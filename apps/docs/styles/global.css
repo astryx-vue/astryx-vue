@@ -96,6 +96,11 @@ samp {
   outline: none;
 }
 
+/* The text area container owns its rounded focus treatment. */
+.astryx-text-area-control:focus-visible {
+  outline: none;
+}
+
 /* Navigation */
 
 .VPNav {
