@@ -715,6 +715,10 @@ html.dark .component-card__preview {
   padding-inline: 7px;
 }
 
+html:not(.dark) .component-detail__body :not(pre) > code {
+  color: #0f5f3b;
+}
+
 .component-detail__body > pre.shiki {
   box-sizing: border-box;
   max-width: 100%;
