@@ -1084,6 +1084,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   background: color-mix(in srgb, currentcolor 8%, transparent);
   line-height: 38px;
   text-align: center;
+  white-space: nowrap;
 }
 
 .stack-preview-host[data-kind='stack-item'] .astryx-stack-item[data-size='fill'] {
@@ -1318,7 +1319,26 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-size: 12px;
 }
 
+.checkbox-indicator-preview-size {
+  min-width: 2em;
+  margin-right: 8px;
+  text-align: right;
+}
+
 .checkbox-indicator-preview-item {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.checkbox-indicator-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 24px 16px;
+  font-size: 12px;
+}
+
+.checkbox-indicator-overview-item {
   display: grid;
   justify-items: center;
   gap: 8px;

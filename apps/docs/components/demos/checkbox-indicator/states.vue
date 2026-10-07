@@ -5,7 +5,7 @@ import { CheckboxIndicator } from '@astryx-vue/core/CheckboxIndicator'
 <template>
   <div class="checkbox-indicator-preview">
     <div v-for="size in (['sm', 'md'] as const)" :key="size" class="checkbox-indicator-preview-row">
-      <span>{{ size }}</span>
+      <span class="checkbox-indicator-preview-size">{{ size }}</span>
       <span v-for="state in (['unchecked', 'checked', 'indeterminate'] as const)" :key="state" class="checkbox-indicator-preview-item">
         <CheckboxIndicator :state="state" :size="size" />
         <span>{{ state }}</span>
