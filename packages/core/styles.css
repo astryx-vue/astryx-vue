@@ -3,7 +3,9 @@
 @import './styles/button.css';
 @import './styles/button-group.css';
 @import './styles/field.css';
+@import './styles/radio.css';
 @import './styles/skeleton.css';
+@import './styles/switch.css';
 @import './styles/stack.css';
 @import './styles/text-area.css';
 @import './styles/text-input.css';

@@ -1,0 +1,9 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astyx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-radio-size: 18px;
+    --astryx-radio-radius: 999px;
+  }
+}

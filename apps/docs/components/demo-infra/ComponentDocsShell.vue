@@ -8,7 +8,7 @@ const props = defineProps<{ route: ComponentDocsRoute }>()
 const text = computed(() => componentDocsCopy[props.route.locale])
 const groups = computed(() => [
   { title: text.value.action, slugs: COMPONENT_SLUGS.slice(0, 3) },
-  { title: text.value.form, slugs: ['text-input', 'text-area', 'checkbox-input', 'checkbox-indicator', 'slider', 'field'] },
+  { title: text.value.form, slugs: ['text-input', 'text-area', 'checkbox-input', 'checkbox-indicator', 'radio', 'radio-group', 'radio-list', 'switch', 'slider', 'field'] },
   { title: text.value.layout, slugs: ['stack'] },
   { title: text.value.content, slugs: ['blockquote'] },
   { title: text.value.feedback, slugs: ['banner', 'badge', 'skeleton'] },
@@ -22,6 +22,10 @@ const names = computed(() => ({
   'text-area': text.value.textArea,
   'checkbox-input': text.value.checkboxInput,
   'checkbox-indicator': text.value.checkboxIndicator,
+  'radio': text.value.radio,
+  'radio-group': text.value.radioGroup,
+  'radio-list': text.value.radioList,
+  'switch': text.value.switch,
   'field': text.value.field,
   'slider': text.value.slider,
   'banner': text.value.banner,

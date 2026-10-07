@@ -43,6 +43,11 @@
       "types": "./dist/IconButton/index.d.ts",
       "import": "./dist/IconButton/index.js"
     },
+    "./Radio": {
+      "source": "./src/Radio/index.ts",
+      "types": "./dist/Radio/index.d.ts",
+      "import": "./dist/Radio/index.js"
+    },
     "./Skeleton": {
       "source": "./src/Skeleton/index.ts",
       "types": "./dist/Skeleton/index.d.ts",
@@ -52,6 +57,11 @@
       "source": "./src/Stack/index.ts",
       "types": "./dist/Stack/index.d.ts",
       "import": "./dist/Stack/index.js"
+    },
+    "./Switch": {
+      "source": "./src/Switch/index.ts",
+      "types": "./dist/Switch/index.d.ts",
+      "import": "./dist/Switch/index.js"
     },
     "./TextArea": {
       "source": "./src/TextArea/index.ts",

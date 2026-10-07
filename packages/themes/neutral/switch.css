@@ -1,0 +1,18 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-switch-track-width: 44px;
+    --astryx-switch-track-height: 24px;
+    --astryx-switch-track-width-sm: 36px;
+    --astryx-switch-track-height-sm: 20px;
+    --astryx-switch-track-width-lg: 52px;
+    --astryx-switch-track-height-lg: 28px;
+    --astryx-switch-thumb-size: 18px;
+    --astryx-switch-thumb-size-sm: 14px;
+    --astryx-switch-thumb-size-lg: 22px;
+    --astryx-switch-track-radius: 999px;
+    --astryx-switch-thumb-radius: 999px;
+  }
+}

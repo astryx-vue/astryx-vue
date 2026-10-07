@@ -2,7 +2,9 @@
 @import './neutral/badge.css';
 @import './neutral/button.css';
 @import './neutral/input.css';
+@import './neutral/radio.css';
 @import './neutral/skeleton.css';
+@import './neutral/switch.css';
 @import './neutral/text-area.css';
 @import './neutral/checkbox.css';
 @import './neutral/slider.css';
