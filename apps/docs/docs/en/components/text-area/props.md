@@ -33,7 +33,7 @@ footer: false
 <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>Native textarea name.</td></tr>
 <tr><td><code>form</code></td><td><code>string</code></td><td>—</td><td>ID of the associated form.</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success status.</td></tr>
-<tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td>How the status message is displayed.</td></tr>
+<tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>detached</td><td>How the status message is displayed. Text area defaults to below the control.</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value: string, event) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Action to run after content changes.</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>Show a loading indicator.</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td>false</td><td>Show a clear button.</td></tr>

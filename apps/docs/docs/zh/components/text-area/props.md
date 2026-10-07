@@ -33,7 +33,7 @@ footer: false
 <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>原生 textarea 的 name。</td></tr>
 <tr><td><code>form</code></td><td><code>string</code></td><td>—</td><td>关联表单的 ID。</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>字段的错误、警告或成功状态。</td></tr>
-<tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td>状态消息的显示方式。</td></tr>
+<tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>detached</td><td>状态消息的显示方式。文本域默认显示在控件下方。</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value: string, event) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>内容变化后执行的动作。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>显示加载指示器。</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td>false</td><td>显示清空按钮。</td></tr>

@@ -16,7 +16,7 @@ import '../../styles/text-area.css'
 defineOptions({ name: 'AstryxTextArea', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   size: 'md',
-  statusVariant: 'attached',
+  statusVariant: 'detached',
   resize: 'vertical',
   loadingLabel: 'Loading',
 })
@@ -146,7 +146,6 @@ onMounted(() => {
         </IconButton>
         <ButtonSpinner v-if="busy" class="astryx-text-area-spinner" :label="loadingLabel" />
         <FieldInfoTip v-if="status?.message && statusVariant === 'tooltip'" :text="status.message" :type="status.type" />
-        <FieldIcon v-else-if="status" :type="status.type" />
       </div>
     </template>
   </Field>
