@@ -89,7 +89,7 @@
     transform: translateX(calc(var(--astryx-switch-track-width-sm, 36px) - var(--astryx-switch-thumb-size-sm, 14px) - 6px));
   }
 
-  .astryx-switch[data-size='lg'] .astryx-switch-native:checked + .astryx-switch-native + .astryx-switch-track .astryx-switch-thumb {
+  .astryx-switch[data-size='lg'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
     transform: translateX(calc(var(--astryx-switch-track-width-lg, 52px) - var(--astryx-switch-thumb-size-lg, 22px) - 6px));
   }
 
