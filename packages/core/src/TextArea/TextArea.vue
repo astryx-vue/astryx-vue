@@ -17,7 +17,7 @@ defineOptions({ name: 'AstryxTextArea', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   size: 'md',
   statusVariant: 'attached',
-  resize: 'none',
+  resize: 'vertical',
   loadingLabel: 'Loading',
 })
 const emit = defineEmits<TextAreaEmits>()

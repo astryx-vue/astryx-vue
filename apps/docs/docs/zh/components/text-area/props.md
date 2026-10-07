@@ -18,7 +18,7 @@ footer: false
 <tr><td><code>minlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 minlength。</td></tr>
 <tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 maxlength。</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>原生 textarea 的 wrap。</td></tr>
-<tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>none</td><td>原生 textarea 的 resize。默认隐藏拖动角标。</td></tr>
+<tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>原生 textarea 的 resize。默认允许垂直拖动。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>占位文本。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>隐藏视觉标签。保留无障碍名称。</td></tr>
