@@ -1,42 +1,67 @@
 # astryx-vue
 
-astryx-vue 是 Astryx 设计系统的非官方 Vue 社区版本。
+Astryx 设计系统的非官方 Vue 3 社区实现。
 
-当前提供 Button、IconButton、ButtonGroup、Stack 系列、Badge、Blockquote、Skeleton、VisuallyHidden，以及 TextInput、CheckboxInput、CheckboxIndicator、Slider、Banner、Field、FieldLabel 和 FieldStatus。组件使用 Vue 3 原生 API，文档包含可交互示例和中英文说明。
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-## 已确定的包
+> 本项目不是 Meta 官方项目。原版 Astryx 见 <https://github.com/facebook/astryx>。
 
-- `@astryx-vue/core`：Vue 组件、共用代码、类型和组件样式。
-- `@astryx-vue/themes`：所有主题；当前暂时只提供 Neutral。
+## 特性
 
-Neutral 主题在应用入口引入一次：
+- Vue 3 原生 API：props、事件、插槽、`v-model` 与组合式函数。
+- 组件包与主题包分离：`@astryx-vue/core` 提供组件，`@astryx-vue/themes` 提供主题。
+- 基于 CSS 变量与 CSS 分层，不要求使用者安装 UnoCSS 或 StyleX。
+- 交互式文档，包含组件示例与中英文说明。
+- TypeScript 类型完整，配套 Vitest 测试。
+
+## 安装
+
+当前暂未发布到 npm。可以通过本地 workspace 或源码构建引用。
+
+发布后将支持：
+
+```sh
+pnpm add @astryx-vue/core @astryx-vue/themes
+```
+
+## 快速开始
+
+在应用入口引入一次主题：
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-## 说明
+然后在组件中使用：
 
-- 本项目不是 Meta 官方项目。
-- 原版 Astryx：<https://github.com/facebook/astryx>
-- 本项目使用 MIT 许可证，并保留原版和第三方内容的许可证说明。
+```vue
+<script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
+</script>
 
-## 开发
+<template>
+  <Button label="Get started" />
+</template>
+```
 
-使用 Node.js 22.18+ 和 pnpm。
+## 文档
+
+本地启动文档站点：
 
 ```sh
 pnpm install
 pnpm dev
-pnpm check
 ```
 
-- Vite：开发服务器和应用构建。
-- tsdown + unplugin-vue：组件包构建，生成 ESM 和 Vue 类型声明。
-- Vitest：组件与组合式函数测试。
-- ESLint + antfu config：代码检查。
-- VitePress：中英文文档与原生 Vue 示例。
+## 开发
 
-`pnpm docs:preview` 可预览已经构建的文档。
+需要 Node.js 22.18+ 与 pnpm 11.21+。
 
-TypeScript 7 用于普通 `tsc` 检查；ESLint 和 Vue 类型工具通过官方 `@typescript/typescript6` 兼容包使用 TypeScript 编译器 API。两者使用 npm alias 并装，版本统一保存在 `pnpm-workspace.yaml`。
+```sh
+pnpm install
+pnpm check   # lint + typecheck + test + build
+```
+
+## 许可证
+
+[MIT](./LICENSE)
