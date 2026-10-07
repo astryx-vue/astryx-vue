@@ -7,6 +7,7 @@ export type TextAreaStatusType = FieldStatusType
 export type TextAreaChangeEvent = CustomEvent<{ value: string, originalEvent: Event }>
 export type TextAreaChangeAction = (value: string, event: TextAreaChangeEvent) => void | Promise<void>
 export type TextAreaWrap = 'soft' | 'hard'
+export type TextAreaResize = 'none' | 'both' | 'horizontal' | 'vertical'
 
 export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'> {
   modelValue: string
@@ -26,6 +27,7 @@ export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelI
   minlength?: number | string
   maxlength?: number | string
   wrap?: TextAreaWrap
+  resize?: TextAreaResize
   hasClear?: boolean
   hasAutoFocus?: boolean
   htmlName?: string

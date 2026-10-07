@@ -50,7 +50,7 @@ export type {
 } from './Stack/index.js'
 export { HStack, Stack, StackItem, VStack } from './Stack/index.js'
 export { TextArea } from './TextArea/index.js'
-export type { TextAreaChangeAction, TextAreaChangeEvent, TextAreaEmits, TextAreaProps, TextAreaSize, TextAreaSlots, TextAreaStatus, TextAreaStatusType, TextAreaWrap } from './TextArea/index.js'
+export type { TextAreaChangeAction, TextAreaChangeEvent, TextAreaEmits, TextAreaProps, TextAreaResize, TextAreaSize, TextAreaSlots, TextAreaStatus, TextAreaStatusType, TextAreaWrap } from './TextArea/index.js'
 export { TextInput } from './TextInput/index.js'
 export type { TextInputChangeAction, TextInputChangeEvent, TextInputEmits, TextInputProps, TextInputSize, TextInputSlots, TextInputStatus, TextInputStatusType, TextInputType } from './TextInput/index.js'
 export type { VisuallyHiddenElement, VisuallyHiddenProps } from './VisuallyHidden/index.js'

@@ -18,6 +18,7 @@ footer: false
 <tr><td><code>minlength</code></td><td><code>number | string</code></td><td>—</td><td>Native textarea minlength.</td></tr>
 <tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>Native textarea maxlength.</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>Native textarea wrap.</td></tr>
+<tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>none</td><td>Native textarea resize. The drag grip is hidden by default.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>Placeholder text.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Description below the label.</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>Hide the visual label. Keep the accessible name.</td></tr>

@@ -17,6 +17,7 @@ defineOptions({ name: 'AstryxTextArea', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   size: 'md',
   statusVariant: 'attached',
+  resize: 'none',
   loadingLabel: 'Loading',
 })
 const emit = defineEmits<TextAreaEmits>()
@@ -130,6 +131,7 @@ onMounted(() => {
         <textarea
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-text-area-control"
           :value="action.value.value" :placeholder="placeholder" :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)"
+          :style="{ '--astryx-text-area-resize': resize }"
           :rows="rows" :cols="cols" :minlength="minlength" :maxlength="maxlength" :wrap="wrap"
           :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || showsDisabledMessage"
           :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"

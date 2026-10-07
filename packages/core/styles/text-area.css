@@ -61,7 +61,7 @@
     font-size: var(--astryx-text-body-size, 14px);
     font-weight: 400;
     line-height: 1.4286;
-    resize: vertical;
+    resize: var(--astryx-text-area-resize, none);
   }
 
   .astryx-text-area-control::placeholder {
