@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "customConditions": [
+      "source"
+    ],
+    "types": [
+      "vite/client",
+      "node"
+    ]
+  },
+  "include": [
+    "css-modules.d.ts",
+    ".vitepress/**/*.ts",
+    ".vitepress/**/*.vue",
+    "uno.config.ts",
+    "components/**/*.ts",
+    "components/**/*.vue"
+  ]
+}

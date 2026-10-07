@@ -1,0 +1,34 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-button-primary-background: light-dark(#262626, #ebebeb);
+    --astryx-button-primary-foreground: light-dark(#ffffff, #171717);
+    --astryx-button-secondary-background: light-dark(#0000000f, #ffffff1a);
+    --astryx-button-secondary-foreground: light-dark(#171717, #fafafa);
+    --astryx-button-ghost-background: transparent;
+    --astryx-button-ghost-foreground: light-dark(#171717, #fafafa);
+    --astryx-button-destructive-background: light-dark(#facecb, #ff9e973d);
+    --astryx-button-destructive-foreground: light-dark(#a50c25, #ffc6c1);
+    --astryx-button-hover-overlay: light-dark(#0000000d, #ffffff0d);
+    --astryx-button-pressed-overlay: light-dark(#0000001a, #ffffff1a);
+    --astryx-button-focus: light-dark(#262626, #ebebeb);
+    --astryx-button-separator: light-dark(#00000014, #ffffff1a);
+    --astryx-button-solid-separator: light-dark(#ffffff, #171717);
+    --astryx-button-tooltip-background: light-dark(#171717, #262626);
+    --astryx-button-tooltip-foreground: light-dark(#ffffff, #fafafa);
+    --astryx-button-shadow-low:
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
+    --astryx-button-shadow-med:
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 35%)),
+      0 4px 12px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 12%));
+    --astryx-button-shadow-high:
+      0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
+      0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%));
+  }
+}

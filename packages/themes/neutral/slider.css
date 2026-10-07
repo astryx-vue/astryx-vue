@@ -1,0 +1,10 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-slider-track: light-dark(#e5e5e5, #404040);
+    --astryx-slider-accent: light-dark(#262626, #ebebeb);
+    --astryx-slider-focus: light-dark(#262626, #ebebeb);
+    --astryx-slider-height: 160px;
+  }
+}

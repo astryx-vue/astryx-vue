@@ -1,0 +1,67 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  @keyframes astryx-skeleton-fade {
+    from {
+      opacity: 0.25;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .astryx-skeleton {
+    box-sizing: border-box;
+    background-color: var(--astryx-color-skeleton);
+    opacity: 0.25;
+    animation-name: astryx-skeleton-fade;
+    animation-duration: var(--astryx-duration-medium-max, 550ms);
+    animation-timing-function: steps(10, end);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  .astryx-skeleton:is([data-radius='none'], [data-radius='0']) {
+    border-radius: var(--astryx-radius-none, 0);
+  }
+
+  .astryx-skeleton[data-radius='1'] {
+    border-radius: var(--astryx-radius-inner, 0.375rem);
+  }
+
+  .astryx-skeleton[data-radius='2'] {
+    border-radius: var(--astryx-radius-element, 0.625rem);
+  }
+
+  .astryx-skeleton:is([data-radius='3'], [data-radius='4']) {
+    border-radius: var(--astryx-radius-container, 0.75rem);
+  }
+
+  .astryx-skeleton[data-radius='rounded'] {
+    border-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  @media (prefers-contrast: more) {
+    .astryx-skeleton {
+      background-color: color-mix(
+        in srgb,
+        var(--astryx-color-skeleton),
+        var(--astryx-color-text-primary) 30%
+      );
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-skeleton {
+      background-color: GrayText;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-skeleton {
+      animation-name: none;
+    }
+  }
+}

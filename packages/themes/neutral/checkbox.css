@@ -1,0 +1,13 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-checkbox-background: light-dark(#fff, #262626);
+    --astryx-checkbox-border: light-dark(#d4d4d4, #525252);
+    --astryx-checkbox-accent: light-dark(#262626, #ebebeb);
+    --astryx-checkbox-on-accent: light-dark(#fff, #171717);
+    --astryx-checkbox-focus: light-dark(#262626, #ebebeb);
+    --astryx-checkbox-disabled-background: light-dark(#f5f5f5, #171717);
+  }
+}

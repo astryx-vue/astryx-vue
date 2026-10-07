@@ -1,0 +1,70 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-button-group {
+    display: inline-flex;
+    align-items: stretch;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+  }
+
+  .astryx-button-group[data-orientation='vertical'] {
+    flex-direction: column;
+  }
+
+  .astryx-button-group[data-elevation='low'] {
+    box-shadow: var(--astryx-button-shadow-low);
+  }
+
+  .astryx-button-group[data-elevation='med'] {
+    box-shadow: var(--astryx-button-shadow-med);
+  }
+
+  .astryx-button-group[data-elevation='high'] {
+    box-shadow: var(--astryx-button-shadow-high);
+  }
+
+  .astryx-button-group > .astryx-button {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .astryx-button-group > .astryx-button:active {
+    transform: none;
+  }
+
+  .astryx-button-group > .astryx-button:focus-visible {
+    z-index: 1;
+  }
+
+  .astryx-button-group[data-orientation='horizontal'] > .astryx-button:first-child {
+    border-start-start-radius: var(--astryx-radius-element, 0.625rem);
+    border-end-start-radius: var(--astryx-radius-element, 0.625rem);
+  }
+
+  .astryx-button-group[data-orientation='horizontal'] > .astryx-button:last-child {
+    border-start-end-radius: var(--astryx-radius-element, 0.625rem);
+    border-end-end-radius: var(--astryx-radius-element, 0.625rem);
+  }
+
+  .astryx-button-group[data-orientation='horizontal'] > .astryx-button:not(:first-child) {
+    border-inline-start: 1px solid var(--astryx-button-separator, #00000014);
+  }
+
+  .astryx-button-group[data-orientation='vertical'] > .astryx-button:first-child {
+    border-start-start-radius: var(--astryx-radius-element, 0.625rem);
+    border-start-end-radius: var(--astryx-radius-element, 0.625rem);
+  }
+
+  .astryx-button-group[data-orientation='vertical'] > .astryx-button:last-child {
+    border-end-start-radius: var(--astryx-radius-element, 0.625rem);
+    border-end-end-radius: var(--astryx-radius-element, 0.625rem);
+  }
+
+  .astryx-button-group[data-orientation='vertical'] > .astryx-button:not(:first-child) {
+    border-block-start: 1px solid var(--astryx-button-separator, #00000014);
+  }
+
+  .astryx-button-group > .astryx-button:is([data-variant='primary'], [data-variant='destructive']):not(:first-child) {
+    --astryx-button-separator: var(--astryx-button-solid-separator);
+  }
+}

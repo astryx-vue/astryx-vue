@@ -1,0 +1,107 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-stack {
+    box-sizing: border-box;
+    display: flex;
+    gap: var(--astryx-stack-gap, normal);
+    padding-block: var(--astryx-stack-padding-block, 0);
+    padding-inline: var(--astryx-stack-padding-inline, 0);
+  }
+
+  .astryx-stack[data-direction='horizontal'] {
+    flex-direction: row;
+  }
+
+  .astryx-stack[data-direction='vertical'] {
+    flex-direction: column;
+  }
+
+  .astryx-stack[data-main-align='start'] {
+    justify-content: flex-start;
+  }
+
+  .astryx-stack[data-main-align='center'] {
+    justify-content: center;
+  }
+
+  .astryx-stack[data-main-align='end'] {
+    justify-content: flex-end;
+  }
+
+  .astryx-stack[data-main-align='between'] {
+    justify-content: space-between;
+  }
+
+  .astryx-stack[data-main-align='around'] {
+    justify-content: space-around;
+  }
+
+  .astryx-stack[data-main-align='evenly'] {
+    justify-content: space-evenly;
+  }
+
+  .astryx-stack[data-cross-align='start'] {
+    align-items: flex-start;
+  }
+
+  .astryx-stack[data-cross-align='center'] {
+    align-items: center;
+  }
+
+  .astryx-stack[data-cross-align='end'] {
+    align-items: flex-end;
+  }
+
+  .astryx-stack[data-cross-align='stretch'] {
+    align-items: stretch;
+  }
+
+  .astryx-stack[data-wrap='nowrap'] {
+    flex-wrap: nowrap;
+  }
+
+  .astryx-stack[data-wrap='wrap'] {
+    flex-wrap: wrap;
+  }
+
+  .astryx-stack[data-wrap='wrap-reverse'] {
+    flex-wrap: wrap-reverse;
+  }
+
+  .astryx-stack[data-scrollable='true'],
+  .astryx-stack-item[data-scrollable='true'] {
+    overflow: auto;
+  }
+
+  .astryx-stack-item {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .astryx-stack-item[data-size='static'] {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  .astryx-stack-item[data-size='fill'] {
+    flex-grow: 1;
+  }
+
+  .astryx-stack-item[data-cross-align-self='start'] {
+    align-self: flex-start;
+  }
+
+  .astryx-stack-item[data-cross-align-self='center'] {
+    align-self: center;
+  }
+
+  .astryx-stack-item[data-cross-align-self='end'] {
+    align-self: flex-end;
+  }
+
+  .astryx-stack-item[data-cross-align-self='stretch'] {
+    align-self: stretch;
+  }
+}

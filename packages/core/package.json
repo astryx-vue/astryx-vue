@@ -1,0 +1,130 @@
+{
+  "name": "@astryx-vue/core",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Vue components for the unofficial astryx-vue community project.",
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./Badge": {
+      "source": "./src/Badge/index.ts",
+      "types": "./dist/Badge/index.d.ts",
+      "import": "./dist/Badge/index.js"
+    },
+    "./Blockquote": {
+      "source": "./src/Blockquote/index.ts",
+      "types": "./dist/Blockquote/index.d.ts",
+      "import": "./dist/Blockquote/index.js"
+    },
+    "./Button": {
+      "source": "./src/Button/index.ts",
+      "types": "./dist/Button/index.d.ts",
+      "import": "./dist/Button/index.js"
+    },
+    "./ButtonGroup": {
+      "source": "./src/ButtonGroup/index.ts",
+      "types": "./dist/ButtonGroup/index.d.ts",
+      "import": "./dist/ButtonGroup/index.js"
+    },
+    "./Field": {
+      "source": "./src/Field/index.ts",
+      "types": "./dist/Field/index.d.ts",
+      "import": "./dist/Field/index.js"
+    },
+    "./IconButton": {
+      "source": "./src/IconButton/index.ts",
+      "types": "./dist/IconButton/index.d.ts",
+      "import": "./dist/IconButton/index.js"
+    },
+    "./Skeleton": {
+      "source": "./src/Skeleton/index.ts",
+      "types": "./dist/Skeleton/index.d.ts",
+      "import": "./dist/Skeleton/index.js"
+    },
+    "./Stack": {
+      "source": "./src/Stack/index.ts",
+      "types": "./dist/Stack/index.d.ts",
+      "import": "./dist/Stack/index.js"
+    },
+    "./TextArea": {
+      "source": "./src/TextArea/index.ts",
+      "types": "./dist/TextArea/index.d.ts",
+      "import": "./dist/TextArea/index.js"
+    },
+    "./TextInput": {
+      "source": "./src/TextInput/index.ts",
+      "types": "./dist/TextInput/index.d.ts",
+      "import": "./dist/TextInput/index.js"
+    },
+    "./VisuallyHidden": {
+      "source": "./src/VisuallyHidden/index.ts",
+      "types": "./dist/VisuallyHidden/index.d.ts",
+      "import": "./dist/VisuallyHidden/index.js"
+    },
+    "./package.json": "./package.json",
+    "./reset.css": {
+      "types": "./css.d.ts",
+      "default": "./reset.css"
+    },
+    "./styles.css": {
+      "types": "./css.d.ts",
+      "default": "./styles.css"
+    },
+    "./CheckboxInput": {
+      "source": "./src/CheckboxInput/index.ts",
+      "types": "./dist/CheckboxInput/index.d.ts",
+      "import": "./dist/CheckboxInput/index.js"
+    },
+    "./CheckboxIndicator": {
+      "source": "./src/CheckboxIndicator/index.ts",
+      "types": "./dist/CheckboxIndicator/index.d.ts",
+      "import": "./dist/CheckboxIndicator/index.js"
+    },
+    "./Slider": {
+      "source": "./src/Slider/index.ts",
+      "types": "./dist/Slider/index.d.ts",
+      "import": "./dist/Slider/index.js"
+    },
+    "./Banner": {
+      "source": "./src/Banner/index.ts",
+      "types": "./dist/Banner/index.d.ts",
+      "import": "./dist/Banner/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "THIRD_PARTY_NOTICES.md",
+    "css.d.ts",
+    "dist",
+    "reset.css",
+    "styles",
+    "styles.css"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "vue": "catalog:vue"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "catalog:vue",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:language",
+    "unplugin-vue": "catalog:build",
+    "vue": "catalog:vue",
+    "vue-tsc": "catalog:vue"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

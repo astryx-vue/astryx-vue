@@ -1,0 +1,29 @@
+{
+  "name": "@astryx-vue/docs",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vitepress build",
+    "dev": "vitepress dev",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "@astryx-vue/core": "workspace:^",
+    "@astryx-vue/themes": "workspace:^",
+    "@fontsource/figtree": "catalog:docs",
+    "@fontsource/fira-code": "catalog:docs",
+    "vue": "catalog:vue"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "catalog:docs",
+    "@types/node": "catalog:language",
+    "postcss": "catalog:docs",
+    "typescript": "catalog:language",
+    "unocss": "catalog:docs",
+    "vite": "catalog:build",
+    "vitepress": "catalog:docs",
+    "vue-tsc": "catalog:vue"
+  }
+}

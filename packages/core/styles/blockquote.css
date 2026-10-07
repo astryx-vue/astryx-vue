@@ -1,0 +1,19 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-blockquote {
+    box-sizing: border-box;
+    margin: 0;
+    padding-inline-start: var(--astryx-spacing-4, 16px);
+    border-inline-start: var(--astryx-spacing-0-5, 2px) solid var(--astryx-color-border-emphasized);
+    color: var(--astryx-color-text-secondary);
+  }
+
+  .astryx-blockquote__cite {
+    display: block;
+    margin-block-start: var(--astryx-spacing-2, 8px);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-style: normal;
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@astryx-vue/themes",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Themes for the unofficial astryx-vue community project.",
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./*.css": {
+      "types": "./css.d.ts",
+      "default": "./*.css"
+    },
+    "./*/*.css": {
+      "types": "./css.d.ts",
+      "default": "./*/*.css"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "README.md",
+    "THIRD_PARTY_NOTICES.md",
+    "css.d.ts",
+    "neutral",
+    "neutral.css"
+  ],
+  "scripts": {
+    "build": "true"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

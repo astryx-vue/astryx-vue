@@ -1,0 +1,36 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-badge-neutral-background: light-dark(#e5e5e5, #ffffff1a);
+    --astryx-badge-neutral-foreground: light-dark(#262626, #e5e5e5);
+    --astryx-badge-info-background: light-dark(#0074e2, #6d9cfe);
+    --astryx-badge-info-foreground: light-dark(#ffffff, #171717);
+    --astryx-badge-success-background: light-dark(#198100, #64af4c);
+    --astryx-badge-success-foreground: light-dark(#ffffff, #171717);
+    --astryx-badge-warning-background: #ffce2f;
+    --astryx-badge-warning-foreground: #171717;
+    --astryx-badge-error-background: light-dark(#e33f4a, #ff705d);
+    --astryx-badge-error-foreground: light-dark(#ffffff, #171717);
+
+    --astryx-badge-blue-background: light-dark(#c4ddfb, #9eb7ff3d);
+    --astryx-badge-blue-foreground: light-dark(#00458c, #c7d3ff);
+    --astryx-badge-cyan-background: light-dark(#a3e0ef, #83c2d43d);
+    --astryx-badge-cyan-foreground: light-dark(#00505f, #9edef0);
+    --astryx-badge-green-background: light-dark(#c5e5c0, #84c9803d);
+    --astryx-badge-green-foreground: light-dark(#0c5700, #9fe59b);
+    --astryx-badge-orange-background: light-dark(#fad0b5, #ffa2583d);
+    --astryx-badge-orange-foreground: light-dark(#6e3500, #ffc9a2);
+    --astryx-badge-pink-background: light-dark(#fccadc, #ff99c33d);
+    --astryx-badge-pink-foreground: light-dark(#83004b, #ffc3da);
+    --astryx-badge-purple-background: light-dark(#eccef3, #f297ff3d);
+    --astryx-badge-purple-foreground: light-dark(#700084, #fac1ff);
+    --astryx-badge-red-background: light-dark(#facecb, #ff9e973d);
+    --astryx-badge-red-foreground: light-dark(#89001a, #ffc6c1);
+    --astryx-badge-teal-background: light-dark(#a5e3d6, #7ec6b83d);
+    --astryx-badge-teal-foreground: light-dark(#005348, #99e2d3);
+    --astryx-badge-yellow-background: light-dark(#f8da9d, #deb4333d);
+    --astryx-badge-yellow-foreground: light-dark(#584400, #fdcf4f);
+  }
+}

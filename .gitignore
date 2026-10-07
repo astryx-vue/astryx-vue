@@ -1,0 +1,7 @@
+node_modules/
+**/dist/
+**/.vitepress/cache/
+coverage/
+*.log
+*.tsbuildinfo
+.DS_Store

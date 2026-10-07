@@ -1,0 +1,87 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-checkbox-indicator {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--astryx-checkbox-border, #d4d4d4);
+    border-radius: var(--astryx-radius-inner, 6px);
+    color: var(--astryx-checkbox-accent, #262626);
+    background: var(--astryx-checkbox-background, #fff);
+    transition: background-color 130ms ease-out, border-color 130ms ease-out;
+  }
+
+  .astryx-checkbox-indicator[data-size='sm'] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .astryx-checkbox-indicator:not([data-state='unchecked']) {
+    color: var(--astryx-checkbox-on-accent, #fff);
+    background: var(--astryx-checkbox-accent, #262626);
+    border-color: var(--astryx-checkbox-accent, #262626);
+  }
+
+  .astryx-checkbox-indicator[data-disabled='true'] {
+    opacity: 0.5;
+  }
+
+  .astryx-checkbox-indicator[data-disabled='true'][data-state='unchecked'] {
+    background: var(--astryx-checkbox-disabled-background, #f5f5f5);
+  }
+
+  .astryx-checkbox-indicator-check {
+    display: none;
+    width: 14px;
+    height: 14px;
+  }
+
+  .astryx-checkbox-indicator-dash {
+    display: none;
+    width: 12px;
+    height: 2px;
+    border-radius: 9999px;
+    background: currentcolor;
+  }
+
+  .astryx-checkbox-indicator[data-size='sm'] > .astryx-checkbox-indicator-check {
+    width: 12px;
+    height: 12px;
+  }
+
+  .astryx-checkbox-indicator[data-size='sm'] > .astryx-checkbox-indicator-dash {
+    width: 10px;
+  }
+
+  .astryx-checkbox-indicator[data-state='checked'] > .astryx-checkbox-indicator-check,
+  .astryx-checkbox-indicator[data-state='indeterminate'] > .astryx-checkbox-indicator-dash {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-checkbox-indicator { transition: none; }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-checkbox-indicator,
+    .astryx-checkbox-indicator:not([data-state='unchecked']) {
+      color: CanvasText;
+      border-color: CanvasText;
+      background: Canvas;
+    }
+    .astryx-checkbox-indicator-dash {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+    .astryx-checkbox-indicator[data-disabled='true'] {
+      color: GrayText;
+      border-color: GrayText;
+      opacity: 1;
+    }
+  }
+}

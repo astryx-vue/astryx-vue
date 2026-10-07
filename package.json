@@ -1,0 +1,50 @@
+{
+  "name": "astryx-vue",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.21.0",
+  "description": "An unofficial community Vue port of the Astryx design system.",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0",
+    "pnpm": ">=11.21.0"
+  },
+  "scripts": {
+    "build": "pnpm build:packages && pnpm docs:build",
+    "build:packages": "pnpm --filter './packages/*' --recursive run build",
+    "check": "pnpm check:packages && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check:packages": "node ./scripts/check-package-boundaries.mjs",
+    "dev": "pnpm build:packages && pnpm --filter @astryx-vue/docs dev",
+    "docs:build": "pnpm --filter @astryx-vue/docs build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter './packages/*' --filter './apps/*' --recursive --if-present run typecheck",
+    "docs:preview": "pnpm --filter @astryx-vue/docs preview"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "catalog:linting",
+    "@types/node": "catalog:language",
+    "@typescript/native": "catalog:language",
+    "@vitejs/plugin-vue": "catalog:build",
+    "@vue/compiler-dom": "catalog:vue",
+    "@vue/compiler-sfc": "catalog:vue",
+    "@vue/server-renderer": "catalog:vue",
+    "@vue/test-utils": "catalog:testing",
+    "eslint": "catalog:linting",
+    "eslint-plugin-vuejs-accessibility": "catalog:linting",
+    "globals": "catalog:linting",
+    "happy-dom": "catalog:testing",
+    "typescript": "catalog:language",
+    "vite": "catalog:build",
+    "vitest": "catalog:testing",
+    "vue": "catalog:vue"
+  },
+  "upstream": {
+    "repository": "https://github.com/facebook/astryx",
+    "version": "0.4.1",
+    "commit": "96f9917fe013a7062a403c58e54dfd47f482d89f"
+  }
+}
