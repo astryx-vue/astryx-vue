@@ -10,6 +10,7 @@ import { checkboxIndicatorOverview } from '../demos/checkbox-indicator'
 import { checkboxInputBasic } from '../demos/checkbox-input'
 import { fieldCustom } from '../demos/field'
 import { iconButtonActionBar } from '../demos/icon-button'
+import { progressBarBasic } from '../demos/progress-bar'
 import { radioBasic } from '../demos/radio'
 import { skeletonProfile } from '../demos/skeleton'
 import { sliderBasic } from '../demos/slider'
@@ -35,6 +36,7 @@ const groups = computed(() => [
     { demo: textAreaBasic, slug: 'text-area', name: nav.value.textArea },
     { demo: checkboxInputBasic, slug: 'checkbox-input', name: nav.value.checkboxInput },
     { demo: checkboxIndicatorOverview, slug: 'checkbox-indicator', name: nav.value.checkboxIndicator },
+    { demo: progressBarBasic, slug: 'progress-bar', name: nav.value.progressBar },
     { demo: radioBasic, slug: 'radio', name: nav.value.radio },
     { demo: switchBasic, slug: 'switch', name: nav.value.switch },
     { demo: sliderBasic, slug: 'slider', name: nav.value.slider },

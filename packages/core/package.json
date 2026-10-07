@@ -43,6 +43,11 @@
       "types": "./dist/IconButton/index.d.ts",
       "import": "./dist/IconButton/index.js"
     },
+    "./ProgressBar": {
+      "source": "./src/ProgressBar/index.ts",
+      "types": "./dist/ProgressBar/index.d.ts",
+      "import": "./dist/ProgressBar/index.js"
+    },
     "./Radio": {
       "source": "./src/Radio/index.ts",
       "types": "./dist/Radio/index.d.ts",
