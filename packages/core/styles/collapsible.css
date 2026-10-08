@@ -1,0 +1,145 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-collapsible {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /*
+   * The trigger is a bare row: no surface, no padding, no radius. Its only
+   * background is the pressed overlay, painted while it is held down.
+   */
+  .astryx-collapsible-trigger {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    outline: 0;
+    color: var(--astryx-collapsible-trigger-foreground, var(--astryx-color-text-primary, #171717));
+    background-color: transparent;
+    background-image: none;
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-large-size, 1rem);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    line-height: var(--astryx-text-large-leading, 1.5);
+    text-align: start;
+    cursor: pointer;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .astryx-collapsible-trigger:not([aria-disabled='true']):active {
+    background-image: linear-gradient(
+      var(--astryx-collapsible-pressed-overlay, #0000001a),
+      var(--astryx-collapsible-pressed-overlay, #0000001a)
+    );
+  }
+
+  .astryx-collapsible-trigger:focus-visible {
+    outline: 2px solid var(--astryx-collapsible-focus, var(--astryx-color-text-primary, #171717));
+    outline-offset: 2px;
+  }
+
+  .astryx-collapsible-trigger[data-disabled='disabled'] {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  /*
+   * The label takes the rest of the row. A composed label can then spend that
+   * width on its own trailing content instead of stranding it behind the
+   * chevron.
+   */
+  .astryx-collapsible-trigger-label {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .astryx-collapsible-chevron {
+    transition-property: transform;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /* A trailing indicator points down while collapsed and up while expanded. */
+  .astryx-collapsible-trigger[data-chevron-position='end'][data-open='open'] .astryx-collapsible-chevron {
+    transform: rotate(180deg);
+  }
+
+  /*
+   * A leading arrow points into the row while collapsed — towards the content,
+   * so it mirrors under RTL — and turns down while expanded.
+   */
+  .astryx-collapsible-trigger[data-chevron-position='start'] .astryx-collapsible-chevron {
+    margin-inline-end: var(--astryx-spacing-2, 8px);
+    transform: rotate(0deg);
+  }
+
+  [dir='rtl'] .astryx-collapsible-trigger[data-chevron-position='start'] .astryx-collapsible-chevron {
+    transform: scaleX(-1);
+  }
+
+  .astryx-collapsible-trigger[data-chevron-position='start'][data-open='open'] .astryx-collapsible-chevron {
+    transform: rotate(90deg);
+  }
+
+  [dir='rtl'] .astryx-collapsible-trigger[data-chevron-position='start'][data-open='open'] .astryx-collapsible-chevron {
+    transform: scaleX(-1) rotate(90deg);
+  }
+
+  /*
+   * The content region is a grid whose single row track is the reveal: the
+   * track grows to `1fr` on enter and folds back to `0fr` on leave, with the
+   * block-start padding folding away with it so nothing is left behind. The
+   * clip lives on the inner element and only while a transition runs, so a
+   * focus ring inside open content is never cut off.
+   */
+  .astryx-collapsible-content {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 1fr;
+    padding-block-start: var(--astryx-spacing-1, 4px);
+    color: var(--astryx-collapsible-content-foreground, var(--astryx-color-text-primary, #171717));
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-font-weight-regular, 400);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    transition-property: grid-template-rows, padding-block-start, opacity;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-collapsible-content-inner {
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .astryx-collapsible-reveal-enter-active > .astryx-collapsible-content-inner,
+  .astryx-collapsible-reveal-leave-active > .astryx-collapsible-content-inner {
+    overflow: hidden;
+  }
+
+  .astryx-collapsible-reveal-enter-from,
+  .astryx-collapsible-reveal-leave-to {
+    grid-template-rows: 0fr;
+    padding-block-start: 0;
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-collapsible-content {
+      transition-duration: 0.01ms;
+    }
+
+    .astryx-collapsible-chevron {
+      transition: none;
+    }
+  }
+}

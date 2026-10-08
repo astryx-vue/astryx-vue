@@ -1,0 +1,10 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-toggle-button-pressed-background: light-dark(#05365919, #ffffff19);
+    --astryx-toggle-button-pressed-font-weight: 600;
+    --astryx-toggle-button-group-gap: 4px;
+  }
+}

@@ -1,0 +1,19 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-context-menu-background: light-dark(#ffffff, #1b1b1b);
+    --astryx-context-menu-foreground: light-dark(#171717, #fafafa);
+    --astryx-context-menu-shadow:
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
+    --astryx-context-menu-item-foreground: light-dark(#171717, #fafafa);
+    --astryx-context-menu-item-focus-background: light-dark(#0536590c, #ffffff0c);
+    --astryx-context-menu-item-pressed-background: light-dark(#05365919, #ffffff19);
+    --astryx-context-menu-item-description-foreground: light-dark(#525252, #a3a3a3);
+    --astryx-context-menu-item-error-foreground: light-dark(#89001a, #ffc6c1);
+    --astryx-context-menu-section-foreground: light-dark(#525252, #a3a3a3);
+  }
+}

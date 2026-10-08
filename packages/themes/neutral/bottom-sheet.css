@@ -1,0 +1,17 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-bottom-sheet-background: light-dark(#ffffff, #262626);
+    --astryx-bottom-sheet-foreground: light-dark(#171717, #fafafa);
+    --astryx-bottom-sheet-border: light-dark(#d4d4d4, #525252);
+    --astryx-bottom-sheet-scrim: light-dark(#00000080, #000000cc);
+    --astryx-bottom-sheet-handle-background: light-dark(#d4d4d4, #525252);
+    --astryx-bottom-sheet-focus: light-dark(#171717, #fafafa);
+    --astryx-bottom-sheet-shadow:
+      0 -4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
+      0 -12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%));
+  }
+}

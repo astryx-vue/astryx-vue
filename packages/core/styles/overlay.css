@@ -1,0 +1,171 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * The container is the positioning context for the scrim and the clipping
+   * box for its rounded corners. `overflow: clip` rather than `hidden` keeps
+   * the container from becoming a scroll container. `useOverlay` puts the
+   * scope class on a container it does not own, so both classes carry this.
+   */
+  .astryx-overlay,
+  .astryx-overlay-scope {
+    position: relative;
+    overflow: clip;
+  }
+
+  .astryx-overlay-scrim {
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-spacing-3, 12px);
+    pointer-events: none;
+    transition-property: opacity, visibility, transform;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /*
+   * The media wrapper only carries the surface theme, so it must not join the
+   * layout: its children are the flex items of the scrim.
+   */
+  .astryx-overlay-scrim__media {
+    display: contents;
+  }
+
+  /*
+   * `color-scheme` resolves every `light-dark()` token of the components inside
+   * the scrim against the surface the scrim paints, and `color` covers text
+   * that is not wrapped in a component of its own.
+   */
+  .astryx-overlay-scrim__media[data-astryx-media='dark'] {
+    color-scheme: dark;
+    color: var(--astryx-color-text-primary, #fafafa);
+  }
+
+  .astryx-overlay-scrim__media[data-astryx-media='light'] {
+    color-scheme: light;
+    color: var(--astryx-color-text-primary, #171717);
+  }
+
+  .astryx-overlay-scrim[data-position='fill'] {
+    inset: 0;
+  }
+
+  .astryx-overlay-scrim[data-position='bottom'] {
+    inset-inline: 0;
+    bottom: 0;
+  }
+
+  .astryx-overlay-scrim[data-position='top'] {
+    inset-inline: 0;
+    top: 0;
+  }
+
+  .astryx-overlay-scrim[data-align='start'] {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .astryx-overlay-scrim[data-align='center'] {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .astryx-overlay-scrim[data-align='end'] {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  .astryx-overlay-scrim[data-scrim='dark'] {
+    background-color: var(--astryx-overlay-scrim-background, rgb(0 0 0 / 50%));
+  }
+
+  .astryx-overlay-scrim[data-scrim='light'] {
+    background-color: var(
+      --astryx-overlay-scrim-light-background,
+      color-mix(in srgb, #fff 60%, transparent)
+    );
+  }
+
+  /* Visible. Strips are back on screen; the base rule also covers the fade. */
+  .astryx-overlay-scrim[data-visibility='visible'] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  /* Hidden, driven from JavaScript. */
+  .astryx-overlay-scrim[data-visibility='hidden'] {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /*
+   * Hidden, driven by CSS: the reveal is selected on the container, so the
+   * scrim itself only carries the resting state here.
+   */
+  .astryx-overlay-scrim[data-visibility='hover'],
+  .astryx-overlay-scrim[data-visibility='focus'] {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .astryx-overlay-scrim[data-position='bottom'][data-visibility='hidden'],
+  .astryx-overlay-scrim[data-position='bottom'][data-visibility='hover'],
+  .astryx-overlay-scrim[data-position='bottom'][data-visibility='focus'] {
+    transform: translateY(100%);
+  }
+
+  .astryx-overlay-scrim[data-position='top'][data-visibility='hidden'],
+  .astryx-overlay-scrim[data-position='top'][data-visibility='hover'],
+  .astryx-overlay-scrim[data-position='top'][data-visibility='focus'] {
+    transform: translateY(-100%);
+  }
+
+  /* Hover needs a pointer that can hover; a touch device toggles by tap. */
+  @media (hover: hover) {
+    .astryx-overlay-scope:hover .astryx-overlay-scrim[data-visibility='hover'] {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+  }
+
+  /*
+   * Focus reveals the overlay for keyboard users, and keeps it on screen while
+   * the content inside holds focus.
+   */
+  .astryx-overlay-scope:focus-within .astryx-overlay-scrim[data-visibility='hover'],
+  .astryx-overlay-scope:focus-within .astryx-overlay-scrim[data-visibility='focus'] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  @starting-style {
+    .astryx-overlay-scrim[data-visibility='visible'] {
+      opacity: 0;
+    }
+
+    .astryx-overlay-scrim[data-position='bottom'][data-visibility='visible'] {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    .astryx-overlay-scrim[data-position='top'][data-visibility='visible'] {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-overlay-scrim {
+      transition-duration: 0.01ms;
+    }
+  }
+}

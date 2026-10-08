@@ -1,0 +1,325 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@keyframes astryx-context-menu-enter-below {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes astryx-context-menu-enter-above {
+  from {
+    opacity: 0;
+    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes astryx-context-menu-enter-end {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes astryx-context-menu-enter-start {
+  from {
+    opacity: 0;
+    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes astryx-context-menu-leave {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@layer astryx.components {
+  /*
+   * The trigger is the caller-owned region that accepts context input. It is
+   * the containing block of the zero-size cursor anchor, and it suppresses the
+   * iOS long-press callout so a held finger opens this menu instead of the
+   * native text selection UI.
+   */
+  .astryx-context-menu-trigger {
+    position: relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* A disabled trigger is not ours to suppress: the native menu is the point. */
+  .astryx-context-menu-trigger[data-disabled='true'] {
+    -webkit-touch-callout: default;
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+
+  .astryx-context-menu-anchor {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .astryx-context-menu {
+    --_context-menu-radius: var(--astryx-radius-container, 0.75rem);
+    --_context-menu-padding: var(--astryx-spacing-1, 4px);
+    --_context-menu-min-width: 160px;
+
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--astryx-context-menu-z-index, var(--astryx-popover-z-index, 1000));
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+    min-inline-size: min(var(--_context-menu-min-width), calc(100vw - 16px));
+    max-inline-size: calc(100vw - 16px);
+    max-block-size: min(var(--astryx-context-menu-block-cap, 300px), calc(100vh - 16px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin: 0;
+    padding: var(--_context-menu-padding);
+    border-radius: var(--_context-menu-radius);
+    outline: none;
+    background-color: var(--astryx-context-menu-background, #fff);
+    color: var(--astryx-context-menu-foreground, var(--astryx-color-text-primary, #171717));
+    box-shadow: var(
+      --astryx-context-menu-shadow,
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%))
+    );
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.25);
+    text-align: start;
+    /* Scroll ownership follows the menu's own overflow; see data-overflow. */
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    animation-duration: var(--astryx-duration-fast-max, 165ms);
+    animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /*
+   * The panel hugs its rows but never overflows the viewport: the width floor
+   * and the cap are both resolved against the live viewport, so a long row or a
+   * custom width cannot push the menu off a narrow screen.
+   */
+  .astryx-context-menu[data-width='custom'] {
+    inline-size: min(var(--_context-menu-width), calc(100vw - 16px));
+  }
+
+  /*
+   * A menu that scrolls hands vertical panning to the browser and contains the
+   * overscroll, so a finger scrolls the rows instead of dragging the page. A
+   * menu that does not scroll keeps the gesture for the press model.
+   */
+  .astryx-context-menu[data-overflow='true'] {
+    touch-action: pan-y;
+  }
+
+  .astryx-context-menu[data-placement='below'] {
+    animation-name: astryx-context-menu-enter-below;
+    animation-fill-mode: backwards;
+  }
+
+  .astryx-context-menu[data-placement='above'] {
+    animation-name: astryx-context-menu-enter-above;
+    animation-fill-mode: backwards;
+  }
+
+  .astryx-context-menu[data-placement='end'] {
+    animation-name: astryx-context-menu-enter-end;
+    animation-fill-mode: backwards;
+  }
+
+  .astryx-context-menu[data-placement='start'] {
+    animation-name: astryx-context-menu-enter-start;
+    animation-fill-mode: backwards;
+  }
+
+  [dir='rtl'] .astryx-context-menu[data-placement='end'] {
+    animation-name: astryx-context-menu-enter-start;
+  }
+
+  [dir='rtl'] .astryx-context-menu[data-placement='start'] {
+    animation-name: astryx-context-menu-enter-end;
+  }
+
+  /* A leave keeps its final frame until Vue takes the element away. */
+  .astryx-context-menu.astryx-context-menu-leave-active,
+  .astryx-context-menu.astryx-context-menu-flyout-leave-active {
+    animation-name: astryx-context-menu-leave;
+    animation-fill-mode: forwards;
+  }
+
+  /*
+   * A row is a full-width menu item whose highlight is DOM focus, so hover and
+   * the keyboard share one highlight and never light two rows at once.
+   */
+  .astryx-context-menu-item {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    min-width: 0;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    border-radius: max(0px, calc(var(--_context-menu-radius, 0.75rem) - var(--_context-menu-padding, 4px)));
+    color: var(--astryx-context-menu-item-foreground, var(--astryx-color-text-primary, #171717));
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    transition: background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Step for step with a list item's density, so the three sizes are
+     distinguishable and every menu behaves the same. */
+  .astryx-context-menu-item[data-size='sm'] {
+    padding-block: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-context-menu-item[data-size='md'] {
+    padding-block: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-context-menu-item[data-size='lg'] {
+    padding-block: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-context-menu-item:focus {
+    background-color: var(--astryx-context-menu-item-focus-background, var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c)));
+  }
+
+  @media (hover: hover) {
+    .astryx-context-menu-item:not([data-disabled]):hover {
+      background-color: var(--astryx-context-menu-item-focus-background, var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c)));
+    }
+
+    /*
+     * The pressed look only where hover exists: under a finger the row a press
+     * began on would stay painted while the highlight moves to the row the
+     * finger is over — two rows lit.
+     */
+    .astryx-context-menu[data-astryx-menu-press] .astryx-context-menu-item:not([data-disabled]):active {
+      background-color: var(--astryx-context-menu-item-pressed-background, var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19)));
+    }
+  }
+
+  .astryx-context-menu-item[data-disabled] {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .astryx-context-menu-item--destructive {
+    color: var(--astryx-context-menu-item-error-foreground, var(--astryx-banner-error-foreground, light-dark(#89001a, #ffc6c1)));
+  }
+
+  .astryx-context-menu-item__start,
+  .astryx-context-menu-item__end {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+  }
+
+  .astryx-context-menu-item__end {
+    margin-inline-start: auto;
+  }
+
+  .astryx-context-menu-item__content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .astryx-context-menu-item__label {
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-context-menu-item__description {
+    color: var(--astryx-context-menu-item-description-foreground, var(--astryx-color-text-secondary, #525252));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-context-menu-item--destructive .astryx-context-menu-item__description {
+    color: inherit;
+  }
+
+  .astryx-context-menu-item__chevron {
+    margin-inline-start: var(--astryx-spacing-1, 4px);
+  }
+
+  [dir='rtl'] .astryx-context-menu-item__chevron {
+    transform: scaleX(-1);
+  }
+
+  .astryx-context-menu-divider {
+    margin-block: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-context-menu-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+    min-width: 0;
+  }
+
+  .astryx-context-menu-group__heading {
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    color: var(--astryx-context-menu-section-foreground, var(--astryx-color-text-secondary, #525252));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-context-menu,
+    .astryx-context-menu[data-placement] {
+      animation: none;
+    }
+
+    .astryx-context-menu-item {
+      transition: none;
+    }
+  }
+}

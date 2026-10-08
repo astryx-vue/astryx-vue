@@ -1,0 +1,240 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-list-root {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .astryx-list-header {
+    margin-bottom: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-list {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+    min-width: 0;
+    margin: 0;
+    padding-inline-start: 0;
+    list-style-type: none;
+  }
+
+  .astryx-list[data-dividers='true'] {
+    gap: 0;
+  }
+
+  .astryx-list:not([data-list-style='none']) {
+    counter-reset: astryx-list;
+  }
+
+  .astryx-list:not([data-list-style='none']) > .astryx-list-item {
+    counter-increment: astryx-list;
+  }
+
+  .astryx-list[data-dividers='true'] > .astryx-list-item {
+    border-radius: 0;
+    border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-list-divider-color, light-dark(#05365919, #f2f4f619));
+  }
+
+  .astryx-list[data-dividers='true'] > .astryx-list-item:last-child {
+    border-block-end-width: 0;
+  }
+
+  /*
+   * Each logical edge is clamped on its own, against the container padding
+   * published for that edge, so an asymmetric host is never over-pulled and a
+   * surface with no published padding leaves the row where it is.
+   */
+  .astryx-list[data-edge-compensation='inline'] > .astryx-list-item {
+    margin-inline-start: calc(-1 * min(var(--astryx-item-inset-inline), var(--container-padding-inline-start, 0px)));
+    margin-inline-end: calc(-1 * min(var(--astryx-item-inset-inline), var(--container-padding-inline-end, 0px)));
+  }
+
+  .astryx-list-marker {
+    box-sizing: border-box;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    align-self: baseline;
+    width: var(--astryx-spacing-4, 16px);
+    margin-top: calc((1em * var(--astryx-text-body-leading, 1.4286) - 6px) / 2);
+  }
+
+  .astryx-list-marker__glyph {
+    width: 6px;
+    height: 6px;
+    background-color: var(--astryx-list-marker-foreground, light-dark(#171717, #fafafa));
+  }
+
+  .astryx-list-marker__glyph[data-shape='disc'] {
+    border-radius: 50%;
+  }
+
+  .astryx-list-marker__glyph[data-shape='circle'] {
+    box-sizing: border-box;
+    border: 1px solid var(--astryx-list-marker-foreground, light-dark(#171717, #fafafa));
+    border-radius: 50%;
+    background-color: transparent;
+  }
+
+  .astryx-list-marker__number {
+    flex-shrink: 0;
+    align-self: baseline;
+    width: var(--astryx-spacing-4, 16px);
+    color: var(--astryx-list-marker-foreground, light-dark(#171717, #fafafa));
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-list-marker__number[data-style='decimal']::before {
+    content: counter(astryx-list) '.';
+  }
+
+  .astryx-item {
+    --astryx-item-inset-inline: var(--astryx-spacing-2, 8px);
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+    padding-inline: var(--astryx-item-inset-inline);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    text-align: start;
+  }
+
+  .astryx-item[data-align='start'] {
+    align-items: flex-start;
+  }
+
+  .astryx-item[data-density='compact'] {
+    padding-block: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-item[data-density='balanced'] {
+    padding-block: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-item[data-density='spacious'] {
+    --astryx-item-inset-inline: var(--astryx-spacing-3, 12px);
+    padding-block: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-item[data-interactive='true'] {
+    cursor: pointer;
+    transition: background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-item[data-inert='true'] {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .astryx-item[data-disabled='true'] > :is(.astryx-item__content, .astryx-item__end) {
+    opacity: 0.5;
+  }
+
+  .astryx-item[data-highlighted='true'] {
+    background-color: var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c));
+  }
+
+  .astryx-item[data-selected='true'] {
+    background-color: var(--astryx-list-item-selected-background, light-dark(#0082fb33, #0082fb3f));
+  }
+
+  @media (hover: hover) {
+    .astryx-item[data-interactive='true']:not([data-disabled='true']):not([data-highlighted='true']):not([data-selected='true']):hover {
+      background-color: var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    }
+  }
+
+  .astryx-item[data-interactive='true']:not([data-disabled='true']):not([data-selected='true']):active {
+    background-color: var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19));
+  }
+
+  .astryx-item:has(:focus-visible) {
+    outline: 2px solid var(--astryx-list-item-focus, light-dark(#0064e0, #2694fe));
+    outline-offset: 3px;
+  }
+
+  .astryx-item__start,
+  .astryx-item__end {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+  }
+
+  .astryx-item__end {
+    margin-inline-start: auto;
+  }
+
+  .astryx-item__content {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: none;
+    font: inherit;
+    text-align: start;
+    text-decoration: none;
+    outline: none;
+    appearance: none;
+  }
+
+  .astryx-item__content--inline {
+    flex-direction: row;
+    align-items: center;
+    column-gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-item__label {
+    color: var(--astryx-item-label-color, var(--astryx-color-text-primary, light-dark(#171717, #fafafa)));
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-item__description {
+    color: var(--astryx-item-description-color, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-item__content--inline > .astryx-item__label {
+    flex-shrink: 0;
+  }
+
+  .astryx-item__content--inline > .astryx-item__description {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .astryx-item__ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .astryx-item__clamp {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--astryx-item-clamp-lines, 2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-item {
+      transition: none;
+    }
+  }
+}

@@ -1,0 +1,160 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-segmented-control {
+    --_segmented-control-padding: var(--astryx-segmented-control-padding, var(--astryx-spacing-0-5, 2px));
+    --_segmented-control-radius: var(--astryx-segmented-control-radius, var(--astryx-radius-element, 0.625rem));
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-0-5, 2px);
+    width: fit-content;
+    max-width: none;
+    min-width: auto;
+    padding: var(--_segmented-control-padding);
+    border-radius: var(--_segmented-control-radius);
+    background-color: var(--astryx-segmented-control-background, light-dark(#f5f5f5, #171717));
+  }
+
+  /*
+   * A control with visible labels is capped at its container: when the card or
+   * the phone row is narrower than the labels, the segments shrink and their
+   * labels truncate instead of the control running off the edge. Icon-only
+   * segments carry their name in aria-label and have nothing to truncate, so
+   * they keep the control at its content size.
+   */
+  .astryx-segmented-control:has([role='radio']:not([aria-label])) {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .astryx-segmented-control[data-layout='fill'] {
+    display: flex;
+    width: 100%;
+  }
+
+  /*
+   * A disabled control no longer reacts to the pointer. The one exception is a
+   * disabled control with a disabledMessage: it keeps receiving hover so the
+   * reason can be surfaced, while selection stays blocked in the handlers.
+   */
+  .astryx-segmented-control[data-disabled='true'] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .astryx-segmented-control[data-disabled='true'][data-disabled-message='true'] {
+    pointer-events: auto;
+  }
+
+  .astryx-segmented-control-item {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astryx-spacing-1, 4px);
+    min-width: 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+    border: 0;
+    border-radius: max(0px, calc(var(--_segmented-control-radius) - var(--_segmented-control-padding)));
+    color: var(--astryx-segmented-control-item-foreground, var(--astryx-color-text-secondary, #525252));
+    background-color: transparent;
+    background-image: none;
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-label-size, 0.875rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: var(--astryx-text-label-leading, 1.25);
+    white-space: nowrap;
+    cursor: pointer;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition-property: color, background-color, box-shadow;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-segmented-control-item[data-size='sm'] {
+    height: 28px;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+  }
+
+  .astryx-segmented-control-item[data-size='md'] {
+    height: 32px;
+  }
+
+  .astryx-segmented-control-item[data-size='lg'] {
+    height: 36px;
+  }
+
+  .astryx-segmented-control[data-layout='fill'] .astryx-segmented-control-item {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
+  .astryx-segmented-control-item[data-icon-only='true'] {
+    flex-shrink: 0;
+  }
+
+  .astryx-segmented-control-item[data-selected='true'] {
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    color: var(--astryx-segmented-control-item-selected-foreground, var(--astryx-color-text-primary, #171717));
+    background-color: var(--astryx-segmented-control-item-selected-background, light-dark(#fff, #262626));
+    box-shadow: var(--astryx-segmented-control-item-selected-shadow);
+    /*
+     * The selected segment is a button, and under forced colors the user agent
+     * keeps native form-control colors for it, ignoring the authored fill.
+     * Opting out of that remapping keeps the highlight surface and its
+     * highlighted text together instead of white text on a white button.
+     */
+    forced-color-adjust: none;
+  }
+
+  .astryx-segmented-control-item:not([aria-disabled='true']):not([data-selected='true']):hover {
+    background-color: var(--astryx-segmented-control-item-hover-background, light-dark(#0000000d, #ffffff0d));
+  }
+
+  .astryx-segmented-control-item:not([aria-disabled='true']):not([data-selected='true']):active {
+    background-color: var(--astryx-segmented-control-item-pressed-background, light-dark(#0000001a, #ffffff1a));
+  }
+
+  .astryx-segmented-control-item[aria-disabled='true'] {
+    color: var(--astryx-segmented-control-item-disabled-foreground, light-dark(#919191, #525252));
+    cursor: default;
+  }
+
+  .astryx-segmented-control-item:focus-visible {
+    outline: 2px solid var(--astryx-segmented-control-focus, var(--astryx-color-text-primary, #171717));
+    outline-offset: 2px;
+  }
+
+  .astryx-segmented-control-item__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .astryx-segmented-control-item__label {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (forced-colors: active) {
+    .astryx-segmented-control-item[data-selected='true'] {
+      color: HighlightText;
+      background-color: Highlight;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-segmented-control-item {
+      transition-duration: 0s;
+    }
+  }
+}

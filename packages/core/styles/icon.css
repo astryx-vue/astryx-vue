@@ -1,0 +1,163 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    vertical-align: middle;
+    color: inherit;
+  }
+
+  /*
+   * Built-in artwork is a mask painted with the current color, so one glyph
+   * scales with its box and follows the color tokens. The artwork itself lives
+   * in the generated rules below, one `--astryx-icon-<slug>` variable each, so
+   * a theme overrides a single icon with one declaration.
+   */
+  .astryx-icon__glyph {
+    width: 100%;
+    height: 100%;
+    -webkit-mask-image: var(--astryx-icon-artwork);
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: var(--astryx-icon-artwork);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    background-color: currentcolor;
+  }
+
+  /*
+   * An icon passed as a component or written into the slot keeps the size its
+   * owner gives it; the box owns that size through width, height, and
+   * font-size.
+   */
+  .astryx-icon > svg {
+    width: 1em;
+    height: 1em;
+  }
+
+  .astryx-icon[data-size='xsm'] {
+    width: 0.75rem;
+    height: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .astryx-icon[data-size='sm'] {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+
+  .astryx-icon[data-size='md'] {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+  }
+
+  .astryx-icon[data-size='lg'] {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .astryx-icon[data-color='primary'] {
+    color: var(--astryx-icon-primary-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='secondary'],
+  .astryx-icon[data-color='tertiary'] {
+    color: var(--astryx-icon-secondary-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='disabled'] {
+    color: var(--astryx-icon-disabled-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='accent'] {
+    color: var(--astryx-icon-accent-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='success'] {
+    color: var(--astryx-icon-success-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='error'] {
+    color: var(--astryx-icon-error-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='warning'] {
+    color: var(--astryx-icon-warning-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='blue'] {
+    color: var(--astryx-icon-blue-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='cyan'] {
+    color: var(--astryx-icon-cyan-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='green'] {
+    color: var(--astryx-icon-green-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='gray'] {
+    color: var(--astryx-icon-gray-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='orange'] {
+    color: var(--astryx-icon-orange-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='pink'] {
+    color: var(--astryx-icon-pink-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='purple'] {
+    color: var(--astryx-icon-purple-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='red'] {
+    color: var(--astryx-icon-red-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='teal'] {
+    color: var(--astryx-icon-teal-foreground, currentcolor);
+  }
+
+  .astryx-icon[data-color='yellow'] {
+    color: var(--astryx-icon-yellow-foreground, currentcolor);
+  }
+
+  /* ARTWORK: generated start */
+  /* chevronDown */
+  .astryx-icon--chevron-down {
+    --astryx-icon-artwork: var(--astryx-icon-chevron-down, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6' /%3E%3C/svg%3E"));
+  }
+  /* chevronLeft */
+  .astryx-icon--chevron-left {
+    --astryx-icon-artwork: var(--astryx-icon-chevron-left, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6' /%3E%3C/svg%3E"));
+  }
+  /* chevronRight */
+  .astryx-icon--chevron-right {
+    --astryx-icon-artwork: var(--astryx-icon-chevron-right, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6' /%3E%3C/svg%3E"));
+  }
+  /* check */
+  .astryx-icon--check {
+    --astryx-icon-artwork: var(--astryx-icon-check, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7' /%3E%3C/svg%3E"));
+  }
+  /* moreHorizontal */
+  .astryx-icon--more-horizontal {
+    --astryx-icon-artwork: var(--astryx-icon-more-horizontal, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Ccircle cx='5' cy='12' r='1.5' /%3E%3Ccircle cx='12' cy='12' r='1.5' /%3E%3Ccircle cx='19' cy='12' r='1.5' /%3E%3C/svg%3E"));
+  }
+  /* copy */
+  .astryx-icon--copy {
+    --astryx-icon-artwork: var(--astryx-icon-copy, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4v12a2 2 0 002 2h8a2 2 0 002-2V7.242a2 2 0 00-.602-1.43L16.083 2.57A2 2 0 0014.685 2H10a2 2 0 00-2 2z' /%3E%3Cpath d='M16 18v2a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2' /%3E%3C/svg%3E"));
+  }
+  /* ARTWORK: generated end */
+}

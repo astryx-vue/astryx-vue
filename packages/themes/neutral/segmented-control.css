@@ -1,0 +1,19 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-segmented-control-background: light-dark(#f5f5f5, #171717);
+    --astryx-segmented-control-focus: light-dark(#262626, #ebebeb);
+    --astryx-segmented-control-item-foreground: light-dark(#525252, #a3a3a3);
+    --astryx-segmented-control-item-hover-background: light-dark(#0000000d, #ffffff0d);
+    --astryx-segmented-control-item-pressed-background: light-dark(#0000001a, #ffffff1a);
+    --astryx-segmented-control-item-selected-foreground: light-dark(#171717, #fafafa);
+    --astryx-segmented-control-item-selected-background: light-dark(#ffffff, #262626);
+    --astryx-segmented-control-item-selected-shadow:
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
+    --astryx-segmented-control-item-disabled-foreground: light-dark(#919191, #525252);
+  }
+}

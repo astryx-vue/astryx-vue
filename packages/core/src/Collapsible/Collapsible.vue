@@ -1,0 +1,83 @@
+<script setup lang="ts">
+import type { CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './types.js'
+import { computed, shallowRef, useId, useTemplateRef } from 'vue'
+import Icon from '../Icon/Icon.vue'
+import '../../styles/collapsible.css'
+
+defineOptions({ name: 'AstryxCollapsible' })
+
+const props = withDefaults(defineProps<Omit<CollapsibleProps, 'isOpen'>>(), {
+  defaultIsOpen: true,
+  isDisabled: false,
+  chevronPosition: 'end',
+})
+
+const emit = defineEmits<CollapsibleEmits>()
+defineSlots<CollapsibleSlots>()
+const open = defineModel<boolean | undefined>('isOpen', { default: undefined })
+const localIsOpen = shallowRef(props.defaultIsOpen)
+const isOpen = computed(() => open.value ?? localIsOpen.value)
+const isChevronAtStart = computed(() => props.chevronPosition === 'start')
+const contentId = `astryx-collapsible-${useId()}`
+const root = useTemplateRef<HTMLDivElement>('root')
+const element = computed(() => root.value ?? null)
+
+defineExpose({ element })
+
+function toggle(): void {
+  if (props.isDisabled)
+    return
+
+  const next = !isOpen.value
+  localIsOpen.value = next
+  open.value = next
+  emit('openChange', next)
+}
+</script>
+
+<template>
+  <div ref="root" class="astryx-collapsible">
+    <button
+      type="button"
+      class="astryx-collapsible-trigger"
+      :data-chevron-position="chevronPosition"
+      :data-open="isOpen ? 'open' : undefined"
+      :data-disabled="isDisabled ? 'disabled' : undefined"
+      :aria-expanded="isOpen"
+      :aria-controls="contentId"
+      :aria-disabled="isDisabled || undefined"
+      :tabindex="isDisabled ? -1 : undefined"
+      @click="toggle"
+    >
+      <Icon
+        v-if="isChevronAtStart"
+        class="astryx-collapsible-chevron"
+        color="secondary"
+        icon="chevronRight"
+        size="sm"
+      />
+      <span class="astryx-collapsible-trigger-label">
+        <slot name="trigger">{{ trigger }}</slot>
+      </span>
+      <Icon
+        v-if="!isChevronAtStart"
+        class="astryx-collapsible-chevron"
+        color="secondary"
+        icon="chevronDown"
+        size="sm"
+      />
+    </button>
+    <Transition name="astryx-collapsible-reveal">
+      <div
+        v-show="isOpen"
+        :id="contentId"
+        class="astryx-collapsible-content"
+        :data-open="isOpen ? 'open' : undefined"
+      >
+        <div class="astryx-collapsible-content-inner">
+          <slot />
+        </div>
+      </div>
+    </Transition>
+  </div>
+</template>

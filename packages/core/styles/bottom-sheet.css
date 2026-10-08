@@ -1,0 +1,268 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * The dialog is a bare shell: it covers the viewport, holds the panel at the
+   * bottom edge, and paints the scrim through ::backdrop. It is hidden until
+   * `show()` / `showModal()` sets the `open` attribute.
+   */
+  .astryx-bottom-sheet-dialog {
+    --_sheet-scrim-opacity: 1;
+
+    box-sizing: border-box;
+    position: fixed;
+    inset: 0;
+    display: none;
+    width: 100dvw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    overflow: visible;
+    overscroll-behavior: contain;
+  }
+
+  .astryx-bottom-sheet-dialog[open] {
+    display: block;
+  }
+
+  .astryx-bottom-sheet-dialog--scrim::backdrop {
+    background: var(--astryx-bottom-sheet-scrim, var(--astryx-color-overlay, rgb(0 0 0 / 50%)));
+    opacity: var(--_sheet-scrim-opacity, 1);
+    transition-property: opacity, display;
+    transition-duration: var(--astryx-duration-medium-max, 400ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition-behavior: allow-discrete;
+  }
+
+  /*
+   * The dim leaves with the sheet on a linear curve: a fade covers no distance,
+   * so a decelerate token would front-load its progress and leave an undimmed
+   * page under a sheet that is still sliding across it.
+   */
+  .astryx-bottom-sheet-dialog--closing::backdrop {
+    transition-timing-function: linear;
+  }
+
+  @starting-style {
+    .astryx-bottom-sheet-dialog--scrim::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /*
+   * A non-modal sheet leaves the page behind it interactive, so the shell must
+   * not swallow clicks; the panel re-enables them for itself.
+   */
+  .astryx-bottom-sheet-dialog:not(.astryx-bottom-sheet-dialog--scrim) {
+    pointer-events: none;
+  }
+
+  .astryx-bottom-sheet__positioner {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .astryx-bottom-sheet-inline {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .astryx-bottom-sheet__positioner--inline {
+    position: static;
+    inset: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* In flow there is no off-screen overscroll to reserve. */
+  .astryx-bottom-sheet__positioner--inline .astryx-bottom-sheet {
+    margin-block-end: 0;
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+
+  .astryx-bottom-sheet__positioner--inline .astryx-bottom-sheet[data-height='capped'],
+  .astryx-bottom-sheet__positioner--inline .astryx-bottom-sheet[data-height='tall'],
+  .astryx-bottom-sheet__positioner--inline .astryx-bottom-sheet[data-height='custom'] {
+    height: var(--_sheet-budget, 62dvh);
+  }
+
+  .astryx-bottom-sheet__positioner--inline .astryx-bottom-sheet[data-height='hug'] {
+    max-height: 92dvh;
+  }
+
+  /*
+   * The panel. Its height budget is `--_sheet-budget` plus the block-end
+   * overscroll the drag lift reveals, and it is pulled back below the viewport
+   * by that same amount, so a fully open sheet sits flush with the bottom edge.
+   */
+  .astryx-bottom-sheet {
+    --_sheet-radius: var(--astryx-radius-container, 0.75rem);
+    --_sheet-border: var(--astryx-bottom-sheet-border, var(--astryx-color-border-emphasized, #d4d4d4));
+
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: min(var(--astryx-bottom-sheet-max-width, 640px), 100%);
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    margin-block-end: -48px;
+    padding-block-end: calc(env(safe-area-inset-bottom, 0px) + 48px);
+    border-block-start: var(--astryx-border-width, 1px) solid var(--_sheet-border);
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--_sheet-border);
+    border-inline-end: var(--astryx-border-width, 1px) solid var(--_sheet-border);
+    border-start-start-radius: var(--_sheet-radius);
+    border-start-end-radius: var(--_sheet-radius);
+    outline: 0;
+    background: var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff));
+    color: var(--astryx-bottom-sheet-foreground, var(--astryx-color-text-primary, #171717));
+    box-shadow: var(--astryx-bottom-sheet-shadow, 0 -4px 24px rgb(0 0 0 / 15%));
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    overflow: hidden;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition-property: transform, opacity;
+    transition-duration: var(--astryx-duration-medium-max, 400ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    will-change: transform, opacity;
+  }
+
+  /*
+   * The entrance starts below the bottom edge. It runs when the shell first
+   * becomes displayed, which is what `@starting-style` observes.
+   */
+  @starting-style {
+    .astryx-bottom-sheet {
+      transform: translateY(100%);
+    }
+  }
+
+  /*
+   * The exit accelerates: it leaves rest, gathers speed, and is quickest as it
+   * clears the screen, so the travel stays visible for the whole duration
+   * instead of being over in the first frames.
+   */
+  .astryx-bottom-sheet[data-state='exiting'] {
+    transform: translateY(100%);
+    transition-timing-function: cubic-bezier(0.3, 0, 0.6, 0.6);
+  }
+
+  .astryx-bottom-sheet[data-dragging],
+  .astryx-bottom-sheet[data-reconciling] {
+    transition: none;
+  }
+
+  .astryx-bottom-sheet[data-height='hug'] {
+    height: fit-content;
+    max-height: calc(92dvh + 48px);
+  }
+
+  .astryx-bottom-sheet[data-height='capped'],
+  .astryx-bottom-sheet[data-height='tall'],
+  .astryx-bottom-sheet[data-height='custom'] {
+    height: calc(var(--_sheet-budget, 62dvh) + 48px);
+  }
+
+  /*
+   * The handle floats over the body instead of taking a row in the flex column,
+   * so the content starts at the sheet's top edge and rides up under the pill.
+   */
+  .astryx-bottom-sheet__handle {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--astryx-spacing-6, 24px);
+    background-image: linear-gradient(to bottom, var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff)) 60%, transparent);
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .astryx-bottom-sheet__handle:active {
+    cursor: grabbing;
+  }
+
+  .astryx-bottom-sheet__handle-pill {
+    width: 36px;
+    height: var(--astryx-spacing-1, 4px);
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: var(--astryx-bottom-sheet-handle-background, var(--astryx-color-border-emphasized, #d4d4d4));
+  }
+
+  .astryx-bottom-sheet__body {
+    box-sizing: border-box;
+    flex-grow: 1;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    background: var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff));
+    touch-action: pan-y;
+    outline-offset: -2px;
+  }
+
+  .astryx-bottom-sheet__body:focus-visible {
+    outline: 2px solid var(--astryx-bottom-sheet-focus, var(--astryx-color-text-primary, #171717));
+    outline-offset: calc(-1 * var(--astryx-border-width, 1px));
+  }
+
+  .astryx-bottom-sheet__body[data-keyboard='tall'] {
+    scroll-padding-block-end: 48px;
+  }
+
+  /*
+   * The content box is a container: it carries the padding and preserves the
+   * body's block formatting and its percentage-height basis. The inset is the
+   * `padding` prop, then the theme's bottom-sheet padding, then `--spacing-4`.
+   */
+  .astryx-bottom-sheet__content {
+    box-sizing: border-box;
+    display: flow-root;
+    height: 100%;
+    min-height: min-content;
+    padding: var(--_sheet-padding, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
+  }
+
+  /*
+   * iOS 26 Safari derives the colour behind its translucent toolbars by
+   * sampling just inside the viewport edge, so give it an unambiguous box in
+   * the sheet's own surface colour: fixed, full width, flush with the bottom
+   * edge, above the panel, and masked out so it is never visible.
+   */
+  .astryx-bottom-sheet__edge-tint {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 2;
+    height: 12px;
+    background: var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff));
+    pointer-events: none;
+    mask-image: linear-gradient(transparent, transparent);
+    -webkit-mask-image: linear-gradient(transparent, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-bottom-sheet {
+      transition-duration: 0.01s;
+    }
+
+    .astryx-bottom-sheet-dialog--scrim::backdrop {
+      transition-duration: 0.01s;
+    }
+  }
+}

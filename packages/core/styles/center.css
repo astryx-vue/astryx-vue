@@ -1,0 +1,34 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * Padding arrives as CSS variables rather than raw inline declarations, so a
+   * consumer or theme rule — including one inside a media query — can still
+   * override it.
+   */
+  .astryx-center {
+    box-sizing: border-box;
+    display: flex;
+    padding-block-start: var(--astryx-center-padding-block-start, var(--astryx-center-default-padding, 0));
+    padding-block-end: var(--astryx-center-padding-block-end, var(--astryx-center-default-padding, 0));
+    padding-inline-start: var(--astryx-center-padding-inline-start, var(--astryx-center-default-padding, 0));
+    padding-inline-end: var(--astryx-center-padding-inline-end, var(--astryx-center-default-padding, 0));
+  }
+
+  .astryx-center--inline {
+    display: inline-flex;
+  }
+
+  .astryx-center[data-axis='both'] {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .astryx-center[data-axis='horizontal'] {
+    justify-content: center;
+  }
+
+  .astryx-center[data-axis='vertical'] {
+    align-items: center;
+  }
+}

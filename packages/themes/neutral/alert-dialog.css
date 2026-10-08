@@ -1,0 +1,9 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-alert-dialog-title-foreground: light-dark(#171717, #fafafa);
+    --astryx-alert-dialog-description-foreground: light-dark(#525252, #a3a3a3);
+  }
+}

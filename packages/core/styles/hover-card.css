@@ -1,0 +1,206 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@keyframes astryx-hover-card-enter-above {
+  from {
+    opacity: 0;
+    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes astryx-hover-card-enter-below {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes astryx-hover-card-enter-start {
+  from {
+    opacity: 0;
+    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes astryx-hover-card-enter-end {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes astryx-hover-card-leave-above {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(var(--astryx-spacing-1, 4px)) scale(0.98);
+  }
+}
+
+@keyframes astryx-hover-card-leave-below {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--astryx-spacing-1, 4px))) scale(0.98);
+  }
+}
+
+@keyframes astryx-hover-card-leave-start {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(var(--astryx-spacing-1, 4px)) scale(0.98);
+  }
+}
+
+@keyframes astryx-hover-card-leave-end {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--astryx-spacing-1, 4px))) scale(0.98);
+  }
+}
+
+@layer astryx.components {
+  /* display: contents keeps the wrapper out of the layout, so an element
+     trigger keeps its own box; a text-only trigger is the wrapper itself. */
+  .astryx-hover-card__trigger {
+    display: contents;
+  }
+
+  .astryx-hover-card__trigger--text {
+    display: inline;
+  }
+
+  .astryx-hover-card__trigger--indicated {
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: var(--astryx-hover-card-indication-color, #d4d4d4);
+    text-underline-offset: var(--astryx-spacing-0-5, 2px);
+  }
+
+  .astryx-hover-card {
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--astryx-hover-card-z-index, 1000);
+    max-inline-size: min(20rem, calc(100vw - 16px));
+    border-radius: var(--astryx-hover-card-radius, var(--astryx-radius-container, 0.75rem));
+    background: var(--astryx-hover-card-background, #fff);
+    color: var(--astryx-hover-card-foreground, #171717);
+    box-shadow: var(--astryx-hover-card-shadow, 0 2px 4px oklch(0 0 0 / 5%), 0 4px 8px oklch(0 0 0 / 10%));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-hover-card__content {
+    box-sizing: border-box;
+    padding: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-hover-card-enter-active,
+  .astryx-hover-card-leave-active {
+    animation-duration: var(--astryx-duration-fast-max, 165ms);
+    animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-hover-card-enter-active {
+    animation-fill-mode: backwards;
+  }
+
+  .astryx-hover-card-leave-active {
+    animation-duration: calc(var(--astryx-duration-fast-max, 165ms) * 0.7);
+    animation-fill-mode: forwards;
+  }
+
+  .astryx-hover-card-enter-active[data-placement='above'] {
+    animation-name: astryx-hover-card-enter-above;
+  }
+
+  .astryx-hover-card-enter-active[data-placement='below'] {
+    animation-name: astryx-hover-card-enter-below;
+  }
+
+  .astryx-hover-card-enter-active[data-placement='start'] {
+    animation-name: astryx-hover-card-enter-start;
+  }
+
+  .astryx-hover-card-enter-active[data-placement='end'] {
+    animation-name: astryx-hover-card-enter-end;
+  }
+
+  .astryx-hover-card-enter-active[data-placement='start']:is([dir='rtl'] *) {
+    animation-name: astryx-hover-card-enter-end;
+  }
+
+  .astryx-hover-card-enter-active[data-placement='end']:is([dir='rtl'] *) {
+    animation-name: astryx-hover-card-enter-start;
+  }
+
+  .astryx-hover-card-leave-active[data-placement='above'] {
+    animation-name: astryx-hover-card-leave-above;
+  }
+
+  .astryx-hover-card-leave-active[data-placement='below'] {
+    animation-name: astryx-hover-card-leave-below;
+  }
+
+  .astryx-hover-card-leave-active[data-placement='start'] {
+    animation-name: astryx-hover-card-leave-start;
+  }
+
+  .astryx-hover-card-leave-active[data-placement='end'] {
+    animation-name: astryx-hover-card-leave-end;
+  }
+
+  .astryx-hover-card-leave-active[data-placement='start']:is([dir='rtl'] *) {
+    animation-name: astryx-hover-card-leave-end;
+  }
+
+  .astryx-hover-card-leave-active[data-placement='end']:is([dir='rtl'] *) {
+    animation-name: astryx-hover-card-leave-start;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-hover-card-enter-active,
+    .astryx-hover-card-leave-active {
+      animation: none;
+    }
+  }
+}

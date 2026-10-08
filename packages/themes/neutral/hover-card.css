@@ -1,0 +1,14 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-hover-card-background: light-dark(#ffffff, #1b1b1b);
+    --astryx-hover-card-foreground: light-dark(#171717, #fafafa);
+    --astryx-hover-card-shadow:
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
+    --astryx-hover-card-indication-color: light-dark(#d4d4d4, #525252);
+  }
+}

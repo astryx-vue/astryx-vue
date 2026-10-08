@@ -1,0 +1,47 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * The dialog surface, backdrop, focus handling, and Escape behavior all come
+   * from Dialog. AlertDialog only owns how its title, description, and
+   * confirmation actions are arranged inside that surface.
+   */
+  .astryx-alert-dialog__content {
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow: auto;
+    overflow-wrap: anywhere;
+  }
+
+  /* Two classes so the level-2 scale from Heading still loses to this rule
+     regardless of stylesheet order. */
+  .astryx-alert-dialog .astryx-alert-dialog__title {
+    color: var(--astryx-alert-dialog-title-foreground, var(--astryx-color-text-primary, #171717));
+    font-size: var(--astryx-text-heading-2-size, 1.25rem);
+    font-weight: var(--astryx-text-heading-2-weight, 600);
+    line-height: var(--astryx-text-heading-2-leading, 1.4);
+  }
+
+  .astryx-alert-dialog .astryx-alert-dialog__description {
+    color: var(--astryx-alert-dialog-description-foreground, var(--astryx-color-text-secondary, #525252));
+  }
+
+  .astryx-alert-dialog__footer {
+    display: flex;
+    flex: 0 0 auto;
+    margin-block-start: var(--astryx-alert-dialog-content-gap, var(--astryx-spacing-4, 16px));
+  }
+
+  .astryx-alert-dialog__actions {
+    width: 100%;
+  }
+
+  /* Long labels shrink and truncate instead of pushing the footer wider than
+     the surface; the row itself wraps onto another line. */
+  .astryx-alert-dialog__action {
+    max-width: 100%;
+    min-width: 0;
+  }
+}

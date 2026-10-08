@@ -1,0 +1,10 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-empty-state-title-foreground: light-dark(#171717, #fafafa);
+    --astryx-empty-state-description-foreground: light-dark(#525252, #a3a3a3);
+    --astryx-empty-state-text-width: 360px;
+  }
+}

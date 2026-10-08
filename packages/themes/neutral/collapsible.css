@@ -1,0 +1,11 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-collapsible-trigger-foreground: light-dark(#171717, #fafafa);
+    --astryx-collapsible-content-foreground: light-dark(#171717, #fafafa);
+    --astryx-collapsible-pressed-overlay: light-dark(#0000001a, #ffffff1a);
+    --astryx-collapsible-focus: light-dark(#262626, #ebebeb);
+  }
+}

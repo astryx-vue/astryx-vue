@@ -1,0 +1,24 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-icon-primary-foreground: light-dark(#171717, #fafafa);
+    --astryx-icon-secondary-foreground: light-dark(#6a6a6a, #9e9e9e);
+    --astryx-icon-disabled-foreground: light-dark(#919191, #525252);
+    --astryx-icon-accent-foreground: light-dark(#0074e2, #6d9cfe);
+    --astryx-icon-success-foreground: light-dark(#00490b, #a4d6a3);
+    --astryx-icon-error-foreground: light-dark(#76000c, #ffc4be);
+    --astryx-icon-warning-foreground: light-dark(#4b3900, #f8d36a);
+    --astryx-icon-blue-foreground: light-dark(#003978, #88bcff);
+    --astryx-icon-cyan-foreground: light-dark(#004351, #71c7dd);
+    --astryx-icon-green-foreground: light-dark(#00490b, #a4d6a3);
+    --astryx-icon-gray-foreground: light-dark(#474747, #9e9e9e);
+    --astryx-icon-orange-foreground: light-dark(#622700, #ff9e55);
+    --astryx-icon-pink-foreground: light-dark(#70003f, #fd92bd);
+    --astryx-icon-purple-foreground: light-dark(#5c0e6c, #e496f6);
+    --astryx-icon-red-foreground: light-dark(#76000c, #ff9890);
+    --astryx-icon-teal-foreground: light-dark(#00463d, #81c9bb);
+    --astryx-icon-yellow-foreground: light-dark(#4b3900, #e2b623);
+  }
+}

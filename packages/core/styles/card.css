@@ -1,0 +1,187 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-card {
+    box-sizing: border-box;
+    /*
+     * Yielding to the track: `min-width: 0` keeps a card from holding a flex
+     * row or a `1fr` grid track at its min-content width, and `overflow: clip`
+     * keeps it from becoming a scroll container — which would capture sticky
+     * descendants and turn every overflowing card into an unnamed tab stop.
+     * A fixed height opts back into scrolling because that card is a
+     * deliberate viewport for its content.
+     */
+    min-width: 0;
+    overflow: clip;
+    --_card-radius: var(--astryx-radius-container, 0.75rem);
+    --_card-elevation: 0 0 transparent;
+    --_card-ring: 0 0 transparent;
+    --_card-padding-inline-start: var(--astryx-card-padding-inline-start, var(--astryx-card-padding-inline, var(--astryx-card-padding, var(--astryx-spacing-4, 16px))));
+    --_card-padding-inline-end: var(--astryx-card-padding-inline-end, var(--astryx-card-padding-inline, var(--astryx-card-padding, var(--astryx-spacing-4, 16px))));
+    --_card-padding-block-start: var(--astryx-card-padding-block-start, var(--astryx-card-padding, var(--astryx-spacing-4, 16px)));
+    --_card-padding-block-end: var(--astryx-card-padding-block-end, var(--astryx-card-padding, var(--astryx-spacing-4, 16px)));
+    border-radius: var(--_card-radius);
+    box-shadow: var(--_card-ring), var(--_card-elevation);
+    padding-block: var(--_card-padding-block-start) var(--_card-padding-block-end);
+    padding-inline: var(--_card-padding-inline-start) var(--_card-padding-inline-end);
+    /* Published so edge-bleeding children (Divider, tables) can compensate. */
+    --container-padding-inline-start: var(--_card-padding-inline-start);
+    --container-padding-inline-end: var(--_card-padding-inline-end);
+    --container-padding-block-start: var(--_card-padding-block-start);
+    --container-padding-block-end: var(--_card-padding-block-end);
+  }
+
+  .astryx-card[data-scrollable='true'] {
+    overflow: auto;
+  }
+
+  .astryx-card[data-padding] {
+    --_card-padding-inline-start: var(--_card-padding-step);
+    --_card-padding-inline-end: var(--_card-padding-step);
+    --_card-padding-block-start: var(--_card-padding-step);
+    --_card-padding-block-end: var(--_card-padding-step);
+  }
+
+  .astryx-card[data-padding='0'] {
+    --_card-padding-step: var(--astryx-spacing-0, 0px);
+  }
+
+  .astryx-card[data-padding='0.5'] {
+    --_card-padding-step: var(--astryx-spacing-0-5, 2px);
+  }
+
+  .astryx-card[data-padding='1'] {
+    --_card-padding-step: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-card[data-padding='1.5'] {
+    --_card-padding-step: var(--astryx-spacing-1-5, 6px);
+  }
+
+  .astryx-card[data-padding='2'] {
+    --_card-padding-step: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-card[data-padding='3'] {
+    --_card-padding-step: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-card[data-padding='4'] {
+    --_card-padding-step: var(--astryx-spacing-4, 16px);
+  }
+
+  .astryx-card[data-padding='5'] {
+    --_card-padding-step: var(--astryx-spacing-5, 20px);
+  }
+
+  .astryx-card[data-padding='6'] {
+    --_card-padding-step: var(--astryx-spacing-6, 24px);
+  }
+
+  .astryx-card[data-padding='8'] {
+    --_card-padding-step: var(--astryx-spacing-8, 32px);
+  }
+
+  .astryx-card[data-padding='10'] {
+    --_card-padding-step: var(--astryx-spacing-10, 40px);
+  }
+
+  /*
+   * Only `default` draws a border, and it draws it inside the padding: the
+   * border width is subtracted from each side, so the total inset (border plus
+   * padding) equals the padding step instead of exceeding it by the border.
+   */
+  .astryx-card[data-variant='default'] {
+    border-width: var(--astryx-border-width, 1px);
+    border-style: solid;
+    border-color: var(--astryx-card-border, #00000014);
+    background-color: var(--astryx-card-background, #fff);
+    padding-inline-start: calc(var(--_card-padding-inline-start) - var(--astryx-border-width, 1px));
+    padding-inline-end: calc(var(--_card-padding-inline-end) - var(--astryx-border-width, 1px));
+    padding-block-start: calc(var(--_card-padding-block-start) - var(--astryx-border-width, 1px));
+    padding-block-end: calc(var(--_card-padding-block-end) - var(--astryx-border-width, 1px));
+  }
+
+  /*
+   * A variant the theme added upstream of these rules has no entry here: it
+   * keeps the base styles and the theme's own rule paints over them.
+   */
+  .astryx-card[data-variant='transparent'] {
+    background-color: transparent;
+  }
+
+  .astryx-card[data-variant='muted'] {
+    background-color: var(--astryx-card-muted-background, #f5f5f5);
+  }
+
+  .astryx-card[data-variant='blue'] {
+    background-color: var(--astryx-card-blue-background, #c4ddfb);
+  }
+
+  .astryx-card[data-variant='cyan'] {
+    background-color: var(--astryx-card-cyan-background, #a3e0ef);
+  }
+
+  .astryx-card[data-variant='gray'] {
+    background-color: var(--astryx-card-gray-background, #e5e5e5);
+  }
+
+  .astryx-card[data-variant='green'] {
+    background-color: var(--astryx-card-green-background, #c5e5c0);
+  }
+
+  .astryx-card[data-variant='orange'] {
+    background-color: var(--astryx-card-orange-background, #fad0b5);
+  }
+
+  .astryx-card[data-variant='pink'] {
+    background-color: var(--astryx-card-pink-background, #fccadc);
+  }
+
+  .astryx-card[data-variant='purple'] {
+    background-color: var(--astryx-card-purple-background, #eccef3);
+  }
+
+  .astryx-card[data-variant='red'] {
+    background-color: var(--astryx-card-red-background, #facecb);
+  }
+
+  .astryx-card[data-variant='teal'] {
+    background-color: var(--astryx-card-teal-background, #a5e3d6);
+  }
+
+  .astryx-card[data-variant='yellow'] {
+    background-color: var(--astryx-card-yellow-background, #f8da9d);
+  }
+
+  /*
+   * The elevation writes a private variable rather than the box-shadow
+   * property, so a ring layered through --_card-ring and the resting shadow
+   * coexist instead of one clobbering the other. The literal fallbacks keep an
+   * unthemed card from losing the whole shadow list — and with it the ring —
+   * when a theme defines no shadow tokens.
+   */
+  .astryx-card[data-elevation='low'] {
+    --_card-elevation: var(
+      --astryx-card-shadow-low,
+      0 1px 1px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 20%)),
+      0 2px 8px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 20%))
+    );
+  }
+
+  .astryx-card[data-elevation='med'] {
+    --_card-elevation: var(
+      --astryx-card-shadow-med,
+      0 1px 2px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 20%)),
+      0 2px 12px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 20%))
+    );
+  }
+
+  .astryx-card[data-elevation='high'] {
+    --_card-elevation: var(
+      --astryx-card-shadow-high,
+      0 2px 2px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 20%)),
+      0 8px 24px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 30%))
+    );
+  }
+}

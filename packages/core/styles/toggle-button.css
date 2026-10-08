@@ -1,0 +1,67 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * The pressed fill is painted on the ghost button, so the selector carries
+   * the ghost variant to outrank `.astryx-button[data-variant='ghost']`
+   * regardless of the order the two stylesheets load in.
+   */
+  .astryx-toggle-button[data-variant='ghost'][data-pressed='true'] {
+    background-color: var(--astryx-toggle-button-pressed-background, #05365919);
+    forced-color-adjust: none;
+  }
+
+  /*
+   * Button keeps its own flex container; this wrapper only stacks the visible
+   * label over a hidden copy set at the pressed weight, so the button reserves
+   * the wider width and never shifts when it toggles.
+   */
+  .astryx-toggle-button__label {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .astryx-toggle-button__label-text {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .astryx-toggle-button[data-pressed='true'] .astryx-toggle-button__label-text {
+    font-weight: var(--astryx-toggle-button-pressed-font-weight, 600);
+  }
+
+  .astryx-toggle-button__label-reserve {
+    display: block;
+    height: 0;
+    max-width: 100%;
+    overflow: hidden;
+    font-weight: var(--astryx-toggle-button-pressed-font-weight, 600);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .astryx-toggle-button-group {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-toggle-button-group-gap, var(--astryx-spacing-1, 4px));
+    max-width: 100%;
+  }
+
+  .astryx-toggle-button-group[data-orientation='vertical'] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  @media (forced-colors: active) {
+    .astryx-toggle-button[data-variant='ghost'][data-pressed='true'] {
+      color: HighlightText;
+      background-color: Highlight;
+    }
+  }
+}

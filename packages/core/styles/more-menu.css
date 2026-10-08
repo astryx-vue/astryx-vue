@@ -1,0 +1,383 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-more-menu {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /*
+   * The trigger keeps its own surface; the wrapper only carries the layout, and
+   * in the inline form the surface itself. It is positioned so the panel can be
+   * laid over the stage rather than added to the flow.
+   */
+  .astryx-more-menu--inline {
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  /*
+   * An open trigger keeps the pressed paint, so the control reads as still
+   * being held down while its menu is up.
+   */
+  .astryx-more-menu[data-open] .astryx-button {
+    background-image: linear-gradient(
+      var(--astryx-more-menu-trigger-open-overlay, var(--astryx-button-pressed-overlay, light-dark(#0000001a, #ffffff1a))),
+      var(--astryx-more-menu-trigger-open-overlay, var(--astryx-button-pressed-overlay, light-dark(#0000001a, #ffffff1a)))
+    );
+  }
+
+  /* One anchored menu. Distance from the trigger and the viewport gutter both
+     come from the layer itself, so the flip decision sees the same box. */
+  .astryx-more-menu__layer {
+    position: fixed;
+    z-index: calc(var(--astryx-more-menu-z-index, 1000) + var(--astryx-more-menu-level, 0));
+    box-sizing: border-box;
+    max-inline-size: calc(100vw - 2 * var(--astryx-spacing-4, 16px));
+    max-block-size: min(300px, calc(100vh - 2 * var(--astryx-spacing-4, 16px)));
+  }
+
+  /*
+   * The inline form exists for previews, so the panel must not change the
+   * layout around it: in the flow it widened the block the trigger sits in
+   * (moving a centered trigger sideways) and grew the page on open. It is laid
+   * under the trigger at its natural width instead.
+   */
+  .astryx-more-menu__layer--inline {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    z-index: 1;
+    inline-size: max-content;
+    max-inline-size: none;
+    margin-block-start: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-more-menu__panel {
+    --_more-menu-radius: var(--astryx-more-menu-radius, var(--astryx-radius-container, 0.75rem));
+    --_more-menu-padding: var(--astryx-more-menu-padding, var(--astryx-spacing-1, 4px));
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+    /* The trigger's width is the menu's floor, so the surface never reads as a
+       stray sliver beside the control it belongs to. */
+    min-inline-size: min(var(--_more-menu-anchor-inline-size, 0px), calc(100vw - 2 * var(--astryx-spacing-4, 16px)));
+    /* The height cap sits on the scrolling box itself: a menu longer than it
+       scrolls instead of painting past the cap. */
+    max-block-size: min(300px, calc(100vh - 2 * var(--astryx-spacing-4, 16px)));
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    padding: var(--_more-menu-padding);
+    border-radius: var(--_more-menu-radius);
+    color: var(--astryx-more-menu-foreground, var(--astryx-color-text-primary, light-dark(#171717, #fafafa)));
+    background: var(--astryx-more-menu-background, light-dark(#ffffff, #1b1b1b));
+    box-shadow: var(--astryx-more-menu-shadow, 0 2px 4px oklch(0 0 0 / 5%), 0 4px 8px oklch(0 0 0 / 10%));
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    /* The container is an internal focus target, not a control. */
+    outline: none;
+    /* A held finger drives the highlight; the browser's own held-press
+       affordances must not compete with it. */
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .astryx-more-menu__divider {
+    margin-block: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-more-menu__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+  }
+
+  .astryx-more-menu__heading {
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    overflow-wrap: anywhere;
+    color: var(--astryx-more-menu-heading-foreground, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    user-select: none;
+  }
+
+  .astryx-more-menu__item {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    border: 0;
+    border-radius: max(
+      0px,
+      calc(var(--_more-menu-radius, var(--astryx-radius-container, 0.75rem)) - var(--_more-menu-padding, var(--astryx-spacing-1, 4px)))
+    );
+    color: inherit;
+    background-color: transparent;
+    background-image: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    transition: background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /* The row density follows the trigger's own size, step for step with a list
+     item's density, so the three sizes are actually distinguishable. */
+  .astryx-more-menu__panel[data-size='sm'] .astryx-more-menu__item {
+    padding-block: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-more-menu__panel[data-size='md'] .astryx-more-menu__item {
+    padding-block: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-more-menu__panel[data-size='lg'] .astryx-more-menu__item {
+    padding-block: var(--astryx-spacing-3, 12px);
+  }
+
+  /*
+   * The focused row is the highlighted row: keyboard travel and hover both land
+   * focus on the row under them, so one rule paints both.
+   */
+  .astryx-more-menu__item:not([data-disabled]):is(:hover, :focus) {
+    background-color: var(--astryx-more-menu-item-hover-background, var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c)));
+  }
+
+  /* The pressed look only where hover exists: under a finger the row a press
+     began on would otherwise stay painted while the highlight moves on. */
+  @media (hover: hover) {
+    .astryx-more-menu__item:not([data-disabled]):active {
+      background-color: var(--astryx-more-menu-item-pressed-background, var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19)));
+    }
+  }
+
+  .astryx-more-menu__item[data-disabled] {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .astryx-more-menu__item--destructive {
+    color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
+  }
+
+  .astryx-more-menu__item-start,
+  .astryx-more-menu__item-end {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+  }
+
+  .astryx-more-menu__item-end {
+    margin-inline-start: auto;
+  }
+
+  .astryx-more-menu__item-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .astryx-more-menu__item-label {
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-more-menu__item-description {
+    color: var(--astryx-more-menu-description-foreground, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-more-menu__item--destructive .astryx-more-menu__item-description {
+    color: inherit;
+  }
+
+  .astryx-more-menu__item-hint {
+    color: var(--astryx-more-menu-description-foreground, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+  }
+
+  /* A submenu caret points into the flyout, so it mirrors under RTL. */
+  [dir='rtl'] .astryx-more-menu__caret,
+  [dir='rtl'] .astryx-more-menu__sheet-back-icon {
+    transform: scaleX(-1);
+  }
+
+  .astryx-more-menu-enter-active,
+  .astryx-more-menu-leave-active {
+    transition:
+      opacity var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      transform var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-more-menu__layer[data-placement='below'] {
+    transform-origin: top;
+  }
+
+  .astryx-more-menu__layer[data-placement='above'] {
+    transform-origin: bottom;
+  }
+
+  .astryx-more-menu__layer[data-placement='start'] {
+    transform-origin: left;
+  }
+
+  .astryx-more-menu__layer[data-placement='end'] {
+    transform-origin: right;
+  }
+
+  .astryx-more-menu-enter-from,
+  .astryx-more-menu-leave-to {
+    opacity: 0;
+  }
+
+  .astryx-more-menu__layer[data-placement='below'].astryx-more-menu-enter-from,
+  .astryx-more-menu__layer[data-placement='below'].astryx-more-menu-leave-to {
+    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
+  }
+
+  .astryx-more-menu__layer[data-placement='above'].astryx-more-menu-enter-from,
+  .astryx-more-menu__layer[data-placement='above'].astryx-more-menu-leave-to {
+    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
+  }
+
+  .astryx-more-menu__layer[data-placement='start'].astryx-more-menu-enter-from,
+  .astryx-more-menu__layer[data-placement='start'].astryx-more-menu-leave-to {
+    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.95);
+  }
+
+  .astryx-more-menu__layer[data-placement='end'].astryx-more-menu-enter-from,
+  .astryx-more-menu__layer[data-placement='end'].astryx-more-menu-leave-to {
+    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
+  }
+
+  /* The sheet presentation: a modal surface the thumb can reach. */
+  .astryx-more-menu__sheet-layer {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--astryx-more-menu-z-index, 1000) + 1);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .astryx-more-menu__scrim {
+    position: absolute;
+    inset: 0;
+    background: var(--astryx-more-menu-scrim, light-dark(#00000080, #000000cc));
+  }
+
+  .astryx-more-menu__sheet {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    inline-size: min(28rem, 100%);
+    max-block-size: 85dvh;
+    padding: var(--astryx-spacing-4, 16px);
+    padding-block-end: max(var(--astryx-spacing-4, 16px), env(safe-area-inset-bottom, 0px));
+    border-start-start-radius: var(--astryx-more-menu-radius, var(--astryx-radius-container, 0.75rem));
+    border-start-end-radius: var(--astryx-more-menu-radius, var(--astryx-radius-container, 0.75rem));
+    color: var(--astryx-more-menu-foreground, var(--astryx-color-text-primary, light-dark(#171717, #fafafa)));
+    background: var(--astryx-more-menu-background, light-dark(#ffffff, #1b1b1b));
+    box-shadow: var(--astryx-more-menu-shadow, 0 2px 4px oklch(0 0 0 / 5%), 0 4px 8px oklch(0 0 0 / 10%));
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    outline: none;
+    transition: transform var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-more-menu__sheet-header {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    margin-block-end: var(--astryx-spacing-2, 8px);
+  }
+
+  /*
+   * A heading, not a control: it takes focus to announce a view change, so the
+   * browser ring stays off it, and it starts at the content edge of a row that
+   * carries no icon.
+   */
+  .astryx-more-menu__sheet-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding-inline-start: var(--astryx-spacing-3, 12px);
+    outline: none;
+  }
+
+  .astryx-more-menu__sheet-back {
+    flex: 0 0 auto;
+  }
+
+  .astryx-more-menu__sheet-body {
+    min-block-size: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .astryx-more-menu__sheet-divider,
+  .astryx-more-menu__sheet-group {
+    list-style: none;
+  }
+
+  .astryx-more-menu__sheet-divider {
+    margin-block: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-more-menu__sheet-heading {
+    margin-block: var(--astryx-spacing-1, 4px) 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-more-menu__sheet-item--destructive {
+    --astryx-item-label-color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
+    --astryx-item-description-color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
+
+    color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
+  }
+
+  .astryx-more-menu-sheet-enter-active,
+  .astryx-more-menu-sheet-leave-active {
+    transition: opacity var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-more-menu-sheet-enter-from,
+  .astryx-more-menu-sheet-leave-to {
+    opacity: 0;
+  }
+
+  .astryx-more-menu-sheet-enter-from .astryx-more-menu__sheet,
+  .astryx-more-menu-sheet-leave-to .astryx-more-menu__sheet {
+    transform: translateY(100%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-more-menu-enter-active,
+    .astryx-more-menu-leave-active,
+    .astryx-more-menu-sheet-enter-active,
+    .astryx-more-menu-sheet-leave-active,
+    .astryx-more-menu__sheet,
+    .astryx-more-menu__item {
+      transition: none;
+    }
+  }
+}

@@ -34,7 +34,7 @@ let triggerElement: HTMLElement | null = null
 let previousBodyOverflow: string | null = null
 
 const isFullscreen = computed(() => props.variant === 'fullscreen')
-const dialogRole = computed(() => (props.purpose === 'required' ? 'alertdialog' : undefined))
+const dialogRole = computed(() => (attrs.role as string | undefined) ?? (props.purpose === 'required' ? 'alertdialog' : undefined))
 
 const rootStyle = computed(() => {
   if (isFullscreen.value)
@@ -186,6 +186,7 @@ onBeforeUnmount(() => {
       :class="{ 'astryx-dialog--fullscreen': isFullscreen }"
       :data-variant="variant"
       :data-padded="padding == null ? undefined : ''"
+      :aria-labelledby="resolvedLabelledBy()"
       :style="rootStyle"
     >
       <div class="astryx-dialog__inner" :style="innerStyle">

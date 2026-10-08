@@ -1,0 +1,33 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-card-background: light-dark(#fff, #1f1f22);
+    --astryx-card-muted-background: light-dark(#f5f5f5, #171717);
+    --astryx-card-border: light-dark(#00000014, #ffffff1a);
+    --astryx-card-shadow-low:
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
+    --astryx-card-shadow-med:
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 35%)),
+      0 4px 12px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 12%));
+    --astryx-card-shadow-high:
+      0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
+      0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%));
+
+    --astryx-card-blue-background: light-dark(#c4ddfb, #9eb7ff3d);
+    --astryx-card-cyan-background: light-dark(#a3e0ef, #83c2d43d);
+    --astryx-card-gray-background: light-dark(#e5e5e5, #ffffff1a);
+    --astryx-card-green-background: light-dark(#c5e5c0, #84c9803d);
+    --astryx-card-orange-background: light-dark(#fad0b5, #ffa2583d);
+    --astryx-card-pink-background: light-dark(#fccadc, #ff99c33d);
+    --astryx-card-purple-background: light-dark(#eccef3, #f297ff3d);
+    --astryx-card-red-background: light-dark(#facecb, #ff9e973d);
+    --astryx-card-teal-background: light-dark(#a5e3d6, #7ec6b83d);
+    --astryx-card-yellow-background: light-dark(#f8da9d, #deb4333d);
+  }
+}
