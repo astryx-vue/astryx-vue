@@ -32,8 +32,8 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 | 指引 | 实践 |
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 选择与场景匹配的颜色变体：一般进度用 accent，完成用 success，提醒用 warning 或 error。 |
-| <Badge variant="error">不要</Badge> | 在进度条内放置图标或文字。应使用布局组件将它们与进度条并排组合。 |
-| <Badge variant="error">不要</Badge> | 为同一操作叠放多个进度条。应使用一个进度条，并显示数值标签。 |
+| <Badge variant="error">避免</Badge> | 在进度条内放置图标或文字。应使用布局组件将它们与进度条并排组合。 |
+| <Badge variant="error">避免</Badge> | 为同一操作叠放多个进度条。应使用一个进度条，并显示数值标签。 |
 
 ## 示例
 

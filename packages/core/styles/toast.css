@@ -1,0 +1,184 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* Span the inline axis and align the toasts inside, rather than shrink-wrap
+     the container. A shrink-wrapped box is sized by its widest toast, so every
+     toast would resize whenever a longer or shorter one joins the stack. */
+  .astryx-toast-viewport {
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: auto;
+    margin: 0;
+    inset-inline: 0;
+    padding: var(--astryx-spacing-4, 16px);
+    pointer-events: none;
+  }
+
+  .astryx-toast-viewport > * {
+    pointer-events: auto;
+  }
+
+  .astryx-toast-viewport--placement-top-start,
+  .astryx-toast-viewport--placement-top-center,
+  .astryx-toast-viewport--placement-top-end {
+    top: 0;
+  }
+
+  .astryx-toast-viewport--placement-bottom-start,
+  .astryx-toast-viewport--placement-bottom-center,
+  .astryx-toast-viewport--placement-bottom-end {
+    bottom: 0;
+  }
+
+  .astryx-toast-viewport--placement-top-start,
+  .astryx-toast-viewport--placement-bottom-start {
+    align-items: flex-start;
+  }
+
+  .astryx-toast-viewport--placement-top-end,
+  .astryx-toast-viewport--placement-bottom-end {
+    align-items: flex-end;
+  }
+
+  .astryx-toast-viewport--placement-top-center,
+  .astryx-toast-viewport--placement-bottom-center {
+    align-items: center;
+  }
+
+  /* Each row owns the spacing to the next toast so the gap folds away together
+     with the row track while a toast joins or leaves the stack. */
+  .astryx-toast-viewport__row {
+    display: grid;
+    grid-template-rows: 1fr;
+    box-sizing: border-box;
+    width: 400px;
+    max-width: 100%;
+    min-width: 0;
+    padding-block-end: var(--astryx-spacing-2, 8px);
+    transition-property: grid-template-rows, padding;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+
+    @starting-style {
+      grid-template-rows: 0fr;
+      padding-block-end: 0;
+    }
+  }
+
+  .astryx-toast-viewport__row:last-child {
+    padding-block-end: 0;
+  }
+
+  .astryx-toast-viewport__row--exiting {
+    grid-template-rows: 0fr;
+    padding-block-end: 0;
+  }
+
+  /* Clip while the row opens and closes so the toast folds into the stack. The
+     viewport releases the clip once the row settles, otherwise the card shadow
+     would be cut off. */
+  .astryx-toast-viewport__clip {
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .astryx-toast-viewport__clip--settled {
+    overflow: visible;
+  }
+
+  /* Bottom stacks drift up from the edge; top stacks drift down. */
+  .astryx-toast-viewport__row--from-bottom {
+    --astryx-toast-slide-y: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-toast-viewport__row--from-top {
+    --astryx-toast-slide-y: calc(-1 * var(--astryx-spacing-2, 8px));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-toast-viewport__row {
+      transition-duration: 0.01ms;
+    }
+  }
+
+  .astryx-toast {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--astryx-spacing-3, 12px);
+    width: 400px;
+    max-width: 100%;
+    padding: var(--astryx-spacing-4, 16px);
+    border-radius: var(--astryx-radius-container, 0.75rem);
+    background-color: var(--astryx-toast-info-background, #171717);
+    color: var(--astryx-toast-info-foreground, #fafafa);
+    box-shadow: 0 4px 24px rgb(0 0 0 / 16%);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    transition-property: opacity, transform;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(var(--astryx-toast-slide-y, var(--astryx-spacing-2, 8px)));
+    }
+  }
+
+  .astryx-toast--exiting {
+    opacity: 0;
+    transform: translateY(var(--astryx-toast-slide-y, var(--astryx-spacing-2, 8px)));
+  }
+
+  .astryx-toast--type-success {
+    background-color: var(--astryx-toast-success-background, #0a7b3e);
+    color: var(--astryx-toast-type-foreground, #fff);
+  }
+
+  .astryx-toast--type-warning {
+    background-color: var(--astryx-toast-warning-background, #9a6700);
+    color: var(--astryx-toast-type-foreground, #fff);
+  }
+
+  .astryx-toast--type-error {
+    background-color: var(--astryx-toast-error-background, #c52626);
+    color: var(--astryx-toast-type-foreground, #fff);
+  }
+
+  .astryx-toast__body {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .astryx-toast__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 999px);
+    background: transparent;
+    color: inherit;
+    font-size: 1.125rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .astryx-toast__close:hover {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-toast {
+      transition-duration: 0.01ms;
+    }
+  }
+}

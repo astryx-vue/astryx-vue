@@ -9,14 +9,14 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="Dialog 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>对话框是否打开。必填。</td></tr>
-<tr><td><code>isInline</code></td><td><code>boolean</code></td><td><code>false</code></td><td>以普通文档流渲染内容，不使用模态对话框、遮罩与焦点行为。仅用于文档预览。</td></tr>
-<tr><td><code>width</code></td><td><code>number | string</code></td><td><code>400</code></td><td>首选宽度。数字单位为像素。窄屏时夹取到视口内。全屏变体忽略此项。</td></tr>
-<tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td><code>'75vh'</code></td><td>最大高度。数字单位为像素。全屏变体忽略此项。</td></tr>
-<tr><td><code>position</code></td><td><code>DialogPosition</code></td><td>居中</td><td>静态偏移：<code>top</code>、<code>bottom</code>、<code>start</code>、<code>end</code>。逻辑属性 <code>start</code> 与 <code>end</code> 在 RTL 下镜像。全屏变体忽略此项。</td></tr>
-<tr><td><code>variant</code></td><td><code>'standard' | 'fullscreen'</code></td><td><code>'standard'</code></td><td>标准对话框，或占满视口的对话框。</td></tr>
-<tr><td><code>purpose</code></td><td><code>'required' | 'form' | 'info'</code></td><td><code>'info'</code></td><td><code>required</code> 禁用 Escape 与点击遮罩关闭；<code>form</code> 仅允许 Escape；<code>info</code> 两者都允许。</td></tr>
-<tr><td><code>padding</code></td><td><code>0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10</code></td><td>主题默认值（16px）</td><td>内边距，对应 <code>--astryx-spacing-*</code> 令牌。</td></tr>
+<tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>对话框是否打开。该属性必填。</td></tr>
+<tr><td><code>isInline</code></td><td><code>boolean</code></td><td><code>false</code></td><td>以普通文档流渲染内容，不使用 <code>&lt;dialog&gt;</code>、遮罩与模态行为，仅用于文档预览。</td></tr>
+<tr><td><code>width</code></td><td><code>number | string</code></td><td><code>400</code></td><td>首选宽度，数字单位为像素，字符串原样使用。窄屏时夹取到视口内，全屏变体忽略此项。</td></tr>
+<tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td><code>'75vh'</code></td><td>最大高度，数字单位为像素，字符串原样使用。全屏变体忽略此项。</td></tr>
+<tr><td><code>position</code></td><td><code>DialogPosition</code></td><td>居中</td><td>对话框的静态偏移，支持 <code>top</code>、<code>bottom</code>、<code>start</code>、<code>end</code>，未设置时居中。逻辑属性 <code>start</code> 与 <code>end</code> 在 RTL 下自动镜像，全屏变体忽略此项。</td></tr>
+<tr><td><code>variant</code></td><td><code>'standard' | 'fullscreen'</code></td><td><code>'standard'</code></td><td>对话框变体：standard 为标准对话框，fullscreen 占满整个视口。</td></tr>
+<tr><td><code>purpose</code></td><td><code>'required' | 'form' | 'info'</code></td><td><code>'info'</code></td><td>允许的关闭方式：<code>required</code> 禁用 Escape 与点击遮罩，必须由用户响应；<code>form</code> 仅允许 Escape；<code>info</code> 两者都允许。</td></tr>
+<tr><td><code>padding</code></td><td><code>0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10</code></td><td>主题默认值（16px）</td><td>对话框内边距，取值对应 <code>--astryx-spacing-*</code> 令牌。</td></tr>
 </tbody></table>
 </div>
 

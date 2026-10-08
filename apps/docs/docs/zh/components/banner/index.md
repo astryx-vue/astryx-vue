@@ -12,7 +12,7 @@ import { bannerStatuses, bannerDetails, bannerActions, bannerContainers } from '
 
 ## 使用方法
 
-`Banner` 用于持续显示需要用户关注或处理的消息。
+`Banner` 用于持续展示需要用户关注或处理的消息，例如功能更新、操作结果或需要解决的问题。与会自动消失的 Toast 不同，它会一直留在界面上，直到用户处理或主动关闭：
 
 ```vue
 <script setup lang="ts">
@@ -46,12 +46,12 @@ import '@astryx-vue/themes/neutral.css'
 | <Badge variant="success">推荐</Badge> | 页面内容中使用 card 容器。覆盖整页宽度的消息使用 section 容器。 |
 | <Badge variant="success">推荐</Badge> | info 和 success 提示条可以关闭。error 提示条必须保留，直到用户解决问题。 |
 | <Badge variant="success">推荐</Badge> | 标题保持简短、便于扫读。例如用 “Payment failed”，不用 “There was a problem processing your most recent payment.” |
-| <Badge variant="error">不要</Badge> | 用提示条展示会自动消失的短暂消息。应改用 Toast。 |
-| <Badge variant="error">不要</Badge> | 叠放同一状态的多条提示条。应把相关消息合并为一条。 |
+| <Badge variant="error">避免</Badge> | 用提示条展示会自动消失的短暂消息。应改用 Toast。 |
+| <Badge variant="error">避免</Badge> | 叠放同一状态的多条提示条。应把相关消息合并为一条。 |
 
 ## 示例
 
-<DemoExample :demo="bannerStatuses" title="消息状态" description="使用标题说明消息含义。不要只依赖颜色。" locale="zh" />
+<DemoExample :demo="bannerStatuses" title="消息状态" description="使用标题说明消息含义。避免只依赖颜色。" locale="zh" />
 
 <DemoExample :demo="bannerDetails" title="展开详情" description="默认插槽提供详情。collapsible 为 false 时，详情始终显示。" locale="zh" />
 

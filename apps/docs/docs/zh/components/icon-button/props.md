@@ -13,16 +13,16 @@ IconButton 继承 Button 的大部分属性，但不提供 <code>isIconOnly</cod
   <table>
     <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>按钮的无障碍名称。</td></tr>
-      <tr><td><code>variant</code></td><td><code>'primary' | 'secondary' | 'ghost' | 'destructive'</code></td><td><code>'secondary'</code></td><td>按钮外观与操作类型。</td></tr>
-      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>正方形按钮尺寸。</td></tr>
-      <tr><td><code>elevation</code></td><td><code>'none' | 'low' | 'med' | 'high'</code></td><td><code>'none'</code></td><td>独立悬浮按钮的静止阴影深度。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用交互。存在 tooltip 时，组件使用 aria-disabled 保留焦点。</td></tr>
-      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示加载图标。设置 aria-busy。默认阻止重复操作。</td></tr>
-      <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>加载期间可以再次触发 clickAction。</td></tr>
-      <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>返回 Promise 时，组件显示加载状态。</td></tr>
-      <tr><td><code>tooltip</code></td><td><code>string</code></td><td>—</td><td>悬停或键盘聚焦时显示的补充提示。</td></tr>
-      <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>存在且未禁用时，把根元素渲染为链接。</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>按钮的无障碍名称，供辅助技术识别按钮用途。</td></tr>
+      <tr><td><code>variant</code></td><td><code>'primary' | 'secondary' | 'ghost' | 'destructive'</code></td><td><code>'secondary'</code></td><td>按钮的视觉样式，同时暗示操作的类型。</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>按钮尺寸，IconButton 始终渲染为正方形。</td></tr>
+      <tr><td><code>elevation</code></td><td><code>'none' | 'low' | 'med' | 'high'</code></td><td><code>'none'</code></td><td>静止状态的阴影深度，适合悬浮于内容上方的独立按钮。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用交互。存在 tooltip 时改用 aria-disabled 标记，让按钮保留焦点以显示提示。</td></tr>
+      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否显示加载图标，同时设置 aria-busy。加载期间默认阻止重复操作。</td></tr>
+      <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否允许加载期间再次触发 clickAction。</td></tr>
+      <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>点击时执行的回调；返回 Promise 时，组件会自动显示加载状态。</td></tr>
+      <tr><td><code>tooltip</code></td><td><code>string</code></td><td>—</td><td>悬停或键盘聚焦时显示的补充提示，不能替代 label。</td></tr>
+      <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>链接地址。存在且未禁用时，根元素渲染为链接。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>按钮宽度。数字转换为像素，CSS 字符串按原样使用。</td></tr>
     </tbody>
   </table>

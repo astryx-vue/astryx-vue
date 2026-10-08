@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type { DocsLocale } from './docs-i18n'
 import { computed } from 'vue'
+import { avatarSizes } from '../demos/avatar'
+import { avatarGroupBasic } from '../demos/avatar-group'
 import { badgeColors } from '../demos/badge'
 import { bannerStatuses } from '../demos/banner'
 import { blockquoteCite } from '../demos/blockquote'
+import { breadcrumbsBasic } from '../demos/breadcrumbs'
 import { buttonVariants } from '../demos/button'
 import { buttonGroupBasic } from '../demos/button-group'
 import { checkboxIndicatorOverview } from '../demos/checkbox-indicator'
@@ -11,7 +14,9 @@ import { checkboxInputBasic } from '../demos/checkbox-input'
 import { dialogOverview } from '../demos/dialog'
 import { dividerOverview } from '../demos/divider'
 import { fieldCustom } from '../demos/field'
+import { headingLevels } from '../demos/heading'
 import { iconButtonActionBar } from '../demos/icon-button'
+import { linkColors } from '../demos/link'
 import { popoverOverview } from '../demos/popover'
 import { progressBarBasic } from '../demos/progress-bar'
 import { radioBasic } from '../demos/radio'
@@ -19,9 +24,13 @@ import { skeletonProfile } from '../demos/skeleton'
 import { sliderBasic } from '../demos/slider'
 import { spinnerBasic } from '../demos/spinner'
 import { stackDirections } from '../demos/stack'
+import { statusDotVariants } from '../demos/status-dot'
 import { switchBasic } from '../demos/switch'
+import { tabListBasic } from '../demos/tab-list'
+import { textTypes } from '../demos/text'
 import { textAreaBasic } from '../demos/text-area'
 import { textInputBasic } from '../demos/text-input'
+import { toastPreview } from '../demos/toast'
 import { tooltipOverview } from '../demos/tooltip'
 import { visuallyHiddenContext } from '../demos/visually-hidden'
 import { componentDocsCopy } from './componentDocsRoute'
@@ -51,17 +60,30 @@ const groups = computed(() => [
     { demo: stackDirections, slug: 'stack', name: nav.value.stack },
     { demo: dividerOverview, slug: 'divider', name: nav.value.divider },
   ] },
-  { title: nav.value.content, cards: [{ demo: blockquoteCite, slug: 'blockquote', name: nav.value.blockquote }] },
+  { title: nav.value.content, cards: [
+    { demo: avatarSizes, slug: 'avatar', name: nav.value.avatar },
+    { demo: avatarGroupBasic, slug: 'avatar-group', name: nav.value.avatarGroup },
+    { demo: blockquoteCite, slug: 'blockquote', name: nav.value.blockquote },
+    { demo: headingLevels, slug: 'heading', name: nav.value.heading },
+    { demo: textTypes, slug: 'text', name: nav.value.text },
+  ] },
+  { title: nav.value.navigation, cards: [
+    { demo: linkColors, slug: 'link', name: nav.value.link },
+    { demo: breadcrumbsBasic, slug: 'breadcrumbs', name: nav.value.breadcrumbs },
+    { demo: tabListBasic, slug: 'tab-list', name: nav.value.tabList },
+  ] },
   { title: nav.value.feedback, cards: [
     { demo: bannerStatuses, slug: 'banner', name: nav.value.banner },
     { demo: badgeColors, slug: 'badge', name: nav.value.badge },
     { demo: skeletonProfile, slug: 'skeleton', name: nav.value.skeleton },
     { demo: spinnerBasic, slug: 'spinner', name: nav.value.spinner },
+    { demo: statusDotVariants, slug: 'status-dot', name: nav.value.statusDot },
   ] },
   { title: nav.value.overlays, cards: [
     { demo: tooltipOverview, slug: 'tooltip', name: nav.value.tooltip },
     { demo: popoverOverview, slug: 'popover', name: nav.value.popover },
     { demo: dialogOverview, slug: 'dialog', name: nav.value.dialog },
+    { demo: toastPreview, slug: 'toast', name: nav.value.toast },
   ] },
   { title: nav.value.utilities, cards: [{ demo: visuallyHiddenContext, slug: 'visually-hidden', name: nav.value.visuallyHidden }] },
 ])

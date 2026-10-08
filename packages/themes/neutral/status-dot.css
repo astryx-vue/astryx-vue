@@ -1,0 +1,12 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-status-dot-neutral-background: light-dark(#a3a3a3, #737373);
+    --astryx-status-dot-info-background: light-dark(#0074e2, #6d9cfe);
+    --astryx-status-dot-success-background: light-dark(#198100, #64af4c);
+    --astryx-status-dot-warning-background: #ffce2f;
+    --astryx-status-dot-error-background: light-dark(#e33f4a, #ff705d);
+  }
+}

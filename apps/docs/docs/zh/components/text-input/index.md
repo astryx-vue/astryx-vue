@@ -12,7 +12,7 @@ import { textInputBasic, textInputSizes, textInputSearch, textInputPassword, tex
 
 ## 使用方法
 
-`TextInput` 用于单行文本输入。组件已包含 `Field`。
+`TextInput` 用于输入邮箱、姓名、搜索词等单行文本。标签、说明与校验消息由内置的 `Field` 自动关联，通过 `v-model` 管理输入值即可：
 
 ```vue
 <script setup lang="ts">

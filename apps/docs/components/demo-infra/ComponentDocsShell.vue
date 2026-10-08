@@ -1,22 +1,32 @@
 <script setup lang="ts">
 import type { ComponentDocsRoute } from './componentDocsRoute'
 import { computed } from 'vue'
-import { COMPONENT_SLUGS, componentDocsCopy } from './componentDocsRoute'
+import { componentDocsCopy } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
 
 const props = defineProps<{ route: ComponentDocsRoute }>()
 const text = computed(() => componentDocsCopy[props.route.locale])
 const groups = computed(() => [
-  { title: text.value.action, slugs: COMPONENT_SLUGS.slice(0, 3) },
+  { title: text.value.action, slugs: ['button', 'button-group', 'icon-button'] },
   { title: text.value.form, slugs: ['text-input', 'text-area', 'checkbox-input', 'checkbox-indicator', 'progress-bar', 'radio', 'radio-group', 'radio-list', 'switch', 'slider', 'field'] },
   { title: text.value.layout, slugs: ['stack', 'divider'] },
-  { title: text.value.content, slugs: ['blockquote'] },
-  { title: text.value.feedback, slugs: ['banner', 'badge', 'skeleton', 'spinner'] },
-  { title: text.value.overlays, slugs: ['tooltip', 'popover', 'dialog'] },
+  { title: text.value.content, slugs: ['avatar', 'avatar-group', 'blockquote', 'heading', 'text'] },
+  { title: text.value.navigation, slugs: ['link', 'breadcrumbs', 'tab-list'] },
+  { title: text.value.feedback, slugs: ['banner', 'badge', 'skeleton', 'spinner', 'status-dot'] },
+  { title: text.value.overlays, slugs: ['tooltip', 'popover', 'dialog', 'toast'] },
   { title: text.value.utilities, slugs: ['visually-hidden'] },
 ])
 const names = computed(() => ({
+  'avatar': text.value.avatar,
+  'avatar-group': text.value.avatarGroup,
+  'breadcrumbs': text.value.breadcrumbs,
   'button': text.value.button,
+  'heading': text.value.heading,
+  'link': text.value.link,
+  'status-dot': text.value.statusDot,
+  'tab-list': text.value.tabList,
+  'text': text.value.text,
+  'toast': text.value.toast,
   'button-group': text.value.buttonGroup,
   'icon-button': text.value.iconButton,
   'text-input': text.value.textInput,

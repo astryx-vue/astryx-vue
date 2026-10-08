@@ -3,7 +3,7 @@ import { Button } from '@astryx-vue/core/Button'
 </script>
 
 <template>
-  <Button label="Save changes" variant="primary" />
+  <Button label="Save" variant="primary" />
   <Button label="Cancel" />
   <Button label="Preview" variant="ghost" />
   <Button label="Delete" variant="destructive" />

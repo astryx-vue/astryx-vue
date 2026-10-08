@@ -1,0 +1,117 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-text {
+    margin: 0;
+    color: var(--astryx-text-foreground, var(--astryx-color-text-primary, #171717));
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-text--block {
+    display: block;
+  }
+
+  .astryx-text--color-secondary {
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-text--color-accent {
+    color: var(--astryx-color-text-accent, #0074e2);
+  }
+
+  .astryx-text--color-inherit {
+    color: inherit;
+  }
+
+  .astryx-text--weight-regular {
+    font-weight: var(--astryx-font-weight-regular, 400);
+  }
+
+  .astryx-text--weight-medium {
+    font-weight: var(--astryx-font-weight-medium, 500);
+  }
+
+  .astryx-text--weight-semibold {
+    font-weight: var(--astryx-font-weight-semibold, 600);
+  }
+
+  .astryx-text--weight-bold {
+    font-weight: var(--astryx-font-weight-bold, 700);
+  }
+
+  .astryx-text--type-body {
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-text--type-large {
+    font-size: var(--astryx-text-large-size, 1rem);
+    line-height: var(--astryx-text-large-leading, 1.5);
+  }
+
+  .astryx-text--type-label {
+    font-size: var(--astryx-text-label-size, 0.875rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: var(--astryx-text-label-leading, 1.25);
+  }
+
+  .astryx-text--type-supporting {
+    color: var(--astryx-text-supporting-foreground, var(--astryx-color-text-secondary, #525252));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-text--type-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-text--type-display-1 {
+    font-size: var(--astryx-text-display-1-size, 3rem);
+    font-weight: var(--astryx-text-display-weight, 300);
+    line-height: 1.1;
+  }
+
+  .astryx-text--type-display-2 {
+    font-size: var(--astryx-text-display-2-size, 2.25rem);
+    font-weight: var(--astryx-text-display-weight, 300);
+    line-height: 1.15;
+  }
+
+  .astryx-text--type-display-3 {
+    font-size: var(--astryx-text-display-3-size, 1.75rem);
+    font-weight: var(--astryx-text-display-weight, 300);
+    line-height: 1.2;
+  }
+
+  .astryx-text--size-sm {
+    font-size: var(--astryx-text-sm-size, 0.75rem);
+  }
+
+  .astryx-text--size-md {
+    font-size: var(--astryx-text-md-size, 0.875rem);
+  }
+
+  .astryx-text--size-lg {
+    font-size: var(--astryx-text-lg-size, 1rem);
+  }
+
+  .astryx-text--size-xl {
+    font-size: var(--astryx-text-xl-size, 1.25rem);
+  }
+
+  .astryx-text--truncate-single {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .astryx-text--truncate-multi {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+  }
+}

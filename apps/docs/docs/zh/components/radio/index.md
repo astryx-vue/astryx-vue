@@ -11,7 +11,7 @@ import { radioBasic, radioList, radioStates } from '../../../../components/demos
 
 ## 使用方法
 
-`Radio` 表示一个单选选项。它必须放在 `RadioGroup` 中使用，由 RadioGroup 通过 `provide/inject` 管理选中状态。
+`Radio` 表示一组互斥选项中的单个选项，需要配合 `RadioGroup` 使用：选中状态由 RadioGroup 通过 `provide/inject` 统一管理，单个 Radio 只需声明自己的值和标签。最基本的用法如下：
 
 ```vue
 <script setup lang="ts">
@@ -32,11 +32,11 @@ const size = shallowRef('md')
 
 ## 示例
 
-<DemoExample :demo="radioBasic" title="基本用法" description="在 RadioGroup 中放置 Radio 子项。v-model 绑定当前选中的值。" locale="zh" />
+<DemoExample :demo="radioBasic" title="基本用法" description="把 Radio 作为子项放进 RadioGroup，再用 v-model 绑定当前选中的值，选中状态即由组统一管理。" locale="zh" />
 
-<DemoExample :demo="radioList" title="单选列表" description="RadioList 接收 options 数组，快速渲染一组选项。" locale="zh" />
+<DemoExample :demo="radioList" title="单选列表" description="选项结构简单时，可以改用 RadioList 直接传入 options 数组，省去逐个书写 Radio 子项的麻烦。" locale="zh" />
 
-<DemoExample :demo="radioStates" title="禁用选项" description="单个选项可以禁用，不影响组内其他选项。" locale="zh" />
+<DemoExample :demo="radioStates" title="禁用选项" description="给单个选项设置 isDisabled 即可将其禁用，组内其他选项不受影响，仍可正常选择。" locale="zh" />
 
 ## 键盘操作
 
@@ -46,6 +46,6 @@ const size = shallowRef('md')
 
 ## 使用建议
 
-- 选项数量较少且 mutually exclusive 时使用单选组。
-- 选项超过约 7 个时，考虑使用下拉选择。
-- 必须提供组标签 `label`。
+- 选项数量较少、彼此互斥时，使用单选组让用户一眼看清全部可选项。
+- 选项超过 7 个左右时，改用下拉选择更省空间，也更便于扫读。
+- 务必提供组标签 `label`：它是整组单选按钮的无障碍名称，屏幕阅读器依赖它朗读。

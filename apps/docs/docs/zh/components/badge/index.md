@@ -12,9 +12,9 @@ import { badgeColors, badgeCounts } from '../../../../components/demos/badge'
 
 ## 使用方法
 
-从独立入口导入组件。组件会加载结构样式。
+`Badge` 用于标记状态或类别，例如处理结果、优先级或团队归属，适合在列表、卡片和表格中快速扫读。从独立入口导入即可，结构样式会随组件自动加载：
 
-在应用入口引入主题：
+主题在应用入口引入一次：
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
@@ -46,11 +46,11 @@ import { Badge } from '@astryx-vue/core/Badge'
 | <Badge variant="success">推荐</Badge> | 对用于分组或分类的标签，使用颜色变体（蓝色、紫色、青色等）。例如团队名称、内容类型、优先级。 |
 | <Badge variant="success">推荐</Badge> | 标签文字保持一到两个词。需要更多说明时，把说明放在标签外的文字中。 |
 | <Badge variant="success">推荐</Badge> | 图标有助于快速识别标签类型时，添加图标。图标旁必须保留文字标签。 |
-| <Badge variant="error">不要</Badge> | 为每个健康、活跃或正常的项目都使用 success 标签。若每行都是绿色的 “Active”，标签就无法突出。标签只显示需要用户关注的状态，如错误、警告和待处理操作。 |
-| <Badge variant="error">不要</Badge> | 用标签展示元数据。时长（“6h window”）、数量（“12 trigger types”）、日期和描述都不是状态或分类。应改用描述文本（Text 组件，type="supporting"）。 |
-| <Badge variant="error">不要</Badge> | 用 success、warning、error、info 等语义状态变体表示分类或说明性内容。这些变体视觉强烈，只用于表示系统状态。 |
-| <Badge variant="error">不要</Badge> | 在表格或列表的每一行都重复同一个标签。若多数行都有相同的值，标签就不再传递信息。常见状态使用普通文本，标签只留给例外情况。 |
-| <Badge variant="error">不要</Badge> | 让标签可点击。标签是只读指示器。用户需要操作时，使用按钮或链接。 |
+| <Badge variant="error">避免</Badge> | 为每个健康、活跃或正常的项目都使用 success 标签。若每行都是绿色的 “Active”，标签就无法突出。标签只显示需要用户关注的状态，如错误、警告和待处理操作。 |
+| <Badge variant="error">避免</Badge> | 用标签展示元数据。时长（“6h window”）、数量（“12 trigger types”）、日期和描述都不是状态或分类。应改用描述文本（Text 组件，type="supporting"）。 |
+| <Badge variant="error">避免</Badge> | 用 success、warning、error、info 等语义状态变体表示分类或说明性内容。这些变体视觉强烈，只用于表示系统状态。 |
+| <Badge variant="error">避免</Badge> | 在表格或列表的每一行都重复同一个标签。若多数行都有相同的值，标签就不再传递信息。常见状态使用普通文本，标签只留给例外情况。 |
+| <Badge variant="error">避免</Badge> | 让标签可点击。标签是只读指示器。用户需要操作时，使用按钮或链接。 |
 
 ## 示例
 

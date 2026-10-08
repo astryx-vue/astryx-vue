@@ -12,7 +12,7 @@ import { popoverActions, popoverBasic, popoverForm, popoverPlacements } from '..
 
 ## 使用方法
 
-`Popover` 在触发按钮旁边打开一个浮层。浮层可以包含简短的交互内容，例如表单、简短说明或操作列表。触发元素放在默认插槽，浮层内容放在 `content` 插槽。
+`Popover` 在点击触发按钮时，在它旁边打开一个浮层。和只放纯文字的 Tooltip 不同，浮层可以承载简短的交互内容，例如一个小表单、一段补充说明或一组操作。触发元素放进默认插槽，浮层内容放进 `content` 插槽：
 
 ```vue
 <script setup lang="ts">
@@ -39,9 +39,9 @@ import { Popover } from '@astryx-vue/core/Popover'
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 弹出层内容只聚焦一项任务或一条信息。 |
 | <Badge variant="success">推荐</Badge> | 提供明确的关闭方式：点击外部区域，或使用显式的关闭按钮。 |
-| <Badge variant="error">不要</Badge> | 在弹出层中嵌套弹出层。这会造成混乱的焦点和导航。 |
-| <Badge variant="error">不要</Badge> | 需要大量用户输入的内容，不要放在弹出层中。应使用 Dialog。 |
-| <Badge variant="error">不要</Badge> | 在弹出层中放入过多内容。若需要滚动，应改用 Dialog。 |
+| <Badge variant="error">避免</Badge> | 在弹出层中嵌套弹出层。这会造成混乱的焦点和导航。 |
+| <Badge variant="error">避免</Badge> | 需要大量用户输入的内容，避免放在弹出层中。应使用 Dialog。 |
+| <Badge variant="error">避免</Badge> | 在弹出层中放入过多内容。若需要滚动，应改用 Dialog。 |
 
 ## 示例
 

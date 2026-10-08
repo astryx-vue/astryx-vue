@@ -13,7 +13,7 @@ import { skeletonProfile } from '../../../../components/demos/skeleton'
 
 ## 使用方法
 
-从独立入口导入组件。组件会加载结构样式。
+`Skeleton` 在内容尚未加载完成时渲染占位块，按最终内容的尺寸与形状撑起布局，减轻加载完成时的跳动。它适合内容尺寸已知的场景；尺寸未知时建议改用 `Spinner`。
 
 在应用入口引入主题：
 
@@ -21,7 +21,7 @@ import { skeletonProfile } from '../../../../components/demos/skeleton'
 import '@astryx-vue/themes/neutral.css'
 ```
 
-组件用法：
+组件从独立入口导入，结构样式会随组件自动加载：
 
 ```vue
 <script setup lang="ts">
@@ -42,19 +42,19 @@ import { Skeleton } from '@astryx-vue/core/Skeleton'
 
 | 指引 | 实践 |
 | --- | --- |
-| <Badge variant="success">推荐</Badge> | 骨架屏的尺寸和形状要与加载内容一致，形成逼真的占位效果。 |
-| <Badge variant="success">推荐</Badge> | 为多个骨架屏设置 index 属性，形成自然的波浪动画。 |
-| <Badge variant="error">不要</Badge> | 内容尺寸未知时使用骨架屏。应改用 Spinner。 |
-| <Badge variant="error">不要</Badge> | 在同一内容区域同时使用 Spinner 和骨架屏。应只选一种加载模式。 |
-| <Badge variant="error">不要</Badge> | 长时间显示骨架屏。加载时间过长时，应显示错误或空状态。 |
+| <Badge variant="success">推荐</Badge> | 让占位块的尺寸和形状贴近最终内容，加载完成后布局才不会发生明显跳动。 |
+| <Badge variant="success">推荐</Badge> | 为同一区域内的多个骨架屏依次设置 `index`，脉冲动画会按顺序错开，形成自然的波浪效果。 |
+| <Badge variant="error">避免</Badge> | 在内容尺寸未知时使用骨架屏，占位块无法模拟未知布局，这种情况改用 `Spinner` 更合适。 |
+| <Badge variant="error">避免</Badge> | 在同一内容区域混用 `Spinner` 和骨架屏，两种加载模式并存会让界面显得不一致，只选其中一种即可。 |
+| <Badge variant="error">避免</Badge> | 让骨架屏长时间停留，加载明显偏慢时应改显错误或空状态，让用户知道当前发生了什么。 |
 
 ## 示例
 
-按照最终内容的尺寸和结构组合占位形状。
+按最终内容的尺寸与结构组合占位形状，让加载前后的布局保持一致。
 
 <DemoExample
   :demo="skeletonProfile"
-  description="让每个占位块贴近最终内容的尺寸与形状，并用 index 依次错开脉冲动画。"
+  description="参照最终内容的布局组合占位块，尺寸与形状一一对应，并用 index 依次错开脉冲动画，减少加载完成时的跳动。"
   locale="zh"
   title="内容占位"
 />

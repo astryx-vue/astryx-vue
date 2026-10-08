@@ -11,23 +11,23 @@ footer: false
   <table>
     <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>可见标签。隐藏时仍为控件提供名称。</td></tr>
-      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>视觉上隐藏标签和说明，保留无障碍关联。</td></tr>
-      <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方、控件上方的补充说明。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用状态。Field/FieldLabel 只改变标签样式，控件由使用方禁用。</td></tr>
-      <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示可选提示。与 isRequired 同时设置时优先。</td></tr>
-      <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示必填提示。TextInput 同时设置 aria-required。</td></tr>
-      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>标签前的 Vue 图标组件。labelIcon 插槽优先。</td></tr>
-      <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息按钮，支持悬停、键盘聚焦和点击。</td></tr>
-      <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>可选提示的本地化文字。</td></tr>
-      <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>必填提示的本地化文字。</td></tr>
-      <tr><td><code>inputId</code></td><td><code>string</code></td><td>必需</td><td>被标记控件的 ID。必须与控件 id 相同。</td></tr>
-      <tr><td><code>labelId</code></td><td><code>string</code></td><td>{inputId}-label</td><td>标签自身 ID。分组使用 aria-labelledby 引用。</td></tr>
-      <tr><td><code>descriptionId</code></td><td><code>string</code></td><td>{inputId}-description</td><td>说明 ID。控件通过 aria-describedby 引用。</td></tr>
-      <tr><td><code>isGroupLabel</code></td><td><code>boolean</code></td><td>false</td><td>为 radiogroup 等分组输出 span，避免把分组当作单个控件。</td></tr>
-      <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>状态类型、可选消息与自定义 messageId。</td></tr>
-      <tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td>tooltip 隐藏行内消息，但保留描述和播报。控件自行提供提示按钮。</td></tr>
-      <tr><td><code>width</code></td><td><code>number | string</code></td><td>auto</td><td>整个字段宽度，数字转换为像素。</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段的可见标签；即使视觉上隐藏，也仍作为控件的无障碍名称。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>在视觉上隐藏标签和说明，但保留它们与控件的无障碍关联。</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>显示在标签下方、控件上方的补充说明。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用状态。Field 和 FieldLabel 只调整标签样式，控件本身由使用方禁用。</td></tr>
+      <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示“可选”提示；与 <code>isRequired</code> 同时设置时优先。</td></tr>
+      <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示“必填”提示；在 <code>TextInput</code> 中还会同时设置 <code>aria-required</code>。</td></tr>
+      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在标签前的 Vue 图标组件；<code>labelIcon</code> 插槽优先于该属性。</td></tr>
+      <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息按钮，提示内容支持悬停、键盘聚焦和点击查看。</td></tr>
+      <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>“可选”提示的本地化文字。</td></tr>
+      <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>“必填”提示的本地化文字。</td></tr>
+      <tr><td><code>inputId</code></td><td><code>string</code></td><td>必需</td><td>被标记控件的 ID，必须与内部控件的 <code>id</code> 一致。</td></tr>
+      <tr><td><code>labelId</code></td><td><code>string</code></td><td>{inputId}-label</td><td>标签自身的 ID；作为分组标签时，由分组容器通过 <code>aria-labelledby</code> 引用。</td></tr>
+      <tr><td><code>descriptionId</code></td><td><code>string</code></td><td>{inputId}-description</td><td>说明文字的 ID，控件通过 <code>aria-describedby</code> 引用它。</td></tr>
+      <tr><td><code>isGroupLabel</code></td><td><code>boolean</code></td><td>false</td><td>为 <code>radiogroup</code> 等分组输出 <code>span</code> 而不是 <code>label</code>，避免把分组当作单个控件。</td></tr>
+      <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>字段状态，包含状态类型、可选的消息文本和自定义 <code>messageId</code>。</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td><code>tooltip</code> 隐藏行内消息框，但保留描述与屏幕阅读器播报，提示按钮由内部控件自行提供。</td></tr>
+      <tr><td><code>width</code></td><td><code>number | string</code></td><td>auto</td><td>整个字段的宽度，传入数字时按像素处理。</td></tr>
     </tbody>
   </table>
 </div>

@@ -9,15 +9,15 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="Spinner 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg' | 'xl'</code></td><td><code>'md'</code></td><td>环的直径：10px、14px、18px 或 28px。</td></tr>
-<tr><td><code>shade</code></td><td><code>'default' | 'subtle' | 'onMedia' | 'inherit'</code></td><td><code>'default'</code></td><td>浅色背景、深色背景或继承文字颜色的配色层级。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>显示在加载态下方的文字。同时作为无障碍名称。</td></tr>
+<tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg' | 'xl'</code></td><td><code>'md'</code></td><td>圆环的直径，sm 为 10px，md 为 14px，lg 为 18px，xl 为 28px。</td></tr>
+<tr><td><code>shade</code></td><td><code>'default' | 'subtle' | 'onMedia' | 'inherit'</code></td><td><code>'default'</code></td><td>圆环的配色层级，分别面向浅色背景、深色背景或继承周围文字颜色的场景。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>显示在加载态下方的文字，同时作为无障碍名称供屏幕阅读器播报。</td></tr>
 </tbody></table>
 </div>
 
 ## 插槽
 
-- `label`：加载态下方的富文本内容。会替代 `label` 属性的文字。未提供文字时，默认名称为 `Loading`。
+- `label`：加载态下方的富文本内容，会替代 `label` 属性的文字。未提供文字时，无障碍名称默认为 `Loading`。
 
 ## 主题
 

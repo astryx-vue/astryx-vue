@@ -17,31 +17,11 @@ footer: false
         <td><code>variant</code></td>
         <td><code>BadgeVariant</code></td>
         <td><code>'neutral'</code></td>
-        <td>Sets the visual variant of the badge.</td>
+        <td>Sets the visual variant of the badge. Optional: neutral, info, success, warning, error, blue, cyan, green, orange, pink, purple, red, teal, yellow.</td>
       </tr>
     </tbody>
   </table>
 </div>
-
-### Semantic variants
-
-- `neutral`
-- `info`
-- `success`
-- `warning`
-- `error`
-
-### Category colors
-
-- `blue`
-- `cyan`
-- `green`
-- `orange`
-- `pink`
-- `purple`
-- `red`
-- `teal`
-- `yellow`
 
 ## Slots
 

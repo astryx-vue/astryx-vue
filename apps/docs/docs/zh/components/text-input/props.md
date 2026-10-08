@@ -11,35 +11,35 @@ footer: false
   <table>
     <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><code>modelValue</code></td><td><code>string</code></td><td>必需</td><td>输入值。通常使用 v-model。</td></tr>
-      <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>可见标签。隐藏时仍为控件提供名称。</td></tr>
-      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>视觉上隐藏标签和说明，保留无障碍关联。</td></tr>
-      <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方、控件上方的补充说明。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用输入框。禁用字段不参与表单提交。</td></tr>
-      <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示可选提示。与 isRequired 同时设置时优先。</td></tr>
-      <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示必填提示。TextInput 同时设置 aria-required。</td></tr>
-      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>标签前的 Vue 图标组件。labelIcon 插槽优先。</td></tr>
-      <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息按钮，支持悬停、键盘聚焦和点击。</td></tr>
-      <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>可选提示的本地化文字。</td></tr>
-      <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>必填提示的本地化文字。</td></tr>
-      <tr><td><code>id</code></td><td><code>string</code></td><td>自动生成</td><td>原生 input 的 ID，同步更新标签与说明关联。</td></tr>
-      <tr><td><code>type</code></td><td><code>&#x27;text&#x27; | &#x27;password&#x27; | &#x27;email&#x27;</code></td><td>text</td><td>单行输入类型。多行内容应使用 textarea。</td></tr>
-      <tr><td><code>size</code></td><td><code>&#x27;sm&#x27; | &#x27;md&#x27; | &#x27;lg&#x27;</code></td><td>md</td><td>Neutral 主题的高度分别为 28、32、36px。</td></tr>
-      <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>不能编辑，但保留焦点、正常显示并参与表单提交。</td></tr>
-      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。设置后使用 aria-disabled 和 readonly 保留焦点，仍阻止修改和提交该字段。</td></tr>
-      <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>输入框前端的装饰图标。icon 插槽优先。</td></tr>
-      <tr><td><code>status</code></td><td><code>TextInputStatus</code></td><td>—</td><td>error、warning 或 success，可附带 message 和 messageId。错误设置 aria-invalid。</td></tr>
-      <tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td>状态消息紧贴、分离或显示在图标提示中。三种方式均关联输入框。</td></tr>
-      <tr><td><code>changeAction</code></td><td><code>(value: string, event: TextInputChangeEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>值变化后运行。返回 Promise 时，组件显示加载状态。</td></tr>
-      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>控制外部加载状态。异步操作未结束时也显示加载状态。输入保持可编辑。</td></tr>
-      <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>空值提示，不能替代 label。</td></tr>
-      <tr><td><code>width</code></td><td><code>number | string</code></td><td>auto</td><td>整个字段的宽度。数字表示像素，CSS 字符串按原样使用。</td></tr>
-      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td>false</td><td>非空且可编辑时显示清除按钮，清除后恢复输入框焦点。</td></tr>
-      <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>挂载后聚焦原生 input。</td></tr>
-      <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>原生 name。优先于传入的 name。禁用时移除。</td></tr>
-      <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原样传入原生 autocomplete。</td></tr>
-      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>清除按钮的本地化名称。</td></tr>
-      <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>加载图标的本地化名称。</td></tr>
+      <tr><td><code>modelValue</code></td><td><code>string</code></td><td>必需</td><td>输入框的当前值，一般通过 v-model 绑定。</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段的可见标签。即使被隐藏，也会作为控件的名称提供给辅助技术。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>在视觉上隐藏标签与说明，同时保留它们与控件的无障碍关联。</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>显示在标签下方、控件上方的补充说明文字。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用输入框。被禁用的字段不参与表单提交。</td></tr>
+      <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示“可选”提示。与 isRequired 同时设置时，isOptional 优先。</td></tr>
+      <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示“必填”提示，组件同时会设置 aria-required。</td></tr>
+      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在标签前的图标组件。与 labelIcon 插槽同时使用时，插槽优先。</td></tr>
+      <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>在标签旁显示信息按钮，悬停、键盘聚焦或点击都可以查看提示。</td></tr>
+      <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>“可选”提示的显示文字，用于本地化。</td></tr>
+      <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>“必填”提示的显示文字，用于本地化。</td></tr>
+      <tr><td><code>id</code></td><td><code>string</code></td><td>自动生成</td><td>原生 input 的 ID。设置后会同步更新标签与说明的关联。</td></tr>
+      <tr><td><code>type</code></td><td><code>&#x27;text&#x27; | &#x27;password&#x27; | &#x27;email&#x27;</code></td><td>text</td><td>输入框类型。多行内容请改用 TextArea。</td></tr>
+      <tr><td><code>size</code></td><td><code>&#x27;sm&#x27; | &#x27;md&#x27; | &#x27;lg&#x27;</code></td><td>md</td><td>输入框高度。Neutral 主题下三档分别为 28、32、36px。</td></tr>
+      <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>内容不可编辑，但输入框保留焦点、正常显示，值仍会参与表单提交。</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>说明禁用原因。设置后改用 aria-disabled 与 readonly 保留焦点，方便用户查看原因；字段仍不可修改，也不会随表单提交。</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在输入框前端的装饰图标。与 icon 插槽同时使用时，插槽优先。</td></tr>
+      <tr><td><code>status</code></td><td><code>TextInputStatus</code></td><td>—</td><td>设置 error、warning 或 success 校验状态，可附带 message 和 messageId。错误状态会设置 aria-invalid。</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td>状态消息的展示方式：紧贴控件、分离显示，或收进图标提示。三种方式均与输入框保持关联。</td></tr>
+      <tr><td><code>changeAction</code></td><td><code>(value: string, event: TextInputChangeEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>在值变化后执行的动作。返回 Promise 时，组件会显示加载状态。</td></tr>
+      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>手动控制加载状态。存在未完成的异步操作时也会显示加载，期间输入框仍可编辑。</td></tr>
+      <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>输入为空时显示的提示文字，不能替代 label。</td></tr>
+      <tr><td><code>width</code></td><td><code>number | string</code></td><td>auto</td><td>整个字段的宽度。数字按像素处理，CSS 字符串按原样使用。</td></tr>
+      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td>false</td><td>在有内容且可编辑时显示清除按钮，点击清除后焦点会回到输入框。</td></tr>
+      <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>组件挂载后自动聚焦原生 input。</td></tr>
+      <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>原生 input 的 name 属性，优先于通过原生属性传入的 name。字段禁用时会被移除。</td></tr>
+      <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原样透传给原生 input 的 autocomplete 属性。</td></tr>
+      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>清除按钮的无障碍名称，用于本地化。</td></tr>
+      <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>加载指示器的无障碍名称，用于本地化。</td></tr>
     </tbody>
   </table>
 </div>
@@ -60,7 +60,7 @@ interface TextInputStatus {
   <table>
     <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><code>icon</code></td><td><code>() =&gt; VNode[]</code></td><td>—</td><td>前端装饰图标，覆盖 startIcon。不要放入可交互控件。</td></tr>
+      <tr><td><code>icon</code></td><td><code>() =&gt; VNode[]</code></td><td>—</td><td>前端装饰图标，覆盖 startIcon。避免放入可交互控件。</td></tr>
       <tr><td><code>end</code></td><td><code>() =&gt; VNode[]</code></td><td>—</td><td>尾部内容，可以放按钮。使用方负责其无障碍名称。</td></tr>
       <tr><td><code>labelIcon</code></td><td><code>() =&gt; VNode[]</code></td><td>—</td><td>标签前的装饰图标，覆盖 labelIcon 属性。</td></tr>
     </tbody>

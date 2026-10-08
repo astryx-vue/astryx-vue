@@ -13,6 +13,21 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./Avatar": {
+      "source": "./src/Avatar/index.ts",
+      "types": "./dist/Avatar/index.d.ts",
+      "import": "./dist/Avatar/index.js"
+    },
+    "./AvatarGroup": {
+      "source": "./src/AvatarGroup/index.ts",
+      "types": "./dist/AvatarGroup/index.d.ts",
+      "import": "./dist/AvatarGroup/index.js"
+    },
+    "./StatusDot": {
+      "source": "./src/StatusDot/index.ts",
+      "types": "./dist/StatusDot/index.d.ts",
+      "import": "./dist/StatusDot/index.js"
+    },
     "./Badge": {
       "source": "./src/Badge/index.ts",
       "types": "./dist/Badge/index.d.ts",
@@ -22,6 +37,11 @@
       "source": "./src/Blockquote/index.ts",
       "types": "./dist/Blockquote/index.d.ts",
       "import": "./dist/Blockquote/index.js"
+    },
+    "./Breadcrumbs": {
+      "source": "./src/Breadcrumbs/index.ts",
+      "types": "./dist/Breadcrumbs/index.d.ts",
+      "import": "./dist/Breadcrumbs/index.js"
     },
     "./Button": {
       "source": "./src/Button/index.ts",
@@ -43,10 +63,20 @@
       "types": "./dist/Field/index.d.ts",
       "import": "./dist/Field/index.js"
     },
+    "./Heading": {
+      "source": "./src/Heading/index.ts",
+      "types": "./dist/Heading/index.d.ts",
+      "import": "./dist/Heading/index.js"
+    },
     "./IconButton": {
       "source": "./src/IconButton/index.ts",
       "types": "./dist/IconButton/index.d.ts",
       "import": "./dist/IconButton/index.js"
+    },
+    "./Link": {
+      "source": "./src/Link/index.ts",
+      "types": "./dist/Link/index.d.ts",
+      "import": "./dist/Link/index.js"
     },
     "./ProgressBar": {
       "source": "./src/ProgressBar/index.ts",
@@ -93,15 +123,30 @@
       "types": "./dist/Switch/index.d.ts",
       "import": "./dist/Switch/index.js"
     },
+    "./TabList": {
+      "source": "./src/TabList/index.ts",
+      "types": "./dist/TabList/index.d.ts",
+      "import": "./dist/TabList/index.js"
+    },
     "./TextArea": {
       "source": "./src/TextArea/index.ts",
       "types": "./dist/TextArea/index.d.ts",
       "import": "./dist/TextArea/index.js"
     },
+    "./Text": {
+      "source": "./src/Text/index.ts",
+      "types": "./dist/Text/index.d.ts",
+      "import": "./dist/Text/index.js"
+    },
     "./TextInput": {
       "source": "./src/TextInput/index.ts",
       "types": "./dist/TextInput/index.d.ts",
       "import": "./dist/TextInput/index.js"
+    },
+    "./Toast": {
+      "source": "./src/Toast/index.ts",
+      "types": "./dist/Toast/index.d.ts",
+      "import": "./dist/Toast/index.js"
     },
     "./VisuallyHidden": {
       "source": "./src/VisuallyHidden/index.ts",

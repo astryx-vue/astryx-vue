@@ -9,28 +9,28 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="属性列表" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>v-model</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>必需。当前选中状态。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必需。控件的无障碍名称。</td></tr>
-<tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>原生输入元素的 ID。省略时自动生成。</td></tr>
-<tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>sm 为 20px。md 为 24px。</td></tr>
-<tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>组件宽度。数字按 px 处理。</td></tr>
-<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
-<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>隐藏标签的视觉显示。保留无障碍名称。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>阻止修改。字段不参与表单提交。</td></tr>
-<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。提供原因时，禁用控件仍可聚焦。</td></tr>
-<tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>阻止修改。已选字段仍参与提交。</td></tr>
-<tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>显示加载状态。阻止重复切换。</td></tr>
-<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>'Loading'</code></td><td>加载状态的无障碍文本。</td></tr>
-<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示必填提示。启用原生必填校验。</td></tr>
-<tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示可选提示。优先于 isRequired。</td></tr>
-<tr><td><code>optionalLabel</code></td><td><code>string</code></td><td><code>'Optional'</code></td><td>可选提示文本。</td></tr>
-<tr><td><code>requiredLabel</code></td><td><code>string</code></td><td><code>'Required'</code></td><td>必填提示文本。</td></tr>
-<tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>表单字段名。优先于原生 name。</td></tr>
-<tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>状态类型、消息和消息 ID。</td></tr>
-<tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>标签前的装饰图标。</td></tr>
-<tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息按钮提示。</td></tr>
-<tr><td><code>changeAction</code></td><td><code>CheckboxInputChangeAction</code></td><td>—</td><td>选择变化后执行的操作。支持 Promise。</td></tr>
-<tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>挂载后聚焦输入元素。</td></tr>
+<tr><td><code>v-model</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>必需，当前的选中状态，支持布尔值与半选。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必需，作为控件无障碍名称的文本。</td></tr>
+<tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>原生输入元素的 ID，省略时由组件自动生成。</td></tr>
+<tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>控件尺寸，sm 为 20px，md 为 24px。</td></tr>
+<tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>组件宽度，传入数字时按像素处理。</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>显示在标签下方的补充说明。</td></tr>
+<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>在视觉上隐藏标签和说明，但保留它们的无障碍关联。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用控件并阻止修改，禁用字段不参与表单提交。</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因的说明文字；提供后，禁用控件仍保持可聚焦，原因通过提示气泡展示。</td></tr>
+<tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>只读，阻止修改；已选中的字段仍会参与表单提交。</td></tr>
+<tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>显示加载状态，加载期间阻止重复切换。</td></tr>
+<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>'Loading'</code></td><td>加载状态读给屏幕阅读器的提示文本。</td></tr>
+<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示“必填”提示，并启用原生必填校验。</td></tr>
+<tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示“可选”提示，优先于 <code>isRequired</code>。</td></tr>
+<tr><td><code>optionalLabel</code></td><td><code>string</code></td><td><code>'Optional'</code></td><td>“可选”提示的文字。</td></tr>
+<tr><td><code>requiredLabel</code></td><td><code>string</code></td><td><code>'Required'</code></td><td>“必填”提示的文字。</td></tr>
+<tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>表单提交时的字段名，优先于原生 <code>name</code> 属性。</td></tr>
+<tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>状态消息，包含状态类型、可选的消息文本和消息 ID。</td></tr>
+<tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在标签前的装饰图标。</td></tr>
+<tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁信息按钮的提示文字。</td></tr>
+<tr><td><code>changeAction</code></td><td><code>CheckboxInputChangeAction</code></td><td>—</td><td>选中状态变化后执行的操作，可返回 Promise 用于异步提交。</td></tr>
+<tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>组件挂载后自动聚焦输入元素。</td></tr>
 </tbody></table>
 </div>
 

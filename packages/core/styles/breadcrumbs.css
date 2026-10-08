@@ -1,0 +1,76 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-breadcrumbs {
+    display: block;
+  }
+
+  .astryx-breadcrumbs__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    margin: 0;
+  }
+
+  .astryx-breadcrumb-item:first-child .astryx-breadcrumb-item__separator {
+    display: none;
+  }
+
+  .astryx-breadcrumb-item__separator {
+    display: flex;
+    align-items: center;
+    color: var(--astryx-color-text-secondary, #525252);
+    user-select: none;
+  }
+
+  .astryx-breadcrumb-item__content.astryx-breadcrumb-item__content {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-0-5, 2px);
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: 0;
+    border: 0;
+    background: transparent;
+    color: var(--astryx-color-text-secondary, #525252);
+    font: inherit;
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .astryx-breadcrumb-item--variant-supporting .astryx-breadcrumb-item__content {
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-breadcrumb-item__content.astryx-breadcrumb-item__content:hover:not(:disabled, [aria-disabled='true']) {
+    text-decoration: underline;
+  }
+
+  .astryx-breadcrumb-item__content--current.astryx-breadcrumb-item__content--current {
+    color: var(--astryx-color-text-primary, #171717);
+    font-weight: 600;
+    cursor: default;
+  }
+
+  .astryx-breadcrumb-item__content--current.astryx-breadcrumb-item__content--current:hover {
+    text-decoration: none;
+  }
+
+  .astryx-breadcrumb-item__icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+}

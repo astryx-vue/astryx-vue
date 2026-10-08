@@ -448,7 +448,7 @@ html.dark .astryx-hero .astryx-button--primary:hover {
 
 .component-overview {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   min-height: calc(100svh - var(--vp-nav-height));
   color: var(--astryx-text);
   background: var(--astryx-bg);
@@ -604,6 +604,11 @@ html.dark .component-card__preview {
 .component-card__preview .stack-preview-host,
 .component-card__preview .blockquote-preview,
 .component-card__preview .badge-preview,
+.component-card__preview .avatar-preview,
+.component-card__preview .avatar-group-preview,
+.component-card__preview .heading-preview,
+.component-card__preview .status-dot-preview,
+.component-card__preview .text-preview,
 .component-card__preview .skeleton-preview,
 .component-card__preview .visually-hidden-preview {
   width: 100%;
@@ -1061,6 +1066,78 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-size: 14px;
 }
 
+.avatar-preview {
+  width: min(100%, 660px);
+}
+
+.avatar-preview .avatar-preview__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.component-card__preview .avatar-preview .avatar-preview__row {
+  justify-content: center;
+  gap: 10px;
+}
+
+.status-dot-preview {
+  width: min(100%, 660px);
+}
+
+.status-dot-preview__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.component-card__preview .status-dot-preview__row {
+  justify-content: center;
+  gap: 12px;
+}
+
+.avatar-group-preview {
+  width: min(100%, 660px);
+}
+
+.component-card__preview .avatar-group-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-group-preview__stack {
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+}
+
+.component-card__preview .avatar-group-preview__stack {
+  justify-items: center;
+}
+
+.heading-preview,
+.text-preview {
+  width: min(100%, 660px);
+}
+
+.heading-preview__stack,
+.text-preview__stack {
+  display: grid;
+  gap: 12px;
+}
+
+.heading-preview__stack .astryx-heading {
+  margin: 0 !important;
+}
+
+.text-preview__stack .astryx-text--truncate-single,
+.text-preview__stack .astryx-text--truncate-multi {
+  max-width: 100%;
+}
+
 .stack-preview-host {
   width: min(100%, 680px);
 }
@@ -1367,3 +1444,135 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .slider-preview-stack > .astryx-button { justify-self: start; }
 .banner-preview-list { margin: 0; padding-inline-start: 20px; list-style: disc; }
 .banner-preview-list > li + li { margin-top: 4px; }
+
+.link-preview__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.breadcrumbs-preview {
+  width: min(100%, 680px);
+}
+
+.breadcrumbs-preview .astryx-breadcrumbs {
+  width: 100%;
+}
+
+.tab-list-preview {
+  width: min(100%, 680px);
+}
+
+.tab-list-preview__stack {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+}
+
+.toast-preview {
+  width: min(100%, 680px);
+}
+
+.toast-preview__stack {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 260px);
+}
+
+.toast-preview__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.toast-preview__trigger {
+  padding: 8px 14px;
+  border: 1px solid var(--astryx-line);
+  border-radius: 8px;
+  color: var(--astryx-text);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.toast-preview__trigger:hover {
+  border-color: var(--astryx-accent-bright);
+}
+
+.component-card__preview .link-preview__row,
+.component-card__preview .breadcrumbs-preview,
+.component-card__preview .tab-list-preview,
+.component-card__preview .toast-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .toast-preview__stack {
+  width: 100%;
+}
+
+/* The component sizes a toast at a fixed 400px, which is the right default
+   inside a ToastViewport. The preview stack is much narrower, so let the
+   toasts follow the stack instead of overflowing the card. */
+.component-card__preview .toast-preview__stack .astryx-toast {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .breadcrumbs-preview .astryx-breadcrumbs {
+  justify-content: center;
+}
+
+.component-card__preview .tab-list-preview .astryx-tab-list {
+  justify-content: center;
+}
+
+/* Docs: override unlayered VitePress .vp-doc styles for component examples */
+.vp-doc a.astryx-link {
+  color: var(--astryx-link-accent-foreground, #0074e2);
+  text-decoration: none;
+}
+
+.vp-doc a.astryx-link--color-primary {
+  color: var(--astryx-link-primary-foreground, var(--astryx-color-text-primary, #171717));
+}
+
+.vp-doc a.astryx-link--color-secondary {
+  color: var(--astryx-link-secondary-foreground, var(--astryx-color-text-secondary, #525252));
+}
+
+.vp-doc a.astryx-link--color-accent {
+  color: var(--astryx-link-accent-foreground, #0074e2);
+}
+
+.vp-doc a.astryx-link--color-inherit {
+  color: inherit;
+}
+
+.vp-doc a.astryx-link:hover:not(:disabled, [aria-disabled='true']) {
+  text-decoration: underline;
+}
+
+.vp-doc a.astryx-link--underlined {
+  text-decoration: underline;
+}
+
+.vp-doc a.astryx-breadcrumb-item__content {
+  color: var(--astryx-color-text-secondary, #525252);
+  text-decoration: none;
+}
+
+.vp-doc span.astryx-breadcrumb-item__content--current {
+  color: var(--astryx-color-text-primary, #171717);
+}
+
+.vp-doc h1.astryx-heading,
+.vp-doc h2.astryx-heading,
+.vp-doc h3.astryx-heading,
+.vp-doc h4.astryx-heading,
+.vp-doc h5.astryx-heading,
+.vp-doc h6.astryx-heading {
+  margin: 0;
+}

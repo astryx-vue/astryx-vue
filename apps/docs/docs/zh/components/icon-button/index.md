@@ -13,7 +13,7 @@ import { iconButtonActionBar, iconButtonAsync, iconButtonFloating, iconButtonToo
 
 ## 使用方法
 
-`IconButton` 只显示图标。图标必须清楚表达操作用途。必须用 `label` 提供无障碍名称：
+`IconButton` 是一个只含图标的方形按钮，适合工具栏、列表操作等空间紧凑、含义明确的场景。由于按钮没有可见文字，必须通过 `label` 提供无障碍名称，辅助技术才能识别它的用途：
 
 ```vue
 <script setup lang="ts">
@@ -27,7 +27,7 @@ import { IconButton } from '@astryx-vue/core/IconButton'
 </template>
 ```
 
-图标无法说明操作用途时，使用带文字的 [Button](/components/button)。
+如果操作的含义无法凭图标一眼看出，请改用带文字的 [Button](/components/button)。
 
 
 
@@ -36,38 +36,38 @@ import { IconButton } from '@astryx-vue/core/IconButton'
 
 | 指引 | 实践 |
 | --- | --- |
-| <Badge variant="success">推荐</Badge> | 让 aria-label 足够具体。标有 “Delete conversation” 的垃圾桶图标，比只写 “Delete” 更便于屏幕阅读器用户理解。 |
-| <Badge variant="success">推荐</Badge> | 添加提示框。即使是齿轮图标，也可能表示 Settings、Preferences 或 Configure。 |
-| <Badge variant="success">推荐</Badge> | 在工具栏和紧凑区域使用 ghost 变体，减少视觉干扰。 |
-| <Badge variant="error">不要</Badge> | 操作无法仅凭图标看出时，使用 IconButton。应改用带文字的 Button。 |
-| <Badge variant="error">不要</Badge> | 省略提示框。标签只供屏幕阅读器使用，明眼用户还需要悬停提示。 |
+| <Badge variant="success">推荐</Badge> | 让 `label` 尽量具体：标有 “Delete conversation” 的垃圾桶图标，比只写 “Delete” 更便于屏幕阅读器用户理解按钮的作用。 |
+| <Badge variant="success">推荐</Badge> | 为按钮加上提示框。即便是常见的齿轮图标，在不同产品中也可能表示 Settings、Preferences 或 Configure，悬停提示能减少用户的猜测。 |
+| <Badge variant="success">推荐</Badge> | 在工具栏和紧凑区域使用 ghost 变体，视觉重量更轻，不会干扰旁边的正文内容。 |
+| <Badge variant="error">避免</Badge> | 避免在操作含义不直观时仍然只放图标：用户看不出按钮能做什么，这类操作应改用带文字的 Button。 |
+| <Badge variant="error">避免</Badge> | 避免省略提示框：`label` 只供屏幕阅读器使用，普通用户还需要悬停或键盘聚焦时的文字提示。 |
 
 ## 示例
 
 <DemoExample
   :demo="iconButtonActionBar"
-  description="在工具栏中使用低强调的纯图标按钮，让常见操作紧凑排列。"
+  description="工具栏中常用一组低强调的纯图标按钮，把常见操作紧凑排开，同时保持界面轻量。"
   locale="zh"
   title="操作栏"
 />
 
 <DemoExample
   :demo="iconButtonFloating"
-  description="纯图标按钮是常见的悬浮操作形态。用 elevation=&quot;high&quot; 让它从内容上方明确浮起。"
+  description="纯图标按钮最常见的形态就是悬浮操作按钮，配合 elevation=&quot;high&quot; 的阴影，让它从内容上方清晰地浮起。"
   locale="zh"
   title="悬浮操作"
 />
 
 <DemoExample
   :demo="iconButtonAsync"
-  description="异步操作期间会显示加载图标并阻止重复触发。完成后可以再次操作。"
+  description="处理异步操作时，按钮会自动显示加载图标并阻止重复触发，完成后恢复可点击。"
   locale="zh"
   title="异步状态"
 />
 
 <DemoExample
   :demo="iconButtonTooltips"
-  description="tooltip 为看得见界面的用户解释图标含义，但不能代替必需的 label。"
+  description="tooltip 在悬停或键盘聚焦时向用户解释图标的含义，但它是补充说明，不能替代必需的 label。"
   locale="zh"
   title="提示文本"
 />

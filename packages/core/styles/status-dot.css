@@ -1,0 +1,46 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-status-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: var(--astryx-status-dot-size, 8px);
+    height: var(--astryx-status-dot-size, 8px);
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: var(--astryx-status-dot-neutral-background, #a3a3a3);
+  }
+
+  .astryx-status-dot[data-variant='info'] {
+    background-color: var(--astryx-status-dot-info-background, #0074e2);
+  }
+
+  .astryx-status-dot[data-variant='success'] {
+    background-color: var(--astryx-status-dot-success-background, #198100);
+  }
+
+  .astryx-status-dot[data-variant='warning'] {
+    background-color: var(--astryx-status-dot-warning-background, #ffce2f);
+  }
+
+  .astryx-status-dot[data-variant='error'] {
+    background-color: var(--astryx-status-dot-error-background, #e33f4a);
+  }
+
+  .astryx-status-dot--pulsing {
+    animation: astryx-status-dot-pulse 2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-status-dot--pulsing {
+      animation: none;
+    }
+  }
+
+  @keyframes astryx-status-dot-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+}

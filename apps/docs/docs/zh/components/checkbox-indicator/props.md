@@ -9,9 +9,9 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="属性列表" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>state</code></td><td><code>'unchecked' | 'checked' | 'indeterminate'</code></td><td>—</td><td>必需。显示状态。</td></tr>
-<tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>指示器尺寸。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>显示禁用样式。</td></tr>
+<tr><td><code>state</code></td><td><code>'unchecked' | 'checked' | 'indeterminate'</code></td><td>—</td><td>必需，要展示的标记状态。</td></tr>
+<tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>指示器尺寸，md 为 24px，sm 为 20px。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>以禁用的视觉样式展示，仅影响外观，不涉及交互行为。</td></tr>
 </tbody></table>
 </div>
 

@@ -1,0 +1,72 @@
+---
+layout: component-docs
+title: Text
+outline: false
+footer: false
+---
+
+## Props
+
+<div class="component-api-table" role="region" aria-label="Text Props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>type</code></td>
+        <td><code>TextType</code></td>
+        <td><code>'body'</code></td>
+        <td>Semantic text type. Determines default size, weight, and line-height. Optional: body, large, label, supporting, code, display-1, display-2, display-3.</td>
+      </tr>
+      <tr>
+        <td><code>size</code></td>
+        <td><code>TextSize</code></td>
+        <td>-</td>
+        <td>Explicit font size override. Optional: sm, md, lg, xl.</td>
+      </tr>
+      <tr>
+        <td><code>color</code></td>
+        <td><code>TextColor</code></td>
+        <td><code>'primary'</code></td>
+        <td>Text color. Optional: primary, secondary, accent, inherit.</td>
+      </tr>
+      <tr>
+        <td><code>weight</code></td>
+        <td><code>TextWeight</code></td>
+        <td>-</td>
+        <td>Font weight override. Optional: regular, medium, semibold, bold.</td>
+      </tr>
+      <tr>
+        <td><code>display</code></td>
+        <td><code>TextDisplay</code></td>
+        <td><code>'inline'</code></td>
+        <td>Display type: <code>inline</code> or <code>block</code>.</td>
+      </tr>
+      <tr>
+        <td><code>as</code></td>
+        <td><code>TextAs</code></td>
+        <td><code>'span'</code></td>
+        <td>HTML element to render. Optional: span, p, div, label.</td>
+      </tr>
+      <tr>
+        <td><code>maxLines</code></td>
+        <td><code>number</code></td>
+        <td><code>0</code></td>
+        <td>Maximum lines before truncation. 0 means no truncation.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## Native attributes
+
+The root element is determined by `as`, defaulting to `<span>`.
+
+The following are passed to the root element:
+
+- HTML attributes.
+- `aria-*` attributes.
+- `data-*` attributes.
+- `class`.
+- `style`.

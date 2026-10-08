@@ -1,0 +1,52 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-link.astryx-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-0-5, 2px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--astryx-link-accent-foreground, #0074e2);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 150ms ease;
+  }
+
+  .astryx-link.astryx-link:hover:not(:disabled, [aria-disabled='true']) {
+    text-decoration: underline;
+  }
+
+  .astryx-link.astryx-link--underlined {
+    text-decoration: underline;
+  }
+
+  .astryx-link.astryx-link--disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .astryx-link.astryx-link--color-primary {
+    color: var(--astryx-link-primary-foreground, var(--astryx-color-text-primary, #171717));
+  }
+
+  .astryx-link.astryx-link--color-secondary {
+    color: var(--astryx-link-secondary-foreground, var(--astryx-color-text-secondary, #525252));
+  }
+
+  .astryx-link.astryx-link--color-accent {
+    color: var(--astryx-link-accent-foreground, #0074e2);
+  }
+
+  .astryx-link.astryx-link--color-inherit {
+    color: inherit;
+  }
+
+  .astryx-link__external {
+    display: inline-block;
+    font-size: 0.75em;
+    line-height: 1;
+  }
+}

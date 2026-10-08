@@ -17,31 +17,11 @@ footer: false
         <td><code>variant</code></td>
         <td><code>BadgeVariant</code></td>
         <td><code>'neutral'</code></td>
-        <td>设置标签的视觉变体。</td>
+        <td>标签的视觉变体。语义变体：neutral、info、success、warning、error；分类颜色：blue、cyan、green、orange、pink、purple、red、teal、yellow。</td>
       </tr>
     </tbody>
   </table>
 </div>
-
-### 语义变体
-
-- `neutral`
-- `info`
-- `success`
-- `warning`
-- `error`
-
-### 分类颜色
-
-- `blue`
-- `cyan`
-- `green`
-- `orange`
-- `pink`
-- `purple`
-- `red`
-- `teal`
-- `yellow`
 
 ## 插槽
 

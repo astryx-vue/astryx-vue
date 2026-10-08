@@ -1,0 +1,44 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-avatar-group {
+    display: inline-flex;
+    align-items: center;
+    padding-inline-start: var(--astryx-avatar-group-overlap, 0px);
+  }
+
+  .astryx-avatar--group-item {
+    border-style: solid;
+    border-color: var(--astryx-avatar-group-border-color, #fff);
+  }
+
+  .astryx-avatar-group-overflow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    color: var(--astryx-avatar-group-overflow-foreground, #525252);
+    background-color: var(--astryx-avatar-group-overflow-background, #e5e5e5);
+    border-style: solid;
+    border-color: var(--astryx-avatar-group-border-color, #fff);
+    border-width: 2px;
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: 1;
+    user-select: none;
+  }
+
+  .astryx-avatar-group-overflow--circle {
+    border-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-avatar-group-overflow--rounded {
+    border-radius: var(--astryx-radius-element, 0.625rem);
+  }
+
+  .astryx-avatar-group-overflow--square {
+    border-radius: var(--astryx-radius-none, 0);
+  }
+}

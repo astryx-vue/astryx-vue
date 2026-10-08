@@ -13,9 +13,9 @@ import { blockquoteCite } from '../../../../components/demos/blockquote'
 
 ## 使用方法
 
-从独立入口导入组件。组件会加载结构样式。
+`Blockquote` 用于展示引用的文本，例如推荐语、评论摘录或文档中引用的外部内容，在视觉上与普通段落区分开。从独立入口导入即可，结构样式会随组件自动加载：
 
-在应用入口引入主题：
+主题在应用入口引入一次：
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
@@ -44,7 +44,7 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 用于引用文本、推荐语或来自外部来源的高亮摘录。 |
 | <Badge variant="success">推荐</Badge> | 引用来源已知时，提供 cite 属性。 |
-| <Badge variant="error">不要</Badge> | 用于提示或信息说明。应使用提示条（Banner）。 |
+| <Badge variant="error">避免</Badge> | 用于提示或信息说明。应使用提示条（Banner）。 |
 
 ## 示例
 

@@ -12,7 +12,7 @@ import { dialogBasic, dialogForm, dialogFullscreen, dialogImperative, dialogRequ
 
 ## 使用方法
 
-`Dialog` 在页面上方呈现一个模态任务。它基于原生 `<dialog>` 元素，因此会锁定背景、把焦点限制在对话框内，并在关闭后把焦点还给打开它的元素。搭配 `DialogHeader` 可以获得可聚焦的标题、可选的副标题与关闭按钮。
+`Dialog` 在页面内容上方呈现一个模态对话框，用来承载需要用户专注处理的任务。它基于原生 `<dialog>` 元素，会自动锁定背景、把焦点限制在对话框内，关闭后焦点还会还给打开它的元素。搭配 `DialogHeader` 使用，可以获得可聚焦的标题、可选的副标题和关闭按钮：
 
 ```vue
 <script setup lang="ts">
@@ -43,9 +43,9 @@ const isOpen = ref(false)
 | <Badge variant="success">推荐</Badge> | 在头部添加清晰的标题，让用户立即了解对话框要他们做什么。 |
 | <Badge variant="success">推荐</Badge> | 含有输入内容的对话框使用 purpose="form"。这样用户不会因误点遮罩而丢失数据。 |
 | <Badge variant="success">推荐</Badge> | 对话框只处理单一任务。内容超出可容纳范围时，考虑改用整页。 |
-| <Badge variant="error">不要</Badge> | 用对话框展示简单消息。这类消息可以内联显示，或使用 Toast 通知。 |
-| <Badge variant="error">不要</Badge> | 在对话框中嵌套对话框。应把流程拆成单个对话框内的多个步骤。 |
-| <Badge variant="error">不要</Badge> | 为简单确认使用 fullscreen 变体。它适用于编辑器或长表单等复杂内容。 |
+| <Badge variant="error">避免</Badge> | 用对话框展示简单消息。这类消息可以内联显示，或使用 Toast 通知。 |
+| <Badge variant="error">避免</Badge> | 在对话框中嵌套对话框。应把流程拆成单个对话框内的多个步骤。 |
+| <Badge variant="error">避免</Badge> | 为简单确认使用 fullscreen 变体。它适用于编辑器或长表单等复杂内容。 |
 
 ## 示例
 

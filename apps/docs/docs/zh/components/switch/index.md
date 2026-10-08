@@ -36,8 +36,8 @@ const enabled = shallowRef(false)
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 用于立即生效的设置。切换后应直接生效，无需单独的保存操作。 |
 | <Badge variant="success">推荐</Badge> | 搭配清晰、简洁的标签，说明所控制的设置。 |
-| <Badge variant="error">不要</Badge> | 需要提交表单才能生效的选项使用开关。应改用复选框。 |
-| <Badge variant="error">不要</Badge> | 用 Tooltip 包裹禁用的开关来解释禁用原因。禁用的控件会吞掉包裹层需要的悬停事件。应改用 disabledMessage 属性。 |
+| <Badge variant="error">避免</Badge> | 需要提交表单才能生效的选项使用开关。应改用复选框。 |
+| <Badge variant="error">避免</Badge> | 用 Tooltip 包裹禁用的开关来解释禁用原因。禁用的控件会吞掉包裹层需要的悬停事件。应改用 disabledMessage 属性。 |
 
 ## 示例
 
