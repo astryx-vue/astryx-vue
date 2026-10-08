@@ -1,12 +1,12 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-spinner-dash {
+@keyframes astryx-spinner-rotate {
   from {
-    stroke-dashoffset: 0px;
+    transform: rotate(0deg);
   }
 
   to {
-    stroke-dashoffset: calc(var(--_spinner-diameter) * -3.14159265);
+    transform: rotate(360deg);
   }
 }
 
@@ -20,7 +20,7 @@
   }
 
   .astryx-spinner-label {
-    color: var(--astryx-spinner-label-color, #000);
+    color: var(--astryx-spinner-label-color, #171717);
     font-size: var(--astryx-text-body-size, 0.875rem);
     font-weight: var(--astryx-font-weight-bold, 700);
     line-height: var(--astryx-text-body-leading, 1.4286);
@@ -29,8 +29,8 @@
   .astryx-spinner {
     --_spinner-diameter: var(--astryx-spinner-diameter-md, 14px);
     --_spinner-stroke: var(--astryx-spinner-stroke-width-md, 3px);
-    --_spinner-color: var(--astryx-spinner-color-accent, #1b1b1b);
-    --_spinner-track: var(--astryx-spinner-color-track, #ababab);
+    --_spinner-color: var(--astryx-spinner-color-accent, #262626);
+    --_spinner-track: var(--astryx-spinner-color-track, #ccd3db);
     --_spinner-track-opacity: 1;
     --_spinner-arc-fraction: var(--astryx-spinner-arc-fraction, 0.375);
 
@@ -64,14 +64,14 @@
   }
 
   .astryx-spinner[data-shade='default'] {
-    --_spinner-color: var(--astryx-spinner-color-accent, #1b1b1b);
-    --_spinner-track: var(--astryx-spinner-color-track, #ababab);
+    --_spinner-color: var(--astryx-spinner-color-accent, #262626);
+    --_spinner-track: var(--astryx-spinner-color-track, #ccd3db);
     --_spinner-track-opacity: 1;
   }
 
   .astryx-spinner[data-shade='subtle'] {
-    --_spinner-color: var(--astryx-spinner-color-subtle, #474747);
-    --_spinner-track: var(--astryx-spinner-color-track, #ababab);
+    --_spinner-color: var(--astryx-spinner-color-subtle, #525252);
+    --_spinner-track: var(--astryx-spinner-color-track, #ccd3db);
     --_spinner-track-opacity: 1;
   }
 
@@ -92,6 +92,7 @@
     width: 100%;
     height: 100%;
     overflow: visible;
+    animation: astryx-spinner-rotate var(--astryx-duration-slow-min, 525ms) linear infinite;
   }
 
   .astryx-spinner__track,
@@ -115,11 +116,10 @@
     stroke-dasharray:
       calc(var(--_spinner-diameter) * 3.14159265 * var(--_spinner-arc-fraction))
       calc(var(--_spinner-diameter) * 3.14159265 * (1 - var(--_spinner-arc-fraction)));
-    animation: astryx-spinner-dash var(--astryx-duration-slow-min, 525ms) linear infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-spinner__arc {
+    .astryx-spinner__ring {
       animation-duration: 3s;
     }
   }
