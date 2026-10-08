@@ -63,6 +63,11 @@
       "types": "./dist/Tooltip/index.d.ts",
       "import": "./dist/Tooltip/index.js"
     },
+    "./Popover": {
+      "source": "./src/Popover/index.ts",
+      "types": "./dist/Popover/index.d.ts",
+      "import": "./dist/Popover/index.js"
+    },
     "./Skeleton": {
       "source": "./src/Skeleton/index.ts",
       "types": "./dist/Skeleton/index.d.ts",

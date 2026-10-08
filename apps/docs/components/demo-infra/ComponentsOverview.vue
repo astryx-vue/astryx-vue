@@ -11,6 +11,7 @@ import { checkboxInputBasic } from '../demos/checkbox-input'
 import { dividerBasic } from '../demos/divider'
 import { fieldCustom } from '../demos/field'
 import { iconButtonActionBar } from '../demos/icon-button'
+import { popoverBasic } from '../demos/popover'
 import { progressBarBasic } from '../demos/progress-bar'
 import { radioBasic } from '../demos/radio'
 import { skeletonProfile } from '../demos/skeleton'
@@ -56,7 +57,10 @@ const groups = computed(() => [
     { demo: skeletonProfile, slug: 'skeleton', name: nav.value.skeleton },
     { demo: spinnerBasic, slug: 'spinner', name: nav.value.spinner },
   ] },
-  { title: nav.value.overlays, cards: [{ demo: tooltipBasic, slug: 'tooltip', name: nav.value.tooltip }] },
+  { title: nav.value.overlays, cards: [
+    { demo: tooltipBasic, slug: 'tooltip', name: nav.value.tooltip },
+    { demo: popoverBasic, slug: 'popover', name: nav.value.popover },
+  ] },
   { title: nav.value.utilities, cards: [{ demo: visuallyHiddenContext, slug: 'visually-hidden', name: nav.value.visuallyHidden }] },
 ])
 </script>
