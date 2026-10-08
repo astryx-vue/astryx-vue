@@ -28,8 +28,8 @@ const erroredSrc = ref<string | undefined>(undefined)
 const erroredFallbackSrc = ref<string | undefined>(undefined)
 
 const avatarGroup = inject(AvatarGroupContext, undefined)
-const resolvedSize = computed(() => avatarGroup?.size ?? props.size)
-const resolvedShape = computed(() => avatarGroup?.shape ?? props.shape)
+const resolvedSize = computed(() => avatarGroup?.size.value ?? props.size)
+const resolvedShape = computed(() => avatarGroup?.shape.value ?? props.shape)
 
 const numericSize = computed(() => resolveSize(resolvedSize.value))
 
@@ -38,7 +38,7 @@ const groupStyle = computed<CSSProperties>(() => {
     return {}
   }
   return {
-    marginInlineStart: `${-avatarGroup.overlap}px`,
+    marginInlineStart: `${-avatarGroup.overlap.value}px`,
     borderWidth: '2px',
   }
 })

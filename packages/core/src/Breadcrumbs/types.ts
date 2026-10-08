@@ -1,3 +1,5 @@
+import type { ComputedRef } from 'vue'
+
 export type BreadcrumbsVariant = 'default' | 'supporting'
 
 export interface BreadcrumbsProps {
@@ -29,7 +31,11 @@ export interface BreadcrumbItemProps {
   isCurrent?: boolean
 }
 
+/**
+ * Breadcrumb items read the trail styling from the list, so these stay
+ * reactive refs instead of plain values.
+ */
 export interface BreadcrumbContextValue {
-  variant: BreadcrumbsVariant
-  separator: string
+  variant: ComputedRef<BreadcrumbsVariant>
+  separator: ComputedRef<string>
 }

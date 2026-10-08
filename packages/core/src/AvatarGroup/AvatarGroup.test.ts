@@ -48,6 +48,24 @@ describe('avatarGroup', () => {
     expect(avatar.attributes('style')).toContain('width: 48px')
   })
 
+  it('follows the group size when it changes', async () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { size: 'sm' },
+      slots: {
+        default: '<Avatar name="Ana Thomas" />',
+      },
+      global: {
+        components: { Avatar },
+      },
+    })
+
+    expect(wrapper.find('.astryx-avatar').attributes('style')).toContain('width: 24px')
+
+    await wrapper.setProps({ size: 'lg' })
+
+    expect(wrapper.find('.astryx-avatar').attributes('style')).toContain('width: 48px')
+  })
+
   it('renders overflow indicator', () => {
     const wrapper = mount(AvatarGroup, {
       props: {

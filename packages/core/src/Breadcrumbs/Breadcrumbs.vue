@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { BreadcrumbsProps } from './types.js'
-import { provide, readonly } from 'vue'
+import { computed, provide } from 'vue'
 
 import { breadcrumbContextKey } from './context.js'
 import '../../styles/breadcrumbs.css'
@@ -15,10 +15,10 @@ defineSlots<{
   default: () => unknown
 }>()
 
-provide(breadcrumbContextKey, readonly({
-  variant: props.variant,
-  separator: props.separator,
-}))
+provide(breadcrumbContextKey, {
+  variant: computed(() => props.variant),
+  separator: computed(() => props.separator),
+})
 </script>
 
 <template>

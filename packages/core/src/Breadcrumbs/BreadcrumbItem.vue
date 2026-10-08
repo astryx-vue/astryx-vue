@@ -15,14 +15,13 @@ defineSlots<{
   startIcon: () => unknown
 }>()
 
-const context = inject(breadcrumbContextKey, {
-  variant: 'default',
-  separator: '/',
-})
+const context = inject(breadcrumbContextKey, undefined)
+const variant = computed(() => context?.variant.value ?? 'default')
+const separator = computed(() => context?.separator.value ?? '/')
 
 const classes = computed(() => [
   'astryx-breadcrumb-item',
-  `astryx-breadcrumb-item--variant-${context.variant}`,
+  `astryx-breadcrumb-item--variant-${variant.value}`,
 ])
 
 const contentClasses = computed(() => [
@@ -41,7 +40,7 @@ function handleClick(event: MouseEvent) {
 
 <template>
   <li :class="classes">
-    <span class="astryx-breadcrumb-item__separator" aria-hidden="true">{{ context.separator }}</span>
+    <span class="astryx-breadcrumb-item__separator" aria-hidden="true">{{ separator }}</span>
     <a
       v-if="href && !isCurrent"
       :href="href"

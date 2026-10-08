@@ -83,12 +83,12 @@ function unregisterTab(value: string) {
 }
 
 provide(tabListContextKey, {
-  value: computed(() => props.value).value,
-  size: props.size,
-  layout: props.layout,
-  hasDivider: props.hasDivider,
+  value: computed(() => props.value),
+  size: computed(() => props.size),
+  layout: computed(() => props.layout),
+  hasDivider: computed(() => props.hasDivider),
   tabs,
-  focusedValue: computed(() => focusedValue.value).value,
+  focusedValue,
   registerTab,
   unregisterTab,
   selectTab,

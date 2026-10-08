@@ -89,4 +89,21 @@ describe('breadcrumbs', () => {
 
     expect(wrapper.find('.astryx-breadcrumb-item--variant-supporting').exists()).toBe(true)
   })
+
+  it('follows the variant and separator when they change', async () => {
+    const wrapper = mount(Breadcrumbs, {
+      props: { variant: 'default', separator: '/' },
+      slots: {
+        default: () => h(BreadcrumbItem, { href: '/' }, () => 'Home'),
+      },
+    })
+
+    expect(wrapper.find('.astryx-breadcrumb-item--variant-default').exists()).toBe(true)
+    expect(wrapper.find('.astryx-breadcrumb-item__separator').text()).toBe('/')
+
+    await wrapper.setProps({ variant: 'supporting', separator: '>' })
+
+    expect(wrapper.find('.astryx-breadcrumb-item--variant-supporting').exists()).toBe(true)
+    expect(wrapper.find('.astryx-breadcrumb-item__separator').text()).toBe('>')
+  })
 })

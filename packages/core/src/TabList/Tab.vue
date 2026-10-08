@@ -18,12 +18,12 @@ const props = withDefaults(defineProps<TabProps>(), {
 const context = inject(tabListContextKey)
 const rootRef = ref<HTMLElement>()
 
-const isSelected = computed(() => context?.value === props.value)
+const isSelected = computed(() => context?.value.value === props.value)
 const tabIndex = computed(() => (isSelected.value && !props.disabled ? 0 : -1))
 
 const classes = computed(() => [
   'astryx-tab',
-  `astryx-tab--size-${context?.size ?? 'md'}`,
+  `astryx-tab--size-${context?.size.value ?? 'md'}`,
   isSelected.value && 'astryx-tab--selected',
   props.disabled && 'astryx-tab--disabled',
 ])

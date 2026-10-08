@@ -17,9 +17,9 @@ const numericSize = computed(() => resolveSize(props.size))
 const overlap = computed(() => Math.round(numericSize.value * OVERLAP_RATIO))
 
 provide(AvatarGroupContext, {
-  size: props.size,
-  shape: props.shape,
-  overlap: overlap.value,
+  size: computed(() => props.size),
+  shape: computed(() => props.shape),
+  overlap,
 })
 </script>
 
