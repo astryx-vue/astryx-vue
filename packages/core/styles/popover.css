@@ -51,6 +51,7 @@
 @layer astryx.components {
   .astryx-popover-trigger {
     display: inline-flex;
+    justify-self: start;
   }
 
   .astryx-popover {
