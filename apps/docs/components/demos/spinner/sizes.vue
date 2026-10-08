@@ -4,9 +4,9 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 <template>
   <div class="input-preview-grid">
-    <Spinner size="sm" />
-    <Spinner size="md" />
-    <Spinner size="lg" />
-    <Spinner size="xl" />
+    <Spinner size="sm" label="sm" />
+    <Spinner size="md" label="md" />
+    <Spinner size="lg" label="lg" />
+    <Spinner size="xl" label="xl" />
   </div>
 </template>
