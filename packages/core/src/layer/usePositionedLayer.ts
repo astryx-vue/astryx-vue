@@ -32,10 +32,9 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     const layerEl = layer.value
     if (!anchorEl || !layerEl || !isOpen.value)
       return
-    const rect = layerEl.getBoundingClientRect()
     position.value = computeLayerPosition(
       anchorEl.getBoundingClientRect(),
-      { width: rect.width, height: rect.height },
+      { width: layerEl.offsetWidth, height: layerEl.offsetHeight },
       { width: window.innerWidth, height: window.innerHeight },
       placement.value,
       alignment.value,
@@ -49,8 +48,8 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   // 轮询锚点与浮层的几何信息，任一发生变化即重新计算位置。
   function geometryKey(): string {
     const a = anchor.value?.getBoundingClientRect()
-    const l = layer.value?.getBoundingClientRect()
-    return [a?.top, a?.left, a?.width, a?.height, l?.width, l?.height].join(',')
+    const l = layer.value
+    return [a?.top, a?.left, a?.width, a?.height, l?.offsetWidth, l?.offsetHeight].join(',')
   }
 
   function watchGeometry(): void {
