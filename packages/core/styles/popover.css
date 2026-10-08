@@ -61,6 +61,7 @@
     z-index: var(--astryx-popover-z-index, 1000);
     display: flex;
     flex-direction: column;
+    gap: var(--astryx-spacing-3, 12px);
     max-inline-size: calc(100vw - 16px);
     max-block-size: calc(100vh - 16px);
     overflow: auto;

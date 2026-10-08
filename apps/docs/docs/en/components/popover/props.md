@@ -13,7 +13,7 @@ footer: false
 <tr><td><code>alignment</code></td><td><code>'start' | 'center' | 'end'</code></td><td><code>'start'</code></td><td>Alignment along the placement axis.</td></tr>
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>Controlled visibility. When unset, the trigger manages visibility.</td></tr>
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Prevents the trigger from opening the surface when false.</td></tr>
-<tr><td><code>width</code></td><td><code>number | string</code></td><td>Trigger width</td><td>Surface width. Numbers are pixels. Defaults to the trigger width.</td></tr>
+<tr><td><code>width</code></td><td><code>number | string</code></td><td>Trigger width</td><td>Surface width. Numbers are pixels. When unset, the surface is at least as wide as the trigger and at most 320px (and never wider than the viewport).</td></tr>
 <tr><td><code>padding</code></td><td><code>0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10</code></td><td><code>3</code></td><td>Inner padding, mapped to the <code>--astryx-spacing-*</code> tokens.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name of the dialog. Provide it when <code>role</code> is <code>dialog</code>.</td></tr>
 <tr><td><code>role</code></td><td><code>'dialog' | 'none'</code></td><td><code>'dialog'</code></td><td>Use <code>dialog</code> for interactive content. Use <code>none</code> when the content already has its own role.</td></tr>

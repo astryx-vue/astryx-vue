@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 
 const GAP = 4
+const DEFAULT_MAX_WIDTH = 320
 const popoverId = `astryx-popover-${useId()}`
 const anchorRef = ref<HTMLElement | null>(null)
 const surfaceRef = ref<HTMLElement | null>(null)
@@ -51,10 +52,13 @@ const surfaceStyle = computed(() => {
     'top': `${position.value.top}px`,
     'left': `${position.value.left}px`,
   }
-  if (props.width != null)
+  if (props.width != null) {
     style.width = typeof props.width === 'number' ? `${props.width}px` : props.width
-  else
-    style.minWidth = `${anchorWidth.value}px`
+  }
+  else {
+    style.minWidth = `min(${anchorWidth.value}px, ${DEFAULT_MAX_WIDTH}px)`
+    style.maxWidth = `min(${DEFAULT_MAX_WIDTH}px, calc(100vw - 16px))`
+  }
   return style
 })
 

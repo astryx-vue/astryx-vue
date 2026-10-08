@@ -13,7 +13,7 @@ footer: false
 <tr><td><code>alignment</code></td><td><code>'start' | 'center' | 'end'</code></td><td><code>'start'</code></td><td>沿位置方向的对齐方式。</td></tr>
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>受控显示状态。未设置时由触发元素管理显示。</td></tr>
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>为 false 时触发元素无法打开浮层。</td></tr>
-<tr><td><code>width</code></td><td><code>number | string</code></td><td>触发元素宽度</td><td>浮层宽度。数字单位为像素。未设置时与触发元素等宽。</td></tr>
+<tr><td><code>width</code></td><td><code>number | string</code></td><td>触发元素宽度</td><td>浮层宽度。数字单位为像素。未设置时最小与触发元素等宽，最大为 320px（且不超出视口）。</td></tr>
 <tr><td><code>padding</code></td><td><code>0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10</code></td><td><code>3</code></td><td>内边距，对应 <code>--astryx-spacing-*</code> 令牌。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>对话框的无障碍名称。<code>role</code> 为 <code>dialog</code> 时应提供。</td></tr>
 <tr><td><code>role</code></td><td><code>'dialog' | 'none'</code></td><td><code>'dialog'</code></td><td>交互内容使用 <code>dialog</code>。内容自带角色时使用 <code>none</code>。</td></tr>
