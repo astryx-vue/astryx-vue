@@ -41,6 +41,7 @@
     vertical-align: middle;
     width: calc(var(--_spinner-diameter) + var(--_spinner-stroke) * 2);
     height: calc(var(--_spinner-diameter) + var(--_spinner-stroke) * 2);
+    animation: astryx-spinner-rotate var(--astryx-duration-slow-min, 525ms) linear infinite;
   }
 
   .astryx-spinner[data-size='sm'] {
@@ -89,10 +90,9 @@
 
   .astryx-spinner__ring {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: calc(var(--_spinner-diameter) + var(--_spinner-stroke) * 2);
+    height: calc(var(--_spinner-diameter) + var(--_spinner-stroke) * 2);
     overflow: visible;
-    animation: astryx-spinner-rotate var(--astryx-duration-slow-min, 525ms) linear infinite;
   }
 
   .astryx-spinner__track,
@@ -119,7 +119,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-spinner__ring {
+    .astryx-spinner {
       animation-duration: 3s;
     }
   }
