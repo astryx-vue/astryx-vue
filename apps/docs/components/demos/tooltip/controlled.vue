@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Button } from '@astryx-vue/core/Button'
 import { Tooltip } from '@astryx-vue/core/Tooltip'
+import { ref } from 'vue'
 
 const isOpen = ref(true)
 </script>

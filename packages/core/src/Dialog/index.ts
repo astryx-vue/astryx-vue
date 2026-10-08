@@ -1,5 +1,5 @@
 export { default as Dialog } from './Dialog.vue'
 export { default as DialogHeader } from './DialogHeader.vue'
+export type { DialogBlockPosition, DialogHeaderProps, DialogPadding, DialogPosition, DialogProps, DialogPurpose, DialogVariant } from './types.js'
 export type { ImperativeDialogOptions, ImperativeDialogReturn } from './useImperativeDialog.js'
 export { useImperativeDialog } from './useImperativeDialog.js'
-export type { DialogBlockPosition, DialogHeaderProps, DialogPadding, DialogPosition, DialogProps, DialogPurpose, DialogVariant } from './types.js'

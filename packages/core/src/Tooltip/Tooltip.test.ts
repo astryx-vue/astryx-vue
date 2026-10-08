@@ -82,7 +82,7 @@ describe('tooltip', () => {
   })
 
   it('closes on Escape when uncontrolled', async () => {
-    const { wrapper, trigger, bubble } = renderTooltip({ isDefaultOpen: true })
+    const { wrapper, bubble } = renderTooltip({ isDefaultOpen: true })
     await nextTick()
     expect(isShown(bubble)).toBe(true)
 
@@ -121,7 +121,8 @@ describe('tooltip', () => {
   })
 
   it('makes a text-only trigger focusable and marks it for hover indication', async () => {
-    const { trigger, bubble } = renderTooltip({}, 'Read more')
+    const { bubble } = renderTooltip({}, 'Read more')
+    const trigger = document.querySelector('.astryx-tooltip-trigger') as HTMLElement
     await nextTick()
 
     expect(trigger.classList.contains('astryx-tooltip-trigger--text')).toBe(true)

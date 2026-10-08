@@ -68,7 +68,7 @@ describe('dialog', () => {
   })
 
   it('lets an explicit aria-label replace the header name', async () => {
-    const wrapper = renderDialog({ isOpen: true, 'aria-label': 'Custom name' }, {
+    const wrapper = renderDialog({ 'isOpen': true, 'aria-label': 'Custom name' }, {
       default: () => h(DialogHeader, { title: 'Delete project' }),
     })
     await flushPromises()
@@ -178,7 +178,7 @@ describe('dialog', () => {
     renderDialog({ isOpen: true, position: { top: 24 } })
 
     expect(dialogEl().style.top).toBe('24px')
-    expect(dialogEl().style.margin).toBe('0')
+    expect(Number.parseFloat(dialogEl().style.margin)).toBe(0)
   })
 
   it('maps numeric padding to the spacing token', () => {

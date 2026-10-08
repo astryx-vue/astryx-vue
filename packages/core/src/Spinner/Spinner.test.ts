@@ -79,7 +79,7 @@ describe('spinner', () => {
   it('passes class and data attributes to the root element', () => {
     const wrapper = mount(Spinner, {
       attachTo: document.body,
-      attrs: { class: 'custom', 'data-testid': 'spinner' },
+      attrs: { 'class': 'custom', 'data-testid': 'spinner' },
     })
 
     expect(wrapper.get('[data-testid="spinner"]').classes()).toContain('custom')
@@ -89,7 +89,7 @@ describe('spinner', () => {
     const wrapper = mount(Spinner, {
       attachTo: document.body,
       props: { label: 'Loading data' },
-      attrs: { class: 'custom', 'data-testid': 'spinner' },
+      attrs: { 'class': 'custom', 'data-testid': 'spinner' },
     })
     const group = wrapper.get('[data-testid="spinner"]')
 

@@ -193,6 +193,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
   </template>
+  <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 遮罩点击只作用于原生 dialog 元素本身；Escape 由原生 cancel 事件处理。 -->
   <dialog
     v-else
     ref="dialogRef"

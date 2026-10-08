@@ -36,7 +36,9 @@ const labelledBy = computed(() => {
   >
     <div class="astryx-divider__rule" />
     <div v-if="hasLabel" :id="labelId" class="astryx-divider__label">
-      <slot name="label">{{ label }}</slot>
+      <slot name="label">
+        {{ label }}
+      </slot>
     </div>
     <div v-if="hasLabel" class="astryx-divider__rule" />
   </div>

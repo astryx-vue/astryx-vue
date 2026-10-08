@@ -15,7 +15,13 @@ export interface PositionedLayerOptions {
 /**
  * 在浮层打开时维护其位置，并在滚动与窗口尺寸变化时更新。
  */
-export function usePositionedLayer(options: PositionedLayerOptions) {
+export interface PositionedLayer {
+  position: Ref<LayerPosition>
+  update: () => void
+  detach: () => void
+}
+
+export function usePositionedLayer(options: PositionedLayerOptions): PositionedLayer {
   const { anchor, layer, isOpen, placement, alignment, gap } = options
   const position = ref<LayerPosition>({ top: 0, left: 0, placement: placement.value })
 

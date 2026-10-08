@@ -87,7 +87,7 @@ function scheduleShow(): void {
   if (!props.isEnabled || isControlled.value)
     return
   clearTimers()
-  showTimer = setTimeout(() => setOpen(true), props.delay)
+  showTimer = setTimeout(setOpen, props.delay, true)
 }
 
 function scheduleHide(): void {
@@ -95,7 +95,7 @@ function scheduleHide(): void {
     return
   clearTimers()
   const wait = props.hideDelay > 0 ? props.hideDelay : HOVER_BRIDGE_DELAY
-  hideTimer = setTimeout(() => setOpen(false), wait)
+  hideTimer = setTimeout(setOpen, wait, false)
 }
 
 function cancelHide(): void {
@@ -277,10 +277,11 @@ onBeforeUnmount(() => {
     <slot />
   </span>
   <Teleport to="body">
+    <!-- eslint-disable-next-line vue-a11y/mouse-events-have-key-events, vue-a11y/no-static-element-interactions -- 气泡上的鼠标事件仅用于指针移入气泡时保持显示；键盘焦点由触发元素的 focusin / focusout 处理。 -->
     <div
+      v-show="isVisible"
       :id="tooltipId"
       ref="bubbleRef"
-      v-show="isVisible"
       class="astryx-tooltip"
       role="tooltip"
       :data-placement="position.placement"
@@ -288,7 +289,9 @@ onBeforeUnmount(() => {
       @mouseenter="cancelHide"
       @mouseleave="scheduleHide"
     >
-      <slot name="content">{{ content }}</slot>
+      <slot name="content">
+        {{ content }}
+      </slot>
     </div>
   </Teleport>
 </template>

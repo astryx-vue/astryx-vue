@@ -48,7 +48,9 @@ function rootAttrs(): Record<string, unknown> {
         class="astryx-dialog-header__title"
         tabindex="-1"
         :data-dialog-default-focus="defaultFocusAttr"
-      >{{ title }}</h2>
+      >
+        {{ title }}
+      </h2>
       <span v-if="hasSubtitle" class="astryx-dialog-header__subtitle">{{ subtitle }}</span>
     </div>
     <div

@@ -186,7 +186,7 @@ watch(isOpenState, (open) => {
     anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
     document.addEventListener('pointerdown', onDocumentPointerDown, true)
     document.addEventListener('keydown', onDocumentKeydown)
-    if (props.hasAutoFocus)
+    if (props.hasAutoFocus && props.role === 'dialog')
       nextTick(focusInitialTarget)
     return
   }
