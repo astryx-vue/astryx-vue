@@ -7,7 +7,7 @@ const isOpen = ref(true)
 </script>
 
 <template>
-  <div class="input-preview-grid">
+  <div class="input-preview-row">
     <Tooltip content="Controlled tooltip" :is-open="isOpen" @open-change="isOpen = $event">
       <Button label="Hover me" />
     </Tooltip>

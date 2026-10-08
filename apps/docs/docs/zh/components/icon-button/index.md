@@ -27,6 +27,8 @@ import { IconButton } from '@astryx-vue/core/IconButton'
 </template>
 ```
 
+astryx-vue 不自带图标集，图形由你提供：图标插槽可以放任意 CSS 图标类（UnoCSS、Tailwind 或你自己的类名），也可以放你自己的组件。UnoCSS 的图标预设会让图形铺满容器，而按钮已经为这个盒子定好了尺寸，所以这里写一个 `<span class="i-carbon-search" />` 就够了；放到别处时，记得给承载类名的元素一个尺寸。
+
 如果操作的含义无法凭图标一眼看出，请改用带文字的 [Button](/components/button)。
 
 

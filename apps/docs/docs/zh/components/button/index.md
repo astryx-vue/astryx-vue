@@ -28,6 +28,25 @@ import { Button } from '@astryx-vue/core/Button'
 - 需要把一组相关操作并排放在一起时，使用 [ButtonGroup](/components/button-group)。
 - 操作只需要一个图标时，使用 [IconButton](/components/icon-button)。
 
+astryx-vue 不自带图标，需要显示图标的按钮由你自己的图标方案提供图形。`icon` 插槽位于文字之前、放在一个已经定好尺寸的盒子里，`end` 插槽与之对称：
+
+```vue
+<template>
+  <Button label="Upload file">
+    <template #icon>
+      <span class="i-carbon-upload" />
+    </template>
+  </Button>
+  <Button label="Continue" variant="secondary">
+    <template #end>
+      <span class="i-carbon-chevron-right" />
+    </template>
+  </Button>
+</template>
+```
+
+任何 CSS 图标类都可以：UnoCSS 的图标类、Tailwind 的工具类，或者你自己写的类；也可以放一个绘制 SVG 的组件。UnoCSS 的图标预设会铺满容器，而按钮已经为这个盒子定好了尺寸，所以不必再手动指定大小。
+
 
 
 
