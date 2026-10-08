@@ -3,11 +3,11 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-popover-background: light-dark(#fff, #1b1b1b);
-    --astryx-popover-foreground: light-dark(#000, #fff);
+    --astryx-popover-background: light-dark(#ffffff, #1b1b1b);
+    --astryx-popover-foreground: light-dark(#171717, #fafafa);
     --astryx-popover-shadow:
-      0 2px 4px light-dark(rgb(0 0 0 / 5%), rgb(0 0 0 / 25%)),
-      0 4px 8px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 40%)),
-      inset 0 0 0 1px light-dark(transparent, rgb(255 255 255 / 8%));
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
   }
 }

@@ -61,7 +61,6 @@
     z-index: var(--astryx-popover-z-index, 1000);
     display: flex;
     flex-direction: column;
-    gap: var(--astryx-spacing-3, 12px);
     max-inline-size: calc(100vw - 16px);
     max-block-size: calc(100vh - 16px);
     overflow: auto;
@@ -69,8 +68,8 @@
     padding: var(--_popover-padding);
     border-radius: var(--astryx-radius-container, 0.75rem);
     background: var(--astryx-popover-background, #fff);
-    color: var(--astryx-popover-foreground, #000);
-    box-shadow: var(--astryx-popover-shadow, 0 2px 4px rgb(0 0 0 / 5%), 0 4px 8px rgb(0 0 0 / 10%));
+    color: var(--astryx-popover-foreground, #171717);
+    box-shadow: var(--astryx-popover-shadow, 0 2px 4px oklch(0 0 0 / 5%), 0 4px 8px oklch(0 0 0 / 10%));
     font-family: var(--astryx-font-family-body, Figtree, sans-serif);
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
@@ -113,7 +112,7 @@
     overflow: visible;
     clip-path: none;
     pointer-events: auto;
-    padding: var(--astryx-spacing-1, 4px);
+    padding-block-start: var(--astryx-spacing-1, 4px);
   }
 
   @media (prefers-reduced-motion: reduce) {
