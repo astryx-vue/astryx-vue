@@ -10,7 +10,7 @@
 
   .astryx-radio {
     display: inline-flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--astryx-spacing-2, 8px);
     cursor: pointer;
   }
@@ -44,7 +44,6 @@
     justify-content: center;
     width: var(--astryx-radio-size, 18px);
     height: var(--astryx-radio-size, 18px);
-    margin-top: 2px;
     border: 1px solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
     border-radius: var(--astryx-radio-radius, 999px);
     background: var(--astryx-input-background, #fff);

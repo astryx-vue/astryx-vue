@@ -16,6 +16,12 @@
     flex-direction: column;
   }
 
+  /* A group label (a radiogroup, a checkbox group) heads the controls under it,
+     so it needs more room than the label of a single input. */
+  .astryx-field[data-group-label='true'] {
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
   .astryx-field-label-row {
     display: flex;
     align-items: center;

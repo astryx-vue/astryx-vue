@@ -11,17 +11,14 @@
 
   .astryx-checkbox-row {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--astryx-spacing-2, 8px);
   }
 
   .astryx-checkbox-row > .astryx-field-label-group {
     min-width: 0;
-    padding-top: 2px;
     overflow-wrap: anywhere;
   }
-
-  .astryx-checkbox-input[data-size='sm'] .astryx-field-label-group { padding-top: 0; }
 
   .astryx-checkbox-control {
     position: relative;

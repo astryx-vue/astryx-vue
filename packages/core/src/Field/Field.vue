@@ -26,7 +26,7 @@ const style = computed<CSSProperties>(() => ({ '--astryx-field-width': typeof pr
 </script>
 
 <template>
-  <div ref="field" class="astryx-field" :style="style" :data-status-variant="statusVariant">
+  <div ref="field" class="astryx-field" :style="style" :data-status-variant="statusVariant" :data-group-label="isGroupLabel || undefined">
     <FieldLabel
       :label="label" :input-id="inputId" :label-id="slotProps.labelId"
       :description="description" :description-id="slotProps.descriptionId"
