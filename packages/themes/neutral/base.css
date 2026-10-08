@@ -32,8 +32,9 @@
     --astryx-font-weight-bold: 700;
     --astryx-border-width: 1px;
     --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-duration-fast-max: 165ms;
     --astryx-duration-slow-min: 525ms;
-    --astryx-duration-medium-max: 550ms;
+    --astryx-duration-medium-max: 400ms;
 
     --astryx-color-border-emphasized: light-dark(#d4d4d4, #525252);
     --astryx-color-text-primary: light-dark(#171717, #fafafa);

@@ -3,6 +3,8 @@ import type { LayerAlignment, LayerPlacement, LayerPosition } from './position.j
 import { nextTick, ref, watch } from 'vue'
 import { computeLayerPosition } from './position.js'
 
+const GEOMETRY_POLL_INTERVAL = 100
+
 export interface PositionedLayerOptions {
   anchor: Ref<HTMLElement | null>
   layer: Ref<HTMLElement | null>
@@ -41,14 +43,38 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     )
   }
 
+  let pollId: ReturnType<typeof setInterval> | undefined
+
+  // 布局偏移（例如上方内容异步加载）不会触发 scroll 或 resize，因此在浮层打开期间
+  // 轮询锚点与浮层的几何信息，任一发生变化即重新计算位置。
+  function geometryKey(): string {
+    const a = anchor.value?.getBoundingClientRect()
+    const l = layer.value?.getBoundingClientRect()
+    return [a?.top, a?.left, a?.width, a?.height, l?.width, l?.height].join(',')
+  }
+
+  function watchGeometry(): void {
+    let lastKey = ''
+    pollId = setInterval(() => {
+      const key = geometryKey()
+      if (key !== lastKey) {
+        lastKey = key
+        update()
+      }
+    }, GEOMETRY_POLL_INTERVAL)
+  }
+
   function attach(): void {
     window.addEventListener('scroll', update, true)
     window.addEventListener('resize', update)
+    watchGeometry()
   }
 
   function detach(): void {
     window.removeEventListener('scroll', update, true)
     window.removeEventListener('resize', update)
+    clearInterval(pollId)
+    pollId = undefined
   }
 
   watch(isOpen, (open) => {

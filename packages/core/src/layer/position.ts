@@ -58,9 +58,21 @@ export function computeLayerPosition(
     top = alignOnAxis(anchor.top, anchor.height, layer.height, alignment)
   }
 
+  // 锚点完全位于视口之外时不做视口夹紧：浮层跟随锚点停留在其相对位置上，
+  // 而不是被钉在视口边缘。锚点回到视口后再次计算即可正常显示。
+  if (!isAnchorInViewport(anchor, viewport))
+    return { top, left, placement: resolved }
+
   return {
     top: clamp(top, VIEWPORT_MARGIN, viewport.height - layer.height - VIEWPORT_MARGIN),
     left: clamp(left, VIEWPORT_MARGIN, viewport.width - layer.width - VIEWPORT_MARGIN),
     placement: resolved,
   }
+}
+
+function isAnchorInViewport(anchor: DOMRect, viewport: LayerBox): boolean {
+  return anchor.right > 0
+    && anchor.bottom > 0
+    && anchor.left < viewport.width
+    && anchor.top < viewport.height
 }
