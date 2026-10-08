@@ -1521,11 +1521,12 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   max-width: 100%;
 }
 
-.component-card__preview .breadcrumbs-preview .astryx-breadcrumbs {
-  justify-content: center;
-}
-
-.component-card__preview .tab-list-preview .astryx-tab-list {
+/* Center the preview contents. The centering has to land on the element that
+   actually lays the items out: `.astryx-breadcrumbs` is a block box, and the
+   tab strip stretches to fill the list, so neither one aligns its children. */
+.component-card__preview .link-preview__row,
+.component-card__preview .breadcrumbs-preview .astryx-breadcrumbs__list,
+.component-card__preview .tab-list-preview .astryx-tab-list__strip {
   justify-content: center;
 }
 

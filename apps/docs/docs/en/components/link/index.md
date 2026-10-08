@@ -43,7 +43,7 @@ import { Link } from '@astryx-vue/core/Link'
 
 <DemoExample
   :demo="linkColors"
-  description="Links come in primary, secondary, accent, and inherit color variants."
+  description="Links come in primary, secondary, accent, and inherit color variants. Without a color prop a link uses accent."
   locale="en"
   title="Colors"
 />

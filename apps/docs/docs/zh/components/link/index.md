@@ -43,7 +43,7 @@ import { Link } from '@astryx-vue/core/Link'
 
 <DemoExample
   :demo="linkColors"
-  description="链接提供 primary、secondary、accent、inherit 四种颜色变体，可按强调程度或当前上下文选择。"
+  description="链接提供 primary、secondary、accent、inherit 四种颜色变体，可按强调程度或当前上下文选择；不传 color 时默认使用 accent。"
   locale="zh"
   title="颜色"
 />

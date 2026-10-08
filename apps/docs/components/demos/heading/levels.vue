@@ -5,13 +5,13 @@ import { Heading } from '@astryx-vue/core/Heading'
 <template>
   <div class="heading-preview__stack">
     <Heading :level="1">
-      一级标题
+      Level 1 heading
     </Heading>
     <Heading :level="2">
-      二级标题
+      Level 2 heading
     </Heading>
     <Heading :level="3">
-      三级标题
+      Level 3 heading
     </Heading>
   </div>
 </template>

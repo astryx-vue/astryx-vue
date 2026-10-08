@@ -5,13 +5,13 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 <template>
   <Breadcrumbs>
     <BreadcrumbItem href="/">
-      首页
+      Home
     </BreadcrumbItem>
     <BreadcrumbItem href="/components">
-      组件
+      Components
     </BreadcrumbItem>
     <BreadcrumbItem is-current>
-      面包屑
+      Breadcrumbs
     </BreadcrumbItem>
   </Breadcrumbs>
 </template>

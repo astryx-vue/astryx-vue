@@ -8,13 +8,13 @@ const value = ref('overview')
 <template>
   <TabList v-model:value="value">
     <Tab value="overview">
-      总览
+      Overview
     </Tab>
     <Tab value="props">
-      属性
+      Props
     </Tab>
     <Tab value="examples">
-      示例
+      Examples
     </Tab>
   </TabList>
 </template>

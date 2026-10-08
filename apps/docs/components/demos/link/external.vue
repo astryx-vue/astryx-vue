@@ -8,7 +8,7 @@ import { Link } from '@astryx-vue/core/Link'
       GitHub
     </Link>
     <Link href="https://example.com" is-external-link has-underline>
-      带下划线的外部链接
+      External link with underline
     </Link>
   </div>
 </template>

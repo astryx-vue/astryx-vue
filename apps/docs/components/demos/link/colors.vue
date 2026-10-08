@@ -4,17 +4,17 @@ import { Link } from '@astryx-vue/core/Link'
 
 <template>
   <div class="link-preview__row">
-    <Link href="/">
-      默认链接
-    </Link>
     <Link href="/" color="primary">
-      主要链接
+      Primary
     </Link>
     <Link href="/" color="secondary">
-      次要链接
+      Secondary
     </Link>
     <Link href="/" color="accent">
-      强调链接
+      Accent
+    </Link>
+    <Link href="/" color="inherit">
+      Inherit
     </Link>
   </div>
 </template>
