@@ -1297,6 +1297,8 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 
 .component-card__preview .input-preview-grid {
   grid-template-columns: 1fr;
+  justify-items: center;
+  align-items: center;
 }
 
 .checkbox-preview-children {
