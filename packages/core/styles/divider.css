@@ -1,0 +1,63 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-divider {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .astryx-divider[data-orientation='vertical'] {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    height: 100%;
+  }
+
+  .astryx-divider__rule {
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: var(--astryx-border-width, 1px);
+    background: var(--_divider-color, #00000014);
+  }
+
+  .astryx-divider[data-orientation='vertical'] .astryx-divider__rule {
+    width: var(--astryx-border-width, 1px);
+    height: auto;
+  }
+
+  .astryx-divider[data-variant='subtle'] {
+    --_divider-color: var(--astryx-divider-color-subtle, #00000014);
+  }
+
+  .astryx-divider[data-variant='strong'] {
+    --_divider-color: var(--astryx-divider-color-strong, #d4d4d4);
+  }
+
+  .astryx-divider__label {
+    flex-shrink: 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+    color: var(--astryx-divider-label-color, #474747);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-divider[data-orientation='vertical'] .astryx-divider__label {
+    padding-block: var(--astryx-spacing-3, 12px);
+    padding-inline: 0;
+  }
+
+  .astryx-divider[data-full-bleed][data-orientation='horizontal'] {
+    margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
+    margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
+    width: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));
+  }
+
+  .astryx-divider[data-full-bleed][data-orientation='vertical'] {
+    margin-block-start: calc(-1 * var(--container-padding-block-start, 0px));
+    margin-block-end: calc(-1 * var(--container-padding-block-end, 0px));
+    height: calc(100% + var(--container-padding-block-start, 0px) + var(--container-padding-block-end, 0px));
+  }
+}

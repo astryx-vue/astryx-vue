@@ -1,0 +1,10 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-divider-color-subtle: light-dark(#00000014, #ffffff1a);
+    --astryx-divider-color-strong: light-dark(#d4d4d4, #525252);
+    --astryx-divider-label-color: light-dark(#474747, #9e9e9e);
+  }
+}

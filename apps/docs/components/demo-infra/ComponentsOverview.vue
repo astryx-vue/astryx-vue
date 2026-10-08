@@ -8,6 +8,7 @@ import { buttonVariants } from '../demos/button'
 import { buttonGroupBasic } from '../demos/button-group'
 import { checkboxIndicatorOverview } from '../demos/checkbox-indicator'
 import { checkboxInputBasic } from '../demos/checkbox-input'
+import { dividerBasic } from '../demos/divider'
 import { fieldCustom } from '../demos/field'
 import { iconButtonActionBar } from '../demos/icon-button'
 import { progressBarBasic } from '../demos/progress-bar'
@@ -43,7 +44,10 @@ const groups = computed(() => [
     { demo: sliderBasic, slug: 'slider', name: nav.value.slider },
     { demo: fieldCustom, slug: 'field', name: nav.value.field },
   ] },
-  { title: nav.value.layout, cards: [{ demo: stackDirections, slug: 'stack', name: nav.value.stack }] },
+  { title: nav.value.layout, cards: [
+    { demo: stackDirections, slug: 'stack', name: nav.value.stack },
+    { demo: dividerBasic, slug: 'divider', name: nav.value.divider },
+  ] },
   { title: nav.value.content, cards: [{ demo: blockquoteCite, slug: 'blockquote', name: nav.value.blockquote }] },
   { title: nav.value.feedback, cards: [
     { demo: bannerStatuses, slug: 'banner', name: nav.value.banner },

@@ -9,7 +9,7 @@ const text = computed(() => componentDocsCopy[props.route.locale])
 const groups = computed(() => [
   { title: text.value.action, slugs: COMPONENT_SLUGS.slice(0, 3) },
   { title: text.value.form, slugs: ['text-input', 'text-area', 'checkbox-input', 'checkbox-indicator', 'progress-bar', 'radio', 'radio-group', 'radio-list', 'switch', 'slider', 'field'] },
-  { title: text.value.layout, slugs: ['stack'] },
+  { title: text.value.layout, slugs: ['stack', 'divider'] },
   { title: text.value.content, slugs: ['blockquote'] },
   { title: text.value.feedback, slugs: ['banner', 'badge', 'skeleton', 'spinner'] },
   { title: text.value.utilities, slugs: ['visually-hidden'] },
@@ -31,6 +31,7 @@ const names = computed(() => ({
   'slider': text.value.slider,
   'banner': text.value.banner,
   'stack': text.value.stack,
+  'divider': text.value.divider,
   'blockquote': text.value.blockquote,
   'badge': text.value.badge,
   'skeleton': text.value.skeleton,
