@@ -9,7 +9,7 @@ import { buttonGroupBasic } from '../demos/button-group'
 import { checkboxIndicatorOverview } from '../demos/checkbox-indicator'
 import { checkboxInputBasic } from '../demos/checkbox-input'
 import { dialogOverview } from '../demos/dialog'
-import { dividerBasic } from '../demos/divider'
+import { dividerOverview } from '../demos/divider'
 import { fieldCustom } from '../demos/field'
 import { iconButtonActionBar } from '../demos/icon-button'
 import { popoverOverview } from '../demos/popover'
@@ -49,7 +49,7 @@ const groups = computed(() => [
   ] },
   { title: nav.value.layout, cards: [
     { demo: stackDirections, slug: 'stack', name: nav.value.stack },
-    { demo: dividerBasic, slug: 'divider', name: nav.value.divider },
+    { demo: dividerOverview, slug: 'divider', name: nav.value.divider },
   ] },
   { title: nav.value.content, cards: [{ demo: blockquoteCite, slug: 'blockquote', name: nav.value.blockquote }] },
   { title: nav.value.feedback, cards: [
