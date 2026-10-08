@@ -8,10 +8,12 @@ import { VStack } from '@astryx-vue/core/Stack'
   <div class="input-preview-grid">
     <VStack :gap="2" align="center">
       <div class="astryx-popover" style="position: relative; top: auto; left: auto; width: 240px">
-        <VStack :gap="3">
-          <span>Short, interactive content.</span>
-          <Button label="Got it" variant="primary" />
-        </VStack>
+        <div class="astryx-popover__body">
+          <VStack :gap="3">
+            <span>Short, interactive content.</span>
+            <Button label="Got it" variant="primary" />
+          </VStack>
+        </div>
       </div>
       <Popover label="Project details">
         <Button label="Details" variant="secondary" />

@@ -561,6 +561,7 @@ html.dark .astryx-hero .astryx-button--primary:hover {
   min-height: 260px;
   padding: 30px;
   overflow: hidden;
+  isolation: isolate;
   border: 1px solid transparent;
   border-radius: 16px;
   gap: 8px;
@@ -1250,6 +1251,18 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.input-preview-stack > .astryx-button,
+.input-preview-stack > .astryx-button-tooltip,
+.input-preview-stack > .astryx-tooltip-trigger > .astryx-button,
+.input-preview-stack > .astryx-popover-trigger > .astryx-button,
+.input-preview-grid > .astryx-button,
+.input-preview-grid > .astryx-button-tooltip,
+.input-preview-grid > .astryx-tooltip-trigger > .astryx-button,
+.input-preview-grid > .astryx-popover-trigger > .astryx-button {
+  align-self: flex-start;
+  justify-self: start;
 }
 
 .input-preview-note {
