@@ -13,8 +13,10 @@ afterEach(() => {
 describe('dialogHeader', () => {
   it('renders the title as a programmatically focusable heading', () => {
     const wrapper = mount(DialogHeader, { props: { title: 'Delete project' } })
-    const title = wrapper.find('h2')
+    const title = wrapper.find('.astryx-dialog-header__title')
 
+    expect(title.attributes('role')).toBe('heading')
+    expect(title.attributes('aria-level')).toBe('2')
     expect(title.text()).toBe('Delete project')
     expect(title.attributes('tabindex')).toBe('-1')
     expect(title.attributes('data-dialog-default-focus')).toBe('')
@@ -63,6 +65,6 @@ describe('dialogHeader', () => {
       slots: { default: () => h(DialogHeader, { title: 'Preview' }) },
     })
 
-    expect(wrapper.find('h2').attributes('data-dialog-default-focus')).toBeUndefined()
+    expect(wrapper.find('.astryx-dialog-header__title').attributes('data-dialog-default-focus')).toBeUndefined()
   })
 })

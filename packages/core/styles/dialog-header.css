@@ -18,6 +18,7 @@
     margin-block: calc(var(--astryx-size-element-md, 32px) / 2 - var(--astryx-spacing-2, 8px) - var(--astryx-text-heading-2-size, 1.25rem) * var(--astryx-text-heading-2-leading, 1.4) / 2);
   }
 
+  /* 标题使用 role="heading" 而非 h2，宿主页面对 h2 的全局边框与外边距不会作用到组件上 */
   .astryx-dialog-header__title {
     margin: 0;
     outline: none;

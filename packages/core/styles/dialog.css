@@ -86,6 +86,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    gap: var(--astryx-spacing-3, 12px);
     min-height: 0;
     overflow: hidden;
     border-radius: inherit;
