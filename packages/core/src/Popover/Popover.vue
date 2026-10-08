@@ -245,7 +245,9 @@ onBeforeUnmount(() => {
       :data-placement="position.placement"
       :style="surfaceStyle"
     >
-      <slot name="content" />
+      <div class="astryx-popover__body">
+        <slot name="content" />
+      </div>
       <div v-if="hasCloseButton" class="astryx-popover__close">
         <Button variant="secondary" :label="closeButtonLabel" @click="setOpen(false)" />
       </div>
