@@ -58,6 +58,11 @@
       "types": "./dist/Radio/index.d.ts",
       "import": "./dist/Radio/index.js"
     },
+    "./Tooltip": {
+      "source": "./src/Tooltip/index.ts",
+      "types": "./dist/Tooltip/index.d.ts",
+      "import": "./dist/Tooltip/index.js"
+    },
     "./Skeleton": {
       "source": "./src/Skeleton/index.ts",
       "types": "./dist/Skeleton/index.d.ts",

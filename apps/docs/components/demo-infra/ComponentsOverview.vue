@@ -20,6 +20,7 @@ import { stackDirections } from '../demos/stack'
 import { switchBasic } from '../demos/switch'
 import { textAreaBasic } from '../demos/text-area'
 import { textInputBasic } from '../demos/text-input'
+import { tooltipBasic } from '../demos/tooltip'
 import { visuallyHiddenContext } from '../demos/visually-hidden'
 import { componentDocsCopy } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
@@ -55,6 +56,7 @@ const groups = computed(() => [
     { demo: skeletonProfile, slug: 'skeleton', name: nav.value.skeleton },
     { demo: spinnerBasic, slug: 'spinner', name: nav.value.spinner },
   ] },
+  { title: nav.value.overlays, cards: [{ demo: tooltipBasic, slug: 'tooltip', name: nav.value.tooltip }] },
   { title: nav.value.utilities, cards: [{ demo: visuallyHiddenContext, slug: 'visually-hidden', name: nav.value.visuallyHidden }] },
 ])
 </script>

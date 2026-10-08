@@ -1,0 +1,107 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@keyframes astryx-tooltip-enter-above {
+  from {
+    opacity: 0;
+    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes astryx-tooltip-enter-below {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes astryx-tooltip-enter-start {
+  from {
+    opacity: 0;
+    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes astryx-tooltip-enter-end {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@layer astryx.components {
+  .astryx-tooltip-trigger {
+    display: contents;
+  }
+
+  .astryx-tooltip-trigger.astryx-tooltip-trigger--text {
+    display: inline;
+  }
+
+  .astryx-tooltip-trigger--indicated {
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: var(--astryx-tooltip-indication-color, #d4d4d4);
+    text-underline-offset: 2px;
+  }
+
+  .astryx-tooltip {
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--astryx-tooltip-z-index, 1000);
+    max-width: 300px;
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    border-radius: var(--astryx-radius-container, 0.75rem);
+    background: var(--astryx-tooltip-background, #000);
+    color: var(--astryx-tooltip-foreground, #fff);
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    word-break: break-word;
+    animation-duration: 165ms;
+    animation-fill-mode: backwards;
+    animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-tooltip[data-placement='above'] {
+    animation-name: astryx-tooltip-enter-above;
+  }
+
+  .astryx-tooltip[data-placement='below'] {
+    animation-name: astryx-tooltip-enter-below;
+  }
+
+  .astryx-tooltip[data-placement='start'] {
+    animation-name: astryx-tooltip-enter-start;
+  }
+
+  .astryx-tooltip[data-placement='end'] {
+    animation-name: astryx-tooltip-enter-end;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-tooltip {
+      animation: none;
+    }
+  }
+}

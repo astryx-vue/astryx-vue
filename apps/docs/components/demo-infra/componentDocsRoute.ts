@@ -22,6 +22,7 @@ export const COMPONENT_SLUGS = [
   'badge',
   'skeleton',
   'spinner',
+  'tooltip',
   'visually-hidden',
 ] as const
 
@@ -73,6 +74,8 @@ export const componentDocsCopy = {
     skeleton: 'Skeleton',
     spinner: 'Spinner',
     stack: 'Stack',
+    overlays: 'Overlays',
+    tooltip: 'Tooltip',
     utilities: 'Utilities',
     visuallyHidden: 'Visually Hidden',
   },
@@ -108,6 +111,8 @@ export const componentDocsCopy = {
     skeleton: '骨架屏',
     spinner: '旋转器',
     stack: '堆叠布局',
+    overlays: '浮层',
+    tooltip: '提示框',
     utilities: '工具',
     visuallyHidden: '视觉隐藏',
   },
@@ -136,6 +141,7 @@ const componentNames: Record<DocsLocale, Record<ComponentSlug, string>> = {
     'skeleton': componentDocsCopy.en.skeleton,
     'spinner': componentDocsCopy.en.spinner,
     'stack': componentDocsCopy.en.stack,
+    'tooltip': componentDocsCopy.en.tooltip,
     'visually-hidden': componentDocsCopy.en.visuallyHidden,
   },
   zh: {
@@ -160,6 +166,7 @@ const componentNames: Record<DocsLocale, Record<ComponentSlug, string>> = {
     'skeleton': componentDocsCopy.zh.skeleton,
     'spinner': componentDocsCopy.zh.spinner,
     'stack': componentDocsCopy.zh.stack,
+    'tooltip': componentDocsCopy.zh.tooltip,
     'visually-hidden': componentDocsCopy.zh.visuallyHidden,
   },
 }
