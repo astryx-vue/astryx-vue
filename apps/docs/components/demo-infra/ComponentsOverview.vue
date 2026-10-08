@@ -8,6 +8,7 @@ import { buttonVariants } from '../demos/button'
 import { buttonGroupBasic } from '../demos/button-group'
 import { checkboxIndicatorOverview } from '../demos/checkbox-indicator'
 import { checkboxInputBasic } from '../demos/checkbox-input'
+import { dialogBasic } from '../demos/dialog'
 import { dividerBasic } from '../demos/divider'
 import { fieldCustom } from '../demos/field'
 import { iconButtonActionBar } from '../demos/icon-button'
@@ -60,6 +61,7 @@ const groups = computed(() => [
   { title: nav.value.overlays, cards: [
     { demo: tooltipBasic, slug: 'tooltip', name: nav.value.tooltip },
     { demo: popoverBasic, slug: 'popover', name: nav.value.popover },
+    { demo: dialogBasic, slug: 'dialog', name: nav.value.dialog },
   ] },
   { title: nav.value.utilities, cards: [{ demo: visuallyHiddenContext, slug: 'visually-hidden', name: nav.value.visuallyHidden }] },
 ])

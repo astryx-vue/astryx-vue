@@ -1,0 +1,107 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@keyframes astryx-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translate(var(--dialog-dir-x, 0px), var(--dialog-dir-y, 16px)) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes astryx-dialog-enter-fullscreen {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@layer astryx.components {
+  .astryx-dialog {
+    --_dialog-radius: var(--astryx-radius-container, 0.75rem);
+
+    box-sizing: border-box;
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: 400px;
+    max-width: min(100%, calc(100dvw - var(--astryx-spacing-4, 1rem) - var(--astryx-spacing-4, 1rem)));
+    max-height: 75dvh;
+    height: fit-content;
+    padding: 0;
+    border: 0;
+    border-radius: var(--_dialog-radius);
+    background: var(--astryx-dialog-background, #fff);
+    color: var(--astryx-dialog-foreground, #000);
+    box-shadow: var(--astryx-dialog-shadow, 0 4px 6px rgb(0 0 0 / 10%), 0 12px 24px rgb(0 0 0 / 15%));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    flex-direction: column;
+    overscroll-behavior: contain;
+  }
+
+  .astryx-dialog:not([open]):not(.astryx-dialog--inline) {
+    display: none;
+  }
+
+  .astryx-dialog[open] {
+    display: flex;
+    animation: astryx-dialog-enter var(--astryx-duration-medium-max, 550ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)) backwards;
+  }
+
+  .astryx-dialog::backdrop {
+    background: var(--astryx-dialog-overlay, rgb(255 255 255 / 50%));
+    backdrop-filter: blur(2px);
+  }
+
+  .astryx-dialog--inline {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    display: flex;
+    max-width: 100%;
+  }
+
+  .astryx-dialog--fullscreen {
+    width: 100dvw;
+    height: 100dvh;
+    max-width: 100dvw;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .astryx-dialog--fullscreen[open] {
+    animation-name: astryx-dialog-enter-fullscreen;
+  }
+
+  .astryx-dialog__inner {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    padding: var(--_dialog-padding, var(--astryx-dialog-padding, var(--astryx-spacing-4, 1rem)));
+  }
+
+  .astryx-dialog--fullscreen:not([data-padded]) > .astryx-dialog__inner {
+    padding-block-start: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-top, 0px));
+    padding-block-end: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-bottom, 0px));
+    padding-inline-start: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-left, 0px));
+    padding-inline-end: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-right, 0px));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-dialog[open] {
+      animation: none;
+    }
+  }
+}

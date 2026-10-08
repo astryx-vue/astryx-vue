@@ -1,0 +1,14 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-dialog-background: light-dark(#fff, #262626);
+    --astryx-dialog-foreground: light-dark(#000, #fff);
+    --astryx-dialog-overlay: light-dark(rgb(255 255 255 / 50%), rgb(0 0 0 / 80%));
+    --astryx-dialog-shadow:
+      0 4px 6px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 50%)),
+      0 12px 24px light-dark(rgb(0 0 0 / 15%), rgb(0 0 0 / 70%)),
+      inset 0 0 0 1px light-dark(transparent, rgb(255 255 255 / 15%));
+  }
+}

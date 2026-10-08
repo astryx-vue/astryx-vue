@@ -68,6 +68,11 @@
       "types": "./dist/Popover/index.d.ts",
       "import": "./dist/Popover/index.js"
     },
+    "./Dialog": {
+      "source": "./src/Dialog/index.ts",
+      "types": "./dist/Dialog/index.d.ts",
+      "import": "./dist/Dialog/index.js"
+    },
     "./Skeleton": {
       "source": "./src/Skeleton/index.ts",
       "types": "./dist/Skeleton/index.d.ts",

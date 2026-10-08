@@ -12,7 +12,7 @@ const groups = computed(() => [
   { title: text.value.layout, slugs: ['stack', 'divider'] },
   { title: text.value.content, slugs: ['blockquote'] },
   { title: text.value.feedback, slugs: ['banner', 'badge', 'skeleton', 'spinner'] },
-  { title: text.value.overlays, slugs: ['tooltip', 'popover'] },
+  { title: text.value.overlays, slugs: ['tooltip', 'popover', 'dialog'] },
   { title: text.value.utilities, slugs: ['visually-hidden'] },
 ])
 const names = computed(() => ({
@@ -38,6 +38,7 @@ const names = computed(() => ({
   'skeleton': text.value.skeleton,
   'spinner': text.value.spinner,
   'popover': text.value.popover,
+  'dialog': text.value.dialog,
   'tooltip': text.value.tooltip,
   'visually-hidden': text.value.visuallyHidden,
 }))

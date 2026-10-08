@@ -40,6 +40,8 @@ export type { TooltipAlignment, TooltipFocusTrigger, TooltipPlacement, TooltipPr
 export { Tooltip } from './Tooltip/index.js'
 export type { PopoverAlignment, PopoverPadding, PopoverPlacement, PopoverProps, PopoverRole } from './Popover/index.js'
 export { Popover } from './Popover/index.js'
+export type { DialogBlockPosition, DialogHeaderProps, DialogPadding, DialogPosition, DialogProps, DialogPurpose, DialogVariant, ImperativeDialogOptions, ImperativeDialogReturn } from './Dialog/index.js'
+export { Dialog, DialogHeader, useImperativeDialog } from './Dialog/index.js'
 export type { SpinnerProps, SpinnerShade, SpinnerSize } from './Spinner/index.js'
 export { Slider } from './Slider/index.js'
 export type { SliderEmits, SliderMark, SliderOrientation, SliderProps, SliderSlots, SliderValue, SliderValueDisplay } from './Slider/index.js'

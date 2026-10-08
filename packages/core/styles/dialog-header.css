@@ -1,0 +1,49 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-dialog-header {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-dialog-header__title-block {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    /* 与关闭按钮的中心线对齐 */
+    margin-block: calc(var(--astryx-size-element-md, 32px) / 2 - var(--astryx-spacing-2, 8px) - var(--astryx-text-heading-2-size, 1.25rem) * var(--astryx-text-heading-2-leading, 1.4) / 2);
+  }
+
+  .astryx-dialog-header__title {
+    margin: 0;
+    outline: none;
+    overflow-wrap: anywhere;
+    color: var(--astryx-dialog-title-color, var(--astryx-color-text-primary, #000));
+    font-size: var(--astryx-text-heading-2-size, 1.25rem);
+    font-weight: var(--astryx-text-heading-2-weight, 600);
+    line-height: var(--astryx-text-heading-2-leading, 1.4);
+  }
+
+  .astryx-dialog-header__subtitle {
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-dialog-header__actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  /* 关闭按钮的视觉内边距由按钮自身承担，此处抵消以对齐边缘 */
+  .astryx-dialog-header__actions--compensated {
+    margin-block: calc(-1 * var(--astryx-spacing-2, 8px));
+    margin-inline-end: calc(-1 * var(--astryx-spacing-2, 8px));
+  }
+}
