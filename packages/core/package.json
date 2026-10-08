@@ -58,6 +58,11 @@
       "types": "./dist/Skeleton/index.d.ts",
       "import": "./dist/Skeleton/index.js"
     },
+    "./Spinner": {
+      "source": "./src/Spinner/index.ts",
+      "types": "./dist/Spinner/index.d.ts",
+      "import": "./dist/Spinner/index.js"
+    },
     "./Stack": {
       "source": "./src/Stack/index.ts",
       "types": "./dist/Stack/index.d.ts",

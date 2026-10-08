@@ -1,0 +1,22 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-spinner-diameter-sm: 10px;
+    --astryx-spinner-diameter-md: 14px;
+    --astryx-spinner-diameter-lg: 18px;
+    --astryx-spinner-diameter-xl: 28px;
+    --astryx-spinner-stroke-width-sm: 2px;
+    --astryx-spinner-stroke-width-md: 3px;
+    --astryx-spinner-stroke-width-lg: 3px;
+    --astryx-spinner-stroke-width-xl: 4px;
+    --astryx-spinner-arc-fraction: 0.375;
+    --astryx-spinner-group-gap: 8px;
+    --astryx-spinner-label-color: light-dark(#000, #fff);
+    --astryx-spinner-color-accent: light-dark(#1b1b1b, #f1f1f1);
+    --astryx-spinner-color-subtle: light-dark(#474747, #9e9e9e);
+    --astryx-spinner-color-track: light-dark(#ababab, #474747);
+    --astryx-spinner-color-on-dark: #fff;
+  }
+}

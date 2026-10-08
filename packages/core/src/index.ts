@@ -33,6 +33,8 @@ export type { ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './Pr
 export { Radio, RadioGroup, RadioList } from './Radio/index.js'
 export type { RadioChangeEvent, RadioGroupEmits, RadioGroupProps, RadioGroupSlots, RadioListProps, RadioOption, RadioProps, RadioSlots, RadioStatus, RadioStatusType, RadioValue } from './Radio/index.js'
 export { Skeleton } from './Skeleton/index.js'
+export { Spinner } from './Spinner/index.js'
+export type { SpinnerProps, SpinnerShade, SpinnerSize } from './Spinner/index.js'
 export { Slider } from './Slider/index.js'
 export type { SliderEmits, SliderMark, SliderOrientation, SliderProps, SliderSlots, SliderValue, SliderValueDisplay } from './Slider/index.js'
 export type {

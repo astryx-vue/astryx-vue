@@ -14,6 +14,7 @@ import { progressBarBasic } from '../demos/progress-bar'
 import { radioBasic } from '../demos/radio'
 import { skeletonProfile } from '../demos/skeleton'
 import { sliderBasic } from '../demos/slider'
+import { spinnerBasic } from '../demos/spinner'
 import { stackDirections } from '../demos/stack'
 import { switchBasic } from '../demos/switch'
 import { textAreaBasic } from '../demos/text-area'
@@ -48,6 +49,7 @@ const groups = computed(() => [
     { demo: bannerStatuses, slug: 'banner', name: nav.value.banner },
     { demo: badgeColors, slug: 'badge', name: nav.value.badge },
     { demo: skeletonProfile, slug: 'skeleton', name: nav.value.skeleton },
+    { demo: spinnerBasic, slug: 'spinner', name: nav.value.spinner },
   ] },
   { title: nav.value.utilities, cards: [{ demo: visuallyHiddenContext, slug: 'visually-hidden', name: nav.value.visuallyHidden }] },
 ])
