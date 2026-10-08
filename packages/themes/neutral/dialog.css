@@ -3,12 +3,13 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-dialog-background: light-dark(#fff, #262626);
-    --astryx-dialog-foreground: light-dark(#000, #fff);
-    --astryx-dialog-overlay: light-dark(rgb(255 255 255 / 50%), rgb(0 0 0 / 80%));
+    --astryx-dialog-background: light-dark(#ffffff, #262626);
+    --astryx-dialog-foreground: light-dark(#171717, #fafafa);
+    --astryx-dialog-overlay: light-dark(#00000080, #000000cc);
     --astryx-dialog-shadow:
-      0 4px 6px light-dark(rgb(0 0 0 / 10%), rgb(0 0 0 / 50%)),
-      0 12px 24px light-dark(rgb(0 0 0 / 15%), rgb(0 0 0 / 70%)),
-      inset 0 0 0 1px light-dark(transparent, rgb(255 255 255 / 15%));
+      0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
+      0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%));
+    --astryx-dialog-enter-duration: 400ms;
   }
 }

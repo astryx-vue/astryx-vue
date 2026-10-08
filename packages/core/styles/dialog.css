@@ -53,7 +53,7 @@
 
   .astryx-dialog[open] {
     display: flex;
-    animation: astryx-dialog-enter var(--astryx-duration-medium-max, 550ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)) backwards;
+    animation: astryx-dialog-enter var(--astryx-dialog-enter-duration, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)) backwards;
   }
 
   .astryx-dialog::backdrop {
@@ -86,7 +86,6 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--astryx-spacing-3, 12px);
     min-height: 0;
     overflow: hidden;
     border-radius: inherit;
