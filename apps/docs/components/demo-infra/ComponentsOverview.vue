@@ -8,11 +8,11 @@ import { buttonVariants } from '../demos/button'
 import { buttonGroupBasic } from '../demos/button-group'
 import { checkboxIndicatorOverview } from '../demos/checkbox-indicator'
 import { checkboxInputBasic } from '../demos/checkbox-input'
-import { dialogBasic } from '../demos/dialog'
+import { dialogOverview } from '../demos/dialog'
 import { dividerBasic } from '../demos/divider'
 import { fieldCustom } from '../demos/field'
 import { iconButtonActionBar } from '../demos/icon-button'
-import { popoverBasic } from '../demos/popover'
+import { popoverOverview } from '../demos/popover'
 import { progressBarBasic } from '../demos/progress-bar'
 import { radioBasic } from '../demos/radio'
 import { skeletonProfile } from '../demos/skeleton'
@@ -22,7 +22,7 @@ import { stackDirections } from '../demos/stack'
 import { switchBasic } from '../demos/switch'
 import { textAreaBasic } from '../demos/text-area'
 import { textInputBasic } from '../demos/text-input'
-import { tooltipBasic } from '../demos/tooltip'
+import { tooltipOverview } from '../demos/tooltip'
 import { visuallyHiddenContext } from '../demos/visually-hidden'
 import { componentDocsCopy } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
@@ -59,9 +59,9 @@ const groups = computed(() => [
     { demo: spinnerBasic, slug: 'spinner', name: nav.value.spinner },
   ] },
   { title: nav.value.overlays, cards: [
-    { demo: tooltipBasic, slug: 'tooltip', name: nav.value.tooltip },
-    { demo: popoverBasic, slug: 'popover', name: nav.value.popover },
-    { demo: dialogBasic, slug: 'dialog', name: nav.value.dialog },
+    { demo: tooltipOverview, slug: 'tooltip', name: nav.value.tooltip },
+    { demo: popoverOverview, slug: 'popover', name: nav.value.popover },
+    { demo: dialogOverview, slug: 'dialog', name: nav.value.dialog },
   ] },
   { title: nav.value.utilities, cards: [{ demo: visuallyHiddenContext, slug: 'visually-hidden', name: nav.value.visuallyHidden }] },
 ])

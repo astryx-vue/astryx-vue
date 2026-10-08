@@ -7,6 +7,8 @@ import fullscreenDemo from './fullscreen.vue'
 import fullscreenSource from './fullscreen.vue?raw&highlighted'
 import imperativeDemo from './imperative.vue'
 import imperativeSource from './imperative.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import requiredDemo from './required.vue'
 import requiredSource from './required.vue?raw&highlighted'
 
@@ -16,3 +18,4 @@ export const dialogForm = defineDemo(formDemo, formSource, options)
 export const dialogRequired = defineDemo(requiredDemo, requiredSource, options)
 export const dialogFullscreen = defineDemo(fullscreenDemo, fullscreenSource, options)
 export const dialogImperative = defineDemo(imperativeDemo, imperativeSource, options)
+export const dialogOverview = defineDemo(overviewDemo, overviewSource, options)
