@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { textAreaBasic, textAreaSizes, textAreaRows, textAreaStates, textAreaValidation, textAreaAsync } from '../../../../components/demos/text-area'
 </script>
 
@@ -31,6 +32,22 @@ Import the theme once in the application entry:
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Provide a visible label so users know what to enter. If the label must be hidden, set isLabelHidden with a descriptive label for screen readers. |
+| <Badge variant="success">Do</Badge> | Set maxLength with a character counter when there is a defined limit; it helps users stay within bounds before they submit. |
+| <Badge variant="success">Do</Badge> | Use the status prop to surface validation feedback inline: show success when input is valid, warning for soft limits, and error for hard failures. |
+| <Badge variant="success">Do</Badge> | Add a description or placeholder to clarify expected content, like "Describe the issue in detail," but never rely on placeholder alone as the only label. |
+| <Badge variant="error">Don't</Badge> | Avoid using TextArea for short, single-line values like names or emails; use TextInput instead. |
+| <Badge variant="error">Don't</Badge> | Don't rely solely on placeholder text to communicate the purpose of the field; placeholders disappear on focus and are not accessible labels. |
+| <Badge variant="error">Don't</Badge> | Don't show a status message without also setting the status type; the colored border and icon are what draw the user's attention to the message. |
+| <Badge variant="error">Don't</Badge> | Don't wrap a disabled TextArea in Tooltip to explain why it's disabled; disabled controls swallow the hover events the wrapper needs. Use the disabledMessage prop instead. |
 
 ## Examples
 

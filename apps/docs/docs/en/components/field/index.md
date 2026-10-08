@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { fieldCustom, fieldPrimitives } from '../../../../components/demos/field'
 </script>
 
@@ -40,6 +41,21 @@ const inputId = `volume-${useId()}`
   </Field>
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Wrap custom controls, native inputs, or third-party widgets that need labeling, helper text, optional/required indicators, or validation status. |
+| <Badge variant="success">Do</Badge> | Always provide a label for accessibility, even if visually hidden with isLabelHidden. |
+| <Badge variant="success">Do</Badge> | Use inputID and descriptionID to connect the label and description to the inner control with htmlFor and aria-describedby. |
+| <Badge variant="error">Don't</Badge> | Nest Field around styled inputs such as TextInput, Typeahead, Select, DateInput, or TextArea; those components already render their own Field shell. |
+| <Badge variant="error">Don't</Badge> | Use the attached status variant on non-bordered controls such as sliders, switches, or checkboxes; use detached so the message does not overlap the control. |
+| <Badge variant="error">Don't</Badge> | Set both isOptional and isRequired on the same field. |
+| <Badge variant="error">Don't</Badge> | Hide the label without providing an alternative way for the user to understand the field purpose. |
 
 ## Examples
 

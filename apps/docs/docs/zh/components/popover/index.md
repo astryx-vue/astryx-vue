@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { popoverActions, popoverBasic, popoverForm, popoverPlacements } from '../../../../components/demos/popover'
 </script>
 
@@ -28,6 +29,19 @@ import { Popover } from '@astryx-vue/core/Popover'
   </Popover>
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 弹出层内容只聚焦一项任务或一条信息。 |
+| <Badge variant="success">推荐</Badge> | 提供明确的关闭方式：点击外部区域，或使用显式的关闭按钮。 |
+| <Badge variant="error">不要</Badge> | 在弹出层中嵌套弹出层。这会造成混乱的焦点和导航。 |
+| <Badge variant="error">不要</Badge> | 需要大量用户输入的内容，不要放在弹出层中。应使用 Dialog。 |
+| <Badge variant="error">不要</Badge> | 在弹出层中放入过多内容。若需要滚动，应改用 Dialog。 |
 
 ## 示例
 

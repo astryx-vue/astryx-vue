@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { sliderBasic, sliderRange, sliderMarks, sliderStates, sliderDirections, sliderForm } from '../../../../components/demos/slider'
 </script>
 
@@ -33,6 +34,19 @@ Import the theme once in the application entry:
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Always provide a label, even if visually hidden, so the slider is accessible to screen readers. |
+| <Badge variant="success">Do</Badge> | Format values with meaningful units like "$50" or "75%" instead of raw numbers. |
+| <Badge variant="error">Don't</Badge> | Use for precise numeric entry; pair with a text input or use NumberInput instead. |
+| <Badge variant="error">Don't</Badge> | Set a step size so large that only a few positions are possible; use SegmentedControl or radio buttons instead. |
+| <Badge variant="error">Don't</Badge> | Wrap a disabled slider in Tooltip to explain why it is disabled; disabled controls swallow the hover events the wrapper needs. Use the disabledMessage prop instead. |
 
 ## Examples
 

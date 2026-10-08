@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { bannerStatuses, bannerDetails, bannerActions, bannerContainers } from '../../../../components/demos/banner'
 </script>
 
@@ -33,6 +34,20 @@ import { Banner } from '@astryx-vue/core/Banner'
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 选择与消息相符的状态：更新用 info，注意事项用 warning，问题用 error，确认用 success。 |
+| <Badge variant="success">推荐</Badge> | 页面内容中使用 card 容器。覆盖整页宽度的消息使用 section 容器。 |
+| <Badge variant="success">推荐</Badge> | info 和 success 提示条可以关闭。error 提示条必须保留，直到用户解决问题。 |
+| <Badge variant="success">推荐</Badge> | 标题保持简短、便于扫读。例如用 “Payment failed”，不用 “There was a problem processing your most recent payment.” |
+| <Badge variant="error">不要</Badge> | 用提示条展示会自动消失的短暂消息。应改用 Toast。 |
+| <Badge variant="error">不要</Badge> | 叠放同一状态的多条提示条。应把相关消息合并为一条。 |
 
 ## 示例
 

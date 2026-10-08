@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { stackDirections, stackHStack, stackItem, stackVStack } from '../../../../components/demos/stack'
 </script>
 
@@ -27,6 +28,17 @@ Component usage:
 import { HStack, Stack, StackItem, VStack } from '@astryx-vue/core/Stack'
 </script>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Use the gap prop for spacing between items; don't add margins manually. |
+| <Badge variant="success">Do</Badge> | Use StackItem with size="fill" to make one item stretch and fill the leftover space. |
+| <Badge variant="error">Don't</Badge> | Nest stacks inside stacks; try wrap="wrap" first to let items flow to the next line. |
 
 ## Examples
 

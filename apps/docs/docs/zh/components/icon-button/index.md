@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { iconButtonActionBar, iconButtonAsync, iconButtonFloating, iconButtonTooltips } from '../../../../components/demos/icon-button'
 </script>
 
@@ -27,6 +28,19 @@ import { IconButton } from '@astryx-vue/core/IconButton'
 ```
 
 图标无法说明操作用途时，使用带文字的 [Button](/components/button)。
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 让 aria-label 足够具体。标有 “Delete conversation” 的垃圾桶图标，比只写 “Delete” 更便于屏幕阅读器用户理解。 |
+| <Badge variant="success">推荐</Badge> | 添加提示框。即使是齿轮图标，也可能表示 Settings、Preferences 或 Configure。 |
+| <Badge variant="success">推荐</Badge> | 在工具栏和紧凑区域使用 ghost 变体，减少视觉干扰。 |
+| <Badge variant="error">不要</Badge> | 操作无法仅凭图标看出时，使用 IconButton。应改用带文字的 Button。 |
+| <Badge variant="error">不要</Badge> | 省略提示框。标签只供屏幕阅读器使用，明眼用户还需要悬停提示。 |
 
 ## 示例
 

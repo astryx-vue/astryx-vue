@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { popoverActions, popoverBasic, popoverForm, popoverPlacements } from '../../../../components/demos/popover'
 </script>
 
@@ -28,6 +29,19 @@ import { Popover } from '@astryx-vue/core/Popover'
   </Popover>
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Keep popover content focused on a single task or piece of information. |
+| <Badge variant="success">Do</Badge> | Provide a clear way to close: either by clicking outside or with an explicit close button. |
+| <Badge variant="error">Don't</Badge> | Nest popovers inside other popovers; it creates confusing focus and navigation. |
+| <Badge variant="error">Don't</Badge> | Use a popover for content that requires heavy user input; use a Dialog instead. |
+| <Badge variant="error">Don't</Badge> | Put too much content in a popover; if it needs scrolling, use a Dialog instead. |
 
 ## Examples
 

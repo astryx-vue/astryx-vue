@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { iconButtonActionBar, iconButtonAsync, iconButtonFloating, iconButtonTooltips } from '../../../../components/demos/icon-button'
 </script>
 
@@ -27,6 +28,19 @@ import { IconButton } from '@astryx-vue/core/IconButton'
 ```
 
 Use a text-bearing [Button](/en/components/button) when the action is not immediately clear.
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Make the aria-label specific: a trash icon labeled "Delete conversation" is clearer than just "Delete" for screen readers. |
+| <Badge variant="success">Do</Badge> | Add a tooltip: even a gear icon can mean Settings, Preferences, or Configure. |
+| <Badge variant="success">Do</Badge> | Use ghost in toolbars and dense areas to reduce visual clutter. |
+| <Badge variant="error">Don't</Badge> | Use IconButton if the action isn't obvious from the icon alone; use Button with text. |
+| <Badge variant="error">Don't</Badge> | Skip the tooltip; label only reaches screen readers, sighted users need the hover hint. |
 
 ## Examples
 

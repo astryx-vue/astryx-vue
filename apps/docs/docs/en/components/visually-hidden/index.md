@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { visuallyHiddenContext, visuallyHiddenLiveRegion } from '../../../../components/demos/visually-hidden'
 </script>
 
@@ -26,6 +27,18 @@ import { VisuallyHidden } from '@astryx-vue/core/VisuallyHidden'
   </a>
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Use to give icon-only buttons and controls an accessible name that screen readers announce. |
+| <Badge variant="success">Do</Badge> | Render as a block element (as="div") with aria-live to announce dynamic updates like drag-and-drop or result counts. |
+| <Badge variant="error">Don't</Badge> | Use it to hide content from everyone; it stays in the accessibility tree; use conditional rendering or `hidden` to remove content entirely. |
+| <Badge variant="error">Don't</Badge> | Put interactive controls inside it; the content is not visible and cannot receive pointer input. |
 
 ## Examples
 

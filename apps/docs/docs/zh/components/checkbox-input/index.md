@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { checkboxInputBasic, checkboxInputSizes, checkboxInputIndeterminate, checkboxInputStates, checkboxInputForm, checkboxInputAsync } from '../../../../components/demos/checkbox-input'
 </script>
 
@@ -32,6 +33,20 @@ const selected = shallowRef(false)
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 必须提供可见的标签，让用户知道自己在切换什么。只有上下文已经明确时，才使用 isLabelHidden 隐藏标签。 |
+| <Badge variant="success">推荐</Badge> | 对需要额外说明的选项添加描述。例如解释 “Share usage data” 实际会共享哪些内容。 |
+| <Badge variant="success">推荐</Badge> | 当一组中只选中部分项目时，“全选”复选框使用不确定状态（indeterminate）。 |
+| <Badge variant="error">不要</Badge> | 用复选框表示互斥的选项。只能选一项时，应使用 RadioList。 |
+| <Badge variant="error">不要</Badge> | 用复选框表示立即生效的操作。应使用开关或按钮。 |
+| <Badge variant="error">不要</Badge> | 用 Tooltip 包裹禁用的复选框来解释禁用原因。禁用的控件会吞掉包裹层需要的悬停事件。应改用 disabledMessage 属性。 |
 
 ## 示例
 

@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { buttonAsync, buttonFloating, buttonSizes, buttonVariants } from '../../../../components/demos/button'
 </script>
 
@@ -27,6 +28,22 @@ import { Button } from '@astryx-vue/core/Button'
 ```
 
 Use the dedicated [ButtonGroup](/en/components/button-group) and [IconButton](/en/components/icon-button) components when you need connected actions or an explicit icon-only button.
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Reserve primary for the single most important action in the view. Use secondary or ghost for everything else based on emphasis. |
+| <Badge variant="success">Do</Badge> | Write labels that describe the action ("Save changes", "Delete account", "Send invite"), not vague labels like "OK" or "Click here". |
+| <Badge variant="success">Do</Badge> | Show a loading state for actions that take time, like saving or submitting, so the user knows it is working. |
+| <Badge variant="success">Do</Badge> | Always provide a label for icon-only buttons so screen readers can announce what the button does. Add a tooltip for sighted users. |
+| <Badge variant="success">Do</Badge> | For a dedicated icon-only button, use IconButton from '@astryx-vue/core/IconButton'. It is a separate component, not exported from '@astryx-vue/core/Button'. |
+| <Badge variant="error">Don't</Badge> | Place more than one primary button in the same view; this dilutes the visual hierarchy. |
+| <Badge variant="error">Don't</Badge> | Use the destructive variant without a confirmation step for irreversible actions like deleting data. |
+| <Badge variant="error">Don't</Badge> | Use a button for navigation. If it only takes the user to another page, use a link instead. Buttons are for actions like saving, deleting, or submitting. |
 
 ## Examples
 

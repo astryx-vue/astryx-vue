@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { blockquoteCite } from '../../../../components/demos/blockquote'
 </script>
 
@@ -33,6 +34,17 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
   </Blockquote>
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 用于引用文本、推荐语或来自外部来源的高亮摘录。 |
+| <Badge variant="success">推荐</Badge> | 引用来源已知时，提供 cite 属性。 |
+| <Badge variant="error">不要</Badge> | 用于提示或信息说明。应使用提示条（Banner）。 |
 
 ## 示例
 

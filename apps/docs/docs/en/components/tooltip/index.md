@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { tooltipBasic, tooltipControlled, tooltipPlacements, tooltipText } from '../../../../components/demos/tooltip'
 </script>
 
@@ -25,6 +26,18 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
   </Tooltip>
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Keep tooltip content concise: aim for under 140 characters of plain text. |
+| <Badge variant="success">Do</Badge> | Add a tooltip to icon-only buttons and controls that lack a visible label. |
+| <Badge variant="error">Don't</Badge> | Place interactive elements like links or buttons inside a tooltip; use HoverCard or Popover instead. |
+| <Badge variant="error">Don't</Badge> | Use tooltips for essential information that users must see to complete a task. |
 
 ## Examples
 

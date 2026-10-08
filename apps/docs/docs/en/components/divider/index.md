@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { dividerBasic, dividerLabel, dividerVariants, dividerVertical } from '../../../../components/demos/divider'
 </script>
 
@@ -22,6 +23,17 @@ import { Divider } from '@astryx-vue/core/Divider'
   <Divider label="or" />
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Use subtle dividers between related content sections and strong dividers for high-contrast boundaries. |
+| <Badge variant="success">Do</Badge> | Add a label to the divider when sections need a visible category heading. |
+| <Badge variant="error">Don't</Badge> | Overuse dividers; rely on spacing and layout to separate content when possible. |
 
 ## Examples
 

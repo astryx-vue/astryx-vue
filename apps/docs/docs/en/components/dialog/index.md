@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { dialogBasic, dialogForm, dialogFullscreen, dialogImperative, dialogRequired } from '../../../../components/demos/dialog'
 </script>
 
@@ -30,6 +31,21 @@ const isOpen = ref(false)
   </Dialog>
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Choose the right purpose: info for dismissable content, form to prevent accidental backdrop dismissal, required when the user must respond. |
+| <Badge variant="success">Do</Badge> | Include a clear title in the header so users immediately understand what the dialog is asking. |
+| <Badge variant="success">Do</Badge> | Use purpose="form" for dialogs with inputs so the user can't accidentally lose data by clicking the backdrop. |
+| <Badge variant="success">Do</Badge> | Keep dialogs focused on a single task; if the content grows beyond what fits, consider a full page instead. |
+| <Badge variant="error">Don't</Badge> | Use a dialog for simple messages that could be shown inline or as a toast notification. |
+| <Badge variant="error">Don't</Badge> | Nest dialogs inside other dialogs; restructure the flow into steps within a single dialog instead. |
+| <Badge variant="error">Don't</Badge> | Use the fullscreen variant for simple confirmations; it is meant for complex content like editors or long forms. |
 
 ## Examples
 

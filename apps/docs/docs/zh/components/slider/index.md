@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { sliderBasic, sliderRange, sliderMarks, sliderStates, sliderDirections, sliderForm } from '../../../../components/demos/slider'
 </script>
 
@@ -33,6 +34,19 @@ const budget = shallowRef<[number, number]>([20, 80])
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 必须提供标签，即使将其隐藏，让屏幕阅读器用户也能理解滑块。 |
+| <Badge variant="success">推荐</Badge> | 使用有意义的单位格式化数值，例如 “$50” 或 “75%”，不要只显示原始数字。 |
+| <Badge variant="error">不要</Badge> | 用于精确的数值输入。应搭配文本输入框，或使用 NumberInput。 |
+| <Badge variant="error">不要</Badge> | 把步长设得过大，导致只能选择少数几个位置。应改用 SegmentedControl 或单选按钮。 |
+| <Badge variant="error">不要</Badge> | 用 Tooltip 包裹禁用的滑块来解释禁用原因。禁用的控件会吞掉包裹层需要的悬停事件。应改用 disabledMessage 属性。 |
 
 ## 示例
 

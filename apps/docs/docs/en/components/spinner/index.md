@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { spinnerBasic, spinnerLabel, spinnerShades, spinnerSizes } from '../../../../components/demos/spinner'
 </script>
 
@@ -22,6 +23,18 @@ import { Spinner } from '@astryx-vue/core/Spinner'
   <Spinner label="Loading data" />
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Provide a meaningful label to describe what is loading for screen reader users. |
+| <Badge variant="success">Do</Badge> | Use the "onMedia" shade when placed on dark or accent-colored backgrounds. |
+| <Badge variant="error">Don't</Badge> | Use for content areas with known dimensions; use Skeleton to preserve layout instead. |
+| <Badge variant="error">Don't</Badge> | Stack multiple spinners in the same view; use one to represent the overall loading state. |
 
 ## Examples
 

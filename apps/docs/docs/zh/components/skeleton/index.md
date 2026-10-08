@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { skeletonProfile } from '../../../../components/demos/skeleton'
 </script>
 
@@ -33,6 +34,19 @@ import { Skeleton } from '@astryx-vue/core/Skeleton'
   </div>
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 骨架屏的尺寸和形状要与加载内容一致，形成逼真的占位效果。 |
+| <Badge variant="success">推荐</Badge> | 为多个骨架屏设置 index 属性，形成自然的波浪动画。 |
+| <Badge variant="error">不要</Badge> | 内容尺寸未知时使用骨架屏。应改用 Spinner。 |
+| <Badge variant="error">不要</Badge> | 在同一内容区域同时使用 Spinner 和骨架屏。应只选一种加载模式。 |
+| <Badge variant="error">不要</Badge> | 长时间显示骨架屏。加载时间过长时，应显示错误或空状态。 |
 
 ## 示例
 

@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { stackDirections, stackHStack, stackItem, stackVStack } from '../../../../components/demos/stack'
 </script>
 
@@ -27,6 +28,17 @@ import '@astryx-vue/themes/neutral.css'
 import { HStack, Stack, StackItem, VStack } from '@astryx-vue/core/Stack'
 </script>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 项目之间的间距使用 gap 属性。不要手动添加外边距。 |
+| <Badge variant="success">推荐</Badge> | 使用 size="fill" 的 StackItem，让一个项目拉伸并填满剩余空间。 |
+| <Badge variant="error">不要</Badge> | 在堆叠布局中嵌套堆叠布局。应先尝试 wrap="wrap"，让项目自动换行。 |
 
 ## 示例
 

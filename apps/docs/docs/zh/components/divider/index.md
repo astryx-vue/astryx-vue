@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { dividerBasic, dividerLabel, dividerVariants, dividerVertical } from '../../../../components/demos/divider'
 </script>
 
@@ -22,6 +23,17 @@ import { Divider } from '@astryx-vue/core/Divider'
   <Divider label="或" />
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 相关内容区块之间使用 subtle 分隔线。需要高对比边界时，使用 strong 分隔线。 |
+| <Badge variant="success">推荐</Badge> | 分区需要可见的类别标题时，为分隔线添加标签。 |
+| <Badge variant="error">不要</Badge> | 过度使用分隔线。能用间距和布局区分内容时，优先使用间距和布局。 |
 
 ## 示例
 

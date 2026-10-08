@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { checkboxInputBasic, checkboxInputSizes, checkboxInputIndeterminate, checkboxInputStates, checkboxInputForm, checkboxInputAsync } from '../../../../components/demos/checkbox-input'
 </script>
 
@@ -32,6 +33,20 @@ Import the theme once in the application entry:
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Always provide a visible label so the user knows what they are toggling. Use isLabelHidden only when surrounding context makes it obvious. |
+| <Badge variant="success">Do</Badge> | Add a description for choices that need extra context, like explaining what "Share usage data" actually shares. |
+| <Badge variant="success">Do</Badge> | Use the indeterminate state for "select all" checkboxes when only some items in a group are selected. |
+| <Badge variant="error">Don't</Badge> | Use a checkbox for mutually exclusive choices; use RadioList when only one option can be selected. |
+| <Badge variant="error">Don't</Badge> | Use a checkbox for actions that take effect immediately; use a toggle switch or button instead. |
+| <Badge variant="error">Don't</Badge> | Wrap a disabled checkbox in Tooltip to explain why it is disabled; disabled controls swallow the hover events the wrapper needs. Use the disabledMessage prop instead. |
 
 ## Examples
 

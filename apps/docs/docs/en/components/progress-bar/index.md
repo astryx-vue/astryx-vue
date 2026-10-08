@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { progressBarBasic, progressBarIndeterminate, progressBarSizes, progressBarVariants } from '../../../../components/demos/progress-bar'
 </script>
 
@@ -22,6 +23,17 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
   <ProgressBar :value="60" label="Upload" show-value />
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Choose a color variant that matches the context: accent for general progress, success for completion, warning or error for alerts. |
+| <Badge variant="error">Don't</Badge> | Place icons or labels inside the bar; compose them alongside it using layout components. |
+| <Badge variant="error">Don't</Badge> | Use multiple progress bars stacked together for the same operation; use one bar with a value label instead. |
 
 ## Examples
 

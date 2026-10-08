@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { radioList } from '../../../../components/demos/radio'
 </script>
 
@@ -30,6 +31,20 @@ const options = [
   <RadioList v-model="plan" label="Plan" :options="options" />
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 选项数量保持较少，通常为 2 到 7 个。 |
+| <Badge variant="success">推荐</Badge> | 使用清晰、简洁的标签，让每个选项一眼可辨。 |
+| <Badge variant="error">不要</Badge> | 需要多选时使用单选列表。应改用 CheckboxList。 |
+| <Badge variant="error">不要</Badge> | 用于长列表。应使用 Selector，便于查找。 |
+| <Badge variant="error">不要</Badge> | 超过 4 个选项时使用水平布局，排版会很别扭。 |
+| <Badge variant="error">不要</Badge> | 用 Tooltip 包裹禁用的 RadioList 来解释禁用原因。禁用的控件会吞掉包裹层需要的悬停事件。应改用 disabledMessage 属性。 |
 
 ## 示例
 

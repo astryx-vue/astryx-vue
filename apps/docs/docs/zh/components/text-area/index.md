@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { textAreaBasic, textAreaSizes, textAreaRows, textAreaStates, textAreaValidation, textAreaAsync } from '../../../../components/demos/text-area'
 </script>
 
@@ -31,6 +32,22 @@ const bio = shallowRef('')
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 提供可见的标签，让用户知道该输入什么。若必须隐藏标签，设置 isLabelHidden，并为屏幕阅读器提供描述性标签。 |
+| <Badge variant="success">推荐</Badge> | 设有字数上限时，设置 maxLength 并显示字数统计。这能帮助用户在提交前控制字数。 |
+| <Badge variant="success">推荐</Badge> | 使用 status 属性显示行内校验反馈：输入有效时用 success，软限制用 warning，硬错误用 error。 |
+| <Badge variant="success">推荐</Badge> | 添加说明或占位文字，说明预期内容，例如 “Describe the issue in detail”。不要只用占位文字作为唯一标签。 |
+| <Badge variant="error">不要</Badge> | 用文本域输入名称或邮箱等单行短内容。应使用文本输入框。 |
+| <Badge variant="error">不要</Badge> | 只依赖占位文字说明字段用途。占位文字在获得焦点后会消失，且不是可访问的标签。 |
+| <Badge variant="error">不要</Badge> | 在未设置状态类型时显示状态消息。边框颜色和图标正是吸引用户注意消息的元素。 |
+| <Badge variant="error">不要</Badge> | 用 Tooltip 包裹禁用的文本域来解释禁用原因。禁用的控件会吞掉包裹层需要的悬停事件。应改用 disabledMessage 属性。 |
 
 ## 示例
 

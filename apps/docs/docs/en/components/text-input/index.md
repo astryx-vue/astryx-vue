@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { textInputBasic, textInputSizes, textInputSearch, textInputPassword, textInputStates, textInputValidation, textInputAsync } from '../../../../components/demos/text-input'
 </script>
 
@@ -31,6 +32,18 @@ For a custom control, use [Field](/en/components/field). Import the theme once i
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Always provide a visible label so users know what the field is for. Only hide the label when surrounding context makes it obvious, like a search bar with a magnifying-glass icon. |
+| <Badge variant="success">Do</Badge> | Use validation status with a message to explain what went wrong: "Email must include @" is better than just turning the border red. |
+| <Badge variant="success">Do</Badge> | Size the input to match the expected content length so users can gauge how much to type: small for zip codes, medium for names, large for URLs. |
+| <Badge variant="success">Do</Badge> | Add a clear button for search and filter inputs so users can quickly reset without selecting all text. |
 
 ## Examples
 

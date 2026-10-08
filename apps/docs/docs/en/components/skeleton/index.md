@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { skeletonProfile } from '../../../../components/demos/skeleton'
 </script>
 
@@ -33,6 +34,19 @@ import { Skeleton } from '@astryx-vue/core/Skeleton'
   </div>
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Match the size and shape of the content being loaded to create a realistic placeholder. |
+| <Badge variant="success">Do</Badge> | Stagger multiple skeletons with the `index` prop for a natural wave animation. |
+| <Badge variant="error">Don't</Badge> | Use when the content dimensions are unknown; use Spinner instead. |
+| <Badge variant="error">Don't</Badge> | Combine with a Spinner on the same content area; pick one loading pattern. |
+| <Badge variant="error">Don't</Badge> | Show skeletons indefinitely; if loading takes too long, show an error or empty state instead. |
 
 ## Examples
 

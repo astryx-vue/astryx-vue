@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { buttonAsync, buttonFloating, buttonSizes, buttonVariants } from '../../../../components/demos/button'
 </script>
 
@@ -28,6 +29,22 @@ import { Button } from '@astryx-vue/core/Button'
 
 - 组合相关操作时，使用 [ButtonGroup](/components/button-group)。
 - 操作只显示图标时，使用 [IconButton](/components/icon-button)。
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 将 primary 变体只用于视图中最重要的一个操作。其余操作按强调程度使用 secondary 或 ghost 变体。 |
+| <Badge variant="success">推荐</Badge> | 按钮文字描述操作，例如 “Save changes”、“Delete account”、“Send invite”。不要使用 “OK” 或 “Click here” 这类模糊文字。 |
+| <Badge variant="success">推荐</Badge> | 耗时操作（如保存或提交）显示加载状态，让用户知道操作正在进行。 |
+| <Badge variant="success">推荐</Badge> | 纯图标按钮必须提供文字标签，供屏幕阅读器播报。面向明眼用户时，再添加提示框。 |
+| <Badge variant="success">推荐</Badge> | 需要独立的纯图标按钮时，使用 `@astryx-vue/core/IconButton` 中的 IconButton。它是独立组件，不从 `@astryx-vue/core/Button` 导出。 |
+| <Badge variant="error">不要</Badge> | 在同一视图中放置多个 primary 按钮。这会削弱视觉层级。 |
+| <Badge variant="error">不要</Badge> | 对不可撤销的操作（如删除数据）使用 destructive 变体却不设确认步骤。 |
+| <Badge variant="error">不要</Badge> | 用按钮做页面跳转。若只是跳转到另一页，应使用链接。按钮用于保存、删除或提交等操作。 |
 
 ## 示例
 

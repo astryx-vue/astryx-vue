@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { textInputBasic, textInputSizes, textInputSearch, textInputPassword, textInputStates, textInputValidation, textInputAsync } from '../../../../components/demos/text-input'
 </script>
 
@@ -31,6 +32,18 @@ const email = shallowRef('')
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 必须提供可见的标签，让用户知道该字段的用途。只有上下文已经明确时才隐藏标签，例如带放大镜图标的搜索框。 |
+| <Badge variant="success">推荐</Badge> | 使用带消息的校验状态，说明出了什么问题。“邮箱必须包含 @” 比仅把边框变红更清楚。 |
+| <Badge variant="success">推荐</Badge> | 输入框尺寸要与预期内容长度相符，让用户判断该输入多少内容。邮编用 small，姓名用 medium，URL 用 large。 |
+| <Badge variant="success">推荐</Badge> | 为搜索和筛选输入框添加清除按钮，让用户无需全选文字即可快速重置。 |
 
 ## 示例
 

@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { radioList } from '../../../../components/demos/radio'
 </script>
 
@@ -30,6 +31,20 @@ const options = [
   <RadioList v-model="plan" label="Plan" :options="options" />
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Keep the number of options small: typically 2 to 7 choices. |
+| <Badge variant="success">Do</Badge> | Use clear, concise labels that differentiate each option at a glance. |
+| <Badge variant="error">Don't</Badge> | Use when multiple selections are needed; use CheckboxList instead. |
+| <Badge variant="error">Don't</Badge> | Use for long lists; use Selector for better discoverability. |
+| <Badge variant="error">Don't</Badge> | Use horizontal layout with more than 4 options; it wraps awkwardly. |
+| <Badge variant="error">Don't</Badge> | Wrap a disabled RadioList in Tooltip to explain why it is disabled; disabled controls swallow the hover events the wrapper needs. Use the disabledMessage prop instead. |
 
 ## Examples
 

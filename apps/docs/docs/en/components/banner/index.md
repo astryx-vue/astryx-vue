@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { bannerStatuses, bannerDetails, bannerActions, bannerContainers } from '../../../../components/demos/banner'
 </script>
 
@@ -33,6 +34,20 @@ Import the theme once in the application entry:
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Pick a status that matches the message: info for updates, warning for caution, error for problems, success for confirmations. |
+| <Badge variant="success">Do</Badge> | Use the card container inside page content and the section container for full-width messages that span the entire page. |
+| <Badge variant="success">Do</Badge> | Make info and success banners dismissable. Keep error banners visible until the user fixes the issue. |
+| <Badge variant="success">Do</Badge> | Keep titles short and scannable: "Payment failed" not "There was a problem processing your most recent payment." |
+| <Badge variant="error">Don't</Badge> | Use Banner for short-lived messages that disappear on their own; use Toast instead. |
+| <Badge variant="error">Don't</Badge> | Stack multiple banners with the same status; combine related messages into one banner. |
 
 ## Examples
 

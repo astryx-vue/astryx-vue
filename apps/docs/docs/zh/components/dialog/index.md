@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { dialogBasic, dialogForm, dialogFullscreen, dialogImperative, dialogRequired } from '../../../../components/demos/dialog'
 </script>
 
@@ -30,6 +31,21 @@ const isOpen = ref(false)
   </Dialog>
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 选择正确的用途：info 用于可关闭的内容，form 用于防止误点遮罩关闭，required 用于必须由用户作出响应的场景。 |
+| <Badge variant="success">推荐</Badge> | 在头部添加清晰的标题，让用户立即了解对话框要他们做什么。 |
+| <Badge variant="success">推荐</Badge> | 含有输入内容的对话框使用 purpose="form"。这样用户不会因误点遮罩而丢失数据。 |
+| <Badge variant="success">推荐</Badge> | 对话框只处理单一任务。内容超出可容纳范围时，考虑改用整页。 |
+| <Badge variant="error">不要</Badge> | 用对话框展示简单消息。这类消息可以内联显示，或使用 Toast 通知。 |
+| <Badge variant="error">不要</Badge> | 在对话框中嵌套对话框。应把流程拆成单个对话框内的多个步骤。 |
+| <Badge variant="error">不要</Badge> | 为简单确认使用 fullscreen 变体。它适用于编辑器或长表单等复杂内容。 |
 
 ## 示例
 

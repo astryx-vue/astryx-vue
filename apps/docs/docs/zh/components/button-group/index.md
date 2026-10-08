@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { buttonGroupBasic, buttonGroupFloating } from '../../../../components/demos/button-group'
 </script>
 
@@ -28,6 +29,17 @@ import { ButtonGroup } from '@astryx-vue/core/ButtonGroup'
   </ButtonGroup>
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 将对同一对象执行相关操作的按钮放入一组。例如对选中文本执行复制、剪切、粘贴。 |
+| <Badge variant="success">推荐</Badge> | 组内所有按钮使用相同的变体，使其看起来是一个整体。 |
+| <Badge variant="success">推荐</Badge> | 保持按钮组较小，建议 2 到 4 个按钮。更多操作请使用 Toolbar 或 DropdownMenu。 |
 
 ## 示例
 

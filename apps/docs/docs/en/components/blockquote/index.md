@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { blockquoteCite } from '../../../../components/demos/blockquote'
 </script>
 
@@ -33,6 +34,17 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
   </Blockquote>
 </template>
 ```
+
+
+
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Use for quoted text, testimonials, or highlighted excerpts from external sources. |
+| <Badge variant="success">Do</Badge> | Provide a cite prop when the source of the quote is known. |
+| <Badge variant="error">Don't</Badge> | Use for callout boxes or informational notes; use Banner for those. |
 
 ## Examples
 

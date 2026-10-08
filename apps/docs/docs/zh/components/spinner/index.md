@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { spinnerBasic, spinnerLabel, spinnerShades, spinnerSizes } from '../../../../components/demos/spinner'
 </script>
 
@@ -22,6 +23,18 @@ import { Spinner } from '@astryx-vue/core/Spinner'
   <Spinner label="加载数据" />
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 提供有意义的标签，说明正在加载的内容，供屏幕阅读器用户理解。 |
+| <Badge variant="success">推荐</Badge> | 放在深色或强调色背景上时，使用 onMedia 色调。 |
+| <Badge variant="error">不要</Badge> | 用于尺寸已知的内容区域。应使用 Skeleton 保持布局。 |
+| <Badge variant="error">不要</Badge> | 在同一视图中堆叠多个 Spinner。应使用一个 Spinner 表示整体加载状态。 |
 
 ## 示例
 

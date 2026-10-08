@@ -6,6 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
 import { visuallyHiddenContext, visuallyHiddenLiveRegion } from '../../../../components/demos/visually-hidden'
 </script>
 
@@ -26,6 +27,18 @@ import { VisuallyHidden } from '@astryx-vue/core/VisuallyHidden'
   </a>
 </template>
 ```
+
+
+
+
+## 最佳实践
+
+| 指引 | 实践 |
+| --- | --- |
+| <Badge variant="success">推荐</Badge> | 用于为纯图标按钮和控件提供屏幕阅读器可播报的无障碍名称。 |
+| <Badge variant="success">推荐</Badge> | 以块级元素（as="div"）渲染，并设置 aria-live，用于播报拖放或结果数量等动态更新。 |
+| <Badge variant="error">不要</Badge> | 用它对所有人隐藏内容。内容仍保留在无障碍树中。如需完全移除，应使用条件渲染或 hidden。 |
+| <Badge variant="error">不要</Badge> | 在其中放置交互控件。内容不可见，也无法接收指针输入。 |
 
 ## 示例
 
