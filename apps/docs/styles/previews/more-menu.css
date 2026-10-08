@@ -1,0 +1,81 @@
+.more-menu-preview {
+  width: min(100%, 520px);
+}
+
+.more-menu-preview__stack,
+.more-menu-preview__inline,
+.more-menu-preview__row {
+  min-width: 0;
+}
+
+.more-menu-preview__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/*
+ * The catalog preview shows the open surface itself, laid out under its trigger:
+ * the pair is one block, so it is centered as one. The stage reserves the height
+ * the open panel needs, because an in-flow panel grows the preview and shoves
+ * the page under the reader's cursor every time the menu is toggled.
+ */
+.more-menu-preview__inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-block-size: 200px;
+}
+
+.more-menu-preview__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* One stage per size. The panels are laid out of flow, so each stage reserves
+   the room the open panel needs and the three menus line up at the top. */
+.more-menu-preview__sizes {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 32px;
+  width: 100%;
+}
+
+.more-menu-preview__size {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-block-size: 176px;
+}
+
+.more-menu-preview__size-label {
+  color: var(--astryx-text-muted);
+  font-family: var(--vp-font-family-mono);
+  font-size: 12px;
+}
+
+.component-card__preview .more-menu-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .more-menu-preview__row {
+  justify-content: center;
+  gap: 12px;
+}
+
+/* The card is the surface here, so the inline menu keeps its own width instead
+   of stretching to the card. */
+.component-card__preview .more-menu-preview__inline .astryx-more-menu__panel {
+  max-width: 100%;
+}
+
+/* A row's own focus paint is the highlight; the documentation ring on every
+   focused control would double it. */
+.more-menu-preview .astryx-more-menu__item:focus-visible {
+  outline: none;
+}

@@ -1,0 +1,39 @@
+.hover-card-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: min(100%, 680px);
+}
+
+/* The catalog card is inert, so the surface is previewed as a static card next
+   to the live trigger it would be anchored to. */
+.hover-card-preview__surface {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: min(100%, 280px);
+}
+
+/*
+ * One trigger per row, centered: an `above` or `below` card then has vertical
+ * room to itself, and a `start` or `end` card has room beside it. Side by side,
+ * the cards overlapped the neighbouring trigger and read as that trigger's card.
+ */
+.hover-card-preview__placements {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 112px;
+  width: 100%;
+}
+
+.component-card__preview .hover-card-preview {
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .hover-card-preview__placements {
+  gap: 96px;
+}

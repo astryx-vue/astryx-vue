@@ -1,0 +1,69 @@
+.grid-preview {
+  display: grid;
+  width: min(100%, 660px);
+  gap: 24px;
+}
+
+.grid-preview__sections {
+  display: grid;
+  gap: 24px;
+}
+
+.grid-preview__section {
+  display: grid;
+  gap: 10px;
+}
+
+.grid-preview__caption {
+  color: var(--astryx-text-muted);
+  font-size: 13px;
+}
+
+.grid-preview__tile {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: 1px solid var(--astryx-line);
+  border-radius: var(--astryx-radius-element, 0.625rem);
+  color: var(--astryx-text);
+  background: color-mix(in srgb, currentcolor 5%, transparent);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.grid-preview__tile--accent {
+  border-color: var(--astryx-accent-bright);
+  background: color-mix(in srgb, var(--astryx-accent) 12%, transparent);
+}
+
+.grid-preview__tile--tall {
+  min-height: 112px;
+}
+
+.grid-preview__label {
+  color: var(--astryx-text-muted);
+  font-size: 12px;
+}
+
+.grid-preview__value {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.component-card__preview .grid-preview {
+  width: 100%;
+  max-width: 100%;
+  gap: 16px;
+}
+
+.component-card__preview .grid-preview__tile {
+  min-height: 56px;
+  padding: 10px 12px;
+}
+
+.component-card__preview .grid-preview__value {
+  font-size: 16px;
+}

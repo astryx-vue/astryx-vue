@@ -1,0 +1,13 @@
+import { defineDemo } from '../../demo-infra/defineDemo'
+import basicDemo from './basic.vue'
+import basicSource from './basic.vue?raw&highlighted'
+import keyNamesDemo from './key-names.vue'
+import keyNamesSource from './key-names.vue?raw&highlighted'
+import modifiersDemo from './modifiers.vue'
+import modifiersSource from './modifiers.vue?raw&highlighted'
+
+const options = { className: 'kbd-preview' }
+
+export const kbdBasic = defineDemo(basicDemo, basicSource, options)
+export const kbdModifiers = defineDemo(modifiersDemo, modifiersSource, options)
+export const kbdKeyNames = defineDemo(keyNamesDemo, keyNamesSource, options)

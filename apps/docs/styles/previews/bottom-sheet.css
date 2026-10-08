@@ -1,0 +1,41 @@
+/*
+ * The demo host and each demo's own root share this class, so the rules below
+ * apply to both layers of the preview frame.
+ */
+.bottom-sheet-preview {
+  box-sizing: border-box;
+  display: grid;
+  width: 100%;
+  max-width: 560px;
+  gap: 16px;
+  justify-items: center;
+}
+
+/* An inline sheet fills the frame it is previewed in rather than the viewport. */
+.bottom-sheet-preview .astryx-bottom-sheet {
+  width: 100%;
+}
+
+.bottom-sheet-preview .astryx-bottom-sheet__content > * + * {
+  margin-block-start: 8px;
+}
+
+.component-card__preview .bottom-sheet-preview {
+  width: 100%;
+  max-width: 100%;
+  gap: 12px;
+}
+
+.component-card__preview .bottom-sheet-preview .astryx-bottom-sheet__content {
+  font-size: 13px;
+}
+
+.component-card__preview .bottom-sheet-preview .astryx-heading {
+  font-size: 15px;
+}
+
+@media (width <= 640px) {
+  .bottom-sheet-preview {
+    width: 100%;
+  }
+}

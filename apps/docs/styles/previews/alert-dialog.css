@@ -1,0 +1,16 @@
+.alert-dialog-preview {
+  display: grid;
+  width: min(100%, 420px);
+  gap: 16px;
+}
+
+.alert-dialog-preview > .astryx-button {
+  justify-self: start;
+}
+
+/* The inline surface carries the layout the dialog owns, so the preview only
+   has to let it fill the card. */
+.component-card__preview .alert-dialog-preview {
+  width: 100%;
+  max-width: 100%;
+}

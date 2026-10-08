@@ -1,0 +1,64 @@
+.list-preview {
+  width: min(100%, 420px);
+}
+
+.list-preview__stack,
+.list-preview__row,
+.list-preview__marker {
+  min-width: 0;
+}
+
+.list-preview__stack {
+  display: grid;
+  gap: 24px;
+}
+
+.list-preview__section {
+  display: grid;
+  gap: 8px;
+}
+
+.list-preview__row {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.list-preview__marker {
+  display: grid;
+  flex: 1 1 140px;
+  gap: 8px;
+}
+
+.list-preview__note {
+  color: var(--astryx-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* A long description must not push the row past the preview: the label column
+   is the only part of a row that grows, and it has to be allowed to shrink. */
+.list-preview .astryx-item__content {
+  min-width: 0;
+}
+
+.component-card__preview .list-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .list-preview__row {
+  flex-wrap: nowrap;
+}
+
+/*
+ * The focus ring belongs to the row: it spans the row's full width, while the
+ * inner control is only as wide as the label area. global.css draws the
+ * documentation ring on every focused element, so the control's own ring is
+ * suppressed here, exactly as it is for the text input. Unlayered, like the
+ * rule it answers.
+ */
+.list-preview .astryx-item__content:focus-visible {
+  outline: none;
+}

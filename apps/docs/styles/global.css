@@ -2,6 +2,23 @@
 @import '@fontsource/fira-code/400.css';
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
+@import './previews/alert-dialog.css';
+@import './previews/bottom-sheet.css';
+@import './previews/card.css';
+@import './previews/center.css';
+@import './previews/code.css';
+@import './previews/collapsible.css';
+@import './previews/context-menu.css';
+@import './previews/dropdown-menu.css';
+@import './previews/empty-state.css';
+@import './previews/grid.css';
+@import './previews/hover-card.css';
+@import './previews/kbd.css';
+@import './previews/list.css';
+@import './previews/more-menu.css';
+@import './previews/overlay.css';
+@import './previews/segmented-control.css';
+@import './previews/toggle-button.css';
 
 
 
@@ -853,6 +870,18 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   display: none;
 }
 
+/* Demos bring their own icons, the way a consumer would: a sized box with an
+   icon class from the icon solution (UnoCSS Carbon in this site). */
+.css-icon {
+  display: inline-block;
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.css-icon--sm { width: 16px; height: 16px; }
+.css-icon--lg { width: 24px; height: 24px; }
+
 .blockquote-preview {
   display: grid;
   width: min(100%, 680px);
@@ -1330,6 +1359,15 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   gap: 12px;
 }
 
+/* Two related controls belong together; in the auto-fit grid they landed one
+   whole column apart, which read as two unrelated demos. */
+.input-preview-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .input-preview-stack > .astryx-button,
 .input-preview-stack > .astryx-button-tooltip,
 .input-preview-stack > .astryx-tooltip-trigger > .astryx-button,
@@ -1530,6 +1568,24 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   justify-content: center;
 }
 
+/* The example preview centers its single child, but the breadcrumb root is a
+   block box that fills the preview, so the trail itself has to be centered. */
+.component-example__preview .breadcrumbs-preview .astryx-breadcrumbs__list {
+  justify-content: center;
+}
+
+/*
+ * VitePress styles every bare list inside `.vp-doc`: an `ol` picks up its
+ * padding, its top margin, and decimal markers, which both pushed the trail off
+ * center and added a marker column. Our components own those elements and reset
+ * them in the component layer, so the prose declarations are rolled back to it
+ * instead of being restated here.
+ */
+.vp-doc .astryx-breadcrumbs :is(ol, ul, li),
+.vp-doc .astryx-list :is(ol, ul, li) {
+  all: revert-layer;
+}
+
 /* Docs: override unlayered VitePress .vp-doc styles for component examples */
 .vp-doc a.astryx-link {
   color: var(--astryx-link-accent-foreground, #0074e2);
@@ -1576,4 +1632,17 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .vp-doc h5.astryx-heading,
 .vp-doc h6.astryx-heading {
   margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/*
+ * VitePress paints every `<code>` in prose with its own tint and inline padding,
+ * which reads as a band across the code block's gutter and code. Rolling the
+ * prose declarations back to the component layer restores the CodeBlock's own
+ * surface and padding without restating them here.
+ */
+.vp-doc .astryx-code-block code,
+.vp-doc .astryx-code {
+  all: revert-layer;
 }

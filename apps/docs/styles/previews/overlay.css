@@ -1,0 +1,55 @@
+.overlay-preview {
+  width: min(100%, 640px);
+}
+
+.overlay-preview__frame {
+  width: min(100%, 560px);
+}
+
+.overlay-preview__stack {
+  width: min(100%, 560px);
+}
+
+.overlay-preview__grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+}
+
+.overlay-preview__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--astryx-radius-container, 0.75rem);
+  background: linear-gradient(135deg, #172554 0%, #2563eb 55%, #67e8f9 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.overlay-preview__media-label {
+  padding-inline: 12px;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-align: center;
+}
+
+.overlay-preview__hint {
+  margin: 0;
+  color: var(--astryx-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.component-card__preview .overlay-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .overlay-preview__frame {
+  width: 100%;
+}

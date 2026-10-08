@@ -1,0 +1,147 @@
+---
+layout: component-docs
+title: 卡片
+outline: false
+footer: false
+---
+
+## Props
+
+<div class="component-api-table" role="region" aria-label="Card Props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>width</code></td>
+        <td><code>number | string</code></td>
+        <td>-</td>
+        <td>卡片宽度。数字按像素解释，字符串按原样使用。在弹性行或网格轨道里这是首选宽度：行更窄时卡片仍然会让位。</td>
+      </tr>
+      <tr>
+        <td><code>height</code></td>
+        <td><code>number | string</code></td>
+        <td>-</td>
+        <td>卡片高度。数字按像素解释，字符串按原样使用。给出固定高度后，卡片的内部内容会自己滚动；<code>auto</code> 和不传则交给内容决定。</td>
+      </tr>
+      <tr>
+        <td><code>maxWidth</code></td>
+        <td><code>number | string</code></td>
+        <td>-</td>
+        <td>卡片的最大宽度。</td>
+      </tr>
+      <tr>
+        <td><code>minHeight</code></td>
+        <td><code>number | string</code></td>
+        <td>-</td>
+        <td>卡片的最小高度。</td>
+      </tr>
+      <tr>
+        <td><code>padding</code></td>
+        <td><code>SpacingStep</code></td>
+        <td>-</td>
+        <td>四边的内边距，取间距比例的一档：0、0.5、1、1.5、2、3、4、5、6、8、10。省略时使用主题的卡片内边距（无主题时为间距步进 4），所以传入步进值意味着覆盖主题，而不是复述默认值。</td>
+      </tr>
+      <tr>
+        <td><code>variant</code></td>
+        <td><code>CardVariant</code></td>
+        <td><code>'default'</code></td>
+        <td>背景变体。<code>default</code> 使用标准卡片表面并带描边，<code>transparent</code> 去掉背景和描边，<code>muted</code> 使用弱化背景。非语义色相：blue、cyan、gray、green、orange、pink、purple、red、teal、yellow。</td>
+      </tr>
+      <tr>
+        <td><code>elevation</code></td>
+        <td><code>CardElevation</code></td>
+        <td><code>'none'</code></td>
+        <td>静止时的阴影深度，可选 none、low、med、high。只有在卡片需要浮在周围内容之上时才抬升它。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## 插槽
+
+<div class="component-api-table" role="region" aria-label="Card Slots" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>default</code></td>
+        <td>卡片的内容，通常是一个装着标题、文字和操作的 <code>Stack</code>。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## 主题变量
+
+<div class="component-api-table" role="region" aria-label="Card Theme Variables" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>默认值</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>--astryx-card-padding</code></td>
+        <td><code>--astryx-spacing-4</code></td>
+        <td>主题的卡片内边距。为 <code>padding</code> 传入步进值时会绕过它。同族的 <code>--astryx-card-padding-inline</code>、<code>--astryx-card-padding-inline-start</code>、<code>--astryx-card-padding-inline-end</code>、<code>--astryx-card-padding-block-start</code>、<code>--astryx-card-padding-block-end</code> 可以按边细化。</td>
+      </tr>
+      <tr>
+        <td><code>--astryx-card-background</code></td>
+        <td>-</td>
+        <td><code>default</code> 变体的背景。</td>
+      </tr>
+      <tr>
+        <td><code>--astryx-card-muted-background</code></td>
+        <td>-</td>
+        <td><code>muted</code> 变体的背景。</td>
+      </tr>
+      <tr>
+        <td><code>--astryx-card-border</code></td>
+        <td>-</td>
+        <td><code>default</code> 变体的描边颜色。宽度固定为 <code>--astryx-border-width</code>。</td>
+      </tr>
+      <tr>
+        <td><code>--astryx-card-&lt;色相&gt;-background</code></td>
+        <td>-</td>
+        <td>十个色相变体的背景，例如 <code>--astryx-card-blue-background</code>。</td>
+      </tr>
+      <tr>
+        <td><code>--astryx-card-shadow-low</code>、<code>-med</code>、<code>-high</code></td>
+        <td>内置阴影</td>
+        <td>三档抬升阴影，分别对应 <code>elevation</code> 的 low、med、high。主题未定义时使用内置的阴影值。</td>
+      </tr>
+      <tr>
+        <td><code>--_card-radius</code></td>
+        <td><code>--astryx-radius-container</code></td>
+        <td>卡片圆角。内部变量，主题可以覆盖。</td>
+      </tr>
+      <tr>
+        <td><code>--_card-elevation</code></td>
+        <td><code>0 0 transparent</code></td>
+        <td>静止阴影，由 <code>elevation</code> 写入。它与 <code>--_card-ring</code> 一起组成卡片的 <code>box-shadow</code>，所以描边环和抬升阴影可以共存。</td>
+      </tr>
+      <tr>
+        <td><code>--_card-ring</code></td>
+        <td><code>0 0 transparent</code></td>
+        <td>画在卡片阴影列表里的内环，供需要表达选中状态的组合组件设置。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## 原生属性
+
+根元素为 `<div>`。
+
+以下内容传入根元素：
+
+- HTML 属性。
+- `aria-*` 属性。
+- `data-*` 属性。
+- `class`。
+- `style`。
+
+`variant`、`elevation`、`padding` 会同时反映为根元素上的 `data-variant`、`data-elevation`、`data-padding`，`height` 为固定值时还会带上 `data-scrollable="true"`。

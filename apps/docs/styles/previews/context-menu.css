@@ -1,0 +1,48 @@
+.context-menu-preview {
+  width: min(100%, 640px);
+}
+
+.context-menu-preview__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/*
+ * The catalog card previews the painted panel. In real use the panel is fixed
+ * and teleported to the end of the document, so the static preview puts a copy
+ * of it back into the flow of the card.
+ */
+.context-menu-preview__surface {
+  position: relative;
+  top: auto;
+  left: auto;
+  z-index: 0;
+  flex: 0 0 auto;
+  width: min(240px, 100%);
+}
+
+.context-menu-preview__hint,
+.context-menu-preview__result {
+  flex: 1 1 220px;
+  min-width: 0;
+  margin: 0;
+  color: var(--astryx-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.context-menu-preview__result {
+  flex: 0 0 auto;
+  margin-top: 12px;
+}
+
+.component-card__preview .context-menu-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .context-menu-preview__stage {
+  gap: 16px;
+}

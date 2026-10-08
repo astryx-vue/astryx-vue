@@ -1,0 +1,36 @@
+.toggle-button-preview {
+  display: grid;
+  gap: 20px;
+  justify-items: center;
+  width: min(100%, 640px);
+}
+
+.toggle-button-preview__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.toggle-button-preview__note {
+  margin: 0;
+  color: var(--astryx-text-muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.component-card__preview .toggle-button-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .toggle-button-preview__row {
+  gap: 8px;
+}
+
+/* The state matrix needs a narrower column of controls than the default
+   preview, so let the longer rows wrap instead of pushing the card wider. */
+.component-card__preview .toggle-button-preview .astryx-toggle-button {
+  max-width: 100%;
+}

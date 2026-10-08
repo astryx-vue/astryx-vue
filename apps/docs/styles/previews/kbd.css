@@ -1,0 +1,74 @@
+.kbd-preview {
+  width: min(100%, 660px);
+}
+
+.kbd-preview__list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kbd-preview__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.kbd-preview__label {
+  color: var(--astryx-text);
+  font-size: 14px;
+}
+
+.kbd-preview__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.kbd-preview__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.kbd-preview__cell {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 8px;
+  border: 1px solid var(--astryx-line);
+  border-radius: var(--astryx-radius-element, 0.625rem);
+}
+
+.kbd-preview__code {
+  color: var(--astryx-text-muted);
+  font-size: 12px;
+}
+
+/*
+ * The docs stylesheet paints every <kbd> in the mono stack, which would
+ * override the body font the component paints its key badges with.
+ */
+.kbd-preview .astryx-kbd__key {
+  font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+.component-card__preview .kbd-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .kbd-preview__list {
+  gap: 10px;
+}
+
+.component-card__preview .kbd-preview__row {
+  justify-content: center;
+  gap: 12px;
+}

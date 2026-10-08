@@ -1,0 +1,46 @@
+.dropdown-menu-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: min(100%, 320px);
+}
+
+/* The trigger is painted as the open one so the preview shows the pair. */
+.dropdown-menu-preview__trigger {
+  pointer-events: none;
+}
+
+/*
+ * The preview shows the panel itself, so it is laid out in the page instead of
+ * being positioned against a trigger and teleported to the body.
+ */
+.dropdown-menu-preview__surface {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  max-width: 100%;
+  max-block-size: none;
+}
+
+/* One row reads as the highlighted row, the way the open menu looks. */
+.dropdown-menu-preview__highlight {
+  background-color: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+}
+
+.dropdown-menu-preview__note {
+  margin: 0;
+  color: var(--astryx-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.component-card__preview .dropdown-menu-preview {
+  width: 100%;
+  max-width: 100%;
+  align-items: center;
+}
+
+.component-card__preview .dropdown-menu-preview__surface {
+  width: min(100%, 300px);
+}

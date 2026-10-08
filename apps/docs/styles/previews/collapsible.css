@@ -1,0 +1,17 @@
+.collapsible-preview {
+  width: min(100%, 560px);
+}
+
+.collapsible-preview__surface {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--astryx-spacing-4, 16px);
+  border: 1px solid var(--astryx-line);
+  border-radius: var(--astryx-radius-container, 0.75rem);
+  background: var(--astryx-bg);
+}
+
+.component-card__preview .collapsible-preview {
+  width: 100%;
+  max-width: 100%;
+}
