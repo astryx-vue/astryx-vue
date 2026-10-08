@@ -113,7 +113,7 @@ export const componentDocsCopy = {
     overview: '总览',
     props: '属性',
     skeleton: '骨架屏',
-    spinner: '旋转器',
+    spinner: '加载态',
     stack: '堆叠布局',
     overlays: '浮层',
     popover: '弹出层',

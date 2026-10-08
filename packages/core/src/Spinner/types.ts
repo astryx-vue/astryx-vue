@@ -6,6 +6,6 @@ export interface SpinnerProps {
   size?: SpinnerSize
   /** 配色层级，用于浅色背景、深色背景或继承文字颜色的场景。 */
   shade?: SpinnerShade
-  /** 显示在旋转器下方的文字。字符串会同时作为无障碍名称。 */
+  /** 显示在加载态下方的文字。字符串会同时作为无障碍名称。 */
   label?: string
 }
