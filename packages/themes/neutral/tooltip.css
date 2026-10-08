@@ -3,7 +3,7 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-tooltip-background: light-dark(#000, #fff);
+    --astryx-tooltip-background: light-dark(#171717, #fafafa);
     --astryx-tooltip-foreground: light-dark(#fff, #262626);
     --astryx-tooltip-indication-color: light-dark(#d4d4d4, #525252);
   }
