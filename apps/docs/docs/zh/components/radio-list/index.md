@@ -52,11 +52,14 @@ const options = [
 
 ## 键盘与无障碍
 
-- 与 RadioGroup 共享相同的键盘操作和 ARIA 结构。
-- 自动为每个选项生成 ID。
-- 必须提供组 `label`。
+`RadioList` 内部把渲染工作交给 [RadioGroup](/components/radio-group)，所以键盘操作和 ARIA 结构与 RadioGroup 完全一致，在两者之间切换时不需要重新适应交互方式。
+
+- 整组渲染为一个 `role="radiogroup"` 容器，屏幕阅读器会按单选组的语义朗读它。
+- 每个选项的 ID 由组件自动生成，你不需要手动指定。
+- 组 `label` 是必填项，它是整组的无障碍名称，屏幕阅读器靠它说明这组选项在让人选什么。
 
 ## 使用建议
 
-- 选项结构简单且无需自定义布局时，优先使用 RadioList。
-- 需要自定义选项渲染或复杂布局时，使用 [RadioGroup](/components/radio-group) 配合 Radio 子项。
+选项结构简单、也不需要自定义布局时，优先使用 `RadioList`：它只接收一个 `options` 数组，就能把整组选项渲染出来。
+
+需要自定义选项渲染，或者布局比较复杂时，改用 [RadioGroup](/components/radio-group) 并直接组合 Radio 子项。

@@ -63,18 +63,22 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 无障碍
 
-- 必须提供 `label`。
-- 不得用 `placeholder` 代替标签。
-- `description` 关联到 `aria-describedby`。
-- `status.message` 关联到 `aria-describedby`。
-- 错误状态设置 `aria-invalid`。
-- 必填状态设置 `aria-required`。
+`label` 是必填项。屏幕阅读器靠它说明这个字段是做什么的；`placeholder` 只在输入框为空时可见，用户一开始输入就消失，不能用它代替标签。
 
-必须使用浏览器原生必填校验时，另外传入 `required`。
-`isRequired` 控制必填提示和 ARIA 状态。
+标签、说明和状态消息由组件通过 ARIA 属性串联起来，辅助技术能把它们当成一个整体读出：
 
-## 输入法
+- `description` 与 `status.message` 关联到 `aria-describedby`。
+- 出错时自动设置 `aria-invalid`。
+- 字段必填时自动设置 `aria-required`。
 
-- 输入法正在组合文字时，组件不更新 `v-model`。
-- `compositionend` 触发后，组件更新 `v-model`。
-- 使用 Enter 提交候选词时，组件不触发 `enter`。
+`isRequired` 负责显示必填提示并设置 ARIA 状态。如果还需要浏览器原生的必填校验——例如依赖表单提交来拦截未填写的字段——再额外传入 `required`。
+
+## 中文输入法
+
+拼音、注音这类输入法在用户敲下字母时，文字还处在候选状态，选定候选词之后才算真正输入完成。组件会区分「正在组合」和「已经输入」，避免把半成品当成最终值：
+
+- 候选词尚未确定时，组件不更新 `v-model`，输入框里显示的仍是组合中的文字。
+- `compositionend` 触发后，也就是用户选定候选词的那一刻，组件才把最终文字同步到 `v-model`。
+- 用 Enter 选定候选词不会触发 `enter` 事件；用户再次按下 Enter 提交表单时，`enter` 才正常触发。
+
+这样，依赖 `v-model` 的校验和提交逻辑就不会在用户输入到一半时被提前打断。

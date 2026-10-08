@@ -65,13 +65,14 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 键盘与无障碍
 
-- 使用 Tab 聚焦复选框。
-- 使用空格键切换选中状态。
-- 必须提供 `label`。
-- `isLabelHidden` 只隐藏视觉标签。
-- 半选状态通过原生 `indeterminate` 属性提供。
-- `description` 和状态消息关联到 `aria-describedby`。
-- `isRequired` 启用原生必填校验。
-- 错误状态设置 `aria-invalid`。
+`CheckboxInput` 内部是原生的 `<input type="checkbox">`，键盘操作沿用浏览器的默认行为：按 Tab 聚焦复选框，按空格键切换选中状态。
 
-只需显示选中标记时，使用 [CheckboxIndicator](/components/checkbox-indicator).
+标签、说明和状态消息由组件通过 ARIA 属性串联起来，辅助技术能把它们当成一个整体读出：
+
+- 必须提供 `label`，屏幕阅读器靠它说明这个选项的含义；`isLabelHidden` 只隐藏视觉上的标签，标签文本仍然作为可访问名称提供。
+- `description` 和状态消息关联到 `aria-describedby`，聚焦时会一并读出。
+- 半选状态通过原生 `indeterminate` 属性提供，浏览器和辅助技术都能直接识别。
+- `isRequired` 启用浏览器原生的必填校验。
+- 出错时组件自动设置 `aria-invalid`。
+
+如果只需要显示选中标记，请使用 [CheckboxIndicator](/components/checkbox-indicator)。

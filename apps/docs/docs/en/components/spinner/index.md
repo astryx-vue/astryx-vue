@@ -48,8 +48,10 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 ## Accessibility
 
-- The root element has `role="status"`.
-- A string `label` provides the accessible name through `aria-labelledby`.
-- Without `label`, the default name is `Loading`. Set `aria-label` to change it.
-- The ring is `aria-hidden` and carries no text of its own.
+A `Spinner` has no visible text of its own, so its loading state reaches assistive technology entirely through ARIA attributes. The component sets these for you, and you normally do not need to manage them yourself; the list below covers the attributes it actually uses and what each one does.
+
+- The root element carries `role="status"`, so assistive technology treats it as a status region.
+- When you pass a string `label`, it shows as visible text below the spinner and provides the accessible name through `aria-labelledby`.
+- Without a `label`, the accessible name defaults to `Loading`; pass `aria-label` to change it to something more specific to the context.
+- The ring is `aria-hidden` and carries no text of its own, so it is not read out separately.
 - With reduced motion enabled, the arc slows to a 3-second cycle.

@@ -47,8 +47,11 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 
 ## Accessibility
 
-- The track has `role="progressbar"`.
-- `aria-valuemin`, `aria-valuemax`, and `aria-valuenow` are set automatically.
-- `label` is linked through `aria-labelledby`.
-- `description` is linked through `aria-describedby`.
-- `aria-valuenow` is removed when `isIndeterminate` is true.
+A progress bar has no focusable element, so screen reader users rely on the ARIA attributes the component exposes to learn the current progress. The component therefore puts `role="progressbar"` on the track and fills in the progress values and name, so assistive technologies can announce it accurately:
+
+- The progress range is described by `aria-valuemin` and `aria-valuemax`, which the component sets automatically from `min` and `max`.
+- The current progress is described by `aria-valuenow`, which is also set automatically.
+- When `label` is provided, the label is linked to the track through `aria-labelledby`.
+- When `description` is provided, the description is linked to the track through `aria-describedby`.
+
+When `isIndeterminate` is true the progress is unknown, so the component removes `aria-valuenow` and screen readers announce the bar without a specific value.

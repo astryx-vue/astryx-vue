@@ -61,16 +61,20 @@ const isOpen = ref(false)
 
 ## Accessibility
 
-- The dialog is shown with `showModal()`, so the rest of the page is inert while it is open.
-- Initial focus goes to the first element with `data-autofocus`. If none exists, it goes to the `DialogHeader` title.
-- The dialog is named by the `DialogHeader` title. An explicit `aria-label` or `aria-labelledby` replaces that name.
-- Escape and backdrop clicks emit `openChange(false)`. The parent decides whether to close.
-- Closing returns focus to the element that was focused when the dialog opened, when it is still in the page.
+`Dialog` is built on the native `<dialog>` element, so the modal behavior, the focus trap, and the focus handoff on close all come from the browser rather than from extra configuration.
+
+The dialog is shown with `showModal()`, which makes the rest of the page inert while it is open. When it opens, initial focus goes to the first element with `data-autofocus`; if no element has that attribute, focus goes to the `DialogHeader` title.
+
+The dialog takes its name from the `DialogHeader` title, which the component associates with the dialog through `aria-labelledby`. An explicit `aria-label` or `aria-labelledby` replaces that name with the one you provide.
+
+Escape and backdrop clicks do not close the dialog directly. They emit `openChange(false)`, and the parent decides whether to close. When the dialog closes, focus returns to the element that was focused when it opened, as long as that element is still in the page.
 
 ## Limitations
 
-- Tooltip and Popover render into `body`. Inside an open `Dialog` they sit beneath the modal top layer and cannot be seen or used. Do not nest them inside a dialog until they are moved into the dialog's own layer.
-- Dialogs cannot be nested. Restructure the flow into steps within one dialog.
+Two constraints shape what you can put inside a dialog, and both are worth knowing before you combine it with other components.
+
+- Tooltip and Popover render into `body`. Inside an open `Dialog` they sit beneath the modal top layer, so they cannot be seen or used. Do not nest them inside a dialog until they are moved into the dialog's own layer.
+- Dialogs cannot be nested. If a flow needs several steps, restructure it as steps within a single dialog rather than opening a second one.
 
 ## Layout
 

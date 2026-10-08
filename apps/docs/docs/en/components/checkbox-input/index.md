@@ -64,13 +64,14 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Keyboard and accessibility
 
-- Press Tab to focus the checkbox.
-- Press Space to toggle the selection.
-- Always provide `label`.
-- `isLabelHidden` only hides the visual label.
-- The native `indeterminate` property provides the mixed state.
-- `aria-describedby` references the description and status message.
-- `isRequired` enables native required validation.
-- An error status sets `aria-invalid`.
+`CheckboxInput` renders a native `<input type="checkbox">`, so keyboard behaviour follows the browser defaults: press Tab to focus the checkbox, and press Space to toggle the selection.
 
-For a decorative selection mark, use [CheckboxIndicator](/en/components/checkbox-indicator).
+The component wires the label, description and status message together through ARIA attributes, so assistive technology reads them as one unit:
+
+- Always provide `label`; screen readers use it to describe what this option means. `isLabelHidden` only hides the visual label, and the label text still provides the accessible name.
+- `aria-describedby` references the description and the status message, so both are announced on focus.
+- The mixed state comes from the native `indeterminate` property, which browsers and assistive technology recognise directly.
+- `isRequired` enables the browser's native required validation.
+- When the status is an error, the component sets `aria-invalid`.
+
+For a decorative selection mark on its own, use [CheckboxIndicator](/en/components/checkbox-indicator).

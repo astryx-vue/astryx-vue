@@ -55,11 +55,13 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## 无障碍
 
-- 触发元素带有 `aria-haspopup`、`aria-expanded` 与 `aria-controls`。
-- `dialog` 类型的浮层带有 `role="dialog"`；设置 `isModal` 时带有 `aria-modal="true"`，并以 `label` 作为无障碍名称。
-- 打开时焦点移入第一个可聚焦元素；通过 Escape 或关闭时焦点回到触发元素。
+弹出层要把自己的存在、当前的开合状态和内部内容告诉使用屏幕阅读器或键盘的用户。组件会自动把触发元素和浮层关联起来，并在浮层打开、关闭时管理焦点，你只需要提供必要的无障碍名称。
+
+- 触发元素上带有 `aria-haspopup`、`aria-expanded` 与 `aria-controls`，辅助技术由此知道这是一个会打开浮层的按钮，并能读出浮层当前是展开还是收起。
+- `dialog` 类型的浮层带有 `role="dialog"`；设置 `isModal` 时还会带有 `aria-modal="true"`，并以 `label` 作为无障碍名称。
+- 打开时焦点移入浮层中的第一个可聚焦元素；用户按下 Escape 或关闭浮层时，焦点回到触发元素。
 - 设置 `isModal` 后，浮层打开期间 Tab 焦点保持在浮层内。
-- 内置关闭按钮在获得焦点前视觉隐藏。
+- 内置关闭按钮在获得焦点前视觉隐藏，键盘聚焦到它时才显示出来。
 
 ## 布局
 

@@ -52,11 +52,14 @@ const options = [
 
 ## Keyboard and accessibility
 
-- Same keyboard interactions and ARIA structure as RadioGroup.
-- IDs are generated automatically for each option.
-- A group `label` is required.
+`RadioList` hands rendering to [RadioGroup](/en/components/radio-group) internally, so keyboard interactions and the ARIA structure are identical to RadioGroup — there is nothing new to learn when you move between the two.
+
+- The group renders as a single `role="radiogroup"` container, which screen readers announce as a set of radio options.
+- An ID is generated automatically for each option, so you never need to specify one yourself.
+- A group `label` is required: it is the accessible name of the whole group, and screen readers use it to say what the options are choosing between.
 
 ## Usage notes
 
-- Prefer RadioList when the options are simple and do not need custom layout.
-- Use [RadioGroup](/en/components/radio-group) with Radio children for custom rendering or complex layouts.
+Prefer `RadioList` when the options are simple and do not need a custom layout: it only needs an `options` array to render the whole group.
+
+Use [RadioGroup](/en/components/radio-group) with Radio children when you need custom option rendering or a more complex layout.

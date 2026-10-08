@@ -47,6 +47,9 @@ import { Divider } from '@astryx-vue/core/Divider'
 
 ## Accessibility
 
-- The root element has `role="separator"` and `aria-orientation`.
-- With a `label`, the label becomes the accessible name through `aria-labelledby`.
-- Set `aria-label` to name the separator with other text.
+A divider is not interactive, but assistive technology still has to know that it is a separator and which orientation it uses before it can describe the element correctly. The component supplies that semantics on the root element:
+
+- The root element has `role="separator"`, and `aria-orientation` reports the current `orientation`.
+- When you provide a `label`, the label text becomes the accessible name through `aria-labelledby`.
+
+If you want to name the separator with different text, set `aria-label`. Once `aria-label` is set, the component uses it as the accessible name and no longer links the `label` automatically.

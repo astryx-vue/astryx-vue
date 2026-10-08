@@ -47,8 +47,11 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 
 ## 无障碍
 
-- 轨道使用 `role="progressbar"`。
-- 自动设置 `aria-valuemin`、`aria-valuemax`、`aria-valuenow`。
-- 提供 `label` 时，通过 `aria-labelledby` 关联标签。
-- 提供 `description` 时，通过 `aria-describedby` 关联说明。
-- `isIndeterminate` 时移除 `aria-valuenow`。
+进度条没有可以聚焦的元素，屏幕阅读器用户只能靠组件暴露的 ARIA 属性了解当前进度。因此组件在轨道上设置了 `role="progressbar"`，并由它负责补全进度数值和名称，让辅助技术能够如实播报：
+
+- 进度范围由 `aria-valuemin` 和 `aria-valuemax` 描述，组件会依据 `min` 和 `max` 自动设置。
+- 当前进度由 `aria-valuenow` 描述，同样由组件自动设置。
+- 传入 `label` 时，标签通过 `aria-labelledby` 关联到轨道。
+- 传入 `description` 时，说明文字通过 `aria-describedby` 关联到轨道。
+
+`isIndeterminate` 为真时进度未知，组件会移除 `aria-valuenow`，此时屏幕阅读器只播报这是一个进度条，不再给出具体数值。

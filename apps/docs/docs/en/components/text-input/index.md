@@ -63,18 +63,22 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Accessibility
 
-- Provide `label`.
-- Do not use `placeholder` instead of a label.
-- `description` connects to `aria-describedby`.
-- `status.message` connects to `aria-describedby`.
-- Error status sets `aria-invalid`.
-- Required status sets `aria-required`.
+A `label` is required. Screen readers rely on it to describe what the field is for, and a `placeholder` is only visible while the field is empty, so it cannot stand in for a label.
 
-For native browser validation, also pass `required`.
-`isRequired` controls the required indicator and ARIA state.
+The component wires the label, description and status message together with ARIA attributes, so assistive technology reads them as one unit:
+
+- `description` and `status.message` connect to `aria-describedby`.
+- An error status sets `aria-invalid`.
+- A required field sets `aria-required`.
+
+`isRequired` renders the required indicator and sets the ARIA state. When you also need native browser validation — for example when you rely on form submission to block an incomplete field — pass `required` as well.
 
 ## Input methods
 
-- During input method composition, the component does not update `v-model`.
-- After `compositionend`, the component updates `v-model`.
-- Enter used to confirm a composition candidate does not emit `enter`.
+While an input method such as Pinyin or Kana is composing a candidate, the characters the user has typed are not final yet. The component tracks that distinction so a half-finished value never reaches your state:
+
+- The component does not update `v-model` while a candidate is still being composed, and the field keeps showing the composing text.
+- Once `compositionend` fires — the moment the user picks a candidate — the component writes the final text to `v-model`.
+- Enter used to confirm a candidate does not emit `enter`. The event fires normally when the user presses Enter again to submit the form.
+
+This keeps validation and submit logic built on `v-model` from reacting to partial input.

@@ -38,13 +38,18 @@ const size = shallowRef('md')
 
 ## 键盘与无障碍
 
+`RadioGroup` 把一组互斥的选项组织成一个单选组，辅助技术会把它当成一个整体朗读，而不是若干个互不相关的按钮。下面这些语义和属性都由组件自动处理，你不需要手动声明。
+
 - 整组渲染为一个 `role="radiogroup"` 容器，屏幕阅读器按单选组语义朗读。
-- 组标签通过 `aria-labelledby` 与容器关联。
-- 必须提供组 `label`，它是整组的无障碍名称。
-- 设置 `isRequired` 会显示必填提示，并启用原生必填校验。
+- 组标签通过 `aria-labelledby` 与容器关联，所以必须提供组 `label`，它就是整组的无障碍名称。
 - 处于错误状态时，组会自动设置 `aria-invalid`。
+- 设置 `isRequired` 会显示必填提示，并启用原生必填校验。
+
+键盘方面，组内所有选项共享同一个 `name`，浏览器会把它们当成同一组原生单选按钮：按 `Tab` 键进入这一组时会落在当前选中项上，之后用方向键在选项之间切换。
 
 ## 使用建议
 
-- 需要自定义选项布局或渲染时，使用 RadioGroup 直接组合 Radio 子项。
-- 选项结构简单、无需定制布局时，改用 [RadioList](/components/radio-list) 会更省事。
+下面两条建议用来帮你在 `RadioGroup` 和 [RadioList](/components/radio-list) 之间做选择。两者解决的问题相同——都是在一组互斥的选项里选出一个——区别只在于你对选项布局的控制程度。
+
+- 需要自定义选项布局或渲染时，直接组合 `RadioGroup` 和 `Radio` 子项。
+- 选项结构简单、不需要定制布局时，改用 [RadioList](/components/radio-list) 会更省事。

@@ -55,11 +55,13 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## Accessibility
 
-- The trigger receives `aria-haspopup`, `aria-expanded`, and `aria-controls`.
-- A `dialog` surface has `role="dialog"`, `aria-modal="true"` when `isModal` is set, and the `label` as its accessible name.
-- Focus moves to the first focusable element on open and returns to the trigger on Escape or close.
-- `isModal` keeps Tab focus inside the surface while it is open.
-- The built-in close button is visually hidden until it receives focus.
+A popover has to communicate its presence, its current open state, and its content to people who use a screen reader or a keyboard. The component links the trigger to the surface automatically and manages focus as the surface opens and closes, so you only need to supply the accessible name.
+
+- The trigger receives `aria-haspopup`, `aria-expanded`, and `aria-controls`, so assistive technology knows it is a button that opens a surface and can announce whether that surface is currently expanded.
+- A `dialog` surface has `role="dialog"`; when `isModal` is set it also has `aria-modal="true"`, and the `label` serves as its accessible name.
+- Focus moves to the first focusable element inside the surface on open, and returns to the trigger when the user presses Escape or closes the surface.
+- With `isModal` set, Tab focus stays inside the surface while it is open.
+- The built-in close button is visually hidden until it receives focus, so it appears once the keyboard reaches it.
 
 ## Layout
 

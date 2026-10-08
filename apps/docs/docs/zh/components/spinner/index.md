@@ -48,8 +48,10 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 ## 无障碍
 
-- 根元素带有 `role="status"`。
-- 字符串类型的 `label` 通过 `aria-labelledby` 提供无障碍名称。
-- 未提供 `label` 时，默认名称为 `Loading`。设置 `aria-label` 可以修改。
-- 圆环带有 `aria-hidden`，不包含任何文字。
-- 开启减少动态效果时，圆弧放慢为 3 秒一圈。
+`Spinner` 本身没有可见文字，加载状态要依靠 ARIA 属性才能被辅助技术理解。这些属性都由组件自动设置，通常不需要你手动维护，下面说明组件实际用到的属性和它们各自的作用。
+
+- 根元素带有 `role="status"`，辅助技术会把这块区域当作状态提示来处理。
+- 传入字符串类型的 `label` 时，它会显示为加载态下方的可见文字，并通过 `aria-labelledby` 成为无障碍名称。
+- 不传 `label` 时，无障碍名称默认为 `Loading`；这时传入 `aria-label` 就可以改成更贴合场景的说法。
+- 圆环带有 `aria-hidden`，自身不含任何文字，因此它不会被单独读出。
+- 开启「减少动态效果」时，圆弧放慢为 3 秒一圈。

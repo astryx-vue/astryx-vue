@@ -40,12 +40,17 @@ const size = shallowRef('md')
 
 ## Keyboard interactions
 
-- Tab: focus the radio group.
-- Arrow keys: move selection within the group.
-- Space: select the currently focused option.
+Once focus enters a radio group, the options follow the browser's native radio keyboard behavior, so no extra key conventions are needed:
+
+- Tab: focus the radio group. Focus lands on the currently selected option, and the whole group takes up a single stop in the tab order.
+- Arrow keys: move the selection within the group.
+- Space: select the option that currently has focus.
 
 ## Usage notes
 
-- Use a radio group when options are few and mutually exclusive.
-- Consider a select control when there are more than about 7 options.
-- Always provide a group `label`.
+A radio group is meant for choosing one option out of a small, mutually exclusive set. Once that set grows larger, the pattern stops working well.
+
+- When there are only a few mutually exclusive options, a radio group lets the user see every choice at a glance.
+- When there are more than about 7 options, a select control takes up less space and is easier to scan.
+
+Whatever the number of options, always provide a group `label`: it is the accessible name for the whole radio group, and screen readers rely on it when announcing the options.

@@ -61,15 +61,15 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Usage guidance
 
-- Use `info` for information.
-- Use `success` for successful results.
-- Use `warning` for caution.
-- Use `error` for problems that block progress.
-- Set `:collapsible="false"` for details that users must read.
-- Mount urgent messages in response to user actions.
+The `status` prop sets the tone of a banner, and picking the wrong one makes readers misjudge how urgent the message is. The list below covers which status fits which kind of message, plus two usages that are easy to overlook.
 
-`warning` and `error` use `role="alert"`.
-`info` and `success` use `role="status"`.
-Messages in the initial page render may not be announced by screen readers.
+- Use `info` for general information and updates.
+- Use `success` for the result of a successful action.
+- Use `warning` for situations that call for caution.
+- Use `error` for problems that block progress.
+- Set `:collapsible="false"` for details that users must read, so those details stay visible and no click is needed to open them.
+- Mount urgent messages when the user action that triggers them happens.
+
+The status also decides the role the banner exposes to screen readers: `warning` and `error` use `role="alert"`, while `info` and `success` use `role="status"`. Note that messages already present in the initial page render may not be announced by screen readers, so the more urgent a message is, the better it works when mounted in response to a user action.
 
 For a single field validation message, use [FieldStatus](/en/components/field).

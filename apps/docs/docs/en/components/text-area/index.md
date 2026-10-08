@@ -65,13 +65,19 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Keyboard controls
 
-- Tab: focus the text area.
-- Shift + Enter: insert a newline.
-- Enter: fire the `enter` event.
-- Escape: close the disabled reason or status tooltip.
+The control is a real `textarea`, so it keeps the browser's native key behaviour, and the component only adds handling on top of a few keys. Most keystrokes therefore behave exactly as they do in any other multi-line field:
+
+- Tab moves focus into or out of the text area.
+- Shift + Enter inserts a newline at the caret.
+- Enter emits the `enter` event, so your handler can take over submit-like logic.
+- Escape closes an open disabled reason tooltip or status tooltip.
+
+When submit-on-Enter behaviour makes sense for your form, implement it in the `enter` handler.
 
 ## Usage guidance
 
-- State exact length expectations in the description when using minlength and maxlength.
-- `isRequired` only adds a required description. It does not run native validation.
-- Validate content in application code.
+The text area does not constrain what users type, so length limits and validation belong to your application:
+
+- When the expected length matters, state `minlength` and `maxlength` in the `description` so users know it before they submit.
+- `isRequired` only shows the required indicator and sets the matching ARIA state; it does not run native validation.
+- Whether the content meets your business rules is up to validation in application code.

@@ -64,18 +64,21 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Keyboard controls
 
-- Tab: focus each thumb in order.
-- Left / Right: move one step in the horizontal direction.
-- Up / Down: increase or decrease one step.
-- PageUp / PageDown: increase or decrease ten steps.
-- Home / End: move to the allowed minimum or maximum.
-- Escape: close the value tooltip or disabled reason.
+The slider is fully operable with the keyboard, so users never have to drag. Once a thumb has focus, these keys change its value:
 
-Range thumbs have individual names.
-Each thumb's ARIA bounds update when its sibling changes.
+- Tab moves focus to each thumb in turn.
+- Left / Right move one step in the horizontal direction; the direction is reversed in right-to-left layouts.
+- Up / Down increase or decrease the value by one step.
+- PageUp / PageDown increase or decrease the value by ten steps.
+- Home / End move to the allowed minimum or maximum.
+- Escape closes the value tooltip or the disabled reason tooltip.
+
+In range mode each thumb has its own name, taken from `minLabel` and `maxLabel`, so assistive technology can tell which bound is being adjusted. Each thumb's ARIA bounds also update when its sibling changes, so the range that is announced always matches the values the thumb can actually take.
 
 ## Usage guidance
 
+A slider suits choosing a value along a continuous range, not entering an exact number. Keep the following in mind:
+
 - Provide a numeric input when exact entry matters.
-- `isRequired` only provides a required description.
+- `isRequired` only provides a required description, so assistive technology knows the field is required.
 - Validate accepted values in application code.

@@ -51,7 +51,11 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 
 ## Accessibility
 
-- The bubble has `role="tooltip"`.
-- The trigger receives `aria-describedby` that points to the bubble.
-- Escape closes an uncontrolled tooltip.
-- Hover and focus are the only triggers. Keep essential information out of tooltips.
+The tooltip bubble is a separate layer, and the component links it to the trigger with ARIA attributes so assistive technology can announce both the extra description attached to the trigger and the text inside the bubble:
+
+- The bubble has `role="tooltip"`, which tells assistive technology to treat it as a hint.
+- The trigger receives `aria-describedby` pointing to the bubble's `id`.
+
+The hint appears on mouse hover or keyboard focus. While it is showing, pressing Escape closes an uncontrolled tooltip; a controlled tooltip instead emits `openChange(false)`, and the parent decides whether to close it.
+
+Because the hint appears only on hover or focus and disappears again, users can easily miss it, and touch devices do not always trigger it. Keep essential information that users must see to complete a task out of tooltips.

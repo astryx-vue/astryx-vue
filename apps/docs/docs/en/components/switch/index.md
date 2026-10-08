@@ -49,11 +49,16 @@ const enabled = shallowRef(false)
 
 ## Keyboard interactions
 
-- Tab: focus the switch.
-- Space: toggle the checked state.
-- Escape: close the disabled-reason tooltip.
+`Switch` is built on a native checkbox, so its keyboard behaviour follows the browser's defaults and every action is reachable without a mouse. With focus on the switch, these keys apply:
+
+- Tab moves focus to the switch.
+- Space toggles the checked state.
+- Escape closes the disabled-reason tooltip.
+
+The disabled-reason tooltip only appears when the switch is disabled and a `disabledMessage` is provided, so Escape has an effect only in that case.
 
 ## Usage notes
 
-- Use a switch for options that take effect immediately, not for form submission.
-- `isRequired` only shows a required indicator; it does not perform validation.
+Use a switch for a two-state option that takes effect right away, such as turning notifications on or off. If an option only applies once the form is submitted, use a checkbox instead; otherwise users may assume the switch has already saved the change.
+
+`isRequired` only shows the required indicator and sets `aria-required`; it does not perform validation or block form submission.

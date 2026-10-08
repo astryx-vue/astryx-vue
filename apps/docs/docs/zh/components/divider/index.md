@@ -47,6 +47,9 @@ import { Divider } from '@astryx-vue/core/Divider'
 
 ## 无障碍
 
-- 根元素带有 `role="separator"` 和 `aria-orientation`。
-- 提供 `label` 时，文字通过 `aria-labelledby` 成为无障碍名称。
-- 设置 `aria-label` 可以用其他文字为分隔线命名。
+分隔线本身没有交互行为，但辅助技术仍需要知道它是一条分隔线、朝向如何，才能在浏览时正确描述这个元素。组件会自动在根元素上补齐这部分语义：
+
+- 根元素带有 `role="separator"`，并用 `aria-orientation` 反映当前的 `orientation`。
+- 提供 `label` 时，标签文字会通过 `aria-labelledby` 成为分隔线的无障碍名称。
+
+如果希望用别的文字为分隔线命名，可以设置 `aria-label`。一旦设置了 `aria-label`，组件就用它作为无障碍名称，不再自动关联 `label`。
