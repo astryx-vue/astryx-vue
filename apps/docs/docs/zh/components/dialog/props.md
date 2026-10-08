@@ -12,7 +12,7 @@ footer: false
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>对话框是否打开。必填。</td></tr>
 <tr><td><code>isInline</code></td><td><code>boolean</code></td><td><code>false</code></td><td>以普通文档流渲染内容，不使用模态对话框、遮罩与焦点行为。仅用于文档预览。</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td><code>400</code></td><td>首选宽度。数字单位为像素。窄屏时夹取到视口内。全屏变体忽略此项。</td></tr>
-<tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td><code>'75dvh'</code></td><td>最大高度。数字单位为像素。全屏变体忽略此项。</td></tr>
+<tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td><code>'75vh'</code></td><td>最大高度。数字单位为像素。全屏变体忽略此项。</td></tr>
 <tr><td><code>position</code></td><td><code>DialogPosition</code></td><td>居中</td><td>静态偏移：<code>top</code>、<code>bottom</code>、<code>start</code>、<code>end</code>。逻辑属性 <code>start</code> 与 <code>end</code> 在 RTL 下镜像。全屏变体忽略此项。</td></tr>
 <tr><td><code>variant</code></td><td><code>'standard' | 'fullscreen'</code></td><td><code>'standard'</code></td><td>标准对话框，或占满视口的对话框。</td></tr>
 <tr><td><code>purpose</code></td><td><code>'required' | 'form' | 'info'</code></td><td><code>'info'</code></td><td><code>required</code> 禁用 Escape 与点击遮罩关闭；<code>form</code> 仅允许 Escape；<code>info</code> 两者都允许。</td></tr>

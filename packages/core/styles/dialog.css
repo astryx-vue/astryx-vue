@@ -12,16 +12,6 @@
   }
 }
 
-@keyframes astryx-dialog-enter-fullscreen {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 @layer astryx.components {
   .astryx-dialog {
     --_dialog-radius: var(--astryx-radius-container, 0.75rem);
@@ -31,8 +21,8 @@
     inset: 0;
     margin: auto;
     width: 400px;
-    max-width: min(100%, calc(100dvw - var(--astryx-spacing-4, 1rem) - var(--astryx-spacing-4, 1rem)));
-    max-height: 75dvh;
+    max-width: 90vw;
+    max-height: 75vh;
     height: fit-content;
     padding: 0;
     border: 0;
@@ -53,7 +43,7 @@
 
   .astryx-dialog[open] {
     display: flex;
-    animation: astryx-dialog-enter var(--astryx-dialog-enter-duration, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)) backwards;
+    animation: astryx-dialog-enter var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)) backwards;
   }
 
   .astryx-dialog::backdrop {
@@ -76,10 +66,6 @@
     max-height: 100dvh;
     margin: 0;
     border-radius: 0;
-  }
-
-  .astryx-dialog--fullscreen[open] {
-    animation-name: astryx-dialog-enter-fullscreen;
   }
 
   .astryx-dialog__inner {

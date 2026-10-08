@@ -12,7 +12,7 @@ footer: false
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>Whether the dialog is open. Required.</td></tr>
 <tr><td><code>isInline</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Renders content in normal flow without the modal dialog, backdrop, or focus behavior. For documentation previews only.</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td><code>400</code></td><td>Preferred width. Numbers are pixels. Clamped to the viewport on narrow screens. Ignored by <code>fullscreen</code>.</td></tr>
-<tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td><code>'75dvh'</code></td><td>Maximum height. Numbers are pixels. Ignored by <code>fullscreen</code>.</td></tr>
+<tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td><code>'75vh'</code></td><td>Maximum height. Numbers are pixels. Ignored by <code>fullscreen</code>.</td></tr>
 <tr><td><code>position</code></td><td><code>DialogPosition</code></td><td>Centered</td><td>Static offsets: <code>top</code>, <code>bottom</code>, <code>start</code>, <code>end</code>. Logical <code>start</code> and <code>end</code> mirror under RTL. Ignored by <code>fullscreen</code>.</td></tr>
 <tr><td><code>variant</code></td><td><code>'standard' | 'fullscreen'</code></td><td><code>'standard'</code></td><td>Standard dialog or a dialog that fills the viewport.</td></tr>
 <tr><td><code>purpose</code></td><td><code>'required' | 'form' | 'info'</code></td><td><code>'info'</code></td><td><code>required</code> disables Escape and backdrop dismissal. <code>form</code> allows Escape only. <code>info</code> allows both.</td></tr>

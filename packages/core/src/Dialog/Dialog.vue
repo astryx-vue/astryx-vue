@@ -9,7 +9,7 @@ defineOptions({ name: 'AstryxDialog', inheritAttrs: false })
 const props = withDefaults(defineProps<DialogProps>(), {
   isInline: false,
   width: 400,
-  maxHeight: '75dvh',
+  maxHeight: '75vh',
   position: undefined,
   variant: 'standard',
   purpose: 'info',
