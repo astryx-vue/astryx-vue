@@ -263,6 +263,16 @@
       "types": "./dist/Selector/index.d.ts",
       "import": "./dist/Selector/index.js"
     },
+    "./NumberInput": {
+      "source": "./src/NumberInput/index.ts",
+      "types": "./dist/NumberInput/index.d.ts",
+      "import": "./dist/NumberInput/index.js"
+    },
+    "./InputGroup": {
+      "source": "./src/InputGroup/index.ts",
+      "types": "./dist/InputGroup/index.d.ts",
+      "import": "./dist/InputGroup/index.js"
+    },
     "./MultiSelector": {
       "source": "./src/MultiSelector/index.ts",
       "types": "./dist/MultiSelector/index.d.ts",

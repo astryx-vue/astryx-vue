@@ -1,0 +1,62 @@
+.astryx-input-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-md);
+  overflow: hidden;
+  transition: border-color 150ms var(--astryx-ease-out);
+}
+
+.astryx-input-group:focus-within:not(.is-disabled) {
+  border-color: var(--astryx-color-primary);
+}
+
+.astryx-input-group.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.astryx-input-group-addon {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--astryx-spacing-3);
+  background: var(--astryx-color-surface-hover);
+  color: var(--astryx-color-text-secondary);
+  font-size: var(--astryx-text-body);
+  white-space: nowrap;
+}
+
+.astryx-input-group-addon.before {
+  border-right: 1px solid var(--astryx-color-border);
+}
+
+.astryx-input-group-addon.after {
+  border-left: 1px solid var(--astryx-color-border);
+}
+
+.astryx-input-group-field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 移除子输入框的边框和圆角 */
+.astryx-input-group-field input,
+.astryx-input-group-field .astryx-selector-trigger,
+.astryx-input-group-field .astryx-text-input,
+.astryx-input-group-field .astryx-number-input-field {
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* 尺寸变体 */
+.astryx-input-group.size-sm .astryx-input-group-addon {
+  padding: 0 var(--astryx-spacing-2);
+  font-size: var(--astryx-text-body-sm);
+}
+
+.astryx-input-group.size-lg .astryx-input-group-addon {
+  padding: 0 var(--astryx-spacing-4);
+  font-size: var(--astryx-text-body-lg);
+}

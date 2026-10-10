@@ -1,0 +1,76 @@
+.astryx-number-input {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.astryx-number-input-field {
+  width: 100%;
+  padding: var(--astryx-spacing-2) var(--astryx-spacing-3);
+  padding-right: 60px;
+  background: var(--astryx-color-surface);
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-md);
+  font-family: inherit;
+  font-size: var(--astryx-text-body);
+  color: var(--astryx-color-text);
+  transition: all 150ms var(--astryx-ease-out);
+}
+
+.astryx-number-input-field:hover:not(:disabled) {
+  border-color: var(--astryx-color-border-hover);
+}
+
+.astryx-number-input-field:focus {
+  outline: none;
+  border-color: var(--astryx-color-primary);
+}
+
+.astryx-number-input-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.astryx-number-input-buttons {
+  position: absolute;
+  right: var(--astryx-spacing-1);
+  display: flex;
+  gap: var(--astryx-spacing-0-5);
+}
+
+.astryx-number-input-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: var(--astryx-color-surface-hover);
+  border: none;
+  border-radius: var(--astryx-radius-sm);
+  color: var(--astryx-color-text);
+  cursor: pointer;
+  transition: all 150ms var(--astryx-ease-out);
+}
+
+.astryx-number-input-button:hover:not(:disabled) {
+  background: var(--astryx-color-surface-active);
+}
+
+.astryx-number-input-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 尺寸变体 */
+.astryx-number-input.size-sm .astryx-number-input-field {
+  padding: var(--astryx-spacing-1-5) var(--astryx-spacing-2);
+  padding-right: 50px;
+  font-size: var(--astryx-text-body-sm);
+}
+
+.astryx-number-input.size-lg .astryx-number-input-field {
+  padding: var(--astryx-spacing-3) var(--astryx-spacing-4);
+  padding-right: 70px;
+  font-size: var(--astryx-text-body-lg);
+}
