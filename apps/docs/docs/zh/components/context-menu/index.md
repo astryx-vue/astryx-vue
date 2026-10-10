@@ -82,7 +82,7 @@ const items: ContextMenuOption[] = [
 
 <DemoExample
   :demo="contextMenuOverview"
-  description="The painted menu surface: rows with icons and a secondary description, a divider, and a destructive action."
+  description="展开的菜单表面：带图标的菜单行、次要说明、分隔线和危险操作。"
   locale="zh"
   title="菜单表面"
 />
