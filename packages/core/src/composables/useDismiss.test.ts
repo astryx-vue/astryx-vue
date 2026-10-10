@@ -36,7 +36,7 @@ describe('useDismiss', () => {
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
 
-    const event = new MouseEvent('mousedown', { bubbles: true })
+    const event = new PointerEvent('pointerdown', { bubbles: true })
     document.body.dispatchEvent(event)
 
     await nextTick()
@@ -58,7 +58,7 @@ describe('useDismiss', () => {
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
 
-    const event = new MouseEvent('mousedown', { bubbles: true })
+    const event = new PointerEvent('pointerdown', { bubbles: true })
     container.dispatchEvent(event)
 
     await nextTick()
@@ -80,7 +80,7 @@ describe('useDismiss', () => {
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
 
-    const event = new MouseEvent('mousedown', { bubbles: true })
+    const event = new PointerEvent('pointerdown', { bubbles: true })
     trigger.dispatchEvent(event)
 
     await nextTick()
@@ -142,8 +142,8 @@ describe('useDismiss', () => {
 
     await nextTick()
 
-    const mouseEvent = new MouseEvent('mousedown', { bubbles: true })
-    document.body.dispatchEvent(mouseEvent)
+    const pointerEvent = new PointerEvent('pointerdown', { bubbles: true })
+    document.body.dispatchEvent(pointerEvent)
 
     const keyEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
     document.dispatchEvent(keyEvent)

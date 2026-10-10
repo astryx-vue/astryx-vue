@@ -164,11 +164,11 @@ describe('popover', () => {
     await flushPromises()
     const [first, last] = Array.from(surface.querySelectorAll<HTMLElement>('input, button'))
     last.focus()
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }))
+    last.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true, composed: true }))
     expect(document.activeElement).toBe(first)
 
     first.focus()
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }))
+    first.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true, composed: true }))
     expect(document.activeElement).toBe(last)
   })
 

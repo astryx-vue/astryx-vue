@@ -27,20 +27,25 @@ export function useDismiss(options: UseDismissOptions): void {
     onDismiss,
   } = options
 
-  function onClickOutside(event: MouseEvent): void {
+  let ignoreNextOutsideClick = false
+
+  function onClickOutside(event: PointerEvent): void {
     if (!isEnabled.value)
       return
+
+    if (ignoreNextOutsideClick) {
+      ignoreNextOutsideClick = false
+      return
+    }
 
     const el = container.value
     if (!el)
       return
 
     const target = event.target as Node
-    // 点击在容器内，忽略
     if (el.contains(target))
       return
 
-    // 点击在触发器上，忽略（触发器通常自己处理切换逻辑）
     const triggerEl = trigger?.value
     if (triggerEl?.contains(target))
       return
@@ -53,30 +58,41 @@ export function useDismiss(options: UseDismissOptions): void {
       return
 
     if (event.key === 'Escape') {
+      const el = container.value
+      if (!el)
+        return
+
+      const target = event.target as Node
+      if (el.contains(target)) {
+        return
+      }
+
       event.preventDefault()
-      event.stopPropagation()
       onDismiss()
     }
   }
 
   function setup(): void {
     if (typeof document !== 'undefined') {
-      document.addEventListener('mousedown', onClickOutside, true)
+      ignoreNextOutsideClick = true
+      setTimeout(() => {
+        ignoreNextOutsideClick = false
+      }, 0)
+      document.addEventListener('pointerdown', onClickOutside as EventListener, true)
       document.addEventListener('keydown', onKeyDown, true)
     }
   }
 
   function teardown(): void {
     if (typeof document !== 'undefined') {
-      document.removeEventListener('mousedown', onClickOutside, true)
+      document.removeEventListener('pointerdown', onClickOutside as EventListener, true)
       document.removeEventListener('keydown', onKeyDown, true)
     }
   }
 
   watch(isEnabled, (enabled) => {
     if (enabled) {
-      // 稍微延迟，避免立即触发（打开动作的点击事件可能还在冒泡）
-      setTimeout(setup, 0)
+      setup()
     }
     else {
       teardown()
