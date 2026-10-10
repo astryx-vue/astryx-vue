@@ -85,7 +85,6 @@ const longPress = useLongPress({
 useDismiss({
   container: panel,
   isEnabled: isOpen,
-  enableEscape: computed(() => false),
   onDismiss: () => closeMenu(),
 })
 

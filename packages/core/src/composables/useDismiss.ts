@@ -59,11 +59,9 @@ export function useDismiss(options: UseDismissOptions): void {
 
     if (event.key === 'Escape') {
       const el = container.value
-      if (!el)
-        return
-
       const target = event.target as Node
-      if (el.contains(target)) {
+
+      if (el && el.contains(target)) {
         return
       }
 
