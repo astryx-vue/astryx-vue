@@ -40,7 +40,8 @@
     "typescript": "catalog:language",
     "vite": "catalog:build",
     "vitest": "catalog:testing",
-    "vue": "catalog:vue"
+    "vue": "catalog:vue",
+    "wrangler": "catalog:deploy"
   },
   "upstream": {
     "repository": "https://github.com/facebook/astryx",

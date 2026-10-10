@@ -39,11 +39,15 @@ jobs:
       - name: Deploy to Cloudflare Pages
         if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/docs/.vitepress/dist --project-name=astryx-vue --branch=${{ github.head_ref || github.ref_name }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          DEPLOY_OUTPUT=$(pnpm exec wrangler pages deploy apps/docs/.vitepress/dist --project-name=astryx-vue --branch="$BRANCH" 2>&1)
+          echo "$DEPLOY_OUTPUT"
+          DEPLOYMENT_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'https://[^\s]+\.pages\.dev' | head -1)
+          echo "deployment-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
 
       - name: Comment Preview URL
         if: github.event_name == 'pull_request' && steps.deploy.outcome == 'success'
