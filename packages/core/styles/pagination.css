@@ -1,0 +1,111 @@
+.astryx-pagination {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.astryx-pagination.is-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 总数显示 */
+.astryx-pagination-total {
+  font-size: 14px;
+  color: var(--astryx-color-text-secondary);
+}
+
+/* 内容区 */
+.astryx-pagination-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 按钮 */
+.astryx-pagination-button {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: var(--astryx-color-text-primary);
+  cursor: pointer;
+  background: var(--astryx-color-surface);
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-md);
+  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
+}
+
+.astryx-pagination-button:hover:not(:disabled) {
+  color: var(--astryx-color-primary);
+  border-color: var(--astryx-color-primary);
+}
+
+.astryx-pagination-button:disabled {
+  color: var(--astryx-color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 页码列表 */
+.astryx-pagination-pages {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.astryx-pagination-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  font-size: 14px;
+  color: var(--astryx-color-text-primary);
+  cursor: pointer;
+  background: var(--astryx-color-surface);
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-md);
+  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
+}
+
+.astryx-pagination-page:hover:not(:disabled):not(.is-active) {
+  color: var(--astryx-color-primary);
+  border-color: var(--astryx-color-primary);
+}
+
+.astryx-pagination-page.is-active {
+  color: var(--astryx-color-on-primary);
+  cursor: default;
+  background: var(--astryx-color-primary);
+  border-color: var(--astryx-color-primary);
+}
+
+.astryx-pagination-page.is-ellipsis {
+  cursor: default;
+  border-color: transparent;
+}
+
+.astryx-pagination-page:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 页面大小选择器 */
+.astryx-pagination-size-changer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.astryx-pagination-size-label {
+  font-size: 14px;
+  color: var(--astryx-color-text-secondary);
+}
+
+.astryx-pagination-size-changer .astryx-selector {
+  width: 120px;
+}

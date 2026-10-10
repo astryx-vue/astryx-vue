@@ -1,0 +1,155 @@
+.astryx-calendar {
+  --calendar-width: 280px;
+  --calendar-padding: 16px;
+  --cell-size: 36px;
+  --cell-gap: 2px;
+
+  width: var(--calendar-width);
+  padding: var(--calendar-padding);
+  background: var(--astryx-color-surface);
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-lg);
+  box-shadow: var(--astryx-shadow-md);
+}
+
+.astryx-calendar.is-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 头部 */
+.astryx-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.astryx-calendar-month-year {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--astryx-color-text-primary);
+}
+
+.astryx-calendar-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--astryx-color-text-secondary);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: var(--astryx-radius-md);
+  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
+}
+
+.astryx-calendar-nav-button:hover:not(:disabled) {
+  color: var(--astryx-color-text-primary);
+  background: var(--astryx-color-surface-hover);
+}
+
+.astryx-calendar-nav-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.astryx-calendar-nav-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 星期标题 */
+.astryx-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--cell-gap);
+  margin-bottom: 8px;
+}
+
+.astryx-calendar-weekday {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--astryx-color-text-tertiary);
+}
+
+/* 日期网格 */
+.astryx-calendar-grid {
+  outline: none;
+}
+
+.astryx-calendar-grid:focus-visible {
+  outline: 2px solid var(--astryx-color-primary);
+  outline-offset: 2px;
+  border-radius: var(--astryx-radius-md);
+}
+
+.astryx-calendar-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--cell-gap);
+}
+
+.astryx-calendar-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  cursor: pointer;
+  border-radius: var(--astryx-radius-md);
+  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
+}
+
+.astryx-calendar-cell:hover:not(.is-disabled) {
+  background: var(--astryx-color-surface-hover);
+}
+
+.astryx-calendar-cell.is-active:not(.is-disabled) {
+  outline: 2px solid var(--astryx-color-primary);
+  outline-offset: -2px;
+}
+
+.astryx-calendar-cell.is-selected {
+  color: var(--astryx-color-on-primary);
+  background: var(--astryx-color-primary);
+}
+
+.astryx-calendar-cell.is-today:not(.is-selected) {
+  font-weight: 600;
+  color: var(--astryx-color-primary);
+}
+
+.astryx-calendar-cell.is-today:not(.is-selected)::after {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  content: '';
+  background: var(--astryx-color-primary);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.astryx-calendar-cell.is-disabled {
+  color: var(--astryx-color-text-disabled);
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.astryx-calendar-cell.is-other-month {
+  color: var(--astryx-color-text-tertiary);
+}
+
+.astryx-calendar-day {
+  font-size: 14px;
+}

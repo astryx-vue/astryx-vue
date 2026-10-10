@@ -1,0 +1,103 @@
+.astryx-date-input {
+  display: inline-block;
+  width: 100%;
+}
+
+.astryx-date-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: var(--astryx-color-surface);
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-md);
+  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
+}
+
+.astryx-date-input-wrapper:hover {
+  border-color: var(--astryx-color-primary);
+}
+
+.astryx-date-input-wrapper:focus-within {
+  border-color: var(--astryx-color-primary);
+  outline: 2px solid rgba(var(--astryx-color-primary-rgb), 0.1);
+  outline-offset: 0;
+}
+
+/* 状态 */
+.astryx-date-input.status-error .astryx-date-input-wrapper {
+  border-color: var(--astryx-color-error);
+}
+
+.astryx-date-input.status-warning .astryx-date-input-wrapper {
+  border-color: var(--astryx-color-warning);
+}
+
+.astryx-date-input.status-success .astryx-date-input-wrapper {
+  border-color: var(--astryx-color-success);
+}
+
+/* 输入框 */
+.astryx-date-input-field {
+  flex: 1;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--astryx-color-text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.astryx-date-input-field::placeholder {
+  color: var(--astryx-color-text-placeholder);
+}
+
+.astryx-date-input-field:disabled {
+  color: var(--astryx-color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* 前缀/后缀 */
+.astryx-date-input-prefix,
+.astryx-date-input-suffix {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.astryx-date-input-icon {
+  display: inline-flex;
+  color: var(--astryx-color-text-tertiary);
+}
+
+.astryx-date-input-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--astryx-color-text-tertiary);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: var(--astryx-radius-sm);
+  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
+}
+
+.astryx-date-input-clear:hover {
+  color: var(--astryx-color-text-secondary);
+}
+
+/* 尺寸 */
+.astryx-date-input.size-sm .astryx-date-input-field {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.astryx-date-input.size-lg .astryx-date-input-field {
+  padding: 12px 16px;
+  font-size: 16px;
+}
