@@ -5,6 +5,7 @@ import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import '../../styles/selector.css'
+import '../../styles/visually-hidden-utility.css'
 
 defineOptions({ name: 'AstryxSelector', inheritAttrs: false })
 
@@ -155,7 +156,7 @@ watch(() => combobox.activeIndex.value, (index) => {
       class="astryx-selector-trigger"
       :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled }"
       :disabled="props.disabled"
-      :aria-haspopup="'listbox'"
+      aria-haspopup="listbox"
       :aria-expanded="combobox.isOpen.value"
       :aria-controls="listboxId"
       :aria-label="props.label"
@@ -192,8 +193,8 @@ watch(() => combobox.activeIndex.value, (index) => {
     <Teleport to="body">
       <div
         v-show="combobox.isOpen.value"
-        ref="listboxRef"
         :id="listboxId"
+        ref="listboxRef"
         role="listbox"
         class="astryx-selector-listbox"
         :style="{
@@ -205,9 +206,11 @@ watch(() => combobox.activeIndex.value, (index) => {
         <!-- 搜索框 -->
         <div v-if="props.searchable" class="astryx-selector-search">
           <input
+            :id="`${selectorId}-search`"
             ref="searchInputRef"
             type="text"
             class="astryx-selector-search-input"
+            :aria-label="props.searchPlaceholder"
             :placeholder="props.searchPlaceholder"
             :value="combobox.searchQuery.value"
             @input="onSearchInput"
@@ -218,9 +221,10 @@ watch(() => combobox.activeIndex.value, (index) => {
         <div v-if="!isEmpty" class="astryx-selector-options">
           <div
             v-for="(option, index) in combobox.filteredOptions.value"
-            :key="option.value"
             :id="getOptionId(index)"
+            :key="option.value"
             role="option"
+            tabindex="0"
             class="astryx-selector-option"
             :class="{
               'is-active': index === combobox.activeIndex.value,
@@ -230,6 +234,8 @@ watch(() => combobox.activeIndex.value, (index) => {
             :aria-selected="option.value === props.modelValue"
             :aria-disabled="option.disabled"
             @click="onOptionClick(option)"
+            @keydown.enter="onOptionClick(option)"
+            @keydown.space.prevent="onOptionClick(option)"
           >
             <slot v-if="slots.option" name="option" :option="option" :is-active="index === combobox.activeIndex.value" :is-selected="option.value === props.modelValue" />
             <template v-else>
@@ -252,7 +258,15 @@ watch(() => combobox.activeIndex.value, (index) => {
     </Teleport>
 
     <!-- 隐藏的原生 select（用于表单提交） -->
-    <select v-if="props.name" :name="props.name" :value="props.modelValue ?? ''" tabindex="-1" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+    <select
+      v-if="props.name"
+      :id="`${selectorId}-hidden-select`"
+      :name="props.name"
+      :value="props.modelValue ?? ''"
+      :aria-label="props.label || props.placeholder"
+      tabindex="-1"
+      style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+    >
       <option value="" />
       <option v-for="option in props.options" :key="option.value" :value="option.value">
         {{ option.label }}

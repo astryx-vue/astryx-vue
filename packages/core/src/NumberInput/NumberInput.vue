@@ -17,7 +17,6 @@ const props = withDefaults(defineProps<NumberInputProps>(), {
 const emit = defineEmits<NumberInputEmits>()
 
 const inputId = `astryx-number-input-${useId()}`
-const inputRef = ref<HTMLInputElement | null>(null)
 const inputValue = ref('')
 
 const modelValueRef = computed({
@@ -75,7 +74,6 @@ syncDisplayValue()
   <div class="astryx-number-input" :class="`size-${props.size}`">
     <input
       :id="inputId"
-      ref="inputRef"
       type="text"
       inputmode="decimal"
       class="astryx-number-input-field"

@@ -1,6 +1,6 @@
+import type { ComboboxOption } from './useCombobox'
 import { describe, expect, it, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
-import type { ComboboxOption } from './useCombobox'
 import { useCombobox } from './useCombobox'
 
 describe('useCombobox', () => {
@@ -83,7 +83,7 @@ describe('useCombobox', () => {
     expect(combobox.filteredOptions.value[0].label).toBe('Banana')
   })
 
-  it('jumps to match on typeahead', () => {
+  it('jumps to match on typeahead', async () => {
     const options = ref(createOptions())
     const modelValue = ref<string | null>(null)
     const onChange = vi.fn()
@@ -93,6 +93,9 @@ describe('useCombobox', () => {
 
     combobox.jumpToMatch('c')
     expect(combobox.activeIndex.value).toBe(2) // Cherry
+
+    // Wait for typeahead buffer to reset, then jump to 'b'
+    await new Promise(resolve => setTimeout(resolve, 800))
 
     combobox.jumpToMatch('b')
     expect(combobox.activeIndex.value).toBe(1) // Banana

@@ -15,8 +15,6 @@ export type { BottomSheetEmits, BottomSheetHeight, BottomSheetMotion, BottomShee
 export { BreadcrumbItem, Breadcrumbs } from './Breadcrumbs/index.js'
 export type { BreadcrumbItemProps, BreadcrumbsProps, BreadcrumbsVariant } from './Breadcrumbs/index.js'
 
-// Composables - shared logic
-export * from './composables/index.js'
 export type {
   ButtonClickAction,
   ButtonElevation,
@@ -45,6 +43,8 @@ export { applyHighlightRanges, Code, CodeBlock, flatTokensToLines, HIGHLIGHTED_T
 export type { CodeBlockContainer, CodeBlockEmits, CodeBlockProps, CodeBlockSize, CodeBlockTokenizer, CodeColor, CodeHighlightMode, CodeProps, CodeSize, CodeSlots, CopyToClipboardOptions, CopyToClipboardReturn, SyntaxToken, TokenLine } from './Code/index.js'
 export { Collapsible } from './Collapsible/index.js'
 export type { CollapsibleChevronPosition, CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './Collapsible/index.js'
+// Composables - shared logic
+export * from './composables/index.js'
 export { ContextMenu, ContextMenuDivider, ContextMenuGroup, ContextMenuItem, ContextMenuSubMenu, useContextMenu, useContextMenuSize } from './ContextMenu/index.js'
 export type { ContextMenuDividerData, ContextMenuDividerProps, ContextMenuEmits, ContextMenuGroupProps, ContextMenuGroupSlots, ContextMenuItemData, ContextMenuItemEmits, ContextMenuItemIcon, ContextMenuItemProps, ContextMenuItemSlots, ContextMenuItemTarget, ContextMenuOption, ContextMenuProps, ContextMenuSection, ContextMenuSize, ContextMenuSlots, ContextMenuSubMenuEmits, ContextMenuSubMenuProps, ContextMenuSubMenuSlots, ContextMenuTriggerElement, ContextMenuVariant, ContextMenuWidth } from './ContextMenu/index.js'
 export type { DialogBlockPosition, DialogHeaderProps, DialogPadding, DialogPosition, DialogProps, DialogPurpose, DialogVariant, ImperativeDialogOptions, ImperativeDialogReturn } from './Dialog/index.js'

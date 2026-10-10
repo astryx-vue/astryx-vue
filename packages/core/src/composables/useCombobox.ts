@@ -5,6 +5,7 @@ export interface ComboboxOption {
   value: string | number
   label: string
   disabled?: boolean
+  description?: string
 }
 
 export interface UseComboboxOptions<T = string | number> {

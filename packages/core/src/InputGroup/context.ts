@@ -1,8 +1,8 @@
-import type { InjectionKey } from 'vue'
+import type { ComputedRef, InjectionKey } from 'vue'
 
 export interface InputGroupContext {
-  size: 'sm' | 'md' | 'lg'
-  disabled: boolean
+  size: ComputedRef<'sm' | 'md' | 'lg'>
+  disabled: ComputedRef<boolean>
 }
 
 export const INPUT_GROUP_KEY: InjectionKey<InputGroupContext> = Symbol('InputGroup')
