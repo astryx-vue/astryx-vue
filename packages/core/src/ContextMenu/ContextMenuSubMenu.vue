@@ -2,6 +2,7 @@
 import type { StyleValue } from 'vue'
 import type { ContextMenuItemData, ContextMenuSubMenuEmits, ContextMenuSubMenuProps, ContextMenuSubMenuSlots } from './types.js'
 import { computed, nextTick, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { useDismiss } from '../composables/useDismiss.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useContextMenu, useContextMenuSize } from './context.js'
@@ -58,6 +59,15 @@ const nav = useMenuNav({
     else
       menu?.closeMenu({ restoreFocus: true })
   },
+})
+
+// 注册到 Escape 栈，确保子菜单优先处理 Escape（最内层优先）
+useDismiss({
+  container: flyout,
+  trigger: row,
+  isEnabled: showsFlyout,
+  enableEscape: computed(() => true),
+  onDismiss: () => close(true),
 })
 
 function open(focusFirstRow: boolean): void {

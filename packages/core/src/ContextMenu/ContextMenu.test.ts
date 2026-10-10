@@ -262,7 +262,8 @@ describe('contextMenu', () => {
     contextMenu(trigger)
     await flushPromises()
 
-    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    // useDismiss 监听 pointerdown 事件
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
     await flushPromises()
 
     expect(isShown(panel)).toBe(false)
@@ -273,7 +274,8 @@ describe('contextMenu', () => {
     contextMenu(trigger)
     await flushPromises()
 
-    rows()[0]!.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    // useDismiss 监听 pointerdown 事件
+    rows()[0]!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
     await flushPromises()
 
     expect(isShown(panel)).toBe(true)
@@ -447,7 +449,8 @@ describe('contextMenu', () => {
 
     expect(document.activeElement).toBe(rows()[0])
 
-    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    // useDismiss 监听 pointerdown 事件
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
     await flushPromises()
 
     expect(document.querySelector<HTMLElement>('.astryx-context-menu')!.style.display).toBe('none')
