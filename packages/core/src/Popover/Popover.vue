@@ -2,6 +2,9 @@
 import type { PopoverProps } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useId, watch } from 'vue'
 import { Button } from '../Button/index.js'
+import { useDismiss } from '../composables/useDismiss.js'
+import { useFocusTrap } from '../composables/useFocusTrap.js'
+import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { focusElement, getFocusables } from '../layer/focus.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import '../../styles/popover.css'
@@ -40,6 +43,26 @@ const { position, detach: detachPosition } = usePositionedLayer({
   placement: computed(() => props.placement),
   alignment: computed(() => props.alignment),
   gap: GAP,
+})
+
+const isModalDialog = computed(() => props.role === 'dialog' && props.isModal)
+
+useFocusTrap({
+  container: surfaceRef,
+  isEnabled: computed(() => isOpenState.value && isModalDialog.value),
+})
+
+useRestoreFocus({
+  isEnabled: computed(() => props.role === 'dialog'),
+  shouldRestore: isOpenState,
+})
+
+useDismiss({
+  container: surfaceRef,
+  trigger: anchorRef,
+  isEnabled: computed(() => isOpenState.value && props.hasLightDismiss),
+  enableEscape: computed(() => props.hasEscapeDismiss),
+  onDismiss: () => setOpen(false),
 })
 
 const surfaceRole = computed(() => (props.role === 'dialog' ? 'dialog' : undefined))
@@ -136,67 +159,15 @@ function focusInitialTarget(): void {
     focusElement(surface)
 }
 
-function onDocumentPointerDown(event: PointerEvent): void {
-  if (!props.hasLightDismiss || !isOpenState.value)
-    return
-  const target = event.target as Node
-  if (surfaceRef.value?.contains(target) || anchorRef.value?.contains(target))
-    return
-  setOpen(false)
-}
-
-function trapTab(event: KeyboardEvent): void {
-  const surface = surfaceRef.value
-  if (!surface)
-    return
-  const items = getFocusables(surface)
-  if (items.length === 0) {
-    event.preventDefault()
-    focusElement(surface)
-    return
-  }
-  const first = items[0]
-  const last = items[items.length - 1]
-  const active = document.activeElement
-  if (!surface.contains(active)) {
-    event.preventDefault()
-    focusElement(event.shiftKey ? last : first)
-    return
-  }
-  if (event.shiftKey && (active === first || active === surface)) {
-    event.preventDefault()
-    focusElement(last)
-  }
-  else if (!event.shiftKey && active === last) {
-    event.preventDefault()
-    focusElement(first)
-  }
-}
-
-function onDocumentKeydown(event: KeyboardEvent): void {
-  if (!isOpenState.value)
-    return
-  if (event.key === 'Escape' && props.hasEscapeDismiss) {
-    setOpen(false)
-    return
-  }
-  if (event.key === 'Tab' && props.isModal && props.role === 'dialog')
-    trapTab(event)
-}
-
 watch(isOpenState, (open) => {
   syncTriggerAttributes()
   if (open) {
     anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
-    document.addEventListener('pointerdown', onDocumentPointerDown, true)
-    document.addEventListener('keydown', onDocumentKeydown)
     if (props.hasAutoFocus && props.role === 'dialog')
       nextTick(focusInitialTarget)
     return
   }
-  document.removeEventListener('pointerdown', onDocumentPointerDown, true)
-  document.removeEventListener('keydown', onDocumentKeydown)
-  const hadFocus = surfaceRef.value?.contains(document.activeElement) ?? false
+  const hadFocus = surfaceRef.value?.contains(typeof document !== 'undefined' ? document.activeElement : null) ?? false
   if (hadFocus && boundButton)
     nextTick(() => focusElement(boundButton as HTMLElement))
 })
@@ -223,8 +194,6 @@ onUpdated(bindButton)
 onBeforeUnmount(() => {
   unbindButton()
   detachPosition()
-  document.removeEventListener('pointerdown', onDocumentPointerDown, true)
-  document.removeEventListener('keydown', onDocumentKeydown)
 })
 </script>
 

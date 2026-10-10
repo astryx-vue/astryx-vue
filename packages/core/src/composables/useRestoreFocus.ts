@@ -24,7 +24,7 @@ export function useRestoreFocus(options: UseRestoreFocusOptions): RestoreFocus {
   let savedElement: HTMLElement | null = null
 
   function save(): void {
-    if (!isEnabled.value)
+    if (!isEnabled.value || typeof document === 'undefined')
       return
     const active = document.activeElement
     if (active instanceof HTMLElement) {

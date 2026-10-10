@@ -60,14 +60,17 @@ export function useDismiss(options: UseDismissOptions): void {
   }
 
   function setup(): void {
-    // 使用 capture 阶段，确保在组件内部处理前捕获
-    document.addEventListener('mousedown', onClickOutside, true)
-    document.addEventListener('keydown', onKeyDown, true)
+    if (typeof document !== 'undefined') {
+      document.addEventListener('mousedown', onClickOutside, true)
+      document.addEventListener('keydown', onKeyDown, true)
+    }
   }
 
   function teardown(): void {
-    document.removeEventListener('mousedown', onClickOutside, true)
-    document.removeEventListener('keydown', onKeyDown, true)
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('mousedown', onClickOutside, true)
+      document.removeEventListener('keydown', onKeyDown, true)
+    }
   }
 
   watch(isEnabled, (enabled) => {

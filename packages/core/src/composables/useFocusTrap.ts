@@ -43,7 +43,7 @@ export function useFocusTrap(options: UseFocusTrapOptions): FocusTrap {
 
     const first = focusables[0]
     const last = focusables[focusables.length - 1]
-    const active = document.activeElement
+    const active = typeof document !== 'undefined' ? document.activeElement : null
 
     if (event.shiftKey && active === first) {
       event.preventDefault()
@@ -78,11 +78,15 @@ export function useFocusTrap(options: UseFocusTrapOptions): FocusTrap {
   }
 
   function setup(): void {
-    document.addEventListener('keydown', onKeyDown, true)
+    if (typeof document !== 'undefined') {
+      document.addEventListener('keydown', onKeyDown, true)
+    }
   }
 
   function teardown(): void {
-    document.removeEventListener('keydown', onKeyDown, true)
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('keydown', onKeyDown, true)
+    }
   }
 
   watch(isEnabled, (enabled) => {

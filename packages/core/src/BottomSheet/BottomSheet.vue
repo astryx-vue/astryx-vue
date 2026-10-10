@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheetSlots, BottomSheetState } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
+import { useFocusTrap } from '../composables/useFocusTrap.js'
+import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
 import '../../styles/bottom-sheet.css'
 
@@ -39,6 +41,16 @@ const isSwipeDismissAllowed = computed(() => props.purpose === 'info' && !props.
 
 const dialogStyle = computed(() => ({ '--_sheet-scrim-opacity': String(scrimOpacity.value) }))
 
+useFocusTrap({
+  container: computed(() => panelElement()),
+  isEnabled: computed(() => isOpen.value && props.hasScrim),
+})
+
+useRestoreFocus({
+  isEnabled: computed(() => !props.isInline),
+  shouldRestore: isOpen,
+})
+
 /** The dialog carries the accessible name; the panel keeps every other attribute. */
 const dialogLabel = computed(() => {
   if (attrs['aria-labelledby'] != null)
@@ -53,18 +65,17 @@ function panelAttrs(): Record<string, unknown> {
   return rest
 }
 
-let triggerElement: HTMLElement | null = null
 let previousBodyOverflow: string | null = null
 
 function lockScroll(): void {
-  if (previousBodyOverflow !== null)
+  if (previousBodyOverflow !== null || typeof document === 'undefined')
     return
   previousBodyOverflow = document.body.style.overflow
   document.body.style.overflow = 'hidden'
 }
 
 function unlockScroll(): void {
-  if (previousBodyOverflow === null)
+  if (previousBodyOverflow === null || typeof document === 'undefined')
     return
   document.body.style.overflow = previousBodyOverflow
   previousBodyOverflow = null
@@ -74,10 +85,9 @@ function panelElement(): HTMLElement | null {
   return panel.value?.element ?? null
 }
 
-/** Presenting a sheet must not scroll the page to reveal what it just focused. */
 function focusPanel(): void {
   const element = panelElement()
-  if (!element)
+  if (!element || typeof document === 'undefined')
     return
   const active = document.activeElement
   if (active != null && element.contains(active))
@@ -90,7 +100,7 @@ function focusPanel(): void {
 }
 
 function openSheet(): void {
-  if (props.isInline)
+  if (props.isInline || typeof document === 'undefined')
     return
   const dialogElement = dialog.value
   if (!dialogElement)
@@ -98,7 +108,6 @@ function openSheet(): void {
   isPresented.value = true
   if (!dialogElement.open) {
     if (props.hasScrim) {
-      triggerElement = document.activeElement as HTMLElement | null
       dialogElement.showModal()
     }
     else {
@@ -114,8 +123,7 @@ function closeSheet(): void {
   dialog.value?.close()
   unlockScroll()
   isPresented.value = false
-  const target = toValue(props.finalFocusRef) ?? triggerElement
-  triggerElement = null
+  const target = toValue(props.finalFocusRef)
   if (target?.isConnected)
     target.focus()
 }

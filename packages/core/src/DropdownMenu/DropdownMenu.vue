@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { DropdownMenuEmits, DropdownMenuProps, DropdownMenuSlots, DropdownMenuTriggerProps } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useId, useSlots, watch } from 'vue'
 import Button from '../Button/Button.vue'
+import { useDismiss } from '../composables/useDismiss.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { dropdownMenuContextKey } from './context.js'
@@ -134,10 +135,17 @@ const typeahead = useMenuTypeahead({
     return label?.textContent ?? row.textContent ?? ''
   }),
   getCurrentIndex: () => {
-    const active = document.activeElement
-    return focusNav.getItems().findIndex(row => row === active || row.contains(active))
+    const active = typeof document !== 'undefined' ? document.activeElement : null
+    return focusNav.getItems().findIndex(row => row === active || row.contains(active as Node))
   },
   onMatch: index => focusNav.focusItem(index),
+})
+
+useDismiss({
+  container: surfaceRef,
+  trigger: anchorRef,
+  isEnabled: computed(() => isOpen.value),
+  onDismiss: closeMenu,
 })
 
 function emitOpenChange(next: boolean): void {
@@ -173,38 +181,10 @@ function getTriggerControl(): HTMLElement | null {
   return anchor.querySelector<HTMLElement>('button, a[href], [role="button"], [tabindex]')
 }
 
-function onDocumentPointerDown(event: PointerEvent): void {
-  if (!isOpen.value)
-    return
-  const target = event.target
-  if (!(target instanceof Node))
-    return
-  if (surfaceRef.value?.contains(target) || anchorRef.value?.contains(target))
-    return
-  closeMenu()
-}
-
-function onDocumentKeydown(event: KeyboardEvent): void {
-  if (!isOpen.value || event.key !== 'Escape')
-    return
-  event.preventDefault()
-  closeMenu()
-}
-
-function attachDismissListeners(): void {
-  anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
-  document.addEventListener('pointerdown', onDocumentPointerDown, true)
-  document.addEventListener('keydown', onDocumentKeydown)
-}
-
-function detachDismissListeners(): void {
-  document.removeEventListener('pointerdown', onDocumentPointerDown, true)
-  document.removeEventListener('keydown', onDocumentKeydown)
-}
-
 watch(isOpen, async (nowOpen) => {
+  layerIsOpen.value = nowOpen
   if (nowOpen) {
-    attachDismissListeners()
+    anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
     await nextTick()
     if (!shouldFocusOnOpen.value)
       return
@@ -217,31 +197,24 @@ watch(isOpen, async (nowOpen) => {
     return
   }
 
-  detachDismissListeners()
   typeahead.reset()
-  const active = document.activeElement
+  const active = typeof document !== 'undefined' ? document.activeElement : null
   const surface = surfaceRef.value
-  const focusWasLost = active == null || active === document.body
-  // A press outside that landed on a focusable control has already put focus
-  // where the user meant it; only a lost focus comes back to the trigger.
-  if (focusWasLost || (surface != null && surface.contains(active)))
+  const focusWasLost = active == null || active === (typeof document !== 'undefined' ? document.body : null)
+  if (focusWasLost || (surface != null && surface.contains(active as Node)))
     getTriggerControl()?.focus({ preventScroll: true })
 })
 
 function onSurfaceKeydown(event: KeyboardEvent): void {
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault()
-    // The key that opened the menu, held down, auto-repeats into the menu once
-    // focus has moved there; a repeat is never an activation.
     if (event.repeat)
       return
-    const focused = document.activeElement
+    const focused = typeof document !== 'undefined' ? document.activeElement : null
     if (focused instanceof HTMLElement && MENU_ITEM_ROLES.has(focused.getAttribute('role') ?? ''))
       activateMenuItem(focused, event)
     return
   }
-  // APG menu-button pattern: Tab closes the menu. Closing returns focus to the
-  // trigger, and the browser's default Tab then continues from there.
   if (event.key === 'Tab') {
     closeMenu()
     return
@@ -313,11 +286,10 @@ onMounted(() => {
   if (!isOpen.value)
     return
   layerIsOpen.value = true
-  attachDismissListeners()
+  anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
 })
 
 onBeforeUnmount(() => {
-  detachDismissListeners()
   detachPosition()
 })
 </script>
