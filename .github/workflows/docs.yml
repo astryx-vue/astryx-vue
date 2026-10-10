@@ -28,7 +28,10 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm install --frozen-lockfile || true
+          pnpm approve-builds esbuild workerd
+          pnpm install --frozen-lockfile
 
       - name: Build core package
         run: pnpm --filter @astryx-vue/core build
