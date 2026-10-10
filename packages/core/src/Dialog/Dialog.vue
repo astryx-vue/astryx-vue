@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DialogPadding, DialogProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { useFocusTrap, useRestoreFocus } from '../composables/index.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
 import '../../styles/dialog.css'
@@ -115,12 +116,32 @@ function unlockScroll(): void {
   previousBodyOverflow = null
 }
 
-/** 先使对话框进入模态，再应用焦点请求。显式请求优先于标题默认焦点。 */
-function focusInitialTarget(dialog: HTMLDialogElement): void {
-  const target = dialog.querySelector<HTMLElement>('[data-autofocus]')
-    ?? dialog.querySelector<HTMLElement>('[data-dialog-default-focus]')
-  target?.focus()
-}
+const isDialogOpen = computed(() => {
+  if (props.isInline)
+    return false
+  return dialogRef.value?.open ?? false
+})
+
+const shouldRestoreFocus = computed(() => isDialogOpen.value)
+
+// 使用共享的焦点管理
+useFocusTrap({
+  container: dialogRef,
+  isEnabled: isDialogOpen,
+  initialFocus: () => {
+    const dialog = dialogRef.value
+    if (!dialog)
+      return null
+    return dialog.querySelector<HTMLElement>('[data-autofocus]')
+      ?? dialog.querySelector<HTMLElement>('[data-dialog-default-focus]')
+      ?? null
+  },
+})
+
+useRestoreFocus({
+  isEnabled: ref(true),
+  shouldRestore: shouldRestoreFocus,
+})
 
 function openDialog(): void {
   if (props.isInline)
@@ -132,7 +153,6 @@ function openDialog(): void {
   applyEntryDirection(dialog)
   dialog.showModal()
   lockScroll()
-  focusInitialTarget(dialog)
 }
 
 function closeDialog(): void {
@@ -142,10 +162,6 @@ function closeDialog(): void {
   if (dialog?.open)
     dialog.close()
   unlockScroll()
-  const trigger = triggerElement
-  triggerElement = null
-  if (trigger?.isConnected)
-    trigger.focus()
 }
 
 function onCancel(event: Event): void {

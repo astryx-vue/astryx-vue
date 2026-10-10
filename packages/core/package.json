@@ -376,6 +376,12 @@
   "peerDependencies": {
     "vue": "catalog:vue"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@internationalized/date": "catalog:"
+  },
   "devDependencies": {
     "@vue/compiler-sfc": "catalog:vue",
     "tsdown": "catalog:build",
@@ -384,8 +390,5 @@
     "unrun": "catalog:",
     "vue": "catalog:vue",
     "vue-tsc": "catalog:vue"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }
