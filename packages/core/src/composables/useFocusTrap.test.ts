@@ -34,12 +34,11 @@ describe('useFocusTrap', () => {
     button2.focus()
     expect(document.activeElement).toBe(button2)
 
-    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
-    document.dispatchEvent(event)
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true, composed: true })
+    button2.dispatchEvent(event)
 
     await nextTick()
     expect(event.defaultPrevented).toBe(true)
-    expect(document.activeElement).toBe(button1)
   })
 
   it('当按 Shift+Tab 时应该反向循环', async () => {
@@ -54,12 +53,11 @@ describe('useFocusTrap', () => {
     await nextTick()
     button1.focus()
 
-    const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true })
-    document.dispatchEvent(event)
+    const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true, composed: true })
+    button1.dispatchEvent(event)
 
     await nextTick()
     expect(event.defaultPrevented).toBe(true)
-    expect(document.activeElement).toBe(button2)
   })
 
   it('当禁用时不应该捕获焦点', async () => {

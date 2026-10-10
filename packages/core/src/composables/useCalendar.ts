@@ -50,9 +50,9 @@ export function useCalendar(options: UseCalendarOptions): CalendarState {
 
   const timeZone = getLocalTimeZone()
 
-  const focusedDate = ref<CalendarDate>(
+  const focusedDate = ref(
     value.value ? jsDateToCalendarDate(value.value) : today(timeZone),
-  )
+  ) as Ref<CalendarDate>
 
   const dates = computed(() => {
     const year = focusedDate.value.year

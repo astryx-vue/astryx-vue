@@ -380,14 +380,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@internationalized/date": "catalog:"
+    "@internationalized/date": "catalog:runtime"
   },
   "devDependencies": {
     "@vue/compiler-sfc": "catalog:vue",
     "tsdown": "catalog:build",
     "typescript": "catalog:language",
     "unplugin-vue": "catalog:build",
-    "unrun": "catalog:",
+    "unrun": "catalog:build",
     "vue": "catalog:vue",
     "vue-tsc": "catalog:vue"
   }

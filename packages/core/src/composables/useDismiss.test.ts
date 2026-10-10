@@ -5,7 +5,7 @@ import { useDismiss } from './useDismiss.js'
 describe('useDismiss', () => {
   let container: HTMLDivElement
   let trigger: HTMLButtonElement
-  let dismissSpy: ReturnType<typeof vi.fn>
+  let dismissSpy: () => void
 
   beforeEach(() => {
     container = document.createElement('div')

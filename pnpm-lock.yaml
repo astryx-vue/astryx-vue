@@ -173,16 +173,12 @@ catalogs:
     unplugin-vue:
       specifier: 8.0.0
       version: 8.0.0
+    unrun:
+      specifier: 0.3.1
+      version: 0.3.1
     vite:
       specifier: 8.3.3
       version: 8.3.3
-  default:
-    '@internationalized/date':
-      specifier: ^3.12.4
-      version: 3.12.4
-    unrun:
-      specifier: ^0.3.1
-      version: 0.3.1
   docs:
     '@fontsource/figtree':
       specifier: 5.3.0
@@ -225,6 +221,10 @@ catalogs:
     globals:
       specifier: 17.13.0
       version: 17.13.0
+  runtime:
+    '@internationalized/date':
+      specifier: 3.12.4
+      version: 3.12.4
   testing:
     '@vue/test-utils':
       specifier: 2.5.1
@@ -353,7 +353,7 @@ importers:
   packages/core:
     dependencies:
       '@internationalized/date':
-        specifier: 'catalog:'
+        specifier: catalog:runtime
         version: 3.12.4
     devDependencies:
       '@vue/compiler-sfc':
@@ -369,7 +369,7 @@ importers:
         specifier: catalog:build
         version: 8.0.0(@types/node@26.6.4)(jiti@2.7.0)(rolldown@1.2.12)(vue@3.5.43(@typescript/typescript6@6.0.2))(yaml@2.9.1)
       unrun:
-        specifier: 'catalog:'
+        specifier: catalog:build
         version: 0.3.1(synckit@0.11.13)
       vue:
         specifier: catalog:vue

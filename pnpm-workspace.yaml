@@ -10,15 +10,12 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
-catalog:
-  '@internationalized/date': ^3.12.4
-  unrun: ^0.3.1
-
 catalogs:
   build:
     '@vitejs/plugin-vue': 6.0.9
     tsdown: 0.23.0
     unplugin-vue: 8.0.0
+    unrun: 0.3.1
 
     vite: 8.3.3
   docs:
@@ -39,6 +36,9 @@ catalogs:
     eslint: 10.12.0
     eslint-plugin-vuejs-accessibility: 2.6.0
     globals: 17.13.0
+
+  runtime:
+    '@internationalized/date': 3.12.4
 
   testing:
     '@vue/test-utils': 2.5.1
