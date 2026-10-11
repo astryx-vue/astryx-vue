@@ -292,7 +292,7 @@ defineExpose({
       </span>
       <span :ref="overflow.measureRef" class="astryx-tokenizer-measure" aria-hidden="true">
         <span v-for="item in values" :key="item.id" class="astryx-tokenizer-token">
-          <Token :label="item.label" :size="props.size" />
+          <Token :label="item.label" :size="props.size" removable />
         </span>
         <span class="astryx-tokenizer-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>

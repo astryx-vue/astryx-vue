@@ -128,9 +128,19 @@
   }
 
   .astryx-tokenizer-tokens.is-collapsed {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
     flex-wrap: nowrap;
     overflow: hidden;
+  }
+
+  /* 已有标签且收起时，空输入不占 flex，宽度留给标签。聚焦后 collapsed 取消，输入框回到行内。 */
+  .astryx-tokenizer-control.has-tokens:has(.astryx-tokenizer-tokens.is-collapsed) .astryx-tokenizer-input {
+    position: absolute;
+    flex: 0 0 auto;
+    width: 1px;
+    min-width: 1px;
+    padding: 0;
   }
 
   .astryx-tokenizer-token {
