@@ -1,3 +1,6 @@
+export { createStaticSource, useAsyncSource } from './useAsyncSource.js'
+export type { AsyncSource, AsyncSourceStatus, CreateStaticSourceOptions, SearchableItem, SearchSource, UseAsyncSourceOptions } from './useAsyncSource.js'
+
 export { useCombobox } from './useCombobox.js'
 export type { Combobox, ComboboxOption, UseComboboxOptions } from './useCombobox.js'
 
@@ -12,6 +15,9 @@ export type { GridRovingFocus, UseGridRovingFocusOptions } from './useGridRoving
 
 export { useNumberField } from './useNumberField.js'
 export type { NumberField, UseNumberFieldOptions } from './useNumberField.js'
+
+export { computeOverflow, useOverflow } from './useOverflow.js'
+export type { OverflowState, UseOverflowOptions } from './useOverflow.js'
 
 export { useRestoreFocus } from './useRestoreFocus.js'
 export type { RestoreFocus, UseRestoreFocusOptions } from './useRestoreFocus.js'

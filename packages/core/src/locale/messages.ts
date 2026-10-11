@@ -1,4 +1,8 @@
 import type { AstryxLocale, AstryxMessages } from './types.js'
+import { multiSelectorMessages } from './messages/multiSelector.js'
+import { tokenMessages } from './messages/token.js'
+import { tokenizerMessages } from './messages/tokenizer.js'
+import { typeaheadMessages } from './messages/typeahead.js'
 
 function clearLabel(label: string | undefined, fallback: string, prefix: string): string {
   return label != null && label !== '' ? `${prefix}${label}` : fallback
@@ -37,6 +41,10 @@ const en: AstryxMessages = {
     pageSize: count => `${count} / page`,
     total: (total, from, to) => `${from}–${to} of ${total}`,
   },
+  typeahead: typeaheadMessages.en,
+  multiSelector: multiSelectorMessages.en,
+  token: tokenMessages.en,
+  tokenizer: tokenizerMessages.en,
 }
 
 const zhCN: AstryxMessages = {
@@ -72,6 +80,10 @@ const zhCN: AstryxMessages = {
     pageSize: count => `${count} 条/页`,
     total: (total, from, to) => `共 ${total} 条，显示 ${from}-${to}`,
   },
+  typeahead: typeaheadMessages['zh-CN'],
+  multiSelector: multiSelectorMessages['zh-CN'],
+  token: tokenMessages['zh-CN'],
+  tokenizer: tokenizerMessages['zh-CN'],
 }
 
 export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {

@@ -1,0 +1,26 @@
+export const tokenizerMessages = {
+  'en': {
+    placeholder: 'Add…',
+    empty: 'No results',
+    loading: 'Loading results',
+    error: 'Couldn\'t load results',
+    clear: 'Clear all',
+    results: 'Search results',
+    more: (count: number) => `+${count}`,
+    added: (label: string) => `Added ${label}`,
+    removed: (label: string) => `Removed ${label}`,
+    create: (query: string) => `Create "${query}"`,
+  },
+  'zh-CN': {
+    placeholder: '添加…',
+    empty: '没有结果',
+    loading: '正在加载',
+    error: '加载失败',
+    clear: '全部清除',
+    results: '搜索结果',
+    more: (count: number) => `+${count}`,
+    added: (label: string) => `已添加${label}`,
+    removed: (label: string) => `已移除${label}`,
+    create: (query: string) => `创建「${query}」`,
+  },
+}

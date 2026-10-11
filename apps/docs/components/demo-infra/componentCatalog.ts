@@ -85,6 +85,9 @@ export const COMPONENT_CATALOG = [
   { slug: 'number-input', group: 'form', en: 'Number Input', zh: '数字输入框' },
   { slug: 'input-group', group: 'form', en: 'Input Group', zh: '输入框组' },
   { slug: 'selector', group: 'form', en: 'Selector', zh: '选择器' },
+  { slug: 'typeahead', group: 'form', en: 'Typeahead', zh: '自动补全' },
+  { slug: 'multi-selector', group: 'form', en: 'Multi Selector', zh: '多选器' },
+  { slug: 'tokenizer', group: 'form', en: 'Tokenizer', zh: '标签输入' },
   { slug: 'date-input', group: 'form', en: 'Date Input', zh: '日期输入框' },
   { slug: 'calendar', group: 'form', en: 'Calendar', zh: '日历' },
   { slug: 'segmented-control', group: 'form', en: 'Segmented Control', zh: '分段控件' },
@@ -113,6 +116,7 @@ export const COMPONENT_CATALOG = [
 
   { slug: 'banner', group: 'feedback', en: 'Banner', zh: '提示条' },
   { slug: 'badge', group: 'feedback', en: 'Badge', zh: '标签' },
+  { slug: 'token', group: 'feedback', en: 'Token', zh: '词元' },
   { slug: 'skeleton', group: 'feedback', en: 'Skeleton', zh: '骨架屏' },
   { slug: 'spinner', group: 'feedback', en: 'Spinner', zh: '加载态' },
   { slug: 'status-dot', group: 'feedback', en: 'Status Dot', zh: '状态点' },

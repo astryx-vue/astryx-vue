@@ -33,6 +33,7 @@ import { kbdBasic } from './kbd'
 import { linkColors } from './link'
 import { listBasic } from './list'
 import { moreMenuOverview } from './more-menu'
+import { multiSelectorBadges } from './multi-selector'
 import { numberInputBasic } from './number-input'
 import { overlayBasic } from './overlay'
 import { paginationBasic } from './pagination'
@@ -53,7 +54,10 @@ import { textAreaBasic } from './text-area'
 import { textInputBasic } from './text-input'
 import { toastPreview } from './toast'
 import { toggleButtonBasic } from './toggle-button'
+import { tokenBasic } from './token'
+import { tokenizerOverflow } from './tokenizer'
 import { tooltipOverview } from './tooltip'
+import { typeaheadStatic } from './typeahead'
 import { visuallyHiddenContext } from './visually-hidden'
 
 /**
@@ -65,6 +69,7 @@ export const componentDemos: Record<ComponentSlug, DemoModule> = {
   'avatar': avatarSizes,
   'avatar-group': avatarGroupBasic,
   'badge': badgeColors,
+  'token': tokenBasic,
   'banner': bannerStatuses,
   'blockquote': blockquoteCite,
   'breadcrumbs': breadcrumbsBasic,
@@ -90,6 +95,9 @@ export const componentDemos: Record<ComponentSlug, DemoModule> = {
   'number-input': numberInputBasic,
   'input-group': inputGroupBasic,
   'selector': selectorBasic,
+  'typeahead': typeaheadStatic,
+  'multi-selector': multiSelectorBadges,
+  'tokenizer': tokenizerOverflow,
   'date-input': dateInputBasic,
   'calendar': calendarBasic,
   'pagination': paginationBasic,

@@ -33,4 +33,36 @@ export interface AstryxMessages {
     pageSize: (count: number) => string
     total: (total: number, from: number, to: number) => string
   }
+  typeahead: {
+    placeholder: string
+    empty: string
+    loading: string
+    error: string
+    clear: string
+    results: string
+  }
+  multiSelector: {
+    placeholder: string
+    search: string
+    clear: string
+    empty: string
+    selectAll: string
+    selected: (count: number) => string
+    more: (count: number) => string
+  }
+  token: {
+    remove: (label: string) => string
+  }
+  tokenizer: {
+    placeholder: string
+    empty: string
+    loading: string
+    error: string
+    clear: string
+    results: string
+    more: (count: number) => string
+    added: (label: string) => string
+    removed: (label: string) => string
+    create: (query: string) => string
+  }
 }
