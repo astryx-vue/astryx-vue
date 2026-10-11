@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <div :class="className" :data-kind="dataKind">
+  <div class="astryx-demo" :class="className" :data-kind="dataKind">
     <component :is="component" />
   </div>
 </template>

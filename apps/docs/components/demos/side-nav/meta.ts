@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { sideNavCollapse as demo } from './index'
+import { sideNavOverview as demo } from './index'
 
 export const meta = {
   slug: 'side-nav',

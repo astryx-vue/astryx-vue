@@ -7,7 +7,6 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { navMenuBasic } from '../../../../components/demos/nav-menu'
 </script>
 
 ## 使用方法
@@ -44,12 +43,3 @@ import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'
 | <Badge variant="success">推荐</Badge> | 触发按钮写上 <code>aria-expanded</code> 和 <code>aria-controls</code>，插槽已经把状态传出来了。 |
 | <Badge variant="success">推荐</Badge> | 选中一项后默认关闭。需要留下菜单时给项设置 <code>keepOpen</code>。 |
 | <Badge variant="error">避免</Badge> | 不要把菜单项单独放进抽屉。抽屉里把 <code>isMenuItem</code> 设成 false，避免菜单项脱离菜单。 |
-
-## 示例
-
-<DemoExample
-  :demo="navMenuBasic"
-  description="点击或按 ArrowDown 打开。方向键移动，输入字母跳到匹配项，Escape 关闭。"
-  locale="zh"
-  title="账号菜单"
-/>

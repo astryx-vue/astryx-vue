@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { topNavMega as demo } from './index'
+import { topNavOverview as demo } from './index'
 
 export const meta = {
   slug: 'top-nav',

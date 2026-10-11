@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { mobileNavDrawer } from '../../../../components/demos/mobile-nav'
+import { mobileNavDrawer, mobileNavEnd, mobileNavUntitled } from '../../../../components/demos/mobile-nav'
 </script>
 
 ## 使用方法
@@ -42,9 +42,8 @@ const open = ref(false)
 
 ## 示例
 
-<DemoExample
-  :demo="mobileNavDrawer"
-  description="点开关从左侧打开抽屉。Escape、关闭按钮或遮罩都会把它关掉。"
-  locale="zh"
-  title="侧边抽屉"
-/>
+<DemoExample :demo="mobileNavDrawer" description="菜单按钮打开分组导航。" locale="zh" title="基本抽屉" />
+
+<DemoExample :demo="mobileNavEnd" description="同一套抽屉从结束边滑入。" locale="zh" title="结束边抽屉" />
+
+<DemoExample :demo="mobileNavUntitled" description="不传标题时，抽屉里只剩导航项和关闭按钮。" locale="zh" title="无标题" />

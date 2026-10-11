@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<ToolbarProps>(), {
   gap: 1,
   orientation: 'horizontal',
   size: 'md',
+  variant: 'transparent',
 })
 
 defineSlots<ToolbarSlots>()
@@ -35,7 +36,14 @@ void listRef.value
     :class="[
       `astryx-toolbar--${size}`,
       `astryx-toolbar--${orientation}`,
-      { 'astryx-toolbar--centered': $slots.center },
+      {
+        'astryx-toolbar--centered': $slots.center,
+        'astryx-toolbar--muted': variant === 'muted',
+        'astryx-toolbar--divider-top': dividers?.includes('top'),
+        'astryx-toolbar--divider-bottom': dividers?.includes('bottom'),
+        'astryx-toolbar--divider-start': dividers?.includes('start'),
+        'astryx-toolbar--divider-end': dividers?.includes('end'),
+      },
     ]"
     role="toolbar"
     :aria-label="label"

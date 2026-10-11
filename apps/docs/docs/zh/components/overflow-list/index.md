@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { overflowListBasic } from '../../../../components/demos/overflow-list'
+import { overflowListActions, overflowListBadges, overflowListCapped, overflowListCollapseStart, overflowListMultiRow } from '../../../../components/demos/overflow-list'
 </script>
 
 ## 使用方法
@@ -42,9 +42,12 @@ const items = [
 
 ## 示例
 
-<DemoExample
-  :demo="overflowListBasic"
-  description="容器变窄后，末尾的项收进「更多」。打开菜单仍能到达那些项。"
-  locale="zh"
-  title="收进更多"
-/>
+<DemoExample :demo="overflowListBadges" description="徽章排成一行，放不下的收成一个数量徽章。" locale="zh" title="徽章标签" />
+
+<DemoExample :demo="overflowListCapped" description="这一行最多留下三项，其余进下拉菜单。" locale="zh" title="限制可见项" />
+
+<DemoExample :demo="overflowListCollapseStart" description="从开头收起，末尾的步骤留在外面。" locale="zh" title="从开头收起" />
+
+<DemoExample :demo="overflowListActions" description="放不下的按钮收进下拉菜单。" locale="zh" title="下拉操作" />
+
+<DemoExample :demo="overflowListMultiRow" description="先排满两行，剩下的收成一个数量徽章。" locale="zh" title="多行标签" />

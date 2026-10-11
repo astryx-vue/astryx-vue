@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeaturedCard, TopNavMegaMenuItem, TopNavMenu } from '@astryx-vue/core/TopNav'
+import { Button } from '@astryx-vue/core/Button'
+import { NavIcon } from '@astryx-vue/core/NavItem'
+import { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeaturedCard, TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'
 </script>
 
 <template>
-  <div class="top-nav-preview">
-    <TopNav mobile-query="(max-width: 800px)">
+  <div class="nav-frame">
+    <TopNav label="Marketing navigation">
       <template #heading>
-        <TopNavHeading heading="Northwind" href="#home">
+        <TopNavHeading heading="My App" href="#home">
           <template #icon>
-            <span class="i-carbon-dashboard" />
+            <NavIcon icon-class="i-carbon-cube" label="Product" />
           </template>
         </TopNavHeading>
       </template>
-      <TopNavItem href="#inbox" is-selected label="Inbox" />
-      <TopNavMenu
-        label="Product"
-        :items="[
-          { description: 'Usage across teams', href: '#analytics', iconClass: 'i-carbon-analytics', label: 'Analytics' },
-          { description: 'Shared files', href: '#library', iconClass: 'i-carbon-document', label: 'Library' },
-        ]"
-      />
-      <TopNavMegaMenu label="Solutions">
-        <TopNavMegaMenuItem description="Plan work across teams" href="#teams" icon-class="i-carbon-user" title="Teams" />
-        <TopNavMegaMenuItem description="Ship a public site" href="#sites" icon-class="i-carbon-launch" title="Sites" />
+      <TopNavMegaMenu label="Products">
+        <TopNavMegaMenuItem description="Track and analyze user behavior across your apps" href="#analytics" icon-class="i-carbon-analytics" title="Analytics" />
+        <TopNavMegaMenuItem description="Enterprise-grade protection for your data" href="#security" icon-class="i-carbon-security" title="Security" />
+        <TopNavMegaMenuItem description="Streamline workflows with intelligent tools" href="#automation" icon-class="i-carbon-flash" title="Automation" />
+        <TopNavMegaMenuItem description="APIs, SDKs, and CLI for integration" href="#dev-tools" icon-class="i-carbon-code" title="Developer Tools" />
+        <TopNavMegaMenuItem description="Low-latency edge infra in 40+ regions" href="#network" icon-class="i-carbon-globe" title="Global Network" />
         <template #featured>
-          <TopNavMegaMenuFeaturedCard description="See how the navigation fits a product shell." href="#tour" title="Take a tour" />
+          <TopNavMegaMenuFeaturedCard description="AI-powered analytics and real-time collaboration." href="#announcement" title="What's new in v4.0" />
         </template>
       </TopNavMegaMenu>
+      <TopNavItem href="#pricing" label="Pricing" />
+      <TopNavItem href="#docs" label="Docs" />
       <template #end>
-        <TopNavItem href="#help" icon-class="i-carbon-help" is-icon-only label="Help" />
+        <Button label="Sign in" variant="ghost" />
+        <Button label="Get started" variant="primary" />
       </template>
     </TopNav>
   </div>

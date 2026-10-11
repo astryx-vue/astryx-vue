@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { mobileNavDrawer } from '../../../../components/demos/mobile-nav'
+import { mobileNavDrawer, mobileNavEnd, mobileNavUntitled } from '../../../../components/demos/mobile-nav'
 </script>
 
 ## Usage
@@ -42,9 +42,8 @@ const open = ref(false)
 
 ## Examples
 
-<DemoExample
-  :demo="mobileNavDrawer"
-  description="The toggle opens a drawer from the start edge. Escape, the close button, or the scrim dismisses it."
-  locale="en"
-  title="Side drawer"
-/>
+<DemoExample :demo="mobileNavDrawer" description="A menu button opens sectioned navigation." locale="en" title="Basic Drawer" />
+
+<DemoExample :demo="mobileNavEnd" description="The same drawer slides in from the end edge." locale="en" title="End Side Drawer" />
+
+<DemoExample :demo="mobileNavUntitled" description="Without a title, the drawer keeps the items and the close button." locale="en" title="Without Title" />

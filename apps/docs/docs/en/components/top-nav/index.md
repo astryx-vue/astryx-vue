@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { topNavMega } from '../../../../components/demos/top-nav'
+import { topNavCentered, topNavEnterprise, topNavLogo, topNavMega, topNavMenu, topNavMenus } from '../../../../components/demos/top-nav'
 </script>
 
 ## Usage
@@ -41,9 +41,14 @@ import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
 
 ## Examples
 
-<DemoExample
-  :demo="topNavMega"
-  description="Hover or click Product and Solutions. Below 800px those items move into the mobile drawer."
-  locale="en"
-  title="Menu and mega menu"
-/>
+<DemoExample :demo="topNavCentered" description="The center group is centered. The heading stays at the start." locale="en" title="Centered Navigation" />
+
+<DemoExample :demo="topNavEnterprise" description="Icon-labeled items, a notification, and a primary action." locale="en" title="Enterprise Dashboard" />
+
+<DemoExample :demo="topNavMenu" description="Hover opens a product menu with icons and descriptions." locale="en" title="Hover Menu" />
+
+<DemoExample :demo="topNavMega" description="The mega menu has product items and a featured card." locale="en" title="Mega Menu" />
+
+<DemoExample :demo="topNavMenus" description="One bar holds more than one hover menu." locale="en" title="Multiple Dropdowns" />
+
+<DemoExample :demo="topNavLogo" description="A product mark sits in front of the heading, with an action at the end." locale="en" title="With Logo" />

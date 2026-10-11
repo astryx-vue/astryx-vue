@@ -12,6 +12,15 @@
     padding-block: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-toolbar--muted {
+    background: var(--astryx-color-background-muted);
+  }
+
+  .astryx-toolbar--divider-top { border-top: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
+  .astryx-toolbar--divider-bottom { border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
+  .astryx-toolbar--divider-start { border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
+  .astryx-toolbar--divider-end { border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
+
   .astryx-toolbar--sm { min-height: 28px; }
   .astryx-toolbar--md { min-height: 32px; }
   .astryx-toolbar--lg { min-height: 36px; }

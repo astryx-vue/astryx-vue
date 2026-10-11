@@ -12,7 +12,7 @@ const items = [
 </script>
 
 <template>
-  <div class="overflow-list-preview">
+  <div class="nav-frame--narrow">
     <OverflowList :items="items" />
   </div>
 </template>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { overflowListBasic } from '../../../../components/demos/overflow-list'
+import { overflowListActions, overflowListBadges, overflowListCapped, overflowListCollapseStart, overflowListMultiRow } from '../../../../components/demos/overflow-list'
 </script>
 
 ## Usage
@@ -42,9 +42,12 @@ const items = [
 
 ## Examples
 
-<DemoExample
-  :demo="overflowListBasic"
-  description="As the container gets narrower, trailing items move into More. Opening the menu still reaches them."
-  locale="en"
-  title="Collapse into More"
-/>
+<DemoExample :demo="overflowListBadges" description="Badges sit in a row. The ones that do not fit collapse into a count." locale="en" title="Badge Tags" />
+
+<DemoExample :demo="overflowListCapped" description="The row stays capped at three actions. The rest move into a menu." locale="en" title="Capped Toolbar" />
+
+<DemoExample :demo="overflowListCollapseStart" description="Items collapse from the start, so the latest steps stay visible." locale="en" title="Collapse From Start" />
+
+<DemoExample :demo="overflowListActions" description="Buttons that do not fit move into a dropdown." locale="en" title="Dropdown Actions" />
+
+<DemoExample :demo="overflowListMultiRow" description="Tags fill two rows, then the rest collapse into a count." locale="en" title="Multi-row Tags" />

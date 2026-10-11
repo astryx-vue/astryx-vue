@@ -7,12 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { sideNavCollapse } from '../../../../components/demos/side-nav'
+import { sideNavEnd, sideNavHeaderMenu, sideNavNested } from '../../../../components/demos/side-nav'
 </script>
 
 ## 使用方法
 
-`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，底部有 `SideNavCollapseButton`。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。
+`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，`SideNavCollapseButton` 在侧栏顶部靠右。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。
 
 用 `v-model:is-collapsed` 受控。`collapsible` 也可以传对象，关掉内置按钮，或给一个快捷键，例如 `mod+\\`。
 
@@ -43,9 +43,8 @@ const collapsed = ref(false)
 
 ## 示例
 
-<DemoExample
-  :demo="sideNavCollapse"
-  description="点底部按钮收起侧栏。图标项留下提示，带下级的项从侧面展开。"
-  locale="zh"
-  title="收起与展开"
-/>
+<DemoExample :demo="sideNavEnd" description="项的末尾放菜单、数量和辅助文字。" locale="zh" title="尾部内容" />
+
+<DemoExample :demo="sideNavHeaderMenu" description="标题带产品标志和账号菜单。" locale="zh" title="带菜单的标题" />
+
+<DemoExample :demo="sideNavNested" description="设置项下面可以收起一组下级。" locale="zh" title="嵌套项" />

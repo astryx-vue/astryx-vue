@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { overflowListBasic as demo } from './index'
+import { overflowListOverview as demo } from './index'
 
 export const meta = {
   slug: 'overflow-list',

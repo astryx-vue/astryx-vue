@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { toolbarOverflow as demo } from './index'
+import { toolbarOverview as demo } from './index'
 
 export const meta = {
   slug: 'toolbar',

@@ -36,9 +36,4 @@ import { NavItem } from '@astryx-vue/core/NavItem'
 
 ## 示例
 
-<DemoExample
-  :demo="navItemBasic"
-  description="选中、普通、禁用和图标按钮，以及一枚圆形 NavIcon。"
-  locale="zh"
-  title="状态与图标"
-/>
+<DemoExample :demo="navItemBasic" description="当前页用 isSelected。图标和文字排在一行。" locale="zh" title="基本用法" />

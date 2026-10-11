@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { topNavMega } from '../../../../components/demos/top-nav'
+import { topNavCentered, topNavEnterprise, topNavLogo, topNavMega, topNavMenu, topNavMenus } from '../../../../components/demos/top-nav'
 </script>
 
 ## 使用方法
@@ -41,9 +41,14 @@ import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
 
 ## 示例
 
-<DemoExample
-  :demo="topNavMega"
-  description="悬停或点击「产品」和「解决方案」。视口窄于 800px 时，这些项收进移动导航。"
-  locale="zh"
-  title="菜单与大菜单"
-/>
+<DemoExample :demo="topNavCentered" description="中间一组导航居中，标题留在起始边。" locale="zh" title="居中导航" />
+
+<DemoExample :demo="topNavEnterprise" description="带图标的导航项，加上通知和主要操作。" locale="zh" title="应用顶栏" />
+
+<DemoExample :demo="topNavMenu" description="悬停打开带图标和说明的产品菜单。" locale="zh" title="悬停菜单" />
+
+<DemoExample :demo="topNavMega" description="大菜单里有产品项和一张推荐卡。" locale="zh" title="大菜单" />
+
+<DemoExample :demo="topNavMenus" description="一条顶栏里有多个悬停菜单。" locale="zh" title="多个下拉菜单" />
+
+<DemoExample :demo="topNavLogo" description="标题前有产品标志，结束区有一项操作。" locale="zh" title="带标志" />

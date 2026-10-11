@@ -7,12 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { sideNavCollapse } from '../../../../components/demos/side-nav'
+import { sideNavEnd, sideNavHeaderMenu, sideNavNested } from '../../../../components/demos/side-nav'
 </script>
 
 ## Usage
 
-`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail and shows a `SideNavCollapseButton`. Items without an icon are omitted while collapsed. Items with children open in a side menu.
+`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu.
 
 Control it with `v-model:is-collapsed`. Pass an object to `collapsible` to hide the built-in button or to set a hotkey such as `mod+\\`.
 
@@ -43,9 +43,8 @@ const collapsed = ref(false)
 
 ## Examples
 
-<DemoExample
-  :demo="sideNavCollapse"
-  description="Use the button at the bottom to collapse the bar. Icon items keep a tooltip, and nested items open to the side."
-  locale="en"
-  title="Collapse and expand"
-/>
+<DemoExample :demo="sideNavEnd" description="Rows end with a menu, a count, and supporting text." locale="en" title="End Content" />
+
+<DemoExample :demo="sideNavHeaderMenu" description="The heading carries a product mark and an account menu." locale="en" title="Header with Menu" />
+
+<DemoExample :demo="sideNavNested" description="Settings opens a collapsible group of children." locale="en" title="Nested Items" />

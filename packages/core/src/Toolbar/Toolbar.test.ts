@@ -31,4 +31,14 @@ describe('toolbar', () => {
     expect(document.activeElement).toBe(buttons[2].element)
     wrapper.unmount()
   })
+
+  it('paints a muted bar and the requested dividers', () => {
+    const wrapper = mount(Toolbar, {
+      props: { dividers: ['bottom'], label: 'Bulk actions', variant: 'muted' },
+      slots: { start: () => h('button', { type: 'button' }, 'Delete') },
+    })
+    const toolbar = wrapper.get('[role="toolbar"]')
+    expect(toolbar.classes()).toContain('astryx-toolbar--muted')
+    expect(toolbar.classes()).toContain('astryx-toolbar--divider-bottom')
+  })
 })

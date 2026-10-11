@@ -1753,14 +1753,11 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .side-nav-preview {
-  width: min(100%, 280px);
-  height: 360px;
+  width: min(100%, 260px);
 }
 
 .side-nav-preview .astryx-side-nav {
-  height: 100%;
-  border: var(--astryx-border-width, 1px) solid var(--astryx-color-border);
-  border-radius: var(--astryx-radius-container);
+  height: auto;
 }
 
 .side-nav-preview__mark {
@@ -1802,21 +1799,122 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-card__preview .side-nav-preview {
-  height: 280px;
+  height: auto;
 }
 
-.vp-doc :is(
-  .astryx-side-nav,
-  .astryx-top-nav,
-  .astryx-nav-item,
-  .astryx-nav-menu,
-  .astryx-nav-disclosure,
-  .astryx-nav-disclosure__panel,
-  .astryx-toolbar,
-  .astryx-overflow-list,
-  .astryx-mobile-nav
-) :is(button, a) {
-  all: revert-layer;
+/*
+ * VitePress `.vp-doc a` is unlayered (brand color, underline, medium weight).
+ * It beats `@layer astryx.components`, and it matches the component root when
+ * that root is the anchor (`a.astryx-nav-item`). A descendant selector never
+ * sees that root. Inside the demo host, roll those prose properties back to
+ * the component layer. Components still set their own color and text-decoration.
+ */
+.vp-doc .astryx-demo :is(a, button) {
+  color: revert-layer;
+  font-weight: revert-layer;
+  text-decoration: revert-layer;
+  text-underline-offset: revert-layer;
+}
+
+.nav-overview {
+  box-sizing: border-box;
+  width: 20rem;
+  max-width: 100%;
+}
+
+.nav-overview--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: max-content;
+  max-width: 100%;
+}
+
+.nav-overview--side .astryx-side-nav {
+  height: auto;
+}
+
+.nav-overview--menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.nav-overview--menu .astryx-nav-disclosure__panel,
+.nav-menu-static {
+  position: static;
+  min-width: 12rem;
+}
+
+.nav-frame {
+  width: min(100%, 42rem);
+  max-width: 100%;
+}
+
+.component-example__preview > .astryx-demo:has(.nav-frame--fill) {
+  width: 100%;
+}
+
+.nav-frame--fill {
+  width: 100%;
+}
+
+.nav-frame--fill .astryx-toolbar__slot--start {
+  flex-wrap: nowrap;
+}
+
+.nav-frame--fill .astryx-toolbar__slot--start > * {
+  flex: none;
+}
+
+.nav-filter .astryx-field,
+.nav-filter .astryx-selector,
+.nav-filter .astryx-text-input {
+  width: 10rem;
+  max-width: 10rem;
+  flex: none;
+}
+
+.nav-frame--narrow {
+  width: min(100%, 16rem);
+}
+
+.nav-bulk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.nav-bulk-table th,
+.nav-bulk-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--astryx-color-border);
+  text-align: start;
+}
+
+.nav-bulk-table th {
+  font-weight: var(--astryx-font-weight-semibold, 600);
+}
+
+.nav-bulk-table tr.is-selected td {
+  background: var(--astryx-color-background-muted);
+}
+
+.mobile-nav-static {
+  width: min(100%, 16rem);
+  overflow: hidden;
+  border: var(--astryx-border-width, 1px) solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-container);
+  background: var(--astryx-color-background-popover);
+}
+
+.mobile-nav-static .astryx-mobile-nav__drawer {
+  width: 100%;
+  height: auto;
+  box-shadow: none;
 }
 
 .nav-menu-preview__trigger,

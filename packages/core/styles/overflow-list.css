@@ -41,9 +41,12 @@
   .astryx-overflow-list__chip,
   .astryx-overflow-list__more {
     display: inline-flex;
+    flex: none;
     align-items: center;
+    align-self: center;
+    box-sizing: border-box;
     gap: var(--astryx-spacing-1, 4px);
-    height: 32px;
+    height: var(--astryx-size-element-md, 32px);
     padding-inline: var(--astryx-spacing-3, 12px);
     border: 0;
     border-radius: var(--astryx-radius-element, 0.625rem);

@@ -36,9 +36,4 @@ import { NavItem } from '@astryx-vue/core/NavItem'
 
 ## Examples
 
-<DemoExample
-  :demo="navItemBasic"
-  description="Selected, plain, disabled, and icon-only items, plus a round NavIcon."
-  locale="en"
-  title="States and icons"
-/>
+<DemoExample :demo="navItemBasic" description="isSelected marks the current page. The icon and label sit on one row." locale="en" title="Basic" />

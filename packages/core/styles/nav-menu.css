@@ -3,8 +3,10 @@
 @layer astryx.components {
   .astryx-nav-disclosure {
     display: inline-flex;
+    align-items: center;
     max-width: 100%;
     min-width: 0;
+    vertical-align: middle;
   }
 
   .astryx-nav-disclosure__panel {
@@ -42,7 +44,7 @@
     border: 0;
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: transparent;
-    color: inherit;
+    color: var(--astryx-color-text-primary);
     font: inherit;
     text-align: start;
     text-decoration: none;

@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { mobileNavDrawer as demo } from './index'
+import { mobileNavOverview as demo } from './index'
 
 export const meta = {
   slug: 'mobile-nav',

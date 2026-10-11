@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
 import { OverflowList } from '@astryx-vue/core/OverflowList'
 import { Toolbar } from '@astryx-vue/core/Toolbar'
 
@@ -13,15 +14,13 @@ const items = [
 </script>
 
 <template>
-  <div class="toolbar-preview">
+  <div class="nav-frame--narrow">
     <Toolbar label="Formatting">
       <template #start>
         <OverflowList :items="items" />
       </template>
       <template #end>
-        <button type="button" class="toolbar-preview__action">
-          Share
-        </button>
+        <Button label="Share" size="sm" variant="primary" />
       </template>
     </Toolbar>
   </div>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { toolbarOverflow } from '../../../../components/demos/toolbar'
+import { toolbarBulk, toolbarCard, toolbarFilter, toolbarSizes, toolbarTabs } from '../../../../components/demos/toolbar'
 </script>
 
 ## 使用方法
@@ -45,9 +45,12 @@ import { Toolbar } from '@astryx-vue/core/Toolbar'
 
 ## 示例
 
-<DemoExample
-  :demo="toolbarOverflow"
-  description="格式操作放在一条窄工具栏里。放不下的项收进「更多」，方向键仍能在可见按钮之间移动。"
-  locale="zh"
-  title="溢出"
-/>
+<DemoExample :demo="toolbarBulk" description="选中多项后，起始边显示数量，结束边放批量操作。" locale="zh" title="批量操作" />
+
+<DemoExample :demo="toolbarCard" description="卡片标题在左，图标操作在右。" locale="zh" title="卡片标题" />
+
+<DemoExample :demo="toolbarSizes" description="小、中、大三档并排。尺寸会传给里面的按钮。" locale="zh" title="尺寸" />
+
+<DemoExample :demo="toolbarTabs" description="起始区是标签，结束区是一个操作。" locale="zh" title="标签导航" />
+
+<DemoExample :demo="toolbarFilter" description="搜索在最前面，旁边是状态、优先级和客户，末尾是当前结果数量。" locale="zh" title="表格筛选" />

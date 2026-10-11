@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { toolbarOverflow } from '../../../../components/demos/toolbar'
+import { toolbarBulk, toolbarCard, toolbarFilter, toolbarSizes, toolbarTabs } from '../../../../components/demos/toolbar'
 </script>
 
 ## Usage
@@ -45,9 +45,12 @@ import { Toolbar } from '@astryx-vue/core/Toolbar'
 
 ## Examples
 
-<DemoExample
-  :demo="toolbarOverflow"
-  description="Formatting actions sit in a narrow toolbar. Items that do not fit move into More, and arrows still move among the visible buttons."
-  locale="en"
-  title="Overflow"
-/>
+<DemoExample :demo="toolbarBulk" description="After a multi-select, the count stays at the start and batch actions stay at the end." locale="en" title="Bulk Actions" />
+
+<DemoExample :demo="toolbarCard" description="The card title sits on the left. Icon actions sit on the right." locale="en" title="Card Header" />
+
+<DemoExample :demo="toolbarSizes" description="Small, medium, and large side by side. Size cascades to the buttons inside." locale="en" title="Sizes" />
+
+<DemoExample :demo="toolbarTabs" description="Tabs sit in the start group. One action sits at the end." locale="en" title="Tab Navigation" />
+
+<DemoExample :demo="toolbarFilter" description="Search leads the row. Status, priority, and customer sit beside it, with a live result count." locale="en" title="Table Filter" />

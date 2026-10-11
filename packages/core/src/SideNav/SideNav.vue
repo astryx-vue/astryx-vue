@@ -34,8 +34,8 @@ const isCollapsed = computed(() => {
   return localCollapsed.value
 })
 const showButton = computed(() => isCollapsible.value && (config.value.hasButton ?? true))
-const hasTop = computed(() => slots.header != null || slots.top != null)
-const hasBottom = computed(() => slots.footer != null || slots.footerIcons != null || showButton.value)
+const hasTop = computed(() => slots.header != null || slots.top != null || showButton.value)
+const hasBottom = computed(() => slots.footer != null || slots.footerIcons != null)
 const label = computed(() => props.label || messages.value.nav.sideNav)
 
 watch(() => config.value.defaultIsCollapsed, (value) => {
@@ -80,7 +80,10 @@ provide(sideNavCollapseKey, {
     :data-collapsed="isCollapsed || undefined"
   >
     <div v-if="hasTop" class="astryx-side-nav__top">
-      <slot name="header" />
+      <div v-if="slots.header || showButton" class="astryx-side-nav__heading-row">
+        <slot name="header" />
+        <SideNavCollapseButton v-if="showButton" :label="config.buttonLabel" />
+      </div>
       <div v-if="slots.top" class="astryx-side-nav__top-content">
         <slot name="top" />
       </div>
@@ -90,11 +93,8 @@ provide(sideNavCollapseKey, {
     </div>
     <div v-if="hasBottom" class="astryx-side-nav__bottom">
       <slot name="footer" />
-      <div class="astryx-side-nav__footer-row">
-        <SideNavCollapseButton v-if="showButton" :label="config.buttonLabel" />
-        <div v-if="slots.footerIcons" class="astryx-side-nav__footer-icons">
-          <slot name="footerIcons" />
-        </div>
+      <div v-if="slots.footerIcons" class="astryx-side-nav__footer-icons">
+        <slot name="footerIcons" />
       </div>
     </div>
   </nav>
