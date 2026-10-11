@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { DateInput } from '@astryx-vue/core/DateInput'
-import { today, type CalendarDate } from '@internationalized/date'
 
-const date = ref<CalendarDate | null>(null)
-
-onMounted(() => {
-  date.value = today('Asia/Shanghai')
-})
+const date = ref<Date | null>(new Date(2026, 9, 11))
 </script>
 
 <template>
   <div class="demo-container">
-    <DateInput v-model="date" clearable />
+    <DateInput v-model="date" label="截止日期" clearable />
     <p class="demo-result">
-      选中的日期：{{ date?.toString() || '未选择' }}
+      选中的日期：{{ date ? date.toLocaleDateString('zh-CN') : '未选择' }}
     </p>
   </div>
 </template>

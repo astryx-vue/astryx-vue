@@ -29,7 +29,7 @@ const date = ref(null)
 </template>
 ```
 
-日期值使用 `@internationalized/date` 库的 `CalendarDate` 类型。组件会自动格式化日期为 `YYYY-MM-DD` 格式显示。
+绑定值是原生 `Date`。输入框按 `YYYY-MM-DD` 显示日期，点击后通过弹出的日历选择。
 
 ## 最佳实践
 

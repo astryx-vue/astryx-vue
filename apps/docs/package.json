@@ -14,7 +14,6 @@
     "@astryx-vue/themes": "workspace:^",
     "@fontsource/figtree": "catalog:docs",
     "@fontsource/fira-code": "catalog:docs",
-    "@internationalized/date": "catalog:runtime",
     "vue": "catalog:vue"
   },
   "devDependencies": {

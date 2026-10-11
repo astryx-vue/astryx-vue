@@ -328,9 +328,6 @@ importers:
       '@fontsource/fira-code':
         specifier: catalog:docs
         version: 5.3.0
-      '@internationalized/date':
-        specifier: catalog:runtime
-        version: 3.12.4
       vue:
         specifier: catalog:vue
         version: 3.5.43(@typescript/typescript6@6.0.2)

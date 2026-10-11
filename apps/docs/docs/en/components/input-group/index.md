@@ -25,7 +25,7 @@ import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demo
 
 <DemoExample
   :demo="inputGroupWithIcon"
-  description="Place icons in prepend slot for visual recognition."
+  description="The before slot can hold a short prefix that explains the field."
   locale="en"
-  title="With Icon"
+  title="Prefix"
 />

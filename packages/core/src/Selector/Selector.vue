@@ -133,14 +133,20 @@ function getOptionId(index: number): string {
   return `${listboxId}-option-${index}`
 }
 
-// 滚动到激活的选项
+// 只滚动列表自身，避免把页面滚到尚未定位的浮层上。
 watch(() => combobox.activeIndex.value, (index) => {
   if (index >= 0 && combobox.isOpen.value) {
     nextTick(() => {
-      const optionEl = listboxRef.value?.querySelector(`#${getOptionId(index)}`)
-      if (optionEl) {
-        optionEl.scrollIntoView({ block: 'nearest' })
-      }
+      const listbox = listboxRef.value
+      const optionEl = listbox?.querySelector<HTMLElement>(`#${getOptionId(index)}`)
+      if (!listbox || !optionEl)
+        return
+      const listboxRect = listbox.getBoundingClientRect()
+      const optionRect = optionEl.getBoundingClientRect()
+      if (optionRect.top < listboxRect.top)
+        listbox.scrollTop -= listboxRect.top - optionRect.top
+      else if (optionRect.bottom > listboxRect.bottom)
+        listbox.scrollTop += optionRect.bottom - listboxRect.bottom
     })
   }
 })

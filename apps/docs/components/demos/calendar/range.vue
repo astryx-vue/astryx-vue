@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { Calendar } from '@astryx-vue/core/Calendar'
-import { today, type CalendarDate } from '@internationalized/date'
 
-const selected = ref<CalendarDate | null>(null)
-const minDate = ref<CalendarDate | undefined>(undefined)
-const maxDate = ref<CalendarDate | undefined>(undefined)
-
-onMounted(() => {
-  minDate.value = today('Asia/Shanghai')
-  maxDate.value = today('Asia/Shanghai').add({ months: 1 })
-})
+const selected = ref<Date | null>(null)
+const minDate = new Date(2026, 9, 11)
+const maxDate = new Date(2026, 10, 11)
 </script>
 
 <template>
   <div class="demo-container">
-    <Calendar v-model="selected" :min-value="minDate" :max-value="maxDate" />
+    <Calendar v-model="selected" label="可选日期" :min="minDate" :max="maxDate" />
     <p class="demo-result">
-      可选范围：未来一个月内
+      只能选择 2026-10-11 到 2026-11-11
     </p>
   </div>
 </template>

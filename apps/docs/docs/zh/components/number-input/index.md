@@ -29,7 +29,7 @@ const count = ref(0)
 </template>
 ```
 
-通过 `min` 和 `max` 属性设置数值范围，`step` 设置每次增减的步长，`precision` 控制小数位数。组件自动处理输入验证，超出范围的值会被限制在有效区间内。
+通过 `min` 和 `max` 属性设置数值范围，`step` 设置每次增减的步长。超出范围的值会被限制在有效区间内。
 
 ## 最佳实践
 
@@ -51,9 +51,9 @@ const count = ref(0)
 
 <DemoExample
   :demo="numberInputPrecision"
-  description="通过 precision 控制小数位数，适用于价格、评分等场景。"
+  description="用 min 和 max 限制可输入范围，用 step 控制每次点击增减的幅度。"
   locale="zh"
-  title="小数精度"
+  title="范围与步长"
 />
 
 <DemoExample

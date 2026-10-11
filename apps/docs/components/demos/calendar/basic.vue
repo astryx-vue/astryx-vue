@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Calendar } from '@astryx-vue/core/Calendar'
-import type { CalendarDate } from '@internationalized/date'
 
-const selected = ref<CalendarDate | null>(null)
+const selected = ref<Date | null>(new Date(2026, 9, 11))
 </script>
 
 <template>
   <div class="demo-container">
-    <Calendar v-model="selected" />
+    <Calendar v-model="selected" label="选择日期" />
     <p class="demo-result">
-      选中的日期：{{ selected?.toString() || '未选择' }}
+      选中的日期：{{ selected ? selected.toLocaleDateString('zh-CN') : '未选择' }}
     </p>
   </div>
 </template>

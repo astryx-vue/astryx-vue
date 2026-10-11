@@ -11,22 +11,21 @@ footer: false
   <table>
     <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
-      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>整组的尺寸，会传给组内控件。</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用整组。</td></tr>
     </tbody>
   </table>
 </div>
 
-## InputGroup Slots
+## InputGroup 插槽
 
-<div class="component-api-table" role="region" aria-label="InputGroup Slots" tabindex="0">
+<div class="component-api-table" role="region" aria-label="InputGroup 插槽" tabindex="0">
   <table>
     <thead><tr><th>名称</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><code>default</code></td><td>输入框主体内容。</td></tr>
-      <tr><td><code>prepend</code></td><td>前置内容。</td></tr>
-      <tr><td><code>append</code></td><td>后置内容。</td></tr>
+      <tr><td><code>default</code></td><td>中间的输入控件。</td></tr>
+      <tr><td><code>before</code></td><td>输入框前面的文字、图标或按钮。</td></tr>
+      <tr><td><code>after</code></td><td>输入框后面的文字、图标或按钮。</td></tr>
     </tbody>
   </table>
 </div>

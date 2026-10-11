@@ -12,7 +12,7 @@ import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../
 
 ## Usage
 
-`NumberInput` is a component for numeric input with stepper buttons, min/max limits, and precision control.
+`NumberInput` is a numeric field with stepper buttons, a min and max, and a configurable step.
 
 ## Examples
 
@@ -25,9 +25,9 @@ import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../
 
 <DemoExample
   :demo="numberInputPrecision"
-  description="Control decimal places with precision, suitable for prices and ratings."
+  description="Limit the range with min and max, and set how much each step changes the value."
   locale="en"
-  title="Precision"
+  title="Range and step"
 />
 
 <DemoExample

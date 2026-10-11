@@ -20,19 +20,16 @@ import { calendarBasic, calendarRange } from '../../../../components/demos/calen
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Calendar } from '@astryx-vue/core/Calendar'
-import { today } from '@internationalized/date'
 
-const date = ref(today('Asia/Shanghai'))
+const date = ref<Date | null>(new Date(2026, 9, 11))
 </script>
 
 <template>
-  <Calendar v-model="date" />
+  <Calendar v-model="date" label="选择日期" />
 </template>
 ```
 
-日期值使用 `@internationalized/date` 库的 `CalendarDate` 类型，这是一个不含时区的纯日期表示，避免了原生 `Date` 对象的时区问题。
-
-通过 `minValue` 和 `maxValue` 限制可选日期范围，通过 `isDateUnavailable` 函数禁用特定日期。
+绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。
 
 ## 最佳实践
 
@@ -40,7 +37,7 @@ const date = ref(today('Asia/Shanghai'))
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 为业务场景设置合理的日期范围限制。 |
 | <Badge variant="success">推荐</Badge> | 使用 `isDateUnavailable` 禁用不可选的日期。 |
-| <Badge variant="success">推荐</Badge> | 使用 `@internationalized/date` 而不是原生 `Date`，避免时区问题。 |
+| <Badge variant="success">推荐</Badge> | 用固定的本地日期构造 `Date`，避免把带时区的时间戳直接当成日历上的某一天。 |
 | <Badge variant="error">避免</Badge> | 在日历上层叠过多的装饰或自定义内容，保持日期网格清晰。 |
 
 ## 示例
@@ -54,7 +51,7 @@ const date = ref(today('Asia/Shanghai'))
 
 <DemoExample
   :demo="calendarRange"
-  description="通过 minValue 和 maxValue 限制可选日期范围，超出范围的日期自动禁用。"
+  description="通过 min 和 max 限制可选日期范围，超出范围的日期自动禁用。"
   locale="zh"
   title="限制日期范围"
 />

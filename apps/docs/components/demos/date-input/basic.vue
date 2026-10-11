@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { DateInput } from '@astryx-vue/core/DateInput'
-import type { CalendarDate } from '@internationalized/date'
 
-const date = ref<CalendarDate | null>(null)
+const date = ref<Date | null>(null)
 </script>
 
 <template>
   <div class="demo-container">
-    <DateInput v-model="date" placeholder="选择日期" />
+    <DateInput v-model="date" label="出发日期" placeholder="选择日期" />
     <p class="demo-result">
-      选中的日期：{{ date?.toString() || '未选择' }}
+      选中的日期：{{ date ? date.toLocaleDateString('zh-CN') : '未选择' }}
     </p>
   </div>
 </template>

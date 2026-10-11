@@ -25,7 +25,7 @@ import { calendarBasic, calendarRange } from '../../../../components/demos/calen
 
 <DemoExample
   :demo="calendarRange"
-  description="Limit selectable date range with minValue and maxValue."
+  description="Limit the selectable range with min and max. Dates outside that range are disabled."
   locale="en"
   title="Date Range"
 />
