@@ -377,25 +377,19 @@ footer: false
 
 <code>useChatNewMessages({ isLocked, onResize })</code> 看着记录高度。未贴底时，最后一个 <code>.astryx-chat-message</code> 换了，<code>hasNewMessages</code> 变成 true，直到 <code>dismiss()</code>。<code>ChatLayout</code> 会播报这次变化。
 
-两个函数从 <code>@astryx-vue/core</code> 和 <code>@astryx-vue/core/Chat</code> 导出。<code>useAnnounce</code> 从 <code>@astryx-vue/core</code> 导出。
+<code>useChatStreamScroll</code>、<code>useChatNewMessages</code> 和 <code>useAnnounce</code> 从 <code>@astryx-vue/core</code> 导出。减少动效通过 <code>useMediaQuery</code> 读取。
 
 ## 主题
 
-```css
-.my-chat {
-  --astryx-chat-bubble-background: rgb(5 54 89 / 10%);
-  --astryx-chat-radius: 28px;
-}
-```
+颜色、字号、圆角、阴影和动效都走共享 token，没有单独的对话主题文件。
 
-- `--astryx-chat-bubble-background` / `--astryx-chat-bubble-foreground`：填充气泡的底色和文字。
-- `--astryx-chat-meta`、`--astryx-chat-muted`：元信息、系统行、工具调用的次要文字。
-- `--astryx-chat-error`、`--astryx-chat-success`、`--astryx-chat-accent`：失败状态、新增行数、输入中的圆点。
-- `--astryx-chat-focus`：折叠按钮的键盘焦点描边。
-- `--astryx-chat-scroll-surface` / `--astryx-chat-scroll-shadow`：回到底部的胶囊。
-- `--astryx-chat-radius`：单独气泡的圆角。紧凑密度改用全局容器圆角。
-
-这些变量目前写在对话自己的主题文件里。适合以后提成全局的有：中性表面、错误色、成功色、禁用文字、强调色、弹出层表面、悬停叠层、中等阴影、28px 对话圆角，以及常规 / 半粗字重。
+- `--astryx-color-neutral` / `--astryx-color-text-primary`：填充气泡的底色和文字。
+- `--astryx-color-text-secondary`、`--astryx-color-text-disabled`：元信息、系统行、工具调用的次要文字。
+- `--astryx-color-error`、`--astryx-color-success`、`--astryx-color-accent`：失败状态、新增行数、输入中的圆点。
+- `--astryx-focus-outline-color`：折叠按钮的键盘焦点描边。
+- `--astryx-color-background-popover` / `--astryx-shadow-med`：回到底部的胶囊。
+- `--astryx-radius-chat`：单独气泡的圆角。紧凑密度用 `--astryx-radius-container`。
+- `--astryx-duration-fast-max`、`--astryx-duration-medium-max`、`--astryx-duration-slow-max`、`--astryx-ease-standard`：胶囊、折叠和输入中圆点的动效。
 
 ## 原生属性
 

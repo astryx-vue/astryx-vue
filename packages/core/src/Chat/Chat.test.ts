@@ -2,7 +2,7 @@ import type { ChatToolCallItem } from './types.js'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
-import { __resetLiveRegionsForTest } from '../composables/useAnnounce.js'
+import { resetLiveRegionsForTest } from '../composables/testing/resetLiveRegions.js'
 import { provideAstryxLocale } from '../locale/index.js'
 import ChatLayout from './ChatLayout.vue'
 import ChatLayoutScrollButton from './ChatLayoutScrollButton.vue'
@@ -17,7 +17,7 @@ import ChatTypingIndicator from './ChatTypingIndicator.vue'
 import ChatUnreadDivider from './ChatUnreadDivider.vue'
 
 afterEach(() => {
-  __resetLiveRegionsForTest()
+  resetLiveRegionsForTest()
 })
 
 const calls: ChatToolCallItem[] = [

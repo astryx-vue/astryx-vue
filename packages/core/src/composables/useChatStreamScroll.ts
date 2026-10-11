@@ -1,5 +1,6 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
-import { onScopeDispose, ref, toValue, watch } from 'vue'
+import { ref, toValue, watch } from 'vue'
+import { useMediaQuery } from './useMediaQuery.js'
 
 /** How `scrollToBottom` moves. `instant` skips the spring. */
 export interface ChatScrollToBottomOptions {
@@ -58,21 +59,6 @@ export interface UseChatStreamScrollReturn {
 const SIXTY_FPS_MS = 1000 / 60
 const CHAT_MESSAGE_CLASS = 'astryx-chat-message'
 
-function subscribeReducedMotion(onChange: (matches: boolean) => void): () => void {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function')
-    return () => {}
-
-  const list = window.matchMedia('(prefers-reduced-motion: reduce)')
-  onChange(Boolean(list.matches))
-  if (typeof list.addEventListener !== 'function')
-    return () => {}
-  const listener = (event: MediaQueryListEvent): void => {
-    onChange(event.matches)
-  }
-  list.addEventListener('change', listener)
-  return () => list.removeEventListener('change', listener)
-}
-
 /**
  * Keeps a chat transcript pinned to the bottom while text streams in, and lets
  * go as soon as the reader scrolls up.
@@ -95,7 +81,7 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
 
   const isScrolledUp = ref(false)
   const isLocked = ref(true)
-  const prefersReducedMotion = ref(false)
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
 
   let locked = true
   let initialFillPending = true
@@ -255,11 +241,6 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     }
     startAnimation()
   }
-
-  const stopMotion = subscribeReducedMotion((matches) => {
-    prefersReducedMotion.value = matches
-  })
-  onScopeDispose(stopMotion)
 
   watch(
     () => [scrollRef.value, toValue(enabled)] as const,

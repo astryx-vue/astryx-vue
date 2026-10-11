@@ -39,20 +39,14 @@ A template ref exposes <code>element</code>, the link or the span.
 
 ## Theming
 
-```css
-.my-citation {
-  --astryx-citation-foreground: #4e606f;
-  --astryx-citation-number-background: rgb(0 130 251 / 20%);
-}
-```
+Citation uses the shared tokens. There is no citation-only theme file.
 
-- `--astryx-citation-foreground` / `--astryx-citation-hover-foreground`: resting and hover text.
-- `--astryx-citation-border` / `--astryx-citation-hover`: chip border and hover fill.
-- `--astryx-citation-number-background`: superscript fill.
-- `--astryx-citation-icon-surface`: the circle behind a label icon.
-- `--astryx-citation-focus`: keyboard outline.
-
-The focus color and the superscript fill are accent-shaped values that currently live on the citation theme. They are candidates for the global accent tokens.
+- `--astryx-color-text-secondary` / `--astryx-color-text-primary`: resting and hover text.
+- `--astryx-color-border` / `--astryx-color-overlay-hover`: chip border and hover fill.
+- `--astryx-color-accent-muted`: superscript fill.
+- `--astryx-color-background-surface`: the circle behind a label icon.
+- `--astryx-focus-outline-color`: keyboard outline.
+- `--astryx-duration-fast-max` / `--astryx-ease-standard`: hover transition.
 
 ## Native attributes
 

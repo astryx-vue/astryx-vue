@@ -377,25 +377,19 @@ The root is <code>role="separator"</code>. It is not a <code>.astryx-chat-messag
 
 <code>useChatNewMessages({ isLocked, onResize })</code> watches the transcript height. When the last <code>.astryx-chat-message</code> changes while unlocked, <code>hasNewMessages</code> becomes true until <code>dismiss()</code>. <code>ChatLayout</code> announces that change.
 
-Both are exported from <code>@astryx-vue/core</code> and from <code>@astryx-vue/core/Chat</code>. <code>useAnnounce</code> is exported from <code>@astryx-vue/core</code>.
+<code>useChatStreamScroll</code>, <code>useChatNewMessages</code>, and <code>useAnnounce</code> are exported from <code>@astryx-vue/core</code>. Reduced motion is read with <code>useMediaQuery</code>.
 
 ## Theming
 
-```css
-.my-chat {
-  --astryx-chat-bubble-background: rgb(5 54 89 / 10%);
-  --astryx-chat-radius: 28px;
-}
-```
+Colors, type, radius, shadow, and motion come from the shared tokens. There is no chat-only theme file.
 
-- `--astryx-chat-bubble-background` / `--astryx-chat-bubble-foreground`: filled bubble surface and text.
-- `--astryx-chat-meta`, `--astryx-chat-muted`: metadata, system lines, and secondary tool text.
-- `--astryx-chat-error`, `--astryx-chat-success`, `--astryx-chat-accent`: failed status, additions, and the typing dots.
-- `--astryx-chat-focus`: keyboard outline on disclosure buttons.
-- `--astryx-chat-scroll-surface` / `--astryx-chat-scroll-shadow`: the scroll-to-bottom pill.
-- `--astryx-chat-radius`: standalone bubble radius. Compact density uses the global container radius instead.
-
-These live on the chat theme file today. Candidates to lift into the global theme are the neutral surface, error, success, disabled text, accent, popover surface, hover overlay, medium shadow, a 28px chat radius, and the regular / semibold weights.
+- `--astryx-color-neutral` / `--astryx-color-text-primary`: filled bubble surface and text.
+- `--astryx-color-text-secondary`, `--astryx-color-text-disabled`: metadata, system lines, and secondary tool text.
+- `--astryx-color-error`, `--astryx-color-success`, `--astryx-color-accent`: failed status, additions, and the typing dots.
+- `--astryx-focus-outline-color`: keyboard outline on disclosure buttons.
+- `--astryx-color-background-popover` / `--astryx-shadow-med`: the scroll-to-bottom pill.
+- `--astryx-radius-chat`: standalone bubble radius. Compact density uses `--astryx-radius-container`.
+- `--astryx-duration-fast-max`, `--astryx-duration-medium-max`, `--astryx-duration-slow-max`, `--astryx-ease-standard`: pill, disclosure, and typing motion.
 
 ## Native attributes
 

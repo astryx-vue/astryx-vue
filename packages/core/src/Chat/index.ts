@@ -1,7 +1,3 @@
-export { useChatNewMessages } from '../composables/useChatNewMessages.js'
-export type { UseChatNewMessagesOptions, UseChatNewMessagesReturn } from '../composables/useChatNewMessages.js'
-export { useChatStreamScroll } from '../composables/useChatStreamScroll.js'
-export type { ChatScrollToBottomOptions, UseChatStreamScrollOptions, UseChatStreamScrollReturn } from '../composables/useChatStreamScroll.js'
 export { default as ChatLayout } from './ChatLayout.vue'
 export { default as ChatLayoutScrollButton } from './ChatLayoutScrollButton.vue'
 export { default as ChatMessage } from './ChatMessage.vue'

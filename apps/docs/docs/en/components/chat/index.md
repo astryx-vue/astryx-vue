@@ -27,10 +27,14 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
   <ChatLayout>
     <ChatMessageList>
       <ChatMessage sender="user">
-        <ChatMessageBubble>Check the release notes for me.</ChatMessageBubble>
+        <ChatMessageBubble>
+          Check the release notes for me.
+        </ChatMessageBubble>
       </ChatMessage>
       <ChatMessage sender="assistant">
-        <ChatMessageBubble name="Assistant">The notes are in the docs.</ChatMessageBubble>
+        <ChatMessageBubble name="Assistant">
+          The notes are in the docs.
+        </ChatMessageBubble>
       </ChatMessage>
     </ChatMessageList>
     <template #composer>

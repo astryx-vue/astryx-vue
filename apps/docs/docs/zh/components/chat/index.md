@@ -27,10 +27,14 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
   <ChatLayout>
     <ChatMessageList>
       <ChatMessage sender="user">
-        <ChatMessageBubble>帮我看一下发布说明。</ChatMessageBubble>
+        <ChatMessageBubble>
+          帮我看一下发布说明。
+        </ChatMessageBubble>
       </ChatMessage>
       <ChatMessage sender="assistant">
-        <ChatMessageBubble name="助手">说明在文档里。</ChatMessageBubble>
+        <ChatMessageBubble name="助手">
+          说明在文档里。
+        </ChatMessageBubble>
       </ChatMessage>
     </ChatMessageList>
     <template #composer>

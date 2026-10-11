@@ -39,20 +39,14 @@ footer: false
 
 ## 主题
 
-```css
-.my-citation {
-  --astryx-citation-foreground: #4e606f;
-  --astryx-citation-number-background: rgb(0 130 251 / 20%);
-}
-```
+引文使用共享 token，没有单独的主题文件。
 
-- `--astryx-citation-foreground` / `--astryx-citation-hover-foreground`：默认和悬停时的文字颜色。
-- `--astryx-citation-border` / `--astryx-citation-hover`：胶囊边框和悬停底色。
-- `--astryx-citation-number-background`：上标底色。
-- `--astryx-citation-icon-surface`：label 图标后面的圆。
-- `--astryx-citation-focus`：键盘焦点描边。
-
-焦点色和上标底色目前写在引文自己的主题文件里，形状上是强调色，以后可以并进全局强调色。
+- `--astryx-color-text-secondary` / `--astryx-color-text-primary`：默认和悬停时的文字颜色。
+- `--astryx-color-border` / `--astryx-color-overlay-hover`：胶囊边框和悬停底色。
+- `--astryx-color-accent-muted`：上标底色。
+- `--astryx-color-background-surface`：label 图标后面的圆。
+- `--astryx-focus-outline-color`：键盘焦点描边。
+- `--astryx-duration-fast-max` / `--astryx-ease-standard`：悬停过渡。
 
 ## 原生属性
 

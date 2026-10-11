@@ -1,91 +1,70 @@
-import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, nextTick } from 'vue'
-import { __resetLiveRegionsForTest, useAnnounce } from './useAnnounce.js'
-
-afterEach(() => {
-  __resetLiveRegionsForTest()
-  vi.unstubAllGlobals()
-  vi.useRealTimers()
-})
-
-function politeRegion(): HTMLElement | null {
-  return document.querySelector('[data-astryx-live-region="polite"]')
-}
-
-function assertiveRegion(): HTMLElement | null {
-  return document.querySelector('[data-astryx-live-region="assertive"]')
-}
-
-function mountAnnounce() {
-  let announce: ReturnType<typeof useAnnounce> = () => {}
-  const Host = defineComponent({
-    setup() {
-      announce = useAnnounce()
-      return () => null
-    },
-  })
-  const wrapper = mount(Host)
-  return { announce, wrapper }
-}
+import { resetLiveRegionsForTest } from './testing/resetLiveRegions.js'
+import { useAnnounce } from './useAnnounce.js'
 
 describe('useAnnounce', () => {
-  it('mounts empty polite and assertive regions on the first announcement', async () => {
-    const { announce } = mountAnnounce()
-    expect(politeRegion()).toBeNull()
-
-    announce('Saved')
-    await nextTick()
-
-    expect(politeRegion()?.getAttribute('aria-live')).toBe('polite')
-    expect(politeRegion()?.getAttribute('aria-atomic')).toBe('true')
-    expect(politeRegion()?.getAttribute('role')).toBe('status')
-    expect(assertiveRegion()?.getAttribute('aria-live')).toBe('assertive')
-    expect(assertiveRegion()?.getAttribute('role')).toBe('alert')
+  afterEach(() => {
+    vi.useRealTimers()
+    resetLiveRegionsForTest()
   })
 
-  it('speaks a polite message and leaves the assertive region empty', async () => {
-    const { announce } = mountAnnounce()
-    announce('12 results')
-    await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)))
-    expect(politeRegion()?.textContent).toBe('12 results')
-    expect(assertiveRegion()?.textContent).toBe('')
+  async function flushFrame(): Promise<void> {
+    await new Promise(resolve => requestAnimationFrame(resolve))
+  }
+
+  it('polite 和 assertive 写到各自的区域', async () => {
+    const announce = useAnnounce()
+    announce('三条结果')
+    announce('保存失败', 'assertive')
+    await flushFrame()
+
+    const polite = document.querySelector('[data-astryx-live-region="polite"]')
+    const assertive = document.querySelector('[data-astryx-live-region="assertive"]')
+    expect(polite?.getAttribute('role')).toBe('status')
+    expect(assertive?.getAttribute('role')).toBe('alert')
+    expect(polite?.textContent).toBe('三条结果')
+    expect(assertive?.textContent).toBe('保存失败')
   })
 
-  it('routes assertive messages to the assertive region', async () => {
-    const { announce } = mountAnnounce()
-    announce('Upload failed', 'assertive')
-    await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)))
-    expect(assertiveRegion()?.textContent).toBe('Upload failed')
-    expect(politeRegion()?.textContent).toBe('')
+  it('同样的文字会先清空再写，空字符串直接清掉', async () => {
+    const announce = useAnnounce()
+    announce('还在')
+    await flushFrame()
+    announce('还在')
+    const polite = document.querySelector('[data-astryx-live-region="polite"]')
+    expect(polite?.textContent).toBe('')
+    await flushFrame()
+    expect(polite?.textContent).toBe('还在')
+
+    announce('', 'polite')
+    expect(polite?.textContent).toBe('')
   })
 
-  it('repeats an identical message by clearing the region first', async () => {
-    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
-      callback(0)
-      return 1
-    })
-    const { announce } = mountAnnounce()
-    announce('No results found')
-    expect(politeRegion()?.textContent).toBe('No results found')
-    announce('No results found')
-    expect(politeRegion()?.textContent).toBe('No results found')
-  })
-
-  it('clears a region when the message is empty, and drops the text after a delay', () => {
+  it('两秒后清掉，期间再次播报会重新计时', async () => {
     vi.useFakeTimers()
-    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
-      callback(0)
-      return 1
-    })
-    const { announce } = mountAnnounce()
-    announce('Saved')
-    expect(politeRegion()?.textContent).toBe('Saved')
-    announce('')
-    expect(politeRegion()?.textContent).toBe('')
+    const announce = useAnnounce()
+    announce('注意')
+    await vi.advanceTimersByTimeAsync(16)
+    const polite = document.querySelector('[data-astryx-live-region="polite"]')
+    expect(polite?.textContent).toBe('注意')
 
-    announce('Saved again')
-    vi.advanceTimersByTime(2000)
-    expect(politeRegion()?.textContent).toBe('')
+    await vi.advanceTimersByTimeAsync(1500)
+    announce('还在')
+    await vi.advanceTimersByTimeAsync(16)
+    expect(polite?.textContent).toBe('还在')
+    await vi.advanceTimersByTimeAsync(1500)
+    expect(polite?.textContent).toBe('还在')
+    await vi.advanceTimersByTimeAsync(500)
+    expect(polite?.textContent).toBe('')
+  })
+
+  it('区域被拆掉之后会重新挂上', async () => {
+    const announce = useAnnounce()
+    announce('第一次')
+    await flushFrame()
+    document.querySelector('[data-astryx-live-region="polite"]')?.remove()
+    announce('第二次')
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('第二次')
   })
 })
