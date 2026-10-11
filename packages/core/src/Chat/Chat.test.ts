@@ -221,6 +221,8 @@ describe('chat tool calls', () => {
       },
     })
     expect(wrapper.get('.astryx-chat-tool-calls__name').text()).toBe('search_docs')
+    expect(wrapper.find('.astryx-chat-icon--circle-check').exists()).toBe(true)
+    expect(wrapper.find('.astryx-chat-status__disc').exists()).toBe(false)
     expect(wrapper.text()).toContain('+12')
     expect(wrapper.text()).toContain('-3')
     expect(wrapper.text()).toContain('1.2s')
@@ -250,6 +252,7 @@ describe('chat tool calls', () => {
     }))
 
     expect(wrapper.get('.astryx-chat-tool-calls__name').text()).toBe('read_file')
+    expect(wrapper.find('.astryx-chat-icon--circle-x').exists()).toBe(true)
     expect(wrapper.text()).toContain('2')
     expect(wrapper.text()).toContain('Error: File not found')
     expect(wrapper.get('.astryx-chat-tool-calls > button').attributes('aria-expanded')).toBe('false')

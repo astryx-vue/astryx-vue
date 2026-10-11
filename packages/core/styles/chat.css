@@ -322,6 +322,10 @@
     word-break: break-word;
   }
 
+  .astryx-chat-message-bubble strong {
+    font-weight: var(--astryx-chat-font-weight-semibold, 600);
+  }
+
   .astryx-chat-message-bubble[data-variant='filled'] {
     background: var(--astryx-chat-bubble-background, var(--astryx-color-neutral));
   }
@@ -471,7 +475,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 100%;
+    width: max-content;
+    max-width: 100%;
     min-width: 0;
     margin-block-start: var(--astryx-spacing-2, 8px);
     color: var(--astryx-chat-foreground-secondary, var(--astryx-color-text-secondary));
@@ -522,13 +527,16 @@
     }
   }
 
-  .astryx-chat-tool-calls__name {
-    flex-shrink: 1;
-    min-width: 4ch;
-    overflow: hidden;
-    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+  .astryx-chat-tool-calls__name,
+  .astryx-chat-tool-calls__group-label {
+    color: var(--astryx-chat-foreground, var(--astryx-color-text-primary));
     font-weight: var(--astryx-chat-font-weight-medium, var(--astryx-font-weight-medium, 500));
-    text-overflow: ellipsis;
+  }
+
+  .astryx-chat-tool-calls__name {
+    flex-shrink: 0;
+    min-width: max-content;
+    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
     white-space: nowrap;
   }
 
@@ -536,13 +544,20 @@
   .astryx-chat-reasoning__preview {
     min-width: 0;
     overflow: hidden;
-    color: var(--astryx-chat-foreground-muted, var(--astryx-color-text-disabled));
+    color: var(--astryx-chat-foreground-secondary, var(--astryx-color-text-secondary));
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
+  .astryx-chat-reasoning__preview {
+    color: var(--astryx-chat-foreground-muted, var(--astryx-color-text-disabled));
+  }
+
   .astryx-chat-tool-calls__target {
-    flex-shrink: 10;
+    flex-shrink: 0;
+    min-width: max-content;
+    overflow: visible;
+    text-overflow: clip;
   }
 
   .astryx-chat-tool-calls__stats,
@@ -550,7 +565,7 @@
   .astryx-chat-tool-calls__count,
   .astryx-chat-tool-calls__node {
     flex-shrink: 0;
-    color: var(--astryx-chat-foreground-muted, var(--astryx-color-text-disabled));
+    color: var(--astryx-chat-foreground-secondary, var(--astryx-color-text-secondary));
     white-space: nowrap;
   }
 
@@ -597,14 +612,24 @@
 
   .astryx-chat-tool-calls__group-label,
   .astryx-chat-reasoning__label {
-    font-weight: var(--astryx-chat-font-weight-medium, var(--astryx-font-weight-medium, 500));
     white-space: nowrap;
+  }
+
+  .astryx-chat-reasoning__label {
+    font-weight: var(--astryx-chat-font-weight-medium, var(--astryx-font-weight-medium, 500));
+  }
+
+  .astryx-chat-tool-calls__list {
+    width: max-content;
+    max-width: 100%;
   }
 
   .astryx-chat-tool-calls__panel,
   .astryx-chat-reasoning__panel {
     display: grid;
     grid-template-rows: 0fr;
+    width: max-content;
+    max-width: 100%;
     transition: grid-template-rows var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
@@ -679,23 +704,11 @@
   }
 
   .astryx-chat-status[data-status='running'] {
-    color: var(--astryx-chat-accent, var(--astryx-color-accent));
+    color: var(--astryx-chat-foreground, var(--astryx-color-text-primary));
   }
 
   .astryx-chat-status[data-status='error'] {
     color: var(--astryx-chat-error, var(--astryx-color-error));
-  }
-
-  .astryx-chat-status__disc {
-    position: absolute;
-    inset: 0;
-    border-radius: var(--astryx-radius-full, 9999px);
-    background: currentcolor;
-    opacity: 0.15;
-  }
-
-  .astryx-chat-status__icon {
-    position: relative;
   }
 
   .astryx-chat-typing {
@@ -753,6 +766,14 @@
 
   .astryx-chat-icon--check-double {
     --astryx-icon-artwork: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 13l4 4L16 6'/%3E%3Cpath d='M8 13l4 4L22 6'/%3E%3C/svg%3E");
+  }
+
+  .astryx-chat-icon--circle-check {
+    --astryx-icon-artwork: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21.801 10A10 10 0 1 1 17 3.335'/%3E%3Cpath d='M9 11l3 3L22 4'/%3E%3C/svg%3E");
+  }
+
+  .astryx-chat-icon--circle-x {
+    --astryx-icon-artwork: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M15 9l-6 6'/%3E%3Cpath d='M9 9l6 6'/%3E%3C/svg%3E");
   }
 
   .astryx-chat-icon--close {

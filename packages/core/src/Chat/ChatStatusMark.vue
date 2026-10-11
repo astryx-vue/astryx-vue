@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ChatToolCallStatus } from './types.js'
 import { computed } from 'vue'
-import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -28,13 +27,10 @@ const label = computed(() => {
 
 <template>
   <span class="astryx-chat-status" :data-status="status" :title="status === 'error' ? errorMessage : undefined">
-    <Spinner v-if="status === 'pending' || status === 'running'" size="sm" shade="subtle" :aria-label="label" />
-    <template v-else>
-      <span class="astryx-chat-status__disc" />
-      <Icon v-if="status === 'complete'" class="astryx-chat-status__icon" icon="check" size="xsm" color="inherit" />
-      <ChatIcon v-else class="astryx-chat-status__icon" name="close" size="xsm" />
-    </template>
-    <VisuallyHidden v-if="status === 'error' && errorMessage">
+    <Spinner v-if="status === 'pending' || status === 'running'" size="sm" shade="inherit" :aria-label="label" />
+    <ChatIcon v-else-if="status === 'complete'" name="circle-check" size="xsm" />
+    <ChatIcon v-else name="circle-x" size="xsm" />
+    <VisuallyHidden v-if="status !== 'pending' && status !== 'running'">
       {{ label }}
     </VisuallyHidden>
   </span>

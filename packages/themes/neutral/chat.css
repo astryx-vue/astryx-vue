@@ -4,7 +4,9 @@
   :root,
   [data-astryx-theme='neutral'] {
     --astryx-chat-foreground: var(--astryx-color-text-primary);
-    --astryx-chat-foreground-secondary: var(--astryx-color-text-secondary);
+    /* Docs secondary text measures rgb(71, 71, 71). The shared text-secondary
+       token stays lighter, so chat supporting copy uses this darker stop. */
+    --astryx-chat-foreground-secondary: light-dark(#474747, #a3a3a3);
     --astryx-chat-foreground-muted: var(--astryx-color-text-disabled);
     --astryx-chat-bubble-background: var(--astryx-color-neutral);
     --astryx-chat-error: var(--astryx-color-error);
