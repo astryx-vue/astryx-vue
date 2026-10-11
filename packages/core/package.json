@@ -238,30 +238,15 @@
       "types": "./dist/Overlay/index.d.ts",
       "import": "./dist/Overlay/index.js"
     },
-    "./NumberInput": {
-      "source": "./src/NumberInput/index.ts",
-      "types": "./dist/NumberInput/index.d.ts",
-      "import": "./dist/NumberInput/index.js"
-    },
     "./FileInput": {
       "source": "./src/FileInput/index.ts",
       "types": "./dist/FileInput/index.d.ts",
       "import": "./dist/FileInput/index.js"
     },
-    "./InputGroup": {
-      "source": "./src/InputGroup/index.ts",
-      "types": "./dist/InputGroup/index.d.ts",
-      "import": "./dist/InputGroup/index.js"
-    },
     "./CheckboxList": {
       "source": "./src/CheckboxList/index.ts",
       "types": "./dist/CheckboxList/index.d.ts",
       "import": "./dist/CheckboxList/index.js"
-    },
-    "./Selector": {
-      "source": "./src/Selector/index.ts",
-      "types": "./dist/Selector/index.d.ts",
-      "import": "./dist/Selector/index.js"
     },
     "./MultiSelector": {
       "source": "./src/MultiSelector/index.ts",
@@ -371,6 +356,21 @@
       "source": "./src/Banner/index.ts",
       "types": "./dist/Banner/index.d.ts",
       "import": "./dist/Banner/index.js"
+    },
+    "./Selector": {
+      "source": "./src/Selector/index.ts",
+      "types": "./dist/Selector/index.d.ts",
+      "import": "./dist/Selector/index.js"
+    },
+    "./NumberInput": {
+      "source": "./src/NumberInput/index.ts",
+      "types": "./dist/NumberInput/index.d.ts",
+      "import": "./dist/NumberInput/index.js"
+    },
+    "./InputGroup": {
+      "source": "./src/InputGroup/index.ts",
+      "types": "./dist/InputGroup/index.d.ts",
+      "import": "./dist/InputGroup/index.js"
     }
   },
   "types": "./dist/index.d.ts",
@@ -391,15 +391,19 @@
   "peerDependencies": {
     "vue": "catalog:vue"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@internationalized/date": "catalog:runtime"
+  },
   "devDependencies": {
     "@vue/compiler-sfc": "catalog:vue",
     "tsdown": "catalog:build",
     "typescript": "catalog:language",
     "unplugin-vue": "catalog:build",
+    "unrun": "catalog:build",
     "vue": "catalog:vue",
     "vue-tsc": "catalog:vue"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

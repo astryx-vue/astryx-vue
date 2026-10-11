@@ -1,0 +1,137 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-calendar {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 220px;
+    padding: var(--astryx-spacing-3, 12px);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-calendar.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .astryx-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--astryx-spacing-2, 8px);
+    margin-bottom: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-calendar-month-year {
+    flex: 1;
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-font-weight-bold, 700);
+    text-align: center;
+  }
+
+  .astryx-calendar-nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--astryx-input-height-md, 32px);
+    height: var(--astryx-input-height-md, 32px);
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: transparent;
+    color: var(--astryx-color-text-secondary, #525252);
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .astryx-calendar-nav-button:hover:not(:disabled) {
+      background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+      color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    }
+  }
+
+  .astryx-calendar-nav-button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .astryx-calendar-weekdays,
+  .astryx-calendar-row {
+    display: grid;
+    grid-template-columns: repeat(7, var(--astryx-input-height-md, 32px));
+    justify-content: center;
+  }
+
+  .astryx-calendar-weekday,
+  .astryx-calendar-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--astryx-input-height-md, 32px);
+    height: var(--astryx-input-height-md, 32px);
+  }
+
+  .astryx-calendar-weekday {
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: 400;
+  }
+
+  .astryx-calendar-grid {
+    outline: none;
+  }
+
+  .astryx-calendar-cell {
+    position: relative;
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: transparent;
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font: inherit;
+    cursor: pointer;
+    transition:
+      background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  @media (hover: hover) {
+    .astryx-calendar-cell:hover:not(.is-disabled):not(.is-selected) {
+      background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+    }
+  }
+
+  .astryx-calendar-cell.is-other-month {
+    color: var(--astryx-color-text-secondary, #525252);
+    opacity: 0.5;
+  }
+
+  .astryx-calendar-cell.is-today:not(.is-selected) {
+    box-shadow: inset 0 0 0 1px var(--astryx-color-border-emphasized, #d4d4d4);
+  }
+
+  .astryx-calendar-cell.is-selected {
+    background: var(--astryx-button-primary-background, light-dark(#262626, #ebebeb));
+    color: var(--astryx-button-primary-foreground, light-dark(#ffffff, #171717));
+  }
+
+  .astryx-calendar-cell.is-disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .astryx-calendar-day {
+    font-size: var(--astryx-text-body-size, 0.875rem);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-calendar-cell {
+      transition: none;
+    }
+  }
+}

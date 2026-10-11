@@ -9,6 +9,7 @@ import { blockquoteCite } from './blockquote'
 import { bottomSheetOverview } from './bottom-sheet'
 import { breadcrumbsBasic } from './breadcrumbs'
 import { buttonVariants } from './button'
+import { calendarBasic } from './calendar'
 import { buttonGroupBasic } from './button-group'
 import { cardBasic } from './card'
 import { centerBasic } from './center'
@@ -17,6 +18,7 @@ import { checkboxInputBasic } from './checkbox-input'
 import { codeBasic } from './code'
 import { collapsibleBasic } from './collapsible'
 import { contextMenuOverview } from './context-menu'
+import { dateInputBasic } from './date-input'
 import { dialogOverview } from './dialog'
 import { dividerOverview } from './divider'
 import { dropdownMenuOverview } from './dropdown-menu'
@@ -26,15 +28,19 @@ import { gridBasic } from './grid'
 import { headingLevels } from './heading'
 import { hoverCardOverview } from './hover-card'
 import { iconButtonActionBar } from './icon-button'
+import { inputGroupBasic } from './input-group'
 import { kbdBasic } from './kbd'
 import { linkColors } from './link'
 import { listBasic } from './list'
 import { moreMenuOverview } from './more-menu'
+import { numberInputBasic } from './number-input'
 import { overlayBasic } from './overlay'
+import { paginationBasic } from './pagination'
 import { popoverOverview } from './popover'
 import { progressBarBasic } from './progress-bar'
 import { radioBasic, radioList } from './radio'
 import { segmentedControlBasic } from './segmented-control'
+import { selectorBasic } from './selector'
 import { skeletonProfile } from './skeleton'
 import { sliderBasic } from './slider'
 import { spinnerBasic } from './spinner'
@@ -81,6 +87,12 @@ export const componentDemos: Record<ComponentSlug, DemoModule> = {
   'segmented-control': segmentedControlBasic,
   'grid': gridBasic,
   'overlay': overlayBasic,
+  'number-input': numberInputBasic,
+  'input-group': inputGroupBasic,
+  'selector': selectorBasic,
+  'date-input': dateInputBasic,
+  'calendar': calendarBasic,
+  'pagination': paginationBasic,
   'heading': headingLevels,
   'icon-button': iconButtonActionBar,
   'kbd': kbdBasic,

@@ -1,0 +1,82 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--astryx-spacing-4, 16px);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-pagination.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .astryx-pagination-total,
+  .astryx-pagination-size-label {
+    color: var(--astryx-color-text-secondary, #525252);
+    white-space: nowrap;
+  }
+
+  .astryx-pagination-content,
+  .astryx-pagination-pages,
+  .astryx-pagination-size-changer {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-pagination-button,
+  .astryx-pagination-page {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astryx-spacing-1, 4px);
+    min-width: var(--astryx-input-height-md, 32px);
+    height: var(--astryx-input-height-md, 32px);
+    padding: 0 var(--astryx-spacing-2, 8px);
+    border: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .astryx-pagination-button {
+    padding-inline: var(--astryx-spacing-2, 8px);
+  }
+
+  @media (hover: hover) {
+    .astryx-pagination-button:hover:not(:disabled),
+    .astryx-pagination-page:hover:not(:disabled):not(.is-active):not(.is-ellipsis) {
+      background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+    }
+  }
+
+  .astryx-pagination-page.is-active {
+    background: var(--astryx-dropdown-menu-pressed-background, light-dark(#05365919, #ffffff19));
+    font-weight: var(--astryx-font-weight-medium, 500);
+    cursor: default;
+  }
+
+  .astryx-pagination-page.is-ellipsis,
+  .astryx-pagination-button:disabled,
+  .astryx-pagination-page:disabled {
+    cursor: default;
+  }
+
+  .astryx-pagination-button:disabled {
+    opacity: 0.4;
+  }
+
+  .astryx-pagination-size-changer .astryx-selector {
+    width: 7.5rem;
+  }
+}

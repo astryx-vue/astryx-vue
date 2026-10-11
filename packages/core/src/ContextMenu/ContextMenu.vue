@@ -2,10 +2,11 @@
 import type { StyleValue } from 'vue'
 import type { ContextMenuEmits, ContextMenuItemData, ContextMenuProps, ContextMenuSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
-import { MENU_BOUNDARY_SELECTOR, useMenuNav } from './menuNav.js'
+import { useMenuNav } from './menuNav.js'
 import { useLongPress } from './useLongPress.js'
 import { useMenuOverflow } from './useMenuOverflow.js'
 import { resetMenuPress, useMenuPress } from './useMenuPress.js'
@@ -81,6 +82,12 @@ const longPress = useLongPress({
   },
 })
 
+useDismiss({
+  container: panel,
+  isEnabled: isOpen,
+  onDismiss: () => closeMenu(),
+})
+
 function formatSize(value: number | string): string {
   return typeof value === 'number' ? `${value}px` : value
 }
@@ -108,18 +115,6 @@ function focusPanelOrFirstRow(): void {
     panel.value?.focus({ preventScroll: true })
 }
 
-function attachDismissListeners(): void {
-  const doc = panel.value?.ownerDocument
-  doc?.addEventListener('mousedown', onDocumentMouseDown)
-  doc?.addEventListener('keydown', onDocumentKeydown)
-}
-
-function detachDismissListeners(): void {
-  const doc = panel.value?.ownerDocument
-  doc?.removeEventListener('mousedown', onDocumentMouseDown)
-  doc?.removeEventListener('keydown', onDocumentKeydown)
-}
-
 function setOpen(next: boolean): void {
   if (isOpen.value === next)
     return
@@ -128,7 +123,6 @@ function setOpen(next: boolean): void {
   emit('openChange', next)
 }
 
-/** Close the menu, optionally handing focus back to where it was before. */
 function closeMenu(options: { restoreFocus?: boolean } = {}): void {
   if (!isOpen.value)
     return
@@ -158,9 +152,6 @@ function onTriggerContextMenu(event: MouseEvent): void {
     return
   event.preventDefault()
   const rect = trigger.value?.getBoundingClientRect()
-  // A keyboard-invoked contextmenu (Shift+F10 or the context-menu key) reports
-  // the point (0, 0) in several browsers; anchor to the trigger's bottom-left
-  // instead, so the menu is reachable without a pointer.
   const isKeyboardInvoked = event.clientX === 0 && event.clientY === 0 && event.detail === 0
   openAt(
     isKeyboardInvoked || rect == null ? 0 : event.clientX - rect.left,
@@ -182,27 +173,6 @@ function onTriggerPointerMove(event: PointerEvent): void {
   longPress.moveTo({ x: event.clientX, y: event.clientY })
 }
 
-function onDocumentMouseDown(event: MouseEvent): void {
-  const target = event.target
-  if (panel.value != null && target instanceof Node && panel.value.contains(target))
-    return
-  closeMenu()
-}
-
-function onDocumentKeydown(event: KeyboardEvent): void {
-  if (event.key !== 'Escape' || event.isComposing || !isOpen.value)
-    return
-  // A nested flyout owns its own Escape.
-  const target = event.target
-  if (target instanceof Element) {
-    const owner = target.closest(MENU_BOUNDARY_SELECTOR)
-    if (owner != null && owner !== panel.value)
-      return
-  }
-  event.preventDefault()
-  closeMenu({ restoreFocus: true })
-}
-
 function onSelect(item: ContextMenuItemData, event: MouseEvent): void {
   emit('select', item, event)
 }
@@ -216,19 +186,15 @@ provide(contextMenuContextKey, {
 
 function applyOpenState(next: boolean): void {
   if (next) {
-    attachDismissListeners()
     updatePosition()
     void nextTick(focusPanelOrFirstRow)
     return
   }
-  detachDismissListeners()
   nav.resetTypeahead()
 }
 
 watch(isOpen, applyOpenState)
 
-// A menu that is already open on mount — a bound `is-open`, a restored state —
-// gets the same wiring as one opened later, since its watch never fired.
 onMounted(() => {
   if (isOpen.value)
     applyOpenState(true)
@@ -240,7 +206,6 @@ watch(() => props.isDisabled, (isDisabled) => {
 })
 
 onBeforeUnmount(() => {
-  detachDismissListeners()
   resetMenuPress()
 })
 

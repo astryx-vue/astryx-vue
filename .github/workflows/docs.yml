@@ -1,0 +1,75 @@
+name: Deploy Docs to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  deploy:
+    name: Build and Deploy Docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.18'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile || true
+          pnpm approve-builds esbuild workerd
+          pnpm install --frozen-lockfile
+
+      - name: Build core package
+        run: pnpm --filter @astryx-vue/core build
+
+      - name: Build docs
+        run: pnpm docs:build
+
+      - name: Deploy to Cloudflare Pages
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          DEPLOY_OUTPUT=$(pnpm exec wrangler pages deploy apps/docs/.vitepress/dist --project-name=astryx-vue --branch="$BRANCH" 2>&1)
+          echo "$DEPLOY_OUTPUT"
+          DEPLOYMENT_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'https://[^\s]+\.pages\.dev' | head -1)
+          echo "deployment-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+
+      - name: Comment Preview URL
+        if: github.event_name == 'pull_request' && steps.deploy.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = '${{ steps.deploy.outputs.deployment-url }}' || 'https://astryx-vue.pages.dev';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📚 Documentation preview deployed!\n\n🔗 **Preview URL**: ${deploymentUrl}`
+            });
+
+      - name: Skip Deploy (Fork PR or Missing Secrets)
+        if: |
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) ||
+          (steps.deploy.outcome == 'skipped')
+        run: |
+          echo "⚠️  Deployment skipped: Fork PR or missing Cloudflare secrets"
+          echo "📦 Docs built successfully and available in apps/docs/.vitepress/dist"

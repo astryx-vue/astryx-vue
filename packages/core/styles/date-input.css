@@ -1,0 +1,137 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-date-input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .astryx-date-input .astryx-popover-trigger {
+    display: flex;
+    width: 100%;
+  }
+
+  .astryx-date-input-wrapper {
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    min-width: 180px;
+    height: var(--astryx-input-height-md, 32px);
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-input-background, #fff);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    transition:
+      border-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      box-shadow var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-date-input-wrapper[data-size='sm'] {
+    height: var(--astryx-input-height-sm, 28px);
+  }
+
+  .astryx-date-input-wrapper[data-size='lg'] {
+    height: var(--astryx-input-height-lg, 36px);
+  }
+
+  @media (hover: hover) {
+    .astryx-date-input-wrapper:hover:not([data-disabled='true']):not(:focus-within) {
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4)) 30%, transparent);
+    }
+  }
+
+  .astryx-date-input-wrapper:focus-within {
+    border-color: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
+  }
+
+  .astryx-date-input-wrapper[data-disabled='true'] {
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  .astryx-date-input.status-error {
+    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
+  }
+
+  .astryx-date-input.status-warning {
+    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
+  }
+
+  .astryx-date-input.status-success {
+    --astryx-input-status-color: var(--astryx-input-success, #198100);
+  }
+
+  .astryx-date-input-field {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-date-input-field::placeholder {
+    color: var(--astryx-color-text-secondary, #525252);
+    opacity: 1;
+  }
+
+  .astryx-date-input-field:disabled {
+    cursor: default;
+  }
+
+  .astryx-date-input-toggle,
+  .astryx-date-input-clear {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--astryx-color-text-secondary, #525252);
+    cursor: pointer;
+  }
+
+  .astryx-date-input-toggle:disabled,
+  .astryx-date-input-clear:disabled {
+    cursor: default;
+  }
+
+  .astryx-date-input-prefix,
+  .astryx-date-input-suffix {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-date-input-wrapper {
+      transition: none;
+    }
+  }
+}
+
+/* Unlayered: a page-level :focus-visible ring must not draw a second box
+   inside the field. The wrapper's focus-within border is the focus treatment. */
+.astryx-date-input-field:focus,
+.astryx-date-input-field:focus-visible,
+.astryx-date-input-toggle:focus,
+.astryx-date-input-toggle:focus-visible,
+.astryx-date-input-clear:focus,
+.astryx-date-input-clear:focus-visible {
+  outline: none;
+}

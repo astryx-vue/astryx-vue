@@ -1,0 +1,84 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-input-group {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    height: var(--astryx-input-height-md, 32px);
+    overflow: hidden;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-input-border, #d4d4d4);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-input-background, #fff);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  }
+
+  .astryx-input-group.size-sm {
+    height: var(--astryx-input-height-sm, 28px);
+  }
+
+  .astryx-input-group.size-lg {
+    height: var(--astryx-input-height-lg, 36px);
+  }
+
+  .astryx-input-group:focus-within:not(.is-disabled) {
+    border-color: var(--astryx-input-focus, #262626);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);
+  }
+
+  .astryx-input-group.is-disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .astryx-input-group-addon {
+    display: flex;
+    flex: none;
+    align-items: center;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    background: color-mix(in srgb, var(--astryx-color-text-primary, #171717) 5%, transparent);
+    color: var(--astryx-color-text-secondary, #525252);
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    white-space: nowrap;
+  }
+
+  .astryx-input-group-addon.before {
+    border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
+  }
+
+  .astryx-input-group-addon.after {
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
+  }
+
+  .astryx-input-group-field {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .astryx-input-group-field input,
+  .astryx-input-group-field .astryx-selector-trigger,
+  .astryx-input-group-field .astryx-text-input,
+  .astryx-input-group-field .astryx-number-input,
+  .astryx-input-group-field .astryx-number-input-field,
+  .astryx-input-group-field .astryx-date-input-wrapper {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .astryx-input-group-field .astryx-text-input,
+  .astryx-input-group-field .astryx-number-input,
+  .astryx-input-group-field .astryx-selector,
+  .astryx-input-group-field .astryx-date-input,
+  .astryx-input-group-field .astryx-date-input-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+}

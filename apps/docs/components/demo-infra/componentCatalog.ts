@@ -82,6 +82,11 @@ export const COMPONENT_CATALOG = [
   { slug: 'switch', group: 'form', en: 'Switch', zh: '开关' },
   { slug: 'slider', group: 'form', en: 'Slider', zh: '滑块' },
   { slug: 'field', group: 'form', en: 'Field', zh: '表单字段' },
+  { slug: 'number-input', group: 'form', en: 'Number Input', zh: '数字输入框' },
+  { slug: 'input-group', group: 'form', en: 'Input Group', zh: '输入框组' },
+  { slug: 'selector', group: 'form', en: 'Selector', zh: '选择器' },
+  { slug: 'date-input', group: 'form', en: 'Date Input', zh: '日期输入框' },
+  { slug: 'calendar', group: 'form', en: 'Calendar', zh: '日历' },
   { slug: 'segmented-control', group: 'form', en: 'Segmented Control', zh: '分段控件' },
 
   { slug: 'stack', group: 'layout', en: 'Stack', zh: '堆叠布局' },
@@ -104,6 +109,7 @@ export const COMPONENT_CATALOG = [
   { slug: 'link', group: 'navigation', en: 'Link', zh: '链接' },
   { slug: 'breadcrumbs', group: 'navigation', en: 'Breadcrumbs', zh: '面包屑' },
   { slug: 'tab-list', group: 'navigation', en: 'Tab List', zh: '标签列表' },
+  { slug: 'pagination', group: 'navigation', en: 'Pagination', zh: '分页' },
 
   { slug: 'banner', group: 'feedback', en: 'Banner', zh: '提示条' },
   { slug: 'badge', group: 'feedback', en: 'Badge', zh: '标签' },
