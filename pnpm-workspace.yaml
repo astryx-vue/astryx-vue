@@ -26,7 +26,6 @@ catalogs:
     wrangler: 4.149.0
   docs:
     '@fontsource/figtree': 5.3.0
-    '@fontsource/jetbrains-mono': 5.3.0
     '@iconify-json/carbon': 1.2.28
     '@iconify-json/heroicons': 1.2.3
     postcss: 8.5.29
@@ -44,7 +43,15 @@ catalogs:
     eslint-plugin-vuejs-accessibility: 2.6.0
     globals: 17.13.0
 
+  peer:
+    vue: '^3.5.0'
+  release:
+    '@arethetypeswrong/cli': 0.18.5
+    '@changesets/changelog-github': 1.0.1
+    '@changesets/cli': 3.0.3
+    publint: 0.3.25
   runtime:
+    '@fontsource/jetbrains-mono': 5.3.0
     '@internationalized/date': 3.12.4
     mdast-util-from-markdown: 2.1.0
     mdast-util-gfm: 3.1.0

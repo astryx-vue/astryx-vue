@@ -375,6 +375,63 @@ function standardComponentExport(dir) {
   }
 }
 
+function sourceFileExists(rootDir, entry) {
+  if (entry == null || typeof entry !== 'object' || Array.isArray(entry))
+    return true
+  if (typeof entry.source !== 'string')
+    return true
+  return existsSync(join(rootDir, 'packages/core', entry.source))
+}
+
+function withoutSource(entry) {
+  if (entry == null || typeof entry !== 'object' || Array.isArray(entry))
+    return entry
+  if (!Object.hasOwn(entry, 'source'))
+    return entry
+  const next = { ...entry }
+  delete next.source
+  return next
+}
+
+function publishedExports(exportsObject) {
+  const result = {}
+  for (const [key, value] of Object.entries(exportsObject))
+    result[key] = withoutSource(value)
+  return result
+}
+
+function publishConfigFor(json, exportsObject) {
+  const current = { ...(json.publishConfig ?? {}) }
+  const access = current.access
+  delete current.access
+  delete current.exports
+  const next = {}
+  if (access !== undefined)
+    next.access = access
+  Object.assign(next, current)
+  next.exports = publishedExports(exportsObject)
+  return next
+}
+
+function serializeJsonValue(value) {
+  const lines = JSON.stringify(value, null, 2).split('\n')
+  return lines.map((line, index) => index === 0 ? line : `  ${line}`).join('\n')
+}
+
+function replaceOrInsertTopLevel(text, key, value) {
+  const serialized = serializeJsonValue(value)
+  if (text.includes(`"${key}":`)) {
+    const location = findJsonValue(text, key)
+    return `${text.slice(0, location.start)}${serialized}${text.slice(location.end)}`
+  }
+  const trimmed = text.replace(/\s*$/, '')
+  if (!trimmed.endsWith('}'))
+    throw new Error('package.json 没有以 } 结束')
+  const body = trimmed.slice(0, -1).trimEnd()
+  const comma = body.endsWith(',') ? '' : ','
+  return `${body}${comma}\n  "${key}": ${serialized}\n}\n`
+}
+
 function sameJson(a, b) {
   return JSON.stringify(a) === JSON.stringify(b)
 }
@@ -419,21 +476,28 @@ function renderPackageExports(rootDir) {
       exportsObject[key] = current[key] && sameJson(current[key], standard) ? current[key] : standard
       continue
     }
-    if (current[key] !== undefined)
+    // 源文件已经不在的条目（例如还没实现的组件）不要继续留在 exports 里。
+    if (current[key] !== undefined && sourceFileExists(rootDir, current[key]))
       exportsObject[key] = current[key]
   }
 
-  if (sameJson(exportsObject, current))
+  const nextPublishConfig = publishConfigFor(json, exportsObject)
+  const exportsChanged = !sameJson(exportsObject, current)
+  const publishChanged = !sameJson(nextPublishConfig, json.publishConfig ?? {})
+  if (!exportsChanged && !publishChanged)
     return { file, text, changed: false }
 
-  const location = findJsonValue(text, 'exports')
-  const serialized = JSON.stringify(exportsObject, null, 2)
-    .split('\n')
-    .map(line => `  ${line}`)
-    .join('\n')
+  let next = text
+  if (exportsChanged) {
+    const location = findJsonValue(next, 'exports')
+    next = `${next.slice(0, location.start)}${serializeJsonValue(exportsObject)}${next.slice(location.end)}`
+  }
+  if (publishChanged)
+    next = replaceOrInsertTopLevel(next, 'publishConfig', nextPublishConfig)
+
   return {
     file,
-    text: `${text.slice(0, location.start)}${serialized}${text.slice(location.end)}`,
+    text: next,
     changed: true,
   }
 }

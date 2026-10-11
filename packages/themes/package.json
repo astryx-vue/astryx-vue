@@ -3,7 +3,23 @@
   "type": "module",
   "version": "0.0.0",
   "description": "Themes for the unofficial astryx-vue community project.",
+  "author": "ShenQingchuan",
   "license": "MIT",
+  "homepage": "https://astryx-vue.pages.dev",
+  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astryx-vue/astryx-vue.git",
+    "directory": "packages/themes"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "design-system",
+    "astryx",
+    "components",
+    "ui"
+  ],
   "sideEffects": [
     "**/*.css"
   ],
@@ -30,7 +46,7 @@
     "build": "true"
   },
   "dependencies": {
-    "@fontsource/jetbrains-mono": "catalog:docs"
+    "@fontsource/jetbrains-mono": "catalog:runtime"
   },
   "publishConfig": {
     "access": "public"

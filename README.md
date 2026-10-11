@@ -2,6 +2,9 @@
 
 Astryx 设计系统的非官方 Vue 3 社区实现。
 
+[![GitHub](https://img.shields.io/badge/GitHub-astryx--vue%2Fastryx--vue-181717?logo=github)](https://github.com/astryx-vue/astryx-vue)
+[![npm @astryx-vue/core](https://img.shields.io/npm/v/@astryx-vue/core?label=%40astryx-vue%2Fcore)](https://www.npmjs.com/package/@astryx-vue/core)
+[![npm @astryx-vue/themes](https://img.shields.io/npm/v/@astryx-vue/themes?label=%40astryx-vue%2Fthemes)](https://www.npmjs.com/package/@astryx-vue/themes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 > 本项目不是 Meta 官方项目。原版 Astryx 见 <https://github.com/facebook/astryx>。
@@ -16,13 +19,13 @@ Astryx 设计系统的非官方 Vue 3 社区实现。
 
 ## 安装
 
-当前暂未发布到 npm。可以通过本地 workspace 或源码构建引用。
-
-发布后将支持：
-
 ```sh
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
+
+文档站：<https://astryx-vue.pages.dev>
+
+首次 npm 版本是 `0.1.0`。发布步骤见 [RELEASING.md](./RELEASING.md)。
 
 ## 快速开始
 
@@ -47,6 +50,8 @@ import { Button } from '@astryx-vue/core/Button'
 ```
 
 ## 文档
+
+在线文档：<https://astryx-vue.pages.dev>
 
 本地启动文档站点：
 

@@ -2,14 +2,17 @@
 
 Vue components for astryx-vue.
 
+Docs: <https://astryx-vue.pages.dev>
+
 ```bash
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-Component entries load structural styles. Import a theme once at the app entry:
+Component entries load structural styles. Import a theme once at the app entry. To load every structural stylesheet yourself, also import `@astryx-vue/core/styles.css`.
 
 ```ts
 import { Badge } from '@astryx-vue/core/Badge'
+import '@astryx-vue/core/styles.css'
 import '@astryx-vue/themes/neutral.css'
 ```
 

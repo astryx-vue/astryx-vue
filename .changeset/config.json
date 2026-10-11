@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@4.0.1/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "astryx-vue/astryx-vue"
+    }
+  ],
+  "commit": false,
+  "fixed": [
+    [
+      "@astryx-vue/core",
+      "@astryx-vue/themes"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@astryx-vue/docs"
+  ]
+}
