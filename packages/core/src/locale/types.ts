@@ -1,6 +1,12 @@
 export type AstryxLocale = 'en' | 'zh-CN'
 
 export interface AstryxMessages {
+  markdown: {
+    headingLink: (title: string) => string
+    taskDone: string
+    taskList: string
+    taskPending: string
+  }
   calendar: {
     label: string
     previousMonth: string

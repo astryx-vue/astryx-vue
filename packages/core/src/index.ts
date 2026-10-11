@@ -79,6 +79,8 @@ export { Item, List, ListItem, useItemDescriptionId, useListContext } from './Li
 export type { ItemAlign, ItemDensity, ItemElement, ItemLabel, ItemLayout, ItemProps, ItemSlots, ItemTarget, ItemText, ListDensity, ListEdgeCompensation, ListItemProps, ListItemSlots, ListMarkerStyle, ListProps, ListSlots } from './List/index.js'
 export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
 export type { AstryxLocale, AstryxMessages } from './locale/index.js'
+export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
+export type { MarkdownAlign, MarkdownCodeProps, MarkdownComponents, MarkdownDensity, MarkdownDisplay, MarkdownHeadingLevel, MarkdownHeadingProps, MarkdownImageProps, MarkdownInlineCodeProps, MarkdownLinkProps, MarkdownListProps, MarkdownProps, MarkdownSlots } from './Markdown/index.js'
 export { MoreMenu } from './MoreMenu/index.js'
 export type { MoreMenuDivider, MoreMenuEmits, MoreMenuIcon, MoreMenuInitialFocus, MoreMenuItem, MoreMenuItemVariant, MoreMenuOption, MoreMenuPresentation, MoreMenuProps, MoreMenuResolvedPresentation, MoreMenuSection, MoreMenuSlots } from './MoreMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'

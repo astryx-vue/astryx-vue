@@ -1,10 +1,12 @@
 import type { AstryxLocale, AstryxMessages } from './types.js'
+import { markdownMessages } from './messages/markdown.js'
 
 function clearLabel(label: string | undefined, fallback: string, prefix: string): string {
   return label != null && label !== '' ? `${prefix}${label}` : fallback
 }
 
 const en: AstryxMessages = {
+  markdown: markdownMessages.en,
   calendar: {
     label: 'Calendar',
     previousMonth: 'Previous month',
@@ -40,6 +42,7 @@ const en: AstryxMessages = {
 }
 
 const zhCN: AstryxMessages = {
+  markdown: markdownMessages['zh-CN'],
   calendar: {
     label: '日历',
     previousMonth: '上一月',

@@ -15,3 +15,6 @@ export type { NumberField, UseNumberFieldOptions } from './useNumberField.js'
 
 export { useRestoreFocus } from './useRestoreFocus.js'
 export type { RestoreFocus, UseRestoreFocusOptions } from './useRestoreFocus.js'
+
+export { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
+export type { StreamingTextSpeed, UseStreamingTextOptions } from './useStreamingText.js'

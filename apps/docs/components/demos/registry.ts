@@ -32,6 +32,7 @@ import { inputGroupBasic } from './input-group'
 import { kbdBasic } from './kbd'
 import { linkColors } from './link'
 import { listBasic } from './list'
+import { markdownBasic } from './markdown'
 import { moreMenuOverview } from './more-menu'
 import { numberInputBasic } from './number-input'
 import { overlayBasic } from './overlay'
@@ -98,6 +99,7 @@ export const componentDemos: Record<ComponentSlug, DemoModule> = {
   'kbd': kbdBasic,
   'link': linkColors,
   'list': listBasic,
+  'markdown': markdownBasic,
   'popover': popoverOverview,
   'progress-bar': progressBarBasic,
   'radio': radioBasic,

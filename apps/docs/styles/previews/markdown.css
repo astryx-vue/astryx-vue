@@ -1,0 +1,25 @@
+.markdown-preview {
+  box-sizing: border-box;
+  width: min(100%, 720px);
+  min-width: 0;
+  text-align: start;
+}
+
+.markdown-preview__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.markdown-preview__hint {
+  margin: 0 0 12px;
+  color: var(--astryx-color-text-secondary, #525252);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.component-card__preview .markdown-preview {
+  width: 100%;
+  max-width: 100%;
+}

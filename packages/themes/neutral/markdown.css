@@ -1,0 +1,10 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-markdown-table-border: var(--astryx-color-border-emphasized, light-dark(#d4d4d4, #525252));
+    --astryx-markdown-table-header-background: light-dark(#f7f7f7, #262626);
+    --astryx-markdown-anchor-foreground: var(--astryx-link-accent-foreground, light-dark(#0074e2, #6d9cfe));
+  }
+}

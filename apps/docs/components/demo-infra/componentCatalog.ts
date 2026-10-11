@@ -104,6 +104,7 @@ export const COMPONENT_CATALOG = [
   { slug: 'kbd', group: 'content', en: 'Kbd', zh: '快捷键' },
   { slug: 'list', group: 'content', en: 'List', zh: '列表' },
   { slug: 'code', group: 'content', en: 'Code', zh: '代码' },
+  { slug: 'markdown', group: 'content', en: 'Markdown', zh: 'Markdown' },
   { slug: 'collapsible', group: 'content', en: 'Collapsible', zh: '折叠面板' },
 
   { slug: 'link', group: 'navigation', en: 'Link', zh: '链接' },
