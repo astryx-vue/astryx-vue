@@ -3,6 +3,7 @@ import type { SelectorOption } from '../Selector/types.js'
 import type { PaginationEmits, PaginationProps, PaginationSlots } from './types.js'
 import { computed, ref } from 'vue'
 import { usePagination } from '../composables/usePagination.js'
+import { useAstryxMessages } from '../locale/index.js'
 import Selector from '../Selector/Selector.vue'
 import '../../styles/pagination.css'
 
@@ -16,13 +17,15 @@ const props = withDefaults(defineProps<PaginationProps>(), {
   pageSizeOptions: () => [10, 20, 50, 100],
   showTotal: false,
   disabled: false,
-  prevLabel: '上一页',
-  nextLabel: '下一页',
-  pageSizeLabel: '每页',
 })
 
 const emit = defineEmits<PaginationEmits>()
 defineSlots<PaginationSlots>()
+
+const messages = useAstryxMessages()
+const resolvedPrevLabel = computed(() => props.prevLabel ?? messages.value.pagination.previous)
+const resolvedNextLabel = computed(() => props.nextLabel ?? messages.value.pagination.next)
+const resolvedPageSizeLabel = computed(() => props.pageSizeLabel ?? messages.value.pagination.perPage)
 
 const pageRef = ref(props.page)
 const pageSizeRef = ref(props.pageSize)
@@ -56,7 +59,7 @@ syncFromProps()
 const pageSizeOptions = computed<SelectorOption[]>(() => {
   return props.pageSizeOptions.map(size => ({
     value: size,
-    label: `${size} 条/页`,
+    label: messages.value.pagination.pageSize(size),
   }))
 })
 
@@ -84,31 +87,28 @@ function onPageClick(page: number): void {
     class="astryx-pagination"
     :class="{ 'is-disabled': props.disabled }"
     role="navigation"
-    aria-label="分页导航"
+    :aria-label="messages.pagination.nav"
   >
-    <!-- 总数显示 -->
     <div v-if="props.showTotal" class="astryx-pagination-total">
       <slot name="total" :total="totalRef" :from="fromIndex" :to="toIndex">
-        共 {{ totalRef }} 条，显示 {{ fromIndex }}-{{ toIndex }}
+        {{ messages.pagination.total(totalRef, fromIndex, toIndex) }}
       </slot>
     </div>
 
     <div class="astryx-pagination-content">
-      <!-- 上一页按钮 -->
       <button
         type="button"
         class="astryx-pagination-button astryx-pagination-prev"
         :disabled="props.disabled || !pagination.canPrevious.value"
-        :aria-label="props.prevLabel"
+        :aria-label="resolvedPrevLabel"
         @click="pagination.previous"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span>{{ props.prevLabel }}</span>
+        <span>{{ resolvedPrevLabel }}</span>
       </button>
 
-      <!-- 页码列表 -->
       <div class="astryx-pagination-pages">
         <button
           v-for="(page, index) in pagination.pageNumbers.value"
@@ -120,7 +120,7 @@ function onPageClick(page: number): void {
             'is-ellipsis': isEllipsis(page),
           }"
           :disabled="props.disabled || isEllipsis(page)"
-          :aria-label="isEllipsis(page) ? '更多页码' : `第 ${page} 页`"
+          :aria-label="isEllipsis(page) ? messages.pagination.more : messages.pagination.page(page)"
           :aria-current="page === pageRef ? 'page' : undefined"
           @click="onPageClick(page)"
         >
@@ -128,23 +128,21 @@ function onPageClick(page: number): void {
         </button>
       </div>
 
-      <!-- 下一页按钮 -->
       <button
         type="button"
         class="astryx-pagination-button astryx-pagination-next"
         :disabled="props.disabled || !pagination.canNext.value"
-        :aria-label="props.nextLabel"
+        :aria-label="resolvedNextLabel"
         @click="pagination.next"
       >
-        <span>{{ props.nextLabel }}</span>
+        <span>{{ resolvedNextLabel }}</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
 
-      <!-- 页面大小选择器 -->
       <div v-if="props.showSizeChanger" class="astryx-pagination-size-changer">
-        <span class="astryx-pagination-size-label">{{ props.pageSizeLabel }}</span>
+        <span class="astryx-pagination-size-label">{{ resolvedPageSizeLabel }}</span>
         <Selector
           :model-value="pageSizeRef"
           :options="pageSizeOptions"

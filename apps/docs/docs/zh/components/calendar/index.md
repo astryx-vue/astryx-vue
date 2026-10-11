@@ -18,8 +18,8 @@ import { calendarBasic, calendarRange } from '../../../../components/demos/calen
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Calendar } from '@astryx-vue/core/Calendar'
+import { ref } from 'vue'
 
 const date = ref<Date | null>(new Date(2026, 9, 11))
 </script>
@@ -29,7 +29,7 @@ const date = ref<Date | null>(new Date(2026, 9, 11))
 </template>
 ```
 
-绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。
+绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。月份标题和星期名称跟随当前语言。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
 
 ## 最佳实践
 

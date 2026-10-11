@@ -18,8 +18,8 @@ import { dateInputBasic, dateInputClearable } from '../../../../components/demos
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { DateInput } from '@astryx-vue/core/DateInput'
+import { ref } from 'vue'
 
 const date = ref(null)
 </script>
@@ -29,7 +29,7 @@ const date = ref(null)
 </template>
 ```
 
-绑定值是原生 `Date`。输入框按 `YYYY-MM-DD` 显示日期，点击后通过弹出的日历选择。
+绑定值是原生 `Date`。输入框按 `YYYY-MM-DD` 显示日期，点击后通过弹出的日历选择。占位符、清除按钮和日历里的文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
 
 ## 最佳实践
 

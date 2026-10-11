@@ -4,6 +4,11 @@
     "customConditions": [
       "source"
     ],
+    "paths": {
+      "@internationalized/date": [
+        "../../packages/core/node_modules/@internationalized/date/dist/types/src/index.d.ts"
+      ]
+    },
     "types": [
       "vite/client",
       "node"

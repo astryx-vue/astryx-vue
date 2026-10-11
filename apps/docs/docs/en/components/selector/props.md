@@ -13,7 +13,7 @@ footer: false
     <tbody>
       <tr><td><code>modelValue</code></td><td><code>string | number | null</code></td><td><code>null</code></td><td>Selected value.</td></tr>
       <tr><td><code>options</code></td><td><code>SelectorOption[]</code></td><td>Required</td><td>Options array.</td></tr>
-      <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>'Please select'</code></td><td>Placeholder text.</td></tr>
+      <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>Placeholder text. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether to support search.</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether clearable.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether disabled.</td></tr>

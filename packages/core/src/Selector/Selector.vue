@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
-import { computed, nextTick, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/selector.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -11,15 +12,11 @@ defineOptions({ name: 'AstryxSelector', inheritAttrs: false })
 
 const props = withDefaults(defineProps<SelectorProps>(), {
   modelValue: null,
-  placeholder: '请选择',
   disabled: false,
   status: 'default',
   size: 'md',
   searchable: false,
-  searchPlaceholder: '搜索...',
   clearable: false,
-  clearLabel: '清除',
-  emptyText: '无匹配项',
 })
 
 const emit = defineEmits<SelectorEmits>()
@@ -28,7 +25,12 @@ const slots = useSlots()
 
 const selectorId = `astryx-selector-${useId()}`
 const listboxId = `${selectorId}-listbox`
-const triggerRef = useTemplateRef<HTMLElement>('triggerRef')
+const messages = useAstryxMessages()
+const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
+const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.selector.search)
+const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clear)
+const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selector.empty)
+const fieldRef = useTemplateRef<HTMLElement>('fieldRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const searchInputRef = useTemplateRef<HTMLInputElement>('searchInputRef')
 
@@ -69,7 +71,7 @@ const combobox = useCombobox({
 })
 
 const { position } = usePositionedLayer({
-  anchor: triggerRef,
+  anchor: fieldRef,
   layer: listboxRef,
   isOpen: combobox.isOpen,
   placement: computed(() => 'below'),
@@ -79,7 +81,7 @@ const { position } = usePositionedLayer({
 
 useDismiss({
   container: listboxRef,
-  trigger: triggerRef,
+  trigger: fieldRef,
   isEnabled: combobox.isOpen,
   enableEscape: ref(true),
   onDismiss: () => {
@@ -94,7 +96,7 @@ const selectedOption = computed(() => {
 })
 
 const displayText = computed(() => {
-  return selectedOption.value?.label ?? props.placeholder
+  return selectedOption.value?.label ?? resolvedPlaceholder.value
 })
 
 const isEmpty = computed(() => {
@@ -133,6 +135,25 @@ function getOptionId(index: number): string {
   return `${listboxId}-option-${index}`
 }
 
+const anchorWidth = ref(0)
+
+function syncAnchorWidth(): void {
+  anchorWidth.value = fieldRef.value?.getBoundingClientRect().width ?? 0
+}
+
+const listboxStyle = computed(() => ({
+  top: `${position.value.top}px`,
+  left: `${position.value.left}px`,
+  minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
+}))
+
+watch(combobox.isOpen, (open) => {
+  if (open)
+    syncAnchorWidth()
+}, { flush: 'pre' })
+
+onMounted(syncAnchorWidth)
+
 // 只滚动列表自身，避免把页面滚到尚未定位的浮层上。
 watch(() => combobox.activeIndex.value, (index) => {
   if (index >= 0 && combobox.isOpen.value) {
@@ -154,48 +175,51 @@ watch(() => combobox.activeIndex.value, (index) => {
 
 <template>
   <div class="astryx-selector" :class="[`size-${props.size}`, `status-${props.status}`]">
-    <!-- 触发器 -->
-    <button
-      :id="selectorId"
-      ref="triggerRef"
-      type="button"
-      class="astryx-selector-trigger"
+    <div
+      ref="fieldRef"
+      class="astryx-selector-field"
       :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled }"
-      :disabled="props.disabled"
-      aria-haspopup="listbox"
-      :aria-expanded="combobox.isOpen.value"
-      :aria-controls="listboxId"
-      :aria-label="props.label"
-      :aria-activedescendant="combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
-      :title="props.disabledReason"
-      @click="onTriggerClick"
-      @keydown="onTriggerKeyDown"
     >
-      <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption }">
-        <slot v-if="slots.selected" name="selected" :option="selectedOption" />
-        <template v-else>
-          {{ displayText }}
-        </template>
-      </span>
-      <span class="astryx-selector-icon" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
+      <button
+        :id="selectorId"
+        type="button"
+        class="astryx-selector-trigger"
+        :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled }"
+        :disabled="props.disabled"
+        aria-haspopup="listbox"
+        :aria-expanded="combobox.isOpen.value"
+        :aria-controls="listboxId"
+        :aria-label="props.label"
+        :aria-activedescendant="combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
+        :title="props.disabledReason"
+        @click="onTriggerClick"
+        @keydown="onTriggerKeyDown"
+      >
+        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption }">
+          <slot v-if="slots.selected" name="selected" :option="selectedOption" />
+          <template v-else>
+            {{ displayText }}
+          </template>
+        </span>
+        <span class="astryx-selector-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </button>
       <button
         v-if="props.clearable && selectedOption"
         type="button"
         class="astryx-selector-clear"
-        :aria-label="props.clearLabel"
+        :aria-label="resolvedClearLabel"
         @click="onClear"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
       </button>
-    </button>
+    </div>
 
-    <!-- 下拉列表 -->
     <Teleport to="body">
       <div
         v-show="combobox.isOpen.value"
@@ -204,28 +228,22 @@ watch(() => combobox.activeIndex.value, (index) => {
         role="listbox"
         class="astryx-selector-listbox"
         :data-placement="position.placement"
-        :style="{
-          top: `${position.top}px`,
-          left: `${position.left}px`,
-          minWidth: triggerRef?.offsetWidth ? `${triggerRef.offsetWidth}px` : undefined,
-        }"
+        :style="listboxStyle"
         tabindex="-1"
       >
-        <!-- 搜索框 -->
         <div v-if="props.searchable" class="astryx-selector-search">
           <input
             :id="`${selectorId}-search`"
             ref="searchInputRef"
             type="text"
             class="astryx-selector-search-input"
-            :aria-label="props.searchPlaceholder"
-            :placeholder="props.searchPlaceholder"
+            :aria-label="resolvedSearchPlaceholder"
+            :placeholder="resolvedSearchPlaceholder"
             :value="combobox.searchQuery.value"
             @input="onSearchInput"
           >
         </div>
 
-        <!-- 选项列表 -->
         <div v-if="!isEmpty" class="astryx-selector-options">
           <div
             v-for="(option, index) in combobox.filteredOptions.value"
@@ -255,23 +273,21 @@ watch(() => combobox.activeIndex.value, (index) => {
           </div>
         </div>
 
-        <!-- 空状态 -->
         <div v-else class="astryx-selector-empty">
           <slot v-if="slots.empty" name="empty" />
           <template v-else>
-            {{ props.emptyText }}
+            {{ resolvedEmptyText }}
           </template>
         </div>
       </div>
     </Teleport>
 
-    <!-- 隐藏的原生 select（用于表单提交） -->
     <select
       v-if="props.name"
       :id="`${selectorId}-hidden-select`"
       :name="props.name"
       :value="props.modelValue ?? ''"
-      :aria-label="props.label || props.placeholder"
+      :aria-label="props.label || resolvedPlaceholder"
       tabindex="-1"
       style="position: absolute; left: -9999px; width: 1px; height: 1px;"
     >

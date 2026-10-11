@@ -199,7 +199,9 @@ describe('selector', () => {
     })
 
     const clearButton = wrapper.find('.astryx-selector-clear')
+    const trigger = wrapper.find('.astryx-selector-trigger')
     expect(clearButton.exists()).toBe(true)
+    expect(trigger.element.contains(clearButton.element)).toBe(false)
 
     await clearButton.trigger('click')
     await flushPromises()
@@ -283,6 +285,11 @@ describe('selector', () => {
     })
 
     expect(wrapper.find('.astryx-selector').classes()).toContain('status-error')
+  })
+
+  it('uses English text unless a locale is provided', () => {
+    const wrapper = mount(Selector, { props: { options } })
+    expect(wrapper.get('.astryx-selector-value').text()).toBe('Select…')
   })
 
   it('includes hidden select for form submission', () => {

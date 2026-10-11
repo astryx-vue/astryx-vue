@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { DateInput } from '@astryx-vue/core/DateInput'
+import { ref } from 'vue'
+import { useDemoText } from '../../demo-infra/useDemoText'
 
 const date = ref<Date | null>(null)
+const { pick } = useDemoText()
+
+function formatSelected(value: Date): string {
+  const month = String(value.getMonth() + 1).padStart(2, '0')
+  const day = String(value.getDate()).padStart(2, '0')
+  return `${value.getFullYear()}-${month}-${day}`
+}
 </script>
 
 <template>
   <div class="demo-container">
-    <DateInput v-model="date" label="出发日期" placeholder="选择日期" />
+    <DateInput v-model="date" :label="pick('出发日期', 'Departure date')" />
     <p class="demo-result">
-      选中的日期：{{ date ? date.toLocaleDateString('zh-CN') : '未选择' }}
+      {{ pick('选中的日期：', 'Selected: ') }}{{ date ? formatSelected(date) : pick('未选择', 'none') }}
     </p>
   </div>
 </template>
@@ -19,7 +27,7 @@ const date = ref<Date | null>(null)
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 20rem;
+  width: min(100%, 20rem);
 }
 .demo-result {
   font-size: 0.875rem;

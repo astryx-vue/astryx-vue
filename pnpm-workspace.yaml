@@ -10,6 +10,10 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+allowBuilds:
+  esbuild: true
+  workerd: true
+
 catalogs:
   build:
     '@vitejs/plugin-vue': 6.0.9
@@ -53,7 +57,3 @@ catalogs:
     '@vue/server-renderer': 3.5.43
     vue: 3.5.43
     vue-tsc: 3.3.12
-
-allowBuilds:
-  esbuild: true
-  workerd: true

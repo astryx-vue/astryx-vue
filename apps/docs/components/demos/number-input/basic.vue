@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { NumberInput } from '@astryx-vue/core/NumberInput'
+import { ref } from 'vue'
+import { useDemoText } from '../../demo-infra/useDemoText'
 
 const count = ref(5)
+const { pick } = useDemoText()
 </script>
 
 <template>
   <div class="demo-container">
     <NumberInput v-model="count" :min="0" :max="100" />
     <p class="demo-result">
-      当前值：{{ count }}
+      {{ pick('当前值：', 'Current value: ') }}{{ count }}
     </p>
   </div>
 </template>
@@ -19,7 +21,7 @@ const count = ref(5)
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 20rem;
+  width: min(100%, 20rem);
 }
 .demo-result {
   font-size: 0.875rem;

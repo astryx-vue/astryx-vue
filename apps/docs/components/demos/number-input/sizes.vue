@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { NumberInput } from '@astryx-vue/core/NumberInput'
+import { ref } from 'vue'
 
 const value = ref(10)
 </script>
@@ -18,6 +18,6 @@ const value = ref(10)
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 20rem;
+  width: min(100%, 20rem);
 }
 </style>

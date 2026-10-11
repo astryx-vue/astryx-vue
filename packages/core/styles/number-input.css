@@ -62,7 +62,8 @@
     display: flex;
     flex-direction: column;
     flex: none;
-    width: var(--astryx-spacing-4, 16px);
+    /* Wider than the corner radius, so the sm chevron is not clipped. */
+    width: max(1.75rem, calc(var(--astryx-radius-element, 0.625rem) + 1.125rem));
     border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
   }
 
@@ -76,6 +77,15 @@
     background: var(--astryx-input-background, #fff);
     color: var(--astryx-color-text-secondary, #525252);
     cursor: pointer;
+  }
+
+  .astryx-number-input-chevron {
+    display: block;
+    flex: none;
+  }
+
+  .astryx-number-input-button.increment .astryx-number-input-chevron {
+    transform: rotate(180deg);
   }
 
   .astryx-number-input-button.decrement {

@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { NumberInput } from '@astryx-vue/core/NumberInput'
+import { ref } from 'vue'
+import { useDemoText } from '../../demo-infra/useDemoText'
 
 const price = ref(9.5)
+const { pick } = useDemoText()
 </script>
 
 <template>
   <div class="demo-container">
-    <NumberInput v-model="price" label="价格" :min="0" :max="20" :step="0.5" />
+    <NumberInput v-model="price" :label="pick('价格', 'Price')" :min="0" :max="20" :step="0.5" />
     <p class="demo-result">
-      当前价格：{{ price }}
+      {{ pick('当前价格：', 'Current price: ') }}{{ price }}
     </p>
   </div>
 </template>
@@ -19,7 +21,7 @@ const price = ref(9.5)
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 16rem;
+  width: min(100%, 16rem);
 }
 .demo-result {
   font-size: 0.875rem;
