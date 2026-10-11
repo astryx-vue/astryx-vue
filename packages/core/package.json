@@ -6,12 +6,12 @@
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://astryx-vue.pages.dev",
-  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/astryx-vue/astryx-vue.git",
     "directory": "packages/core"
   },
+  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
   "keywords": [
     "vue",
     "vue3",

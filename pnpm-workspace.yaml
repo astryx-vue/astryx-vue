@@ -44,7 +44,7 @@ catalogs:
     globals: 17.13.0
 
   peer:
-    vue: '^3.5.0'
+    vue: ^3.5.0
   release:
     '@arethetypeswrong/cli': 0.18.5
     '@changesets/changelog-github': 1.0.1
