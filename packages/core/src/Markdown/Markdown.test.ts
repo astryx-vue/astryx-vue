@@ -230,6 +230,21 @@ describe('markdown', () => {
     expect(plain[0]?.attributes('style')).toContain('min-width')
   })
 
+  it('turns a known source id into a citation chip and leaves unknown brackets as text', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: 'See Tokyo[abc1] and a literal [not-a-source].',
+        sources: {
+          abc1: { title: 'Tokyo - Wikipedia', url: 'https://en.wikipedia.org/wiki/Tokyo' },
+        },
+      },
+    })
+    const chip = wrapper.get('.astryx-markdown__cite')
+    expect(chip.text()).toBe('Tokyo - Wikipedia')
+    expect(chip.attributes('href')).toBe('https://en.wikipedia.org/wiki/Tokyo')
+    expect(wrapper.text()).toContain('[not-a-source]')
+  })
+
   it('cycles list markers by nesting depth and keeps an ordered start', () => {
     const wrapper = mount(Markdown, {
       props: {
@@ -244,9 +259,11 @@ describe('markdown', () => {
     })
     const lists = wrapper.findAll('.astryx-markdown__list')
     expect(lists.map(list => list.attributes('data-depth'))).toEqual(['0', '1', '2', '0'])
+    expect(lists.map(list => list.attributes('data-marker'))).toEqual(['disc', 'lower-alpha', 'square', 'decimal'])
     expect(lists[1]?.element.tagName).toBe('OL')
     expect(lists[3]?.attributes('start')).toBe('26')
-    expect(wrapper.findAll('.astryx-markdown__marker')).toHaveLength(0)
+    expect(lists[3]?.attributes('style')).toContain('astryx-md-list 25')
+    expect(wrapper.findAll('.astryx-markdown__marker-shape').map(shape => shape.attributes('data-shape'))).toEqual(['disc', 'square'])
     expect(wrapper.findAll('.astryx-markdown__item').every(item => item.element.tagName === 'LI')).toBe(true)
   })
 

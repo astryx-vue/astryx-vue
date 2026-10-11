@@ -33,6 +33,9 @@ export interface RenderContext {
   messages: MarkdownMessages
   onLinkClick?: (href: string, event: MouseEvent) => void | false
   slugs: Map<MdNode, string>
+  sources?: Record<string, { title?: string, url?: string, icon?: string }>
+  /** First-seen order of citation ids, so chips number stably in one render. */
+  citationOrder: Map<string, number>
 }
 
 export function measureNode(node: MdNode): number {
@@ -90,7 +93,7 @@ function headingLevel(depth: number, start: number): MarkdownHeadingLevel {
   return Math.min(6, Math.max(1, depth + start - 1)) as MarkdownHeadingLevel
 }
 
-function renderText(value: string, key: string, fade: FadeCursor): VNodeChild {
+function renderPlainText(value: string, key: string, fade: FadeCursor): VNodeChild {
   const start = fade.offset
   fade.offset += value.length
   if (!fade.active)
@@ -102,6 +105,67 @@ function renderText(value: string, key: string, fade: FadeCursor): VNodeChild {
     key: segment.key,
     class: segment.fading ? 'astryx-markdown__fade' : undefined,
   }, segment.text)))
+}
+
+function renderText(value: string, key: string, ctx: RenderContext): VNodeChild {
+  const sources = ctx.sources
+  if (sources == null)
+    return renderPlainText(value, key, ctx.fade)
+  const pattern = /\[([^\]\s]+)\]|【([^】\s]+)】/g
+  const pieces: Array<{ kind: 'text', value: string } | { kind: 'cite', id: string, raw: string }> = []
+  let cursor = 0
+  for (const match of value.matchAll(pattern)) {
+    const id = match[1] ?? match[2] ?? ''
+    const index = match.index ?? 0
+    if (sources[id] == null)
+      continue
+    if (index > cursor)
+      pieces.push({ kind: 'text', value: value.slice(cursor, index) })
+    pieces.push({ kind: 'cite', id, raw: match[0] })
+    cursor = index + match[0].length
+  }
+  if (pieces.length === 0)
+    return renderPlainText(value, key, ctx.fade)
+  if (cursor < value.length)
+    pieces.push({ kind: 'text', value: value.slice(cursor) })
+  return pieces.map((piece, index) => {
+    if (piece.kind === 'text')
+      return renderPlainText(piece.value, `${key}-${index}`, ctx.fade)
+    const start = ctx.fade.offset
+    ctx.fade.offset += piece.raw.length
+    return renderCitation(piece.id, `${key}-${index}`, start, ctx)
+  })
+}
+
+function renderCitation(id: string, key: string, start: number, ctx: RenderContext): VNode {
+  const source = ctx.sources?.[id]
+  let number = ctx.citationOrder.get(id)
+  if (number == null) {
+    number = ctx.citationOrder.size + 1
+    ctx.citationOrder.set(id, number)
+  }
+  const title = source?.title?.trim() || id
+  const href = source?.url == null ? null : sanitizeMarkdownLinkUrl(source.url)
+  const icon = source?.icon == null ? null : sanitizeMarkdownImageUrl(source.icon)
+  const label = h('span', { class: 'astryx-markdown__cite-label' }, title)
+  const iconNode = icon == null
+    ? null
+    : h('span', { class: 'astryx-markdown__cite-icon' }, [
+        h('img', { alt: '', src: icon }),
+      ])
+  const className = ['astryx-markdown__cite', fadeClass(start, ctx.fade), iconNode == null ? null : 'astryx-markdown__cite--icon']
+  const children = iconNode == null ? [label] : [iconNode, label]
+  if (href == null)
+    return h('span', { key, 'class': className, 'data-citation': String(number), title }, children)
+  return h('a', {
+    key,
+    'class': className,
+    'data-citation': String(number),
+    href,
+    'rel': linkOpensInNewTab(href) ? 'noopener noreferrer' : undefined,
+    'target': linkOpensInNewTab(href) ? '_blank' : undefined,
+    title,
+  }, children)
 }
 
 function fadeClass(start: number, fade: FadeCursor): string | undefined {
@@ -140,9 +204,9 @@ function renderLink(href: string, key: string, children: VNodeChild[], title: st
 function renderInline(node: MdNode, key: string, ctx: RenderContext): VNodeChild | null {
   switch (node.type) {
     case 'text':
-      return renderText(node.value ?? '', key, ctx.fade)
+      return renderText(node.value ?? '', key, ctx)
     case 'html':
-      return renderText(node.value ?? '', key, ctx.fade)
+      return renderText(node.value ?? '', key, ctx)
     case 'emphasis':
       return h('em', { key }, renderChildren(node.children, key, ctx))
     case 'strong':
@@ -194,7 +258,7 @@ function renderInline(node: MdNode, key: string, ctx: RenderContext): VNodeChild
     case 'footnoteReference': {
       const label = node.label ?? node.identifier ?? ''
       const id = node.identifier ?? label
-      const labelNode = renderText(label, `${key}-label`, ctx.fade)
+      const labelNode = renderText(label, `${key}-label`, ctx)
       return h('sup', { key, class: 'astryx-markdown__fn' }, [
         h(Link, { href: `#astryx-fn-${id}` }, () => labelNode),
       ])
@@ -239,12 +303,17 @@ function columnMinCh(node: MdNode): number[] {
   })
 }
 
+const BULLET_MARKERS = ['disc', 'circle', 'square'] as const
+const NUMBER_MARKERS = ['decimal', 'lower-alpha', 'lower-roman'] as const
+type ListMarker = typeof BULLET_MARKERS[number] | typeof NUMBER_MARKERS[number]
+
 function renderList(node: MdNode, key: string, ctx: RenderContext): VNode {
   const items = node.children ?? []
   const taskList = items.length > 0 && items.every(isTaskItem)
   const ordered = node.ordered === true && !taskList
   const nested: RenderContext = { ...ctx, listDepth: ctx.listDepth + 1 }
-  const renderedItems = items.map((item, index) => renderListItem(item, `${key}-item-${index}`, taskList, nested))
+  const marker = (ordered ? NUMBER_MARKERS : BULLET_MARKERS)[ctx.listDepth % 3] ?? 'disc'
+  const renderedItems = items.map((item, index) => renderListItem(item, `${key}-item-${index}`, taskList, marker, nested))
   const override = ctx.components?.list
   const start = ordered && node.start != null && node.start !== 1 ? node.start : undefined
   if (override != null) {
@@ -257,18 +326,44 @@ function renderList(node: MdNode, key: string, ctx: RenderContext): VNode {
 
   return h(ordered ? 'ol' : 'ul', {
     key,
+    'role': 'list',
     'class': ['astryx-markdown__list', 'astryx-markdown__prose', taskList ? 'astryx-markdown__tasks' : null],
     'data-depth': taskList ? undefined : ctx.listDepth % 3,
+    'data-marker': taskList ? undefined : marker,
     'data-tight': node.spread === false || undefined,
     'start': start,
+    'style': start == null ? undefined : { counterReset: `astryx-md-list ${start - 1}` },
     'aria-label': taskList ? ctx.messages.taskList : undefined,
   }, renderedItems)
 }
 
-function renderListItem(node: MdNode, key: string, taskList: boolean, ctx: RenderContext): VNode {
-  const children = (node.children ?? []).map((child, index) => renderBlock(child, `${key}-${index}`, ctx)).filter(child => child != null)
-  if (!taskList && !isTaskItem(node))
-    return h('li', { key, class: 'astryx-markdown__item' }, children)
+function renderMarker(marker: ListMarker): VNode {
+  const numbered = marker === 'decimal' || marker === 'lower-alpha' || marker === 'lower-roman'
+  return h('span', {
+    'class': 'astryx-markdown__marker',
+    'data-marker': marker,
+    'aria-hidden': 'true',
+  }, numbered
+    ? undefined
+    : [h('span', { 'class': 'astryx-markdown__marker-shape', 'data-shape': marker })])
+}
+
+function renderItemBody(node: MdNode, key: string, ctx: RenderContext): VNodeChild[] {
+  const children = node.children ?? []
+  const onlyParagraph = children.length === 1 && children[0]?.type === 'paragraph'
+  if (onlyParagraph)
+    return renderChildren(children[0]?.children, `${key}-label`, ctx)
+  return children.map((child, index) => renderBlock(child, `${key}-${index}`, ctx)).filter(child => child != null)
+}
+
+function renderListItem(node: MdNode, key: string, taskList: boolean, marker: ListMarker, ctx: RenderContext): VNode {
+  const body = renderItemBody(node, key, ctx)
+  if (!taskList && !isTaskItem(node)) {
+    return h('li', { key, class: 'astryx-markdown__item' }, [
+      renderMarker(marker),
+      h('div', { class: 'astryx-markdown__item-body' }, body),
+    ])
+  }
 
   const checked = node.checked === true
   return h('li', { key, class: 'astryx-markdown__task' }, [
@@ -276,7 +371,7 @@ function renderListItem(node: MdNode, key: string, taskList: boolean, ctx: Rende
       h(CheckboxIndicator, { state: checked ? 'checked' : 'unchecked', size: 'sm' }),
       h(VisuallyHidden, () => checked ? ctx.messages.taskDone : ctx.messages.taskPending),
     ]),
-    h('div', { class: 'astryx-markdown__task-body' }, children),
+    h('div', { class: 'astryx-markdown__task-body' }, body),
   ])
 }
 

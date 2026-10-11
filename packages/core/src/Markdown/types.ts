@@ -51,6 +51,15 @@ export interface MarkdownComponents {
   table?: Component
 }
 
+export interface MarkdownSource {
+  title?: string
+  url?: string
+  /**
+   * Favicon or logo URL, drawn in a round slot before the label.
+   */
+  icon?: string
+}
+
 export interface MarkdownProps {
   /**
    * Horizontal alignment of the prose measure when `contentWidth` is set.
@@ -98,6 +107,11 @@ export interface MarkdownProps {
    * Called when a link is activated. Return `false` to cancel navigation.
    */
   onLinkClick?: (href: string, event: MouseEvent) => void | false
+  /**
+   * Citation sources keyed by id. `[id]` and `【id】` that match a key render
+   * as a label chip instead of literal text.
+   */
+  sources?: Record<string, MarkdownSource>
 }
 
 export interface MarkdownSlots {

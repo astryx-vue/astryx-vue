@@ -180,10 +180,13 @@
   }
 
   .astryx-markdown :is(ul, ol).astryx-markdown__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
     margin-block: var(--astryx-spacing-3, 12px);
-    margin-inline: 0;
-    padding-inline-start: 1.5em;
-    list-style-position: outside;
+    margin-inline: calc(-1 * var(--astryx-spacing-2, 8px));
+    padding: 0;
+    list-style: none;
   }
 
   .astryx-markdown > :is(:first-child).astryx-markdown__list {
@@ -194,72 +197,153 @@
     margin-block-end: 0;
   }
 
-  .astryx-markdown ul.astryx-markdown__list[data-depth='0'] {
-    list-style-type: disc;
+  .astryx-markdown ol.astryx-markdown__list {
+    counter-reset: astryx-md-list;
   }
 
-  .astryx-markdown ul.astryx-markdown__list[data-depth='1'] {
-    list-style-type: circle;
+  .astryx-markdown ol.astryx-markdown__list > .astryx-markdown__item {
+    counter-increment: astryx-md-list;
   }
 
-  .astryx-markdown ul.astryx-markdown__list[data-depth='2'] {
-    list-style-type: square;
-  }
-
-  .astryx-markdown ol.astryx-markdown__list[data-depth='0'] {
-    list-style-type: decimal;
-  }
-
-  .astryx-markdown ol.astryx-markdown__list[data-depth='1'] {
-    list-style-type: lower-alpha;
-  }
-
-  .astryx-markdown ol.astryx-markdown__list[data-depth='2'] {
-    list-style-type: lower-roman;
-  }
-
-  .astryx-markdown .astryx-markdown__list .astryx-markdown__list {
-    margin-block: var(--astryx-spacing-1, 4px);
-  }
-
-  .astryx-markdown__item {
-    display: list-item;
+  .astryx-markdown__item,
+  .astryx-markdown__task {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
     margin: 0;
-    padding: 0;
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    list-style: none;
+  }
+
+  .astryx-markdown__marker {
+    box-sizing: border-box;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    align-self: baseline;
+    width: var(--astryx-spacing-4, 16px);
+    margin-top: calc((1em * var(--astryx-text-body-leading, 1.4286) - 6px) / 2);
+    color: var(--astryx-color-text-primary, #171717);
+  }
+
+  .astryx-markdown__marker[data-marker='decimal'],
+  .astryx-markdown__marker[data-marker='lower-alpha'],
+  .astryx-markdown__marker[data-marker='lower-roman'] {
+    justify-content: flex-start;
+    margin-top: 0;
+    color: var(--astryx-color-text-primary, #171717);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    white-space: nowrap;
+  }
+
+  .astryx-markdown__marker[data-marker='decimal']::before {
+    content: counter(astryx-md-list) '.';
+  }
+
+  .astryx-markdown__marker[data-marker='lower-alpha']::before {
+    content: counter(astryx-md-list, lower-alpha) '.';
+  }
+
+  .astryx-markdown__marker[data-marker='lower-roman']::before {
+    content: counter(astryx-md-list, lower-roman) '.';
+  }
+
+  .astryx-markdown__marker-shape {
+    box-sizing: border-box;
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+  }
+
+  .astryx-markdown__marker-shape[data-shape='disc'] {
+    border-radius: 50%;
+  }
+
+  .astryx-markdown__marker-shape[data-shape='circle'] {
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    background: transparent;
+  }
+
+  .astryx-markdown__marker-shape[data-shape='square'] {
+    border-radius: 0;
+  }
+
+  .astryx-markdown__item-body,
+  .astryx-markdown__task-body {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .astryx-markdown__item-body > .astryx-markdown__paragraph,
+  .astryx-markdown__task-body > .astryx-markdown__paragraph {
+    margin: 0;
   }
 
   .astryx-markdown__list[data-tight] .astryx-markdown__paragraph {
     margin-block: 0;
   }
 
-  .astryx-markdown__tasks {
-    list-style-type: none;
-    list-style-position: outside;
-    padding-inline-start: 0;
-    margin-inline: 0;
-  }
-
-  .astryx-markdown__task {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--astryx-spacing-2, 8px);
-    margin-block: var(--astryx-spacing-1, 4px);
-  }
-
   .astryx-markdown__task-check {
-    display: inline-flex;
+    display: flex;
     flex: none;
-    margin-block-start: 0.15em;
+    align-self: flex-start;
+    margin-top: calc((1em * var(--astryx-text-body-leading, 1.4286) - 20px) / 2);
     pointer-events: none;
   }
 
-  .astryx-markdown__task-body {
-    min-width: 0;
-    flex: 1;
+  .astryx-markdown__cite {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    max-width: 15em;
+    height: var(--astryx-spacing-5, 20px);
+    margin-inline-start: var(--astryx-spacing-0-5, 2px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    overflow: hidden;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-text-supporting-weight, 400);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    text-decoration: none;
+    vertical-align: baseline;
   }
 
-  .astryx-markdown__task-body > .astryx-markdown__paragraph {
+  .astryx-markdown__cite--icon {
+    padding-inline-start: var(--astryx-spacing-0-5, 2px);
+  }
+
+  .astryx-markdown__cite-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--astryx-spacing-4, 16px);
+    height: var(--astryx-spacing-4, 16px);
+    overflow: hidden;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+    border-radius: var(--astryx-radius-full, 999px);
+    background: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-markdown__cite-icon img {
+    width: var(--astryx-spacing-3, 12px);
+    height: var(--astryx-spacing-3, 12px);
     margin: 0;
+    border-radius: 0;
+  }
+
+  .astryx-markdown__cite-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .astryx-markdown__table-wrap {

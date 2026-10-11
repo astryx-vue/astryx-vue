@@ -27,15 +27,22 @@
   max-width: 100%;
 }
 
+.markdown-example {
+  box-sizing: border-box;
+  width: min(100%, 450px);
+  margin-inline: auto;
+  text-align: start;
+}
+
 .markdown-overview {
   box-sizing: border-box;
-  width: 20rem;
+  width: 400px;
   max-width: 100%;
   text-align: start;
 }
 
 .component-card__preview .markdown-overview {
-  width: 20rem;
+  width: 400px;
   max-width: 100%;
 }
 

@@ -1755,17 +1755,18 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /*
- * Lists stay out of `all: revert-layer`. That shorthand also drops list-style,
- * and VitePress `.vp-doc ul` (list-style, margin, padding) is unlayered, so a
- * layered component rule cannot put the marker back. These rules are unlayered
- * and more specific, and they repeat the marker, position, padding, and margin
- * the component already sets.
+ * Lists stay out of `all: revert-layer`. VitePress `.vp-doc ul` is unlayered,
+ * so a layered component rule cannot keep `list-style: none` or the 6px marker
+ * column. These rules repeat the component's own marker, gap, padding, and margin.
  */
 .vp-doc .astryx-markdown :is(ul, ol).astryx-markdown__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--astryx-spacing-0-5, 2px);
   margin-block: var(--astryx-spacing-3, 12px);
-  margin-inline: 0;
-  padding-inline-start: 1.5em;
-  list-style-position: outside;
+  margin-inline: calc(-1 * var(--astryx-spacing-2, 8px));
+  padding: 0;
+  list-style: none;
 }
 
 .vp-doc .astryx-markdown[data-density='compact'] :is(ul, ol).astryx-markdown__list {
@@ -1780,51 +1781,49 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   margin-block-end: 0;
 }
 
-.vp-doc .astryx-markdown ul.astryx-markdown__list[data-depth='0'] {
-  list-style-type: disc;
-}
-
-.vp-doc .astryx-markdown ul.astryx-markdown__list[data-depth='1'] {
-  list-style-type: circle;
-}
-
-.vp-doc .astryx-markdown ul.astryx-markdown__list[data-depth='2'] {
-  list-style-type: square;
-}
-
-.vp-doc .astryx-markdown ol.astryx-markdown__list[data-depth='0'] {
-  list-style-type: decimal;
-}
-
-.vp-doc .astryx-markdown ol.astryx-markdown__list[data-depth='1'] {
-  list-style-type: lower-alpha;
-}
-
-.vp-doc .astryx-markdown ol.astryx-markdown__list[data-depth='2'] {
-  list-style-type: lower-roman;
-}
-
-.vp-doc .astryx-markdown .astryx-markdown__list .astryx-markdown__list {
-  margin-block: var(--astryx-spacing-1, 4px);
-}
-
-.vp-doc .astryx-markdown li.astryx-markdown__item {
-  display: list-item;
-  margin: 0;
-  padding: 0;
-}
-
-.vp-doc .astryx-markdown ul.astryx-markdown__tasks {
-  list-style-type: none;
-  padding-inline-start: 0;
-  margin-inline: 0;
-}
-
-.vp-doc .astryx-markdown li.astryx-markdown__task {
+.vp-doc .astryx-markdown :is(li.astryx-markdown__item, li.astryx-markdown__task) {
   display: flex;
+  align-items: center;
+  gap: var(--astryx-spacing-2, 8px);
   margin: 0;
-  padding: 0;
-  list-style-type: none;
+  padding-block: var(--astryx-spacing-1, 4px);
+  padding-inline: var(--astryx-spacing-2, 8px);
+  list-style: none;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  align-self: baseline;
+  width: var(--astryx-spacing-4, 16px);
+  margin-top: calc((1em * var(--astryx-text-body-leading, 1.4286) - 6px) / 2);
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='disc'],
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
+  border-radius: 50%;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
+  border: 1px solid currentColor;
+  background: transparent;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__task-check {
+  display: flex;
+  flex: none;
+  align-self: flex-start;
+  width: 20px;
+  height: 20px;
 }
 
 .vp-doc .astryx-markdown blockquote.astryx-blockquote {
@@ -1891,6 +1890,18 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   color: light-dark(#1b1b1b, #f1f1f1);
   font-weight: var(--astryx-font-weight-normal, 400);
   text-decoration-line: underline;
+}
+
+.vp-doc .astryx-markdown a.astryx-markdown__cite {
+  color: var(--astryx-color-text-secondary, #525252);
+  font-weight: var(--astryx-text-supporting-weight, 400);
+  text-decoration: none;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__cite img {
+  width: var(--astryx-spacing-3, 12px);
+  height: var(--astryx-spacing-3, 12px);
+  margin: 0;
 }
 
 /*

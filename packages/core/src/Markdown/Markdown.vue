@@ -33,6 +33,7 @@ export default defineComponent({
     headingLevelStart: { type: Number as PropType<MarkdownProps['headingLevelStart']>, default: 1 },
     isStreaming: { type: Boolean, default: false },
     onLinkClick: { type: Function as PropType<MarkdownProps['onLinkClick']>, default: undefined },
+    sources: { type: Object as PropType<MarkdownProps['sources']>, default: undefined },
   },
   setup(props, { attrs, slots, expose }) {
     const root = ref<HTMLElement | null>(null)
@@ -89,6 +90,8 @@ export default defineComponent({
         messages: messages.value.markdown,
         onLinkClick: props.onLinkClick,
         slugs: assignHeadingSlugs(blocks),
+        sources: props.sources,
+        citationOrder: new Map(),
       }
       const children = renderMarkdownBlocks(blocks, inline ? 0 : parsed.settledCount, ctx, cache)
       previousLength = ctx.fade.offset

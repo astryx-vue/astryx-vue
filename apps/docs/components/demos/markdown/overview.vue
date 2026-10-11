@@ -2,12 +2,17 @@
 import { Markdown } from '@astryx-vue/core/Markdown'
 
 const content = [
-  '## Release notes',
+  '# Markdown Demo',
   '',
-  'A paragraph can hold **emphasis**, `code`, and a [link](https://example.com).',
+  'Renders **markdown** with *design-system-consistent* styling.',
   '',
-  '- Settled blocks stay put',
-  '- New text fades in',
+  '## Features',
+  '',
+  '- Headings mapped to the Astryx type scale',
+  '- **Bold**, *italic*, and ~~strikethrough~~ text',
+  '- [Links](https://example.com) with external detection',
+  '',
+  '> Block quote indented text',
 ].join('\n')
 </script>
 
