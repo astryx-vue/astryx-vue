@@ -13,7 +13,6 @@
     "@astryx-vue/core": "workspace:^",
     "@astryx-vue/themes": "workspace:^",
     "@fontsource/figtree": "catalog:docs",
-    "@fontsource/fira-code": "catalog:docs",
     "vue": "catalog:vue"
   },
   "devDependencies": {

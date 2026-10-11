@@ -32,6 +32,8 @@ pnpm add @astryx-vue/core @astryx-vue/themes
 import '@astryx-vue/themes/neutral.css'
 ```
 
+等宽字体栈是 JetBrains Mono。引入 Neutral 主题时会一并加载 400、500、600、700 和 400 斜体。
+
 然后在组件中使用：
 
 ```vue
