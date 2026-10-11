@@ -786,7 +786,8 @@ html.dark .component-card__preview {
   padding-inline: 7px;
 }
 
-html:not(.dark) .component-detail__body :not(pre) > code {
+/* CodeBlock 的 code 包在 pre 里的 div 中，不能套用文档行内代码的绿色。 */
+html:not(.dark) .component-detail__body :not(pre) > code:not(.astryx-code-block__code) {
   color: #0f5f3b;
 }
 
