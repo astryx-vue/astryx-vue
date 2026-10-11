@@ -141,6 +141,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISHED_PACKAGES: ${{ steps.backfill.outputs.packages }}
           REPO_VISIBILITY: ${{ github.event.repository.visibility }}
+          # 补齐的版本不是这个 workflow 发的（例如首发在本机手动发布），不会带 provenance。
+          REQUIRE_PROVENANCE: 'false'
         run: node ./scripts/after-publish.mjs
 
   github-packages:
