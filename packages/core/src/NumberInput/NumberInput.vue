@@ -2,7 +2,6 @@
 import type { NumberInputEmits, NumberInputProps } from './types.js'
 import { computed, ref, useId } from 'vue'
 import { useNumberField } from '../composables/useNumberField.js'
-import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/number-input.css'
 
@@ -99,7 +98,9 @@ syncDisplayValue()
         tabindex="-1"
         @click="numberField.increment"
       >
-        <Icon icon="chevronDown" size="xsm" />
+        <svg class="astryx-number-input-chevron" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" fill="none">
+          <path d="M1.5 1.75 6 6.25 10.5 1.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
       </button>
       <button
         type="button"
@@ -109,7 +110,9 @@ syncDisplayValue()
         tabindex="-1"
         @click="numberField.decrement"
       >
-        <Icon icon="chevronDown" size="xsm" />
+        <svg class="astryx-number-input-chevron" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" fill="none">
+          <path d="M1.5 1.75 6 6.25 10.5 1.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
       </button>
     </div>
 
