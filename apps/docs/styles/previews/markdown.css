@@ -1,7 +1,10 @@
 .markdown-preview {
   box-sizing: border-box;
-  width: min(100%, 720px);
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
+  justify-self: stretch;
+  align-self: start;
   text-align: start;
 }
 

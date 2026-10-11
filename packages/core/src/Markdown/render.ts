@@ -320,11 +320,12 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       const align = node.align ?? []
       const renderRow = (row: MdNode, rowKey: string, cellTag: 'th' | 'td'): VNode => h('tr', { key: rowKey }, (row.children ?? []).map((cell, index) => {
         const alignment = align[index]
+        const marked = alignment === 'center' || alignment === 'right' ? alignment : undefined
         return h(cellTag, {
           'key': `${rowKey}-${index}`,
           'class': 'astryx-markdown__cell',
           'scope': cellTag === 'th' ? 'col' : undefined,
-          'data-align': alignment ?? undefined,
+          'data-align': marked,
         }, renderChildren(cell.children, `${rowKey}-${index}`, ctx))
       }))
       const content = [

@@ -18,7 +18,7 @@ footer: false
       <tr><td><code>density</code></td><td><code>'default' | 'compact'</code></td><td><code>'default'</code></td><td><code>compact</code> 收紧块与块之间的间距。</td></tr>
       <tr><td><code>display</code></td><td><code>'block' | 'inline'</code></td><td><code>'block'</code></td><td><code>inline</code> 把源码当成短语，渲染在 <code>span</code> 里。</td></tr>
       <tr><td><code>headingLevelStart</code></td><td><code>1 | 2 | 3 | 4 | 5 | 6</code></td><td><code>1</code></td><td>Markdown 里的 <code>#</code> 对应的标题级别。更深的标题一起后移，到 <code>h6</code> 为止。</td></tr>
-      <tr><td><code>isStreaming</code></td><td><code>boolean</code></td><td><code>false</code></td><td>平滑揭示追加的文本，并且只重新解析最后一个未完成的块。</td></tr>
+      <tr><td><code>isStreaming</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只重新解析最后一个未完成的块，并为新文字播放淡入。不做逐字平滑。逐字揭示请先用 <code>useStreamingText</code>，再把结果传给 <code>content</code>。</td></tr>
       <tr><td><code>onLinkClick</code></td><td><code>(href: string, event: MouseEvent) =&gt; void | false</code></td><td>—</td><td>链接被点击时调用。返回 <code>false</code> 会取消跳转。</td></tr>
     </tbody>
   </table>
@@ -49,6 +49,8 @@ footer: false
 ## 组合式函数
 
 `useStreamingText(targetText, isStreaming?, options?)` 把一段不断变长的文本平滑成稳定的揭示。`options.speed` 可以是 `natural`、`fast` 或 `instant`。未在流式输出，或用户偏好减少动态效果时，直接返回全文。
+
+字符级平滑只放在这一层。把返回值交给 `Markdown` 的 `content`，并用 `isStreaming` 打开分块解析和淡入。不要在 `Markdown` 外面再套一次 `useStreamingText`。
 
 ## 原生属性
 

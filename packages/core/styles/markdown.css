@@ -22,7 +22,9 @@
   }
 
   .astryx-markdown__prose {
+    width: 100%;
     max-width: var(--astryx-markdown-measure, none);
+    text-align: start;
   }
 
   .astryx-markdown[data-align='center'] .astryx-markdown__prose {
@@ -35,6 +37,17 @@
 
   .astryx-markdown__heading:is(h1, h2) {
     margin-block: var(--astryx-spacing-6, 24px) var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-markdown__paragraph,
+  .astryx-markdown__list,
+  .astryx-markdown__blockquote,
+  .astryx-markdown__table {
+    color: inherit;
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-text-body-weight, 400);
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   .astryx-markdown__paragraph,
@@ -99,21 +112,19 @@
 
   .astryx-markdown__anchor {
     margin-inline-start: 0.35em;
-    color: var(--astryx-link-accent-foreground, #0074e2);
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: 0.75em;
     font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: 1;
     text-decoration: none;
+    user-select: none;
     opacity: 0;
   }
 
   .astryx-markdown__heading:hover .astryx-markdown__anchor,
+  .astryx-markdown__heading:focus-within .astryx-markdown__anchor,
   .astryx-markdown__anchor:focus-visible {
     opacity: 1;
-  }
-
-  @media (hover: none) {
-    .astryx-markdown__anchor {
-      opacity: 1;
-    }
   }
 
   .astryx-markdown__list {
@@ -164,8 +175,6 @@
   .astryx-markdown__table {
     width: 100%;
     border-collapse: collapse;
-    font-size: inherit;
-    line-height: inherit;
   }
 
   .astryx-markdown__cell {

@@ -38,9 +38,9 @@ Code blocks go through the existing `CodeBlock`, quotes through `Blockquote`, he
 
 `components` replaces the renderer for one kind of node. A custom component receives the node data as props and, when the node has content, that content as the default slot.
 
-`isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the component skips the character reveal and the fade.
+`isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the fade is skipped.
 
-The component uses `useStreamingText` to smooth a burst of text. A string you have already smoothed, passed with `isStreaming`, is smoothed a second time. To simulate a model, pass the accumulated source as `content` and leave `isStreaming` on until the reply is finished.
+`isStreaming` does not reveal the string character by character. Use `useStreamingText` for that, then pass its string as `content`. Markdown does not smooth that string again. To simulate a model, pass the accumulated source as `content` and leave `isStreaming` on until the reply is finished.
 
 This version has no plugin protocol and does not render math.
 
@@ -50,6 +50,7 @@ This version has no plugin protocol and does not render math.
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Use it for model replies, documentation excerpts, and explanatory prose. |
 | <Badge variant="success">Do</Badge> | While streaming, only append text, and set `isStreaming` back to `false` when the reply is done. |
+| <Badge variant="success">Do</Badge> | For a character reveal, call `useStreamingText` once and pass the result as `content`. `isStreaming` handles block parsing and the fade, and does not smooth again. |
 | <Badge variant="success">Do</Badge> | Set `contentWidth` when the line length should be capped. Without it, prose uses the container width. |
 | <Badge variant="error">Don't</Badge> | Put user-supplied HTML in the source and expect it to run. The component shows it as text. |
 | <Badge variant="error">Don't</Badge> | Replace the whole source while `isStreaming` is `true`. The cache assumes the text only grows at the end. |

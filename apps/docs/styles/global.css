@@ -1742,3 +1742,14 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .vp-doc .astryx-code {
   all: revert-layer;
 }
+
+/*
+ * VitePress prose styles are unlayered, so they outrank the Markdown component
+ * layer: headings, lists, tables, and links pick up the doc font, alignment,
+ * and link color. Rolling those declarations back lets the component tokens
+ * own the prose inside an example.
+ */
+.vp-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, table, thead, tbody, tr, th, td),
+.vp-doc a.astryx-markdown__anchor {
+  all: revert-layer;
+}

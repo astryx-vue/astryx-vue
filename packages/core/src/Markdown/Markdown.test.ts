@@ -1,6 +1,6 @@
 import type { MarkdownComponents } from './types.js'
 import { mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { provideAstryxLocale } from '../locale/index.js'
 import Markdown from './Markdown.vue'
@@ -37,38 +37,6 @@ const sample = [
   '',
 ].join('\n')
 
-function stubFrames(): { flush: (times?: number) => Promise<void> } {
-  const queue = new Map<number, FrameRequestCallback>()
-  let nextId = 1
-  let now = 0
-  vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
-    const id = nextId
-    nextId += 1
-    queue.set(id, callback)
-    return id
-  })
-  vi.stubGlobal('cancelAnimationFrame', (id: number) => {
-    queue.delete(id)
-  })
-  vi.stubGlobal('matchMedia', () => ({
-    matches: false,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }))
-  return {
-    async flush(times = 1) {
-      for (let index = 0; index < times; index += 1) {
-        const batch = [...queue.values()]
-        queue.clear()
-        now += 20
-        for (const callback of batch)
-          callback(now)
-        await nextTick()
-      }
-    },
-  }
-}
-
 describe('markdown', () => {
   it('renders headings, emphasis, links, lists, quotes, code, tables, and rules', () => {
     const wrapper = mount(Markdown, { props: { content: sample } })
@@ -101,7 +69,10 @@ describe('markdown', () => {
     expect(wrapper.find('.astryx-code-block').text()).toContain('const ready = true')
 
     const cells = wrapper.findAll('.astryx-markdown__cell')
+    expect(cells[0]?.attributes('data-align')).toBeUndefined()
     expect(cells[1]?.attributes('data-align')).toBe('right')
+    expect(cells[2]?.attributes('data-align')).toBeUndefined()
+    expect(cells[3]?.attributes('data-align')).toBe('right')
     expect(cells[1]?.attributes('scope')).toBe('col')
     expect(wrapper.find('hr').exists()).toBe(true)
     expect(wrapper.find('img').attributes()).toMatchObject({
@@ -227,15 +198,39 @@ describe('markdown', () => {
     expect(wrapper.find('strong').text()).toBe('there')
   })
 
-  describe('streaming', () => {
-    afterEach(() => {
-      document.documentElement.style.removeProperty('--astryx-duration-fast-min')
-      vi.unstubAllGlobals()
+  it('leaves unmarked columns on the default alignment and honors center markers', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: [
+          '| A | B |',
+          '| --- | --- |',
+          '| one | two |',
+          '',
+          '| Left | Middle |',
+          '| :--- | :---: |',
+          '| start | center |',
+        ].join('\n'),
+      },
     })
+    const tables = wrapper.findAll('table')
+    const plain = tables[0]?.findAll('.astryx-markdown__cell') ?? []
+    expect(plain.map(cell => cell.attributes('data-align'))).toEqual([
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ])
+    const marked = tables[1]?.findAll('.astryx-markdown__cell') ?? []
+    expect(marked.map(cell => cell.attributes('data-align'))).toEqual([
+      undefined,
+      'center',
+      undefined,
+      'center',
+    ])
+  })
 
+  describe('streaming', () => {
     it('keeps a settled heading node while later text arrives', async () => {
-      document.documentElement.style.setProperty('--astryx-duration-fast-min', '100ms')
-      const frames = stubFrames()
       const content = ref('# Hello\n\n')
       const Host = defineComponent({
         setup() {
@@ -244,14 +239,12 @@ describe('markdown', () => {
       })
       const wrapper = mount(Host)
       expect(wrapper.attributes('data-streaming')).toBe('true')
-
-      await frames.flush(1)
+      await nextTick()
       const heading = wrapper.find('h1').element
       expect(heading.textContent).toContain('Hello')
 
       content.value = '# Hello\n\nWorld keeps arriving while the heading stays put.\n'
       await nextTick()
-      await frames.flush(8)
       expect(wrapper.find('h1').element).toBe(heading)
       expect(wrapper.text()).toContain('World keeps arriving')
     })

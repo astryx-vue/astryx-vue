@@ -3,7 +3,6 @@ import type { PropType, StyleValue, VNode } from 'vue'
 import type { MdNode } from './ast.js'
 import type { MarkdownProps } from './types.js'
 import { computed, defineComponent, h, ref } from 'vue'
-import { useStreamingText } from '../composables/useStreamingText.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { createIncrementalMarkdownState, parseMarkdown, parseMarkdownIncremental } from './parse.js'
 import { assignHeadingSlugs, collectDefinitions, renderMarkdownBlocks, slotText } from './render.js'
@@ -42,7 +41,6 @@ export default defineComponent({
     const messages = useAstryxMessages()
     const slotSource = ref('')
     const source = computed(() => props.content ?? slotSource.value)
-    const streamed = useStreamingText(source, () => props.isStreaming)
     const incremental = createIncrementalMarkdownState()
     const cache = new Map<MdNode, VNode>()
     let boundaries: number[] = []
@@ -61,7 +59,7 @@ export default defineComponent({
         incremental.blocks = []
       }
 
-      const shown = props.isStreaming ? streamed.value : source.value
+      const shown = source.value
       const inline = props.display === 'inline'
       const parsed = inline || !props.isStreaming
         ? { blocks: parseMarkdown(shown).children ?? [], settledCount: 0 }

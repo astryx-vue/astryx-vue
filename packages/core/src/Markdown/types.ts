@@ -87,8 +87,10 @@ export interface MarkdownProps {
    */
   headingLevelStart?: MarkdownHeadingLevel
   /**
-   * Reveals appended source smoothly and re-parses only the open trailing
-   * block. Settled blocks keep their rendered nodes.
+   * Re-parses only the open trailing block and fades in appended text.
+   * Settled blocks keep their rendered nodes. This prop does not reveal
+   * characters on its own. Run `useStreamingText` first and pass that string
+   * as `content`; `Markdown` will not smooth the string a second time.
    * @default false
    */
   isStreaming?: boolean

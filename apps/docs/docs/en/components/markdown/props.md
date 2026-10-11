@@ -20,7 +20,7 @@ footer: false
       <tr><td><code>density</code></td><td><code>'default' | 'compact'</code></td><td><code>'default'</code></td><td><code>compact</code> tightens the space between blocks.</td></tr>
       <tr><td><code>display</code></td><td><code>'block' | 'inline'</code></td><td><code>'block'</code></td><td><code>inline</code> renders the source as phrasing content inside a <code>span</code>.</td></tr>
       <tr><td><code>headingLevelStart</code></td><td><code>1 | 2 | 3 | 4 | 5 | 6</code></td><td><code>1</code></td><td>The heading level a markdown <code>#</code> maps to. Deeper headings shift with it and stop at <code>h6</code>.</td></tr>
-      <tr><td><code>isStreaming</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Reveals appended source smoothly and re-parses only the last unfinished block.</td></tr>
+      <tr><td><code>isStreaming</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Re-parses only the last unfinished block and fades in new text. It does not reveal characters. For that, pass the result of <code>useStreamingText</code> as <code>content</code>.</td></tr>
       <tr><td><code>onLinkClick</code></td><td><code>(href: string, event: MouseEvent) =&gt; void | false</code></td><td>—</td><td>Called when a link is activated. Return <code>false</code> to cancel navigation.</td></tr>
     </tbody>
   </table>
@@ -51,6 +51,8 @@ footer: false
 ## Composable
 
 `useStreamingText(targetText, isStreaming?, options?)` turns a growing string into a steady reveal. `options.speed` is `natural`, `fast`, or `instant`. When streaming is off, or the user prefers reduced motion, the full source is returned.
+
+Character smoothing stays in this composable. Pass its result to `Markdown` as `content`, and set `isStreaming` for block parsing and the fade. Do not wrap that result in `useStreamingText` again.
 
 ## Native attributes
 
