@@ -8,8 +8,30 @@
 
   .astryx-switch-row {
     display: inline-flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-switch-row:has(> .astryx-switch-label .astryx-field-label-group[data-hidden='true']) {
+    gap: 0;
+  }
+
+  /* The label line is 20px and the track is taller. A wrapper at least as tall
+     as the track, centered, keeps the text on the track's midline. */
+  .astryx-switch-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    min-height: var(--astryx-switch-track-height, 24px);
+  }
+
+  .astryx-switch[data-size='sm'] .astryx-switch-label {
+    min-height: var(--astryx-switch-track-height-sm, 20px);
+  }
+
+  .astryx-switch[data-size='lg'] .astryx-switch-label {
+    min-height: var(--astryx-switch-track-height-lg, 28px);
   }
 
   .astryx-switch-control {
@@ -41,34 +63,41 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: var(--astryx-switch-track-width, 44px);
+    width: var(--astryx-switch-track-width, 40px);
     height: var(--astryx-switch-track-height, 24px);
-    padding: 2px;
-    border: 1px solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
+    padding: var(--astryx-switch-track-padding, 4px);
+    border: 0 solid transparent;
     border-radius: var(--astryx-switch-track-radius, 999px);
     color: var(--astryx-color-text-primary, #171717);
-    background: var(--astryx-input-background, #fff);
+    background: var(--astryx-switch-track-off, #e2e2e2);
     transition: background-color 130ms cubic-bezier(0.24, 1, 0.4, 1), border-color 130ms cubic-bezier(0.24, 1, 0.4, 1);
   }
 
   .astryx-switch[data-size='sm'] .astryx-switch-track {
-    width: var(--astryx-switch-track-width-sm, 36px);
+    width: var(--astryx-switch-track-width-sm, 32px);
     height: var(--astryx-switch-track-height-sm, 20px);
+    padding: var(--astryx-switch-track-padding-sm, 2px);
   }
 
   .astryx-switch[data-size='lg'] .astryx-switch-track {
     width: var(--astryx-switch-track-width-lg, 52px);
     height: var(--astryx-switch-track-height-lg, 28px);
+    padding: var(--astryx-switch-track-padding-lg, 4px);
+  }
+
+  .astryx-switch-native:checked + .astryx-switch-track {
+    background: var(--astryx-switch-track-on, #1b1b1b);
   }
 
   .astryx-switch-thumb {
     box-sizing: border-box;
-    width: var(--astryx-switch-thumb-size, 18px);
-    height: var(--astryx-switch-thumb-size, 18px);
+    flex: none;
+    width: var(--astryx-switch-thumb-size, 16px);
+    height: var(--astryx-switch-thumb-size, 16px);
     border-radius: var(--astryx-switch-thumb-radius, 999px);
-    background: var(--astryx-color-text-primary, #171717);
+    background: var(--astryx-switch-thumb, #fff);
     transform: translateX(0);
-    transition: transform 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color 130ms cubic-bezier(0.24, 1, 0.4, 1);
+    transition: transform 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color 130ms cubic-bezier(0.24, 1, 0.4, 1), width 130ms cubic-bezier(0.24, 1, 0.4, 1), height 130ms cubic-bezier(0.24, 1, 0.4, 1);
   }
 
   .astryx-switch[data-size='sm'] .astryx-switch-thumb {
@@ -77,20 +106,38 @@
   }
 
   .astryx-switch[data-size='lg'] .astryx-switch-thumb {
-    width: var(--astryx-switch-thumb-size-lg, 22px);
-    height: var(--astryx-switch-thumb-size-lg, 22px);
+    width: var(--astryx-switch-thumb-size-lg, 20px);
+    height: var(--astryx-switch-thumb-size-lg, 20px);
   }
 
   .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
-    transform: translateX(calc(var(--astryx-switch-track-width, 44px) - var(--astryx-switch-thumb-size, 18px) - 6px));
+    width: var(--astryx-switch-thumb-size-on, 20px);
+    height: var(--astryx-switch-thumb-size-on, 20px);
+    transform: translateX(var(--astryx-switch-thumb-travel, 14px));
+  }
+
+  .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb:dir(rtl) {
+    transform: translateX(calc(var(--astryx-switch-thumb-travel, 14px) * -1));
   }
 
   .astryx-switch[data-size='sm'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
-    transform: translateX(calc(var(--astryx-switch-track-width-sm, 36px) - var(--astryx-switch-thumb-size-sm, 14px) - 6px));
+    width: var(--astryx-switch-thumb-size-on-sm, 16px);
+    height: var(--astryx-switch-thumb-size-on-sm, 16px);
+    transform: translateX(var(--astryx-switch-thumb-travel-sm, 12px));
+  }
+
+  .astryx-switch[data-size='sm'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb:dir(rtl) {
+    transform: translateX(calc(var(--astryx-switch-thumb-travel-sm, 12px) * -1));
   }
 
   .astryx-switch[data-size='lg'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
-    transform: translateX(calc(var(--astryx-switch-track-width-lg, 52px) - var(--astryx-switch-thumb-size-lg, 22px) - 6px));
+    width: var(--astryx-switch-thumb-size-on-lg, 24px);
+    height: var(--astryx-switch-thumb-size-on-lg, 24px);
+    transform: translateX(var(--astryx-switch-thumb-travel-lg, 22px));
+  }
+
+  .astryx-switch[data-size='lg'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb:dir(rtl) {
+    transform: translateX(calc(var(--astryx-switch-thumb-travel-lg, 22px) * -1));
   }
 
   .astryx-switch-native:focus-visible + .astryx-switch-track {
@@ -99,14 +146,17 @@
   }
 
   .astryx-switch[data-status='error'] .astryx-switch-track {
+    border-width: 1px;
     border-color: var(--astryx-input-error, #e33f4a);
   }
 
   .astryx-switch[data-status='warning'] .astryx-switch-track {
+    border-width: 1px;
     border-color: var(--astryx-input-warning, #a67a00);
   }
 
   .astryx-switch[data-status='success'] .astryx-switch-track {
+    border-width: 1px;
     border-color: var(--astryx-input-success, #198100);
   }
 
@@ -141,14 +191,21 @@
 
   @media (forced-colors: active) {
     .astryx-switch-track {
-      border-color: ButtonText;
+      border-width: 1px;
+      border-color: CanvasText;
       background: Canvas;
     }
     .astryx-switch-thumb {
-      background: ButtonText;
+      background: CanvasText;
     }
     .astryx-switch-native:checked + .astryx-switch-track {
       background: Highlight;
+    }
+    .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
+      background: HighlightText;
+    }
+    .astryx-switch[data-blocked='true'] .astryx-switch-track {
+      border-color: GrayText;
     }
   }
 }

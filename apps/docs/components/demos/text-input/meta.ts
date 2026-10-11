@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { textInputBasic as demo } from './index'
+import { textInputOverview as demo } from './index'
 
 export const meta = {
   slug: 'text-input',

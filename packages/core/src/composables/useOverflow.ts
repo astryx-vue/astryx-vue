@@ -76,6 +76,8 @@ export interface UseOverflowReturn {
   rows: Ref<number>
   /** 测到的最大项高，多行容器用它定高度。 */
   rowHeight: Ref<number>
+  /** 宽度是测试里改的、或者折叠状态变了，再量一次。 */
+  remeasure: () => void
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -367,6 +369,15 @@ function useItemOverflow(itemCount: MaybeRefOrGetter<number>, options: UseOverfl
       return
     }
 
+    // 宽度还是 0 说明这一帧还没排出来。先按上限全留，避免首屏闪成空。
+    if (!(availableWidth > 0)) {
+      const { ceiling } = resolveBounds(total, minVisibleItems, maxVisibleItems)
+      visibleCount.value = ceiling
+      rows.value = ceiling > 0 ? 1 : 0
+      rowHeight.value = children.reduce((max, child) => Math.max(max, child.offsetHeight || 0), 0)
+      return
+    }
+
     const widths = children.map(child => child.offsetWidth)
     const measuredRowHeight = children.reduce((max, child) => Math.max(max, child.offsetHeight || 0), 0)
     const next = computeOverflow({
@@ -413,6 +424,7 @@ function useItemOverflow(itemCount: MaybeRefOrGetter<number>, options: UseOverfl
     containerRef,
     hasOverflow,
     measureRef,
+    remeasure: calculate,
     rowHeight,
     rows,
     visibleCount,

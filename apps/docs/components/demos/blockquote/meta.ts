@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { blockquoteCite as demo } from './index'
+import { blockquoteOverview as demo } from './index'
 
 export const meta = {
   slug: 'blockquote',

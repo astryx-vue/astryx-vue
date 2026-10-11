@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { paginationBasic as demo } from './index'
+import { paginationOverview as demo } from './index'
 
 export const meta = {
   slug: 'pagination',

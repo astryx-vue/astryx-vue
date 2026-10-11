@@ -333,6 +333,41 @@
       "types": "./dist/Tokenizer/index.d.ts",
       "import": "./dist/Tokenizer/index.js"
     },
+    "./MobileNav": {
+      "source": "./src/MobileNav/index.ts",
+      "types": "./dist/MobileNav/index.d.ts",
+      "import": "./dist/MobileNav/index.js"
+    },
+    "./NavItem": {
+      "source": "./src/NavItem/index.ts",
+      "types": "./dist/NavItem/index.d.ts",
+      "import": "./dist/NavItem/index.js"
+    },
+    "./NavMenu": {
+      "source": "./src/NavMenu/index.ts",
+      "types": "./dist/NavMenu/index.d.ts",
+      "import": "./dist/NavMenu/index.js"
+    },
+    "./OverflowList": {
+      "source": "./src/OverflowList/index.ts",
+      "types": "./dist/OverflowList/index.d.ts",
+      "import": "./dist/OverflowList/index.js"
+    },
+    "./SideNav": {
+      "source": "./src/SideNav/index.ts",
+      "types": "./dist/SideNav/index.d.ts",
+      "import": "./dist/SideNav/index.js"
+    },
+    "./Toolbar": {
+      "source": "./src/Toolbar/index.ts",
+      "types": "./dist/Toolbar/index.d.ts",
+      "import": "./dist/Toolbar/index.js"
+    },
+    "./TopNav": {
+      "source": "./src/TopNav/index.ts",
+      "types": "./dist/TopNav/index.d.ts",
+      "import": "./dist/TopNav/index.js"
+    },
     "./locale": {
       "source": "./src/locale/index.ts",
       "types": "./dist/locale/index.d.ts",
@@ -405,7 +440,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@internationalized/date": "catalog:runtime"
+    "@internationalized/date": "catalog:runtime",
+    "mdast-util-from-markdown": "catalog:runtime",
+    "mdast-util-gfm": "catalog:runtime",
+    "micromark-extension-gfm": "catalog:runtime"
   },
   "devDependencies": {
     "@vue/compiler-sfc": "catalog:vue",

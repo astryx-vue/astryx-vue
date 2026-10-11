@@ -5,6 +5,8 @@ import asyncDemo from './async.vue'
 import asyncSource from './async.vue?raw&highlighted'
 import floatingDemo from './floating.vue'
 import floatingSource from './floating.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import tooltipsDemo from './tooltips.vue'
 import tooltipsSource from './tooltips.vue?raw&highlighted'
 
@@ -25,3 +27,5 @@ export const iconButtonAsync = defineDemo(asyncDemo, asyncSource, {
 export const iconButtonTooltips = defineDemo(tooltipsDemo, tooltipsSource, {
   className: iconButtonPreviewClass,
 })
+
+export const iconButtonOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

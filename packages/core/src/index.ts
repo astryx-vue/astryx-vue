@@ -317,6 +317,31 @@ export type {
 } from './List/index.js'
 export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
 export type { AstryxLocale, AstryxMessages } from './locale/index.js'
+export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
+export type {
+  MarkdownAlign,
+  MarkdownCodeProps,
+  MarkdownComponents,
+  MarkdownDensity,
+  MarkdownDisplay,
+  MarkdownHeadingLevel,
+  MarkdownHeadingProps,
+  MarkdownImageProps,
+  MarkdownInlineCodeProps,
+  MarkdownLinkProps,
+  MarkdownListProps,
+  MarkdownProps,
+  MarkdownSlots,
+} from './Markdown/index.js'
+export { MobileNav, MobileNavToggle } from './MobileNav/index.js'
+export type {
+  MobileNavEmits,
+  MobileNavProps,
+  MobileNavSide,
+  MobileNavSlots,
+  MobileNavToggleEmits,
+  MobileNavToggleProps,
+} from './MobileNav/index.js'
 export { MoreMenu } from './MoreMenu/index.js'
 export type {
   MoreMenuDivider,
@@ -332,8 +357,46 @@ export type {
   MoreMenuSection,
   MoreMenuSlots,
 } from './MoreMenu/index.js'
+export { flattenOptions, MultiSelector, SELECT_ALL_VALUE } from './MultiSelector/index.js'
+export type {
+  MultiSelectorCheckboxPosition,
+  MultiSelectorDivider,
+  MultiSelectorEmits,
+  MultiSelectorOption,
+  MultiSelectorOptionData,
+  MultiSelectorPresentation,
+  MultiSelectorProps,
+  MultiSelectorSection,
+  MultiSelectorSize,
+  MultiSelectorSlots,
+  MultiSelectorStatus,
+  MultiSelectorTriggerDisplay,
+  MultiSelectorVariant,
+} from './MultiSelector/index.js'
+export { NavIcon, NavItem, resolveNavRoot } from './NavItem/index.js'
+export type {
+  NavIconProps,
+  NavIconSlots,
+  NavItemEmits,
+  NavItemProps,
+  NavItemSize,
+  NavItemSlots,
+  NavLinkComponent,
+} from './NavItem/index.js'
+export { NavDisclosure, NavMenu, NavMenuItem } from './NavMenu/index.js'
+export type {
+  NavDisclosureProps,
+  NavMenuEmits,
+  NavMenuFocusRequest,
+  NavMenuItemEmits,
+  NavMenuItemProps,
+  NavMenuProps,
+  NavMenuSize,
+} from './NavMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'
 export type { NumberInputEmits, NumberInputProps } from './NumberInput/index.js'
+export { OverflowList } from './OverflowList/index.js'
+export type { OverflowListEmits, OverflowListItem, OverflowListProps } from './OverflowList/index.js'
 export { Overlay, OverlayScrim, useOverlay } from './Overlay/index.js'
 export type {
   OverlayAlign,
@@ -388,6 +451,25 @@ export type {
   SelectorSlots,
   SelectorStatus,
 } from './Selector/index.js'
+export {
+  SideNav,
+  SideNavCollapseButton,
+  SideNavHeading,
+  SideNavItem,
+  SideNavSection,
+  useSideNavCollapse,
+} from './SideNav/index.js'
+export type {
+  SideNavCollapseButtonProps,
+  SideNavCollapseContext,
+  SideNavCollapsible,
+  SideNavEmits,
+  SideNavHeadingProps,
+  SideNavItemEmits,
+  SideNavItemProps,
+  SideNavProps,
+  SideNavSectionProps,
+} from './SideNav/index.js'
 export { Skeleton } from './Skeleton/index.js'
 export { Slider } from './Slider/index.js'
 export type {
@@ -481,6 +563,20 @@ export type {
   ToggleButtonSize,
   ToggleButtonSlots,
 } from './ToggleButton/index.js'
+export { Token, TOKEN_COLORS } from './Token/index.js'
+export type { TokenColor, TokenEmits, TokenProps, TokenSize, TokenSlots } from './Token/index.js'
+export { Tokenizer } from './Tokenizer/index.js'
+export type {
+  TokenizerChange,
+  TokenizerEmits,
+  TokenizerOverflow,
+  TokenizerProps,
+  TokenizerSize,
+  TokenizerSlots,
+  TokenizerStatus,
+} from './Tokenizer/index.js'
+export { Toolbar } from './Toolbar/index.js'
+export type { ToolbarOrientation, ToolbarProps, ToolbarSize } from './Toolbar/index.js'
 export { Tooltip } from './Tooltip/index.js'
 export type {
   TooltipAlignment,
@@ -489,5 +585,35 @@ export type {
   TooltipProps,
   TooltipTouchTrigger,
 } from './Tooltip/index.js'
+export {
+  TopNav,
+  TopNavHeading,
+  TopNavItem,
+  TopNavMegaMenu,
+  TopNavMegaMenuFeaturedCard,
+  TopNavMegaMenuItem,
+  TopNavMenu,
+} from './TopNav/index.js'
+export type {
+  TopNavHeadingProps,
+  TopNavItemEmits,
+  TopNavItemProps,
+  TopNavMegaMenuEmits,
+  TopNavMegaMenuFeaturedCardProps,
+  TopNavMegaMenuItemProps,
+  TopNavMegaMenuProps,
+  TopNavMenuEmits,
+  TopNavMenuItem,
+  TopNavMenuProps,
+  TopNavProps,
+} from './TopNav/index.js'
+export { Typeahead } from './Typeahead/index.js'
+export type {
+  TypeaheadEmits,
+  TypeaheadProps,
+  TypeaheadSize,
+  TypeaheadSlots,
+  TypeaheadStatus,
+} from './Typeahead/index.js'
 export { VisuallyHidden } from './VisuallyHidden/index.js'
 export type { VisuallyHiddenElement, VisuallyHiddenProps } from './VisuallyHidden/index.js'

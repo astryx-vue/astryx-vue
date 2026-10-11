@@ -203,4 +203,26 @@ describe('useOverflow 横向收起', () => {
     expect(result.visibleCount.value).toBe(2)
     expect(result.hasOverflow.value).toBe(false)
   })
+
+  it('宽度还是 0 时先全部留下，量到宽度后再收起', async () => {
+    const { result } = mountComposable(() => useOverflow(2, { gap: 0 }))
+    const container = document.createElement('div')
+    const measure = document.createElement('div')
+    setBox(container, { offsetWidth: 0 })
+    for (const width of [40, 40]) {
+      const child = document.createElement('span')
+      setBox(child, { offsetHeight: 8, offsetWidth: width })
+      measure.append(child)
+    }
+    document.body.append(container, measure)
+    result.containerRef.value = container
+    result.measureRef.value = measure
+    await nextTick()
+    expect(result.visibleCount.value).toBe(2)
+
+    setBox(container, { offsetWidth: 40 })
+    result.remeasure()
+    expect(result.visibleCount.value).toBe(1)
+    expect(result.hasOverflow.value).toBe(true)
+  })
 })

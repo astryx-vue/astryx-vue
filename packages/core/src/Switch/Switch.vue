@@ -4,7 +4,7 @@ import type { SwitchEmits, SwitchProps, SwitchSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import Field from '../Field/Field.vue'
+import FieldLabel from '../Field/FieldLabel.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useSwitchAction } from './useSwitchAction.js'
 import '../../styles/switch.css'
@@ -22,6 +22,7 @@ const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')
 const generatedId = `astryx-switch-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
+const descriptionId = computed(() => props.description ? `${inputId.value}-description` : undefined)
 const disabledId = `${generatedId}-disabled`
 const loadingId = `${generatedId}-loading`
 const showsDisabledMessage = computed(() => !!props.isDisabled && !!props.disabledMessage?.trim())
@@ -48,8 +49,8 @@ const controlledAttrs = new Set(['class', 'style', 'id', 'type', 'checked', 'dis
 function inputAttrs(): InputHTMLAttributes {
   return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
 }
-function describedBy(fieldIds?: string): string | undefined {
-  return [attrs['aria-describedby'], fieldIds, showsDisabledMessage.value ? disabledId : undefined, busy.value ? loadingId : undefined].filter(Boolean).join(' ') || undefined
+function describedBy(): string | undefined {
+  return [attrs['aria-describedby'], descriptionId.value, showsDisabledMessage.value ? disabledId : undefined, busy.value ? loadingId : undefined].filter(Boolean).join(' ') || undefined
 }
 function syncNative(): void {
   if (input.value)
@@ -107,15 +108,17 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
           <span v-if="busy" class="astryx-switch-spinner" />
         </span>
       </span>
-      <Field
-        :label="label" :input-id="inputId" :label-id="`${inputId}-label`" :description="description"
-        :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
-        :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
-      >
-        <template v-if="$slots.labelIcon" #labelIcon>
-          <slot name="labelIcon" />
-        </template>
-      </Field>
+      <div class="astryx-switch-label">
+        <FieldLabel
+          :label="label" :input-id="inputId" :label-id="`${inputId}-label`" :description="description" :description-id="descriptionId"
+          :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
+          :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
+        >
+          <template v-if="$slots.labelIcon" #labelIcon>
+            <slot name="labelIcon" />
+          </template>
+        </FieldLabel>
+      </div>
     </div>
     <VisuallyHidden v-if="showsDisabledMessage" :id="disabledId">
       {{ disabledMessage }}
