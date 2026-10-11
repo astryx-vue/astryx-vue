@@ -41,7 +41,8 @@ const options = computed(() => [
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: min(20rem, 100%);
+  width: 20rem;
+  max-width: calc(100vw - 4rem);
 }
 .demo-result {
   margin: 0;

@@ -25,8 +25,10 @@
 }
 
 @layer astryx.components {
-  .astryx-typeahead {
-    width: 100%;
+  /* 默认铺满容器。传入 width 时改走 --astryx-field-width。 */
+  .astryx-field.astryx-typeahead {
+    width: var(--astryx-field-width, 100%);
+    max-width: 100%;
     min-width: 0;
   }
 
@@ -130,6 +132,8 @@
   }
 
   .astryx-typeahead-value {
+    flex: 0 1 auto;
+    width: max-content;
     max-width: calc(100% - 28px);
   }
 

@@ -28,6 +28,7 @@ const options = computed(() => [
 
 <style scoped>
 .demo-container {
-  width: min(16rem, 100%);
+  width: 20rem;
+  max-width: calc(100vw - 4rem);
 }
 </style>

@@ -41,6 +41,7 @@ const source = computed(() => ({
 
 <style scoped>
 .demo-container {
-  width: min(20rem, 100%);
+  width: 20rem;
+  max-width: calc(100vw - 4rem);
 }
 </style>

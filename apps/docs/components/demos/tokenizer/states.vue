@@ -32,6 +32,7 @@ const selected = computed(() => [{ id: 'ada', label: 'Ada' }])
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: min(20rem, 100%);
+  width: 20rem;
+  max-width: calc(100vw - 4rem);
 }
 </style>

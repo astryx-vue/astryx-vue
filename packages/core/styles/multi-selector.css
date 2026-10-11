@@ -25,8 +25,9 @@
 }
 
 @layer astryx.components {
-  .astryx-multi-selector {
-    width: 100%;
+  .astryx-field.astryx-multi-selector {
+    width: var(--astryx-field-width, 100%);
+    max-width: 100%;
     min-width: 0;
   }
 

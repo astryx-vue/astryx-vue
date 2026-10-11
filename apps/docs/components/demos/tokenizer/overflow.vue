@@ -32,7 +32,8 @@ const source = computed(() => createStaticSource(selected.value))
 
 <style scoped>
 .demo-container {
-  width: min(16rem, 100%);
+  width: 20rem;
+  max-width: calc(100vw - 4rem);
 }
 .demo-note {
   margin: 0.75rem 0 0;

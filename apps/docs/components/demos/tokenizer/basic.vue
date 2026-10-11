@@ -35,7 +35,8 @@ const source = computed(() => createStaticSource([
 
 <style scoped>
 .demo-container {
-  width: min(22rem, 100%);
+  width: 20rem;
+  max-width: calc(100vw - 4rem);
 }
 .demo-icon {
   color: var(--vp-c-text-2);
