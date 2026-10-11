@@ -6,5 +6,5 @@ const enabled = shallowRef(true)
 </script>
 
 <template>
-  <Switch v-model="enabled" label="Notifications" />
+  <Switch v-model="enabled" label="Enable notifications" />
 </template>
