@@ -23,12 +23,18 @@ const { pick } = useDemoText()
       {{ pick('2026年3月15日', 'March 15, 2026') }}
     </ChatSystemMessage>
     <ChatSystemMessage>
+      <template #icon>
+        <span class="i-carbon-user-minus" style="width: 20px; height: 20px" />
+      </template>
       {{ pick('林川离开了会话', 'Alex Rivera left the conversation') }}
     </ChatSystemMessage>
     <ChatSystemMessage variant="divider">
       {{ pick('今天', 'Today') }}
     </ChatSystemMessage>
     <ChatSystemMessage>
+      <template #icon>
+        <span class="i-carbon-checkmark-outline" style="width: 20px; height: 20px" />
+      </template>
       {{ pick('会话已标为已解决', 'Conversation marked as resolved') }}
     </ChatSystemMessage>
   </ChatMessageList>
