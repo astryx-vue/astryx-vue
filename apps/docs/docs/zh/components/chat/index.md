@@ -52,7 +52,7 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 
 `ChatReasoning` 是同样的折叠，用来放推理过程，默认收起。默认插槽如果是纯文本，会同时当作收起时的一行预览。`isStreaming` 会让标题闪动，并藏起预览和 `duration`。
 
-`ChatTypingIndicator` 画三个点。传入 `names` 后，一个人、两个人、以及「某人和其他几人」各有一句文案，并会播报这句。`ChatUnreadDivider` 是那条「下面是新消息」的分隔线。
+`ChatTypingIndicator` 画三个点。传入 `names` 后，一个人、两个人、以及「某人和其他几人」各有一句文案。根节点是 `role="status"`，由它播报这一句。`ChatUnreadDivider` 标出第一条未读消息，新到的内容放在它下面。
 
 下面的示例把这些放在同一次会话里：文字逐字追加，工具调用和推理留在助手那一轮，有人正在输入，底部输入框可以再发一条。
 
@@ -65,13 +65,13 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 | <Badge variant="success">推荐</Badge> | 把 `ChatUnreadDivider` 放在读者还没看到的第一条前面。按钮上的「有新消息」负责播报，分隔线负责标位置。 |
 | <Badge variant="success">推荐</Badge> | 气泡里放纯文本、引文，或你自己的渲染结果。气泡只提供底色和圆角。 |
 | <Badge variant="error">避免</Badge> | 在布局里面再套一个滚动容器。记录的滚动只交给布局自己，或者交给 `scrollRef` 指向的那个元素。 |
-| <Badge variant="error">避免</Badge> | 每个流式 token 都自己播报一遍。正在输入和新消息文案已经走共用的 live region。 |
+| <Badge variant="error">避免</Badge> | 每个流式 token 都自己播报一遍。正在输入靠自己的 `role="status"` 播报一次，新消息文案走布局里的 live region。 |
 
 ## 示例
 
 <DemoExample
   :demo="chatConversation"
-  description="一段会逐字追加的会话，里面有工具调用、可折叠的推理，以及正在输入。发送一行可以再接一轮。"
+  description="一段会逐字追加的会话，里面有工具调用、可折叠的推理，以及正在输入。未读分隔线在第一条未读消息前面，之后发出的内容出现在它下方。"
   locale="zh"
   title="模拟对话"
 />

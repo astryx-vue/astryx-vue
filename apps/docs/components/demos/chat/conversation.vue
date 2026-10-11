@@ -107,8 +107,16 @@ onScopeDispose(() => {
             </p>
           </ChatMessageBubble>
           <template #metadata>
-            <ChatMessageMetadata footer="neutral" timestamp="09:41" />
+            <ChatMessageMetadata footer="fig-small" timestamp="09:41" />
           </template>
+        </ChatMessage>
+
+        <ChatUnreadDivider />
+
+        <ChatMessage sender="assistant">
+          <ChatMessageBubble>
+            {{ pick('变更记录里还有一条没打开。', 'One changelog entry is still unread.') }}
+          </ChatMessageBubble>
         </ChatMessage>
 
         <ChatMessage v-for="line in sent" :key="line.id" sender="user">
@@ -123,7 +131,6 @@ onScopeDispose(() => {
           </ChatMessageBubble>
         </ChatMessage>
 
-        <ChatUnreadDivider />
         <ChatTypingIndicator :names="[pick('阿青', 'Alex')]" />
       </ChatMessageList>
 

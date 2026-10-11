@@ -52,7 +52,7 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 
 `ChatReasoning` is the same kind of disclosure for a thinking trace. It starts collapsed. A plain-text default slot is reused as the one-line preview. `isStreaming` shimmers the label and hides both the preview and `duration`.
 
-`ChatTypingIndicator` draws three dots. Pass `names` and it writes a sentence for one person, two people, or a named person plus a count, then announces that sentence. `ChatUnreadDivider` is the rule that says new messages are below.
+`ChatTypingIndicator` draws three dots. Pass `names` and it writes a sentence for one person, two people, or a named person plus a count. The root is `role="status"`, and that region is the only announcement. `ChatUnreadDivider` marks the first unread message, and new rows go below it.
 
 The live example below runs all of these together: text appends one character at a time, tool calls and reasoning stay on the assistant turn, someone is typing, and the field at the bottom adds another exchange.
 
@@ -65,13 +65,13 @@ The live example below runs all of these together: text appends one character at
 | <Badge variant="success">Do</Badge> | Use `ChatUnreadDivider` at the first message the reader has not seen. The scroll button’s “New messages” label is the announcement; the divider is the visible mark. |
 | <Badge variant="success">Do</Badge> | Put plain text, citations, or your own renderer in the bubble slot. The bubble only supplies the surface. |
 | <Badge variant="error">Don't</Badge> | Render a second scroll parent inside the layout. One element should own the transcript scroll, either the layout or the element passed as `scrollRef`. |
-| <Badge variant="error">Don't</Badge> | Announce every streamed token yourself. The typing indicator and the new-message label already speak through the shared live region. |
+| <Badge variant="error">Don't</Badge> | Announce every streamed token yourself. The typing indicator speaks once through its own `role="status"`, and the new-message label speaks through the layout live region. |
 
 ## Examples
 
 <DemoExample
   :demo="chatConversation"
-  description="A transcript that appends text, lists tool calls, folds a reasoning trace, and shows who is typing. Send a line to add another exchange."
+  description="A transcript that appends text, lists tool calls, folds a reasoning trace, and shows who is typing. The unread rule sits before the first unread message, and anything you send appears below it."
   locale="en"
   title="Conversation"
 />

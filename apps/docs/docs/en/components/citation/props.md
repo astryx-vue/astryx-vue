@@ -39,13 +39,13 @@ A template ref exposes <code>element</code>, the link or the span.
 
 ## Theming
 
-Citation uses the shared tokens. There is no citation-only theme file.
+`packages/themes/neutral/citation.css` maps component variables onto semantic tokens. Another theme overrides those variables.
 
-- `--astryx-color-text-secondary` / `--astryx-color-text-primary`: resting and hover text.
-- `--astryx-color-border` / `--astryx-color-overlay-hover`: chip border and hover fill.
-- `--astryx-color-accent-muted`: superscript fill.
-- `--astryx-color-background-surface`: the circle behind a label icon.
-- `--astryx-focus-outline-color`: keyboard outline.
+- `--astryx-citation-foreground` / `--astryx-citation-foreground-hover`: resting and hover text.
+- `--astryx-citation-border` / `--astryx-citation-hover`: chip border and hover fill.
+- `--astryx-citation-number-background`: superscript fill.
+- `--astryx-citation-icon-background`: the circle behind a label icon.
+- `--astryx-citation-focus`: keyboard outline.
 - `--astryx-duration-fast-max` / `--astryx-ease-standard`: hover transition.
 
 ## Native attributes

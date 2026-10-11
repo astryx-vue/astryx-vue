@@ -39,13 +39,13 @@ footer: false
 
 ## 主题
 
-引文使用共享 token，没有单独的主题文件。
+`packages/themes/neutral/citation.css` 把组件变量映射到语义 token。换主题时覆盖这些变量即可。
 
-- `--astryx-color-text-secondary` / `--astryx-color-text-primary`：默认和悬停时的文字颜色。
-- `--astryx-color-border` / `--astryx-color-overlay-hover`：胶囊边框和悬停底色。
-- `--astryx-color-accent-muted`：上标底色。
-- `--astryx-color-background-surface`：label 图标后面的圆。
-- `--astryx-focus-outline-color`：键盘焦点描边。
+- `--astryx-citation-foreground` / `--astryx-citation-foreground-hover`：默认和悬停时的文字颜色。
+- `--astryx-citation-border` / `--astryx-citation-hover`：胶囊边框和悬停底色。
+- `--astryx-citation-number-background`：上标底色。
+- `--astryx-citation-icon-background`：label 图标后面的圆。
+- `--astryx-citation-focus`：键盘焦点描边。
 - `--astryx-duration-fast-max` / `--astryx-ease-standard`：悬停过渡。
 
 ## 原生属性

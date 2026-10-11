@@ -154,7 +154,7 @@ describe('chat message', () => {
       slots: {
         default: () => h(ChatMessageBubble, { variant: 'ghost', group: 'first' }, {
           default: () => 'Noted',
-          metadata: () => h(ChatMessageMetadata, { timestamp: '09:41', footer: 'neutral', status: 'read' }),
+          metadata: () => h(ChatMessageMetadata, { timestamp: '09:41', footer: 'fig-small', status: 'read' }),
         }),
       },
     })
@@ -309,15 +309,18 @@ describe('chat reasoning', () => {
 })
 
 describe('chat typing indicator', () => {
-  it('builds a sentence from the name count and announces it', async () => {
+  it('builds a sentence from the name count and exposes one status region', () => {
     const dots = mount(ChatTypingIndicator)
     expect(dots.find('.astryx-chat-typing__label').exists()).toBe(false)
-    expect(dots.get('.astryx-chat-typing').attributes('aria-label')).toBeUndefined()
+    expect(dots.get('.astryx-chat-typing').attributes('role')).toBe('status')
 
     const one = mount(ChatTypingIndicator, { props: { names: ['Ada'] } })
+    const region = one.get('.astryx-chat-typing')
     expect(one.get('.astryx-chat-typing__label').text()).toBe('Ada is typing…')
-    await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)))
-    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('Ada is typing…')
+    expect(region.attributes('role')).toBe('status')
+    expect(region.attributes('aria-live')).toBe('polite')
+    expect(region.attributes('aria-label')).toBeUndefined()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')).toBeNull()
 
     expect(mount(ChatTypingIndicator, { props: { names: ['Ada', 'Grace'] } }).text()).toContain('Ada and Grace are typing…')
     expect(mount(ChatTypingIndicator, { props: { names: ['Ada', 'Grace', 'Lin'] } }).text()).toContain('Ada and 2 others are typing…')
@@ -340,6 +343,7 @@ describe('chat unread divider', () => {
     const root = wrapper.get('.astryx-chat-unread')
     expect(root.attributes('role')).toBe('separator')
     expect(root.attributes('aria-label')).toBe('New messages below')
+    expect(root.classes()).not.toContain('astryx-chat-message')
     expect(root.text()).toContain('New')
 
     const custom = mount(defineComponent({
@@ -350,5 +354,51 @@ describe('chat unread divider', () => {
     }))
     expect(custom.get('.astryx-chat-unread').attributes('aria-label')).toBe('新消息以下是未读消息')
     expect(custom.text()).toContain('新消息')
+  })
+
+  it('stays ahead of messages that arrive after the first unread row', async () => {
+    const sent = ref<string[]>([])
+    const wrapper = mount(defineComponent({
+      setup() {
+        return () => h(ChatMessageList, null, {
+          default: () => [
+            h(ChatMessage, { sender: 'user' }, {
+              default: () => h(ChatMessageBubble, null, () => 'Read'),
+            }),
+            h(ChatUnreadDivider),
+            ...sent.value.map(text => h(ChatMessage, { key: text, sender: 'assistant' }, {
+              default: () => h(ChatMessageBubble, null, () => text),
+            })),
+            h(ChatTypingIndicator, { names: ['Ada'] }),
+          ],
+        })
+      },
+    }))
+
+    const inner = wrapper.get('.astryx-chat-message-list__inner').element
+    const classes = () => [...inner.children].map(el => el.classList[0])
+    expect(classes()).toEqual([
+      'astryx-chat-message-list__spacer',
+      'astryx-chat-message',
+      'astryx-chat-unread',
+      'astryx-chat-typing',
+    ])
+
+    sent.value = ['A new line']
+    await nextTick()
+
+    expect(classes()).toEqual([
+      'astryx-chat-message-list__spacer',
+      'astryx-chat-message',
+      'astryx-chat-unread',
+      'astryx-chat-message',
+      'astryx-chat-typing',
+    ])
+    const nodes = [...inner.children]
+    const dividerIndex = nodes.findIndex(el => el.classList.contains('astryx-chat-unread'))
+    const messageIndexes = nodes.flatMap((el, index) => el.classList.contains('astryx-chat-message') ? [index] : [])
+    expect(nodes[messageIndexes[1] ?? -1]?.textContent).toContain('A new line')
+    expect(messageIndexes[0]).toBeLessThan(dividerIndex)
+    expect(dividerIndex).toBeLessThan(messageIndexes[1] ?? -1)
   })
 })

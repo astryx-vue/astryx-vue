@@ -343,13 +343,13 @@ The default slot is the full trace. A single text node is also the collapsed pre
         <td><code>names</code></td>
         <td><code>string[]</code></td>
         <td>-</td>
-        <td>People currently typing. Empty names are dropped. No names leaves the dots only. One, two, and three or more each get their own sentence, which is also announced.</td>
+        <td>People currently typing. Empty names are dropped. No names leaves the dots only. One, two, and three or more each get their own sentence.</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-The root is <code>role="status"</code>. The announcement goes through <code>useAnnounce</code> as well, so some readers may hear the sentence twice.
+The root is <code>role="status"</code> with <code>aria-live="polite"</code>. The sentence lives in that region and is not announced again through <code>useAnnounce</code>.
 
 ## ChatUnreadDivider
 
@@ -381,14 +381,15 @@ The root is <code>role="separator"</code>. It is not a <code>.astryx-chat-messag
 
 ## Theming
 
-Colors, type, radius, shadow, and motion come from the shared tokens. There is no chat-only theme file.
+`packages/themes/neutral/chat.css` maps component variables onto semantic tokens. Another theme overrides those variables.
 
-- `--astryx-color-neutral` / `--astryx-color-text-primary`: filled bubble surface and text.
-- `--astryx-color-text-secondary`, `--astryx-color-text-disabled`: metadata, system lines, and secondary tool text.
-- `--astryx-color-error`, `--astryx-color-success`, `--astryx-color-accent`: failed status, additions, and the typing dots.
-- `--astryx-focus-outline-color`: keyboard outline on disclosure buttons.
-- `--astryx-color-background-popover` / `--astryx-shadow-med`: the scroll-to-bottom pill.
-- `--astryx-radius-chat`: standalone bubble radius. Compact density uses `--astryx-radius-container`.
+- `--astryx-chat-bubble-background` / `--astryx-chat-foreground`: filled bubble surface and text, mapped from `--astryx-color-neutral` and `--astryx-color-text-primary`.
+- `--astryx-chat-foreground-secondary`, `--astryx-chat-foreground-muted`: metadata, system lines, and secondary tool text.
+- `--astryx-chat-error`, `--astryx-chat-success`, `--astryx-chat-accent`: failed status, deletions, and a running tool.
+- `--astryx-chat-unread-color`: the unread rule and its label. Neutral maps it to `--astryx-color-border-red`, so both viewports use one color.
+- `--astryx-chat-focus`: keyboard outline on disclosure buttons.
+- `--astryx-chat-scroll-background` / `--astryx-chat-scroll-shadow`: the scroll-to-bottom pill.
+- `--astryx-chat-radius`: standalone bubble radius. Compact density uses `--astryx-chat-radius-compact`. Grouped bubbles use `--astryx-chat-radius-group` on the inner corners.
 - `--astryx-duration-fast-max`, `--astryx-duration-medium-max`, `--astryx-duration-slow-max`, `--astryx-ease-standard`: pill, disclosure, and typing motion.
 
 ## Native attributes

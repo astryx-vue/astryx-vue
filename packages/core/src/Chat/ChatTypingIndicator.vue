@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ChatTypingIndicatorProps } from './types.js'
-import { computed, useTemplateRef, watch } from 'vue'
-import { useAnnounce } from '../composables/useAnnounce.js'
+import { computed, useTemplateRef } from 'vue'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/chat.css'
 
@@ -9,7 +8,6 @@ defineOptions({ name: 'AstryxChatTypingIndicator', inheritAttrs: false })
 
 const props = defineProps<ChatTypingIndicatorProps>()
 const messages = useAstryxMessages()
-const announce = useAnnounce()
 const root = useTemplateRef<HTMLDivElement>('root')
 
 const label = computed(() => {
@@ -24,11 +22,6 @@ const label = computed(() => {
   return chat.typingMany(names[0]!, names.length - 1)
 })
 
-watch(label, (next) => {
-  if (next)
-    announce(next)
-}, { immediate: true })
-
 defineExpose({ element: root })
 </script>
 
@@ -38,7 +31,7 @@ defineExpose({ element: root })
     v-bind="$attrs"
     class="astryx-chat-typing"
     role="status"
-    :aria-label="label ?? undefined"
+    aria-live="polite"
   >
     <span class="astryx-chat-typing__dots" aria-hidden="true">
       <span class="astryx-chat-typing__dot" />

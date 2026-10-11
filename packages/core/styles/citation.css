@@ -3,7 +3,7 @@
 @layer astryx.components {
   .astryx-citation {
     box-sizing: border-box;
-    color: var(--astryx-color-text-secondary);
+    color: var(--astryx-citation-foreground, var(--astryx-color-text-secondary));
     text-decoration: none;
     transition-property: background-color, border-color, color;
     transition-duration: var(--astryx-duration-fast-max, 165ms);
@@ -20,10 +20,10 @@
     padding-inline: var(--astryx-spacing-2, 8px);
     overflow: hidden;
     vertical-align: baseline;
-    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-citation-border, var(--astryx-color-border));
     border-radius: var(--astryx-radius-element, 0.625rem);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
-    font-weight: var(--astryx-font-weight-regular);
+    font-weight: var(--astryx-citation-font-weight, var(--astryx-font-weight-regular));
     line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
@@ -44,9 +44,9 @@
     padding-inline: var(--astryx-spacing-1, 4px);
     vertical-align: super;
     border-radius: var(--astryx-radius-full, 9999px);
-    background: var(--astryx-color-accent-muted);
+    background: var(--astryx-citation-number-background, var(--astryx-color-accent-muted));
     font-size: var(--astryx-text-supporting-size, 0.75rem);
-    font-weight: var(--astryx-font-weight-semibold);
+    font-weight: var(--astryx-citation-number-font-weight, var(--astryx-font-weight-semibold));
     line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
@@ -56,17 +56,17 @@
 
   @media (hover: hover) {
     a.astryx-citation[data-variant='label']:hover {
-      color: var(--astryx-color-text-primary);
-      background: var(--astryx-color-overlay-hover);
+      color: var(--astryx-citation-foreground-hover, var(--astryx-color-text-primary));
+      background: var(--astryx-citation-hover, var(--astryx-color-overlay-hover));
     }
 
     a.astryx-citation[data-variant='number']:hover {
-      background: var(--astryx-color-overlay-hover);
+      background: var(--astryx-citation-hover, var(--astryx-color-overlay-hover));
     }
   }
 
   .astryx-citation:focus-visible {
-    outline: 2px solid var(--astryx-focus-outline-color);
+    outline: 2px solid var(--astryx-citation-focus, var(--astryx-focus-outline-color));
     outline-offset: 2px;
   }
 
@@ -85,9 +85,9 @@
     width: var(--astryx-spacing-4, 16px);
     height: var(--astryx-spacing-4, 16px);
     overflow: hidden;
-    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-citation-border, var(--astryx-color-border));
     border-radius: var(--astryx-radius-full, 9999px);
-    background: var(--astryx-color-background-surface);
+    background: var(--astryx-citation-icon-background, var(--astryx-color-background-surface));
   }
 
   .astryx-citation__image {

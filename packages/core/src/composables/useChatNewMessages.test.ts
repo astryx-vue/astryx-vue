@@ -63,4 +63,42 @@ describe('useChatNewMessages', () => {
     api?.dismiss()
     expect(api?.hasNewMessages.value).toBe(false)
   })
+
+  it('ignores the unread divider and flags the message that follows it', async () => {
+    observed.length = 0
+    const content = document.createElement('div')
+    const read = message('Read')
+    const divider = document.createElement('div')
+    divider.className = 'astryx-chat-unread'
+    divider.setAttribute('role', 'separator')
+    content.append(read, divider)
+    const locked = ref(true)
+    let api: UseChatNewMessagesReturn | undefined
+    const Host = defineComponent({
+      setup() {
+        api = useChatNewMessages({ isLocked: locked })
+        api.contentRef(content)
+        return () => null
+      },
+    })
+    mount(Host)
+    await nextTick()
+
+    expect(api?.hasNewMessages.value).toBe(false)
+    expect(divider.classList.contains(CHAT_MESSAGE_CLASS)).toBe(false)
+
+    locked.value = false
+    observed[0]?.callback([{ target: content } as unknown as ResizeObserverEntry], {} as ResizeObserver)
+    await nextTick()
+    expect(api?.hasNewMessages.value).toBe(false)
+
+    const unread = message('Unread')
+    content.append(unread)
+    observed[0]?.callback([{ target: content } as unknown as ResizeObserverEntry], {} as ResizeObserver)
+    await nextTick()
+
+    expect(api?.hasNewMessages.value).toBe(true)
+    expect(content.children[1]).toBe(divider)
+    expect(content.children[2]).toBe(unread)
+  })
 })

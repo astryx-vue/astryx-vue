@@ -343,13 +343,13 @@ footer: false
         <td><code>names</code></td>
         <td><code>string[]</code></td>
         <td>-</td>
-        <td>正在输入的人。空字符串会被丢掉。不传名字时只有三个点。一个人、两个人、三个及以上各有一句文案，并会播报。</td>
+        <td>正在输入的人。空字符串会被丢掉。不传名字时只有三个点。一个人、两个人、三个及以上各有一句文案。</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-根节点是 <code>role="status"</code>。同一句也会经 <code>useAnnounce</code> 再播一次，有的阅读器可能听到两遍。
+根节点是 <code>role="status"</code>，并带 <code>aria-live="polite"</code>。文案就写在这个区域里，不再经 <code>useAnnounce</code> 播第二遍。
 
 ## ChatUnreadDivider
 
@@ -381,14 +381,15 @@ footer: false
 
 ## 主题
 
-颜色、字号、圆角、阴影和动效都走共享 token，没有单独的对话主题文件。
+`packages/themes/neutral/chat.css` 把组件变量映射到语义 token。换主题时覆盖这些变量即可。
 
-- `--astryx-color-neutral` / `--astryx-color-text-primary`：填充气泡的底色和文字。
-- `--astryx-color-text-secondary`、`--astryx-color-text-disabled`：元信息、系统行、工具调用的次要文字。
-- `--astryx-color-error`、`--astryx-color-success`、`--astryx-color-accent`：失败状态、新增行数、输入中的圆点。
-- `--astryx-focus-outline-color`：折叠按钮的键盘焦点描边。
-- `--astryx-color-background-popover` / `--astryx-shadow-med`：回到底部的胶囊。
-- `--astryx-radius-chat`：单独气泡的圆角。紧凑密度用 `--astryx-radius-container`。
+- `--astryx-chat-bubble-background` / `--astryx-chat-foreground`：填充气泡的底色和文字，对应 `--astryx-color-neutral` 和 `--astryx-color-text-primary`。
+- `--astryx-chat-foreground-secondary`、`--astryx-chat-foreground-muted`：元信息、系统行、工具调用的次要文字。
+- `--astryx-chat-error`、`--astryx-chat-success`、`--astryx-chat-accent`：失败状态、删除行数、进行中的工具。
+- `--astryx-chat-unread-color`：未读分隔线的线和标签，Neutral 映射到 `--astryx-color-border-red`，两条视口用同一个颜色。
+- `--astryx-chat-focus`：折叠按钮的键盘焦点描边。
+- `--astryx-chat-scroll-background` / `--astryx-chat-scroll-shadow`：回到底部的胶囊。
+- `--astryx-chat-radius`：单独气泡的圆角。紧凑密度用 `--astryx-chat-radius-compact`。成组气泡的内侧用 `--astryx-chat-radius-group`。
 - `--astryx-duration-fast-max`、`--astryx-duration-medium-max`、`--astryx-duration-slow-max`、`--astryx-ease-standard`：胶囊、折叠和输入中圆点的动效。
 
 ## 原生属性
