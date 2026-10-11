@@ -38,20 +38,24 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
    pnpm install && pnpm build:packages
    ```
 
-4. 在两个包的目录里分别发布。`pnpm publish` 会再要一次 2FA 一次性密码。
+4. 在仓库根目录一次发布两个包。pnpm 会提示当前不在 main 分支，选 Yes 继续；需要时会要 2FA 一次性密码，也可以用 `--otp=<code>` 直接带上。
 
    ```sh
-   pnpm publish --access public
+   pnpm -r publish --access public
    ```
 
-   先在 `packages/core` 里执行，再在 `packages/themes` 里执行。
-5. 打开每个包在 npmjs.com 上的设置，添加 Trusted Publisher：
+5. 合并 `Version Packages` PR。`0.1.0` 已经在 npm 上，`changeset publish` 会说没有要发的包；workflow 的 “Backfill tags and GitHub Releases” 步骤会发现 npm 上有这个版本但远端没有 tag，于是在当前 commit 上补 tag 和 GitHub Release，再补 npm 链接，并把同一版本发到 GitHub Packages。
+6. 等到真正要发下一个版本时，再在每个包的 npmjs.com 设置里添加 Trusted Publisher：
    - 来源：GitHub Actions
    - Organization or user：`astryx-vue`
    - Repository：`astryx-vue`
    - Workflow filename：`release.yml`
-6. 可选：在包设置里打开 “Require two-factor authentication and disallow tokens”（要求 2FA，并且不允许 token）。打开之后，CI 只能走 Trusted Publisher。
-7. 再合并 `Version Packages` PR。`0.1.0` 已经在 npm 上，workflow 会跳过上传，并补上 git tag 和 GitHub Release。之后的版本由 workflow 用 GitHub OIDC 发布。
+   - Allowed actions：勾上允许 `npm publish`。2026-09-03 之后新建的配置默认只允许 `npm stage publish`，而本 workflow 是直接发布
+   
+   新建的配置必须在 2 天内完成第一次成功发布，否则过期，只能删掉重建。所以不要提前配，配好后尽快合并带 changeset 的改动发版。
+7. 可选：在包设置里打开 “Require two-factor authentication and disallow tokens”（要求 2FA，并且不允许 token）。打开之后，CI 只能走 Trusted Publisher。
+
+新包第一次发布时，npm 可能先放出一个占位版本 `0.0.0-stage`，真正的版本在扫描或审核通过后才出现。可以用 `npm stage list` 查看是否有待批准的包，用 `npm stage approve <id>` 带 2FA 批准。
 
 `NPM_TOKEN` 只作为备用，不建议使用。如果暂时不能在自己的电脑上发，可以在仓库 Settings、Secrets and variables、Actions 里添加 secret `NPM_TOKEN`（automation granular access token，不要写进仓库）。pnpm 会先尝试 OIDC，换票失败才退回这个 token。配好 Trusted Publisher，并打开上面的 “disallow tokens” 之后，这个 secret 就不再有效。
 
@@ -108,7 +112,7 @@ pnpm changeset
 
 - `pnpm check` 或 dry-run 失败：还没发布。修完再跑。
 - 认证失败，日志里有 `Skipped OIDC`：Trusted Publisher 没配好。按上面的一次性准备配好，再用 workflow_dispatch 重跑。`NPM_TOKEN` 只是不推荐的备用。不要改版本号，除非包其实已经发出去了。
-- npm 已经收到包，但 workflow 在打 tag 或建 GitHub Release 时失败：不要再次 `pnpm publish`。重跑 workflow。`changeset publish` 发现该版本已在 registry 上会跳过上传；tag 已存在也会跳过。`after-publish.mjs` 会补上 npm 链接。若 Release 完全没建出来，而 tag 已经在远端，脚本会补建。
+- npm 已经收到包，但 workflow 在打 tag 或建 GitHub Release 时失败：不要再次 `pnpm publish`。在 `main` 上用 workflow_dispatch 重跑。`changeset publish` 发现该版本已在 registry 上会跳过上传，随后 `scripts/backfill-releases.mjs` 会补上缺的 tag 和 Release，`after-publish.mjs` 补 npm 链接。
 - 只发出去一个包：重跑。已存在的版本跳过，缺的那个会继续发。
 - provenance 在私有仓库上报错：确认 workflow 里 `PNPM_CONFIG_PROVENANCE` 为 `false`。不要手改已发布的 tarball。
 - GitHub Packages 那一步失败：npm 上的包不受影响。看日志里的 `::error` 或 `pnpm publish` 输出。修好后用 workflow_dispatch 重跑。已经在 npm 和 GitHub Packages 上的版本都会跳过，缺的那个会补发。不想再发到 GitHub Packages 时，把仓库变量 `PUBLISH_GITHUB_PACKAGES` 设为 `false`。

@@ -123,6 +123,26 @@ jobs:
           REPO_VISIBILITY: ${{ github.event.repository.visibility }}
         run: node ./scripts/after-publish.mjs
 
+      # 版本已在 npm（例如首发手动发布）时 changeset publish 什么都不做，也不会打 tag。
+      # 这里补齐缺的 tag 和 GitHub Release，再用 after-publish.mjs 核对 npm 并补 npm 链接。
+      - name: Backfill tags and GitHub Releases
+        id: backfill
+        if: steps.changesets.outputs.published != 'true' && steps.changesets.outputs.hasChangesets != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          node ./scripts/backfill-releases.mjs
+
+      - name: Verify npm and link backfilled Releases
+        if: steps.backfill.outputs.packages != '' && steps.backfill.outputs.packages != '[]'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISHED_PACKAGES: ${{ steps.backfill.outputs.packages }}
+          REPO_VISIBILITY: ${{ github.event.repository.visibility }}
+        run: node ./scripts/after-publish.mjs
+
   github-packages:
     name: GitHub Packages
     needs: release
@@ -167,7 +187,9 @@ jobs:
           for spec in core themes; do
             name="@astryx-vue/${spec}"
             version="$(node -p "require('./packages/${spec}/package.json').version")"
-            if ! npm view "${name}@${version}" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
+            # 上面已把 @astryx-vue scope 指向 GitHub Packages，scope 配置优先于 --registry，
+            # 所以这里必须同时覆盖 scope registry，才真的是在查 npmjs.org。
+            if ! npm view "${name}@${version}" version --registry https://registry.npmjs.org --@astryx-vue:registry=https://registry.npmjs.org >/dev/null 2>&1; then
               echo "${name}@${version} 还没发布到 npmjs.org，跳过 GitHub Packages。"
               continue
             fi
