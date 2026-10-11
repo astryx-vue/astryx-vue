@@ -8,8 +8,30 @@
 
   .astryx-switch-row {
     display: inline-flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-switch-row:has(> .astryx-switch-label .astryx-field-label-group[data-hidden='true']) {
+    gap: 0;
+  }
+
+  /* The label line is 20px and the track is taller. A wrapper at least as tall
+     as the track, centered, keeps the text on the track's midline. */
+  .astryx-switch-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    min-height: var(--astryx-switch-track-height, 24px);
+  }
+
+  .astryx-switch[data-size='sm'] .astryx-switch-label {
+    min-height: var(--astryx-switch-track-height-sm, 20px);
+  }
+
+  .astryx-switch[data-size='lg'] .astryx-switch-label {
+    min-height: var(--astryx-switch-track-height-lg, 28px);
   }
 
   .astryx-switch-control {
