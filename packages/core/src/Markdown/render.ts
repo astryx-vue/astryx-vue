@@ -28,6 +28,8 @@ export interface RenderContext {
   density: 'default' | 'compact'
   headingLevelStart: number
   inline: boolean
+  /** How many lists enclose the block being rendered. Markers cycle every third level. */
+  listDepth: number
   messages: MarkdownMessages
   onLinkClick?: (href: string, event: MouseEvent) => void | false
   slugs: Map<MdNode, string>
@@ -124,6 +126,7 @@ function renderLink(href: string, key: string, children: VNodeChild[], title: st
   return h(Link, {
     key,
     href,
+    class: 'astryx-markdown__link',
     hasUnderline: true,
     target: linkOpensInNewTab(href) ? '_blank' : undefined,
     title: title ?? undefined,
@@ -213,25 +216,51 @@ function isTaskItem(node: MdNode): boolean {
   return node.checked === true || node.checked === false
 }
 
+const TABLE_COLUMN_MIN_CH = 4
+const TABLE_COLUMN_MAX_CH = 24
+const TABLE_HEADER_ONE_LINE_MAX_CH = 20
+
+function columnMinCh(node: MdNode): number[] {
+  const rows = node.children ?? []
+  const header = rows[0]
+  if (header == null)
+    return []
+  return (header.children ?? []).map((cell, index) => {
+    const headerLen = measureNode(cell)
+    let maxLen = headerLen
+    for (const row of rows.slice(1)) {
+      const body = row.children?.[index]
+      if (body != null)
+        maxLen = Math.max(maxLen, measureNode(body))
+    }
+    const bodyFloor = Math.ceil(maxLen / 2)
+    const headerFloor = Math.min(headerLen, TABLE_HEADER_ONE_LINE_MAX_CH)
+    return Math.min(TABLE_COLUMN_MAX_CH, Math.max(TABLE_COLUMN_MIN_CH, bodyFloor, headerFloor))
+  })
+}
+
 function renderList(node: MdNode, key: string, ctx: RenderContext): VNode {
   const items = node.children ?? []
   const taskList = items.length > 0 && items.every(isTaskItem)
   const ordered = node.ordered === true && !taskList
-  const renderedItems = items.map((item, index) => renderListItem(item, `${key}-item-${index}`, taskList, ctx))
+  const nested: RenderContext = { ...ctx, listDepth: ctx.listDepth + 1 }
+  const renderedItems = items.map((item, index) => renderListItem(item, `${key}-item-${index}`, taskList, nested))
   const override = ctx.components?.list
+  const start = ordered && node.start != null && node.start !== 1 ? node.start : undefined
   if (override != null) {
     return h(override, {
       key,
       ordered,
-      start: ordered && node.start != null && node.start !== 1 ? node.start : undefined,
+      start,
     }, () => renderedItems)
   }
 
   return h(ordered ? 'ol' : 'ul', {
     key,
     'class': ['astryx-markdown__list', 'astryx-markdown__prose', taskList ? 'astryx-markdown__tasks' : null],
+    'data-depth': taskList ? undefined : ctx.listDepth % 3,
     'data-tight': node.spread === false || undefined,
-    'start': ordered && node.start != null && node.start !== 1 ? node.start : undefined,
+    'start': start,
     'aria-label': taskList ? ctx.messages.taskList : undefined,
   }, renderedItems)
 }
@@ -300,7 +329,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
           code: value,
           language: language ?? 'plaintext',
           width: '100%',
-          isCollapsible: false,
+          isCollapsible: true,
         }),
       ])
     }
@@ -318,14 +347,17 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       const header = rows[0]
       const body = rows.slice(1)
       const align = node.align ?? []
+      const floors = columnMinCh(node)
       const renderRow = (row: MdNode, rowKey: string, cellTag: 'th' | 'td'): VNode => h('tr', { key: rowKey }, (row.children ?? []).map((cell, index) => {
         const alignment = align[index]
         const marked = alignment === 'center' || alignment === 'right' ? alignment : undefined
+        const floor = floors[index]
         return h(cellTag, {
           'key': `${rowKey}-${index}`,
           'class': 'astryx-markdown__cell',
           'scope': cellTag === 'th' ? 'col' : undefined,
           'data-align': marked,
+          'style': floor == null ? undefined : { minWidth: `${floor}ch` },
         }, renderChildren(cell.children, `${rowKey}-${index}`, ctx))
       }))
       const content = [

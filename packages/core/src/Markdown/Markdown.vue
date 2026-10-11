@@ -85,6 +85,7 @@ export default defineComponent({
         density: props.density ?? 'default',
         headingLevelStart: props.headingLevelStart ?? 1,
         inline,
+        listDepth: 0,
         messages: messages.value.markdown,
         onLinkClick: props.onLinkClick,
         slugs: assignHeadingSlugs(blocks),

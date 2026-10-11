@@ -227,6 +227,27 @@ describe('markdown', () => {
       undefined,
       'center',
     ])
+    expect(plain[0]?.attributes('style')).toContain('min-width')
+  })
+
+  it('cycles list markers by nesting depth and keeps an ordered start', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: [
+          '- Bullet at depth 0',
+          '  1. Number at depth 1',
+          '     - Bullet at depth 2',
+          '',
+          '26. Start 26',
+        ].join('\n'),
+      },
+    })
+    const lists = wrapper.findAll('.astryx-markdown__list')
+    expect(lists.map(list => list.attributes('data-depth'))).toEqual(['0', '1', '2', '0'])
+    expect(lists[1]?.element.tagName).toBe('OL')
+    expect(lists[3]?.attributes('start')).toBe('26')
+    expect(wrapper.findAll('.astryx-markdown__marker')).toHaveLength(0)
+    expect(wrapper.findAll('.astryx-markdown__item').every(item => item.element.tagName === 'LI')).toBe(true)
   })
 
   describe('streaming', () => {

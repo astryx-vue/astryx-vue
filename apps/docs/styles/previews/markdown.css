@@ -26,3 +26,44 @@
   width: 100%;
   max-width: 100%;
 }
+
+.markdown-overview {
+  box-sizing: border-box;
+  width: 20rem;
+  max-width: 100%;
+  text-align: start;
+}
+
+.component-card__preview .markdown-overview {
+  width: 20rem;
+  max-width: 100%;
+}
+
+.markdown-preview__frame {
+  box-sizing: border-box;
+  width: min(100%, 900px);
+  padding: 16px;
+  border: 1px dashed var(--astryx-color-border, #ccc);
+}
+
+.markdown-preview__column {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 12px;
+  outline: 1px dashed #c33;
+}
+
+.markdown-preview__inline {
+  display: grid;
+  gap: 16px;
+  width: min(100%, 680px);
+  text-align: start;
+}
+
+.markdown-preview__note {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--astryx-color-border, #ddd);
+  border-radius: 8px;
+}

@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { markdownBasic as demo } from './index'
+import { markdownOverview as demo } from './index'
 
 export const meta = {
   slug: 'markdown',
