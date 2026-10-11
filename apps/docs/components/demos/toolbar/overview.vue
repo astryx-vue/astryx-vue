@@ -20,7 +20,6 @@ import { Toolbar } from '@astryx-vue/core/Toolbar'
         </Heading>
       </template>
       <template #end>
-        <Button label="Discard" size="sm" />
         <Button label="Save" size="sm" variant="primary" />
       </template>
     </Toolbar>
