@@ -8,9 +8,9 @@
     width: var(--astryx-side-nav-width, 260px);
     height: 100%;
     overflow: hidden;
-    background: var(--astryx-side-nav-background, transparent);
-    color: var(--astryx-nav-item-foreground, var(--astryx-color-text-primary, #171717));
-    transition: width var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    background: transparent;
+    color: var(--astryx-color-text-primary);
+    transition: width var(--astryx-duration-medium-max) var(--astryx-ease-standard);
   }
 
   .astryx-side-nav--collapsed {
@@ -127,7 +127,7 @@
   }
 
   .astryx-side-nav-heading--link:hover {
-    background: var(--astryx-nav-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    background: var(--astryx-color-overlay-hover);
   }
 
   .astryx-side-nav-heading__icon {
@@ -198,14 +198,14 @@
 
   .astryx-side-nav-heading__chevron:hover,
   .astryx-side-nav-collapse:hover {
-    background: var(--astryx-nav-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    background: var(--astryx-color-overlay-hover);
   }
 
   .astryx-side-nav-heading__chevron:focus-visible,
   .astryx-side-nav-collapse:focus-visible,
   .astryx-side-nav-heading--collapsed:focus-visible {
-    outline: 2px solid var(--astryx-nav-item-focus, light-dark(#262626, #ebebeb));
-    outline-offset: 2px;
+    outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
   }
 
   .astryx-side-nav-heading__chevron-icon--open,
@@ -218,7 +218,7 @@
   .astryx-side-nav-item__chevron,
   .astryx-side-nav-collapse__chevron {
     display: inline-flex;
-    transition: transform var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition: transform var(--astryx-duration-fast-max) var(--astryx-ease-standard);
   }
 
   [dir='rtl'] .astryx-side-nav-collapse__mirror {
@@ -247,13 +247,13 @@
   }
 
   .astryx-side-nav-item__toggle:hover {
-    background: var(--astryx-nav-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    background: var(--astryx-color-overlay-hover);
   }
 
   .astryx-side-nav-item__children {
     display: grid;
     grid-template-rows: 1fr;
-    transition: grid-template-rows var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition: grid-template-rows var(--astryx-duration-medium-max) var(--astryx-ease-standard);
   }
 
   .astryx-side-nav-item__children--collapsed {

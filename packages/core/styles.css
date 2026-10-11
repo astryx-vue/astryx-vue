@@ -1,3 +1,4 @@
+/* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './styles/alert-dialog.css';
 @import './styles/avatar.css';
 @import './styles/avatar-group.css';
@@ -30,6 +31,7 @@
 @import './styles/list.css';
 @import './styles/mobile-nav.css';
 @import './styles/more-menu.css';
+@import './styles/motion.css';
 @import './styles/nav-item.css';
 @import './styles/nav-menu.css';
 @import './styles/overflow-list.css';

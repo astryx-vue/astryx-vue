@@ -1,8 +1,0 @@
-@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
-
-@layer astryx.tokens {
-  :root,
-  [data-astryx-theme='neutral'] {
-    --astryx-top-nav-background: transparent;
-  }
-}

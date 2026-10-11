@@ -20,7 +20,7 @@
   .astryx-mobile-nav[open] { display: flex; }
 
   .astryx-mobile-nav::backdrop {
-    background: var(--astryx-mobile-nav-overlay, light-dark(#00000080, #000000cc));
+    background: var(--astryx-color-overlay);
   }
 
   .astryx-mobile-nav__drawer {
@@ -29,13 +29,20 @@
     box-sizing: border-box;
     width: min(100%, var(--astryx-mobile-nav-width, 320px));
     height: 100%;
-    background: var(--astryx-mobile-nav-background, light-dark(#ffffff, #1b1b1b));
-    color: var(--astryx-nav-item-foreground, var(--astryx-color-text-primary, #171717));
-    box-shadow: var(--astryx-nav-menu-shadow, 0 4px 16px light-dark(oklch(0 0 0 / 12%), oklch(0 0 0 / 45%)));
+    background: var(--astryx-color-background-popover);
+    color: var(--astryx-color-text-primary);
+    box-shadow: var(--astryx-shadow-low);
   }
 
-  .astryx-mobile-nav--start .astryx-mobile-nav__drawer { margin-inline-end: auto; }
-  .astryx-mobile-nav--end .astryx-mobile-nav__drawer { margin-inline-start: auto; }
+  .astryx-mobile-nav--start .astryx-mobile-nav__drawer {
+    margin-inline-end: auto;
+    animation: astryx-slide-in-start var(--astryx-duration-medium) var(--astryx-ease-standard) both;
+  }
+
+  .astryx-mobile-nav--end .astryx-mobile-nav__drawer {
+    margin-inline-start: auto;
+    animation: astryx-slide-in-end var(--astryx-duration-medium) var(--astryx-ease-standard) both;
+  }
 
   .astryx-mobile-nav__header {
     display: flex;
@@ -83,13 +90,13 @@
 
   .astryx-mobile-nav__close:hover,
   .astryx-mobile-nav-toggle:hover {
-    background: var(--astryx-nav-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    background: var(--astryx-color-overlay-hover);
   }
 
   .astryx-mobile-nav__close:focus-visible,
   .astryx-mobile-nav-toggle:focus-visible {
-    outline: 2px solid var(--astryx-nav-item-focus, light-dark(#262626, #ebebeb));
-    outline-offset: 2px;
+    outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
   }
 
   .astryx-mobile-nav__close-glyph {
@@ -129,5 +136,11 @@
   .astryx-mobile-nav-toggle__glyph--open::after {
     content: '';
     position: absolute;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-mobile-nav__drawer {
+      animation-duration: 0.01ms;
+    }
   }
 }

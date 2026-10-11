@@ -1,253 +1,434 @@
-import type { MaybeRefOrGetter, Ref } from 'vue'
-import { onScopeDispose, ref, toValue, watch } from 'vue'
+import type { Ref } from 'vue'
+import { ref, watch } from 'vue'
 
+/**
+ * 一维列表的方向。
+ * - `horizontal`：左右方向键
+ * - `vertical`：上下方向键
+ * - `both`：四个方向键都按 DOM 顺序走
+ */
 export type ListFocusOrientation = 'horizontal' | 'vertical' | 'both'
 
 export interface UseListFocusOptions {
-  /** 列表里可移动焦点的元素。 @default '[role="menuitem"]' */
-  itemSelector?: MaybeRefOrGetter<string>
   /**
-   * 用来区分嵌套列表的边界。
-   * 一项属于当前列表，仅当它最近的边界祖先就是这个容器。
-   * 工具栏里套了菜单时，传 `[role="toolbar"], [role="menu"]`。
+   * 列表里可聚焦项的选择器。
+   * @default '[role="menuitem"]'
+   */
+  itemSelector?: string
+  /**
+   * 列表边界。子菜单画在父菜单里面时，用它把两边的项和按键分开。
+   * 菜单一般传 `[role="menu"]`。平铺列表不用传。
    */
   boundarySelector?: string
-  /** 到头之后是否绕回。 @default true */
+  /**
+   * 到头之后是否绕回另一头。
+   * @default true
+   */
   wrap?: boolean
-  /** 按下 Escape 时调用。 */
+  /** 按下 Escape 时调用。传了才会吃掉这个键。 */
   onEscape?: () => void
-  /** 方向键怎么走。 @default 'vertical' */
-  orientation?: MaybeRefOrGetter<ListFocusOrientation>
-  /** Home / End 是否跳到首尾。 @default true */
+  /**
+   * 导航方向。
+   * @default 'vertical'
+   */
+  orientation?: ListFocusOrientation
+  /**
+   * Home / End 是否跳到第一项 / 最后一项。
+   * @default true
+   */
   hasHomeEnd?: boolean
   /**
-   * 为 true 时，只有一项 tabindex 为 0，其余为 -1。
-   * 默认只移动焦点，不改 tabindex。
+   * PageDown / PageUp 是否按视口翻页。不滚动的列表里它们等于 End / Home。
+   * @default false
+   */
+  hasPaging?: boolean
+  /**
+   * 是否由这里管理 roving tabindex：只有一项是 `tabindex="0"`，其余是 `-1`。
    * @default false
    */
   hasRovingTabIndex?: boolean
   /**
-   * 为 true 时，方向键不从正在编辑的输入框里抢走，
-   * 除非光标已经顶到移动方向的边界。
+   * 方向键是否让给嵌在列表里的文本框。光标不在移动方向的边界上时不抢。
    * @default false
    */
-  preserveEditing?: boolean
+  hasCaretGuard?: boolean
 }
 
-export interface UseListFocusReturn {
+export interface ListFocus {
+  /** 绑到列表容器上。 */
   listRef: Ref<HTMLElement | null>
   handleKeyDown: (event: KeyboardEvent) => void
+  /** roving tabindex 打开时，点击或程序聚焦后把 tab 停靠点对齐到当前项。 */
   handleFocus: (event: FocusEvent) => void
   focusItem: (index: number) => void
-  syncTabIndex: () => void
+  /** 聚焦第一个可用项。没有可用项时返回 false。 */
+  focusFirst: () => boolean
+  /** 聚焦最后一个可用项。没有可用项时返回 false。 */
+  focusLast: () => boolean
+  /** 这个按键是不是属于当前这一层。没配 boundarySelector 时恒为 true。 */
+  ownsEvent: (event: KeyboardEvent) => boolean
+  /** 当前这一层、DOM 顺序上的项，含禁用项，不含藏起来的项。 */
+  getItems: () => HTMLElement[]
 }
 
-function isItemDisabled(element: HTMLElement): boolean {
-  return element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true'
+const TEXT_INPUT_TYPES = new Set([
+  'text',
+  'search',
+  'url',
+  'tel',
+  'email',
+  'password',
+  'number',
+])
+
+function isHiddenWithin(el: HTMLElement, listEl: HTMLElement): boolean {
+  const hidden = el.parentElement?.closest('[hidden],[inert]')
+  return hidden != null && hidden !== listEl && listEl.contains(hidden)
 }
 
-function isRtl(element: HTMLElement): boolean {
-  return getComputedStyle(element).direction === 'rtl'
+function isRtlElement(el: HTMLElement | null): boolean {
+  if (el == null || typeof window === 'undefined')
+    return false
+  return window.getComputedStyle(el).direction === 'rtl'
 }
 
-function editingClaimsKey(event: KeyboardEvent): boolean {
-  const target = event.target
+function getContentEditableRoot(el: HTMLElement): HTMLElement | null {
+  if (el.isContentEditable)
+    return el
+  const candidate = el.closest('[contenteditable]')
+  if (candidate instanceof HTMLElement && candidate.getAttribute('contenteditable') !== 'false')
+    return candidate
+  return null
+}
+
+function shouldDeferToCaret(target: EventTarget | null, key: string): boolean {
   if (!(target instanceof HTMLElement))
     return false
-  if (target.isContentEditable)
-    return true
-  if (target.tagName === 'SELECT')
-    return true
-  if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA')
+
+  const editableRoot = getContentEditableRoot(target)
+  if (editableRoot != null) {
+    const selection = typeof window === 'undefined' ? null : window.getSelection()
+    if (selection != null && selection.rangeCount > 0 && !selection.isCollapsed)
+      return true
+    return (editableRoot.textContent ?? '').length > 0
+  }
+
+  const isTextarea = target.tagName === 'TEXTAREA'
+  const isTextInput = target.tagName === 'INPUT' && TEXT_INPUT_TYPES.has((target as HTMLInputElement).type)
+  if (!isTextarea && !isTextInput)
     return false
 
-  const field = target as HTMLInputElement
-  const start = field.selectionStart
-  const end = field.selectionEnd
-  if (start == null || end == null)
+  const input = target as HTMLInputElement | HTMLTextAreaElement
+  const { selectionStart, selectionEnd, value } = input
+  if (selectionStart !== selectionEnd)
     return true
-  if (start !== end)
+  if (selectionStart == null)
     return true
-  const length = field.value.length
-  if ((event.key === 'ArrowLeft' || event.key === 'ArrowUp') && start > 0)
-    return true
-  if ((event.key === 'ArrowRight' || event.key === 'ArrowDown') && end < length)
-    return true
+  if (key === 'ArrowLeft' || key === 'ArrowUp' || key === 'Home')
+    return selectionStart > 0
+  if (key === 'ArrowRight' || key === 'ArrowDown' || key === 'End')
+    return selectionStart < value.length
   return false
 }
 
 /**
- * 线性列表的键盘焦点：方向键移动，Home / End 跳到两端，可选循环 tabindex。
- * 横向列表会按容器的 direction 对调左右方向键。
+ * 对应原版 Astryx 的 `hooks/useListFocus`。
+ *
+ * 一维方向键焦点：菜单、工具栏、侧栏、树列表这类「一行一项」的集合。
+ * 默认只移动 DOM 焦点，不改 tabindex。`hasRovingTabIndex` 打开后，
+ * 由这里维持唯一的 tab 停靠点。横向时会看容器的书写方向，RTL 里左右对调。
  */
-export function useListFocus(options: UseListFocusOptions = {}): UseListFocusReturn {
+export function useListFocus(options: UseListFocusOptions = {}): ListFocus {
+  const {
+    itemSelector = '[role="menuitem"]',
+    boundarySelector,
+    wrap = true,
+    onEscape,
+    orientation = 'vertical',
+    hasHomeEnd = true,
+    hasPaging = false,
+    hasRovingTabIndex = false,
+    hasCaretGuard = false,
+  } = options
+
   const listRef = ref<HTMLElement | null>(null)
-  const wrap = options.wrap ?? true
-  const hasHomeEnd = options.hasHomeEnd ?? true
-  function selector(): string {
-    return toValue(options.itemSelector) ?? '[role="menuitem"]'
+
+  function isItemDisabled(el: HTMLElement): boolean {
+    return el.getAttribute('aria-disabled') === 'true'
+      || (el as HTMLButtonElement).disabled === true
+      || el.hasAttribute('disabled')
   }
 
-  function items(): HTMLElement[] {
-    const root = listRef.value
-    if (!root)
+  function getItems(): HTMLElement[] {
+    const listEl = listRef.value
+    if (listEl == null)
       return []
-    return [...root.querySelectorAll<HTMLElement>(selector())].filter((element) => {
-      if (isItemDisabled(element))
-        return false
-      if (!options.boundarySelector)
-        return true
-      return element.closest(options.boundarySelector) === root
-    })
+    const matched = Array.from(listEl.querySelectorAll<HTMLElement>(itemSelector))
+      .filter(el => !isHiddenWithin(el, listEl))
+    if (boundarySelector == null)
+      return matched
+    return matched.filter(el => el.closest(boundarySelector) === listEl)
   }
 
-  function eventBelongs(event: Event): boolean {
-    const root = listRef.value
-    const target = event.target
-    if (!root || !(target instanceof Node) || !root.contains(target))
-      return false
-    if (!options.boundarySelector || !(target instanceof Element))
+  function ownsEvent(event: KeyboardEvent): boolean {
+    const listEl = listRef.value
+    if (listEl == null || boundarySelector == null)
       return true
-    return target.closest(options.boundarySelector) === root
+    const target = event.target
+    if (!(target instanceof Element))
+      return true
+    return target.closest(boundarySelector) === listEl
   }
 
-  function currentIndex(list: HTMLElement[]): number {
+  function findEnabledIndex(items: HTMLElement[], start: number, step: 1 | -1, shouldWrap: boolean): number {
+    const count = items.length
+    if (count === 0)
+      return -1
+    let index = start
+    for (let i = 0; i < count; i++) {
+      if (index < 0 || index >= count) {
+        if (!shouldWrap)
+          return -1
+        index = (index + count) % count
+      }
+      const item = items[index]
+      if (item != null && !isItemDisabled(item))
+        return index
+      index += step
+    }
+    return -1
+  }
+
+  function getCurrentIndex(): number {
+    const items = getItems()
     const active = document.activeElement
-    const focused = list.findIndex(element => element === active || (active instanceof Node && element.contains(active)))
-    if (focused >= 0)
-      return focused
-    return list.findIndex(element => element.tabIndex === 0)
+    return items.findIndex(item => item === active || item.contains(active))
   }
 
-  function syncTabIndex(): void {
-    if (!options.hasRovingTabIndex)
-      return
-    const list = items()
-    if (list.length === 0)
-      return
-    const selected = list.findIndex(element => element.tabIndex === 0)
-    const activeIndex = selected >= 0 ? selected : 0
-    list.forEach((element, index) => {
-      element.tabIndex = index === activeIndex ? 0 : -1
-    })
+  function setTabIndex(el: HTMLElement, value: 0 | -1): void {
+    if (el.getAttribute('tabindex') !== String(value))
+      el.setAttribute('tabindex', String(value))
   }
 
-  function focusItem(index: number): void {
-    const list = items()
-    if (list.length === 0)
+  function syncTabStops(): void {
+    const items = getItems()
+    const enabled = items.filter(el => !isItemDisabled(el))
+    if (enabled.length === 0)
       return
-    const next = ((index % list.length) + list.length) % list.length
-    const target = list[next]
-    if (!target)
+    const current = enabled.find(el => el.getAttribute('tabindex') === '0')
+    const tabbable = current ?? enabled[0]
+    for (const el of items)
+      setTabIndex(el, el === tabbable ? 0 : -1)
+  }
+
+  function focusIndex(items: HTMLElement[], index: number): void {
+    const target = items[index]
+    if (target == null)
       return
-    if (options.hasRovingTabIndex) {
-      list.forEach((element, itemIndex) => {
-        element.tabIndex = itemIndex === next ? 0 : -1
-      })
+    if (hasRovingTabIndex) {
+      for (const el of items)
+        setTabIndex(el, el === target ? 0 : -1)
     }
     target.focus()
   }
 
-  function move(delta: number): void {
-    const list = items()
-    if (list.length === 0)
+  function focusItem(index: number): void {
+    const items = getItems()
+    if (items.length === 0)
       return
-    const current = currentIndex(list)
-    if (current < 0) {
-      focusItem(delta > 0 ? 0 : list.length - 1)
-      return
-    }
-    let next = current + delta
-    if (wrap) {
-      next = (next + list.length) % list.length
-    }
-    else if (next < 0 || next >= list.length) {
-      return
-    }
-    focusItem(next)
+    focusIndex(items, Math.max(0, Math.min(index, items.length - 1)))
   }
 
-  function handleKeyDown(event: KeyboardEvent): void {
-    if (!eventBelongs(event))
+  function focusFirst(): boolean {
+    const items = getItems()
+    const index = findEnabledIndex(items, 0, 1, false)
+    if (index === -1)
+      return false
+    focusIndex(items, index)
+    return true
+  }
+
+  function focusLast(): boolean {
+    const items = getItems()
+    const index = findEnabledIndex(items, items.length - 1, -1, false)
+    if (index === -1)
+      return false
+    focusIndex(items, index)
+    return true
+  }
+
+  function focusPage(direction: 1 | -1): void {
+    const container = listRef.value
+    const items = getItems()
+    if (container == null || items.length === 0)
       return
-    if (options.preserveEditing && editingClaimsKey(event))
+    const currentIndex = getCurrentIndex()
+    const enabledIndices = items
+      .map((item, index) => (isItemDisabled(item) ? -1 : index))
+      .filter(index => index !== -1)
+    if (enabledIndices.length === 0)
       return
 
-    if (event.key === 'Escape' && options.onEscape) {
-      event.preventDefault()
-      event.stopPropagation()
-      options.onEscape()
+    function edgeVisible(): number {
+      const bounds = container!.getBoundingClientRect()
+      const visible = enabledIndices.filter((index) => {
+        const rect = items[index]!.getBoundingClientRect()
+        return rect.top >= bounds.top - 1 && rect.bottom <= bounds.bottom + 1
+      })
+      if (visible.length === 0)
+        return -1
+      return direction === 1 ? visible[visible.length - 1]! : visible[0]!
+    }
+
+    function isAhead(index: number): boolean {
+      return currentIndex === -1 || (direction === 1 ? index > currentIndex : index < currentIndex)
+    }
+
+    if (currentIndex === -1 && direction === -1) {
+      focusFirst()
       return
     }
 
-    const orientation = toValue(options.orientation) ?? 'vertical'
-    const horizontal = orientation === 'horizontal' || orientation === 'both'
-    const vertical = orientation === 'vertical' || orientation === 'both'
-    const root = listRef.value
-    const rtl = root ? isRtl(root) : false
-    const nextKey = rtl ? 'ArrowLeft' : 'ArrowRight'
-    const previousKey = rtl ? 'ArrowRight' : 'ArrowLeft'
-
-    if (hasHomeEnd && event.key === 'Home') {
-      event.preventDefault()
-      event.stopPropagation()
-      focusItem(0)
-      return
-    }
-    if (hasHomeEnd && event.key === 'End') {
-      event.preventDefault()
-      event.stopPropagation()
-      const list = items()
-      focusItem(list.length - 1)
-      return
+    let target = edgeVisible()
+    if (target === -1 || !isAhead(target)) {
+      container.scrollTop += direction * container.clientHeight
+      target = edgeVisible()
+      if (target === -1 || !isAhead(target)) {
+        const pageSize = Math.max(1, enabledIndices.filter((index) => {
+          const bounds = container.getBoundingClientRect()
+          const rect = items[index]!.getBoundingClientRect()
+          return rect.height > 0 && rect.top >= bounds.top - 1 && rect.bottom <= bounds.bottom + 1
+        }).length)
+        const position = enabledIndices.indexOf(currentIndex)
+        const from = position === -1 ? (direction === 1 ? -1 : enabledIndices.length) : position
+        const next = Math.max(0, Math.min(enabledIndices.length - 1, from + direction * pageSize))
+        target = enabledIndices[next] ?? -1
+      }
     }
 
-    let delta: number | null = null
-    if (vertical && event.key === 'ArrowDown')
-      delta = 1
-    else if (vertical && event.key === 'ArrowUp')
-      delta = -1
-    else if (horizontal && event.key === nextKey)
-      delta = 1
-    else if (horizontal && event.key === previousKey)
-      delta = -1
-
-    if (delta == null)
-      return
-    event.preventDefault()
-    event.stopPropagation()
-    move(delta)
+    if (target !== -1 && target !== currentIndex)
+      focusIndex(items, target)
   }
 
   function handleFocus(event: FocusEvent): void {
-    if (!options.hasRovingTabIndex || !eventBelongs(event))
+    if (!hasRovingTabIndex)
       return
-    const list = items()
+    const items = getItems()
     const target = event.target
-    const index = list.findIndex(element => element === target || (target instanceof Node && element.contains(target)))
-    if (index >= 0)
-      focusItem(index)
+    if (!(target instanceof Node)) {
+      syncTabStops()
+      return
+    }
+    const match = items.find(item => item === target || item.contains(target))
+    if (match != null && !isItemDisabled(match)) {
+      for (const item of items)
+        setTabIndex(item, item === match ? 0 : -1)
+      return
+    }
+    syncTabStops()
   }
 
-  watch(listRef, (element, _previous, onCleanup) => {
-    if (!element || !options.hasRovingTabIndex)
+  function handleKeyDown(event: KeyboardEvent): void {
+    if (event.ctrlKey || event.metaKey || event.altKey)
       return
-    syncTabIndex()
-    if (typeof MutationObserver === 'undefined')
+    if (!ownsEvent(event))
       return
-    const observer = new MutationObserver(() => syncTabIndex())
-    observer.observe(element, {
-      attributeFilter: ['aria-disabled', 'disabled'],
-      attributes: true,
-      childList: true,
-      subtree: true,
-    })
-    onCleanup(() => observer.disconnect())
-  })
 
-  onScopeDispose(() => {
-    listRef.value = null
-  })
+    if (event.key === 'Escape') {
+      if (onEscape != null) {
+        event.preventDefault()
+        onEscape()
+      }
+      return
+    }
 
-  return { listRef, handleKeyDown, handleFocus, focusItem, syncTabIndex }
+    const horizontal = orientation === 'horizontal' || orientation === 'both'
+    const vertical = orientation === 'vertical' || orientation === 'both'
+    const nextKeys: string[] = []
+    const prevKeys: string[] = []
+    if (horizontal) {
+      const rtl = event.key === 'ArrowLeft' || event.key === 'ArrowRight'
+        ? isRtlElement(listRef.value)
+        : false
+      nextKeys.push(rtl ? 'ArrowLeft' : 'ArrowRight')
+      prevKeys.push(rtl ? 'ArrowRight' : 'ArrowLeft')
+    }
+    if (vertical) {
+      nextKeys.push('ArrowDown')
+      prevKeys.push('ArrowUp')
+    }
+
+    const isNext = nextKeys.includes(event.key)
+    const isPrev = prevKeys.includes(event.key)
+    const isHome = hasHomeEnd && event.key === 'Home'
+    const isEnd = hasHomeEnd && event.key === 'End'
+    const isPageDown = hasPaging && event.key === 'PageDown'
+    const isPageUp = hasPaging && event.key === 'PageUp'
+
+    if (!isNext && !isPrev && !isHome && !isEnd && !isPageDown && !isPageUp)
+      return
+
+    if (hasCaretGuard && (shouldDeferToCaret(event.target, event.key) || shouldDeferToCaret(document.activeElement, event.key)))
+      return
+
+    const items = getItems()
+    const currentIndex = getCurrentIndex()
+
+    if (isNext) {
+      const from = currentIndex === -1 ? 0 : currentIndex + 1
+      const next = findEnabledIndex(items, from, 1, wrap)
+      if (next !== -1)
+        focusIndex(items, next)
+    }
+    else if (isPrev) {
+      const from = currentIndex === -1 ? items.length - 1 : currentIndex - 1
+      const prev = findEnabledIndex(items, from, -1, wrap)
+      if (prev !== -1)
+        focusIndex(items, prev)
+    }
+    else if (isHome) {
+      focusFirst()
+    }
+    else if (isEnd) {
+      focusLast()
+    }
+    else if (isPageDown) {
+      focusPage(1)
+    }
+    else if (isPageUp) {
+      focusPage(-1)
+    }
+
+    event.preventDefault()
+  }
+
+  if (hasRovingTabIndex) {
+    watch(listRef, (el, _previous, onCleanup) => {
+      if (el == null || typeof MutationObserver === 'undefined') {
+        if (el != null)
+          syncTabStops()
+        return
+      }
+      syncTabStops()
+      const observer = new MutationObserver(() => syncTabStops())
+      observer.observe(el, {
+        attributeFilter: ['disabled', 'aria-disabled', 'hidden', 'inert'],
+        attributes: true,
+        childList: true,
+        subtree: true,
+      })
+      onCleanup(() => observer.disconnect())
+    }, { immediate: true })
+  }
+
+  return {
+    focusFirst,
+    focusItem,
+    focusLast,
+    getItems,
+    handleFocus,
+    handleKeyDown,
+    listRef,
+    ownsEvent,
+  }
 }

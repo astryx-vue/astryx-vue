@@ -9,8 +9,8 @@
     min-height: 48px;
     padding: var(--astryx-spacing-2, 8px);
     gap: var(--astryx-spacing-4, 16px);
-    background: var(--astryx-top-nav-background, transparent);
-    color: var(--astryx-nav-item-foreground, var(--astryx-color-text-primary, #171717));
+    background: transparent;
+    color: var(--astryx-color-text-primary);
   }
 
   .astryx-top-nav--centered {
@@ -73,18 +73,18 @@
 
   .astryx-top-nav-menu__trigger:hover,
   .astryx-top-nav-menu__trigger[data-open='true'] {
-    background: var(--astryx-nav-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    background: var(--astryx-color-overlay-hover);
     color: var(--astryx-color-text-primary, #171717);
   }
 
   .astryx-top-nav-menu__trigger:focus-visible,
   .astryx-top-nav-menu__drawer-trigger:focus-visible {
-    outline: 2px solid var(--astryx-nav-item-focus, light-dark(#262626, #ebebeb));
-    outline-offset: 2px;
+    outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
   }
 
   .astryx-top-nav-menu__chevron {
-    transition: transform var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition: transform var(--astryx-duration-fast-max) var(--astryx-ease-standard);
   }
 
   .astryx-top-nav-menu__chevron--open { transform: rotate(180deg); }
@@ -156,14 +156,14 @@
   .astryx-top-nav-mega-card {
     flex-direction: column;
     height: 100%;
-    background: var(--astryx-nav-item-selected-background, light-dark(#0000000f, #ffffff1a));
+    background: var(--astryx-color-neutral);
     cursor: pointer;
   }
 
   .astryx-top-nav-mega-item:hover,
   .astryx-top-nav-mega-item:focus-visible,
   .astryx-top-nav-mega-card:hover {
-    background: var(--astryx-nav-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    background: var(--astryx-color-overlay-hover);
     outline: none;
   }
 
@@ -175,7 +175,7 @@
     width: 40px;
     height: 40px;
     border-radius: var(--astryx-radius-element, 0.625rem);
-    background: var(--astryx-nav-item-selected-background, light-dark(#0000000f, #ffffff1a));
+    background: var(--astryx-color-neutral);
   }
 
   .astryx-top-nav-mega-item__glyph { display: block; width: 1.25rem; height: 1.25rem; }

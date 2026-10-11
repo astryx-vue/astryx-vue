@@ -1,3 +1,4 @@
+/* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './neutral/alert-dialog.css';
 @import './neutral/avatar.css';
 @import './neutral/avatar-group.css';
@@ -27,9 +28,7 @@
 @import './neutral/list.css';
 @import './neutral/mobile-nav.css';
 @import './neutral/more-menu.css';
-@import './neutral/nav-item.css';
 @import './neutral/nav-menu.css';
-@import './neutral/overflow-list.css';
 @import './neutral/overlay.css';
 @import './neutral/popover.css';
 @import './neutral/progress-bar.css';
@@ -45,6 +44,4 @@
 @import './neutral/text-area.css';
 @import './neutral/toast.css';
 @import './neutral/toggle-button.css';
-@import './neutral/toolbar.css';
 @import './neutral/tooltip.css';
-@import './neutral/top-nav.css';

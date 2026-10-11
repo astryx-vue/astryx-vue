@@ -15,7 +15,7 @@ const slots = useSlots()
 const messages = useAstryxMessages()
 const drawerId = `astryx-top-nav-${useId()}`
 const mobileOpen = ref(false)
-const queryMatches = useMediaQuery(computed(() => props.mobileQuery))
+const queryMatches = props.mobileQuery ? useMediaQuery(props.mobileQuery) : ref(false)
 const isCompact = computed(() => Boolean(props.mobileQuery) && queryMatches.value)
 const hasCenter = computed(() => slots.center != null)
 const hasDrawer = computed(() => slots.start != null || slots.default != null || slots.center != null)

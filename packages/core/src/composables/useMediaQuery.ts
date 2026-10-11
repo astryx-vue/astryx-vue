@@ -1,39 +1,38 @@
-import type { MaybeRefOrGetter, Ref } from 'vue'
-import { onScopeDispose, ref, toValue, watch } from 'vue'
+import type { Ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+
+function readMatches(query: string): boolean {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function')
+    return false
+  return window.matchMedia(query).matches
+}
 
 /**
- * 订阅一条媒体查询。查询字符串变化时会重新订阅。
- * 服务端或没有 matchMedia 时返回 `serverDefault`。
+ * 对应原版 Astryx 的 `hooks/useMediaQuery`。
+ *
+ * Tracks a CSS media query as a ref. The first value is read during setup so a
+ * layout decision does not have to wait for mount, and changes are followed
+ * while the component is alive.
  */
-export function useMediaQuery(
-  query: MaybeRefOrGetter<string | undefined>,
-  serverDefault = false,
-): Ref<boolean> {
-  const matches = ref(serverDefault)
-  let media: MediaQueryList | null = null
+export function useMediaQuery(query: string): Ref<boolean> {
+  const matches = ref(readMatches(query))
+  let mediaQueryList: MediaQueryList | null = null
 
-  function onChange(): void {
-    matches.value = media?.matches ?? serverDefault
+  function update(event: MediaQueryListEvent | MediaQueryList): void {
+    matches.value = event.matches
   }
 
-  function stop(): void {
-    media?.removeEventListener('change', onChange)
-    media = null
-  }
-
-  function start(): void {
-    stop()
-    const value = toValue(query)
-    if (value == null || value === '' || typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-      matches.value = serverDefault
+  onMounted(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function')
       return
-    }
-    media = window.matchMedia(value)
-    matches.value = media.matches
-    media.addEventListener('change', onChange)
-  }
+    mediaQueryList = window.matchMedia(query)
+    update(mediaQueryList)
+    mediaQueryList.addEventListener('change', update)
+  })
 
-  watch(() => toValue(query), start, { immediate: true })
-  onScopeDispose(stop)
+  onBeforeUnmount(() => {
+    mediaQueryList?.removeEventListener('change', update)
+  })
+
   return matches
 }

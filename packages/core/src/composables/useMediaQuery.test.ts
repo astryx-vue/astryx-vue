@@ -1,43 +1,52 @@
-import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, ref } from 'vue'
+import { mountComposable } from './testing/mountComposable.js'
 import { useMediaQuery } from './useMediaQuery.js'
 
 describe('useMediaQuery', () => {
+  const original = window.matchMedia
+
   afterEach(() => {
-    vi.unstubAllGlobals()
+    window.matchMedia = original
   })
 
-  it('reads the current match and updates when the query changes', async () => {
-    const query = ref('(max-width: 600px)')
-    vi.stubGlobal('matchMedia', (value: string) => ({
-      addEventListener: () => {},
-      matches: value.includes('600'),
-      removeEventListener: () => {},
-    }))
+  it('setup 时就读到当前是否匹配', () => {
+    window.matchMedia = vi.fn(() => ({
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })) as unknown as typeof window.matchMedia
 
-    const Host = defineComponent({
-      setup() {
-        const matches = useMediaQuery(query)
-        return () => h('span', matches.value ? 'compact' : 'wide')
-      },
-    })
-    const wrapper = mount(Host)
-    expect(wrapper.text()).toBe('compact')
-
-    query.value = '(min-width: 1000px)'
-    await wrapper.vm.$nextTick()
-    expect(wrapper.text()).toBe('wide')
+    const { result } = mountComposable(() => useMediaQuery('(max-width: 640px)'))
+    expect(result.value).toBe(true)
   })
 
-  it('falls back when matchMedia is missing', () => {
-    vi.stubGlobal('matchMedia', undefined)
-    const Host = defineComponent({
-      setup() {
-        const matches = useMediaQuery('(max-width: 600px)', true)
-        return () => h('span', String(matches.value))
+  it('媒体查询变化时跟着变，卸载后不再听', () => {
+    const heard: { listener: ((event: MediaQueryListEvent) => void) | null } = { listener: null }
+    window.matchMedia = vi.fn(() => ({
+      matches: false,
+      addEventListener: (_type: string, callback: (event: MediaQueryListEvent) => void) => {
+        heard.listener = callback
       },
-    })
-    expect(mount(Host).text()).toBe('true')
+      removeEventListener: () => {
+        heard.listener = null
+      },
+    })) as unknown as typeof window.matchMedia
+
+    const { result, wrapper } = mountComposable(() => useMediaQuery('(max-width: 640px)'))
+    expect(result.value).toBe(false)
+
+    heard.listener?.({ matches: true } as MediaQueryListEvent)
+    expect(result.value).toBe(true)
+
+    wrapper.unmount()
+    heard.listener?.({ matches: false } as MediaQueryListEvent)
+    expect(result.value).toBe(true)
+    expect(heard.listener).toBeNull()
+  })
+
+  it('没有 matchMedia 时当作不匹配', () => {
+    window.matchMedia = undefined as unknown as typeof window.matchMedia
+    const { result } = mountComposable(() => useMediaQuery('(max-width: 640px)'))
+    expect(result.value).toBe(false)
   })
 })

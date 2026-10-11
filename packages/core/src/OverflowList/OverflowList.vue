@@ -35,14 +35,14 @@ const gapPx: Record<number, number> = {
 }
 const gapToken = computed(() => String(props.gap).replace('.', '-'))
 const { containerRef, measureRef, rowHeight, visibleCount: measuredCount } = useOverflow(
-  computed(() => props.items.length),
+  () => props.items.length,
   {
-    behavior: computed(() => props.behavior),
-    collapseFrom: computed(() => props.collapseFrom),
-    gap: computed(() => gapPx[props.gap] ?? 8),
-    maxRows: computed(() => props.maxRows),
-    maxVisibleItems: computed(() => props.maxVisibleItems),
-    minVisibleItems: computed(() => props.minVisibleItems),
+    behavior: props.behavior,
+    collapseFrom: props.collapseFrom,
+    gap: gapPx[props.gap] ?? 8,
+    maxRows: props.maxRows,
+    maxVisibleItems: props.maxVisibleItems,
+    minVisibleItems: props.minVisibleItems,
   },
 )
 // 这两个 ref 只交给模板测量。读一次，避免被当成未使用。
@@ -92,7 +92,7 @@ function onSelect(item: OverflowListItem, event: MouseEvent): void {
           <span class="astryx-overflow-list__chip">{{ item.label }}</span>
         </slot>
       </div>
-      <div>
+      <div data-overflow-indicator>
         <span class="astryx-overflow-list__more">{{ messages.nav.moreItems(items.length) }}</span>
       </div>
     </div>

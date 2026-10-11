@@ -3,12 +3,6 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-nav-menu-background: light-dark(#ffffff, #1b1b1b);
-    --astryx-nav-menu-foreground: light-dark(#171717, #fafafa);
-    --astryx-nav-menu-shadow:
-      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
-      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
-      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
     --astryx-nav-menu-z: 1000;
   }
 }

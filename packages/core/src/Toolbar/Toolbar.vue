@@ -20,8 +20,8 @@ const { listRef, handleKeyDown, handleFocus } = useListFocus({
   hasHomeEnd: true,
   hasRovingTabIndex: true,
   itemSelector: 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])',
-  orientation: computed(() => props.orientation === 'vertical' ? 'vertical' : 'horizontal'),
-  preserveEditing: true,
+  hasCaretGuard: true,
+  orientation: props.orientation === 'vertical' ? 'vertical' : 'horizontal',
   wrap: true,
 })
 void listRef.value

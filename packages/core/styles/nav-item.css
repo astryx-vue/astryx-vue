@@ -13,7 +13,7 @@
     border: 0;
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: transparent;
-    color: var(--astryx-nav-item-foreground, var(--astryx-color-text-primary, #171717));
+    color: var(--astryx-color-text-primary);
     font: inherit;
     font-size: var(--astryx-text-body-size, 0.875rem);
     font-weight: 400;
@@ -23,8 +23,8 @@
     white-space: nowrap;
     cursor: pointer;
     transition:
-      background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
-      color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+      background-color var(--astryx-duration-fast-max) var(--astryx-ease-standard),
+      color var(--astryx-duration-fast-max) var(--astryx-ease-standard);
   }
 
   .astryx-nav-item--sm { height: 28px; padding-inline: var(--astryx-spacing-1, 4px); }
@@ -51,27 +51,27 @@
   }
 
   .astryx-nav-item:hover:not(:disabled, .astryx-nav-item--plain, .astryx-nav-item--selected) {
-    background: var(--astryx-nav-item-hover-background, light-dark(#0536590c, #ffffff0c));
+    background: var(--astryx-color-overlay-hover);
   }
 
   .astryx-nav-item:active:not(:disabled, .astryx-nav-item--plain) {
-    background: var(--astryx-nav-item-pressed-background, light-dark(#05365919, #ffffff19));
+    background: var(--astryx-color-overlay-pressed);
   }
 
   .astryx-nav-item--selected {
-    background: var(--astryx-nav-item-selected-background, light-dark(#0000000f, #ffffff1a));
+    background: var(--astryx-color-neutral);
     font-weight: var(--astryx-font-weight-medium, 500);
   }
 
   .astryx-nav-item--disabled,
   .astryx-nav-item:disabled {
-    color: var(--astryx-nav-item-disabled-foreground, light-dark(#a3a3a3, #737373));
+    color: var(--astryx-color-text-disabled);
     cursor: not-allowed;
   }
 
   .astryx-nav-item:focus-visible {
-    outline: 2px solid var(--astryx-nav-item-focus, light-dark(#262626, #ebebeb));
-    outline-offset: 2px;
+    outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
   }
 
   .astryx-nav-item__icon,
@@ -104,8 +104,8 @@
     align-items: center;
     justify-content: center;
     border-radius: var(--astryx-radius-full, 9999px);
-    background: var(--astryx-nav-icon-background, light-dark(#262626, #ebebeb));
-    color: var(--astryx-nav-icon-foreground, light-dark(#ffffff, #171717));
+    background: var(--astryx-color-accent);
+    color: var(--astryx-color-on-accent);
   }
 
   .astryx-nav-icon--sm { width: 28px; height: 28px; }

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { formatCalendarMonth, weekdayNames } from './format.js'
 import { normalizeLocale, provideAstryxLocale, useAstryxMessages } from './index.js'
+import { astryxMessages } from './messages.js'
 
 describe('locale', () => {
   it('defaults to English and treats Chinese tags as zh-CN', () => {
@@ -33,5 +34,18 @@ describe('locale', () => {
       },
     })
     expect(mount(Parent).text()).toBe('请选择')
+  })
+
+  it('keeps the English and Chinese strings for inputs and pagination', () => {
+    expect(astryxMessages.en.dateInput.clear('Name')).toBe('Clear Name')
+    expect(astryxMessages.en.dateInput.clear(undefined)).toBe('Clear')
+    expect(astryxMessages['zh-CN'].dateInput.clear('日期')).toBe('清除日期')
+    expect(astryxMessages.en.numberInput.increment(undefined)).toBe('Increment')
+    expect(astryxMessages['zh-CN'].numberInput.decrement('数量')).toBe('减少数量')
+    expect(astryxMessages.en.pagination.total(10, 1, 10)).toBe('1–10 of 10')
+    expect(astryxMessages['zh-CN'].pagination.total(10, 1, 10)).toBe('共 10 条，显示 1-10')
+    expect(astryxMessages.en.pagination.compact(1, 20)).toBe('1 / 20')
+    expect(astryxMessages['zh-CN'].pagination.compact(1, 20)).toBe('1 / 20')
+    expect(astryxMessages['zh-CN'].selector.placeholder).toBe('请选择')
   })
 })
