@@ -118,6 +118,13 @@ samp {
   outline: none;
 }
 
+/* The date field container owns its rounded focus treatment. */
+.astryx-date-input-field:focus-visible,
+.astryx-date-input-toggle:focus-visible,
+.astryx-date-input-clear:focus-visible {
+  outline: none;
+}
+
 /* Navigation */
 
 .VPNav {
