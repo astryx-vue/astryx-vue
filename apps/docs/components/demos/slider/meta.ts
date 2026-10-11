@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { sliderBasic as demo } from './index'
+import { sliderOverview as demo } from './index'
 
 export const meta = {
   slug: 'slider',

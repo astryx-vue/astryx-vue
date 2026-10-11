@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { bannerStatuses as demo } from './index'
+import { bannerOverview as demo } from './index'
 
 export const meta = {
   slug: 'banner',

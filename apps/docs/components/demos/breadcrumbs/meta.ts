@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { breadcrumbsBasic as demo } from './index'
+import { breadcrumbsOverview as demo } from './index'
 
 export const meta = {
   slug: 'breadcrumbs',

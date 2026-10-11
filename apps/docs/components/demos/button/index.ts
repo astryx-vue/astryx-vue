@@ -3,6 +3,8 @@ import asyncDemo from './async.vue'
 import asyncSource from './async.vue?raw&highlighted'
 import floatingDemo from './floating.vue'
 import floatingSource from './floating.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import sizesDemo from './sizes.vue'
 import sizesSource from './sizes.vue?raw&highlighted'
 import variantsDemo from './variants.vue'
@@ -25,3 +27,5 @@ export const buttonSizes = defineDemo(sizesDemo, sizesSource, {
 export const buttonAsync = defineDemo(asyncDemo, asyncSource, {
   className: `${buttonPreviewClass} button-preview--async`,
 })
+
+export const buttonOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

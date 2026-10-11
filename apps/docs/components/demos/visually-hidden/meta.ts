@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { visuallyHiddenContext as demo } from './index'
+import { visuallyHiddenOverview as demo } from './index'
 
 export const meta = {
   slug: 'visually-hidden',

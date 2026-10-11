@@ -3,6 +3,8 @@ import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
 import dividerDemo from './divider.vue'
 import dividerSource from './divider.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import sizesDemo from './sizes.vue'
 import sizesSource from './sizes.vue?raw&highlighted'
 
@@ -17,3 +19,5 @@ export const tabListSizes = defineDemo(sizesDemo, sizesSource, {
 export const tabListDivider = defineDemo(dividerDemo, dividerSource, {
   className: 'tab-list-preview',
 })
+
+export const tabListOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { inputGroupBasic as demo } from './index'
+import { inputGroupOverview as demo } from './index'
 
 export const meta = {
   slug: 'input-group',

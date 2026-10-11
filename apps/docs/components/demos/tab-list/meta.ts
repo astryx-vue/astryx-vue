@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { tabListBasic as demo } from './index'
+import { tabListOverview as demo } from './index'
 
 export const meta = {
   slug: 'tab-list',

@@ -3,6 +3,8 @@ import displaysDemo from './displays.vue'
 import displaysSource from './displays.vue?raw&highlighted'
 import levelsDemo from './levels.vue'
 import levelsSource from './levels.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 
 export const headingLevels = defineDemo(levelsDemo, levelsSource, {
   className: 'heading-preview',
@@ -11,3 +13,5 @@ export const headingLevels = defineDemo(levelsDemo, levelsSource, {
 export const headingDisplays = defineDemo(displaysDemo, displaysSource, {
   className: 'heading-preview',
 })
+
+export const headingOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

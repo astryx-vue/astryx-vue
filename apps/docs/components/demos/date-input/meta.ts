@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { dateInputBasic as demo } from './index'
+import { dateInputOverview as demo } from './index'
 
 export const meta = {
   slug: 'date-input',
