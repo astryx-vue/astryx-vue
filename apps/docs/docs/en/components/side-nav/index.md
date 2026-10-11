@@ -8,6 +8,7 @@ footer: false
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
 import { sideNavEnd, sideNavHeaderMenu, sideNavNested } from '../../../../components/demos/side-nav'
+import SideNavCollapseFigure from '../../../../components/demos/side-nav/collapse.vue'
 </script>
 
 ## Usage
@@ -32,6 +33,8 @@ const collapsed = ref(false)
   </SideNav>
 </template>
 ```
+
+<SideNavCollapseFigure class="nav-collapse-figure" />
 
 ## Best practices
 

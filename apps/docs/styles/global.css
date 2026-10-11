@@ -1859,6 +1859,9 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .nav-frame--fill {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   width: 100%;
 }
 
@@ -1882,25 +1885,64 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: min(100%, 16rem);
 }
 
-.nav-bulk-table {
+.vp-doc .nav-bulk-table {
+  display: table;
   width: 100%;
+  margin: 0;
+  border: 0;
   border-collapse: collapse;
+  overflow: visible;
   font-size: 0.875rem;
 }
 
-.nav-bulk-table th,
-.nav-bulk-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--astryx-color-border);
-  text-align: start;
+.vp-doc .nav-bulk-table tr,
+.vp-doc .nav-bulk-table tr:nth-child(2n) {
+  border: 0;
+  background: transparent;
 }
 
-.nav-bulk-table th {
+.vp-doc .nav-bulk-table th,
+.vp-doc .nav-bulk-table td {
+  border: 0;
+  border-bottom: 1px solid var(--astryx-color-border);
+  background: transparent;
+  padding: 10px 12px;
+  text-align: start;
+  vertical-align: middle;
+}
+
+.vp-doc .nav-bulk-table th {
   font-weight: var(--astryx-font-weight-semibold, 600);
 }
 
-.nav-bulk-table tr.is-selected td {
+.vp-doc .nav-bulk-table tr.is-selected td {
   background: var(--astryx-color-background-muted);
+}
+
+.vp-doc .nav-bulk-table .astryx-checkbox-input {
+  width: auto;
+}
+
+/*
+ * Uno icon rules are unlayered and set width/height to 100%, so the
+ * layered 1rem glyph size loses and the mark fills the circle.
+ * This more specific unlayered rule keeps the glyph at 16px.
+ */
+.astryx-nav-icon > .astryx-nav-icon__glyph {
+  width: 1rem;
+  height: 1rem;
+  background-color: currentcolor;
+}
+
+.astryx-button__end > .nav-overflow-chevron {
+  width: 16px;
+  height: 16px;
+  background-color: currentcolor;
+}
+
+.nav-collapse-figure {
+  width: min(100%, 260px);
+  margin: 16px 0 28px;
 }
 
 .mobile-nav-static {

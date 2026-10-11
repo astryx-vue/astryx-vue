@@ -30,7 +30,11 @@ const items = [
               :aria-controls="panelId"
               :aria-expanded="isOpen ? 'true' : 'false'"
               aria-haspopup="menu"
-            />
+            >
+              <template #end>
+                <span class="nav-overflow-chevron i-carbon-chevron-down" />
+              </template>
+            </Button>
           </template>
           <template #default="{ close, focusRequest }">
             <NavMenu label="More actions" :focus-request="focusRequest" @close="close">

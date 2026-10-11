@@ -124,9 +124,11 @@
   .astryx-nav-icon--md { width: 32px; height: 32px; }
   .astryx-nav-icon--lg { width: 36px; height: 36px; }
 
-  .astryx-nav-icon__glyph {
+  .astryx-nav-icon > .astryx-nav-icon__glyph {
     display: block;
+    flex: none;
     width: 1rem;
     height: 1rem;
+    background-color: currentcolor;
   }
 }

@@ -6,10 +6,10 @@ const collapsed = ref(false)
 </script>
 
 <template>
-  <div class="side-nav-preview">
+  <div class="side-nav-preview astryx-demo">
     <SideNav v-model:is-collapsed="collapsed" collapsible>
       <template #header>
-        <SideNavHeading heading="Workspace" />
+        <SideNavHeading heading="My App" />
       </template>
       <SideNavSection title="Main">
         <SideNavItem href="#home" icon-class="i-carbon-home" is-selected label="Home" />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
 import { Button } from '@astryx-vue/core/Button'
+import { CheckboxInput } from '@astryx-vue/core/CheckboxInput'
 import { Toolbar } from '@astryx-vue/core/Toolbar'
 import { computed, ref } from 'vue'
 
@@ -13,14 +14,25 @@ const rows = [
 ]
 const selected = ref(new Set(['1', '3', '5']))
 const count = computed(() => selected.value.size)
+const headerChecked = computed(() => {
+  if (count.value === 0)
+    return false
+  if (count.value === rows.length)
+    return true
+  return 'indeterminate' as const
+})
 
-function toggle(id: string): void {
+function setRow(id: string, checked: boolean | 'indeterminate'): void {
   const next = new Set(selected.value)
-  if (next.has(id))
-    next.delete(id)
-  else
+  if (checked === true)
     next.add(id)
+  else
+    next.delete(id)
   selected.value = next
+}
+
+function setAll(checked: boolean | 'indeterminate'): void {
+  selected.value = checked === true ? new Set(rows.map(row => row.id)) : new Set()
 }
 
 function clear(): void {
@@ -51,7 +63,15 @@ function clear(): void {
     <table class="nav-bulk-table">
       <thead>
         <tr>
-          <th />
+          <th>
+            <CheckboxInput
+              is-label-hidden
+              label="Select all rows"
+              :model-value="headerChecked"
+              size="sm"
+              @update:model-value="setAll"
+            />
+          </th>
           <th>Name</th>
           <th>Status</th>
           <th>Role</th>
@@ -60,12 +80,13 @@ function clear(): void {
       <tbody>
         <tr v-for="row in rows" :key="row.id" :class="{ 'is-selected': selected.has(row.id) }">
           <td>
-            <input
-              :aria-label="`Select ${row.name}`"
-              :checked="selected.has(row.id)"
-              type="checkbox"
-              @change="toggle(row.id)"
-            >
+            <CheckboxInput
+              is-label-hidden
+              :label="`Select ${row.name}`"
+              :model-value="selected.has(row.id)"
+              size="sm"
+              @update:model-value="setRow(row.id, $event)"
+            />
           </td>
           <td>{{ row.name }}</td>
           <td>{{ row.status }}</td>
