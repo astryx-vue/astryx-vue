@@ -1,3 +1,6 @@
+import type { ChatMessages } from './messages/chat.js'
+import type { CitationMessages } from './messages/citation.js'
+
 export type AstryxLocale = 'en' | 'zh-CN'
 
 export interface AstryxMessages {
@@ -33,4 +36,6 @@ export interface AstryxMessages {
     pageSize: (count: number) => string
     total: (total: number, from: number, to: number) => string
   }
+  chat: ChatMessages
+  citation: CitationMessages
 }

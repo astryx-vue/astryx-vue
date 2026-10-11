@@ -1,0 +1,13 @@
+.citation-preview {
+  max-width: 100%;
+  margin: 0;
+  color: var(--astryx-text);
+  font-size: var(--astryx-text-body-size, 0.875rem);
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+
+.component-card__preview .citation-preview {
+  width: min(100%, 280px);
+  text-align: center;
+}

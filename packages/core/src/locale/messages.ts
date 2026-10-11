@@ -1,4 +1,6 @@
 import type { AstryxLocale, AstryxMessages } from './types.js'
+import { chatMessagesEn, chatMessagesZh } from './messages/chat.js'
+import { citationMessagesEn, citationMessagesZh } from './messages/citation.js'
 
 function clearLabel(label: string | undefined, fallback: string, prefix: string): string {
   return label != null && label !== '' ? `${prefix}${label}` : fallback
@@ -37,6 +39,8 @@ const en: AstryxMessages = {
     pageSize: count => `${count} / page`,
     total: (total, from, to) => `${from}–${to} of ${total}`,
   },
+  chat: chatMessagesEn,
+  citation: citationMessagesEn,
 }
 
 const zhCN: AstryxMessages = {
@@ -72,6 +76,8 @@ const zhCN: AstryxMessages = {
     pageSize: count => `${count} 条/页`,
     total: (total, from, to) => `共 ${total} 条，显示 ${from}-${to}`,
   },
+  chat: chatMessagesZh,
+  citation: citationMessagesZh,
 }
 
 export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {

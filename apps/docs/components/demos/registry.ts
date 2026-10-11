@@ -13,8 +13,10 @@ import { buttonGroupBasic } from './button-group'
 import { calendarBasic } from './calendar'
 import { cardBasic } from './card'
 import { centerBasic } from './center'
+import { chatConversation } from './chat'
 import { checkboxIndicatorOverview } from './checkbox-indicator'
 import { checkboxInputBasic } from './checkbox-input'
+import { citationLabels } from './citation'
 import { codeBasic } from './code'
 import { collapsibleBasic } from './collapsible'
 import { contextMenuOverview } from './context-menu'
@@ -76,6 +78,8 @@ export const componentDemos: Record<ComponentSlug, DemoModule> = {
   'toggle-button': toggleButtonBasic,
   'card': cardBasic,
   'center': centerBasic,
+  'chat': chatConversation,
+  'citation': citationLabels,
   'code': codeBasic,
   'collapsible': collapsibleBasic,
   'checkbox-indicator': checkboxIndicatorOverview,

@@ -1,3 +1,12 @@
+export { useAnnounce } from './useAnnounce.js'
+export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
+
+export { useChatNewMessages } from './useChatNewMessages.js'
+export type { UseChatNewMessagesOptions, UseChatNewMessagesReturn } from './useChatNewMessages.js'
+
+export { useChatStreamScroll } from './useChatStreamScroll.js'
+export type { ChatScrollToBottomOptions, UseChatStreamScrollOptions, UseChatStreamScrollReturn } from './useChatStreamScroll.js'
+
 export { useCombobox } from './useCombobox.js'
 export type { Combobox, ComboboxOption, UseComboboxOptions } from './useCombobox.js'
 

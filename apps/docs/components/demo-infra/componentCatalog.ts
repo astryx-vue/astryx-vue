@@ -105,6 +105,8 @@ export const COMPONENT_CATALOG = [
   { slug: 'list', group: 'content', en: 'List', zh: '列表' },
   { slug: 'code', group: 'content', en: 'Code', zh: '代码' },
   { slug: 'collapsible', group: 'content', en: 'Collapsible', zh: '折叠面板' },
+  { slug: 'chat', group: 'content', en: 'Chat', zh: '对话' },
+  { slug: 'citation', group: 'content', en: 'Citation', zh: '引文' },
 
   { slug: 'link', group: 'navigation', en: 'Link', zh: '链接' },
   { slug: 'breadcrumbs', group: 'navigation', en: 'Breadcrumbs', zh: '面包屑' },

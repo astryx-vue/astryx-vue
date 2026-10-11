@@ -37,10 +37,61 @@ export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
 export { Center } from './Center/index.js'
 export type { CenterAxis, CenterProps, CenterSizeValue, CenterSlots } from './Center/index.js'
+export {
+  ChatLayout,
+  ChatLayoutScrollButton,
+  ChatMessage,
+  ChatMessageBubble,
+  ChatMessageList,
+  ChatMessageMetadata,
+  ChatReasoning,
+  ChatSystemMessage,
+  ChatToolCalls,
+  ChatTypingIndicator,
+  ChatUnreadDivider,
+  useChatLayoutContext,
+  useChatListContext,
+  useChatMessageContext,
+} from './Chat/index.js'
+export type {
+  ChatDensity,
+  ChatLayoutProps,
+  ChatLayoutScrollButtonEmits,
+  ChatLayoutScrollButtonProps,
+  ChatLayoutScrollSlotProps,
+  ChatLayoutSlots,
+  ChatMessageBubbleGroup,
+  ChatMessageBubbleProps,
+  ChatMessageBubbleSlots,
+  ChatMessageBubbleVariant,
+  ChatMessageListProps,
+  ChatMessageListSlots,
+  ChatMessageMetadataProps,
+  ChatMessageMetadataSlots,
+  ChatMessageProps,
+  ChatMessageSender,
+  ChatMessageSlots,
+  ChatMessageStatus,
+  ChatReasoningEmits,
+  ChatReasoningProps,
+  ChatReasoningSlots,
+  ChatSystemMessageProps,
+  ChatSystemMessageSlots,
+  ChatSystemMessageVariant,
+  ChatToolCallItem,
+  ChatToolCallsEmits,
+  ChatToolCallsProps,
+  ChatToolCallsSlots,
+  ChatToolCallStatus,
+  ChatTypingIndicatorProps,
+  ChatUnreadDividerProps,
+} from './Chat/index.js'
 export { CheckboxIndicator } from './CheckboxIndicator/index.js'
 export type { CheckboxIndicatorProps, CheckboxIndicatorSlots, CheckboxSize, CheckboxState } from './CheckboxIndicator/index.js'
 export { CheckboxInput } from './CheckboxInput/index.js'
 export type { CheckboxInputChangeAction, CheckboxInputChangeEvent, CheckboxInputEmits, CheckboxInputProps, CheckboxInputSlots, CheckboxValue } from './CheckboxInput/index.js'
+export { Citation } from './Citation/index.js'
+export type { CitationProps, CitationSource } from './Citation/index.js'
 export { applyHighlightRanges, Code, CodeBlock, flatTokensToLines, HIGHLIGHTED_TOKEN_TYPES, SYNC_TOKENIZE_THRESHOLD, tokenize, tokenizeAsync, useCopyToClipboard } from './Code/index.js'
 export type { CodeBlockContainer, CodeBlockEmits, CodeBlockProps, CodeBlockSize, CodeBlockTokenizer, CodeColor, CodeHighlightMode, CodeProps, CodeSize, CodeSlots, CopyToClipboardOptions, CopyToClipboardReturn, SyntaxToken, TokenLine } from './Code/index.js'
 export { Collapsible } from './Collapsible/index.js'
