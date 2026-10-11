@@ -12,7 +12,7 @@ import { calendarBasic, calendarRange } from '../../../../components/demos/calen
 
 ## Usage
 
-Calendar component documentation.
+`Calendar` displays dates in a grid format for date selection with keyboard navigation support.
 
 ## Examples
 
@@ -29,4 +29,3 @@ Calendar component documentation.
   locale="en"
   title="Date Range"
 />
-

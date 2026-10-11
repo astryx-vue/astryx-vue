@@ -12,7 +12,7 @@ import { paginationBasic, paginationSizeChanger } from '../../../../components/d
 
 ## Usage
 
-Pagination component documentation.
+`Pagination` provides navigation controls for paginated content.
 
 ## Examples
 
@@ -29,4 +29,3 @@ Pagination component documentation.
   locale="en"
   title="Page Size"
 />
-

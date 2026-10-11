@@ -12,7 +12,7 @@ import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demo
 
 ## Usage
 
-Input Group component documentation.
+`InputGroup` combines input fields with prefix, suffix, or action buttons.
 
 ## Examples
 
@@ -29,4 +29,3 @@ Input Group component documentation.
   locale="en"
   title="With Icon"
 />
-

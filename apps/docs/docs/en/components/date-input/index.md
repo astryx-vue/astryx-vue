@@ -12,7 +12,7 @@ import { dateInputBasic, dateInputClearable } from '../../../../components/demos
 
 ## Usage
 
-Date Input component documentation.
+`DateInput` combines a text input with a calendar popover for date selection.
 
 ## Examples
 
@@ -29,4 +29,3 @@ Date Input component documentation.
   locale="en"
   title="Clearable"
 />
-

@@ -12,7 +12,7 @@ import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../
 
 ## Usage
 
-Number Input component documentation.
+`NumberInput` is a component for numeric input with stepper buttons, min/max limits, and precision control.
 
 ## Examples
 
@@ -36,4 +36,3 @@ Number Input component documentation.
   locale="en"
   title="Sizes"
 />
-
