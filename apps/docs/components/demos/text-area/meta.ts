@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { textAreaBasic as demo } from './index'
+import { textAreaOverview as demo } from './index'
 
 export const meta = {
   slug: 'text-area',

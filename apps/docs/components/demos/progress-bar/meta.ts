@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { progressBarBasic as demo } from './index'
+import { progressBarOverview as demo } from './index'
 
 export const meta = {
   slug: 'progress-bar',

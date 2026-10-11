@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { linkColors as demo } from './index'
+import { linkOverview as demo } from './index'
 
 export const meta = {
   slug: 'link',

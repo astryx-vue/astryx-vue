@@ -1,7 +1,9 @@
 @import '@fontsource/figtree/400.css';
 @import '@fontsource/figtree/400-italic.css';
+@import '@fontsource/figtree/500.css';
 @import '@fontsource/figtree/600.css';
 @import '@fontsource/figtree/600-italic.css';
+@import '@fontsource/figtree/700.css';
 @import '@fontsource/fira-code/400.css';
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
@@ -592,17 +594,16 @@ html.dark .astryx-hero .astryx-button--primary:hover {
 }
 
 .component-card__preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   min-height: 260px;
-  padding: 30px;
+  /* 左右只留 12px：三列卡片里分页的可用宽度要留在 260px 以上，
+     否则组件会收成「1 / 20」，看不到页码。 */
+  padding: 28px 12px;
   overflow: hidden;
   isolation: isolate;
   border: 1px solid transparent;
   border-radius: 16px;
-  gap: 8px;
-  flex-wrap: wrap;
   background: #fafafa;
   pointer-events: none;
   transition: border-color 180ms ease-out, transform 180ms ease-out;
@@ -612,8 +613,7 @@ html.dark .component-card__preview {
   background: #151619;
 }
 
-/* 预览格子是 flex 且居中。子元素默认 min-width: auto，内容一宽就会撑出格子，
-   再被 overflow 裁掉左侧。允许收缩后，分页这类控件才能按自己的容器宽度收起。 */
+/* 预览子元素默认 min-width: auto，内容一宽就会撑出格子。允许收缩后，分页才能按容器宽度收起。 */
 .component-card__preview > *,
 .component-example__preview > * {
   max-width: 100%;
@@ -1972,4 +1972,95 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   height: auto;
   margin: 0;
   border-radius: var(--astryx-radius-element, 0.625rem);
+}
+
+/* Catalog cards show the component itself, centered. Wide controls stay near 20rem
+   instead of stretching to the card edges. */
+.component-card__preview > .overview-frame {
+  box-sizing: border-box;
+  width: min(100%, 20rem) !important;
+  max-width: 100% !important;
+}
+
+.component-card__preview > .overview-hug {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: max-content !important;
+  max-width: 100% !important;
+}
+
+.overview-fill {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.component-card__preview > .overview-frame > .overview-fill,
+.overview-fill > * {
+  width: 100%;
+  max-width: 100%;
+}
+
+.overview-row,
+.overview-stack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.overview-row {
+  flex-wrap: wrap;
+  gap: 10px;
+  width: max-content;
+}
+
+/* A full row of badges is wider than a three-column card. Tighten the gap so
+   the last badge stays inside the preview instead of being clipped. */
+.component-card__preview .overview-row {
+  gap: 6px;
+  max-width: 100%;
+}
+
+.overview-stack {
+  flex-direction: column;
+  gap: 12px;
+  width: max-content;
+}
+
+.component-card__preview > .overview-hug > .astryx-breadcrumbs,
+.component-card__preview > .overview-hug > .astryx-tab-list,
+.component-card__preview > .overview-hug > .astryx-calendar {
+  width: max-content;
+  max-width: 100%;
+}
+
+.component-card__preview .overview-frame .astryx-field,
+.component-card__preview .overview-frame .astryx-toast {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .context-menu-preview__hint {
+  display: none;
+}
+
+.component-card__preview .context-menu-preview__stage {
+  justify-content: center;
+}
+
+.component-card__preview > .context-menu-preview {
+  width: max-content !important;
+  max-width: 100% !important;
+}
+
+.component-card__preview .checkbox-indicator-overview {
+  width: max-content;
+  max-width: 100%;
+  grid-template-columns: repeat(3, max-content);
 }

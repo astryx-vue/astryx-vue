@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { spinnerBasic as demo } from './index'
+import { spinnerOverview as demo } from './index'
 
 export const meta = {
   slug: 'spinner',

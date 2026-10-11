@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { statusDotVariants as demo } from './index'
+import { statusDotOverview as demo } from './index'
 
 export const meta = {
   slug: 'status-dot',

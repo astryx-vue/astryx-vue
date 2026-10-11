@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { buttonGroupBasic as demo } from './index'
+import { buttonGroupOverview as demo } from './index'
 
 export const meta = {
   slug: 'button-group',

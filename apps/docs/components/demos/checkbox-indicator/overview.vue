@@ -26,7 +26,7 @@ import { CheckboxIndicator } from '@astryx-vue/core/CheckboxIndicator'
     </span>
     <span class="checkbox-indicator-overview-item">
       <CheckboxIndicator state="indeterminate" is-disabled />
-      <span>Disabled indeterminate</span>
+      <span>Disabled mixed</span>
     </span>
   </div>
 </template>

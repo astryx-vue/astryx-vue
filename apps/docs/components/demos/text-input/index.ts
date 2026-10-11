@@ -3,6 +3,8 @@ import asyncDemo from './async.vue'
 import asyncSource from './async.vue?raw&highlighted'
 import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import passwordDemo from './password.vue'
 import passwordSource from './password.vue?raw&highlighted'
 import searchDemo from './search.vue'
@@ -22,3 +24,5 @@ export const textInputPassword = defineDemo(passwordDemo, passwordSource, option
 export const textInputStates = defineDemo(statesDemo, statesSource, options)
 export const textInputValidation = defineDemo(validationDemo, validationSource, options)
 export const textInputAsync = defineDemo(asyncDemo, asyncSource, options)
+
+export const textInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

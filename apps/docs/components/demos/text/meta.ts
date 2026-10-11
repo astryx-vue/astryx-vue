@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { textTypes as demo } from './index'
+import { textOverview as demo } from './index'
 
 export const meta = {
   slug: 'text',

@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { calendarBasic as demo } from './index'
+import { calendarOverview as demo } from './index'
 
 export const meta = {
   slug: 'calendar',

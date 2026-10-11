@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { overlayBasic as demo } from './index'
+import { overlayOverview as demo } from './index'
 
 export const meta = {
   slug: 'overlay',

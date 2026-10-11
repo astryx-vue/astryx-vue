@@ -53,7 +53,7 @@ const expectedCatalog = [
   { slug: 'tab-list', group: 'navigation', en: 'Tab List', zh: '标签列表' },
   { slug: 'pagination', group: 'navigation', en: 'Pagination', zh: '分页' },
   { slug: 'banner', group: 'feedback', en: 'Banner', zh: '提示条' },
-  { slug: 'badge', group: 'feedback', en: 'Badge', zh: '标签' },
+  { slug: 'badge', group: 'feedback', en: 'Badge', zh: '徽标' },
   { slug: 'skeleton', group: 'feedback', en: 'Skeleton', zh: '骨架屏' },
   { slug: 'spinner', group: 'feedback', en: 'Spinner', zh: '加载态' },
   { slug: 'status-dot', group: 'feedback', en: 'Status Dot', zh: '状态点' },

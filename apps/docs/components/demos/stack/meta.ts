@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { stackDirections as demo } from './index'
+import { stackOverview as demo } from './index'
 
 export const meta = {
   slug: 'stack',

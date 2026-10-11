@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { switchBasic as demo } from './index'
+import { switchOverview as demo } from './index'
 
 export const meta = {
   slug: 'switch',

@@ -3,6 +3,8 @@ import asyncDemo from './async.vue'
 import asyncSource from './async.vue?raw&highlighted'
 import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import rowsDemo from './rows.vue'
 import rowsSource from './rows.vue?raw&highlighted'
 import sizesDemo from './sizes.vue'
@@ -19,3 +21,5 @@ export const textAreaRows = defineDemo(rowsDemo, rowsSource, options)
 export const textAreaStates = defineDemo(statesDemo, statesSource, options)
 export const textAreaValidation = defineDemo(validationDemo, validationSource, options)
 export const textAreaAsync = defineDemo(asyncDemo, asyncSource, options)
+
+export const textAreaOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { selectorBasic as demo } from './index'
+import { selectorOverview as demo } from './index'
 
 export const meta = {
   slug: 'selector',
