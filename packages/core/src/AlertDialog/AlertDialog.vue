@@ -4,12 +4,12 @@ import type { ButtonVariant } from '../Button/types.js'
 import type { AlertDialogEmits, AlertDialogProps, AlertDialogSlots } from './types.js'
 import { computed, provide, useId, useTemplateRef } from 'vue'
 import Button from '../Button/Button.vue'
+import { useMediaQuery } from '../composables/useMediaQuery.js'
 import Dialog from '../Dialog/Dialog.vue'
 import Heading from '../Heading/Heading.vue'
 import Stack from '../Stack/Stack.vue'
 import Text from '../Text/Text.vue'
 import { ALERT_DIALOG_CONTEXT_KEY } from './context.js'
-import { useMediaQuery } from './useMediaQuery.js'
 import '../../styles/alert-dialog.css'
 
 defineOptions({ name: 'AstryxAlertDialog', inheritAttrs: false })
