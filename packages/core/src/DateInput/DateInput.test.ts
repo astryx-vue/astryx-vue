@@ -37,18 +37,19 @@ describe('dateInput', () => {
     expect(vm.inputValue).toBe('')
   })
 
-  it('opens popover on focus', async () => {
+  it('opens the calendar from a click, not from focus alone', async () => {
     const wrapper = mount(DateInput, {
       props: {
         modelValue: null,
       },
     })
 
-    const vm = wrapper.vm as any
-    vm.openCalendar()
-    await nextTick()
+    const input = wrapper.get('input.astryx-date-input-field')
+    await input.trigger('focus')
+    expect((wrapper.vm as any).isOpen).toBe(false)
 
-    expect(vm.isOpen).toBe(true)
+    await input.trigger('click')
+    expect((wrapper.vm as any).isOpen).toBe(true)
   })
 
   it('closes popover after selecting date', async () => {

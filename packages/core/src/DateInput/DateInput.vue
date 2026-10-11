@@ -88,6 +88,15 @@ function openCalendar(): void {
     isOpen.value = true
 }
 
+function onInputKeyDown(event: KeyboardEvent): void {
+  if (props.disabled || isOpen.value)
+    return
+  if (event.key === 'ArrowDown' || (event.altKey && event.key === 'ArrowDown')) {
+    event.preventDefault()
+    openCalendar()
+  }
+}
+
 function onCalendarChange(date: Date | null): void {
   modelValueRef.value = date
   isOpen.value = false
@@ -151,8 +160,8 @@ syncDisplayValue()
           :title="props.disabledReason"
           autocomplete="off"
           @input="onInput"
-          @focus="openCalendar"
           @click="openCalendar"
+          @keydown="onInputKeyDown"
         >
         <button
           v-if="props.clearable && props.modelValue"
