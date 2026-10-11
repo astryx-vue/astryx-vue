@@ -1786,6 +1786,13 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: max-content;
 }
 
+/* A full row of badges is wider than a three-column card. Tighten the gap so
+   the last badge stays inside the preview instead of being clipped. */
+.component-card__preview .overview-row {
+  gap: 6px;
+  max-width: 100%;
+}
+
 .overview-stack {
   flex-direction: column;
   gap: 12px;
