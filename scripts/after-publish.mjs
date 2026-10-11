@@ -4,6 +4,8 @@ import { setTimeout } from 'node:timers/promises'
 
 const packages = JSON.parse(process.env.PUBLISHED_PACKAGES ?? '[]')
 const visibility = process.env.REPO_VISIBILITY ?? ''
+// 补齐的版本可能是在本机手动发布的，本来就没有 provenance，这时传 REQUIRE_PROVENANCE=false。
+const requireProvenance = process.env.REQUIRE_PROVENANCE !== 'false'
 
 function run(command, args, options = {}) {
   return execFileSync(command, args, {
@@ -70,14 +72,14 @@ for (const pkg of packages) {
   if (!url.includes('github.com/astryx-vue/astryx-vue'))
     throw new Error(`${spec} 的 repository 没有指向 astryx-vue/astryx-vue：${url}`)
 
-  if (visibility === 'public') {
+  if (visibility === 'public' && requireProvenance) {
     if (!hasProvenance(info)) {
       throw new Error(`${spec} 缺少 provenance。dist.attestations=${JSON.stringify(info.dist?.attestations ?? null)}`)
     }
     console.log(`${spec} 已在 npm 上，并且带有 provenance`)
   }
   else {
-    console.log(`${spec} 已在 npm 上。仓库可见性是 ${visibility || '未知'}，这次不要求 provenance`)
+    console.log(`${spec} 已在 npm 上。仓库可见性是 ${visibility || '未知'}${requireProvenance ? '' : '，且是补齐的版本'}，这次不要求 provenance`)
   }
 
   const tag = `${pkg.name}@${pkg.version}`
