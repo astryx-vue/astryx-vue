@@ -167,8 +167,8 @@ const notes: Record<string, { zh: string, en: string }> = {
     en: 'Components already use this name. It points at font-weight-normal, which is 400. Upstream calls that token normal.',
   },
   '--astryx-font-family-code': {
-    zh: '以 JetBrains Mono 开头，后面是 ui-monospace、SFMono-Regular、Menlo、Consolas、monospace。字形文件不跟主题走，需要时再引入 @astryx-vue/themes/fonts.css。',
-    en: 'Starts with JetBrains Mono, then ui-monospace, SFMono-Regular, Menlo, Consolas, and monospace. The font files are not part of the theme; import @astryx-vue/themes/fonts.css to opt in.',
+    zh: '以 JetBrains Mono 开头，后面是 ui-monospace、SFMono-Regular、Menlo、Consolas、monospace。Neutral 主题入口会加载 400、500、600、700 和 400 斜体。',
+    en: 'Starts with JetBrains Mono, then ui-monospace, SFMono-Regular, Menlo, Consolas, and monospace. The Neutral theme entry loads 400, 500, 600, 700, and 400 italic.',
   },
 }
 

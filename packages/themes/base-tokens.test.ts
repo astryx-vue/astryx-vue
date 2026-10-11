@@ -340,16 +340,17 @@ describe('neutral base.css semantic tokens', () => {
   })
 })
 
-describe('jetbrains mono opt-in', () => {
-  const fontsCss = readFileSync(join(root, 'packages/themes/fonts.css'), 'utf8')
-
-  it('ships weights 400, 500, 600, 700 and italic 400 without loading them from the theme', () => {
-    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/400.css\'')
-    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/400-italic.css\'')
-    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/500.css\'')
-    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/600.css\'')
-    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/700.css\'')
-    expect(readFileSync(join(root, 'packages/themes/neutral.css'), 'utf8')).not.toContain('fonts.css')
+describe('jetbrains mono in the neutral theme', () => {
+  it('loads the shared faces through the theme entry', () => {
+    const fonts = readFileSync(join(root, 'packages/themes/fonts.css'), 'utf8')
+    const neutral = readFileSync(join(root, 'packages/themes/neutral.css'), 'utf8')
+    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/400.css\';')
+    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/400-italic.css\';')
+    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/500.css\';')
+    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/600.css\';')
+    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/700.css\';')
+    expect(neutral).toContain('@import \'./fonts.css\';')
+    expect(neutral).not.toContain('@fontsource/jetbrains-mono')
     expect(readFileSync(join(root, 'packages/themes/neutral/code.css'), 'utf8')).not.toContain('--astryx-font-family-code')
   })
 })

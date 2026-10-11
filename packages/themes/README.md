@@ -6,8 +6,4 @@ Themes for astryx-vue.
 import '@astryx-vue/themes/neutral.css'
 ```
 
-JetBrains Mono is opt-in. `neutral.css` does not load it.
-
-```ts
-import '@astryx-vue/themes/fonts.css'
-```
+That entry loads JetBrains Mono at 400, 500, 600, 700, and 400 italic.

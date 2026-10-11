@@ -8,6 +8,11 @@ import ts from 'typescript'
 const TS_BANNER = '// 这个文件由 `pnpm sync` 生成，不要手改。\n'
 const CSS_BANNER = '/* 这个文件由 `pnpm sync` 生成，不要手改。 */\n'
 
+// 各主题入口都引入同一份 fonts.css。以后新增主题时，生成的入口同样加上这行。
+const THEME_FONT_IMPORTS = [
+  '@import \'./fonts.css\';',
+]
+
 // 这些名字在改成自动生成之前就没有从包的总入口导出。
 // 子路径仍然导出它们。新组件的导出会照常进入总入口。
 const ROOT_NAME_OMISSIONS = new Set([
@@ -300,8 +305,8 @@ function cssImports(dir, specifierPrefix, omissions) {
     .map(name => `@import '${specifierPrefix}${name}';`)
 }
 
-function renderCss(dir, specifierPrefix, omissions) {
-  const imports = cssImports(dir, specifierPrefix, omissions)
+function renderCss(dir, specifierPrefix, omissions, prelude = []) {
+  const imports = [...prelude, ...cssImports(dir, specifierPrefix, omissions)]
   return `${CSS_BANNER}${imports.join('\n')}\n`
 }
 
@@ -479,7 +484,7 @@ function generatedFiles(rootDir) {
     [join(rootDir, 'packages/core/src/index.ts'), renderIndex(rootDir)],
     [join(rootDir, 'packages/core/src/composables/index.ts'), composables.text],
     [join(rootDir, 'packages/core/styles.css'), renderCss(join(rootDir, 'packages/core/styles'), './styles/', STYLE_FILE_OMISSIONS)],
-    [join(rootDir, 'packages/themes/neutral.css'), renderCss(join(rootDir, 'packages/themes/neutral'), './neutral/', new Set())],
+    [join(rootDir, 'packages/themes/neutral.css'), renderCss(join(rootDir, 'packages/themes/neutral'), './neutral/', new Set(), THEME_FONT_IMPORTS)],
     [join(rootDir, 'packages/core/src/locale/messages.ts'), renderMessages(rootDir)],
   ])
   const packageExports = renderPackageExports(rootDir)

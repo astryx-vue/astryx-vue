@@ -1,4 +1,4 @@
-/* 可选入口。neutral.css 不会引入这些字形。 */
+/* 各主题共用的等宽字形。主题入口在内部引入，使用方不要单独 import 这个文件。 */
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/400-italic.css';
 @import '@fontsource/jetbrains-mono/500.css';
