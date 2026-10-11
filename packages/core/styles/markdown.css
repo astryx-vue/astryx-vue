@@ -383,6 +383,10 @@
     font-weight: var(--astryx-font-weight-semibold, 600);
   }
 
+  .astryx-markdown__table td {
+    color: light-dark(#000000, #ffffff);
+  }
+
   .astryx-markdown__cell[data-align='center'] {
     text-align: center;
   }

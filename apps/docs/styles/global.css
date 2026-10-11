@@ -1897,6 +1897,10 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-weight: var(--astryx-font-weight-semibold, 600);
 }
 
+.vp-doc .astryx-markdown td.astryx-markdown__cell {
+  color: light-dark(#000000, #ffffff);
+}
+
 .vp-doc .astryx-markdown code.astryx-code {
   padding-block: 0;
   padding-inline: var(--astryx-spacing-1, 4px);
