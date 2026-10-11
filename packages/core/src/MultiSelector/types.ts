@@ -1,5 +1,6 @@
 export type MultiSelectorSize = 'sm' | 'md' | 'lg'
 export type MultiSelectorVariant = 'input' | 'ghost'
+export type MultiSelectorPresentation = 'popover' | 'bottom-sheet'
 export type MultiSelectorStatus = 'default' | 'success' | 'warning' | 'error'
 export type MultiSelectorTriggerDisplay = 'count' | 'labels' | 'badges'
 export type MultiSelectorCheckboxPosition = 'start' | 'end'
@@ -37,6 +38,8 @@ export interface MultiSelectorProps {
   size?: MultiSelectorSize
   /** input 是带边框的表单控件，ghost 适合放在工具栏里。 */
   variant?: MultiSelectorVariant
+  /** popover 锚在触发器下，bottom-sheet 在底部弹层里展开。 */
+  presentation?: MultiSelectorPresentation
   clearable?: boolean
   searchable?: boolean
   searchPlaceholder?: string

@@ -2,6 +2,7 @@
 import type { FieldStatusInput } from '../Field/types.js'
 import type { MultiSelectorEmits, MultiSelectorOptionData, MultiSelectorProps, MultiSelectorSlots } from './types.js'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
+import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useOverflow } from '../composables/useOverflow.js'
@@ -9,6 +10,7 @@ import Field from '../Field/Field.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import Token from '../Token/Token.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
+import { isKeyboardModality, trackInteractionModality } from './interactionModality.js'
 import { flattenOptions, SELECT_ALL_VALUE } from './options.js'
 import '../../styles/multi-selector.css'
 import '../../styles/visually-hidden-utility.css'
@@ -22,6 +24,7 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
   status: 'default',
   size: 'md',
   variant: 'input',
+  presentation: 'popover',
   clearable: false,
   searchable: false,
   selectAll: false,
@@ -95,10 +98,31 @@ const combobox = useCombobox({
   },
 })
 
+trackInteractionModality()
+const searchKeyboardFocus = ref(false)
+const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
+const isSheet = computed(() => props.presentation === 'bottom-sheet')
+const sheetOpen = computed({
+  get: () => isSheet.value && combobox.isOpen.value,
+  set: (open: boolean) => {
+    if (!open && combobox.isOpen.value)
+      combobox.close()
+  },
+})
+const listboxTarget = computed(() => isSheet.value && sheetSlot.value ? sheetSlot.value : 'body')
+
+function onSearchFocus(): void {
+  searchKeyboardFocus.value = isKeyboardModality()
+}
+
+function onSearchBlur(): void {
+  searchKeyboardFocus.value = false
+}
+
 const anchored = useAnchoredListbox({
   anchor: anchorRef,
   layer: listboxRef,
-  isOpen: combobox.isOpen,
+  isOpen: computed(() => combobox.isOpen.value && !isSheet.value),
   onDismiss: () => {
     combobox.close()
   },
@@ -379,20 +403,32 @@ defineExpose({
       <input v-for="value in selectedValues" :key="value" type="hidden" :name="props.name" :value="value" :disabled="!props.name">
     </div>
   </Field>
-  <Teleport to="body">
+  <BottomSheet
+    v-if="isSheet"
+    v-model:is-open="sheetOpen"
+    height="hug"
+    :label="props.label"
+    :padding="2"
+  >
+    <div ref="sheetSlot" class="astryx-multi-selector-sheet">
+      <div class="astryx-multi-selector-sheet-title">{{ props.label }}</div>
+    </div>
+  </BottomSheet>
+  <Teleport :to="listboxTarget">
     <div
       v-show="combobox.isOpen.value"
       :id="listboxId"
       ref="listboxRef"
       class="astryx-multi-selector-listbox"
+      :class="{ 'is-sheet': isSheet }"
       role="listbox"
       aria-multiselectable="true"
       :aria-label="props.label"
-      :data-placement="anchored.position.value.placement"
-      :style="anchored.style.value"
+      :data-placement="isSheet ? undefined : anchored.position.value.placement"
+      :style="isSheet ? undefined : anchored.style.value"
       tabindex="-1"
     >
-      <div v-if="props.searchable" class="astryx-multi-selector-search">
+      <div v-if="props.searchable" class="astryx-multi-selector-search" :data-keyboard-focus="searchKeyboardFocus ? 'true' : undefined">
         <input
           :id="searchId"
           ref="searchRef"
@@ -408,6 +444,8 @@ defineExpose({
           :placeholder="searchPlaceholder"
           :value="query"
           @input="onSearchInput"
+          @focus="onSearchFocus"
+          @blur="onSearchBlur"
           @keydown="onKeyDown"
         >
       </div>

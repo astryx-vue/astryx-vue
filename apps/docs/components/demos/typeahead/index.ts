@@ -1,11 +1,17 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import asyncDemo from './async.vue'
-import asyncSource from './async.vue?raw&highlighted'
-import statesDemo from './states.vue'
-import statesSource from './states.vue?raw&highlighted'
-import staticDemo from './static.vue'
-import staticSource from './static.vue?raw&highlighted'
+import helperDemo from './helper.vue'
+import helperSource from './helper.vue?raw&highlighted'
+import limitedDemo from './limited.vue'
+import limitedSource from './limited.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
+import searchDemo from './search.vue'
+import searchSource from './search.vue?raw&highlighted'
+import validationDemo from './validation.vue'
+import validationSource from './validation.vue?raw&highlighted'
 
-export const typeaheadStatic = defineDemo(staticDemo, staticSource)
-export const typeaheadAsync = defineDemo(asyncDemo, asyncSource)
-export const typeaheadStates = defineDemo(statesDemo, statesSource)
+export const typeaheadOverview = defineDemo(overviewDemo, overviewSource)
+export const typeaheadLimited = defineDemo(limitedDemo, limitedSource)
+export const typeaheadSearch = defineDemo(searchDemo, searchSource)
+export const typeaheadHelper = defineDemo(helperDemo, helperSource)
+export const typeaheadValidation = defineDemo(validationDemo, validationSource)

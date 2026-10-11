@@ -144,7 +144,7 @@
   }
 
   .astryx-token.is-interactive:focus-within {
-    outline: 2px solid var(--astryx-input-focus, #262626);
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
     outline-offset: 1px;
   }
 
@@ -163,4 +163,17 @@
       transition: none;
     }
   }
+}
+
+/* 不分层：文档页的 :focus-visible 会盖过分层里的 outline。 */
+.astryx-token-action:focus,
+.astryx-token-action:focus-visible,
+.astryx-token-remove:focus,
+.astryx-token-remove:focus-visible {
+  outline: none;
+}
+
+.astryx-token.is-interactive:focus-within {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+  outline-offset: 1px;
 }

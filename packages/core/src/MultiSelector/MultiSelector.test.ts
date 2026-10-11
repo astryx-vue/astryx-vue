@@ -55,6 +55,26 @@ describe('multi selector', () => {
     wrapper.unmount()
   })
 
+  it('does not paint a keyboard ring when a pointer opens the search', async () => {
+    const wrapper = mountSelector({ searchable: true })
+    document.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+    await wrapper.get('button[aria-haspopup="listbox"]').trigger('click')
+    await flush()
+    const search = document.querySelector('.astryx-multi-selector-search')
+    expect(search?.getAttribute('data-keyboard-focus')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('paints a keyboard ring when the keyboard opens the search', async () => {
+    const wrapper = mountSelector({ searchable: true })
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))
+    await wrapper.get('button[aria-haspopup="listbox"]').trigger('keydown', { key: 'ArrowDown' })
+    await flush()
+    const search = document.querySelector('.astryx-multi-selector-search')
+    expect(search?.getAttribute('data-keyboard-focus')).toBe('true')
+    wrapper.unmount()
+  })
+
   it('filters from the search combobox', async () => {
     const wrapper = mountSelector({ searchable: true })
     await wrapper.get('button[aria-haspopup="listbox"]').trigger('click')

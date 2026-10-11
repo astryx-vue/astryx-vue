@@ -244,3 +244,15 @@
     }
   }
 }
+
+/* 不分层：输入框自己不画环，焦点落在外框的 focus-within 上。 */
+.astryx-typeahead-input:focus,
+.astryx-typeahead-input:focus-visible,
+.astryx-typeahead-clear:focus {
+  outline: none;
+}
+
+.astryx-typeahead-clear:focus-visible {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+  outline-offset: 1px;
+}

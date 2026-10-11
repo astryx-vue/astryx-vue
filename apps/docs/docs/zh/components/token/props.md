@@ -1,6 +1,6 @@
 ---
 layout: component-docs
-title: 词元
+title: 标签
 outline: false
 footer: false
 ---
@@ -29,7 +29,7 @@ footer: false
   <table>
     <thead><tr><th>名称</th><th>载荷</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><code>remove</code></td><td><code>event: Event</code></td><td>点击删除按钮，或在词元上按 Backspace / Delete。</td></tr>
+      <tr><td><code>remove</code></td><td><code>event: Event</code></td><td>点击删除按钮，或在标签上按 Backspace / Delete。</td></tr>
     </tbody>
   </table>
 </div>

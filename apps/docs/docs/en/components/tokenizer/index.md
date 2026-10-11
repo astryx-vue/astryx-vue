@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tokenizerBasic, tokenizerOverflow, tokenizerStates } from '../../../../components/demos/tokenizer'
+import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokenizerMax, tokenizerOverflow, tokenizerStates } from '../../../../components/demos/tokenizer'
 </script>
 
 ## Usage
@@ -37,22 +37,50 @@ Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the 
 ## Examples
 
 <DemoExample
-  :demo="tokenizerBasic"
-  description="Search, create, and clear. The @ mark comes from the icon slot."
+  :demo="tokenizerClear"
+  description="Tokenizer with a built-in clear-all button for bulk removal."
   locale="en"
-  title="Search and select many"
+  title="Clear"
+/>
+
+<DemoExample
+  :demo="tokenizerCreatable"
+  description="Free-text tokenizer for creating custom tags, and a combined create-or-search pattern."
+  locale="en"
+  title="Creatable"
+/>
+
+<DemoExample
+  :demo="tokenizerEnd"
+  description="Tokenizer with an action button in the end slot."
+  locale="en"
+  title="End Content"
+/>
+
+<DemoExample
+  :demo="tokenizerIcon"
+  description="Tokenizer with a leading search icon."
+  locale="en"
+  title="Icon"
+/>
+
+<DemoExample
+  :demo="tokenizerMax"
+  description="Tokenizer with a maximum selection limit. The input stops accepting more once the limit is reached."
+  locale="en"
+  title="Max Entries"
 />
 
 <DemoExample
   :demo="tokenizerOverflow"
-  description="On blur the tags collapse to one line with +N. Focusing the field expands them."
+  description="On blur, tokens collapse to one line. Inline mode pushes content down on expand; layer mode overlays without shifting layout."
   locale="en"
-  title="Tag overflow"
+  title="Overflow"
 />
 
 <DemoExample
   :demo="tokenizerStates"
-  description="A disabled field with a reason stays focusable. The error state prints its message under the field."
+  description="Disabled, error, warning, and success states."
   locale="en"
-  title="Disabled and error"
+  title="States"
 />

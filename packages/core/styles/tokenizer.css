@@ -173,3 +173,18 @@
     }
   }
 }
+
+/* 不分层：输入框的焦点由外框承担，避免文档页再套一层品牌绿环。 */
+.astryx-tokenizer-input:focus,
+.astryx-tokenizer-input:focus-visible,
+.astryx-tokenizer-clear:focus,
+.astryx-tokenizer-token:focus,
+.astryx-tokenizer-token:focus-visible {
+  outline: none;
+}
+
+.astryx-tokenizer-clear:focus-visible,
+.astryx-tokenizer-token:focus-visible .astryx-token {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+  outline-offset: 1px;
+}

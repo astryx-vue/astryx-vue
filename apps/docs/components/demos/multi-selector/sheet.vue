@@ -3,31 +3,31 @@ import { MultiSelector } from '@astryx-vue/core/MultiSelector'
 import { computed, ref } from 'vue'
 import { useDemoText } from '../../demo-infra/useDemoText'
 
-const selected = ref(['design', 'ios', 'android', 'web', 'api'])
+const selected = ref<string[]>([])
 const { pick } = useDemoText()
 const options = computed(() => [
-  { value: 'design', label: pick('设计', 'Design') },
-  { value: 'ios', label: 'iOS' },
-  { value: 'android', label: 'Android' },
-  { value: 'web', label: 'Web' },
-  { value: 'api', label: 'API' },
+  pick('设计', 'Design'),
+  pick('工程', 'Engineering'),
+  pick('市场', 'Marketing'),
+  pick('运营', 'Operations'),
 ])
 </script>
 
 <template>
-  <div class="demo-container">
+  <div class="demo-field">
     <MultiSelector
       v-model="selected"
       :options="options"
-      :label="pick('平台', 'Platforms')"
-      trigger-display="badges"
-      :max-badges="2"
+      :label="pick('团队', 'Teams')"
+      :placeholder="pick('选择团队', 'Choose teams')"
+      presentation="bottom-sheet"
+      select-all
     />
   </div>
 </template>
 
 <style scoped>
-.demo-container {
+.demo-field {
   width: 20rem;
   max-width: calc(100vw - 4rem);
 }

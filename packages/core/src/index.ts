@@ -288,6 +288,7 @@ export type {
   MultiSelectorEmits,
   MultiSelectorOption,
   MultiSelectorOptionData,
+  MultiSelectorPresentation,
   MultiSelectorProps,
   MultiSelectorSection,
   MultiSelectorSize,

@@ -7,12 +7,14 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tokenBasic, tokenColors } from '../../../../components/demos/token'
+import { tokenClickable, tokenColors, tokenEnd, tokenIcon, tokenRemovable } from '../../../../components/demos/token'
 </script>
 
 ## Usage
 
-`Token` is a small chip. Typeahead, Multi Selector, and Tokenizer use it internally, and a chat composer can use it for an attachment or a mention.
+`Token` is an interactive chip. It can be removed, clicked, or used as a link, for a selected value or a filter. `Badge` is a static status or count marker.
+
+Typeahead, Multi Selector, and Tokenizer use `Token` internally, and a chat composer can use it for an attachment or a mention.
 
 `removable` shows a focusable remove button. Click, `Backspace`, and `Delete` all emit `remove`. `disabled` ignores that action. `#icon` sits before the text and is the place for a type icon.
 
@@ -45,15 +47,36 @@ The remove button’s accessible name defaults to `Remove Design review`. `provi
 ## Examples
 
 <DemoExample
-  :demo="tokenBasic"
-  description="A removable token with a prefix icon. Disabling it stops the remove button."
+  :demo="tokenClickable"
+  description="Interactive tokens that respond to clicks. Use for toggleable filters or tokens that open a detail view."
   locale="en"
-  title="Removable"
+  title="Clickable"
 />
 
 <DemoExample
   :demo="tokenColors"
-  description="Colors share the Badge palette."
+  description="All 11 color variants in default and disabled states."
   locale="en"
   title="Colors"
+/>
+
+<DemoExample
+  :demo="tokenEnd"
+  description="Tokens with trailing content like a count badge or status indicator."
+  locale="en"
+  title="End Content"
+/>
+
+<DemoExample
+  :demo="tokenIcon"
+  description="Tokens with a leading icon that identifies the entity type."
+  locale="en"
+  title="Icon"
+/>
+
+<DemoExample
+  :demo="tokenRemovable"
+  description="Tokens with a dismiss button for selections the user can undo."
+  locale="en"
+  title="Removable"
 />

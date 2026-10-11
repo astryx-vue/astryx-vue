@@ -1,10 +1,10 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { multiSelectorBadges as demo } from './index'
+import { multiSelectorOverview as demo } from './index'
 
 export const meta = {
   slug: 'multi-selector',
   group: 'form',
-  order: 18,
+  order: 14,
   en: 'Multi Selector',
   zh: '多选器',
   demo,

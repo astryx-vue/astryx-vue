@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { multiSelectorBadges, multiSelectorBasic, multiSelectorStates } from '../../../../components/demos/multi-selector'
+import { multiSelectorColumns, multiSelectorForm, multiSelectorGhost, multiSelectorSearchable, multiSelectorSections, multiSelectorSheet } from '../../../../components/demos/multi-selector'
 </script>
 
 ## Usage
@@ -31,22 +31,43 @@ Arrow keys move the highlight. `Enter` and Space toggle the highlighted option. 
 ## Examples
 
 <DemoExample
-  :demo="multiSelectorBasic"
-  description="Searchable, clearable, and select all. The disabled option inside the section stays unselected."
+  :demo="multiSelectorSheet"
+  description="Keeps a multi-selection list open in a bottom sheet while choices are toggled."
   locale="en"
-  title="Multiple selection"
+  title="Bottom Sheet"
 />
 
 <DemoExample
-  :demo="multiSelectorBadges"
-  description="The trigger shows at most two tokens. The rest collapse to +N."
+  :demo="multiSelectorColumns"
+  description="Column visibility toggle with hidden label, search, select-all, and selection count."
   locale="en"
-  title="Tag overflow"
+  title="Column Visibility"
 />
 
 <DemoExample
-  :demo="multiSelectorStates"
-  description="A disabled field with a reason stays focusable. The error state prints its message under the field."
+  :demo="multiSelectorForm"
+  description="Two multi-selectors in a form with required and optional states."
   locale="en"
-  title="Disabled and error"
+  title="Form Composition"
+/>
+
+<DemoExample
+  :demo="multiSelectorGhost"
+  description="Borderless variant composed with ghost buttons in a toolbar."
+  locale="en"
+  title="Ghost Toolbar"
+/>
+
+<DemoExample
+  :demo="multiSelectorSearchable"
+  description="Multi-select with search filtering and select-all."
+  locale="en"
+  title="Searchable"
+/>
+
+<DemoExample
+  :demo="multiSelectorSections"
+  description="Multi-select with options grouped into labeled sections."
+  locale="en"
+  title="Sectioned Permissions"
 />

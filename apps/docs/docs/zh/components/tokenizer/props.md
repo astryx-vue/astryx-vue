@@ -1,6 +1,6 @@
 ---
 layout: component-docs
-title: 标签输入
+title: 标签输入框
 outline: false
 footer: false
 ---
@@ -15,7 +15,7 @@ footer: false
       <tr><td><code>searchSource</code></td><td><code>SearchSource&lt;T&gt;</code></td><td>必需</td><td>静态或异步搜索源。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段标签。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Add…</code> / <code>添加…</code></td><td>输入框占位符。</td></tr>
-      <tr><td><code>creatable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>回车把输入文字收成新词元。</td></tr>
+      <tr><td><code>creatable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>回车把输入文字收成新标签。</td></tr>
       <tr><td><code>overflow</code></td><td><code>'none' | 'unfocused-inline' | 'unfocused-layer'</code></td><td><code>'none'</code></td><td>失焦时是否收成一行并显示 <code>+N</code>。</td></tr>
       <tr><td><code>maxEntries</code></td><td><code>number</code></td><td>—</td><td>最多可选几条。达到上限后输入框只读。</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>输入停顿后再搜索。</td></tr>
@@ -53,7 +53,7 @@ footer: false
     <tbody>
       <tr><td><code>icon</code></td><td>—</td><td>输入区开头的图标。</td></tr>
       <tr><td><code>end</code></td><td>—</td><td>输入区末尾的内容。</td></tr>
-      <tr><td><code>token</code></td><td><code>{ item, remove }</code></td><td>自定义已选词元。</td></tr>
+      <tr><td><code>token</code></td><td><code>{ item, remove }</code></td><td>自定义已选标签。</td></tr>
       <tr><td><code>item</code></td><td><code>{ item, isActive, isSelected }</code></td><td>自定义下拉条目。</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>自定义空状态。</td></tr>
     </tbody>

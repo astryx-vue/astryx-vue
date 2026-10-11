@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadAsync, typeaheadStates, typeaheadStatic } from '../../../../components/demos/typeahead'
+import { typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## Usage
@@ -51,22 +51,29 @@ Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chines
 ## Examples
 
 <DemoExample
-  :demo="typeaheadStatic"
-  description="A local list filters by label and keywords. Grape also matches “raisin”."
+  :demo="typeaheadLimited"
+  description="Typeahead with a capped dropdown showing at most three results."
   locale="en"
-  title="Static search"
+  title="Limited Results"
 />
 
 <DemoExample
-  :demo="typeaheadAsync"
-  description="The request waits 400 milliseconds. Typing “error” shows the error state. Loading and empty states appear in the menu too."
+  :demo="typeaheadSearch"
+  description="Search input with icon and suggestions on focus."
   locale="en"
-  title="Async search"
+  title="Search Field"
 />
 
 <DemoExample
-  :demo="typeaheadStates"
-  description="A disabled field with a reason stays focusable. The error state prints its message under the field."
+  :demo="typeaheadHelper"
+  description="Typeahead with a description below the label."
   locale="en"
-  title="Disabled and error"
+  title="With Helper Text"
+/>
+
+<DemoExample
+  :demo="typeaheadValidation"
+  description="Typeahead with an error validation message."
+  locale="en"
+  title="With Validation"
 />
