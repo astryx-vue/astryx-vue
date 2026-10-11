@@ -1,5 +1,6 @@
 import type { ComputedRef, InjectionKey, MaybeRefOrGetter } from 'vue'
-import type { AstryxLocale, AstryxMessages } from './types.js'
+import type { AstryxMessages } from './messages.js'
+import type { AstryxLocale } from './types.js'
 import { computed, inject, provide, toValue } from 'vue'
 import { astryxMessages } from './messages.js'
 

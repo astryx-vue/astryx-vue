@@ -43,5 +43,10 @@ export default defineConfig({
     publicDir: fileURLToPath(new URL('../public', import.meta.url)),
     resolve: { conditions: ['source', 'module', 'browser', 'development|production'] },
     plugins: [demoSourcePlugin(), UnoCSS(unoConfig)],
+    server: {
+      fs: {
+        allow: [fileURLToPath(new URL('../../..', import.meta.url))],
+      },
+    },
   },
 })

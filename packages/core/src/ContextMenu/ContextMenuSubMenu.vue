@@ -3,12 +3,12 @@ import type { StyleValue } from 'vue'
 import type { ContextMenuItemData, ContextMenuSubMenuEmits, ContextMenuSubMenuProps, ContextMenuSubMenuSlots } from './types.js'
 import { computed, nextTick, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
+import { useOverflow } from '../composables/useOverflow.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useContextMenu, useContextMenuSize } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
 import { useMenuNav } from './menuNav.js'
-import { useMenuOverflow } from './useMenuOverflow.js'
 import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenuSubMenu', inheritAttrs: false })
@@ -47,7 +47,7 @@ const flyoutStyle = computed(() => ({
   top: `${position.value.top}px`,
 }))
 
-const hasOverflow = useMenuOverflow(flyout, showsFlyout)
+const hasOverflow = useOverflow(flyout, showsFlyout)
 
 const nav = useMenuNav({
   menuRef: flyout,

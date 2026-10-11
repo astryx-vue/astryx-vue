@@ -4,13 +4,13 @@ import type { DropdownMenuEmits, DropdownMenuProps, DropdownMenuSlots, DropdownM
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useId, useSlots, watch } from 'vue'
 import Button from '../Button/Button.vue'
 import { useDismiss } from '../composables/useDismiss.js'
+import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { dropdownMenuContextKey } from './context.js'
 import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
 import { DropdownMenuItems } from './renderItems.js'
 import { useMenuFocus } from './useMenuFocus.js'
-import { useMenuTypeahead } from './useMenuTypeahead.js'
 import '../../styles/dropdown-menu.css'
 
 defineOptions({ name: 'AstryxDropdownMenu', inheritAttrs: false })
@@ -129,7 +129,7 @@ const surfaceStyle = computed<CSSProperties>(() => {
 
 const focusNav = useMenuFocus({ list: surfaceRef })
 
-const typeahead = useMenuTypeahead({
+const typeahead = useTypeahead({
   getItemLabels: () => focusNav.getItems().map((row) => {
     const label = row.querySelector('.astryx-item__label')
     return label?.textContent ?? row.textContent ?? ''
