@@ -36,7 +36,7 @@ const date = ref<Date | null>(new Date(2026, 9, 11))
 | 指引 | 实践 |
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 为业务场景设置合理的日期范围限制。 |
-| <Badge variant="success">推荐</Badge> | 使用 `isDateUnavailable` 禁用不可选的日期。 |
+| <Badge variant="success">推荐</Badge> | 使用 `isDateDisabled` 禁用范围内仍不可选的日期。 |
 | <Badge variant="success">推荐</Badge> | 用固定的本地日期构造 `Date`，避免把带时区的时间戳直接当成日历上的某一天。 |
 | <Badge variant="error">避免</Badge> | 在日历上层叠过多的装饰或自定义内容，保持日期网格清晰。 |
 

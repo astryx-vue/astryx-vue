@@ -12,7 +12,16 @@ import { paginationBasic, paginationSizeChanger } from '../../../../components/d
 
 ## Usage
 
-`Pagination` provides navigation controls for paginated content.
+`Pagination` moves through a paged list. `page` is the current page, `pageSize` is the page length, and `total` is the number of items. `showSizeChanger` lets people change how many items each page holds.
+
+## Best practices
+
+| Guideline | Practice |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Use it under tables and lists that are too long for one page. |
+| <Badge variant="success">Do</Badge> | Offer `showSizeChanger` when the list is large enough that page length matters. |
+| <Badge variant="success">Do</Badge> | Show the total and the current range so people know how much data there is. |
+| <Badge variant="error">Don't</Badge> | Rely on a long row of page buttons on a narrow screen. Keep the control compact. |
 
 ## Examples
 

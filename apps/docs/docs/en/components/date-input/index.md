@@ -12,7 +12,16 @@ import { dateInputBasic, dateInputClearable } from '../../../../components/demos
 
 ## Usage
 
-`DateInput` combines a text input with a calendar popover for date selection.
+`DateInput` is a field that opens a calendar. The value is a `Date`, shown as `YYYY-MM-DD`.
+
+## Best practices
+
+| Guideline | Practice |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Turn on `clearable` when the date is optional. |
+| <Badge variant="success">Do</Badge> | Set `min` and `max` so people cannot pick a date the product will reject. |
+| <Badge variant="success">Do</Badge> | Use a placeholder that shows the expected format. |
+| <Badge variant="error">Don't</Badge> | Use it when the value needs a time of day. This field is a calendar date. |
 
 ## Examples
 

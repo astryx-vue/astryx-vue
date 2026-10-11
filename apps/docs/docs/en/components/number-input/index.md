@@ -14,6 +14,15 @@ import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../
 
 `NumberInput` is a numeric field with stepper buttons, a min and max, and a configurable step.
 
+## Best practices
+
+| Guideline | Practice |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Set `min` and `max` when the value has a real range. |
+| <Badge variant="success">Do</Badge> | Pick a `step` that matches the field: `1` for a count, `0.01` for a price. |
+| <Badge variant="success">Do</Badge> | Put the unit in the label, such as "Quantity (pcs)", rather than inside the field. |
+| <Badge variant="error">Don't</Badge> | Use a tiny step across a wide range. People will have to click the stepper many times. |
+
 ## Examples
 
 <DemoExample

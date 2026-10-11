@@ -12,7 +12,16 @@ import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demo
 
 ## Usage
 
-`InputGroup` combines input fields with prefix, suffix, or action buttons.
+`InputGroup` combines an input with a `before` prefix and an `after` suffix. The addons can be text, an icon, or a button.
+
+## Best practices
+
+| Guideline | Practice |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Use `before` for a fixed prefix such as a unit or `https://`. |
+| <Badge variant="success">Do</Badge> | Use `after` for a short action, such as clear or submit. |
+| <Badge variant="success">Do</Badge> | Keep the addons short so the field itself stays easy to read. |
+| <Badge variant="error">Don't</Badge> | Stack several addons on both sides. The field becomes cramped. |
 
 ## Examples
 
