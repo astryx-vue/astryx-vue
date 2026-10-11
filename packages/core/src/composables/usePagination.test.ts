@@ -1,7 +1,7 @@
 import type { UsePaginationOptions } from './usePagination.js'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
-import { usePagination } from './usePagination.js'
+import { paginationDensityForWidth, siblingCountForDensity, usePagination } from './usePagination.js'
 
 describe('usePagination', () => {
   it('calculates total pages', () => {
@@ -297,5 +297,48 @@ describe('usePagination', () => {
 
     expect(totalPages.value).toBe(1) // At least 1 page
     expect(pageNumbers.value).toEqual([1])
+  })
+
+  it('keeps the full window when the container width is unknown', () => {
+    expect(paginationDensityForWidth(0)).toBe('full')
+    expect(paginationDensityForWidth(Number.NaN)).toBe('full')
+    expect(siblingCountForDensity('full')).toBe(1)
+  })
+
+  it('drops sibling pages once the container is narrower than a desktop row', () => {
+    expect(paginationDensityForWidth(575)).toBe('compact')
+    expect(paginationDensityForWidth(390)).toBe('compact')
+    expect(paginationDensityForWidth(280)).toBe('compact')
+    expect(siblingCountForDensity('compact')).toBe(0)
+  })
+
+  it('switches to a page counter on very narrow containers such as catalog cards', () => {
+    expect(paginationDensityForWidth(259)).toBe('minimal')
+    expect(paginationDensityForWidth(240)).toBe('minimal')
+    expect(siblingCountForDensity('minimal')).toBe(0)
+  })
+
+  it('uses a short page range when siblingCount is 0', () => {
+    const page = ref(1)
+    const pageSize = ref(10)
+    const total = ref(200) // 20 pages
+    const siblingCount = ref(0)
+    const onPageChange = vi.fn()
+
+    const { pageNumbers } = usePagination({
+      page,
+      pageSize,
+      total,
+      siblingCount,
+      onPageChange,
+    } as UsePaginationOptions)
+
+    expect(pageNumbers.value).toEqual([1, 2, 3, -1, 20])
+
+    page.value = 10
+    expect(pageNumbers.value).toEqual([1, -1, 10, -1, 20])
+
+    page.value = 20
+    expect(pageNumbers.value).toEqual([1, -1, 18, 19, 20])
   })
 })

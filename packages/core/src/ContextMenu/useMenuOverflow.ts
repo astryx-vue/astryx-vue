@@ -1,42 +1,10 @@
 import type { Ref } from 'vue'
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useOverflow } from '../composables/useOverflow.js'
 
 /**
- * Whether a menu panel's content is taller than the panel.
- *
- * A menu that scrolls has to hand vertical panning to the browser so a finger
- * can scroll its rows; a menu that does not scroll keeps the gesture, so the
- * press model can follow the finger across rows instead of the page.
+ * 旧名字。新代码用 `useOverflow(元素, 是否有效)`。
+ * 签名保持不变：只回答菜单面板的内容是不是比盒子高。
  */
 export function useMenuOverflow(panel: Ref<HTMLElement | null>, isOpen: Ref<boolean>): Ref<boolean> {
-  const hasOverflow = ref(false)
-  let observer: ResizeObserver | null = null
-
-  function update(): void {
-    const element = panel.value
-    hasOverflow.value = element != null && isOpen.value && element.scrollHeight > element.clientHeight
-  }
-
-  onMounted(() => {
-    if (typeof ResizeObserver === 'undefined')
-      return
-    observer = new ResizeObserver(update)
-    if (panel.value != null)
-      observer.observe(panel.value)
-  })
-
-  onBeforeUnmount(() => {
-    observer?.disconnect()
-    observer = null
-  })
-
-  watch(isOpen, (open) => {
-    if (open) {
-      void nextTick(update)
-      return
-    }
-    hasOverflow.value = false
-  })
-
-  return hasOverflow
+  return useOverflow(panel, isOpen)
 }

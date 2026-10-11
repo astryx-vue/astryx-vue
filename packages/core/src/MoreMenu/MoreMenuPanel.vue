@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { LayerPlacement } from '../layer/position.js'
 import type { MoreMenuInitialFocus, MoreMenuItem, MoreMenuPanelEmits, MoreMenuPanelProps, MoreMenuSection } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useId, useTemplateRef, watch } from 'vue'
+import { useOverflow } from '../composables/useOverflow.js'
 import Divider from '../Divider/Divider.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { moreMenuLevelKey, useMoreMenuLevel, useMoreMenuSize } from './context.js'
@@ -38,6 +39,8 @@ const HOVER_CLOSE_DELAY = 250
 const menuId = computed(() => props.id ?? generatedId)
 const layer = useTemplateRef<HTMLElement>('layer')
 const panel = useTemplateRef<HTMLElement>('panel')
+const isPanelOpen = computed(() => props.isOpen)
+const hasOverflow = useOverflow(panel, isPanelOpen)
 const openRowKey = ref<string | null>(null)
 const renderedRowKey = ref<string | null>(null)
 const flyoutFocus = ref<MoreMenuInitialFocus>('none')
@@ -324,6 +327,7 @@ defineExpose({
           ref="panel"
           class="astryx-more-menu__panel"
           data-astryx-more-menu-surface=""
+          :data-overflow="hasOverflow || undefined"
           :data-size="size"
           :aria-label="ariaLabelledby == null ? label : undefined"
           :aria-labelledby="ariaLabelledby"

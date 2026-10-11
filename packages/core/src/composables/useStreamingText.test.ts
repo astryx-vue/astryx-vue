@@ -5,7 +5,7 @@ import { defineComponent, h, nextTick, ref } from 'vue'
 import { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
 
 function stubMotion(matches = false): void {
-  document.documentElement.style.setProperty('--astryx-duration-fast-max', '100ms')
+  document.documentElement.style.setProperty('--astryx-duration-fast-min', '100ms')
   vi.stubGlobal('matchMedia', () => ({
     matches,
     addEventListener: () => {},
@@ -65,7 +65,7 @@ describe('snapToGraphemeBoundary', () => {
 
 describe('useStreamingText', () => {
   afterEach(() => {
-    document.documentElement.style.removeProperty('--astryx-duration-fast-max')
+    document.documentElement.style.removeProperty('--astryx-duration-fast-min')
     vi.unstubAllGlobals()
   })
 

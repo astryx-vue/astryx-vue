@@ -1,5 +1,73 @@
-import type { Ref } from 'vue'
-import { computed } from 'vue'
+import type { MaybeRef, Ref } from 'vue'
+import { computed, toValue } from 'vue'
+
+/**
+ * 窄于这个宽度时收起两侧页码，只留当前页附近的按钮。
+ * 再窄于 {@link PAGINATION_MINIMAL_MAX_WIDTH} 时改为「当前页 / 总页数」。
+ */
+export const PAGINATION_COMPACT_MAX_WIDTH = 576
+
+/** 比手机上单列卡片更窄时，才改成「当前页 / 总页数」。 */
+export const PAGINATION_MINIMAL_MAX_WIDTH = 260
+
+export type PaginationDensity = 'full' | 'compact' | 'minimal'
+
+/**
+ * 按容器宽度决定分页怎么排。
+ * 宽度未知（还没量到，或测试环境里是 0）时保持完整页码，避免默认行为乱跳。
+ */
+export function paginationDensityForWidth(width: number): PaginationDensity {
+  if (!Number.isFinite(width) || width <= 0)
+    return 'full'
+  if (width < PAGINATION_MINIMAL_MAX_WIDTH)
+    return 'minimal'
+  if (width < PAGINATION_COMPACT_MAX_WIDTH)
+    return 'compact'
+  return 'full'
+}
+
+/** `full` 两侧各 1 页；更窄时两侧为 0，只保留当前页和首尾。 */
+export function siblingCountForDensity(density: PaginationDensity): number {
+  return density === 'full' ? 1 : 0
+}
+
+/**
+ * 生成要显示的页码。`-1` 表示省略号。
+ * 算法与上游 Astryx 的 `generatePageRange` 一致，`siblingCount` 是当前页两侧各留几页。
+ */
+export function generatePageRange(currentPage: number, totalPages: number, siblingCount: number): number[] {
+  const siblings = Number.isFinite(siblingCount) ? Math.max(0, Math.floor(siblingCount)) : 1
+  const totalSlots = 5 + 2 * siblings
+
+  if (totalPages <= totalSlots)
+    return Array.from({ length: totalPages }, (_, index) => index + 1)
+
+  const leftSiblingIndex = Math.max(currentPage - siblings, 1)
+  const rightSiblingIndex = Math.min(currentPage + siblings, totalPages)
+  const showLeftEllipsis = leftSiblingIndex > 2
+  const showRightEllipsis = rightSiblingIndex < totalPages - 1
+
+  if (!showLeftEllipsis && showRightEllipsis) {
+    const leftRange = 3 + 2 * siblings
+    const pages = Array.from({ length: leftRange }, (_, index) => index + 1)
+    pages.push(-1, totalPages)
+    return pages
+  }
+
+  if (showLeftEllipsis && !showRightEllipsis) {
+    const rightRange = 3 + 2 * siblings
+    const pages = [1, -1]
+    for (let page = totalPages - rightRange + 1; page <= totalPages; page++)
+      pages.push(page)
+    return pages
+  }
+
+  const pages = [1, -1]
+  for (let page = leftSiblingIndex; page <= rightSiblingIndex; page++)
+    pages.push(page)
+  pages.push(-1, totalPages)
+  return pages
+}
 
 export interface UsePaginationOptions {
   /** 当前页码（1-based） */
@@ -12,6 +80,11 @@ export interface UsePaginationOptions {
   onPageChange: (page: number) => void
   /** 每页条目数变化回调 */
   onPageSizeChange?: (pageSize: number) => void
+  /**
+   * 当前页两侧各显示几个页码。不传时按 1 处理，和原来的 7 个槽位一致。
+   * 窄容器传 0，收成「首页、当前页、末页」。
+   */
+  siblingCount?: MaybeRef<number>
 }
 
 export interface PaginationState {
@@ -37,7 +110,7 @@ export interface PaginationState {
  * 分页逻辑：页码计算、页码范围生成。
  */
 export function usePagination(options: UsePaginationOptions): PaginationState {
-  const { page, pageSize, total, onPageChange, onPageSizeChange } = options
+  const { page, pageSize, total, onPageChange, onPageSizeChange, siblingCount } = options
 
   const totalPages = computed(() => {
     return Math.max(1, Math.ceil(total.value / pageSize.value))
@@ -47,42 +120,8 @@ export function usePagination(options: UsePaginationOptions): PaginationState {
   const canNext = computed(() => page.value < totalPages.value)
 
   const pageNumbers = computed(() => {
-    const current = page.value
-    const total = totalPages.value
-    const maxVisible = 7
-
-    if (total <= maxVisible) {
-      return Array.from({ length: total }, (_, i) => i + 1)
-    }
-
-    // 显示: 1 ... 4 5 [6] 7 8 ... 10
-    const result: number[] = []
-
-    if (current <= 4) {
-      // 靠近开头
-      for (let i = 1; i <= 5; i++)
-        result.push(i)
-      result.push(-1) // 省略号标记
-      result.push(total)
-    }
-    else if (current >= total - 3) {
-      // 靠近结尾
-      result.push(1)
-      result.push(-1)
-      for (let i = total - 4; i <= total; i++)
-        result.push(i)
-    }
-    else {
-      // 中间
-      result.push(1)
-      result.push(-1)
-      for (let i = current - 1; i <= current + 1; i++)
-        result.push(i)
-      result.push(-1)
-      result.push(total)
-    }
-
-    return result
+    const count = toValue(siblingCount) ?? 1
+    return generatePageRange(page.value, totalPages.value, count)
   })
 
   function previous(): void {

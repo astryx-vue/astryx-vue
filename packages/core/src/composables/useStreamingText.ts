@@ -1,5 +1,6 @@
-import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
-import { computed, onBeforeUnmount, onMounted, ref, toValue, watch } from 'vue'
+import type { ComputedRef, MaybeRefOrGetter } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
+import { useMediaQuery } from './useMediaQuery.js'
 
 export type StreamingTextSpeed = 'natural' | 'fast' | 'instant'
 
@@ -19,7 +20,7 @@ const CHARS_PER_TICK: Record<StreamingTextSpeed, number> = {
   instant: Number.POSITIVE_INFINITY,
 }
 
-const FALLBACK_DURATION_MS = 165
+const FALLBACK_DURATION_MS = 95
 
 function parseCssDuration(value: string): number | null {
   const milliseconds = /^([\d.]+)ms$/.exec(value.trim())
@@ -34,7 +35,7 @@ function parseCssDuration(value: string): number | null {
 function motionDuration(): number {
   if (typeof document === 'undefined')
     return FALLBACK_DURATION_MS
-  const raw = getComputedStyle(document.documentElement).getPropertyValue('--astryx-duration-fast-max')
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--astryx-duration-fast-min')
   return parseCssDuration(raw) ?? FALLBACK_DURATION_MS
 }
 
@@ -66,32 +67,6 @@ export function snapToGraphemeBoundary(text: string, offset: number): number {
   return isLowSurrogate(text.charCodeAt(offset)) ? offset - 1 : offset
 }
 
-function usePrefersReducedMotion(): Ref<boolean> {
-  const query = '(prefers-reduced-motion: reduce)'
-  const matches = ref(false)
-  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function')
-    matches.value = window.matchMedia(query).matches
-
-  let media: MediaQueryList | null = null
-  const update = (event: MediaQueryListEvent): void => {
-    matches.value = event.matches
-  }
-
-  onMounted(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function')
-      return
-    media = window.matchMedia(query)
-    matches.value = media.matches
-    media.addEventListener('change', update)
-  })
-
-  onBeforeUnmount(() => {
-    media?.removeEventListener('change', update)
-  })
-
-  return matches
-}
-
 /**
  * Smooth a burst of streamed text into a steady reveal.
  * While `isStreaming` is false, or the user prefers reduced motion, the full
@@ -104,7 +79,7 @@ export function useStreamingText(
   options?: MaybeRefOrGetter<UseStreamingTextOptions>,
 ): ComputedRef<string> {
   const displayedLen = ref(0)
-  const prefersReducedMotion = usePrefersReducedMotion()
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const target = computed(() => toValue(targetText))
   const streaming = computed(() => toValue(isStreaming))
   const speed = computed<StreamingTextSpeed>(() => toValue(options)?.speed ?? 'natural')

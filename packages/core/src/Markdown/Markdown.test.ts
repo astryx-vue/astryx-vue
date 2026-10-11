@@ -229,12 +229,12 @@ describe('markdown', () => {
 
   describe('streaming', () => {
     afterEach(() => {
-      document.documentElement.style.removeProperty('--astryx-duration-fast-max')
+      document.documentElement.style.removeProperty('--astryx-duration-fast-min')
       vi.unstubAllGlobals()
     })
 
     it('keeps a settled heading node while later text arrives', async () => {
-      document.documentElement.style.setProperty('--astryx-duration-fast-max', '100ms')
+      document.documentElement.style.setProperty('--astryx-duration-fast-min', '100ms')
       const frames = stubFrames()
       const content = ref('# Hello\n\n')
       const Host = defineComponent({

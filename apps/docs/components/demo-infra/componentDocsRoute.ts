@@ -21,17 +21,23 @@ export type ComponentDocsRoute
 export const componentDocsCopy = {
   en: {
     catalogTitle: 'Components',
+    closeNavigation: 'Close navigation',
     documentation: 'documentation',
+    menu: 'Menu',
     navigation: 'Component navigation',
     overview: 'Overview',
     props: 'Props',
+    returnToTop: 'Return to top',
   },
   zh: {
     catalogTitle: '组件',
+    closeNavigation: '关闭导航',
     documentation: '文档',
+    menu: '菜单',
     navigation: '组件导航',
     overview: '总览',
     props: '属性',
+    returnToTop: '返回顶部',
   },
 } as const
 
