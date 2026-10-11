@@ -1,76 +1,101 @@
-.astryx-number-input {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-.astryx-number-input-field {
-  width: 100%;
-  padding: var(--astryx-spacing-2) var(--astryx-spacing-3);
-  padding-right: 60px;
-  background: var(--astryx-color-surface);
-  border: 1px solid var(--astryx-color-border);
-  border-radius: var(--astryx-radius-md);
-  font-family: inherit;
-  font-size: var(--astryx-text-body);
-  color: var(--astryx-color-text);
-  transition: all 150ms var(--astryx-ease-out);
-}
+@layer astryx.components {
+  .astryx-number-input {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    height: var(--astryx-input-height-md, 32px);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-input-border, #d4d4d4);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-input-background, #fff);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    overflow: hidden;
+    transition:
+      border-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      box-shadow var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
 
-.astryx-number-input-field:hover:not(:disabled) {
-  border-color: var(--astryx-color-border-hover);
-}
+  .astryx-number-input.size-sm {
+    height: var(--astryx-input-height-sm, 28px);
+  }
 
-.astryx-number-input-field:focus {
-  outline: none;
-  border-color: var(--astryx-color-primary);
-}
+  .astryx-number-input.size-lg {
+    height: var(--astryx-input-height-lg, 36px);
+  }
 
-.astryx-number-input-field:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+  .astryx-number-input:focus-within {
+    border-color: var(--astryx-input-focus, #262626);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);
+  }
 
-.astryx-number-input-buttons {
-  position: absolute;
-  right: var(--astryx-spacing-1);
-  display: flex;
-  gap: var(--astryx-spacing-0-5);
-}
+  .astryx-number-input:has(.astryx-number-input-field:disabled) {
+    opacity: 0.5;
+  }
 
-.astryx-number-input-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  background: var(--astryx-color-surface-hover);
-  border: none;
-  border-radius: var(--astryx-radius-sm);
-  color: var(--astryx-color-text);
-  cursor: pointer;
-  transition: all 150ms var(--astryx-ease-out);
-}
+  .astryx-number-input-field {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    padding: 0 var(--astryx-spacing-2, 8px);
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
 
-.astryx-number-input-button:hover:not(:disabled) {
-  background: var(--astryx-color-surface-active);
-}
+  .astryx-number-input-field::placeholder {
+    color: var(--astryx-color-text-secondary, #525252);
+    opacity: 1;
+  }
 
-.astryx-number-input-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+  .astryx-number-input-field:disabled {
+    cursor: default;
+  }
 
-/* 尺寸变体 */
-.astryx-number-input.size-sm .astryx-number-input-field {
-  padding: var(--astryx-spacing-1-5) var(--astryx-spacing-2);
-  padding-right: 50px;
-  font-size: var(--astryx-text-body-sm);
-}
+  .astryx-number-input-buttons {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    width: var(--astryx-spacing-4, 16px);
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
+  }
 
-.astryx-number-input.size-lg .astryx-number-input-field {
-  padding: var(--astryx-spacing-3) var(--astryx-spacing-4);
-  padding-right: 70px;
-  font-size: var(--astryx-text-body-lg);
+  .astryx-number-input-button {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: var(--astryx-input-background, #fff);
+    color: var(--astryx-color-text-secondary, #525252);
+    cursor: pointer;
+  }
+
+  .astryx-number-input-button.decrement {
+    border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
+  }
+
+  .astryx-number-input-button:disabled {
+    color: var(--astryx-color-text-secondary, #525252);
+    cursor: default;
+  }
+
+  @media (hover: hover) {
+    .astryx-number-input-button:hover:not(:disabled) {
+      background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-number-input {
+      transition: none;
+    }
+  }
 }

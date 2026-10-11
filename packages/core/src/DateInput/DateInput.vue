@@ -79,10 +79,13 @@ function onInput(event: Event): void {
   }
 }
 
-function onInputFocus(): void {
-  if (!props.disabled) {
+function onOpenChange(open: boolean): void {
+  isOpen.value = open
+}
+
+function openCalendar(): void {
+  if (!props.disabled)
     isOpen.value = true
-  }
 }
 
 function onCalendarChange(date: Date | null): void {
@@ -103,56 +106,70 @@ syncDisplayValue()
 
 <template>
   <div class="astryx-date-input" :class="[`size-${props.size}`, `status-${props.status}`]">
-    <Popover v-model:is-open="isOpen" :disabled="props.disabled" placement="below" alignment="start">
-      <template #trigger>
-        <div class="astryx-date-input-wrapper">
-          <!-- 前缀图标 -->
-          <span v-if="$slots.prefix" class="astryx-date-input-prefix">
-            <slot name="prefix" />
-          </span>
-
-          <!-- 输入框 -->
-          <input
-            :id="inputId"
-            ref="inputRef"
-            type="text"
-            class="astryx-date-input-field"
-            :value="inputValue"
-            :placeholder="props.placeholder"
-            :disabled="props.disabled"
-            :aria-label="props.label"
-            :title="props.disabledReason"
-            @input="onInput"
-            @focus="onInputFocus"
-          >
-
-          <!-- 后缀区域 -->
-          <div class="astryx-date-input-suffix">
-            <button
-              v-if="props.clearable && props.modelValue"
-              type="button"
-              class="astryx-date-input-clear"
-              :aria-label="props.clearLabel"
-              tabindex="-1"
-              @click="onClear"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-              </svg>
-            </button>
-            <slot v-else name="suffix">
-              <span class="astryx-date-input-icon">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect x="3" y="4" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.5" />
-                  <path d="M3 6H13" stroke="currentColor" stroke-width="1.5" />
-                  <path d="M5 3V5M11 3V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                </svg>
-              </span>
-            </slot>
-          </div>
-        </div>
-      </template>
-
+    <Popover
+      :is-open="isOpen"
+      :is-enabled="!props.disabled"
+      placement="below"
+      alignment="start"
+      :padding="0"
+      :width="248"
+      :has-close-button="false"
+      :is-modal="false"
+      :has-auto-focus="true"
+      role="dialog"
+      :label="props.label || '选择日期'"
+      @open-change="onOpenChange"
+    >
+      <div class="astryx-date-input-wrapper" :data-disabled="props.disabled ? 'true' : undefined" :data-size="props.size">
+        <span v-if="$slots.prefix" class="astryx-date-input-prefix">
+          <slot name="prefix" />
+        </span>
+        <button
+          type="button"
+          class="astryx-date-input-toggle"
+          :disabled="props.disabled"
+          :aria-label="isOpen ? '关闭日历' : '打开日历'"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="3" y="4" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.5" />
+            <path d="M3 6H13" stroke="currentColor" stroke-width="1.5" />
+            <path d="M5 3V5M11 3V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </button>
+        <input
+          :id="inputId"
+          ref="inputRef"
+          type="text"
+          class="astryx-date-input-field"
+          role="combobox"
+          :value="inputValue"
+          :placeholder="props.placeholder"
+          :disabled="props.disabled"
+          :aria-label="props.label"
+          :aria-expanded="isOpen"
+          aria-haspopup="dialog"
+          :title="props.disabledReason"
+          autocomplete="off"
+          @input="onInput"
+          @focus="openCalendar"
+          @click="openCalendar"
+        >
+        <button
+          v-if="props.clearable && props.modelValue"
+          type="button"
+          class="astryx-date-input-clear"
+          :aria-label="props.clearLabel"
+          tabindex="-1"
+          @click="onClear"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </button>
+        <span v-else-if="$slots.suffix" class="astryx-date-input-suffix">
+          <slot name="suffix" />
+        </span>
+      </div>
       <template #content>
         <Calendar
           :model-value="props.modelValue"

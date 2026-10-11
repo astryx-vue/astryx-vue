@@ -1,62 +1,84 @@
-.astryx-input-group {
-  display: flex;
-  align-items: stretch;
-  width: 100%;
-  border: 1px solid var(--astryx-color-border);
-  border-radius: var(--astryx-radius-md);
-  overflow: hidden;
-  transition: border-color 150ms var(--astryx-ease-out);
-}
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-.astryx-input-group:focus-within:not(.is-disabled) {
-  border-color: var(--astryx-color-primary);
-}
+@layer astryx.components {
+  .astryx-input-group {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    height: var(--astryx-input-height-md, 32px);
+    overflow: hidden;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-input-border, #d4d4d4);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-input-background, #fff);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  }
 
-.astryx-input-group.is-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+  .astryx-input-group.size-sm {
+    height: var(--astryx-input-height-sm, 28px);
+  }
 
-.astryx-input-group-addon {
-  display: flex;
-  align-items: center;
-  padding: 0 var(--astryx-spacing-3);
-  background: var(--astryx-color-surface-hover);
-  color: var(--astryx-color-text-secondary);
-  font-size: var(--astryx-text-body);
-  white-space: nowrap;
-}
+  .astryx-input-group.size-lg {
+    height: var(--astryx-input-height-lg, 36px);
+  }
 
-.astryx-input-group-addon.before {
-  border-right: 1px solid var(--astryx-color-border);
-}
+  .astryx-input-group:focus-within:not(.is-disabled) {
+    border-color: var(--astryx-input-focus, #262626);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);
+  }
 
-.astryx-input-group-addon.after {
-  border-left: 1px solid var(--astryx-color-border);
-}
+  .astryx-input-group.is-disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 
-.astryx-input-group-field {
-  flex: 1;
-  min-width: 0;
-}
+  .astryx-input-group-addon {
+    display: flex;
+    flex: none;
+    align-items: center;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    background: color-mix(in srgb, var(--astryx-color-text-primary, #171717) 5%, transparent);
+    color: var(--astryx-color-text-secondary, #525252);
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    white-space: nowrap;
+  }
 
-/* 移除子输入框的边框和圆角 */
-.astryx-input-group-field input,
-.astryx-input-group-field .astryx-selector-trigger,
-.astryx-input-group-field .astryx-text-input,
-.astryx-input-group-field .astryx-number-input-field {
-  border: none !important;
-  border-radius: 0 !important;
-  outline: none !important;
-}
+  .astryx-input-group-addon.before {
+    border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
+  }
 
-/* 尺寸变体 */
-.astryx-input-group.size-sm .astryx-input-group-addon {
-  padding: 0 var(--astryx-spacing-2);
-  font-size: var(--astryx-text-body-sm);
-}
+  .astryx-input-group-addon.after {
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
+  }
 
-.astryx-input-group.size-lg .astryx-input-group-addon {
-  padding: 0 var(--astryx-spacing-4);
-  font-size: var(--astryx-text-body-lg);
+  .astryx-input-group-field {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .astryx-input-group-field input,
+  .astryx-input-group-field .astryx-selector-trigger,
+  .astryx-input-group-field .astryx-text-input,
+  .astryx-input-group-field .astryx-number-input,
+  .astryx-input-group-field .astryx-number-input-field,
+  .astryx-input-group-field .astryx-date-input-wrapper {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .astryx-input-group-field .astryx-text-input,
+  .astryx-input-group-field .astryx-number-input,
+  .astryx-input-group-field .astryx-selector,
+  .astryx-input-group-field .astryx-date-input,
+  .astryx-input-group-field .astryx-date-input-wrapper {
+    height: 100%;
+    width: 100%;
+  }
 }

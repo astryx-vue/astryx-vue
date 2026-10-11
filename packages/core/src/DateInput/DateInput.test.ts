@@ -45,7 +45,7 @@ describe('dateInput', () => {
     })
 
     const vm = wrapper.vm as any
-    vm.onInputFocus()
+    vm.openCalendar()
     await nextTick()
 
     expect(vm.isOpen).toBe(true)

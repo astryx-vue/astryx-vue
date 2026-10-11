@@ -1,103 +1,126 @@
-.astryx-date-input {
-  display: inline-block;
-  width: 100%;
-}
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-.astryx-date-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  background: var(--astryx-color-surface);
-  border: 1px solid var(--astryx-color-border);
-  border-radius: var(--astryx-radius-md);
-  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
-}
+@layer astryx.components {
+  .astryx-date-input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
 
-.astryx-date-input-wrapper:hover {
-  border-color: var(--astryx-color-primary);
-}
+  .astryx-date-input .astryx-popover-trigger {
+    display: flex;
+    width: 100%;
+  }
 
-.astryx-date-input-wrapper:focus-within {
-  border-color: var(--astryx-color-primary);
-  outline: 2px solid rgba(var(--astryx-color-primary-rgb), 0.1);
-  outline-offset: 0;
-}
+  .astryx-date-input-wrapper {
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    min-width: 180px;
+    height: var(--astryx-input-height-md, 32px);
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-input-background, #fff);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    transition:
+      border-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      box-shadow var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
 
-/* 状态 */
-.astryx-date-input.status-error .astryx-date-input-wrapper {
-  border-color: var(--astryx-color-error);
-}
+  .astryx-date-input-wrapper[data-size='sm'] {
+    height: var(--astryx-input-height-sm, 28px);
+  }
 
-.astryx-date-input.status-warning .astryx-date-input-wrapper {
-  border-color: var(--astryx-color-warning);
-}
+  .astryx-date-input-wrapper[data-size='lg'] {
+    height: var(--astryx-input-height-lg, 36px);
+  }
 
-.astryx-date-input.status-success .astryx-date-input-wrapper {
-  border-color: var(--astryx-color-success);
-}
+  @media (hover: hover) {
+    .astryx-date-input-wrapper:hover:not([data-disabled='true']):not(:focus-within) {
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4)) 30%, transparent);
+    }
+  }
 
-/* 输入框 */
-.astryx-date-input-field {
-  flex: 1;
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--astryx-color-text-primary);
-  background: transparent;
-  border: none;
-  outline: none;
-}
+  .astryx-date-input-wrapper:focus-within {
+    border-color: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
+  }
 
-.astryx-date-input-field::placeholder {
-  color: var(--astryx-color-text-placeholder);
-}
+  .astryx-date-input-wrapper[data-disabled='true'] {
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: default;
+  }
 
-.astryx-date-input-field:disabled {
-  color: var(--astryx-color-text-disabled);
-  cursor: not-allowed;
-}
+  .astryx-date-input.status-error {
+    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
+  }
 
-/* 前缀/后缀 */
-.astryx-date-input-prefix,
-.astryx-date-input-suffix {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 4px;
-  padding: 0 8px;
-}
+  .astryx-date-input.status-warning {
+    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
+  }
 
-.astryx-date-input-icon {
-  display: inline-flex;
-  color: var(--astryx-color-text-tertiary);
-}
+  .astryx-date-input.status-success {
+    --astryx-input-status-color: var(--astryx-input-success, #198100);
+  }
 
-.astryx-date-input-clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  color: var(--astryx-color-text-tertiary);
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  border-radius: var(--astryx-radius-sm);
-  transition: all var(--astryx-motion-duration-fast) var(--astryx-motion-easing-standard);
-}
+  .astryx-date-input-field {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
 
-.astryx-date-input-clear:hover {
-  color: var(--astryx-color-text-secondary);
-}
+  .astryx-date-input-field::placeholder {
+    color: var(--astryx-color-text-secondary, #525252);
+    opacity: 1;
+  }
 
-/* 尺寸 */
-.astryx-date-input.size-sm .astryx-date-input-field {
-  padding: 4px 8px;
-  font-size: 12px;
-}
+  .astryx-date-input-field:disabled {
+    cursor: default;
+  }
 
-.astryx-date-input.size-lg .astryx-date-input-field {
-  padding: 12px 16px;
-  font-size: 16px;
+  .astryx-date-input-toggle,
+  .astryx-date-input-clear {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--astryx-color-text-secondary, #525252);
+    cursor: pointer;
+  }
+
+  .astryx-date-input-toggle:disabled,
+  .astryx-date-input-clear:disabled {
+    cursor: default;
+  }
+
+  .astryx-date-input-prefix,
+  .astryx-date-input-suffix {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-date-input-wrapper {
+      transition: none;
+    }
+  }
 }

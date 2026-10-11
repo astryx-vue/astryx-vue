@@ -203,9 +203,11 @@ watch(() => combobox.activeIndex.value, (index) => {
         ref="listboxRef"
         role="listbox"
         class="astryx-selector-listbox"
+        :data-placement="position.placement"
         :style="{
           top: `${position.top}px`,
           left: `${position.left}px`,
+          minWidth: triggerRef?.offsetWidth ? `${triggerRef.offsetWidth}px` : undefined,
         }"
         tabindex="-1"
       >
