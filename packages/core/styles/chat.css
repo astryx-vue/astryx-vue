@@ -309,6 +309,12 @@
     min-width: 0;
   }
 
+  /* Same column gap as the original bubble stack. Metadata’s -6px / +4px
+     margins sit on top of it, so the painted gap under a balanced bubble is 2px. */
+  .astryx-chat-message-bubble__frame[data-density='compact'] { gap: var(--astryx-spacing-0-5, 2px); }
+  .astryx-chat-message-bubble__frame[data-density='balanced'] { gap: var(--astryx-spacing-1, 4px); }
+  .astryx-chat-message-bubble__frame[data-density='spacious'] { gap: var(--astryx-spacing-1-5, 6px); }
+
   .astryx-chat-message-bubble {
     box-sizing: border-box;
     max-width: 100%;
