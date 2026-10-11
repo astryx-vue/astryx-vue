@@ -1,0 +1,251 @@
+/**
+ * Shared enter and exit motion.
+ *
+ * Fade, scale, and four-direction slide keyframes. Existing components keep
+ * their own animations; these names are for later use and for the theme docs.
+ * prefers-reduced-motion collapses the distance, scale, and opacity delta to
+ * nothing, without rewriting component duration tokens.
+ */
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root {
+    --astryx-motion-enter-opacity: 0;
+    --astryx-motion-exit-opacity: 1;
+    --astryx-motion-scale-from: 0.95;
+    --astryx-motion-offset: var(--astryx-spacing-2, 8px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --astryx-motion-enter-opacity: 1;
+      --astryx-motion-exit-opacity: 0;
+      --astryx-motion-scale-from: 1;
+      --astryx-motion-offset: 0px;
+    }
+  }
+}
+
+@keyframes astryx-fade-in {
+  from {
+    opacity: var(--astryx-motion-enter-opacity);
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes astryx-fade-out {
+  from {
+    opacity: var(--astryx-motion-exit-opacity);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes astryx-scale-in {
+  from {
+    opacity: var(--astryx-motion-enter-opacity);
+    transform: scale(var(--astryx-motion-scale-from));
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes astryx-scale-out {
+  from {
+    opacity: var(--astryx-motion-exit-opacity);
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(var(--astryx-motion-scale-from));
+  }
+}
+
+@keyframes astryx-slide-in-above {
+  from {
+    opacity: var(--astryx-motion-enter-opacity);
+    transform: translateY(var(--astryx-motion-offset));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes astryx-slide-out-above {
+  from {
+    opacity: var(--astryx-motion-exit-opacity);
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(var(--astryx-motion-offset));
+  }
+}
+
+@keyframes astryx-slide-in-below {
+  from {
+    opacity: var(--astryx-motion-enter-opacity);
+    transform: translateY(calc(-1 * var(--astryx-motion-offset)));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes astryx-slide-out-below {
+  from {
+    opacity: var(--astryx-motion-exit-opacity);
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--astryx-motion-offset)));
+  }
+}
+
+@keyframes astryx-slide-in-start {
+  from {
+    opacity: var(--astryx-motion-enter-opacity);
+    transform: translateX(var(--astryx-motion-offset));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes astryx-slide-out-start {
+  from {
+    opacity: var(--astryx-motion-exit-opacity);
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(var(--astryx-motion-offset));
+  }
+}
+
+@keyframes astryx-slide-in-end {
+  from {
+    opacity: var(--astryx-motion-enter-opacity);
+    transform: translateX(calc(-1 * var(--astryx-motion-offset)));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes astryx-slide-out-end {
+  from {
+    opacity: var(--astryx-motion-exit-opacity);
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--astryx-motion-offset)));
+  }
+}
+
+@layer astryx.base {
+  .astryx-motion-fade-in,
+  .astryx-motion-fade-out,
+  .astryx-motion-scale-in,
+  .astryx-motion-scale-out,
+  .astryx-motion-slide-in-above,
+  .astryx-motion-slide-out-above,
+  .astryx-motion-slide-in-below,
+  .astryx-motion-slide-out-below,
+  .astryx-motion-slide-in-start,
+  .astryx-motion-slide-out-start,
+  .astryx-motion-slide-in-end,
+  .astryx-motion-slide-out-end {
+    animation-duration: var(--astryx-duration-medium, 300ms);
+    animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    animation-fill-mode: both;
+  }
+
+  .astryx-motion-fade-in {
+    animation-name: astryx-fade-in;
+  }
+
+  .astryx-motion-fade-out {
+    animation-name: astryx-fade-out;
+  }
+
+  .astryx-motion-scale-in {
+    animation-name: astryx-scale-in;
+  }
+
+  .astryx-motion-scale-out {
+    animation-name: astryx-scale-out;
+  }
+
+  .astryx-motion-slide-in-above {
+    animation-name: astryx-slide-in-above;
+  }
+
+  .astryx-motion-slide-out-above {
+    animation-name: astryx-slide-out-above;
+  }
+
+  .astryx-motion-slide-in-below {
+    animation-name: astryx-slide-in-below;
+  }
+
+  .astryx-motion-slide-out-below {
+    animation-name: astryx-slide-out-below;
+  }
+
+  .astryx-motion-slide-in-start {
+    animation-name: astryx-slide-in-start;
+  }
+
+  .astryx-motion-slide-out-start {
+    animation-name: astryx-slide-out-start;
+  }
+
+  .astryx-motion-slide-in-end {
+    animation-name: astryx-slide-in-end;
+  }
+
+  .astryx-motion-slide-out-end {
+    animation-name: astryx-slide-out-end;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-motion-fade-in,
+    .astryx-motion-fade-out,
+    .astryx-motion-scale-in,
+    .astryx-motion-scale-out,
+    .astryx-motion-slide-in-above,
+    .astryx-motion-slide-out-above,
+    .astryx-motion-slide-in-below,
+    .astryx-motion-slide-out-below,
+    .astryx-motion-slide-in-start,
+    .astryx-motion-slide-out-start,
+    .astryx-motion-slide-in-end,
+    .astryx-motion-slide-out-end {
+      animation-duration: 0.01ms;
+    }
+  }
+}
