@@ -18,9 +18,9 @@ import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demo
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { InputGroup } from '@astryx-vue/core/InputGroup'
 import { TextInput } from '@astryx-vue/core/TextInput'
+import { ref } from 'vue'
 
 const domain = ref('')
 </script>

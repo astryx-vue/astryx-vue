@@ -12,7 +12,24 @@ import { dateInputBasic, dateInputClearable } from '../../../../components/demos
 
 ## Usage
 
-`DateInput` is a field that opens a calendar. The value is a `Date`, shown as `YYYY-MM-DD`.
+`DateInput` is a text field with a calendar button. People can type a date or open the calendar and pick a day.
+
+Bind a date:
+
+```vue
+<script setup lang="ts">
+import { DateInput } from '@astryx-vue/core/DateInput'
+import { ref } from 'vue'
+
+const date = ref(null)
+</script>
+
+<template>
+  <DateInput v-model="date" />
+</template>
+```
+
+The value is a `Date`. The field shows it as `YYYY-MM-DD`. Clicking the field opens the calendar, and choosing a day closes it. The placeholder, clear button, and calendar labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
 
 ## Best practices
 

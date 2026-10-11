@@ -15,7 +15,7 @@ footer: false
       <tr><td><code>min</code></td><td><code>Date</code></td><td>—</td><td>Earliest selectable date.</td></tr>
       <tr><td><code>max</code></td><td><code>Date</code></td><td>—</td><td>Latest selectable date.</td></tr>
       <tr><td><code>isDateDisabled</code></td><td><code>(date: Date) =&gt; boolean</code></td><td>—</td><td>Return true to disable a date.</td></tr>
-      <tr><td><code>label</code></td><td><code>string</code></td><td><code>'日历'</code></td><td>Accessible name for the calendar.</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td><code>Calendar</code> / <code>日历</code></td><td>Accessible name for the calendar. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the whole calendar.</td></tr>
     </tbody>
   </table>

@@ -18,8 +18,8 @@ import { selectorBasic, selectorSearchable, selectorClearable, selectorSizes } f
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Selector } from '@astryx-vue/core/Selector'
+import { ref } from 'vue'
 
 const selected = ref(null)
 const options = [
@@ -39,6 +39,8 @@ const options = [
 开启 `searchable` 属性后，选择器会显示搜索框，用户可以输入文字过滤选项。开启 `clearable` 后，已选中的值旁边会出现清除按钮。
 
 键盘导航完整支持：按下方向键上下移动高亮项，`Home` 和 `End` 跳到首尾，`Enter` 选中当前项，`Escape` 关闭列表。
+
+菜单至少和触发器一样宽，选项更长时会跟着变宽。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。
 
 ## 最佳实践
 

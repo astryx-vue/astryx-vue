@@ -18,9 +18,9 @@ footer: false
       <tr><td><code>pageSizeOptions</code></td><td><code>number[]</code></td><td><code>[10, 20, 50, 100]</code></td><td>每页数量选项。</td></tr>
       <tr><td><code>showTotal</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否显示总条目数。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
-      <tr><td><code>prevLabel</code></td><td><code>string</code></td><td>—</td><td>上一页按钮文字。</td></tr>
-      <tr><td><code>nextLabel</code></td><td><code>string</code></td><td>—</td><td>下一页按钮文字。</td></tr>
-      <tr><td><code>pageSizeLabel</code></td><td><code>string</code></td><td><code>'每页'</code></td><td>每页数量选择器的标签。</td></tr>
+      <tr><td><code>prevLabel</code></td><td><code>string</code></td><td><code>Previous</code> / <code>上一页</code></td><td>上一页按钮文字。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
+      <tr><td><code>nextLabel</code></td><td><code>string</code></td><td><code>Next</code> / <code>下一页</code></td><td>下一页按钮文字。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
+      <tr><td><code>pageSizeLabel</code></td><td><code>string</code></td><td><code>Per page</code> / <code>每页</code></td><td>每页数量选择器的标签。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
     </tbody>
   </table>
 </div>

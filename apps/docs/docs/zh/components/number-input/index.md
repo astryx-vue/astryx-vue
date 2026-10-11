@@ -18,8 +18,8 @@ import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { NumberInput } from '@astryx-vue/core/NumberInput'
+import { ref } from 'vue'
 
 const count = ref(0)
 </script>
@@ -29,7 +29,7 @@ const count = ref(0)
 </template>
 ```
 
-通过 `min` 和 `max` 属性设置数值范围，`step` 设置每次增减的步长。超出范围的值会被限制在有效区间内。
+通过 `min` 和 `max` 属性设置数值范围，`step` 设置每次增减的步长。超出范围的值会被限制在有效区间内。步进按钮使用向上和向下的箭头。按钮的无障碍名称默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文；如果传了 `label`，名称里会带上它。
 
 ## 最佳实践
 

@@ -12,7 +12,35 @@ import { selectorBasic, selectorSearchable, selectorClearable, selectorSizes } f
 
 ## Usage
 
-`Selector` is a dropdown component that expands to show a list of options when clicked. Users can select one item and the list collapses. It supports search filtering, clearing selection, and disabling specific options.
+`Selector` opens a list when the trigger is clicked. Choosing one option closes the list. It can filter the list, clear the current value, and disable individual options.
+
+Pass the options and bind the value:
+
+```vue
+<script setup lang="ts">
+import { Selector } from '@astryx-vue/core/Selector'
+import { ref } from 'vue'
+
+const selected = ref(null)
+const options = [
+  { value: 'apple', label: 'Apple' },
+  { value: 'banana', label: 'Banana' },
+  { value: 'cherry', label: 'Cherry' },
+]
+</script>
+
+<template>
+  <Selector v-model="selected" :options="options" placeholder="Select a fruit" />
+</template>
+```
+
+Each option has a `value` and a `label`. Set `disabled` to skip an option, or `description` to add a second line of text.
+
+`searchable` shows a search field that filters the list. `clearable` adds a clear button next to the current value. The menu is at least as wide as the trigger, and grows when an option label is longer.
+
+Arrow keys move the highlight, `Home` and `End` jump to the ends, `Enter` selects the highlighted option, and `Escape` closes the list.
+
+Built-in strings such as the placeholder and the empty state are English. Call `provideAstryxLocale('zh-CN')` to use the Chinese strings.
 
 ## Best Practices
 

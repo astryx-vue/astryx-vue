@@ -12,7 +12,24 @@ import { calendarBasic, calendarRange } from '../../../../components/demos/calen
 
 ## Usage
 
-`Calendar` shows one month as a grid. The value is a `Date`. `min` and `max` limit the range, and `isDateDisabled` rejects individual dates. Arrow keys move through the grid, and Enter selects the focused day.
+`Calendar` shows one month as a grid. People click a day to select it. Arrow keys move through the grid, and Enter selects the focused day. `min`, `max`, and `isDateDisabled` limit which days can be chosen.
+
+Bind a date:
+
+```vue
+<script setup lang="ts">
+import { Calendar } from '@astryx-vue/core/Calendar'
+import { ref } from 'vue'
+
+const date = ref<Date | null>(new Date(2026, 9, 11))
+</script>
+
+<template>
+  <Calendar v-model="date" label="Select a date" />
+</template>
+```
+
+The value is a local `Date`. The month title and weekday names follow the active locale. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
 
 ## Best practices
 

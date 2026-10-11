@@ -13,7 +13,7 @@ footer: false
     <tbody>
       <tr><td><code>modelValue</code></td><td><code>string | number | null</code></td><td><code>null</code></td><td>选中的值。</td></tr>
       <tr><td><code>options</code></td><td><code>SelectorOption[]</code></td><td>必需</td><td>选项数组，每项包含 value、label 和可选的 disabled、description。</td></tr>
-      <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>'请选择'</code></td><td>占位符文本。</td></tr>
+      <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>占位符文本。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否支持搜索。</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否可清除。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
