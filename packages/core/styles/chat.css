@@ -452,7 +452,8 @@
     padding-block: var(--astryx-spacing-1, 4px);
     color: var(--astryx-chat-foreground-secondary, var(--astryx-color-text-secondary));
     font-size: var(--astryx-text-supporting-size, 0.75rem);
-    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    /* Original default system rows measure 18px, not the 20px supporting leading. */
+    line-height: 1.5;
     text-align: center;
   }
 

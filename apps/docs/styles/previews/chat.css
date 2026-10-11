@@ -3,6 +3,13 @@
   width: min(100%, 40rem);
 }
 
+/* Status Updates sits in the same 249px list the original example measures,
+   so the date rules stay equal and the side inset stays 16px. */
+.chat-preview-system {
+  justify-self: center;
+  width: min(100%, 249px);
+}
+
 .chat-preview-wide {
   width: min(100%, 100%);
 }

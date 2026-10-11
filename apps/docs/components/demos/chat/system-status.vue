@@ -11,6 +11,9 @@ const { pick } = useDemoText()
       {{ pick('2026年3月14日', 'March 14, 2026') }}
     </ChatSystemMessage>
     <ChatSystemMessage>
+      <template #icon>
+        <span class="i-carbon-user-follow" style="width: 20px; height: 20px" />
+      </template>
       {{ pick('陈晓加入了会话', 'Sarah Chen joined the conversation') }}
     </ChatSystemMessage>
     <ChatSystemMessage>
