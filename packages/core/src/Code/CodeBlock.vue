@@ -2,12 +2,12 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { CodeBlockEmits, CodeBlockProps, TokenLine } from './types.js'
 import { computed, onBeforeUnmount, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { useClipboard } from '../composables/useClipboard.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import CodeBlockContent from './CodeBlockContent.vue'
 import { flatTokensToLines, SYNC_TOKENIZE_THRESHOLD, tokenize, tokenizeAsync } from './tokenizer.js'
-import { useCopyToClipboard } from './useCopyToClipboard.js'
 import '../../styles/code.css'
 
 defineOptions({ name: 'AstryxCodeBlock', inheritAttrs: false })
@@ -191,7 +191,7 @@ function onTitleKeydown(event: KeyboardEvent): void {
   }
 }
 
-const { copy, isCopied } = useCopyToClipboard()
+const { copy, isCopied } = useClipboard()
 
 const copyButtonLabel = computed(() => (isCopied.value ? props.copiedLabel : props.copyLabel))
 
