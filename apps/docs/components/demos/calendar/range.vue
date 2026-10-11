@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Calendar } from '@astryx-vue/core/Calendar'
 import { today, type CalendarDate } from '@internationalized/date'
 
 const selected = ref<CalendarDate | null>(null)
-const minDate = today('Asia/Shanghai')
-const maxDate = today('Asia/Shanghai').add({ months: 1 })
+const minDate = ref<CalendarDate | undefined>(undefined)
+const maxDate = ref<CalendarDate | undefined>(undefined)
+
+onMounted(() => {
+  minDate.value = today('Asia/Shanghai')
+  maxDate.value = today('Asia/Shanghai').add({ months: 1 })
+})
 </script>
 
 <template>
