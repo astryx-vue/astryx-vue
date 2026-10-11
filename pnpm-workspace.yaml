@@ -28,6 +28,7 @@ catalogs:
     '@fontsource/figtree': 5.3.0
     '@fontsource/jetbrains-mono': 5.3.0
     '@iconify-json/carbon': 1.2.28
+    '@iconify-json/heroicons': 1.2.3
     postcss: 8.5.29
 
     unocss: 66.10.5

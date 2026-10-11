@@ -331,6 +331,7 @@ describe('neutral base.css semantic tokens', () => {
       '--astryx-duration-fast-max',
       '--astryx-duration-medium',
       '--astryx-duration-medium-max',
+      '--astryx-duration-slow-max',
       '--astryx-duration-slow-min',
       '--astryx-ease-standard',
     ])

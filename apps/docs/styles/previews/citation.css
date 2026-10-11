@@ -1,0 +1,39 @@
+.citation-preview {
+  max-width: 100%;
+  margin: 0;
+  color: var(--astryx-text);
+  font-size: var(--astryx-text-body-size, 0.875rem);
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+
+.citation-overview {
+  width: min(100%, 20rem);
+  margin: 0;
+  color: var(--astryx-text);
+  font-size: var(--astryx-text-body-size, 0.875rem);
+  line-height: 2;
+  text-align: center;
+}
+
+.citation-preview a.astryx-citation,
+.citation-overview a.astryx-citation,
+.citation-sources a.astryx-citation {
+  color: var(--astryx-color-text-secondary);
+  text-decoration: none;
+}
+
+.citation-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  width: min(100%, 36rem);
+  margin: 0;
+}
+
+.component-card__preview .citation-preview,
+.component-card__preview .citation-overview {
+  width: min(100%, 20rem);
+  text-align: center;
+}

@@ -51,6 +51,8 @@ const expectedCatalog = [
   { slug: 'code', group: 'content', en: 'Code', zh: '代码' },
   { slug: 'markdown', group: 'content', en: 'Markdown', zh: 'Markdown' },
   { slug: 'collapsible', group: 'content', en: 'Collapsible', zh: '折叠面板' },
+  { slug: 'chat', group: 'content', en: 'Chat', zh: '对话' },
+  { slug: 'citation', group: 'content', en: 'Citation', zh: '引文' },
   { slug: 'link', group: 'navigation', en: 'Link', zh: '链接' },
   { slug: 'breadcrumbs', group: 'navigation', en: 'Breadcrumbs', zh: '面包屑' },
   { slug: 'tab-list', group: 'navigation', en: 'Tab List', zh: '标签列表' },

@@ -64,6 +64,55 @@ export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
 export { Center } from './Center/index.js'
 export type { CenterAxis, CenterProps, CenterSizeValue, CenterSlots } from './Center/index.js'
+export {
+  ChatLayout,
+  ChatLayoutScrollButton,
+  ChatMessage,
+  ChatMessageBubble,
+  ChatMessageList,
+  ChatMessageMetadata,
+  ChatReasoning,
+  ChatSystemMessage,
+  ChatToolCalls,
+  ChatTypingIndicator,
+  ChatUnreadDivider,
+  useChatLayoutContext,
+  useChatListContext,
+  useChatMessageContext,
+} from './Chat/index.js'
+export type {
+  ChatDensity,
+  ChatLayoutProps,
+  ChatLayoutScrollButtonEmits,
+  ChatLayoutScrollButtonProps,
+  ChatLayoutScrollSlotProps,
+  ChatLayoutSlots,
+  ChatMessageBubbleGroup,
+  ChatMessageBubbleProps,
+  ChatMessageBubbleSlots,
+  ChatMessageBubbleVariant,
+  ChatMessageListProps,
+  ChatMessageListSlots,
+  ChatMessageMetadataProps,
+  ChatMessageMetadataSlots,
+  ChatMessageProps,
+  ChatMessageSender,
+  ChatMessageSlots,
+  ChatMessageStatus,
+  ChatReasoningEmits,
+  ChatReasoningProps,
+  ChatReasoningSlots,
+  ChatSystemMessageProps,
+  ChatSystemMessageSlots,
+  ChatSystemMessageVariant,
+  ChatToolCallItem,
+  ChatToolCallsEmits,
+  ChatToolCallsProps,
+  ChatToolCallsSlots,
+  ChatToolCallStatus,
+  ChatTypingIndicatorProps,
+  ChatUnreadDividerProps,
+} from './Chat/index.js'
 export { CheckboxIndicator } from './CheckboxIndicator/index.js'
 export type {
   CheckboxIndicatorProps,
@@ -80,6 +129,8 @@ export type {
   CheckboxInputSlots,
   CheckboxValue,
 } from './CheckboxInput/index.js'
+export { Citation } from './Citation/index.js'
+export type { CitationProps, CitationSource } from './Citation/index.js'
 export {
   applyHighlightRanges,
   Code,

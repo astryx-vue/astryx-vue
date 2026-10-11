@@ -13,6 +13,16 @@ export type {
   UseAsyncSourceOptions,
 } from './useAsyncSource.js'
 
+export { CHAT_MESSAGE_CLASS, useChatNewMessages } from './useChatNewMessages.js'
+export type { UseChatNewMessagesOptions, UseChatNewMessagesReturn } from './useChatNewMessages.js'
+
+export { useChatStreamScroll } from './useChatStreamScroll.js'
+export type {
+  ChatScrollToBottomOptions,
+  UseChatStreamScrollOptions,
+  UseChatStreamScrollReturn,
+} from './useChatStreamScroll.js'
+
 export { useClipboard } from './useClipboard.js'
 export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard.js'
 

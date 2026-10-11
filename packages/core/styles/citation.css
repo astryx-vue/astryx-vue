@@ -1,0 +1,104 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-citation {
+    box-sizing: border-box;
+    color: var(--astryx-citation-foreground, var(--astryx-color-text-secondary));
+    text-decoration: none;
+    transition-property: background-color, border-color, color;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-citation[data-variant='label'] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    flex-shrink: 0;
+    width: max-content;
+    max-width: none;
+    height: var(--astryx-spacing-5, 20px);
+    margin-inline-start: var(--astryx-spacing-0-5, 2px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    overflow: visible;
+    vertical-align: baseline;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-citation-border, var(--astryx-color-border));
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-citation-font-weight, var(--astryx-font-weight-regular));
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-citation[data-variant='label']:has(.astryx-citation__icon) {
+    padding-inline-start: var(--astryx-spacing-0-5, 2px);
+  }
+
+  a.astryx-citation[data-variant='label'] {
+    color: var(--astryx-citation-foreground, var(--astryx-color-text-secondary));
+    cursor: pointer;
+  }
+
+  .astryx-citation[data-variant='number'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--astryx-spacing-5, 20px);
+    height: var(--astryx-spacing-5, 20px);
+    padding-inline: var(--astryx-spacing-1, 4px);
+    vertical-align: super;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: var(--astryx-citation-number-background, var(--astryx-color-accent-muted));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-citation-number-font-weight, var(--astryx-font-weight-semibold));
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  a.astryx-citation[data-variant='number'] {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    a.astryx-citation[data-variant='label']:hover {
+      color: var(--astryx-citation-foreground-hover, var(--astryx-color-text-primary));
+      background: var(--astryx-citation-hover, var(--astryx-color-overlay-hover));
+    }
+
+    a.astryx-citation[data-variant='number']:hover {
+      background: var(--astryx-citation-hover, var(--astryx-color-overlay-hover));
+    }
+  }
+
+  .astryx-citation:focus-visible {
+    outline: 2px solid var(--astryx-citation-focus, var(--astryx-focus-outline-color));
+    outline-offset: 2px;
+  }
+
+  .astryx-citation__text {
+    white-space: nowrap;
+  }
+
+  .astryx-citation__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--astryx-spacing-4, 16px);
+    height: var(--astryx-spacing-4, 16px);
+    overflow: hidden;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-citation-border, var(--astryx-color-border));
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: var(--astryx-citation-icon-background, var(--astryx-color-background-surface));
+  }
+
+  .astryx-citation__image {
+    width: var(--astryx-spacing-3, 12px);
+    height: var(--astryx-spacing-3, 12px);
+    object-fit: cover;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-citation {
+      transition: none;
+    }
+  }
+}

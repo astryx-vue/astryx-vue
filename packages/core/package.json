@@ -308,6 +308,11 @@
       "types": "./dist/Chat/index.d.ts",
       "import": "./dist/Chat/index.js"
     },
+    "./Citation": {
+      "source": "./src/Citation/index.ts",
+      "types": "./dist/Citation/index.d.ts",
+      "import": "./dist/Citation/index.js"
+    },
     "./Carousel": {
       "source": "./src/Carousel/index.ts",
       "types": "./dist/Carousel/index.d.ts",

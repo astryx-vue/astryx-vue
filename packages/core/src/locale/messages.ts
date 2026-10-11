@@ -1,6 +1,8 @@
 // 这个文件由 `pnpm sync` 生成，不要手改。
 
 import type { CalendarMessages } from './messages/calendar.js'
+import type { ChatMessages } from './messages/chat.js'
+import type { CitationMessages } from './messages/citation.js'
 import type { DateInputMessages } from './messages/date-input.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MultiSelectorMessages } from './messages/multi-selector.js'
@@ -13,6 +15,8 @@ import type { TokenizerMessages } from './messages/tokenizer.js'
 import type { TypeaheadMessages } from './messages/typeahead.js'
 import type { AstryxLocale } from './types.js'
 import { calendarMessages } from './messages/calendar.js'
+import { chatMessages } from './messages/chat.js'
+import { citationMessages } from './messages/citation.js'
 import { dateInputMessages } from './messages/date-input.js'
 import { markdownMessages } from './messages/markdown.js'
 import { multiSelectorMessages } from './messages/multi-selector.js'
@@ -26,6 +30,8 @@ import { typeaheadMessages } from './messages/typeahead.js'
 
 export interface AstryxMessages {
   calendar: CalendarMessages
+  chat: ChatMessages
+  citation: CitationMessages
   dateInput: DateInputMessages
   markdown: MarkdownMessages
   multiSelector: MultiSelectorMessages
@@ -41,6 +47,8 @@ export interface AstryxMessages {
 export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
   'en': {
     calendar: calendarMessages.en,
+    chat: chatMessages.en,
+    citation: citationMessages.en,
     dateInput: dateInputMessages.en,
     markdown: markdownMessages.en,
     multiSelector: multiSelectorMessages.en,
@@ -54,6 +62,8 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
   },
   'zh-CN': {
     calendar: calendarMessages['zh-CN'],
+    chat: chatMessages['zh-CN'],
+    citation: citationMessages['zh-CN'],
     dateInput: dateInputMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     multiSelector: multiSelectorMessages['zh-CN'],
