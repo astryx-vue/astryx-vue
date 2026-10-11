@@ -187,7 +187,7 @@ catalogs:
     '@fontsource/figtree':
       specifier: 5.3.0
       version: 5.3.0
-    '@fontsource/fira-code':
+    '@fontsource/jetbrains-mono':
       specifier: 5.3.0
       version: 5.3.0
     '@iconify-json/carbon':
@@ -334,9 +334,6 @@ importers:
       '@fontsource/figtree':
         specifier: catalog:docs
         version: 5.3.0
-      '@fontsource/fira-code':
-        specifier: catalog:docs
-        version: 5.3.0
       vue:
         specifier: catalog:vue
         version: 3.5.43(@typescript/typescript6@6.0.2)
@@ -403,7 +400,11 @@ importers:
         specifier: catalog:vue
         version: 3.3.12(@typescript/typescript6@6.0.2)
 
-  packages/themes: {}
+  packages/themes:
+    dependencies:
+      '@fontsource/jetbrains-mono':
+        specifier: catalog:docs
+        version: 5.3.0
 
 packages:
 
@@ -809,8 +810,8 @@ packages:
   '@fontsource/figtree@5.3.0':
     resolution: {integrity: sha512-/iTcTXL1eRBGhvD7NN9dnKzXzWqDLVZVEUFI9xIxAC1G/hXU8tCyYeXCAuPOuvSYPInFUP7H6KLGgygmDfy1SA==}
 
-  '@fontsource/fira-code@5.3.0':
-    resolution: {integrity: sha512-EJL968RJRkakubAj/coU8pSUaeTE5UNoRjtzAr6kGiSZ3jWuN8/AKWHwym/PFUaQL1q7IL/H+EXs4358YhrTBQ==}
+  '@fontsource/jetbrains-mono@5.3.0':
+    resolution: {integrity: sha512-fqDfB5I9f1p1TV486aUgB9t8zP84P0O1FtQR5Ol9vjwPy+S+EIGlVYm1cvj2W5shcZMTg2nZFdVMoH5wFu8a1A==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -4082,7 +4083,7 @@ snapshots:
 
   '@fontsource/figtree@5.3.0': {}
 
-  '@fontsource/fira-code@5.3.0': {}
+  '@fontsource/jetbrains-mono@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

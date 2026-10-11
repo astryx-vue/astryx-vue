@@ -32,6 +32,12 @@ pnpm add @astryx-vue/core @astryx-vue/themes
 import '@astryx-vue/themes/neutral.css'
 ```
 
+等宽字体栈默认是 JetBrains Mono。字形文件不随主题加载，需要时再引入：
+
+```ts
+import '@astryx-vue/themes/fonts.css'
+```
+
 然后在组件中使用：
 
 ```vue

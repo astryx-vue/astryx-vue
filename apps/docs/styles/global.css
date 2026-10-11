@@ -4,7 +4,7 @@
 @import '@fontsource/figtree/600.css';
 @import '@fontsource/figtree/600-italic.css';
 @import '@fontsource/figtree/700.css';
-@import '@fontsource/fira-code/400.css';
+@import '@astryx-vue/themes/fonts.css';
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
 @import './previews/alert-dialog.css';
@@ -41,7 +41,7 @@
   --vp-c-brand-3: #047857;
   --vp-c-brand-soft: rgb(16 185 129 / 14%);
   --vp-font-family-base: 'Figtree', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  --vp-font-family-mono: 'Fira Code', monospace;
+  --vp-font-family-mono: var(--astryx-font-family-code);
   --vp-nav-height: 72px;
   --astryx-accent: #10b981;
   --astryx-accent-bright: #10b981;
@@ -1963,7 +1963,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   border-radius: var(--astryx-radius-inner, 0.375rem);
   background-color: var(--astryx-code-background, #f5f5f5);
   color: var(--astryx-code-primary-foreground, #171717);
-  font-family: var(--astryx-font-family-code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--astryx-font-family-code, monospace);
   font-size: var(--astryx-text-code-size, 0.875rem);
 }
 
@@ -1974,7 +1974,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   border-radius: 0;
   background: transparent;
   color: var(--astryx-code-syntax-variable, #171717);
-  font-family: var(--astryx-font-family-code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-family: var(--astryx-font-family-code, monospace);
   font-size: var(--astryx-text-code-size, 0.875rem);
 }
 

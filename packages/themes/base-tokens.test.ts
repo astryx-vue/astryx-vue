@@ -286,6 +286,7 @@ describe('neutral base.css semantic tokens', () => {
     expect(declared.get('--astryx-spacing-0')).toBe('0')
     expect(declared.get('--astryx-spacing-2')).toBe('8px')
     expect(declared.get('--astryx-font-family-body')).toBe('Figtree, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif')
+    expect(declared.get('--astryx-font-family-code')).toBe('\'JetBrains Mono\', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace')
     expect(declared.get('--astryx-font-weight-medium')).toBe('500')
     expect(declared.get('--astryx-font-weight-bold')).toBe('700')
     expect(declared.get('--astryx-font-weight-semibold')).toBe('600')
@@ -336,6 +337,20 @@ describe('neutral base.css semantic tokens', () => {
 
     for (const name of referenced)
       expect(declared.has(name), name).toBe(true)
+  })
+})
+
+describe('jetbrains mono opt-in', () => {
+  const fontsCss = readFileSync(join(root, 'packages/themes/fonts.css'), 'utf8')
+
+  it('ships weights 400, 500, 600, 700 and italic 400 without loading them from the theme', () => {
+    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/400.css\'')
+    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/400-italic.css\'')
+    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/500.css\'')
+    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/600.css\'')
+    expect(fontsCss).toContain('@import \'@fontsource/jetbrains-mono/700.css\'')
+    expect(readFileSync(join(root, 'packages/themes/neutral.css'), 'utf8')).not.toContain('fonts.css')
+    expect(readFileSync(join(root, 'packages/themes/neutral/code.css'), 'utf8')).not.toContain('--astryx-font-family-code')
   })
 })
 
