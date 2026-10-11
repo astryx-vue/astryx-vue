@@ -3,6 +3,16 @@
 export { useAnnounce } from './useAnnounce.js'
 export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
 
+export { createStaticSource, useAsyncSource } from './useAsyncSource.js'
+export type {
+  AsyncSource,
+  AsyncSourceStatus,
+  CreateStaticSourceOptions,
+  SearchableItem,
+  SearchSource,
+  UseAsyncSourceOptions,
+} from './useAsyncSource.js'
+
 export { useClipboard } from './useClipboard.js'
 export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard.js'
 

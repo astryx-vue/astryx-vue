@@ -297,6 +297,22 @@ export type {
   MoreMenuSection,
   MoreMenuSlots,
 } from './MoreMenu/index.js'
+export { flattenOptions, MultiSelector, SELECT_ALL_VALUE } from './MultiSelector/index.js'
+export type {
+  MultiSelectorCheckboxPosition,
+  MultiSelectorDivider,
+  MultiSelectorEmits,
+  MultiSelectorOption,
+  MultiSelectorOptionData,
+  MultiSelectorPresentation,
+  MultiSelectorProps,
+  MultiSelectorSection,
+  MultiSelectorSize,
+  MultiSelectorSlots,
+  MultiSelectorStatus,
+  MultiSelectorTriggerDisplay,
+  MultiSelectorVariant,
+} from './MultiSelector/index.js'
 export { NumberInput } from './NumberInput/index.js'
 export type { NumberInputEmits, NumberInputProps } from './NumberInput/index.js'
 export { Overlay, OverlayScrim, useOverlay } from './Overlay/index.js'
@@ -446,6 +462,18 @@ export type {
   ToggleButtonSize,
   ToggleButtonSlots,
 } from './ToggleButton/index.js'
+export { Token, TOKEN_COLORS } from './Token/index.js'
+export type { TokenColor, TokenEmits, TokenProps, TokenSize, TokenSlots } from './Token/index.js'
+export { Tokenizer } from './Tokenizer/index.js'
+export type {
+  TokenizerChange,
+  TokenizerEmits,
+  TokenizerOverflow,
+  TokenizerProps,
+  TokenizerSize,
+  TokenizerSlots,
+  TokenizerStatus,
+} from './Tokenizer/index.js'
 export { Tooltip } from './Tooltip/index.js'
 export type {
   TooltipAlignment,
@@ -454,5 +482,13 @@ export type {
   TooltipProps,
   TooltipTouchTrigger,
 } from './Tooltip/index.js'
+export { Typeahead } from './Typeahead/index.js'
+export type {
+  TypeaheadEmits,
+  TypeaheadProps,
+  TypeaheadSize,
+  TypeaheadSlots,
+  TypeaheadStatus,
+} from './Typeahead/index.js'
 export { VisuallyHidden } from './VisuallyHidden/index.js'
 export type { VisuallyHiddenElement, VisuallyHiddenProps } from './VisuallyHidden/index.js'

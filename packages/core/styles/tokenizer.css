@@ -1,0 +1,200 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-field.astryx-tokenizer {
+    position: relative;
+    width: var(--astryx-field-width, 100%);
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .astryx-tokenizer-control {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    width: 100%;
+    min-width: 0;
+    min-height: var(--astryx-input-height-md, 32px);
+    padding: var(--astryx-spacing-1, 4px);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-input-background, #fff);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    cursor: text;
+    transition:
+      border-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      box-shadow var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-tokenizer.size-sm .astryx-tokenizer-control {
+    min-height: var(--astryx-input-height-sm, 28px);
+  }
+
+  .astryx-tokenizer.size-lg .astryx-tokenizer-control {
+    min-height: var(--astryx-input-height-lg, 36px);
+  }
+
+  .astryx-tokenizer-control.is-floating {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 0;
+    top: 0;
+    height: auto;
+    box-shadow: var(
+      --astryx-popover-shadow,
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%))
+    );
+  }
+
+  @media (hover: hover) {
+    .astryx-tokenizer-control:hover:not(.is-disabled):not(:focus-within) {
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4)) 30%, transparent);
+    }
+  }
+
+  .astryx-tokenizer-control:focus-within,
+  .astryx-tokenizer-control.is-open {
+    border-color: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
+  }
+
+  .astryx-tokenizer-control.is-floating:focus-within {
+    box-shadow: var(
+      --astryx-popover-shadow,
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%))
+    );
+  }
+
+  .astryx-tokenizer-control.is-disabled {
+    cursor: default;
+    opacity: 0.5;
+    box-shadow: none;
+  }
+
+  .astryx-tokenizer-control.status-error {
+    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
+  }
+
+  .astryx-tokenizer-control.status-warning {
+    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
+  }
+
+  .astryx-tokenizer-control.status-success {
+    --astryx-input-status-color: var(--astryx-input-success, #198100);
+  }
+
+  .astryx-tokenizer-icon,
+  .astryx-tokenizer-clear {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-tokenizer-clear {
+    margin-inline-start: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .astryx-tokenizer-measure {
+    position: absolute;
+    display: flex;
+    gap: var(--astryx-spacing-1, 4px);
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .astryx-tokenizer-tokens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--astryx-spacing-1, 4px);
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .astryx-tokenizer-tokens.is-collapsed {
+    flex: 1 1 0;
+    min-width: 0;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  /* 已有标签且收起时，空输入不占 flex，宽度留给标签。聚焦后 collapsed 取消，输入框回到行内。 */
+  .astryx-tokenizer-control.has-tokens:has(.astryx-tokenizer-tokens.is-collapsed) .astryx-tokenizer-input {
+    position: absolute;
+    flex: 0 0 auto;
+    width: 1px;
+    min-width: 1px;
+    padding: 0;
+  }
+
+  .astryx-tokenizer-token {
+    display: inline-flex;
+    max-width: 100%;
+    outline: none;
+  }
+
+  .astryx-tokenizer-token:focus-visible .astryx-token {
+    outline: 2px solid var(--astryx-input-focus, #262626);
+    outline-offset: 1px;
+  }
+
+  .astryx-tokenizer-more {
+    flex: none;
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+  }
+
+  .astryx-tokenizer-input {
+    flex: 1;
+    width: auto;
+    min-width: 4rem;
+    padding: 0 var(--astryx-spacing-1, 4px);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    outline: none;
+  }
+
+  .astryx-tokenizer-placeholder {
+    width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-tokenizer-control {
+      transition: none;
+    }
+  }
+}
+
+/* 不分层：输入框的焦点由外框承担，避免文档页再套一层品牌绿环。 */
+.astryx-tokenizer-input:focus,
+.astryx-tokenizer-input:focus-visible,
+.astryx-tokenizer-clear:focus,
+.astryx-tokenizer-token:focus,
+.astryx-tokenizer-token:focus-visible {
+  outline: none;
+}
+
+.astryx-tokenizer-clear:focus-visible,
+.astryx-tokenizer-token:focus-visible .astryx-token {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+  outline-offset: 1px;
+}
