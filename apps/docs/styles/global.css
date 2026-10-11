@@ -1,4 +1,7 @@
 @import '@fontsource/figtree/400.css';
+@import '@fontsource/figtree/400-italic.css';
+@import '@fontsource/figtree/600.css';
+@import '@fontsource/figtree/600-italic.css';
 @import '@fontsource/fira-code/400.css';
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
@@ -1855,8 +1858,38 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-size: var(--astryx-text-body-size, 0.875rem);
 }
 
+/*
+ * The start alignment above is unlayered, so it outranks the component layer's
+ * GFM rules. Restate center and right here or every column stays left.
+ */
+.vp-doc .astryx-markdown .astryx-markdown__cell[data-align='center'] {
+  text-align: center;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__cell[data-align='right'] {
+  text-align: end;
+}
+
 .vp-doc .astryx-markdown tbody tr:last-child > .astryx-markdown__cell {
   border-block-end: 0;
+}
+
+/*
+ * body { font-synthesis: none } and a Figtree 400-only import make weight 600
+ * and italic resolve to the regular face. Markdown opts back in, and the
+ * semibold / italic faces above supply the real glyphs.
+ */
+.vp-doc .astryx-markdown {
+  font-synthesis: weight style;
+}
+
+.vp-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6).astryx-heading.astryx-markdown__heading,
+.vp-doc .astryx-markdown strong {
+  font-weight: var(--astryx-font-weight-semibold, 600);
+}
+
+.vp-doc .astryx-markdown em {
+  font-style: italic;
 }
 
 .vp-doc .astryx-markdown th.astryx-markdown__cell {

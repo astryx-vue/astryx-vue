@@ -9,6 +9,9 @@
     color: var(--astryx-color-text-primary, #171717);
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
     font-size: var(--astryx-text-body-size, 0.875rem);
+    /* A host can set font-synthesis: none and ship only Figtree 400. Emphasis
+       and heading weight still have to paint when the matching face is absent. */
+    font-synthesis: weight style;
     line-height: var(--astryx-text-body-leading, 1.4286);
     overflow-wrap: break-word;
   }
