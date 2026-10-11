@@ -155,7 +155,9 @@ export interface ChatMessageSlots {
 export interface ChatMessageBubbleProps {
   /**
    * `filled` paints the sender surface. `ghost` keeps the padding and drops
-   * the background, so mixed content still lines up.
+   * the background, so mixed content still lines up. A bubble whose only
+   * child is a code block, or an element with class `astryx-chat-card`,
+   * drops that padding and background so the card lines up with the bubble.
    * @default 'filled'
    */
   variant?: ChatMessageBubbleVariant

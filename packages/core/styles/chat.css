@@ -362,6 +362,14 @@
     padding-block: 0;
   }
 
+  /* A bubble that only holds a self-framed card (a code block, or anything
+     marked `.astryx-chat-card`) should not add its own inset or fill.
+     Screen-reader status nodes sit beside the card and do not count. */
+  .astryx-chat-message-bubble:has(> :is(.astryx-code-block, .astryx-chat-card)):not(:has(> :not(:is(.astryx-code-block, .astryx-chat-card, .astryx-visually-hidden)))) {
+    padding: 0;
+    background: transparent;
+  }
+
   .astryx-chat-message-bubble[data-sender='assistant'][data-group='first'] { border-end-start-radius: var(--astryx-chat-radius-group, var(--astryx-radius-inner, 4px)); }
   .astryx-chat-message-bubble[data-sender='assistant'][data-group='middle'] {
     border-start-start-radius: var(--astryx-chat-radius-group, var(--astryx-radius-inner, 4px));
