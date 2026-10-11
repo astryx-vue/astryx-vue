@@ -18,10 +18,10 @@
 
 .citation-sources {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 8px;
-  align-items: flex-start;
-  width: min(100%, 24rem);
+  align-items: center;
+  width: min(100%, 36rem);
   margin: 0;
 }
 
