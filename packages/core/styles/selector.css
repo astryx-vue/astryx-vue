@@ -197,6 +197,12 @@
     border-color: var(--astryx-input-focus, #262626);
   }
 
+  .astryx-selector-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
   .astryx-selector-option {
     box-sizing: border-box;
     display: flex;
