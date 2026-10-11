@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { PaginationDensity } from '../composables/usePagination.js'
 import type { SelectorOption } from '../Selector/types.js'
 import type { PaginationEmits, PaginationProps, PaginationSlots } from './types.js'
-import { computed, ref } from 'vue'
-import { usePagination } from '../composables/usePagination.js'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { paginationDensityForWidth, siblingCountForDensity, usePagination } from '../composables/usePagination.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Selector from '../Selector/Selector.vue'
 import '../../styles/pagination.css'
@@ -30,11 +31,36 @@ const resolvedPageSizeLabel = computed(() => props.pageSizeLabel ?? messages.val
 const pageRef = ref(props.page)
 const pageSizeRef = ref(props.pageSize)
 const totalRef = ref(props.total)
+const root = ref<HTMLElement | null>(null)
+const density = ref<PaginationDensity>('full')
+const siblingCount = computed(() => siblingCountForDensity(density.value))
+let resizeObserver: ResizeObserver | undefined
+
+function applyContainerWidth(width: number): void {
+  density.value = paginationDensityForWidth(width)
+}
+
+onMounted(() => {
+  const element = root.value
+  if (!element || typeof ResizeObserver === 'undefined')
+    return
+
+  resizeObserver = new ResizeObserver((entries) => {
+    applyContainerWidth(entries[0]?.contentRect.width ?? 0)
+  })
+  resizeObserver.observe(element)
+  applyContainerWidth(element.getBoundingClientRect().width)
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+})
 
 const pagination = usePagination({
   page: pageRef,
   pageSize: pageSizeRef,
   total: totalRef,
+  siblingCount,
   onPageChange: (page) => {
     pageRef.value = page
     emit('update:page', page)
@@ -84,8 +110,10 @@ function onPageClick(page: number): void {
 
 <template>
   <nav
+    ref="root"
     class="astryx-pagination"
     :class="{ 'is-disabled': props.disabled }"
+    :data-density="density"
     role="navigation"
     :aria-label="messages.pagination.nav"
   >
@@ -106,10 +134,14 @@ function onPageClick(page: number): void {
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span>{{ resolvedPrevLabel }}</span>
+        <span class="astryx-pagination-label" aria-hidden="true">{{ resolvedPrevLabel }}</span>
       </button>
 
-      <div class="astryx-pagination-pages">
+      <span class="astryx-pagination-compact" :aria-hidden="density === 'minimal' ? undefined : true">
+        {{ messages.pagination.compact(pageRef, pagination.totalPages.value) }}
+      </span>
+
+      <div v-show="density !== 'minimal'" class="astryx-pagination-pages">
         <button
           v-for="(page, index) in pagination.pageNumbers.value"
           :key="index"
@@ -135,7 +167,7 @@ function onPageClick(page: number): void {
         :aria-label="resolvedNextLabel"
         @click="pagination.next"
       >
-        <span>{{ resolvedNextLabel }}</span>
+        <span class="astryx-pagination-label" aria-hidden="true">{{ resolvedNextLabel }}</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
