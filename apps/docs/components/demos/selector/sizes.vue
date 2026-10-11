@@ -24,6 +24,7 @@ const options = useLocalizedOptions([
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: min(100%, 20rem);
+  width: 20rem;
+  max-width: calc(100vw - 4rem);
 }
 </style>

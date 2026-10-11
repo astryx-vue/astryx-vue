@@ -199,7 +199,9 @@ describe('selector', () => {
     })
 
     const clearButton = wrapper.find('.astryx-selector-clear')
+    const trigger = wrapper.find('.astryx-selector-trigger')
     expect(clearButton.exists()).toBe(true)
+    expect(trigger.element.contains(clearButton.element)).toBe(false)
 
     await clearButton.trigger('click')
     await flushPromises()

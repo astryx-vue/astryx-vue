@@ -32,13 +32,12 @@
     min-width: 0;
   }
 
-  .astryx-selector-trigger {
+  .astryx-selector-field {
     box-sizing: border-box;
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--astryx-spacing-2, 8px);
+    gap: var(--astryx-spacing-1, 4px);
     width: 100%;
     min-width: 0;
     height: var(--astryx-input-height-md, 32px);
@@ -51,48 +50,67 @@
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
     text-align: start;
-    cursor: pointer;
-    outline: none;
     transition:
       border-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
       box-shadow var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-selector.size-sm .astryx-selector-trigger {
+  .astryx-selector-trigger {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .astryx-selector.size-sm .astryx-selector-field {
     height: var(--astryx-input-height-sm, 28px);
   }
 
-  .astryx-selector.size-lg .astryx-selector-trigger {
+  .astryx-selector.size-lg .astryx-selector-field {
     height: var(--astryx-input-height-lg, 36px);
   }
 
   @media (hover: hover) {
-    .astryx-selector-trigger:hover:not(.is-disabled):not(:focus-visible) {
+    .astryx-selector-field:hover:not(.is-disabled):not(:focus-within) {
       box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4)) 30%, transparent);
     }
   }
 
-  .astryx-selector-trigger:focus-visible,
-  .astryx-selector-trigger.is-open {
+  .astryx-selector-field:focus-within,
+  .astryx-selector-field.is-open {
     border-color: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
     box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
   }
 
-  .astryx-selector-trigger.is-disabled {
+  .astryx-selector-field.is-disabled {
     opacity: 0.5;
     box-shadow: none;
+  }
+
+  .astryx-selector-field.is-disabled .astryx-selector-trigger {
     cursor: default;
   }
 
-  .astryx-selector.status-error .astryx-selector-trigger {
+  .astryx-selector.status-error .astryx-selector-field {
     --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
   }
 
-  .astryx-selector.status-warning .astryx-selector-trigger {
+  .astryx-selector.status-warning .astryx-selector-field {
     --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
   }
 
-  .astryx-selector.status-success .astryx-selector-trigger {
+  .astryx-selector.status-success .astryx-selector-field {
     --astryx-input-status-color: var(--astryx-input-success, #198100);
   }
 
@@ -117,7 +135,7 @@
     transition: transform var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-selector-trigger.is-open .astryx-selector-icon {
+  .astryx-selector-field.is-open .astryx-selector-icon {
     transform: rotate(180deg);
   }
 
@@ -258,6 +276,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .astryx-selector-field,
     .astryx-selector-trigger,
     .astryx-selector-icon,
     .astryx-selector-listbox {

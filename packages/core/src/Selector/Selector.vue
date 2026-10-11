@@ -30,7 +30,7 @@ const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.s
 const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.selector.search)
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clear)
 const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selector.empty)
-const triggerRef = useTemplateRef<HTMLElement>('triggerRef')
+const fieldRef = useTemplateRef<HTMLElement>('fieldRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const searchInputRef = useTemplateRef<HTMLInputElement>('searchInputRef')
 
@@ -71,7 +71,7 @@ const combobox = useCombobox({
 })
 
 const { position } = usePositionedLayer({
-  anchor: triggerRef,
+  anchor: fieldRef,
   layer: listboxRef,
   isOpen: combobox.isOpen,
   placement: computed(() => 'below'),
@@ -81,7 +81,7 @@ const { position } = usePositionedLayer({
 
 useDismiss({
   container: listboxRef,
-  trigger: triggerRef,
+  trigger: fieldRef,
   isEnabled: combobox.isOpen,
   enableEscape: ref(true),
   onDismiss: () => {
@@ -138,7 +138,7 @@ function getOptionId(index: number): string {
 const anchorWidth = ref(0)
 
 function syncAnchorWidth(): void {
-  anchorWidth.value = triggerRef.value?.getBoundingClientRect().width ?? 0
+  anchorWidth.value = fieldRef.value?.getBoundingClientRect().width ?? 0
 }
 
 const listboxStyle = computed(() => ({
@@ -175,33 +175,38 @@ watch(() => combobox.activeIndex.value, (index) => {
 
 <template>
   <div class="astryx-selector" :class="[`size-${props.size}`, `status-${props.status}`]">
-    <button
-      :id="selectorId"
-      ref="triggerRef"
-      type="button"
-      class="astryx-selector-trigger"
+    <div
+      ref="fieldRef"
+      class="astryx-selector-field"
       :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled }"
-      :disabled="props.disabled"
-      aria-haspopup="listbox"
-      :aria-expanded="combobox.isOpen.value"
-      :aria-controls="listboxId"
-      :aria-label="props.label"
-      :aria-activedescendant="combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
-      :title="props.disabledReason"
-      @click="onTriggerClick"
-      @keydown="onTriggerKeyDown"
     >
-      <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption }">
-        <slot v-if="slots.selected" name="selected" :option="selectedOption" />
-        <template v-else>
-          {{ displayText }}
-        </template>
-      </span>
-      <span class="astryx-selector-icon" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
+      <button
+        :id="selectorId"
+        type="button"
+        class="astryx-selector-trigger"
+        :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled }"
+        :disabled="props.disabled"
+        aria-haspopup="listbox"
+        :aria-expanded="combobox.isOpen.value"
+        :aria-controls="listboxId"
+        :aria-label="props.label"
+        :aria-activedescendant="combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
+        :title="props.disabledReason"
+        @click="onTriggerClick"
+        @keydown="onTriggerKeyDown"
+      >
+        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption }">
+          <slot v-if="slots.selected" name="selected" :option="selectedOption" />
+          <template v-else>
+            {{ displayText }}
+          </template>
+        </span>
+        <span class="astryx-selector-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+      </button>
       <button
         v-if="props.clearable && selectedOption"
         type="button"
@@ -213,7 +218,7 @@ watch(() => combobox.activeIndex.value, (index) => {
           <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
       </button>
-    </button>
+    </div>
 
     <Teleport to="body">
       <div

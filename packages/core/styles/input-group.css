@@ -62,6 +62,7 @@
   }
 
   .astryx-input-group-field input,
+  .astryx-input-group-field .astryx-selector-field,
   .astryx-input-group-field .astryx-selector-trigger,
   .astryx-input-group-field .astryx-text-input,
   .astryx-input-group-field .astryx-number-input,
