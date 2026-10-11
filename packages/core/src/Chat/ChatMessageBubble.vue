@@ -6,7 +6,7 @@ import '../../styles/chat.css'
 
 defineOptions({ name: 'AstryxChatMessageBubble', inheritAttrs: false })
 
-withDefaults(defineProps<ChatMessageBubbleProps>(), {
+const props = withDefaults(defineProps<ChatMessageBubbleProps>(), {
   variant: 'filled',
 })
 defineSlots<ChatMessageBubbleSlots>()
@@ -15,6 +15,7 @@ const context = useChatMessageContext()
 const root = useTemplateRef<HTMLDivElement>('root')
 const sender = computed(() => context?.sender.value ?? 'assistant')
 const density = computed(() => context?.density.value ?? 'balanced')
+const frameStyle = computed(() => props.width ? { width: props.width, maxWidth: props.width } : undefined)
 
 defineExpose({ element: root })
 </script>
@@ -25,6 +26,7 @@ defineExpose({ element: root })
     :data-sender="sender"
     :data-variant="variant"
     :data-density="density"
+    :style="frameStyle"
   >
     <div
       v-if="name || $slots.name"

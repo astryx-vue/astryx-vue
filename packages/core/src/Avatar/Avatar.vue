@@ -21,7 +21,7 @@ defineSlots<{
   status?: () => unknown
 }>()
 
-const INITIALS_FONT_SIZE_RATIO = 0.4
+const INITIALS_FONT_SIZE_RATIO = 16 / 36
 const DEFAULT_ICON_RATIO = 0.6
 
 const erroredSrc = ref<string | undefined>(undefined)

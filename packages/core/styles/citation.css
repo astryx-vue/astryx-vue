@@ -14,11 +14,13 @@
     display: inline-flex;
     align-items: center;
     gap: var(--astryx-spacing-1, 4px);
-    max-width: 15em;
+    flex-shrink: 0;
+    width: max-content;
+    max-width: none;
     height: var(--astryx-spacing-5, 20px);
     margin-inline-start: var(--astryx-spacing-0-5, 2px);
     padding-inline: var(--astryx-spacing-2, 8px);
-    overflow: hidden;
+    overflow: visible;
     vertical-align: baseline;
     border: var(--astryx-border-width, 1px) solid var(--astryx-citation-border, var(--astryx-color-border));
     border-radius: var(--astryx-radius-element, 0.625rem);
@@ -32,6 +34,7 @@
   }
 
   a.astryx-citation[data-variant='label'] {
+    color: var(--astryx-citation-foreground, var(--astryx-color-text-secondary));
     cursor: pointer;
   }
 
@@ -71,9 +74,6 @@
   }
 
   .astryx-citation__text {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

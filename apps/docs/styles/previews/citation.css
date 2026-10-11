@@ -16,6 +16,13 @@
   text-align: center;
 }
 
+.citation-preview a.astryx-citation,
+.citation-overview a.astryx-citation,
+.citation-sources a.astryx-citation {
+  color: var(--astryx-color-text-secondary);
+  text-decoration: none;
+}
+
 .citation-sources {
   display: flex;
   flex-wrap: wrap;

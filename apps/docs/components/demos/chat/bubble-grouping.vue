@@ -11,7 +11,7 @@ const agent = pick('助手', 'Agent')
   <ChatMessageList>
     <ChatMessage sender="assistant">
       <template #avatar>
-        <Avatar :name="agent" size="sm" />
+        <Avatar :name="agent" size="md" />
       </template>
       <ChatMessageBubble group="first" :name="agent">
         {{ pick('你发的三个文件我看过了。', 'I reviewed the three files you shared.') }}

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList, ChatSystemMessage } from '@astryx-vue/core/Chat'
+import { IconButton } from '@astryx-vue/core/IconButton'
 import { ref } from 'vue'
 import { useDemoText } from '../../demo-infra/useDemoText'
 
@@ -8,8 +9,8 @@ const draft = ref('')
 </script>
 
 <template>
-  <ChatLayout class="chat-preview__panel" density="compact">
-    <ChatMessageList density="compact">
+  <ChatLayout class="chat-preview__panel">
+    <ChatMessageList>
       <ChatSystemMessage variant="divider">
         {{ pick('今天', 'Today') }}
       </ChatSystemMessage>
@@ -19,14 +20,10 @@ const draft = ref('')
         </ChatMessageBubble>
       </ChatMessage>
       <ChatMessage sender="assistant">
-        <ChatMessageBubble variant="ghost">
-          <p class="chat-preview__answer">
-            {{ pick('我现在去看 Button 组件。', 'I\'ll check the Button component now.') }}
-          </p>
-          <p class="chat-preview__answer">
-            {{ pick('找到了：圆角写死了，已经换成主题 token。', 'Found the issue — the border radius was hardcoded. Replaced with the theme token.') }}
-          </p>
-        </ChatMessageBubble>
+        <div class="chat-preview__lines">
+          <p>{{ pick('我现在去看 Button 组件。', 'I\'ll check the Button component now.') }}</p>
+          <p>{{ pick('找到了：圆角写死了，已经换成主题 token。', 'Found the issue — the border radius was hardcoded. Replaced with the theme token.') }}</p>
+        </div>
       </ChatMessage>
       <ChatMessage sender="user">
         <ChatMessageBubble>
@@ -34,22 +31,24 @@ const draft = ref('')
         </ChatMessageBubble>
       </ChatMessage>
       <ChatMessage sender="assistant">
-        <ChatMessageBubble variant="ghost">
-          <p class="chat-preview__answer">
-            {{ pick('正在看这个组件。', 'Checking the component now.') }}
-          </p>
-          <p class="chat-preview__answer">
-            {{ pick('找到了：圆角写死了，已经换成主题 token。', 'Found the issue — the border radius was hardcoded. Replaced with the theme token.') }}
-          </p>
-        </ChatMessageBubble>
+        <div class="chat-preview__lines">
+          <p>{{ pick('正在看这个组件。', 'Checking the component now.') }}</p>
+          <p>{{ pick('找到了：圆角写死了，已经换成主题 token。', 'Found the issue — the border radius was hardcoded. Replaced with the theme token.') }}</p>
+        </div>
       </ChatMessage>
     </ChatMessageList>
     <template #composer>
-      <form class="chat-preview__dock" @submit.prevent="draft = ''">
-        <input v-model="draft" class="chat-preview__dock-input" type="text" :aria-label="pick('消息', 'Message')" :placeholder="pick('问点什么…', 'Ask something...')">
-        <button class="chat-preview__dock-send" type="submit" :aria-label="pick('发送', 'Send')">
+      <form class="chat-preview__composer-card" @submit.prevent="draft = ''">
+        <textarea
+          v-model="draft"
+          class="chat-preview__composer-input"
+          rows="1"
+          :aria-label="pick('消息', 'Message')"
+          :placeholder="pick('问点什么…', 'Ask something...')"
+        />
+        <IconButton class="chat-preview__send" type="submit" variant="primary" size="md" :label="pick('发送', 'Send')">
           <span class="i-carbon-arrow-up" />
-        </button>
+        </IconButton>
       </form>
     </template>
   </ChatLayout>

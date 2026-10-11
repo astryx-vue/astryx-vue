@@ -166,6 +166,11 @@ export interface ChatMessageBubbleProps {
    * Leave it unset for a standalone bubble.
    */
   group?: ChatMessageBubbleGroup
+  /**
+   * Overrides the default cap (`max(80%, 280px)`).
+   * Pass `100%` when in-bubble content should span the message column.
+   */
+  width?: string
 }
 
 export interface ChatMessageBubbleSlots {

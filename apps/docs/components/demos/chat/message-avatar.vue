@@ -11,7 +11,7 @@ const agent = pick('助手', 'Agent')
   <ChatMessageList>
     <ChatMessage sender="assistant">
       <template #avatar>
-        <Avatar :name="agent" size="sm" />
+        <Avatar :name="agent" size="md" />
       </template>
       <ChatMessageBubble :name="agent">
         {{ pick('我看过这个拉取请求了。改动很干净，测试也覆盖到了。', 'I reviewed the pull request. The changes look solid — clean code and good test coverage.') }}
@@ -30,7 +30,7 @@ const agent = pick('助手', 'Agent')
     </ChatMessage>
     <ChatMessage sender="assistant">
       <template #avatar>
-        <Avatar :name="agent" size="sm" />
+        <Avatar :name="agent" size="md" />
       </template>
       <ChatMessageBubble :name="agent">
         {{ pick('合并之后我可以跑部署。你说一声就行。', 'I can run the deployment pipeline once it lands. Just let me know.') }}

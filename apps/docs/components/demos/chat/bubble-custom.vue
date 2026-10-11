@@ -13,7 +13,7 @@ const { pick } = useDemoText()
       </ChatMessageBubble>
     </ChatMessage>
     <ChatMessage sender="assistant">
-      <ChatMessageBubble variant="ghost" :name="pick('Navi', 'Navi')">
+      <ChatMessageBubble variant="ghost" width="100%" :name="pick('Navi', 'Navi')">
         {{ pick('这是上个季度的那份。', 'Sure, here is the artifact from last quarter.') }}
         <div class="chat-preview__card">
           <p class="chat-preview__card-title">

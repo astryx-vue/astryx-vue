@@ -25,7 +25,7 @@ const agent = pick('助手', 'Agent')
     </ChatMessage>
     <ChatMessage sender="assistant">
       <template #avatar>
-        <Avatar :name="agent" size="sm" />
+        <Avatar :name="agent" size="md" />
       </template>
       <ChatMessageBubble group="first" :name="agent">
         {{ pick('问得好。分页用游标，带上 limit。响应里会有 nextCursor。', 'Great questions! For pagination, use cursor-based with a limit parameter. The response includes a nextCursor field.') }}
