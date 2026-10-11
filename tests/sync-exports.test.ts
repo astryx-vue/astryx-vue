@@ -121,6 +121,11 @@ describe('sync exports', () => {
             types: './dist/index.d.ts',
             import: './dist/index.js',
           },
+          './FileInput': {
+            source: './src/FileInput/index.ts',
+            types: './dist/FileInput/index.d.ts',
+            import: './dist/FileInput/index.js',
+          },
           './package.json': './package.json',
         },
       }, null, 2)}\n`)
@@ -165,6 +170,14 @@ export const zzProbeMessages = { en: { label: 'Probe' }, 'zh-CN': { label: 'ๆข้
         types: './dist/ZzProbe/index.d.ts',
         import: './dist/ZzProbe/index.js',
       })
+      expect(packageJson.publishConfig.exports['./ZzProbe']).toEqual({
+        types: './dist/ZzProbe/index.d.ts',
+        import: './dist/ZzProbe/index.js',
+      })
+      expect(packageJson.publishConfig.exports['.']).not.toHaveProperty('source')
+      expect(JSON.stringify(packageJson.publishConfig.exports)).not.toContain('"source"')
+      expect(packageJson.exports['./FileInput']).toBeUndefined()
+      expect(packageJson.publishConfig.exports['./FileInput']).toBeUndefined()
 
       const probeMeta = parseDemoMetaFields(`export const meta = {
   slug: 'zz-probe',

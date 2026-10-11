@@ -3,7 +3,23 @@
   "type": "module",
   "version": "0.0.0",
   "description": "Vue components for the unofficial astryx-vue community project.",
+  "author": "ShenQingchuan",
   "license": "MIT",
+  "homepage": "https://astryx-vue.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astryx-vue/astryx-vue.git",
+    "directory": "packages/core"
+  },
+  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
+  "keywords": [
+    "vue",
+    "vue3",
+    "design-system",
+    "astryx",
+    "components",
+    "ui"
+  ],
   "sideEffects": [
     "**/*.css"
   ],
@@ -238,16 +254,6 @@
       "types": "./dist/Overlay/index.d.ts",
       "import": "./dist/Overlay/index.js"
     },
-    "./FileInput": {
-      "source": "./src/FileInput/index.ts",
-      "types": "./dist/FileInput/index.d.ts",
-      "import": "./dist/FileInput/index.js"
-    },
-    "./CheckboxList": {
-      "source": "./src/CheckboxList/index.ts",
-      "types": "./dist/CheckboxList/index.d.ts",
-      "import": "./dist/CheckboxList/index.js"
-    },
     "./MultiSelector": {
       "source": "./src/MultiSelector/index.ts",
       "types": "./dist/MultiSelector/index.d.ts",
@@ -268,35 +274,10 @@
       "types": "./dist/Calendar/index.d.ts",
       "import": "./dist/Calendar/index.js"
     },
-    "./TimeInput": {
-      "source": "./src/TimeInput/index.ts",
-      "types": "./dist/TimeInput/index.d.ts",
-      "import": "./dist/TimeInput/index.js"
-    },
-    "./Table": {
-      "source": "./src/Table/index.ts",
-      "types": "./dist/Table/index.d.ts",
-      "import": "./dist/Table/index.js"
-    },
-    "./TreeList": {
-      "source": "./src/TreeList/index.ts",
-      "types": "./dist/TreeList/index.d.ts",
-      "import": "./dist/TreeList/index.js"
-    },
-    "./Stepper": {
-      "source": "./src/Stepper/index.ts",
-      "types": "./dist/Stepper/index.d.ts",
-      "import": "./dist/Stepper/index.js"
-    },
     "./Pagination": {
       "source": "./src/Pagination/index.ts",
       "types": "./dist/Pagination/index.d.ts",
       "import": "./dist/Pagination/index.js"
-    },
-    "./AppShell": {
-      "source": "./src/AppShell/index.ts",
-      "types": "./dist/AppShell/index.d.ts",
-      "import": "./dist/AppShell/index.js"
     },
     "./Markdown": {
       "source": "./src/Markdown/index.ts",
@@ -312,16 +293,6 @@
       "source": "./src/Citation/index.ts",
       "types": "./dist/Citation/index.d.ts",
       "import": "./dist/Citation/index.js"
-    },
-    "./Carousel": {
-      "source": "./src/Carousel/index.ts",
-      "types": "./dist/Carousel/index.d.ts",
-      "import": "./dist/Carousel/index.js"
-    },
-    "./Lightbox": {
-      "source": "./src/Lightbox/index.ts",
-      "types": "./dist/Lightbox/index.d.ts",
-      "import": "./dist/Lightbox/index.js"
     },
     "./Token": {
       "source": "./src/Token/index.ts",
@@ -434,10 +405,305 @@
     "typecheck": "vue-tsc --noEmit -p tsconfig.json"
   },
   "peerDependencies": {
-    "vue": "catalog:vue"
+    "vue": "catalog:peer"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./Avatar": {
+        "types": "./dist/Avatar/index.d.ts",
+        "import": "./dist/Avatar/index.js"
+      },
+      "./AvatarGroup": {
+        "types": "./dist/AvatarGroup/index.d.ts",
+        "import": "./dist/AvatarGroup/index.js"
+      },
+      "./StatusDot": {
+        "types": "./dist/StatusDot/index.d.ts",
+        "import": "./dist/StatusDot/index.js"
+      },
+      "./Badge": {
+        "types": "./dist/Badge/index.d.ts",
+        "import": "./dist/Badge/index.js"
+      },
+      "./Blockquote": {
+        "types": "./dist/Blockquote/index.d.ts",
+        "import": "./dist/Blockquote/index.js"
+      },
+      "./Breadcrumbs": {
+        "types": "./dist/Breadcrumbs/index.d.ts",
+        "import": "./dist/Breadcrumbs/index.js"
+      },
+      "./Button": {
+        "types": "./dist/Button/index.d.ts",
+        "import": "./dist/Button/index.js"
+      },
+      "./ButtonGroup": {
+        "types": "./dist/ButtonGroup/index.d.ts",
+        "import": "./dist/ButtonGroup/index.js"
+      },
+      "./Divider": {
+        "types": "./dist/Divider/index.d.ts",
+        "import": "./dist/Divider/index.js"
+      },
+      "./Field": {
+        "types": "./dist/Field/index.d.ts",
+        "import": "./dist/Field/index.js"
+      },
+      "./Heading": {
+        "types": "./dist/Heading/index.d.ts",
+        "import": "./dist/Heading/index.js"
+      },
+      "./IconButton": {
+        "types": "./dist/IconButton/index.d.ts",
+        "import": "./dist/IconButton/index.js"
+      },
+      "./Link": {
+        "types": "./dist/Link/index.d.ts",
+        "import": "./dist/Link/index.js"
+      },
+      "./ProgressBar": {
+        "types": "./dist/ProgressBar/index.d.ts",
+        "import": "./dist/ProgressBar/index.js"
+      },
+      "./Radio": {
+        "types": "./dist/Radio/index.d.ts",
+        "import": "./dist/Radio/index.js"
+      },
+      "./Tooltip": {
+        "types": "./dist/Tooltip/index.d.ts",
+        "import": "./dist/Tooltip/index.js"
+      },
+      "./Popover": {
+        "types": "./dist/Popover/index.d.ts",
+        "import": "./dist/Popover/index.js"
+      },
+      "./Dialog": {
+        "types": "./dist/Dialog/index.d.ts",
+        "import": "./dist/Dialog/index.js"
+      },
+      "./Skeleton": {
+        "types": "./dist/Skeleton/index.d.ts",
+        "import": "./dist/Skeleton/index.js"
+      },
+      "./Spinner": {
+        "types": "./dist/Spinner/index.d.ts",
+        "import": "./dist/Spinner/index.js"
+      },
+      "./Stack": {
+        "types": "./dist/Stack/index.d.ts",
+        "import": "./dist/Stack/index.js"
+      },
+      "./Switch": {
+        "types": "./dist/Switch/index.d.ts",
+        "import": "./dist/Switch/index.js"
+      },
+      "./TabList": {
+        "types": "./dist/TabList/index.d.ts",
+        "import": "./dist/TabList/index.js"
+      },
+      "./TextArea": {
+        "types": "./dist/TextArea/index.d.ts",
+        "import": "./dist/TextArea/index.js"
+      },
+      "./Text": {
+        "types": "./dist/Text/index.d.ts",
+        "import": "./dist/Text/index.js"
+      },
+      "./TextInput": {
+        "types": "./dist/TextInput/index.d.ts",
+        "import": "./dist/TextInput/index.js"
+      },
+      "./Toast": {
+        "types": "./dist/Toast/index.d.ts",
+        "import": "./dist/Toast/index.js"
+      },
+      "./VisuallyHidden": {
+        "types": "./dist/VisuallyHidden/index.d.ts",
+        "import": "./dist/VisuallyHidden/index.js"
+      },
+      "./Kbd": {
+        "types": "./dist/Kbd/index.d.ts",
+        "import": "./dist/Kbd/index.js"
+      },
+      "./Center": {
+        "types": "./dist/Center/index.d.ts",
+        "import": "./dist/Center/index.js"
+      },
+      "./Grid": {
+        "types": "./dist/Grid/index.d.ts",
+        "import": "./dist/Grid/index.js"
+      },
+      "./Card": {
+        "types": "./dist/Card/index.d.ts",
+        "import": "./dist/Card/index.js"
+      },
+      "./List": {
+        "types": "./dist/List/index.d.ts",
+        "import": "./dist/List/index.js"
+      },
+      "./EmptyState": {
+        "types": "./dist/EmptyState/index.d.ts",
+        "import": "./dist/EmptyState/index.js"
+      },
+      "./Collapsible": {
+        "types": "./dist/Collapsible/index.d.ts",
+        "import": "./dist/Collapsible/index.js"
+      },
+      "./Code": {
+        "types": "./dist/Code/index.d.ts",
+        "import": "./dist/Code/index.js"
+      },
+      "./DropdownMenu": {
+        "types": "./dist/DropdownMenu/index.d.ts",
+        "import": "./dist/DropdownMenu/index.js"
+      },
+      "./ContextMenu": {
+        "types": "./dist/ContextMenu/index.d.ts",
+        "import": "./dist/ContextMenu/index.js"
+      },
+      "./MoreMenu": {
+        "types": "./dist/MoreMenu/index.d.ts",
+        "import": "./dist/MoreMenu/index.js"
+      },
+      "./HoverCard": {
+        "types": "./dist/HoverCard/index.d.ts",
+        "import": "./dist/HoverCard/index.js"
+      },
+      "./AlertDialog": {
+        "types": "./dist/AlertDialog/index.d.ts",
+        "import": "./dist/AlertDialog/index.js"
+      },
+      "./BottomSheet": {
+        "types": "./dist/BottomSheet/index.d.ts",
+        "import": "./dist/BottomSheet/index.js"
+      },
+      "./SegmentedControl": {
+        "types": "./dist/SegmentedControl/index.d.ts",
+        "import": "./dist/SegmentedControl/index.js"
+      },
+      "./ToggleButton": {
+        "types": "./dist/ToggleButton/index.d.ts",
+        "import": "./dist/ToggleButton/index.js"
+      },
+      "./Overlay": {
+        "types": "./dist/Overlay/index.d.ts",
+        "import": "./dist/Overlay/index.js"
+      },
+      "./MultiSelector": {
+        "types": "./dist/MultiSelector/index.d.ts",
+        "import": "./dist/MultiSelector/index.js"
+      },
+      "./Typeahead": {
+        "types": "./dist/Typeahead/index.d.ts",
+        "import": "./dist/Typeahead/index.js"
+      },
+      "./DateInput": {
+        "types": "./dist/DateInput/index.d.ts",
+        "import": "./dist/DateInput/index.js"
+      },
+      "./Calendar": {
+        "types": "./dist/Calendar/index.d.ts",
+        "import": "./dist/Calendar/index.js"
+      },
+      "./Pagination": {
+        "types": "./dist/Pagination/index.d.ts",
+        "import": "./dist/Pagination/index.js"
+      },
+      "./Markdown": {
+        "types": "./dist/Markdown/index.d.ts",
+        "import": "./dist/Markdown/index.js"
+      },
+      "./Chat": {
+        "types": "./dist/Chat/index.d.ts",
+        "import": "./dist/Chat/index.js"
+      },
+      "./Citation": {
+        "types": "./dist/Citation/index.d.ts",
+        "import": "./dist/Citation/index.js"
+      },
+      "./Token": {
+        "types": "./dist/Token/index.d.ts",
+        "import": "./dist/Token/index.js"
+      },
+      "./Tokenizer": {
+        "types": "./dist/Tokenizer/index.d.ts",
+        "import": "./dist/Tokenizer/index.js"
+      },
+      "./MobileNav": {
+        "types": "./dist/MobileNav/index.d.ts",
+        "import": "./dist/MobileNav/index.js"
+      },
+      "./NavItem": {
+        "types": "./dist/NavItem/index.d.ts",
+        "import": "./dist/NavItem/index.js"
+      },
+      "./NavMenu": {
+        "types": "./dist/NavMenu/index.d.ts",
+        "import": "./dist/NavMenu/index.js"
+      },
+      "./OverflowList": {
+        "types": "./dist/OverflowList/index.d.ts",
+        "import": "./dist/OverflowList/index.js"
+      },
+      "./SideNav": {
+        "types": "./dist/SideNav/index.d.ts",
+        "import": "./dist/SideNav/index.js"
+      },
+      "./Toolbar": {
+        "types": "./dist/Toolbar/index.d.ts",
+        "import": "./dist/Toolbar/index.js"
+      },
+      "./TopNav": {
+        "types": "./dist/TopNav/index.d.ts",
+        "import": "./dist/TopNav/index.js"
+      },
+      "./locale": {
+        "types": "./dist/locale/index.d.ts",
+        "import": "./dist/locale/index.js"
+      },
+      "./package.json": "./package.json",
+      "./reset.css": {
+        "types": "./css.d.ts",
+        "default": "./reset.css"
+      },
+      "./styles.css": {
+        "types": "./css.d.ts",
+        "default": "./styles.css"
+      },
+      "./CheckboxInput": {
+        "types": "./dist/CheckboxInput/index.d.ts",
+        "import": "./dist/CheckboxInput/index.js"
+      },
+      "./CheckboxIndicator": {
+        "types": "./dist/CheckboxIndicator/index.d.ts",
+        "import": "./dist/CheckboxIndicator/index.js"
+      },
+      "./Slider": {
+        "types": "./dist/Slider/index.d.ts",
+        "import": "./dist/Slider/index.js"
+      },
+      "./Banner": {
+        "types": "./dist/Banner/index.d.ts",
+        "import": "./dist/Banner/index.js"
+      },
+      "./Selector": {
+        "types": "./dist/Selector/index.d.ts",
+        "import": "./dist/Selector/index.js"
+      },
+      "./NumberInput": {
+        "types": "./dist/NumberInput/index.d.ts",
+        "import": "./dist/NumberInput/index.js"
+      },
+      "./InputGroup": {
+        "types": "./dist/InputGroup/index.d.ts",
+        "import": "./dist/InputGroup/index.js"
+      }
+    }
   },
   "dependencies": {
     "@internationalized/date": "catalog:runtime",

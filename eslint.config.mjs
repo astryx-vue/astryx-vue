@@ -21,6 +21,12 @@ export default antfu({
     'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true }],
   },
 }, {
+  files: ['pnpm-workspace.yaml'],
+  rules: {
+    // 工作区钉死 3.5.43，peer 范围是 ^3.5.0，同一个包名要留在两个 catalog 里。
+    'pnpm/yaml-no-duplicate-catalog-item': ['error', { allow: ['vue'] }],
+  },
+}, {
   files: [
     'apps/docs/**/*.ts',
   ],
