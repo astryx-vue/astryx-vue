@@ -33,7 +33,11 @@
     min-width: 0;
   }
 
-  .astryx-toolbar__slot--start:only-child { flex: 1 1 auto; }
+  .astryx-toolbar__slot--start {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .astryx-toolbar__slot--center { justify-content: center; overflow: hidden; }
   .astryx-toolbar__slot--end { justify-content: flex-end; margin-inline-start: auto; }
   .astryx-toolbar--centered .astryx-toolbar__slot--end { margin-inline-start: 0; }

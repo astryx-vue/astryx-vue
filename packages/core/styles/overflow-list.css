@@ -3,6 +3,7 @@
 @layer astryx.components {
   .astryx-overflow-list {
     position: relative;
+    width: 100%;
     min-width: 0;
     max-width: 100%;
   }
