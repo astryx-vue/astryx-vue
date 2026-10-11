@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { nextTick, ref } from 'vue'
 import { useMenuOverflow } from '../ContextMenu/useMenuOverflow.js'
-import { mountComposable } from './mountComposable.js'
+import { mountComposable } from './testing/mountComposable.js'
 import { computeOverflow, useOverflow } from './useOverflow.js'
 
 function setBox(element: HTMLElement, fields: Record<string, number>): void {

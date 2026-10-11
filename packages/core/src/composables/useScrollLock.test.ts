@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { ref } from 'vue'
-import { mountComposable } from './mountComposable.js'
-import { resetScrollLockForTest, useScrollLock } from './useScrollLock.js'
+import { mountComposable } from './testing/mountComposable.js'
+import { resetScrollLockForTest } from './testing/resetScrollLock.js'
+import { useScrollLock } from './useScrollLock.js'
 
 describe('useScrollLock', () => {
   afterEach(() => {

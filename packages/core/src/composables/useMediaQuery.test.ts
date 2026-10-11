@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { mountComposable } from './mountComposable.js'
+import { mountComposable } from './testing/mountComposable.js'
 import { useMediaQuery } from './useMediaQuery.js'
 
 describe('useMediaQuery', () => {

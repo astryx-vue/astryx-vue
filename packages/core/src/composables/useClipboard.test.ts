@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { mountComposable } from './mountComposable.js'
-import { resetLiveRegionsForTest } from './useAnnounce.js'
+import { mountComposable } from './testing/mountComposable.js'
+import { resetLiveRegionsForTest } from './testing/resetLiveRegions.js'
 import { useClipboard } from './useClipboard.js'
 
 describe('useClipboard', () => {

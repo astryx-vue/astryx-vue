@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { resetLiveRegionsForTest, useAnnounce } from './useAnnounce.js'
+import { resetLiveRegionsForTest } from './testing/resetLiveRegions.js'
+import { useAnnounce } from './useAnnounce.js'
 
 describe('useAnnounce', () => {
   afterEach(() => {

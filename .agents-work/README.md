@@ -1,7 +1,7 @@
 # Astryx Vue 调研与讨论记录
 
-> 状态：Git、基本目录和配置已经完成；尚未开始写组件  
-> 更新日期：2026-08-15
+> 状态：组件已经在写。总导出、样式汇总和文案汇总由 `pnpm sync` 生成，不要手改。  
+> 更新日期：2026-10-11
 
 ## 写作方式
 
@@ -21,6 +21,31 @@
 - `@astryx-vue/core` 等公开组件包，以及新建空白 Vue 项目安装它们之后，都不能出现 React 依赖。
 - 样式先用 CSS 变量和 CSS 分层，不把 UnoCSS 或 StyleX 作为使用组件的前提。
 - Vue 版本使用 Vue 自己习惯的 props、事件、插槽、`v-model` 和组合式函数，不照抄 React 写法。
+
+## 新增一个组件
+
+只新建自己的目录，然后跑 `pnpm sync`。不要手改下面这些生成文件：
+
+- `packages/core/src/index.ts`
+- `packages/core/package.json` 里的 `exports`
+- `packages/core/styles.css`
+- `packages/themes/neutral.css`
+- `packages/core/src/composables/index.ts`
+- `packages/core/src/locale/messages.ts`
+- `apps/docs/components/demo-infra/componentCatalog.ts`
+- `apps/docs/components/demos/registry.ts`
+
+要新建的目录和文件：
+
+1. `packages/core/src/<Component>/`，里面要有 `index.ts`，用具名导出组件、类型和组合式函数。不要只写默认导出。注入键（名字以 `Key` 或 `_KEY` 结尾）留在子路径里，不会进总入口。`Icon` 没有 `index.ts`，所以不对外公开。
+2. `packages/core/styles/<kebab>.css`，以及需要主题时的 `packages/themes/neutral/<kebab>.css`。
+3. 文案放在 `packages/core/src/locale/messages/<kebab>.ts`。同一个文件里写 `en` 和 `zh-CN`，并导出 `export const <camel>Messages` 和 `export interface <Pascal>Messages`。没有文案就不要建这个文件。
+4. 可复用的组合式函数放在 `packages/core/src/composables/useX.ts`。不要手改该目录的 `index.ts`。
+5. 文档示例放在 `apps/docs/components/demos/<slug>/`，并新增 `meta.ts`（`slug`、分组、组内 `order`、中英文名、目录卡片示例）。文档页放在 `docs/zh/components/<slug>/` 和 `docs/en/components/<slug>/`。
+
+然后在仓库根目录运行 `pnpm sync`。`pnpm check` 里的 `sync --check` 会核对生成结果；不一致就先重新生成，不要手动合并这些文件。
+
+`styles.css` 里原先没有汇总、由组件单文件自己引入的样式，以及 `composables/index.ts` 原先没有公开的 `useCalendar`、`usePagination`，生成脚本会继续留在外面，避免公开范围被悄悄改掉。新文件不在这份例外里，会自动收进汇总。
 
 ## 第一轮做什么
 

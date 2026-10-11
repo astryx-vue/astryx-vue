@@ -1,3 +1,5 @@
+// 这个文件由 `pnpm sync` 生成，不要手改。
+
 export { useAnnounce } from './useAnnounce.js'
 export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
 
@@ -34,7 +36,12 @@ export { useNumberField } from './useNumberField.js'
 export type { NumberField, UseNumberFieldOptions } from './useNumberField.js'
 
 export { computeOverflow, useOverflow } from './useOverflow.js'
-export type { ComputeOverflowInput, ComputeOverflowResult, UseOverflowOptions, UseOverflowReturn } from './useOverflow.js'
+export type {
+  ComputeOverflowInput,
+  ComputeOverflowResult,
+  UseOverflowOptions,
+  UseOverflowReturn,
+} from './useOverflow.js'
 
 export { useRestoreFocus } from './useRestoreFocus.js'
 export type { RestoreFocus, UseRestoreFocusOptions } from './useRestoreFocus.js'

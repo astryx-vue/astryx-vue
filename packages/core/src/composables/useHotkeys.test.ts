@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
-import { mountComposable } from './mountComposable.js'
+import { mountComposable } from './testing/mountComposable.js'
 import { useHotkeys } from './useHotkeys.js'
 
 function setPlatform(platform: string): void {

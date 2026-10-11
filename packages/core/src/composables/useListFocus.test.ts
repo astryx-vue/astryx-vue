@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
-import { mountComposable } from './mountComposable.js'
+import { mountComposable } from './testing/mountComposable.js'
 import { useListFocus } from './useListFocus.js'
 
 function item(label: string, options: { disabled?: boolean } = {}): HTMLButtonElement {
