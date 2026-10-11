@@ -124,7 +124,7 @@
   overflow: auto;
   border-radius: var(--astryx-radius-element, 0.625rem);
   background: var(--astryx-color-neutral);
-  font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+  font-family: var(--astryx-font-family-code);
   font-size: 0.75rem;
   line-height: 1.5;
   white-space: pre;

@@ -551,7 +551,7 @@
   .astryx-chat-tool-calls__name {
     flex-shrink: 0;
     min-width: max-content;
-    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+    font-family: var(--astryx-font-family-code);
     white-space: nowrap;
   }
 
