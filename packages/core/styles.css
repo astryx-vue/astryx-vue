@@ -1,3 +1,4 @@
+/* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './styles/alert-dialog.css';
 @import './styles/avatar.css';
 @import './styles/avatar-group.css';
@@ -29,6 +30,8 @@
 @import './styles/link.css';
 @import './styles/list.css';
 @import './styles/more-menu.css';
+@import './styles/motion.css';
+@import './styles/multi-selector.css';
 @import './styles/overlay.css';
 @import './styles/popover.css';
 @import './styles/progress-bar.css';
@@ -46,5 +49,8 @@
 @import './styles/text-input.css';
 @import './styles/toast.css';
 @import './styles/toggle-button.css';
+@import './styles/token.css';
+@import './styles/tokenizer.css';
 @import './styles/tooltip.css';
+@import './styles/typeahead.css';
 @import './styles/visually-hidden.css';

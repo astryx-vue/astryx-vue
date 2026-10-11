@@ -72,38 +72,17 @@ describe('tokenizer', () => {
       { id: 'c', label: 'Charlie' },
     ]
     const wrapper = mountTokenizer({ modelValue: items, overflow: 'unfocused-inline', searchSource: createStaticSource(items) })
-    const row = wrapper.get('.astryx-tokenizer-tokens').element
-    const originals = new Map<Element, () => DOMRect>()
-    function mockWidth(element: Element, width: number): void {
-      const original = element.getBoundingClientRect.bind(element)
-      originals.set(element, original)
-      element.getBoundingClientRect = () => {
-        const rect = original()
-        return {
-          ...rect,
-          width,
-          height: 24,
-          top: 0,
-          left: 0,
-          right: width,
-          bottom: 24,
-          x: 0,
-          y: 0,
-          toJSON() {
-            return {}
-          },
-        }
-      }
+    function setWidth(element: Element, width: number): void {
+      Object.defineProperty(element, 'offsetWidth', { configurable: true, value: width })
+      Object.defineProperty(element, 'offsetHeight', { configurable: true, value: 24 })
     }
-    Object.defineProperty(row, 'clientWidth', { configurable: true, value: 100 })
-    mockWidth(row, 100)
-    wrapper.findAll('[data-overflow-item]').forEach(item => mockWidth(item.element, 48))
-    const indicator = wrapper.get('[data-overflow-indicator]').element
-    mockWidth(indicator, 32)
+    setWidth(wrapper.get('.astryx-tokenizer-tokens').element, 100)
+    for (const child of wrapper.get('.astryx-tokenizer-measure').element.children)
+      setWidth(child, child.hasAttribute('data-overflow-indicator') ? 32 : 48)
     await wrapper.get('input').trigger('focus')
     await wrapper.get('input').trigger('blur')
     await flush()
-    expect(wrapper.text()).toContain('+')
+    expect(wrapper.text()).toContain('+2')
     wrapper.unmount()
   })
 })

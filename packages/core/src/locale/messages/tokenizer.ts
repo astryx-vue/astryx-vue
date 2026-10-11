@@ -1,4 +1,19 @@
-export const tokenizerMessages = {
+import type { AstryxLocale } from '../types.js'
+
+export interface TokenizerMessages {
+  placeholder: string
+  empty: string
+  loading: string
+  error: string
+  clear: string
+  results: string
+  more: (count: number) => string
+  added: (label: string) => string
+  removed: (label: string) => string
+  create: (query: string) => string
+}
+
+export const tokenizerMessages: Record<AstryxLocale, TokenizerMessages> = {
   'en': {
     placeholder: 'Add…',
     empty: 'No results',
@@ -6,10 +21,10 @@ export const tokenizerMessages = {
     error: 'Couldn\'t load results',
     clear: 'Clear all',
     results: 'Search results',
-    more: (count: number) => `+${count}`,
-    added: (label: string) => `Added ${label}`,
-    removed: (label: string) => `Removed ${label}`,
-    create: (query: string) => `Create "${query}"`,
+    more: count => `+${count}`,
+    added: label => `Added ${label}`,
+    removed: label => `Removed ${label}`,
+    create: query => `Create "${query}"`,
   },
   'zh-CN': {
     placeholder: '添加…',
@@ -18,9 +33,9 @@ export const tokenizerMessages = {
     error: '加载失败',
     clear: '全部清除',
     results: '搜索结果',
-    more: (count: number) => `+${count}`,
-    added: (label: string) => `已添加${label}`,
-    removed: (label: string) => `已移除${label}`,
-    create: (query: string) => `创建「${query}」`,
+    more: count => `+${count}`,
+    added: label => `已添加${label}`,
+    removed: label => `已移除${label}`,
+    create: query => `创建「${query}」`,
   },
 }

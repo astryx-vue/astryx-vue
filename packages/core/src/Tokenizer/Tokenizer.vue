@@ -3,6 +3,7 @@ import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { TokenizerChange, TokenizerEmits, TokenizerProps, TokenizerSlots } from './types.js'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
 import { useAstryxMessages } from '../locale/index.js'
@@ -42,11 +43,10 @@ const disabledId = `${inputId}-disabled`
 const values = computed(() => props.modelValue ?? [])
 const focused = ref(false)
 const placeholderHeight = ref(0)
-const announcement = ref('')
+const announce = useAnnounce()
 const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
-const tokenRowRef = useTemplateRef<HTMLElement>('tokenRowRef')
 const tokenEls = new Map<number, HTMLElement>()
 
 const placeholder = computed(() => props.placeholder ?? messages.value.tokenizer.placeholder)
@@ -86,12 +86,15 @@ const anchored = useAnchoredListbox({
 })
 
 const tokenCount = computed(() => values.value.length)
-const overflow = useOverflow({
-  container: tokenRowRef,
-  count: tokenCount,
-  enabled: collapsed,
+const overflow = useOverflow(tokenCount, { gap: 4 })
+const visibleCount = computed(() => collapsed.value ? overflow.visibleCount.value : tokenCount.value)
+const hiddenCount = computed(() => Math.max(0, tokenCount.value - visibleCount.value))
+const measureMoreLabel = computed(() => messages.value.tokenizer.more(Math.max(hiddenCount.value, 1)))
+const visibleItems = computed(() => values.value.slice(0, visibleCount.value))
+
+watch(collapsed, () => {
+  void nextTick(() => overflow.remeasure())
 })
-const visibleCount = computed(() => collapsed.value ? overflow.visibleCount.value : values.value.length)
 
 watch(() => menu.combobox.isOpen.value, (isOpen) => {
   emit('openChange', isOpen)
@@ -102,13 +105,6 @@ watch(() => menu.combobox.activeIndex.value, (index) => {
     return
   void nextTick(() => scrollOptionIntoView(listboxRef.value, menu.entries.value[index]?.id))
 })
-
-function announce(text: string): void {
-  announcement.value = ''
-  void nextTick(() => {
-    announcement.value = text
-  })
-}
 
 function commit(next: T[], change: TokenizerChange<T>): void {
   emit('update:modelValue', next)
@@ -273,18 +269,16 @@ defineExpose({
         <slot name="icon" />
       </span>
       <span
-        ref="tokenRowRef"
+        :ref="overflow.containerRef"
         class="astryx-tokenizer-tokens"
         :class="{ 'is-collapsed': collapsed }"
       >
         <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 方向键在标签容器上移动焦点，删除由内部按钮处理。 -->
         <span
-          v-for="(item, index) in values"
-          v-show="!collapsed || index < visibleCount"
+          v-for="(item, index) in visibleItems"
           :key="item.id"
           :ref="element => setTokenEl(index, element)"
           class="astryx-tokenizer-token"
-          data-overflow-item
           tabindex="-1"
           @keydown="onTokenKeyDown($event, item, index)"
         >
@@ -292,9 +286,15 @@ defineExpose({
             <Token :label="item.label" :size="props.size" :disabled="props.disabled" removable @remove="remove(item)" />
           </slot>
         </span>
-        <span v-show="collapsed && overflow.overflowCount.value > 0" class="astryx-tokenizer-more" data-overflow-indicator>
-          {{ messages.tokenizer.more(overflow.overflowCount.value) }}
+        <span v-if="collapsed && hiddenCount > 0" class="astryx-tokenizer-more">
+          {{ messages.tokenizer.more(hiddenCount) }}
         </span>
+      </span>
+      <span :ref="overflow.measureRef" class="astryx-tokenizer-measure" aria-hidden="true">
+        <span v-for="item in values" :key="item.id" class="astryx-tokenizer-token">
+          <Token :label="item.label" :size="props.size" />
+        </span>
+        <span class="astryx-tokenizer-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>
       <input
         :id="inputId"
@@ -334,7 +334,6 @@ defineExpose({
       <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ props.disabledReason }}</span>
       <input v-for="item in values" :key="`${props.name}-${item.id}`" type="hidden" :name="props.name" :value="item.id" :disabled="!props.name">
     </div>
-    <span class="astryx-visually-hidden" aria-live="polite">{{ announcement }}</span>
   </Field>
   <Teleport to="body">
     <div

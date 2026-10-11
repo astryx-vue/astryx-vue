@@ -18,7 +18,8 @@ import { typeaheadAsync, typeaheadStates, typeaheadStatic } from '../../../../co
 
 ```vue
 <script setup lang="ts">
-import { createStaticSource, Typeahead } from '@astryx-vue/core/Typeahead'
+import { createStaticSource } from '@astryx-vue/core'
+import { Typeahead } from '@astryx-vue/core/Typeahead'
 import { ref } from 'vue'
 
 const selected = ref(null)

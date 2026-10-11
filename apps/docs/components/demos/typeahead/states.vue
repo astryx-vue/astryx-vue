@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { createStaticSource, Typeahead } from '@astryx-vue/core/Typeahead'
+import { createStaticSource } from '@astryx-vue/core'
+import { Typeahead } from '@astryx-vue/core/Typeahead'
 import { computed } from 'vue'
 import { useDemoText } from '../../demo-infra/useDemoText'
 

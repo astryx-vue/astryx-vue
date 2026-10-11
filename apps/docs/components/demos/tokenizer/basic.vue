@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { SearchableItem } from '@astryx-vue/core/Typeahead'
+import type { SearchableItem } from '@astryx-vue/core'
+import { createStaticSource } from '@astryx-vue/core'
 import { Tokenizer } from '@astryx-vue/core/Tokenizer'
-import { createStaticSource } from '@astryx-vue/core/Typeahead'
 import { computed, ref } from 'vue'
 import { useDemoText } from '../../demo-infra/useDemoText'
 

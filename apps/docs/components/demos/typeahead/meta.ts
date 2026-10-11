@@ -1,4 +1,11 @@
-export const typeaheadMeta = {
+import type { DemoMeta } from '../../demo-infra/demoMeta'
+import { typeaheadStatic as demo } from './index'
+
+export const meta = {
   slug: 'typeahead',
-  demos: ['static', 'async', 'states'],
-}
+  group: 'form',
+  order: 17,
+  en: 'Typeahead',
+  zh: '自动补全',
+  demo,
+} satisfies DemoMeta

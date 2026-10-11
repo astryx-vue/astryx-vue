@@ -1,7 +1,5 @@
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
 
-export type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
-
 export type TypeaheadSize = 'sm' | 'md' | 'lg'
 export type TypeaheadStatus = 'default' | 'success' | 'warning' | 'error'
 

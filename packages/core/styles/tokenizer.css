@@ -9,6 +9,7 @@
 
   .astryx-tokenizer-control {
     box-sizing: border-box;
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -103,6 +104,17 @@
     border: 0;
     background: transparent;
     cursor: pointer;
+  }
+
+  .astryx-tokenizer-measure {
+    position: absolute;
+    display: flex;
+    gap: var(--astryx-spacing-1, 4px);
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+    white-space: nowrap;
   }
 
   .astryx-tokenizer-tokens {

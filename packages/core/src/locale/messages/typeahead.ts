@@ -1,4 +1,15 @@
-export const typeaheadMessages = {
+import type { AstryxLocale } from '../types.js'
+
+export interface TypeaheadMessages {
+  placeholder: string
+  empty: string
+  loading: string
+  error: string
+  clear: string
+  results: string
+}
+
+export const typeaheadMessages: Record<AstryxLocale, TypeaheadMessages> = {
   'en': {
     placeholder: 'Search…',
     empty: 'No results',
@@ -15,4 +26,4 @@ export const typeaheadMessages = {
     clear: '清除',
     results: '搜索结果',
   },
-} as const
+}

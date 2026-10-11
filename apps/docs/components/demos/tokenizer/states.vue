@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { createStaticSource } from '@astryx-vue/core'
 import { Tokenizer } from '@astryx-vue/core/Tokenizer'
-import { createStaticSource } from '@astryx-vue/core/Typeahead'
 import { computed } from 'vue'
 import { useDemoText } from '../../demo-infra/useDemoText'
 

@@ -44,7 +44,6 @@ const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const triggerRef = useTemplateRef<HTMLElement>('triggerRef')
 const searchRef = useTemplateRef<HTMLInputElement>('searchRef')
-const badgeRowRef = useTemplateRef<HTMLElement>('badgeRowRef')
 const query = ref('')
 const focusableDisabled = computed(() => props.disabled && Boolean(props.disabledReason?.trim()))
 const selectedValues = computed(() => props.modelValue ?? [])
@@ -119,13 +118,10 @@ const selectAllState = computed(() => {
   return 'indeterminate' as const
 })
 const badgeCount = computed(() => selectedOptions.value.length)
-const overflow = useOverflow({
-  container: badgeRowRef,
-  count: badgeCount,
-  enabled: computed(() => props.triggerDisplay === 'badges' && selectedOptions.value.length > 0),
-})
-const visibleBadgeCount = computed(() => Math.min(overflow.visibleCount.value, props.maxBadges, selectedOptions.value.length))
-const hiddenBadgeCount = computed(() => Math.max(0, selectedOptions.value.length - visibleBadgeCount.value))
+const overflow = useOverflow(badgeCount, { gap: 4 })
+const visibleBadgeCount = computed(() => Math.min(overflow.visibleCount.value, props.maxBadges, badgeCount.value))
+const hiddenBadgeCount = computed(() => Math.max(0, badgeCount.value - visibleBadgeCount.value))
+const measureMoreLabel = computed(() => messages.value.multiSelector.more(Math.max(hiddenBadgeCount.value, 1)))
 const labelText = computed(() => {
   const labels = selectedOptions.value.map(option => option.label)
   const shown = labels.slice(0, props.maxBadges)
@@ -342,16 +338,14 @@ defineExpose({
         <span v-if="selectedOptions.length === 0" class="astryx-multi-selector-placeholder">{{ placeholder }}</span>
         <span v-else-if="props.triggerDisplay === 'count'" class="astryx-multi-selector-value">{{ messages.multiSelector.selected(selectedOptions.length) }}</span>
         <span v-else-if="props.triggerDisplay === 'labels'" class="astryx-multi-selector-value">{{ labelText }}</span>
-        <span v-else ref="badgeRowRef" class="astryx-multi-selector-badges">
+        <span v-else :ref="overflow.containerRef" class="astryx-multi-selector-badges">
           <Token
-            v-for="(option, index) in selectedOptions"
-            v-show="index < visibleBadgeCount"
+            v-for="option in selectedOptions.slice(0, visibleBadgeCount)"
             :key="option.value"
-            data-overflow-item
             :label="option.label"
             :size="props.size === 'lg' ? 'md' : 'sm'"
           />
-          <span v-show="hiddenBadgeCount > 0" class="astryx-multi-selector-more" data-overflow-indicator>
+          <span v-if="hiddenBadgeCount > 0" class="astryx-multi-selector-more">
             {{ messages.multiSelector.more(hiddenBadgeCount) }}
           </span>
         </span>
@@ -371,6 +365,15 @@ defineExpose({
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
+      </span>
+      <span v-if="props.triggerDisplay === 'badges'" :ref="overflow.measureRef" class="astryx-multi-selector-measure" aria-hidden="true">
+        <Token
+          v-for="option in selectedOptions"
+          :key="option.value"
+          :label="option.label"
+          :size="props.size === 'lg' ? 'md' : 'sm'"
+        />
+        <span class="astryx-multi-selector-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>
       <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ props.disabledReason }}</span>
       <input v-for="value in selectedValues" :key="value" type="hidden" :name="props.name" :value="value" :disabled="!props.name">

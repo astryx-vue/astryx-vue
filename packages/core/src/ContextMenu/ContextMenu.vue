@@ -3,12 +3,12 @@ import type { StyleValue } from 'vue'
 import type { ContextMenuEmits, ContextMenuItemData, ContextMenuProps, ContextMenuSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
+import { useLongPress } from '../composables/useLongPress.js'
+import { useOverflow } from '../composables/useOverflow.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
 import { useMenuNav } from './menuNav.js'
-import { useLongPress } from './useLongPress.js'
-import { useMenuOverflow } from './useMenuOverflow.js'
 import { resetMenuPress, useMenuPress } from './useMenuPress.js'
 import '../../styles/context-menu.css'
 
@@ -63,7 +63,7 @@ const nav = useMenuNav({
   onClose: () => closeMenu({ restoreFocus: true }),
 })
 
-const hasOverflow = useMenuOverflow(panel, isOpen)
+const hasOverflow = useOverflow(panel, isOpen)
 
 const menuPress = useMenuPress({
   menuRef: panel,
