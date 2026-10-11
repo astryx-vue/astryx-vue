@@ -3,6 +3,16 @@
 export { useAnnounce } from './useAnnounce.js'
 export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
 
+export { createStaticSource, useAsyncSource } from './useAsyncSource.js'
+export type {
+  AsyncSource,
+  AsyncSourceStatus,
+  CreateStaticSourceOptions,
+  SearchableItem,
+  SearchSource,
+  UseAsyncSourceOptions,
+} from './useAsyncSource.js'
+
 export { useClipboard } from './useClipboard.js'
 export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard.js'
 
@@ -47,6 +57,9 @@ export { useRestoreFocus } from './useRestoreFocus.js'
 export type { RestoreFocus, UseRestoreFocusOptions } from './useRestoreFocus.js'
 
 export { useScrollLock } from './useScrollLock.js'
+
+export { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
+export type { StreamingTextSpeed, UseStreamingTextOptions } from './useStreamingText.js'
 
 export { useTypeahead } from './useTypeahead.js'
 export type { UseTypeaheadOptions, UseTypeaheadReturn } from './useTypeahead.js'

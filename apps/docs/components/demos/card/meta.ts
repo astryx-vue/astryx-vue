@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { cardBasic as demo } from './index'
+import { cardOverview as demo } from './index'
 
 export const meta = {
   slug: 'card',

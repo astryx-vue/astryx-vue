@@ -266,6 +266,22 @@ export type {
 } from './List/index.js'
 export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
 export type { AstryxLocale, AstryxMessages } from './locale/index.js'
+export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
+export type {
+  MarkdownAlign,
+  MarkdownCodeProps,
+  MarkdownComponents,
+  MarkdownDensity,
+  MarkdownDisplay,
+  MarkdownHeadingLevel,
+  MarkdownHeadingProps,
+  MarkdownImageProps,
+  MarkdownInlineCodeProps,
+  MarkdownLinkProps,
+  MarkdownListProps,
+  MarkdownProps,
+  MarkdownSlots,
+} from './Markdown/index.js'
 export { MobileNav, MobileNavToggle } from './MobileNav/index.js'
 export type {
   MobileNavEmits,
@@ -290,6 +306,22 @@ export type {
   MoreMenuSection,
   MoreMenuSlots,
 } from './MoreMenu/index.js'
+export { flattenOptions, MultiSelector, SELECT_ALL_VALUE } from './MultiSelector/index.js'
+export type {
+  MultiSelectorCheckboxPosition,
+  MultiSelectorDivider,
+  MultiSelectorEmits,
+  MultiSelectorOption,
+  MultiSelectorOptionData,
+  MultiSelectorPresentation,
+  MultiSelectorProps,
+  MultiSelectorSection,
+  MultiSelectorSize,
+  MultiSelectorSlots,
+  MultiSelectorStatus,
+  MultiSelectorTriggerDisplay,
+  MultiSelectorVariant,
+} from './MultiSelector/index.js'
 export { NavIcon, NavItem, resolveNavRoot } from './NavItem/index.js'
 export type {
   NavIconProps,
@@ -480,6 +512,18 @@ export type {
   ToggleButtonSize,
   ToggleButtonSlots,
 } from './ToggleButton/index.js'
+export { Token, TOKEN_COLORS } from './Token/index.js'
+export type { TokenColor, TokenEmits, TokenProps, TokenSize, TokenSlots } from './Token/index.js'
+export { Tokenizer } from './Tokenizer/index.js'
+export type {
+  TokenizerChange,
+  TokenizerEmits,
+  TokenizerOverflow,
+  TokenizerProps,
+  TokenizerSize,
+  TokenizerSlots,
+  TokenizerStatus,
+} from './Tokenizer/index.js'
 export { Toolbar } from './Toolbar/index.js'
 export type { ToolbarOrientation, ToolbarProps, ToolbarSize } from './Toolbar/index.js'
 export { Tooltip } from './Tooltip/index.js'
@@ -512,5 +556,13 @@ export type {
   TopNavMenuProps,
   TopNavProps,
 } from './TopNav/index.js'
+export { Typeahead } from './Typeahead/index.js'
+export type {
+  TypeaheadEmits,
+  TypeaheadProps,
+  TypeaheadSize,
+  TypeaheadSlots,
+  TypeaheadStatus,
+} from './Typeahead/index.js'
 export { VisuallyHidden } from './VisuallyHidden/index.js'
 export type { VisuallyHiddenElement, VisuallyHiddenProps } from './VisuallyHidden/index.js'

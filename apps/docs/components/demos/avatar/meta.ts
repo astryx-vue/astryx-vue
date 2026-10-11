@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { avatarSizes as demo } from './index'
+import { avatarOverview as demo } from './index'
 
 export const meta = {
   slug: 'avatar',

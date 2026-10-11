@@ -1,6 +1,8 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
 import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import previewDemo from './preview.vue'
 import previewSource from './preview.vue?raw&highlighted'
 import stackDemo from './stack.vue'
@@ -17,3 +19,5 @@ export const toastPreview = defineDemo(previewDemo, previewSource, {
 export const toastStack = defineDemo(stackDemo, stackSource, {
   className: 'toast-preview',
 })
+
+export const toastOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

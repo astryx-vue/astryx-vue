@@ -5,6 +5,8 @@ import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
 import columnsDemo from './columns.vue'
 import columnsSource from './columns.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import spanDemo from './span.vue'
 import spanSource from './span.vue?raw&highlighted'
 
@@ -14,3 +16,5 @@ export const gridBasic = defineDemo(basicDemo, basicSource, options)
 export const gridColumns = defineDemo(columnsDemo, columnsSource, options)
 export const gridSpan = defineDemo(spanDemo, spanSource, options)
 export const gridAlignment = defineDemo(alignmentDemo, alignmentSource, options)
+
+export const gridOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

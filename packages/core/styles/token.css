@@ -1,0 +1,179 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-token {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    max-width: 100%;
+    height: calc(var(--astryx-input-height-md, 32px) - 8px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    border: 0;
+    border-radius: var(--astryx-radius-inner, 0.375rem);
+    background: var(--astryx-token-default-background, var(--astryx-badge-neutral-background, #e5e5e5));
+    color: var(--astryx-token-default-foreground, var(--astryx-badge-neutral-foreground, #262626));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    transition: background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-token.size-sm {
+    height: calc(var(--astryx-input-height-sm, 28px) - 8px);
+    padding-inline: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-token.size-lg {
+    height: calc(var(--astryx-input-height-lg, 36px) - 8px);
+  }
+
+  .astryx-token[data-color='gray'] {
+    background: var(--astryx-token-gray-background, var(--astryx-badge-neutral-background, #e5e5e5));
+    color: var(--astryx-token-gray-foreground, var(--astryx-badge-neutral-foreground, #262626));
+  }
+
+  .astryx-token[data-color='blue'] {
+    background: var(--astryx-token-blue-background, var(--astryx-badge-blue-background, #c4ddfb));
+    color: var(--astryx-token-blue-foreground, var(--astryx-badge-blue-foreground, #00458c));
+  }
+
+  .astryx-token[data-color='cyan'] {
+    background: var(--astryx-token-cyan-background, var(--astryx-badge-cyan-background, #a3e0ef));
+    color: var(--astryx-token-cyan-foreground, var(--astryx-badge-cyan-foreground, #00505f));
+  }
+
+  .astryx-token[data-color='green'] {
+    background: var(--astryx-token-green-background, var(--astryx-badge-green-background, #c5e5c0));
+    color: var(--astryx-token-green-foreground, var(--astryx-badge-green-foreground, #0c5700));
+  }
+
+  .astryx-token[data-color='orange'] {
+    background: var(--astryx-token-orange-background, var(--astryx-badge-orange-background, #fad0b5));
+    color: var(--astryx-token-orange-foreground, var(--astryx-badge-orange-foreground, #6e3500));
+  }
+
+  .astryx-token[data-color='pink'] {
+    background: var(--astryx-token-pink-background, var(--astryx-badge-pink-background, #fccadc));
+    color: var(--astryx-token-pink-foreground, var(--astryx-badge-pink-foreground, #83004b));
+  }
+
+  .astryx-token[data-color='purple'] {
+    background: var(--astryx-token-purple-background, var(--astryx-badge-purple-background, #eccef3));
+    color: var(--astryx-token-purple-foreground, var(--astryx-badge-purple-foreground, #700084));
+  }
+
+  .astryx-token[data-color='red'] {
+    background: var(--astryx-token-red-background, var(--astryx-badge-red-background, #facecb));
+    color: var(--astryx-token-red-foreground, var(--astryx-badge-red-foreground, #89001a));
+  }
+
+  .astryx-token[data-color='teal'] {
+    background: var(--astryx-token-teal-background, var(--astryx-badge-teal-background, #a5e3d6));
+    color: var(--astryx-token-teal-foreground, var(--astryx-badge-teal-foreground, #005348));
+  }
+
+  .astryx-token[data-color='yellow'] {
+    background: var(--astryx-token-yellow-background, var(--astryx-badge-yellow-background, #f8da9d));
+    color: var(--astryx-token-yellow-foreground, var(--astryx-badge-yellow-foreground, #584400));
+  }
+
+  .astryx-token-icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+  }
+
+  .astryx-token-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .astryx-token-label.is-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .astryx-token-action {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .astryx-token-remove {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-inline-end: calc(-1 * var(--astryx-spacing-1, 4px));
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    outline: none;
+  }
+
+  @media (hover: hover) {
+    .astryx-token.is-interactive:hover:not(.is-disabled) {
+      background-image: linear-gradient(color-mix(in srgb, var(--astryx-color-text-primary, #171717) 8%, transparent), color-mix(in srgb, var(--astryx-color-text-primary, #171717) 8%, transparent));
+    }
+  }
+
+  .astryx-token.is-interactive:focus-within {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+    outline-offset: 1px;
+  }
+
+  .astryx-token.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .astryx-token.is-disabled .astryx-token-action,
+  .astryx-token.is-disabled .astryx-token-remove {
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-token {
+      transition: none;
+    }
+  }
+}
+
+/* 不分层：文档页的 :focus-visible 会盖过分层里的 outline。 */
+.astryx-token-action:focus,
+.astryx-token-action:focus-visible,
+.astryx-token-remove:focus,
+.astryx-token-remove:focus-visible {
+  outline: none;
+}
+
+.astryx-token.is-interactive:focus-within {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+  outline-offset: 1px;
+}

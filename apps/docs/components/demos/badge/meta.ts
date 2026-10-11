@@ -1,11 +1,11 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { badgeColors as demo } from './index'
+import { badgeOverview as demo } from './index'
 
 export const meta = {
   slug: 'badge',
   group: 'feedback',
   order: 1,
   en: 'Badge',
-  zh: '标签',
+  zh: '徽标',
   demo,
 } satisfies DemoMeta

@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { checkboxInputBasic as demo } from './index'
+import { checkboxInputOverview as demo } from './index'
 
 export const meta = {
   slug: 'checkbox-input',
