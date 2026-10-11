@@ -23,11 +23,11 @@ const snippet = `const [state, dispatch] = useReducer(
       {{ pick('今天', 'Today') }}
     </ChatSystemMessage>
     <ChatMessage sender="user">
+      <div class="chat-preview__files">
+        <span class="chat-preview__file">useReducer.ts</span>
+        <span class="chat-preview__file">formState.ts</span>
+      </div>
       <ChatMessageBubble>
-        <div class="chat-preview__files">
-          <span class="chat-preview__file">useReducer.ts</span>
-          <span class="chat-preview__file">formState.ts</span>
-        </div>
         {{ pick('帮我看一下这几个文件。', 'Can you review these files?') }}
         <template #metadata>
           <ChatMessageMetadata status="read" timestamp="2:30 PM" />

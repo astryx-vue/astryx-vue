@@ -126,8 +126,12 @@
 .chat-preview__files {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-block-end: 8px;
+  justify-content: flex-end;
+  align-self: flex-end;
+  gap: 8px;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
 }
 
 .chat-preview__file {
