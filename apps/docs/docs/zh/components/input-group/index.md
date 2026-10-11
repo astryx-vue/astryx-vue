@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demos/input-group'
 </script>
 
 ## 使用方法
@@ -35,19 +36,6 @@ import { InputGroup } from '@astryx-vue/core/InputGroup'
 
 `prepend` 插槽用于添加前置内容，`append` 用于后置内容。可以是文字、图标、按钮等任何元素。
 
-组件内部可以放置 `<input>`、`<textarea>` 或其他输入组件，`InputGroup` 会为它们提供统一的视觉容器和边框。
-
-```vue
-<template>
-  <InputGroup>
-    <template #prepend>
-      <span class="i-lucide-user" />
-    </template>
-    <input type="text" placeholder="用户名" aria-label="用户名输入">
-  </InputGroup>
-</template>
-```
-
 ## 最佳实践
 
 | 指引 | 实践 |
@@ -56,30 +44,19 @@ import { InputGroup } from '@astryx-vue/core/InputGroup'
 | <Badge variant="success">推荐</Badge> | 用后置内容放置清除按钮、提交按钮等操作。 |
 | <Badge variant="success">推荐</Badge> | 保持前后缀内容简洁，避免占用过多空间。 |
 | <Badge variant="error">避免</Badge> | 同时使用过多前后缀元素，会让输入框显得拥挤。 |
-| <Badge variant="error">避免</Badge> | 在前后缀中放置过长的文本或复杂的交互元素。 |
 
 ## 示例
 
-输入框组组件示例将在应用中正常显示。
+<DemoExample
+  :demo="inputGroupBasic"
+  description="使用前后缀插槽组合输入框与固定文本，适合 URL、邮箱等场景。"
+  locale="zh"
+  title="基本用法"
+/>
 
-## Props
-
-| 名称 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 尺寸 |
-| `status` | `'default' \| 'error' \| 'warning' \| 'success'` | `'default'` | 状态 |
-| `disabled` | `boolean` | `false` | 是否禁用 |
-
-## Slots
-
-| 名称 | 说明 |
-| --- | --- |
-| `default` | 输入框主体内容 |
-| `prepend` | 前置内容 |
-| `append` | 后置内容 |
-
-## 无障碍
-
-- 保持内部输入元素的原生语义
-- 前后缀装饰性元素使用 `aria-hidden="true"`
-- 前后缀交互元素（按钮等）保留完整的无障碍属性
+<DemoExample
+  :demo="inputGroupWithIcon"
+  description="前缀插槽可以放置图标，增强视觉识别度。"
+  locale="zh"
+  title="带图标"
+/>

@@ -7,18 +7,19 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { selectorBasic, selectorSearchable, selectorClearable, selectorSizes } from '../../../../components/demos/selector'
 </script>
 
 ## Usage
 
-The `Selector` is a dropdown component that expands to show a list of options when clicked. Users can select one item and the list collapses. It supports search filtering, clearing selection, and disabling specific options.
+`Selector` is a dropdown component that expands to show a list of options when clicked. Users can select one item and the list collapses. It supports search filtering, clearing selection, and disabling specific options.
 
 Basic usage requires an options array and a bound value:
 
-```vue
+\`\`\`vue
 <script setup lang="ts">
-import { Selector } from '@astryx-vue/core/Selector'
 import { ref } from 'vue'
+import { Selector } from '@astryx-vue/core/Selector'
 
 const selected = ref(null)
 const options = [
@@ -31,25 +32,13 @@ const options = [
 <template>
   <Selector v-model="selected" :options="options" placeholder="Select a fruit" />
 </template>
-```
+\`\`\`
 
-Each option object contains a `value` (unique identifier) and `label` (display text). Optional `disabled` property can disable specific options, and `description` can add auxiliary text.
+Each option object contains \`value\` (unique identifier) and \`label\` (display text). Optional \`disabled\` property can disable specific options, and \`description\` can add auxiliary text.
 
-Enable `searchable` to show a search box that filters options as users type. Enable `clearable` to show a clear button next to the selected value.
+Enable \`searchable\` to show a search box that filters options as users type. Enable \`clearable\` to show a clear button next to the selected value.
 
-```vue
-<template>
-  <Selector
-    v-model="selected"
-    :options="options"
-    searchable
-    clearable
-    placeholder="Search or select"
-  />
-</template>
-```
-
-Full keyboard navigation is supported: arrow keys move the highlight up and down, `Home` and `End` jump to the first and last options, `Enter` selects the current item, and `Escape` closes the list.
+Full keyboard navigation is supported: arrow keys move the highlight up and down, \`Home\` and \`End\` jump to the first and last options, \`Enter\` selects the current item, and \`Escape\` closes the list.
 
 ## Best Practices
 
@@ -63,52 +52,30 @@ Full keyboard navigation is supported: arrow keys move the highlight up and down
 
 ## Examples
 
-Selector component examples will display normally in the application.
+<DemoExample
+  :demo="selectorBasic"
+  description="Pass options array and bind value, click to expand list and select an item."
+  locale="en"
+  title="Basic Usage"
+/>
 
-## Props
+<DemoExample
+  :demo="selectorSearchable"
+  description="Enable searchable to show a search box for filtering options."
+  locale="en"
+  title="Searchable"
+/>
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `modelValue` | `string \| number \| null` | `null` | Selected value |
-| `options` | `SelectorOption[]` | Required | Options array |
-| `placeholder` | `string` | `'Please select'` | Placeholder text |
-| `searchable` | `boolean` | `false` | Whether to support search |
-| `clearable` | `boolean` | `false` | Whether clearable |
-| `disabled` | `boolean` | `false` | Whether disabled |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size |
-| `status` | `'default' \| 'error' \| 'warning' \| 'success'` | `'default'` | Status |
+<DemoExample
+  :demo="selectorClearable"
+  description="Enable clearable to show a clear button next to selected value."
+  locale="en"
+  title="Clearable"
+/>
 
-## Emits
-
-| Name | Parameters | Description |
-| --- | --- | --- |
-| `update:modelValue` | `value: string \| number \| null` | Emitted when value changes |
-| `change` | `value: string \| number \| null` | Emitted when value changes |
-| `search` | `query: string` | Emitted when search input changes |
-
-## Slots
-
-| Name | Parameters | Description |
-| --- | --- | --- |
-| `selected` | `{ option: SelectorOption \| null }` | Customize selected item display |
-| `option` | `{ option: SelectorOption, isActive: boolean, isSelected: boolean }` | Customize option display |
-| `empty` | - | Customize empty state |
-
-## Keyboard Interaction
-
-| Key | Function |
-| --- | --- |
-| `Enter` / `Space` | Open/close selector |
-| `ArrowDown` | Highlight next option |
-| `ArrowUp` | Highlight previous option |
-| `Home` | Highlight first option |
-| `End` | Highlight last option |
-| `Enter` | Select current highlighted item |
-| `Escape` | Close selector |
-
-## Accessibility
-
-- Uses `role="combobox"` and `role="listbox"` semantics
-- Supports `aria-expanded` state
-- Supports `aria-activedescendant` navigation mode
-- Full keyboard navigation support
+<DemoExample
+  :demo="selectorSizes"
+  description="Available in sm, md, lg sizes, md by default."
+  locale="en"
+  title="Sizes"
+/>
