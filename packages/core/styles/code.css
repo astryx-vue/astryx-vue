@@ -37,7 +37,7 @@
     margin: 0;
     isolation: isolate;
     overflow: hidden;
-    background-color: var(--astryx-code-block-background, #fafafa);
+    background-color: var(--astryx-code-block-background, #ffffff);
     /* Only the code itself preserves whitespace; the header and the wrappers
        around it are ordinary block layout, or the indentation of the markup
        would become visible lines inside the header. */
@@ -45,7 +45,7 @@
   }
 
   .astryx-code-block[data-container='card'] {
-    border: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #e5e5e5);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #00000014);
     border-radius: var(--astryx-radius-element, 0.625rem);
   }
 
@@ -70,11 +70,11 @@
     justify-content: space-between;
     padding-block: var(--astryx-spacing-2, 8px);
     padding-inline: var(--astryx-spacing-4, 16px);
-    background-color: var(--astryx-code-block-background, #fafafa);
+    background-color: var(--astryx-code-block-background, #ffffff);
   }
 
   .astryx-code-block__header--divided {
-    border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #e5e5e5);
+    border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #00000014);
   }
 
   .astryx-code-block__title-control {
@@ -107,7 +107,7 @@
     min-width: 0;
     margin: 0;
     overflow: hidden;
-    color: var(--astryx-code-syntax-comment, #525252);
+    color: var(--astryx-code-syntax-comment, #6a6a6a);
     font-family: var(--astryx-font-family-code, 'SF Mono', Monaco, Consolas, monospace);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: var(--astryx-font-weight-medium, 500);
@@ -129,7 +129,7 @@
     height: 14px;
     margin-inline-end: var(--astryx-spacing-1, 4px);
     overflow: hidden;
-    color: var(--astryx-code-syntax-comment, #525252);
+    color: var(--astryx-code-syntax-comment, #6a6a6a);
     animation: astryx-code-block-chevron-reveal var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
@@ -190,7 +190,7 @@
     margin: 0;
     padding-block: var(--astryx-spacing-3, 12px);
     padding-inline: var(--astryx-spacing-4, 16px);
-    color: var(--astryx-code-syntax-variable, #171717);
+    color: var(--astryx-code-syntax-variable, #111111);
     font-family: var(--astryx-font-family-code, 'SF Mono', Monaco, Consolas, monospace);
     font-size: var(--astryx-text-code-size, 0.875rem);
     tab-size: 2;
@@ -223,7 +223,7 @@
     inset-block: 0;
     inset-inline-start: calc(var(--astryx-spacing-4, 16px) + var(--astryx-code-block-gutter-width, 2ch) + var(--astryx-spacing-3, 12px));
     width: 0;
-    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #e5e5e5);
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #00000014);
     content: '';
     pointer-events: none;
   }
@@ -245,7 +245,7 @@
   .astryx-code-block__line--numbered::before {
     grid-column: 1;
     align-self: start;
-    color: var(--astryx-code-syntax-punctuation, #525252);
+    color: var(--astryx-code-syntax-punctuation, #6a6a6a);
     content: attr(data-line);
     font-family: var(--astryx-font-family-code, 'SF Mono', Monaco, Consolas, monospace);
     text-align: end;
@@ -280,67 +280,67 @@
 
   .astryx-token-keyword,
   .astryx-code-block code::highlight(astryx-keyword) {
-    color: var(--astryx-code-syntax-keyword, #0074e2);
+    color: var(--astryx-code-syntax-keyword, #6b187c);
   }
 
   .astryx-token-string,
   .astryx-code-block code::highlight(astryx-string) {
-    color: var(--astryx-code-syntax-string, #00490b);
+    color: var(--astryx-code-syntax-string, #0b5615);
   }
 
   .astryx-token-comment,
   .astryx-code-block code::highlight(astryx-comment) {
-    color: var(--astryx-code-syntax-comment, #525252);
+    color: var(--astryx-code-syntax-comment, #6a6a6a);
   }
 
   .astryx-token-number,
   .astryx-code-block code::highlight(astryx-number) {
-    color: var(--astryx-code-syntax-number, #622700);
+    color: var(--astryx-code-syntax-number, #733100);
   }
 
   .astryx-token-function,
   .astryx-code-block code::highlight(astryx-function) {
-    color: var(--astryx-code-syntax-function, #003978);
+    color: var(--astryx-code-syntax-function, #00458c);
   }
 
   .astryx-token-type,
   .astryx-code-block code::highlight(astryx-type) {
-    color: var(--astryx-code-syntax-type, #5c0e6c);
+    color: var(--astryx-code-syntax-type, #6b187c);
   }
 
   .astryx-token-tag,
   .astryx-code-block code::highlight(astryx-tag) {
-    color: var(--astryx-code-syntax-tag, #76000c);
+    color: var(--astryx-code-syntax-tag, #8a0011);
   }
 
   .astryx-token-attribute,
   .astryx-code-block code::highlight(astryx-attribute) {
-    color: var(--astryx-code-syntax-attribute, #00463d);
+    color: var(--astryx-code-syntax-attribute, #584400);
   }
 
   .astryx-token-property,
   .astryx-code-block code::highlight(astryx-property) {
-    color: var(--astryx-code-syntax-property, #004351);
+    color: var(--astryx-code-syntax-property, #005348);
   }
 
   .astryx-token-operator,
   .astryx-code-block code::highlight(astryx-operator) {
-    color: var(--astryx-code-syntax-operator, #004351);
+    color: var(--astryx-code-syntax-operator, #6a6a6a);
   }
 
   .astryx-token-constant,
   .astryx-code-block code::highlight(astryx-constant) {
-    color: var(--astryx-code-syntax-constant, #622700);
+    color: var(--astryx-code-syntax-constant, #733100);
   }
 
   .astryx-token-punctuation,
   .astryx-code-block code::highlight(astryx-punctuation) {
-    color: var(--astryx-code-syntax-punctuation, #525252);
+    color: var(--astryx-code-syntax-punctuation, #6a6a6a);
   }
 
   .astryx-token-variable,
   .astryx-code-block code::highlight(astryx-variable) {
-    color: var(--astryx-code-syntax-variable, #171717);
+    color: var(--astryx-code-syntax-variable, #111111);
   }
 
   @media (prefers-reduced-motion: reduce) {

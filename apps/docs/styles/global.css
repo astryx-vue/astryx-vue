@@ -20,6 +20,7 @@
 @import './previews/hover-card.css';
 @import './previews/kbd.css';
 @import './previews/list.css';
+@import './previews/markdown.css';
 @import './previews/more-menu.css';
 @import './previews/overlay.css';
 @import './previews/segmented-control.css';
@@ -1743,6 +1744,234 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .vp-doc .astryx-code-block code,
 .vp-doc .astryx-code {
   all: revert-layer;
+}
+
+/*
+ * VitePress prose styles are unlayered, so they outrank the Markdown component
+ * layer: headings, lists, tables, and links pick up the doc font, alignment,
+ * and link color. Rolling those declarations back lets the component tokens
+ * own the prose inside an example.
+ */
+.vp-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6, blockquote, table, thead, tbody, tr, th, td),
+.vp-doc a.astryx-markdown__anchor {
+  all: revert-layer;
+}
+
+/*
+ * Lists stay out of `all: revert-layer`. VitePress `.vp-doc ul` is unlayered,
+ * so a layered component rule cannot keep `list-style: none` or the 6px marker
+ * column. These rules repeat the component's own marker, gap, padding, and margin.
+ */
+.vp-doc .astryx-markdown :is(ul, ol).astryx-markdown__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--astryx-spacing-0-5, 2px);
+  margin-block: var(--astryx-spacing-3, 12px);
+  margin-inline: calc(-1 * var(--astryx-spacing-2, 8px));
+  padding: 0;
+  list-style: none;
+}
+
+.vp-doc .astryx-markdown[data-density='compact'] :is(ul, ol).astryx-markdown__list {
+  margin-block: var(--astryx-spacing-1, 4px);
+}
+
+.vp-doc .astryx-markdown > :is(:first-child).astryx-markdown__list {
+  margin-block-start: 0;
+}
+
+.vp-doc .astryx-markdown > :is(:last-child).astryx-markdown__list {
+  margin-block-end: 0;
+}
+
+.vp-doc .astryx-markdown :is(li.astryx-markdown__item, li.astryx-markdown__task) {
+  display: flex;
+  align-items: center;
+  gap: var(--astryx-spacing-2, 8px);
+  margin: 0;
+  padding-block: var(--astryx-spacing-1, 4px);
+  padding-inline: var(--astryx-spacing-2, 8px);
+  list-style: none;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  align-self: baseline;
+  width: var(--astryx-spacing-4, 16px);
+  margin-top: calc((1em * var(--astryx-text-body-leading, 1.4286) - 6px) / 2);
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='disc'],
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
+  border-radius: 50%;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
+  border: 1px solid currentColor;
+  background: transparent;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__task-check {
+  display: flex;
+  flex: none;
+  align-self: flex-start;
+  width: 20px;
+  height: 20px;
+}
+
+.vp-doc .astryx-markdown blockquote.astryx-blockquote {
+  margin-block: var(--astryx-spacing-4, 16px);
+  margin-inline: 0;
+  padding-inline-start: var(--astryx-spacing-4, 16px);
+  border: 0;
+  border-inline-start: var(--astryx-spacing-0-5, 2px) solid var(--astryx-color-border-emphasized, #d4d4d4);
+  background: transparent;
+  color: var(--astryx-color-text-secondary, #525252);
+  font-size: var(--astryx-text-body-size, 0.875rem);
+  font-style: normal;
+}
+
+.vp-doc .astryx-markdown table.astryx-markdown__table {
+  display: table;
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+.vp-doc .astryx-markdown :is(th, td).astryx-markdown__cell {
+  padding: var(--astryx-spacing-2, 8px);
+  border: 0;
+  border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+  background: transparent;
+  text-align: start;
+  font-size: var(--astryx-text-body-size, 0.875rem);
+}
+
+/*
+ * The start alignment above is unlayered, so it outranks the component layer's
+ * GFM rules. Restate center and right here or every column stays left.
+ */
+.vp-doc .astryx-markdown .astryx-markdown__cell[data-align='center'] {
+  text-align: center;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__cell[data-align='right'] {
+  text-align: end;
+}
+
+.vp-doc .astryx-markdown tbody tr:last-child > .astryx-markdown__cell {
+  border-block-end: 0;
+}
+
+/*
+ * body { font-synthesis: none } and a Figtree 400-only import make weight 600
+ * and italic resolve to the regular face. Markdown opts back in, and the
+ * semibold / italic faces above supply the real glyphs.
+ */
+.vp-doc .astryx-markdown {
+  font-synthesis: weight style;
+}
+
+.vp-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6).astryx-heading.astryx-markdown__heading,
+.vp-doc .astryx-markdown strong {
+  font-weight: var(--astryx-font-weight-semibold, 600);
+}
+
+.vp-doc .astryx-markdown em {
+  font-style: italic;
+}
+
+.vp-doc .astryx-markdown th.astryx-markdown__cell {
+  color: var(--astryx-color-text-secondary, #525252);
+  font-weight: var(--astryx-font-weight-semibold, 600);
+}
+
+.vp-doc .astryx-markdown td.astryx-markdown__cell {
+  color: light-dark(#000000, #ffffff);
+}
+
+.vp-doc .astryx-markdown code.astryx-code {
+  padding-block: 0;
+  padding-inline: var(--astryx-spacing-1, 4px);
+  border-radius: var(--astryx-radius-inner, 0.375rem);
+  background-color: var(--astryx-code-background, #f5f5f5);
+  color: var(--astryx-code-primary-foreground, #171717);
+  font-family: var(--astryx-font-family-code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: var(--astryx-text-code-size, 0.875rem);
+}
+
+.vp-doc .astryx-code-block code {
+  margin: 0;
+  padding-block: var(--astryx-spacing-3, 12px);
+  padding-inline: var(--astryx-spacing-4, 16px);
+  border-radius: 0;
+  background: transparent;
+  color: var(--astryx-code-syntax-variable, #171717);
+  font-family: var(--astryx-font-family-code, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: var(--astryx-text-code-size, 0.875rem);
+}
+
+.vp-doc .astryx-markdown a.astryx-link,
+.vp-doc .astryx-markdown a.astryx-link.astryx-markdown__link {
+  color: light-dark(#1b1b1b, #f1f1f1);
+  font-weight: var(--astryx-font-weight-normal, 400);
+  text-decoration-line: underline;
+}
+
+.vp-doc .astryx-markdown a.astryx-markdown__cite {
+  color: var(--astryx-color-text-secondary, #525252);
+  font-weight: var(--astryx-text-supporting-weight, 400);
+  text-decoration: none;
+}
+
+.vp-doc .astryx-markdown .astryx-markdown__cite img {
+  width: var(--astryx-spacing-3, 12px);
+  height: var(--astryx-spacing-3, 12px);
+  margin: 0;
+}
+
+/*
+ * `.vp-doc hr` and `.vp-doc img` are unlayered too. They replace the divider
+ * color and add a 1rem margin on images that already sit in a spaced paragraph.
+ */
+.vp-doc .astryx-markdown hr.astryx-markdown__hr {
+  height: 0;
+  margin-block: var(--astryx-spacing-6, 24px);
+  margin-inline: 0;
+  border: 0;
+  border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+  background: transparent;
+}
+
+.vp-doc .astryx-markdown[data-density='compact'] hr.astryx-markdown__hr {
+  margin-block: var(--astryx-spacing-3, 12px);
+}
+
+.vp-doc .astryx-markdown > :is(:first-child).astryx-markdown__hr {
+  margin-block-start: 0;
+}
+
+.vp-doc .astryx-markdown > :is(:last-child).astryx-markdown__hr {
+  margin-block-end: 0;
+}
+
+.vp-doc .astryx-markdown img.astryx-markdown__image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: var(--astryx-radius-element, 0.625rem);
 }
 
 /* Catalog cards show the component itself, centered. Wide controls stay near 20rem

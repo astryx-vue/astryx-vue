@@ -48,5 +48,8 @@ export type { RestoreFocus, UseRestoreFocusOptions } from './useRestoreFocus.js'
 
 export { useScrollLock } from './useScrollLock.js'
 
+export { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
+export type { StreamingTextSpeed, UseStreamingTextOptions } from './useStreamingText.js'
+
 export { useTypeahead } from './useTypeahead.js'
 export type { UseTypeaheadOptions, UseTypeaheadReturn } from './useTypeahead.js'

@@ -1,0 +1,76 @@
+.markdown-preview {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  justify-self: stretch;
+  align-self: start;
+  text-align: start;
+}
+
+.markdown-preview__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.markdown-preview__hint {
+  margin: 0 0 12px;
+  color: var(--astryx-color-text-secondary, #525252);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.component-card__preview .markdown-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.markdown-example {
+  box-sizing: border-box;
+  width: min(100%, 450px);
+  margin-inline: auto;
+  text-align: start;
+}
+
+.markdown-overview {
+  box-sizing: border-box;
+  width: 400px;
+  max-width: 100%;
+  text-align: start;
+}
+
+.component-card__preview .markdown-overview {
+  width: 400px;
+  max-width: 100%;
+}
+
+.markdown-preview__frame {
+  box-sizing: border-box;
+  width: min(100%, 900px);
+  padding: 16px;
+  border: 1px dashed var(--astryx-color-border, #ccc);
+}
+
+.markdown-preview__column {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 12px;
+  outline: 1px dashed #c33;
+}
+
+.markdown-preview__inline {
+  display: grid;
+  gap: 16px;
+  width: min(100%, 680px);
+  text-align: start;
+}
+
+.markdown-preview__note {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--astryx-color-border, #ddd);
+  border-radius: 8px;
+}
