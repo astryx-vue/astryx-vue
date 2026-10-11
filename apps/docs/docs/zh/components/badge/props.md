@@ -1,6 +1,6 @@
 ---
 layout: component-docs
-title: 标签
+title: 徽标
 outline: false
 footer: false
 ---
@@ -17,7 +17,7 @@ footer: false
         <td><code>variant</code></td>
         <td><code>BadgeVariant</code></td>
         <td><code>'neutral'</code></td>
-        <td>标签的视觉变体。语义变体：neutral、info、success、warning、error；分类颜色：blue、cyan、green、orange、pink、purple、red、teal、yellow。</td>
+        <td>徽标的视觉变体。语义变体：neutral、info、success、warning、error；分类颜色：blue、cyan、green、orange、pink、purple、red、teal、yellow。</td>
       </tr>
     </tbody>
   </table>
@@ -31,7 +31,7 @@ footer: false
       <tr><th>名称</th><th>说明</th></tr>
     </thead>
     <tbody>
-      <tr><td><code>default</code></td><td>标签的文字内容。</td></tr>
+      <tr><td><code>default</code></td><td>徽标的文字内容。</td></tr>
       <tr><td><code>icon</code></td><td>可选的前置图标。不得用图标代替文字。</td></tr>
     </tbody>
   </table>
@@ -50,4 +50,4 @@ footer: false
 - `style`。
 - 原生事件监听器。
 
-`Badge` 是只读指示器。不得为标签添加交互行为。
+`Badge` 是只读指示器。不得为徽标添加交互行为。

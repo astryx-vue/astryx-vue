@@ -7,6 +7,8 @@ import inlineDemo from './inline.vue'
 import inlineSource from './inline.vue?raw&highlighted'
 import lineNumbersDemo from './line-numbers.vue'
 import lineNumbersSource from './line-numbers.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 
 const options = { className: 'code-preview' }
 
@@ -14,3 +16,5 @@ export const codeBasic = defineDemo(basicDemo, basicSource, options)
 export const codeInline = defineDemo(inlineDemo, inlineSource, options)
 export const codeLineNumbers = defineDemo(lineNumbersDemo, lineNumbersSource, options)
 export const codeCollapsible = defineDemo(collapsibleDemo, collapsibleSource, options)
+
+export const codeOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

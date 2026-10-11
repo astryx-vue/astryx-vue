@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { collapsibleBasic as demo } from './index'
+import { collapsibleOverview as demo } from './index'
 
 export const meta = {
   slug: 'collapsible',

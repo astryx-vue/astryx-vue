@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { toastPreview as demo } from './index'
+import { toastOverview as demo } from './index'
 
 export const meta = {
   slug: 'toast',

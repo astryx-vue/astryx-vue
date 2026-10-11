@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { buttonVariants as demo } from './index'
+import { buttonOverview as demo } from './index'
 
 export const meta = {
   slug: 'button',

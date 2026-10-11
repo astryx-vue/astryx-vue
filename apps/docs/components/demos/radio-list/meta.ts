@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { radioList as demo } from '../radio'
+import { radioListOverview as demo } from './index'
 
 export const meta = {
   slug: 'radio-list',
