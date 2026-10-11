@@ -514,12 +514,22 @@ html.dark .astryx-hero .astryx-button--primary:hover {
   background: var(--vp-c-bg-elv);
 }
 
-.component-overview__nav p {
-  margin: 18px 12px 4px;
-  color: var(--astryx-text-muted);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.component-overview__group {
+  margin: 22px 12px 8px;
+  color: var(--astryx-heading-foreground, var(--astryx-text));
+  font-size: var(--astryx-heading-level-6-size, 1rem);
+  font-weight: var(--astryx-font-weight-medium, 500);
+  line-height: var(--astryx-heading-leading, 1.25);
+  letter-spacing: -0.01em;
+}
+
+.component-overview__toolbar,
+.component-overview__backdrop {
+  display: none;
+}
+
+.component-overview__main {
+  min-width: 0;
 }
 
 .component-overview__content {
@@ -597,6 +607,32 @@ html.dark .astryx-hero .astryx-button--primary:hover {
 
 html.dark .component-card__preview {
   background: #151619;
+}
+
+/* 预览格子是 flex 且居中。子元素默认 min-width: auto，内容一宽就会撑出格子，
+   再被 overflow 裁掉左侧。允许收缩后，分页这类控件才能按自己的容器宽度收起。 */
+.component-card__preview > *,
+.component-example__preview > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 分页要按格子的真实宽度收起。预览默认把子元素收缩成内容宽度，
+   容器查询会跟着内容越缩越窄，最后只剩「1 / 20」。 */
+.component-card__preview > .pagination-preview,
+.component-example__preview > .pagination-preview {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.pagination-preview .demo-container,
+.pagination-preview .astryx-pagination {
+  width: 100%;
+}
+
+.pagination-preview .astryx-pagination {
+  justify-content: center;
 }
 
 .component-card:hover .component-card__preview {
@@ -1247,42 +1283,95 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   }
 }
 
-@media (width <= 900px) {
+/* 和 VitePress 一样：60rem 以下侧栏离开文档流，从导航上的菜单按钮以抽屉打开。
+   原先 position: static 会把整份目录叠在正文上面。 */
+@media (width < 60rem) {
+  .Layout:has(.component-overview) .VPLocalNav {
+    display: none;
+  }
+
   .component-overview {
     grid-template-columns: 1fr;
   }
 
+  .component-overview__toolbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--vp-z-index-local-nav);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--vp-local-nav-divider-color, var(--astryx-line));
+    background: var(--vp-local-nav-bg-color, var(--astryx-bg));
+  }
+
+  .component-overview__menu,
+  .component-overview__totop {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px 11px;
+    border: 0;
+    background: transparent;
+    color: var(--vp-c-text-2);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 2;
+    cursor: pointer;
+  }
+
+  .component-overview__menu:hover,
+  .component-overview__totop:hover {
+    color: var(--vp-c-text-1);
+  }
+
+  .component-overview__menu-icon {
+    display: block;
+    flex-shrink: 0;
+  }
+
   .component-overview__sidebar {
-    position: static;
+    position: fixed;
+    top: var(--vp-layout-top-height, 0px);
+    bottom: 0;
+    left: 0;
+    z-index: var(--vp-z-index-sidebar);
+    width: min(20rem, calc(100vw - 4rem));
     height: auto;
+    padding: 24px 20px 96px;
     border-right: 0;
-    border-bottom: 1px solid var(--astryx-line);
+    background: var(--vp-sidebar-bg-color, var(--astryx-bg));
+    box-shadow: var(--vp-shadow-3);
+    opacity: 0;
+    visibility: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(-100%);
+    transition: opacity 0.5s, transform 0.25s ease;
   }
 
-  .component-overview__nav {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .component-overview__sidebar.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition: opacity 0.25s, transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   }
 
-  .component-overview__nav p {
-    align-self: center;
-    margin: 0 12px;
-  }
-
-  .component-overview__content {
-    padding-top: 56px;
+  .component-overview__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: var(--vp-z-index-backdrop);
+    display: block;
+    padding: 0;
+    border: 0;
+    background: var(--vp-backdrop-bg-color);
+    cursor: pointer;
   }
 }
 
 @media (width <= 640px) {
-  .component-overview__nav {
-    grid-template-columns: 1fr;
-  }
-
-  .component-overview__nav p {
-    margin: 16px 12px 4px;
-  }
-
   .component-overview__content {
     padding: 48px 18px 72px;
   }
