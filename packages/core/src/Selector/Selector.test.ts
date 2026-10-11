@@ -285,6 +285,11 @@ describe('selector', () => {
     expect(wrapper.find('.astryx-selector').classes()).toContain('status-error')
   })
 
+  it('uses English text unless a locale is provided', () => {
+    const wrapper = mount(Selector, { props: { options } })
+    expect(wrapper.get('.astryx-selector-value').text()).toBe('Select…')
+  })
+
   it('includes hidden select for form submission', () => {
     const wrapper = mount(Selector, {
       props: {

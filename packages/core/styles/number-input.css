@@ -78,6 +78,10 @@
     cursor: pointer;
   }
 
+  .astryx-number-input-button.increment .astryx-icon {
+    transform: rotate(180deg);
+  }
+
   .astryx-number-input-button.decrement {
     border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
   }

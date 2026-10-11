@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Selector } from '@astryx-vue/core/Selector'
+import { ref } from 'vue'
+import { useDemoText, useLocalizedOptions } from '../../demo-infra/useDemoText'
 
 const selected = ref<string | null>(null)
-const options = [
-  { value: 'apple', label: '苹果' },
-  { value: 'banana', label: '香蕉' },
-  { value: 'cherry', label: '樱桃' },
-  { value: 'grape', label: '葡萄' },
-  { value: 'orange', label: '橙子' },
-  { value: 'mango', label: '芒果' },
-  { value: 'watermelon', label: '西瓜' },
-  { value: 'strawberry', label: '草莓' },
-]
+const { pick } = useDemoText()
+const options = useLocalizedOptions([
+  { value: 'apple', zh: '苹果', en: 'Apple' },
+  { value: 'banana', zh: '香蕉', en: 'Banana' },
+  { value: 'cherry', zh: '樱桃', en: 'Cherry' },
+  { value: 'grape', zh: '葡萄', en: 'Grape' },
+  { value: 'orange', zh: '橙子', en: 'Orange' },
+  { value: 'mango', zh: '芒果', en: 'Mango' },
+  { value: 'watermelon', zh: '西瓜', en: 'Watermelon' },
+  { value: 'strawberry', zh: '草莓', en: 'Strawberry' },
+])
 </script>
 
 <template>
@@ -21,10 +23,10 @@ const options = [
       v-model="selected"
       :options="options"
       searchable
-      placeholder="搜索水果"
+      :placeholder="pick('搜索水果', 'Search fruits')"
     />
     <p class="demo-result">
-      选中的值：{{ selected || '未选择' }}
+      {{ pick('选中的值：', 'Selected: ') }}{{ selected || pick('未选择', 'none') }}
     </p>
   </div>
 </template>
@@ -34,7 +36,7 @@ const options = [
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 20rem;
+  width: min(100%, 20rem);
 }
 .demo-result {
   font-size: 0.875rem;

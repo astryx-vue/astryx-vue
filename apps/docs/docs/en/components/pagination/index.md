@@ -12,7 +12,27 @@ import { paginationBasic, paginationSizeChanger } from '../../../../components/d
 
 ## Usage
 
-`Pagination` moves through a paged list. `page` is the current page, `pageSize` is the page length, and `total` is the number of items. `showSizeChanger` lets people change how many items each page holds.
+`Pagination` splits a long list into pages. People move with the page buttons or the previous and next controls.
+
+Pass the total and bind the current page:
+
+```vue
+<script setup lang="ts">
+import { Pagination } from '@astryx-vue/core/Pagination'
+import { ref } from 'vue'
+
+const page = ref(1)
+const total = ref(100)
+</script>
+
+<template>
+  <Pagination v-model:page="page" :total="total" />
+</template>
+```
+
+`pageSize` is how many items each page holds. `showSizeChanger` lets people change that. `showTotal` shows how many items exist and which range the current page covers.
+
+The visible labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
 
 ## Best practices
 

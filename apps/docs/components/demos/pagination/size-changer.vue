@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Pagination } from '@astryx-vue/core/Pagination'
+import { ref } from 'vue'
+import { useDemoText } from '../../demo-infra/useDemoText'
 
 const currentPage = ref(1)
 const total = ref(200)
 const pageSize = ref(10)
+const { pick } = useDemoText()
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const pageSize = ref(10)
       :page-size-options="[10, 20, 50]"
     />
     <p class="demo-result">
-      每页 {{ pageSize }} 条，当前第 {{ currentPage }} 页
+      {{ pick(`每页 ${pageSize} 条，当前第 ${currentPage} 页`, `${pageSize} per page, page ${currentPage}`) }}
     </p>
   </div>
 </template>

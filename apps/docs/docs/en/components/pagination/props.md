@@ -18,9 +18,9 @@ footer: false
       <tr><td><code>pageSizeOptions</code></td><td><code>number[]</code></td><td><code>[10, 20, 50, 100]</code></td><td>Page-size choices.</td></tr>
       <tr><td><code>showTotal</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the total count.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the control.</td></tr>
-      <tr><td><code>prevLabel</code></td><td><code>string</code></td><td>—</td><td>Previous-page label.</td></tr>
-      <tr><td><code>nextLabel</code></td><td><code>string</code></td><td>—</td><td>Next-page label.</td></tr>
-      <tr><td><code>pageSizeLabel</code></td><td><code>string</code></td><td><code>'每页'</code></td><td>Label for the page-size selector.</td></tr>
+      <tr><td><code>prevLabel</code></td><td><code>string</code></td><td><code>Previous</code> / <code>上一页</code></td><td>Previous-page label. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
+      <tr><td><code>nextLabel</code></td><td><code>string</code></td><td><code>Next</code> / <code>下一页</code></td><td>Next-page label. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
+      <tr><td><code>pageSizeLabel</code></td><td><code>string</code></td><td><code>Per page</code> / <code>每页</code></td><td>Label for the page-size selector. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
     </tbody>
   </table>
 </div>

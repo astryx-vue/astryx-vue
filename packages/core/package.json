@@ -328,6 +328,11 @@
       "types": "./dist/Tokenizer/index.d.ts",
       "import": "./dist/Tokenizer/index.js"
     },
+    "./locale": {
+      "source": "./src/locale/index.ts",
+      "types": "./dist/locale/index.d.ts",
+      "import": "./dist/locale/index.js"
+    },
     "./package.json": "./package.json",
     "./reset.css": {
       "types": "./css.d.ts",

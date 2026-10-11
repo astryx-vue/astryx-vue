@@ -2,6 +2,7 @@
 import type { DateInputEmits, DateInputProps, DateInputSlots } from './types.js'
 import { computed, ref, useId, useTemplateRef, watch } from 'vue'
 import Calendar from '../Calendar/Calendar.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
 import '../../styles/date-input.css'
 
@@ -9,10 +10,8 @@ defineOptions({ name: 'AstryxDateInput' })
 
 const props = withDefaults(defineProps<DateInputProps>(), {
   modelValue: null,
-  placeholder: '选择日期',
   disabled: false,
   clearable: false,
-  clearLabel: '清除',
   size: 'md',
   status: 'default',
 })
@@ -21,8 +20,16 @@ const emit = defineEmits<DateInputEmits>()
 defineSlots<DateInputSlots>()
 
 const inputId = `astryx-date-input-${useId()}`
+const popupId = `${inputId}-popup`
+const messages = useAstryxMessages()
+const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.dateInput.placeholder)
+const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.dateInput.clear(props.label))
+const dialogLabel = computed(() => props.label || messages.value.dateInput.dialogLabel)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const isOpen = ref(false)
+const toggleLabel = computed(() => isOpen.value
+  ? messages.value.dateInput.closeCalendar
+  : messages.value.dateInput.openCalendar)
 const inputValue = ref('')
 
 const modelValueRef = computed({
@@ -126,7 +133,7 @@ syncDisplayValue()
       :is-modal="false"
       :has-auto-focus="true"
       role="dialog"
-      :label="props.label || '选择日期'"
+      :label="dialogLabel"
       @open-change="onOpenChange"
     >
       <div class="astryx-date-input-wrapper" :data-disabled="props.disabled ? 'true' : undefined" :data-size="props.size">
@@ -137,7 +144,7 @@ syncDisplayValue()
           type="button"
           class="astryx-date-input-toggle"
           :disabled="props.disabled"
-          :aria-label="isOpen ? '关闭日历' : '打开日历'"
+          :aria-label="toggleLabel"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <rect x="3" y="4" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.5" />
@@ -152,9 +159,10 @@ syncDisplayValue()
           class="astryx-date-input-field"
           role="combobox"
           :value="inputValue"
-          :placeholder="props.placeholder"
+          :placeholder="resolvedPlaceholder"
           :disabled="props.disabled"
           :aria-label="props.label"
+          :aria-controls="popupId"
           :aria-expanded="isOpen"
           aria-haspopup="dialog"
           :title="props.disabledReason"
@@ -167,7 +175,7 @@ syncDisplayValue()
           v-if="props.clearable && props.modelValue"
           type="button"
           class="astryx-date-input-clear"
-          :aria-label="props.clearLabel"
+          :aria-label="resolvedClearLabel"
           tabindex="-1"
           @click="onClear"
         >
@@ -180,17 +188,18 @@ syncDisplayValue()
         </span>
       </div>
       <template #content>
-        <Calendar
-          :model-value="props.modelValue"
-          :min="props.min"
-          :max="props.max"
-          :is-date-disabled="props.isDateDisabled"
-          @update:model-value="onCalendarChange"
-        />
+        <div :id="popupId">
+          <Calendar
+            :model-value="props.modelValue"
+            :min="props.min"
+            :max="props.max"
+            :is-date-disabled="props.isDateDisabled"
+            @update:model-value="onCalendarChange"
+          />
+        </div>
       </template>
     </Popover>
 
-    <!-- 隐藏的原生 input（用于表单提交） -->
     <input
       v-if="props.name"
       type="hidden"

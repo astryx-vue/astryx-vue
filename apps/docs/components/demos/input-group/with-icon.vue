@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { InputGroup } from '@astryx-vue/core/InputGroup'
 import { TextInput } from '@astryx-vue/core/TextInput'
+import { ref } from 'vue'
+import { useDemoText } from '../../demo-infra/useDemoText'
 
 const username = ref('')
+const { pick } = useDemoText()
 </script>
 
 <template>
@@ -12,13 +14,13 @@ const username = ref('')
       <template #before>
         <span>@</span>
       </template>
-      <TextInput v-model="username" label="用户名" is-label-hidden placeholder="用户名" />
+      <TextInput v-model="username" :label="pick('用户名', 'Username')" is-label-hidden :placeholder="pick('用户名', 'Username')" />
     </InputGroup>
   </div>
 </template>
 
 <style scoped>
 .demo-container {
-  max-width: 24rem;
+  width: min(100%, 24rem);
 }
 </style>

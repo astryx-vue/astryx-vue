@@ -35,6 +35,8 @@ describe('numberInput', () => {
     })
 
     const incrementButton = wrapper.find('.increment')
+    expect(incrementButton.attributes('aria-label')).toBe('Increment')
+    expect(incrementButton.find('.astryx-icon--chevron-down').exists()).toBe(true)
     await incrementButton.trigger('click')
 
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([6])

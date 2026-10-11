@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { InputGroup } from '@astryx-vue/core/InputGroup'
 import { TextInput } from '@astryx-vue/core/TextInput'
+import { ref } from 'vue'
+import { useDemoText } from '../../demo-infra/useDemoText'
 
 const domain = ref('')
+const { pick } = useDemoText()
 </script>
 
 <template>
@@ -12,7 +14,7 @@ const domain = ref('')
       <template #before>
         <span>https://</span>
       </template>
-      <TextInput v-model="domain" label="域名" is-label-hidden placeholder="example" />
+      <TextInput v-model="domain" :label="pick('域名', 'Domain')" is-label-hidden placeholder="example" />
       <template #after>
         <span>.com</span>
       </template>
@@ -22,6 +24,6 @@ const domain = ref('')
 
 <style scoped>
 .demo-container {
-  max-width: 24rem;
+  width: min(100%, 24rem);
 }
 </style>

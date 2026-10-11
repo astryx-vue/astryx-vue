@@ -12,7 +12,33 @@ import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demo
 
 ## Usage
 
-`InputGroup` combines an input with a `before` prefix and an `after` suffix. The addons can be text, an icon, or a button.
+`InputGroup` joins a field with a prefix, a suffix, or a button so they read as one control. Use it for a unit, a protocol, or a short action.
+
+Put fixed text in the `before` and `after` slots:
+
+```vue
+<script setup lang="ts">
+import { InputGroup } from '@astryx-vue/core/InputGroup'
+import { TextInput } from '@astryx-vue/core/TextInput'
+import { ref } from 'vue'
+
+const domain = ref('')
+</script>
+
+<template>
+  <InputGroup>
+    <template #before>
+      <span>https://</span>
+    </template>
+    <TextInput v-model="domain" label="Domain" is-label-hidden placeholder="example" />
+    <template #after>
+      <span>.com</span>
+    </template>
+  </InputGroup>
+</template>
+```
+
+`before` sits in front of the field and `after` sits behind it. The content can be text, an icon, or a button.
 
 ## Best practices
 

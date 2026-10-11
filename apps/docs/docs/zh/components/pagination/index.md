@@ -18,8 +18,8 @@ import { paginationBasic, paginationSizeChanger } from '../../../../components/d
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Pagination } from '@astryx-vue/core/Pagination'
+import { ref } from 'vue'
 
 const page = ref(1)
 const total = ref(100)
@@ -30,7 +30,7 @@ const total = ref(100)
 </template>
 ```
 
-通过 `pageSize` 属性设置每页显示的条目数。开启 `showSizeChanger` 后，用户可以自行选择每页显示数量。
+通过 `pageSize` 属性设置每页显示的条目数。开启 `showSizeChanger` 后，用户可以自行选择每页显示数量。按钮和总数文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
 
 ## 最佳实践
 
@@ -39,7 +39,7 @@ const total = ref(100)
 | <Badge variant="success">推荐</Badge> | 在表格、列表等数据展示场景使用分页控制。 |
 | <Badge variant="success">推荐</Badge> | 数据量大时提供页码跳转和每页数量选择功能。 |
 | <Badge variant="success">推荐</Badge> | 显示总条目数和当前范围，让用户了解数据规模。 |
-| <Badge variant="error">避免</Badge> | 在移动端使用过多的页码按钮，考虑使用简洁模式。 |
+| <Badge variant="error">避免</Badge> | 在窄屏上铺一长排页码按钮。页码很多时让控件保持紧凑。 |
 
 ## 示例
 

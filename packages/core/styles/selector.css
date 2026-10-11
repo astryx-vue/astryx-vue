@@ -145,7 +145,8 @@
     box-sizing: border-box;
     position: fixed;
     z-index: var(--astryx-popover-z-index, 1000);
-    min-width: 12rem;
+    width: max-content;
+    max-width: calc(100vw - 16px);
     max-block-size: min(300px, calc(100dvh - 16px));
     padding: var(--astryx-spacing-1, 4px);
     overflow-x: hidden;

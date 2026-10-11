@@ -2,6 +2,8 @@
 import type { NumberInputEmits, NumberInputProps } from './types.js'
 import { computed, ref, useId } from 'vue'
 import { useNumberField } from '../composables/useNumberField.js'
+import Icon from '../Icon/Icon.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/number-input.css'
 
 defineOptions({ name: 'AstryxNumberInput' })
@@ -17,6 +19,9 @@ const props = withDefaults(defineProps<NumberInputProps>(), {
 const emit = defineEmits<NumberInputEmits>()
 
 const inputId = `astryx-number-input-${useId()}`
+const messages = useAstryxMessages()
+const incrementLabel = computed(() => messages.value.numberInput.increment(props.label))
+const decrementLabel = computed(() => messages.value.numberInput.decrement(props.label))
 const inputValue = ref('')
 
 const modelValueRef = computed({
@@ -90,29 +95,24 @@ syncDisplayValue()
         type="button"
         class="astryx-number-input-button increment"
         :disabled="props.disabled"
-        aria-label="增加"
+        :aria-label="incrementLabel"
         tabindex="-1"
         @click="numberField.increment"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M8 4V12M4 8H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
+        <Icon icon="chevronDown" size="xsm" />
       </button>
       <button
         type="button"
         class="astryx-number-input-button decrement"
         :disabled="props.disabled"
-        aria-label="减少"
+        :aria-label="decrementLabel"
         tabindex="-1"
         @click="numberField.decrement"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 8H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
+        <Icon icon="chevronDown" size="xsm" />
       </button>
     </div>
 
-    <!-- 隐藏的原生 input（用于表单提交） -->
     <input
       v-if="props.name"
       type="hidden"

@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
+import { provideAstryxLocale } from '../locale/index.js'
 import Calendar from './Calendar.vue'
 
 function flushPromises() {
@@ -29,8 +30,9 @@ describe('calendar', () => {
     })
 
     const header = wrapper.find('.astryx-calendar-month-year')
-    expect(header.text()).toContain('2024')
-    expect(header.text()).toContain('3')
+    expect(header.text()).toBe('March 2024')
+    expect(wrapper.get('.astryx-calendar').attributes('aria-label')).toBe('Calendar')
+    expect(wrapper.get('.astryx-calendar-nav-button').attributes('aria-label')).toBe('Previous month')
   })
 
   it('selects date on click', async () => {
@@ -76,7 +78,7 @@ describe('calendar', () => {
     await nextTick()
 
     const header = wrapper.find('.astryx-calendar-month-year')
-    expect(header.text()).toContain('2')
+    expect(header.text()).toBe('February 2024')
   })
 
   it('navigates to next month', async () => {
@@ -91,7 +93,7 @@ describe('calendar', () => {
     await nextTick()
 
     const header = wrapper.find('.astryx-calendar-month-year')
-    expect(header.text()).toContain('4')
+    expect(header.text()).toBe('April 2024')
   })
 
   it('disables dates based on min/max', () => {
@@ -183,5 +185,18 @@ describe('calendar', () => {
 
     const otherMonthCells = wrapper.findAll('.astryx-calendar-cell.is-other-month')
     expect(otherMonthCells.length).toBeGreaterThan(0)
+  })
+
+  it('uses Chinese labels when zh-CN is provided', () => {
+    const Host = defineComponent({
+      setup() {
+        provideAstryxLocale('zh-CN')
+        return () => h(Calendar, { modelValue: new Date(2024, 2, 15) })
+      },
+    })
+    const wrapper = mount(Host)
+    expect(wrapper.get('.astryx-calendar-month-year').text()).toBe('2024年3月')
+    expect(wrapper.get('.astryx-calendar').attributes('aria-label')).toBe('日历')
+    expect(wrapper.get('.astryx-calendar-nav-button').attributes('aria-label')).toBe('上一月')
   })
 })

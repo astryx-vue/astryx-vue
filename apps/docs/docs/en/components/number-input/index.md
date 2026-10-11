@@ -12,7 +12,24 @@ import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../
 
 ## Usage
 
-`NumberInput` is a numeric field with stepper buttons, a min and max, and a configurable step.
+`NumberInput` is a numeric field. People can type a number or use the up and down chevrons. `min` and `max` clamp the value, and `step` sets how much each click changes it.
+
+Bind a number:
+
+```vue
+<script setup lang="ts">
+import { NumberInput } from '@astryx-vue/core/NumberInput'
+import { ref } from 'vue'
+
+const count = ref(0)
+</script>
+
+<template>
+  <NumberInput v-model="count" :min="0" :max="100" />
+</template>
+```
+
+Values outside `min` and `max` are pulled back into range. The stepper names are English unless the app calls `provideAstryxLocale('zh-CN')`. When `label` is set, it is included in those names.
 
 ## Best practices
 
