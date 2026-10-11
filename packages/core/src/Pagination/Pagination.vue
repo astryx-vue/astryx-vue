@@ -138,7 +138,7 @@ function onPageClick(page: number): void {
       </button>
 
       <span class="astryx-pagination-compact" :aria-hidden="density === 'minimal' ? undefined : true">
-        {{ pageRef }} / {{ pagination.totalPages.value }}
+        {{ messages.pagination.compact(pageRef, pagination.totalPages.value) }}
       </span>
 
       <div v-show="density !== 'minimal'" class="astryx-pagination-pages">

@@ -44,6 +44,8 @@ describe('locale', () => {
     expect(astryxMessages['zh-CN'].numberInput.decrement('数量')).toBe('减少数量')
     expect(astryxMessages.en.pagination.total(10, 1, 10)).toBe('1–10 of 10')
     expect(astryxMessages['zh-CN'].pagination.total(10, 1, 10)).toBe('共 10 条，显示 1-10')
+    expect(astryxMessages.en.pagination.compact(1, 20)).toBe('1 / 20')
+    expect(astryxMessages['zh-CN'].pagination.compact(1, 20)).toBe('1 / 20')
     expect(astryxMessages['zh-CN'].selector.placeholder).toBe('请选择')
   })
 })

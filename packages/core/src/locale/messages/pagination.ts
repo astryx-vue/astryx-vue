@@ -9,6 +9,8 @@ export interface PaginationMessages {
   perPage: string
   pageSize: (count: number) => string
   total: (total: number, from: number, to: number) => string
+  /** 窄容器里代替页码按钮的「当前页 / 总页数」。 */
+  compact: (page: number, totalPages: number) => string
 }
 
 export const paginationMessages: Record<AstryxLocale, PaginationMessages> = {
@@ -21,6 +23,7 @@ export const paginationMessages: Record<AstryxLocale, PaginationMessages> = {
     perPage: 'Per page',
     pageSize: count => `${count} / page`,
     total: (total, from, to) => `${from}–${to} of ${total}`,
+    compact: (page, totalPages) => `${page} / ${totalPages}`,
   },
   'zh-CN': {
     nav: '分页导航',
@@ -31,5 +34,6 @@ export const paginationMessages: Record<AstryxLocale, PaginationMessages> = {
     perPage: '每页',
     pageSize: count => `${count} 条/页`,
     total: (total, from, to) => `共 ${total} 条，显示 ${from}-${to}`,
+    compact: (page, totalPages) => `${page} / ${totalPages}`,
   },
 }

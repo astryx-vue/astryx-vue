@@ -515,12 +515,11 @@ html.dark .astryx-hero .astryx-button--primary:hover {
 }
 
 .component-overview__group {
-  margin: 22px 12px 8px;
-  color: var(--astryx-heading-foreground, var(--astryx-text));
-  font-size: var(--astryx-heading-level-6-size, 1rem);
-  font-weight: var(--astryx-font-weight-medium, 500);
-  line-height: var(--astryx-heading-leading, 1.25);
-  letter-spacing: -0.01em;
+  margin: var(--astryx-spacing-6) var(--astryx-spacing-3) var(--astryx-spacing-2);
+  color: var(--astryx-color-text-primary);
+  font-size: var(--astryx-text-large-size);
+  font-weight: var(--astryx-text-large-weight);
+  line-height: var(--astryx-text-large-leading);
 }
 
 .component-overview__toolbar,
