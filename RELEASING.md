@@ -2,7 +2,7 @@
 
 `@astryx-vue/core` 和 `@astryx-vue/themes` 一起发版。版本号由 Changesets 固定成同一组，从 `0.0.0` 做 minor 就是 `0.1.0`。
 
-不要在这台机器上执行真正的 `npm publish` 或 `pnpm publish`。发布只走 `.github/workflows/release.yml`。
+`0.1.0` 由仓库所有者在自己的电脑上发布。之后的版本走 `.github/workflows/release.yml`。
 
 ## 流水线做什么
 
@@ -23,18 +23,37 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
 
 ## 一次性准备
 
-包还没在 npm 上出现过时，不能先配 Trusted Publisher。npm 的这个设置挂在已经存在的包上。第一次发布要用 token，或者在自己的电脑上登录后手动发一次。
+不要为第一次发布配置 `NPM_TOKEN`。包还没在 npm 上出现过时，不能先配 Trusted Publisher，这个设置挂在已经存在的包上。`0.1.0` 由仓库所有者在自己的电脑上发布，npm 会要 2FA 一次性密码。
 
-1. 用 npm 账号 `astryx-vue` 组织的权限，创建一个可以发布新包的 granular access token。CI 里要用 automation token，这样不会在发布时交互式要 2FA。不要把 token 写进仓库。
-2. 在 GitHub 仓库 `astryx-vue/astryx-vue` 的 Settings、Secrets and variables、Actions 里添加 secret `NPM_TOKEN`。
-3. 合并这份准备 PR。workflow 会打开 `Version Packages` PR，把两个包升到 `0.1.0`。
-4. 看过 changelog 后合并那个 PR。workflow 用 `NPM_TOKEN` 把 `0.1.0` 发到 npm。
+1. 合并这份准备 PR。workflow 会打开标题为 `Version Packages` 的 PR，把两个包的版本改成 `0.1.0`，这时还不会上传。先不要合并那个 PR。
+2. 在自己的电脑上检出 `Version Packages` PR 的分支，然后登录 npm。登录时会要 2FA 一次性密码。
+
+   ```sh
+   npm login
+   ```
+
+3. 安装依赖并构建：
+
+   ```sh
+   pnpm install && pnpm build:packages
+   ```
+
+4. 在两个包的目录里分别发布。`pnpm publish` 会再要一次 2FA 一次性密码。
+
+   ```sh
+   pnpm publish --access public
+   ```
+
+   先在 `packages/core` 里执行，再在 `packages/themes` 里执行。
 5. 打开每个包在 npmjs.com 上的设置，添加 Trusted Publisher：
    - 来源：GitHub Actions
    - Organization or user：`astryx-vue`
    - Repository：`astryx-vue`
    - Workflow filename：`release.yml`
-6. Trusted Publisher 配好并试过一次 OIDC 发布之后，可以删掉 `NPM_TOKEN`。留着也可以：pnpm 会先尝试 OIDC，换票失败时退回 token。
+6. 可选：在包设置里打开 “Require two-factor authentication and disallow tokens”（要求 2FA，并且不允许 token）。打开之后，CI 只能走 Trusted Publisher。
+7. 再合并 `Version Packages` PR。`0.1.0` 已经在 npm 上，workflow 会跳过上传，并补上 git tag 和 GitHub Release。之后的版本由 workflow 用 GitHub OIDC 发布。
+
+`NPM_TOKEN` 只作为备用，不建议使用。如果暂时不能在自己的电脑上发，可以在仓库 Settings、Secrets and variables、Actions 里添加 secret `NPM_TOKEN`（automation granular access token，不要写进仓库）。pnpm 会先尝试 OIDC，换票失败才退回这个 token。配好 Trusted Publisher，并打开上面的 “disallow tokens” 之后，这个 secret 就不再有效。
 
 `repository.url` 必须指向 `github.com/astryx-vue/astryx-vue`，大小写一致。两个包的 `repository.directory` 分别是 `packages/core` 和 `packages/themes`。包的 `homepage` 仍是文档站 <https://astryx-vue.pages.dev>，`bugs` 指向这个仓库的 issues。
 
@@ -88,7 +107,7 @@ pnpm changeset
 先看是哪一步失败。已经上传到 npm 的版本不能用同一个版本号再传一次。
 
 - `pnpm check` 或 dry-run 失败：还没发布。修完再跑。
-- 认证失败，日志里有 `Skipped OIDC`：Trusted Publisher 没配好，并且 `NPM_TOKEN` 无效或没设。补 secret，或先把 Trusted Publisher 配好，然后用 workflow_dispatch 重跑。不要改版本号，除非包其实已经发出去了。
+- 认证失败，日志里有 `Skipped OIDC`：Trusted Publisher 没配好。按上面的一次性准备配好，再用 workflow_dispatch 重跑。`NPM_TOKEN` 只是不推荐的备用。不要改版本号，除非包其实已经发出去了。
 - npm 已经收到包，但 workflow 在打 tag 或建 GitHub Release 时失败：不要再次 `pnpm publish`。重跑 workflow。`changeset publish` 发现该版本已在 registry 上会跳过上传；tag 已存在也会跳过。`after-publish.mjs` 会补上 npm 链接。若 Release 完全没建出来，而 tag 已经在远端，脚本会补建。
 - 只发出去一个包：重跑。已存在的版本跳过，缺的那个会继续发。
 - provenance 在私有仓库上报错：确认 workflow 里 `PNPM_CONFIG_PROVENANCE` 为 `false`。不要手改已发布的 tarball。
