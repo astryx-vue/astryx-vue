@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { centerBasic as demo } from './index'
+import { centerOverview as demo } from './index'
 
 export const meta = {
   slug: 'center',

@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { skeletonProfile as demo } from './index'
+import { skeletonOverview as demo } from './index'
 
 export const meta = {
   slug: 'skeleton',

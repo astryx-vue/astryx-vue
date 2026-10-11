@@ -1,6 +1,6 @@
 ---
 layout: component-docs
-title: 标签
+title: 徽标
 outline: false
 footer: false
 ---
@@ -12,7 +12,7 @@ import { badgeColors, badgeCounts } from '../../../../components/demos/badge'
 
 ## 使用方法
 
-`Badge` 用于标记状态或类别，例如处理结果、优先级或团队归属，适合在列表、卡片和表格中快速扫读。从独立入口导入即可，结构样式会随组件自动加载：
+`Badge` 用于标记状态或类别，例如处理结果、优先级或团队归属，适合在列表、卡片和表格中快速扫读。徽标是静态的状态或类别标记，需要可移除、可点击的标签请用 Token。从独立入口导入即可，结构样式会随组件自动加载：
 
 主题在应用入口引入一次：
 
@@ -41,20 +41,20 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 | 指引 | 实践 |
 | --- | --- |
-| <Badge variant="success">推荐</Badge> | 每个状态标签都会抢占注意力。只为用户需要注意或处理的状态使用标签：错误、警告和待跟进的项目。无需处理时，普通文本即可。 |
+| <Badge variant="success">推荐</Badge> | 每个状态徽标都会抢占注意力。只为用户需要注意或处理的状态使用徽标：错误、警告和待跟进的项目。无需处理时，普通文本即可。 |
 | <Badge variant="success">推荐</Badge> | 仅对需要关注的系统状态使用 success、warning 和 error 变体，例如 “Failed”、“Degraded”、“Action Required”。这些变体使用醒目的实底背景。 |
-| <Badge variant="success">推荐</Badge> | 对用于分组或分类的标签，使用颜色变体（蓝色、紫色、青色等）。例如团队名称、内容类型、优先级。 |
-| <Badge variant="success">推荐</Badge> | 标签文字保持一到两个词。需要更多说明时，把说明放在标签外的文字中。 |
-| <Badge variant="success">推荐</Badge> | 图标有助于快速识别标签类型时，添加图标。图标旁必须保留文字标签。 |
-| <Badge variant="error">避免</Badge> | 为每个健康、活跃或正常的项目都使用 success 标签。若每行都是绿色的 “Active”，标签就无法突出。标签只显示需要用户关注的状态，如错误、警告和待处理操作。 |
-| <Badge variant="error">避免</Badge> | 用标签展示元数据。时长（“6h window”）、数量（“12 trigger types”）、日期和描述都不是状态或分类。应改用描述文本（Text 组件，type="supporting"）。 |
+| <Badge variant="success">推荐</Badge> | 对用于分组或分类的徽标，使用颜色变体（蓝色、紫色、青色等）。例如团队名称、内容类型、优先级。 |
+| <Badge variant="success">推荐</Badge> | 徽标文字保持一到两个词。需要更多说明时，把说明放在徽标外的文字中。 |
+| <Badge variant="success">推荐</Badge> | 图标有助于快速识别徽标类型时，添加图标。图标旁必须保留文字。 |
+| <Badge variant="error">避免</Badge> | 为每个健康、活跃或正常的项目都使用 success 徽标。若每行都是绿色的 “Active”，徽标就无法突出。徽标只显示需要用户关注的状态，如错误、警告和待处理操作。 |
+| <Badge variant="error">避免</Badge> | 用徽标展示元数据。时长（“6h window”）、数量（“12 trigger types”）、日期和描述都不是状态或分类。应改用描述文本（Text 组件，type="supporting"）。 |
 | <Badge variant="error">避免</Badge> | 用 success、warning、error、info 等语义状态变体表示分类或说明性内容。这些变体视觉强烈，只用于表示系统状态。 |
-| <Badge variant="error">避免</Badge> | 在表格或列表的每一行都重复同一个标签。若多数行都有相同的值，标签就不再传递信息。常见状态使用普通文本，标签只留给例外情况。 |
-| <Badge variant="error">避免</Badge> | 让标签可点击。标签是只读指示器。用户需要操作时，使用按钮或链接。 |
+| <Badge variant="error">避免</Badge> | 在表格或列表的每一行都重复同一个徽标。若多数行都有相同的值，徽标就不再传递信息。常见状态使用普通文本，徽标只留给例外情况。 |
+| <Badge variant="error">避免</Badge> | 让徽标可点击。徽标是只读指示器。用户需要操作时，使用按钮或链接。 |
 
 ## 示例
 
-常见的标签配置与使用场景。
+常见的徽标配置与使用场景。
 
 <DemoExample
   :demo="badgeColors"
@@ -65,7 +65,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 <DemoExample
   :demo="badgeCounts"
-  description="标签显示简短计数。数值超过 99 时，可以显示 99+。"
+  description="徽标显示简短计数。数值超过 99 时，可以显示 99+。"
   locale="zh"
   title="计数"
 />

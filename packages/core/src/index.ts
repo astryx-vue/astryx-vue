@@ -266,6 +266,22 @@ export type {
 } from './List/index.js'
 export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
 export type { AstryxLocale, AstryxMessages } from './locale/index.js'
+export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
+export type {
+  MarkdownAlign,
+  MarkdownCodeProps,
+  MarkdownComponents,
+  MarkdownDensity,
+  MarkdownDisplay,
+  MarkdownHeadingLevel,
+  MarkdownHeadingProps,
+  MarkdownImageProps,
+  MarkdownInlineCodeProps,
+  MarkdownLinkProps,
+  MarkdownListProps,
+  MarkdownProps,
+  MarkdownSlots,
+} from './Markdown/index.js'
 export { MoreMenu } from './MoreMenu/index.js'
 export type {
   MoreMenuDivider,

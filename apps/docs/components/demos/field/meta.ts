@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { fieldCustom as demo } from './index'
+import { fieldOverview as demo } from './index'
 
 export const meta = {
   slug: 'field',

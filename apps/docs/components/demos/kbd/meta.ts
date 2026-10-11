@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { kbdBasic as demo } from './index'
+import { kbdOverview as demo } from './index'
 
 export const meta = {
   slug: 'kbd',

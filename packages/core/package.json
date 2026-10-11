@@ -400,7 +400,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@internationalized/date": "catalog:runtime"
+    "@internationalized/date": "catalog:runtime",
+    "mdast-util-from-markdown": "catalog:runtime",
+    "mdast-util-gfm": "catalog:runtime",
+    "micromark-extension-gfm": "catalog:runtime"
   },
   "devDependencies": {
     "@vue/compiler-sfc": "catalog:vue",
