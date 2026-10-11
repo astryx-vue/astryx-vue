@@ -1746,6 +1746,62 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   all: revert-layer;
 }
 
+.nav-item-preview,
+.nav-menu-preview,
+.mobile-nav-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 680px);
+}
+
+.side-nav-preview {
+  width: min(100%, 260px);
+}
+
+.side-nav-preview .astryx-side-nav {
+  height: auto;
+}
+
+.side-nav-preview__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--astryx-radius-md, 8px);
+  background: var(--astryx-color-accent);
+  color: var(--astryx-color-on-accent);
+}
+
+.side-nav-preview__mark > span {
+  width: 18px;
+  height: 18px;
+}
+
+.top-nav-preview,
+.toolbar-preview,
+.overflow-list-preview {
+  width: min(100%, 720px);
+}
+
+.toolbar-preview .astryx-toolbar,
+.overflow-list-preview .astryx-overflow-list {
+  width: min(100%, 22rem);
+}
+
+.component-card__preview .nav-item-preview,
+.component-card__preview .side-nav-preview,
+.component-card__preview .top-nav-preview,
+.component-card__preview .nav-menu-preview,
+.component-card__preview .mobile-nav-preview,
+.component-card__preview .toolbar-preview,
+.component-card__preview .overflow-list-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
 /*
  * VitePress prose styles are unlayered, so they outrank the Markdown component
  * layer: headings, lists, tables, and links pick up the doc font, alignment,
@@ -2004,6 +2060,191 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .overview-fill > * {
   width: 100%;
   max-width: 100%;
+}
+
+.component-card__preview .side-nav-preview {
+  height: auto;
+}
+
+/*
+ * VitePress `.vp-doc a` is unlayered (brand color, underline, medium weight).
+ * It beats `@layer astryx.components`, and it matches the component root when
+ * that root is the anchor (`a.astryx-nav-item`). A descendant selector never
+ * sees that root. Inside the demo host, roll those prose properties back to
+ * the component layer. Components still set their own color and text-decoration.
+ */
+.vp-doc .astryx-demo :is(a, button) {
+  color: revert-layer;
+  font-weight: revert-layer;
+  text-decoration: revert-layer;
+  text-underline-offset: revert-layer;
+}
+
+.nav-overview {
+  box-sizing: border-box;
+  width: 20rem;
+  max-width: 100%;
+}
+
+.nav-overview--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: max-content;
+  max-width: 100%;
+}
+
+.nav-overview--side .astryx-side-nav {
+  height: auto;
+}
+
+.nav-overview--menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.nav-overview--menu .astryx-nav-disclosure__panel,
+.nav-menu-static {
+  position: static;
+  min-width: 12rem;
+}
+
+.nav-frame {
+  width: min(100%, 42rem);
+  max-width: 100%;
+}
+
+.component-example__preview > .astryx-demo:has(.nav-frame--fill) {
+  width: 100%;
+}
+
+.nav-frame--fill {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.nav-frame--fill .astryx-toolbar__slot--start {
+  flex-wrap: nowrap;
+}
+
+.nav-frame--fill .astryx-toolbar__slot--start > * {
+  flex: none;
+}
+
+.nav-filter .astryx-field,
+.nav-filter .astryx-selector,
+.nav-filter .astryx-text-input {
+  width: 10rem;
+  max-width: 10rem;
+  flex: none;
+}
+
+.nav-frame--narrow {
+  width: min(100%, 16rem);
+}
+
+.vp-doc .nav-bulk-table {
+  display: table;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-collapse: collapse;
+  overflow: visible;
+  font-size: 0.875rem;
+}
+
+.vp-doc .nav-bulk-table tr,
+.vp-doc .nav-bulk-table tr:nth-child(2n) {
+  border: 0;
+  background: transparent;
+}
+
+.vp-doc .nav-bulk-table th,
+.vp-doc .nav-bulk-table td {
+  border: 0;
+  border-bottom: 1px solid var(--astryx-color-border);
+  background: transparent;
+  padding: 10px 12px;
+  text-align: start;
+  vertical-align: middle;
+}
+
+.vp-doc .nav-bulk-table th {
+  font-weight: var(--astryx-font-weight-semibold, 600);
+}
+
+.vp-doc .nav-bulk-table tr.is-selected td {
+  background: var(--astryx-color-background-muted);
+}
+
+.vp-doc .nav-bulk-table .astryx-checkbox-input {
+  width: auto;
+}
+
+/*
+ * Uno icon rules are unlayered and set width/height to 100%, so the
+ * layered 1rem glyph size loses and the mark fills the circle.
+ * This more specific unlayered rule keeps the glyph at 16px.
+ */
+.astryx-nav-icon > .astryx-nav-icon__glyph {
+  width: 1rem;
+  height: 1rem;
+  background-color: currentcolor;
+}
+
+.astryx-button__end > .nav-overflow-chevron {
+  width: 16px;
+  height: 16px;
+  background-color: currentcolor;
+}
+
+.nav-collapse-figure {
+  width: min(100%, 260px);
+  margin: 16px 0 28px;
+}
+
+.mobile-nav-static {
+  width: min(100%, 16rem);
+  overflow: hidden;
+  border: var(--astryx-border-width, 1px) solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-container);
+  background: var(--astryx-color-background-popover);
+}
+
+.mobile-nav-static .astryx-mobile-nav__drawer {
+  width: 100%;
+  height: auto;
+  box-shadow: none;
+}
+
+.nav-menu-preview__trigger,
+.toolbar-preview__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--astryx-radius-md, 8px);
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-menu-preview__trigger > span {
+  width: 16px;
+  height: 16px;
+}
+
+.nav-menu-preview__trigger:hover,
+.toolbar-preview__action:hover {
+  background: var(--astryx-color-overlay-hover);
 }
 
 .overview-row,

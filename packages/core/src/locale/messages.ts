@@ -4,6 +4,7 @@ import type { CalendarMessages } from './messages/calendar.js'
 import type { DateInputMessages } from './messages/date-input.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MultiSelectorMessages } from './messages/multi-selector.js'
+import type { NavMessages } from './messages/nav.js'
 import type { NumberInputMessages } from './messages/number-input.js'
 import type { PaginationMessages } from './messages/pagination.js'
 import type { SelectorMessages } from './messages/selector.js'
@@ -15,6 +16,7 @@ import { calendarMessages } from './messages/calendar.js'
 import { dateInputMessages } from './messages/date-input.js'
 import { markdownMessages } from './messages/markdown.js'
 import { multiSelectorMessages } from './messages/multi-selector.js'
+import { navMessages } from './messages/nav.js'
 import { numberInputMessages } from './messages/number-input.js'
 import { paginationMessages } from './messages/pagination.js'
 import { selectorMessages } from './messages/selector.js'
@@ -27,6 +29,7 @@ export interface AstryxMessages {
   dateInput: DateInputMessages
   markdown: MarkdownMessages
   multiSelector: MultiSelectorMessages
+  nav: NavMessages
   numberInput: NumberInputMessages
   pagination: PaginationMessages
   selector: SelectorMessages
@@ -41,6 +44,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateInput: dateInputMessages.en,
     markdown: markdownMessages.en,
     multiSelector: multiSelectorMessages.en,
+    nav: navMessages.en,
     numberInput: numberInputMessages.en,
     pagination: paginationMessages.en,
     selector: selectorMessages.en,
@@ -53,6 +57,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateInput: dateInputMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     multiSelector: multiSelectorMessages['zh-CN'],
+    nav: navMessages['zh-CN'],
     numberInput: numberInputMessages['zh-CN'],
     pagination: paginationMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
