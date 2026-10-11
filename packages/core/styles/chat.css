@@ -529,7 +529,7 @@
 
   .astryx-chat-tool-calls__name,
   .astryx-chat-tool-calls__group-label {
-    color: var(--astryx-chat-foreground, var(--astryx-color-text-primary));
+    color: var(--astryx-chat-foreground-secondary, var(--astryx-color-text-secondary));
     font-weight: var(--astryx-chat-font-weight-medium, var(--astryx-font-weight-medium, 500));
   }
 
