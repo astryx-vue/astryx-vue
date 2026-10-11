@@ -12,7 +12,7 @@ const { pick } = useDemoText()
     </ChatSystemMessage>
     <ChatSystemMessage>
       <template #icon>
-        <span class="i-carbon-user-follow" style="width: 20px; height: 20px" />
+        <span class="i-heroicons-user-plus" style="width: 20px; height: 20px" />
       </template>
       {{ pick('陈晓加入了会话', 'Sarah Chen joined the conversation') }}
     </ChatSystemMessage>
@@ -24,7 +24,7 @@ const { pick } = useDemoText()
     </ChatSystemMessage>
     <ChatSystemMessage>
       <template #icon>
-        <span class="i-carbon-user-minus" style="width: 20px; height: 20px" />
+        <span class="i-heroicons-user-minus" style="width: 20px; height: 20px" />
       </template>
       {{ pick('林川离开了会话', 'Alex Rivera left the conversation') }}
     </ChatSystemMessage>
@@ -33,7 +33,7 @@ const { pick } = useDemoText()
     </ChatSystemMessage>
     <ChatSystemMessage>
       <template #icon>
-        <span class="i-carbon-checkmark-outline" style="width: 20px; height: 20px" />
+        <span class="i-heroicons-check-circle" style="width: 20px; height: 20px" />
       </template>
       {{ pick('会话已标为已解决', 'Conversation marked as resolved') }}
     </ChatSystemMessage>

@@ -1,4 +1,5 @@
 import { icons as carbon } from '@iconify-json/carbon'
+import { icons as heroicons } from '@iconify-json/heroicons'
 import { defineConfig, presetIcons } from 'unocss'
 
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
     presetIcons({
       collections: {
         carbon: () => carbon,
+        heroicons: () => heroicons,
       },
       extraProperties: {
         display: 'block',

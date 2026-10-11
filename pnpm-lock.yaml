@@ -193,6 +193,9 @@ catalogs:
     '@iconify-json/carbon':
       specifier: 1.2.28
       version: 1.2.28
+    '@iconify-json/heroicons':
+      specifier: 1.2.3
+      version: 1.2.3
     postcss:
       specifier: 8.5.29
       version: 8.5.29
@@ -341,6 +344,9 @@ importers:
       '@iconify-json/carbon':
         specifier: catalog:docs
         version: 1.2.28
+      '@iconify-json/heroicons':
+        specifier: catalog:docs
+        version: 1.2.3
       '@types/node':
         specifier: catalog:language
         version: 26.6.4
@@ -835,6 +841,9 @@ packages:
 
   '@iconify-json/carbon@1.2.28':
     resolution: {integrity: sha512-dog92E0fGszJSrmeikPQmFrd4ptbdapogEhtZ9MCA9KiCNacYb2/nDi0euwsK0kTevsFiTy7Mte6QvRq3LDyHQ==}
+
+  '@iconify-json/heroicons@1.2.3':
+    resolution: {integrity: sha512-n+vmCEgTesRsOpp5AB5ILB6srsgsYK+bieoQBNlafvoEhjVXLq8nIGN4B0v/s4DUfa0dOrjwE/cKJgIKdJXOEg==}
 
   '@iconify-json/simple-icons@1.2.99':
     resolution: {integrity: sha512-kouZhqvUoNdxEe+lZksbJJZMCZv4b4Ob62O1GW3fcpz/I0mVPzM+9/Qf/DUuv5ns8l6c46D8M/ubhJjjbLp9HQ==}
@@ -4102,6 +4111,10 @@ snapshots:
   '@humanwhocodes/retry@0.4.3': {}
 
   '@iconify-json/carbon@1.2.28':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/heroicons@1.2.3':
     dependencies:
       '@iconify/types': 2.0.0
 
