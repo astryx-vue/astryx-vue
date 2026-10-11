@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { ContextMenuItemData, ContextMenuSubMenuEmits, ContextMenuSubMenuProps, ContextMenuSubMenuSlots } from './types.js'
-import { computed, nextTick, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, inject, nextTick, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useContextMenu, useContextMenuSize } from './context.js'
+import { submenuAncestorOpenKey, useContextMenu, useContextMenuSize } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
 import { useMenuNav } from './menuNav.js'
+import { useSubmenuHover } from './useSubmenuHover.js'
 import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenuSubMenu', inheritAttrs: false })
@@ -31,7 +32,12 @@ const isOpen = ref(false)
 
 const flyoutId = `astryx-context-menu-submenu-${useId()}`
 const flyoutLabel = computed(() => (typeof props.label === 'string' ? props.label : menu?.menuLabel.value ?? 'Submenu'))
-const showsFlyout = computed(() => isOpen.value && (menu?.isOpen.value ?? true))
+const ancestorOpen = inject(submenuAncestorOpenKey, computed(() => true))
+const showsFlyout = computed(() => isOpen.value && (menu?.isOpen.value ?? true) && ancestorOpen.value)
+
+// Nested flyouts teleport to body, so a closed ancestor would otherwise leave
+// them on screen. Descendants read this level's visibility and close with it.
+provide(submenuAncestorOpenKey, showsFlyout)
 
 const { position } = usePositionedLayer({
   anchor: row,
@@ -70,6 +76,15 @@ useDismiss({
   onDismiss: () => close(true),
 })
 
+const hover = useSubmenuHover({
+  isEnabled: () => !props.isDisabled,
+  isOpen: () => isOpen.value,
+  flyout,
+  openFromHover,
+  openPinned: () => open(false),
+  closeFromPointer: () => close(false),
+})
+
 function open(focusFirstRow: boolean): void {
   if (props.isDisabled)
     return
@@ -80,12 +95,25 @@ function open(focusFirstRow: boolean): void {
   }
   isOpen.value = true
   emit('openChange', true)
+  // Keyboard and click pin the flyout: leaving the row into empty space must
+  // not dismiss a surface the person opened on purpose.
+  hover.notePinned()
   if (focusFirstRow)
     void nextTick(() => nav.focusFirst())
 }
 
+function openFromHover(): void {
+  if (props.isDisabled || isOpen.value)
+    return
+  isOpen.value = true
+  emit('openChange', true)
+  hover.noteHoverOpened()
+}
+
 function close(focusRow: boolean): void {
-  if (!isOpen.value)
+  const wasOpen = isOpen.value
+  hover.markClosed()
+  if (!wasOpen)
     return
   isOpen.value = false
   nav.resetTypeahead()
@@ -108,15 +136,34 @@ function onRowKeyDown(event: KeyboardEvent): void {
 }
 
 function onRowFocusOut(): void {
-  if (!isOpen.value)
+  // A hover-opened flyout is dismissed by the pointer delay, not by focus.
+  // Moving the highlight onto a sibling would otherwise close it in the same
+  // frame and skip that delay. A pinned flyout still closes when focus leaves.
+  if (!isOpen.value || hover.isHoverDriven())
     return
   void nextTick(() => {
+    if (!isOpen.value || hover.isHoverDriven())
+      return
     const active = row.value?.ownerDocument.activeElement
     const isKept = active instanceof Node
       && (row.value?.contains(active) === true || flyout.value?.contains(active) === true)
     if (!isKept)
       close(false)
   })
+}
+
+function onRowClick(event: MouseEvent): void {
+  hover.onTriggerClick(event)
+}
+
+function onRowPointerMove(event: PointerEvent): void {
+  if (props.isDisabled || event.pointerType !== 'mouse')
+    return
+  const element = row.value
+  if (element == null || element === element.ownerDocument.activeElement)
+    return
+  // Same single highlight as a plain row: hover moves focus onto the row.
+  element.focus({ preventScroll: true })
 }
 
 function onFlyoutKeyDown(event: KeyboardEvent): void {
@@ -135,16 +182,24 @@ function onNestedSelect(item: ContextMenuItemData, event: MouseEvent): void {
 }
 
 function onRowPointerEnter(event: PointerEvent): void {
-  if (event.pointerType !== 'mouse')
-    return
-  open(false)
+  hover.onTriggerPointerEnter(event)
 }
 
 // The close of the root menu takes this level with it, so a stale flyout is
 // never left floating over the page.
-watch(() => menu?.isOpen.value, (open) => {
-  if (open === false)
+watch(() => menu?.isOpen.value, (menuOpen) => {
+  if (menuOpen === false) {
+    // A pending hover must not open a flyout after the root menu is gone.
+    hover.cancel()
     close(false)
+  }
+})
+
+watch(ancestorOpen, (visible) => {
+  if (visible)
+    return
+  hover.cancel()
+  close(false)
 })
 </script>
 
@@ -164,10 +219,12 @@ watch(() => menu?.isOpen.value, (open) => {
     role="menuitem"
     :style="attrs.style as StyleValue"
     :tabindex="isDisabled ? undefined : -1"
-    @click="open(false)"
+    @click="onRowClick"
     @focusout="onRowFocusOut"
     @keydown="onRowKeyDown"
     @pointerenter="onRowPointerEnter"
+    @pointerleave="hover.onTriggerPointerLeave"
+    @pointermove="onRowPointerMove"
   >
     <span v-if="icon != null || $slots.icon" class="astryx-context-menu-item__start">
       <slot name="icon">
@@ -208,6 +265,8 @@ watch(() => menu?.isOpen.value, (open) => {
         tabindex="-1"
         @contextmenu.prevent
         @keydown="onFlyoutKeyDown"
+        @pointerenter="hover.onFlyoutPointerEnter"
+        @pointerleave="hover.onFlyoutPointerLeave"
       >
         <slot>
           <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />

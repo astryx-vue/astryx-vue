@@ -27,6 +27,15 @@ export interface ContextMenuContextValue {
 
 export const contextMenuContextKey: InjectionKey<ContextMenuContextValue> = Symbol('astryx-context-menu')
 
+/**
+ * Whether the submenu flyout that contains this one is showing.
+ *
+ * Nested flyouts are teleported to `body`, so hiding an ancestor's DOM does
+ * not hide them. Each submenu provides its own `showsFlyout` for the next
+ * level; a row with no ancestor submenu reads as open.
+ */
+export const submenuAncestorOpenKey: InjectionKey<ComputedRef<boolean>> = Symbol('astryx-submenu-ancestor-open')
+
 /** The surrounding menu, or `undefined` when the row stands alone. */
 export function useContextMenu(): ContextMenuContextValue | undefined {
   return inject(contextMenuContextKey, undefined)
