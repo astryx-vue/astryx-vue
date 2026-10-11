@@ -22,11 +22,15 @@
     "README.md",
     "THIRD_PARTY_NOTICES.md",
     "css.d.ts",
+    "fonts.css",
     "neutral",
     "neutral.css"
   ],
   "scripts": {
     "build": "true"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "catalog:docs"
   },
   "publishConfig": {
     "access": "public"

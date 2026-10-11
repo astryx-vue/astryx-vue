@@ -3,7 +3,6 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-font-family-code: 'SF Mono', Monaco, Consolas, monospace;
     --astryx-text-code-size: 0.875rem;
     --astryx-text-code-leading: 1.4286;
 

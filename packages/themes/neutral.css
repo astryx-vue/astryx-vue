@@ -1,4 +1,5 @@
 /* 这个文件由 `pnpm sync` 生成，不要手改。 */
+@import './fonts.css';
 @import './neutral/alert-dialog.css';
 @import './neutral/avatar.css';
 @import './neutral/avatar-group.css';

@@ -157,6 +157,8 @@ export const zzProbeMessages = { en: { label: 'Probe' }, 'zh-CN': { label: 'ๆข้
       expect(styles).toContain('./styles/zz-probe.css')
       expect(styles).not.toContain('calendar.css')
       expect(neutral).toContain('./neutral/zz-probe.css')
+      expect(neutral).toContain('@import \'./fonts.css\';')
+      expect(neutral).not.toContain('@fontsource/jetbrains-mono')
       expect(messages).toContain('zzProbeMessages')
       expect(packageJson.exports['./ZzProbe']).toEqual({
         source: './src/ZzProbe/index.ts',
