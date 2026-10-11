@@ -3,6 +3,7 @@ import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheet
 import { computed, onBeforeUnmount, onMounted, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
+import { useScrollLock } from '../composables/useScrollLock.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
 import '../../styles/bottom-sheet.css'
 
@@ -65,20 +66,19 @@ function panelAttrs(): Record<string, unknown> {
   return rest
 }
 
-let previousBodyOverflow: string | null = null
+const isScrollLocked = ref(false)
+useScrollLock(isScrollLocked)
 
 function lockScroll(): void {
-  if (previousBodyOverflow !== null || typeof document === 'undefined')
+  if (typeof document === 'undefined')
     return
-  previousBodyOverflow = document.body.style.overflow
-  document.body.style.overflow = 'hidden'
+  isScrollLocked.value = true
 }
 
 function unlockScroll(): void {
-  if (previousBodyOverflow === null || typeof document === 'undefined')
+  if (typeof document === 'undefined')
     return
-  document.body.style.overflow = previousBodyOverflow
-  previousBodyOverflow = null
+  isScrollLocked.value = false
 }
 
 function panelElement(): HTMLElement | null {

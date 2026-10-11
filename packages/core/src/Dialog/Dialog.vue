@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DialogPadding, DialogProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
-import { useFocusTrap, useRestoreFocus } from '../composables/index.js'
+import { useFocusTrap, useRestoreFocus, useScrollLock } from '../composables/index.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
 import '../../styles/dialog.css'
@@ -32,7 +32,8 @@ provide(DIALOG_CONTEXT_KEY, {
 
 const dialogRef = useTemplateRef<HTMLDialogElement>('dialogRef')
 let triggerElement: HTMLElement | null = null
-let previousBodyOverflow: string | null = null
+const isScrollLocked = ref(false)
+useScrollLock(isScrollLocked)
 
 const isFullscreen = computed(() => props.variant === 'fullscreen')
 const dialogRole = computed(() => (attrs.role as string | undefined) ?? (props.purpose === 'required' ? 'alertdialog' : undefined))
@@ -103,17 +104,11 @@ function applyEntryDirection(dialog: HTMLDialogElement): void {
 }
 
 function lockScroll(): void {
-  if (previousBodyOverflow !== null)
-    return
-  previousBodyOverflow = document.body.style.overflow
-  document.body.style.overflow = 'hidden'
+  isScrollLocked.value = true
 }
 
 function unlockScroll(): void {
-  if (previousBodyOverflow === null)
-    return
-  document.body.style.overflow = previousBodyOverflow
-  previousBodyOverflow = null
+  isScrollLocked.value = false
 }
 
 const isDialogOpen = computed(() => {
