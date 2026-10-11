@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { citationLabels, citationNumbers } from '../../../../components/demos/citation'
+import { citationInline, citationSources } from '../../../../components/demos/citation'
 </script>
 
 ## 使用方法
@@ -45,15 +45,15 @@ import { Citation } from '@astryx-vue/core/Citation'
 ## 示例
 
 <DemoExample
-  :demo="citationLabels"
-  description="两个来源胶囊嵌在句子里，都会在新标签页打开。"
+  :demo="citationInline"
+  description="引文嵌在段落里，和周围的字走在同一行。"
   locale="zh"
-  title="标题"
+  title="Citation — 行内文字"
 />
 
 <DemoExample
-  :demo="citationNumbers"
-  description="上标数字。第二个来源没有 URL，所以不是链接。"
+  :demo="citationSources"
+  description="回答或文章末尾的来源列表，每条都带图标。"
   locale="zh"
-  title="编号"
+  title="Citation — 来源列表"
 />

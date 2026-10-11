@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { citationLabels, citationNumbers } from '../../../../components/demos/citation'
+import { citationInline, citationSources } from '../../../../components/demos/citation'
 </script>
 
 ## Usage
@@ -45,15 +45,15 @@ import { Citation } from '@astryx-vue/core/Citation'
 ## Examples
 
 <DemoExample
-  :demo="citationLabels"
-  description="Two source chips inline with the sentence. Each opens in a new tab."
+  :demo="citationInline"
+  description="Citations embedded within a paragraph of text, showing how they flow inline with surrounding content."
   locale="en"
-  title="Label"
+  title="Citation — Inline Text"
 />
 
 <DemoExample
-  :demo="citationNumbers"
-  description="Superscript numbers. The second source has no URL, so it is not a link."
+  :demo="citationSources"
+  description="A list of citation sources with icons, as you might show at the end of an AI-generated response or article footer."
   locale="en"
-  title="Number"
+  title="Citation — Source List"
 />

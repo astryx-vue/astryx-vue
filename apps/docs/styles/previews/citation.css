@@ -7,7 +7,26 @@
   overflow-wrap: anywhere;
 }
 
-.component-card__preview .citation-preview {
-  width: min(100%, 280px);
+.citation-overview {
+  width: min(100%, 20rem);
+  margin: 0;
+  color: var(--astryx-text);
+  font-size: var(--astryx-text-body-size, 0.875rem);
+  line-height: 2;
+  text-align: center;
+}
+
+.citation-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  width: min(100%, 24rem);
+  margin: 0;
+}
+
+.component-card__preview .citation-preview,
+.component-card__preview .citation-overview {
+  width: min(100%, 20rem);
   text-align: center;
 }

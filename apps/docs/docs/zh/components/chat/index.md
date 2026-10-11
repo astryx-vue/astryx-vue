@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { chatConversation } from '../../../../components/demos/chat'
+import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMetadata, chatBubbleVariants, chatLayoutPanel, chatListDensity, chatListFull, chatMessageAvatar, chatMessageGhost, chatMessageGroup, chatMetadataFooter, chatMetadataStatus, chatMetadataTime, chatScrollLabels, chatSystemIcon, chatSystemStatus, chatSystemVariants, chatToolsExpandable, chatToolsSimple, chatToolsStatuses } from '../../../../components/demos/chat'
 </script>
 
 ## 使用方法
@@ -54,7 +54,7 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 
 `ChatTypingIndicator` 画三个点。传入 `names` 后，一个人、两个人、以及「某人和其他几人」各有一句文案。根节点是 `role="status"`，由它播报这一句。`ChatUnreadDivider` 标出第一条未读消息，新到的内容放在它下面。
 
-下面的示例把这些放在同一次会话里：文字逐字追加，工具调用和推理留在助手那一轮，有人正在输入，底部输入框可以再发一条。
+下面的示例和 Astryx 文档站里 Chat 分类的示例一一对应，顺序也按那边的组件页来：布局、回到底部、消息、气泡、列表、元信息、系统消息、工具调用。
 
 ## 建议
 
@@ -70,8 +70,148 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 ## 示例
 
 <DemoExample
-  :demo="chatConversation"
-  description="一段会逐字追加的会话，里面有工具调用、可折叠的推理，以及正在输入。未读分隔线在第一条未读消息前面，之后发出的内容出现在它下方。"
+  :demo="chatLayoutPanel"
+  description="窄栏里的会话。容器一窄就会用上紧凑密度，适合侧栏、抽屉，或嵌在页面里的对话。"
   locale="zh"
-  title="模拟对话"
+  title="ChatLayout — 面板"
+/>
+
+<DemoExample
+  :demo="chatScrollLabels"
+  description="回到底部的按钮可以只显示图标，也可以带上新消息、未读回复这类说明。"
+  locale="zh"
+  title="ChatLayoutScrollButton — 文案"
+/>
+
+<DemoExample
+  :demo="chatMessageAvatar"
+  description="带头像和发送者名字。正文以气泡开头时，名字放在气泡上；没有气泡时，名字放在消息上。"
+  locale="zh"
+  title="ChatMessage — 头像与名字"
+/>
+
+<DemoExample
+  :demo="chatMessageGhost"
+  description="透明气泡没有可见边界，仍保留内边距以便对齐。适合助手的长回复。"
+  locale="zh"
+  title="ChatMessage — 透明气泡"
+/>
+
+<DemoExample
+  :demo="chatMessageGroup"
+  description="用 group 收紧同一侧的圆角，把同一人连续发出的几条气泡连在一起。"
+  locale="zh"
+  title="ChatMessage — 多气泡"
+/>
+
+<DemoExample
+  :demo="chatBubbleCustom"
+  description="气泡里可以放对齐到文字列的自定义内容。透明气泡拉满消息列，时间贴在气泡的元信息上。"
+  locale="zh"
+  title="ChatMessageBubble — 自定义内容"
+/>
+
+<DemoExample
+  :demo="chatBubbleDensity"
+  description="紧凑、均衡、宽松并排。密度决定气泡内边距、圆角，以及成组气泡之间的间距。"
+  locale="zh"
+  title="ChatMessageBubble — 密度"
+/>
+
+<DemoExample
+  :demo="chatBubbleGrouping"
+  description="一条消息里用 first、middle、last 收紧发送者那一侧的圆角。"
+  locale="zh"
+  title="ChatMessageBubble — 分组"
+/>
+
+<DemoExample
+  :demo="chatBubbleMetadata"
+  description="名字和元信息都对齐气泡的内边距。名字放在第一条气泡上，元信息放在最后一条上。"
+  locale="zh"
+  title="ChatMessageBubble — 元信息"
+/>
+
+<DemoExample
+  :demo="chatBubbleVariants"
+  description="实心和透明两种气泡，用户和助手都会用到。实心是普通消息，透明用来对齐、但不画边界。"
+  locale="zh"
+  title="ChatMessageBubble — 变体"
+/>
+
+<DemoExample
+  :demo="chatListDensity"
+  description="三种密度并排。侧栏用紧凑，整页对话多用均衡，长文用宽松。行距要和密度分开时，用 gap。"
+  locale="zh"
+  title="ChatMessageList — 密度"
+/>
+
+<DemoExample
+  :demo="chatListFull"
+  description="一次会话里放上日期分隔、文件名、代码、透明气泡和元信息。"
+  locale="zh"
+  title="ChatMessageList — 完整会话"
+/>
+
+<DemoExample
+  :demo="chatMetadataFooter"
+  description="助手回复下面的操作：复制、重试、有用、没用，以及模型名。"
+  locale="zh"
+  title="ChatMessageMetadata — 底部操作"
+/>
+
+<DemoExample
+  :demo="chatMetadataStatus"
+  description="五种送达状态：发送中、已发送、已送达、已读、失败。每条都带时间。"
+  locale="zh"
+  title="ChatMessageMetadata — 状态"
+/>
+
+<DemoExample
+  :demo="chatMetadataTime"
+  description="只有时间的元信息。可以是钟点，也可以是相对时间。"
+  locale="zh"
+  title="ChatMessageMetadata — 时间"
+/>
+
+<DemoExample
+  :demo="chatSystemIcon"
+  description="系统消息前面放一个图标，用来区分加入、加密、生成和核验。"
+  locale="zh"
+  title="ChatSystemMessage — 图标"
+/>
+
+<DemoExample
+  :demo="chatSystemStatus"
+  description="会话里的状态流水：谁加入、话题改了、谁离开、日期，以及已解决。"
+  locale="zh"
+  title="ChatSystemMessage — 状态更新"
+/>
+
+<DemoExample
+  :demo="chatSystemVariants"
+  description="默认和分隔线并排。默认用来写一行状态，分隔线用来标日期或分段。"
+  locale="zh"
+  title="ChatSystemMessage — 变体"
+/>
+
+<DemoExample
+  :demo="chatToolsExpandable"
+  description="工具调用可以展开结果，比如差异和命令输出。点一行就能打开。"
+  locale="zh"
+  title="ChatToolCalls — 可展开"
+/>
+
+<DemoExample
+  :demo="chatToolsSimple"
+  description="上面是单条调用，下面是可折叠的一组，并带上增删行数。"
+  locale="zh"
+  title="ChatToolCalls — 简单"
+/>
+
+<DemoExample
+  :demo="chatToolsStatuses"
+  description="等待、运行、完成、失败四种状态放在同一组里。"
+  locale="zh"
+  title="ChatToolCalls — 各种状态"
 />

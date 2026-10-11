@@ -21,33 +21,40 @@ defineExpose({ element: root })
 
 <template>
   <div
-    v-if="name || $slots.name"
-    class="astryx-chat-message-bubble__name"
-    data-chat-name
-    :data-sender="sender"
-    :data-density="density"
-  >
-    <slot name="name">
-      {{ name }}
-    </slot>
-  </div>
-  <div
-    ref="root"
-    v-bind="$attrs"
-    class="astryx-chat-message-bubble"
+    class="astryx-chat-message-bubble__frame"
     :data-sender="sender"
     :data-variant="variant"
     :data-density="density"
-    :data-group="group"
   >
-    <slot />
-  </div>
-  <div
-    v-if="$slots.metadata"
-    class="astryx-chat-message-bubble__meta"
-    :data-sender="sender"
-    :data-density="density"
-  >
-    <slot name="metadata" />
+    <div
+      v-if="name || $slots.name"
+      class="astryx-chat-message-bubble__name"
+      data-chat-name
+      :data-sender="sender"
+      :data-density="density"
+    >
+      <slot name="name">
+        {{ name }}
+      </slot>
+    </div>
+    <div
+      ref="root"
+      v-bind="$attrs"
+      class="astryx-chat-message-bubble"
+      :data-sender="sender"
+      :data-variant="variant"
+      :data-density="density"
+      :data-group="group"
+    >
+      <slot />
+    </div>
+    <div
+      v-if="$slots.metadata"
+      class="astryx-chat-message-bubble__meta"
+      :data-sender="sender"
+      :data-density="density"
+    >
+      <slot name="metadata" />
+    </div>
   </div>
 </template>

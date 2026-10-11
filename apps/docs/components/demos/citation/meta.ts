@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { citationLabels as demo } from './index'
+import { citationOverview as demo } from './index'
 
 export const meta = {
   slug: 'citation',

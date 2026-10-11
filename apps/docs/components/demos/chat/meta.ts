@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { chatConversation as demo } from './index'
+import { chatOverview as demo } from './index'
 
 export const meta = {
   slug: 'chat',
