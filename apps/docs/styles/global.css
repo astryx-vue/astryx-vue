@@ -1653,3 +1653,104 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .vp-doc .astryx-code {
   all: revert-layer;
 }
+
+.nav-item-preview,
+.nav-menu-preview,
+.mobile-nav-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 680px);
+}
+
+.side-nav-preview {
+  width: min(100%, 280px);
+  height: 360px;
+}
+
+.side-nav-preview .astryx-side-nav {
+  height: 100%;
+  border: var(--astryx-border-width, 1px) solid var(--astryx-color-border-secondary, #e5e5e5);
+  border-radius: var(--astryx-radius-lg, 12px);
+}
+
+.side-nav-preview__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--astryx-radius-md, 8px);
+  background: var(--astryx-nav-icon-background, #262626);
+  color: var(--astryx-nav-icon-foreground, #fff);
+}
+
+.side-nav-preview__mark > span {
+  width: 18px;
+  height: 18px;
+}
+
+.top-nav-preview,
+.toolbar-preview,
+.overflow-list-preview {
+  width: min(100%, 720px);
+}
+
+.toolbar-preview .astryx-toolbar,
+.overflow-list-preview .astryx-overflow-list {
+  width: min(100%, 22rem);
+}
+
+.component-card__preview .nav-item-preview,
+.component-card__preview .side-nav-preview,
+.component-card__preview .top-nav-preview,
+.component-card__preview .nav-menu-preview,
+.component-card__preview .mobile-nav-preview,
+.component-card__preview .toolbar-preview,
+.component-card__preview .overflow-list-preview {
+  width: 100%;
+  max-width: 100%;
+}
+
+.component-card__preview .side-nav-preview {
+  height: 280px;
+}
+
+.vp-doc :is(
+  .astryx-side-nav,
+  .astryx-top-nav,
+  .astryx-nav-item,
+  .astryx-nav-menu,
+  .astryx-nav-disclosure,
+  .astryx-nav-disclosure__panel,
+  .astryx-toolbar,
+  .astryx-overflow-list,
+  .astryx-mobile-nav
+) :is(button, a) {
+  all: revert-layer;
+}
+
+.nav-menu-preview__trigger,
+.toolbar-preview__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--astryx-radius-md, 8px);
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-menu-preview__trigger > span {
+  width: 16px;
+  height: 16px;
+}
+
+.nav-menu-preview__trigger:hover,
+.toolbar-preview__action:hover {
+  background: var(--astryx-nav-item-hover-background, #0536590c);
+}

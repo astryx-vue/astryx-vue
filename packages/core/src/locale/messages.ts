@@ -1,4 +1,5 @@
 import type { AstryxLocale, AstryxMessages } from './types.js'
+import { navEn, navZh } from './messages/nav.js'
 
 function clearLabel(label: string | undefined, fallback: string, prefix: string): string {
   return label != null && label !== '' ? `${prefix}${label}` : fallback
@@ -37,6 +38,7 @@ const en: AstryxMessages = {
     pageSize: count => `${count} / page`,
     total: (total, from, to) => `${from}–${to} of ${total}`,
   },
+  nav: navEn,
 }
 
 const zhCN: AstryxMessages = {
@@ -72,6 +74,7 @@ const zhCN: AstryxMessages = {
     pageSize: count => `${count} 条/页`,
     total: (total, from, to) => `共 ${total} 条，显示 ${from}-${to}`,
   },
+  nav: navZh,
 }
 
 export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {

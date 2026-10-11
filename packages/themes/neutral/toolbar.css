@@ -1,0 +1,8 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-toolbar-gap: var(--astryx-spacing-2);
+  }
+}

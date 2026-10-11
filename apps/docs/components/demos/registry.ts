@@ -32,8 +32,12 @@ import { inputGroupBasic } from './input-group'
 import { kbdBasic } from './kbd'
 import { linkColors } from './link'
 import { listBasic } from './list'
+import { mobileNavDrawer } from './mobile-nav'
 import { moreMenuOverview } from './more-menu'
+import { navItemBasic } from './nav-item'
+import { navMenuBasic } from './nav-menu'
 import { numberInputBasic } from './number-input'
+import { overflowListBasic } from './overflow-list'
 import { overlayBasic } from './overlay'
 import { paginationBasic } from './pagination'
 import { popoverOverview } from './popover'
@@ -41,6 +45,7 @@ import { progressBarBasic } from './progress-bar'
 import { radioBasic, radioList } from './radio'
 import { segmentedControlBasic } from './segmented-control'
 import { selectorBasic } from './selector'
+import { sideNavCollapse } from './side-nav'
 import { skeletonProfile } from './skeleton'
 import { sliderBasic } from './slider'
 import { spinnerBasic } from './spinner'
@@ -53,7 +58,9 @@ import { textAreaBasic } from './text-area'
 import { textInputBasic } from './text-input'
 import { toastPreview } from './toast'
 import { toggleButtonBasic } from './toggle-button'
+import { toolbarOverflow } from './toolbar'
 import { tooltipOverview } from './tooltip'
+import { topNavMega } from './top-nav'
 import { visuallyHiddenContext } from './visually-hidden'
 
 /**
@@ -93,6 +100,13 @@ export const componentDemos: Record<ComponentSlug, DemoModule> = {
   'date-input': dateInputBasic,
   'calendar': calendarBasic,
   'pagination': paginationBasic,
+  'nav-item': navItemBasic,
+  'side-nav': sideNavCollapse,
+  'top-nav': topNavMega,
+  'nav-menu': navMenuBasic,
+  'mobile-nav': mobileNavDrawer,
+  'toolbar': toolbarOverflow,
+  'overflow-list': overflowListBasic,
   'heading': headingLevels,
   'icon-button': iconButtonActionBar,
   'kbd': kbdBasic,

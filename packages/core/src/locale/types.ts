@@ -33,4 +33,18 @@ export interface AstryxMessages {
     pageSize: (count: number) => string
     total: (total: number, from: number, to: number) => string
   }
+  nav: {
+    sideNav: string
+    topNav: string
+    mobileNav: string
+    collapseSidebar: string
+    expandSidebar: string
+    openMenu: string
+    close: string
+    more: string
+    moreItems: (count: number) => string
+    expandItem: (label: string) => string
+    collapseItem: (label: string) => string
+    submenu: (label: string) => string
+  }
 }

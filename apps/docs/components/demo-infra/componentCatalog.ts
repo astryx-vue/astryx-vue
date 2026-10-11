@@ -110,6 +110,13 @@ export const COMPONENT_CATALOG = [
   { slug: 'breadcrumbs', group: 'navigation', en: 'Breadcrumbs', zh: '面包屑' },
   { slug: 'tab-list', group: 'navigation', en: 'Tab List', zh: '标签列表' },
   { slug: 'pagination', group: 'navigation', en: 'Pagination', zh: '分页' },
+  { slug: 'nav-item', group: 'navigation', en: 'Nav Item', zh: '导航项' },
+  { slug: 'side-nav', group: 'navigation', en: 'Side Nav', zh: '侧边导航' },
+  { slug: 'top-nav', group: 'navigation', en: 'Top Nav', zh: '顶部导航' },
+  { slug: 'nav-menu', group: 'navigation', en: 'Nav Menu', zh: '导航菜单' },
+  { slug: 'mobile-nav', group: 'navigation', en: 'Mobile Nav', zh: '移动端导航' },
+  { slug: 'toolbar', group: 'navigation', en: 'Toolbar', zh: '工具栏' },
+  { slug: 'overflow-list', group: 'navigation', en: 'Overflow List', zh: '溢出列表' },
 
   { slug: 'banner', group: 'feedback', en: 'Banner', zh: '提示条' },
   { slug: 'badge', group: 'feedback', en: 'Badge', zh: '标签' },
