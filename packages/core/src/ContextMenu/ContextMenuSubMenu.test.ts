@@ -610,7 +610,7 @@ describe('contextMenuSubMenu hover close', () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Escape' }))
     await flushPromises()
     expect(moveTo.getAttribute('aria-expanded')).toBe('false')
-    expect(document.querySelector('.astryx-context-menu')?.style.display).not.toBe('none')
+    expect(document.querySelector<HTMLElement>('.astryx-context-menu')?.style.display).not.toBe('none')
     expect(trigger.isConnected).toBe(true)
   })
 })
