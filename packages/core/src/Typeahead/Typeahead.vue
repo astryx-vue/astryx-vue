@@ -37,6 +37,7 @@ const inputId = `astryx-typeahead-${useId()}`
 const listboxId = `${inputId}-listbox`
 const disabledId = `${inputId}-disabled`
 const editing = ref(false)
+let suppressFocusOpen = false
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
@@ -104,7 +105,12 @@ function commit(item: T | null): void {
   menu.close()
   emit('update:modelValue', item)
   emit('change', item)
-  void nextTick(() => inputRef.value?.focus())
+  // 选中后焦点留在输入框上，但不能马上再展开。否则 show-on-focus 会把刚收起的列表打开。
+  suppressFocusOpen = item != null
+  void nextTick(() => {
+    inputRef.value?.focus()
+    suppressFocusOpen = false
+  })
 }
 
 function restoreSelection(): void {
@@ -138,7 +144,7 @@ function onInput(event: Event): void {
 }
 
 function onFocus(): void {
-  if (props.disabled)
+  if (props.disabled || suppressFocusOpen)
     return
   if (showToken.value) {
     startEdit()

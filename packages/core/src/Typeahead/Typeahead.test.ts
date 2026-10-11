@@ -49,9 +49,13 @@ describe('typeahead', () => {
     expect(options[0]?.textContent).toContain('Banana')
 
     await input.trigger('keydown', { key: 'Enter' })
+    await wrapper.setProps({ modelValue: { id: 'banana', label: 'Banana' } })
     await flush()
     expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toMatchObject({ id: 'banana' })
     expect(wrapper.emitted('change')?.[0]?.[0]).toMatchObject({ id: 'banana' })
+    expect(input.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.get('.astryx-token').text()).toContain('Banana')
+    expect((input.element as HTMLInputElement).value).toBe('')
     wrapper.unmount()
   })
 
