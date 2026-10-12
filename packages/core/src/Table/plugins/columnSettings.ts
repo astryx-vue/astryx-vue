@@ -18,8 +18,12 @@ export function useTableColumnSettingsState<TColumnKey extends string>(config: {
   columns: readonly ColumnSettingsOption<TColumnKey>[]
   activeColumnKeys: MaybeRefOrGetter<readonly TColumnKey[]>
   onChangeActiveColumnKeys: (keys: TColumnKey[]) => void
-}) {
-  function setActiveColumnKeys(keys: readonly TColumnKey[]) {
+}): {
+  readonly activeColumnKeys: readonly TColumnKey[]
+  setActiveColumnKeys: (keys: readonly TColumnKey[]) => void
+  columnSettingsConfig: UseTableColumnSettingsConfig<TColumnKey>
+} {
+  function setActiveColumnKeys(keys: readonly TColumnKey[]): void {
     const locked = config.columns.filter(column => column.isAlwaysVisible).map(column => column.key)
     const next = [...keys]
     for (const key of locked) {

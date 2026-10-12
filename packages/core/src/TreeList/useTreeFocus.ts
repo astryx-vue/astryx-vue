@@ -12,7 +12,11 @@ function isRtl(element: HTMLElement | null): boolean {
   return element != null && getComputedStyle(element).direction === 'rtl'
 }
 
-export function useTreeFocus(options: UseTreeFocusOptions) {
+export function useTreeFocus(options: UseTreeFocusOptions): {
+  treeRef: Ref<HTMLElement | null>
+  handleKeyDown: (event: KeyboardEvent) => void
+  handleFocus: () => void
+} {
   const treeRef = ref<HTMLElement | null>(null)
   const typeahead = { buffer: '', timer: undefined as ReturnType<typeof setTimeout> | undefined }
 
@@ -31,13 +35,13 @@ export function useTreeFocus(options: UseTreeFocusOptions) {
     return Number(item.getAttribute('aria-level') ?? '1')
   }
 
-  function focusItem(item: HTMLElement) {
+  function focusItem(item: HTMLElement): void {
     for (const candidate of items())
       candidate.tabIndex = candidate === item ? 0 : -1
     item.focus()
   }
 
-  function focusEnabledFrom(list: HTMLElement[], start: number, step: 1 | -1) {
+  function focusEnabledFrom(list: HTMLElement[], start: number, step: 1 | -1): void {
     for (let index = start; index >= 0 && index < list.length; index += step) {
       const item = list[index]
       if (item != null && !disabled(item)) {
@@ -47,7 +51,7 @@ export function useTreeFocus(options: UseTreeFocusOptions) {
     }
   }
 
-  function syncTabStops() {
+  function syncTabStops(): void {
     const list = items()
     const active = document.activeElement
     const current = active instanceof Element ? active.closest<HTMLElement>('[role="treeitem"]') : null
@@ -58,7 +62,7 @@ export function useTreeFocus(options: UseTreeFocusOptions) {
 
   onMounted(syncTabStops)
 
-  function handleKeyDown(event: KeyboardEvent) {
+  function handleKeyDown(event: KeyboardEvent): void {
     const list = items()
     if (list.length === 0)
       return
@@ -162,7 +166,7 @@ export function useTreeFocus(options: UseTreeFocusOptions) {
     }
   }
 
-  function handleFocus() {
+  function handleFocus(): void {
     syncTabStops()
   }
 

@@ -67,7 +67,7 @@ function wallClock(date: Date, timeZone: string | undefined): WallClock {
     minute: '2-digit',
     second: '2-digit',
   }).formatToParts(date)
-  const read = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find(part => part.type === type)?.value ?? 0)
+  const read = (type: Intl.DateTimeFormatPartTypes): number => Number(parts.find(part => part.type === type)?.value ?? 0)
   return {
     year: read('year'),
     month: read('month'),

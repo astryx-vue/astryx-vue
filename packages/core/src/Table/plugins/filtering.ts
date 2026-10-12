@@ -1,4 +1,4 @@
-import type { MaybeRefOrGetter } from 'vue'
+import type { MaybeRefOrGetter, Ref } from 'vue'
 import type { TableColumn, TableFilterField, TableFilterState, TableFilterValue, TablePlugin } from '../types.js'
 import { ref, toValue } from 'vue'
 
@@ -9,9 +9,13 @@ export interface UseTableFilteringConfig {
   variant?: 'inline' | 'popover'
 }
 
-export function useTableFilterState(initial: TableFilterState = {}) {
+export function useTableFilterState(initial: TableFilterState = {}): {
+  filters: Ref<TableFilterState>
+  onFilterChange: (key: string, value: TableFilterValue | null) => void
+  clearAll: () => void
+} {
   const filters = ref<TableFilterState>({ ...initial })
-  function onFilterChange(key: string, value: TableFilterValue | null) {
+  function onFilterChange(key: string, value: TableFilterValue | null): void {
     const next = { ...filters.value }
     if (value == null || value === '' || (Array.isArray(value) && value.length === 0))
       delete next[key]
@@ -19,7 +23,7 @@ export function useTableFilterState(initial: TableFilterState = {}) {
       next[key] = value
     filters.value = next
   }
-  function clearAll() {
+  function clearAll(): void {
     filters.value = {}
   }
   return { filters, onFilterChange, clearAll }

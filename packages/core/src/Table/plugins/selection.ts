@@ -15,7 +15,9 @@ function rowId<T extends Record<string, unknown>>(row: T, idKey: string): string
   return String(row[idKey] ?? '')
 }
 
-export function useTableSelectionState<T extends Record<string, unknown>>(config: UseTableSelectionStateConfig<T>) {
+export function useTableSelectionState<T extends Record<string, unknown>>(config: UseTableSelectionStateConfig<T>): {
+  selectionConfig: UseTableSelectionConfig<T> & { readonly rows: readonly T[] }
+} {
   const selectable = computed(() => toValue(config.data))
   const selectionConfig = {
     getIsItemSelected: (item: T) => toValue(config.selectedKeys).has(rowId(item, config.idKey)),

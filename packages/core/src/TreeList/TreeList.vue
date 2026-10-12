@@ -99,6 +99,7 @@ function onKeyDown(event: KeyboardEvent) {
 </script>
 
 <template>
+  <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 方向键从内部 role="tree" 冒泡上来，这一层只负责转发给树的键盘逻辑。 -->
   <div
     class="astryx-tree-list"
     :class="$attrs.class"

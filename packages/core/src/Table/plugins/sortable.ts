@@ -1,4 +1,4 @@
-import type { MaybeRefOrGetter } from 'vue'
+import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { TableColumn, TablePlugin, TableSortDirection, TableSortState } from '../types.js'
 import { computed, ref, toValue } from 'vue'
 import { useAstryxMessages } from '../../locale/context.js'
@@ -15,7 +15,11 @@ export function useTableSortableState<T extends Record<string, unknown>>(options
   data: MaybeRefOrGetter<readonly T[]>
   columns?: MaybeRefOrGetter<readonly TableColumn<T>[]>
   defaultSort?: TableSortState
-}) {
+}): {
+  sortedData: ComputedRef<T[]>
+  sort: Ref<TableSortState>
+  sortConfig: UseTableSortableConfig
+} {
   const sort = ref<TableSortState>(options.defaultSort ?? [])
   const sortedData = computed(() => sortRows(toValue(options.data), sort.value, toValue(options.columns) ?? []))
   const sortConfig: UseTableSortableConfig = {

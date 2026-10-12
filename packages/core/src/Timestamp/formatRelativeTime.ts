@@ -12,7 +12,7 @@ type RelativeTimeUnit = 'second' | 'minute' | 'hour' | 'day' | 'month' | 'year'
 
 const formatters = new Map<string, Intl.RelativeTimeFormat>()
 
-function formatter(locale: AstryxLocale, style: RelativeTimeStyle, numeric: Intl.RelativeTimeFormatNumeric) {
+function formatter(locale: AstryxLocale, style: RelativeTimeStyle, numeric: Intl.RelativeTimeFormatNumeric): Intl.RelativeTimeFormat {
   const key = JSON.stringify([locale, style, numeric])
   let value = formatters.get(key)
   if (value == null) {

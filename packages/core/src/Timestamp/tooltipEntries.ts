@@ -24,7 +24,7 @@ function resolveTimezone(timezoneID: string | undefined): string | undefined {
   if (timezoneID == null || timezoneID.toLowerCase() === LOCAL_ZONE)
     return undefined
   try {
-    new Intl.DateTimeFormat('en-US', { timeZone: timezoneID })
+    new Intl.DateTimeFormat('en-US', { timeZone: timezoneID }).format()
   }
   catch {
     if (!warned.has(timezoneID)) {

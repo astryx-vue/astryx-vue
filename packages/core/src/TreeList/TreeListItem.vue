@@ -90,6 +90,7 @@ function onToggle(event: MouseEvent) {
       </span>
     </template>
     <div class="astryx-tree-list__row">
+      <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 键盘由外层 role="tree" 处理，这一层只接指针点击。 -->
       <div
         class="astryx-tree-list__content"
         :data-density="density"
