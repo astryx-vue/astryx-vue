@@ -285,3 +285,13 @@
     }
   }
 }
+
+/* Unlayered: the field chrome owns focus. A page ring on the trigger or search input stacks a second outline. */
+.astryx-selector-trigger:focus,
+.astryx-selector-trigger:focus-visible,
+.astryx-selector-search-input:focus,
+.astryx-selector-search-input:focus-visible,
+.astryx-selector-clear:focus,
+.astryx-selector-clear:focus-visible {
+  outline: none;
+}

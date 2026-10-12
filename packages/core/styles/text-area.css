@@ -42,7 +42,6 @@
 
   .astryx-text-area-control:focus,
   .astryx-text-area-control:focus-visible {
-    outline: none;
     box-shadow: none;
   }
 
@@ -138,4 +137,10 @@
       opacity: 1;
     }
   }
+}
+
+/* Unlayered: the field chrome owns focus. A page ring on the inner textarea stacks a second outline. */
+.astryx-text-area-control:focus,
+.astryx-text-area-control:focus-visible {
+  outline: none;
 }
