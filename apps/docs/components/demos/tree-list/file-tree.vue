@@ -9,13 +9,13 @@ const items: TreeListItemData[] = [
     id: 'src',
     label: 'src',
     isExpanded: true,
-    icon: 'i-carbon-folder',
+    icon: 'i-heroicons-folder',
     children: [
-      { id: 'app', label: 'App.tsx', onClick: noop, icon: 'i-carbon-document' },
-      { id: 'index', label: 'index.tsx', onClick: noop, icon: 'i-carbon-document' },
+      { id: 'app', label: 'App.tsx', onClick: noop, icon: 'i-heroicons-document' },
+      { id: 'index', label: 'index.tsx', onClick: noop, icon: 'i-heroicons-document' },
     ],
   },
-  { id: 'pkg', label: 'package.json', onClick: noop, icon: 'i-carbon-document' },
+  { id: 'pkg', label: 'package.json', onClick: noop, icon: 'i-heroicons-document' },
 ]
 </script>
 
