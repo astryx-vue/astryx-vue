@@ -1,0 +1,41 @@
+---
+title: Patterns
+---
+
+# Patterns
+
+Components follow the upstream grain, so a surface is a composition rather than one widget. The set shipped today is conversation: the transcript, bubbles, citations, and Markdown are separate components, and the app decides how they sit together.
+
+Import `Chat` from `@astryx-vue/core/Chat`. `ChatLayout` is a column. Put the transcript in `ChatMessageList` and the input in the `composer` slot. The layout scrolls itself by default. While the reader is at the bottom, new content stays pinned there. Scrolling up releases the pin and shows a return-to-bottom button. `useChatStreamScroll` and `useChatNewMessages` do that work inside the layout.
+
+```vue
+<script setup lang="ts">
+import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+</script>
+
+<template>
+  <ChatLayout>
+    <ChatMessageList>
+      <ChatMessage sender="user">
+        <ChatMessageBubble>
+          Can you check the release notes?
+        </ChatMessageBubble>
+      </ChatMessage>
+      <ChatMessage sender="assistant">
+        <ChatMessageBubble name="Assistant">
+          They are in the docs.
+        </ChatMessageBubble>
+      </ChatMessage>
+    </ChatMessageList>
+    <template #composer>
+      <form><!-- the app owns the input --></form>
+    </template>
+  </ChatLayout>
+</template>
+```
+
+These components do not call a model, and they do not render Markdown. The body is a slot. Typeset a reply with `Markdown` from `@astryx-vue/core/Markdown`. Mark a source with `Citation` from `@astryx-vue/core/Citation`. Tool calls, reasoning, and the typing indicator are `ChatToolCalls`, `ChatReasoning`, and `ChatTypingIndicator`, exported from the `Chat` entry.
+
+`sender` is `user`, `assistant`, or `system`. System rows use `ChatSystemMessage`. They are centered and do not render an avatar or a name.
+
+Demos, density, and the unread divider are on [Chat](/en/components/chat). Citation and Markdown have their own pages. The other page templates in the upstream docs do not have full-page presets here.
