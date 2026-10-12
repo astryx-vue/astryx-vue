@@ -9,9 +9,17 @@ const successVal = shallowRef('2026-03-10T10:30')
 </script>
 
 <template>
-  <VStack :gap="4" style="width: 100%; max-width: 400px">
-    <DateTimeInput v-model="errorVal" label="Meeting time" :status="{ type: 'error', message: 'This time slot is already booked' }" />
-    <DateTimeInput v-model="warningVal" label="Preferred time" :status="{ type: 'warning', message: 'This falls outside business hours' }" />
-    <DateTimeInput v-model="successVal" label="Start time" :status="{ type: 'success', message: 'Time confirmed' }" />
-  </VStack>
+  <div class="date-time-demo">
+    <VStack :gap="4">
+      <DateTimeInput v-model="errorVal" label="Meeting time" :status="{ type: 'error', message: 'This time slot is already booked' }" />
+      <DateTimeInput v-model="warningVal" label="Preferred time" :status="{ type: 'warning', message: 'This falls outside business hours' }" />
+      <DateTimeInput v-model="successVal" label="Start time" :status="{ type: 'success', message: 'Time confirmed' }" />
+    </VStack>
+  </div>
 </template>
+
+<style scoped>
+.date-time-demo {
+  width: min(100%, 25rem);
+}
+</style>
