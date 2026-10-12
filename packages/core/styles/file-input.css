@@ -79,3 +79,9 @@
     color: var(--astryx-color-text-secondary, #525252);
   }
 }
+
+/* Unlayered: the bordered control owns focus. A page ring on the trigger stacks a second outline. */
+.astryx-file-input-trigger:focus,
+.astryx-file-input-trigger:focus-visible {
+  outline: none;
+}

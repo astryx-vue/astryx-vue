@@ -115,8 +115,12 @@
   }
 
   .astryx-calendar-cell.is-selected {
-    background: var(--astryx-button-primary-background, light-dark(#262626, #ebebeb));
-    color: var(--astryx-button-primary-foreground, light-dark(#ffffff, #171717));
+    background: light-dark(#1b1b1b, #f1f1f1);
+    color: light-dark(#ffffff, #111111);
+  }
+
+  .astryx-calendar-cell.is-today.is-selected {
+    box-shadow: inset 0 0 0 1px light-dark(#000000, #ffffff);
   }
 
   .astryx-calendar-cell.is-disabled {
@@ -126,6 +130,8 @@
   }
 
   .astryx-calendar-day {
+    position: relative;
+    z-index: 1;
     font-size: var(--astryx-text-body-size, 0.875rem);
   }
 

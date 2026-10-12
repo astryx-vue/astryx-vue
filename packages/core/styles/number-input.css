@@ -109,3 +109,9 @@
     }
   }
 }
+
+/* Unlayered: the field chrome owns focus. A page ring on the inner input stacks a second outline. */
+.astryx-number-input-field:focus,
+.astryx-number-input-field:focus-visible {
+  outline: none;
+}

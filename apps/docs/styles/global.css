@@ -128,7 +128,13 @@ samp {
 /* The date field container owns its rounded focus treatment. */
 .astryx-date-input-field:focus-visible,
 .astryx-date-input-toggle:focus-visible,
-.astryx-date-input-clear:focus-visible {
+.astryx-date-input-clear:focus-visible,
+.astryx-time-input-control:focus-visible,
+.astryx-number-input-field:focus-visible,
+.astryx-file-input-trigger:focus-visible,
+.astryx-selector-trigger:focus-visible,
+.astryx-selector-search-input:focus-visible,
+.astryx-selector-clear:focus-visible {
   outline: none;
 }
 

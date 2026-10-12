@@ -42,3 +42,10 @@
     display: none;
   }
 }
+
+/* Unlayered: a page-level :focus-visible ring must not draw a second box
+   inside the field. The bordered control's focus-within border is the focus treatment. */
+.astryx-time-input-control:focus,
+.astryx-time-input-control:focus-visible {
+  outline: none;
+}

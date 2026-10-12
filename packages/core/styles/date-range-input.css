@@ -108,18 +108,56 @@
     min-width: 14rem;
   }
 
+  /* The range band sits behind the day. Start and end stay full circles
+     with the measured fill, so their text does not sink into the band. */
   .astryx-calendar-cell.is-in-range {
-    border-radius: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: transparent;
+  }
+
+  .astryx-calendar-cell.is-in-range::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 2px 0;
     background: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
   }
 
-  .astryx-calendar-cell.is-range-start {
-    border-start-start-radius: var(--astryx-radius-full, 9999px);
-    border-end-start-radius: var(--astryx-radius-full, 9999px);
+  .astryx-calendar-cell.is-range-start::before {
+    inset: 2px 0 2px 2px;
+    border-radius: 9999px 0 0 9999px;
   }
 
+  .astryx-calendar-cell.is-range-end::before {
+    inset: 2px 2px 2px 0;
+    border-radius: 0 9999px 9999px 0;
+  }
+
+  .astryx-calendar-cell.is-range-start.is-range-end::before {
+    content: none;
+  }
+
+  .astryx-calendar-cell.is-range-start,
   .astryx-calendar-cell.is-range-end {
-    border-start-end-radius: var(--astryx-radius-full, 9999px);
-    border-end-end-radius: var(--astryx-radius-full, 9999px);
+    color: light-dark(#ffffff, #111111);
+  }
+
+  .astryx-calendar-cell.is-range-start::after,
+  .astryx-calendar-cell.is-range-end::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: 9999px;
+    background: light-dark(#1b1b1b, #f1f1f1);
+  }
+
+  .astryx-calendar-cell.is-today.is-range-start::after,
+  .astryx-calendar-cell.is-today.is-range-end::after {
+    box-shadow: inset 0 0 0 1px light-dark(#000000, #ffffff);
+  }
+
+  .astryx-date-range-calendar .astryx-calendar-day {
+    z-index: 2;
   }
 }
