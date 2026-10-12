@@ -27,7 +27,7 @@ const meeting = shallowRef<string | null>(null)
 </template>
 ```
 
-The date uses DateInput. The time uses the same field as TimeInput. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 17.5rem. Clear removes both parts.
+The date uses DateInput. The time uses the same field as TimeInput. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. Clear removes both parts.
 
 ## Best practices
 

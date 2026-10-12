@@ -20,6 +20,7 @@ const successVal = shallowRef('2026-03-10T10:30')
 
 <style scoped>
 .date-time-demo {
-  width: min(100%, 25rem);
+  width: 25rem;
+  max-width: 100%;
 }
 </style>
