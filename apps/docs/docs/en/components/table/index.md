@@ -59,7 +59,7 @@ const columns = [
 
 Filtering is self-contained. It does not depend on PowerSearch, which this library does not include. Pass the filter state through a getter so the table reads the latest value:
 
-```vue
+```ts
 const { filters, onFilterChange } = useTableFilterState()
 const filterPlugin = useTableFiltering(() => ({
   filters: filters.value,
