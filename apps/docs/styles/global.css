@@ -1655,8 +1655,36 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  * instead of being restated here.
  */
 .vp-doc .astryx-breadcrumbs :is(ol, ul, li),
-.vp-doc .astryx-list :is(ol, ul, li) {
+.vp-doc .astryx-list :is(ol, ul, li),
+.vp-doc .astryx-tree-list :is(ol, ul, li) {
   all: revert-layer;
+}
+
+/*
+ * VitePress paints every table in `.vp-doc` without a layer: block display,
+ * 8px 16px cell padding, a left-aligned header, full borders, and zebra rows.
+ * Those beat `@layer astryx.components`, so Table density and column alignment
+ * never reach the docs. Rolling the prose declarations back lets the component
+ * own its cells.
+ */
+.vp-doc .astryx-table,
+.vp-doc .astryx-table :is(thead, tbody, tfoot, tr, th, td) {
+  all: revert-layer;
+}
+
+/* `.vp-doc img` adds a 1rem margin that shifts the thumbnail out of its frame. */
+.vp-doc .astryx-thumbnail img {
+  all: revert-layer;
+}
+
+/*
+ * The docs base sets `font-weight: 400` on every button, which outranks the
+ * component layer. Revert just that pair so header labels, tree actions, and
+ * metadata toggles keep the weight the component declares.
+ */
+.vp-doc :is(.astryx-table, .astryx-tree-list, .astryx-metadata-list, .astryx-thumbnail) :is(button, input) {
+  font-family: revert-layer;
+  font-weight: revert-layer;
 }
 
 /* Docs: override unlayered VitePress .vp-doc styles for component examples */

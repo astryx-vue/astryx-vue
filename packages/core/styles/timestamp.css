@@ -5,6 +5,23 @@
     display: inline;
   }
 
+  /*
+   * Text's supporting type paints a secondary color, and that class is as
+   * specific as the color modifier. The color prop has to win, matching the
+   * original `.astryx-text[data-color]` override.
+   */
+  .astryx-timestamp[data-color='primary'] {
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  }
+
+  .astryx-timestamp[data-color='secondary'] {
+    color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
+  }
+
+  .astryx-timestamp[data-color='accent'] {
+    color: var(--astryx-color-text-accent, #0074e2);
+  }
+
   .astryx-timestamp[data-color='disabled'] {
     color: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
   }
