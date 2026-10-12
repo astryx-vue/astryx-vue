@@ -7,8 +7,8 @@ title: 主题与样式
 一个应用最少引入两样东西：主题，以及组件的结构样式。
 
 ```ts
-import '@astryx-vue/themes/neutral.css'
 import { Button } from '@astryx-vue/core/Button'
+import '@astryx-vue/themes/neutral.css'
 ```
 
 `Button` 的入口会带上 `button` 的结构样式。主题入口带上 Neutral 的变量，包括按钮用到的 `--astryx-button-*`。缺了主题，组件仍有结构，但没有这套颜色和度量。缺了结构样式，变量没有对应的规则可用。

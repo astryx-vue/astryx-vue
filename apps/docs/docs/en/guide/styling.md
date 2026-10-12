@@ -7,8 +7,8 @@ title: Theme and styles
 An app imports two things at minimum: a theme, and structural styles for the components it uses.
 
 ```ts
-import '@astryx-vue/themes/neutral.css'
 import { Button } from '@astryx-vue/core/Button'
+import '@astryx-vue/themes/neutral.css'
 ```
 
 The `Button` entry loads the structural sheet for `button`. The theme entry loads Neutral's variables, including the `--astryx-button-*` names that button reads. Without the theme, the structure is there and the color and metrics are not. Without the structural sheet, the variables have no rules to feed.
