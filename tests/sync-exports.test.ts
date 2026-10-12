@@ -31,6 +31,8 @@ const expectedCatalog = [
   { slug: 'kbd', group: 'Content', en: 'Kbd', zh: '快捷键' },
   { slug: 'markdown', group: 'Content', en: 'Markdown', zh: 'Markdown' },
   { slug: 'text', group: 'Content', en: 'Text', zh: '文本' },
+  { slug: 'thumbnail', group: 'Content', en: 'Thumbnail', zh: '缩略图' },
+  { slug: 'timestamp', group: 'Content', en: 'Timestamp', zh: '时间戳' },
   { slug: 'token', group: 'Content', en: 'Token', zh: '标签' },
   { slug: 'badge', group: 'Feedback & Status', en: 'Badge', zh: '徽标' },
   { slug: 'banner', group: 'Feedback & Status', en: 'Banner', zh: '提示条' },
@@ -77,7 +79,10 @@ const expectedCatalog = [
   { slug: 'toast', group: 'Overlay', en: 'Toast', zh: '轻提示' },
   { slug: 'tooltip', group: 'Overlay', en: 'Tooltip', zh: '提示框' },
   { slug: 'list', group: 'Table & List', en: 'List', zh: '列表' },
+  { slug: 'metadata-list', group: 'Table & List', en: 'Metadata List', zh: '元数据列表' },
   { slug: 'overflow-list', group: 'Table & List', en: 'Overflow List', zh: '溢出列表' },
+  { slug: 'table', group: 'Table & List', en: 'Table', zh: '表格' },
+  { slug: 'tree-list', group: 'Table & List', en: 'Tree List', zh: '树形列表' },
   { slug: 'visually-hidden', group: 'Utility', en: 'Visually Hidden', zh: '视觉隐藏' },
 ]
 

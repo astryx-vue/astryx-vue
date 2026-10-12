@@ -45,6 +45,11 @@ export type IconName
     | 'check'
     | 'moreHorizontal'
     | 'copy'
+    | 'arrowUp'
+    | 'arrowDown'
+    | 'close'
+    | 'funnel'
+    | 'image'
 
 /**
  * A built-in name, or any other string.
