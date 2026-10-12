@@ -1,19 +1,23 @@
 ---
 title: Themes
-outline: false
-footer: false
 ---
 
-Neutral is the theme this package ships today. Load it with:
+# Themes
+
+A theme decides the color, type, radius, shadow, and motion duration the components use. Structural styles live in `@astryx-vue/core`. Themes live in `@astryx-vue/themes`. Install and import them separately.
+
+Neutral is the default theme: neutral gray, with light and dark stops on the same CSS variables, and no brand hue locked in. Customizations and overrides follow the same variable names and structure.
+
+To use it:
+
+1. Install `@astryx-vue/themes`.
+2. Import `@astryx-vue/themes/neutral.css` once from the app entry.
+3. When something has to change, override the `--astryx-*` variable. Leave the structural styles alone.
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-That import loads JetBrains Mono with the theme. `--astryx-font-family-code` names it first, then `ui-monospace`, `SFMono-Regular`, `Menlo`, `Consolas`, and `monospace`. The theme entry loads weights 400, 500, 600, and 700, plus italic at 400. Those are the faces `font-synthesis: none` can use: the browser does not invent a missing weight or italic.
+That import loads JetBrains Mono. The body and heading stacks name Figtree first, then system sans fonts. Figtree is not in the theme package. Load it yourself if you want that face.
 
-Semantic tokens live in `packages/themes/neutral/base.css`. Names follow upstream `tokens.stylex.ts` and add an `--astryx-` prefix. Each token writes its light and dark stops with `light-dark()`. A value comes from the Neutral theme when that theme overrides it, and from the upstream default otherwise.
-
-A few of the same names are still declared in component theme files, including the type sizes in `text.css` and the blue `--astryx-color-text-accent`. Those later declarations win, so existing components keep their current appearance. A later theme pass will fold the duplicates back into this layer.
-
-<TokenReference locale="en" />
+Next: what [Neutral](/en/themes/neutral) overrides today, how [design tokens](/en/themes/tokens) map onto [CSS variables](/en/themes/css-variables), or the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages. To change the look, read [Extending a theme](/en/themes/extending).

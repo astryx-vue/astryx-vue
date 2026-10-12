@@ -1,16 +1,19 @@
+import type { DefaultTheme } from 'vitepress'
 import { fileURLToPath } from 'node:url'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import unoConfig from '../uno.config.ts'
 import { demoSourcePlugin } from './demoSourcePlugin.ts'
+import { guideSidebar, themeSidebar } from './sidebar.ts'
 
-function navigation(english: boolean): { text: string, link: string }[] {
+function navigation(english: boolean): DefaultTheme.NavItem[] {
   const prefix = english ? '/en' : ''
   return [
-    { text: english ? 'Docs' : '文档', link: `${prefix}/guide/getting-started` },
-    { text: english ? 'Components' : '组件', link: `${prefix}/components/` },
-    { text: english ? 'Playground' : '演练场', link: `${prefix}/playground/` },
-    { text: english ? 'Themes' : '主题', link: `${prefix}/themes/` },
+    { text: english ? 'Docs' : '文档', link: `${prefix}/guide/why`, activeMatch: `^${prefix}/guide/` },
+    { text: english ? 'Components' : '组件', link: `${prefix}/components/`, activeMatch: `^${prefix}/components/` },
+    // 演练场先从顶部导航拿掉，页面文件还留着。
+    // { text: english ? 'Playground' : '演练场', link: `${prefix}/playground/` },
+    { text: english ? 'Themes' : '主题', link: `${prefix}/themes/`, activeMatch: `^${prefix}/themes/` },
   ]
 }
 
@@ -27,12 +30,28 @@ export default defineConfig({
   head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
   appearance: 'dark',
   locales: {
-    root: { label: '简体中文', lang: 'zh-CN', themeConfig: { nav: navigation(false) } },
+    root: {
+      label: '简体中文',
+      lang: 'zh-CN',
+      themeConfig: {
+        nav: navigation(false),
+        sidebar: {
+          '/guide/': guideSidebar(false),
+          '/themes/': themeSidebar(false),
+        },
+      },
+    },
     en: {
       label: 'English',
       lang: 'en',
       description: 'A community Vue 3 implementation of the Astryx design system.',
-      themeConfig: { nav: navigation(true) },
+      themeConfig: {
+        nav: navigation(true),
+        sidebar: {
+          '/en/guide/': guideSidebar(true),
+          '/en/themes/': themeSidebar(true),
+        },
+      },
     },
   },
   themeConfig: {

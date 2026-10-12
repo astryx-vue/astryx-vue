@@ -12,9 +12,17 @@ import {
 
 } from './parseTokens'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   locale: 'zh' | 'en'
-}>()
+  /** Limit the reference to these sections. Omit to show every section. */
+  sections?: TokenSectionId[]
+  /** Show the shared motion samples. Defaults to on only for the full reference. */
+  motion?: boolean
+  /** Render each section title and description. */
+  headings?: boolean
+}>(), {
+  headings: true,
+})
 
 const properties = parseCustomProperties(baseCss)
 const byName = new Map(properties.map(property => [property.name, property.value]))
@@ -174,14 +182,18 @@ const notes: Record<string, { zh: string, en: string }> = {
 
 const sectionOrder: TokenSectionId[] = ['color', 'spacing', 'size', 'border', 'focus', 'radius', 'shadow', 'duration', 'ease', 'font', 'type']
 
-const sections = computed(() => sectionOrder.map((id) => {
+const sections = computed(() => sectionOrder.flatMap((id) => {
+  if (props.sections != null && !props.sections.includes(id))
+    return []
   const items = properties.filter(property => sectionId(property.name) === id)
-  return {
+  return [{
     id,
     ...sectionCopy[id],
     items,
-  }
+  }]
 }))
+
+const showMotion = computed(() => props.motion ?? props.sections == null)
 
 const colorGroups = computed(() => {
   const colors = properties.filter(property => sectionId(property.name) === 'color')
@@ -248,8 +260,12 @@ function replay() {
 <template>
   <div class="token-reference">
     <section v-for="section in sections" :key="section.id" class="token-section">
-      <h2>{{ text(section.title) }}</h2>
-      <p>{{ text(section.description) }}</p>
+      <h2 v-if="headings">
+        {{ text(section.title) }}
+      </h2>
+      <p v-if="headings">
+        {{ text(section.description) }}
+      </p>
 
       <div v-if="section.id === 'color'" class="color-groups">
         <div v-for="group in colorGroups" :key="group.bucket">
@@ -310,9 +326,13 @@ function replay() {
       </div>
     </section>
 
-    <section class="token-section">
-      <h2>{{ props.locale === 'zh' ? '动画' : 'Motion' }}</h2>
-      <p>{{ text(copy.motionLead) }}</p>
+    <section v-if="showMotion" class="token-section">
+      <h2 v-if="headings">
+        {{ props.locale === 'zh' ? '动画' : 'Motion' }}
+      </h2>
+      <p v-if="headings">
+        {{ text(copy.motionLead) }}
+      </p>
       <div class="motion-toolbar">
         <button type="button" class="replay" @click="replay">
           {{ text(copy.replay) }}
