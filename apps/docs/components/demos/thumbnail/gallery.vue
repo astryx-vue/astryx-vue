@@ -21,7 +21,7 @@ function remove(id: number) {
     <Text type="supporting" color="secondary">
       {{ pick('点击预览，点关闭移除', 'Click to preview, dismiss to remove') }}
     </Text>
-    <Stack v-align="center" direction="horizontal" :gap="2">
+    <Stack align="center" direction="horizontal" :gap="2">
       <Thumbnail
         v-for="item in items"
         :key="item.id"

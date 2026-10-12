@@ -25,7 +25,7 @@ const columns: TableColumn<User>[] = [
 ]
 
 const columnWidths = ref<Record<string, number>>({})
-const resizePlugin = useTableColumnResize(() => ({
+const resizePlugin = useTableColumnResize<User>(() => ({
   columnWidths: columnWidths.value,
   onColumnResizeEnd: (updates) => {
     columnWidths.value = { ...columnWidths.value, ...updates }

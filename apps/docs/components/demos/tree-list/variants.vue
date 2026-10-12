@@ -29,7 +29,7 @@ const items: TreeListItemData[] = [
 </script>
 
 <template>
-  <Stack v-align="start" direction="horizontal" :gap="6" h-align="start" wrap="wrap">
+  <Stack align="start" direction="horizontal" :gap="6" h-align="start" wrap="wrap">
     <Stack direction="vertical" :gap="2">
       <Text type="supporting" color="secondary" weight="bold">
         lineGuides (default)

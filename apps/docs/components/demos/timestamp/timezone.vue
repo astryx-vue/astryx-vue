@@ -14,7 +14,7 @@ const { pick } = useDemoText()
       <Text type="supporting" color="secondary">
         {{ pick('面向读者，并带上时区', 'User-facing with timezone') }}
       </Text>
-      <Stack v-align="center" direction="horizontal" :gap="4" wrap="wrap">
+      <Stack align="center" direction="horizontal" :gap="4" wrap="wrap">
         <Timestamp :value="DATE" format="date_time" is-timezone-shown color="primary" />
         <Timestamp :value="DATE" format="time" is-timezone-shown color="primary" />
       </Stack>
@@ -23,7 +23,7 @@ const { pick } = useDemoText()
       <Text type="supporting" color="secondary">
         {{ pick('系统格式保持机器可读，不会追加时区', 'System formats stay machine-readable — never suffixed with a zone') }}
       </Text>
-      <Stack v-align="center" direction="horizontal" :gap="4" wrap="wrap">
+      <Stack align="center" direction="horizontal" :gap="4" wrap="wrap">
         <Timestamp :value="DATE" format="system_date_time" type="code" color="primary" />
         <Timestamp :value="DATE" format="system_time" type="code" color="primary" />
       </Stack>

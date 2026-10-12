@@ -14,7 +14,7 @@ const { pick } = useDemoText()
       <Text type="supporting" color="secondary">
         {{ pick('面向读者的格式', 'User-facing formats') }}
       </Text>
-      <Stack v-align="center" direction="horizontal" :gap="4" wrap="wrap">
+      <Stack align="center" direction="horizontal" :gap="4" wrap="wrap">
         <Timestamp :value="DATE" format="date" color="primary" />
         <Timestamp :value="DATE" format="date_long" color="primary" />
         <Timestamp :value="DATE" format="date_weekday" color="primary" />
@@ -26,7 +26,7 @@ const { pick } = useDemoText()
       <Text type="supporting" color="secondary">
         {{ pick('系统格式，适合日志和开发工具', 'System formats (logs and dev tools)') }}
       </Text>
-      <Stack v-align="center" direction="horizontal" :gap="4" wrap="wrap">
+      <Stack align="center" direction="horizontal" :gap="4" wrap="wrap">
         <Timestamp :value="DATE" format="system_date" type="code" color="primary" />
         <Timestamp :value="DATE" format="system_date_time" type="code" color="primary" />
         <Timestamp :value="DATE" format="system_time" type="code" color="primary" />

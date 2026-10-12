@@ -20,7 +20,7 @@ function remove(id: number) {
     <Text type="supporting" color="secondary">
       {{ pick('删除按钮会按图片明暗调整对比度', 'Remove button adapts contrast to image luminance') }}
     </Text>
-    <Stack v-align="center" direction="horizontal" :gap="3">
+    <Stack align="center" direction="horizontal" :gap="3">
       <Thumbnail
         v-for="item in items"
         :key="item.id"

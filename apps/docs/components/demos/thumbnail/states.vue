@@ -14,7 +14,7 @@ const { pick } = useDemoText()
       <Text type="supporting" color="secondary">
         {{ pick('从空到上传、处理，再到完成', 'Lifecycle: empty → uploading → processing → loaded') }}
       </Text>
-      <Stack v-align="end" direction="horizontal" :gap="3">
+      <Stack align="end" direction="horizontal" :gap="3">
         <Stack direction="vertical" :gap="1" h-align="center">
           <Thumbnail label="report.pdf" />
           <Text type="supporting" color="secondary">

@@ -16,7 +16,7 @@ function noop() {}
       <Text type="supporting" color="secondary">
         {{ pick('可用', 'Enabled') }}
       </Text>
-      <Stack v-align="center" direction="horizontal" :gap="3">
+      <Stack align="center" direction="horizontal" :gap="3">
         <Thumbnail
           :src="GOLDEN_SUNSET"
           alt="Golden sunset over mountains"
@@ -35,7 +35,7 @@ function noop() {}
       <Text type="supporting" color="secondary">
         {{ pick('禁用', 'Disabled') }}
       </Text>
-      <Stack v-align="center" direction="horizontal" :gap="3">
+      <Stack align="center" direction="horizontal" :gap="3">
         <Thumbnail
           :src="GOLDEN_SUNSET"
           alt="Golden sunset over mountains"
