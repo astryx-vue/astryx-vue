@@ -2,6 +2,14 @@
   width: min(100%, 560px);
 }
 
+.section-preview .astryx-heading--level-4 {
+  margin: 0;
+  font-size: var(--astryx-heading-level-4-size, 0.875rem);
+  font-weight: var(--astryx-font-weight-bold, 700);
+  line-height: var(--astryx-text-heading-4-leading, 1.4286);
+  letter-spacing: normal;
+}
+
 .section-preview .layout-title,
 .layout-preview .layout-title,
 .app-shell-preview .layout-title,

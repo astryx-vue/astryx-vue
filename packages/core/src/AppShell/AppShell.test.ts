@@ -1,7 +1,9 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
-import { defineComponent } from 'vue'
+import { describe, expect, it, vi } from 'vitest'
+import { defineComponent, h } from 'vue'
 import { useAppShellMobile } from '../composables/useAppShellMobile.js'
+import SideNav from '../SideNav/SideNav.vue'
+import SideNavHeading from '../SideNav/SideNavHeading.vue'
 import AppShell from './AppShell.vue'
 
 const Outside = defineComponent({
@@ -32,6 +34,36 @@ describe('app shell', () => {
     expect(main.text()).toContain('Page Content')
     expect(wrapper.get('.astryx-layout-panel').text()).toContain('App Shell')
     expect(wrapper.attributes('data-variant')).toBe('elevated')
+  })
+
+  it('shows the side nav title and open navigation control below the breakpoint', () => {
+    const original = window.matchMedia
+    window.matchMedia = vi.fn(() => ({
+      matches: true,
+      media: '(width < 768px)',
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })) as unknown as typeof window.matchMedia
+
+    const wrapper = mount(AppShell, {
+      props: { contentPadding: 6 },
+      slots: {
+        sideNav: () => h(SideNav, null, {
+          header: () => h(SideNavHeading, { heading: 'App Shell' }),
+          default: () => h('a', { href: '#' }, 'Dashboard'),
+        }),
+        default: () => h('p', 'Page Content'),
+      },
+    })
+
+    const bar = wrapper.get('.astryx-app-shell__mobile-bar')
+    expect(bar.text()).toContain('App Shell')
+    expect(bar.text()).not.toContain('Dashboard')
+    expect(bar.get('button').attributes('aria-label')).toBe('Open navigation')
+    expect(wrapper.find('.astryx-app-shell__sidenav').exists()).toBe(false)
+    expect(wrapper.get('.astryx-mobile-nav').text()).toContain('Dashboard')
+    wrapper.unmount()
+    window.matchMedia = original
   })
 
   it('returns inert defaults outside a shell', () => {

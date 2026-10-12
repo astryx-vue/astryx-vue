@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { defineComponent, nextTick } from 'vue'
+import { defineComponent, nextTick, ref } from 'vue'
 import ResizeHandle from '../Resizable/ResizeHandle.vue'
 import { pixel } from '../Table/columnUtils.js'
 import { percent, useResizable } from './useResizable.js'
@@ -77,6 +77,44 @@ describe('useResizable', () => {
     wrapper.vm.regions.side.resize(100)
     await nextTick()
     expect(wrapper.get('.side').text()).toBe('100')
+    expect(wrapper.get('.main').text()).toBe('300')
+  })
+
+  it('shrinks the lower shrinkOrder first, then restores it when the container grows', async () => {
+    let width = 400
+    const Hosts = defineComponent({
+      setup() {
+        const container = ref<HTMLElement | null>(null)
+        const regions = useResizable({
+          containerRef: container,
+          regions: {
+            main: { defaultSize: 300, minSize: 100, shrinkOrder: 2 },
+            side: { defaultSize: 300, minSize: 100, shrinkOrder: 1 },
+          },
+        })
+        return { container, regions }
+      },
+      template: '<div ref="container" class="box"></div><span class="side">{{ regions.side.size }}</span><span class="main">{{ regions.main.size }}</span>',
+    })
+    const wrapper = mount(Hosts)
+    const box = wrapper.get('.box').element as HTMLElement
+    Object.defineProperty(box, 'clientWidth', { configurable: true, get: () => width })
+
+    wrapper.vm.regions.side.resize(300)
+    await nextTick()
+    expect(wrapper.get('.side').text()).toBe('100')
+    expect(wrapper.get('.main').text()).toBe('300')
+
+    width = 250
+    wrapper.vm.regions.main.resize(300)
+    await nextTick()
+    expect(wrapper.get('.side').text()).toBe('100')
+    expect(wrapper.get('.main').text()).toBe('150')
+
+    width = 800
+    wrapper.vm.regions.side.resize(300)
+    await nextTick()
+    expect(wrapper.get('.side').text()).toBe('300')
     expect(wrapper.get('.main').text()).toBe('300')
   })
 })

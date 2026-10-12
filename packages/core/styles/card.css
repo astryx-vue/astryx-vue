@@ -115,7 +115,7 @@
   }
 
   .astryx-card[data-variant='muted'] {
-    background-color: var(--astryx-card-muted-background, #f5f5f5);
+    background-color: var(--astryx-card-muted-background, var(--astryx-color-background-muted, #f1f1f1));
   }
 
   .astryx-card[data-variant='blue'] {

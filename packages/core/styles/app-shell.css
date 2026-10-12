@@ -88,6 +88,29 @@
     padding-inline: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-app-shell__mobile-bar[data-variant='wash'],
+  .astryx-app-shell__mobile-bar[data-variant='elevated'] {
+    background-color: var(--astryx-color-background-body, #f1f1f1);
+  }
+
+  .astryx-app-shell__mobile-bar[data-variant='surface'],
+  .astryx-app-shell__mobile-bar[data-variant='section'] {
+    background-color: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-app-shell__mobile-nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .astryx-app-shell__mobile-nav > .astryx-mobile-nav-toggle {
+    flex: none;
+    margin-inline-start: auto;
+  }
+
   .astryx-app-shell__main {
     display: contents;
   }

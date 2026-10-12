@@ -10,6 +10,7 @@ import LayoutPanel from '../Layout/LayoutPanel.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import MobileNav from '../MobileNav/MobileNav.vue'
 import MobileNavToggle from '../MobileNav/MobileNavToggle.vue'
+import SideNavRenderMode from '../SideNav/SideNavRenderMode.vue'
 import '../../styles/app-shell.css'
 
 defineOptions({
@@ -153,8 +154,11 @@ function focusMain() {
           role="banner"
           :data-variant="variant"
         >
-          <nav :aria-label="messages.layout.mobileNavigation">
-            <MobileNavToggle :is-open="open" :controls="mobileNavId" @update:is-open="open = $event" />
+          <nav class="astryx-app-shell__mobile-nav" :aria-label="messages.layout.mobileNavigation">
+            <SideNavRenderMode mode="topbar">
+              <slot name="sideNav" />
+            </SideNavRenderMode>
+            <MobileNavToggle :label="messages.nav.openNavigation" :is-open="open" :controls="mobileNavId" @update:is-open="open = $event" />
           </nav>
         </div>
       </template>
@@ -187,7 +191,9 @@ function focusMain() {
       :label="messages.layout.mobileNavigation"
     >
       <div :id="`${mobileNavId}-items`" />
-      <slot name="sideNav" />
+      <SideNavRenderMode mode="drawer-content">
+        <slot name="sideNav" />
+      </SideNavRenderMode>
     </MobileNav>
   </div>
 </template>

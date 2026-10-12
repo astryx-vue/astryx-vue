@@ -7,6 +7,7 @@ export interface NavMessages {
   collapseSidebar: string
   expandSidebar: string
   openMenu: string
+  openNavigation: string
   close: string
   more: string
   moreItems: (count: number) => string
@@ -23,6 +24,7 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     collapseSidebar: 'Collapse sidebar',
     expandSidebar: 'Expand sidebar',
     openMenu: 'Open menu',
+    openNavigation: 'Open navigation',
     close: 'Close',
     more: 'More',
     moreItems: count => `${count} more`,
@@ -37,6 +39,7 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     collapseSidebar: '收起侧边栏',
     expandSidebar: '展开侧边栏',
     openMenu: '打开菜单',
+    openNavigation: '打开导航',
     close: '关闭',
     more: '更多',
     moreItems: count => `还有 ${count} 项`,

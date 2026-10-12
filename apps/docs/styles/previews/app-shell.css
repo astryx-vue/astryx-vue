@@ -1,3 +1,7 @@
+body:not(:has([data-playground-page])) #astryx-app-shell-main {
+  padding-top: var(--astryx-spacing-12, 48px);
+}
+
 .app-shell-preview {
   width: min(100%, 760px);
   height: 360px;

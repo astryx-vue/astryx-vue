@@ -134,6 +134,12 @@ footer: false
         <td>吸附的像素值。距离相等时取第一个。</td>
       </tr>
       <tr>
+        <td><code>shrinkOrder</code></td>
+        <td><code>number</code></td>
+        <td>-</td>
+        <td>多个区域共用 <code>containerRef</code> 时的收缩顺序。容器比这些区域更窄时，数字更小的先收到 <code>minSize</code>。拖拽仍然改的是该区域自己的目标尺寸。</td>
+      </tr>
+      <tr>
         <td><code>direction</code></td>
         <td><code>'horizontal' | 'vertical'</code></td>
         <td><code>'horizontal'</code></td>

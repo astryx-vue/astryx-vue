@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Heading } from '@astryx-vue/core/Heading'
 import { Section } from '@astryx-vue/core/Section'
 import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
@@ -8,9 +9,9 @@ import { Text } from '@astryx-vue/core/Text'
   <VStack :gap="0">
     <Section :dividers="['bottom']" :padding="5" variant="section">
       <VStack :gap="1">
-        <p class="layout-title">
+        <Heading :level="4">
           Account
-        </p>
+        </Heading>
         <Text color="secondary" type="body">
           Manage your profile, email, and password.
         </Text>
@@ -18,9 +19,9 @@ import { Text } from '@astryx-vue/core/Text'
     </Section>
     <Section :dividers="['bottom']" :padding="5" variant="section">
       <VStack :gap="1">
-        <p class="layout-title">
+        <Heading :level="4">
           Notifications
-        </p>
+        </Heading>
         <Text color="secondary" type="body">
           Choose what updates you receive and how.
         </Text>
@@ -28,9 +29,9 @@ import { Text } from '@astryx-vue/core/Text'
     </Section>
     <Section :padding="5" variant="section">
       <VStack :gap="1">
-        <p class="layout-title">
+        <Heading :level="4">
           Privacy
-        </p>
+        </Heading>
         <Text color="secondary" type="body">
           Control who can see your activity and data.
         </Text>

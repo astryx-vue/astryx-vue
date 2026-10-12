@@ -134,6 +134,12 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
         <td>Pixel values to snap to. An equal distance keeps the first value.</td>
       </tr>
       <tr>
+        <td><code>shrinkOrder</code></td>
+        <td><code>number</code></td>
+        <td>-</td>
+        <td>Cascade priority for a <code>regions</code> map that shares <code>containerRef</code>. A lower number shrinks to <code>minSize</code> first when the container is narrower than the regions. Dragging still sets that region’s preferred size.</td>
+      </tr>
+      <tr>
         <td><code>direction</code></td>
         <td><code>'horizontal' | 'vertical'</code></td>
         <td><code>'horizontal'</code></td>

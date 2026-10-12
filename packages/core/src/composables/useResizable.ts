@@ -20,6 +20,7 @@ export interface ResizableRegionConfig {
   collapsible?: boolean
   collapsedSize?: number
   snaps?: number[]
+  /** Cascade priority. A lower number gives up space first when the shared container is narrower than the regions. */
   shrinkOrder?: number
 }
 
@@ -63,6 +64,19 @@ export interface ResizableRegion {
   expand: () => void
   resize: (size: number) => void
   props: ResizableProps
+}
+
+interface CascadeApi {
+  preferred: () => number
+  isCollapsed: () => boolean
+  min: () => number
+  isDragging: () => boolean
+  applyDisplay: (size: number) => void
+}
+
+interface CascadeLink {
+  register: (api: CascadeApi) => void
+  settle: () => void
 }
 
 const DEFAULT_SIZE = 250
@@ -172,7 +186,7 @@ function loadPersistedState(key: string): PersistedResizableState | null {
   return null
 }
 
-function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
+function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLink): ResizableRegion {
   const direction = options.direction ?? 'horizontal'
   const collapsible = options.collapsible ?? false
   const collapsedSize = options.collapsedSize ?? DEFAULT_COLLAPSED_SIZE
@@ -184,6 +198,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
   const controlledCollapse = computed(() => options.isCollapsed)
   let origin = DEFAULT_SIZE
   let settledDefault = false
+  let dragging = false
 
   function currentBasis(): Basis {
     return readBasis(options.containerRef?.value, direction)
@@ -254,15 +269,18 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     applySize(next ? 0 : expandedSize.value, next)
     options.onCollapseChange?.(next)
     persist()
+    cascade?.settle()
   }
 
   function resize(next: number): void {
     applySize(next, false)
+    cascade?.settle()
     options.onSizeChange?.(size.value)
     persist()
   }
 
   function onResizeStart(): void {
+    dragging = true
     origin = isCollapsed.value ? 0 : size.value
   }
 
@@ -277,7 +295,15 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
   }
 
   function onResizeEnd(): void {
+    dragging = false
     persist()
+    cascade?.settle()
+  }
+
+  function applyDisplay(next: number): void {
+    if (isCollapsed.value)
+      return
+    size.value = next
   }
 
   const props = computed<ResizableProps>(() => {
@@ -313,6 +339,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     expandedSize.value = initial
     if (!isCollapsed.value)
       applySize(initial, false)
+    cascade?.settle()
   }
 
   let observer: ResizeObserver | undefined
@@ -327,8 +354,18 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
   onBeforeUnmount(() => observer?.disconnect())
 
   watch(controlledCollapse, (next) => {
-    if (next != null)
+    if (next != null) {
       applySize(next ? 0 : expandedSize.value, next)
+      cascade?.settle()
+    }
+  })
+
+  cascade?.register({
+    preferred: () => expandedSize.value,
+    isCollapsed: () => isCollapsed.value,
+    min: () => limits().min,
+    isDragging: () => dragging,
+    applyDisplay,
   })
 
   return reactive({
@@ -345,15 +382,74 @@ export function useResizable(options: UseResizableMultiConfig): Record<string, R
 export function useResizable(options: UseResizableSingleOptions): ResizableRegion
 export function useResizable(options: UseResizableSingleOptions | UseResizableMultiConfig): ResizableRegion | Record<string, ResizableRegion> {
   if ('regions' in options && options.regions != null) {
+    const direction = options.direction ?? 'horizontal'
+    const entries: { key: string, order: number | undefined, api: CascadeApi }[] = []
+    let ready = false
+
+    function reflow(): void {
+      if (!ready || entries.length === 0 || !entries.some(entry => entry.order != null))
+        return
+      if (entries.some(entry => entry.api.isDragging()))
+        return
+      const element = options.containerRef?.value
+      if (element == null)
+        return
+      const basis = readBasis(element, direction)
+      if (!basis.measured)
+        return
+      const active = entries.filter(entry => !entry.api.isCollapsed())
+      const sizes = new Map(active.map(entry => [entry.key, entry.api.preferred()]))
+      let overflow = active.reduce((sum, entry) => sum + entry.api.preferred(), 0) - basis.px
+      if (overflow > 0) {
+        const order = [...active].sort((left, right) => {
+          const leftOrder = left.order ?? Number.POSITIVE_INFINITY
+          const rightOrder = right.order ?? Number.POSITIVE_INFINITY
+          return leftOrder - rightOrder || entries.indexOf(left) - entries.indexOf(right)
+        })
+        for (const entry of order) {
+          if (overflow <= 0)
+            break
+          const current = sizes.get(entry.key) ?? 0
+          const room = Math.max(0, current - entry.api.min())
+          const take = Math.min(room, overflow)
+          sizes.set(entry.key, current - take)
+          overflow -= take
+        }
+      }
+      for (const entry of active) {
+        const next = sizes.get(entry.key)
+        if (next != null)
+          entry.api.applyDisplay(next)
+      }
+    }
+
     const regions: Record<string, ResizableRegion> = {}
     for (const key of Object.keys(options.regions)) {
+      const config = options.regions[key]
       regions[key] = useSingleRegion({
-        ...options.regions[key],
-        direction: options.direction,
+        ...config,
+        direction,
         containerRef: options.containerRef,
         autoSaveId: options.autoSaveId ? `${options.autoSaveId}:${key}` : undefined,
+      }, {
+        register: (api) => {
+          entries.push({ key, order: config?.shrinkOrder, api })
+        },
+        settle: reflow,
       })
     }
+    ready = true
+
+    let observer: ResizeObserver | undefined
+    onMounted(() => {
+      reflow()
+      const element = options.containerRef?.value
+      if (element == null || typeof ResizeObserver === 'undefined')
+        return
+      observer = new ResizeObserver(() => reflow())
+      observer.observe(element)
+    })
+    onBeforeUnmount(() => observer?.disconnect())
     return regions
   }
   return useSingleRegion(options)
