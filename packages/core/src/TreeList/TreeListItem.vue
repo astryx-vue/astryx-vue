@@ -2,8 +2,8 @@
 import type { TreeListDensity, TreeListItemData, TreeListVariant } from './types.js'
 import { computed } from 'vue'
 import Badge from '../Badge/Badge.vue'
-import Icon from '../Icon/Icon.vue'
 import { isIconGlyph } from '../Icon/glyphs.js'
+import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import '../../styles/tree-list.css'
 
@@ -98,7 +98,6 @@ function onToggle(event: MouseEvent) {
         :data-selected="item.isSelected || undefined"
         :data-disabled="item.isDisabled || undefined"
         :data-interactive="(item.onClick != null || item.href != null || hasChildren) || undefined"
-        :data-nested="nestedLevel > 0 || undefined"
         :style="{ '--_tree-indent': indent }"
         @click="onRowClick"
       >

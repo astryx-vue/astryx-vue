@@ -21,8 +21,6 @@ describe('tree list', () => {
     expect(wrapper.get('[data-tree-id="src"]').attributes('aria-expanded')).toBe('true')
     expect(wrapper.get('[data-tree-id="app"]').attributes('aria-level')).toBe('2')
     expect(wrapper.find('.astryx-tree-list__guide').exists()).toBe(true)
-    expect(wrapper.get('[data-tree-id="app"] .astryx-tree-list__content').attributes('data-nested')).toBe('true')
-    expect(wrapper.get('[data-tree-id="src"] .astryx-tree-list__content').attributes('data-nested')).toBeUndefined()
   })
 
   it('puts an external icon class in a sized box', () => {
