@@ -260,8 +260,12 @@ function replay() {
 <template>
   <div class="token-reference">
     <section v-for="section in sections" :key="section.id" class="token-section">
-      <h2 v-if="headings">{{ text(section.title) }}</h2>
-      <p v-if="headings">{{ text(section.description) }}</p>
+      <h2 v-if="headings">
+        {{ text(section.title) }}
+      </h2>
+      <p v-if="headings">
+        {{ text(section.description) }}
+      </p>
 
       <div v-if="section.id === 'color'" class="color-groups">
         <div v-for="group in colorGroups" :key="group.bucket">
@@ -323,8 +327,12 @@ function replay() {
     </section>
 
     <section v-if="showMotion" class="token-section">
-      <h2 v-if="headings">{{ props.locale === 'zh' ? '动画' : 'Motion' }}</h2>
-      <p v-if="headings">{{ text(copy.motionLead) }}</p>
+      <h2 v-if="headings">
+        {{ props.locale === 'zh' ? '动画' : 'Motion' }}
+      </h2>
+      <p v-if="headings">
+        {{ text(copy.motionLead) }}
+      </p>
       <div class="motion-toolbar">
         <button type="button" class="replay" @click="replay">
           {{ text(copy.replay) }}
