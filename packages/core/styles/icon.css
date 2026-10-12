@@ -171,9 +171,25 @@
   .astryx-icon--upload {
     --astryx-icon-artwork: var(--astryx-icon-upload, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15V5'/%3E%3Cpath d='M8 8.5 12 4.5 16 8.5'/%3E%3Cpath d='M5 15.5V18a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 18v-2.5'/%3E%3C/svg%3E"));
   }
+  /* arrowUp */
+  .astryx-icon--arrow-up {
+    --astryx-icon-artwork: var(--astryx-icon-arrow-up, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5M6 11l6-6 6 6' /%3E%3C/svg%3E"));
+  }
+  /* arrowDown */
+  .astryx-icon--arrow-down {
+    --astryx-icon-artwork: var(--astryx-icon-arrow-down, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M6 13l6 6 6-6' /%3E%3C/svg%3E"));
+  }
   /* close */
   .astryx-icon--close {
     --astryx-icon-artwork: var(--astryx-icon-close, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E"));
+  }
+  /* funnel */
+  .astryx-icon--funnel {
+    --astryx-icon-artwork: var(--astryx-icon-funnel, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M4 5h16l-6 7v6l-4 2v-8z' /%3E%3C/svg%3E"));
+  }
+  /* image */
+  .astryx-icon--image {
+    --astryx-icon-artwork: var(--astryx-icon-image, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2M8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-5.5z' /%3E%3C/svg%3E"));
   }
   /* ARTWORK: generated end */
 }

@@ -31,7 +31,11 @@ describe('icon', () => {
       'calendar',
       'clock',
       'upload',
+      'arrow-up',
+      'arrow-down',
       'close',
+      'funnel',
+      'image',
     ])
     expect(new Set(slugs).size).toBe(slugs.length)
   })

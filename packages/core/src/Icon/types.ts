@@ -48,7 +48,11 @@ export type IconName
     | 'calendar'
     | 'clock'
     | 'upload'
+    | 'arrowUp'
+    | 'arrowDown'
     | 'close'
+    | 'funnel'
+    | 'image'
 
 /**
  * A built-in name, or any other string.

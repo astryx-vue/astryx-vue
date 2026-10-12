@@ -4,7 +4,7 @@ import { overflowListOverview as demo } from './index'
 export const meta = {
   slug: 'overflow-list',
   group: 'Table & List',
-  order: 1,
+  order: 2,
   en: 'Overflow List',
   zh: '溢出列表',
   demo,
