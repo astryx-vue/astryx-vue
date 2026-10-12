@@ -8,6 +8,7 @@ import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ locale: DocsLocale }>()
 const groups = computed(() => catalogGroups(props.locale).map(group => ({
+  id: group.id,
   title: group.title,
   cards: group.entries.map(entry => ({
     demo: componentDemos[entry.slug],
@@ -23,7 +24,7 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
       <h1>{{ locale === 'en' ? 'Browse components' : '浏览组件库' }}</h1>
       <p>{{ locale === 'en' ? 'Find astryx-vue components by purpose and explore their states and variants.' : '按用途查找 astryx-vue 组件，并查看各个状态与变体。' }}</p>
     </header>
-    <section v-for="(group, index) in groups" :key="group.title" class="component-overview__catalog" :aria-labelledby="`${locale}-group-${index}`">
+    <section v-for="(group, index) in groups" :key="group.id" class="component-overview__catalog" :aria-labelledby="`${locale}-group-${index}`">
       <h2 :id="`${locale}-group-${index}`">
         {{ group.title }}
       </h2>

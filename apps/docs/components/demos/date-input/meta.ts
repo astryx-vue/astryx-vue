@@ -3,8 +3,8 @@ import { dateInputOverview as demo } from './index'
 
 export const meta = {
   slug: 'date-input',
-  group: 'form',
-  order: 16,
+  group: 'Form Controls',
+  order: 4,
   en: 'Date Input',
   zh: '日期输入框',
   demo,

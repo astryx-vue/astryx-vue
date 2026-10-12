@@ -3,7 +3,7 @@ import { checkboxListOverview as demo } from './index'
 
 export const meta = {
   slug: 'checkbox-list',
-  group: 'form',
+  group: 'Form Controls',
   order: 3,
   en: 'Checkbox List',
   zh: '复选列表',

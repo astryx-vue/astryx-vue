@@ -3,8 +3,8 @@ import { cardOverview as demo } from './index'
 
 export const meta = {
   slug: 'card',
-  group: 'layout',
-  order: 4,
+  group: 'Container',
+  order: 0,
   en: 'Card',
   zh: '卡片',
   demo,

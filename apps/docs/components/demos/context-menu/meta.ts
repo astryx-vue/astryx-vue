@@ -3,8 +3,8 @@ import { contextMenuOverview as demo } from './index'
 
 export const meta = {
   slug: 'context-menu',
-  group: 'action',
-  order: 4,
+  group: 'Action',
+  order: 2,
   en: 'Context Menu',
   zh: '上下文菜单',
   demo,

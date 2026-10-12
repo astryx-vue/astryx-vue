@@ -3,8 +3,8 @@ import { fileInputOverview as demo } from './index'
 
 export const meta = {
   slug: 'file-input',
-  group: 'form',
-  order: 10,
+  group: 'Form Controls',
+  order: 9,
   en: 'File Input',
   zh: '文件输入框',
   demo,

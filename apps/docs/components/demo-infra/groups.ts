@@ -1,49 +1,49 @@
 import type { DocsLocale } from './docs-i18n'
 
-export type ComponentGroup
-  = | 'action'
-    | 'content'
-    | 'feedback'
-    | 'form'
-    | 'layout'
-    | 'navigation'
-    | 'overlays'
-    | 'utilities'
-
 /**
- * The order groups appear in, both in the component sidebar and on the catalog
- * page.
+ * Component groups, in display order.
+ *
+ * Names and order match the category list in upstream
+ * `apps/docsite/src/app/(docs)/components/page.tsx` (`CATEGORIES`).
+ * Each component declares one of these strings in `demos/<slug>/meta.ts`.
+ * English sidebar and catalog titles are these strings. Chinese titles are
+ * `GROUP_TITLES.zh`.
  */
-export const COMPONENT_GROUPS: readonly ComponentGroup[] = [
-  'action',
-  'form',
-  'layout',
-  'content',
-  'navigation',
-  'feedback',
-  'overlays',
-  'utilities',
-]
+export const COMPONENT_GROUPS = [
+  'Action',
+  'Chat',
+  'Container',
+  'Content',
+  'Data Visualization',
+  'Feedback & Status',
+  'Form Controls',
+  'Layout',
+  'Navigation',
+  'Overlay',
+  'Table & List',
+  'Utility',
+] as const
+
+export type ComponentGroup = (typeof COMPONENT_GROUPS)[number]
+
+const ENGLISH_TITLES = Object.fromEntries(
+  COMPONENT_GROUPS.map(group => [group, group]),
+) as Record<ComponentGroup, string>
 
 export const GROUP_TITLES: Record<DocsLocale, Record<ComponentGroup, string>> = {
-  en: {
-    action: 'Action',
-    form: 'Form controls',
-    layout: 'Layout',
-    content: 'Content',
-    navigation: 'Component navigation',
-    feedback: 'Feedback & Status',
-    overlays: 'Overlays',
-    utilities: 'Utilities',
-  },
+  en: ENGLISH_TITLES,
   zh: {
-    action: '操作',
-    form: '表单',
-    layout: '布局',
-    content: '内容',
-    navigation: '组件导航',
-    feedback: '反馈与状态',
-    overlays: '浮层',
-    utilities: '工具',
+    'Action': '操作',
+    'Chat': '对话',
+    'Container': '容器',
+    'Content': '内容',
+    'Data Visualization': '数据可视化',
+    'Feedback & Status': '反馈与状态',
+    'Form Controls': '表单控件',
+    'Layout': '布局',
+    'Navigation': '导航',
+    'Overlay': '浮层',
+    'Table & List': '表格与列表',
+    'Utility': '工具',
   },
 }

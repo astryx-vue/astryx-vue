@@ -3,8 +3,8 @@ import { tooltipOverview as demo } from './index'
 
 export const meta = {
   slug: 'tooltip',
-  group: 'overlays',
-  order: 0,
+  group: 'Overlay',
+  order: 7,
   en: 'Tooltip',
   zh: '提示框',
   demo,

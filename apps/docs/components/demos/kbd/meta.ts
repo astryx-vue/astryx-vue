@@ -3,8 +3,8 @@ import { kbdOverview as demo } from './index'
 
 export const meta = {
   slug: 'kbd',
-  group: 'content',
-  order: 5,
+  group: 'Content',
+  order: 7,
   en: 'Kbd',
   zh: '快捷键',
   demo,

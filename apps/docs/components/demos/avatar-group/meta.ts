@@ -3,7 +3,7 @@ import { avatarGroupOverview as demo } from './index'
 
 export const meta = {
   slug: 'avatar-group',
-  group: 'content',
+  group: 'Content',
   order: 1,
   en: 'Avatar Group',
   zh: '头像组',

@@ -3,8 +3,8 @@ import { moreMenuOverview as demo } from './index'
 
 export const meta = {
   slug: 'more-menu',
-  group: 'action',
-  order: 5,
+  group: 'Action',
+  order: 6,
   en: 'More Menu',
   zh: '更多菜单',
   demo,

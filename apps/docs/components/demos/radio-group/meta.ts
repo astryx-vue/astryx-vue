@@ -3,8 +3,8 @@ import { radioGroupOverview as demo } from './index'
 
 export const meta = {
   slug: 'radio-group',
-  group: 'form',
-  order: 6,
+  group: 'Form Controls',
+  order: 14,
   en: 'Radio Group',
   zh: '单选组',
   demo,

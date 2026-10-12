@@ -3,7 +3,7 @@ import { dividerOverview as demo } from './index'
 
 export const meta = {
   slug: 'divider',
-  group: 'layout',
+  group: 'Layout',
   order: 1,
   en: 'Divider',
   zh: '分隔线',

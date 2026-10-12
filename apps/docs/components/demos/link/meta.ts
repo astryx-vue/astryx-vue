@@ -3,8 +3,8 @@ import { linkOverview as demo } from './index'
 
 export const meta = {
   slug: 'link',
-  group: 'navigation',
-  order: 0,
+  group: 'Action',
+  order: 5,
   en: 'Link',
   zh: '链接',
   demo,

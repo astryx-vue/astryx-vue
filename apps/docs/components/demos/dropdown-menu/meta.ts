@@ -3,7 +3,7 @@ import { dropdownMenuOverview as demo } from './index'
 
 export const meta = {
   slug: 'dropdown-menu',
-  group: 'action',
+  group: 'Action',
   order: 3,
   en: 'Dropdown Menu',
   zh: '下拉菜单',
