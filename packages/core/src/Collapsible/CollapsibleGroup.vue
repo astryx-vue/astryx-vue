@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CollapsibleGroupEmits, CollapsibleGroupProps, CollapsibleGroupSlots } from './groupTypes.js'
 import type { CollapsibleGroupValue } from './context.js'
+import type { CollapsibleGroupEmits, CollapsibleGroupProps, CollapsibleGroupSlots } from './groupTypes.js'
 import { computed, provide, shallowRef } from 'vue'
 import { collapsibleGroupKey, collapsibleGroupPresentationKey } from './context.js'
 import '../../styles/collapsible.css'

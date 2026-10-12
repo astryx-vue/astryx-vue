@@ -97,7 +97,7 @@ function onTriggerKeyDown(event: KeyboardEvent): void {
     :width="width"
   >
     <Popover
-      :alignment="'start'"
+      alignment="start"
       :has-auto-focus="true"
       :has-close-button="false"
       :is-enabled="!isDisabled"

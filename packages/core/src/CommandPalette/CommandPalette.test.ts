@@ -2,8 +2,8 @@ import type { SearchableItem, SearchSource } from '../composables/useAsyncSource
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, nextTick, ref } from 'vue'
-import { createStaticSource } from '../composables/useAsyncSource.js'
 import { resetLiveRegionsForTest } from '../composables/testing/resetLiveRegions.js'
+import { createStaticSource } from '../composables/useAsyncSource.js'
 import CommandPalette from './CommandPalette.vue'
 import { moveHighlight } from './keyboard.js'
 

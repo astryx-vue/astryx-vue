@@ -1,7 +1,7 @@
 import type { VNode } from 'vue'
+import type { ButtonSize } from '../Button/types.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 import type { PopoverPlacement } from '../Popover/types.js'
-import type { ButtonSize } from '../Button/types.js'
 
 export interface ComplexSelectorState {
   isOpen: boolean

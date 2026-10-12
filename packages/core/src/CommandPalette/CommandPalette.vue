@@ -195,7 +195,7 @@ provide(commandPaletteKey, {
     :max-height="maxHeight"
     :padding="0"
     purpose="info"
-    role="dialog"
+    :role="isInline ? 'dialog' : undefined"
     :width="width"
     @open-change="onOpenChange"
   >

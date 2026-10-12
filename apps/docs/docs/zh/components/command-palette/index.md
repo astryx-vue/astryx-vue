@@ -34,7 +34,11 @@ const source = createStaticSource([
   { id: 'settings', label: 'Settings' },
 ])
 
-useHotkeys([{ keys: 'mod+k', onPress: () => { isOpen.value = true } }])
+function openPalette() {
+  isOpen.value = true
+}
+
+useHotkeys([{ keys: 'mod+k', onPress: openPalette }])
 </script>
 
 <template>

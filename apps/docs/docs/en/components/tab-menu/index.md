@@ -25,8 +25,12 @@ const value = ref('overview')
 
 <template>
   <TabList v-model:value="value">
-    <Tab value="overview">Overview</Tab>
-    <Tab value="activity">Activity</Tab>
+    <Tab value="overview">
+      Overview
+    </Tab>
+    <Tab value="activity">
+      Activity
+    </Tab>
     <TabMenu
       label="More"
       :options="[

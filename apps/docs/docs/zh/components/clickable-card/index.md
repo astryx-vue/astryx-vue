@@ -21,7 +21,9 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 <template>
   <ClickableCard href="/settings" label="Settings">
-    <Heading :level="4">Settings</Heading>
+    <Heading :level="4">
+      Settings
+    </Heading>
   </ClickableCard>
 </template>
 ```

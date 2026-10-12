@@ -16,6 +16,13 @@ const index = computed(() => palette?.items.value.findIndex(item => item.id === 
 const isHighlighted = computed(() => index.value >= 0 && palette?.highlightedIndex.value === index.value)
 const isSelected = computed(() => palette?.value.value != null && palette.value.value === props.value)
 
+function onKeyDown(event: KeyboardEvent): void {
+  if (event.key !== 'Enter' && event.key !== ' ')
+    return
+  event.preventDefault()
+  select()
+}
+
 function select(): void {
   if (props.isDisabled || palette == null || index.value < 0)
     return
@@ -58,6 +65,7 @@ watch(isHighlighted, (highlighted, _previous, onCleanup) => {
     :id="index >= 0 && palette ? `${palette.listId}-item-${index}` : undefined"
     class="astryx-command-palette-item"
     role="option"
+    tabindex="-1"
     :aria-disabled="isDisabled || undefined"
     :aria-selected="isSelected"
     :data-disabled="isDisabled || undefined"
@@ -65,6 +73,8 @@ watch(isHighlighted, (highlighted, _previous, onCleanup) => {
     :data-selected="isSelected || undefined"
     :data-value="value"
     @click="select"
+    @focus="highlight"
+    @keydown="onKeyDown"
     @mouseenter="highlight"
   >
     <slot />
