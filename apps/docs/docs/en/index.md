@@ -1,5 +1,6 @@
 ---
 layout: page
+pageClass: page-home
 title: astryx-vue
 description: A community Vue 3 implementation of the Astryx design system.
 outline: false

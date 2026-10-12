@@ -140,6 +140,29 @@ samp {
   box-shadow: inset 0 1px 0 rgb(200 237 116 / 18%);
 }
 
+.page-home,
+html:has(.home-stage) {
+  --vp-nav-bg-color: var(--astryx-color-background-body);
+  --vp-nav-home-bg-color: var(--astryx-color-background-body);
+  --astryx-bg: var(--astryx-color-background-body);
+}
+
+.page-home .VPNav,
+.page-home .VPNavBar,
+.page-home .VPNavBar::before,
+html:has(.home-stage) .VPNav,
+html:has(.home-stage) .VPNavBar,
+html:has(.home-stage) .VPNavBar::before {
+  background: var(--astryx-color-background-body) !important;
+  background-color: var(--astryx-color-background-body) !important;
+  box-shadow: none !important;
+}
+
+.page-home .VPNav,
+html:has(.home-stage) .VPNav {
+  border-bottom: 1px solid var(--astryx-color-border) !important;
+}
+
 .VPNavBar .container {
   position: relative;
 }

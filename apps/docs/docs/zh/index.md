@@ -1,5 +1,6 @@
 ---
 layout: page
+pageClass: page-home
 title: astryx-vue
 description: 面向 Vue 3 的 Astryx 设计系统社区实现。
 outline: false

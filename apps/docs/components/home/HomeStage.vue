@@ -27,9 +27,9 @@ const copy = {
     placeholder: '输入消息...',
     send: '发送',
     script: {
-      userQuestion: '今天想用 Vue 重新实现 Astryx，怎么复刻它的 token 和组件？',
+      userQuestion: 'astryx 设计语言是否有 Vue 版本实现的组件库？',
       toolName: 'pnpm add @astryx-vue/core @astryx-vue/themes',
-      assistantLead: '直接安装核心包与主题。底层严格对齐 design token、CSS 变量与动画刻度，按 Vue 规范提供原生组件：',
+      assistantLead: '有的，astryx-vue 就是面向 Vue 3 的社区实现。底层严格对齐 design token、CSS 变量与动画刻度，按 Vue 规范提供原生组件：',
       codeSnippet: `<script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import '@astryx-vue/themes/neutral.css'
@@ -54,9 +54,9 @@ import '@astryx-vue/themes/neutral.css'
     placeholder: 'Type a message...',
     send: 'Send',
     script: {
-      userQuestion: 'How do I reimplement Astryx in Vue with its tokens and components?',
+      userQuestion: 'Is there a Vue component library implementing the Astryx design language?',
       toolName: 'pnpm add @astryx-vue/core @astryx-vue/themes',
-      assistantLead: 'Install the core package and theme. It faithfully replicates design tokens, CSS variables, and motion scales with native Vue 3 components:',
+      assistantLead: 'Yes, astryx-vue is the community implementation for Vue 3. It faithfully replicates design tokens, CSS variables, and motion scales with native components:',
       codeSnippet: `<script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import '@astryx-vue/themes/neutral.css'
@@ -126,8 +126,9 @@ function handleSend(): void {
         <div class="home-install">
           <code>{{ install }}</code>
           <IconButton
+            class="home-copy-btn"
             size="sm"
-            variant="secondary"
+            variant="ghost"
             :label="clipboard.isCopied.value ? text.copied : text.copy"
             @click="copyInstall"
           >
@@ -212,14 +213,38 @@ function handleSend(): void {
 
 <style>
 html:has(.home-stage),
-html:has(.home-stage) body,
-html:has(.home-stage) .VPNav,
-html:has(.home-stage) .VPContent,
-html:has(.home-stage) .VPPage {
-  background: var(--astryx-color-background-body);
+.page-home {
+  --vp-nav-bg-color: var(--astryx-color-background-body) !important;
+  --vp-nav-home-bg-color: var(--astryx-color-background-body) !important;
+  --astryx-bg: var(--astryx-color-background-body) !important;
 }
 
-html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, summary):focus-visible {
+html:has(.home-stage),
+html:has(.home-stage) body,
+html:has(.home-stage) .VPNav,
+html:has(.home-stage) .VPNavBar,
+html:has(.home-stage) .VPNavBar::before,
+html:has(.home-stage) .VPContent,
+html:has(.home-stage) .VPPage,
+.page-home,
+.page-home body,
+.page-home .VPNav,
+.page-home .VPNavBar,
+.page-home .VPNavBar::before,
+.page-home .VPContent,
+.page-home .VPPage {
+  background: var(--astryx-color-background-body) !important;
+  background-color: var(--astryx-color-background-body) !important;
+  box-shadow: none !important;
+}
+
+html:has(.home-stage) .VPNav,
+.page-home .VPNav {
+  border-bottom: 1px solid var(--astryx-color-border) !important;
+}
+
+html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, summary):focus-visible,
+.page-home .home-stage :where(a, button, input, textarea, select, summary):focus-visible {
   outline-color: var(--astryx-focus-outline-color);
 }
 </style>
@@ -289,7 +314,6 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 }
 
 .home-actions,
-.home-install,
 .home-composer {
   display: flex;
   flex-wrap: wrap;
@@ -302,17 +326,40 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 }
 
 .home-install {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
   margin-top: 1.25rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.85rem;
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-inner);
+  background: var(--astryx-color-background-muted);
 }
 
 .home-install code {
-  padding: 0.45rem 0.75rem;
-  border-radius: var(--astryx-radius-inner);
-  background: var(--astryx-color-background-muted);
-  color: var(--astryx-color-text-primary);
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   font-family: var(--astryx-font-family-code);
   font-size: 0.8125rem;
   line-height: 1.4;
+  color: var(--astryx-color-text-primary);
+  background: transparent;
+  padding: 0;
+}
+
+.home-install code::-webkit-scrollbar {
+  display: none;
+}
+
+.home-copy-btn {
+  flex-shrink: 0;
 }
 
 .home-copy-icon {
@@ -334,10 +381,14 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   box-shadow: var(--astryx-shadow-med);
 }
 
-/* 助手标签与气泡之间增加舒适下边距 */
+/* 助手标签与内容紧凑对齐 */
 .home-chat :deep(.astryx-chat-message__name),
 .home-chat :deep(.astryx-chat-message-bubble__name) {
-  margin-block-end: var(--astryx-spacing-2, 8px);
+  margin-block-end: 2px;
+}
+
+.home-chat :deep(.astryx-chat-tool-calls) {
+  margin-block-start: 2px;
 }
 
 .home-chat :deep(.astryx-chat-message__body) {
