@@ -63,5 +63,9 @@ export default defineConfig({
     'i-carbon-upload',
     'i-carbon-view-off',
     'i-carbon-warning',
+    'i-heroicons-chevron-right',
+    'i-heroicons-cog-6-tooth',
+    'i-heroicons-document',
+    'i-heroicons-folder',
   ],
 })

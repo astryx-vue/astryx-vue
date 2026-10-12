@@ -3,6 +3,7 @@ import type { TreeListDensity, TreeListItemData, TreeListVariant } from './types
 import { computed } from 'vue'
 import Badge from '../Badge/Badge.vue'
 import Icon from '../Icon/Icon.vue'
+import { isIconGlyph } from '../Icon/glyphs.js'
 import { useAstryxMessages } from '../locale/context.js'
 import '../../styles/tree-list.css'
 
@@ -97,6 +98,7 @@ function onToggle(event: MouseEvent) {
         :data-selected="item.isSelected || undefined"
         :data-disabled="item.isDisabled || undefined"
         :data-interactive="(item.onClick != null || item.href != null || hasChildren) || undefined"
+        :data-nested="nestedLevel > 0 || undefined"
         :style="{ '--_tree-indent': indent }"
         @click="onRowClick"
       >
@@ -115,8 +117,10 @@ function onToggle(event: MouseEvent) {
           <Icon icon="chevronRight" size="sm" color="inherit" />
         </button>
         <span v-if="item.icon" class="astryx-tree-list__start">
-          <i v-if="item.icon.startsWith('i-')" :class="item.icon" aria-hidden="true" />
-          <Icon v-else :icon="item.icon" size="sm" />
+          <Icon v-if="isIconGlyph(item.icon)" :icon="item.icon" size="sm" />
+          <span v-else class="astryx-tree-list__icon">
+            <i :class="item.icon" aria-hidden="true" />
+          </span>
         </span>
         <a
           v-if="item.href"
@@ -145,8 +149,10 @@ function onToggle(event: MouseEvent) {
         </span>
         <span v-if="item.badge || item.endIcon" class="astryx-tree-list__end">
           <Badge v-if="item.badge">{{ item.badge }}</Badge>
-          <i v-else-if="item.endIcon?.startsWith('i-')" :class="item.endIcon" aria-hidden="true" />
-          <Icon v-else-if="item.endIcon" :icon="item.endIcon" size="sm" />
+          <Icon v-else-if="item.endIcon && isIconGlyph(item.endIcon)" :icon="item.endIcon" size="sm" />
+          <span v-else-if="item.endIcon" class="astryx-tree-list__icon">
+            <i :class="item.endIcon" aria-hidden="true" />
+          </span>
         </span>
       </div>
     </div>

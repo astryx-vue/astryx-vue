@@ -9,7 +9,7 @@ const items: TreeListItemData[] = [
     id: 'settings',
     label: 'Settings',
     isExpanded: true,
-    icon: 'i-carbon-settings',
+    icon: 'i-heroicons-cog-6-tooth',
     children: [
       { id: 'general', label: 'General', onClick: noop },
       { id: 'advanced', label: 'Advanced', onClick: noop },
@@ -19,7 +19,7 @@ const items: TreeListItemData[] = [
     id: 'docs',
     label: 'Documentation',
     href: '#',
-    endIcon: 'i-carbon-chevron-right',
+    endIcon: 'i-heroicons-chevron-right',
   },
 ]
 </script>

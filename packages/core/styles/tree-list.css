@@ -5,6 +5,15 @@
     position: relative;
     --tree-list-indent: var(--astryx-spacing-4, 16px);
     --tree-list-row-gap: var(--astryx-spacing-0-5, 2px);
+    /*
+     * The guide is centered on the parent chevron: branch margin 10px plus
+     * half of the 20px guide track. The child row only indents one 16px step,
+     * so the 1px line sits about 4px inside that row. The fill starts past
+     * the line; the hit target and the label stay where they are.
+     */
+    --_tree-guide-clearance: calc(
+      var(--astryx-spacing-2, 8px) + var(--astryx-spacing-0-5, 2px) + (var(--astryx-spacing-5, 20px) / 2) - var(--tree-list-indent, 16px) + 2px
+    );
   }
 
   .astryx-tree-list__header {
@@ -34,6 +43,7 @@
 
   .astryx-tree-list__content {
     position: relative;
+    isolation: isolate;
     display: flex;
     box-sizing: border-box;
     align-items: center;
@@ -45,6 +55,21 @@
     font-size: var(--astryx-text-body-size, 1rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
     text-align: start;
+  }
+
+  .astryx-tree-list__content::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background-color: transparent;
+    pointer-events: none;
+    transition: background-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-tree-list__content[data-nested='true']::before {
+    inset-inline-start: var(--_tree-guide-clearance, 6px);
   }
 
   .astryx-tree-list__content[data-density='compact'] {
@@ -59,18 +84,21 @@
     padding-block: var(--astryx-spacing-3, 12px);
   }
 
-  .astryx-tree-list__content[data-selected='true'] {
+  .astryx-tree-list__content[data-selected='true']::before {
     background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
   }
 
   .astryx-tree-list__content[data-interactive='true'] {
     cursor: pointer;
-    transition: background-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
   @media (hover: hover) {
-    .astryx-tree-list__content[data-interactive='true']:hover {
+    .astryx-tree-list__content[data-interactive='true']:hover::before {
       background-color: var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d));
+    }
+
+    .astryx-tree-list__content[data-selected='true']:hover::before {
+      background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
     }
   }
 
@@ -117,6 +145,25 @@
     display: flex;
     flex-shrink: 0;
     align-items: center;
+  }
+
+  /*
+   * External icon classes (UnoCSS and the like) size themselves to 100% of
+   * their box. The box has to be explicit or the glyph collapses to nothing.
+   * 1rem matches Icon size sm, the size the original file-tree icons use.
+   */
+  .astryx-tree-list__icon {
+    display: inline-flex;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: inherit;
+  }
+
+  .astryx-tree-list__icon > i {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .astryx-tree-list__end {

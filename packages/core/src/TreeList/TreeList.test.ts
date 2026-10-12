@@ -21,6 +21,20 @@ describe('tree list', () => {
     expect(wrapper.get('[data-tree-id="src"]').attributes('aria-expanded')).toBe('true')
     expect(wrapper.get('[data-tree-id="app"]').attributes('aria-level')).toBe('2')
     expect(wrapper.find('.astryx-tree-list__guide').exists()).toBe(true)
+    expect(wrapper.get('[data-tree-id="app"] .astryx-tree-list__content').attributes('data-nested')).toBe('true')
+    expect(wrapper.get('[data-tree-id="src"] .astryx-tree-list__content').attributes('data-nested')).toBeUndefined()
+  })
+
+  it('puts an external icon class in a sized box', () => {
+    const wrapper = mount(TreeList, {
+      props: {
+        items: [{ id: 'src', label: 'src', icon: 'i-heroicons-folder', endIcon: 'i-heroicons-chevron-right' }],
+      },
+    })
+    const icons = wrapper.findAll('.astryx-tree-list__icon')
+    expect(icons).toHaveLength(2)
+    expect(icons[0]?.get('i').classes()).toContain('i-heroicons-folder')
+    expect(icons[1]?.get('i').classes()).toContain('i-heroicons-chevron-right')
   })
 
   it('collapses a parent from the chevron and from ArrowLeft', async () => {
