@@ -18,6 +18,11 @@ export const ICON_GLYPHS = [
   'check',
   'moreHorizontal',
   'copy',
+  'arrowUp',
+  'arrowDown',
+  'close',
+  'funnel',
+  'image',
 ] as const satisfies readonly IconGlyphName[]
 
 export function isIconGlyph(value: string): value is IconGlyphName {

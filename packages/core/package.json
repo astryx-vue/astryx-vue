@@ -39,6 +39,11 @@
       "types": "./dist/AvatarGroup/index.d.ts",
       "import": "./dist/AvatarGroup/index.js"
     },
+    "./MetadataList": {
+      "source": "./src/MetadataList/index.ts",
+      "types": "./dist/MetadataList/index.d.ts",
+      "import": "./dist/MetadataList/index.js"
+    },
     "./StatusDot": {
       "source": "./src/StatusDot/index.ts",
       "types": "./dist/StatusDot/index.d.ts",
@@ -104,6 +109,21 @@
       "types": "./dist/Radio/index.d.ts",
       "import": "./dist/Radio/index.js"
     },
+    "./Table": {
+      "source": "./src/Table/index.ts",
+      "types": "./dist/Table/index.d.ts",
+      "import": "./dist/Table/index.js"
+    },
+    "./Thumbnail": {
+      "source": "./src/Thumbnail/index.ts",
+      "types": "./dist/Thumbnail/index.d.ts",
+      "import": "./dist/Thumbnail/index.js"
+    },
+    "./Timestamp": {
+      "source": "./src/Timestamp/index.ts",
+      "types": "./dist/Timestamp/index.d.ts",
+      "import": "./dist/Timestamp/index.js"
+    },
     "./Tooltip": {
       "source": "./src/Tooltip/index.ts",
       "types": "./dist/Tooltip/index.d.ts",
@@ -163,6 +183,11 @@
       "source": "./src/Toast/index.ts",
       "types": "./dist/Toast/index.d.ts",
       "import": "./dist/Toast/index.js"
+    },
+    "./TreeList": {
+      "source": "./src/TreeList/index.ts",
+      "types": "./dist/TreeList/index.d.ts",
+      "import": "./dist/TreeList/index.js"
     },
     "./VisuallyHidden": {
       "source": "./src/VisuallyHidden/index.ts",
@@ -422,6 +447,10 @@
         "types": "./dist/AvatarGroup/index.d.ts",
         "import": "./dist/AvatarGroup/index.js"
       },
+      "./MetadataList": {
+        "types": "./dist/MetadataList/index.d.ts",
+        "import": "./dist/MetadataList/index.js"
+      },
       "./StatusDot": {
         "types": "./dist/StatusDot/index.d.ts",
         "import": "./dist/StatusDot/index.js"
@@ -474,6 +503,18 @@
         "types": "./dist/Radio/index.d.ts",
         "import": "./dist/Radio/index.js"
       },
+      "./Table": {
+        "types": "./dist/Table/index.d.ts",
+        "import": "./dist/Table/index.js"
+      },
+      "./Thumbnail": {
+        "types": "./dist/Thumbnail/index.d.ts",
+        "import": "./dist/Thumbnail/index.js"
+      },
+      "./Timestamp": {
+        "types": "./dist/Timestamp/index.d.ts",
+        "import": "./dist/Timestamp/index.js"
+      },
       "./Tooltip": {
         "types": "./dist/Tooltip/index.d.ts",
         "import": "./dist/Tooltip/index.js"
@@ -521,6 +562,10 @@
       "./Toast": {
         "types": "./dist/Toast/index.d.ts",
         "import": "./dist/Toast/index.js"
+      },
+      "./TreeList": {
+        "types": "./dist/TreeList/index.d.ts",
+        "import": "./dist/TreeList/index.js"
       },
       "./VisuallyHidden": {
         "types": "./dist/VisuallyHidden/index.d.ts",

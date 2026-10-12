@@ -333,6 +333,17 @@ export type {
   MarkdownProps,
   MarkdownSlots,
 } from './Markdown/index.js'
+export { MetadataList, MetadataListItem } from './MetadataList/index.js'
+export type {
+  MetadataListColumns,
+  MetadataListItemProps,
+  MetadataListItemSlots,
+  MetadataListLabelConfig,
+  MetadataListLabelPosition,
+  MetadataListOrientation,
+  MetadataListProps,
+  MetadataListSlots,
+} from './MetadataList/index.js'
 export { MobileNav, MobileNavToggle } from './MobileNav/index.js'
 export type {
   MobileNavEmits,
@@ -513,6 +524,65 @@ export type {
   SwitchStatus,
   SwitchStatusType,
 } from './Switch/index.js'
+export {
+  applyTableFilters,
+  capitalize,
+  cellText,
+  generateColumns,
+  paginateData,
+  paginateTableData,
+  pixel,
+  proportional,
+  resolveColumnWidths,
+  sortRows,
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+  TableSelectionToolbar,
+  useTableColumnResize,
+  useTableColumnSettings,
+  useTableColumnSettingsState,
+  useTableFiltering,
+  useTableFilterState,
+  useTablePagination,
+  useTableSelection,
+  useTableSelectionState,
+  useTableSortable,
+  useTableSortableState,
+} from './Table/index.js'
+export type {
+  ColumnSettingsOption,
+  ColumnWidth,
+  PixelWidth,
+  ProportionalWidth,
+  TableCellProps,
+  TableColumn,
+  TableColumnAlign,
+  TableDensity,
+  TableDividers,
+  TableFilterField,
+  TableFilterState,
+  TableFilterValue,
+  TablePlugin,
+  TableProps,
+  TableRowProps,
+  TableSortDirection,
+  TableSortEntry,
+  TableSortState,
+  TableTextOverflow,
+  TableVerticalAlign,
+  UseTableColumnResizeConfig,
+  UseTableColumnSettingsConfig,
+  UseTableFilteringConfig,
+  UseTablePaginationConfig,
+  UseTableSelectionConfig,
+  UseTableSelectionStateConfig,
+  UseTableSortableConfig,
+} from './Table/index.js'
 export { Tab, TabList } from './TabList/index.js'
 export type { TabListLayout, TabListProps, TabListSize, TabListTab, TabProps } from './TabList/index.js'
 export { Text } from './Text/index.js'
@@ -542,6 +612,19 @@ export type {
   TextInputStatusType,
   TextInputType,
 } from './TextInput/index.js'
+export { Thumbnail } from './Thumbnail/index.js'
+export type { ThumbnailEmits, ThumbnailProps, ThumbnailRemoveVisibility } from './Thumbnail/index.js'
+export { formatInstant, formatRelativeTime, formatTooltipLines, Timestamp } from './Timestamp/index.js'
+export type {
+  FormatInstantOptions,
+  InstantFormat,
+  TimestampColor,
+  TimestampFormat,
+  TimestampProps,
+  TimestampTooltipEntry,
+  TimestampTooltipFormat,
+  TimestampTooltipLine,
+} from './Timestamp/index.js'
 export { Toast, ToastViewport, useToast } from './Toast/index.js'
 export type { ToastItem, ToastOptions, ToastPlacement, ToastType } from './Toast/index.js'
 export { ToggleButton, ToggleButtonGroup } from './ToggleButton/index.js'
@@ -607,6 +690,15 @@ export type {
   TopNavMenuProps,
   TopNavProps,
 } from './TopNav/index.js'
+export { TreeList, useTreeFocus } from './TreeList/index.js'
+export type {
+  TreeListDensity,
+  TreeListItemData,
+  TreeListProps,
+  TreeListSlots,
+  TreeListVariant,
+  UseTreeFocusOptions,
+} from './TreeList/index.js'
 export { Typeahead } from './Typeahead/index.js'
 export type {
   TypeaheadEmits,

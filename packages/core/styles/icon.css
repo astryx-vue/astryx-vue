@@ -159,5 +159,25 @@
   .astryx-icon--copy {
     --astryx-icon-artwork: var(--astryx-icon-copy, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4v12a2 2 0 002 2h8a2 2 0 002-2V7.242a2 2 0 00-.602-1.43L16.083 2.57A2 2 0 0014.685 2H10a2 2 0 00-2 2z' /%3E%3Cpath d='M16 18v2a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2' /%3E%3C/svg%3E"));
   }
+  /* arrowUp */
+  .astryx-icon--arrow-up {
+    --astryx-icon-artwork: var(--astryx-icon-arrow-up, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5M6 11l6-6 6 6' /%3E%3C/svg%3E"));
+  }
+  /* arrowDown */
+  .astryx-icon--arrow-down {
+    --astryx-icon-artwork: var(--astryx-icon-arrow-down, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M6 13l6 6 6-6' /%3E%3C/svg%3E"));
+  }
+  /* close */
+  .astryx-icon--close {
+    --astryx-icon-artwork: var(--astryx-icon-close, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18' /%3E%3C/svg%3E"));
+  }
+  /* funnel */
+  .astryx-icon--funnel {
+    --astryx-icon-artwork: var(--astryx-icon-funnel, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M4 5h16l-6 7v6l-4 2v-8z' /%3E%3C/svg%3E"));
+  }
+  /* image */
+  .astryx-icon--image {
+    --astryx-icon-artwork: var(--astryx-icon-image, url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2M8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-5.5z' /%3E%3C/svg%3E"));
+  }
   /* ARTWORK: generated end */
 }
