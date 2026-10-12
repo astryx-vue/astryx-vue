@@ -283,10 +283,25 @@ function send(): void {
   </div>
 </template>
 
+<style>
+html:has(.home-stage),
+html:has(.home-stage) body,
+html:has(.home-stage) .VPNav,
+html:has(.home-stage) .VPContent,
+html:has(.home-stage) .VPPage {
+  background: var(--astryx-color-background-body);
+}
+
+html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, summary):focus-visible {
+  outline-color: var(--astryx-focus-outline-color);
+}
+</style>
+
 <style scoped>
 .home-stage {
   color: var(--astryx-color-text-primary);
   font-family: var(--astryx-font-family-body);
+  background: var(--astryx-color-background-body);
 }
 
 .home-press {
