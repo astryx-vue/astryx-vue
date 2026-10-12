@@ -7,11 +7,11 @@
     --tree-list-row-gap: var(--astryx-spacing-0-5, 2px);
     /*
      * A nested branch only indents 16px, while the guide is centered on the
-     * parent chevron (10px margin + 10px). The 1px line therefore sits about
-     * 4px inside that row. The fill starts just past the line.
+     * parent chevron (10px margin + 10px). The 1px line therefore ends about
+     * 4.5px inside that row. The fill starts one 4px step past that edge.
      */
     --_tree-guide-clearance: calc(
-      var(--astryx-spacing-2, 8px) + var(--astryx-spacing-0-5, 2px) + (var(--astryx-spacing-5, 20px) / 2) - var(--tree-list-indent, 16px) + 2px
+      var(--astryx-spacing-2, 8px) + var(--astryx-spacing-0-5, 2px) + (var(--astryx-spacing-5, 20px) / 2) + 0.5px - var(--tree-list-indent, 16px) + var(--astryx-spacing-1, 4px)
     );
   }
 
@@ -68,7 +68,7 @@
   }
 
   .astryx-tree-list__content[data-guide-inset]::before {
-    inset-inline-start: var(--_tree-guide-clearance, 6px);
+    inset-inline-start: var(--_tree-guide-clearance, 8.5px);
   }
 
   .astryx-tree-list__content[data-density='compact'] {
