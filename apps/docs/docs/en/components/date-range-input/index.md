@@ -28,7 +28,7 @@ const range = shallowRef<DateRange | null>(null)
 </template>
 ```
 
-The popover shows two months. The first click sets the start. The second click commits the range when the span is allowed. Clicking the start again commits a single day when `minRangeSpan` is 1, and cancels the selection otherwise. The closed field omits the year when both ends are in the current year. Presets sit beside the calendars, and move above them when the popover is narrower than 520px.
+The popover shows two months under one header. The first click sets the start. The second click commits the range when the span is allowed. Clicking the start again commits a single day when `minRangeSpan` is 1, and cancels the selection otherwise. The closed field omits the year when both ends are in the current year. Presets stay beside the calendars. When the two months no longer fit side by side, they wrap onto separate rows.
 
 ## Best practices
 
