@@ -1,0 +1,12 @@
+.layout-preview {
+  width: min(100%, 640px);
+}
+
+.layout-preview--fill {
+  height: 320px;
+}
+
+.layout-overview {
+  width: 100%;
+  height: 180px;
+}

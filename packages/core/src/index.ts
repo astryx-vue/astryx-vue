@@ -10,6 +10,18 @@ export type {
   ImperativeAlertDialogOptions,
   ImperativeAlertDialogReturn,
 } from './AlertDialog/index.js'
+export { AppShell } from './AppShell/index.js'
+export type {
+  AppShellBreakpoint,
+  AppShellEmits,
+  AppShellHeight,
+  AppShellMobileNav,
+  AppShellProps,
+  AppShellSlots,
+  AppShellVariant,
+} from './AppShell/index.js'
+export { AspectRatio } from './AspectRatio/index.js'
+export type { AspectRatioFit, AspectRatioProps, AspectRatioShape, AspectRatioSlots } from './AspectRatio/index.js'
 export { Avatar, AvatarStatusDot } from './Avatar/index.js'
 export type {
   AvatarNamedSize,
@@ -276,6 +288,8 @@ export type {
   FileInputStatus,
   FileInputValue,
 } from './FileInput/index.js'
+export { FormLayout } from './FormLayout/index.js'
+export type { FormLayoutDirection, FormLayoutProps, FormLayoutSlots, FormOptionality } from './FormLayout/index.js'
 export { Grid, GridSpan } from './Grid/index.js'
 export type {
   GridAlignment,
@@ -315,6 +329,21 @@ export { InputGroup } from './InputGroup/index.js'
 export type { InputGroupContext, InputGroupProps, InputGroupSize, InputGroupSlots } from './InputGroup/index.js'
 export { Kbd } from './Kbd/index.js'
 export type { KbdKeyAlias, KbdKeyName, KbdProps, KbdSpecialKey } from './Kbd/index.js'
+export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from './Layout/index.js'
+export type {
+  LayoutArea,
+  LayoutContentProps,
+  LayoutContentSlots,
+  LayoutFooterProps,
+  LayoutFooterSlots,
+  LayoutHeaderProps,
+  LayoutHeaderSlots,
+  LayoutHeight,
+  LayoutPanelProps,
+  LayoutPanelSlots,
+  LayoutProps,
+  LayoutSlots,
+} from './Layout/index.js'
 export { Link } from './Link/index.js'
 export type { LinkColor, LinkProps } from './Link/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
@@ -466,6 +495,18 @@ export type {
 } from './Radio/index.js'
 export { RadioList, RadioListItem } from './RadioList/index.js'
 export type { RadioListItemProps, RadioListProps } from './RadioList/index.js'
+export { ResizeHandle } from './Resizable/index.js'
+export type {
+  ResizeDirection,
+  ResizeHandleProps,
+  ResizeHandleSlots,
+  ResizePillPlacement,
+  ResizePosition,
+} from './Resizable/index.js'
+export { ScrollableArea } from './ScrollableArea/index.js'
+export type { ScrollableAreaProps, ScrollableAreaSlots } from './ScrollableArea/index.js'
+export { Section } from './Section/index.js'
+export type { SectionDivider, SectionProps, SectionSlots, SectionVariant } from './Section/index.js'
 export { SegmentedControl, SegmentedControlItem } from './SegmentedControl/index.js'
 export type {
   SegmentedControlContextValue,

@@ -5,6 +5,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, us
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
+import { useAriaRequired } from '../FormLayout/context.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -14,6 +15,7 @@ import '../../styles/button.css'
 
 defineOptions({ name: 'AstryxCheckboxInput', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<CheckboxInputProps, 'modelValue'>>(), { size: 'md', loadingLabel: 'Loading' })
+const ariaRequired = useAriaRequired(props)
 const emit = defineEmits<CheckboxInputEmits>()
 defineSlots<CheckboxInputSlots>()
 const model = defineModel<CheckboxValue>({ required: true })
@@ -99,7 +101,7 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
           :required="(isRequired && !isOptional) || inputAttrs().required" :readonly="isReadOnly || showsDisabledMessage"
           :aria-labelledby="[labelId, attrs['aria-labelledby']].filter(Boolean).join(' ')" :aria-describedby="describedBy()"
           :aria-disabled="showsDisabledMessage || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
-          :aria-required="(isRequired && !isOptional) || undefined" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
+          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
         >
         <CheckboxIndicator :state="state" :size="size" :is-disabled="isDisabled">

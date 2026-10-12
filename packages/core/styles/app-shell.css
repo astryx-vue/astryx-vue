@@ -1,0 +1,128 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-app-shell {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: clip;
+    min-height: 0;
+  }
+
+  .astryx-app-shell[data-variant='wash'],
+  .astryx-app-shell[data-variant='elevated'] {
+    background-color: var(--astryx-color-background-body, #f1f1f1);
+  }
+
+  .astryx-app-shell[data-variant='surface'],
+  .astryx-app-shell[data-variant='section'] {
+    background-color: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-app-shell[data-height='fill'] {
+    height: 100dvh;
+  }
+
+  .astryx-app-shell[data-height='auto'] {
+    min-height: 100dvh;
+  }
+
+  .astryx-app-shell > .astryx-layout {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .astryx-app-shell__skip {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    background-color: var(--astryx-color-background-surface, #fff);
+    color: var(--astryx-color-text-accent, #262626);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    text-decoration: none;
+    z-index: 9999;
+  }
+
+  .astryx-app-shell__skip:focus {
+    position: fixed;
+    top: var(--astryx-spacing-2, 8px);
+    inset-inline-start: var(--astryx-spacing-2, 8px);
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-4, 16px);
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  .astryx-app-shell__header[data-variant='wash'],
+  .astryx-app-shell__header[data-variant='elevated'],
+  .astryx-app-shell__sidenav[data-variant='wash'],
+  .astryx-app-shell__sidenav[data-variant='elevated'] {
+    background-color: var(--astryx-color-background-body, #f1f1f1);
+  }
+
+  .astryx-app-shell__header[data-variant='surface'],
+  .astryx-app-shell__sidenav[data-variant='surface'] {
+    background-color: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-app-shell__banner {
+    flex-shrink: 0;
+  }
+
+  .astryx-app-shell__mobile-bar {
+    display: flex;
+    align-items: center;
+    height: var(--astryx-spacing-12, 48px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-app-shell__main {
+    display: contents;
+  }
+
+  .astryx-app-shell__main[data-elevated] {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .astryx-app-shell__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: var(--astryx-color-background-surface, #fff);
+    border-start-start-radius: var(--astryx-radius-page, 1.75rem);
+    pointer-events: none;
+  }
+
+  .astryx-app-shell__content:focus {
+    outline: none;
+  }
+
+  .astryx-app-shell__content[data-variant='wash'] {
+    background-color: var(--astryx-color-background-body, #f1f1f1);
+  }
+
+  .astryx-app-shell__content[data-variant='surface'],
+  .astryx-app-shell__content[data-variant='elevated']:not([data-corner]) {
+    background-color: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-app-shell__content[data-corner] {
+    background-color: transparent;
+    isolation: isolate;
+  }
+}

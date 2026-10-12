@@ -7,6 +7,7 @@ import type { DateInputMessages } from './messages/date-input.js'
 import type { DateRangeInputMessages } from './messages/date-range-input.js'
 import type { DateTimeInputMessages } from './messages/date-time-input.js'
 import type { FileInputMessages } from './messages/file-input.js'
+import type { LayoutMessages } from './messages/layout.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MetadataListMessages } from './messages/metadata-list.js'
 import type { MultiSelectorMessages } from './messages/multi-selector.js'
@@ -30,6 +31,7 @@ import { dateInputMessages } from './messages/date-input.js'
 import { dateRangeInputMessages } from './messages/date-range-input.js'
 import { dateTimeInputMessages } from './messages/date-time-input.js'
 import { fileInputMessages } from './messages/file-input.js'
+import { layoutMessages } from './messages/layout.js'
 import { markdownMessages } from './messages/markdown.js'
 import { metadataListMessages } from './messages/metadata-list.js'
 import { multiSelectorMessages } from './messages/multi-selector.js'
@@ -54,6 +56,7 @@ export interface AstryxMessages {
   dateRangeInput: DateRangeInputMessages
   dateTimeInput: DateTimeInputMessages
   fileInput: FileInputMessages
+  layout: LayoutMessages
   markdown: MarkdownMessages
   metadataList: MetadataListMessages
   multiSelector: MultiSelectorMessages
@@ -80,6 +83,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateRangeInput: dateRangeInputMessages.en,
     dateTimeInput: dateTimeInputMessages.en,
     fileInput: fileInputMessages.en,
+    layout: layoutMessages.en,
     markdown: markdownMessages.en,
     metadataList: metadataListMessages.en,
     multiSelector: multiSelectorMessages.en,
@@ -104,6 +108,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateRangeInput: dateRangeInputMessages['zh-CN'],
     dateTimeInput: dateTimeInputMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
+    layout: layoutMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     metadataList: metadataListMessages['zh-CN'],
     multiSelector: multiSelectorMessages['zh-CN'],

@@ -3,6 +3,9 @@
 export { useAnnounce } from './useAnnounce.js'
 export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
 
+export { appShellMobileKey, useAppShellMobile } from './useAppShellMobile.js'
+export type { AppShellMobile } from './useAppShellMobile.js'
+
 export { createStaticSource, useAsyncSource } from './useAsyncSource.js'
 export type {
   AsyncSource,
@@ -83,10 +86,39 @@ export type {
   UseOverflowReturn,
 } from './useOverflow.js'
 
+export { percent, useResizable } from './useResizable.js'
+export type {
+  ResizableDirection,
+  ResizablePercentSize,
+  ResizableProps,
+  ResizableRegion,
+  ResizableRegionConfig,
+  ResizableSize,
+  ResizableState,
+  UseResizableMultiConfig,
+  UseResizableOptions,
+  UseResizableSingleOptions,
+} from './useResizable.js'
+
 export { useRestoreFocus } from './useRestoreFocus.js'
 export type { RestoreFocus, UseRestoreFocusOptions } from './useRestoreFocus.js'
 
+export { useScrollableArea } from './useScrollableArea.js'
+
+export type {
+  ScrollableAreaState,
+  ScrollAxis,
+  ScrollAxisState,
+  ScrollOverscroll,
+  ScrollRole,
+  ScrollStickyContainment,
+  UseScrollableAreaOptions,
+  UseScrollableAreaResult,
+} from './useScrollableArea.js'
 export { useScrollLock } from './useScrollLock.js'
+
+export { useScrollOverflow } from './useScrollOverflow.js'
+export type { ScrollOverflowState, UseScrollOverflowResult } from './useScrollOverflow.js'
 
 export { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
 export type { StreamingTextSpeed, UseStreamingTextOptions } from './useStreamingText.js'

@@ -14,6 +14,8 @@ export interface MobileNavProps {
   side?: MobileNavSide
   /** 对话框的无障碍名称。默认用标题，再退回当前语言的「导航」。 */
   label?: string
+  /** 对话框 id。不传时自己生成，方便外壳的开关用 aria-controls 指过来。 */
+  id?: string
 }
 
 export interface MobileNavEmits {

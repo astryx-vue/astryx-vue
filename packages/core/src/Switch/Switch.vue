@@ -4,6 +4,7 @@ import type { SwitchEmits, SwitchProps, SwitchSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useAriaRequired } from '../FormLayout/context.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useSwitchAction } from './useSwitchAction.js'
@@ -15,6 +16,7 @@ const props = withDefaults(defineProps<Omit<SwitchProps, 'modelValue'>>(), {
   statusVariant: 'detached',
   loadingLabel: 'Loading',
 })
+const ariaRequired = useAriaRequired(props)
 const emit = defineEmits<SwitchEmits>()
 defineSlots<SwitchSlots>()
 const model = defineModel<boolean>({ required: true })
@@ -100,7 +102,7 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
           :aria-labelledby="[`${inputId}-label`, attrs['aria-labelledby']].filter(Boolean).join(' ')"
           :aria-describedby="describedBy()"
           :aria-disabled="showsDisabledMessage || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
-          :aria-required="(isRequired && !isOptional) || undefined" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
+          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
         >
         <span class="astryx-switch-track" aria-hidden="true">

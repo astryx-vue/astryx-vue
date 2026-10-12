@@ -73,6 +73,18 @@
     gap: 0;
   }
 
+  /*
+   * horizontal-labels 把标签和控件拆成网格的两列。
+   * 标签顶部补上边框和 4px，才能和输入框里的文字对齐。
+   */
+  .astryx-field[data-layout='horizontal-labels'] {
+    display: contents;
+  }
+
+  .astryx-field[data-layout='horizontal-labels'] > .astryx-field-label-group {
+    padding-top: calc(var(--astryx-border-width, 1px) + var(--astryx-spacing-1, 4px));
+  }
+
   .astryx-field-control {
     position: relative;
     display: flex;

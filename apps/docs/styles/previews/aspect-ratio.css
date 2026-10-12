@@ -1,0 +1,19 @@
+.aspect-ratio-preview {
+  width: min(100%, 640px);
+}
+
+.aspect-ratio-preview img {
+  display: block;
+}
+
+.aspect-ratio-overview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.aspect-ratio-overview > * {
+  width: 72px;
+}
