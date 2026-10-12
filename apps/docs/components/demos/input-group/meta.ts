@@ -3,8 +3,8 @@ import { inputGroupOverview as demo } from './index'
 
 export const meta = {
   slug: 'input-group',
-  group: 'form',
-  order: 12,
+  group: 'Form Controls',
+  order: 5,
   en: 'Input Group',
   zh: '输入框组',
   demo,

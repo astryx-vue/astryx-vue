@@ -3,8 +3,8 @@ import { mobileNavOverview as demo } from './index'
 
 export const meta = {
   slug: 'mobile-nav',
-  group: 'navigation',
-  order: 8,
+  group: 'Navigation',
+  order: 1,
   en: 'Mobile Nav',
   zh: '移动端导航',
   demo,

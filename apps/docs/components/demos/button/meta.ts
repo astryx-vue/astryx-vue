@@ -3,7 +3,7 @@ import { buttonOverview as demo } from './index'
 
 export const meta = {
   slug: 'button',
-  group: 'action',
+  group: 'Action',
   order: 0,
   en: 'Button',
   zh: '按钮',

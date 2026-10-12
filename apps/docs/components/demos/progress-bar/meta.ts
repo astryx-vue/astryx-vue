@@ -3,8 +3,8 @@ import { progressBarOverview as demo } from './index'
 
 export const meta = {
   slug: 'progress-bar',
-  group: 'form',
-  order: 4,
+  group: 'Feedback & Status',
+  order: 2,
   en: 'Progress Bar',
   zh: '进度条',
   demo,

@@ -3,8 +3,8 @@ import { gridOverview as demo } from './index'
 
 export const meta = {
   slug: 'grid',
-  group: 'layout',
-  order: 3,
+  group: 'Layout',
+  order: 2,
   en: 'Grid',
   zh: '网格布局',
   demo,

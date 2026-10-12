@@ -3,8 +3,8 @@ import { fieldOverview as demo } from './index'
 
 export const meta = {
   slug: 'field',
-  group: 'form',
-  order: 10,
+  group: 'Form Controls',
+  order: 4,
   en: 'Field',
   zh: '表单字段',
   demo,

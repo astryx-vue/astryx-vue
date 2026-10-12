@@ -41,7 +41,15 @@
 2. `packages/core/styles/<kebab>.css`，以及需要主题时的 `packages/themes/neutral/<kebab>.css`。
 3. 文案放在 `packages/core/src/locale/messages/<kebab>.ts`。同一个文件里写 `en` 和 `zh-CN`，并导出 `export const <camel>Messages` 和 `export interface <Pascal>Messages`。没有文案就不要建这个文件。
 4. 可复用的组合式函数放在 `packages/core/src/composables/useX.ts`。不要手改该目录的 `index.ts`。
-5. 文档示例放在 `apps/docs/components/demos/<slug>/`，并新增 `meta.ts`（`slug`、分组、组内 `order`、中英文名、目录卡片示例）。文档页放在 `docs/zh/components/<slug>/` 和 `docs/en/components/<slug>/`。
+5. 文档示例放在 `apps/docs/components/demos/<slug>/`，并新增 `meta.ts`。文档页放在 `docs/zh/components/<slug>/` 和 `docs/en/components/<slug>/`。侧边栏和组件总览都读这份 `meta.ts`，不要再手写一份导航。
+
+   `group` 写原版 Astryx 文档的分类名，必须是下面其中一个（顺序也是侧边栏和总览的顺序，英文标题用这个原文，中文标题在 `apps/docs/components/demo-infra/groups.ts`）：
+
+   `Action`、`Chat`、`Container`、`Content`、`Data Visualization`、`Feedback & Status`、`Form Controls`、`Layout`、`Navigation`、`Overlay`、`Table & List`、`Utility`。
+
+   分类以 facebook/astryx 里该组件 `.doc.mjs` 的 `category` 为准，和 `apps/docsite/src/app/(docs)/components/page.tsx` 的 `CATEGORIES` 同一套。原版没有的组件，归到最接近的这一组。
+
+   `order` 是组内位置，从 0 起，同一组不能重复。组内顺序跟原版组件总览一致，也就是按英文显示名的字母序；原版没有的组件同样按英文名插进这个序列。新组件只改自己的 `meta.ts`，跑 `pnpm sync` 后会自动出现在对应分组里。
 
 然后在仓库根目录运行 `pnpm sync`。`pnpm check` 里的 `sync --check` 会核对生成结果；不一致就先重新生成，不要手动合并这些文件。
 

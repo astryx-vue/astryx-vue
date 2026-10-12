@@ -34,6 +34,7 @@ export function componentName(locale: DocsLocale, slug: ComponentSlug): string {
 }
 
 export interface CatalogGroup {
+  id: ComponentGroup
   title: string
   entries: readonly ComponentCatalogEntry[]
 }
@@ -45,6 +46,7 @@ export interface CatalogGroup {
 export function catalogGroups(locale: DocsLocale): CatalogGroup[] {
   return COMPONENT_GROUPS
     .map(group => ({
+      id: group,
       title: GROUP_TITLES[locale][group],
       entries: COMPONENT_CATALOG.filter(entry => entry.group === group),
     }))

@@ -479,7 +479,7 @@ html.dark .astryx-hero .astryx-button--primary:hover {
 
 .component-overview {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-columns: 260px minmax(0, 1fr);
   min-height: calc(100svh - var(--vp-nav-height));
   color: var(--astryx-text);
   background: var(--astryx-bg);
@@ -489,44 +489,18 @@ html.dark .astryx-hero .astryx-button--primary:hover {
   position: sticky;
   top: var(--vp-nav-height);
   align-self: start;
+  display: flex;
+  flex-direction: column;
   height: calc(100svh - var(--vp-nav-height));
-  padding: 16px 14px 28px;
-  overflow-y: auto;
+  overflow: hidden;
   border-right: 1px solid var(--astryx-line);
 }
 
-.component-overview__nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.component-overview__nav a {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 0 12px;
-  border-radius: 10px;
-  color: var(--astryx-text-muted);
-  text-decoration: none;
-}
-
-.component-overview__nav a:hover {
-  color: var(--astryx-text);
-  background: var(--vp-c-bg-soft);
-}
-
-.component-overview__nav a[aria-current='page'] {
-  color: var(--astryx-text);
-  background: var(--vp-c-bg-elv);
-}
-
-.component-overview__group {
-  margin: var(--astryx-spacing-6) var(--astryx-spacing-3) var(--astryx-spacing-2);
-  color: var(--astryx-color-text-primary);
-  font-size: var(--astryx-text-large-size);
-  font-weight: var(--astryx-text-large-weight);
-  line-height: var(--astryx-text-large-leading);
+.component-overview__sidenav {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  --astryx-side-nav-width: 100%;
 }
 
 .component-overview__toolbar,
@@ -1344,14 +1318,12 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
     z-index: var(--vp-z-index-sidebar);
     width: min(20rem, calc(100vw - 4rem));
     height: auto;
-    padding: 24px 20px 96px;
     border-right: 0;
     background: var(--vp-sidebar-bg-color, var(--astryx-bg));
     box-shadow: var(--vp-shadow-3);
     opacity: 0;
     visibility: hidden;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     overscroll-behavior: contain;
     transform: translateX(-100%);
     transition: opacity 0.5s, transform 0.25s ease;

@@ -3,8 +3,8 @@ import { spinnerOverview as demo } from './index'
 
 export const meta = {
   slug: 'spinner',
-  group: 'feedback',
-  order: 3,
+  group: 'Feedback & Status',
+  order: 4,
   en: 'Spinner',
   zh: '加载态',
   demo,

@@ -3,7 +3,7 @@ import { toolbarOverview as demo } from './index'
 
 export const meta = {
   slug: 'toolbar',
-  group: 'navigation',
+  group: 'Action',
   order: 9,
   en: 'Toolbar',
   zh: '工具栏',

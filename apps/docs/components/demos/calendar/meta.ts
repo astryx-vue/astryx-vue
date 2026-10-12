@@ -3,8 +3,8 @@ import { calendarOverview as demo } from './index'
 
 export const meta = {
   slug: 'calendar',
-  group: 'form',
-  order: 17,
+  group: 'Form Controls',
+  order: 0,
   en: 'Calendar',
   zh: '日历',
   demo,

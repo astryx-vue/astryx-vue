@@ -3,8 +3,8 @@ import { breadcrumbsOverview as demo } from './index'
 
 export const meta = {
   slug: 'breadcrumbs',
-  group: 'navigation',
-  order: 1,
+  group: 'Navigation',
+  order: 0,
   en: 'Breadcrumbs',
   zh: '面包屑',
   demo,
