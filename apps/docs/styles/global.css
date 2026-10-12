@@ -503,6 +503,11 @@ html.dark .astryx-hero .astryx-button--primary:hover {
   --astryx-side-nav-width: 100%;
 }
 
+html.component-docs-scroll-lock,
+html.component-docs-scroll-lock body {
+  overflow: clip;
+}
+
 .component-overview__toolbar,
 .component-overview__backdrop {
   display: none;
@@ -1268,8 +1273,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   }
 }
 
-/* 和 VitePress 一样：60rem 以下侧栏离开文档流，从导航上的菜单按钮以抽屉打开。
-   原先 position: static 会把整份目录叠在正文上面。 */
+/* 60rem 以下侧栏离开文档流，从左侧滑出铺满视口高度的抽屉。 */
 @media (width < 60rem) {
   .Layout:has(.component-overview) .VPLocalNav {
     display: none;
@@ -1316,30 +1320,46 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
     flex-shrink: 0;
   }
 
+  .component-overview__sidenav .astryx-side-nav__body {
+    scrollbar-gutter: stable;
+  }
+
   .component-overview__sidebar {
     position: fixed;
-    top: var(--vp-layout-top-height, 0px);
-    bottom: 0;
-    left: 0;
+    inset-block: 0;
+    inset-inline-start: 0;
     z-index: var(--vp-z-index-sidebar);
-    width: min(20rem, calc(100vw - 4rem));
-    height: auto;
+    align-self: stretch;
+    box-sizing: border-box;
+    width: min(320px, 80vw);
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
     border-right: 0;
     background: var(--vp-sidebar-bg-color, var(--astryx-bg));
-    box-shadow: var(--vp-shadow-3);
-    opacity: 0;
+    box-shadow: var(--astryx-shadow-low);
     visibility: hidden;
     overflow: hidden;
     overscroll-behavior: contain;
+    pointer-events: none;
     transform: translateX(-100%);
-    transition: opacity 0.5s, transform 0.25s ease;
+    transition:
+      transform var(--astryx-duration-medium, 300ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      visibility 0s linear var(--astryx-duration-medium, 300ms);
   }
 
-  .component-overview__sidebar.is-open {
-    opacity: 1;
+  [dir='rtl'] .component-overview__sidebar {
+    transform: translateX(100%);
+  }
+
+  .component-overview__sidebar.is-open,
+  [dir='rtl'] .component-overview__sidebar.is-open {
     visibility: visible;
+    pointer-events: auto;
     transform: translateX(0);
-    transition: opacity 0.25s, transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    transition:
+      transform var(--astryx-duration-medium, 300ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      visibility 0s linear 0s;
   }
 
   .component-overview__backdrop {
@@ -1349,8 +1369,30 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
     display: block;
     padding: 0;
     border: 0;
-    background: var(--vp-backdrop-bg-color);
+    background: var(--astryx-color-overlay, rgb(0 0 0 / 50%));
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
     cursor: pointer;
+    transition:
+      opacity var(--astryx-duration-medium, 300ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      visibility 0s linear var(--astryx-duration-medium, 300ms);
+  }
+
+  .component-overview__backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity var(--astryx-duration-medium, 300ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      visibility 0s linear 0s;
+  }
+}
+
+@media (width < 60rem) and (prefers-reduced-motion: reduce) {
+  .component-overview__sidebar,
+  .component-overview__backdrop {
+    transition-duration: 0.01ms;
   }
 }
 

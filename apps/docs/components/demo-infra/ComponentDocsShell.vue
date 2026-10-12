@@ -20,6 +20,7 @@ const activeGroupId = computed(() => {
 const sidebarOpen = ref(false)
 const isNarrow = ref(false)
 const menuButton = ref<HTMLButtonElement | null>(null)
+const backdropEl = ref<HTMLButtonElement | null>(null)
 const sidebarEl = ref<HTMLElement | null>(null)
 let media: MediaQueryList | undefined
 
@@ -35,7 +36,7 @@ function syncNarrow(): void {
 
 function openSidebar(): void {
   sidebarOpen.value = true
-  nextTick(() => sidebarEl.value?.focus())
+  nextTick(() => sidebarEl.value?.focus({ preventScroll: true }))
 }
 
 function closeSidebar(restoreFocus = true): void {
@@ -43,7 +44,7 @@ function closeSidebar(restoreFocus = true): void {
     return
   sidebarOpen.value = false
   if (restoreFocus)
-    nextTick(() => menuButton.value?.focus())
+    nextTick(() => menuButton.value?.focus({ preventScroll: true }))
 }
 
 function toggleSidebar(): void {
@@ -62,21 +63,33 @@ function onKeydown(event: KeyboardEvent): void {
     closeSidebar()
 }
 
+function onFocusIn(event: FocusEvent): void {
+  if (!sidebarOpen.value || !isNarrow.value)
+    return
+  const sidebar = sidebarEl.value
+  const target = event.target
+  if (!sidebar || !(target instanceof Node) || sidebar.contains(target) || target === backdropEl.value)
+    return
+  sidebar.focus({ preventScroll: true })
+}
+
 onMounted(() => {
   media = window.matchMedia('(width < 60rem)')
   syncNarrow()
   media.addEventListener('change', syncNarrow)
   window.addEventListener('keydown', onKeydown)
+  document.addEventListener('focusin', onFocusIn)
 })
 
 onBeforeUnmount(() => {
   media?.removeEventListener('change', syncNarrow)
   window.removeEventListener('keydown', onKeydown)
-  document.documentElement.style.overflow = ''
+  document.removeEventListener('focusin', onFocusIn)
+  document.documentElement.classList.remove('component-docs-scroll-lock')
 })
 
 watch(sidebarOpen, (open) => {
-  document.documentElement.style.overflow = open ? 'hidden' : ''
+  document.documentElement.classList.toggle('component-docs-scroll-lock', open)
 })
 
 watch(() => routePath.path, () => {
@@ -86,7 +99,7 @@ watch(() => routePath.path, () => {
 
 <template>
   <main class="component-overview" :class="[{ 'component-detail': route.kind === 'detail', 'is-sidebar-open': sidebarOpen }]">
-    <div class="component-overview__toolbar">
+    <div class="component-overview__toolbar" :inert="sidebarOpen ? true : undefined">
       <button
         ref="menuButton"
         type="button"
@@ -104,47 +117,55 @@ watch(() => routePath.path, () => {
         {{ text.returnToTop }}
       </button>
     </div>
-    <button
-      v-if="sidebarOpen"
-      type="button"
-      class="component-overview__backdrop"
-      tabindex="-1"
-      :aria-label="text.closeNavigation"
-      @click="closeSidebar()"
-    />
-    <aside
-      id="component-overview-nav"
-      ref="sidebarEl"
-      class="component-overview__sidebar"
-      :class="{ 'is-open': sidebarOpen }"
-      tabindex="-1"
-    >
-      <SideNav class="component-overview__sidenav" :label="text.navigation">
-        <SideNavSection is-header-hidden :title="text.catalogTitle">
-          <SideNavItem
-            :href="path('/components/')"
-            :is-selected="route.kind === 'catalog'"
-            :label="text.overview"
-            @click="closeSidebar(false)"
-          />
-          <SideNavItem
-            v-for="group in groups"
-            :key="activeGroupId === group.id ? `${group.id}-open` : group.id"
-            :collapsible="{ defaultIsCollapsed: activeGroupId !== group.id }"
-            :label="group.title"
-          >
+    <Teleport to="body" :disabled="!isNarrow">
+      <button
+        ref="backdropEl"
+        type="button"
+        class="component-overview__backdrop"
+        :class="{ 'is-open': sidebarOpen }"
+        tabindex="-1"
+        :aria-hidden="sidebarOpen ? undefined : true"
+        :aria-label="text.closeNavigation"
+        @click="closeSidebar()"
+      />
+      <aside
+        id="component-overview-nav"
+        ref="sidebarEl"
+        class="component-overview__sidebar"
+        :class="{ 'is-open': sidebarOpen }"
+        :inert="isNarrow && !sidebarOpen ? true : undefined"
+        :aria-modal="isNarrow && sidebarOpen ? true : undefined"
+        :role="isNarrow && sidebarOpen ? 'dialog' : undefined"
+        :aria-label="isNarrow && sidebarOpen ? text.navigation : undefined"
+        tabindex="-1"
+      >
+        <SideNav class="component-overview__sidenav" :label="text.navigation">
+          <SideNavSection is-header-hidden :title="text.catalogTitle">
             <SideNavItem
-              v-for="entry in group.entries"
-              :key="entry.slug"
-              :href="path(`/components/${entry.slug}`)"
-              :is-selected="route.kind === 'detail' && route.slug === entry.slug"
-              :label="entry[route.locale]"
+              :href="path('/components/')"
+              :is-selected="route.kind === 'catalog'"
+              :label="text.overview"
               @click="closeSidebar(false)"
             />
-          </SideNavItem>
-        </SideNavSection>
-      </SideNav>
-    </aside>
+            <SideNavItem
+              v-for="group in groups"
+              :key="activeGroupId === group.id ? `${group.id}-open` : group.id"
+              :collapsible="{ defaultIsCollapsed: activeGroupId !== group.id }"
+              :label="group.title"
+            >
+              <SideNavItem
+                v-for="entry in group.entries"
+                :key="entry.slug"
+                :href="path(`/components/${entry.slug}`)"
+                :is-selected="route.kind === 'detail' && route.slug === entry.slug"
+                :label="entry[route.locale]"
+                @click="closeSidebar(false)"
+              />
+            </SideNavItem>
+          </SideNavSection>
+        </SideNav>
+      </aside>
+    </Teleport>
     <div class="component-overview__main" :inert="sidebarOpen ? true : undefined">
       <slot v-if="route.kind === 'catalog'" />
       <article v-else class="component-detail__content">
