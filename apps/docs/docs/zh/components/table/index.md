@@ -59,7 +59,7 @@ const columns = [
 
 过滤是组件自己做的，不依赖这个库里还没有的 PowerSearch。过滤状态要用 getter 传进去，表格才会读到最新的值：
 
-```vue
+```ts
 const { filters, onFilterChange } = useTableFilterState()
 const filterPlugin = useTableFiltering(() => ({
   filters: filters.value,
