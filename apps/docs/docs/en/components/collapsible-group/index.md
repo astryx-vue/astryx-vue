@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { collapsibleGroupAccordion, collapsibleGroupCoordinated } from '../../../../components/demos/collapsible-group'
+import { collapsibleGroupDensity } from '../../../../components/demos/collapsible-group'
 </script>
 
 ## Usage
@@ -34,5 +34,4 @@ import { Collapsible, CollapsibleGroup } from '@astryx-vue/core/Collapsible'
 
 ## Examples
 
-<DemoExample :demo="collapsibleGroupCoordinated" description="Shipping, returns, and payment. Each section sits in its own card, and only one stays open." locale="en" title="Collapsible group" />
-<DemoExample :demo="collapsibleGroupAccordion" description="Account starts open. Notifications and Billing take its place when they open." locale="en" title="Accordion" />
+<DemoExample :demo="collapsibleGroupDensity" description="compact, balanced, and spacious. Density sets the padding on every row, and dividers separate the sections." locale="en" title="Density" />

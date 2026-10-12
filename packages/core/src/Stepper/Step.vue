@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { StepProgress, StepProps, StepSlots } from './types.js'
-import { computed, inject } from 'vue'
+import { computed, inject, onUnmounted, watch } from 'vue'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { stepperContextKey } from './context.js'
+import { resolveStepGlyph } from './logic.js'
+import StepMarker from './StepMarker.vue'
 import '../../styles/stepper.css'
 
 defineOptions({ name: 'AstryxStep' })
@@ -33,18 +35,12 @@ const orientation = computed(() => stepper?.orientation.value ?? 'horizontal')
 const indicatorPosition = computed(() => stepper?.indicatorPosition.value ?? 'separated')
 const isClickable = computed(() => stepper?.isNonLinear.value === true && !props.isDisabled)
 const numberLabel = computed(() => String(props.step + 1))
-const statusGlyph = computed(() => {
-  if (props.status === 'success' || (props.status == null && progress.value === 'completed' && props.indicator === 'auto'))
-    return 'check'
-  if (props.status === 'warning')
-    return 'warning'
-  if (props.status === 'error')
-    return 'error'
-  return null
-})
-const showNumber = computed(() => props.indicator === 'number' || (props.indicator === 'auto' && progress.value === 'not-started'))
-const showCheck = computed(() => props.indicator === 'auto' && progress.value === 'completed' && statusGlyph.value == null)
-const showRing = computed(() => props.indicator === 'auto' && progress.value === 'in-progress' && statusGlyph.value == null)
+const glyph = computed(() => resolveStepGlyph({
+  progress: progress.value,
+  indicator: props.indicator,
+  status: props.status,
+}))
+const collapsed = computed(() => stepper?.collapsed.value === true)
 const leadFilled = computed(() => props.step <= (stepper?.activeStep.value ?? 0))
 const trailFilled = computed(() => props.step < (stepper?.activeStep.value ?? 0))
 
@@ -79,6 +75,23 @@ function activate(): void {
     return
   stepper?.select.value?.(props.step)
 }
+
+if (stepper) {
+  const context = stepper
+  watch(
+    () => ({
+      step: props.step,
+      label: props.label,
+      description: props.description,
+      indicator: props.indicator,
+      status: props.status,
+      isDisabled: props.isDisabled,
+    }),
+    record => context.register(record),
+    { immediate: true },
+  )
+  onUnmounted(() => context.unregister(props.step))
+}
 </script>
 
 <template>
@@ -92,7 +105,7 @@ function activate(): void {
     :data-status="status"
   >
     <span
-      v-if="indicatorPosition === 'separated'"
+      v-if="indicatorPosition === 'separated' || collapsed"
       class="astryx-step-bar"
       :data-filled="leadFilled || undefined"
     />
@@ -107,26 +120,10 @@ function activate(): void {
       :type="isClickable ? 'button' : undefined"
       @click="activate"
     >
-      <span v-if="indicator !== 'none'" class="astryx-step-indicator" aria-hidden="true">
-        <slot name="icon">
-          <svg v-if="statusGlyph === 'warning'" viewBox="0 0 16 16">
-            <path d="M8 1.8 14.5 14H1.5L8 1.8z" fill="none" stroke="currentColor" stroke-width="1.5" />
-            <path d="M8 6.2v4.2" stroke="currentColor" stroke-linecap="round" />
-          </svg>
-          <svg v-else-if="statusGlyph === 'error'" viewBox="0 0 16 16">
-            <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5" />
-            <path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="currentColor" stroke-linecap="round" />
-          </svg>
-          <svg v-else-if="showCheck || statusGlyph === 'check'" viewBox="0 0 16 16">
-            <path d="M3.5 8.2 6.4 11 12.5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" />
-          </svg>
-          <svg v-else-if="showRing" viewBox="0 0 16 16">
-            <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2" />
-            <circle cx="8" cy="8" r="2.5" fill="currentColor" />
-          </svg>
-          <span v-else-if="showNumber">{{ numberLabel }}</span>
-        </slot>
+      <span v-if="$slots.icon" class="astryx-step-indicator" :data-glyph="glyph" aria-hidden="true">
+        <slot name="icon" />
       </span>
+      <StepMarker v-else :glyph="glyph" :number-label="numberLabel" />
       <span class="astryx-step-copy">
         <span class="astryx-step-label-row">
           <span class="astryx-step-label">{{ label }}</span>

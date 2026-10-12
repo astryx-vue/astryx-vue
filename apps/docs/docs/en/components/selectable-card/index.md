@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { selectableCardColors, selectableCardElevated, selectableCardPlans } from '../../../../components/demos/selectable-card'
+import { selectableCardColors, selectableCardElevated } from '../../../../components/demos/selectable-card'
 </script>
 
 ## Usage
@@ -36,6 +36,5 @@ const selected = ref('pro')
 
 ## Examples
 
-<DemoExample :demo="selectableCardPlans" description="Basic, Pro, and Enterprise. One plan is selected." locale="en" title="Selectable card" />
-<DemoExample :demo="selectableCardColors" description="React, TypeScript, Node.js, Python, Rust, and Go. Each card keeps its own color, and more than one can be selected." locale="en" title="Multi-select" />
 <DemoExample :demo="selectableCardElevated" description="Starter and Pro sit on a low shadow. The selection ring layers on top." locale="en" title="Elevated" />
+<DemoExample :demo="selectableCardColors" description="React, TypeScript, Node.js, Python, Rust, and Go. Each card keeps its own color, and more than one can be selected." locale="en" title="Multi-select" />

@@ -34,5 +34,5 @@ const view = ref<string | null>('grid')
 
 ## Examples
 
-<DemoExample :demo="toggleButtonGroupSelection" description="View mode keeps one choice. Status filters can keep several." locale="en" title="Toggle button group" />
-<DemoExample :demo="toggleButtonGroupVertical" description="The same two groups, stacked vertically." locale="en" title="Vertical" />
+<DemoExample :demo="toggleButtonGroupSelection" description="Single selection switches the view. Multiple selection is a formatting toolbar." locale="en" title="Group" />
+<DemoExample :demo="toggleButtonGroupVertical" description="List, Grid, and Board, plus Active, Pending, and Closed, stacked vertically." locale="en" title="Vertical" />

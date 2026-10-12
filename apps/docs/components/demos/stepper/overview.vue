@@ -6,9 +6,9 @@ const active = ref(1)
 </script>
 
 <template>
-  <Stepper :active-step="active" indicator-position="on-track" @step-click="active = $event">
-    <Step indicator="number" label="Cart" :step="0" />
-    <Step indicator="number" label="Shipping" :step="1" />
-    <Step indicator="number" label="Payment" :step="2" />
+  <Stepper :active-step="active" @step-click="active = $event">
+    <Step label="Cart" :step="0" />
+    <Step label="Shipping" :step="1" />
+    <Step label="Payment" :step="2" />
   </Stepper>
 </template>

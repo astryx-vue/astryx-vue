@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { tabMenuBasic, tabMenuShowcase } from '../../../../components/demos/tab-menu'
+import { tabMenuBasic } from '../../../../components/demos/tab-menu'
 </script>
 
 ## Usage
@@ -45,4 +45,3 @@ const value = ref('overview')
 ## Examples
 
 <DemoExample :demo="tabMenuBasic" description="Overview and Activity stay on the list. Settings and Billing sit in More." locale="en" title="Basic" />
-<DemoExample :demo="tabMenuShowcase" description="Settings is already selected, so the trigger reads Settings and shows the selected tab style." locale="en" title="Tab menu" />

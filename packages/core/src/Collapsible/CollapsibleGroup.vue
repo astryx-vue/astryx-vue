@@ -8,6 +8,7 @@ import '../../styles/collapsible.css'
 defineOptions({ name: 'AstryxCollapsibleGroup' })
 
 const props = withDefaults(defineProps<CollapsibleGroupProps>(), {
+  chevronPosition: 'end',
   hasDividers: false,
   type: 'single',
 })
@@ -53,9 +54,10 @@ function toggle(item: string): void {
 
 const density = computed(() => props.density ?? (props.hasDividers ? 'balanced' : null))
 const hasDividers = computed(() => props.hasDividers)
+const chevronPosition = computed(() => props.chevronPosition)
 
 provide(collapsibleGroupKey, { isOpen, toggle })
-provide(collapsibleGroupPresentationKey, { density, hasDividers })
+provide(collapsibleGroupPresentationKey, { chevronPosition, density, hasDividers })
 </script>
 
 <template>

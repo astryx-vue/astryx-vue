@@ -1,4 +1,5 @@
 import type { ComputedRef, InjectionKey } from 'vue'
+import type { CollapsibleChevronPosition } from './types.js'
 
 export type CollapsibleGroupDensity = 'compact' | 'balanced' | 'spacious'
 export type CollapsibleGroupType = 'single' | 'multiple'
@@ -12,6 +13,7 @@ export interface CollapsibleGroupContextValue {
 export interface CollapsibleGroupPresentation {
   hasDividers: ComputedRef<boolean>
   density: ComputedRef<CollapsibleGroupDensity | null>
+  chevronPosition: ComputedRef<CollapsibleChevronPosition>
 }
 
 export const collapsibleGroupKey: InjectionKey<CollapsibleGroupContextValue> = Symbol('collapsibleGroup')

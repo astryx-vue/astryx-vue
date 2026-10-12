@@ -10,6 +10,17 @@ const active = ref(2)
   <div class="stepper-modes">
     <div>
       <Text type="label">
+        None
+      </Text>
+      <Stepper :active-step="active" orientation="vertical" @step-click="active = $event">
+        <Step indicator="none" label="Account" :step="0" />
+        <Step indicator="none" label="Profile" :step="1" />
+        <Step indicator="none" label="Settings" :step="2" />
+        <Step indicator="none" label="Review" :step="3" />
+      </Stepper>
+    </div>
+    <div>
+      <Text type="label">
         Auto
       </Text>
       <Stepper :active-step="active" orientation="vertical" @step-click="active = $event">

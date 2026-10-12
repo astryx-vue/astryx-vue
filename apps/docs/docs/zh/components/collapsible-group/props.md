@@ -18,6 +18,7 @@ footer: false
       <tr><td><code>value</code></td><td><code>string | string[]</code></td><td>-</td><td>受控的展开项。用 <code>v-model:value</code> 绑定。</td></tr>
       <tr><td><code>hasDividers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在项与项之间画一条细线。</td></tr>
       <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td>有分隔线时为 <code>'balanced'</code></td><td>触发器和内容的内边距。</td></tr>
+      <tr><td><code>chevronPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'end'</code></td><td>每一项箭头的位置。单项仍可以自己设置 <code>chevronPosition</code>。</td></tr>
     </tbody>
   </table>
 </div>

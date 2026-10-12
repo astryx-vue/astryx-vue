@@ -7,9 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import {
-  complexSelectorCategory,
-  complexSelectorFruit,
-  complexSelectorStatus,
+  complexSelectorDeadline,
   complexSelectorTree,
 } from '../../../../components/demos/complex-selector'
 </script>
@@ -25,25 +23,23 @@ import {
 import { ComplexSelector } from '@astryx-vue/core/ComplexSelector'
 import { ref } from 'vue'
 
-const value = ref('Apple, Juicy')
+const value = ref('Today')
 </script>
 
 <template>
-  <ComplexSelector v-model="value" label="Fruit blend" :trigger-label="value">
+  <ComplexSelector v-model="value" label="Deadline" :trigger-label="value">
     <template #default="{ commit, close }">
-      <button type="button" @click="commit('Pear, Juicy'); close()">
-        Pear, Juicy
+      <button type="button" @click="commit('Next week'); close()">
+        Next week
       </button>
     </template>
   </ComplexSelector>
 </template>
 ```
 
-A grid inside the slot can use `useGridRovingFocus`. A tree can use `TreeList`. `status`, `isDisabled`, `isRequired`, and `description` are the same field props as the other inputs.
+The popup stays open until the slot calls `commit`. A tree can use `TreeList`. `status`, `isDisabled`, `isRequired`, and `description` are the same field props as the other inputs.
 
 ## Examples
 
-<DemoExample :demo="complexSelectorFruit" description="Apple, Pear, Peach, and Plum against Crisp, Tender, Juicy, and Peak. Arrow keys stay in the ripeness column." locale="en" title="Fruit ripeness" />
-<DemoExample :demo="complexSelectorTree" description="Search folders under Workspace, Teams, and Archive. The current path stays under the tree." locale="en" title="Tree list with search" />
-<DemoExample :demo="complexSelectorCategory" description="Produce and Pantry. Save category sits beside the field." locale="en" title="Category tree" />
-<DemoExample :demo="complexSelectorStatus" description="Workspace runs a short save and shows a success message. Locked folder is disabled and shows an error." locale="en" title="Status and pending change" />
+<DemoExample :demo="complexSelectorDeadline" description="Today, Tomorrow, or Next week, or a custom date and time. Apply commits the value and closes the popup." locale="en" title="Deadline picker" />
+<DemoExample :demo="complexSelectorTree" description="Search folders under Teams and Workspace. Choosing a folder closes the popup." locale="en" title="Tree search" />

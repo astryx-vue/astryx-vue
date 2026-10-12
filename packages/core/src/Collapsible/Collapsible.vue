@@ -10,7 +10,6 @@ defineOptions({ name: 'AstryxCollapsible' })
 const props = withDefaults(defineProps<Omit<CollapsibleProps, 'isOpen'>>(), {
   defaultIsOpen: true,
   isDisabled: false,
-  chevronPosition: 'end',
 })
 
 const emit = defineEmits<CollapsibleEmits>()
@@ -27,7 +26,8 @@ const isOpen = computed(() => {
 })
 const density = computed(() => presentation?.density.value ?? null)
 const hasDividers = computed(() => presentation?.hasDividers.value ?? false)
-const isChevronAtStart = computed(() => props.chevronPosition === 'start')
+const chevronPosition = computed(() => props.chevronPosition ?? presentation?.chevronPosition.value ?? 'end')
+const isChevronAtStart = computed(() => chevronPosition.value === 'start')
 const contentId = `astryx-collapsible-${useId()}`
 const root = useTemplateRef<HTMLDivElement>('root')
 const element = computed(() => root.value ?? null)

@@ -7,9 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import {
-  complexSelectorCategory,
-  complexSelectorFruit,
-  complexSelectorStatus,
+  complexSelectorDeadline,
   complexSelectorTree,
 } from '../../../../components/demos/complex-selector'
 </script>
@@ -25,25 +23,23 @@ import {
 import { ComplexSelector } from '@astryx-vue/core/ComplexSelector'
 import { ref } from 'vue'
 
-const value = ref('Apple, Juicy')
+const value = ref('Today')
 </script>
 
 <template>
-  <ComplexSelector v-model="value" label="Fruit blend" :trigger-label="value">
+  <ComplexSelector v-model="value" label="Deadline" :trigger-label="value">
     <template #default="{ commit, close }">
-      <button type="button" @click="commit('Pear, Juicy'); close()">
-        Pear, Juicy
+      <button type="button" @click="commit('Next week'); close()">
+        Next week
       </button>
     </template>
   </ComplexSelector>
 </template>
 ```
 
-插槽里的网格可以用 `useGridRovingFocus`。树可以用 `TreeList`。`status`、`isDisabled`、`isRequired` 和 `description` 与其他输入框的字段属性相同。
+弹层会一直开着，直到插槽调用 `commit`。树可以用 `TreeList`。`status`、`isDisabled`、`isRequired` 和 `description` 与其他输入框的字段属性相同。
 
 ## 示例
 
-<DemoExample :demo="complexSelectorFruit" description="Apple、Pear、Peach、Plum 对应 Crisp、Tender、Juicy、Peak。方向键留在同一列成熟度上。" locale="zh" title="水果成熟度" />
-<DemoExample :demo="complexSelectorTree" description="在 Workspace、Teams、Archive 里搜索文件夹。当前路径留在树的下面。" locale="zh" title="带搜索的树" />
-<DemoExample :demo="complexSelectorCategory" description="Produce 和 Pantry。Save category 放在字段旁边。" locale="zh" title="分类树" />
-<DemoExample :demo="complexSelectorStatus" description="Workspace 会做一次短暂保存并显示成功。Locked folder 被禁用，并显示错误。" locale="zh" title="状态与提交中" />
+<DemoExample :demo="complexSelectorDeadline" description="Today、Tomorrow 或 Next week，也可以自定义日期和时间。Apply 提交并关闭弹层。" locale="zh" title="截止日期" />
+<DemoExample :demo="complexSelectorTree" description="在 Teams 和 Workspace 里搜索文件夹。选中文件夹后弹层关闭。" locale="zh" title="树搜索" />

@@ -18,6 +18,7 @@ footer: false
       <tr><td><code>value</code></td><td><code>string | string[]</code></td><td>-</td><td>Controlled open section. Bind with <code>v-model:value</code>.</td></tr>
       <tr><td><code>hasDividers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Draw a hairline between sections.</td></tr>
       <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code> with dividers</td><td>Trigger and content padding.</td></tr>
+      <tr><td><code>chevronPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'end'</code></td><td>Chevron side for every section. A section can still set its own <code>chevronPosition</code>.</td></tr>
     </tbody>
   </table>
 </div>

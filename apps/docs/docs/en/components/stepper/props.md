@@ -20,6 +20,7 @@ footer: false
       <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>Space around each step.</td></tr>
       <tr><td><code>indicatorPosition</code></td><td><code>'separated' | 'on-track'</code></td><td><code>'separated'</code></td><td>Whether the marker sits on the connector or beside a separate bar.</td></tr>
       <tr><td><code>hasCollapsibleLabels</code></td><td><code>boolean</code></td><td><code>false</code></td><td>In a horizontal stepper narrower than 480px, hide every label except the current one.</td></tr>
+      <tr><td><code>horizontalOptions</code></td><td><code>{ minimumStepWidth?: number, collapsedVariant?: 'withLabelAndControls' | 'withLabel' | 'hiddenLabel' }</code></td><td><code>collapsedVariant: 'withLabelAndControls'</code></td><td>When the horizontal stepper is narrower than <code>minimumStepWidth</code> times the step count, it keeps the track. <code>withLabelAndControls</code> shows the current step with Previous and Next when <code>onStepClick</code> is set. <code>withLabel</code> shows the label only. <code>hiddenLabel</code> leaves the track.</td></tr>
     </tbody>
   </table>
 </div>

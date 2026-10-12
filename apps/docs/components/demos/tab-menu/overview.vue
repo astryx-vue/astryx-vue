@@ -2,7 +2,7 @@
 import { Tab, TabList, TabMenu } from '@astryx-vue/core/TabList'
 import { ref } from 'vue'
 
-const value = ref('overview')
+const value = ref('settings')
 </script>
 
 <template>

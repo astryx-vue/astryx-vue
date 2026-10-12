@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { TreeListItemData } from '@astryx-vue/core/TreeList'
 import { ComplexSelector } from '@astryx-vue/core/ComplexSelector'
-import { HStack, VStack } from '@astryx-vue/core/Stack'
+import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { TextInput } from '@astryx-vue/core/TextInput'
-import { Token } from '@astryx-vue/core/Token'
 import { TreeList } from '@astryx-vue/core/TreeList'
 import { computed, ref } from 'vue'
 
@@ -100,8 +99,8 @@ function items(selectedId: string, pick: (node: Destination) => void) {
 <template>
   <ComplexSelector
     v-model="value"
-    description="Search and browse nested folders from one selector."
-    label="Project destination"
+    description="Search and browse nested folders."
+    label="Destination"
     :trigger-label="value.path"
     width="100%"
   >
@@ -122,12 +121,6 @@ function items(selectedId: string, pick: (node: Destination) => void) {
         <Text v-else color="secondary" type="supporting">
           No matching destinations.
         </Text>
-        <HStack :gap="2">
-          <Text color="secondary" type="supporting">
-            Current:
-          </Text>
-          <Token color="blue" :label="selected.path" size="sm" />
-        </HStack>
       </VStack>
     </template>
   </ComplexSelector>

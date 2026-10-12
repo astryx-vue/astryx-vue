@@ -577,7 +577,9 @@ export type { StatusDotProps, StatusDotVariant } from './StatusDot/index.js'
 export { Step, Stepper } from './Stepper/index.js'
 export type {
   StepIndicator,
+  StepperCollapsedVariant,
   StepperDensity,
+  StepperHorizontalOptions,
   StepperIndicatorPosition,
   StepperOrientation,
   StepperProps,

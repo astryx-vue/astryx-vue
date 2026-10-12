@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { collapsibleGroupAccordion, collapsibleGroupCoordinated } from '../../../../components/demos/collapsible-group'
+import { collapsibleGroupDensity } from '../../../../components/demos/collapsible-group'
 </script>
 
 ## 使用方法
@@ -34,5 +34,4 @@ import { Collapsible, CollapsibleGroup } from '@astryx-vue/core/Collapsible'
 
 ## 示例
 
-<DemoExample :demo="collapsibleGroupCoordinated" description="配送、退货和付款。每一项放在自己的卡片里，同时只展开一项。" locale="zh" title="折叠组" />
-<DemoExample :demo="collapsibleGroupAccordion" description="Account 一开始是展开的。打开 Notifications 或 Billing 时，它会让位。" locale="zh" title="手风琴" />
+<DemoExample :demo="collapsibleGroupDensity" description="compact、balanced 和 spacious。density 决定每一行的内边距，分隔线把各项隔开。" locale="zh" title="密度" />

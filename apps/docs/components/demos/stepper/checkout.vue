@@ -7,12 +7,16 @@ const active = ref(2)
 
 <template>
   <div style="width: 100%; max-width: 640px">
-    <Stepper :active-step="active" indicator-position="on-track" orientation="horizontal" @step-click="active = $event">
-      <Step indicator="number" label="Cart" :step="0" />
-      <Step indicator="number" label="Shipping" :step="1" />
-      <Step indicator="number" label="Payment" :step="2" />
-      <Step indicator="number" label="Review" :step="3" />
-      <Step indicator="number" label="Confirm" :step="4" />
+    <Stepper
+      :active-step="active"
+      :horizontal-options="{ minimumStepWidth: 112 }"
+      @step-click="active = $event"
+    >
+      <Step label="Cart" :step="0" />
+      <Step label="Shipping" :step="1" />
+      <Step label="Payment" :step="2" />
+      <Step label="Review" :step="3" />
+      <Step label="Confirm" :step="4" />
     </Stepper>
   </div>
 </template>

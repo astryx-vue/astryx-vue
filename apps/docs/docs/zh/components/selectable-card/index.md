@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { selectableCardColors, selectableCardElevated, selectableCardPlans } from '../../../../components/demos/selectable-card'
+import { selectableCardColors, selectableCardElevated } from '../../../../components/demos/selectable-card'
 </script>
 
 ## 使用方法
@@ -36,6 +36,5 @@ const selected = ref('pro')
 
 ## 示例
 
-<DemoExample :demo="selectableCardPlans" description="Basic、Pro、Enterprise。一次只选一个方案。" locale="zh" title="可选卡片" />
-<DemoExample :demo="selectableCardColors" description="React、TypeScript、Node.js、Python、Rust、Go。每张卡片保留自己的颜色，可以同时选中多张。" locale="zh" title="多选" />
 <DemoExample :demo="selectableCardElevated" description="Starter 和 Pro 停在低阴影上。选中描边叠在阴影上面。" locale="zh" title="抬升" />
+<DemoExample :demo="selectableCardColors" description="React、TypeScript、Node.js、Python、Rust、Go。每张卡片保留自己的颜色，可以同时选中多张。" locale="zh" title="多选" />

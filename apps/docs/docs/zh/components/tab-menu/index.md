@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { tabMenuBasic, tabMenuShowcase } from '../../../../components/demos/tab-menu'
+import { tabMenuBasic } from '../../../../components/demos/tab-menu'
 </script>
 
 ## 使用方法
@@ -45,4 +45,3 @@ const value = ref('overview')
 ## 示例
 
 <DemoExample :demo="tabMenuBasic" description="Overview 和 Activity 留在标签条上。Settings 和 Billing 收在 More 里。" locale="zh" title="基本用法" />
-<DemoExample :demo="tabMenuShowcase" description="Settings 已经选中，所以触发器显示 Settings，并带上选中标签的样式。" locale="zh" title="标签菜单" />

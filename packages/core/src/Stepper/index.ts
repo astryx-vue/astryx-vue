@@ -3,7 +3,9 @@ import Stepper from './Stepper.vue'
 
 export type {
   StepIndicator,
+  StepperCollapsedVariant,
   StepperDensity,
+  StepperHorizontalOptions,
   StepperIndicatorPosition,
   StepperOrientation,
   StepperProps,

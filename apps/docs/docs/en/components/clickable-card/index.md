@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { clickableCardElevated, clickableCardNavigation, clickableCardNested } from '../../../../components/demos/clickable-card'
+import { clickableCardElevated, clickableCardNested } from '../../../../components/demos/clickable-card'
 </script>
 
 ## Usage
@@ -32,6 +32,5 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 ## Examples
 
-<DemoExample :demo="clickableCardNavigation" description="Settings. The whole card navigates, including the nested description." locale="en" title="Clickable card" />
-<DemoExample :demo="clickableCardNested" description="Wireless Headphones. Add to cart is its own button." locale="en" title="Nested button" />
 <DemoExample :demo="clickableCardElevated" description="Quarterly report, raised with a medium shadow." locale="en" title="Elevated" />
+<DemoExample :demo="clickableCardNested" description="Wireless Headphones. Add to cart is its own button." locale="en" title="Nested button" />

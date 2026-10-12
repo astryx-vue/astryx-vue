@@ -6,6 +6,21 @@ export type StepperIndicatorPosition = 'separated' | 'on-track'
 export type StepStatus = 'accent' | 'success' | 'warning' | 'error'
 export type StepProgress = 'completed' | 'in-progress' | 'not-started'
 export type StepIndicator = 'auto' | 'number' | 'none'
+export type StepperCollapsedVariant = 'withLabelAndControls' | 'withLabel' | 'hiddenLabel'
+
+export interface StepperHorizontalOptions {
+  /**
+   * Collapse a horizontal stepper when its width is below this value times
+   * the step count. The collapsed view keeps the track.
+   */
+  minimumStepWidth?: number
+  /**
+   * What the collapsed row shows. Controls appear only for
+   * `withLabelAndControls` when `onStepClick` is set.
+   * @default 'withLabelAndControls'
+   */
+  collapsedVariant?: StepperCollapsedVariant
+}
 
 export interface StepperProps {
   /** Zero-based index of the current step. */
@@ -28,6 +43,13 @@ export interface StepperProps {
    * @default false
    */
   hasCollapsibleLabels?: boolean
+  /**
+   * Narrow-width behavior for a horizontal stepper. `minimumStepWidth` is the
+   * width each step needs before the stepper collapses to the current step.
+   * `collapsedVariant` chooses a label with controls, the label alone, or the
+   * track with no compact row.
+   */
+  horizontalOptions?: StepperHorizontalOptions
 }
 
 export interface StepperSlots {

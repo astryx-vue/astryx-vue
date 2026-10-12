@@ -1,5 +1,6 @@
 import type { VNode } from 'vue'
 import type { CollapsibleGroupDensity, CollapsibleGroupType, CollapsibleGroupValue } from './context.js'
+import type { CollapsibleChevronPosition } from './types.js'
 
 export interface CollapsibleGroupProps {
   /**
@@ -27,6 +28,12 @@ export interface CollapsibleGroupProps {
    * uses `balanced`.
    */
   density?: CollapsibleGroupDensity
+  /**
+   * Chevron side for the group's sections. A section can still set its own
+   * `chevronPosition`.
+   * @default 'end'
+   */
+  chevronPosition?: CollapsibleChevronPosition
 }
 
 export interface CollapsibleGroupEmits {
