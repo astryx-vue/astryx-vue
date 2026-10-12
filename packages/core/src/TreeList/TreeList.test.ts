@@ -23,6 +23,40 @@ describe('tree list', () => {
     expect(wrapper.find('.astryx-tree-list__guide').exists()).toBe(true)
   })
 
+  it('insets a nested branch fill so it starts past the guide', () => {
+    const wrapper = mount(TreeList, {
+      props: {
+        items: [{
+          id: 'src',
+          label: 'src',
+          isExpanded: true,
+          children: [{
+            id: 'components',
+            label: 'components',
+            isExpanded: true,
+            children: [{ id: 'button', label: 'Button.tsx', onClick: () => {} }],
+          }],
+        }],
+      },
+    })
+    expect(wrapper.get('[data-tree-id="components"] .astryx-tree-list__content').attributes('data-guide-inset')).toBe('true')
+    expect(wrapper.get('[data-tree-id="src"] .astryx-tree-list__content').attributes('data-guide-inset')).toBeUndefined()
+    expect(wrapper.get('[data-tree-id="button"] .astryx-tree-list__content').attributes('data-guide-inset')).toBeUndefined()
+
+    const plain = mount(TreeList, {
+      props: {
+        items: [{
+          id: 'src',
+          label: 'src',
+          isExpanded: true,
+          children: [{ id: 'components', label: 'components', children: [{ id: 'button', label: 'Button.tsx' }] }],
+        }],
+        variant: 'noGuides',
+      },
+    })
+    expect(plain.get('[data-tree-id="components"] .astryx-tree-list__content').attributes('data-guide-inset')).toBeUndefined()
+  })
+
   it('puts an external icon class in a sized box', () => {
     const wrapper = mount(TreeList, {
       props: {

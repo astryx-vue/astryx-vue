@@ -98,6 +98,7 @@ function onToggle(event: MouseEvent) {
         :data-selected="item.isSelected || undefined"
         :data-disabled="item.isDisabled || undefined"
         :data-interactive="(item.onClick != null || item.href != null || hasChildren) || undefined"
+        :data-guide-inset="(variant === 'lineGuides' && nestedLevel > 0 && !reservesChevron) || undefined"
         :style="{ '--_tree-indent': indent }"
         @click="onRowClick"
       >
