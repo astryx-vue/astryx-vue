@@ -9,7 +9,8 @@ function navigation(english: boolean): { text: string, link: string }[] {
   return [
     { text: english ? 'Docs' : '文档', link: `${prefix}/guide/getting-started` },
     { text: english ? 'Components' : '组件', link: `${prefix}/components/` },
-    { text: english ? 'Playground' : '演练场', link: `${prefix}/playground/` },
+    // 演练场先从顶部导航拿掉，页面文件还留着。
+    // { text: english ? 'Playground' : '演练场', link: `${prefix}/playground/` },
     { text: english ? 'Themes' : '主题', link: `${prefix}/themes/` },
   ]
 }
