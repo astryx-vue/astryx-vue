@@ -3,8 +3,8 @@ import { collapsibleOverview as demo } from './index'
 
 export const meta = {
   slug: 'collapsible',
-  group: 'content',
-  order: 8,
+  group: 'Container',
+  order: 1,
   en: 'Collapsible',
   zh: '折叠面板',
   demo,

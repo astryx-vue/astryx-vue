@@ -3,8 +3,8 @@ import { metadataListOverview as demo } from './index'
 
 export const meta = {
   slug: 'metadata-list',
-  group: 'content',
-  order: 11,
+  group: 'Table & List',
+  order: 1,
   en: 'Metadata List',
   zh: '元数据列表',
   demo,

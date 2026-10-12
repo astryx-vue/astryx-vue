@@ -3,8 +3,8 @@ import { tableOverview as demo } from './index'
 
 export const meta = {
   slug: 'table',
-  group: 'content',
-  order: 12,
+  group: 'Table & List',
+  order: 3,
   en: 'Table',
   zh: '表格',
   demo,

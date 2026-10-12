@@ -3,8 +3,8 @@ import { toggleButtonOverview as demo } from './index'
 
 export const meta = {
   slug: 'toggle-button',
-  group: 'action',
-  order: 6,
+  group: 'Action',
+  order: 8,
   en: 'Toggle Button',
   zh: '切换按钮',
   demo,

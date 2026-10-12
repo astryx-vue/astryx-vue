@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import type { ComponentDocsRoute } from './componentDocsRoute'
+import { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
 import { useRoute } from 'vitepress'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { catalogGroups, COMPONENT_CATALOG } from './componentCatalog'
+import { catalogGroups } from './componentCatalog'
 import { componentDocsCopy } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
 
 const props = defineProps<{ route: ComponentDocsRoute }>()
 const text = computed(() => componentDocsCopy[props.route.locale])
-const groups = computed(() => catalogGroups(props.route.locale).map(group => ({
-  title: group.title,
-  slugs: group.entries.map(entry => entry.slug),
-})))
-const names = computed<Record<string, string>>(() => Object.fromEntries(
-  COMPONENT_CATALOG.map(entry => [entry.slug, entry[props.route.locale]]),
-))
+const groups = computed(() => catalogGroups(props.route.locale))
 const routePath = useRoute()
+const activeGroupId = computed(() => {
+  const route = props.route
+  if (route.kind !== 'detail')
+    return undefined
+  return groups.value.find(group => group.entries.some(entry => entry.slug === route.slug))?.id
+})
 const sidebarOpen = ref(false)
 const isNarrow = ref(false)
 const menuButton = ref<HTMLButtonElement | null>(null)
@@ -116,20 +117,33 @@ watch(() => routePath.path, () => {
       ref="sidebarEl"
       class="component-overview__sidebar"
       :class="{ 'is-open': sidebarOpen }"
-      :aria-label="text.navigation"
       tabindex="-1"
     >
-      <nav class="component-overview__nav" :aria-label="text.navigation">
-        <a :aria-current="route.kind === 'catalog' ? 'page' : undefined" :href="path('/components/')" @click="closeSidebar(false)">{{ text.overview }}</a>
-        <template v-for="group in groups" :key="group.title">
-          <p class="component-overview__group">
-            {{ group.title }}
-          </p>
-          <a v-for="slug in group.slugs" :key="slug" :href="path(`/components/${slug}`)" :aria-current="route.kind === 'detail' && route.slug === slug ? 'page' : undefined" @click="closeSidebar(false)">
-            {{ names[slug] }}
-          </a>
-        </template>
-      </nav>
+      <SideNav class="component-overview__sidenav" :label="text.navigation">
+        <SideNavSection is-header-hidden :title="text.catalogTitle">
+          <SideNavItem
+            :href="path('/components/')"
+            :is-selected="route.kind === 'catalog'"
+            :label="text.overview"
+            @click="closeSidebar(false)"
+          />
+          <SideNavItem
+            v-for="group in groups"
+            :key="activeGroupId === group.id ? `${group.id}-open` : group.id"
+            :collapsible="{ defaultIsCollapsed: activeGroupId !== group.id }"
+            :label="group.title"
+          >
+            <SideNavItem
+              v-for="entry in group.entries"
+              :key="entry.slug"
+              :href="path(`/components/${entry.slug}`)"
+              :is-selected="route.kind === 'detail' && route.slug === entry.slug"
+              :label="entry[route.locale]"
+              @click="closeSidebar(false)"
+            />
+          </SideNavItem>
+        </SideNavSection>
+      </SideNav>
     </aside>
     <div class="component-overview__main" :inert="sidebarOpen ? true : undefined">
       <slot v-if="route.kind === 'catalog'" />

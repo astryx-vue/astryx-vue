@@ -3,7 +3,7 @@ import { emptyStateOverview as demo } from './index'
 
 export const meta = {
   slug: 'empty-state',
-  group: 'feedback',
+  group: 'Content',
   order: 5,
   en: 'Empty State',
   zh: '空状态',

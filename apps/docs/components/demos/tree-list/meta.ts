@@ -3,8 +3,8 @@ import { treeListOverview as demo } from './index'
 
 export const meta = {
   slug: 'tree-list',
-  group: 'content',
-  order: 15,
+  group: 'Table & List',
+  order: 4,
   en: 'Tree List',
   zh: '树形列表',
   demo,

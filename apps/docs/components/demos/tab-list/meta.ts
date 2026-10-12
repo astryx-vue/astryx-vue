@@ -3,8 +3,8 @@ import { tabListOverview as demo } from './index'
 
 export const meta = {
   slug: 'tab-list',
-  group: 'navigation',
-  order: 2,
+  group: 'Navigation',
+  order: 6,
   en: 'Tab List',
   zh: '标签列表',
   demo,

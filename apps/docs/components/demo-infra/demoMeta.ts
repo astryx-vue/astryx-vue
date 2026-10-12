@@ -31,12 +31,18 @@ const GROUP_INDEX = new Map(COMPONENT_GROUPS.map((group, index) => [group, index
 
 export function assembleCatalog(metas: readonly CatalogMetaInput[]): CatalogEntry[] {
   const slugs = new Set<string>()
+  const seenOrder = new Map<string, string>()
   for (const meta of metas) {
     if (slugs.has(meta.slug))
       throw new Error(`duplicate component slug: ${meta.slug}`)
     slugs.add(meta.slug)
     if (!GROUP_INDEX.has(meta.group as ComponentGroup))
       throw new Error(`unknown component group "${meta.group}" on ${meta.slug}`)
+    const orderKey = `${meta.group}\0${meta.order}`
+    const previous = seenOrder.get(orderKey)
+    if (previous)
+      throw new Error(`duplicate sidebar order ${meta.order} in group "${meta.group}": ${previous} and ${meta.slug}`)
+    seenOrder.set(orderKey, meta.slug)
   }
 
   return [...metas].sort((a, b) => {

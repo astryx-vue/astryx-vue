@@ -3,8 +3,8 @@ import { thumbnailOverview as demo } from './index'
 
 export const meta = {
   slug: 'thumbnail',
-  group: 'content',
-  order: 13,
+  group: 'Content',
+  order: 10,
   en: 'Thumbnail',
   zh: '缩略图',
   demo,

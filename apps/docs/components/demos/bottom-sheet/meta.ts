@@ -3,8 +3,8 @@ import { bottomSheetOverview as demo } from './index'
 
 export const meta = {
   slug: 'bottom-sheet',
-  group: 'overlays',
-  order: 6,
+  group: 'Overlay',
+  order: 1,
   en: 'Bottom Sheet',
   zh: '底部弹窗',
   demo,

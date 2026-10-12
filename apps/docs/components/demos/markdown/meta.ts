@@ -3,8 +3,8 @@ import { markdownOverview as demo } from './index'
 
 export const meta = {
   slug: 'markdown',
-  group: 'content',
-  order: 7,
+  group: 'Content',
+  order: 8,
   en: 'Markdown',
   zh: 'Markdown',
   demo,

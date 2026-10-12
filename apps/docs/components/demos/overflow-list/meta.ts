@@ -3,8 +3,8 @@ import { overflowListOverview as demo } from './index'
 
 export const meta = {
   slug: 'overflow-list',
-  group: 'navigation',
-  order: 10,
+  group: 'Table & List',
+  order: 2,
   en: 'Overflow List',
   zh: '溢出列表',
   demo,

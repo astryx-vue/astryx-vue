@@ -3,8 +3,8 @@ import { tokenOverview as demo } from './index'
 
 export const meta = {
   slug: 'token',
-  group: 'feedback',
-  order: 6,
+  group: 'Content',
+  order: 12,
   en: 'Token',
   zh: '标签',
   demo,

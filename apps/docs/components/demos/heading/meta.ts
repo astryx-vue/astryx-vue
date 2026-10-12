@@ -3,8 +3,8 @@ import { headingOverview as demo } from './index'
 
 export const meta = {
   slug: 'heading',
-  group: 'content',
-  order: 3,
+  group: 'Content',
+  order: 6,
   en: 'Heading',
   zh: '标题',
   demo,
