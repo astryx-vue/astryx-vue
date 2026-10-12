@@ -72,4 +72,4 @@ The `status` prop sets the tone of a banner, and picking the wrong one makes rea
 
 The status also decides the role the banner exposes to screen readers: `warning` and `error` use `role="alert"`, while `info` and `success` use `role="status"`. Note that messages already present in the initial page render may not be announced by screen readers, so the more urgent a message is, the better it works when mounted in response to a user action.
 
-For a single field validation message, use [FieldStatus](/en/components/field).
+For a single field validation message, use [FieldStatus](/en/components/field-status).

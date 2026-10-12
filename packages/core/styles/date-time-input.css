@@ -1,0 +1,40 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-date-time-input {
+    container-type: inline-size;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+  }
+
+  .astryx-date-time-fields {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+  }
+
+  .astryx-date-time-fields > .astryx-date-input,
+  .astryx-date-time-fields > .astryx-time-input {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .astryx-date-time-input .astryx-date-input-wrapper {
+    min-width: 0;
+  }
+
+  @container (max-width: 399px) {
+    .astryx-date-time-fields {
+      flex-wrap: wrap;
+    }
+
+    .astryx-date-time-fields > .astryx-date-input,
+    .astryx-date-time-fields > .astryx-time-input {
+      flex-basis: 100%;
+    }
+  }
+}

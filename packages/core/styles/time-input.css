@@ -1,0 +1,44 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-time-input {
+    width: 100%;
+  }
+
+  .astryx-time-input-icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-time-input-control {
+    box-sizing: border-box;
+    display: block;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    line-height: inherit;
+    appearance: none;
+  }
+
+  .astryx-time-input-control::placeholder {
+    color: var(--astryx-color-text-secondary, #525252);
+    opacity: 1;
+  }
+
+  .astryx-time-input-control:disabled {
+    color: inherit;
+    cursor: default;
+    -webkit-text-fill-color: currentcolor;
+  }
+
+  .astryx-time-input-control::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+}

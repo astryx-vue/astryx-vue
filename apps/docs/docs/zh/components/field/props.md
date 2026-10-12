@@ -152,7 +152,8 @@ interface FieldStatusInput {
 
 ```ts
 import type { FieldProps, FieldSlotProps, FieldStatusInput } from '@astryx-vue/core/Field'
-import { Field, FieldLabel, FieldStatus } from '@astryx-vue/core/Field'
+import { Field, FieldLabel } from '@astryx-vue/core/Field'
+import { FieldStatus } from '@astryx-vue/core/FieldStatus'
 import '@astryx-vue/themes/neutral.css'
 ```
 

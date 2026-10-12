@@ -28,7 +28,7 @@ function change(event: Event): void {
 </script>
 
 <template>
-  <label :for="inputId" class="astryx-radio" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined">
+  <label :for="inputId" class="astryx-radio" :data-size="context?.size?.value" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined">
     <input
       :id="inputId" class="astryx-radio-native" type="radio" :name="name" :value="value"
       :checked="isSelected" :disabled="isDisabled" :readonly="isReadOnly"
@@ -40,5 +40,6 @@ function change(event: Event): void {
       <span class="astryx-radio-label">{{ label }}</span>
       <span v-if="description" :id="`${inputId}-description`" class="astryx-radio-description">{{ description }}</span>
     </span>
+    <span v-if="$slots.end" class="astryx-radio-end"><slot name="end" /></span>
   </label>
 </template>

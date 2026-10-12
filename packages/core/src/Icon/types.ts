@@ -45,6 +45,10 @@ export type IconName
     | 'check'
     | 'moreHorizontal'
     | 'copy'
+    | 'calendar'
+    | 'clock'
+    | 'upload'
+    | 'close'
 
 /**
  * A built-in name, or any other string.

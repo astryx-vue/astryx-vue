@@ -26,14 +26,32 @@ export type {
 export { useClipboard } from './useClipboard.js'
 export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard.js'
 
+export { useCoarsePointer } from './useCoarsePointer.js'
+
 export { useCombobox } from './useCombobox.js'
 export type { Combobox, ComboboxOption, UseComboboxOptions } from './useCombobox.js'
 
 export { useControllableState } from './useControllableState.js'
 export type { ControllableState, UseControllableStateOptions } from './useControllableState.js'
 
+export {
+  applyRangeClick,
+  compareISODate,
+  formatDateRange,
+  isDayOutsideSpan,
+  isRangeWithinSpan,
+  isSameRange,
+  orderRange,
+  resolveWeekStart,
+  spanDays,
+} from './useDateRange.js'
+export type { ISODateRange, RangeClickResult, WeekStartsOn } from './useDateRange.js'
+
 export { useDismiss } from './useDismiss.js'
 export type { UseDismissOptions } from './useDismiss.js'
+
+export { formatFileSize, selectFiles } from './useFileSelection.js'
+export type { FileRejection, FileSelectionOptions, FileSelectionResult } from './useFileSelection.js'
 
 export { useFocusTrap } from './useFocusTrap.js'
 export type { FocusTrap, UseFocusTrapOptions } from './useFocusTrap.js'
@@ -51,6 +69,8 @@ export { useLongPress } from './useLongPress.js'
 export type { LongPressHandlers, LongPressOptions } from './useLongPress.js'
 
 export { useMediaQuery } from './useMediaQuery.js'
+
+export { addMonths, buildMonthGrid, parseISODate, todayISODate, toISODate } from './useMonthGrid.js'
 
 export { useNumberField } from './useNumberField.js'
 export type { NumberField, UseNumberFieldOptions } from './useNumberField.js'
@@ -70,6 +90,17 @@ export { useScrollLock } from './useScrollLock.js'
 
 export { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
 export type { StreamingTextSpeed, UseStreamingTextOptions } from './useStreamingText.js'
+
+export {
+  formatDisplayTime,
+  formatISOTime,
+  isTimeInRange,
+  parseDisplayTime,
+  parseISOTime,
+  resolveTimeSurface,
+  shiftTime,
+} from './useTimeValue.js'
+export type { HourFormat, ISOTimeString, NativePicker, ParsedTime, TimePresentation } from './useTimeValue.js'
 
 export { useTypeahead } from './useTypeahead.js'
 export type { UseTypeaheadOptions, UseTypeaheadReturn } from './useTypeahead.js'

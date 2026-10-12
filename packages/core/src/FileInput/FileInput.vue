@@ -1,0 +1,169 @@
+<script setup lang="ts">
+import type { FieldStatusInput } from '../Field/types.js'
+import type { FileInputEmits, FileInputProps, FileInputValue } from './types.js'
+import { computed, shallowRef, useId, useTemplateRef } from 'vue'
+import { useAnnounce } from '../composables/useAnnounce.js'
+import { formatFileSize, selectFiles } from '../composables/useFileSelection.js'
+import Field from '../Field/Field.vue'
+import FieldIcon from '../Field/FieldIcon.vue'
+import Icon from '../Icon/Icon.vue'
+import IconButton from '../IconButton/IconButton.vue'
+import { useAstryxMessages } from '../locale/index.js'
+import Spinner from '../Spinner/Spinner.vue'
+import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import '../../styles/bordered-control.css'
+import '../../styles/file-input.css'
+
+defineOptions({ name: 'AstryxFileInput', inheritAttrs: false })
+
+const props = withDefaults(defineProps<Omit<FileInputProps, 'modelValue'>>(), {
+  modelValue: null,
+  mode: 'input',
+  size: 'md',
+  isMultiple: false,
+  statusVariant: 'attached',
+})
+
+const emit = defineEmits<FileInputEmits>()
+const model = defineModel<FileInputValue>({ default: null })
+const messages = useAstryxMessages()
+const announce = useAnnounce()
+const generatedId = `astryx-file-input-${useId()}`
+const inputId = computed(() => props.id ?? generatedId)
+const requiredId = `${generatedId}-required`
+const fileInput = useTemplateRef<HTMLInputElement>('file')
+const validationError = shallowRef<string | null>(null)
+const dragOver = shallowRef(false)
+
+const placeholder = computed(() => props.placeholder ?? (
+  props.isMultiple ? messages.value.fileInput.placeholderMultiple : messages.value.fileInput.placeholder
+))
+const clearLabel = computed(() => props.clearLabel ?? messages.value.fileInput.clear)
+const status = computed<FieldStatusInput | undefined>(() => props.status ?? (
+  validationError.value ? { type: 'error', message: validationError.value } : undefined
+))
+const fileLabel = computed(() => {
+  const value = model.value
+  if (value == null)
+    return ''
+  const files = Array.isArray(value) ? value : [value]
+  if (files.length === 0)
+    return ''
+  if (files.length === 1)
+    return files[0]?.name ?? ''
+  return files.map(file => file.name).join(', ')
+})
+const conveysRequired = computed(() => props.isRequired && !props.isOptional)
+
+function commit(value: FileInputValue): void {
+  model.value = value
+  emit('change', value)
+}
+
+function applyFiles(list: FileList | File[] | null | undefined): void {
+  if (props.isDisabled)
+    return
+  const result = selectFiles(list, {
+    accept: props.accept,
+    maxSize: props.maxSize,
+    maxFiles: props.maxFiles,
+    isMultiple: props.isMultiple,
+  })
+  const first = result.rejections[0]
+  if (first?.code === 'type' && first.fileName)
+    validationError.value = messages.value.fileInput.errorType(first.fileName)
+  else if (first?.code === 'size' && first.fileName)
+    validationError.value = messages.value.fileInput.errorSize(first.fileName, formatFileSize(first.maxSize ?? 0))
+  else if (first?.code === 'count')
+    validationError.value = messages.value.fileInput.errorCount(first.maxFiles ?? 0)
+  else
+    validationError.value = null
+
+  const files = result.files
+  commit(files)
+  if (validationError.value == null && files != null) {
+    const selected = Array.isArray(files) ? files : [files]
+    if (selected.length === 1 && selected[0])
+      announce(messages.value.fileInput.fileSelected(selected[0].name))
+    else if (selected.length > 1)
+      announce(messages.value.fileInput.filesSelected(selected.length))
+  }
+  if (fileInput.value)
+    fileInput.value.value = ''
+}
+
+function openPicker(): void {
+  if (!props.isDisabled)
+    fileInput.value?.click()
+}
+
+function onChange(event: Event): void {
+  applyFiles((event.target as HTMLInputElement).files)
+}
+
+function clear(): void {
+  if (props.isDisabled)
+    return
+  validationError.value = null
+  commit(null)
+  if (fileInput.value)
+    fileInput.value.value = ''
+}
+
+function onDragOver(event: DragEvent): void {
+  if (props.mode !== 'dropzone' || props.isDisabled)
+    return
+  event.preventDefault()
+  dragOver.value = true
+}
+
+function onDragLeave(): void {
+  dragOver.value = false
+}
+
+function onDrop(event: DragEvent): void {
+  if (props.mode !== 'dropzone' || props.isDisabled)
+    return
+  event.preventDefault()
+  dragOver.value = false
+  applyFiles(event.dataTransfer?.files)
+}
+</script>
+
+<template>
+  <Field
+    :label="label" :input-id="inputId" :description="description" :width="width"
+    :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
+    :status="status" :status-variant="statusVariant"
+  >
+    <template #default="field">
+      <div
+        class="astryx-file-input astryx-bordered-control"
+        :data-mode="mode" :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-drag="dragOver || undefined"
+      >
+        <input
+          :id="`${inputId}-file`" ref="file" class="astryx-file-input-native" type="file"
+          :accept="accept" :multiple="isMultiple || undefined" :disabled="isDisabled" tabindex="-1"
+          @change="onChange"
+        >
+        <button
+          :id="inputId" type="button" class="astryx-file-input-trigger"
+          :disabled="isDisabled" :aria-invalid="status?.type === 'error' || undefined"
+          :aria-describedby="[field.describedBy, conveysRequired ? requiredId : undefined].filter(Boolean).join(' ') || undefined"
+          @click="openPicker" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop"
+        >
+          <Icon class="astryx-file-input-icon" icon="upload" size="sm" />
+          <span class="astryx-file-input-text" :data-placeholder="!fileLabel || undefined">{{ fileLabel || placeholder }}</span>
+        </button>
+        <IconButton v-if="fileLabel && !isDisabled" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel" @click="clear">
+          <FieldIcon type="clear" />
+        </IconButton>
+        <Spinner v-if="isLoading" size="sm" />
+        <FieldIcon v-else-if="status" :type="status.type" />
+      </div>
+      <VisuallyHidden v-if="conveysRequired" :id="requiredId">
+        {{ messages.fileInput.required }}
+      </VisuallyHidden>
+    </template>
+  </Field>
+</template>

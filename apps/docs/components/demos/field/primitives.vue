@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { FieldLabel, FieldStatus } from '@astryx-vue/core/Field'
+import { FieldLabel } from '@astryx-vue/core/Field'
+import { FieldStatus } from '@astryx-vue/core/FieldStatus'
 import { shallowRef, useId } from 'vue'
 
 const name = shallowRef('Ada')

@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-checkbox-list {
+    min-width: 0;
+  }
+
+  .astryx-checkbox-list .astryx-item[data-selected='true'] {
+    background-color: var(--astryx-color-accent-muted, light-dark(#d6ebff, #143044));
+  }
+
+  .astryx-checkbox-list .astryx-checkbox-input {
+    gap: 0;
+  }
+}

@@ -40,12 +40,13 @@ provide(radioContextKey, {
   isGroupDisabled: computed(() => props.isDisabled ?? false),
   isGroupReadOnly: computed(() => props.isReadOnly ?? false),
   isRequired: computed(() => (props.isRequired && !props.isOptional) ?? false),
+  size: computed(() => props.size),
 })
 </script>
 
 <template>
   <Field
-    ref="group" class="astryx-radio-group" :style="style"
+    ref="group" class="astryx-radio-group" :style="style" :data-orientation="orientation"
     :label="label" :input-id="inputId" is-group-label :description="description" :width="width"
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
     :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"

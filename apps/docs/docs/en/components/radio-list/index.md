@@ -7,59 +7,42 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { radioList } from '../../../../components/demos/radio'
+import { radioListDescriptions, radioListHorizontal, radioListPricing, radioListValidation } from '../../../../components/demos/radio-list'
 </script>
 
 ## Usage
 
-`RadioList` is a convenience wrapper around `RadioGroup`. It accepts an `options` array and renders a group of radio buttons automatically.
+`RadioList` picks one value. Put a `RadioListItem` in the default slot, or pass an `options` array when the rows are plain text.
 
 ```vue
 <script setup lang="ts">
-import { RadioList } from '@astryx-vue/core/Radio'
+import { RadioList, RadioListItem } from '@astryx-vue/core/RadioList'
 import { shallowRef } from 'vue'
 
-const plan = shallowRef('team')
-const options = [
-  { value: 'free', label: 'Free', description: 'For personal projects.' },
-  { value: 'team', label: 'Team', description: 'For small teams.' },
-  { value: 'enterprise', label: 'Enterprise', description: 'For organizations.' },
-]
+const channel = shallowRef('')
 </script>
 
 <template>
-  <RadioList v-model="plan" label="Plan" :options="options" />
+  <RadioList v-model="channel" label="Notification preference">
+    <RadioListItem label="Email" value="email" />
+    <RadioListItem label="SMS" value="sms" />
+  </RadioList>
 </template>
 ```
 
-
-
+The indicator is 24px by default, and 20px when `size="sm"`. `orientation="horizontal"` lays the rows in a row with a 20px gap. The `end` slot sits on the trailing edge.
 
 ## Best practices
 
-| Guidance | Practices |
+| Guideline | Practice |
 | --- | --- |
-| <Badge variant="success">Do</Badge> | Keep the number of options small: typically 2 to 7 choices. |
-| <Badge variant="success">Do</Badge> | Use clear, concise labels that differentiate each option at a glance. |
-| <Badge variant="error">Don't</Badge> | Use when multiple selections are needed; use CheckboxList instead. |
-| <Badge variant="error">Don't</Badge> | Use for long lists; use Selector for better discoverability. |
-| <Badge variant="error">Don't</Badge> | Use horizontal layout with more than 4 options; it wraps awkwardly. |
-| <Badge variant="error">Don't</Badge> | Wrap a disabled RadioList in Tooltip to explain why it is disabled; disabled controls swallow the hover events the wrapper needs. Use the disabledMessage prop instead. |
+| <Badge variant="success">Do</Badge> | Keep the list short, usually two to seven options. |
+| <Badge variant="error">Don't</Badge> | Use it when more than one option can be selected. Use CheckboxList. |
+| <Badge variant="error">Don't</Badge> | Use a horizontal list for more than about four options. |
 
 ## Examples
 
-<DemoExample :demo="radioList" title="Basic" description="Pass an options array to render a list with descriptions." locale="en" />
-
-## Keyboard and accessibility
-
-`RadioList` hands rendering to [RadioGroup](/en/components/radio-group) internally, so keyboard interactions and the ARIA structure are identical to RadioGroup — there is nothing new to learn when you move between the two.
-
-- The group renders as a single `role="radiogroup"` container, which screen readers announce as a set of radio options.
-- An ID is generated automatically for each option, so you never need to specify one yourself.
-- A group `label` is required: it is the accessible name of the whole group, and screen readers use it to say what the options are choosing between.
-
-## Usage notes
-
-Prefer `RadioList` when the options are simple and do not need a custom layout: it only needs an `options` array to render the whole group.
-
-Use [RadioGroup](/en/components/radio-group) with Radio children when you need custom option rendering or a more complex layout.
+<DemoExample :demo="radioListHorizontal" description="Small, medium, and large in a row." locale="en" title="Horizontal" />
+<DemoExample :demo="radioListPricing" description="Each plan shows its price at the end of the row." locale="en" title="Pricing tier" />
+<DemoExample :demo="radioListDescriptions" description="A description under each option." locale="en" title="With descriptions" />
+<DemoExample :demo="radioListValidation" description="An empty required group shows an error." locale="en" title="With validation" />

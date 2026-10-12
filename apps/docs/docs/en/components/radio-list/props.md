@@ -9,54 +9,28 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="RadioList props" tabindex="0">
 <table><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>v-model</code></td><td><code>string | number</code></td><td>—</td><td>Required. Currently selected value.</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required. Accessible name of the group.</td></tr>
-<tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>ID of the group container. Auto-generated when omitted.</td></tr>
-<tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Shared name for the radios. Auto-generated when omitted.</td></tr>
-<tr><td><code>options</code></td><td><code>RadioOption[]</code></td><td>—</td><td>Array of options.</td></tr>
-<tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Component width. Numbers are treated as px.</td></tr>
-<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Description shown below the label.</td></tr>
-<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hide the visual label while keeping the accessible name.</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the entire group.</td></tr>
-<tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Make the entire group read-only.</td></tr>
-<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show required indicator and enable native required validation.</td></tr>
-<tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show optional indicator. Takes precedence over isRequired.</td></tr>
-<tr><td><code>optionalLabel</code></td><td><code>string</code></td><td><code>'Optional'</code></td><td>Text for the optional indicator.</td></tr>
-<tr><td><code>requiredLabel</code></td><td><code>string</code></td><td><code>'Required'</code></td><td>Text for the required indicator.</td></tr>
-<tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Status type, message, and message ID.</td></tr>
-<tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>Where to display the status message.</td></tr>
-<tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Decorative icon before the label.</td></tr>
-<tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip shown next to the label.</td></tr>
+<tr><td><code>v-model</code></td><td><code>string | number</code></td><td>—</td><td>Required. The selected value.</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required accessible name of the group.</td></tr>
+<tr><td><code>options</code></td><td><code>RadioOption[]</code></td><td>—</td><td>Plain options. Use items when a row needs an end slot.</td></tr>
+<tr><td><code>orientation</code></td><td><code>'vertical' | 'horizontal'</code></td><td><code>'vertical'</code></td><td>Stack the rows, or place them in a row.</td></tr>
+<tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>Indicator size. 20px or 24px. A plain Radio stays 18px.</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Help text under the group label.</td></tr>
+<tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>
+<tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>Where the status message sits.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the group.</td></tr>
+<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the group required.</td></tr>
 </tbody></table>
 </div>
 
-## Status
+## RadioListItem Props
 
-`status` has these fields:
+<div class="component-api-table" role="region" aria-label="RadioListItem props" tabindex="0">
+<table><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>value</code></td><td><code>string | number</code></td><td>—</td><td>Required value submitted when the row is selected.</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required row label.</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Secondary text under the label.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables this row.</td></tr>
+</tbody></table>
+</div>
 
-- `type`: `'error'`, `'warning'`, or `'success'`.
-- `message`: message text.
-- `messageId`: message ID.
-
-The default `statusVariant` is `detached`, so the message appears below the list.
-
-## Events
-
-- `update:modelValue(value)`: emitted after the selected value changes.
-- `change(value, event)`: fired after the model updates.
-
-`event` is a cancellable `RadioChangeEvent`.
-`event.detail.originalEvent` keeps the native event.
-
-## Slots
-
-- `labelIcon`: decorative icon before the label. Overrides the `labelIcon` prop.
-
-## Template ref
-
-- `element`: `HTMLDivElement | null`.
-
-## Native attributes
-
-`class` and `style` are applied to the outer wrapper.
-Unrecognized native attributes and listeners are forwarded to the group container.
+The `end` slot renders after the label, aligned to the trailing edge in a vertical list.
