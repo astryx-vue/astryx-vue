@@ -12,6 +12,7 @@
   .astryx-date-time-fields {
     display: flex;
     flex: 1;
+    flex-wrap: nowrap;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
     min-width: 0;
@@ -27,7 +28,10 @@
     min-width: 0;
   }
 
-  @container (max-width: 399px) {
+  /* Original wraps below 399px because each segment's basis is 196px.
+     Placeholders still fit side by side down to about 17.5rem, so the
+     overview card (20rem) and a 390px viewport stay on one row. */
+  @container (max-width: 17.5rem) {
     .astryx-date-time-fields {
       flex-wrap: wrap;
     }
