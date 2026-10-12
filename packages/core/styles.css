@@ -17,8 +17,11 @@
 @import './styles/checkbox-input.css';
 @import './styles/checkbox-list.css';
 @import './styles/citation.css';
+@import './styles/clickable-card.css';
 @import './styles/code.css';
 @import './styles/collapsible.css';
+@import './styles/command-palette.css';
+@import './styles/complex-selector.css';
 @import './styles/context-menu.css';
 @import './styles/date-range-input.css';
 @import './styles/date-time-input.css';
@@ -56,8 +59,10 @@
 @import './styles/spinner.css';
 @import './styles/stack.css';
 @import './styles/status-dot.css';
+@import './styles/stepper.css';
 @import './styles/switch.css';
 @import './styles/tab-list.css';
+@import './styles/tab-menu.css';
 @import './styles/table.css';
 @import './styles/text.css';
 @import './styles/text-area.css';
