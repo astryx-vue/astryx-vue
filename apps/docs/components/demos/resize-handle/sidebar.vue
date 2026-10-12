@@ -17,7 +17,7 @@ const sidebar = useResizable({
 </script>
 
 <template>
-  <Card height="240" variant="muted" width="500">
+  <Card :height="240" variant="muted" :width="500">
     <Layout height="fill">
       <template #start>
         <LayoutPanel :has-divider="false" :width="sidebar.size">

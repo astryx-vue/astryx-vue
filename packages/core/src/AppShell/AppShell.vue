@@ -20,6 +20,7 @@ defineOptions({
 const props = withDefaults(defineProps<AppShellProps>(), {
   variant: 'elevated',
   height: 'fill',
+  mobileNav: undefined,
 })
 
 const emit = defineEmits<AppShellEmits>()

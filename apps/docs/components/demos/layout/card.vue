@@ -7,7 +7,7 @@ import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <Card height="300" width="100%" style="max-width: 400px">
+  <Card :height="300" width="100%" style="max-width: 400px">
     <Layout>
       <template #header>
         <LayoutHeader has-divider>
