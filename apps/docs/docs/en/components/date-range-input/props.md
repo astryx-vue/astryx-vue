@@ -18,7 +18,7 @@ footer: false
 <tr><td><code>maxRangeSpan</code></td><td><code>number</code></td><td>—</td><td>Longest span in days, including both ends.</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>Sunday, Monday for zh-CN</td><td>First column of the calendar.</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows a clear button.</td></tr>
-<tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select a date range</code></td><td>Empty-state text. Follows the locale.</td></tr>
+<tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select date range</code></td><td>Empty-state text. Follows the locale.</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the field.</td></tr>

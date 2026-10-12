@@ -9,7 +9,7 @@ export interface DateRangeInputMessages {
 
 export const dateRangeInputMessages: Record<AstryxLocale, DateRangeInputMessages> = {
   'en': {
-    placeholder: 'Select a date range',
+    placeholder: 'Select date range',
     dialogLabel: 'Choose date range',
     clear: label => clearLabel(label, 'Clear', 'Clear '),
   },
