@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { defineComponent, nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
+import { defineComponent, nextTick } from 'vue'
 import ResizeHandle from '../Resizable/ResizeHandle.vue'
 import { pixel } from '../Table/columnUtils.js'
 import { percent, useResizable } from './useResizable.js'

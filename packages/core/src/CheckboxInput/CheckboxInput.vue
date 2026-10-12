@@ -5,9 +5,9 @@ import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, us
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
-import { useAriaRequired } from '../FormLayout/context.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
+import { useAriaRequired } from '../FormLayout/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useCheckboxAction } from './useCheckboxAction.js'
 import '../../styles/checkbox-input.css'
@@ -15,9 +15,9 @@ import '../../styles/button.css'
 
 defineOptions({ name: 'AstryxCheckboxInput', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<CheckboxInputProps, 'modelValue'>>(), { size: 'md', loadingLabel: 'Loading' })
-const ariaRequired = useAriaRequired(props)
 const emit = defineEmits<CheckboxInputEmits>()
 defineSlots<CheckboxInputSlots>()
+const ariaRequired = useAriaRequired(props)
 const model = defineModel<CheckboxValue>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')

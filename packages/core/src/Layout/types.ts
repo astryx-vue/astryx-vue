@@ -1,6 +1,6 @@
-import type { AriaRole, VNodeChild } from 'vue'
-import type { SpacingStep } from '../Stack/types.js'
+import type { VNodeChild } from 'vue'
 import type { SizeValue } from '../layout/size.js'
+import type { SpacingStep } from '../Stack/types.js'
 import type { LayoutHeight } from './context.js'
 
 export type { LayoutHeight } from './context.js'
@@ -44,7 +44,7 @@ export interface LayoutHeaderProps {
   /** 只改底边内边距，方便标签下划线和分隔线贴住。 */
   paddingBlockEnd?: SpacingStep
   label?: string
-  role?: AriaRole
+  role?: string
 }
 
 export interface LayoutHeaderSlots {
@@ -57,7 +57,7 @@ export interface LayoutFooterProps {
   height?: SizeValue
   padding?: SpacingStep
   label?: string
-  role?: AriaRole
+  role?: string
 }
 
 export interface LayoutFooterSlots {
@@ -72,7 +72,7 @@ export interface LayoutContentProps {
    */
   isScrollable?: boolean
   label?: string
-  role?: AriaRole
+  role?: string
 }
 
 export interface LayoutContentSlots {
@@ -90,7 +90,7 @@ export interface LayoutPanelProps {
   /** @default true */
   isScrollable?: boolean
   label?: string
-  role?: AriaRole
+  role?: string
   /** 宽度。数字是像素。传了 resizable 时以钩子的尺寸为准。 */
   width?: SizeValue
   resizable?: LayoutResizable

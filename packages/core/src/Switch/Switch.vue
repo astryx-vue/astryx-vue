@@ -4,8 +4,8 @@ import type { SwitchEmits, SwitchProps, SwitchSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import { useAriaRequired } from '../FormLayout/context.js'
 import FieldLabel from '../Field/FieldLabel.vue'
+import { useAriaRequired } from '../FormLayout/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useSwitchAction } from './useSwitchAction.js'
 import '../../styles/switch.css'
@@ -16,9 +16,9 @@ const props = withDefaults(defineProps<Omit<SwitchProps, 'modelValue'>>(), {
   statusVariant: 'detached',
   loadingLabel: 'Loading',
 })
-const ariaRequired = useAriaRequired(props)
 const emit = defineEmits<SwitchEmits>()
 defineSlots<SwitchSlots>()
+const ariaRequired = useAriaRequired(props)
 const model = defineModel<boolean>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')

@@ -115,4 +115,14 @@ footer: false
 
 ## Native attributes
 
-`Section` renders a `<div>`. HTML attributes, <code>aria-*</code>, <code>data-*</code>, <code>class</code>, and <code>style</code> go to that element. <code>class</code> is merged. The inner element sets <code>data-variant</code> and <code>data-divider-*</code> for each requested edge.
+`Section` renders a `<div>`.
+
+The following go to that element:
+
+- HTML attributes.
+- `aria-*` attributes.
+- `data-*` attributes.
+- `class`.
+- `style`.
+
+`class` is merged. The inner element sets `data-variant` and `data-divider-*` for each requested edge.

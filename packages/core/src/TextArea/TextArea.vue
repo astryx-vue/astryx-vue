@@ -5,10 +5,10 @@ import { computed, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useT
 import ButtonSpinner from '../Button/ButtonSpinner.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import { useAriaRequired } from '../FormLayout/context.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
+import { useAriaRequired } from '../FormLayout/context.js'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextAreaAction } from './useTextAreaAction.js'
@@ -21,9 +21,9 @@ const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   resize: 'vertical',
   loadingLabel: 'Loading',
 })
-const ariaRequired = useAriaRequired(props)
 const emit = defineEmits<TextAreaEmits>()
 defineSlots<TextAreaSlots>()
+const ariaRequired = useAriaRequired(props)
 const model = defineModel<string>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLTextAreaElement>('input')

@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'vue'
+import type { ComputedRef, CSSProperties, Ref } from 'vue'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 export type ScrollAxis = 'inline' | 'block' | 'both'
@@ -51,13 +51,13 @@ function mappingFor(element: HTMLElement): Mapping {
   }
 }
 
-function extent(element: HTMLElement, axis: 'x' | 'y') {
+function extent(element: HTMLElement, axis: 'x' | 'y'): { client: number, content: number, offset: number } {
   if (axis === 'x')
     return { client: element.clientWidth, content: element.scrollWidth, offset: element.scrollLeft }
   return { client: element.clientHeight, content: element.scrollHeight, offset: element.scrollTop }
 }
 
-export function useScrollableArea(options: UseScrollableAreaOptions) {
+export function useScrollableArea(options: UseScrollableAreaOptions): UseScrollableAreaResult {
   const viewport = ref<HTMLElement | null>(null)
   const content = ref<HTMLElement | null>(null)
   const inline = ref<ScrollAxisState>(idleAxis())
@@ -71,20 +71,20 @@ export function useScrollableArea(options: UseScrollableAreaOptions) {
   const overscroll = computed(() => options.overscroll ?? 'allow')
   const stickyContainment = computed(() => options.stickyContainment ?? 'whenScrollable')
 
-  function requested(name: 'inline' | 'block') {
+  function requested(name: 'inline' | 'block'): boolean {
     return axis.value === name || axis.value === 'both'
   }
 
-  function sameAxis(current: ScrollAxisState, next: ScrollAxisState) {
+  function sameAxis(current: ScrollAxisState, next: ScrollAxisState): boolean {
     return current.isScrollable === next.isScrollable && current.atStart === next.atStart && current.atEnd === next.atEnd
   }
 
-  function measure() {
+  function measure(): void {
     const element = viewport.value
     if (element == null)
       return
     const nextMapping = mappingFor(element)
-    const read = (name: 'inline' | 'block', reversed: boolean) => {
+    const read = (name: 'inline' | 'block', reversed: boolean): { overflowing: boolean, state: ScrollAxisState } => {
       const box = extent(element, nextMapping[name])
       const overflowing = box.content > box.client + TOLERANCE
       const max = Math.max(0, box.content - box.client)
@@ -123,7 +123,7 @@ export function useScrollableArea(options: UseScrollableAreaOptions) {
   }
 
   let queued = false
-  function queueMeasure() {
+  function queueMeasure(): void {
     if (queued)
       return
     queued = true
@@ -133,19 +133,20 @@ export function useScrollableArea(options: UseScrollableAreaOptions) {
     })
   }
 
-  function bind(element: HTMLElement | null) {
-    if (viewport.value === element)
+  function bind(element: unknown): void {
+    const node = element instanceof HTMLElement ? element : null
+    if (viewport.value === node)
       return
     viewport.value?.removeEventListener('scroll', measure)
     observer?.disconnect()
     observer = undefined
-    viewport.value = element
-    if (element == null)
+    viewport.value = node
+    if (node == null)
       return
-    element.addEventListener('scroll', measure, { passive: true })
+    node.addEventListener('scroll', measure, { passive: true })
     if (typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(() => queueMeasure())
-      observer.observe(element)
+      observer.observe(node)
       if (content.value)
         observer.observe(content.value)
     }
@@ -210,4 +211,10 @@ export function useScrollableArea(options: UseScrollableAreaOptions) {
   }
 }
 
-export type UseScrollableAreaResult = ReturnType<typeof useScrollableArea>
+export interface UseScrollableAreaResult {
+  viewport: (element: unknown) => void
+  content: Ref<HTMLElement | null>
+  viewportAttrs: ComputedRef<Record<string, string | number | undefined>>
+  viewportStyle: ComputedRef<CSSProperties>
+  state: ComputedRef<ScrollableAreaState>
+}

@@ -3,8 +3,8 @@ import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutProps, LayoutSlots } from './types.js'
 import { computed, provide, useAttrs, useSlots, useTemplateRef } from 'vue'
 import { formatSize, spacingVariable, supportsInternalContentWidth } from '../layout/size.js'
-import Area from './Area.vue'
 import { layoutDividerKey, layoutSlotsKey, useLayoutDividers } from './context.js'
+import LayoutRegion from './LayoutRegion.vue'
 import '../../styles/layout.css'
 
 defineOptions({
@@ -61,18 +61,20 @@ const rootStyle = computed<StyleValue>(() => attrs.style as StyleValue)
 
 const innerStyle = computed<CSSProperties>(() => {
   const width = formatSize(props.contentWidth)
-  const style: CSSProperties = {}
+  const style: Record<string, string> = {}
   if (props.padding != null) {
     const step = spacingVariable(props.padding)
-    style['--layout-padding-own-outer-x' as keyof CSSProperties] = step as string
-    style['--layout-padding-own-outer-y' as keyof CSSProperties] = step as string
+    if (step != null) {
+      style['--layout-padding-own-outer-x'] = step
+      style['--layout-padding-own-outer-y'] = step
+    }
   }
   if (width != null) {
-    style['--layout-content-width' as keyof CSSProperties] = width as string
+    style['--layout-content-width'] = width
     if (supportsInternalContentWidth(props.contentWidth))
-      style['--layout-alignment-width' as keyof CSSProperties] = width as string
+      style['--layout-alignment-width'] = width
   }
-  return style
+  return style as CSSProperties
 })
 </script>
 
@@ -91,25 +93,25 @@ const innerStyle = computed<CSSProperties>(() => {
       :data-width-mode="widthMode"
       :style="innerStyle"
     >
-      <Area v-if="slots.header" area="header">
+      <LayoutRegion v-if="slots.header" area="header">
         <slot name="header" />
-      </Area>
+      </LayoutRegion>
       <div class="astryx-layout__middle">
-        <Area v-if="slots.start" area="start">
+        <LayoutRegion v-if="slots.start" area="start">
           <slot name="start" />
-        </Area>
+        </LayoutRegion>
         <div class="astryx-layout__content-slot">
-          <Area area="content">
+          <LayoutRegion area="content">
             <slot />
-          </Area>
+          </LayoutRegion>
         </div>
-        <Area v-if="slots.end" area="end">
+        <LayoutRegion v-if="slots.end" area="end">
           <slot name="end" />
-        </Area>
+        </LayoutRegion>
       </div>
-      <Area v-if="slots.footer" area="footer">
+      <LayoutRegion v-if="slots.footer" area="footer">
         <slot name="footer" />
-      </Area>
+      </LayoutRegion>
     </div>
   </div>
 </template>

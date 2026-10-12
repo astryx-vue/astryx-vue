@@ -191,4 +191,14 @@ footer: false
 
 ## 原生属性
 
-`ResizeHandle` 渲染 <code>&lt;div role="separator"&gt;</code>。HTML 属性、<code>aria-*</code>、<code>data-*</code>、<code>class</code> 和 <code>style</code> 都落到这个元素上。<code>class</code> 会合并。
+`ResizeHandle` 渲染 `<div role="separator">`。
+
+以下内容落到这个元素上：
+
+- HTML 属性。
+- `aria-*` 属性。
+- `data-*` 属性。
+- `class`。
+- `style`。
+
+`class` 会合并。

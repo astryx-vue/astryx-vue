@@ -225,4 +225,14 @@ footer: false
 
 ## 原生属性
 
-每一块的根元素都是 `<div>`。HTML 属性、<code>aria-*</code>、<code>data-*</code>、<code>class</code> 和 <code>style</code> 都落到各自的根上。<code>class</code> 会合并。`Layout` 写 <code>data-height</code>。
+每一块的根元素都是 `<div>`。
+
+以下内容落到各自的根上：
+
+- HTML 属性。
+- `aria-*` 属性。
+- `data-*` 属性。
+- `class`。
+- `style`。
+
+`class` 会合并。`Layout` 写 `data-height`。

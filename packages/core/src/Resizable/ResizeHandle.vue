@@ -190,6 +190,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role=separator 加 tabindex 就是键盘控件；方向键、Home、End、Enter 都在这个元素上。 -->
   <div
     ref="root"
     v-bind="forwardedAttrs"

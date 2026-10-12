@@ -1,3 +1,4 @@
+import type { Ref } from 'vue'
 import { onBeforeUnmount, ref } from 'vue'
 
 export interface ScrollOverflowState {
@@ -10,14 +11,14 @@ export interface ScrollOverflowState {
  * 观察一个横向滚动容器，报告起始边和结束边有没有被挡住。
  * 容差 1px，滚动和尺寸变化都会重新量。
  */
-export function useScrollOverflow() {
+export function useScrollOverflow(): UseScrollOverflowResult {
   const element = ref<HTMLElement | null>(null)
   const overflowStart = ref(false)
   const overflowEnd = ref(false)
   const hasOverflow = ref(false)
   let observer: ResizeObserver | undefined
 
-  function measure() {
+  function measure(): void {
     const node = element.value
     if (node == null)
       return
@@ -31,7 +32,7 @@ export function useScrollOverflow() {
     hasOverflow.value = nextHas
   }
 
-  function scrollRef(node: HTMLElement | null) {
+  function scrollRef(node: HTMLElement | null): void {
     element.value?.removeEventListener('scroll', measure)
     observer?.disconnect()
     element.value = node
@@ -58,4 +59,9 @@ export function useScrollOverflow() {
   }
 }
 
-export type UseScrollOverflowResult = ReturnType<typeof useScrollOverflow>
+export interface UseScrollOverflowResult {
+  scrollRef: (node: HTMLElement | null) => void
+  overflowStart: Ref<boolean>
+  overflowEnd: Ref<boolean>
+  hasOverflow: Ref<boolean>
+}

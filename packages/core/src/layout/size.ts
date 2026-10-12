@@ -87,7 +87,7 @@ export function paddingVariables(padding: ResolvedPadding): Record<string, strin
  */
 export function spacingEdgeVars(prefix: string, input: PaddingInput): Record<string, string> {
   const style: Record<string, string> = {}
-  const set = (edge: string, step: SpacingStep | undefined) => {
+  const set = (edge: string, step: SpacingStep | undefined): void => {
     if (step != null)
       style[`${prefix}-${edge}`] = SPACING_VARIABLES[step]
   }

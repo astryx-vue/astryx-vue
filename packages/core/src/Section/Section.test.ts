@@ -26,8 +26,9 @@ describe('section', () => {
     expect(inner.attributes('data-divider-bottom')).toBe('true')
     expect(inner.attributes('data-divider-start')).toBe('true')
     expect(inner.attributes('data-divider-top')).toBeUndefined()
-    expect(inner.element.style.getPropertyValue('--_section-inline-start')).toContain('--astryx-spacing-6')
-    expect(inner.element.style.getPropertyValue('--_section-block-end')).toContain('--astryx-spacing-6')
+    const innerElement = inner.element as HTMLElement
+    expect(innerElement.style.getPropertyValue('--_section-inline-start')).toContain('--astryx-spacing-6')
+    expect(innerElement.style.getPropertyValue('--_section-block-end')).toContain('--astryx-spacing-6')
   })
 
   it('lets one edge override the shared padding', () => {

@@ -115,4 +115,14 @@ footer: false
 
 ## 原生属性
 
-`Section` 的根元素是 `<div>`。HTML 属性、<code>aria-*</code>、<code>data-*</code>、<code>class</code> 和 <code>style</code> 都落到这个元素上。<code>class</code> 会合并。内层元素写 <code>data-variant</code>，并为每一条请求的边写 <code>data-divider-*</code>。
+`Section` 的根元素是 `<div>`。
+
+以下内容落到这个元素上：
+
+- HTML 属性。
+- `aria-*` 属性。
+- `data-*` 属性。
+- `class`。
+- `style`。
+
+`class` 会合并。内层元素写 `data-variant`，并为每一条请求的边写 `data-divider-*`。

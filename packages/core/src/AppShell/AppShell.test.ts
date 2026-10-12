@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { useAppShellMobile } from '../composables/useAppShellMobile.js'
 import { defineComponent } from 'vue'
+import { useAppShellMobile } from '../composables/useAppShellMobile.js'
 import AppShell from './AppShell.vue'
 
 const Outside = defineComponent({

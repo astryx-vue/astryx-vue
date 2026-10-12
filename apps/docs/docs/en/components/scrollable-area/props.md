@@ -149,4 +149,14 @@ Overflow uses a 1px tolerance. Before a measurement, a requested axis is <code>o
 
 ## Native attributes
 
-`ScrollableArea` renders a `<div>`. HTML attributes, <code>aria-*</code>, <code>data-*</code>, <code>class</code>, and <code>style</code> go to the viewport. <code>class</code> is merged. The viewport also sets <code>data-scroll-axis</code> and, once measured, <code>data-scrollable-*</code> and <code>data-scroll-*-start</code> / <code>data-scroll-*-end</code>.
+`ScrollableArea` renders a `<div>`.
+
+The following go to the viewport:
+
+- HTML attributes.
+- `aria-*` attributes.
+- `data-*` attributes.
+- `class`.
+- `style`.
+
+`class` is merged. The viewport also sets `data-scroll-axis` and, once measured, `data-scrollable-*` and `data-scroll-*-start` / `data-scroll-*-end`.

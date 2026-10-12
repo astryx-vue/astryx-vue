@@ -56,7 +56,7 @@ const columns = [
             16 files across 4 sections
           </Text>
         </VStack>
-        <HStack :gap="3" vAlign="start">
+        <HStack :gap="3" align="start">
           <VStack v-for="column in columns" :key="column.label" :gap="2" :width="180">
             <Text color="secondary" type="label">
               {{ column.label }}

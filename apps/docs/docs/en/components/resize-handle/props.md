@@ -191,4 +191,14 @@ Arrow keys move 10px. Shift moves 50px. Home, End, and Enter jump to the minimum
 
 ## Native attributes
 
-`ResizeHandle` renders a `<div role="separator">`. HTML attributes, <code>aria-*</code>, <code>data-*</code>, <code>class</code>, and <code>style</code> go to that element. <code>class</code> is merged.
+`ResizeHandle` renders a `<div role="separator">`.
+
+The following go to that element:
+
+- HTML attributes.
+- `aria-*` attributes.
+- `data-*` attributes.
+- `class`.
+- `style`.
+
+`class` is merged.

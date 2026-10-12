@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import type { PixelWidth } from '../Table/columnUtils.js'
+import type { PixelWidth } from '../Table/types.js'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 export type ResizableDirection = 'horizontal' | 'vertical'
@@ -189,7 +189,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     return readBasis(options.containerRef?.value, direction)
   }
 
-  function limits() {
+  function limits(): { min: number, max: number } {
     const basis = currentBasis()
     basisMeasured.value = basis.measured || options.containerRef == null
     return {
@@ -198,7 +198,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     }
   }
 
-  function applySize(next: number, collapsed: boolean) {
+  function applySize(next: number, collapsed: boolean): void {
     const { min, max } = limits()
     if (collapsed && collapsible) {
       isCollapsed.value = true
@@ -211,7 +211,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     expandedSize.value = clamped
   }
 
-  function restore() {
+  function restore(): void {
     const basis = currentBasis()
     const initial = parseSize(options.defaultSize, basis.px, DEFAULT_SIZE)
     const saved = options.autoSaveId ? loadPersistedState(options.autoSaveId) : null
@@ -230,7 +230,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
 
   restore()
 
-  function persist() {
+  function persist(): void {
     if (!options.autoSaveId || !basisMeasured.value)
       return
     try {
@@ -244,7 +244,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     }
   }
 
-  function setCollapsed(next: boolean) {
+  function setCollapsed(next: boolean): void {
     if (!collapsible && next)
       return
     if (options.isCollapsed != null) {
@@ -256,17 +256,17 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     persist()
   }
 
-  function resize(next: number) {
+  function resize(next: number): void {
     applySize(next, false)
     options.onSizeChange?.(size.value)
     persist()
   }
 
-  function onResizeStart() {
+  function onResizeStart(): void {
     origin = isCollapsed.value ? 0 : size.value
   }
 
-  function onResizeMove(delta: number) {
+  function onResizeMove(delta: number): void {
     const raw = origin + delta
     if (collapsible && raw < collapsedSize) {
       setCollapsed(true)
@@ -276,7 +276,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     options.onSizeChange?.(size.value)
   }
 
-  function onResizeEnd() {
+  function onResizeEnd(): void {
     persist()
   }
 
@@ -299,7 +299,7 @@ function useSingleRegion(options: UseResizableSingleOptions): ResizableRegion {
     }
   })
 
-  function measureDefault() {
+  function measureDefault(): void {
     if (settledDefault || options.containerRef == null)
       return
     const basis = currentBasis()

@@ -10,7 +10,7 @@ export function regionPaddingStyle(
   if (padding == null && paddingBlockEnd == null)
     return {}
   const style: CSSProperties = {}
-  const set = (edge: string, step: SpacingStep | undefined) => {
+  const set = (edge: string, step: SpacingStep | undefined): void => {
     const value = spacingVariable(step)
     if (value != null)
       style[`${prefix}-${edge}` as keyof CSSProperties] = value as never

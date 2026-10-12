@@ -27,7 +27,7 @@ const {
     </Text>
   </VStack>
   <VStack v-else :gap="2">
-    <HStack :gap="2" vAlign="center">
+    <HStack :gap="2" align="center">
       <Button
         :label="isMobileNavOpen ? 'Close navigation' : 'Open navigation'"
         variant="secondary"

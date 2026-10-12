@@ -14,10 +14,11 @@ describe('scrollable area', () => {
     expect(viewport.attributes('aria-label')).toBe('Workspace files')
     expect(viewport.attributes('data-scroll-axis')).toBe('block')
     expect(viewport.attributes('tabindex')).toBeUndefined()
-    expect(viewport.element.style.overflowY).toBe('clip')
-    expect(viewport.element.style.height).toBe('300px')
-    const content = wrapper.get('[data-scroll-content]')
-    expect(content.element.style.getPropertyValue('--_pad-block-start')).toContain('--astryx-spacing-4')
+    const viewportElement = viewport.element as HTMLElement
+    expect(viewportElement.style.overflowY).toBe('clip')
+    expect(viewportElement.style.height).toBe('300px')
+    const content = wrapper.get('[data-scroll-content]').element as HTMLElement
+    expect(content.style.getPropertyValue('--_pad-block-start')).toContain('--astryx-spacing-4')
   })
 
   it('contains the gesture only on an effective axis', () => {
@@ -28,6 +29,6 @@ describe('scrollable area', () => {
 
     expect(wrapper.attributes('data-full-bleed')).toBe('true')
     expect(wrapper.attributes('data-axis')).toBe('inline')
-    expect(wrapper.element.style.overscrollBehaviorX).toBe('auto')
+    expect((wrapper.element as HTMLElement).style.overscrollBehaviorX).toBe('auto')
   })
 })

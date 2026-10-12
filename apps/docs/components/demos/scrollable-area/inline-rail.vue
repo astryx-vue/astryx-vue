@@ -19,7 +19,7 @@ const files = [
 <template>
   <Card :padding="4" :width="460">
     <VStack :gap="3">
-      <HStack h-align="between" vAlign="center">
+      <HStack h-align="between" align="center">
         <VStack :gap="0.5">
           <p class="layout-title layout-title--page">
             Workspace files

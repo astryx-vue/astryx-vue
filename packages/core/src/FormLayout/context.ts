@@ -9,10 +9,10 @@ export interface FormLayoutContextValue {
   defaultOptionality?: FormOptionality
 }
 
-export const formLayoutKey: InjectionKey<ComputedRef<FormLayoutContextValue>> = Symbol('astryx-form-layout')
+export const formLayoutKey: InjectionKey<ComputedRef<FormLayoutContextValue | null>> = Symbol('astryx-form-layout')
 
 export function useFormLayout(): ComputedRef<FormLayoutContextValue | null> {
-  return inject(formLayoutKey, computed(() => null))
+  return inject(formLayoutKey, computed<FormLayoutContextValue | null>(() => null))
 }
 
 /**

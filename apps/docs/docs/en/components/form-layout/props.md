@@ -47,4 +47,14 @@ footer: false
 
 ## Native attributes
 
-`FormLayout` renders a `<div>`, not a `<form>`. HTML attributes, <code>aria-*</code>, <code>data-*</code>, <code>class</code>, and <code>style</code> go to that element. <code>class</code> is merged. The root sets <code>data-direction</code>.
+`FormLayout` renders a `<div>`, not a `<form>`.
+
+The following go to that element:
+
+- HTML attributes.
+- `aria-*` attributes.
+- `data-*` attributes.
+- `class`.
+- `style`.
+
+`class` is merged. The root sets `data-direction`.

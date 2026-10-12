@@ -69,4 +69,14 @@ footer: false
 
 ## 原生属性
 
-`AspectRatio` 的根元素是 `<div>`。HTML 属性、<code>aria-*</code>、<code>data-*</code>、<code>class</code> 和 <code>style</code> 都落到这个元素上。<code>class</code> 会合并。根元素同时写 <code>data-shape</code>。
+`AspectRatio` 的根元素是 `<div>`。
+
+以下内容落到这个元素上：
+
+- HTML 属性。
+- `aria-*` 属性。
+- `data-*` 属性。
+- `class`。
+- `style`。
+
+`class` 会合并。根元素同时写 `data-shape`。

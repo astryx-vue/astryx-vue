@@ -144,4 +144,14 @@ footer: false
 
 ## 原生属性
 
-`AppShell` 渲染 `<div>`。HTML 属性、<code>aria-*</code>、<code>data-*</code>、<code>class</code> 和 <code>style</code> 都落到这个元素上。<code>class</code> 会合并。根元素写 <code>data-variant</code> 和 <code>data-height</code>。
+`AppShell` 渲染 `<div>`。
+
+以下内容落到这个元素上：
+
+- HTML 属性。
+- `aria-*` 属性。
+- `data-*` 属性。
+- `class`。
+- `style`。
+
+`class` 会合并。根元素写 `data-variant` 和 `data-height`。

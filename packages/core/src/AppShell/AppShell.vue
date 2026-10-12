@@ -2,14 +2,14 @@
 import type { StyleValue } from 'vue'
 import type { AppShellBreakpoint, AppShellEmits, AppShellProps, AppShellSlots } from './types.js'
 import { computed, provide, reactive, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { appShellMobileKey } from '../composables/useAppShellMobile.js'
 import Layout from '../Layout/Layout.vue'
 import LayoutContent from '../Layout/LayoutContent.vue'
 import LayoutHeader from '../Layout/LayoutHeader.vue'
 import LayoutPanel from '../Layout/LayoutPanel.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import MobileNav from '../MobileNav/MobileNav.vue'
 import MobileNavToggle from '../MobileNav/MobileNavToggle.vue'
-import { appShellMobileKey } from '../composables/useAppShellMobile.js'
-import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/app-shell.css'
 
 defineOptions({
@@ -36,10 +36,10 @@ const uncontrolledOpen = defineModel<boolean>('mobileNavOpen', { default: false 
 defineExpose({ element: root })
 
 const BREAKPOINTS: Record<Exclude<AppShellBreakpoint, 'none'>, number> = {
-  sm: 640,
-  md: 768,
-  lg: 1024,
-  xl: 1280,
+  'sm': 640,
+  'md': 768,
+  'lg': 1024,
+  'xl': 1280,
   '2xl': 1536,
 }
 

@@ -149,4 +149,14 @@ footer: false
 
 ## 原生属性
 
-`ScrollableArea` 渲染 `<div>`。HTML 属性、<code>aria-*</code>、<code>data-*</code>、<code>class</code> 和 <code>style</code> 都落到视口上。<code>class</code> 会合并。视口还写 <code>data-scroll-axis</code>，测量之后再写 <code>data-scrollable-*</code> 以及 <code>data-scroll-*-start</code> / <code>data-scroll-*-end</code>。
+`ScrollableArea` 渲染 `<div>`。
+
+以下内容落到视口上：
+
+- HTML 属性。
+- `aria-*` 属性。
+- `data-*` 属性。
+- `class`。
+- `style`。
+
+`class` 会合并。视口还写 `data-scroll-axis`，测量之后再写 `data-scrollable-*` 以及 `data-scroll-*-start` / `data-scroll-*-end`。

@@ -144,4 +144,14 @@ The main region is <code>#astryx-app-shell-main</code>, a <code>div</code> with 
 
 ## Native attributes
 
-`AppShell` renders a `<div>`. HTML attributes, <code>aria-*</code>, <code>data-*</code>, <code>class</code>, and <code>style</code> go to that element. <code>class</code> is merged. The root sets <code>data-variant</code> and <code>data-height</code>.
+`AppShell` renders a `<div>`.
+
+The following go to that element:
+
+- HTML attributes.
+- `aria-*` attributes.
+- `data-*` attributes.
+- `class`.
+- `style`.
+
+`class` is merged. The root sets `data-variant` and `data-height`.

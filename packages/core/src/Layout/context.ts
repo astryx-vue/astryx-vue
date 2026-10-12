@@ -12,7 +12,7 @@ export interface LayoutSlotsState {
 }
 
 export const layoutSlotsKey: InjectionKey<ComputedRef<LayoutSlotsState>> = Symbol('astryx-layout-slots')
-export const layoutAreaKey: InjectionKey<ComputedRef<LayoutArea>> = Symbol('astryx-layout-area')
+export const layoutAreaKey: InjectionKey<ComputedRef<LayoutArea | null>> = Symbol('astryx-layout-area')
 export const layoutDividerKey: InjectionKey<ComputedRef<boolean | undefined>> = Symbol('astryx-layout-dividers')
 
 const emptySlots = computed<LayoutSlotsState>(() => ({
@@ -27,7 +27,7 @@ export function useLayoutSlots(): ComputedRef<LayoutSlotsState> {
 }
 
 export function useLayoutArea(): ComputedRef<LayoutArea | null> {
-  return inject(layoutAreaKey, computed(() => null))
+  return inject(layoutAreaKey, computed<LayoutArea | null>(() => null))
 }
 
 export function useLayoutDividers(): ComputedRef<boolean | undefined> {

@@ -25,7 +25,7 @@ const features = [
           </Text>
         </VStack>
         <VStack :gap="2">
-          <HStack v-for="feature in features" :key="feature" :gap="2" vAlign="center">
+          <HStack v-for="feature in features" :key="feature" :gap="2" align="center">
             <span class="i-carbon-checkmark nav-mark" />
             <Text type="body">
               {{ feature }}
@@ -36,7 +36,7 @@ const features = [
     </Section>
     <Section :padding="6" variant="muted">
       <VStack :gap="2" h-align="center">
-        <HStack :gap="2" vAlign="center">
+        <HStack :gap="2" align="center">
           <Text type="display-3">
             $49
           </Text>
