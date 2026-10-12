@@ -24,15 +24,17 @@ import sortableSource from './sortable.vue?raw&highlighted'
 import stripedDemo from './striped.vue'
 import stripedSource from './striped.vue?raw&highlighted'
 
+const wide = { className: 'table-preview' }
+
 export const tableOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })
-export const tableColumnSettings = defineDemo(columnSettingsDemo, columnSettingsSource)
-export const tableGridDividers = defineDemo(gridDividersDemo, gridDividersSource)
-export const tableInCard = defineDemo(inCardDemo, inCardSource)
-export const tableInlineFilters = defineDemo(inlineFiltersDemo, inlineFiltersSource)
-export const tablePaginated = defineDemo(paginatedDemo, paginatedSource)
-export const tablePopoverFilters = defineDemo(popoverFiltersDemo, popoverFiltersSource)
-export const tableResizable = defineDemo(resizableDemo, resizableSource)
-export const tableRichCell = defineDemo(richCellDemo, richCellSource)
-export const tableRowSelection = defineDemo(rowSelectionDemo, rowSelectionSource)
-export const tableSortable = defineDemo(sortableDemo, sortableSource)
-export const tableStriped = defineDemo(stripedDemo, stripedSource)
+export const tableColumnSettings = defineDemo(columnSettingsDemo, columnSettingsSource, wide)
+export const tableGridDividers = defineDemo(gridDividersDemo, gridDividersSource, wide)
+export const tableInCard = defineDemo(inCardDemo, inCardSource, wide)
+export const tableInlineFilters = defineDemo(inlineFiltersDemo, inlineFiltersSource, wide)
+export const tablePaginated = defineDemo(paginatedDemo, paginatedSource, wide)
+export const tablePopoverFilters = defineDemo(popoverFiltersDemo, popoverFiltersSource, wide)
+export const tableResizable = defineDemo(resizableDemo, resizableSource, wide)
+export const tableRichCell = defineDemo(richCellDemo, richCellSource, wide)
+export const tableRowSelection = defineDemo(rowSelectionDemo, rowSelectionSource, wide)
+export const tableSortable = defineDemo(sortableDemo, sortableSource, wide)
+export const tableStriped = defineDemo(stripedDemo, stripedSource, wide)

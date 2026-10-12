@@ -613,6 +613,12 @@ html.dark .component-card__preview {
   justify-content: center;
 }
 
+/* 表格按格子宽度铺开，比例列才会像原版示例那样吃掉剩余空间。 */
+.component-example__preview > .table-preview,
+.component-card__preview > .table-preview {
+  width: 100%;
+}
+
 .component-card:hover .component-card__preview {
   border-color: var(--astryx-accent-bright);
   transform: translateY(-2px);
