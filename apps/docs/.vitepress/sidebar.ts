@@ -12,7 +12,7 @@ export function guideSidebar(english: boolean): Sidebar {
     {
       text: english ? 'Start' : '开始',
       items: [
-        item(english ? 'Why' : '为什么', `${prefix}/guide/why`),
+        item(english ? 'Introduction' : '介绍', `${prefix}/guide/why`),
         item(english ? 'Quick start' : '快速开始', `${prefix}/guide/getting-started`),
         item(english ? 'Installation' : '安装', `${prefix}/guide/installation`),
       ],

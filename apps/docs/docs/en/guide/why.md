@@ -1,17 +1,37 @@
 ---
-title: Why
+title: Introduction
 ---
 
-# Why
+# Introduction
 
-astryx-vue reimplements the [Astryx](https://github.com/facebook/astryx) design language in Vue 3. The upstream docs are at <https://astryx.atmeta.com>. That project is React 19 and StyleX. This repository is an unofficial community project. It is not a Meta project, and it does not claim the React version's capabilities as its own.
+astryx-vue is an open-source Vue 3 reimplementation of Meta's [Astryx](https://github.com/facebook/astryx) design language. The upstream documentation is located at <https://astryx.atmeta.com>, built on React 19 and StyleX. astryx-vue is an independent community project bringing the aesthetics and engineering precision of Astryx to the Vue ecosystem.
 
-What is worth matching is the design language, not the framework. The port concentrates on four things: design tokens, CSS variables, the motion system, and the grain of the components. The API is Vue: props, events, slots, `v-model`, and composables. There is no React adapter, and the public packages do not depend on anything that would pull React into the tree.
+## Core Focus
 
-Components and themes are two packages. `@astryx-vue/core` ships the components and the structural styles. `@astryx-vue/themes` ships the themes. The styles are plain CSS. You do not install UnoCSS or StyleX to use them.
+Rather than wrapping React components or introducing runtime adapters, astryx-vue reimagines Astryx natively for Vue. The implementation strictly mirrors four foundations:
 
-Icons are not a built-in icon set. Components that need an icon take a CSS class, and the caller draws it. The docs site uses Anthony Fu's CSS icon approach, UnoCSS `presetIcons`. The library itself keeps only a few decorative glyphs, such as the check, the chevrons, and copy. See [Icons](/en/guide/icons).
+1. **Design Tokens**: Structured design tokens across color, spacing, radius, and elevation.
+2. **CSS Variables**: Unified light/dark theme variables leveraging native `light-dark()`.
+3. **Motion System**: Calibrated durations and easing curves with built-in reduced-motion support.
+4. **Component Grain**: Faithful component divisions matching the original design system.
 
-Surfaces that belong together are provided as a set of components, not as one flattened list of buttons. The set that exists today is `Chat`, `Citation`, and `Markdown`. See [Patterns](/en/guide/patterns).
+All APIs embrace standard Vue 3 idioms: typed props, events, slots, `v-model`, and composables without unnecessary runtime abstractions.
 
-The public API is whatever the repository exports. The only theme is Neutral. There is no upstream CLI, no StyleX `xstyle`, and no butter or other theme package.
+## Architecture and Packages
+
+The project separates component structure from visual theming:
+
+- `@astryx-vue/core`: Component implementations, composables, and structural CSS.
+- `@astryx-vue/themes`: Theme tokens, typography, and color definitions (currently providing Neutral).
+
+The styles use standard CSS layers (`@layer astryx.*`), requiring no specialized CSS-in-JS toolchains.
+
+## Icons and Patterns
+
+To keep bundle footprints minimal, the library does not package a proprietary icon font or heavy component suite. Controls such as `IconButton` and `NavItem` accept CSS icon classes, seamlessly integrating with solutions like UnoCSS `presetIcons`, Iconify, or Lucide.
+
+For specialized workflows, the library provides cohesive component patterns including `Chat` layouts, `Citation` elements, and `Markdown` presentations.
+
+---
+
+The public API strictly reflects current repository exports. Neutral is currently the primary theme, with additional themes and patterns planned for future releases.

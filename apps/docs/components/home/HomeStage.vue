@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useClipboard } from '@astryx-vue/core'
-import { Badge } from '@astryx-vue/core/Badge'
 import { Button } from '@astryx-vue/core/Button'
-import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList, ChatSystemMessage } from '@astryx-vue/core/Chat'
+import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList, ChatToolCalls, ChatTypingIndicator } from '@astryx-vue/core/Chat'
 import { IconButton } from '@astryx-vue/core/IconButton'
 import { TextInput } from '@astryx-vue/core/TextInput'
-import { computed, ref, shallowRef } from 'vue'
+import { computed, ref } from 'vue'
+import { useAutoplayChat } from './useAutoplayChat'
 
 const props = defineProps<{
   locale: 'zh' | 'en'
@@ -16,136 +16,92 @@ const install = 'pnpm add @astryx-vue/core @astryx-vue/themes'
 const copy = {
   zh: {
     mark: 'astryx-vue',
-    title: '用 Vue 重新实现 Astryx 的设计语言',
+    title: '用 Vue 重新实现 Astryx 设计语言',
     lede: '非官方社区项目。token、CSS 变量、动画和组件粒度按原版对齐，接口是 props、事件、插槽和组合式函数。',
     start: '快速开始',
     components: '浏览组件',
-    copy: '复制',
-    copied: '已复制',
-    search: '搜索输入框',
-    copyIcon: '复制安装命令',
-    themes: '主题',
-    announce: '已复制安装命令',
-    preview: '页面预览',
-    user: '这套颜色从哪来？',
-    assistant: '从 Neutral 的 CSS 变量来。浅色和深色写在同一个 light-dark() 里。',
+    copy: '复制安装命令',
+    copied: '已复制安装命令',
     assistantName: '助手',
-    caption: '这段对话只留在本页，没有接到模型。',
     composer: '写一句',
-    placeholder: '只加到上面的记录里',
+    placeholder: '输入消息...',
     send: '发送',
-    tray: '组件和 token 样例',
-    motion: '缩放',
-    replay: '再播一次',
-    ghost: '轻量',
-    destructive: '危险',
-    swatchLabel: '色板',
-    rampTitle: '颜色就是 token',
-    rampBody: 'Neutral 把浅色和深色放在同一条 CSS 变量里。下面这条色带是 background 色，不是单独画的插图。',
-    rampLink: '看全部颜色',
-    notesTitle: 'Vue 的写法，不是 React 的外壳',
-    notes: [
-      { term: 'CSS 变量', body: '语义值都是 --astryx-*，颜色用 light-dark()。组件结构样式和主题分成两层。', href: '/themes/css-variables', link: '变量怎么分层' },
-      { term: '动画', body: '时长三档，一条标准缓动。共享的淡入、缩放和四向滑动会听从系统的减少动态效果。', href: '/themes/motion', link: '看动画刻度' },
-      { term: '组合式函数', body: 'useClipboard、useControllableState、useAnnounce 这一类从 @astryx-vue/core 引入。上面的复制按钮用的就是 useClipboard。', href: '/guide/composables', link: '函数列表' },
-      { term: 'CSS 图标', body: '没有内置图标组件。IconButton 和 NavItem 接收一个 CSS class，图形由调用方绘制。', href: '/guide/icons', link: '图标方案' },
-      { term: '对话', body: 'Chat、Citation、Markdown 按组件拆开，由应用自己拼。这一页的记录是 ChatLayout。', href: '/guide/patterns', link: '应用模式' },
-    ],
-    endTitle: '两个包',
-    endBody: '@astryx-vue/core 提供组件，@astryx-vue/themes 提供 Neutral。主题目前只有这一套。',
-    why: '为什么这样做',
+    script: {
+      userQuestion: '今天想用 Vue 重新实现 Astryx，怎么复刻它的 token 和组件？',
+      toolName: 'pnpm add @astryx-vue/core @astryx-vue/themes',
+      assistantLead: '直接安装核心包与主题。底层严格对齐 design token、CSS 变量与动画刻度，按 Vue 规范提供原生组件：',
+      codeSnippet: `<script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
+import '@astryx-vue/themes/neutral.css'
+<\/script>
+
+<template>
+  <Button variant="primary" label="快速开始" />
+</template>`,
+      assistantEnding: '组件按需加载结构样式，Neutral 主题天然支持深浅色模式。',
+    },
   },
   en: {
     mark: 'astryx-vue',
-    title: 'The Astryx design language, rebuilt for Vue',
-    lede: 'An unofficial community project. Tokens, CSS variables, motion, and component grain follow Astryx. The API is props, events, slots, and composables.',
+    title: 'Astryx design language, reimplemented for Vue',
+    lede: 'An unofficial community project. Tokens, CSS variables, motion, and component grain follow Astryx. The API is native props, events, slots, and composables.',
     start: 'Quick start',
     components: 'Browse components',
-    copy: 'Copy',
-    copied: 'Copied',
-    search: 'Focus the message field',
-    copyIcon: 'Copy install command',
-    themes: 'Themes',
-    announce: 'Copied the install command',
-    preview: 'On this page',
-    user: 'Where do these colors come from?',
-    assistant: 'From Neutral CSS variables. Light and dark live in the same light-dark() value.',
+    copy: 'Copy install command',
+    copied: 'Copied install command',
     assistantName: 'Assistant',
-    caption: 'This transcript stays on the page. It does not call a model.',
-    composer: 'Write a line',
-    placeholder: 'It is only added to the transcript above',
+    composer: 'Message',
+    placeholder: 'Type a message...',
     send: 'Send',
-    tray: 'Component and token samples',
-    motion: 'Scale',
-    replay: 'Replay',
-    ghost: 'Ghost',
-    destructive: 'Destructive',
-    swatchLabel: 'Swatches',
-    rampTitle: 'Color is the token',
-    rampBody: 'Neutral keeps light and dark on one CSS variable. The band below is the background tokens, not a separate illustration.',
-    rampLink: 'See every color',
-    notesTitle: 'A Vue API, not a React shell',
-    notes: [
-      { term: 'CSS variables', body: 'Semantic values are --astryx-*. Colors use light-dark(). Structure and theme are separate layers.', href: '/en/themes/css-variables', link: 'How the layers work' },
-      { term: 'Motion', body: 'Three durations and one standard ease. The shared fade, scale, and four-way slides follow reduced motion.', href: '/en/themes/motion', link: 'See the scale' },
-      { term: 'Composables', body: 'useClipboard, useControllableState, and useAnnounce come from @astryx-vue/core. The copy button above is useClipboard.', href: '/en/guide/composables', link: 'Function list' },
-      { term: 'CSS icons', body: 'There is no built-in icon set. IconButton and NavItem take a CSS class, and the app draws the glyph.', href: '/en/guide/icons', link: 'Icon approach' },
-      { term: 'Conversation', body: 'Chat, Citation, and Markdown stay separate components. The transcript on this page is ChatLayout.', href: '/en/guide/patterns', link: 'Patterns' },
-    ],
-    endTitle: 'Two packages',
-    endBody: '@astryx-vue/core is the components. @astryx-vue/themes is Neutral. That is the only theme shipped today.',
-    why: 'Why it is built this way',
+    script: {
+      userQuestion: 'How do I reimplement Astryx in Vue with its tokens and components?',
+      toolName: 'pnpm add @astryx-vue/core @astryx-vue/themes',
+      assistantLead: 'Install the core package and theme. It faithfully replicates design tokens, CSS variables, and motion scales with native Vue 3 components:',
+      codeSnippet: `<script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
+import '@astryx-vue/themes/neutral.css'
+<\/script>
+
+<template>
+  <Button variant="primary" label="Quick start" />
+</template>`,
+      assistantEnding: 'Components load their own structural styles, and theme variables support light and dark mode.',
+    },
   },
 } as const
 
 const text = computed(() => copy[props.locale])
 const prefix = computed(() => props.locale === 'en' ? '/en' : '')
-const clipboard = useClipboard({ announce: text.value.announce })
+const clipboard = useClipboard({ announce: text.value.copied })
+
 const draft = ref('')
-const playId = ref(0)
-const composer = ref<{ focus: () => void } | null>(null)
-let nextId = 3
 
-interface Line {
-  id: number
-  sender: 'user' | 'assistant'
-  text: string
-}
-
-const lines = shallowRef<Line[]>([
-  { id: 1, sender: 'user', text: text.value.user },
-  { id: 2, sender: 'assistant', text: text.value.assistant },
-])
-
-const copiedLabel = computed(() => clipboard.isCopied.value ? text.value.copied : text.value.copy)
-
-const ramps = [
-  '--astryx-color-background-blue',
-  '--astryx-color-background-cyan',
-  '--astryx-color-background-teal',
-  '--astryx-color-background-green',
-  '--astryx-color-background-yellow',
-  '--astryx-color-background-orange',
-  '--astryx-color-background-red',
-  '--astryx-color-background-pink',
-  '--astryx-color-background-purple',
-]
+const {
+  showUser,
+  isTyping,
+  showTool,
+  showCode,
+  showEnding,
+  displayedLeadText,
+  assistantLabel,
+  currentScript,
+  customMessages,
+  sendUserMessage,
+} = useAutoplayChat({
+  script: () => text.value.script,
+  assistantName: () => text.value.assistantName,
+})
 
 async function copyInstall(): Promise<void> {
   await clipboard.copy(install)
 }
 
-function focusComposer(): void {
-  composer.value?.focus()
-}
-
-function send(): void {
+function handleSend(): void {
   const value = draft.value.trim()
-  if (value === '')
+  if (!value)
     return
   draft.value = ''
-  lines.value = [...lines.value, { id: nextId, sender: 'user', text: value }]
-  nextId += 1
+  sendUserMessage(value)
 }
 </script>
 
@@ -169,29 +125,73 @@ function send(): void {
         </div>
         <div class="home-install">
           <code>{{ install }}</code>
-          <Button size="sm" variant="secondary" :label="copiedLabel" @click="copyInstall" />
+          <IconButton
+            size="sm"
+            variant="secondary"
+            :label="clipboard.isCopied.value ? text.copied : text.copy"
+            @click="copyInstall"
+          >
+            <span
+              class="home-copy-icon"
+              :class="clipboard.isCopied.value ? 'i-carbon-checkmark' : 'i-carbon-copy'"
+              aria-hidden="true"
+            />
+          </IconButton>
         </div>
       </div>
 
       <div class="home-chat-column">
         <ChatLayout class="home-chat">
           <ChatMessageList>
-            <ChatSystemMessage variant="divider">
-              {{ text.preview }}
-            </ChatSystemMessage>
-            <ChatMessage v-for="line in lines" :key="line.id" :sender="line.sender">
-              <ChatMessageBubble v-if="line.sender === 'user'">
-                {{ line.text }}
+            <ChatMessage v-if="showUser" sender="user" class="astryx-motion-fade-in">
+              <ChatMessageBubble>
+                {{ currentScript.userQuestion }}
               </ChatMessageBubble>
-              <ChatMessageBubble v-else :name="text.assistantName">
-                {{ line.text }}
+            </ChatMessage>
+
+            <ChatMessage v-if="isTyping" sender="assistant" class="astryx-motion-fade-in">
+              <ChatTypingIndicator :names="[assistantLabel]" />
+            </ChatMessage>
+
+            <ChatMessage
+              v-if="displayedLeadText || showTool"
+              sender="assistant"
+              :name="assistantLabel"
+              class="astryx-motion-fade-in"
+            >
+              <ChatToolCalls
+                v-if="showTool"
+                :calls="[{ name: currentScript.toolName, status: 'complete' }]"
+              />
+
+              <ChatMessageBubble v-if="displayedLeadText">
+                {{ displayedLeadText }}
+              </ChatMessageBubble>
+
+              <div v-if="showCode" class="home-chat-code astryx-motion-fade-in">
+                <pre><code>{{ currentScript.codeSnippet }}</code></pre>
+              </div>
+
+              <ChatMessageBubble v-if="showEnding" class="astryx-motion-fade-in">
+                {{ currentScript.assistantEnding }}
+              </ChatMessageBubble>
+            </ChatMessage>
+
+            <ChatMessage
+              v-for="msg in customMessages"
+              :key="msg.id"
+              :sender="msg.sender"
+              class="astryx-motion-fade-in"
+            >
+              <ChatMessageBubble>
+                {{ msg.text }}
               </ChatMessageBubble>
             </ChatMessage>
           </ChatMessageList>
+
           <template #composer>
-            <form class="home-composer" @submit.prevent="send">
+            <form class="home-composer" @submit.prevent="handleSend">
               <TextInput
-                ref="composer"
                 v-model="draft"
                 is-label-hidden
                 size="sm"
@@ -199,85 +199,12 @@ function send(): void {
                 :label="text.composer"
                 :placeholder="text.placeholder"
                 auto-complete="off"
-                @enter="send"
+                @enter="handleSend"
               />
               <Button type="submit" size="sm" variant="primary" :label="text.send" />
             </form>
           </template>
         </ChatLayout>
-        <p class="home-caption">
-          {{ text.caption }}
-        </p>
-      </div>
-
-      <div class="home-tray" :aria-label="text.tray">
-        <Button size="sm" variant="ghost" :label="text.ghost" />
-        <Button size="sm" variant="destructive" :label="text.destructive" />
-        <Badge>Neutral</Badge>
-        <Badge variant="blue">
-          CSS
-        </Badge>
-        <IconButton :label="text.search" @click="focusComposer">
-          <span class="i-carbon-search" />
-        </IconButton>
-        <IconButton :label="text.copyIcon" @click="copyInstall">
-          <span class="i-carbon-copy" />
-        </IconButton>
-        <IconButton :href="`${prefix}/themes/`" :label="text.themes">
-          <span class="i-carbon-color-palette" />
-        </IconButton>
-        <span class="home-swatches">
-          <span class="home-swatches__name">{{ text.swatchLabel }}</span>
-          <span class="home-swatches__row" aria-hidden="true">
-            <span
-              v-for="name in ramps"
-              :key="name"
-              class="home-swatches__chip"
-              :style="{ background: `var(${name})` }"
-            />
-          </span>
-        </span>
-        <span class="home-motion">
-          <span :key="playId" class="home-motion__chip astryx-motion-scale-in">{{ text.motion }}</span>
-          <Button size="sm" variant="ghost" :label="text.replay" @click="playId += 1" />
-        </span>
-      </div>
-    </section>
-
-    <section class="home-ramp" aria-labelledby="home-ramp-title">
-      <div class="home-ramp__copy">
-        <h2 id="home-ramp-title">
-          {{ text.rampTitle }}
-        </h2>
-        <p>{{ text.rampBody }}</p>
-        <a class="home-link" :href="`${prefix}/themes/color`">{{ text.rampLink }}</a>
-      </div>
-      <div class="home-ramp__bar" role="img" :aria-label="ramps.join(' ')">
-        <span
-          v-for="name in ramps"
-          :key="name"
-          :style="{ background: `var(${name})` }"
-        />
-      </div>
-    </section>
-
-    <section class="home-notes" aria-labelledby="home-notes-title">
-      <h2 id="home-notes-title">
-        {{ text.notesTitle }}
-      </h2>
-      <dl>
-        <div v-for="note in text.notes" :key="note.term">
-          <dt>{{ note.term }}</dt>
-          <dd>
-            <p>{{ note.body }}</p>
-            <a class="home-link" :href="note.href">{{ note.link }}</a>
-          </dd>
-        </div>
-      </dl>
-      <div class="home-end">
-        <h2>{{ text.endTitle }}</h2>
-        <p>{{ text.endBody }}</p>
-        <a class="home-link" :href="`${prefix}/guide/why`">{{ text.why }}</a>
       </div>
     </section>
   </div>
@@ -309,25 +236,30 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   grid-template-areas:
     "mark"
     "copy"
-    "chat"
-    "tray";
+    "chat";
   grid-template-columns: minmax(0, 1fr);
-  gap: 1.5rem;
-  width: min(1120px, calc(100% - 2rem));
+  gap: 2rem;
+  width: min(1200px, calc(100% - 2.5rem));
   min-height: calc(100svh - var(--vp-nav-height));
   margin: 0 auto;
-  padding: 1.75rem 0 2.5rem;
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0 4rem;
   box-sizing: border-box;
 }
 
 .home-mark {
   grid-area: mark;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
 }
 
 .home-mark__logo {
   display: block;
   width: min(100%, 28rem);
   aspect-ratio: 1060 / 200;
+  margin: 0 auto;
   background: var(--astryx-color-text-primary);
   mask: url('/full-text-logo.svg') center / contain no-repeat;
 }
@@ -337,9 +269,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   max-width: 38rem;
 }
 
-.home-copy h1,
-.home-ramp h2,
-.home-notes h2 {
+.home-copy h1 {
   margin: 0;
   color: var(--astryx-color-text-primary);
   font-family: var(--astryx-font-family-heading);
@@ -347,32 +277,19 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   letter-spacing: -0.03em;
   line-height: 1.15;
   text-wrap: balance;
-}
-
-.home-copy h1 {
-  font-size: clamp(2rem, 4.6vw, 3.25rem);
-}
-
-.home-lede,
-.home-caption,
-.home-ramp p,
-.home-notes p,
-.home-end p {
-  margin: 0.85rem 0 0;
-  color: var(--astryx-color-text-secondary);
-  font-size: 1.05rem;
-  line-height: 1.55;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
 }
 
 .home-lede {
+  margin: 1rem 0 0;
+  color: var(--astryx-color-text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.6;
   max-width: 38rem;
 }
 
 .home-actions,
 .home-install,
-.home-tray,
-.home-motion,
-.home-swatches,
 .home-composer {
   display: flex;
   flex-wrap: wrap;
@@ -380,13 +297,16 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   gap: 0.65rem;
 }
 
-.home-actions,
+.home-actions {
+  margin-top: 1.5rem;
+}
+
 .home-install {
   margin-top: 1.25rem;
 }
 
 .home-install code {
-  padding: 0.45rem 0.7rem;
+  padding: 0.45rem 0.75rem;
   border-radius: var(--astryx-radius-inner);
   background: var(--astryx-color-background-muted);
   color: var(--astryx-color-text-primary);
@@ -395,22 +315,58 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   line-height: 1.4;
 }
 
+.home-copy-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
 .home-chat-column {
   grid-area: chat;
   min-width: 0;
 }
 
 .home-chat {
-  height: min(22rem, 64svh);
-  min-height: 18rem;
+  height: min(28rem, 64svh);
+  min-height: 22rem;
   border: 1px solid var(--astryx-color-border);
   border-radius: var(--astryx-radius-container);
   background: var(--astryx-color-background-card);
   box-shadow: var(--astryx-shadow-med);
 }
 
-.home-caption {
-  font-size: 0.875rem;
+/* 助手标签与气泡之间增加舒适下边距 */
+.home-chat :deep(.astryx-chat-message__name),
+.home-chat :deep(.astryx-chat-message-bubble__name) {
+  margin-block-end: var(--astryx-spacing-2, 8px);
+}
+
+.home-chat :deep(.astryx-chat-message__body) {
+  gap: var(--astryx-spacing-2, 8px);
+}
+
+.home-chat-code {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: var(--astryx-spacing-1, 4px);
+  padding: var(--astryx-spacing-3, 12px);
+  overflow-x: auto;
+  border: 1px solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-element, 0.625rem);
+  background: var(--astryx-color-background-surface);
+  font-family: var(--astryx-font-family-code);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--astryx-color-text-primary);
+}
+
+.home-chat-code pre {
+  margin: 0;
+  white-space: pre;
+}
+
+.home-chat-code code {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .home-composer {
@@ -423,137 +379,33 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   min-width: 0;
 }
 
-.home-tray {
-  grid-area: tray;
-  align-items: center;
-  padding: 0.8rem 0.9rem;
-  border: 1px solid var(--astryx-color-border);
-  border-radius: var(--astryx-radius-container);
-  background: var(--astryx-color-background-surface);
-  box-shadow: var(--astryx-shadow-low);
-}
-
-.home-swatches__name,
-.home-motion__chip {
-  color: var(--astryx-color-text-secondary);
-  font-size: 0.8125rem;
-}
-
-.home-swatches__row {
-  display: inline-flex;
-  gap: 0.3rem;
-}
-
-.home-swatches__chip {
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 1px solid var(--astryx-color-border);
-  border-radius: var(--astryx-radius-full);
-}
-
-.home-motion__chip {
-  display: inline-flex;
-  align-items: center;
-  min-width: 4.5rem;
-  min-height: 1.75rem;
-  padding: 0 0.7rem;
-  border-radius: var(--astryx-radius-full);
-  background: var(--astryx-color-background-blue);
-  color: var(--astryx-color-text-blue);
-  justify-content: center;
-}
-
-.home-ramp,
-.home-notes {
-  width: min(1120px, calc(100% - 2rem));
-  margin: 0 auto;
-  padding: 3.5rem 0;
-}
-
-.home-ramp {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.home-ramp__copy,
-.home-notes,
-.home-end {
-  max-width: 68ch;
-}
-
-.home-ramp h2,
-.home-notes h2 {
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-}
-
-.home-ramp__bar {
-  display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
-  height: 5.5rem;
-  overflow: hidden;
-  border-radius: var(--astryx-radius-page);
-}
-
-.home-link {
-  display: inline-block;
-  margin-top: 0.8rem;
-  color: var(--astryx-color-text-blue);
-  font-size: 1rem;
-  text-underline-offset: 0.18em;
-}
-
-.home-link:hover {
-  color: var(--astryx-color-icon-blue);
-}
-
-.home-notes dl {
-  margin: 1.75rem 0 0;
-}
-
-.home-notes dl > div {
-  display: grid;
-  gap: 0.35rem;
-  padding: 1.15rem 0;
-  border-top: 1px solid var(--astryx-color-border);
-}
-
-.home-notes dt {
-  color: var(--astryx-color-text-primary);
-  font-size: 1.15rem;
-  font-weight: 500;
-}
-
-.home-notes dd {
-  margin: 0;
-}
-
-.home-end {
-  margin-top: 2.5rem;
-  padding-top: 0.25rem;
-}
-
 @media (width >= 960px) {
   .home-press {
     grid-template-areas:
       "mark mark"
-      "copy chat"
-      "tray tray";
-    grid-template-columns: minmax(0, 0.92fr) minmax(18rem, 1.08fr);
-    gap: 1.75rem 2.5rem;
+      "copy chat";
+    grid-template-columns: minmax(0, 0.95fr) minmax(20rem, 1.05fr);
+    gap: 2rem 3.5rem;
     align-items: start;
-    padding-top: 2.5rem;
+    padding-top: clamp(4rem, 6.5vw, 6rem);
+    padding-bottom: 4rem;
   }
 
   .home-chat {
-    height: min(26rem, 58svh);
+    height: min(28rem, 60svh);
   }
 
   .home-mark__logo {
-    width: min(46vw, 30rem);
+    width: min(44vw, 29rem);
   }
 }
 
 @media (width < 960px) {
+  .home-press {
+    padding-top: 3.5rem;
+    gap: 1.75rem;
+  }
+
   .home-actions {
     align-items: stretch;
     flex-direction: column;
@@ -562,15 +414,10 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   .home-actions :deep(.astryx-button) {
     width: 100%;
   }
-
-  .home-ramp__bar {
-    height: 3.25rem;
-    border-radius: var(--astryx-radius-container);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-motion__chip {
+  .astryx-motion-fade-in {
     animation: none;
   }
 }
