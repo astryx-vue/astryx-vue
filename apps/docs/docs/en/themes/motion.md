@@ -6,7 +6,7 @@ title: Motion
 
 Durations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. There is one easing token, `--astryx-ease-standard`: `cubic-bezier(0.24, 1, 0.4, 1)`.
 
-Shared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css`. They are available when you import `@astryx-vue/core/styles.css`, or any component sheet that pulls that file in. Existing components still use their own animation names. These shared names are for later components and for this page:
+Shared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css`. They are available when you import `@astryx-vue/core/styles.css`, or any component sheet that pulls that file in. Existing components still use their own animation names, and these shared utility classes provide reusable motion primitives:
 
 | Class | Keyframes |
 | --- | --- |

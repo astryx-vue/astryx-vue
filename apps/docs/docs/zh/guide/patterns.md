@@ -38,4 +38,4 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 
 `sender` 取 `user`、`assistant` 或 `system`。系统消息用 `ChatSystemMessage`，居中，不渲染头像和名字。
 
-更完整的示例、密度和未读分隔在 [对话](/components/chat)。引用和 Markdown 各有自己的组件页。原版文档里的其他页面模板，这个仓库还没有对应的整页预设。
+更完整的示例、密度和未读分隔请参阅 [对话](/components/chat)。引用和 Markdown 各自设有独立的组件说明页。

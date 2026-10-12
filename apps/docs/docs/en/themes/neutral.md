@@ -23,4 +23,4 @@ Two values stay where this package already shipped them, so existing components 
 
 The variables sit on `:root` and `[data-astryx-theme='neutral']`, with `color-scheme: light dark`. Light and dark follow the element's `color-scheme`. Force one side with `data-astryx-color-mode="light"` or `"dark"` on an ancestor. See [Dark mode](/en/guide/dark-mode).
 
-A few of the same names are still declared in component theme files, including the type sizes in `text.css` and the blue `--astryx-color-text-accent`. Those later declarations win, so existing components keep their current appearance. A later theme pass will fold the duplicates back into this layer.
+A few of the same names are still declared in component theme files, including the type sizes in `text.css` and the blue `--astryx-color-text-accent`. Those later declarations take precedence, preserving current component appearances.

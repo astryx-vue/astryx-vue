@@ -34,4 +34,4 @@ astryx-vue 是用 Vue 3 重新实现 [Astryx](https://github.com/facebook/astryx
 
 ---
 
-当前公开接口均以仓库实际导出为准。现阶段提供 Neutral 主题，后续将持续拓展更多主题与应用形态。
+当前公开接口均以仓库实际导出为准。核心样式与组件均遵循原生 Web 标准与现代 Vue 3 模式构建。

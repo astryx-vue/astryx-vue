@@ -6,7 +6,7 @@ title: 动画
 
 时长按 Neutral 的运动刻度生成。基准是 fast 125、medium 300、slow 700，相邻档的比例 0.75，结果四舍五入到 5 毫秒。缓动只有一条，`--astryx-ease-standard`，值是 `cubic-bezier(0.24, 1, 0.4, 1)`。
 
-共享的进入和退出关键帧在 `@astryx-vue/core` 的 `styles/motion.css` 里，引入 `@astryx-vue/core/styles.css` 或任意会带上它的组件样式时可用。现有组件仍使用自己的动画名。这组共享名字留给以后的组件，也给主题文档演示：
+共享的进入和退出关键帧在 `@astryx-vue/core` 的 `styles/motion.css` 里，引入 `@astryx-vue/core/styles.css` 或任意会带上它的组件样式时可用。现有组件仍使用自己的动画名，这组共享类供页面编排与组件动效复用：
 
 | 类名 | 关键帧 |
 | --- | --- |

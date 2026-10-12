@@ -38,4 +38,4 @@ These components do not call a model, and they do not render Markdown. The body 
 
 `sender` is `user`, `assistant`, or `system`. System rows use `ChatSystemMessage`. They are centered and do not render an avatar or a name.
 
-Demos, density, and the unread divider are on [Chat](/en/components/chat). Citation and Markdown have their own pages. The other page templates in the upstream docs do not have full-page presets here.
+For complete demos, density variants, and unread dividers, see [Chat](/en/components/chat). Citation and Markdown each have dedicated component documentation pages.

@@ -12,7 +12,7 @@ title: CSS 变量
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 ```
 
-语义 token 写在 `astryx.tokens`。组件的结构样式写在 `astryx.components`，由 `@astryx-vue/core` 提供。留给应用覆盖的是最后一层 `astryx.overrides`。未分层的样式，以及排在更后面的层，都会压过前面的层。
+语义 token 写在 `astryx.tokens`。组件的结构样式写在 `astryx.components`，由 `@astryx-vue/core` 提供。应用自定义覆盖属于最后一层 `astryx.overrides`。未分层的样式，以及排在更后面的层，都会压过前面的层。
 
 变量名跟原版 token 走，前面加 `--astryx-`。例如原版的文本主色，这里是 `--astryx-color-text-primary`。颜色值写成：
 

@@ -6,7 +6,7 @@ title: Themes
 
 A theme decides the color, type, radius, shadow, and motion duration the components use. Structural styles live in `@astryx-vue/core`. Themes live in `@astryx-vue/themes`. Install and import them separately.
 
-Neutral is the only theme this package ships. It is the default look: neutral gray, with light and dark stops on the same CSS variables, and no brand hue locked in. Later themes, if they arrive, will use the same variable names and the same import shape. The sidebar on these pages is there for that.
+Neutral is the default theme: neutral gray, with light and dark stops on the same CSS variables, and no brand hue locked in. Customizations and overrides follow the same variable names and structure.
 
 To use it:
 

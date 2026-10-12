@@ -16,5 +16,3 @@ Full files:
 
 - [packages/core/CHANGELOG.md](https://github.com/astryx-vue/astryx-vue/blob/main/packages/core/CHANGELOG.md)
 - [packages/themes/CHANGELOG.md](https://github.com/astryx-vue/astryx-vue/blob/main/packages/themes/CHANGELOG.md)
-
-`0.1.1` is not released. This docs pass does not describe changes that are not in the changelog yet.

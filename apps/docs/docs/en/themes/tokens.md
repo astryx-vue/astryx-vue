@@ -12,7 +12,7 @@ Where a value comes from:
 
 1. If Neutral overrides it, that override is used.
 2. If Neutral does not override it, the upstream default is used.
-3. If a component theme file declares the same name again, the later declaration wins. That duplication exists today. It is not the way to extend the theme.
+3. If a component theme file declares the same name again, the later declaration wins. Style extensions should target the semantic layer.
 
 The token name is the stable interface. The current number lives in `packages/themes/neutral/base.css`. The swatches and bars in these docs are parsed from that file. There is no second list to keep in sync.
 

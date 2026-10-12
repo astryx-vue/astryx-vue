@@ -34,4 +34,4 @@ For specialized workflows, the library provides cohesive component patterns incl
 
 ---
 
-The public API strictly reflects current repository exports. Neutral is currently the primary theme, with additional themes and patterns planned for future releases.
+The public API strictly reflects current repository exports. Core styles and components follow native Web standards and modern Vue 3 patterns.

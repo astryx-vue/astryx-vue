@@ -4,6 +4,8 @@ import { Button } from '@astryx-vue/core/Button'
 import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList, ChatToolCalls, ChatTypingIndicator } from '@astryx-vue/core/Chat'
 import { IconButton } from '@astryx-vue/core/IconButton'
 import { TextInput } from '@astryx-vue/core/TextInput'
+// @ts-expect-error virtual module from demoSourcePlugin
+import { homeCodeSnippets } from 'virtual:home-code-snippets'
 import { computed, ref } from 'vue'
 import { useAutoplayChat } from './useAutoplayChat'
 
@@ -23,8 +25,8 @@ const copy = {
     copy: '复制安装命令',
     copied: '已复制安装命令',
     assistantName: '助手',
-    composer: '写一句',
-    placeholder: '输入消息...',
+    composer: '写一句...',
+    placeholder: '写一句...',
     send: '发送',
     script: {
       userQuestion: 'astryx 设计语言是否有 Vue 版本实现的组件库？',
@@ -50,8 +52,8 @@ import '@astryx-vue/themes/neutral.css'
     copy: 'Copy install command',
     copied: 'Copied install command',
     assistantName: 'Assistant',
-    composer: 'Message',
-    placeholder: 'Type a message...',
+    composer: 'Message...',
+    placeholder: 'Message...',
     send: 'Send',
     script: {
       userQuestion: 'Is there a Vue component library implementing the Astryx design language?',
@@ -73,6 +75,7 @@ import '@astryx-vue/themes/neutral.css'
 const text = computed(() => copy[props.locale])
 const prefix = computed(() => props.locale === 'en' ? '/en' : '')
 const clipboard = useClipboard({ announce: text.value.copied })
+const highlightedSnippet = computed(() => homeCodeSnippets[props.locale]?.html ?? '')
 
 const draft = ref('')
 
@@ -169,9 +172,11 @@ function handleSend(): void {
                 {{ displayedLeadText }}
               </ChatMessageBubble>
 
-              <div v-if="showCode" class="home-chat-code astryx-motion-fade-in">
-                <pre><code>{{ currentScript.codeSnippet }}</code></pre>
-              </div>
+              <div
+                v-if="showCode"
+                class="home-chat-code astryx-motion-fade-in"
+                v-html="highlightedSnippet"
+              />
 
               <ChatMessageBubble v-if="showEnding" class="astryx-motion-fade-in">
                 {{ currentScript.assistantEnding }}
@@ -246,6 +251,14 @@ html:has(.home-stage) .VPNav,
 html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, summary):focus-visible,
 .page-home .home-stage :where(a, button, input, textarea, select, summary):focus-visible {
   outline-color: var(--astryx-focus-outline-color);
+}
+
+html:not(.dark) .home-chat-code .shiki span {
+  color: var(--shiki-light, inherit);
+}
+
+html.dark .home-chat-code .shiki span {
+  color: var(--shiki-dark, inherit);
 }
 </style>
 
@@ -373,12 +386,44 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 }
 
 .home-chat {
-  height: min(28rem, 64svh);
-  min-height: 22rem;
+  height: 37.5rem;
+  min-height: 24rem;
   border: 1px solid var(--astryx-color-border);
   border-radius: var(--astryx-radius-container);
   background: var(--astryx-color-background-card);
   box-shadow: var(--astryx-shadow-med);
+}
+
+.home-chat :deep(.astryx-chat-message-list__inner) {
+  padding-block: var(--astryx-spacing-3, 12px);
+  padding-inline: var(--astryx-spacing-3, 12px);
+}
+
+.home-chat :deep(.astryx-chat-layout__blur) {
+  display: none;
+}
+
+.home-chat :deep(.astryx-chat-layout__composer) {
+  padding-block-end: var(--astryx-spacing-2, 8px);
+  padding-inline: var(--astryx-spacing-2, 8px);
+}
+
+.home-chat :deep(.astryx-chat-message[data-sender='user']) {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--astryx-color-background-card);
+}
+
+.home-chat :deep(.astryx-chat-message-bubble) {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.home-chat :deep(.astryx-chat-message-bubble[data-density='compact']),
+.home-chat :deep(.astryx-chat-message-bubble[data-density='balanced']) {
+  padding-block: 8px;
+  padding-inline: 12px;
 }
 
 /* 助手标签与内容紧凑对齐 */
@@ -399,7 +444,6 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   box-sizing: border-box;
   width: 100%;
   margin-top: var(--astryx-spacing-1, 4px);
-  padding: var(--astryx-spacing-3, 12px);
   overflow-x: auto;
   border: 1px solid var(--astryx-color-border);
   border-radius: var(--astryx-radius-element, 0.625rem);
@@ -410,12 +454,27 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   color: var(--astryx-color-text-primary);
 }
 
-.home-chat-code pre {
+.home-chat-code :deep(div[class*='language-']) {
   margin: 0;
-  white-space: pre;
+  border-radius: inherit;
+  background: transparent;
 }
 
-.home-chat-code code {
+.home-chat-code :deep(button.copy),
+.home-chat-code :deep(span.lang) {
+  display: none;
+}
+
+.home-chat-code :deep(pre.shiki) {
+  margin: 0;
+  padding: 10px 12px;
+  background: transparent !important;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  font-family: inherit;
+}
+
+.home-chat-code :deep(code) {
   font-family: inherit;
   font-size: inherit;
 }
@@ -443,7 +502,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   }
 
   .home-chat {
-    height: min(28rem, 60svh);
+    height: 37.5rem;
   }
 
   .home-mark__logo {
@@ -464,6 +523,10 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 
   .home-actions :deep(.astryx-button) {
     width: 100%;
+  }
+
+  .home-chat {
+    height: 40.5rem;
   }
 }
 

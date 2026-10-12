@@ -21,6 +21,6 @@ Load that sheet after `@astryx-vue/themes/neutral.css`. To change one subtree, s
 
 When one component has to diverge, override the variable from `packages/themes/neutral/<component>.css`, for example `--astryx-button-primary-background`. Use the names in that file.
 
-Copying `neutral.css` and rewriting the selector is not a supported theme. The component theme files select `neutral`. Until another theme entry exists, the supported extension is an override of `--astryx-*` variables.
+Copying `neutral.css` and rewriting the selector is not a supported theme. The component theme files select `neutral`. The supported extension approach is overriding `--astryx-*` variables.
 
 Do not keep a separate dark palette. Colors are already `light-dark()`. Switching is described in [Dark mode](/en/guide/dark-mode).

@@ -23,4 +23,4 @@ import '@astryx-vue/themes/neutral.css'
 
 变量挂在 `:root` 和 `[data-astryx-theme='neutral']` 上，并声明 `color-scheme: light dark`。明暗跟随元素的 `color-scheme`。要用其中一边，在祖先上设置 `data-astryx-color-mode="light"` 或 `"dark"`。说明见 [深色模式](/guide/dark-mode)。
 
-有几个同名变量仍写在组件自己的主题文件里，例如 `text.css` 的字号，以及 `--astryx-color-text-accent` 的蓝色。那些声明排在后面，会盖住这里的语义值，所以现有组件的外观不变。后面的主题改造会把重复声明收掉。
+有几个同名变量仍写在组件自己的主题文件里，例如 `text.css` 的字号，以及 `--astryx-color-text-accent` 的蓝色。那些声明排在后面，会盖住这里的语义值，现有组件的外观保持一致。

@@ -21,6 +21,6 @@ title: 扩展主题
 
 某个组件要单独偏离时，覆盖它在 `packages/themes/neutral/<组件>.css` 里的变量，例如 `--astryx-button-primary-background`。名字以那份文件为准。
 
-不建议复制一份 `neutral.css` 再改选择器来假装新主题。组件主题文件里的选择器写的是 `neutral`。在官方提供下一个主题入口之前，支持的扩展方式就是覆盖 `--astryx-*` 变量。
+不建议复制一份 `neutral.css` 再改选择器来假装新主题。组件主题文件里的选择器写的是 `neutral`。当前推荐的扩展方式是覆盖 `--astryx-*` 变量。
 
 明暗不要另做一套色板文件。颜色已经在 `light-dark()` 里。切换方式见 [深色模式](/guide/dark-mode)。
