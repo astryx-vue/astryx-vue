@@ -1,0 +1,87 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-bordered-control {
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+    height: var(--astryx-input-height-md, 32px);
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    border: 1px solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    color: var(--astryx-color-text-primary, #171717);
+    background: var(--astryx-input-background, #fff);
+    font-family: inherit;
+    font-size: var(--astryx-text-body-size, 14px);
+    font-weight: 400;
+    line-height: 1.4286;
+    transition: border-color 130ms cubic-bezier(0.24, 1, 0.4, 1), box-shadow 130ms cubic-bezier(0.24, 1, 0.4, 1);
+  }
+
+  .astryx-bordered-control[data-size='sm'] {
+    height: var(--astryx-input-height-sm, 28px);
+  }
+
+  .astryx-bordered-control[data-size='lg'] {
+    height: var(--astryx-input-height-lg, 36px);
+  }
+
+  .astryx-bordered-control[data-status='error'],
+  .astryx-date-time-input[data-status='error'] {
+    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
+  }
+
+  .astryx-bordered-control[data-status='warning'],
+  .astryx-date-time-input[data-status='warning'] {
+    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
+  }
+
+  .astryx-bordered-control[data-status='success'],
+  .astryx-date-time-input[data-status='success'] {
+    --astryx-input-status-color: var(--astryx-input-success, #198100);
+  }
+
+  @media (hover: hover) {
+    .astryx-bordered-control:not([data-disabled='true']):hover:not(:focus-within) {
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4)) 30%, transparent);
+    }
+  }
+
+  .astryx-bordered-control:focus-within {
+    border-color: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
+  }
+
+  .astryx-bordered-control[data-disabled='true'] {
+    opacity: 0.5;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  .astryx-bordered-control > .astryx-field-icon {
+    color: var(--astryx-input-status-color);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-bordered-control {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-bordered-control {
+      border-color: ButtonText;
+      color: CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+
+    .astryx-bordered-control:focus-within {
+      border-color: Highlight;
+    }
+  }
+}

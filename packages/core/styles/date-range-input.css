@@ -1,0 +1,125 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-date-range-input {
+    width: 100%;
+  }
+
+  .astryx-date-range-trigger {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    line-height: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .astryx-date-range-trigger:disabled {
+    cursor: default;
+  }
+
+  .astryx-date-range-value {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .astryx-date-range-value[data-placeholder='true'] {
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-date-range-icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-date-range-popover {
+    container-type: inline-size;
+    width: 100%;
+  }
+
+  .astryx-date-range-panel {
+    display: flex;
+    align-items: stretch;
+    max-height: min(32rem, calc(100vh - 32px));
+    overflow: auto;
+  }
+
+  .astryx-date-range-presets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-1, 4px);
+    min-width: 9rem;
+    padding: var(--astryx-spacing-3, 12px);
+    border-inline-end: 1px solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-date-range-preset {
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    border: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    color: var(--astryx-color-text-primary, #171717);
+    background: transparent;
+    font: inherit;
+    font-size: var(--astryx-text-label-size, 14px);
+    line-height: var(--astryx-text-label-leading, 1.4286);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .astryx-date-range-preset:hover:not(:disabled) {
+      background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+    }
+  }
+
+  .astryx-date-range-preset:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .astryx-date-range-calendar {
+    display: block;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .astryx-date-range-months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--astryx-spacing-4, 16px);
+    min-width: 0;
+  }
+
+  .astryx-date-range-month {
+    flex: 1 1 14rem;
+    min-width: 14rem;
+  }
+
+  .astryx-calendar-cell.is-in-range {
+    border-radius: 0;
+    background: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
+  }
+
+  .astryx-calendar-cell.is-range-start {
+    border-start-start-radius: var(--astryx-radius-full, 9999px);
+    border-end-start-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-calendar-cell.is-range-end {
+    border-start-end-radius: var(--astryx-radius-full, 9999px);
+    border-end-end-radius: var(--astryx-radius-full, 9999px);
+  }
+}

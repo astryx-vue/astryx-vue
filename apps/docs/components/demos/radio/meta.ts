@@ -4,7 +4,7 @@ import { radioOverview as demo } from './index'
 export const meta = {
   slug: 'radio',
   group: 'Form Controls',
-  order: 8,
+  order: 13,
   en: 'Radio',
   zh: '单选按钮',
   demo,

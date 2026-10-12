@@ -1,0 +1,40 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-date-time-input {
+    container-type: inline-size;
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+  }
+
+  .astryx-date-time-fields {
+    display: grid;
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+  }
+
+  .astryx-date-time-fields > .astryx-date-input,
+  .astryx-date-time-fields > .astryx-time-input {
+    min-width: 0;
+  }
+
+  .astryx-date-time-input .astryx-date-input-wrapper {
+    min-width: 0;
+  }
+
+  /* Original segments use a 196px basis, so the row wraps below 399px
+     even when the placeholders still fit. Measured placeholders are about
+     82px; with the icon and padding they stay on one row down to 16rem.
+     Equal columns keep the 268px overview card (1280px viewport) side by
+     side. Narrower rows wrap. */
+  @container (max-width: 16rem) {
+    .astryx-date-time-fields {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { selectorOverview as demo } from './index'
 export const meta = {
   slug: 'selector',
   group: 'Form Controls',
-  order: 11,
+  order: 16,
   en: 'Selector',
   zh: '选择器',
   demo,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RadioList } from '@astryx-vue/core/Radio'
+import { RadioList } from '@astryx-vue/core/RadioList'
 import { shallowRef } from 'vue'
 
 const plan = shallowRef('team')

@@ -1,4 +1,8 @@
 export interface DateInputProps {
+  /** 输入框 id。不传时组件自己生成。 */
+  id?: string
+  /** 额外的无障碍描述，接在字段说明后面。 */
+  describedBy?: string
   /** 当前选中的日期 */
   modelValue?: Date | null
   /** 占位符文本 */

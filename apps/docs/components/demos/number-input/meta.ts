@@ -4,7 +4,7 @@ import { numberInputOverview as demo } from './index'
 export const meta = {
   slug: 'number-input',
   group: 'Form Controls',
-  order: 7,
+  order: 12,
   en: 'Number Input',
   zh: '数字输入框',
   demo,

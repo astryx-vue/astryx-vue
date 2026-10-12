@@ -72,4 +72,4 @@ import '@astryx-vue/themes/neutral.css'
 
 状态同时还决定组件向屏幕阅读器呈现的角色：`warning` 和 `error` 使用 `role="alert"`，`info` 和 `success` 使用 `role="status"`。需要注意的是，页面初次渲染时就已存在的消息不保证被屏幕阅读器播报，所以越紧急的消息，越适合在用户操作之后再挂载。
 
-如果只是单个字段的校验消息，应改用 [FieldStatus](/components/field)。
+如果只是单个字段的校验消息，应改用 [FieldStatus](/components/field-status)。

@@ -4,6 +4,9 @@ import type { CalendarMessages } from './messages/calendar.js'
 import type { ChatMessages } from './messages/chat.js'
 import type { CitationMessages } from './messages/citation.js'
 import type { DateInputMessages } from './messages/date-input.js'
+import type { DateRangeInputMessages } from './messages/date-range-input.js'
+import type { DateTimeInputMessages } from './messages/date-time-input.js'
+import type { FileInputMessages } from './messages/file-input.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MetadataListMessages } from './messages/metadata-list.js'
 import type { MultiSelectorMessages } from './messages/multi-selector.js'
@@ -13,6 +16,7 @@ import type { PaginationMessages } from './messages/pagination.js'
 import type { SelectorMessages } from './messages/selector.js'
 import type { TableMessages } from './messages/table.js'
 import type { ThumbnailMessages } from './messages/thumbnail.js'
+import type { TimeInputMessages } from './messages/time-input.js'
 import type { TimestampMessages } from './messages/timestamp.js'
 import type { TokenMessages } from './messages/token.js'
 import type { TokenizerMessages } from './messages/tokenizer.js'
@@ -23,6 +27,9 @@ import { calendarMessages } from './messages/calendar.js'
 import { chatMessages } from './messages/chat.js'
 import { citationMessages } from './messages/citation.js'
 import { dateInputMessages } from './messages/date-input.js'
+import { dateRangeInputMessages } from './messages/date-range-input.js'
+import { dateTimeInputMessages } from './messages/date-time-input.js'
+import { fileInputMessages } from './messages/file-input.js'
 import { markdownMessages } from './messages/markdown.js'
 import { metadataListMessages } from './messages/metadata-list.js'
 import { multiSelectorMessages } from './messages/multi-selector.js'
@@ -32,6 +39,7 @@ import { paginationMessages } from './messages/pagination.js'
 import { selectorMessages } from './messages/selector.js'
 import { tableMessages } from './messages/table.js'
 import { thumbnailMessages } from './messages/thumbnail.js'
+import { timeInputMessages } from './messages/time-input.js'
 import { timestampMessages } from './messages/timestamp.js'
 import { tokenMessages } from './messages/token.js'
 import { tokenizerMessages } from './messages/tokenizer.js'
@@ -43,6 +51,9 @@ export interface AstryxMessages {
   chat: ChatMessages
   citation: CitationMessages
   dateInput: DateInputMessages
+  dateRangeInput: DateRangeInputMessages
+  dateTimeInput: DateTimeInputMessages
+  fileInput: FileInputMessages
   markdown: MarkdownMessages
   metadataList: MetadataListMessages
   multiSelector: MultiSelectorMessages
@@ -52,6 +63,7 @@ export interface AstryxMessages {
   selector: SelectorMessages
   table: TableMessages
   thumbnail: ThumbnailMessages
+  timeInput: TimeInputMessages
   timestamp: TimestampMessages
   token: TokenMessages
   tokenizer: TokenizerMessages
@@ -65,6 +77,9 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     chat: chatMessages.en,
     citation: citationMessages.en,
     dateInput: dateInputMessages.en,
+    dateRangeInput: dateRangeInputMessages.en,
+    dateTimeInput: dateTimeInputMessages.en,
+    fileInput: fileInputMessages.en,
     markdown: markdownMessages.en,
     metadataList: metadataListMessages.en,
     multiSelector: multiSelectorMessages.en,
@@ -74,6 +89,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     selector: selectorMessages.en,
     table: tableMessages.en,
     thumbnail: thumbnailMessages.en,
+    timeInput: timeInputMessages.en,
     timestamp: timestampMessages.en,
     token: tokenMessages.en,
     tokenizer: tokenizerMessages.en,
@@ -85,6 +101,9 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     chat: chatMessages['zh-CN'],
     citation: citationMessages['zh-CN'],
     dateInput: dateInputMessages['zh-CN'],
+    dateRangeInput: dateRangeInputMessages['zh-CN'],
+    dateTimeInput: dateTimeInputMessages['zh-CN'],
+    fileInput: fileInputMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     metadataList: metadataListMessages['zh-CN'],
     multiSelector: multiSelectorMessages['zh-CN'],
@@ -94,6 +113,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     selector: selectorMessages['zh-CN'],
     table: tableMessages['zh-CN'],
     thumbnail: thumbnailMessages['zh-CN'],
+    timeInput: timeInputMessages['zh-CN'],
     timestamp: timestampMessages['zh-CN'],
     token: tokenMessages['zh-CN'],
     tokenizer: tokenizerMessages['zh-CN'],

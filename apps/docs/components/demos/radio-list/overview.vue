@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { RadioList } from '@astryx-vue/core/Radio'
+import { RadioList, RadioListItem } from '@astryx-vue/core/RadioList'
 import { shallowRef } from 'vue'
 
-const plan = shallowRef('team')
-const options = [
-  { value: 'free', label: 'Free', description: 'For personal projects.' },
-  { value: 'team', label: 'Team', description: 'For small teams.' },
-  { value: 'enterprise', label: 'Enterprise', description: 'For organizations.' },
-]
+const value = shallowRef('')
 </script>
 
 <template>
-  <RadioList v-model="plan" label="Plan" :options="options" />
+  <RadioList v-model="value" label="Notification preference">
+    <RadioListItem label="Email" value="email" />
+    <RadioListItem label="SMS" value="sms" />
+    <RadioListItem label="Push notification" value="push" />
+  </RadioList>
 </template>

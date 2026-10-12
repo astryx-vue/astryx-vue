@@ -19,8 +19,9 @@ const props = withDefaults(defineProps<DateInputProps>(), {
 const emit = defineEmits<DateInputEmits>()
 defineSlots<DateInputSlots>()
 
-const inputId = `astryx-date-input-${useId()}`
-const popupId = `${inputId}-popup`
+const generatedId = `astryx-date-input-${useId()}`
+const inputId = computed(() => props.id ?? generatedId)
+const popupId = computed(() => `${inputId.value}-popup`)
 const messages = useAstryxMessages()
 const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.dateInput.placeholder)
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.dateInput.clear(props.label))
@@ -162,6 +163,7 @@ syncDisplayValue()
           :placeholder="resolvedPlaceholder"
           :disabled="props.disabled"
           :aria-label="props.label"
+          :aria-describedby="props.describedBy"
           :aria-controls="popupId"
           :aria-expanded="isOpen"
           aria-haspopup="dialog"

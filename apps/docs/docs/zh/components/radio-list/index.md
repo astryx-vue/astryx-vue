@@ -7,59 +7,42 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { radioList } from '../../../../components/demos/radio'
+import { radioListDescriptions, radioListHorizontal, radioListPricing, radioListValidation } from '../../../../components/demos/radio-list'
 </script>
 
 ## 使用方法
 
-`RadioList` 是 `RadioGroup` 的便捷封装。它接收 `options` 数组，自动渲染一组单选按钮。
+`RadioList` 在一组互斥选项里选一个。默认插槽放 `RadioListItem`。选项只是纯文本时，也可以传 `options` 数组。
 
 ```vue
 <script setup lang="ts">
-import { RadioList } from '@astryx-vue/core/Radio'
+import { RadioList, RadioListItem } from '@astryx-vue/core/RadioList'
 import { shallowRef } from 'vue'
 
-const plan = shallowRef('team')
-const options = [
-  { value: 'free', label: 'Free', description: 'For personal projects.' },
-  { value: 'team', label: 'Team', description: 'For small teams.' },
-  { value: 'enterprise', label: 'Enterprise', description: 'For organizations.' },
-]
+const channel = shallowRef('')
 </script>
 
 <template>
-  <RadioList v-model="plan" label="Plan" :options="options" />
+  <RadioList v-model="channel" label="通知方式">
+    <RadioListItem label="邮件" value="email" />
+    <RadioListItem label="短信" value="sms" />
+  </RadioList>
 </template>
 ```
 
-
-
+指示器默认 24px，`size="sm"` 时是 20px。`orientation="horizontal"` 把选项排成一行，间距 20px。`end` 插槽靠行的尾端。
 
 ## 最佳实践
 
 | 指引 | 实践 |
 | --- | --- |
-| <Badge variant="success">推荐</Badge> | 选项数量保持较少，通常为 2 到 7 个。 |
-| <Badge variant="success">推荐</Badge> | 使用清晰、简洁的标签，让每个选项一眼可辨。 |
+| <Badge variant="success">推荐</Badge> | 选项保持较少，通常 2 到 7 个。 |
 | <Badge variant="error">避免</Badge> | 需要多选时使用单选列表。应改用 CheckboxList。 |
-| <Badge variant="error">避免</Badge> | 用于长列表。应使用 Selector，便于查找。 |
-| <Badge variant="error">避免</Badge> | 超过 4 个选项时使用水平布局，排版会很别扭。 |
-| <Badge variant="error">避免</Badge> | 用 Tooltip 包裹禁用的 RadioList 来解释禁用原因。禁用的控件会吞掉包裹层需要的悬停事件。应改用 disabledMessage 属性。 |
+| <Badge variant="error">避免</Badge> | 超过大约 4 个选项时用水平排列。 |
 
 ## 示例
 
-<DemoExample :demo="radioList" title="基本用法" description="传入 options 数组即可渲染带说明的单选列表。" locale="zh" />
-
-## 键盘与无障碍
-
-`RadioList` 内部把渲染工作交给 [RadioGroup](/components/radio-group)，所以键盘操作和 ARIA 结构与 RadioGroup 完全一致，在两者之间切换时不需要重新适应交互方式。
-
-- 整组渲染为一个 `role="radiogroup"` 容器，屏幕阅读器会按单选组的语义朗读它。
-- 每个选项的 ID 由组件自动生成，你不需要手动指定。
-- 组 `label` 是必填项，它是整组的无障碍名称，屏幕阅读器靠它说明这组选项在让人选什么。
-
-## 使用建议
-
-选项结构简单、也不需要自定义布局时，优先使用 `RadioList`：它只接收一个 `options` 数组，就能把整组选项渲染出来。
-
-需要自定义选项渲染，或者布局比较复杂时，改用 [RadioGroup](/components/radio-group) 并直接组合 Radio 子项。
+<DemoExample :demo="radioListHorizontal" description="小号、中号、大号排成一行。" locale="zh" title="水平排列" />
+<DemoExample :demo="radioListPricing" description="每个方案在行尾显示价格。" locale="zh" title="价格方案" />
+<DemoExample :demo="radioListDescriptions" description="每个选项下面有一段说明。" locale="zh" title="带说明" />
+<DemoExample :demo="radioListValidation" description="必填且未选择时显示错误。" locale="zh" title="带校验" />

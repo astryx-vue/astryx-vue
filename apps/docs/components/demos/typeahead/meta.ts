@@ -4,7 +4,7 @@ import { typeaheadOverview as demo } from './index'
 export const meta = {
   slug: 'typeahead',
   group: 'Form Controls',
-  order: 17,
+  order: 23,
   en: 'Typeahead',
   zh: '自动补全',
   demo,

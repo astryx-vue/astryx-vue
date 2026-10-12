@@ -43,7 +43,7 @@ const email = shallowRef('')
 </template>
 ```
 
-Use `Field`, `FieldLabel` and `FieldStatus` from `@astryx-vue/core/Field` for custom controls. `Field` supplies association IDs through its default slot; forward them to the control's `id`, `aria-labelledby` and `aria-describedby`.
+Use `Field` and `FieldLabel` from `@astryx-vue/core/Field`, and `FieldStatus` from `@astryx-vue/core/FieldStatus`, for custom controls. `Field` supplies association IDs through its default slot; forward them to the control's `id`, `aria-labelledby` and `aria-describedby`.
 
 `TextInput` supports clear buttons, disabled reasons, read-only values, three sizes, status messages and asynchronous `changeAction`. Use `@action-error` to handle failed actions. Inputs remain editable while actions are pending; request cancellation and stale-result handling belong to the application.
 
