@@ -3,8 +3,8 @@ import { textOverview as demo } from './index'
 
 export const meta = {
   slug: 'text',
-  group: 'content',
-  order: 4,
+  group: 'Content',
+  order: 9,
   en: 'Text',
   zh: '文本',
   demo,

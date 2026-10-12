@@ -3,7 +3,7 @@ import { blockquoteOverview as demo } from './index'
 
 export const meta = {
   slug: 'blockquote',
-  group: 'content',
+  group: 'Content',
   order: 2,
   en: 'Blockquote',
   zh: '引用',

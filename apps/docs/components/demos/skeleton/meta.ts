@@ -3,8 +3,8 @@ import { skeletonOverview as demo } from './index'
 
 export const meta = {
   slug: 'skeleton',
-  group: 'feedback',
-  order: 2,
+  group: 'Feedback & Status',
+  order: 3,
   en: 'Skeleton',
   zh: '骨架屏',
   demo,

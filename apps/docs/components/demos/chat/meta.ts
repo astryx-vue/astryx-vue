@@ -3,8 +3,8 @@ import { chatOverview as demo } from './index'
 
 export const meta = {
   slug: 'chat',
-  group: 'content',
-  order: 9,
+  group: 'Chat',
+  order: 0,
   en: 'Chat',
   zh: '对话',
   demo,

@@ -3,8 +3,8 @@ import { toastOverview as demo } from './index'
 
 export const meta = {
   slug: 'toast',
-  group: 'overlays',
-  order: 3,
+  group: 'Overlay',
+  order: 6,
   en: 'Toast',
   zh: '轻提示',
   demo,

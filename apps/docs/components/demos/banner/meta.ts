@@ -3,8 +3,8 @@ import { bannerOverview as demo } from './index'
 
 export const meta = {
   slug: 'banner',
-  group: 'feedback',
-  order: 0,
+  group: 'Feedback & Status',
+  order: 1,
   en: 'Banner',
   zh: '提示条',
   demo,
