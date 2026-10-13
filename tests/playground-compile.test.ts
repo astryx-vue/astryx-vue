@@ -21,6 +21,14 @@ const modules = {
   charts: {},
 }
 
+const templateCompileModules = {
+  vue: Vue as unknown as Record<string, unknown>,
+  core: Core as unknown as Record<string, unknown>,
+  charts: Charts as unknown as Record<string, unknown>,
+}
+
+const shippedTemplates = playgroundTemplates('en')
+
 describe('playground compiler', () => {
   it('mounts a script-setup SFC and scopes its CSS', () => {
     const compiled = compilePlaygroundSfc(`
@@ -57,20 +65,27 @@ describe('playground compiler', () => {
     app.unmount()
   })
 
-  it('compiles every shipped template', () => {
-    for (const template of playgroundTemplates('en')) {
-      const compiled = compilePlaygroundSfc(template.source, {
-        vue: Vue as unknown as Record<string, unknown>,
-        core: Core as unknown as Record<string, unknown>,
-        charts: Charts as unknown as Record<string, unknown>,
-      }, 'en')
+  it.each(shippedTemplates.map(template => [template.id, template] as const))(
+    'compiles and mounts template %s',
+    (id, template) => {
+      const warnings: string[] = []
+      const compiled = compilePlaygroundSfc(template.source, templateCompileModules, 'en')
       const host = document.createElement('div')
       const app = createApp(compiled.component)
+      app.config.warnHandler = (msg) => {
+        warnings.push(String(msg))
+      }
       app.mount(host)
       expect(host.childElementCount).toBeGreaterThan(0)
+      const propWarnings = warnings.filter(msg =>
+        msg.includes('Invalid prop')
+        || msg.includes('Missing required prop'),
+      )
+      expect(propWarnings, `${id} prop warnings`).toEqual([])
       app.unmount()
-    }
-  })
+    },
+    15_000,
+  )
 
   it('rejects imports outside vue and the component package', () => {
     expect(() => compilePlaygroundSfc(`

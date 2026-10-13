@@ -245,13 +245,14 @@ const selectionPlugin = useTableSelection<Conversation>(selectionConfig)
               </template>
             </Button>
           </HStack>
-          <TabList v-model="category" has-divider :padding-inline="1">
+          <TabList v-model:value="category" has-divider :padding-inline="1">
             <Tab
               v-for="tab in CATEGORIES"
               :key="tab.value"
               :value="tab.value"
-              :label="tab.label"
-            />
+            >
+              {{ tab.label }}
+            </Tab>
           </TabList>
         </VStack>
       </LayoutHeader>
@@ -309,7 +310,7 @@ const selectionPlugin = useTableSelection<Conversation>(selectionConfig)
             <Text type="label">
               Reply
             </Text>
-            <TextArea v-model="replyDraft" label="Reply" is-label-hidden rows="4" placeholder="Write a reply…" />
+            <TextArea v-model="replyDraft" label="Reply" is-label-hidden :rows="4" placeholder="Write a reply…" />
             <HStack :gap="2" justify="end">
               <Button label="Archive" variant="secondary" />
               <Button label="Send" variant="primary">

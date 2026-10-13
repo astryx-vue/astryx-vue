@@ -108,9 +108,15 @@ function togglePanel() {
           <HStack :align="'center'">
             <StackItem size="fill">
               <TabList v-model:value="activeTab" size="lg" is-full-bleed>
-                <Tab value="details" label="Details" />
-                <Tab value="invoices" label="Invoices" />
-                <Tab value="timeline" label="Timeline" />
+                <Tab value="details">
+                  Details
+                </Tab>
+                <Tab value="invoices">
+                  Invoices
+                </Tab>
+                <Tab value="timeline">
+                  Timeline
+                </Tab>
                 <TabMenu
                   label="More"
                   :options="[
@@ -180,10 +186,18 @@ function togglePanel() {
           <VStack :gap="3">
             <Heading :level="2">Invoice</Heading>
             <MetadataList>
-              <MetadataListItem label="Subtotal" :value="fmt(SUBTOTAL)" />
-              <MetadataListItem label="Discount" :value="`-${fmt(DISCOUNT)}`" />
-              <MetadataListItem label="Tax" :value="fmt(TAX)" />
-              <MetadataListItem label="Total" :value="fmt(TOTAL)" />
+              <MetadataListItem label="Subtotal">
+                {{ fmt(SUBTOTAL) }}
+              </MetadataListItem>
+              <MetadataListItem label="Discount">
+                -{{ fmt(DISCOUNT) }}
+              </MetadataListItem>
+              <MetadataListItem label="Tax">
+                {{ fmt(TAX) }}
+              </MetadataListItem>
+              <MetadataListItem label="Total">
+                {{ fmt(TOTAL) }}
+              </MetadataListItem>
             </MetadataList>
           </VStack>
         </Section>

@@ -249,26 +249,26 @@ const canvasScale = computed(() => ({
           </Text>
           <Divider />
           <HStack :gap="2">
-            <NumberInput label="X" :value="selected.x" size="sm" @update:value="updateSelected({ x: $event })" />
-            <NumberInput label="Y" :value="selected.y" size="sm" @update:value="updateSelected({ y: $event })" />
+            <NumberInput label="X" :model-value="selected.x" size="sm" @update:model-value="updateSelected({ x: $event })" />
+            <NumberInput label="Y" :model-value="selected.y" size="sm" @update:model-value="updateSelected({ y: $event })" />
           </HStack>
           <HStack :gap="2">
-            <NumberInput label="W" :value="selected.width" size="sm" @update:value="updateSelected({ width: $event })" />
-            <NumberInput label="H" :value="selected.height" size="sm" @update:value="updateSelected({ height: $event })" />
+            <NumberInput label="W" :model-value="selected.width" size="sm" @update:model-value="updateSelected({ width: $event })" />
+            <NumberInput label="H" :model-value="selected.height" size="sm" @update:model-value="updateSelected({ height: $event })" />
           </HStack>
-          <NumberInput label="Rotation" :value="selected.rotation" size="sm" @update:value="updateSelected({ rotation: $event })" />
+          <NumberInput label="Rotation" :model-value="selected.rotation" size="sm" @update:model-value="updateSelected({ rotation: $event })" />
           <template v-if="selected.kind === 'text'">
             <TextArea
               label="Content"
-              :value="selected.content"
-              rows="3"
-              @update:value="updateSelected({ content: $event })"
+              :model-value="selected.content"
+              :rows="3"
+              @update:model-value="updateSelected({ content: $event })"
             />
-            <TextInput label="Color" :value="selected.color ?? ''" @update:value="updateSelected({ color: $event })" />
-            <NumberInput label="Size" :value="selected.size ?? 16" @update:value="updateSelected({ size: $event })" />
+            <TextInput label="Color" :model-value="selected.color ?? ''" @update:model-value="updateSelected({ color: $event })" />
+            <NumberInput label="Size" :model-value="selected.size ?? 16" @update:model-value="updateSelected({ size: $event })" />
           </template>
           <template v-else>
-            <TextInput label="Alt text" :value="selected.content" @update:value="updateSelected({ content: $event })" />
+            <TextInput label="Alt text" :model-value="selected.content" @update:model-value="updateSelected({ content: $event })" />
             <AspectRatio :ratio="16 / 9" width="100%">
               <img :src="PHOTO" alt="" class="inspector-thumb">
             </AspectRatio>
