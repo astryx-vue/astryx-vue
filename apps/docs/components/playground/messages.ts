@@ -14,6 +14,8 @@ export interface PlaygroundCopy {
   edit: string
   preview: string
   loading: string
+  deviceDesktop: string
+  devicePhone: string
   resize: string
   colors: string
   colorHint: string
@@ -61,7 +63,9 @@ const zh: PlaygroundCopy = {
   exportTheme: '导出',
   edit: '编辑',
   preview: '预览',
-  loading: '正在准备预览',
+  loading: '构建中…',
+  deviceDesktop: '桌面预览',
+  devicePhone: '手机预览',
   resize: '调整编辑器宽度',
   colors: '颜色',
   colorHint: '颜色改的是当前这一档。打开深色模式会换成另一档。',
@@ -91,7 +95,7 @@ const zh: PlaygroundCopy = {
   exportTitle: '导出主题',
   downloadCss: '下载 CSS',
   downloadJson: '下载 JSON',
-  note: '预览在独立页面里重挂载。刷新预览会清掉当时的界面状态，编辑器里的代码和主题会保留。',
+  note: '临时预览：不写入本地存储。刷新预览会清掉当时的界面状态，再恢复代码和主题。',
   groups: {
     chat: '对话',
     form: '表单',
@@ -110,7 +114,7 @@ const zh: PlaygroundCopy = {
 const en: PlaygroundCopy = {
   title: 'Playground',
   code: 'Code',
-  theme: 'Theme',
+  theme: 'Themes',
   templates: 'Templates',
   neutral: 'Neutral',
   reload: 'Reload preview',
@@ -120,7 +124,9 @@ const en: PlaygroundCopy = {
   exportTheme: 'Export',
   edit: 'Edit',
   preview: 'Preview',
-  loading: 'Preparing preview',
+  loading: 'Building…',
+  deviceDesktop: 'Desktop preview',
+  devicePhone: 'Phone preview',
   resize: 'Resize editor',
   colors: 'Colors',
   colorHint: 'These colors edit the current mode. Dark mode switches to the other set.',
@@ -150,7 +156,7 @@ const en: PlaygroundCopy = {
   exportTitle: 'Export theme',
   downloadCss: 'Download CSS',
   downloadJson: 'Download JSON',
-  note: 'The preview remounts in its own page. Reloading the preview clears that runtime state and keeps the editor code and theme.',
+  note: 'Ephemeral preview: no local storage. Reloading the preview resets runtime state, then restores your code and theme.',
   groups: {
     chat: 'Chat',
     form: 'Form',

@@ -106,6 +106,7 @@ function applyColorMode(mode: PlaygroundColorMode): void {
   colorMode = mode
   const root = document.documentElement
   root.dataset.playgroundFrame = ''
+  root.dataset.astryxTheme = 'neutral'
   root.dataset.astryxColorMode = mode
   root.classList.toggle('dark', mode === 'dark')
 }

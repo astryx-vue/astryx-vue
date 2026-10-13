@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import type { Extension } from '@codemirror/state'
 import { vue } from '@codemirror/lang-vue'
-import { Compartment, EditorState } from '@codemirror/state'
-import { oneDark } from '@codemirror/theme-one-dark'
+import { EditorState } from '@codemirror/state'
 import { basicSetup, EditorView } from 'codemirror'
-import { useData } from 'vitepress'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
@@ -18,8 +16,6 @@ const emit = defineEmits<{
 }>()
 
 const host = ref<HTMLElement | null>(null)
-const { isDark } = useData()
-const themeCompartment = new Compartment()
 let view: EditorView | null = null
 let applying = false
 
@@ -50,12 +46,6 @@ watch(() => props.modelValue, (value) => {
   applying = false
 })
 
-watch(isDark, (dark) => {
-  view?.dispatch({
-    effects: themeCompartment.reconfigure(dark ? oneDark : []),
-  })
-})
-
 watch(() => props.active, (active) => {
   if (active)
     view?.requestMeasure()
@@ -67,7 +57,14 @@ function editorExtensions(): Extension[] {
     vue(),
     EditorView.lineWrapping,
     EditorState.tabSize.of(2),
-    themeCompartment.of(isDark.value ? oneDark : []),
+    EditorView.theme({
+      '&': { height: '100%', backgroundColor: '#f4f5f7', color: '#1c1e21' },
+      '.cm-scroller': { fontFamily: 'var(--astryx-font-family-code)' },
+      '.cm-content': { padding: '8px 0 24px' },
+      '.cm-gutters': { backgroundColor: '#f4f5f7', color: '#9aa1ab', borderRight: 'none' },
+      '.cm-activeLine': { backgroundColor: 'rgb(0 0 0 / 3%)' },
+      '.cm-activeLineGutter': { backgroundColor: 'transparent' },
+    }),
     EditorView.contentAttributes.of({ 'aria-label': props.label }),
     EditorView.updateListener.of((update) => {
       if (applying || !update.docChanged)

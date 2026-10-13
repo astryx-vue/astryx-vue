@@ -54,35 +54,21 @@ function chatSource(zh: boolean): string {
           </ChatMessage>
         </ChatMessageList>
         <template #composer>
-          <form class="composer" @submit.prevent="send">
-            <textarea v-model="draft" rows="2" :aria-label="placeholder" :placeholder="placeholder" />
-            <IconButton type="submit" variant="primary" size="md" :label="sendLabel">
+          <form class="chat-preview__composer-card" @submit.prevent="send">
+            <textarea
+              v-model="draft"
+              class="chat-preview__composer-input"
+              rows="1"
+              :aria-label="placeholder"
+              :placeholder="placeholder"
+            />
+            <IconButton class="chat-preview__send" type="submit" variant="primary" size="md" :label="sendLabel">
               <span class="i-carbon-arrow-up" />
             </IconButton>
           </form>
         </template>
       </ChatLayout>
     </template>
-
-    <style scoped>
-    .composer {
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      width: 100%;
-    }
-
-    .composer textarea {
-      flex: 1;
-      min-height: 44px;
-      border: 0;
-      padding: 8px 0;
-      resize: vertical;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-    }
-    </style>
   `)
 }
 

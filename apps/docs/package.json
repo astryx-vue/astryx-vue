@@ -14,7 +14,6 @@
     "@astryx-vue/themes": "workspace:^",
     "@codemirror/lang-vue": "catalog:docs",
     "@codemirror/state": "catalog:docs",
-    "@codemirror/theme-one-dark": "catalog:docs",
     "@fontsource/figtree": "catalog:docs",
     "@vue/compiler-sfc": "catalog:vue",
     "codemirror": "catalog:docs",
