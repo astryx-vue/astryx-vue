@@ -5,10 +5,10 @@ import { AspectRatio } from '@astryx-vue/core/AspectRatio'
 <template>
   <div class="aspect-ratio-overview">
     <AspectRatio :ratio="1" fit="cover" shape="ellipse">
-      <img alt="" src="/layout/square.svg">
+      <img alt="" src="/template-assets/light-home-square-1.png">
     </AspectRatio>
     <AspectRatio :ratio="16 / 9" fit="cover">
-      <img alt="" src="/layout/wide.svg">
+      <img alt="" src="/template-assets/light-scene-horizontal-1.png">
     </AspectRatio>
   </div>
 </template>

@@ -17,7 +17,7 @@ const images = [
   <Center :width="600">
     <Grid :columns="3" :gap="4" width="100%">
       <AspectRatio v-for="image in images" :key="image.id" :ratio="4 / 3" fit="cover">
-        <img :alt="image.alt" src="/layout/wide.svg" style="border-radius: var(--astryx-radius-element)">
+        <img :alt="image.alt" src="/template-assets/illustrative-horizontal-1.png" style="border-radius: var(--astryx-radius-element)">
       </AspectRatio>
     </Grid>
   </Center>

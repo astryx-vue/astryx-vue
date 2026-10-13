@@ -6,7 +6,7 @@ import { Center } from '@astryx-vue/core/Center'
 <template>
   <Center :width="300">
     <AspectRatio :ratio="1" fit="cover" shape="ellipse">
-      <img alt="Circular image" src="/layout/square.svg">
+      <img alt="Circular image" src="/template-assets/light-home-square-1.png">
     </AspectRatio>
   </Center>
 </template>
