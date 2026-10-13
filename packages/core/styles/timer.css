@@ -1,0 +1,34 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-timer {
+    display: inline;
+  }
+
+  .astryx-timer__time {
+    display: inline;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: normal;
+    font-variant-numeric: tabular-nums;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+
+  .astryx-timer[data-color='primary'] {
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  }
+
+  .astryx-timer[data-color='secondary'] {
+    color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
+  }
+
+  .astryx-timer[data-color='accent'] {
+    color: var(--astryx-color-text-accent, #0074e2);
+  }
+
+  .astryx-timer[data-color='disabled'] {
+    color: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
+  }
+}

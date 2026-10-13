@@ -39,6 +39,11 @@
       "types": "./dist/AvatarGroup/index.d.ts",
       "import": "./dist/AvatarGroup/index.js"
     },
+    "./Carousel": {
+      "source": "./src/Carousel/index.ts",
+      "types": "./dist/Carousel/index.d.ts",
+      "import": "./dist/Carousel/index.js"
+    },
     "./CheckboxList": {
       "source": "./src/CheckboxList/index.ts",
       "types": "./dist/CheckboxList/index.d.ts",
@@ -64,10 +69,20 @@
       "types": "./dist/FileInput/index.d.ts",
       "import": "./dist/FileInput/index.js"
     },
+    "./Lightbox": {
+      "source": "./src/Lightbox/index.ts",
+      "types": "./dist/Lightbox/index.d.ts",
+      "import": "./dist/Lightbox/index.js"
+    },
     "./MetadataList": {
       "source": "./src/MetadataList/index.ts",
       "types": "./dist/MetadataList/index.d.ts",
       "import": "./dist/MetadataList/index.js"
+    },
+    "./Outline": {
+      "source": "./src/Outline/index.ts",
+      "types": "./dist/Outline/index.d.ts",
+      "import": "./dist/Outline/index.js"
     },
     "./RadioList": {
       "source": "./src/RadioList/index.ts",
@@ -153,6 +168,11 @@
       "source": "./src/TimeInput/index.ts",
       "types": "./dist/TimeInput/index.d.ts",
       "import": "./dist/TimeInput/index.js"
+    },
+    "./Timer": {
+      "source": "./src/Timer/index.ts",
+      "types": "./dist/Timer/index.d.ts",
+      "import": "./dist/Timer/index.js"
     },
     "./Timestamp": {
       "source": "./src/Timestamp/index.ts",
@@ -482,6 +502,10 @@
         "types": "./dist/AvatarGroup/index.d.ts",
         "import": "./dist/AvatarGroup/index.js"
       },
+      "./Carousel": {
+        "types": "./dist/Carousel/index.d.ts",
+        "import": "./dist/Carousel/index.js"
+      },
       "./CheckboxList": {
         "types": "./dist/CheckboxList/index.d.ts",
         "import": "./dist/CheckboxList/index.js"
@@ -502,9 +526,17 @@
         "types": "./dist/FileInput/index.d.ts",
         "import": "./dist/FileInput/index.js"
       },
+      "./Lightbox": {
+        "types": "./dist/Lightbox/index.d.ts",
+        "import": "./dist/Lightbox/index.js"
+      },
       "./MetadataList": {
         "types": "./dist/MetadataList/index.d.ts",
         "import": "./dist/MetadataList/index.js"
+      },
+      "./Outline": {
+        "types": "./dist/Outline/index.d.ts",
+        "import": "./dist/Outline/index.js"
       },
       "./RadioList": {
         "types": "./dist/RadioList/index.d.ts",
@@ -573,6 +605,10 @@
       "./TimeInput": {
         "types": "./dist/TimeInput/index.d.ts",
         "import": "./dist/TimeInput/index.js"
+      },
+      "./Timer": {
+        "types": "./dist/Timer/index.d.ts",
+        "import": "./dist/Timer/index.js"
       },
       "./Timestamp": {
         "types": "./dist/Timestamp/index.d.ts",
