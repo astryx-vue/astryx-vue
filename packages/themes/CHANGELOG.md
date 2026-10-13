@@ -1,5 +1,17 @@
 # @astryx-vue/themes
 
+## 0.2.0
+
+### Minor Changes
+
+- [#40](https://github.com/astryx-vue/astryx-vue/pull/40) [`244d4f2`](https://github.com/astryx-vue/astryx-vue/commit/244d4f28dd69849e28d88c9bfa3ce6f58f36a0a7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Add Theme / MediaTheme / SyntaxTheme, six new first-party themes, expanded docs examples, and the docs Playground.
+
+### Patch Changes
+
+- [#34](https://github.com/astryx-vue/astryx-vue/pull/34) [`94cf3dd`](https://github.com/astryx-vue/astryx-vue/commit/94cf3ddf39bc6b2b3e56323162cea8976aa4fa0e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 补齐 Butter、Chocolate、Gothic、Matcha、Stone、Y2K 六套主题，文档里的主题画廊可以切换预览。
+
+- [#36](https://github.com/astryx-vue/astryx-vue/pull/36) [`7e72b05`](https://github.com/astryx-vue/astryx-vue/commit/7e72b05aff576e0d52cd568c8e58e75951f1c851) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 Theme、MediaTheme 和完整的 SyntaxTheme。主题子树会重新绑定文字、标题和按钮的颜色别名，避免主文字色停在 :root 上已经算好的值。
+
 ## 0.1.3
 
 ### Patch Changes
