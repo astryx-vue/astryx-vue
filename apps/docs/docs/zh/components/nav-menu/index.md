@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { navMenuBasic, navMenuDescriptions, navMenuDisabled, navMenuIcons, navMenuSizes } from '../../../../components/demos/nav-menu'
 </script>
 
 ## 使用方法
@@ -43,3 +44,40 @@ import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'
 | <Badge variant="success">推荐</Badge> | 触发按钮写上 <code>aria-expanded</code> 和 <code>aria-controls</code>，插槽已经把状态传出来了。 |
 | <Badge variant="success">推荐</Badge> | 选中一项后默认关闭。需要留下菜单时给项设置 <code>keepOpen</code>。 |
 | <Badge variant="error">避免</Badge> | 不要把菜单项单独放进抽屉。抽屉里把 <code>isMenuItem</code> 设成 false，避免菜单项脱离菜单。 |
+
+## 示例
+
+<DemoExample
+  :demo="navMenuBasic"
+  description="点 Account 打开菜单，里面是 Profile、Notifications 和 Settings。选中一项后菜单收起，焦点回到按钮上。"
+  locale="zh"
+  title="基本用法"
+/>
+
+<DemoExample
+  :demo="navMenuIcons"
+  description="每一项前面放一个图标，Profile、Notifications 和 Settings 扫一眼就能分开。"
+  locale="zh"
+  title="图标"
+/>
+
+<DemoExample
+  :demo="navMenuDescriptions"
+  description="标题下面再写一行说明，用来补充这一项具体包含什么。"
+  locale="zh"
+  title="辅助说明"
+/>
+
+<DemoExample
+  :demo="navMenuSizes"
+  description="同一组菜单项可以做成 sm 和 lg 两档。点 Small 或 Large 打开，窄的更紧凑，宽的给更长的文字留位置。"
+  locale="zh"
+  title="尺寸"
+/>
+
+<DemoExample
+  :demo="navMenuDisabled"
+  description="Billing 留在菜单里，但不能选。方向键移动时会跳过它。"
+  locale="zh"
+  title="禁用项"
+/>
