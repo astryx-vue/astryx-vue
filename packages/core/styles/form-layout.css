@@ -1,0 +1,31 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-form-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-4, 16px);
+    min-width: 0;
+  }
+
+  .astryx-form-layout[data-direction='horizontal'] {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  .astryx-form-layout[data-direction='horizontal-labels'] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--astryx-spacing-3, 12px) var(--astryx-spacing-4, 16px);
+    align-items: start;
+  }
+
+  @media (max-width: 480px) {
+    .astryx-form-layout[data-direction='horizontal-labels'] {
+      display: flex;
+      flex-direction: column;
+      gap: var(--astryx-spacing-4, 16px);
+    }
+  }
+}
