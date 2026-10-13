@@ -23,7 +23,7 @@ import {
 
 Pass `@step-click` when a step can be chosen out of order. The handler receives the zero-based index, and only then do the steps render as buttons. The default `separated` layout draws a track above each horizontal step, with the indicator and the label on one row. `indicatorPosition="on-track"` sets the indicator into the connector and centers the label under it. `indicator` defaults to `auto`: a check when the step is done, a ring on the current step, and a number after that.
 
-`horizontalOptions.minimumStepWidth` collapses a horizontal stepper once it is narrower than that width times the step count. The track stays. `collapsedVariant` defaults to `withLabelAndControls`: Previous and Next move between steps when `@step-click` is set, skipping disabled steps. `withLabel` drops the controls, and `hiddenLabel` leaves only the track.
+`horizontalOptions.minimumStepWidth` defaults to `112`. A horizontal stepper collapses once it is narrower than that width times the step count, and shows the current step with Previous and Next. The track stays. `collapsedVariant` defaults to `withLabelAndControls` and skips disabled steps. `withLabel` drops the controls, and `hiddenLabel` leaves only the track.
 
 ```vue
 <script setup lang="ts">

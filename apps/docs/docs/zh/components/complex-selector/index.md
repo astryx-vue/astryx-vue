@@ -39,6 +39,39 @@ const value = ref('Today')
 
 弹层会一直开着，直到插槽调用 `commit`。树可以用 `TreeList`。`status`、`isDisabled`、`isRequired` 和 `description` 与其他输入框的字段属性相同。
 
+`alignment` 决定弹层沿打开方向怎么对齐。`startIcon` 在触发器开头放一个图标。`variant="ghost"` 去掉边框，触发器看起来像工具栏按钮。`renderTrigger` 或 `trigger` 插槽会换掉整个字段：把参数展开到你自己的控件上。`handleRef` 和模板 `ref` 都能调用 `open`、`close`、`toggle` 和 `isOpen`。
+
+```vue
+<script setup lang="ts">
+import type { ComplexSelectorHandle } from '@astryx-vue/core/ComplexSelector'
+import { ComplexSelector } from '@astryx-vue/core/ComplexSelector'
+import { ref, shallowRef } from 'vue'
+
+const value = ref('Today')
+const selector = shallowRef<ComplexSelectorHandle | null>(null)
+</script>
+
+<template>
+  <button type="button" @click="selector?.open()">
+    Open
+  </button>
+  <ComplexSelector
+    ref="selector"
+    v-model="value"
+    label="Deadline"
+    start-icon="calendar"
+    :trigger-label="value"
+    variant="ghost"
+  >
+    <template #default="{ commit, close }">
+      <button type="button" @click="commit('Next week'); close()">
+        Next week
+      </button>
+    </template>
+  </ComplexSelector>
+</template>
+```
+
 ## 示例
 
 <DemoExample :demo="complexSelectorDeadline" description="Today、Tomorrow 或 Next week，也可以自定义日期和时间。Apply 提交并关闭弹层。" locale="zh" title="截止日期" />

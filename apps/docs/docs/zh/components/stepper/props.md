@@ -20,7 +20,7 @@ footer: false
       <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>每一步周围的间距。</td></tr>
       <tr><td><code>indicatorPosition</code></td><td><code>'separated' | 'on-track'</code></td><td><code>'separated'</code></td><td>标记落在连接线上，还是和一条单独的进度条分开。</td></tr>
       <tr><td><code>hasCollapsibleLabels</code></td><td><code>boolean</code></td><td><code>false</code></td><td>水平步骤条窄于 480px 时，只留下当前步骤的文字。</td></tr>
-      <tr><td><code>horizontalOptions</code></td><td><code>{ minimumStepWidth?: number, collapsedVariant?: 'withLabelAndControls' | 'withLabel' | 'hiddenLabel' }</code></td><td><code>collapsedVariant: 'withLabelAndControls'</code></td><td>水平步骤条窄于 <code>minimumStepWidth</code> 乘以步骤数时保留轨道。<code>withLabelAndControls</code> 在设置了 <code>onStepClick</code> 时显示当前步和 Previous / Next。<code>withLabel</code> 只显示标签。<code>hiddenLabel</code> 只留轨道。</td></tr>
+      <tr><td><code>horizontalOptions</code></td><td><code>{ minimumStepWidth?: number, collapsedVariant?: 'withLabelAndControls' | 'withLabel' | 'hiddenLabel' }</code></td><td><code>{ minimumStepWidth: 112, collapsedVariant: 'withLabelAndControls' }</code></td><td>水平步骤条窄于 <code>minimumStepWidth</code> 乘以步骤数时保留轨道，并显示当前步。<code>withLabelAndControls</code> 在设置了 <code>onStepClick</code> 时带上 Previous / Next。<code>withLabel</code> 只显示标签。<code>hiddenLabel</code> 只留轨道。</td></tr>
     </tbody>
   </table>
 </div>

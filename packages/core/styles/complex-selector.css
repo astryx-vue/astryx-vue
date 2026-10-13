@@ -6,6 +6,10 @@
     width: 100%;
   }
 
+  .astryx-complex-selector-field[data-variant='ghost'] .astryx-popover-trigger {
+    width: auto;
+  }
+
   .astryx-complex-selector {
     box-sizing: border-box;
     display: flex;
@@ -42,6 +46,18 @@
     min-height: var(--astryx-input-height-lg, 36px);
   }
 
+  .astryx-complex-selector[data-variant='ghost'] {
+    width: auto;
+    border-color: transparent;
+    background: transparent;
+  }
+
+  @media (hover: hover) {
+    .astryx-complex-selector[data-variant='ghost']:not(:disabled):hover {
+      background: var(--astryx-color-overlay-hover, #0000000d);
+    }
+  }
+
   .astryx-complex-selector[data-placeholder] {
     color: var(--astryx-color-text-secondary, #525252);
   }
@@ -62,6 +78,10 @@
   .astryx-complex-selector:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  .astryx-complex-selector-start {
+    flex-shrink: 0;
   }
 
   .astryx-complex-selector-value {

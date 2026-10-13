@@ -202,10 +202,14 @@ export type {
 export { ComplexSelector } from './ComplexSelector/index.js'
 export type {
   ComplexSelectorEmits,
+  ComplexSelectorHandle,
+  ComplexSelectorHandleRef,
   ComplexSelectorProps,
   ComplexSelectorSlotProps,
   ComplexSelectorSlots,
   ComplexSelectorState,
+  ComplexSelectorTriggerProps,
+  ComplexSelectorVariant,
 } from './ComplexSelector/index.js'
 export * from './composables/index.js'
 export {

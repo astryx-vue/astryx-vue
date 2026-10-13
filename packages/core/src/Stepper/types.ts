@@ -12,6 +12,7 @@ export interface StepperHorizontalOptions {
   /**
    * Collapse a horizontal stepper when its width is below this value times
    * the step count. The collapsed view keeps the track.
+   * @default 112
    */
   minimumStepWidth?: number
   /**
@@ -44,10 +45,10 @@ export interface StepperProps {
    */
   hasCollapsibleLabels?: boolean
   /**
-   * Narrow-width behavior for a horizontal stepper. `minimumStepWidth` is the
-   * width each step needs before the stepper collapses to the current step.
-   * `collapsedVariant` chooses a label with controls, the label alone, or the
-   * track with no compact row.
+   * Narrow-width behavior for a horizontal stepper. `minimumStepWidth` defaults
+   * to 112: a horizontal stepper narrower than that times the step count
+   * collapses to the current step. `collapsedVariant` chooses a label with
+   * controls, the label alone, or the track with no compact row.
    */
   horizontalOptions?: StepperHorizontalOptions
 }

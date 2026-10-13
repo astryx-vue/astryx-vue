@@ -23,7 +23,7 @@ import {
 
 步骤可以不按顺序点时，传入 `@step-click`。回调拿到从 0 开始的序号，只有这时步骤才会渲染成按钮。默认的 `separated` 在水平步骤上方画轨道，圆标和标签排在同一行。`indicatorPosition="on-track"` 把圆标嵌进连接线，标签居中放在圆标下面。`indicator` 默认是 `auto`：完成的步骤是勾，当前步是环，后面的步骤是数字。
 
-`horizontalOptions.minimumStepWidth` 在水平步骤条窄于「这个宽度 × 步骤数」时收起。轨道还在。`collapsedVariant` 默认是 `withLabelAndControls`：设置了 `@step-click` 时，Previous 和 Next 在步骤之间移动，并跳过禁用的步骤。`withLabel` 不显示这两个按钮，`hiddenLabel` 只留轨道。
+`horizontalOptions.minimumStepWidth` 默认是 `112`。水平步骤条窄于「112 × 步骤数」时会自动收起，只留当前步，并带 Previous 和 Next。轨道还在。`collapsedVariant` 默认是 `withLabelAndControls`，并跳过禁用的步骤。`withLabel` 不显示这两个按钮，`hiddenLabel` 只留轨道。
 
 ```vue
 <script setup lang="ts">

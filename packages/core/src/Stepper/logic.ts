@@ -2,15 +2,18 @@ import type { StepIndicator, StepProgress, StepStatus } from './types.js'
 
 export type StepGlyph = 'check' | 'ring' | 'number' | 'warning' | 'error' | 'none'
 
+/** Live docs default: a horizontal stepper collapses below this width per step. */
+export const DEFAULT_MINIMUM_STEP_WIDTH = 112
+
 export function shouldCollapseStepper(
   width: number,
   count: number,
   minimumStepWidth: number | undefined,
   orientation: 'horizontal' | 'vertical',
 ): boolean {
-  if (orientation !== 'horizontal' || minimumStepWidth == null || count < 1)
+  if (orientation !== 'horizontal' || count < 1)
     return false
-  return width < count * minimumStepWidth
+  return width < count * (minimumStepWidth ?? DEFAULT_MINIMUM_STEP_WIDTH)
 }
 
 export function resolveStepGlyph(options: {

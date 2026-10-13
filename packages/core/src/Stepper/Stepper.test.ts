@@ -103,13 +103,51 @@ describe('stepper', () => {
     expect(wrapper.get('.astryx-stepper-summary').text()).toContain('Shipping')
     vi.unstubAllGlobals()
   })
+
+  it('collapses at 390px with the default minimum step width of 112', async () => {
+    vi.stubGlobal('ResizeObserver', class {
+      constructor(private readonly callback: ResizeObserverCallback) {}
+
+      observe() {
+        this.callback([{ contentRect: { width: 390 } } as ResizeObserverEntry], this)
+      }
+
+      disconnect() {}
+
+      unobserve() {}
+    })
+    const wrapper = mount(defineComponent({
+      components: { Step, Stepper },
+      setup() {
+        const active = ref(2)
+        return { active }
+      },
+      template: `
+        <Stepper :active-step="active" :on-step-click="(index) => { active = index }">
+          <Step :step="0" label="Cart" />
+          <Step :step="1" label="Shipping" />
+          <Step :step="2" label="Payment" />
+          <Step :step="3" label="Review" />
+          <Step :step="4" label="Confirm" />
+        </Stepper>
+      `,
+    }))
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('.astryx-stepper-root').attributes('data-collapsed')).toBe('true')
+    expect(wrapper.get('.astryx-stepper-summary').text()).toContain('Payment')
+    expect(wrapper.find('[aria-label="Previous step"]').exists()).toBe(true)
+    expect(wrapper.find('[aria-label="Next step"]').exists()).toBe(true)
+    vi.unstubAllGlobals()
+  })
 })
 
 describe('stepper logic', () => {
   it('collapses only when the row is narrower than count times minimumStepWidth', () => {
+    expect(shouldCollapseStepper(640, 5, undefined, 'horizontal')).toBe(false)
+    expect(shouldCollapseStepper(390, 5, undefined, 'horizontal')).toBe(true)
     expect(shouldCollapseStepper(640, 5, 112, 'horizontal')).toBe(false)
     expect(shouldCollapseStepper(390, 5, 112, 'horizontal')).toBe(true)
-    expect(shouldCollapseStepper(200, 5, 112, 'vertical')).toBe(false)
+    expect(shouldCollapseStepper(200, 5, undefined, 'vertical')).toBe(false)
     expect(resolveStepGlyph({ progress: 'completed', indicator: 'auto' })).toBe('check')
     expect(resolveStepGlyph({ progress: 'in-progress', indicator: 'auto' })).toBe('ring')
     expect(resolveStepGlyph({ progress: 'not-started', indicator: 'auto' })).toBe('number')

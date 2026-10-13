@@ -29,6 +29,11 @@ footer: false
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Trigger size.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>-</td><td>Field width. Numbers are pixels.</td></tr>
       <tr><td><code>placement</code></td><td><code>PopoverPlacement</code></td><td><code>'below'</code></td><td>Where the popup opens.</td></tr>
+      <tr><td><code>alignment</code></td><td><code>'start' | 'center' | 'end'</code></td><td><code>'start'</code></td><td>Popup alignment along the placement axis.</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>string | Component</code></td><td>-</td><td>Icon at the start of the built-in trigger.</td></tr>
+      <tr><td><code>variant</code></td><td><code>'input' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> is the bordered field. <code>ghost</code> matches a toolbar button.</td></tr>
+      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>Replaces the field and the built-in trigger. Spread <code>props</code> onto your control. The <code>trigger</code> slot does the same job.</td></tr>
+      <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>-</td><td>Receives <code>open</code>, <code>close</code>, <code>toggle</code>, and <code>isOpen</code>. A template <code>ref</code> exposes the same methods.</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>-</td><td>Runs after the value changes. While it is pending the trigger shows a spinner.</td></tr>
     </tbody>
   </table>

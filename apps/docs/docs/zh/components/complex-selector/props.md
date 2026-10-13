@@ -29,6 +29,11 @@ footer: false
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>触发器尺寸。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>-</td><td>字段宽度。数字按像素。</td></tr>
       <tr><td><code>placement</code></td><td><code>PopoverPlacement</code></td><td><code>'below'</code></td><td>弹层打开的位置。</td></tr>
+      <tr><td><code>alignment</code></td><td><code>'start' | 'center' | 'end'</code></td><td><code>'start'</code></td><td>弹层沿打开方向的对齐。</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>string | Component</code></td><td>-</td><td>内置触发器开头的图标。</td></tr>
+      <tr><td><code>variant</code></td><td><code>'input' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> 是带边框的字段。<code>ghost</code> 看起来像工具栏按钮。</td></tr>
+      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>换掉字段和内置触发器。把 <code>props</code> 展开到你的控件上。<code>trigger</code> 插槽做同一件事。</td></tr>
+      <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>-</td><td>拿到 <code>open</code>、<code>close</code>、<code>toggle</code> 和 <code>isOpen</code>。模板 <code>ref</code> 暴露同样的方法。</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>-</td><td>值变化后执行。还没结束时触发器显示加载指示。</td></tr>
     </tbody>
   </table>
