@@ -4,7 +4,7 @@ import { carouselOverview as demo } from './index'
 export const meta = {
   slug: 'carousel',
   group: 'Container',
-  order: 2,
+  order: 5,
   en: 'Carousel',
   zh: '轮播',
   demo,

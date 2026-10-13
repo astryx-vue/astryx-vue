@@ -25,6 +25,23 @@ export interface TabListProps {
   hasDivider?: boolean
 }
 
+export interface TabMenuOption {
+  value: string
+  label: string
+  /** CSS icon class, for example `i-carbon-settings`. */
+  iconClass?: string
+}
+
+export interface TabMenuProps {
+  /**
+   * Trigger text when none of the options is the selected tab, and the
+   * accessible name of the menu.
+   */
+  label: string
+  /** Secondary tabs collected behind the trigger. */
+  options: TabMenuOption[]
+}
+
 export interface TabProps {
   /**
    * Unique value for this tab.
@@ -45,6 +62,12 @@ export interface TabListTab {
   value: string
   disabled: boolean
   el: HTMLElement
+  /**
+   * When false, arrowing onto this stop focuses it without changing the
+   * selected value. TabMenu uses that so the overflow trigger is in the
+   * roving order without becoming a tab value of its own.
+   */
+  selectsOnFocus?: boolean
 }
 
 /**

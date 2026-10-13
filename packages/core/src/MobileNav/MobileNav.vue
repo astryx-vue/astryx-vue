@@ -21,8 +21,9 @@ const messages = useAstryxMessages()
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const resolvedSide = ref<'start' | 'end'>(props.side === 'end' ? 'end' : 'start')
-const dialogId = `astryx-mobile-nav-${useId()}`
-const labelId = `${dialogId}-label`
+const generatedId = `astryx-mobile-nav-${useId()}`
+const dialogId = computed(() => props.id || generatedId)
+const labelId = computed(() => `${dialogId.value}-label`)
 let previousOverflow = ''
 
 const accessibleName = computed(() => props.label || props.header || messages.value.nav.mobileNav)

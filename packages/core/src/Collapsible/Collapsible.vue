@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './types.js'
-import { computed, shallowRef, useId, useTemplateRef } from 'vue'
+import { computed, inject, shallowRef, useId, useTemplateRef } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { collapsibleGroupKey, collapsibleGroupPresentationKey } from './context.js'
 import '../../styles/collapsible.css'
 
 defineOptions({ name: 'AstryxCollapsible' })
@@ -9,15 +10,24 @@ defineOptions({ name: 'AstryxCollapsible' })
 const props = withDefaults(defineProps<Omit<CollapsibleProps, 'isOpen'>>(), {
   defaultIsOpen: true,
   isDisabled: false,
-  chevronPosition: 'end',
 })
 
 const emit = defineEmits<CollapsibleEmits>()
 defineSlots<CollapsibleSlots>()
 const open = defineModel<boolean | undefined>('isOpen', { default: undefined })
 const localIsOpen = shallowRef(props.defaultIsOpen)
-const isOpen = computed(() => open.value ?? localIsOpen.value)
-const isChevronAtStart = computed(() => props.chevronPosition === 'start')
+const group = inject(collapsibleGroupKey, null)
+const presentation = inject(collapsibleGroupPresentationKey, null)
+const isGrouped = computed(() => group != null && props.value != null && props.value !== '')
+const isOpen = computed(() => {
+  if (isGrouped.value && group != null && props.value != null)
+    return group.isOpen(props.value)
+  return open.value ?? localIsOpen.value
+})
+const density = computed(() => presentation?.density.value ?? null)
+const hasDividers = computed(() => presentation?.hasDividers.value ?? false)
+const chevronPosition = computed(() => props.chevronPosition ?? presentation?.chevronPosition.value ?? 'end')
+const isChevronAtStart = computed(() => chevronPosition.value === 'start')
 const contentId = `astryx-collapsible-${useId()}`
 const root = useTemplateRef<HTMLDivElement>('root')
 const element = computed(() => root.value ?? null)
@@ -28,6 +38,11 @@ function toggle(): void {
   if (props.isDisabled)
     return
 
+  if (isGrouped.value && group != null && props.value != null) {
+    group.toggle(props.value)
+    return
+  }
+
   const next = !isOpen.value
   localIsOpen.value = next
   open.value = next
@@ -36,7 +51,12 @@ function toggle(): void {
 </script>
 
 <template>
-  <div ref="root" class="astryx-collapsible">
+  <div
+    ref="root"
+    class="astryx-collapsible"
+    :data-density="density || undefined"
+    :data-dividers="hasDividers || undefined"
+  >
     <button
       type="button"
       class="astryx-collapsible-trigger"

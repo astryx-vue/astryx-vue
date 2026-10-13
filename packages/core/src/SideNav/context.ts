@@ -1,5 +1,15 @@
-import type { InjectionKey, Ref } from 'vue'
-import { inject, ref } from 'vue'
+import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import { computed, inject, ref } from 'vue'
+
+export type SideNavRenderMode = 'default' | 'topbar' | 'drawer' | 'drawer-content'
+
+export const sideNavRenderModeKey: InjectionKey<ComputedRef<SideNavRenderMode>> = Symbol('astryx-side-nav-render-mode')
+
+const defaultRenderMode = computed<SideNavRenderMode>(() => 'default')
+
+export function useSideNavRenderMode(): ComputedRef<SideNavRenderMode> {
+  return inject(sideNavRenderModeKey, defaultRenderMode)
+}
 
 export interface SideNavCollapseContext {
   isCollapsed: Ref<boolean>

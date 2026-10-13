@@ -1,0 +1,51 @@
+.section-preview {
+  width: min(100%, 560px);
+}
+
+.section-preview .astryx-heading--level-4 {
+  margin: 0;
+  font-size: var(--astryx-heading-level-4-size, 0.875rem);
+  font-weight: var(--astryx-font-weight-bold, 700);
+  line-height: var(--astryx-text-heading-4-leading, 1.4286);
+  letter-spacing: normal;
+}
+
+.section-preview .layout-title,
+.layout-preview .layout-title,
+.app-shell-preview .layout-title,
+.scroll-preview .layout-title,
+.form-layout-preview .layout-title {
+  margin: 0;
+  color: var(--astryx-color-text-primary, #171717);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.section-preview .layout-title--page,
+.layout-preview .layout-title--page,
+.app-shell-preview .layout-title--page,
+.scroll-preview .layout-title--page {
+  font-size: 24px;
+}
+
+.section-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.section-frame {
+  border: 1px solid var(--astryx-color-border, #ebebeb);
+  border-radius: var(--astryx-radius-element, 0.625rem);
+  overflow: hidden;
+}
+
+.sticky-label {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  padding-block: var(--astryx-spacing-2, 8px);
+  background: var(--astryx-color-background-card, #fff);
+}

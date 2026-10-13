@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/core",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Vue components for the unofficial astryx-vue community project.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -29,6 +29,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./AppShell": {
+      "source": "./src/AppShell/index.ts",
+      "types": "./dist/AppShell/index.d.ts",
+      "import": "./dist/AppShell/index.js"
+    },
+    "./AspectRatio": {
+      "source": "./src/AspectRatio/index.ts",
+      "types": "./dist/AspectRatio/index.d.ts",
+      "import": "./dist/AspectRatio/index.js"
+    },
     "./Avatar": {
       "source": "./src/Avatar/index.ts",
       "types": "./dist/Avatar/index.d.ts",
@@ -48,6 +58,21 @@
       "source": "./src/CheckboxList/index.ts",
       "types": "./dist/CheckboxList/index.d.ts",
       "import": "./dist/CheckboxList/index.js"
+    },
+    "./ClickableCard": {
+      "source": "./src/ClickableCard/index.ts",
+      "types": "./dist/ClickableCard/index.d.ts",
+      "import": "./dist/ClickableCard/index.js"
+    },
+    "./CommandPalette": {
+      "source": "./src/CommandPalette/index.ts",
+      "types": "./dist/CommandPalette/index.d.ts",
+      "import": "./dist/CommandPalette/index.js"
+    },
+    "./ComplexSelector": {
+      "source": "./src/ComplexSelector/index.ts",
+      "types": "./dist/ComplexSelector/index.d.ts",
+      "import": "./dist/ComplexSelector/index.js"
     },
     "./DateRangeInput": {
       "source": "./src/DateRangeInput/index.ts",
@@ -69,6 +94,16 @@
       "types": "./dist/FileInput/index.d.ts",
       "import": "./dist/FileInput/index.js"
     },
+    "./FormLayout": {
+      "source": "./src/FormLayout/index.ts",
+      "types": "./dist/FormLayout/index.d.ts",
+      "import": "./dist/FormLayout/index.js"
+    },
+    "./Layout": {
+      "source": "./src/Layout/index.ts",
+      "types": "./dist/Layout/index.d.ts",
+      "import": "./dist/Layout/index.js"
+    },
     "./Lightbox": {
       "source": "./src/Lightbox/index.ts",
       "types": "./dist/Lightbox/index.d.ts",
@@ -88,6 +123,26 @@
       "source": "./src/RadioList/index.ts",
       "types": "./dist/RadioList/index.d.ts",
       "import": "./dist/RadioList/index.js"
+    },
+    "./Resizable": {
+      "source": "./src/Resizable/index.ts",
+      "types": "./dist/Resizable/index.d.ts",
+      "import": "./dist/Resizable/index.js"
+    },
+    "./ScrollableArea": {
+      "source": "./src/ScrollableArea/index.ts",
+      "types": "./dist/ScrollableArea/index.d.ts",
+      "import": "./dist/ScrollableArea/index.js"
+    },
+    "./Section": {
+      "source": "./src/Section/index.ts",
+      "types": "./dist/Section/index.d.ts",
+      "import": "./dist/Section/index.js"
+    },
+    "./SelectableCard": {
+      "source": "./src/SelectableCard/index.ts",
+      "types": "./dist/SelectableCard/index.d.ts",
+      "import": "./dist/SelectableCard/index.js"
     },
     "./StatusDot": {
       "source": "./src/StatusDot/index.ts",
@@ -153,6 +208,11 @@
       "source": "./src/Radio/index.ts",
       "types": "./dist/Radio/index.d.ts",
       "import": "./dist/Radio/index.js"
+    },
+    "./Stepper": {
+      "source": "./src/Stepper/index.ts",
+      "types": "./dist/Stepper/index.d.ts",
+      "import": "./dist/Stepper/index.js"
     },
     "./Table": {
       "source": "./src/Table/index.ts",
@@ -494,6 +554,14 @@
         "types": "./dist/index.d.ts",
         "import": "./dist/index.js"
       },
+      "./AppShell": {
+        "types": "./dist/AppShell/index.d.ts",
+        "import": "./dist/AppShell/index.js"
+      },
+      "./AspectRatio": {
+        "types": "./dist/AspectRatio/index.d.ts",
+        "import": "./dist/AspectRatio/index.js"
+      },
       "./Avatar": {
         "types": "./dist/Avatar/index.d.ts",
         "import": "./dist/Avatar/index.js"
@@ -509,6 +577,18 @@
       "./CheckboxList": {
         "types": "./dist/CheckboxList/index.d.ts",
         "import": "./dist/CheckboxList/index.js"
+      },
+      "./ClickableCard": {
+        "types": "./dist/ClickableCard/index.d.ts",
+        "import": "./dist/ClickableCard/index.js"
+      },
+      "./CommandPalette": {
+        "types": "./dist/CommandPalette/index.d.ts",
+        "import": "./dist/CommandPalette/index.js"
+      },
+      "./ComplexSelector": {
+        "types": "./dist/ComplexSelector/index.d.ts",
+        "import": "./dist/ComplexSelector/index.js"
       },
       "./DateRangeInput": {
         "types": "./dist/DateRangeInput/index.d.ts",
@@ -526,6 +606,14 @@
         "types": "./dist/FileInput/index.d.ts",
         "import": "./dist/FileInput/index.js"
       },
+      "./FormLayout": {
+        "types": "./dist/FormLayout/index.d.ts",
+        "import": "./dist/FormLayout/index.js"
+      },
+      "./Layout": {
+        "types": "./dist/Layout/index.d.ts",
+        "import": "./dist/Layout/index.js"
+      },
       "./Lightbox": {
         "types": "./dist/Lightbox/index.d.ts",
         "import": "./dist/Lightbox/index.js"
@@ -541,6 +629,22 @@
       "./RadioList": {
         "types": "./dist/RadioList/index.d.ts",
         "import": "./dist/RadioList/index.js"
+      },
+      "./Resizable": {
+        "types": "./dist/Resizable/index.d.ts",
+        "import": "./dist/Resizable/index.js"
+      },
+      "./ScrollableArea": {
+        "types": "./dist/ScrollableArea/index.d.ts",
+        "import": "./dist/ScrollableArea/index.js"
+      },
+      "./Section": {
+        "types": "./dist/Section/index.d.ts",
+        "import": "./dist/Section/index.js"
+      },
+      "./SelectableCard": {
+        "types": "./dist/SelectableCard/index.d.ts",
+        "import": "./dist/SelectableCard/index.js"
       },
       "./StatusDot": {
         "types": "./dist/StatusDot/index.d.ts",
@@ -593,6 +697,10 @@
       "./Radio": {
         "types": "./dist/Radio/index.d.ts",
         "import": "./dist/Radio/index.js"
+      },
+      "./Stepper": {
+        "types": "./dist/Stepper/index.d.ts",
+        "import": "./dist/Stepper/index.js"
       },
       "./Table": {
         "types": "./dist/Table/index.d.ts",

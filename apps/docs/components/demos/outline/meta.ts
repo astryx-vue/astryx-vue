@@ -4,7 +4,7 @@ import { outlineOverview as demo } from './index'
 export const meta = {
   slug: 'outline',
   group: 'Navigation',
-  order: 8,
+  order: 10,
   en: 'Outline',
   zh: '大纲',
   demo,

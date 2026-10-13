@@ -8,6 +8,7 @@ import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
+import { useAriaRequired } from '../FormLayout/context.js'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextInputAction } from './useTextInputAction.js'
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Omit<TextInputProps, 'modelValue'>>(), {
 })
 const emit = defineEmits<TextInputEmits>()
 defineSlots<TextInputSlots>()
+const ariaRequired = useAriaRequired(props)
 const model = defineModel<string>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')
@@ -133,7 +135,7 @@ onMounted(() => {
           :type="type" :value="action.value.value" :placeholder="placeholder" :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)"
           :autocomplete="(autoComplete ?? inputAttrs().autocomplete) as InputHTMLAttributes['autocomplete']" :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || showsDisabledMessage"
           :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
-          :aria-required="(isRequired && !isOptional) || undefined" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
+          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
           :aria-labelledby="labelledBy(field.labelId)" :aria-describedby="describedBy(field.describedBy)" :data-autofocus="hasAutoFocus || undefined"
           @input="acceptInput" @compositionstart="isComposing = true" @compositionend="compositionEnd" @keydown="keydown"
           @focus="disabledTooltip.onTooltipPointerEnter" @blur="disabledTooltip.onBlur"

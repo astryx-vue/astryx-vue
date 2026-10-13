@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue'
 import type { FieldProps, FieldSlotProps, FieldSlots } from './types.js'
 import { computed, useTemplateRef } from 'vue'
+import { useFormLayout } from '../FormLayout/context.js'
 import FieldLabel from './FieldLabel.vue'
 import FieldStatus from './FieldStatus.vue'
 import '../../styles/field.css'
@@ -23,10 +24,12 @@ const slotProps = computed<FieldSlotProps>(() => {
   }
 })
 const style = computed<CSSProperties>(() => ({ '--astryx-field-width': typeof props.width === 'number' ? `${props.width}px` : props.width }))
+const formLayout = useFormLayout()
+const horizontalLabels = computed(() => formLayout.value?.direction === 'horizontal-labels')
 </script>
 
 <template>
-  <div ref="field" class="astryx-field" :style="style" :data-status-variant="statusVariant" :data-group-label="isGroupLabel || undefined">
+  <div ref="field" class="astryx-field" :style="style" :data-status-variant="statusVariant" :data-group-label="isGroupLabel || undefined" :data-layout="horizontalLabels ? 'horizontal-labels' : undefined">
     <FieldLabel
       :label="label" :input-id="inputId" :label-id="slotProps.labelId"
       :description="description" :description-id="slotProps.descriptionId"

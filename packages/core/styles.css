@@ -1,5 +1,7 @@
 /* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './styles/alert-dialog.css';
+@import './styles/app-shell.css';
+@import './styles/aspect-ratio.css';
 @import './styles/avatar.css';
 @import './styles/avatar-group.css';
 @import './styles/badge.css';
@@ -18,8 +20,11 @@
 @import './styles/checkbox-input.css';
 @import './styles/checkbox-list.css';
 @import './styles/citation.css';
+@import './styles/clickable-card.css';
 @import './styles/code.css';
 @import './styles/collapsible.css';
+@import './styles/command-palette.css';
+@import './styles/complex-selector.css';
 @import './styles/context-menu.css';
 @import './styles/date-range-input.css';
 @import './styles/date-time-input.css';
@@ -30,11 +35,13 @@
 @import './styles/empty-state.css';
 @import './styles/field.css';
 @import './styles/file-input.css';
+@import './styles/form-layout.css';
 @import './styles/grid.css';
 @import './styles/heading.css';
 @import './styles/hover-card.css';
 @import './styles/icon.css';
 @import './styles/kbd.css';
+@import './styles/layout.css';
 @import './styles/lightbox.css';
 @import './styles/link.css';
 @import './styles/list.css';
@@ -52,6 +59,9 @@
 @import './styles/popover.css';
 @import './styles/progress-bar.css';
 @import './styles/radio.css';
+@import './styles/resize-handle.css';
+@import './styles/scrollable-area.css';
+@import './styles/section.css';
 @import './styles/segmented-control.css';
 @import './styles/side-nav.css';
 @import './styles/skeleton.css';
@@ -59,8 +69,10 @@
 @import './styles/spinner.css';
 @import './styles/stack.css';
 @import './styles/status-dot.css';
+@import './styles/stepper.css';
 @import './styles/switch.css';
 @import './styles/tab-list.css';
+@import './styles/tab-menu.css';
 @import './styles/table.css';
 @import './styles/text.css';
 @import './styles/text-area.css';

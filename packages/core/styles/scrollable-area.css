@@ -1,0 +1,50 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-scrollable-area {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-color: var(--astryx-color-neutral, #0000000f) transparent;
+    scrollbar-width: auto;
+  }
+
+  .astryx-scrollable-area:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  .astryx-scrollable-area[data-full-bleed] {
+    margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
+    margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
+    max-inline-size: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));
+  }
+
+  .astryx-scrollable-area[data-full-bleed]:first-child {
+    margin-block-start: calc(-1 * var(--container-padding-block-start, 0px));
+  }
+
+  .astryx-scrollable-area[data-full-bleed]:last-child {
+    margin-block-end: calc(-1 * var(--container-padding-block-end, 0px));
+  }
+
+  .astryx-scrollable-area__content {
+    box-sizing: border-box;
+    min-inline-size: 100%;
+    min-block-size: 100%;
+    padding-inline-start: var(--_pad-inline-start, 0px);
+    padding-inline-end: var(--_pad-inline-end, 0px);
+    padding-block-start: var(--_pad-block-start, 0px);
+    padding-block-end: var(--_pad-block-end, 0px);
+    --container-padding-inline-start: var(--_pad-inline-start, 0px);
+    --container-padding-inline-end: var(--_pad-inline-end, 0px);
+    --container-padding-block-start: var(--_pad-block-start, 0px);
+    --container-padding-block-end: var(--_pad-block-end, 0px);
+  }
+
+  .astryx-scrollable-area[data-axis='inline'] > .astryx-scrollable-area__content,
+  .astryx-scrollable-area[data-axis='both'] > .astryx-scrollable-area__content {
+    inline-size: max-content;
+  }
+}

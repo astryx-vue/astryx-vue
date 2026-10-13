@@ -33,22 +33,6 @@
     color: inherit;
   }
 
-  .astryx-heading--weight-regular {
-    font-weight: var(--astryx-font-weight-regular, 400);
-  }
-
-  .astryx-heading--weight-medium {
-    font-weight: var(--astryx-font-weight-medium, 500);
-  }
-
-  .astryx-heading--weight-semibold {
-    font-weight: var(--astryx-font-weight-semibold, 600);
-  }
-
-  .astryx-heading--weight-bold {
-    font-weight: var(--astryx-font-weight-bold, 700);
-  }
-
   .astryx-heading--level-1 {
     font-size: var(--astryx-heading-level-1-size, 2rem);
   }
@@ -62,7 +46,9 @@
   }
 
   .astryx-heading--level-4 {
-    font-size: var(--astryx-heading-level-4-size, 1.25rem);
+    font-size: var(--astryx-heading-level-4-size, 0.875rem);
+    font-weight: var(--astryx-font-weight-bold, 700);
+    line-height: var(--astryx-text-heading-4-leading, 1.4286);
   }
 
   .astryx-heading--level-5 {
@@ -110,6 +96,22 @@
   .astryx-heading--type-supporting {
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-heading--weight-regular {
+    font-weight: var(--astryx-font-weight-regular, 400);
+  }
+
+  .astryx-heading--weight-medium {
+    font-weight: var(--astryx-font-weight-medium, 500);
+  }
+
+  .astryx-heading--weight-semibold {
+    font-weight: var(--astryx-font-weight-semibold, 600);
+  }
+
+  .astryx-heading--weight-bold {
+    font-weight: var(--astryx-font-weight-bold, 700);
   }
 
   .astryx-heading--truncate-single {

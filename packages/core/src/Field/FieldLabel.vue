@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FieldLabelProps, FieldLabelSlots } from './types.js'
 import { computed, toRaw, useTemplateRef } from 'vue'
+import { showsOptionalIndicator, showsRequiredIndicator, useFormLayout } from '../FormLayout/context.js'
 import FieldInfoTip from './FieldInfoTip.vue'
 import '../../styles/field.css'
 
@@ -15,6 +16,10 @@ defineExpose({ element })
 const labelId = computed(() => props.labelId ?? `${props.inputId}-label`)
 const descriptionId = computed(() => props.descriptionId ?? `${props.inputId}-description`)
 const icon = computed(() => props.labelIcon ? toRaw(props.labelIcon) : undefined)
+const formLayout = useFormLayout()
+const optionality = computed(() => formLayout.value?.defaultOptionality)
+const showOptional = computed(() => showsOptionalIndicator(props.isOptional, props.isRequired, optionality.value))
+const showRequired = computed(() => showsRequiredIndicator(props.isRequired, props.isOptional, optionality.value))
 
 function focusFromDescription(event: MouseEvent): void {
   if (props.isGroupLabel || props.isDisabled)
@@ -41,7 +46,7 @@ function focusFromDescription(event: MouseEvent): void {
         </span>
         {{ label }}
       </component>
-      <span v-if="isOptional || isRequired" class="astryx-field-optionality" aria-hidden="true">{{ isOptional ? optionalLabel : requiredLabel }}</span>
+      <span v-if="showOptional || showRequired" class="astryx-field-optionality" aria-hidden="true">{{ showOptional ? optionalLabel : requiredLabel }}</span>
       <FieldInfoTip v-if="labelTooltip" :text="labelTooltip" />
     </div>
     <span v-if="description" :id="descriptionId" class="astryx-field-description" role="presentation" @click="focusFromDescription">{{ description }}</span>

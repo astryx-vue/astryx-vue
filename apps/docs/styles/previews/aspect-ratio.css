@@ -1,0 +1,28 @@
+.aspect-ratio-preview {
+  width: min(100%, 640px);
+}
+
+/* VitePress `.vp-doc img` is unlayered and sets `margin: 1rem 0`, which shifts the photo out of the clipped ratio box. */
+.vp-doc .astryx-aspect-ratio img {
+  display: block;
+  max-width: none;
+  margin: 0;
+}
+
+.vp-doc [data-astryx-aspect-ratio-override='cover'] > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aspect-ratio-overview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.aspect-ratio-overview > * {
+  width: 72px;
+}

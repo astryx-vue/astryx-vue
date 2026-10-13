@@ -3,7 +3,7 @@ import type { SideNavCollapsible, SideNavEmits, SideNavProps, SideNavSlots } fro
 import { computed, provide, ref, useId, watch } from 'vue'
 import { useHotkeys } from '../composables/useHotkeys.js'
 import { useAstryxMessages } from '../locale/index.js'
-import { sideNavCollapseKey } from './context.js'
+import { sideNavCollapseKey, useSideNavRenderMode } from './context.js'
 import SideNavCollapseButton from './SideNavCollapseButton.vue'
 import '../../styles/side-nav.css'
 
@@ -37,6 +37,7 @@ const showButton = computed(() => isCollapsible.value && (config.value.hasButton
 const hasTop = computed(() => slots.header != null || slots.top != null || showButton.value)
 const hasBottom = computed(() => slots.footer != null || slots.footerIcons != null)
 const label = computed(() => props.label || messages.value.nav.sideNav)
+const renderMode = useSideNavRenderMode()
 
 watch(() => config.value.defaultIsCollapsed, (value) => {
   if (value != null && props.isCollapsed === undefined && config.value.isCollapsed === undefined)
@@ -72,7 +73,28 @@ provide(sideNavCollapseKey, {
 </script>
 
 <template>
+  <div v-if="renderMode === 'topbar'" class="astryx-side-nav astryx-side-nav--topbar" data-mode="topbar">
+    <slot name="header" />
+    <div v-if="slots.footerIcons" class="astryx-side-nav__topbar-icons">
+      <slot name="footerIcons" />
+    </div>
+  </div>
+  <div v-else-if="renderMode === 'drawer' || renderMode === 'drawer-content'" class="astryx-side-nav astryx-side-nav--drawer" data-mode="drawer">
+    <div v-if="slots.top" class="astryx-side-nav__top-content">
+      <slot name="top" />
+    </div>
+    <div class="astryx-side-nav__body">
+      <slot />
+    </div>
+    <div v-if="hasBottom" class="astryx-side-nav__bottom">
+      <slot name="footer" />
+      <div v-if="slots.footerIcons" class="astryx-side-nav__footer-icons">
+        <slot name="footerIcons" />
+      </div>
+    </div>
+  </div>
   <nav
+    v-else
     :id="navId"
     class="astryx-side-nav"
     :class="{ 'astryx-side-nav--collapsed': isCollapsed }"

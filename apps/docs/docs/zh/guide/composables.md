@@ -24,6 +24,7 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `useRestoreFocus` | 浮层打开时记住焦点，关闭时还回去。 |
 | `useScrollLock` | 按引用计数锁住 `body` 滚动。 |
 | `useListFocus` | 一维列表的方向键。默认选择器是 `[role="menuitem"]`。 |
+| `useClickableContainer` | 让一整块区域可以点击，点到里面的按钮、链接或输入框时不触发外层。 |
 | `useGridRovingFocus` | 网格的方向键。 |
 | `useTypeahead` | 按字母在一组标签里循环匹配。它不移动焦点，匹配结果交给 `onMatch`。 |
 | `useCombobox` | 可搜索的选项列表和当前值。 |

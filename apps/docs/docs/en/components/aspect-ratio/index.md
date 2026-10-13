@@ -1,0 +1,77 @@
+---
+layout: component-docs
+title: Aspect Ratio
+outline: false
+footer: false
+---
+
+<script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
+import { aspectRatioCircle, aspectRatioGallery, aspectRatioSkeleton, aspectRatioSquare, aspectRatioWidescreen } from '../../../../components/demos/aspect-ratio'
+</script>
+
+## Usage
+
+`AspectRatio` keeps a fixed width-to-height ratio as its container changes size. Use it for images, video, thumbnails, and other media that should stay in proportion. The width comes from the parent, and the height is derived from `ratio`, so an ancestor needs a definite width.
+
+```vue
+<script setup lang="ts">
+import { AspectRatio } from '@astryx-vue/core/AspectRatio'
+</script>
+
+<template>
+  <AspectRatio :ratio="16 / 9" fit="cover">
+    <img alt="Landscape" src="/photo.jpg">
+  </AspectRatio>
+</template>
+```
+
+`ratio` is width divided by height. Write `16 / 9` rather than a rounded decimal. `shape` is `rectangle` or `ellipse`; an ellipse with `ratio` `1` is a circle. `fit` sizes the child: `cover` fills and crops, `contain` letterboxes, and `center` keeps the natural size. Leave `fit` unset when the child sizes itself.
+
+The ratio is written to the CSS variable `--astryx-aspect-ratio`, not as an inline `aspect-ratio` declaration, so a stylesheet can override it.
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Pass one child when `fit` is set. Every direct child is stretched, so put an overlay inside that child. |
+| <Badge variant="success">Do</Badge> | Give images an `alt`, or `alt=""` when the image is decorative. The ratio box adds no accessible name of its own. |
+| <Badge variant="error">Don't</Badge> | Use it as a general layout container. Use `Section`, `Card`, or `Layout` for page regions. |
+| <Badge variant="error">Don't</Badge> | Set only a height. The width comes from the container, so a lone height clamps the box off ratio. |
+
+## Examples
+
+<DemoExample
+  :demo="aspectRatioCircle"
+  description="shape ellipse with ratio 1 clips the image to a circle. fit cover crops the image to the box."
+  locale="en"
+  title="Circle"
+/>
+
+<DemoExample
+  :demo="aspectRatioSquare"
+  description="ratio 1 with the default rectangle shape. fit cover fills the square."
+  locale="en"
+  title="Square"
+/>
+
+<DemoExample
+  :demo="aspectRatioWidescreen"
+  description="ratio 16 / 9. The width comes from Center, and the height follows the ratio."
+  locale="en"
+  title="Widescreen"
+/>
+
+<DemoExample
+  :demo="aspectRatioGallery"
+  description="A three-column grid of 4 / 3 frames. Each frame needs a parent with a definite width."
+  locale="en"
+  title="Image gallery"
+/>
+
+<DemoExample
+  :demo="aspectRatioSkeleton"
+  description="Without fit, the child sizes itself. A skeleton at 100% by 100% fills the 16 / 9 frame."
+  locale="en"
+  title="Skeleton"
+/>

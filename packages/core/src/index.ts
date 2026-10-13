@@ -10,6 +10,18 @@ export type {
   ImperativeAlertDialogOptions,
   ImperativeAlertDialogReturn,
 } from './AlertDialog/index.js'
+export { AppShell } from './AppShell/index.js'
+export type {
+  AppShellBreakpoint,
+  AppShellEmits,
+  AppShellHeight,
+  AppShellMobileNav,
+  AppShellProps,
+  AppShellSlots,
+  AppShellVariant,
+} from './AppShell/index.js'
+export { AspectRatio } from './AspectRatio/index.js'
+export type { AspectRatioFit, AspectRatioProps, AspectRatioShape, AspectRatioSlots } from './AspectRatio/index.js'
 export { Avatar, AvatarStatusDot } from './Avatar/index.js'
 export type {
   AvatarNamedSize,
@@ -140,6 +152,8 @@ export type {
 } from './CheckboxList/index.js'
 export { Citation } from './Citation/index.js'
 export type { CitationProps, CitationSource } from './Citation/index.js'
+export { ClickableCard } from './ClickableCard/index.js'
+export type { ClickableCardEmits, ClickableCardProps, ClickableCardSlots } from './ClickableCard/index.js'
 export {
   applyHighlightRanges,
   Code,
@@ -172,13 +186,50 @@ export type {
   SyntaxToken,
   TokenLine,
 } from './Code/index.js'
-export { Collapsible } from './Collapsible/index.js'
+export { Collapsible, CollapsibleGroup } from './Collapsible/index.js'
 export type {
   CollapsibleChevronPosition,
   CollapsibleEmits,
+  CollapsibleGroupDensity,
+  CollapsibleGroupEmits,
+  CollapsibleGroupProps,
+  CollapsibleGroupSlots,
+  CollapsibleGroupType,
+  CollapsibleGroupValue,
   CollapsibleProps,
   CollapsibleSlots,
 } from './Collapsible/index.js'
+export {
+  CommandPalette,
+  CommandPaletteEmpty,
+  CommandPaletteFooter,
+  CommandPaletteGroup,
+  CommandPaletteInput,
+  CommandPaletteItem,
+  CommandPaletteList,
+} from './CommandPalette/index.js'
+export type {
+  CommandPaletteEmits,
+  CommandPaletteGroupProps,
+  CommandPaletteInputProps,
+  CommandPaletteItemProps,
+  CommandPaletteItemSlotProps,
+  CommandPaletteListProps,
+  CommandPaletteProps,
+  CommandPaletteSlots,
+} from './CommandPalette/index.js'
+export { ComplexSelector } from './ComplexSelector/index.js'
+export type {
+  ComplexSelectorEmits,
+  ComplexSelectorHandle,
+  ComplexSelectorHandleRef,
+  ComplexSelectorProps,
+  ComplexSelectorSlotProps,
+  ComplexSelectorSlots,
+  ComplexSelectorState,
+  ComplexSelectorTriggerProps,
+  ComplexSelectorVariant,
+} from './ComplexSelector/index.js'
 export * from './composables/index.js'
 export {
   ContextMenu,
@@ -283,6 +334,8 @@ export type {
   FileInputStatus,
   FileInputValue,
 } from './FileInput/index.js'
+export { FormLayout } from './FormLayout/index.js'
+export type { FormLayoutDirection, FormLayoutProps, FormLayoutSlots, FormOptionality } from './FormLayout/index.js'
 export { Grid, GridSpan } from './Grid/index.js'
 export type {
   GridAlignment,
@@ -322,6 +375,21 @@ export { InputGroup } from './InputGroup/index.js'
 export type { InputGroupContext, InputGroupProps, InputGroupSize, InputGroupSlots } from './InputGroup/index.js'
 export { Kbd } from './Kbd/index.js'
 export type { KbdKeyAlias, KbdKeyName, KbdProps, KbdSpecialKey } from './Kbd/index.js'
+export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from './Layout/index.js'
+export type {
+  LayoutArea,
+  LayoutContentProps,
+  LayoutContentSlots,
+  LayoutFooterProps,
+  LayoutFooterSlots,
+  LayoutHeaderProps,
+  LayoutHeaderSlots,
+  LayoutHeight,
+  LayoutPanelProps,
+  LayoutPanelSlots,
+  LayoutProps,
+  LayoutSlots,
+} from './Layout/index.js'
 export { Lightbox, useLightbox } from './Lightbox/index.js'
 export type {
   LightboxEmits,
@@ -484,6 +552,18 @@ export type {
 } from './Radio/index.js'
 export { RadioList, RadioListItem } from './RadioList/index.js'
 export type { RadioListItemProps, RadioListProps } from './RadioList/index.js'
+export { ResizeHandle } from './Resizable/index.js'
+export type {
+  ResizeDirection,
+  ResizeHandleProps,
+  ResizeHandleSlots,
+  ResizePillPlacement,
+  ResizePosition,
+} from './Resizable/index.js'
+export { ScrollableArea } from './ScrollableArea/index.js'
+export type { ScrollableAreaProps, ScrollableAreaSlots } from './ScrollableArea/index.js'
+export { Section } from './Section/index.js'
+export type { SectionDivider, SectionProps, SectionSlots, SectionVariant } from './Section/index.js'
 export { SegmentedControl, SegmentedControlItem } from './SegmentedControl/index.js'
 export type {
   SegmentedControlContextValue,
@@ -495,6 +575,8 @@ export type {
   SegmentedControlSize,
   SegmentedControlSlots,
 } from './SegmentedControl/index.js'
+export { SelectableCard } from './SelectableCard/index.js'
+export type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } from './SelectableCard/index.js'
 export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
@@ -555,6 +637,21 @@ export type {
 } from './Stack/index.js'
 export { StatusDot } from './StatusDot/index.js'
 export type { StatusDotProps, StatusDotVariant } from './StatusDot/index.js'
+export { Step, Stepper } from './Stepper/index.js'
+export type {
+  StepIndicator,
+  StepperCollapsedVariant,
+  StepperDensity,
+  StepperHorizontalOptions,
+  StepperIndicatorPosition,
+  StepperOrientation,
+  StepperProps,
+  StepperSlots,
+  StepProgress,
+  StepProps,
+  StepSlots,
+  StepStatus,
+} from './Stepper/index.js'
 export { Switch } from './Switch/index.js'
 export type {
   SwitchChangeAction,
@@ -625,8 +722,16 @@ export type {
   UseTableSelectionStateConfig,
   UseTableSortableConfig,
 } from './Table/index.js'
-export { Tab, TabList } from './TabList/index.js'
-export type { TabListLayout, TabListProps, TabListSize, TabListTab, TabProps } from './TabList/index.js'
+export { Tab, TabList, TabMenu } from './TabList/index.js'
+export type {
+  TabListLayout,
+  TabListProps,
+  TabListSize,
+  TabListTab,
+  TabMenuOption,
+  TabMenuProps,
+  TabProps,
+} from './TabList/index.js'
 export { Text } from './Text/index.js'
 export type { TextAs, TextColor, TextDisplay, TextProps, TextSize, TextType, TextWeight } from './Text/index.js'
 export { TextArea } from './TextArea/index.js'

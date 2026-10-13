@@ -1,0 +1,60 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-section {
+    box-sizing: border-box;
+    margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
+    margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
+  }
+
+  .astryx-section:first-child {
+    margin-block-start: calc(-1 * var(--container-padding-block-start, 0px));
+  }
+
+  .astryx-section:last-child {
+    margin-block-end: calc(-1 * var(--container-padding-block-end, 0px));
+  }
+
+  .astryx-section__inner {
+    box-sizing: border-box;
+    height: 100%;
+    --layout-padding-own-outer-x: initial;
+    --layout-padding-own-outer-y: initial;
+    --_section-pad: var(--astryx-section-padding, var(--astryx-spacing-4, 16px));
+    padding-inline-start: var(--_section-inline-start, var(--_section-pad));
+    padding-inline-end: var(--_section-inline-end, var(--_section-pad));
+    padding-block-start: var(--_section-block-start, var(--_section-pad));
+    padding-block-end: var(--_section-block-end, var(--_section-pad));
+    --container-padding-inline-start: var(--_section-inline-start, var(--_section-pad));
+    --container-padding-inline-end: var(--_section-inline-end, var(--_section-pad));
+    --container-padding-block-start: var(--_section-block-start, var(--_section-pad));
+    --container-padding-block-end: var(--_section-block-end, var(--_section-pad));
+    --layout-padding-outer-x: var(--container-padding-inline-start);
+    --layout-padding-outer-y: var(--container-padding-block-start);
+    background-color: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-section__inner[data-variant='transparent'] {
+    background-color: transparent;
+  }
+
+  .astryx-section__inner[data-variant='muted'] {
+    background-color: var(--astryx-color-background-muted, #f1f1f1);
+  }
+
+  .astryx-section__inner[data-divider-top] {
+    border-block-start: 1px solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-section__inner[data-divider-bottom] {
+    border-block-end: 1px solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-section__inner[data-divider-start] {
+    border-inline-start: 1px solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-section__inner[data-divider-end] {
+    border-inline-end: 1px solid var(--astryx-color-border, #ebebeb);
+  }
+}

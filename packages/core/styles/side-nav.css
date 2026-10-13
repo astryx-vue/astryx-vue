@@ -17,6 +17,32 @@
     width: var(--astryx-side-nav-collapsed-width, 48px);
   }
 
+  .astryx-side-nav--topbar {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+    height: var(--astryx-spacing-12, 48px);
+    min-width: 0;
+    overflow: hidden;
+    background: inherit;
+  }
+
+  .astryx-side-nav--drawer {
+    width: 100%;
+    height: auto;
+  }
+
+  .astryx-side-nav__topbar-icons {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    margin-inline-start: auto;
+  }
+
   .astryx-side-nav__top,
   .astryx-side-nav__bottom {
     display: flex;

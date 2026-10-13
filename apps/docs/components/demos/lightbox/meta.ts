@@ -4,7 +4,7 @@ import { lightboxOverview as demo } from './index'
 export const meta = {
   slug: 'lightbox',
   group: 'Overlay',
-  order: 8,
+  order: 9,
   en: 'Lightbox',
   zh: '灯箱',
   demo,

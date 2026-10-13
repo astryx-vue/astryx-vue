@@ -7,6 +7,8 @@
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
 @import './previews/alert-dialog.css';
+@import './previews/app-shell.css';
+@import './previews/aspect-ratio.css';
 @import './previews/bottom-sheet.css';
 @import './previews/card.css';
 @import './previews/center.css';
@@ -17,13 +19,18 @@
 @import './previews/context-menu.css';
 @import './previews/dropdown-menu.css';
 @import './previews/empty-state.css';
+@import './previews/form-layout.css';
 @import './previews/grid.css';
 @import './previews/hover-card.css';
 @import './previews/kbd.css';
+@import './previews/layout.css';
 @import './previews/list.css';
 @import './previews/markdown.css';
 @import './previews/more-menu.css';
 @import './previews/overlay.css';
+@import './previews/resize-handle.css';
+@import './previews/scrollable-area.css';
+@import './previews/section.css';
 @import './previews/segmented-control.css';
 @import './previews/toggle-button.css';
 
@@ -414,6 +421,11 @@ html.dark .component-card__preview {
 
 /* 分页要按格子的真实宽度收起。预览默认把子元素收缩成内容宽度，
    容器查询会跟着内容越缩越窄，最后只剩「1 / 20」。 */
+.component-card__preview > .stepper-preview,
+.component-example__preview > .stepper-preview {
+  width: 100%;
+}
+
 .component-card__preview > .pagination-preview,
 .component-example__preview > .pagination-preview {
   display: flex;
@@ -1516,7 +1528,8 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  */
 .vp-doc .astryx-breadcrumbs :is(ol, ul, li),
 .vp-doc .astryx-list :is(ol, ul, li),
-.vp-doc .astryx-tree-list :is(ol, ul, li) {
+.vp-doc .astryx-tree-list :is(ol, ul, li),
+.vp-doc :is(ol.astryx-stepper, .astryx-step, .astryx-step-control) {
   all: revert-layer;
 }
 
