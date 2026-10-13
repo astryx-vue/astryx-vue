@@ -3,7 +3,7 @@
 @layer astryx.components {
   .astryx-heading {
     margin: 0;
-    color: var(--astryx-heading-foreground, var(--astryx-color-text-primary, #171717));
+    color: var(--astryx-heading-foreground, var(--astryx-color-text-primary, light-dark(#171717, #fafafa)));
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
     line-height: var(--astryx-heading-leading, 1.25);
   }
@@ -21,8 +21,12 @@
     display: inline;
   }
 
+  .astryx-heading--color-primary {
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  }
+
   .astryx-heading--color-secondary {
-    color: var(--astryx-color-text-secondary, #525252);
+    color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
   }
 
   .astryx-heading--color-accent {

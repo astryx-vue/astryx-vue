@@ -1,4 +1,5 @@
 import type { VNodeChild } from 'vue'
+import type { SyntaxThemeDefinition } from './syntaxTheme.js'
 
 /**
  * The text color of inline code.
@@ -80,6 +81,13 @@ export interface CodeBlockProps {
    * @default 'plaintext'
    */
   language?: string
+  /**
+   * Syntax colors for this block.
+   *
+   * Shorthand for wrapping the block in `SyntaxTheme`. A surrounding
+   * `SyntaxTheme` still themes every code component in that region.
+   */
+  syntaxTheme?: SyntaxThemeDefinition
   /** A filename or label shown in the header bar next to the language. */
   title?: string
   /**

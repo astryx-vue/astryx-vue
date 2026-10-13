@@ -1,0 +1,29 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * `display: contents` keeps the theme out of layout. Color and font still
+   * inherit through it, so unmarked text uses the primary text token.
+   */
+  .astryx-theme {
+    display: contents;
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    /*
+     * These aliases are also declared on :root, where var() is substituted
+     * once. Restating them here makes the subtree resolve them again, including
+     * semantic tokens this theme did not override but a parent theme did.
+     */
+    --astryx-text-foreground: var(--astryx-color-text-primary);
+    --astryx-text-supporting-foreground: var(--astryx-color-text-secondary);
+    --astryx-heading-foreground: var(--astryx-color-text-primary);
+    --astryx-button-primary-background: var(--astryx-color-accent);
+    --astryx-button-primary-foreground: var(--astryx-color-on-accent);
+    --astryx-button-secondary-background: var(--astryx-color-neutral);
+    --astryx-button-secondary-foreground: var(--astryx-color-text-primary);
+    --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
+    --astryx-button-focus: var(--astryx-color-accent);
+    --astryx-focus-outline-color: var(--astryx-color-accent);
+    --astryx-icon-primary-foreground: var(--astryx-color-icon-primary);
+  }
+}

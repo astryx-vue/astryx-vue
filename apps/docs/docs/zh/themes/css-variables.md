@@ -20,7 +20,7 @@ title: CSS 变量
 --astryx-color-text-primary: light-dark(#171717, #fafafa);
 ```
 
-`light-dark()` 看的是元素的 `color-scheme`，不是一套单独的 JavaScript 主题对象。Neutral 在 `:root` 和 `[data-astryx-theme='neutral']` 上把 `color-scheme` 设成 `light dark`，于是跟随系统或文档站自己的明暗开关。强制一边的写法在 [深色模式](/guide/dark-mode)。
+`light-dark()` 看的是元素的 `color-scheme`。Neutral 在 `:root` 和 `[data-astryx-theme='neutral']` 上把 `color-scheme` 设成 `light dark`，于是跟随系统或文档站自己的明暗开关。强制一边的写法在 [深色模式](/guide/dark-mode)。[`Theme`](/components/theme) 可以把同一批变量写到某一棵子树上。
 
 组件还会有自己的变量，例如按钮的 `--astryx-button-primary-background`。这些名字定义在 `packages/themes/neutral/<组件>.css`，通常引用语义 token。换外观时优先改语义 token；只有某个组件要单独偏离时，再改它自己的变量。
 
