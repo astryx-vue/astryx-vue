@@ -97,7 +97,7 @@ function formSource(zh: boolean): string {
     </script>
 
     <template>
-      <div class="page">
+      <div class="page form-layout-preview">
         <VStack :gap="5">
           <Heading :level="1">
             {{ title }}
@@ -213,6 +213,7 @@ function sideNavSource(zh: boolean): string {
     </script>
 
     <template>
+      <div class="app-shell-preview">
       <AppShell :content-padding="6">
         <template #sideNav>
           <SideNav>
@@ -243,6 +244,7 @@ function sideNavSource(zh: boolean): string {
           </Text>
         </VStack>
       </AppShell>
+      </div>
     </template>
 
     <style scoped>

@@ -22,12 +22,14 @@ const props = defineProps<{
   theme: ThemeState
   locale: PlaygroundLocale
   density: DensityPreset['id'] | null
+  isNeutral: boolean
 }>()
 
 const emit = defineEmits<{
   field: [key: keyof ThemeState, value: ThemeState[keyof ThemeState]]
   color: [key: ThemeColorKey, value: string]
   density: [id: DensityPreset['id']]
+  resetTheme: []
 }>()
 
 const copy = computed(() => playgroundCopy(props.locale))
@@ -127,7 +129,15 @@ function onCustomFont(key: 'customHeadingFont' | 'customBodyFont', event: Event)
 
 <template>
   <div class="theme-editor">
-    <div class="theme-editor__row">
+    <div class="theme-editor__toolbar">
+      <button
+        type="button"
+        class="theme-editor__pill"
+        :aria-pressed="isNeutral"
+        @click="emit('resetTheme')"
+      >
+        {{ copy.neutral }}
+      </button>
       <button
         type="button"
         class="theme-editor__switch"

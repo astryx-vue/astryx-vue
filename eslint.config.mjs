@@ -7,6 +7,7 @@ export default antfu({
     '**/.vitepress/cache/**',
     '**/coverage/**',
     '**/dist/**',
+    'apps/docs/public/monaco/**',
   ],
   react: false,
   typescript: true,

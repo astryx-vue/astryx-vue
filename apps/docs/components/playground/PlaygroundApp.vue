@@ -3,7 +3,7 @@ import type { PlaygroundFrameMessage, PlaygroundHostMessage, PlaygroundLocale } 
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
 import { withBase } from 'vitepress'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import PlaygroundCodeEditor from './PlaygroundCodeEditor.vue'
+import PlaygroundMonacoEditor from './PlaygroundMonacoEditor.vue'
 import PlaygroundThemeEditor from './PlaygroundThemeEditor.vue'
 import { isFrameMessage, PLAYGROUND_CHANNEL } from './protocol'
 import { exportThemeCss, exportThemeJson, fontStylesheetHref, previewCss } from './theme'
@@ -27,7 +27,8 @@ const frameReady = ref(false)
 const sawPreview = ref(false)
 const errorText = ref('')
 const statusText = ref('')
-const editorSize = ref('42%')
+const monacoEditor = ref<InstanceType<typeof PlaygroundMonacoEditor> | null>(null)
+const editorSize = ref('440px')
 const dialogMode = ref<'confirm-template' | 'confirm-theme' | 'share' | 'export' | null>(null)
 const dialogResult = ref(false)
 let resolveDialog: ((value: boolean) => void) | null = null
@@ -126,19 +127,6 @@ function onDialogClose(): void {
 async function chooseTemplate(id: string): Promise<void> {
   templateOpen.value = false
   await loadTemplate(id)
-}
-
-async function openShare(): Promise<void> {
-  templateOpen.value = false
-  await buildShareUrl()
-  dialogMode.value = 'share'
-  dialog.value?.showModal()
-}
-
-function openExport(): void {
-  templateOpen.value = false
-  dialogMode.value = 'export'
-  dialog.value?.showModal()
 }
 
 async function copyShareUrl(): Promise<void> {
@@ -291,6 +279,25 @@ function onDensity(id: DensityPreset['id']): void {
 function templateLabel(id: string): string {
   return copy.templateNames[id] ?? id
 }
+
+function formatCode(): void {
+  if (tab.value !== 'code') {
+    tab.value = 'code'
+    pane.value = 'edit'
+  }
+  monacoEditor.value?.formatDocument()
+}
+
+function togglePreviewDark(): void {
+  theme.dark = !theme.dark
+}
+
+async function openExportDialog(): Promise<void> {
+  templateOpen.value = false
+  await buildShareUrl()
+  dialogMode.value = 'export'
+  dialog.value?.showModal()
+}
 </script>
 
 <template>
@@ -301,134 +308,192 @@ function templateLabel(id: string): string {
     :data-fullscreen="fullscreen ? 'true' : 'false'"
     :style="{ '--editor-size': editorSize }"
   >
-    <div class="playground__toolbar">
-      <a class="playground__brand" :href="homeHref" :aria-label="copy.title">
-        <img :src="logoHref" alt="" width="22" height="22">
-      </a>
-      <h1 class="playground__word">
-        {{ copy.title }}
-      </h1>
-      <div class="playground__tabs" role="tablist" :aria-label="copy.code">
-        <button type="button" class="playground__icon-button" role="tab" :aria-selected="tab === 'code'" :aria-label="copy.code" @click="tab = 'code'">
-          <span class="playground__icon" aria-hidden="true"><span class="i-carbon-code" /></span>
-        </button>
-        <button type="button" class="playground__text-button" role="tab" :aria-selected="tab === 'theme'" @click="tab = 'theme'">
-          {{ copy.theme }}
-        </button>
-      </div>
+    <div class="playground__frame">
+      <aside class="playground__rail" :aria-label="copy.title">
+        <a class="playground__rail-home" :href="homeHref" :aria-label="copy.title">
+          <img :src="logoHref" alt="" width="20" height="20">
+        </a>
+        <div class="playground__rail-tabs" role="tablist" :aria-label="copy.code">
+          <button
+            type="button"
+            class="playground__rail-tab"
+            role="tab"
+            :aria-selected="tab === 'code'"
+            :aria-label="copy.code"
+            @click="tab = 'code'"
+          >
+            <span class="playground__icon" aria-hidden="true"><span class="i-carbon-code" /></span>
+          </button>
+          <button
+            type="button"
+            class="playground__rail-tab"
+            role="tab"
+            :aria-selected="tab === 'theme'"
+            :aria-label="copy.theme"
+            @click="tab = 'theme'"
+          >
+            <span class="playground__icon" aria-hidden="true"><span class="i-carbon-color-palette" /></span>
+          </button>
+        </div>
+      </aside>
 
-      <div ref="templateRoot" class="playground__menu-wrap">
-        <button
-          type="button"
-          class="playground__text-button"
-          :aria-expanded="templateOpen"
-          aria-haspopup="menu"
-          @click="templateOpen = !templateOpen"
+      <div ref="bodyEl" class="playground__surface">
+        <div
+          ref="editorPane"
+          class="playground__left"
+          :class="{ 'playground__left--hidden': pane === 'preview' }"
         >
-          <span class="playground__button-text">{{ copy.templates }}</span>
-          <span class="playground__icon" aria-hidden="true"><span class="i-carbon-chevron-down" /></span>
-        </button>
-        <div v-if="templateOpen" class="playground__menu" role="menu">
-          <div v-for="group in groups" :key="group.id" class="playground__menu-group" role="group" :aria-label="group.label">
-            <p>{{ group.label }}</p>
-            <button
-              v-for="item in group.items"
-              :key="item.id"
-              type="button"
-              role="menuitem"
-              :aria-current="item.id === templateId ? 'true' : undefined"
-              @click="chooseTemplate(item.id)"
-            >
-              {{ templateLabel(item.id) }}
-            </button>
+          <header class="playground__left-header">
+            <h1 class="playground__word">
+              {{ copy.title }}
+            </h1>
+            <div class="playground__left-actions">
+              <button
+                type="button"
+                class="playground__pill playground__pill--icon"
+                :aria-label="copy.formatCode"
+                :disabled="tab !== 'code'"
+                @click="formatCode"
+              >
+                <span class="playground__icon" aria-hidden="true"><span class="i-carbon-magic-wand" /></span>
+              </button>
+              <button type="button" class="playground__pill" :aria-pressed="tab === 'theme'" @click="tab = 'theme'">
+                {{ copy.theme }}
+              </button>
+              <div ref="templateRoot" class="playground__menu-wrap">
+                <button
+                  type="button"
+                  class="playground__pill"
+                  :aria-expanded="templateOpen"
+                  aria-haspopup="menu"
+                  @click="templateOpen = !templateOpen"
+                >
+                  <span class="playground__button-text">{{ copy.templates }}</span>
+                  <span class="playground__icon" aria-hidden="true"><span class="i-carbon-chevron-down" /></span>
+                </button>
+                <div v-if="templateOpen" class="playground__menu" role="menu">
+                  <div v-for="group in groups" :key="group.id" class="playground__menu-group" role="group" :aria-label="group.label">
+                    <p>{{ group.label }}</p>
+                    <button
+                      v-for="item in group.items"
+                      :key="item.id"
+                      type="button"
+                      role="menuitem"
+                      :aria-current="item.id === templateId ? 'true' : undefined"
+                      @click="chooseTemplate(item.id)"
+                    >
+                      {{ templateLabel(item.id) }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="playground__left-body">
+            <PlaygroundMonacoEditor
+              v-if="hydrated"
+              v-show="tab === 'code'"
+              ref="monacoEditor"
+              :model-value="code"
+              :label="copy.code"
+              :active="tab === 'code'"
+              @update:model-value="code = $event"
+            />
+            <PlaygroundThemeEditor
+              v-if="hydrated"
+              v-show="tab === 'theme'"
+              :theme="theme"
+              :locale="locale"
+              :density="density"
+              :is-neutral="isNeutral"
+              @field="onField"
+              @color="onColor"
+              @density="onDensity"
+              @reset-theme="resetTheme"
+            />
           </div>
         </div>
-      </div>
 
-      <button type="button" class="playground__text-button playground__neutral" :aria-pressed="isNeutral" @click="resetTheme">
-        {{ copy.neutral }}
-      </button>
-
-      <div class="playground__spacer" />
-      <a class="playground__locale" :href="localeHref">{{ locale === 'zh' ? 'EN' : '中文' }}</a>
-
-      <div class="playground__panes" role="radiogroup" :aria-label="copy.preview">
-        <button type="button" role="radio" :aria-checked="pane === 'edit'" @click="pane = 'edit'">
-          {{ copy.edit }}
-        </button>
-        <button type="button" role="radio" :aria-checked="pane === 'preview'" @click="pane = 'preview'">
-          {{ copy.preview }}
-        </button>
-      </div>
-
-      <span v-if="!sawPreview" class="playground__status">{{ copy.loading }}</span>
-      <button type="button" class="playground__icon-button" :aria-label="copy.reload" @click="reloadPreview">
-        <span class="playground__icon" aria-hidden="true"><span class="i-carbon-renew" /></span>
-      </button>
-      <div class="playground__device" role="radiogroup" :aria-label="copy.preview">
-        <button type="button" role="radio" :aria-checked="device === 'desktop'" :aria-label="copy.deviceDesktop" @click="device = 'desktop'">
-          <span class="playground__icon" aria-hidden="true"><span class="i-carbon-laptop" /></span>
-        </button>
-        <button type="button" role="radio" :aria-checked="device === 'phone'" :aria-label="copy.devicePhone" @click="device = 'phone'">
-          <span class="playground__icon" aria-hidden="true"><span class="i-carbon-mobile" /></span>
-        </button>
-      </div>
-      <button type="button" class="playground__icon-button playground__fullscreen" :aria-label="fullscreen ? copy.exitFullscreen : copy.fullscreen" :aria-pressed="fullscreen" @click="fullscreen = !fullscreen">
-        <span class="playground__icon" aria-hidden="true"><span :class="fullscreen ? 'i-carbon-exit' : 'i-carbon-fit-to-screen'" /></span>
-      </button>
-      <button type="button" class="playground__icon-button playground__share" :aria-label="copy.share" @click="openShare">
-        <span class="playground__icon" aria-hidden="true"><span class="i-carbon-share" /></span>
-      </button>
-      <button type="button" class="playground__export" @click="openExport">
-        {{ copy.exportTheme }}
-        <span class="playground__icon" aria-hidden="true"><span class="i-carbon-launch" /></span>
-      </button>
-    </div>
-
-    <div ref="bodyEl" class="playground__body">
-      <section ref="editorPane" class="playground__editor">
-        <PlaygroundCodeEditor
-          v-if="hydrated"
-          v-show="tab === 'code'"
-          :model-value="code"
-          :label="copy.code"
-          :active="tab === 'code'"
-          @update:model-value="code = $event"
+        <button
+          type="button"
+          class="playground__divider"
+          :aria-label="copy.resize"
+          @pointerdown="onDividerDown"
+          @keydown="onDividerKey"
         />
-        <PlaygroundThemeEditor
-          v-if="hydrated"
-          v-show="tab === 'theme'"
-          :theme="theme"
-          :locale="locale"
-          :density="density"
-          @field="onField"
-          @color="onColor"
-          @density="onDensity"
-        />
-      </section>
-      <button
-        type="button"
-        class="playground__divider"
-        :aria-label="copy.resize"
-        @pointerdown="onDividerDown"
-        @keydown="onDividerKey"
-      />
-      <section class="playground__preview" :data-device="device">
-        <p class="playground__note">
-          {{ copy.note }}
-        </p>
-        <pre v-if="errorText" class="playground__error">{{ errorText }}</pre>
-        <div class="playground__stage">
-          <iframe
-            ref="iframe"
-            class="playground__iframe"
-            :title="copy.preview"
-            :src="frameSrc"
-            sandbox="allow-scripts allow-same-origin allow-forms"
-            @load="onFrameLoad"
-          />
+
+        <section
+          class="playground__preview"
+          :class="{ 'playground__preview--hidden': pane === 'edit' }"
+          :data-device="device"
+        >
+          <header class="playground__preview-toolbar">
+            <div class="playground__preview-toolbar-start">
+              <button type="button" class="playground__ghost-icon" :aria-label="copy.reload" @click="reloadPreview">
+                <span class="playground__icon" aria-hidden="true"><span class="i-carbon-renew" /></span>
+              </button>
+            </div>
+            <div class="playground__preview-toolbar-center">
+              <button
+                type="button"
+                class="playground__ghost-icon"
+                :aria-label="copy.darkMode"
+                :aria-pressed="theme.dark"
+                @click="togglePreviewDark"
+              >
+                <span class="playground__icon" aria-hidden="true"><span :class="theme.dark ? 'i-carbon-sun' : 'i-carbon-moon'" /></span>
+              </button>
+              <div class="playground__device" role="radiogroup" :aria-label="copy.preview">
+                <button type="button" class="playground__device-item" role="radio" :aria-checked="device === 'desktop'" :aria-label="copy.deviceDesktop" @click="device = 'desktop'">
+                  <span class="playground__icon" aria-hidden="true"><span class="i-carbon-laptop" /></span>
+                </button>
+                <button type="button" class="playground__device-item" role="radio" :aria-checked="device === 'phone'" :aria-label="copy.devicePhone" @click="device = 'phone'">
+                  <span class="playground__icon" aria-hidden="true"><span class="i-carbon-mobile" /></span>
+                </button>
+              </div>
+              <button type="button" class="playground__ghost-icon playground__fullscreen" :aria-label="fullscreen ? copy.exitFullscreen : copy.fullscreen" :aria-pressed="fullscreen" @click="fullscreen = !fullscreen">
+                <span class="playground__icon" aria-hidden="true"><span :class="fullscreen ? 'i-carbon-exit' : 'i-carbon-fit-to-screen'" /></span>
+              </button>
+            </div>
+            <div class="playground__preview-toolbar-end">
+              <span class="playground__status" :data-ready="sawPreview ? 'true' : 'false'">
+                {{ sawPreview ? copy.ready : copy.loading }}
+              </span>
+              <button type="button" class="playground__export" @click="openExportDialog">
+                {{ copy.exportTheme }}
+                <span class="playground__icon" aria-hidden="true"><span class="i-carbon-launch" /></span>
+              </button>
+            </div>
+          </header>
+          <p class="playground__note">
+            {{ copy.note }}
+          </p>
+          <pre v-if="errorText" class="playground__error">{{ errorText }}</pre>
+          <div class="playground__stage-wrap">
+            <div class="playground__stage">
+              <iframe
+                ref="iframe"
+                class="playground__iframe"
+                :title="copy.preview"
+                :src="frameSrc"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                @load="onFrameLoad"
+              />
+            </div>
+          </div>
+        </section>
+
+        <a class="playground__locale" :href="localeHref">{{ locale === 'zh' ? 'EN' : '中文' }}</a>
+
+        <div class="playground__panes" role="radiogroup" :aria-label="copy.preview">
+          <button type="button" class="playground__pill" role="radio" :aria-checked="pane === 'edit'" @click="pane = 'edit'">
+            {{ copy.edit }}
+          </button>
+          <button type="button" class="playground__pill" role="radio" :aria-checked="pane === 'preview'" @click="pane = 'preview'">
+            {{ copy.preview }}
+          </button>
         </div>
-      </section>
+      </div>
     </div>
     <p class="playground__live" aria-live="polite">
       {{ statusText }}
@@ -464,6 +529,15 @@ function templateLabel(id: string): string {
       </template>
       <template v-else-if="dialogMode === 'export'">
         <h2>{{ copy.exportTitle }}</h2>
+        <label class="playground__dialog-label" for="playground-export-share-url">
+          {{ copy.shareTitle }}
+          <input id="playground-export-share-url" type="text" readonly :value="shareUrl">
+        </label>
+        <div class="playground__dialog-actions playground__dialog-actions--start">
+          <button type="button" @click="copyShareUrl">
+            {{ copy.copyUrl }}
+          </button>
+        </div>
         <div class="playground__dialog-actions">
           <button type="button" @click="downloadCss">
             {{ copy.downloadCss }}

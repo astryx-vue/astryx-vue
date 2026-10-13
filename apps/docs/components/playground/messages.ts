@@ -3,6 +3,7 @@ import type { PlaygroundLocale } from './protocol'
 export interface PlaygroundCopy {
   title: string
   code: string
+  formatCode: string
   theme: string
   templates: string
   neutral: string
@@ -14,6 +15,7 @@ export interface PlaygroundCopy {
   edit: string
   preview: string
   loading: string
+  ready: string
   deviceDesktop: string
   devicePhone: string
   resize: string
@@ -53,6 +55,7 @@ export interface PlaygroundCopy {
 const zh: PlaygroundCopy = {
   title: '演练场',
   code: '代码',
+  formatCode: '格式化代码',
   theme: '主题',
   templates: '模板',
   neutral: 'Neutral',
@@ -64,6 +67,7 @@ const zh: PlaygroundCopy = {
   edit: '编辑',
   preview: '预览',
   loading: '构建中…',
+  ready: '构建完成',
   deviceDesktop: '桌面预览',
   devicePhone: '手机预览',
   resize: '调整编辑器宽度',
@@ -114,6 +118,7 @@ const zh: PlaygroundCopy = {
 const en: PlaygroundCopy = {
   title: 'Playground',
   code: 'Code',
+  formatCode: 'Format code',
   theme: 'Themes',
   templates: 'Templates',
   neutral: 'Neutral',
@@ -125,6 +130,7 @@ const en: PlaygroundCopy = {
   edit: 'Edit',
   preview: 'Preview',
   loading: 'Building…',
+  ready: 'Build finished',
   deviceDesktop: 'Desktop preview',
   devicePhone: 'Phone preview',
   resize: 'Resize editor',
