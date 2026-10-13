@@ -123,7 +123,7 @@
       "source": "./src/Section/index.ts",
       "types": "./dist/Section/index.d.ts",
       "import": "./dist/Section/index.js"
-  },
+    },
     "./SelectableCard": {
       "source": "./src/SelectableCard/index.ts",
       "types": "./dist/SelectableCard/index.d.ts",
@@ -609,7 +609,7 @@
       "./Section": {
         "types": "./dist/Section/index.d.ts",
         "import": "./dist/Section/index.js"
-    },
+      },
       "./SelectableCard": {
         "types": "./dist/SelectableCard/index.d.ts",
         "import": "./dist/SelectableCard/index.js"
