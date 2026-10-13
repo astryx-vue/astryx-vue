@@ -22,4 +22,4 @@ Those attributes set `color-scheme` to `dark` or `light`. You do not swap styles
 
 The docs site's switch is VitePress `appearance`. Dark mode adds `dark` on `html` and sets `color-scheme: dark`, so Neutral's `light-dark()` uses the dark stop. That class belongs to the docs site. It is not an API the components require. In an app, use `data-astryx-color-mode` or set `color-scheme` yourself.
 
-There is no JavaScript theme object, and there is no parallel set of dark token names. To change a stop, override the original variable and write both sides inside `light-dark()`. See [Extending a theme](/en/themes/extending).
+`Theme` can force one side for a subtree with `mode="dark"` or `mode="light"`. See [Theme](/en/components/theme). There is no parallel set of dark token names. To change a stop, override the original variable and write both sides inside `light-dark()`. See [Extending a theme](/en/themes/extending).

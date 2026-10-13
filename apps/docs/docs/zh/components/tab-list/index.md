@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tabListBasic, tabListDivider, tabListSizes } from '../../../../components/demos/tab-list'
+import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListStatus } from '../../../../components/demos/tab-list'
 </script>
 
 ## 使用方法
@@ -50,22 +50,43 @@ const value = ref('overview')
 ## 示例
 
 <DemoExample
-  :demo="tabListBasic"
-  description="最基础的用法：点击标签即切换选中项，v-model:value 会同步更新。"
+  :demo="tabListFill"
+  description="layout 设为 fill 后，标签平分整行宽度，底下再加一条分隔线。"
   locale="zh"
-  title="基础用法"
+  title="撑满宽度"
 />
 
 <DemoExample
-  :demo="tabListSizes"
-  description="标签提供 sm、md、lg 三种尺寸，根据所在页面的层次和信息密度选择即可。"
+  :demo="tabListActions"
+  description="标签靠左，筛选和新建按钮靠右。底部分隔线打开时，按钮尺寸跟标签一致。"
   locale="zh"
-  title="尺寸"
+  title="带操作"
 />
 
 <DemoExample
-  :demo="tabListDivider"
-  description="开启 has-divider 后，标签列表底部会显示一条分隔线，让标签区与下方内容的分层更清晰。"
+  :demo="tabListBadges"
+  description="标签文字后面放徽标。需要马上处理的数量用 error，普通计数用 neutral。"
   locale="zh"
-  title="带分隔线"
+  title="带徽标"
+/>
+
+<DemoExample
+  :demo="tabListIcons"
+  description="标签文字前面放一个图标，用来区分页面。"
+  locale="zh"
+  title="带图标"
+/>
+
+<DemoExample
+  :demo="tabListOverflow"
+  description="放不下的标签收进 TabMenu。选中菜单里的一项后，它会成为当前标签。"
+  locale="zh"
+  title="溢出菜单"
+/>
+
+<DemoExample
+  :demo="tabListStatus"
+  description="标签文字后面放状态点，一眼看出环境是否正常。"
+  locale="zh"
+  title="带状态点"
 />

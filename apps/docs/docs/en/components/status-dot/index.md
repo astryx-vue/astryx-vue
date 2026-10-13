@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { statusDotVariants, statusDotPulsing } from '../../../../components/demos/status-dot'
+import { statusDotIndicators, statusDotPulsing, statusDotVariants } from '../../../../components/demos/status-dot'
 </script>
 
 ## Usage
@@ -37,15 +37,22 @@ import { StatusDot } from '@astryx-vue/core/StatusDot'
 ## Examples
 
 <DemoExample
-  :demo="statusDotVariants"
-  description="Status dots come in neutral, info, success, warning, and error semantic variants."
+  :demo="statusDotPulsing"
+  description="isPulsing makes the dot breathe, for a state that is still in progress."
   locale="en"
-  title="Variants"
+  title="Pulsing"
 />
 
 <DemoExample
-  :demo="statusDotPulsing"
-  description="Set isPulsing to make the dot pulse, indicating an active state."
+  :demo="statusDotIndicators"
+  description="A label beside the dot for online, away, offline, and unknown."
   locale="en"
-  title="Pulsing"
+  title="Status indicators"
+/>
+
+<DemoExample
+  :demo="statusDotVariants"
+  description="Neutral, info, success, warning, and error, side by side."
+  locale="en"
+  title="Variants"
 />

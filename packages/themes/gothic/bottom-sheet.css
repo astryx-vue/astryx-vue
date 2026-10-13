@@ -1,0 +1,13 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='gothic'] {
+    --astryx-bottom-sheet-background: var(--astryx-color-background-surface);
+    --astryx-bottom-sheet-foreground: var(--astryx-color-text-primary);
+    --astryx-bottom-sheet-border: var(--astryx-color-border);
+    --astryx-bottom-sheet-scrim: var(--astryx-color-overlay);
+    --astryx-bottom-sheet-handle-background: var(--astryx-color-background-surface);
+    --astryx-bottom-sheet-focus: var(--astryx-color-accent);
+    --astryx-bottom-sheet-shadow: var(--astryx-shadow-low);
+  }
+}

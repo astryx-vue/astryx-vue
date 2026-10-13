@@ -1,0 +1,250 @@
+/**
+ * Stone semantic tokens.
+ *
+ * Warm stone and slate. Figtree for text, Montserrat for headings. Values follow @astryxdesign/theme-stone 0.7.0.
+ * Names match Neutral, with an --astryx- prefix.
+ * A token present in the upstream theme.css replaces the Neutral value.
+ * Tokens the theme does not set keep the shared default from Neutral's base.
+ * JetBrains Mono stays on the shared fonts.css stack.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='stone'] {
+    color-scheme: light dark;
+    background-color: var(--astryx-color-background-body);
+    color: var(--astryx-color-text-primary);
+    font-family: var(--astryx-font-family-body);
+    font-size: var(--astryx-text-body-size);
+    line-height: var(--astryx-text-body-leading);
+
+    --astryx-color-accent: light-dark(#25252a, #f3f3f5);
+    --astryx-color-accent-muted: light-dark(#25252a14, #f3f3f520);
+    --astryx-color-on-accent: light-dark(#ffffff, #25252a);
+    --astryx-color-neutral: light-dark(#25252a0f, #f3f3f51a);
+    --astryx-color-background-surface: light-dark(#ffffff, #1b1b1f);
+    --astryx-color-background-body: light-dark(#f3f3f5, #111015);
+    --astryx-color-overlay: light-dark(#25252a80, #28282acc);
+    --astryx-color-overlay-hover: light-dark(#25252a0d, #f3f3f50d);
+    --astryx-color-overlay-pressed: light-dark(#25252a1a, #f3f3f51a);
+    --astryx-color-background-muted: light-dark(#e2e2e8, #3b3b3f);
+
+    --astryx-color-text-primary: light-dark(#25252a, #f3f3f5);
+    --astryx-color-text-secondary: light-dark(#5e5e63, #ababb0);
+    --astryx-color-text-disabled: light-dark(#d7d7da, #5e5e61);
+    --astryx-color-text-accent: light-dark(#25252a, #f3f3f5);
+    --astryx-color-on-dark: #FFFFFF;
+    --astryx-color-on-light: light-dark(#25252a, #28282a);
+
+    --astryx-color-icon-accent: light-dark(#25252a, #f3f3f5);
+    --astryx-color-icon-primary: light-dark(#25252a, #f3f3f5);
+    --astryx-color-icon-secondary: light-dark(#83838a, #9d9da3);
+    --astryx-color-icon-disabled: light-dark(#d7d7da, #5e5e61);
+
+    --astryx-color-background-card: light-dark(#FFFFFF, #242325);
+    --astryx-color-background-popover: light-dark(#ffffff, #25252a);
+    --astryx-color-background-inverted: light-dark(#25252a, #f3f3f5);
+    --astryx-color-background-error-inverted: light-dark(#aa071e, #e3193b);
+
+    --astryx-color-success: light-dark(#374c36, #b4cdb2);
+    --astryx-color-success-muted: light-dark(#d0e9ce, #b4cdb2);
+    --astryx-color-on-success: light-dark(#374c36, #d0e9ce);
+    --astryx-color-error: light-dark(#58413e, #dcc0bc);
+    --astryx-color-error-muted: light-dark(#f9dcd7, #dcc0bc);
+    --astryx-color-on-error: light-dark(#58413e, #f9dcd7);
+    --astryx-color-warning: light-dark(#524622, #d7c59c);
+    --astryx-color-warning-muted: light-dark(#f4e1b7, #d7c59c);
+    --astryx-color-on-warning: light-dark(#524622, #f4e1b7);
+
+    --astryx-color-border: light-dark(#e2e2e8, #f3f3f51a);
+    --astryx-color-border-emphasized: light-dark(#83838a, #5e5e61);
+
+    --astryx-color-skeleton: light-dark(#d4d4da, #5e5e64);
+    --astryx-color-track: light-dark(#ccd3db, #5a5e66);
+    --astryx-color-shadow: light-dark(#25252a1a, #0000004d);
+    --astryx-color-tint-hover: light-dark(black, white);
+
+    --astryx-color-background-blue: light-dark(#d7e4f5, #485362);
+    --astryx-color-border-blue: light-dark(#c9d6e7, #313c4a);
+    --astryx-color-icon-blue: light-dark(#3c4856, #d7e4f5);
+    --astryx-color-text-blue: light-dark(#3c4856, #d7e4f5);
+
+    --astryx-color-background-cyan: light-dark(#cce8e5, #3e5755);
+    --astryx-color-border-cyan: light-dark(#bedad7, #28403e);
+    --astryx-color-icon-cyan: light-dark(#334b49, #cce8e5);
+    --astryx-color-text-cyan: light-dark(#334b49, #cce8e5);
+
+    --astryx-color-background-gray: light-dark(#e2e2e8, #525257);
+    --astryx-color-border-gray: light-dark(#d4d4da, #3b3b3f);
+    --astryx-color-icon-gray: light-dark(#46464b, #e2e2e8);
+    --astryx-color-text-gray: light-dark(#46464b, #e2e2e8);
+
+    --astryx-color-background-green: light-dark(#d0e9ce, #425841);
+    --astryx-color-border-green: light-dark(#c2dbc0, #2b402b);
+    --astryx-color-icon-green: light-dark(#374c36, #d0e9ce);
+    --astryx-color-text-green: light-dark(#374c36, #d0e9ce);
+
+    --astryx-color-background-orange: light-dark(#ffdcbb, #684d32);
+    --astryx-color-border-orange: light-dark(#f1ceae, #4f361c);
+    --astryx-color-icon-orange: light-dark(#5b4227, #ffdcbb);
+    --astryx-color-text-orange: light-dark(#5b4227, #ffdcbb);
+
+    --astryx-color-background-pink: light-dark(#f0dde8, #5e4e57);
+    --astryx-color-border-pink: light-dark(#e2cfda, #463740);
+    --astryx-color-icon-pink: light-dark(#52424c, #f0dde8);
+    --astryx-color-text-pink: light-dark(#52424c, #f0dde8);
+
+    --astryx-color-background-purple: light-dark(#e8dff3, #564f60);
+    --astryx-color-border-purple: light-dark(#d9d1e5, #3f3949);
+    --astryx-color-icon-purple: light-dark(#4b4454, #e8dff3);
+    --astryx-color-text-purple: light-dark(#4b4454, #e8dff3);
+
+    --astryx-color-background-red: light-dark(#f9dcd7, #644d49);
+    --astryx-color-border-red: light-dark(#ebcec9, #4c3633);
+    --astryx-color-icon-red: light-dark(#58413e, #f9dcd7);
+    --astryx-color-text-red: light-dark(#58413e, #f9dcd7);
+
+    --astryx-color-background-teal: light-dark(#d4e7dc, #46564d);
+    --astryx-color-border-teal: light-dark(#c6d9ce, #303f36);
+    --astryx-color-icon-teal: light-dark(#3b4a41, #d4e7dc);
+    --astryx-color-text-teal: light-dark(#3b4a41, #d4e7dc);
+
+    --astryx-color-background-yellow: light-dark(#f4e1b7, #5e512d);
+    --astryx-color-border-yellow: light-dark(#e5d3a9, #463a18);
+    --astryx-color-icon-yellow: light-dark(#524622, #f4e1b7);
+    --astryx-color-text-yellow: light-dark(#524622, #f4e1b7);
+
+    --astryx-spacing-0: 0;
+    --astryx-spacing-0-5: 2px;
+    --astryx-spacing-1: 4px;
+    --astryx-spacing-1-5: 6px;
+    --astryx-spacing-2: 8px;
+    --astryx-spacing-3: 12px;
+    --astryx-spacing-4: 16px;
+    --astryx-spacing-5: 20px;
+    --astryx-spacing-6: 24px;
+    --astryx-spacing-7: 28px;
+    --astryx-spacing-8: 32px;
+    --astryx-spacing-9: 36px;
+    --astryx-spacing-10: 40px;
+    --astryx-spacing-11: 44px;
+    --astryx-spacing-12: 48px;
+
+    --astryx-size-element-sm: 28px;
+    --astryx-size-element-md: 32px;
+    --astryx-size-element-lg: 36px;
+
+    --astryx-border-width: 1px;
+
+    --astryx-focus-outline-width: 2px;
+    --astryx-focus-outline-style: solid;
+    --astryx-focus-outline-color: var(--astryx-color-accent);
+    --astryx-focus-outline-offset: 3px;
+
+    --astryx-radius-none: 0px;
+    --astryx-radius-inner: 0.25rem;
+    --astryx-radius-element: 0.5rem;
+    --astryx-radius-container: 0.75rem;
+    --astryx-radius-page: 1.5rem;
+    --astryx-radius-chat: 28px;
+    --astryx-radius-full: 9999px;
+
+    --astryx-shadow-low: 0 2px 4px #28282A0D, 0 4px 8px #28282A1A;
+    --astryx-shadow-med: 0 2px 4px #28282A0D, 0 4px 12px #28282A1A;
+    --astryx-shadow-high: 0 4px 6px #28282A1A, 0 12px 24px #28282A26;
+    --astryx-shadow-inset-hover: inset 0px 0px 0px 2px #28282A30;
+    --astryx-shadow-inset-selected: inset 0px 0px 0px 2px #28282A50;
+    --astryx-shadow-inset-success: inset 0px 0px 0px 2px #83838a30;
+    --astryx-shadow-inset-warning: inset 0px 0px 0px 2px #83838a30;
+    --astryx-shadow-inset-error: inset 0px 0px 0px 2px #83838a30;
+
+    --astryx-duration-fast-min: 95ms;
+    --astryx-duration-fast: 125ms;
+    --astryx-duration-fast-max: 165ms;
+    --astryx-duration-medium-min: 225ms;
+    --astryx-duration-medium: 300ms;
+    --astryx-duration-medium-max: 400ms;
+    --astryx-duration-slow-min: 525ms;
+    --astryx-duration-slow: 700ms;
+    --astryx-duration-slow-max: 935ms;
+
+    --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
+
+    --astryx-font-family-body: Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --astryx-font-family-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --astryx-font-family-heading: Montserrat, 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    --astryx-font-size-4xs: 0.3125rem;
+    --astryx-font-size-3xs: 0.375rem;
+    --astryx-font-size-2xs: 0.4375rem;
+    --astryx-font-size-xs: 0.5625rem;
+    --astryx-font-size-sm: 0.6875rem;
+    --astryx-font-size-base: 0.875rem;
+    --astryx-font-size-lg: 1.125rem;
+    --astryx-font-size-xl: 1.375rem;
+    --astryx-font-size-2xl: 1.6875rem;
+    --astryx-font-size-3xl: 2.125rem;
+    --astryx-font-size-4xl: 2.6875rem;
+    --astryx-font-size-5xl: 3.3125rem;
+
+    --astryx-font-weight-normal: 400;
+    --astryx-font-weight-regular: var(--astryx-font-weight-normal);
+    --astryx-font-weight-medium: 500;
+    --astryx-font-weight-semibold: 600;
+    --astryx-font-weight-bold: 700;
+
+    --astryx-text-heading-1-size: var(--astryx-font-size-2xl);
+    --astryx-text-heading-1-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-1-leading: 1.3333;
+    --astryx-text-heading-2-size: var(--astryx-font-size-xl);
+    --astryx-text-heading-2-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-2-leading: 1.4545;
+    --astryx-text-heading-3-size: var(--astryx-font-size-lg);
+    --astryx-text-heading-3-weight: var(--astryx-font-weight-bold);
+    --astryx-text-heading-3-leading: 1.5556;
+    --astryx-text-heading-4-size: var(--astryx-font-size-base);
+    --astryx-text-heading-4-weight: var(--astryx-font-weight-bold);
+    --astryx-text-heading-4-leading: 1.4286;
+    --astryx-text-heading-5-size: var(--astryx-font-size-sm);
+    --astryx-text-heading-5-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-5-leading: 1.4545;
+    --astryx-text-heading-6-size: var(--astryx-font-size-xs);
+    --astryx-text-heading-6-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-6-leading: 1.7778;
+
+    --astryx-text-body-size: var(--astryx-font-size-base);
+    --astryx-text-body-weight: var(--astryx-font-weight-normal);
+    --astryx-text-body-leading: 1.4286;
+    --astryx-text-large-size: var(--astryx-font-size-lg);
+    --astryx-text-large-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-large-leading: 1.5556;
+    --astryx-text-label-size: var(--astryx-font-size-base);
+    --astryx-text-label-weight: var(--astryx-font-weight-medium);
+    --astryx-text-label-leading: 1.4286;
+    --astryx-text-code-size: var(--astryx-font-size-base);
+    --astryx-text-code-weight: var(--astryx-font-weight-normal);
+    --astryx-text-code-leading: 1.4286;
+    --astryx-text-supporting-size: 12px;
+    --astryx-text-supporting-weight: var(--astryx-font-weight-normal);
+    --astryx-text-supporting-leading: 1.4545;
+
+    --astryx-text-display-1-size: var(--astryx-font-size-5xl);
+    --astryx-text-display-1-weight: var(--astryx-font-weight-normal);
+    --astryx-text-display-1-leading: 1.283;
+    --astryx-text-display-2-size: var(--astryx-font-size-4xl);
+    --astryx-text-display-2-weight: var(--astryx-font-weight-normal);
+    --astryx-text-display-2-leading: 1.2093;
+    --astryx-text-display-3-size: var(--astryx-font-size-3xl);
+    --astryx-text-display-3-weight: var(--astryx-font-weight-normal);
+    --astryx-text-display-3-leading: 1.2941;
+  }
+
+  [data-astryx-theme='stone'][data-astryx-color-mode='light'] {
+    color-scheme: light;
+  }
+
+  [data-astryx-theme='stone'][data-astryx-color-mode='dark'] {
+    color-scheme: dark;
+  }
+}

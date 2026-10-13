@@ -1,14 +1,25 @@
 <script setup lang="ts">
 import { Text } from '@astryx-vue/core/Text'
+
+const longText = 'The design system provides a consistent set of typography tokens, spacing scales, and color palettes that ensure every surface in the product feels cohesive regardless of which team built it.'
+const lines = [
+  { maxLines: 1, label: '1 line' },
+  { maxLines: 2, label: '2 lines' },
+  { maxLines: 3, label: '3 lines' },
+]
 </script>
 
 <template>
-  <div class="text-preview__stack">
-    <Text as="p" display="block" :max-lines="1">
-      Truncation keeps long content inside its container: with maxLines set to 1 the text is cut off at the end of the first line and finished with an ellipsis.
-    </Text>
-    <Text as="p" display="block" :max-lines="2">
-      Truncation keeps long content inside its container: with maxLines set to 2 the text is limited to two lines, and anything beyond that is cut off and finished with an ellipsis, so the surrounding layout stays intact no matter how much copy the consumer passes in.
-    </Text>
+  <div class="text-preview__clamp">
+    <div v-for="item in lines" :key="item.maxLines">
+      <Text type="supporting" color="secondary" display="block">
+        {{ item.label }}
+      </Text>
+      <div class="text-preview__box">
+        <Text type="body" :max-lines="item.maxLines">
+          {{ longText }}
+        </Text>
+      </div>
+    </div>
   </div>
 </template>

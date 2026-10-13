@@ -1,0 +1,35 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='gothic'] {
+    --astryx-heading-foreground: var(--astryx-color-text-primary);
+    --astryx-heading-level-1-size: var(--astryx-text-heading-1-size);
+    --astryx-heading-level-2-size: var(--astryx-text-heading-2-size);
+    --astryx-heading-level-3-size: var(--astryx-text-heading-3-size);
+    --astryx-heading-level-4-size: var(--astryx-text-heading-4-size);
+    --astryx-heading-level-5-size: var(--astryx-text-heading-5-size);
+    --astryx-heading-level-6-size: var(--astryx-text-heading-6-size);
+    --astryx-heading-display-1-size: var(--astryx-text-display-1-size);
+    --astryx-heading-display-2-size: var(--astryx-text-display-2-size);
+    --astryx-heading-display-3-size: var(--astryx-text-display-3-size);
+    --astryx-heading-display-weight: var(--astryx-text-display-1-weight);
+    --astryx-heading-leading: 1.25;
+
+    --astryx-text-supporting-foreground: var(--astryx-color-text-secondary);
+  }
+}
+
+@layer astryx.components {
+  [data-astryx-theme='gothic'] .astryx-heading {
+    font-family: var(--astryx-font-family-heading);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-text--type-display-1,
+  [data-astryx-theme='gothic'] .astryx-text--type-display-2,
+  [data-astryx-theme='gothic'] .astryx-text--type-display-3,
+  [data-astryx-theme='gothic'] .astryx-heading--type-display-1,
+  [data-astryx-theme='gothic'] .astryx-heading--type-display-2,
+  [data-astryx-theme='gothic'] .astryx-heading--type-display-3 {
+    font-family: 'Manufacturing Consent', 'UnifrakturMaguntia', 'Old English Text MT', serif;
+  }
+}

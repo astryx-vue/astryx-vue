@@ -1,3 +1,22 @@
+export const SYNTAX_TOKEN_KEYS = [
+  'keyword',
+  'string',
+  'comment',
+  'number',
+  'function',
+  'type',
+  'variable',
+  'operator',
+  'constant',
+  'tag',
+  'attribute',
+  'property',
+  'punctuation',
+  'background',
+] as const
+
+export type SyntaxTokenKey = (typeof SYNTAX_TOKEN_KEYS)[number]
+
 export interface SyntaxThemeTokens {
   keyword: string
   string: string
@@ -15,13 +34,42 @@ export interface SyntaxThemeTokens {
   background: string
 }
 
+/** A string is used as written. A tuple is the light stop, then the dark stop. */
+export type SyntaxTokenValue = string | readonly [string, string]
+
 export interface SyntaxThemeDefinition {
   name: string
   tokens: SyntaxThemeTokens
 }
 
-export function defineSyntaxTheme(theme: SyntaxThemeDefinition): SyntaxThemeDefinition {
-  return theme
+export interface SyntaxThemeInput {
+  name: string
+  tokens: { [K in keyof SyntaxThemeTokens]: SyntaxTokenValue }
+}
+
+function resolveSyntaxToken(value: SyntaxTokenValue): string {
+  if (typeof value === 'string')
+    return value
+  return `light-dark(${value[0]}, ${value[1]})`
+}
+
+/**
+ * Create a syntax theme. All 14 tokens are required.
+ * `[light, dark]` tuples are stored as `light-dark()`.
+ */
+export function defineSyntaxTheme(theme: SyntaxThemeInput): SyntaxThemeDefinition {
+  const missing = SYNTAX_TOKEN_KEYS.filter(key => theme.tokens[key] == null)
+  if (missing.length > 0 && typeof console !== 'undefined') {
+    console.warn(`[Astryx] defineSyntaxTheme("${theme.name}"): missing tokens: ${missing.join(', ')}. All 14 syntax tokens are required.`)
+  }
+
+  const tokens = {} as SyntaxThemeTokens
+  for (const key of SYNTAX_TOKEN_KEYS) {
+    const value = theme.tokens[key]
+    if (value != null)
+      tokens[key] = resolveSyntaxToken(value)
+  }
+  return { name: theme.name, tokens }
 }
 
 /** GitHub Dark (GitHub Primer team), MIT. */

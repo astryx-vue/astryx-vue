@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { blockquoteCite } from '../../../../components/demos/blockquote'
+import { blockquoteCite, blockquoteTestimonials } from '../../../../components/demos/blockquote'
 </script>
 
 
@@ -48,11 +48,16 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
 
 ## Examples
 
-Common quote and attribution configurations.
+<DemoExample
+  :demo="blockquoteTestimonials"
+  description="Several quotes in a card grid. The one that spans the row uses GridSpan."
+  locale="en"
+  title="Testimonials"
+/>
 
 <DemoExample
   :demo="blockquoteCite"
-  description="A quote can stand alone. When its source is known, use cite to credit the author or publication."
+  description="One quote stands alone. The other names its source with cite."
   locale="en"
   title="With attribution"
 />

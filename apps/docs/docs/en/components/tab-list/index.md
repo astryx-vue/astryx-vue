@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tabListBasic, tabListDivider, tabListSizes } from '../../../../components/demos/tab-list'
+import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListStatus } from '../../../../components/demos/tab-list'
 </script>
 
 ## Usage
@@ -50,22 +50,43 @@ const value = ref('overview')
 ## Examples
 
 <DemoExample
-  :demo="tabListBasic"
-  description="A basic tab list that switches the selected value on click."
+  :demo="tabListFill"
+  description="With layout set to fill, the tabs share the width of the row and a divider sits under the list."
   locale="en"
-  title="Basic"
+  title="Fill layout"
 />
 
 <DemoExample
-  :demo="tabListSizes"
-  description="Tabs come in sm, md, and lg sizes."
+  :demo="tabListActions"
+  description="Tabs stay on the left and the filter and create buttons sit on the right. With a divider, the buttons use the same size as the tabs."
   locale="en"
-  title="Sizes"
+  title="With actions"
 />
 
 <DemoExample
-  :demo="tabListDivider"
-  description="Use has-divider to add a bottom border to the tab list."
+  :demo="tabListBadges"
+  description="A badge after the label. Error is for a count that needs attention; neutral is for an ordinary count."
   locale="en"
-  title="With divider"
+  title="With badge"
+/>
+
+<DemoExample
+  :demo="tabListIcons"
+  description="An icon before the label, so each tab is recognizable before the word is read."
+  locale="en"
+  title="With icons"
+/>
+
+<DemoExample
+  :demo="tabListOverflow"
+  description="Tabs that do not fit inline go into a TabMenu. Choosing one makes it the selected tab."
+  locale="en"
+  title="With overflow menu"
+/>
+
+<DemoExample
+  :demo="tabListStatus"
+  description="A status dot after the label shows whether an environment is healthy."
+  locale="en"
+  title="With status dot"
 />

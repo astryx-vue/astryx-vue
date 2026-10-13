@@ -1,43 +1,45 @@
+English | [简体中文](./README.zh-CN.md)
+
 # astryx-vue
 
-Astryx 设计系统的非官方 Vue 3 社区实现。
+An unofficial Vue 3 community implementation of the Astryx design system.
 
 [![GitHub](https://img.shields.io/badge/GitHub-astryx--vue%2Fastryx--vue-181717?logo=github)](https://github.com/astryx-vue/astryx-vue)
 [![npm @astryx-vue/core](https://img.shields.io/npm/v/@astryx-vue/core?label=%40astryx-vue%2Fcore)](https://www.npmjs.com/package/@astryx-vue/core)
 [![npm @astryx-vue/themes](https://img.shields.io/npm/v/@astryx-vue/themes?label=%40astryx-vue%2Fthemes)](https://www.npmjs.com/package/@astryx-vue/themes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-> 本项目不是 Meta 官方项目。原版 Astryx 见 <https://github.com/facebook/astryx>。
+> This project is not an official Meta project. The original Astryx is at <https://github.com/facebook/astryx>.
 
-## 特性
+## Features
 
-- Vue 3 原生 API：props、事件、插槽、`v-model` 与组合式函数。
-- 组件包与主题包分离：`@astryx-vue/core` 提供组件，`@astryx-vue/themes` 提供主题。
-- 基于 CSS 变量与 CSS 分层，不要求使用者安装 UnoCSS 或 StyleX。
-- 交互式文档，包含组件示例与中英文说明。
-- TypeScript 类型完整，配套 Vitest 测试。
+- A native Vue 3 API: props, events, slots, `v-model`, and composables.
+- Components and themes ship separately: `@astryx-vue/core` provides the components, and `@astryx-vue/themes` provides the themes.
+- Built with CSS variables and CSS cascade layers. UnoCSS and StyleX are not required.
+- Interactive documentation, with component examples, Chinese and English pages, and a theme playground.
+- Complete TypeScript types, with Vitest tests.
 
-## 安装
+## Install
 
 ```sh
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-文档站：<https://astryx-vue.pages.dev>
+Documentation site: <https://astryx-vue.pages.dev>
 
-首次 npm 版本是 `0.1.0`。发布步骤见 [RELEASING.md](./RELEASING.md)。
+The first npm release was `0.1.0`. Release steps are in [RELEASING.md](./RELEASING.md).
 
-## 快速开始
+## Quick start
 
-在应用入口引入一次主题：
+Import the theme once at the application entry:
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-等宽字体栈是 JetBrains Mono。引入 Neutral 主题时会一并加载 400、500、600、700 和 400 斜体。
+The monospace font stack is JetBrains Mono. Importing the Neutral theme also loads weights 400, 500, 600, and 700, plus 400 italic.
 
-然后在组件中使用：
+Then use it from a component:
 
 ```vue
 <script setup lang="ts">
@@ -49,26 +51,28 @@ import { Button } from '@astryx-vue/core/Button'
 </template>
 ```
 
-## 文档
+## Documentation
 
-在线文档：<https://astryx-vue.pages.dev>
+Online docs: <https://astryx-vue.pages.dev>
 
-本地启动文档站点：
+Playground: <https://astryx-vue.pages.dev/playground/> (English: <https://astryx-vue.pages.dev/en/playground/>)
+
+Start the docs site locally:
 
 ```sh
 pnpm install
 pnpm dev
 ```
 
-## 开发
+## Development
 
-需要 Node.js 22.18+ 与 pnpm 11.21+。
+Node.js 22.18+ and pnpm 11.21+ are required.
 
 ```sh
 pnpm install
 pnpm check   # lint + typecheck + test + build
 ```
 
-## 许可证
+## License
 
 [MIT](./LICENSE)

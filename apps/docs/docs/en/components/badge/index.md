@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { badgeColors, badgeCounts } from '../../../../components/demos/badge'
+import { badgeColors, badgeCounts, badgeStatus } from '../../../../components/demos/badge'
 </script>
 
 
@@ -54,19 +54,24 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 ## Examples
 
-Common Badge configurations and use cases.
-
 <DemoExample
   :demo="badgeColors"
-  description="Use non-semantic colors to distinguish categories such as teams, topics, or priorities. Color establishes visual grouping rather than communicating system status."
+  description="Blue, cyan, green, and the other category colors group teams or topics. They do not report system status."
   locale="en"
   title="Colors"
 />
 
 <DemoExample
   :demo="badgeCounts"
-  description="Show concise counts beside notifications, lists, or navigation items. Use compact forms such as 99+ for larger values."
+  description="A short number for unread messages or open tasks. Values past 99 can read 99+."
   locale="en"
   title="Counts"
+/>
+
+<DemoExample
+  :demo="badgeStatus"
+  description="Success, warning, and error mark a state that needs attention. Neutral and info mark where something sits in a workflow."
+  locale="en"
+  title="Status"
 />
 

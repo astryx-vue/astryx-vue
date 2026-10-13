@@ -51,5 +51,7 @@ Some functions belong to one component and are not in the table above. Import th
 | `useDropdownMenuContext` | `@astryx-vue/core/DropdownMenu` |
 | `useSideNavCollapse` | `@astryx-vue/core/SideNav` |
 | `useListContext`, `useItemDescriptionId` | `@astryx-vue/core/List` |
+| `useTheme`, `useMediaTheme` | `@astryx-vue/core/Theme` |
+| `useSyntaxTheme` | `@astryx-vue/core/Code` |
 
 `provideAstryxLocale` and `useAstryxMessages` are in [Internationalization](/en/guide/i18n).

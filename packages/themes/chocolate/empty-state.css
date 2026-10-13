@@ -1,0 +1,9 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='chocolate'] {
+    --astryx-empty-state-title-foreground: var(--astryx-color-text-primary);
+    --astryx-empty-state-description-foreground: var(--astryx-color-text-secondary);
+    --astryx-empty-state-text-width: 360px;
+  }
+}

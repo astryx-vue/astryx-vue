@@ -1,0 +1,10 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='matcha'] {
+    --astryx-hover-card-background: var(--astryx-color-background-card);
+    --astryx-hover-card-foreground: var(--astryx-color-text-primary);
+    --astryx-hover-card-shadow: var(--astryx-shadow-low);
+    --astryx-hover-card-indication-color: var(--astryx-color-text-primary);
+  }
+}

@@ -1,0 +1,33 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+
+    --astryx-code-background: var(--astryx-color-background-muted);
+    --astryx-code-primary-foreground: var(--astryx-color-text-primary);
+    --astryx-code-secondary-foreground: var(--astryx-color-text-secondary);
+
+    /* CodeBlock card: white surface and a hairline border, matching the
+       original block. Inline code keeps the muted chip above. */
+    --astryx-code-block-background: light-dark(#FFF6ED, #190f00);
+    --astryx-code-block-border: var(--astryx-color-border);
+    --astryx-code-block-focus: var(--astryx-color-accent);
+    --astryx-code-block-highlight-background: color-mix(in srgb, var(--astryx-color-accent) 20%, transparent);
+
+    /* Syntax colors from the original CodeBlock theme: keyword and type share
+       the same purple, strings stay green. */
+    --astryx-code-syntax-keyword: light-dark(#615a7a, #aea6ca);
+    --astryx-code-syntax-string: light-dark(#586242, #a5af8b);
+    --astryx-code-syntax-comment: light-dark(#5e5e5e, #ababab);
+    --astryx-code-syntax-number: light-dark(#775843, #c8a48c);
+    --astryx-code-syntax-function: light-dark(#39637d, #87b0cd);
+    --astryx-code-syntax-type: light-dark(#615a7a, #aea6ca);
+    --astryx-code-syntax-variable: light-dark(#5e5e5e, #ababab);
+    --astryx-code-syntax-operator: light-dark(#5e5e5e, #ababab);
+    --astryx-code-syntax-constant: light-dark(#775843, #c8a48c);
+    --astryx-code-syntax-tag: light-dark(#7f5351, #d19f9d);
+    --astryx-code-syntax-attribute: light-dark(#6c5c3e, #bca987);
+    --astryx-code-syntax-property: light-dark(#3c6755, #87b5a1);
+    --astryx-code-syntax-punctuation: light-dark(#5e5e5e, #ababab);
+  }
+}

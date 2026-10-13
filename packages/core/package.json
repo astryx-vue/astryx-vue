@@ -99,6 +99,11 @@
       "types": "./dist/FormLayout/index.d.ts",
       "import": "./dist/FormLayout/index.js"
     },
+    "./Icon": {
+      "source": "./src/Icon/index.ts",
+      "types": "./dist/Icon/index.d.ts",
+      "import": "./dist/Icon/index.js"
+    },
     "./Layout": {
       "source": "./src/Layout/index.ts",
       "types": "./dist/Layout/index.d.ts",
@@ -218,6 +223,11 @@
       "source": "./src/Table/index.ts",
       "types": "./dist/Table/index.d.ts",
       "import": "./dist/Table/index.js"
+    },
+    "./Theme": {
+      "source": "./src/Theme/index.ts",
+      "types": "./dist/Theme/index.d.ts",
+      "import": "./dist/Theme/index.js"
     },
     "./Thumbnail": {
       "source": "./src/Thumbnail/index.ts",
@@ -610,6 +620,10 @@
         "types": "./dist/FormLayout/index.d.ts",
         "import": "./dist/FormLayout/index.js"
       },
+      "./Icon": {
+        "types": "./dist/Icon/index.d.ts",
+        "import": "./dist/Icon/index.js"
+      },
       "./Layout": {
         "types": "./dist/Layout/index.d.ts",
         "import": "./dist/Layout/index.js"
@@ -705,6 +719,10 @@
       "./Table": {
         "types": "./dist/Table/index.d.ts",
         "import": "./dist/Table/index.js"
+      },
+      "./Theme": {
+        "types": "./dist/Theme/index.d.ts",
+        "import": "./dist/Theme/index.js"
       },
       "./Thumbnail": {
         "types": "./dist/Thumbnail/index.d.ts",

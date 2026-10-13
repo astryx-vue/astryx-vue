@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-progress-bar-track-height: 8px;
+    --astryx-progress-bar-track-height-sm: 4px;
+    --astryx-progress-bar-track-height-lg: 12px;
+    --astryx-progress-bar-track-background: var(--astryx-color-background-muted);
+    --astryx-progress-bar-fill-background: var(--astryx-color-accent);
+    --astryx-progress-bar-success-fill: var(--astryx-color-success);
+    --astryx-progress-bar-warning-fill: var(--astryx-color-warning);
+    --astryx-progress-bar-error-fill: var(--astryx-color-error);
+    --astryx-progress-bar-info-fill: var(--astryx-color-background-blue);
+  }
+}

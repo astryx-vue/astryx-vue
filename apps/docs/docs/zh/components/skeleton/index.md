@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { skeletonProfile } from '../../../../components/demos/skeleton'
+import { skeletonCard, skeletonList, skeletonTable } from '../../../../components/demos/skeleton'
 </script>
 
 
@@ -50,12 +50,24 @@ import { Skeleton } from '@astryx-vue/core/Skeleton'
 
 ## 示例
 
-按最终内容的尺寸与结构组合占位形状，让加载前后的布局保持一致。
+<DemoExample
+  :demo="skeletonCard"
+  description="一张卡片的占位：圆形头像、名字、一行说明，下面再接几行正文。index 让脉冲依次错开。"
+  locale="zh"
+  title="卡片加载"
+/>
 
 <DemoExample
-  :demo="skeletonProfile"
-  description="参照最终内容的布局组合占位块，尺寸与形状一一对应，并用 index 依次错开脉冲动画，减少加载完成时的跳动。"
+  :demo="skeletonList"
+  description="几条宽度不一的横条，用来占住一份列表还没回来时的位置。"
   locale="zh"
-  title="内容占位"
+  title="错开的列表"
+/>
+
+<DemoExample
+  :demo="skeletonTable"
+  description="每一行四列，列宽按内容长短错开，整表的脉冲也按 index 往后推。"
+  locale="zh"
+  title="表格行"
 />
 

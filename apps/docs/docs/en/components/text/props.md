@@ -29,13 +29,37 @@ footer: false
         <td><code>color</code></td>
         <td><code>TextColor</code></td>
         <td><code>'primary'</code></td>
-        <td>Text color. Optional: primary, secondary, accent, inherit.</td>
+        <td>Text color. Optional: primary, secondary, accent, disabled, placeholder, inherit.</td>
       </tr>
       <tr>
         <td><code>weight</code></td>
         <td><code>TextWeight</code></td>
         <td>-</td>
-        <td>Font weight override. Optional: regular, medium, semibold, bold.</td>
+        <td>Font weight override. Optional: regular, normal, medium, semibold, bold. normal is the same weight as regular.</td>
+      </tr>
+      <tr>
+        <td><code>textWrap</code></td>
+        <td><code>TextWrap</code></td>
+        <td>-</td>
+        <td>Wrapping behavior: wrap, nowrap, balance, or pretty.</td>
+      </tr>
+      <tr>
+        <td><code>wordBreak</code></td>
+        <td><code>TextWordBreak</code></td>
+        <td>-</td>
+        <td>How a long unbroken string breaks: normal, break-word, or break-all.</td>
+      </tr>
+      <tr>
+        <td><code>hasStrikethrough</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Draws a line through the text.</td>
+      </tr>
+      <tr>
+        <td><code>hasTabularNumbers</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Uses tabular figures so digits line up across rows.</td>
       </tr>
       <tr>
         <td><code>display</code></td>
@@ -53,7 +77,7 @@ footer: false
         <td><code>maxLines</code></td>
         <td><code>number</code></td>
         <td><code>0</code></td>
-        <td>Maximum lines before truncation. 0 means no truncation.</td>
+        <td>Maximum lines before truncation. 0 means no truncation. A positive value forces block layout so the ellipsis has a width.</td>
       </tr>
     </tbody>
   </table>

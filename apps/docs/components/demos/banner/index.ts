@@ -1,19 +1,22 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
 import actionsDemo from './actions.vue'
 import actionsSource from './actions.vue?raw&highlighted'
-import containersDemo from './containers.vue'
-import containersSource from './containers.vue?raw&highlighted'
-import detailsDemo from './details.vue'
-import detailsSource from './details.vue?raw&highlighted'
+import collapsibleDemo from './collapsible.vue'
+import collapsibleSource from './collapsible.vue?raw&highlighted'
+import dismissDemo from './dismiss.vue'
+import dismissSource from './dismiss.vue?raw&highlighted'
+import fullWidthDemo from './full-width.vue'
+import fullWidthSource from './full-width.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 import statusesDemo from './statuses.vue'
 import statusesSource from './statuses.vue?raw&highlighted'
 
 const options = { className: 'input-preview-host' }
-export const bannerStatuses = defineDemo(statusesDemo, statusesSource, options)
-export const bannerDetails = defineDemo(detailsDemo, detailsSource, options)
-export const bannerActions = defineDemo(actionsDemo, actionsSource, options)
-export const bannerContainers = defineDemo(containersDemo, containersSource, options)
 
+export const bannerAction = defineDemo(actionsDemo, actionsSource, options)
+export const bannerCollapsible = defineDemo(collapsibleDemo, collapsibleSource, options)
+export const bannerDismiss = defineDemo(dismissDemo, dismissSource, options)
+export const bannerFullWidth = defineDemo(fullWidthDemo, fullWidthSource, options)
+export const bannerStatuses = defineDemo(statusesDemo, statusesSource, options)
 export const bannerOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

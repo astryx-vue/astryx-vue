@@ -371,7 +371,9 @@ html.component-docs-scroll-lock body {
   padding-top: 44px;
 }
 
-.component-overview__catalog h2 {
+/* Direct child only. A descendant h2 also matches Heading level 2 inside a
+   catalog card, which adds 24px under Level 2 and flattens its size. */
+.component-overview__catalog > h2 {
   margin: 0 0 24px;
   font-size: 24px;
   font-weight: 400;
@@ -1019,9 +1021,59 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   margin: 0 !important;
 }
 
+.heading-preview__clamp {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.heading-preview__box {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 12px;
+  border: 1px solid var(--astryx-color-border, #d4d4d4);
+}
+
+.tab-list-preview__width {
+  width: min(100%, 500px);
+}
+
+.tab-list-preview__actions {
+  width: 100%;
+}
+
+.tab-list-preview__actions .astryx-tab-list__strip {
+  width: 100%;
+}
+
+.tab-list-preview__end {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: auto;
+}
+
 .text-preview__stack .astryx-text--truncate-single,
 .text-preview__stack .astryx-text--truncate-multi {
   max-width: 100%;
+}
+
+.text-preview__clamp {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 400px;
+}
+
+.text-preview__box {
+  box-sizing: border-box;
+  width: 200px;
+  padding: 8px;
+  border: 1px solid var(--astryx-color-border, #d4d4d4);
+}
+
+.text-preview__box--clip {
+  overflow: hidden;
 }
 
 .stack-preview-host {
@@ -1953,6 +2005,24 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-weight: revert-layer;
   text-decoration: revert-layer;
   text-underline-offset: revert-layer;
+}
+
+/*
+ * VitePress `.vp-doc` also paints `p` and headings in the prose color. That
+ * unlayered color beats the component layer, so themed text stayed on the
+ * docs palette. Roll the prose color back to the component token.
+ */
+.vp-doc .astryx-demo :is(.astryx-heading, .astryx-text) {
+  color: revert-layer;
+}
+
+.vp-doc .astryx-demo.theme-preview :is(.astryx-heading, .astryx-text),
+.vp-doc .astryx-demo.media-theme-preview :is(.astryx-heading, .astryx-text),
+.vp-doc .astryx-demo.syntax-theme-preview :is(.astryx-heading, .astryx-text) {
+  font-size: revert-layer;
+  font-weight: revert-layer;
+  line-height: revert-layer;
+  letter-spacing: revert-layer;
 }
 
 .nav-overview {

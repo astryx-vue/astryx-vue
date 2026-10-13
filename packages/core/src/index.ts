@@ -155,18 +155,34 @@ export type { CitationProps, CitationSource } from './Citation/index.js'
 export { ClickableCard } from './ClickableCard/index.js'
 export type { ClickableCardEmits, ClickableCardProps, ClickableCardSlots } from './ClickableCard/index.js'
 export {
+  allSyntaxPresets,
   applyHighlightRanges,
+  catppuccinLatte,
+  catppuccinMocha,
   Code,
   CodeBlock,
+  darkSyntaxPresets,
   defineSyntaxTheme,
+  dracula,
   flatTokensToLines,
   githubDark,
+  githubLight,
   HIGHLIGHTED_TOKEN_TYPES,
+  lightSyntaxPresets,
+  monokai,
+  nord,
+  oneDarkPro,
+  oneLight,
+  solarizedLight,
   SYNC_TOKENIZE_THRESHOLD,
+  SYNTAX_TOKEN_KEYS,
   SyntaxTheme,
   tokenize,
   tokenizeAsync,
+  tokyoNight,
+  tokyoNightLight,
   useCopyToClipboard,
+  useSyntaxTheme,
 } from './Code/index.js'
 export type {
   CodeBlockContainer,
@@ -182,9 +198,13 @@ export type {
   CopyToClipboardOptions,
   CopyToClipboardReturn,
   SyntaxThemeDefinition,
+  SyntaxThemeInput,
   SyntaxThemeTokens,
   SyntaxToken,
+  SyntaxTokenKey,
+  SyntaxTokenValue,
   TokenLine,
+  UseSyntaxThemeReturn,
 } from './Code/index.js'
 export { Collapsible, CollapsibleGroup } from './Collapsible/index.js'
 export type {
@@ -369,6 +389,8 @@ export type {
   HoverCardSlots,
   HoverCardTouchTrigger,
 } from './HoverCard/index.js'
+export { Icon, ICON_GLYPHS, iconGlyphSlug, isIconGlyph } from './Icon/index.js'
+export type { IconColor, IconGlyphName, IconName, IconProps, IconSize, IconSlots } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
 export type { IconButtonEmits, IconButtonProps, IconButtonSlots } from './IconButton/index.js'
 export { InputGroup } from './InputGroup/index.js'
@@ -733,7 +755,17 @@ export type {
   TabProps,
 } from './TabList/index.js'
 export { Text } from './Text/index.js'
-export type { TextAs, TextColor, TextDisplay, TextProps, TextSize, TextType, TextWeight } from './Text/index.js'
+export type {
+  TextAs,
+  TextColor,
+  TextDisplay,
+  TextProps,
+  TextSize,
+  TextType,
+  TextWeight,
+  TextWordBreak,
+  TextWrap,
+} from './Text/index.js'
 export { TextArea } from './TextArea/index.js'
 export type {
   TextAreaChangeAction,
@@ -759,6 +791,29 @@ export type {
   TextInputStatusType,
   TextInputType,
 } from './TextInput/index.js'
+export {
+  defineTheme,
+  isDefinedTheme,
+  MediaTheme,
+  neutralTheme,
+  normalizeTokenName,
+  Theme,
+  useMediaTheme,
+  useTheme,
+} from './Theme/index.js'
+export type {
+  DefineThemeInput,
+  MediaThemeMode,
+  MediaThemeProps,
+  ThemeDefinition,
+  ThemeMode,
+  ThemeProps,
+  ThemeSurfaceInput,
+  ThemeTokens,
+  ThemeTokenValue,
+  UseMediaThemeReturn,
+  UseThemeReturn,
+} from './Theme/index.js'
 export { Thumbnail } from './Thumbnail/index.js'
 export type { ThumbnailEmits, ThumbnailProps, ThumbnailRemoveVisibility } from './Thumbnail/index.js'
 export { TimeInput } from './TimeInput/index.js'

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Banner } from '@astryx-vue/core/Banner'
+import { VStack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <div class="input-preview-stack">
-    <Banner status="info" title="An update is available" description="Restart the application to use the new version." />
-    <Banner status="success" title="Changes saved" description="Your team can now use the updated settings." />
-    <Banner status="warning" title="Storage is nearly full" description="Remove unused files before uploading more content." />
-    <Banner status="error" title="Changes could not be saved" description="Check your connection and try again." />
-  </div>
+  <VStack :gap="3">
+    <Banner status="info" title="A new software update is available" description="Version 2.4.1 includes performance improvements and bug fixes." />
+    <Banner status="success" title="Changes saved" description="Your profile information has been updated successfully." />
+    <Banner status="warning" title="Storage almost full" description="You have used 90% of your available storage." />
+    <Banner status="error" title="Build failed" description="3 tests did not pass. Check the logs for details." />
+  </VStack>
 </template>

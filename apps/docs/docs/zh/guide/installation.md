@@ -27,7 +27,7 @@ yarn add @astryx-vue/core @astryx-vue/themes
 | 某一个组件 | `@astryx-vue/core/Button` 这种子路径 |
 | 组合式函数，以及根入口重新导出的组件 | `@astryx-vue/core` |
 | `provideAstryxLocale`、`useAstryxMessages` | `@astryx-vue/core/locale`，根入口也能拿到 |
-| Neutral 主题 | `@astryx-vue/themes/neutral.css` |
+| 一套主题 | `@astryx-vue/themes/neutral.css`。Butter、Chocolate、Gothic、Matcha、Stone、Y2K 也是这个路径，换成各自的文件名。 |
 | 全部结构样式 | `@astryx-vue/core/styles.css` |
 | 层声明 | `@astryx-vue/core/reset.css` |
 

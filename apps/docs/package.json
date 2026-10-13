@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "vitepress build",
-    "dev": "vitepress dev",
+    "build": "node scripts/copy-monaco.mjs && vitepress build",
+    "dev": "node scripts/copy-monaco.mjs && vitepress dev",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "preview": "vitepress preview"
   },
@@ -13,6 +13,10 @@
     "@astryx-vue/core": "workspace:^",
     "@astryx-vue/themes": "workspace:^",
     "@fontsource/figtree": "catalog:docs",
+    "@monaco-editor/loader": "catalog:docs",
+    "@vue/compiler-sfc": "catalog:vue",
+    "monaco-editor": "catalog:docs",
+    "sucrase": "catalog:docs",
     "vue": "catalog:vue"
   },
   "devDependencies": {

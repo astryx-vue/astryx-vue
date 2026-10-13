@@ -66,4 +66,68 @@ describe('nav-menu', () => {
     expect(document.body.querySelector('[role="menu"]')).toBeNull()
     wrapper.unmount()
   })
+
+  it('still closes a link item when a router already called preventDefault', async () => {
+    const Host = defineComponent({
+      components: { NavDisclosure, NavMenu, NavMenuItem },
+      template: `
+        <NavDisclosure label="Account">
+          <template #trigger="{ isOpen }">
+            <button type="button">{{ isOpen ? 'Open' : 'Closed' }}</button>
+          </template>
+          <template #default="{ close, focusRequest }">
+            <NavMenu label="Account" :focus-request="focusRequest" @close="close">
+              <NavMenuItem href="#profile" label="Profile" />
+            </NavMenu>
+          </template>
+        </NavDisclosure>
+      `,
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    const stopRouter = (event: Event) => event.preventDefault()
+    document.addEventListener('click', stopRouter, true)
+
+    await wrapper.get('button').trigger('click')
+    await nextTick()
+    const item = document.body.querySelector('[role="menuitem"]')
+    item?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+    await nextTick()
+    expect(document.body.querySelector('[role="menu"]')).toBeNull()
+
+    document.removeEventListener('click', stopRouter, true)
+    wrapper.unmount()
+  })
+
+  it('stays open when the item click handler prevents the default', async () => {
+    const Host = defineComponent({
+      components: { NavDisclosure, NavMenu, NavMenuItem },
+      setup() {
+        function keep(event: MouseEvent) {
+          event.preventDefault()
+        }
+        return { keep }
+      },
+      template: `
+        <NavDisclosure label="Account">
+          <template #trigger="{ isOpen }">
+            <button type="button">{{ isOpen ? 'Open' : 'Closed' }}</button>
+          </template>
+          <template #default="{ close, focusRequest }">
+            <NavMenu label="Account" :focus-request="focusRequest" @close="close">
+              <NavMenuItem label="Profile" @click="keep" />
+            </NavMenu>
+          </template>
+        </NavDisclosure>
+      `,
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+
+    await wrapper.get('button').trigger('click')
+    await nextTick()
+    const item = document.body.querySelector('[role="menuitem"]')
+    item?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+    await nextTick()
+    expect(document.body.querySelector('[role="menu"]')).not.toBeNull()
+    wrapper.unmount()
+  })
 })

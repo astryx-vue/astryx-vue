@@ -1,0 +1,8 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='stone'] {
+    --astryx-overlay-scrim-background: var(--astryx-color-overlay);
+    --astryx-overlay-scrim-light-background: var(--astryx-color-overlay);
+  }
+}
