@@ -132,7 +132,7 @@ const displaySections = computed(() =>
             :start-icon="SearchIcon"
             size="lg"
           />
-          <HStack :v-align="'center'" :gap="4">
+          <HStack :align="'center'" :gap="4">
             <StackItem size="fill">
               <ToggleButtonGroup
                 v-model="activeTab"

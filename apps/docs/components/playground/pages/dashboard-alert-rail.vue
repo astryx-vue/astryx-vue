@@ -115,12 +115,12 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
   <Layout height="fill" :style="pageStyle">
     <template #header>
       <LayoutHeader :padding="6" has-divider>
-        <HStack :gap="3" v-align="center" h-align="between" wrap="wrap">
-          <VStack :gap="0" v-align="center">
+        <HStack :gap="3" align="center" justify="between" wrap="wrap">
+          <VStack :gap="0" align="center">
             <Heading :level="1">
               Service Health Monitor
             </Heading>
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <StatusDot variant="success" label="Live" is-pulsing tooltip="Auto-refreshing every 30s" />
               <Text type="supporting" color="secondary">
                 Updated
@@ -128,7 +128,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
               </Text>
             </HStack>
           </VStack>
-          <HStack :gap="2" v-align="center">
+          <HStack :gap="2" align="center">
             <SegmentedControl v-model="timeWindow" label="Time window" size="lg">
               <SegmentedControlItem label="1h" value="1h" />
               <SegmentedControlItem label="1d" value="1d" />
@@ -147,17 +147,17 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
             <Grid :columns="{ minWidth: 240, repeat: 'fit' }" :gap="3">
               <Card v-for="kpi in kpis" :key="kpi.key" :padding="4">
                 <VStack :gap="2">
-                  <HStack :gap="2" v-align="center">
+                  <HStack :gap="2" align="center">
                     <StatusDot :variant="kpi.status === 'healthy' ? 'success' : kpi.status === 'warning' ? 'warning' : 'error'" :label="kpi.label" />
                     <Text type="label" color="secondary">
                       {{ kpi.label }}
                     </Text>
                   </HStack>
-                  <HStack :gap="2" v-align="center">
+                  <HStack :gap="2" align="center">
                     <Heading :level="2">
                       {{ kpi.value }}
                     </Heading>
-                    <HStack :gap="1" v-align="center">
+                    <HStack :gap="1" align="center">
                       <Icon :icon="kpi.deltaPositive ? 'arrowUp' : 'arrowDown'" size="xsm" :color="kpi.deltaPositive ? 'success' : 'error'" />
                       <Text type="supporting" color="secondary">
                         {{ kpi.delta }}
@@ -215,7 +215,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
             <Card :padding="0">
               <VStack :gap="0">
                 <VStack :gap="1" :padding="4" class="rail-header">
-                  <HStack :gap="2" v-align="center">
+                  <HStack :gap="2" align="center">
                     <Icon icon="i-heroicons-bell-alert" size="sm" color="error" />
                     <Heading :level="3">
                       Active alerts
@@ -264,7 +264,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
       <LayoutPanel :width="400" :padding="0" has-divider role="complementary" label="Alerts and service breakdown" is-scrollable>
         <VStack :gap="0">
           <VStack :gap="1" :padding="4" class="rail-header sticky-header">
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <Icon icon="i-heroicons-bell-alert" size="sm" :color="firingCount > 0 ? 'error' : 'secondary'" />
               <Heading :level="3">
                 Active alerts

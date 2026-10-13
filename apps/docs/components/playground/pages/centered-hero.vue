@@ -32,8 +32,8 @@ const heroFrame: CSSProperties = {
     <template #default>
       <LayoutContent :padding="6">
         <VStack :gap="10">
-          <VStack :gap="6" h-align="center">
-            <VStack :gap="3" h-align="center">
+          <VStack :gap="6" justify="center">
+            <VStack :gap="3" justify="center">
               <Heading :level="1" type="display-2" justify="center" text-wrap="balance">
                 Little joys, everywhere you go
               </Heading>

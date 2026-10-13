@@ -175,7 +175,7 @@ function toggleReason(reason: string) {
                 placeholder="Project details*"
                 :status="errors.details ? { type: 'error', message: errors.details } : undefined"
               />
-              <VStack h-align="stretch">
+              <VStack justify="stretch">
                 <Button label="Let's connect" variant="primary" @click="handleSubmit" />
               </VStack>
             </VStack>
@@ -185,7 +185,7 @@ function toggleReason(reason: string) {
         <VStack :gap="6">
           <Divider />
           <Grid :columns="{ minWidth: 200 }" :gap="6">
-            <VStack v-for="col in CONTACT_COLUMNS" :key="col.label" :gap="1" h-align="center">
+            <VStack v-for="col in CONTACT_COLUMNS" :key="col.label" :gap="1" justify="center">
               <Text type="supporting" color="secondary">
                 {{ col.label }}
               </Text>

@@ -68,7 +68,7 @@ const searchValue = ref<SearchableItem | null>(null)
   <Layout height="fill" :content-width="1440">
     <template #header>
       <LayoutHeader has-divider>
-        <HStack v-align="center">
+        <HStack align="center">
           <StackItem size="fill">
             <Heading :level="1">
               Settings
@@ -101,7 +101,7 @@ const searchValue = ref<SearchableItem | null>(null)
     </template>
     <LayoutContent :padding="4">
       <VStack :gap="4">
-        <VStack v-if="isNarrow" h-align="center">
+        <VStack v-if="isNarrow" justify="center">
           <TabList v-model:value="activeNav">
             <Tab v-for="item in NAV_ITEMS" :key="item" :value="item" :label="item" />
           </TabList>

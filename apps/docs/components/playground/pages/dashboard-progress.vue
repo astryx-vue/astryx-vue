@@ -174,12 +174,12 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
   <Layout height="fill">
     <template #header>
       <LayoutHeader :padding="6" has-divider>
-        <HStack :gap="3" v-align="center" h-align="between" wrap="wrap" class="content-column">
+        <HStack :gap="3" align="center" justify="between" wrap="wrap" class="content-column">
           <VStack :gap="1">
             <Heading :level="1">
               Aurora Launch
             </Heading>
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <Text type="body" color="secondary">
                 Target GA ·
               </Text>
@@ -233,7 +233,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                   <Heading :level="3">
                     Overall progress
                   </Heading>
-                  <HStack :gap="8" v-align="center" wrap="wrap">
+                  <HStack :gap="8" align="center" wrap="wrap">
                     <PlaygroundDonutChart :segments="donutSegments" />
                     <VStack :gap="2">
                       <Text v-for="s in TASK_STATUS" :key="s.key" type="supporting" color="secondary">

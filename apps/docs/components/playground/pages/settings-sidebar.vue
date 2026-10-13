@@ -263,7 +263,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                   </Heading>
                   <Divider />
                   <template v-for="row in LOGIN_ROWS" :key="row.label">
-                    <HStack h-align="between" v-align="start" :style="rowPadding">
+                    <HStack justify="between" align="start" :style="rowPadding">
                       <VStack :gap="0">
                         <Text type="body" weight="semibold" display="block">
                           {{ row.label }}
@@ -285,7 +285,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                   </Heading>
                   <Divider />
                   <template v-for="row in SOCIAL_ROWS" :key="row.label">
-                    <HStack h-align="between" v-align="start" :style="rowPadding">
+                    <HStack justify="between" align="start" :style="rowPadding">
                       <VStack :gap="0">
                         <Text type="body" weight="semibold" display="block">
                           {{ row.label }}
@@ -310,13 +310,13 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                     v-for="(device, i) in DEVICE_ROWS"
                     :key="i"
                     :gap="3"
-                    v-align="start"
+                    align="start"
                     :style="rowPadding"
                   >
                     <Icon icon="i-heroicons-computer-desktop" />
                     <StackItem size="fill">
                       <VStack :gap="0">
-                        <HStack :gap="2" v-align="center">
+                        <HStack :gap="2" align="center">
                           <Text type="body" weight="semibold">
                             {{ device.label }}
                           </Text>
@@ -347,7 +347,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                   </Text>
                 </VStack>
                 <Card variant="muted">
-                  <HStack :gap="4" v-align="start">
+                  <HStack :gap="4" align="start">
                     <Center :width="48" :height="48" :style="iconBox">
                       <Icon icon="i-heroicons-lock-closed" />
                     </Center>
@@ -406,7 +406,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                     <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
                   </HStack>
                 </VStack>
-                <HStack v-else h-align="between" v-align="start" :style="rowPadding">
+                <HStack v-else justify="between" align="start" :style="rowPadding">
                   <VStack :gap="0">
                     <Text type="body" weight="semibold" display="block">
                       {{ key === 'language' ? 'Preferred language' : key === 'currency' ? 'Preferred currency' : 'Time zone' }}
@@ -441,7 +441,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                   <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
                 </HStack>
               </VStack>
-              <HStack v-else h-align="between" v-align="start" :style="rowPadding">
+              <HStack v-else justify="between" align="start" :style="rowPadding">
                 <VStack :gap="0">
                   <Text type="body" weight="semibold" display="block">
                     Legal name
@@ -465,7 +465,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                   <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
                 </HStack>
               </VStack>
-              <HStack v-else h-align="between" v-align="start" :style="rowPadding">
+              <HStack v-else justify="between" align="start" :style="rowPadding">
                 <VStack :gap="0">
                   <Text type="body" weight="semibold" display="block">
                     Preferred first name
@@ -489,7 +489,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                   <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
                 </HStack>
               </VStack>
-              <HStack v-else h-align="between" v-align="start" :style="rowPadding">
+              <HStack v-else justify="between" align="start" :style="rowPadding">
                 <VStack :gap="0">
                   <Text type="body" weight="semibold" display="block">
                     Email address
@@ -525,7 +525,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                     label-spacing="spread"
                   />
                 </VStack>
-                <HStack h-align="between" v-align="center" :style="rowPadding">
+                <HStack justify="between" align="center" :style="rowPadding">
                   <Text type="body" weight="semibold">
                     Blocked people
                   </Text>

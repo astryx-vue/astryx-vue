@@ -84,9 +84,9 @@ function trendPath(values: number[]) {
   <Layout height="fill">
     <template #header>
       <LayoutHeader has-divider :padding="6">
-        <HStack :h-align="'between'" :v-align="'center'" wrap="wrap" :gap="4">
+        <HStack :justify="'between'" :align="'center'" wrap="wrap" :gap="4">
           <Heading :level="2">Executive scorecard</Heading>
-          <HStack :gap="2" :v-align="'center'">
+          <HStack :gap="2" :align="'center'">
             <Selector v-model="period" label="Period" is-label-hidden :options="PERIOD_OPTIONS" />
             <Button label="Export" variant="secondary">
               <template #icon><Icon icon="i-heroicons-arrow-down-tray" size="sm" /></template>

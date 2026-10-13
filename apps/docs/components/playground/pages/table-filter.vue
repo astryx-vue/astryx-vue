@@ -217,7 +217,7 @@ const filterChips = computed(() => [
     <template #header>
       <LayoutHeader has-divider :padding="4">
         <VStack :gap="4">
-          <HStack :gap="3" v-align="center">
+          <HStack :gap="3" align="center">
             <StackItem size="fill">
               <Heading :level="1">
                 Service jobs
@@ -229,7 +229,7 @@ const filterChips = computed(() => [
             <Button label="New job" variant="primary" />
           </HStack>
 
-          <HStack :gap="2" v-align="center" wrap="wrap">
+          <HStack :gap="2" align="center" wrap="wrap">
             <VStack :width="220">
               <Selector
                 v-model="statusFilter"
@@ -267,7 +267,7 @@ const filterChips = computed(() => [
             </StackItem>
           </HStack>
 
-          <HStack v-if="filterChips.length > 0" :gap="2" v-align="center" wrap="wrap">
+          <HStack v-if="filterChips.length > 0" :gap="2" align="center" wrap="wrap">
             <Token
               v-for="chip in filterChips"
               :key="chip.key"
@@ -307,7 +307,7 @@ const filterChips = computed(() => [
         label="Job details"
       >
         <VStack :gap="4">
-          <HStack :gap="2" v-align="center">
+          <HStack :gap="2" align="center">
             <StackItem size="fill">
               <Badge :variant="STATUS_META[activeJob.status].badge" :label="STATUS_META[activeJob.status].label" />
             </StackItem>
@@ -331,7 +331,7 @@ const filterChips = computed(() => [
               {{ activeJob.address }}
             </MetadataListItem>
             <MetadataListItem label="Technician">
-              <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center">
                 <Avatar :name="activeJob.technician" size="sm" />
                 <Text>{{ activeJob.technician }}</Text>
               </HStack>

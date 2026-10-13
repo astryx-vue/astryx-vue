@@ -338,7 +338,7 @@ function goNext() {
         </template>
         <template #footer>
           <LayoutFooter>
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <Button
                 label="Back"
                 variant="secondary"

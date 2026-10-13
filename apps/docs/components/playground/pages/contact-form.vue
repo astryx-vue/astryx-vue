@@ -109,10 +109,10 @@ function toggleGoal(goal: string) {
 
 <template>
   <Center axis="horizontal">
-    <VStack h-align="center" width="100%">
+    <VStack justify="center" width="100%">
       <Section :max-width="800" :padding="6" :padding-block="10" variant="section">
         <VStack :gap="6">
-          <VStack :gap="2" h-align="center">
+          <VStack :gap="2" justify="center">
             <Text type="display-1" weight="bold">
               Let's work together
             </Text>
@@ -224,7 +224,7 @@ function toggleGoal(goal: string) {
 
           <VStack :gap="3">
             <Button label="Submit" variant="primary" size="lg" @click="submitted = true" />
-            <HStack :gap="1" h-align="center">
+            <HStack :gap="1" justify="center">
               <Text type="supporting" color="secondary">
                 By submitting you agree to our
                 <Link href="#" type="supporting">

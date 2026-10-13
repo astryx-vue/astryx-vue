@@ -89,9 +89,9 @@ function copyPrompt() {
 
         <Card>
           <VStack :gap="3">
-            <HStack :gap="2" :v-align="'center'">
+            <HStack :gap="2" :align="'center'">
               <StackItem size="fill">
-                <HStack :gap="2" :v-align="'center'">
+                <HStack :gap="2" :align="'center'">
                   <span class="i-carbon-magic-wand" aria-hidden="true" />
                   <Text type="body" weight="semibold">
                     AI Assistance

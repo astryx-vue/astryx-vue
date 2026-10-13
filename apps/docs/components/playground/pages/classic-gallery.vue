@@ -77,8 +77,8 @@ const filteredImages = computed(() =>
         <VStack :gap="8" :style="outer">
           <Center axis="horizontal">
             <Section variant="transparent" :max-width="680" :padding="0">
-              <VStack :gap="4" h-align="center" :style="textCenter">
-                <VStack :gap="2" h-align="center">
+              <VStack :gap="4" justify="center" :style="textCenter">
+                <VStack :gap="2" justify="center">
                   <Heading :level="1">
                     Make every day a little more delightful, one detail at a time.
                   </Heading>

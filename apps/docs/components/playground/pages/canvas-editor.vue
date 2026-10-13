@@ -136,7 +136,7 @@ const canvasScale = computed(() => ({
       <LayoutHeader :padding="0">
         <Toolbar label="Document" size="sm" :dividers="['bottom']">
           <template #startContent>
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <IconButton label="Menu" variant="ghost" size="sm">
                 <Icon icon="i-heroicons-bars-3" size="sm" />
               </IconButton>
@@ -155,7 +155,7 @@ const canvasScale = computed(() => ({
           </template>
         </Toolbar>
         <Section variant="muted" :padding="2">
-          <HStack :gap="2" v-align="center" wrap="wrap">
+          <HStack :gap="2" align="center" wrap="wrap">
             <IconButton label="Undo" variant="ghost" size="sm">
               <Icon icon="i-heroicons-arrow-uturn-left" size="sm" />
             </IconButton>
@@ -236,7 +236,7 @@ const canvasScale = computed(() => ({
       <ResizeHandle :resizable="inspector.props" is-reversed :is-always-visible="false" />
       <LayoutPanel has-divider :width="inspector.size" :padding="4" :resizable="inspector.props" label="Inspector">
         <VStack v-if="selected" :gap="4">
-          <HStack :gap="2" v-align="center" h-align="between">
+          <HStack :gap="2" align="center" justify="between">
             <Heading :level="3">
               {{ selected.name }}
             </Heading>

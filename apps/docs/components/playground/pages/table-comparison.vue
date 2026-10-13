@@ -177,7 +177,7 @@ const rowsByGroup = computed(() => {
   <Layout height="auto" :content-width="1440">
     <template #header>
       <LayoutHeader :padding="4">
-        <HStack :gap="3" v-align="center" wrap="wrap">
+        <HStack :gap="3" align="center" wrap="wrap">
           <StackItem size="fill">
             <Heading :level="1">
               Compare models
@@ -195,7 +195,7 @@ const rowsByGroup = computed(() => {
 
     <LayoutContent :padding="4">
       <VStack :gap="6">
-        <HStack :gap="3" v-align="end" wrap="wrap">
+        <HStack :gap="3" align="end" wrap="wrap">
           <VStack v-for="(slotId, index) in slots" :key="slotId" :width="280">
             <Selector
               :model-value="slotId"

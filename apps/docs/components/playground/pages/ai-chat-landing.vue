@@ -130,9 +130,9 @@ function modeMenuItems() {
 <template>
   <Layout height="fill" :content-width="720" :padding="6">
     <LayoutContent>
-      <VStack :gap="8" :v-align="'center'" class="page">
+      <VStack :gap="8" :align="'center'" class="page">
         <VStack :gap="1">
-          <HStack :gap="2" :v-align="'center'">
+          <HStack :gap="2" :align="'center'">
             <span class="i-heroicons-sparkles accent" aria-hidden="true" />
             <Text type="large">
               Hi, Andrew
@@ -145,7 +145,7 @@ function modeMenuItems() {
 
         <Card :padding="4" class="composer-shell">
           <VStack :gap="3">
-            <HStack :gap="2" :v-align="'center'" :h-align="'between'">
+            <HStack :gap="2" :align="'center'" :justify="'between'">
               <DropdownMenu
                 :button="{ label: 'Reference', variant: 'ghost', size: 'sm', isIconOnly: true }"
                 :has-chevron="false"
@@ -210,7 +210,7 @@ function modeMenuItems() {
               class="composer-input"
             />
 
-            <HStack :h-align="'end'">
+            <HStack :justify="'end'">
               <Button label="Send" variant="primary" size="md" />
             </HStack>
           </VStack>

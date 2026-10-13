@@ -223,7 +223,7 @@ const selectionPlugin = useTableSelection<Conversation>(selectionConfig)
     <template #header>
       <LayoutHeader :padding="0">
         <VStack :gap="0">
-          <HStack :gap="3" v-align="center" wrap="wrap" :padding="4">
+          <HStack :gap="3" align="center" wrap="wrap" :padding="4">
             <StackItem size="fill">
               <VStack :gap="0.5">
                 <Heading :level="1">
@@ -274,7 +274,7 @@ const selectionPlugin = useTableSelection<Conversation>(selectionConfig)
       <ResizeHandle :resizable="pane.props" is-reversed :is-always-visible="false" />
       <LayoutPanel has-divider :resizable="pane.props" :padding="4" role="complementary" label="Reading pane">
         <VStack :gap="4" height="100%">
-          <HStack :gap="2" v-align="center">
+          <HStack :gap="2" align="center">
             <StackItem size="fill">
               <Heading :level="3">
                 {{ openThread.subject }}
@@ -287,7 +287,7 @@ const selectionPlugin = useTableSelection<Conversation>(selectionConfig)
               <Icon icon="i-heroicons-x-mark" size="sm" />
             </IconButton>
           </HStack>
-          <HStack :gap="2" v-align="center">
+          <HStack :gap="2" align="center">
             <Avatar :name="openThread.sender" size="md" />
             <VStack :gap="0">
               <Text weight="semibold">
@@ -310,7 +310,7 @@ const selectionPlugin = useTableSelection<Conversation>(selectionConfig)
               Reply
             </Text>
             <TextArea v-model="replyDraft" label="Reply" is-label-hidden rows="4" placeholder="Write a reply…" />
-            <HStack :gap="2" h-align="end">
+            <HStack :gap="2" justify="end">
               <Button label="Archive" variant="secondary" />
               <Button label="Send" variant="primary">
                 <template #icon>

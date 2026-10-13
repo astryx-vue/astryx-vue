@@ -246,7 +246,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
   <Layout height="fill" :padding="4" :content-width="1440">
     <template #header>
       <LayoutHeader has-divider>
-        <HStack :gap="3" v-align="center" h-align="between" wrap="wrap">
+        <HStack :gap="3" align="center" justify="between" wrap="wrap">
           <VStack :gap="0">
             <Heading :level="1">
               Funnel & cohort analytics
@@ -290,7 +290,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                     <Heading :level="1">
                       {{ kpi.value }}
                     </Heading>
-                    <HStack :gap="1" v-align="center">
+                    <HStack :gap="1" align="center">
                       <Icon
                         :icon="kpi.delta >= 0 ? 'arrowUp' : 'arrowDown'"
                         size="xsm"
@@ -324,7 +324,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                     <Text type="label" color="secondary">
                       {{ step.label }}
                     </Text>
-                    <HStack :gap="2" v-align="center">
+                    <HStack :gap="2" align="center">
                       <Heading :level="2">
                         {{ step.conv.toFixed(1) }}%
                       </Heading>
@@ -364,8 +364,8 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                     :x-tick-format="formatTrendTick"
                   />
                 </PlaygroundResponsive>
-                <HStack :gap="5" v-align="center" wrap="wrap">
-                  <HStack v-for="series in TREND_SERIES" :key="series.key" :gap="2" v-align="center">
+                <HStack :gap="5" align="center" wrap="wrap">
+                  <HStack v-for="series in TREND_SERIES" :key="series.key" :gap="2" align="center">
                     <span class="legend-dot" :style="{ background: series.color }" />
                     <Text type="supporting" color="secondary">
                       {{ series.name }}
@@ -390,11 +390,11 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
             <Card :padding="6">
               <VStack :gap="8">
                 <Table :data="cohortRows" :columns="cohortColumns" id-key="id" density="balanced" dividers="rows" />
-                <HStack :gap="4" v-align="center" wrap="wrap">
+                <HStack :gap="4" align="center" wrap="wrap">
                   <Text type="supporting" color="secondary">
                     Retention:
                   </Text>
-                  <HStack :gap="2" v-align="center">
+                  <HStack :gap="2" align="center">
                     <Token size="sm" color="red" label="< 32%" />
                     <Token size="sm" color="orange" label="32–40%" />
                     <Token size="sm" color="yellow" label="40–50%" />

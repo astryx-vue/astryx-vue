@@ -100,9 +100,9 @@ function onPasswordChange(value: string) {
 <template>
   <Center axis="both" :padding="6" :style="pageStyle">
     <Card :padding="8" width="100%" :max-width="400">
-      <VStack :gap="4" h-align="stretch">
+      <VStack :gap="4" justify="stretch">
         <template v-if="step === 'email'">
-          <VStack :gap="1" h-align="center">
+          <VStack :gap="1" justify="center">
             <Text type="display-1" as="h2">
               Welcome back
             </Text>
@@ -147,7 +147,7 @@ function onPasswordChange(value: string) {
             :is-disabled="!emailValid"
             @click="handleContinue"
           />
-          <VStack h-align="center">
+          <VStack justify="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
               <Link href="#" type="supporting">
@@ -158,7 +158,7 @@ function onPasswordChange(value: string) {
         </template>
 
         <template v-else-if="step === 'sso-confirm' && provider">
-          <VStack :gap="2" h-align="center">
+          <VStack :gap="2" justify="center">
             <Avatar :name="provider.name" :size="48" />
             <Text type="display-3" as="h2">
               Sign in with {{ provider.name }}
@@ -169,7 +169,7 @@ function onPasswordChange(value: string) {
           </VStack>
           <Card :padding="0">
             <Section variant="muted" :padding="4">
-              <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center">
                 <Icon icon="i-heroicons-shield-check" color="secondary" />
                 <VStack :gap="0">
                   <Text type="label">
@@ -200,7 +200,7 @@ function onPasswordChange(value: string) {
         </template>
 
         <template v-else-if="step === 'password-fallback'">
-          <VStack :gap="1" h-align="center">
+          <VStack :gap="1" justify="center">
             <Text type="display-1" as="h2">
               Welcome back
             </Text>
@@ -218,7 +218,7 @@ function onPasswordChange(value: string) {
                 :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                 @update:model-value="onPasswordChange"
               />
-              <VStack v-if="loginFailed" h-align="end">
+              <VStack v-if="loginFailed" justify="end">
                 <Link href="#" size="sm" color="secondary" type="supporting">
                   Forgot password?
                 </Link>

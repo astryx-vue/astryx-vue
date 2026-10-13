@@ -109,7 +109,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Heading :level="1" type="display-2">
                 {{ PRODUCT.name }}
               </Heading>
-              <HStack :gap="1" :v-align="'center'">
+              <HStack :gap="1" :align="'center'">
                 <span
                   v-for="n in filledStars"
                   :key="`full-${n}`"
@@ -126,7 +126,7 @@ const filledStars = computed(() => Math.round(4.3))
                   4.3 (128)
                 </Text>
               </HStack>
-              <HStack :gap="2" :v-align="'center'">
+              <HStack :gap="2" :align="'center'">
                 <Text type="large" weight="bold">
                   {{ fmt(PRODUCT.price) }}
                 </Text>
@@ -143,7 +143,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Glaze
               </Text>
-              <VStack h-align="start">
+              <VStack justify="start">
                 <SegmentedControl v-model="color" label="Glaze">
                   <SegmentedControlItem
                     v-for="c in COLORS"
@@ -158,7 +158,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Finish
               </Text>
-              <VStack h-align="start">
+              <VStack justify="start">
                 <SegmentedControl v-model="finish" label="Finish">
                   <SegmentedControlItem
                     v-for="f in FINISHES"
@@ -173,7 +173,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Quantity
               </Text>
-              <HStack :gap="1" :v-align="'center'">
+              <HStack :gap="1" :align="'center'">
                 <Button
                   label="Decrease quantity"
                   variant="ghost"

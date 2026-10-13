@@ -281,7 +281,7 @@ function toggleAll(): void {
   <Layout height="auto" :content-width="1200" class="wash">
     <template #header>
       <LayoutHeader :padding="4">
-        <HStack :gap="3" v-align="center" wrap="wrap">
+        <HStack :gap="3" align="center" wrap="wrap">
           <StackItem size="fill">
             <VStack :gap="0.5">
               <Heading :level="1">
@@ -305,15 +305,15 @@ function toggleAll(): void {
         <Card :padding="2">
           <Collapsible v-model:is-open="bankOpen">
             <template #trigger>
-              <HStack :gap="2" v-align="center" h-align="between" class="group-trigger">
-                <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center" justify="between" class="group-trigger">
+                <HStack :gap="2" align="center">
                   <Icon icon="i-heroicons-building-library" size="sm" />
                   <Text weight="semibold">
                     Bank accounts
                   </Text>
                   <Badge variant="neutral" :label="String(BANK_ACCOUNTS.length)" />
                 </HStack>
-                <HStack :gap="2" v-align="center">
+                <HStack :gap="2" align="center">
                   <Text color="secondary">
                     Available
                   </Text>
@@ -332,15 +332,15 @@ function toggleAll(): void {
         <Card :padding="2">
           <Collapsible v-model:is-open="cardsOpen">
             <template #trigger>
-              <HStack :gap="2" v-align="center" h-align="between" class="group-trigger">
-                <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center" justify="between" class="group-trigger">
+                <HStack :gap="2" align="center">
                   <Icon icon="i-heroicons-credit-card" size="sm" />
                   <Text weight="semibold">
                     Credit cards
                   </Text>
                   <Badge variant="neutral" :label="String(CREDIT_CARDS.length)" />
                 </HStack>
-                <HStack :gap="2" v-align="center">
+                <HStack :gap="2" align="center">
                   <Text color="secondary">
                     Outstanding
                   </Text>
@@ -359,15 +359,15 @@ function toggleAll(): void {
         <Card :padding="2">
           <Collapsible v-model:is-open="processorsOpen">
             <template #trigger>
-              <HStack :gap="2" v-align="center" h-align="between" class="group-trigger">
-                <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center" justify="between" class="group-trigger">
+                <HStack :gap="2" align="center">
                   <Icon icon="i-heroicons-arrows-right-left" size="sm" />
                   <Text weight="semibold">
                     Payment processors
                   </Text>
                   <Badge variant="neutral" :label="String(PROCESSORS.length)" />
                 </HStack>
-                <HStack :gap="2" v-align="center">
+                <HStack :gap="2" align="center">
                   <Text color="secondary">
                     Pending payout
                   </Text>
@@ -386,15 +386,15 @@ function toggleAll(): void {
         <Card :padding="2">
           <Collapsible v-model:is-open="investmentsOpen">
             <template #trigger>
-              <HStack :gap="2" v-align="center" h-align="between" class="group-trigger">
-                <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center" justify="between" class="group-trigger">
+                <HStack :gap="2" align="center">
                   <Icon icon="i-heroicons-presentation-chart-line" size="sm" />
                   <Text weight="semibold">
                     Investment accounts
                   </Text>
                   <Badge variant="neutral" :label="String(INVESTMENTS.length)" />
                 </HStack>
-                <HStack :gap="2" v-align="center">
+                <HStack :gap="2" align="center">
                   <Text color="secondary">
                     Market value
                   </Text>

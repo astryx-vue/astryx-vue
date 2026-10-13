@@ -235,7 +235,7 @@ function onRowActivate(task: TaskRow): void {
     <template #header>
       <LayoutHeader has-divider :padding="4">
         <VStack :gap="4">
-          <HStack :gap="3" v-align="center">
+          <HStack :gap="3" align="center">
             <StackItem size="fill">
               <Heading :level="1">
                 All Issues
@@ -243,7 +243,7 @@ function onRowActivate(task: TaskRow): void {
             </StackItem>
             <Button label="Create issue" variant="primary" size="lg" @click="dialogOpen = true" />
           </HStack>
-          <HStack :gap="2" v-align="center">
+          <HStack :gap="2" align="center">
             <StackItem size="fill">
               <TextInput
                 v-model="query"
@@ -289,7 +289,7 @@ function onRowActivate(task: TaskRow): void {
             class="group-header"
             @click="toggleGroup(key)"
           >
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <Icon
                 :icon="expandedGroups.has(key) ? 'i-heroicons-chevron-down' : 'i-heroicons-chevron-right'"
                 size="sm"
@@ -325,7 +325,7 @@ function onRowActivate(task: TaskRow): void {
         label="Task details"
       >
         <VStack :gap="4">
-          <HStack :gap="2" v-align="center">
+          <HStack :gap="2" align="center">
             <StackItem size="fill">
               <Text type="supporting" color="secondary">
                 {{ selectedTask.taskId }}
@@ -347,19 +347,19 @@ function onRowActivate(task: TaskRow): void {
           </VStack>
           <MetadataList :label="{ position: 'start' }">
             <MetadataListItem label="Status">
-              <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center">
                 <StatusDot :variant="STATUS_DOT[selectedTask.status]" :label="STATUS_LABEL[selectedTask.status]" />
                 <Text>{{ STATUS_LABEL[selectedTask.status] }}</Text>
               </HStack>
             </MetadataListItem>
             <MetadataListItem label="Priority">
-              <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center">
                 <Icon icon="i-heroicons-chart-bar-solid" size="sm" :color="PRIORITY_COLOR[selectedTask.priority]" />
                 <Text>{{ PRIORITY_LABEL[selectedTask.priority] }}</Text>
               </HStack>
             </MetadataListItem>
             <MetadataListItem label="Assignee">
-              <HStack :gap="2" v-align="center">
+              <HStack :gap="2" align="center">
                 <Avatar :name="selectedTask.assignee" size="sm" />
                 <Text>{{ selectedTask.assignee }}</Text>
               </HStack>
@@ -402,7 +402,7 @@ function onRowActivate(task: TaskRow): void {
       </LayoutContent>
       <template #footer>
         <LayoutFooter has-divider>
-          <HStack :gap="2" h-align="end">
+          <HStack :gap="2" justify="end">
             <Button label="Cancel" variant="secondary" @click="dialogOpen = false" />
             <Button label="Create" variant="primary" @click="dialogOpen = false" />
           </HStack>

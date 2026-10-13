@@ -56,7 +56,7 @@ const COMPONENT = {
     <LayoutContent :padding="8">
       <VStack :gap="8">
         <VStack :gap="2">
-          <HStack :gap="2" :v-align="'center'" wrap="wrap">
+          <HStack :gap="2" :align="'center'" wrap="wrap">
             <Badge :label="COMPONENT.category" variant="blue" />
             <Token label="Stable" />
           </HStack>
@@ -91,14 +91,14 @@ const COMPONENT = {
 
         <VStack id="examples" :gap="4">
           <Heading :level="2">Examples</Heading>
-          <HStack :gap="2" :v-align="'center'">
+          <HStack :gap="2" :align="'center'">
             <Button label="Open Dialog" variant="primary" @click="dialogOpen = true" />
             <IconButton label="Open in new tab">
               <Icon icon="i-heroicons-arrow-top-right-on-square" size="sm" />
             </IconButton>
           </HStack>
           <Card variant="muted" :padding="8" class="preview-stage">
-            <HStack :h-align="'center'">
+            <HStack :justify="'center'">
               <Button label="Primary action" variant="primary" />
             </HStack>
           </Card>

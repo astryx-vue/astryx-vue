@@ -111,7 +111,7 @@ function openArtifact() {
                   </template>
                   <ChatMessageBubble variant="ghost" width="100%">
                     <ClickableCard :label="ARTIFACT_TITLE" variant="muted" :padding="3" :max-width="360" @click="openArtifact">
-                      <HStack :gap="3" :v-align="'center'" width="100%">
+                      <HStack :gap="3" :align="'center'" width="100%">
                         <Icon icon="i-heroicons-document-text" size="md" color="secondary" />
                         <StackItem size="fill">
                           <VStack :gap="0">
@@ -127,7 +127,7 @@ function openArtifact() {
               </ChatMessageList>
               <template #composer>
                 <VStack :gap="2" class="composer">
-                  <HStack :h-align="'between'">
+                  <HStack :justify="'between'">
                     <DropdownMenu
                       :button="{ label: composerMode === 'ask' ? 'Ask' : 'Edit', variant: 'ghost', size: 'sm' }"
                       :items="[
@@ -165,7 +165,7 @@ function openArtifact() {
             >
               <Toolbar label="Artifact actions" :dividers="['bottom']">
                 <template #start>
-                  <HStack :gap="3" :v-align="'center'">
+                  <HStack :gap="3" :align="'center'">
                     <Icon icon="i-heroicons-document-text" size="sm" color="secondary" />
                     <VStack :gap="0">
                       <Text type="label" weight="semibold">{{ ARTIFACT_TITLE }}</Text>

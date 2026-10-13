@@ -96,20 +96,20 @@ function back() {
               <Heading :level="3">
                 Order summary
               </Heading>
-              <HStack h-align="between">
+              <HStack justify="between">
                 <Text color="secondary">
                   Subtotal
                 </Text>
                 <Text>$230.00</Text>
               </HStack>
-              <HStack h-align="between">
+              <HStack justify="between">
                 <Text color="secondary">
                   Shipping
                 </Text>
                 <Text>$4.95</Text>
               </HStack>
               <Divider />
-              <HStack h-align="between">
+              <HStack justify="between">
                 <Text weight="bold">
                   Total
                 </Text>

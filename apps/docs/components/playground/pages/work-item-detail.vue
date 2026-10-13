@@ -79,9 +79,9 @@ function togglePanel() {
     <template #header>
       <LayoutHeader has-divider :padding="4">
         <VStack :gap="3">
-          <HStack :gap="2" :v-align="'center'" wrap="wrap">
+          <HStack :gap="2" :align="'center'" wrap="wrap">
             <Link href="#" color="secondary">
-              <HStack :gap="1" :v-align="'center'">
+              <HStack :gap="1" :align="'center'">
                 <Icon icon="i-heroicons-arrow-left" size="sm" />
                 Back to board
               </HStack>
@@ -91,7 +91,7 @@ function togglePanel() {
             <Text type="supporting" color="secondary">Updated <Timestamp value="2026-04-29T09:00:00" format="relative" /></Text>
           </HStack>
           <Heading :level="1">Fix silent JWT refresh in API gateway</Heading>
-          <HStack :gap="2" :v-align="'center'" wrap="wrap">
+          <HStack :gap="2" :align="'center'" wrap="wrap">
             <Selector v-model="status" label="Status" :options="STATUS_OPTIONS" size="sm" />
             <Selector v-model="priority" label="Priority" :options="PRIORITY_OPTIONS" size="sm" />
             <AvatarGroup>
@@ -144,7 +144,7 @@ function togglePanel() {
             <Heading :level="2">Comments</Heading>
             <VStack :gap="3">
               <Card v-for="c in COMMENTS" :key="c.id" variant="muted" :padding="3">
-                <HStack :gap="2" :v-align="'center'">
+                <HStack :gap="2" :align="'center'">
                   <Avatar :name="c.author" size="sm" />
                   <Text type="body" weight="bold">{{ c.author }}</Text>
                   <Timestamp :value="c.time" format="date_time" />
@@ -153,7 +153,7 @@ function togglePanel() {
               </Card>
             </VStack>
             <TextArea v-model="comment" label="Add comment" placeholder="Leave a comment…" />
-            <HStack :h-align="'end'">
+            <HStack :justify="'end'">
               <Button label="Post comment" variant="primary" />
             </HStack>
           </VStack>

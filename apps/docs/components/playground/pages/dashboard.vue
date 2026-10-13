@@ -122,7 +122,7 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
     <LayoutContent :padding="6">
       <VStack :gap="6">
         <VStack :gap="6">
-          <HStack :h-align="'between'" :v-align="'center'">
+          <HStack :justify="'between'" :align="'center'">
             <Heading :level="3">Active users</Heading>
             <Button label="Reload" variant="secondary" size="md">
               <template #icon>
@@ -135,7 +135,7 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
               <path :d="activeUsersPath" fill="none" stroke="var(--color-data-categorical-blue, #0171E3)" stroke-width="2" />
             </svg>
             <HStack :gap="4" class="legend">
-              <HStack :gap="2" :v-align="'center'">
+              <HStack :gap="2" :align="'center'">
                 <Icon icon="i-heroicons-stop-solid" size="xsm" style="color: var(--color-data-categorical-blue, #0171E3)" />
                 <Text type="supporting" color="secondary">All users</Text>
               </HStack>
@@ -148,9 +148,9 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
             <Card v-for="m in metrics.slice(start, start + 2)" :key="m.label">
               <VStack :gap="2">
                 <Heading :level="4">{{ m.label }}</Heading>
-                <HStack :gap="2" :v-align="'center'">
+                <HStack :gap="2" :align="'center'">
                   <Heading :level="2">{{ m.value }}</Heading>
-                  <HStack :gap="1" :v-align="'center'">
+                  <HStack :gap="1" :align="'center'">
                     <Icon
                       :icon="m.positive ? 'i-heroicons-arrow-up' : 'i-heroicons-arrow-down'"
                       size="xsm"
@@ -170,7 +170,7 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
 
         <Divider />
 
-        <HStack :h-align="'between'" :v-align="'center'">
+        <HStack :justify="'between'" :align="'center'">
           <Heading :level="3">Demographics</Heading>
           <Button label="View more" variant="secondary" size="md" />
         </HStack>
@@ -185,7 +185,7 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
               </div>
               <HStack :gap="4" wrap="wrap">
                 <VStack v-for="d in (idx === 0 ? regionData : roleData)" :key="d.label" :gap="0">
-                  <HStack :gap="2" :v-align="'center'">
+                  <HStack :gap="2" :align="'center'">
                     <Icon icon="i-heroicons-stop-solid" size="xsm" :style="{ color: d.color }" />
                     <Text type="supporting">{{ d.label }}</Text>
                   </HStack>
@@ -198,14 +198,14 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
 
         <Divider />
 
-        <HStack :h-align="'between'" :v-align="'center'">
+        <HStack :justify="'between'" :align="'center'">
           <Heading :level="3">Engagement</Heading>
           <Button label="View more" variant="secondary" size="md" />
         </HStack>
         <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
           <Card>
             <VStack :gap="6">
-              <HStack :h-align="'between'" :v-align="'center'">
+              <HStack :justify="'between'" :align="'center'">
                 <Heading :level="4">Top pages</Heading>
                 <Link href="#">All pages</Link>
               </HStack>
@@ -214,7 +214,7 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
           </Card>
           <Card>
             <VStack :gap="6">
-              <HStack :h-align="'between'" :v-align="'center'">
+              <HStack :justify="'between'" :align="'center'">
                 <Heading :level="4">Top events</Heading>
                 <Link href="#">All events</Link>
               </HStack>

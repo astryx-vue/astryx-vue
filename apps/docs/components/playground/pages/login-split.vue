@@ -78,7 +78,7 @@ function onPasswordChange(value: string) {
           >
             <Section variant="transparent" :padding="0" height="100%">
               <VStack :gap="4" height="100%">
-                <HStack :gap="2" v-align="center">
+                <HStack :gap="2" align="center">
                   <Icon icon="i-heroicons-squares-2x2" />
                   <Text type="body" weight="bold">
                     Product Inc.
@@ -95,7 +95,7 @@ function onPasswordChange(value: string) {
                         <Icon icon="i-heroicons-check-circle" size="lg" />
                       </template>
                     </EmptyState>
-                    <VStack v-else :gap="4" h-align="stretch" width="100%">
+                    <VStack v-else :gap="4" justify="stretch" width="100%">
                       <VStack :gap="1">
                         <Text type="display-1" as="h2">
                           Welcome back
@@ -124,7 +124,7 @@ function onPasswordChange(value: string) {
                             :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                             @update:model-value="onPasswordChange"
                           />
-                          <VStack v-if="loginFailed" h-align="end">
+                          <VStack v-if="loginFailed" justify="end">
                             <Link href="#" size="sm" color="secondary" type="supporting">
                               Forgot your password?
                             </Link>
@@ -170,7 +170,7 @@ function onPasswordChange(value: string) {
           </Grid>
         </Card>
       </div>
-      <VStack h-align="center">
+      <VStack justify="center">
         <Text type="supporting" color="secondary">
           By clicking continue, you agree to our
           <Link href="#" type="supporting">

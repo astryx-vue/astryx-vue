@@ -384,7 +384,7 @@ onBeforeUnmount(() => {
                   ]"
                 />
                 <Divider variant="strong" orientation="vertical" class="toolbar-divider" />
-                <HStack :gap="1" v-align="center">
+                <HStack :gap="1" align="center">
                   <IconButton label="Sort">
                     <Icon icon="i-heroicons-arrows-up-down" size="sm" />
                   </IconButton>
@@ -418,8 +418,8 @@ onBeforeUnmount(() => {
             <Layout height="fill">
               <template #header>
                 <LayoutHeader has-divider :padding="3">
-                  <HStack h-align="between" v-align="center">
-                    <HStack :gap="2" v-align="center">
+                  <HStack justify="between" align="center">
+                    <HStack :gap="2" align="center">
                       <StatusDot :variant="meta.variant" :label="`${meta.title} status`" />
                       <Heading :level="4">
                         {{ meta.title }}
@@ -467,8 +467,8 @@ onBeforeUnmount(() => {
                       @pointerdown="onCardPointerDown($event, item.id)"
                     >
                       <VStack :gap="2">
-                        <HStack h-align="between" v-align="start">
-                          <HStack :gap="1" v-align="center" wrap="wrap">
+                        <HStack justify="between" align="start">
+                          <HStack :gap="1" align="center" wrap="wrap">
                             <Badge :label="item.ref" variant="neutral" />
                             <Badge :label="PRIORITY_META[item.priority].label" :variant="PRIORITY_META[item.priority].variant" />
                           </HStack>
@@ -511,8 +511,8 @@ onBeforeUnmount(() => {
       }"
     >
       <VStack :gap="2">
-        <HStack h-align="between" v-align="start">
-          <HStack :gap="1" v-align="center" wrap="wrap">
+        <HStack justify="between" align="start">
+          <HStack :gap="1" align="center" wrap="wrap">
             <Badge :label="draggedItem.ref" variant="neutral" />
             <Badge :label="PRIORITY_META[draggedItem.priority].label" :variant="PRIORITY_META[draggedItem.priority].variant" />
           </HStack>

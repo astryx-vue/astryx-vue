@@ -168,7 +168,7 @@ function goBack() {
     </template>
     <template #footer>
       <LayoutFooter>
-        <HStack :gap="2" v-align="center">
+        <HStack :gap="2" align="center">
           <Button label="Back" variant="secondary" :is-disabled="step === 0" @click="goBack" />
           <StackItem size="fill" />
           <FieldStatus

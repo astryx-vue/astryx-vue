@@ -132,7 +132,7 @@ function deltaColor(delta: number, higherIsBetter: boolean) {
       <LayoutHeader has-divider :padding="6">
         <VStack :gap="4">
           <Heading :level="2">User analytics</Heading>
-          <HStack :gap="3" wrap="wrap" :v-align="'center'">
+          <HStack :gap="3" wrap="wrap" :align="'center'">
             <DateRangeInput v-model="range" label="Date range" is-label-hidden />
             <Selector v-model="segment" label="Segment" is-label-hidden :options="SEGMENT_OPTIONS" />
             <Selector v-model="device" label="Device" is-label-hidden :options="DEVICE_OPTIONS" />
@@ -147,7 +147,7 @@ function deltaColor(delta: number, higherIsBetter: boolean) {
     <LayoutContent :padding="6">
       <VStack :gap="10">
         <VStack :gap="6">
-          <HStack :gap="2" :v-align="'center'">
+          <HStack :gap="2" :align="'center'">
             <Icon icon="i-heroicons-users" size="sm" color="secondary" />
             <VStack :gap="0">
               <Heading :level="3">Key metrics</Heading>
@@ -171,7 +171,7 @@ function deltaColor(delta: number, higherIsBetter: boolean) {
         </VStack>
 
         <VStack :gap="6">
-          <HStack :gap="2" :v-align="'center'">
+          <HStack :gap="2" :align="'center'">
             <Icon icon="i-heroicons-cursor-arrow-rays" size="sm" color="secondary" />
             <VStack :gap="0">
               <Heading :level="3">Devices</Heading>

@@ -49,7 +49,7 @@ function fmt(n: number) {
           <Heading :level="1">
             Make every day a little more delightful, one small detail at a time.
           </Heading>
-          <VStack :gap="3" h-align="start">
+          <VStack :gap="3" justify="start">
             <Text type="body">
               We believe the smallest details are the ones that matter most. A little color, a thoughtful touch, a moment that catches your eye and makes you pause; that's what turns an ordinary day into something worth remembering.
             </Text>

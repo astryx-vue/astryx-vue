@@ -79,17 +79,17 @@ function togglePanel() {
     <template #header>
       <LayoutHeader has-divider :padding="4" :padding-block-end="0">
         <VStack :gap="3">
-          <HStack :gap="4" :v-align="'start'">
+          <HStack :gap="4" :align="'start'">
             <StackItem size="fill">
               <VStack :gap="0">
                 <Link href="#" color="secondary">
-                  <HStack :gap="1" :v-align="'center'">
+                  <HStack :gap="1" :align="'center'">
                     <Icon icon="i-heroicons-arrow-left" size="sm" color="inherit" />
                     All orders
                   </HStack>
                 </Link>
                 <Heading :level="1" :max-lines="1">#1001</Heading>
-                <HStack :gap="1" :v-align="'center'" wrap="wrap">
+                <HStack :gap="1" :align="'center'" wrap="wrap">
                   <Text type="body" :max-lines="1">{{ PRODUCTS.length }} ordered items</Text>
                   <Text type="supporting" color="secondary">・</Text>
                   <Avatar name="Jane Doe" size="sm" />
@@ -105,7 +105,7 @@ function togglePanel() {
             </HStack>
           </HStack>
 
-          <HStack :v-align="'center'">
+          <HStack :align="'center'">
             <StackItem size="fill">
               <TabList v-model:value="activeTab" size="lg" is-full-bleed>
                 <Tab value="details" label="Details" />
@@ -138,9 +138,9 @@ function togglePanel() {
       <VStack :gap="4">
         <Section>
           <VStack :gap="4">
-            <HStack :v-align="'center'" :gap="2" wrap="wrap">
+            <HStack :align="'center'" :gap="2" wrap="wrap">
               <StackItem size="fill">
-                <HStack :gap="2" :v-align="'center'">
+                <HStack :gap="2" :align="'center'">
                   <Heading :level="2">Items</Heading>
                   <Badge variant="warning" label="Unfulfilled" />
                 </HStack>
@@ -166,7 +166,7 @@ function togglePanel() {
                   <Thumbnail :src="product.image" :alt="product.name" :label="product.name" />
                 </template>
                 <template #end>
-                  <VStack :gap="0" :h-align="'end'">
+                  <VStack :gap="0" :justify="'end'">
                     <Text type="body" weight="bold">{{ fmt(product.price * product.qty) }}</Text>
                     <Text type="supporting" color="secondary">{{ fmt(product.price) }} × {{ product.qty }}</Text>
                   </VStack>

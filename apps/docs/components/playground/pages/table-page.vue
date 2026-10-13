@@ -257,12 +257,12 @@ const basis = ref<'all' | BillingBasis>('all')
 
 const { filters: columnFilters, onFilterChange, clearAll } = useTableFilterState()
 
-const filterPlugin = useTableFiltering<InvoiceRow>({
-  filters: columnFilters,
+const filterPlugin = useTableFiltering<InvoiceRow>(() => ({
+  filters: columnFilters.value,
   onFilterChange,
   fields: FILTER_FIELDS,
   variant: 'popover',
-})
+}))
 
 const visible = computed(() => {
   let matched = applyTableFilters(ROWS, columnFilters.value, FILTER_FIELDS)
@@ -344,7 +344,7 @@ const AMOUNT_COLUMN_WIDTH = 132
     <LayoutContent :padding="0">
       <VStack :padding="4" :gap="8">
         <VStack :gap="6" :padding-block-end="4">
-          <HStack :gap="3" v-align="center" wrap="wrap">
+          <HStack :gap="3" align="center" wrap="wrap">
             <StackItem size="fill">
               <Heading :level="1">
                 Invoice INV-2043
@@ -363,7 +363,7 @@ const AMOUNT_COLUMN_WIDTH = 132
           </MetadataList>
         </VStack>
 
-        <HStack :gap="3" v-align="center" h-align="between" wrap="wrap">
+        <HStack :gap="3" align="center" justify="between" wrap="wrap">
           <SegmentedControl v-model="basis" label="Filter by billing basis">
             <SegmentedControlItem
               v-for="filter in BASIS_FILTERS"
@@ -405,7 +405,7 @@ const AMOUNT_COLUMN_WIDTH = 132
             />
             <VStack :gap="3">
               <Divider />
-              <HStack :gap="6" h-align="end" v-align="center">
+              <HStack :gap="6" justify="end" align="center">
                 <Text>Subtotal</Text>
                 <VStack :width="AMOUNT_COLUMN_WIDTH">
                   <Text justify="end" display="block" has-tabular-numbers>
@@ -413,7 +413,7 @@ const AMOUNT_COLUMN_WIDTH = 132
                   </Text>
                 </VStack>
               </HStack>
-              <HStack :gap="6" h-align="end" v-align="center">
+              <HStack :gap="6" justify="end" align="center">
                 <Text color="secondary">
                   Tax (8.75%)
                 </Text>
@@ -424,7 +424,7 @@ const AMOUNT_COLUMN_WIDTH = 132
                 </VStack>
               </HStack>
               <Divider />
-              <HStack :gap="6" h-align="end" v-align="center">
+              <HStack :gap="6" justify="end" align="center">
                 <Text weight="semibold">
                   Total due
                 </Text>

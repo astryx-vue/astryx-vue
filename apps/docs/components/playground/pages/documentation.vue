@@ -73,7 +73,7 @@ const COMPONENT_CATEGORIES = [
     <LayoutContent :padding="8">
       <VStack :gap="10">
         <Card variant="gray" :padding="10">
-          <HStack :gap="8" :v-align="'center'">
+          <HStack :gap="8" :align="'center'">
             <StackItem size="fill">
               <VStack :gap="4">
                 <Text type="display-1">

@@ -177,7 +177,7 @@ function conversationMenuOpen(open: boolean) {
           <HStack
             v-for="(message, mi) in MESSAGES"
             :key="mi"
-            :h-align="message.role === 'assistant' ? 'start' : 'end'"
+            :justify="message.role === 'assistant' ? 'start' : 'end'"
           >
             <Card
               variant="muted"

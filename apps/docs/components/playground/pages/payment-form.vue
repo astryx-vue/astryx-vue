@@ -263,7 +263,7 @@ const errors = computed(() => submitted.value ? {
                 </VStack>
                 <Divider />
               </VStack>
-              <Stack :direction="isMobile ? 'vertical' : 'horizontal'" :gap="8" v-align="start">
+              <Stack :direction="isMobile ? 'vertical' : 'horizontal'" :gap="8" align="start">
                 <StackItem size="fill" :style="isMobile ? undefined : formColBasis">
                   <VStack :gap="8">
                     <VStack :gap="3">
@@ -316,12 +316,12 @@ const errors = computed(() => submitted.value ? {
                     <Collapsible trigger="Order Summary" :default-is-open="true">
                       <VStack :gap="4" :style="summaryContent">
                         <VStack v-for="item in ORDER_ITEMS" :key="item.id" :gap="3">
-                          <HStack :gap="3" v-align="start">
+                          <HStack :gap="3" align="start">
                             <Thumbnail :src="ITEM_IMAGES[item.id].src" :alt="item.name" />
                             <StackItem size="fill">
                               <VStack :gap="1">
-                                <HStack :gap="2" h-align="between" v-align="start">
-                                  <HStack :gap="2" v-align="center">
+                                <HStack :gap="2" justify="between" align="start">
+                                  <HStack :gap="2" align="center">
                                     <Text type="body" weight="medium">{{ item.name }}</Text>
                                     <Badge v-if="item.limited" variant="green" label="LIMITED EDITION" />
                                   </HStack>
@@ -334,11 +334,11 @@ const errors = computed(() => submitted.value ? {
                           </HStack>
                           <Divider />
                         </VStack>
-                        <HStack h-align="between"><Text color="secondary">Subtotal</Text><Text>{{ fmt(SUBTOTAL) }}</Text></HStack>
-                        <HStack h-align="between"><Text color="secondary">Shipping</Text><Text>{{ fmt(shippingCost) }}</Text></HStack>
-                        <HStack h-align="between"><Text color="secondary">Tax</Text><Text>{{ fmt(TAX) }}</Text></HStack>
+                        <HStack justify="between"><Text color="secondary">Subtotal</Text><Text>{{ fmt(SUBTOTAL) }}</Text></HStack>
+                        <HStack justify="between"><Text color="secondary">Shipping</Text><Text>{{ fmt(shippingCost) }}</Text></HStack>
+                        <HStack justify="between"><Text color="secondary">Tax</Text><Text>{{ fmt(TAX) }}</Text></HStack>
                         <Divider />
-                        <HStack h-align="between"><Text type="large" weight="bold">Total</Text><Text type="large" weight="bold">{{ fmt(orderTotal) }}</Text></HStack>
+                        <HStack justify="between"><Text type="large" weight="bold">Total</Text><Text type="large" weight="bold">{{ fmt(orderTotal) }}</Text></HStack>
                         <Banner status="info" title="Free shipping on orders over $300">
                           <template #icon><Icon icon="i-heroicons-truck" size="sm" /></template>
                         </Banner>

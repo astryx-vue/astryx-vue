@@ -230,7 +230,7 @@ const crumbs = computed(() => {
     <template #header>
       <Toolbar label="Repository" size="sm" :dividers="['bottom']">
         <template #startContent>
-          <HStack :gap="2" v-align="center">
+          <HStack :gap="2" align="center">
             <Heading :level="1" class="visually-hidden">
               canvas-editor
             </Heading>
@@ -259,7 +259,7 @@ const crumbs = computed(() => {
 
     <LayoutContent :padding="4">
       <VStack :gap="6">
-        <HStack :gap="2" v-align="center" wrap="wrap">
+        <HStack :gap="2" align="center" wrap="wrap">
           <Button label="main" variant="secondary" size="sm">
             <template #icon>
               <Icon icon="i-heroicons-code-bracket" size="sm" />

@@ -65,15 +65,15 @@ const ORDER = [
 
 const CATEGORY_ZH = {
   'AI Chat': 'AI 对话',
-  Content: '内容',
-  Dashboard: '仪表盘',
-  Form: '表单',
-  Gallery: '画廊',
-  Login: '登录',
-  Settings: '设置',
-  Shell: '框架',
-  Table: '表格',
-  Tools: '工具',
+  'Content': '内容',
+  'Dashboard': '仪表盘',
+  'Form': '表单',
+  'Gallery': '画廊',
+  'Login': '登录',
+  'Settings': '设置',
+  'Shell': '框架',
+  'Table': '表格',
+  'Tools': '工具',
 }
 
 const NAME_ZH = {
@@ -126,7 +126,7 @@ const NAME_ZH = {
   'Tree Table': '树形表格',
   'Canvas Editor': '画布编辑器',
   'File Explorer': '文件浏览器',
-  IDE: 'IDE',
+  'IDE': 'IDE',
   'Kanban Board': '看板',
   'Page Editor': '页面编辑器',
 }

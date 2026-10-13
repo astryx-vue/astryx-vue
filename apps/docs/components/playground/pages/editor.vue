@@ -180,11 +180,11 @@ function updateBlockProp(key: string, value: unknown): void {
     <template v-if="isMobile" #header>
       <LayoutPanel :has-divider="false" :padding="0" class="mobile-sidebar">
         <Section variant="transparent" :padding="4">
-          <HStack :gap="3" v-align="center" h-align="between">
+          <HStack :gap="3" align="center" justify="between">
             <Heading :level="2">
               {{ pageTitle }}
             </Heading>
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <Button label="Edit" variant="ghost" is-icon-only @click="isCustomizeOpen = true">
                 <template #icon>
                   <Icon icon="i-heroicons-adjustments-horizontal" size="sm" />
@@ -319,7 +319,7 @@ function updateBlockProp(key: string, value: unknown): void {
               </VStack>
             </template>
             <template v-else-if="block.type === 'text'">
-              <VStack :gap="3" h-align="center">
+              <VStack :gap="3" justify="center">
                 <Spinner />
                 <Heading :level="3">
                   {{ block.props.heading }}
@@ -331,7 +331,7 @@ function updateBlockProp(key: string, value: unknown): void {
               </VStack>
             </template>
             <template v-else-if="block.type === 'cta'">
-              <HStack :gap="4" v-align="start">
+              <HStack :gap="4" align="start">
                 <Center class="icon-circle" :width="48" :height="48">
                   <Icon icon="i-heroicons-lock-closed" size="sm" />
                 </Center>
@@ -373,7 +373,7 @@ function updateBlockProp(key: string, value: unknown): void {
     <Layout height="fill">
       <template #header>
         <LayoutHeader has-divider>
-          <HStack :gap="3" v-align="center" h-align="between">
+          <HStack :gap="3" align="center" justify="between">
             <Heading :level="3">
               Customize
             </Heading>

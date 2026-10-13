@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import * as Vue from 'vue'
-import * as Core from '../packages/core/src/index.ts'
-import * as Charts from '../apps/docs/components/playground/playgroundCharts'
 import { compilePlaygroundSfc } from '../apps/docs/components/playground/compileSfc'
+import * as Charts from '../apps/docs/components/playground/playgroundCharts'
 import { playgroundTemplates } from '../apps/docs/components/playground/templates'
+import * as Core from '../packages/core/src/index.ts'
 
 const { createApp, h } = Vue
 

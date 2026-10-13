@@ -5,6 +5,9 @@
       "source"
     ],
     "paths": {
+      "@astryx-vue/playground-charts": [
+        "./components/playground/playgroundCharts.ts"
+      ],
       "@internationalized/date": [
         "../../packages/core/node_modules/@internationalized/date/dist/types/src/index.d.ts"
       ]
@@ -21,5 +24,8 @@
     "uno.config.ts",
     "components/**/*.ts",
     "components/**/*.vue"
+  ],
+  "exclude": [
+    "components/playground/pages"
   ]
 }

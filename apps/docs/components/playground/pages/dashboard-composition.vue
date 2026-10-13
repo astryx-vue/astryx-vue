@@ -328,7 +328,7 @@ const timeRange = ref('1 year')
     <template #default>
       <LayoutContent :padding="6">
         <VStack :gap="6">
-          <HStack h-align="between" v-align="center">
+          <HStack justify="between" align="center">
             <Heading :level="1">My Portfolio</Heading>
             <DropdownMenu
               :button="{ label: timeRange, variant: 'secondary', size: 'lg' }"
@@ -347,9 +347,9 @@ const timeRange = ref('1 year')
           <Grid :columns="{ minWidth: 280, repeat: 'fit' }" :gap="4">
             <Card v-for="m in metrics" :key="m.label">
               <VStack :gap="1">
-                <HStack :gap="3" v-align="center">
+                <HStack :gap="3" align="center">
                   <Text type="display-3" weight="bold">{{ m.value }}</Text>
-                  <HStack :gap="1" v-align="center">
+                  <HStack :gap="1" align="center">
                     <Icon :icon="!m.change.startsWith('-') ? 'arrowUp' : 'arrowDown'" size="xsm" :color="!m.change.startsWith('-') ? 'success' : 'error'" />
                     <Text type="body" color="secondary">{{ m.change }}</Text>
                   </HStack>
@@ -363,7 +363,7 @@ const timeRange = ref('1 year')
             <GridSpan :columns="3">
               <Card>
                 <VStack :gap="4">
-                  <HStack h-align="between" v-align="center">
+                  <HStack justify="between" align="center">
                     <Heading :level="3">Portfolio Value</Heading>
                     <Link href="#">View details</Link>
                   </HStack>
@@ -387,7 +387,7 @@ const timeRange = ref('1 year')
             <GridSpan :columns="1">
               <Card>
                 <VStack :gap="4">
-                  <HStack h-align="between" v-align="center">
+                  <HStack justify="between" align="center">
                     <Heading :level="3">Top Assets</Heading>
                     <Link href="#">View all</Link>
                   </HStack>
@@ -403,7 +403,7 @@ const timeRange = ref('1 year')
                         <Avatar :name="asset.ticker" size="md" />
                       </template>
                       <template #end-content>
-                        <VStack :gap="0" h-align="end">
+                        <VStack :gap="0" justify="end">
                           <Text type="body">{{ asset.value }}</Text>
                           <Badge :label="asset.change" :variant="asset.change.startsWith('-') ? 'red' : 'green'" />
                         </VStack>
@@ -417,7 +417,7 @@ const timeRange = ref('1 year')
 
           <Divider />
 
-          <HStack h-align="between" v-align="start">
+          <HStack justify="between" align="start">
             <VStack :gap="1">
               <Heading :level="1">Market Today</Heading>
               <Text type="body" color="secondary">Past 24 hours</Text>
@@ -433,9 +433,9 @@ const timeRange = ref('1 year')
                   <Text type="supporting" color="secondary">{{ m.ticker }}</Text>
                 </VStack>
                 <PlaygroundSparkline :data="m.spark" :color="m.positive ? 'var(--color-data-categorical-green, #0B991F)' : 'var(--color-data-categorical-red, #F5394F)'" />
-                <HStack :gap="3" v-align="center">
+                <HStack :gap="3" align="center">
                   <Text type="display-3" weight="bold">{{ m.price }}</Text>
-                  <HStack :gap="1" v-align="center">
+                  <HStack :gap="1" align="center">
                     <Icon :icon="m.positive ? 'arrowUp' : 'arrowDown'" size="xsm" :color="m.positive ? 'success' : 'error'" />
                     <Text type="body" color="secondary">{{ m.change }}</Text>
                   </HStack>

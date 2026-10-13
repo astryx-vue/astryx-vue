@@ -242,7 +242,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
               :width="1"
               :height="14"
             />
-            <HStack v-else :gap="3" v-align="center">
+            <HStack v-else :gap="3" align="center">
               <Card variant="muted" :padding="0" :width="20" :height="14" />
               <Card variant="muted" :padding="0" :width="width" :height="14" />
             </HStack>
