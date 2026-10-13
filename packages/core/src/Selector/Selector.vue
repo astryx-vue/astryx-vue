@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
 import { computed, nextTick, onMounted, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
+import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<SelectorProps>(), {
   size: 'md',
   searchable: false,
   clearable: false,
+  presentation: 'popover',
 })
 
 const emit = defineEmits<SelectorEmits>()
@@ -33,6 +35,9 @@ const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selec
 const fieldRef = useTemplateRef<HTMLElement>('fieldRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const searchInputRef = useTemplateRef<HTMLInputElement>('searchInputRef')
+const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
+const isSheet = computed(() => props.presentation === 'bottom-sheet')
+const sheetLabel = computed(() => props.label || resolvedPlaceholder.value)
 
 const isEnabled = computed(() => !props.disabled)
 const isSearchable = computed(() => props.searchable)
@@ -70,10 +75,20 @@ const combobox = useCombobox({
   },
 })
 
+const sheetOpen = computed({
+  get: () => isSheet.value && combobox.isOpen.value,
+  set: (open: boolean) => {
+    if (!open && combobox.isOpen.value)
+      combobox.close()
+  },
+})
+const popoverOpen = computed(() => combobox.isOpen.value && !isSheet.value)
+const listboxTarget = computed(() => isSheet.value && sheetSlot.value ? sheetSlot.value : 'body')
+
 const { position } = usePositionedLayer({
   anchor: fieldRef,
   layer: listboxRef,
-  isOpen: combobox.isOpen,
+  isOpen: popoverOpen,
   placement: computed(() => 'below'),
   alignment: computed(() => 'start'),
   gap: 4,
@@ -82,7 +97,7 @@ const { position } = usePositionedLayer({
 useDismiss({
   container: listboxRef,
   trigger: fieldRef,
-  isEnabled: combobox.isOpen,
+  isEnabled: popoverOpen,
   enableEscape: ref(true),
   onDismiss: () => {
     combobox.close()
@@ -141,11 +156,13 @@ function syncAnchorWidth(): void {
   anchorWidth.value = fieldRef.value?.getBoundingClientRect().width ?? 0
 }
 
-const listboxStyle = computed(() => ({
-  top: `${position.value.top}px`,
-  left: `${position.value.left}px`,
-  minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
-}))
+const listboxStyle = computed(() => isSheet.value
+  ? undefined
+  : {
+      top: `${position.value.top}px`,
+      left: `${position.value.left}px`,
+      minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
+    })
 
 watch(combobox.isOpen, (open) => {
   if (open)
@@ -220,14 +237,28 @@ watch(() => combobox.activeIndex.value, (index) => {
       </button>
     </div>
 
-    <Teleport to="body">
+    <BottomSheet
+      v-if="isSheet"
+      v-model:is-open="sheetOpen"
+      height="hug"
+      :label="sheetLabel"
+      :padding="2"
+    >
+      <div ref="sheetSlot" class="astryx-selector-sheet">
+        <div class="astryx-selector-sheet-title">
+          {{ sheetLabel }}
+        </div>
+      </div>
+    </BottomSheet>
+    <Teleport :to="listboxTarget">
       <div
         v-show="combobox.isOpen.value"
         :id="listboxId"
         ref="listboxRef"
         role="listbox"
         class="astryx-selector-listbox"
-        :data-placement="position.placement"
+        :class="{ 'is-sheet': isSheet }"
+        :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
         tabindex="-1"
       >

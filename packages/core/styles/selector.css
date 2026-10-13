@@ -188,6 +188,22 @@
     animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
+  .astryx-selector-listbox.is-sheet {
+    position: static;
+    width: 100%;
+    max-width: none;
+    max-block-size: none;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .astryx-selector-sheet-title {
+    margin-bottom: var(--astryx-spacing-2, 8px);
+    font-weight: var(--astryx-font-weight-medium, 500);
+  }
+
   .astryx-selector-listbox[data-placement='below'] {
     animation-name: astryx-selector-enter-below;
   }

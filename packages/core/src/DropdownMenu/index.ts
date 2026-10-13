@@ -16,6 +16,7 @@ export type {
   DropdownMenuItemSlots,
   DropdownMenuItemVariant,
   DropdownMenuOption,
+  DropdownMenuPresentation,
   DropdownMenuProps,
   DropdownMenuSection,
   DropdownMenuSize,

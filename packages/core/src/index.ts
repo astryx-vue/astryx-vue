@@ -324,6 +324,7 @@ export type {
   DropdownMenuItemSlots,
   DropdownMenuItemVariant,
   DropdownMenuOption,
+  DropdownMenuPresentation,
   DropdownMenuProps,
   DropdownMenuSection,
   DropdownMenuSize,
@@ -603,6 +604,7 @@ export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
   SelectorOption,
+  SelectorPresentation,
   SelectorProps,
   SelectorSize,
   SelectorSlots,
@@ -832,7 +834,7 @@ export type {
   TimestampTooltipLine,
 } from './Timestamp/index.js'
 export { Toast, ToastViewport, useToast } from './Toast/index.js'
-export type { ToastItem, ToastOptions, ToastPlacement, ToastType } from './Toast/index.js'
+export type { ToastCollisionBehavior, ToastItem, ToastOptions, ToastPlacement, ToastType } from './Toast/index.js'
 export { ToggleButton, ToggleButtonGroup } from './ToggleButton/index.js'
 export type {
   ToggleButtonChangeAction,

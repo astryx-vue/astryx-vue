@@ -292,6 +292,26 @@ describe('selector', () => {
     expect(wrapper.get('.astryx-selector-value').text()).toBe('Select…')
   })
 
+  it('opens the option list inside a bottom sheet', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options,
+        label: 'Team',
+        presentation: 'bottom-sheet',
+      },
+      attachTo: document.body,
+    })
+
+    await wrapper.find('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    await nextTick()
+
+    const sheet = document.querySelector('.astryx-bottom-sheet, .astryx-bottom-sheet-inline, dialog')
+    expect(sheet).not.toBeNull()
+    expect(document.body.textContent).toContain('Apple')
+    wrapper.unmount()
+  })
+
   it('includes hidden select for form submission', () => {
     const wrapper = mount(Selector, {
       props: {
