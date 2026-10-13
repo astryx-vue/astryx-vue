@@ -1,4 +1,5 @@
 ---
+aside: false
 title: Y2K
 ---
 

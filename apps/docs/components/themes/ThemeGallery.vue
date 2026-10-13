@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import type { ThemeId } from './themeCatalog'
 import { Text } from '@astryx-vue/core/Text'
-import { useData } from 'vitepress'
-import { computed, shallowRef } from 'vue'
+import { shallowRef } from 'vue'
 import { themeCatalog } from './themeCatalog'
 import ThemeStage from './ThemeStage.vue'
 
 const current = shallowRef<ThemeId>('neutral')
-const { isDark } = useData()
-const colorMode = computed(() => isDark.value ? 'dark' : 'light')
 
 function select(id: ThemeId) {
   current.value = id
@@ -30,7 +27,7 @@ function select(id: ThemeId) {
         <span
           class="theme-gallery__swatch"
           :data-astryx-theme="item.id"
-          :data-astryx-color-mode="item.id === 'gothic' ? 'dark' : colorMode"
+          :data-astryx-color-mode="item.id === 'gothic' ? 'dark' : 'light'"
           :style="item.picker ? { backgroundImage: `url(${item.picker})` } : undefined"
         >
           <Text type="display-3">
@@ -48,45 +45,76 @@ function select(id: ThemeId) {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
   margin: 24px 0 8px;
 }
 
 .theme-gallery__picker {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .theme-gallery__picker button {
-  flex: 0 0 200px;
+  min-width: 0;
   padding: 0;
   border: 0;
-  border-radius: 12px;
+  border-radius: 16px;
   background: transparent;
   cursor: pointer;
 }
 
-.theme-gallery__picker button.is-selected {
-  outline: 2px solid var(--vp-c-brand-1, #10b981);
-  outline-offset: 2px;
+.theme-gallery__picker button:focus,
+.theme-gallery__picker button:focus-visible {
+  outline: none;
+}
+
+.theme-gallery__picker button.is-selected .theme-gallery__swatch,
+.theme-gallery__picker button:focus-visible .theme-gallery__swatch {
+  box-shadow: inset 0 0 0 2px #15110c;
 }
 
 .theme-gallery__swatch {
   display: flex;
   align-items: flex-end;
   box-sizing: border-box;
-  min-height: 112px;
+  min-height: 120px;
+  height: 100%;
   padding: 12px;
-  border-radius: 12px;
+  overflow: hidden;
+  border-radius: 16px;
   background-color: var(--astryx-color-background-body);
   background-position: center;
   background-size: cover;
-  color: var(--astryx-color-text-primary);
+  color: var(--astryx-color-accent);
   text-align: start;
 }
 
 .theme-gallery__swatch :deep(.astryx-text) {
+  max-width: 100%;
+  padding: 0.02em 0.28em;
+  border-radius: 0.2em;
+  background: color-mix(in srgb, var(--astryx-color-background-body) 82%, transparent);
+  color: var(--astryx-color-accent);
+  font-size: clamp(1.15rem, 1.4vw, 1.5rem);
   line-height: 1.05;
+}
+
+@media (max-width: 800px) {
+  .theme-gallery {
+    width: auto;
+    max-width: none;
+    margin-right: 0;
+  }
+
+  .theme-gallery__picker {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .theme-gallery__picker button {
+    flex: 0 0 168px;
+  }
 }
 </style>
