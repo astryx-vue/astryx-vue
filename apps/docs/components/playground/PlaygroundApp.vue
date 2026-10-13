@@ -61,12 +61,6 @@ const logoHref = withBase('/icon-logo.svg')
 const localeHref = withBase(props.locale === 'zh' ? '/en/playground/' : '/playground/')
 const styleText = computed(() => previewCss(theme))
 const fontHref = computed(() => fontStylesheetHref(theme))
-const groups = computed(() => (['chat', 'form', 'table', 'shell'] as const).map(id => ({
-  id,
-  label: copy.groups[id] ?? id,
-  items: templates.filter(item => item.group === id),
-})))
-
 watch(code, () => {
   codeChanged = true
   schedulePush(200)
@@ -276,10 +270,6 @@ function onDensity(id: DensityPreset['id']): void {
   selectDensity(id)
 }
 
-function templateLabel(id: string): string {
-  return copy.templateNames[id] ?? id
-}
-
 function formatCode(): void {
   if (tab.value !== 'code') {
     tab.value = 'code'
@@ -371,20 +361,22 @@ async function openExportDialog(): Promise<void> {
                   <span class="playground__button-text">{{ copy.templates }}</span>
                   <span class="playground__icon" aria-hidden="true"><span class="i-carbon-chevron-down" /></span>
                 </button>
-                <div v-if="templateOpen" class="playground__menu" role="menu">
-                  <div v-for="group in groups" :key="group.id" class="playground__menu-group" role="group" :aria-label="group.label">
-                    <p>{{ group.label }}</p>
-                    <button
-                      v-for="item in group.items"
-                      :key="item.id"
-                      type="button"
-                      role="menuitem"
-                      :aria-current="item.id === templateId ? 'true' : undefined"
-                      @click="chooseTemplate(item.id)"
-                    >
-                      {{ templateLabel(item.id) }}
-                    </button>
-                  </div>
+                <div
+                  v-if="templateOpen"
+                  class="playground__menu"
+                  role="menu"
+                  :aria-label="copy.templates"
+                >
+                  <button
+                    v-for="item in templates"
+                    :key="item.id"
+                    type="button"
+                    role="menuitem"
+                    :aria-current="item.id === templateId ? 'true' : undefined"
+                    @click="chooseTemplate(item.id)"
+                  >
+                    {{ item.label }}
+                  </button>
                 </div>
               </div>
             </div>

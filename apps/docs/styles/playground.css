@@ -227,20 +227,14 @@ html:has(.playground-route) body {
   z-index: 30;
   top: calc(100% + 6px);
   right: 0;
-  width: min(20rem, 70vw);
-  max-height: min(28rem, 60vh);
+  width: min(22rem, 80vw);
+  max-height: min(32rem, 70vh);
   padding: 6px;
   overflow: auto;
   border: 1px solid var(--pg-line);
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 12px 32px rgb(0 0 0 / 12%);
-}
-
-.playground__menu-group p {
-  margin: 8px 8px 4px;
-  color: var(--pg-muted-ink);
-  font-size: 12px;
 }
 
 .playground__menu button {

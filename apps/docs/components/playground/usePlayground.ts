@@ -4,6 +4,7 @@ import type { PlaygroundLocale } from './protocol'
 import type { PlaygroundTemplate } from './templates'
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
 import { computed, onMounted, reactive, ref } from 'vue'
+import { DEFAULT_PLAYGROUND_CODE } from './defaultCode'
 import { playgroundCopy } from './messages'
 import { decodeShare, encodeShare, shareHash } from './share'
 import { playgroundTemplates } from './templates'
@@ -34,13 +35,10 @@ export function usePlayground(
 ): PlaygroundController {
   const copy = playgroundCopy(locale)
   const templates = playgroundTemplates(locale)
-  const fallback = templates[0]
-  if (!fallback)
-    throw new Error('Playground has no templates')
 
   const theme = reactive<ThemeState>(createNeutralTheme())
-  const code = ref(fallback.source)
-  const templateId = ref(fallback.id)
+  const code = ref(DEFAULT_PLAYGROUND_CODE)
+  const templateId = ref('')
   const hydrated = ref(false)
   const mountId = ref(0)
   const shareUrl = ref('')
@@ -58,7 +56,9 @@ export function usePlayground(
       if (shared) {
         applyTheme(theme, shared.theme)
         code.value = shared.code
-        templateId.value = templates.some(item => item.id === shared.templateId) ? shared.templateId : fallback.id
+        templateId.value = shared.templateId && templates.some(item => item.id === shared.templateId)
+          ? shared.templateId
+          : ''
       }
     }
     finally {
