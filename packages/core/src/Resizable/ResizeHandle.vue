@@ -102,10 +102,22 @@ function clearDrag() {
   document.body.style.userSelect = ''
 }
 
+let frame = 0
+let pendingDelta = 0
+
+function flushMove(): void {
+  if (frame) {
+    cancelAnimationFrame(frame)
+    frame = 0
+  }
+  props.resizable?._onResizeMove(pendingDelta)
+}
+
 function pointerDown(event: PointerEvent) {
   if (props.isDisabled || props.resizable == null || drag)
     return
   event.preventDefault()
+  event.stopPropagation()
   const target = event.currentTarget
   if (target instanceof HTMLElement)
     target.setPointerCapture?.(event.pointerId)
@@ -115,6 +127,7 @@ function pointerDown(event: PointerEvent) {
     rtl: rtlMultiplier(),
   }
   dragging.value = true
+  pendingDelta = 0
   document.body.style.cursor = props.direction === 'horizontal' ? 'col-resize' : 'row-resize'
   document.body.style.userSelect = 'none'
   props.resizable._onResizeStart()
@@ -124,12 +137,19 @@ function pointerMove(event: PointerEvent) {
   if (drag == null || drag.pointerId !== event.pointerId || props.resizable == null)
     return
   const current = props.direction === 'horizontal' ? event.clientX : event.clientY
-  props.resizable._onResizeMove((current - drag.start) * drag.rtl * sign.value)
+  pendingDelta = (current - drag.start) * drag.rtl * sign.value
+  if (frame)
+    return
+  frame = requestAnimationFrame(() => {
+    frame = 0
+    props.resizable?._onResizeMove(pendingDelta)
+  })
 }
 
 function pointerUp(event: PointerEvent) {
   if (drag?.pointerId !== event.pointerId)
     return
+  flushMove()
   clearDrag()
   props.resizable?._onResizeEnd()
 }
@@ -137,6 +157,10 @@ function pointerUp(event: PointerEvent) {
 function pointerCancel(event: PointerEvent) {
   if (drag?.pointerId !== event.pointerId)
     return
+  if (frame) {
+    cancelAnimationFrame(frame)
+    frame = 0
+  }
   clearDrag()
   props.resizable?._onResizeCancel?.()
 }
@@ -184,6 +208,10 @@ function doubleClick() {
 }
 
 onBeforeUnmount(() => {
+  if (frame) {
+    cancelAnimationFrame(frame)
+    frame = 0
+  }
   if (drag)
     clearDrag()
 })

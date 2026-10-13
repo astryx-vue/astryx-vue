@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { resizeHandleSidebar } from '../../../../components/demos/resize-handle'
+import { resizeHandleHorizontal, resizeHandleSidebar } from '../../../../components/demos/resize-handle'
 </script>
 
 ## Usage
@@ -41,7 +41,7 @@ const sidebar = useResizable({
 
 The handle is `role="separator"`. A horizontal handle sets `aria-orientation="vertical"`. Arrow keys move 10px, and Shift moves 50px. Home and End jump to the limits. Enter restores the expanded size.
 
-`useResizable` accepts one region, or a `regions` map. `snaps` pulls the size to the nearest value, and an equal distance keeps the first snap. A drag below `collapsedSize` (default 40) collapses a collapsible region to 0. `autoSaveId` stores the size under `astryx-resizable:` in `localStorage`. `percent()` builds a percentage size with a pixel minimum or maximum.
+`useResizable` accepts one region, or a `regions` map. `snaps` holds the size when the pointer comes within 8px of a listed value, and the drag otherwise follows the pointer. A drag below `collapsedSize` (default 40) collapses a collapsible region to 0. `autoSaveId` stores the size under `astryx-resizable:` in `localStorage`. `percent()` builds a percentage size with a pixel minimum or maximum.
 
 ## Best practices
 
@@ -54,8 +54,15 @@ The handle is `role="separator"`. A horizontal handle sets `aria-orientation="ve
 ## Examples
 
 <DemoExample
-  :demo="resizeHandleSidebar"
-  description="The sidebar snaps to 200px and 280px. Dragging below the collapse threshold hides it."
+  :demo="resizeHandleHorizontal"
+  description="A horizontal split. Drag the handle between the sidebar and the content."
   locale="en"
-  title="Sidebar"
+  title="Horizontal"
+/>
+
+<DemoExample
+  :demo="resizeHandleSidebar"
+  description="A collapsible sidebar. The width sticks within 8px of 200px and 280px, and dragging past the collapse threshold hides it."
+  locale="en"
+  title="Collapsible with snap points"
 />

@@ -101,7 +101,7 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
         <td><code>defaultSize</code></td>
         <td><code>number | string | ResizablePercentSize</code></td>
         <td><code>250</code></td>
-        <td>Starting size. A number is pixels. When <code>snaps</code> is set, the start value moves to the nearest snap.</td>
+        <td>Starting size. A number is pixels. A listed snap holds it only when the value is already within 8px.</td>
       </tr>
       <tr>
         <td><code>minSize</code></td>
@@ -131,7 +131,7 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
         <td><code>snaps</code></td>
         <td><code>number[]</code></td>
         <td>-</td>
-        <td>Pixel values to snap to. An equal distance keeps the first value.</td>
+        <td>Pixel values that hold the size when the pointer is within 8px.</td>
       </tr>
       <tr>
         <td><code>shrinkOrder</code></td>

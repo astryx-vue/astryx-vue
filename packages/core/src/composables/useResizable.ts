@@ -82,6 +82,7 @@ interface CascadeLink {
 const DEFAULT_SIZE = 250
 const DEFAULT_MIN = 50
 const DEFAULT_COLLAPSED_SIZE = 40
+const SNAP_DISTANCE = 8
 const UNMEASURED_BASIS = 1200
 const STORAGE_PREFIX = 'astryx-resizable:'
 
@@ -148,6 +149,8 @@ function clampSize(size: number, min: number, max: number, snaps: number[]): num
       nearestDist = dist
     }
   }
+  if (nearestDist > SNAP_DISTANCE)
+    return clamped
   return Math.min(max, Math.max(min, nearest))
 }
 
@@ -199,6 +202,7 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
   let origin = DEFAULT_SIZE
   let settledDefault = false
   let dragging = false
+  let dragLimits: { min: number, max: number } | null = null
 
   function currentBasis(): Basis {
     return readBasis(options.containerRef?.value, direction)
@@ -279,23 +283,45 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
     persist()
   }
 
+  function paintDrag(next: number, collapsed: boolean): void {
+    const bounds = dragLimits ?? limits()
+    if (collapsed && collapsible) {
+      isCollapsed.value = true
+      size.value = 0
+      return
+    }
+    const clamped = clampSize(next, bounds.min, bounds.max, snaps)
+    isCollapsed.value = false
+    size.value = clamped
+    expandedSize.value = clamped
+  }
+
   function onResizeStart(): void {
     dragging = true
     origin = isCollapsed.value ? 0 : size.value
+    dragLimits = limits()
   }
 
   function onResizeMove(delta: number): void {
     const raw = origin + delta
     if (collapsible && raw < collapsedSize) {
-      setCollapsed(true)
+      if (!isCollapsed.value) {
+        paintDrag(0, true)
+        options.onCollapseChange?.(true)
+        options.onSizeChange?.(0)
+      }
       return
     }
-    applySize(raw, false)
+    const wasCollapsed = isCollapsed.value
+    paintDrag(raw, false)
+    if (wasCollapsed)
+      options.onCollapseChange?.(false)
     options.onSizeChange?.(size.value)
   }
 
   function onResizeEnd(): void {
     dragging = false
+    dragLimits = null
     persist()
     cascade?.settle()
   }

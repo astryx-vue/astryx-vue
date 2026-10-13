@@ -30,13 +30,20 @@ const Host = defineComponent({
 describe('useResizable', () => {
   it('snaps to the nearest point and collapses below the threshold', async () => {
     const wrapper = mount(Host)
-    expect(wrapper.get('.size').text()).toBe('200')
+    expect(wrapper.get('.size').text()).toBe('240')
     const handle = wrapper.get('[role="separator"]')
     expect(handle.attributes('aria-orientation')).toBe('vertical')
-    expect(handle.attributes('aria-valuenow')).toBe('200')
+    expect(handle.attributes('aria-valuenow')).toBe('240')
 
     await handle.trigger('keydown', { key: 'ArrowLeft' })
+    expect(wrapper.get('.size').text()).toBe('230')
+
+    wrapper.vm.region.resize(203)
+    await nextTick()
     expect(wrapper.get('.size').text()).toBe('200')
+    wrapper.vm.region.resize(220)
+    await nextTick()
+    expect(wrapper.get('.size').text()).toBe('220')
 
     wrapper.vm.region.resize(50)
     await nextTick()

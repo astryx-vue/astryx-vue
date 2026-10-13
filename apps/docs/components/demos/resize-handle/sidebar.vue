@@ -8,7 +8,7 @@ import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 
 const sidebar = useResizable({
-  defaultSize: 240,
+  defaultSize: 200,
   minSize: 160,
   maxSize: 360,
   collapsible: true,
