@@ -20,7 +20,7 @@ Names follow the upstream tokens and add `--astryx-`. The primary text color is 
 --astryx-color-text-primary: light-dark(#171717, #fafafa);
 ```
 
-`light-dark()` reads the element's `color-scheme`. It is not a JavaScript theme object. Neutral sets `color-scheme: light dark` on `:root` and `[data-astryx-theme='neutral']`, so the result follows the system or whatever the docs site already set. Forcing one side is described in [Dark mode](/en/guide/dark-mode).
+`light-dark()` reads the element's `color-scheme`. Neutral sets `color-scheme: light dark` on `:root` and `[data-astryx-theme='neutral']`, so the result follows the system or whatever the docs site already set. Forcing one side is described in [Dark mode](/en/guide/dark-mode). [`Theme`](/en/components/theme) can set the same variables on one subtree.
 
 Components also have their own variables, such as `--astryx-button-primary-background`. Those names are defined in `packages/themes/neutral/<component>.css` and usually point at a semantic token. Prefer overriding the semantic token. Override the component variable only when that component has to diverge.
 

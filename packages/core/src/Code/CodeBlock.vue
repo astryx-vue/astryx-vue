@@ -7,6 +7,7 @@ import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import CodeBlockContent from './CodeBlockContent.vue'
+import { syntaxThemeStyle } from './syntaxTheme.js'
 import { flatTokensToLines, SYNC_TOKENIZE_THRESHOLD, tokenize, tokenizeAsync } from './tokenizer.js'
 import '../../styles/code.css'
 
@@ -208,7 +209,7 @@ const rootStyle = computed<StyleValue>(() => {
     style.maxWidth = '100%'
   }
 
-  return [attrs.style as StyleValue, style]
+  return [attrs.style as StyleValue, props.syntaxTheme ? syntaxThemeStyle(props.syntaxTheme) : null, style]
 })
 
 const forwardedAttrs = computed(() => Object.fromEntries(

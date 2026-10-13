@@ -51,5 +51,7 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `useDropdownMenuContext` | `@astryx-vue/core/DropdownMenu` |
 | `useSideNavCollapse` | `@astryx-vue/core/SideNav` |
 | `useListContext`、`useItemDescriptionId` | `@astryx-vue/core/List` |
+| `useTheme`、`useMediaTheme` | `@astryx-vue/core/Theme` |
+| `useSyntaxTheme` | `@astryx-vue/core/Code` |
 
 语言环境的 `provideAstryxLocale` 和 `useAstryxMessages` 见 [国际化](/guide/i18n)。

@@ -110,6 +110,9 @@ const expectedCatalog = [
   { slug: 'table', group: 'Table & List', en: 'Table', zh: '表格' },
   { slug: 'tree-list', group: 'Table & List', en: 'Tree List', zh: '树形列表' },
   { slug: 'visually-hidden', group: 'Utility', en: 'Visually Hidden', zh: '视觉隐藏' },
+  { slug: 'media-theme', group: 'Utility', en: 'Media Theme', zh: '媒体主题' },
+  { slug: 'syntax-theme', group: 'Utility', en: 'Syntax Theme', zh: '语法主题' },
+  { slug: 'theme', group: 'Utility', en: 'Theme', zh: '主题' },
 ]
 
 describe('component catalog meta', () => {

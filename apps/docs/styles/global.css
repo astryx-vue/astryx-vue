@@ -1955,6 +1955,24 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   text-underline-offset: revert-layer;
 }
 
+/*
+ * VitePress `.vp-doc` also paints `p` and headings in the prose color. That
+ * unlayered color beats the component layer, so themed text stayed on the
+ * docs palette. Roll the prose color back to the component token.
+ */
+.vp-doc .astryx-demo :is(.astryx-heading, .astryx-text) {
+  color: revert-layer;
+}
+
+.vp-doc .astryx-demo.theme-preview :is(.astryx-heading, .astryx-text),
+.vp-doc .astryx-demo.media-theme-preview :is(.astryx-heading, .astryx-text),
+.vp-doc .astryx-demo.syntax-theme-preview :is(.astryx-heading, .astryx-text) {
+  font-size: revert-layer;
+  font-weight: revert-layer;
+  line-height: revert-layer;
+  letter-spacing: revert-layer;
+}
+
 .nav-overview {
   box-sizing: border-box;
   width: 20rem;
