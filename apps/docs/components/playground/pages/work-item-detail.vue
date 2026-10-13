@@ -88,7 +88,7 @@ function togglePanel() {
             </Link>
             <Badge variant="blue" label="AUTH-142" />
             <StatusDot label="In progress" variant="warning" />
-            <Text type="supporting" color="secondary">Updated <Timestamp value="2026-04-29T09:00:00" format="relative" /></Text>
+            <Text type="supporting" color="secondary">Updated <Timestamp :value="'2026-04-29T09:00:00'" format="relative" /></Text>
           </HStack>
           <Heading :level="1">Fix silent JWT refresh in API gateway</Heading>
           <HStack :gap="2" :align="'center'" wrap="wrap">
@@ -166,9 +166,15 @@ function togglePanel() {
         <VStack :gap="4">
           <Heading :level="3">Details</Heading>
           <MetadataList>
-            <MetadataListItem label="Sprint" value="Q2 Infra" />
-            <MetadataListItem label="Estimate" value="3 days" />
-            <MetadataListItem label="Reporter" value="Jordan Lee" />
+            <MetadataListItem label="Sprint">
+              Q2 Infra
+            </MetadataListItem>
+            <MetadataListItem label="Estimate">
+              3 days
+            </MetadataListItem>
+            <MetadataListItem label="Reporter">
+              Jordan Lee
+            </MetadataListItem>
           </MetadataList>
           <Divider />
           <Heading :level="4">Linked items</Heading>
@@ -188,8 +194,12 @@ function togglePanel() {
       </template>
       <LayoutContent :padding="4">
         <MetadataList>
-          <MetadataListItem label="Sprint" value="Q2 Infra" />
-          <MetadataListItem label="Estimate" value="3 days" />
+          <MetadataListItem label="Sprint">
+            Q2 Infra
+          </MetadataListItem>
+          <MetadataListItem label="Estimate">
+            3 days
+          </MetadataListItem>
         </MetadataList>
       </LayoutContent>
     </Layout>

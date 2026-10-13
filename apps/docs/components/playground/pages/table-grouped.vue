@@ -128,6 +128,7 @@ const groupBy = ref<GroupByField>('status')
 const expandedGroups = ref<Set<string>>(new Set(GROUP_ORDER))
 const selectedTask = ref<TaskRow | null>(null)
 const dialogOpen = ref(false)
+const newIssueTitle = ref('')
 
 const detailPanel = useResizable({
   defaultSize: 360,
@@ -397,7 +398,7 @@ function onRowActivate(task: TaskRow): void {
       </template>
       <LayoutContent :padding="4">
         <VStack :gap="4">
-          <TextInput label="Title" placeholder="Issue title" />
+          <TextInput v-model="newIssueTitle" label="Title" placeholder="Issue title" />
         </VStack>
       </LayoutContent>
       <template #footer>
