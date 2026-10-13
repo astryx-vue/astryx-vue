@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import * as Vue from 'vue'
+import * as Core from '../packages/core/src/index.ts'
+import * as Charts from '../apps/docs/components/playground/playgroundCharts'
 import { compilePlaygroundSfc } from '../apps/docs/components/playground/compileSfc'
 import { playgroundTemplates } from '../apps/docs/components/playground/templates'
 
@@ -56,27 +58,11 @@ describe('playground compiler', () => {
   })
 
   it('compiles every shipped template', () => {
-    const stub = {
-      name: 'Stub',
-      setup(_props: unknown, context: { slots: { default?: () => unknown } }) {
-        return () => h('div', context.slots.default?.())
-      },
-    }
-    const core = new Proxy({
-      pixel: (value: number) => value,
-      proportional: (value: number) => value,
-    }, {
-      get(target, key, receiver) {
-        if (Reflect.has(target, key))
-          return Reflect.get(target, key, receiver)
-        return stub
-      },
-    })
     for (const template of playgroundTemplates('en')) {
       const compiled = compilePlaygroundSfc(template.source, {
         vue: Vue as unknown as Record<string, unknown>,
-        core: core as unknown as Record<string, unknown>,
-        charts: {},
+        core: Core as unknown as Record<string, unknown>,
+        charts: Charts as unknown as Record<string, unknown>,
       }, 'en')
       const host = document.createElement('div')
       const app = createApp(compiled.component)

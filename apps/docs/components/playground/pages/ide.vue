@@ -28,44 +28,28 @@ import {
 } from '@astryx-vue/core'
 import { computed, ref } from 'vue'
 
-const EDITOR_CODE = `import {useState, useCallback} from 'react';
-import {Button} from '@astryxdesign/core/Button';
-import {Text} from '@astryxdesign/core/Text';
-
-const containerStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  padding: 16,
-};
-const counterStyle = {
-  fontSize: 48,
-  fontWeight: 700,
-  fontVariantNumeric: 'tabular-nums',
-};
-
-export default function Counter() {
-  const [count, setCount] = useState(0);
-
-  const increment = useCallback(() => {
-    setCount(prev => prev + 1);
-  }, []);
-
-  const reset = useCallback(() => {
-    setCount(0);
-  }, []);
-
-  return (
-    <div style={containerStyle}>
-      <Text type="label">Counter</Text>
-      <span style={counterStyle}>
-        {count}
-      </span>
-      <Button label="Increment" onClick={increment} />
-      <Button label="Reset" variant="secondary" onClick={reset} />
-    </div>
-  );
-}`
+const EDITOR_CODE = [
+  'import {useState, useCallback} from \'react\';',
+  'import {Button} from \'@astryxdesign/core/Button\';',
+  'import {Text} from \'@astryxdesign/core/Text\';',
+  '',
+  'const containerStyle = { display: \'flex\', flexDirection: \'column\', gap: 8, padding: 16 };',
+  'const counterStyle = { fontSize: 48, fontWeight: 700, fontVariantNumeric: \'tabular-nums\' };',
+  '',
+  'export default function Counter() {',
+  '  const [count, setCount] = useState(0);',
+  '  const increment = useCallback(() => setCount(prev => prev + 1), []);',
+  '  const reset = useCallback(() => setCount(0), []);',
+  '  return (',
+  '    <div style={containerStyle}>',
+  '      <Text type="label">Counter</Text>',
+  '      <span style={counterStyle}>{count}</span>',
+  '      <Button label="Increment" onClick={increment} />',
+  '      <Button label="Reset" variant="secondary" onClick={reset} />',
+  '    </div>',
+  '  );',
+  '}',
+].join('\n')
 
 const TERMINAL_OUTPUT = `$ yarn dev
 yarn run v1.22.22
