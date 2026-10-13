@@ -371,7 +371,9 @@ html.component-docs-scroll-lock body {
   padding-top: 44px;
 }
 
-.component-overview__catalog h2 {
+/* Direct child only. A descendant h2 also matches Heading level 2 inside a
+   catalog card, which adds 24px under Level 2 and flattens its size. */
+.component-overview__catalog > h2 {
   margin: 0 0 24px;
   font-size: 24px;
   font-weight: 400;
