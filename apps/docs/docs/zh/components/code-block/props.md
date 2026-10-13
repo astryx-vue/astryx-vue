@@ -13,6 +13,7 @@ footer: false
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>code</code></td><td><code>string</code></td><td>—</td><td>只读代码。复制按钮写下的就是这个字符串。</td></tr>
 <tr><td><code>language</code></td><td><code>string</code></td><td><code>'plaintext'</code></td><td>分词用的语言。<code>plaintext</code> 不显示语言名。</td></tr>
+<tr><td><code>syntaxTheme</code></td><td><code>SyntaxThemeDefinition</code></td><td>—</td><td>这一块的语法颜色。相当于在外面套一层 <code>SyntaxTheme</code>。</td></tr>
 <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>顶栏里的文件名或标签。</td></tr>
 <tr><td><code>hasLanguageLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>顶栏是否显示语言名。</td></tr>
 <tr><td><code>hasLineNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否画行号槽。</td></tr>
@@ -41,7 +42,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="SyntaxTheme 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>theme</code></td><td><code>SyntaxThemeDefinition</code></td><td>一组命名的语法颜色。包内包含 <code>githubDark</code>。<code>defineSyntaxTheme</code> 原样返回定义。</td></tr>
+<tr><td><code>theme</code></td><td><code>SyntaxThemeDefinition</code></td><td>内置预设，或 <code>defineSyntaxTheme()</code> 的结果。<code>[浅色, 深色]</code> 会存成 <code>light-dark()</code>。组件页见 <a href="/components/syntax-theme">语法主题</a>。</td></tr>
 </tbody></table>
 </div>
 

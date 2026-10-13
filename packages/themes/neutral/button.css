@@ -3,17 +3,17 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-button-primary-background: light-dark(#262626, #ebebeb);
-    --astryx-button-primary-foreground: light-dark(#ffffff, #171717);
-    --astryx-button-secondary-background: light-dark(#0000000f, #ffffff1a);
-    --astryx-button-secondary-foreground: light-dark(#171717, #fafafa);
+    --astryx-button-primary-background: var(--astryx-color-accent);
+    --astryx-button-primary-foreground: var(--astryx-color-on-accent);
+    --astryx-button-secondary-background: var(--astryx-color-neutral);
+    --astryx-button-secondary-foreground: var(--astryx-color-text-primary);
     --astryx-button-ghost-background: transparent;
-    --astryx-button-ghost-foreground: light-dark(#171717, #fafafa);
+    --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
     --astryx-button-destructive-background: light-dark(#facecb, #ff9e973d);
     --astryx-button-destructive-foreground: light-dark(#a50c25, #ffc6c1);
     --astryx-button-hover-overlay: light-dark(#0000000d, #ffffff0d);
     --astryx-button-pressed-overlay: light-dark(#0000001a, #ffffff1a);
-    --astryx-button-focus: light-dark(#262626, #ebebeb);
+    --astryx-button-focus: var(--astryx-color-accent);
     --astryx-button-separator: light-dark(#00000014, #ffffff1a);
     --astryx-button-solid-separator: light-dark(#ffffff, #171717);
     --astryx-button-tooltip-background: light-dark(#171717, #262626);

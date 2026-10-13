@@ -1,0 +1,51 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-media-theme {
+    display: contents;
+  }
+
+  /*
+   * Inverted surfaces do not rely on `color-scheme` alone. Text and heading
+   * colors are their own variables, and a `display: contents` wrapper does not
+   * always establish a color-scheme for its children. These declarations set
+   * the text tokens to the on-dark / on-light colors directly.
+   */
+  [data-astryx-media='dark'] {
+    color-scheme: dark;
+    color: var(--astryx-color-on-dark, #ffffff);
+    --astryx-color-text-primary: var(--astryx-color-on-dark, #ffffff);
+    --astryx-color-text-secondary: #a3a3a3;
+    --astryx-text-foreground: var(--astryx-color-on-dark, #ffffff);
+    --astryx-text-supporting-foreground: #a3a3a3;
+    --astryx-heading-foreground: var(--astryx-color-on-dark, #ffffff);
+    --astryx-color-icon-primary: var(--astryx-color-on-dark, #ffffff);
+    --astryx-icon-primary-foreground: var(--astryx-color-on-dark, #ffffff);
+    --astryx-color-accent: var(--astryx-color-on-dark, #ffffff);
+    --astryx-color-on-accent: var(--astryx-color-on-light, #171717);
+    --astryx-button-primary-background: var(--astryx-color-on-dark, #ffffff);
+    --astryx-button-primary-foreground: var(--astryx-color-on-light, #171717);
+    --astryx-button-secondary-background: #ffffff1a;
+    --astryx-button-secondary-foreground: var(--astryx-color-on-dark, #ffffff);
+    --astryx-button-ghost-foreground: var(--astryx-color-on-dark, #ffffff);
+  }
+
+  [data-astryx-media='light'] {
+    color-scheme: light;
+    color: var(--astryx-color-on-light, #171717);
+    --astryx-color-text-primary: var(--astryx-color-on-light, #171717);
+    --astryx-color-text-secondary: #525252;
+    --astryx-text-foreground: var(--astryx-color-on-light, #171717);
+    --astryx-text-supporting-foreground: #525252;
+    --astryx-heading-foreground: var(--astryx-color-on-light, #171717);
+    --astryx-color-icon-primary: var(--astryx-color-on-light, #171717);
+    --astryx-icon-primary-foreground: var(--astryx-color-on-light, #171717);
+    --astryx-color-accent: var(--astryx-color-on-light, #171717);
+    --astryx-color-on-accent: #ffffff;
+    --astryx-button-primary-background: var(--astryx-color-on-light, #171717);
+    --astryx-button-primary-foreground: #ffffff;
+    --astryx-button-secondary-background: #0000000f;
+    --astryx-button-secondary-foreground: var(--astryx-color-on-light, #171717);
+    --astryx-button-ghost-foreground: var(--astryx-color-on-light, #171717);
+  }
+}

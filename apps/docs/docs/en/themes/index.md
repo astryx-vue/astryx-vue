@@ -20,4 +20,4 @@ import '@astryx-vue/themes/neutral.css'
 
 That import loads JetBrains Mono. The body and heading stacks name Figtree first, then system sans fonts. Figtree is not in the theme package. Load it yourself if you want that face.
 
-Next: what [Neutral](/en/themes/neutral) overrides today, how [design tokens](/en/themes/tokens) map onto [CSS variables](/en/themes/css-variables), or the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages. To change the look, read [Extending a theme](/en/themes/extending).
+Next: what [Neutral](/en/themes/neutral) overrides today, how [design tokens](/en/themes/tokens) map onto [CSS variables](/en/themes/css-variables), or the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages. To change the look, read [Extending a theme](/en/themes/extending). To apply a theme object to one subtree, use the [Theme](/en/components/theme), [Media Theme](/en/components/media-theme), and [Syntax Theme](/en/components/syntax-theme) components.
