@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bannerStatuses, bannerDetails, bannerActions, bannerContainers } from '../../../../components/demos/banner'
+import { bannerAction, bannerCollapsible, bannerDismiss, bannerFullWidth, bannerStatuses } from '../../../../components/demos/banner'
 </script>
 
 ## Usage
@@ -51,13 +51,40 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Examples
 
-<DemoExample :demo="bannerStatuses" title="Message states" description="Describe the message in the title. Do not rely on color alone." locale="en" />
+<DemoExample
+  :demo="bannerAction"
+  description="A button in the end slot lets the user act on the message."
+  locale="en"
+  title="Action"
+/>
 
-<DemoExample :demo="bannerDetails" title="Details" description="The default slot provides details. Set collapsible to false to keep them visible." locale="en" />
+<DemoExample
+  :demo="bannerCollapsible"
+  description="One banner with an action, a dismiss control, and details that start open. The details go in the default slot."
+  locale="en"
+  title="Collapsible"
+/>
 
-<DemoExample :demo="bannerActions" title="Actions and dismissal" description="Put actions in the end slot. Dismissal hides the component." locale="en" />
+<DemoExample
+  :demo="bannerDismiss"
+  description="isDismissable lets the user close the banner after reading it."
+  locale="en"
+  title="Dismiss"
+/>
 
-<DemoExample :demo="bannerContainers" title="Containers and elevation" description="Use card inside page content. Use section for full-width notices." locale="en" />
+<DemoExample
+  :demo="bannerFullWidth"
+  description="With container set to section, the banner runs edge to edge without a rounded corner, for a notice at the top of the page."
+  locale="en"
+  title="Full width"
+/>
+
+<DemoExample
+  :demo="bannerStatuses"
+  description="Info, success, warning, and error, for an update, a confirmation, a caution, and a problem."
+  locale="en"
+  title="Statuses"
+/>
 
 ## Usage guidance
 

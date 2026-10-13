@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { headingLevels, headingDisplays } from '../../../../components/demos/heading'
+import { headingCardGrid, headingHierarchy, headingTruncation } from '../../../../components/demos/heading'
 </script>
 
 ## 使用方法
@@ -42,15 +42,22 @@ import { Heading } from '@astryx-vue/core/Heading'
 ## 示例
 
 <DemoExample
-  :demo="headingLevels"
-  description="Heading 渲染 h1–h6 语义元素，默认按层级设置字号。"
+  :demo="headingCardGrid"
+  description="卡片里的标题保持一行，说明用 maxLines 收成两行，这样每张卡片的高度一致。"
   locale="zh"
-  title="层级"
+  title="卡片标题"
 />
 
 <DemoExample
-  :demo="headingDisplays"
-  description="display-1、display-2、display-3 提供更大的展示字号。"
+  :demo="headingHierarchy"
+  description="一页里的 h1、h2、h3，各自配一段说明。"
   locale="zh"
-  title="展示标题"
+  title="页面层级"
+/>
+
+<DemoExample
+  :demo="headingTruncation"
+  description="限宽之后，maxLines 为 1 收成一行，为 2 收成两行，末尾是省略号。"
+  locale="zh"
+  title="截断"
 />

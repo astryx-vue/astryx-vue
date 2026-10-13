@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { switchBasic, switchSizes, switchStates } from '../../../../components/demos/switch'
+import { switchDescription, switchDisabled, switchSettings, switchStatus } from '../../../../components/demos/switch'
 </script>
 
 ## Usage
@@ -41,11 +41,33 @@ const enabled = shallowRef(false)
 
 ## Examples
 
-<DemoExample :demo="switchBasic" title="Basic" description="Bind a boolean value with v-model. The label and description are automatically associated through Field." locale="en" />
+<DemoExample
+  :demo="switchDisabled"
+  description="A disabled switch with a label and a description, for a feature that is not available yet."
+  locale="en"
+  title="Disabled"
+/>
 
-<DemoExample :demo="switchSizes" title="Sizes" description="Switch comes in sm, md, and lg sizes." locale="en" />
+<DemoExample
+  :demo="switchSettings"
+  description="Several settings in one card, each one a switch."
+  locale="en"
+  title="Settings panel"
+/>
 
-<DemoExample :demo="switchStates" title="Disabled and read-only" description="When disabledMessage is provided, the disabled switch remains focusable so the reason can be read." locale="en" />
+<DemoExample
+  :demo="switchDescription"
+  description="A line under the label says what turning the switch on will do."
+  locale="en"
+  title="With description"
+/>
+
+<DemoExample
+  :demo="switchStatus"
+  description="Error, warning, and success messages under the switch."
+  locale="en"
+  title="With status"
+/>
 
 ## Keyboard interactions
 

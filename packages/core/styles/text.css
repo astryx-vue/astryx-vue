@@ -13,18 +13,6 @@
     display: block;
   }
 
-  .astryx-text--color-secondary {
-    color: var(--astryx-color-text-secondary, #525252);
-  }
-
-  .astryx-text--color-accent {
-    color: var(--astryx-color-text-accent, #0074e2);
-  }
-
-  .astryx-text--color-inherit {
-    color: inherit;
-  }
-
   .astryx-text--weight-regular {
     font-weight: var(--astryx-font-weight-regular, 400);
   }
@@ -85,6 +73,63 @@
     font-size: var(--astryx-text-display-3-size, 1.75rem);
     font-weight: var(--astryx-text-display-weight, 300);
     line-height: 1.2;
+  }
+
+  .astryx-text--color-secondary {
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-text--color-accent {
+    color: var(--astryx-color-text-accent, #0074e2);
+  }
+
+  .astryx-text--color-disabled {
+    color: var(--astryx-color-text-disabled, #a3a3a3);
+  }
+
+  .astryx-text--color-placeholder {
+    color: var(--astryx-color-text-placeholder, #737373);
+  }
+
+  .astryx-text--color-inherit {
+    color: inherit;
+  }
+
+  .astryx-text--wrap-wrap {
+    text-wrap: wrap;
+  }
+
+  .astryx-text--wrap-nowrap {
+    text-wrap: nowrap;
+  }
+
+  .astryx-text--wrap-balance {
+    text-wrap: balance;
+  }
+
+  .astryx-text--wrap-pretty {
+    text-wrap: pretty;
+  }
+
+  .astryx-text--word-normal {
+    word-break: normal;
+  }
+
+  .astryx-text--word-break-word {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .astryx-text--word-break-all {
+    word-break: break-all;
+  }
+
+  .astryx-text--strike {
+    text-decoration: line-through;
+  }
+
+  .astryx-text--tabular {
+    font-variant-numeric: tabular-nums;
   }
 
   .astryx-text--size-sm {

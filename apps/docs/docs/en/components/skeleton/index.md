@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { skeletonProfile } from '../../../../components/demos/skeleton'
+import { skeletonCard, skeletonList, skeletonTable } from '../../../../components/demos/skeleton'
 </script>
 
 
@@ -50,12 +50,24 @@ import { Skeleton } from '@astryx-vue/core/Skeleton'
 
 ## Examples
 
-Compose placeholder shapes to match the dimensions and structure of the final content.
+<DemoExample
+  :demo="skeletonCard"
+  description="A card placeholder: a round avatar, a name, a short line, then a few lines of body text. index staggers the pulse."
+  locale="en"
+  title="Card loading"
+/>
 
 <DemoExample
-  :demo="skeletonProfile"
-  description="Match each placeholder to the final content's size and shape, then use index to stagger the pulse animation."
+  :demo="skeletonList"
+  description="Horizontal bars of different widths, standing in for a list that has not loaded yet."
   locale="en"
-  title="Content placeholder"
+  title="Staggered list"
+/>
+
+<DemoExample
+  :demo="skeletonTable"
+  description="Four columns per row, with widths that follow the content, and a pulse that steps forward by index."
+  locale="en"
+  title="Table rows"
 />
 

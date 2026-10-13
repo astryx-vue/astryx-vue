@@ -733,7 +733,17 @@ export type {
   TabProps,
 } from './TabList/index.js'
 export { Text } from './Text/index.js'
-export type { TextAs, TextColor, TextDisplay, TextProps, TextSize, TextType, TextWeight } from './Text/index.js'
+export type {
+  TextAs,
+  TextColor,
+  TextDisplay,
+  TextProps,
+  TextSize,
+  TextType,
+  TextWeight,
+  TextWordBreak,
+  TextWrap,
+} from './Text/index.js'
 export { TextArea } from './TextArea/index.js'
 export type {
   TextAreaChangeAction,

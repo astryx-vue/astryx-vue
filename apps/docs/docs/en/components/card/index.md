@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { cardBasic, cardElevation, cardPadding, cardVariants } from '../../../../components/demos/card'
+import { cardCallout, cardElevation, cardLayout, cardSimple, cardVariants } from '../../../../components/demos/card'
 </script>
 
 ## Usage
@@ -65,29 +65,36 @@ The card also publishes `--container-padding-inline-start`, `--container-padding
 ## Examples
 
 <DemoExample
-  :demo="cardBasic"
-  description="A typical card: a title, supporting text, a divider, and the actions at the bottom."
+  :demo="cardCallout"
+  description="The muted variant keeps a tip or note in the page instead of lifting it like the default card."
   locale="en"
-  title="Basic usage"
-/>
-
-<DemoExample
-  :demo="cardVariants"
-  description="The three surface variants and the ten categorisation hues. Only default draws a border, transparent only groups, and muted de-emphasises."
-  locale="en"
-  title="Background variants"
+  title="Callout"
 />
 
 <DemoExample
   :demo="cardElevation"
-  description="Four resting shadows. Raise a card only when it has to float above the content around it."
+  description="None, low, med, and high. A card is flat until it needs to sit above the content around it."
   locale="en"
-  title="Elevation"
+  title="Elevations"
 />
 
 <DemoExample
-  :demo="cardPadding"
-  description="One step applied to all four sides. The dashed box is the card's content, and the gap between it and the card edge is the padding."
+  :demo="cardLayout"
+  description="A header, a body, and a footer. The header and footer have dividers, and the actions sit on the right."
   locale="en"
-  title="Padding"
+  title="Layout"
+/>
+
+<DemoExample
+  :demo="cardSimple"
+  description="A heading, a paragraph, and a supporting line. The card supplies the border, background, and padding."
+  locale="en"
+  title="Simple"
+/>
+
+<DemoExample
+  :demo="cardVariants"
+  description="Default and muted, plus blue, green, orange, and purple, for grouping cards by category."
+  locale="en"
+  title="Variants"
 />
