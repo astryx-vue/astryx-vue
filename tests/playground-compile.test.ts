@@ -16,6 +16,7 @@ const modules = {
       },
     },
   },
+  charts: {},
 }
 
 describe('playground compiler', () => {
@@ -75,6 +76,7 @@ describe('playground compiler', () => {
       const compiled = compilePlaygroundSfc(template.source, {
         vue: Vue as unknown as Record<string, unknown>,
         core: core as unknown as Record<string, unknown>,
+        charts: {},
       }, 'en')
       const host = document.createElement('div')
       const app = createApp(compiled.component)

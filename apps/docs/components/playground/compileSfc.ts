@@ -15,6 +15,7 @@ export interface CompiledPlaygroundSfc {
 export interface PlaygroundModules {
   vue: Record<string, unknown>
   core: Record<string, unknown>
+  charts: Record<string, unknown>
 }
 
 export function compilePlaygroundSfc(
@@ -65,11 +66,12 @@ export function compilePlaygroundSfc(
   const rewritten = rewriteImports(plain, locale)
   // 编辑器里的 SFC 要在浏览器里变成组件，这里没有别的执行入口。
   // eslint-disable-next-line no-new-func
-  const factory = new Function('vue', 'core', `${rewritten.prelude}\n${rewritten.code}\nreturn __sfc__`) as (
+  const factory = new Function('vue', 'core', 'charts', `${rewritten.prelude}\n${rewritten.code}\nreturn __sfc__`) as (
     vue: Record<string, unknown>,
     core: Record<string, unknown>,
+    charts: Record<string, unknown>,
   ) => Component
-  const component = factory(modules.vue, modules.core)
+  const component = factory(modules.vue, modules.core, modules.charts)
   if (!component || typeof component !== 'object')
     throw new Error(locale === 'zh' ? '没有编译出组件。' : 'Compilation did not produce a component.')
 
@@ -171,7 +173,7 @@ function parseImportStatement(statement: string): { typeOnly: boolean, clause: s
 }
 
 function namedBindings(clause: string, source: string, statement: string, locale: PlaygroundLocale): string[] {
-  const namespace = moduleNamespace(source, locale)
+  const namespace = moduleNamespace(source, locale) as 'vue' | 'core' | 'charts'
   if (!clause.startsWith('{') || !clause.endsWith('}')) {
     throw new Error(locale === 'zh'
       ? `只支持具名导入：${statement.trim()}`
@@ -195,18 +197,24 @@ function namedBindings(clause: string, source: string, statement: string, locale
   return bindings
 }
 
-function moduleNamespace(source: string, locale: PlaygroundLocale): 'vue' | 'core' {
+function moduleNamespace(source: string, locale: PlaygroundLocale): 'vue' | 'core' | 'charts' {
   if (source === 'vue')
     return 'vue'
   if (source === '@astryx-vue/core' || source.startsWith('@astryx-vue/core/'))
     return 'core'
+  if (source === '@astryx-vue/playground-charts')
+    return 'charts'
   throw new Error(locale === 'zh'
-    ? `只能从 vue 和 @astryx-vue/core 导入，不支持 ${source}。`
-    : `Only vue and @astryx-vue/core can be imported, not ${source}.`)
+    ? `只能从 vue、@astryx-vue/core 和 @astryx-vue/playground-charts 导入，不支持 ${source}。`
+    : `Only vue, @astryx-vue/core, and @astryx-vue/playground-charts can be imported, not ${source}.`)
 }
 
-function missingExport(namespace: 'vue' | 'core', name: string, locale: PlaygroundLocale): string {
-  const from = namespace === 'vue' ? 'vue' : '@astryx-vue/core'
+function missingExport(namespace: 'vue' | 'core' | 'charts', name: string, locale: PlaygroundLocale): string {
+  const from = namespace === 'vue'
+    ? 'vue'
+    : namespace === 'charts'
+      ? '@astryx-vue/playground-charts'
+      : '@astryx-vue/core'
   return locale === 'zh' ? `${from} 没有导出 ${name}。` : `${from} does not export ${name}.`
 }
 

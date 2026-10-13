@@ -5,6 +5,7 @@ import type { PlaygroundColorMode, PlaygroundHostMessage } from './protocol'
 import * as core from '@astryx-vue/core'
 import * as Vue from 'vue'
 import { compilePlaygroundSfc } from './compileSfc'
+import * as playgroundCharts from './playgroundCharts'
 import { PreviewHost } from './previewHost'
 import { isHostMessage, PLAYGROUND_CHANNEL } from './protocol'
 
@@ -147,6 +148,7 @@ function runtimeModules(): PlaygroundModules {
   return {
     vue: Vue as unknown as PlaygroundModules['vue'],
     core: core as unknown as PlaygroundModules['core'],
+    charts: playgroundCharts as unknown as PlaygroundModules['charts'],
   }
 }
 
