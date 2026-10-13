@@ -99,6 +99,11 @@
       "types": "./dist/FormLayout/index.d.ts",
       "import": "./dist/FormLayout/index.js"
     },
+    "./Icon": {
+      "source": "./src/Icon/index.ts",
+      "types": "./dist/Icon/index.d.ts",
+      "import": "./dist/Icon/index.js"
+    },
     "./Layout": {
       "source": "./src/Layout/index.ts",
       "types": "./dist/Layout/index.d.ts",
@@ -614,6 +619,10 @@
       "./FormLayout": {
         "types": "./dist/FormLayout/index.d.ts",
         "import": "./dist/FormLayout/index.js"
+      },
+      "./Icon": {
+        "types": "./dist/Icon/index.d.ts",
+        "import": "./dist/Icon/index.js"
       },
       "./Layout": {
         "types": "./dist/Layout/index.d.ts",

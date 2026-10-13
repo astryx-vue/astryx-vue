@@ -389,6 +389,8 @@ export type {
   HoverCardSlots,
   HoverCardTouchTrigger,
 } from './HoverCard/index.js'
+export { Icon, ICON_GLYPHS, iconGlyphSlug, isIconGlyph } from './Icon/index.js'
+export type { IconColor, IconGlyphName, IconName, IconProps, IconSize, IconSlots } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
 export type { IconButtonEmits, IconButtonProps, IconButtonSlots } from './IconButton/index.js'
 export { InputGroup } from './InputGroup/index.js'
