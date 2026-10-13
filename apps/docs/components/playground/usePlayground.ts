@@ -60,6 +60,14 @@ export function usePlayground(
           ? shared.templateId
           : ''
       }
+      else {
+        const fromQuery = new URLSearchParams(window.location.search).get('template')
+        const match = fromQuery ? templates.find(item => item.id === fromQuery) : undefined
+        if (match) {
+          code.value = match.source
+          templateId.value = match.id
+        }
+      }
     }
     finally {
       hydrated.value = true
