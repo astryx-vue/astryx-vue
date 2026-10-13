@@ -23,6 +23,9 @@ export type {
   UseChatStreamScrollReturn,
 } from './useChatStreamScroll.js'
 
+export { INTERACTIVE_SELECTORS, useClickableContainer } from './useClickableContainer.js'
+export type { ClickableContainerHandlers, UseClickableContainerOptions } from './useClickableContainer.js'
+
 export { useClipboard } from './useClipboard.js'
 export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard.js'
 

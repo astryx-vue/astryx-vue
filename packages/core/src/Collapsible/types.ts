@@ -39,8 +39,16 @@ export interface CollapsibleProps {
   /**
    * Controlled open state, bound with `v-model:isOpen`. Leave it unbound to let
    * the component own its state, starting from `defaultIsOpen`.
+   *
+   * Inside a `CollapsibleGroup`, the group owns the open state and this prop
+   * is ignored.
    */
   isOpen?: boolean
+  /**
+   * Identifier used by a parent `CollapsibleGroup`. A collapsible without a
+   * `value` keeps its own open state even when it sits inside a group.
+   */
+  value?: string
 }
 
 export interface CollapsibleEmits {
