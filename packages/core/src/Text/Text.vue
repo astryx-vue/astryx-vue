@@ -13,13 +13,21 @@ const props = withDefaults(defineProps<TextProps>(), {
   maxLines: 0,
 })
 
+const weight = computed(() => props.weight === 'normal' ? 'regular' : props.weight)
+// maxLines needs a block box so single-line ellipsis and line-clamp have a width.
+const isBlock = computed(() => props.display === 'block' || props.maxLines > 0)
+
 const classes = computed(() => [
   'astryx-text',
   `astryx-text--type-${props.type}`,
   props.size && `astryx-text--size-${props.size}`,
   `astryx-text--color-${props.color}`,
-  props.weight && `astryx-text--weight-${props.weight}`,
-  props.display === 'block' && 'astryx-text--block',
+  weight.value && `astryx-text--weight-${weight.value}`,
+  props.textWrap && `astryx-text--wrap-${props.textWrap}`,
+  props.wordBreak && `astryx-text--word-${props.wordBreak}`,
+  props.hasStrikethrough && 'astryx-text--strike',
+  props.hasTabularNumbers && 'astryx-text--tabular',
+  isBlock.value && 'astryx-text--block',
   props.maxLines === 1 && 'astryx-text--truncate-single',
   props.maxLines > 1 && 'astryx-text--truncate-multi',
 ])

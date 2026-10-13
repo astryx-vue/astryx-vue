@@ -1021,9 +1021,59 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   margin: 0 !important;
 }
 
+.heading-preview__clamp {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.heading-preview__box {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 12px;
+  border: 1px solid var(--astryx-color-border, #d4d4d4);
+}
+
+.tab-list-preview__width {
+  width: min(100%, 500px);
+}
+
+.tab-list-preview__actions {
+  width: 100%;
+}
+
+.tab-list-preview__actions .astryx-tab-list__strip {
+  width: 100%;
+}
+
+.tab-list-preview__end {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: auto;
+}
+
 .text-preview__stack .astryx-text--truncate-single,
 .text-preview__stack .astryx-text--truncate-multi {
   max-width: 100%;
+}
+
+.text-preview__clamp {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 400px;
+}
+
+.text-preview__box {
+  box-sizing: border-box;
+  width: 200px;
+  padding: 8px;
+  border: 1px solid var(--astryx-color-border, #d4d4d4);
+}
+
+.text-preview__box--clip {
+  overflow: hidden;
 }
 
 .stack-preview-host {

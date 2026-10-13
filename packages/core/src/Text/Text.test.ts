@@ -31,6 +31,34 @@ describe('text', () => {
     expect(wrapper.classes()).toContain('astryx-text--size-sm')
   })
 
+  it('maps normal weight onto the regular weight class', () => {
+    const wrapper = mount(Text, {
+      props: { weight: 'normal' },
+      slots: { default: 'Normal' },
+    })
+
+    expect(wrapper.classes()).toContain('astryx-text--weight-regular')
+  })
+
+  it('applies wrap, word break, strikethrough, and tabular classes', () => {
+    const wrapper = mount(Text, {
+      props: {
+        textWrap: 'balance',
+        wordBreak: 'break-all',
+        hasStrikethrough: true,
+        hasTabularNumbers: true,
+        color: 'disabled',
+      },
+      slots: { default: 'Styled' },
+    })
+
+    expect(wrapper.classes()).toContain('astryx-text--wrap-balance')
+    expect(wrapper.classes()).toContain('astryx-text--word-break-all')
+    expect(wrapper.classes()).toContain('astryx-text--strike')
+    expect(wrapper.classes()).toContain('astryx-text--tabular')
+    expect(wrapper.classes()).toContain('astryx-text--color-disabled')
+  })
+
   it('truncates to multiple lines when maxLines is greater than 1', () => {
     const wrapper = mount(Text, {
       props: { maxLines: 2 },
@@ -38,5 +66,16 @@ describe('text', () => {
     })
 
     expect(wrapper.classes()).toContain('astryx-text--truncate-multi')
+    expect(wrapper.classes()).toContain('astryx-text--block')
+  })
+
+  it('forces a block box when maxLines is 1 so the ellipsis has a width', () => {
+    const wrapper = mount(Text, {
+      props: { maxLines: 1 },
+      slots: { default: 'Long text' },
+    })
+
+    expect(wrapper.classes()).toContain('astryx-text--truncate-single')
+    expect(wrapper.classes()).toContain('astryx-text--block')
   })
 })

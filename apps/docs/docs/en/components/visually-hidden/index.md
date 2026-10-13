@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { visuallyHiddenContext, visuallyHiddenLiveRegion } from '../../../../components/demos/visually-hidden'
+import { visuallyHiddenContext, visuallyHiddenLiveRegion, visuallyHiddenStructural } from '../../../../components/demos/visually-hidden'
 </script>
 
 
@@ -42,19 +42,24 @@ import { VisuallyHidden } from '@astryx-vue/core/VisuallyHidden'
 
 ## Examples
 
-Add context and dynamic status information that assistive technology needs but the visual interface does not show.
-
 <DemoExample
-  :demo="visuallyHiddenContext"
-  description="Add screen-reader-only context to a short link so its purpose remains clear when read outside the surrounding page."
+  :demo="visuallyHiddenLiveRegion"
+  description="When the task moves to the next column, aria-live reads the new place. People who can see the label do not need that sentence."
   locale="en"
-  title="Supplementary context"
+  title="Live region"
 />
 
 <DemoExample
-  :demo="visuallyHiddenLiveRegion"
-  description="Use a block root and aria-live to announce dynamic visual updates while keeping the hidden content in the accessibility tree."
+  :demo="visuallyHiddenStructural"
+  description="The group is obvious on screen and has no visible heading. A hidden h2 gives screen-reader users a landmark to jump to."
   locale="en"
-  title="Live region"
+  title="Structural heading"
+/>
+
+<DemoExample
+  :demo="visuallyHiddenContext"
+  description="The arrow is decoration. Whether the number went up or down is written in VisuallyHidden for a screen reader."
+  locale="en"
+  title="Supplementary context"
 />
 

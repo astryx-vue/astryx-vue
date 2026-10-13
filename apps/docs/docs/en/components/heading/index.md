@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { headingLevels, headingDisplays } from '../../../../components/demos/heading'
+import { headingCardGrid, headingHierarchy, headingTruncation } from '../../../../components/demos/heading'
 </script>
 
 ## Usage
@@ -42,15 +42,22 @@ import { Heading } from '@astryx-vue/core/Heading'
 ## Examples
 
 <DemoExample
-  :demo="headingLevels"
-  description="Heading renders h1–h6 semantic elements with level-based sizing by default."
+  :demo="headingCardGrid"
+  description="The heading stays on one line and the description clamps to two, so cards in a grid keep the same height."
   locale="en"
-  title="Levels"
+  title="Card grid"
 />
 
 <DemoExample
-  :demo="headingDisplays"
-  description="display-1, display-2, and display-3 provide larger display typography."
+  :demo="headingHierarchy"
+  description="An h1, an h2, and an h3 on one page, each with the text that belongs under it."
   locale="en"
-  title="Display headings"
+  title="Page hierarchy"
+/>
+
+<DemoExample
+  :demo="headingTruncation"
+  description="Inside a fixed width, maxLines of 1 keeps a single line and maxLines of 2 keeps two, both ending in an ellipsis."
+  locale="en"
+  title="Truncation"
 />

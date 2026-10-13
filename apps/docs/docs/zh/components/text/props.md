@@ -29,13 +29,37 @@ footer: false
         <td><code>color</code></td>
         <td><code>TextColor</code></td>
         <td><code>'primary'</code></td>
-        <td>文字颜色，可选 primary、secondary、accent、inherit。</td>
+        <td>文字颜色，可选 primary、secondary、accent、disabled、placeholder、inherit。</td>
       </tr>
       <tr>
         <td><code>weight</code></td>
         <td><code>TextWeight</code></td>
         <td>-</td>
-        <td>字重覆盖，可选 regular、medium、semibold、bold。</td>
+        <td>字重覆盖，可选 regular、normal、medium、semibold、bold。normal 与 regular 相同。</td>
+      </tr>
+      <tr>
+        <td><code>textWrap</code></td>
+        <td><code>TextWrap</code></td>
+        <td>-</td>
+        <td>换行方式，可选 wrap、nowrap、balance、pretty。</td>
+      </tr>
+      <tr>
+        <td><code>wordBreak</code></td>
+        <td><code>TextWordBreak</code></td>
+        <td>-</td>
+        <td>长词如何断开，可选 normal、break-word、break-all。</td>
+      </tr>
+      <tr>
+        <td><code>hasStrikethrough</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>给文字加删除线。</td>
+      </tr>
+      <tr>
+        <td><code>hasTabularNumbers</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>使用等宽数字，方便多行数字对齐。</td>
       </tr>
       <tr>
         <td><code>display</code></td>
@@ -53,7 +77,7 @@ footer: false
         <td><code>maxLines</code></td>
         <td><code>number</code></td>
         <td><code>0</code></td>
-        <td>最大显示行数，超出部分截断并显示省略号，0 表示不截断。</td>
+        <td>最大显示行数，超出部分截断并显示省略号，0 表示不截断。大于 0 时会改成块级，省略号才有宽度可用。</td>
       </tr>
     </tbody>
   </table>

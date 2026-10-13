@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { linkColors, linkExternal } from '../../../../components/demos/link'
+import { linkExternal, linkInline, linkTooltips } from '../../../../components/demos/link'
 </script>
 
 ## Usage
@@ -42,15 +42,22 @@ import { Link } from '@astryx-vue/core/Link'
 ## Examples
 
 <DemoExample
-  :demo="linkColors"
-  description="Links come in primary, secondary, accent, and inherit color variants. Without a color prop a link uses accent."
+  :demo="linkExternal"
+  description="isExternalLink opens a new tab and shows the external indicator. hasUnderline adds a line under the label."
   locale="en"
-  title="Colors"
+  title="External links"
 />
 
 <DemoExample
-  :demo="linkExternal"
-  description="isExternalLink opens in a new tab, adds an external indicator, and sets safe rel values."
+  :demo="linkInline"
+  description="A link sitting inside a sentence, on the same line as the words around it."
   locale="en"
-  title="External link"
+  title="Inline text"
+/>
+
+<DemoExample
+  :demo="linkTooltips"
+  description="A tooltip on hover or focus says where the link goes."
+  locale="en"
+  title="With tooltips"
 />

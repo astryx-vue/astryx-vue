@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { blockquoteCite } from '../../../../components/demos/blockquote'
+import { blockquoteCite, blockquoteTestimonials } from '../../../../components/demos/blockquote'
 </script>
 
 
@@ -48,12 +48,17 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
 
 ## 示例
 
-常见的引用与出处配置。
+<DemoExample
+  :demo="blockquoteTestimonials"
+  description="几段推荐语放进卡片网格。跨两列的那一张用 GridSpan 拉满。"
+  locale="zh"
+  title="推荐语"
+/>
 
 <DemoExample
   :demo="blockquoteCite"
-  description="引用可以单独使用。来源已知时，通过 cite 标明作者或出处。"
+  description="一段不署名，一段用 cite 写上来源。"
   locale="zh"
-  title="带出处的引用"
+  title="带出处"
 />
 

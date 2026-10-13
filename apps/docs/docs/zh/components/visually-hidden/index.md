@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { visuallyHiddenContext, visuallyHiddenLiveRegion } from '../../../../components/demos/visually-hidden'
+import { visuallyHiddenContext, visuallyHiddenLiveRegion, visuallyHiddenStructural } from '../../../../components/demos/visually-hidden'
 </script>
 
 
@@ -42,19 +42,24 @@ import { VisuallyHidden } from '@astryx-vue/core/VisuallyHidden'
 
 ## 示例
 
-为辅助技术补充视觉界面没有表达的上下文与动态状态。
-
 <DemoExample
-  :demo="visuallyHiddenContext"
-  description="在简短链接后补充只供屏幕阅读器读取的上下文，避免链接脱离页面后含义不明。"
+  :demo="visuallyHiddenLiveRegion"
+  description="任务被移到下一列时，aria-live 把新位置读出来。看见箭头的人不用听这段话。"
   locale="zh"
-  title="补充上下文"
+  title="实时播报"
 />
 
 <DemoExample
-  :demo="visuallyHiddenLiveRegion"
-  description="使用块级根元素和 aria-live 播报视觉界面中的动态更新。隐藏内容仍保留在无障碍树中。"
+  :demo="visuallyHiddenStructural"
+  description="这一组在视觉上已经成块，但没有可见标题。隐藏的 h2 让屏幕阅读器能跳到这里。"
   locale="zh"
-  title="实时播报"
+  title="结构标题"
+/>
+
+<DemoExample
+  :demo="visuallyHiddenContext"
+  description="箭头只是装饰。涨了还是跌了，写在 VisuallyHidden 里给屏幕阅读器。"
+  locale="zh"
+  title="补充上下文"
 />
 
