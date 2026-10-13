@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+    --astryx-segmented-control-background: var(--astryx-color-background-muted);
+    --astryx-segmented-control-focus: var(--astryx-color-accent);
+    --astryx-segmented-control-item-foreground: var(--astryx-color-text-primary);
+    --astryx-segmented-control-item-hover-background: var(--astryx-color-overlay-hover);
+    --astryx-segmented-control-item-pressed-background: var(--astryx-color-overlay-pressed);
+    --astryx-segmented-control-item-selected-foreground: var(--astryx-color-text-primary);
+    --astryx-segmented-control-item-selected-background: var(--astryx-color-accent-muted);
+    --astryx-segmented-control-item-selected-shadow: var(--astryx-shadow-low);
+    --astryx-segmented-control-item-disabled-foreground: var(--astryx-color-text-disabled);
+  }
+}

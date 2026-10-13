@@ -145,6 +145,7 @@ describe('sync exports', () => {
       await mkdir(join(rootDir, 'packages/core/src/locale/messages'), { recursive: true })
       await mkdir(join(rootDir, 'packages/core/styles'), { recursive: true })
       await mkdir(join(rootDir, 'packages/themes/neutral'), { recursive: true })
+      await mkdir(join(rootDir, 'packages/themes/butter'), { recursive: true })
 
       await writeFile(join(rootDir, 'packages/core/package.json'), `${JSON.stringify({
         name: '@astryx-vue/core',
@@ -174,6 +175,7 @@ export interface UseZzProbeOptions { id: string }
       await writeFile(join(rootDir, 'packages/core/styles/zz-probe.css'), '.zz-probe {}\n')
       await writeFile(join(rootDir, 'packages/core/styles/calendar.css'), '.calendar {}\n')
       await writeFile(join(rootDir, 'packages/themes/neutral/zz-probe.css'), '.zz-probe {}\n')
+      await writeFile(join(rootDir, 'packages/themes/butter/zz-probe.css'), '.zz-probe {}\n')
       await writeFile(join(rootDir, 'packages/core/src/locale/messages/zz-probe.ts'), `export interface ZzProbeMessages { label: string }
 export const zzProbeMessages = { en: { label: 'Probe' }, 'zh-CN': { label: '探针' } }
 `)
@@ -195,9 +197,13 @@ export const zzProbeMessages = { en: { label: 'Probe' }, 'zh-CN': { label: '探�
       expect(composables).not.toContain('useCalendar')
       expect(styles).toContain('./styles/zz-probe.css')
       expect(styles).not.toContain('calendar.css')
+      const butter = await readFile(join(rootDir, 'packages/themes/butter.css'), 'utf8')
       expect(neutral).toContain('./neutral/zz-probe.css')
       expect(neutral).toContain('@import \'./fonts.css\';')
       expect(neutral).not.toContain('@fontsource/jetbrains-mono')
+      expect(butter).toContain('./butter/zz-probe.css')
+      expect(butter).toContain('@import \'./fonts.css\';')
+      expect(butter).not.toContain('@fontsource/jetbrains-mono')
       expect(messages).toContain('zzProbeMessages')
       expect(packageJson.exports['./ZzProbe']).toEqual({
         source: './src/ZzProbe/index.ts',

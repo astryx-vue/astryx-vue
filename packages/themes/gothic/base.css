@@ -1,0 +1,247 @@
+/**
+ * Gothic semantic tokens.
+ *
+ * Dark-only. Deep blue-gray surfaces, Fustat for text, Manufacturing Consent for display. Values follow @astryxdesign/theme-gothic 0.7.0.
+ * Names match Neutral, with an --astryx- prefix.
+ * A token present in the upstream theme.css replaces the Neutral value.
+ * Tokens the theme does not set keep the shared default from Neutral's base.
+ * JetBrains Mono stays on the shared fonts.css stack.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Fustat:wght@400;500;600;700&family=Manufacturing+Consent&family=UnifrakturMaguntia&display=swap');
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='gothic'] {
+    color-scheme: dark;
+    background-color: var(--astryx-color-background-body);
+    color: var(--astryx-color-text-primary);
+    font-family: var(--astryx-font-family-body);
+    font-size: var(--astryx-text-body-size);
+    line-height: var(--astryx-text-body-leading);
+
+    --astryx-color-accent: #E8F1F6;
+    --astryx-color-accent-muted: #E8F1F620;
+    --astryx-color-on-accent: #101314;
+    --astryx-color-neutral: #E8F1F61A;
+    --astryx-color-background-surface: #101314;
+    --astryx-color-background-body: #101314;
+    --astryx-color-overlay: #101314CC;
+    --astryx-color-overlay-hover: #E8F1F60D;
+    --astryx-color-overlay-pressed: #E8F1F61A;
+    --astryx-color-background-muted: #24292D;
+
+    --astryx-color-text-primary: #E8F1F6;
+    --astryx-color-text-secondary: #96A0AB;
+    --astryx-color-text-disabled: #495056;
+    --astryx-color-text-accent: #E8F1F6;
+    --astryx-color-on-dark: #E8F1F6;
+    --astryx-color-on-light: #101314;
+
+    --astryx-color-icon-accent: #E8F1F6;
+    --astryx-color-icon-primary: #E8F1F6;
+    --astryx-color-icon-secondary: #96A0AB;
+    --astryx-color-icon-disabled: #495056;
+
+    --astryx-color-background-card: #1a1d20;
+    --astryx-color-background-popover: #24292D;
+    --astryx-color-background-inverted: #E8F1F6;
+    --astryx-color-background-error-inverted: light-dark(#aa071e, #e3193b);
+
+    --astryx-color-success: #b3c79a;
+    --astryx-color-success-muted: #b3c79a;
+    --astryx-color-on-success: #101314;
+    --astryx-color-error: #c6a6a2;
+    --astryx-color-error-muted: #c6a6a2;
+    --astryx-color-on-error: #101314;
+    --astryx-color-warning: #d3c490;
+    --astryx-color-warning-muted: #d3c490;
+    --astryx-color-on-warning: #101314;
+
+    --astryx-color-border: #E8F1F61A;
+    --astryx-color-border-emphasized: #495056;
+
+    --astryx-color-skeleton: #495056;
+    --astryx-color-track: light-dark(#ccd3db, #5a5e66);
+    --astryx-color-shadow: #0000004D;
+    --astryx-color-tint-hover: white;
+
+    --astryx-color-background-blue: #a3b5d6;
+    --astryx-color-border-blue: #8696b8;
+    --astryx-color-icon-blue: #2a3b6e;
+    --astryx-color-text-blue: #1f2c54;
+
+    --astryx-color-background-cyan: #a3c2cf;
+    --astryx-color-border-cyan: #86a4b1;
+    --astryx-color-icon-cyan: #2a5e75;
+    --astryx-color-text-cyan: #204858;
+
+    --astryx-color-background-gray: #3d4248;
+    --astryx-color-border-gray: #5d646b;
+    --astryx-color-icon-gray: #E8F1F6;
+    --astryx-color-text-gray: #E8F1F6;
+
+    --astryx-color-background-green: #b3c79a;
+    --astryx-color-border-green: #96a880;
+    --astryx-color-icon-green: #3a5e2c;
+    --astryx-color-text-green: #244023;
+
+    --astryx-color-background-orange: #d3b89a;
+    --astryx-color-border-orange: #b6987d;
+    --astryx-color-icon-orange: #8a4818;
+    --astryx-color-text-orange: #6e3812;
+
+    --astryx-color-background-pink: #c89aab;
+    --astryx-color-border-pink: #aa7d8e;
+    --astryx-color-icon-pink: #8d2d4c;
+    --astryx-color-text-pink: #71223c;
+
+    --astryx-color-background-purple: #b29bc4;
+    --astryx-color-border-purple: #947da6;
+    --astryx-color-icon-purple: #5a2370;
+    --astryx-color-text-purple: #481b58;
+
+    --astryx-color-background-red: #c6a6a2;
+    --astryx-color-border-red: #a48581;
+    --astryx-color-icon-red: #5e3a35;
+    --astryx-color-text-red: #4a2520;
+
+    --astryx-color-background-teal: #a3c2b6;
+    --astryx-color-border-teal: #86a499;
+    --astryx-color-icon-teal: #1f5e52;
+    --astryx-color-text-teal: #174a40;
+
+    --astryx-color-background-yellow: #d3c490;
+    --astryx-color-border-yellow: #b6a775;
+    --astryx-color-icon-yellow: #876515;
+    --astryx-color-text-yellow: #6c5010;
+
+    --astryx-spacing-0: 0;
+    --astryx-spacing-0-5: 2px;
+    --astryx-spacing-1: 4px;
+    --astryx-spacing-1-5: 6px;
+    --astryx-spacing-2: 8px;
+    --astryx-spacing-3: 12px;
+    --astryx-spacing-4: 16px;
+    --astryx-spacing-5: 20px;
+    --astryx-spacing-6: 24px;
+    --astryx-spacing-7: 28px;
+    --astryx-spacing-8: 32px;
+    --astryx-spacing-9: 36px;
+    --astryx-spacing-10: 40px;
+    --astryx-spacing-11: 44px;
+    --astryx-spacing-12: 48px;
+
+    --astryx-size-element-sm: 28px;
+    --astryx-size-element-md: 32px;
+    --astryx-size-element-lg: 36px;
+
+    --astryx-border-width: 1px;
+
+    --astryx-focus-outline-width: 2px;
+    --astryx-focus-outline-style: solid;
+    --astryx-focus-outline-color: var(--astryx-color-accent);
+    --astryx-focus-outline-offset: 3px;
+
+    --astryx-radius-none: 0px;
+    --astryx-radius-inner: 0.25rem;
+    --astryx-radius-element: 0.5rem;
+    --astryx-radius-container: 0.75rem;
+    --astryx-radius-page: 1.5rem;
+    --astryx-radius-chat: 28px;
+    --astryx-radius-full: 9999px;
+
+    --astryx-shadow-low: 0 2px 4px #00000033, 0 4px 8px #00000040;
+    --astryx-shadow-med: 0 2px 4px #00000033, 0 4px 12px #00000040;
+    --astryx-shadow-high: 0 4px 6px #00000040, 0 12px 24px #0000004D;
+    --astryx-shadow-inset-hover: inset 0px 0px 0px 1px #96A0AB30;
+    --astryx-shadow-inset-selected: inset 0px 0px 0px 2px #96A0AB50;
+    --astryx-shadow-inset-success: inset 0px 0px 0px 1px #87b06a50;
+    --astryx-shadow-inset-warning: inset 0px 0px 0px 1px #d6b56a50;
+    --astryx-shadow-inset-error: inset 0px 0px 0px 1px #d4485150;
+
+    --astryx-duration-fast-min: 115ms;
+    --astryx-duration-fast: 150ms;
+    --astryx-duration-fast-max: 200ms;
+    --astryx-duration-medium-min: 265ms;
+    --astryx-duration-medium: 350ms;
+    --astryx-duration-medium-max: 465ms;
+    --astryx-duration-slow-min: 600ms;
+    --astryx-duration-slow: 800ms;
+    --astryx-duration-slow-max: 1065ms;
+
+    --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
+
+    --astryx-font-family-body: Fustat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --astryx-font-family-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --astryx-font-family-heading: Fustat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    --astryx-font-size-4xs: 0.3125rem;
+    --astryx-font-size-3xs: 0.4375rem;
+    --astryx-font-size-2xs: 0.5rem;
+    --astryx-font-size-xs: 0.625rem;
+    --astryx-font-size-sm: 0.8125rem;
+    --astryx-font-size-base: 1rem;
+    --astryx-font-size-lg: 1.25rem;
+    --astryx-font-size-xl: 1.5625rem;
+    --astryx-font-size-2xl: 1.9375rem;
+    --astryx-font-size-3xl: 2.4375rem;
+    --astryx-font-size-4xl: 3.0625rem;
+    --astryx-font-size-5xl: 3.8125rem;
+
+    --astryx-font-weight-normal: 400;
+    --astryx-font-weight-regular: var(--astryx-font-weight-normal);
+    --astryx-font-weight-medium: 500;
+    --astryx-font-weight-semibold: 600;
+    --astryx-font-weight-bold: 700;
+
+    --astryx-text-heading-1-size: var(--astryx-font-size-2xl);
+    --astryx-text-heading-1-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-1-leading: 1.4194;
+    --astryx-text-heading-2-size: var(--astryx-font-size-xl);
+    --astryx-text-heading-2-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-2-leading: 1.44;
+    --astryx-text-heading-3-size: var(--astryx-font-size-lg);
+    --astryx-text-heading-3-weight: var(--astryx-font-weight-bold);
+    --astryx-text-heading-3-leading: 1.4;
+    --astryx-text-heading-4-size: var(--astryx-font-size-base);
+    --astryx-text-heading-4-weight: var(--astryx-font-weight-bold);
+    --astryx-text-heading-4-leading: 1.5;
+    --astryx-text-heading-5-size: var(--astryx-font-size-sm);
+    --astryx-text-heading-5-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-5-leading: 1.5385;
+    --astryx-text-heading-6-size: var(--astryx-font-size-xs);
+    --astryx-text-heading-6-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-6-leading: 1.6;
+
+    --astryx-text-body-size: var(--astryx-font-size-base);
+    --astryx-text-body-weight: var(--astryx-font-weight-normal);
+    --astryx-text-body-leading: 1.5;
+    --astryx-text-large-size: var(--astryx-font-size-lg);
+    --astryx-text-large-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-large-leading: 1.4;
+    --astryx-text-label-size: var(--astryx-font-size-base);
+    --astryx-text-label-weight: var(--astryx-font-weight-medium);
+    --astryx-text-label-leading: 1.5;
+    --astryx-text-code-size: var(--astryx-font-size-base);
+    --astryx-text-code-weight: var(--astryx-font-weight-normal);
+    --astryx-text-code-leading: 1.5;
+    --astryx-text-supporting-size: var(--astryx-font-size-sm);
+    --astryx-text-supporting-weight: var(--astryx-font-weight-normal);
+    --astryx-text-supporting-leading: 1.5385;
+
+    --astryx-text-display-1-size: var(--astryx-font-size-5xl);
+    --astryx-text-display-1-weight: var(--astryx-font-weight-normal);
+    --astryx-text-display-1-leading: 1.2459;
+    --astryx-text-display-2-size: var(--astryx-font-size-4xl);
+    --astryx-text-display-2-weight: var(--astryx-font-weight-normal);
+    --astryx-text-display-2-leading: 1.2245;
+    --astryx-text-display-3-size: var(--astryx-font-size-3xl);
+    --astryx-text-display-3-weight: var(--astryx-font-weight-normal);
+    --astryx-text-display-3-leading: 1.2308;
+  }
+
+  [data-astryx-theme='gothic'][data-astryx-color-mode='light'],
+  [data-astryx-theme='gothic'][data-astryx-color-mode='dark'] {
+    color-scheme: dark;
+  }
+}

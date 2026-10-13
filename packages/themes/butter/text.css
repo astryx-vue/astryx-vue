@@ -1,0 +1,31 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-text-foreground: var(--astryx-color-text-primary);
+
+    --astryx-text-supporting-foreground: var(--astryx-color-text-secondary);
+
+    --astryx-text-display-weight: var(--astryx-text-display-1-weight);
+    --astryx-text-sm-size: var(--astryx-font-size-sm);
+    --astryx-text-md-size: var(--astryx-font-size-base);
+    --astryx-text-lg-size: var(--astryx-font-size-lg);
+    --astryx-text-xl-size: var(--astryx-font-size-xl);
+
+  }
+}
+
+@layer astryx.components {
+  [data-astryx-theme='butter'] .astryx-heading {
+    font-family: var(--astryx-font-family-heading);
+  }
+
+  [data-astryx-theme='butter'] .astryx-text--type-display-1,
+  [data-astryx-theme='butter'] .astryx-text--type-display-2,
+  [data-astryx-theme='butter'] .astryx-text--type-display-3,
+  [data-astryx-theme='butter'] .astryx-heading--type-display-1,
+  [data-astryx-theme='butter'] .astryx-heading--type-display-2,
+  [data-astryx-theme='butter'] .astryx-heading--type-display-3 {
+    font-family: Sarina, 'Brush Script MT', 'Snell Roundhand', cursive;
+  }
+}

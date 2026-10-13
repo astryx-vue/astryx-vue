@@ -1,0 +1,23 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='chocolate'] {
+    --astryx-icon-primary-foreground: var(--astryx-color-text-primary);
+    --astryx-icon-secondary-foreground: var(--astryx-color-text-secondary);
+    --astryx-icon-disabled-foreground: var(--astryx-color-text-disabled);
+    --astryx-icon-accent-foreground: var(--astryx-color-on-accent);
+    --astryx-icon-success-foreground: var(--astryx-color-text-green);
+    --astryx-icon-error-foreground: var(--astryx-color-text-red);
+    --astryx-icon-warning-foreground: var(--astryx-color-text-yellow);
+    --astryx-icon-blue-foreground: var(--astryx-color-icon-blue);
+    --astryx-icon-cyan-foreground: var(--astryx-color-icon-cyan);
+    --astryx-icon-green-foreground: var(--astryx-color-icon-green);
+    --astryx-icon-gray-foreground: var(--astryx-color-icon-gray);
+    --astryx-icon-orange-foreground: var(--astryx-color-icon-orange);
+    --astryx-icon-pink-foreground: var(--astryx-color-icon-pink);
+    --astryx-icon-purple-foreground: var(--astryx-color-icon-purple);
+    --astryx-icon-red-foreground: var(--astryx-color-icon-red);
+    --astryx-icon-teal-foreground: var(--astryx-color-icon-teal);
+    --astryx-icon-yellow-foreground: var(--astryx-color-icon-yellow);
+  }
+}

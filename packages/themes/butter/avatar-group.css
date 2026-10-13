@@ -1,0 +1,9 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-avatar-group-border-color: var(--astryx-color-border);
+    --astryx-avatar-group-overflow-background: var(--astryx-color-background-surface);
+    --astryx-avatar-group-overflow-foreground: var(--astryx-color-text-primary);
+  }
+}

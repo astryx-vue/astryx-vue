@@ -1,0 +1,21 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+    --astryx-spinner-diameter-sm: 10px;
+    --astryx-spinner-diameter-md: 14px;
+    --astryx-spinner-diameter-lg: 18px;
+    --astryx-spinner-diameter-xl: 28px;
+    --astryx-spinner-stroke-width-sm: 2px;
+    --astryx-spinner-stroke-width-md: 3px;
+    --astryx-spinner-stroke-width-lg: 3px;
+    --astryx-spinner-stroke-width-xl: 4px;
+    --astryx-spinner-arc-fraction: 0.375;
+    --astryx-spinner-group-gap: 8px;
+    --astryx-spinner-label-color: var(--astryx-color-text-secondary);
+    --astryx-spinner-color-accent: var(--astryx-color-accent);
+    --astryx-spinner-color-subtle: var(--astryx-color-text-secondary);
+    --astryx-spinner-color-track: var(--astryx-color-track);
+    --astryx-spinner-color-on-dark: var(--astryx-color-on-dark);
+  }
+}

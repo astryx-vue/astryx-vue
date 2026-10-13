@@ -358,6 +358,58 @@ describe('jetbrains mono in the neutral theme', () => {
   })
 })
 
+const firstPartyThemes = ['butter', 'chocolate', 'gothic', 'matcha', 'stone', 'y2k'] as const
+
+describe('first-party themes', () => {
+  const neutralNames = new Set(parseCustomProperties(baseCss).map(property => property.name))
+
+  it('ships a stylesheet entry for every theme', () => {
+    for (const name of firstPartyThemes) {
+      const entry = readFileSync(join(root, `packages/themes/${name}.css`), 'utf8')
+      expect(entry).toContain('@import \'./fonts.css\';')
+      expect(entry).toContain(`@import './${name}/base.css';`)
+      expect(entry).not.toContain('@fontsource/jetbrains-mono')
+      expect(entry).not.toContain('neutral')
+    }
+  })
+
+  it('declares the same semantic tokens as Neutral, scoped to the theme', () => {
+    for (const name of firstPartyThemes) {
+      const css = readFileSync(join(root, `packages/themes/${name}/base.css`), 'utf8')
+      const properties = parseCustomProperties(css)
+      const names = properties.map(property => property.name)
+      expect(names.filter((token, index) => names.indexOf(token) !== index), name).toEqual([])
+      expect(new Set(names), name).toEqual(neutralNames)
+      expect(css).toContain(`[data-astryx-theme='${name}']`)
+      expect(css).not.toContain(':root')
+      expect(css).toContain('\'JetBrains Mono\', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace')
+      for (const token of ['--astryx-duration-fast', '--astryx-ease-standard', '--astryx-font-weight-regular'])
+        expect(new Set(names).has(token), `${name} ${token}`).toBe(true)
+    }
+  })
+
+  it('keeps the upstream palette, type, and gothic dark-only behavior', () => {
+    const read = (name: string) => readFileSync(join(root, `packages/themes/${name}/base.css`), 'utf8')
+    expect(read('butter')).toContain('--astryx-color-accent: light-dark(#225BFF, #FDEE8C);')
+    expect(read('butter')).toContain('--astryx-font-family-body: Outfit,')
+    expect(readFileSync(join(root, 'packages/themes/butter/text.css'), 'utf8')).toContain('Sarina')
+    expect(read('chocolate')).toContain('--astryx-font-family-body: \'Albert Sans\'')
+    expect(read('chocolate')).toContain('--astryx-font-family-heading: Fraunces,')
+    expect(read('gothic')).toContain('color-scheme: dark;')
+    expect(read('gothic')).toContain('--astryx-color-accent: #E8F1F6;')
+    expect(read('gothic')).not.toContain('--astryx-color-accent: light-dark(')
+    expect(read('gothic')).toContain('--astryx-font-family-body: Fustat,')
+    expect(readFileSync(join(root, 'packages/themes/gothic/text.css'), 'utf8')).toContain('Manufacturing Consent')
+    expect(read('matcha')).toContain('\'DM Sans\'')
+    expect(read('matcha')).toContain('Playwrite US Trad')
+    expect(read('stone')).toContain('--astryx-font-family-body: Figtree,')
+    expect(read('stone')).toContain('--astryx-font-family-heading: Montserrat,')
+    expect(read('y2k')).toContain('--astryx-font-family-body: Poppins,')
+    expect(read('y2k')).toContain('--astryx-radius-full: 0px;')
+    expect(readFileSync(join(root, 'packages/themes/y2k/text.css'), 'utf8')).toContain('Crimson Text')
+  })
+})
+
 describe('shared motion stylesheet', () => {
   it('defines fade, scale, and four-direction enter and exit keyframes', () => {
     for (const name of motionKeyframes)

@@ -4,20 +4,16 @@ title: Themes
 
 # Themes
 
-A theme decides the color, type, radius, shadow, and motion duration the components use. Structural styles live in `@astryx-vue/core`. Themes live in `@astryx-vue/themes`. Install and import them separately.
-
-Neutral is the default theme: neutral gray, with light and dark stops on the same CSS variables, and no brand hue locked in. Customizations and overrides follow the same variable names and structure.
-
-To use it:
-
-1. Install `@astryx-vue/themes`.
-2. Import `@astryx-vue/themes/neutral.css` once from the app entry.
-3. When something has to change, override the `--astryx-*` variable. Leave the structural styles alone.
+A theme sets the color, type, radius, shadow, and motion the components use. Structural styles stay in `@astryx-vue/core`.
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-That import loads JetBrains Mono. The body and heading stacks name Figtree first, then system sans fonts. Figtree is not in the theme package. Load it yourself if you want that face.
+Put `data-astryx-theme="neutral"` on the element that should take the theme. On `html`, that is the whole app. On a smaller element, only that subtree. Neutral also writes the same variables on `:root`, so importing `neutral.css` is enough for a single-theme app. The other themes do not touch `:root`.
 
-Next: what [Neutral](/en/themes/neutral) overrides today, how [design tokens](/en/themes/tokens) map onto [CSS variables](/en/themes/css-variables), or the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages. To change the look, read [Extending a theme](/en/themes/extending). To apply a theme object to one subtree, use the [Theme](/en/components/theme), [Media Theme](/en/components/media-theme), and [Syntax Theme](/en/components/syntax-theme) components.
+JetBrains Mono loads with every theme. Each theme also loads its own text faces.
+
+<ThemeGallery />
+
+[Neutral](/en/themes/neutral), [Butter](/en/themes/butter), [Chocolate](/en/themes/chocolate), [Gothic](/en/themes/gothic), [Matcha](/en/themes/matcha), [Stone](/en/themes/stone), and [Y2K](/en/themes/y2k) each have an import snippet. Token names are shared; see [CSS variables](/en/themes/css-variables). How [design tokens](/en/themes/tokens) map onto those variables, and the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages, sit next to that. To change one value, read [Extending a theme](/en/themes/extending). To apply a theme object to one subtree, use the [Theme](/en/components/theme), [Media Theme](/en/components/media-theme), and [Syntax Theme](/en/components/syntax-theme) components.

@@ -4,20 +4,16 @@ title: 主题概览
 
 # 主题概览
 
-主题决定组件用哪一套颜色、字体、圆角、阴影和动画时长。组件自己的结构样式在 `@astryx-vue/core`，主题在 `@astryx-vue/themes`。两边分开装、分开引入。
-
-目前提供 Neutral 主题作为默认外观：中性灰底色，明暗两套颜色写在同一批 CSS 变量里，不绑定特定品牌色。所有的样式定制与扩展都沿着统一的 CSS 变量名展开。
-
-选用时做这三件事：
-
-1. 安装 `@astryx-vue/themes`。
-2. 在应用入口引入一次 `@astryx-vue/themes/neutral.css`。
-3. 需要改某一项时，覆盖对应的 `--astryx-*` 变量，而不是改组件的结构样式。
+主题决定组件的颜色、字体、圆角、阴影和动画时长。组件的结构样式在 `@astryx-vue/core`。
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-引入上面这一行就会带上 JetBrains Mono。正文和标题的字体栈写的是 Figtree，再落到系统无衬线字体。Figtree 本身不在主题包里，要用它就在应用里自己加载。
+把 `data-astryx-theme="neutral"` 写在要使用这套主题的元素上。写在 `html` 上就是整站，写在更小的元素上就只影响那一块。Neutral 还会把同一批变量写到 `:root`，所以只使用 Neutral 时，引入 `neutral.css` 即可。其余主题不会改 `:root`。
 
-接下来可以看 [Neutral](/themes/neutral) 现在具体覆盖了什么，看 [Design token](/themes/tokens) 和 [CSS 变量](/themes/css-variables) 这两套名字怎么对应，或者直接看 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画](/themes/motion)。想改出自己的外观，读 [扩展主题](/themes/extending)。要把一份主题对象套到某一棵子树上，用 [主题](/components/theme)、[媒体主题](/components/media-theme) 和 [语法主题](/components/syntax-theme)。
+每套主题都会带上 JetBrains Mono，并加载自己的正文字体。
+
+<ThemeGallery />
+
+各套主题的引入方式见 [Neutral](/themes/neutral)、[Butter](/themes/butter)、[Chocolate](/themes/chocolate)、[Gothic](/themes/gothic)、[Matcha](/themes/matcha)、[Stone](/themes/stone)、[Y2K](/themes/y2k)。变量名是共用的，说明在 [CSS 变量](/themes/css-variables)。[Design token](/themes/tokens) 和这些变量怎么对应，以及 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画](/themes/motion)，都写在旁边。只改个别取值时，看 [扩展主题](/themes/extending)。要把一份主题对象套到某一棵子树上，用 [主题](/components/theme)、[媒体主题](/components/media-theme) 和 [语法主题](/components/syntax-theme)。

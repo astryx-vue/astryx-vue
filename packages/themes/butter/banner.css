@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-banner-info-background: #4883fd;
+    --astryx-banner-info-foreground: #ffffff;
+    --astryx-banner-error-background: #fc473b;
+    --astryx-banner-error-foreground: #ffffff;
+    --astryx-banner-warning-background: #ffc502;
+    --astryx-banner-warning-foreground: #1d1c11;
+    --astryx-banner-success-background: #91D143;
+    --astryx-banner-success-foreground: #1d1c11;
+    --astryx-banner-content-background: var(--astryx-color-background-surface);
+    --astryx-banner-border: var(--astryx-color-border);
+  }
+}

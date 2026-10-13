@@ -1,0 +1,28 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='chocolate'] {
+    --astryx-token-default-background: var(--astryx-badge-neutral-background);
+    --astryx-token-default-foreground: var(--astryx-badge-neutral-foreground);
+    --astryx-token-gray-background: var(--astryx-badge-neutral-background);
+    --astryx-token-gray-foreground: var(--astryx-badge-neutral-foreground);
+    --astryx-token-blue-background: var(--astryx-badge-blue-background);
+    --astryx-token-blue-foreground: var(--astryx-badge-blue-foreground);
+    --astryx-token-cyan-background: var(--astryx-badge-cyan-background);
+    --astryx-token-cyan-foreground: var(--astryx-badge-cyan-foreground);
+    --astryx-token-green-background: var(--astryx-badge-green-background);
+    --astryx-token-green-foreground: var(--astryx-badge-green-foreground);
+    --astryx-token-orange-background: var(--astryx-badge-orange-background);
+    --astryx-token-orange-foreground: var(--astryx-badge-orange-foreground);
+    --astryx-token-pink-background: var(--astryx-badge-pink-background);
+    --astryx-token-pink-foreground: var(--astryx-badge-pink-foreground);
+    --astryx-token-purple-background: var(--astryx-badge-purple-background);
+    --astryx-token-purple-foreground: var(--astryx-badge-purple-foreground);
+    --astryx-token-red-background: var(--astryx-badge-red-background);
+    --astryx-token-red-foreground: var(--astryx-badge-red-foreground);
+    --astryx-token-teal-background: var(--astryx-badge-teal-background);
+    --astryx-token-teal-foreground: var(--astryx-badge-teal-foreground);
+    --astryx-token-yellow-background: var(--astryx-badge-yellow-background);
+    --astryx-token-yellow-foreground: var(--astryx-badge-yellow-foreground);
+  }
+}

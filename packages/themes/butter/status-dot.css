@@ -1,0 +1,11 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-status-dot-neutral-background: var(--astryx-color-background-surface);
+    --astryx-status-dot-info-background: var(--astryx-color-background-blue);
+    --astryx-status-dot-success-background: var(--astryx-color-success-muted);
+    --astryx-status-dot-warning-background: var(--astryx-color-warning-muted);
+    --astryx-status-dot-error-background: var(--astryx-color-error-muted);
+  }
+}

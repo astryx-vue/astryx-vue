@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+    --astryx-banner-info-background: var(--astryx-color-background-blue);
+    --astryx-banner-info-foreground: var(--astryx-color-text-blue);
+    --astryx-banner-error-background: var(--astryx-color-error-muted);
+    --astryx-banner-error-foreground: var(--astryx-color-text-red);
+    --astryx-banner-warning-background: var(--astryx-color-warning-muted);
+    --astryx-banner-warning-foreground: var(--astryx-color-text-yellow);
+    --astryx-banner-success-background: var(--astryx-color-success-muted);
+    --astryx-banner-success-foreground: var(--astryx-color-text-green);
+    --astryx-banner-content-background: var(--astryx-color-background-surface);
+    --astryx-banner-border: var(--astryx-color-border);
+  }
+}
