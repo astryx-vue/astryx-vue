@@ -285,7 +285,7 @@ export type {
   ContextMenuWidth,
 } from './ContextMenu/index.js'
 export { DateInput } from './DateInput/index.js'
-export type { DateInputEmits, DateInputProps, DateInputSlots } from './DateInput/index.js'
+export type { DateInputEmits, DateInputFormat, DateInputFormatName, DateInputPresentation, DateInputProps, DateInputSlots, DateInputStatus, DateInputStatusType } from './DateInput/index.js'
 export { DateRangeInput } from './DateRangeInput/index.js'
 export type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './DateRangeInput/index.js'
 export { DateTimeInput } from './DateTimeInput/index.js'
