@@ -20,4 +20,4 @@ import '@astryx-vue/themes/neutral.css'
 
 引入上面这一行就会带上 JetBrains Mono。正文和标题的字体栈写的是 Figtree，再落到系统无衬线字体。Figtree 本身不在主题包里，要用它就在应用里自己加载。
 
-接下来可以看 [Neutral](/themes/neutral) 现在具体覆盖了什么，看 [Design token](/themes/tokens) 和 [CSS 变量](/themes/css-variables) 这两套名字怎么对应，或者直接看 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画](/themes/motion)。想改出自己的外观，读 [扩展主题](/themes/extending)。
+接下来可以看 [Neutral](/themes/neutral) 现在具体覆盖了什么，看 [Design token](/themes/tokens) 和 [CSS 变量](/themes/css-variables) 这两套名字怎么对应，或者直接看 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画](/themes/motion)。想改出自己的外观，读 [扩展主题](/themes/extending)。要把一份主题对象套到某一棵子树上，用 [主题](/components/theme)、[媒体主题](/components/media-theme) 和 [语法主题](/components/syntax-theme)。

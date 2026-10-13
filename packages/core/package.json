@@ -219,6 +219,11 @@
       "types": "./dist/Table/index.d.ts",
       "import": "./dist/Table/index.js"
     },
+    "./Theme": {
+      "source": "./src/Theme/index.ts",
+      "types": "./dist/Theme/index.d.ts",
+      "import": "./dist/Theme/index.js"
+    },
     "./Thumbnail": {
       "source": "./src/Thumbnail/index.ts",
       "types": "./dist/Thumbnail/index.d.ts",
@@ -705,6 +710,10 @@
       "./Table": {
         "types": "./dist/Table/index.d.ts",
         "import": "./dist/Table/index.js"
+      },
+      "./Theme": {
+        "types": "./dist/Theme/index.d.ts",
+        "import": "./dist/Theme/index.js"
       },
       "./Thumbnail": {
         "types": "./dist/Thumbnail/index.d.ts",

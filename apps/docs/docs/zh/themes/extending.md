@@ -17,7 +17,7 @@ title: 扩展主题
 }
 ```
 
-这条样式要排在 `@astryx-vue/themes/neutral.css` 之后。只想改一个子树时，可以把同一批变量写在那个子树上。Neutral 的变量选择器已经包含 `[data-astryx-theme='neutral']`，所以这个属性可以标在子树上；因为选择器里同时有 `:root`，引入主题之后，变量默认仍然是全局的。
+这条样式要排在 `@astryx-vue/themes/neutral.css` 之后。只想在 Vue 里改一个子树时，用 [`Theme`](/components/theme) 包住它，并传入 `defineTheme()` 的结果。它会把变量写到这棵子树上，并重新绑定文字、标题和按钮的别名，避免这些别名停在 `:root` 上已经算好的颜色。Neutral 的变量选择器已经包含 `[data-astryx-theme='neutral']`，所以这个属性可以标在子树上；因为选择器里同时有 `:root`，引入主题之后，变量默认仍然是全局的。
 
 某个组件要单独偏离时，覆盖它在 `packages/themes/neutral/<组件>.css` 里的变量，例如 `--astryx-button-primary-background`。名字以那份文件为准。
 
