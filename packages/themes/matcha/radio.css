@@ -1,0 +1,8 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astyx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='matcha'] {
+    --astryx-radio-size: 18px;
+    --astryx-radio-radius: 999px;
+  }
+}

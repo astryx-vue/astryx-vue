@@ -1,0 +1,16 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='matcha'] {
+    --astryx-more-menu-background: var(--astryx-color-background-card);
+    --astryx-more-menu-foreground: var(--astryx-color-text-primary);
+    --astryx-more-menu-description-foreground: var(--astryx-color-text-secondary);
+    --astryx-more-menu-heading-foreground: var(--astryx-color-text-primary);
+    --astryx-more-menu-destructive-foreground: var(--astryx-color-text-primary);
+    --astryx-more-menu-item-hover-background: var(--astryx-color-overlay-hover);
+    --astryx-more-menu-item-pressed-background: var(--astryx-color-overlay-pressed);
+    --astryx-more-menu-scrim: var(--astryx-color-overlay);
+    --astryx-more-menu-trigger-open-overlay: var(--astryx-color-overlay-pressed);
+    --astryx-more-menu-shadow: var(--astryx-shadow-low);
+  }
+}

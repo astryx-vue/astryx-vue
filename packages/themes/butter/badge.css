@@ -1,0 +1,35 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-badge-neutral-background: #ffee7b;
+    --astryx-badge-neutral-foreground: #225BFF;
+    --astryx-badge-info-background: #4883fd;
+    --astryx-badge-info-foreground: #ffffff;
+    --astryx-badge-success-background: #91D143;
+    --astryx-badge-success-foreground: #1d1c11;
+    --astryx-badge-warning-background: #ffc502;
+    --astryx-badge-warning-foreground: #1d1c11;
+    --astryx-badge-error-background: #fc473b;
+    --astryx-badge-error-foreground: #ffffff;
+
+    --astryx-badge-blue-background: var(--astryx-color-background-blue);
+    --astryx-badge-blue-foreground: var(--astryx-color-text-blue);
+    --astryx-badge-cyan-background: var(--astryx-color-background-cyan);
+    --astryx-badge-cyan-foreground: var(--astryx-color-text-cyan);
+    --astryx-badge-green-background: var(--astryx-color-background-green);
+    --astryx-badge-green-foreground: var(--astryx-color-text-green);
+    --astryx-badge-orange-background: var(--astryx-color-background-orange);
+    --astryx-badge-orange-foreground: var(--astryx-color-text-orange);
+    --astryx-badge-pink-background: var(--astryx-color-background-pink);
+    --astryx-badge-pink-foreground: var(--astryx-color-text-pink);
+    --astryx-badge-purple-background: var(--astryx-color-background-purple);
+    --astryx-badge-purple-foreground: var(--astryx-color-text-purple);
+    --astryx-badge-red-background: var(--astryx-color-background-red);
+    --astryx-badge-red-foreground: var(--astryx-color-text-red);
+    --astryx-badge-teal-background: var(--astryx-color-background-teal);
+    --astryx-badge-teal-foreground: var(--astryx-color-text-teal);
+    --astryx-badge-yellow-background: var(--astryx-color-background-yellow);
+    --astryx-badge-yellow-foreground: var(--astryx-color-text-yellow);
+  }
+}

@@ -27,7 +27,7 @@ Entries differ by what you need:
 | One component | A subpath such as `@astryx-vue/core/Button` |
 | Composables, and components re-exported from the root | `@astryx-vue/core` |
 | `provideAstryxLocale`, `useAstryxMessages` | `@astryx-vue/core/locale`, also on the root |
-| The Neutral theme | `@astryx-vue/themes/neutral.css` |
+| A theme | `@astryx-vue/themes/neutral.css`. Butter, Chocolate, Gothic, Matcha, Stone, and Y2K use the same path with their own file name. |
 | Every structural sheet | `@astryx-vue/core/styles.css` |
 | The layer declaration | `@astryx-vue/core/reset.css` |
 

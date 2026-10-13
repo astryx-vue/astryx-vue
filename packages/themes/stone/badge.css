@@ -1,0 +1,35 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='stone'] {
+    --astryx-badge-neutral-background: var(--astryx-color-background-gray);
+    --astryx-badge-neutral-foreground: var(--astryx-color-text-gray);
+    --astryx-badge-info-background: var(--astryx-color-background-blue);
+    --astryx-badge-info-foreground: var(--astryx-color-text-blue);
+    --astryx-badge-success-background: var(--astryx-color-background-green);
+    --astryx-badge-success-foreground: var(--astryx-color-text-green);
+    --astryx-badge-warning-background: var(--astryx-color-background-yellow);
+    --astryx-badge-warning-foreground: var(--astryx-color-text-yellow);
+    --astryx-badge-error-background: var(--astryx-color-background-red);
+    --astryx-badge-error-foreground: var(--astryx-color-text-red);
+
+    --astryx-badge-blue-background: var(--astryx-color-background-blue);
+    --astryx-badge-blue-foreground: var(--astryx-color-text-blue);
+    --astryx-badge-cyan-background: var(--astryx-color-background-cyan);
+    --astryx-badge-cyan-foreground: var(--astryx-color-text-cyan);
+    --astryx-badge-green-background: var(--astryx-color-background-green);
+    --astryx-badge-green-foreground: var(--astryx-color-text-green);
+    --astryx-badge-orange-background: var(--astryx-color-background-orange);
+    --astryx-badge-orange-foreground: var(--astryx-color-text-orange);
+    --astryx-badge-pink-background: var(--astryx-color-background-pink);
+    --astryx-badge-pink-foreground: var(--astryx-color-text-pink);
+    --astryx-badge-purple-background: var(--astryx-color-background-purple);
+    --astryx-badge-purple-foreground: var(--astryx-color-text-purple);
+    --astryx-badge-red-background: var(--astryx-color-background-red);
+    --astryx-badge-red-foreground: var(--astryx-color-text-red);
+    --astryx-badge-teal-background: var(--astryx-color-background-teal);
+    --astryx-badge-teal-foreground: var(--astryx-color-text-teal);
+    --astryx-badge-yellow-background: var(--astryx-color-background-yellow);
+    --astryx-badge-yellow-foreground: var(--astryx-color-text-yellow);
+  }
+}

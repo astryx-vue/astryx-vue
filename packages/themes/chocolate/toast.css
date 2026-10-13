@@ -1,0 +1,12 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='chocolate'] {
+    --astryx-toast-info-background: var(--astryx-color-text-primary);
+    --astryx-toast-info-foreground: var(--astryx-color-background-body);
+    --astryx-toast-success-background: var(--astryx-color-success-muted);
+    --astryx-toast-warning-background: var(--astryx-color-warning-muted);
+    --astryx-toast-error-background: var(--astryx-color-error-muted);
+    --astryx-toast-type-foreground: var(--astryx-color-background-body);
+  }
+}

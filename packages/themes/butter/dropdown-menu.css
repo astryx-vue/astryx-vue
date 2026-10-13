@@ -1,0 +1,14 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-dropdown-menu-background: var(--astryx-color-background-card);
+    --astryx-dropdown-menu-foreground: var(--astryx-color-text-primary);
+    --astryx-dropdown-menu-shadow: var(--astryx-shadow-low);
+    --astryx-dropdown-menu-hover-background: var(--astryx-color-overlay-hover);
+    --astryx-dropdown-menu-pressed-background: var(--astryx-color-overlay-pressed);
+    --astryx-dropdown-menu-trigger-open-overlay: var(--astryx-color-overlay-pressed);
+    --astryx-dropdown-menu-destructive-foreground: var(--astryx-color-text-primary);
+    --astryx-dropdown-menu-section-heading-foreground: var(--astryx-color-text-primary);
+  }
+}

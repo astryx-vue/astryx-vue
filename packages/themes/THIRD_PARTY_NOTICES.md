@@ -14,6 +14,8 @@ The TextInput, CheckboxInput, CheckboxIndicator, Slider, Banner and Field family
 
 When files or substantial portions are copied or adapted, their original copyright and license notices must be kept here or alongside the adapted files.
 
+Butter, Chocolate, Gothic, Matcha, Stone, and Y2K token values are adapted from the public `@astryxdesign/theme-*` packages at version 0.7.0 (`theme.css` and `fonts.css`), under the same MIT license. The Vue package renames those custom properties with an `--astryx-` prefix and keeps JetBrains Mono on `@fontsource/jetbrains-mono`.
+
 No Meta trademarks, logos, or endorsement are granted by the Astryx software license.
 
 ## Astryx license text

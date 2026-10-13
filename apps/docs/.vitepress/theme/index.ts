@@ -3,6 +3,8 @@ import DefaultTheme from 'vitepress/theme'
 import ComponentsOverview from '../../components/demo-infra/ComponentsOverview.vue'
 import DemoExample from '../../components/demo-infra/DemoExample.vue'
 import TokenReference from '../../components/theme-tokens/TokenReference.vue'
+import ThemeGallery from '../../components/themes/ThemeGallery.vue'
+import ThemeStage from '../../components/themes/ThemeStage.vue'
 import ComponentDocsPage from './ComponentDocsPage.vue'
 import 'virtual:uno.css'
 import '../../styles/global.css'
@@ -14,5 +16,7 @@ export default {
     app.component('DemoExample', DemoExample)
     app.component('ComponentsOverview', ComponentsOverview)
     app.component('TokenReference', TokenReference)
+    app.component('ThemeGallery', ThemeGallery)
+    app.component('ThemeStage', ThemeStage)
   },
 } satisfies Theme

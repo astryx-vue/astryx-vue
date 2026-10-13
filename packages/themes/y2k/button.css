@@ -1,0 +1,30 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+    --astryx-button-primary-background: var(--astryx-color-text-primary);
+    --astryx-button-primary-foreground: var(--astryx-color-background-body);
+    --astryx-button-secondary-background: var(--astryx-color-background-green);
+    --astryx-button-secondary-foreground: var(--astryx-color-text-green);
+    --astryx-button-ghost-background: transparent;
+    --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
+    --astryx-button-destructive-background: var(--astryx-color-background-red);
+    --astryx-button-destructive-foreground: var(--astryx-color-text-red);
+    --astryx-button-hover-overlay: var(--astryx-color-overlay-hover);
+    --astryx-button-pressed-overlay: var(--astryx-color-overlay-pressed);
+    --astryx-button-focus: var(--astryx-color-accent);
+    --astryx-button-separator: var(--astryx-color-border);
+    --astryx-button-solid-separator: var(--astryx-color-on-accent);
+    --astryx-button-tooltip-background: var(--astryx-color-text-primary);
+    --astryx-button-tooltip-foreground: var(--astryx-color-background-body);
+    --astryx-button-shadow-low: var(--astryx-shadow-low);
+    --astryx-button-shadow-med: var(--astryx-shadow-med);
+    --astryx-button-shadow-high: var(--astryx-shadow-high);
+  }
+}
+
+@layer astryx.components {
+  [data-astryx-theme='y2k'] .astryx-button[data-variant='secondary'] {
+    border: 1px solid var(--astryx-color-text-green);
+  }
+}

@@ -1,0 +1,27 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+    --astryx-chat-foreground: var(--astryx-color-text-primary);
+    /* Docs secondary text measures rgb(71, 71, 71). The shared text-secondary
+       token stays lighter, so chat supporting copy uses this darker stop. */
+    --astryx-chat-foreground-secondary: var(--astryx-color-text-secondary);
+    --astryx-chat-foreground-muted: var(--astryx-color-text-disabled);
+    --astryx-chat-bubble-background: var(--astryx-color-neutral);
+    --astryx-chat-error: var(--astryx-color-error);
+    --astryx-chat-success: var(--astryx-color-success);
+    --astryx-chat-accent: var(--astryx-color-accent);
+    --astryx-chat-unread-color: var(--astryx-color-border-red);
+    --astryx-chat-scroll-background: var(--astryx-color-background-popover);
+    --astryx-chat-scroll-shadow: var(--astryx-shadow-med);
+    --astryx-chat-hover: var(--astryx-color-overlay-hover);
+    --astryx-chat-focus: var(--astryx-focus-outline-color);
+    --astryx-chat-radius: var(--astryx-radius-chat);
+    --astryx-chat-radius-compact: var(--astryx-radius-container);
+    --astryx-chat-radius-group: var(--astryx-radius-inner);
+    --astryx-chat-font-weight-regular: var(--astryx-font-weight-regular);
+    --astryx-chat-font-weight-medium: var(--astryx-font-weight-medium);
+    --astryx-chat-font-weight-semibold: var(--astryx-font-weight-semibold);
+    --astryx-chat-font-weight-bold: var(--astryx-font-weight-bold);
+  }
+}

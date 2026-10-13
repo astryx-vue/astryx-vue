@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='stone'] {
+    --astryx-avatar-fallback-background: var(--astryx-color-background-surface);
+    --astryx-avatar-fallback-foreground: var(--astryx-color-text-primary);
+    --astryx-avatar-status-dot-border-color: var(--astryx-color-border);
+
+    --astryx-avatar-status-dot-neutral-background: var(--astryx-color-background-surface);
+    --astryx-avatar-status-dot-info-background: var(--astryx-color-background-blue);
+    --astryx-avatar-status-dot-success-background: var(--astryx-color-success-muted);
+    --astryx-avatar-status-dot-warning-background: var(--astryx-color-warning-muted);
+    --astryx-avatar-status-dot-error-background: var(--astryx-color-error-muted);
+  }
+}

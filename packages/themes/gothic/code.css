@@ -1,0 +1,33 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='gothic'] {
+
+    --astryx-code-background: var(--astryx-color-background-muted);
+    --astryx-code-primary-foreground: var(--astryx-color-text-primary);
+    --astryx-code-secondary-foreground: var(--astryx-color-text-secondary);
+
+    /* CodeBlock card: white surface and a hairline border, matching the
+       original block. Inline code keeps the muted chip above. */
+    --astryx-code-block-background: #101314;
+    --astryx-code-block-border: var(--astryx-color-border);
+    --astryx-code-block-focus: var(--astryx-color-accent);
+    --astryx-code-block-highlight-background: color-mix(in srgb, var(--astryx-color-accent) 20%, transparent);
+
+    /* Syntax colors from the original CodeBlock theme: keyword and type share
+       the same purple, strings stay green. */
+    --astryx-code-syntax-keyword: #c39adb;
+    --astryx-code-syntax-string: #a3c987;
+    --astryx-code-syntax-comment: #6b7079;
+    --astryx-code-syntax-number: #dec074;
+    --astryx-code-syntax-function: #8aa1d8;
+    --astryx-code-syntax-type: #c39adb;
+    --astryx-code-syntax-variable: #E8F1F6;
+    --astryx-code-syntax-operator: #96A0AB;
+    --astryx-code-syntax-constant: #e6b85e;
+    --astryx-code-syntax-tag: #d97580;
+    --astryx-code-syntax-attribute: #dec074;
+    --astryx-code-syntax-property: #7cc5b3;
+    --astryx-code-syntax-punctuation: #7a8290;
+  }
+}
