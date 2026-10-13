@@ -3,14 +3,14 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-text-foreground: light-dark(#171717, #fafafa);
+    --astryx-text-foreground: var(--astryx-color-text-primary);
     --astryx-text-body-size: 0.875rem;
     --astryx-text-body-leading: 1.4286;
     --astryx-text-large-size: 1rem;
     --astryx-text-large-leading: 1.5;
     --astryx-text-label-size: 0.875rem;
     --astryx-text-label-leading: 1.25;
-    --astryx-text-supporting-foreground: light-dark(#525252, #a3a3a3);
+    --astryx-text-supporting-foreground: var(--astryx-color-text-secondary);
     --astryx-text-supporting-size: 0.75rem;
     --astryx-text-supporting-leading: 1.6667;
     --astryx-text-display-1-size: 3rem;

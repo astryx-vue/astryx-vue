@@ -542,15 +542,30 @@ function findJsonValue(text, key) {
   throw new Error(`${key} 没有正常结束`)
 }
 
+function themeStylesheetDirs(rootDir) {
+  const themesDir = join(rootDir, 'packages/themes')
+  if (!existsSync(themesDir))
+    return []
+  return readdirSync(themesDir)
+    .filter(name => statSync(join(themesDir, name)).isDirectory())
+    .filter(name => readdirSync(join(themesDir, name)).some(entry => entry.endsWith('.css')))
+    .sort(compareName)
+}
+
 function generatedFiles(rootDir) {
   const composables = renderComposables(rootDir)
   const files = new Map([
     [join(rootDir, 'packages/core/src/index.ts'), renderIndex(rootDir)],
     [join(rootDir, 'packages/core/src/composables/index.ts'), composables.text],
     [join(rootDir, 'packages/core/styles.css'), renderCss(join(rootDir, 'packages/core/styles'), './styles/', STYLE_FILE_OMISSIONS)],
-    [join(rootDir, 'packages/themes/neutral.css'), renderCss(join(rootDir, 'packages/themes/neutral'), './neutral/', new Set(), THEME_FONT_IMPORTS)],
     [join(rootDir, 'packages/core/src/locale/messages.ts'), renderMessages(rootDir)],
   ])
+  for (const name of themeStylesheetDirs(rootDir)) {
+    files.set(
+      join(rootDir, 'packages/themes', `${name}.css`),
+      renderCss(join(rootDir, 'packages/themes', name), `./${name}/`, new Set(), THEME_FONT_IMPORTS),
+    )
+  }
   const packageExports = renderPackageExports(rootDir)
   if (packageExports.changed)
     files.set(packageExports.file, packageExports.text)

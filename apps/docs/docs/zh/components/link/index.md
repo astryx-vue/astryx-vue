@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { linkColors, linkExternal } from '../../../../components/demos/link'
+import { linkExternal, linkInline, linkTooltips } from '../../../../components/demos/link'
 </script>
 
 ## 使用方法
@@ -42,15 +42,22 @@ import { Link } from '@astryx-vue/core/Link'
 ## 示例
 
 <DemoExample
-  :demo="linkColors"
-  description="链接提供 primary、secondary、accent、inherit 四种颜色变体，可按强调程度或当前上下文选择；不传 color 时默认使用 accent。"
+  :demo="linkExternal"
+  description="isExternalLink 在新标签页打开，并带上外部标识。需要下划线时再加 hasUnderline。"
   locale="zh"
-  title="颜色"
+  title="外部链接"
 />
 
 <DemoExample
-  :demo="linkExternal"
-  description="开启 isExternalLink 后，链接会在新标签页打开，并自动追加安全 rel 属性与外部标识。"
+  :demo="linkInline"
+  description="链接嵌在一段正文里，跟前后的文字排在同一行。"
   locale="zh"
-  title="外部链接"
+  title="行内链接"
+/>
+
+<DemoExample
+  :demo="linkTooltips"
+  description="悬停或聚焦时，Tooltip 说明这个链接会去哪里。"
+  locale="zh"
+  title="提示"
 />

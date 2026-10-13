@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { badgeColors, badgeCounts } from '../../../../components/demos/badge'
+import { badgeColors, badgeCounts, badgeStatus } from '../../../../components/demos/badge'
 </script>
 
 
@@ -54,19 +54,24 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 ## 示例
 
-常见的徽标配置与使用场景。
-
 <DemoExample
   :demo="badgeColors"
-  description="使用分类颜色区分类别。分类颜色不表示系统状态。"
+  description="用蓝、青、绿这类分类色区分团队或主题。这些颜色不表示系统状态。"
   locale="zh"
   title="颜色"
 />
 
 <DemoExample
   :demo="badgeCounts"
-  description="徽标显示简短计数。数值超过 99 时，可以显示 99+。"
+  description="徽标里放一个短数字，用在未读消息或待办数量旁边。超过 99 可以写成 99+。"
   locale="zh"
   title="计数"
+/>
+
+<DemoExample
+  :demo="badgeStatus"
+  description="用 success、warning、error 标出需要处理的状态，用 neutral 和 info 标出流程位置。"
+  locale="zh"
+  title="状态"
 />
 

@@ -1,0 +1,29 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='butter'] {
+    --astryx-switch-track-width: 40px;
+    --astryx-switch-track-height: 24px;
+    --astryx-switch-track-width-sm: 32px;
+    --astryx-switch-track-height-sm: 20px;
+    --astryx-switch-track-width-lg: 52px;
+    --astryx-switch-track-height-lg: 28px;
+    --astryx-switch-track-padding: 4px;
+    --astryx-switch-track-padding-sm: 2px;
+    --astryx-switch-track-padding-lg: 4px;
+    --astryx-switch-thumb-size: 16px;
+    --astryx-switch-thumb-size-on: 20px;
+    --astryx-switch-thumb-size-sm: 14px;
+    --astryx-switch-thumb-size-on-sm: 16px;
+    --astryx-switch-thumb-size-lg: 20px;
+    --astryx-switch-thumb-size-on-lg: 24px;
+    --astryx-switch-thumb-travel: 14px;
+    --astryx-switch-thumb-travel-sm: 12px;
+    --astryx-switch-thumb-travel-lg: 22px;
+    --astryx-switch-track-radius: 999px;
+    --astryx-switch-thumb-radius: 999px;
+    --astryx-switch-track-off: var(--astryx-color-background-muted);
+    --astryx-switch-track-on: var(--astryx-color-accent);
+    --astryx-switch-thumb: var(--astryx-color-background-surface);
+  }
+}

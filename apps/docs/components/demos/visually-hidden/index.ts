@@ -5,12 +5,17 @@ import liveRegionDemo from './live-region.vue'
 import liveRegionSource from './live-region.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
+import structuralDemo from './structural.vue'
+import structuralSource from './structural.vue?raw&highlighted'
 
 export const visuallyHiddenContext = defineDemo(contextDemo, contextSource, {
   className: 'visually-hidden-preview visually-hidden-preview--context',
 })
 export const visuallyHiddenLiveRegion = defineDemo(liveRegionDemo, liveRegionSource, {
   className: 'visually-hidden-preview visually-hidden-preview--live',
+})
+export const visuallyHiddenStructural = defineDemo(structuralDemo, structuralSource, {
+  className: 'visually-hidden-preview',
 })
 
 export const visuallyHiddenOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

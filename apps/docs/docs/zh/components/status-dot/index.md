@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { statusDotVariants, statusDotPulsing } from '../../../../components/demos/status-dot'
+import { statusDotIndicators, statusDotPulsing, statusDotVariants } from '../../../../components/demos/status-dot'
 </script>
 
 ## 使用方法
@@ -37,15 +37,22 @@ import { StatusDot } from '@astryx-vue/core/StatusDot'
 ## 示例
 
 <DemoExample
-  :demo="statusDotVariants"
-  description="状态点有 neutral、info、success、warning、error 五种语义变体。"
+  :demo="statusDotPulsing"
+  description="isPulsing 让点呼吸闪烁，用来表示正在进行的状态。"
   locale="zh"
-  title="变体"
+  title="脉冲"
 />
 
 <DemoExample
-  :demo="statusDotPulsing"
-  description="设置 isPulsing 可以让状态点呼吸闪烁，表示活动中的状态。"
+  :demo="statusDotIndicators"
+  description="点的旁边写上文字，用来表示在线、离开、离线和未知。"
   locale="zh"
-  title="脉冲"
+  title="状态指示"
+/>
+
+<DemoExample
+  :demo="statusDotVariants"
+  description="neutral、info、success、warning、error 五种颜色并排。"
+  locale="zh"
+  title="变体"
 />

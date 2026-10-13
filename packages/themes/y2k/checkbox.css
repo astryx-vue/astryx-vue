@@ -1,0 +1,12 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+    --astryx-checkbox-background: var(--astryx-color-background-surface);
+    --astryx-checkbox-border: var(--astryx-color-border-emphasized);
+    --astryx-checkbox-accent: var(--astryx-color-accent);
+    --astryx-checkbox-on-accent: var(--astryx-color-on-accent);
+    --astryx-checkbox-focus: var(--astryx-color-accent);
+    --astryx-checkbox-disabled-background: var(--astryx-color-background-muted);
+  }
+}

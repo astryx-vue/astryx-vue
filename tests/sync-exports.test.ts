@@ -110,6 +110,9 @@ const expectedCatalog = [
   { slug: 'table', group: 'Table & List', en: 'Table', zh: '表格' },
   { slug: 'tree-list', group: 'Table & List', en: 'Tree List', zh: '树形列表' },
   { slug: 'visually-hidden', group: 'Utility', en: 'Visually Hidden', zh: '视觉隐藏' },
+  { slug: 'media-theme', group: 'Utility', en: 'Media Theme', zh: '媒体主题' },
+  { slug: 'syntax-theme', group: 'Utility', en: 'Syntax Theme', zh: '语法主题' },
+  { slug: 'theme', group: 'Utility', en: 'Theme', zh: '主题' },
 ]
 
 describe('component catalog meta', () => {
@@ -142,6 +145,7 @@ describe('sync exports', () => {
       await mkdir(join(rootDir, 'packages/core/src/locale/messages'), { recursive: true })
       await mkdir(join(rootDir, 'packages/core/styles'), { recursive: true })
       await mkdir(join(rootDir, 'packages/themes/neutral'), { recursive: true })
+      await mkdir(join(rootDir, 'packages/themes/butter'), { recursive: true })
 
       await writeFile(join(rootDir, 'packages/core/package.json'), `${JSON.stringify({
         name: '@astryx-vue/core',
@@ -171,6 +175,7 @@ export interface UseZzProbeOptions { id: string }
       await writeFile(join(rootDir, 'packages/core/styles/zz-probe.css'), '.zz-probe {}\n')
       await writeFile(join(rootDir, 'packages/core/styles/calendar.css'), '.calendar {}\n')
       await writeFile(join(rootDir, 'packages/themes/neutral/zz-probe.css'), '.zz-probe {}\n')
+      await writeFile(join(rootDir, 'packages/themes/butter/zz-probe.css'), '.zz-probe {}\n')
       await writeFile(join(rootDir, 'packages/core/src/locale/messages/zz-probe.ts'), `export interface ZzProbeMessages { label: string }
 export const zzProbeMessages = { en: { label: 'Probe' }, 'zh-CN': { label: '探针' } }
 `)
@@ -192,9 +197,13 @@ export const zzProbeMessages = { en: { label: 'Probe' }, 'zh-CN': { label: '探�
       expect(composables).not.toContain('useCalendar')
       expect(styles).toContain('./styles/zz-probe.css')
       expect(styles).not.toContain('calendar.css')
+      const butter = await readFile(join(rootDir, 'packages/themes/butter.css'), 'utf8')
       expect(neutral).toContain('./neutral/zz-probe.css')
       expect(neutral).toContain('@import \'./fonts.css\';')
       expect(neutral).not.toContain('@fontsource/jetbrains-mono')
+      expect(butter).toContain('./butter/zz-probe.css')
+      expect(butter).toContain('@import \'./fonts.css\';')
+      expect(butter).not.toContain('@fontsource/jetbrains-mono')
       expect(messages).toContain('zzProbeMessages')
       expect(packageJson.exports['./ZzProbe']).toEqual({
         source: './src/ZzProbe/index.ts',

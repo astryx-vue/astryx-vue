@@ -46,6 +46,7 @@
 @import './styles/link.css';
 @import './styles/list.css';
 @import './styles/markdown.css';
+@import './styles/media-theme.css';
 @import './styles/metadata-list.css';
 @import './styles/mobile-nav.css';
 @import './styles/more-menu.css';
@@ -77,6 +78,7 @@
 @import './styles/text.css';
 @import './styles/text-area.css';
 @import './styles/text-input.css';
+@import './styles/theme.css';
 @import './styles/thumbnail.css';
 @import './styles/time-input.css';
 @import './styles/timer.css';

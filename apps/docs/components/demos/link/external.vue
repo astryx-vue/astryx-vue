@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { Link } from '@astryx-vue/core/Link'
+import { VStack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <div class="link-preview__row">
+  <VStack :gap="2">
     <Link href="https://github.com" is-external-link>
       GitHub
     </Link>
-    <Link href="https://example.com" is-external-link has-underline>
-      External link with underline
+    <Link href="https://developer.mozilla.org" is-external-link>
+      MDN Web Docs
     </Link>
-  </div>
+    <Link href="https://vuejs.org" is-external-link has-underline>
+      Vue Documentation
+    </Link>
+  </VStack>
 </template>

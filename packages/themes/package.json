@@ -37,10 +37,22 @@
   "files": [
     "README.md",
     "THIRD_PARTY_NOTICES.md",
+    "butter",
+    "butter.css",
+    "chocolate",
+    "chocolate.css",
     "css.d.ts",
     "fonts.css",
+    "gothic",
+    "gothic.css",
+    "matcha",
+    "matcha.css",
     "neutral",
-    "neutral.css"
+    "neutral.css",
+    "stone",
+    "stone.css",
+    "y2k",
+    "y2k.css"
   ],
   "scripts": {
     "build": "true"

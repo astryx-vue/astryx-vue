@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='stone'] {
+    --astryx-citation-foreground: var(--astryx-color-text-secondary);
+    --astryx-citation-foreground-hover: var(--astryx-color-text-primary);
+    --astryx-citation-border: var(--astryx-color-border);
+    --astryx-citation-hover: var(--astryx-color-overlay-hover);
+    --astryx-citation-number-background: var(--astryx-color-accent-muted);
+    --astryx-citation-icon-background: var(--astryx-color-background-surface);
+    --astryx-citation-focus: var(--astryx-focus-outline-color);
+    --astryx-citation-font-weight: var(--astryx-font-weight-regular);
+    --astryx-citation-number-font-weight: var(--astryx-font-weight-semibold);
+  }
+}

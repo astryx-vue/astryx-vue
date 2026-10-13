@@ -1,0 +1,11 @@
+import type { DemoMeta } from '../../demo-infra/demoMeta'
+import { themeOverview as demo } from './index'
+
+export const meta = {
+  slug: 'theme',
+  group: 'Utility',
+  order: 3,
+  en: 'Theme',
+  zh: '主题',
+  demo,
+} satisfies DemoMeta

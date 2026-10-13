@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { cardBasic, cardElevation, cardPadding, cardVariants } from '../../../../components/demos/card'
+import { cardCallout, cardElevation, cardLayout, cardSimple, cardVariants } from '../../../../components/demos/card'
 </script>
 
 ## 使用方法
@@ -65,29 +65,36 @@ import { Text } from '@astryx-vue/core/Text'
 ## 示例
 
 <DemoExample
-  :demo="cardBasic"
-  description="一张典型的卡片：标题、说明文字、分隔线，以及底部的操作按钮。"
+  :demo="cardCallout"
+  description="muted 变体把提示和补充说明压进页面，不像默认卡片那样抬起来。"
   locale="zh"
-  title="基础用法"
-/>
-
-<DemoExample
-  :demo="cardVariants"
-  description="三种表面变体加上十个分类色相。只有 default 带描边，transparent 只做分组，muted 用于弱化的卡片。"
-  locale="zh"
-  title="背景变体"
+  title="提示"
 />
 
 <DemoExample
   :demo="cardElevation"
-  description="四档静止阴影。只有卡片确实需要浮在周围内容之上时才抬升它。"
+  description="none、low、med、high 四档阴影。默认是平的，只有需要浮在内容之上时才抬高。"
   locale="zh"
-  title="阴影深度"
+  title="阴影"
 />
 
 <DemoExample
-  :demo="cardPadding"
-  description="同一个步进值作用于四边。虚线框是卡片内容，它与卡片边缘之间的距离就是内边距。"
+  :demo="cardLayout"
+  description="页眉、正文和页脚分成三段，页眉和页脚带分隔线，操作按钮靠右。"
   locale="zh"
-  title="内边距"
+  title="页眉与页脚"
+/>
+
+<DemoExample
+  :demo="cardSimple"
+  description="一张卡片里放标题、正文和一行辅助说明。边框、背景和内边距由卡片自己处理。"
+  locale="zh"
+  title="简单内容"
+/>
+
+<DemoExample
+  :demo="cardVariants"
+  description="default、muted，再加上蓝、绿、橙、紫，用来给卡片分类。"
+  locale="zh"
+  title="背景变体"
 />

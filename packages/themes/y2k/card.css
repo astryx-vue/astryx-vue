@@ -1,0 +1,23 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='y2k'] {
+    --astryx-card-background: var(--astryx-color-background-card);
+    --astryx-card-muted-background: var(--astryx-color-background-muted);
+    --astryx-card-border: var(--astryx-color-border);
+    --astryx-card-shadow-low: var(--astryx-shadow-low);
+    --astryx-card-shadow-med: var(--astryx-shadow-med);
+    --astryx-card-shadow-high: var(--astryx-shadow-high);
+
+    --astryx-card-blue-background: var(--astryx-color-background-blue);
+    --astryx-card-cyan-background: var(--astryx-color-background-cyan);
+    --astryx-card-gray-background: var(--astryx-color-background-gray);
+    --astryx-card-green-background: var(--astryx-color-background-green);
+    --astryx-card-orange-background: var(--astryx-color-background-orange);
+    --astryx-card-pink-background: var(--astryx-color-background-pink);
+    --astryx-card-purple-background: var(--astryx-color-background-purple);
+    --astryx-card-red-background: var(--astryx-color-background-red);
+    --astryx-card-teal-background: var(--astryx-color-background-teal);
+    --astryx-card-yellow-background: var(--astryx-color-background-yellow);
+  }
+}

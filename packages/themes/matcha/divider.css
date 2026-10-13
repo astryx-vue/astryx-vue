@@ -1,0 +1,9 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='matcha'] {
+    --astryx-divider-color-subtle: var(--astryx-color-text-secondary);
+    --astryx-divider-color-strong: var(--astryx-color-border);
+    --astryx-divider-label-color: var(--astryx-color-text-secondary);
+  }
+}

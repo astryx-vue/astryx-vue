@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { textTypes, textTruncation } from '../../../../components/demos/text'
+import { textColors, textHeadingLevels, textInline, textTruncation, textTypes, textWeight, textWordBreak, textWrap } from '../../../../components/demos/text'
 </script>
 
 ## 使用方法
@@ -42,15 +42,57 @@ import { Text } from '@astryx-vue/core/Text'
 ## 示例
 
 <DemoExample
+  :demo="textColors"
+  description="primary、secondary、accent、disabled、placeholder 五种颜色，各自对应正文、辅助信息、强调、不可用内容和占位提示。"
+  locale="zh"
+  title="颜色"
+/>
+
+<DemoExample
+  :demo="textHeadingLevels"
+  description="Heading 从 h1 排到 h6，字号随层级下降。"
+  locale="zh"
+  title="标题层级"
+/>
+
+<DemoExample
+  :demo="textInline"
+  description="默认是行内元素，所以正文和等宽代码可以排在同一行里。"
+  locale="zh"
+  title="行内混排"
+/>
+
+<DemoExample
+  :demo="textTruncation"
+  description="在限宽容器里用 maxLines 把文字收成一行、两行或三行，超出的部分以省略号结尾。"
+  locale="zh"
+  title="截断"
+/>
+
+<DemoExample
   :demo="textTypes"
-  description="Text 提供 body、large、supporting、label、code 等语义类型，覆盖正文、强调、辅助说明、标签与等宽代码等常见场景。"
+  description="body、large、label、supporting、code 五种语义类型，以及删除线和等宽数字。"
   locale="zh"
   title="文本类型"
 />
 
 <DemoExample
-  :demo="textTruncation"
-  description="设置 maxLines 后，超出指定行数的文本会被截断并以省略号收尾，避免长文本撑破布局。"
+  :demo="textWeight"
+  description="normal、medium、semibold、bold 四种字重。normal 与 regular 是同一档。"
   locale="zh"
-  title="截断"
+  title="字重"
+/>
+
+<DemoExample
+  :demo="textWordBreak"
+  description="一长串没有空格的文字，break-word 尽量在词的边界断开，break-all 则可以在任意字符处断开。"
+  locale="zh"
+  title="断词"
+/>
+
+<DemoExample
+  :demo="textWrap"
+  description="wrap、nowrap、balance、pretty 四种换行方式，都放在同样宽度的盒子里。"
+  locale="zh"
+  title="换行"
 />

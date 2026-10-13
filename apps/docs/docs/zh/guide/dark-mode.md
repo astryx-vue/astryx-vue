@@ -22,4 +22,4 @@ Neutral 不提供单独的深色样式表。每条颜色写成 `light-dark(浅�
 
 文档站的明暗开关是 VitePress 的 `appearance`。打开深色时，站点在 `html` 上加 `dark`，并把 `color-scheme` 设成 `dark`，Neutral 的 `light-dark()` 就取深色那一档。这是文档站的做法，不是组件要求的 class 名。应用里用 `data-astryx-color-mode` 或自己设置 `color-scheme` 即可。
 
-没有 JavaScript 主题对象，也不要同时维护一套深色 token 名字。要改某一档的颜色，仍覆盖原来的变量，并在 `light-dark()` 里写下两边。见 [扩展主题](/themes/extending)。
+`Theme` 可以用 `mode="dark"` 或 `mode="light"` 强制一块子树的明暗。见 [主题](/components/theme)。不要同时维护一套深色 token 名字。要改某一档的颜色，仍覆盖原来的变量，并在 `light-dark()` 里写下两边。见 [扩展主题](/themes/extending)。

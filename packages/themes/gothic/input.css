@@ -1,0 +1,21 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='gothic'] {
+    --astryx-input-background: var(--astryx-color-background-surface);
+    --astryx-input-border: var(--astryx-color-border-emphasized);
+    --astryx-input-focus: var(--astryx-color-accent);
+    --astryx-input-height-sm: 28px;
+    --astryx-input-height-md: 32px;
+    --astryx-input-height-lg: 36px;
+    --astryx-input-error: var(--astryx-color-error);
+    --astryx-input-error-foreground: var(--astryx-color-text-red);
+    --astryx-input-error-background: var(--astryx-color-error-muted);
+    --astryx-input-warning: var(--astryx-color-warning);
+    --astryx-input-warning-foreground: var(--astryx-color-text-yellow);
+    --astryx-input-warning-background: var(--astryx-color-warning-muted);
+    --astryx-input-success: var(--astryx-color-success);
+    --astryx-input-success-foreground: var(--astryx-color-text-green);
+    --astryx-input-success-background: var(--astryx-color-success-muted);
+  }
+}

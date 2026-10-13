@@ -27,8 +27,11 @@ function onClick(event: MouseEvent): void {
     event.preventDefault()
     return
   }
+  // 文档站和路由会在捕获阶段先 preventDefault。那只是拦住跳转，不表示这一项要留着菜单。
+  // 只有该项自己的 click 监听再 preventDefault 时，才取消关闭。
+  const preventedBeforeItem = event.defaultPrevented
   emit('click', event)
-  if (event.defaultPrevented || props.keepOpen)
+  if (props.keepOpen || (!preventedBeforeItem && event.defaultPrevented))
     return
   closeMenu?.()
   menu?.close()

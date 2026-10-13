@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bannerStatuses, bannerDetails, bannerActions, bannerContainers } from '../../../../components/demos/banner'
+import { bannerAction, bannerCollapsible, bannerDismiss, bannerFullWidth, bannerStatuses } from '../../../../components/demos/banner'
 </script>
 
 ## 使用方法
@@ -51,13 +51,40 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 示例
 
-<DemoExample :demo="bannerStatuses" title="消息状态" description="使用标题说明消息含义。避免只依赖颜色。" locale="zh" />
+<DemoExample
+  :demo="bannerAction"
+  description="end 插槽放一个按钮，让用户能直接处理这条消息。"
+  locale="zh"
+  title="操作"
+/>
 
-<DemoExample :demo="bannerDetails" title="展开详情" description="默认插槽提供详情。collapsible 为 false 时，详情始终显示。" locale="zh" />
+<DemoExample
+  :demo="bannerCollapsible"
+  description="同一条提示里放操作按钮、关闭按钮，以及默认展开的详情。详情写在默认插槽里。"
+  locale="zh"
+  title="可折叠"
+/>
 
-<DemoExample :demo="bannerActions" title="操作与关闭" description="操作按钮放入 end 插槽。关闭后，组件自行隐藏。" locale="zh" />
+<DemoExample
+  :demo="bannerDismiss"
+  description="isDismissable 让用户读完后关掉提示。适合维护通知和功能介绍。"
+  locale="zh"
+  title="关闭"
+/>
 
-<DemoExample :demo="bannerContainers" title="容器与阴影" description="card 适合页面内容。section 适合通栏提示。" locale="zh" />
+<DemoExample
+  :demo="bannerFullWidth"
+  description="container 设为 section 后，提示条铺满整行，没有圆角，适合放在页面顶部。"
+  locale="zh"
+  title="通栏"
+/>
+
+<DemoExample
+  :demo="bannerStatuses"
+  description="info、success、warning、error 四种状态，分别用于更新、完成、提醒和出错。"
+  locale="zh"
+  title="状态"
+/>
 
 ## 使用建议
 

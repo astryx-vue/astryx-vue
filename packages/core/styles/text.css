@@ -3,7 +3,7 @@
 @layer astryx.components {
   .astryx-text {
     margin: 0;
-    color: var(--astryx-text-foreground, var(--astryx-color-text-primary, #171717));
+    color: var(--astryx-text-foreground, var(--astryx-color-text-primary, light-dark(#171717, #fafafa)));
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
@@ -11,18 +11,6 @@
 
   .astryx-text--block {
     display: block;
-  }
-
-  .astryx-text--color-secondary {
-    color: var(--astryx-color-text-secondary, #525252);
-  }
-
-  .astryx-text--color-accent {
-    color: var(--astryx-color-text-accent, #0074e2);
-  }
-
-  .astryx-text--color-inherit {
-    color: inherit;
   }
 
   .astryx-text--weight-regular {
@@ -58,7 +46,7 @@
   }
 
   .astryx-text--type-supporting {
-    color: var(--astryx-text-supporting-foreground, var(--astryx-color-text-secondary, #525252));
+    color: var(--astryx-text-supporting-foreground, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
@@ -85,6 +73,67 @@
     font-size: var(--astryx-text-display-3-size, 1.75rem);
     font-weight: var(--astryx-text-display-weight, 300);
     line-height: 1.2;
+  }
+
+  .astryx-text--color-primary {
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  }
+
+  .astryx-text--color-secondary {
+    color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
+  }
+
+  .astryx-text--color-accent {
+    color: var(--astryx-color-text-accent, #0074e2);
+  }
+
+  .astryx-text--color-disabled {
+    color: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
+  }
+
+  .astryx-text--color-placeholder {
+    color: var(--astryx-color-text-placeholder, #737373);
+  }
+
+  .astryx-text--color-inherit {
+    color: inherit;
+  }
+
+  .astryx-text--wrap-wrap {
+    text-wrap: wrap;
+  }
+
+  .astryx-text--wrap-nowrap {
+    text-wrap: nowrap;
+  }
+
+  .astryx-text--wrap-balance {
+    text-wrap: balance;
+  }
+
+  .astryx-text--wrap-pretty {
+    text-wrap: pretty;
+  }
+
+  .astryx-text--word-normal {
+    word-break: normal;
+  }
+
+  .astryx-text--word-break-word {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .astryx-text--word-break-all {
+    word-break: break-all;
+  }
+
+  .astryx-text--strike {
+    text-decoration: line-through;
+  }
+
+  .astryx-text--tabular {
+    font-variant-numeric: tabular-nums;
   }
 
   .astryx-text--size-sm {

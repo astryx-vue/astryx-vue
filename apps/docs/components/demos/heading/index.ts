@@ -1,17 +1,16 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import displaysDemo from './displays.vue'
-import displaysSource from './displays.vue?raw&highlighted'
-import levelsDemo from './levels.vue'
-import levelsSource from './levels.vue?raw&highlighted'
+import cardGridDemo from './card-grid.vue'
+import cardGridSource from './card-grid.vue?raw&highlighted'
+import hierarchyDemo from './hierarchy.vue'
+import hierarchySource from './hierarchy.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
+import truncationDemo from './truncation.vue'
+import truncationSource from './truncation.vue?raw&highlighted'
 
-export const headingLevels = defineDemo(levelsDemo, levelsSource, {
-  className: 'heading-preview',
-})
+const options = { className: 'heading-preview' }
 
-export const headingDisplays = defineDemo(displaysDemo, displaysSource, {
-  className: 'heading-preview',
-})
-
+export const headingCardGrid = defineDemo(cardGridDemo, cardGridSource, options)
+export const headingHierarchy = defineDemo(hierarchyDemo, hierarchySource, options)
+export const headingTruncation = defineDemo(truncationDemo, truncationSource, options)
 export const headingOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

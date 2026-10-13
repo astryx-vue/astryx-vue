@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { switchBasic, switchSizes, switchStates } from '../../../../components/demos/switch'
+import { switchDescription, switchDisabled, switchSettings, switchStatus } from '../../../../components/demos/switch'
 </script>
 
 ## 使用方法
@@ -41,11 +41,33 @@ const enabled = shallowRef(false)
 
 ## 示例
 
-<DemoExample :demo="switchBasic" title="基本用法" description="使用 v-model 绑定布尔值。标签和说明通过 Field 自动关联。" locale="zh" />
+<DemoExample
+  :demo="switchDisabled"
+  description="禁用的开关带上标签和说明，用来表示还没开放的功能。"
+  locale="zh"
+  title="禁用"
+/>
 
-<DemoExample :demo="switchSizes" title="尺寸" description="提供 sm、md、lg 三种尺寸。" locale="zh" />
+<DemoExample
+  :demo="switchSettings"
+  description="几项设置放在同一张卡片里，每一项是一个开关。"
+  locale="zh"
+  title="设置面板"
+/>
 
-<DemoExample :demo="switchStates" title="禁用与只读" description="提供 disabledMessage 时，禁用开关仍可聚焦并查看原因。" locale="zh" />
+<DemoExample
+  :demo="switchDescription"
+  description="标签下面再写一行说明，交代打开之后会发生什么。"
+  locale="zh"
+  title="带说明"
+/>
+
+<DemoExample
+  :demo="switchStatus"
+  description="error、warning、success 三种校验结果，写在开关下面。"
+  locale="zh"
+  title="校验状态"
+/>
 
 ## 键盘操作
 

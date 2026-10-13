@@ -1,0 +1,9 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='matcha'] {
+    --astryx-toggle-button-pressed-background: var(--astryx-color-overlay-pressed);
+    --astryx-toggle-button-pressed-font-weight: 600;
+    --astryx-toggle-button-group-gap: 4px;
+  }
+}

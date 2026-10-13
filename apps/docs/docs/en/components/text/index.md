@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { textTypes, textTruncation } from '../../../../components/demos/text'
+import { textColors, textHeadingLevels, textInline, textTruncation, textTypes, textWeight, textWordBreak, textWrap } from '../../../../components/demos/text'
 </script>
 
 ## Usage
@@ -42,15 +42,57 @@ import { Text } from '@astryx-vue/core/Text'
 ## Examples
 
 <DemoExample
-  :demo="textTypes"
-  description="Text provides body, large, supporting, label, and code semantic types."
+  :demo="textColors"
+  description="Primary, secondary, accent, disabled, and placeholder colors, each used for the kind of text it names."
   locale="en"
-  title="Text types"
+  title="Colors"
+/>
+
+<DemoExample
+  :demo="textHeadingLevels"
+  description="Heading levels 1 through 6, with the type scale stepping down at each level."
+  locale="en"
+  title="Heading levels"
+/>
+
+<DemoExample
+  :demo="textInline"
+  description="Text is inline by default, so body copy and a code span can share one line."
+  locale="en"
+  title="Inline"
 />
 
 <DemoExample
   :demo="textTruncation"
-  description="Use maxLines to limit visible lines and truncate with an ellipsis."
+  description="maxLines clamps a paragraph to one, two, or three lines and ends the overflow with an ellipsis."
   locale="en"
   title="Truncation"
+/>
+
+<DemoExample
+  :demo="textTypes"
+  description="The body, large, label, supporting, and code types, plus strikethrough and tabular figures."
+  locale="en"
+  title="Types"
+/>
+
+<DemoExample
+  :demo="textWeight"
+  description="Normal, medium, semibold, and bold. Normal is the same weight as regular."
+  locale="en"
+  title="Weight"
+/>
+
+<DemoExample
+  :demo="textWordBreak"
+  description="break-word keeps a long token together when it can; break-all splits it at any character."
+  locale="en"
+  title="Word break"
+/>
+
+<DemoExample
+  :demo="textWrap"
+  description="Wrap, nowrap, balance, and pretty, each in a box of the same width."
+  locale="en"
+  title="Wrap"
 />
