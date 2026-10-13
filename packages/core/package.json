@@ -109,7 +109,6 @@
       "types": "./dist/RadioList/index.d.ts",
       "import": "./dist/RadioList/index.js"
     },
-<<<<<<< ours
     "./Resizable": {
       "source": "./src/Resizable/index.ts",
       "types": "./dist/Resizable/index.d.ts",
@@ -124,12 +123,11 @@
       "source": "./src/Section/index.ts",
       "types": "./dist/Section/index.d.ts",
       "import": "./dist/Section/index.js"
-=======
+  },
     "./SelectableCard": {
       "source": "./src/SelectableCard/index.ts",
       "types": "./dist/SelectableCard/index.d.ts",
       "import": "./dist/SelectableCard/index.js"
->>>>>>> theirs
     },
     "./StatusDot": {
       "source": "./src/StatusDot/index.ts",
@@ -600,7 +598,6 @@
         "types": "./dist/RadioList/index.d.ts",
         "import": "./dist/RadioList/index.js"
       },
-<<<<<<< ours
       "./Resizable": {
         "types": "./dist/Resizable/index.d.ts",
         "import": "./dist/Resizable/index.js"
@@ -612,11 +609,10 @@
       "./Section": {
         "types": "./dist/Section/index.d.ts",
         "import": "./dist/Section/index.js"
-=======
+    },
       "./SelectableCard": {
         "types": "./dist/SelectableCard/index.d.ts",
         "import": "./dist/SelectableCard/index.js"
->>>>>>> theirs
       },
       "./StatusDot": {
         "types": "./dist/StatusDot/index.d.ts",
