@@ -74,6 +74,8 @@ export { Calendar } from './Calendar/index.js'
 export type { CalendarEmits, CalendarProps, CalendarSlots } from './Calendar/index.js'
 export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
+export { Carousel } from './Carousel/index.js'
+export type { CarouselGap, CarouselHandle, CarouselProps, CarouselSlots } from './Carousel/index.js'
 export { Center } from './Center/index.js'
 export type { CenterAxis, CenterProps, CenterSizeValue, CenterSlots } from './Center/index.js'
 export {
@@ -156,9 +158,12 @@ export {
   applyHighlightRanges,
   Code,
   CodeBlock,
+  defineSyntaxTheme,
   flatTokensToLines,
+  githubDark,
   HIGHLIGHTED_TOKEN_TYPES,
   SYNC_TOKENIZE_THRESHOLD,
+  SyntaxTheme,
   tokenize,
   tokenizeAsync,
   useCopyToClipboard,
@@ -176,6 +181,8 @@ export type {
   CodeSlots,
   CopyToClipboardOptions,
   CopyToClipboardReturn,
+  SyntaxThemeDefinition,
+  SyntaxThemeTokens,
   SyntaxToken,
   TokenLine,
 } from './Code/index.js'
@@ -383,6 +390,15 @@ export type {
   LayoutProps,
   LayoutSlots,
 } from './Layout/index.js'
+export { Lightbox, useLightbox } from './Lightbox/index.js'
+export type {
+  LightboxEmits,
+  LightboxMedia,
+  LightboxMediaType,
+  LightboxProps,
+  LightboxTriggerProps,
+  UseLightboxOptions,
+} from './Lightbox/index.js'
 export { Link } from './Link/index.js'
 export type { LinkColor, LinkProps } from './Link/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
@@ -495,6 +511,8 @@ export type {
 } from './NavMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'
 export type { NumberInputEmits, NumberInputProps } from './NumberInput/index.js'
+export { Outline } from './Outline/index.js'
+export type { OutlineDensity, OutlineEmits, OutlineItem, OutlineProps } from './Outline/index.js'
 export { OverflowList } from './OverflowList/index.js'
 export type { OverflowListEmits, OverflowListItem, OverflowListProps } from './OverflowList/index.js'
 export { Overlay, OverlayScrim, useOverlay } from './Overlay/index.js'
@@ -745,6 +763,8 @@ export { Thumbnail } from './Thumbnail/index.js'
 export type { ThumbnailEmits, ThumbnailProps, ThumbnailRemoveVisibility } from './Thumbnail/index.js'
 export { TimeInput } from './TimeInput/index.js'
 export type { TimeInputEmits, TimeInputProps, TimeInputSize } from './TimeInput/index.js'
+export { getPresentation, Timer } from './Timer/index.js'
+export type { TimerColor, TimerFormat, TimerPresentation, TimerProps, TimerType } from './Timer/index.js'
 export { formatInstant, formatRelativeTime, formatTooltipLines, Timestamp } from './Timestamp/index.js'
 export type {
   FormatInstantOptions,

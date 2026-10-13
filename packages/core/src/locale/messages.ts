@@ -1,6 +1,7 @@
 // 这个文件由 `pnpm sync` 生成，不要手改。
 
 import type { CalendarMessages } from './messages/calendar.js'
+import type { CarouselMessages } from './messages/carousel.js'
 import type { ChatMessages } from './messages/chat.js'
 import type { CitationMessages } from './messages/citation.js'
 import type { CommandPaletteMessages } from './messages/command-palette.js'
@@ -9,11 +10,13 @@ import type { DateRangeInputMessages } from './messages/date-range-input.js'
 import type { DateTimeInputMessages } from './messages/date-time-input.js'
 import type { FileInputMessages } from './messages/file-input.js'
 import type { LayoutMessages } from './messages/layout.js'
+import type { LightboxMessages } from './messages/lightbox.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MetadataListMessages } from './messages/metadata-list.js'
 import type { MultiSelectorMessages } from './messages/multi-selector.js'
 import type { NavMessages } from './messages/nav.js'
 import type { NumberInputMessages } from './messages/number-input.js'
+import type { OutlineMessages } from './messages/outline.js'
 import type { PaginationMessages } from './messages/pagination.js'
 import type { SelectorMessages } from './messages/selector.js'
 import type { StepperMessages } from './messages/stepper.js'
@@ -27,6 +30,7 @@ import type { TreeListMessages } from './messages/tree-list.js'
 import type { TypeaheadMessages } from './messages/typeahead.js'
 import type { AstryxLocale } from './types.js'
 import { calendarMessages } from './messages/calendar.js'
+import { carouselMessages } from './messages/carousel.js'
 import { chatMessages } from './messages/chat.js'
 import { citationMessages } from './messages/citation.js'
 import { commandPaletteMessages } from './messages/command-palette.js'
@@ -35,11 +39,13 @@ import { dateRangeInputMessages } from './messages/date-range-input.js'
 import { dateTimeInputMessages } from './messages/date-time-input.js'
 import { fileInputMessages } from './messages/file-input.js'
 import { layoutMessages } from './messages/layout.js'
+import { lightboxMessages } from './messages/lightbox.js'
 import { markdownMessages } from './messages/markdown.js'
 import { metadataListMessages } from './messages/metadata-list.js'
 import { multiSelectorMessages } from './messages/multi-selector.js'
 import { navMessages } from './messages/nav.js'
 import { numberInputMessages } from './messages/number-input.js'
+import { outlineMessages } from './messages/outline.js'
 import { paginationMessages } from './messages/pagination.js'
 import { selectorMessages } from './messages/selector.js'
 import { stepperMessages } from './messages/stepper.js'
@@ -54,6 +60,7 @@ import { typeaheadMessages } from './messages/typeahead.js'
 
 export interface AstryxMessages {
   calendar: CalendarMessages
+  carousel: CarouselMessages
   chat: ChatMessages
   citation: CitationMessages
   commandPalette: CommandPaletteMessages
@@ -62,11 +69,13 @@ export interface AstryxMessages {
   dateTimeInput: DateTimeInputMessages
   fileInput: FileInputMessages
   layout: LayoutMessages
+  lightbox: LightboxMessages
   markdown: MarkdownMessages
   metadataList: MetadataListMessages
   multiSelector: MultiSelectorMessages
   nav: NavMessages
   numberInput: NumberInputMessages
+  outline: OutlineMessages
   pagination: PaginationMessages
   selector: SelectorMessages
   stepper: StepperMessages
@@ -83,6 +92,7 @@ export interface AstryxMessages {
 export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
   'en': {
     calendar: calendarMessages.en,
+    carousel: carouselMessages.en,
     chat: chatMessages.en,
     citation: citationMessages.en,
     commandPalette: commandPaletteMessages.en,
@@ -91,11 +101,13 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateTimeInput: dateTimeInputMessages.en,
     fileInput: fileInputMessages.en,
     layout: layoutMessages.en,
+    lightbox: lightboxMessages.en,
     markdown: markdownMessages.en,
     metadataList: metadataListMessages.en,
     multiSelector: multiSelectorMessages.en,
     nav: navMessages.en,
     numberInput: numberInputMessages.en,
+    outline: outlineMessages.en,
     pagination: paginationMessages.en,
     selector: selectorMessages.en,
     stepper: stepperMessages.en,
@@ -110,6 +122,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
   },
   'zh-CN': {
     calendar: calendarMessages['zh-CN'],
+    carousel: carouselMessages['zh-CN'],
     chat: chatMessages['zh-CN'],
     citation: citationMessages['zh-CN'],
     commandPalette: commandPaletteMessages['zh-CN'],
@@ -118,11 +131,13 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateTimeInput: dateTimeInputMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],
+    lightbox: lightboxMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     metadataList: metadataListMessages['zh-CN'],
     multiSelector: multiSelectorMessages['zh-CN'],
     nav: navMessages['zh-CN'],
     numberInput: numberInputMessages['zh-CN'],
+    outline: outlineMessages['zh-CN'],
     pagination: paginationMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
     stepper: stepperMessages['zh-CN'],

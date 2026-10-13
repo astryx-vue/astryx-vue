@@ -192,7 +192,7 @@ footer: false
 
 ## Exports
 
-These are exported from `@astryx-vue/core/Code` beside the two components:
+These are exported from `@astryx-vue/core/Code` beside `Code`, `CodeBlock`, and `SyntaxTheme`:
 
 <div class="component-api-table" role="region" aria-label="Code Exports" tabindex="0">
   <table>
@@ -234,6 +234,11 @@ These are exported from `@astryx-vue/core/Code` beside the two components:
         <td><code>HIGHLIGHTED_TOKEN_TYPES</code></td>
         <td><code>readonly string[]</code></td>
         <td>Token types the stylesheet already paints, so a custom tokenizer can reuse them.</td>
+      </tr>
+      <tr>
+        <td><code>SyntaxTheme</code></td>
+        <td><code>component</code></td>
+        <td>Sets <code>--astryx-code-syntax-*</code> from a <code>theme</code> prop. <code>githubDark</code> is the included dark preset. <code>defineSyntaxTheme</code> returns a definition unchanged.</td>
       </tr>
     </tbody>
   </table>

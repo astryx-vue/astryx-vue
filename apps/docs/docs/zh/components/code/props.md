@@ -192,7 +192,7 @@ footer: false
 
 ## 导出
 
-除两个组件外，这些也从 `@astryx-vue/core/Code` 导出：
+除 `Code`、`CodeBlock` 和 `SyntaxTheme` 外，这些也从 `@astryx-vue/core/Code` 导出：
 
 <div class="component-api-table" role="region" aria-label="Code Exports" tabindex="0">
   <table>
@@ -234,6 +234,11 @@ footer: false
         <td><code>HIGHLIGHTED_TOKEN_TYPES</code></td>
         <td><code>readonly string[]</code></td>
         <td>样式表已经着色的 token 类型，自定义分词器可以直接复用。</td>
+      </tr>
+      <tr>
+        <td><code>SyntaxTheme</code></td>
+        <td><code>component</code></td>
+        <td>按 <code>theme</code> 写入 <code>--astryx-code-syntax-*</code>。包内深色预设是 <code>githubDark</code>。<code>defineSyntaxTheme</code> 原样返回定义。</td>
       </tr>
     </tbody>
   </table>

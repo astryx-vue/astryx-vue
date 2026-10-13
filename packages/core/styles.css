@@ -13,6 +13,7 @@
 @import './styles/button.css';
 @import './styles/button-group.css';
 @import './styles/card.css';
+@import './styles/carousel.css';
 @import './styles/center.css';
 @import './styles/chat.css';
 @import './styles/checkbox-indicator.css';
@@ -41,6 +42,7 @@
 @import './styles/icon.css';
 @import './styles/kbd.css';
 @import './styles/layout.css';
+@import './styles/lightbox.css';
 @import './styles/link.css';
 @import './styles/list.css';
 @import './styles/markdown.css';
@@ -51,6 +53,7 @@
 @import './styles/multi-selector.css';
 @import './styles/nav-item.css';
 @import './styles/nav-menu.css';
+@import './styles/outline.css';
 @import './styles/overflow-list.css';
 @import './styles/overlay.css';
 @import './styles/popover.css';
@@ -76,6 +79,7 @@
 @import './styles/text-input.css';
 @import './styles/thumbnail.css';
 @import './styles/time-input.css';
+@import './styles/timer.css';
 @import './styles/timestamp.css';
 @import './styles/toast.css';
 @import './styles/toggle-button.css';
