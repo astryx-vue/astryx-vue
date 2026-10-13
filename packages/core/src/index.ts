@@ -420,6 +420,22 @@ export type {
   ListProps,
   ListSlots,
 } from './List/index.js'
+export { useAnnounce } from './composables/useAnnounce.js'
+export type { AnnounceFn, AnnouncePoliteness } from './composables/useAnnounce.js'
+export { useMediaQuery } from './composables/useMediaQuery.js'
+export {
+  percent,
+  useResizable,
+} from './composables/useResizable.js'
+export type {
+  ResizablePercentSize,
+  ResizableProps,
+  ResizableRegion,
+  ResizableRegionConfig,
+  ResizableSize,
+  UseResizableMultiConfig,
+  UseResizableSingleOptions,
+} from './composables/useResizable.js'
 export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
 export type { AstryxLocale, AstryxMessages } from './locale/index.js'
 export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
