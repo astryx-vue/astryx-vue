@@ -24,6 +24,7 @@ There is no `@astryx-vue/core/composables` subpath. The functions exported from 
 | `useRestoreFocus` | Remembers focus when a popup opens and returns it on close. |
 | `useScrollLock` | Locks `body` scroll with a reference count. |
 | `useListFocus` | Arrow keys for a one-dimensional list. The default selector is `[role="menuitem"]`. |
+| `useClickableContainer` | Makes a region activate on click, and leaves nested buttons, links, and inputs alone. |
 | `useGridRovingFocus` | Arrow keys for a grid. |
 | `useTypeahead` | Cycles matches as the same letter is pressed. It does not move focus; `onMatch` does. |
 | `useCombobox` | A searchable option list and the current value. |

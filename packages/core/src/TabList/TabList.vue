@@ -61,7 +61,8 @@ function moveFocus(direction: 'next' | 'prev' | 'first' | 'last', value: string)
     return
 
   focusedValue.value = next.value
-  selectTab(next.value)
+  if (next.selectsOnFocus !== false)
+    selectTab(next.value)
   next.el.focus()
 }
 

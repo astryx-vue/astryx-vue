@@ -54,6 +54,21 @@
       "types": "./dist/CheckboxList/index.d.ts",
       "import": "./dist/CheckboxList/index.js"
     },
+    "./ClickableCard": {
+      "source": "./src/ClickableCard/index.ts",
+      "types": "./dist/ClickableCard/index.d.ts",
+      "import": "./dist/ClickableCard/index.js"
+    },
+    "./CommandPalette": {
+      "source": "./src/CommandPalette/index.ts",
+      "types": "./dist/CommandPalette/index.d.ts",
+      "import": "./dist/CommandPalette/index.js"
+    },
+    "./ComplexSelector": {
+      "source": "./src/ComplexSelector/index.ts",
+      "types": "./dist/ComplexSelector/index.d.ts",
+      "import": "./dist/ComplexSelector/index.js"
+    },
     "./DateRangeInput": {
       "source": "./src/DateRangeInput/index.ts",
       "types": "./dist/DateRangeInput/index.d.ts",
@@ -94,6 +109,7 @@
       "types": "./dist/RadioList/index.d.ts",
       "import": "./dist/RadioList/index.js"
     },
+<<<<<<< ours
     "./Resizable": {
       "source": "./src/Resizable/index.ts",
       "types": "./dist/Resizable/index.d.ts",
@@ -108,6 +124,12 @@
       "source": "./src/Section/index.ts",
       "types": "./dist/Section/index.d.ts",
       "import": "./dist/Section/index.js"
+=======
+    "./SelectableCard": {
+      "source": "./src/SelectableCard/index.ts",
+      "types": "./dist/SelectableCard/index.d.ts",
+      "import": "./dist/SelectableCard/index.js"
+>>>>>>> theirs
     },
     "./StatusDot": {
       "source": "./src/StatusDot/index.ts",
@@ -173,6 +195,11 @@
       "source": "./src/Radio/index.ts",
       "types": "./dist/Radio/index.d.ts",
       "import": "./dist/Radio/index.js"
+    },
+    "./Stepper": {
+      "source": "./src/Stepper/index.ts",
+      "types": "./dist/Stepper/index.d.ts",
+      "import": "./dist/Stepper/index.js"
     },
     "./Table": {
       "source": "./src/Table/index.ts",
@@ -529,6 +556,18 @@
         "types": "./dist/CheckboxList/index.d.ts",
         "import": "./dist/CheckboxList/index.js"
       },
+      "./ClickableCard": {
+        "types": "./dist/ClickableCard/index.d.ts",
+        "import": "./dist/ClickableCard/index.js"
+      },
+      "./CommandPalette": {
+        "types": "./dist/CommandPalette/index.d.ts",
+        "import": "./dist/CommandPalette/index.js"
+      },
+      "./ComplexSelector": {
+        "types": "./dist/ComplexSelector/index.d.ts",
+        "import": "./dist/ComplexSelector/index.js"
+      },
       "./DateRangeInput": {
         "types": "./dist/DateRangeInput/index.d.ts",
         "import": "./dist/DateRangeInput/index.js"
@@ -561,6 +600,7 @@
         "types": "./dist/RadioList/index.d.ts",
         "import": "./dist/RadioList/index.js"
       },
+<<<<<<< ours
       "./Resizable": {
         "types": "./dist/Resizable/index.d.ts",
         "import": "./dist/Resizable/index.js"
@@ -572,6 +612,11 @@
       "./Section": {
         "types": "./dist/Section/index.d.ts",
         "import": "./dist/Section/index.js"
+=======
+      "./SelectableCard": {
+        "types": "./dist/SelectableCard/index.d.ts",
+        "import": "./dist/SelectableCard/index.js"
+>>>>>>> theirs
       },
       "./StatusDot": {
         "types": "./dist/StatusDot/index.d.ts",
@@ -624,6 +669,10 @@
       "./Radio": {
         "types": "./dist/Radio/index.d.ts",
         "import": "./dist/Radio/index.js"
+      },
+      "./Stepper": {
+        "types": "./dist/Stepper/index.d.ts",
+        "import": "./dist/Stepper/index.js"
       },
       "./Table": {
         "types": "./dist/Table/index.d.ts",

@@ -3,6 +3,7 @@
 import type { CalendarMessages } from './messages/calendar.js'
 import type { ChatMessages } from './messages/chat.js'
 import type { CitationMessages } from './messages/citation.js'
+import type { CommandPaletteMessages } from './messages/command-palette.js'
 import type { DateInputMessages } from './messages/date-input.js'
 import type { DateRangeInputMessages } from './messages/date-range-input.js'
 import type { DateTimeInputMessages } from './messages/date-time-input.js'
@@ -15,6 +16,7 @@ import type { NavMessages } from './messages/nav.js'
 import type { NumberInputMessages } from './messages/number-input.js'
 import type { PaginationMessages } from './messages/pagination.js'
 import type { SelectorMessages } from './messages/selector.js'
+import type { StepperMessages } from './messages/stepper.js'
 import type { TableMessages } from './messages/table.js'
 import type { ThumbnailMessages } from './messages/thumbnail.js'
 import type { TimeInputMessages } from './messages/time-input.js'
@@ -27,6 +29,7 @@ import type { AstryxLocale } from './types.js'
 import { calendarMessages } from './messages/calendar.js'
 import { chatMessages } from './messages/chat.js'
 import { citationMessages } from './messages/citation.js'
+import { commandPaletteMessages } from './messages/command-palette.js'
 import { dateInputMessages } from './messages/date-input.js'
 import { dateRangeInputMessages } from './messages/date-range-input.js'
 import { dateTimeInputMessages } from './messages/date-time-input.js'
@@ -39,6 +42,7 @@ import { navMessages } from './messages/nav.js'
 import { numberInputMessages } from './messages/number-input.js'
 import { paginationMessages } from './messages/pagination.js'
 import { selectorMessages } from './messages/selector.js'
+import { stepperMessages } from './messages/stepper.js'
 import { tableMessages } from './messages/table.js'
 import { thumbnailMessages } from './messages/thumbnail.js'
 import { timeInputMessages } from './messages/time-input.js'
@@ -52,6 +56,7 @@ export interface AstryxMessages {
   calendar: CalendarMessages
   chat: ChatMessages
   citation: CitationMessages
+  commandPalette: CommandPaletteMessages
   dateInput: DateInputMessages
   dateRangeInput: DateRangeInputMessages
   dateTimeInput: DateTimeInputMessages
@@ -64,6 +69,7 @@ export interface AstryxMessages {
   numberInput: NumberInputMessages
   pagination: PaginationMessages
   selector: SelectorMessages
+  stepper: StepperMessages
   table: TableMessages
   thumbnail: ThumbnailMessages
   timeInput: TimeInputMessages
@@ -79,6 +85,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     calendar: calendarMessages.en,
     chat: chatMessages.en,
     citation: citationMessages.en,
+    commandPalette: commandPaletteMessages.en,
     dateInput: dateInputMessages.en,
     dateRangeInput: dateRangeInputMessages.en,
     dateTimeInput: dateTimeInputMessages.en,
@@ -91,6 +98,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     numberInput: numberInputMessages.en,
     pagination: paginationMessages.en,
     selector: selectorMessages.en,
+    stepper: stepperMessages.en,
     table: tableMessages.en,
     thumbnail: thumbnailMessages.en,
     timeInput: timeInputMessages.en,
@@ -104,6 +112,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     calendar: calendarMessages['zh-CN'],
     chat: chatMessages['zh-CN'],
     citation: citationMessages['zh-CN'],
+    commandPalette: commandPaletteMessages['zh-CN'],
     dateInput: dateInputMessages['zh-CN'],
     dateRangeInput: dateRangeInputMessages['zh-CN'],
     dateTimeInput: dateTimeInputMessages['zh-CN'],
@@ -116,6 +125,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     numberInput: numberInputMessages['zh-CN'],
     pagination: paginationMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
+    stepper: stepperMessages['zh-CN'],
     table: tableMessages['zh-CN'],
     thumbnail: thumbnailMessages['zh-CN'],
     timeInput: timeInputMessages['zh-CN'],

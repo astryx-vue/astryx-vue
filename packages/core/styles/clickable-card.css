@@ -1,0 +1,101 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-clickable-card {
+    position: relative;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .astryx-clickable-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background-color: transparent;
+    transition: background-color var(--astryx-duration-fast, 130ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-clickable-card:active::after {
+    background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+  }
+
+  @media (hover: hover) {
+    .astryx-clickable-card:hover::after {
+      background-color: var(--astryx-color-overlay-hover, light-dark(#0536590c, #ffffff0c));
+    }
+
+    .astryx-clickable-card[data-variant='default']:hover {
+      border-color: var(--astryx-color-border-emphasized, #d4d4d4);
+    }
+  }
+
+  .astryx-clickable-card:focus-within {
+    outline: var(--astryx-focus-outline-width, 2px) solid var(--astryx-focus-outline-color, var(--astryx-color-text-primary, #171717));
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  .astryx-clickable-card[data-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .astryx-clickable-card[data-disabled='true']::after,
+  .astryx-clickable-card[data-disabled='true']:hover::after,
+  .astryx-clickable-card[data-disabled='true']:active::after {
+    background-color: transparent;
+  }
+
+  .astryx-selectable-card {
+    transition:
+      box-shadow var(--astryx-duration-fast, 130ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      border-color var(--astryx-duration-fast, 130ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-selectable-card[data-selected='true'] {
+    border-color: var(--astryx-selectable-card-accent, var(--astryx-color-accent, #0082fb));
+    --_card-ring: inset 0 0 0 2px var(--astryx-selectable-card-accent, var(--astryx-color-accent, #0082fb));
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='blue'] {
+    --astryx-selectable-card-accent: var(--astryx-color-blue, #0082fb);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='cyan'] {
+    --astryx-selectable-card-accent: var(--astryx-color-cyan, #0891b2);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='gray'] {
+    --astryx-selectable-card-accent: var(--astryx-color-gray, #737373);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='green'] {
+    --astryx-selectable-card-accent: var(--astryx-color-green, #16a34a);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='orange'] {
+    --astryx-selectable-card-accent: var(--astryx-color-orange, #ea580c);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='pink'] {
+    --astryx-selectable-card-accent: var(--astryx-color-pink, #db2777);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='purple'] {
+    --astryx-selectable-card-accent: var(--astryx-color-purple, #9333ea);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='red'] {
+    --astryx-selectable-card-accent: var(--astryx-color-red, #dc2626);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='teal'] {
+    --astryx-selectable-card-accent: var(--astryx-color-teal, #0d9488);
+  }
+
+  .astryx-selectable-card[data-selected='true'][data-variant='yellow'] {
+    --astryx-selectable-card-accent: var(--astryx-color-yellow, #ca8a04);
+  }
+}

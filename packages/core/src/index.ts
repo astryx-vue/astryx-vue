@@ -150,6 +150,8 @@ export type {
 } from './CheckboxList/index.js'
 export { Citation } from './Citation/index.js'
 export type { CitationProps, CitationSource } from './Citation/index.js'
+export { ClickableCard } from './ClickableCard/index.js'
+export type { ClickableCardEmits, ClickableCardProps, ClickableCardSlots } from './ClickableCard/index.js'
 export {
   applyHighlightRanges,
   Code,
@@ -177,13 +179,50 @@ export type {
   SyntaxToken,
   TokenLine,
 } from './Code/index.js'
-export { Collapsible } from './Collapsible/index.js'
+export { Collapsible, CollapsibleGroup } from './Collapsible/index.js'
 export type {
   CollapsibleChevronPosition,
   CollapsibleEmits,
+  CollapsibleGroupDensity,
+  CollapsibleGroupEmits,
+  CollapsibleGroupProps,
+  CollapsibleGroupSlots,
+  CollapsibleGroupType,
+  CollapsibleGroupValue,
   CollapsibleProps,
   CollapsibleSlots,
 } from './Collapsible/index.js'
+export {
+  CommandPalette,
+  CommandPaletteEmpty,
+  CommandPaletteFooter,
+  CommandPaletteGroup,
+  CommandPaletteInput,
+  CommandPaletteItem,
+  CommandPaletteList,
+} from './CommandPalette/index.js'
+export type {
+  CommandPaletteEmits,
+  CommandPaletteGroupProps,
+  CommandPaletteInputProps,
+  CommandPaletteItemProps,
+  CommandPaletteItemSlotProps,
+  CommandPaletteListProps,
+  CommandPaletteProps,
+  CommandPaletteSlots,
+} from './CommandPalette/index.js'
+export { ComplexSelector } from './ComplexSelector/index.js'
+export type {
+  ComplexSelectorEmits,
+  ComplexSelectorHandle,
+  ComplexSelectorHandleRef,
+  ComplexSelectorProps,
+  ComplexSelectorSlotProps,
+  ComplexSelectorSlots,
+  ComplexSelectorState,
+  ComplexSelectorTriggerProps,
+  ComplexSelectorVariant,
+} from './ComplexSelector/index.js'
 export * from './composables/index.js'
 export {
   ContextMenu,
@@ -518,6 +557,8 @@ export type {
   SegmentedControlSize,
   SegmentedControlSlots,
 } from './SegmentedControl/index.js'
+export { SelectableCard } from './SelectableCard/index.js'
+export type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } from './SelectableCard/index.js'
 export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
@@ -578,6 +619,21 @@ export type {
 } from './Stack/index.js'
 export { StatusDot } from './StatusDot/index.js'
 export type { StatusDotProps, StatusDotVariant } from './StatusDot/index.js'
+export { Step, Stepper } from './Stepper/index.js'
+export type {
+  StepIndicator,
+  StepperCollapsedVariant,
+  StepperDensity,
+  StepperHorizontalOptions,
+  StepperIndicatorPosition,
+  StepperOrientation,
+  StepperProps,
+  StepperSlots,
+  StepProgress,
+  StepProps,
+  StepSlots,
+  StepStatus,
+} from './Stepper/index.js'
 export { Switch } from './Switch/index.js'
 export type {
   SwitchChangeAction,
@@ -648,8 +704,16 @@ export type {
   UseTableSelectionStateConfig,
   UseTableSortableConfig,
 } from './Table/index.js'
-export { Tab, TabList } from './TabList/index.js'
-export type { TabListLayout, TabListProps, TabListSize, TabListTab, TabProps } from './TabList/index.js'
+export { Tab, TabList, TabMenu } from './TabList/index.js'
+export type {
+  TabListLayout,
+  TabListProps,
+  TabListSize,
+  TabListTab,
+  TabMenuOption,
+  TabMenuProps,
+  TabProps,
+} from './TabList/index.js'
 export { Text } from './Text/index.js'
 export type { TextAs, TextColor, TextDisplay, TextProps, TextSize, TextType, TextWeight } from './Text/index.js'
 export { TextArea } from './TextArea/index.js'

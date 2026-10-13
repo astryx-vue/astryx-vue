@@ -1,0 +1,24 @@
+<script setup lang="ts">
+import { Tab, TabList, TabMenu } from '@astryx-vue/core/TabList'
+import { ref } from 'vue'
+
+const value = ref('overview')
+</script>
+
+<template>
+  <TabList v-model:value="value">
+    <Tab value="overview">
+      Overview
+    </Tab>
+    <Tab value="activity">
+      Activity
+    </Tab>
+    <TabMenu
+      label="More"
+      :options="[
+        { value: 'settings', label: 'Settings' },
+        { value: 'billing', label: 'Billing' },
+      ]"
+    />
+  </TabList>
+</template>
