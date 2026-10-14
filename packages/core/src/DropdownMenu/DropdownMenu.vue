@@ -2,10 +2,8 @@
 import type { CSSProperties } from 'vue'
 import type { DropdownMenuEmits, DropdownMenuProps, DropdownMenuSlots, DropdownMenuTriggerProps } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useId, useSlots, watch } from 'vue'
-import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import Button from '../Button/Button.vue'
 import { useDismiss } from '../composables/useDismiss.js'
-import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
@@ -22,7 +20,6 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
   button: () => ({ label: 'Menu' }),
   hasChevron: true,
   placement: 'below',
-  presentation: 'popover',
 })
 
 const emit = defineEmits<DropdownMenuEmits>()
@@ -53,19 +50,7 @@ const focusLastOnOpen = shallowRef(false)
 let openModality: 'keyboard' | 'pointer' = 'keyboard'
 let armedTriggerClickGuard = false
 
-const COMPACT_TOUCH_QUERY = '(max-width: 639px) and (pointer: coarse) and (hover: none)'
-const isCompactTouch = useMediaQuery(COMPACT_TOUCH_QUERY)
-const isSheet = computed(() => props.presentation === 'bottom-sheet' || (props.presentation === 'adaptive' && isCompactTouch.value))
-const sheetOpen = computed({
-  get: () => isSheet.value && isOpen.value,
-  set: (open: boolean) => {
-    if (!open)
-      closeMenu()
-  },
-})
-
 const buttonProps = computed(() => props.button ?? {})
-const sheetLabel = computed(() => typeof buttonProps.value.label === 'string' ? buttonProps.value.label : 'Menu')
 const menuSize = computed(() => buttonProps.value.size ?? 'md')
 const isIconOnly = computed(() => buttonProps.value.isIconOnly === true)
 const hasChevron = computed(() => props.hasChevron && !isIconOnly.value)
@@ -114,12 +99,10 @@ const { position, detach: detachPosition } = usePositionedLayer({
 })
 
 watch(isOpen, (nowOpen) => {
-  layerIsOpen.value = nowOpen && !isSheet.value
+  layerIsOpen.value = nowOpen
 })
 
 const surfaceStyle = computed<CSSProperties>(() => {
-  if (isSheet.value)
-    return {}
   const style: Record<string, string> = {
     'top': `${position.value.top}px`,
     'left': `${position.value.left}px`,
@@ -161,7 +144,7 @@ const typeahead = useTypeahead({
 useDismiss({
   container: surfaceRef,
   trigger: anchorRef,
-  isEnabled: computed(() => isOpen.value && !isSheet.value),
+  isEnabled: computed(() => isOpen.value),
   onDismiss: closeMenu,
 })
 
@@ -199,7 +182,7 @@ function getTriggerControl(): HTMLElement | null {
 }
 
 watch(isOpen, async (nowOpen) => {
-  layerIsOpen.value = nowOpen && !isSheet.value
+  layerIsOpen.value = nowOpen
   if (nowOpen) {
     anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
     await nextTick()
@@ -335,30 +318,7 @@ onBeforeUnmount(() => {
     </Button>
   </span>
 
-  <BottomSheet
-    v-if="isSheet"
-    v-model:is-open="sheetOpen"
-    height="hug"
-    :label="sheetLabel"
-    :padding="2"
-  >
-    <div
-      :id="surfaceId"
-      ref="surfaceRef"
-      v-bind="forwardedAttrs"
-      :aria-labelledby="menuAriaLabelledBy"
-      :aria-label="menuAriaLabel"
-      class="astryx-dropdown-menu is-sheet"
-      :class="attrs.class"
-      role="menu"
-      tabindex="-1"
-      @keydown="onSurfaceKeydown"
-    >
-      <DropdownMenuItems v-if="items != null" :items="items" />
-      <slot v-else />
-    </div>
-  </BottomSheet>
-  <Teleport v-else to="body">
+  <Teleport to="body">
     <Transition name="astryx-dropdown-menu">
       <div
         v-show="isOpen"

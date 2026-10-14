@@ -6,14 +6,6 @@ import type { ItemTarget } from '../List/types.js'
 /** Size of the menu, derived from the trigger button's size. */
 export type DropdownMenuSize = 'sm' | 'md' | 'lg'
 
-/**
- * Where the menu opens.
- *
- * `popover` hangs off the trigger. `bottom-sheet` rises from the bottom edge.
- * `adaptive` uses the sheet only on a compact touch surface.
- */
-export type DropdownMenuPresentation = 'adaptive' | 'bottom-sheet' | 'popover'
-
 /** Visual variant of one menu row. */
 export type DropdownMenuItemVariant = 'default' | 'destructive'
 
@@ -148,13 +140,6 @@ export interface DropdownMenuProps {
    * @default 'below'
    */
   placement?: LayerPlacement
-  /**
-   * `popover` anchors to the trigger. `bottom-sheet` uses a bottom sheet.
-   * `adaptive` chooses the sheet on a compact touch surface and a popover
-   * otherwise.
-   * @default 'popover'
-   */
-  presentation?: DropdownMenuPresentation
   /**
    * How the menu aligns with the trigger along the placement axis.
    * @default 'start'
