@@ -16,6 +16,7 @@
 6. 为每个包打 git tag，并创建 GitHub Release。随后把对应的 npm 版本页链接补进 Release 说明
 7. `npm view` 核对刚发布的版本、`repository` 字段；仓库是 public 时还核对 provenance
 8. npm 发布成功后，把同一版本发到 GitHub Packages。仓库变量 `PUBLISH_GITHUB_PACKAGES` 为 `false` 时跳过这一步
+9. changesets 真正把包发出去之后（`published` 为 `true`），另一个 job 把 `main` 合并回 `dev`，补上 Version Packages 那次提交。没有冲突就直接推送；推送被分支保护拒绝，或者有冲突，就打开或更新标题为 `chore: sync main into dev` 的 PR（`main` → `dev`）。已经有同名的开放 PR 时不另开，只更新说明。直接推送成功后，这个 PR 会关掉。这一步不依赖 GitHub Packages，失败不会撤回已经发出的版本
 
 pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
 
@@ -116,5 +117,6 @@ pnpm changeset
 - 只发出去一个包：重跑。已存在的版本跳过，缺的那个会继续发。
 - provenance 在私有仓库上报错：确认 workflow 里 `PNPM_CONFIG_PROVENANCE` 为 `false`。不要手改已发布的 tarball。
 - GitHub Packages 那一步失败：npm 上的包不受影响。看日志里的 `::error` 或 `pnpm publish` 输出。修好后用 workflow_dispatch 重跑。已经在 npm 和 GitHub Packages 上的版本都会跳过，缺的那个会补发。不想再发到 GitHub Packages 时，把仓库变量 `PUBLISH_GITHUB_PACKAGES` 设为 `false`。
+- 同步 `main` 回 `dev` 没能直接推送：npm 上的包不受影响。推送被分支保护拒绝，或者合并有冲突时，会留下标题为 `chore: sync main into dev` 的 PR。这一步用的是 `GITHUB_TOKEN`，推送和开出来的 PR 不会再触发别的 workflow。
 
 手动补发只作为上面这些步骤都对不上时的最后手段，并且不要复用已经成功的版本号。
