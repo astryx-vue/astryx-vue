@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { popoverActions, popoverBasic, popoverForm, popoverPlacements } from '../../../../components/demos/popover'
+import { popoverBottomSheet, popoverConfirm, popoverFilter, popoverSettings, popoverShortcuts } from '../../../../components/demos/popover'
 </script>
 
 ## Usage
@@ -45,13 +45,15 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## Examples
 
-<DemoExample :demo="popoverBasic" title="Basic" description="Click the trigger to open the surface. Escape, an outside press, or the close button dismisses it." locale="en" />
+<DemoExample :demo="popoverBottomSheet" title="Bottom sheet alternative" description="On a compact touch surface, project actions open in a bottom sheet instead of an anchored popover." locale="en" />
 
-<DemoExample :demo="popoverPlacements" title="Placements" description="placement sets the side of the trigger and alignment sets its position along that side. The popover flips when there is no room." locale="en" />
+<DemoExample :demo="popoverConfirm" title="Confirm action" description="A destructive button opens a short confirmation with Delete and Cancel." locale="en" />
 
-<DemoExample :demo="popoverForm" title="Form content" description="A dialog popover holds interactive controls. Focus moves into it when it opens and returns to the trigger when it closes." locale="en" />
+<DemoExample :demo="popoverFilter" title="Filter panel" description="Status checkboxes with Apply and Reset." locale="en" />
 
-<DemoExample :demo="popoverActions" title="Action list" description="role none removes dialog semantics for content that already carries its own roles, such as a menu. Focus stays on the trigger." locale="en" />
+<DemoExample :demo="popoverShortcuts" title="Keyboard shortcuts" description="A list of shortcut keys and what they do." locale="en" />
+
+<DemoExample :demo="popoverSettings" title="Settings panel" description="Switches for notifications, dark mode, and sounds." locale="en" />
 
 ## Accessibility
 

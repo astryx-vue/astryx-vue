@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dialogBasic, dialogForm, dialogFullscreen, dialogImperative, dialogRequired } from '../../../../components/demos/dialog'
+import { dialogAdaptive, dialogConfirmation, dialogForm, dialogFullscreen, dialogRequired, dialogScrollable } from '../../../../components/demos/dialog'
 </script>
 
 ## 使用方法
@@ -49,15 +49,17 @@ const isOpen = ref(false)
 
 ## 示例
 
-<DemoExample :demo="dialogBasic" title="基本用法" description="包含副标题与关闭按钮的标题区。对话框打开时标题获得焦点。" locale="zh" />
+<DemoExample :demo="dialogAdaptive" title="自适应呈现" description="默认仍是对话框。触屏且宽度不超过 lg 时，同一份资料表单改为底部弹层。" locale="zh" />
 
-<DemoExample :demo="dialogForm" title="表单" description="purpose 为 form 时允许 Escape 关闭，但忽略点击遮罩，避免已输入的内容意外丢失。" locale="zh" />
+<DemoExample :demo="dialogConfirmation" title="确认" description="破坏性操作前先确认。页面上的预览一直留着，点按钮才会打开真正的对话框。" locale="zh" />
 
-<DemoExample :demo="dialogRequired" title="必须响应" description="purpose 为 required 时禁用 Escape 与点击遮罩关闭。用户必须做出选择时使用 alertdialog 语义。" locale="zh" />
+<DemoExample :demo="dialogForm" title="表单" description="不离开当前页面就能改名字和简介。purpose 为 form 时保留 Escape，并忽略点击遮罩。" locale="zh" />
 
-<DemoExample :demo="dialogFullscreen" title="全屏" description="variant 为 fullscreen 时占满视口，适合长篇编辑任务，并尊重安全区域。" locale="zh" />
+<DemoExample :demo="dialogFullscreen" title="全屏" description="variant 为 fullscreen 时占满视口，适合文档这类长内容。" locale="zh" />
 
-<DemoExample :demo="dialogImperative" title="命令式" description="useImperativeDialog 无需管理 isOpen 即可打开内容。在模板中渲染一次它的 Host。" locale="zh" />
+<DemoExample :demo="dialogScrollable" title="可滚动" description="maxHeight 把对话框压短，条款在内部滚动。" locale="zh" />
+
+<DemoExample :demo="dialogRequired" title="必须响应" description="purpose 为 required 时，Escape 和遮罩都不能关掉。用户必须选择取消或转让。" locale="zh" />
 
 ## 无障碍
 

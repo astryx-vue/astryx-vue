@@ -8,7 +8,6 @@ footer: false
 <script setup lang="ts">
 import {
   commandPaletteAsync,
-  commandPaletteBasic,
   commandPaletteFooter,
   commandPaletteGrouped,
   commandPalettePicker,
@@ -57,17 +56,17 @@ Arrow keys, Home, End, Page Up, and Page Down move the highlight and do not wrap
 ## Examples
 
 <DemoExample
-  :demo="commandPaletteBasic"
-  description="A static list of Home, Settings, Profile, Dashboard, and Help."
+  :demo="commandPaletteAsync"
+  description="Search waits briefly, then filters filenames. An empty query asks for a filename."
   locale="en"
-  title="Command palette"
+  title="Async search"
 />
 
 <DemoExample
-  :demo="commandPalettePicker"
-  description="Light, Dark, and System. The current theme keeps a check mark."
+  :demo="commandPaletteGrouped"
+  description="Home and Settings sit under Navigation. New File and Save sit under Actions."
   locale="en"
-  title="Picker mode"
+  title="Grouped"
 />
 
 <DemoExample
@@ -78,22 +77,15 @@ Arrow keys, Home, End, Page Up, and Page Down move the highlight and do not wrap
 />
 
 <DemoExample
-  :demo="commandPaletteAsync"
-  description="Search waits briefly, then filters filenames. An empty query asks for a filename."
+  :demo="commandPalettePicker"
+  description="Light, Dark, and System. The current theme keeps a check mark."
   locale="en"
-  title="Async search"
+  title="Picker mode"
 />
 
 <DemoExample
   :demo="commandPaletteRich"
-  description="Rows carry a shortcut, and auxiliaryData.group places them under Navigation and Actions."
+  description="Rows show the command and, when one is set, its shortcut."
   locale="en"
   title="Rich items"
-/>
-
-<DemoExample
-  :demo="commandPaletteGrouped"
-  description="Home and Settings sit under Navigation. New File and Save sit under Actions."
-  locale="en"
-  title="Grouped"
 />

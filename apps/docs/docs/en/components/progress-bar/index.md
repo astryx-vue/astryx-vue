@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { progressBarBasic, progressBarIndeterminate, progressBarSizes, progressBarVariants } from '../../../../components/demos/progress-bar'
+import { progressBarCustomFormat, progressBarIndeterminate, progressBarSemantic, progressBarValueLabel } from '../../../../components/demos/progress-bar'
 </script>
 
 ## Usage
@@ -37,13 +37,13 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 
 ## Examples
 
-<DemoExample :demo="progressBarBasic" title="Basic" description="Use value and max to control completion. show-value displays the percentage." locale="en" />
+<DemoExample :demo="progressBarCustomFormat" title="Custom format" description="formatValueLabel turns the current value and max into a label such as disk usage in GB." locale="en" />
 
-<DemoExample :demo="progressBarSizes" title="Sizes" description="Progress bars come in sm, md, and lg track heights." locale="en" />
+<DemoExample :demo="progressBarIndeterminate" title="Indeterminate" description="isIndeterminate is for work whose duration is unknown." locale="en" />
 
-<DemoExample :demo="progressBarVariants" title="Color variants" description="Use different colors to match the state." locale="en" />
+<DemoExample :demo="progressBarSemantic" title="Semantic variants" description="Accent, success, warning, error, and neutral, stacked so the status colors can be compared." locale="en" />
 
-<DemoExample :demo="progressBarIndeterminate" title="Indeterminate" description="Use isIndeterminate for loading states with unknown progress." locale="en" />
+<DemoExample :demo="progressBarValueLabel" title="Value label" description="hasValueLabel shows the current percentage beside the label." locale="en" />
 
 ## Accessibility
 
