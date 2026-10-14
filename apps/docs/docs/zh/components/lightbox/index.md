@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { lightboxGallery, lightboxOverview, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
+import { lightboxGallery, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
 </script>
 
 ## 使用方法
@@ -52,29 +52,22 @@ const { bindings, open } = useLightbox({ media: photo })
 ## 示例
 
 <DemoExample
-  :demo="lightboxOverview"
-  description="带说明文字的全屏图片查看器。"
-  locale="zh"
-  title="Lightbox"
-/>
-
-<DemoExample
   :demo="lightboxGallery"
   description="缩略图网格打开全屏图库。点任意一张，灯箱就从那一张开始。上一张和下一张可以不关闭就翻完。"
   locale="zh"
-  title="Lightbox — 图库"
+  title="图库"
 />
 
 <DemoExample
   :demo="lightboxVideo"
   description="在灯箱里打开视频，使用浏览器自带控件。视频不能缩放，也不能平移。"
   locale="zh"
-  title="Lightbox — 视频"
+  title="视频"
 />
 
 <DemoExample
   :demo="lightboxZoom"
   description="打开缩放和平移。双击图片放大，拖动查看。再双击一次，或点关闭，回到原大小并退出。"
   locale="zh"
-  title="Lightbox — 缩放"
+  title="缩放"
 />

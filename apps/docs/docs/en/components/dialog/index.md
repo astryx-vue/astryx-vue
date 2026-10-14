@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dialogBasic, dialogForm, dialogFullscreen, dialogImperative, dialogRequired } from '../../../../components/demos/dialog'
+import { dialogAdaptive, dialogConfirmation, dialogForm, dialogFullscreen, dialogRequired, dialogScrollable } from '../../../../components/demos/dialog'
 </script>
 
 ## Usage
@@ -49,15 +49,17 @@ const isOpen = ref(false)
 
 ## Examples
 
-<DemoExample :demo="dialogBasic" title="Basic" description="A header with a subtitle and close button. The title receives focus when the dialog opens." locale="en" />
+<DemoExample :demo="dialogAdaptive" title="Adaptive presentation" description="Dialog stays the default. On a coarse pointer at lg and below, the same profile form opens as a bottom sheet." locale="en" />
 
-<DemoExample :demo="dialogForm" title="Form" description="purpose form allows Escape but ignores backdrop clicks, so typed input is not lost by accident." locale="en" />
+<DemoExample :demo="dialogConfirmation" title="Confirmation" description="Asks before a destructive action. The inline preview stays on the page; its buttons open the real dialog." locale="en" />
 
-<DemoExample :demo="dialogRequired" title="Required" description="purpose required disables Escape and backdrop dismissal. The dialog uses alertdialog semantics for decisions the user must make." locale="en" />
+<DemoExample :demo="dialogForm" title="Form" description="Collects a name and bio without leaving the page. purpose form keeps Escape and ignores backdrop clicks." locale="en" />
 
-<DemoExample :demo="dialogFullscreen" title="Fullscreen" description="variant fullscreen fills the viewport for long editing tasks and respects safe-area insets." locale="en" />
+<DemoExample :demo="dialogFullscreen" title="Fullscreen" description="variant fullscreen fills the viewport for documentation and other long reading." locale="en" />
 
-<DemoExample :demo="dialogImperative" title="Imperative" description="useImperativeDialog opens content without managing isOpen. Render its Host once in the template." locale="en" />
+<DemoExample :demo="dialogScrollable" title="Scrollable" description="maxHeight keeps the dialog short and scrolls the terms inside it." locale="en" />
+
+<DemoExample :demo="dialogRequired" title="Required" description="purpose required blocks Escape and the backdrop. The user has to choose Cancel or Transfer." locale="en" />
 
 ## Accessibility
 

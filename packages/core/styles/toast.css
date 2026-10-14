@@ -155,6 +155,13 @@
     overflow-wrap: anywhere;
   }
 
+  .astryx-toast__end {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
   .astryx-toast__close {
     display: inline-flex;
     align-items: center;

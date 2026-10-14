@@ -65,6 +65,25 @@ describe('dropdownMenu', () => {
     expect(isShown(surface)).toBe(false)
   })
 
+  it('opens the menu inside a bottom sheet', async () => {
+    const wrapper = mount(DropdownMenu, {
+      attachTo: document.body,
+      props: {
+        presentation: 'bottom-sheet',
+        button: { label: 'Project actions' },
+        items: [{ label: 'Edit project' }],
+      },
+    })
+
+    await wrapper.get('button').trigger('click')
+    await nextTick()
+    await flushPromises()
+
+    expect(document.body.textContent).toContain('Edit project')
+    expect(document.querySelector('.astryx-dropdown-menu.is-sheet')).not.toBeNull()
+    wrapper.unmount()
+  })
+
   it('shows a chevron on a labelled trigger', () => {
     const { trigger } = renderMenu()
 

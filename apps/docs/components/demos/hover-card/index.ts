@@ -1,16 +1,16 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import basicDemo from './basic.vue'
-import basicSource from './basic.vue?raw&highlighted'
-import controlledDemo from './controlled.vue'
-import controlledSource from './controlled.vue?raw&highlighted'
+import definitionDemo from './definition.vue'
+import definitionSource from './definition.vue?raw&highlighted'
+import linkPreviewDemo from './link-preview.vue'
+import linkPreviewSource from './link-preview.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
-import placementsDemo from './placements.vue'
-import placementsSource from './placements.vue?raw&highlighted'
+import profileDemo from './profile.vue'
+import profileSource from './profile.vue?raw&highlighted'
 
 const options = { className: 'hover-card-preview' }
 
+export const hoverCardDefinition = defineDemo(definitionDemo, definitionSource, options)
+export const hoverCardLinkPreview = defineDemo(linkPreviewDemo, linkPreviewSource, options)
+export const hoverCardProfile = defineDemo(profileDemo, profileSource, options)
 export const hoverCardOverview = defineDemo(overviewDemo, overviewSource, options)
-export const hoverCardBasic = defineDemo(basicDemo, basicSource, options)
-export const hoverCardPlacements = defineDemo(placementsDemo, placementsSource, options)
-export const hoverCardControlled = defineDemo(controlledDemo, controlledSource, options)

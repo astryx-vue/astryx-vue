@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { alertDialogBasic, alertDialogLoading, alertDialogNonDestructive } from '../../../../components/demos/alert-dialog'
+import { alertDialogLoading } from '../../../../components/demos/alert-dialog'
 </script>
 
 ## 使用方法
@@ -90,24 +90,10 @@ async function revoke(): Promise<void> {
 ## 示例
 
 <DemoExample
-  :demo="alertDialogBasic"
-  description="最常用的形态：破坏性确认。打开时焦点落在「取消」上，Escape 等同于取消，点击遮罩不会关闭。"
-  locale="zh"
-  title="基本用法"
-/>
-
-<DemoExample
-  :demo="alertDialogNonDestructive"
-  description="确认操作并不具有破坏性时把 actionVariant 设为 primary，同时用 cancelLabel 说明取消之后会发生什么。"
-  locale="zh"
-  title="非破坏性确认"
-/>
-
-<DemoExample
   :demo="alertDialogLoading"
-  description="异步操作期间保持对话框打开并让确认按钮显示加载指示，操作结束后再由父组件关闭。"
+  description="Revoke 会进入两秒的加载状态。对话框以内联方式直接展示，不用先点开就能看到等待中的操作。"
   locale="zh"
-  title="异步操作"
+  title="加载中"
 />
 
 ## 无障碍

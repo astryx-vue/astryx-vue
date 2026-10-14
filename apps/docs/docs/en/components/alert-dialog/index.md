@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { alertDialogBasic, alertDialogLoading, alertDialogNonDestructive } from '../../../../components/demos/alert-dialog'
+import { alertDialogLoading } from '../../../../components/demos/alert-dialog'
 </script>
 
 ## Usage
@@ -90,24 +90,10 @@ The action layout follows the available width. Above 640px the actions sit in on
 ## Examples
 
 <DemoExample
-  :demo="alertDialogBasic"
-  description="The common case: a destructive confirmation. Focus lands on Cancel, Escape cancels, and a backdrop click does nothing."
-  locale="en"
-  title="Basic usage"
-/>
-
-<DemoExample
-  :demo="alertDialogNonDestructive"
-  description="When the confirmation is not destructive, actionVariant switches the confirm action to primary, and cancelLabel can say what happens instead."
-  locale="en"
-  title="Non-destructive confirmation"
-/>
-
-<DemoExample
   :demo="alertDialogLoading"
-  description="An async action keeps the dialog open and shows a spinner on the confirm button until the parent closes it."
+  description="Revoke stays in a loading state for two seconds. The dialog is shown inline so the pending action is visible without opening it first."
   locale="en"
-  title="Async action"
+  title="Loading"
 />
 
 ## Accessibility

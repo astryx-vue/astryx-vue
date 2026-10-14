@@ -42,6 +42,26 @@ describe('useToast', () => {
     expect(toastStore.toasts).toHaveLength(0)
   })
 
+  it('overwrites a toast that reuses uniqueID', () => {
+    const toast = useToast()
+    toast({ body: 'Uploading… 10%', uniqueID: 'upload', autoClose: false })
+    toast({ body: 'Uploading… 40%', uniqueID: 'upload', collisionBehavior: 'overwrite', autoClose: false })
+
+    expect(toastStore.toasts).toHaveLength(1)
+    expect(toastStore.toasts[0].body).toBe('Uploading… 40%')
+  })
+
+  it('ignores a toast whose uniqueID is already visible', () => {
+    const toast = useToast()
+    toast({ body: 'You are offline', uniqueID: 'offline', collisionBehavior: 'ignore', autoClose: false })
+    const dismiss = toast({ body: 'You are offline', uniqueID: 'offline', collisionBehavior: 'ignore', autoClose: false })
+
+    expect(toastStore.toasts).toHaveLength(1)
+    expect(toastStore.toasts[0].body).toBe('You are offline')
+    dismiss()
+    expect(toastStore.toasts[0].isExiting).toBe(false)
+  })
+
   it('exits every toast on clear', () => {
     const toast = useToast()
     toast({ body: 'One' })

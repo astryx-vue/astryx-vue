@@ -58,6 +58,24 @@ describe('progressBar', () => {
     expect(wrapper.get('[role="progressbar"]').attributes('aria-valuetext')).toBe('3 of 4')
   })
 
+  it('formats the value label from the current value and max', () => {
+    const wrapper = renderProgressBar({
+      value: 3.2,
+      max: 5,
+      hasValueLabel: true,
+      formatValueLabel: (value: number, max: number) => `${value} GB / ${max} GB`,
+    })
+    expect(wrapper.get('.astryx-progress-bar-value').text()).toBe('3.2 GB / 5 GB')
+    expect(wrapper.get('[role="progressbar"]').attributes('aria-valuetext')).toBe('3.2 GB / 5 GB')
+    expect(wrapper.attributes('data-variant')).toBe('neutral')
+  })
+
+  it('paints the accent variant', () => {
+    const wrapper = renderProgressBar({ value: 60, variant: 'accent', hasValueLabel: true })
+    expect(wrapper.attributes('data-variant')).toBe('accent')
+    expect(wrapper.get('.astryx-progress-bar-value').text()).toBe('60%')
+  })
+
   it('renders server-side', async () => {
     const html = await renderToString(createSSRApp({ render: () => h(ProgressBar, { value: 60, label: 'Upload' }) }))
     expect(html).toContain('role="progressbar"')

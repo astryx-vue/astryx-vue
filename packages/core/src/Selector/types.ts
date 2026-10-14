@@ -7,6 +7,7 @@ export interface SelectorOption {
 
 export type SelectorSize = 'sm' | 'md' | 'lg'
 export type SelectorStatus = 'default' | 'success' | 'warning' | 'error'
+export type SelectorPresentation = 'popover' | 'bottom-sheet'
 
 export interface SelectorProps {
   /** 选中的值 */
@@ -25,6 +26,11 @@ export interface SelectorProps {
   statusMessage?: string
   /** 尺寸 */
   size?: SelectorSize
+  /**
+   * popover 锚在触发器下，bottom-sheet 在底部弹层里展开。
+   * @default 'popover'
+   */
+  presentation?: SelectorPresentation
   /** 是否可搜索 */
   searchable?: boolean
   /** 搜索占位文本 */
