@@ -10,6 +10,6 @@ export const PreviewHost = defineComponent({
   },
   setup(props) {
     provideAstryxLocale(() => props.locale)
-    return () => h(props.preview)
+    return () => h('div', { class: 'playground-preview__content' }, [h(props.preview)])
   },
 })
