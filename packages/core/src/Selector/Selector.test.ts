@@ -292,6 +292,23 @@ describe('selector', () => {
     expect(wrapper.get('.astryx-selector-value').text()).toBe('Select…')
   })
 
+  it('accepts string options and an object status', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options: ['Alabama', 'Alaska'],
+        status: { type: 'error', message: 'Required' },
+      },
+      attachTo: document.body,
+    })
+
+    await wrapper.find('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    expect(document.body.textContent).toContain('Alabama')
+    expect(wrapper.text()).toContain('Required')
+    expect(wrapper.find('.astryx-selector').classes()).toContain('status-error')
+    wrapper.unmount()
+  })
+
   it('shows a label and section titles', async () => {
     const wrapper = mount(Selector, {
       props: {

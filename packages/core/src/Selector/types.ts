@@ -1,3 +1,5 @@
+import type { FieldStatusInput } from '../Field/types.js'
+
 export interface SelectorOption {
   value: string | number
   label: string
@@ -7,6 +9,9 @@ export interface SelectorOption {
   icon?: string
 }
 
+/** 字符串会当成 value 和 label 相同的选项，演练场模板一直这样传。 */
+export type SelectorOptionInput = SelectorOption | string
+
 /** A titled group of options. */
 export interface SelectorSection {
   type: 'section'
@@ -14,10 +19,12 @@ export interface SelectorSection {
   options: readonly SelectorOption[]
 }
 
-export type SelectorEntry = SelectorOption | SelectorSection
+export type SelectorEntry = SelectorOptionInput | SelectorSection
 
 export type SelectorSize = 'sm' | 'md' | 'lg'
 export type SelectorStatus = 'default' | 'success' | 'warning' | 'error'
+/** 字符串状态，或演练场里那种 `{ type, message }`。 */
+export type SelectorStatusInput = SelectorStatus | FieldStatusInput
 export type SelectorPresentation = 'popover' | 'bottom-sheet'
 export type SelectorVariant = 'default' | 'ghost'
 export type SelectorStatusVariant = 'attached' | 'detached' | 'tooltip'
@@ -33,8 +40,8 @@ export interface SelectorProps {
   disabled?: boolean
   /** 禁用原因（鼠标悬停时显示） */
   disabledReason?: string
-  /** 状态 */
-  status?: SelectorStatus
+  /** 状态。可以是 `'error'`，也可以是 `{ type, message }`。 */
+  status?: SelectorStatusInput
   /** 状态消息 */
   statusMessage?: string
   /**

@@ -48,10 +48,22 @@ const isEnabled = computed(() => !props.disabled)
 const isSearchable = computed(() => props.searchable)
 
 function isSection(entry: SelectorEntry): entry is SelectorSection {
-  return 'type' in entry && entry.type === 'section'
+  return typeof entry === 'object' && entry !== null && 'type' in entry && entry.type === 'section'
 }
 
-const flatOptions = computed(() => props.options.flatMap(entry => isSection(entry) ? entry.options : [entry]))
+function asOption(entry: SelectorOption | string): SelectorOption {
+  if (typeof entry === 'string')
+    return { value: entry, label: entry }
+  return entry
+}
+
+const normalizedEntries = computed(() => props.options.map((entry) => {
+  if (isSection(entry))
+    return { ...entry, options: entry.options.map(asOption) }
+  return asOption(entry)
+}))
+
+const flatOptions = computed(() => normalizedEntries.value.flatMap(entry => isSection(entry) ? entry.options : [entry]))
 
 const comboboxOptions = computed(() =>
   flatOptions.value.map(opt => ({
@@ -123,10 +135,22 @@ const selectedOption = computed(() => {
 
 const fieldLabel = computed(() => props.label || resolvedPlaceholder.value)
 const hideLabel = computed(() => props.isLabelHidden || !props.label)
+const statusType = computed(() => {
+  const status = props.status
+  if (status == null || status === 'default')
+    return 'default'
+  if (typeof status === 'string')
+    return status
+  return status.type
+})
+
 const fieldStatus = computed<FieldStatusInput | undefined>(() => {
-  if (!props.statusMessage || props.status === 'default')
+  const status = props.status
+  if (status && typeof status === 'object')
+    return status
+  if (!props.statusMessage || statusType.value === 'default')
     return undefined
-  return { type: props.status, message: props.statusMessage }
+  return { type: statusType.value, message: props.statusMessage }
 })
 
 interface DisplayRow {
@@ -139,7 +163,7 @@ interface DisplayRow {
 const displayRows = computed<DisplayRow[]>(() => {
   const indexByValue = new Map(combobox.filteredOptions.value.map((option, index) => [option.value, index]))
   const rows: DisplayRow[] = []
-  for (const entry of props.options) {
+  for (const entry of normalizedEntries.value) {
     if (isSection(entry)) {
       const children = entry.options.filter(option => indexByValue.has(option.value))
       if (children.length === 0)
@@ -239,7 +263,7 @@ watch(() => combobox.activeIndex.value, (index) => {
 <template>
   <Field
     class="astryx-selector"
-    :class="[`size-${props.size}`, `status-${props.status}`, `variant-${props.variant}`]"
+    :class="[`size-${props.size}`, `status-${statusType}`, `variant-${props.variant}`]"
     :label="fieldLabel"
     :input-id="selectorId"
     :description="props.description"
