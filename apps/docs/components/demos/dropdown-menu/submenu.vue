@@ -10,13 +10,13 @@ const lastAction = ref<string | null>(null)
 <template>
   <VStack :gap="3">
     <DropdownMenu :button="{ label: 'Actions' }">
-      <DropdownMenuItem icon="css-icon css-icon--sm i-carbon-edit" label="Rename" @click="lastAction = 'Rename'" />
-      <DropdownMenuSubMenu icon="css-icon css-icon--sm i-carbon-folder" label="Move to">
+      <DropdownMenuItem label="Rename" @click="lastAction = 'Rename'" />
+      <DropdownMenuSubMenu label="Move to">
         <DropdownMenuItem label="Projects" @click="lastAction = 'Move to Projects'" />
         <DropdownMenuItem label="Archive" @click="lastAction = 'Move to Archive'" />
         <DropdownMenuItem label="Trash" @click="lastAction = 'Move to Trash'" />
       </DropdownMenuSubMenu>
-      <DropdownMenuItem icon="css-icon css-icon--sm i-carbon-trash-can" label="Delete" @click="lastAction = 'Delete'" />
+      <DropdownMenuItem label="Delete" @click="lastAction = 'Delete'" />
     </DropdownMenu>
     <Text v-if="lastAction" type="supporting" color="secondary">
       Last action: {{ lastAction }}
