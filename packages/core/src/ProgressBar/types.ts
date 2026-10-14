@@ -8,6 +8,11 @@ export interface ProgressBarProps {
   size?: ProgressBarSize
   variant?: ProgressBarVariant
   label?: string
+  /**
+   * Keep `label` available to assistive technology without painting it.
+   * @default false
+   */
+  isLabelHidden?: boolean
   description?: string
   isIndeterminate?: boolean
   /** 在标签旁显示当前进度。`hasValueLabel` 是同一开关。 */

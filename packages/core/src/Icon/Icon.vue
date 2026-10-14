@@ -43,12 +43,17 @@ const a11yAttrs = computed(() => {
   <span
     v-bind="a11yAttrs"
     class="astryx-icon"
-    :class="providedClass"
     :data-color="color"
     :data-size="resolvedSize"
   >
     <span v-if="glyphSlug" class="astryx-icon__glyph" :class="`astryx-icon--${glyphSlug}`" />
+    <!--
+      Utility icon classes (UnoCSS `i-*`) set width and height to 100% outside
+      any layer, which would override this box's size if the class sat on it.
+      The box owns the size; the class only paints the inside.
+    -->
+    <span v-else-if="providedClass" class="astryx-icon__external" :class="providedClass" />
     <component :is="iconComponent" v-else-if="iconComponent" />
-    <slot v-else-if="!providedClass" />
+    <slot v-else />
   </span>
 </template>
