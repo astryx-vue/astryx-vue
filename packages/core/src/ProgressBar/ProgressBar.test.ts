@@ -63,7 +63,7 @@ describe('progressBar', () => {
       value: 3.2,
       max: 5,
       hasValueLabel: true,
-      formatValueLabel: (value, max) => `${value} GB / ${max} GB`,
+      formatValueLabel: (value: number, max: number) => `${value} GB / ${max} GB`,
     })
     expect(wrapper.get('.astryx-progress-bar-value').text()).toBe('3.2 GB / 5 GB')
     expect(wrapper.get('[role="progressbar"]').attributes('aria-valuetext')).toBe('3.2 GB / 5 GB')
