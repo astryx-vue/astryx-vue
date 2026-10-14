@@ -20,6 +20,11 @@ footer: false
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Field size.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>''</code></td><td>Placeholder text.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Field label, also used as the accessible name.</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Helper text under the label.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps the label for screen readers and hides it visually.</td></tr>
+      <tr><td><code>units</code></td><td><code>string</code></td><td>—</td><td>Unit shown before the stepper, such as %.</td></tr>
+      <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button when the field has a value.</td></tr>
+      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>Validation status. An object with <code>message</code> shows that text under the field.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name.</td></tr>
     </tbody>
   </table>

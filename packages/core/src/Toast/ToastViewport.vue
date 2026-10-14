@@ -77,6 +77,7 @@ watch(
             :body="toast.body"
             :auto-close="toast.autoClose"
             :duration="toast.duration"
+            :end-content="toast.endContent"
             :is-exiting="toast.isExiting"
             @close="handleClose(toast.id)"
           />

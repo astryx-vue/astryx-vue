@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { spinnerBasic, spinnerLabel, spinnerShades, spinnerSizes } from '../../../../components/demos/spinner'
+import { spinnerLabel, spinnerMedia, spinnerSizes } from '../../../../components/demos/spinner'
 </script>
 
 ## Usage
@@ -38,13 +38,11 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 ## Examples
 
-<DemoExample :demo="spinnerBasic" title="Basic" description="The default spinner uses the accent color and the md size." locale="en" />
+<DemoExample :demo="spinnerMedia" title="On media" description="default sits on a light surface. onMedia sits on a dark surface." locale="en" />
 
-<DemoExample :demo="spinnerSizes" title="Sizes" description="Use sm, md, lg, or xl. The ring diameter is 10px, 14px, 18px, or 28px." locale="en" />
+<DemoExample :demo="spinnerSizes" title="Sizes" description="sm, md, lg, and xl." locale="en" />
 
-<DemoExample :demo="spinnerShades" title="Shades" description="default and subtle suit light backgrounds. onMedia suits dark or accent backgrounds. inherit takes the surrounding text color." locale="en" />
-
-<DemoExample :demo="spinnerLabel" title="Label" description="A visible label appears below the spinner and names it for screen readers." locale="en" />
+<DemoExample :demo="spinnerLabel" title="With label" description="A short label, or a title and a supporting line. The accessible name stays Fetching data when the label is rich." locale="en" />
 
 ## Accessibility
 

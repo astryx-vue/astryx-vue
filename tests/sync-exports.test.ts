@@ -41,6 +41,7 @@ const expectedCatalog = [
   { slug: 'token', group: 'Content', en: 'Token', zh: '标签' },
   { slug: 'code-block', group: 'Content', en: 'Code Block', zh: '代码块' },
   { slug: 'timer', group: 'Content', en: 'Timer', zh: '计时' },
+  { slug: 'icon', group: 'Content', en: 'Icon', zh: '图标' },
   { slug: 'badge', group: 'Feedback & Status', en: 'Badge', zh: '徽标' },
   { slug: 'banner', group: 'Feedback & Status', en: 'Banner', zh: '提示条' },
   { slug: 'progress-bar', group: 'Feedback & Status', en: 'Progress Bar', zh: '进度条' },

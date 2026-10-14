@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { avatarGroupBasic, avatarGroupSizes } from '../../../../components/demos/avatar-group'
+import { avatarGroupGroup, avatarGroupInteractive } from '../../../../components/demos/avatar-group'
 </script>
 
 ## 使用方法
@@ -44,15 +44,15 @@ import { Avatar, AvatarGroup, AvatarGroupOverflow } from '@astryx-vue/core/Avata
 ## 示例
 
 <DemoExample
-  :demo="avatarGroupBasic"
-  description="多个头像相互重叠排列，末尾的 +N 概括了未展示的成员数量，适合成员列表和协作场景。"
+  :demo="avatarGroupGroup"
+  description="把多张头像叠成一行，用来表示一组人。适合团队、审阅者或参与人数，既看得到面孔，又不占太多空间。"
   locale="zh"
-  title="基础用法"
+  title="头像组"
 />
 
 <DemoExample
-  :demo="avatarGroupSizes"
-  description="AvatarGroup 支持 sm、md、lg 等尺寸，整个组一起缩放，头像之间的重叠比例保持一致。"
+  :demo="avatarGroupInteractive"
+  description="头像链到个人资料，溢出指示器打开完整成员列表。整组是一个 Tab 停靠点，方向键在头像和溢出按钮之间移动。"
   locale="zh"
-  title="尺寸"
+  title="可交互"
 />

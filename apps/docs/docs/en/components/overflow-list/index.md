@@ -8,6 +8,7 @@ footer: false
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
 import { overflowListActions, overflowListBadges, overflowListCapped, overflowListCollapseStart, overflowListMultiRow } from '../../../../components/demos/overflow-list'
+import { toolbarFilter } from '../../../../components/demos/toolbar'
 </script>
 
 ## Usage
@@ -42,12 +43,44 @@ const items = [
 
 ## Examples
 
-<DemoExample :demo="overflowListBadges" description="Badges sit in a row. The ones that do not fit collapse into a count." locale="en" title="Badge Tags" />
+<DemoExample
+  :demo="overflowListCapped"
+  description="maxVisibleItems caps the row at three actions even when more would fit; the rest move to a dropdown."
+  locale="en"
+  title="Capped toolbar"
+/>
 
-<DemoExample :demo="overflowListCapped" description="The row stays capped at three actions. The rest move into a menu." locale="en" title="Capped Toolbar" />
+<DemoExample
+  :demo="overflowListCollapseStart"
+  description="Overflow list that hides items from the start, keeping the latest visible."
+  locale="en"
+  title="Collapse from start"
+/>
 
-<DemoExample :demo="overflowListCollapseStart" description="Items collapse from the start, so the latest steps stay visible." locale="en" title="Collapse From Start" />
+<DemoExample
+  :demo="overflowListMultiRow"
+  description="Tags wrap onto up to two rows with maxRows, then collapse the rest into a count badge."
+  locale="en"
+  title="Multi-row tags"
+/>
 
-<DemoExample :demo="overflowListActions" description="Buttons that do not fit move into a dropdown." locale="en" title="Dropdown Actions" />
+<DemoExample
+  :demo="overflowListBadges"
+  description="Resizable row of badges that collapses into a count badge on overflow."
+  locale="en"
+  title="Badge tags"
+/>
 
-<DemoExample :demo="overflowListMultiRow" description="Tags fill two rows, then the rest collapse into a count." locale="en" title="Multi-row Tags" />
+<DemoExample
+  :demo="overflowListActions"
+  description="Action toolbar that collapses overflow buttons into a dropdown menu."
+  locale="en"
+  title="Dropdown actions"
+/>
+
+<DemoExample
+  :demo="toolbarFilter"
+  description="Filter bar above a table: a search box leads the row, each field beside it is a closed trigger that doubles as its own filter chip, and the clauses fold from the end into a count as the row narrows."
+  locale="en"
+  title="Table filter"
+/>

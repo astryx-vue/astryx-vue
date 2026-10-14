@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { lightboxGallery, lightboxOverview, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
+import { lightboxGallery, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
 </script>
 
 ## Usage
@@ -52,29 +52,22 @@ const { bindings, open } = useLightbox({ media: photo })
 ## Examples
 
 <DemoExample
-  :demo="lightboxOverview"
-  description="A fullscreen image viewer with caption."
-  locale="en"
-  title="Lightbox"
-/>
-
-<DemoExample
   :demo="lightboxGallery"
-  description="A thumbnail grid that opens a fullscreen gallery. Clicking any thumbnail opens the lightbox at that index. Prev/next navigation lets users browse all images without closing."
+  description="A thumbnail grid that opens a fullscreen gallery. Clicking any thumbnail opens the lightbox at that index. Previous and next browse the rest without closing."
   locale="en"
-  title="Lightbox — Gallery"
+  title="Gallery"
 />
 
 <DemoExample
   :demo="lightboxVideo"
-  description="Opens a video in the lightbox. Native browser controls are available. Zoom and pan are disabled for video items."
+  description="Opens a video with the browser controls. Zoom and pan stay off for video."
   locale="en"
-  title="Lightbox — Video"
+  title="Video"
 />
 
 <DemoExample
   :demo="lightboxZoom"
-  description="A lightbox with zoom and pan enabled. Double-click the image to zoom in; drag to pan around. Double-click again or use the close button to exit."
+  description="Double-click the image to zoom in, then drag to pan. Double-click again, or close, to leave zoom."
   locale="en"
-  title="Lightbox — Zoom"
+  title="Zoom"
 />

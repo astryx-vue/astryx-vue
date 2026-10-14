@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateInputBasic, dateInputClearable } from '../../../../components/demos/date-input'
+import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation } from '../../../../components/demos/date-input'
 </script>
 
 ## 使用方法
@@ -29,7 +29,7 @@ const date = ref(null)
 </template>
 ```
 
-绑定值是原生 `Date`。输入框按 `YYYY-MM-DD` 显示日期，点击后通过弹出的日历选择。占位符、清除按钮和日历里的文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
+绑定值是原生 `Date`。默认按长日期显示，例如 March 21, 2026。`format` 可以是 `date`、`date_long`、`date_weekday`、`system_date`，或一个接收 `YYYY-MM-DD` 的函数。`description` 显示在标签下方。`status` 传 `{ type, message }` 时，说明会出现在字段下面。`presentation="bottom-sheet"` 在底部面板里打开日历，`adaptive-bottom-sheet` 则在粗指针设备上这样做。
 
 ## 最佳实践
 
@@ -43,15 +43,36 @@ const date = ref(null)
 ## 示例
 
 <DemoExample
-  :demo="dateInputBasic"
-  description="点击输入框打开日历弹层，选择日期后自动关闭。"
+  :demo="dateInputClearable"
+  description="可选的活动日期，带清除按钮。字段上方显示当前选中的值。"
   locale="zh"
-  title="基本用法"
+  title="可清除"
 />
 
 <DemoExample
-  :demo="dateInputClearable"
-  description="开启 clearable 后，已选日期旁边会显示清除按钮。"
+  :demo="dateInputDescription"
+  description="标签下方的说明用来交代这个日期的用途。"
   locale="zh"
-  title="可清除"
+  title="说明文字"
+/>
+
+<DemoExample
+  :demo="dateInputFormats"
+  description="同一天可以显示为短月份、长月份、带星期、ISO 日期，或自定义文案。"
+  locale="zh"
+  title="显示格式"
+/>
+
+<DemoExample
+  :demo="dateInputRange"
+  description="只能选择本月 8 日到 21 日。粗指针设备会在底部面板里打开日历。"
+  locale="zh"
+  title="最小和最大"
+/>
+
+<DemoExample
+  :demo="dateInputValidation"
+  description="错误、警告和成功，各自带一条说明。"
+  locale="zh"
+  title="校验状态"
 />

@@ -7,8 +7,16 @@
     justify-content: center;
     flex-shrink: 0;
     box-sizing: border-box;
-    vertical-align: middle;
-    color: inherit;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    color: currentcolor;
+    /*
+     * A 1em box with vertical-align: middle sits on the descender, so the
+     * drawing looks low next to the letters. -0.125em is the Iconify offset
+     * that puts the box on the text baseline.
+     */
+    vertical-align: -0.125em;
   }
 
   /*
@@ -32,13 +40,35 @@
   }
 
   /*
-   * An icon passed as a component or written into the slot keeps the size its
-   * owner gives it; the box owns that size through width, height, and
-   * font-size.
+   * The wrapper keeps a box. display:contents would make the SVG's 100%
+   * resolve against the icon's parent, so a 1em icon would grow to the line.
    */
-  .astryx-icon > svg {
-    width: 1em;
-    height: 1em;
+  .astryx-icon__svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .astryx-icon > svg,
+  .astryx-icon__svg > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentcolor;
+  }
+
+  /*
+   * A class the caller supplies, such as an UnoCSS icon, paints this box.
+   * Those utilities are unlayered and set width/height to 100%, so they have
+   * to live on the inner element. On the box itself they would replace the
+   * size below and stretch the icon to its flex parent.
+   */
+  .astryx-icon__external {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .astryx-icon[data-size='xsm'] {

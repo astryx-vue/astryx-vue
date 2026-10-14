@@ -292,6 +292,62 @@ describe('selector', () => {
     expect(wrapper.get('.astryx-selector-value').text()).toBe('Select…')
   })
 
+  it('accepts string options and an object status', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options: ['Alabama', 'Alaska'],
+        status: { type: 'error', message: 'Required' },
+      },
+      attachTo: document.body,
+    })
+
+    await wrapper.find('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    expect(document.body.textContent).toContain('Alabama')
+    expect(wrapper.text()).toContain('Required')
+    expect(wrapper.find('.astryx-selector').classes()).toContain('status-error')
+    wrapper.unmount()
+  })
+
+  it('shows a label and section titles', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        label: 'Office',
+        options: [
+          { type: 'section', title: 'Europe', options: [{ value: 'ldn', label: 'London' }] },
+        ],
+      },
+      attachTo: document.body,
+    })
+
+    expect(wrapper.text()).toContain('Office')
+    await wrapper.find('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    expect(document.body.textContent).toContain('Europe')
+    expect(document.body.textContent).toContain('London')
+    wrapper.unmount()
+  })
+
+  it('opens the option list inside a bottom sheet', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options,
+        label: 'Team',
+        presentation: 'bottom-sheet',
+      },
+      attachTo: document.body,
+    })
+
+    await wrapper.find('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    await nextTick()
+
+    const sheet = document.querySelector('.astryx-bottom-sheet, .astryx-bottom-sheet-inline, dialog')
+    expect(sheet).not.toBeNull()
+    expect(document.body.textContent).toContain('Apple')
+    wrapper.unmount()
+  })
+
   it('includes hidden select for form submission', () => {
     const wrapper = mount(Selector, {
       props: {

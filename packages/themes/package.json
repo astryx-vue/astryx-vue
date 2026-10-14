@@ -58,6 +58,7 @@
     "build": "true"
   },
   "dependencies": {
+    "@fontsource/figtree": "catalog:runtime",
     "@fontsource/jetbrains-mono": "catalog:runtime"
   },
   "publishConfig": {

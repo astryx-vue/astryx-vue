@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { checkboxInputBasic, checkboxInputSizes, checkboxInputIndeterminate, checkboxInputStates, checkboxInputForm, checkboxInputAsync } from '../../../../components/demos/checkbox-input'
+import { checkboxInputStates, checkboxInputIndeterminate, checkboxInputStatus } from '../../../../components/demos/checkbox-input'
 </script>
 
 ## 使用方法
@@ -51,17 +51,26 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 示例
 
-<DemoExample :demo="checkboxInputBasic" title="基本选择" description="使用 v-model 管理选中状态。点击标签或说明也可切换。" locale="zh" />
+<DemoExample
+  :demo="checkboxInputStates"
+  description="选中、未选中、禁用和部分选中，每项都有说明。"
+  locale="zh"
+  title="状态"
+/>
 
-<DemoExample :demo="checkboxInputSizes" title="尺寸" description="sm 为 20px。md 为 24px。" locale="zh" />
+<DemoExample
+  :demo="checkboxInputIndeterminate"
+  description="只开启了部分通知时，全选显示为横线。"
+  locale="zh"
+  title="部分选中"
+/>
 
-<DemoExample :demo="checkboxInputIndeterminate" title="全选与半选" description="部分子项选中时，父项显示半选。激活半选框后，值变为 true。" locale="zh" />
-
-<DemoExample :demo="checkboxInputStates" title="禁用、只读与加载" description="加载状态阻止重复切换。禁用原因可通过悬停或键盘焦点查看。" locale="zh" />
-
-<DemoExample :demo="checkboxInputForm" title="原生表单" description="选中必填项后提交表单。示例通过重置事件更新 v-model。" locale="zh" />
-
-<DemoExample :demo="checkboxInputAsync" title="异步保存与重试" description="开启失败模拟可查看错误。关闭模拟后再次修改可重试。" locale="zh" />
+<DemoExample
+  :demo="checkboxInputStatus"
+  description="复选框下方的错误、警告和成功说明。"
+  locale="zh"
+  title="校验状态"
+/>
 
 ## 键盘与无障碍
 

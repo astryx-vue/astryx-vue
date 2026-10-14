@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { hoverCardBasic, hoverCardControlled, hoverCardPlacements } from '../../../../components/demos/hover-card'
+import { hoverCardDefinition, hoverCardLinkPreview, hoverCardProfile } from '../../../../components/demos/hover-card'
 </script>
 
 ## Usage
@@ -50,11 +50,11 @@ When the trigger is plain text the component gives it a dashed underline and mak
 
 ## Examples
 
-<DemoExample :demo="hoverCardBasic" title="Basic" description="Hover or focus the link and the card appears after a short delay, staying open once the pointer moves into it." locale="en" />
+<DemoExample :demo="hoverCardDefinition" title="Definition" description="Hover a term in a sentence to read a short definition." locale="en" />
 
-<DemoExample :demo="hoverCardPlacements" title="Placements" description="placement sets the side of the trigger; the card flips to the other side when there is no room." locale="en" />
+<DemoExample :demo="hoverCardLinkPreview" title="Link preview" description="Hover a documentation link to see its title, summary, and URL." locale="en" />
 
-<DemoExample :demo="hoverCardControlled" title="Controlled" description="Pass isOpen to control visibility. Hover and focus stop applying, and Escape only emits openChange(false)." locale="en" />
+<DemoExample :demo="hoverCardProfile" title="Profile preview" description="Hover a username to see an avatar, bio, and join date." locale="en" />
 
 ## Accessibility
 

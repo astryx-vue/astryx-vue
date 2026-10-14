@@ -43,21 +43,21 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 <DemoExample
   :demo="headingCardGrid"
-  description="The heading stays on one line and the description clamps to two, so cards in a grid keep the same height."
+  description="Responsive card grid with truncated headings and descriptions for uniform layout."
   locale="en"
   title="Card grid"
 />
 
 <DemoExample
   :demo="headingHierarchy"
-  description="An h1, an h2, and an h3 on one page, each with the text that belongs under it."
+  description="Real-world page layout demonstrating heading levels h1 through h3 with supporting text."
   locale="en"
   title="Page hierarchy"
 />
 
 <DemoExample
   :demo="headingTruncation"
-  description="Inside a fixed width, maxLines of 1 keeps a single line and maxLines of 2 keeps two, both ending in an ellipsis."
+  description="Single-line and multi-line heading truncation with ellipsis for constrained layouts."
   locale="en"
   title="Truncation"
 />

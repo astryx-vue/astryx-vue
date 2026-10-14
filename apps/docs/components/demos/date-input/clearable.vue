@@ -1,36 +1,34 @@
 <script setup lang="ts">
+import { provideAstryxLocale } from '@astryx-vue/core'
 import { DateInput } from '@astryx-vue/core/DateInput'
+import { VStack } from '@astryx-vue/core/Stack'
+import { Text } from '@astryx-vue/core/Text'
 import { ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 
-const date = ref<Date | null>(new Date(2026, 9, 11))
-const { pick } = useDemoText()
+provideAstryxLocale('en')
 
-function formatSelected(value: Date): string {
-  const month = String(value.getMonth() + 1).padStart(2, '0')
-  const day = String(value.getDate()).padStart(2, '0')
-  return `${value.getFullYear()}-${month}-${day}`
+const value = ref<Date | null>(new Date(2026, 3, 6))
+
+function iso(date: Date | null): string {
+  if (!date)
+    return ''
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
 }
 </script>
 
 <template>
-  <div class="demo-container">
-    <DateInput v-model="date" :label="pick('截止日期', 'Due date')" clearable />
-    <p class="demo-result">
-      {{ pick('选中的日期：', 'Selected: ') }}{{ date ? formatSelected(date) : pick('未选择', 'none') }}
-    </p>
-  </div>
+  <VStack :gap="4" width="100%" style="min-width: 240px; max-width: 400px">
+    <Text type="supporting" color="secondary">
+      {{ value ? `Selected: ${iso(value)}` : 'No date selected' }}
+    </Text>
+    <DateInput
+      v-model="value"
+      label="Event date"
+      description="Pick a date for your event"
+      placeholder="Select a date"
+      clearable
+    />
+  </VStack>
 </template>
-
-<style scoped>
-.demo-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: min(100%, 20rem);
-}
-.demo-result {
-  font-size: 0.875rem;
-  color: var(--vp-c-text-2);
-}
-</style>

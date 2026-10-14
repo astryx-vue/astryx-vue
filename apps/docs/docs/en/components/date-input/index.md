@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateInputBasic, dateInputClearable } from '../../../../components/demos/date-input'
+import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation } from '../../../../components/demos/date-input'
 </script>
 
 ## Usage
@@ -29,7 +29,7 @@ const date = ref(null)
 </template>
 ```
 
-The value is a `Date`. The field shows it as `YYYY-MM-DD`. Clicking the field opens the calendar, and choosing a day closes it. The placeholder, clear button, and calendar labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
+The value is a `Date`. By default the field shows a long date, such as March 21, 2026. `format` can be `date`, `date_long`, `date_weekday`, `system_date`, or a function that receives `YYYY-MM-DD`. `description` sits under the label. `status` as `{ type, message }` shows that message under the field. `presentation="bottom-sheet"` opens the calendar in a bottom sheet, and `adaptive-bottom-sheet` does that when the pointer is coarse.
 
 ## Best practices
 
@@ -43,15 +43,36 @@ The value is a `Date`. The field shows it as `YYYY-MM-DD`. Clicking the field op
 ## Examples
 
 <DemoExample
-  :demo="dateInputBasic"
-  description="Click to open calendar popover, select date to close automatically."
+  :demo="dateInputClearable"
+  description="An optional event date with a clear button. The line above shows the selected value."
   locale="en"
-  title="Basic Usage"
+  title="Clearable"
 />
 
 <DemoExample
-  :demo="dateInputClearable"
-  description="Enable clearable to show clear button next to selected date."
+  :demo="dateInputDescription"
+  description="Helper text under the label explains what the date is for."
   locale="en"
-  title="Clearable"
+  title="Description"
+/>
+
+<DemoExample
+  :demo="dateInputFormats"
+  description="The same committed date as a short month, a long month, a weekday, an ISO date, or a custom string."
+  locale="en"
+  title="Formats"
+/>
+
+<DemoExample
+  :demo="dateInputRange"
+  description="Only the 8th through the 21st of the current month can be selected. A coarse pointer opens a bottom sheet."
+  locale="en"
+  title="Min and max"
+/>
+
+<DemoExample
+  :demo="dateInputValidation"
+  description="Error, warning, and success, each with a message."
+  locale="en"
+  title="Validation"
 />

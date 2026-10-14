@@ -20,7 +20,7 @@ import '@astryx-vue/core/styles.css'
 import '@astryx-vue/themes/neutral.css'
 ```
 
-`styles.css` 汇总 `packages/core/styles/` 里的结构样式，包含共享动画 `motion.css`。`neutral.css` 汇总 `packages/themes/neutral/` 里的主题文件，并引入 JetBrains Mono。
+`styles.css` 汇总 `packages/core/styles/` 里的结构样式，包含共享动画 `motion.css`。`neutral.css` 汇总 `packages/themes/neutral/` 里的主题文件，并引入 Figtree 和 JetBrains Mono。
 
 层的顺序是：
 

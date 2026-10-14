@@ -166,10 +166,10 @@ function labelForOption(options: { label: string, value: string }[], value: stri
             :label="item.label"
             @click="selectNav(item.label)"
           >
-            <template #start>
+            <template #startContent>
               <Icon :icon="item.icon" />
             </template>
-            <template #end>
+            <template #endContent>
               <Icon icon="i-heroicons-chevron-right" size="sm" color="secondary" />
             </template>
           </ListItem>
@@ -177,7 +177,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
         <Divider />
         <List density="spacious">
           <ListItem label="Professional hosting tools" @click="() => {}">
-            <template #start>
+            <template #startContent>
               <Icon icon="i-heroicons-wrench-screwdriver" />
             </template>
           </ListItem>
@@ -205,7 +205,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
               :is-selected="activeNav === item.label"
               @click="selectNav(item.label)"
             >
-              <template #start>
+              <template #startContent>
                 <Icon :icon="item.icon" />
               </template>
             </ListItem>
@@ -213,7 +213,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
           <Divider />
           <List density="spacious">
             <ListItem label="Professional hosting tools" @click="() => {}">
-              <template #start>
+              <template #startContent>
                 <Icon icon="i-heroicons-wrench-screwdriver" />
               </template>
             </ListItem>

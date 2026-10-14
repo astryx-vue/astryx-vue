@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { ContextMenuEmits, ContextMenuItemData, ContextMenuProps, ContextMenuSlots } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useLongPress } from '../composables/useLongPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
@@ -17,6 +18,7 @@ defineOptions({ name: 'AstryxContextMenu', inheritAttrs: false })
 const props = withDefaults(defineProps<ContextMenuProps>(), {
   label: 'Context menu',
   isDisabled: false,
+  presentation: 'popover',
   size: 'md',
   triggerAs: 'div',
 })
@@ -36,6 +38,20 @@ const triggerAttrs = computed(() => Object.fromEntries(
 /** Where the menu's own corner sits relative to the cursor point. */
 const GAP = 0
 const DEFAULT_MIN_WIDTH = 160
+const ADAPTIVE_QUERY = '(max-width: 768px) and (pointer: coarse)'
+
+const isCompactTouch = shallowRef(false)
+let mediaQuery: MediaQueryList | undefined
+
+function syncCompactTouch(): void {
+  isCompactTouch.value = mediaQuery?.matches === true
+}
+
+const isSheet = computed(() => {
+  if (props.presentation === 'adaptive')
+    return isCompactTouch.value
+  return props.presentation === 'bottom-sheet'
+})
 
 const openModel = defineModel<boolean | undefined>('isOpen', { default: undefined })
 const localIsOpen = ref(false)
@@ -111,6 +127,8 @@ function restoreFocus(): void {
 }
 
 function focusPanelOrFirstRow(): void {
+  if (isSheet.value)
+    return
   if (!nav.focusFirst())
     panel.value?.focus({ preventScroll: true })
 }
@@ -121,6 +139,11 @@ function setOpen(next: boolean): void {
   openModel.value = next
   localIsOpen.value = next
   emit('openChange', next)
+}
+
+function onSheetOpen(open: unknown): void {
+  if (open === false)
+    closeMenu()
 }
 
 function closeMenu(options: { restoreFocus?: boolean } = {}): void {
@@ -196,6 +219,11 @@ function applyOpenState(next: boolean): void {
 watch(isOpen, applyOpenState)
 
 onMounted(() => {
+  if (typeof window.matchMedia === 'function') {
+    mediaQuery = window.matchMedia(ADAPTIVE_QUERY)
+    syncCompactTouch()
+    mediaQuery.addEventListener?.('change', syncCompactTouch)
+  }
   if (isOpen.value)
     applyOpenState(true)
 })
@@ -206,6 +234,7 @@ watch(() => props.isDisabled, (isDisabled) => {
 })
 
 onBeforeUnmount(() => {
+  mediaQuery?.removeEventListener?.('change', syncCompactTouch)
   resetMenuPress()
 })
 
@@ -246,7 +275,7 @@ defineExpose({
   <Teleport to="body">
     <Transition name="astryx-context-menu">
       <div
-        v-show="isOpen"
+        v-show="isOpen && !isSheet"
         :id="menuId"
         ref="panel"
         :aria-label="label"
@@ -265,12 +294,25 @@ defineExpose({
         @pointerdown="menuPress.onPointerDown"
       >
         <ContextMenuItems
-          v-if="items != null"
+          v-if="items != null && !isSheet"
           :items="items"
           @select="onSelect"
         />
-        <slot v-else name="content" />
+        <slot v-else-if="!isSheet" name="content" />
       </div>
     </Transition>
   </Teleport>
+  <BottomSheet
+    v-if="isSheet"
+    :is-open="isOpen"
+    :label="label"
+    @update:is-open="onSheetOpen"
+  >
+    <ContextMenuItems
+      v-if="items != null"
+      :items="items"
+      @select="onSelect"
+    />
+    <slot v-else name="content" />
+  </BottomSheet>
 </template>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { textAreaBasic, textAreaSizes, textAreaRows, textAreaStates, textAreaValidation, textAreaAsync } from '../../../../components/demos/text-area'
+import { textAreaCount, textAreaStates, textAreaValidation, textAreaIcon } from '../../../../components/demos/text-area'
 </script>
 
 ## 使用方法
@@ -51,17 +51,33 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 示例
 
-<DemoExample :demo="textAreaBasic" title="基本用法" description="用于长文本。标签、说明与状态消息通过 Field 自动关联。" locale="zh" />
+<DemoExample
+  :demo="textAreaCount"
+  description="一条状态更新，最多 280 个字符，并实时显示字数。"
+  locale="zh"
+  title="字数"
+/>
 
-<DemoExample :demo="textAreaSizes" title="尺寸" description="提供 sm、md、lg 三种高度。宽度由 width 属性控制。" locale="zh" />
+<DemoExample
+  :demo="textAreaStates"
+  description="必填、禁用和加载中的文本域。"
+  locale="zh"
+  title="状态"
+/>
 
-<DemoExample :demo="textAreaRows" title="行数与长度" description="rows、cols、minlength 与 maxlength 直接透传给原生 textarea。" locale="zh" />
+<DemoExample
+  :demo="textAreaValidation"
+  description="错误、警告和成功说明，以及一条没有说明的错误。"
+  locale="zh"
+  title="校验"
+/>
 
-<DemoExample :demo="textAreaStates" title="禁用与只读" description="禁用后表单不提交值。提供 disabledMessage 时仍可聚焦并查看原因。" locale="zh" />
-
-<DemoExample :demo="textAreaValidation" title="验证状态" description="status 显示错误、警告或成功消息。默认附在字段下方。" locale="zh" />
-
-<DemoExample :demo="textAreaAsync" title="异步保存" description="changeAction 在每次内容变化后执行。执行期间显示加载状态。" locale="zh" />
+<DemoExample
+  :demo="textAreaIcon"
+  description="会议记录，带铅笔图标和一段简短说明。"
+  locale="zh"
+  title="图标"
+/>
 
 ## 键盘操作
 

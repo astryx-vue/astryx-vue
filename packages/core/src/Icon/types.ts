@@ -64,14 +64,31 @@ export type ExtendedIconName = IconName | (string & {})
 
 export interface IconProps {
   /**
+   * Iconify icon to draw, as `collection:icon`.
+   *
+   * `carbon:settings` reads the `settings` icon from the Carbon collection.
+   * `carbon-settings` is the same icon when that collection is registered.
+   * The component does not ship the artwork: install `@iconify-json/carbon`
+   * (or another collection) and register it with the `astryxIcons` Vite
+   * plugin, or call `addIcon` / `addCollection`.
+   *
+   * With no `size`, the icon is `1em` square and uses `currentColor`, so it
+   * follows the surrounding text and the sized slots on Button, IconButton,
+   * and fields.
+   */
+  name?: string
+  /**
    * The icon to render. Three forms are accepted:
    *
    * - a string, treated as a CSS icon class you provide — for example an
-   *   UnoCSS icon such as `'i-carbon-search'`, or your own class;
+   *   UnoCSS icon such as `'i-carbon-search'`, or your own class. The class
+   *   paints the inside of the sized box, so a utility that sets
+   *   `width`/`height: 100%` fills the icon instead of replacing its size;
    * - a name from the library's own chrome, which only the components use;
    * - a component, rendered as it is.
    *
-   * Omit it when the default slot provides the artwork instead.
+   * Omit it when `name` or the default slot provides the artwork instead.
+   * `name` wins when both are set.
    */
   icon?: ExtendedIconName | Component
   /**
@@ -87,9 +104,9 @@ export interface IconProps {
   /**
    * The size of the icon.
    *
-   * An explicit value wins. When omitted, Icon uses the nearest default
-   * supplied by an owning astryx-vue component for its icon slot, then falls
-   * back to `md`.
+   * An explicit value wins. When omitted, a `name` icon stays `1em` so it
+   * scales with the text around it. Any other icon uses the nearest default
+   * supplied by an owning astryx-vue component, then falls back to `md`.
    */
   size?: IconSize
   /**

@@ -181,6 +181,19 @@
     font-size: 20px;
   }
 
+  /* The end slot has no fixed box of its own. A named icon still matches the leading slot. */
+  .astryx-button__end > .astryx-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+  }
+
+  .astryx-button[data-size='lg'] .astryx-button__end > .astryx-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+
   .astryx-button__icon > *,
   .astryx-button__end > * {
     display: block;

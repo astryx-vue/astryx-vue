@@ -5,9 +5,9 @@
  * Names match Neutral, with an --astryx- prefix.
  * A token present in the upstream theme.css replaces the Neutral value.
  * Tokens the theme does not set keep the shared default from Neutral's base.
- * JetBrains Mono stays on the shared fonts.css stack.
+ * Figtree and JetBrains Mono stay on the shared fonts.css stack.
  */
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {

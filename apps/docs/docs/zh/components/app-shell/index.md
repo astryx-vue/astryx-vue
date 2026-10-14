@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { appShellBanner, appShellContentOnly, appShellMobileHook, appShellSideNav, appShellTopAndSide, appShellTopNav } from '../../../../components/demos/app-shell'
+import { appShellBanner, appShellContentOnly, appShellSideNav, appShellTopAndSide, appShellTopNav } from '../../../../components/demos/app-shell'
 </script>
 
 ## 使用方法
@@ -51,44 +51,12 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 
 ## 示例
 
-<DemoExample
-  :demo="appShellContentOnly"
-  description="只有正文内边距，没有顶栏和侧栏。"
-  locale="zh"
-  title="仅正文"
-/>
+<DemoExample :demo="appShellContentOnly" description="没有导航的外壳，适合通栏页面、登录页或嵌入视图。" locale="zh" title="仅正文" />
 
-<DemoExample
-  :demo="appShellMobileHook"
-  description="在外壳外面，钩子会说明移动导航没有启用。"
-  locale="zh"
-  title="移动端钩子"
-/>
+<DemoExample :demo="appShellSideNav" description="侧栏标题承担应用身份，不再需要顶栏。" locale="zh" title="仅侧栏" />
 
-<DemoExample
-  :demo="appShellSideNav"
-  description="侧栏。窄于 md 时收进抽屉，顶上只留开关。"
-  locale="zh"
-  title="侧边导航"
-/>
+<DemoExample :demo="appShellTopNav" description="只有顶栏、没有侧栏，适合落地页。" locale="zh" title="仅顶栏" />
 
-<DemoExample
-  :demo="appShellTopNav"
-  description="只有顶栏，没有侧栏。"
-  locale="zh"
-  title="顶部导航"
-/>
+<DemoExample :demo="appShellTopAndSide" description="最常见的框架：顶栏表示应用，侧栏表示页面。" locale="zh" title="顶栏与侧栏" />
 
-<DemoExample
-  :demo="appShellTopAndSide"
-  description="顶栏和侧栏同时存在。elevated 变体把正文一角做成圆角。"
-  locale="zh"
-  title="顶部与侧边导航"
-/>
-
-<DemoExample
-  :demo="appShellBanner"
-  description="横幅放在导航和正文之间。"
-  locale="zh"
-  title="横幅"
-/>
+<DemoExample :demo="appShellBanner" description="顶栏、侧栏，以及夹在导航和正文之间、可以关闭的信息横幅。" locale="zh" title="带横幅" />

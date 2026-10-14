@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { fieldCustom, fieldPrimitives } from '../../../../components/demos/field'
+import { fieldRequired, fieldValidation, fieldDescription } from '../../../../components/demos/field'
 </script>
 
 ## 使用方法
@@ -54,9 +54,26 @@ const inputId = `volume-${useId()}`
 
 ## 示例
 
-<DemoExample :demo="fieldCustom" title="自定义控件" description="默认插槽提供关联 ID，滑块使用 detached 状态，避免消息背景与控件重叠。" locale="zh" />
+<DemoExample
+  :demo="fieldRequired"
+  description="必填的用户名，以及可选的备用邮箱。"
+  locale="zh"
+  title="必填和可选"
+/>
 
-<DemoExample :demo="fieldPrimitives" title="独立标签与状态" description="FieldLabel 和 FieldStatus 可以独立组合。使用方负责连接控件的 id 和 aria-describedby。" locale="zh" />
+<DemoExample
+  :demo="fieldValidation"
+  description="邮箱、用户名和 API 密钥上的错误、警告和成功。"
+  locale="zh"
+  title="校验状态"
+/>
+
+<DemoExample
+  :demo="fieldDescription"
+  description="邮箱和密码标签下方的辅助说明。"
+  locale="zh"
+  title="说明文字"
+/>
 
 ## 关联 ID
 

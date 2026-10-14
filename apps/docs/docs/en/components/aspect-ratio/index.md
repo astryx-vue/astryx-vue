@@ -41,37 +41,12 @@ The ratio is written to the CSS variable `--astryx-aspect-ratio`, not as an inli
 
 ## Examples
 
-<DemoExample
-  :demo="aspectRatioCircle"
-  description="shape ellipse with ratio 1 clips the image to a circle. fit cover crops the image to the box."
-  locale="en"
-  title="Circle"
-/>
+<DemoExample :demo="aspectRatioCircle" description="shape ellipse with ratio 1 clips the image to a circle." locale="en" title="Circle" />
 
-<DemoExample
-  :demo="aspectRatioSquare"
-  description="ratio 1 with the default rectangle shape. fit cover fills the square."
-  locale="en"
-  title="Square"
-/>
+<DemoExample :demo="aspectRatioGallery" description="A grid of images that share a 4:3 frame." locale="en" title="Image gallery" />
 
-<DemoExample
-  :demo="aspectRatioWidescreen"
-  description="ratio 16 / 9. The width comes from Center, and the height follows the ratio."
-  locale="en"
-  title="Widescreen"
-/>
+<DemoExample :demo="aspectRatioSquare" description="A 1:1 frame for an avatar or a square image." locale="en" title="Square" />
 
-<DemoExample
-  :demo="aspectRatioGallery"
-  description="A three-column grid of 4 / 3 frames. Each frame needs a parent with a definite width."
-  locale="en"
-  title="Image gallery"
-/>
+<DemoExample :demo="aspectRatioWidescreen" description="A 16:9 frame around an image." locale="en" title="Widescreen" />
 
-<DemoExample
-  :demo="aspectRatioSkeleton"
-  description="Without fit, the child sizes itself. A skeleton at 100% by 100% fills the 16 / 9 frame."
-  locale="en"
-  title="Skeleton"
-/>
+<DemoExample :demo="aspectRatioSkeleton" description="The frame holds a skeleton while the image is still loading." locale="en" title="Loading skeleton" />

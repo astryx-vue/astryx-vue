@@ -3,16 +3,14 @@ import type { SearchableItem } from '@astryx-vue/core'
 import { createStaticSource } from '@astryx-vue/core'
 import { Tokenizer } from '@astryx-vue/core/Tokenizer'
 import { computed, ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 
-const { pick } = useDemoText()
 const people = computed<SearchableItem[]>(() => [
-  { id: 'alice', label: pick('爱丽丝·约翰逊', 'Alice Johnson') },
-  { id: 'bob', label: pick('鲍勃·史密斯', 'Bob Smith') },
-  { id: 'charlie', label: pick('查理·布朗', 'Charlie Brown') },
-  { id: 'diana', label: pick('戴安娜·普林斯', 'Diana Prince') },
-  { id: 'eve', label: pick('伊芙·威廉斯', 'Eve Williams') },
-  { id: 'frank', label: pick('弗兰克·米勒', 'Frank Miller') },
+  { id: 'alice', label: 'Alice Johnson' },
+  { id: 'bob', label: 'Bob Smith' },
+  { id: 'charlie', label: 'Charlie Brown' },
+  { id: 'diana', label: 'Diana Prince' },
+  { id: 'eve', label: 'Eve Williams' },
+  { id: 'frank', label: 'Frank Miller' },
 ])
 const source = computed(() => createStaticSource(people.value))
 const inlineValue = ref<SearchableItem[]>([])
@@ -24,24 +22,24 @@ layerValue.value = people.value.map(item => ({ ...item }))
 <template>
   <div class="demo-stack">
     <p class="demo-caption">
-      {{ pick('行内溢出：展开时把下面的内容往下推', 'Inline overflow — content shifts down on expand') }}
+      Inline overflow — content shifts down on expand
     </p>
     <Tokenizer
       v-model="inlineValue"
       :search-source="source"
-      :label="pick('行内溢出', 'Inline Overflow')"
-      :placeholder="pick('继续添加', 'Add more...')"
+      label="Inline Overflow"
+      placeholder="Add more..."
       overflow="unfocused-inline"
       :debounce-ms="0"
     />
     <p class="demo-caption">
-      {{ pick('浮层溢出：展开时盖在字段上，不推动布局', 'Layer overflow — expands as overlay, no layout shift') }}
+      Layer overflow — expands as overlay, no layout shift
     </p>
     <Tokenizer
       v-model="layerValue"
       :search-source="source"
-      :label="pick('浮层溢出', 'Layer Overflow')"
-      :placeholder="pick('继续添加', 'Add more...')"
+      label="Layer Overflow"
+      placeholder="Add more..."
       overflow="unfocused-layer"
       :debounce-ms="0"
     />

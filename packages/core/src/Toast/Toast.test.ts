@@ -30,6 +30,15 @@ describe('toast', () => {
     expect(wrapper.find('.astryx-toast--exiting').exists()).toBe(true)
   })
 
+  it('renders end content after the message', () => {
+    const wrapper = mount(Toast, {
+      props: { body: 'Item deleted' },
+      slots: { end: '<button type="button">Undo</button>' },
+    })
+
+    expect(wrapper.find('.astryx-toast__end').text()).toBe('Undo')
+  })
+
   it('emits close when close button is clicked', async () => {
     const wrapper = mount(Toast, {
       props: { body: 'Message' },

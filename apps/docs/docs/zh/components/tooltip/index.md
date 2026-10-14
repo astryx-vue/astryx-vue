@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tooltipBasic, tooltipControlled, tooltipPlacements, tooltipText } from '../../../../components/demos/tooltip'
+import { tooltipActionBar, tooltipHook, tooltipInline } from '../../../../components/demos/tooltip'
 </script>
 
 ## 使用方法
@@ -41,13 +41,11 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 
 ## 示例
 
-<DemoExample :demo="tooltipBasic" title="基本用法" description="悬停或聚焦按钮，短暂延迟后显示提示。" locale="zh" />
+<DemoExample :demo="tooltipActionBar" title="操作条" description="Save、Cancel、Delete 三个按钮，提示都出现在按钮上方。" locale="zh" />
 
-<DemoExample :demo="tooltipPlacements" title="位置" description="placement 设置提示相对触发元素的方向。空间不足时自动翻转到另一侧。" locale="zh" />
+<DemoExample :demo="tooltipHook" title="钩子" description="按钮文案是 Using hook directly，提示是 Tooltip via hook。" locale="zh" />
 
-<DemoExample :demo="tooltipText" title="文字触发" description="纯文字触发元素会变为可聚焦，并显示虚线下划线。" locale="zh" />
-
-<DemoExample :demo="tooltipControlled" title="受控" description="传入 isOpen 控制显示。按下 Escape 会发出 openChange(false)，由父组件决定是否关闭。" locale="zh" />
+<DemoExample :demo="tooltipInline" title="行内文字" description="句子里的 privacy policy 和 terms of service 各自带一条提示。" locale="zh" />
 
 ## 无障碍
 

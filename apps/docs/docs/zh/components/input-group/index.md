@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demos/input-group'
+import { inputGroupBasic } from '../../../../components/demos/input-group'
 </script>
 
 ## 使用方法
@@ -53,14 +53,7 @@ const domain = ref('')
 
 <DemoExample
   :demo="inputGroupBasic"
-  description="用 before 和 after 插槽把固定文本和输入框合成一组，适合网址、邮箱这类带前后缀的字段。"
+  description="价格字段前面是美元符号，后面是 USD。"
   locale="zh"
-  title="基本用法"
-/>
-
-<DemoExample
-  :demo="inputGroupWithIcon"
-  description="before 插槽可以放一个简短前缀，用来提示字段含义。"
-  locale="zh"
-  title="带图标"
+  title="基本"
 />

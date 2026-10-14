@@ -43,37 +43,12 @@ import { ScrollableArea } from '@astryx-vue/core/ScrollableArea'
 
 ## 示例
 
-<DemoExample
-  :demo="scrollableAreaInlineRail"
-  description="axis 为 inline 时横向滚动一排卡片。isFullBleed 铺到卡片边缘，内容内边距让第一张卡片和标题对齐。"
-  locale="zh"
-  title="横向滑轨"
-/>
+<DemoExample :demo="scrollableAreaInlineRail" description="axis 为 inline 时卡片横向滚动。isFullBleed 让轨道贴到面板边缘，第一张卡片仍和标题对齐。" locale="zh" title="横向滑轨" />
 
-<DemoExample
-  :demo="scrollableAreaOverscroll"
-  description="第一块嵌套区域滚到底后，手势继续带动外层面板。第二块用 overscroll contain，手势停在自己的边缘。"
-  locale="zh"
-  title="过度滚动"
-/>
+<DemoExample :demo="scrollableAreaOverscroll" description="overscroll allow 把已经滚到底的手势交给后面的面板。contain 则停在这一节的边缘。" locale="zh" title="过度滚动" />
 
-<DemoExample
-  :demo="scrollableAreaStickyHeaders"
-  description="视口是 sticky 的包含块。分组标题钉在列表顶部，页面标题会跟着滚走。"
-  locale="zh"
-  title="粘性标题"
-/>
+<DemoExample :demo="scrollableAreaStickyHeaders" description="滚动视口是粘性定位的包含块，分组标签会钉在列表顶部。" locale="zh" title="粘性分组标题" />
 
-<DemoExample
-  :demo="scrollableAreaStickyPassthrough"
-  description="装得下的区域把 sticky 交给外层。stickyContainment 为 always 时，下一组标题留在自己的盒子里。"
-  locale="zh"
-  title="粘性穿透"
-/>
+<DemoExample :demo="scrollableAreaStickyPassthrough" description="内容放得下的一节会把粘性标签交出去。下一节用 stickyContainment always 把标签留在自己的盒子里。" locale="zh" title="粘性穿透" />
 
-<DemoExample
-  :demo="scrollableAreaTwoAxis"
-  description="axis 为 both 时，内容的行向尺寸是 max-content，看板可以同时横向和纵向滚动。"
-  locale="zh"
-  title="双轴"
-/>
+<DemoExample :demo="scrollableAreaTwoAxis" description="axis 为 both 时，内容在行向上按 max-content 排布，一块看板可以同时横竖滚动。" locale="zh" title="双轴看板" />

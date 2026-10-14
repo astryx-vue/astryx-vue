@@ -1,16 +1,45 @@
 <script setup lang="ts">
+import { VStack } from '@astryx-vue/core/Stack'
 import { TextInput } from '@astryx-vue/core/TextInput'
-import { shallowRef } from 'vue'
+import { ref } from 'vue'
 
-const disabled = shallowRef('Unavailable')
-const readOnly = shallowRef('INV-2026-0042')
-const owner = shallowRef('Ada Lovelace')
+const error = ref('sarah@')
+const warning = ref('sarah_chen')
+const success = ref('https://sarahchen.dev')
+const errorOnly = ref('test')
+const disabled = ref('')
+const loading = ref('sarahc')
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <TextInput v-model="disabled" label="Disabled" is-disabled has-clear />
-    <TextInput v-model="readOnly" label="Read-only" is-read-only html-name="invoice" description="This value is still included in form submission." />
-    <TextInput v-model="owner" label="Owner" is-disabled disabled-message="You need the Editor role to change the owner." label-tooltip="The person responsible for this project." />
+  <div style="width: 300px; max-width: 100%">
+    <VStack :gap="3">
+      <TextInput
+        v-model="error"
+        label="Error message"
+        placeholder="Enter a value"
+        :status="{ type: 'error', message: 'Please enter a valid email address.' }"
+      />
+      <TextInput
+        v-model="warning"
+        label="Warning message"
+        placeholder="Enter a value"
+        :status="{ type: 'warning', message: 'This username is already taken — try adding a number.' }"
+      />
+      <TextInput
+        v-model="success"
+        label="Success message"
+        placeholder="Enter a value"
+        :status="{ type: 'success', message: 'URL is valid and reachable.' }"
+      />
+      <TextInput
+        v-model="errorOnly"
+        label="Status without message"
+        placeholder="Enter a value"
+        :status="{ type: 'error' }"
+      />
+      <TextInput v-model="disabled" label="Disabled field" placeholder="Enter a value" is-disabled />
+      <TextInput v-model="loading" label="Loading field" is-loading />
+    </VStack>
   </div>
 </template>

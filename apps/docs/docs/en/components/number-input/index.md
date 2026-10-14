@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../../../components/demos/number-input'
+import { numberInputClearable, numberInputRange, numberInputStatus, numberInputUnits } from '../../../../components/demos/number-input'
 </script>
 
 ## Usage
@@ -43,22 +43,29 @@ Values outside `min` and `max` are pulled back into range. The stepper names are
 ## Examples
 
 <DemoExample
-  :demo="numberInputBasic"
-  description="Bind a number value, increment/decrement with buttons or keyboard arrows."
+  :demo="numberInputClearable"
+  description="Progress from 0 to 100, with a percent suffix and a clear button."
   locale="en"
-  title="Basic Usage"
+  title="Clearable"
 />
 
 <DemoExample
-  :demo="numberInputPrecision"
-  description="Limit the range with min and max, and set how much each step changes the value."
+  :demo="numberInputRange"
+  description="Team size from 1 to 50, with a description of what the number means."
   locale="en"
-  title="Range and step"
+  title="Range"
 />
 
 <DemoExample
-  :demo="numberInputSizes"
-  description="Available in sm, md, lg sizes, md by default."
+  :demo="numberInputStatus"
+  description="Error, warning, and success on budget, headcount, and completion."
   locale="en"
-  title="Sizes"
+  title="Status"
+/>
+
+<DemoExample
+  :demo="numberInputUnits"
+  description="A discount with a percent suffix, limited to 0–100."
+  locale="en"
+  title="Units"
 />

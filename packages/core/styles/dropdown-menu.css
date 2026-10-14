@@ -20,6 +20,17 @@
     );
   }
 
+  .astryx-dropdown-menu.is-sheet {
+    position: static;
+    top: auto;
+    left: auto;
+    width: 100%;
+    max-width: none;
+    background: transparent;
+    box-shadow: none;
+    animation: none;
+  }
+
   .astryx-dropdown-menu {
     box-sizing: border-box;
     position: fixed;

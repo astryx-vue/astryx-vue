@@ -2,16 +2,14 @@
 import { createStaticSource } from '@astryx-vue/core'
 import { Typeahead } from '@astryx-vue/core/Typeahead'
 import { computed, ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 
 const selected = ref(null)
-const { pick } = useDemoText()
 const source = computed(() => createStaticSource([
-  { id: 'olivia', label: pick('奥利维亚', 'Olivia Martin') },
-  { id: 'jackson', label: pick('杰克逊', 'Jackson Lee') },
-  { id: 'isabella', label: pick('伊莎贝拉', 'Isabella Nguyen') },
-  { id: 'william', label: pick('威廉', 'William Kim') },
-  { id: 'sofia', label: pick('索菲亚', 'Sofia Davis') },
+  { id: 'olivia', label: 'Olivia Martin' },
+  { id: 'jackson', label: 'Jackson Lee' },
+  { id: 'isabella', label: 'Isabella Nguyen' },
+  { id: 'william', label: 'William Kim' },
+  { id: 'sofia', label: 'Sofia Davis' },
 ]))
 </script>
 
@@ -20,8 +18,8 @@ const source = computed(() => createStaticSource([
     <Typeahead
       v-model="selected"
       :search-source="source"
-      :label="pick('成员', 'Team member')"
-      :placeholder="pick('搜索成员', 'Search people...')"
+      label="Team member"
+      placeholder="Search people..."
       :debounce-ms="0"
       show-on-focus
     >

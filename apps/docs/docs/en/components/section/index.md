@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { sectionDividers, sectionVariants, sectionWash } from '../../../../components/demos/section'
+import { sectionDividers, sectionWash } from '../../../../components/demos/section'
 </script>
 
 ## Usage
@@ -41,23 +41,6 @@ The outer box uses a negative margin so a section can escape the padding of a pa
 
 ## Examples
 
-<DemoExample
-  :demo="sectionWash"
-  description="A surface section for the plan, and a muted section for the price."
-  locale="en"
-  title="Highlight"
-/>
+<DemoExample :demo="sectionWash" description="A default section stacked with a full-width muted section, so one region such as an upgrade prompt stands out." locale="en" title="Default with wash" />
 
-<DemoExample
-  :demo="sectionDividers"
-  description="Adjacent sections share a background. A bottom divider separates them."
-  locale="en"
-  title="Dividers"
-/>
-
-<DemoExample
-  :demo="sectionVariants"
-  description="section paints the surface, muted paints the wash, and transparent leaves the background to the parent."
-  locale="en"
-  title="Variants"
-/>
+<DemoExample :demo="sectionDividers" description="Adjacent sections of the same variant, separated by a bottom divider, as on a settings page." locale="en" title="With dividers" />

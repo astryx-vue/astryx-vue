@@ -30,6 +30,21 @@
     padding-bottom: var(--astryx-spacing-1, 4px);
   }
 
+  /* Cancel the container's inline padding so the underline can span the
+     content box. The strip pads the labels back onto the content inset,
+     minus the padding each tab already has. */
+  .astryx-tab-list--full-bleed {
+    margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
+    margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
+    max-width: none;
+    width: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));
+  }
+
+  .astryx-tab-list--full-bleed .astryx-tab-list__strip {
+    padding-inline-start: max(var(--container-padding-inline-start, 0px) - var(--astryx-spacing-3, 12px), 0px);
+    padding-inline-end: max(var(--container-padding-inline-end, 0px) - var(--astryx-spacing-3, 12px), 0px);
+  }
+
   .astryx-tab {
     display: inline-flex;
     align-items: center;

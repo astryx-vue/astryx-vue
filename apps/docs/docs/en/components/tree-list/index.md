@@ -52,13 +52,6 @@ const items = [
 ## Examples
 
 <DemoExample
-  :demo="treeListVariants"
-  description="lineGuides draws connectors between a parent and its children. noGuides keeps the indent and drops the lines. Density is separate and only changes the row padding."
-  locale="en"
-  title="Tree List — Variants"
-/>
-
-<DemoExample
   :demo="treeListFileTree"
   description="File browser tree with folder and document icons distinguishing directories from files."
   locale="en"
@@ -84,4 +77,11 @@ const items = [
   description="Navigation tree with a selected item for the current page."
   locale="en"
   title="TreeList — Navigation Tree"
+/>
+
+<DemoExample
+  :demo="treeListVariants"
+  description="lineGuides draws connectors between a parent and its children. noGuides keeps the indent and drops the lines. Density is separate and only changes the row padding."
+  locale="en"
+  title="Tree List — Variants"
 />

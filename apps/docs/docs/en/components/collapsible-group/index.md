@@ -34,4 +34,9 @@ import { Collapsible, CollapsibleGroup } from '@astryx-vue/core/Collapsible'
 
 ## Examples
 
-<DemoExample :demo="collapsibleGroupDensity" description="compact, balanced, and spacious. Density sets the padding on every row, and dividers separate the sections." locale="en" title="Density" />
+<DemoExample
+  :demo="collapsibleGroupDensity"
+  description="density sets the block padding on every row in the group, so a list of sections can be tuned to the surface it sits on. compact for dense surfaces, balanced for page content, spacious for a short list that is the main thing on the page."
+  locale="en"
+  title="Density"
+/>

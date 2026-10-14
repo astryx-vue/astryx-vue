@@ -4,7 +4,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 <template>
   <div class="badge-preview__group">
-    <span class="badge-preview__label">Team</span>
+    <span class="badge-preview__label">Teams</span>
     <div class="badge-preview__badges">
       <Badge variant="blue">
         Design

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { codeBasic, codeCollapsible, codeInline, codeLineNumbers } from '../../../../components/demos/code'
+import { codeContent, codeInline, codeSizes } from '../../../../components/demos/code'
 </script>
 
 ## Usage
@@ -57,29 +57,22 @@ The code viewport is a named `role="group"` with a keyboard stop, so a keyboard 
 ## Examples
 
 <DemoExample
-  :demo="codeBasic"
-  description="A code block with a title, a visible language label, and the copy button living in its header bar."
+  :demo="codeSizes"
+  description="Inline code rendered inside heading, body, supporting, and label text. Code automatically matches the font size of its parent text element."
   locale="en"
-  title="Overview"
+  title="Text sizes"
 />
 
 <DemoExample
   :demo="codeInline"
-  description="Inline code in a sentence, in secondary color, and with size set to inherit inside larger text."
+  description="Inline code references mixed within a paragraph of body text. Use Code to mark up function names, hooks, or API terms so they stand out from surrounding prose."
   locale="en"
-  title="Inline code"
+  title="Inline"
 />
 
 <DemoExample
-  :demo="codeLineNumbers"
-  description="Line numbers with a gutter sized to the widest number, and two highlighted lines that draw the eye to the interesting part."
+  :demo="codeContent"
+  description="Inline code used for variables, terminal commands, CSS properties, file paths, and keyboard shortcuts. Shows how Code adapts to different kinds of technical content."
   locale="en"
-  title="Line numbers and highlights"
-/>
-
-<DemoExample
-  :demo="codeCollapsible"
-  description="A long block that collapses from its header, with a maximum height so the expanded body scrolls instead of growing without bound."
-  locale="en"
-  title="Collapsible and bounded"
+  title="Content types"
 />

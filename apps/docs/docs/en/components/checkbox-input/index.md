@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { checkboxInputBasic, checkboxInputSizes, checkboxInputIndeterminate, checkboxInputStates, checkboxInputForm, checkboxInputAsync } from '../../../../components/demos/checkbox-input'
+import { checkboxInputStates, checkboxInputIndeterminate, checkboxInputStatus } from '../../../../components/demos/checkbox-input'
 </script>
 
 ## Usage
@@ -50,17 +50,26 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Examples
 
-<DemoExample :demo="checkboxInputBasic" title="Basic selection" description="Use v-model to control the selection. Click the label or description to toggle." locale="en" />
+<DemoExample
+  :demo="checkboxInputStates"
+  description="Checked, unchecked, disabled, and indeterminate, each with a description."
+  locale="en"
+  title="States"
+/>
 
-<DemoExample :demo="checkboxInputSizes" title="Sizes" description="sm is 20px. md is 24px." locale="en" />
+<DemoExample
+  :demo="checkboxInputIndeterminate"
+  description="Select all shows a dash when only some notifications are on."
+  locale="en"
+  title="Indeterminate"
+/>
 
-<DemoExample :demo="checkboxInputIndeterminate" title="Select all and mixed selection" description="The parent shows a mixed state when some items are selected. Activating it changes the value to true." locale="en" />
-
-<DemoExample :demo="checkboxInputStates" title="Disabled, read-only and loading" description="Loading blocks repeat activation. Hover or focus the disabled control to read its reason." locale="en" />
-
-<DemoExample :demo="checkboxInputForm" title="Native forms" description="Select the required option before submitting. The reset handler updates v-model." locale="en" />
-
-<DemoExample :demo="checkboxInputAsync" title="Async saving and retry" description="Enable failure simulation to show an error. Turn it off and change the selection to retry." locale="en" />
+<DemoExample
+  :demo="checkboxInputStatus"
+  description="Error, warning, and success messages under the checkbox."
+  locale="en"
+  title="Status"
+/>
 
 ## Keyboard and accessibility
 

@@ -46,8 +46,8 @@ const collapsed = ref(false)
 
 ## Examples
 
-<DemoExample :demo="sideNavEnd" description="Rows end with a menu, a count, and supporting text." locale="en" title="End Content" />
+<DemoExample :demo="sideNavEnd" description="Rows end with a menu, a count, a badge, and supporting text." locale="en" title="End content" />
 
-<DemoExample :demo="sideNavHeaderMenu" description="The heading carries a product mark and an account menu." locale="en" title="Header with Menu" />
+<DemoExample :demo="sideNavNested" description="Settings opens a collapsible group of children." locale="en" title="Nested items" />
 
-<DemoExample :demo="sideNavNested" description="Settings opens a collapsible group of children." locale="en" title="Nested Items" />
+<DemoExample :demo="sideNavHeaderMenu" description="The heading is an account switcher, with the product name and the current account." locale="en" title="Header with menu" />

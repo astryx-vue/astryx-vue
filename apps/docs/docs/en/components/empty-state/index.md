@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { emptyStateBasic, emptyStateCompact, emptyStateIllustration, emptyStateNarrow } from '../../../../components/demos/empty-state'
+import { emptyStateActions, emptyStateCompact, emptyStateContainer } from '../../../../components/demos/empty-state'
 </script>
 
 ## Usage
@@ -78,29 +78,22 @@ The component carries `role="status"`, so when it appears after data finishes lo
 ## Examples
 
 <DemoExample
-  :demo="emptyStateBasic"
-  description="A complete empty state: icon, title, description, and two actions cover all four parts of the component."
+  :demo="emptyStateActions"
+  description="Full empty state with icon, message, and action buttons. Use when a search returns no results, a filter clears all items, or a list has been emptied. The buttons give the user a way forward."
   locale="en"
-  title="Basic"
+  title="Actions"
 />
 
 <DemoExample
   :demo="emptyStateCompact"
-  description="isCompact tightens the spacing and the text sizes and stacks the actions, which suits cards and sidebars."
+  description="Smaller empty state with reduced spacing for constrained areas. Use inside sidebar panels, card widgets, or notification drawers where a full-size empty state would overwhelm the layout."
   locale="en"
   title="Compact"
 />
 
 <DemoExample
-  :demo="emptyStateIllustration"
-  description="The icon slot takes an icon class or your own drawing; either way it is hidden from assistive technology."
+  :demo="emptyStateContainer"
+  description="Empty state wrapped in a Card for first-time setup or onboarding. Use when the user has not created any items yet, like a project list that will fill once they take action."
   locale="en"
-  title="Icon and illustration"
-/>
-
-<DemoExample
-  :demo="emptyStateNarrow"
-  description="Inside a narrow column the title, description, and actions wrap instead of overflowing the container."
-  locale="en"
-  title="Narrow container"
+  title="Container"
 />

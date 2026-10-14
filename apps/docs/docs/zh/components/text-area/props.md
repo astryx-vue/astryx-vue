@@ -16,7 +16,7 @@ footer: false
 <tr><td><code>rows</code></td><td><code>number</code></td><td>—</td><td>原生 textarea 的 rows 属性。</td></tr>
 <tr><td><code>cols</code></td><td><code>number</code></td><td>—</td><td>原生 textarea 的 cols 属性。</td></tr>
 <tr><td><code>minlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 minlength 属性。</td></tr>
-<tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 maxlength 属性。</td></tr>
+<tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 maxlength。设置后会显示实时字数，超过上限时字数变红。</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>原生 textarea 的 wrap 属性。</td></tr>
 <tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>原生 resize 样式，控制可拖拽调整的方向。默认 vertical，只允许垂直拖动。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>输入为空时显示的占位文本，不能替代 label。</td></tr>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { stackDirections, stackHStack, stackItem, stackVStack } from '../../../../components/demos/stack'
+import { stackAlignment, stackFill } from '../../../../components/demos/stack'
 </script>
 
 
@@ -42,33 +42,6 @@ import { HStack, Stack, StackItem, VStack } from '@astryx-vue/core/Stack'
 
 ## 示例
 
-下面覆盖常见的方向与空间分配配置。
+<DemoExample :demo="stackAlignment" description="按钮分别靠左、居中、靠右排在一行里。" locale="zh" title="对齐" />
 
-<DemoExample
-  :demo="stackDirections"
-  description="direction 决定子元素的排列方向：horizontal 从左到右，vertical 从上到下，Stack 默认为 vertical。"
-  locale="zh"
-  title="Stack — 方向"
-/>
-
-<DemoExample
-  :demo="stackHStack"
-  description="HStack 固定使用水平方向，等价于 direction 为 horizontal 的 Stack，写导航栏、按钮组等横向排列时更直白。"
-  locale="zh"
-  title="HStack — 基础"
-/>
-
-<DemoExample
-  :demo="stackVStack"
-  description="VStack 固定使用垂直方向，等价于 direction 为 vertical 的 Stack，表单、列表等纵向排列可以直接使用。"
-  locale="zh"
-  title="VStack — 基础"
-/>
-
-<DemoExample
-  :demo="stackItem"
-  description="StackItem 默认为 static，保持子项固有尺寸；设为 fill 时子项拉伸并占据堆叠容器中的剩余空间。"
-  locale="zh"
-  title="StackItem — 尺寸"
-/>
-
+<DemoExample :demo="stackFill" description="头像、姓名和按钮排成一行。姓名把中间剩下的空间撑满。" locale="zh" title="填满剩余空间" />

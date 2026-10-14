@@ -5,10 +5,6 @@ outline: false
 footer: false
 ---
 
-<script setup lang="ts">
-import { checkboxIndicatorStates } from '../../../../components/demos/checkbox-indicator'
-</script>
-
 ## Usage
 
 `CheckboxIndicator` displays unchecked, checked or indeterminate marks.
@@ -30,6 +26,5 @@ Import the theme in the application entry:
 import '@astryx-vue/themes/neutral.css'
 ```
 
-<DemoExample :demo="checkboxIndicatorStates" title="States and sizes" description="sm is 20px. md is 24px. Disabled indicators use reduced opacity." locale="en" />
 
 For an interactive checkbox, use [CheckboxInput](/en/components/checkbox-input).

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { kbdBasic, kbdKeyNames, kbdModifiers } from '../../../../components/demos/kbd'
+import { kbdInline, kbdMenu, kbdModifiers } from '../../../../components/demos/kbd'
 </script>
 
 ## 使用方法
@@ -62,22 +62,22 @@ import { Kbd } from '@astryx-vue/core/Kbd'
 ## 示例
 
 <DemoExample
-  :demo="kbdBasic"
-  description="把快捷键放在它触发的操作旁边：标签在左，按键徽章在右，用户一眼就能把两者对应起来。"
+  :demo="kbdInline"
+  description="说明文字里的键盘快捷键。"
   locale="zh"
-  title="快捷键列表"
+  title="行内说明"
+/>
+
+<DemoExample
+  :demo="kbdMenu"
+  description="菜单式列表，把操作名称和对应快捷键放在一起。"
+  locale="zh"
+  title="菜单快捷键"
 />
 
 <DemoExample
   :demo="kbdModifiers"
-  description="mod 在 macOS 上显示为 ⌘，在其他平台显示为 Ctrl；ctrl、alt、shift 等修饰键各有固定字形，plus 用来表示加号键本身。"
+  description="修饰键组合和特殊键，显示成快捷键徽章。"
   locale="zh"
-  title="修饰键与组合键"
-/>
-
-<DemoExample
-  :demo="kbdKeyNames"
-  description="组件认识的全部按键写法，以及它们各自画出的字形。esc 与 return 分别是 escape 和 enter 的别名。"
-  locale="zh"
-  title="按键名称"
+  title="修饰键组合"
 />

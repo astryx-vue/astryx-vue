@@ -10,7 +10,7 @@ import { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeatur
       <template #heading>
         <TopNavHeading heading="My App" href="#home">
           <template #icon>
-            <NavIcon icon-class="i-carbon-cube" label="Product" />
+            <NavIcon icon-class="i-carbon-cube" />
           </template>
         </TopNavHeading>
       </template>

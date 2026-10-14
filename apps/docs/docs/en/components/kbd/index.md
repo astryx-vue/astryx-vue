@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { kbdBasic, kbdKeyNames, kbdModifiers } from '../../../../components/demos/kbd'
+import { kbdInline, kbdMenu, kbdModifiers } from '../../../../components/demos/kbd'
 </script>
 
 ## Usage
@@ -62,22 +62,22 @@ To a screen reader the whole group is one image named "Command + K"; the glyphs 
 ## Examples
 
 <DemoExample
-  :demo="kbdBasic"
-  description="Shortcuts sit beside the action they trigger: the label leads, the key badges follow, and the two read as one line."
+  :demo="kbdInline"
+  description="Keyboard shortcuts rendered inline within instructional text."
   locale="en"
-  title="Shortcut list"
+  title="Inline instructions"
+/>
+
+<DemoExample
+  :demo="kbdMenu"
+  description="Menu-style list pairing action labels with their keyboard shortcuts."
+  locale="en"
+  title="Menu shortcuts"
 />
 
 <DemoExample
   :demo="kbdModifiers"
-  description="mod paints ⌘ on macOS and Ctrl elsewhere, while ctrl, alt, and shift keep their own glyphs and plus stands for the plus key."
+  description="Modifier combinations and special keys rendered as shortcut badges."
   locale="en"
-  title="Modifiers and combinations"
-/>
-
-<DemoExample
-  :demo="kbdKeyNames"
-  description="Every key name the component understands, with the glyph it paints. esc and return are aliases for escape and enter."
-  locale="en"
-  title="Key names"
+  title="Modifier combinations"
 />

@@ -5,6 +5,8 @@ import { computed, ref } from 'vue'
 export interface UseCalendarOptions {
   /** 当前选中的日期 */
   value: Ref<Date | null>
+  /** 打开时先显示这一天所在的月份 */
+  initialDate?: Date
   /** 最小可选日期 */
   min?: Date
   /** 最大可选日期 */
@@ -20,6 +22,8 @@ export interface CalendarState {
   focusedDate: Ref<CalendarDate>
   /** 当前月份的所有日期（包括前后月份的填充日期） */
   dates: Ref<CalendarDate[][]>
+  /** 生成任意月份的六周网格 */
+  datesFor: (month: CalendarDate) => CalendarDate[][]
   /** 选中日期 */
   select: (date: CalendarDate) => void
   /** 上一月 */
@@ -46,28 +50,22 @@ function jsDateToCalendarDate(date: Date): CalendarDate {
  * 日历逻辑：日期计算、月份导航、日期选择。
  */
 export function useCalendar(options: UseCalendarOptions): CalendarState {
-  const { value, min, max, isDateDisabled, onChange } = options
+  const { value, min, max, isDateDisabled, onChange, initialDate } = options
 
   const timeZone = getLocalTimeZone()
 
   const focusedDate = ref(
-    value.value ? jsDateToCalendarDate(value.value) : today(timeZone),
+    initialDate
+      ? jsDateToCalendarDate(initialDate)
+      : value.value
+        ? jsDateToCalendarDate(value.value)
+        : today(timeZone),
   ) as Ref<CalendarDate>
 
-  const dates = computed(() => {
-    const year = focusedDate.value.year
-    const month = focusedDate.value.month
-
-    // 获取当月第一天
-    const firstDay = new CalendarDate(year, month, 1)
-
-    // 计算第一天是周几（0 = Sunday）
+  function datesFor(month: CalendarDate): CalendarDate[][] {
+    const firstDay = new CalendarDate(month.year, month.month, 1)
     const firstDayOfWeek = firstDay.toDate(timeZone).getDay()
-
-    // 从上个月的日期开始填充
     const startDate = firstDay.subtract({ days: firstDayOfWeek })
-
-    // 生成 6 周的日期（42 天）
     const weeks: CalendarDate[][] = []
     let currentDate = startDate
 
@@ -81,7 +79,9 @@ export function useCalendar(options: UseCalendarOptions): CalendarState {
     }
 
     return weeks
-  })
+  }
+
+  const dates = computed(() => datesFor(focusedDate.value))
 
   function select(date: CalendarDate): void {
     if (isDisabled(date))
@@ -124,6 +124,7 @@ export function useCalendar(options: UseCalendarOptions): CalendarState {
   return {
     focusedDate,
     dates,
+    datesFor,
     select,
     previousMonth,
     nextMonth,

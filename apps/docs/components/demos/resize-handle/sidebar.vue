@@ -8,7 +8,7 @@ import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 
 const sidebar = useResizable({
-  defaultSize: 200,
+  defaultSize: 240,
   minSize: 160,
   maxSize: 360,
   collapsible: true,
@@ -17,7 +17,7 @@ const sidebar = useResizable({
 </script>
 
 <template>
-  <Card :height="240" :padding="3" variant="muted" :width="500">
+  <Card :height="240" variant="muted" :width="500">
     <Layout height="fill">
       <template #start>
         <LayoutPanel :has-divider="false" :width="sidebar.size">

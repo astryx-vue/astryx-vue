@@ -10,9 +10,9 @@ Neutral 是 `@astryx-vue/themes` 目前提供的主题。页面和组件通过�
 import '@astryx-vue/themes/neutral.css'
 ```
 
-这个入口会先加载 `fonts.css`，再按文件名引入 `neutral/` 目录里的每一份主题样式，其中包含 `base.css`。`fonts.css` 只装 JetBrains Mono 的 400、500、600、700，以及 400 斜体。这些字重和斜体对应 `font-synthesis: none`：缺了的字重或斜体，浏览器不会自己造。
+这个入口会先加载 `fonts.css`，再按文件名引入 `neutral/` 目录里的每一份主题样式，其中包含 `base.css`。`fonts.css` 装 Figtree 和 JetBrains Mono 的 400、500、600、700，以及 400 斜体。Figtree 另外包含 600 斜体。这些字重和斜体对应 `font-synthesis: none`：缺了的字重或斜体，浏览器不会自己造。
 
-`--astryx-font-family-code` 以 JetBrains Mono 开头，后面是 `ui-monospace`、`SFMono-Regular`、`Menlo`、`Consolas` 和 `monospace`。
+`--astryx-font-family-body` 和 `--astryx-font-family-heading` 以 Figtree 开头，后面是 `-apple-system`、`BlinkMacSystemFont`、`Segoe UI`、`Roboto`、`Helvetica`、`Arial` 和 `sans-serif`。`--astryx-font-family-code` 以 JetBrains Mono 开头，后面是 `ui-monospace`、`SFMono-Regular`、`Menlo`、`Consolas` 和 `monospace`。
 
 语义变量写在 `packages/themes/neutral/base.css`。名字对应原版 `tokens.stylex.ts`，统一加上 `--astryx-` 前缀。浅色和深色放在同一个 `light-dark()` 里。取值优先用 Neutral 主题覆盖过的结果；Neutral 没有覆盖的，用原版默认值。
 

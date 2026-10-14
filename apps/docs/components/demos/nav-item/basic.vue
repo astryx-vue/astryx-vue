@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { NavItem } from '@astryx-vue/core/NavItem'
+import { NavIcon } from '@astryx-vue/core/NavItem'
+import { HStack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <div class="nav-overview--row">
-    <NavItem href="#inbox" icon-class="i-carbon-email" is-selected label="Inbox" />
-    <NavItem href="#documents" icon-class="i-carbon-document" label="Documents" />
-  </div>
+  <HStack align="center" :gap="4">
+    <NavIcon icon-class="i-carbon-search" />
+    <NavIcon icon-class="i-carbon-calendar" />
+  </HStack>
 </template>

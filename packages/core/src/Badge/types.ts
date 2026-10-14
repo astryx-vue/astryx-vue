@@ -24,4 +24,9 @@ export interface BadgeProps {
    * @default 'neutral'
    */
   variant?: BadgeVariant
+  /**
+   * Badge text. A string or number is also set as the title so a clipped
+   * label stays reachable. The default slot overrides this when both are set.
+   */
+  label?: string | number
 }

@@ -290,10 +290,10 @@ const errors = computed(() => submitted.value ? {
                       <Text type="large" weight="bold">Delivery</Text>
                       <RadioList v-model="deliveryMethod" label="Delivery method">
                         <RadioListItem value="standard" label="Standard (3–7 business days)">
-                          <template #end-content><Text type="body" weight="medium">$4.95</Text></template>
+                          <template #end><Text type="body" weight="medium">$4.95</Text></template>
                         </RadioListItem>
                         <RadioListItem value="expedited" label="Expedited (1–2 business days)">
-                          <template #end-content><Text type="body" weight="medium">$9.95</Text></template>
+                          <template #end><Text type="body" weight="medium">$9.95</Text></template>
                         </RadioListItem>
                       </RadioList>
                     </VStack>

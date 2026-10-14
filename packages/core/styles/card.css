@@ -33,6 +33,8 @@
     --layout-padding-own-outer-y: initial;
     --layout-padding-outer-x: var(--_card-padding-inline-start);
     --layout-padding-outer-y: var(--_card-padding-block-start);
+    --layout-padding-inner-x: var(--_card-padding-inline-start);
+    --layout-padding-inner-y: var(--_card-padding-block-start);
   }
 
   .astryx-card[data-scrollable='true'] {
