@@ -3,10 +3,13 @@ import baseCss from '../apps/docs/../../packages/themes/neutral/base.css?raw'
 import { decodeShare, encodeShare } from '../apps/docs/components/playground/share'
 import {
   applyDensity,
+  colorTokenLabel,
   contrastingInk,
   createNeutralTheme,
   describeDuration,
+  formatColorReadout,
   matchingDensity,
+  parseColorReadout,
   sanitizeTheme,
   themesEqual,
   themeVariables,
@@ -61,8 +64,27 @@ describe('playground theme', () => {
     expect(themeVariables(theme)['--astryx-duration-fast']).toBe('250ms')
     applyDensity(theme, 'compact')
     expect(matchingDensity(theme)).toBe('compact')
-    expect(themeVariables(theme)['--astryx-spacing-1']).toBe('3px')
+    expect(theme.typeScale).toBe('major-second')
+    expect(theme.typeSize).toBe(12)
+    expect(theme.radius).toBe(2)
+    expect(themeVariables(theme)['--astryx-spacing-1']).toBe('2px')
     expect(themesEqual(theme, createNeutralTheme())).toBe(false)
+  })
+
+  it('keeps preview mode out of palette equality', () => {
+    const theme = createNeutralTheme()
+    theme.dark = true
+    expect(themesEqual(theme, createNeutralTheme())).toBe(true)
+  })
+
+  it('formats color rows the way the upstream swatch does', () => {
+    expect(colorTokenLabel('--astryx-color-accent')).toBe('Color Accent')
+    expect(colorTokenLabel('--astryx-color-background-card')).toBe('Color Card')
+    expect(colorTokenLabel('--astryx-color-text-primary')).toBe('Color Text Primary')
+    expect(formatColorReadout('#ffffff1a')).toBe('#ffffff  10%')
+    expect(formatColorReadout('#1B1B1B')).toBe('#1b1b1b  100%')
+    expect(parseColorReadout('#ffffff  10%')).toBe('#ffffff1a')
+    expect(parseColorReadout('nope')).toBeNull()
   })
 
   it('picks readable ink for the Neutral accent stops', () => {
