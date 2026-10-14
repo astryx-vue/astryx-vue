@@ -532,8 +532,18 @@ html.dark .playground__error {
   clip: rect(0 0 0 0);
 }
 
+/* VitePress preflight sets margin: 0 on *, which beats the UA dialog's
+   margin: auto and pins a modal with inset: 0 to the viewport top-left.
+   Match Dialog: fixed against the viewport, inset 0, auto margins, fit height.
+   Ancestors have no transform, filter, or contain, so fixed stays viewport-relative. */
 .playground__dialog {
+  position: fixed;
+  inset: 0;
   width: min(28rem, calc(100vw - 32px));
+  height: fit-content;
+  max-height: calc(100svh - 32px);
+  margin: auto;
+  overflow: auto;
   padding: 20px;
   border: 1px solid var(--pg-line);
   border-radius: 16px;
