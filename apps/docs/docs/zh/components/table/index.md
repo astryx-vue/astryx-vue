@@ -9,7 +9,9 @@ footer: false
 import { Badge } from '@astryx-vue/core/Badge'
 import {
   tableColumnSettings,
+  tableExpansion,
   tableGridDividers,
+  tableGrouped,
   tableInCard,
   tableInlineFilters,
   tablePaginated,
@@ -17,8 +19,11 @@ import {
   tableResizable,
   tableRichCell,
   tableRowSelection,
+  tableRowStatus,
   tableSortable,
+  tableSticky,
   tableStriped,
+  tableTree,
 } from '../../../../components/demos/table'
 </script>
 
@@ -33,7 +38,13 @@ import {
 - `useTablePagination` 在表格下方放分页。传给 `data` 之前用 `paginateData` 切好当前页。
 - `useTableColumnSettings` 只显示当前选中的列，`isAlwaysVisible` 的列会留着。
 - `useTableColumnResize` 允许拖表头边缘。最窄 60px。
-- `useTableFiltering` 给 `filter` 指向某个字段的列加上字符串或枚举过滤。`applyTableFilters` 返回匹配的行。字符串是包含匹配，枚举是精确匹配。
+- `useTableFiltering` 给 `filter` 指向某个字段的列加上字符串或枚举过滤。`applyTableFilters` 返回匹配的行。字符串是包含匹配，枚举是精确匹配。这套过滤和结构化搜索是分开的。
+- `useTableGroupedRows` 把已经排好、切好的行收成分组。返回的数据、插件和行身份要一起传给表格。折叠后表头还在，里面的行先藏起来。切换时换成一个新的集合，表格才会重画。
+- `useTableTreeState` 负责展开哪些节点，`useTableTreeData` 负责缩进和按钮。子行继续用原来的列。点表头上的按钮可以一次展开或折叠。有环的节点会被跳过。
+- `useTableRowExpansion` 在一行下面放一整块详情。右键也能展开或折叠。详情和树形子行不是一回事。
+- `useTableStickyColumns` 把从第一列到指定列、或从指定列到最后一列的连续区间钉住。只有横向溢出时才出现阴影。空配置什么也不钉。
+- `useTableRowStatus` 在行首放成功、警告或错误标记，也可以换成自定义颜色。悬停能看到说明。
+- `useTableRowIndex` 给真实行编号。分组表头不占号。
 
 `density` 是 `compact`、`balanced` 或 `spacious`。`dividers` 是 `rows`、`columns`、`grid` 或 `none`。`isStriped` 和 `hasHover` 互不影响。`data` 为空时显示本地化的空状态，也可以用 `empty` 插槽替换。
 
@@ -57,7 +68,7 @@ const columns = [
 </template>
 ```
 
-过滤是组件自己做的，不依赖这个库里还没有的 PowerSearch。过滤状态要用 getter 传进去，表格才会读到最新的值：
+列上的过滤状态要用 getter 传进去，表格才会读到最新的值：
 
 ```ts
 const { filters, onFilterChange } = useTableFilterState()
@@ -68,7 +79,7 @@ const filterPlugin = useTableFiltering(() => ({
 }))
 ```
 
-树形数据、固定列、分组行、行展开、行状态、行号，以及表格的右键菜单，这一版还没有。
+`rowCount` 和 `rowIndexStart` 用来报告当前窗口在整表里的位置。两个只要设置一个，数据行就会带上行号；只给起点时，总行数按未知处理。分组表头和展开出来的详情不编号。
 
 ## 建议
 
@@ -157,4 +168,39 @@ const filterPlugin = useTableFiltering(() => ({
   description="隔行变色，悬停时再高亮，方便扫读。"
   locale="zh"
   title="Table — 斑马纹"
+/>
+
+<DemoExample
+  :demo="tableGrouped"
+  description="按角色分成两段。折叠后表头还在，行号只数真正的数据行。"
+  locale="zh"
+  title="Table — 分组和行号"
+/>
+
+<DemoExample
+  :demo="tableTree"
+  description="子行沿用同样的列。表头可以一次展开，点行也能展开有子节点的那一行。"
+  locale="zh"
+  title="Table — 树形数据"
+/>
+
+<DemoExample
+  :demo="tableExpansion"
+  description="点行或行首的箭头，在下面展开备注。右键也有同样的操作。"
+  locale="zh"
+  title="Table — 展开行"
+/>
+
+<DemoExample
+  :demo="tableSticky"
+  description="姓名钉在左边，周五钉在右边。把表格滚到边上时，中间的日期会从固定列下面滑过去。"
+  locale="zh"
+  title="Table — 固定列"
+/>
+
+<DemoExample
+  :demo="tableRowStatus"
+  description="行首的标记说明这一行是成功、警告、错误，或者只是一个没有信号的圆点。"
+  locale="zh"
+  title="Table — 行状态"
 />

@@ -61,6 +61,25 @@ export interface ResolvedColumnWidths {
   tableMinWidth: number
 }
 
+/**
+ * 表格被挤到最小宽度时每一列的像素。固定列的偏移按这个宽度累加。
+ */
+export function resolveColumnFloorWidths<T extends Record<string, unknown>>(columns: readonly TableColumn<T>[]): Map<string, number> {
+  const { totalProportion, maxProportionalSpace } = planColumnSpace(columns)
+  const widths = new Map<string, number>()
+  for (const column of columns) {
+    const width = column.width
+    if (width?.type === 'pixel') {
+      widths.set(column.key, width.value)
+    }
+    else {
+      const proportion = width?.value ?? 1
+      widths.set(column.key, totalProportion > 0 ? (maxProportionalSpace * proportion) / totalProportion : 0)
+    }
+  }
+  return widths
+}
+
 export function resolveColumnWidths<T extends Record<string, unknown>>(columns: readonly TableColumn<T>[]): ResolvedColumnWidths {
   const { totalProportion, pixelTotal, maxProportionalSpace } = planColumnSpace(columns)
   const result = new Map<string, ResolvedColumnWidth>()

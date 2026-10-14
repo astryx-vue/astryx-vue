@@ -73,6 +73,7 @@ const expectedCatalog = [
   { slug: 'tokenizer', group: 'Form Controls', en: 'Tokenizer', zh: '标签输入框' },
   { slug: 'typeahead', group: 'Form Controls', en: 'Typeahead', zh: '自动补全' },
   { slug: 'complex-selector', group: 'Form Controls', en: 'Complex Selector', zh: '复合选择器' },
+  { slug: 'power-search', group: 'Form Controls', en: 'Power Search', zh: '结构化搜索' },
   { slug: 'center', group: 'Layout', en: 'Center', zh: '居中容器' },
   { slug: 'divider', group: 'Layout', en: 'Divider', zh: '分隔线' },
   { slug: 'grid', group: 'Layout', en: 'Grid', zh: '网格布局' },

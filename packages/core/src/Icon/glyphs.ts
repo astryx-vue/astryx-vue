@@ -26,6 +26,9 @@ export const ICON_GLYPHS = [
   'close',
   'funnel',
   'image',
+  'search',
+  'warning',
+  'error',
 ] as const satisfies readonly IconGlyphName[]
 
 export function isIconGlyph(value: string): value is IconGlyphName {

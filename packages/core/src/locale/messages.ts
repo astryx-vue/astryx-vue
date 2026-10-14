@@ -18,6 +18,7 @@ import type { NavMessages } from './messages/nav.js'
 import type { NumberInputMessages } from './messages/number-input.js'
 import type { OutlineMessages } from './messages/outline.js'
 import type { PaginationMessages } from './messages/pagination.js'
+import type { PowerSearchMessages } from './messages/power-search.js'
 import type { SelectorMessages } from './messages/selector.js'
 import type { StepperMessages } from './messages/stepper.js'
 import type { TableMessages } from './messages/table.js'
@@ -47,6 +48,7 @@ import { navMessages } from './messages/nav.js'
 import { numberInputMessages } from './messages/number-input.js'
 import { outlineMessages } from './messages/outline.js'
 import { paginationMessages } from './messages/pagination.js'
+import { powerSearchMessages } from './messages/power-search.js'
 import { selectorMessages } from './messages/selector.js'
 import { stepperMessages } from './messages/stepper.js'
 import { tableMessages } from './messages/table.js'
@@ -77,6 +79,7 @@ export interface AstryxMessages {
   numberInput: NumberInputMessages
   outline: OutlineMessages
   pagination: PaginationMessages
+  powerSearch: PowerSearchMessages
   selector: SelectorMessages
   stepper: StepperMessages
   table: TableMessages
@@ -109,6 +112,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     numberInput: numberInputMessages.en,
     outline: outlineMessages.en,
     pagination: paginationMessages.en,
+    powerSearch: powerSearchMessages.en,
     selector: selectorMessages.en,
     stepper: stepperMessages.en,
     table: tableMessages.en,
@@ -139,6 +143,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     numberInput: numberInputMessages['zh-CN'],
     outline: outlineMessages['zh-CN'],
     pagination: paginationMessages['zh-CN'],
+    powerSearch: powerSearchMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
     stepper: stepperMessages['zh-CN'],
     table: tableMessages['zh-CN'],

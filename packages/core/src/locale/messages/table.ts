@@ -19,6 +19,14 @@ export interface TableMessages {
   clearAll: string
   selectedCount: (count: number) => string
   paginationLabel: string
+  expandGroup: (groupKey: string) => string
+  collapseGroup: (groupKey: string) => string
+  expandRow: string
+  collapseRow: string
+  expandAllRows: string
+  collapseAllRows: string
+  rowExpansion: string
+  rowStatus: string
 }
 
 export const tableMessages: Record<AstryxLocale, TableMessages> = {
@@ -41,6 +49,14 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     clearAll: 'Unselect All',
     selectedCount: count => `${count} selected`,
     paginationLabel: 'Table pagination',
+    expandGroup: groupKey => `Expand group ${groupKey}`,
+    collapseGroup: groupKey => `Collapse group ${groupKey}`,
+    expandRow: 'Expand row',
+    collapseRow: 'Collapse row',
+    expandAllRows: 'Expand all rows',
+    collapseAllRows: 'Collapse all rows',
+    rowExpansion: 'Row expansion',
+    rowStatus: 'Row status',
   },
   'zh-CN': {
     label: '表格',
@@ -61,5 +77,13 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     clearAll: '取消全选',
     selectedCount: count => `已选择 ${count} 项`,
     paginationLabel: '表格分页',
+    expandGroup: groupKey => `展开分组 ${groupKey}`,
+    collapseGroup: groupKey => `折叠分组 ${groupKey}`,
+    expandRow: '展开行',
+    collapseRow: '折叠行',
+    expandAllRows: '展开所有行',
+    collapseAllRows: '折叠所有行',
+    rowExpansion: '行展开',
+    rowStatus: '行状态',
   },
 }
