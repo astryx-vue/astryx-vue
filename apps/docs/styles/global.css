@@ -567,6 +567,16 @@ html.dark .component-card__preview {
   letter-spacing: -0.025em;
 }
 
+/*
+ * That heading rule is unlayered, so it beats the component-layer clip on a
+ * VisuallyHidden rendered as h2. The hidden "Build status" landmark then keeps
+ * a 48px top margin and opens a hole between the note and the status cards.
+ * revert-layer hands margin, position, and font back to .astryx-visually-hidden.
+ */
+.component-detail__body :is(h1, h2, h3, h4, h5, h6).astryx-visually-hidden {
+  all: revert-layer;
+}
+
 .component-detail__body > h2:first-child {
   margin-top: 36px;
 }
@@ -776,9 +786,26 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   max-width: 100%;
 }
 
+/*
+ * Original example chrome (measured at 1440 on VisuallyHidden): the preview is a
+ * full-width flex row, min-height 200px, padding 0, content centered. The demo
+ * itself is only 16px of padding around fit-content. A 680px host plus the
+ * shared 32px preview padding left a wide empty band around these short stacks.
+ */
+.component-example__preview:has(> .visually-hidden-preview) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 0;
+}
+
 .visually-hidden-preview {
   position: relative;
-  width: min(100%, 680px);
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  padding: 16px;
 }
 
 .visually-hidden-preview__row {
