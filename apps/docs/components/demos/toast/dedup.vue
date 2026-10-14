@@ -9,7 +9,7 @@ const toast = useToast()
 <template>
   <VStack :gap="3">
     <Toast :auto-close="false" body="You are offline" type="info" />
-    <HStack v-align="center" :gap="3">
+    <HStack align="center" :gap="3">
       <Button
         label="Offline (ignore)"
         size="sm"

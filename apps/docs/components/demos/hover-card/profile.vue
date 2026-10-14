@@ -12,7 +12,7 @@ import { Text } from '@astryx-vue/core/Text'
   <HoverCard placement="below">
     <Button label="@janedoe" variant="ghost" />
     <template #content>
-      <HStack v-align="start" :gap="3" style="max-width: 280px">
+      <HStack align="start" :gap="3" style="max-width: 280px">
         <Avatar name="Jane Doe" :size="48" style="flex-shrink: 0" />
         <VStack :gap="1">
           <Heading :level="3">
@@ -21,7 +21,7 @@ import { Text } from '@astryx-vue/core/Text'
           <Text type="body" color="secondary">
             Crafting accessible, scalable design systems for modern teams.
           </Text>
-          <HStack v-align="center" :gap="1">
+          <HStack align="center" :gap="1">
             <Icon icon="calendar" size="xsm" color="secondary" />
             <Text type="supporting" color="secondary">
               March 2024

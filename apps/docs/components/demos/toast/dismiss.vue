@@ -20,7 +20,7 @@ function dismissFromCode(): void {
 <template>
   <VStack :gap="3">
     <Toast :auto-close="false" body="Uploading file…" type="info" />
-    <HStack v-align="center" :gap="3">
+    <HStack align="center" :gap="3">
       <Button label="Show toast" size="sm" variant="secondary" @click="show" />
       <Button label="Dismiss via code" size="sm" variant="ghost" @click="dismissFromCode" />
     </HStack>

@@ -5,7 +5,7 @@ import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <HStack v-align="start" :gap="8">
+  <HStack align="start" :gap="8">
     <Spinner label="Loading..." size="lg" />
     <Spinner aria-label="Fetching data" size="lg">
       <template #label>

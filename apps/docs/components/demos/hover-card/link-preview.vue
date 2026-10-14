@@ -30,7 +30,7 @@ function LinkIcon() {
       </Link>
       <template #content>
         <VStack :gap="2" style="max-width: 280px">
-          <HStack v-align="start" :gap="2">
+          <HStack align="start" :gap="2">
             <Icon :icon="LinkIcon" size="sm" color="secondary" />
             <VStack :gap="1">
               <Text type="label">
