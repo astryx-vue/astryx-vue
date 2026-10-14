@@ -1,4 +1,6 @@
 export { ICON_GLYPHS, iconGlyphSlug, isIconGlyph } from './glyphs.js'
 export type { IconGlyphName } from './glyphs.js'
 export { default as Icon } from './Icon.vue'
+export { addCollection, addIcon } from './registry.js'
+export type { IconifyCollection, IconifyIcon } from './registry.js'
 export type { IconColor, IconName, IconProps, IconSize, IconSlots } from './types.js'

@@ -82,6 +82,11 @@
     height: 16px;
   }
 
+  .astryx-text-input-end > .astryx-icon {
+    width: 16px;
+    height: 16px;
+  }
+
   .astryx-text-input > .astryx-field-icon {
     color: var(--astryx-input-status-color);
   }

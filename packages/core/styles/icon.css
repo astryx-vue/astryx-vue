@@ -8,7 +8,9 @@
     flex-shrink: 0;
     box-sizing: border-box;
     vertical-align: middle;
-    color: inherit;
+    width: 1em;
+    height: 1em;
+    color: currentcolor;
   }
 
   /*
@@ -32,13 +34,21 @@
   }
 
   /*
-   * An icon passed as a component or written into the slot keeps the size its
-   * owner gives it; the box owns that size through width, height, and
-   * font-size.
+   * The wrapper keeps a box. display:contents would make the SVG's 100%
+   * resolve against the icon's parent, so a 1em icon would grow to the line.
    */
-  .astryx-icon > svg {
-    width: 1em;
-    height: 1em;
+  .astryx-icon__svg {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  .astryx-icon > svg,
+  .astryx-icon__svg > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentcolor;
   }
 
   .astryx-icon[data-size='xsm'] {

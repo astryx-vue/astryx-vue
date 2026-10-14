@@ -21,14 +21,14 @@ function stripCssImportsFromDts() {
 }
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/*/index.ts'],
+  entry: ['src/index.ts', 'src/*/index.ts', 'src/Icon/plugin.ts'],
   format: ['esm'],
   platform: 'neutral',
   target: 'es2022',
   clean: true,
   plugins: [Vue({ isProduction: true }), stripCssImportsFromDts()],
   deps: {
-    neverBundle: ['vue', /\.css$/],
+    neverBundle: ['vue', /^node:/, /\.css$/],
   },
   dts: { vue: true },
 })

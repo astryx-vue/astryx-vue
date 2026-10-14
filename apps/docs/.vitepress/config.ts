@@ -1,5 +1,6 @@
 import type { DefaultTheme } from 'vitepress'
 import { fileURLToPath } from 'node:url'
+import { astryxIcons } from '@astryx-vue/core/icons'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import unoConfig from '../uno.config.ts'
@@ -60,7 +61,7 @@ export default defineConfig({
   vite: {
     publicDir: fileURLToPath(new URL('../public', import.meta.url)),
     resolve: { conditions: ['source', 'module', 'browser', 'development|production'] },
-    plugins: [demoSourcePlugin(), UnoCSS(unoConfig)],
+    plugins: [astryxIcons(), demoSourcePlugin(), UnoCSS(unoConfig)],
     server: {
       fs: {
         allow: [fileURLToPath(new URL('../../..', import.meta.url))],

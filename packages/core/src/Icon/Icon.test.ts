@@ -1,11 +1,16 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, markRaw, nextTick, ref } from 'vue'
 import { ICON_DEFAULT_SIZE_KEY, provideIconSize } from './context.js'
 import { ICON_GLYPHS, iconGlyphSlug } from './glyphs.js'
 import Icon from './Icon.vue'
+import { addIcon, resetIcons } from './registry.js'
 
 describe('icon', () => {
+  beforeEach(() => {
+    resetIcons()
+  })
+
   it('renders the built-in artwork for a semantic name', () => {
     const wrapper = mount(Icon, { props: { icon: 'chevronDown' } })
 
@@ -140,6 +145,70 @@ describe('icon', () => {
 
     expect(wrapper.find('.astryx-icon').exists()).toBe(true)
     expect(wrapper.find('svg.slot-icon').exists()).toBe(true)
+  })
+
+  it('draws a registered collection icon from its name and hides it', () => {
+    addIcon('carbon:settings', { body: '<path d="M1 2"/>', width: 32, height: 32 })
+    const wrapper = mount(Icon, { props: { name: 'carbon:settings' } })
+    const icon = wrapper.find('.astryx-icon')
+    const svg = icon.find('svg')
+
+    expect(svg.exists()).toBe(true)
+    expect(svg.attributes('viewBox')).toBe('0 0 32 32')
+    expect(svg.html()).toContain('d="M1 2"')
+    expect(icon.attributes('data-size')).toBeUndefined()
+    expect(icon.attributes('aria-hidden')).toBe('true')
+    expect(icon.attributes('data-color')).toBe('inherit')
+  })
+
+  it('accepts collection-icon when that collection is registered', () => {
+    addIcon('carbon:settings', { body: '<path d="M1 2"/>', width: 16, height: 16 })
+    const wrapper = mount(Icon, { props: { name: 'carbon-settings', size: 'sm', color: 'accent' } })
+    const icon = wrapper.find('.astryx-icon')
+
+    expect(icon.find('svg').exists()).toBe(true)
+    expect(icon.attributes('data-size')).toBe('sm')
+    expect(icon.attributes('data-color')).toBe('accent')
+  })
+
+  it('names a standalone collection icon', () => {
+    addIcon('carbon:checkmark', { body: '<path d="M0 0"/>' })
+    const wrapper = mount(Icon, { props: { name: 'carbon:checkmark', label: 'Saved' } })
+    const icon = wrapper.find('.astryx-icon')
+
+    expect(icon.attributes('role')).toBe('img')
+    expect(icon.attributes('aria-label')).toBe('Saved')
+    expect(icon.find('svg').attributes('aria-hidden')).toBe('true')
+  })
+
+  it('leaves the box empty and warns when the name is not registered', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(Icon, { props: { name: 'carbon:missing', icon: 'check' } })
+
+    expect(wrapper.find('svg').exists()).toBe(false)
+    expect(wrapper.find('.astryx-icon__glyph').exists()).toBe(false)
+    expect(wrapper.find('.astryx-icon').attributes('data-size')).toBeUndefined()
+    expect(warn).toHaveBeenCalled()
+    warn.mockRestore()
+  })
+
+  it('gives each copy of an icon its own id prefix', () => {
+    addIcon('carbon:logo', { body: '<path id="mark" d="M0 0"/>' })
+    const Pair = defineComponent({
+      setup() {
+        return () => h('div', [
+          h(Icon, { name: 'carbon:logo' }),
+          h(Icon, { name: 'carbon:logo' }),
+        ])
+      },
+    })
+    const wrapper = mount(Pair)
+    const ids = wrapper.findAll('path').map(path => path.attributes('id'))
+
+    expect(ids).toHaveLength(2)
+    expect(ids[0]).toMatch(/mark$/)
+    expect(ids[1]).toMatch(/mark$/)
+    expect(ids[0]).not.toBe(ids[1])
   })
 
   it('renders the box when it is given no artwork, so a class can paint it', () => {
