@@ -18,7 +18,7 @@ npm install @astryx-vue/core @astryx-vue/themes
 yarn add @astryx-vue/core @astryx-vue/themes
 ```
 
-`@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包依赖 `@fontsource/jetbrains-mono`，用来提供等宽字体。两个包都只发布 ESM。
+`@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包依赖 `@fontsource/figtree` 和 `@fontsource/jetbrains-mono`，用来提供正文和等宽字体。两个包都只发布 ESM。
 
 组件、组合式函数和语言环境的入口不同：
 
