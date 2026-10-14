@@ -7,6 +7,7 @@ const props = defineProps<{
   modelValue: string
   label: string
   active: boolean
+  colorMode: 'light' | 'dark'
 }>()
 
 const emit = defineEmits<{
@@ -15,17 +16,23 @@ const emit = defineEmits<{
 
 const host = ref<HTMLElement | null>(null)
 const editor = shallowRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
+let monacoApi: typeof Monaco | null = null
 let applying = false
+
+function editorTheme(mode: 'light' | 'dark'): string {
+  return mode === 'dark' ? 'github-dark' : 'github-light'
+}
 
 onMounted(async () => {
   if (!host.value)
     return
   const monaco = await loadMonaco()
+  monacoApi = monaco
   const instance = monaco.editor.create(host.value, {
     ...monacoEditorOptions,
     value: props.modelValue,
     language: 'html',
-    theme: 'github-light',
+    theme: editorTheme(props.colorMode),
     ariaLabel: props.label,
   })
   instance.onDidChangeModelContent(() => {
@@ -53,6 +60,10 @@ watch(() => props.modelValue, (value) => {
 watch(() => props.active, (active) => {
   if (active)
     editor.value?.focus()
+})
+
+watch(() => props.colorMode, (mode) => {
+  monacoApi?.editor.setTheme(editorTheme(mode))
 })
 
 function formatDocument(): void {
