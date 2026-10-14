@@ -371,6 +371,254 @@ The root is <code>role="status"</code> with <code>aria-live="polite"</code>. The
 
 The root is <code>role="separator"</code>. It is not a <code>.astryx-chat-message</code>, so the new-message tracker does not treat it as a message.
 
+## ChatComposer
+
+<div class="component-api-table" role="region" aria-label="ChatComposer props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>modelValue</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Controlled draft, bound with <code>v-model</code>. Omit it and the shell keeps the draft.</td>
+      </tr>
+      <tr>
+        <td><code>placeholder</code></td>
+        <td><code>string</code></td>
+        <td>The localized “Type a message…”</td>
+        <td>Shown while the draft is empty.</td>
+      </tr>
+      <tr>
+        <td><code>isDisabled</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Disables editing and send. Stop stays clickable when it is shown.</td>
+      </tr>
+      <tr>
+        <td><code>density</code></td>
+        <td><code>'compact' | 'balanced' | 'spacious'</code></td>
+        <td><code>'balanced'</code></td>
+        <td>Padding inside the body. Spacious uses the same spacing as balanced.</td>
+      </tr>
+      <tr>
+        <td><code>elevation</code></td>
+        <td><code>'low' | 'none'</code></td>
+        <td><code>'low'</code></td>
+        <td>Low deepens on hover and focus. None is flat and uses a border. The focus ring appears only when the keyboard focuses the editor.</td>
+      </tr>
+      <tr>
+        <td><code>isStopShown</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Shows stop instead of send.</td>
+      </tr>
+      <tr>
+        <td><code>status</code></td>
+        <td><code>{ type: 'error' | 'warning', message?: string }</code></td>
+        <td>-</td>
+        <td>Error uses alert. Warning uses status.</td>
+      </tr>
+      <tr>
+        <td><code>statusPosition</code></td>
+        <td><code>'top' | 'bottom'</code></td>
+        <td><code>'bottom'</code></td>
+        <td>Places the bar above or below the body, tucked behind the radius.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="component-api-table" role="region" aria-label="ChatComposer events" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Payload</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>submit</code></td>
+        <td><code>value: string</code></td>
+        <td>Fires for a trimmed, non-empty draft, then clears it.</td>
+      </tr>
+      <tr>
+        <td><code>stop</code></td>
+        <td>-</td>
+        <td>Stop was activated.</td>
+      </tr>
+      <tr>
+        <td><code>change</code></td>
+        <td><code>value: string</code></td>
+        <td>The draft changed, including the clear after submit.</td>
+      </tr>
+      <tr>
+        <td><code>update:modelValue</code></td>
+        <td><code>value: string</code></td>
+        <td>Emitted with change for <code>v-model</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+Slots are drawer, headerActions, headerContext, input, footerActions, sendActions, and sendButton. The template ref exposes element.
+
+## ChatComposerInput
+
+<div class="component-api-table" role="region" aria-label="ChatComposerInput props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>modelValue</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Controlled draft. Inside a shell, an omitted value follows the shell.</td>
+      </tr>
+      <tr>
+        <td><code>placeholder</code></td>
+        <td><code>string</code></td>
+        <td>The shell or the localized placeholder</td>
+        <td>Hint on the empty editor.</td>
+      </tr>
+      <tr>
+        <td><code>maxRows</code></td>
+        <td><code>number</code></td>
+        <td><code>8</code></td>
+        <td>The editor scrolls after this many lines. A line is 22px.</td>
+      </tr>
+      <tr>
+        <td><code>triggers</code></td>
+        <td><code>ChatComposerTrigger[]</code></td>
+        <td>-</td>
+        <td>A trigger character at a word boundary opens suggestions. The editor becomes a combobox.</td>
+      </tr>
+      <tr>
+        <td><code>debounceMs</code></td>
+        <td><code>number</code></td>
+        <td><code>150</code></td>
+        <td>Delay for an async search. Sync results are immediate, and the first async search starts at once.</td>
+      </tr>
+      <tr>
+        <td><code>hasHistory</code></td>
+        <td><code>boolean</code></td>
+        <td><code>true</code></td>
+        <td>Arrow Up at the start recalls the previous submission. Arrow Down at the end steps forward.</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>The localized “Message input”</td>
+        <td>Accessible name of the editor.</td>
+      </tr>
+      <tr>
+        <td><code>isDisabled</code></td>
+        <td><code>boolean</code></td>
+        <td>The shell's disabled state</td>
+        <td>Disables editing.</td>
+      </tr>
+      <tr>
+        <td><code>pasteAsToken</code></td>
+        <td><code>Return value of useChatPasteAsToken | false</code></td>
+        <td>Pastes longer than 200 characters become a chip</td>
+        <td>Pass false to insert the text as-is.</td>
+      </tr>
+      <tr>
+        <td><code>pasteAction</code></td>
+        <td><code>(event, text) => boolean | void</code></td>
+        <td>-</td>
+        <td>First chance at a plain-text paste. Return true and the input will not insert it.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+Events are change, update:modelValue, submit, files, and keydown. files comes from a paste or a drop, and a drop does not navigate away. keydown fires after an open suggestion list declines the event. preventDefault skips Enter-to-send and history. The template ref exposes insertToken, expandToken, insertText, focus, and getValue.
+
+## ChatComposerDrawer
+
+<div class="component-api-table" role="region" aria-label="ChatComposerDrawer props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>count</code></td>
+        <td><code>number</code></td>
+        <td>-</td>
+        <td>Enables collapse and appears in the default summary.</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>The localized “Items”</td>
+        <td>Used in the summary and in the expand and collapse names.</td>
+      </tr>
+      <tr>
+        <td><code>isCollapsed</code></td>
+        <td><code>boolean</code></td>
+        <td>-</td>
+        <td>Controlled collapsed state, bound with <code>v-model:is-collapsed</code>.</td>
+      </tr>
+      <tr>
+        <td><code>defaultIsCollapsed</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Initial state while unbound.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+collapsedChange fires when the collapsed state changes. The default slot is the open content. collapsedSummary replaces the count and label. The button still owns the disclosure name.
+
+## ChatSendButton
+
+<div class="component-api-table" role="region" aria-label="ChatSendButton props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>isStopShown</code></td>
+        <td><code>boolean</code></td>
+        <td>The shell's stop state</td>
+        <td>Stop is secondary. Send is primary. Stop ignores disabled.</td>
+      </tr>
+      <tr>
+        <td><code>isDisabled</code></td>
+        <td><code>boolean</code></td>
+        <td>The draft is empty or the shell is disabled</td>
+        <td>Disables send only.</td>
+      </tr>
+      <tr>
+        <td><code>size</code></td>
+        <td><code>'sm' | 'md'</code></td>
+        <td><code>'md'</code></td>
+        <td>Button size. The shell rounds it to the outer radius.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+Events are send, stop, and click. sendIcon and stopIcon replace the arrow and the square. Inside a shell, a click with no listener of its own submits the draft or stops the shell.
+
+## ChatDictationButton
+
+Pass the return value of useChatDictation or useSpeechRecognition. size defaults to md. isHiddenWhenUnsupported defaults to true, so the control is absent when speech recognition is missing. Set it to false and the button stays, disabled. label replaces the start or stop dictation name. While listening, five bars follow the volume, and a loud signal blends the accent color toward the error color.
+
+## ChatTokenizedText
+
+text is a string that may contain serialized chip values. Each non-empty value in tokens is matched literally and replaced with a badge or custom content. Empty values are ignored. The same objects a trigger returns can be reused here.
+
+## ChatComposerTokenElement
+
+Wraps one chip so it cannot be edited inside the field and carries the serialized value. The input inserts these itself. Use it directly when a chip should render outside the editor.
+
 ## Composables
 
 <code>useChatStreamScroll({ scrollRef })</code> follows the bottom of <code>scrollRef</code>. The first time the content can scroll it jumps; later growth uses a spring, unless reduced motion is requested. Scrolling up unlocks at once. Settling within 10px of the bottom locks again. <code>isScrolledUp</code> feeds the button.
@@ -378,6 +626,8 @@ The root is <code>role="separator"</code>. It is not a <code>.astryx-chat-messag
 <code>useChatNewMessages({ isLocked, onResize })</code> watches the transcript height. When the last <code>.astryx-chat-message</code> changes while unlocked, <code>hasNewMessages</code> becomes true until <code>dismiss()</code>. <code>ChatLayout</code> announces that change.
 
 <code>useChatStreamScroll</code>, <code>useChatNewMessages</code>, and <code>useAnnounce</code> are exported from <code>@astryx-vue/core</code>. Reduced motion is read with <code>useMediaQuery</code>.
+
+The composer also exports useChatComposerContext, useChatComposerTokens, useChatPasteAsToken, useChatDictation, and useSpeechRecognition. Import them from the Chat entry. The package root re-exports them. Speech recognition uses the browser API and does not bind a speech service. A paste longer than 200 characters becomes a chip by default.
 
 ## Theming
 
@@ -394,4 +644,4 @@ The root is <code>role="separator"</code>. It is not a <code>.astryx-chat-messag
 
 ## Native attributes
 
-`ChatLayout`, `ChatMessageList`, `ChatMessage`, `ChatSystemMessage`, `ChatToolCalls`, `ChatReasoning`, `ChatTypingIndicator`, and `ChatUnreadDivider` forward attributes to their root. `ChatMessageBubble` forwards them to the bubble, not the name or metadata. `ChatMessageMetadata` forwards them to the metadata row.
+`ChatLayout`, `ChatMessageList`, `ChatMessage`, `ChatSystemMessage`, `ChatToolCalls`, `ChatReasoning`, `ChatTypingIndicator`, `ChatUnreadDivider`, `ChatComposer`, `ChatComposerDrawer`, `ChatComposerInput`, and `ChatTokenizedText` forward attributes to their root. `ChatMessageBubble` forwards them to the bubble, not the name or metadata. `ChatMessageMetadata` forwards them to the metadata row. `ChatSendButton` and `ChatDictationButton` forward them to the button.

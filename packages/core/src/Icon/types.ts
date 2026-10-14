@@ -54,6 +54,8 @@ export type IconName
     | 'funnel'
     | 'image'
     | 'search'
+    | 'stop'
+    | 'microphone'
     | 'warning'
     | 'error'
 

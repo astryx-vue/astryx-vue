@@ -27,6 +27,8 @@ export const ICON_GLYPHS = [
   'funnel',
   'image',
   'search',
+  'stop',
+  'microphone',
   'warning',
   'error',
 ] as const satisfies readonly IconGlyphName[]

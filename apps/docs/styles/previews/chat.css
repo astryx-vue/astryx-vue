@@ -87,35 +87,11 @@
   margin: 0;
 }
 
-.chat-preview__composer-card {
+.chat-preview-composer {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  min-height: 86px;
-  padding: 12px;
-  border-radius: var(--astryx-radius-chat, 28px);
-  background: var(--astryx-bg);
-  box-shadow: var(--astryx-shadow-low);
-}
-
-.chat-preview__composer-input {
-  width: 100%;
-  min-height: 22px;
-  padding: 0 4px;
-  border: 0;
-  resize: none;
-  outline: none;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-size: var(--astryx-text-body-size, 0.875rem);
-  line-height: 22px;
-}
-
-.chat-preview__send {
-  align-self: flex-end;
-  border-radius: 999px;
+  gap: 16px;
+  width: min(100%, 28rem);
 }
 
 .chat-preview__code {
@@ -193,26 +169,6 @@
   }
 }
 
-.chat-preview__composer {
-  display: flex;
-  gap: var(--astryx-spacing-2, 8px);
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-}
-
-.chat-preview__input {
-  box-sizing: border-box;
-  flex: 1;
-  min-width: 0;
-  height: 36px;
-  padding-inline: var(--astryx-spacing-3, 12px);
-  border: 1px solid var(--astryx-line);
-  border-radius: var(--astryx-radius-full, 9999px);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-}
 
 .component-card__preview .chat-preview {
   width: 100%;
