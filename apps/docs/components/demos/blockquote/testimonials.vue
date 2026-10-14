@@ -13,7 +13,7 @@ import { Grid, GridSpan } from '@astryx-vue/core/Grid'
     </Card>
     <Card :padding="4">
       <Blockquote cite="Marcus T., Product Designer">
-        The token system means every new screen just looks right. No manual color or spacing decisions.
+        The token system means every new screen just looks right — no manual color or spacing decisions.
       </Blockquote>
     </Card>
     <GridSpan :columns="2">

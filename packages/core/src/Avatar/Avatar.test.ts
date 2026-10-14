@@ -178,4 +178,73 @@ describe('avatarStatusDot', () => {
     expect(dot.exists()).toBe(true)
     expect(dot.attributes('data-variant')).toBe('success')
   })
+
+  it('exposes a label when one is provided', () => {
+    const wrapper = mount(AvatarStatusDot, {
+      props: { label: 'Online', variant: 'success' },
+    })
+
+    const dot = wrapper.find('.astryx-avatar-status-dot')
+    expect(dot.attributes('role')).toBe('img')
+    expect(dot.attributes('aria-label')).toBe('Online')
+    expect(dot.attributes('aria-hidden')).toBeUndefined()
+  })
+})
+
+describe('avatar interaction', () => {
+  it('renders a link when href is set', () => {
+    const wrapper = mount(Avatar, {
+      props: { href: 'https://example.com/people/itai-jordaan', name: 'Itai Jordaan' },
+    })
+
+    const link = wrapper.find('a.astryx-avatar')
+    expect(link.exists()).toBe(true)
+    expect(link.attributes('href')).toBe('https://example.com/people/itai-jordaan')
+    expect(link.attributes('role')).toBeUndefined()
+    expect(link.attributes('aria-label')).toBe('Itai Jordaan')
+  })
+
+  it('renders a button when a click listener is set', async () => {
+    const onClick = vi.fn()
+    const wrapper = mount(Avatar, {
+      props: { name: 'Margot Schroder', onClick },
+    })
+
+    const button = wrapper.find('button.astryx-avatar')
+    expect(button.exists()).toBe(true)
+    expect(button.attributes('type')).toBe('button')
+    await button.trigger('click')
+    expect(onClick).toHaveBeenCalledOnce()
+  })
+
+  it('shows the name in a tooltip by default', () => {
+    const wrapper = mount(Avatar, {
+      attachTo: document.body,
+      props: { name: 'Ana Thomas' },
+    })
+
+    expect(document.body.textContent).toContain('Ana Thomas')
+    wrapper.unmount()
+  })
+
+  it('shows a custom tooltip string', () => {
+    const wrapper = mount(Avatar, {
+      attachTo: document.body,
+      props: { name: 'Itai Jordaan', tooltip: 'Itai Jordaan · Engineering Lead' },
+    })
+
+    expect(document.body.textContent).toContain('Itai Jordaan · Engineering Lead')
+    wrapper.unmount()
+  })
+
+  it('renders no tooltip when tooltip is false', () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(Avatar, {
+      attachTo: document.body,
+      props: { name: 'Ana Thomas', tooltip: false },
+    })
+
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
+    wrapper.unmount()
+  })
 })

@@ -5,6 +5,8 @@ import asyncDemo from './async.vue'
 import asyncSource from './async.vue?raw&highlighted'
 import floatingDemo from './floating.vue'
 import floatingSource from './floating.vue?raw&highlighted'
+import loadingDemo from './loading.vue'
+import loadingSource from './loading.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 import tooltipsDemo from './tooltips.vue'
@@ -17,6 +19,10 @@ export const iconButtonActionBar = defineDemo(actionBarDemo, actionBarSource, {
 })
 
 export const iconButtonFloating = defineDemo(floatingDemo, floatingSource, {
+  className: iconButtonPreviewClass,
+})
+
+export const iconButtonLoading = defineDemo(loadingDemo, loadingSource, {
   className: iconButtonPreviewClass,
 })
 

@@ -277,3 +277,25 @@ export interface DropdownMenuGroupSlots {
   /** Rich content replacing the `title` prop, still used as the group's name. */
   title?: () => VNodeChild
 }
+
+export interface DropdownMenuSubMenuProps {
+  /** Row label. */
+  label?: string | number
+  /** Icon before the label. A CSS class or a component. */
+  icon?: string | Component
+  /** Secondary line under the label. */
+  description?: string | number
+  /**
+   * Whether the row can open its flyout.
+   * @default false
+   */
+  isDisabled?: boolean
+}
+
+export interface DropdownMenuSubMenuSlots {
+  /** The rows of the nested menu. */
+  default?: () => VNodeChild
+  icon?: () => VNodeChild
+  label?: () => VNodeChild
+  description?: () => VNodeChild
+}

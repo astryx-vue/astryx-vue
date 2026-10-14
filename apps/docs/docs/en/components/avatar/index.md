@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { avatarSizes, avatarShapes, avatarFallback, avatarStatus } from '../../../../components/demos/avatar'
+import { avatarFallbackChain, avatarInitials, avatarInteractive, avatarPhoto, avatarStatus, avatarTooltip, avatarUserCard } from '../../../../components/demos/avatar'
 </script>
 
 ## Usage
@@ -52,29 +52,50 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 ## Examples
 
 <DemoExample
-  :demo="avatarSizes"
-  description="Avatars support xsm, sm, md, lg, xl named sizes as well as numeric pixel values."
+  :demo="avatarFallbackChain"
+  description="Demonstrates the avatar fallback chain: primary image, fallback image, initials, then default icon."
   locale="en"
-  title="Sizes"
+  title="Fallback chain"
 />
 
 <DemoExample
-  :demo="avatarShapes"
-  description="Avatars come in circle, rounded, and square shapes. The default is circle."
+  :demo="avatarInitials"
+  description="Show initials instead of a photo. The avatar extracts the first and last initials from the name automatically. Use when you only have a user name."
   locale="en"
-  title="Shapes"
+  title="Initials"
 />
 
 <DemoExample
-  :demo="avatarFallback"
-  description="When an image fails to load, the avatar falls back to initials; without a name, a default person icon is shown."
+  :demo="avatarInteractive"
+  description="Make an avatar interactive by passing href to render it as a link or a click listener to render it as a button. Both forms are focusable and show a focus-visible ring."
   locale="en"
-  title="Fallback"
+  title="Interactive"
+/>
+
+<DemoExample
+  :demo="avatarTooltip"
+  description="By default an avatar shows its name in a tooltip on hover and keyboard focus. Pass a string to show custom text instead, or false to turn the tooltip off."
+  locale="en"
+  title="Tooltip"
+/>
+
+<DemoExample
+  :demo="avatarUserCard"
+  description="Place an avatar next to a name and role to create a user card row. Use for comment headers, contact lists, profile sections, or anywhere you need to identify a person."
+  locale="en"
+  title="User card"
+/>
+
+<DemoExample
+  :demo="avatarPhoto"
+  description="Show a profile photo at different sizes. Use when you have a user photo URL. If the image fails to load, initials are shown instead."
+  locale="en"
+  title="Photo"
 />
 
 <DemoExample
   :demo="avatarStatus"
-  description="Place an AvatarStatusDot in the status slot to indicate user status."
+  description="Add a status dot to an avatar to show whether someone is online, away, or busy. Use in chat, messaging, or any UI where knowing availability matters."
   locale="en"
-  title="Status"
+  title="Status dot"
 />

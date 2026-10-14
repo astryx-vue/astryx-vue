@@ -4,6 +4,7 @@ export { default as DropdownMenu } from './DropdownMenu.vue'
 export { default as DropdownMenuDivider } from './DropdownMenuDivider.vue'
 export { default as DropdownMenuGroup } from './DropdownMenuGroup.vue'
 export { default as DropdownMenuItem } from './DropdownMenuItem.vue'
+export { default as DropdownMenuSubMenu } from './DropdownMenuSubMenu.vue'
 export type {
   DropdownMenuButtonProps,
   DropdownMenuDividerData,
@@ -21,5 +22,7 @@ export type {
   DropdownMenuSection,
   DropdownMenuSize,
   DropdownMenuSlots,
+  DropdownMenuSubMenuProps,
+  DropdownMenuSubMenuSlots,
   DropdownMenuTriggerProps,
 } from './types.js'

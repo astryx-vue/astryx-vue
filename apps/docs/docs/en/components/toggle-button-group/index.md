@@ -34,5 +34,16 @@ const view = ref<string | null>('grid')
 
 ## Examples
 
-<DemoExample :demo="toggleButtonGroupSelection" description="Single selection switches the view. Multiple selection is a formatting toolbar." locale="en" title="Group" />
-<DemoExample :demo="toggleButtonGroupVertical" description="List, Grid, and Board, plus Active, Pending, and Closed, stacked vertically." locale="en" title="Vertical" />
+<DemoExample
+  :demo="toggleButtonGroupSelection"
+  description="Toggle button groups in single-select and multi-select modes. Single selection acts as a view mode switcher; multiple selection forms a formatting toolbar."
+  locale="en"
+  title="Group"
+/>
+
+<DemoExample
+  :demo="toggleButtonGroupVertical"
+  description="A vertically stacked ToggleButtonGroup using the vertical orientation, shown with both single-select and multi-select behavior."
+  locale="en"
+  title="Vertical"
+/>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { segmentedControlBasic, segmentedControlIcons, segmentedControlSizes, segmentedControlStates } from '../../../../components/demos/segmented-control'
+import { segmentedControlDisabled, segmentedControlFill, segmentedControlIconOnly, segmentedControlIcons } from '../../../../components/demos/segmented-control'
 </script>
 
 ## 使用方法
@@ -57,29 +57,29 @@ const view = ref('overview')
 ## 示例
 
 <DemoExample
-  :demo="segmentedControlBasic"
-  description="最基础的用法：一个受控的单选分段行，选中项变化时下方的说明文字跟着更新。"
+  :demo="segmentedControlDisabled"
+  description="某一项单独禁用，用来表示暂时不可用的选项。"
   locale="zh"
-  title="基础用法"
+  title="禁用项"
 />
 
 <DemoExample
-  :demo="segmentedControlSizes"
-  description="sm、md、lg 三档尺寸，只改变高度和内边距，不改变行为。"
+  :demo="segmentedControlFill"
+  description="各段等分并撑满可用宽度，适合固定宽度的容器。"
   locale="zh"
-  title="尺寸"
+  title="撑满布局"
+/>
+
+<DemoExample
+  :demo="segmentedControlIconOnly"
+  description="隐藏标签、只显示图标的紧凑分段控制，适合空间有限的布局。"
+  locale="zh"
+  title="仅图标"
 />
 
 <DemoExample
   :demo="segmentedControlIcons"
-  description="分段可以在标签前放图标；设置 isLabelHidden 后只显示图标，标签会变成该分段的无障碍名称。"
+  description="图标和文字成对出现，用来切换视图模式。"
   locale="zh"
-  title="图标"
-/>
-
-<DemoExample
-  :demo="segmentedControlStates"
-  description="单独禁用一个分段、禁用整个控件并说明原因，以及用 fill 布局平均分摊窄卡片的宽度。"
-  locale="zh"
-  title="状态与布局"
+  title="带图标"
 />

@@ -8,6 +8,7 @@ footer: false
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
 import { overflowListActions, overflowListBadges, overflowListCapped, overflowListCollapseStart, overflowListMultiRow } from '../../../../components/demos/overflow-list'
+import { toolbarFilter } from '../../../../components/demos/toolbar'
 </script>
 
 ## 使用方法
@@ -42,12 +43,44 @@ const items = [
 
 ## 示例
 
-<DemoExample :demo="overflowListBadges" description="徽章排成一行，放不下的收成一个数量徽章。" locale="zh" title="徽章标签" />
+<DemoExample
+  :demo="overflowListCapped"
+  description="maxVisibleItems 把一行限制成三个操作，即使还能放下更多；其余进入下拉菜单。"
+  locale="zh"
+  title="限量工具栏"
+/>
 
-<DemoExample :demo="overflowListCapped" description="这一行最多留下三项，其余进下拉菜单。" locale="zh" title="限制可见项" />
+<DemoExample
+  :demo="overflowListCollapseStart"
+  description="从开头隐藏放不下的项，让最新的项保持可见。"
+  locale="zh"
+  title="从开头折叠"
+/>
 
-<DemoExample :demo="overflowListCollapseStart" description="从开头收起，末尾的步骤留在外面。" locale="zh" title="从开头收起" />
+<DemoExample
+  :demo="overflowListMultiRow"
+  description="标签最多换到两行，其余折叠成数量徽章。"
+  locale="zh"
+  title="多行标签"
+/>
 
-<DemoExample :demo="overflowListActions" description="放不下的按钮收进下拉菜单。" locale="zh" title="下拉操作" />
+<DemoExample
+  :demo="overflowListBadges"
+  description="可调整宽度的徽章行，溢出时收成一个数量徽章。"
+  locale="zh"
+  title="徽章标签"
+/>
 
-<DemoExample :demo="overflowListMultiRow" description="先排满两行，剩下的收成一个数量徽章。" locale="zh" title="多行标签" />
+<DemoExample
+  :demo="overflowListActions"
+  description="操作工具栏把放不下的按钮收进下拉菜单。"
+  locale="zh"
+  title="下拉操作"
+/>
+
+<DemoExample
+  :demo="toolbarFilter"
+  description="表格上方的筛选条：搜索框在最前，旁边每个字段既是关闭的触发器，也是自己的筛选条；行变窄时，条件从末尾收成一个数量。"
+  locale="zh"
+  title="表格筛选"
+/>

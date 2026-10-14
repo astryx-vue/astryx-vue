@@ -1,63 +1,64 @@
 <script setup lang="ts">
-import { VStack } from '@astryx-vue/core/Stack'
+import { Icon } from '@astryx-vue/core/Icon'
+import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { ToggleButton, ToggleButtonGroup } from '@astryx-vue/core/ToggleButton'
 import { ref } from 'vue'
 
 const view = ref<string | null>('list')
-const marks = ref(['bold'])
+const formats = ref<string[]>(['bold'])
 </script>
 
 <template>
-  <VStack :gap="4">
-    <VStack :gap="1">
-      <Text color="secondary" type="label">
+  <Stack direction="vertical" :gap="4">
+    <Stack direction="vertical" :gap="1">
+      <Text type="supporting" color="secondary">
         Single selection
       </Text>
       <ToggleButtonGroup v-model:value="view" label="View mode">
-        <ToggleButton is-icon-only label="List view" tooltip="List view" value="list">
+        <ToggleButton value="list" label="List view" is-icon-only>
           <template #icon>
-            <span class="css-icon css-icon--sm i-carbon-list" />
+            <Icon icon="i-heroicons-list-bullet" />
           </template>
         </ToggleButton>
-        <ToggleButton is-icon-only label="Grid view" tooltip="Grid view" value="grid">
+        <ToggleButton value="grid" label="Grid view" is-icon-only>
           <template #icon>
-            <span class="css-icon css-icon--sm i-carbon-grid" />
+            <Icon icon="i-heroicons-squares-2x2" />
           </template>
         </ToggleButton>
-        <ToggleButton is-icon-only label="Table view" tooltip="Table view" value="table">
+        <ToggleButton value="table" label="Table view" is-icon-only>
           <template #icon>
-            <span class="css-icon css-icon--sm i-carbon-table" />
+            <Icon icon="i-heroicons-table-cells" />
           </template>
         </ToggleButton>
       </ToggleButtonGroup>
-    </VStack>
-    <VStack :gap="1">
-      <Text color="secondary" type="label">
+    </Stack>
+    <Stack direction="vertical" :gap="1">
+      <Text type="supporting" color="secondary">
         Multiple selections
       </Text>
-      <ToggleButtonGroup v-model:value="marks" label="Formatting" type="multiple">
-        <ToggleButton is-icon-only label="Bold" tooltip="Bold" value="bold">
+      <ToggleButtonGroup v-model:value="formats" type="multiple" label="Text formatting">
+        <ToggleButton value="bold" label="Bold" is-icon-only>
           <template #icon>
-            <span class="css-icon css-icon--sm i-carbon-text-bold" />
+            <Icon icon="i-heroicons-bold" />
           </template>
         </ToggleButton>
-        <ToggleButton is-icon-only label="Italic" tooltip="Italic" value="italic">
+        <ToggleButton value="italic" label="Italic" is-icon-only>
           <template #icon>
-            <span class="css-icon css-icon--sm i-carbon-text-italic" />
+            <Icon icon="i-heroicons-italic" />
           </template>
         </ToggleButton>
-        <ToggleButton is-icon-only label="Underline" tooltip="Underline" value="underline">
+        <ToggleButton value="underline" label="Underline" is-icon-only>
           <template #icon>
-            <span class="css-icon css-icon--sm i-carbon-text-underline" />
+            <Icon icon="i-heroicons-underline" />
           </template>
         </ToggleButton>
-        <ToggleButton is-icon-only label="Strikethrough" tooltip="Strikethrough" value="strikethrough">
+        <ToggleButton value="strikethrough" label="Strikethrough" is-icon-only>
           <template #icon>
-            <span class="css-icon css-icon--sm i-carbon-text-strikethrough" />
+            <Icon icon="i-heroicons-strikethrough" />
           </template>
         </ToggleButton>
       </ToggleButtonGroup>
-    </VStack>
-  </VStack>
+    </Stack>
+  </Stack>
 </template>

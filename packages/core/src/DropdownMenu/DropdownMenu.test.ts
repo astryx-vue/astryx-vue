@@ -6,6 +6,7 @@ import DropdownMenu from './DropdownMenu.vue'
 import DropdownMenuDivider from './DropdownMenuDivider.vue'
 import DropdownMenuGroup from './DropdownMenuGroup.vue'
 import DropdownMenuItem from './DropdownMenuItem.vue'
+import DropdownMenuSubMenu from './DropdownMenuSubMenu.vue'
 
 enableAutoUnmount(afterEach)
 
@@ -665,5 +666,29 @@ describe('dropdownMenu', () => {
     expect(trigger.getAttribute('aria-expanded')).toBe('true')
     expect(isShown(surface)).toBe(true)
     expect(document.activeElement).toBe(enabledRows()[0])
+  })
+
+  it('opens a submenu flyout from its row', async () => {
+    const Host = defineComponent({
+      components: { DropdownMenu, DropdownMenuItem, DropdownMenuSubMenu },
+      template: `
+        <DropdownMenu :button="{ label: 'Actions' }">
+          <DropdownMenuSubMenu label="Move to">
+            <DropdownMenuItem label="Projects" />
+          </DropdownMenuSubMenu>
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    document.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-trigger > .astryx-button')!.click()
+    await flushPromises()
+    const row = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(item => item.textContent?.includes('Move to'))
+    row?.click()
+    await flushPromises()
+    await nextTick()
+    expect(document.body.textContent).toContain('Projects')
+    const flyout = document.querySelector('.astryx-dropdown-submenu')
+    expect(flyout).not.toBeNull()
+    expect((flyout as HTMLElement).style.display).not.toBe('none')
   })
 })

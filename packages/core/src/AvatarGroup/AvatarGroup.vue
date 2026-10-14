@@ -9,6 +9,7 @@ import '../../styles/avatar-group.css'
 const props = withDefaults(defineProps<AvatarGroupProps>(), {
   size: 'md',
   shape: 'circle',
+  label: 'Avatar group',
 })
 
 const OVERLAP_RATIO = 0.25
@@ -27,7 +28,7 @@ provide(AvatarGroupContext, {
   <div
     class="astryx-avatar-group"
     role="group"
-    aria-label="Avatar group"
+    :aria-label="label"
   >
     <slot />
   </div>

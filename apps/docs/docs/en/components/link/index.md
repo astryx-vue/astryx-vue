@@ -43,21 +43,21 @@ import { Link } from '@astryx-vue/core/Link'
 
 <DemoExample
   :demo="linkExternal"
-  description="isExternalLink opens a new tab and shows the external indicator. hasUnderline adds a line under the label."
+  description="A vertical list of external links that open in a new tab with an indicator icon."
   locale="en"
   title="External links"
 />
 
 <DemoExample
   :demo="linkInline"
-  description="A link sitting inside a sentence, on the same line as the words around it."
+  description="A link embedded within a paragraph of body text."
   locale="en"
   title="Inline text"
 />
 
 <DemoExample
   :demo="linkTooltips"
-  description="A tooltip on hover or focus says where the link goes."
+  description="Horizontal row of standalone links with descriptive hover tooltips."
   locale="en"
   title="With tooltips"
 />

@@ -34,5 +34,16 @@ const view = ref<string | null>('grid')
 
 ## 示例
 
-<DemoExample :demo="toggleButtonGroupSelection" description="单选用来切换视图。多选是一行格式工具。" locale="zh" title="分组" />
-<DemoExample :demo="toggleButtonGroupVertical" description="List、Grid、Board，以及 Active、Pending、Closed，改成竖着排。" locale="zh" title="垂直排列" />
+<DemoExample
+  :demo="toggleButtonGroupSelection"
+  description="单选和多选两种开关组。单选用来切换视图，多选组成格式工具栏。"
+  locale="zh"
+  title="分组"
+/>
+
+<DemoExample
+  :demo="toggleButtonGroupVertical"
+  description="垂直排列的开关组，同时展示单选和多选。适合侧栏式选项和垂直工具栏。"
+  locale="zh"
+  title="垂直"
+/>

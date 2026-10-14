@@ -83,4 +83,20 @@ describe('link', () => {
     expect(anchor.classes()).toContain('astryx-link--disabled')
     expect(anchor.attributes('aria-disabled')).toBe('true')
   })
+
+  it('adds the standalone class and a tooltip', () => {
+    const wrapper = mount(Link, {
+      attachTo: document.body,
+      props: {
+        href: 'https://github.com',
+        isStandalone: true,
+        tooltip: 'Visit our GitHub repository',
+      },
+      slots: { default: 'GitHub' },
+    })
+
+    expect(wrapper.get('a').classes()).toContain('astryx-link--standalone')
+    expect(document.body.textContent).toContain('Visit our GitHub repository')
+    wrapper.unmount()
+  })
 })

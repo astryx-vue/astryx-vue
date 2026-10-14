@@ -87,4 +87,17 @@ describe('avatarGroup', () => {
     expect(overflow.exists()).toBe(true)
     expect(overflow.text()).toBe('+5')
   })
+
+  it('names the group, and accepts a custom label', () => {
+    const wrapper = mount(AvatarGroup, {
+      slots: { default: '<span />' },
+    })
+    expect(wrapper.get('.astryx-avatar-group').attributes('aria-label')).toBe('Avatar group')
+
+    const named = mount(AvatarGroup, {
+      props: { label: 'Reviewers' },
+      slots: { default: '<span />' },
+    })
+    expect(named.get('.astryx-avatar-group').attributes('aria-label')).toBe('Reviewers')
+  })
 })

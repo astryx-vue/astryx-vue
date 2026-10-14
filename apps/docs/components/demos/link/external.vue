@@ -5,14 +5,14 @@ import { VStack } from '@astryx-vue/core/Stack'
 
 <template>
   <VStack :gap="2">
-    <Link href="https://github.com" is-external-link>
+    <Link href="https://github.com" is-external-link is-standalone>
       GitHub
     </Link>
-    <Link href="https://developer.mozilla.org" is-external-link>
+    <Link href="https://developer.mozilla.org" is-external-link is-standalone>
       MDN Web Docs
     </Link>
-    <Link href="https://vuejs.org" is-external-link has-underline>
-      Vue Documentation
+    <Link href="https://react.dev" is-external-link has-underline is-standalone>
+      React Documentation
     </Link>
   </VStack>
 </template>

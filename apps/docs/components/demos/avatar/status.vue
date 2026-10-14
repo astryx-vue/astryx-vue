@@ -1,28 +1,24 @@
 <script setup lang="ts">
 import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
+import { Stack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <div class="avatar-preview__row">
-    <Avatar name="Ana Thomas">
+  <Stack align="center" direction="horizontal" :gap="4">
+    <Avatar src="/template-assets/DATA-Itai-Jordaan.png" name="Itai Jordaan" size="xl">
       <template #status>
-        <AvatarStatusDot variant="success" />
+        <AvatarStatusDot variant="success" label="Online" />
       </template>
     </Avatar>
-    <Avatar name="Ben Lee">
+    <Avatar src="/template-assets/DATA-Margot-Schroder.png" name="Margot Schroder" size="xl">
       <template #status>
-        <AvatarStatusDot variant="warning" />
+        <AvatarStatusDot variant="neutral" label="Offline" />
       </template>
     </Avatar>
-    <Avatar name="Carol Davis">
+    <Avatar src="/template-assets/DATA-Pablo-Morales.png" name="Pablo Morales" size="xl">
       <template #status>
-        <AvatarStatusDot variant="error" />
+        <AvatarStatusDot variant="error" label="Busy" />
       </template>
     </Avatar>
-    <Avatar name="Nam Tran">
-      <template #status>
-        <AvatarStatusDot variant="neutral" />
-      </template>
-    </Avatar>
-  </div>
+  </Stack>
 </template>

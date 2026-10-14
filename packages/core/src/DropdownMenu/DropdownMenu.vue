@@ -297,7 +297,7 @@ const triggerProps = computed<DropdownMenuTriggerProps>(() => ({
   'onKeyDown': onTriggerKeydown,
 }))
 
-provide(dropdownMenuContextKey, { closeMenu, menuSize })
+provide(dropdownMenuContextKey, { closeMenu, isOpen, menuSize })
 
 onMounted(() => {
   if (!isOpen.value)

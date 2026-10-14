@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { collapsibleBasic, collapsibleChevronPosition, collapsibleControlled, collapsibleDisabled } from '../../../../components/demos/collapsible'
+import { collapsibleControlled, collapsibleDividers, collapsibleFaq, collapsibleMultiple, collapsibleSingle } from '../../../../components/demos/collapsible'
 </script>
 
 ## Usage
@@ -71,29 +71,36 @@ The trigger and the content are linked with `aria-expanded` and `aria-controls`,
 ## Examples
 
 <DemoExample
-  :demo="collapsibleBasic"
-  description="Two independent sections: the first starts expanded to show the content region, the second stays collapsed."
-  locale="en"
-  title="Basic"
-/>
-
-<DemoExample
   :demo="collapsibleControlled"
-  description="The state lives in the parent: the button outside opens and closes the section, and clicking the trigger updates the bound value too."
+  description="Manage the open section from parent state, so something other than a click can move it: a URL parameter, a form jumping to the step that failed validation, or the Previous/Next controls shown here."
   locale="en"
-  title="Controlled state"
+  title="Controlled"
 />
 
 <DemoExample
-  :demo="collapsibleChevronPosition"
-  description="The chevron follows the label by default; setting start leads with an arrow that points into the content while collapsed."
+  :demo="collapsibleFaq"
+  description="FAQ built with hasDividers: row hairlines and density padding with no custom CSS. Questions use body semibold so a list of questions reads as rows rather than a stack of headings."
   locale="en"
-  title="Chevron position"
+  title="FAQ"
 />
 
 <DemoExample
-  :demo="collapsibleDisabled"
-  description="A disabled trigger is dimmed, leaves the tab order, and cannot be toggled, while content that was already open stays visible."
+  :demo="collapsibleMultiple"
+  description="Several sections open at once, for comparing across them. One Collapsible per Card, so each trigger keeps its own large type: it is the heading of its surface, not a row in a list."
   locale="en"
-  title="Disabled"
+  title="Multiple mode"
+/>
+
+<DemoExample
+  :demo="collapsibleSingle"
+  description="Only one section open at a time, so a single body of content competes for attention. Use defaultValue to pre-expand whichever section a first-time reader needs."
+  locale="en"
+  title="Single mode"
+/>
+
+<DemoExample
+  :demo="collapsibleDividers"
+  description="A flat list on the page background with hand-placed Dividers, for detail panels and sidebars where cards would add too much weight."
+  locale="en"
+  title="With dividers"
 />

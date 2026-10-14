@@ -90,6 +90,13 @@ const filterPlugin = useTableFiltering(() => ({
 />
 
 <DemoExample
+  :demo="tablePopoverFilters"
+  description="点表头上的图标，在弹出层里过滤。"
+  locale="zh"
+  title="Table — 弹出过滤"
+/>
+
+<DemoExample
   :demo="tableGridDividers"
   description="紧凑密度，行和列都有分隔线，适合密集的数字。"
   locale="zh"
@@ -115,13 +122,6 @@ const filterPlugin = useTableFiltering(() => ({
   description="数据比较多时按页查看。"
   locale="zh"
   title="Table — 分页"
-/>
-
-<DemoExample
-  :demo="tablePopoverFilters"
-  description="点表头上的图标，在弹出层里过滤。"
-  locale="zh"
-  title="Table — 弹出过滤"
 />
 
 <DemoExample

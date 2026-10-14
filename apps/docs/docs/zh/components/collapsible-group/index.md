@@ -34,4 +34,9 @@ import { Collapsible, CollapsibleGroup } from '@astryx-vue/core/Collapsible'
 
 ## 示例
 
-<DemoExample :demo="collapsibleGroupDensity" description="compact、balanced 和 spacious。density 决定每一行的内边距，分隔线把各项隔开。" locale="zh" title="密度" />
+<DemoExample
+  :demo="collapsibleGroupDensity"
+  description="density 决定组里每一行的块级内边距。紧凑表面用 compact，页面内容用 balanced，页面上唯一的短列表用 spacious。"
+  locale="zh"
+  title="密度"
+/>

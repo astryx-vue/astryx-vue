@@ -5,29 +5,29 @@ import { ToggleButton, ToggleButtonGroup } from '@astryx-vue/core/ToggleButton'
 import { ref } from 'vue'
 
 const view = ref<string | null>('grid')
-const filters = ref(['active'])
+const filters = ref<string[]>(['active'])
 </script>
 
 <template>
   <VStack :gap="4">
     <VStack :gap="1">
-      <Text color="secondary" type="label">
+      <Text type="label" color="secondary">
         Single select
       </Text>
-      <ToggleButtonGroup v-model:value="view" label="View mode" orientation="vertical">
-        <ToggleButton label="List" value="list" />
-        <ToggleButton label="Grid" value="grid" />
-        <ToggleButton label="Board" value="board" />
+      <ToggleButtonGroup v-model:value="view" orientation="vertical" label="View mode">
+        <ToggleButton value="list" label="List" />
+        <ToggleButton value="grid" label="Grid" />
+        <ToggleButton value="board" label="Board" />
       </ToggleButtonGroup>
     </VStack>
     <VStack :gap="1">
-      <Text color="secondary" type="label">
+      <Text type="label" color="secondary">
         Multi select
       </Text>
-      <ToggleButtonGroup v-model:value="filters" label="Status filters" orientation="vertical" type="multiple">
-        <ToggleButton label="Active" value="active" />
-        <ToggleButton label="Pending" value="pending" />
-        <ToggleButton label="Closed" value="closed" />
+      <ToggleButtonGroup v-model:value="filters" orientation="vertical" type="multiple" label="Status filters">
+        <ToggleButton value="active" label="Active" />
+        <ToggleButton value="pending" label="Pending" />
+        <ToggleButton value="closed" label="Closed" />
       </ToggleButtonGroup>
     </VStack>
   </VStack>

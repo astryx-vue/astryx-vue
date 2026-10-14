@@ -51,6 +51,6 @@ import { Toolbar } from '@astryx-vue/core/Toolbar'
 
 <DemoExample :demo="toolbarSizes" description="小、中、大三档并排。尺寸会传给里面的按钮。" locale="zh" title="尺寸" />
 
-<DemoExample :demo="toolbarTabs" description="起始区是标签，结束区是一个操作。" locale="zh" title="标签导航" />
-
 <DemoExample :demo="toolbarFilter" description="搜索在最前面，旁边是状态、优先级和客户，末尾是当前结果数量。" locale="zh" title="表格筛选" />
+
+<DemoExample :demo="toolbarTabs" description="起始区是标签，结束区是一个操作。" locale="zh" title="标签导航" />

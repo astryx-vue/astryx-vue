@@ -273,6 +273,7 @@ export type {
   ContextMenuItemSlots,
   ContextMenuItemTarget,
   ContextMenuOption,
+  ContextMenuPresentation,
   ContextMenuProps,
   ContextMenuSection,
   ContextMenuSize,
@@ -309,6 +310,7 @@ export {
   DropdownMenuDivider,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSubMenu,
   useDropdownMenuContext,
 } from './DropdownMenu/index.js'
 export type {
@@ -329,6 +331,8 @@ export type {
   DropdownMenuSection,
   DropdownMenuSize,
   DropdownMenuSlots,
+  DropdownMenuSubMenuProps,
+  DropdownMenuSubMenuSlots,
   DropdownMenuTriggerProps,
 } from './DropdownMenu/index.js'
 export { EmptyState } from './EmptyState/index.js'

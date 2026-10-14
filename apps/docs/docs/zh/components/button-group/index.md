@@ -45,15 +45,14 @@ import { ButtonGroup } from '@astryx-vue/core/ButtonGroup'
 
 <DemoExample
   :demo="buttonGroupBasic"
-  description="把 2 到 4 个相关操作放进一组，并让组内按钮使用相同的 variant，视觉上就是一个整体。"
+  description="把三个相关操作连成一组。为无障碍提供组标签，并让按钮使用同一变体，读起来才是一个控件。"
   locale="zh"
-  title="基础按钮组"
+  title="基本"
 />
 
 <DemoExample
   :demo="buttonGroupFloating"
-  description="elevation 作用于整个按钮组：阴影由组统一呈现，组内按钮不再单独显示阴影。"
+  description="用 elevation=&quot;med&quot; 抬起的一组操作。相连的按钮共用一个表面，阴影把它们作为一个整体抬起来。"
   locale="zh"
-  title="悬浮按钮组"
+  title="悬浮"
 />
-

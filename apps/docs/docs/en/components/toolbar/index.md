@@ -51,6 +51,6 @@ import { Toolbar } from '@astryx-vue/core/Toolbar'
 
 <DemoExample :demo="toolbarSizes" description="Small, medium, and large side by side. Size cascades to the buttons inside." locale="en" title="Sizes" />
 
-<DemoExample :demo="toolbarTabs" description="Tabs sit in the start group. One action sits at the end." locale="en" title="Tab Navigation" />
-
 <DemoExample :demo="toolbarFilter" description="Search leads the row. Status, priority, and customer sit beside it, with a live result count." locale="en" title="Table Filter" />
+
+<DemoExample :demo="toolbarTabs" description="Tabs sit in the start group. One action sits at the end." locale="en" title="Tab Navigation" />

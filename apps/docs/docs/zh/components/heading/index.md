@@ -43,21 +43,21 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 <DemoExample
   :demo="headingCardGrid"
-  description="卡片里的标题保持一行，说明用 maxLines 收成两行，这样每张卡片的高度一致。"
+  description="响应式卡片网格。标题和说明被截断，让每张卡片高度一致。"
   locale="zh"
-  title="卡片标题"
+  title="卡片网格"
 />
 
 <DemoExample
   :demo="headingHierarchy"
-  description="一页里的 h1、h2、h3，各自配一段说明。"
+  description="真实页面布局，用 h1 到 h3 和配套说明展示标题层级。"
   locale="zh"
   title="页面层级"
 />
 
 <DemoExample
   :demo="headingTruncation"
-  description="限宽之后，maxLines 为 1 收成一行，为 2 收成两行，末尾是省略号。"
+  description="在有限宽度里把标题截成一行或两行，并以省略号结尾。"
   locale="zh"
   title="截断"
 />

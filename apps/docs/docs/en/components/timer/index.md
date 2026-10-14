@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { timerFormats, timerInline, timerShowcase, timerTypography } from '../../../../components/demos/timer'
+import { timerFormats, timerInline, timerTypography } from '../../../../components/demos/timer'
 </script>
 
 ## Usage
@@ -45,12 +45,6 @@ import { Timer } from '@astryx-vue/core/Timer'
 
 ## Examples
 
-<DemoExample
-  :demo="timerShowcase"
-  description="Elapsed and clock readings from the same start time, set in large primary type beside short labels."
-  locale="en"
-  title="Timer"
-/>
 
 <DemoExample
   :demo="timerFormats"
