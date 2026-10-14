@@ -201,3 +201,26 @@ jobs:
             fi
             pnpm --filter "${name}" publish --registry https://npm.pkg.github.com --no-git-checks --no-provenance
           done
+
+  # 只在 changesets 真的 publish 之后跑。核对 npm、补 Release 这些后续步骤失败时，
+  # published 已经是 true；重跑往往不会再发布一次，所以不能等整个 release job 成功。
+  # 取消的运行不同步。这个 job 失败不会撤回已经发出的版本。
+  sync-main-to-dev:
+    name: Sync main into dev
+    needs: release
+    if: always() && cancelled() == false && needs.release.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout dev
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Merge main into dev
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash ./scripts/sync-main-into-dev.sh
