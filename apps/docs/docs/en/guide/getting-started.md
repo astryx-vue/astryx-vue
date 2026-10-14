@@ -10,7 +10,7 @@ Install the components and the theme. The peer dependency is Vue `^3.5.0`.
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-Load the theme once from the app entry. Neutral includes JetBrains Mono.
+Load the theme once from the app entry. Neutral includes Figtree and JetBrains Mono.
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
@@ -33,7 +33,5 @@ Import every structural stylesheet at once with:
 ```ts
 import '@astryx-vue/core/styles.css'
 ```
-
-Figtree is the first family in the body stack, and the theme package does not load it. Load the face in the app if you want it. Otherwise the stack falls through to the system sans.
 
 Next, see how package entries work in [Installation](/en/guide/installation), how layers and variables connect in [Theme and styles](/en/guide/styling), or open [Components](/en/components/). To learn more about the background and design decisions, see [Introduction](/en/guide/why).

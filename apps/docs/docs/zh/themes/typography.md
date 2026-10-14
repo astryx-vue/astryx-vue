@@ -8,7 +8,7 @@ title: 排版与字体
 
 `--astryx-font-family-body` 和 `--astryx-font-family-heading` 以 Figtree 开头，后面是 `-apple-system`、`BlinkMacSystemFont`、`Segoe UI`、`Roboto`、`Helvetica`、`Arial`、`sans-serif`。`--astryx-font-family-code` 以 JetBrains Mono 开头，后面是 `ui-monospace`、`SFMono-Regular`、`Menlo`、`Consolas`、`monospace`。
 
-主题包只加载 JetBrains Mono，字重 400、500、600、700，以及 400 斜体。Figtree 不在 `@astryx-vue/themes` 里。文档站自己用 `@fontsource/figtree` 加载了 400、500、600、700 和部分斜体。应用里要出现 Figtree，需要自己引入字体文件；不引入时，字体会落到栈里后面的系统字体。
+主题包加载 Figtree 和 JetBrains Mono，字重 400、500、600、700，以及 400 斜体。Figtree 另外包含 600 斜体。引入主题入口就会带上这两种字体。
 
 字重 token 是 `--astryx-font-weight-normal`（400）、`medium`（500）、`semibold`（600）、`bold`（700）。`--astryx-font-weight-regular` 指向 `normal`，组件已经在用这个名字。原版对应的变量名是 `normal`。
 

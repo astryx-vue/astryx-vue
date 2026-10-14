@@ -8,7 +8,7 @@ Two font stacks live on Neutral's semantic tokens.
 
 `--astryx-font-family-body` and `--astryx-font-family-heading` start with Figtree, then `-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Roboto`, `Helvetica`, `Arial`, and `sans-serif`. `--astryx-font-family-code` starts with JetBrains Mono, then `ui-monospace`, `SFMono-Regular`, `Menlo`, `Consolas`, and `monospace`.
 
-The theme package loads JetBrains Mono at 400, 500, 600, 700, and 400 italic. It does not load Figtree. The docs site loads Figtree itself, through `@fontsource/figtree`, at 400, 500, 600, 700, and some italics. An app that wants Figtree has to load the face. Otherwise the stack falls through to the system sans.
+The theme package loads Figtree and JetBrains Mono at 400, 500, 600, 700, and 400 italic. Figtree also includes 600 italic. Importing a theme entry loads both faces.
 
 Weight tokens are `--astryx-font-weight-normal` (400), `medium` (500), `semibold` (600), and `bold` (700). `--astryx-font-weight-regular` points at `normal`. Components already use that name. Upstream calls the token `normal`.
 

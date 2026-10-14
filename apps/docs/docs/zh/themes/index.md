@@ -13,7 +13,7 @@ import '@astryx-vue/themes/neutral.css'
 
 把 `data-astryx-theme="neutral"` 写在要使用这套主题的元素上。写在 `html` 上就是整站，写在更小的元素上就只影响那一块。Neutral 还会把同一批变量写到 `:root`，所以只使用 Neutral 时，引入 `neutral.css` 即可。其余主题不会改 `:root`。
 
-每套主题都会带上 JetBrains Mono，并加载自己的正文字体。
+每套主题都会带上 Figtree 和 JetBrains Mono。Butter、Chocolate、Gothic、Matcha、Stone 和 Y2K 还会加载各自的正文字体。
 
 <ThemeGallery />
 

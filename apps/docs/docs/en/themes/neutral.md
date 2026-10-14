@@ -10,9 +10,9 @@ Neutral is the theme `@astryx-vue/themes` ships today. Load it with:
 import '@astryx-vue/themes/neutral.css'
 ```
 
-That entry loads `fonts.css`, then each file under `neutral/` in name order, including `base.css`. `fonts.css` loads JetBrains Mono at 400, 500, 600, 700, and 400 italic. Those are the faces `font-synthesis: none` can use. The browser does not invent a missing weight or italic.
+That entry loads `fonts.css`, then each file under `neutral/` in name order, including `base.css`. `fonts.css` loads Figtree and JetBrains Mono at 400, 500, 600, 700, and 400 italic. Figtree also includes 600 italic. Those are the faces `font-synthesis: none` can use. The browser does not invent a missing weight or italic.
 
-`--astryx-font-family-code` names JetBrains Mono first, then `ui-monospace`, `SFMono-Regular`, `Menlo`, `Consolas`, and `monospace`.
+`--astryx-font-family-body` and `--astryx-font-family-heading` name Figtree first, then `-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Roboto`, `Helvetica`, `Arial`, and `sans-serif`. `--astryx-font-family-code` names JetBrains Mono first, then `ui-monospace`, `SFMono-Regular`, `Menlo`, `Consolas`, and `monospace`.
 
 Semantic tokens live in `packages/themes/neutral/base.css`. Names follow upstream `tokens.stylex.ts` and add an `--astryx-` prefix. Each token writes its light and dark stops with `light-dark()`. A value comes from the Neutral theme when that theme overrides it, and from the upstream default otherwise.
 
