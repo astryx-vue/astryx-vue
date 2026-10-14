@@ -3,10 +3,10 @@ import type { FieldStatusInput } from '../Field/types.js'
 import type { MultiSelectorEmits, MultiSelectorOptionData, MultiSelectorProps, MultiSelectorSlots } from './types.js'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
-import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Token from '../Token/Token.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
@@ -36,7 +36,10 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
 })
 
 const emit = defineEmits<MultiSelectorEmits>()
+
 defineSlots<MultiSelectorSlots>()
+
+const CheckboxMark = useIndicator('checkbox')
 
 const messages = useAstryxMessages()
 const triggerId = `astryx-multi-selector-${useId()}`
@@ -411,7 +414,9 @@ defineExpose({
     :padding="2"
   >
     <div ref="sheetSlot" class="astryx-multi-selector-sheet">
-      <div class="astryx-multi-selector-sheet-title">{{ props.label }}</div>
+      <div class="astryx-multi-selector-sheet-title">
+        {{ props.label }}
+      </div>
     </div>
   </BottomSheet>
   <Teleport :to="listboxTarget">
@@ -463,9 +468,9 @@ defineExpose({
         @mouseenter="highlight(0)"
         @click="toggleValue(SELECT_ALL_VALUE)"
       >
-        <CheckboxIndicator v-if="props.checkboxPosition === 'start'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
+        <component :is="CheckboxMark" v-if="props.checkboxPosition === 'start'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
         <span class="astryx-multi-selector-option-label">{{ selectAllLabel }}</span>
-        <CheckboxIndicator v-if="props.checkboxPosition === 'end'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
+        <component :is="CheckboxMark" v-if="props.checkboxPosition === 'end'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
       </div>
       <template v-for="row in rows" :key="row.key">
         <div v-if="row.kind === 'divider'" class="astryx-multi-selector-divider" role="separator" />
@@ -490,7 +495,8 @@ defineExpose({
           @mouseenter="highlight(optionIndex(row.option.value))"
           @click="toggleValue(row.option.value)"
         >
-          <CheckboxIndicator
+          <component
+            :is="CheckboxMark"
             v-if="props.checkboxPosition === 'start'"
             :state="checkboxState(row.option)"
             :size="props.size === 'lg' ? 'md' : 'sm'"
@@ -509,7 +515,8 @@ defineExpose({
               <span v-if="row.option.description" class="astryx-multi-selector-option-description">{{ row.option.description }}</span>
             </template>
           </span>
-          <CheckboxIndicator
+          <component
+            :is="CheckboxMark"
             v-if="props.checkboxPosition === 'end'"
             :state="checkboxState(row.option)"
             :size="props.size === 'lg' ? 'md' : 'sm'"

@@ -109,6 +109,11 @@
       "types": "./dist/Icon/plugin.d.ts",
       "import": "./dist/Icon/plugin.js"
     },
+    "./Indicator": {
+      "source": "./src/Indicator/index.ts",
+      "types": "./dist/Indicator/index.d.ts",
+      "import": "./dist/Indicator/index.js"
+    },
     "./Layout": {
       "source": "./src/Layout/index.ts",
       "types": "./dist/Layout/index.d.ts",
@@ -637,6 +642,10 @@
       "./icons": {
         "types": "./dist/Icon/plugin.d.ts",
         "import": "./dist/Icon/plugin.js"
+      },
+      "./Indicator": {
+        "types": "./dist/Indicator/index.d.ts",
+        "import": "./dist/Indicator/index.js"
       },
       "./Layout": {
         "types": "./dist/Layout/index.d.ts",

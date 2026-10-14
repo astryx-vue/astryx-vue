@@ -348,6 +348,37 @@ describe('selector', () => {
     wrapper.unmount()
   })
 
+  it('marks the chosen option and leaves unchosen rows without a check', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'banana' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+
+    const listbox = document.querySelector('.astryx-selector-listbox:last-of-type')
+    const rows = [...(listbox?.querySelectorAll('.astryx-selector-option') ?? [])]
+    const chosen = rows.find(row => row.getAttribute('aria-selected') === 'true')
+    const open = rows.find(row => row.getAttribute('aria-selected') === 'false')
+    expect(chosen?.querySelector('.astryx-selector-check')).not.toBeNull()
+    expect(open?.querySelector('.astryx-selector-check')).toBeNull()
+    expect(chosen?.querySelector('.astryx-selector-mark')).toBe(chosen?.lastElementChild)
+    wrapper.unmount()
+  })
+
+  it('puts the selection mark at the start when asked', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'apple', indicatorPosition: 'start' },
+      attachTo: document.body,
+    })
+    await wrapper.find('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    const listbox = document.querySelector('.astryx-selector-listbox:last-of-type')
+    const chosen = listbox?.querySelector('.astryx-selector-option[aria-selected="true"]')
+    expect(chosen?.querySelector('.astryx-selector-mark')).toBe(chosen?.firstElementChild)
+    wrapper.unmount()
+  })
+
   it('includes hidden select for form submission', () => {
     const wrapper = mount(Selector, {
       props: {

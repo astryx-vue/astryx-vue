@@ -1,0 +1,17 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-check-indicator {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    color: var(--astryx-icon-accent-foreground, var(--astryx-color-accent, #262626));
+  }
+
+  .astryx-check-indicator[data-disabled='true'] {
+    color: var(--astryx-icon-disabled-foreground, var(--astryx-color-icon-disabled, #a3a3a3));
+  }
+}

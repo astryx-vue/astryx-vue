@@ -6,6 +6,7 @@ import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import Field from '../Field/Field.vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/selector.css'
@@ -24,11 +25,13 @@ const props = withDefaults(defineProps<SelectorProps>(), {
   variant: 'default',
   statusVariant: 'attached',
   isLabelHidden: false,
+  indicatorPosition: 'end',
 })
 
 const emit = defineEmits<SelectorEmits>()
 defineSlots<SelectorSlots>()
 const slots = useSlots()
+const SelectionMark = useIndicator('check')
 
 const selectorId = `astryx-selector-${useId()}`
 const listboxId = `${selectorId}-listbox`
@@ -378,14 +381,34 @@ watch(() => combobox.activeIndex.value, (index) => {
               @keydown.enter="onOptionClick(row.option)"
               @keydown.space.prevent="onOptionClick(row.option)"
             >
-              <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
-              <template v-else>
-                <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
-                <span class="astryx-selector-option-label">{{ row.option.label }}</span>
-                <span v-if="row.option.description" class="astryx-selector-option-description">
-                  {{ row.option.description }}
-                </span>
-              </template>
+              <span v-if="props.indicatorPosition === 'start'" class="astryx-selector-mark">
+                <component
+                  :is="SelectionMark"
+                  class="astryx-selector-check"
+                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
+                  size="sm"
+                  :is-disabled="row.option.disabled"
+                />
+              </span>
+              <span class="astryx-selector-option-body">
+                <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
+                <template v-else>
+                  <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
+                  <span class="astryx-selector-option-label">{{ row.option.label }}</span>
+                  <span v-if="row.option.description" class="astryx-selector-option-description">
+                    {{ row.option.description }}
+                  </span>
+                </template>
+              </span>
+              <span v-if="props.indicatorPosition === 'end'" class="astryx-selector-mark">
+                <component
+                  :is="SelectionMark"
+                  class="astryx-selector-check"
+                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
+                  size="sm"
+                  :is-disabled="row.option.disabled"
+                />
+              </span>
             </div>
           </template>
         </div>

@@ -74,6 +74,7 @@ const expectedCatalog = [
   { slug: 'typeahead', group: 'Form Controls', en: 'Typeahead', zh: '自动补全' },
   { slug: 'complex-selector', group: 'Form Controls', en: 'Complex Selector', zh: '复合选择器' },
   { slug: 'power-search', group: 'Form Controls', en: 'Power Search', zh: '结构化搜索' },
+  { slug: 'indicator', group: 'Form Controls', en: 'Indicator', zh: '指示器' },
   { slug: 'center', group: 'Layout', en: 'Center', zh: '居中容器' },
   { slug: 'divider', group: 'Layout', en: 'Divider', zh: '分隔线' },
   { slug: 'grid', group: 'Layout', en: 'Grid', zh: '网格布局' },

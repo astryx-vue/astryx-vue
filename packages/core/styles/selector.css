@@ -269,8 +269,9 @@
   .astryx-selector-option {
     box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
     width: 100%;
     padding: var(--astryx-spacing-1-5, 6px) var(--astryx-spacing-2, 8px);
     border: 0;
@@ -281,6 +282,30 @@
     text-align: start;
     cursor: pointer;
     outline: none;
+  }
+
+  .astryx-selector-option-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  /*
+   * The column keeps a visible mark at either edge. When the graphic draws
+   * nothing, :empty drops the column so an unchosen row does not reserve a gap.
+   */
+  .astryx-selector-mark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 1rem;
+  }
+
+  .astryx-selector-mark:empty {
+    display: none;
   }
 
   .astryx-selector.size-sm .astryx-selector-option {

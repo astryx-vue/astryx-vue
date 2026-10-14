@@ -28,3 +28,5 @@ import '@astryx-vue/themes/neutral.css'
 
 
 For an interactive checkbox, use [CheckboxInput](/en/components/checkbox-input).
+
+The box can be replaced for the whole theme. The check used by selectors and task lists, and the radio circle, are swapped by name on the [indicator](/en/components/indicator) page.

@@ -45,17 +45,6 @@
   .astryx-checkbox-input[data-blocked='true'] .astryx-checkbox-native,
   .astryx-checkbox-input[data-blocked='true'] .astryx-field-label { cursor: default; }
 
-  @media (hover: hover) {
-    .astryx-checkbox-input:not([data-blocked='true']) .astryx-checkbox-row:hover .astryx-checkbox-indicator {
-      background: color-mix(in srgb, var(--astryx-checkbox-background, #fff), var(--astryx-checkbox-accent, #262626) 5%);
-      border-color: color-mix(in srgb, var(--astryx-checkbox-border, #d4d4d4), var(--astryx-checkbox-accent, #262626) 20%);
-    }
-    .astryx-checkbox-input:not([data-blocked='true']) .astryx-checkbox-row:hover .astryx-checkbox-indicator:not([data-state='unchecked']) {
-      background: color-mix(in srgb, var(--astryx-checkbox-accent, #262626), var(--astryx-checkbox-on-accent, #fff) 15%);
-      border-color: transparent;
-    }
-  }
-
   .astryx-checkbox-spinner {
     box-sizing: border-box;
     width: 12px;

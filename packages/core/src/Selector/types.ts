@@ -1,4 +1,5 @@
 import type { FieldStatusInput } from '../Field/types.js'
+import type { IndicatorPosition } from '../Indicator/types.js'
 
 export interface SelectorOption {
   value: string | number
@@ -81,6 +82,12 @@ export interface SelectorProps {
   width?: number | string
   /** 名称（用于表单提交） */
   name?: string
+  /**
+   * 单选标记放在选项的哪一侧。
+   * 未选中时默认的勾不占位；主题把勾换成单选圆点后，未选中的行也会画出空心圆。
+   * @default 'end'
+   */
+  indicatorPosition?: IndicatorPosition
 }
 
 export interface SelectorEmits {

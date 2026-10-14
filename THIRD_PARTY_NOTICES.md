@@ -12,6 +12,8 @@ This project is an unofficial community Vue port based on the public Astryx proj
 
 The TextInput, CheckboxInput, CheckboxIndicator, Slider, Banner and Field family added in October 2026 also references the upstream implementation at commit `92779d3fbd0f12e659203c7d719d5bb00935060c`, including TextInput, CheckboxInput, CheckboxIndicator, Slider, Banner, Field, FieldLabel, FieldStatus and the shared input styles. Their public behavior and visual structure are adapted into native Vue components under the same MIT license. The Vue model/events, scoped slots and async-state implementation are local adaptations.
 
+The indicator family and semantic icon names added in October 2026 also reference the upstream implementation at commit `fdb53f3` (0.7.1), including CheckIndicator, RadioIndicator, the indicator registry, and the semantic icon name list. Their public behavior is adapted into Vue components and a name-to-Iconify map under the same MIT license. The Vue slots, composables, and built-in glyph fallback are local adaptations.
+
 When files or substantial portions are copied or adapted, their original copyright and license notices must be kept here or alongside the adapted files.
 
 No Meta trademarks, logos, or endorsement are granted by the Astryx software license.

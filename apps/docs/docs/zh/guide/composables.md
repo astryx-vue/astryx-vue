@@ -52,6 +52,8 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `useSideNavCollapse` | `@astryx-vue/core/SideNav` |
 | `useListContext`、`useItemDescriptionId` | `@astryx-vue/core/List` |
 | `useTheme`、`useMediaTheme` | `@astryx-vue/core/Theme` |
+| `useIndicator` | `@astryx-vue/core/Indicator` |
+| `useSemanticIcon` | `@astryx-vue/core/Icon` |
 | `useSyntaxTheme` | `@astryx-vue/core/Code` |
 | `useChatComposerContext`、`useChatComposerTokens`、`useChatPasteAsToken`、`useChatDictation`、`useSpeechRecognition` | `@astryx-vue/core/Chat` |
 

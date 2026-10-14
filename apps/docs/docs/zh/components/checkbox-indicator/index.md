@@ -28,4 +28,6 @@ import '@astryx-vue/themes/neutral.css'
 ```
 
 
-需要用户操作时，使用 [CheckboxInput](/components/checkbox-input).
+需要用户操作时，使用 [CheckboxInput](/components/checkbox-input)。
+
+方框也可以整组替换。选择器和任务列表用的勾、单选用的圆点，都在 [指示器](/components/indicator) 里按名字换。

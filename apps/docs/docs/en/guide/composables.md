@@ -52,6 +52,8 @@ Some functions belong to one component and are not in the table above. Import th
 | `useSideNavCollapse` | `@astryx-vue/core/SideNav` |
 | `useListContext`, `useItemDescriptionId` | `@astryx-vue/core/List` |
 | `useTheme`, `useMediaTheme` | `@astryx-vue/core/Theme` |
+| `useIndicator` | `@astryx-vue/core/Indicator` |
+| `useSemanticIcon` | `@astryx-vue/core/Icon` |
 | `useSyntaxTheme` | `@astryx-vue/core/Code` |
 | `useChatComposerContext`, `useChatComposerTokens`, `useChatPasteAsToken`, `useChatDictation`, `useSpeechRecognition` | `@astryx-vue/core/Chat` |
 
