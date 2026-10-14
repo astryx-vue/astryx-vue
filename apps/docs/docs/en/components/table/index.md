@@ -9,7 +9,9 @@ footer: false
 import { Badge } from '@astryx-vue/core/Badge'
 import {
   tableColumnSettings,
+  tableExpansion,
   tableGridDividers,
+  tableGrouped,
   tableInCard,
   tableInlineFilters,
   tablePaginated,
@@ -17,8 +19,11 @@ import {
   tableResizable,
   tableRichCell,
   tableRowSelection,
+  tableRowStatus,
   tableSortable,
+  tableSticky,
   tableStriped,
+  tableTree,
 } from '../../../../components/demos/table'
 </script>
 
@@ -33,7 +38,13 @@ Behavior is added with plugins, composed in the `plugins` object:
 - `useTablePagination` renders a pager under the table. Slice the rows with `paginateData` before passing `data`.
 - `useTableColumnSettings` shows only the active column keys, and keeps `isAlwaysVisible` columns on.
 - `useTableColumnResize` lets a header edge be dragged. The smallest width is 60px.
-- `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly.
+- `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly. This filtering stays separate from Power Search.
+- `useTableGroupedRows` turns the rows you already filtered, sorted, and sliced into sections. Pass its data, plugin, and row identity back to the table together. A collapsed section keeps its header. Replace the collapsed set instead of mutating it.
+- `useTableTreeState` decides which nodes are open. `useTableTreeData` draws the indent and the buttons. Child rows reuse the parent columns. The header button expands or collapses every branch, and a cycle is skipped.
+- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. Use the tree plugins when the children should reuse the columns.
+- `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.
+- `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.
+- `useTableRowIndex` numbers real rows. Group headers do not take a number.
 
 `density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.
 
@@ -57,7 +68,7 @@ const columns = [
 </template>
 ```
 
-Filtering is self-contained. It does not depend on PowerSearch, which this library does not include. Pass the filter state through a getter so the table reads the latest value:
+Pass the column filter state through a getter so the table reads the latest value:
 
 ```ts
 const { filters, onFilterChange } = useTableFilterState()
@@ -68,7 +79,7 @@ const filterPlugin = useTableFiltering(() => ({
 }))
 ```
 
-Tree data, sticky columns, grouped rows, row expansion, row status, row index, and a table context menu are not part of this component yet.
+`rowCount` and `rowIndexStart` report where the visible window sits in the full result. Setting either one numbers the data rows. When only the start is set, the total count is unknown. Group headers and detail panels are not numbered.
 
 ## Best practices
 
@@ -157,4 +168,39 @@ Tree data, sticky columns, grouped rows, row expansion, row status, row index, a
   description="Table with alternating row colors and hover highlighting for easy scanning."
   locale="en"
   title="Table — Striped Rows"
+/>
+
+<DemoExample
+  :demo="tableGrouped"
+  description="Rows split by role. A collapsed section keeps its header, and the row numbers skip those headers."
+  locale="en"
+  title="Table — Grouped rows"
+/>
+
+<DemoExample
+  :demo="tableTree"
+  description="Child rows reuse the same columns. The header expands every branch, and a row click expands a node that has children."
+  locale="en"
+  title="Table — Tree data"
+/>
+
+<DemoExample
+  :demo="tableExpansion"
+  description="Open the note under a row from the chevron, the row, or the context menu."
+  locale="en"
+  title="Table — Row expansion"
+/>
+
+<DemoExample
+  :demo="tableSticky"
+  description="Name stays on the left and Friday stays on the right while the days in between scroll."
+  locale="en"
+  title="Table — Sticky columns"
+/>
+
+<DemoExample
+  :demo="tableRowStatus"
+  description="The mark at the start of a row is success, warning, error, or a dot with no signal."
+  locale="en"
+  title="Table — Row status"
 />

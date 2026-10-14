@@ -6,11 +6,15 @@ title: 应用模式
 
 组件按原版的粒度拆开，同一类界面可以叠在一起用。目前成套提供的是对话这一种：消息列表、气泡、引用和 Markdown 各自是组件，由应用决定怎么拼。
 
-`Chat` 从 `@astryx-vue/core/Chat` 引入。`ChatLayout` 是一列，记录放进 `ChatMessageList`，输入区放进 `composer` 插槽。布局默认自己滚动。阅读位置在底部时，新内容会继续贴底；向上滚之后贴底停止，并出现回到底部的按钮。这件事内部用 `useChatStreamScroll` 和 `useChatNewMessages`。
+对话从 `@astryx-vue/core/Chat` 引入。`ChatLayout` 是一列，记录放进 `ChatMessageList`，输入套件 `ChatComposer` 放进 `composer` 插槽。布局默认自己滚动。阅读位置在底部时，新内容会继续贴底；向上滚之后贴底停止，并出现回到底部的按钮。这件事内部用 `useChatStreamScroll` 和 `useChatNewMessages`。
 
 ```vue
 <script setup lang="ts">
-import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+import { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+
+function onSubmit(value: string) {
+  console.log(value)
+}
 </script>
 
 <template>
@@ -28,7 +32,7 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
       </ChatMessage>
     </ChatMessageList>
     <template #composer>
-      <form><!-- 输入区由应用提供 --></form>
+      <ChatComposer @submit="onSubmit" />
     </template>
   </ChatLayout>
 </template>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMetadata, chatBubbleVariants, chatLayoutPanel, chatListDensity, chatListFull, chatMessageAvatar, chatMessageGhost, chatMessageGroup, chatMetadataFooter, chatMetadataStatus, chatMetadataTime, chatScrollLabels, chatSystemIcon, chatSystemStatus, chatSystemVariants, chatToolsExpandable, chatToolsSimple, chatToolsStatuses } from '../../../../components/demos/chat'
+import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMetadata, chatBubbleVariants, chatComposerMentions, chatComposerShell, chatComposerStates, chatLayoutPanel, chatListDensity, chatListFull, chatMessageAvatar, chatMessageGhost, chatMessageGroup, chatMetadataFooter, chatMetadataStatus, chatMetadataTime, chatScrollLabels, chatSystemIcon, chatSystemStatus, chatSystemVariants, chatTokenized, chatToolsExpandable, chatToolsSimple, chatToolsStatuses } from '../../../../components/demos/chat'
 </script>
 
 ## Usage
@@ -18,9 +18,15 @@ The chat display is a set of pieces that stack into a transcript: a scrolling la
 
 While the reader is at the bottom, new text keeps the view pinned there. Scrolling up lets go immediately and reveals the scroll-to-bottom button. If messages arrive while the view is unlocked, the button label changes to the localized “New messages” string, a live region announces it, and `ChatUnreadDivider` can mark the boundary. `ChatLayout` wires this through `useChatStreamScroll` and `useChatNewMessages`. Set `showScrollButton` to `false` to hide the built-in button, or replace it with the `scrollButton` slot.
 
+The field is ChatComposer, placed in the layout's composer slot. The shell owns the draft, send, and stop. The default editor accepts chips, sends on Enter, and inserts a newline on Shift+Enter. The attachment drawer, header, and footer are slots. Dictation uses the browser's speech recognition, and the microphone stays hidden when that API is missing.
+
 ```vue
 <script setup lang="ts">
-import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+import { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+
+function onSubmit(value: string) {
+  console.log(value)
+}
 </script>
 
 <template>
@@ -38,7 +44,7 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
       </ChatMessage>
     </ChatMessageList>
     <template #composer>
-      <form><!-- your composer --></form>
+      <ChatComposer placeholder="Type a message…" @submit="onSubmit" />
     </template>
   </ChatLayout>
 </template>
@@ -54,13 +60,13 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 
 `ChatTypingIndicator` draws three dots. Pass `names` and it writes a sentence for one person, two people, or a named person plus a count. The root is `role="status"`, and that region is the only announcement. `ChatUnreadDivider` marks the first unread message, and new rows go below it.
 
-The examples below follow the Chat section of the Astryx docs, in the same order: layout, scroll button, message, bubble, list, metadata, system message, and tool calls.
+The examples start with the composer beside the transcript, then follow layout, scroll button, message, bubble, list, metadata, system message, and tool calls.
 
 ## Best practices
 
 | Guidance | Practices |
 | --- | --- |
-| <Badge variant="success">Do</Badge> | Keep the transcript in `ChatMessageList` and the field in the `composer` slot, so the frosted dock and the scroll button stay aligned. |
+| <Badge variant="success">Do</Badge> | Keep the transcript in the message list and the composer in the bottom slot, so the frosted dock and the scroll button stay aligned. |
 | <Badge variant="success">Do</Badge> | Set `isStreaming` for the whole time an assistant body is growing, and clear it when the message is complete. |
 | <Badge variant="success">Do</Badge> | Use `ChatUnreadDivider` at the first message the reader has not seen. The scroll button’s “New messages” label is the announcement; the divider is the visible mark. |
 | <Badge variant="success">Do</Badge> | Put plain text, citations, or your own renderer in the bubble slot. The bubble only supplies the surface. |
@@ -71,9 +77,37 @@ The examples below follow the Chat section of the Astryx docs, in the same order
 
 <DemoExample
   :demo="chatLayoutPanel"
-  description="Narrow sidebar chat in a constrained container that triggers compact density. Use for side panels, drawers, or embedded chat widgets where horizontal space is limited."
+  description="A narrow column. Press Enter and the draft is appended to the transcript. A tight container uses compact density, which fits a side panel or a drawer."
   locale="en"
   title="ChatLayout — Panel View"
+/>
+
+<DemoExample
+  :demo="chatComposerShell"
+  description="A field with an attachment drawer, a header button, and dictation. The drawer handle collapses the attachments. The microphone starts listening in browsers that support speech recognition."
+  locale="en"
+  title="ChatComposer — Shell"
+/>
+
+<DemoExample
+  :demo="chatComposerStates"
+  description="The top field is disabled while a reply is in progress, and Stop stays clickable. The middle one is compact and flat, with a warning. The bottom one puts an error above the field."
+  locale="en"
+  title="ChatComposer — States"
+/>
+
+<DemoExample
+  :demo="chatComposerMentions"
+  description="Type @ at the start of a word to list people. Choosing one leaves a chip in the draft. The submitted string contains the chip value."
+  locale="en"
+  title="ChatComposerInput — Mentions"
+/>
+
+<DemoExample
+  :demo="chatTokenized"
+  description="The same chip definitions render inside a sent bubble."
+  locale="en"
+  title="ChatTokenizedText — Chips in a bubble"
 />
 
 <DemoExample

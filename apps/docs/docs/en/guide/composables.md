@@ -53,5 +53,6 @@ Some functions belong to one component and are not in the table above. Import th
 | `useListContext`, `useItemDescriptionId` | `@astryx-vue/core/List` |
 | `useTheme`, `useMediaTheme` | `@astryx-vue/core/Theme` |
 | `useSyntaxTheme` | `@astryx-vue/core/Code` |
+| `useChatComposerContext`, `useChatComposerTokens`, `useChatPasteAsToken`, `useChatDictation`, `useSpeechRecognition` | `@astryx-vue/core/Chat` |
 
 `provideAstryxLocale` and `useAstryxMessages` are in [Internationalization](/en/guide/i18n).

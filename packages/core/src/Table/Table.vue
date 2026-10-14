@@ -20,6 +20,12 @@ const props = withDefaults(defineProps<TableProps<T>>(), {
 defineSlots<TableSlots>()
 
 const messages = useAstryxMessages()
+const passedIdKey = computed(() => {
+  const key = props.idKey
+  if (typeof key === 'function')
+    return (row: Record<string, unknown>) => key(row as T)
+  return key
+})
 const plugins = computed(() => Object.values(props.plugins ?? {}).filter((plugin): plugin is TablePlugin<T> => plugin != null))
 const dataMode = computed(() => props.data != null)
 const columns = computed(() => (props.columns ?? []) as TableColumn[])
@@ -33,7 +39,7 @@ const columns = computed(() => (props.columns ?? []) as TableColumn[])
     :rows="data ?? []"
     :columns="columns"
     :plugins="plugins as TablePlugin[]"
-    :id-key="idKey"
+    :id-key="passedIdKey"
     :label="label ?? messages.table.label"
     :density="density"
     :dividers="dividers"
@@ -41,6 +47,8 @@ const columns = computed(() => (props.columns ?? []) as TableColumn[])
     :has-hover="hasHover"
     :text-overflow="textOverflow"
     :vertical-align="verticalAlign"
+    :row-index-start="rowIndexStart"
+    :row-count="rowCount"
   >
     <template v-if="$slots.empty" #empty>
       <slot name="empty" />
