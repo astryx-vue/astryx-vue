@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { inputGroupBasic } from '../../../../components/demos/input-group'
+import { inputGroupBasic, inputGroupStatus, inputGroupWebsite } from '../../../../components/demos/input-group'
 </script>
 
 ## 使用方法
@@ -26,11 +26,11 @@ const domain = ref('')
 </script>
 
 <template>
-  <InputGroup label="网站" description="对外地址" is-required>
+  <InputGroup label="网站">
     <template #before>
       <InputGroupText>https://</InputGroupText>
     </template>
-    <TextInput v-model="domain" label="域名" is-label-hidden placeholder="example" />
+    <TextInput v-model="domain" label="网址" is-label-hidden placeholder="example" />
     <template #after>
       <InputGroupText>.com</InputGroupText>
     </template>
@@ -53,7 +53,21 @@ const domain = ref('')
 
 <DemoExample
   :demo="inputGroupBasic"
-  description="价格字段自带标签、说明、可选和错误状态。美元符号和 USD 是组内文字。"
+  description="金额输入两侧是固定的前缀和后缀，用来标明单位。"
   locale="zh"
   title="基本"
+/>
+
+<DemoExample
+  :demo="inputGroupWebsite"
+  description="协议和域名后缀固定在输入框两侧。"
+  locale="zh"
+  title="网站"
+/>
+
+<DemoExample
+  :demo="inputGroupStatus"
+  description="带上标签之后，说明、可选和错误都由这一组自己负责。"
+  locale="zh"
+  title="字段状态"
 />

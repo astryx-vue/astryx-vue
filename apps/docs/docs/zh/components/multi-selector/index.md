@@ -74,15 +74,15 @@ import { multiSelectorColumns, multiSelectorCreate, multiSelectorForm, multiSele
 />
 
 <DemoExample
-  :demo="multiSelectorCreate"
-  description="输入现有列表里没有的名字可以创建。关闭后的文字可以改成自己的句子。只读保留已选值。"
-  locale="zh"
-  title="创建和只读"
-/>
-
-<DemoExample
   :demo="multiSelectorSections"
   description="选项按标题分成几组。"
   locale="zh"
   title="分组权限"
+/>
+
+<DemoExample
+  :demo="multiSelectorCreate"
+  description="输入现有列表里没有的名字可以创建。关闭后的文字可以改成自己的句子。只读保留已选值。"
+  locale="zh"
+  title="创建和只读"
 />

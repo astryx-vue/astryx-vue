@@ -8,12 +8,7 @@ const price = ref('')
 
 <template>
   <div style="width: 320px; max-width: 100%">
-    <InputGroup
-      label="Price"
-      description="Before tax"
-      is-optional
-      :status="{ type: 'error', message: 'Enter an amount' }"
-    >
+    <InputGroup label="Price">
       <template #before>
         <InputGroupText>$</InputGroupText>
       </template>

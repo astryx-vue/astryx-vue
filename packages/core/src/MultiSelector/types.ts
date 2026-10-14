@@ -4,6 +4,7 @@ export type MultiSelectorSize = 'sm' | 'md' | 'lg'
 export type MultiSelectorVariant = 'input' | 'ghost'
 export type MultiSelectorPresentation = 'popover' | 'bottom-sheet'
 export type MultiSelectorStatus = 'default' | 'success' | 'warning' | 'error'
+export type MultiSelectorStatusVariant = 'attached' | 'detached' | 'tooltip'
 export type MultiSelectorTriggerDisplay = 'count' | 'labels' | 'badges'
 export type MultiSelectorCheckboxPosition = 'start' | 'end'
 
@@ -63,6 +64,11 @@ export interface MultiSelectorProps {
   disabledReason?: string
   status?: MultiSelectorStatus
   statusMessage?: string
+  /**
+   * 状态文案怎么放。工具栏里的 ghost 会把 attached 收成独立说明，避免把行高撑开。
+   * tooltip 把说明留在图标上。
+   */
+  statusVariant?: MultiSelectorStatusVariant
   size?: MultiSelectorSize
   /** input 是带边框的表单控件，ghost 适合放在工具栏里。 */
   variant?: MultiSelectorVariant

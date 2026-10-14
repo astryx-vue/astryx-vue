@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { inputGroupBasic } from '../../../../components/demos/input-group'
+import { inputGroupBasic, inputGroupStatus, inputGroupWebsite } from '../../../../components/demos/input-group'
 </script>
 
 ## Usage
@@ -26,11 +26,11 @@ const domain = ref('')
 </script>
 
 <template>
-  <InputGroup label="Website" description="Public address" is-required>
+  <InputGroup label="Website">
     <template #before>
       <InputGroupText>https://</InputGroupText>
     </template>
-    <TextInput v-model="domain" label="Domain" is-label-hidden placeholder="example" />
+    <TextInput v-model="domain" label="URL" is-label-hidden placeholder="example" />
     <template #after>
       <InputGroupText>.com</InputGroupText>
     </template>
@@ -53,7 +53,21 @@ Once the group has a label, it is a field. The label, description, optional or r
 
 <DemoExample
   :demo="inputGroupBasic"
-  description="The price field brings its own label, description, optional mark, and error. The dollar sign and USD are group text."
+  description="A currency field with a static prefix and suffix around the amount."
   locale="en"
   title="Basic"
+/>
+
+<DemoExample
+  :demo="inputGroupWebsite"
+  description="The protocol and the domain suffix stay fixed on either side of the address."
+  locale="en"
+  title="Website"
+/>
+
+<DemoExample
+  :demo="inputGroupStatus"
+  description="With a label, the description, optional mark, and error belong to the group."
+  locale="en"
+  title="Field status"
 />

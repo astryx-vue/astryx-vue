@@ -26,6 +26,7 @@ footer: false
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Reason for the disabled state. The control stays focusable.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>Status style.</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>Status text under the field.</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits. Ghost detaches an attached message. Tooltip keeps it on the icon inside the field.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Size.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected value is submitted once.</td></tr>
       <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Read-only. The selection stays, can be focused and submitted, and cannot be opened or cleared. It does not dim.</td></tr>

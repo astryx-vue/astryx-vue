@@ -424,6 +424,59 @@ describe('selector', () => {
     expect(wrapper.text()).toContain('Fruit')
   })
 
+  it('draws the status icon inside the field and keeps the chevron when the message is detached', () => {
+    const attached = mount(Selector, {
+      props: { options, label: 'Role', status: 'error', statusMessage: 'Please select a role' },
+    })
+    expect(attached.find('.astryx-icon--error').exists()).toBe(true)
+    expect(attached.find('.astryx-selector-icon').exists()).toBe(false)
+    expect(attached.text()).toContain('Please select a role')
+
+    const detached = mount(Selector, {
+      props: { options, label: 'Role', status: 'warning', statusMessage: 'Limited', statusVariant: 'detached' },
+    })
+    expect(detached.find('.astryx-field-status-glyph').exists()).toBe(false)
+    expect(detached.find('.astryx-selector-icon').exists()).toBe(true)
+
+    const tooltip = mount(Selector, {
+      props: { options, label: 'Density', variant: 'ghost', status: 'warning', statusMessage: 'This setting affects all users', statusVariant: 'tooltip' },
+    })
+    expect(tooltip.get('button.astryx-field-status-glyph').attributes('aria-label')).toBe('Warning details')
+    expect(tooltip.find('.astryx-selector-icon').exists()).toBe(false)
+  })
+
+  it('shows the selected option icon in the closed trigger', () => {
+    const wrapper = mount(Selector, {
+      props: {
+        modelValue: 'private',
+        label: 'Visibility',
+        options: [{ value: 'private', label: 'Private', icon: 'lock-icon' }],
+      },
+    })
+    expect(wrapper.get('.astryx-selector-value-icon').classes()).toContain('lock-icon')
+    expect(wrapper.get('.astryx-selector-value').text()).toBe('Private')
+  })
+
+  it('puts an option icon beside the label and the check at the end', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options: [{ value: 'private', label: 'Private', description: 'Members only', icon: 'lock' }],
+        modelValue: 'private',
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    const controls = wrapper.get('.astryx-selector-trigger').attributes('aria-controls') ?? ''
+    const listboxes = document.querySelectorAll(`[id="${controls}"]`)
+    const option = listboxes[listboxes.length - 1]?.querySelector('.astryx-selector-option')
+    const body = option?.querySelector('.astryx-selector-option-body')
+    expect(body?.firstElementChild?.classList.contains('astryx-selector-option-icon')).toBe(true)
+    expect(body?.querySelector('.astryx-selector-option-copy .astryx-selector-option-description')?.textContent).toContain('Members only')
+    expect(option?.lastElementChild?.classList.contains('astryx-selector-option-mark')).toBe(true)
+    wrapper.unmount()
+  })
+
   it('includes hidden select for form submission', () => {
     const wrapper = mount(Selector, {
       props: {

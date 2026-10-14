@@ -26,6 +26,7 @@ footer: false
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>禁用原因。有值时控件仍可聚焦。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>字段下方的状态说明。</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明的位置。ghost 会把 attached 收成独立说明。tooltip 把说明留在字段里的图标上。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。每个已选值提交一次。</td></tr>
       <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只读。已选值还在，可以聚焦并提交，但不能打开或清除。不变暗。</td></tr>

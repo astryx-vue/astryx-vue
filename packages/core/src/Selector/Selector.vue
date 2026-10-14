@@ -8,6 +8,8 @@ import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useFieldControlState } from '../composables/useFieldControlState.js'
 import Field from '../Field/Field.vue'
+import StatusGlyph from '../Field/StatusGlyph.vue'
+import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
@@ -174,6 +176,14 @@ const fieldStatus = computed<FieldStatusInput | undefined>(() => {
   return { type: statusType.value, message: props.statusMessage }
 })
 
+const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
+const statusGlyph = computed(() => {
+  const type = statusType.value
+  if ((type !== 'error' && type !== 'warning' && type !== 'success') || effectiveStatusVariant.value === 'detached')
+    return undefined
+  return type
+})
+
 interface DisplayRow {
   kind: 'section' | 'option'
   title?: string
@@ -323,7 +333,7 @@ watch(() => combobox.activeIndex.value, (index) => {
     :is-required="inGroup ? false : props.isRequired"
     :description="inGroup ? undefined : props.description"
     :status="inGroup ? undefined : fieldStatus"
-    :status-variant="props.statusVariant"
+    :status-variant="effectiveStatusVariant"
     :width="props.width"
   >
     <div
@@ -358,10 +368,11 @@ watch(() => combobox.activeIndex.value, (index) => {
         @click="onTriggerClick"
         @keydown="onTriggerKeyDown"
       >
-        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected }">
+        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
-            {{ displayText }}
+            <span v-if="selectedOption?.icon" class="astryx-selector-value-icon" :class="selectedOption.icon" aria-hidden="true" />
+            <span class="astryx-selector-value-label">{{ displayText }}</span>
           </template>
         </span>
       </button>
@@ -375,7 +386,13 @@ watch(() => combobox.activeIndex.value, (index) => {
       >
         <Icon icon="close" size="sm" />
       </button>
-      <Icon v-if="control.canActivate.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
+      <StatusGlyph
+        v-if="statusGlyph"
+        :type="statusGlyph"
+        :message="fieldStatus?.message"
+        :tooltip="effectiveStatusVariant === 'tooltip'"
+      />
+      <Icon v-else-if="control.canActivate.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
       <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.selector.readOnly }}</span>
     </div>
 
@@ -463,9 +480,11 @@ watch(() => combobox.activeIndex.value, (index) => {
                 <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
                 <template v-else>
                   <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
-                  <span class="astryx-selector-option-label">{{ row.option.label }}</span>
-                  <span v-if="row.option.description" class="astryx-selector-option-description">
-                    {{ row.option.description }}
+                  <span class="astryx-selector-option-copy">
+                    <span class="astryx-selector-option-label">{{ row.option.label }}</span>
+                    <span v-if="row.option.description" class="astryx-selector-option-description">
+                      {{ row.option.description }}
+                    </span>
                   </span>
                 </template>
               </span>

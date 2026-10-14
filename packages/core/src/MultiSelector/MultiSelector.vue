@@ -10,6 +10,8 @@ import { useDisclosureHandle } from '../composables/useDisclosureHandle.js'
 import { useFieldControlState } from '../composables/useFieldControlState.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
+import StatusGlyph from '../Field/StatusGlyph.vue'
+import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -30,6 +32,7 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
   labelHidden: false,
   disabled: false,
   status: 'default',
+  statusVariant: 'attached',
   size: 'md',
   variant: 'input',
   presentation: 'popover',
@@ -79,6 +82,13 @@ const fieldStatus = computed<FieldStatusInput | undefined>(() => {
   if (!props.statusMessage || props.status === 'default')
     return undefined
   return { type: props.status, message: props.statusMessage }
+})
+// 工具栏里的 attached 会收成独立说明；tooltip 把说明留在字段里的图标上。
+const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
+const statusGlyph = computed(() => {
+  if (props.status === 'default' || effectiveStatusVariant.value === 'detached')
+    return undefined
+  return props.status
 })
 
 const rows = computed(() => flattenOptions(props.options, query.value))
@@ -441,6 +451,7 @@ defineExpose({
     :is-optional="inGroup ? false : props.optional"
     :description="inGroup ? undefined : props.description"
     :status="inGroup ? undefined : fieldStatus"
+    :status-variant="effectiveStatusVariant"
     :width="props.width"
   >
     <div
@@ -502,7 +513,13 @@ defineExpose({
       >
         <Icon icon="close" size="sm" />
       </button>
-      <Icon v-if="control.canActivate.value" class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" icon="chevronDown" size="sm" />
+      <StatusGlyph
+        v-if="statusGlyph"
+        :type="statusGlyph"
+        :message="fieldStatus?.message"
+        :tooltip="effectiveStatusVariant === 'tooltip'"
+      />
+      <Icon v-else-if="control.canActivate.value" class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" icon="chevronDown" size="sm" />
       <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.multiSelector.readOnly }}</span>
       <span v-if="props.triggerDisplay === 'badges'" :ref="overflow.measureRef" class="astryx-multi-selector-measure" aria-hidden="true">
         <Token

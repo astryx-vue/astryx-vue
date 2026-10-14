@@ -172,6 +172,18 @@ describe('multi selector', () => {
     warn.mockRestore()
   })
 
+  it('replaces the chevron with a warning icon when the status is a tooltip', () => {
+    const wrapper = mountSelector({
+      variant: 'ghost',
+      status: 'warning',
+      statusMessage: 'Some filters hide archived rows',
+      statusVariant: 'tooltip',
+    })
+    expect(wrapper.get('button.astryx-field-status-glyph').attributes('aria-label')).toBe('Warning details')
+    expect(wrapper.find('.astryx-multi-selector-chevron').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
   it('opens and closes from the handle, and refuses when read-only', async () => {
     const handleRef = ref<MultiSelectorHandle | null>(null)
     const wrapper = mountSelector({ handleRef })

@@ -595,6 +595,7 @@ export type {
   MultiSelectorSize,
   MultiSelectorSlots,
   MultiSelectorStatus,
+  MultiSelectorStatusVariant,
   MultiSelectorTriggerDisplay,
   MultiSelectorVariant,
 } from './MultiSelector/index.js'

@@ -10,6 +10,7 @@ import type { DateInputMessages } from './messages/date-input.js'
 import type { DateRangeInputMessages } from './messages/date-range-input.js'
 import type { DateTimeInputMessages } from './messages/date-time-input.js'
 import type { FileInputMessages } from './messages/file-input.js'
+import type { InputMessages } from './messages/input.js'
 import type { LayoutMessages } from './messages/layout.js'
 import type { LightboxMessages } from './messages/lightbox.js'
 import type { MarkdownMessages } from './messages/markdown.js'
@@ -41,6 +42,7 @@ import { dateInputMessages } from './messages/date-input.js'
 import { dateRangeInputMessages } from './messages/date-range-input.js'
 import { dateTimeInputMessages } from './messages/date-time-input.js'
 import { fileInputMessages } from './messages/file-input.js'
+import { inputMessages } from './messages/input.js'
 import { layoutMessages } from './messages/layout.js'
 import { lightboxMessages } from './messages/lightbox.js'
 import { markdownMessages } from './messages/markdown.js'
@@ -73,6 +75,7 @@ export interface AstryxMessages {
   dateRangeInput: DateRangeInputMessages
   dateTimeInput: DateTimeInputMessages
   fileInput: FileInputMessages
+  input: InputMessages
   layout: LayoutMessages
   lightbox: LightboxMessages
   markdown: MarkdownMessages
@@ -107,6 +110,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateRangeInput: dateRangeInputMessages.en,
     dateTimeInput: dateTimeInputMessages.en,
     fileInput: fileInputMessages.en,
+    input: inputMessages.en,
     layout: layoutMessages.en,
     lightbox: lightboxMessages.en,
     markdown: markdownMessages.en,
@@ -139,6 +143,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateRangeInput: dateRangeInputMessages['zh-CN'],
     dateTimeInput: dateTimeInputMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
+    input: inputMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],
     lightbox: lightboxMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],

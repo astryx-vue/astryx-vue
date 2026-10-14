@@ -74,15 +74,15 @@ Arrow keys move the highlight. Enter and Space toggle the highlighted option. Sp
 />
 
 <DemoExample
-  :demo="multiSelectorCreate"
-  description="Typing a name that is not in the list offers to create it. The closed text can be a custom sentence. Read-only keeps the selection."
-  locale="en"
-  title="Create and read-only"
-/>
-
-<DemoExample
   :demo="multiSelectorSections"
   description="Multi-select with options grouped into labeled sections."
   locale="en"
   title="Sectioned Permissions"
+/>
+
+<DemoExample
+  :demo="multiSelectorCreate"
+  description="Typing a name that is not in the list offers to create it. The closed text can be a custom sentence. Read-only keeps the selection."
+  locale="en"
+  title="Create and read-only"
 />

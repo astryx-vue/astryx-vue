@@ -31,6 +31,7 @@ export const ICON_GLYPHS = [
   'microphone',
   'warning',
   'error',
+  'success',
 ] as const satisfies readonly IconGlyphName[]
 
 export function isIconGlyph(value: string): value is IconGlyphName {

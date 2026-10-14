@@ -25,6 +25,20 @@ describe('checkbox list', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([['free', 'pro']])
   })
 
+  it('fills a checked row and leaves the indeterminate select-all row clear', () => {
+    const wrapper = mount(CheckboxList, {
+      props: { label: 'Include in export' },
+      slots: {
+        default: '<CheckboxListItem label="Select all" is-checked="indeterminate" /><CheckboxListItem label="History" :is-checked="true" />',
+      },
+      global: { components: { CheckboxListItem } },
+    })
+    const rows = wrapper.findAll('.astryx-item')
+    expect(rows[0]?.find('.astryx-checkbox-indicator').attributes('data-state')).toBe('indeterminate')
+    expect(rows[0]?.attributes('data-selected')).toBeUndefined()
+    expect(rows[1]?.attributes('data-selected')).toBe('true')
+  })
+
   it('supports a standalone select-all item', async () => {
     const wrapper = mount(CheckboxList, {
       props: { label: 'Include in export' },
