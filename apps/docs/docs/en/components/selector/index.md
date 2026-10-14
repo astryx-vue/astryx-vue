@@ -76,17 +76,17 @@ Built-in strings such as the placeholder and the empty state are English. Call `
 />
 
 <DemoExample
-  :demo="selectorDescriptions"
-  description="Options carry a description, so the menu draws a two-line row. A one-line value stays at the size token. A two-line value grows by one line. Inside an input group the value stays on one line."
-  locale="en"
-  title="Option descriptions"
-/>
-
-<DemoExample
   :demo="selectorSections"
   description="Options are grouped into labeled sections."
   locale="en"
   title="Grouped sections"
+/>
+
+<DemoExample
+  :demo="selectorDescriptions"
+  description="Options carry a description, so the menu draws a two-line row. A one-line value stays at the size token. A two-line value grows by one line. Inside an input group the value stays on one line."
+  locale="en"
+  title="Option descriptions"
 />
 
 <DemoExample

@@ -50,10 +50,10 @@ The value is a `Date`. By default the field shows a long date, such as March 21,
 />
 
 <DemoExample
-  :demo="dateInputRange"
-  description="Only the 8th through the 21st of the current month can be selected. A coarse pointer opens a bottom sheet."
+  :demo="dateInputDescription"
+  description="Helper text under the label explains what the date is for."
   locale="en"
-  title="Min and max"
+  title="Description"
 />
 
 <DemoExample
@@ -64,10 +64,10 @@ The value is a `Date`. By default the field shows a long date, such as March 21,
 />
 
 <DemoExample
-  :demo="dateInputDescription"
-  description="Helper text under the label explains what the date is for."
+  :demo="dateInputRange"
+  description="Only the 8th through the 21st of the current month can be selected. A coarse pointer opens a bottom sheet."
   locale="en"
-  title="Description"
+  title="Min and max"
 />
 
 <DemoExample

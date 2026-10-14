@@ -50,10 +50,10 @@ const date = ref(null)
 />
 
 <DemoExample
-  :demo="dateInputRange"
-  description="只能选择本月 8 日到 21 日。粗指针设备会在底部面板里打开日历。"
+  :demo="dateInputDescription"
+  description="标签下方的说明用来交代这个日期的用途。"
   locale="zh"
-  title="最小和最大"
+  title="说明文字"
 />
 
 <DemoExample
@@ -64,10 +64,10 @@ const date = ref(null)
 />
 
 <DemoExample
-  :demo="dateInputDescription"
-  description="标签下方的说明用来交代这个日期的用途。"
+  :demo="dateInputRange"
+  description="只能选择本月 8 日到 21 日。粗指针设备会在底部面板里打开日历。"
   locale="zh"
-  title="说明文字"
+  title="最小和最大"
 />
 
 <DemoExample

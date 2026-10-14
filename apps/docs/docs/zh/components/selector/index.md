@@ -76,17 +76,17 @@ const options = [
 />
 
 <DemoExample
-  :demo="selectorDescriptions"
-  description="选项带说明时，菜单画成两行。单行的值保持控件高度，两行的值正好高出一行。放进输入组后，值仍保持一行。"
-  locale="zh"
-  title="选项说明"
-/>
-
-<DemoExample
   :demo="selectorSections"
   description="选项按带标题的分组排列。"
   locale="zh"
   title="分组"
+/>
+
+<DemoExample
+  :demo="selectorDescriptions"
+  description="选项带说明时，菜单画成两行。单行的值保持控件高度，两行的值正好高出一行。放进输入组后，值仍保持一行。"
+  locale="zh"
+  title="选项说明"
 />
 
 <DemoExample
