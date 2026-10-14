@@ -53,7 +53,7 @@ const domain = ref('')
 
 <DemoExample
   :demo="inputGroupBasic"
-  description="A price field with a dollar prefix and a USD suffix."
+  description="A currency field with a static prefix and suffix around a text input."
   locale="en"
-  title="Prefix and suffix"
+  title="Basic"
 />

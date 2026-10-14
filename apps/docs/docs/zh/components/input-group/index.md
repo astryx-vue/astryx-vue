@@ -55,5 +55,5 @@ const domain = ref('')
   :demo="inputGroupBasic"
   description="价格字段前面是美元符号，后面是 USD。"
   locale="zh"
-  title="前缀和后缀"
+  title="基本"
 />

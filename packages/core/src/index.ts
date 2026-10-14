@@ -611,11 +611,16 @@ export type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } fr
 export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
+  SelectorEntry,
   SelectorOption,
+  SelectorPresentation,
   SelectorProps,
+  SelectorSection,
   SelectorSize,
   SelectorSlots,
   SelectorStatus,
+  SelectorStatusVariant,
+  SelectorVariant,
 } from './Selector/index.js'
 export {
   SideNav,

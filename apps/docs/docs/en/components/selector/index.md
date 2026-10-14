@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { selectorBasic, selectorSearchable, selectorClearable, selectorSizes } from '../../../../components/demos/selector'
+import { selectorClearable, selectorDescriptions, selectorGhost, selectorSections, selectorSheet, selectorStatus } from '../../../../components/demos/selector'
 </script>
 
 ## Usage
@@ -55,29 +55,43 @@ Built-in strings such as the placeholder and the empty state are English. Call `
 ## Examples
 
 <DemoExample
-  :demo="selectorBasic"
-  description="Pass options array and bind value, click to expand list and select an item."
+  :demo="selectorSheet"
+  description="Presents a single-selection list in a bottom sheet for compact touch interfaces."
   locale="en"
-  title="Basic Usage"
-/>
-
-<DemoExample
-  :demo="selectorSearchable"
-  description="Enable searchable to show a search box for filtering options."
-  locale="en"
-  title="Searchable"
+  title="Bottom sheet"
 />
 
 <DemoExample
   :demo="selectorClearable"
-  description="Enable clearable to show a clear button next to selected value."
+  description="A clear button resets the selected value."
   locale="en"
   title="Clearable"
 />
 
 <DemoExample
-  :demo="selectorSizes"
-  description="Available in sm, md, lg sizes, md by default."
+  :demo="selectorGhost"
+  description="A borderless selector sits with ghost buttons in a toolbar."
   locale="en"
-  title="Sizes"
+  title="Ghost toolbar"
+/>
+
+<DemoExample
+  :demo="selectorDescriptions"
+  description="Options carry a description, so the menu draws a two-line row. A one-line value stays at the size token. A two-line value grows by one line. Inside an input group the value stays on one line."
+  locale="en"
+  title="Option descriptions"
+/>
+
+<DemoExample
+  :demo="selectorSections"
+  description="Options are grouped into labeled sections."
+  locale="en"
+  title="Grouped sections"
+/>
+
+<DemoExample
+  :demo="selectorStatus"
+  description="Error, warning, and success validation states."
+  locale="en"
+  title="Validation states"
 />
