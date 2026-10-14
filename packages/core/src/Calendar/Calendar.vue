@@ -5,7 +5,7 @@ import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import Icon from '../Icon/Icon.vue'
-import { formatCalendarMonth, weekdayNames } from '../locale/format.js'
+import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import {
@@ -72,11 +72,11 @@ const rtl = computed(() => {
 const resolvedLabel = computed(() => props.label ?? messages.value.calendar.label)
 const weekName = computed(() => weekFieldName(locale.value))
 const headers = computed(() => {
-  const narrow = weekdayNames(locale.value, 'narrow')
+  const short = standaloneShortWeekdayNames(locale.value)
   const long = weekdayNames(locale.value, 'long')
   const start = weekStart.value
   return Array.from({ length: 7 }, (_, index) => ({
-    narrow: narrow[(index + start) % 7]!,
+    short: short[(index + start) % 7]!,
     long: long[(index + start) % 7]!,
   }))
 })
@@ -419,7 +419,7 @@ function onKeyDown(event: KeyboardEvent): void {
               role="columnheader"
               :aria-label="day.long"
             >
-              {{ day.narrow }}
+              {{ day.short }}
             </div>
           </div>
           <div

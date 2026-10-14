@@ -257,6 +257,7 @@ describe('calendar', () => {
       props: { focusDate: new Date(2026, 0, 1), weekStartsOn: 'mon' },
     })
     expect(monday.findAll('[role="columnheader"]').at(0)?.attributes('aria-label')).toBe('Monday')
+    expect(monday.findAll('[role="columnheader"]').map(cell => cell.text())).toEqual(['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'])
   })
 
   it('hides adjacent months and refuses to select them', async () => {

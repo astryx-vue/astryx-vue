@@ -23,7 +23,7 @@ const presets = [
 </script>
 
 <template>
-  <VStack :gap="4" style="width: 100%; max-width: 400px">
+  <VStack :gap="4" style="width: 240px; max-width: 100%">
     <Text type="supporting" color="secondary">
       {{ range ? `${range.start} → ${range.end}` : 'No range selected' }}
     </Text>

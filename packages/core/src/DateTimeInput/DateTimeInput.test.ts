@@ -8,7 +8,7 @@ describe('date time input', () => {
       props: { label: 'Meeting time', modelValue: '2026-03-10T10:30' },
     })
     const inputs = wrapper.findAll('input')
-    expect((inputs[0]?.element as HTMLInputElement).value).toBe('2026-03-10')
+    expect((inputs[0]?.element as HTMLInputElement).value).toBe('March 10, 2026')
     expect((inputs[1]?.element as HTMLInputElement).value).toBe('10:30 AM')
   })
 

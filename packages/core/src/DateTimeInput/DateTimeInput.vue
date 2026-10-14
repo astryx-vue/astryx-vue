@@ -116,7 +116,7 @@ watch(model, (value) => {
         <div class="astryx-date-time-fields">
           <DateInput
             :id="generatedId" :model-value="dateValue" :label="messages.dateTimeInput.dateLabel"
-            format="system_date" is-label-hidden
+            is-label-hidden
             :placeholder="placeholder" :disabled="locked" :size="size" :described-by="field.describedBy"
             :date-constraints="dateConstraints" :number-of-months="numberOfMonths" :week-starts-on="weekStartsOn"
             :presentation="datePresentation" :native-picker="nativePicker"

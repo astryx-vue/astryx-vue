@@ -16,7 +16,7 @@ import rangeSource from './range.vue?raw&highlighted'
 import validationDemo from './validation.vue'
 import validationSource from './validation.vue?raw&highlighted'
 
-const options = { className: 'input-preview-host' }
+const options = { className: 'date-preview-host' }
 export const dateInputClearable = defineDemo(clearableDemo, clearableSource, options)
 export const dateInputRange = defineDemo(rangeDemo, rangeSource, options)
 export const dateInputFormats = defineDemo(formatsDemo, formatsSource, options)

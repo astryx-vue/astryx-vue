@@ -10,7 +10,7 @@ const successRange = shallowRef<DateRange | null>({ start: '2026-03-01', end: '2
 </script>
 
 <template>
-  <VStack :gap="4" style="width: 100%; max-width: 400px">
+  <VStack :gap="4" style="width: 240px; max-width: 100%">
     <DateRangeInput v-model="errorRange" label="Booking period" :status="{ type: 'error', message: 'Selected dates are no longer available' }" />
     <DateRangeInput v-model="warningRange" label="Preferred period" :status="{ type: 'warning', message: 'High demand — limited availability' }" />
     <DateRangeInput v-model="successRange" label="Confirmed period" :status="{ type: 'success', message: 'Dates confirmed and available' }" />

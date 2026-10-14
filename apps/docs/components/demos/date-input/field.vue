@@ -17,7 +17,7 @@ function save(value: Date | null): Promise<void> {
 </script>
 
 <template>
-  <VStack :gap="4" style="width: 100%; max-width: 360px">
+  <VStack :gap="4" style="width: 240px; max-width: 100%">
     <DateInput
       v-model="ship"
       label="Ship date"

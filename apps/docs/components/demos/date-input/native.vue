@@ -9,7 +9,7 @@ const date = ref<Date | null>(new Date(2026, 2, 21))
 </script>
 
 <template>
-  <div style="width: 100%; max-width: 360px">
+  <div style="width: 240px; max-width: 100%">
     <DateInput
       v-model="date"
       label="System date"

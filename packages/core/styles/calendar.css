@@ -79,6 +79,7 @@
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: 400;
+    text-align: center;
   }
 
   .astryx-calendar-grid {

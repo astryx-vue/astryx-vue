@@ -40,5 +40,5 @@ const range = shallowRef<DateRange | null>(null)
 
 ## 示例
 
-<DemoExample :demo="dateRangeInputPresets" description="最近 7、14、30、90 天的预设，也可以自己选区间。" locale="zh" title="带预设" />
 <DemoExample :demo="dateRangeInputValidation" description="已填区间上的错误、警告和成功。" locale="zh" title="校验" />
+<DemoExample :demo="dateRangeInputPresets" description="最近 7、14、30、90 天的预设，也可以自己选区间。" locale="zh" title="带预设" />

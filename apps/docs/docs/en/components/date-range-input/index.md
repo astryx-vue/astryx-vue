@@ -40,5 +40,5 @@ The popover shows two months under one header. The first click sets the start. T
 
 ## Examples
 
-<DemoExample :demo="dateRangeInputPresets" description="Presets for the last 7, 14, 30, and 90 days, or a custom range." locale="en" title="With presets" />
 <DemoExample :demo="dateRangeInputValidation" description="Error, warning, and success on a filled range." locale="en" title="Validation" />
+<DemoExample :demo="dateRangeInputPresets" description="Presets for the last 7, 14, 30, and 90 days, or a custom range." locale="en" title="With presets" />
