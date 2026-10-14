@@ -71,7 +71,7 @@ export type {
 export { ButtonGroup } from './ButtonGroup/index.js'
 export type { ButtonGroupOrientation, ButtonGroupProps, ButtonGroupSlots } from './ButtonGroup/index.js'
 export { Calendar } from './Calendar/index.js'
-export type { CalendarEmits, CalendarProps, CalendarSlots } from './Calendar/index.js'
+export type { CalendarEmits, CalendarProps, CalendarRangeValue, CalendarSlots } from './Calendar/index.js'
 export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
 export { Carousel } from './Carousel/index.js'
@@ -286,7 +286,16 @@ export type {
   ContextMenuWidth,
 } from './ContextMenu/index.js'
 export { DateInput } from './DateInput/index.js'
-export type { DateInputEmits, DateInputProps, DateInputSlots } from './DateInput/index.js'
+export type {
+  DateInputEmits,
+  DateInputFormat,
+  DateInputFormatName,
+  DateInputPresentation,
+  DateInputProps,
+  DateInputSlots,
+  DateInputStatus,
+  DateInputStatusType,
+} from './DateInput/index.js'
 export { DateRangeInput } from './DateRangeInput/index.js'
 export type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './DateRangeInput/index.js'
 export { DateTimeInput } from './DateTimeInput/index.js'
@@ -537,7 +546,7 @@ export type {
   NavMenuSize,
 } from './NavMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'
-export type { NumberInputEmits, NumberInputProps } from './NumberInput/index.js'
+export type { NumberInputEmits, NumberInputProps, NumberInputStatus } from './NumberInput/index.js'
 export { Outline } from './Outline/index.js'
 export type { OutlineDensity, OutlineEmits, OutlineItem, OutlineProps } from './Outline/index.js'
 export { OverflowList } from './OverflowList/index.js'
@@ -607,12 +616,18 @@ export type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } fr
 export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
+  SelectorEntry,
   SelectorOption,
+  SelectorOptionInput,
   SelectorPresentation,
   SelectorProps,
+  SelectorSection,
   SelectorSize,
   SelectorSlots,
   SelectorStatus,
+  SelectorStatusInput,
+  SelectorStatusVariant,
+  SelectorVariant,
 } from './Selector/index.js'
 export {
   SideNav,

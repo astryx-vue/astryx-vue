@@ -2,48 +2,46 @@
 import { Button } from '@astryx-vue/core/Button'
 import { MultiSelector } from '@astryx-vue/core/MultiSelector'
 import { ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 
 const columns = ref(['name', 'email'])
 const filters = ref(['active'])
-const { pick } = useDemoText()
 </script>
 
 <template>
   <div class="toolbar">
-    <Button :label="pick('刷新', 'Refresh')" variant="ghost" />
+    <Button label="Refresh" variant="ghost" />
     <MultiSelector
       v-model="columns"
       :options="[
-        { value: 'name', label: pick('姓名', 'Name') },
-        { value: 'email', label: pick('邮箱', 'Email') },
-        { value: 'role', label: pick('角色', 'Role') },
-        { value: 'status', label: pick('状态', 'Status') },
-        { value: 'created', label: pick('创建时间', 'Created') },
+        { value: 'name', label: 'Name' },
+        { value: 'email', label: 'Email' },
+        { value: 'role', label: 'Role' },
+        { value: 'status', label: 'Status' },
+        { value: 'created', label: 'Created' },
       ]"
-      :label="pick('列', 'Columns')"
+      label="Columns"
       label-hidden
       variant="ghost"
       trigger-display="labels"
-      :placeholder="pick('列', 'Columns')"
+      placeholder="Columns"
       width="max-content"
     />
     <MultiSelector
       v-model="filters"
       :options="[
-        { value: 'active', label: pick('启用', 'Active') },
-        { value: 'inactive', label: pick('停用', 'Inactive') },
-        { value: 'pending', label: pick('待处理', 'Pending') },
-        { value: 'archived', label: pick('已归档', 'Archived') },
+        { value: 'active', label: 'Active' },
+        { value: 'inactive', label: 'Inactive' },
+        { value: 'pending', label: 'Pending' },
+        { value: 'archived', label: 'Archived' },
       ]"
-      :label="pick('状态', 'Status')"
+      label="Status"
       label-hidden
       variant="ghost"
       trigger-display="labels"
-      :placeholder="pick('状态', 'Status')"
+      placeholder="Status"
       width="max-content"
     />
-    <Button :label="pick('导出', 'Export')" variant="ghost" />
+    <Button label="Export" variant="ghost" />
   </div>
 </template>
 

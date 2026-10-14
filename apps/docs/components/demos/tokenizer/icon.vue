@@ -3,15 +3,13 @@ import type { SearchableItem } from '@astryx-vue/core'
 import { createStaticSource } from '@astryx-vue/core'
 import { Tokenizer } from '@astryx-vue/core/Tokenizer'
 import { computed, ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 
-const { pick } = useDemoText()
 const people = computed(() => [
-  { id: 'alice', label: pick('爱丽丝·约翰逊', 'Alice Johnson') },
-  { id: 'bob', label: pick('鲍勃·史密斯', 'Bob Smith') },
-  { id: 'charlie', label: pick('查理·布朗', 'Charlie Brown') },
-  { id: 'diana', label: pick('戴安娜·普林斯', 'Diana Prince') },
-  { id: 'eve', label: pick('伊芙·威廉斯', 'Eve Williams') },
+  { id: 'alice', label: 'Alice Johnson' },
+  { id: 'bob', label: 'Bob Smith' },
+  { id: 'charlie', label: 'Charlie Brown' },
+  { id: 'diana', label: 'Diana Prince' },
+  { id: 'eve', label: 'Eve Williams' },
 ])
 const source = computed(() => createStaticSource(people.value))
 const selected = ref<SearchableItem[]>([])
@@ -21,13 +19,13 @@ selected.value = [people.value[0]!, people.value[2]!]
 <template>
   <div class="demo-stack">
     <p class="demo-caption">
-      {{ pick('开头的图标表示这里可以搜索', 'Leading icon reinforces the search affordance') }}
+      Leading icon reinforces the search affordance
     </p>
     <Tokenizer
       v-model="selected"
       :search-source="source"
-      :label="pick('团队成员', 'Team Members')"
-      :placeholder="pick('搜索成员', 'Search people...')"
+      label="Team Members"
+      placeholder="Search people..."
       :debounce-ms="0"
     >
       <template #icon>

@@ -1,22 +1,47 @@
 <script setup lang="ts">
 import type { CheckboxValue } from '@astryx-vue/core/CheckboxInput'
 import { CheckboxInput } from '@astryx-vue/core/CheckboxInput'
-import { computed, shallowRef } from 'vue'
+import { Divider } from '@astryx-vue/core/Divider'
+import { VStack } from '@astryx-vue/core/Stack'
+import { computed, ref } from 'vue'
 
-const email = shallowRef(true)
-const push = shallowRef(false)
-const all = computed<CheckboxValue>({
-  get: () => email.value === push.value ? email.value : 'indeterminate',
-  set: (value) => { email.value = push.value = value === true },
+const items = ref({
+  email: true,
+  push: false,
+  sms: true,
+  slack: false,
+})
+
+const checkedCount = computed(() => Object.values(items.value).filter(Boolean).length)
+const totalCount = computed(() => Object.keys(items.value).length)
+const selectAll = computed<CheckboxValue>({
+  get() {
+    if (checkedCount.value === 0)
+      return false
+    if (checkedCount.value === totalCount.value)
+      return true
+    return 'indeterminate'
+  },
+  set(checked: CheckboxValue) {
+    const next = checked === true
+    items.value = { email: next, push: next, sms: next, slack: next }
+  },
 })
 </script>
 
 <template>
-  <div class="input-preview-stack">
-    <CheckboxInput v-model="all" label="All notifications" description="Choose all channels or clear the selection." />
-    <div class="checkbox-preview-children">
-      <CheckboxInput v-model="email" label="Email notifications" />
-      <CheckboxInput v-model="push" label="Push notifications" />
-    </div>
-  </div>
+  <VStack :gap="3">
+    <CheckboxInput
+      v-model="selectAll"
+      label="Select all notifications"
+      :description="`${checkedCount} of ${totalCount} enabled`"
+    />
+    <Divider />
+    <VStack :gap="3">
+      <CheckboxInput v-model="items.email" label="Email notifications" />
+      <CheckboxInput v-model="items.push" label="Push notifications" />
+      <CheckboxInput v-model="items.sms" label="SMS alerts" />
+      <CheckboxInput v-model="items.slack" label="Slack messages" />
+    </VStack>
+  </VStack>
 </template>

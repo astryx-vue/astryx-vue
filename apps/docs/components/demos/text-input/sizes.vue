@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import type { TextInputSize } from '@astryx-vue/core/TextInput'
+import { VStack } from '@astryx-vue/core/Stack'
 import { TextInput } from '@astryx-vue/core/TextInput'
-import { reactive } from 'vue'
+import { ref } from 'vue'
 
-const sizes: TextInputSize[] = ['sm', 'md', 'lg']
-const values = reactive({ sm: 'Compact', md: 'Default', lg: 'Large' })
+const sm = ref('')
+const md = ref('')
+const lg = ref('')
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <TextInput v-for="size in sizes" :key="size" v-model="values[size]" :label="size" :size="size" />
+  <div style="width: 300px; max-width: 100%">
+    <VStack :gap="3">
+      <TextInput v-model="sm" label="Small" placeholder="Enter a value" size="sm" />
+      <TextInput v-model="md" label="Medium" placeholder="Enter a value" size="md" />
+      <TextInput v-model="lg" label="Large" placeholder="Enter a value" size="lg" />
+    </VStack>
   </div>
 </template>

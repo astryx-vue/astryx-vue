@@ -1,41 +1,23 @@
 <script setup lang="ts">
 import { Selector } from '@astryx-vue/core/Selector'
 import { ref } from 'vue'
-import { useDemoText, useLocalizedOptions } from '../../demo-infra/useDemoText'
 
-const selected = ref<string | null>('banana')
-const { pick } = useDemoText()
-const options = useLocalizedOptions([
-  { value: 'apple', zh: '苹果', en: 'Apple' },
-  { value: 'banana', zh: '香蕉', en: 'Banana' },
-  { value: 'cherry', zh: '樱桃', en: 'Cherry' },
-])
+const value = ref<string | null>('engineering')
+const options = [
+  { value: 'engineering', label: 'Engineering' },
+  { value: 'design', label: 'Design' },
+  { value: 'marketing', label: 'Marketing' },
+  { value: 'sales', label: 'Sales' },
+]
 </script>
 
 <template>
-  <div class="demo-container">
-    <Selector
-      v-model="selected"
-      :options="options"
-      clearable
-      :placeholder="pick('选择水果', 'Select a fruit')"
-    />
-    <p class="demo-result">
-      {{ pick('选中的值：', 'Selected: ') }}{{ selected || pick('未选择', 'none') }}
-    </p>
-  </div>
+  <Selector
+    v-model="value"
+    label="Department"
+    :options="options"
+    placeholder="Choose a department..."
+    clearable
+    :width="300"
+  />
 </template>
-
-<style scoped>
-.demo-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 20rem;
-  max-width: calc(100vw - 4rem);
-}
-.demo-result {
-  font-size: 0.875rem;
-  color: var(--vp-c-text-2);
-}
-</style>

@@ -5,10 +5,6 @@ outline: false
 footer: false
 ---
 
-<script setup lang="ts">
-import { checkboxIndicatorStates } from '../../../../components/demos/checkbox-indicator'
-</script>
-
 ## 使用方法
 
 `CheckboxIndicator` 只负责展示未选、选中或半选三种标记，是一个纯装饰组件：没有输入、焦点或表单行为。它适合出现在列表、多选摘要等只需要呈现选择状态、不需要用户操作的场景：
@@ -31,6 +27,5 @@ import { CheckboxIndicator } from '@astryx-vue/core/CheckboxIndicator'
 import '@astryx-vue/themes/neutral.css'
 ```
 
-<DemoExample :demo="checkboxIndicatorStates" title="状态与尺寸" description="sm 为 20px。md 为 24px。禁用状态降低不透明度。" locale="zh" />
 
 需要用户操作时，使用 [CheckboxInput](/components/checkbox-input).

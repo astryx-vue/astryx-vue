@@ -12,6 +12,10 @@ footer: false
     <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
     <tbody>
       <tr><td><code>modelValue</code></td><td><code>Date | null</code></td><td><code>null</code></td><td>当前选中的日期。</td></tr>
+      <tr><td><code>mode</code></td><td><code>'single' | 'range'</code></td><td><code>'single'</code></td><td>选一天，或选一段起止日期。</td></tr>
+      <tr><td><code>range</code></td><td><code>{ start: Date | null, end: Date | null } | null</code></td><td><code>null</code></td><td>范围值，用 <code>v-model:range</code> 绑定。</td></tr>
+      <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>并排显示的月份数。</td></tr>
+      <tr><td><code>focusDate</code></td><td><code>Date</code></td><td>—</td><td>先显示这一天所在的月份。</td></tr>
       <tr><td><code>min</code></td><td><code>Date</code></td><td>—</td><td>最早可选日期。</td></tr>
       <tr><td><code>max</code></td><td><code>Date</code></td><td>—</td><td>最晚可选日期。</td></tr>
       <tr><td><code>isDateDisabled</code></td><td><code>(date: Date) =&gt; boolean</code></td><td>—</td><td>返回 true 时该日期不可选。</td></tr>
@@ -28,6 +32,7 @@ footer: false
     <thead><tr><th>名称</th><th>载荷</th><th>说明</th></tr></thead>
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>value: Date | null</code></td><td>选中日期变化时触发。</td></tr>
+      <tr><td><code>update:range</code></td><td><code>value: { start: Date | null, end: Date | null }</code></td><td>日期范围变化时触发。</td></tr>
       <tr><td><code>change</code></td><td><code>value: Date | null</code></td><td>选中日期变化时触发。</td></tr>
     </tbody>
   </table>

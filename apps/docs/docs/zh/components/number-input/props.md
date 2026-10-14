@@ -20,6 +20,11 @@ footer: false
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>''</code></td><td>占位文本。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>字段标签，同时作为无障碍名称。</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签只留给读屏，页面上不显示。</td></tr>
+      <tr><td><code>units</code></td><td><code>string</code></td><td>—</td><td>显示在步进按钮前的单位，例如 %。</td></tr>
+      <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有值时显示清除按钮。</td></tr>
+      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>校验状态。对象带 <code>message</code> 时，说明会显示在字段下方。</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。</td></tr>
     </tbody>
   </table>

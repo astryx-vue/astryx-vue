@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { radioBasic, radioList, radioStates } from '../../../../components/demos/radio'
+import { radioBasic, radioStates } from '../../../../components/demos/radio'
 </script>
 
 ## 使用方法
@@ -34,7 +34,6 @@ const size = shallowRef('md')
 
 <DemoExample :demo="radioBasic" title="基本用法" description="把 Radio 作为子项放进 RadioGroup，再用 v-model 绑定当前选中的值，选中状态即由组统一管理。" locale="zh" />
 
-<DemoExample :demo="radioList" title="单选列表" description="选项结构简单时，可以改用 RadioList 直接传入 options 数组，省去逐个书写 Radio 子项的麻烦。" locale="zh" />
 
 <DemoExample :demo="radioStates" title="禁用选项" description="给单个选项设置 isDisabled 即可将其禁用，组内其他选项不受影响，仍可正常选择。" locale="zh" />
 

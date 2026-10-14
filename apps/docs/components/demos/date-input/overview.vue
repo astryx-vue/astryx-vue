@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import { provideAstryxLocale } from '@astryx-vue/core'
 import { DateInput } from '@astryx-vue/core/DateInput'
-import { Field } from '@astryx-vue/core/Field'
-import { ref, useId } from 'vue'
+import { ref } from 'vue'
+
+provideAstryxLocale('en')
 
 const date = ref<Date | null>(null)
-const inputId = `start-date-${useId()}`
 </script>
 
 <template>
-  <Field :input-id="inputId" label="Start date">
-    <DateInput v-model="date" label="Start date" placeholder="Select a date" />
-  </Field>
+  <div style="width: 100%; min-width: 240px; max-width: 400px">
+    <DateInput v-model="date" label="Start date" placeholder="Select a date" clearable />
+  </div>
 </template>

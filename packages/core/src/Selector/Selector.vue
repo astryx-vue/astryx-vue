@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
+import type { FieldStatusInput } from '../Field/types.js'
+import type { SelectorEmits, SelectorEntry, SelectorOption, SelectorProps, SelectorSection, SelectorSlots } from './types.js'
 import { computed, nextTick, onMounted, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
+import Field from '../Field/Field.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/selector.css'
@@ -19,6 +21,9 @@ const props = withDefaults(defineProps<SelectorProps>(), {
   searchable: false,
   clearable: false,
   presentation: 'popover',
+  variant: 'default',
+  statusVariant: 'attached',
+  isLabelHidden: false,
 })
 
 const emit = defineEmits<SelectorEmits>()
@@ -42,8 +47,26 @@ const sheetLabel = computed(() => props.label || resolvedPlaceholder.value)
 const isEnabled = computed(() => !props.disabled)
 const isSearchable = computed(() => props.searchable)
 
+function isSection(entry: SelectorEntry): entry is SelectorSection {
+  return typeof entry === 'object' && entry !== null && 'type' in entry && entry.type === 'section'
+}
+
+function asOption(entry: SelectorOption | string): SelectorOption {
+  if (typeof entry === 'string')
+    return { value: entry, label: entry }
+  return entry
+}
+
+const normalizedEntries = computed(() => props.options.map((entry) => {
+  if (isSection(entry))
+    return { ...entry, options: entry.options.map(asOption) }
+  return asOption(entry)
+}))
+
+const flatOptions = computed(() => normalizedEntries.value.flatMap(entry => isSection(entry) ? entry.options : [entry]))
+
 const comboboxOptions = computed(() =>
-  props.options.map(opt => ({
+  flatOptions.value.map(opt => ({
     value: opt.value,
     label: opt.label,
     disabled: opt.disabled ?? false,
@@ -107,7 +130,54 @@ useDismiss({
 const selectedOption = computed(() => {
   if (props.modelValue == null)
     return null
-  return props.options.find(opt => opt.value === props.modelValue) ?? null
+  return flatOptions.value.find(opt => opt.value === props.modelValue) ?? null
+})
+
+const fieldLabel = computed(() => props.label || resolvedPlaceholder.value)
+const hideLabel = computed(() => props.isLabelHidden || !props.label)
+const statusType = computed(() => {
+  const status = props.status
+  if (status == null || status === 'default')
+    return 'default'
+  if (typeof status === 'string')
+    return status
+  return status.type
+})
+
+const fieldStatus = computed<FieldStatusInput | undefined>(() => {
+  const status = props.status
+  if (status && typeof status === 'object')
+    return status
+  if (!props.statusMessage || statusType.value === 'default')
+    return undefined
+  return { type: statusType.value, message: props.statusMessage }
+})
+
+interface DisplayRow {
+  kind: 'section' | 'option'
+  title?: string
+  option?: SelectorOption
+  index?: number
+}
+
+const displayRows = computed<DisplayRow[]>(() => {
+  const indexByValue = new Map(combobox.filteredOptions.value.map((option, index) => [option.value, index]))
+  const rows: DisplayRow[] = []
+  for (const entry of normalizedEntries.value) {
+    if (isSection(entry)) {
+      const children = entry.options.filter(option => indexByValue.has(option.value))
+      if (children.length === 0)
+        continue
+      rows.push({ kind: 'section', title: entry.title })
+      for (const option of children)
+        rows.push({ kind: 'option', option, index: indexByValue.get(option.value) })
+      continue
+    }
+    if (!indexByValue.has(entry.value))
+      continue
+    rows.push({ kind: 'option', option: entry, index: indexByValue.get(entry.value) })
+  }
+  return rows
 })
 
 const displayText = computed(() => {
@@ -191,11 +261,22 @@ watch(() => combobox.activeIndex.value, (index) => {
 </script>
 
 <template>
-  <div class="astryx-selector" :class="[`size-${props.size}`, `status-${props.status}`]">
+  <Field
+    class="astryx-selector"
+    :class="[`size-${props.size}`, `status-${statusType}`, `variant-${props.variant}`]"
+    :label="fieldLabel"
+    :input-id="selectorId"
+    :description="props.description"
+    :is-label-hidden="hideLabel"
+    :is-disabled="props.disabled"
+    :status="fieldStatus"
+    :status-variant="props.statusVariant"
+    :width="props.width"
+  >
     <div
       ref="fieldRef"
       class="astryx-selector-field"
-      :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled }"
+      :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled, 'is-ghost': props.variant === 'ghost' }"
     >
       <button
         :id="selectorId"
@@ -212,7 +293,7 @@ watch(() => combobox.activeIndex.value, (index) => {
         @click="onTriggerClick"
         @keydown="onTriggerKeyDown"
       >
-        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption }">
+        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
             {{ displayText }}
@@ -276,32 +357,37 @@ watch(() => combobox.activeIndex.value, (index) => {
         </div>
 
         <div v-if="!isEmpty" class="astryx-selector-options">
-          <div
-            v-for="(option, index) in combobox.filteredOptions.value"
-            :id="getOptionId(index)"
-            :key="option.value"
-            role="option"
-            tabindex="0"
-            class="astryx-selector-option"
-            :class="{
-              'is-active': index === combobox.activeIndex.value,
-              'is-selected': option.value === props.modelValue,
-              'is-disabled': option.disabled,
-            }"
-            :aria-selected="option.value === props.modelValue"
-            :aria-disabled="option.disabled"
-            @click="onOptionClick(option)"
-            @keydown.enter="onOptionClick(option)"
-            @keydown.space.prevent="onOptionClick(option)"
-          >
-            <slot v-if="slots.option" name="option" :option="option" :is-active="index === combobox.activeIndex.value" :is-selected="option.value === props.modelValue" />
-            <template v-else>
-              <span class="astryx-selector-option-label">{{ option.label }}</span>
-              <span v-if="option.description" class="astryx-selector-option-description">
-                {{ option.description }}
-              </span>
-            </template>
-          </div>
+          <template v-for="(row, rowIndex) in displayRows" :key="row.kind === 'section' ? `section-${rowIndex}` : row.option?.value">
+            <div v-if="row.kind === 'section'" class="astryx-selector-section" role="presentation">
+              {{ row.title }}
+            </div>
+            <div
+              v-else-if="row.option && row.index != null"
+              :id="getOptionId(row.index)"
+              role="option"
+              tabindex="0"
+              class="astryx-selector-option"
+              :class="{
+                'is-active': row.index === combobox.activeIndex.value,
+                'is-selected': row.option.value === props.modelValue,
+                'is-disabled': row.option.disabled,
+              }"
+              :aria-selected="row.option.value === props.modelValue"
+              :aria-disabled="row.option.disabled"
+              @click="onOptionClick(row.option)"
+              @keydown.enter="onOptionClick(row.option)"
+              @keydown.space.prevent="onOptionClick(row.option)"
+            >
+              <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
+              <template v-else>
+                <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
+                <span class="astryx-selector-option-label">{{ row.option.label }}</span>
+                <span v-if="row.option.description" class="astryx-selector-option-description">
+                  {{ row.option.description }}
+                </span>
+              </template>
+            </div>
+          </template>
         </div>
 
         <div v-else class="astryx-selector-empty">
@@ -323,9 +409,9 @@ watch(() => combobox.activeIndex.value, (index) => {
       style="position: absolute; left: -9999px; width: 1px; height: 1px;"
     >
       <option value="" />
-      <option v-for="option in props.options" :key="option.value" :value="option.value">
+      <option v-for="option in flatOptions" :key="option.value" :value="option.value">
         {{ option.label }}
       </option>
     </select>
-  </div>
+  </Field>
 </template>
