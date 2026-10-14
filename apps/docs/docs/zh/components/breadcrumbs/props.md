@@ -69,7 +69,19 @@ footer: false
         <td><code>isCurrent</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>是否为当前页，渲染为 <code>&lt;span&gt;</code> 并添加 <code>aria-current="page"</code>。</td>
+        <td>是否为当前页，渲染为 <code>&lt;span&gt;</code> 并添加 <code>aria-current="page"</code>。当前页仍然可以打开菜单。</td>
+      </tr>
+      <tr>
+        <td><code>menu</code></td>
+        <td><code>BreadcrumbMenuOption[]</code></td>
+        <td>-</td>
+        <td>把这一项变成菜单触发器，数组和下拉菜单的数据条目相同，包括勾选行和单选组。与链接地址互斥，给出菜单时忽略链接。写了菜单插槽时忽略这个数组。</td>
+      </tr>
+      <tr>
+        <td><code>menuSize</code></td>
+        <td><code>'sm' | 'md' | 'lg'</code></td>
+        <td>supporting 变体为 <code>sm</code>，否则为 <code>md</code></td>
+        <td>菜单行的尺寸。</td>
       </tr>
     </tbody>
   </table>
@@ -89,7 +101,11 @@ footer: false
       </tr>
       <tr>
         <td><code>startIcon</code></td>
-        <td>文本前的图标。</td>
+        <td>文本前的图标。可以使用内置图标组件。</td>
+      </tr>
+      <tr>
+        <td><code>menu</code></td>
+        <td>自己写的菜单内容，包括勾选行和单选组。组件名为 <code>BreadcrumbMenuCheckboxItem</code>、<code>BreadcrumbMenuRadioGroup</code>、<code>BreadcrumbMenuRadioItem</code>。有这个插槽时不再使用 <code>menu</code> 数组。</td>
       </tr>
     </tbody>
   </table>

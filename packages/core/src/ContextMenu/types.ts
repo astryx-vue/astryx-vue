@@ -1,4 +1,5 @@
 import type { Component, VNodeChild } from 'vue'
+import type { DropdownMenuSubMenuPresentation } from '../DropdownMenu/types.js'
 
 /**
  * Density of the menu rows, from the tightest to the most spacious.
@@ -99,6 +100,57 @@ export interface ContextMenuItemData {
   items?: ContextMenuOption[]
 }
 
+/** A checkbox row of the `items` data API. The checked state is controlled. */
+export interface ContextMenuCheckboxData {
+  type: 'checkbox'
+  id?: string
+  label: string
+  icon?: ContextMenuItemIcon
+  description?: string
+  /** Whether the row is checked. */
+  checked: boolean
+  /** @default false */
+  isDisabled?: boolean
+  /**
+   * Whether toggling closes the menu. Checkbox rows stay open.
+   * @default false
+   */
+  hasCloseOnSelect?: boolean
+  /** Called with the next checked state. */
+  onChange?: (checked: boolean) => void
+}
+
+/** One option inside a radio group of the `items` data API. */
+export interface ContextMenuRadioOptionData {
+  id?: string
+  value: string
+  label: string
+  icon?: ContextMenuItemIcon
+  description?: string
+  /** @default false */
+  isDisabled?: boolean
+}
+
+/**
+ * A single-select radio group of the `items` data API.
+ * Choosing a value closes the menu unless `hasCloseOnSelect` is false.
+ */
+export interface ContextMenuRadioData {
+  type: 'radio'
+  id?: string
+  /** Accessible name of the group. */
+  label: string
+  /** Selected value. Unset when nothing is selected. */
+  value?: string
+  /** @default true */
+  hasCloseOnSelect?: boolean
+  items: ContextMenuRadioOptionData[]
+  onChange?: (value: string) => void
+}
+
+/** A row the data API can place inside a section or at the top level. */
+export type ContextMenuEntry = ContextMenuItemData | ContextMenuCheckboxData | ContextMenuRadioData
+
 /** A horizontal rule between groups of rows. */
 export interface ContextMenuDividerData {
   type: 'divider'
@@ -112,11 +164,11 @@ export interface ContextMenuSection {
   /** Heading shown above the group's rows and used as the group's name. */
   title?: string
   /** The actions of the group. */
-  items: ContextMenuItemData[]
+  items: ContextMenuEntry[]
 }
 
 /** One entry of the `items` data API. */
-export type ContextMenuOption = ContextMenuItemData | ContextMenuDividerData | ContextMenuSection
+export type ContextMenuOption = ContextMenuEntry | ContextMenuDividerData | ContextMenuSection
 
 export interface ContextMenuProps {
   /**
@@ -180,9 +232,10 @@ export interface ContextMenuSlots {
   /** The trigger area: right-click on this content to open the menu. */
   default?: () => VNodeChild
   /**
-   * The menu's content for a caller-composed menu. Every row still needs the
-   * `menuitem` role and keyboard handling comes from the menu, so compose it
-   * from the exported menu components.
+   * Custom panel in place of `items`. Compose it from the menu rows, including
+   * checkbox and radio rows, when the menu has to stay open across several
+   * toggles or the rows depend on state. Keyboard handling still belongs to
+   * the menu.
    */
   content?: () => VNodeChild
 }
@@ -274,6 +327,22 @@ export interface ContextMenuSubMenuProps {
   isDisabled?: boolean
   /** The entries revealed in the flyout. */
   items?: ContextMenuOption[]
+  /**
+   * Show a spinner in place of the caret while the flyout's rows are loading.
+   * @default false
+   */
+  hasSpinner?: boolean
+  /**
+   * Minimum width of the flyout. Capped to the viewport. Defaults to the
+   * flyout's content, at least 160px.
+   */
+  menuWidth?: number | string
+  /**
+   * `flyout` opens beside the row. `drill-in` replaces the menu's rows and
+   * adds a Back row. `adaptive` drills in on a compact touch surface.
+   * @default 'adaptive'
+   */
+  presentation?: DropdownMenuSubMenuPresentation
 }
 
 export interface ContextMenuSubMenuEmits {

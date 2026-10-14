@@ -8,6 +8,7 @@ import type { CommandPaletteMessages } from './messages/command-palette.js'
 import type { DateInputMessages } from './messages/date-input.js'
 import type { DateRangeInputMessages } from './messages/date-range-input.js'
 import type { DateTimeInputMessages } from './messages/date-time-input.js'
+import type { DropdownMenuMessages } from './messages/dropdown-menu.js'
 import type { FileInputMessages } from './messages/file-input.js'
 import type { LayoutMessages } from './messages/layout.js'
 import type { LightboxMessages } from './messages/lightbox.js'
@@ -38,6 +39,7 @@ import { commandPaletteMessages } from './messages/command-palette.js'
 import { dateInputMessages } from './messages/date-input.js'
 import { dateRangeInputMessages } from './messages/date-range-input.js'
 import { dateTimeInputMessages } from './messages/date-time-input.js'
+import { dropdownMenuMessages } from './messages/dropdown-menu.js'
 import { fileInputMessages } from './messages/file-input.js'
 import { layoutMessages } from './messages/layout.js'
 import { lightboxMessages } from './messages/lightbox.js'
@@ -69,6 +71,7 @@ export interface AstryxMessages {
   dateInput: DateInputMessages
   dateRangeInput: DateRangeInputMessages
   dateTimeInput: DateTimeInputMessages
+  dropdownMenu: DropdownMenuMessages
   fileInput: FileInputMessages
   layout: LayoutMessages
   lightbox: LightboxMessages
@@ -102,6 +105,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateInput: dateInputMessages.en,
     dateRangeInput: dateRangeInputMessages.en,
     dateTimeInput: dateTimeInputMessages.en,
+    dropdownMenu: dropdownMenuMessages.en,
     fileInput: fileInputMessages.en,
     layout: layoutMessages.en,
     lightbox: lightboxMessages.en,
@@ -133,6 +137,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateInput: dateInputMessages['zh-CN'],
     dateRangeInput: dateRangeInputMessages['zh-CN'],
     dateTimeInput: dateTimeInputMessages['zh-CN'],
+    dropdownMenu: dropdownMenuMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],
     lightbox: lightboxMessages['zh-CN'],

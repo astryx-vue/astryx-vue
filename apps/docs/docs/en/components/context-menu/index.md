@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { contextMenuBasic, contextMenuBottomSheet } from '../../../../components/demos/context-menu'
+import { contextMenuBasic, contextMenuBottomSheet, contextMenuSelection } from '../../../../components/demos/context-menu'
 </script>
 
 ## Usage
@@ -38,7 +38,7 @@ const items: ContextMenuOption[] = [
 </template>
 ```
 
-An entry of `items` is one of three shapes: an action row (`label` is required; `icon`, `description`, `endContent`, `onClick`, `isDisabled`, `variant`, `hasCloseOnSelect`, and `href`/`target`/`rel` are optional), a divider `{ type: 'divider' }`, or a section `{ type: 'section', title, items }`. A row that also carries `items` becomes a submenu, revealed beside it on hover or with the right arrow key. The `icon` is a CSS icon class — an UnoCSS class such as `i-carbon-copy`, or one of your own — or a component that draws the SVG; astryx-vue ships no icons of its own.
+An entry can be an action, a divider, a section, a checkbox row, or a radio group. An action that also carries nested entries becomes a submenu. A checkbox row carries whether it is on and a change callback, and toggling it leaves the menu open. A radio group carries the current value and its options, and choosing one closes the menu. When the menu is composed by hand, those rows go in the content slot under the context menu's own names, and they behave like the dropdown menu's rows. Put the built-in icon in the icon slot and pass its name.
 
 When the menu needs to be composed by hand, use the `content` slot with the exported menu components instead. Both styles share one keyboard model:
 
@@ -60,6 +60,8 @@ When the menu needs to be composed by hand, use the `content` slot with the expo
 Open state is managed for you: a right-click opens the menu, and a click outside, Escape, or Tab closes it. Every change is reported through the `openChange` event. Bind `v-model:is-open` when something outside the component should decide, and the menu renders exactly the bound value.
 
 Focus lands on the first available row when the menu opens. The arrow keys move between rows and wrap at both ends, Home and End jump to the first and last row, PageDown and PageUp move by a screenful, and typing letters jumps to the next row whose label starts with them — pressing the same letter again cycles through the matches. Enter and Space activate the focused row, Escape closes the menu and returns focus to whatever was focused before it opened, and Tab closes the menu while letting the browser move focus on from there. A disabled row is marked `aria-disabled`, leaves the tab order, and is skipped by both the arrow keys and typeahead. The surface is `role="menu"`, rows are `role="menuitem"`, sections are `role="group"`, and dividers are `role="separator"`.
+
+A submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row. It can also be forced to always fly out or always replace the rows. While the next level is loading, the caret can become a spinner.
 
 `isDisabled` stops the component intercepting the right-click, so the browser's own menu still appears and people keep their spell-check, copy, and inspect tools. `triggerAs` decides whether the trigger renders as a block `div` or an inline `span`; the inline form lets a word inside running prose own a context menu without breaking the layout.
 
@@ -92,4 +94,11 @@ The panel is at least 160px wide and grows with its rows unless `menuWidth` pins
   description="A ContextMenu using the explicit BottomSheet presentation. Long-press the target on touch devices or right-click it with a pointer. Keep a visible menu trigger for important mobile actions."
   locale="en"
   title="Bottom sheet"
+/>
+
+<DemoExample
+  :demo="contextMenuSelection"
+  description="Pin and mute from the custom panel without closing it. Choosing a density closes the menu and updates the card."
+  locale="en"
+  title="Checkbox and radio"
 />

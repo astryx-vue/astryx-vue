@@ -4,9 +4,13 @@ import type { ContextMenuItemData, ContextMenuSubMenuEmits, ContextMenuSubMenuPr
 import { computed, inject, nextTick, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useSubmenuMode } from '../DropdownMenu/useSubmenuMode.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useAstryxMessages } from '../locale/index.js'
+import Spinner from '../Spinner/Spinner.vue'
 import { submenuAncestorOpenKey, useContextMenu, useContextMenuSize } from './context.js'
+import ContextMenuItem from './ContextMenuItem.vue'
 import ContextMenuItems from './ContextMenuItems.vue'
 import { useMenuNav } from './menuNav.js'
 import { useSubmenuHover } from './useSubmenuHover.js'
@@ -16,6 +20,8 @@ defineOptions({ name: 'AstryxContextMenuSubMenu', inheritAttrs: false })
 
 const props = withDefaults(defineProps<ContextMenuSubMenuProps>(), {
   isDisabled: false,
+  hasSpinner: false,
+  presentation: 'adaptive',
 })
 
 const emit = defineEmits<ContextMenuSubMenuEmits>()
@@ -24,7 +30,24 @@ const attrs = useAttrs()
 
 const menu = useContextMenu()
 const size = useContextMenuSize()
+const messages = useAstryxMessages()
 const GAP = 4
+const viewId = useId()
+const mode = useSubmenuMode({
+  drillIn: computed(() => menu?.drillIn.value),
+  presentation: computed(() => props.presentation),
+  viewId,
+})
+const isDrill = mode.isDrill
+const drillOnStack = mode.isOnStack
+const drillIsTop = mode.isTop
+const drillHost = computed(() => isDrill.value ? menu?.drillIn.value.host ?? null : null)
+const backLabel = computed(() => {
+  const parent = menu?.menuLabel.value
+  return parent != null && parent !== ''
+    ? messages.value.dropdownMenu.backTo(parent)
+    : messages.value.dropdownMenu.back
+})
 
 const row = useTemplateRef<HTMLElement>('row')
 const flyout = useTemplateRef<HTMLElement>('flyout')
@@ -48,10 +71,15 @@ const { position } = usePositionedLayer({
   gap: GAP,
 })
 
-const flyoutStyle = computed(() => ({
-  left: `${position.value.left}px`,
-  top: `${position.value.top}px`,
-}))
+const flyoutStyle = computed(() => {
+  const style: Record<string, string> = {
+    left: `${position.value.left}px`,
+    top: `${position.value.top}px`,
+  }
+  if (props.menuWidth != null)
+    style.minWidth = `min(${typeof props.menuWidth === 'number' ? `${props.menuWidth}px` : props.menuWidth}, calc(100vw - 16px))`
+  return style
+})
 
 const hasOverflow = useOverflow(flyout, showsFlyout)
 
@@ -88,6 +116,15 @@ const hover = useSubmenuHover({
 function open(focusFirstRow: boolean): void {
   if (props.isDisabled)
     return
+  if (isDrill.value) {
+    const wasOpen = drillOnStack.value
+    mode.openDrill()
+    if (!wasOpen)
+      emit('openChange', true)
+    if (focusFirstRow)
+      void nextTick(() => nav.focusFirst())
+    return
+  }
   if (isOpen.value) {
     if (focusFirstRow)
       nav.focusFirst()
@@ -111,6 +148,14 @@ function openFromHover(): void {
 }
 
 function close(focusRow: boolean): void {
+  if (isDrill.value) {
+    if (!mode.closeDrill())
+      return
+    emit('openChange', false)
+    if (focusRow)
+      row.value?.focus()
+    return
+  }
   const wasOpen = isOpen.value
   hover.markClosed()
   if (!wasOpen)
@@ -210,7 +255,7 @@ watch(ancestorOpen, (visible) => {
     v-bind="attrs"
     :aria-controls="flyoutId"
     :aria-disabled="isDisabled || undefined"
-    :aria-expanded="showsFlyout"
+    :aria-expanded="showsFlyout || drillOnStack"
     aria-haspopup="menu"
     class="astryx-context-menu-item astryx-context-menu-item--submenu"
     :class="attrs.class"
@@ -244,12 +289,36 @@ watch(ancestorOpen, (visible) => {
     </span>
     <span class="astryx-context-menu-item__end">
       <slot name="endContent">
-        <Icon class="astryx-context-menu-item__chevron" icon="chevronRight" color="secondary" size="sm" />
+        <span v-if="hasSpinner" aria-hidden="true">
+          <Spinner size="sm" />
+        </span>
+        <Icon v-else class="astryx-context-menu-item__chevron" icon="chevronRight" color="secondary" size="sm" />
       </slot>
     </span>
   </div>
 
-  <Teleport to="body">
+  <Teleport v-if="drillHost" :to="drillHost">
+    <div
+      v-show="drillOnStack"
+      ref="flyout"
+      class="astryx-context-menu astryx-context-menu--flyout"
+      role="menu"
+      :aria-label="flyoutLabel"
+      :hidden="drillIsTop ? undefined : true"
+      tabindex="-1"
+      @keydown="onFlyoutKeyDown"
+    >
+      <ContextMenuItem :has-close-on-select="false" :label="backLabel" @click="close(true)">
+        <template #icon>
+          <Icon color="secondary" icon="chevronLeft" size="sm" />
+        </template>
+      </ContextMenuItem>
+      <slot>
+        <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
+      </slot>
+    </div>
+  </Teleport>
+  <Teleport v-else to="body">
     <Transition name="astryx-context-menu-flyout">
       <div
         v-show="showsFlyout"

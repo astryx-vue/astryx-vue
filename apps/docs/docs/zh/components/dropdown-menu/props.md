@@ -25,7 +25,7 @@ footer: false
         <td><code>items</code></td>
         <td><code>DropdownMenuOption[]</code></td>
         <td>-</td>
-        <td>数据式菜单内容。每条可以是一条动作、一条分隔线 <code>{ type: 'divider' }</code>，或一个分组 <code>{ type: 'section', title, items }</code>。与默认插槽互斥，同时给出时以 <code>items</code> 为准。</td>
+        <td>数据式菜单内容。每条可以是一条动作、一条分隔线、一个分组、一条勾选行（<code>type: 'checkbox'</code>，用 <code>checked</code> 和 <code>onChange</code>），或一组单选（<code>type: 'radio'</code>，用 <code>value</code>、<code>label</code>、<code>items</code> 和 <code>onChange</code>）。与默认插槽互斥，同时给出时以 <code>items</code> 为准。</td>
       </tr>
       <tr>
         <td><code>isMenuOpen</code></td>
@@ -157,7 +157,185 @@ footer: false
   </table>
 </div>
 
-`DropdownMenuDivider` 没有属性，它渲染一条 `role="separator"` 的分隔线，因此永远不会成为方向键的一站。
+`DropdownMenuDivider` 没有属性，它渲染一条分隔线，因此永远不会成为方向键的一站。
+
+### DropdownMenuCheckboxItem
+
+<div class="component-api-table" role="region" aria-label="DropdownMenuCheckboxItem Props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>modelValue</code></td>
+        <td><code>boolean</code></td>
+        <td>-</td>
+        <td>是否选中，配合 <code>v-model</code> 使用。数据数组里对应字段是 <code>checked</code>。</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>行内的主要文字。需要富文本时改用 <code>label</code> 插槽。</td>
+      </tr>
+      <tr>
+        <td><code>description</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>标签下方的次要说明。</td>
+      </tr>
+      <tr>
+        <td><code>icon</code></td>
+        <td><code>string | Component</code></td>
+        <td>-</td>
+        <td>标签前的图标：一个 CSS 图标类，或一个绘制图标的组件。任意内容改用 <code>icon</code> 插槽，文档示例使用内置图标组件。</td>
+      </tr>
+      <tr>
+        <td><code>isDisabled</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>禁用这一行。行仍留在无障碍树里，方向键会跳过它，点击不会切换。</td>
+      </tr>
+      <tr>
+        <td><code>hasCloseOnSelect</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>切换后是否收起菜单。勾选行默认保持打开。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+行的角色是 <code>menuitemcheckbox</code>，选中状态写在 <code>aria-checked</code> 上。勾选标记是装饰，不单独接收点击。
+
+### DropdownMenuRadioGroup
+
+<div class="component-api-table" role="region" aria-label="DropdownMenuRadioGroup Props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>modelValue</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>当前选中的值，配合 <code>v-model</code> 使用。留空表示还没有选中。数据数组里字段名同样是 <code>value</code>。</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>这一组的无障碍名称。选项会作为同一组被朗读。</td>
+      </tr>
+      <tr>
+        <td><code>hasCloseOnSelect</code></td>
+        <td><code>boolean</code></td>
+        <td><code>true</code></td>
+        <td>选中一项后是否收起菜单。单选默认收起。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### DropdownMenuRadioItem
+
+<div class="component-api-table" role="region" aria-label="DropdownMenuRadioItem Props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>value</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>这个选项代表的值。必须放在单选组里面，否则组件会在初始化时抛出错误。</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>行内的主要文字。</td>
+      </tr>
+      <tr>
+        <td><code>description</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>标签下方的次要说明。</td>
+      </tr>
+      <tr>
+        <td><code>icon</code></td>
+        <td><code>string | Component</code></td>
+        <td>-</td>
+        <td>标签前的图标。任意内容改用 <code>icon</code> 插槽。</td>
+      </tr>
+      <tr>
+        <td><code>isDisabled</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>禁用这个选项。它仍留在组里，但不能被选中。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+行的角色是 <code>menuitemradio</code>。
+
+### DropdownMenuSubMenu
+
+<div class="component-api-table" role="region" aria-label="DropdownMenuSubMenu Props" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>这一行的文字，也是下一级返回按钮里提到的父级名字。</td>
+      </tr>
+      <tr>
+        <td><code>description</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>标签下方的次要说明。</td>
+      </tr>
+      <tr>
+        <td><code>icon</code></td>
+        <td><code>string | Component</code></td>
+        <td>-</td>
+        <td>标签前的图标。</td>
+      </tr>
+      <tr>
+        <td><code>isDisabled</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>禁用后这一行不能打开下一级。</td>
+      </tr>
+      <tr>
+        <td><code>hasSpinner</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>用转圈代替行尾箭头，表示下一级还在加载。转圈是装饰，不阻止打开。</td>
+      </tr>
+      <tr>
+        <td><code>menuWidth</code></td>
+        <td><code>number | string</code></td>
+        <td>-</td>
+        <td>飞出面板的宽度。数字按像素处理，作为最小宽度并限制在视口内。固有尺寸关键字则作为首选宽度。钻入时不使用。</td>
+      </tr>
+      <tr>
+        <td><code>presentation</code></td>
+        <td><code>'flyout' | 'drill-in' | 'adaptive'</code></td>
+        <td><code>'adaptive'</code></td>
+        <td>下一级怎么出现。旁边飞出、在原菜单里替换当前行，或在菜单打开时按是否为紧凑触控界面决定。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 ## 事件
 
@@ -187,6 +365,16 @@ footer: false
         <td><code>MouseEvent</code></td>
         <td>这一行被激活时触发。</td>
       </tr>
+      <tr>
+        <td><code>update:modelValue</code> / <code>change</code>（勾选行、单选组）</td>
+        <td><code>boolean</code> 或 <code>string</code></td>
+        <td>选中状态变化。勾选行给出下一个布尔值，单选组给出下一个字符串。双向绑定听的是 <code>update:modelValue</code>。</td>
+      </tr>
+      <tr>
+        <td><code>openChange</code>（<code>DropdownMenuSubMenu</code>）</td>
+        <td><code>boolean</code></td>
+        <td>飞出面板或钻入视图打开、关闭时触发。</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -201,7 +389,7 @@ footer: false
     <tbody>
       <tr>
         <td><code>default</code></td>
-        <td>自己写菜单内容时使用：<code>DropdownMenuItem</code>、<code>DropdownMenuGroup</code> 和 <code>DropdownMenuDivider</code>。与 <code>items</code> 互斥。</td>
+        <td>自己写菜单内容时使用，包括动作行、勾选行、单选组、分组、分隔线和子菜单。与 <code>items</code> 互斥。</td>
       </tr>
       <tr>
         <td><code>trigger</code></td>
@@ -222,6 +410,22 @@ footer: false
       <tr>
         <td><code>title</code> / <code>default</code>（<code>DropdownMenuGroup</code>）</td>
         <td>分组的富文本标题，以及组内的行。</td>
+      </tr>
+      <tr>
+        <td><code>header</code></td>
+        <td>菜单上方、选项之外的内容，例如筛选框。不参与字母跳转。</td>
+      </tr>
+      <tr>
+        <td><code>footer</code></td>
+        <td>菜单下方、选项之外的内容，例如新建按钮。</td>
+      </tr>
+      <tr>
+        <td><code>icon</code> / <code>label</code> / <code>description</code> / <code>endContent</code>（勾选行、单选行）</td>
+        <td>与动作行相同的富文本位置。勾选标记和单选圆点由组件自己绘制，不占用这些插槽。</td>
+      </tr>
+      <tr>
+        <td><code>default</code>（单选组、子菜单）</td>
+        <td>单选组里放单选项；子菜单里放下一级的行。</td>
       </tr>
     </tbody>
   </table>
