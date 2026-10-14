@@ -11,6 +11,11 @@ export interface AvatarGroupProps {
    * @default 'circle'
    */
   shape?: AvatarShape
+  /**
+   * Accessible name for the group.
+   * @default 'Avatar group'
+   */
+  label?: string
 }
 
 export interface AvatarGroupOverflowProps {

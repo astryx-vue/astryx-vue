@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { listBasic, listDensities, listInteractive, listMarkers } from '../../../../components/demos/list'
+import { listBasic, listBulleted, listMessages, listSteps } from '../../../../components/demos/list'
 </script>
 
 ## Usage
@@ -59,28 +59,28 @@ The package also exports the more general `Item` primitive. `ListItem` is that p
 
 <DemoExample
   :demo="listBasic"
-  description="A list with a header, rows that carry an icon on the left, and a badge or a chevron on the right."
+  description="Simple list with labels and descriptions for settings-style layouts."
   locale="en"
   title="Basic"
 />
 
 <DemoExample
-  :demo="listDensities"
-  description="The three density steps change the block padding of every row, and a single row can override the density its list sets."
+  :demo="listBulleted"
+  description="Bulleted list of feature highlights using disc markers."
   locale="en"
-  title="Densities"
+  title="Bulleted features"
 />
 
 <DemoExample
-  :demo="listMarkers"
-  description="Disc and circle draw a bullet in front of each row, while decimal renders an ordered list whose numbering can start at any value."
+  :demo="listMessages"
+  description="Chat-style message list with avatars, preview text, and unread badges."
   locale="en"
-  title="Markers"
+  title="Message list"
 />
 
 <DemoExample
-  :demo="listInteractive"
-  description="Rows that carry a click handler become buttons with hover and pressed states; the selected row is marked, and the disabled row is inert."
+  :demo="listSteps"
+  description="Numbered step-by-step instructions using decimal list markers."
   locale="en"
-  title="Selection and interaction"
+  title="Ordered steps"
 />

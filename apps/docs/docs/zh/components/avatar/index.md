@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { avatarSizes, avatarShapes, avatarFallback, avatarStatus } from '../../../../components/demos/avatar'
+import { avatarFallbackChain, avatarInitials, avatarInteractive, avatarPhoto, avatarStatus, avatarTooltip, avatarUserCard } from '../../../../components/demos/avatar'
 </script>
 
 ## 使用方法
@@ -52,29 +52,50 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 ## 示例
 
 <DemoExample
-  :demo="avatarSizes"
-  description="头像提供 xsm、sm、md、lg 等命名尺寸，也可以直接传入像素值，方便与设计稿精确对齐。"
+  :demo="avatarFallbackChain"
+  description="头像的回退顺序：主图、备用图、姓名首字母，最后是默认图标。"
   locale="zh"
-  title="尺寸"
+  title="回退链"
 />
 
 <DemoExample
-  :demo="avatarShapes"
-  description="头像有圆形、圆角方形和方形三种形状，默认为圆形，可按内容类型和页面风格选择。"
+  :demo="avatarInitials"
+  description="没有照片时显示姓名首字母。头像会自动取名和姓的首字母。"
   locale="zh"
-  title="形状"
+  title="姓名首字母"
 />
 
 <DemoExample
-  :demo="avatarFallback"
-  description="图片加载失败时自动回退到姓名首字母；既没有图片也没有姓名时，则显示默认的人物图标。"
+  :demo="avatarInteractive"
+  description="传入 href 时头像是链接，监听点击时头像是按钮。两种形式都可聚焦，并带有 focus-visible 焦点环。"
   locale="zh"
-  title="回退"
+  title="可交互"
+/>
+
+<DemoExample
+  :demo="avatarPhoto"
+  description="用不同尺寸展示头像照片。图片加载失败时改显示姓名首字母。"
+  locale="zh"
+  title="照片"
 />
 
 <DemoExample
   :demo="avatarStatus"
-  description="把 AvatarStatusDot 放进 status 插槽，就能在头像角落标示在线、忙碌等状态。"
+  description="在头像上加状态点，表示在线、离开或忙碌。适合聊天和需要看得到在线状态的界面。"
   locale="zh"
-  title="状态"
+  title="状态点"
+/>
+
+<DemoExample
+  :demo="avatarTooltip"
+  description="默认在悬停和键盘聚焦时用提示显示姓名。传入字符串可换成自定义文案，传入 false 则关闭提示。"
+  locale="zh"
+  title="提示"
+/>
+
+<DemoExample
+  :demo="avatarUserCard"
+  description="把头像放在姓名和角色旁边，组成一行用户信息。适合评论标题、联系人列表和资料区。"
+  locale="zh"
+  title="用户卡片"
 />

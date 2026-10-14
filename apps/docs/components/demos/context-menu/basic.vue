@@ -1,41 +1,22 @@
 <script setup lang="ts">
 import type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'
-import { Card } from '@astryx-vue/core/Card'
 import { ContextMenu } from '@astryx-vue/core/ContextMenu'
-import { Text } from '@astryx-vue/core/Text'
-import { ref } from 'vue'
-
-const LAST_ACTION_NONE = 'No action yet'
-
-const lastAction = ref(LAST_ACTION_NONE)
 
 const items: ContextMenuOption[] = [
-  { label: 'Cut', icon: 'css-icon css-icon--sm i-carbon-cut' },
-  { label: 'Copy', icon: 'css-icon css-icon--sm i-carbon-copy' },
-  { label: 'Paste', isDisabled: true },
+  { label: 'Cut', onClick: () => {} },
+  { label: 'Copy', onClick: () => {} },
+  { label: 'Paste', onClick: () => {} },
   { type: 'divider' },
-  { type: 'section', title: 'Share', items: [{ label: 'Copy link' }, { label: 'Email' }] },
-  { type: 'divider' },
-  { label: 'Delete', variant: 'destructive' },
+  { label: 'Delete', onClick: () => {} },
 ]
-
-function onSelect(item: ContextMenuOption): void {
-  if (item.type === undefined)
-    lastAction.value = item.label
-}
 </script>
 
 <template>
-  <div class="context-menu-preview">
-    <ContextMenu :items="items" label="Clipboard actions" @select="onSelect">
-      <Card :padding="6">
-        <Text as="div" color="secondary">
-          Right-click this card.
-        </Text>
-      </Card>
-    </ContextMenu>
-    <p class="context-menu-preview__result">
-      Last action: {{ lastAction }}
-    </p>
-  </div>
+  <ContextMenu presentation="adaptive" :items="items">
+    <div
+      style="padding: 48px; border-width: 2px; border-style: dashed; border-color: #d1d5db; border-radius: 8px; text-align: center; color: #6b7280; user-select: none;"
+    >
+      Long-press or right-click this area
+    </div>
+  </ContextMenu>
 </template>

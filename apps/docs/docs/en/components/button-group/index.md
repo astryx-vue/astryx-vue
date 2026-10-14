@@ -45,15 +45,14 @@ import { ButtonGroup } from '@astryx-vue/core/ButtonGroup'
 
 <DemoExample
   :demo="buttonGroupBasic"
-  description="Keep 2–4 closely related actions together and use a consistent variant so they read as one connected control."
+  description="Three related actions joined into a single connected control. Provide a group label for accessibility and keep all buttons the same variant so they read as one unit."
   locale="en"
-  title="Basic group"
+  title="Basic"
 />
 
 <DemoExample
   :demo="buttonGroupFloating"
-  description="Elevation belongs to the whole group rather than an individual member, so the connected controls rise as one floating surface."
+  description="A grouped action bar raised with elevation=&quot;med&quot;. The connected buttons share one surface, so the shadow lifts them as a unit."
   locale="en"
-  title="Floating group"
+  title="Floating"
 />
-

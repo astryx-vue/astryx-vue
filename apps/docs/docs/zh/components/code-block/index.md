@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { codeBlockConfig, codeBlockHighlighted, codeBlockOverview, codeBlockScrollable, codeBlockSnippet, codeBlockTerminal } from '../../../../components/demos/code-block'
+import { codeBlockConfig, codeBlockHighlighted, codeBlockScrollable, codeBlockSnippet, codeBlockTerminal } from '../../../../components/demos/code-block'
 </script>
 
 ## 使用方法
@@ -45,12 +45,6 @@ const commands = `$ astryx init --features agents`
 
 ## 示例
 
-<DemoExample
-  :demo="codeBlockOverview"
-  description="带行号、标题栏和复制按钮的 TypeScript 代码块，并做了语法着色。"
-  locale="zh"
-  title="Code Block"
-/>
 
 <DemoExample
   :demo="codeBlockSnippet"

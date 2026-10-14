@@ -7,6 +7,6 @@ import { Text } from '@astryx-vue/core/Text'
   <Text type="body">
     Read the <Link href="#">
       documentation
-    </Link> for more information about using these components.
+    </Link> for more information about using Astryx components.
   </Text>
 </template>

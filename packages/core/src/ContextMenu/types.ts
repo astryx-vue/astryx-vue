@@ -17,6 +17,15 @@ export type ContextMenuSize = 'sm' | 'md' | 'lg'
  */
 export type ContextMenuTriggerElement = 'div' | 'span'
 
+/**
+ * How the actions are presented.
+ *
+ * `popover` anchors a menu to the pointer, `bottom-sheet` presents a
+ * thumb-reachable sheet, and `adaptive` uses the sheet at 768px and below
+ * when the primary pointer is coarse.
+ */
+export type ContextMenuPresentation = 'popover' | 'bottom-sheet' | 'adaptive'
+
 /** A menu width as a number of pixels or any CSS length. */
 export type ContextMenuWidth = number | string
 
@@ -144,6 +153,11 @@ export interface ContextMenuProps {
    * @default 'div'
    */
   triggerAs?: ContextMenuTriggerElement
+  /**
+   * How the menu is presented.
+   * @default 'popover'
+   */
+  presentation?: ContextMenuPresentation
   /**
    * Open state of the menu. Bind it with `v-model:is-open` to control the
    * menu from the outside; leave it unbound and the menu manages its own

@@ -3,17 +3,23 @@ import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
 import collapsibleDemo from './collapsible.vue'
 import collapsibleSource from './collapsible.vue?raw&highlighted'
+import contentDemo from './content.vue'
+import contentSource from './content.vue?raw&highlighted'
 import inlineDemo from './inline.vue'
 import inlineSource from './inline.vue?raw&highlighted'
 import lineNumbersDemo from './line-numbers.vue'
 import lineNumbersSource from './line-numbers.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
+import sizesDemo from './sizes.vue'
+import sizesSource from './sizes.vue?raw&highlighted'
 
 const options = { className: 'code-preview' }
 
 export const codeBasic = defineDemo(basicDemo, basicSource, options)
+export const codeContent = defineDemo(contentDemo, contentSource, options)
 export const codeInline = defineDemo(inlineDemo, inlineSource, options)
+export const codeSizes = defineDemo(sizesDemo, sizesSource, options)
 export const codeLineNumbers = defineDemo(lineNumbersDemo, lineNumbersSource, options)
 export const codeCollapsible = defineDemo(collapsibleDemo, collapsibleSource, options)
 

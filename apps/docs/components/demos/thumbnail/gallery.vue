@@ -4,10 +4,8 @@ import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { Thumbnail } from '@astryx-vue/core/Thumbnail'
 import { ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 import { thumbnailScenes } from './images'
 
-const { pick } = useDemoText()
 const items = ref<ThumbnailScene[]>([...thumbnailScenes])
 const selected = ref<string | null>(null)
 
@@ -19,7 +17,7 @@ function remove(id: number) {
 <template>
   <Stack direction="vertical" :gap="3">
     <Text type="supporting" color="secondary">
-      {{ pick('点击预览，点关闭移除', 'Click to preview, dismiss to remove') }}
+      {{ 'Click to preview, dismiss to remove' }}
     </Text>
     <Stack align="center" direction="horizontal" :gap="2">
       <Thumbnail
@@ -34,7 +32,7 @@ function remove(id: number) {
       />
     </Stack>
     <Text v-if="selected" type="supporting" color="secondary">
-      {{ pick(`已选择：${selected}`, `Selected: ${selected}`) }}
+      Selected: {{ selected }}
     </Text>
   </Stack>
 </template>

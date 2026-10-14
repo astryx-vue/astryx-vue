@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { mediaThemeImageOverlay, mediaThemeLightScrim, mediaThemeOverview } from '../../../../components/demos/media-theme'
+import { mediaThemeImageOverlay, mediaThemeLightScrim } from '../../../../components/demos/media-theme'
 </script>
 
 ## Usage
@@ -45,12 +45,6 @@ A theme can add tokens for these surfaces with `onDark` and `onLight` on `define
 
 ## Examples
 
-<DemoExample
-  :demo="mediaThemeOverview"
-  description="A compact media overlay showing MediaTheme adapting text, icons, badges, and button variants over an image-backed dark surface."
-  locale="en"
-  title="MediaTheme — Media Overlay"
-/>
 
 <DemoExample
   :demo="mediaThemeImageOverlay"

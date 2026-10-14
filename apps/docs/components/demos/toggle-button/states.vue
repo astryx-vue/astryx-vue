@@ -1,41 +1,91 @@
 <script setup lang="ts">
+import { Icon } from '@astryx-vue/core/Icon'
+import { Stack } from '@astryx-vue/core/Stack'
+import { Text } from '@astryx-vue/core/Text'
 import { ToggleButton } from '@astryx-vue/core/ToggleButton'
-import { shallowRef } from 'vue'
-
-const isShared = shallowRef(false)
-const note = shallowRef('')
-
-async function shareWithTeam(next: boolean): Promise<void> {
-  note.value = ''
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1200)
-  })
-  note.value = next ? 'The board is shared with the team.' : 'Sharing stopped.'
-}
 </script>
 
 <template>
-  <div class="toggle-button-preview">
-    <div class="toggle-button-preview__row">
-      <ToggleButton elevation="low" label="Small" size="sm" />
-      <ToggleButton elevation="low" label="Medium" />
-      <ToggleButton elevation="low" label="Large" size="lg" />
-    </div>
-    <div class="toggle-button-preview__row">
-      <ToggleButton is-disabled label="Disabled" />
-      <ToggleButton is-loading label="Saving" />
-    </div>
-    <div class="toggle-button-preview__row">
-      <ToggleButton
-        v-model:is-pressed="isShared"
-        label="Share with team"
-        :pressed-change-action="shareWithTeam"
-      >
-        <template #icon>
-          <span class="css-icon css-icon--sm i-carbon-upload" />
-        </template>
-      </ToggleButton>
-      <span v-if="note" class="toggle-button-preview__note">{{ note }}</span>
-    </div>
-  </div>
+  <Stack direction="vertical" :gap="4">
+    <Stack direction="vertical" :gap="1">
+      <Text type="supporting" color="secondary">
+        Default
+      </Text>
+      <Stack align="center" direction="horizontal" :gap="3">
+        <ToggleButton label="Favorite" :is-pressed="false">
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+          <template #pressedIcon>
+            <Icon icon="i-heroicons-star-solid" />
+          </template>
+        </ToggleButton>
+        <ToggleButton label="Favorite" :is-pressed="false" is-icon-only>
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+          <template #pressedIcon>
+            <Icon icon="i-heroicons-star-solid" />
+          </template>
+        </ToggleButton>
+      </Stack>
+    </Stack>
+    <Stack direction="vertical" :gap="1">
+      <Text type="supporting" color="secondary">
+        Pressed
+      </Text>
+      <Stack align="center" direction="horizontal" :gap="3">
+        <ToggleButton label="Favorite" :is-pressed="true">
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+          <template #pressedIcon>
+            <Icon icon="i-heroicons-star-solid" />
+          </template>
+        </ToggleButton>
+        <ToggleButton label="Favorite" :is-pressed="true" is-icon-only>
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+          <template #pressedIcon>
+            <Icon icon="i-heroicons-star-solid" />
+          </template>
+        </ToggleButton>
+      </Stack>
+    </Stack>
+    <Stack direction="vertical" :gap="1">
+      <Text type="supporting" color="secondary">
+        Disabled
+      </Text>
+      <Stack align="center" direction="horizontal" :gap="3">
+        <ToggleButton label="Favorite" :is-pressed="false" is-disabled>
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+        </ToggleButton>
+        <ToggleButton label="Favorite" :is-pressed="false" is-icon-only is-disabled>
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+        </ToggleButton>
+      </Stack>
+    </Stack>
+    <Stack direction="vertical" :gap="1">
+      <Text type="supporting" color="secondary">
+        Loading
+      </Text>
+      <Stack align="center" direction="horizontal" :gap="3">
+        <ToggleButton label="Favorite" :is-pressed="false" is-loading>
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+        </ToggleButton>
+        <ToggleButton label="Favorite" :is-pressed="false" is-icon-only is-loading>
+          <template #icon>
+            <Icon icon="i-heroicons-star" />
+          </template>
+        </ToggleButton>
+      </Stack>
+    </Stack>
+  </Stack>
 </template>

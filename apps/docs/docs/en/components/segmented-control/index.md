@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { segmentedControlBasic, segmentedControlIcons, segmentedControlSizes, segmentedControlStates } from '../../../../components/demos/segmented-control'
+import { segmentedControlDisabled, segmentedControlFill, segmentedControlIconOnly, segmentedControlIcons } from '../../../../components/demos/segmented-control'
 </script>
 
 ## Usage
@@ -57,29 +57,29 @@ A segment can show an icon before its label by putting it in the `#icon` slot; t
 ## Examples
 
 <DemoExample
-  :demo="segmentedControlBasic"
-  description="The basic case: a controlled row of segments, with the line underneath following the selection."
+  :demo="segmentedControlDisabled"
+  description="Segmented control with an individually disabled option for unavailable choices."
   locale="en"
-  title="Basic"
+  title="Disabled item"
 />
 
 <DemoExample
-  :demo="segmentedControlSizes"
-  description="The sm, md, and lg sizes change only the height and inner padding, never the behavior."
+  :demo="segmentedControlFill"
+  description="Segmented control that stretches segments equally to fill the available width, useful for fixed-width containers."
   locale="en"
-  title="Sizes"
+  title="Fill layout"
+/>
+
+<DemoExample
+  :demo="segmentedControlIconOnly"
+  description="Compact segmented control with hidden labels, showing only icons for space-constrained layouts."
+  locale="en"
+  title="Icon only"
 />
 
 <DemoExample
   :demo="segmentedControlIcons"
-  description="A segment can carry an icon before its label; with isLabelHidden it shows the icon alone and the label becomes the segment's accessible name."
+  description="Segmented control with icon and label pairs for a view mode switcher."
   locale="en"
-  title="Icons"
-/>
-
-<DemoExample
-  :demo="segmentedControlStates"
-  description="One disabled segment, a whole control disabled with a reason, and the fill layout sharing the width of a narrow card."
-  locale="en"
-  title="States and layout"
+  title="With icons"
 />

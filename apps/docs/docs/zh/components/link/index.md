@@ -43,21 +43,21 @@ import { Link } from '@astryx-vue/core/Link'
 
 <DemoExample
   :demo="linkExternal"
-  description="isExternalLink 在新标签页打开，并带上外部标识。需要下划线时再加 hasUnderline。"
+  description="纵向排列的外部链接，在新标签页打开，并带有外部指示图标。"
   locale="zh"
   title="外部链接"
 />
 
 <DemoExample
   :demo="linkInline"
-  description="链接嵌在一段正文里，跟前后的文字排在同一行。"
+  description="嵌在正文段落里的链接。"
   locale="zh"
-  title="行内链接"
+  title="行内文字"
 />
 
 <DemoExample
   :demo="linkTooltips"
-  description="悬停或聚焦时，Tooltip 说明这个链接会去哪里。"
+  description="一排独立链接，悬停时用提示说明去向。"
   locale="zh"
-  title="提示"
+  title="带提示"
 />

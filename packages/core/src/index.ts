@@ -273,6 +273,7 @@ export type {
   ContextMenuItemSlots,
   ContextMenuItemTarget,
   ContextMenuOption,
+  ContextMenuPresentation,
   ContextMenuProps,
   ContextMenuSection,
   ContextMenuSize,

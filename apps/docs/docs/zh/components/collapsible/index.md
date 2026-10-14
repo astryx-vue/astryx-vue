@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { collapsibleBasic, collapsibleChevronPosition, collapsibleControlled, collapsibleDisabled } from '../../../../components/demos/collapsible'
+import { collapsibleControlled, collapsibleDividers, collapsibleFaq, collapsibleMultiple, collapsibleSingle } from '../../../../components/demos/collapsible'
 </script>
 
 ## 使用方法
@@ -71,29 +71,36 @@ const isOpen = ref(false)
 ## 示例
 
 <DemoExample
-  :demo="collapsibleBasic"
-  description="两行独立的小节：第一行默认展开，展示内容区域的样子，第二行保持收起。"
-  locale="zh"
-  title="基本用法"
-/>
-
-<DemoExample
   :demo="collapsibleControlled"
-  description="把状态交给父组件：外部的按钮可以展开或收起面板，面板自己点击同样会更新绑定的值。"
+  description="由父级状态决定哪一节打开，因此不只是点击能切换：URL 参数、校验失败时跳到对应步骤，或这里的上一步 / 下一步。"
   locale="zh"
-  title="受控状态"
+  title="受控"
 />
 
 <DemoExample
-  :demo="collapsibleChevronPosition"
-  description="箭头默认跟在标签后面；设为 start 后移到标签前面，收起时指向内容一侧。"
+  :demo="collapsibleFaq"
+  description="用 hasDividers 做常见问题：行间细线和密度间距，不需要自定义 CSS。问题用正文半粗，读起来是一行行问题，而不是一叠标题。"
   locale="zh"
-  title="箭头位置"
+  title="常见问题"
 />
 
 <DemoExample
-  :demo="collapsibleDisabled"
-  description="isDisabled 让触发器变暗、退出 Tab 顺序且无法点击，但已经展开的内容会保持可见。"
+  :demo="collapsibleMultiple"
+  description="多节能同时打开，方便对照。每个 Card 里放一个 Collapsible，触发器保持 large 字号，因为它是这块表面的标题，不是列表里的一行。"
   locale="zh"
-  title="禁用"
+  title="多开"
+/>
+
+<DemoExample
+  :demo="collapsibleSingle"
+  description="一次只打开一节，让一块内容独占注意力。用 defaultValue 预先展开首次阅读者需要的那一节。"
+  locale="zh"
+  title="单开"
+/>
+
+<DemoExample
+  :demo="collapsibleDividers"
+  description="页面背景上的扁平列表，分隔线手动放置。适合卡片会显得太重的详情面板和侧栏。"
+  locale="zh"
+  title="带分隔线"
 />

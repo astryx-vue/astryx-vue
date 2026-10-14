@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { emptyStateBasic, emptyStateCompact, emptyStateIllustration, emptyStateNarrow } from '../../../../components/demos/empty-state'
+import { emptyStateActions, emptyStateCompact, emptyStateContainer } from '../../../../components/demos/empty-state'
 </script>
 
 ## 使用方法
@@ -78,29 +78,22 @@ astryx-vue 不自带图标：`icon` 插槽里放什么由你决定，可以是�
 ## 示例
 
 <DemoExample
-  :demo="emptyStateBasic"
-  description="完整的空状态：图标、标题、说明文字和两个操作按钮，覆盖了组件的四个组成部分。"
+  :demo="emptyStateActions"
+  description="带图标、说明和操作按钮的完整空状态。搜索没有结果、筛选清空列表，或列表被清空时使用。按钮给用户下一步。"
   locale="zh"
-  title="基础用法"
+  title="操作"
 />
 
 <DemoExample
   :demo="emptyStateCompact"
-  description="isCompact 同时收紧间距与字号，并把操作按钮改为竖排，适合卡片和侧边栏。"
+  description="间距更小的空状态，适合侧栏、卡片和通知抽屉这类放不下完整空状态的区域。"
   locale="zh"
-  title="紧凑变体"
+  title="紧凑"
 />
 
 <DemoExample
-  :demo="emptyStateIllustration"
-  description="icon 插槽既接受图标类，也接受自己绘制的插图，两种写法都会自动被隐藏给辅助技术。"
+  :demo="emptyStateContainer"
+  description="放在 Card 里的空状态，适合首次设置或引导。用户还没创建任何内容时使用，例如项目列表。"
   locale="zh"
-  title="图标与插图"
-/>
-
-<DemoExample
-  :demo="emptyStateNarrow"
-  description="在窄容器中，标题、说明和操作按钮会换行，而不会撑破容器。"
-  locale="zh"
-  title="窄容器"
+  title="容器"
 />

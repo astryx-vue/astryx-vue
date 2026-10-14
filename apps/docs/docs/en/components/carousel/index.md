@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { carouselCards, carouselOverview, carouselSnap } from '../../../../components/demos/carousel'
+import { carouselCards, carouselSnap } from '../../../../components/demos/carousel'
 </script>
 
 ## Usage
@@ -50,12 +50,6 @@ import { Carousel } from '@astryx-vue/core/Carousel'
 
 ## Examples
 
-<DemoExample
-  :demo="carouselOverview"
-  description="A horizontal carousel of cards with scroll-snap and navigation buttons. Scroll or click the arrows to browse."
-  locale="en"
-  title="Carousel"
-/>
 
 <DemoExample
   :demo="carouselCards"

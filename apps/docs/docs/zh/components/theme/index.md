@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { themeApply, themeNested, themeOverview, themeSwitcher } from '../../../../components/demos/theme'
+import { themeApply, themeNested, themeSwitcher } from '../../../../components/demos/theme'
 </script>
 
 ## 使用方法
@@ -53,12 +53,6 @@ const ocean = defineTheme({
 
 ## 示例
 
-<DemoExample
-  :demo="themeOverview"
-  description="两套差别明显的主题包住同一份内容，用来看 Theme 如何改变子组件的颜色、圆角和按钮。"
-  locale="zh"
-  title="Theme — Distinct Themes"
-/>
 
 <DemoExample
   :demo="themeApply"

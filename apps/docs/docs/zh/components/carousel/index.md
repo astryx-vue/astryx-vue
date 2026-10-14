@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { carouselCards, carouselOverview, carouselSnap } from '../../../../components/demos/carousel'
+import { carouselCards, carouselSnap } from '../../../../components/demos/carousel'
 </script>
 
 ## 使用方法
@@ -50,12 +50,6 @@ import { Carousel } from '@astryx-vue/core/Carousel'
 
 ## 示例
 
-<DemoExample
-  :demo="carouselOverview"
-  description="一组可以横向滑动的卡片，带滚动吸附和导航按钮。滑动或点箭头浏览。"
-  locale="zh"
-  title="Carousel"
-/>
 
 <DemoExample
   :demo="carouselCards"

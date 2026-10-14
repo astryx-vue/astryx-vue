@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { contextMenuBasic, contextMenuCompound, contextMenuOverview, contextMenuSubmenu } from '../../../../components/demos/context-menu'
+import { contextMenuBasic, contextMenuBottomSheet } from '../../../../components/demos/context-menu'
 </script>
 
 ## 使用方法
@@ -81,29 +81,15 @@ const items: ContextMenuOption[] = [
 ## 示例
 
 <DemoExample
-  :demo="contextMenuOverview"
-  description="展开的菜单表面：带图标的菜单行、次要说明、分隔线和危险操作。"
-  locale="zh"
-  title="菜单表面"
-/>
-
-<DemoExample
   :demo="contextMenuBasic"
-  description="数据驱动的菜单：动作条目、禁用条目、分组、分隔线与危险操作，选中结果会写回页面。"
+  description="自适应的上下文区域：紧凑触屏上长按打开底部动作条，其他设备上右键打开跟随光标的菜单。"
   locale="zh"
-  title="基本用法"
+  title="基本"
 />
 
 <DemoExample
-  :demo="contextMenuCompound"
-  description="复合模式：用 content 插槽和菜单组件自己组合内容，其中一行选中后不关闭菜单，而是在原处报告结果。"
+  :demo="contextMenuBottomSheet"
+  description="明确使用底部动作条的 ContextMenu。触屏长按目标，指针设备右键。重要的移动端操作仍应保留可见的菜单触发器。"
   locale="zh"
-  title="自定义内容"
-/>
-
-<DemoExample
-  :demo="contextMenuSubmenu"
-  description="嵌套的 items 让条目变成子菜单，悬停或按右方向键会展开下一级，多层嵌套同样适用。"
-  locale="zh"
-  title="子菜单"
+  title="底部动作条"
 />

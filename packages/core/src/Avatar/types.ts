@@ -33,6 +33,25 @@ export interface AvatarProps {
    * The primary image source for the avatar.
    */
   src?: string
+  /**
+   * When set, the avatar renders as a link.
+   */
+  href?: string
+  /**
+   * HTML target for the link. Only applies when `href` is set.
+   */
+  target?: string
+  /**
+   * HTML rel for the link. `noopener noreferrer` is added when `target` is `_blank`.
+   */
+  rel?: string
+  /**
+   * Hover and focus tooltip.
+   *
+   * `true` (default) shows `name`. A string shows that text instead. `false` turns the tooltip off.
+   * @default true
+   */
+  tooltip?: boolean | string
 }
 
 export type AvatarStatusDotVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error'
@@ -43,4 +62,8 @@ export interface AvatarStatusDotProps {
    * @default 'neutral'
    */
   variant?: AvatarStatusDotVariant
+  /**
+   * Accessible name for the status. When omitted the dot is hidden from assistive technology.
+   */
+  label?: string
 }

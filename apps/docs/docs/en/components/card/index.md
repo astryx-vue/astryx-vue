@@ -66,35 +66,35 @@ The card also publishes `--container-padding-inline-start`, `--container-padding
 
 <DemoExample
   :demo="cardCallout"
-  description="The muted variant keeps a tip or note in the page instead of lifting it like the default card."
+  description="Muted-variant cards for tips, notes, or supplementary information. Use when content should be visually distinct but not prominent."
   locale="en"
   title="Callout"
 />
 
 <DemoExample
   :demo="cardElevation"
-  description="None, low, med, and high. A card is flat until it needs to sit above the content around it."
+  description="The four elevation levels side by side. Cards are flat by default; raise a card with elevation only when it needs to float above surrounding content."
   locale="en"
   title="Elevations"
 />
 
 <DemoExample
   :demo="cardLayout"
-  description="A header, a body, and a footer. The header and footer have dividers, and the actions sit on the right."
+  description="A card with a structured header, content area, and footer with action buttons. Use for forms, dialogs, or settings panels that need clear sections."
   locale="en"
   title="Layout"
 />
 
 <DemoExample
   :demo="cardSimple"
-  description="A heading, a paragraph, and a supporting line. The card supplies the border, background, and padding."
+  description="A card with a heading and body text. Use for summaries, descriptions, or any grouped content that needs visual separation from the page."
   locale="en"
   title="Simple"
 />
 
 <DemoExample
   :demo="cardVariants"
-  description="Default and muted, plus blue, green, orange, and purple, for grouping cards by category."
+  description="Default, muted, and color variants side by side. Use color variants to categorize cards visually, like team colors, project tags, or content types."
   locale="en"
   title="Variants"
 />

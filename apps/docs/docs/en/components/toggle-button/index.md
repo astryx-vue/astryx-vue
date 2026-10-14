@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { toggleButtonBasic, toggleButtonGroup, toggleButtonIconOnly, toggleButtonStates } from '../../../../components/demos/toggle-button'
+import { toggleButtonColor, toggleButtonIconSwap, toggleButtonLabel, toggleButtonStates } from '../../../../components/demos/toggle-button'
 </script>
 
 ## Usage
@@ -91,29 +91,29 @@ For an icon-only toggle set `isIconOnly`: the button becomes square, `label` bec
 ## Examples
 
 <DemoExample
-  :demo="toggleButtonBasic"
-  description="A view switcher with one pressed member, next to a standalone filter toggle that shows the pressed background and the colored pressed icon."
+  :demo="toggleButtonColor"
+  description="Toggle buttons with colored icons in the pressed state. Shows accent-colored toolbar formatting and semantic reaction colors."
   locale="en"
-  title="Basic"
+  title="Color"
 />
 
 <DemoExample
-  :demo="toggleButtonGroup"
-  description="A single-select alignment group that keeps one member pressed and clears on a second click, above a multi-select group where every column switches on its own."
+  :demo="toggleButtonIconSwap"
+  description="Icon-only toggle buttons that swap between outline and solid icons when pressed. Use for actions like favorite, bookmark, or mute where the icon itself communicates the state."
   locale="en"
-  title="Single and multiple"
+  title="Icon swap"
 />
 
 <DemoExample
-  :demo="toggleButtonIconOnly"
-  description="An icon-only toolbar that leans on label for its accessible name and tooltip for the hover hint, plus a record toggle that swaps to a solid glyph while pressed."
+  :demo="toggleButtonLabel"
+  description="Toggle buttons with visible text labels that show a font weight shift on press. Use when the icon alone is not enough to communicate the action."
   locale="en"
-  title="Icon only and pressed icon"
+  title="Label"
 />
 
 <DemoExample
   :demo="toggleButtonStates"
-  description="Three sizes, a disabled and a loading toggle, and an async toggle driven by pressedChangeAction that keeps previewing the next state until the action settles."
+  description="Default, pressed, disabled, and loading states of a standalone toggle button. Shows how visual treatment changes across states."
   locale="en"
-  title="Sizes and states"
+  title="States"
 />

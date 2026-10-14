@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { listBasic, listDensities, listInteractive, listMarkers } from '../../../../components/demos/list'
+import { listBasic, listBulleted, listMessages, listSteps } from '../../../../components/demos/list'
 </script>
 
 ## 使用方法
@@ -59,28 +59,28 @@ import { List, ListItem } from '@astryx-vue/core/List'
 
 <DemoExample
   :demo="listBasic"
-  description="带标题的列表：左侧图标用于分类，右侧徽章或箭头用于提示数量与可进入。"
+  description="带标签和说明的简单列表，适合设置类布局。"
   locale="zh"
-  title="基础用法"
+  title="基本"
 />
 
 <DemoExample
-  :demo="listDensities"
-  description="三档密度改变每一行的上下内边距，同一列表中的单行也可以覆盖列表给定的密度。"
+  :demo="listBulleted"
+  description="用圆点标出功能要点。"
   locale="zh"
-  title="密度"
+  title="项目符号"
 />
 
 <DemoExample
-  :demo="listMarkers"
-  description="disc 与 circle 在每行前面画出项目符号，decimal 则改用有序列表渲染，并且可以从任意数值开始编号。"
+  :demo="listMessages"
+  description="聊天式消息列表，包含头像、预览文字和未读徽章。"
   locale="zh"
-  title="标记"
+  title="消息列表"
 />
 
 <DemoExample
-  :demo="listInteractive"
-  description="带有点击处理的行会变成按钮，并带有悬停和按下状态；选中行有明确的标记，被禁用的行不响应任何操作。"
+  :demo="listSteps"
+  description="用数字标出逐步说明。"
   locale="zh"
-  title="选择与交互"
+  title="有序步骤"
 />

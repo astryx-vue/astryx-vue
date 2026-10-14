@@ -66,35 +66,35 @@ import { Text } from '@astryx-vue/core/Text'
 
 <DemoExample
   :demo="cardCallout"
-  description="muted 变体把提示和补充说明压进页面，不像默认卡片那样抬起来。"
+  description="muted 变体适合提示、备注或补充信息。内容需要和页面区分开，但又不该太抢眼时使用。"
   locale="zh"
-  title="提示"
+  title="提示卡片"
 />
 
 <DemoExample
   :demo="cardElevation"
-  description="none、low、med、high 四档阴影。默认是平的，只有需要浮在内容之上时才抬高。"
+  description="四种海拔并排。卡片默认是平的；只有需要浮在周围内容之上时才用 elevation 抬起。"
   locale="zh"
-  title="阴影"
+  title="海拔"
 />
 
 <DemoExample
   :demo="cardLayout"
-  description="页眉、正文和页脚分成三段，页眉和页脚带分隔线，操作按钮靠右。"
+  description="带结构化页眉、内容区和操作页脚的卡片。适合需要清晰分区的表单、对话框或设置面板。"
   locale="zh"
-  title="页眉与页脚"
+  title="布局"
 />
 
 <DemoExample
   :demo="cardSimple"
-  description="一张卡片里放标题、正文和一行辅助说明。边框、背景和内边距由卡片自己处理。"
+  description="带标题和正文的卡片。适合摘要、说明，或任何需要从页面上分开的一组内容。"
   locale="zh"
-  title="简单内容"
+  title="简单"
 />
 
 <DemoExample
   :demo="cardVariants"
-  description="default、muted，再加上蓝、绿、橙、紫，用来给卡片分类。"
+  description="默认、muted 和颜色变体并排。用颜色给卡片分类，例如团队色、项目标签或内容类型。"
   locale="zh"
-  title="背景变体"
+  title="变体"
 />
