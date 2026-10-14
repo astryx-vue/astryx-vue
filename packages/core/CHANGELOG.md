@@ -1,5 +1,13 @@
 # @astryx-vue/core
 
+## 0.2.2
+
+### Patch Changes
+
+- [#58](https://github.com/astryx-vue/astryx-vue/pull/58) [`c25b7ad`](https://github.com/astryx-vue/astryx-vue/commit/c25b7adba7fd63bdc7523ff3eb75f1fcc7ff9656) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对话输入套件：ChatComposer、可插入标记的输入框、发送和停止、附件抽屉、语音听写，以及对应的组合式函数。
+
+- [#59](https://github.com/astryx-vue/astryx-vue/pull/59) [`b2a0c14`](https://github.com/astryx-vue/astryx-vue/commit/b2a0c14eafc37650c71abefeb4e8ffd4c2657df2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增结构化搜索，表格可以分组、展开树和详情、固定列，并标出行状态与窗口中的行号。
+
 ## 0.2.1
 
 ### Patch Changes
