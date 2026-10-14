@@ -1,17 +1,20 @@
 <script setup lang="ts">
+import type { CheckboxValue } from '@astryx-vue/core/CheckboxInput'
 import { CheckboxInput } from '@astryx-vue/core/CheckboxInput'
-import { shallowRef } from 'vue'
+import { VStack } from '@astryx-vue/core/Stack'
+import { ref } from 'vue'
 
-const checked = shallowRef(true)
-const unchecked = shallowRef(false)
+const checked = ref<CheckboxValue>(true)
+const unchecked = ref<CheckboxValue>(false)
+const disabled = ref<CheckboxValue>(false)
+const indeterminate = ref<CheckboxValue>('indeterminate')
 </script>
 
 <template>
-  <div class="input-preview-stack">
-    <CheckboxInput v-model="checked" label="Read-only selection" is-read-only />
-    <CheckboxInput v-model="unchecked" label="Disabled option" is-disabled />
-    <CheckboxInput v-model="checked" label="Managed by your team" is-disabled disabled-message="Contact your administrator to change this setting." />
-    <CheckboxInput v-model="checked" label="Saving preferences" is-loading />
-    <CheckboxInput v-model="unchecked" label="Email receipts" label-tooltip="We send a receipt after each payment." is-optional />
-  </div>
+  <VStack :gap="4">
+    <CheckboxInput v-model="checked" label="Checked" description="This checkbox is currently on." />
+    <CheckboxInput v-model="unchecked" label="Unchecked" description="This checkbox is currently off." />
+    <CheckboxInput v-model="disabled" label="Disabled" description="This checkbox cannot be changed." is-disabled />
+    <CheckboxInput v-model="indeterminate" label="Indeterminate" description="This checkbox represents a partial selection." />
+  </VStack>
 </template>

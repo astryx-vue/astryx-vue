@@ -1,8 +1,21 @@
 import type { CalendarDate } from '@internationalized/date'
 
+export interface CalendarRangeValue {
+  start: Date | null
+  end: Date | null
+}
+
 export interface CalendarProps {
-  /** 当前选中的日期 */
+  /** 当前选中的日期。`mode="range"` 时改用 `range`。 */
   modelValue?: Date | null
+  /** 选一天，或选一段起止日期。 */
+  mode?: 'single' | 'range'
+  /** 范围模式下的起止日期，用 `v-model:range` 绑定。 */
+  range?: CalendarRangeValue | null
+  /** 并排显示的月份数。 */
+  numberOfMonths?: 1 | 2
+  /** 打开时先显示这一天所在的月份。 */
+  focusDate?: Date
   /** 最小可选日期 */
   min?: Date
   /** 最大可选日期 */
@@ -17,6 +30,7 @@ export interface CalendarProps {
 
 export interface CalendarEmits {
   (event: 'update:modelValue', value: Date | null): void
+  (event: 'update:range', value: CalendarRangeValue): void
   (event: 'change', value: Date | null): void
 }
 

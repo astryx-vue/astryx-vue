@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { radioBasic, radioList, radioStates } from '../../../../components/demos/radio'
+import { radioBasic, radioStates } from '../../../../components/demos/radio'
 </script>
 
 ## Usage
@@ -34,7 +34,6 @@ const size = shallowRef('md')
 
 <DemoExample :demo="radioBasic" title="Basic" description="Place Radio items inside RadioGroup. v-model binds the currently selected value." locale="en" />
 
-<DemoExample :demo="radioList" title="Radio list" description="RadioList accepts an options array to render a group quickly." locale="en" />
 
 <DemoExample :demo="radioStates" title="Disabled option" description="A single option can be disabled without affecting the rest of the group." locale="en" />
 

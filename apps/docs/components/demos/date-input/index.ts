@@ -1,12 +1,22 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import basicDemo from './basic.vue'
-import basicSource from './basic.vue?raw&highlighted'
 import clearableDemo from './clearable.vue'
 import clearableSource from './clearable.vue?raw&highlighted'
+import descriptionDemo from './description.vue'
+import descriptionSource from './description.vue?raw&highlighted'
+import formatsDemo from './formats.vue'
+import formatsSource from './formats.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
+import rangeDemo from './range.vue'
+import rangeSource from './range.vue?raw&highlighted'
+import validationDemo from './validation.vue'
+import validationSource from './validation.vue?raw&highlighted'
 
-export const dateInputBasic = defineDemo(basicDemo, basicSource)
-export const dateInputClearable = defineDemo(clearableDemo, clearableSource)
+const options = { className: 'input-preview-host' }
+export const dateInputClearable = defineDemo(clearableDemo, clearableSource, options)
+export const dateInputRange = defineDemo(rangeDemo, rangeSource, options)
+export const dateInputFormats = defineDemo(formatsDemo, formatsSource, options)
+export const dateInputDescription = defineDemo(descriptionDemo, descriptionSource, options)
+export const dateInputValidation = defineDemo(validationDemo, validationSource, options)
 
 export const dateInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

@@ -26,6 +26,28 @@
     height: var(--astryx-input-height-lg, 36px);
   }
 
+  .astryx-number-input[data-status='error'] {
+    border-color: var(--astryx-input-error, #e33f4a);
+  }
+
+  .astryx-number-input[data-status='warning'] {
+    border-color: var(--astryx-input-warning, #a67a00);
+  }
+
+  .astryx-number-input[data-status='success'] {
+    border-color: var(--astryx-input-success, #198100);
+  }
+
+  .astryx-number-input-units,
+  .astryx-number-input-clear {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    color: var(--astryx-color-text-secondary, #525252);
+    background: transparent;
+    border: 0;
+  }
+
   .astryx-number-input:focus-within {
     border-color: var(--astryx-input-focus, #262626);
     box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);

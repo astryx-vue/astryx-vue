@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { numberInputBasic, numberInputPrecision, numberInputSizes } from '../../../../components/demos/number-input'
+import { numberInputClearable, numberInputRange, numberInputStatus, numberInputUnits } from '../../../../components/demos/number-input'
 </script>
 
 ## 使用方法
@@ -43,22 +43,29 @@ const count = ref(0)
 ## 示例
 
 <DemoExample
-  :demo="numberInputBasic"
-  description="绑定数字值，通过按钮或键盘方向键增减，自动限制在最小最大值范围内。"
+  :demo="numberInputClearable"
+  description="进度从 0 到 100，带百分号和清除按钮。"
   locale="zh"
-  title="基本用法"
+  title="可清除"
 />
 
 <DemoExample
-  :demo="numberInputPrecision"
-  description="用 min 和 max 限制可输入范围，用 step 控制每次点击增减的幅度。"
+  :demo="numberInputRange"
+  description="团队人数限制在 1 到 50，并说明这个数字代表什么。"
   locale="zh"
-  title="范围与步长"
+  title="范围"
 />
 
 <DemoExample
-  :demo="numberInputSizes"
-  description="提供 sm、md、lg 三种尺寸，默认为 md。"
+  :demo="numberInputStatus"
+  description="预算、人数和完成度上的错误、警告和成功。"
   locale="zh"
-  title="不同尺寸"
+  title="校验状态"
+/>
+
+<DemoExample
+  :demo="numberInputUnits"
+  description="带百分号的折扣，范围是 0 到 100。"
+  locale="zh"
+  title="单位"
 />

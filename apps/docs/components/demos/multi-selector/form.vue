@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { MultiSelector } from '@astryx-vue/core/MultiSelector'
 import { ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 
 const columns = ref(['name', 'email'])
 const filters = ref<string[]>([])
-const { pick } = useDemoText()
 </script>
 
 <template>
@@ -13,14 +11,14 @@ const { pick } = useDemoText()
     <MultiSelector
       v-model="columns"
       :options="[
-        { value: 'name', label: pick('姓名', 'Name') },
-        { value: 'email', label: pick('邮箱', 'Email') },
-        { value: 'role', label: pick('角色', 'Role') },
-        { value: 'status', label: pick('状态', 'Status') },
-        { value: 'created', label: pick('创建时间', 'Created at') },
+        { value: 'name', label: 'Name' },
+        { value: 'email', label: 'Email' },
+        { value: 'role', label: 'Role' },
+        { value: 'status', label: 'Status' },
+        { value: 'created', label: 'Created at' },
       ]"
-      :label="pick('可见列', 'Visible columns')"
-      :description="pick('选择表格里要显示的列', 'Choose which columns to display in the table')"
+      label="Visible columns"
+      description="Choose which columns to display in the table"
       required
       select-all
       trigger-display="labels"
@@ -28,14 +26,14 @@ const { pick } = useDemoText()
     <MultiSelector
       v-model="filters"
       :options="[
-        pick('启用', 'Active'),
-        pick('停用', 'Inactive'),
-        pick('待处理', 'Pending'),
-        pick('已归档', 'Archived'),
+        'Active',
+        'Inactive',
+        'Pending',
+        'Archived',
       ]"
-      :label="pick('状态筛选', 'Status filter')"
-      :description="pick('按状态筛选', 'Filter by status')"
-      :placeholder="pick('全部状态', 'All statuses')"
+      label="Status filter"
+      description="Filter by status"
+      placeholder="All statuses"
       optional
       trigger-display="badges"
     />

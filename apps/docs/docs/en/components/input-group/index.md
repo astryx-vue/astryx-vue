@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { inputGroupBasic, inputGroupWithIcon } from '../../../../components/demos/input-group'
+import { inputGroupBasic } from '../../../../components/demos/input-group'
 </script>
 
 ## Usage
@@ -53,14 +53,7 @@ const domain = ref('')
 
 <DemoExample
   :demo="inputGroupBasic"
-  description="Combine input with prefix/suffix slots for URL, email scenarios."
+  description="A price field with a dollar prefix and a USD suffix."
   locale="en"
-  title="Basic Usage"
-/>
-
-<DemoExample
-  :demo="inputGroupWithIcon"
-  description="The before slot can hold a short prefix that explains the field."
-  locale="en"
-  title="Prefix"
+  title="Prefix and suffix"
 />
