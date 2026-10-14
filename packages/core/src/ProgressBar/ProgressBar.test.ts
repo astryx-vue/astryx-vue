@@ -47,6 +47,14 @@ describe('progressBar', () => {
     expect(track.attributes('aria-valuemax')).toBe('100')
   })
 
+  it('keeps a hidden label in the accessibility tree', () => {
+    const wrapper = renderProgressBar({ label: 'Risk level', isLabelHidden: true })
+    const hidden = wrapper.get('.astryx-visually-hidden')
+    expect(hidden.text()).toBe('Risk level')
+    expect(wrapper.find('.astryx-progress-bar-header').exists()).toBe(false)
+    expect(wrapper.get('[role="progressbar"]').attributes('aria-labelledby')).toBe(hidden.attributes('id'))
+  })
+
   it('shows value text when showValue is true', () => {
     const wrapper = renderProgressBar({ value: 75, showValue: true })
     expect(wrapper.get('.astryx-progress-bar-value').text()).toBe('75%')

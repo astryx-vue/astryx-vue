@@ -300,10 +300,10 @@ const SearchIcon = iconComponent('i-heroicons-magnifying-glass')
                   @mouseenter="searchActiveIndex = index"
                   @click="selectPanel(setting.panel)"
                 >
-                  <template #start>
+                  <template #startContent>
                     <Icon :icon="setting.icon" size="sm" color="secondary" />
                   </template>
-                  <template #end>
+                  <template #endContent>
                     <Icon icon="i-heroicons-chevron-right" size="sm" color="secondary" />
                   </template>
                 </ListItem>

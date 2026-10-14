@@ -230,10 +230,10 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                     :label="alert.title"
                     :description="alert.service"
                   >
-                    <template #start-content>
+                    <template #startContent>
                       <StatusDot :variant="alert.severity === 'healthy' ? 'success' : alert.severity === 'warning' ? 'warning' : 'error'" :label="alert.severity" />
                     </template>
-                    <template #end-content>
+                    <template #endContent>
                       <Timestamp :value="alert.at" format="relative" color="secondary" />
                     </template>
                   </ListItem>
@@ -248,7 +248,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                   :label="row.service"
                   :description="`${row.region} · ${row.instances} hosts · ${row.rpm} rpm`"
                 >
-                  <template #end-content>
+                  <template #endContent>
                     <Text type="body" weight="semibold">
                       {{ row.p99 }} ms
                     </Text>
@@ -278,10 +278,10 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
           <Divider />
           <List density="compact" has-dividers>
             <ListItem v-for="alert in ALERTS" :key="alert.id" :label="alert.title" :description="alert.service">
-              <template #start-content>
+              <template #startContent>
                 <StatusDot :variant="alert.severity === 'critical' ? 'error' : 'warning'" :label="alert.severity" :is-pulsing="alert.state === 'firing' && alert.severity === 'critical'" />
               </template>
-              <template #end-content>
+              <template #endContent>
                 <Token size="sm" :color="alert.state === 'firing' ? 'red' : 'yellow'" :label="alert.state === 'firing' ? 'Firing' : 'Ack'" />
               </template>
             </ListItem>
@@ -297,7 +297,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
           </VStack>
           <List density="compact" has-dividers>
             <ListItem v-for="row in rows" :key="row.id" :label="row.service" :description="`${row.region} · ${row.instances} hosts`">
-              <template #end-content>
+              <template #endContent>
                 <Text type="body" weight="semibold">
                   {{ row.p99 }} ms
                 </Text>

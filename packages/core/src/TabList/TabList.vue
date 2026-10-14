@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<TabListProps>(), {
   size: 'md',
   layout: 'hug',
   hasDivider: false,
+  isFullBleed: false,
 })
 
 const emit = defineEmits<{
@@ -19,6 +20,10 @@ const emit = defineEmits<{
 defineSlots<{
   default: () => unknown
 }>()
+
+const bleedsInline = computed(() =>
+  props.edgeCompensation === 'inline' || (props.edgeCompensation == null && props.isFullBleed),
+)
 
 const tabs = reactive<TabListTab[]>([])
 const focusedValue = ref(props.value)
@@ -104,6 +109,7 @@ provide(tabListContextKey, {
       `astryx-tab-list--size-${size}`,
       `astryx-tab-list--layout-${layout}`,
       hasDivider && 'astryx-tab-list--has-divider',
+      bleedsInline && 'astryx-tab-list--full-bleed',
     ]"
     role="tablist"
   >

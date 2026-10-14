@@ -276,7 +276,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                         :description="`${risk.workstream} · ${PHASE_LABEL[risk.phase]} · ${risk.owner}`"
                         class="risk-row"
                       >
-                        <template #end-content>
+                        <template #endContent>
                           <Badge :variant="RAG_BADGE[risk.severity]" :label="RAG_LABEL[risk.severity]" />
                         </template>
                       </ListItem>

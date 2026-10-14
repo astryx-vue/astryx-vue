@@ -115,7 +115,10 @@ describe('icon', () => {
 
     const icon = wrapper.find('.astryx-icon')
     expect(icon.exists()).toBe(true)
-    expect(icon.classes()).toContain('i-carbon-search')
+    expect(icon.classes()).not.toContain('i-carbon-search')
+    const external = icon.find('.astryx-icon__external')
+    expect(external.exists()).toBe(true)
+    expect(external.classes()).toContain('i-carbon-search')
     expect(icon.find('.astryx-icon__glyph').exists()).toBe(false)
     expect(icon.attributes('data-size')).toBe('md')
   })
