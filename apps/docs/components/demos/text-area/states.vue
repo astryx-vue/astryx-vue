@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import { VStack } from '@astryx-vue/core/Stack'
 import { TextArea } from '@astryx-vue/core/TextArea'
-import { shallowRef } from 'vue'
+import { ref } from 'vue'
 
-const disabled = shallowRef('Unavailable')
-const readOnly = shallowRef('This value is read-only.')
-const locked = shallowRef('Only editors can edit this.')
+const requiredValue = ref('')
+const disabledValue = ref('This field is disabled and cannot be edited.')
+const loadingValue = ref('')
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <TextArea v-model="disabled" label="Disabled" is-disabled has-clear />
-    <TextArea v-model="readOnly" label="Read-only" is-read-only html-name="notes" description="This value is still included in form submission." />
-    <TextArea v-model="locked" label="Locked" is-disabled disabled-message="You need the Editor role to edit this field." />
-  </div>
+  <VStack :gap="4" width="100%" style="max-width: 400px">
+    <TextArea v-model="requiredValue" label="Required field" placeholder="Describe the issue..." is-required />
+    <TextArea v-model="disabledValue" label="Disabled field" is-disabled />
+    <TextArea v-model="loadingValue" label="Loading field" placeholder="Generating summary..." is-loading />
+  </VStack>
 </template>

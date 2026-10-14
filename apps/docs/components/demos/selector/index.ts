@@ -1,18 +1,24 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import basicDemo from './basic.vue'
-import basicSource from './basic.vue?raw&highlighted'
 import clearableDemo from './clearable.vue'
 import clearableSource from './clearable.vue?raw&highlighted'
+import descriptionsDemo from './descriptions.vue'
+import descriptionsSource from './descriptions.vue?raw&highlighted'
+import ghostDemo from './ghost.vue'
+import ghostSource from './ghost.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
-import searchableDemo from './searchable.vue'
-import searchableSource from './searchable.vue?raw&highlighted'
-import sizesDemo from './sizes.vue'
-import sizesSource from './sizes.vue?raw&highlighted'
+import sectionsDemo from './sections.vue'
+import sectionsSource from './sections.vue?raw&highlighted'
+import sheetDemo from './sheet.vue'
+import sheetSource from './sheet.vue?raw&highlighted'
+import statusDemo from './status.vue'
+import statusSource from './status.vue?raw&highlighted'
 
-export const selectorBasic = defineDemo(basicDemo, basicSource)
-export const selectorSearchable = defineDemo(searchableDemo, searchableSource)
+export const selectorSheet = defineDemo(sheetDemo, sheetSource)
 export const selectorClearable = defineDemo(clearableDemo, clearableSource)
-export const selectorSizes = defineDemo(sizesDemo, sizesSource)
+export const selectorGhost = defineDemo(ghostDemo, ghostSource)
+export const selectorDescriptions = defineDemo(descriptionsDemo, descriptionsSource)
+export const selectorSections = defineDemo(sectionsDemo, sectionsSource)
+export const selectorStatus = defineDemo(statusDemo, statusSource)
 
 export const selectorOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

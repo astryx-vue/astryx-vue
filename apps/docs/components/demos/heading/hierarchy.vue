@@ -27,9 +27,9 @@ import { Text } from '@astryx-vue/core/Text'
         Today
       </Heading>
       <Text type="body" display="block">
-        Project Alpha updated<br>
-        3 new comments<br>
-        Task completed
+        • Project Alpha updated<br>
+        • 3 new comments<br>
+        • Task completed
       </Text>
     </VStack>
   </VStack>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { sliderBasic, sliderRange, sliderMarks, sliderStates, sliderDirections, sliderForm } from '../../../../components/demos/slider'
+import { sliderFormatted, sliderRange, sliderMarks, sliderStatus } from '../../../../components/demos/slider'
 </script>
 
 ## Usage
@@ -50,17 +50,33 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Examples
 
-<DemoExample :demo="sliderBasic" title="Basic usage and formatting" description="Show values in a tooltip or beside the control. formatValue also provides accessible value text." locale="en" />
+<DemoExample
+  :demo="sliderFormatted"
+  description="Temperature in Fahrenheit, shown beside the slider."
+  locale="en"
+  title="Formatted value"
+/>
 
-<DemoExample :demo="sliderRange" title="Range selection" description="The first array item is the lower bound. The second is the upper bound. Thumbs cannot cross." locale="en" />
+<DemoExample
+  :demo="sliderRange"
+  description="A price range with a lower and an upper thumb."
+  locale="en"
+  title="Range"
+/>
 
-<DemoExample :demo="sliderMarks" title="Marks" description="Click a mark to choose its value. Dragging and keyboard input still follow step." locale="en" />
+<DemoExample
+  :demo="sliderMarks"
+  description="Volume with tick labels at 0, 25, 50, 75, and 100."
+  locale="en"
+  title="Marks"
+/>
 
-<DemoExample :demo="sliderStates" title="Disabled and validation states" description="Disabled reasons remain available through keyboard focus. Status messages appear below the control." locale="en" />
-
-<DemoExample :demo="sliderDirections" title="Vertical and right-to-left" description="Vertical values increase from bottom to top. Horizontal RTL values increase from right to left." locale="en" />
-
-<DemoExample :demo="sliderForm" title="Forms and completed adjustments" description="A range submits two fields with the same name. changeEnd fires when an adjustment ends." locale="en" />
+<DemoExample
+  :demo="sliderStatus"
+  description="Error, warning, and success on CPU, memory, and disk."
+  locale="en"
+  title="Validation states"
+/>
 
 ## Keyboard controls
 

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { buttonAsync, buttonFloating, buttonSizes, buttonVariants } from '../../../../components/demos/button'
+import { buttonEndSlot, buttonFloating, buttonIcon, buttonSizes, buttonVariants } from '../../../../components/demos/button'
 </script>
 
 
@@ -66,33 +66,37 @@ Any CSS icon class works — an UnoCSS class, a Tailwind utility, or a class of 
 
 ## Examples
 
-Use variants, sizes, and composition to establish action hierarchy. Let <code>clickAction</code> manage loading state for asynchronous work.
-
-<DemoExample
-  :demo="buttonVariants"
-  description="Reserve primary for the most important action in the view. Secondary, ghost, and destructive communicate regular, low-emphasis, and dangerous actions."
-  locale="en"
-  title="Visual hierarchy"
-/>
-
 <DemoExample
   :demo="buttonFloating"
-  description="Use elevation for actions that float above content. Shadow depth changes the resting layer, not the button variant or the action's meaning."
+  description="A floating action button raised with elevation=&quot;med&quot;. Use elevation for buttons that hover above content, like a FAB."
   locale="en"
-  title="Floating button"
+  title="Floating"
 />
 
 <DemoExample
   :demo="buttonSizes"
-  description="Use sm, md, and lg for compact, default, and more prominent action areas. Size changes the control dimensions, not its meaning."
+  description="Small, medium, and large buttons side by side. Use small in dense UIs like toolbars, medium for most cases, and large for prominent CTAs."
   locale="en"
   title="Sizes"
 />
 
 <DemoExample
-  :demo="buttonAsync"
-  description="When clickAction returns a Promise, Button sets aria-busy immediately, prevents duplicate activation, and avoids flashing a spinner when short work settles quickly."
+  :demo="buttonVariants"
+  description="All 4 button variants in default, disabled, and loading states. Use primary for the main action, secondary for most others, ghost for low-emphasis, and destructive for dangerous actions."
   locale="en"
-  title="Async action"
+  title="Variants"
 />
 
+<DemoExample
+  :demo="buttonEndSlot"
+  description="Buttons with a trailing badge showing a count or status. Use for notification counts, unread messages, or any button that needs a visual indicator."
+  locale="en"
+  title="End slot"
+/>
+
+<DemoExample
+  :demo="buttonIcon"
+  description="Buttons with a leading icon that reinforces the label. Use when the icon helps the user identify the action faster, like a plus for New or a trash can for Delete."
+  locale="en"
+  title="Icon"
+/>

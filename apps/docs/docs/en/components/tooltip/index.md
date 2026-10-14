@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tooltipBasic, tooltipControlled, tooltipPlacements, tooltipText } from '../../../../components/demos/tooltip'
+import { tooltipActionBar, tooltipHook, tooltipInline } from '../../../../components/demos/tooltip'
 </script>
 
 ## Usage
@@ -41,13 +41,11 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 
 ## Examples
 
-<DemoExample :demo="tooltipBasic" title="Basic" description="Hover or focus the button to show the hint after a short delay." locale="en" />
+<DemoExample :demo="tooltipActionBar" title="Action bar" description="Save, Cancel, and Delete, each with a hint above the button." locale="en" />
 
-<DemoExample :demo="tooltipPlacements" title="Placements" description="placement sets the side of the trigger. The tooltip flips to the other side when there is no room." locale="en" />
+<DemoExample :demo="tooltipHook" title="Hook" description="A button named Using hook directly, with the hint Tooltip via hook." locale="en" />
 
-<DemoExample :demo="tooltipText" title="Text trigger" description="A plain text trigger becomes focusable and shows a dashed underline." locale="en" />
-
-<DemoExample :demo="tooltipControlled" title="Controlled" description="Pass isOpen to control visibility. Escape sends openChange(false) and the parent decides whether to close." locale="en" />
+<DemoExample :demo="tooltipInline" title="Inline text" description="privacy policy and terms of service sit in a sentence, each with its own hint." locale="en" />
 
 ## Accessibility
 

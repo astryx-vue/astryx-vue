@@ -1,17 +1,10 @@
 <script setup lang="ts">
 import { Code } from '@astryx-vue/core/Code'
+import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <div class="code-preview__prose">
-    <p class="code-preview__sentence">
-      Pass <Code>isLoading</Code> to keep the button busy until the promise settles.
-    </p>
-    <p class="code-preview__sentence code-preview__sentence--large">
-      Run <Code size="inherit">npm run build:packages</Code> before you publish.
-    </p>
-    <p class="code-preview__sentence code-preview__sentence--muted">
-      The <Code color="secondary">variant</Code> prop selects the visual style.
-    </p>
-  </div>
+  <Text type="body" style="max-width: 400px">
+    Use <Code>useState</Code>for local state and <Code>useEffect</Code>for side effects. If you need shared state across components, consider <Code>useContext</Code>or a state management library.
+  </Text>
 </template>

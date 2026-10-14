@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { textInputBasic, textInputSizes, textInputSearch, textInputPassword, textInputStates, textInputValidation, textInputAsync } from '../../../../components/demos/text-input'
+import { textInputIcon, textInputSearch, textInputSizes, textInputStates, textInputVariant, textInputTypes } from '../../../../components/demos/text-input'
 </script>
 
 ## 使用方法
@@ -47,19 +47,47 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 示例
 
-<DemoExample :demo="textInputBasic" title="基本输入" description="标签、说明与输入值放在同一个字段中，使用 v-model 管理值。" locale="zh" />
+<DemoExample
+  :demo="textInputIcon"
+  description="姓名、邮箱和密码字段，前面各有一个图标。"
+  locale="zh"
+  title="图标"
+/>
 
-<DemoExample :demo="textInputSizes" title="尺寸" description="输入框提供三档尺寸。标签和说明的字号保持固定。" locale="zh" />
+<DemoExample
+  :demo="textInputSearch"
+  description="带放大镜和清除按钮的搜索框。"
+  locale="zh"
+  title="搜索"
+/>
 
-<DemoExample :demo="textInputSearch" title="搜索与清除" description="隐藏标签时仍保留无障碍名称。中文输入法提交候选词时不会触发 enter。" locale="zh" />
+<DemoExample
+  :demo="textInputSizes"
+  description="小号、中号和大号字段。"
+  locale="zh"
+  title="尺寸"
+/>
 
-<DemoExample :demo="textInputPassword" title="密码与尾部插槽" description="通过 end 插槽加入显示密码按钮，组件保留原生 password 类型。" locale="zh" />
+<DemoExample
+  :demo="textInputStates"
+  description="错误、警告和成功说明，以及没有说明的状态、禁用和加载中。"
+  locale="zh"
+  title="状态"
+/>
 
-<DemoExample :demo="textInputStates" title="禁用与只读" description="禁用字段不参与提交。只读字段仍可聚焦、复制和提交。禁用原因可通过焦点发现。" locale="zh" />
+<DemoExample
+  :demo="textInputVariant"
+  description="状态说明可以贴在字段上，也可以浮在字段下方。"
+  locale="zh"
+  title="状态位置"
+/>
 
-<DemoExample :demo="textInputValidation" title="校验状态" description="三种状态均有图标。错误、警告和成功文字支持紧贴、分离或提示布局。" locale="zh" />
-
-<DemoExample :demo="textInputAsync" title="异步保存与失败重试" description="修改内容时显示加载状态。输入 fail 可触发保存失败。再次修改内容可重试。示例忽略过期结果。" locale="zh" />
+<DemoExample
+  :demo="textInputTypes"
+  description="说明、密码、邮箱、提示、必填和可选字段。"
+  locale="zh"
+  title="类型"
+/>
 
 ## 无障碍
 

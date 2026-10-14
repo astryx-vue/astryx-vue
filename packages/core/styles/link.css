@@ -44,6 +44,11 @@
     color: inherit;
   }
 
+  .astryx-link.astryx-link--standalone {
+    font-size: var(--astryx-font-size-body, var(--text-body-size, 1rem));
+    line-height: var(--astryx-line-height-body, var(--text-body-leading, 1.5));
+  }
+
   .astryx-link__external {
     display: inline-block;
     font-size: 0.75em;

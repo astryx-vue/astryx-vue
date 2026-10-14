@@ -1,59 +1,76 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { ComplexSelector } from '@astryx-vue/core/ComplexSelector'
-import { HStack, VStack } from '@astryx-vue/core/Stack'
-import { Text } from '@astryx-vue/core/Text'
-import { TextInput } from '@astryx-vue/core/TextInput'
+import { DateInput } from '@astryx-vue/core/DateInput'
+import { RadioList, RadioListItem } from '@astryx-vue/core/RadioList'
+import { VStack } from '@astryx-vue/core/Stack'
+import { TimeInput } from '@astryx-vue/core/TimeInput'
 import { ref } from 'vue'
 
-const presets = ['Today', 'Tomorrow', 'Next week']
-const value = ref('Today')
-const choice = ref('Today')
-const custom = ref(false)
-const date = ref('2026-04-18')
-const time = ref('09:00')
-
-function pick(preset: string) {
-  custom.value = false
-  choice.value = preset
+interface Deadline {
+  preset: 'today' | 'next-week' | 'custom'
+  date: Date
+  time: string
 }
 
-function apply(commit: (next: string) => void, close: () => void) {
-  const next = custom.value ? `${date.value} ${time.value}` : choice.value
-  commit(next)
-  close()
+const labels = {
+  'today': 'Today',
+  'next-week': 'Next week',
+  'custom': 'Custom date',
+} as const
+
+const value = ref<Deadline>({
+  preset: 'today',
+  date: new Date(2026, 3, 6),
+  time: '17:00',
+})
+
+function iso(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+function formatDeadline(item: Deadline): string {
+  if (item.preset === 'custom')
+    return `${iso(item.date)} at ${item.time}`
+  return labels[item.preset]
 }
 </script>
 
 <template>
-  <div style="width: 100%; max-width: 320px">
+  <div style="width: 320px; max-width: 100%">
     <ComplexSelector
       v-model="value"
-      description="Choose a preset or set a custom date and time."
       label="Deadline"
-      :trigger-label="value"
+      description="Choose a preset or set a custom date and time."
+      :trigger-label="formatDeadline(value)"
       width="100%"
     >
-      <template #default="{ commit, close }">
-        <VStack :gap="3">
-          <HStack :gap="2">
-            <Button
-              v-for="preset in presets"
-              :key="preset"
-              :label="preset"
-              :variant="!custom && choice === preset ? 'primary' : 'secondary'"
-              @click="pick(preset)"
+      <template #default="{ value: selected, commit, close }">
+        <VStack :gap="4" style="width: 320px">
+          <RadioList
+            label="When is it due?"
+            :model-value="selected.preset"
+            @update:model-value="preset => commit({ ...selected, preset: preset as Deadline['preset'] })"
+          >
+            <RadioListItem label="Today" value="today" />
+            <RadioListItem label="Next week" value="next-week" />
+            <RadioListItem label="Custom date" value="custom" />
+          </RadioList>
+          <VStack v-if="selected.preset === 'custom'" :gap="3">
+            <DateInput
+              label="Date"
+              :model-value="selected.date"
+              @update:model-value="value => value && commit({ ...selected, date: value })"
             />
-          </HStack>
-          <Button label="Custom" variant="secondary" @click="custom = true" />
-          <VStack v-if="custom" :gap="2">
-            <TextInput v-model="date" label="Date" placeholder="YYYY-MM-DD" />
-            <TextInput v-model="time" label="Time" placeholder="HH:MM" />
+            <TimeInput
+              label="Time"
+              :model-value="selected.time"
+              @update:model-value="next => { if (typeof next === 'string' && next) commit({ ...selected, time: next }) }"
+            />
           </VStack>
-          <Text color="secondary" type="supporting">
-            The popup stays open until you apply.
-          </Text>
-          <Button label="Apply" variant="primary" @click="apply(commit, close)" />
+          <Button label="Apply" variant="primary" @click="close" />
         </VStack>
       </template>
     </ComplexSelector>

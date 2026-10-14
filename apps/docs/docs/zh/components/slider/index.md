@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { sliderBasic, sliderRange, sliderMarks, sliderStates, sliderDirections, sliderForm } from '../../../../components/demos/slider'
+import { sliderFormatted, sliderRange, sliderMarks, sliderStatus } from '../../../../components/demos/slider'
 </script>
 
 ## 使用方法
@@ -50,17 +50,33 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 示例
 
-<DemoExample :demo="sliderBasic" title="基本用法与格式化" description="数值可显示在提示中或控件旁边。formatValue 同时提供无障碍数值文本。" locale="zh" />
+<DemoExample
+  :demo="sliderFormatted"
+  description="温度以华氏度显示在滑块旁边。"
+  locale="zh"
+  title="格式化数值"
+/>
 
-<DemoExample :demo="sliderRange" title="区间选择" description="数组的第一项表示下限，第二项表示上限。两个滑块不能交叉。" locale="zh" />
+<DemoExample
+  :demo="sliderRange"
+  description="价格区间，上下两个滑块各管一端。"
+  locale="zh"
+  title="范围"
+/>
 
-<DemoExample :demo="sliderMarks" title="刻度" description="点击刻度可选择对应值。拖动和键盘操作仍遵守 step。" locale="zh" />
+<DemoExample
+  :demo="sliderMarks"
+  description="音量在 0、25、50、75 和 100 处有刻度。"
+  locale="zh"
+  title="刻度"
+/>
 
-<DemoExample :demo="sliderStates" title="禁用与状态消息" description="带禁用原因的滑块保留键盘焦点。状态消息显示在控件下方。" locale="zh" />
-
-<DemoExample :demo="sliderDirections" title="垂直与从右到左" description="垂直方向从下向上增加。RTL 水平方向从右向左增加。" locale="zh" />
-
-<DemoExample :demo="sliderForm" title="表单与操作结束事件" description="区间提交两个同名字段。changeEnd 在一次调整结束时触发。" locale="zh" />
+<DemoExample
+  :demo="sliderStatus"
+  description="CPU、内存和磁盘上的错误、警告和成功。"
+  locale="zh"
+  title="校验状态"
+/>
 
 ## 键盘操作
 

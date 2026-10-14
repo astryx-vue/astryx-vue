@@ -76,6 +76,10 @@
     background: var(--astryx-progress-bar-error-fill, var(--astryx-input-error, #ff705d));
   }
 
+  .astryx-progress-bar[data-variant='accent'] .astryx-progress-bar-fill {
+    background: var(--astryx-progress-bar-accent-fill, var(--astryx-color-accent, #25252a));
+  }
+
   .astryx-progress-bar[data-variant='info'] .astryx-progress-bar-fill {
     background: var(--astryx-progress-bar-info-fill, var(--astryx-input-info, #6d9cfe));
   }

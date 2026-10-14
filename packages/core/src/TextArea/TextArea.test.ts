@@ -147,10 +147,19 @@ describe('textArea', () => {
     const textarea = wrapper.get('textarea')
     expect(textarea.attributes('rows')).toBe('4')
     expect(textarea.attributes('maxlength')).toBe('200')
+    expect(wrapper.get('.astryx-text-area-count').text()).toBe('0 / 200')
+    expect(wrapper.get('.astryx-text-area-count').attributes('data-over')).toBeUndefined()
     expect(textarea.attributes('minlength')).toBe('10')
     expect(textarea.attributes('wrap')).toBe('hard')
     expect(textarea.attributes('cols')).toBe('60')
     expect(wrapper.get('.astryx-text-area').classes()).toContain('custom-area')
+  })
+
+  it('marks the character count when the value is longer than maxlength', () => {
+    const wrapper = renderArea({ maxlength: 10, modelValue: 'This sentence is already too long.' })
+    const count = wrapper.get('.astryx-text-area-count')
+    expect(count.attributes('data-over')).toBe('true')
+    expect(count.text()).toContain('/ 10')
   })
 
   it('renders all slots and a component startIcon', () => {

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { buttonAsync, buttonFloating, buttonSizes, buttonVariants } from '../../../../components/demos/button'
+import { buttonEndSlot, buttonFloating, buttonIcon, buttonSizes, buttonVariants } from '../../../../components/demos/button'
 </script>
 
 
@@ -65,33 +65,37 @@ astryx-vue 不自带图标，需要显示图标的按钮由你自己的图标方
 
 ## 示例
 
-下面的示例覆盖视觉层级、悬浮、尺寸与异步操作四个典型场景。`variant` 决定按钮外观，`size` 决定按钮规格；异步操作返回 Promise 时，`clickAction` 会自动接管加载状态。
-
-<DemoExample
-  :demo="buttonVariants"
-  description="primary 只用于当前视图最重要的操作，secondary、ghost 和 destructive 依次表达普通、低强调与危险操作，按操作的强调程度选择即可。"
-  locale="zh"
-  title="视觉层级"
-/>
-
 <DemoExample
   :demo="buttonFloating"
-  description="当按钮需要悬浮在内容之上时，通过 elevation 提升它的静止层级；阴影只改变视觉重量，不影响按钮的变体与操作语义。"
+  description="用 elevation=&quot;med&quot; 抬起的悬浮操作按钮。按钮需要浮在内容之上时使用 elevation。"
   locale="zh"
-  title="悬浮按钮"
+  title="悬浮"
 />
 
 <DemoExample
   :demo="buttonSizes"
-  description="sm、md、lg 依次对应紧凑、默认与更醒目的点击区域。尺寸只改变按钮规格，不影响操作本身的含义。"
+  description="小、中、大三种尺寸并排。紧凑界面用 small，多数情况用 medium，需要突出的行动号召用 large。"
   locale="zh"
   title="尺寸"
 />
 
 <DemoExample
-  :demo="buttonAsync"
-  description="clickAction 返回 Promise 时，Button 立即设置 aria-busy 并默认阻止重复点击；加载图标会延迟显示，快速完成的操作不会出现闪烁。"
+  :demo="buttonVariants"
+  description="四种变体的默认、禁用和加载状态。primary 留给主操作，secondary 用于多数操作，ghost 表示低强调，destructive 表示危险操作。"
   locale="zh"
-  title="异步操作"
+  title="变体"
 />
 
+<DemoExample
+  :demo="buttonEndSlot"
+  description="按钮尾部放一个表示数量或状态的徽章。适合通知数、未读消息，或任何需要视觉提示的按钮。"
+  locale="zh"
+  title="尾部内容"
+/>
+
+<DemoExample
+  :demo="buttonIcon"
+  description="按钮前面放一个强化文案的图标。图标能让人更快认出操作时使用，例如新建用加号、删除用垃圾桶。"
+  locale="zh"
+  title="图标"
+/>

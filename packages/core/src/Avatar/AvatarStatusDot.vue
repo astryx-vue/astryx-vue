@@ -10,6 +10,8 @@ withDefaults(defineProps<AvatarStatusDotProps>(), {
   <span
     class="astryx-avatar-status-dot"
     :data-variant="variant"
-    aria-hidden="true"
+    :role="label ? 'img' : undefined"
+    :aria-label="label || undefined"
+    :aria-hidden="label ? undefined : 'true'"
   />
 </template>

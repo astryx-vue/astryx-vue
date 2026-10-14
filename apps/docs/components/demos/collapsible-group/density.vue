@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CollapsibleGroupDensity } from '@astryx-vue/core/Collapsible'
 import { Collapsible, CollapsibleGroup } from '@astryx-vue/core/Collapsible'
-import { VStack } from '@astryx-vue/core/Stack'
+import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 
 const densities: Array<{ value: CollapsibleGroupDensity, label: string }> = [
@@ -9,31 +9,32 @@ const densities: Array<{ value: CollapsibleGroupDensity, label: string }> = [
   { value: 'balanced', label: 'balanced — the default' },
   { value: 'spacious', label: 'spacious' },
 ]
+
+const sections = [
+  { value: 'a', trigger: 'Region', body: 'Where your data is stored and processed. Changing region migrates existing data and can take up to an hour.' },
+  { value: 'b', trigger: 'Retention', body: 'How long deleted items stay recoverable before being purged.' },
+  { value: 'c', trigger: 'Audit log', body: 'Who can read the log, and how far back it reaches.' },
+]
 </script>
 
 <template>
-  <VStack :gap="6" width="100%">
-    <VStack v-for="density in densities" :key="density.value" :gap="2">
-      <Text color="secondary" type="label">
+  <Stack :gap="5" :max-width="420">
+    <Stack v-for="density in densities" :key="density.value" :gap="1">
+      <Text type="supporting">
         {{ density.label }}
       </Text>
-      <CollapsibleGroup :density="density.value" default-value="region" has-dividers type="single">
-        <Collapsible trigger="Region" value="region">
-          <Text color="secondary" type="body">
-            Where your data is stored and processed. Changing region migrates existing data and can take up to an hour.
-          </Text>
-        </Collapsible>
-        <Collapsible trigger="Retention" value="retention">
-          <Text color="secondary" type="body">
-            How long records are kept before they are deleted.
-          </Text>
-        </Collapsible>
-        <Collapsible trigger="Audit log" value="audit">
-          <Text color="secondary" type="body">
-            Who changed a setting, and when.
+      <CollapsibleGroup type="single" has-dividers :density="density.value" default-value="a">
+        <Collapsible v-for="section in sections" :key="section.value" :value="section.value">
+          <template #trigger>
+            <Text type="body" weight="semibold">
+              {{ section.trigger }}
+            </Text>
+          </template>
+          <Text type="body" color="secondary">
+            {{ section.body }}
           </Text>
         </Collapsible>
       </CollapsibleGroup>
-    </VStack>
-  </VStack>
+    </Stack>
+  </Stack>
 </template>

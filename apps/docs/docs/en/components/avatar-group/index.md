@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { avatarGroupBasic, avatarGroupSizes } from '../../../../components/demos/avatar-group'
+import { avatarGroupGroup, avatarGroupInteractive } from '../../../../components/demos/avatar-group'
 </script>
 
 ## Usage
@@ -42,15 +42,15 @@ import { Avatar, AvatarGroup, AvatarGroupOverflow } from '@astryx-vue/core/Avata
 ## Examples
 
 <DemoExample
-  :demo="avatarGroupBasic"
-  description="Avatars overlap each other, with a +N overflow indicator at the end."
+  :demo="avatarGroupGroup"
+  description="Overlap multiple avatars in a row to represent a group of people. Use for team lists, PR reviewers, or participant counts where you want to show faces without taking up much space."
   locale="en"
-  title="Basic"
+  title="Group"
 />
 
 <DemoExample
-  :demo="avatarGroupSizes"
-  description="AvatarGroup supports sm, md, lg sizes; all child avatars scale together."
+  :demo="avatarGroupInteractive"
+  description="A facepile whose avatars link to profiles, with an overflow indicator that opens the full member list. The whole group is one Tab stop; arrow keys move between the avatars and the overflow button."
   locale="en"
-  title="Sizes"
+  title="Interactive"
 />

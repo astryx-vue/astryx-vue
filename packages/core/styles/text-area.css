@@ -18,6 +18,23 @@
     transition: border-color 130ms cubic-bezier(0.24, 1, 0.4, 1);
   }
 
+  .astryx-text-area-count {
+    position: absolute;
+    right: var(--astryx-spacing-2, 8px);
+    bottom: var(--astryx-spacing-1, 4px);
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-text-area-count[data-over='true'] {
+    color: var(--astryx-input-error, #e33f4a);
+  }
+
+  .astryx-text-area:has(.astryx-text-area-count) {
+    padding-bottom: var(--astryx-spacing-5, 20px);
+  }
+
   .astryx-text-area[data-size='sm'] {
     min-height: var(--astryx-text-area-min-height-sm, 64px);
     padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);

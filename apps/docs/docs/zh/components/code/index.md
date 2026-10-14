@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { codeBasic, codeCollapsible, codeInline, codeLineNumbers } from '../../../../components/demos/code'
+import { codeContent, codeInline, codeSizes } from '../../../../components/demos/code'
 </script>
 
 ## 使用方法
@@ -57,29 +57,22 @@ const snippet = 'const total = items.length'
 ## 示例
 
 <DemoExample
-  :demo="codeBasic"
-  description="带标题和可见语言标签的代码块，复制按钮位于头部。"
+  :demo="codeSizes"
+  description="标题、正文、辅助文字和标签里的行内代码。代码会自动跟上父级文字的字号。"
   locale="zh"
-  title="基础用法"
+  title="字号"
 />
 
 <DemoExample
   :demo="codeInline"
-  description="句子里的行内代码，次要色写法，以及在较大的文字里用 size=inherit 让它跟随字号。"
+  description="正文段落里夹着的行内代码。用 Code 标出函数名、hook 或 API 术语，让它们从周围文字里跳出来。"
   locale="zh"
-  title="行内代码"
+  title="行内"
 />
 
 <DemoExample
-  :demo="codeLineNumbers"
-  description="打开行号，行号栏按最大行号占宽；两行加了底色，把注意力引到关键处。"
+  :demo="codeContent"
+  description="变量、终端命令、CSS 属性、文件路径和快捷键都可以放进行内代码，展示 Code 如何适应不同的技术内容。"
   locale="zh"
-  title="行号与高亮"
-/>
-
-<DemoExample
-  :demo="codeCollapsible"
-  description="从头部折叠的长代码块，同时限制了最大高度，展开后纵向滚动而不是无限变高。"
-  locale="zh"
-  title="折叠与限高"
+  title="内容类型"
 />

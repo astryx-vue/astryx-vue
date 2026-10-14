@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { textInputBasic, textInputSizes, textInputSearch, textInputPassword, textInputStates, textInputValidation, textInputAsync } from '../../../../components/demos/text-input'
+import { textInputIcon, textInputSearch, textInputSizes, textInputStates, textInputVariant, textInputTypes } from '../../../../components/demos/text-input'
 </script>
 
 ## Usage
@@ -47,19 +47,47 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Examples
 
-<DemoExample :demo="textInputBasic" title="Basic input" description="Keep the label, description and value together, with v-model owning the value." locale="en" />
+<DemoExample
+  :demo="textInputIcon"
+  description="Name, email, and password fields with a leading icon."
+  locale="en"
+  title="Icon"
+/>
 
-<DemoExample :demo="textInputSizes" title="Sizes" description="Three sizes match Button. Labels and descriptions keep their own type scale." locale="en" />
+<DemoExample
+  :demo="textInputSearch"
+  description="Search fields with a magnifying glass and a clear button."
+  locale="en"
+  title="Search"
+/>
 
-<DemoExample :demo="textInputSearch" title="Search and clear" description="Hidden labels retain their accessible name. Committing an IME candidate does not emit enter." locale="en" />
+<DemoExample
+  :demo="textInputSizes"
+  description="Small, medium, and large fields."
+  locale="en"
+  title="Sizes"
+/>
 
-<DemoExample :demo="textInputPassword" title="Password and end slot" description="Add a reveal button through the end slot while retaining native password behavior." locale="en" />
+<DemoExample
+  :demo="textInputStates"
+  description="Error, warning, and success messages, plus status without a message, disabled, and loading."
+  locale="en"
+  title="States"
+/>
 
-<DemoExample :demo="textInputStates" title="Disabled and read-only" description="Disabled fields do not submit. Read-only fields remain focusable, copyable and submittable. A disabled reason stays focus-discoverable." locale="en" />
+<DemoExample
+  :demo="textInputVariant"
+  description="The status message can sit against the field or float below it."
+  locale="en"
+  title="Status variant"
+/>
 
-<DemoExample :demo="textInputValidation" title="Validation states" description="Every status has a glyph. Messages can be attached, detached or shown in a tooltip." locale="en" />
-
-<DemoExample :demo="textInputAsync" title="Async saving and retry" description="Edits drive pending state. Enter fail to see a failure, then edit to retry. The example ignores stale request results." locale="en" />
+<DemoExample
+  :demo="textInputTypes"
+  description="Description, password, email, tooltip, required, and optional fields."
+  locale="en"
+  title="Types"
+/>
 
 ## Accessibility
 

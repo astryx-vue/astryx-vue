@@ -249,4 +249,26 @@ describe('numberInput', () => {
     const input = wrapper.find('input[type="text"]')
     expect(input.attributes('inputmode')).toBe('decimal')
   })
+
+  it('shows the label, description, units, status message, and clear button', async () => {
+    const wrapper = mount(NumberInput, {
+      props: {
+        modelValue: 75,
+        label: 'Progress',
+        description: 'How far along the work is',
+        units: '%',
+        clearable: true,
+        status: { type: 'success', message: 'On track' },
+      },
+    })
+
+    expect(wrapper.text()).toContain('Progress')
+    expect(wrapper.text()).toContain('How far along the work is')
+    expect(wrapper.text()).toContain('%')
+    expect(wrapper.text()).toContain('On track')
+    expect(wrapper.find('.astryx-number-input').attributes('data-status')).toBe('success')
+
+    await wrapper.find('.astryx-number-input-clear').trigger('click')
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
+  })
 })

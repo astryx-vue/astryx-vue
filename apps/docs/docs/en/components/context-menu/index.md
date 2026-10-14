@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { contextMenuBasic, contextMenuCompound, contextMenuOverview, contextMenuSubmenu } from '../../../../components/demos/context-menu'
+import { contextMenuBasic, contextMenuBottomSheet } from '../../../../components/demos/context-menu'
 </script>
 
 ## Usage
@@ -81,29 +81,15 @@ The panel is at least 160px wide and grows with its rows unless `menuWidth` pins
 ## Examples
 
 <DemoExample
-  :demo="contextMenuOverview"
-  description="The painted menu surface: rows with icons and a secondary description, a divider, and a destructive action."
-  locale="en"
-  title="Menu surface"
-/>
-
-<DemoExample
   :demo="contextMenuBasic"
-  description="A data-driven menu with action rows, a disabled row, a section, a divider, and a destructive action. The chosen row is reported back on the page."
+  description="An adaptive context area: long-press opens a BottomSheet on compact touch screens, while right-click opens a cursor-positioned menu elsewhere."
   locale="en"
-  title="Basic usage"
+  title="Basic"
 />
 
 <DemoExample
-  :demo="contextMenuCompound"
-  description="Compound mode: the content slot composes the menu from menu components, and one row reports its result in place instead of closing the menu."
+  :demo="contextMenuBottomSheet"
+  description="A ContextMenu using the explicit BottomSheet presentation. Long-press the target on touch devices or right-click it with a pointer. Keep a visible menu trigger for important mobile actions."
   locale="en"
-  title="Custom content"
-/>
-
-<DemoExample
-  :demo="contextMenuSubmenu"
-  description="Nested items turn a row into a submenu, revealed on hover or with the right arrow key, at any depth."
-  locale="en"
-  title="Submenus"
+  title="Bottom sheet"
 />

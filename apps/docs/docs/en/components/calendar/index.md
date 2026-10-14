@@ -7,12 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { calendarBasic, calendarRange } from '../../../../components/demos/calendar'
+import { calendarConstraints, calendarRange, calendarSingle, calendarTwoMonths } from '../../../../components/demos/calendar'
 </script>
 
 ## Usage
 
-`Calendar` shows one month as a grid. People click a day to select it. Arrow keys move through the grid, and Enter selects the focused day. `min`, `max`, and `isDateDisabled` limit which days can be chosen.
+`Calendar` shows a month grid. `mode="single"` selects one day. `mode="range"` with `v-model:range` selects a start and an end. `numberOfMonths` can show two months. `focusDate` chooses which month opens first. `min`, `max`, and `isDateDisabled` limit which days can be chosen.
 
 Bind a date:
 
@@ -43,15 +43,29 @@ The value is a local `Date`. The month title and weekday names follow the active
 ## Examples
 
 <DemoExample
-  :demo="calendarBasic"
-  description="Click to select date, arrow keys to navigate, Enter to confirm."
+  :demo="calendarConstraints"
+  description="Only weekdays from January 10 through March 20, 2026 can be selected."
   locale="en"
-  title="Basic Usage"
+  title="Constraints"
 />
 
 <DemoExample
   :demo="calendarRange"
-  description="Limit the selectable range with min and max. Dates outside that range are disabled."
+  description="Pick a start and end date. The days between them stay highlighted."
   locale="en"
-  title="Date Range"
+  title="Range"
+/>
+
+<DemoExample
+  :demo="calendarSingle"
+  description="Pick one date from the month."
+  locale="en"
+  title="Single date"
+/>
+
+<DemoExample
+  :demo="calendarTwoMonths"
+  description="Two months side by side, for a range that crosses a month boundary."
+  locale="en"
+  title="Two months"
 />

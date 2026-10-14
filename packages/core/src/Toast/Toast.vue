@@ -23,6 +23,7 @@ const emit = defineEmits<{
 
 defineSlots<{
   default: () => unknown
+  end: () => unknown
 }>()
 
 const remaining = ref(props.duration)
@@ -107,6 +108,11 @@ onUnmounted(() => {
   >
     <span class="astryx-toast__body">
       <slot>{{ body }}</slot>
+    </span>
+    <span v-if="endContent || $slots.end" class="astryx-toast__end">
+      <slot name="end">
+        <component :is="endContent" v-if="endContent" />
+      </slot>
     </span>
     <button
       type="button"

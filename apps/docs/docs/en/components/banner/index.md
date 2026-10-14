@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bannerAction, bannerCollapsible, bannerDismiss, bannerFullWidth, bannerStatuses } from '../../../../components/demos/banner'
+import { bannerAction, bannerCollapsible, bannerDismiss, bannerFloating, bannerFullWidth, bannerStatuses } from '../../../../components/demos/banner'
 </script>
 
 ## Usage
@@ -52,13 +52,6 @@ import '@astryx-vue/themes/neutral.css'
 ## Examples
 
 <DemoExample
-  :demo="bannerAction"
-  description="A button in the end slot lets the user act on the message."
-  locale="en"
-  title="Action"
-/>
-
-<DemoExample
   :demo="bannerCollapsible"
   description="One banner with an action, a dismiss control, and details that start open. The details go in the default slot."
   locale="en"
@@ -73,6 +66,13 @@ import '@astryx-vue/themes/neutral.css'
 />
 
 <DemoExample
+  :demo="bannerFloating"
+  description="elevation med lifts the banner off the page, so it reads as a floating notice."
+  locale="en"
+  title="Floating"
+/>
+
+<DemoExample
   :demo="bannerFullWidth"
   description="With container set to section, the banner runs edge to edge without a rounded corner, for a notice at the top of the page."
   locale="en"
@@ -84,6 +84,13 @@ import '@astryx-vue/themes/neutral.css'
   description="Info, success, warning, and error, for an update, a confirmation, a caution, and a problem."
   locale="en"
   title="Statuses"
+/>
+
+<DemoExample
+  :demo="bannerAction"
+  description="A button in the end slot lets the user act on the message."
+  locale="en"
+  title="Action"
 />
 
 ## Usage guidance

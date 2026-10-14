@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { progressBarBasic, progressBarIndeterminate, progressBarSizes, progressBarVariants } from '../../../../components/demos/progress-bar'
+import { progressBarCustomFormat, progressBarIndeterminate, progressBarSemantic, progressBarValueLabel } from '../../../../components/demos/progress-bar'
 </script>
 
 ## 使用方法
@@ -37,13 +37,13 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 
 ## 示例
 
-<DemoExample :demo="progressBarBasic" title="基本用法" description="使用 value 和 max 控制完成比例。show-value 显示百分比。" locale="zh" />
+<DemoExample :demo="progressBarCustomFormat" title="自定义格式" description="formatValueLabel 用当前值和最大值生成文案，例如磁盘占用的 GB 数。" locale="zh" />
 
-<DemoExample :demo="progressBarSizes" title="尺寸" description="提供 sm、md、lg 三种轨道高度。" locale="zh" />
+<DemoExample :demo="progressBarIndeterminate" title="不确定进度" description="isIndeterminate 用于还不知道要多久的操作。" locale="zh" />
 
-<DemoExample :demo="progressBarVariants" title="颜色变体" description="根据状态使用不同颜色。" locale="zh" />
+<DemoExample :demo="progressBarSemantic" title="语义颜色" description="accent、success、warning、error、neutral 叠在一起，方便对照状态颜色。" locale="zh" />
 
-<DemoExample :demo="progressBarIndeterminate" title="不确定状态" description="isIndeterminate 用于未知进度的加载场景。" locale="zh" />
+<DemoExample :demo="progressBarValueLabel" title="数值标签" description="hasValueLabel 在标签旁显示当前百分比。" locale="zh" />
 
 ## 无障碍
 

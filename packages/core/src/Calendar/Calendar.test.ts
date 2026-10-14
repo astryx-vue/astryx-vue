@@ -199,4 +199,42 @@ describe('calendar', () => {
     expect(wrapper.get('.astryx-calendar').attributes('aria-label')).toBe('日历')
     expect(wrapper.get('.astryx-calendar-nav-button').attributes('aria-label')).toBe('上一月')
   })
+
+  it('shows the focused month and disables weekends inside min and max', () => {
+    const wrapper = mount(Calendar, {
+      props: {
+        modelValue: null,
+        focusDate: new Date(2026, 0, 1),
+        min: new Date(2026, 0, 10),
+        max: new Date(2026, 2, 20),
+        isDateDisabled: (date: Date) => date.getDay() === 0 || date.getDay() === 6,
+      },
+    })
+    expect(wrapper.get('.astryx-calendar-month-year').text()).toBe('January 2026')
+    const weekday = wrapper.findAll('.astryx-calendar-cell').find(cell => cell.text() === '12')
+    const saturday = wrapper.findAll('.astryx-calendar-cell').find(cell => cell.text() === '10')
+    expect(weekday?.classes()).not.toContain('is-disabled')
+    expect(saturday?.classes()).toContain('is-disabled')
+  })
+
+  it('selects a range across two clicks and can show two months', async () => {
+    const wrapper = mount(Calendar, {
+      props: {
+        mode: 'range',
+        numberOfMonths: 2,
+        focusDate: new Date(2026, 0, 1),
+        range: { start: new Date(2026, 0, 10), end: new Date(2026, 0, 20) },
+      },
+    })
+    expect(wrapper.findAll('.astryx-calendar-month')).toHaveLength(2)
+    expect(wrapper.findAll('.astryx-calendar-month-year').map(node => node.text())).toEqual(['January 2026', 'February 2026'])
+    expect(wrapper.findAll('.is-range-start').length).toBeGreaterThan(0)
+    expect(wrapper.findAll('.is-in-range').length).toBeGreaterThan(0)
+
+    const day = wrapper.findAll('.astryx-calendar-cell').find(cell => cell.text() === '25' && !cell.classes().includes('is-other-month'))
+    await day?.trigger('click')
+    const next = wrapper.emitted('update:range')?.[0]?.[0] as { start: Date, end: Date | null }
+    expect(next.start).toEqual(new Date(2026, 0, 25))
+    expect(next.end).toBeNull()
+  })
 })

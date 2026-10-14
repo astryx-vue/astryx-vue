@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { Button } from '@astryx-vue/core/Button'
-import { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'
-import { ref } from 'vue'
+import { Dialog, useImperativeDialog } from '@astryx-vue/core/Dialog'
+import { h } from 'vue'
+import RequiredBody from './required-body.vue'
 
-const isOpen = ref(false)
+const dialog = useImperativeDialog({ purpose: 'required' })
+
+function openDialog() {
+  dialog.show(() => h(RequiredBody, { requestClose: () => dialog.hide() }))
+}
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <Button label="Delete project" variant="destructive" @click="isOpen = true" />
-    <Dialog :is-open="isOpen" purpose="required" @open-change="isOpen = $event">
-      <DialogHeader title="Delete this project?" subtitle="This cannot be undone." />
-      <p>Escape and clicks outside the dialog are disabled. Choose an action to continue.</p>
-      <Button label="Delete" variant="destructive" @click="isOpen = false" />
-      <Button label="Cancel" variant="ghost" @click="isOpen = false" />
-    </Dialog>
-  </div>
+  <Dialog is-open is-inline purpose="required">
+    <RequiredBody :request-close="openDialog" />
+  </Dialog>
+  <component :is="dialog.Host" />
 </template>

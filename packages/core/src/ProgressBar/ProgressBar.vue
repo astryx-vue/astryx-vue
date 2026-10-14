@@ -6,6 +6,7 @@ import '../../styles/progress-bar.css'
 
 defineOptions({ name: 'AstryxProgressBar', inheritAttrs: false })
 const props = withDefaults(defineProps<ProgressBarProps>(), {
+  value: 0,
   min: 0,
   max: 100,
   size: 'md',
@@ -27,7 +28,14 @@ const percentage = computed(() => {
 })
 const fillWidth = computed<CSSProperties>(() => ({ width: `${percentage.value}%` }))
 const widthStyle = computed<CSSProperties>(() => ({ width: typeof props.width === 'number' ? `${props.width}px` : props.width }))
-const displayValue = computed(() => props.valueText ?? `${Math.round(percentage.value)}%`)
+const showsValue = computed(() => Boolean(props.showValue || props.hasValueLabel))
+const displayValue = computed(() => {
+  if (props.valueText != null)
+    return props.valueText
+  if (props.formatValueLabel)
+    return props.formatValueLabel(clamped.value, max.value)
+  return `${Math.round(percentage.value)}%`
+})
 const labelledBy = computed(() => [labelId.value, attrs['aria-labelledby']].filter(Boolean).join(' ') || undefined)
 const describedBy = computed(() => [descriptionId.value, attrs['aria-describedby']].filter(Boolean).join(' ') || undefined)
 </script>
@@ -39,7 +47,7 @@ const describedBy = computed(() => [descriptionId.value, attrs['aria-describedby
   >
     <div class="astryx-progress-bar-header">
       <span v-if="label" :id="labelId" class="astryx-progress-bar-label">{{ label }}</span>
-      <span v-if="showValue && !isIndeterminate" class="astryx-progress-bar-value" aria-hidden="true">{{ displayValue }}</span>
+      <span v-if="showsValue && !isIndeterminate" class="astryx-progress-bar-value" aria-hidden="true">{{ displayValue }}</span>
     </div>
     <div
       class="astryx-progress-bar-track" role="progressbar" :aria-labelledby="labelledBy" :aria-describedby="describedBy"

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { textAreaBasic, textAreaSizes, textAreaRows, textAreaStates, textAreaValidation, textAreaAsync } from '../../../../components/demos/text-area'
+import { textAreaCount, textAreaStates, textAreaValidation, textAreaIcon } from '../../../../components/demos/text-area'
 </script>
 
 ## Usage
@@ -51,17 +51,33 @@ import '@astryx-vue/themes/neutral.css'
 
 ## Examples
 
-<DemoExample :demo="textAreaBasic" title="Basic usage" description="For longer text. Label, description, and status are linked through Field." locale="en" />
+<DemoExample
+  :demo="textAreaCount"
+  description="A status update with a 280-character limit and a live counter."
+  locale="en"
+  title="Character count"
+/>
 
-<DemoExample :demo="textAreaSizes" title="Sizes" description="Three heights are available: sm, md, and lg. Width is controlled by the width prop." locale="en" />
+<DemoExample
+  :demo="textAreaStates"
+  description="Required, disabled, and loading fields."
+  locale="en"
+  title="States"
+/>
 
-<DemoExample :demo="textAreaRows" title="Rows and length" description="rows, cols, minlength, and maxlength are forwarded to the native textarea." locale="en" />
+<DemoExample
+  :demo="textAreaValidation"
+  description="Error, warning, and success messages, plus an error with no message."
+  locale="en"
+  title="Validation"
+/>
 
-<DemoExample :demo="textAreaStates" title="Disabled and read-only" description="Disabled values are not submitted. A disabledMessage keeps the control focusable and explains why." locale="en" />
-
-<DemoExample :demo="textAreaValidation" title="Validation states" description="status shows an error, warning, or success message. The message is attached below the field by default." locale="en" />
-
-<DemoExample :demo="textAreaAsync" title="Async save" description="changeAction runs after each content change. A loading indicator appears while the action is pending." locale="en" />
+<DemoExample
+  :demo="textAreaIcon"
+  description="Meeting notes with a pencil icon and a short description."
+  locale="en"
+  title="Icon"
+/>
 
 ## Keyboard controls
 

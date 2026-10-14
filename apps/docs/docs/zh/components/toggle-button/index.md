@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { toggleButtonBasic, toggleButtonGroup, toggleButtonIconOnly, toggleButtonStates } from '../../../../components/demos/toggle-button'
+import { toggleButtonColor, toggleButtonIconSwap, toggleButtonLabel, toggleButtonStates } from '../../../../components/demos/toggle-button'
 </script>
 
 ## 使用方法
@@ -91,29 +91,29 @@ const view = ref<string | null | string[]>('board')
 ## 示例
 
 <DemoExample
-  :demo="toggleButtonBasic"
-  description="一组视图切换按钮中有一项处于按下状态，右侧单独一个筛选开关展示按下时的背景与图标颜色变化。"
+  :demo="toggleButtonColor"
+  description="按下后图标带颜色。工具栏格式用强调色，反应按钮用各自的语义色。"
   locale="zh"
-  title="基本用法"
+  title="颜色"
 />
 
 <DemoExample
-  :demo="toggleButtonGroup"
-  description="上面是单选的对齐方式，只能有一项生效，再次点击会取消选择；下面是多选的列显示，每一项独立开关。"
+  :demo="toggleButtonIconSwap"
+  description="纯图标开关在按下时从线框图标换成实心图标。适合收藏、书签或静音这类靠图标本身表达状态的操作。"
   locale="zh"
-  title="单选与多选"
+  title="图标切换"
 />
 
 <DemoExample
-  :demo="toggleButtonIconOnly"
-  description="纯图标工具栏依赖 label 作为无障碍名称、tooltip 作为悬停提示；录音开关在按下时把麦克风换成实心方块。"
+  :demo="toggleButtonLabel"
+  description="带可见文字的开关，按下后字重会变化。图标单独说不清操作时使用。"
   locale="zh"
-  title="纯图标与图标切换"
+  title="文字标签"
 />
 
 <DemoExample
   :demo="toggleButtonStates"
-  description="三档尺寸、禁用与加载状态，以及一个由 pressedChangeAction 驱动的异步开关：动作未完成前按钮持续显示下一次点击的结果。"
+  description="独立开关的默认、按下、禁用和加载状态。"
   locale="zh"
-  title="尺寸与状态"
+  title="状态"
 />

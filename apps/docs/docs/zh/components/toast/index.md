@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { toastBasic, toastStack } from '../../../../components/demos/toast'
+import { toastAction, toastDedup, toastDismiss, toastStacking, toastTypes } from '../../../../components/demos/toast'
 </script>
 
 ## 使用方法
@@ -46,15 +46,36 @@ toast({ body: '操作成功', type: 'success' })
 ## 示例
 
 <DemoExample
-  :demo="toastBasic"
-  description="点击按钮即可触发轻提示，示例中展示了不同的 type 和 duration 组合。"
+  :demo="toastAction"
+  description="常驻通知的末尾可以放按钮或链接，用来撤销删除，或者打开报告。"
   locale="zh"
-  title="基础用法"
+  title="操作"
 />
 
 <DemoExample
-  :demo="toastStack"
-  description="多条轻提示会在视口中依次堆叠，并保持出现的先后顺序。"
+  :demo="toastDedup"
+  description="uniqueID 把重复通知收成一条。ignore 保留第一条，overwrite 用新内容替换，适合进度百分比。"
+  locale="zh"
+  title="去重"
+/>
+
+<DemoExample
+  :demo="toastDismiss"
+  description="useToast 返回的函数可以关掉那一条通知，适合耗时操作自己收尾。"
+  locale="zh"
+  title="关闭"
+/>
+
+<DemoExample
+  :demo="toastStacking"
+  description="通知纵向叠放，进入和离开都有动画。再点一次会再排上一条。"
   locale="zh"
   title="堆叠"
+/>
+
+<DemoExample
+  :demo="toastTypes"
+  description="信息与错误并排。信息会自己消失，错误一直留到被关掉。"
+  locale="zh"
+  title="类型"
 />

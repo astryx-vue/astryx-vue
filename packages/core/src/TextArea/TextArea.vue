@@ -142,6 +142,11 @@ onMounted(() => {
           @input="acceptInput" @compositionstart="isComposing = true" @compositionend="compositionEnd" @keydown="keydown"
           @focus="disabledTooltip.onTooltipPointerEnter" @blur="disabledTooltip.onBlur"
         />
+        <span
+          v-if="maxlength != null"
+          class="astryx-text-area-count"
+          :data-over="action.value.value.length > Number(maxlength) || undefined"
+        >{{ action.value.value.length }} / {{ maxlength }}</span>
         <span v-if="$slots.end" class="astryx-text-area-end"><slot name="end" /></span>
         <IconButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" variant="ghost" size="sm" :label="clearLabel ?? `Clear ${label}`" @click="clear">
           <FieldIcon type="clear" />

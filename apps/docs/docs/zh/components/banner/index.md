@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bannerAction, bannerCollapsible, bannerDismiss, bannerFullWidth, bannerStatuses } from '../../../../components/demos/banner'
+import { bannerAction, bannerCollapsible, bannerDismiss, bannerFloating, bannerFullWidth, bannerStatuses } from '../../../../components/demos/banner'
 </script>
 
 ## 使用方法
@@ -52,13 +52,6 @@ import '@astryx-vue/themes/neutral.css'
 ## 示例
 
 <DemoExample
-  :demo="bannerAction"
-  description="end 插槽放一个按钮，让用户能直接处理这条消息。"
-  locale="zh"
-  title="操作"
-/>
-
-<DemoExample
   :demo="bannerCollapsible"
   description="同一条提示里放操作按钮、关闭按钮，以及默认展开的详情。详情写在默认插槽里。"
   locale="zh"
@@ -73,6 +66,13 @@ import '@astryx-vue/themes/neutral.css'
 />
 
 <DemoExample
+  :demo="bannerFloating"
+  description="elevation 设为 med 后，提示条浮在页面之上，读起来像一层悬空通知。"
+  locale="zh"
+  title="浮动"
+/>
+
+<DemoExample
   :demo="bannerFullWidth"
   description="container 设为 section 后，提示条铺满整行，没有圆角，适合放在页面顶部。"
   locale="zh"
@@ -84,6 +84,13 @@ import '@astryx-vue/themes/neutral.css'
   description="info、success、warning、error 四种状态，分别用于更新、完成、提醒和出错。"
   locale="zh"
   title="状态"
+/>
+
+<DemoExample
+  :demo="bannerAction"
+  description="end 插槽放一个按钮，让用户能直接处理这条消息。"
+  locale="zh"
+  title="操作"
 />
 
 ## 使用建议

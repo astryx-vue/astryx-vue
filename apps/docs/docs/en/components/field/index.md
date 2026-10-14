@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { fieldCustom, fieldPrimitives } from '../../../../components/demos/field'
+import { fieldRequired, fieldValidation, fieldDescription } from '../../../../components/demos/field'
 </script>
 
 ## Usage
@@ -59,9 +59,26 @@ const inputId = `volume-${useId()}`
 
 ## Examples
 
-<DemoExample :demo="fieldCustom" title="Custom control" description="The default slot supplies association IDs. Detached status avoids overlapping a slider." locale="en" />
+<DemoExample
+  :demo="fieldRequired"
+  description="A required username next to an optional backup email."
+  locale="en"
+  title="Required and optional"
+/>
 
-<DemoExample :demo="fieldPrimitives" title="Standalone label and status" description="Compose FieldLabel and FieldStatus separately and connect the control id and aria-describedby yourself." locale="en" />
+<DemoExample
+  :demo="fieldValidation"
+  description="Error, warning, and success on email, username, and API key."
+  locale="en"
+  title="Validation states"
+/>
+
+<DemoExample
+  :demo="fieldDescription"
+  description="Helper text under the label for the email and password fields."
+  locale="en"
+  title="Description"
+/>
 
 ## Association IDs
 

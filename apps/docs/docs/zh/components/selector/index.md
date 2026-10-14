@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { selectorBasic, selectorSearchable, selectorClearable, selectorSizes } from '../../../../components/demos/selector'
+import { selectorClearable, selectorDescriptions, selectorGhost, selectorSections, selectorSheet, selectorStatus } from '../../../../components/demos/selector'
 </script>
 
 ## 使用方法
@@ -55,29 +55,43 @@ const options = [
 ## 示例
 
 <DemoExample
-  :demo="selectorBasic"
-  description="传入选项数组和绑定值，用户点击展开列表并选择一项。"
+  :demo="selectorSheet"
+  description="在底部弹层里展示单选列表，适合紧凑的触控界面。"
   locale="zh"
-  title="基本用法"
-/>
-
-<DemoExample
-  :demo="selectorSearchable"
-  description="开启 searchable 后，选择器会显示搜索框，用户可以输入文字快速过滤选项。"
-  locale="zh"
-  title="支持搜索"
+  title="底部弹层"
 />
 
 <DemoExample
   :demo="selectorClearable"
-  description="开启 clearable 后，已选中的值旁边会出现清除按钮，让用户可以取消选择。"
+  description="清除按钮可以把已选的值重置掉。"
   locale="zh"
   title="可清除"
 />
 
 <DemoExample
-  :demo="selectorSizes"
-  description="提供 sm、md、lg 三种尺寸，默认为 md。"
+  :demo="selectorGhost"
+  description="无边框的选择器和幽灵按钮一起放在工具栏里。"
   locale="zh"
-  title="不同尺寸"
+  title="幽灵工具栏"
+/>
+
+<DemoExample
+  :demo="selectorSections"
+  description="选项按带标题的分组排列。"
+  locale="zh"
+  title="分组"
+/>
+
+<DemoExample
+  :demo="selectorDescriptions"
+  description="选项带说明时，菜单画成两行。单行的值保持控件高度，两行的值正好高出一行。放进输入组后，值仍保持一行。"
+  locale="zh"
+  title="选项说明"
+/>
+
+<DemoExample
+  :demo="selectorStatus"
+  description="错误、警告和成功三种校验状态。"
+  locale="zh"
+  title="校验状态"
 />

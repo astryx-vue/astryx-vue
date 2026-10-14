@@ -2,9 +2,6 @@
 import type { ChatToolCallItem } from '@astryx-vue/core/Chat'
 import { ChatMessage, ChatMessageList, ChatToolCalls } from '@astryx-vue/core/Chat'
 import { computed } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
-
-const { pick } = useDemoText()
 
 const calls = computed<ChatToolCallItem[]>(() => [
   { name: 'bash', status: 'pending', target: 'yarn build' },
@@ -14,7 +11,7 @@ const calls = computed<ChatToolCallItem[]>(() => [
     name: 'bash',
     status: 'error',
     target: 'yarn lint',
-    errorMessage: pick('有 3 个 lint 错误。', '3 lint errors found'),
+    errorMessage: '3 lint errors found',
   },
 ])
 </script>

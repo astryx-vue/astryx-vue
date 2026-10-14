@@ -1,27 +1,24 @@
 <script setup lang="ts">
 import { Token } from '@astryx-vue/core/Token'
-import { useDemoText } from '../../demo-infra/useDemoText'
-
-const { pick } = useDemoText()
 </script>
 
 <template>
   <div class="demo-container">
     <p class="demo-caption">
-      {{ pick('当前筛选', 'Active filters') }}
+      {{ 'Active filters' }}
     </p>
     <div class="demo-row">
-      <Token :label="pick('状态：打开', 'Status: Open')" color="green" removable />
-      <Token :label="pick('优先级：高', 'Priority: High')" color="red" removable />
-      <Token :label="pick('团队：设计', 'Team: Design')" color="purple" removable />
+      <Token label="Status: Open" color="green" removable />
+      <Token label="Priority: High" color="red" removable />
+      <Token label="Team: Design" color="purple" removable />
     </div>
     <p class="demo-caption">
-      {{ pick('已选收件人', 'Selected recipients') }}
+      {{ 'Selected recipients' }}
     </p>
     <div class="demo-row">
-      <Token :label="pick('陈莎拉', 'Sarah Chen')" color="blue" removable />
-      <Token :label="pick('瑞维拉', 'Alex Rivera')" color="blue" removable />
-      <Token :label="pick('李乔丹', 'Jordan Lee')" color="blue" removable />
+      <Token label="Sarah Chen" color="blue" removable />
+      <Token label="Alex Rivera" color="blue" removable />
+      <Token label="Jordan Lee" color="blue" removable />
     </div>
   </div>
 </template>

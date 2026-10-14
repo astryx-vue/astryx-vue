@@ -4,7 +4,7 @@ import { ButtonGroup } from '@astryx-vue/core/ButtonGroup'
 </script>
 
 <template>
-  <ButtonGroup label="Editing actions">
+  <ButtonGroup label="Text editing actions">
     <Button label="Copy" />
     <Button label="Cut" />
     <Button label="Paste" />

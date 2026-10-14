@@ -2,29 +2,26 @@
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { Thumbnail } from '@astryx-vue/core/Thumbnail'
-import { useDemoText } from '../../demo-infra/useDemoText'
 import { MISTY_VALLEY } from './images'
-
-const { pick } = useDemoText()
 </script>
 
 <template>
   <Stack direction="vertical" :gap="4">
     <Stack direction="vertical" :gap="1">
       <Text type="supporting" color="secondary">
-        {{ pick('从空到上传、处理，再到完成', 'Lifecycle: empty → uploading → processing → loaded') }}
+        {{ 'Lifecycle: empty → uploading → processing → loaded' }}
       </Text>
       <Stack align="end" direction="horizontal" :gap="3">
         <Stack direction="vertical" :gap="1" h-align="center">
           <Thumbnail label="report.pdf" />
           <Text type="supporting" color="secondary">
-            {{ pick('占位', 'Placeholder') }}
+            {{ 'Placeholder' }}
           </Text>
         </Stack>
         <Stack direction="vertical" :gap="1" h-align="center">
           <Thumbnail is-loading label="uploading.jpg" />
           <Text type="supporting" color="secondary">
-            {{ pick('骨架', 'Skeleton') }}
+            {{ 'Skeleton' }}
           </Text>
         </Stack>
         <Stack direction="vertical" :gap="1" h-align="center">
@@ -35,7 +32,7 @@ const { pick } = useDemoText()
             label="misty-valley.jpg"
           />
           <Text type="supporting" color="secondary">
-            {{ pick('上传中', 'Uploading') }}
+            {{ 'Uploading' }}
           </Text>
         </Stack>
         <Stack direction="vertical" :gap="1" h-align="center">
@@ -45,7 +42,7 @@ const { pick } = useDemoText()
             label="misty-valley.jpg"
           />
           <Text type="supporting" color="secondary">
-            {{ pick('已加载', 'Loaded') }}
+            {{ 'Loaded' }}
           </Text>
         </Stack>
       </Stack>

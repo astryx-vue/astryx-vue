@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { MultiSelector } from '@astryx-vue/core/MultiSelector'
 import { computed, ref } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
 
 const selected = ref(['name', 'email', 'role', 'status'])
-const { pick } = useDemoText()
 const options = computed(() => [
-  { value: 'name', label: pick('姓名', 'Name') },
-  { value: 'email', label: pick('邮箱', 'Email') },
-  { value: 'role', label: pick('角色', 'Role') },
-  { value: 'status', label: pick('状态', 'Status') },
-  { value: 'created', label: pick('创建时间', 'Created') },
-  { value: 'updated', label: pick('更新时间', 'Updated') },
-  { value: 'actions', label: pick('操作', 'Actions') },
+  { value: 'name', label: 'Name' },
+  { value: 'email', label: 'Email' },
+  { value: 'role', label: 'Role' },
+  { value: 'status', label: 'Status' },
+  { value: 'created', label: 'Created' },
+  { value: 'updated', label: 'Updated' },
+  { value: 'actions', label: 'Actions' },
 ])
 </script>
 
@@ -21,9 +19,9 @@ const options = computed(() => [
     <MultiSelector
       v-model="selected"
       :options="options"
-      :label="pick('列', 'Columns')"
+      label="Columns"
       label-hidden
-      :placeholder="pick('列', 'Columns')"
+      placeholder="Columns"
       searchable
       select-all
       trigger-display="count"

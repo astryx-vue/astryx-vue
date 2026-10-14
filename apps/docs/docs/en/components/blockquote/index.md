@@ -50,15 +50,14 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
 
 <DemoExample
   :demo="blockquoteTestimonials"
-  description="Several quotes in a card grid. The one that spans the row uses GridSpan."
+  description="Multiple quotes arranged in a card grid for a testimonials section. Combine with Card and Grid to create social-proof layouts."
   locale="en"
   title="Testimonials"
 />
 
 <DemoExample
   :demo="blockquoteCite"
-  description="One quote stands alone. The other names its source with cite."
+  description="A plain quote and a quote with a cite attribution. Use cite to credit the original author or source."
   locale="en"
   title="With attribution"
 />
-
