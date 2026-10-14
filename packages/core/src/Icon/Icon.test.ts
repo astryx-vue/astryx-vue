@@ -41,6 +41,7 @@ describe('icon', () => {
       'close',
       'funnel',
       'image',
+      'search',
       'stop',
       'microphone',
       'warning',

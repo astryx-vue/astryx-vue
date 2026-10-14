@@ -26,6 +26,7 @@ export const ICON_GLYPHS = [
   'close',
   'funnel',
   'image',
+  'search',
   'stop',
   'microphone',
   'warning',

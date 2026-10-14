@@ -129,6 +129,11 @@
       "types": "./dist/Outline/index.d.ts",
       "import": "./dist/Outline/index.js"
     },
+    "./PowerSearch": {
+      "source": "./src/PowerSearch/index.ts",
+      "types": "./dist/PowerSearch/index.d.ts",
+      "import": "./dist/PowerSearch/index.js"
+    },
     "./RadioList": {
       "source": "./src/RadioList/index.ts",
       "types": "./dist/RadioList/index.d.ts",
@@ -648,6 +653,10 @@
       "./Outline": {
         "types": "./dist/Outline/index.d.ts",
         "import": "./dist/Outline/index.js"
+      },
+      "./PowerSearch": {
+        "types": "./dist/PowerSearch/index.d.ts",
+        "import": "./dist/PowerSearch/index.js"
       },
       "./RadioList": {
         "types": "./dist/RadioList/index.d.ts",

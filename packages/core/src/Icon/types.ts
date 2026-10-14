@@ -53,6 +53,7 @@ export type IconName
     | 'close'
     | 'funnel'
     | 'image'
+    | 'search'
     | 'stop'
     | 'microphone'
     | 'warning'
