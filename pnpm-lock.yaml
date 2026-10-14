@@ -427,6 +427,9 @@ importers:
         specifier: catalog:runtime
         version: 3.0.0
     devDependencies:
+      '@types/node':
+        specifier: catalog:language
+        version: 26.6.4
       '@vue/compiler-sfc':
         specifier: catalog:vue
         version: 3.5.43

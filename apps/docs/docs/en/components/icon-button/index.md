@@ -17,17 +17,18 @@ import { iconButtonActionBar, iconButtonFloating, iconButtonLoading, iconButtonT
 
 ```vue
 <script setup lang="ts">
+import { Icon } from '@astryx-vue/core/Icon'
 import { IconButton } from '@astryx-vue/core/IconButton'
 </script>
 
 <template>
   <IconButton label="Search">
-    <span class="i-carbon-search" />
+    <Icon name="carbon:search" />
   </IconButton>
 </template>
 ```
 
-astryx-vue ships no icon set, so the artwork is yours: the icon slot takes a CSS icon class from whatever solution you already use (UnoCSS, Tailwind, or a class of your own) or your own component. UnoCSS's icon preset makes the glyph fill its container, and the button already sizes that box, so a bare `<span class="i-carbon-search" />` is enough here; elsewhere give the icon an element with a size of its own.
+[Icon](/en/components/icon) fills the square the button already sizes. Leave `size` unset. A CSS icon class still works in the slot when your build generates it; UnoCSS is not required.
 
 Use a text-bearing [Button](/en/components/button) when the action is not immediately clear.
 

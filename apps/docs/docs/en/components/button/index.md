@@ -29,24 +29,29 @@ import { Button } from '@astryx-vue/core/Button'
 
 Use the dedicated [ButtonGroup](/en/components/button-group) and [IconButton](/en/components/icon-button) components when you need connected actions or an explicit icon-only button.
 
-astryx-vue ships no icons, so a button that shows one takes it from your own icon solution. The `icon` slot sits in a sized box before the label, and the `end` slot mirrors it:
+The `icon` slot sits in a sized box before the label, and the `end` slot mirrors it. Put an [Icon](/en/components/icon) there and leave its `size` unset; the slot already decides the box:
 
 ```vue
+<script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
+import { Icon } from '@astryx-vue/core/Icon'
+</script>
+
 <template>
   <Button label="Upload file">
     <template #icon>
-      <span class="i-carbon-upload" />
+      <Icon name="carbon:upload" />
     </template>
   </Button>
   <Button label="Continue" variant="secondary">
     <template #end>
-      <span class="i-carbon-chevron-right" />
+      <Icon name="carbon:chevron-right" />
     </template>
   </Button>
 </template>
 ```
 
-Any CSS icon class works — an UnoCSS class, a Tailwind utility, or a class of your own — and so does a component that draws the SVG. UnoCSS's icon preset fills its container, which the button already sizes for you.
+A CSS icon class still works in the slot if you already generate one. UnoCSS is not required.
 
 
 

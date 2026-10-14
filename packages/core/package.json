@@ -104,6 +104,11 @@
       "types": "./dist/Icon/index.d.ts",
       "import": "./dist/Icon/index.js"
     },
+    "./icons": {
+      "source": "./src/Icon/plugin.ts",
+      "types": "./dist/Icon/plugin.d.ts",
+      "import": "./dist/Icon/plugin.js"
+    },
     "./Layout": {
       "source": "./src/Layout/index.ts",
       "types": "./dist/Layout/index.d.ts",
@@ -624,6 +629,10 @@
         "types": "./dist/Icon/index.d.ts",
         "import": "./dist/Icon/index.js"
       },
+      "./icons": {
+        "types": "./dist/Icon/plugin.d.ts",
+        "import": "./dist/Icon/plugin.js"
+      },
       "./Layout": {
         "types": "./dist/Layout/index.d.ts",
         "import": "./dist/Layout/index.js"
@@ -982,6 +991,7 @@
     "micromark-extension-gfm": "catalog:runtime"
   },
   "devDependencies": {
+    "@types/node": "catalog:language",
     "@vue/compiler-sfc": "catalog:vue",
     "tsdown": "catalog:build",
     "typescript": "catalog:language",
