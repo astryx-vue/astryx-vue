@@ -79,6 +79,13 @@ import { Text } from '@astryx-vue/core/Text'
 />
 
 <DemoExample
+  :demo="cardVariants"
+  description="默认、muted 和颜色变体并排。用颜色给卡片分类，例如团队色、项目标签或内容类型。"
+  locale="zh"
+  title="变体"
+/>
+
+<DemoExample
   :demo="cardLayout"
   description="带结构化页眉、内容区和操作页脚的卡片。适合需要清晰分区的表单、对话框或设置面板。"
   locale="zh"
@@ -90,11 +97,4 @@ import { Text } from '@astryx-vue/core/Text'
   description="带标题和正文的卡片。适合摘要、说明，或任何需要从页面上分开的一组内容。"
   locale="zh"
   title="简单"
-/>
-
-<DemoExample
-  :demo="cardVariants"
-  description="默认、muted 和颜色变体并排。用颜色给卡片分类，例如团队色、项目标签或内容类型。"
-  locale="zh"
-  title="变体"
 />

@@ -73,20 +73,6 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 />
 
 <DemoExample
-  :demo="avatarPhoto"
-  description="用不同尺寸展示头像照片。图片加载失败时改显示姓名首字母。"
-  locale="zh"
-  title="照片"
-/>
-
-<DemoExample
-  :demo="avatarStatus"
-  description="在头像上加状态点，表示在线、离开或忙碌。适合聊天和需要看得到在线状态的界面。"
-  locale="zh"
-  title="状态点"
-/>
-
-<DemoExample
   :demo="avatarTooltip"
   description="默认在悬停和键盘聚焦时用提示显示姓名。传入字符串可换成自定义文案，传入 false 则关闭提示。"
   locale="zh"
@@ -98,4 +84,18 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
   description="把头像放在姓名和角色旁边，组成一行用户信息。适合评论标题、联系人列表和资料区。"
   locale="zh"
   title="用户卡片"
+/>
+
+<DemoExample
+  :demo="avatarPhoto"
+  description="用不同尺寸展示头像照片。图片加载失败时改显示姓名首字母。"
+  locale="zh"
+  title="照片"
+/>
+
+<DemoExample
+  :demo="avatarStatus"
+  description="在头像上加状态点，表示在线、离开或忙碌。适合聊天和需要看得到在线状态的界面。"
+  locale="zh"
+  title="状态点"
 />

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dropdownMenuBasic, dropdownMenuOverview, dropdownMenuSections, dropdownMenuShortcuts } from '../../../../components/demos/dropdown-menu'
+import { dropdownMenuActions, dropdownMenuAdaptive, dropdownMenuDisabled, dropdownMenuIconTrigger, dropdownMenuSections, dropdownMenuSubmenu } from '../../../../components/demos/dropdown-menu'
 </script>
 
 ## 使用方法
@@ -73,29 +73,43 @@ import { DropdownMenu } from '@astryx-vue/core/DropdownMenu'
 ## 示例
 
 <DemoExample
-  :demo="dropdownMenuOverview"
-  description="展开后的菜单：分组标题、图标、次行说明、快捷键提示、分隔线和危险动作。"
+  :demo="dropdownMenuActions"
+  description="动作菜单用分隔线把日常操作和破坏性操作分开。选中一行后会记下最近一次动作。"
   locale="zh"
-  title="菜单结构"
+  title="动作"
 />
 
 <DemoExample
-  :demo="dropdownMenuBasic"
-  description="用 items 数组铺一组动作。选中任意一项后菜单收起，并把焦点交还给触发按钮。"
+  :demo="dropdownMenuAdaptive"
+  description="紧凑的触控界面打开底部弹层，其他情况菜单仍锚在按钮旁边。"
   locale="zh"
-  title="基本用法"
+  title="自适应呈现"
+/>
+
+<DemoExample
+  :demo="dropdownMenuDisabled"
+  description="当前用户不能执行的行保持禁用。"
+  locale="zh"
+  title="禁用项"
+/>
+
+<DemoExample
+  :demo="dropdownMenuIconTrigger"
+  description="只用一个图标按钮打开菜单，触发器上没有文字，也没有箭头。"
+  locale="zh"
+  title="图标触发"
 />
 
 <DemoExample
   :demo="dropdownMenuSections"
-  description="用 section 条目给动作分簇，簇与簇之间用 divider 隔开；分组标题不会被方向键选中。"
+  description="带标题的分组把行归在一起，菜单变长以后仍然好扫读。"
   locale="zh"
-  title="分组与分隔线"
+  title="分组"
 />
 
 <DemoExample
-  :demo="dropdownMenuShortcuts"
-  description="换成纯图标触发按钮，并用 endContent 插槽把快捷键提示放在行的末尾。"
+  :demo="dropdownMenuSubmenu"
+  description="悬停或按右方向键打开子菜单。左方向键或 Escape 关掉子菜单，焦点回到父行。"
   locale="zh"
-  title="自定义触发控件与快捷键"
+  title="子菜单"
 />

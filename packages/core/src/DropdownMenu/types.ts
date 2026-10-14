@@ -6,6 +6,14 @@ import type { ItemTarget } from '../List/types.js'
 /** Size of the menu, derived from the trigger button's size. */
 export type DropdownMenuSize = 'sm' | 'md' | 'lg'
 
+/**
+ * Where the menu opens.
+ *
+ * `popover` hangs off the trigger. `bottom-sheet` rises from the bottom edge.
+ * `adaptive` uses the sheet only on a compact touch surface.
+ */
+export type DropdownMenuPresentation = 'adaptive' | 'bottom-sheet' | 'popover'
+
 /** Visual variant of one menu row. */
 export type DropdownMenuItemVariant = 'default' | 'destructive'
 
@@ -141,6 +149,13 @@ export interface DropdownMenuProps {
    */
   placement?: LayerPlacement
   /**
+   * `popover` anchors to the trigger. `bottom-sheet` uses a bottom sheet.
+   * `adaptive` chooses the sheet on a compact touch surface and a popover
+   * otherwise.
+   * @default 'popover'
+   */
+  presentation?: DropdownMenuPresentation
+  /**
    * How the menu aligns with the trigger along the placement axis.
    * @default 'start'
    */
@@ -261,4 +276,26 @@ export interface DropdownMenuGroupSlots {
   default?: () => VNodeChild
   /** Rich content replacing the `title` prop, still used as the group's name. */
   title?: () => VNodeChild
+}
+
+export interface DropdownMenuSubMenuProps {
+  /** Row label. */
+  label?: string | number
+  /** Icon before the label. A CSS class or a component. */
+  icon?: string | Component
+  /** Secondary line under the label. */
+  description?: string | number
+  /**
+   * Whether the row can open its flyout.
+   * @default false
+   */
+  isDisabled?: boolean
+}
+
+export interface DropdownMenuSubMenuSlots {
+  /** The rows of the nested menu. */
+  default?: () => VNodeChild
+  icon?: () => VNodeChild
+  label?: () => VNodeChild
+  description?: () => VNodeChild
 }

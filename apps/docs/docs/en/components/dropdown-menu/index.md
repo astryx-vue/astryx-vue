@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dropdownMenuBasic, dropdownMenuOverview, dropdownMenuSections, dropdownMenuShortcuts } from '../../../../components/demos/dropdown-menu'
+import { dropdownMenuActions, dropdownMenuAdaptive, dropdownMenuDisabled, dropdownMenuIconTrigger, dropdownMenuSections, dropdownMenuSubmenu } from '../../../../components/demos/dropdown-menu'
 </script>
 
 ## Usage
@@ -73,29 +73,43 @@ Use `v-model:is-menu-open` when something outside the menu drives the open state
 ## Examples
 
 <DemoExample
-  :demo="dropdownMenuOverview"
-  description="An open menu: a group heading, icons, a second line of detail, a shortcut hint, a divider, and a destructive action."
+  :demo="dropdownMenuActions"
+  description="An action menu with a divider between everyday actions and destructive ones. Picking a row reports the last action."
   locale="en"
-  title="Menu anatomy"
+  title="Actions"
 />
 
 <DemoExample
-  :demo="dropdownMenuBasic"
-  description="A row of actions from the items array. Picking one closes the menu and hands focus back to the trigger."
+  :demo="dropdownMenuAdaptive"
+  description="A compact touch surface opens a bottom sheet. Everywhere else the menu stays anchored to the button."
   locale="en"
-  title="Basic usage"
+  title="Adaptive presentation"
+/>
+
+<DemoExample
+  :demo="dropdownMenuDisabled"
+  description="Some rows stay disabled when the current user cannot run them."
+  locale="en"
+  title="Disabled"
+/>
+
+<DemoExample
+  :demo="dropdownMenuIconTrigger"
+  description="An icon-only button opens the menu, with no chevron and no label on the trigger."
+  locale="en"
+  title="Icon trigger"
 />
 
 <DemoExample
   :demo="dropdownMenuSections"
-  description="Sections cluster the actions and a divider separates the clusters. A group's heading is plain text, so the arrow keys never land on it."
+  description="Titled sections group the rows, so a longer menu stays easy to scan."
   locale="en"
-  title="Groups and dividers"
+  title="Sections"
 />
 
 <DemoExample
-  :demo="dropdownMenuShortcuts"
-  description="An icon-only trigger, with keyboard-shortcut hints placed at the end of each row."
+  :demo="dropdownMenuSubmenu"
+  description="Hover or the Right arrow opens the flyout. Left arrow or Escape closes it and returns to the parent row."
   locale="en"
-  title="Custom trigger and shortcuts"
+  title="Submenu"
 />

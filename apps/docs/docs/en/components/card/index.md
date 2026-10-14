@@ -79,6 +79,13 @@ The card also publishes `--container-padding-inline-start`, `--container-padding
 />
 
 <DemoExample
+  :demo="cardVariants"
+  description="Default, muted, and color variants side by side. Use color variants to categorize cards visually, like team colors, project tags, or content types."
+  locale="en"
+  title="Variants"
+/>
+
+<DemoExample
   :demo="cardLayout"
   description="A card with a structured header, content area, and footer with action buttons. Use for forms, dialogs, or settings panels that need clear sections."
   locale="en"
@@ -90,11 +97,4 @@ The card also publishes `--container-padding-inline-start`, `--container-padding
   description="A card with a heading and body text. Use for summaries, descriptions, or any grouped content that needs visual separation from the page."
   locale="en"
   title="Simple"
-/>
-
-<DemoExample
-  :demo="cardVariants"
-  description="Default, muted, and color variants side by side. Use color variants to categorize cards visually, like team colors, project tags, or content types."
-  locale="en"
-  title="Variants"
 />

@@ -73,20 +73,6 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 />
 
 <DemoExample
-  :demo="avatarPhoto"
-  description="Show a profile photo at different sizes. Use when you have a user photo URL. If the image fails to load, initials are shown instead."
-  locale="en"
-  title="Photo"
-/>
-
-<DemoExample
-  :demo="avatarStatus"
-  description="Add a status dot to an avatar to show whether someone is online, away, or busy. Use in chat, messaging, or any UI where knowing availability matters."
-  locale="en"
-  title="Status dot"
-/>
-
-<DemoExample
   :demo="avatarTooltip"
   description="By default an avatar shows its name in a tooltip on hover and keyboard focus. Pass a string to show custom text instead, or false to turn the tooltip off."
   locale="en"
@@ -98,4 +84,18 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
   description="Place an avatar next to a name and role to create a user card row. Use for comment headers, contact lists, profile sections, or anywhere you need to identify a person."
   locale="en"
   title="User card"
+/>
+
+<DemoExample
+  :demo="avatarPhoto"
+  description="Show a profile photo at different sizes. Use when you have a user photo URL. If the image fails to load, initials are shown instead."
+  locale="en"
+  title="Photo"
+/>
+
+<DemoExample
+  :demo="avatarStatus"
+  description="Add a status dot to an avatar to show whether someone is online, away, or busy. Use in chat, messaging, or any UI where knowing availability matters."
+  locale="en"
+  title="Status dot"
 />
