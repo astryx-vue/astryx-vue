@@ -1,5 +1,31 @@
 # @astryx-vue/core
 
+## 0.2.1
+
+### Patch Changes
+
+- [#46](https://github.com/astryx-vue/astryx-vue/pull/46) [`02352d5`](https://github.com/astryx-vue/astryx-vue/commit/02352d571a1e5e9d550c801e8d32ff8f60676246) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DateInput 补上说明文字、日期显示格式、带说明的校验状态，以及在底部面板里打开日历。
+
+- [#43](https://github.com/astryx-vue/astryx-vue/pull/43) [`e6e34d6`](https://github.com/astryx-vue/astryx-vue/commit/e6e34d64e45e6048a9840011bf35e40942e3938e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 下拉菜单可以在紧凑触控界面改用底部弹层，并支持子菜单。
+
+- [#43](https://github.com/astryx-vue/astryx-vue/pull/43) [`e6e34d6`](https://github.com/astryx-vue/astryx-vue/commit/e6e34d64e45e6048a9840011bf35e40942e3938e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 头像支持链接、按钮和姓名提示，状态点可以命名，头像组可以设置组标签。链接支持独立排版和提示。上下文菜单可以按指针菜单或底部动作条呈现。
+
+- [#46](https://github.com/astryx-vue/astryx-vue/pull/46) [`02352d5`](https://github.com/astryx-vue/astryx-vue/commit/02352d571a1e5e9d550c801e8d32ff8f60676246) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Calendar 可以选一段日期并排两个月。NumberInput 补上说明、单位、清除和校验文案。TextArea 在设置了最大长度时显示字数。
+
+- [#50](https://github.com/astryx-vue/astryx-vue/pull/50) [`9d7762b`](https://github.com/astryx-vue/astryx-vue/commit/9d7762bd77295159628af5dadef0e36588021a06) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Icon` 可以用 `name="carbon:settings"` 按 Iconify 的集合名画图标。配上 `astryxIcons()` 后，只会把源码里写到的图标从 `@iconify-json/*` 打进包里。
+
+- [#45](https://github.com/astryx-vue/astryx-vue/pull/45) [`0a1a584`](https://github.com/astryx-vue/astryx-vue/commit/0a1a5845983af52964eac0f4de7ff84c0fddef63) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 中性主题的卡片默认内边距改为间距 3（12px）。卡片里的布局面板内外边距都跟随这张卡片，侧栏文字不再被多出来的内边距挤出省略号。
+
+- [#45](https://github.com/astryx-vue/astryx-vue/pull/45) [`0a1a584`](https://github.com/astryx-vue/astryx-vue/commit/0a1a5845983af52964eac0f4de7ff84c0fddef63) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 面包屑项可以带上菜单，用来在同级页面之间切换。分页增加 dots、count、compact 变体和 sm 尺寸，并可以用 totalPages 表示总页数。
+
+- [#51](https://github.com/astryx-vue/astryx-vue/pull/51) [`606f6d4`](https://github.com/astryx-vue/astryx-vue/commit/606f6d411521cb10ec2f463c40bb16874ce5de30) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 图标的外部 class 画在尺寸盒内部，避免 `width: 100%` 把同行文字挤成逐词换行。TabList 补上 `isFullBleed`，进度条可以只把标签留给读屏。Badge 接受 `label`，过长时省略号截断，字符串和数字会写进 `title`。
+
+- [#44](https://github.com/astryx-vue/astryx-vue/pull/44) [`e690d12`](https://github.com/astryx-vue/astryx-vue/commit/e690d122ecd889418b35464e07b89a535cb562ef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 进度条可以显示自定义数值，并支持 accent 颜色。
+
+- [#46](https://github.com/astryx-vue/astryx-vue/pull/46) [`02352d5`](https://github.com/astryx-vue/astryx-vue/commit/02352d571a1e5e9d550c801e8d32ff8f60676246) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 选择器可以显示标签、说明和校验文案，支持分组、幽灵样式和底部弹层。选项可以是字符串，校验状态也可以写成 `{ type, message }`。
+
+- [#44](https://github.com/astryx-vue/astryx-vue/pull/44) [`e690d12`](https://github.com/astryx-vue/astryx-vue/commit/e690d122ecd889418b35464e07b89a535cb562ef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Toast 可以带尾部操作，并用 uniqueID 合并重复通知。Selector 和 DropdownMenu 可以在底部弹层里展开。
+
 ## 0.2.0
 
 ### Minor Changes
