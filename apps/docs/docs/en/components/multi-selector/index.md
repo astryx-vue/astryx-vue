@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { multiSelectorColumns, multiSelectorForm, multiSelectorGhost, multiSelectorSearchable, multiSelectorSections, multiSelectorSheet } from '../../../../components/demos/multi-selector'
+import { multiSelectorColumns, multiSelectorCreate, multiSelectorForm, multiSelectorGhost, multiSelectorSearchable, multiSelectorSections, multiSelectorSheet } from '../../../../components/demos/multi-selector'
 </script>
 
 ## Usage
@@ -18,7 +18,15 @@ An option can be a string, an object with a description, a divider, or a labeled
 
 `triggerDisplay` controls the closed trigger. `count` shows how many are selected, `labels` joins the text, and `badges` uses tokens. `maxBadges` limits how many are visible, and the rest collapse to `+N`. A narrower trigger collapses further.
 
-Arrow keys move the highlight. `Enter` and Space toggle the highlighted option. Space inside the search field still types. `Escape` closes the menu. When the menu is closed and the user is not searching, `Backspace` clears the selection.
+Read-only keeps the selection, stays focusable, and still submits. It does not open, and it has no clear button or chevron. It does not dim. While loading, the trigger shows a spinner, the create row stays hidden, and the menu does not claim the list is empty.
+
+A function can replace the closed text for the count and labels displays. Badges ignore it. An empty selection does not call it and keeps the placeholder.
+
+Create works together with search. When the typed text matches no option label, ignoring case, the first row offers to create it. Choosing that row adds a description to the change event: the kind is create, and the text is the query. Add that option to the list in the same update. Without search, the create row never appears.
+
+To open the menu from outside, pass the handle object itself from script. A template unwraps a ref, so pass a function that receives the handle. Open does nothing while the field is read-only or disabled.
+
+Arrow keys move the highlight. Enter and Space toggle the highlighted option. Space inside the search field still types. Enter creates the current text when nothing is highlighted. Escape closes the menu. When the menu is closed and the user is not searching, Backspace clears the selection.
 
 ## Best Practices
 
@@ -63,6 +71,13 @@ Arrow keys move the highlight. `Enter` and Space toggle the highlighted option. 
   description="Multi-select with search filtering and select-all."
   locale="en"
   title="Searchable"
+/>
+
+<DemoExample
+  :demo="multiSelectorCreate"
+  description="Typing a name that is not in the list offers to create it. The closed text can be a custom sentence. Read-only keeps the selection."
+  locale="en"
+  title="Create and read-only"
 />
 
 <DemoExample

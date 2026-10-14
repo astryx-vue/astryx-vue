@@ -3,6 +3,7 @@
 import type { CalendarMessages } from './messages/calendar.js'
 import type { CarouselMessages } from './messages/carousel.js'
 import type { ChatMessages } from './messages/chat.js'
+import type { CheckboxListMessages } from './messages/checkbox-list.js'
 import type { CitationMessages } from './messages/citation.js'
 import type { CommandPaletteMessages } from './messages/command-palette.js'
 import type { DateInputMessages } from './messages/date-input.js'
@@ -33,6 +34,7 @@ import type { AstryxLocale } from './types.js'
 import { calendarMessages } from './messages/calendar.js'
 import { carouselMessages } from './messages/carousel.js'
 import { chatMessages } from './messages/chat.js'
+import { checkboxListMessages } from './messages/checkbox-list.js'
 import { citationMessages } from './messages/citation.js'
 import { commandPaletteMessages } from './messages/command-palette.js'
 import { dateInputMessages } from './messages/date-input.js'
@@ -64,6 +66,7 @@ export interface AstryxMessages {
   calendar: CalendarMessages
   carousel: CarouselMessages
   chat: ChatMessages
+  checkboxList: CheckboxListMessages
   citation: CitationMessages
   commandPalette: CommandPaletteMessages
   dateInput: DateInputMessages
@@ -97,6 +100,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     calendar: calendarMessages.en,
     carousel: carouselMessages.en,
     chat: chatMessages.en,
+    checkboxList: checkboxListMessages.en,
     citation: citationMessages.en,
     commandPalette: commandPaletteMessages.en,
     dateInput: dateInputMessages.en,
@@ -128,6 +132,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     calendar: calendarMessages['zh-CN'],
     carousel: carouselMessages['zh-CN'],
     chat: chatMessages['zh-CN'],
+    checkboxList: checkboxListMessages['zh-CN'],
     citation: citationMessages['zh-CN'],
     commandPalette: commandPaletteMessages['zh-CN'],
     dateInput: dateInputMessages['zh-CN'],

@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import InputGroup from './InputGroup.vue'
+import InputGroupText from './InputGroupText.vue'
 
 describe('inputGroup', () => {
   it('renders default slot', () => {
@@ -136,6 +137,33 @@ describe('inputGroup', () => {
     })
 
     expect(wrapper.find('.astryx-input-group').classes()).toContain('size-md')
+  })
+
+  it('renders a field shell and prefix text', () => {
+    const wrapper = mount(InputGroup, {
+      props: {
+        label: 'Price',
+        description: 'Before tax',
+        isOptional: true,
+        status: { type: 'error', message: 'Enter an amount' },
+      },
+      slots: {
+        before: '<span class="astryx-input-group-text">$</span>',
+        default: '<input type="text" />',
+      },
+      global: { components: { InputGroupText } },
+    })
+
+    expect(wrapper.get('[role="group"]').attributes('aria-labelledby')).toBeTruthy()
+    expect(wrapper.text()).toContain('Price')
+    expect(wrapper.text()).toContain('Before tax')
+    expect(wrapper.text()).toContain('Optional')
+    expect(wrapper.text()).toContain('Enter an amount')
+    expect(wrapper.get('.astryx-input-group').classes()).toContain('status-error')
+
+    const text = mount(InputGroupText, { slots: { default: 'kg' } })
+    expect(text.text()).toBe('kg')
+    expect(text.classes()).toContain('astryx-input-group-text')
   })
 
   it('is not disabled by default', () => {

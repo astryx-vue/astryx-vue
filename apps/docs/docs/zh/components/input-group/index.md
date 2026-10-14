@@ -18,7 +18,7 @@ import { inputGroupBasic } from '../../../../components/demos/input-group'
 
 ```vue
 <script setup lang="ts">
-import { InputGroup } from '@astryx-vue/core/InputGroup'
+import { InputGroup, InputGroupText } from '@astryx-vue/core/InputGroup'
 import { TextInput } from '@astryx-vue/core/TextInput'
 import { ref } from 'vue'
 
@@ -26,19 +26,19 @@ const domain = ref('')
 </script>
 
 <template>
-  <InputGroup>
+  <InputGroup label="网站" description="对外地址" is-required>
     <template #before>
-      <span>https://</span>
+      <InputGroupText>https://</InputGroupText>
     </template>
     <TextInput v-model="domain" label="域名" is-label-hidden placeholder="example" />
     <template #after>
-      <span>.com</span>
+      <InputGroupText>.com</InputGroupText>
     </template>
   </InputGroup>
 </template>
 ```
 
-`before` 放在输入框前面，`after` 放在后面。内容可以是文字、图标或按钮。
+写上标签之后，这一组就是一个字段：标签、说明、可选或必填、状态都由字段壳负责，不要在外面再包一层。组内输入框自己的标签继续说明这一格填什么，通常隐藏起来。前后缀里的固定文字用组内文本组件，它和前后缀共用同一套字号和颜色。没有标签时，组仍然只是一条连在一起的控件，方便嵌进已经有字段的表单。
 
 ## 最佳实践
 
@@ -53,7 +53,7 @@ const domain = ref('')
 
 <DemoExample
   :demo="inputGroupBasic"
-  description="价格字段前面是美元符号，后面是 USD。"
+  description="价格字段自带标签、说明、可选和错误状态。美元符号和 USD 是组内文字。"
   locale="zh"
   title="基本"
 />

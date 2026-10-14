@@ -469,8 +469,15 @@ export type {
 } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
 export type { IconButtonEmits, IconButtonProps, IconButtonSlots } from './IconButton/index.js'
-export { InputGroup } from './InputGroup/index.js'
-export type { InputGroupContext, InputGroupProps, InputGroupSize, InputGroupSlots } from './InputGroup/index.js'
+export { InputGroup, InputGroupText } from './InputGroup/index.js'
+export type {
+  InputGroupContext,
+  InputGroupProps,
+  InputGroupSize,
+  InputGroupSlots,
+  InputGroupTextProps,
+  InputGroupTextSlots,
+} from './InputGroup/index.js'
 export { Kbd } from './Kbd/index.js'
 export type { KbdKeyAlias, KbdKeyName, KbdProps, KbdSpecialKey } from './Kbd/index.js'
 export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from './Layout/index.js'
@@ -574,13 +581,17 @@ export type {
 export { flattenOptions, MultiSelector, SELECT_ALL_VALUE } from './MultiSelector/index.js'
 export type {
   MultiSelectorCheckboxPosition,
+  MultiSelectorCreateChange,
   MultiSelectorDivider,
   MultiSelectorEmits,
+  MultiSelectorHandle,
+  MultiSelectorHandleRef,
   MultiSelectorOption,
   MultiSelectorOptionData,
   MultiSelectorPresentation,
   MultiSelectorProps,
   MultiSelectorSection,
+  MultiSelectorSelectedItem,
   MultiSelectorSize,
   MultiSelectorSlots,
   MultiSelectorStatus,
@@ -725,6 +736,7 @@ export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
   SelectorEntry,
+  SelectorIndicatorPosition,
   SelectorOption,
   SelectorOptionInput,
   SelectorPresentation,

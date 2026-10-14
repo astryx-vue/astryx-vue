@@ -11,6 +11,8 @@ import sectionsDemo from './sections.vue'
 import sectionsSource from './sections.vue?raw&highlighted'
 import sheetDemo from './sheet.vue'
 import sheetSource from './sheet.vue?raw&highlighted'
+import statesDemo from './states.vue'
+import statesSource from './states.vue?raw&highlighted'
 import statusDemo from './status.vue'
 import statusSource from './status.vue?raw&highlighted'
 
@@ -20,5 +22,6 @@ export const selectorGhost = defineDemo(ghostDemo, ghostSource)
 export const selectorDescriptions = defineDemo(descriptionsDemo, descriptionsSource)
 export const selectorSections = defineDemo(sectionsDemo, sectionsSource)
 export const selectorStatus = defineDemo(statusDemo, statusSource)
+export const selectorStates = defineDemo(statesDemo, statesSource)
 
 export const selectorOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

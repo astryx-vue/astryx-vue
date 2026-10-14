@@ -348,6 +348,82 @@ describe('selector', () => {
     wrapper.unmount()
   })
 
+  it('keeps a read-only value focusable and refuses to open', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'banana', isReadOnly: true, clearable: true, label: 'Fruit' },
+    })
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    expect(trigger.attributes('aria-readonly')).toBe('true')
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('.astryx-selector-icon').exists()).toBe(false)
+    expect(wrapper.find('.astryx-selector-clear').exists()).toBe(false)
+    expect(wrapper.find('.astryx-selector-field').classes()).not.toContain('is-disabled')
+    await trigger.trigger('click')
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+
+    await wrapper.setProps({ disabled: true })
+    expect(trigger.attributes('aria-readonly')).toBeUndefined()
+    expect(trigger.attributes('disabled')).toBeDefined()
+  })
+
+  it('shows a spinner and stays quiet while loading', async () => {
+    const wrapper = mount(Selector, {
+      props: { options: [], isLoading: true, emptyText: 'No options', searchable: true },
+      attachTo: document.body,
+    })
+    expect(wrapper.find('.astryx-selector-spinner').exists()).toBe(true)
+    await wrapper.get('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    expect(document.querySelector('.astryx-selector-empty')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('uses a different message when a search misses', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options,
+        searchable: true,
+        emptyText: 'No options',
+        emptySearchText: 'Nothing like that',
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    const search = document.querySelector('.astryx-selector-search-input') as HTMLInputElement
+    search.value = 'pear'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await flushPromises()
+    await nextTick()
+    expect(document.body.textContent).toContain('Nothing like that')
+    expect(document.body.textContent).not.toContain('No options')
+    wrapper.unmount()
+  })
+
+  it('places the selection mark on the requested side', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'apple', indicatorPosition: 'start' },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    await trigger.trigger('click')
+    await flushPromises()
+    const controls = trigger.attributes('aria-controls') ?? ''
+    const listboxes = document.querySelectorAll(`[id="${controls}"]`)
+    const listbox = listboxes[listboxes.length - 1]
+    const option = listbox?.querySelector('.astryx-selector-option.is-selected')
+    expect(option?.firstElementChild?.classList.contains('astryx-selector-option-mark')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('marks the field optional or required', () => {
+    const wrapper = mount(Selector, {
+      props: { options, label: 'Fruit', isOptional: true },
+    })
+    expect(wrapper.text()).toContain('Optional')
+    expect(wrapper.text()).toContain('Fruit')
+  })
+
   it('includes hidden select for form submission', () => {
     const wrapper = mount(Selector, {
       props: {

@@ -53,8 +53,14 @@ export {
 } from './useDateRange.js'
 export type { ISODateRange, RangeClickResult, WeekStartsOn } from './useDateRange.js'
 
+export { useDisclosureHandle } from './useDisclosureHandle.js'
+export type { DisclosureHandle, DisclosureHandleRef } from './useDisclosureHandle.js'
+
 export { useDismiss } from './useDismiss.js'
 export type { UseDismissOptions } from './useDismiss.js'
+
+export { useFieldControlState } from './useFieldControlState.js'
+export type { FieldControlState, FieldControlStateInput } from './useFieldControlState.js'
 
 export { formatFileSize, selectFiles } from './useFileSelection.js'
 export type { FileRejection, FileSelectionOptions, FileSelectionResult } from './useFileSelection.js'

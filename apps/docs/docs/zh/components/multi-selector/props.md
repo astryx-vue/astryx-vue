@@ -28,6 +28,13 @@ footer: false
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>字段下方的状态说明。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。每个已选值提交一次。</td></tr>
+      <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只读。已选值还在，可以聚焦并提交，但不能打开或清除。不变暗。</td></tr>
+      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器显示加载指示。加载时没有创建行，也不显示空状态。</td></tr>
+      <tr><td><code>formatValue</code></td><td><code>(items) =&gt; string</code></td><td>—</td><td>自定义关闭后的文字。只用于数量和标签两种展示，标签徽章会忽略。没有选中项时不调用。</td></tr>
+      <tr><td><code>hasCreate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>和搜索一起用。输入和任何标签都不相同（忽略大小写）时，第一行是创建。</td></tr>
+      <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>—</td><td>从外面打开、关闭或查询。模板里传函数。只读和禁用时打开无效。</td></tr>
+      <tr><td><code>emptyText</code></td><td><code>string</code></td><td>无匹配项 / No matches</td><td>列表里没有任何选项时的文案。</td></tr>
+      <tr><td><code>emptySearchText</code></td><td><code>string</code></td><td>未找到结果 / No results found</td><td>搜索没有命中时的文案。</td></tr>
     </tbody>
   </table>
 </div>
@@ -39,7 +46,7 @@ footer: false
     <thead><tr><th>名称</th><th>载荷</th><th>说明</th></tr></thead>
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>value: (string | number)[]</code></td><td>选中项变化时触发。</td></tr>
-      <tr><td><code>change</code></td><td><code>value: (string | number)[]</code></td><td>选中项变化时触发。</td></tr>
+      <tr><td><code>change</code></td><td><code>value, change?</code></td><td>选中项变化时触发。创建时第二参是 <code>{ type: 'create', query }</code>。</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td>搜索文字变化时触发。</td></tr>
       <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>列表打开或关闭时触发。</td></tr>
     </tbody>

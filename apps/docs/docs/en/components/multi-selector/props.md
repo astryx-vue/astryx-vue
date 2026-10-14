@@ -28,6 +28,13 @@ footer: false
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>Status text under the field.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Size.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected value is submitted once.</td></tr>
+      <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Read-only. The selection stays, can be focused and submitted, and cannot be opened or cleared. It does not dim.</td></tr>
+      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a spinner in the trigger. The create row and the empty state stay hidden.</td></tr>
+      <tr><td><code>formatValue</code></td><td><code>(items) =&gt; string</code></td><td>—</td><td>Custom closed text. Used by count and labels only. Badges ignore it. An empty selection does not call it.</td></tr>
+      <tr><td><code>hasCreate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Use with search. When the text matches no label, ignoring case, the first row creates it.</td></tr>
+      <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>—</td><td>Open, close, or ask whether the menu is open. Pass a function from a template. Open does nothing when read-only or disabled.</td></tr>
+      <tr><td><code>emptyText</code></td><td><code>string</code></td><td>No matches / 无匹配项</td><td>Shown when the list itself has no options.</td></tr>
+      <tr><td><code>emptySearchText</code></td><td><code>string</code></td><td>No results found / 未找到结果</td><td>Shown when a search matches nothing.</td></tr>
     </tbody>
   </table>
 </div>
@@ -39,7 +46,7 @@ footer: false
     <thead><tr><th>Name</th><th>Parameters</th><th>Description</th></tr></thead>
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>value: (string | number)[]</code></td><td>Emitted when the selection changes.</td></tr>
-      <tr><td><code>change</code></td><td><code>value: (string | number)[]</code></td><td>Emitted when the selection changes.</td></tr>
+      <tr><td><code>change</code></td><td><code>value, change?</code></td><td>Emitted when the selection changes. A create also passes <code>{ type: 'create', query }</code>.</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td>Emitted when the search text changes.</td></tr>
       <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>Emitted when the menu opens or closes.</td></tr>
     </tbody>
