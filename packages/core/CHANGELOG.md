@@ -1,5 +1,19 @@
 # @astryx-vue/core
 
+## 0.2.0
+
+### Minor Changes
+
+- [#40](https://github.com/astryx-vue/astryx-vue/pull/40) [`244d4f2`](https://github.com/astryx-vue/astryx-vue/commit/244d4f28dd69849e28d88c9bfa3ce6f58f36a0a7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Add Theme / MediaTheme / SyntaxTheme, six new first-party themes, expanded docs examples, and the docs Playground.
+
+### Patch Changes
+
+- [#32](https://github.com/astryx-vue/astryx-vue/pull/32) [`7a48eca`](https://github.com/astryx-vue/astryx-vue/commit/7a48eca533aab06b24ab3c89405cb60686450488) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 Carousel、Lightbox、Outline、Timer，并为 CodeBlock 补上 SyntaxTheme 与 githubDark 预设。
+
+- [#37](https://github.com/astryx-vue/astryx-vue/pull/37) [`1a0cafe`](https://github.com/astryx-vue/astryx-vue/commit/1a0cafef379df57fb8131827426f86b73e3067ae) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 导航菜单的链接被路由提前拦住时，选中后仍然关闭。只有该项自己的点击处理调用了 preventDefault，菜单才会留下。
+
+- [#36](https://github.com/astryx-vue/astryx-vue/pull/36) [`7e72b05`](https://github.com/astryx-vue/astryx-vue/commit/7e72b05aff576e0d52cd568c8e58e75951f1c851) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 Theme、MediaTheme 和完整的 SyntaxTheme。主题子树会重新绑定文字、标题和按钮的颜色别名，避免主文字色停在 :root 上已经算好的值。
+
 ## 0.1.3
 
 ### Patch Changes
