@@ -41,14 +41,14 @@ import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
 
 ## 示例
 
-<DemoExample :demo="topNavCentered" description="中间一组导航居中，标题留在起始边。" locale="zh" title="居中导航" />
+<DemoExample :demo="topNavCentered" description="导航项居中。标题留在起始侧，操作留在结束侧。" locale="zh" title="居中导航" />
 
-<DemoExample :demo="topNavEnterprise" description="带图标的导航项，加上通知和主要操作。" locale="zh" title="应用顶栏" />
+<DemoExample :demo="topNavEnterprise" description="带图标的导航项、搜索、通知，以及一个主要操作。" locale="zh" title="应用顶栏" />
 
-<DemoExample :demo="topNavMenu" description="悬停打开带图标和说明的产品菜单。" locale="zh" title="悬停菜单" />
+<DemoExample :demo="topNavMenu" description="悬停打开产品菜单，每一项有图标和说明。" locale="zh" title="悬停菜单" />
 
-<DemoExample :demo="topNavMega" description="大菜单里有产品项和一张推荐卡。" locale="zh" title="大菜单" />
+<DemoExample :demo="topNavMega" description="通栏的大菜单里有产品项和一张推荐卡片。" locale="zh" title="大菜单" />
 
-<DemoExample :demo="topNavMenus" description="一条顶栏里有多个悬停菜单。" locale="zh" title="多个下拉菜单" />
+<DemoExample :demo="topNavMenus" description="一条顶栏里有多个悬停菜单，指针移到另一个菜单时前一个会关上。" locale="zh" title="多个下拉菜单" />
 
-<DemoExample :demo="topNavLogo" description="标题前有产品标志，结束区有一项操作。" locale="zh" title="带标志" />
+<DemoExample :demo="topNavLogo" description="标题前面是产品标志，结束侧是个人资料操作。" locale="zh" title="带标志" />

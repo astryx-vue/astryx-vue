@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { resizeHandleHorizontal, resizeHandleSidebar } from '../../../../components/demos/resize-handle'
+import { resizeHandleSidebar } from '../../../../components/demos/resize-handle'
 </script>
 
 ## 使用方法
@@ -53,16 +53,4 @@ const sidebar = useResizable({
 
 ## 示例
 
-<DemoExample
-  :demo="resizeHandleHorizontal"
-  description="左右分栏。拖动分隔条调整侧栏和正文的宽度。"
-  locale="zh"
-  title="水平分隔"
-/>
-
-<DemoExample
-  :demo="resizeHandleSidebar"
-  description="可收起的侧栏。宽度进入 200px 或 280px 的 8px 范围内会吸住，拖过收起阈值后侧栏隐藏。"
-  locale="zh"
-  title="吸附并收起"
-/>
+<DemoExample :demo="resizeHandleSidebar" description="拖动会吸附到预设宽度。拖过最小宽度后侧栏收起，点 Expand 再把它展开。" locale="zh" title="吸附并收起" />

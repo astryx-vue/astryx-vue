@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PlaygroundFrameMessage, PlaygroundHostMessage, PlaygroundLocale } from './protocol'
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
-import { withBase } from 'vitepress'
+import { useData, withBase } from 'vitepress'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import PlaygroundMonacoEditor from './PlaygroundMonacoEditor.vue'
 import PlaygroundThemeEditor from './PlaygroundThemeEditor.vue'
@@ -12,6 +12,8 @@ import { usePlayground } from './usePlayground'
 const props = defineProps<{
   locale: PlaygroundLocale
 }>()
+
+const { isDark } = useData()
 
 const dialog = ref<HTMLDialogElement | null>(null)
 const iframe = ref<HTMLIFrameElement | null>(null)
@@ -45,8 +47,6 @@ const {
   hydrated,
   mountId,
   shareUrl,
-  isNeutral,
-  density,
   loadTemplate,
   resetTheme,
   reloadPreview,
@@ -389,15 +389,13 @@ async function openExportDialog(): Promise<void> {
               :model-value="code"
               :label="copy.code"
               :active="tab === 'code'"
+              :color-mode="isDark ? 'dark' : 'light'"
               @update:model-value="code = $event"
             />
             <PlaygroundThemeEditor
               v-if="hydrated"
               v-show="tab === 'theme'"
               :theme="theme"
-              :locale="locale"
-              :density="density"
-              :is-neutral="isNeutral"
               @field="onField"
               @color="onColor"
               @density="onDensity"

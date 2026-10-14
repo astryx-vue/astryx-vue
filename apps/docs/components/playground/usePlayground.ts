@@ -8,7 +8,7 @@ import { DEFAULT_PLAYGROUND_CODE } from './defaultCode'
 import { playgroundCopy } from './messages'
 import { decodeShare, encodeShare, shareHash } from './share'
 import { playgroundTemplates } from './templates'
-import { applyDensity, applyTheme, createNeutralTheme, matchingDensity, setThemeColor, themesEqual } from './theme'
+import { applyDensity, applyTheme, createNeutralTheme, setThemeColor, themesEqual } from './theme'
 
 export interface PlaygroundController {
   copy: PlaygroundCopy
@@ -20,7 +20,6 @@ export interface PlaygroundController {
   mountId: Ref<number>
   shareUrl: Ref<string>
   isNeutral: ComputedRef<boolean>
-  density: ComputedRef<DensityPreset['id'] | null>
   loadTemplate: (id: string) => Promise<void>
   resetTheme: () => Promise<void>
   reloadPreview: () => void
@@ -44,7 +43,6 @@ export function usePlayground(
   const shareUrl = ref('')
 
   const isNeutral = computed(() => themesEqual(theme, createNeutralTheme()))
-  const density = computed(() => matchingDensity(theme))
 
   onMounted(() => {
     void hydrate()
@@ -61,6 +59,10 @@ export function usePlayground(
           : ''
       }
       else {
+        // VitePress resolves `appearance` plus localStorage
+        // `vitepress-theme-appearance` onto `html.dark` before paint.
+        // Seed the preview once from that. The toolbar owns it afterwards.
+        theme.dark = document.documentElement.classList.contains('dark')
         const fromQuery = new URLSearchParams(window.location.search).get('template')
         const match = fromQuery ? templates.find(item => item.id === fromQuery) : undefined
         if (match) {
@@ -93,7 +95,9 @@ export function usePlayground(
       if (!confirmed)
         return
     }
+    const dark = theme.dark
     applyTheme(theme, createNeutralTheme())
+    theme.dark = dark
   }
 
   function reloadPreview(): void {
@@ -149,7 +153,6 @@ export function usePlayground(
     mountId,
     shareUrl,
     isNeutral,
-    density,
     loadTemplate,
     resetTheme,
     reloadPreview,

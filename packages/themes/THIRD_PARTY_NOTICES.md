@@ -14,7 +14,9 @@ The TextInput, CheckboxInput, CheckboxIndicator, Slider, Banner and Field family
 
 When files or substantial portions are copied or adapted, their original copyright and license notices must be kept here or alongside the adapted files.
 
-Butter, Chocolate, Gothic, Matcha, Stone, and Y2K token values are adapted from the public `@astryxdesign/theme-*` packages at version 0.7.0 (`theme.css` and `fonts.css`), under the same MIT license. The Vue package renames those custom properties with an `--astryx-` prefix and keeps JetBrains Mono on `@fontsource/jetbrains-mono`.
+Butter, Chocolate, Gothic, Matcha, Stone, and Y2K token values are adapted from the public `@astryxdesign/theme-*` packages at version 0.7.0 (`theme.css` and `fonts.css`), under the same MIT license. The Vue package renames those custom properties with an `--astryx-` prefix. Figtree and JetBrains Mono stay on `@fontsource/figtree` and `@fontsource/jetbrains-mono`, which ship self-hosted woff2.
+
+Figtree: Copyright 2022 The Figtree Project Authors (https://github.com/erikdkennedy/figtree), SIL Open Font License 1.1. The license text ships inside `@fontsource/figtree`. The font is not sold by itself.
 
 No Meta trademarks, logos, or endorsement are granted by the Astryx software license.
 

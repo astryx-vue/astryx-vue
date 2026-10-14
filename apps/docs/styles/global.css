@@ -1,9 +1,3 @@
-@import '@fontsource/figtree/400.css';
-@import '@fontsource/figtree/400-italic.css';
-@import '@fontsource/figtree/500.css';
-@import '@fontsource/figtree/600.css';
-@import '@fontsource/figtree/600-italic.css';
-@import '@fontsource/figtree/700.css';
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
 @import './previews/alert-dialog.css';
@@ -1606,6 +1600,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  * instead of being restated here.
  */
 .vp-doc .astryx-breadcrumbs :is(ol, ul, li),
+.vp-doc :is(ul, ol).astryx-list,
 .vp-doc .astryx-list :is(ol, ul, li),
 .vp-doc .astryx-tree-list :is(ol, ul, li),
 .vp-doc :is(ol.astryx-stepper, .astryx-step, .astryx-step-control) {
@@ -1885,9 +1880,9 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /*
- * body { font-synthesis: none } and a Figtree 400-only import make weight 600
- * and italic resolve to the regular face. Markdown opts back in, and the
- * semibold / italic faces above supply the real glyphs.
+ * body { font-synthesis: none } makes a missing weight or italic fall back to
+ * the regular face. Markdown opts back in. The theme sheet already loads
+ * Figtree 600 and italic, so those glyphs are real faces.
  */
 .vp-doc .astryx-markdown {
   font-synthesis: weight style;

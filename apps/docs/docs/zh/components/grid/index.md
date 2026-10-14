@@ -79,30 +79,10 @@ import { Grid } from '@astryx-vue/core/Grid'
 
 ## 示例
 
-<DemoExample
-  :demo="gridBasic"
-  description="响应式列：网格按可用宽度自己决定列数，窄屏时自动折行。用对象形式给出每列的最小宽度即可。"
-  locale="zh"
-  title="响应式列"
-/>
+<DemoExample :demo="gridBasic" description="仪表盘把一张大的流量卡片、四项指标和一整行动态排在一起。" locale="zh" title="仪表盘布局" />
 
-<DemoExample
-  :demo="gridColumns"
-  description="固定列数：传数字得到等宽的列，rowGap 与 columnGap 需要分别控制时按轴覆盖 gap。"
-  locale="zh"
-  title="固定列数"
-/>
+<DemoExample :demo="gridColumns" description="卡片保持一致的最小宽度，画廊变窄时自动换行。" locale="zh" title="卡片画廊" />
 
-<DemoExample
-  :demo="gridSpan"
-  description="用 GridSpan 让某一项跨越多列：columns 给数字表示列数，给 'full' 则跨越整行。"
-  locale="zh"
-  title="跨越列与行"
-/>
+<DemoExample :demo="gridAlignment" description="拖动分隔条。一行没排满时，卡片会把剩下的宽度撑满。" locale="zh" title="自适应列宽" />
 
-<DemoExample
-  :demo="gridAlignment"
-  description="align 控制项目在行内的垂直对齐，justify 控制水平对齐。默认都是 stretch，也就是撑满单元格。"
-  locale="zh"
-  title="对齐方式"
-/>
+<DemoExample :demo="gridSpan" description="重点卡片跨过若干列和行，旁边是较小的统计项。" locale="zh" title="跨列" />

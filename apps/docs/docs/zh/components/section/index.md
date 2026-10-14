@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { sectionDividers, sectionVariants, sectionWash } from '../../../../components/demos/section'
+import { sectionDividers, sectionWash } from '../../../../components/demos/section'
 </script>
 
 ## 使用方法
@@ -41,23 +41,6 @@ import { Section } from '@astryx-vue/core/Section'
 
 ## 示例
 
-<DemoExample
-  :demo="sectionWash"
-  description="上面是表面色的方案说明，下面是弱化底的价格。"
-  locale="zh"
-  title="强调"
-/>
+<DemoExample :demo="sectionWash" description="默认区块下面接一整条弱化背景，用来把升级提示这类区域单独提出来。" locale="zh" title="默认与弱化背景" />
 
-<DemoExample
-  :demo="sectionDividers"
-  description="相邻区块共用背景，底边分隔线把它们分开。"
-  locale="zh"
-  title="分隔线"
-/>
-
-<DemoExample
-  :demo="sectionVariants"
-  description="section 用表面色，muted 用弱化底，transparent 不铺底，露出父级的颜色。"
-  locale="zh"
-  title="变体"
-/>
+<DemoExample :demo="sectionDividers" description="相邻且背景相同的区块用底部分隔线分开，像设置页那样。" locale="zh" title="带分隔线" />

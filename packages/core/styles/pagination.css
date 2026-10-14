@@ -48,12 +48,56 @@
     flex-wrap: nowrap;
   }
 
-  .astryx-pagination-compact {
+  .astryx-pagination-compact,
+  .astryx-pagination-count {
     display: none;
     flex-shrink: 0;
     align-items: center;
     color: var(--astryx-color-text-secondary);
     white-space: nowrap;
+  }
+
+  .astryx-pagination-count {
+    display: inline-flex;
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-pagination-dots {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-pagination-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 999px);
+    background: var(--astryx-color-border, #d4d4d4);
+    cursor: pointer;
+  }
+
+  .astryx-pagination-dot.is-active {
+    background: var(--astryx-color-text-primary, #171717);
+  }
+
+  .astryx-pagination-dot:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+
+  .astryx-pagination--sm .astryx-pagination-button,
+  .astryx-pagination--sm .astryx-pagination-page {
+    min-width: var(--astryx-size-element-sm, 28px);
+    height: var(--astryx-size-element-sm, 28px);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+  }
+
+  .astryx-pagination--sm .astryx-pagination-dot {
+    width: 6px;
+    height: 6px;
   }
 
   .astryx-pagination-button,

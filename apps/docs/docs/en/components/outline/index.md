@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { outlineControlled, outlineDeepNesting, outlineDensity, outlineOverview } from '../../../../components/demos/outline'
+import { outlineControlled, outlineDeepNesting, outlineDensity } from '../../../../components/demos/outline'
 </script>
 
 ## Usage
@@ -48,30 +48,8 @@ const items = [
 
 ## Examples
 
-<DemoExample
-  :demo="outlineOverview"
-  description="A document outline with the active section highlighted by the sliding indicator track."
-  locale="en"
-  title="Outline"
-/>
+<DemoExample :demo="outlineControlled" description="activeId turns off the built-in scroll spy, so the highlight follows your own logic." locale="en" title="Controlled" />
 
-<DemoExample
-  :demo="outlineControlled"
-  description="Drive the active section yourself with activeId. Providing activeId disables the built-in scroll-spy so your own logic owns the highlight."
-  locale="en"
-  title="Outline — Controlled"
-/>
+<DemoExample :demo="outlineDeepNesting" description="Levels 1 through 4 step the indent inward, so a long document with subsections stays scannable." locale="en" title="Deep nesting" />
 
-<DemoExample
-  :demo="outlineDeepNesting"
-  description="Heading levels 1 through 4 map to progressively deeper indentation, so a long document with sub-sections stays scannable."
-  locale="en"
-  title="Outline — Deep Nesting"
-/>
-
-<DemoExample
-  :demo="outlineDensity"
-  description="Two density variants control item padding. Use compact for dense sidebars and default for standard documentation layouts. The sliding indicator automatically matches each item height."
-  locale="en"
-  title="Outline — Density"
-/>
+<DemoExample :demo="outlineDensity" description="Compact tightens the item padding for a dense sidebar. Default is the usual documentation rhythm. The indicator matches each item’s height." locale="en" title="Density" />

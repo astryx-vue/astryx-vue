@@ -343,18 +343,32 @@ describe('neutral base.css semantic tokens', () => {
   })
 })
 
-describe('jetbrains mono in the neutral theme', () => {
-  it('loads the shared faces through the theme entry', () => {
+describe('shared faces in the neutral theme', () => {
+  it('loads Figtree and JetBrains Mono through the theme entry', () => {
     const fonts = readFileSync(join(root, 'packages/themes/fonts.css'), 'utf8')
     const neutral = readFileSync(join(root, 'packages/themes/neutral.css'), 'utf8')
-    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/400.css\';')
-    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/400-italic.css\';')
-    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/500.css\';')
-    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/600.css\';')
-    expect(fonts).toContain('@import \'@fontsource/jetbrains-mono/700.css\';')
+    for (const face of ['400', '400-italic', '500', '600', '600-italic', '700'])
+      expect(fonts).toContain(`@import '@fontsource/figtree/${face}.css';`)
+    for (const face of ['400', '400-italic', '500', '600', '700'])
+      expect(fonts).toContain(`@import '@fontsource/jetbrains-mono/${face}.css';`)
     expect(neutral).toContain('@import \'./fonts.css\';')
+    expect(neutral).not.toContain('@fontsource/figtree')
     expect(neutral).not.toContain('@fontsource/jetbrains-mono')
     expect(readFileSync(join(root, 'packages/themes/neutral/code.css'), 'utf8')).not.toContain('--astryx-font-family-code')
+    expect(readFileSync(join(root, 'apps/docs/styles/global.css'), 'utf8')).not.toContain('@fontsource/figtree')
+  })
+
+  it('does not tell apps to load Figtree themselves', () => {
+    const docs = [
+      'apps/docs/docs/en/guide/getting-started.md',
+      'apps/docs/docs/zh/guide/getting-started.md',
+      'apps/docs/docs/en/themes/typography.md',
+      'apps/docs/docs/zh/themes/typography.md',
+    ]
+    for (const file of docs) {
+      const text = readFileSync(join(root, file), 'utf8')
+      expect(text, file).not.toMatch(/does not load Figtree|load the face|自己引入/)
+    }
   })
 })
 
@@ -368,6 +382,7 @@ describe('first-party themes', () => {
       const entry = readFileSync(join(root, `packages/themes/${name}.css`), 'utf8')
       expect(entry).toContain('@import \'./fonts.css\';')
       expect(entry).toContain(`@import './${name}/base.css';`)
+      expect(entry).not.toContain('@fontsource/figtree')
       expect(entry).not.toContain('@fontsource/jetbrains-mono')
       expect(entry).not.toContain('neutral')
     }
@@ -404,6 +419,8 @@ describe('first-party themes', () => {
     expect(read('matcha')).toContain('Playwrite US Trad')
     expect(read('stone')).toContain('--astryx-font-family-body: Figtree,')
     expect(read('stone')).toContain('--astryx-font-family-heading: Montserrat,')
+    expect(read('stone')).toContain('family=Montserrat')
+    expect(read('stone')).not.toContain('family=Figtree')
     expect(read('y2k')).toContain('--astryx-font-family-body: Poppins,')
     expect(read('y2k')).toContain('--astryx-radius-full: 0px;')
     expect(readFileSync(join(root, 'packages/themes/y2k/text.css'), 'utf8')).toContain('Crimson Text')

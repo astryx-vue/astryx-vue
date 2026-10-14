@@ -79,30 +79,10 @@ The column template is written to the container as the CSS variable `--astryx-gr
 
 ## Examples
 
-<DemoExample
-  :demo="gridBasic"
-  description="Responsive columns: the grid decides how many columns fit and reflows on a narrow screen. Give the smallest a column may be and let it do the rest."
-  locale="en"
-  title="Responsive columns"
-/>
+<DemoExample :demo="gridBasic" description="A dashboard mixes a large traffic card, four metrics, and a full-width activity row." locale="en" title="Dashboard layout" />
 
-<DemoExample
-  :demo="gridColumns"
-  description="Fixed column counts come from a number and produce equal-width columns. Override gap per axis with rowGap and columnGap when the two differ."
-  locale="en"
-  title="Fixed columns"
-/>
+<DemoExample :demo="gridColumns" description="Cards keep a consistent minimum width and reflow as the gallery gets narrower." locale="en" title="Card gallery" />
 
-<DemoExample
-  :demo="gridSpan"
-  description="GridSpan makes one item span several columns. Give columns a number for the count, or 'full' to span the whole row."
-  locale="en"
-  title="Spanning columns and rows"
-/>
+<DemoExample :demo="gridAlignment" description="Drag the handle. Cards stretch to fill the remaining width of a row that is not full." locale="en" title="Responsive auto-fit" />
 
-<DemoExample
-  :demo="gridAlignment"
-  description="align positions items vertically inside their row and justify positions them horizontally. Both default to stretch, which fills the cell."
-  locale="en"
-  title="Alignment"
-/>
+<DemoExample :demo="gridSpan" description="Featured cards span columns and rows beside a set of smaller stats." locale="en" title="Column spanning" />

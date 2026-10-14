@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { paginationBasic, paginationSizeChanger } from '../../../../components/demos/pagination'
+import { paginationDots, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
 </script>
 
 ## 使用方法
@@ -43,16 +43,8 @@ const total = ref(100)
 
 ## 示例
 
-<DemoExample
-  :demo="paginationBasic"
-  description="点击页码跳转，使用上下页按钮导航，支持键盘交互。"
-  locale="zh"
-  title="基本用法"
-/>
+<DemoExample :demo="paginationDots" description="圆点分页用来翻过几条评价。总数不大时，位置比页码更重要。" locale="zh" title="圆点轮播" />
 
-<DemoExample
-  :demo="paginationSizeChanger"
-  description="开启 showSizeChanger 后，用户可以选择每页显示数量。"
-  locale="zh"
-  title="每页数量选择"
-/>
+<DemoExample :demo="paginationPageSize" description="分页放在交易表格下面，并可以调整每页行数。" locale="zh" title="每页数量" />
+
+<DemoExample :demo="paginationWithTable" description="小号的计数分页放在表格下面，显示当前页覆盖的条目范围。" locale="zh" title="表格分页" />

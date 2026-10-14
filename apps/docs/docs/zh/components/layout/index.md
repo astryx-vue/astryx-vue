@@ -48,44 +48,14 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 
 ## 示例
 
-<DemoExample
-  :demo="layoutCard"
-  description="固定高度的卡片。页眉和页脚不动，正文滚动。"
-  locale="zh"
-  title="卡片"
-/>
+<DemoExample :demo="layoutCard" description="卡片包含页眉、可滚动的正文，以及放着操作按钮的页脚。" locale="zh" title="基础卡片" />
 
-<DemoExample
-  :demo="layoutContentOnly"
-  description="只有正文，没有页眉和页脚。"
-  locale="zh"
-  title="仅正文"
-/>
+<DemoExample :demo="layoutContentOnly" description="卡片里只有正文，没有页眉和页脚。" locale="zh" title="仅正文" />
 
-<DemoExample
-  :demo="layoutContentWidth"
-  description="contentWidth 为 360 时正文居中。分隔线仍然拉满。"
-  locale="zh"
-  title="内容宽度"
-/>
+<DemoExample :demo="layoutContentWidth" description="contentWidth 把文字约束并居中，分隔线仍然拉满。" locale="zh" title="内容宽度" />
 
-<DemoExample
-  :demo="layoutDualPanel"
-  description="正文两侧各有一块面板。"
-  locale="zh"
-  title="双侧面板"
-/>
+<DemoExample :demo="layoutDualPanel" description="文件浏览器：左侧是文件夹，中间是文件，右侧是详情。" locale="zh" title="双侧面板" />
 
-<DemoExample
-  :demo="layoutFullBleed"
-  description="LayoutContent 的 padding 为 0 时，Section 可以铺到卡片边缘。"
-  locale="zh"
-  title="通栏"
-/>
+<DemoExample :demo="layoutFullBleed" description="正文没有内边距，一直铺到边缘，适合表格或图片。" locale="zh" title="通栏正文" />
 
-<DemoExample
-  :demo="layoutSidebar"
-  description="起始边是 role 为 navigation 的面板，页脚放操作按钮。"
-  locale="zh"
-  title="侧栏"
-/>
+<DemoExample :demo="layoutSidebar" description="设置页有导航侧栏、正文、页眉和页脚。" locale="zh" title="侧栏导航" />

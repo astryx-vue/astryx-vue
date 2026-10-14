@@ -36,4 +36,4 @@ import { NavItem } from '@astryx-vue/core/NavItem'
 
 ## Examples
 
-<DemoExample :demo="navItemBasic" description="isSelected marks the current page. The icon and label sit on one row." locale="en" title="Basic" />
+<DemoExample :demo="navItemBasic" description="Round icon containers for a navigation header. Search and calendar sit side by side." locale="en" title="Basic" />
