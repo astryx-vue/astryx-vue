@@ -19,7 +19,6 @@ const copy = {
   zh: {
     mark: 'astryx-vue',
     title: '用 Vue 重新实现 Astryx 设计语言',
-    lede: '非官方社区项目。token、CSS 变量、动画和组件粒度按原版对齐，接口是 props、事件、插槽和组合式函数。',
     start: '快速开始',
     components: '浏览组件',
     copy: '复制安装命令',
@@ -40,13 +39,12 @@ import '@astryx-vue/themes/neutral.css'
 <template>
   <Button variant="primary" label="快速开始" />
 </template>`,
-      assistantEnding: '组件按需加载结构样式，Neutral 主题天然支持深浅色模式。',
+      assistantEnding: '准备好开始使用 astryx-vue 了吗？相信它一定不会让你失望！',
     },
   },
   en: {
     mark: 'astryx-vue',
     title: 'Astryx design language, reimplemented for Vue',
-    lede: 'An unofficial community project. Tokens, CSS variables, motion, and component grain follow Astryx. The API is native props, events, slots, and composables.',
     start: 'Quick start',
     components: 'Browse components',
     copy: 'Copy install command',
@@ -67,7 +65,7 @@ import '@astryx-vue/themes/neutral.css'
 <template>
   <Button variant="primary" label="Quick start" />
 </template>`,
-      assistantEnding: 'Components load their own structural styles, and theme variables support light and dark mode.',
+      assistantEnding: 'Ready to start using astryx-vue? It won\'t let you down.',
     },
   },
 } as const
@@ -119,9 +117,6 @@ function handleSend(): void {
         <h1 id="home-title">
           {{ text.title }}
         </h1>
-        <p class="home-lede">
-          {{ text.lede }}
-        </p>
         <div class="home-actions">
           <Button variant="primary" :href="`${prefix}/guide/getting-started`" :label="text.start" />
           <Button variant="secondary" :href="`${prefix}/components/`" :label="text.components" />
@@ -316,14 +311,6 @@ html.dark .home-chat-code .shiki span {
   line-height: 1.15;
   text-wrap: balance;
   font-size: clamp(2rem, 4.2vw, 3.25rem);
-}
-
-.home-lede {
-  margin: 1rem 0 0;
-  color: var(--astryx-color-text-secondary);
-  font-size: 1.05rem;
-  line-height: 1.6;
-  max-width: 38rem;
 }
 
 .home-actions,
