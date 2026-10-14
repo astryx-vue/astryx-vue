@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { codeBlockConfig, codeBlockHighlighted, codeBlockOverview, codeBlockScrollable, codeBlockSnippet, codeBlockTerminal } from '../../../../components/demos/code-block'
+import { codeBlockConfig, codeBlockHighlighted, codeBlockScrollable, codeBlockSnippet, codeBlockTerminal } from '../../../../components/demos/code-block'
 </script>
 
 ## Usage
@@ -45,12 +45,6 @@ const commands = `$ astryx init --features agents`
 
 ## Examples
 
-<DemoExample
-  :demo="codeBlockOverview"
-  description="A syntax-highlighted TypeScript code block with line numbers, a title bar, and a copy button."
-  locale="en"
-  title="Code Block"
-/>
 
 <DemoExample
   :demo="codeBlockSnippet"

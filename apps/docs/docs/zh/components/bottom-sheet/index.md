@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetBasic, bottomSheetSnap, bottomSheetTall } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## 使用方法
@@ -61,24 +61,59 @@ const isOpen = ref(false)
 ## 示例
 
 <DemoExample
-  :demo="bottomSheetBasic"
-  description="从底部升起的筛选面板：拖动条、标题和操作按钮，遮罩点击或 Escape 均可关闭。"
+  :demo="bottomSheetHeights"
+  description="对比 hug、capped、tall 三种起始高度，分别适合不同体量的内容。"
   locale="zh"
-  title="基本用法"
+  title="高度"
 />
 
 <DemoExample
-  :demo="bottomSheetTall"
-  description="tall 档位固定接近满屏高度，列表在面板内部滚动，页面本身不会被撑长。"
+  :demo="bottomSheetKeyboard"
+  description="接近全屏的可滚动表单，聚焦时控件仍留在移动端键盘上方。"
   locale="zh"
-  title="列表"
+  title="移动端键盘"
 />
 
 <DemoExample
-  :demo="bottomSheetSnap"
-  description="snapPoints 让用户把面板拖到半个屏幕的高度，松手后停在最近的档位。"
+  :demo="bottomSheetNoScrim"
+  description="非模态面板不盖住页面，背后的内容仍然可以看见，也可以点。"
   locale="zh"
-  title="拖动到中间高度"
+  title="无遮罩"
+/>
+
+<DemoExample
+  :demo="bottomSheetSnapPoints"
+  description="拖动时可以停在半屏，也可以停在一条细缝上；细缝会把面板滑出，并减弱遮罩。"
+  locale="zh"
+  title="停靠点"
+/>
+
+<DemoExample
+  :demo="bottomSheetAdaptiveDialog"
+  description="默认仍是对话框。粗指针且宽度在 lg 及以下时，同一份资料表单改为底部面板。"
+  locale="zh"
+  title="自适应对话框"
+/>
+
+<DemoExample
+  :demo="bottomSheetAdaptiveMenu"
+  description="紧凑的触屏上用底部面板，其余情况用锚在按钮上的菜单。"
+  locale="zh"
+  title="自适应菜单"
+/>
+
+<DemoExample
+  :demo="bottomSheetMultiSelector"
+  description="多选列表在底部面板里保持打开，勾选时不会收起。"
+  locale="zh"
+  title="多选面板"
+/>
+
+<DemoExample
+  :demo="bottomSheetSelector"
+  description="单选列表在底部面板里打开。"
+  locale="zh"
+  title="单选面板"
 />
 
 ## 无障碍

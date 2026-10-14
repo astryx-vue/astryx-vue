@@ -12,6 +12,8 @@ import { inject } from 'vue'
 export interface DropdownMenuContextValue {
   /** Closes the menu and returns focus to the trigger. */
   closeMenu: () => void
+  /** Whether the root menu is open. Nested flyouts close with it. */
+  isOpen: ComputedRef<boolean>
   /** Size of the menu, derived from the trigger button's size. */
   menuSize: ComputedRef<DropdownMenuSize>
 }

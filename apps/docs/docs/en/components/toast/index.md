@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { toastBasic, toastStack } from '../../../../components/demos/toast'
+import { toastAction, toastDedup, toastDismiss, toastStacking, toastTypes } from '../../../../components/demos/toast'
 </script>
 
 ## Usage
@@ -46,15 +46,36 @@ toast({ body: 'Saved successfully', type: 'success' })
 ## Examples
 
 <DemoExample
-  :demo="toastBasic"
-  description="Click the buttons to trigger toasts of different types and durations."
+  :demo="toastAction"
+  description="A persistent toast can end with a button or a link, for undoing a delete or opening a report."
   locale="en"
-  title="Basic"
+  title="Action"
 />
 
 <DemoExample
-  :demo="toastStack"
-  description="Several toasts stack in the viewport and keep their order as they appear."
+  :demo="toastDedup"
+  description="uniqueID collapses repeats. ignore keeps the first toast; overwrite replaces it, for a progress percentage."
   locale="en"
-  title="Stack"
+  title="Deduplication"
+/>
+
+<DemoExample
+  :demo="toastDismiss"
+  description="useToast returns a function that dismisses that toast. Use it when a long-running operation should close the notice itself."
+  locale="en"
+  title="Dismiss"
+/>
+
+<DemoExample
+  :demo="toastStacking"
+  description="Toasts stack vertically and animate in and out. Clicking again queues another one."
+  locale="en"
+  title="Stacking"
+/>
+
+<DemoExample
+  :demo="toastTypes"
+  description="Info and error side by side. Info goes away on its own; error stays until it is dismissed."
+  locale="en"
+  title="Types"
 />

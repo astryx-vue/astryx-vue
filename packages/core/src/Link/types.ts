@@ -37,4 +37,14 @@ export interface LinkProps {
    * Causes the browser to download the linked URL.
    */
   download?: string | boolean
+  /**
+   * Tooltip text shown on hover and keyboard focus.
+   */
+  tooltip?: string
+  /**
+   * Whether the link stands alone, rather than sitting inside body text.
+   * Applies body font size and line height.
+   * @default false
+   */
+  isStandalone?: boolean
 }

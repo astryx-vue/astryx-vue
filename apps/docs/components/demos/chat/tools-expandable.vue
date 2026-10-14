@@ -2,9 +2,6 @@
 import type { ChatToolCallItem } from '@astryx-vue/core/Chat'
 import { ChatMessage, ChatMessageList, ChatToolCalls } from '@astryx-vue/core/Chat'
 import { computed } from 'vue'
-import { useDemoText } from '../../demo-infra/useDemoText'
-
-const { pick } = useDemoText()
 
 const calls = computed<ChatToolCallItem[]>(() => [
   {
@@ -15,7 +12,7 @@ const calls = computed<ChatToolCallItem[]>(() => [
     additions: 6,
     deletions: 3,
     duration: '85ms',
-    detail: pick('diff', 'diff'),
+    detail: 'diff',
   },
   {
     name: 'bash',
@@ -23,14 +20,14 @@ const calls = computed<ChatToolCallItem[]>(() => [
     node: 'cli:remote-server',
     target: 'yarn test',
     duration: '1.8s',
-    detail: pick('ok', 'ok'),
+    detail: 'ok',
   },
   {
     name: 'web_search',
     status: 'complete',
     target: 'Intl.DateTimeFormat locale options',
     duration: '1.2s',
-    detail: pick('ok', 'ok'),
+    detail: 'ok',
   },
 ])
 
@@ -45,7 +42,7 @@ const diff = `function formatDate(value) {
     <ChatMessage sender="assistant">
       <ChatToolCalls :calls="calls" default-is-expanded>
         <template #detail="{ call }">
-          <pre class="chat-preview__code">{{ call.name === 'edit' ? diff : pick('通过', 'passed') }}</pre>
+          <pre class="chat-preview__code">{{ call.name === 'edit' ? diff : 'passed' }}</pre>
         </template>
       </ChatToolCalls>
     </ChatMessage>

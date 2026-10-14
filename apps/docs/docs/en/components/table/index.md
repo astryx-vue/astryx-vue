@@ -90,6 +90,13 @@ Tree data, sticky columns, grouped rows, row expansion, row status, row index, a
 />
 
 <DemoExample
+  :demo="tablePopoverFilters"
+  description="Table with popover filter controls triggered by icons in column headers."
+  locale="en"
+  title="Table — Popover Filters"
+/>
+
+<DemoExample
   :demo="tableGridDividers"
   description="Compact table with grid dividers showing both row and column borders, suited for dense numeric data."
   locale="en"
@@ -115,13 +122,6 @@ Tree data, sticky columns, grouped rows, row expansion, row status, row index, a
   description="Paginated data table navigating through a larger dataset page by page."
   locale="en"
   title="Table — Paginated Data"
-/>
-
-<DemoExample
-  :demo="tablePopoverFilters"
-  description="Table with popover filter controls triggered by icons in column headers."
-  locale="en"
-  title="Table — Popover Filters"
 />
 
 <DemoExample

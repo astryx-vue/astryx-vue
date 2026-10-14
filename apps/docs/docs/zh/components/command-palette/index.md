@@ -8,7 +8,6 @@ footer: false
 <script setup lang="ts">
 import {
   commandPaletteAsync,
-  commandPaletteBasic,
   commandPaletteFooter,
   commandPaletteGrouped,
   commandPalettePicker,
@@ -57,17 +56,17 @@ useHotkeys([{ keys: 'mod+k', onPress: openPalette }])
 ## 示例
 
 <DemoExample
-  :demo="commandPaletteBasic"
-  description="一份静态列表：Home、Settings、Profile、Dashboard、Help。"
+  :demo="commandPaletteAsync"
+  description="搜索会稍等一下再按文件名过滤。还没输入时提示输入文件名。"
   locale="zh"
-  title="命令面板"
+  title="异步搜索"
 />
 
 <DemoExample
-  :demo="commandPalettePicker"
-  description="Light、Dark、System。当前主题保留勾选标记。"
+  :demo="commandPaletteGrouped"
+  description="Home 和 Settings 在 Navigation 下，New File 和 Save 在 Actions 下。"
   locale="zh"
-  title="选择模式"
+  title="分组"
 />
 
 <DemoExample
@@ -78,22 +77,15 @@ useHotkeys([{ keys: 'mod+k', onPress: openPalette }])
 />
 
 <DemoExample
-  :demo="commandPaletteAsync"
-  description="搜索会稍等一下再按文件名过滤。还没输入时提示输入文件名。"
+  :demo="commandPalettePicker"
+  description="Light、Dark、System。当前主题保留勾选标记。"
   locale="zh"
-  title="异步搜索"
+  title="选择模式"
 />
 
 <DemoExample
   :demo="commandPaletteRich"
-  description="行上带快捷键，auxiliaryData.group 把它们分到 Navigation 和 Actions。"
+  description="行上显示命令；设置了快捷键时，右侧会显示按键。"
   locale="zh"
   title="带附加信息的条目"
-/>
-
-<DemoExample
-  :demo="commandPaletteGrouped"
-  description="Home 和 Settings 在 Navigation 下，New File 和 Save 在 Actions 下。"
-  locale="zh"
-  title="分组"
 />

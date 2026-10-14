@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { overlayBasic, overlayHover, overlayPositions, overlayScrim } from '../../../../components/demos/overlay'
+import { overlayBottomStrip, overlayHoverReveal } from '../../../../components/demos/overlay'
 </script>
 
 ## 使用方法
@@ -94,29 +94,15 @@ const { containerRef, containerProps, scrimProps } = useOverlay({ showOn: 'hover
 ## 示例
 
 <DemoExample
-  :demo="overlayBasic"
-  description="深色遮罩覆盖在底层表面上，上方显示一个操作按钮。遮罩内的内容切换到深色表面主题，无需手写颜色即可保持清晰可读。"
+  :demo="overlayBottomStrip"
+  description="底部一条横条放徽章和两行字，图片其余部分仍然看得见。"
   locale="zh"
-  title="基础用法"
+  title="底部横条"
 />
 
 <DemoExample
-  :demo="overlayScrim"
-  description="同一表面分别使用深色遮罩、浅色遮罩和无遮罩。遮罩的深浅描述底层内容，而非页面主题。"
+  :demo="overlayHoverReveal"
+  description="Quick view 按钮在图片被悬停或聚焦之前保持隐藏。"
   locale="zh"
-  title="遮罩深浅"
-/>
-
-<DemoExample
-  :demo="overlayPositions"
-  description="fill 覆盖整个表面，bottom 和 top 是贴在边缘的横条，从该边缘滑入。align 控制内容在横条上的对齐位置。"
-  locale="zh"
-  title="覆盖范围与对齐"
-/>
-
-<DemoExample
-  :demo="overlayHover"
-  description="showOn=&quot;hover&quot; 让遮罩在悬停前保持隐藏，当表面被悬停或获得焦点时显示，键盘用户也能访问操作按钮。"
-  locale="zh"
-  title="悬停与聚焦时出现"
+  title="悬停显示"
 />

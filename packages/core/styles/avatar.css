@@ -9,6 +9,20 @@
     vertical-align: middle;
   }
 
+  .astryx-avatar--interactive {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .astryx-avatar--interactive:focus-visible {
+    outline: 2px solid var(--astryx-color-border-focus, #0074e2);
+    outline-offset: 2px;
+  }
+
   .astryx-avatar--circle {
     border-radius: var(--astryx-radius-full, 9999px);
   }

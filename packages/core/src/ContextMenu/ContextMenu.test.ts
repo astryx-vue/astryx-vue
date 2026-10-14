@@ -467,4 +467,20 @@ describe('contextMenu', () => {
 
     expect(isShown(panel)).toBe(false)
   })
+
+  it('opens document actions in a bottom sheet', async () => {
+    const { trigger } = renderMenu({
+      items: [{ label: 'Rename document', description: 'Change the title shown to collaborators.' }],
+      props: { label: 'Document actions', presentation: 'bottom-sheet' },
+    })
+
+    contextMenu(trigger)
+    await nextTick()
+    await flushPromises()
+
+    const sheet = document.querySelector('.astryx-bottom-sheet-dialog')
+    expect(sheet).not.toBeNull()
+    expect(document.body.textContent).toContain('Rename document')
+    expect(document.querySelector<HTMLElement>('.astryx-context-menu')!.style.display).toBe('none')
+  })
 })

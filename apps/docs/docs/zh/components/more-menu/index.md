@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { moreMenuBasic, moreMenuOverview, moreMenuSections, moreMenuSizes, moreMenuTriggers } from '../../../../components/demos/more-menu'
+import { moreMenuBasic, moreMenuBottomSheet, moreMenuDividers, moreMenuSections } from '../../../../components/demos/more-menu'
 </script>
 
 ## 使用方法
@@ -59,36 +59,29 @@ const items = [
 ## 示例
 
 <DemoExample
-  :demo="moreMenuOverview"
-  description="把菜单表面打开来看：动作、分隔线，以及排在最后的破坏性操作。"
+  :demo="moreMenuBottomSheet"
+  description="可见的溢出触发器，在底部动作条里打开操作。适合紧凑触屏上的短操作列表。"
   locale="zh"
-  title="菜单表面"
-/>
-
-<DemoExample
-  :demo="moreMenuSizes"
-  description="行密度跟着菜单尺寸走：sm、md、lg 用的是和列表项同一套密度步进，所以三档一眼能分辨。"
-  locale="zh"
-  title="尺寸"
+  title="底部动作条"
 />
 
 <DemoExample
   :demo="moreMenuBasic"
-  description="一个真实可用的触发器。用鼠标点击或用 Enter 打开，选中一项后结果会显示在下方。"
+  description="基本的三点溢出菜单，条目只有文字。"
   locale="zh"
-  title="基本用法"
+  title="默认"
+/>
+
+<DemoExample
+  :demo="moreMenuDividers"
+  description="三点菜单用分隔线把危险操作和安全操作分开。"
+  locale="zh"
+  title="带分隔线"
 />
 
 <DemoExample
   :demo="moreMenuSections"
-  description="带标题的分组把相关动作聚在一起；每一行还可以带图标、说明和快捷键提示。"
+  description="三点菜单把操作放进带标题的分组。"
   locale="zh"
-  title="分组与说明"
-/>
-
-<DemoExample
-  :demo="moreMenuTriggers"
-  description="触发器沿用按钮的尺寸与变体，可以被禁用，可以换成自定义图标，也可以改用自适应呈现。"
-  locale="zh"
-  title="触发器形态"
+  title="带分组"
 />

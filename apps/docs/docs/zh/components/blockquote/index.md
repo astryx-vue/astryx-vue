@@ -50,15 +50,14 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
 
 <DemoExample
   :demo="blockquoteTestimonials"
-  description="几段推荐语放进卡片网格。跨两列的那一张用 GridSpan 拉满。"
+  description="评价区里的多条引言，排成卡片网格。和 Card、Grid 一起用来做社会证明布局。"
   locale="zh"
-  title="推荐语"
+  title="用户评价"
 />
 
 <DemoExample
   :demo="blockquoteCite"
-  description="一段不署名，一段用 cite 写上来源。"
+  description="一条普通引言，和一条用来源 cite 署名的引言。已知作者或出处时使用 cite。"
   locale="zh"
-  title="带出处"
+  title="带来源"
 />
-

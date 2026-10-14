@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { hoverCardBasic, hoverCardControlled, hoverCardPlacements } from '../../../../components/demos/hover-card'
+import { hoverCardDefinition, hoverCardLinkPreview, hoverCardProfile } from '../../../../components/demos/hover-card'
 </script>
 
 ## 使用方法
@@ -50,11 +50,11 @@ import { HoverCard } from '@astryx-vue/core/HoverCard'
 
 ## 示例
 
-<DemoExample :demo="hoverCardBasic" title="基本用法" description="悬停或聚焦链接，卡片在短暂延迟后显示，指针移入卡片后仍保持打开。" locale="zh" />
+<DemoExample :demo="hoverCardDefinition" title="词条解释" description="悬停句子里的术语，读一段简短解释。" locale="zh" />
 
-<DemoExample :demo="hoverCardPlacements" title="位置" description="placement 设置卡片相对触发元素的方向，空间不足时自动翻转到另一侧。" locale="zh" />
+<DemoExample :demo="hoverCardLinkPreview" title="链接预览" description="悬停文档链接，看标题、摘要和网址。" locale="zh" />
 
-<DemoExample :demo="hoverCardControlled" title="受控" description="传入 isOpen 控制显示。悬停和聚焦不再生效，按 Escape 只会发出 openChange(false)。" locale="zh" />
+<DemoExample :demo="hoverCardProfile" title="资料预览" description="悬停用户名，看头像、简介和加入时间。" locale="zh" />
 
 ## 无障碍
 

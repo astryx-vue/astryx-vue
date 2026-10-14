@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { moreMenuBasic, moreMenuOverview, moreMenuSections, moreMenuSizes, moreMenuTriggers } from '../../../../components/demos/more-menu'
+import { moreMenuBasic, moreMenuBottomSheet, moreMenuDividers, moreMenuSections } from '../../../../components/demos/more-menu'
 </script>
 
 ## Usage
@@ -59,36 +59,29 @@ The open state can belong to the component or to you. Pass `isMenuOpen` to contr
 ## Examples
 
 <DemoExample
-  :demo="moreMenuOverview"
-  description="An overflow menu with its surface open: actions, a divider, and a destructive row at the end."
+  :demo="moreMenuBottomSheet"
+  description="A visible overflow trigger that opens actions in a BottomSheet. Use this presentation for short action sets on compact touch surfaces."
   locale="en"
-  title="The menu surface"
-/>
-
-<DemoExample
-  :demo="moreMenuSizes"
-  description="Row density follows the menu size: sm, md, and lg step through the same density scale a list item uses, so the three are easy to tell apart."
-  locale="en"
-  title="Sizes"
+  title="Bottom sheet"
 />
 
 <DemoExample
   :demo="moreMenuBasic"
-  description="A working trigger. Open it with a click or with Enter, then pick an action to see it reported below."
+  description="Basic three-dot overflow menu with simple text-only action items."
   locale="en"
-  title="Basic usage"
+  title="Default"
+/>
+
+<DemoExample
+  :demo="moreMenuDividers"
+  description="A three-dot menu with a divider separating destructive actions from safe ones."
+  locale="en"
+  title="With dividers"
 />
 
 <DemoExample
   :demo="moreMenuSections"
-  description="Sections with headings group related actions, and each row can carry an icon, a description, and a shortcut hint."
+  description="A three-dot menu with actions organized into labeled groups."
   locale="en"
-  title="Groups and descriptions"
-/>
-
-<DemoExample
-  :demo="moreMenuTriggers"
-  description="The trigger takes the button sizes and variants, can be disabled, accepts custom artwork, and can use the adaptive presentation."
-  locale="en"
-  title="Trigger shapes"
+  title="With sections"
 />

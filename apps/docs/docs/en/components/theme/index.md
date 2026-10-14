@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { themeApply, themeNested, themeOverview, themeSwitcher } from '../../../../components/demos/theme'
+import { themeApply, themeNested, themeSwitcher } from '../../../../components/demos/theme'
 </script>
 
 ## Usage
@@ -53,12 +53,6 @@ const ocean = defineTheme({
 
 ## Examples
 
-<DemoExample
-  :demo="themeOverview"
-  description="Two visually distinct theme providers wrapping identical content to show how Theme changes the visual treatment of child components."
-  locale="en"
-  title="Theme — Distinct Themes"
-/>
 
 <DemoExample
   :demo="themeApply"

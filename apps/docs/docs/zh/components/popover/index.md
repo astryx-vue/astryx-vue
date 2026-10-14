@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { popoverActions, popoverBasic, popoverForm, popoverPlacements } from '../../../../components/demos/popover'
+import { popoverBottomSheet, popoverConfirm, popoverFilter, popoverSettings, popoverShortcuts } from '../../../../components/demos/popover'
 </script>
 
 ## 使用方法
@@ -45,13 +45,15 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## 示例
 
-<DemoExample :demo="popoverBasic" title="基本用法" description="点击触发元素打开浮层。按下 Escape、点击浮层外部或点击关闭按钮可以关闭。" locale="zh" />
+<DemoExample :demo="popoverBottomSheet" title="底部弹层" description="紧凑触屏上，项目操作改由底部弹层承接，而不是锚在按钮旁的弹出层。" locale="zh" />
 
-<DemoExample :demo="popoverPlacements" title="位置" description="placement 设置浮层相对触发元素的方向，alignment 设置沿该方向的对齐方式。空间不足时自动翻转。" locale="zh" />
+<DemoExample :demo="popoverConfirm" title="确认操作" description="破坏性按钮打开一段简短确认，里面是删除和取消。" locale="zh" />
 
-<DemoExample :demo="popoverForm" title="表单内容" description="对话框类浮层可以包含交互控件。打开时焦点移入浮层，关闭时焦点回到触发元素。" locale="zh" />
+<DemoExample :demo="popoverFilter" title="筛选面板" description="按状态勾选，并提供应用和重置。" locale="zh" />
 
-<DemoExample :demo="popoverActions" title="操作列表" description="role 为 none 时不添加对话框语义，适用于内容自带角色的菜单类内容。焦点保留在触发元素上。" locale="zh" />
+<DemoExample :demo="popoverShortcuts" title="键盘快捷键" description="列出快捷键以及各自的作用。" locale="zh" />
+
+<DemoExample :demo="popoverSettings" title="设置面板" description="通知、深色模式和声音三个开关。" locale="zh" />
 
 ## 无障碍
 

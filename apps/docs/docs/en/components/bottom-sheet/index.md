@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetBasic, bottomSheetSnap, bottomSheetTall } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## Usage
@@ -61,24 +61,59 @@ A downward drag closes the sheet, and a fast upward flick expands it to the tall
 ## Examples
 
 <DemoExample
-  :demo="bottomSheetBasic"
-  description="A filter sheet that rises from the bottom edge, with a grab handle, a heading, and actions. Escape and the scrim close it."
+  :demo="bottomSheetHeights"
+  description="Compares hug, capped, and tall starting heights for different amounts of content."
   locale="en"
-  title="Basic"
+  title="Height variants"
 />
 
 <DemoExample
-  :demo="bottomSheetTall"
-  description="The tall budget pins the panel near full height and the list scrolls inside it, leaving the page itself its original length."
+  :demo="bottomSheetKeyboard"
+  description="A tall, scrollable form that keeps focused controls visible above the mobile keyboard."
   locale="en"
-  title="List"
+  title="Mobile keyboard"
 />
 
 <DemoExample
-  :demo="bottomSheetSnap"
-  description="snapPoints lets someone drag the panel to half the screen and rest there, or push it back up to full height."
+  :demo="bottomSheetNoScrim"
+  description="The page stays visible and interactive behind a non-modal sheet."
   locale="en"
-  title="Intermediate stop"
+  title="No scrim"
+/>
+
+<DemoExample
+  :demo="bottomSheetSnapPoints"
+  description="Drag-to-resize stops: a half-height working surface, and a peek that slides away and thins the scrim."
+  locale="en"
+  title="Snap points"
+/>
+
+<DemoExample
+  :demo="bottomSheetAdaptiveDialog"
+  description="Dialog stays the default. On a coarse pointer at lg and below, the same profile form opens as a bottom sheet."
+  locale="en"
+  title="Adaptive dialog"
+/>
+
+<DemoExample
+  :demo="bottomSheetAdaptiveMenu"
+  description="Project actions use a bottom sheet on a compact touch surface and an anchored menu otherwise."
+  locale="en"
+  title="Adaptive menu"
+/>
+
+<DemoExample
+  :demo="bottomSheetMultiSelector"
+  description="A multi-selection list stays open in a bottom sheet while choices are toggled."
+  locale="en"
+  title="Multi-select sheet"
+/>
+
+<DemoExample
+  :demo="bottomSheetSelector"
+  description="A single-selection list opens in a bottom sheet."
+  locale="en"
+  title="Select sheet"
 />
 
 ## Accessibility

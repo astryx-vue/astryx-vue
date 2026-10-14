@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { mediaThemeImageOverlay, mediaThemeLightScrim, mediaThemeOverview } from '../../../../components/demos/media-theme'
+import { mediaThemeImageOverlay, mediaThemeLightScrim } from '../../../../components/demos/media-theme'
 </script>
 
 ## 使用方法
@@ -45,12 +45,6 @@ import { MediaTheme } from '@astryx-vue/core/Theme'
 
 ## 示例
 
-<DemoExample
-  :demo="mediaThemeOverview"
-  description="一块压在深色图片上的叠层。文字、图标、徽章和几种按钮都改成深底上可读的颜色。"
-  locale="zh"
-  title="MediaTheme — Media Overlay"
-/>
 
 <DemoExample
   :demo="mediaThemeImageOverlay"

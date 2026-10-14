@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { AvatarProps } from './types.js'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
+import Tooltip from '../Tooltip/Tooltip.vue'
 import { resolveSize } from './utils.js'
 import '../../styles/avatar.css'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<AvatarProps>(), {
   size: 'md',
   shape: 'circle',
+  tooltip: true,
 })
 
 const emit = defineEmits<{
@@ -20,6 +24,8 @@ defineSlots<{
   default?: () => unknown
   status?: () => unknown
 }>()
+
+const attrs = useAttrs()
 
 const INITIALS_FONT_SIZE_RATIO = 16 / 36
 const DEFAULT_ICON_RATIO = 0.6
@@ -86,11 +92,57 @@ const accessibleName = computed(() => {
   return meaningfulAlt.value || meaningfulName.value
 })
 
+const isLink = computed(() => props.href != null)
+const isButton = computed(() => !isLink.value && attrs.onClick != null)
+const isInteractive = computed(() => isLink.value || isButton.value)
+const rootTag = computed(() => isLink.value ? 'a' : isButton.value ? 'button' : 'span')
+
+const linkRel = computed(() => {
+  const parts = new Set((props.rel ?? '').split(/\s+/).filter(Boolean))
+  if (props.target === '_blank') {
+    parts.add('noopener')
+    parts.add('noreferrer')
+  }
+  return parts.size > 0 ? Array.from(parts).join(' ') : undefined
+})
+
+const tooltipText = computed(() => {
+  if (props.tooltip === false)
+    return undefined
+  if (typeof props.tooltip === 'string') {
+    const custom = props.tooltip.trim()
+    return custom === '' ? undefined : custom
+  }
+  return meaningfulName.value
+})
+
 const a11yProps = computed(() => {
+  if (isInteractive.value) {
+    return accessibleName.value
+      ? { 'aria-label': accessibleName.value }
+      : {}
+  }
   if (accessibleName.value) {
     return { 'role': 'img' as const, 'aria-label': accessibleName.value }
   }
   return { 'role': 'presentation' as const, 'aria-hidden': 'true' as const }
+})
+
+const rootBindings = computed(() => {
+  const bindings: Record<string, unknown> = {
+    ...a11yProps.value,
+    ...attrs,
+  }
+  if (isLink.value) {
+    bindings.href = props.href
+    bindings.target = props.target
+    bindings.rel = linkRel.value
+  }
+  if (isButton.value)
+    bindings.type = attrs.type ?? 'button'
+  if (!isInteractive.value && tooltipText.value != null && bindings.tabindex == null && bindings.tabIndex == null)
+    bindings.tabindex = 0
+  return bindings
 })
 
 function handleImageError(event: Event) {
@@ -108,11 +160,67 @@ function handleFallbackError() {
 </script>
 
 <template>
-  <span
+  <Tooltip v-if="tooltipText" :content="tooltipText">
+    <component
+      :is="rootTag"
+      class="astryx-avatar"
+      :class="[`astryx-avatar--${resolvedShape}`, { 'astryx-avatar--group-item': avatarGroup, 'astryx-avatar--interactive': isInteractive }]"
+      :style="[rootStyle, groupStyle]"
+      v-bind="rootBindings"
+    >
+      <span class="astryx-avatar__content">
+        <img
+          v-if="showImage"
+          class="astryx-avatar__image"
+          :src="src"
+          alt=""
+          @error="handleImageError"
+        >
+        <img
+          v-else-if="showFallbackImage"
+          class="astryx-avatar__image"
+          :src="fallbackSrc"
+          alt=""
+          @error="handleFallbackError"
+        >
+        <span
+          v-else-if="showInitials"
+          class="astryx-avatar__fallback astryx-avatar__fallback--initials"
+          :style="{ fontSize: `${numericSize * INITIALS_FONT_SIZE_RATIO}px` }"
+        >
+          {{ initials }}
+        </span>
+        <span
+          v-else-if="showIcon"
+          class="astryx-avatar__fallback astryx-avatar__fallback--icon"
+          :style="{ fontSize: `${numericSize * DEFAULT_ICON_RATIO}px` }"
+        >
+          <slot name="default">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+          </slot>
+        </span>
+      </span>
+      <span
+        v-if="$slots.status"
+        class="astryx-avatar__status"
+      >
+        <slot name="status" />
+      </span>
+    </component>
+  </Tooltip>
+  <component
+    :is="rootTag"
+    v-else
     class="astryx-avatar"
-    :class="[`astryx-avatar--${resolvedShape}`, { 'astryx-avatar--group-item': avatarGroup }]"
+    :class="[`astryx-avatar--${resolvedShape}`, { 'astryx-avatar--group-item': avatarGroup, 'astryx-avatar--interactive': isInteractive }]"
     :style="[rootStyle, groupStyle]"
-    v-bind="a11yProps"
+    v-bind="rootBindings"
   >
     <span class="astryx-avatar__content">
       <img
@@ -158,5 +266,5 @@ function handleFallbackError() {
     >
       <slot name="status" />
     </span>
-  </span>
+  </component>
 </template>

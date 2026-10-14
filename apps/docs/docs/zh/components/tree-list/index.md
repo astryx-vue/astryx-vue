@@ -52,13 +52,6 @@ const items = [
 ## 示例
 
 <DemoExample
-  :demo="treeListVariants"
-  description="lineGuides 在父子之间画连接线。noGuides 只留缩进。密度是另一件事，只改行的内边距。"
-  locale="zh"
-  title="Tree List — 变体"
-/>
-
-<DemoExample
   :demo="treeListFileTree"
   description="文件树用文件夹和文档图标区分目录和文件。"
   locale="zh"
@@ -84,4 +77,11 @@ const items = [
   description="导航树里，当前页那一项是选中状态。"
   locale="zh"
   title="TreeList — 导航"
+/>
+
+<DemoExample
+  :demo="treeListVariants"
+  description="lineGuides 在父子之间画连接线。noGuides 只留缩进。密度是另一件事，只改行的内边距。"
+  locale="zh"
+  title="Tree List — 变体"
 />

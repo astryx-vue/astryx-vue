@@ -273,6 +273,7 @@ export type {
   ContextMenuItemSlots,
   ContextMenuItemTarget,
   ContextMenuOption,
+  ContextMenuPresentation,
   ContextMenuProps,
   ContextMenuSection,
   ContextMenuSize,
@@ -318,6 +319,7 @@ export {
   DropdownMenuDivider,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSubMenu,
   useDropdownMenuContext,
 } from './DropdownMenu/index.js'
 export type {
@@ -333,10 +335,13 @@ export type {
   DropdownMenuItemSlots,
   DropdownMenuItemVariant,
   DropdownMenuOption,
+  DropdownMenuPresentation,
   DropdownMenuProps,
   DropdownMenuSection,
   DropdownMenuSize,
   DropdownMenuSlots,
+  DropdownMenuSubMenuProps,
+  DropdownMenuSubMenuSlots,
   DropdownMenuTriggerProps,
 } from './DropdownMenu/index.js'
 export { EmptyState } from './EmptyState/index.js'
@@ -848,7 +853,7 @@ export type {
   TimestampTooltipLine,
 } from './Timestamp/index.js'
 export { Toast, ToastViewport, useToast } from './Toast/index.js'
-export type { ToastItem, ToastOptions, ToastPlacement, ToastType } from './Toast/index.js'
+export type { ToastCollisionBehavior, ToastItem, ToastOptions, ToastPlacement, ToastType } from './Toast/index.js'
 export { ToggleButton, ToggleButtonGroup } from './ToggleButton/index.js'
 export type {
   ToggleButtonChangeAction,

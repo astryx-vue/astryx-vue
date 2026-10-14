@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { overlayBasic, overlayHover, overlayPositions, overlayScrim } from '../../../../components/demos/overlay'
+import { overlayBottomStrip, overlayHoverReveal } from '../../../../components/demos/overlay'
 </script>
 
 ## Usage
@@ -94,29 +94,15 @@ The container needs both `containerProps` — which bring the positioning, the c
 ## Examples
 
 <DemoExample
-  :demo="overlayBasic"
-  description="A dark scrim laid over the base surface, with a single action on top. The content inside the scrim switches to the dark surface theme, so it stays legible without any hand-written color."
+  :demo="overlayBottomStrip"
+  description="A bottom strip carries a badge and two lines of text, and leaves the rest of the image visible."
   locale="en"
-  title="Basic"
+  title="Bottom strip"
 />
 
 <DemoExample
-  :demo="overlayScrim"
-  description="The same surface with a dark scrim, a light scrim, and no scrim at all. The scrim describes what is underneath, not the page theme."
+  :demo="overlayHoverReveal"
+  description="The Quick view button stays hidden until the image is hovered or focused."
   locale="en"
-  title="Scrim modes"
-/>
-
-<DemoExample
-  :demo="overlayPositions"
-  description="fill covers the whole surface, while bottom and top are strips pinned to an edge that slide in from that edge. align moves the content along the strip."
-  locale="en"
-  title="Coverage and alignment"
-/>
-
-<DemoExample
-  :demo="overlayHover"
-  description="showOn=&quot;hover&quot; keeps the overlay out of the way until the surface is hovered, and reveals it as well when focus enters the surface, so keyboard users reach the action too."
-  locale="en"
-  title="Revealed on hover or focus"
+  title="Hover reveal"
 />

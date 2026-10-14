@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { syntaxThemeDark, syntaxThemeLight, syntaxThemeOverview } from '../../../../components/demos/syntax-theme'
+import { syntaxThemeDark, syntaxThemeLight } from '../../../../components/demos/syntax-theme'
 </script>
 
 ## Usage
@@ -43,12 +43,6 @@ const code = `const status = response.ok ? 'success' : 'error'`
 
 ## Examples
 
-<DemoExample
-  :demo="syntaxThemeOverview"
-  description="A concise code block rendered with the One Dark Pro syntax preset to show how SyntaxTheme changes highlighting colors without making the page long."
-  locale="en"
-  title="SyntaxTheme — Compact Preset"
-/>
 
 <DemoExample
   :demo="syntaxThemeDark"

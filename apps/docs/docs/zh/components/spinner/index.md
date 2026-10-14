@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { spinnerBasic, spinnerLabel, spinnerShades, spinnerSizes } from '../../../../components/demos/spinner'
+import { spinnerLabel, spinnerMedia, spinnerSizes } from '../../../../components/demos/spinner'
 </script>
 
 ## 使用方法
@@ -38,13 +38,11 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 ## 示例
 
-<DemoExample :demo="spinnerBasic" title="基本用法" description="默认的加载态，使用强调色和 md 尺寸，适合大多数常规场景。" locale="zh" />
+<DemoExample :demo="spinnerMedia" title="深色底" description="default 放在浅色表面上，onMedia 放在深色表面上。" locale="zh" />
 
-<DemoExample :demo="spinnerSizes" title="尺寸" description="尺寸可选 sm、md、lg、xl，环的直径依次为 10px、14px、18px、28px，按场景空间的大小选择即可。" locale="zh" />
+<DemoExample :demo="spinnerSizes" title="尺寸" description="sm、md、lg、xl 四种尺寸。" locale="zh" />
 
-<DemoExample :demo="spinnerShades" title="色调" description="default 和 subtle 适合浅色背景，onMedia 适合深色或强调色背景，inherit 直接继承周围文字颜色，嵌入文本段落时很方便。" locale="zh" />
-
-<DemoExample :demo="spinnerLabel" title="文字标签" description="设置 label 后，加载态下方会显示可见文字，同时作为屏幕阅读器播报的无障碍名称。" locale="zh" />
+<DemoExample :demo="spinnerLabel" title="带文字" description="可以是一句短文字，也可以是标题加一行说明。富文本时无障碍名称仍是 Fetching data。" locale="zh" />
 
 ## 无障碍
 

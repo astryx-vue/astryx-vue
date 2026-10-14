@@ -19,6 +19,8 @@ export interface UseToastReturn {
 export function useToast(): UseToastReturn {
   function show(options: ToastOptions): () => void {
     const id = toastStore.add(options)
+    if (id == null)
+      return () => {}
     return () => toastStore.requestClose(id)
   }
 

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { iconButtonActionBar, iconButtonAsync, iconButtonFloating, iconButtonTooltips } from '../../../../components/demos/icon-button'
+import { iconButtonActionBar, iconButtonFloating, iconButtonLoading, iconButtonTooltips } from '../../../../components/demos/icon-button'
 </script>
 
 
@@ -48,29 +48,28 @@ Use a text-bearing [Button](/en/components/button) when the action is not immedi
 
 <DemoExample
   :demo="iconButtonActionBar"
-  description="Use low-emphasis icon-only buttons in an action bar to keep frequent controls compact."
+  description="Row of ghost icon buttons for a compact action toolbar."
   locale="en"
   title="Action bar"
 />
 
 <DemoExample
   :demo="iconButtonFloating"
-  description="Icon-only controls are a common floating-action shape. Set elevation=&quot;high&quot; to emphasize the floating action."
+  description="A floating action button. The most common floating-button shape is icon-only. Raised here with elevation=&quot;high&quot;."
   locale="en"
-  title="Floating action"
+  title="Floating"
 />
 
 <DemoExample
-  :demo="iconButtonAsync"
-  description="The button shows a loading indicator during asynchronous work and prevents duplicate activation until it settles."
+  :demo="iconButtonLoading"
+  description="Icon buttons that show a loading spinner on click for async feedback."
   locale="en"
-  title="Async state"
+  title="Loading state"
 />
 
 <DemoExample
   :demo="iconButtonTooltips"
-  description="A tooltip explains the icon to sighted users, but it never replaces the required label."
+  description="Icon buttons with tooltips that explain each action on hover."
   locale="en"
-  title="Tooltip"
+  title="With tooltips"
 />
-
