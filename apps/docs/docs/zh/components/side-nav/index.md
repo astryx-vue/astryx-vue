@@ -46,8 +46,8 @@ const collapsed = ref(false)
 
 ## 示例
 
-<DemoExample :demo="sideNavEnd" description="项的末尾放菜单、数量和辅助文字。" locale="zh" title="尾部内容" />
+<DemoExample :demo="sideNavEnd" description="每一行末尾可以是菜单、数量、徽章或辅助文字。" locale="zh" title="尾部内容" />
 
-<DemoExample :demo="sideNavHeaderMenu" description="标题带产品标志和账号菜单。" locale="zh" title="带菜单的标题" />
+<DemoExample :demo="sideNavNested" description="设置项展开后是一组可以折叠的子项。" locale="zh" title="嵌套项" />
 
-<DemoExample :demo="sideNavNested" description="设置项下面可以收起一组下级。" locale="zh" title="嵌套项" />
+<DemoExample :demo="sideNavHeaderMenu" description="标题是账户切换器，显示产品名和当前账户。" locale="zh" title="带菜单的标题" />

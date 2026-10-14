@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { resizeHandleHorizontal, resizeHandleSidebar } from '../../../../components/demos/resize-handle'
+import { resizeHandleSidebar } from '../../../../components/demos/resize-handle'
 </script>
 
 ## Usage
@@ -53,16 +53,4 @@ The handle is `role="separator"`. A horizontal handle sets `aria-orientation="ve
 
 ## Examples
 
-<DemoExample
-  :demo="resizeHandleHorizontal"
-  description="A horizontal split. Drag the handle between the sidebar and the content."
-  locale="en"
-  title="Horizontal"
-/>
-
-<DemoExample
-  :demo="resizeHandleSidebar"
-  description="A collapsible sidebar. The width sticks within 8px of 200px and 280px, and dragging past the collapse threshold hides it."
-  locale="en"
-  title="Collapsible with snap points"
-/>
+<DemoExample :demo="resizeHandleSidebar" description="Dragging snaps to preset widths. Dragging past the minimum collapses the sidebar, and Expand restores it." locale="en" title="Collapsible with snap points" />

@@ -41,14 +41,14 @@ import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
 
 ## Examples
 
-<DemoExample :demo="topNavCentered" description="The center group is centered. The heading stays at the start." locale="en" title="Centered Navigation" />
+<DemoExample :demo="topNavCentered" description="Nav items sit in the center. The heading stays at the start, and actions stay at the end." locale="en" title="Centered navigation" />
 
-<DemoExample :demo="topNavEnterprise" description="Icon-labeled items, a notification, and a primary action." locale="en" title="Enterprise Dashboard" />
+<DemoExample :demo="topNavEnterprise" description="Icon-labeled items, search, a notification, and a primary action." locale="en" title="Enterprise dashboard" />
 
-<DemoExample :demo="topNavMenu" description="Hover opens a product menu with icons and descriptions." locale="en" title="Hover Menu" />
+<DemoExample :demo="topNavMenu" description="Hover opens a product menu with icons and descriptions." locale="en" title="Hover menu" />
 
-<DemoExample :demo="topNavMega" description="The mega menu has product items and a featured card." locale="en" title="Mega Menu" />
+<DemoExample :demo="topNavMega" description="A full-width mega menu with product items and a featured card." locale="en" title="Mega menu" />
 
-<DemoExample :demo="topNavMenus" description="One bar holds more than one hover menu." locale="en" title="Multiple Dropdowns" />
+<DemoExample :demo="topNavMenus" description="Several hover menus share one bar and close when the pointer moves to another." locale="en" title="Multiple dropdowns" />
 
-<DemoExample :demo="topNavLogo" description="A product mark sits in front of the heading, with an action at the end." locale="en" title="With Logo" />
+<DemoExample :demo="topNavLogo" description="A product mark sits in front of the heading, with a profile action at the end." locale="en" title="With logo" />

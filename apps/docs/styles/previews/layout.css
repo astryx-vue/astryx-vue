@@ -2,6 +2,21 @@
   width: min(100%, 640px);
 }
 
+/*
+ * Dual-panel and sidebar cards are max-width 500. The shared 640px host left
+ * them start-aligned inside a wider box, so the example looked narrower than
+ * the original 16px hug wrapper (500px card + 16px on each side = 532px).
+ */
+.layout-preview--panel {
+  box-sizing: border-box;
+  width: min(100%, 532px);
+  padding: 16px;
+}
+
+.component-example__preview:has(> .layout-preview--panel) {
+  padding-inline: 0;
+}
+
 .layout-preview--fill {
   height: 320px;
 }

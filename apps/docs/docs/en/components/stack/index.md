@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { stackDirections, stackHStack, stackItem, stackVStack } from '../../../../components/demos/stack'
+import { stackAlignment, stackFill } from '../../../../components/demos/stack'
 </script>
 
 
@@ -42,33 +42,6 @@ import { HStack, Stack, StackItem, VStack } from '@astryx-vue/core/Stack'
 
 ## Examples
 
-Common direction and space-distribution configurations.
+<DemoExample :demo="stackAlignment" description="Buttons sit at the start, the center, and the end of a row." locale="en" title="Alignment" />
 
-<DemoExample
-  :demo="stackDirections"
-  description="With horizontal, children flow from left to right. With vertical, they flow from top to bottom. Stack uses vertical by default."
-  locale="en"
-  title="Stack — Direction"
-/>
-
-<DemoExample
-  :demo="stackHStack"
-  description="HStack always uses a horizontal direction and is equivalent to Stack with direction set to horizontal."
-  locale="en"
-  title="HStack — Basic"
-/>
-
-<DemoExample
-  :demo="stackVStack"
-  description="VStack always uses a vertical direction and is equivalent to Stack with direction set to vertical."
-  locale="en"
-  title="VStack — Basic"
-/>
-
-<DemoExample
-  :demo="stackItem"
-  description="StackItem uses static sizing by default. Set it to fill to occupy the remaining space in the stack."
-  locale="en"
-  title="StackItem — Size"
-/>
-
+<DemoExample :demo="stackFill" description="An avatar, a name, and a button share a row. The name stretches to fill the space between them." locale="en" title="Fill item" />

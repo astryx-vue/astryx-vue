@@ -48,44 +48,14 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 
 ## Examples
 
-<DemoExample
-  :demo="layoutCard"
-  description="A fixed-height card. The header and footer stay put, and the content scrolls."
-  locale="en"
-  title="Card"
-/>
+<DemoExample :demo="layoutCard" description="A card with a header, a scrolling content area, and a footer of actions." locale="en" title="Basic card" />
 
-<DemoExample
-  :demo="layoutContentOnly"
-  description="Content without a header or a footer."
-  locale="en"
-  title="Content only"
-/>
+<DemoExample :demo="layoutContentOnly" description="A card that is only a content area, with no header or footer." locale="en" title="Content only" />
 
-<DemoExample
-  :demo="layoutContentWidth"
-  description="contentWidth 360 centers the text. The dividers still span the layout."
-  locale="en"
-  title="Content width"
-/>
+<DemoExample :demo="layoutContentWidth" description="contentWidth constrains and centers the text while the dividers stay full bleed." locale="en" title="Content width" />
 
-<DemoExample
-  :demo="layoutDualPanel"
-  description="A start panel and an end panel around the content."
-  locale="en"
-  title="Dual panel"
-/>
+<DemoExample :demo="layoutDualPanel" description="A file browser: folders at the start, files in the middle, details at the end." locale="en" title="Dual panel" />
 
-<DemoExample
-  :demo="layoutFullBleed"
-  description="LayoutContent padding 0 lets a Section reach the edges of the card."
-  locale="en"
-  title="Full bleed"
-/>
+<DemoExample :demo="layoutFullBleed" description="Content runs edge to edge with no padding, for a table or an image." locale="en" title="Full bleed content" />
 
-<DemoExample
-  :demo="layoutSidebar"
-  description="A start panel with role navigation, and a footer for the actions."
-  locale="en"
-  title="Sidebar"
-/>
+<DemoExample :demo="layoutSidebar" description="A settings page with a navigation panel, a content area, a header, and a footer." locale="en" title="Sidebar navigation" />

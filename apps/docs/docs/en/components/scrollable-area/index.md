@@ -43,37 +43,12 @@ Until overflow is measured, the requested axis uses `overflow: clip`. After a me
 
 ## Examples
 
-<DemoExample
-  :demo="scrollableAreaInlineRail"
-  description="axis inline scrolls a row of cards. isFullBleed reaches the card edges, and the content padding keeps the first card aligned with the heading."
-  locale="en"
-  title="Inline rail"
-/>
+<DemoExample :demo="scrollableAreaInlineRail" description="axis inline scrolls the cards sideways. isFullBleed lets the rail reach the panel edges while the first card stays aligned with the heading." locale="en" title="Inline rail" />
 
-<DemoExample
-  :demo="scrollableAreaOverscroll"
-  description="The first nested area lets a gesture continue into the panel. overscroll contain stops the gesture at the second area."
-  locale="en"
-  title="Overscroll"
-/>
+<DemoExample :demo="scrollableAreaOverscroll" description="overscroll allow hands a finished gesture to the panel behind it. overscroll contain stops the gesture at the section edge." locale="en" title="Overscroll" />
 
-<DemoExample
-  :demo="scrollableAreaStickyHeaders"
-  description="The viewport is the sticky containing block. Section labels pin to the list, and the page heading scrolls away."
-  locale="en"
-  title="Sticky headers"
-/>
+<DemoExample :demo="scrollableAreaStickyHeaders" description="The scroll viewport is the sticky containing block, so section labels pin to the top of the list." locale="en" title="Sticky section labels" />
 
-<DemoExample
-  :demo="scrollableAreaStickyPassthrough"
-  description="A fitting area passes sticky ownership outward. stickyContainment always keeps the next label inside its own box."
-  locale="en"
-  title="Sticky passthrough"
-/>
+<DemoExample :demo="scrollableAreaStickyPassthrough" description="A section that fits passes its sticky label outward. stickyContainment always keeps the next label inside its own box." locale="en" title="Sticky passthrough" />
 
-<DemoExample
-  :demo="scrollableAreaTwoAxis"
-  description="axis both gives the content a max-content inline size, so the board scrolls on both axes."
-  locale="en"
-  title="Two axes"
-/>
+<DemoExample :demo="scrollableAreaTwoAxis" description="axis both gives the board max-content inline sizing, so one viewport scrolls both ways." locale="en" title="Two-axis board" />

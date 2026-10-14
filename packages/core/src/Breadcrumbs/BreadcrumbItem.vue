@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
 import { computed, inject } from 'vue'
-
+import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
+import Icon from '../Icon/Icon.vue'
 import { breadcrumbContextKey } from './context.js'
 
 const props = defineProps<BreadcrumbItemProps>()
@@ -18,6 +20,7 @@ defineSlots<{
 const context = inject(breadcrumbContextKey, undefined)
 const variant = computed(() => context?.variant.value ?? 'default')
 const separator = computed(() => context?.separator.value ?? '/')
+const hasMenu = computed(() => props.menu != null)
 
 const classes = computed(() => [
   'astryx-breadcrumb-item',
@@ -28,6 +31,15 @@ const contentClasses = computed(() => [
   'astryx-breadcrumb-item__content',
   props.isCurrent && 'astryx-breadcrumb-item__content--current',
 ])
+
+const menuSize = computed<DropdownMenuSize>(() => props.menuSize ?? (variant.value === 'supporting' ? 'sm' : 'md'))
+
+const isDev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV !== false
+if (isDev && hasMenu.value && props.href) {
+  console.warn(
+    'BreadcrumbItem: `menu` and `href` are mutually exclusive; `menu` takes precedence and `href` is ignored.',
+  )
+}
 
 function handleClick(event: MouseEvent) {
   if (props.isCurrent) {
@@ -41,8 +53,29 @@ function handleClick(event: MouseEvent) {
 <template>
   <li :class="classes">
     <span class="astryx-breadcrumb-item__separator" aria-hidden="true">{{ separator }}</span>
+    <DropdownMenu
+      v-if="hasMenu"
+      :button="{ label: 'Menu', size: menuSize }"
+      :items="menu"
+      menu-width="max-content"
+    >
+      <template #trigger="triggerProps">
+        <button
+          type="button"
+          :class="contentClasses"
+          v-bind="triggerProps"
+          :aria-current="isCurrent ? 'page' : undefined"
+        >
+          <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+            <slot name="startIcon" />
+          </span>
+          <slot />
+          <Icon class="astryx-breadcrumb-item__chevron" icon="chevronDown" size="sm" />
+        </button>
+      </template>
+    </DropdownMenu>
     <a
-      v-if="href && !isCurrent"
+      v-else-if="href && !isCurrent"
       :href="href"
       class="astryx-breadcrumb-item__content"
       @click="handleClick"

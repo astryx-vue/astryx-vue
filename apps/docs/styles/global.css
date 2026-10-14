@@ -1606,6 +1606,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  * instead of being restated here.
  */
 .vp-doc .astryx-breadcrumbs :is(ol, ul, li),
+.vp-doc :is(ul, ol).astryx-list,
 .vp-doc .astryx-list :is(ol, ul, li),
 .vp-doc .astryx-tree-list :is(ol, ul, li),
 .vp-doc :is(ol.astryx-stepper, .astryx-step, .astryx-step-control) {
