@@ -1,53 +1,42 @@
 <script setup lang="ts">
-import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList, ChatSystemMessage } from '@astryx-vue/core/Chat'
-import { IconButton } from '@astryx-vue/core/IconButton'
+import { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList, ChatSystemMessage } from '@astryx-vue/core/Chat'
 import { ref } from 'vue'
 
-const draft = ref('')
+interface Row {
+  id: number
+  sender: 'user' | 'assistant'
+  text: string
+}
+
+let nextId = 3
+const rows = ref<Row[]>([
+  { id: 1, sender: 'user', text: 'Can you review the Button component and fix the focus ring?' },
+  { id: 2, sender: 'assistant', text: 'Found the issue — the border radius was hardcoded. Replaced with the theme token.' },
+])
+
+function onSubmit(value: string): void {
+  rows.value = [...rows.value, { id: nextId, sender: 'user', text: value }]
+  nextId += 1
+}
 </script>
 
 <template>
   <ChatLayout class="chat-preview__panel">
     <ChatMessageList>
       <ChatSystemMessage variant="divider">
-        {{ 'Today' }}
+        Today
       </ChatSystemMessage>
-      <ChatMessage sender="user">
-        <ChatMessageBubble>
-          {{ 'Can you review the Button component and fix the focus ring?' }}
+      <ChatMessage v-for="row in rows" :key="row.id" :sender="row.sender">
+        <ChatMessageBubble v-if="row.sender === 'user'">
+          {{ row.text }}
         </ChatMessageBubble>
-      </ChatMessage>
-      <ChatMessage sender="assistant">
-        <div class="chat-preview__lines">
-          <p>{{ 'I\'ll check the Button component now.' }}</p>
-          <p>{{ 'Found the issue — the border radius was hardcoded. Replaced with the theme token.' }}</p>
-        </div>
-      </ChatMessage>
-      <ChatMessage sender="user">
-        <ChatMessageBubble>
-          {{ 'Nice, can you also check the Card component?' }}
-        </ChatMessageBubble>
-      </ChatMessage>
-      <ChatMessage sender="assistant">
-        <div class="chat-preview__lines">
-          <p>{{ 'Checking the component now.' }}</p>
-          <p>{{ 'Found the issue — the border radius was hardcoded. Replaced with the theme token.' }}</p>
+        <div v-else class="chat-preview__lines">
+          <p>{{ row.text }}</p>
         </div>
       </ChatMessage>
     </ChatMessageList>
     <template #composer>
-      <form class="chat-preview__composer-card" @submit.prevent="draft = ''">
-        <textarea
-          v-model="draft"
-          class="chat-preview__composer-input"
-          rows="1"
-          aria-label="Message"
-          placeholder="Ask something..."
-        />
-        <IconButton class="chat-preview__send" type="submit" variant="primary" size="md" label="Send">
-          <span class="i-carbon-arrow-up" />
-        </IconButton>
-      </form>
+      <ChatComposer placeholder="Ask something..." @submit="onSubmit" />
     </template>
   </ChatLayout>
 </template>

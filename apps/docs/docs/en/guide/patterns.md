@@ -6,11 +6,15 @@ title: Patterns
 
 Components follow the upstream grain, so a surface is a composition rather than one widget. The set shipped today is conversation: the transcript, bubbles, citations, and Markdown are separate components, and the app decides how they sit together.
 
-Import `Chat` from `@astryx-vue/core/Chat`. `ChatLayout` is a column. Put the transcript in `ChatMessageList` and the input in the `composer` slot. The layout scrolls itself by default. While the reader is at the bottom, new content stays pinned there. Scrolling up releases the pin and shows a return-to-bottom button. `useChatStreamScroll` and `useChatNewMessages` do that work inside the layout.
+Import the conversation pieces from `@astryx-vue/core/Chat`. `ChatLayout` is a column. Put the transcript in `ChatMessageList` and `ChatComposer` in the `composer` slot. The layout scrolls itself by default. While the reader is at the bottom, new content stays pinned there. Scrolling up releases the pin and shows a return-to-bottom button. `useChatStreamScroll` and `useChatNewMessages` do that work inside the layout.
 
 ```vue
 <script setup lang="ts">
-import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+import { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+
+function onSubmit(value: string) {
+  console.log(value)
+}
 </script>
 
 <template>
@@ -28,7 +32,7 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
       </ChatMessage>
     </ChatMessageList>
     <template #composer>
-      <form><!-- the app owns the input --></form>
+      <ChatComposer @submit="onSubmit" />
     </template>
   </ChatLayout>
 </template>

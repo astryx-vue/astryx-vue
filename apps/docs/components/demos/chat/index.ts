@@ -9,6 +9,12 @@ import bubbleMetadataDemo from './bubble-metadata.vue'
 import bubbleMetadataSource from './bubble-metadata.vue?raw&highlighted'
 import bubbleVariantsDemo from './bubble-variants.vue'
 import bubbleVariantsSource from './bubble-variants.vue?raw&highlighted'
+import composerMentionsDemo from './composer-mentions.vue'
+import composerMentionsSource from './composer-mentions.vue?raw&highlighted'
+import composerShellDemo from './composer-shell.vue'
+import composerShellSource from './composer-shell.vue?raw&highlighted'
+import composerStatesDemo from './composer-states.vue'
+import composerStatesSource from './composer-states.vue?raw&highlighted'
 import layoutPanelDemo from './layout-panel.vue'
 import layoutPanelSource from './layout-panel.vue?raw&highlighted'
 import listDensityDemo from './list-density.vue'
@@ -37,6 +43,8 @@ import systemStatusDemo from './system-status.vue'
 import systemStatusSource from './system-status.vue?raw&highlighted'
 import systemVariantsDemo from './system-variants.vue'
 import systemVariantsSource from './system-variants.vue?raw&highlighted'
+import tokenizedDemo from './tokenized.vue'
+import tokenizedSource from './tokenized.vue?raw&highlighted'
 import toolsExpandableDemo from './tools-expandable.vue'
 import toolsExpandableSource from './tools-expandable.vue?raw&highlighted'
 import toolsSimpleDemo from './tools-simple.vue'
@@ -49,6 +57,10 @@ const wide = { className: 'chat-preview-wide' }
 
 export const chatOverview = defineDemo(overviewDemo, overviewSource, { className: 'chat-overview' })
 export const chatLayoutPanel = defineDemo(layoutPanelDemo, layoutPanelSource, { className: 'chat-preview' })
+export const chatComposerShell = defineDemo(composerShellDemo, composerShellSource, { className: 'chat-preview' })
+export const chatComposerStates = defineDemo(composerStatesDemo, composerStatesSource, { className: 'chat-preview' })
+export const chatComposerMentions = defineDemo(composerMentionsDemo, composerMentionsSource, { className: 'chat-preview' })
+export const chatTokenized = defineDemo(tokenizedDemo, tokenizedSource, stack)
 export const chatScrollLabels = defineDemo(scrollLabelsDemo, scrollLabelsSource, stack)
 export const chatMessageAvatar = defineDemo(messageAvatarDemo, messageAvatarSource, stack)
 export const chatMessageGhost = defineDemo(messageGhostDemo, messageGhostSource, stack)

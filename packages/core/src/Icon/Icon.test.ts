@@ -41,6 +41,10 @@ describe('icon', () => {
       'close',
       'funnel',
       'image',
+      'stop',
+      'microphone',
+      'warning',
+      'error',
     ])
     expect(new Set(slugs).size).toBe(slugs.length)
   })

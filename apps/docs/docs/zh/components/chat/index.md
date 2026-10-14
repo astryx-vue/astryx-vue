@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMetadata, chatBubbleVariants, chatLayoutPanel, chatListDensity, chatListFull, chatMessageAvatar, chatMessageGhost, chatMessageGroup, chatMetadataFooter, chatMetadataStatus, chatMetadataTime, chatScrollLabels, chatSystemIcon, chatSystemStatus, chatSystemVariants, chatToolsExpandable, chatToolsSimple, chatToolsStatuses } from '../../../../components/demos/chat'
+import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMetadata, chatBubbleVariants, chatComposerMentions, chatComposerShell, chatComposerStates, chatLayoutPanel, chatListDensity, chatListFull, chatMessageAvatar, chatMessageGhost, chatMessageGroup, chatMetadataFooter, chatMetadataStatus, chatMetadataTime, chatScrollLabels, chatSystemIcon, chatSystemStatus, chatSystemVariants, chatTokenized, chatToolsExpandable, chatToolsSimple, chatToolsStatuses } from '../../../../components/demos/chat'
 </script>
 
 ## 使用方法
@@ -18,9 +18,15 @@ import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMeta
 
 阅读位置在底部时，新文字会把视图继续贴在底部。一旦向上滚，贴底立刻停下，并出现回到底部的按钮。没贴底时又来了新消息，按钮文案会换成当前语言的「有新消息」，屏幕阅读器也会播报，`ChatUnreadDivider` 用来标出分界。`ChatLayout` 内部用 `useChatStreamScroll` 和 `useChatNewMessages` 串起这件事。`showScrollButton` 设为 `false` 可以拿掉内置按钮，也可以用 `scrollButton` 插槽换成自己的。
 
+输入区用 ChatComposer，放进布局的 composer 插槽。外壳管草稿、发送和停止。默认输入框能插入标记，回车发送，Shift 加回车换行。附件抽屉、顶栏和底栏都是插槽。语音听写走浏览器自己的语音识别，没有识别能力时麦克风不出现。
+
 ```vue
 <script setup lang="ts">
-import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+import { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
+
+function onSubmit(value: string) {
+  console.log(value)
+}
 </script>
 
 <template>
@@ -38,7 +44,7 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
       </ChatMessage>
     </ChatMessageList>
     <template #composer>
-      <form><!-- 你的输入区 --></form>
+      <ChatComposer placeholder="输入消息……" @submit="onSubmit" />
     </template>
   </ChatLayout>
 </template>
@@ -54,13 +60,13 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 
 `ChatTypingIndicator` 画三个点。传入 `names` 后，一个人、两个人、以及「某人和其他几人」各有一句文案。根节点是 `role="status"`，由它播报这一句。`ChatUnreadDivider` 标出第一条未读消息，新到的内容放在它下面。
 
-下面的示例和 Astryx 文档站里 Chat 分类的示例一一对应，顺序也按那边的组件页来：布局、回到底部、消息、气泡、列表、元信息、系统消息、工具调用。
+下面先看输入套件和消息列表放在一起的样子，再按布局、回到底部、消息、气泡、列表、元信息、系统消息、工具调用往下排。
 
 ## 建议
 
 | 建议 | 做法 |
 | --- | --- |
-| <Badge variant="success">推荐</Badge> | 记录放进 `ChatMessageList`，输入放进 `composer` 插槽，磨砂和回到底部的按钮才对得齐。 |
+| <Badge variant="success">推荐</Badge> | 记录放进消息列表，输入套件放进底部插槽，磨砂和回到底部的按钮才对得齐。 |
 | <Badge variant="success">推荐</Badge> | 助手正文还在增长时保持 `isStreaming`，写完再关掉。 |
 | <Badge variant="success">推荐</Badge> | 把 `ChatUnreadDivider` 放在读者还没看到的第一条前面。按钮上的「有新消息」负责播报，分隔线负责标位置。 |
 | <Badge variant="success">推荐</Badge> | 气泡里放纯文本、引文，或你自己的渲染结果。气泡只提供底色和圆角。 |
@@ -71,9 +77,37 @@ import { ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@as
 
 <DemoExample
   :demo="chatLayoutPanel"
-  description="窄栏里的会话。容器一窄就会用上紧凑密度，适合侧栏、抽屉，或嵌在页面里的对话。"
+  description="窄栏里的会话。输入文字后回车，这句话会出现在记录末尾。容器一窄就会用上紧凑密度。"
   locale="zh"
   title="ChatLayout — 面板"
+/>
+
+<DemoExample
+  :demo="chatComposerShell"
+  description="带附件抽屉、顶栏按钮和语音按钮的输入区。点抽屉把手可以收起附件。点麦克风会在支持语音的浏览器里开始听写。"
+  locale="zh"
+  title="ChatComposer — 外壳"
+/>
+
+<DemoExample
+  :demo="chatComposerStates"
+  description="上面一条正在生成，编辑停用，停止按钮仍可点。中间是紧凑、无阴影，并带警告。下面把错误放在输入区上方。"
+  locale="zh"
+  title="ChatComposer — 状态"
+/>
+
+<DemoExample
+  :demo="chatComposerMentions"
+  description="在词首输入 @，会列出可以插入的人。选中后草稿里留下这个人的标记，发送出去的是标记的值。"
+  locale="zh"
+  title="ChatComposerInput — 提及"
+/>
+
+<DemoExample
+  :demo="chatTokenized"
+  description="同一组标记既能出现在输入框里，也能出现在已经发出的气泡里。"
+  locale="zh"
+  title="ChatTokenizedText — 气泡里的标记"
 />
 
 <DemoExample
