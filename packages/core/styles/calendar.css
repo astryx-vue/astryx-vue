@@ -114,15 +114,49 @@
     box-shadow: inset 0 0 0 1px var(--astryx-color-border-emphasized, #d4d4d4);
   }
 
-  .astryx-calendar[data-months='2'] {
+  .astryx-calendar-months {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--astryx-spacing-4, 16px);
   }
 
-  .astryx-calendar[data-months='2'] .astryx-calendar-header {
+  .astryx-calendar-grid[data-week-numbers] .astryx-calendar-weekdays,
+  .astryx-calendar-grid[data-week-numbers] .astryx-calendar-row {
+    grid-template-columns: var(--astryx-spacing-6, 24px) repeat(7, var(--astryx-input-height-md, 32px));
+  }
+
+  .astryx-calendar-week-number {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+  }
+
+  .astryx-calendar-gridcell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .astryx-calendar-cell.is-in-range.is-round-start {
+    border-start-start-radius: var(--astryx-radius-full, 9999px);
+    border-end-start-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-calendar-cell.is-in-range.is-round-end {
+    border-start-end-radius: var(--astryx-radius-full, 9999px);
+    border-end-end-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-calendar-cell:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentColor);
+    outline-offset: 1px;
+  }
+
+  .astryx-calendar-nav-button:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentColor);
+    outline-offset: 1px;
   }
 
   .astryx-calendar-cell.is-in-range {

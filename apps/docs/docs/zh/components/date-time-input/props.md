@@ -20,5 +20,14 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>这一对字段的错误、警告或成功。</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息的位置。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>同时禁用两个字段。</td></tr>
+<tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>日期那一半里，任一函数返回 false 时该日不可选。</td></tr>
+<tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td>—</td><td>日期月历并排的月份数。</td></tr>
+<tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>日期月历从哪一天开始一周。</td></tr>
+<tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>旧的打开方式，同时传给日期和时间。</td></tr>
+<tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>两个字段都不可改。</td></tr>
+<tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>日期和时间都齐了之后再跑。返回 Promise 时保持加载。清除也会跑。</td></tr>
+<tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>在标签旁标成可选。</td></tr>
+<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>把这一对字段标成必填。</td></tr>
+<tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签末尾信息图标里的说明。</td></tr>
 </tbody></table>
 </div>

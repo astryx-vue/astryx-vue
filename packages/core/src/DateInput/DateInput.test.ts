@@ -275,6 +275,83 @@ describe('dateInput', () => {
     fine.unmount()
     vi.unstubAllGlobals()
   })
+
+  it('uses the system date control and marks the field required', () => {
+    const wrapper = mount(DateInput, {
+      props: {
+        presentation: 'native',
+        label: 'Due',
+        modelValue: new Date(2026, 2, 21),
+        isRequired: true,
+        labelTooltip: 'Ship on a weekday',
+      },
+    })
+    const input = wrapper.get('input')
+    expect(input.attributes('type')).toBe('date')
+    expect(input.element.value).toBe('2026-03-21')
+    expect(input.attributes('aria-required')).toBe('true')
+    expect(wrapper.text()).toContain('March 21, 2026')
+    expect(wrapper.find('.astryx-date-input').attributes('data-presentation')).toBe('native')
+  })
+
+  it('follows nativePicker when presentation is omitted', () => {
+    const always = mount(DateInput, { props: { nativePicker: 'always', modelValue: null, label: 'Due' } })
+    expect(always.get('input').attributes('type')).toBe('date')
+    always.unmount()
+
+    mockPointer(true)
+    const touch = mount(DateInput, { props: { nativePicker: 'touch', modelValue: null, label: 'Due' } })
+    expect(touch.get('input').attributes('type')).toBe('date')
+    touch.unmount()
+    vi.unstubAllGlobals()
+  })
+
+  it('disables the field and runs changeAction after the value is committed', async () => {
+    let release: () => void = () => {}
+    const changeAction = vi.fn(() => new Promise<void>((resolve) => {
+      release = resolve
+    }))
+    const wrapper = mount(DateInput, {
+      props: {
+        modelValue: null,
+        presentation: 'popover',
+        label: 'Due',
+        isOptional: true,
+        isLoading: false,
+        changeAction,
+      },
+    })
+    expect(wrapper.text()).toContain('Optional')
+    const input = wrapper.get('input.astryx-date-input-field')
+    await input.setValue('2026-03-15')
+    await input.trigger('input')
+    expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toEqual(new Date(2026, 2, 15))
+    expect(changeAction).toHaveBeenCalledWith(new Date(2026, 2, 15))
+    expect(input.attributes('aria-busy')).toBe('true')
+    expect(input.attributes('disabled')).toBeDefined()
+    expect(wrapper.find('.astryx-date-input-spinner').exists()).toBe(true)
+    release()
+    await nextTick()
+    await Promise.resolve()
+    await nextTick()
+    expect(wrapper.get('input.astryx-date-input-field').attributes('aria-busy')).toBeUndefined()
+  })
+
+  it('rejects a native date that fails a constraint', async () => {
+    const wrapper = mount(DateInput, {
+      props: {
+        presentation: 'native',
+        label: 'Due',
+        modelValue: new Date(2026, 2, 20),
+        dateConstraints: [(date: Date) => date.getDay() !== 0],
+      },
+    })
+    const input = wrapper.get('input')
+    input.element.value = '2026-03-22'
+    await input.trigger('change')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(wrapper.get('[role="alert"]').text()).toContain('not available')
+  })
 })
 
 afterEach(() => {

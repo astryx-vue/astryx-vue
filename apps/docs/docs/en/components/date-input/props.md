@@ -16,13 +16,23 @@ footer: false
       <tr><td><code>min</code></td><td><code>Date</code></td><td>—</td><td>Earliest selectable date.</td></tr>
       <tr><td><code>max</code></td><td><code>Date</code></td><td>—</td><td>Latest selectable date.</td></tr>
       <tr><td><code>isDateDisabled</code></td><td><code>(date: Date) =&gt; boolean</code></td><td>—</td><td>Return true to disable a date.</td></tr>
+      <tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>A day is disabled when any function returns false.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Field label.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Helper text under the label.</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps the label for screen readers and hides it visually.</td></tr>
+      <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>Marks the label as optional.</td></tr>
+      <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>Marks the field required and sets aria-required on the input.</td></tr>
+      <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Hint shown from the info icon at the end of the label.</td></tr>
       <tr><td><code>format</code></td><td><code>'date' | 'date_long' | 'date_weekday' | 'system_date' | ((iso: string) =&gt; string)</code></td><td><code>'date_long'</code></td><td>How a committed date is displayed. A function receives <code>YYYY-MM-DD</code>.</td></tr>
-      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive-bottom-sheet'</code></td><td><code>'popover'</code></td><td>Opens the calendar in a popover, always in a bottom sheet, or in a bottom sheet when the pointer is coarse.</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native'</code></td><td>adaptive-native when omitted</td><td>Popover, bottom sheet, system date control, or a switch between them based on the pointer. presentation wins when nativePicker is also set.</td></tr>
+      <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>Older surface name. touch follows the pointer, always uses the system control, never keeps the calendar.</td></tr>
+      <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>Months shown side by side in the calendar. The system date control cannot express this.</td></tr>
+      <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>First day of the week in the calendar. The system date control cannot express this.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the field.</td></tr>
+      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The field cannot be edited and shows a loading indicator.</td></tr>
+      <tr><td><code>changeAction</code></td><td><code>(value: Date | null) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs after the value is committed. A promise keeps the field busy until it settles.</td></tr>
+      <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Width of the whole field. A number is pixels.</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Reason shown while the field is disabled.</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button.</td></tr>
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td><code>Clear</code> / <code>清除</code></td><td>Accessible name for the clear button. Includes <code>label</code> when one is set. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>

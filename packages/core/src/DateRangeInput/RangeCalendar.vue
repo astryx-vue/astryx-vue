@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<{
   minRangeSpan?: number
   maxRangeSpan?: number
   weekStartsOn?: WeekStartsOn
+  dateConstraints?: ReadonlyArray<(date: Date) => boolean>
 }>(), {
   monthCount: 2,
   range: null,
@@ -71,10 +72,17 @@ function inSpan(day: string, range: ISODateRange | null): boolean {
   return range != null && day >= range.start && day <= range.end
 }
 
+function dayDate(day: string): Date {
+  const [year, month, date] = day.split('-').map(Number)
+  return new Date(year!, month! - 1, date)
+}
+
 function isDisabled(day: string): boolean {
   if (props.min && day < props.min)
     return true
   if (props.max && day > props.max)
+    return true
+  if (props.dateConstraints?.some(constraint => !constraint(dayDate(day))))
     return true
   return isDayOutsideSpan(props.pending, day, props.minRangeSpan, props.maxRangeSpan)
 }
