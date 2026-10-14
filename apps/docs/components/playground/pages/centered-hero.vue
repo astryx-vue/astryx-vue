@@ -47,7 +47,7 @@ const heroFrame: CSSProperties = {
                 label="Get started"
                 variant="primary"
               >
-                <template #end-content>
+                <template #end>
                   <Icon icon="i-heroicons-arrow-right-solid" size="sm" color="inherit" />
                 </template>
               </Button>

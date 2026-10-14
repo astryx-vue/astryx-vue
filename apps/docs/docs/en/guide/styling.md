@@ -20,7 +20,7 @@ import '@astryx-vue/core/styles.css'
 import '@astryx-vue/themes/neutral.css'
 ```
 
-`styles.css` gathers the sheets in `packages/core/styles/`, including the shared motion in `motion.css`. `neutral.css` gathers the theme files in `packages/themes/neutral/` and loads JetBrains Mono.
+`styles.css` gathers the sheets in `packages/core/styles/`, including the shared motion in `motion.css`. `neutral.css` gathers the theme files in `packages/themes/neutral/` and loads Figtree and JetBrains Mono.
 
 The layer order is:
 

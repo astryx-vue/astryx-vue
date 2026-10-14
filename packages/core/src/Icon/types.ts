@@ -81,7 +81,9 @@ export interface IconProps {
    * The icon to render. Three forms are accepted:
    *
    * - a string, treated as a CSS icon class you provide — for example an
-   *   UnoCSS icon such as `'i-carbon-search'`, or your own class;
+   *   UnoCSS icon such as `'i-carbon-search'`, or your own class. The class
+   *   paints the inside of the sized box, so a utility that sets
+   *   `width`/`height: 100%` fills the icon instead of replacing its size;
    * - a name from the library's own chrome, which only the components use;
    * - a component, rendered as it is.
    *

@@ -10,7 +10,7 @@ title: 快速开始
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-在应用入口引入一次主题。Neutral 会带上 JetBrains Mono。
+在应用入口引入一次主题。Neutral 会带上 Figtree 和 JetBrains Mono。
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
@@ -33,7 +33,5 @@ import { Button } from '@astryx-vue/core/Button'
 ```ts
 import '@astryx-vue/core/styles.css'
 ```
-
-Figtree 写在正文字体栈的第一位，但主题包不加载它。要使用这个字体，在应用里自己引入。不引入时会落到后面的系统无衬线字体。
 
 下一步看 [安装](/guide/installation) 里的包入口，看 [主题与样式](/guide/styling) 里层和变量怎么接，或者直接打开 [组件](/components/)。了解设计初衷与实现思路，请参阅 [介绍](/guide/why)。

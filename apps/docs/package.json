@@ -12,7 +12,6 @@
   "dependencies": {
     "@astryx-vue/core": "workspace:^",
     "@astryx-vue/themes": "workspace:^",
-    "@fontsource/figtree": "catalog:docs",
     "@monaco-editor/loader": "catalog:docs",
     "@vue/compiler-sfc": "catalog:vue",
     "monaco-editor": "catalog:docs",

@@ -399,10 +399,10 @@ const timeRange = ref('1 year')
                       :description="asset.name"
                       href="#"
                     >
-                      <template #start-content>
+                      <template #startContent>
                         <Avatar :name="asset.ticker" size="md" />
                       </template>
-                      <template #end-content>
+                      <template #endContent>
                         <VStack :gap="0" justify="end">
                           <Text type="body">{{ asset.value }}</Text>
                           <Badge :label="asset.change" :variant="asset.change.startsWith('-') ? 'red' : 'green'" />

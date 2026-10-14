@@ -184,9 +184,6 @@ catalogs:
       specifier: 4.149.0
       version: 4.149.0
   docs:
-    '@fontsource/figtree':
-      specifier: 5.3.0
-      version: 5.3.0
     '@iconify-json/carbon':
       specifier: 1.2.28
       version: 1.2.28
@@ -248,6 +245,9 @@ catalogs:
       specifier: 0.3.25
       version: 0.3.25
   runtime:
+    '@fontsource/figtree':
+      specifier: 5.3.0
+      version: 5.3.0
     '@fontsource/jetbrains-mono':
       specifier: 5.3.0
       version: 5.3.0
@@ -368,9 +368,6 @@ importers:
       '@astryx-vue/themes':
         specifier: workspace:^
         version: link:../../packages/themes
-      '@fontsource/figtree':
-        specifier: catalog:docs
-        version: 5.3.0
       '@monaco-editor/loader':
         specifier: catalog:docs
         version: 1.7.0
@@ -457,6 +454,9 @@ importers:
 
   packages/themes:
     dependencies:
+      '@fontsource/figtree':
+        specifier: catalog:runtime
+        version: 5.3.0
       '@fontsource/jetbrains-mono':
         specifier: catalog:runtime
         version: 5.3.0

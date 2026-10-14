@@ -1,4 +1,10 @@
-/* 各主题共用的等宽字形。主题入口在内部引入，使用方不要单独 import 这个文件。 */
+/* 各主题共用的正文字体 Figtree 和等宽字体 JetBrains Mono。主题入口在内部引入，使用方不要单独 import 这个文件。 */
+@import '@fontsource/figtree/400.css';
+@import '@fontsource/figtree/400-italic.css';
+@import '@fontsource/figtree/500.css';
+@import '@fontsource/figtree/600.css';
+@import '@fontsource/figtree/600-italic.css';
+@import '@fontsource/figtree/700.css';
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/400-italic.css';
 @import '@fontsource/jetbrains-mono/500.css';

@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import process from 'node:process'
-import { setTimeout } from 'node:timers/promises'
+import { retryWithBackoff } from './npm-view-retry.mjs'
 
 const packages = JSON.parse(process.env.PUBLISHED_PACKAGES ?? '[]')
 const visibility = process.env.REPO_VISIBILITY ?? ''
@@ -15,21 +15,31 @@ function run(command, args, options = {}) {
   })
 }
 
+function parseMaxWaitMs() {
+  const raw = process.env.NPM_VIEW_MAX_WAIT_MS
+  if (raw == null || raw === '')
+    return undefined
+  const parsed = Number(raw)
+  if (!Number.isFinite(parsed) || parsed <= 0)
+    throw new Error(`NPM_VIEW_MAX_WAIT_MS 无效：${raw}`)
+  return parsed
+}
+
 async function viewPackage(spec) {
-  let lastError
-  for (let attempt = 1; attempt <= 6; attempt += 1) {
-    try {
-      return JSON.parse(run('npm', ['view', spec, '--json']))
-    }
-    catch (error) {
-      lastError = error
-      const stderr = error.stderr?.toString() ?? ''
-      console.log(`npm view ${spec} 第 ${attempt} 次没有查到。${stderr.trim()}`)
-      if (attempt < 6)
-        await setTimeout(10_000)
-    }
-  }
-  throw lastError
+  const maxWaitMs = parseMaxWaitMs()
+  return retryWithBackoff(
+    () => JSON.parse(run('npm', ['view', spec, '--json'])),
+    {
+      ...(maxWaitMs != null ? { maxWaitMs } : {}),
+      onRetry: ({ attempt, error, waitMs, elapsed }) => {
+        const stderr = error.stderr?.toString() ?? ''
+        const detail = stderr.trim() || String(error.message ?? error)
+        console.log(
+          `npm view ${spec} 第 ${attempt} 次没有查到（已等待约 ${Math.round(elapsed / 1000)}s），${waitMs}ms 后重试。${detail}`,
+        )
+      },
+    },
+  )
 }
 
 function repositoryUrl(info) {

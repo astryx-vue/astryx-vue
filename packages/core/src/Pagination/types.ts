@@ -1,10 +1,32 @@
+/** 上一页和下一页之间显示什么。 */
+export type PaginationVariant = 'pages' | 'count' | 'compact' | 'dots' | 'none'
+
+/** 控件尺寸。 */
+export type PaginationSize = 'sm' | 'md'
+
 export interface PaginationProps {
   /** 当前页码（1-based） */
   page?: number
   /** 每页条目数 */
   pageSize?: number
-  /** 总条目数 */
+  /** 总条目数。和 `totalPages` 同时存在时以总条目数为准。 */
   total?: number
+  /**
+   * 总页数。没有总条目数时使用，例如圆点轮播。
+   */
+  totalPages?: number
+  /**
+   * 中间区域的形态。
+   * `pages` 是页码，`count` 是「起–止 / 总数」，`compact` 是「第几页 / 共几页」，
+   * `dots` 是圆点，`none` 只留上一页和下一页。
+   * @default 'pages'
+   */
+  variant?: PaginationVariant
+  /**
+   * 控件高度。
+   * @default 'md'
+   */
+  size?: PaginationSize
   /** 是否显示页面大小选择器 */
   showSizeChanger?: boolean
   /** 页面大小选项 */

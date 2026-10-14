@@ -149,4 +149,17 @@ describe('tab-list', () => {
     expect(wrapper.classes()).toContain('astryx-tab-list--has-divider')
     expect(wrapper.find('.astryx-tab--size-sm').exists()).toBe(true)
   })
+
+  it('bleeds inline from isFullBleed or edgeCompensation', () => {
+    const slots = { default: () => h(Tab, { value: 'a' }, () => 'Tab A') }
+
+    const bleed = mount(TabList, { props: { value: 'a', isFullBleed: true }, slots })
+    expect(bleed.classes()).toContain('astryx-tab-list--full-bleed')
+
+    const canonical = mount(TabList, { props: { value: 'a', edgeCompensation: 'inline' }, slots })
+    expect(canonical.classes()).toContain('astryx-tab-list--full-bleed')
+
+    const plain = mount(TabList, { props: { value: 'a' }, slots })
+    expect(plain.classes()).not.toContain('astryx-tab-list--full-bleed')
+  })
 })

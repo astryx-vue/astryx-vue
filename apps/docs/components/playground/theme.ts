@@ -52,6 +52,7 @@ export interface DensityPreset {
   zh: string
   en: string
   typeSize: number
+  typeScale: string
   spacing: number
   elementSize: number
   radius: number
@@ -158,11 +159,16 @@ export const TYPE_SCALES: TypeScaleOption[] = [
   { id: 'golden', ratio: 1.618, zh: '黄金比例', en: 'Golden ratio' },
 ]
 
+/**
+ * Same numbers as upstream UNIFIED_PRESETS. `radius` here is the value stored
+ * on ThemeState (the element radius our scale expands from), not upstream's
+ * inner-radius base.
+ */
 export const DENSITY_PRESETS: DensityPreset[] = [
-  { id: 'compact', zh: '紧凑', en: 'Compact', typeSize: 13, spacing: 3, elementSize: 28, radius: 8 },
-  { id: 'default', zh: '默认', en: 'Default', typeSize: 14, spacing: 4, elementSize: 32, radius: 10 },
-  { id: 'comfortable', zh: '宽松', en: 'Comfortable', typeSize: 16, spacing: 5, elementSize: 36, radius: 12 },
-  { id: 'gigantic', zh: '超大', en: 'Gigantic', typeSize: 18, spacing: 6, elementSize: 44, radius: 16 },
+  { id: 'compact', zh: '紧凑', en: 'Compact', typeSize: 12, typeScale: 'major-second', spacing: 2, elementSize: 28, radius: 2 },
+  { id: 'default', zh: '默认', en: 'Default', typeSize: 14, typeScale: 'minor-third', spacing: 4, elementSize: 32, radius: 4 },
+  { id: 'comfortable', zh: '宽松', en: 'Comfortable', typeSize: 16, typeScale: 'major-third', spacing: 6, elementSize: 40, radius: 6 },
+  { id: 'gigantic', zh: '超大', en: 'Gigantic', typeSize: 18, typeScale: 'augmented-fourth', spacing: 8, elementSize: 48, radius: 8 },
 ]
 
 export const PLAYGROUND_FONTS: PlaygroundFont[] = [
@@ -226,6 +232,7 @@ export function applyDensity(theme: ThemeState, id: DensityPreset['id']): void {
   if (!preset)
     return
   theme.typeSize = preset.typeSize
+  theme.typeScale = preset.typeScale
   theme.spacing = preset.spacing
   theme.elementSize = preset.elementSize
   theme.radius = preset.radius
@@ -234,11 +241,50 @@ export function applyDensity(theme: ThemeState, id: DensityPreset['id']): void {
 export function matchingDensity(theme: ThemeState): DensityPreset['id'] | null {
   const match = DENSITY_PRESETS.find(preset =>
     preset.typeSize === theme.typeSize
+    && preset.typeScale === theme.typeScale
     && preset.spacing === theme.spacing
     && preset.elementSize === theme.elementSize
     && preset.radius === theme.radius,
   )
   return match?.id ?? null
+}
+
+/** Upstream `getTokenLabel`, with this package's `--astryx-` prefix removed. */
+export function colorTokenLabel(variable: string): string {
+  return variable
+    .replace(/^--astryx-/, '')
+    .replace(/-/g, ' ')
+    .replace(/\bbackground /gi, '')
+    .replace(/\b\w/g, char => char.toUpperCase())
+}
+
+/** `#ffffff  10%`, matching upstream ColorSwatch's readout (two spaces). */
+export function formatColorReadout(value: string): string {
+  const normalized = normalizeHex(value)
+  if (!normalized)
+    return value
+  const hex = normalized.slice(0, 7)
+  const alpha = normalized.length === 9
+    ? Math.round(Number.parseInt(normalized.slice(7), 16) / 255 * 100)
+    : 100
+  return `${hex}  ${alpha}%`
+}
+
+/** Inverse of formatColorReadout. Returns null when the text is not a color. */
+export function parseColorReadout(raw: string): string | null {
+  const parts = raw.trim().split(/\s+/)
+  const head = parts[0] ?? ''
+  const pct = parts.find(part => part.endsWith('%'))
+  const alpha = pct
+    ? Math.min(100, Math.max(0, Number(pct.slice(0, -1)))) / 100
+    : 1
+  const normalized = normalizeHex(head)
+  if (!normalized || !Number.isFinite(alpha))
+    return null
+  if (alpha >= 1)
+    return normalized.slice(0, 7)
+  const byte = Math.round(alpha * 255).toString(16).padStart(2, '0')
+  return `${normalized.slice(0, 7)}${byte}`
 }
 
 export function activeColors(theme: ThemeState): ThemeColors {
@@ -441,13 +487,16 @@ function readNeutralColors(): { light: ThemeColors, dark: ThemeColors } {
   return { light, dark }
 }
 
-function themeSnapshot(theme: ThemeState): ThemeState {
+/**
+ * Palette snapshot. Preview light/dark is not part of the palette: the toolbar
+ * owns it separately from the token values, same as upstream `mode`.
+ */
+function themeSnapshot(theme: ThemeState): Omit<ThemeState, 'dark'> {
   return {
     colors: {
       light: { ...theme.colors.light },
       dark: { ...theme.colors.dark },
     },
-    dark: theme.dark,
     headingFont: theme.headingFont,
     bodyFont: theme.bodyFont,
     customHeadingFont: theme.customHeadingFont,

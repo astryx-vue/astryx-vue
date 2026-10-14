@@ -2,6 +2,7 @@ import type { ComputedRef, Ref } from 'vue'
 
 export type TabListSize = 'sm' | 'md' | 'lg'
 export type TabListLayout = 'hug' | 'fill'
+export type TabListEdgeCompensation = 'inline'
 
 export interface TabListProps {
   /**
@@ -23,6 +24,19 @@ export interface TabListProps {
    * @default false
    */
   hasDivider?: boolean
+  /**
+   * Stretch the strip to the container's inline content edges, cancelling
+   * `--container-padding-inline-*`, while the first and last labels stay on
+   * the content inset. `edgeCompensation="inline"` is the same mode and wins
+   * when both are set.
+   * @default false
+   */
+  isFullBleed?: boolean
+  /**
+   * Canonical name for the inline bleed. `isFullBleed` selects the same mode
+   * when this is omitted.
+   */
+  edgeCompensation?: TabListEdgeCompensation
 }
 
 export interface TabMenuOption {

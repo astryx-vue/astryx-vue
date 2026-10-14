@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { outlineControlled, outlineDeepNesting, outlineDensity, outlineOverview } from '../../../../components/demos/outline'
+import { outlineControlled, outlineDeepNesting, outlineDensity } from '../../../../components/demos/outline'
 </script>
 
 ## 使用方法
@@ -48,30 +48,8 @@ const items = [
 
 ## 示例
 
-<DemoExample
-  :demo="outlineOverview"
-  description="文档大纲。当前章节由滑动的指示条标出。"
-  locale="zh"
-  title="Outline"
-/>
+<DemoExample :demo="outlineControlled" description="传入 activeId 后，内置的滚动侦测会停下来，高亮由你自己的逻辑决定。" locale="zh" title="受控" />
 
-<DemoExample
-  :demo="outlineControlled"
-  description="用 activeId 自己决定当前章节。传入之后，内置滚动侦测关闭，高亮由外部逻辑负责。"
-  locale="zh"
-  title="Outline — 受控"
-/>
+<DemoExample :demo="outlineDeepNesting" description="1 到 4 级标题逐级向内缩进，长文档里的小节仍然容易扫读。" locale="zh" title="深层嵌套" />
 
-<DemoExample
-  :demo="outlineDeepNesting"
-  description="1 到 4 级标题对应越来越深的缩进，带小节的长文档仍然好扫读。"
-  locale="zh"
-  title="Outline — 深层嵌套"
-/>
-
-<DemoExample
-  :demo="outlineDensity"
-  description="两种密度控制条目的内边距。紧凑用于密集侧栏，默认用于普通文档。指示条会跟上每条的高度。"
-  locale="zh"
-  title="Outline — 密度"
-/>
+<DemoExample :demo="outlineDensity" description="compact 收紧每一项的内边距，适合密集侧栏。default 是文档里的常规间距。指示条会跟着每一项的高度走。" locale="zh" title="密度" />

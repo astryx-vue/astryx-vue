@@ -41,37 +41,12 @@ import { AspectRatio } from '@astryx-vue/core/AspectRatio'
 
 ## 示例
 
-<DemoExample
-  :demo="aspectRatioCircle"
-  description="shape 为 ellipse、ratio 为 1 时，图片被裁成正圆。fit cover 按框裁切。"
-  locale="zh"
-  title="正圆"
-/>
+<DemoExample :demo="aspectRatioCircle" description="shape 为 ellipse、比例为 1 时，图片被裁成正圆。" locale="zh" title="正圆" />
 
-<DemoExample
-  :demo="aspectRatioSquare"
-  description="ratio 为 1，外形用默认的矩形。fit cover 填满正方形。"
-  locale="zh"
-  title="正方形"
-/>
+<DemoExample :demo="aspectRatioGallery" description="一组图片共用 4:3 的画幅。" locale="zh" title="图片墙" />
 
-<DemoExample
-  :demo="aspectRatioWidescreen"
-  description="ratio 为 16 / 9。宽度来自 Center，高度跟着比例走。"
-  locale="zh"
-  title="宽屏"
-/>
+<DemoExample :demo="aspectRatioSquare" description="1:1 的方图，适合头像或方幅照片。" locale="zh" title="正方形" />
 
-<DemoExample
-  :demo="aspectRatioGallery"
-  description="三列网格，每格是 4 / 3。比例框需要一个有明确宽度的父级。"
-  locale="zh"
-  title="图片墙"
-/>
+<DemoExample :demo="aspectRatioWidescreen" description="16:9 的宽幅画面包住一张图片。" locale="zh" title="宽屏" />
 
-<DemoExample
-  :demo="aspectRatioSkeleton"
-  description="不传 fit 时子元素自己决定尺寸。100% 宽高的骨架屏填满 16 / 9 的框。"
-  locale="zh"
-  title="骨架屏"
-/>
+<DemoExample :demo="aspectRatioSkeleton" description="图片还在加载时，画幅里放一块骨架屏。" locale="zh" title="加载骨架" />

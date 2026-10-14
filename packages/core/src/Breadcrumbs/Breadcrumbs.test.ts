@@ -106,4 +106,44 @@ describe('breadcrumbs', () => {
     expect(wrapper.find('.astryx-breadcrumb-item--variant-supporting').exists()).toBe(true)
     expect(wrapper.find('.astryx-breadcrumb-item__separator').text()).toBe('>')
   })
+
+  it('renders a menu trigger and ignores href when menu is set', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(Breadcrumbs, {
+      slots: {
+        default: () => h(BreadcrumbItem, {
+          href: '/teams',
+          menu: [
+            { label: 'Design' },
+            { label: 'Engineering' },
+            { type: 'divider' },
+            { label: 'Data' },
+          ],
+        }, () => 'Teams'),
+      },
+    })
+
+    const trigger = wrapper.get('button')
+    expect(trigger.attributes('aria-haspopup')).toBe('menu')
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(trigger.text()).toContain('Teams')
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(warn).toHaveBeenCalled()
+    warn.mockRestore()
+  })
+
+  it('keeps aria-current on a current crumb that opens a menu', () => {
+    const wrapper = mount(Breadcrumbs, {
+      slots: {
+        default: () => h(BreadcrumbItem, {
+          isCurrent: true,
+          menu: [{ label: 'Overview' }],
+        }, () => 'Overview'),
+      },
+    })
+
+    const trigger = wrapper.get('button')
+    expect(trigger.attributes('aria-current')).toBe('page')
+    expect(trigger.attributes('aria-haspopup')).toBe('menu')
+  })
 })

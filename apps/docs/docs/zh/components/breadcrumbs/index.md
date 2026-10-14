@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { breadcrumbsBasic, breadcrumbsSupporting } from '../../../../components/demos/breadcrumbs'
+import { breadcrumbsDeep, breadcrumbsIcons, breadcrumbsMenu, breadcrumbsSeparators, breadcrumbsVariants } from '../../../../components/demos/breadcrumbs'
 </script>
 
 ## 使用方法
@@ -46,16 +46,12 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 
 ## 示例
 
-<DemoExample
-  :demo="breadcrumbsBasic"
-  description="标准的面包屑路径，使用默认文本尺寸。"
-  locale="zh"
-  title="基础用法"
-/>
+<DemoExample :demo="breadcrumbsSeparators" description="把默认的斜杠换成尖角、箭头或圆点，用来配合页面的分隔样式。" locale="zh" title="分隔符" />
 
-<DemoExample
-  :demo="breadcrumbsSupporting"
-  description="supporting 变体使用更小的辅助文本尺寸，适合紧凑场景。"
-  locale="zh"
-  title="辅助变体"
-/>
+<DemoExample :demo="breadcrumbsDeep" description="五级路径，适合嵌套很深的页面。根项前面放一个首页图标。" locale="zh" title="深层路径" />
+
+<DemoExample :demo="breadcrumbsMenu" description="路径中间的一项可以打开菜单，用来在同级目的地之间切换。" locale="zh" title="菜单项" />
+
+<DemoExample :demo="breadcrumbsVariants" description="默认样式和 supporting 变体放在一起。supporting 更轻，适合紧凑的管理界面。" locale="zh" title="变体" />
+
+<DemoExample :demo="breadcrumbsIcons" description="标签前面加图标，根项和设置分区扫一眼就能认出来。" locale="zh" title="图标" />

@@ -296,7 +296,7 @@
   .astryx-chat-message__metadata {
     box-sizing: border-box;
     max-width: min(100%, max(80%, 280px));
-    min-width: 0;
+    min-width: min(100%, 280px);
   }
 
   .astryx-chat-message-bubble__frame {
@@ -306,7 +306,10 @@
     box-sizing: border-box;
     width: fit-content;
     max-width: min(100%, max(80%, 280px));
-    min-width: 0;
+    /* fit-content with min-width: 0 collapses to a few characters when the
+       parent's width is cyclic. 280px is the original floor; cap it at the
+       column so a narrow thread wraps the text instead of overflowing. */
+    min-width: min(100%, 280px);
   }
 
   /* Same column gap as the original bubble stack. Metadata’s -6px / +4px

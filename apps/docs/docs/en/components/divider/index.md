@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dividerBasic, dividerLabel, dividerVariants, dividerVertical } from '../../../../components/demos/divider'
+import { dividerFullBleed, dividerVariants, dividerVertical } from '../../../../components/demos/divider'
 </script>
 
 ## Usage
@@ -37,19 +37,8 @@ import { Divider } from '@astryx-vue/core/Divider'
 
 ## Examples
 
-<DemoExample :demo="dividerBasic" title="Basic" description="A horizontal rule spans the available width." locale="en" />
+<DemoExample :demo="dividerFullBleed" description="The rule runs past the card padding, from edge to edge, between the line items and the total." locale="en" title="Full bleed" />
 
-<DemoExample :demo="dividerLabel" title="Label" description="A label sits in the middle of the rule. The label uses supporting text styling." locale="en" />
+<DemoExample :demo="dividerVariants" description="A labeled rule for an alternative such as “or”, then a strong rule before the fine print." locale="en" title="Variants" />
 
-<DemoExample :demo="dividerVariants" title="Variants" description="subtle is the default weight. strong uses the emphasized border color." locale="en" />
-
-<DemoExample :demo="dividerVertical" title="Vertical" description="Set orientation to vertical inside a row with a fixed height." locale="en" />
-
-## Accessibility
-
-A divider is not interactive, but assistive technology still has to know that it is a separator and which orientation it uses before it can describe the element correctly. The component supplies that semantics on the root element:
-
-- The root element has `role="separator"`, and `aria-orientation` reports the current `orientation`.
-- When you provide a `label`, the label text becomes the accessible name through `aria-labelledby`.
-
-If you want to name the separator with different text, set `aria-label`. Once `aria-label` is set, the component uses it as the accessible name and no longer links the `label` automatically.
+<DemoExample :demo="dividerVertical" description="Vertical rules between side-by-side metrics." locale="en" title="Vertical" />

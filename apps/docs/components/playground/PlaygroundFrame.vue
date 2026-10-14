@@ -7,6 +7,7 @@ import * as Vue from 'vue'
 import { compilePlaygroundSfc } from './compileSfc'
 import * as playgroundCharts from './playgroundCharts'
 import { PreviewHost } from './previewHost'
+import { previewLayoutMode } from './previewLayout'
 import { isHostMessage, PLAYGROUND_CHANNEL } from './protocol'
 
 const { createApp, onBeforeUnmount, onMounted, ref } = Vue
@@ -75,6 +76,7 @@ async function render(code: string): Promise<void> {
       return
     writeStyle('playground-sfc', compiled.css)
     mount(compiled.component)
+    layoutPreview(current)
     post({ channel: PLAYGROUND_CHANNEL, type: 'ok' })
   }
   catch (error) {
@@ -96,6 +98,24 @@ function mount(component: Component): void {
     post({ channel: PLAYGROUND_CHANNEL, type: 'error', message: errorText(error) })
   }
   app.mount(mountEl.value)
+}
+
+function layoutPreview(renderedGeneration: number, attempt = 0): void {
+  if (renderedGeneration !== generation)
+    return
+  const stage = mountEl.value
+  if (!stage)
+    return
+  stage.dataset.previewLayout = 'fill'
+  if ((stage.clientWidth < 2 || stage.clientHeight < 2) && attempt < 5) {
+    requestAnimationFrame(() => layoutPreview(renderedGeneration, attempt + 1))
+    return
+  }
+  const root = stage.querySelector('.playground-preview__content')?.firstElementChild
+  if (!(root instanceof HTMLElement))
+    return
+  const rect = root.getBoundingClientRect()
+  stage.dataset.previewLayout = previewLayoutMode(stage.clientWidth, stage.clientHeight, rect.width, rect.height)
 }
 
 function clearPreview(): void {

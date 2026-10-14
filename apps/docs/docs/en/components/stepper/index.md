@@ -7,7 +7,6 @@ footer: false
 
 <script setup lang="ts">
 import {
-  stepperCheckout,
   stepperCustom,
   stepperHorizontal,
   stepperIndicators,
@@ -48,13 +47,17 @@ const active = ref(2)
 </template>
 ```
 
-<DemoExample :demo="stepperCheckout" description="Cart through Confirm. Finished steps use a check, the current step uses a ring, and the rest use a number." locale="en" title="Stepper" />
 
 ## Examples
 
-<DemoExample :demo="stepperCustom" description="A vertical stepper where each step owns a slice of the page. The content slot is rendered only for the active step." locale="en" title="Custom content" />
-<DemoExample :demo="stepperNarrow" description="At 320px, four steps fall below the 112px minimumStepWidth and collapse to the current step, with Previous and Next." locale="en" title="Horizontal narrow collapsed" />
-<DemoExample :demo="stepperIndicators" description="None, auto, number, and a custom icon. Auto uses a check, a ring, or a number." locale="en" title="Indicator modes" />
-<DemoExample :demo="stepperHorizontal" description="Numbered nodes sit on one line. Labels center under each node." locale="en" title="On-track horizontal" />
-<DemoExample :demo="stepperOnTrack" description="Indicators sit on a vertical rail, with the label and description beside each node." locale="en" title="On-track vertical" />
-<DemoExample :demo="stepperStatus" description="Success, error, and accent recolor the indicator. Background check is optional." locale="en" title="Validation status" />
+<DemoExample :demo="stepperCustom" description="Each vertical step owns a slice of the page. The content slot can be fields, a summary, or a banner, and only the active step renders it." locale="en" title="Custom content" />
+
+<DemoExample :demo="stepperIndicators" description="None leaves progress to the bar and the label. Auto uses a check, a ring, or a number. Number always shows the step. A custom icon can replace the glyph." locale="en" title="Indicator modes" />
+
+<DemoExample :demo="stepperHorizontal" description="On a horizontal track, each indicator sits in the connector so the numbers read as beads on one line. Labels center under their node." locale="en" title="On-track horizontal" />
+
+<DemoExample :demo="stepperOnTrack" description="On a vertical rail, the indicator sits on the connector, with the label and description beside the node." locale="en" title="On-track vertical" />
+
+<DemoExample :demo="stepperStatus" description="Success, error, and accent recolor the indicator in a verification flow. Status never recolors the connector." locale="en" title="Validation status" />
+
+<DemoExample :demo="stepperNarrow" description="At 320px, four steps fall below the 112px minimum width and collapse to the current step, with Previous and Next." locale="en" title="Horizontal narrow collapsed" />

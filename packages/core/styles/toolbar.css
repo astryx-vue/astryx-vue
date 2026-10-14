@@ -47,6 +47,17 @@
     min-width: 0;
   }
 
+  /*
+   * The start slot is a row. A title stack inside it is another row whose
+   * column of text would otherwise shrink to its longest word (min-content)
+   * and stack one word per line. Give those stacks the slot's width instead.
+   */
+  .astryx-toolbar__slot--start > *,
+  .astryx-toolbar__slot--start .astryx-stack {
+    max-width: 100%;
+    min-width: 0;
+  }
+
   .astryx-toolbar__slot--center { justify-content: center; overflow: hidden; }
   .astryx-toolbar__slot--end { justify-content: flex-end; margin-inline-start: auto; }
   .astryx-toolbar--centered .astryx-toolbar__slot--end { margin-inline-start: 0; }

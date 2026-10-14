@@ -241,6 +241,52 @@ describe('pagination', () => {
     expect(wrapper.props('page')).toBe(3)
   })
 
+  it('renders dot indicators from totalPages', async () => {
+    const wrapper = mount(Pagination, {
+      props: {
+        page: 2,
+        totalPages: 4,
+        variant: 'dots',
+      },
+    })
+
+    const dots = wrapper.findAll('.astryx-pagination-dot')
+    expect(dots).toHaveLength(4)
+    expect(dots[1]!.attributes('aria-current')).toBe('page')
+    expect(wrapper.find('.astryx-pagination-pages').exists()).toBe(false)
+
+    await dots[2]!.trigger('click')
+    expect(wrapper.emitted('update:page')?.[0]).toEqual([3])
+  })
+
+  it('renders a count range and a smaller control', () => {
+    const wrapper = mount(Pagination, {
+      props: {
+        page: 1,
+        pageSize: 4,
+        total: 12,
+        variant: 'count',
+        size: 'sm',
+      },
+    })
+
+    expect(wrapper.get('.astryx-pagination').attributes('data-size')).toBe('sm')
+    expect(wrapper.get('.astryx-pagination-count').text()).toBe('1–4 of 12')
+    expect(wrapper.find('.astryx-pagination-pages').exists()).toBe(false)
+  })
+
+  it('renders the compact page-of-total label', () => {
+    const wrapper = mount(Pagination, {
+      props: {
+        page: 2,
+        totalPages: 8,
+        variant: 'compact',
+      },
+    })
+
+    expect(wrapper.get('.astryx-pagination-count').text()).toBe('Page 2 of 8')
+  })
+
   it('does not emit when clicking ellipsis', async () => {
     const wrapper = mount(Pagination, {
       props: {

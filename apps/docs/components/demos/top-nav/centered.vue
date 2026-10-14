@@ -10,7 +10,7 @@ import { TopNav, TopNavHeading, TopNavItem } from '@astryx-vue/core/TopNav'
       <template #heading>
         <TopNavHeading heading="My App" href="#home">
           <template #icon>
-            <NavIcon icon-class="i-carbon-cube" label="Product" />
+            <NavIcon icon-class="i-carbon-cube" />
           </template>
         </TopNavHeading>
       </template>

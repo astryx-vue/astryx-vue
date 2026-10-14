@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { appShellBanner, appShellContentOnly, appShellMobileHook, appShellSideNav, appShellTopAndSide, appShellTopNav } from '../../../../components/demos/app-shell'
+import { appShellBanner, appShellContentOnly, appShellSideNav, appShellTopAndSide, appShellTopNav } from '../../../../components/demos/app-shell'
 </script>
 
 ## Usage
@@ -51,44 +51,12 @@ A skip link points at `#astryx-app-shell-main`. The main region is a `div` with 
 
 ## Examples
 
-<DemoExample
-  :demo="appShellContentOnly"
-  description="Content padding without a top nav or a side nav."
-  locale="en"
-  title="Content only"
-/>
+<DemoExample :demo="appShellContentOnly" description="A shell with no navigation, for a full-bleed page, an auth screen, or an embedded view." locale="en" title="Content only" />
 
-<DemoExample
-  :demo="appShellMobileHook"
-  description="Outside a shell the hook reports that mobile navigation is disabled."
-  locale="en"
-  title="Mobile hook"
-/>
+<DemoExample :demo="appShellSideNav" description="The side nav heading carries the app identity, so a top nav is unnecessary." locale="en" title="Side nav only" />
 
-<DemoExample
-  :demo="appShellSideNav"
-  description="A side nav. Below the md breakpoint it moves into the drawer, and the top bar is the drawer toggle."
-  locale="en"
-  title="Side navigation"
-/>
+<DemoExample :demo="appShellTopNav" description="A top nav and no side navigation, for a landing page." locale="en" title="Top nav only" />
 
-<DemoExample
-  :demo="appShellTopNav"
-  description="A top nav and no side nav."
-  locale="en"
-  title="Top navigation"
-/>
+<DemoExample :demo="appShellTopAndSide" description="The usual frame: a top nav for the app, and a side nav for the pages." locale="en" title="Top nav with side nav" />
 
-<DemoExample
-  :demo="appShellTopAndSide"
-  description="Top and side navigation. The elevated variant rounds the content corner."
-  locale="en"
-  title="Top and side navigation"
-/>
-
-<DemoExample
-  :demo="appShellBanner"
-  description="A banner between the navigation and the content."
-  locale="en"
-  title="Banner"
-/>
+<DemoExample :demo="appShellBanner" description="Top nav, side nav, and a dismissable info banner between the navigation and the content." locale="en" title="With banner" />

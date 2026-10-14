@@ -45,30 +45,10 @@ import { TextInput } from '@astryx-vue/core/TextInput'
 
 ## 示例
 
-<DemoExample
-  :demo="formLayoutHorizontal"
-  description="direction 为 horizontal 时，字段排成等宽的列。"
-  locale="zh"
-  title="横向"
-/>
+<DemoExample :demo="formLayoutHorizontal" description="两个字段并排，适合姓和名这类成对输入。" locale="zh" title="横向" />
 
-<DemoExample
-  :demo="formLayoutHorizontalLabels"
-  description="标签在左。窄于 480px 时改成上下排列。"
-  locale="zh"
-  title="横向标签"
-/>
+<DemoExample :demo="formLayoutHorizontalLabels" description="设置表单把标签放在输入框旁边。" locale="zh" title="设置表单" />
 
-<DemoExample
-  :demo="formLayoutMixed"
-  description="默认纵向，依次是文本框、选择器和复选列表。"
-  locale="zh"
-  title="混合控件"
-/>
+<DemoExample :demo="formLayoutMixed" description="同一张表单里有文本框、选择器和复选框。" locale="zh" title="混合控件" />
 
-<DemoExample
-  :demo="formLayoutNested"
-  description="纵向表单里放了两行横向字段。"
-  locale="zh"
-  title="嵌套"
-/>
+<DemoExample :demo="formLayoutNested" description="地址表单把纵向排列和横向成组的字段混在一起。" locale="zh" title="嵌套地址" />

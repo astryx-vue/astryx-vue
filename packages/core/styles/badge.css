@@ -17,6 +17,14 @@
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     vertical-align: middle;
     white-space: nowrap;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .astryx-badge__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .astryx-badge[data-variant='neutral'] {
