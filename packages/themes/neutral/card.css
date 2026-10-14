@@ -4,6 +4,7 @@
   :root,
   [data-astryx-theme='neutral'] {
     --astryx-card-background: light-dark(#fff, #1f1f22);
+    --astryx-card-padding: var(--astryx-spacing-3);
     --astryx-card-muted-background: var(--astryx-color-background-muted);
     --astryx-card-border: light-dark(#00000014, #ffffff1a);
     --astryx-card-shadow-low:

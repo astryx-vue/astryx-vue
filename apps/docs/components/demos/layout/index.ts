@@ -15,11 +15,12 @@ import sidebarDemo from './sidebar.vue'
 import sidebarSource from './sidebar.vue?raw&highlighted'
 
 const options = { className: 'layout-preview' }
+const panelOptions = { className: 'layout-preview layout-preview--panel' }
 
 export const layoutCard = defineDemo(cardDemo, cardSource, options)
 export const layoutContentOnly = defineDemo(contentOnlyDemo, contentOnlySource, options)
 export const layoutContentWidth = defineDemo(contentWidthDemo, contentWidthSource, { className: 'layout-preview layout-preview--fill' })
-export const layoutDualPanel = defineDemo(dualPanelDemo, dualPanelSource, options)
+export const layoutDualPanel = defineDemo(dualPanelDemo, dualPanelSource, panelOptions)
 export const layoutFullBleed = defineDemo(fullBleedDemo, fullBleedSource, options)
-export const layoutSidebar = defineDemo(sidebarDemo, sidebarSource, options)
+export const layoutSidebar = defineDemo(sidebarDemo, sidebarSource, panelOptions)
 export const layoutOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })

@@ -61,7 +61,7 @@ export interface CardProps {
    * passing a step is a decision to override the theme instead of a way to
    * restate the default.
    *
-   * @default undefined (the theme's card padding, spacing step 4)
+   * @default undefined (the theme's card padding; neutral uses step 3, otherwise step 4)
    */
   padding?: SpacingStep
   /**
