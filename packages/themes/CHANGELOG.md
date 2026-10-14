@@ -1,5 +1,13 @@
 # @astryx-vue/themes
 
+## 0.2.1
+
+### Patch Changes
+
+- [#48](https://github.com/astryx-vue/astryx-vue/pull/48) [`09833d1`](https://github.com/astryx-vue/astryx-vue/commit/09833d13706539b032a5d9be9b13a5fd90bcc686) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题入口通过 `fonts.css` 内置 Figtree，和 JetBrains Mono 一样随主题加载，使用方不用再单独引入正文字体。
+
+- [#45](https://github.com/astryx-vue/astryx-vue/pull/45) [`0a1a584`](https://github.com/astryx-vue/astryx-vue/commit/0a1a5845983af52964eac0f4de7ff84c0fddef63) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 中性主题的卡片默认内边距改为间距 3（12px）。卡片里的布局面板内外边距都跟随这张卡片，侧栏文字不再被多出来的内边距挤出省略号。
+
 ## 0.2.0
 
 ### Minor Changes
