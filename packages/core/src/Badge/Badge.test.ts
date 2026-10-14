@@ -16,6 +16,29 @@ describe('badge', () => {
     expect(wrapper.attributes('data-variant')).toBe('neutral')
   })
 
+  it('renders a label prop and exposes the full string as the title', () => {
+    const wrapper = mount(Badge, {
+      props: {
+        label: 'Unfulfilled',
+        variant: 'warning',
+      },
+    })
+
+    expect(wrapper.text()).toBe('Unfulfilled')
+    expect(wrapper.attributes('title')).toBe('Unfulfilled')
+    expect(wrapper.attributes('data-variant')).toBe('warning')
+    expect(wrapper.find('.astryx-badge__label').exists()).toBe(true)
+  })
+
+  it('stringifies a numeric label and skips the title for an empty string', () => {
+    const numbered = mount(Badge, { props: { label: 3 } })
+    expect(numbered.text()).toBe('3')
+    expect(numbered.attributes('title')).toBe('3')
+
+    const empty = mount(Badge, { props: { label: '' } })
+    expect(empty.attributes('title')).toBeUndefined()
+  })
+
   it('renders leading content through the icon slot', () => {
     const wrapper = mount(Badge, {
       slots: {
