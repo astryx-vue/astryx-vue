@@ -1,5 +1,5 @@
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
-import type { ChatDensity, ChatMessageSender } from './types.js'
+import type { ChatComposerInputControl, ChatDensity, ChatMessageSender } from './types.js'
 import { inject } from 'vue'
 
 /** What a `ChatMessage` tells the bubble and metadata inside it. */
@@ -37,4 +37,24 @@ export const chatLayoutContextKey: InjectionKey<ChatLayoutContextValue> = Symbol
 
 export function useChatLayoutContext(): ChatLayoutContextValue | undefined {
   return inject(chatLayoutContextKey, undefined)
+}
+
+/** Draft and actions shared by the composer shell, its input, and the send button. */
+export interface ChatComposerContextValue {
+  value: ComputedRef<string>
+  placeholder: ComputedRef<string>
+  isDisabled: ComputedRef<boolean>
+  isStopShown: ComputedRef<boolean>
+  canSend: ComputedRef<boolean>
+  onChange: (value: string) => void
+  onSubmit: (value: string) => void
+  onStop: () => void
+  /** The input assigns this on mount and clears it on unmount. */
+  inputControl: Ref<ChatComposerInputControl | null>
+}
+
+export const chatComposerContextKey: InjectionKey<ChatComposerContextValue> = Symbol('astryx-chat-composer')
+
+export function useChatComposerContext(): ChatComposerContextValue | undefined {
+  return inject(chatComposerContextKey, undefined)
 }

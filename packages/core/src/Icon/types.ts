@@ -53,6 +53,10 @@ export type IconName
     | 'close'
     | 'funnel'
     | 'image'
+    | 'stop'
+    | 'microphone'
+    | 'warning'
+    | 'error'
 
 /**
  * A built-in name, or any other string.

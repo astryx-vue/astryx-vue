@@ -24,6 +24,20 @@ export interface ChatMessages {
   typingMany: (name: string, others: number) => string
   unreadBelow: (label: string) => string
   unreadLabel: string
+  placeholder: string
+  drawerLabel: string
+  inputLabel: string
+  noSpeechDetected: string
+  expandPastedText: string
+  drawerExpand: (label: string) => string
+  drawerCollapse: (label: string) => string
+  startDictation: string
+  stopDictation: string
+  send: string
+  stop: string
+  suggestions: string
+  searching: string
+  noResults: string
 }
 
 export const chatMessages: Record<AstryxLocale, ChatMessages> = {
@@ -51,6 +65,20 @@ export const chatMessages: Record<AstryxLocale, ChatMessages> = {
     typingMany: (name, others) => `${name} and ${others} others are typing…`,
     unreadBelow: label => `${label} messages below`,
     unreadLabel: 'New',
+    placeholder: 'Type a message…',
+    drawerLabel: 'Items',
+    inputLabel: 'Message input',
+    noSpeechDetected: 'No speech was detected.',
+    expandPastedText: 'Expand',
+    drawerExpand: label => `Expand ${label}`,
+    drawerCollapse: label => `Collapse ${label}`,
+    startDictation: 'Start dictation',
+    stopDictation: 'Stop dictation',
+    send: 'Send',
+    stop: 'Stop',
+    suggestions: 'Suggestions',
+    searching: 'Searching…',
+    noResults: 'No results',
   },
   'zh-CN': {
     log: '消息列表',
@@ -76,5 +104,19 @@ export const chatMessages: Record<AstryxLocale, ChatMessages> = {
     typingMany: (name, others) => `${name} 和其他 ${others} 人正在输入…`,
     unreadBelow: label => `${label}以下是未读消息`,
     unreadLabel: '新消息',
+    placeholder: '输入消息……',
+    drawerLabel: '项目',
+    inputLabel: '消息输入框',
+    noSpeechDetected: '未检测到语音。',
+    expandPastedText: '展开',
+    drawerExpand: label => `展开 ${label}`,
+    drawerCollapse: label => `折叠 ${label}`,
+    startDictation: '开始语音输入',
+    stopDictation: '停止语音输入',
+    send: '发送',
+    stop: '停止',
+    suggestions: '建议',
+    searching: '正在搜索…',
+    noResults: '没有结果',
   },
 }

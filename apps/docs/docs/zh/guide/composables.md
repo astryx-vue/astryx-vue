@@ -53,5 +53,6 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `useListContext`、`useItemDescriptionId` | `@astryx-vue/core/List` |
 | `useTheme`、`useMediaTheme` | `@astryx-vue/core/Theme` |
 | `useSyntaxTheme` | `@astryx-vue/core/Code` |
+| `useChatComposerContext`、`useChatComposerTokens`、`useChatPasteAsToken`、`useChatDictation`、`useSpeechRecognition` | `@astryx-vue/core/Chat` |
 
 语言环境的 `provideAstryxLocale` 和 `useAstryxMessages` 见 [国际化](/guide/i18n)。
