@@ -53,7 +53,12 @@ export type {
   BottomSheetState,
 } from './BottomSheet/index.js'
 export { BreadcrumbItem, Breadcrumbs } from './Breadcrumbs/index.js'
-export type { BreadcrumbItemProps, BreadcrumbsProps, BreadcrumbsVariant } from './Breadcrumbs/index.js'
+export type {
+  BreadcrumbItemProps,
+  BreadcrumbMenuOption,
+  BreadcrumbsProps,
+  BreadcrumbsVariant,
+} from './Breadcrumbs/index.js'
 export { Button } from './Button/index.js'
 export type {
   ButtonClickAction,
@@ -552,7 +557,13 @@ export type {
   UseOverlayResult,
 } from './Overlay/index.js'
 export { Pagination } from './Pagination/index.js'
-export type { PaginationEmits, PaginationProps, PaginationSlots } from './Pagination/index.js'
+export type {
+  PaginationEmits,
+  PaginationProps,
+  PaginationSize,
+  PaginationSlots,
+  PaginationVariant,
+} from './Pagination/index.js'
 export { Popover } from './Popover/index.js'
 export type { PopoverAlignment, PopoverPadding, PopoverPlacement, PopoverProps, PopoverRole } from './Popover/index.js'
 export { ProgressBar } from './ProgressBar/index.js'

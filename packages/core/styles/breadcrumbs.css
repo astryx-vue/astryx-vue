@@ -68,9 +68,14 @@
     text-decoration: none;
   }
 
-  .astryx-breadcrumb-item__icon {
+  .astryx-breadcrumb-item__icon,
+  .astryx-breadcrumb-item__chevron {
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
+  }
+
+  .astryx-breadcrumb-item__chevron {
+    margin-inline-start: var(--astryx-spacing-0-5, 2px);
   }
 }

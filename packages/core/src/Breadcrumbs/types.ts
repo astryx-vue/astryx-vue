@@ -1,6 +1,9 @@
 import type { ComputedRef } from 'vue'
+import type { DropdownMenuOption, DropdownMenuSize } from '../DropdownMenu/types.js'
 
 export type BreadcrumbsVariant = 'default' | 'supporting'
+
+export type BreadcrumbMenuOption = DropdownMenuOption
 
 export interface BreadcrumbsProps {
   /**
@@ -23,12 +26,23 @@ export interface BreadcrumbsProps {
 export interface BreadcrumbItemProps {
   /**
    * URL for the breadcrumb link. Omit for the current page.
+   * Mutually exclusive with `menu`: a menu crumb is a trigger, not a link.
    */
   href?: string
   /**
    * Marks this item as the current page. Renders as a span with aria-current="page".
+   * A current crumb can still open `menu`.
    */
   isCurrent?: boolean
+  /**
+   * Turns the crumb into a menu trigger for sibling destinations.
+   * Uses the same item objects as DropdownMenu, including `{ type: 'divider' }`.
+   */
+  menu?: BreadcrumbMenuOption[]
+  /**
+   * Size of the menu items. Defaults to `sm` on the supporting variant and `md` otherwise.
+   */
+  menuSize?: DropdownMenuSize
 }
 
 /**

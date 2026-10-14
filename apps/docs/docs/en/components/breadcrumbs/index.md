@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { breadcrumbsBasic, breadcrumbsSupporting } from '../../../../components/demos/breadcrumbs'
+import { breadcrumbsDeep, breadcrumbsIcons, breadcrumbsMenu, breadcrumbsSeparators, breadcrumbsVariants } from '../../../../components/demos/breadcrumbs'
 </script>
 
 ## Usage
@@ -46,16 +46,12 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 
 ## Examples
 
-<DemoExample
-  :demo="breadcrumbsBasic"
-  description="A standard breadcrumb trail using the default text size."
-  locale="en"
-  title="Basic"
-/>
+<DemoExample :demo="breadcrumbsSeparators" description="Swap the default slash for a chevron, an arrow, or a dot when the page calls for a different separator." locale="en" title="Separators" />
 
-<DemoExample
-  :demo="breadcrumbsSupporting"
-  description="The supporting variant uses a smaller text size for compact contexts."
-  locale="en"
-  title="Supporting variant"
-/>
+<DemoExample :demo="breadcrumbsDeep" description="A five-level trail for a deeply nested page, with a home icon on the root." locale="en" title="Deep path" />
+
+<DemoExample :demo="breadcrumbsMenu" description="A crumb in the middle of the trail opens a menu for switching between sibling destinations." locale="en" title="Menu item" />
+
+<DemoExample :demo="breadcrumbsVariants" description="The default trail next to the supporting variant, which stays quieter in a dense admin page." locale="en" title="Variants" />
+
+<DemoExample :demo="breadcrumbsIcons" description="Icons before the labels make the root and the settings section recognizable at a glance." locale="en" title="Icons" />

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { paginationBasic, paginationSizeChanger } from '../../../../components/demos/pagination'
+import { paginationDots, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
 </script>
 
 ## Usage
@@ -45,16 +45,8 @@ The visible labels are English unless the app calls `provideAstryxLocale('zh-CN'
 
 ## Examples
 
-<DemoExample
-  :demo="paginationBasic"
-  description="Click page numbers or use prev/next buttons to navigate."
-  locale="en"
-  title="Basic Usage"
-/>
+<DemoExample :demo="paginationDots" description="Dot pagination steps through a short set of review cards, where position matters more than a page number." locale="en" title="Dots carousel" />
 
-<DemoExample
-  :demo="paginationSizeChanger"
-  description="Enable showSizeChanger to let users choose page size."
-  locale="en"
-  title="Page Size"
-/>
+<DemoExample :demo="paginationPageSize" description="Pagination sits under a transactions table, with a control for how many rows each page holds." locale="en" title="Page size selector" />
+
+<DemoExample :demo="paginationWithTable" description="The count variant under a table, at the small size, shows the item range for the current page." locale="en" title="With table" />

@@ -7,7 +7,6 @@ footer: false
 
 <script setup lang="ts">
 import {
-  stepperCheckout,
   stepperCustom,
   stepperHorizontal,
   stepperIndicators,
@@ -48,13 +47,17 @@ const active = ref(2)
 </template>
 ```
 
-<DemoExample :demo="stepperCheckout" description="从 Cart 到 Confirm。完成的步骤是勾，当前步是环，后面的步骤是数字。" locale="zh" title="步骤条" />
 
 ## 示例
 
-<DemoExample :demo="stepperCustom" description="垂直步骤条，每一步占页面的一块。内容插槽只在当前步渲染。" locale="zh" title="自定义内容" />
-<DemoExample :demo="stepperNarrow" description="宽度 320px 时，四步都低于 112px 的 minimumStepWidth，收成当前步，并带 Previous 和 Next。" locale="zh" title="窄水平收起" />
-<DemoExample :demo="stepperIndicators" description="无指示器、自动、数字和自定义图标。自动模式按进度显示勾、环或数字。" locale="zh" title="指示器模式" />
-<DemoExample :demo="stepperHorizontal" description="数字圆标落在同一条线上，标签居中放在圆标下面。" locale="zh" title="轨道上的水平步骤" />
-<DemoExample :demo="stepperOnTrack" description="圆标落在垂直轨道上，标签和说明在圆标旁边。" locale="zh" title="轨道上的垂直步骤" />
-<DemoExample :demo="stepperStatus" description="成功、错误和强调色只作用在指示器上。背景检查这一步是可选的。" locale="zh" title="校验状态" />
+<DemoExample :demo="stepperCustom" description="垂直步骤各自占页面的一块。内容可以是表单、摘要或横幅，并且只渲染当前步骤。" locale="zh" title="自定义内容" />
+
+<DemoExample :demo="stepperIndicators" description="none 只靠轨道和标签表示进度。auto 用勾、环或数字。number 始终显示序号。也可以换成自定义图标。" locale="zh" title="指示器模式" />
+
+<DemoExample :demo="stepperHorizontal" description="水平轨道上，指示器嵌进连接线，数字像一串珠子。标签居中放在节点下面。" locale="zh" title="轨道上的水平步骤" />
+
+<DemoExample :demo="stepperOnTrack" description="垂直轨道上，指示器落在连续的连接线上，标签和说明放在节点旁边。" locale="zh" title="轨道上的垂直步骤" />
+
+<DemoExample :demo="stepperStatus" description="校验流程里，成功、错误和强调色只改变指示器。连接线的颜色不受状态影响。" locale="zh" title="校验状态" />
+
+<DemoExample :demo="stepperNarrow" description="宽度 320px 时，四步低于 112px 的最小宽度，收成当前步骤，并带上一步和下一步。" locale="zh" title="窄水平收起" />

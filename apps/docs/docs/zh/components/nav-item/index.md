@@ -36,4 +36,4 @@ import { NavItem } from '@astryx-vue/core/NavItem'
 
 ## 示例
 
-<DemoExample :demo="navItemBasic" description="当前页用 isSelected。图标和文字排在一行。" locale="zh" title="基本用法" />
+<DemoExample :demo="navItemBasic" description="导航标题上的圆形图标容器。搜索和日历并排放在一起。" locale="zh" title="基本用法" />

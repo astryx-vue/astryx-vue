@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { centerAxes, centerBasic, centerInline, centerPadding } from '../../../../components/demos/center'
+import { centerHorizontal, centerInsideCard } from '../../../../components/demos/center'
 </script>
 
 ## Usage
@@ -62,30 +62,6 @@ The size of the container comes from `width`, `height`, `maxWidth`, and `minHeig
 
 ## Examples
 
-<DemoExample
-  :demo="centerBasic"
-  description="The default both centers on both axes: the content sits in the middle of a fixed-height box, and the box keeps its own padding."
-  locale="en"
-  title="Basic usage"
-/>
+<DemoExample :demo="centerHorizontal" description="A formatting toolbar centered on the horizontal axis. In vertical writing, that axis follows flex rather than a guaranteed physical horizontal." locale="en" title="Horizontal" />
 
-<DemoExample
-  :demo="centerAxes"
-  description="Three containers using both, horizontal, and vertical. A single-axis value centers only the axis it names and leaves the other axis to the default placement of the content."
-  locale="en"
-  title="Which axis is centered"
-/>
-
-<DemoExample
-  :demo="centerPadding"
-  description="Padding uses the Stack spacing scale: padding sets all four edges while paddingInline and paddingBlock override their own axis. The gap between the dashed border and the inner block is the inset that is actually applied."
-  locale="en"
-  title="Padding"
-/>
-
-<DemoExample
-  :demo="centerInline"
-  description="isInline renders inline-flex: the small boxes stay inside the line of text without breaking the line box, and the glyphs inside them are still centered."
-  locale="en"
-  title="Inline centering"
-/>
+<DemoExample :demo="centerInsideCard" description="An empty state centered both ways inside a fixed-height card. The height is what gives Center room to center." locale="en" title="Inside a card" />

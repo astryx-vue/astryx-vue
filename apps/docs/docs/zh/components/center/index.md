@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { centerAxes, centerBasic, centerInline, centerPadding } from '../../../../components/demos/center'
+import { centerHorizontal, centerInsideCard } from '../../../../components/demos/center'
 </script>
 
 ## 使用方法
@@ -62,30 +62,6 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 ## 示例
 
-<DemoExample
-  :demo="centerBasic"
-  description="默认的 both 同时居中两条轴：内容在固定高度的容器里水平和垂直居中，容器自身的 padding 也会留出来。"
-  locale="zh"
-  title="基础用法"
-/>
+<DemoExample :demo="centerHorizontal" description="一组格式按钮沿水平轴居中。在竖排书写里，这条轴跟着 flex 主轴走，并不保证物理上的水平居中。" locale="zh" title="水平居中" />
 
-<DemoExample
-  :demo="centerAxes"
-  description="三个容器分别使用 both、horizontal 和 vertical。单轴取值只居中它对应的那条轴，另一条轴上的位置就交给内容的默认排列。"
-  locale="zh"
-  title="居中哪条轴"
-/>
-
-<DemoExample
-  :demo="centerPadding"
-  description="内边距使用 Stack 的间距刻度：padding 设置四边，paddingInline 与 paddingBlock 覆盖各自的轴。虚线框与内部色块之间的距离就是实际生效的内边距。"
-  locale="zh"
-  title="内边距"
-/>
-
-<DemoExample
-  :demo="centerInline"
-  description="isInline 让容器变成 inline-flex：小方块留在文字行里，行盒不被拆断，方块内部的图标仍然居中。"
-  locale="zh"
-  title="行内居中"
-/>
+<DemoExample :demo="centerInsideCard" description="空状态在固定高度的卡片里同时水平和垂直居中。高度决定了可以分配的居中空间。" locale="zh" title="卡片内部" />

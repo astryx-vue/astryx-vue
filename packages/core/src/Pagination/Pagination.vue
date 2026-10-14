@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PaginationDensity } from '../composables/usePagination.js'
 import type { SelectorOption } from '../Selector/types.js'
-import type { PaginationEmits, PaginationProps, PaginationSlots } from './types.js'
+import type { PaginationEmits, PaginationProps, PaginationSlots, PaginationVariant } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { paginationDensityForWidth, siblingCountForDensity, usePagination } from '../composables/usePagination.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -14,6 +14,8 @@ const props = withDefaults(defineProps<PaginationProps>(), {
   page: 1,
   pageSize: 10,
   total: 0,
+  variant: 'pages',
+  size: 'md',
   showSizeChanger: false,
   pageSizeOptions: () => [10, 20, 50, 100],
   showTotal: false,
@@ -28,9 +30,18 @@ const resolvedPrevLabel = computed(() => props.prevLabel ?? messages.value.pagin
 const resolvedNextLabel = computed(() => props.nextLabel ?? messages.value.pagination.next)
 const resolvedPageSizeLabel = computed(() => props.pageSizeLabel ?? messages.value.pagination.perPage)
 
+function resolvedItemTotal(): number {
+  if (props.total > 0)
+    return props.total
+  if (props.totalPages != null && props.totalPages > 0)
+    return props.totalPages * props.pageSize
+  return props.total
+}
+
 const pageRef = ref(props.page)
 const pageSizeRef = ref(props.pageSize)
-const totalRef = ref(props.total)
+const totalRef = ref(resolvedItemTotal())
+const variant = computed<PaginationVariant>(() => props.variant)
 const root = ref<HTMLElement | null>(null)
 const density = ref<PaginationDensity>('full')
 const siblingCount = computed(() => siblingCountForDensity(density.value))
@@ -77,7 +88,7 @@ const pagination = usePagination({
 function syncFromProps(): void {
   pageRef.value = props.page
   pageSizeRef.value = props.pageSize
-  totalRef.value = props.total
+  totalRef.value = resolvedItemTotal()
 }
 
 syncFromProps()
@@ -112,8 +123,13 @@ function onPageClick(page: number): void {
   <nav
     ref="root"
     class="astryx-pagination"
-    :class="{ 'is-disabled': props.disabled }"
+    :class="{
+      'is-disabled': props.disabled,
+      'astryx-pagination--sm': props.size === 'sm',
+    }"
     :data-density="density"
+    :data-variant="variant"
+    :data-size="props.size"
     role="navigation"
     :aria-label="messages.pagination.nav"
   >
@@ -137,11 +153,42 @@ function onPageClick(page: number): void {
         <span class="astryx-pagination-label" aria-hidden="true">{{ resolvedPrevLabel }}</span>
       </button>
 
-      <span class="astryx-pagination-compact" :aria-hidden="density === 'minimal' ? undefined : true">
+      <span v-if="variant === 'count'" class="astryx-pagination-count">
+        {{ messages.pagination.total(totalRef, fromIndex, toIndex) }}
+      </span>
+
+      <span v-else-if="variant === 'compact'" class="astryx-pagination-count">
+        {{ messages.pagination.pageOf(pageRef, pagination.totalPages.value) }}
+      </span>
+
+      <div
+        v-else-if="variant === 'dots'"
+        class="astryx-pagination-dots"
+        role="group"
+        :aria-label="messages.pagination.nav"
+      >
+        <button
+          v-for="dotPage in pagination.totalPages.value"
+          :key="dotPage"
+          type="button"
+          class="astryx-pagination-dot"
+          :class="{ 'is-active': dotPage === pageRef }"
+          :disabled="props.disabled"
+          :aria-current="dotPage === pageRef ? 'page' : undefined"
+          :aria-label="messages.pagination.page(dotPage)"
+          @click="onPageClick(dotPage)"
+        />
+      </div>
+
+      <span
+        v-if="variant === 'pages'"
+        class="astryx-pagination-compact"
+        :aria-hidden="density === 'minimal' ? undefined : true"
+      >
         {{ messages.pagination.compact(pageRef, pagination.totalPages.value) }}
       </span>
 
-      <div v-show="density !== 'minimal'" class="astryx-pagination-pages">
+      <div v-if="variant === 'pages'" v-show="density !== 'minimal'" class="astryx-pagination-pages">
         <button
           v-for="(page, index) in pagination.pageNumbers.value"
           :key="index"

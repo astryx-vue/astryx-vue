@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dividerBasic, dividerLabel, dividerVariants, dividerVertical } from '../../../../components/demos/divider'
+import { dividerFullBleed, dividerVariants, dividerVertical } from '../../../../components/demos/divider'
 </script>
 
 ## 使用方法
@@ -37,19 +37,8 @@ import { Divider } from '@astryx-vue/core/Divider'
 
 ## 示例
 
-<DemoExample :demo="dividerBasic" title="基本用法" description="水平分隔线是默认形态，会占满所在容器的可用宽度。" locale="zh" />
+<DemoExample :demo="dividerFullBleed" description="分隔线穿过卡片内边距，从一边拉到另一边，放在明细和合计之间。" locale="zh" title="通栏" />
 
-<DemoExample :demo="dividerLabel" title="文字标签" description="传入 label 后文字会居中显示在线条中间，样式与辅助文字一致，适合“或”“以下为评论”这类简短标注。" locale="zh" />
+<DemoExample :demo="dividerVariants" description="带「or」的分隔线用来表示另一种登录方式，强调线放在说明文字前面。" locale="zh" title="变体" />
 
-<DemoExample :demo="dividerVariants" title="变体" description="线条提供 subtle 和 strong 两种强度：subtle 是默认值，视觉较轻；strong 使用强调边框色，适合需要明显边界的场合。" locale="zh" />
-
-<DemoExample :demo="dividerVertical" title="垂直" description="把 orientation 设为 vertical 可得到垂直分隔线，适合放在按钮、图标等固定高度的行内元素之间。" locale="zh" />
-
-## 无障碍
-
-分隔线本身没有交互行为，但辅助技术仍需要知道它是一条分隔线、朝向如何，才能在浏览时正确描述这个元素。组件会自动在根元素上补齐这部分语义：
-
-- 根元素带有 `role="separator"`，并用 `aria-orientation` 反映当前的 `orientation`。
-- 提供 `label` 时，标签文字会通过 `aria-labelledby` 成为分隔线的无障碍名称。
-
-如果希望用别的文字为分隔线命名，可以设置 `aria-label`。一旦设置了 `aria-label`，组件就用它作为无障碍名称，不再自动关联 `label`。
+<DemoExample :demo="dividerVertical" description="并排的指标之间用垂直分隔线隔开。" locale="zh" title="垂直" />

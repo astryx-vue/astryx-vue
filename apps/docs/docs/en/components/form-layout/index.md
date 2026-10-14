@@ -45,30 +45,10 @@ Nested layouts keep their own direction. A horizontal row can sit inside a verti
 
 ## Examples
 
-<DemoExample
-  :demo="formLayoutHorizontal"
-  description="direction horizontal places the fields in equal columns."
-  locale="en"
-  title="Horizontal"
-/>
+<DemoExample :demo="formLayoutHorizontal" description="Two fields sit side by side for a pair such as first and last name." locale="en" title="Horizontal" />
 
-<DemoExample
-  :demo="formLayoutHorizontalLabels"
-  description="Labels sit on the left. Below 480px the rows stack."
-  locale="en"
-  title="Horizontal labels"
-/>
+<DemoExample :demo="formLayoutHorizontalLabels" description="A settings form places each label beside its input." locale="en" title="Settings form" />
 
-<DemoExample
-  :demo="formLayoutMixed"
-  description="The default vertical direction stacks a text field, a selector, and a checkbox list."
-  locale="en"
-  title="Mixed controls"
-/>
+<DemoExample :demo="formLayoutMixed" description="One form mixes a text input, a selector, and checkboxes." locale="en" title="Mixed controls" />
 
-<DemoExample
-  :demo="formLayoutNested"
-  description="A vertical form contains two horizontal rows."
-  locale="en"
-  title="Nested"
-/>
+<DemoExample :demo="formLayoutNested" description="An address form mixes a vertical stack with horizontal rows for grouped fields." locale="en" title="Nested address" />
