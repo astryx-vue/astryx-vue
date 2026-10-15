@@ -50,6 +50,8 @@ footer: false
 | <code>syntax</code> | 子树里代码的语法色。更近的 <code>SyntaxTheme</code> 优先。 |
 | <code>onDark</code> | 深色 <code>MediaTheme</code> 表面上的额外 token。 |
 | <code>onLight</code> | 浅色 <code>MediaTheme</code> 表面上的额外 token。 |
+| <code>icons</code> | 语义图标名到 Iconify id。按名字覆盖，和被扩展的主题浅合并。 |
+| <code>indicators</code> | 指示器图形，按 check、checkbox、radio 替换。一处替换，所有使用处一起变。 |
 
 ## useTheme
 

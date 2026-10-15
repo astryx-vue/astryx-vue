@@ -1364,6 +1364,11 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: min(100%, 680px);
 }
 
+.date-preview-host {
+  width: max-content;
+  max-width: 100%;
+}
+
 .input-preview-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
@@ -1490,6 +1495,77 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   display: grid;
   justify-items: center;
   gap: 8px;
+}
+
+.indicator-board {
+  display: grid;
+  gap: 16px;
+}
+
+.indicator-board-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 24px;
+}
+
+.indicator-board-item {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-width: 72px;
+  color: var(--astryx-color-text-secondary, #525252);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.indicator-replace {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.indicator-replace-card {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  min-width: 140px;
+  color: var(--astryx-color-text-secondary, #525252);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.indicator-spinner {
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid currentcolor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: indicator-spin 750ms linear infinite;
+}
+
+@keyframes indicator-spin {
+  to { transform: rotate(360deg); }
+}
+
+.icon-theme-board {
+  display: grid;
+  gap: 16px;
+}
+
+.icon-theme-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  color: var(--astryx-color-text-secondary, #525252);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator-spinner { animation: none; }
 }
 
 .slider-preview-stack {
@@ -2271,4 +2347,9 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: max-content;
   max-width: 100%;
   grid-template-columns: repeat(3, max-content);
+}
+
+.component-card__preview .indicator-board {
+  width: max-content;
+  max-width: 100%;
 }

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation } from '../../../../components/demos/date-input'
+import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation, dateInputField, dateInputNative } from '../../../../components/demos/date-input'
 </script>
 
 ## Usage
@@ -29,7 +29,9 @@ const date = ref(null)
 </template>
 ```
 
-The value is a `Date`. By default the field shows a long date, such as March 21, 2026. `format` can be `date`, `date_long`, `date_weekday`, `system_date`, or a function that receives `YYYY-MM-DD`. `description` sits under the label. `status` as `{ type, message }` shows that message under the field. `presentation="bottom-sheet"` opens the calendar in a bottom sheet, and `adaptive-bottom-sheet` does that when the pointer is coarse.
+The value is a local date. The field writes it back as a long date, such as March 21, 2026. It can also show a short date, a weekday, the system date, or custom text. A description can sit under the label, and validation can change the border or add a message under the field.
+
+The calendar can open in a popover or a bottom sheet. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.
 
 ## Best practices
 
@@ -75,4 +77,18 @@ The value is a `Date`. By default the field shows a long date, such as March 21,
   description="Error, warning, and success, each with a message."
   locale="en"
   title="Validation"
+/>
+
+<DemoExample
+  :demo="dateInputField"
+  description="The date is written first, and the field stays busy until the save finishes. Weekends cannot be picked. The other field is marked optional."
+  locale="en"
+  title="Saving and labels"
+/>
+
+<DemoExample
+  :demo="dateInputNative"
+  description="The browser date control, with the committed day still shown as a long date."
+  locale="en"
+  title="System date"
 />

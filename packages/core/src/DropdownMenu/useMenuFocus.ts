@@ -12,12 +12,25 @@ export interface MenuFocus {
   focusItem: (index: number) => void
   focusFirst: () => boolean
   focusLast: () => boolean
+  /** Whether the event started in this menu level, not a nested one. */
+  ownsEvent: (event: KeyboardEvent) => boolean
   /** Moves the highlight for the arrow, Home/End, and Page keys. */
   handleKeyDown: (event: KeyboardEvent) => void
 }
 
 function isDisabled(el: HTMLElement): boolean {
   return el.getAttribute('aria-disabled') === 'true' || el.hasAttribute('disabled')
+}
+
+/** A row inside a drilled-away view stays mounted and must not take focus. */
+function isHiddenRow(el: HTMLElement, listEl: HTMLElement): boolean {
+  let current: HTMLElement | null = el
+  while (current != null && current !== listEl) {
+    if (current.hidden || current.getAttribute('aria-hidden') === 'true')
+      return true
+    current = current.parentElement
+  }
+  return false
 }
 
 /**
@@ -40,7 +53,7 @@ export function useMenuFocus(options: UseMenuFocusOptions): MenuFocus {
       return []
 
     return Array.from(listEl.querySelectorAll<HTMLElement>(MENU_ITEM_SELECTOR))
-      .filter(el => belongsHere(el, listEl) && !isDisabled(el))
+      .filter(el => belongsHere(el, listEl) && !isDisabled(el) && !isHiddenRow(el, listEl))
   }
 
   function getCurrentIndex(): number {
@@ -197,5 +210,5 @@ export function useMenuFocus(options: UseMenuFocusOptions): MenuFocus {
     event.preventDefault()
   }
 
-  return { focusFirst, focusItem, focusLast, getItems, handleKeyDown }
+  return { focusFirst, focusItem, focusLast, getItems, handleKeyDown, ownsEvent }
 }

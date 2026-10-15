@@ -40,6 +40,9 @@ export type { Combobox, ComboboxOption, UseComboboxOptions } from './useCombobox
 export { useControllableState } from './useControllableState.js'
 export type { ControllableState, UseControllableStateOptions } from './useControllableState.js'
 
+export { resolveDatePresentation, resolveDateSurface } from './useDatePresentation.js'
+export type { DatePresentation, DateSurface } from './useDatePresentation.js'
+
 export {
   applyRangeClick,
   compareISODate,
@@ -53,8 +56,14 @@ export {
 } from './useDateRange.js'
 export type { ISODateRange, RangeClickResult, WeekStartsOn } from './useDateRange.js'
 
+export { useDisclosureHandle } from './useDisclosureHandle.js'
+export type { DisclosureHandle, DisclosureHandleRef } from './useDisclosureHandle.js'
+
 export { useDismiss } from './useDismiss.js'
 export type { UseDismissOptions } from './useDismiss.js'
+
+export { useFieldControlState } from './useFieldControlState.js'
+export type { FieldControlState, FieldControlStateInput } from './useFieldControlState.js'
 
 export { formatFileSize, selectFiles } from './useFileSelection.js'
 export type { FileRejection, FileSelectionOptions, FileSelectionResult } from './useFileSelection.js'
@@ -64,6 +73,9 @@ export type { FocusTrap, UseFocusTrapOptions } from './useFocusTrap.js'
 
 export { useGridRovingFocus } from './useGridRovingFocus.js'
 export type { GridRovingFocus, UseGridRovingFocusOptions } from './useGridRovingFocus.js'
+
+export { useHandleRef } from './useHandleRef.js'
+export type { HandleRef } from './useHandleRef.js'
 
 export { useHotkeys } from './useHotkeys.js'
 export type { Hotkey } from './useHotkeys.js'
@@ -88,6 +100,9 @@ export type {
   UseOverflowOptions,
   UseOverflowReturn,
 } from './useOverflow.js'
+
+export { usePendingChange } from './usePendingChange.js'
+export type { PendingChange } from './usePendingChange.js'
 
 export { percent, useResizable } from './useResizable.js'
 export type {

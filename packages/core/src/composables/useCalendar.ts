@@ -1,6 +1,9 @@
 import type { Ref } from 'vue'
+import type { CalendarConstraintInput } from '../Calendar/useCalendarConstraints.js'
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
 import { computed, ref } from 'vue'
+import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
+import { buildCalendarWeeks } from '../Calendar/useCalendarGrid.js'
 
 export interface UseCalendarOptions {
   /** 当前选中的日期 */
@@ -13,6 +16,12 @@ export interface UseCalendarOptions {
   max?: Date
   /** 禁用的日期判断函数 */
   isDateDisabled?: (date: Date) => boolean
+  /** 返回 false 的约束会禁用这一天 */
+  dateConstraints?: CalendarConstraintInput['dateConstraints']
+  /** 一周从哪一天开始，0 是周日 */
+  weekStartsOn?: number
+  /** 按当月收缩行数。默认固定六行 */
+  hasVariableRowCount?: boolean
   /** 日期变化回调 */
   onChange: (date: Date | null) => void
 }
@@ -50,7 +59,9 @@ function jsDateToCalendarDate(date: Date): CalendarDate {
  * 日历逻辑：日期计算、月份导航、日期选择。
  */
 export function useCalendar(options: UseCalendarOptions): CalendarState {
-  const { value, min, max, isDateDisabled, onChange, initialDate } = options
+  const { value, min, max, isDateDisabled, dateConstraints, onChange, initialDate } = options
+  const weekStartsOn = options.weekStartsOn ?? 0
+  const variableRows = options.hasVariableRowCount ?? false
 
   const timeZone = getLocalTimeZone()
 
@@ -63,22 +74,8 @@ export function useCalendar(options: UseCalendarOptions): CalendarState {
   ) as Ref<CalendarDate>
 
   function datesFor(month: CalendarDate): CalendarDate[][] {
-    const firstDay = new CalendarDate(month.year, month.month, 1)
-    const firstDayOfWeek = firstDay.toDate(timeZone).getDay()
-    const startDate = firstDay.subtract({ days: firstDayOfWeek })
-    const weeks: CalendarDate[][] = []
-    let currentDate = startDate
-
-    for (let week = 0; week < 6; week++) {
-      const weekDates: CalendarDate[] = []
-      for (let day = 0; day < 7; day++) {
-        weekDates.push(currentDate)
-        currentDate = currentDate.add({ days: 1 })
-      }
-      weeks.push(weekDates)
-    }
-
-    return weeks
+    return buildCalendarWeeks(month.year, month.month, weekStartsOn, variableRows)
+      .map(week => week.days.map(day => day.date))
   }
 
   const dates = computed(() => datesFor(focusedDate.value))
@@ -105,16 +102,7 @@ export function useCalendar(options: UseCalendarOptions): CalendarState {
   }
 
   function isDisabled(date: CalendarDate): boolean {
-    const jsDate = calendarDateToJSDate(date)
-
-    if (min && jsDate < min)
-      return true
-    if (max && jsDate > max)
-      return true
-    if (isDateDisabled?.(jsDate))
-      return true
-
-    return false
+    return isCalendarDateDisabled(date, { min, max, isDateDisabled, dateConstraints })
   }
 
   function isInMonth(date: CalendarDate): boolean {

@@ -16,6 +16,7 @@
 @import './styles/carousel.css';
 @import './styles/center.css';
 @import './styles/chat.css';
+@import './styles/check-indicator.css';
 @import './styles/checkbox-indicator.css';
 @import './styles/checkbox-input.css';
 @import './styles/checkbox-list.css';
@@ -61,6 +62,7 @@
 @import './styles/power-search.css';
 @import './styles/progress-bar.css';
 @import './styles/radio.css';
+@import './styles/radio-indicator.css';
 @import './styles/resize-handle.css';
 @import './styles/scrollable-area.css';
 @import './styles/section.css';

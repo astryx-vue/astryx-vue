@@ -17,9 +17,9 @@ footer: false
 
 ## Slots
 
-- The default slot replaces the checkmark and dash.
-- Slot content is decorative.
-- Do not put focusable controls in the slot.
+- The default slot replaces the checkmark and the dash, drawn inside the box.
+- An empty slot, including a condition that is false, keeps the marks. Use isRenderable rather than a null check.
+- Slot content is decorative. Do not put a focusable control in the slot.
 
 ## Accessibility
 

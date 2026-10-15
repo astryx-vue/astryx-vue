@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { iconBasic, iconButton, iconPalette, iconSemantic, iconSizes, iconStatus } from '../../../../components/demos/icon'
+import { iconBasic, iconButton, iconPalette, iconSemantic, iconSizes, iconStatus, iconThemes } from '../../../../components/demos/icon'
 </script>
 
 ## Usage
@@ -69,6 +69,31 @@ A decorative icon is `aria-hidden`. Set `label` only when the icon is the only t
 
 `icon` still accepts a CSS class or your own component. Navigation `iconClass` is still a class. Those paths do not require UnoCSS either.
 
+## Semantic names
+
+Inside the components, a name is the job, not a file in one collection. Search, close, check, and the downward chevron are that kind of name. Each one points at the Lucide icon that does the same job. Until that collection is registered, the built-in glyph stays, so the icon is not a blank box.
+
+To change the set, point those names at Iconify ids on the theme. A theme that extends another one only lists the names it changes. A direct icon still uses `name`, and that wins over a semantic name.
+
+```vue
+<script setup lang="ts">
+import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+</script>
+
+<template>
+  <Theme
+    :theme="defineTheme({
+      name: 'withCarbon',
+      icons: { search: 'carbon:search', close: 'carbon:close' },
+    })"
+  >
+    <slot />
+  </Theme>
+</template>
+```
+
+The full list is on the props page. Read the current id with `useSemanticIcon`, exported from the same entry as `Icon`.
+
 ## Best practices
 
 | Guidance | Practices |
@@ -123,6 +148,13 @@ A decorative icon is `aria-hidden`. Set `label` only when the icon is the only t
   description="Icon in a Button start slot, a Button end slot, an IconButton, and a text field's start and end slots. No size is set; each slot owns the box."
   locale="en"
   title="In a button"
+/>
+
+<DemoExample
+  :demo="iconThemes"
+  description="The same semantic names. The first row is the built-in glyphs. The next two rows point search, close, check, and the downward chevron at Carbon and Heroicons."
+  locale="en"
+  title="Swap the drawings with the theme"
 />
 
 ## Accessibility

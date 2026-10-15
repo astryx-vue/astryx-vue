@@ -1,4 +1,6 @@
 import type { SyntaxThemeDefinition } from '../Code/syntaxTheme.js'
+import type { SemanticIconMap } from '../Icon/semantic.js'
+import type { IndicatorRegistry } from '../Indicator/types.js'
 
 /** Color mode for a theme subtree. `system` follows the page and the OS. */
 export type ThemeMode = 'light' | 'dark' | 'system'
@@ -32,6 +34,20 @@ export interface DefineThemeInput {
   onDark?: ThemeSurfaceInput
   /** Extra tokens for content on a light surface. */
   onLight?: ThemeSurfaceInput
+  /**
+   * Semantic icon name to Iconify id.
+   *
+   * Entries replace the built-in map by name and merge with the theme this
+   * one extends. A name that is not listed keeps the built-in id.
+   */
+  icons?: SemanticIconMap
+  /**
+   * Indicator graphics, replaced by name.
+   *
+   * One entry reaches every control that draws that indicator. Entries merge
+   * with the theme this one extends.
+   */
+  indicators?: IndicatorRegistry
 }
 
 export interface ThemeDefinition {
@@ -43,6 +59,10 @@ export interface ThemeDefinition {
   /** Extra tokens applied by MediaTheme when the surface is light. */
   onLight: Readonly<Record<string, string>>
   syntax?: SyntaxThemeDefinition
+  /** Semantic icon overrides. Absent when this theme does not set any. */
+  icons?: SemanticIconMap
+  /** Indicator overrides. Absent when this theme does not set any. */
+  indicators?: IndicatorRegistry
   readonly __astryxTheme: true
 }
 

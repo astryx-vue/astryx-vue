@@ -36,35 +36,22 @@
     white-space: nowrap;
   }
 
-  .astryx-radio-indicator {
-    box-sizing: border-box;
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
+  /*
+   * A radio with no size keeps the 18px control. sm and md are 20px and 24px,
+   * and those sizes live on the indicator itself.
+   */
+  .astryx-radio:not([data-size]) > .astryx-radio-indicator {
     width: var(--astryx-radio-size, 18px);
     height: var(--astryx-radio-size, 18px);
-    border: 1px solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
-    border-radius: var(--astryx-radio-radius, 999px);
-    background: var(--astryx-input-background, #fff);
-    transition: border-color 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color 130ms cubic-bezier(0.24, 1, 0.4, 1);
   }
 
-  .astryx-radio-native:checked + .astryx-radio-indicator {
-    border-color: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
-    background: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
-  }
-
-  .astryx-radio-native:checked + .astryx-radio-indicator::after {
+  .astryx-radio:not([data-size]) > .astryx-radio-indicator > .astryx-radio-indicator-dot {
     width: 8px;
     height: 8px;
-    border-radius: 999px;
-    background: var(--astryx-input-background, #fff);
-    content: '';
   }
 
   .astryx-radio-native:focus-visible + .astryx-radio-indicator {
-    outline: 2px solid var(--astryx-input-focus, #262626);
+    outline: 2px solid var(--astryx-focus-outline-color, var(--astryx-input-focus, #262626));
     outline-offset: 2px;
   }
 
@@ -87,19 +74,6 @@
     line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
-  .astryx-radio[data-size='sm'] {
-    --astryx-radio-size: 20px;
-  }
-
-  .astryx-radio[data-size='md'] {
-    --astryx-radio-size: 24px;
-  }
-
-  .astryx-radio[data-size='md'] .astryx-radio-native:checked + .astryx-radio-indicator::after {
-    width: 10px;
-    height: 10px;
-  }
-
   .astryx-radio-group[data-orientation='horizontal'] .astryx-radio-group-list {
     flex-direction: row;
     flex-wrap: wrap;
@@ -120,15 +94,8 @@
   }
 
   @media (forced-colors: active) {
-    .astryx-radio-indicator {
-      border-color: ButtonText;
-      background: Canvas;
-    }
-    .astryx-radio-native:checked + .astryx-radio-indicator {
-      background: Highlight;
-    }
-    .astryx-radio-native:checked + .astryx-radio-indicator::after {
-      background: Canvas;
+    .astryx-radio-native:focus-visible + .astryx-radio-indicator {
+      outline-color: Highlight;
     }
   }
 }

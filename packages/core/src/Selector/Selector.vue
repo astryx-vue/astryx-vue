@@ -1,13 +1,22 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
 import type { SelectorEmits, SelectorEntry, SelectorOption, SelectorProps, SelectorSection, SelectorSlots } from './types.js'
-import { computed, nextTick, onMounted, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { computed, inject, nextTick, onMounted, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
+import { useFieldControlState } from '../composables/useFieldControlState.js'
 import Field from '../Field/Field.vue'
+import StatusGlyph from '../Field/StatusGlyph.vue'
+import { fieldStatusPlacement } from '../Field/statusPlacement.js'
+import Icon from '../Icon/Icon.vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
+import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
+import Spinner from '../Spinner/Spinner.vue'
+import { searchResultMessage } from './searchResultMessage.js'
 import '../../styles/selector.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -24,11 +33,17 @@ const props = withDefaults(defineProps<SelectorProps>(), {
   variant: 'default',
   statusVariant: 'attached',
   isLabelHidden: false,
+  isReadOnly: false,
+  isLoading: false,
+  isOptional: false,
+  isRequired: false,
+  indicatorPosition: 'end',
 })
 
 const emit = defineEmits<SelectorEmits>()
 defineSlots<SelectorSlots>()
 const slots = useSlots()
+const SelectionMark = useIndicator('check')
 
 const selectorId = `astryx-selector-${useId()}`
 const listboxId = `${selectorId}-listbox`
@@ -37,6 +52,16 @@ const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.s
 const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.selector.search)
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clear)
 const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selector.empty)
+const resolvedEmptySearchText = computed(() => props.emptySearchText ?? messages.value.selector.emptySearch)
+const inputGroup = inject(INPUT_GROUP_KEY, null)
+const inGroup = computed(() => inputGroup != null)
+const control = useFieldControlState({
+  disabled: () => props.disabled || (inputGroup?.disabled.value ?? false),
+  readOnly: () => props.isReadOnly,
+  loading: () => props.isLoading,
+})
+const announce = useAnnounce()
+const readOnlyId = `${selectorId}-readonly`
 const fieldRef = useTemplateRef<HTMLElement>('fieldRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const searchInputRef = useTemplateRef<HTMLInputElement>('searchInputRef')
@@ -44,8 +69,8 @@ const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
 const isSheet = computed(() => props.presentation === 'bottom-sheet')
 const sheetLabel = computed(() => props.label || resolvedPlaceholder.value)
 
-const isEnabled = computed(() => !props.disabled)
-const isSearchable = computed(() => props.searchable)
+const isEnabled = control.canActivate
+const isSearchable = computed(() => props.searchable && control.canActivate.value)
 
 function isSection(entry: SelectorEntry): entry is SelectorSection {
   return typeof entry === 'object' && entry !== null && 'type' in entry && entry.type === 'section'
@@ -153,6 +178,14 @@ const fieldStatus = computed<FieldStatusInput | undefined>(() => {
   return { type: statusType.value, message: props.statusMessage }
 })
 
+const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
+const statusGlyph = computed(() => {
+  const type = statusType.value
+  if ((type !== 'error' && type !== 'warning' && type !== 'success') || effectiveStatusVariant.value === 'detached')
+    return undefined
+  return type
+})
+
 interface DisplayRow {
   kind: 'section' | 'option'
   title?: string
@@ -187,11 +220,32 @@ const displayText = computed(() => {
 const isEmpty = computed(() => {
   return combobox.filteredOptions.value.length === 0
 })
+const isSearching = computed(() => props.searchable && combobox.searchQuery.value.trim() !== '')
+const showEmpty = computed(() => isEmpty.value && !control.isLoading.value)
+const describedBy = computed(() => {
+  return [
+    inGroup.value ? inputGroup?.describedBy.value : undefined,
+    control.isReadOnly.value ? readOnlyId : undefined,
+  ].filter(Boolean).join(' ') || undefined
+})
+const announcement = computed(() => searchResultMessage({
+  isOpen: combobox.isOpen.value,
+  isLoading: control.isLoading.value,
+  query: combobox.searchQuery.value,
+  matchCount: combobox.filteredOptions.value.length,
+  emptyText: resolvedEmptyText.value,
+  emptySearchText: resolvedEmptySearchText.value,
+  resultCount: messages.value.selector.resultCount,
+}))
+
+watch(announcement, (message) => {
+  if (message)
+    announce(message)
+})
 
 function onTriggerClick(): void {
-  if (isEnabled.value) {
+  if (control.canActivate.value)
     combobox.toggle()
-  }
 }
 
 function onTriggerKeyDown(event: KeyboardEvent): void {
@@ -206,8 +260,17 @@ function onOptionClick(option: SelectorOption): void {
 
 function onClear(event: Event): void {
   event.stopPropagation()
+  if (!control.canActivate.value)
+    return
   modelValueRef.value = null
   combobox.close()
+}
+
+function clearSearch(event: Event): void {
+  event.stopPropagation()
+  combobox.setSearchQuery('')
+  emit('search', '')
+  searchInputRef.value?.focus()
 }
 
 function onSearchInput(event: Event): void {
@@ -266,56 +329,73 @@ watch(() => combobox.activeIndex.value, (index) => {
     :class="[`size-${props.size}`, `status-${statusType}`, `variant-${props.variant}`]"
     :label="fieldLabel"
     :input-id="selectorId"
-    :description="props.description"
-    :is-label-hidden="hideLabel"
-    :is-disabled="props.disabled"
-    :status="fieldStatus"
-    :status-variant="props.statusVariant"
+    :is-label-hidden="inGroup || hideLabel"
+    :is-disabled="control.isDisabled.value"
+    :is-optional="inGroup ? false : props.isOptional"
+    :is-required="inGroup ? false : props.isRequired"
+    :description="inGroup ? undefined : props.description"
+    :status="inGroup ? undefined : fieldStatus"
+    :status-variant="effectiveStatusVariant"
     :width="props.width"
   >
     <div
       ref="fieldRef"
       class="astryx-selector-field"
-      :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled, 'is-ghost': props.variant === 'ghost' }"
+      :class="{
+        'is-open': combobox.isOpen.value,
+        'is-disabled': control.isDisabled.value,
+        'is-readonly': control.isReadOnly.value,
+        'is-loading': control.isLoading.value,
+        'is-ghost': props.variant === 'ghost',
+      }"
     >
       <button
         :id="selectorId"
         type="button"
         class="astryx-selector-trigger"
-        :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled }"
-        :disabled="props.disabled"
-        aria-haspopup="listbox"
-        :aria-expanded="combobox.isOpen.value"
-        :aria-controls="listboxId"
+        :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': control.isDisabled.value }"
+        :disabled="control.isDisabled.value"
+        :role="control.isReadOnly.value || !props.searchable ? 'combobox' : undefined"
+        :aria-haspopup="control.isReadOnly.value ? undefined : 'listbox'"
+        :aria-expanded="control.isReadOnly.value ? false : combobox.isOpen.value"
+        :aria-controls="control.isReadOnly.value ? undefined : listboxId"
+        :aria-readonly="control.isReadOnly.value || undefined"
+        :aria-busy="control.isLoading.value || undefined"
+        :aria-required="props.isRequired || undefined"
         :aria-label="props.label"
-        :aria-activedescendant="combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
+        :aria-describedby="describedBy"
+        :aria-autocomplete="props.searchable ? undefined : 'none'"
+        :aria-activedescendant="!props.searchable && !control.isReadOnly.value && combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
         :title="props.disabledReason"
         @click="onTriggerClick"
         @keydown="onTriggerKeyDown"
       >
-        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected }">
+        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
-            {{ displayText }}
+            <span v-if="selectedOption?.icon" class="astryx-selector-value-icon" :class="selectedOption.icon" aria-hidden="true" />
+            <span class="astryx-selector-value-label">{{ displayText }}</span>
           </template>
         </span>
-        <span class="astryx-selector-icon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </span>
       </button>
+      <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" :aria-label="messages.selector.loading" />
       <button
-        v-if="props.clearable && selectedOption"
+        v-if="props.clearable && selectedOption && control.canActivate.value"
         type="button"
         class="astryx-selector-clear"
         :aria-label="resolvedClearLabel"
         @click="onClear"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
+        <Icon icon="close" size="sm" />
       </button>
+      <StatusGlyph
+        v-if="statusGlyph"
+        :type="statusGlyph"
+        :message="fieldStatus?.message"
+        :tooltip="effectiveStatusVariant === 'tooltip'"
+      />
+      <Icon v-else-if="control.canActivate.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
+      <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.selector.readOnly }}</span>
     </div>
 
     <BottomSheet
@@ -344,19 +424,36 @@ watch(() => combobox.activeIndex.value, (index) => {
         tabindex="-1"
       >
         <div v-if="props.searchable" class="astryx-selector-search">
+          <Icon class="astryx-selector-search-icon" icon="search" size="sm" />
           <input
             :id="`${selectorId}-search`"
             ref="searchInputRef"
             type="text"
             class="astryx-selector-search-input"
+            role="combobox"
+            autocomplete="off"
             :aria-label="resolvedSearchPlaceholder"
+            :aria-expanded="combobox.isOpen.value"
+            :aria-controls="listboxId"
+            aria-autocomplete="list"
+            :aria-activedescendant="combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
             :placeholder="resolvedSearchPlaceholder"
             :value="combobox.searchQuery.value"
             @input="onSearchInput"
+            @keydown="onTriggerKeyDown"
           >
+          <button
+            v-if="combobox.searchQuery.value"
+            type="button"
+            class="astryx-selector-search-clear"
+            :aria-label="resolvedClearLabel"
+            @click="clearSearch"
+          >
+            <Icon icon="close" size="sm" />
+          </button>
         </div>
 
-        <div v-if="!isEmpty" class="astryx-selector-options">
+        <div v-if="!control.isLoading.value && !isEmpty" class="astryx-selector-options">
           <template v-for="(row, rowIndex) in displayRows" :key="row.kind === 'section' ? `section-${rowIndex}` : row.option?.value">
             <div v-if="row.kind === 'section'" class="astryx-selector-section" role="presentation">
               {{ row.title }}
@@ -378,22 +475,44 @@ watch(() => combobox.activeIndex.value, (index) => {
               @keydown.enter="onOptionClick(row.option)"
               @keydown.space.prevent="onOptionClick(row.option)"
             >
-              <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
-              <template v-else>
-                <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
-                <span class="astryx-selector-option-label">{{ row.option.label }}</span>
-                <span v-if="row.option.description" class="astryx-selector-option-description">
-                  {{ row.option.description }}
-                </span>
-              </template>
+              <span v-if="props.indicatorPosition === 'start'" class="astryx-selector-option-mark">
+                <component
+                  :is="SelectionMark"
+                  class="astryx-selector-check"
+                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
+                  size="sm"
+                  :is-disabled="row.option.disabled"
+                />
+              </span>
+              <span class="astryx-selector-option-body">
+                <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
+                <template v-else>
+                  <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
+                  <span class="astryx-selector-option-copy">
+                    <span class="astryx-selector-option-label">{{ row.option.label }}</span>
+                    <span v-if="row.option.description" class="astryx-selector-option-description">
+                      {{ row.option.description }}
+                    </span>
+                  </span>
+                </template>
+              </span>
+              <span v-if="props.indicatorPosition === 'end'" class="astryx-selector-option-mark">
+                <component
+                  :is="SelectionMark"
+                  class="astryx-selector-check"
+                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
+                  size="sm"
+                  :is-disabled="row.option.disabled"
+                />
+              </span>
             </div>
           </template>
         </div>
 
-        <div v-else class="astryx-selector-empty">
-          <slot v-if="slots.empty" name="empty" />
+        <div v-else-if="showEmpty" class="astryx-selector-empty" role="presentation">
+          <slot v-if="!isSearching && slots.empty" name="empty" />
           <template v-else>
-            {{ resolvedEmptyText }}
+            {{ isSearching ? resolvedEmptySearchText : resolvedEmptyText }}
           </template>
         </div>
       </div>
@@ -404,6 +523,7 @@ watch(() => combobox.activeIndex.value, (index) => {
       :id="`${selectorId}-hidden-select`"
       :name="props.name"
       :value="props.modelValue ?? ''"
+      :disabled="control.isDisabled.value"
       :aria-label="props.label || resolvedPlaceholder"
       tabindex="-1"
       style="position: absolute; left: -9999px; width: 1px; height: 1px;"

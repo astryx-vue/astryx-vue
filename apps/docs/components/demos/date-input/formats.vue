@@ -15,7 +15,7 @@ function shipBy(iso: string): string {
 </script>
 
 <template>
-  <VStack :gap="4" width="100%" style="min-width: 240px; max-width: 400px">
+  <VStack :gap="4" style="width: 320px; max-width: 100%">
     <Text type="supporting" color="secondary">
       The same committed date, displayed with different formats.
     </Text>

@@ -1,4 +1,8 @@
+import type { Component } from 'vue'
+import type { SemanticIconMap } from '../Icon/semantic.js'
+import type { IndicatorRegistry } from '../Indicator/types.js'
 import type { DefineThemeInput, ThemeDefinition, ThemeTokens, ThemeTokenValue } from './types.js'
+import { markRaw } from 'vue'
 
 const THEME_NAME = /^[a-z0-9][a-z0-9-]*$/i
 const UNSAFE_TOKEN = /[;{}<>\n\r]/
@@ -51,6 +55,23 @@ function resolveTokenMap(tokens: ThemeTokens | undefined): Record<string, string
   return resolved
 }
 
+function mergeMaps<T>(base: Readonly<Record<string, T>> | undefined, next: Readonly<Record<string, T>> | undefined): Record<string, T> | undefined {
+  if (base == null && next == null)
+    return undefined
+  return { ...base, ...next }
+}
+
+function sealIndicators(indicators: IndicatorRegistry | undefined): IndicatorRegistry | undefined {
+  if (indicators == null)
+    return undefined
+  const sealed: IndicatorRegistry = {}
+  for (const [name, component] of Object.entries(indicators)) {
+    if (component)
+      sealed[name] = markRaw(component as Component)
+  }
+  return sealed
+}
+
 /**
  * Create a theme object that `Theme` can apply to a subtree.
  *
@@ -65,6 +86,8 @@ export function defineTheme(input: DefineThemeInput): ThemeDefinition {
     throw new Error('defineTheme extends must be a theme returned by defineTheme().')
 
   const base = input.extends
+  const icons = mergeMaps<string>(base?.icons, input.icons) as SemanticIconMap | undefined
+  const indicators = sealIndicators(mergeMaps(base?.indicators, input.indicators))
   return {
     __astryxTheme: true,
     name: input.name,
@@ -72,6 +95,8 @@ export function defineTheme(input: DefineThemeInput): ThemeDefinition {
     onDark: { ...base?.onDark, ...resolveTokenMap(input.onDark?.tokens) },
     onLight: { ...base?.onLight, ...resolveTokenMap(input.onLight?.tokens) },
     syntax: input.syntax ?? base?.syntax,
+    ...(icons ? { icons } : {}),
+    ...(indicators ? { indicators } : {}),
   }
 }
 

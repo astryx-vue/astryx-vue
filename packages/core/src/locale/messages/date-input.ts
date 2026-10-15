@@ -7,6 +7,8 @@ export interface DateInputMessages {
   openCalendar: string
   closeCalendar: string
   clear: (label?: string) => string
+  invalidDate: string
+  loading: string
 }
 
 export const dateInputMessages: Record<AstryxLocale, DateInputMessages> = {
@@ -16,6 +18,8 @@ export const dateInputMessages: Record<AstryxLocale, DateInputMessages> = {
     openCalendar: 'Open calendar',
     closeCalendar: 'Close calendar',
     clear: label => clearLabel(label, 'Clear', 'Clear '),
+    invalidDate: 'That date is not available',
+    loading: 'Loading',
   },
   'zh-CN': {
     placeholder: '选择日期',
@@ -23,5 +27,7 @@ export const dateInputMessages: Record<AstryxLocale, DateInputMessages> = {
     openCalendar: '打开日历',
     closeCalendar: '关闭日历',
     clear: label => clearLabel(label, '清除', '清除'),
+    invalidDate: '这个日期不可用',
+    loading: '正在加载',
   },
 }

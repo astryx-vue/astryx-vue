@@ -6,5 +6,7 @@ const dateTime = shallowRef<string | null>(null)
 </script>
 
 <template>
-  <DateTimeInput v-model="dateTime" label="Meeting time" placeholder="Select a date" has-clear />
+  <div style="width: 400px; max-width: 100%">
+    <DateTimeInput v-model="dateTime" label="Meeting time" placeholder="Select a date" has-clear />
+  </div>
 </template>

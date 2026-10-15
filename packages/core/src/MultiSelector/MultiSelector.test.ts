@@ -1,6 +1,7 @@
+import type { MultiSelectorHandle } from './types.js'
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
+import { describe, expect, it, vi } from 'vitest'
+import { nextTick, ref } from 'vue'
 import MultiSelector from './MultiSelector.vue'
 import { flattenOptions } from './options.js'
 
@@ -116,6 +117,91 @@ describe('multi selector', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toEqual([])
 
     await trigger.trigger('keydown', { key: 'Backspace' })
+    wrapper.unmount()
+  })
+
+  it('formats the closed trigger for count and labels, and ignores badges', () => {
+    const formatValue = vi.fn((items: { label: string }[]) => items.map(item => item.label).join(' & '))
+    const wrapper = mountSelector({ modelValue: ['read', 'billing'], formatValue, triggerDisplay: 'count' })
+    expect(wrapper.get('.astryx-multi-selector-value').text()).toBe('Read & Billing')
+    expect(formatValue).toHaveBeenCalled()
+
+    const badges = mountSelector({
+      modelValue: ['read'],
+      triggerDisplay: 'badges',
+      formatValue: () => 'formatted',
+    })
+    expect(badges.text()).not.toContain('formatted')
+    expect(badges.text()).toContain('Read')
+
+    const empty = mountSelector({ formatValue: vi.fn(() => 'formatted') })
+    expect(empty.text()).toContain('Select…')
+    wrapper.unmount()
+    badges.unmount()
+    empty.unmount()
+  })
+
+  it('offers a create row and reports the query', async () => {
+    const wrapper = mountSelector({ searchable: true, hasCreate: true, modelValue: [] })
+    await wrapper.get('button[aria-haspopup="listbox"]').trigger('click')
+    await flush()
+    const search = document.querySelector('.astryx-multi-selector-search-input') as HTMLInputElement
+    search.value = 'Audit'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await flush()
+    expect(document.body.textContent).toContain('Create "Audit"')
+    await search.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    await flush()
+    const change = wrapper.emitted('change')?.at(-1)
+    expect(change?.[0]).toEqual(['Audit'])
+    expect(change?.[1]).toEqual({ type: 'create', query: 'Audit' })
+    wrapper.unmount()
+  })
+
+  it('does not offer a create row for an existing label or while loading', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mountSelector({ searchable: true, hasCreate: true, isLoading: true })
+    await wrapper.get('.astryx-multi-selector-trigger').trigger('click')
+    await flush()
+    expect(document.body.textContent).not.toContain('Create')
+    expect(document.querySelector('.astryx-multi-selector-empty')).toBeNull()
+    wrapper.unmount()
+
+    mountSelector({ hasCreate: true })
+    expect(warn).toHaveBeenCalled()
+    warn.mockRestore()
+  })
+
+  it('replaces the chevron with a warning icon when the status is a tooltip', () => {
+    const wrapper = mountSelector({
+      variant: 'ghost',
+      status: 'warning',
+      statusMessage: 'Some filters hide archived rows',
+      statusVariant: 'tooltip',
+    })
+    expect(wrapper.get('button.astryx-field-status-glyph').attributes('aria-label')).toBe('Warning details')
+    expect(wrapper.find('.astryx-multi-selector-chevron').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('opens and closes from the handle, and refuses when read-only', async () => {
+    const handleRef = ref<MultiSelectorHandle | null>(null)
+    const wrapper = mountSelector({ handleRef })
+    await flush()
+    handleRef.value?.open()
+    await flush()
+    expect(handleRef.value?.isOpen()).toBe(true)
+    handleRef.value?.close()
+    await flush()
+    expect(handleRef.value?.isOpen()).toBe(false)
+
+    await wrapper.setProps({ isReadOnly: true, modelValue: ['read'] })
+    const trigger = wrapper.get('.astryx-multi-selector-trigger')
+    expect(trigger.attributes('aria-readonly')).toBe('true')
+    expect(trigger.attributes('aria-haspopup')).toBeUndefined()
+    handleRef.value?.open()
+    await flush()
+    expect(handleRef.value?.isOpen()).toBe(false)
     wrapper.unmount()
   })
 })

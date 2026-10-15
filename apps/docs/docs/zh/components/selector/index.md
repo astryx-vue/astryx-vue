@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { selectorClearable, selectorDescriptions, selectorGhost, selectorSections, selectorSheet, selectorStatus } from '../../../../components/demos/selector'
+import { selectorClearable, selectorDescriptions, selectorGhost, selectorSections, selectorSheet, selectorStates, selectorStatus } from '../../../../components/demos/selector'
 </script>
 
 ## 使用方法
@@ -38,7 +38,9 @@ const options = [
 
 开启 `searchable` 属性后，选择器会显示搜索框，用户可以输入文字过滤选项。开启 `clearable` 后，已选中的值旁边会出现清除按钮。
 
-键盘导航完整支持：按下方向键上下移动高亮项，`Home` 和 `End` 跳到首尾，`Enter` 选中当前项，`Escape` 关闭列表。
+只读时当前值还在，可以聚焦，也会随表单提交，但打不开列表，也没有清除和展开箭头，外观不会变暗。同时禁用时按禁用处理。加载时触发器里是旋转指示，列表在选项到达之前不说「没有结果」。没有任何选项，和搜索之后没有命中，是两句不同的话。选中标记默认画在行尾，也可以改到行首；没选中时标记不占位。
+
+方向键上下移动高亮项，Home 和 End 跳到首尾，Enter 选中当前项，Escape 关闭列表。搜索框打开后，方向键和回车作用在搜索框上，空格仍用于输入。
 
 菜单至少和触发器一样宽，选项更长时会跟着变宽。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。
 
@@ -94,4 +96,11 @@ const options = [
   description="错误、警告和成功三种校验状态。"
   locale="zh"
   title="校验状态"
+/>
+
+<DemoExample
+  :demo="selectorStates"
+  description="只读保留当前值，加载时不声称没有选项。必填标在标签旁。搜索没有命中时用另一句文案，选中标记可以画在行首。"
+  locale="zh"
+  title="只读、加载和搜索"
 />

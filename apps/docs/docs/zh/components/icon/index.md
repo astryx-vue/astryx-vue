@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { iconBasic, iconButton, iconPalette, iconSemantic, iconSizes, iconStatus } from '../../../../components/demos/icon'
+import { iconBasic, iconButton, iconPalette, iconSemantic, iconSizes, iconStatus, iconThemes } from '../../../../components/demos/icon'
 </script>
 
 ## 使用方法
@@ -69,6 +69,31 @@ addCollection(carbon)
 
 `icon` 仍然可以收一个 CSS 类名，或你自己的组件。导航上的 `iconClass` 也还是类名。这些用法同样不要求 UnoCSS。
 
+## 语义名
+
+组件内部说的是用途，不是某一套图形的文件名。搜索、关闭、勾选、向下的箭头，都是这种名字。默认指向 Lucide 里做同一件事的图标。那一套还没注册时，页面上仍是内置字形，不会空出一块。
+
+换一整套时，在主题里把语义名指到 Iconify 的 id。子主题只写要改的名字，其余沿用上一层。直接指定某一枚图标仍然用 `name`，它优先于语义名。
+
+```vue
+<script setup lang="ts">
+import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+</script>
+
+<template>
+  <Theme
+    :theme="defineTheme({
+      name: 'withCarbon',
+      icons: { search: 'carbon:search', close: 'carbon:close' },
+    })"
+  >
+    <slot />
+  </Theme>
+</template>
+```
+
+完整名单在属性页。读取当前 id 用 `useSemanticIcon`，它和 `Icon` 从同一个入口导出。
+
 ## 最佳实践
 
 | 指引 | 实践 |
@@ -123,6 +148,13 @@ addCollection(carbon)
   description="放在 Button 的前置槽和后置槽、IconButton，以及输入框的开头和结尾。都没有设 size，盒子由槽决定。"
   locale="zh"
   title="在按钮里"
+/>
+
+<DemoExample
+  :demo="iconThemes"
+  description="同一组语义名。第一行是内置字形。后两行把搜索、关闭、勾选和向下箭头换成 Carbon 和 Heroicons。"
+  locale="zh"
+  title="随主题换图形"
 />
 
 ## 无障碍

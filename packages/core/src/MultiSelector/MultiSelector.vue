@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
-import type { MultiSelectorEmits, MultiSelectorOptionData, MultiSelectorProps, MultiSelectorSlots } from './types.js'
-import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
+import type { MultiSelectorCreateChange, MultiSelectorEmits, MultiSelectorHandle, MultiSelectorOptionData, MultiSelectorProps, MultiSelectorSlots } from './types.js'
+import { computed, inject, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
-import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
+import { useDisclosureHandle } from '../composables/useDisclosureHandle.js'
+import { useFieldControlState } from '../composables/useFieldControlState.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
+import StatusGlyph from '../Field/StatusGlyph.vue'
+import { fieldStatusPlacement } from '../Field/statusPlacement.js'
+import Icon from '../Icon/Icon.vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
+import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { searchResultMessage } from '../Selector/searchResultMessage.js'
+import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
+import { createOptionValue, readCreateQuery, resolveCreateQuery } from './createOption.js'
 import { isKeyboardModality, trackInteractionModality } from './interactionModality.js'
 import { flattenOptions, SELECT_ALL_VALUE } from './options.js'
 import '../../styles/multi-selector.css'
@@ -22,6 +32,7 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
   labelHidden: false,
   disabled: false,
   status: 'default',
+  statusVariant: 'attached',
   size: 'md',
   variant: 'input',
   presentation: 'popover',
@@ -33,12 +44,26 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
   checkboxPosition: 'start',
   required: false,
   optional: false,
+  isReadOnly: false,
+  isLoading: false,
+  hasCreate: false,
 })
 
 const emit = defineEmits<MultiSelectorEmits>()
+
 defineSlots<MultiSelectorSlots>()
 
+const CheckboxMark = useIndicator('checkbox')
+
 const messages = useAstryxMessages()
+const announce = useAnnounce()
+const inputGroup = inject(INPUT_GROUP_KEY, null)
+const inGroup = computed(() => inputGroup != null)
+const control = useFieldControlState({
+  disabled: () => props.disabled || (inputGroup?.disabled.value ?? false),
+  readOnly: () => props.isReadOnly,
+  loading: () => props.isLoading,
+})
 const triggerId = `astryx-multi-selector-${useId()}`
 const listboxId = `${triggerId}-listbox`
 const searchId = `${triggerId}-search`
@@ -48,16 +73,25 @@ const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const triggerRef = useTemplateRef<HTMLElement>('triggerRef')
 const searchRef = useTemplateRef<HTMLInputElement>('searchRef')
 const query = ref('')
-const focusableDisabled = computed(() => props.disabled && Boolean(props.disabledReason?.trim()))
+const readOnlyId = `${triggerId}-readonly`
+const focusableDisabled = computed(() => control.isDisabled.value && Boolean(props.disabledReason?.trim()))
 const selectedValues = computed(() => props.modelValue ?? [])
 const placeholder = computed(() => props.placeholder ?? messages.value.multiSelector.placeholder)
 const searchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.multiSelector.search)
 const selectAllLabel = computed(() => props.selectAllLabel ?? messages.value.multiSelector.selectAll)
-const emptyText = computed(() => messages.value.multiSelector.empty)
+const emptyText = computed(() => props.emptyText ?? messages.value.multiSelector.empty)
+const emptySearchText = computed(() => props.emptySearchText ?? messages.value.multiSelector.emptySearch)
 const fieldStatus = computed<FieldStatusInput | undefined>(() => {
   if (!props.statusMessage || props.status === 'default')
     return undefined
   return { type: props.status, message: props.statusMessage }
+})
+// 工具栏里的 attached 会收成独立说明；tooltip 把说明留在字段里的图标上。
+const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
+const statusGlyph = computed(() => {
+  if (props.status === 'default' || effectiveStatusVariant.value === 'detached')
+    return undefined
+  return props.status
 })
 
 const rows = computed(() => flattenOptions(props.options, query.value))
@@ -69,11 +103,27 @@ const optionByValue = computed(() => {
   }
   return map
 })
+const createQuery = computed(() => resolveCreateQuery({
+  enabled: props.hasCreate && props.searchable && !control.isLoading.value,
+  query: query.value,
+  labels: [...optionByValue.value.values()].map(option => option.label),
+}))
+const createOption = computed<MultiSelectorOptionData | null>(() => {
+  if (createQuery.value == null)
+    return null
+  return {
+    value: createOptionValue(createQuery.value),
+    label: messages.value.multiSelector.create(createQuery.value),
+  }
+})
 const selectable = computed<MultiSelectorOptionData[]>(() => {
   const items = rows.value.flatMap(row => row.kind === 'option' && row.option ? [row.option] : [])
-  if (!props.selectAll)
-    return items
-  return [{ value: SELECT_ALL_VALUE, label: selectAllLabel.value }, ...items]
+  const head: MultiSelectorOptionData[] = []
+  if (createOption.value)
+    head.push(createOption.value)
+  if (props.selectAll)
+    head.push({ value: SELECT_ALL_VALUE, label: selectAllLabel.value })
+  return [...head, ...items]
 })
 const comboboxOptions = computed(() => selectable.value.map(option => ({
   value: option.value,
@@ -82,10 +132,12 @@ const comboboxOptions = computed(() => selectable.value.map(option => ({
   description: option.description,
 })))
 const dummyValue = ref<string | number | null>(null)
+const selectAllIndex = computed(() => props.selectAll ? (createOption.value ? 1 : 0) : -1)
+
 const combobox = useCombobox({
   options: comboboxOptions,
   modelValue: dummyValue,
-  isEnabled: computed(() => !props.disabled),
+  isEnabled: control.canActivate,
   isSearchable: ref(false),
   onChange: () => {},
   onOpenChange: (isOpen) => {
@@ -132,7 +184,7 @@ const selectedOptions = computed(() => selectedValues.value.flatMap((value) => {
   const option = optionByValue.value.get(value)
   return option ? [option] : []
 }))
-const enabledValues = computed(() => selectable.value.filter(option => option.value !== SELECT_ALL_VALUE && !option.disabled).map(option => option.value))
+const enabledValues = computed(() => selectable.value.filter(option => option.value !== SELECT_ALL_VALUE && readCreateQuery(option.value) == null && !option.disabled).map(option => option.value))
 const selectedEnabledCount = computed(() => enabledValues.value.filter(value => selectedValues.value.includes(value)).length)
 const selectAllState = computed(() => {
   if (selectedEnabledCount.value === 0)
@@ -154,8 +206,30 @@ const labelText = computed(() => {
     return ''
   return extra > 0 ? `${shown.join(', ')} ${messages.value.multiSelector.more(extra)}` : shown.join(', ')
 })
+const formattedValue = computed(() => {
+  if (selectedOptions.value.length === 0 || props.formatValue == null || props.triggerDisplay === 'badges')
+    return undefined
+  return props.formatValue(selectedOptions.value.map(option => ({ value: option.value, label: option.label })))
+})
+const realMatchCount = computed(() => rows.value.filter(row => row.kind === 'option').length)
+const showEmpty = computed(() => !control.isLoading.value && realMatchCount.value === 0 && createOption.value == null)
+const announcement = computed(() => searchResultMessage({
+  isOpen: combobox.isOpen.value,
+  isLoading: control.isLoading.value,
+  query: query.value,
+  matchCount: realMatchCount.value,
+  hasCreateRow: createOption.value != null,
+  emptyText: emptyText.value,
+  emptySearchText: emptySearchText.value,
+  resultCount: messages.value.multiSelector.resultCount,
+}))
 const describedBy = computed(() => {
-  return [props.description ? `${triggerId}-description` : undefined, props.statusMessage ? `${triggerId}-status` : undefined, focusableDisabled.value ? disabledId : undefined].filter(Boolean).join(' ') || undefined
+  return [
+    inGroup.value ? inputGroup?.describedBy.value : undefined,
+    !inGroup.value && props.description ? `${triggerId}-description` : undefined,
+    !inGroup.value && props.statusMessage ? `${triggerId}-status` : undefined,
+    focusableDisabled.value ? disabledId : undefined,
+  ].filter(Boolean).join(' ') || undefined
 })
 
 watch(query, (value) => {
@@ -164,6 +238,17 @@ watch(query, (value) => {
     combobox.highlightFirst()
 })
 
+watch(announcement, (message) => {
+  if (message)
+    announce(message)
+})
+
+watch(() => [props.hasCreate, props.searchable] as const, ([create, search]) => {
+  const dev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV === true
+  if (create && !search && dev)
+    console.warn('[MultiSelector] hasCreate 需要同时开启 searchable，否则不会出现创建行。')
+}, { immediate: true })
+
 watch(() => combobox.activeIndex.value, (index) => {
   if (!combobox.isOpen.value || index < 0)
     return
@@ -171,9 +256,16 @@ watch(() => combobox.activeIndex.value, (index) => {
   void nextTick(() => scrollOptionIntoView(listboxRef.value, option ? String(option.value) : undefined))
 })
 
-function commit(next: (string | number)[]): void {
+function commit(next: (string | number)[], change?: MultiSelectorCreateChange): void {
   emit('update:modelValue', next)
-  emit('change', next)
+  emit('change', next, change)
+}
+
+function commitCreate(created: string): void {
+  const next = [...selectedValues.value, created]
+  commit(next, { type: 'create', query: created })
+  announce(messages.value.multiSelector.created(created))
+  query.value = ''
 }
 
 function isSelected(value: string | number): boolean {
@@ -181,8 +273,13 @@ function isSelected(value: string | number): boolean {
 }
 
 function toggleValue(value: string | number): void {
-  if (props.disabled)
+  if (!control.canActivate.value || control.isLoading.value)
     return
+  const created = readCreateQuery(value)
+  if (created != null) {
+    commitCreate(created)
+    return
+  }
   if (value === SELECT_ALL_VALUE) {
     const allOn = selectAllState.value === 'checked'
     const enabled = new Set(enabledValues.value)
@@ -196,12 +293,34 @@ function toggleValue(value: string | number): void {
 }
 
 function onTriggerClick(): void {
-  if (!props.disabled)
+  if (control.canActivate.value)
     combobox.toggle()
 }
 
+function openPanel(): void {
+  if (control.canActivate.value)
+    combobox.open()
+}
+
+function closePanel(): void {
+  combobox.close()
+}
+
+const handle: MultiSelectorHandle = {
+  open: openPanel,
+  close: closePanel,
+  toggle: () => {
+    if (combobox.isOpen.value)
+      closePanel()
+    else
+      openPanel()
+  },
+  isOpen: () => combobox.isOpen.value,
+}
+useDisclosureHandle(() => props.handleRef, handle)
+
 function onKeyDown(event: KeyboardEvent): void {
-  if (props.disabled || event.isComposing)
+  if (!control.canActivate.value || event.isComposing)
     return
   const searchInput = props.searchable && event.target instanceof HTMLInputElement
   switch (event.key) {
@@ -255,6 +374,9 @@ function onKeyDown(event: KeyboardEvent): void {
         const option = selectable.value[combobox.activeIndex.value]
         if (option && !option.disabled)
           toggleValue(option.value)
+      }
+      else if (combobox.isOpen.value && createQuery.value != null) {
+        commitCreate(createQuery.value)
       }
       else if (!combobox.isOpen.value) {
         combobox.open()
@@ -316,6 +438,7 @@ function checkboxState(option: MultiSelectorOptionData) {
 defineExpose({
   focus: () => (props.searchable && combobox.isOpen.value ? searchRef.value : triggerRef.value)?.focus(),
   blur: () => triggerRef.value?.blur(),
+  ...handle,
 })
 </script>
 
@@ -325,18 +448,25 @@ defineExpose({
     :class="[`size-${props.size}`, `variant-${props.variant}`]"
     :label="props.label"
     :input-id="props.searchable && combobox.isOpen.value ? searchId : triggerId"
-    :description="props.description"
-    :is-label-hidden="props.labelHidden"
-    :is-disabled="props.disabled"
-    :is-required="props.required"
-    :is-optional="props.optional"
-    :status="fieldStatus"
+    :is-label-hidden="inGroup || props.labelHidden"
+    :is-disabled="control.isDisabled.value"
+    :is-required="inGroup ? false : props.required"
+    :is-optional="inGroup ? false : props.optional"
+    :description="inGroup ? undefined : props.description"
+    :status="inGroup ? undefined : fieldStatus"
+    :status-variant="effectiveStatusVariant"
     :width="props.width"
   >
     <div
       ref="anchorRef"
       class="astryx-multi-selector-control"
-      :class="[`status-${props.status}`, { 'is-open': combobox.isOpen.value, 'is-disabled': props.disabled, 'is-ghost': props.variant === 'ghost' }]"
+      :class="[`status-${props.status}`, {
+        'is-open': combobox.isOpen.value,
+        'is-disabled': control.isDisabled.value,
+        'is-readonly': control.isReadOnly.value,
+        'is-loading': control.isLoading.value,
+        'is-ghost': props.variant === 'ghost',
+      }]"
     >
       <span v-if="$slots.icon" class="astryx-multi-selector-icon" aria-hidden="true">
         <slot name="icon" />
@@ -346,22 +476,24 @@ defineExpose({
         ref="triggerRef"
         type="button"
         class="astryx-multi-selector-trigger"
-        :disabled="props.disabled && !focusableDisabled"
+        :disabled="control.isDisabled.value && !focusableDisabled"
         :aria-disabled="focusableDisabled ? 'true' : undefined"
-        :role="props.searchable ? undefined : 'combobox'"
-        aria-haspopup="listbox"
-        :aria-expanded="combobox.isOpen.value"
-        :aria-controls="listboxId"
+        :aria-readonly="control.isReadOnly.value || undefined"
+        :aria-busy="control.isLoading.value || undefined"
+        :role="props.searchable && !control.isReadOnly.value ? undefined : 'combobox'"
+        :aria-haspopup="control.isReadOnly.value ? undefined : 'listbox'"
+        :aria-expanded="control.isReadOnly.value ? false : combobox.isOpen.value"
+        :aria-controls="control.isReadOnly.value ? undefined : listboxId"
         :aria-autocomplete="props.searchable ? undefined : 'none'"
         :aria-activedescendant="!props.searchable && combobox.isOpen.value && combobox.activeIndex.value >= 0 ? optionDomId(combobox.activeIndex.value) : undefined"
-        :aria-describedby="describedBy"
+        :aria-describedby="[describedBy, control.isReadOnly.value ? readOnlyId : undefined].filter(Boolean).join(' ') || undefined"
         :title="props.disabledReason"
         @click="onTriggerClick"
         @keydown="onKeyDown"
       >
         <span v-if="selectedOptions.length === 0" class="astryx-multi-selector-placeholder">{{ placeholder }}</span>
-        <span v-else-if="props.triggerDisplay === 'count'" class="astryx-multi-selector-value">{{ messages.multiSelector.selected(selectedOptions.length) }}</span>
-        <span v-else-if="props.triggerDisplay === 'labels'" class="astryx-multi-selector-value">{{ labelText }}</span>
+        <span v-else-if="props.triggerDisplay === 'count'" class="astryx-multi-selector-value">{{ formattedValue ?? messages.multiSelector.selected(selectedOptions.length) }}</span>
+        <span v-else-if="props.triggerDisplay === 'labels'" class="astryx-multi-selector-value">{{ formattedValue ?? labelText }}</span>
         <span v-else :ref="overflow.containerRef" class="astryx-multi-selector-badges">
           <Token
             v-for="option in selectedOptions.slice(0, visibleBadgeCount)"
@@ -374,22 +506,24 @@ defineExpose({
           </span>
         </span>
       </button>
+      <Spinner v-if="control.isLoading.value" class="astryx-multi-selector-spinner" size="sm" :aria-label="messages.multiSelector.loading" />
       <button
-        v-if="props.clearable && selectedValues.length > 0 && !props.disabled"
+        v-if="props.clearable && selectedValues.length > 0 && control.canActivate.value"
         type="button"
         class="astryx-multi-selector-clear"
         :aria-label="messages.multiSelector.clear"
         @click.stop="commit([])"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
+        <Icon icon="close" size="sm" />
       </button>
-      <span class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </span>
+      <StatusGlyph
+        v-if="statusGlyph"
+        :type="statusGlyph"
+        :message="fieldStatus?.message"
+        :tooltip="effectiveStatusVariant === 'tooltip'"
+      />
+      <Icon v-else-if="control.canActivate.value" class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" icon="chevronDown" size="sm" />
+      <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.multiSelector.readOnly }}</span>
       <span v-if="props.triggerDisplay === 'badges'" :ref="overflow.measureRef" class="astryx-multi-selector-measure" aria-hidden="true">
         <Token
           v-for="option in selectedOptions"
@@ -411,7 +545,9 @@ defineExpose({
     :padding="2"
   >
     <div ref="sheetSlot" class="astryx-multi-selector-sheet">
-      <div class="astryx-multi-selector-sheet-title">{{ props.label }}</div>
+      <div class="astryx-multi-selector-sheet-title">
+        {{ props.label }}
+      </div>
     </div>
   </BottomSheet>
   <Teleport :to="listboxTarget">
@@ -429,6 +565,7 @@ defineExpose({
       tabindex="-1"
     >
       <div v-if="props.searchable" class="astryx-multi-selector-search" :data-keyboard-focus="searchKeyboardFocus ? 'true' : undefined">
+        <Icon class="astryx-multi-selector-search-icon" icon="search" size="sm" />
         <input
           :id="searchId"
           ref="searchRef"
@@ -448,79 +585,111 @@ defineExpose({
           @blur="onSearchBlur"
           @keydown="onKeyDown"
         >
+        <button
+          v-if="query"
+          type="button"
+          class="astryx-multi-selector-search-clear"
+          :aria-label="messages.multiSelector.clear"
+          @click.stop="query = ''"
+        >
+          <Icon icon="close" size="sm" />
+        </button>
+      </div>
+      <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 创建行不进 Tab 序，方向键和回车由组合框处理。 -->
+      <div
+        v-if="createOption"
+        :id="optionDomId(0)"
+        class="astryx-multi-selector-option is-create"
+        :class="{ 'is-active': combobox.activeIndex.value === 0 }"
+        role="option"
+        :aria-selected="false"
+        :data-option-id="String(createOption.value)"
+        tabindex="-1"
+        @mousedown.prevent
+        @mouseenter="highlight(0)"
+        @click="toggleValue(createOption.value)"
+      >
+        <span class="astryx-multi-selector-option-label">{{ createOption.label }}</span>
       </div>
       <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 全选行不进 Tab 序，方向键和空格由组合框处理。 -->
       <div
-        v-if="props.selectAll"
-        :id="optionDomId(0)"
+        v-if="props.selectAll && !control.isLoading.value && realMatchCount > 0"
+        :id="optionDomId(selectAllIndex)"
         class="astryx-multi-selector-option is-select-all"
-        :class="{ 'is-active': combobox.activeIndex.value === 0 }"
+        :class="{ 'is-active': combobox.activeIndex.value === selectAllIndex }"
         role="option"
         :aria-selected="selectAllState === 'checked'"
         :data-option-id="SELECT_ALL_VALUE"
         tabindex="-1"
         @mousedown.prevent
-        @mouseenter="highlight(0)"
+        @mouseenter="highlight(selectAllIndex)"
         @click="toggleValue(SELECT_ALL_VALUE)"
       >
-        <CheckboxIndicator v-if="props.checkboxPosition === 'start'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
+        <component :is="CheckboxMark" v-if="props.checkboxPosition === 'start'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
         <span class="astryx-multi-selector-option-label">{{ selectAllLabel }}</span>
-        <CheckboxIndicator v-if="props.checkboxPosition === 'end'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
+        <component :is="CheckboxMark" v-if="props.checkboxPosition === 'end'" :state="selectAllState" :size="props.size === 'lg' ? 'md' : 'sm'" />
       </div>
-      <template v-for="row in rows" :key="row.key">
-        <div v-if="row.kind === 'divider'" class="astryx-multi-selector-divider" role="separator" />
-        <div v-else-if="row.kind === 'heading'" class="astryx-multi-selector-heading" role="presentation">
-          {{ row.label }}
-        </div>
-        <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 选项不进 Tab 序，方向键和空格由组合框处理。 -->
-        <div
-          v-else-if="row.option"
-          :id="optionDomId(optionIndex(row.option.value))"
-          class="astryx-multi-selector-option"
-          :class="{
-            'is-active': optionIndex(row.option.value) === combobox.activeIndex.value,
-            'is-disabled': row.option.disabled,
-          }"
-          role="option"
-          :aria-selected="isSelected(row.option.value)"
-          :aria-disabled="row.option.disabled || undefined"
-          :data-option-id="String(row.option.value)"
-          tabindex="-1"
-          @mousedown.prevent
-          @mouseenter="highlight(optionIndex(row.option.value))"
-          @click="toggleValue(row.option.value)"
-        >
-          <CheckboxIndicator
-            v-if="props.checkboxPosition === 'start'"
-            :state="checkboxState(row.option)"
-            :size="props.size === 'lg' ? 'md' : 'sm'"
-            :is-disabled="row.option.disabled"
-          />
-          <span class="astryx-multi-selector-option-copy">
-            <slot
-              v-if="$slots.option"
-              name="option"
-              :option="row.option"
-              :selected="isSelected(row.option.value)"
-              :active="optionIndex(row.option.value) === combobox.activeIndex.value"
+      <template v-if="!control.isLoading.value">
+        <template v-for="row in rows" :key="row.key">
+          <div v-if="row.kind === 'divider'" class="astryx-multi-selector-divider" role="separator" />
+          <div v-else-if="row.kind === 'heading'" class="astryx-multi-selector-heading" role="presentation">
+            {{ row.label }}
+          </div>
+          <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 选项不进 Tab 序，方向键和空格由组合框处理。 -->
+          <div
+            v-else-if="row.option"
+            :id="optionDomId(optionIndex(row.option.value))"
+            class="astryx-multi-selector-option"
+            :class="{
+              'is-active': optionIndex(row.option.value) === combobox.activeIndex.value,
+              'is-disabled': row.option.disabled,
+            }"
+            role="option"
+            :aria-selected="isSelected(row.option.value)"
+            :aria-disabled="row.option.disabled || undefined"
+            :data-option-id="String(row.option.value)"
+            tabindex="-1"
+            @mousedown.prevent
+            @mouseenter="highlight(optionIndex(row.option.value))"
+            @click="toggleValue(row.option.value)"
+          >
+            <component
+              :is="CheckboxMark"
+              v-if="props.checkboxPosition === 'start'"
+              :state="checkboxState(row.option)"
+              :size="props.size === 'lg' ? 'md' : 'sm'"
+              :is-disabled="row.option.disabled"
             />
-            <template v-else>
-              <span class="astryx-multi-selector-option-label">{{ row.option.label }}</span>
-              <span v-if="row.option.description" class="astryx-multi-selector-option-description">{{ row.option.description }}</span>
-            </template>
-          </span>
-          <CheckboxIndicator
-            v-if="props.checkboxPosition === 'end'"
-            :state="checkboxState(row.option)"
-            :size="props.size === 'lg' ? 'md' : 'sm'"
-            :is-disabled="row.option.disabled"
-          />
-        </div>
+            <span class="astryx-multi-selector-option-copy">
+              <slot
+                v-if="$slots.option"
+                name="option"
+                :option="row.option"
+                :selected="isSelected(row.option.value)"
+                :active="optionIndex(row.option.value) === combobox.activeIndex.value"
+              />
+              <template v-else>
+                <span class="astryx-multi-selector-option-label">{{ row.option.label }}</span>
+                <span v-if="row.option.description" class="astryx-multi-selector-option-description">{{ row.option.description }}</span>
+              </template>
+            </span>
+            <component
+              :is="CheckboxMark"
+              v-if="props.checkboxPosition === 'end'"
+              :state="checkboxState(row.option)"
+              :size="props.size === 'lg' ? 'md' : 'sm'"
+              :is-disabled="row.option.disabled"
+            />
+          </div>
+        </template>
       </template>
-      <div v-if="rows.length === 0" class="astryx-multi-selector-empty">
-        <slot name="empty">
+      <div v-if="showEmpty" class="astryx-multi-selector-empty" role="presentation">
+        <slot v-if="!query.trim()" name="empty">
           {{ emptyText }}
         </slot>
+        <template v-else>
+          {{ emptySearchText }}
+        </template>
       </div>
     </div>
   </Teleport>

@@ -7,12 +7,16 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { calendarConstraints, calendarRange, calendarSingle, calendarTwoMonths } from '../../../../components/demos/calendar'
+import { calendarConstraints, calendarRange, calendarSingle, calendarSpan, calendarTwoMonths, calendarWeeks } from '../../../../components/demos/calendar'
 </script>
 
 ## Usage
 
-`Calendar` shows a month grid. `mode="single"` selects one day. `mode="range"` with `v-model:range` selects a start and an end. `numberOfMonths` can show two months. `focusDate` chooses which month opens first. `min`, `max`, and `isDateDisabled` limit which days can be chosen.
+`Calendar` shows one or two months and selects a day or a start and end. It opens on the requested month, or on the selected day, or on today when that day still falls inside the earliest and latest dates.
+
+A day is unavailable when it is outside those bounds, when a predicate returns true, or when any constraint returns false. A range can also require a minimum and maximum length, counting both ends. Week numbers can sit beside each row. Days from the neighboring months can fill the grid, and they cannot be picked. The grid can shrink to the weeks the month needs, or stay six rows tall. The week can start on Sunday or on any other day, given as a number or a short name. A handle can move the visible month to a date and focus that day.
+
+Arrow keys move by a day or a week, cross into the next month, and skip days that cannot be picked. Home and End move to the first and last available day of the week. Page Up and Page Down move by a month. Enter or Space picks the focused day. Escape cancels a range that has a start but no end yet. Each month is a grid named with that month. Selection, today, and unavailable days are exposed to assistive technology.
 
 Bind a date:
 
@@ -68,4 +72,18 @@ The value is a local `Date`. The month title and weekday names follow the active
   description="Two months side by side, for a range that crosses a month boundary."
   locale="en"
   title="Two months"
+/>
+
+<DemoExample
+  :demo="calendarWeeks"
+  description="Turn week numbers, outside days, and a shorter month on or off, and start the week on Monday."
+  locale="en"
+  title="Weeks"
+/>
+
+<DemoExample
+  :demo="calendarSpan"
+  description="The range is at most three days, and Sundays cannot be picked. June moves the month from outside the calendar."
+  locale="en"
+  title="Span and navigation"
 />

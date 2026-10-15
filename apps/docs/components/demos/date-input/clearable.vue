@@ -19,7 +19,7 @@ function iso(date: Date | null): string {
 </script>
 
 <template>
-  <VStack :gap="4" width="100%" style="min-width: 240px; max-width: 400px">
+  <VStack :gap="4" style="width: 240px; max-width: 100%">
     <Text type="supporting" color="secondary">
       {{ value ? `Selected: ${iso(value)}` : 'No date selected' }}
     </Text>

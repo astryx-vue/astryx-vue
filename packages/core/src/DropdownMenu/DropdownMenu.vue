@@ -12,7 +12,9 @@ import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { dropdownMenuContextKey } from './context.js'
 import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
 import { DropdownMenuItems } from './renderItems.js'
+import { useMenuDrillIn } from './useMenuDrillIn.js'
 import { useMenuFocus } from './useMenuFocus.js'
+import { useMenuRegions } from './useMenuRegions.js'
 import '../../styles/dropdown-menu.css'
 
 defineOptions({ name: 'AstryxDropdownMenu', inheritAttrs: false })
@@ -47,7 +49,12 @@ const triggerId = `astryx-dropdown-menu-trigger-${uid}`
 
 const anchorRef = ref<HTMLElement | null>(null)
 const surfaceRef = ref<HTMLElement | null>(null)
+const popoverRef = ref<HTMLElement | null>(null)
+const headerRef = ref<HTMLElement | null>(null)
+const footerRef = ref<HTMLElement | null>(null)
 const anchorWidth = ref(0)
+const regionFocus = ref(false)
+let suppressRegionRing = false
 const shouldFocusOnOpen = shallowRef(false)
 const focusLastOnOpen = shallowRef(false)
 let openModality: 'keyboard' | 'pointer' = 'keyboard'
@@ -55,6 +62,9 @@ let armedTriggerClickGuard = false
 
 const COMPACT_TOUCH_QUERY = '(max-width: 639px) and (pointer: coarse) and (hover: none)'
 const isCompactTouch = useMediaQuery(COMPACT_TOUCH_QUERY)
+const hasRegions = computed(() => slots.header != null || slots.footer != null)
+const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen, COMPACT_TOUCH_QUERY)
+const positionedEl = computed(() => (hasRegions.value ? popoverRef.value : surfaceRef.value))
 const isSheet = computed(() => props.presentation === 'bottom-sheet' || (props.presentation === 'adaptive' && isCompactTouch.value))
 const sheetOpen = computed({
   get: () => isSheet.value && isOpen.value,
@@ -73,6 +83,13 @@ const hasChevron = computed(() => props.hasChevron && !isIconOnly.value)
 const surfaceId = computed(() => {
   const provided = attrs.id
   return typeof provided === 'string' && provided.length > 0 ? provided : menuId
+})
+
+const menuLabel = computed(() => {
+  const explicit = attrs['aria-label']
+  if (typeof explicit === 'string' && explicit.length > 0)
+    return explicit
+  return typeof buttonProps.value.label === 'string' ? buttonProps.value.label : undefined
 })
 
 const menuAriaLabel = computed(() => {
@@ -106,7 +123,7 @@ const layerIsOpen = ref(false)
 
 const { position, detach: detachPosition } = usePositionedLayer({
   anchor: anchorRef,
-  layer: surfaceRef,
+  layer: positionedEl,
   isOpen: layerIsOpen,
   placement: computed(() => props.placement),
   alignment: computed(() => props.alignment),
@@ -159,10 +176,17 @@ const typeahead = useTypeahead({
 })
 
 useDismiss({
-  container: surfaceRef,
+  container: positionedEl,
   trigger: anchorRef,
   isEnabled: computed(() => isOpen.value && !isSheet.value),
   onDismiss: closeMenu,
+  onEscape: () => {
+    if (drillIn.value.viewStack.length > 0) {
+      drillIn.value.pop()
+      return
+    }
+    closeMenu()
+  },
 })
 
 function emitOpenChange(next: boolean): void {
@@ -172,7 +196,21 @@ function emitOpenChange(next: boolean): void {
 }
 
 function focusSurface(): void {
+  suppressRegionRing = openModality === 'pointer'
   surfaceRef.value?.focus({ preventScroll: true })
+  suppressRegionRing = false
+}
+
+function onSurfaceFocus(event: FocusEvent): void {
+  if (event.target !== surfaceRef.value) {
+    regionFocus.value = false
+    return
+  }
+  regionFocus.value = hasRegions.value && !suppressRegionRing
+}
+
+function assignHost(element: unknown): void {
+  host.value = element instanceof HTMLElement ? element : null
 }
 
 function openMenu(modality: 'keyboard' | 'pointer'): void {
@@ -222,7 +260,22 @@ watch(isOpen, async (nowOpen) => {
     getTriggerControl()?.focus({ preventScroll: true })
 })
 
+const regions = useMenuRegions({
+  closeMenu,
+  footer: footerRef,
+  hasRegions,
+  header: headerRef,
+  menu: surfaceRef,
+})
+
 function onSurfaceKeydown(event: KeyboardEvent): void {
+  if (!focusNav.ownsEvent(event)) {
+    if (event.key === 'Tab' && hasRegions.value) {
+      event.preventDefault()
+      regions.focusRegion(event.shiftKey ? 'previous' : 'next')
+    }
+    return
+  }
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault()
     if (event.repeat)
@@ -232,6 +285,8 @@ function onSurfaceKeydown(event: KeyboardEvent): void {
       activateMenuItem(focused, event)
     return
   }
+  if (regions.onMenuTab(event))
+    return
   if (event.key === 'Tab') {
     closeMenu()
     return
@@ -297,7 +352,15 @@ const triggerProps = computed<DropdownMenuTriggerProps>(() => ({
   'onKeyDown': onTriggerKeydown,
 }))
 
-provide(dropdownMenuContextKey, { closeMenu, isOpen, menuSize })
+provide(dropdownMenuContextKey, {
+  closeMenu,
+  drillIn,
+  focusRegion: regions.focusRegion,
+  hasRegions,
+  isOpen,
+  menuLabel,
+  menuSize,
+})
 
 onMounted(() => {
   if (!isOpen.value)
@@ -343,6 +406,14 @@ onBeforeUnmount(() => {
     :padding="2"
   >
     <div
+      v-if="slots.header"
+      ref="headerRef"
+      class="astryx-dropdown-menu-region"
+      @keydown="regions.onRegionKeydown"
+    >
+      <slot name="header" />
+    </div>
+    <div
       :id="surfaceId"
       ref="surfaceRef"
       v-bind="forwardedAttrs"
@@ -354,13 +425,70 @@ onBeforeUnmount(() => {
       tabindex="-1"
       @keydown="onSurfaceKeydown"
     >
-      <DropdownMenuItems v-if="items != null" :items="items" />
-      <slot v-else />
+      <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+        <DropdownMenuItems v-if="items != null" :items="items" />
+        <slot v-else />
+      </div>
+      <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
+    </div>
+    <div
+      v-if="slots.footer"
+      ref="footerRef"
+      class="astryx-dropdown-menu-region"
+      @keydown="regions.onRegionKeydown"
+    >
+      <slot name="footer" />
     </div>
   </BottomSheet>
   <Teleport v-else to="body">
     <Transition name="astryx-dropdown-menu">
       <div
+        v-if="hasRegions"
+        v-show="isOpen"
+        ref="popoverRef"
+        class="astryx-dropdown-menu-popover"
+        :data-placement="position.placement"
+        :style="[surfaceStyle, attrs.style as CSSProperties]"
+      >
+        <div
+          v-if="slots.header"
+          ref="headerRef"
+          class="astryx-dropdown-menu-region"
+          @keydown="regions.onRegionKeydown"
+        >
+          <slot name="header" />
+        </div>
+        <div
+          :id="surfaceId"
+          ref="surfaceRef"
+          v-bind="forwardedAttrs"
+          :aria-labelledby="menuAriaLabelledBy"
+          :aria-label="menuAriaLabel"
+          class="astryx-dropdown-menu is-in-frame"
+          :class="attrs.class"
+          :data-region-focus="regionFocus || undefined"
+          role="menu"
+          tabindex="0"
+          @focus="onSurfaceFocus"
+          @keydown="onSurfaceKeydown"
+        >
+          <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+            <DropdownMenuItems v-if="items != null" :items="items" />
+            <slot v-else />
+          </div>
+          <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
+        </div>
+        <div
+          v-if="slots.footer"
+          ref="footerRef"
+          class="astryx-dropdown-menu-region"
+          @keydown="regions.onRegionKeydown"
+        >
+          <slot name="footer" />
+        </div>
+      </div>
+      <div
+        v-else
         v-show="isOpen"
         :id="surfaceId"
         ref="surfaceRef"
@@ -373,10 +501,14 @@ onBeforeUnmount(() => {
         role="menu"
         :style="[surfaceStyle, attrs.style as CSSProperties]"
         tabindex="-1"
+        @focus="onSurfaceFocus"
         @keydown="onSurfaceKeydown"
       >
-        <DropdownMenuItems v-if="items != null" :items="items" />
-        <slot v-else />
+        <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+          <DropdownMenuItems v-if="items != null" :items="items" />
+          <slot v-else />
+        </div>
+        <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
       </div>
     </Transition>
   </Teleport>

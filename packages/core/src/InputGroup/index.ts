@@ -1,4 +1,5 @@
 export { INPUT_GROUP_KEY } from './context.js'
 export type { InputGroupContext } from './context.js'
 export { default as InputGroup } from './InputGroup.vue'
-export type { InputGroupProps, InputGroupSize, InputGroupSlots } from './types.js'
+export { default as InputGroupText } from './InputGroupText.vue'
+export type { InputGroupProps, InputGroupSize, InputGroupSlots, InputGroupTextProps, InputGroupTextSlots } from './types.js'

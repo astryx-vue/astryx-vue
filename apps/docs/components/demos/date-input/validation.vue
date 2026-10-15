@@ -12,7 +12,7 @@ const successVal = ref<Date | null>(new Date(2026, 2, 10))
 </script>
 
 <template>
-  <VStack :gap="4" width="100%" style="min-width: 240px; max-width: 400px">
+  <VStack :gap="4" style="width: 240px; max-width: 100%">
     <DateInput
       v-model="errorVal"
       label="Event date"

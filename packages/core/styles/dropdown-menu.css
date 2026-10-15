@@ -194,6 +194,165 @@
     margin-block: var(--astryx-spacing-1, 4px);
   }
 
+  /*
+   * Header and footer sit beside the menu, in the same panel. The frame keeps
+   * the height cap; the menu between them scrolls.
+   */
+  .astryx-dropdown-menu-popover {
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--astryx-dropdown-menu-z-index, 1000);
+    display: flex;
+    flex-direction: column;
+    --_dropdown-menu-radius: var(--astryx-dropdown-menu-radius, var(--astryx-radius-container, 0.75rem));
+    --_dropdown-menu-padding: var(--astryx-dropdown-menu-padding, var(--astryx-spacing-1, 4px));
+    max-block-size: var(--_dropdown-menu-max-block, min(300px, calc(100dvh - 16px)));
+    overflow: hidden;
+    border-radius: var(--_dropdown-menu-radius);
+    background: var(--astryx-dropdown-menu-background, #fff);
+    box-shadow: var(
+      --astryx-dropdown-menu-shadow,
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%))
+    );
+    color: var(--astryx-dropdown-menu-foreground, var(--astryx-color-text-primary, light-dark(#171717, #fafafa)));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-dropdown-menu.is-in-frame {
+    position: static;
+    z-index: auto;
+    flex: 1 1 auto;
+    min-block-size: 0;
+    max-block-size: none;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .astryx-dropdown-menu[data-region-focus='true'] {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-offset, 3px));
+  }
+
+  .astryx-dropdown-menu-region {
+    flex: none;
+    padding: var(--astryx-spacing-1, 4px);
+  }
+
+  /* Wrappers add no box, so the menu's own gap still runs between rows. */
+  .astryx-dropdown-menu-tree {
+    display: contents;
+  }
+
+  .astryx-dropdown-menu-tree[hidden] {
+    display: none;
+  }
+
+  .astryx-dropdown-menu-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+    min-width: 0;
+  }
+
+  .astryx-dropdown-submenu {
+    min-width: min(160px, calc(100vw - 16px));
+  }
+
+  .astryx-dropdown-menu-drill {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+    min-width: 0;
+    outline: none;
+  }
+
+  .astryx-dropdown-menu-drill[hidden] {
+    display: none;
+  }
+
+  /*
+   * The selection mark is decorative. On a coarse pointer it moves to the
+   * inline end, where a touch toggle is usually drawn.
+   */
+  .astryx-dropdown-menu-mark {
+    display: inline-flex;
+    flex: none;
+    pointer-events: none;
+  }
+
+  .astryx-dropdown-menu-radio {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--astryx-input-border, #d4d4d4);
+    border-radius: var(--astryx-radio-radius, 999px);
+    background: var(--astryx-input-background, #fff);
+    transition:
+      border-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
+      background-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-dropdown-menu-radio[data-size='sm'] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .astryx-dropdown-menu-radio[data-checked='checked'] {
+    border-color: var(--astryx-input-focus, #262626);
+    background: var(--astryx-input-focus, #262626);
+  }
+
+  .astryx-dropdown-menu-radio-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: transparent;
+  }
+
+  .astryx-dropdown-menu-radio[data-size='sm'] .astryx-dropdown-menu-radio-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .astryx-dropdown-menu-radio[data-checked='checked'] .astryx-dropdown-menu-radio-dot {
+    background: var(--astryx-input-background, #fff);
+  }
+
+  .astryx-dropdown-menu-radio[data-disabled='true'] {
+    opacity: 0.5;
+  }
+
+  @media (pointer: coarse) {
+    .astryx-dropdown-menu-mark {
+      order: 1;
+      margin-inline-start: auto;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-dropdown-menu-radio {
+      border-color: ButtonText;
+      background: Canvas;
+    }
+
+    .astryx-dropdown-menu-radio[data-checked='checked'] {
+      background: Highlight;
+    }
+
+    .astryx-dropdown-menu-radio[data-checked='checked'] .astryx-dropdown-menu-radio-dot {
+      background: Canvas;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .astryx-dropdown-menu-enter-active,
     .astryx-dropdown-menu-leave-active {
@@ -206,6 +365,10 @@
     .astryx-dropdown-menu-leave-to[data-placement] {
       opacity: 1;
       transform: none;
+    }
+
+    .astryx-dropdown-menu-radio {
+      transition: none;
     }
   }
 }

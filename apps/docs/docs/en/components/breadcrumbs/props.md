@@ -69,7 +69,19 @@ footer: false
         <td><code>isCurrent</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Whether this is the current page. Renders as a <code>&lt;span&gt;</code> with <code>aria-current="page"</code>.</td>
+        <td>Whether this is the current page. Renders as a <code>&lt;span&gt;</code> with <code>aria-current="page"</code>. A current crumb can still open a menu.</td>
+      </tr>
+      <tr>
+        <td><code>menu</code></td>
+        <td><code>BreadcrumbMenuOption[]</code></td>
+        <td>-</td>
+        <td>Turns the crumb into a menu trigger. The array matches the dropdown menu's data entries, including checkbox rows and radio groups. Mutually exclusive with a link, which is ignored when a menu is set. Ignored when the menu slot is used.</td>
+      </tr>
+      <tr>
+        <td><code>menuSize</code></td>
+        <td><code>'sm' | 'md' | 'lg'</code></td>
+        <td><code>sm</code> on the supporting variant, otherwise <code>md</code></td>
+        <td>Size of the menu rows.</td>
       </tr>
     </tbody>
   </table>
@@ -89,7 +101,11 @@ footer: false
       </tr>
       <tr>
         <td><code>startIcon</code></td>
-        <td>Icon rendered before the label.</td>
+        <td>Icon rendered before the label. The built-in icon component can go here.</td>
+      </tr>
+      <tr>
+        <td><code>menu</code></td>
+        <td>Menu content written by hand, including checkbox and radio rows. The components are <code>BreadcrumbMenuCheckboxItem</code>, <code>BreadcrumbMenuRadioGroup</code>, and <code>BreadcrumbMenuRadioItem</code>. When this slot is set, the <code>menu</code> array is not used.</td>
       </tr>
     </tbody>
   </table>

@@ -39,6 +39,9 @@ const filters = ref(['active'])
       variant="ghost"
       trigger-display="labels"
       placeholder="Status"
+      status="warning"
+      status-message="Some filters hide archived rows"
+      status-variant="tooltip"
       width="max-content"
     />
     <Button label="Export" variant="ghost" />

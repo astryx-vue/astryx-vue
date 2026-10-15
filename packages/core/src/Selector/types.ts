@@ -28,6 +28,8 @@ export type SelectorStatusInput = SelectorStatus | FieldStatusInput
 export type SelectorPresentation = 'popover' | 'bottom-sheet'
 export type SelectorVariant = 'default' | 'ghost'
 export type SelectorStatusVariant = 'attached' | 'detached' | 'tooltip'
+/** 选中标记画在选项行的哪一侧。没有选中时标记不占位。 */
+export type SelectorIndicatorPosition = 'start' | 'end'
 
 export interface SelectorProps {
   /** 选中的值 */
@@ -69,8 +71,10 @@ export interface SelectorProps {
   clearable?: boolean
   /** 清除按钮标签 */
   clearLabel?: string
-  /** 空状态文本 */
+  /** 没有任何选项时的空状态。 */
   emptyText?: string
+  /** 搜索没有命中时的文案。和没有任何选项不是同一句话。 */
+  emptySearchText?: string
   /** 可见标签。不传时用占位文本作为隐藏的无障碍名称。 */
   label?: string
   /** 隐藏可见标签，仍保留给读屏。 */
@@ -81,6 +85,23 @@ export interface SelectorProps {
   width?: number | string
   /** 名称（用于表单提交） */
   name?: string
+  /**
+   * 只读。当前值还在，可以聚焦，也会随表单提交，但打不开列表，也没有清除和展开箭头。
+   * 不会变暗。和 disabled 同时设置时按禁用处理。
+   */
+  isReadOnly?: boolean
+  /** 触发器里显示加载指示，面板在加载完成前不声称「没有选项」。 */
+  isLoading?: boolean
+  /** 在标签旁标成可选。 */
+  isOptional?: boolean
+  /** 在标签旁标成必填，并设置 aria-required。 */
+  isRequired?: boolean
+  /**
+   * 选中标记在选项行的起始侧或结束侧。
+   * 未选中时默认的勾不占位；主题把勾换成单选圆点后，未选中的行也会画出空心圆。
+   * @default 'end'
+   */
+  indicatorPosition?: SelectorIndicatorPosition
 }
 
 export interface SelectorEmits {

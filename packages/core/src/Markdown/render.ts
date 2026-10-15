@@ -1,4 +1,4 @@
-import type { VNode, VNodeChild } from 'vue'
+import type { Component, VNode, VNodeChild } from 'vue'
 import type { MarkdownMessages } from '../locale/messages/markdown.js'
 import type { MdNode } from './ast.js'
 import type { MarkdownComponents, MarkdownHeadingLevel } from './types.js'
@@ -36,6 +36,8 @@ export interface RenderContext {
   sources?: Record<string, { title?: string, url?: string, icon?: string }>
   /** First-seen order of citation ids, so chips number stably in one render. */
   citationOrder: Map<string, number>
+  /** Checkbox graphic from the nearest theme. Falls back to the built-in box. */
+  checkboxIndicator?: Component
 }
 
 export function measureNode(node: MdNode): number {
@@ -368,7 +370,7 @@ function renderListItem(node: MdNode, key: string, taskList: boolean, marker: Li
   const checked = node.checked === true
   return h('li', { key, class: 'astryx-markdown__task' }, [
     h('span', { class: 'astryx-markdown__task-check' }, [
-      h(CheckboxIndicator, { state: checked ? 'checked' : 'unchecked', size: 'sm' }),
+      h(ctx.checkboxIndicator ?? CheckboxIndicator, { state: checked ? 'checked' : 'unchecked', size: 'sm' }),
       h(VisuallyHidden, () => checked ? ctx.messages.taskDone : ctx.messages.taskPending),
     ]),
     h('div', { class: 'astryx-markdown__task-body' }, body),

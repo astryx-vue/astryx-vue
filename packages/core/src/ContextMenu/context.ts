@@ -1,4 +1,5 @@
 import type { ComputedRef, InjectionKey } from 'vue'
+import type { MenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
 import type { ContextMenuSize } from './types.js'
 import { computed, inject } from 'vue'
 
@@ -23,6 +24,8 @@ export interface ContextMenuContextValue {
   menuLabel: ComputedRef<string>
   /** Density of the rows inside this menu. */
   menuSize: ComputedRef<ContextMenuSize>
+  /** View stack for submenus that replace the rows in place. */
+  drillIn: ComputedRef<MenuDrillIn>
 }
 
 export const contextMenuContextKey: InjectionKey<ContextMenuContextValue> = Symbol('astryx-context-menu')

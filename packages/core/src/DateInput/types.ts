@@ -1,3 +1,6 @@
+import type { DatePresentation } from '../composables/useDatePresentation.js'
+import type { WeekStartsOn } from '../composables/useDateRange.js'
+import type { NativePicker } from '../composables/useTimeValue.js'
 import type { FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
 
 /**
@@ -13,10 +16,19 @@ export type DateInputFormat = DateInputFormatName | ((iso: string) => string)
  * Which surface opens for the calendar.
  *
  * `popover` is the desktop calendar. `bottom-sheet` always uses a bottom sheet.
- * `adaptive-bottom-sheet` uses a bottom sheet for a coarse pointer and the
- * popover otherwise, matching the original `(pointer: coarse)` check.
+ * `native` always uses the system date control. `adaptive-bottom-sheet` uses a
+ * bottom sheet for a coarse pointer. `adaptive-native` uses the system control
+ * for a coarse pointer and the popover otherwise. When neither this nor
+ * `nativePicker` is set, the field follows `adaptive-native`.
  */
-export type DateInputPresentation = 'popover' | 'bottom-sheet' | 'adaptive-bottom-sheet'
+export type DateInputPresentation = DatePresentation
+
+/**
+ * Older name for the picker surface.
+ * `touch` follows the pointer, `always` uses the system control, `never` keeps the calendar.
+ * `presentation` wins when both are set.
+ */
+export type DateInputNativePicker = NativePicker
 
 /** Legacy string status. Prefer `{ type, message }` so the message is visible. */
 export type DateInputStatusType = 'default' | FieldStatusType
@@ -37,6 +49,8 @@ export interface DateInputProps {
   max?: Date
   /** 禁用的日期判断函数 */
   isDateDisabled?: (date: Date) => boolean
+  /** 任一函数返回 false 时禁用这一天。 */
+  dateConstraints?: ReadonlyArray<(date: Date) => boolean>
   /** 表单字段名 */
   name?: string
   /** 输入框标签。传入后会显示在字段上方。 */
@@ -45,10 +59,22 @@ export interface DateInputProps {
   description?: string
   /** 只把标签留给读屏，不显示出来。 */
   isLabelHidden?: boolean
+  /** 在标签旁标成可选。 */
+  isOptional?: boolean
+  /** 把字段标成必填。 */
+  isRequired?: boolean
+  /** 标签末尾信息图标里的说明。 */
+  labelTooltip?: string
   /** 是否禁用 */
   disabled?: boolean
   /** 禁用原因 */
   disabledReason?: string
+  /** 正在提交。字段不可改，并显示加载指示。 */
+  isLoading?: boolean
+  /**
+   * 值已经提交之后再跑。返回 Promise 时，字段保持加载直到它结束。
+   */
+  changeAction?: (value: Date | null) => void | Promise<void>
   /** 是否可清除 */
   clearable?: boolean
   /** 清除按钮标签 */
@@ -67,8 +93,16 @@ export interface DateInputProps {
    * 函数参数是 `YYYY-MM-DD`，只作用于已提交的值，不作用于正在输入的文本。
    */
   format?: DateInputFormat
-  /** 日历的打开方式。默认 `popover`。 */
+  /** 日历的打开方式。不传时，鼠标用弹出层，触摸设备用系统日期控件。 */
   presentation?: DateInputPresentation
+  /** 旧的打开方式。同时传了 `presentation` 时以 `presentation` 为准。 */
+  nativePicker?: DateInputNativePicker
+  /** 弹出日历并排的月份数。系统日期控件表达不了这项。 */
+  numberOfMonths?: 1 | 2
+  /** 弹出日历从哪一天开始一周。系统日期控件表达不了这项。 */
+  weekStartsOn?: WeekStartsOn
+  /** 整段字段的宽度。数字按像素算。 */
+  width?: number | string
 }
 
 export interface DateInputEmits {

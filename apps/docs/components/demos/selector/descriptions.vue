@@ -27,7 +27,7 @@ const grouped = ref('private')
 </script>
 
 <template>
-  <VStack :gap="6" style="width: 320px; max-width: 100%">
+  <VStack :gap="6" style="width: min(100%, 560px)">
     <Selector
       v-model="condensed"
       label="Visibility"
@@ -61,7 +61,8 @@ const grouped = ref('private')
           <template #selected="{ option }">
             <span v-if="option" class="selector-value selector-value--inline">
               <span :class="option.icon" aria-hidden="true" />
-              <span>{{ option.label }}</span>
+              <span class="selector-value__label">{{ option.label }}</span>
+              <span class="selector-value__description">{{ option.description }}</span>
             </span>
           </template>
         </Selector>
@@ -83,11 +84,39 @@ const grouped = ref('private')
 
 .selector-value--inline {
   align-items: center;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+.selector-value--inline > :first-child {
+  flex: none;
+}
+
+.selector-value > span {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .selector-value__label,
 .selector-value__description {
   display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selector-value--inline .selector-value__label {
+  flex: none;
+}
+
+.selector-value--inline .selector-value__description {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .selector-value__description {

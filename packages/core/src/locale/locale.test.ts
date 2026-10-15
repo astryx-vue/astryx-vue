@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
-import { formatCalendarMonth, weekdayNames } from './format.js'
+import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from './format.js'
 import { normalizeLocale, provideAstryxLocale, useAstryxMessages } from './index.js'
 import { astryxMessages } from './messages.js'
 
@@ -17,6 +17,8 @@ describe('locale', () => {
     expect(formatCalendarMonth(2024, 3, 'en')).toBe('March 2024')
     expect(formatCalendarMonth(2024, 3, 'zh-CN')).toBe('2024年3月')
     expect(weekdayNames('en', 'narrow')).toEqual(['S', 'M', 'T', 'W', 'T', 'F', 'S'])
+    expect(standaloneShortWeekdayNames('en')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+    expect(standaloneShortWeekdayNames('zh-CN')[0]).toBe('周日')
     expect(weekdayNames('zh-CN', 'narrow')[0]).toBe('日')
   })
 
