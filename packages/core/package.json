@@ -509,6 +509,7 @@
       "types": "./dist/locale/index.d.ts",
       "import": "./dist/locale/index.js"
     },
+    "./locales/*.json": "./locales/*.json",
     "./package.json": "./package.json",
     "./reset.css": {
       "types": "./css.d.ts",
@@ -560,6 +561,7 @@
     "THIRD_PARTY_NOTICES.md",
     "css.d.ts",
     "dist",
+    "locales",
     "reset.css",
     "styles",
     "styles.css"
@@ -963,6 +965,7 @@
         "types": "./dist/locale/index.d.ts",
         "import": "./dist/locale/index.js"
       },
+      "./locales/*.json": "./locales/*.json",
       "./package.json": "./package.json",
       "./reset.css": {
         "types": "./css.d.ts",
