@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { defineComponent, h } from 'vue'
 import Avatar from './Avatar.vue'
 import AvatarStatusDot from './AvatarStatusDot.vue'
 
@@ -246,5 +247,21 @@ describe('avatar interaction', () => {
 
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
     wrapper.unmount()
+  })
+
+  it('passes href and to to a custom link component', () => {
+    const RouterLink = defineComponent({
+      name: 'RouterLink',
+      props: { to: String, href: String },
+      setup(props, { slots }) {
+        return () => h('a', { 'data-to': props.to, 'href': props.href }, slots.default?.())
+      },
+    })
+    const wrapper = mount(Avatar, {
+      props: { as: RouterLink, href: '/people/ana', name: 'Ana Thomas', tooltip: false },
+    })
+    const link = wrapper.get('a.astryx-avatar')
+    expect(link.attributes('href')).toBe('/people/ana')
+    expect(link.attributes('data-to')).toBe('/people/ana')
   })
 })

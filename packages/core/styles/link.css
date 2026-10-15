@@ -54,4 +54,38 @@
     font-size: 0.75em;
     line-height: 1;
   }
+
+  .astryx-link--size-sm { font-size: var(--astryx-text-sm-size, 0.75rem); }
+  .astryx-link--size-md { font-size: var(--astryx-text-md-size, 0.875rem); }
+  .astryx-link--size-lg { font-size: var(--astryx-text-lg-size, 1rem); }
+  .astryx-link--size-xl { font-size: var(--astryx-text-xl-size, 1.25rem); }
+
+  .astryx-link--weight-regular { font-weight: var(--astryx-font-weight-regular, 400); }
+  .astryx-link--weight-medium { font-weight: var(--astryx-font-weight-medium, 500); }
+  .astryx-link--weight-semibold { font-weight: var(--astryx-font-weight-semibold, 600); }
+  .astryx-link--weight-bold { font-weight: var(--astryx-font-weight-bold, 700); }
+
+  .astryx-link__label {
+    min-width: 0;
+  }
+
+  .astryx-link__label--single {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .astryx-link.astryx-link--lines {
+    max-width: 100%;
+    align-items: flex-start;
+  }
+
+  .astryx-link__label--clamp {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--astryx-link-max-lines);
+    line-clamp: var(--astryx-link-max-lines);
+  }
 }

@@ -10,3 +10,5 @@ export interface NavMenuContextValue {
 
 export const navMenuKey: InjectionKey<NavMenuContextValue> = Symbol('astryx-nav-menu')
 export const navMenuCloseKey: InjectionKey<() => void> = Symbol('astryx-nav-menu-close')
+/** 弹出层要求菜单把焦点放在哪一项。菜单可以自己收，调用方也可以用插槽参数盖过它。 */
+export const navMenuFocusKey: InjectionKey<Ref<NavMenuFocusRequest>> = Symbol('astryx-nav-menu-focus')

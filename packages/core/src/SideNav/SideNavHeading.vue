@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { SideNavHeadingProps, SideNavHeadingSlots } from './types.js'
 import { computed, useSlots } from 'vue'
-import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
+import NavHeadingSurface from '../NavMenu/NavHeadingSurface.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { useSideNavCollapse } from './context.js'
 import '../../styles/side-nav.css'
@@ -15,13 +14,9 @@ const props = defineProps<SideNavHeadingProps>()
 defineSlots<SideNavHeadingSlots>()
 const slots = useSlots()
 const collapse = useSideNavCollapse()
-const messages = useAstryxMessages()
 const collapsed = computed(() => collapse.isCollapsed.value)
 const hasIcon = computed(() => slots.icon != null)
 const hasMenu = computed(() => slots.menu != null)
-const wholeLink = computed(() =>
-  Boolean(props.headingHref) && !hasMenu.value && !props.superheadingHref && !props.subheadingHref,
-)
 const linkRoot = computed(() => resolveNavRoot(props.headingHref, false, props.as))
 </script>
 
@@ -42,9 +37,9 @@ const linkRoot = computed(() => resolveNavRoot(props.headingHref, false, props.a
           </span>
         </button>
       </template>
-      <template #default="{ close }">
+      <template #default="{ close, focusRequest }">
         <div class="astryx-side-nav-heading__menu">
-          <slot name="menu" :close="close" />
+          <slot name="menu" :close="close" :focus-request="focusRequest" />
         </div>
       </template>
     </NavDisclosure>
@@ -67,146 +62,26 @@ const linkRoot = computed(() => resolveNavRoot(props.headingHref, false, props.a
     </div>
   </Tooltip>
 
-  <component
-    :is="linkRoot"
-    v-else-if="!collapsed && wholeLink"
-    class="astryx-side-nav-heading astryx-side-nav-heading--link"
-    :href="headingHref"
-    :to="as != null ? headingHref : undefined"
+  <NavHeadingSurface
+    v-else
+    kind="side"
+    :as="as"
+    :heading="heading"
+    :heading-href="headingHref"
+    :logo-label="logoLabel"
+    :subheading="subheading"
+    :subheading-href="subheadingHref"
+    :superheading="superheading"
+    :superheading-href="superheadingHref"
   >
-    <span v-if="hasIcon" class="astryx-side-nav-heading__icon">
+    <template v-if="hasIcon" #icon>
       <slot name="icon" />
-    </span>
-    <span class="astryx-side-nav-heading__text">
-      <span v-if="superheading" class="astryx-side-nav-heading__super">{{ superheading }}</span>
-      <span class="astryx-side-nav-heading__title">{{ heading }}</span>
-      <span v-if="subheading" class="astryx-side-nav-heading__sub">{{ subheading }}</span>
-    </span>
-    <span v-if="$slots.end" class="astryx-side-nav-heading__end">
-      <slot name="end" />
-    </span>
-  </component>
-
-  <NavDisclosure v-else-if="!collapsed && hasMenu" hover :label="heading">
-    <template #trigger="{ isOpen, panelId }">
-      <div class="astryx-side-nav-heading" :data-open="isOpen || undefined">
-        <component
-          :is="linkRoot"
-          v-if="headingHref"
-          class="astryx-side-nav-heading__icon"
-          :href="headingHref"
-          :to="as != null ? headingHref : undefined"
-          :aria-label="heading"
-        >
-          <slot name="icon" />
-        </component>
-        <span v-else-if="hasIcon" class="astryx-side-nav-heading__icon">
-          <slot name="icon" />
-        </span>
-        <span class="astryx-side-nav-heading__text">
-          <component
-            :is="resolveNavRoot(superheadingHref, false, as)"
-            v-if="superheading && superheadingHref"
-            class="astryx-side-nav-heading__super astryx-side-nav-heading__link"
-            :href="superheadingHref"
-            :to="as != null ? superheadingHref : undefined"
-          >
-            {{ superheading }}
-          </component>
-          <span v-else-if="superheading" class="astryx-side-nav-heading__super">{{ superheading }}</span>
-          <span class="astryx-side-nav-heading__row">
-            <component
-              :is="linkRoot"
-              v-if="headingHref"
-              class="astryx-side-nav-heading__title astryx-side-nav-heading__link"
-              :href="headingHref"
-              :to="as != null ? headingHref : undefined"
-            >
-              {{ heading }}
-            </component>
-            <span v-else class="astryx-side-nav-heading__title">{{ heading }}</span>
-            <button
-              type="button"
-              class="astryx-side-nav-heading__chevron"
-              :aria-label="messages.nav.openMenu"
-              :aria-expanded="isOpen ? 'true' : 'false'"
-              :aria-controls="panelId"
-              aria-haspopup="menu"
-            >
-              <Icon icon="chevronDown" size="sm" :class="{ 'astryx-side-nav-heading__chevron-icon--open': isOpen }" />
-            </button>
-          </span>
-          <component
-            :is="resolveNavRoot(subheadingHref, false, as)"
-            v-if="subheading && subheadingHref"
-            class="astryx-side-nav-heading__sub astryx-side-nav-heading__link"
-            :href="subheadingHref"
-            :to="as != null ? subheadingHref : undefined"
-          >
-            {{ subheading }}
-          </component>
-          <span v-else-if="subheading" class="astryx-side-nav-heading__sub">{{ subheading }}</span>
-        </span>
-        <span v-if="$slots.end" class="astryx-side-nav-heading__end">
-          <slot name="end" />
-        </span>
-      </div>
     </template>
-    <template #default="{ close }">
-      <div class="astryx-side-nav-heading__menu">
-        <slot name="menu" :close="close" />
-      </div>
-    </template>
-  </NavDisclosure>
-
-  <div v-else-if="!collapsed" class="astryx-side-nav-heading">
-    <component
-      :is="linkRoot"
-      v-if="hasIcon && headingHref"
-      class="astryx-side-nav-heading__icon"
-      :href="headingHref"
-      :to="as != null ? headingHref : undefined"
-      :aria-label="heading"
-    >
-      <slot name="icon" />
-    </component>
-    <span v-else-if="hasIcon" class="astryx-side-nav-heading__icon">
-      <slot name="icon" />
-    </span>
-    <span class="astryx-side-nav-heading__text">
-      <component
-        :is="resolveNavRoot(superheadingHref, false, as)"
-        v-if="superheading && superheadingHref"
-        class="astryx-side-nav-heading__super astryx-side-nav-heading__link"
-        :href="superheadingHref"
-        :to="as != null ? superheadingHref : undefined"
-      >
-        {{ superheading }}
-      </component>
-      <span v-else-if="superheading" class="astryx-side-nav-heading__super">{{ superheading }}</span>
-      <component
-        :is="linkRoot"
-        v-if="headingHref"
-        class="astryx-side-nav-heading__title astryx-side-nav-heading__link"
-        :href="headingHref"
-        :to="as != null ? headingHref : undefined"
-      >
-        {{ heading }}
-      </component>
-      <span v-else class="astryx-side-nav-heading__title">{{ heading }}</span>
-      <component
-        :is="resolveNavRoot(subheadingHref, false, as)"
-        v-if="subheading && subheadingHref"
-        class="astryx-side-nav-heading__sub astryx-side-nav-heading__link"
-        :href="subheadingHref"
-        :to="as != null ? subheadingHref : undefined"
-      >
-        {{ subheading }}
-      </component>
-      <span v-else-if="subheading" class="astryx-side-nav-heading__sub">{{ subheading }}</span>
-    </span>
-    <span v-if="$slots.end" class="astryx-side-nav-heading__end">
+    <template v-if="slots.end" #end>
       <slot name="end" />
-    </span>
-  </div>
+    </template>
+    <template v-if="hasMenu" #menu="scope">
+      <slot name="menu" v-bind="scope" />
+    </template>
+  </NavHeadingSurface>
 </template>

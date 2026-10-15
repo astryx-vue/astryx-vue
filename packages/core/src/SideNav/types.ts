@@ -1,4 +1,6 @@
+import type { HandleRef } from '../composables/useHandleRef.js'
 import type { NavItemSize, NavLinkComponent } from '../NavItem/types.js'
+import type { NavMenuFocusRequest } from '../NavMenu/context.js'
 
 export interface SideNavCollapsible {
   /** 非受控时的初始收起状态。 @default false */
@@ -21,6 +23,29 @@ export interface SideNavItemCollapsible {
   isCollapsed?: boolean
 }
 
+export interface SideNavResizable {
+  /** 初始宽度，像素。 @default 260 */
+  defaultWidth?: number
+  /** 最小宽度，像素。 @default 180 */
+  minWidth?: number
+  /** 最大宽度，像素。 @default 480 */
+  maxWidth?: number
+  /** 把宽度和收起状态记在 localStorage，键名以 `astryx-resizable:` 开头。 */
+  autoSaveId?: string
+  onWidthChange?: (width: number) => void
+  /** 由拖拽配置拥有收起状态。和 `collapsible` 同时写时，以这里为准。 */
+  defaultIsCollapsed?: boolean
+  isCollapsed?: boolean
+  onCollapseChange?: (isCollapsed: boolean) => void
+}
+
+export interface SideNavHandle {
+  readonly isCollapsed: boolean
+  toggle: () => void
+  collapse: () => void
+  expand: () => void
+}
+
 export interface SideNavProps {
   /** 导航地标的无障碍名称。默认走当前语言的「侧边导航」。 */
   label?: string
@@ -32,11 +57,23 @@ export interface SideNavProps {
   collapsible?: boolean | SideNavCollapsible
   /** 受控收起状态，配合 `v-model:isCollapsed`。 */
   isCollapsed?: boolean
+  /**
+   * 在结束边拖宽度。`true` 使用 260px 初始、180–480px 范围。
+   * 收起后把手隐藏。拖到 160px 以下会收起（需要同时可收起）。
+   * @default false
+   */
+  resizable?: boolean | SideNavResizable
+  /**
+   * 侧栏外面的收起按钮可以拿这个句柄。
+   * 和根元素的模板 ref 分开。更常见的做法是两边共用 `v-model:is-collapsed`。
+   */
+  handleRef?: HandleRef<SideNavHandle>
 }
 
 export interface SideNavEmits {
   'update:isCollapsed': [isCollapsed: boolean]
   'collapsedChange': [isCollapsed: boolean]
+  'widthChange': [width: number]
 }
 
 export interface SideNavSlots {
@@ -61,6 +98,11 @@ export interface SideNavSectionSlots {
   end?: () => unknown
 }
 
+export interface SideNavHeadingMenuScope {
+  close: () => void
+  focusRequest: NavMenuFocusRequest
+}
+
 export interface SideNavHeadingProps {
   /** 产品或应用名称。 */
   heading: string
@@ -69,12 +111,17 @@ export interface SideNavHeadingProps {
   superheadingHref?: string
   subheading?: string
   subheadingHref?: string
+  /**
+   * 标志单独成链接、旁边没有可读文字时的无障碍名称。
+   * 不传则用 `heading`。
+   */
+  logoLabel?: string
   as?: NavLinkComponent
 }
 
 export interface SideNavHeadingSlots {
   icon?: () => unknown
-  menu?: () => unknown
+  menu?: (props: SideNavHeadingMenuScope) => unknown
   end?: () => unknown
 }
 

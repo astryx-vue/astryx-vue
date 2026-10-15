@@ -70,7 +70,7 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 
 <DemoExample
   :demo="avatarInteractive"
-  description="Make an avatar interactive by passing href to render it as a link or a click listener to render it as a button. Both forms are focusable and show a focus-visible ring."
+  description="Pass href to make the avatar a link, or as to use a router link instead. A click listener without an address makes it a button. Both forms are focusable and show a focus-visible ring."
   locale="en"
   title="Interactive"
 />

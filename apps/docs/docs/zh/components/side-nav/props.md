@@ -14,6 +14,8 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>当前语言的「侧边导航」</td><td>导航地标的无障碍名称。</td></tr>
       <tr><td><code>collapsible</code></td><td><code>boolean | SideNavCollapsible</code></td><td><code>false</code></td><td>允许收成图标栏。对象可设置初始状态、内置按钮和快捷键。</td></tr>
       <tr><td><code>isCollapsed</code></td><td><code>boolean</code></td><td>-</td><td>受控收起状态，配合 <code>v-model:is-collapsed</code>。</td></tr>
+      <tr><td><code>resizable</code></td><td><code>boolean | SideNavResizable</code></td><td><code>false</code></td><td>在结束边拖宽度。对象可设置初始宽度、最小和最大宽度，以及记住宽度的 <code>autoSaveId</code>。</td></tr>
+      <tr><td><code>handleRef</code></td><td><code>HandleRef&lt;SideNavHandle&gt;</code></td><td>-</td><td>侧栏外面的按钮可以拿到收起、展开和切换。更常见的做法是两边共用 <code>v-model:is-collapsed</code>。</td></tr>
     </tbody>
   </table>
 </div>
@@ -26,6 +28,7 @@ footer: false
     <tbody>
       <tr><td><code>update:isCollapsed</code></td><td>收起状态变化，用于 <code>v-model:is-collapsed</code>。</td></tr>
       <tr><td><code>collapsedChange</code></td><td>收起状态变化时触发。</td></tr>
+      <tr><td><code>widthChange</code></td><td>拖拽改变宽度时触发，参数是像素宽度。</td></tr>
     </tbody>
   </table>
 </div>
@@ -84,8 +87,24 @@ footer: false
       <tr><td><code>heading</code></td><td><code>string</code></td><td>-</td><td>产品或应用名称。</td></tr>
       <tr><td><code>headingHref</code></td><td><code>string</code></td><td>-</td><td>主标题链接。</td></tr>
       <tr><td><code>superheading</code></td><td><code>string</code></td><td>-</td><td>主标题上方的小字。</td></tr>
+      <tr><td><code>superheadingHref</code></td><td><code>string</code></td><td>-</td><td>上方小字的链接。</td></tr>
       <tr><td><code>subheading</code></td><td><code>string</code></td><td>-</td><td>主标题下方的小字。</td></tr>
+      <tr><td><code>subheadingHref</code></td><td><code>string</code></td><td>-</td><td>下方小字的链接。</td></tr>
+      <tr><td><code>logoLabel</code></td><td><code>string</code></td><td>-</td><td>标志单独成链接时的无障碍名称。不传则用 <code>heading</code>。</td></tr>
       <tr><td><code>as</code></td><td><code>NavLinkComponent</code></td><td><code>'a'</code></td><td>链接根组件。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## SideNavHeading Slots
+
+<div class="component-api-table" role="region" aria-label="SideNavHeading Slots" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>icon</code></td><td>标题前的标志。收起后只剩这一块。</td></tr>
+      <tr><td><code>end</code></td><td>标题行末尾。</td></tr>
+      <tr><td><code>menu</code></td><td>弹出菜单，通常放 <code>NavHeadingMenu</code>。作用域提供 <code>close</code> 和 <code>focusRequest</code>。</td></tr>
     </tbody>
   </table>
 </div>

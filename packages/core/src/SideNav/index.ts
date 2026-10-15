@@ -9,9 +9,11 @@ export type {
   SideNavCollapseButtonProps,
   SideNavCollapsible,
   SideNavEmits,
+  SideNavHandle,
   SideNavHeadingProps,
   SideNavItemEmits,
   SideNavItemProps,
   SideNavProps,
+  SideNavResizable,
   SideNavSectionProps,
 } from './types.js'
