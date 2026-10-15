@@ -1,5 +1,19 @@
 # @astryx-vue/core
 
+## 0.2.4
+
+### Patch Changes
+
+- [#74](https://github.com/astryx-vue/astryx-vue/pull/74) [`2cbd6ee`](https://github.com/astryx-vue/astryx-vue/commit/2cbd6eef18532991508321c841b7fec7064a2933) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 代码块可以按 unified diff 给整行上色，符号后面的文本仍按原来的语言做语法高亮。主题补上新增、删除、差异头和标记色，名字沿用 `--astryx-code-syntax-*`。Markdown 可以挂文档插件和行内插件，裸链接可以单独打开，引用芯片可以改成序号。
+
+- [#74](https://github.com/astryx-vue/astryx-vue/pull/74) [`2cbd6ee`](https://github.com/astryx-vue/astryx-vue/commit/2cbd6eef18532991508321c841b7fec7064a2933) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `defineTheme()` 可以从强调色、字号比例、圆角和时长生成 token，并按组件覆盖样式。主题补上了图表用的数据色，七套主题用同一组数值。
+
+- [#74](https://github.com/astryx-vue/astryx-vue/pull/74) [`2cbd6ee`](https://github.com/astryx-vue/astryx-vue/commit/2cbd6eef18532991508321c841b7fec7064a2933) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 可以用原版 Astryx 的语言 JSON 加载中文和英文以外的语言。对不上的键会列出来，不会悄悄丢掉。另外补上按当前语言比较字符串的 `useCollator`。
+
+- [#74](https://github.com/astryx-vue/astryx-vue/pull/74) [`2cbd6ee`](https://github.com/astryx-vue/astryx-vue/commit/2cbd6eef18532991508321c841b7fec7064a2933) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 顶栏标题补上标志、上下行和菜单。大菜单推荐卡可以带图片和行动链接。侧栏可以拖宽度。标题菜单、链接和头像可以换成自定义根组件。
+
+- [#74](https://github.com/astryx-vue/astryx-vue/pull/74) [`2cbd6ee`](https://github.com/astryx-vue/astryx-vue/commit/2cbd6eef18532991508321c841b7fec7064a2933) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 分页补上首页和末页、两侧页码数量、一次跳多页、总数未知时的继续翻页、可输入页码，以及提交后的忙碌状态。进度条可以标刻度。列表行可以在触摸横滑后露出操作。标题补上读屏层级、换行、断词、对齐、删除线和截断提示，正文补上对齐和截断提示。公开 `useKeyboardHint`、`useImageMode`、`useContainerReveal` 和 `useMenuPress`。底部面板可以用切换器串起多步流程。补上不带字段外壳的 `BaseTypeahead`，以及默认的 `TypeaheadItem` 行。
+
 ## 0.2.3
 
 ### Patch Changes
