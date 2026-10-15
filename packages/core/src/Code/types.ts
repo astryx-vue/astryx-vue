@@ -106,6 +106,17 @@ export interface CodeBlockProps {
   /** One-indexed line numbers to emphasize with an accent background. */
   highlightLines?: number[]
   /**
+   * Paint the code as a unified diff over `language`.
+   *
+   * A line starting with `+` is added, `-` is removed, and `@@` is a hunk
+   * header. A `--- ` line directly followed by a `+++ ` line and then `@@`
+   * is a file header. The glyph sits in its own column. The rest of every
+   * line keeps this language's syntax colors. Copy still writes `code`,
+   * glyphs included. The header reads `diff`, or `<language> diff`.
+   * @default false
+   */
+  isDiff?: boolean
+  /**
    * Whether to show the copy button.
    * @default true
    */

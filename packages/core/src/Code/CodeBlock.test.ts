@@ -316,4 +316,67 @@ describe('codeBlock collapse', () => {
     expect(writeText).toHaveBeenCalledWith(LONG_CODE)
     expect(wrapper.get('[role="button"]').attributes('aria-expanded')).toBe('true')
   })
+
+  it('paints a diff without taking the glyphs out of the copy or the syntax colors', async () => {
+    const code = [
+      '--- a/x.ts',
+      '+++ b/x.ts',
+      '@@ -1 +1 @@',
+      '-const a = 1;',
+      '+const b = 2;',
+      ' plain',
+      '---i;',
+    ].join('\n')
+    const wrapper = renderCodeBlock({
+      code,
+      language: 'typescript',
+      isDiff: true,
+      hasLineNumbers: true,
+      highlightLines: [5],
+      highlightMode: 'ranges',
+    })
+
+    expect(wrapper.get('.astryx-code-block-title').text()).toBe('typescript diff')
+    expect(wrapper.get('.astryx-code-block__scroll').attributes('aria-label')).toBe('typescript diff')
+
+    const rows = wrapper.findAll('[data-line]')
+    expect(rows.map(row => row.attributes('data-diff'))).toEqual([
+      'header',
+      'header',
+      'header',
+      'removed',
+      'added',
+      undefined,
+      'removed',
+    ])
+    expect(rows[2]?.get('.astryx-code-block__line-content').text()).toContain('@@')
+    expect(rows[2]?.find('.astryx-token-keyword').exists()).toBe(false)
+    expect(rows[3]?.get('.astryx-token-keyword').text()).toBe('const')
+    expect(rows[3]?.get('[data-diff-marker]').text()).toBe('-')
+    expect(rows[4]?.get('.astryx-token-keyword').text()).toBe('const')
+    expect(rows[4]?.classes()).toContain('astryx-code-block__line--highlighted')
+    expect(rows[5]?.get('[data-diff-marker]').element.textContent).toBe(' ')
+    expect(rows[5]?.get('.astryx-code-block__line-content').text()).toBe('plain')
+    expect(rows[6]?.attributes('data-diff')).toBe('removed')
+
+    await copyButton(wrapper).trigger('click')
+    await settle()
+    expect(writeText).toHaveBeenCalledWith(code)
+  })
+
+  it('names a plaintext diff and keeps an unindented context line whole', () => {
+    const wrapper = renderCodeBlock({
+      code: 'diff --git a/x b/x\n+added\ncontext',
+      language: 'plaintext',
+      isDiff: true,
+    })
+
+    expect(wrapper.get('.astryx-code-block-title').text()).toBe('diff')
+    expect(wrapper.get('.astryx-code-block__scroll').attributes('aria-label')).toBe('diff')
+    const rows = wrapper.findAll('[data-line]')
+    expect(rows[0]?.attributes('data-diff')).toBeUndefined()
+    expect(rows[0]?.get('.astryx-code-block__line-content').text()).toBe('diff --git a/x b/x')
+    expect(rows[2]?.get('.astryx-code-block__line-content').text()).toBe('context')
+    expect(rows[2]?.get('[data-diff-marker]').element.textContent).toBe(' ')
+  })
 })

@@ -1,6 +1,8 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
 import configDemo from './config.vue'
 import configSource from './config.vue?raw&highlighted'
+import diffDemo from './diff.vue'
+import diffSource from './diff.vue?raw&highlighted'
 import highlightedDemo from './highlighted.vue'
 import highlightedSource from './highlighted.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
@@ -16,5 +18,6 @@ export const codeBlockOverview = defineDemo(overviewDemo, overviewSource, { clas
 export const codeBlockSnippet = defineDemo(snippetDemo, snippetSource)
 export const codeBlockHighlighted = defineDemo(highlightedDemo, highlightedSource)
 export const codeBlockConfig = defineDemo(configDemo, configSource)
+export const codeBlockDiff = defineDemo(diffDemo, diffSource)
 export const codeBlockScrollable = defineDemo(scrollableDemo, scrollableSource)
 export const codeBlockTerminal = defineDemo(terminalDemo, terminalSource)

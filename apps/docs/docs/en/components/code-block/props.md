@@ -17,7 +17,8 @@ footer: false
 <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>Filename or label in the header.</td></tr>
 <tr><td><code>hasLanguageLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether the language name appears in the header.</td></tr>
 <tr><td><code>hasLineNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether to draw a line number gutter.</td></tr>
-<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>One-indexed lines to emphasize.</td></tr>
+<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>One-indexed lines to emphasize. On a diff row, the highlight replaces the diff tint.</td></tr>
+<tr><td><code>isDiff</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Paint the snippet as a unified diff. Text after the glyph keeps the <code>language</code> syntax colors. Copy still writes the original string.</td></tr>
 <tr><td><code>hasCopyButton</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether to show the copy button.</td></tr>
 <tr><td><code>isWrapped</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether long lines wrap instead of scrolling sideways.</td></tr>
 <tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td>—</td><td>Maximum height before the body scrolls. Numbers are pixels.</td></tr>
@@ -48,4 +49,4 @@ footer: false
 
 The default slot is the content that should pick up those colors, usually one or more `CodeBlock`s.
 
-`githubDark` sets `--astryx-code-syntax-*` and `--astryx-code-block-background`. A dark background also sets `--astryx-code-block-border` to white at 12% opacity.
+`githubDark` sets `--astryx-code-syntax-*` and `--astryx-code-block-background`. A dark background also sets `--astryx-code-block-border` to white at 12% opacity. Diff colors are optional slots in that same list: `added`, `removed`, `diff-header`, `added-marker`, and `removed-marker`. When a syntax theme leaves them out, markers follow its punctuation color, the header row gets no extra paint, and the added and removed tints stay on the page theme's slots.

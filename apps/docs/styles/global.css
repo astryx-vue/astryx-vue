@@ -2016,6 +2016,11 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   text-decoration: none;
 }
 
+.vp-doc .astryx-markdown .astryx-markdown__cite[data-citation-style='number'] {
+  font-weight: var(--astryx-citation-number-font-weight, var(--astryx-font-weight-semibold, 600));
+  text-decoration: none;
+}
+
 .vp-doc .astryx-markdown .astryx-markdown__cite img {
   width: var(--astryx-spacing-3, 12px);
   height: var(--astryx-spacing-3, 12px);
