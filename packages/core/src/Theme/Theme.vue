@@ -5,6 +5,7 @@ import { computed, inject, provide, useAttrs, useTemplateRef } from 'vue'
 import { syntaxThemeKey } from '../Code/syntaxContext.js'
 import { themeContextKey, themeNestingKey } from './context.js'
 import { themeStyle } from './themeStyle.js'
+import { ThemeStyle } from './themeStyleTag.js'
 import { useThemeRootSync } from './useThemeRootSync.js'
 import '../../styles/theme.css'
 
@@ -55,6 +56,7 @@ defineExpose({ element: root })
     :data-astryx-color-mode="mode === 'system' ? undefined : mode"
     :style="[rootStyle, attrs.style as CSSProperties]"
   >
+    <ThemeStyle v-if="theme.css" :css="theme.css" />
     <slot />
   </div>
 </template>

@@ -1045,6 +1045,10 @@ export type {
 } from './TextInput/index.js'
 export {
   defineTheme,
+  expandColorScale,
+  expandMotionScale,
+  expandRadiusScale,
+  expandTypeScale,
   isDefinedTheme,
   MediaTheme,
   neutralTheme,
@@ -1054,15 +1058,23 @@ export {
   useTheme,
 } from './Theme/index.js'
 export type {
+  ColorScaleConfig,
+  ComponentStyleMap,
   DefineThemeInput,
   MediaThemeMode,
   MediaThemeProps,
+  MotionScaleConfig,
+  RadiusScaleConfig,
+  StyleOverrides,
   ThemeDefinition,
   ThemeMode,
   ThemeProps,
   ThemeSurfaceInput,
   ThemeTokens,
   ThemeTokenValue,
+  TypeScaleConfig,
+  TypographyConfig,
+  TypographyRole,
   UseMediaThemeReturn,
   UseThemeReturn,
 } from './Theme/index.js'
