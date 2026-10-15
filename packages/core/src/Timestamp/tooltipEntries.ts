@@ -1,4 +1,3 @@
-import type { AstryxLocale } from '../locale/types.js'
 import type { InstantFormat } from './formatInstant.js'
 import { formatInstant } from './formatInstant.js'
 
@@ -51,7 +50,7 @@ function shouldShowZoneName(format: TimestampTooltipFormat, hasMultipleZones: bo
 export function formatTooltipLines(
   date: Date,
   entries: readonly TimestampTooltipEntry[],
-  locale: AstryxLocale,
+  locale: string,
 ): TimestampTooltipLine[] {
   const resolved = entries.map(entry => resolveTimezone(entry.timezoneID))
   const hasMultipleZones = new Set(resolved.map(zoneKey)).size > 1
