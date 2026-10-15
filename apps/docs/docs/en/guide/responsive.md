@@ -29,10 +29,10 @@ A `LayoutPanel` in the end slot takes a fixed column with `width`. When the row 
 
 ```vue
 <script setup lang="ts">
+import { useMediaQuery } from '@astryx-vue/core'
 import { AppShell } from '@astryx-vue/core/AppShell'
 import { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'
 import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
-import { useMediaQuery } from '@astryx-vue/core'
 
 const isNarrow = useMediaQuery('(max-width: 1024px)')
 </script>
