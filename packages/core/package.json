@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/core",
   "type": "module",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Vue components for the unofficial astryx-vue community project.",
   "author": "ShenQingchuan",
   "license": "MIT",
