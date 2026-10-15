@@ -7,10 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { linkExternal, linkInline, linkTooltips } from '../../../../components/demos/link'
+import { linkExternal, linkInline, linkTooltips, linkTruncate } from '../../../../components/demos/link'
 </script>
 
 ## Usage
+
+`Link` navigates inside the app or out of it. With `href` it renders an anchor. Pass `as` to use a router link or another component; that component receives both `href` and `to`. Without `href` it renders a button. A disabled link stays a plain anchor and does not use the custom root. `size` and `weight` follow the same steps as body text, and `maxLines` limits how many lines stay visible.
 
 Import the component from its dedicated entry. Structural styles are loaded automatically.
 
@@ -60,4 +62,11 @@ import { Link } from '@astryx-vue/core/Link'
   description="Horizontal row of standalone links with descriptive hover tooltips."
   locale="en"
   title="With tooltips"
+/>
+
+<DemoExample
+  :demo="linkTruncate"
+  description="In a narrow box the link shows at most two lines, in a smaller size and a heavier weight."
+  locale="en"
+  title="Line limit"
 />

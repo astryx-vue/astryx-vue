@@ -21,7 +21,13 @@ import { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeatur
         <TopNavMegaMenuItem description="APIs, SDKs, and CLI for integration" href="#dev-tools" icon-class="i-carbon-code" title="Developer Tools" />
         <TopNavMegaMenuItem description="Low-latency edge infra in 40+ regions" href="#network" icon-class="i-carbon-globe" title="Global Network" />
         <template #featured>
-          <TopNavMegaMenuFeaturedCard description="AI-powered analytics and real-time collaboration." href="#announcement" title="What's new in v4.0" />
+          <TopNavMegaMenuFeaturedCard
+            description="AI-powered analytics and real-time collaboration."
+            image="/template-assets/light-working-horizontal-1.png"
+            link-href="#announcement"
+            link-label="Read the announcement"
+            title="What's new in v4.0"
+          />
         </template>
       </TopNavMegaMenu>
       <TopNavItem href="#pricing" label="Pricing" />

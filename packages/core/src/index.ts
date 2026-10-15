@@ -581,7 +581,7 @@ export type {
   UseLightboxOptions,
 } from './Lightbox/index.js'
 export { Link } from './Link/index.js'
-export type { LinkColor, LinkProps } from './Link/index.js'
+export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkWeight } from './Link/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
 export type {
   ItemAlign,
@@ -685,9 +685,13 @@ export type {
   NavItemSlots,
   NavLinkComponent,
 } from './NavItem/index.js'
-export { NavDisclosure, NavMenu, NavMenuItem } from './NavMenu/index.js'
+export { NavDisclosure, NavHeadingMenu, NavHeadingMenuItem, NavMenu, NavMenuItem } from './NavMenu/index.js'
 export type {
   NavDisclosureProps,
+  NavHeadingMenuEmits,
+  NavHeadingMenuItemEmits,
+  NavHeadingMenuItemProps,
+  NavHeadingMenuProps,
   NavMenuEmits,
   NavMenuFocusRequest,
   NavMenuItemEmits,
@@ -839,10 +843,12 @@ export type {
   SideNavCollapseContext,
   SideNavCollapsible,
   SideNavEmits,
+  SideNavHandle,
   SideNavHeadingProps,
   SideNavItemEmits,
   SideNavItemProps,
   SideNavProps,
+  SideNavResizable,
   SideNavSectionProps,
 } from './SideNav/index.js'
 export { Skeleton } from './Skeleton/index.js'

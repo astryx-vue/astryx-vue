@@ -62,3 +62,44 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## NavHeadingMenu Props
+
+<div class="component-api-table" role="region" aria-label="NavHeadingMenu Props" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>菜单的无障碍名称。</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>菜单宽度档，也会传给每一项的内边距。</td></tr>
+      <tr><td><code>minWidth</code></td><td><code>number | string</code></td><td>-</td><td>覆盖按档位算出的最小宽度。数字按像素。</td></tr>
+      <tr><td><code>focusRequest</code></td><td><code>'first' | 'last' | null</code></td><td>-</td><td>打开后聚焦第一项或最后一项。放在标题菜单插槽里时，标题会传入这个值。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## NavHeadingMenu 事件
+
+<div class="component-api-table" role="region" aria-label="NavHeadingMenu 事件" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>close</code></td><td>按下 Escape 时触发。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## NavHeadingMenuItem Props
+
+<div class="component-api-table" role="region" aria-label="NavHeadingMenuItem Props" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>主文字。默认插槽优先。</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>-</td><td>主文字下面的辅助说明。</td></tr>
+      <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>有地址时渲染成链接。</td></tr>
+      <tr><td><code>as</code></td><td><code>NavLinkComponent</code></td><td><code>'a'</code></td><td>链接根组件。</td></tr>
+      <tr><td><code>iconClass</code></td><td><code>string</code></td><td>-</td><td>图标 CSS class。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。方向键和首字母查找会跳过。</td></tr>
+    </tbody>
+  </table>
+</div>

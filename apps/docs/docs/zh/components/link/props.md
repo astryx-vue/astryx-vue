@@ -20,6 +20,42 @@ footer: false
         <td>链接目标地址。未提供时渲染为 <code>&lt;button&gt;</code>。</td>
       </tr>
       <tr>
+        <td><code>as</code></td>
+        <td><code>LinkRoot</code></td>
+        <td>-</td>
+        <td>有地址且未禁用时替换 <code>&lt;a&gt;</code> 的根组件，同时接收 <code>href</code> 和 <code>to</code>。</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>无障碍名称。可见内容不是名称时使用，例如只有图标的链接。设置后会代替链接文字被朗读。</td>
+      </tr>
+      <tr>
+        <td><code>newTabLabel</code></td>
+        <td><code>string</code></td>
+        <td>当前语言的「（在新标签页打开）」</td>
+        <td>外部链接后面给读屏的说明。</td>
+      </tr>
+      <tr>
+        <td><code>size</code></td>
+        <td><code>LinkSize</code></td>
+        <td>-</td>
+        <td>字号，和正文相同：sm、md、lg、xl。</td>
+      </tr>
+      <tr>
+        <td><code>weight</code></td>
+        <td><code>LinkWeight</code></td>
+        <td>-</td>
+        <td>字重。normal 和 regular 相同。</td>
+      </tr>
+      <tr>
+        <td><code>maxLines</code></td>
+        <td><code>number</code></td>
+        <td><code>0</code></td>
+        <td>最多显示的行数。0 表示不截断。</td>
+      </tr>
+      <tr>
         <td><code>isExternalLink</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
@@ -101,7 +137,7 @@ footer: false
 
 ## 原生属性
 
-根元素为 `<a>` 或 `<button>`。
+根元素为 `<a>`、`<button>`，或 `as` 传入的组件。禁用的链接始终是没有地址的 `<a>`。
 
 以下内容传入根元素：
 

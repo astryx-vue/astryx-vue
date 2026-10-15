@@ -1,6 +1,7 @@
+import type { SideNavHandle } from './types.js'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { h, nextTick } from 'vue'
+import { h, nextTick, ref } from 'vue'
 import SideNav from './SideNav.vue'
 import SideNavItem from './SideNavItem.vue'
 import SideNavSection from './SideNavSection.vue'
@@ -76,6 +77,46 @@ describe('side-nav', () => {
     window.dispatchEvent(new KeyboardEvent('keydown', { ctrlKey: true, key: '\\' }))
     await nextTick()
     expect(wrapper.get('nav').attributes('data-collapsed')).toBe('true')
+    wrapper.unmount()
+  })
+
+  it('resizes from the end edge and hides the handle while collapsed', async () => {
+    const wrapper = mount(SideNav, {
+      props: {
+        collapsible: true,
+        resizable: { defaultWidth: 280 },
+      },
+      slots: {
+        default: () => h(SideNavItem, { href: '/home', label: 'Home' }),
+      },
+    })
+
+    const nav = wrapper.get('nav')
+    expect(nav.attributes('style')).toContain('280px')
+    const handle = wrapper.get('[role="separator"]')
+    expect(handle.attributes('aria-controls')).toBe(nav.attributes('id'))
+    expect(handle.attributes('aria-label')).toBe('Resize sidebar')
+
+    await wrapper.get('[aria-label="Collapse sidebar"]').trigger('click')
+    expect(nav.attributes('data-collapsed')).toBe('true')
+    expect(wrapper.find('[role="separator"]').exists()).toBe(false)
+    expect(nav.attributes('style') ?? '').not.toContain('280px')
+    wrapper.unmount()
+  })
+
+  it('toggles through handleRef', async () => {
+    const handle = ref<SideNavHandle | null>(null)
+    const wrapper = mount(SideNav, {
+      props: { collapsible: true, handleRef: handle },
+      slots: {
+        default: () => h(SideNavItem, { href: '/home', label: 'Home' }),
+      },
+    })
+    await nextTick()
+    handle.value?.collapse()
+    await nextTick()
+    expect(wrapper.get('nav').attributes('data-collapsed')).toBe('true')
+    expect(handle.value?.isCollapsed).toBe(true)
     wrapper.unmount()
   })
 })

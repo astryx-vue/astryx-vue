@@ -65,3 +65,43 @@ export interface NavDisclosureSlots {
   trigger?: (props: { isOpen: boolean, panelId: string }) => unknown
   default?: (props: { close: () => void, focusRequest: NavMenuFocusRequest }) => unknown
 }
+
+export interface NavHeadingMenuProps {
+  /** 菜单的无障碍名称。标题没传时可以自己写。 */
+  label?: string
+  /** 菜单宽度档，也会传给每一项的内边距。 @default 'md' */
+  size?: NavMenuSize
+  /** 覆盖按档位算出的最小宽度。数字按像素。 */
+  minWidth?: number | string
+  /** 键盘打开后聚焦第一项或最后一项。 */
+  focusRequest?: NavMenuFocusRequest
+}
+
+export interface NavHeadingMenuEmits {
+  close: []
+}
+
+export interface NavHeadingMenuItemProps {
+  /** 主文字。自定义内容用默认插槽，插槽优先。 */
+  label?: string
+  /** 主文字下面的辅助说明。 */
+  description?: string
+  /** 有地址时渲染成链接。 */
+  href?: string
+  /** 链接根组件。 */
+  as?: NavLinkComponent
+  /** 图标 CSS class。 */
+  iconClass?: string
+  /** 禁用后不响应点击，方向键和首字母查找也会跳过。 @default false */
+  isDisabled?: boolean
+}
+
+export interface NavHeadingMenuItemEmits {
+  click: [event: MouseEvent]
+}
+
+export interface NavHeadingMenuItemSlots {
+  /** 自定义主文字。有插槽时不再显示 `label`。 */
+  default?: () => unknown
+  icon?: () => unknown
+}

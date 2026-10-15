@@ -5,6 +5,8 @@ import centeredDemo from './centered.vue'
 import centeredSource from './centered.vue?raw&highlighted'
 import enterpriseDemo from './enterprise.vue'
 import enterpriseSource from './enterprise.vue?raw&highlighted'
+import headingDemo from './heading.vue'
+import headingSource from './heading.vue?raw&highlighted'
 import logoDemo from './logo.vue'
 import logoSource from './logo.vue?raw&highlighted'
 import megaDemo from './mega.vue'
@@ -17,6 +19,7 @@ import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 
 export const topNavBasic = defineDemo(basicDemo, basicSource)
+export const topNavHeading = defineDemo(headingDemo, headingSource)
 export const topNavLogo = defineDemo(logoDemo, logoSource)
 export const topNavCentered = defineDemo(centeredDemo, centeredSource)
 export const topNavMenu = defineDemo(menuDemo, menuSource)

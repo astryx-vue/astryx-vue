@@ -62,3 +62,44 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## NavHeadingMenu Props
+
+<div class="component-api-table" role="region" aria-label="NavHeadingMenu Props" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Accessible name of the menu.</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Menu width, also passed through as item padding.</td></tr>
+      <tr><td><code>minWidth</code></td><td><code>number | string</code></td><td>-</td><td>Overrides the width that comes from the size. A number is pixels.</td></tr>
+      <tr><td><code>focusRequest</code></td><td><code>'first' | 'last' | null</code></td><td>-</td><td>Moves focus to the first or last item after open. A heading menu slot passes this in.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## NavHeadingMenu events
+
+<div class="component-api-table" role="region" aria-label="NavHeadingMenu events" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>close</code></td><td>Fired on Escape.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## NavHeadingMenuItem Props
+
+<div class="component-api-table" role="region" aria-label="NavHeadingMenuItem Props" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Primary text. The default slot wins when it is set.</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>-</td><td>Supporting line under the text.</td></tr>
+      <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Renders a link when set.</td></tr>
+      <tr><td><code>as</code></td><td><code>NavLinkComponent</code></td><td><code>'a'</code></td><td>Link root.</td></tr>
+      <tr><td><code>iconClass</code></td><td><code>string</code></td><td>-</td><td>CSS icon class.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disabled. Arrow keys and typeahead skip it.</td></tr>
+    </tbody>
+  </table>
+</div>

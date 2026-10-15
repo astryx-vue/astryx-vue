@@ -49,6 +49,30 @@ footer: false
         <td><code>'circle'</code></td>
         <td>头像形状，可选 <code>circle</code>、<code>rounded</code>、<code>square</code>。</td>
       </tr>
+      <tr>
+        <td><code>href</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>有地址时头像是链接。</td>
+      </tr>
+      <tr>
+        <td><code>as</code></td>
+        <td><code>LinkRoot</code></td>
+        <td>-</td>
+        <td>有地址时替换链接根组件，同时接收 <code>href</code> 和 <code>to</code>。没有地址时头像仍是按钮或 <code>span</code>。</td>
+      </tr>
+      <tr>
+        <td><code>target</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>链接的浏览上下文。只在有地址时生效。</td>
+      </tr>
+      <tr>
+        <td><code>rel</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>链接的关系属性。<code>target</code> 为 <code>_blank</code> 时会补上 noopener noreferrer。</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -127,7 +151,7 @@ footer: false
 
 ## 原生属性
 
-根元素为 `<span>`。
+默认根元素为 `<span>`。有 `href` 时是 `<a>` 或 `as` 传入的组件。没有地址、但监听了点击时是 `<button>`。
 
 以下内容传入根元素：
 

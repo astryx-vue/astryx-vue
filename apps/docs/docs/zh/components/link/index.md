@@ -7,12 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { linkExternal, linkInline, linkTooltips } from '../../../../components/demos/link'
+import { linkExternal, linkInline, linkTooltips, linkTruncate } from '../../../../components/demos/link'
 </script>
 
 ## 使用方法
 
-`Link` 用于在应用内部或外部之间建立导航。它默认渲染为 `<a>`，当没有 `href` 时会降级为 `<button>`，方便在需要链接样式但触发操作的场景中使用。从独立入口导入后，结构样式会随组件自动加载：
+`Link` 用于在应用内部或外部之间建立导航。有 `href` 时默认渲染为 `<a>`，也可以用 `as` 换成路由链接或其他组件，组件会同时收到 `href` 和 `to`。没有 `href` 时降级为 `<button>`。禁用后仍是普通锚点，不再使用自定义根。`size` 和 `weight` 跟正文同一套字号和字重，`maxLines` 限制可见行数。从独立入口导入后，结构样式会随组件自动加载：
 
 ```vue
 <script setup lang="ts">
@@ -60,4 +60,11 @@ import { Link } from '@astryx-vue/core/Link'
   description="一排独立链接，悬停时用提示说明去向。"
   locale="zh"
   title="带提示"
+/>
+
+<DemoExample
+  :demo="linkTruncate"
+  description="窄容器里最多显示两行，字号偏小，字重偏重。"
+  locale="zh"
+  title="限制行数"
 />
