@@ -6,11 +6,15 @@ import { normalizeLocale, provideAstryxLocale, useAstryxMessages } from './index
 import { astryxMessages } from './messages.js'
 
 describe('locale', () => {
-  it('defaults to English and treats Chinese tags as zh-CN', () => {
+  it('defaults to English and keeps tags that have their own catalog', () => {
     expect(normalizeLocale(undefined)).toBe('en')
     expect(normalizeLocale('en-US')).toBe('en')
     expect(normalizeLocale('zh')).toBe('zh-CN')
     expect(normalizeLocale('zh-CN')).toBe('zh-CN')
+    expect(normalizeLocale('zh-Hans')).toBe('zh-CN')
+    expect(normalizeLocale('zh-TW')).toBe('zh-TW')
+    expect(normalizeLocale('ja-jp')).toBe('ja-JP')
+    expect(normalizeLocale('not a locale')).toBe('en')
   })
 
   it('formats months and Sunday-first weekdays for both locales', () => {
