@@ -312,7 +312,7 @@
 | `incident-console` | `pages/incident-console/template.doc.mjs` | `isReady: false` | 等原版标成可用再移植，P2，批次 B11 |
 | `messaging-shell` | `pages/messaging-shell/template.doc.mjs` | `isReady: false` | 同上。四栏消息壳依赖条目 1 的输入套件，不要先搬一份不能输入的壳 |
 
-#### 27. 演练场还缺空白模板
+### 27. 演练场还缺空白模板
 
 - 优先级：P2
 - 批次：B11
@@ -331,7 +331,7 @@
 
 我们的导航在 `apps/docs/.vitepress/config.ts` 和 `sidebar.ts`：指南、组件、演练场、主题。指南有介绍、快速开始、安装、样式、图标、组合式函数、应用模式、无障碍、深色模式、国际化、更新日志、贡献。主题有七套皮肤和 token、颜色、排版、动画、间距圆角阴影。
 
-#### 28. 指南还缺三篇消费者文档
+### 28. 指南还缺三篇消费者文档
 
 - 优先级：P2
 - 批次：B11
