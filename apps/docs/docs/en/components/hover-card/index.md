@@ -35,6 +35,9 @@ import { HoverCard } from '@astryx-vue/core/HoverCard'
 
 When the trigger is plain text the component gives it a dashed underline and makes it focusable, so a keyboard user can open the card with Tab. When the trigger is an element such as a button or link, the component listens on that element and writes `aria-haspopup` and `aria-controls` onto it. Passing `label` exposes the card to assistive technology as a named `role="dialog"`; without it the card is a `role="group"` linked to the trigger by `aria-describedby`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

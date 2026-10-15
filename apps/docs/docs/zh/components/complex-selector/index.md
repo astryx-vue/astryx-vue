@@ -72,6 +72,9 @@ const selector = shallowRef<ComplexSelectorHandle | null>(null)
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample :demo="complexSelectorDeadline" description="Today、Tomorrow 或 Next week，也可以自定义日期和时间。Apply 提交并关闭弹层。" locale="zh" title="截止日期" />

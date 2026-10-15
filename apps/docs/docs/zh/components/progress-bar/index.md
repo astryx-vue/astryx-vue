@@ -27,6 +27,9 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 
 
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

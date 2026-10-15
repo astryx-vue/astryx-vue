@@ -46,6 +46,9 @@ A downward drag closes the sheet, and a fast upward flick expands it to the tall
 
 `padding` sets the content area's inset on the spacing scale. When omitted, the theme decides, falling back to the `--spacing-4` step (16px) on every logical edge; pass `0` for a content box flush with the panel. The content area is also a container: if its only child is a region that carries its own inset, that child escapes the padding instead of being inset twice.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

@@ -35,6 +35,9 @@ import { HoverCard } from '@astryx-vue/core/HoverCard'
 
 触发元素是纯文字时，组件会给它加上虚线底划线并让它可聚焦，键盘用户按 Tab 就能打开卡片；触发元素本身是一个按钮或链接时，组件直接监听那个元素，并把 `aria-haspopup`、`aria-controls` 这类属性写在它身上。传入 `label` 后卡片会以具名的 `role="dialog"` 暴露给屏幕阅读器，不传 `label` 时则是 `role="group"`，并通过 `aria-describedby` 指向卡片内容。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

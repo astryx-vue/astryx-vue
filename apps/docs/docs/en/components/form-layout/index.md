@@ -34,6 +34,9 @@ import { TextInput } from '@astryx-vue/core/TextInput'
 
 Nested layouts keep their own direction. A horizontal row can sit inside a vertical form.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

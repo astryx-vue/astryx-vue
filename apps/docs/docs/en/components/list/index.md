@@ -43,6 +43,9 @@ The `header` slot renders a title above the list and associates it through `aria
 
 The package also exports the more general `Item` primitive. `ListItem` is that primitive rendered as an `<li>` with the density and marker from its list; use `Item` directly when the same row layout is needed outside a list, or when you need its extra controls — `as`, `align`, `labelLines`, `descriptionLines`, and `layout`. Most screens only need `List` and `ListItem`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

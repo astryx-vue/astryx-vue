@@ -15,7 +15,7 @@ export type ComponentDocsRoute
     locale: DocsLocale
     name: string
     slug: ComponentSlug
-    tab: 'overview' | 'props'
+    tab: 'overview' | 'props' | 'accessibility'
   }
 
 export const componentDocsCopy = {
@@ -25,6 +25,7 @@ export const componentDocsCopy = {
     documentation: 'documentation',
     menu: 'Menu',
     navigation: 'Component navigation',
+    accessibility: 'Accessibility',
     overview: 'Overview',
     props: 'Props',
     returnToTop: 'Return to top',
@@ -35,6 +36,7 @@ export const componentDocsCopy = {
     documentation: '文档',
     menu: '菜单',
     navigation: '组件导航',
+    accessibility: '无障碍',
     overview: '总览',
     props: '属性',
     returnToTop: '返回顶部',
@@ -71,7 +73,8 @@ export function parseComponentDocsRoute(pathname: string): ComponentDocsRoute | 
     return null
   }
 
-  if (segments.length === 3 && segments[2] !== 'props') {
+  const tab = segments[2]
+  if (segments.length === 3 && tab !== 'props' && tab !== 'accessibility') {
     return null
   }
 
@@ -80,6 +83,6 @@ export function parseComponentDocsRoute(pathname: string): ComponentDocsRoute | 
     locale,
     name: componentName(locale, slug),
     slug,
-    tab: segments.length === 3 ? 'props' : 'overview',
+    tab: tab === 'props' || tab === 'accessibility' ? tab : 'overview',
   }
 }

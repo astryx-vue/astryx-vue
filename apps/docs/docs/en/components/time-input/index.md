@@ -29,6 +29,9 @@ const time = shallowRef<string | null>('14:30')
 
 The default hour format is 12-hour. Arrow keys step by `increment` minutes. On a fine pointer the field is typed text. On a coarse pointer, `adaptive-native` and `adaptive-bottom-sheet` use the platform time input, unless the field needs seconds or a step other than one minute. Placeholder and clear text follow the locale.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

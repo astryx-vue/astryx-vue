@@ -48,6 +48,9 @@ Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chines
 | <Badge variant="success">Do</Badge> | Abort the request when `signal` is cancelled so an older response cannot replace a newer one. |
 | <Badge variant="error">Don't</Badge> | Use typeahead for multiple values. Use Multi Selector for a fixed list, and Tokenizer for searchable tags. |
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample

@@ -39,6 +39,9 @@ const { bindings, open } = useLightbox({ media: photo })
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

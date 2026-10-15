@@ -38,6 +38,9 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

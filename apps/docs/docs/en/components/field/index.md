@@ -45,6 +45,9 @@ const inputId = `volume-${useId()}`
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

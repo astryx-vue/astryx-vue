@@ -26,6 +26,9 @@ import { FieldStatus } from '@astryx-vue/core/FieldStatus'
 
 `attached` tucks the message under a bordered control. `detached` is a separate block, which is what a standalone message should use. An error is announced assertively. Warning and success are polite. The component does not invent new behavior beyond `Field`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

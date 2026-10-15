@@ -38,6 +38,9 @@ import { Blockquote } from '@astryx-vue/core/Blockquote'
 
 
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

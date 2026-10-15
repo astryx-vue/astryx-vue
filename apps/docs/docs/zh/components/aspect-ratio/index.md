@@ -30,6 +30,9 @@ import { AspectRatio } from '@astryx-vue/core/AspectRatio'
 
 比例写在 CSS 变量 `--astryx-aspect-ratio` 上，不写成行内的 `aspect-ratio`，样式表可以覆盖它。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

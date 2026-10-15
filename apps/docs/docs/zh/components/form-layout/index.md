@@ -34,6 +34,9 @@ import { TextInput } from '@astryx-vue/core/TextInput'
 
 嵌套的布局各自保留方向。纵向表单里可以放一行横向字段。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

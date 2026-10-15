@@ -65,6 +65,9 @@ import { Grid } from '@astryx-vue/core/Grid'
 
 列模板写在容器的 CSS 变量 `--astryx-grid-template-columns` 上，而不是内联的 `grid-template-columns` 声明。因此在自有样式或媒体查询里重写这个变量、或者直接重写 `grid-template-columns`，都能生效。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

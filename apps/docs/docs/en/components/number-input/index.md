@@ -31,6 +31,9 @@ const count = ref(0)
 
 Values outside `min` and `max` are pulled back into range. The stepper names are English unless the app calls `provideAstryxLocale('zh-CN')`. When `label` is set, it is included in those names.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

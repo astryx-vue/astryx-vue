@@ -48,6 +48,9 @@ import { Text } from '@astryx-vue/core/Text'
 
 卡片还会在根元素上发布 `--container-padding-inline-start`、`--container-padding-inline-end`、`--container-padding-block-start`、`--container-padding-block-end`。需要向外延伸到卡片边缘的子元素（例如 `isFullBleed` 的 `Divider`）读取这几个变量来抵消内边距，所以它不需要知道卡片用了多少 padding。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

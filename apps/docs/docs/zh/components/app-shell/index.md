@@ -40,6 +40,9 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 
 `useAppShellMobile` 读取最近的外壳。在外壳外面，或关掉了移动导航时，`isMobile` 和 `isMobileNavEnabled` 都是 false，打开和关闭方法不做任何事。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

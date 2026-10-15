@@ -91,6 +91,9 @@ const filterPlugin = useTableFiltering(() => ({
 | <Badge variant="error">避免</Badge> | 在 `renderCell` 里排序或分页。单元格只画交给它的那一行。 |
 | <Badge variant="error">避免</Badge> | 一张表把每个插件都打开。又密又要过滤、拖宽度、还要多选，通常太挤。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

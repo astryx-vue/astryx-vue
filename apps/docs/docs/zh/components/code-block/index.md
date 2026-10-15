@@ -43,6 +43,9 @@ const commands = `$ astryx init --features agents`
 | <Badge variant="error">避免</Badge> | 用一次性 CSS 涂一个深色盒子。预设会把 token 颜色和边框一起换掉。 |
 | <Badge variant="error">避免</Badge> | 把一整段说明文字放进代码块。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 

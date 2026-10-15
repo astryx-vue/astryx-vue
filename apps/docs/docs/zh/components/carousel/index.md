@@ -48,6 +48,9 @@ import { Carousel } from '@astryx-vue/core/Carousel'
 | <Badge variant="error">避免</Badge> | 只放一项而且放得下。按钮不会出现，这一行就只是普通横排。 |
 | <Badge variant="error">避免</Badge> | 内容溢出时同时关掉按钮和边缘渐隐。至少留一个，让人知道旁边还有内容。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 

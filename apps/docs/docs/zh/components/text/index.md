@@ -29,6 +29,9 @@ import { Text } from '@astryx-vue/core/Text'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

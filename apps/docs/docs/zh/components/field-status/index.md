@@ -26,6 +26,9 @@ import { FieldStatus } from '@astryx-vue/core/FieldStatus'
 
 `attached` 贴在带边框控件的下方。`detached` 是独立的一块，单独使用时用这个。错误会立刻播报，警告和成功则较缓和。它没有另一套实现，就是字段里的那个组件。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

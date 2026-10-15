@@ -37,6 +37,9 @@ const value = ref('overview')
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

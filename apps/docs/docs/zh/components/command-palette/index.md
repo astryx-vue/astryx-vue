@@ -53,6 +53,9 @@ useHotkeys([{ keys: 'mod+k', onPress: openPalette }])
 
 方向键、Home、End、Page Up、Page Down 移动高亮，到头不停。Enter 选中高亮行。Escape 关闭面板，并丢掉还没回来的搜索。高亮在鼠标或键盘移动之前保持为空。
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

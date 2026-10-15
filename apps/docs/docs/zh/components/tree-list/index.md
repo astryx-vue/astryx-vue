@@ -49,6 +49,9 @@ const items = [
 | <Badge variant="error">避免</Badge> | 一行里又是链接又是按钮。一行只做一件事。 |
 | <Badge variant="error">避免</Badge> | 很大的树默认全部展开。从读者当前所在的路径展开。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

@@ -36,6 +36,9 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 
 A crumb in the middle of the trail can open a menu for sibling destinations. A short list is a menu array. Checkbox and radio rows go in the menu slot on that crumb, and the slot replaces the array. Those rows are exported from the breadcrumbs entry and are the same components the menu uses, so a choice opens and closes the same way.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

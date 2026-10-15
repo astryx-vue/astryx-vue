@@ -67,6 +67,9 @@ const items: ContextMenuOption[] = [
 
 菜单面板的宽度默认至少 160px 并随内容伸缩，`menuWidth` 可以给出确定宽度；无论哪种方式，面板都不会超出视口，超长内容会换行并被限制在最高 300px 的滚动区域内。`size` 只改变条目的上下内边距，`sm`、`md`、`lg` 依次更宽松。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

@@ -32,6 +32,9 @@ import { HStack, Stack, StackItem, VStack } from '@astryx-vue/core/Stack'
 
 
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

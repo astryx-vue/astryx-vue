@@ -49,6 +49,9 @@ The size of the container comes from `width`, `height`, `maxWidth`, and `minHeig
 
 `isInline` renders the container as `inline-flex`. It then takes part in the surrounding line of text instead of breaking the line box, which is what you want for a fixed-size box that centers an icon or a badge.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

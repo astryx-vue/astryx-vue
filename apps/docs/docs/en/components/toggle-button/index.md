@@ -76,6 +76,9 @@ A group is single-select by default: one member is pressed, and clicking it agai
 
 For an icon-only toggle set `isIconOnly`: the button becomes square, `label` becomes the accessible name, and `tooltip` supplies the hover hint. To swap in a filled glyph while pressed, put it in the `pressedIcon` slot; the slot falls back to `icon` when it is empty.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

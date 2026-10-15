@@ -32,6 +32,9 @@ const commands = `$ astryx init --features agents`
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

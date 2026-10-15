@@ -36,6 +36,9 @@ import '@astryx-vue/themes/neutral.css'
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

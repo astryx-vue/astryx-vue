@@ -49,6 +49,9 @@ import { Markdown } from '@astryx-vue/core/Markdown'
 
 这一版没有插件协议，也不渲染数学公式。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

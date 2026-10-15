@@ -28,6 +28,9 @@ import { Thumbnail } from '@astryx-vue/core/Thumbnail'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

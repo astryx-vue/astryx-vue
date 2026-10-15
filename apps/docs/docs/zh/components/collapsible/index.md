@@ -55,6 +55,9 @@ const isOpen = ref(false)
 
 `isDisabled` 会让触发器变暗、不再响应点击，同时带上 `aria-disabled` 并退出 Tab 顺序。注意它不会收起已经展开的内容，只是让用户无法再操作这一项。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

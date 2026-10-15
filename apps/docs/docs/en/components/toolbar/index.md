@@ -35,6 +35,9 @@ import { Toolbar } from '@astryx-vue/core/Toolbar'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

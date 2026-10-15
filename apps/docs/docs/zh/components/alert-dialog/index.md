@@ -74,6 +74,9 @@ async function revoke(): Promise<void> {
 
 `isInline` 用于文档预览：它以普通文档流渲染整个表面，不使用 `<dialog>`、遮罩与焦点限制。既然没有模态行为，它也不会声称自己是模态的，根元素的角色改为 `role="group"`。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

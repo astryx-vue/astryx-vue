@@ -73,6 +73,9 @@ function onSubmit(value: string) {
 | <Badge variant="error">避免</Badge> | 在布局里面再套一个滚动容器。记录的滚动只交给布局自己，或者交给 `scrollRef` 指向的那个元素。 |
 | <Badge variant="error">避免</Badge> | 每个流式 token 都自己播报一遍。正在输入靠自己的 `role="status"` 播报一次，新消息文案走布局里的 live region。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

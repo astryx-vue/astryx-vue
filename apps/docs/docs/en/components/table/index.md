@@ -81,6 +81,9 @@ const filterPlugin = useTableFiltering(() => ({
 
 `rowCount` and `rowIndexStart` report where the visible window sits in the full result. Setting either one numbers the data rows. When only the start is set, the total count is unknown. Group headers and detail panels are not numbered.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |
