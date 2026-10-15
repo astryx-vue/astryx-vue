@@ -608,8 +608,23 @@ export type {
   ListProps,
   ListSlots,
 } from './List/index.js'
-export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
-export type { AstryxLocale, AstryxMessages } from './locale/index.js'
+export {
+  loadAstryxCatalog,
+  normalizeLocale,
+  provideAstryxLocale,
+  useAstryxLocale,
+  useAstryxMessages,
+  useCollator,
+} from './locale/index.js'
+export type {
+  AstryxLocale,
+  AstryxMessages,
+  AstryxUpstreamCatalog,
+  AstryxUpstreamMessage,
+  LoadedAstryxLocale,
+  UnmappedUpstreamEntry,
+  UnmappedUpstreamReason,
+} from './locale/index.js'
 export {
   applyInlinePlugins,
   applyMarkdownPlugins,
@@ -1069,6 +1084,10 @@ export type {
 } from './TextInput/index.js'
 export {
   defineTheme,
+  expandColorScale,
+  expandMotionScale,
+  expandRadiusScale,
+  expandTypeScale,
   isDefinedTheme,
   MediaTheme,
   neutralTheme,
@@ -1078,15 +1097,23 @@ export {
   useTheme,
 } from './Theme/index.js'
 export type {
+  ColorScaleConfig,
+  ComponentStyleMap,
   DefineThemeInput,
   MediaThemeMode,
   MediaThemeProps,
+  MotionScaleConfig,
+  RadiusScaleConfig,
+  StyleOverrides,
   ThemeDefinition,
   ThemeMode,
   ThemeProps,
   ThemeSurfaceInput,
   ThemeTokens,
   ThemeTokenValue,
+  TypeScaleConfig,
+  TypographyConfig,
+  TypographyRole,
   UseMediaThemeReturn,
   UseThemeReturn,
 } from './Theme/index.js'

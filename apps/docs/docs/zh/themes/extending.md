@@ -17,7 +17,11 @@ title: 扩展主题
 }
 ```
 
-这条样式要排在主题样式之后，例如 `@astryx-vue/themes/neutral.css`。只想在 Vue 里改一个子树时，用 [`Theme`](/components/theme) 包住它，并传入 `defineTheme()` 的结果。它会把变量写到这棵子树上，并重新绑定文字、标题和按钮的别名，避免这些别名停在 `:root` 上已经算好的颜色。每套主题都选择 `[data-astryx-theme='…']`。Neutral 同时还选择 `:root`，所以引入 `neutral.css` 之后变量是全局的。其余主题只挂在这个属性上。
+这条样式要排在主题样式之后，例如 `@astryx-vue/themes/neutral.css`。只想在 Vue 里改一个子树时，用 [`Theme`](/components/theme) 包住它，并传入 `defineTheme()` 的结果。它会把变量写到这棵子树上，并重新绑定文字、标题和按钮的别名，避免这些别名停在 `:root` 上已经算好的颜色。
+
+要从一个强调色、一组字号比例、圆角或时长生成整份 token，用 `defineTheme()` 的 `color`、`typography`、`radius` 和 `motion`。现成的七套主题仍然是手写 CSS。
+
+每套主题都选择 `[data-astryx-theme='…']`。Neutral 同时还选择 `:root`，所以引入 `neutral.css` 之后变量是全局的。其余主题只挂在这个属性上。
 
 某个组件要单独偏离时，覆盖它在该主题组件文件里的变量，例如 `packages/themes/neutral/button.css` 里的 `--astryx-button-primary-background`。名字以那份文件为准。
 

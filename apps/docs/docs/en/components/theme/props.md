@@ -45,7 +45,12 @@ footer: false
 | Field | Description |
 | --- | --- |
 | <code>name</code> | Theme name. Written to <code>data-astryx-theme</code>. |
-| <code>tokens</code> | Semantic token overrides. A tuple is the light stop, then the dark stop. |
+| <code>tokens</code> | Semantic token overrides. A tuple is the light stop, then the dark stop. A listed name wins over a generated value. |
+| <code>color</code> | Palette from an accent. Omit the accent to recolor only the neutrals. |
+| <code>typography</code> | Fonts, and a type scale from base and ratio. |
+| <code>radius</code> | Radius steps from base and multiplier. |
+| <code>motion</code> | Durations from fast, medium, slow, and ratio. |
+| <code>components</code> | Per-component style overrides. The compiled sheet is <code>css</code> on the theme. |
 | <code>extends</code> | Another theme from <code>defineTheme()</code>. This theme's own values win. |
 | <code>syntax</code> | Syntax colors for code in this subtree, unless a <code>SyntaxTheme</code> is closer. |
 | <code>onDark</code> | Extra tokens for a dark <code>MediaTheme</code> surface. |
