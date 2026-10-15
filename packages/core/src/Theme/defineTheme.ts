@@ -3,6 +3,14 @@ import type { SemanticIconMap } from '../Icon/semantic.js'
 import type { IndicatorRegistry } from '../Indicator/types.js'
 import type { DefineThemeInput, ThemeDefinition, ThemeTokens, ThemeTokenValue } from './types.js'
 import { markRaw } from 'vue'
+import { compileComponentStyles, mergeComponentMaps } from './componentStyles.js'
+import { expandColorScale } from './expandColorScale.js'
+import { expandMotionScale } from './expandMotionScale.js'
+import { expandRadiusScale } from './expandRadiusScale.js'
+import { normalizeTokenName, prefixTokenReferences } from './tokenName.js'
+import { resolveTypography } from './typography.js'
+
+export { normalizeTokenName } from './tokenName.js'
 
 const THEME_NAME = /^[a-z0-9][a-z0-9-]*$/i
 const UNSAFE_TOKEN = /[;{}<>\n\r]/
@@ -11,16 +19,6 @@ export function isDefinedTheme(value: unknown): value is ThemeDefinition {
   return !!value
     && typeof value === 'object'
     && (value as ThemeDefinition).__astryxTheme === true
-}
-
-/** Accept `--color-accent`, `--astryx-color-accent`, or `color-accent`. */
-export function normalizeTokenName(name: string): string {
-  const trimmed = name.trim()
-  if (trimmed.startsWith('--astryx-'))
-    return trimmed
-  if (trimmed.startsWith('--'))
-    return `--astryx-${trimmed.slice(2)}`
-  return `--astryx-${trimmed}`
 }
 
 function assertTokenValue(value: string, name: string): void {
@@ -45,11 +43,11 @@ function resolveTokenMap(tokens: ThemeTokens | undefined): Record<string, string
       const [light, dark] = value
       assertTokenValue(light, key)
       assertTokenValue(dark, key)
-      resolved[key] = `light-dark(${light}, ${dark})`
+      resolved[key] = prefixTokenReferences(`light-dark(${light}, ${dark})`)
       continue
     }
     assertTokenValue(value, key)
-    resolved[key] = value
+    resolved[key] = prefixTokenReferences(value)
   }
 
   return resolved
@@ -77,7 +75,10 @@ function sealIndicators(indicators: IndicatorRegistry | undefined): IndicatorReg
  *
  * Token names are the upstream names (`--color-accent`) or this package's
  * prefixed names (`--astryx-color-accent`). A `[light, dark]` tuple becomes
- * `light-dark()`.
+ * `light-dark()`. `color`, `typography`, `radius`, and `motion` generate
+ * tokens; an explicit `tokens` entry wins for that name.
+ *
+ * `var(--color-accent)` inside a value is rewritten to the prefixed name.
  */
 export function defineTheme(input: DefineThemeInput): ThemeDefinition {
   if (!THEME_NAME.test(input.name))
@@ -86,17 +87,28 @@ export function defineTheme(input: DefineThemeInput): ThemeDefinition {
     throw new Error('defineTheme extends must be a theme returned by defineTheme().')
 
   const base = input.extends
+  const typography = resolveTypography(input.typography)
+  const generated: ThemeTokens = {
+    ...(input.color ? expandColorScale(input.color) : {}),
+    ...typography.tokens,
+    ...(input.radius ? expandRadiusScale(input.radius) : {}),
+    ...(input.motion ? expandMotionScale(input.motion) : {}),
+  }
   const icons = mergeMaps<string>(base?.icons, input.icons) as SemanticIconMap | undefined
   const indicators = sealIndicators(mergeMaps(base?.indicators, input.indicators))
+  const components = mergeComponentMaps(mergeComponentMaps(base?.components, typography.components), input.components)
+  const css = compileComponentStyles(input.name, components)
   return {
     __astryxTheme: true,
     name: input.name,
-    tokens: { ...base?.tokens, ...resolveTokenMap(input.tokens) },
+    tokens: { ...base?.tokens, ...resolveTokenMap({ ...generated, ...input.tokens }) },
     onDark: { ...base?.onDark, ...resolveTokenMap(input.onDark?.tokens) },
     onLight: { ...base?.onLight, ...resolveTokenMap(input.onLight?.tokens) },
     syntax: input.syntax ?? base?.syntax,
     ...(icons ? { icons } : {}),
     ...(indicators ? { indicators } : {}),
+    ...(components ? { components } : {}),
+    ...(css ? { css } : {}),
   }
 }
 

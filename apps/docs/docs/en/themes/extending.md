@@ -17,7 +17,11 @@ Change the look by overriding CSS variables. Put the override in the `astryx.ove
 }
 ```
 
-Load that sheet after the theme CSS, for example `@astryx-vue/themes/neutral.css`. To change one subtree in Vue, wrap it in [`Theme`](/en/components/theme) and pass a `defineTheme()` object. That writes the variables on the subtree and rebinds text, heading, and button aliases that would otherwise stay stuck on the `:root` values. Every theme selects `[data-astryx-theme='…']`. Neutral also selects `:root`, so importing `neutral.css` applies it globally. The other themes stay on the attribute.
+Load that sheet after the theme CSS, for example `@astryx-vue/themes/neutral.css`. To change one subtree in Vue, wrap it in [`Theme`](/en/components/theme) and pass a `defineTheme()` object. That writes the variables on the subtree and rebinds text, heading, and button aliases that would otherwise stay stuck on the `:root` values.
+
+To build the token set from an accent, a type ratio, a radius, or a duration scale, use `color`, `typography`, `radius`, and `motion` on `defineTheme()`. The seven shipped themes stay handwritten CSS.
+
+Every theme selects `[data-astryx-theme='…']`. Neutral also selects `:root`, so importing `neutral.css` applies it globally. The other themes stay on the attribute.
 
 When one component has to diverge, override the variable from that theme's component file, for example `--astryx-button-primary-background` in `packages/themes/neutral/button.css`. Use the names in that file.
 

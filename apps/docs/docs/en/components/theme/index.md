@@ -40,7 +40,29 @@ const ocean = defineTheme({
 </template>
 ```
 
-`neutralTheme` is the empty theme. Its colors still come from `@astryx-vue/themes/neutral.css`.
+`neutralTheme` is the empty theme. Its colors still come from `@astryx-vue/themes/neutral.css`. The seven shipped themes stay handwritten CSS. They are not rebuilt from the generators below.
+
+## Generated from a few numbers
+
+`color`, `typography`, `radius`, and `motion` fill tokens on the theme object. A matching `tokens` entry wins. A reference such as `var(--color-accent)` is rewritten to the `--astryx-` name.
+
+`color.accent` is one hex color, or `[light, dark]`. The palette is HCT: hue and chroma come from the seed, tone walks a fixed ramp, and the stops are paired into light and dark. Omit the accent and set `neutralStyle` to recolor only the neutrals. `--color-on-accent` is baked from the seed so the contrast holds. The muted, text, and icon accent tokens reference `--color-accent`, so a later accent override carries them along.
+
+Type sizes come from `typography.scale` `base` and `ratio`, rounded from `base × ratio` at each step. Radii come from `radius` `base` and `multiplier`. `none` and `full` stay fixed. Durations come from `motion` `fast`, `medium`, `slow`, and `ratio`. The min step multiplies the base by the ratio, and the max step divides by it. Both round to 5 milliseconds.
+
+`components` overrides styles by component name. `base` hits the root. `variant:secondary` hits that variant. `Theme` puts the compiled rules in the `astryx.overrides` layer, scoped to `data-astryx-theme`. The semantic icon table is still `icons`: a name points at an Iconify id.
+
+```ts
+const brand = defineTheme({
+  name: 'brand',
+  color: { accent: '#0064E0' },
+  typography: { scale: { base: 14, ratio: 1.2 } },
+  radius: { base: 4, multiplier: 1 },
+  motion: { fast: 125, medium: 300, slow: 700, ratio: 0.75 },
+})
+```
+
+For the tokens alone, call `expandColorScale`, `expandTypeScale`, `expandRadiusScale`, or `expandMotionScale`. They return the unprefixed names. Pass that object to `defineTheme()` as `tokens`.
 
 ## Best practices
 

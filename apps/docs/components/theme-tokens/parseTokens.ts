@@ -18,7 +18,7 @@ export type TokenSectionId
 
 const hues = ['blue', 'cyan', 'gray', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'] as const
 
-export type ColorBucket = 'core' | 'text' | 'icon' | 'status' | 'line' | (typeof hues)[number]
+export type ColorBucket = 'core' | 'text' | 'icon' | 'status' | 'line' | 'data' | (typeof hues)[number]
 
 export function parseCustomProperties(css: string): CustomProperty[] {
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '')
@@ -70,6 +70,8 @@ export function sectionId(name: string): TokenSectionId | null {
 }
 
 export function colorBucket(name: string): ColorBucket {
+  if (name.startsWith('--astryx-color-data-'))
+    return 'data'
   const hue = hues.find(item => name.endsWith(`-${item}`))
   if (hue)
     return hue
