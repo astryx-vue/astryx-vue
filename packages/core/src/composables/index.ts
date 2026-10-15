@@ -40,6 +40,9 @@ export type { Combobox, ComboboxOption, UseComboboxOptions } from './useCombobox
 export { useControllableState } from './useControllableState.js'
 export type { ControllableState, UseControllableStateOptions } from './useControllableState.js'
 
+export { resolveDatePresentation, resolveDateSurface } from './useDatePresentation.js'
+export type { DatePresentation, DateSurface } from './useDatePresentation.js'
+
 export {
   applyRangeClick,
   compareISODate,
@@ -65,6 +68,9 @@ export type { FocusTrap, UseFocusTrapOptions } from './useFocusTrap.js'
 export { useGridRovingFocus } from './useGridRovingFocus.js'
 export type { GridRovingFocus, UseGridRovingFocusOptions } from './useGridRovingFocus.js'
 
+export { useHandleRef } from './useHandleRef.js'
+export type { HandleRef } from './useHandleRef.js'
+
 export { useHotkeys } from './useHotkeys.js'
 export type { Hotkey } from './useHotkeys.js'
 
@@ -88,6 +94,9 @@ export type {
   UseOverflowOptions,
   UseOverflowReturn,
 } from './useOverflow.js'
+
+export { usePendingChange } from './usePendingChange.js'
+export type { PendingChange } from './usePendingChange.js'
 
 export { percent, useResizable } from './useResizable.js'
 export type {

@@ -9,7 +9,7 @@ const date = ref<Date | null>(null)
 </script>
 
 <template>
-  <div style="width: 100%; min-width: 240px; max-width: 400px">
+  <div style="width: 240px; max-width: 100%">
     <DateInput v-model="date" label="Start date" placeholder="Select a date" clearable />
   </div>
 </template>

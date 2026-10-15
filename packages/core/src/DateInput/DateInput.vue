@@ -4,12 +4,19 @@ import type { DateInputEmits, DateInputProps, DateInputSlots, DateInputStatus } 
 import { computed, defineComponent, ref, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import Calendar from '../Calendar/Calendar.vue'
+import { toCalendarDate } from '../Calendar/calendarDate.js'
+import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
+import { resolveDatePresentation, resolveDateSurface } from '../composables/useDatePresentation.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
+import { usePendingChange } from '../composables/usePendingChange.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
+import Spinner from '../Spinner/Spinner.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
+import NativeDateField from './NativeDateField.vue'
 import '../../styles/date-input.css'
 
 defineOptions({ name: 'AstryxDateInput' })
@@ -21,7 +28,8 @@ const props = withDefaults(defineProps<DateInputProps>(), {
   size: 'md',
   statusVariant: 'attached',
   format: 'date_long',
-  presentation: 'popover',
+  isLoading: false,
+  numberOfMonths: 1,
 })
 
 const emit = defineEmits<DateInputEmits>()
@@ -49,12 +57,34 @@ const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const isOpen = ref(false)
 const inputValue = ref('')
 
+const pending = usePendingChange(() => props.changeAction)
+const busy = computed(() => props.isLoading || pending.busy.value)
+const locked = computed(() => props.disabled || busy.value)
+const policy = computed(() => resolveDatePresentation(props.presentation, props.nativePicker))
+const surface = computed(() => resolveDateSurface(policy.value, isCoarsePointer.value))
+const useSheet = computed(() => surface.value === 'sheet')
+const popupWidth = computed(() => props.numberOfMonths === 2 ? 'min(36rem, calc(100vw - 16px))' : 280)
+
+function allowed(date: Date): boolean {
+  return !isCalendarDateDisabled(toCalendarDate(date), {
+    min: props.min,
+    max: props.max,
+    isDateDisabled: props.isDateDisabled,
+    dateConstraints: props.dateConstraints,
+  })
+}
+
+function commit(value: Date | null): void {
+  if (locked.value)
+    return
+  emit('update:modelValue', value)
+  emit('change', value)
+  void pending.run(value)
+}
+
 const modelValueRef = computed({
   get: () => props.modelValue,
-  set: (value) => {
-    emit('update:modelValue', value)
-    emit('change', value)
-  },
+  set: value => commit(value),
 })
 
 function toIso(date: Date): string {
@@ -107,13 +137,6 @@ function resolvedStatus(status: DateInputStatus | undefined): FieldStatusInput |
 
 const statusValue = computed(() => resolvedStatus(props.status))
 const statusType = computed<FieldStatusType | undefined>(() => statusValue.value?.type)
-const useSheet = computed(() => {
-  if (props.presentation === 'bottom-sheet')
-    return true
-  if (props.presentation === 'adaptive-bottom-sheet')
-    return isCoarsePointer.value
-  return false
-})
 const showsField = computed(() => {
   if (props.isLabelHidden && !props.description && !statusValue.value?.message)
     return false
@@ -126,7 +149,11 @@ const fieldBindings = computed(() => showsField.value
       inputId: inputId.value,
       description: props.description,
       isLabelHidden: props.isLabelHidden || !props.label,
-      isDisabled: props.disabled,
+      isDisabled: locked.value,
+      isOptional: props.isOptional,
+      isRequired: props.isRequired,
+      labelTooltip: props.labelTooltip,
+      width: props.width,
       status: statusValue.value,
       statusVariant: props.statusVariant,
     }
@@ -147,7 +174,7 @@ function onInput(event: Event): void {
   inputValue.value = target.value
 
   const parsed = parseDate(value)
-  if (parsed)
+  if (parsed && allowed(parsed))
     modelValueRef.value = parsed
 }
 
@@ -162,7 +189,7 @@ function onOpenChange(open: boolean): void {
 }
 
 function openCalendar(): void {
-  if (!props.disabled)
+  if (!locked.value)
     isOpen.value = true
 }
 
@@ -172,7 +199,7 @@ function onToggleClick(): void {
 }
 
 function onInputKeyDown(event: KeyboardEvent): void {
-  if (props.disabled || isOpen.value)
+  if (locked.value || isOpen.value)
     return
   if (event.key === 'ArrowDown' || (event.altKey && event.key === 'ArrowDown')) {
     event.preventDefault()
@@ -193,11 +220,48 @@ function onClear(event: Event): void {
   isOpen.value = false
 }
 
+defineExpose({
+  inputValue,
+  isOpen,
+  onCalendarChange,
+  onClear,
+  parseDate,
+})
+
 syncDisplayValue()
 </script>
 
 <template>
-  <component :is="shell" v-bind="fieldBindings">
+  <NativeDateField
+    v-if="surface === 'native'"
+    :input-id="inputId"
+    :model-value="modelValue"
+    :label="label"
+    :description="description"
+    :placeholder="resolvedPlaceholder"
+    :min="min"
+    :max="max"
+    :is-date-disabled="isDateDisabled"
+    :date-constraints="dateConstraints"
+    :name="name"
+    :is-label-hidden="isLabelHidden"
+    :is-optional="isOptional"
+    :is-required="isRequired"
+    :label-tooltip="labelTooltip"
+    :disabled="disabled"
+    :disabled-reason="disabledReason"
+    :is-loading="busy"
+    :clearable="clearable"
+    :clear-label="resolvedClearLabel"
+    :size="size"
+    :status="status"
+    :status-variant="statusVariant"
+    :format="format"
+    :described-by="props.describedBy"
+    :width="width"
+    @update:model-value="commit"
+  />
+  <component :is="shell" v-else v-bind="fieldBindings">
     <template #default="field">
       <div
         class="astryx-date-input"
@@ -207,11 +271,11 @@ syncDisplayValue()
       >
         <Popover
           :is-open="useSheet ? false : isOpen"
-          :is-enabled="!useSheet && !props.disabled"
+          :is-enabled="!useSheet && !locked"
           placement="below"
           alignment="start"
           :padding="0"
-          :width="248"
+          :width="popupWidth"
           :has-close-button="false"
           :is-modal="false"
           :has-auto-focus="true"
@@ -219,22 +283,18 @@ syncDisplayValue()
           :label="dialogLabel"
           @open-change="onOpenChange"
         >
-          <div class="astryx-date-input-wrapper" :data-disabled="props.disabled ? 'true' : undefined" :data-size="props.size" :data-status="statusType">
+          <div class="astryx-date-input-wrapper" :data-disabled="locked ? 'true' : undefined" :data-size="props.size" :data-status="statusType">
             <span v-if="$slots.prefix" class="astryx-date-input-prefix">
               <slot name="prefix" />
             </span>
             <button
               type="button"
               class="astryx-date-input-toggle"
-              :disabled="props.disabled"
+              :disabled="locked"
               :aria-label="toggleLabel"
               @click="onToggleClick"
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <rect x="3" y="4" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.5" />
-                <path d="M3 6H13" stroke="currentColor" stroke-width="1.5" />
-                <path d="M5 3V5M11 3V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-              </svg>
+              <Icon icon="calendar" size="sm" />
             </button>
             <input
               :id="inputId"
@@ -244,13 +304,15 @@ syncDisplayValue()
               role="combobox"
               :value="inputValue"
               :placeholder="resolvedPlaceholder"
-              :disabled="props.disabled"
+              :disabled="locked"
               :readonly="useSheet"
               :inputmode="useSheet ? 'none' : undefined"
               :aria-label="showsField ? undefined : props.label"
               :aria-labelledby="showsField ? field?.labelId : undefined"
               :aria-describedby="describedBy(field?.describedBy)"
               :aria-invalid="statusType === 'error' ? 'true' : undefined"
+              :aria-required="isRequired || undefined"
+              :aria-busy="busy || undefined"
               :aria-controls="popupId"
               :aria-expanded="isOpen"
               aria-haspopup="dialog"
@@ -262,21 +324,20 @@ syncDisplayValue()
               @keydown="onInputKeyDown"
             >
             <button
-              v-if="props.clearable && props.modelValue"
+              v-if="props.clearable && props.modelValue && !locked"
               type="button"
               class="astryx-date-input-clear"
               :aria-label="resolvedClearLabel"
               tabindex="-1"
               @click="onClear"
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-              </svg>
+              <Icon icon="close" size="sm" />
             </button>
             <span v-else-if="$slots.suffix" class="astryx-date-input-suffix">
               <slot name="suffix" />
             </span>
-            <FieldIcon v-if="statusType && props.statusVariant !== 'tooltip'" :type="statusType" />
+            <Spinner v-if="busy" class="astryx-date-input-spinner" size="sm" :aria-label="messages.dateInput.loading" />
+            <FieldIcon v-else-if="statusType && props.statusVariant !== 'tooltip'" :type="statusType" />
           </div>
           <template #content>
             <div v-if="!useSheet" :id="popupId">
@@ -285,6 +346,9 @@ syncDisplayValue()
                 :min="props.min"
                 :max="props.max"
                 :is-date-disabled="props.isDateDisabled"
+                :date-constraints="props.dateConstraints"
+                :number-of-months="props.numberOfMonths"
+                :week-starts-on="props.weekStartsOn"
                 @update:model-value="onCalendarChange"
               />
             </div>
@@ -303,6 +367,9 @@ syncDisplayValue()
               :min="props.min"
               :max="props.max"
               :is-date-disabled="props.isDateDisabled"
+              :date-constraints="props.dateConstraints"
+              :number-of-months="props.numberOfMonths"
+              :week-starts-on="props.weekStartsOn"
               @update:model-value="onCalendarChange"
             />
           </div>

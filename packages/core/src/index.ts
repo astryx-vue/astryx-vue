@@ -76,7 +76,14 @@ export type {
 export { ButtonGroup } from './ButtonGroup/index.js'
 export type { ButtonGroupOrientation, ButtonGroupProps, ButtonGroupSlots } from './ButtonGroup/index.js'
 export { Calendar } from './Calendar/index.js'
-export type { CalendarEmits, CalendarProps, CalendarRangeValue, CalendarSlots } from './Calendar/index.js'
+export type {
+  CalendarEmits,
+  CalendarHandle,
+  CalendarHandleRef,
+  CalendarProps,
+  CalendarRangeValue,
+  CalendarSlots,
+} from './Calendar/index.js'
 export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
 export { Carousel } from './Carousel/index.js'
@@ -343,6 +350,7 @@ export type {
   DateInputEmits,
   DateInputFormat,
   DateInputFormatName,
+  DateInputNativePicker,
   DateInputPresentation,
   DateInputProps,
   DateInputSlots,

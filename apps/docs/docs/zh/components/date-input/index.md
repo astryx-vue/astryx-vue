@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation } from '../../../../components/demos/date-input'
+import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation, dateInputField, dateInputNative } from '../../../../components/demos/date-input'
 </script>
 
 ## 使用方法
@@ -29,7 +29,9 @@ const date = ref(null)
 </template>
 ```
 
-绑定值是原生 `Date`。默认按长日期显示，例如 March 21, 2026。`format` 可以是 `date`、`date_long`、`date_weekday`、`system_date`，或一个接收 `YYYY-MM-DD` 的函数。`description` 显示在标签下方。`status` 传 `{ type, message }` 时，说明会出现在字段下面。`presentation="bottom-sheet"` 在底部面板里打开日历，`adaptive-bottom-sheet` 则在粗指针设备上这样做。
+绑定值是本地日期。写回字段时默认排成完整日期，例如 March 21, 2026。也可以改成短日期、带星期、系统日期，或自己排版。标签下面可以放说明。校验可以只改边框，也可以在字段下面写出原因。
+
+日历可以从弹出层或底部面板打开。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。
 
 ## 最佳实践
 
@@ -75,4 +77,18 @@ const date = ref(null)
   description="错误、警告和成功，各自带一条说明。"
   locale="zh"
   title="校验状态"
+/>
+
+<DemoExample
+  :demo="dateInputField"
+  description="日期先写进字段，保存结束前不能再改。周末不可选。另一个字段标明选填。"
+  locale="zh"
+  title="保存与标签"
+/>
+
+<DemoExample
+  :demo="dateInputNative"
+  description="直接使用系统日期控件，字段上仍按完整日期显示。"
+  locale="zh"
+  title="系统日期"
 />
