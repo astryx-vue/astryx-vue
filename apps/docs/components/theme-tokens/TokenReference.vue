@@ -117,7 +117,7 @@ const sectionCopy: Record<TokenSectionId, { title: { zh: string, en: string }, d
   },
 }
 
-const bucketOrder = ['core', 'text', 'icon', 'status', 'line', 'blue', 'cyan', 'gray', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'] as const satisfies readonly ColorBucket[]
+const bucketOrder = ['core', 'text', 'icon', 'status', 'line', 'blue', 'cyan', 'gray', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow', 'data'] as const satisfies readonly ColorBucket[]
 
 const bucketCopy: Record<ColorBucket, { zh: string, en: string }> = {
   core: { zh: '底色与强调', en: 'Surfaces and accent' },
@@ -135,6 +135,7 @@ const bucketCopy: Record<ColorBucket, { zh: string, en: string }> = {
   red: { zh: '红', en: 'Red' },
   teal: { zh: '蓝绿', en: 'Teal' },
   yellow: { zh: '黄', en: 'Yellow' },
+  data: { zh: '图表', en: 'Charts' },
 }
 
 const notes: Record<string, { zh: string, en: string }> = {
