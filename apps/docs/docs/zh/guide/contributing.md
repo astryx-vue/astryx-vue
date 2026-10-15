@@ -17,6 +17,8 @@ pnpm check
 
 `packages/core/src/index.ts`、`composables/index.ts`、`styles.css` 和 `neutral.css` 由 `pnpm sync` 生成，文件头写着不要手改。新增导出或样式入口后运行 `pnpm sync`，再把生成结果一起提交。
 
+`packages/core/locales/*.json` 是从原版 Astryx 拉下来的语言目录，不要手抄进 `messages.ts`。额外语言用 `loadAstryxCatalog`，说明在国际化那一页。
+
 文档站：
 
 ```sh

@@ -1,5 +1,3 @@
-import type { AstryxLocale } from '../locale/types.js'
-
 export type InstantFormat
   = | 'date'
     | 'date_long'
@@ -81,7 +79,7 @@ function wallClock(date: Date, timeZone: string | undefined): WallClock {
 export function formatInstant(
   date: Date,
   format: InstantFormat,
-  locale: AstryxLocale,
+  locale: string,
   { timeZone, isTimezoneShown = false, timeZoneNameStyle = 'short' }: FormatInstantOptions = {},
 ): string {
   const zone = timeZone == null ? {} : { timeZone }

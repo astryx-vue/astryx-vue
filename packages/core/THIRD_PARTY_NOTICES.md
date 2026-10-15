@@ -14,6 +14,8 @@ The TextInput, CheckboxInput, CheckboxIndicator, Slider, Banner and Field family
 
 The indicator family and semantic icon names added in October 2026 also reference the upstream implementation at commit `fdb53f3` (0.7.1), including CheckIndicator, RadioIndicator, the indicator registry, and the semantic icon name list. Their public behavior is adapted into Vue components and a name-to-Iconify map under the same MIT license. The Vue slots, composables, and built-in glyph fallback are local adaptations.
 
+The locale JSON files in `locales/` are copied from `packages/core/locales` at commit `df75749470029f0b34680e13deac635f2d72c89d`. They stay in the upstream React Intl shape. `loadAstryxCatalog` maps their keys onto this package's message tree. The files are not hand-translated here.
+
 When files or substantial portions are copied or adapted, their original copyright and license notices must be kept here or alongside the adapted files.
 
 No Meta trademarks, logos, or endorsement are granted by the Astryx software license.

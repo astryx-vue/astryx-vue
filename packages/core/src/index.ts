@@ -601,8 +601,23 @@ export type {
   ListProps,
   ListSlots,
 } from './List/index.js'
-export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
-export type { AstryxLocale, AstryxMessages } from './locale/index.js'
+export {
+  loadAstryxCatalog,
+  normalizeLocale,
+  provideAstryxLocale,
+  useAstryxLocale,
+  useAstryxMessages,
+  useCollator,
+} from './locale/index.js'
+export type {
+  AstryxLocale,
+  AstryxMessages,
+  AstryxUpstreamCatalog,
+  AstryxUpstreamMessage,
+  LoadedAstryxLocale,
+  UnmappedUpstreamEntry,
+  UnmappedUpstreamReason,
+} from './locale/index.js'
 export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
 export type {
   MarkdownAlign,
