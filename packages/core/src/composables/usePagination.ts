@@ -85,6 +85,14 @@ export interface UsePaginationOptions {
    * 窄容器传 0，收成「首页、当前页、末页」。
    */
   siblingCount?: MaybeRef<number>
+  /**
+   * 上一页 / 下一页每次跳几页。不是正整数时按 1 处理。
+   */
+  step?: MaybeRef<number | undefined>
+  /**
+   * 总数未知时，是否还有下一页。只有 `total <= 0` 且这里传入了布尔值，才进入游标模式。
+   */
+  hasMore?: MaybeRef<boolean | undefined>
 }
 
 export interface PaginationState {
@@ -102,6 +110,12 @@ export interface PaginationState {
   next: () => void
   /** 跳转到指定页 */
   goto: (page: number) => void
+  /** 跳到第一页 */
+  first: () => void
+  /** 跳到最后一页。总数未知时没有目标。 */
+  last: () => void
+  /** 总数未知、靠 `hasMore` 决定能不能往后翻。 */
+  isCursor: Ref<boolean>
   /** 修改每页条目数 */
   setPageSize: (size: number) => void
 }
@@ -109,38 +123,56 @@ export interface PaginationState {
 /**
  * 分页逻辑：页码计算、页码范围生成。
  */
+function pageStride(step: number | undefined): number {
+  return Number.isInteger(step) && step != null && step >= 1 ? step : 1
+}
+
 export function usePagination(options: UsePaginationOptions): PaginationState {
-  const { page, pageSize, total, onPageChange, onPageSizeChange, siblingCount } = options
+  const { page, pageSize, total, onPageChange, onPageSizeChange, siblingCount, step, hasMore } = options
 
   const totalPages = computed(() => {
     return Math.max(1, Math.ceil(total.value / pageSize.value))
   })
 
+  const isCursor = computed(() => toValue(hasMore) !== undefined && total.value <= 0)
   const canPrevious = computed(() => page.value > 1)
-  const canNext = computed(() => page.value < totalPages.value)
+  const canNext = computed(() => isCursor.value ? toValue(hasMore) === true : page.value < totalPages.value)
 
   const pageNumbers = computed(() => {
+    if (isCursor.value)
+      return []
     const count = toValue(siblingCount) ?? 1
     return generatePageRange(page.value, totalPages.value, count)
   })
 
   function previous(): void {
-    if (canPrevious.value) {
-      onPageChange(page.value - 1)
-    }
+    if (!canPrevious.value)
+      return
+    onPageChange(Math.max(1, page.value - pageStride(toValue(step))))
   }
 
   function next(): void {
-    if (canNext.value) {
-      onPageChange(page.value + 1)
-    }
+    if (!canNext.value)
+      return
+    const target = page.value + pageStride(toValue(step))
+    onPageChange(isCursor.value ? target : Math.min(target, totalPages.value))
   }
 
   function goto(targetPage: number): void {
-    const clamped = Math.max(1, Math.min(targetPage, totalPages.value))
-    if (clamped !== page.value) {
+    const lower = Math.max(1, targetPage)
+    const clamped = isCursor.value ? lower : Math.min(lower, totalPages.value)
+    if (clamped !== page.value)
       onPageChange(clamped)
-    }
+  }
+
+  function first(): void {
+    if (canPrevious.value)
+      onPageChange(1)
+  }
+
+  function last(): void {
+    if (!isCursor.value && canNext.value)
+      onPageChange(totalPages.value)
   }
 
   function setPageSize(size: number): void {
@@ -160,6 +192,9 @@ export function usePagination(options: UsePaginationOptions): PaginationState {
     previous,
     next,
     goto,
+    first,
+    last,
+    isCursor,
     setPageSize,
   }
 }

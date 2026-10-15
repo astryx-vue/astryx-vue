@@ -36,6 +36,10 @@ There is no `@astryx-vue/core/composables` subpath. The functions exported from 
 | `snapToGraphemeBoundary` | Snaps an offset to a grapheme boundary for streaming text. |
 | `useChatStreamScroll` | Pins a transcript to the bottom, or lets it go. Reduced motion jumps instead of springing. |
 | `useChatNewMessages` | Marks rows that arrived while the reader was not pinned to the bottom. |
+| `useKeyboardHint` | The first time keyboard focus enters a group of arrow-key controls, shows a short hint beside the current item. |
+| `useImageMode` | Decides whether a foreground should be dark or light from an image's brightness. Returns `fallback` when sampling fails. |
+| `useContainerReveal` | Reveals inline actions on hover or keyboard focus. Returns classes for the container and the content. |
+| `useMenuPress` | After a menu press, swallows the browser's extra click. `resetMenuPress` is for unmount and tests. |
 
 `useClipboard` is also exported as `useCopyToClipboard` from `@astryx-vue/core` and from `@astryx-vue/core/Code`. The types are the same.
 

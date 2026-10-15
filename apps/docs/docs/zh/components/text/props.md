@@ -74,6 +74,18 @@ footer: false
         <td>实际渲染的 HTML 元素，可选 span、p、div、label。</td>
       </tr>
       <tr>
+        <td><code>justify</code></td>
+        <td><code>'start' | 'center' | 'end'</code></td>
+        <td><code>'start'</code></td>
+        <td>对齐方式。<code>start</code> 和 <code>end</code> 跟随书写方向。</td>
+      </tr>
+      <tr>
+        <td><code>hasTruncateTooltip</code></td>
+        <td><code>boolean | 'above' | 'below' | 'start' | 'end'</code></td>
+        <td><code>true</code></td>
+        <td>截断之后要不要把全文放进提示。<code>false</code> 关掉。没被截断时不会弹出。</td>
+      </tr>
+      <tr>
         <td><code>maxLines</code></td>
         <td><code>number</code></td>
         <td><code>0</code></td>

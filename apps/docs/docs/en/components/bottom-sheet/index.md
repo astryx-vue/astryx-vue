@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints, bottomSheetSwitcher } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## Usage
@@ -117,6 +117,13 @@ A downward drag closes the sheet, and a fast upward flick expands it to the tall
   description="A single-selection list opens in a bottom sheet."
   locale="en"
   title="Select sheet"
+/>
+
+<DemoExample
+  :demo="bottomSheetSwitcher"
+  description="Checkout is two sheets in one dialog. The scrim stays up while the page changes."
+  locale="en"
+  title="Multi-step switcher"
 />
 
 ## Accessibility

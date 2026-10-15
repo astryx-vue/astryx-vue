@@ -68,3 +68,20 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## BaseTypeahead
+
+No field label, description, or validation message. Use it where the surrounding surface already has a title, such as a command palette. `label` here is the input's accessible name; omit it when an outside `<label for>` already names the input. The rest of the input behavior matches `Typeahead`. The default menu row is `TypeaheadItem`, and the `item` slot replaces it.
+
+## TypeaheadItem
+
+<div class="component-api-table" role="region" aria-label="TypeaheadItem props" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>item</code></td><td><code>SearchableItem</code></td><td>The search result this row shows.</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>Overrides the item's own description.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>Paints the row as unavailable.</td></tr>
+    </tbody>
+  </table>
+</div>

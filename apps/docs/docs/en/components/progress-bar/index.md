@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { progressBarCustomFormat, progressBarIndeterminate, progressBarSemantic, progressBarValueLabel } from '../../../../components/demos/progress-bar'
+import { progressBarCustomFormat, progressBarIndeterminate, progressBarMarks, progressBarSemantic, progressBarValueLabel } from '../../../../components/demos/progress-bar'
 </script>
 
 ## Usage
@@ -47,6 +47,8 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 <DemoExample :demo="progressBarSemantic" title="Semantic variants" description="Accent, success, warning, error, and neutral, stacked so the status colors can be compared." locale="en" />
 
 <DemoExample :demo="progressBarValueLabel" title="Value label" description="hasValueLabel shows the current percentage beside the label." locale="en" />
+
+<DemoExample :demo="progressBarMarks" title="Marks" description="Marks use the same scale as the bar. A mark on the fill uses the fill foreground; a mark still on the track uses the text color. Hover or focus reads its name." locale="en" />
 
 ## Accessibility
 

@@ -19,6 +19,7 @@ footer: false
 <tr><td><code>isIndeterminate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Indeterminate state. Shows a looping animation and removes aria-valuenow.</td></tr>
 <tr><td><code>showValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show the percentage next to the label.</td></tr>
 <tr><td><code>valueText</code></td><td><code>string</code></td><td>—</td><td>Custom aria-valuetext and display text. Overrides the default percentage.</td></tr>
+<tr><td><code>marks</code></td><td><code>{ value: number, label: string }[]</code></td><td>—</td><td>Target ticks on the track. Hidden while indeterminate. <code>label</code> is the accessible name and the hover or focus tooltip.</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Component width. Numbers are treated as px.</td></tr>
 </tbody></table>
 </div>

@@ -68,3 +68,20 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## BaseTypeahead
+
+没有字段标签、说明和校验文案。适合命令面板这类外面已经有标题的地方。`label` 在这里是输入框的无障碍名，外面已经有 `<label for>` 时不用传。其余属性和事件与 `Typeahead` 的输入行为相同。默认下拉行是 `TypeaheadItem`，可以用 `item` 插槽换掉。
+
+## TypeaheadItem
+
+<div class="component-api-table" role="region" aria-label="TypeaheadItem 属性" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>类型</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>item</code></td><td><code>SearchableItem</code></td><td>这一行对应的搜索结果。</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>盖过条目自己的说明。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>这一行看起来不可选。</td></tr>
+    </tbody>
+  </table>
+</div>

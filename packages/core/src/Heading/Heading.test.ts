@@ -38,6 +38,28 @@ describe('heading', () => {
       slots: { default: 'Very long heading text' },
     })
 
-    expect(wrapper.classes()).toContain('astryx-heading--truncate-single')
+    expect(wrapper.get('h2').classes()).toContain('astryx-heading--truncate-single')
+    expect(wrapper.get('h2').element.parentElement?.tagName).not.toBe('SPAN')
+  })
+
+  it('keeps the visual level and exposes a different accessibility level', () => {
+    const wrapper = mount(Heading, {
+      props: {
+        level: 2,
+        accessibilityLevel: 3,
+        textWrap: 'balance',
+        wordBreak: 'break-word',
+        justify: 'center',
+        hasStrikethrough: true,
+      },
+      slots: { default: 'Section' },
+    })
+
+    const heading = wrapper.get('h2')
+    expect(heading.attributes('aria-level')).toBe('3')
+    expect(heading.classes()).toContain('astryx-heading--wrap-balance')
+    expect(heading.classes()).toContain('astryx-heading--word-break-word')
+    expect(heading.classes()).toContain('astryx-heading--justify-center')
+    expect(heading.classes()).toContain('astryx-heading--strike')
   })
 })

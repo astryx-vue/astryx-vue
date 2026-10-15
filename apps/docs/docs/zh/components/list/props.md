@@ -177,6 +177,8 @@ footer: false
 
 `Item` 同时接受 `ListItem` 的全部属性，以及 `label`、`description`、`density`、`onClick`、`interactiveRef`、`href`、`target`、`rel`、`isDisabled`、`isSelected`。
 
+`swipeActions` 给出触摸横滑露出的操作，`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。`swipeBehavior` 默认 `reveal`，松手后停开；`commit` 越过阈值就滑出并触发最外侧，一侧只适合一个操作。鼠标不会开始这次拖动，每个操作还要在行自己的内容里能点到。
+
 ## 插槽
 
 ### List

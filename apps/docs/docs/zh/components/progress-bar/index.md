@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { progressBarCustomFormat, progressBarIndeterminate, progressBarSemantic, progressBarValueLabel } from '../../../../components/demos/progress-bar'
+import { progressBarCustomFormat, progressBarIndeterminate, progressBarMarks, progressBarSemantic, progressBarValueLabel } from '../../../../components/demos/progress-bar'
 </script>
 
 ## 使用方法
@@ -47,6 +47,8 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 <DemoExample :demo="progressBarSemantic" title="语义颜色" description="accent、success、warning、error、neutral 叠在一起，方便对照状态颜色。" locale="zh" />
 
 <DemoExample :demo="progressBarValueLabel" title="数值标签" description="hasValueLabel 在标签旁显示当前百分比。" locale="zh" />
+
+<DemoExample :demo="progressBarMarks" title="刻度" description="刻度用和进度条同一把尺子。落在填充里的用填充上的颜色，还在轨道上的用文字色。悬停或聚焦时读出名称。" locale="zh" />
 
 ## 无障碍
 

@@ -37,6 +37,14 @@ export { useCoarsePointer } from './useCoarsePointer.js'
 export { useCombobox } from './useCombobox.js'
 export type { Combobox, ComboboxOption, UseComboboxOptions } from './useCombobox.js'
 
+export { useContainerReveal } from './useContainerReveal.js'
+export type {
+  ContainerRevealOptions,
+  ContentRevealOptions,
+  UseContainerReveal,
+  UseContainerRevealOptions,
+} from './useContainerReveal.js'
+
 export { useControllableState } from './useControllableState.js'
 export type { ControllableState, UseControllableStateOptions } from './useControllableState.js'
 
@@ -80,6 +88,12 @@ export type { HandleRef } from './useHandleRef.js'
 export { useHotkeys } from './useHotkeys.js'
 export type { Hotkey } from './useHotkeys.js'
 
+export { imageModeFromPixels, perceptualLightness, useImageMode } from './useImageMode.js'
+export type { ImageSampleRegion, UseImageModeOptions } from './useImageMode.js'
+
+export { useKeyboardHint } from './useKeyboardHint.js'
+export type { KeyboardHintOrientation, UseKeyboardHint, UseKeyboardHintOptions } from './useKeyboardHint.js'
+
 export { useListFocus } from './useListFocus.js'
 export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './useListFocus.js'
 
@@ -87,6 +101,9 @@ export { useLongPress } from './useLongPress.js'
 export type { LongPressHandlers, LongPressOptions } from './useLongPress.js'
 
 export { useMediaQuery } from './useMediaQuery.js'
+
+export { resetMenuPress, useMenuPress } from './useMenuPress.js'
+export type { MenuPress, MenuPressOptions } from './useMenuPress.js'
 
 export { addMonths, buildMonthGrid, parseISODate, todayISODate, toISODate } from './useMonthGrid.js'
 

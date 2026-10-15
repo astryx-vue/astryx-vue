@@ -1,2 +1,2 @@
 export { default as ProgressBar } from './ProgressBar.vue'
-export type { ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './types.js'
+export type { ProgressBarMark, ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './types.js'

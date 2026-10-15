@@ -211,6 +211,30 @@
     opacity: 0.5;
   }
 
+  .astryx-typeahead--bare {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .astryx-typeahead-item {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+  }
+
+  .astryx-typeahead-item-icon {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .astryx-typeahead-item-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
   .astryx-typeahead-option-copy {
     display: flex;
     flex: 1;

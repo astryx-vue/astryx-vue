@@ -1,5 +1,28 @@
 import type { Component, MaybeRefOrGetter, VNodeChild } from 'vue'
 
+/** 滑动露出的一侧。`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。 */
+export type ItemSwipeSide = 'leading' | 'trailing'
+
+/** `reveal` 松手后停开；`commit` 越过阈值就滑出并触发最外侧，一侧只适合一个操作。 */
+export type ItemSwipeBehavior = 'reveal' | 'commit'
+
+/** 横滑露出的一个操作。数组里越靠后越靠外。 */
+export interface ItemSwipeAction {
+  id?: string
+  label: string
+  icon?: Component
+  onActivate: () => void
+  isDisabled?: boolean
+  variant?: 'neutral' | 'accent' | 'destructive'
+  /** 触发后行停在滑出的位置，不再弹回。行本身不会被删掉。 */
+  hasRemoval?: boolean
+}
+
+export interface ItemSwipeActions {
+  leading?: ItemSwipeAction[]
+  trailing?: ItemSwipeAction[]
+}
+
 /**
  * Spacing density for list rows.
  *
@@ -136,6 +159,16 @@ export interface ListItemProps {
    * @default false
    */
   isSelected?: boolean
+  /**
+   * 触摸横滑露出的操作。鼠标不会开始这次拖动。
+   * 每个操作还要在行自己的内容里能点到，否则键盘和鼠标够不着。
+   */
+  swipeActions?: ItemSwipeActions
+  /**
+   * 松手之后怎么收场。
+   * @default 'reveal'
+   */
+  swipeBehavior?: ItemSwipeBehavior
 }
 
 export interface ListItemSlots {

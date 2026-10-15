@@ -58,6 +58,11 @@ export interface BottomSheetProps {
    */
   label: string
   /**
+   * 放进 `BottomSheetSwitcher` 时的名字。切换器靠它决定哪一张是当前页。
+   * 单独使用时可以不传。
+   */
+  sheetId?: string
+  /**
    * Renders the panel in the document flow instead of a native `<dialog>`,
    * without a scrim, focus trap, or motion. Used to preview the surface inside
    * a container that is already inert, such as component documentation.
