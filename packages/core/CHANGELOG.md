@@ -1,5 +1,17 @@
 # @astryx-vue/core
 
+## 0.2.3
+
+### Patch Changes
+
+- [#66](https://github.com/astryx-vue/astryx-vue/pull/66) [`4cda5b9`](https://github.com/astryx-vue/astryx-vue/commit/4cda5b9bd337e5c363f0c5eb6d9070fdd4e5cdf2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 日历补上周数、月外日期、可变行数、周起始、日期约束、范围跨度和命令式翻月。日期、区间和日期时间字段补上系统日期控件、加载、异步保存、标签提示，以及必填和选填。
+
+- [#66](https://github.com/astryx-vue/astryx-vue/pull/66) [`4cda5b9`](https://github.com/astryx-vue/astryx-vue/commit/4cda5b9bd337e5c363f0c5eb6d9070fdd4e5cdf2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 指示器可以按名字整组替换，语义图标也可以随主题换成另一套 Iconify 图形。
+
+- [#66](https://github.com/astryx-vue/astryx-vue/pull/66) [`4cda5b9`](https://github.com/astryx-vue/astryx-vue/commit/4cda5b9bd337e5c363f0c5eb6d9070fdd4e5cdf2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 下拉菜单、上下文菜单和面包屑补上勾选行、单选行，以及菜单的页眉、页脚和钻入式子菜单。
+
+- [#66](https://github.com/astryx-vue/astryx-vue/pull/66) [`4cda5b9`](https://github.com/astryx-vue/astryx-vue/commit/4cda5b9bd337e5c363f0c5eb6d9070fdd4e5cdf2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 选择器补上只读、加载、必填和搜索未命中文案。校验图标画在字段里，工具栏警告留在图标上，并和两侧控件处在同一水平线。菜单选中标记跟在说明旁边。多选可以输入后创建并自定义关闭后的文字。输入组成为带标签和状态的字段。复选列表可以整组只读并说明禁用原因。
+
 ## 0.2.2
 
 ### Patch Changes
