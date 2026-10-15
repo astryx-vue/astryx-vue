@@ -45,7 +45,12 @@ footer: false
 | 字段 | 说明 |
 | --- | --- |
 | <code>name</code> | 主题名，写到 <code>data-astryx-theme</code>。 |
-| <code>tokens</code> | 语义 token。二元组先写浅色，再写深色。 |
+| <code>tokens</code> | 语义 token。二元组先写浅色，再写深色。同名时盖过生成结果。 |
+| <code>color</code> | 用强调色生成调色板。accent 可省略，只改中性色。 |
+| <code>typography</code> | 字体，以及从 base、ratio 生成的字号。 |
+| <code>radius</code> | 从 base 和 multiplier 生成圆角。 |
+| <code>motion</code> | 从 fast、medium、slow 和 ratio 生成时长。 |
+| <code>components</code> | 按组件名覆盖样式。编译结果在主题对象的 <code>css</code> 上。 |
 | <code>extends</code> | 另一份 <code>defineTheme()</code> 主题。当前这份的值优先。 |
 | <code>syntax</code> | 子树里代码的语法色。更近的 <code>SyntaxTheme</code> 优先。 |
 | <code>onDark</code> | 深色 <code>MediaTheme</code> 表面上的额外 token。 |
