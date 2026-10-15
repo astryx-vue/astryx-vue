@@ -7,6 +7,7 @@ import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import CodeBlockContent from './CodeBlockContent.vue'
+import { splitDiffLines } from './diff.js'
 import { syntaxThemeStyle } from './syntaxTheme.js'
 import { flatTokensToLines, SYNC_TOKENIZE_THRESHOLD, tokenize, tokenizeAsync } from './tokenizer.js'
 import '../../styles/code.css'
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<CodeBlockProps>(), {
   hasLineNumbers: false,
   highlightMode: 'auto',
   isCollapsible: false,
+  isDiff: false,
   isWrapped: false,
   language: 'plaintext',
   size: 'md',
@@ -50,14 +52,25 @@ const lines = computed<string[]>(() => {
 const asyncTokens = ref<{ code: string, language: string, tokens: TokenLine[] } | null>(null)
 let pendingLoad: AbortController | null = null
 
-const syncTokenLines = computed<TokenLine[] | null>(() => {
-  if (props.tokenizer != null)
-    return flatTokensToLines(props.tokenizer(props.code, props.language), props.code)
+/**
+ * With the diff layer on, the base language sees the code after the glyph
+ * column is set aside. Header rows contribute an empty line and are painted
+ * from the original text.
+ */
+const diffLines = computed(() => (props.isDiff ? splitDiffLines(lines.value) : null))
 
-  if (props.code.length >= SYNC_TOKENIZE_THRESHOLD)
+const tokenSource = computed(() => diffLines.value?.content.join('\n') ?? props.code)
+
+const syncTokenLines = computed<TokenLine[] | null>(() => {
+  const source = tokenSource.value
+
+  if (props.tokenizer != null)
+    return flatTokensToLines(props.tokenizer(source, props.language), source)
+
+  if (source.length >= SYNC_TOKENIZE_THRESHOLD)
     return null
 
-  return tokenize(props.code, props.language)
+  return tokenize(source, props.language)
 })
 
 const tokenLines = computed<TokenLine[]>(() => {
@@ -68,17 +81,19 @@ const tokenLines = computed<TokenLine[]>(() => {
 
   const async = asyncTokens.value
 
-  if (async != null && async.code === props.code && async.language === props.language)
+  if (async != null && async.code === tokenSource.value && async.language === props.language)
     return async.tokens
 
   return []
 })
 
 async function loadTokens(): Promise<void> {
-  if (props.tokenizer != null || props.code.length < SYNC_TOKENIZE_THRESHOLD)
+  const source = tokenSource.value
+
+  if (props.tokenizer != null || source.length < SYNC_TOKENIZE_THRESHOLD)
     return
 
-  const code = props.code
+  const code = source
   const language = props.language
   const controller = new AbortController()
 
@@ -98,7 +113,7 @@ async function loadTokens(): Promise<void> {
 }
 
 watch(
-  [() => props.code, () => props.language, () => props.tokenizer],
+  [tokenSource, () => props.language, () => props.tokenizer],
   () => {
     void loadTokens()
   },
@@ -122,7 +137,9 @@ function isSafari(): boolean {
 
 /** Safari ships the Highlight API objects but paints them unreliably in code. */
 const paintMode = computed<'ranges' | 'spans'>(() => {
-  if (props.highlightMode === 'spans' || !supportsHighlightApi())
+  // Range paint maps token offsets onto the raw line text. A diff line's
+  // tokens belong to the text after the glyph, so the layer always uses spans.
+  if (props.isDiff || props.highlightMode === 'spans' || !supportsHighlightApi())
     return 'spans'
 
   if (props.highlightMode === 'ranges')
@@ -135,9 +152,15 @@ const highlightSet = computed<Set<number> | null>(() =>
   props.highlightLines == null ? null : new Set(props.highlightLines),
 )
 
-const languageLabel = computed(() =>
-  props.hasLanguageLabel && props.language !== 'plaintext' ? props.language : null,
-)
+const languageLabel = computed(() => {
+  if (!props.hasLanguageLabel)
+    return null
+
+  if (props.isDiff)
+    return props.language === 'plaintext' ? 'diff' : `${props.language} diff`
+
+  return props.language === 'plaintext' ? null : props.language
+})
 
 /** `filename — language`, omitting whichever half is missing. */
 const headerText = computed(() => [props.title, languageLabel.value]
@@ -281,6 +304,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
     >
       <div class="astryx-code-block__collapse-inner">
         <CodeBlockContent
+          :diff="diffLines"
           :has-line-numbers="hasLineNumbers"
           :highlight-set="highlightSet"
           :is-compact="showHeader && !hasLineNumbers"
@@ -296,6 +320,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
     </div>
     <CodeBlockContent
       v-else
+      :diff="diffLines"
       :has-line-numbers="hasLineNumbers"
       :highlight-set="highlightSet"
       :is-compact="showHeader && !hasLineNumbers"

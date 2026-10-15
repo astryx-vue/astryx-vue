@@ -1,12 +1,14 @@
 import type { Component, VNode, VNodeChild } from 'vue'
 import type { MarkdownMessages } from '../locale/messages/markdown.js'
 import type { MdNode } from './ast.js'
-import type { MarkdownComponents, MarkdownHeadingLevel } from './types.js'
+import type { MarkdownInlinePlugin, MarkdownPlugin, MarkdownPluginRenderContext } from './plugins.js'
+import type { MarkdownCitationStyle, MarkdownComponents, MarkdownHeadingLevel } from './types.js'
 import { Fragment, h } from 'vue'
 import Blockquote from '../Blockquote/Blockquote.vue'
 import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
 import Code from '../Code/Code.vue'
 import CodeBlock from '../Code/CodeBlock.vue'
+import { parseFenceLanguage } from '../Code/diff.js'
 import Heading from '../Heading/Heading.vue'
 import Link from '../Link/Link.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -36,6 +38,10 @@ export interface RenderContext {
   sources?: Record<string, { title?: string, url?: string, icon?: string }>
   /** First-seen order of citation ids, so chips number stably in one render. */
   citationOrder: Map<string, number>
+  citationStyle: MarkdownCitationStyle
+  citationLabel: (number: number, title: string) => string
+  plugins?: readonly MarkdownPlugin[]
+  inlinePlugins?: readonly MarkdownInlinePlugin[]
   /** Checkbox graphic from the nearest theme. Falls back to the built-in box. */
   checkboxIndicator?: Component
 }
@@ -149,25 +155,79 @@ function renderCitation(id: string, key: string, start: number, ctx: RenderConte
   const title = source?.title?.trim() || id
   const href = source?.url == null ? null : sanitizeMarkdownLinkUrl(source.url)
   const icon = source?.icon == null ? null : sanitizeMarkdownImageUrl(source.icon)
+  const accessibleName = ctx.citationLabel(number, title)
+  const fading = fadeClass(start, ctx.fade)
+  if (ctx.citationStyle === 'number') {
+    const shared = {
+      'key': key,
+      'class': ['astryx-markdown__cite', fading],
+      'data-citation': String(number),
+      'data-citation-style': 'number',
+      'aria-label': accessibleName,
+      title,
+    }
+    const text = String(number)
+    if (href == null)
+      return h('span', shared, text)
+    return h('a', {
+      ...shared,
+      href,
+      rel: linkOpensInNewTab(href) ? 'noopener noreferrer' : undefined,
+      target: linkOpensInNewTab(href) ? '_blank' : undefined,
+    }, text)
+  }
   const label = h('span', { class: 'astryx-markdown__cite-label' }, title)
   const iconNode = icon == null
     ? null
     : h('span', { class: 'astryx-markdown__cite-icon' }, [
         h('img', { alt: '', src: icon }),
       ])
-  const className = ['astryx-markdown__cite', fadeClass(start, ctx.fade), iconNode == null ? null : 'astryx-markdown__cite--icon']
+  const className = ['astryx-markdown__cite', fading, iconNode == null ? null : 'astryx-markdown__cite--icon']
   const children = iconNode == null ? [label] : [iconNode, label]
-  if (href == null)
-    return h('span', { key, 'class': className, 'data-citation': String(number), title }, children)
-  return h('a', {
+  const shared = {
     key,
     'class': className,
     'data-citation': String(number),
-    href,
-    'rel': linkOpensInNewTab(href) ? 'noopener noreferrer' : undefined,
-    'target': linkOpensInNewTab(href) ? '_blank' : undefined,
+    'data-citation-style': 'label',
+    'aria-label': accessibleName,
     title,
+  }
+  if (href == null)
+    return h('span', shared, children)
+  return h('a', {
+    ...shared,
+    href,
+    rel: linkOpensInNewTab(href) ? 'noopener noreferrer' : undefined,
+    target: linkOpensInNewTab(href) ? '_blank' : undefined,
   }, children)
+}
+
+function extensionRenderer(node: MdNode, ctx: RenderContext): MarkdownPlugin['render'] | MarkdownInlinePlugin['render'] | null {
+  const owner = node.plugin
+  if (owner == null)
+    return null
+  const block = ctx.plugins?.find(plugin => plugin.name === owner && plugin.render != null)
+  if (block?.render != null)
+    return block.render
+  const inline = ctx.inlinePlugins?.find(plugin => plugin.name === owner && plugin.render != null)
+  return inline?.render ?? null
+}
+
+function renderExtension(node: MdNode, key: string, ctx: RenderContext): VNodeChild | null {
+  const render = extensionRenderer(node, ctx)
+  if (render != null) {
+    const context: MarkdownPluginRenderContext = {
+      renderChildren: () => renderChildren(node.children, key, ctx),
+    }
+    const rendered = render(node, context)
+    if (rendered != null)
+      return rendered
+  }
+  if (node.value != null && node.value !== '')
+    return renderText(node.value, key, ctx)
+  if (node.children != null && node.children.length > 0)
+    return h(Fragment, { key }, renderChildren(node.children, key, ctx))
+  return null
 }
 
 function fadeClass(start: number, fade: FadeCursor): string | undefined {
@@ -265,6 +325,8 @@ function renderInline(node: MdNode, key: string, ctx: RenderContext): VNodeChild
         h(Link, { href: `#astryx-fn-${id}` }, () => labelNode),
       ])
     }
+    case 'extension':
+      return renderExtension(node, key, ctx)
     default:
       if (node.children != null)
         return h(Fragment, { key }, renderChildren(node.children, key, ctx))
@@ -421,10 +483,12 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       const override = ctx.components?.code
       if (override != null)
         return h(override, { key, code: value, language }, () => value)
+      const fence = parseFenceLanguage(language)
       return h('div', { key, class: ['astryx-markdown__code', fadeClass(start, ctx.fade)] }, [
         h(CodeBlock, {
           code: value,
-          language: language ?? 'plaintext',
+          language: fence.language,
+          isDiff: fence.isDiff,
           width: '100%',
           isCollapsible: true,
         }),
@@ -483,6 +547,8 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       return null
     case 'image':
       return renderInline(node, key, ctx) as VNode | null
+    case 'extension':
+      return renderExtension(node, key, ctx) as VNode | null
     default:
       return renderInline(node, key, ctx) as VNode | null
   }

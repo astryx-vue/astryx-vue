@@ -232,6 +232,8 @@ export {
   CodeBlock,
   darkSyntaxPresets,
   defineSyntaxTheme,
+  DIFF_SYNTAX_TOKEN_KEYS,
+  diffLineKind,
   dracula,
   flatTokensToLines,
   githubDark,
@@ -242,7 +244,9 @@ export {
   nord,
   oneDarkPro,
   oneLight,
+  parseFenceLanguage,
   solarizedLight,
+  splitDiffLines,
   SYNC_TOKENIZE_THRESHOLD,
   SYNTAX_TOKEN_KEYS,
   SyntaxTheme,
@@ -266,6 +270,9 @@ export type {
   CodeSlots,
   CopyToClipboardOptions,
   CopyToClipboardReturn,
+  DiffLineKind,
+  DiffLines,
+  SyntaxDiffTokenKey,
   SyntaxThemeDefinition,
   SyntaxThemeInput,
   SyntaxThemeTokens,
@@ -603,9 +610,20 @@ export type {
 } from './List/index.js'
 export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
 export type { AstryxLocale, AstryxMessages } from './locale/index.js'
-export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
+export {
+  applyInlinePlugins,
+  applyMarkdownPlugins,
+  defineMarkdownPlugin,
+  isMarkdownExtensionNode,
+  Markdown,
+  parseMarkdown,
+  slugify,
+  uniqueSlug,
+} from './Markdown/index.js'
 export type {
   MarkdownAlign,
+  MarkdownAutolink,
+  MarkdownCitationStyle,
   MarkdownCodeProps,
   MarkdownComponents,
   MarkdownDensity,
@@ -614,10 +632,16 @@ export type {
   MarkdownHeadingProps,
   MarkdownImageProps,
   MarkdownInlineCodeProps,
+  MarkdownInlinePlugin,
   MarkdownLinkProps,
   MarkdownListProps,
+  MarkdownPlugin,
+  MarkdownPluginRenderContext,
   MarkdownProps,
   MarkdownSlots,
+  MarkdownSource,
+  MarkdownTransformContext,
+  ParseMarkdownOptions,
 } from './Markdown/index.js'
 export { MetadataList, MetadataListItem } from './MetadataList/index.js'
 export type {

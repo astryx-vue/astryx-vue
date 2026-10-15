@@ -349,6 +349,18 @@
     white-space: nowrap;
   }
 
+  .astryx-markdown__cite[data-citation-style='number'] {
+    justify-content: center;
+    max-width: none;
+    min-width: var(--astryx-spacing-5, 20px);
+    padding-inline: var(--astryx-spacing-1, 4px);
+    vertical-align: super;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: var(--astryx-citation-number-background, var(--astryx-color-accent-muted, #e5e5e5));
+    font-weight: var(--astryx-citation-number-font-weight, var(--astryx-font-weight-semibold, 600));
+  }
+
   .astryx-markdown__table-wrap {
     max-width: 100%;
     overflow-x: auto;

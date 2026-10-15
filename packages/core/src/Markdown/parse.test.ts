@@ -117,6 +117,20 @@ describe('markdown parsing', () => {
     expect(documentSignature('- a\n\n- b\n')).toBe(parsed.blocks.map(node => signature(node)).join('|'))
   })
 
+  it('keeps bare urls as text unless autolink is gfm', () => {
+    const bare = parseMarkdown('See https://example.com/docs.')
+    expect(bare.children?.[0]?.children?.[0]).toMatchObject({
+      type: 'text',
+      value: 'See https://example.com/docs.',
+    })
+
+    const linked = parseMarkdown('See https://example.com/docs.', { autolink: 'gfm' })
+    expect(linked.children?.[0]?.children?.some(node => node.type === 'link' && node.url === 'https://example.com/docs')).toBe(true)
+
+    const angle = parseMarkdown('See <https://example.com/angle>.')
+    expect(angle.children?.[0]?.children?.some(node => node.type === 'link' && node.url === 'https://example.com/angle')).toBe(true)
+  })
+
   it('leaves html disabled so tags stay text', () => {
     const root = parseMarkdown('<script>alert(1)</script>')
     expect(root.children?.[0]?.children?.[0]).toMatchObject({

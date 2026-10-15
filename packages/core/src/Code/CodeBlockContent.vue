@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
+import type { DiffLines } from './diff.js'
 import type { CodeBlockSize, SyntaxToken, TokenLine } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
 import { applyHighlightRanges } from './highlightRanges.js'
@@ -7,6 +8,7 @@ import { applyHighlightRanges } from './highlightRanges.js'
 defineOptions({ name: 'AstryxCodeBlockContent' })
 
 const props = defineProps<{
+  diff?: DiffLines | null
   hasLineNumbers: boolean
   highlightSet: Set<number> | null
   isCompact: boolean
@@ -74,9 +76,42 @@ function buildParts(line: string, tokens: SyntaxToken[]): CodePart[] {
   return parts.length > 0 ? parts : [{ text: '\u200B', type: null }]
 }
 
+function lineText(index: number): string {
+  const diff = props.diff
+  const line = props.lines[index] ?? ''
+
+  if (diff == null)
+    return line
+
+  if (diff.kinds[index] === 'header')
+    return line
+
+  return diff.content[index] ?? ''
+}
+
+function lineTokens(index: number): SyntaxToken[] {
+  if (props.diff?.kinds[index] === 'header')
+    return []
+
+  return props.tokenLines[index] ?? []
+}
+
 const lineParts = computed<CodePart[][]>(() =>
-  props.lines.map((line, index) => buildParts(line, props.tokenLines[index] ?? [])),
+  props.lines.map((_, index) => buildParts(lineText(index), lineTokens(index))),
 )
+
+function diffKind(index: number): string | undefined {
+  const kind = props.diff?.kinds[index]
+
+  if (kind == null || kind === 'context')
+    return undefined
+
+  return kind
+}
+
+function glyph(index: number): string {
+  return props.diff?.glyphs[index] || ' '
+}
 
 const codeStyle = computed<StyleValue>(() => {
   const style: CSSProperties = {}
@@ -152,12 +187,19 @@ onBeforeUnmount(() => removeRanges?.())
             :key="chunk.start + offset"
             class="astryx-code-block__line"
             :class="{
+              'astryx-code-block__line--diff': diff != null,
               'astryx-code-block__line--highlighted': isHighlighted(chunk.start + offset),
               'astryx-code-block__line--numbered': hasLineNumbers,
             }"
+            :data-diff="diffKind(chunk.start + offset)"
             :data-line="chunk.start + offset + 1"
           >
-            <span v-if="mode === 'spans'" class="astryx-code-block__line-content">
+            <span
+              v-if="diff != null"
+              class="astryx-code-block__diff-marker"
+              data-diff-marker
+            >{{ glyph(chunk.start + offset) }}</span>
+            <span v-if="mode === 'spans' || diff != null" class="astryx-code-block__line-content">
               <template v-for="(part, index) in lineParts[chunk.start + offset]" :key="index">
                 <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
                 <template v-else>{{ part.text }}</template>

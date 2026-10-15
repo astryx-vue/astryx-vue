@@ -16,7 +16,7 @@ import { syntaxThemeDark, syntaxThemeLight } from '../../../../components/demos/
 
 单个代码块可以直接传 `syntaxTheme`。一整块区域共用一套预设时，用 `SyntaxTheme` 包起来。
 
-预设从 `@astryx-vue/core/Code` 导出：`oneDarkPro`、`dracula`、`monokai`、`nord`、`tokyoNight`、`catppuccinMocha`、`githubDark`、`githubLight`、`solarizedLight`、`oneLight`、`catppuccinLatte`、`tokyoNightLight`。`defineSyntaxTheme()` 用来做自定义主题。14 个 token 都要给。`[浅色, 深色]` 会存成 `light-dark()`。
+预设从 `@astryx-vue/core/Code` 导出：`oneDarkPro`、`dracula`、`monokai`、`nord`、`tokyoNight`、`catppuccinMocha`、`githubDark`、`githubLight`、`solarizedLight`、`oneLight`、`catppuccinLatte`、`tokyoNightLight`。`defineSyntaxTheme()` 用来做自定义主题。14 个颜色 token 都要给。差异行另外有五个可选槽，名字仍是 `--astryx-code-syntax-*`：`added`、`removed`、`diff-header`、`added-marker`、`removed-marker`。不写时，标记跟着标点色，差异头不另铺底色。`[浅色, 深色]` 会存成 `light-dark()`。
 
 ```vue
 <script setup lang="ts">

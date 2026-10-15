@@ -6,6 +6,7 @@ import { computed, defineComponent, h, ref } from 'vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { createIncrementalMarkdownState, parseMarkdown, parseMarkdownIncremental } from './parse.js'
+import { applyInlinePlugins, applyMarkdownPlugins } from './plugins.js'
 import { assignHeadingSlugs, collectDefinitions, renderMarkdownBlocks, slotText } from './render.js'
 import { computeBoundaries, parseCssDuration } from './streaming.js'
 import '../../styles/markdown.css'
@@ -34,6 +35,10 @@ export default defineComponent({
     headingLevelStart: { type: Number as PropType<MarkdownProps['headingLevelStart']>, default: 1 },
     isStreaming: { type: Boolean, default: false },
     onLinkClick: { type: Function as PropType<MarkdownProps['onLinkClick']>, default: undefined },
+    plugins: { type: Array as PropType<MarkdownProps['plugins']>, default: undefined },
+    inlinePlugins: { type: Array as PropType<MarkdownProps['inlinePlugins']>, default: undefined },
+    autolink: { type: String as PropType<MarkdownProps['autolink']>, default: undefined },
+    citationStyle: { type: String as PropType<MarkdownProps['citationStyle']>, default: 'label' },
     sources: { type: Object as PropType<MarkdownProps['sources']>, default: undefined },
   },
   setup(props, { attrs, slots, expose }) {
@@ -48,6 +53,7 @@ export default defineComponent({
     const cache = new Map<MdNode, VNode>()
     let boundaries: number[] = []
     let previousLength = 0
+    let seenAutolink = props.autolink
 
     return () => {
       if (props.content == null) {
@@ -56,17 +62,18 @@ export default defineComponent({
           slotSource.value = text
       }
 
-      if (!props.isStreaming) {
+      if (!props.isStreaming || seenAutolink !== props.autolink) {
         incremental.settledEnd = 0
         incremental.settledSource = ''
         incremental.blocks = []
+        seenAutolink = props.autolink
       }
 
       const shown = source.value
       const inline = props.display === 'inline'
       const parsed = inline || !props.isStreaming
-        ? { blocks: parseMarkdown(shown).children ?? [], settledCount: 0 }
-        : parseMarkdownIncremental(shown, incremental, { trimTail: true })
+        ? { blocks: parseMarkdown(shown, { autolink: props.autolink }).children ?? [], settledCount: 0 }
+        : parseMarkdownIncremental(shown, incremental, { trimTail: true, autolink: props.autolink })
 
       if (!props.isStreaming || shown.length === 0) {
         boundaries = []
@@ -76,7 +83,11 @@ export default defineComponent({
         boundaries = computeBoundaries(boundaries, previousLength, fadeSpanCount())
       }
 
-      const blocks = parsed.blocks
+      const prepared = applyInlinePlugins(
+        applyMarkdownPlugins({ type: 'root', children: parsed.blocks }, props.plugins),
+        props.inlinePlugins,
+      )
+      const blocks = prepared.children ?? []
       const ctx = {
         components: props.components,
         fade: {
@@ -94,6 +105,10 @@ export default defineComponent({
         slugs: assignHeadingSlugs(blocks),
         sources: props.sources,
         citationOrder: new Map(),
+        citationStyle: props.citationStyle ?? 'label',
+        citationLabel: messages.value.citation.label,
+        plugins: props.plugins,
+        inlinePlugins: props.inlinePlugins,
         checkboxIndicator: checkboxIndicator.value,
       }
       const children = renderMarkdownBlocks(blocks, inline ? 0 : parsed.settledCount, ctx, cache)

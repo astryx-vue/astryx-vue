@@ -55,7 +55,8 @@ describe('markdown', () => {
     expect(links[0]?.attributes('href')).toBe('https://example.com/docs')
     expect(links[0]?.attributes('target')).toBe('_blank')
     expect(links[0]?.attributes('rel')).toContain('noopener')
-    expect(links.some(link => link.attributes('href') === 'https://example.com')).toBe(true)
+    expect(links.some(link => link.attributes('href') === 'https://example.com')).toBe(false)
+    expect(wrapper.text()).toContain('https://example.com')
 
     const tasks = wrapper.find('ul.astryx-markdown__tasks')
     expect(tasks.attributes('aria-label')).toBe('Task list')
@@ -242,7 +243,129 @@ describe('markdown', () => {
     const chip = wrapper.get('.astryx-markdown__cite')
     expect(chip.text()).toBe('Tokyo - Wikipedia')
     expect(chip.attributes('href')).toBe('https://en.wikipedia.org/wiki/Tokyo')
+    expect(chip.attributes('data-citation-style')).toBe('label')
+    expect(chip.attributes('aria-label')).toBe('Citation 1: Tokyo - Wikipedia')
     expect(wrapper.text()).toContain('[not-a-source]')
+  })
+
+  it('switches citations to a numbered badge and reuses the number', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: 'Tokyo[abc1] again[abc1] and Osaka[def2].',
+        citationStyle: 'number',
+        sources: {
+          abc1: { title: 'Tokyo - Wikipedia', url: 'https://en.wikipedia.org/wiki/Tokyo' },
+          def2: { title: 'Osaka' },
+        },
+      },
+    })
+    const chips = wrapper.findAll('.astryx-markdown__cite')
+    expect(chips.map(chip => chip.text())).toEqual(['1', '1', '2'])
+    expect(chips.map(chip => chip.attributes('data-citation-style'))).toEqual(['number', 'number', 'number'])
+    expect(chips[0]?.attributes('aria-label')).toBe('Citation 1: Tokyo - Wikipedia')
+    expect(chips[2]?.element.tagName).toBe('SPAN')
+    expect(chips[2]?.attributes('href')).toBeUndefined()
+  })
+
+  it('links bare urls only when autolink is gfm, and leaves code and explicit links alone', () => {
+    const source = [
+      'See https://example.com/bare.',
+      '',
+      'Mail me at ada@example.com.',
+      '',
+      'Visit www.example.com/path.',
+      '',
+      'Angle <https://example.com/angle> stays.',
+      '',
+      'Code `https://example.com/code` stays.',
+      '',
+      'Explicit [docs](https://example.com/docs) stays.',
+      '',
+      'See (https://example.com/a_(b)) end.',
+    ].join('\n')
+
+    const plain = mount(Markdown, { props: { content: source } })
+    expect(plain.find('a[href="https://example.com/bare"]').exists()).toBe(false)
+    expect(plain.find('a[href="https://example.com/docs"]').exists()).toBe(true)
+    expect(plain.find('a[href="mailto:ada@example.com"]').exists()).toBe(false)
+    expect(plain.find('a[href="https://example.com/angle"]').exists()).toBe(true)
+    expect(plain.text()).toContain('https://example.com/code')
+    expect(plain.find('code').text()).toBe('https://example.com/code')
+
+    const linked = mount(Markdown, { props: { content: source, autolink: 'gfm' } })
+    const hrefs = linked.findAll('a.astryx-link').map(link => link.attributes('href'))
+    expect(hrefs).toContain('https://example.com/bare')
+    expect(hrefs).toContain('mailto:ada@example.com')
+    expect(hrefs).toContain('http://www.example.com/path')
+    expect(hrefs).toContain('https://example.com/angle')
+    expect(hrefs.filter(href => href === 'https://example.com/docs')).toHaveLength(1)
+    expect(hrefs).not.toContain('https://example.com/bare.')
+    expect(linked.find('code').text()).toBe('https://example.com/code')
+    expect(hrefs).toContain('https://example.com/a_(b)')
+    expect(linked.text()).toContain('end.')
+  })
+
+  it('runs block and inline plugins on the ast and skips inline code', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: 'Hello @ada in `code @ada`.\n\nSee https://example.com/note.',
+        autolink: 'gfm',
+        plugins: [{
+          name: 'note',
+          transform(root) {
+            return {
+              ...root,
+              children: [
+                ...(root.children ?? []),
+                { type: 'extension', plugin: 'note', name: 'banner', display: 'block', value: 'done' },
+              ],
+            }
+          },
+          render(node) {
+            return h('aside', { class: 'note-banner' }, node.value ?? '')
+          },
+        }],
+        inlinePlugins: [{
+          name: 'mention',
+          pattern: /@([a-z]+)/g,
+          replace(match) {
+            return {
+              type: 'extension',
+              plugin: 'mention',
+              name: 'user',
+              value: match[1],
+            }
+          },
+          render(node) {
+            return h('span', { 'class': 'mention', 'data-user': node.value }, `@${node.value ?? ''}`)
+          },
+        }],
+      },
+    })
+
+    expect(wrapper.get('.mention').attributes('data-user')).toBe('ada')
+    expect(wrapper.get('code').text()).toBe('code @ada')
+    expect(wrapper.find('code .mention').exists()).toBe(false)
+    expect(wrapper.get('.note-banner').text()).toBe('done')
+    expect(wrapper.find('a[href="https://example.com/note"]').exists()).toBe(true)
+  })
+
+  it('maps a diff fence onto the code block diff layer', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: [
+          '```diff-ts',
+          '-const a = 1',
+          '+const b = 2',
+          '```',
+        ].join('\n'),
+      },
+    })
+    expect(wrapper.get('.astryx-code-block-title').text()).toBe('ts diff')
+    const rows = wrapper.findAll('[data-line]')
+    expect(rows.map(row => row.attributes('data-diff'))).toEqual(['removed', 'added'])
+    expect(rows[0]?.get('.astryx-token-keyword').text()).toBe('const')
+    expect(rows[1]?.get('.astryx-token-keyword').text()).toBe('const')
   })
 
   it('cycles list markers by nesting depth and keeps an ordered start', () => {
