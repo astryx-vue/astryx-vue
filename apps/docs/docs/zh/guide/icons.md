@@ -76,3 +76,29 @@ addCollection(carbon)
 `icon` 仍然接受 CSS 类名，导航和菜单上的 `iconClass` 也是。类名要在你的构建里真正生成，才会画出来。UnoCSS 是其中一种办法，文档站的一些旧示例还在用它。应用不必装 UnoCSS。
 
 组件自己画的 `chevronDown`、`check` 这些字形不是通用图标集。产品里的图标用 `name`。
+
+## 语义名
+
+组件内部用语义名描述用途，例如搜索、关闭、勾选。默认指向 Lucide 里做同一件事的图标。那一套还没注册时，仍画内置字形。
+
+整套跟着主题换。`defineTheme({ icons })` 把语义名指到 Iconify 的 id，子主题只写要改的名字。`Icon` 的 `icon` 收到这些名字时会去解析；`name` 仍是直接的 Iconify id，并且优先。
+
+```vue
+<script setup lang="ts">
+import { Icon } from '@astryx-vue/core/Icon'
+import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+
+const carbon = defineTheme({
+  name: 'withCarbon',
+  icons: { search: 'carbon:search', close: 'carbon:close' },
+})
+</script>
+
+<template>
+  <Theme :theme="carbon">
+    <Icon icon="search" />
+  </Theme>
+</template>
+```
+
+当前 id 用 `useSemanticIcon` 读取，从 `@astryx-vue/core/Icon` 引入。名字和默认 id 的对照在图标组件的属性页。

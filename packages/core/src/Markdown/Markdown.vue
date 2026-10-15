@@ -3,6 +3,7 @@ import type { PropType, StyleValue, VNode } from 'vue'
 import type { MdNode } from './ast.js'
 import type { MarkdownProps } from './types.js'
 import { computed, defineComponent, h, ref } from 'vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { createIncrementalMarkdownState, parseMarkdown, parseMarkdownIncremental } from './parse.js'
 import { assignHeadingSlugs, collectDefinitions, renderMarkdownBlocks, slotText } from './render.js'
@@ -40,6 +41,7 @@ export default defineComponent({
     expose({ element: computed(() => root.value) })
 
     const messages = useAstryxMessages()
+    const checkboxIndicator = useIndicator('checkbox')
     const slotSource = ref('')
     const source = computed(() => props.content ?? slotSource.value)
     const incremental = createIncrementalMarkdownState()
@@ -92,6 +94,7 @@ export default defineComponent({
         slugs: assignHeadingSlugs(blocks),
         sources: props.sources,
         citationOrder: new Map(),
+        checkboxIndicator: checkboxIndicator.value,
       }
       const children = renderMarkdownBlocks(blocks, inline ? 0 : parsed.settledCount, ctx, cache)
       previousLength = ctx.fade.offset

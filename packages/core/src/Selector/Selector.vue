@@ -11,6 +11,7 @@ import Field from '../Field/Field.vue'
 import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
 import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -42,6 +43,7 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 const emit = defineEmits<SelectorEmits>()
 defineSlots<SelectorSlots>()
 const slots = useSlots()
+const SelectionMark = useIndicator('check')
 
 const selectorId = `astryx-selector-${useId()}`
 const listboxId = `${selectorId}-listbox`
@@ -473,8 +475,14 @@ watch(() => combobox.activeIndex.value, (index) => {
               @keydown.enter="onOptionClick(row.option)"
               @keydown.space.prevent="onOptionClick(row.option)"
             >
-              <span v-if="row.option.value === props.modelValue && props.indicatorPosition === 'start'" class="astryx-selector-option-mark">
-                <Icon icon="check" size="sm" />
+              <span v-if="props.indicatorPosition === 'start'" class="astryx-selector-option-mark">
+                <component
+                  :is="SelectionMark"
+                  class="astryx-selector-check"
+                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
+                  size="sm"
+                  :is-disabled="row.option.disabled"
+                />
               </span>
               <span class="astryx-selector-option-body">
                 <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
@@ -488,8 +496,14 @@ watch(() => combobox.activeIndex.value, (index) => {
                   </span>
                 </template>
               </span>
-              <span v-if="row.option.value === props.modelValue && props.indicatorPosition === 'end'" class="astryx-selector-option-mark">
-                <Icon icon="check" size="sm" />
+              <span v-if="props.indicatorPosition === 'end'" class="astryx-selector-option-mark">
+                <component
+                  :is="SelectionMark"
+                  class="astryx-selector-check"
+                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
+                  size="sm"
+                  :is-disabled="row.option.disabled"
+                />
               </span>
             </div>
           </template>

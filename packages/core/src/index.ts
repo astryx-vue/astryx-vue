@@ -499,7 +499,17 @@ export type {
   HoverCardSlots,
   HoverCardTouchTrigger,
 } from './HoverCard/index.js'
-export { addCollection, addIcon, Icon, ICON_GLYPHS, iconGlyphSlug, isIconGlyph } from './Icon/index.js'
+export {
+  addCollection,
+  addIcon,
+  defaultSemanticIcons,
+  Icon,
+  ICON_GLYPHS,
+  iconGlyphSlug,
+  isIconGlyph,
+  resolveSemanticIcon,
+  useSemanticIcon,
+} from './Icon/index.js'
 export type {
   IconColor,
   IconGlyphName,
@@ -509,9 +519,32 @@ export type {
   IconProps,
   IconSize,
   IconSlots,
+  SemanticIconMap,
 } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
 export type { IconButtonEmits, IconButtonProps, IconButtonSlots } from './IconButton/index.js'
+export {
+  CheckIndicator,
+  defaultIndicators,
+  getIndicator,
+  isCoreIndicatorName,
+  isRenderable,
+  RadioIndicator,
+  useIndicator,
+} from './Indicator/index.js'
+export type {
+  CoreIndicatorName,
+  IndicatorComponent,
+  IndicatorFamily,
+  IndicatorFamilyMap,
+  IndicatorMap,
+  IndicatorName,
+  IndicatorPosition,
+  IndicatorProps,
+  IndicatorRegistry,
+  IndicatorSize,
+  IndicatorState,
+} from './Indicator/index.js'
 export { InputGroup, InputGroupText } from './InputGroup/index.js'
 export type {
   InputGroupContext,

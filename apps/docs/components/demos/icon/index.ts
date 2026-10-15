@@ -13,6 +13,8 @@ import sizesDemo from './sizes.vue'
 import sizesSource from './sizes.vue?raw&highlighted'
 import statusDemo from './status.vue'
 import statusSource from './status.vue?raw&highlighted'
+import themesDemo from './themes.vue'
+import themesSource from './themes.vue?raw&highlighted'
 
 export const iconBasic = defineDemo(basicDemo, basicSource)
 export const iconSizes = defineDemo(sizesDemo, sizesSource)
@@ -20,5 +22,6 @@ export const iconSemantic = defineDemo(semanticDemo, semanticSource)
 export const iconPalette = defineDemo(paletteDemo, paletteSource)
 export const iconStatus = defineDemo(statusDemo, statusSource)
 export const iconButton = defineDemo(buttonDemo, buttonSource)
+export const iconThemes = defineDemo(themesDemo, themesSource)
 
 export const iconOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

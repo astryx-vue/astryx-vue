@@ -98,7 +98,7 @@ export interface SelectorProps {
   isRequired?: boolean
   /**
    * 选中标记在选项行的起始侧或结束侧。
-   * 未选中时标记不占位，所以选中前后标签位置可能不一样。
+   * 未选中时默认的勾不占位；主题把勾换成单选圆点后，未选中的行也会画出空心圆。
    * @default 'end'
    */
   indicatorPosition?: SelectorIndicatorPosition

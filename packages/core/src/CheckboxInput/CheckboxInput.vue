@@ -4,10 +4,10 @@ import type { CheckboxInputEmits, CheckboxInputProps, CheckboxInputSlots, Checkb
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
+import { useIndicator } from '../Indicator/useIndicator.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useCheckboxAction } from './useCheckboxAction.js'
 import '../../styles/checkbox-input.css'
@@ -34,6 +34,7 @@ const action = useCheckboxAction({ model, changeAction: () => props.changeAction
 const busy = computed(() => !!props.isLoading || action.isPending.value)
 const blocked = computed(() => props.isDisabled || props.isReadOnly || busy.value)
 const state = computed(() => action.value.value === 'indeterminate' ? 'indeterminate' : action.value.value ? 'checked' : 'unchecked')
+const CheckboxMark = useIndicator('checkbox')
 const widthStyle = computed<CSSProperties>(() => ({ width: typeof props.width === 'number' ? `${props.width}px` : props.width }))
 const element = computed(() => input.value ?? null)
 function focus(options?: FocusOptions): void {
@@ -92,7 +93,7 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
 
 <template>
   <div class="astryx-checkbox-input" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-status="status?.type" :data-blocked="blocked || undefined">
-    <div class="astryx-checkbox-row" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
+    <div class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked }" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
       <span class="astryx-checkbox-control">
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-checkbox-native" type="checkbox"
@@ -104,9 +105,9 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
           :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
         >
-        <CheckboxIndicator :state="state" :size="size" :is-disabled="isDisabled">
+        <component :is="CheckboxMark" :state="state" :size="size" :is-disabled="isDisabled">
           <span v-if="busy" class="astryx-checkbox-spinner" />
-        </CheckboxIndicator>
+        </component>
       </span>
       <FieldLabel
         :label="label" :input-id="inputId" :label-id="labelId" :description="description" :description-id="descriptionId"

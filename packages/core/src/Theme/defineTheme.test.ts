@@ -54,5 +54,7 @@ describe('defineTheme', () => {
   it('ships neutral with no token overrides', () => {
     expect(neutralTheme.name).toBe('neutral')
     expect(neutralTheme.tokens).toEqual({})
+    expect(neutralTheme.icons).toBeUndefined()
+    expect(neutralTheme.indicators).toBeUndefined()
   })
 })

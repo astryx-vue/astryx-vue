@@ -25,7 +25,7 @@ footer: false
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a spinner in the trigger. The empty state stays hidden until loading finishes.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label as optional.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label as required and sets aria-required.</td></tr>
-      <tr><td><code>indicatorPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'end'</code></td><td>Which side of a selected row draws the check mark. Unselected rows do not reserve space.</td></tr>
+      <tr><td><code>indicatorPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'end'</code></td><td>Which edge of the option holds the selection mark. An unchosen check takes no space. After the theme maps that mark to a circle, an unchosen row draws the empty circle too.</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string</code></td><td>No matches / 无匹配项</td><td>Shown when the catalog itself is empty.</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string</code></td><td>No results found / 未找到结果</td><td>Shown when a search matches nothing.</td></tr>
     </tbody>

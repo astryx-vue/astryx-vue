@@ -31,34 +31,44 @@ export interface IconColorMap {
 export type IconColor = Extract<keyof IconColorMap, string>
 
 /**
- * The semantic names of the artwork astryx-vue keeps for its own chrome.
+ * Semantic names shared by the components.
  *
- * A name describes what the icon is for, not one particular drawing, so a theme
- * can replace the artwork with one declaration. Applications never pass these
- * names: the artwork is a library implementation detail, and a `icon` prop or
- * slot takes a CSS icon class or the application's own component instead.
+ * A name is the job, not one drawing. `defineTheme({ icons })` points the name
+ * at an Iconify id, and every component that asks for that name follows.
+ * `name` on Icon is still a direct Iconify id. `icon` accepts one of these
+ * names, a CSS class, or a component.
  */
 export type IconName
-  = | 'chevronDown'
+  = | 'close'
+    | 'chevronDown'
     | 'chevronLeft'
     | 'chevronRight'
+    | 'chevronsLeft'
+    | 'chevronsRight'
     | 'check'
-    | 'moreHorizontal'
-    | 'copy'
+    | 'success'
+    | 'error'
+    | 'warning'
+    | 'info'
     | 'calendar'
     | 'clock'
+    | 'externalLink'
+    | 'menu'
+    | 'moreHorizontal'
+    | 'search'
     | 'upload'
     | 'arrowUp'
     | 'arrowDown'
-    | 'close'
+    | 'arrowsUpDown'
     | 'funnel'
-    | 'image'
-    | 'search'
+    | 'eyeSlash'
+    | 'viewColumns'
+    | 'copy'
+    | 'checkDouble'
+    | 'wrench'
     | 'stop'
     | 'microphone'
-    | 'warning'
-    | 'error'
-    | 'success'
+    | 'image'
 
 /**
  * A built-in name, or any other string.
@@ -86,11 +96,12 @@ export interface IconProps {
   /**
    * The icon to render. Three forms are accepted:
    *
-   * - a string, treated as a CSS icon class you provide — for example an
-   *   UnoCSS icon such as `'i-carbon-search'`, or your own class. The class
-   *   paints the inside of the sized box, so a utility that sets
-   *   `width`/`height: 100%` fills the icon instead of replacing its size;
-   * - a name from the library's own chrome, which only the components use;
+   * - a semantic name such as `search` or `close`. The nearest theme decides
+   *   which Iconify icon that name draws. Until that icon is registered, the
+   *   built-in glyph is used;
+   * - a CSS icon class you provide, such as an UnoCSS class. The class paints
+   *   the inside of the sized box, so a utility that sets `width`/`height:
+   *   100%` fills the icon instead of replacing its size;
    * - a component, rendered as it is.
    *
    * Omit it when `name` or the default slot provides the artwork instead.

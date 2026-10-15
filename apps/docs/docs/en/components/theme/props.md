@@ -50,6 +50,8 @@ footer: false
 | <code>syntax</code> | Syntax colors for code in this subtree, unless a <code>SyntaxTheme</code> is closer. |
 | <code>onDark</code> | Extra tokens for a dark <code>MediaTheme</code> surface. |
 | <code>onLight</code> | Extra tokens for a light <code>MediaTheme</code> surface. |
+| <code>icons</code> | Semantic icon name to Iconify id. Overrides by name and merges shallowly with the extended theme. |
+| <code>indicators</code> | Indicator graphics, replaced by check, checkbox, or radio. One entry reaches every place that draws that name. |
 
 ## useTheme
 

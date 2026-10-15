@@ -25,7 +25,7 @@ footer: false
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器显示加载指示。加载完成前不显示空状态。</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在标签旁标成可选。</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在标签旁标成必填，并设置 aria-required。</td></tr>
-      <tr><td><code>indicatorPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'end'</code></td><td>选中标记在行首或行尾。未选中时不占位。</td></tr>
+      <tr><td><code>indicatorPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'end'</code></td><td>单选标记放在选项的哪一侧。没选中时默认的勾不占位。主题把勾换成圆点后，没选中的行也会画出空心圆。</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string</code></td><td>无匹配项 / No matches</td><td>没有任何选项时的文案。</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string</code></td><td>未找到结果 / No results found</td><td>搜索没有命中时的文案。</td></tr>
     </tbody>

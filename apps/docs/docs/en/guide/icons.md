@@ -76,3 +76,29 @@ A decorative icon is hidden from assistive technology. Set `label` only when the
 `icon` still accepts a CSS class, and so does `iconClass` on navigation and menu items. A class only draws something if your build generates it. UnoCSS is one way to do that. It is what the docs site uses for older examples. An application does not have to use it.
 
 The glyphs the components draw themselves (`chevronDown`, `check`, and the rest) are not a general icon set. Use `name` for product icons.
+
+## Semantic names
+
+Inside the components, a semantic name is the job: search, close, check. Each one points at the Lucide icon that does the same job. Until that collection is registered, the built-in glyph stays.
+
+The set follows the theme. `defineTheme({ icons })` points a semantic name at an Iconify id, and a child theme only lists the names it changes. `Icon`'s `icon` prop resolves those names. `name` is still a direct Iconify id, and it wins.
+
+```vue
+<script setup lang="ts">
+import { Icon } from '@astryx-vue/core/Icon'
+import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+
+const carbon = defineTheme({
+  name: 'withCarbon',
+  icons: { search: 'carbon:search', close: 'carbon:close' },
+})
+</script>
+
+<template>
+  <Theme :theme="carbon">
+    <Icon icon="search" />
+  </Theme>
+</template>
+```
+
+Read the current id with `useSemanticIcon` from `@astryx-vue/core/Icon`. The name-to-id table is on the Icon props page.

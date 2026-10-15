@@ -378,6 +378,11 @@
     min-width: 0;
   }
 
+  /*
+   * The column stays mounted so a radio replacement can draw its empty circle.
+   * When the graphic draws nothing, :empty drops the column so an unchosen
+   * check does not reserve a gap.
+   */
   .astryx-selector-option-mark {
     display: inline-flex;
     flex: none;

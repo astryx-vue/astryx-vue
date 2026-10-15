@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, markRaw, nextTick, ref } from 'vue'
+import { defineTheme } from '../Theme/defineTheme.js'
+import Theme from '../Theme/Theme.vue'
 import { ICON_DEFAULT_SIZE_KEY, provideIconSize } from './context.js'
 import { ICON_GLYPHS, iconGlyphSlug } from './glyphs.js'
 import Icon from './Icon.vue'
@@ -27,26 +29,36 @@ describe('icon', () => {
     const slugs = ICON_GLYPHS.map(iconGlyphSlug)
 
     expect(slugs).toEqual([
+      'close',
       'chevron-down',
       'chevron-left',
       'chevron-right',
+      'chevrons-left',
+      'chevrons-right',
       'check',
-      'more-horizontal',
-      'copy',
+      'success',
+      'error',
+      'warning',
+      'info',
       'calendar',
       'clock',
+      'external-link',
+      'menu',
+      'more-horizontal',
+      'search',
       'upload',
       'arrow-up',
       'arrow-down',
-      'close',
+      'arrows-up-down',
       'funnel',
-      'image',
-      'search',
+      'eye-slash',
+      'view-columns',
+      'copy',
+      'check-double',
+      'wrench',
       'stop',
       'microphone',
-      'warning',
-      'error',
-      'success',
+      'image',
     ])
     expect(new Set(slugs).size).toBe(slugs.length)
   })
@@ -218,6 +230,45 @@ describe('icon', () => {
     expect(ids[0]).toMatch(/mark$/)
     expect(ids[1]).toMatch(/mark$/)
     expect(ids[0]).not.toBe(ids[1])
+  })
+
+  it('draws a theme Iconify icon for a semantic name, and keeps the glyph when that icon is not registered', () => {
+    addIcon('carbon:close', { body: '<path d="M0 0h10v10z" />', width: 16, height: 16 })
+    const swapped = defineTheme({
+      name: 'icon-swap',
+      icons: { close: 'carbon:close' },
+    })
+    const themed = mount(Theme, {
+      props: { theme: swapped },
+      slots: { default: () => h(Icon, { icon: 'close', size: 'sm' }) },
+    })
+    expect(themed.find('.astryx-icon__svg svg').exists()).toBe(true)
+    expect(themed.find('.astryx-icon__glyph').exists()).toBe(false)
+
+    const missing = defineTheme({
+      name: 'icon-missing',
+      icons: { close: 'lucide:x' },
+    })
+    const fallback = mount(Theme, {
+      props: { theme: missing },
+      slots: { default: () => h(Icon, { icon: 'close' }) },
+    })
+    expect(fallback.find('.astryx-icon--close').exists()).toBe(true)
+    expect(fallback.find('svg').exists()).toBe(false)
+  })
+
+  it('lets a child theme replace one semantic icon and keep the rest', () => {
+    addIcon('carbon:search', { body: '<circle />', width: 16, height: 16 })
+    const base = defineTheme({
+      name: 'icon-base',
+      icons: { close: 'carbon:close', search: 'carbon:search' },
+    })
+    const child = defineTheme({
+      name: 'icon-child',
+      extends: base,
+      icons: { close: 'heroicons:x-mark' },
+    })
+    expect(child.icons).toEqual({ close: 'heroicons:x-mark', search: 'carbon:search' })
   })
 
   it('renders the box when it is given no artwork, so a class can paint it', () => {

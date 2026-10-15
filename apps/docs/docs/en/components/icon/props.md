@@ -10,7 +10,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="Icon props" tabindex="0">
 <table><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Iconify id, <code>collection:icon</code>. <code>carbon-settings</code> is the same as <code>carbon:settings</code> after the carbon collection is registered. Hyphenated collection names should keep the colon.</td></tr>
-<tr><td><code>icon</code></td><td><code>string | Component</code></td><td>—</td><td>A CSS icon class, or your own component. Ignored when <code>name</code> is set. Built-in names such as <code>chevronDown</code> are the library's own chrome.</td></tr>
+<tr><td><code>icon</code></td><td><code>string | Component</code></td><td>—</td><td>A semantic name, a CSS icon class, or your own component. A semantic name resolves to an Iconify id from the nearest theme, and falls back to the built-in glyph until that icon is registered. Ignored when <code>name</code> is set.</td></tr>
 <tr><td><code>color</code></td><td><code>'inherit' | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'accent' | 'success' | 'error' | 'warning' | 'blue' | 'cyan' | 'green' | 'gray' | 'orange' | 'pink' | 'purple' | 'red' | 'teal' | 'yellow'</code></td><td><code>'inherit'</code></td><td>Sets the color the icon's <code>currentColor</code> resolves to. <code>inherit</code> keeps the surrounding text color.</td></tr>
 <tr><td><code>size</code></td><td><code>'xsm' | 'sm' | 'md' | 'lg'</code></td><td>—</td><td>12px, 16px, 20px, or 24px at a 16px root. When omitted, a <code>name</code> icon is <code>1em</code>. Any other icon falls back to <code>md</code> unless a parent provides a size.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name for a meaningful icon. Sets <code>role="img"</code> and <code>aria-label</code>. Omit it for decoration (<code>aria-hidden="true"</code>). An empty string stays decorative.</td></tr>
@@ -30,6 +30,47 @@ footer: false
 <tr><td><code>addCollection(collection)</code></td><td><code>@astryx-vue/core/Icon</code></td><td>Register an <code>@iconify-json</code> document. The whole collection is included in the bundle.</td></tr>
 </tbody></table>
 </div>
+
+## Semantic names
+
+`defineTheme({ icons })` overrides by name. Entries merge shallowly with the theme this one extends, and this theme wins. A name that is not listed keeps the default id. The collection has to be registered, or the built-in glyph stays.
+
+<div class="component-api-table" role="region" aria-label="Semantic icons" tabindex="0">
+<table><thead><tr><th>Name</th><th>Default Iconify id</th></tr></thead><tbody>
+<tr><td><code>close</code></td><td><code>lucide:x</code></td></tr>
+<tr><td><code>chevronDown</code></td><td><code>lucide:chevron-down</code></td></tr>
+<tr><td><code>chevronLeft</code></td><td><code>lucide:chevron-left</code></td></tr>
+<tr><td><code>chevronRight</code></td><td><code>lucide:chevron-right</code></td></tr>
+<tr><td><code>chevronsLeft</code></td><td><code>lucide:chevrons-left</code></td></tr>
+<tr><td><code>chevronsRight</code></td><td><code>lucide:chevrons-right</code></td></tr>
+<tr><td><code>check</code></td><td><code>lucide:check</code></td></tr>
+<tr><td><code>success</code></td><td><code>lucide:circle-check</code></td></tr>
+<tr><td><code>error</code></td><td><code>lucide:circle-x</code></td></tr>
+<tr><td><code>warning</code></td><td><code>lucide:triangle-alert</code></td></tr>
+<tr><td><code>info</code></td><td><code>lucide:info</code></td></tr>
+<tr><td><code>calendar</code></td><td><code>lucide:calendar</code></td></tr>
+<tr><td><code>clock</code></td><td><code>lucide:clock</code></td></tr>
+<tr><td><code>externalLink</code></td><td><code>lucide:external-link</code></td></tr>
+<tr><td><code>menu</code></td><td><code>lucide:menu</code></td></tr>
+<tr><td><code>moreHorizontal</code></td><td><code>lucide:ellipsis</code></td></tr>
+<tr><td><code>search</code></td><td><code>lucide:search</code></td></tr>
+<tr><td><code>upload</code></td><td><code>lucide:upload</code></td></tr>
+<tr><td><code>arrowUp</code></td><td><code>lucide:arrow-up</code></td></tr>
+<tr><td><code>arrowDown</code></td><td><code>lucide:arrow-down</code></td></tr>
+<tr><td><code>arrowsUpDown</code></td><td><code>lucide:arrow-up-down</code></td></tr>
+<tr><td><code>funnel</code></td><td><code>lucide:funnel</code></td></tr>
+<tr><td><code>eyeSlash</code></td><td><code>lucide:eye-off</code></td></tr>
+<tr><td><code>viewColumns</code></td><td><code>lucide:columns-3</code></td></tr>
+<tr><td><code>copy</code></td><td><code>lucide:copy</code></td></tr>
+<tr><td><code>checkDouble</code></td><td><code>lucide:check-check</code></td></tr>
+<tr><td><code>wrench</code></td><td><code>lucide:wrench</code></td></tr>
+<tr><td><code>stop</code></td><td><code>lucide:square</code></td></tr>
+<tr><td><code>microphone</code></td><td><code>lucide:mic</code></td></tr>
+<tr><td><code>image</code></td><td><code>lucide:image</code></td></tr>
+</tbody></table>
+</div>
+
+`useSemanticIcon(name)` comes from `@astryx-vue/core/Icon` and from the package root. An unknown string with no theme entry returns empty, so the caller can still treat it as a CSS class.
 
 ## Theme
 
