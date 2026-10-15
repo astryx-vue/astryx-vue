@@ -1,5 +1,3 @@
-import type { AstryxLocale } from '../locale/types.js'
-
 const MINUTE = 60
 const HOUR = 3600
 const DAY = 86400
@@ -12,7 +10,7 @@ type RelativeTimeUnit = 'second' | 'minute' | 'hour' | 'day' | 'month' | 'year'
 
 const formatters = new Map<string, Intl.RelativeTimeFormat>()
 
-function formatter(locale: AstryxLocale, style: RelativeTimeStyle, numeric: Intl.RelativeTimeFormatNumeric): Intl.RelativeTimeFormat {
+function formatter(locale: string, style: RelativeTimeStyle, numeric: Intl.RelativeTimeFormatNumeric): Intl.RelativeTimeFormat {
   const key = JSON.stringify([locale, style, numeric])
   let value = formatters.get(key)
   if (value == null) {
@@ -22,7 +20,7 @@ function formatter(locale: AstryxLocale, style: RelativeTimeStyle, numeric: Intl
   return value
 }
 
-export function formatRelativeTime(date: Date, now: Date, locale: AstryxLocale, style: RelativeTimeStyle): string {
+export function formatRelativeTime(date: Date, now: Date, locale: string, style: RelativeTimeStyle): string {
   const diffSeconds = Math.round((now.getTime() - date.getTime()) / 1000)
   const absDiff = Math.abs(diffSeconds)
 
