@@ -130,6 +130,17 @@ describe('link', () => {
     expect(link.get('.astryx-link__label').classes()).toContain('astryx-link__label--single')
   })
 
+  it('limits the label to the requested number of lines', () => {
+    const wrapper = mount(Link, {
+      props: { href: '/notes', maxLines: 2 },
+      slots: { default: 'Field notes from the harbor survey, including the tide table.' },
+    })
+    const label = wrapper.get('.astryx-link__label')
+    expect(wrapper.get('a').classes()).toContain('astryx-link--lines')
+    expect(label.classes()).toContain('astryx-link__label--clamp')
+    expect(label.attributes('style')).toContain('--astryx-link-max-lines: 2')
+  })
+
   it('announces that an external link opens in a new tab', () => {
     const wrapper = mount(Link, {
       props: { href: 'https://example.com', isExternalLink: true, newTabLabel: '新标签页' },

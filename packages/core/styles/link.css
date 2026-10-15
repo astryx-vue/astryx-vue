@@ -76,9 +76,16 @@
     white-space: nowrap;
   }
 
+  .astryx-link.astryx-link--lines {
+    max-width: 100%;
+    align-items: flex-start;
+  }
+
   .astryx-link__label--clamp {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--astryx-link-max-lines);
+    line-clamp: var(--astryx-link-max-lines);
   }
 }

@@ -65,6 +65,7 @@ const classes = computed(() => [
   props.isStandalone && 'astryx-link--standalone',
   props.size && `astryx-link--size-${props.size}`,
   weightClass.value && `astryx-link--weight-${weightClass.value}`,
+  props.maxLines > 0 && 'astryx-link--lines',
 ])
 
 const labelClass = computed(() => [
@@ -75,7 +76,7 @@ const labelClass = computed(() => [
 
 const labelStyle = computed<CSSProperties | undefined>(() => {
   if (props.maxLines > 1)
-    return { WebkitLineClamp: props.maxLines }
+    return { '--astryx-link-max-lines': String(props.maxLines) }
   return undefined
 })
 
