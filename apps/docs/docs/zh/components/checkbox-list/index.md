@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { checkboxListEndContent, checkboxListSelectAll } from '../../../../components/demos/checkbox-list'
+import { checkboxListEndContent, checkboxListSelectAll, checkboxListStates } from '../../../../components/demos/checkbox-list'
 </script>
 
 ## 使用方法
@@ -30,7 +30,9 @@ const selected = shallowRef(['email'])
 </template>
 ```
 
-全选这类行自己管勾选状态时，不要给列表绑 `v-model`。那一行用 `isChecked` 和 `check`。`density="compact"` 使用小号复选框。勾选的行使用强调色的浅底。
+全选这类行自己管勾选状态时，不要给列表绑值。那一行用自己的勾选状态。紧凑密度使用小号复选框。勾选的行使用强调色的浅底。只读和禁用时这层浅底会拿掉。
+
+整组只读时，勾选状态还在，也不会变暗，但不能改。和禁用同时设置时按禁用处理。禁用并写上原因时，每一行仍可聚焦，悬停或用键盘停在上面能看到原因。某一行自己在加载，或者一次变更还没结束时，复选框里显示旋转指示，这一行不能再点。
 
 ## 最佳实践
 
@@ -43,3 +45,4 @@ const selected = shallowRef(['email'])
 
 <DemoExample :demo="checkboxListSelectAll" description="没有全部选中时，全选行是半选。" locale="zh" title="全选" />
 <DemoExample :demo="checkboxListEndContent" description="每一行末尾可以放价格徽标。" locale="zh" title="尾部内容" />
+<DemoExample :demo="checkboxListStates" description="只读保留勾选且不变暗。禁用时写上原因，行仍然可以聚焦。正在加载的行不能再点。" locale="zh" title="只读、原因和加载" />

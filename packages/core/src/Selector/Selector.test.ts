@@ -348,6 +348,135 @@ describe('selector', () => {
     wrapper.unmount()
   })
 
+  it('keeps a read-only value focusable and refuses to open', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'banana', isReadOnly: true, clearable: true, label: 'Fruit' },
+    })
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    expect(trigger.attributes('aria-readonly')).toBe('true')
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('.astryx-selector-icon').exists()).toBe(false)
+    expect(wrapper.find('.astryx-selector-clear').exists()).toBe(false)
+    expect(wrapper.find('.astryx-selector-field').classes()).not.toContain('is-disabled')
+    await trigger.trigger('click')
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+
+    await wrapper.setProps({ disabled: true })
+    expect(trigger.attributes('aria-readonly')).toBeUndefined()
+    expect(trigger.attributes('disabled')).toBeDefined()
+  })
+
+  it('shows a spinner and stays quiet while loading', async () => {
+    const wrapper = mount(Selector, {
+      props: { options: [], isLoading: true, emptyText: 'No options', searchable: true },
+      attachTo: document.body,
+    })
+    expect(wrapper.find('.astryx-selector-spinner').exists()).toBe(true)
+    await wrapper.get('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    expect(document.querySelector('.astryx-selector-empty')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('uses a different message when a search misses', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options,
+        searchable: true,
+        emptyText: 'No options',
+        emptySearchText: 'Nothing like that',
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    const search = document.querySelector('.astryx-selector-search-input') as HTMLInputElement
+    search.value = 'pear'
+    search.dispatchEvent(new Event('input', { bubbles: true }))
+    await flushPromises()
+    await nextTick()
+    expect(document.body.textContent).toContain('Nothing like that')
+    expect(document.body.textContent).not.toContain('No options')
+    wrapper.unmount()
+  })
+
+  it('places the selection mark on the requested side', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'apple', indicatorPosition: 'start' },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    await trigger.trigger('click')
+    await flushPromises()
+    const controls = trigger.attributes('aria-controls') ?? ''
+    const listboxes = document.querySelectorAll(`[id="${controls}"]`)
+    const listbox = listboxes[listboxes.length - 1]
+    const option = listbox?.querySelector('.astryx-selector-option.is-selected')
+    expect(option?.firstElementChild?.classList.contains('astryx-selector-option-mark')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('marks the field optional or required', () => {
+    const wrapper = mount(Selector, {
+      props: { options, label: 'Fruit', isOptional: true },
+    })
+    expect(wrapper.text()).toContain('Optional')
+    expect(wrapper.text()).toContain('Fruit')
+  })
+
+  it('draws the status icon inside the field and keeps the chevron when the message is detached', () => {
+    const attached = mount(Selector, {
+      props: { options, label: 'Role', status: 'error', statusMessage: 'Please select a role' },
+    })
+    expect(attached.find('.astryx-icon--error').exists()).toBe(true)
+    expect(attached.find('.astryx-selector-icon').exists()).toBe(false)
+    expect(attached.text()).toContain('Please select a role')
+
+    const detached = mount(Selector, {
+      props: { options, label: 'Role', status: 'warning', statusMessage: 'Limited', statusVariant: 'detached' },
+    })
+    expect(detached.find('.astryx-field-status-glyph').exists()).toBe(false)
+    expect(detached.find('.astryx-selector-icon').exists()).toBe(true)
+
+    const tooltip = mount(Selector, {
+      props: { options, label: 'Density', variant: 'ghost', status: 'warning', statusMessage: 'This setting affects all users', statusVariant: 'tooltip' },
+    })
+    expect(tooltip.get('button.astryx-field-status-glyph').attributes('aria-label')).toBe('Warning details')
+    expect(tooltip.find('.astryx-selector-icon').exists()).toBe(false)
+  })
+
+  it('shows the selected option icon in the closed trigger', () => {
+    const wrapper = mount(Selector, {
+      props: {
+        modelValue: 'private',
+        label: 'Visibility',
+        options: [{ value: 'private', label: 'Private', icon: 'lock-icon' }],
+      },
+    })
+    expect(wrapper.get('.astryx-selector-value-icon').classes()).toContain('lock-icon')
+    expect(wrapper.get('.astryx-selector-value').text()).toBe('Private')
+  })
+
+  it('puts an option icon beside the label and the check at the end', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options: [{ value: 'private', label: 'Private', description: 'Members only', icon: 'lock' }],
+        modelValue: 'private',
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    const controls = wrapper.get('.astryx-selector-trigger').attributes('aria-controls') ?? ''
+    const listboxes = document.querySelectorAll(`[id="${controls}"]`)
+    const option = listboxes[listboxes.length - 1]?.querySelector('.astryx-selector-option')
+    const body = option?.querySelector('.astryx-selector-option-body')
+    expect(body?.firstElementChild?.classList.contains('astryx-selector-option-icon')).toBe(true)
+    expect(body?.querySelector('.astryx-selector-option-copy .astryx-selector-option-description')?.textContent).toContain('Members only')
+    expect(option?.lastElementChild?.classList.contains('astryx-selector-option-mark')).toBe(true)
+    wrapper.unmount()
+  })
+
   it('includes hidden select for form submission', () => {
     const wrapper = mount(Selector, {
       props: {

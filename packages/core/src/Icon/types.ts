@@ -58,6 +58,7 @@ export type IconName
     | 'microphone'
     | 'warning'
     | 'error'
+    | 'success'
 
 /**
  * A built-in name, or any other string.

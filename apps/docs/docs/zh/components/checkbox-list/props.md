@@ -17,6 +17,9 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>状态消息的位置。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用每一行。</td></tr>
+<tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>整组被禁用的原因。和禁用一起用时，每一行仍可聚焦。</td></tr>
+<tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>整组只读。勾选还在，不变暗，但不能改。和禁用同时设置时按禁用处理。</td></tr>
+<tr><td><code>changeAction</code></td><td><code>(values) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>勾选变化之后执行。进行中的那一行显示加载，并且不能再点。</td></tr>
 </tbody></table>
 </div>
 
@@ -29,6 +32,7 @@ footer: false
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>次要文字，同时作为复选框的说明。</td></tr>
 <tr><td><code>isChecked</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>独立行的勾选状态。集合模式忽略它。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一行。</td></tr>
+<tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一行自己的加载。复选框里显示旋转指示，并且不能切换。</td></tr>
 </tbody></table>
 </div>
 

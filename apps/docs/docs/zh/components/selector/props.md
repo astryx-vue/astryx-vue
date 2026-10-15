@@ -19,6 +19,15 @@ footer: false
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>选择器尺寸。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>可见标签。不传时用占位文本作为隐藏的无障碍名称。</td></tr>
+      <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
+      <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只读。值还在，可以聚焦并提交，但不能打开、清除。不变暗。和禁用同时设置时按禁用处理。</td></tr>
+      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器显示加载指示。加载完成前不显示空状态。</td></tr>
+      <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在标签旁标成可选。</td></tr>
+      <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在标签旁标成必填，并设置 aria-required。</td></tr>
+      <tr><td><code>indicatorPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'end'</code></td><td>选中标记在行首或行尾。未选中时不占位。</td></tr>
+      <tr><td><code>emptyText</code></td><td><code>string</code></td><td>无匹配项 / No matches</td><td>没有任何选项时的文案。</td></tr>
+      <tr><td><code>emptySearchText</code></td><td><code>string</code></td><td>未找到结果 / No results found</td><td>搜索没有命中时的文案。</td></tr>
     </tbody>
   </table>
 </div>

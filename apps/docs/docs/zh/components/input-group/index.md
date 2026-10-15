@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { inputGroupBasic } from '../../../../components/demos/input-group'
+import { inputGroupBasic, inputGroupStatus, inputGroupWebsite } from '../../../../components/demos/input-group'
 </script>
 
 ## 使用方法
@@ -18,7 +18,7 @@ import { inputGroupBasic } from '../../../../components/demos/input-group'
 
 ```vue
 <script setup lang="ts">
-import { InputGroup } from '@astryx-vue/core/InputGroup'
+import { InputGroup, InputGroupText } from '@astryx-vue/core/InputGroup'
 import { TextInput } from '@astryx-vue/core/TextInput'
 import { ref } from 'vue'
 
@@ -26,19 +26,19 @@ const domain = ref('')
 </script>
 
 <template>
-  <InputGroup>
+  <InputGroup label="网站">
     <template #before>
-      <span>https://</span>
+      <InputGroupText>https://</InputGroupText>
     </template>
-    <TextInput v-model="domain" label="域名" is-label-hidden placeholder="example" />
+    <TextInput v-model="domain" label="网址" is-label-hidden placeholder="example" />
     <template #after>
-      <span>.com</span>
+      <InputGroupText>.com</InputGroupText>
     </template>
   </InputGroup>
 </template>
 ```
 
-`before` 放在输入框前面，`after` 放在后面。内容可以是文字、图标或按钮。
+写上标签之后，这一组就是一个字段：标签、说明、可选或必填、状态都由字段壳负责，不要在外面再包一层。组内输入框自己的标签继续说明这一格填什么，通常隐藏起来。前后缀里的固定文字用组内文本组件，它和前后缀共用同一套字号和颜色。没有标签时，组仍然只是一条连在一起的控件，方便嵌进已经有字段的表单。
 
 ## 最佳实践
 
@@ -53,7 +53,21 @@ const domain = ref('')
 
 <DemoExample
   :demo="inputGroupBasic"
-  description="价格字段前面是美元符号，后面是 USD。"
+  description="金额输入两侧是固定的前缀和后缀，用来标明单位。"
   locale="zh"
   title="基本"
+/>
+
+<DemoExample
+  :demo="inputGroupWebsite"
+  description="协议和域名后缀固定在输入框两侧。"
+  locale="zh"
+  title="网站"
+/>
+
+<DemoExample
+  :demo="inputGroupStatus"
+  description="带上标签之后，说明、可选和错误都由这一组自己负责。"
+  locale="zh"
+  title="字段状态"
 />
