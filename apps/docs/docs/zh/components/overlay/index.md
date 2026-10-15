@@ -79,6 +79,9 @@ const { containerRef, containerProps, scrimProps } = useOverlay({ showOn: 'hover
 
 容器上要同时挂 `containerProps`（它带来定位、裁剪和点按切换）和 `containerRef`，遮罩要渲染在这个容器内部，悬停和焦点的祖先选择器才找得到它。返回的属性是响应式的：`showOn`、`isOpen` 这些选项传 `ref` 或 `computed` 时，遮罩会跟着变；传普通值时它们只在初始化时读一次。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

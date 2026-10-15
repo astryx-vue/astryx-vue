@@ -267,6 +267,68 @@
     background-color: var(--astryx-code-block-highlight-background, #0074e233);
   }
 
+  /*
+   * Diff layer. The glyph column is a fixed track so every code column starts
+   * at the same offset. Row tints use the syntax slots, and a highlight
+   * replaces the tint instead of stacking on it.
+   */
+  .astryx-code-block__line--diff {
+    display: grid;
+    grid-template-columns: 1ch 1fr;
+    column-gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-code-block__line--diff.astryx-code-block__line--numbered {
+    grid-template-columns: var(--astryx-code-block-gutter-width, 2ch) auto 1fr;
+    column-gap: 0;
+  }
+
+  .astryx-code-block__line[data-diff='added'],
+  .astryx-code-block__line[data-diff='removed'],
+  .astryx-code-block__line[data-diff='header'] {
+    margin-inline: calc(-1 * var(--astryx-spacing-4, 16px));
+    padding-inline: var(--astryx-spacing-4, 16px);
+  }
+
+  .astryx-code-block__line[data-diff='added'] {
+    background-color: var(--astryx-code-syntax-added, color-mix(in srgb, var(--astryx-color-success-muted, #bbf7d0) 25%, transparent));
+  }
+
+  .astryx-code-block__line[data-diff='removed'] {
+    background-color: var(--astryx-code-syntax-removed, color-mix(in srgb, var(--astryx-color-error-muted, #fecaca) 25%, transparent));
+  }
+
+  .astryx-code-block__line[data-diff='header'] {
+    background-color: var(--astryx-code-syntax-diff-header, var(--astryx-color-background-muted, #f5f5f5));
+    color: var(--astryx-code-syntax-punctuation, #6a6a6a);
+  }
+
+  .astryx-code-block__line[data-diff='added']::before,
+  .astryx-code-block__line[data-diff='added'] > .astryx-code-block__diff-marker {
+    color: var(--astryx-code-syntax-added-marker, var(--astryx-color-text-green, #0b5615));
+  }
+
+  .astryx-code-block__line[data-diff='removed']::before,
+  .astryx-code-block__line[data-diff='removed'] > .astryx-code-block__diff-marker {
+    color: var(--astryx-code-syntax-removed-marker, var(--astryx-color-text-red, #8a0011));
+  }
+
+  .astryx-code-block__line[data-diff].astryx-code-block__line--highlighted {
+    background-color: var(--astryx-code-block-highlight-background, #0074e233);
+  }
+
+  .astryx-code-block__diff-marker {
+    color: var(--astryx-code-syntax-punctuation, #6a6a6a);
+    font-family: var(--astryx-font-family-code, monospace);
+    white-space: pre;
+    user-select: none;
+  }
+
+  .astryx-code-block__line--numbered.astryx-code-block__line--diff > .astryx-code-block__diff-marker {
+    margin-inline-start: calc(var(--astryx-spacing-3, 12px) + var(--astryx-border-width, 1px) + var(--astryx-spacing-4, 16px));
+    margin-inline-end: var(--astryx-spacing-2, 8px);
+  }
+
   /* Tints the resting glyph to the muted header color; Button owns the surface. */
   .astryx-code-block .astryx-code-block-copy-button {
     --astryx-button-ghost-foreground: var(--astryx-code-syntax-comment, #525252);

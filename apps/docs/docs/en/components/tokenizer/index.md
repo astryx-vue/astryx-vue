@@ -34,6 +34,9 @@ Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the 
 | <Badge variant="success">Do</Badge> | Turn on `creatable` when people can mint a value, and tell `add` from `create` in the change event. |
 | <Badge variant="error">Don't</Badge> | Use Tokenizer for a short fixed list. Use Multi Selector for that. |
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample

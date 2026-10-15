@@ -34,6 +34,9 @@ const selected = ref('pro')
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample :demo="selectableCardElevated" description="Starter 和 Pro 停在低阴影上。选中描边叠在阴影上面。" locale="zh" title="抬升" />

@@ -17,7 +17,8 @@ footer: false
 <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>顶栏里的文件名或标签。</td></tr>
 <tr><td><code>hasLanguageLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>顶栏是否显示语言名。</td></tr>
 <tr><td><code>hasLineNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否画行号槽。</td></tr>
-<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>要强调的行，从 1 开始。</td></tr>
+<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>要强调的行，从 1 开始。和差异行叠在一起时，高亮盖住差异底色。</td></tr>
+<tr><td><code>isDiff</code></td><td><code>boolean</code></td><td><code>false</code></td><td>按 unified diff 给整行上色，符号后面的文本仍按 <code>language</code> 高亮。复制内容不变。</td></tr>
 <tr><td><code>hasCopyButton</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否显示复制按钮。</td></tr>
 <tr><td><code>isWrapped</code></td><td><code>boolean</code></td><td><code>false</code></td><td>长行是换行，还是横向滚动。</td></tr>
 <tr><td><code>maxHeight</code></td><td><code>number | string</code></td><td>—</td><td>正文开始滚动前的最大高度。数字按像素计。</td></tr>
@@ -48,4 +49,4 @@ footer: false
 
 默认插槽是要吃到这些颜色的内容，通常是一个或多个 `CodeBlock`。
 
-`githubDark` 写入 `--astryx-code-syntax-*` 和 `--astryx-code-block-background`。背景偏暗时，还会把 `--astryx-code-block-border` 设为 12% 不透明度的白色。
+`githubDark` 写入 `--astryx-code-syntax-*` 和 `--astryx-code-block-background`。背景偏暗时，还会把 `--astryx-code-block-border` 设为 12% 不透明度的白色。差异色是同一组名字里的可选项：`added`、`removed`、`diff-header`、`added-marker`、`removed-marker`。语法主题没写它们时，标记跟着标点色，差异头不再另铺底色，新增和删除的底色仍用页面主题的那两个槽。

@@ -94,6 +94,9 @@ import { defineTheme, Theme } from '@astryx-vue/core/Theme'
 
 完整名单在属性页。读取当前 id 用 `useSemanticIcon`，它和 `Icon` 从同一个入口导出。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

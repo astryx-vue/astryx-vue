@@ -17,21 +17,47 @@ export const SYNTAX_TOKEN_KEYS = [
 
 export type SyntaxTokenKey = (typeof SYNTAX_TOKEN_KEYS)[number]
 
+/**
+ * Diff row slots. Optional on a syntax theme. The names continue
+ * `--astryx-code-syntax-*`: `added` is `--astryx-code-syntax-added`.
+ * A theme that omits them keeps the page theme's row tints, and takes its
+ * own punctuation color for the markers and no extra header paint.
+ */
+export const DIFF_SYNTAX_TOKEN_KEYS = [
+  'added',
+  'removed',
+  'diff-header',
+  'added-marker',
+  'removed-marker',
+] as const
+
+export type SyntaxDiffTokenKey = (typeof DIFF_SYNTAX_TOKEN_KEYS)[number]
+
 export interface SyntaxThemeTokens {
-  keyword: string
-  string: string
-  comment: string
-  number: string
-  function: string
-  type: string
-  variable: string
-  operator: string
-  constant: string
-  tag: string
-  attribute: string
-  property: string
-  punctuation: string
-  background: string
+  'keyword': string
+  'string': string
+  'comment': string
+  'number': string
+  'function': string
+  'type': string
+  'variable': string
+  'operator': string
+  'constant': string
+  'tag': string
+  'attribute': string
+  'property': string
+  'punctuation': string
+  'background': string
+  /** Whole-row tint behind an added line. */
+  'added'?: string
+  /** Whole-row tint behind a removed line. */
+  'removed'?: string
+  /** Whole-row paint behind a hunk or file header. */
+  'diff-header'?: string
+  /** Line number and `+` glyph on an added row. */
+  'added-marker'?: string
+  /** Line number and `-` glyph on a removed row. */
+  'removed-marker'?: string
 }
 
 /** A string is used as written. A tuple is the light stop, then the dark stop. */
@@ -44,7 +70,7 @@ export interface SyntaxThemeDefinition {
 
 export interface SyntaxThemeInput {
   name: string
-  tokens: { [K in keyof SyntaxThemeTokens]: SyntaxTokenValue }
+  tokens: { [K in SyntaxTokenKey]: SyntaxTokenValue } & { [K in SyntaxDiffTokenKey]?: SyntaxTokenValue }
 }
 
 function resolveSyntaxToken(value: SyntaxTokenValue): string {
@@ -54,7 +80,8 @@ function resolveSyntaxToken(value: SyntaxTokenValue): string {
 }
 
 /**
- * Create a syntax theme. All 14 tokens are required.
+ * Create a syntax theme. The 14 color tokens are required.
+ * Diff row slots are optional and use the same `--astryx-code-syntax-*` names.
  * `[light, dark]` tuples are stored as `light-dark()`.
  */
 export function defineSyntaxTheme(theme: SyntaxThemeInput): SyntaxThemeDefinition {
@@ -65,6 +92,11 @@ export function defineSyntaxTheme(theme: SyntaxThemeInput): SyntaxThemeDefinitio
 
   const tokens = {} as SyntaxThemeTokens
   for (const key of SYNTAX_TOKEN_KEYS) {
+    const value = theme.tokens[key]
+    if (value != null)
+      tokens[key] = resolveSyntaxToken(value)
+  }
+  for (const key of DIFF_SYNTAX_TOKEN_KEYS) {
     const value = theme.tokens[key]
     if (value != null)
       tokens[key] = resolveSyntaxToken(value)
@@ -108,9 +140,20 @@ export function syntaxThemeStyle(theme: SyntaxThemeDefinition): Record<string, s
     style['--astryx-code-block-border'] = 'rgb(255 255 255 / 12%)'
 
   for (const [key, color] of Object.entries(theme.tokens)) {
-    if (key === 'background')
+    if (key === 'background' || color == null)
       continue
     style[`--astryx-code-syntax-${key}`] = color
   }
+
+  // A defined theme that leaves the margin slots unset follows its own
+  // punctuation color, and a header row sits on the theme background
+  // instead of borrowing the page theme's muted surface.
+  if (theme.tokens['added-marker'] == null)
+    style['--astryx-code-syntax-added-marker'] = 'var(--astryx-code-syntax-punctuation)'
+  if (theme.tokens['removed-marker'] == null)
+    style['--astryx-code-syntax-removed-marker'] = 'var(--astryx-code-syntax-punctuation)'
+  if (theme.tokens['diff-header'] == null)
+    style['--astryx-code-syntax-diff-header'] = 'transparent'
+
   return style
 }

@@ -118,6 +118,53 @@
     font-weight: var(--astryx-font-weight-bold, 700);
   }
 
+  .astryx-heading--wrap-wrap {
+    text-wrap: wrap;
+  }
+
+  .astryx-heading--wrap-nowrap {
+    text-wrap: nowrap;
+  }
+
+  .astryx-heading--wrap-balance {
+    text-wrap: balance;
+  }
+
+  .astryx-heading--wrap-pretty {
+    text-wrap: pretty;
+  }
+
+  .astryx-heading--word-break-word {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .astryx-heading--word-break-all {
+    word-break: break-all;
+  }
+
+  .astryx-heading--strike {
+    text-decoration: line-through;
+  }
+
+  .astryx-heading--justify-start {
+    text-align: start;
+  }
+
+  .astryx-heading--justify-center {
+    text-align: center;
+  }
+
+  .astryx-heading--justify-end {
+    text-align: end;
+  }
+
+  .astryx-heading--truncate-single,
+  .astryx-heading--truncate-multi {
+    max-width: 100%;
+    min-width: 0;
+  }
+
   .astryx-heading--truncate-single {
     overflow: hidden;
     text-overflow: ellipsis;

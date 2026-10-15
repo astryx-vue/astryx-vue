@@ -17,6 +17,8 @@ import selectorDemo from './selector.vue'
 import selectorSource from './selector.vue?raw&highlighted'
 import snapPointsDemo from './snap-points.vue'
 import snapPointsSource from './snap-points.vue?raw&highlighted'
+import switcherDemo from './switcher.vue'
+import switcherSource from './switcher.vue?raw&highlighted'
 
 const options = { className: 'bottom-sheet-preview' }
 
@@ -29,3 +31,4 @@ export const bottomSheetAdaptiveDialog = defineDemo(adaptiveDialogDemo, adaptive
 export const bottomSheetAdaptiveMenu = defineDemo(adaptiveMenuDemo, adaptiveMenuSource, options)
 export const bottomSheetMultiSelector = defineDemo(multiSelectorDemo, multiSelectorSource, options)
 export const bottomSheetSelector = defineDemo(selectorDemo, selectorSource, options)
+export const bottomSheetSwitcher = defineDemo(switcherDemo, switcherSource, options)

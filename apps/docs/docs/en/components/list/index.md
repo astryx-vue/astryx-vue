@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { listBasic, listBulleted, listMessages, listSteps } from '../../../../components/demos/list'
+import { listBasic, listBulleted, listMessages, listSteps, listSwipe } from '../../../../components/demos/list'
 </script>
 
 ## Usage
@@ -42,6 +42,9 @@ A row becomes interactive in one of two ways. Give it `onClick` and a button app
 The `header` slot renders a title above the list and associates it through `aria-labelledby`, so a screen reader announces the title when it enters the list. `edgeCompensation="inline"` is for a list placed inside a padded container: it pulls every row toward the container's inline content edges so the row text lines up with a sibling heading, cancelling no more than the container padding each edge actually publishes.
 
 The package also exports the more general `Item` primitive. `ListItem` is that primitive rendered as an `<li>` with the density and marker from its list; use `Item` directly when the same row layout is needed outside a list, or when you need its extra controls — `as`, `align`, `labelLines`, `descriptionLines`, and `layout`. Most screens only need `List` and `ListItem`.
+
+
+<ComponentAnatomy />
 
 ## Best practices
 
@@ -83,4 +86,11 @@ The package also exports the more general `Item` primitive. `ListItem` is that p
   description="Numbered step-by-step instructions using decimal list markers."
   locale="en"
   title="Ordered steps"
+/>
+
+<DemoExample
+  :demo="listSwipe"
+  description="A touch drag reveals Archive. A mouse drag does not start, so the same action stays in the row."
+  locale="en"
+  title="Swipe actions"
 />

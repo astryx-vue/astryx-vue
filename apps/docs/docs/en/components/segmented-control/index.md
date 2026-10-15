@@ -41,6 +41,9 @@ Keyboard behavior follows the radio group convention: the left and right arrows 
 
 A segment can show an icon before its label by putting it in the `#icon` slot; the icon follows the size of the control. Set `isLabelHidden` to show the icon alone, and the `label` becomes the segment's `aria-label` so its name is not lost.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

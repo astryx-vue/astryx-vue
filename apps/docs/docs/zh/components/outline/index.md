@@ -46,6 +46,9 @@ const items = [
 | <Badge variant="error">避免</Badge> | 传了 `activeId` 还指望内置滚动侦测继续改它。只要传入，侦测就关掉。 |
 | <Badge variant="error">避免</Badge> | 再用额外标记自己缩进。级别已经决定缩进。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample :demo="outlineControlled" description="传入 activeId 后，内置的滚动侦测会停下来，高亮由你自己的逻辑决定。" locale="zh" title="受控" />

@@ -40,6 +40,9 @@ A skip link points at `#astryx-app-shell-main`. The main region is a `div` with 
 
 `useAppShellMobile` reads the nearest shell. Outside a shell, or when mobile nav is off, `isMobile` and `isMobileNavEnabled` are false and the open and close methods do nothing.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

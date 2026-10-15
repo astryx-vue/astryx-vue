@@ -34,6 +34,8 @@ const isBullet = computed(() => marker.value === 'disc' || marker.value === 'cir
     :is-selected="isSelected"
     :label="label"
     :on-click="onClick"
+    :swipe-actions="swipeActions"
+    :swipe-behavior="swipeBehavior"
     :rel="rel"
     :target="target"
   >

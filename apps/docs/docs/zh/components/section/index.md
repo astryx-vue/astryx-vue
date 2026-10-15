@@ -30,6 +30,9 @@ import { Section } from '@astryx-vue/core/Section'
 
 外层用负外边距，让区块能逃出父级容器（例如 `Card` 或 `LayoutContent`）的内边距。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

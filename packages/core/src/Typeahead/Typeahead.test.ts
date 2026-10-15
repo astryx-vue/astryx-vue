@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 import { createStaticSource } from '../composables/useAsyncSource.js'
+import BaseTypeahead from './BaseTypeahead.vue'
 import Typeahead from './Typeahead.vue'
 
 const fruits: SearchableItem[] = [
@@ -102,6 +103,29 @@ describe('typeahead', () => {
     await input.trigger('keydown', { key: 'ArrowDown' })
     await flush()
     expect(input.attributes('aria-expanded')).toBe('false')
+    wrapper.unmount()
+  })
+
+  it('renders the default option row', async () => {
+    const wrapper = mountTypeahead()
+    await wrapper.get('input[role="combobox"]').trigger('focus')
+    await flush()
+    expect(document.querySelector('.astryx-typeahead-item')?.textContent).toContain('Apple')
+    wrapper.unmount()
+  })
+
+  it('renders a bare combobox without a field label', async () => {
+    const wrapper = mount(BaseTypeahead, {
+      attachTo: document.body,
+      props: {
+        label: 'Command',
+        searchSource: createStaticSource(fruits),
+        debounceMs: 0,
+      },
+    })
+    expect(wrapper.find('label').exists()).toBe(false)
+    expect(wrapper.find('.astryx-typeahead--bare').exists()).toBe(true)
+    expect(wrapper.get('input').attributes('aria-label')).toBe('Command')
     wrapper.unmount()
   })
 })

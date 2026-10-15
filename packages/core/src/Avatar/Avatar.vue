@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { AvatarProps } from './types.js'
-import { computed, inject, ref, useAttrs } from 'vue'
+import { computed, inject, ref, toRaw, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
@@ -92,10 +92,15 @@ const accessibleName = computed(() => {
   return meaningfulAlt.value || meaningfulName.value
 })
 
-const isLink = computed(() => props.href != null)
+const isLink = computed(() => props.href != null && props.href !== '')
 const isButton = computed(() => !isLink.value && attrs.onClick != null)
 const isInteractive = computed(() => isLink.value || isButton.value)
-const rootTag = computed(() => isLink.value ? 'a' : isButton.value ? 'button' : 'span')
+const isCustomLink = computed(() => isLink.value && props.as != null)
+const rootTag = computed(() => {
+  if (isLink.value)
+    return props.as == null ? 'a' : toRaw(props.as)
+  return isButton.value ? 'button' : 'span'
+})
 
 const linkRel = computed(() => {
   const parts = new Set((props.rel ?? '').split(/\s+/).filter(Boolean))
@@ -137,6 +142,8 @@ const rootBindings = computed(() => {
     bindings.href = props.href
     bindings.target = props.target
     bindings.rel = linkRel.value
+    if (isCustomLink.value)
+      bindings.to = props.href
   }
   if (isButton.value)
     bindings.type = attrs.type ?? 'button'

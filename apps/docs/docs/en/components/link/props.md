@@ -20,6 +20,42 @@ footer: false
         <td>Link URL. When omitted, the component renders as a <code>&lt;button&gt;</code>.</td>
       </tr>
       <tr>
+        <td><code>as</code></td>
+        <td><code>LinkRoot</code></td>
+        <td>-</td>
+        <td>Root used instead of <code>&lt;a&gt;</code> when the link has an address and is enabled. It receives <code>href</code> and <code>to</code>.</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Accessible name. Use it when the visible content is not the name, such as an icon-only link. It replaces the link text for assistive technology.</td>
+      </tr>
+      <tr>
+        <td><code>newTabLabel</code></td>
+        <td><code>string</code></td>
+        <td>Localized “(opens in new tab)”</td>
+        <td>Screen-reader text after an external link.</td>
+      </tr>
+      <tr>
+        <td><code>size</code></td>
+        <td><code>LinkSize</code></td>
+        <td>-</td>
+        <td>Font size, the same steps as body text: sm, md, lg, xl.</td>
+      </tr>
+      <tr>
+        <td><code>weight</code></td>
+        <td><code>LinkWeight</code></td>
+        <td>-</td>
+        <td>Font weight. normal is the same as regular.</td>
+      </tr>
+      <tr>
+        <td><code>maxLines</code></td>
+        <td><code>number</code></td>
+        <td><code>0</code></td>
+        <td>Maximum visible lines. 0 does not truncate.</td>
+      </tr>
+      <tr>
         <td><code>isExternalLink</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
@@ -99,7 +135,7 @@ footer: false
 
 ## Native attributes
 
-The root element is `<a>` or `<button>`.
+The root element is an `<a>`, a `<button>`, or the component passed to `as`. A disabled link is always an `<a>` without an address.
 
 The following are passed to the root element:
 

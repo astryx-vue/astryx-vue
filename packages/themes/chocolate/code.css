@@ -29,5 +29,11 @@
     --astryx-code-syntax-attribute: light-dark(#8C5927, #d4a06a);
     --astryx-code-syntax-property: light-dark(#3a7c6b, #70c4b0);
     --astryx-code-syntax-punctuation: light-dark(#9e622e, #cb884d);
+
+    --astryx-code-syntax-added: color-mix(in srgb, var(--astryx-color-success-muted) 25%, transparent);
+    --astryx-code-syntax-removed: color-mix(in srgb, var(--astryx-color-error-muted) 25%, transparent);
+    --astryx-code-syntax-diff-header: var(--astryx-color-background-muted);
+    --astryx-code-syntax-added-marker: var(--astryx-color-text-green);
+    --astryx-code-syntax-removed-marker: var(--astryx-color-text-red);
   }
 }

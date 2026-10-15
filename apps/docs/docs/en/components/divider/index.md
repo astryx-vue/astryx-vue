@@ -27,6 +27,9 @@ import { Divider } from '@astryx-vue/core/Divider'
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

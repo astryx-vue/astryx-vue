@@ -29,6 +29,9 @@ const meeting = shallowRef<string | null>(null)
 
 The date uses the date field. The time uses the same field as the time input. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. Clear removes both parts. The date half can show two months and can start the week on a chosen day. While a change is saving, neither field can be edited.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

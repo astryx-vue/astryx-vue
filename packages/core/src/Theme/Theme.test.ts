@@ -54,6 +54,7 @@ describe('theme', () => {
     expect(wrapper.element.style.getPropertyValue('--astryx-button-ghost-foreground')).toBe('light-dark(#052E16, #DCFCE7)')
     expect(wrapper.element.style.getPropertyValue('--astryx-card-background')).toBe('light-dark(#FFFFFF, #0F3D24)')
     expect(wrapper.element.style.colorScheme).toBe('dark')
+    expect(wrapper.find('style').exists()).toBe(false)
     expect(document.documentElement.getAttribute('data-astryx-theme')).toBe('forest')
     expect(document.documentElement.getAttribute('data-astryx-color-mode')).toBe('dark')
 
@@ -73,6 +74,23 @@ describe('theme', () => {
     const nested = wrapper.get('[data-astryx-theme="forest"]')
     expect(document.documentElement.getAttribute('data-astryx-theme')).toBe('warm')
     expect((nested.element as HTMLElement).style.getPropertyValue('--astryx-color-text-primary')).toBe('light-dark(#052E16, #DCFCE7)')
+    wrapper.unmount()
+  })
+
+  it('injects component style rules for the theme name', () => {
+    const theme = defineTheme({
+      name: 'ruled',
+      components: {
+        button: { base: { fontWeight: '600' } },
+      },
+    })
+    const wrapper = mount(Theme, {
+      props: { theme, mode: 'light' },
+      slots: { default: 'Ruled' },
+    })
+    const style = wrapper.get('[data-astryx-theme-style]')
+    expect(style.text()).toContain('[data-astryx-theme="ruled"] .astryx-button')
+    expect(style.text()).toContain('font-weight: 600;')
     wrapper.unmount()
   })
 

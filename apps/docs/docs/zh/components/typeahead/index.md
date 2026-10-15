@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
+import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## 使用方法
@@ -39,6 +39,9 @@ const source = createStaticSource([
 方向键移动高亮项，`Enter` 选中，`Escape` 关闭列表。焦点在输入框里时，`Home` 和 `End` 移动光标。选中后结果收成一枚可聚焦的标签，再次聚焦会回到搜索。
 
 内置文案默认是英文。调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。
+
+
+<ComponentAnatomy />
 
 ## 最佳实践
 
@@ -76,4 +79,11 @@ const source = createStaticSource([
   description="用错误状态提示必须选择一个地点。"
   locale="zh"
   title="校验"
+/>
+
+<DemoExample
+  :demo="typeaheadBare"
+  description="BaseTypeahead 没有字段标签和说明。命令面板这类已经有自己标题的地方用它，输入框的无障碍名用 label 传入。"
+  locale="zh"
+  title="无字段外壳"
 />

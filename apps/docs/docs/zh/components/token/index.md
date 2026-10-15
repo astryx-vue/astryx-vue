@@ -36,6 +36,9 @@ import { Token } from '@astryx-vue/core/Token'
 
 删除按钮的无障碍名称默认是英文 `Remove 设计评审`。调用 `provideAstryxLocale('zh-CN')` 后改为「移除设计评审」。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

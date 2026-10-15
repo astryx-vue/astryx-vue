@@ -33,6 +33,9 @@ import { ButtonGroup } from '@astryx-vue/core/ButtonGroup'
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

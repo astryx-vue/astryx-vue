@@ -16,6 +16,8 @@ import { navMenuHeading } from '../../../../components/demos/nav-menu'
 
 The top nav and overflow list already compose these parts. Use them directly for an account menu.
 
+Menus attached to a side or top heading use `NavHeadingMenu` and `NavHeadingMenuItem`. Put the menu in the heading `menu` slot. The heading owns closing and where focus goes after open. An item with an address is a link. An item without one is a `menuitem`. Arrows move, and Enter or Space activates the current item.
+
 ```vue
 <script setup lang="ts">
 import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'

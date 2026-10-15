@@ -44,6 +44,42 @@ footer: false
         <td>Display type: <code>block</code> or <code>inline</code>.</td>
       </tr>
       <tr>
+        <td><code>accessibilityLevel</code></td>
+        <td><code>1 | 2 | 3 | 4 | 5 | 6</code></td>
+        <td>-</td>
+        <td>Outline level for assistive technology when it should differ from the visual <code>level</code>. The element stays <code>h{level}</code>.</td>
+      </tr>
+      <tr>
+        <td><code>textWrap</code></td>
+        <td><code>'wrap' | 'nowrap' | 'balance' | 'pretty'</code></td>
+        <td>-</td>
+        <td>CSS <code>text-wrap</code>.</td>
+      </tr>
+      <tr>
+        <td><code>wordBreak</code></td>
+        <td><code>'break-word' | 'break-all'</code></td>
+        <td><code>break-all</code> for one line, <code>break-word</code> for more</td>
+        <td>How long unbroken strings break.</td>
+      </tr>
+      <tr>
+        <td><code>justify</code></td>
+        <td><code>'start' | 'center' | 'end'</code></td>
+        <td><code>'start'</code></td>
+        <td>Text alignment. <code>start</code> and <code>end</code> follow the writing direction.</td>
+      </tr>
+      <tr>
+        <td><code>hasStrikethrough</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Draws a line through the text.</td>
+      </tr>
+      <tr>
+        <td><code>hasTruncateTooltip</code></td>
+        <td><code>boolean | 'above' | 'below' | 'start' | 'end'</code></td>
+        <td><code>true</code></td>
+        <td>Puts the full text in a tooltip after truncation. <code>false</code> turns it off. It stays closed when the text fits.</td>
+      </tr>
+      <tr>
         <td><code>maxLines</code></td>
         <td><code>number</code></td>
         <td><code>0</code></td>

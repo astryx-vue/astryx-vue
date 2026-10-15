@@ -44,5 +44,34 @@ describe('syntax theme', () => {
     const block = wrapper.get('pre').element as HTMLElement
     expect(block.style.getPropertyValue('--astryx-code-syntax-keyword')).toBe('#cf222e')
     expect(block.style.getPropertyValue('--astryx-code-block-background')).toBe('#ffffff')
+    expect(block.style.getPropertyValue('--astryx-code-syntax-added')).toBe('')
+    expect(block.style.getPropertyValue('--astryx-code-syntax-added-marker')).toBe('var(--astryx-code-syntax-punctuation)')
+    expect(block.style.getPropertyValue('--astryx-code-syntax-removed-marker')).toBe('var(--astryx-code-syntax-punctuation)')
+    expect(block.style.getPropertyValue('--astryx-code-syntax-diff-header')).toBe('transparent')
+  })
+
+  it('writes diff slots onto the same syntax variables when a theme sets them', () => {
+    const theme = defineSyntaxTheme({
+      name: 'diff',
+      tokens: {
+        ...githubDark.tokens,
+        'added': '#e6ffec',
+        'removed': ['#ffebe9', '#4d1116'],
+        'diff-header': '#f6f8fa',
+        'added-marker': '#1a7f37',
+        'removed-marker': '#cf222e',
+      },
+    })
+
+    expect(theme.tokens.removed).toBe('light-dark(#ffebe9, #4d1116)')
+
+    const wrapper = mount(CodeBlock, {
+      props: { code: '+const ready = true', language: 'ts', isDiff: true, syntaxTheme: theme },
+    })
+    const block = wrapper.get('pre').element as HTMLElement
+    expect(block.style.getPropertyValue('--astryx-code-syntax-added')).toBe('#e6ffec')
+    expect(block.style.getPropertyValue('--astryx-code-syntax-removed')).toBe('light-dark(#ffebe9, #4d1116)')
+    expect(block.style.getPropertyValue('--astryx-code-syntax-diff-header')).toBe('#f6f8fa')
+    expect(block.style.getPropertyValue('--astryx-code-syntax-added-marker')).toBe('#1a7f37')
   })
 })

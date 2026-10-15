@@ -33,6 +33,9 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

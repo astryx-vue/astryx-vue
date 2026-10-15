@@ -24,6 +24,9 @@ export function guideSidebar(english: boolean): Sidebar {
         item(english ? 'Icons' : '图标', `${prefix}/guide/icons`),
         item(english ? 'Composables' : '组合式函数', `${prefix}/guide/composables`),
         item(english ? 'Patterns' : '应用模式', `${prefix}/guide/patterns`),
+        item(english ? 'Templates' : '模板', `${prefix}/guide/templates`),
+        item(english ? 'Links and routers' : '链接与路由', `${prefix}/guide/links`),
+        item(english ? 'Responsive layout' : '响应式布局', `${prefix}/guide/responsive`),
       ],
     },
     {

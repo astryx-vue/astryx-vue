@@ -40,7 +40,7 @@ export { Banner } from './Banner/index.js'
 export type { BannerContainer, BannerEmits, BannerProps, BannerSlots, BannerStatus } from './Banner/index.js'
 export { Blockquote } from './Blockquote/index.js'
 export type { BlockquoteProps } from './Blockquote/index.js'
-export { BottomSheet } from './BottomSheet/index.js'
+export { BottomSheet, BottomSheetSwitcher } from './BottomSheet/index.js'
 export type {
   BottomSheetEmits,
   BottomSheetHeight,
@@ -232,6 +232,8 @@ export {
   CodeBlock,
   darkSyntaxPresets,
   defineSyntaxTheme,
+  DIFF_SYNTAX_TOKEN_KEYS,
+  diffLineKind,
   dracula,
   flatTokensToLines,
   githubDark,
@@ -242,7 +244,9 @@ export {
   nord,
   oneDarkPro,
   oneLight,
+  parseFenceLanguage,
   solarizedLight,
+  splitDiffLines,
   SYNC_TOKENIZE_THRESHOLD,
   SYNTAX_TOKEN_KEYS,
   SyntaxTheme,
@@ -266,6 +270,9 @@ export type {
   CodeSlots,
   CopyToClipboardOptions,
   CopyToClipboardReturn,
+  DiffLineKind,
+  DiffLines,
+  SyntaxDiffTokenKey,
   SyntaxThemeDefinition,
   SyntaxThemeInput,
   SyntaxThemeTokens,
@@ -483,10 +490,14 @@ export { Heading } from './Heading/index.js'
 export type {
   HeadingColor,
   HeadingDisplay,
+  HeadingJustify,
   HeadingLevel,
   HeadingProps,
+  HeadingTruncateTooltip,
   HeadingType,
   HeadingWeight,
+  HeadingWordBreak,
+  HeadingWrap,
 } from './Heading/index.js'
 export { HoverCard } from './HoverCard/index.js'
 export type {
@@ -581,7 +592,7 @@ export type {
   UseLightboxOptions,
 } from './Lightbox/index.js'
 export { Link } from './Link/index.js'
-export type { LinkColor, LinkProps } from './Link/index.js'
+export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkWeight } from './Link/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
 export type {
   ItemAlign,
@@ -591,6 +602,10 @@ export type {
   ItemLayout,
   ItemProps,
   ItemSlots,
+  ItemSwipeAction,
+  ItemSwipeActions,
+  ItemSwipeBehavior,
+  ItemSwipeSide,
   ItemTarget,
   ItemText,
   ListDensity,
@@ -601,11 +616,37 @@ export type {
   ListProps,
   ListSlots,
 } from './List/index.js'
-export { normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './locale/index.js'
-export type { AstryxLocale, AstryxMessages } from './locale/index.js'
-export { Markdown, parseMarkdown, slugify, uniqueSlug } from './Markdown/index.js'
+export {
+  loadAstryxCatalog,
+  normalizeLocale,
+  provideAstryxLocale,
+  useAstryxLocale,
+  useAstryxMessages,
+  useCollator,
+} from './locale/index.js'
+export type {
+  AstryxLocale,
+  AstryxMessages,
+  AstryxUpstreamCatalog,
+  AstryxUpstreamMessage,
+  LoadedAstryxLocale,
+  UnmappedUpstreamEntry,
+  UnmappedUpstreamReason,
+} from './locale/index.js'
+export {
+  applyInlinePlugins,
+  applyMarkdownPlugins,
+  defineMarkdownPlugin,
+  isMarkdownExtensionNode,
+  Markdown,
+  parseMarkdown,
+  slugify,
+  uniqueSlug,
+} from './Markdown/index.js'
 export type {
   MarkdownAlign,
+  MarkdownAutolink,
+  MarkdownCitationStyle,
   MarkdownCodeProps,
   MarkdownComponents,
   MarkdownDensity,
@@ -614,10 +655,16 @@ export type {
   MarkdownHeadingProps,
   MarkdownImageProps,
   MarkdownInlineCodeProps,
+  MarkdownInlinePlugin,
   MarkdownLinkProps,
   MarkdownListProps,
+  MarkdownPlugin,
+  MarkdownPluginRenderContext,
   MarkdownProps,
   MarkdownSlots,
+  MarkdownSource,
+  MarkdownTransformContext,
+  ParseMarkdownOptions,
 } from './Markdown/index.js'
 export { MetadataList, MetadataListItem } from './MetadataList/index.js'
 export type {
@@ -685,9 +732,13 @@ export type {
   NavItemSlots,
   NavLinkComponent,
 } from './NavItem/index.js'
-export { NavDisclosure, NavMenu, NavMenuItem } from './NavMenu/index.js'
+export { NavDisclosure, NavHeadingMenu, NavHeadingMenuItem, NavMenu, NavMenuItem } from './NavMenu/index.js'
 export type {
   NavDisclosureProps,
+  NavHeadingMenuEmits,
+  NavHeadingMenuItemEmits,
+  NavHeadingMenuItemProps,
+  NavHeadingMenuProps,
   NavMenuEmits,
   NavMenuFocusRequest,
   NavMenuItemEmits,
@@ -766,7 +817,7 @@ export type {
   PowerSearchStatus,
 } from './PowerSearch/index.js'
 export { ProgressBar } from './ProgressBar/index.js'
-export type { ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './ProgressBar/index.js'
+export type { ProgressBarMark, ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './ProgressBar/index.js'
 export { Radio, RadioGroup } from './Radio/index.js'
 export type {
   RadioChangeEvent,
@@ -839,10 +890,12 @@ export type {
   SideNavCollapseContext,
   SideNavCollapsible,
   SideNavEmits,
+  SideNavHandle,
   SideNavHeadingProps,
   SideNavItemEmits,
   SideNavItemProps,
   SideNavProps,
+  SideNavResizable,
   SideNavSectionProps,
 } from './SideNav/index.js'
 export { Skeleton } from './Skeleton/index.js'
@@ -1011,8 +1064,10 @@ export type {
   TextAs,
   TextColor,
   TextDisplay,
+  TextJustify,
   TextProps,
   TextSize,
+  TextTruncateTooltip,
   TextType,
   TextWeight,
   TextWordBreak,
@@ -1045,6 +1100,10 @@ export type {
 } from './TextInput/index.js'
 export {
   defineTheme,
+  expandColorScale,
+  expandMotionScale,
+  expandRadiusScale,
+  expandTypeScale,
   isDefinedTheme,
   MediaTheme,
   neutralTheme,
@@ -1054,15 +1113,23 @@ export {
   useTheme,
 } from './Theme/index.js'
 export type {
+  ColorScaleConfig,
+  ComponentStyleMap,
   DefineThemeInput,
   MediaThemeMode,
   MediaThemeProps,
+  MotionScaleConfig,
+  RadiusScaleConfig,
+  StyleOverrides,
   ThemeDefinition,
   ThemeMode,
   ThemeProps,
   ThemeSurfaceInput,
   ThemeTokens,
   ThemeTokenValue,
+  TypeScaleConfig,
+  TypographyConfig,
+  TypographyRole,
   UseMediaThemeReturn,
   UseThemeReturn,
 } from './Theme/index.js'
@@ -1157,9 +1224,11 @@ export type {
   TreeListVariant,
   UseTreeFocusOptions,
 } from './TreeList/index.js'
-export { Typeahead } from './Typeahead/index.js'
+export { BaseTypeahead, Typeahead, TypeaheadItem } from './Typeahead/index.js'
 export type {
+  BaseTypeaheadProps,
   TypeaheadEmits,
+  TypeaheadItemProps,
   TypeaheadProps,
   TypeaheadSize,
   TypeaheadSlots,

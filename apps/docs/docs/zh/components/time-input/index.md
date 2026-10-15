@@ -29,6 +29,9 @@ const time = shallowRef<string | null>('14:30')
 
 默认按 12 小时显示。方向键按 `increment` 分钟步进。细指针下是文本框。粗指针下，`adaptive-native` 和 `adaptive-bottom-sheet` 使用系统时间输入；需要秒，或步进不是 1 分钟时，仍保留文本框。占位符和清除文案跟随语言。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

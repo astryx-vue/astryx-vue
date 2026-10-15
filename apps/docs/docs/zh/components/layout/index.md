@@ -37,6 +37,9 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 
 `LayoutHeader`、`LayoutFooter`、`LayoutContent`、`LayoutPanel` 是四个区域组件。面板的 `width` 传数字时按像素。宽度由 `ResizeHandle` 控制时，把 `useResizable` 返回的 `props` 传给 `resizable`。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

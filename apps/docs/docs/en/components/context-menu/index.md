@@ -67,6 +67,9 @@ A submenu flies out beside its row on a wide screen. On a compact touch surface 
 
 The panel is at least 160px wide and grows with its rows unless `menuWidth` pins a width; either way it is capped to the viewport, and content taller than 300px scrolls inside it. `size` changes only the rows' block padding, from `sm` to `lg`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

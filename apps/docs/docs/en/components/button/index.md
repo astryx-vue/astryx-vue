@@ -56,6 +56,9 @@ A CSS icon class still works in the slot if you already generate one. UnoCSS is 
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

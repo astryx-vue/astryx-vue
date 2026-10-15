@@ -7,12 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { topNavCentered, topNavEnterprise, topNavLogo, topNavMega, topNavMenu, topNavMenus } from '../../../../components/demos/top-nav'
+import { topNavCentered, topNavEnterprise, topNavHeading, topNavLogo, topNavMega, topNavMenu, topNavMenus } from '../../../../components/demos/top-nav'
 </script>
 
 ## Usage
 
-`TopNav` is the navigation landmark across the top of a page. `heading`, `start`, the default slot, and `center` run from the leading edge, and `end` stays at the trailing edge. `TopNavMenu` opens a menu. `TopNavMegaMenu` opens a larger panel with items and a featured card. Arrow keys move through the items and Escape closes the panel.
+`TopNav` is the navigation landmark across the top of a page. `heading`, `start`, the default slot, and `center` run from the leading edge, and `end` stays at the trailing edge. `TopNavHeading` can show a logo, a line above the title, a line below it, and a menu. `TopNavMenu` opens a menu. `TopNavMegaMenu` opens a larger panel with items and a featured card. The card can show an image, and its action is its own link. Arrow keys move through the items and Escape closes the panel.
 
 Pass `mobileQuery` and, when it matches, the leading and center content moves into `MobileNav`. The bar keeps the heading, the end slot, and the toggle. A slot is not rendered in both places at once.
 
@@ -31,6 +31,9 @@ import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |
@@ -47,7 +50,9 @@ import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
 
 <DemoExample :demo="topNavMenu" description="Hover opens a product menu with icons and descriptions." locale="en" title="Hover menu" />
 
-<DemoExample :demo="topNavMega" description="A full-width mega menu with product items and a featured card." locale="en" title="Mega menu" />
+<DemoExample :demo="topNavMega" description="A full-width mega menu with product items. The featured card shows an image, and the action at the bottom is its own link." locale="en" title="Mega menu" />
+
+<DemoExample :demo="topNavHeading" description="The heading shows the suite, the product, and the account. The suite is its own link, and the chevron opens the product menu." locale="en" title="Heading with menu" />
 
 <DemoExample :demo="topNavMenus" description="Several hover menus share one bar and close when the pointer moves to another." locale="en" title="Multiple dropdowns" />
 

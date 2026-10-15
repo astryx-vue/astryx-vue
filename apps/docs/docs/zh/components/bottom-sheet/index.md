@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints, bottomSheetSwitcher } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## 使用方法
@@ -45,6 +45,9 @@ const isOpen = ref(false)
 `purpose` 控制隐式关闭的尺度，和 `Dialog` 一致。默认的 `info` 允许 Escape、点击遮罩和向下拖动；`form` 只允许 Escape，避免用户误触遮罩丢失已经输入的内容；`required` 屏蔽全部隐式关闭，并使用 `alertdialog` 语义，用于必须由用户明确响应的流程。想要面板和页面同时可交互时，把 `hasScrim` 设为 `false`：面板会用非模态方式打开，背景不再被压暗，页面可以继续滚动和点击，拖动关闭依旧可用。非模态面板不会把焦点从页面上抢走，因此 Escape 只在焦点位于面板内部时才会关闭它。
 
 `padding` 设置内容区的内边距，取值来自全局间距刻度。不设置时使用主题为底部弹窗定义的内边距，主题没有定义时取 `--spacing-4`（16px），四个逻辑边相同；传入 `0` 可以让内容紧贴面板边缘。内容区同时是一个容器，如果它的唯一子元素是自带内边距的区块，那个区块会顶掉这层内边距，不会被叠加两次。
+
+
+<ComponentAnatomy />
 
 ## 最佳实践
 
@@ -114,6 +117,13 @@ const isOpen = ref(false)
   description="单选列表在底部面板里打开。"
   locale="zh"
   title="单选面板"
+/>
+
+<DemoExample
+  :demo="bottomSheetSwitcher"
+  description="结账分成两张底栏，共用一个对话框。换页时遮罩不闪。"
+  locale="zh"
+  title="多步切换"
 />
 
 ## 无障碍

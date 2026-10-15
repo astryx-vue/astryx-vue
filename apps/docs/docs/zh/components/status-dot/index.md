@@ -24,6 +24,9 @@ import { StatusDot } from '@astryx-vue/core/StatusDot'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

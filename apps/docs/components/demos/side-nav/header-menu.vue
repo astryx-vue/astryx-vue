@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NavIcon } from '@astryx-vue/core/NavItem'
-import { NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'
+import { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'
 import { SideNav, SideNavHeading, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
 </script>
 
@@ -13,12 +13,12 @@ import { SideNav, SideNavHeading, SideNavItem, SideNavSection } from '@astryx-vu
             <NavIcon icon-class="i-carbon-cube" label="Product" />
           </template>
           <template #menu>
-            <NavMenu label="Accounts">
-              <NavMenuItem href="#personal" label="Personal Account" />
-              <NavMenuItem href="#acme" label="Acme Corp" />
-              <NavMenuItem href="#add" label="Add account" />
-              <NavMenuItem href="#sign-out" label="Sign out" />
-            </NavMenu>
+            <NavHeadingMenu label="Accounts">
+              <NavHeadingMenuItem href="#personal" label="Personal Account" />
+              <NavHeadingMenuItem href="#acme" label="Acme Corp" />
+              <NavHeadingMenuItem href="#add" label="Add account" />
+              <NavHeadingMenuItem href="#sign-out" label="Sign out" />
+            </NavHeadingMenu>
           </template>
         </SideNavHeading>
       </template>

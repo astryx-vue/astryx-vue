@@ -38,6 +38,9 @@ import { Skeleton } from '@astryx-vue/core/Skeleton'
 
 
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

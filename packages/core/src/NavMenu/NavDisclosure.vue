@@ -4,7 +4,7 @@ import type { NavDisclosureProps, NavDisclosureSlots } from './types.js'
 import { computed, nextTick, provide, ref, useId, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { navMenuCloseKey } from './context.js'
+import { navMenuCloseKey, navMenuFocusKey } from './context.js'
 import '../../styles/nav-menu.css'
 
 defineOptions({ name: 'AstryxNavDisclosure' })
@@ -136,6 +136,7 @@ useDismiss({
 })
 
 provide(navMenuCloseKey, () => close(true))
+provide(navMenuFocusKey, focusRequest)
 
 watch(isOpen, (open) => {
   emit('openChange', open)

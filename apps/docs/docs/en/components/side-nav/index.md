@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { sideNavEnd, sideNavHeaderMenu, sideNavNested } from '../../../../components/demos/side-nav'
+import { sideNavEnd, sideNavHeaderMenu, sideNavNested, sideNavResizable } from '../../../../components/demos/side-nav'
 import SideNavCollapseFigure from '../../../../components/demos/side-nav/collapse.vue'
 </script>
 
@@ -15,7 +15,7 @@ import SideNavCollapseFigure from '../../../../components/demos/side-nav/collaps
 
 `SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu.
 
-Control it with `v-model:is-collapsed`. Pass an object to `collapsible` to hide the built-in button or to set a hotkey such as `mod+\\`.
+Control it with `v-model:is-collapsed`. Pass an object to `collapsible` to hide the built-in button or to set a hotkey such as `mod+\\`. With `resizable`, the trailing edge can be dragged. The width starts at 260px and stays between 180px and 480px. The handle hides while the bar is collapsed. Dragging below 160px collapses the bar when collapse is also enabled.
 
 ```vue
 <script setup lang="ts">
@@ -36,13 +36,16 @@ const collapsed = ref(false)
 
 <SideNavCollapseFigure class="nav-collapse-figure" />
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Give every collapsible item an icon, or it disappears in the rail. |
 | <Badge variant="success">Do</Badge> | Set `href` when a row both navigates and has children. The label navigates; the chevron collapses. |
-| <Badge variant="error">Avoid</Badge> | Do not drag to resize. The bar has an expanded width and a collapsed width. |
+| <Badge variant="success">Do</Badge> | Turn on `resizable` when people should drag the width. Keep collapse on `v-model:is-collapsed` instead of setting it on both `collapsible` and `resizable`. |
 
 ## Examples
 
@@ -51,3 +54,5 @@ const collapsed = ref(false)
 <DemoExample :demo="sideNavNested" description="Settings opens a collapsible group of children." locale="en" title="Nested items" />
 
 <DemoExample :demo="sideNavHeaderMenu" description="The heading is an account switcher, with the product name and the current account." locale="en" title="Header with menu" />
+
+<DemoExample :demo="sideNavResizable" description="Drag the handle on the trailing edge to change the width. Dragging it narrow collapses the bar and hides the handle." locale="en" title="Resizable width" />

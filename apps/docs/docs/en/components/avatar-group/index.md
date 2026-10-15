@@ -29,6 +29,9 @@ import { Avatar, AvatarGroup, AvatarGroupOverflow } from '@astryx-vue/core/Avata
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

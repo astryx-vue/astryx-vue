@@ -20,6 +20,11 @@ footer: false
       <tr><td><code>headingLevelStart</code></td><td><code>1 | 2 | 3 | 4 | 5 | 6</code></td><td><code>1</code></td><td>Markdown 里的 <code>#</code> 对应的标题级别。更深的标题一起后移，到 <code>h6</code> 为止。</td></tr>
       <tr><td><code>isStreaming</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只重新解析最后一个未完成的块，并为新文字播放淡入。不做逐字平滑。逐字揭示请先用 <code>useStreamingText</code>，再把结果传给 <code>content</code>。</td></tr>
       <tr><td><code>onLinkClick</code></td><td><code>(href: string, event: MouseEvent) =&gt; void | false</code></td><td>—</td><td>链接被点击时调用。返回 <code>false</code> 会取消跳转。</td></tr>
+      <tr><td><code>plugins</code></td><td><code>MarkdownPlugin[]</code></td><td>—</td><td>文档插件。可以替换语法树，并绘制自己的 <code>extension</code> 节点。</td></tr>
+      <tr><td><code>inlinePlugins</code></td><td><code>MarkdownInlinePlugin[]</code></td><td>—</td><td>在普通文本上做匹配。不进入行内代码和围栏代码。</td></tr>
+      <tr><td><code>autolink</code></td><td><code>'gfm'</code></td><td>—</td><td>设为 <code>gfm</code> 时，裸网址、<code>www.</code> 和裸邮箱变成链接。</td></tr>
+      <tr><td><code>citationStyle</code></td><td><code>'label' | 'number'</code></td><td><code>'label'</code></td><td>引用来源芯片是标题，还是序号徽章。</td></tr>
+      <tr><td><code>sources</code></td><td><code>Record&lt;string, MarkdownSource&gt;</code></td><td>—</td><td>按 id 提供的引用来源。<code>[id]</code> 和 <code>【id】</code> 对上键时画成芯片。</td></tr>
     </tbody>
   </table>
 </div>

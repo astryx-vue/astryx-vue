@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { paginationDots, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
+import { paginationDots, paginationInput, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
 </script>
 
 ## Usage
@@ -34,6 +34,9 @@ const total = ref(100)
 
 The visible labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |
@@ -50,3 +53,5 @@ The visible labels are English unless the app calls `provideAstryxLocale('zh-CN'
 <DemoExample :demo="paginationPageSize" description="Pagination sits under a transactions table, with a control for how many rows each page holds." locale="en" title="Page size selector" />
 
 <DemoExample :demo="paginationWithTable" description="The count variant under a table, at the small size, shows the item range for the current page." locale="en" title="With table" />
+
+<DemoExample :demo="paginationInput" description="Type a page number to jump. First and last sit outside the previous and next buttons. When the total is unknown, pass hasMore instead of a last page." locale="en" title="Page input" />

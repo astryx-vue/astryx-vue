@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AsyncSourceStatus } from '../composables/useAsyncSource.js'
 import Spinner from '../Spinner/Spinner.vue'
+import TypeaheadItem from './TypeaheadItem.vue'
 
 export interface TypeaheadMenuEntryView {
   id: string
@@ -77,8 +78,10 @@ function onOptionClick(id: string, disabled?: boolean): void {
       >
         <span class="astryx-typeahead-option-copy">
           <slot name="item" :entry="entry" :is-active="index === props.activeIndex" :is-selected="Boolean(entry.selected)">
-            <span class="astryx-typeahead-option-label">{{ entry.label }}</span>
-            <span v-if="entry.description" class="astryx-typeahead-option-description">{{ entry.description }}</span>
+            <TypeaheadItem
+              :item="{ id: entry.id, label: entry.label, description: entry.description, disabled: entry.disabled }"
+              :is-disabled="entry.disabled"
+            />
           </slot>
         </span>
         <svg v-if="entry.selected" class="astryx-typeahead-check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">

@@ -64,6 +64,9 @@ In tight places such as cards and sidebars, `isCompact` reduces the spacing and 
 
 The component carries `role="status"`, so when it appears after data finishes loading a screen reader announces it. Attributes you pass — `class`, `style`, `data-*`, and the rest — land on the root element, and an explicit `role` overrides that default.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

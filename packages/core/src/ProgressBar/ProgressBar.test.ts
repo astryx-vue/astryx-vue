@@ -84,6 +84,31 @@ describe('progressBar', () => {
     expect(wrapper.get('.astryx-progress-bar-value').text()).toBe('60%')
   })
 
+  it('places named marks on the fill or the remaining track', () => {
+    const wrapper = renderProgressBar({
+      value: 40,
+      marks: [
+        { value: 25, label: 'Quarter' },
+        { value: 80, label: 'Late' },
+        { value: 10, label: '' },
+      ],
+    })
+    const marks = wrapper.findAll('.astryx-progress-bar-mark')
+    expect(marks).toHaveLength(2)
+    expect(marks[0]!.attributes('aria-label')).toBe('Quarter')
+    expect(marks[0]!.attributes('data-placement')).toBe('fill')
+    expect(marks[1]!.attributes('data-placement')).toBe('track')
+    expect(wrapper.get('.astryx-progress-bar-mark-anchor').attributes('style')).toContain('25%')
+  })
+
+  it('hides marks while the progress is indeterminate', () => {
+    const wrapper = renderProgressBar({
+      isIndeterminate: true,
+      marks: [{ value: 50, label: 'Halfway' }],
+    })
+    expect(wrapper.find('.astryx-progress-bar-mark').exists()).toBe(false)
+  })
+
   it('renders server-side', async () => {
     const html = await renderToString(createSSRApp({ render: () => h(ProgressBar, { value: 60, label: 'Upload' }) }))
     expect(html).toContain('role="progressbar"')

@@ -38,6 +38,9 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |
@@ -67,7 +70,7 @@ import { Avatar, AvatarStatusDot } from '@astryx-vue/core/Avatar'
 
 <DemoExample
   :demo="avatarInteractive"
-  description="传入 href 时头像是链接，监听点击时头像是按钮。两种形式都可聚焦，并带有 focus-visible 焦点环。"
+  description="传入 href 时头像是链接，也可以用 as 换成路由链接。监听点击且没有地址时头像是按钮。两种形式都可聚焦，并带有 focus-visible 焦点环。"
   locale="zh"
   title="可交互"
 />

@@ -2016,6 +2016,11 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   text-decoration: none;
 }
 
+.vp-doc .astryx-markdown .astryx-markdown__cite[data-citation-style='number'] {
+  font-weight: var(--astryx-citation-number-font-weight, var(--astryx-font-weight-semibold, 600));
+  text-decoration: none;
+}
+
 .vp-doc .astryx-markdown .astryx-markdown__cite img {
   width: var(--astryx-spacing-3, 12px);
   height: var(--astryx-spacing-3, 12px);
@@ -2352,4 +2357,86 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .component-card__preview .indicator-board {
   width: max-content;
   max-width: 100%;
+}
+
+.props-playground {
+  display: grid;
+  gap: 16px;
+  margin: 8px 0 28px;
+}
+
+.props-playground__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 112px;
+  padding: 28px 20px;
+  border: 1px solid var(--astryx-line);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+}
+
+.props-playground__stage > * {
+  max-width: 100%;
+}
+
+.props-playground__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+
+.props-playground__field {
+  display: grid;
+  gap: 4px;
+  min-width: 140px;
+  color: var(--astryx-text-muted);
+  font-size: 13px;
+}
+
+.props-playground__field select,
+.props-playground__field input[type='text'],
+.props-playground__field input[type='number'] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--astryx-line);
+  border-radius: 8px;
+  background: var(--vp-c-bg);
+  color: var(--astryx-text);
+  font: inherit;
+}
+
+.props-playground__sample {
+  margin: 0;
+  overflow-x: auto;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  font-size: 13px;
+}
+
+.props-playground__error {
+  margin: 0;
+  color: var(--astryx-text);
+}
+
+.component-a11y__guidance,
+.component-a11y__criterion {
+  margin: 0;
+}
+
+.component-a11y__criterion {
+  margin-top: 6px;
+  color: var(--astryx-text-muted);
+  font-size: 13px;
+}
+
+.component-a11y__refs {
+  display: flex;
+  gap: 16px;
+}
+
+.component-anatomy h2,
+.component-a11y h2 {
+  margin-top: 36px;
 }

@@ -21,6 +21,13 @@ footer: false
       <tr><td><code>prevLabel</code></td><td><code>string</code></td><td><code>Previous</code> / <code>上一页</code></td><td>Previous-page label. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>nextLabel</code></td><td><code>string</code></td><td><code>Next</code> / <code>下一页</code></td><td>Next-page label. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>pageSizeLabel</code></td><td><code>string</code></td><td><code>Per page</code> / <code>每页</code></td><td>Label for the page-size selector. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
+      <tr><td><code>variant</code></td><td><code>'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'</code></td><td><code>'pages'</code></td><td>Middle of the control. <code>input</code> is an editable page field.</td></tr>
+      <tr><td><code>siblingCount</code></td><td><code>number</code></td><td><code>1</code></td><td>How many page buttons sit on each side of the current page. Narrow containers drop another step.</td></tr>
+      <tr><td><code>step</code></td><td><code>number</code></td><td><code>1</code></td><td>How many pages previous and next move.</td></tr>
+      <tr><td><code>hasMore</code></td><td><code>boolean</code></td><td>—</td><td>Whether another page exists when the total is unknown. A <code>total</code> above 0 wins.</td></tr>
+      <tr><td><code>pageLabel</code></td><td><code>string</code></td><td><code>Page</code> / <code>页</code></td><td>Noun in front of the <code>input</code> field.</td></tr>
+      <tr><td><code>hasFirstLast</code></td><td><code>boolean</code></td><td><code>input</code> when the page count is known</td><td>Shows buttons that jump to the first and last page.</td></tr>
+      <tr><td><code>changeAction</code></td><td><code>(page: number) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs after the page is committed. The control stays busy until it settles, and a failure does not roll the page back.</td></tr>
     </tbody>
   </table>
 </div>

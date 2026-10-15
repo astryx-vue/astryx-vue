@@ -42,6 +42,9 @@ const snippet = 'const total = items.length'
 
 代码视口是一个有名字的 `role="group"`，并且可以聚焦，键盘用户因此能滚动溢出的代码。复制按钮和折叠控件是并列的兄弟节点，各自有自己的无障碍名称，按下一个不会连带触发另一个。语法颜色来自 `--astryx-code-syntax-*` 这一组 token，`highlightMode` 决定着色方式：`auto` 在浏览器支持良好时使用 CSS Custom Highlight API，否则回退到 span；`ranges` 完全通过该 API 着色，代码文本里不会多出任何元素；`spans` 则把每个 token 包进一个元素。三种方式的文本、语义和复制结果完全相同。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

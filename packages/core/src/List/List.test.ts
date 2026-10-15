@@ -368,3 +368,65 @@ describe('list item template listener', () => {
     expect(handler).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('item swipe actions', () => {
+  it('reveals a trailing action after a touch drag and runs it from the button', async () => {
+    vi.useFakeTimers()
+    const onActivate = vi.fn()
+    const wrapper = mount(Item, {
+      props: {
+        label: 'Invoice 1042',
+        swipeActions: {
+          trailing: [{ label: 'Archive', onActivate }],
+        },
+      },
+    })
+
+    const row = wrapper.get('.astryx-item')
+    expect(row.attributes('data-swipe')).toBe('idle')
+    await row.trigger('pointerdown', { pointerType: 'mouse', pointerId: 1, clientX: 200, clientY: 20 })
+    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: 80, clientY: 20, bubbles: true }))
+    expect(row.attributes('data-swipe')).toBe('idle')
+
+    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 2, clientX: 200, clientY: 20 })
+    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 2, clientX: 120, clientY: 20, bubbles: true }))
+    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 2, clientX: 120, clientY: 20, bubbles: true }))
+    await vi.advanceTimersByTimeAsync(200)
+
+    expect(row.attributes('data-swipe')).toBe('resting')
+    const action = wrapper.get('.astryx-item__swipe-action')
+    expect(action.element.closest('[inert]')).toBeNull()
+    await action.trigger('click')
+    expect(onActivate).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+
+  it('commits the outer action when the drag passes the row', async () => {
+    vi.useFakeTimers()
+    const onActivate = vi.fn()
+    const wrapper = mount(Item, {
+      attachTo: document.body,
+      props: {
+        label: 'Draft',
+        swipeBehavior: 'commit',
+        swipeActions: {
+          trailing: [
+            { id: 'keep', label: 'Keep', onActivate: vi.fn() },
+            { id: 'delete', label: 'Delete', onActivate, variant: 'destructive' },
+          ],
+        },
+      },
+    })
+
+    expect(wrapper.findAll('.astryx-item__swipe-action')).toHaveLength(1)
+    const row = wrapper.get('.astryx-item').element as HTMLElement
+    Object.defineProperty(row, 'offsetWidth', { configurable: true, value: 300 })
+    await wrapper.get('.astryx-item').trigger('pointerdown', { pointerType: 'touch', pointerId: 3, clientX: 500, clientY: 10 })
+    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 3, clientX: 0, clientY: 12, bubbles: true }))
+    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 3, clientX: 0, clientY: 12, bubbles: true }))
+    expect(onActivate).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+})

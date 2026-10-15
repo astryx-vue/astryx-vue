@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
+import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## Usage
@@ -48,6 +48,9 @@ Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chines
 | <Badge variant="success">Do</Badge> | Abort the request when `signal` is cancelled so an older response cannot replace a newer one. |
 | <Badge variant="error">Don't</Badge> | Use typeahead for multiple values. Use Multi Selector for a fixed list, and Tokenizer for searchable tags. |
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample
@@ -76,4 +79,11 @@ Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chines
   description="Typeahead with an error validation message."
   locale="en"
   title="With Validation"
+/>
+
+<DemoExample
+  :demo="typeaheadBare"
+  description="BaseTypeahead has no field label or description. Use it where the page already names the control, such as a command palette, and pass label as the input's accessible name."
+  locale="en"
+  title="Without field chrome"
 />

@@ -3,6 +3,7 @@ import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ItemProps, ItemSlots } from './types.js'
 import { computed, provide, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { itemDescriptionContextKey } from './context.js'
+import { useItemSwipe } from './useItemSwipe.js'
 import '../../styles/list.css'
 
 defineOptions({ name: 'AstryxItem', inheritAttrs: false })
@@ -237,6 +238,31 @@ function handleDelegatedClick(event: MouseEvent): void {
   event.stopPropagation()
 }
 
+const SWIPE_BLOCKED_ROLES = new Set(['option', 'menuitem', 'menuitemcheckbox', 'menuitemradio'])
+const swipeBehavior = computed(() => props.swipeBehavior ?? 'reveal')
+const leadingActions = computed(() => {
+  const actions = props.swipeActions?.leading ?? []
+  return swipeBehavior.value === 'commit' ? actions.slice(-1) : actions
+})
+const trailingActions = computed(() => {
+  const actions = props.swipeActions?.trailing ?? []
+  return swipeBehavior.value === 'commit' ? actions.slice(-1) : actions
+})
+const swipeEnabled = computed(() => {
+  if (props.isDisabled || isDelegate.value)
+    return false
+  if (role.value != null && SWIPE_BLOCKED_ROLES.has(role.value))
+    return false
+  return leadingActions.value.length + trailingActions.value.length > 0
+})
+const swipe = useItemSwipe({
+  root: element,
+  enabled: swipeEnabled,
+  behavior: swipeBehavior,
+  leading: leadingActions,
+  trailing: trailingActions,
+})
+
 const rootClick = computed(() => {
   if (isDelegate.value)
     return handleDelegatedClick
@@ -247,7 +273,7 @@ const rootClick = computed(() => {
   return isInteractive.value ? handleContainerClick : undefined
 })
 
-const rootClass = computed(() => ['astryx-item', attrs.class])
+const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', attrs.class])
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !CONTROLLED_ATTRS.has(key)),
@@ -284,40 +310,109 @@ defineExpose({ element, focus, blur })
     :data-inert="isDisabled && !hasParentRole ? true : undefined"
     :data-interactive="isInteractive || undefined"
     :data-selected="isSelected || undefined"
+    :data-swipe="swipeEnabled ? swipe.phase.value : undefined"
     :role="role"
     :style="attrs.style as StyleValue"
+    @pointerdown="swipe.onPointerDown"
+    @click.capture="swipe.onClickCapture"
+    @keydown="swipe.onKeyDown"
     @click="rootClick"
   >
-    <slot name="marker" />
-    <span v-if="$slots.startContent" class="astryx-item__start">
-      <slot name="startContent" />
-    </span>
-    <component
-      :is="contentTag"
-      v-bind="contentAttrs"
-      class="astryx-item__content"
-      :class="{ 'astryx-item__content--inline': isInline }"
-    >
-      <span
-        v-if="hasLabel"
-        class="astryx-item__label"
-        :class="labelClasses"
-        :style="labelStyle"
-      >
-        <slot name="label">{{ label }}</slot>
+    <template v-if="swipeEnabled">
+      <div v-if="leadingActions.length" class="astryx-item__swipe-panel" data-side="leading" :inert="swipe.phase.value === 'resting' ? undefined : true">
+        <button
+          v-for="action in leadingActions"
+          :key="action.id ?? action.label"
+          type="button"
+          class="astryx-item__swipe-action"
+          :data-variant="action.variant ?? 'neutral'"
+          :disabled="action.isDisabled"
+          @click.stop="swipe.activate(action)"
+        >
+          <component :is="action.icon" v-if="action.icon" aria-hidden="true" />
+          <span>{{ action.label }}</span>
+        </button>
+      </div>
+      <div v-if="trailingActions.length" class="astryx-item__swipe-panel" data-side="trailing" :inert="swipe.phase.value === 'resting' ? undefined : true">
+        <button
+          v-for="action in trailingActions"
+          :key="action.id ?? action.label"
+          type="button"
+          class="astryx-item__swipe-action"
+          :data-variant="action.variant ?? 'neutral'"
+          :disabled="action.isDisabled"
+          @click.stop="swipe.activate(action)"
+        >
+          <component :is="action.icon" v-if="action.icon" aria-hidden="true" />
+          <span>{{ action.label }}</span>
+        </button>
+      </div>
+    </template>
+    <div v-if="swipeEnabled" class="astryx-item__surface">
+      <slot name="marker" />
+      <span v-if="$slots.startContent" class="astryx-item__start">
+        <slot name="startContent" />
       </span>
-      <span
-        v-if="hasDescription"
-        :id="descriptionIdBase"
-        class="astryx-item__description"
-        :class="descriptionClasses"
-        :style="descriptionStyle"
+      <component
+        :is="contentTag"
+        v-bind="contentAttrs"
+        class="astryx-item__content"
+        :class="{ 'astryx-item__content--inline': isInline }"
       >
-        <slot name="description">{{ description }}</slot>
+        <span
+          v-if="hasLabel"
+          class="astryx-item__label"
+          :class="labelClasses"
+          :style="labelStyle"
+        >
+          <slot name="label">{{ label }}</slot>
+        </span>
+        <span
+          v-if="hasDescription"
+          :id="descriptionIdBase"
+          class="astryx-item__description"
+          :class="descriptionClasses"
+          :style="descriptionStyle"
+        >
+          <slot name="description">{{ description }}</slot>
+        </span>
+      </component>
+      <span v-if="$slots.endContent" class="astryx-item__end">
+        <slot name="endContent" />
       </span>
-    </component>
-    <span v-if="$slots.endContent" class="astryx-item__end">
-      <slot name="endContent" />
-    </span>
+    </div>
+    <template v-else>
+      <slot name="marker" />
+      <span v-if="$slots.startContent" class="astryx-item__start">
+        <slot name="startContent" />
+      </span>
+      <component
+        :is="contentTag"
+        v-bind="contentAttrs"
+        class="astryx-item__content"
+        :class="{ 'astryx-item__content--inline': isInline }"
+      >
+        <span
+          v-if="hasLabel"
+          class="astryx-item__label"
+          :class="labelClasses"
+          :style="labelStyle"
+        >
+          <slot name="label">{{ label }}</slot>
+        </span>
+        <span
+          v-if="hasDescription"
+          :id="descriptionIdBase"
+          class="astryx-item__description"
+          :class="descriptionClasses"
+          :style="descriptionStyle"
+        >
+          <slot name="description">{{ description }}</slot>
+        </span>
+      </component>
+      <span v-if="$slots.endContent" class="astryx-item__end">
+        <slot name="endContent" />
+      </span>
+    </template>
   </component>
 </template>

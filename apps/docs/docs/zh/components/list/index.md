@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { listBasic, listBulleted, listMessages, listSteps } from '../../../../components/demos/list'
+import { listBasic, listBulleted, listMessages, listSteps, listSwipe } from '../../../../components/demos/list'
 </script>
 
 ## 使用方法
@@ -42,6 +42,9 @@ import { List, ListItem } from '@astryx-vue/core/List'
 `header` 插槽会在列表上方渲染一段标题，并用 `aria-labelledby` 与列表关联起来，于是屏幕阅读器在进入列表时会先读出这个标题。`edgeCompensation="inline"` 用于把列表放在带内边距的容器里时让每一行的文字与同级的标题对齐：它会按每个逻辑边缘各自可用的容器内边距，抵消掉行自身的左右内边距，最多抵消到零。
 
 包里同时导出了更通用的原语 `Item`。`ListItem` 就是它在 `<li>` 上的一层封装，加上来自 `List` 的密度和标记；需要在非列表结构里复用同一套行布局时，可以直接使用 `Item`，它能通过 `as` 决定根元素，并提供 `align`、`labelLines`、`descriptionLines`、`layout` 等额外控制。大多数界面只需要 `List` 和 `ListItem`。
+
+
+<ComponentAnatomy />
 
 ## 最佳实践
 
@@ -83,4 +86,11 @@ import { List, ListItem } from '@astryx-vue/core/List'
   description="用数字标出逐步说明。"
   locale="zh"
   title="有序步骤"
+/>
+
+<DemoExample
+  :demo="listSwipe"
+  description="触摸横滑露出归档。鼠标不会开始这次拖动，所以同一操作还要留在行里。"
+  locale="zh"
+  title="横滑操作"
 />

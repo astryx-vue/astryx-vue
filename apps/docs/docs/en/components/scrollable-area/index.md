@@ -32,6 +32,9 @@ Until overflow is measured, the requested axis uses `overflow: clip`. After a me
 
 `useScrollableArea` is the same measurement for a viewport and content box you already own. `useScrollOverflow` reports the inline start and end edges of one horizontal scroller.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

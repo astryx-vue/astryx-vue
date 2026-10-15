@@ -1,9 +1,12 @@
 import type { Component, VNodeChild } from 'vue'
+import type { MarkdownInlinePlugin, MarkdownPlugin } from './plugins.js'
 
 export type MarkdownDisplay = 'block' | 'inline'
 export type MarkdownDensity = 'default' | 'compact'
 export type MarkdownAlign = 'start' | 'center'
 export type MarkdownHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
+export type MarkdownAutolink = 'gfm'
+export type MarkdownCitationStyle = 'label' | 'number'
 
 export interface MarkdownHeadingProps {
   level: MarkdownHeadingLevel
@@ -108,8 +111,28 @@ export interface MarkdownProps {
    */
   onLinkClick?: (href: string, event: MouseEvent) => void | false
   /**
+   * Document plugins. Each one may replace the parsed tree and draw the
+   * extension nodes it owns. An empty list leaves the document unchanged.
+   */
+  plugins?: readonly MarkdownPlugin[]
+  /**
+   * Patterns matched against text nodes, in order. The first match at a
+   * position wins. Inline code and fenced code are left alone.
+   */
+  inlinePlugins?: readonly MarkdownInlinePlugin[]
+  /**
+   * `'gfm'` links bare `https://` URLs, `www.` hosts, and emails.
+   * Omit it and those stay text. `<https://…>` and `<email>` stay links.
+   */
+  autolink?: MarkdownAutolink
+  /**
+   * `label` is a chip with the source title. `number` is a compact badge.
+   * @default 'label'
+   */
+  citationStyle?: MarkdownCitationStyle
+  /**
    * Citation sources keyed by id. `[id]` and `【id】` that match a key render
-   * as a label chip instead of literal text.
+   * as a citation chip instead of literal text.
    */
   sources?: Record<string, MarkdownSource>
 }

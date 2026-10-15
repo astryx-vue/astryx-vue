@@ -6,6 +6,8 @@ export type TextWrap = 'wrap' | 'nowrap' | 'balance' | 'pretty'
 export type TextWordBreak = 'normal' | 'break-word' | 'break-all'
 export type TextDisplay = 'block' | 'inline'
 export type TextAs = 'span' | 'p' | 'div' | 'label'
+export type TextJustify = 'start' | 'center' | 'end'
+export type TextTruncateTooltip = boolean | 'above' | 'below' | 'start' | 'end'
 
 export interface TextProps {
   /**
@@ -55,9 +57,20 @@ export interface TextProps {
    */
   as?: TextAs
   /**
+   * Text alignment. `start` and `end` follow the writing direction.
+   * @default 'start'
+   */
+  justify?: TextJustify
+  /**
    * Maximum lines before truncation. 0 means no truncation.
    * A positive value forces block layout so the ellipsis has a width.
    * @default 0
    */
   maxLines?: number
+  /**
+   * 截断之后要不要把全文放进提示。`true` 出现在上方，方位字符串指定位置，`false` 关掉。
+   * 没被截断时不会弹出。
+   * @default true
+   */
+  hasTruncateTooltip?: TextTruncateTooltip
 }

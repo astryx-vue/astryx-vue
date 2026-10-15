@@ -1,5 +1,5 @@
-import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { flushPromises, mount } from '@vue/test-utils'
+import { describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import Pagination from './Pagination.vue'
 
@@ -301,5 +301,86 @@ describe('pagination', () => {
       await ellipsis.trigger('click')
       expect(wrapper.emitted('update:page')).toBeFalsy()
     }
+  })
+
+  it('jumps to the first and last page and skips by step', async () => {
+    const wrapper = mount(Pagination, {
+      props: {
+        page: 4,
+        pageSize: 10,
+        total: 100,
+        hasFirstLast: true,
+        step: 3,
+      },
+    })
+
+    await wrapper.get('.astryx-pagination-first').trigger('click')
+    expect(wrapper.emitted('update:page')?.[0]).toEqual([1])
+
+    await wrapper.get('.astryx-pagination-last').trigger('click')
+    expect(wrapper.emitted('update:page')?.at(-1)).toEqual([10])
+
+    await wrapper.setProps({ page: 2 })
+    await wrapper.get('.astryx-pagination-next').trigger('click')
+    expect(wrapper.emitted('update:page')?.at(-1)).toEqual([5])
+    expect(wrapper.get('.astryx-pagination-next').attributes('aria-label')).toBe('Forward 3 pages')
+  })
+
+  it('commits a typed page and stays busy while changeAction is pending', async () => {
+    let release: () => void = () => {}
+    const changeAction = vi.fn(() => new Promise<void>((resolve) => {
+      release = resolve
+    }))
+    const wrapper = mount(Pagination, {
+      props: {
+        page: 2,
+        pageSize: 10,
+        total: 80,
+        variant: 'input',
+        pageLabel: 'Page',
+        changeAction,
+      },
+    })
+
+    expect(wrapper.get('.astryx-pagination-input-label').text()).toBe('Page')
+    expect(wrapper.find('.astryx-pagination-first').exists()).toBe(true)
+    const input = wrapper.get('input')
+    await input.setValue('6')
+    await input.trigger('change')
+    expect(wrapper.emitted('update:page')?.[0]).toEqual([6])
+    expect(wrapper.get('nav').attributes('aria-busy')).toBe('true')
+    release()
+    await flushPromises()
+    expect(wrapper.get('nav').attributes('aria-busy')).toBeUndefined()
+  })
+
+  it('keeps moving forward when the total is unknown and hasMore is set', async () => {
+    const wrapper = mount(Pagination, {
+      props: {
+        page: 1,
+        total: 0,
+        hasMore: true,
+      },
+    })
+
+    expect(wrapper.find('.astryx-pagination-pages').exists()).toBe(false)
+    expect(wrapper.find('.astryx-pagination-last').exists()).toBe(false)
+    expect(wrapper.get('.astryx-pagination-next').attributes('disabled')).toBeUndefined()
+    await wrapper.get('.astryx-pagination-next').trigger('click')
+    expect(wrapper.emitted('update:page')?.[0]).toEqual([2])
+  })
+
+  it('uses the requested sibling count when the container is wide enough', () => {
+    const wrapper = mount(Pagination, {
+      props: {
+        page: 10,
+        pageSize: 10,
+        total: 200,
+        siblingCount: 0,
+      },
+    })
+
+    const labels = wrapper.findAll('.astryx-pagination-page').map(page => page.text())
+    expect(labels).toEqual(['1', '...', '10', '...', '20'])
   })
 })

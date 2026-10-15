@@ -1,3 +1,14 @@
+export interface MdPoint {
+  offset?: number | null
+  line?: number
+  column?: number
+}
+
+export interface MdPosition {
+  start?: MdPoint
+  end?: MdPoint
+}
+
 export interface MdNode {
   type: string
   value?: string
@@ -14,6 +25,33 @@ export interface MdNode {
   align?: Array<'left' | 'right' | 'center' | null> | null
   identifier?: string
   label?: string | null
+  /** Parser offsets. Used to tell a bare autolink from an explicit link. */
+  position?: MdPosition
+  /**
+   * Set on `type: 'extension'` nodes a plugin inserts.
+   * `plugin` matches `MarkdownPlugin.name` or `MarkdownInlinePlugin.name`.
+   */
+  plugin?: string
+  /** Name of an extension node within its plugin. */
+  name?: string
+  /** `block` extension nodes are rendered as their own block. */
+  display?: 'inline' | 'block'
+  /** Extra fields a plugin wants the renderer to read. Keep values plain. */
+  data?: Readonly<Record<string, string | number | boolean | null>>
+}
+
+export function isMarkdownExtensionNode(
+  node: MdNode,
+  plugin?: string,
+  name?: string,
+): node is MdNode & { type: 'extension', plugin: string, name: string } {
+  if (node.type !== 'extension' || node.plugin == null || node.name == null)
+    return false
+  if (plugin != null && node.plugin !== plugin)
+    return false
+  if (name != null && node.name !== name)
+    return false
+  return true
 }
 
 export function plainText(node: MdNode): string {

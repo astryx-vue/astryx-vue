@@ -74,6 +74,9 @@ The action layout follows the available width. Above 640px the actions sit in on
 
 `isInline` renders the whole surface in normal flow for documentation previews, without the `<dialog>` element, the backdrop, or focus behavior. Because it is not modal, it does not claim to be: the root element uses `role="group"` instead.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

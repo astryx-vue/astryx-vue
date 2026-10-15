@@ -49,6 +49,30 @@ footer: false
         <td><code>'circle'</code></td>
         <td>Avatar shape: <code>circle</code>, <code>rounded</code>, or <code>square</code>.</td>
       </tr>
+      <tr>
+        <td><code>href</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Makes the avatar a link.</td>
+      </tr>
+      <tr>
+        <td><code>as</code></td>
+        <td><code>LinkRoot</code></td>
+        <td>-</td>
+        <td>Link root used when <code>href</code> is set. It receives <code>href</code> and <code>to</code>. Without an address the avatar stays a button or a <code>span</code>.</td>
+      </tr>
+      <tr>
+        <td><code>target</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Browsing context of the link. Applies only when <code>href</code> is set.</td>
+      </tr>
+      <tr>
+        <td><code>rel</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Link relationship. <code>noopener noreferrer</code> is added when <code>target</code> is <code>_blank</code>.</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -127,7 +151,7 @@ The component does not restrict you to these values. Passing any number will sti
 
 ## Native attributes
 
-The root element is a `<span>`.
+The root is a `<span>` by default. With `href` it is an `<a>` or the component passed to `as`. A click listener without an address makes it a `<button>`.
 
 The following are passed to the root element:
 

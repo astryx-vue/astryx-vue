@@ -29,6 +29,9 @@ const resume = shallowRef<File | File[] | null>(null)
 
 `mode="input"` is the compact field. `mode="dropzone"` is a dashed target that also accepts a drop. Files that miss `accept`, `maxSize`, or `maxFiles` stay out of the value and the field shows an error. Placeholder, clear, and error text follow `provideAstryxLocale`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

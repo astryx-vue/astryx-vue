@@ -35,6 +35,9 @@ const isOpen = ref(false)
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

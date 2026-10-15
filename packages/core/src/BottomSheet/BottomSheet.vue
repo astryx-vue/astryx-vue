@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheetSlots, BottomSheetState } from './types.js'
-import { computed, onBeforeUnmount, onMounted, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
+import { bottomSheetSwitcherKey } from './switcher.js'
 import '../../styles/bottom-sheet.css'
 
 defineOptions({ name: 'AstryxBottomSheet', inheritAttrs: false })
@@ -23,6 +24,18 @@ const emit = defineEmits<BottomSheetEmits>()
 defineSlots<BottomSheetSlots>()
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
+const switcher = inject(bottomSheetSwitcherKey, null)
+const hosted = computed(() => switcher != null && props.sheetId != null)
+const retained = computed(() => {
+  if (!hosted.value || switcher == null)
+    return false
+  return switcher.retainedId.value === props.sheetId && switcher.activeId.value !== props.sheetId
+})
+const open = computed(() => {
+  if (!hosted.value || props.sheetId == null)
+    return isOpen.value
+  return switcher?.activeId.value === props.sheetId || switcher?.retainedId.value === props.sheetId
+})
 const attrs = useAttrs()
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
 const panel = useTemplateRef<InstanceType<typeof BottomSheetPanel>>('panel')
@@ -30,9 +43,11 @@ const isPresented = ref(false)
 const scrimOpacity = ref(1)
 
 const panelState = computed<BottomSheetState>(() => {
-  if (isOpen.value)
+  if (retained.value)
+    return 'exiting'
+  if (open.value)
     return 'open'
-  if (props.isInline)
+  if (props.isInline || hosted.value)
     return 'hidden'
   return isPresented.value ? 'exiting' : 'hidden'
 })
@@ -44,11 +59,11 @@ const dialogStyle = computed(() => ({ '--_sheet-scrim-opacity': String(scrimOpac
 
 useFocusTrap({
   container: computed(() => panelElement()),
-  isEnabled: computed(() => isOpen.value && props.hasScrim),
+  isEnabled: computed(() => !hosted.value && isOpen.value && props.hasScrim),
 })
 
 useRestoreFocus({
-  isEnabled: computed(() => !props.isInline),
+  isEnabled: computed(() => !props.isInline && !hosted.value),
   shouldRestore: isOpen,
 })
 
@@ -129,6 +144,12 @@ function closeSheet(): void {
 }
 
 function requestClose(): void {
+  if (hosted.value && props.sheetId != null) {
+    if (switcher?.activeId.value === props.sheetId)
+      switcher.setActive(null)
+    emit('openChange', false)
+    return
+  }
   isOpen.value = false
   emit('openChange', false)
 }
@@ -166,17 +187,28 @@ function onPanelMotionComplete(motion: BottomSheetMotion): void {
     closeSheet()
 }
 
-watch(isOpen, (open) => {
-  if (open)
-    openSheet()
+watch(isOpen, (value) => {
+  if (hosted.value || !value)
+    return
+  openSheet()
 }, { flush: 'post' })
 
 onMounted(() => {
+  if (hosted.value && props.sheetId != null) {
+    switcher?.register(props.sheetId, {
+      getElement: () => panelElement(),
+      label: () => props.label,
+      purpose: () => props.purpose,
+    })
+    return
+  }
   if (isOpen.value)
     openSheet()
 })
 
 onBeforeUnmount(() => {
+  if (props.sheetId != null)
+    switcher?.unregister(props.sheetId)
   unlockScroll()
 })
 
@@ -188,7 +220,33 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="isInline" class="astryx-bottom-sheet-inline">
+  <template v-if="hosted">
+    <div
+      v-if="open"
+      class="astryx-bottom-sheet__positioner"
+      :class="retained ? 'astryx-bottom-sheet__positioner--retained' : 'astryx-bottom-sheet__positioner--active'"
+      :style="retained ? { '--_sheet-align': `${switcher?.alignmentOffset.value ?? 0}px` } : undefined"
+      :inert="retained || undefined"
+    >
+      <BottomSheetPanel
+        ref="panel"
+        v-bind="panelAttrs()"
+        :state="panelState"
+        :label="label"
+        :height="height"
+        :padding="padding"
+        :snap-points="snapPoints"
+        :is-swipe-dismiss-allowed="purpose === 'info'"
+        @dismiss="requestClose"
+        @snap="emit('snap', $event)"
+        @motion-start="emit('motionStart', $event)"
+        @motion-complete="emit('motionComplete', $event)"
+      >
+        <slot />
+      </BottomSheetPanel>
+    </div>
+  </template>
+  <div v-else-if="isInline" class="astryx-bottom-sheet-inline">
     <div v-if="isOpen" class="astryx-bottom-sheet__positioner astryx-bottom-sheet__positioner--inline">
       <BottomSheetPanel
         ref="panel"

@@ -94,6 +94,9 @@ import { defineTheme, Theme } from '@astryx-vue/core/Theme'
 
 The full list is on the props page. Read the current id with `useSemanticIcon`, exported from the same entry as `Icon`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

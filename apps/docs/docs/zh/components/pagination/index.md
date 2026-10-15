@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { paginationDots, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
+import { paginationDots, paginationInput, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
 </script>
 
 ## 使用方法
@@ -32,6 +32,9 @@ const total = ref(100)
 
 通过 `pageSize` 属性设置每页显示的条目数。开启 `showSizeChanger` 后，用户可以自行选择每页显示数量。按钮和总数文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |
@@ -48,3 +51,5 @@ const total = ref(100)
 <DemoExample :demo="paginationPageSize" description="分页放在交易表格下面，并可以调整每页行数。" locale="zh" title="每页数量" />
 
 <DemoExample :demo="paginationWithTable" description="小号的计数分页放在表格下面，显示当前页覆盖的条目范围。" locale="zh" title="表格分页" />
+
+<DemoExample :demo="paginationInput" description="输入页码后跳转，两侧可以直达首页和末页。总数未知时改用 hasMore，不再显示末页。" locale="zh" title="输入页码" />

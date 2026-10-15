@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue'
 import type { ProgressBarProps } from './types.js'
 import { computed, useAttrs, useId } from 'vue'
+import Tooltip from '../Tooltip/Tooltip.vue'
 import '../../styles/progress-bar.css'
 import '../../styles/visually-hidden.css'
 
@@ -40,6 +41,24 @@ const displayValue = computed(() => {
 })
 const labelledBy = computed(() => [labelId.value, attrs['aria-labelledby']].filter(Boolean).join(' ') || undefined)
 const describedBy = computed(() => [descriptionId.value, attrs['aria-describedby']].filter(Boolean).join(' ') || undefined)
+
+const resolvedMarks = computed(() => {
+  if (props.isIndeterminate || !props.marks)
+    return []
+  const span = max.value - min.value
+  return props.marks.flatMap((mark, index) => {
+    if (!Number.isFinite(mark.value) || !mark.label)
+      return []
+    const clampedMark = Math.min(max.value, Math.max(min.value, mark.value))
+    const pct = span === 0 ? 0 : ((clampedMark - min.value) / span) * 100
+    return [{
+      key: `${mark.value}:${mark.label}:${index}`,
+      label: mark.label,
+      pct,
+      onFill: percentage.value > 0 && pct <= percentage.value,
+    }]
+  })
+})
 </script>
 
 <template>
@@ -57,11 +76,28 @@ const describedBy = computed(() => [descriptionId.value, attrs['aria-describedby
       <span v-if="showsValue && !isIndeterminate" class="astryx-progress-bar-value" aria-hidden="true">{{ displayValue }}</span>
     </div>
     <span v-else-if="label" :id="labelId" class="astryx-visually-hidden">{{ label }}</span>
-    <div
-      class="astryx-progress-bar-track" role="progressbar" :aria-labelledby="labelledBy" :aria-describedby="describedBy"
-      :aria-valuemin="min" :aria-valuemax="max" :aria-valuenow="isIndeterminate ? undefined : clamped" :aria-valuetext="isIndeterminate ? undefined : displayValue"
-    >
-      <div class="astryx-progress-bar-fill" :style="isIndeterminate ? undefined : fillWidth" />
+    <div class="astryx-progress-bar-rail">
+      <div
+        class="astryx-progress-bar-track" role="progressbar" :aria-labelledby="labelledBy" :aria-describedby="describedBy"
+        :aria-valuemin="min" :aria-valuemax="max" :aria-valuenow="isIndeterminate ? undefined : clamped" :aria-valuetext="isIndeterminate ? undefined : displayValue"
+      >
+        <div class="astryx-progress-bar-fill" :style="isIndeterminate ? undefined : fillWidth" />
+      </div>
+      <Tooltip
+        v-for="mark in resolvedMarks"
+        :key="mark.key"
+        class="astryx-progress-bar-mark-anchor"
+        :content="mark.label"
+        :style="{ insetInlineStart: `${mark.pct}%` }"
+      >
+        <span
+          class="astryx-progress-bar-mark"
+          tabindex="0"
+          :aria-label="mark.label"
+          :data-placement="mark.onFill ? 'fill' : 'track'"
+          :data-variant="variant"
+        />
+      </Tooltip>
     </div>
     <span v-if="description" :id="descriptionId" class="astryx-progress-bar-description">{{ description }}</span>
   </div>

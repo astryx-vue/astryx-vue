@@ -1,0 +1,400 @@
+{
+  "button": [
+    {
+      "name": "Text label",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down"
+      ],
+      "description": "Button text must have at least 4.5:1 contrast with the button background in every state. For Hover and Pointer down, measure the final background after the overlay is applied."
+    },
+    {
+      "name": "Essential icon or spinner arc",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Icon only",
+        "Loading"
+      ],
+      "description": "An icon used instead of text must have at least 3:1 contrast with the button background. The moving spinner arc must also meet 3:1. An icon beside a visible label does not need its own check."
+    },
+    {
+      "name": "Badge text",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down"
+      ],
+      "description": "Badge text inside a button must have at least 4.5:1 contrast with the Badge background. Check all 14 built-in Badge colors in Rest, Hover, and Pointer down on page and surface backgrounds. This covers 336 pairs per mode. Check custom end content separately."
+    },
+    {
+      "name": "Visible control boundary",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1 if needed",
+      "states": [
+        "Rest"
+      ],
+      "description": "The button edge needs 3:1 contrast only when users need it to see the control. A text-only button can rely on its label."
+    },
+    {
+      "name": "Keyboard focus indicator",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Focus visible"
+      ],
+      "description": "The focus outline needs at least 3:1 contrast with the area around the button. Check every style. Destructive buttons use a red outline."
+    },
+    {
+      "name": "Disabled appearance",
+      "category": "Color contrast",
+      "criterion": "1.4.3 and 1.4.11 exceptions",
+      "requirement": "Not required",
+      "states": [
+        "Disabled"
+      ],
+      "description": "Disabled controls do not need to meet these contrast ratios."
+    }
+  ],
+  "button-group": [
+    {
+      "name": "Text label",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down"
+      ],
+      "description": "Text in each button must have at least 4.5:1 contrast with its background in every state. For Hover and Pointer down, measure the final background after the overlay is applied."
+    },
+    {
+      "name": "Essential icon or spinner arc",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Icon only",
+        "Loading"
+      ],
+      "description": "An icon used instead of text must have at least 3:1 contrast with the button background. The moving spinner arc must also meet 3:1. An icon beside a visible label does not need its own check."
+    },
+    {
+      "name": "Visible control boundary",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1 if needed",
+      "states": [
+        "Rest"
+      ],
+      "description": "Some groups need a divider or edge to show each button. That divider or edge must have at least 3:1 contrast."
+    },
+    {
+      "name": "Keyboard focus indicator",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Focus visible"
+      ],
+      "description": "The focus outline must have at least 3:1 contrast with the area around it."
+    },
+    {
+      "name": "Disabled appearance",
+      "category": "Color contrast",
+      "criterion": "1.4.3 and 1.4.11 exceptions",
+      "requirement": "Not required",
+      "states": [
+        "Disabled"
+      ],
+      "description": "Disabled controls do not need to meet these contrast ratios."
+    }
+  ],
+  "checkbox-input": [
+    {
+      "name": "Checkbox box",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down",
+        "Checked"
+      ],
+      "description": "The box edge (unchecked) and fill (checked) must have at least 3:1 contrast with the surface behind them. For Hover and Pointer down, measure the final colors after the tint and the pressed overlay are applied."
+    }
+  ],
+  "collapsible": [
+    {
+      "name": "Trigger label",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Rest",
+        "Pointer down"
+      ],
+      "description": "The trigger text must have at least 4.5:1 contrast with the surface behind it. For Pointer down, measure against the pressed overlay the trigger row paints while it is pressed."
+    }
+  ],
+  "icon-button": [
+    {
+      "name": "Essential icon or spinner arc",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down",
+        "Loading"
+      ],
+      "description": "IconButton has no visible label. Its icon must have at least 3:1 contrast with the button background in Rest, Hover, and Pointer down. The moving spinner arc must also meet 3:1 while loading."
+    },
+    {
+      "name": "Visible control boundary",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1 if needed",
+      "states": [
+        "Rest"
+      ],
+      "description": "The button edge needs 3:1 contrast only when users need it to see the control."
+    },
+    {
+      "name": "Keyboard focus indicator",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Focus visible"
+      ],
+      "description": "The focus outline must have at least 3:1 contrast with the area around the button. Check the red outline on destructive buttons too."
+    },
+    {
+      "name": "Disabled appearance",
+      "category": "Color contrast",
+      "criterion": "1.4.3 and 1.4.11 exceptions",
+      "requirement": "Not required",
+      "states": [
+        "Disabled"
+      ],
+      "description": "Disabled controls do not need to meet these contrast ratios."
+    }
+  ],
+  "link": [
+    {
+      "name": "Link text",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down"
+      ],
+      "description": "Link text must have at least 4.5:1 contrast with the background behind it. For Pointer down, measure against the pressed overlay the link paints behind its text."
+    }
+  ],
+  "radio-list": [
+    {
+      "name": "Radio circle",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down",
+        "Selected"
+      ],
+      "description": "The circle edge (unselected) and fill (selected) must have at least 3:1 contrast with the surface behind them. For Hover and Pointer down, measure the final colors after the tint and the pressed overlay are applied."
+    }
+  ],
+  "segmented-control": [
+    {
+      "name": "Text label",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down",
+        "Selected"
+      ],
+      "description": "Each label must have at least 4.5:1 contrast with its segment background. Check unselected, Hover, Pointer down, and selected colors as they appear on screen. For Hover and Pointer down, measure the final background after the overlay is applied."
+    },
+    {
+      "name": "Essential icon",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Icon only"
+      ],
+      "description": "When a segment has no visible label, its icon must have at least 3:1 contrast with the segment background. An icon beside a visible label does not need its own check."
+    },
+    {
+      "name": "Selected state indicator",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1 if relied upon",
+      "states": [
+        "Selected"
+      ],
+      "description": "The selected background must reach 3:1 only when users need it to tell selected from unselected. Label color and weight also show selection."
+    },
+    {
+      "name": "Visible control boundary",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1 if needed",
+      "states": [
+        "Rest"
+      ],
+      "description": "The control edge or segment borders need at least 3:1 contrast when users need them to see the choices."
+    },
+    {
+      "name": "Keyboard focus indicator",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Focus visible"
+      ],
+      "description": "The focus outline must have at least 3:1 contrast with the area around the segment. Check it on the track and selected background."
+    },
+    {
+      "name": "Disabled appearance",
+      "category": "Color contrast",
+      "criterion": "1.4.3 and 1.4.11 exceptions",
+      "requirement": "Not required",
+      "states": [
+        "Disabled"
+      ],
+      "description": "Disabled controls do not need to meet these contrast ratios."
+    }
+  ],
+  "slider": [
+    {
+      "name": "Thumb",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down"
+      ],
+      "description": "The thumb must have at least 3:1 contrast with the track and the surface behind it. Pointer down is the whole drag: measure the thumb with the pressed overlay applied."
+    }
+  ],
+  "switch": [
+    {
+      "name": "Track and thumb",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down"
+      ],
+      "description": "The on and off tracks must each have at least 3:1 contrast with the surface behind them, and the thumb with its track. For Hover and Pointer down, measure the final colors after the tint and the pressed overlay are applied."
+    }
+  ],
+  "tab-list": [
+    {
+      "name": "Tab label",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Rest",
+        "Hover",
+        "Pointer down",
+        "Selected"
+      ],
+      "description": "Each label must have at least 4.5:1 contrast with the tab surface behind it. For Hover and Pointer down, measure the final background after the overlay layer is applied."
+    }
+  ],
+  "toggle-button": [
+    {
+      "name": "Text label",
+      "category": "Color contrast",
+      "criterion": "1.4.3 Contrast (Minimum)",
+      "requirement": "4.5:1",
+      "states": [
+        "Unselected",
+        "Selected",
+        "Hover",
+        "Pointer down"
+      ],
+      "description": "The label must have at least 4.5:1 contrast with the button background when selected and unselected. For Hover and Pointer down, measure the final background after the overlay is applied."
+    },
+    {
+      "name": "Essential icon or spinner arc",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Icon only",
+        "Loading"
+      ],
+      "description": "An icon-only ToggleButton must have at least 3:1 contrast between its icon and button background. The moving spinner arc must also meet 3:1. An icon beside a visible label does not need its own check."
+    },
+    {
+      "name": "Selected state indicator",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1 if relied upon",
+      "states": [
+        "Selected"
+      ],
+      "description": "The selected background must reach 3:1 only when users need it to tell selected from unselected. Label weight or a changed icon can also show selection."
+    },
+    {
+      "name": "Visible control boundary",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1 if needed",
+      "states": [
+        "Rest"
+      ],
+      "description": "The button edge needs 3:1 contrast only when users need it to see the control. A visible label or icon can show the control instead."
+    },
+    {
+      "name": "Keyboard focus indicator",
+      "category": "Color contrast",
+      "criterion": "1.4.11 Non-text Contrast",
+      "requirement": "3:1",
+      "states": [
+        "Focus visible"
+      ],
+      "description": "The focus outline must have at least 3:1 contrast with the area around the button. Check both selected and unselected states."
+    },
+    {
+      "name": "Disabled appearance",
+      "category": "Color contrast",
+      "criterion": "1.4.3 and 1.4.11 exceptions",
+      "requirement": "Not required",
+      "states": [
+        "Disabled"
+      ],
+      "description": "Disabled controls do not need to meet these contrast ratios."
+    }
+  ]
+}

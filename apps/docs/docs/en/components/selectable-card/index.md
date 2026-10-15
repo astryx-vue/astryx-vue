@@ -34,6 +34,9 @@ const selected = ref('pro')
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample :demo="selectableCardElevated" description="Starter and Pro sit on a low shadow. The selection ring layers on top." locale="en" title="Elevated" />

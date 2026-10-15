@@ -20,7 +20,7 @@ astryx-vue 的 token 对齐原版 Astryx 的 `tokens.stylex.ts`，公开形式�
 
 | 页面 | 变量 |
 | --- | --- |
-| [颜色](/themes/color) | `--astryx-color-*` |
+| [颜色](/themes/color) | `--astryx-color-*`，其中 `--astryx-color-data-*` 是图表用的分类色和连续色阶 |
 | [排版与字体](/themes/typography) | `--astryx-font-*`、`--astryx-text-*` |
 | [动画](/themes/motion) | `--astryx-duration-*`、`--astryx-ease-*`，以及共享关键帧 |
 | [间距、圆角与阴影](/themes/scale) | `--astryx-spacing-*`、`--astryx-size-*`、`--astryx-radius-*`、`--astryx-shadow-*`、边框和焦点环 |

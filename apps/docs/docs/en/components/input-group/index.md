@@ -40,6 +40,9 @@ const domain = ref('')
 
 Once the group has a label, it is a field. The label, description, optional or required mark, and status come from the shared field shell, so do not wrap another field around it. A control inside the group keeps its own label for that cell, usually hidden. Fixed text in the addons uses the group text component, which shares the addon type size and color. Without a label, the group stays a joined control that can sit inside a field that already exists.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

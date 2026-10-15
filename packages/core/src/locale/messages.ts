@@ -12,6 +12,7 @@ import type { DateTimeInputMessages } from './messages/date-time-input.js'
 import type { DropdownMenuMessages } from './messages/dropdown-menu.js'
 import type { FileInputMessages } from './messages/file-input.js'
 import type { InputMessages } from './messages/input.js'
+import type { KeyboardHintMessages } from './messages/keyboard-hint.js'
 import type { LayoutMessages } from './messages/layout.js'
 import type { LightboxMessages } from './messages/lightbox.js'
 import type { MarkdownMessages } from './messages/markdown.js'
@@ -45,6 +46,7 @@ import { dateTimeInputMessages } from './messages/date-time-input.js'
 import { dropdownMenuMessages } from './messages/dropdown-menu.js'
 import { fileInputMessages } from './messages/file-input.js'
 import { inputMessages } from './messages/input.js'
+import { keyboardHintMessages } from './messages/keyboard-hint.js'
 import { layoutMessages } from './messages/layout.js'
 import { lightboxMessages } from './messages/lightbox.js'
 import { markdownMessages } from './messages/markdown.js'
@@ -79,6 +81,7 @@ export interface AstryxMessages {
   dropdownMenu: DropdownMenuMessages
   fileInput: FileInputMessages
   input: InputMessages
+  keyboardHint: KeyboardHintMessages
   layout: LayoutMessages
   lightbox: LightboxMessages
   markdown: MarkdownMessages
@@ -115,6 +118,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dropdownMenu: dropdownMenuMessages.en,
     fileInput: fileInputMessages.en,
     input: inputMessages.en,
+    keyboardHint: keyboardHintMessages.en,
     layout: layoutMessages.en,
     lightbox: lightboxMessages.en,
     markdown: markdownMessages.en,
@@ -149,6 +153,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dropdownMenu: dropdownMenuMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
     input: inputMessages['zh-CN'],
+    keyboardHint: keyboardHintMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],
     lightbox: lightboxMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],

@@ -18,7 +18,7 @@ The token name is the stable interface. The current number lives in `packages/th
 
 | Page | Variables |
 | --- | --- |
-| [Color](/en/themes/color) | `--astryx-color-*` |
+| [Color](/en/themes/color) | `--astryx-color-*`, including `--astryx-color-data-*` for chart categories and sequential ramps |
 | [Typography](/en/themes/typography) | `--astryx-font-*`, `--astryx-text-*` |
 | [Motion](/en/themes/motion) | `--astryx-duration-*`, `--astryx-ease-*`, and the shared keyframes |
 | [Space, radius, shadow](/en/themes/scale) | `--astryx-spacing-*`, `--astryx-size-*`, `--astryx-radius-*`, `--astryx-shadow-*`, border and focus |

@@ -14,6 +14,8 @@ export interface NavMessages {
   expandItem: (label: string) => string
   collapseItem: (label: string) => string
   submenu: (label: string) => string
+  resizeSidebar: string
+  opensInNewTab: string
 }
 
 export const navMessages: Record<AstryxLocale, NavMessages> = {
@@ -31,6 +33,8 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     expandItem: label => `Expand ${label}`,
     collapseItem: label => `Collapse ${label}`,
     submenu: label => `${label} submenu`,
+    resizeSidebar: 'Resize sidebar',
+    opensInNewTab: '(opens in new tab)',
   },
   'zh-CN': {
     sideNav: '侧边导航',
@@ -46,5 +50,7 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     expandItem: label => `展开${label}`,
     collapseItem: label => `收起${label}`,
     submenu: label => `${label}子菜单`,
+    resizeSidebar: '调整侧栏宽度',
+    opensInNewTab: '（在新标签页打开）',
   },
 }

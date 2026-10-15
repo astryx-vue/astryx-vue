@@ -48,6 +48,9 @@ const active = ref(2)
 ```
 
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample :demo="stepperCustom" description="Each vertical step owns a slice of the page. The content slot can be fields, a summary, or a banner, and only the active step renders it." locale="en" title="Custom content" />

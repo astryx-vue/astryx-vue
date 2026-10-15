@@ -16,6 +16,8 @@ import { navMenuHeading } from '../../../../components/demos/nav-menu'
 
 顶栏和溢出列表已经包好了这组零件。需要自己做账号菜单时直接用它们。
 
+挂在侧栏或顶栏标题上的菜单用 `NavHeadingMenu` 和 `NavHeadingMenuItem`。把它放进标题的 `menu` 插槽即可，关闭和打开后的焦点由标题负责。有地址的项是链接，没有地址的项是 `menuitem`。方向键移动，Enter 或 Space 激活当前项。
+
 ```vue
 <script setup lang="ts">
 import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'

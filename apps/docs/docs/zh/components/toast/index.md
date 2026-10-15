@@ -33,6 +33,9 @@ toast({ body: '操作成功', type: 'success' })
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

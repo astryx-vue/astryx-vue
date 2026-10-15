@@ -14,6 +14,8 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>Localized “Sidebar”</td><td>Accessible name of the navigation landmark.</td></tr>
       <tr><td><code>collapsible</code></td><td><code>boolean | SideNavCollapsible</code></td><td><code>false</code></td><td>Allows the icon rail. An object can set the initial state, the built-in button, and a hotkey.</td></tr>
       <tr><td><code>isCollapsed</code></td><td><code>boolean</code></td><td>-</td><td>Controlled collapsed state for <code>v-model:is-collapsed</code>.</td></tr>
+      <tr><td><code>resizable</code></td><td><code>boolean | SideNavResizable</code></td><td><code>false</code></td><td>Drag the trailing edge. An object can set the starting, minimum, and maximum widths, and an <code>autoSaveId</code> that remembers the width.</td></tr>
+      <tr><td><code>handleRef</code></td><td><code>HandleRef&lt;SideNavHandle&gt;</code></td><td>-</td><td>A button outside the bar can collapse, expand, and toggle. Sharing <code>v-model:is-collapsed</code> is the usual approach.</td></tr>
     </tbody>
   </table>
 </div>
@@ -26,6 +28,7 @@ footer: false
     <tbody>
       <tr><td><code>update:isCollapsed</code></td><td>Collapsed state change for <code>v-model:is-collapsed</code>.</td></tr>
       <tr><td><code>collapsedChange</code></td><td>Fired whenever the collapsed state changes.</td></tr>
+      <tr><td><code>widthChange</code></td><td>Fired while dragging, with the width in pixels.</td></tr>
     </tbody>
   </table>
 </div>
@@ -84,8 +87,24 @@ footer: false
       <tr><td><code>heading</code></td><td><code>string</code></td><td>-</td><td>Product or app name.</td></tr>
       <tr><td><code>headingHref</code></td><td><code>string</code></td><td>-</td><td>Link for the main title.</td></tr>
       <tr><td><code>superheading</code></td><td><code>string</code></td><td>-</td><td>Small line above the title.</td></tr>
+      <tr><td><code>superheadingHref</code></td><td><code>string</code></td><td>-</td><td>Link for the line above the title.</td></tr>
       <tr><td><code>subheading</code></td><td><code>string</code></td><td>-</td><td>Small line below the title.</td></tr>
+      <tr><td><code>subheadingHref</code></td><td><code>string</code></td><td>-</td><td>Link for the line below the title.</td></tr>
+      <tr><td><code>logoLabel</code></td><td><code>string</code></td><td>-</td><td>Accessible name when the logo is a link on its own. Falls back to <code>heading</code>.</td></tr>
       <tr><td><code>as</code></td><td><code>NavLinkComponent</code></td><td><code>'a'</code></td><td>Link root.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## SideNavHeading slots
+
+<div class="component-api-table" role="region" aria-label="SideNavHeading slots" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>icon</code></td><td>Mark in front of the title. This is all that remains while collapsed.</td></tr>
+      <tr><td><code>end</code></td><td>Trailing content on the title row.</td></tr>
+      <tr><td><code>menu</code></td><td>Popup menu, usually a <code>NavHeadingMenu</code>. The scope provides <code>close</code> and <code>focusRequest</code>.</td></tr>
     </tbody>
   </table>
 </div>

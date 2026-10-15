@@ -16,7 +16,7 @@ import { syntaxThemeDark, syntaxThemeLight } from '../../../../components/demos/
 
 A single block can take the `syntaxTheme` prop instead of a wrapper. Use the wrapper when a region of code should share one preset.
 
-Presets are exported from `@astryx-vue/core/Code`: `oneDarkPro`, `dracula`, `monokai`, `nord`, `tokyoNight`, `catppuccinMocha`, `githubDark`, `githubLight`, `solarizedLight`, `oneLight`, `catppuccinLatte`, and `tokyoNightLight`. `defineSyntaxTheme()` builds another one. All 14 tokens are required. A `[light, dark]` tuple is stored as `light-dark()`.
+Presets are exported from `@astryx-vue/core/Code`: `oneDarkPro`, `dracula`, `monokai`, `nord`, `tokyoNight`, `catppuccinMocha`, `githubDark`, `githubLight`, `solarizedLight`, `oneLight`, `catppuccinLatte`, and `tokyoNightLight`. `defineSyntaxTheme()` builds another one. All 14 color tokens are required. Five diff slots are optional and use the same `--astryx-code-syntax-*` names: `added`, `removed`, `diff-header`, `added-marker`, and `removed-marker`. Leave them out and the markers follow the punctuation color, with no extra header paint. A `[light, dark]` tuple is stored as `light-dark()`.
 
 ```vue
 <script setup lang="ts">
