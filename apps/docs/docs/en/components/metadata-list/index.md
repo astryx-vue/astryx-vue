@@ -33,6 +33,9 @@ import { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

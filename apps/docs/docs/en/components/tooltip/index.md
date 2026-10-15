@@ -30,6 +30,9 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 
 
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

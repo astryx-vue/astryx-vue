@@ -30,6 +30,9 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 `target="_blank"` opens `href` in a new tab. Modifier clicks and the middle button do the same. `elevation` and `variant` are forwarded to `Card`.
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample :demo="clickableCardElevated" description="Quarterly report, raised with a medium shadow." locale="en" title="Elevated" />

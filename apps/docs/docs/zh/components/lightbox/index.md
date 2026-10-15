@@ -49,6 +49,9 @@ const { bindings, open } = useLightbox({ media: photo })
 | <Badge variant="error">避免</Badge> | 给视频加 `hasZoom`。视频保持浏览器控件，缩放不会生效。 |
 | <Badge variant="error">避免</Badge> | `alt` 留空。对话框名称和图片名称都从这里来。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

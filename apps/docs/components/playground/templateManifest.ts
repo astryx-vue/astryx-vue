@@ -39,6 +39,7 @@ export const PLAYGROUND_TEMPLATE_SLUGS = [
   'settings-dialog',
   'settings',
   'settings-sidebar',
+  'blank',
   'shell-nav',
   'shell-side-nav',
   'shell-top-nav',
@@ -363,6 +364,14 @@ export const PLAYGROUND_TEMPLATE_META: Record<PlaygroundTemplateSlug, Playground
     nameEn: 'Settings Panels',
     categoryZh: '设置',
     nameZh: '设置面板',
+  },
+  'blank': {
+    slug: 'blank',
+    categoryEn: 'Shell - Blank',
+    groupEn: 'Shell',
+    nameEn: 'Blank',
+    categoryZh: '框架',
+    nameZh: '空白页',
   },
   'shell-nav': {
     slug: 'shell-nav',

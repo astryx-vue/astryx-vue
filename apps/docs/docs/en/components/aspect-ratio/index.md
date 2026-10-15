@@ -30,6 +30,9 @@ import { AspectRatio } from '@astryx-vue/core/AspectRatio'
 
 The ratio is written to the CSS variable `--astryx-aspect-ratio`, not as an inline `aspect-ratio` declaration, so a stylesheet can override it.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

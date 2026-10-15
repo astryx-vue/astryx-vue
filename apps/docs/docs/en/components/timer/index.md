@@ -33,6 +33,9 @@ import { Timer } from '@astryx-vue/core/Timer'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

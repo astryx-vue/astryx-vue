@@ -49,6 +49,9 @@ Code blocks go through the existing `CodeBlock`, quotes through `Blockquote`, he
 
 This version has no plugin protocol and does not render math.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

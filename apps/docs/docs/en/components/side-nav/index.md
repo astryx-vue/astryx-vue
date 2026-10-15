@@ -36,6 +36,9 @@ const collapsed = ref(false)
 
 <SideNavCollapseFigure class="nav-collapse-figure" />
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

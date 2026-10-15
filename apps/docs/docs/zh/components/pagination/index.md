@@ -32,6 +32,9 @@ const total = ref(100)
 
 通过 `pageSize` 属性设置每页显示的条目数。开启 `showSizeChanger` 后，用户可以自行选择每页显示数量。按钮和总数文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

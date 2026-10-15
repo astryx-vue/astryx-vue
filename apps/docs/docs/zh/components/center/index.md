@@ -49,6 +49,9 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 `isInline` 会把容器换成 `inline-flex`。这时它作为行内元素参与文字排版，不会打断行盒，适合给图标或角标做一个固定大小的小方块。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

@@ -38,6 +38,9 @@ import { Carousel } from '@astryx-vue/core/Carousel'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

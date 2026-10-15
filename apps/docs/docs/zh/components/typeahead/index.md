@@ -40,6 +40,9 @@ const source = createStaticSource([
 
 内置文案默认是英文。调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

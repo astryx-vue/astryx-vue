@@ -30,6 +30,9 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 `target="_blank"` 会在新标签页打开 `href`。按住修饰键或用中键点击也一样。`elevation` 和 `variant` 传给 `Card`。
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample :demo="clickableCardElevated" description="Quarterly report，用中等阴影抬起来。" locale="zh" title="抬升" />

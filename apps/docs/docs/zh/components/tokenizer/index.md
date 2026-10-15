@@ -26,6 +26,9 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 宽度测量复用 `useOverflow`。`#icon` 插槽放在输入区开头，每条标签也可以用 `#token` 换成自己的 `Token`。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

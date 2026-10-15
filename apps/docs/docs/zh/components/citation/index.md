@@ -42,6 +42,9 @@ import { Citation } from '@astryx-vue/core/Citation'
 | <Badge variant="error">避免</Badge> | 把一整句放进 `title`。胶囊会截断，无障碍名称也会变成那一整句。 |
 | <Badge variant="error">避免</Badge> | 拿引文当普通链接。它是注记，不是导航。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

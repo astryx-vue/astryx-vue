@@ -38,6 +38,9 @@ import '@astryx-vue/themes/neutral.css'
 
 
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

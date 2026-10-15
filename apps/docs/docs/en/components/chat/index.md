@@ -62,6 +62,9 @@ function onSubmit(value: string) {
 
 The examples start with the composer beside the transcript, then follow layout, scroll button, message, bubble, list, metadata, system message, and tool calls.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

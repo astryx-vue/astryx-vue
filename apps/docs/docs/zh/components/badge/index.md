@@ -37,6 +37,9 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

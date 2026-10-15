@@ -43,6 +43,9 @@ Mouse and touch behave differently on purpose. With a mouse, the highlight follo
 
 The open state can belong to the component or to you. Pass `isMenuOpen` to control it, usually with `v-model:isMenuOpen`; `openChange` fires every time an open or close is requested.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

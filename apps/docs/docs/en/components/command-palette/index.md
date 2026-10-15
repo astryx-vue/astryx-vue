@@ -53,6 +53,9 @@ useHotkeys([{ keys: 'mod+k', onPress: openPalette }])
 
 Arrow keys, Home, End, Page Up, and Page Down move the highlight and do not wrap. Enter selects the highlighted row. Escape closes the palette and drops an in-flight search. The highlight stays empty until the pointer or the keyboard moves it.
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample
