@@ -131,6 +131,25 @@
     border-radius: var(--astryx-radius-element, 0.625rem);
   }
 
+  /*
+   * Tooltip keeps the message node for the live region. The attached box
+   * rule above would put that node back in flow and lift a ghost toolbar
+   * control off the row, so the hidden treatment has to win.
+   */
+  .astryx-field-status[data-hidden='true'] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
   :is(.astryx-field-status, .astryx-text-input)[data-type='error'],
   .astryx-text-input[data-status='error'] {
     --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
