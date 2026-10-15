@@ -17,7 +17,7 @@ footer: false
         <td><code>items</code></td>
         <td><code>ContextMenuOption[]</code></td>
         <td>-</td>
-        <td>数据驱动的菜单内容。元素可以是动作条目、分隔线 <code>{ type: 'divider' }</code> 或分组 <code>{ type: 'section', title, items }</code>；条目自带 <code>items</code> 时变成子菜单。省略时使用 <code>content</code> 插槽。</td>
+        <td>数据驱动的菜单内容。元素可以是动作、分隔线、分组、勾选行（<code>type: 'checkbox'</code>）或单选组（<code>type: 'radio'</code>）；动作自带下一级时变成子菜单。省略时使用内容插槽。</td>
       </tr>
       <tr>
         <td><code>menuWidth</code></td>
@@ -73,7 +73,7 @@ footer: false
       </tr>
       <tr>
         <td><code>content</code></td>
-        <td>复合模式的菜单内容，用 <code>ContextMenuItem</code>、<code>ContextMenuDivider</code>、<code>ContextMenuGroup</code>、<code>ContextMenuSubMenu</code> 组合。给出 <code>items</code> 时忽略该插槽。</td>
+        <td>自己组合的菜单内容，可以放动作行、分隔线、分组、子菜单、勾选行和单选组。这就是自定义面板。给出数据数组时忽略该插槽。</td>
       </tr>
     </tbody>
   </table>
@@ -152,9 +152,24 @@ footer: false
         <td>带标题的分组，渲染为 <code>role="group"</code> 并用标题作为无障碍名称。插槽：<code>default</code>。</td>
       </tr>
       <tr>
+        <td><code>ContextMenuCheckboxItem</code></td>
+        <td><code>v-model</code>、<code>label</code>、<code>description</code>、<code>icon</code>、<code>isDisabled</code>、<code>hasCloseOnSelect</code></td>
+        <td>勾选行，角色是 <code>menuitemcheckbox</code>。默认切换后不关闭菜单。与下拉菜单的勾选行是同一个组件。</td>
+      </tr>
+      <tr>
+        <td><code>ContextMenuRadioGroup</code></td>
+        <td><code>v-model</code>、<code>label</code>、<code>hasCloseOnSelect</code></td>
+        <td>单选组。默认选中后关闭菜单。<code>label</code> 是这一组的无障碍名称。</td>
+      </tr>
+      <tr>
+        <td><code>ContextMenuRadioItem</code></td>
+        <td><code>value</code>、<code>label</code>、<code>description</code>、<code>icon</code>、<code>isDisabled</code></td>
+        <td>单选项，必须放在单选组里，角色是 <code>menuitemradio</code>。</td>
+      </tr>
+      <tr>
         <td><code>ContextMenuSubMenu</code></td>
-        <td><code>icon</code>、<code>label</code>、<code>description</code>、<code>isDisabled</code>、<code>items</code></td>
-        <td>会展开下一级菜单的条目，行上带 <code>aria-haspopup="menu"</code> 与 <code>aria-expanded</code>。<code>items</code> 用在数据模式，插槽 <code>default</code> 用在复合模式；打开或关闭时触发 <code>openChange</code>。</td>
+        <td><code>icon</code>、<code>label</code>、<code>description</code>、<code>isDisabled</code>、<code>items</code>、<code>hasSpinner</code>、<code>menuWidth</code>、<code>presentation</code></td>
+        <td>会展开下一级的条目。呈现方式默认随界面变化：宽屏向旁边展开，紧凑触控上在原面板里替换当前行并给出返回。也可以强制飞出或钻入。<code>hasSpinner</code> 用转圈代替箭头，<code>menuWidth</code> 指定飞出宽度。打开或关闭时触发 <code>openChange</code>。</td>
       </tr>
     </tbody>
   </table>

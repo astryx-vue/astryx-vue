@@ -1,6 +1,8 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
 import columnsDemo from './columns.vue'
 import columnsSource from './columns.vue?raw&highlighted'
+import createDemo from './create.vue'
+import createSource from './create.vue?raw&highlighted'
 import formDemo from './form.vue'
 import formSource from './form.vue?raw&highlighted'
 import ghostDemo from './ghost.vue'
@@ -17,6 +19,7 @@ import sheetSource from './sheet.vue?raw&highlighted'
 export const multiSelectorOverview = defineDemo(overviewDemo, overviewSource)
 export const multiSelectorSheet = defineDemo(sheetDemo, sheetSource)
 export const multiSelectorColumns = defineDemo(columnsDemo, columnsSource)
+export const multiSelectorCreate = defineDemo(createDemo, createSource)
 export const multiSelectorForm = defineDemo(formDemo, formSource)
 export const multiSelectorGhost = defineDemo(ghostDemo, ghostSource)
 export const multiSelectorSearchable = defineDemo(searchableDemo, searchableSource)

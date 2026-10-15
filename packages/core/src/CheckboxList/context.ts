@@ -4,6 +4,9 @@ export interface CheckboxListContext {
   values: Ref<string[] | undefined>
   toggle: (value: string, checked: boolean) => void
   isDisabled: ComputedRef<boolean>
+  disabledReason: ComputedRef<string | undefined>
+  isReadOnly: ComputedRef<boolean>
+  loadingValues: ComputedRef<readonly string[]>
   size: ComputedRef<'sm' | 'md'>
 }
 

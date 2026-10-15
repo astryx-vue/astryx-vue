@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { isDayOutsideSpan, orderRange, resolveWeekStart } from '../composables/useDateRange.js'
 import { addMonths, buildMonthGrid, todayISODate } from '../composables/useMonthGrid.js'
 import Icon from '../Icon/Icon.vue'
-import { formatCalendarMonth, weekdayNames } from '../locale/format.js'
+import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import '../../styles/calendar.css'
 import '../../styles/date-range-input.css'
@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<{
   minRangeSpan?: number
   maxRangeSpan?: number
   weekStartsOn?: WeekStartsOn
+  dateConstraints?: ReadonlyArray<(date: Date) => boolean>
 }>(), {
   monthCount: 2,
   range: null,
@@ -38,7 +39,7 @@ const hover = defineModel<string | null>('hover', { default: null })
 const today = todayISODate()
 const weekStart = computed(() => resolveWeekStart(props.weekStartsOn ?? (locale.value === 'zh-CN' ? 1 : 0)))
 const weekDays = computed(() => {
-  const names = weekdayNames(locale.value, 'narrow')
+  const names = standaloneShortWeekdayNames(locale.value)
   const labels = weekdayNames(locale.value, 'long')
   const start = weekStart.value
   return Array.from({ length: 7 }, (_, index) => ({
@@ -71,10 +72,17 @@ function inSpan(day: string, range: ISODateRange | null): boolean {
   return range != null && day >= range.start && day <= range.end
 }
 
+function dayDate(day: string): Date {
+  const [year, month, date] = day.split('-').map(Number)
+  return new Date(year!, month! - 1, date)
+}
+
 function isDisabled(day: string): boolean {
   if (props.min && day < props.min)
     return true
   if (props.max && day > props.max)
+    return true
+  if (props.dateConstraints?.some(constraint => !constraint(dayDate(day))))
     return true
   return isDayOutsideSpan(props.pending, day, props.minRangeSpan, props.maxRangeSpan)
 }

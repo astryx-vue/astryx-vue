@@ -12,15 +12,17 @@ const emit = defineEmits<{
   (e: 'click', event: MouseEvent): void
 }>()
 
-defineSlots<{
+const slots = defineSlots<{
   default: () => unknown
   startIcon: () => unknown
+  /** Compound menu rows. Used instead of the `menu` array. */
+  menu?: () => unknown
 }>()
 
 const context = inject(breadcrumbContextKey, undefined)
 const variant = computed(() => context?.variant.value ?? 'default')
 const separator = computed(() => context?.separator.value ?? '/')
-const hasMenu = computed(() => props.menu != null)
+const hasMenu = computed(() => props.menu != null || slots.menu != null)
 
 const classes = computed(() => [
   'astryx-breadcrumb-item',
@@ -56,9 +58,12 @@ function handleClick(event: MouseEvent) {
     <DropdownMenu
       v-if="hasMenu"
       :button="{ label: 'Menu', size: menuSize }"
-      :items="menu"
+      :items="slots.menu ? undefined : menu"
       menu-width="max-content"
     >
+      <template v-if="slots.menu" #default>
+        <slot name="menu" />
+      </template>
       <template #trigger="triggerProps">
         <button
           type="button"

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { breadcrumbsDeep, breadcrumbsIcons, breadcrumbsMenu, breadcrumbsSeparators, breadcrumbsVariants } from '../../../../components/demos/breadcrumbs'
+import { breadcrumbsDeep, breadcrumbsIcons, breadcrumbsMenu, breadcrumbsMenuSelection, breadcrumbsSeparators, breadcrumbsVariants } from '../../../../components/demos/breadcrumbs'
 </script>
 
 ## 使用方法
@@ -34,6 +34,8 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 </template>
 ```
 
+路径中间的一项可以打开菜单，用来在同级目的地之间切换。简单列表直接传一个菜单数组。需要勾选或单选时，改用菜单插槽把行写在这一项里面；写了插槽就不再使用数组。这些行从面包屑入口导出，和菜单里的勾选行、单选组是同一批组件，选中一项后的开关行为也相同。
+
 ## 最佳实践
 
 | 指引 | 实践 |
@@ -51,6 +53,8 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 <DemoExample :demo="breadcrumbsDeep" description="五级路径，适合嵌套很深的页面。根项前面放一个首页图标。" locale="zh" title="深层路径" />
 
 <DemoExample :demo="breadcrumbsMenu" description="路径中间的一项可以打开菜单，用来在同级目的地之间切换。" locale="zh" title="菜单项" />
+
+<DemoExample :demo="breadcrumbsMenuSelection" description="这一项用菜单插槽放一组单选。选中一个团队后，面包屑上的名字跟着换成对应团队。" locale="zh" title="选择团队" />
 
 <DemoExample :demo="breadcrumbsVariants" description="默认样式和 supporting 变体放在一起。supporting 更轻，适合紧凑的管理界面。" locale="zh" title="变体" />
 

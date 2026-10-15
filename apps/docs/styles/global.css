@@ -1364,6 +1364,11 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: min(100%, 680px);
 }
 
+.date-preview-host {
+  width: max-content;
+  max-width: 100%;
+}
+
 .input-preview-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));

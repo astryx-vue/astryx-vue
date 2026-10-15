@@ -1,0 +1,26 @@
+<script setup lang="ts">
+import { InputGroup, InputGroupText } from '@astryx-vue/core/InputGroup'
+import { TextInput } from '@astryx-vue/core/TextInput'
+import { ref } from 'vue'
+
+const price = ref('')
+</script>
+
+<template>
+  <div style="width: 320px; max-width: 100%">
+    <InputGroup
+      label="Price"
+      description="Before tax"
+      is-optional
+      :status="{ type: 'error', message: 'Enter an amount' }"
+    >
+      <template #before>
+        <InputGroupText>$</InputGroupText>
+      </template>
+      <TextInput v-model="price" label="Amount" is-label-hidden placeholder="0.00" />
+      <template #after>
+        <InputGroupText>USD</InputGroupText>
+      </template>
+    </InputGroup>
+  </div>
+</template>

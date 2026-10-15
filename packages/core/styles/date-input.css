@@ -118,6 +118,54 @@
     color: var(--astryx-color-text-secondary, #525252);
   }
 
+  .astryx-date-input-native {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .astryx-date-input-native .astryx-date-input-field {
+    color: transparent;
+    caret-color: transparent;
+  }
+
+  .astryx-date-input-native .astryx-date-input-field::-webkit-calendar-picker-indicator {
+    opacity: 0;
+  }
+
+  .astryx-date-input-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .astryx-date-input-overlay[data-placeholder] {
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-date-input-alert {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .astryx-date-input-spinner {
+    flex: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .astryx-date-input-wrapper {
       transition: none;

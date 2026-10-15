@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { breadcrumbsDeep, breadcrumbsIcons, breadcrumbsMenu, breadcrumbsSeparators, breadcrumbsVariants } from '../../../../components/demos/breadcrumbs'
+import { breadcrumbsDeep, breadcrumbsIcons, breadcrumbsMenu, breadcrumbsMenuSelection, breadcrumbsSeparators, breadcrumbsVariants } from '../../../../components/demos/breadcrumbs'
 </script>
 
 ## Usage
@@ -34,6 +34,8 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 </template>
 ```
 
+A crumb in the middle of the trail can open a menu for sibling destinations. A short list is a menu array. Checkbox and radio rows go in the menu slot on that crumb, and the slot replaces the array. Those rows are exported from the breadcrumbs entry and are the same components the menu uses, so a choice opens and closes the same way.
+
 ## Best practices
 
 | Guidance | Practice |
@@ -51,6 +53,8 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 <DemoExample :demo="breadcrumbsDeep" description="A five-level trail for a deeply nested page, with a home icon on the root." locale="en" title="Deep path" />
 
 <DemoExample :demo="breadcrumbsMenu" description="A crumb in the middle of the trail opens a menu for switching between sibling destinations." locale="en" title="Menu item" />
+
+<DemoExample :demo="breadcrumbsMenuSelection" description="This crumb uses the menu slot for a radio group. Choosing a team renames the crumb." locale="en" title="Choose a team" />
 
 <DemoExample :demo="breadcrumbsVariants" description="The default trail next to the supporting variant, which stays quieter in a dense admin page." locale="en" title="Variants" />
 

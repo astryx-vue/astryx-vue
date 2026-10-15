@@ -17,7 +17,7 @@ footer: false
         <td><code>items</code></td>
         <td><code>ContextMenuOption[]</code></td>
         <td>-</td>
-        <td>The data-driven menu content. An entry is an action row, a divider <code>{ type: 'divider' }</code>, or a section <code>{ type: 'section', title, items }</code>; a row that carries <code>items</code> becomes a submenu. Omit it and use the <code>content</code> slot.</td>
+        <td>The data-driven menu content. An entry is an action, a divider, a section, a checkbox row (<code>type: 'checkbox'</code>), or a radio group (<code>type: 'radio'</code>). An action that carries nested entries becomes a submenu. Omit it and use the content slot.</td>
       </tr>
       <tr>
         <td><code>menuWidth</code></td>
@@ -73,7 +73,7 @@ footer: false
       </tr>
       <tr>
         <td><code>content</code></td>
-        <td>The menu content in compound mode, composed from <code>ContextMenuItem</code>, <code>ContextMenuDivider</code>, <code>ContextMenuGroup</code>, and <code>ContextMenuSubMenu</code>. Ignored when <code>items</code> is given.</td>
+        <td>Menu content composed by hand: action rows, dividers, groups, submenus, checkbox rows, and radio groups. This is the custom panel. Ignored when the data array is given.</td>
       </tr>
     </tbody>
   </table>
@@ -152,9 +152,24 @@ Compound mode and data mode render the same row components, so their styling, ke
         <td>A titled group, rendered as <code>role="group"</code> named by its heading. Slot: <code>default</code>.</td>
       </tr>
       <tr>
+        <td><code>ContextMenuCheckboxItem</code></td>
+        <td><code>v-model</code>, <code>label</code>, <code>description</code>, <code>icon</code>, <code>isDisabled</code>, <code>hasCloseOnSelect</code></td>
+        <td>A checkbox row with role <code>menuitemcheckbox</code>. Toggling leaves the menu open. It is the same component as the dropdown menu's checkbox row.</td>
+      </tr>
+      <tr>
+        <td><code>ContextMenuRadioGroup</code></td>
+        <td><code>v-model</code>, <code>label</code>, <code>hasCloseOnSelect</code></td>
+        <td>A radio group. Choosing a value closes the menu. <code>label</code> is the group's accessible name.</td>
+      </tr>
+      <tr>
+        <td><code>ContextMenuRadioItem</code></td>
+        <td><code>value</code>, <code>label</code>, <code>description</code>, <code>icon</code>, <code>isDisabled</code></td>
+        <td>One radio option. It must sit inside a radio group, and its role is <code>menuitemradio</code>.</td>
+      </tr>
+      <tr>
         <td><code>ContextMenuSubMenu</code></td>
-        <td><code>icon</code>, <code>label</code>, <code>description</code>, <code>isDisabled</code>, <code>items</code></td>
-        <td>A row that reveals a nested menu, carrying <code>aria-haspopup="menu"</code> and <code>aria-expanded</code>. Use <code>items</code> in data mode or the <code>default</code> slot in compound mode; emits <code>openChange</code>.</td>
+        <td><code>icon</code>, <code>label</code>, <code>description</code>, <code>isDisabled</code>, <code>items</code>, <code>hasSpinner</code>, <code>menuWidth</code>, <code>presentation</code></td>
+        <td>A row that reveals the next level. By default a wide screen flies out and a compact touch surface replaces the current rows with a Back row. Either form can be forced. <code>hasSpinner</code> replaces the caret, and <code>menuWidth</code> sizes the flyout. Emits <code>openChange</code>.</td>
       </tr>
     </tbody>
   </table>

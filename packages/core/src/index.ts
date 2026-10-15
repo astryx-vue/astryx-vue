@@ -52,10 +52,19 @@ export type {
   BottomSheetSnapPoint,
   BottomSheetState,
 } from './BottomSheet/index.js'
-export { BreadcrumbItem, Breadcrumbs } from './Breadcrumbs/index.js'
+export {
+  BreadcrumbItem,
+  BreadcrumbMenuCheckboxItem,
+  BreadcrumbMenuRadioGroup,
+  BreadcrumbMenuRadioItem,
+  Breadcrumbs,
+} from './Breadcrumbs/index.js'
 export type {
   BreadcrumbItemProps,
+  BreadcrumbMenuCheckboxItemProps,
   BreadcrumbMenuOption,
+  BreadcrumbMenuRadioGroupProps,
+  BreadcrumbMenuRadioItemProps,
   BreadcrumbsProps,
   BreadcrumbsVariant,
 } from './Breadcrumbs/index.js'
@@ -76,7 +85,14 @@ export type {
 export { ButtonGroup } from './ButtonGroup/index.js'
 export type { ButtonGroupOrientation, ButtonGroupProps, ButtonGroupSlots } from './ButtonGroup/index.js'
 export { Calendar } from './Calendar/index.js'
-export type { CalendarEmits, CalendarProps, CalendarRangeValue, CalendarSlots } from './Calendar/index.js'
+export type {
+  CalendarEmits,
+  CalendarHandle,
+  CalendarHandleRef,
+  CalendarProps,
+  CalendarRangeValue,
+  CalendarSlots,
+} from './Calendar/index.js'
 export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
 export { Carousel } from './Carousel/index.js'
@@ -306,17 +322,22 @@ export type {
 export * from './composables/index.js'
 export {
   ContextMenu,
+  ContextMenuCheckboxItem,
   ContextMenuDivider,
   ContextMenuGroup,
   ContextMenuItem,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
   ContextMenuSubMenu,
   useContextMenu,
   useContextMenuSize,
 } from './ContextMenu/index.js'
 export type {
+  ContextMenuCheckboxData,
   ContextMenuDividerData,
   ContextMenuDividerProps,
   ContextMenuEmits,
+  ContextMenuEntry,
   ContextMenuGroupProps,
   ContextMenuGroupSlots,
   ContextMenuItemData,
@@ -328,6 +349,8 @@ export type {
   ContextMenuOption,
   ContextMenuPresentation,
   ContextMenuProps,
+  ContextMenuRadioData,
+  ContextMenuRadioOptionData,
   ContextMenuSection,
   ContextMenuSize,
   ContextMenuSlots,
@@ -343,6 +366,7 @@ export type {
   DateInputEmits,
   DateInputFormat,
   DateInputFormatName,
+  DateInputNativePicker,
   DateInputPresentation,
   DateInputProps,
   DateInputSlots,
@@ -369,17 +393,26 @@ export { Divider } from './Divider/index.js'
 export type { DividerOrientation, DividerProps, DividerVariant } from './Divider/index.js'
 export {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuDivider,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSubMenu,
   useDropdownMenuContext,
+  useDropdownMenuRadioGroup,
 } from './DropdownMenu/index.js'
 export type {
   DropdownMenuButtonProps,
+  DropdownMenuCheckboxData,
+  DropdownMenuCheckboxItemEmits,
+  DropdownMenuCheckboxItemProps,
+  DropdownMenuCheckboxItemSlots,
   DropdownMenuContextValue,
   DropdownMenuDividerData,
   DropdownMenuEmits,
+  DropdownMenuEntry,
   DropdownMenuGroupProps,
   DropdownMenuGroupSlots,
   DropdownMenuItemData,
@@ -390,9 +423,19 @@ export type {
   DropdownMenuOption,
   DropdownMenuPresentation,
   DropdownMenuProps,
+  DropdownMenuRadioData,
+  DropdownMenuRadioGroupContext,
+  DropdownMenuRadioGroupEmits,
+  DropdownMenuRadioGroupProps,
+  DropdownMenuRadioGroupSlots,
+  DropdownMenuRadioItemProps,
+  DropdownMenuRadioItemSlots,
+  DropdownMenuRadioOptionData,
   DropdownMenuSection,
   DropdownMenuSize,
   DropdownMenuSlots,
+  DropdownMenuSubMenuEmits,
+  DropdownMenuSubMenuPresentation,
   DropdownMenuSubMenuProps,
   DropdownMenuSubMenuSlots,
   DropdownMenuTriggerProps,
@@ -502,8 +545,15 @@ export type {
   IndicatorSize,
   IndicatorState,
 } from './Indicator/index.js'
-export { InputGroup } from './InputGroup/index.js'
-export type { InputGroupContext, InputGroupProps, InputGroupSize, InputGroupSlots } from './InputGroup/index.js'
+export { InputGroup, InputGroupText } from './InputGroup/index.js'
+export type {
+  InputGroupContext,
+  InputGroupProps,
+  InputGroupSize,
+  InputGroupSlots,
+  InputGroupTextProps,
+  InputGroupTextSlots,
+} from './InputGroup/index.js'
 export { Kbd } from './Kbd/index.js'
 export type { KbdKeyAlias, KbdKeyName, KbdProps, KbdSpecialKey } from './Kbd/index.js'
 export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from './Layout/index.js'
@@ -607,16 +657,21 @@ export type {
 export { flattenOptions, MultiSelector, SELECT_ALL_VALUE } from './MultiSelector/index.js'
 export type {
   MultiSelectorCheckboxPosition,
+  MultiSelectorCreateChange,
   MultiSelectorDivider,
   MultiSelectorEmits,
+  MultiSelectorHandle,
+  MultiSelectorHandleRef,
   MultiSelectorOption,
   MultiSelectorOptionData,
   MultiSelectorPresentation,
   MultiSelectorProps,
   MultiSelectorSection,
+  MultiSelectorSelectedItem,
   MultiSelectorSize,
   MultiSelectorSlots,
   MultiSelectorStatus,
+  MultiSelectorStatusVariant,
   MultiSelectorTriggerDisplay,
   MultiSelectorVariant,
 } from './MultiSelector/index.js'
@@ -758,6 +813,7 @@ export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
   SelectorEntry,
+  SelectorIndicatorPosition,
   SelectorOption,
   SelectorOptionInput,
   SelectorPresentation,

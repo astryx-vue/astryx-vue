@@ -3,12 +3,14 @@ import type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePres
 import { computed, shallowRef, useId } from 'vue'
 import { applyRangeClick, formatDateRange, isRangeWithinSpan } from '../composables/useDateRange.js'
 import { addMonths, todayISODate } from '../composables/useMonthGrid.js'
+import { usePendingChange } from '../composables/usePendingChange.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
+import Spinner from '../Spinner/Spinner.vue'
 import RangeCalendar from './RangeCalendar.vue'
 import '../../styles/bordered-control.css'
 import '../../styles/date-range-input.css'
@@ -22,6 +24,7 @@ const props = withDefaults(defineProps<Omit<DateRangeInputProps, 'modelValue'>>(
   hasClear: true,
   size: 'md',
   statusVariant: 'attached',
+  isLoading: false,
 })
 
 const emit = defineEmits<DateRangeInputEmits>()
@@ -34,14 +37,21 @@ const open = shallowRef(false)
 const pending = shallowRef<string | null>(null)
 const today = todayISODate()
 const cursor = shallowRef({ year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) })
+const action = usePendingChange(() => props.changeAction)
+const busy = computed(() => props.isLoading || action.busy.value)
+const locked = computed(() => props.isDisabled || busy.value)
+const visibleMonths = computed(() => props.numberOfMonths ?? props.monthCount)
 
 const display = computed(() => formatDateRange(model.value, locale.value))
 const placeholder = computed(() => props.placeholder ?? messages.value.dateRangeInput.placeholder)
 const clearLabel = computed(() => props.clearLabel ?? messages.value.dateRangeInput.clear(props.label))
 
 function commit(value: DateRange | null): void {
+  if (locked.value)
+    return
   model.value = value
   emit('change', value)
+  void action.run(value)
 }
 
 function onSelect(day: string): void {
@@ -90,30 +100,32 @@ function clear(): void {
 <template>
   <Field
     :label="label" :input-id="inputId" :description="description" :width="width"
-    :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
-    :status="status" :status-variant="statusVariant"
+    :is-label-hidden="isLabelHidden" :is-disabled="locked" :is-optional="isOptional" :is-required="isRequired"
+    :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
   >
     <template #default="field">
       <Popover
-        :is-open="open" :is-enabled="!isDisabled" placement="below" alignment="start"
+        :is-open="open" :is-enabled="!locked" placement="below" alignment="start"
         :padding="0" width="min(40rem, calc(100vw - 16px))" :has-close-button="false" :is-modal="false"
         role="dialog" :label="messages.dateRangeInput.dialogLabel" @open-change="onOpenChange"
       >
         <div
           class="astryx-date-range-input astryx-bordered-control" :data-size="size"
-          :data-status="status?.type" :data-disabled="isDisabled || undefined"
+          :data-status="status?.type" :data-disabled="locked || undefined"
         >
           <button
-            :id="inputId" type="button" class="astryx-date-range-trigger" :disabled="isDisabled"
+            :id="inputId" type="button" class="astryx-date-range-trigger" :disabled="locked"
             :aria-describedby="field.describedBy" :aria-invalid="status?.type === 'error' || undefined"
+            :aria-busy="busy || undefined" :aria-required="isRequired || undefined"
           >
             <Icon class="astryx-date-range-icon" icon="calendar" size="sm" />
             <span class="astryx-date-range-value" :data-placeholder="!display || undefined">{{ display || placeholder }}</span>
           </button>
-          <IconButton v-if="hasClear && model && !isDisabled" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel" @click="clear">
+          <IconButton v-if="hasClear && model && !locked" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel" @click="clear">
             <FieldIcon type="clear" />
           </IconButton>
-          <FieldIcon v-if="status" :type="status.type" />
+          <Spinner v-if="busy" size="sm" :aria-label="messages.dateInput.loading" />
+          <FieldIcon v-else-if="status" :type="status.type" />
         </div>
         <template #content>
           <div class="astryx-date-range-popover">
@@ -127,8 +139,8 @@ function clear(): void {
                 </button>
               </div>
               <RangeCalendar
-                :cursor-year="cursor.year" :cursor-month="cursor.month" :month-count="monthCount"
-                :range="model" :pending="pending" :min="min" :max="max"
+                :cursor-year="cursor.year" :cursor-month="cursor.month" :month-count="visibleMonths"
+                :range="model" :pending="pending" :min="min" :max="max" :date-constraints="dateConstraints"
                 :min-range-span="minRangeSpan" :max-range-span="maxRangeSpan" :week-starts-on="weekStartsOn"
                 @select="onSelect" @shift="onShift"
               />
