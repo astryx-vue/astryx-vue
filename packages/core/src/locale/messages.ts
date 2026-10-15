@@ -9,6 +9,7 @@ import type { CommandPaletteMessages } from './messages/command-palette.js'
 import type { DateInputMessages } from './messages/date-input.js'
 import type { DateRangeInputMessages } from './messages/date-range-input.js'
 import type { DateTimeInputMessages } from './messages/date-time-input.js'
+import type { DropdownMenuMessages } from './messages/dropdown-menu.js'
 import type { FileInputMessages } from './messages/file-input.js'
 import type { InputMessages } from './messages/input.js'
 import type { LayoutMessages } from './messages/layout.js'
@@ -41,6 +42,7 @@ import { commandPaletteMessages } from './messages/command-palette.js'
 import { dateInputMessages } from './messages/date-input.js'
 import { dateRangeInputMessages } from './messages/date-range-input.js'
 import { dateTimeInputMessages } from './messages/date-time-input.js'
+import { dropdownMenuMessages } from './messages/dropdown-menu.js'
 import { fileInputMessages } from './messages/file-input.js'
 import { inputMessages } from './messages/input.js'
 import { layoutMessages } from './messages/layout.js'
@@ -74,6 +76,7 @@ export interface AstryxMessages {
   dateInput: DateInputMessages
   dateRangeInput: DateRangeInputMessages
   dateTimeInput: DateTimeInputMessages
+  dropdownMenu: DropdownMenuMessages
   fileInput: FileInputMessages
   input: InputMessages
   layout: LayoutMessages
@@ -109,6 +112,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateInput: dateInputMessages.en,
     dateRangeInput: dateRangeInputMessages.en,
     dateTimeInput: dateTimeInputMessages.en,
+    dropdownMenu: dropdownMenuMessages.en,
     fileInput: fileInputMessages.en,
     input: inputMessages.en,
     layout: layoutMessages.en,
@@ -142,6 +146,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     dateInput: dateInputMessages['zh-CN'],
     dateRangeInput: dateRangeInputMessages['zh-CN'],
     dateTimeInput: dateTimeInputMessages['zh-CN'],
+    dropdownMenu: dropdownMenuMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
     input: inputMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],

@@ -6,6 +6,7 @@ import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useLongPress } from '../composables/useLongPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
@@ -98,10 +99,19 @@ const longPress = useLongPress({
   },
 })
 
+const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen, ADAPTIVE_QUERY)
+
 useDismiss({
   container: panel,
   isEnabled: isOpen,
   onDismiss: () => closeMenu(),
+  onEscape: () => {
+    if (drillIn.value.viewStack.length > 0) {
+      drillIn.value.pop()
+      return
+    }
+    closeMenu({ restoreFocus: true })
+  },
 })
 
 function formatSize(value: number | string): string {
@@ -200,8 +210,13 @@ function onSelect(item: ContextMenuItemData, event: MouseEvent): void {
   emit('select', item, event)
 }
 
+function assignHost(element: unknown): void {
+  host.value = element instanceof HTMLElement ? element : null
+}
+
 provide(contextMenuContextKey, {
   closeMenu,
+  drillIn,
   isOpen,
   menuLabel: computed(() => props.label),
   menuSize: computed(() => props.size),
@@ -293,12 +308,15 @@ defineExpose({
         @keydown="nav.handleKeyDown"
         @pointerdown="menuPress.onPointerDown"
       >
-        <ContextMenuItems
-          v-if="items != null && !isSheet"
-          :items="items"
-          @select="onSelect"
-        />
-        <slot v-else-if="!isSheet" name="content" />
+        <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+          <ContextMenuItems
+            v-if="items != null"
+            :items="items"
+            @select="onSelect"
+          />
+          <slot v-else name="content" />
+        </div>
+        <div v-if="!isSheet" :ref="assignHost" class="astryx-dropdown-menu-tree" />
       </div>
     </Transition>
   </Teleport>
@@ -308,11 +326,16 @@ defineExpose({
     :label="label"
     @update:is-open="onSheetOpen"
   >
-    <ContextMenuItems
-      v-if="items != null"
-      :items="items"
-      @select="onSelect"
-    />
-    <slot v-else name="content" />
+    <div class="astryx-context-menu-sheet" role="menu" :aria-label="label">
+      <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+        <ContextMenuItems
+          v-if="items != null"
+          :items="items"
+          @select="onSelect"
+        />
+        <slot v-else name="content" />
+      </div>
+      <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
+    </div>
   </BottomSheet>
 </template>

@@ -12,6 +12,11 @@ export interface UseDismissOptions {
   enableEscape?: Ref<boolean>
   /** 关闭回调 */
   onDismiss: () => void
+  /**
+   * Escape 单独处理。不传时和点击外部走同一个回调。
+   * 菜单钻进子层时，Escape 先退一层，点击外部仍整层关闭。
+   */
+  onEscape?: () => void
 }
 
 // 全局 Escape 层级栈：最后一个（最内层）处理 Escape
@@ -36,6 +41,13 @@ export function useDismiss(options: UseDismissOptions): void {
   } = options
 
   let isAttached = false
+
+  function dismissFromEscape(): void {
+    if (options.onEscape != null)
+      options.onEscape()
+    else
+      onDismiss()
+  }
 
   function onClickOutside(event: PointerEvent): void {
     if (!isEnabled.value)
@@ -63,9 +75,9 @@ export function useDismiss(options: UseDismissOptions): void {
     if (event.key === 'Escape') {
       // 只有栈顶（最内层）的浮层处理 Escape
       const topHandler = escapeStack[escapeStack.length - 1]
-      if (topHandler === onDismiss) {
+      if (topHandler === dismissFromEscape) {
         event.preventDefault()
-        onDismiss()
+        dismissFromEscape()
       }
     }
   }
@@ -86,7 +98,7 @@ export function useDismiss(options: UseDismissOptions): void {
 
     // 将当前 dismiss 处理器推入 Escape 栈
     if (enableEscape.value) {
-      escapeStack.push(onDismiss)
+      escapeStack.push(dismissFromEscape)
     }
   }
 
@@ -99,7 +111,7 @@ export function useDismiss(options: UseDismissOptions): void {
     document.removeEventListener('keydown', onEscapeKey, true)
 
     // 从 Escape 栈中移除
-    const index = escapeStack.indexOf(onDismiss)
+    const index = escapeStack.indexOf(dismissFromEscape)
     if (index !== -1) {
       escapeStack.splice(index, 1)
     }
