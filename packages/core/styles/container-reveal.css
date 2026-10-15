@@ -1,0 +1,104 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-reveal {
+    --_hover-delay: 0s;
+    --_reveal-opacity: 0;
+    --_reveal-position: absolute;
+    --_conceal-opacity: 1;
+  }
+
+  @media (hover: hover) {
+    .astryx-reveal:hover {
+      --_reveal-opacity: 1;
+      --_reveal-position: static;
+      --_conceal-opacity: 0;
+    }
+
+    .astryx-reveal--inactive:hover {
+      --_reveal-opacity: 0;
+      --_reveal-position: absolute;
+      --_conceal-opacity: 1;
+    }
+  }
+
+  .astryx-reveal:focus-within,
+  .astryx-reveal--active {
+    --_reveal-opacity: 1;
+    --_reveal-position: static;
+  }
+
+  @media (any-pointer: coarse) {
+    .astryx-reveal {
+      --_reveal-opacity: 1;
+      --_reveal-position: static;
+    }
+  }
+
+  .astryx-reveal__content,
+  .astryx-reveal__content--preserve,
+  .astryx-reveal__conceal,
+  .astryx-reveal__conceal--preserve {
+    transition-property: opacity, position;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition-delay: var(--_reveal-delay, 0s);
+    transition-behavior: allow-discrete;
+  }
+
+  @media (hover: hover) {
+    .astryx-reveal:hover {
+      --_reveal-delay: var(--_hover-delay);
+    }
+  }
+
+  .astryx-reveal:focus-within .astryx-reveal__content,
+  .astryx-reveal:focus-within .astryx-reveal__content--preserve,
+  .astryx-reveal--active .astryx-reveal__content,
+  .astryx-reveal--active .astryx-reveal__content--preserve {
+    transition-delay: 0s;
+  }
+
+  .astryx-reveal__content,
+  .astryx-reveal__content--preserve {
+    opacity: var(--_reveal-opacity, 1);
+  }
+
+  .astryx-reveal__content {
+    position: var(--_reveal-position, static);
+  }
+
+  .astryx-reveal__conceal,
+  .astryx-reveal__conceal--preserve {
+    opacity: var(--_conceal-opacity, 1);
+  }
+
+  .astryx-reveal__shown {
+    position: static;
+    opacity: 1;
+  }
+
+  .astryx-reveal__hidden {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .astryx-reveal__hidden--preserve {
+    opacity: 0;
+  }
+
+  .astryx-reveal:focus-within .astryx-reveal__hidden,
+  .astryx-reveal:focus-within .astryx-reveal__hidden--preserve {
+    position: static;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-reveal__content,
+    .astryx-reveal__content--preserve,
+    .astryx-reveal__conceal,
+    .astryx-reveal__conceal--preserve {
+      transition-duration: 0.01s;
+    }
+  }
+}

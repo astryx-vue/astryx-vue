@@ -152,6 +152,36 @@
     opacity: 0.4;
   }
 
+  .astryx-pagination-input {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    color: var(--astryx-color-text-secondary);
+    white-space: nowrap;
+  }
+
+  .astryx-pagination-input-field {
+    box-sizing: border-box;
+    width: var(--astryx-size-element-md, 36px);
+    height: var(--astryx-size-element-md, 36px);
+    padding: 0;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #d4d4d4);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: center;
+  }
+
+  .astryx-pagination--sm .astryx-pagination-input-field {
+    width: var(--astryx-size-element-sm, 28px);
+    height: var(--astryx-size-element-sm, 28px);
+  }
+
+  .astryx-pagination-input-field:disabled {
+    opacity: 0.4;
+  }
+
   .astryx-pagination-size-changer .astryx-selector {
     width: 7.5rem;
   }

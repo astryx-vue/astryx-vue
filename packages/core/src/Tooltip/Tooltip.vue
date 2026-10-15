@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TooltipProps } from './types.js'
-import { computed, onBeforeUnmount, onMounted, onUpdated, ref, useId, watch } from 'vue'
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, onUpdated, ref, useAttrs, useId, watch } from 'vue'
 import { isFocusable } from '../layer/focus.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import '../../styles/tooltip.css'
 
-defineOptions({ name: 'AstryxTooltip' })
+defineOptions({ name: 'AstryxTooltip', inheritAttrs: false })
 const props = withDefaults(defineProps<TooltipProps>(), {
   content: '',
   placement: 'above',
@@ -18,9 +18,11 @@ const props = withDefaults(defineProps<TooltipProps>(), {
   hasHoverIndication: 'auto',
   isOpen: undefined,
   isDefaultOpen: false,
+  anchorsOnSelf: false,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
-
+const attrs = useAttrs()
+const instance = getCurrentInstance()
 const HOVER_BRIDGE_DELAY = 100
 const GAP = 4
 const ACTION_TAGS = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']
@@ -181,6 +183,10 @@ function resolveTrigger(): HTMLElement | null {
   const wrapper = wrapperRef.value
   if (!wrapper)
     return null
+  if (props.anchorsOnSelf) {
+    isTextTrigger.value = false
+    return wrapper
+  }
   const child = wrapper.firstElementChild as HTMLElement | null
   isTextTrigger.value = child == null && (wrapper.textContent ?? '').trim() !== ''
   if (child)
@@ -193,6 +199,10 @@ function resolveTrigger(): HTMLElement | null {
 }
 
 function bindTrigger(): void {
+  if (props.anchorsOnSelf) {
+    const el = instance?.vnode.el
+    wrapperRef.value = el instanceof HTMLElement ? el : null
+  }
   const next = resolveTrigger()
   if (next === trigger)
     return
@@ -270,12 +280,15 @@ onBeforeUnmount(() => {
 
 <template>
   <span
+    v-if="!anchorsOnSelf"
     ref="wrapperRef"
+    v-bind="attrs"
     class="astryx-tooltip-trigger"
     :class="{ 'astryx-tooltip-trigger--text': isTextTrigger, 'astryx-tooltip-trigger--indicated': showIndication }"
   >
     <slot />
   </span>
+  <slot v-else />
   <Teleport to="body">
     <!-- eslint-disable-next-line vue-a11y/mouse-events-have-key-events, vue-a11y/no-static-element-interactions -- 气泡上的鼠标事件仅用于指针移入气泡时保持显示；键盘焦点由触发元素的 focusin / focusout 处理。 -->
     <div

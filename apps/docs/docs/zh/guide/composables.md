@@ -36,6 +36,10 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `snapToGraphemeBoundary` | 把偏移对齐到字素边界，给流式文本用。 |
 | `useChatStreamScroll` | 对话记录贴底或停住。减少动态效果时，弹簧滚动会改成直接跳。 |
 | `useChatNewMessages` | 读者没贴在底部时，标出新长出来的消息。 |
+| `useKeyboardHint` | 一组方向键控件第一次被键盘点进来时，在当前项旁边短暂提示怎么移动。 |
+| `useImageMode` | 按图片亮度判断该用深色还是浅色前景。采样失败时返回 `fallback`。 |
+| `useContainerReveal` | 悬停或键盘焦点时才露出行内操作。返回容器和内容上的 class。 |
+| `useMenuPress` | 菜单按下后，吞掉浏览器补发的那一下点击。`resetMenuPress` 用于卸载和测试。 |
 
 `useClipboard` 还有一个旧名字 `useCopyToClipboard`，从 `@astryx-vue/core` 和 `@astryx-vue/core/Code` 都能引入，类型是同一套。
 

@@ -40,7 +40,7 @@ export { Banner } from './Banner/index.js'
 export type { BannerContainer, BannerEmits, BannerProps, BannerSlots, BannerStatus } from './Banner/index.js'
 export { Blockquote } from './Blockquote/index.js'
 export type { BlockquoteProps } from './Blockquote/index.js'
-export { BottomSheet } from './BottomSheet/index.js'
+export { BottomSheet, BottomSheetSwitcher } from './BottomSheet/index.js'
 export type {
   BottomSheetEmits,
   BottomSheetHeight,
@@ -483,10 +483,14 @@ export { Heading } from './Heading/index.js'
 export type {
   HeadingColor,
   HeadingDisplay,
+  HeadingJustify,
   HeadingLevel,
   HeadingProps,
+  HeadingTruncateTooltip,
   HeadingType,
   HeadingWeight,
+  HeadingWordBreak,
+  HeadingWrap,
 } from './Heading/index.js'
 export { HoverCard } from './HoverCard/index.js'
 export type {
@@ -591,6 +595,10 @@ export type {
   ItemLayout,
   ItemProps,
   ItemSlots,
+  ItemSwipeAction,
+  ItemSwipeActions,
+  ItemSwipeBehavior,
+  ItemSwipeSide,
   ItemTarget,
   ItemText,
   ListDensity,
@@ -766,7 +774,7 @@ export type {
   PowerSearchStatus,
 } from './PowerSearch/index.js'
 export { ProgressBar } from './ProgressBar/index.js'
-export type { ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './ProgressBar/index.js'
+export type { ProgressBarMark, ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './ProgressBar/index.js'
 export { Radio, RadioGroup } from './Radio/index.js'
 export type {
   RadioChangeEvent,
@@ -1011,8 +1019,10 @@ export type {
   TextAs,
   TextColor,
   TextDisplay,
+  TextJustify,
   TextProps,
   TextSize,
+  TextTruncateTooltip,
   TextType,
   TextWeight,
   TextWordBreak,
@@ -1157,9 +1167,11 @@ export type {
   TreeListVariant,
   UseTreeFocusOptions,
 } from './TreeList/index.js'
-export { Typeahead } from './Typeahead/index.js'
+export { BaseTypeahead, Typeahead, TypeaheadItem } from './Typeahead/index.js'
 export type {
+  BaseTypeaheadProps,
   TypeaheadEmits,
+  TypeaheadItemProps,
   TypeaheadProps,
   TypeaheadSize,
   TypeaheadSlots,

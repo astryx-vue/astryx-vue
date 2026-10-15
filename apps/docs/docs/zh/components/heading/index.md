@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { headingCardGrid, headingHierarchy, headingTruncation } from '../../../../components/demos/heading'
+import { headingCardGrid, headingHierarchy, headingOutline, headingTruncation } from '../../../../components/demos/heading'
 </script>
 
 ## 使用方法
@@ -57,7 +57,14 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 <DemoExample
   :demo="headingTruncation"
-  description="在有限宽度里把标题截成一行或两行，并以省略号结尾。"
+  description="在有限宽度里把标题截成一行或两行，并以省略号结尾。截断后悬停可读全文。"
   locale="zh"
   title="截断"
+/>
+
+<DemoExample
+  :demo="headingOutline"
+  description="视觉层级和读屏层级可以分开。删除线和对齐跟着标题走。"
+  locale="zh"
+  title="大纲与对齐"
 />

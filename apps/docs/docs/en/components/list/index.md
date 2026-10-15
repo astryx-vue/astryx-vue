@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { listBasic, listBulleted, listMessages, listSteps } from '../../../../components/demos/list'
+import { listBasic, listBulleted, listMessages, listSteps, listSwipe } from '../../../../components/demos/list'
 </script>
 
 ## Usage
@@ -83,4 +83,11 @@ The package also exports the more general `Item` primitive. `ListItem` is that p
   description="Numbered step-by-step instructions using decimal list markers."
   locale="en"
   title="Ordered steps"
+/>
+
+<DemoExample
+  :demo="listSwipe"
+  description="A touch drag reveals Archive. A mouse drag does not start, so the same action stays in the row."
+  locale="en"
+  title="Swipe actions"
 />

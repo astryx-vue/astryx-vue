@@ -341,4 +341,57 @@ describe('usePagination', () => {
     page.value = 20
     expect(pageNumbers.value).toEqual([1, -1, 18, 19, 20])
   })
+
+  it('jumps by step and clamps on the last page', () => {
+    const page = ref(2)
+    const pageSize = ref(10)
+    const total = ref(100)
+    const onPageChange = vi.fn()
+    const { next, previous, first, last } = usePagination({
+      page,
+      pageSize,
+      total,
+      step: 3,
+      onPageChange,
+    })
+
+    next()
+    expect(onPageChange).toHaveBeenLastCalledWith(5)
+    page.value = 9
+    next()
+    expect(onPageChange).toHaveBeenLastCalledWith(10)
+    page.value = 4
+    previous()
+    expect(onPageChange).toHaveBeenLastCalledWith(1)
+    last()
+    expect(onPageChange).toHaveBeenLastCalledWith(10)
+    page.value = 10
+    first()
+    expect(onPageChange).toHaveBeenLastCalledWith(1)
+  })
+
+  it('walks forward without a total while hasMore is true', () => {
+    const page = ref(1)
+    const pageSize = ref(10)
+    const total = ref(0)
+    const hasMore = ref(true)
+    const onPageChange = vi.fn()
+    const state = usePagination({
+      page,
+      pageSize,
+      total,
+      hasMore,
+      onPageChange,
+    })
+
+    expect(state.isCursor.value).toBe(true)
+    expect(state.canNext.value).toBe(true)
+    expect(state.pageNumbers.value).toEqual([])
+    state.next()
+    expect(onPageChange).toHaveBeenCalledWith(2)
+    state.last()
+    expect(onPageChange).toHaveBeenCalledTimes(1)
+    hasMore.value = false
+    expect(state.canNext.value).toBe(false)
+  })
 })

@@ -1,5 +1,5 @@
 /** 上一页和下一页之间显示什么。 */
-export type PaginationVariant = 'pages' | 'count' | 'compact' | 'dots' | 'none'
+export type PaginationVariant = 'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'
 
 /** 控件尺寸。 */
 export type PaginationSize = 'sm' | 'md'
@@ -18,10 +18,37 @@ export interface PaginationProps {
   /**
    * 中间区域的形态。
    * `pages` 是页码，`count` 是「起–止 / 总数」，`compact` 是「第几页 / 共几页」，
-   * `dots` 是圆点，`none` 只留上一页和下一页。
+   * `dots` 是圆点，`input` 是可输入的页码，`none` 只留上一页和下一页。
    * @default 'pages'
    */
   variant?: PaginationVariant
+  /**
+   * `pages` 形态下，当前页两侧各留几个页码。不传时宽容器是 1，窄容器会再收一档。
+   */
+  siblingCount?: number
+  /**
+   * 上一页 / 下一页每次跳几页。越过边界时停在第一页或最后一页。
+   * @default 1
+   */
+  step?: number
+  /**
+   * 总数还不知道时，后面是否还有内容。`total` 大于 0 时以总条目数为准，这个值不再生效。
+   */
+  hasMore?: boolean
+  /**
+   * `input` 形态里，输入框前面的名词。不传时用当前语言的「Page」或「页」。
+   */
+  pageLabel?: string
+  /**
+   * 是否在上一页 / 下一页外侧放跳到首尾的按钮。
+   * 不传时只在 `input` 形态、并且总页数已知时显示。
+   * `null` 和缺省是同一件事。布尔属性缺省会被当成 false，所以这里用 null 表示没指定。
+   */
+  hasFirstLast?: boolean | null
+  /**
+   * 页码已经提交之后再跑的动作。控件会在它结束前标成忙碌，失败也不会把页码改回去。
+   */
+  changeAction?: (page: number) => void | Promise<void>
   /**
    * 控件高度。
    * @default 'md'

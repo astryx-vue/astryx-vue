@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints, bottomSheetSwitcher } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## 使用方法
@@ -114,6 +114,13 @@ const isOpen = ref(false)
   description="单选列表在底部面板里打开。"
   locale="zh"
   title="单选面板"
+/>
+
+<DemoExample
+  :demo="bottomSheetSwitcher"
+  description="结账分成两张底栏，共用一个对话框。换页时遮罩不闪。"
+  locale="zh"
+  title="多步切换"
 />
 
 ## 无障碍

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { listBasic, listBulleted, listMessages, listSteps } from '../../../../components/demos/list'
+import { listBasic, listBulleted, listMessages, listSteps, listSwipe } from '../../../../components/demos/list'
 </script>
 
 ## 使用方法
@@ -83,4 +83,11 @@ import { List, ListItem } from '@astryx-vue/core/List'
   description="用数字标出逐步说明。"
   locale="zh"
   title="有序步骤"
+/>
+
+<DemoExample
+  :demo="listSwipe"
+  description="触摸横滑露出归档。鼠标不会开始这次拖动，所以同一操作还要留在行里。"
+  locale="zh"
+  title="横滑操作"
 />

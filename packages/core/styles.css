@@ -26,6 +26,7 @@
 @import './styles/collapsible.css';
 @import './styles/command-palette.css';
 @import './styles/complex-selector.css';
+@import './styles/container-reveal.css';
 @import './styles/context-menu.css';
 @import './styles/date-range-input.css';
 @import './styles/date-time-input.css';
@@ -42,6 +43,7 @@
 @import './styles/hover-card.css';
 @import './styles/icon.css';
 @import './styles/kbd.css';
+@import './styles/keyboard-hint.css';
 @import './styles/layout.css';
 @import './styles/lightbox.css';
 @import './styles/link.css';

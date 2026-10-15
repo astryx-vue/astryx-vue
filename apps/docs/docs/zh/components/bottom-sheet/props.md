@@ -134,6 +134,24 @@ footer: false
   </table>
 </div>
 
+## BottomSheetSwitcher
+
+多步流程共用一个对话框。当前页用 `v-model:active-sheet` 指向子级 `BottomSheet` 的 `sheetId`。换页时遮罩留着，上一张会短暂留在下面并对齐高度。关掉时把 `activeSheet` 设为 `null`。
+
+<div class="component-api-table" role="region" aria-label="BottomSheetSwitcher 属性" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>activeSheet</code></td><td><code>string | null</code></td><td><code>null</code></td><td>当前那一张的 <code>sheetId</code>。用 <code>v-model:active-sheet</code> 绑定。</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>当前底栏的 <code>label</code></td><td>整段流程的无障碍名。</td></tr>
+      <tr><td><code>purpose</code></td><td><code>BottomSheetPurpose</code></td><td>当前底栏的 <code>purpose</code></td><td>整段流程怎么被关掉。</td></tr>
+      <tr><td><code>hasScrim</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否给整段流程一块遮罩。换页时遮罩留着。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+子级 `BottomSheet` 加上 `sheetId` 后不再自己打开对话框，由切换器决定哪一张可见。
+
 ## 原生属性
 
 根元素是面板的 `<div>`（类名 <code>astryx-bottom-sheet</code>），它被包裹在一个固定的 <code>&lt;dialog&gt;</code> 里。

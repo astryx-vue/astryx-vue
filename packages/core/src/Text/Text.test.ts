@@ -65,8 +65,9 @@ describe('text', () => {
       slots: { default: 'Long text' },
     })
 
-    expect(wrapper.classes()).toContain('astryx-text--truncate-multi')
-    expect(wrapper.classes()).toContain('astryx-text--block')
+    const text = wrapper.get('.astryx-text')
+    expect(text.classes()).toContain('astryx-text--truncate-multi')
+    expect(text.classes()).toContain('astryx-text--block')
   })
 
   it('forces a block box when maxLines is 1 so the ellipsis has a width', () => {
@@ -75,7 +76,20 @@ describe('text', () => {
       slots: { default: 'Long text' },
     })
 
-    expect(wrapper.classes()).toContain('astryx-text--truncate-single')
-    expect(wrapper.classes()).toContain('astryx-text--block')
+    const text = wrapper.get('.astryx-text')
+    expect(text.classes()).toContain('astryx-text--truncate-single')
+    expect(text.classes()).toContain('astryx-text--block')
+    expect(text.element.parentElement?.tagName).not.toBe('SPAN')
+  })
+
+  it('aligns a block of text without opening a tooltip until it is truncated', () => {
+    const wrapper = mount(Text, {
+      props: { as: 'p', justify: 'end', hasTruncateTooltip: false, maxLines: 1 },
+      slots: { default: 'Aligned' },
+    })
+
+    expect(wrapper.element.tagName).toBe('P')
+    expect(wrapper.classes()).toContain('astryx-text--justify-end')
+    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
   })
 })

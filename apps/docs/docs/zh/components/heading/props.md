@@ -44,6 +44,42 @@ footer: false
         <td>显示类型：<code>block</code> 或 <code>inline</code>。</td>
       </tr>
       <tr>
+        <td><code>accessibilityLevel</code></td>
+        <td><code>1 | 2 | 3 | 4 | 5 | 6</code></td>
+        <td>-</td>
+        <td>和视觉 <code>level</code> 不同时，读屏使用的大纲级别。元素仍是 <code>h{level}</code>。</td>
+      </tr>
+      <tr>
+        <td><code>textWrap</code></td>
+        <td><code>'wrap' | 'nowrap' | 'balance' | 'pretty'</code></td>
+        <td>-</td>
+        <td>CSS <code>text-wrap</code>。</td>
+      </tr>
+      <tr>
+        <td><code>wordBreak</code></td>
+        <td><code>'break-word' | 'break-all'</code></td>
+        <td>单行截断为 <code>break-all</code>，多行为 <code>break-word</code></td>
+        <td>长词如何断开。</td>
+      </tr>
+      <tr>
+        <td><code>justify</code></td>
+        <td><code>'start' | 'center' | 'end'</code></td>
+        <td><code>'start'</code></td>
+        <td>对齐方式。<code>start</code> 和 <code>end</code> 跟随书写方向。</td>
+      </tr>
+      <tr>
+        <td><code>hasStrikethrough</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>给文字加删除线。</td>
+      </tr>
+      <tr>
+        <td><code>hasTruncateTooltip</code></td>
+        <td><code>boolean | 'above' | 'below' | 'start' | 'end'</code></td>
+        <td><code>true</code></td>
+        <td>截断之后要不要把全文放进提示。<code>false</code> 关掉。没被截断时不会弹出。</td>
+      </tr>
+      <tr>
         <td><code>maxLines</code></td>
         <td><code>number</code></td>
         <td><code>0</code></td>

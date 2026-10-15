@@ -36,4 +36,10 @@ export interface TooltipProps {
   isOpen?: boolean
   /** 挂载时是否默认显示。 */
   isDefaultOpen?: boolean
+  /**
+   * 为 true 时不再包一层 span，默认插槽的根元素自己当触发器。
+   * 标题和段落不能放进 span。
+   * @default false
+   */
+  anchorsOnSelf?: boolean
 }

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
+import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## 使用方法
@@ -76,4 +76,11 @@ const source = createStaticSource([
   description="用错误状态提示必须选择一个地点。"
   locale="zh"
   title="校验"
+/>
+
+<DemoExample
+  :demo="typeaheadBare"
+  description="BaseTypeahead 没有字段标签和说明。命令面板这类已经有自己标题的地方用它，输入框的无障碍名用 label 传入。"
+  locale="zh"
+  title="无字段外壳"
 />

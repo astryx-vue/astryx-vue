@@ -134,6 +134,24 @@ footer: false
   </table>
 </div>
 
+## BottomSheetSwitcher
+
+A multi-step flow shares one dialog. `v-model:active-sheet` names the child `BottomSheet` `sheetId` that is current. The scrim stays while the page changes, and the previous sheet remains briefly underneath so the heights can line up. Set `activeSheet` to `null` to close the flow.
+
+<div class="component-api-table" role="region" aria-label="BottomSheetSwitcher props" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>activeSheet</code></td><td><code>string | null</code></td><td><code>null</code></td><td>The current sheet's <code>sheetId</code>. Bind it with <code>v-model:active-sheet</code>.</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>The current sheet's <code>label</code></td><td>Accessible name for the whole flow.</td></tr>
+      <tr><td><code>purpose</code></td><td><code>BottomSheetPurpose</code></td><td>The current sheet's <code>purpose</code></td><td>How the whole flow can be dismissed.</td></tr>
+      <tr><td><code>hasScrim</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether the flow has one scrim. It stays up across pages.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+A child `BottomSheet` with `sheetId` no longer opens its own dialog. The switcher decides which one is visible.
+
 ## Native attributes
 
 The root element is the panel <code>&lt;div&gt;</code> (class <code>astryx-bottom-sheet</code>), wrapped in a fixed-position <code>&lt;dialog&gt;</code>.

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { headingCardGrid, headingHierarchy, headingTruncation } from '../../../../components/demos/heading'
+import { headingCardGrid, headingHierarchy, headingOutline, headingTruncation } from '../../../../components/demos/heading'
 </script>
 
 ## Usage
@@ -57,7 +57,14 @@ import { Heading } from '@astryx-vue/core/Heading'
 
 <DemoExample
   :demo="headingTruncation"
-  description="Single-line and multi-line heading truncation with ellipsis for constrained layouts."
+  description="Single-line and multi-line heading truncation with ellipsis for constrained layouts. Hover reads the full text once it is cut off."
   locale="en"
   title="Truncation"
+/>
+
+<DemoExample
+  :demo="headingOutline"
+  description="The visual level and the outline level can differ. Strikethrough and alignment stay on the heading."
+  locale="en"
+  title="Outline and alignment"
 />

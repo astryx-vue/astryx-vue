@@ -1,0 +1,28 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-keyboard-hint {
+    position: fixed;
+    z-index: 80;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    margin: 0;
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    border: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-color-background-popover, light-dark(#fff, #1b1b1b));
+    box-shadow: var(--astryx-shadow-low, 0 1px 2px rgb(0 0 0 / 12%));
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .astryx-keyboard-hint__keys {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+}

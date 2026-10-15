@@ -132,6 +132,18 @@
     text-decoration: line-through;
   }
 
+  .astryx-text--justify-start {
+    text-align: start;
+  }
+
+  .astryx-text--justify-center {
+    text-align: center;
+  }
+
+  .astryx-text--justify-end {
+    text-align: end;
+  }
+
   .astryx-text--tabular {
     font-variant-numeric: tabular-nums;
   }
@@ -150,6 +162,12 @@
 
   .astryx-text--size-xl {
     font-size: var(--astryx-text-xl-size, 1.25rem);
+  }
+
+  .astryx-text--truncate-single,
+  .astryx-text--truncate-multi {
+    max-width: 100%;
+    min-width: 0;
   }
 
   .astryx-text--truncate-single {
