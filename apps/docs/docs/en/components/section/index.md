@@ -30,6 +30,9 @@ import { Section } from '@astryx-vue/core/Section'
 
 The outer box uses a negative margin so a section can escape the padding of a parent container such as `Card` or `LayoutContent`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

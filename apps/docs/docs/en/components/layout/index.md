@@ -37,6 +37,9 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 
 `LayoutHeader`, `LayoutFooter`, `LayoutContent`, and `LayoutPanel` are the region components. A panel's `width` is pixels when it is a number. Pass `resizable` from `useResizable` when a `ResizeHandle` controls that width.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

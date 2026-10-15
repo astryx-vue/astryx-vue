@@ -28,6 +28,9 @@ import { Timestamp } from '@astryx-vue/core/Timestamp'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

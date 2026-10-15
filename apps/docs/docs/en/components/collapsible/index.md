@@ -55,6 +55,9 @@ The trigger and the content are linked with `aria-expanded` and `aria-controls`,
 
 `isDisabled` dims the trigger, stops it responding to clicks, marks it `aria-disabled`, and takes it out of the tab order. It never collapses content that is already open; it only stops further changes.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

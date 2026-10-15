@@ -79,6 +79,9 @@ const { containerRef, containerProps, scrimProps } = useOverlay({ showOn: 'hover
 
 The container needs both `containerProps` — which bring the positioning, the clipping, and the tap toggle — and `containerRef`, and the scrim has to render inside that container for the hover and focus selectors to find it. The returned state is reactive: pass a `ref` or a `computed` for options such as `showOn` and `isOpen` and the scrim follows them, while plain values are read once at setup.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

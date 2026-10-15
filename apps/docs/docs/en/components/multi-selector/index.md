@@ -36,6 +36,9 @@ Arrow keys move the highlight. Enter and Space toggle the highlighted option. Sp
 | <Badge variant="success">Do</Badge> | Use `badges` and `+N` when the closed trigger should still name the selection. |
 | <Badge variant="error">Don't</Badge> | Search a remote source with Multi Selector. Use Tokenizer for that. |
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample

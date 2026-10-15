@@ -34,6 +34,9 @@ Omit the bound value when a row owns its own checked state, such as a select-all
 
 A read-only group keeps the checks and does not dim, but the checks cannot change. Disabled wins when both are set. When the group is disabled and a reason is set, every row stays focusable, and hovering or keyboard focus shows the reason. A row that is loading, or whose change is still running, shows a spinner inside the checkbox and cannot be toggled.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

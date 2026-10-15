@@ -43,6 +43,9 @@ import { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'
 | <Badge variant="error">避免</Badge> | 把一整句放进标签。标签轨道是按短名字留的。 |
 | <Badge variant="error">避免</Badge> | 水平排列时还指望列数生效。水平布局会忽略列数。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

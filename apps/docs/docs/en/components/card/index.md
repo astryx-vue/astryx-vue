@@ -48,6 +48,9 @@ import { Text } from '@astryx-vue/core/Text'
 
 The card also publishes `--container-padding-inline-start`, `--container-padding-inline-end`, `--container-padding-block-start`, and `--container-padding-block-end` on its root. Children that need to extend to the card's edge — a `Divider` with `isFullBleed`, for example — read those variables to cancel the padding, so they never need to know how much padding the card used.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

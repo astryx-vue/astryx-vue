@@ -54,6 +54,9 @@ Built-in strings such as the placeholder and the empty state are English. Call `
 | <Badge variant="error">Don't</Badge> | Put more than 100 options in a selector; consider pagination or async loading. |
 | <Badge variant="error">Don't</Badge> | Use selector for multi-select; use a dedicated multi-select component instead. |
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample

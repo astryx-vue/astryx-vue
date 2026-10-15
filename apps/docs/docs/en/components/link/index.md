@@ -29,6 +29,9 @@ import { Link } from '@astryx-vue/core/Link'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

@@ -1,0 +1,2158 @@
+{
+  "alert-dialog": [
+    {
+      "name": "标题",
+      "description": "问的那句话。画成二级标题，并用 aria-labelledby 作为对话框的名称。"
+    },
+    {
+      "name": "说明",
+      "description": "用户确认之后会发生什么。通过 aria-describedby 关联到对话框。"
+    },
+    {
+      "name": "取消按钮",
+      "description": "不执行操作、只关掉对话框的幽灵按钮。打开时焦点先落在这里，按 Escape 效果相同。"
+    },
+    {
+      "name": "确认按钮",
+      "description": "真正执行的那个操作。默认是破坏性样式；isActionLoading 为真时显示转圈。"
+    },
+    {
+      "name": "遮罩",
+      "description": "对话框后面挡住页面的一层。点它不会关闭。"
+    },
+    {
+      "name": "对话框表面",
+      "description": "装着标题、说明和按钮的模态面板。"
+    }
+  ],
+  "app-shell": [
+    {
+      "name": "页面框架",
+      "description": "最外层的应用框。它管页面级导航、外壳在不同宽度下的行为，以及主内容地标。"
+    },
+    {
+      "name": "跳过链接",
+      "description": "页面上第一个可聚焦的元素。平时看不见，聚焦后才出现，并把焦点移到主内容。"
+    },
+    {
+      "name": "通告条",
+      "description": "banner 插槽，用来放全站通告。画在顶栏上面，落在 banner 地标里。"
+    },
+    {
+      "name": "顶部导航",
+      "description": "topNav 插槽，一般放 TopNav。窄于移动断点时，收成一条带着导航开关的紧凑栏。"
+    },
+    {
+      "name": "侧边导航",
+      "description": "sideNav 插槽，一般放 SideNav。宽于断点时嵌在页面里，窄于断点时收进移动抽屉。"
+    },
+    {
+      "name": "主内容",
+      "description": "默认插槽，画在 main 地标里。height 为 fill 时在框架内滚动，为 auto 时跟着页面滚。"
+    },
+    {
+      "name": "移动导航抽屉",
+      "description": "窄于断点时，除非 mobileNav 关掉或换掉它，否则由导航插槽生成。它是模态对话框：锁住焦点，关闭后把焦点交回开关。"
+    }
+  ],
+  "aspect-ratio": [
+    {
+      "name": "比例盒",
+      "description": "保持宽高比并裁掉溢出的外层。带有 astryx-aspect-ratio 主题目标；shape 为 ellipse 时裁成椭圆。"
+    },
+    {
+      "name": "内容插槽",
+      "description": "铺满比例盒并摆放里面内容的一层。设了 fit 时，里面内容的尺寸也由它定；没设时，里面的内容自己决定尺寸。"
+    }
+  ],
+  "avatar": [
+    {
+      "name": "照片",
+      "description": "从 src 地址加载的头像。有图就显示。"
+    },
+    {
+      "name": "首字母",
+      "description": "取名字里第一个词和最后一个词的首个字母、数字或 emoji，标点跳过。没有照片时显示。名字里没有任何字母、数字或 emoji 时，改显示默认图标。"
+    },
+    {
+      "name": "默认图标",
+      "description": "一个通用的人影。没有照片、也没有名字时显示。"
+    },
+    {
+      "name": "状态点",
+      "description": "右下角的小指示，表示在线、离开或忙碌。每种状态用颜色配一种不同的形状，不单靠颜色区分。"
+    }
+  ],
+  "avatar-group": [
+    {
+      "name": "头像",
+      "description": "叠成一排的 Avatar。每个都可以有自己的属性。"
+    },
+    {
+      "name": "溢出指示",
+      "description": "末尾的「+N」圆，表示还有多少没画出来。也可以换成自定义的 AvatarGroupOverflow 插槽。"
+    }
+  ],
+  "badge": [
+    {
+      "name": "图标",
+      "description": "可选的前导图标，让人一眼看出徽章类型。"
+    },
+    {
+      "name": "标签",
+      "description": "徽章里的文字或数字。"
+    }
+  ],
+  "banner": [
+    {
+      "name": "通告框",
+      "description": "把状态面和可选的内容面包在一起的外框。整条通告的抬升由它承担；抬升的卡片样式还会带上形成轮廓的圆角。"
+    },
+    {
+      "name": "状态面",
+      "description": "主要着色的那一面。它表达状态，并装着图标、标题、说明、操作和控件。"
+    },
+    {
+      "name": "图标",
+      "description": "按状态自动选择：信息、警告、错误、成功。"
+    },
+    {
+      "name": "标题",
+      "description": "主要信息。必填。"
+    },
+    {
+      "name": "说明",
+      "description": "标题下面的补充。"
+    },
+    {
+      "name": "操作按钮",
+      "description": "让用户针对这条信息做事的按钮，比如「查看」或「重试」。"
+    },
+    {
+      "name": "关闭按钮",
+      "description": "让用户关掉通告。设置 isDismissable 后出现。"
+    },
+    {
+      "name": "内容面",
+      "description": "状态面下面的第二层，放额外细节，比如一列错误。默认藏在展开和收起开关后面；把 collapsible 设为 false 就一直显示。"
+    }
+  ],
+  "blockquote": [
+    {
+      "name": "竖线",
+      "description": "行首一侧的边线，用 --color-border-emphasized 绘制。"
+    },
+    {
+      "name": "引文",
+      "description": "默认插槽里的引用内容，画在 blockquote 元素里。"
+    },
+    {
+      "name": "出处",
+      "description": "来源，通过 cite 传入，画成引文下方的 cite 元素。"
+    }
+  ],
+  "bottom-sheet": [
+    {
+      "name": "面板",
+      "description": "从底边升起、装着内容的着色表面。"
+    },
+    {
+      "name": "内容区",
+      "description": "有内边距、可滚动，用来放使用方提供的面板内容。"
+    },
+    {
+      "name": "把手",
+      "description": "面板顶部的装饰性拖动手柄，也是拖动区域。"
+    },
+    {
+      "name": "遮罩",
+      "description": "带遮罩的呈现方式里，压暗并挡住页面的背景。"
+    }
+  ],
+  "breadcrumbs": [
+    {
+      "name": "路径",
+      "description": "从根到当前页的有序链接。"
+    },
+    {
+      "name": "一项",
+      "description": "路径里的一步。当前页是纯文本，其余是链接。"
+    },
+    {
+      "name": "分隔符",
+      "description": "项与项之间的字符。默认是「/」，可以换。"
+    },
+    {
+      "name": "图标",
+      "description": "标签前面的可选图标，比如第一项上的首页图标。"
+    }
+  ],
+  "button": [
+    {
+      "name": "图标",
+      "description": "强化标签的前导图标，比如删除按钮上的垃圾桶。"
+    },
+    {
+      "name": "标签",
+      "description": "说明这个操作的可见文字，同时也是无障碍名称。"
+    },
+    {
+      "name": "尾部内容",
+      "description": "标签后面的徽章或图标，比如通知数或下拉箭头。"
+    },
+    {
+      "name": "转圈",
+      "description": "加载时替换图标，表示操作还在进行。"
+    }
+  ],
+  "button-group": [
+    {
+      "name": "按钮",
+      "description": "组成这一组的一个或多个 Button 或 IconButton。"
+    },
+    {
+      "name": "分隔线",
+      "description": "按钮之间的细边，由组自动画出。"
+    }
+  ],
+  "calendar": [
+    {
+      "name": "日历根",
+      "description": "装着月份标题和日期网格的容器。"
+    },
+    {
+      "name": "月份标题",
+      "description": "月份、年份，以及切换月份的箭头。dir=\"rtl\" 时箭头会自动对调。"
+    },
+    {
+      "name": "日期网格",
+      "description": "七列的日期格，列头是星期名。"
+    },
+    {
+      "name": "日期按钮",
+      "description": "网格里的一天，用来选日期。"
+    },
+    {
+      "name": "选中的日期",
+      "description": "当前选中的日期，会高亮。范围模式下，还包括起止日期和中间那些天。"
+    },
+    {
+      "name": "今天标记",
+      "description": "标在当天上的淡提示，用来帮人定位。"
+    }
+  ],
+  "card": [
+    {
+      "name": "容器",
+      "description": "带边框、背景、圆角和内边距的外盒。"
+    },
+    {
+      "name": "内容",
+      "description": "默认插槽里放进卡片的任何东西。常见的是标题、正文和操作叠在一起。"
+    }
+  ],
+  "carousel": [
+    {
+      "name": "滚动容器",
+      "description": "装着所有项的横向溢出区域。"
+    },
+    {
+      "name": "项",
+      "description": "默认插槽，在滚动容器里排成一行。开了 hasSnap 时，每一项会吸附到起始边。"
+    },
+    {
+      "name": "边缘渐隐",
+      "description": "左右边缘的渐变，表示后面还有内容。默认开启，把 hasEdgeFade 设为 false 就关掉。"
+    },
+    {
+      "name": "导航按钮",
+      "description": "内容还能往某个方向滚时出现的上一张和下一张按钮。默认开启，把 hasButtons 设为 false 就关掉。"
+    }
+  ],
+  "center": [
+    {
+      "name": "容器",
+      "description": "沿所选轴向把内容居中的 flex 容器。"
+    },
+    {
+      "name": "内容",
+      "description": "放进 Center 默认插槽的任何东西。常见的是卡片、表单、转圈或空状态。"
+    }
+  ],
+  "chat": [
+    {
+      "name": "消息区",
+      "description": "可滚动的消息区域。默认插槽（一般是 ChatMessageList）排成纵向 flex，消息少时把内容推到底部。"
+    },
+    {
+      "name": "毛玻璃停靠区",
+      "description": "底部粘住或固定的容器，带一层背景模糊。里面放滚到底按钮和输入区。"
+    },
+    {
+      "name": "滚到底按钮",
+      "description": "用户往上滚，或有新消息时出现。默认是 ChatLayoutScrollButton。把 showScrollButton 设为 false 就隐藏；要换成别的控件，用 scrollButton 插槽。"
+    },
+    {
+      "name": "输入区",
+      "description": "发消息的输入区域，一般是 ChatComposer。停在毛玻璃层里的底部。"
+    },
+    {
+      "name": "空状态",
+      "description": "还没有消息时居中显示的占位。用 EmptyState 可以保持外观一致。"
+    },
+    {
+      "name": "头像",
+      "description": "消息旁边的发送者头像，一般是 size 为 md 的 Avatar。系统消息不显示。"
+    },
+    {
+      "name": "名字",
+      "description": "消息正文上方的发送者名字。用气泡时放在气泡上；自由内容则放在消息外层。"
+    },
+    {
+      "name": "内容",
+      "description": "消息正文：一个或多个 ChatMessageBubble，或图片、工具调用这类自由插槽内容。非气泡内容可以包进幽灵气泡，好跟气泡的文字列对齐。"
+    },
+    {
+      "name": "元信息",
+      "description": "时间、送达状态，以及消息下方的操作。放在最后一个气泡上，或放在消息外层。"
+    }
+  ],
+  "checkbox-input": [
+    {
+      "name": "复选框",
+      "description": "框本身：未选、已选或不确定。"
+    },
+    {
+      "name": "标签",
+      "description": "说明这个框控制什么。为了无障碍，始终存在。"
+    },
+    {
+      "name": "说明",
+      "description": "标签下面的辅助文字，补充语境。"
+    },
+    {
+      "name": "状态消息",
+      "description": "框下面的错误、警告或成功提示。"
+    }
+  ],
+  "checkbox-list": [
+    {
+      "name": "组",
+      "description": "带标签的复选框组的容器。"
+    },
+    {
+      "name": "组标签",
+      "description": "说明这些选项代表什么。"
+    },
+    {
+      "name": "说明",
+      "description": "组标签下面的辅助文字。"
+    },
+    {
+      "name": "选项列表",
+      "description": "装着可选复选框的列表。"
+    },
+    {
+      "name": "选项行",
+      "description": "装着一个选项的可选择行。"
+    },
+    {
+      "name": "复选框",
+      "description": "选项的选中指示。"
+    },
+    {
+      "name": "选项标签",
+      "description": "标识一个选项的主要内容。"
+    },
+    {
+      "name": "选项说明",
+      "description": "选项标签下面的次要文字。"
+    },
+    {
+      "name": "尾部内容",
+      "description": "使用方放在选项行末尾的内容。"
+    },
+    {
+      "name": "转圈",
+      "description": "还在等待结果的复选框里显示的加载指示。"
+    },
+    {
+      "name": "状态消息",
+      "description": "组下面的错误、警告或成功提示。"
+    }
+  ],
+  "citation": [
+    {
+      "name": "容器",
+      "description": "根容器。来源地址可用时渲染成链接；缺失或被拒绝时渲染成不起作用的 span。"
+    },
+    {
+      "name": "图标",
+      "description": "标签文字前面的可选来源图标。可以是网站图标或标志的图片地址（source.src），也可以是插槽内容，比如 Astryx 的 Icon。只在标签变体里可用。"
+    },
+    {
+      "name": "标签文字",
+      "description": "来源标题。超过最大宽度时用省略号截断。标签变体里显示。"
+    },
+    {
+      "name": "编号",
+      "description": "显示成上标徽章的引用序号。编号变体里显示。"
+    }
+  ],
+  "clickable-card": [
+    {
+      "name": "容器",
+      "description": "带悬停、聚焦和按下状态的可交互区域。"
+    },
+    {
+      "name": "内容",
+      "description": "里面的内容，可以再嵌套可交互元素。"
+    }
+  ],
+  "code": [
+    {
+      "name": "容器",
+      "description": "装着行内代码的 code 元素，负责背景、字体、内边距和圆角。"
+    }
+  ],
+  "code-block": [
+    {
+      "name": "顶栏",
+      "description": "有顶栏时显示标题、可见的语言名和复制按钮。标题或可见语言名会生成顶栏；只有复制按钮时，它浮在没有顶栏的代码块末端上方。"
+    },
+    {
+      "name": "顶栏标题",
+      "description": "把可选标题、可见语言名和折叠箭头收在顶栏里。"
+    },
+    {
+      "name": "行号",
+      "description": "左侧的编号槽。用 hasLineNumbers 打开。"
+    },
+    {
+      "name": "代码正文",
+      "description": "做了语法高亮的代码。"
+    },
+    {
+      "name": "高亮行",
+      "description": "给指定行加上背景，把注意力引过去。"
+    },
+    {
+      "name": "复制按钮",
+      "description": "把代码字符串复制到剪贴板。默认显示。"
+    }
+  ],
+  "collapsible": [
+    {
+      "name": "容器",
+      "description": "装着一个触发器和它控制的内容的根。在带分隔的组里，还画出这一项的分隔线。"
+    },
+    {
+      "name": "触发器",
+      "description": "始终可见、用来开关内容的按钮。带标签和箭头。"
+    },
+    {
+      "name": "箭头",
+      "description": "会动的展开指示。默认跟在标签后面；chevronPosition 为 start 时挪到标签前面。收起时指向内侧（从右到左时镜像），展开时转向下。"
+    },
+    {
+      "name": "内容",
+      "description": "点击触发器后隐藏或露出的区域。"
+    },
+    {
+      "name": "组容器",
+      "description": "打开分隔线时渲染的 CollapsibleGroup。装着相互配合的各项，并带上它们的密度。"
+    }
+  ],
+  "command-palette": [
+    {
+      "name": "对话框",
+      "description": "装着命令面板的模态表面。"
+    },
+    {
+      "name": "输入区",
+      "description": "装着查询框和配套视觉的搜索区域。"
+    },
+    {
+      "name": "搜索符号",
+      "description": "默认输入区里由 Icon 画出的搜索符号。"
+    },
+    {
+      "name": "查询框",
+      "description": "用来输入搜索词的原生文本框。"
+    },
+    {
+      "name": "加载转圈",
+      "description": "搜索进行中时，默认输入区里的转圈。"
+    },
+    {
+      "name": "列表",
+      "description": "可滚动的列表框，装着当前结果或空状态。"
+    },
+    {
+      "name": "项",
+      "description": "列表里可选的一条命令结果。"
+    },
+    {
+      "name": "分组",
+      "description": "共享一个标题的一组项，可选。"
+    },
+    {
+      "name": "分组标题",
+      "description": "分组显示出来的标题。"
+    },
+    {
+      "name": "空状态",
+      "description": "当前没有结果时显示的消息。"
+    },
+    {
+      "name": "页脚",
+      "description": "放默认的键盘提示，或使用方自己的内容。"
+    },
+    {
+      "name": "快捷键",
+      "description": "默认页脚提示里由 Kbd 画出的按键徽章。"
+    }
+  ],
+  "complex-selector": [
+    {
+      "name": "字段",
+      "description": "提供标签和可选辅助内容的字段外壳。"
+    },
+    {
+      "name": "触发器",
+      "description": "显示当前值或占位，并打开弹层的控件。"
+    },
+    {
+      "name": "图标渲染的起始图标",
+      "description": "可选的前导语义图标或图标组件，通过 Icon 绘制。"
+    },
+    {
+      "name": "使用方渲染的起始内容",
+      "description": "可选的任意插槽内容，直接画在触发器开头。"
+    },
+    {
+      "name": "指示图标",
+      "description": "尾部箭头，随弹层开合转动。"
+    },
+    {
+      "name": "弹层",
+      "description": "打开时画出并显示、关闭时隐藏的对话框表面。"
+    }
+  ],
+  "context-menu": [
+    {
+      "name": "触发区域",
+      "description": "使用方提供的区域，接受右键、键盘的上下文菜单和长按。"
+    },
+    {
+      "name": "指针菜单表面",
+      "description": "指针呈现方式里，跟在光标位置的菜单面板。"
+    },
+    {
+      "name": "指针操作行",
+      "description": "指针呈现方式里，由 DropdownMenu 拥有的操作、可选项或子菜单行。"
+    },
+    {
+      "name": "触摸面板框",
+      "description": "装着触摸操作的 BottomSheet 面板、内容区、把手和可选遮罩。"
+    },
+    {
+      "name": "触摸菜单表面",
+      "description": "画在触摸面板框里、由 ContextMenu 拥有的内容面板。"
+    },
+    {
+      "name": "触摸操作列表",
+      "description": "把数据驱动的触摸操作分组的宽松 List。"
+    },
+    {
+      "name": "触摸操作行",
+      "description": "触摸呈现方式里，用于数据驱动操作或进入下一层的 ListItem 按钮。"
+    }
+  ],
+  "date-input": [
+    {
+      "name": "标签",
+      "description": "输入框上方的文字，说明期望的是什么日期。"
+    },
+    {
+      "name": "文本输入",
+      "description": "可以直接打日期的字段。能解析 MM/DD/YYYY 这类常见格式。"
+    },
+    {
+      "name": "日历图标",
+      "description": "打开日历浮层，看着日历选日期的按钮。"
+    },
+    {
+      "name": "日历浮层",
+      "description": "点击图标或输入框聚焦时出现的月份网格。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "把日期清掉的 × 按钮。clearable 打开且已经有日期时显示。"
+    },
+    {
+      "name": "状态消息",
+      "description": "输入框下面的错误、警告或成功提示。"
+    }
+  ],
+  "date-range-input": [
+    {
+      "name": "标签",
+      "description": "触发器上方的文字，说明期望的是什么日期范围。"
+    },
+    {
+      "name": "字段表面",
+      "description": "带边框的控件，装着日历开关、范围触发器和尾部操作。"
+    },
+    {
+      "name": "触发按钮",
+      "description": "显示格式化后的范围或占位的按钮。点击打开浮层。"
+    },
+    {
+      "name": "日历图标",
+      "description": "同样能打开浮层的尾部图标。"
+    },
+    {
+      "name": "日历浮层",
+      "description": "双月历网格，支持范围选择和悬停预览。"
+    },
+    {
+      "name": "预设侧栏",
+      "description": "日历旁边的预设范围列表。"
+    },
+    {
+      "name": "预设按钮",
+      "description": "一键选中某个预设范围，并反映当前和禁用状态。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "把范围重置为空的 × 按钮。"
+    },
+    {
+      "name": "状态消息",
+      "description": "触发器下面的错误、警告或成功提示。"
+    }
+  ],
+  "date-time-input": [
+    {
+      "name": "标签",
+      "description": "输入框上方的文字，说明期望的是什么日期时间。"
+    },
+    {
+      "name": "分段行",
+      "description": "不带边框的布局行，装着两段带边框的输入。容器变窄时会换行。"
+    },
+    {
+      "name": "日期输入",
+      "description": "精细指针下是带日历浮层的 Astryx 日期字段；原生模式是真正的 input type=date；presentation 为 adaptive-bottom-sheet 且指针较粗时，是只读分段，打开 Astryx 触摸面板。"
+    },
+    {
+      "name": "日历图标",
+      "description": "打开当前日期表面的按钮：平台选择器、Astryx 日历浮层，或 Astryx 触摸面板。"
+    },
+    {
+      "name": "日期选择器",
+      "description": "原生模式用浏览器或系统选择器；精细指针用 Astryx 的月份网格浮层；presentation 为 adaptive-bottom-sheet 且指针较粗时，用 Astryx 底部面板里的日期页。"
+    },
+    {
+      "name": "时间输入",
+      "description": "默认的分钟精度原生模式是真正的 input type=time；需要秒、自定义步进或预设选项时，是文本或组合框时间字段；presentation 为 adaptive-bottom-sheet 且指针较粗时，是只读分段，打开可访问的时间滚轮。"
+    },
+    {
+      "name": "时钟图标",
+      "description": "时间符号。在 Astryx 的指针字段上作为前导标识，在原生模式和触摸面板的时间分段上作为打开选择器的操作。"
+    },
+    {
+      "name": "时间选项浮层",
+      "description": "按 timeOptionInterval 的间隔列出预设时间。设置这个属性后，即使 nativePicker 本来会选原生控件，也会保留 Astryx 的文本或组合框时间字段；Astryx 触摸面板则改用滚轮。"
+    },
+    {
+      "name": "时间选项",
+      "description": "可选时间选项浮层里的一个预设时间。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "把日期时间清掉的 × 按钮。"
+    },
+    {
+      "name": "状态消息",
+      "description": "输入框下面的错误、警告或成功提示。"
+    }
+  ],
+  "dialog": [
+    {
+      "name": "页眉",
+      "description": "标题、可选副标题和关闭按钮。打开时焦点落到标题上，标题通过 aria-labelledby 标出对话框。"
+    },
+    {
+      "name": "正文",
+      "description": "主要内容：文字、表单、列表或任意布局。"
+    },
+    {
+      "name": "页脚",
+      "description": "保存、取消或接受、拒绝这类操作按钮，靠尾部对齐。"
+    },
+    {
+      "name": "遮罩",
+      "description": "对话框后面的半透明层，挡住页面交互。"
+    }
+  ],
+  "divider": [
+    {
+      "name": "分隔组",
+      "description": "把一条或两条线排在可选标签周围的分隔组。"
+    },
+    {
+      "name": "线",
+      "description": "画出的线段。有标签时会再画一段。"
+    },
+    {
+      "name": "标签",
+      "description": "显示在两段线之间的可选内容。"
+    }
+  ],
+  "dropdown-menu": [
+    {
+      "name": "触发按钮",
+      "description": "打开和关闭当前菜单呈现方式的按钮。"
+    },
+    {
+      "name": "触发指示图标",
+      "description": "带标签的触发器在 hasChevron 打开时显示的可选尾部箭头。"
+    },
+    {
+      "name": "指针菜单表面",
+      "description": "指针呈现方式里，锚定的顶层或嵌套菜单面板。"
+    },
+    {
+      "name": "指针操作行",
+      "description": "锚定菜单里的操作、可选项或子菜单触发行。"
+    },
+    {
+      "name": "图标渲染的项图标",
+      "description": "操作行开头通过 Icon 绘制的可选语义图标或组件图标。"
+    },
+    {
+      "name": "使用方渲染的项起始内容",
+      "description": "直接画在操作行开头的可选任意插槽内容。"
+    },
+    {
+      "name": "复选指示",
+      "description": "复选操作行上的装饰性共用复选指示。"
+    },
+    {
+      "name": "单选指示",
+      "description": "带额外菜单目标的装饰性共用单选指示。"
+    },
+    {
+      "name": "指针分组标题",
+      "description": "锚定菜单里给一组行命名的标题：数据驱动的分区，或组合式的 DropdownMenuGroup。"
+    },
+    {
+      "name": "指针分隔线",
+      "description": "锚定菜单里分组之间的分隔线。"
+    },
+    {
+      "name": "指针子菜单指示",
+      "description": "尾部箭头，表示这一行会展开嵌套浮层。"
+    },
+    {
+      "name": "触摸面板框",
+      "description": "装着触摸操作的 BottomSheet 面板、内容区、把手和可选遮罩。"
+    },
+    {
+      "name": "触摸菜单表面",
+      "description": "画在触摸面板框里、由菜单拥有的内容面板。"
+    },
+    {
+      "name": "触摸标题",
+      "description": "当前操作表的标题。打开嵌套操作视图时会更新。"
+    },
+    {
+      "name": "触摸操作列表",
+      "description": "触摸呈现方式里把操作分组的宽松 List。"
+    },
+    {
+      "name": "触摸操作行",
+      "description": "触摸呈现方式里用于操作或进入下一层的 ListItem 按钮。"
+    },
+    {
+      "name": "触摸分隔线",
+      "description": "触摸呈现方式里操作组之间的分隔线。"
+    }
+  ],
+  "empty-state": [
+    {
+      "name": "图标",
+      "description": "标题上方的视觉提示，用来强化语境，比如没有结果时的搜索图标。"
+    },
+    {
+      "name": "标题",
+      "description": "说明空的是什么。写「还没有项目」，不要写「没有数据」。"
+    },
+    {
+      "name": "说明",
+      "description": "补充为什么是空的，或者用户可以做什么。"
+    },
+    {
+      "name": "操作",
+      "description": "一到两个按钮，把用户引到下一步，比如「创建项目」或「清除筛选」。"
+    }
+  ],
+  "field": [
+    {
+      "name": "标签",
+      "description": "标识字段的文字。为了无障碍始终渲染，也可以只在视觉上隐藏。"
+    },
+    {
+      "name": "说明",
+      "description": "标签和输入之间的辅助文字，说明该填什么。"
+    },
+    {
+      "name": "控件插槽",
+      "description": "还没有自己的字段外壳的自定义、原生或第三方控件。"
+    },
+    {
+      "name": "状态消息",
+      "description": "行内校验反馈，带上错误、警告或成功，以及一条消息。"
+    },
+    {
+      "name": "可选或必填指示",
+      "description": "标签旁边的徽章，表示字段是可选还是必填。"
+    },
+    {
+      "name": "标签提示",
+      "description": "标签末尾的信息图标，用提示说明这个字段。"
+    }
+  ],
+  "field-status": [
+    {
+      "name": "消息盒",
+      "description": "装着校验反馈的着色容器。"
+    },
+    {
+      "name": "分离图标",
+      "description": "只有分离变体才显示的前导状态符号。"
+    },
+    {
+      "name": "消息文字",
+      "description": "描述校验状态的文字。"
+    }
+  ],
+  "file-input": [
+    {
+      "name": "标签",
+      "description": "标识字段的文字。即使视觉上隐藏，为了无障碍也始终渲染。"
+    },
+    {
+      "name": "说明",
+      "description": "标签和投放区之间的辅助文字，说明接受的格式或大小限制。"
+    },
+    {
+      "name": "投放区",
+      "description": "点击即可选择文件的区域。投放区模式下也接受拖进来的文件。"
+    },
+    {
+      "name": "上传图标",
+      "description": "投放区里暗示上传的托盘图标。"
+    },
+    {
+      "name": "占位",
+      "description": "还没选文件时的提示文字。"
+    },
+    {
+      "name": "文件名",
+      "description": "显示已选文件的名字。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "去掉已选文件，并把焦点交回输入的关闭按钮。"
+    },
+    {
+      "name": "转圈",
+      "description": "异步上传时出现的加载指示。"
+    },
+    {
+      "name": "状态消息",
+      "description": "带错误、警告或成功和一条消息的校验反馈。"
+    }
+  ],
+  "form-layout": [
+    {
+      "name": "表单标题",
+      "description": "说明这个表单是干什么的标题。"
+    },
+    {
+      "name": "字段",
+      "description": "带标签、用来收集数据的输入组件。"
+    },
+    {
+      "name": "页脚",
+      "description": "装着提交或取消这类确认按钮。"
+    }
+  ],
+  "grid": [
+    {
+      "name": "网格容器",
+      "description": "按行和列排列使用方提供的项的二维布局容器。"
+    },
+    {
+      "name": "跨列项",
+      "description": "可选的 GridSpan，改变某一项参与列或行的方式。"
+    }
+  ],
+  "hover-card": [
+    {
+      "name": "触发器",
+      "description": "悬停或聚焦时打开悬停卡片的元素：按钮、链接或行内文字。"
+    },
+    {
+      "name": "卡片",
+      "description": "锚定在触发器上、装着预览内容的浮动层。"
+    },
+    {
+      "name": "正文",
+      "description": "主要内容：资料、链接摘要，或任意富内容。"
+    },
+    {
+      "name": "操作",
+      "description": "卡片里可选的后续按钮，比如关注或发消息。"
+    }
+  ],
+  "icon": [
+    {
+      "name": "符号",
+      "description": "为所选图标画出的视觉符号。"
+    }
+  ],
+  "input-group": [
+    {
+      "name": "标签",
+      "description": "组上方的文字。"
+    },
+    {
+      "name": "前缀",
+      "description": "输入前面的内容，可以是文字、图标或按钮。"
+    },
+    {
+      "name": "输入",
+      "description": "主要输入元素，可以是 TextInput、NumberInput、TimeInput、DateInput、Typeahead、Selector 或 MultiSelector。"
+    },
+    {
+      "name": "后缀",
+      "description": "输入后面的内容，可以是文字、图标或按钮。"
+    },
+    {
+      "name": "状态消息",
+      "description": "组下面的错误、警告或成功提示。"
+    }
+  ],
+  "kbd": [
+    {
+      "name": "快捷键",
+      "description": "呈现完整键盘快捷键及其无障碍名称的组。"
+    },
+    {
+      "name": "按键徽章",
+      "description": "快捷键里的每个键各画一枚按键徽章。"
+    }
+  ],
+  "layout": [
+    {
+      "name": "布局容器",
+      "description": "摆放页眉、起始侧、内容、末尾侧和页脚这些插槽的通用布局。"
+    },
+    {
+      "name": "页眉",
+      "description": "使用方提供的可选 LayoutHeader，一般放在 header 插槽。"
+    },
+    {
+      "name": "面板",
+      "description": "使用方放在起始侧或末尾侧插槽里的可选 LayoutPanel。"
+    },
+    {
+      "name": "内容区",
+      "description": "使用方放在 content 插槽里的可选 LayoutContent。"
+    },
+    {
+      "name": "页脚",
+      "description": "使用方提供的可选 LayoutFooter，一般放在 footer 插槽。"
+    }
+  ],
+  "lightbox": [
+    {
+      "name": "查看器遮罩",
+      "description": "铺满视口、装着当前媒体和控件的对话框遮罩。"
+    },
+    {
+      "name": "媒体",
+      "description": "查看器里正在展示的图片或视频。"
+    },
+    {
+      "name": "关闭按钮",
+      "description": "关闭查看器的按钮。"
+    },
+    {
+      "name": "上一张",
+      "description": "画廊里切到上一项媒体的按钮。"
+    },
+    {
+      "name": "下一张",
+      "description": "画廊里切到下一项媒体的按钮。"
+    },
+    {
+      "name": "说明文字",
+      "description": "显示在当前媒体下方、由使用方提供的说明。"
+    },
+    {
+      "name": "计数",
+      "description": "画廊模式里显示的当前位置和总数。"
+    }
+  ],
+  "link": [
+    {
+      "name": "标签",
+      "description": "链接的可见文字。"
+    },
+    {
+      "name": "右侧图标",
+      "description": "放在标签后面，表示这个链接会做什么。"
+    },
+    {
+      "name": "左侧图标",
+      "description": "放在标签前面，表示含义。"
+    }
+  ],
+  "list": [
+    {
+      "name": "列表标题",
+      "description": "给列表命名的标题。"
+    },
+    {
+      "name": "说明",
+      "description": "标题下面的补充文字。"
+    },
+    {
+      "name": "列表项",
+      "description": "单独的条目，可以带图标或图片。"
+    },
+    {
+      "name": "项说明",
+      "description": "单个列表项的补充细节。"
+    }
+  ],
+  "markdown": [
+    {
+      "name": "文档",
+      "description": "块级或行内 Markdown 内容的根容器。"
+    },
+    {
+      "name": "标题",
+      "description": "渲染出的语义标题。自定义标题渲染会换掉内置的这一部分。"
+    },
+    {
+      "name": "段落",
+      "description": "渲染出的段落。自定义段落渲染会换掉默认的这一部分。"
+    },
+    {
+      "name": "列表",
+      "description": "由 Markdown 项渲染出的有序、无序或任务列表。"
+    },
+    {
+      "name": "代码块",
+      "description": "围栏代码块。自定义代码渲染会换掉默认的这一部分。"
+    },
+    {
+      "name": "引用",
+      "description": "引用块。自定义引用渲染会换掉默认的这一部分。"
+    },
+    {
+      "name": "表格",
+      "description": "由 Markdown 的行和列渲染出的表格。里面的 Table 负责横向滚动。"
+    },
+    {
+      "name": "分隔线",
+      "description": "水平线。自定义 hr 渲染会换掉默认的这一部分。"
+    },
+    {
+      "name": "图片",
+      "description": "块级图片；地址不安全时改为回退。自定义图片渲染会换掉安全情况下的默认图片。"
+    }
+  ],
+  "metadata-list": [
+    {
+      "name": "标题",
+      "description": "元数据列表的可选标题。"
+    },
+    {
+      "name": "标签",
+      "description": "每条元数据的键名。"
+    },
+    {
+      "name": "元数据",
+      "description": "以各种格式显示的值。"
+    },
+    {
+      "name": "展开控制",
+      "description": "列表的收起和展开控件。"
+    }
+  ],
+  "mobile-nav": [
+    {
+      "name": "导航遮罩",
+      "description": "铺满视口、承载移动导航抽屉的对话框遮罩。"
+    },
+    {
+      "name": "抽屉",
+      "description": "从解析出的视口边缘滑入的着色面板。"
+    },
+    {
+      "name": "页眉",
+      "description": "固定的一行，装着可选的页眉内容和关闭按钮。"
+    },
+    {
+      "name": "内容",
+      "description": "装着导航内容的可滚动区域。"
+    },
+    {
+      "name": "关闭按钮",
+      "description": "关闭导航抽屉的按钮。"
+    },
+    {
+      "name": "开关按钮",
+      "description": "能配合 AppShell 的 Button，在移动视口上打开或关闭抽屉。"
+    }
+  ],
+  "more-menu": [
+    {
+      "name": "触发按钮",
+      "description": "只有图标的 Button，作为溢出菜单的可见入口。"
+    },
+    {
+      "name": "解析出的触发图标",
+      "description": "从当前 Icon 注册表解析出的默认三点图标。"
+    },
+    {
+      "name": "使用方渲染的触发内容",
+      "description": "直接用来替换触发图标的任意插槽内容。"
+    },
+    {
+      "name": "菜单表面",
+      "description": "DropdownMenu 面板，同时带上 MoreMenu 当前公开的主题目标。"
+    },
+    {
+      "name": "指针操作行",
+      "description": "锚定呈现方式里，由 DropdownMenu 画出的操作或嵌套操作触发行。"
+    },
+    {
+      "name": "触摸操作行",
+      "description": "底部面板呈现方式里，由 DropdownMenu 画出的 ListItem 按钮。"
+    }
+  ],
+  "multi-selector": [
+    {
+      "name": "字段",
+      "description": "提供标签和可选辅助内容的独立 Field 外壳。放在 InputGroup 里时不画这一层。"
+    },
+    {
+      "name": "触发器",
+      "description": "着色控件，显示当前选择或占位。可编辑时打开选择表面。"
+    },
+    {
+      "name": "图标渲染的起始图标",
+      "description": "可选的前导语义图标或图标组件，通过 Icon 绘制。"
+    },
+    {
+      "name": "使用方渲染的起始内容",
+      "description": "直接画在触发器开头的可选任意插槽内容。"
+    },
+    {
+      "name": "触发器清除按钮",
+      "description": "共用的清除操作。clearable 打开时，一次去掉所有已选值。"
+    },
+    {
+      "name": "状态图标",
+      "description": "状态以附着或提示方式呈现时，用来代替展开指示的状态符号。"
+    },
+    {
+      "name": "指示图标",
+      "description": "状态呈现没有把它换掉时显示的尾部箭头，反映收起或展开。"
+    },
+    {
+      "name": "搜索行",
+      "description": "面板头部，带无边框搜索框和可选的清除操作。"
+    },
+    {
+      "name": "搜索图标",
+      "description": "搜索行里通过 Icon 画出的前导放大镜。"
+    },
+    {
+      "name": "搜索清除按钮",
+      "description": "已经有查询词时，搜索行里的共用清除操作。"
+    },
+    {
+      "name": "选项行",
+      "description": "一个选项，或可选的全选，所在的可选择行。"
+    },
+    {
+      "name": "选项复选指示",
+      "description": "CheckboxInput 指示，呈现每一行的已选、未选或不确定。"
+    },
+    {
+      "name": "选项分隔线",
+      "description": "公开选项数据里用来分开相邻选项组的分隔线。"
+    },
+    {
+      "name": "分区标题",
+      "description": "一组带标签的选项行的可见标题。"
+    },
+    {
+      "name": "空状态",
+      "description": "共用面板里没有选项，或搜索没有匹配时的消息。"
+    },
+    {
+      "name": "指针弹层",
+      "description": "浮层呈现方式里，承载共用面板内容的锚定着色表面。"
+    },
+    {
+      "name": "触摸面板标题",
+      "description": "底部面板呈现方式里，共用面板内容上方的标题。"
+    },
+    {
+      "name": "触摸面板",
+      "description": "底部面板呈现方式里，承载同一套面板内容的 BottomSheet 表面。"
+    }
+  ],
+  "number-input": [
+    {
+      "name": "标签",
+      "description": "数字输入的标签。"
+    },
+    {
+      "name": "说明",
+      "description": "标签下面的补充说明。"
+    },
+    {
+      "name": "图标",
+      "description": "输入框里的可选图标。"
+    },
+    {
+      "name": "占位",
+      "description": "输入为空时显示的占位文字。"
+    },
+    {
+      "name": "数字步进",
+      "description": "可选按钮，按配置的步长加减。"
+    }
+  ],
+  "outline": [
+    {
+      "name": "大纲",
+      "description": "装着本页标题链接和指示器的导航容器。"
+    },
+    {
+      "name": "标题链接",
+      "description": "指向一个标题的锚点，按层级缩进，当前项会标出来。"
+    },
+    {
+      "name": "标签",
+      "description": "标题链接里显示的标题文字。"
+    },
+    {
+      "name": "指示轨道",
+      "description": "当前指示器后面画出的竖线。"
+    },
+    {
+      "name": "当前指示",
+      "description": "滑到当前标题链接旁边的条。"
+    }
+  ],
+  "overflow-list": [
+    {
+      "name": "列表",
+      "description": "装着当前可见内容的横向列表容器。"
+    },
+    {
+      "name": "项",
+      "description": "使用方提供的项里，按当前宽度和数量限制选出来显示的那些。"
+    },
+    {
+      "name": "溢出指示",
+      "description": "可选的、由使用方渲染的指示，表示被宽度或数量限制收起来的项。"
+    }
+  ],
+  "overlay": [
+    {
+      "name": "底内容",
+      "description": "覆盖层压在上面的媒体、卡片或有边界的表面。"
+    },
+    {
+      "name": "遮罩",
+      "description": "可选的深色或浅色背景，用来提高上面内容的对比度。"
+    },
+    {
+      "name": "覆盖内容",
+      "description": "画在底表面之上的操作、标签或辅助内容。"
+    }
+  ],
+  "pagination": [
+    {
+      "name": "分页",
+      "description": "装着当前分页控件和可选的每页条数选择器的导航地标。"
+    },
+    {
+      "name": "每页条数",
+      "description": "可选的 Selector，用来选择每页显示多少项。"
+    },
+    {
+      "name": "首页和末页按钮",
+      "description": "可选的 Button，跳到已知的第一页或最后一页。"
+    },
+    {
+      "name": "上一页和下一页",
+      "description": "在页面之间向前或向后移动的按钮。"
+    },
+    {
+      "name": "页码按钮",
+      "description": "编号呈现方式里，直接选中某一页的按钮。"
+    },
+    {
+      "name": "省略号",
+      "description": "不相邻的页码按钮之间的省略标记。"
+    },
+    {
+      "name": "计数读出",
+      "description": "显示当前条目范围和总条目数的文字。"
+    },
+    {
+      "name": "紧凑读出",
+      "description": "显示当前页和总页数的文字。"
+    },
+    {
+      "name": "圆点",
+      "description": "反映并切换当前页的页指示。"
+    },
+    {
+      "name": "页码输入标签",
+      "description": "可编辑页码字段前面的可见标签。"
+    },
+    {
+      "name": "页码输入",
+      "description": "用来直接输入页码的 NumberInput。"
+    },
+    {
+      "name": "页码总数",
+      "description": "尾部文字，显示已知的总页数。"
+    }
+  ],
+  "popover": [
+    {
+      "name": "触发元素",
+      "description": "使用方提供或从外部引用的控件，用来锚定并开关浮层。"
+    },
+    {
+      "name": "浮层表面",
+      "description": "由 Popover 拥有并套上主题的着色表面，使用组件约定的 popover 主题目标。"
+    },
+    {
+      "name": "浮层内容",
+      "description": "画在表面里、由使用方提供的内容。"
+    },
+    {
+      "name": "后备关闭控件",
+      "description": "usePopover 启用时追加的关闭操作，键盘可以到达。"
+    }
+  ],
+  "progress-bar": [
+    {
+      "name": "进度条",
+      "description": "排列标签行和进度轨道的容器。"
+    },
+    {
+      "name": "标签",
+      "description": "给这个操作命名的文字。可以在视觉上隐藏，但仍然能被读到。"
+    },
+    {
+      "name": "数值文字",
+      "description": "需要时显示在标签旁边的、格式化后的确定进度。"
+    },
+    {
+      "name": "轨道",
+      "description": "表示剩余进度的轨，带有 progressbar 语义。"
+    },
+    {
+      "name": "填充",
+      "description": "表示已完成进度，或不确定状态下的运动的着色段。"
+    },
+    {
+      "name": "刻度",
+      "description": "标在确定轨道上的目标刻度，可以带标签。"
+    }
+  ],
+  "radio-list": [
+    {
+      "name": "页眉",
+      "description": "单选列表上方的可选标题。"
+    },
+    {
+      "name": "子项",
+      "description": "作为可选项渲染的单选列表项。"
+    },
+    {
+      "name": "标签和值",
+      "description": "每个单选项的文字标签，以及对应的值。"
+    }
+  ],
+  "scrollable-area": [
+    {
+      "name": "视口",
+      "description": "根上的原生滚动容器。它拥有无障碍名称，生效时是焦点目标，也是 astryx-scrollable-area 主题目标。"
+    },
+    {
+      "name": "内容盒",
+      "description": "和视口一起被观察的真实内层布局盒。行内滚动时，行内尺寸用 max-content，最小为 100%。"
+    }
+  ],
+  "section": [
+    {
+      "name": "区块容器",
+      "description": "把页面里的一块区域分组的着色容器。"
+    },
+    {
+      "name": "使用方内容",
+      "description": "画在区块容器里、由使用方提供的内容。"
+    }
+  ],
+  "segmented-control": [
+    {
+      "name": "控件",
+      "description": "装着互斥分段选项的容器。"
+    },
+    {
+      "name": "分段",
+      "description": "控件里的一个选项。"
+    },
+    {
+      "name": "标签",
+      "description": "标签没有隐藏时，用来标识这个分段的可见文字。"
+    },
+    {
+      "name": "图标",
+      "description": "分段里可选的、由使用方提供的图标。"
+    }
+  ],
+  "selectable-card": [
+    {
+      "name": "容器",
+      "description": "选中时带强调边框的可交互区域。"
+    },
+    {
+      "name": "内容",
+      "description": "画在卡片里的内容。"
+    }
+  ],
+  "selector": [
+    {
+      "name": "字段",
+      "description": "提供标签和可选辅助内容的独立 Field 外壳。放在 InputGroup 里时不画这一层。"
+    },
+    {
+      "name": "触发器",
+      "description": "着色控件，显示当前选择或占位。可编辑时打开选择表面。"
+    },
+    {
+      "name": "图标渲染的起始图标",
+      "description": "可选的前导语义图标或图标组件，通过 Icon 绘制。"
+    },
+    {
+      "name": "使用方渲染的起始内容",
+      "description": "直接画在触发器开头的可选任意插槽内容。"
+    },
+    {
+      "name": "触发器清除按钮",
+      "description": "共用的清除操作。clearable 打开时去掉已选值。"
+    },
+    {
+      "name": "状态图标",
+      "description": "状态以附着或提示方式呈现时，用来代替展开指示的状态符号。"
+    },
+    {
+      "name": "指示图标",
+      "description": "状态呈现没有把它换掉时显示的尾部箭头，反映收起或展开。"
+    },
+    {
+      "name": "搜索行",
+      "description": "面板头部，带无边框搜索框和可选的清除操作。"
+    },
+    {
+      "name": "搜索图标",
+      "description": "搜索行里通过 Icon 画出的前导放大镜。"
+    },
+    {
+      "name": "搜索清除按钮",
+      "description": "已经有查询词时，搜索行里的共用清除操作。"
+    },
+    {
+      "name": "选项行",
+      "description": "一个选项所在的可选择行。"
+    },
+    {
+      "name": "默认选项内容",
+      "description": "没有提供 option 插槽时，从选项数据画出的标签、说明和图标。"
+    },
+    {
+      "name": "选项插槽内容",
+      "description": "通过 option 插槽提供的内容，用来代替默认的标签和说明。"
+    },
+    {
+      "name": "选项选中指示",
+      "description": "每个选项在已选或未选状态下画出的选中标记。解析后的指示什么都不画时，它占的布局空间会收起来。"
+    },
+    {
+      "name": "选项分隔线",
+      "description": "公开选项数据里用来分开相邻选项组的分隔线。"
+    },
+    {
+      "name": "分区标题",
+      "description": "一组带标签的选项行的可见标题。"
+    },
+    {
+      "name": "空状态",
+      "description": "共用面板里没有选项，或搜索没有匹配时的消息。"
+    },
+    {
+      "name": "指针弹层",
+      "description": "浮层呈现方式里，承载共用面板内容的锚定着色表面。"
+    },
+    {
+      "name": "触摸面板标题",
+      "description": "底部面板呈现方式里，共用面板内容上方的标题。"
+    },
+    {
+      "name": "触摸面板",
+      "description": "底部面板呈现方式里，承载同一套面板内容的 BottomSheet 表面。"
+    }
+  ],
+  "side-nav": [
+    {
+      "name": "产品图标和名称",
+      "description": "导航顶部的品牌区。"
+    },
+    {
+      "name": "导航项",
+      "description": "可导航链接的分区和分组。"
+    },
+    {
+      "name": "收起和展开开关",
+      "description": "收起或展开侧边导航的开关。"
+    }
+  ],
+  "skeleton": [
+    {
+      "name": "占位",
+      "description": "内容还在加载时，替它站位的着色形状。"
+    }
+  ],
+  "slider": [
+    {
+      "name": "标签",
+      "description": "说明滑块控制的是哪一项数值的文字。"
+    },
+    {
+      "name": "说明",
+      "description": "标签和滑块控件之间的辅助文字。"
+    },
+    {
+      "name": "滑块",
+      "description": "装着轨道、拇指（一个或两个）和可选文字值的控件行。"
+    },
+    {
+      "name": "交互控件",
+      "description": "指针和键盘的交互表面，装着轨、填充、刻度和拇指。"
+    },
+    {
+      "name": "轨道",
+      "description": "表示可用数值范围的背景轨。"
+    },
+    {
+      "name": "已填充范围",
+      "description": "从最小值到单个值的强调段；范围模式则是两个值之间的那段。"
+    },
+    {
+      "name": "刻度",
+      "description": "通过 marks 提供的位置标记。"
+    },
+    {
+      "name": "刻度标签",
+      "description": "刻度旁边可选的文字。"
+    },
+    {
+      "name": "拇指",
+      "description": "可拖动的值指示。范围模式会画出最小值和最大值两个拇指。"
+    },
+    {
+      "name": "数值显示",
+      "description": "valueDisplay 为 text 时，显示在滑块旁边的格式化当前值。"
+    },
+    {
+      "name": "数值提示",
+      "description": "valueDisplay 为 tooltip 时，显示在提示里的格式化当前值。"
+    },
+    {
+      "name": "状态消息",
+      "description": "滑块下面的错误、警告或成功提示。"
+    }
+  ],
+  "stack": [
+    {
+      "name": "堆叠容器",
+      "description": "沿一条 flex 轴排列内容的布局容器。"
+    },
+    {
+      "name": "项",
+      "description": "可选的 StackItem，用来控制堆叠里的一项。"
+    },
+    {
+      "name": "内容",
+      "description": "Stack 或 StackItem 画出的、由使用方提供的内容。"
+    }
+  ],
+  "status-dot": [
+    {
+      "name": "点",
+      "description": "带着所选语义变体的着色状态点。"
+    },
+    {
+      "name": "状态图标",
+      "description": "画在点里面的、由使用方提供的可选图标。"
+    }
+  ],
+  "stepper": [
+    {
+      "name": "步骤条",
+      "description": "装着各步的有序列表。整条流程的方向，以及指示放在哪里，都由它决定。"
+    },
+    {
+      "name": "框架",
+      "description": "把有序的步骤和窄宽度下可选的紧凑摘要组合在一起的布局框。"
+    },
+    {
+      "name": "紧凑摘要",
+      "description": "横向 Stepper 窄到没法给每一步都标字时，直接加在轨道下方的可选一行。horizontalOptions.collapsedVariant 决定这一行是「标签加上一页和下一页」、只有标签，还是不出现、只留一条进度轨。轨道上的布局把指示留在轨上，不会在标签旁边再重复当前指示。无论多窄，每一步的名字都留在无障碍序列里。"
+    },
+    {
+      "name": "步骤",
+      "description": "流程里的一步，也是带着这一步状态的元素。里面有指示、标签、说明，以及属于它的轨段。"
+    },
+    {
+      "name": "进度条",
+      "description": "每一步一条 4px 的分段条。已完成和当前步是填满的。前进一步时，填充沿着刚走过的那段轨长出来，读起来是在前进，而不是一根条在变色。其余变化一次完成：往回走、一次跳过不止一步、中途挂载，以及 prefers-reduced-motion 下的任何变化。一段跨度由不止一段画出时（轨道上的布局会把它分给两步，中间再插内容插槽时是三步），这些段按轨道顺序、以同一个恒定速度走，所以填充读起来是一条线在长，而不是一段段依次点亮。"
+    },
+    {
+      "name": "连接线",
+      "description": "轨道上的布局里，指示之间画出的轨。每条连接线先画一条未填充的线，再在上面画表示已完成进度的强调填充。一条连接线由几段拼成，是布局的实现细节，不是可以单独换主题的部分。用 --step-connector-gap 让轨和指示保持距离。"
+    },
+    {
+      "name": "指示",
+      "description": "数字徽章、勾，或任意自定义图标。由 indicator 属性控制。"
+    },
+    {
+      "name": "标签",
+      "description": "标识这一步的文字。"
+    },
+    {
+      "name": "说明",
+      "description": "标签下面的补充文字。"
+    }
+  ],
+  "switch": [
+    {
+      "name": "字段",
+      "description": "排列开关、标签和反馈的容器。"
+    },
+    {
+      "name": "轨道",
+      "description": "表示关或开的胶囊形表面。"
+    },
+    {
+      "name": "拇指",
+      "description": "状态变化时沿轨道移动的指示。"
+    },
+    {
+      "name": "标签",
+      "description": "说明开关控制的是哪一项设置的文字。"
+    },
+    {
+      "name": "说明",
+      "description": "标签下面的辅助文字。"
+    },
+    {
+      "name": "转圈",
+      "description": "忙碌时显示在拇指里的加载指示。"
+    },
+    {
+      "name": "状态消息",
+      "description": "开关下面的错误、警告或成功提示。"
+    }
+  ],
+  "tab-list": [
+    {
+      "name": "左侧内容",
+      "description": "最重要的区域，宽度贴着内容。"
+    },
+    {
+      "name": "中间填充内容",
+      "description": "伸展并填满可用空间。"
+    },
+    {
+      "name": "右侧内容",
+      "description": "宽度贴着内容。"
+    }
+  ],
+  "table": [
+    {
+      "name": "表格",
+      "description": "把表格分区、行和单元格组在一起的语义 table 元素。"
+    },
+    {
+      "name": "滚动区",
+      "description": "横向滚动的外层。只有列溢出时才进入键盘顺序，并且只在那时限制过度滚动。"
+    },
+    {
+      "name": "表头区",
+      "description": "有数据驱动的列时生成的列标题区。用插槽组合表格时，由 TableHeader 提供。"
+    },
+    {
+      "name": "列标题单元格",
+      "description": "标识一列的单元格，可以装着排序或批量选择控件。"
+    },
+    {
+      "name": "排序控件",
+      "description": "包住可排序列的标签，并改变该列排序方向的按钮。"
+    },
+    {
+      "name": "排序指示符号",
+      "description": "排序控件里由 Icon 画出的方向符号。"
+    },
+    {
+      "name": "排序优先级",
+      "description": "多列排序打开时，已排序列上显示的数字。"
+    },
+    {
+      "name": "选择控件",
+      "description": "选择插件在表头和可选正文行里渲染的 CheckboxInput。"
+    },
+    {
+      "name": "正文区",
+      "description": "装着数据行或当前空状态的分区。数据驱动模式会自动渲染它。"
+    },
+    {
+      "name": "行",
+      "description": "重复的 TableRow，把标准表头、正文或表尾行里的单元格组在一起。"
+    },
+    {
+      "name": "单元格",
+      "description": "TableCell。在标准正文行或表脚行里，装着一个值或使用方提供的内容。"
+    },
+    {
+      "name": "默认空状态",
+      "description": "数据数组为空时显示的紧凑 EmptyState，除非被替换或关掉。"
+    },
+    {
+      "name": "展开控件",
+      "description": "前导单元格里的按钮，用来展开或收起一行可展开的行。"
+    },
+    {
+      "name": "展开符号",
+      "description": "展开控件里由 Icon 画出的方向符号。"
+    },
+    {
+      "name": "展开详情面板",
+      "description": "展开行下方的详情行和跨列单元格，包着使用方提供的内容。"
+    },
+    {
+      "name": "表脚区",
+      "description": "用插槽组合表格时，由 TableFooter 提供的可选汇总或合计分区。"
+    }
+  ],
+  "text": [
+    {
+      "name": "文本",
+      "description": "多态文本元素，用主题里的字体渲染放进来的内容。"
+    },
+    {
+      "name": "标题",
+      "description": "Text 上的 Heading。把放进来的内容渲染成语义上的 h1 到 h6。"
+    },
+    {
+      "name": "截断提示",
+      "description": "只有 Text 或 Heading 被测出已经截断，并且打开了截断提示时，才出现的 Tooltip 表面。"
+    }
+  ],
+  "text-area": [
+    {
+      "name": "标签",
+      "description": "标识这个多行字段的文字。"
+    },
+    {
+      "name": "说明",
+      "description": "标签和输入之间的辅助文字。"
+    },
+    {
+      "name": "输入容器",
+      "description": "装着文本域和盖在上面的那些部分的着色边界。"
+    },
+    {
+      "name": "文本域",
+      "description": "显示并编辑值的多行控件。"
+    },
+    {
+      "name": "占位",
+      "description": "空文本域里的提示文字。"
+    },
+    {
+      "name": "起始图标",
+      "description": "startIcon 是语义名或图标组件时，在开头画出的 Astryx Icon。"
+    },
+    {
+      "name": "自定义起始内容",
+      "description": "使用方提供的插槽内容，画在开头，代替 Astryx Icon。"
+    },
+    {
+      "name": "转圈",
+      "description": "输入容器末尾的加载指示。"
+    },
+    {
+      "name": "状态图标",
+      "description": "输入框里的错误、警告或成功图标。"
+    },
+    {
+      "name": "字数",
+      "description": "输入容器里显示的当前字数和上限。"
+    },
+    {
+      "name": "字段状态消息",
+      "description": "跟字段关联的附着或分离的错误、警告或成功消息。"
+    },
+    {
+      "name": "提示状态消息",
+      "description": "提示变体里，用来呈现状态消息的 Tooltip 表面。"
+    }
+  ],
+  "text-input": [
+    {
+      "name": "标签",
+      "description": "标识字段的文字。即使视觉上隐藏，为了无障碍也始终渲染。"
+    },
+    {
+      "name": "说明",
+      "description": "标签和输入之间的辅助文字，补充语境或格式。"
+    },
+    {
+      "name": "起始图标",
+      "description": "输入框里的前导图标，暗示期望的内容，比如搜索用的放大镜。"
+    },
+    {
+      "name": "占位",
+      "description": "输入为空时的提示文字。聚焦后消失。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "尾部的 × 按钮，清空值并把焦点交回输入。"
+    },
+    {
+      "name": "转圈",
+      "description": "服务端校验这类异步操作进行时出现的加载指示。"
+    },
+    {
+      "name": "状态图标",
+      "description": "尾部图标，表示错误、警告或成功，用来传达校验状态。"
+    }
+  ],
+  "thumbnail": [
+    {
+      "name": "图片",
+      "description": "预览图，按正方形、cover 的方式显示。"
+    },
+    {
+      "name": "占位",
+      "description": "没有 src 时显示的图片剪影图标。"
+    },
+    {
+      "name": "移除按钮",
+      "description": "叠在右上角的关闭按钮。什么时候出现由 showRemoveOn 决定，默认是悬停。点击会发出 remove。它坐在固定的 --color-overlay 遮罩上，图标用 --color-on-dark，好在任何图片上都看得见。"
+    },
+    {
+      "name": "上传遮罩",
+      "description": "半透明遮罩加转圈。isLoading 为真、并且已经有 src 预览时显示。"
+    },
+    {
+      "name": "骨架",
+      "description": "isLoading 为真、并且没有 src 时的闪烁动画。"
+    }
+  ],
+  "time-input": [
+    {
+      "name": "时钟图标",
+      "description": "前导时钟图标。它标识这个字段，并在原生模式打开浏览器或系统选择器。"
+    },
+    {
+      "name": "时间控件",
+      "description": "原生模式是真正的 input type=time。精细指针、presentation 为 text-input、需要秒或自定义步进时，是 Astryx 可编辑的文本字段。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "尾部用来重置值的按钮。hasClear 为真且已经有值时显示。"
+    },
+    {
+      "name": "状态图标",
+      "description": "尾部图标，表示错误、警告或成功。"
+    },
+    {
+      "name": "转圈",
+      "description": "加载时替换尾部内容，表示异步操作还在进行。"
+    }
+  ],
+  "timer": [
+    {
+      "name": "已过时间",
+      "description": "装着标准化已过时长的语义 time 元素。"
+    }
+  ],
+  "timestamp": [
+    {
+      "name": "格式化文字",
+      "description": "渲染出的日期、时间或相对标签，比如「2 小时前」或「2025年3月21日」。"
+    },
+    {
+      "name": "悬停卡片",
+      "description": "显示为相对时间时，这张可复制的悬停卡片给出完整的绝对日期和时间；也可以用 tooltipEntries 配置各行。默认的单行带着完整的绝对时间。"
+    },
+    {
+      "name": "悬停卡片行",
+      "description": "卡片的一行：可选标签，旁边是按一个时区和一种格式渲染的时刻。一行要不要复制按钮，由 isCopyable 决定。"
+    },
+    {
+      "name": "复制按钮",
+      "description": "悬停卡片里每一行的复制按钮，复制的是该行格式化后的值。"
+    }
+  ],
+  "toast": [
+    {
+      "name": "正文",
+      "description": "说明发生了什么，或用户该知道什么的主要消息。"
+    },
+    {
+      "name": "尾部内容",
+      "description": "正文后面的操作，比如撤销按钮或链接。"
+    },
+    {
+      "name": "关闭按钮",
+      "description": "让用户在自动隐藏之前手动关掉这条提示的按钮。"
+    }
+  ],
+  "toggle-button": [
+    {
+      "name": "图标",
+      "description": "表示这个切换做什么的前导图标，比如收藏用的星，或加粗用的 B。"
+    },
+    {
+      "name": "按下时的图标",
+      "description": "按下时显示的另一枚图标，一般是默认图标的实心版，用来强化已经按下。"
+    },
+    {
+      "name": "标签",
+      "description": "可见文字或无障碍名称。只有图标的切换用它做 aria-label，并自动作为提示。"
+    },
+    {
+      "name": "转圈",
+      "description": "pressedChangeAction 触发的异步操作期间，替换图标。"
+    }
+  ],
+  "token": [
+    {
+      "name": "图标",
+      "description": "标识这个标签类型的前导图标，比如用户头像或分类符号。"
+    },
+    {
+      "name": "标签",
+      "description": "可见文字。labelHidden 为真时，也用作无障碍名称。"
+    },
+    {
+      "name": "尾部内容",
+      "description": "标签后面的内容，比如计数徽章或状态点。"
+    },
+    {
+      "name": "移除按钮",
+      "description": "removable 打开时出现的 X 按钮，让用户去掉这个标签。点击会发出 remove。"
+    }
+  ],
+  "tokenizer": [
+    {
+      "name": "标签",
+      "description": "输入上方的可见文字，说明用户在选什么。也用作无障碍名称。"
+    },
+    {
+      "name": "标签芯片",
+      "description": "表示每个已选项的可移除芯片。每片有标签和移除按钮。"
+    },
+    {
+      "name": "搜索输入",
+      "description": "用户输入、用来搜索数据源的文本框。达到 maxEntries 后隐藏。"
+    },
+    {
+      "name": "下拉菜单",
+      "description": "用户输入时出现在输入框下方的搜索结果列表。"
+    },
+    {
+      "name": "转圈",
+      "description": "搜索进行中时，字段末尾的加载指示。"
+    },
+    {
+      "name": "尾部内容",
+      "description": "输入后面的插槽，放操作按钮、计数或其他控件。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "一次去掉所有已选标签的按钮。clearable 打开且已经有标签时显示。"
+    }
+  ],
+  "toolbar": [
+    {
+      "name": "外框",
+      "description": "由分区拥有的容器，提供工具栏表面、内边距，以及选中的那些分隔边。"
+    },
+    {
+      "name": "工具栏",
+      "description": "带工具栏语义的一行，拥有起始、可选的中间和末尾布局。"
+    }
+  ],
+  "tooltip": [
+    {
+      "name": "提示表面",
+      "description": "呈现提示的着色覆盖表面。"
+    },
+    {
+      "name": "提示文字",
+      "description": "画在表面里的提示内容。"
+    }
+  ],
+  "top-nav": [
+    {
+      "name": "产品图标和名称",
+      "description": "在导航栏里标识产品。"
+    },
+    {
+      "name": "导航项",
+      "description": "指向产品级目的地的主要链接。"
+    },
+    {
+      "name": "更多菜单",
+      "description": "收纳放不下的导航项的溢出菜单。"
+    },
+    {
+      "name": "弹性区域",
+      "description": "放搜索、主要操作按钮或其他控件的弹性区域。"
+    }
+  ],
+  "tree-list": [
+    {
+      "name": "树列表",
+      "description": "呈现层级树的容器。"
+    },
+    {
+      "name": "页眉",
+      "description": "使用方提供的内容，用来给这棵树一个看得见的名字。"
+    },
+    {
+      "name": "项",
+      "description": "层级里一个节点的着色行。"
+    },
+    {
+      "name": "箭头",
+      "description": "有子节点的项上的展开和收起控件。"
+    },
+    {
+      "name": "箭头符号",
+      "description": "箭头里由 Icon 画出的方向符号。"
+    },
+    {
+      "name": "项标签",
+      "description": "标识一项的主要内容。"
+    },
+    {
+      "name": "项说明",
+      "description": "项标签下面的次要文字。"
+    },
+    {
+      "name": "起始内容",
+      "description": "画在项标签前面的、由使用方提供的内容。"
+    },
+    {
+      "name": "尾部内容",
+      "description": "画在项标签后面的、由使用方提供的内容。"
+    },
+    {
+      "name": "引导线",
+      "description": "表示父子关系的连接线。"
+    }
+  ],
+  "typeahead": [
+    {
+      "name": "字段",
+      "description": "提供标签和可选辅助内容的独立 Field 外壳。放在 InputGroup 里时不画这一层。"
+    },
+    {
+      "name": "输入表面",
+      "description": "装着可编辑输入或已选标签的着色控件表面。"
+    },
+    {
+      "name": "图标渲染的起始图标",
+      "description": "可选的前导语义图标或图标组件，通过 Icon 绘制。"
+    },
+    {
+      "name": "使用方渲染的起始内容",
+      "description": "直接画在输入表面开头的可选任意插槽内容。"
+    },
+    {
+      "name": "已选标签",
+      "description": "控件不在编辑状态时，用来呈现已选项的 Token。"
+    },
+    {
+      "name": "转圈",
+      "description": "搜索进行中时，输入表面末尾的加载指示。"
+    },
+    {
+      "name": "清除按钮",
+      "description": "共用的清除操作。clearable 打开时去掉已选项。"
+    },
+    {
+      "name": "下拉",
+      "description": "装着当前搜索结果的锚定列表框表面。"
+    },
+    {
+      "name": "空状态",
+      "description": "一次搜索完成但没有结果时的消息。"
+    },
+    {
+      "name": "结果行",
+      "description": "稳定的选项外层，负责高亮、选中、指针和键盘行为。"
+    },
+    {
+      "name": "默认项内容",
+      "description": "没有提供 item 插槽时，结果行里画出的标准标签和辅助内容。"
+    },
+    {
+      "name": "使用方渲染的项内容",
+      "description": "通过 item 插槽放进稳定结果行里的、由使用方拥有的结果内容。"
+    },
+    {
+      "name": "结果分组标题",
+      "description": "一组带标签的结果行的可见标题。"
+    },
+    {
+      "name": "已选结果状态",
+      "description": "当前结果行上的选中样式，以及尾部的勾。"
+    }
+  ]
+}

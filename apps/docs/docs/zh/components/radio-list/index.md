@@ -32,6 +32,9 @@ const channel = shallowRef('')
 
 指示器默认 24px，`size="sm"` 时是 20px。`orientation="horizontal"` 把选项排成一行，间距 20px。`end` 插槽靠行的尾端。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

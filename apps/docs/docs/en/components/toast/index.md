@@ -33,6 +33,9 @@ toast({ body: 'Saved successfully', type: 'success' })
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

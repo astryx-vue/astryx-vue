@@ -34,6 +34,9 @@ const total = ref(100)
 
 The visible labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

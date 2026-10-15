@@ -31,6 +31,9 @@ const count = ref(0)
 
 通过 `min` 和 `max` 属性设置数值范围，`step` 设置每次增减的步长。超出范围的值会被限制在有效区间内。步进按钮使用向上和向下的箭头。按钮的无障碍名称默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文；如果传了 `label`，名称里会带上它。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

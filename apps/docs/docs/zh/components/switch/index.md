@@ -30,6 +30,9 @@ const enabled = shallowRef(false)
 
 
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

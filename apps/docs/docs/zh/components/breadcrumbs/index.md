@@ -36,6 +36,9 @@ import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
 
 路径中间的一项可以打开菜单，用来在同级目的地之间切换。简单列表直接传一个菜单数组。需要勾选或单选时，改用菜单插槽把行写在这一项里面；写了插槽就不再使用数组。这些行从面包屑入口导出，和菜单里的勾选行、单选组是同一批组件，选中一项后的开关行为也相同。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

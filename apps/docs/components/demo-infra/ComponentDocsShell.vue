@@ -6,9 +6,12 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { catalogGroups } from './componentCatalog'
 import { componentDocsCopy } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
+import PropsPlayground from './PropsPlayground.vue'
+import { hasAccessibility } from './reference/loadReference'
 
 const props = defineProps<{ route: ComponentDocsRoute }>()
 const text = computed(() => componentDocsCopy[props.route.locale])
+const showAccessibility = computed(() => props.route.kind === 'detail' && hasAccessibility(props.route.slug))
 const groups = computed(() => catalogGroups(props.route.locale))
 const routePath = useRoute()
 const activeGroupId = computed(() => {
@@ -175,8 +178,10 @@ watch(() => routePath.path, () => {
         <nav class="component-detail__tabs" :aria-label="`${route.name} ${text.documentation}`">
           <a :href="path(`/components/${route.slug}`)" :aria-current="route.tab === 'overview' ? 'page' : undefined">{{ text.overview }}</a>
           <a :href="path(`/components/${route.slug}/props`)" :aria-current="route.tab === 'props' ? 'page' : undefined">{{ text.props }}</a>
+          <a v-if="showAccessibility" :href="path(`/components/${route.slug}/accessibility`)" :aria-current="route.tab === 'accessibility' ? 'page' : undefined">{{ text.accessibility }}</a>
         </nav>
         <div class="component-detail__body vp-doc">
+          <PropsPlayground v-if="route.tab === 'props'" :locale="route.locale" :slug="route.slug" />
           <slot />
         </div>
       </article>

@@ -48,6 +48,9 @@ const active = ref(2)
 ```
 
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample :demo="stepperCustom" description="垂直步骤各自占页面的一块。内容可以是表单、摘要或横幅，并且只渲染当前步骤。" locale="zh" title="自定义内容" />

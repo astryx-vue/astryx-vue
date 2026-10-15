@@ -41,6 +41,9 @@ const view = ref('overview')
 
 分段可以在标签前面放一个图标，把图标写进 `#icon` 插槽即可；图标会跟随控件的尺寸。只显示图标时设置 `isLabelHidden`，此时 `label` 会转成 `aria-label`，分段的无障碍名称不会丢失。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

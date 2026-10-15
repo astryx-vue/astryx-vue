@@ -43,6 +43,9 @@ import { Timer } from '@astryx-vue/core/Timer'
 | <Badge variant="error">避免</Badge> | 把每一次跳动都播报出去。时间元素就地更新，保持安静。 |
 | <Badge variant="error">避免</Badge> | 满一小时后还指望 `elapsed` 精确到秒。这个格式到点就会改成按分钟显示。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 

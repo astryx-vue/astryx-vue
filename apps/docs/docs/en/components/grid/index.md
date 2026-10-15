@@ -65,6 +65,9 @@ Wrap an item in `GridSpan` when it has to span more than one column or row. Its 
 
 The column template is written to the container as the CSS variable `--astryx-grid-template-columns` rather than as an inline `grid-template-columns` declaration. That way your own stylesheet, including a rule inside a media query, can still override the variable or the declaration itself.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

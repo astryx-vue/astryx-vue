@@ -29,6 +29,9 @@ const resume = shallowRef<File | File[] | null>(null)
 
 `mode="input"` 是紧凑的输入框。`mode="dropzone"` 是虚线区域，也可以把文件拖进去。不符合 `accept`、`maxSize` 或 `maxFiles` 的文件不会进入值，字段会显示错误。占位符、清除按钮和错误文案跟随 `provideAstryxLocale`。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

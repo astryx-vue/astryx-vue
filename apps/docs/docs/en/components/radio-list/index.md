@@ -32,6 +32,9 @@ const channel = shallowRef('')
 
 The indicator is 24px by default, and 20px when `size="sm"`. `orientation="horizontal"` lays the rows in a row with a 20px gap. The `end` slot sits on the trailing edge.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

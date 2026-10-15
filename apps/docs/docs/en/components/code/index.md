@@ -42,6 +42,9 @@ The copy button writes the exact `code` string, so what a reader pastes always m
 
 The code viewport is a named `role="group"` with a keyboard stop, so a keyboard user can scroll a snippet that overflows. The copy control and the collapse control are separate siblings, each with its own accessible name, so activating one never triggers the other. Syntax colors come from the `--astryx-code-syntax-*` tokens, and `highlightMode` chooses how they are painted: `auto` uses the CSS Custom Highlight API when the browser supports it well and falls back to spans, `ranges` paints through the API without adding any element to the code text, and `spans` wraps every token in an element. The text, the semantics, and the copy output are the same in all three.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

@@ -72,6 +72,9 @@ const selector = shallowRef<ComplexSelectorHandle | null>(null)
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample :demo="complexSelectorDeadline" description="Today, Tomorrow, or Next week, or a custom date and time. Apply commits the value and closes the popup." locale="en" title="Deadline picker" />

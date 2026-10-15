@@ -28,6 +28,9 @@ import { multiSelectorColumns, multiSelectorCreate, multiSelectorForm, multiSele
 
 方向键移动高亮项，Enter 和空格切换选中。搜索框里的空格仍用于输入。没有高亮项时，Enter 会创建当前文字。Escape 关闭列表。关闭且没有在搜索时，Backspace 清空已选项。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

@@ -33,6 +33,9 @@ The value is a local date. The field writes it back as a long date, such as Marc
 
 The calendar can open in a popover or a bottom sheet. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guideline | Practice |

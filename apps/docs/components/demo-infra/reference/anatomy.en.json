@@ -1,0 +1,2158 @@
+{
+  "alert-dialog": [
+    {
+      "name": "Title",
+      "description": "The question being asked. Renders as a level-2 heading and labels the dialog via aria-labelledby."
+    },
+    {
+      "name": "Description",
+      "description": "What will happen if the user confirms. Linked to the dialog via aria-describedby."
+    },
+    {
+      "name": "Cancel button",
+      "description": "Ghost button that dismisses without acting. Takes initial focus, and Escape does the same thing."
+    },
+    {
+      "name": "Action button",
+      "description": "The confirming action. Destructive by default; shows a spinner while isActionLoading is set."
+    },
+    {
+      "name": "Backdrop",
+      "description": "Overlay behind the dialog that blocks page interaction. Clicking it does not dismiss."
+    },
+    {
+      "name": "Dialog surface",
+      "description": "The modal panel that holds the title, description, and buttons."
+    }
+  ],
+  "app-shell": [
+    {
+      "name": "Page shell",
+      "description": "Outermost application frame that owns page-level navigation, responsive shell behavior, and the main content landmark."
+    },
+    {
+      "name": "Skip link",
+      "description": "First focusable element on the page. Visually hidden until focused, then moves focus to the main content area."
+    },
+    {
+      "name": "Banner",
+      "description": "The banner slot, for system-wide announcements. Renders above the top nav, inside the banner landmark."
+    },
+    {
+      "name": "Top navigation",
+      "description": "The topNav slot, typically TopNav. Below the mobile breakpoint it becomes a compact bar carrying the nav toggle."
+    },
+    {
+      "name": "Side navigation",
+      "description": "The sideNav slot, typically SideNav. Inline above the breakpoint, moved into the mobile drawer below it."
+    },
+    {
+      "name": "Main content",
+      "description": "The default slot, rendered in the main landmark. Scrolls internally when height is fill, and with the page when it is auto."
+    },
+    {
+      "name": "Mobile nav drawer",
+      "description": "Generated below the breakpoint from the nav slots unless mobileNav disables or replaces it. A modal dialog: it traps focus and returns focus to the toggle on close."
+    }
+  ],
+  "aspect-ratio": [
+    {
+      "name": "Ratio box",
+      "description": "The outer element that holds the aspect ratio and clips overflow. Carries the `astryx-aspect-ratio` theme target, and the elliptical clip when `shape` is `ellipse`."
+    },
+    {
+      "name": "Content slot",
+      "description": "A wrapper that fills the ratio box and positions the child. With `fit` set it also sizes the child; without it the child styles itself."
+    }
+  ],
+  "avatar": [
+    {
+      "name": "Photo",
+      "description": "The profile image, loaded from the src URL. Shown when available."
+    },
+    {
+      "name": "Initials",
+      "description": "The first letter, digit or emoji of the first and last words of the name; punctuation is skipped. Shown when no photo is available. A name with no letters, digits or emoji shows the default icon instead."
+    },
+    {
+      "name": "Default icon",
+      "description": "A generic person silhouette. Shown when there is no photo or name."
+    },
+    {
+      "name": "Status dot",
+      "description": "A small indicator in the bottom-right corner showing availability (online, away, busy). Each variant pairs colour with a distinct shape so status does not rely on colour alone."
+    }
+  ],
+  "avatar-group": [
+    {
+      "name": "Avatars",
+      "description": "Avatar elements that form the overlapping row. Each can have its own props."
+    },
+    {
+      "name": "Overflow indicator",
+      "description": "A \"+N\" circle at the end showing hidden count, or a custom AvatarGroupOverflow slot."
+    }
+  ],
+  "badge": [
+    {
+      "name": "Icon",
+      "description": "An optional leading icon that helps identify the badge type at a glance."
+    },
+    {
+      "name": "Label",
+      "description": "The text or number shown inside the badge."
+    }
+  ],
+  "banner": [
+    {
+      "name": "Banner frame",
+      "description": "Outer frame that groups the status surface and optional content surface. It carries whole-banner elevation and, for elevated card banners, the radius that shapes that silhouette."
+    },
+    {
+      "name": "Status surface",
+      "description": "The primary painted surface. It communicates status and contains the icon, title, description, actions, and controls."
+    },
+    {
+      "name": "Icon",
+      "description": "Automatically set based on the status (info, warning, error, success)."
+    },
+    {
+      "name": "Title",
+      "description": "The main message. Always required."
+    },
+    {
+      "name": "Description",
+      "description": "Additional detail below the title."
+    },
+    {
+      "name": "Action button",
+      "description": "A button for the user to act on the message, like \"Review\" or \"Retry\"."
+    },
+    {
+      "name": "Dismiss button",
+      "description": "Lets the user close the banner. Enabled by setting isDismissable."
+    },
+    {
+      "name": "Content surface",
+      "description": "Secondary surface for extra detail below the status surface, like a list of errors. Sits behind an expand/collapse toggle by default; set collapsible to false to keep it visible."
+    }
+  ],
+  "blockquote": [
+    {
+      "name": "Rule",
+      "description": "The border on the inline-start edge, drawn with --color-border-emphasized."
+    },
+    {
+      "name": "Quotation",
+      "description": "The quoted content, passed in the default slot. Renders inside the <blockquote> element."
+    },
+    {
+      "name": "Attribution",
+      "description": "The source, passed as cite. Renders as a <cite> element below the quotation."
+    }
+  ],
+  "bottom-sheet": [
+    {
+      "name": "Sheet panel",
+      "description": "Painted surface that rises from the bottom edge and contains the sheet."
+    },
+    {
+      "name": "Content area",
+      "description": "Padded, scrollable container that presents the caller-provided sheet content."
+    },
+    {
+      "name": "Handle",
+      "description": "Decorative grab affordance and drag region at the top of the panel."
+    },
+    {
+      "name": "Scrim",
+      "description": "Backdrop that dims and blocks the page in a scrim-backed presentation."
+    }
+  ],
+  "breadcrumbs": [
+    {
+      "name": "Trail",
+      "description": "The ordered list of links from root to current page."
+    },
+    {
+      "name": "Item",
+      "description": "A single step in the trail. Renders as a link or plain text for the current page."
+    },
+    {
+      "name": "Separator",
+      "description": "The character between items. Defaults to \"/\" but can be customized."
+    },
+    {
+      "name": "Icon",
+      "description": "An optional icon before an item label, like a home icon on the first item."
+    }
+  ],
+  "button": [
+    {
+      "name": "Icon",
+      "description": "A leading icon that reinforces the label, like a trash icon on a Delete button."
+    },
+    {
+      "name": "Label",
+      "description": "The visible text describing the action. Also used as the accessible name."
+    },
+    {
+      "name": "End content",
+      "description": "A trailing badge or icon after the label, like a notification count or dropdown arrow."
+    },
+    {
+      "name": "Spinner",
+      "description": "Replaces the icon during loading to show the action is in progress."
+    }
+  ],
+  "button-group": [
+    {
+      "name": "Button",
+      "description": "One or more Button or IconButton elements that form the connected group."
+    },
+    {
+      "name": "Divider",
+      "description": "A thin border between buttons, rendered automatically by the group."
+    }
+  ],
+  "calendar": [
+    {
+      "name": "Calendar root",
+      "description": "The container that holds the month header and the day grid."
+    },
+    {
+      "name": "Month header",
+      "description": "The month name and year with navigation arrows to move between months. The arrows mirror automatically under dir=\"rtl\"."
+    },
+    {
+      "name": "Day grid",
+      "description": "A 7-column grid of days with column headers for the day names."
+    },
+    {
+      "name": "Day button",
+      "description": "One day in the grid; the control a date is picked with."
+    },
+    {
+      "name": "Selected day",
+      "description": "The currently selected date, highlighted. In range mode, the start and end dates plus the days between them."
+    },
+    {
+      "name": "Today marker",
+      "description": "A subtle indicator on the current date for orientation."
+    }
+  ],
+  "card": [
+    {
+      "name": "Container",
+      "description": "The outer box with border, background, border-radius, and padding."
+    },
+    {
+      "name": "Content",
+      "description": "Anything rendered in the default slot inside the card. Often a stack of heading, text, and actions."
+    }
+  ],
+  "carousel": [
+    {
+      "name": "Scroll container",
+      "description": "The horizontal overflow area that holds all items."
+    },
+    {
+      "name": "Items",
+      "description": "The default slot, rendered in a row inside the scroll container. With hasSnap, each item snaps to the start edge."
+    },
+    {
+      "name": "Fade edges",
+      "description": "Gradient fades on the left and right edges that indicate more content is available. Enabled by default. Set hasEdgeFade to false to turn it off."
+    },
+    {
+      "name": "Navigation buttons",
+      "description": "Prev/next buttons that appear when the content can scroll in that direction. Enabled by default. Set hasButtons to false to turn it off."
+    }
+  ],
+  "center": [
+    {
+      "name": "Container",
+      "description": "A flexbox wrapper that aligns its children to the center along the chosen axis."
+    },
+    {
+      "name": "Content",
+      "description": "Anything passed in the default slot to Center. Typically a card, form, spinner, or empty state message."
+    }
+  ],
+  "chat": [
+    {
+      "name": "Message area",
+      "description": "Scrollable region for messages. Renders the default slot (typically ChatMessageList) in a flex column that pushes content to the bottom when the list is short."
+    },
+    {
+      "name": "Frosted glass dock",
+      "description": "Sticky or fixed container at the bottom with a backdrop-blur layer. Houses the scroll button and composer."
+    },
+    {
+      "name": "Scroll-to-bottom button",
+      "description": "Appears when the user scrolls up or new messages arrive. Defaults to ChatLayoutScrollButton. Set showScrollButton to false to hide it, or replace it with the scrollButton slot."
+    },
+    {
+      "name": "Composer",
+      "description": "The input area for sending messages, typically ChatComposer. Docked at the bottom inside the frosted glass layer."
+    },
+    {
+      "name": "Empty state",
+      "description": "Centered placeholder shown when no messages exist. Use EmptyState for a consistent look."
+    },
+    {
+      "name": "Avatar",
+      "description": "A sender avatar rendered beside the message. Typically Avatar with size=\"md\". Hidden for system messages."
+    },
+    {
+      "name": "Name",
+      "description": "Sender name above the message body. Place on the bubble when using bubbles, or on the message wrapper for raw content."
+    },
+    {
+      "name": "Content",
+      "description": "The message body: one or more ChatMessageBubble elements, or any free-form slot content like images or tool calls. Wrap non-bubble content in a ghost bubble to align it with the bubble text column."
+    },
+    {
+      "name": "Metadata",
+      "description": "Timestamp, delivery status, and footer actions below the message. Place on the last bubble or on the message wrapper."
+    }
+  ],
+  "checkbox-input": [
+    {
+      "name": "Checkbox",
+      "description": "The check box itself: unchecked, checked, or indeterminate."
+    },
+    {
+      "name": "Label",
+      "description": "Text describing what the checkbox controls. Always present for accessibility."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text below the label with additional context."
+    },
+    {
+      "name": "Status message",
+      "description": "An error, warning, or success message below the checkbox."
+    }
+  ],
+  "checkbox-list": [
+    {
+      "name": "Group",
+      "description": "Container for the labeled checkbox group."
+    },
+    {
+      "name": "Group label",
+      "description": "Text identifying what the checkbox options represent."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text below the group label."
+    },
+    {
+      "name": "Options list",
+      "description": "List containing the available checkbox options."
+    },
+    {
+      "name": "Option row",
+      "description": "Selectable row containing one option."
+    },
+    {
+      "name": "Checkbox",
+      "description": "Selection indicator for an option."
+    },
+    {
+      "name": "Option label",
+      "description": "Primary content identifying an option."
+    },
+    {
+      "name": "Option description",
+      "description": "Secondary text below an option label."
+    },
+    {
+      "name": "End content",
+      "description": "Caller-provided content at the end of an option row."
+    },
+    {
+      "name": "Spinner",
+      "description": "Loading indicator shown inside the pending checkbox."
+    },
+    {
+      "name": "Status message",
+      "description": "Error, warning, or success message below the group."
+    }
+  ],
+  "citation": [
+    {
+      "name": "Container",
+      "description": "The root wrapper. Accepted source URLs render an anchor; missing or rejected URLs render an inert span."
+    },
+    {
+      "name": "Icon",
+      "description": "An optional source icon shown before the label text. Accepts a favicon/logo image URL (via source.src) or slot content such as an Astryx <Icon>. Only available in the label variant."
+    },
+    {
+      "name": "Label text",
+      "description": "The source title, truncated with ellipsis when it exceeds the max width. Shown in the label variant."
+    },
+    {
+      "name": "Number",
+      "description": "The citation index displayed as a superscript badge. Shown in the number variant."
+    }
+  ],
+  "clickable-card": [
+    {
+      "name": "Container",
+      "description": "Interactive div with hover/focus/active states."
+    },
+    {
+      "name": "Content",
+      "description": "Children, which may include nested interactive elements."
+    }
+  ],
+  "code": [
+    {
+      "name": "Container",
+      "description": "The semantic code element that contains the inline code content and paints the background, typography, padding, and radius."
+    }
+  ],
+  "code-block": [
+    {
+      "name": "Header Bar",
+      "description": "Shows the title, visible language label, and copy button when a header is present. A title or visible language label creates the header; the copy button alone floats at the top-end of a headerless block."
+    },
+    {
+      "name": "Header Title",
+      "description": "Groups the optional title, visible language label, and collapsible chevron inside the header bar."
+    },
+    {
+      "name": "Line Numbers",
+      "description": "Numbered gutter along the left edge. Enable with hasLineNumbers."
+    },
+    {
+      "name": "Code Body",
+      "description": "The syntax-highlighted code content."
+    },
+    {
+      "name": "Highlighted Lines",
+      "description": "Background accent on specific lines to draw attention."
+    },
+    {
+      "name": "Copy Button",
+      "description": "Copies the code string to the clipboard. Shown by default."
+    }
+  ],
+  "collapsible": [
+    {
+      "name": "Container",
+      "description": "The root that contains one trigger and its controlled content and, in a divided group, paints the item divider."
+    },
+    {
+      "name": "Trigger",
+      "description": "The always-visible button that toggles the content. Shows a label and a chevron indicator."
+    },
+    {
+      "name": "Chevron",
+      "description": "Animated disclosure arrow. It follows the label by default; chevronPosition=\"start\" moves it ahead of the label, points inward when collapsed (mirrored under RTL), and turns down when expanded."
+    },
+    {
+      "name": "Content",
+      "description": "The area that hides or reveals when the trigger is clicked."
+    },
+    {
+      "name": "Group container",
+      "description": "The CollapsibleGroup wrapper rendered when dividers are enabled. It contains the coordinated items and carries their density."
+    }
+  ],
+  "command-palette": [
+    {
+      "name": "Dialog",
+      "description": "Modal surface that contains the command palette."
+    },
+    {
+      "name": "Input",
+      "description": "Search region containing the query field and its supporting visuals."
+    },
+    {
+      "name": "Search glyph",
+      "description": "Search symbol rendered by Icon in the default Input."
+    },
+    {
+      "name": "Query field",
+      "description": "Native text field used to enter a search query."
+    },
+    {
+      "name": "Loading spinner",
+      "description": "Spinner shown in the default Input while a search is pending."
+    },
+    {
+      "name": "List",
+      "description": "Scrollable listbox containing the current results or Empty state."
+    },
+    {
+      "name": "Item",
+      "description": "Selectable command result rendered inside the List."
+    },
+    {
+      "name": "Group",
+      "description": "Optional collection of Items that share a heading."
+    },
+    {
+      "name": "Group heading",
+      "description": "Visible heading rendered for a Group."
+    },
+    {
+      "name": "Empty",
+      "description": "Message shown when the current result set is empty."
+    },
+    {
+      "name": "Footer",
+      "description": "Footer region for default keyboard guidance or caller-provided content."
+    },
+    {
+      "name": "Keyboard shortcut",
+      "description": "Painted key badges rendered by Kbd in the default Footer guidance."
+    }
+  ],
+  "complex-selector": [
+    {
+      "name": "Field",
+      "description": "Field shell that provides the label and optional supporting field content."
+    },
+    {
+      "name": "Trigger",
+      "description": "Control that displays the current value or placeholder and opens the popup."
+    },
+    {
+      "name": "Icon-rendered start icon",
+      "description": "Optional leading semantic icon or icon component rendered through Icon."
+    },
+    {
+      "name": "Caller-rendered start content",
+      "description": "Optional arbitrary slot content rendered directly at the start of the trigger."
+    },
+    {
+      "name": "Indicator icon",
+      "description": "Trailing chevron that rotates to reflect whether the popup is open."
+    },
+    {
+      "name": "Popup",
+      "description": "Mounted dialog surface that is painted and shown while open and hidden while closed."
+    }
+  ],
+  "context-menu": [
+    {
+      "name": "Trigger area",
+      "description": "Caller-provided region that accepts right-click, keyboard context-menu, and long-press input."
+    },
+    {
+      "name": "Pointer menu surface",
+      "description": "Cursor-positioned menu panel used by the pointer presentation."
+    },
+    {
+      "name": "Pointer action row",
+      "description": "DropdownMenu-owned action, selectable option, or submenu row in the pointer presentation."
+    },
+    {
+      "name": "Touch sheet frame",
+      "description": "BottomSheet panel, content area, handle, and optional scrim that host touch actions."
+    },
+    {
+      "name": "Touch menu surface",
+      "description": "ContextMenu-owned content panel rendered inside the touch sheet frame."
+    },
+    {
+      "name": "Touch action list",
+      "description": "Spacious List that groups data-driven touch actions."
+    },
+    {
+      "name": "Touch action row",
+      "description": "ListItem button used for a data-driven action or drill-in entry in the touch presentation."
+    }
+  ],
+  "date-input": [
+    {
+      "name": "Label",
+      "description": "Text above the input describing what date is expected."
+    },
+    {
+      "name": "Text input",
+      "description": "A field where the user can type a date directly. Parses common formats like MM/DD/YYYY."
+    },
+    {
+      "name": "Calendar icon",
+      "description": "A button that opens the calendar popover for visual date picking."
+    },
+    {
+      "name": "Calendar popover",
+      "description": "A month grid that appears when the icon is clicked or the input is focused."
+    },
+    {
+      "name": "Clear button",
+      "description": "A × button that resets the date value. Shown when clearable is set and a date is present."
+    },
+    {
+      "name": "Status message",
+      "description": "An error, warning, or success message below the input."
+    }
+  ],
+  "date-range-input": [
+    {
+      "name": "Label",
+      "description": "Text above the trigger describing what date range is expected."
+    },
+    {
+      "name": "Field surface",
+      "description": "Bordered control containing the calendar toggle, range trigger, and end affordances."
+    },
+    {
+      "name": "Trigger button",
+      "description": "A button showing the formatted range or placeholder. Clicking opens the popover."
+    },
+    {
+      "name": "Calendar icon",
+      "description": "A trailing icon that also opens the popover."
+    },
+    {
+      "name": "Calendar popover",
+      "description": "A dual-month calendar grid with range selection and hover preview."
+    },
+    {
+      "name": "Preset sidebar",
+      "description": "A list of preset range options beside the calendar."
+    },
+    {
+      "name": "Preset button",
+      "description": "A quick-select action for one preset range, reflecting current and disabled states."
+    },
+    {
+      "name": "Clear button",
+      "description": "A × button that resets the range to null."
+    },
+    {
+      "name": "Status message",
+      "description": "An error, warning, or success message below the trigger."
+    }
+  ],
+  "date-time-input": [
+    {
+      "name": "Label",
+      "description": "Text above the input describing what datetime is expected."
+    },
+    {
+      "name": "Segment row",
+      "description": "The unbordered layout row that holds the two bordered segments and wraps them when its container is narrow."
+    },
+    {
+      "name": "Date input",
+      "description": "A typed date field with calendar popover on the fine-pointer Astryx surface, a real input type=date in native modes, or a read-only segment opening the Astryx touch sheet under presentation=\"adaptive-bottom-sheet\" on a coarse pointer."
+    },
+    {
+      "name": "Calendar icon",
+      "description": "A button that opens the active date surface: the platform picker, Astryx calendar popover, or Astryx touch sheet."
+    },
+    {
+      "name": "Date picker",
+      "description": "The browser/OS picker in native modes, an Astryx month-grid popover on a fine pointer, or the Date panel of the Astryx bottom sheet on a coarse pointer with presentation=\"adaptive-bottom-sheet\"."
+    },
+    {
+      "name": "Time input",
+      "description": "A real input type=time for the default minute-precision native mode, a text/combobox time field when seconds, custom increments, or preset options are requested, or a read-only segment opening accessible time wheels under presentation=\"adaptive-bottom-sheet\" on a coarse pointer."
+    },
+    {
+      "name": "Clock icon",
+      "description": "The time glyph shown as a leading identifier on the Astryx pointer field and as the picker affordance in native and touch-sheet time segments."
+    },
+    {
+      "name": "Time options popover",
+      "description": "A list of preset times at the timeOptionInterval cadence. Setting the prop retains Astryx's text/combobox time field even when nativePicker otherwise selects native controls; the Astryx touch sheet uses wheels instead."
+    },
+    {
+      "name": "Time option",
+      "description": "One selectable preset time in the optional time-options popover."
+    },
+    {
+      "name": "Clear button",
+      "description": "A × button that resets the datetime value."
+    },
+    {
+      "name": "Status message",
+      "description": "An error, warning, or success message below the inputs."
+    }
+  ],
+  "dialog": [
+    {
+      "name": "Header",
+      "description": "Title, optional subtitle, and close button. The title receives focus on open and labels the dialog via aria-labelledby."
+    },
+    {
+      "name": "Body",
+      "description": "The main content area: text, forms, lists, or any layout."
+    },
+    {
+      "name": "Footer",
+      "description": "Action buttons like Save/Cancel or Accept/Decline, aligned to the end."
+    },
+    {
+      "name": "Backdrop",
+      "description": "Semi-transparent overlay behind the dialog that blocks page interaction."
+    }
+  ],
+  "divider": [
+    {
+      "name": "Divider group",
+      "description": "Separator group that arranges one or two rules around an optional label."
+    },
+    {
+      "name": "Rule",
+      "description": "Painted line segment; a second segment renders when a label is present."
+    },
+    {
+      "name": "Label",
+      "description": "Optional content displayed between two rule segments."
+    }
+  ],
+  "dropdown-menu": [
+    {
+      "name": "Trigger button",
+      "description": "Button that opens and closes the selected menu presentation."
+    },
+    {
+      "name": "Trigger indicator icon",
+      "description": "Optional trailing chevron shown by a labeled trigger when hasChevron is enabled."
+    },
+    {
+      "name": "Pointer menu surface",
+      "description": "Anchored top-level or nested menu panel used by the pointer presentation."
+    },
+    {
+      "name": "Pointer action row",
+      "description": "Action, selectable option, or submenu trigger row in an anchored menu."
+    },
+    {
+      "name": "Icon-rendered item icon",
+      "description": "Optional semantic or component icon rendered through Icon at the start of an action row."
+    },
+    {
+      "name": "Caller-rendered item start content",
+      "description": "Optional arbitrary slot content rendered directly at the start of an action row."
+    },
+    {
+      "name": "Checkbox indicator",
+      "description": "Decorative shared checkbox indicator for a checkbox action row."
+    },
+    {
+      "name": "Radio indicator",
+      "description": "Decorative shared radio indicator with an additional menu-owned target."
+    },
+    {
+      "name": "Pointer section heading",
+      "description": "Heading that labels a group of rows in an anchored menu: a data-driven section or a compound DropdownMenuGroup."
+    },
+    {
+      "name": "Pointer divider",
+      "description": "Divider between groups in an anchored menu."
+    },
+    {
+      "name": "Pointer submenu indicator icon",
+      "description": "Trailing chevron that identifies an action row as a nested flyout trigger."
+    },
+    {
+      "name": "Touch sheet frame",
+      "description": "BottomSheet panel, content area, handle, and optional scrim that host touch actions."
+    },
+    {
+      "name": "Touch menu surface",
+      "description": "Menu-owned content panel rendered inside the touch sheet frame."
+    },
+    {
+      "name": "Touch heading",
+      "description": "Current action-sheet title, updated when a nested action view is opened."
+    },
+    {
+      "name": "Touch action list",
+      "description": "Spacious List that groups actions in the touch presentation."
+    },
+    {
+      "name": "Touch action row",
+      "description": "ListItem button used for an action or drill-in entry in the touch presentation."
+    },
+    {
+      "name": "Touch divider",
+      "description": "Divider between action groups in the touch presentation."
+    }
+  ],
+  "empty-state": [
+    {
+      "name": "Icon",
+      "description": "A visual cue above the title that reinforces the context, like a search icon for no results."
+    },
+    {
+      "name": "Title",
+      "description": "Primary message explaining what is empty: \"No projects yet\" not \"No data\"."
+    },
+    {
+      "name": "Description",
+      "description": "Additional context explaining why it is empty or what the user can do."
+    },
+    {
+      "name": "Actions",
+      "description": "One or two buttons guiding the user to a next step, like \"Create project\" or \"Clear filters\"."
+    }
+  ],
+  "field": [
+    {
+      "name": "Label",
+      "description": "Text identifying the field. Always rendered for accessibility, optionally hidden visually."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text between the label and input explaining what to enter."
+    },
+    {
+      "name": "Control slot",
+      "description": "A custom, native, or third-party control that does not already render a field shell."
+    },
+    {
+      "name": "Status message",
+      "description": "Inline validation feedback showing error, warning, or success with a message."
+    },
+    {
+      "name": "Optional/Required indicator",
+      "description": "Badge next to the label showing whether the field is optional or required."
+    },
+    {
+      "name": "Label tooltip",
+      "description": "Info icon at the end of the label with a tooltip explaining the field."
+    }
+  ],
+  "field-status": [
+    {
+      "name": "Message box",
+      "description": "Painted container for the validation feedback."
+    },
+    {
+      "name": "Detached icon",
+      "description": "Leading status glyph shown only by the detached variant."
+    },
+    {
+      "name": "Message text",
+      "description": "Text describing the validation status."
+    }
+  ],
+  "file-input": [
+    {
+      "name": "Label",
+      "description": "Text that identifies the field. Always rendered for accessibility even when visually hidden."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text between the label and the drop zone explaining accepted formats or size limits."
+    },
+    {
+      "name": "Drop zone",
+      "description": "The clickable area for file selection. In dropzone mode, also accepts dragged files."
+    },
+    {
+      "name": "Upload icon",
+      "description": "An upload-to-tray icon in the drop zone hinting at the upload action."
+    },
+    {
+      "name": "Placeholder",
+      "description": "Hint text shown when no files are selected."
+    },
+    {
+      "name": "File name display",
+      "description": "Shows the name(s) of selected files."
+    },
+    {
+      "name": "Clear button",
+      "description": "A close button that removes selected files and returns focus to the input."
+    },
+    {
+      "name": "Spinner",
+      "description": "Loading indicator that appears during async upload actions."
+    },
+    {
+      "name": "Status message",
+      "description": "Validation feedback showing error, warning, or success with a message."
+    }
+  ],
+  "form-layout": [
+    {
+      "name": "Form title",
+      "description": "Heading that describes the purpose of the form."
+    },
+    {
+      "name": "Fields",
+      "description": "Input components with labels for collecting user data."
+    },
+    {
+      "name": "Footer",
+      "description": "Contains confirmation buttons such as Submit or Cancel."
+    }
+  ],
+  "grid": [
+    {
+      "name": "Grid container",
+      "description": "Two-dimensional layout container that arranges caller-supplied items in rows and columns."
+    },
+    {
+      "name": "Spanning item",
+      "description": "Optional GridSpan wrapper that changes one item's column or row participation."
+    }
+  ],
+  "hover-card": [
+    {
+      "name": "Trigger",
+      "description": "The element that opens the hover card on hover or focus: a button, link, or inline text."
+    },
+    {
+      "name": "Card",
+      "description": "The floating overlay with the preview content, anchored to the trigger."
+    },
+    {
+      "name": "Body",
+      "description": "The main content area: profile info, link summary, or any rich content."
+    },
+    {
+      "name": "Actions",
+      "description": "Optional buttons inside the card for follow-up actions like Follow or Message."
+    }
+  ],
+  "icon": [
+    {
+      "name": "Glyph",
+      "description": "Visual symbol rendered for the selected icon."
+    }
+  ],
+  "input-group": [
+    {
+      "name": "Label",
+      "description": "Text above the group."
+    },
+    {
+      "name": "Prefix addon",
+      "description": "Content before the input (text, icon, or button)."
+    },
+    {
+      "name": "Input",
+      "description": "The main input element (TextInput, NumberInput, TimeInput, DateInput, Typeahead, Selector, or MultiSelector)."
+    },
+    {
+      "name": "Suffix addon",
+      "description": "Content after the input (text, icon, or button)."
+    },
+    {
+      "name": "Status message",
+      "description": "An error, warning, or success message below the group."
+    }
+  ],
+  "kbd": [
+    {
+      "name": "Shortcut",
+      "description": "Group that presents the complete keyboard shortcut and its accessible name."
+    },
+    {
+      "name": "Key badge",
+      "description": "Painted key badge rendered once for each key in the shortcut."
+    }
+  ],
+  "layout": [
+    {
+      "name": "Layout container",
+      "description": "General layout primitive that places the header, start, content, end, and footer slots."
+    },
+    {
+      "name": "Header",
+      "description": "Optional LayoutHeader region supplied by the caller, typically in the header slot."
+    },
+    {
+      "name": "Panel",
+      "description": "Optional LayoutPanel region supplied by the caller in the start or end slot."
+    },
+    {
+      "name": "Content area",
+      "description": "Optional LayoutContent region supplied by the caller in the content slot."
+    },
+    {
+      "name": "Footer",
+      "description": "Optional LayoutFooter region supplied by the caller, typically in the footer slot."
+    }
+  ],
+  "lightbox": [
+    {
+      "name": "Viewer overlay",
+      "description": "Full-viewport dialog overlay that contains the active media and controls."
+    },
+    {
+      "name": "Media",
+      "description": "Active image or video presented inside the viewer."
+    },
+    {
+      "name": "Close button",
+      "description": "Button that closes the viewer."
+    },
+    {
+      "name": "Previous button",
+      "description": "Gallery button that moves to the previous media item."
+    },
+    {
+      "name": "Next button",
+      "description": "Gallery button that moves to the next media item."
+    },
+    {
+      "name": "Caption",
+      "description": "Caller-provided caption displayed below the active media."
+    },
+    {
+      "name": "Counter",
+      "description": "Current position and total shown in gallery mode."
+    }
+  ],
+  "link": [
+    {
+      "name": "Label",
+      "description": "The visible text of the link."
+    },
+    {
+      "name": "Right icon",
+      "description": "Icon placed after the label to indicate an action affordance."
+    },
+    {
+      "name": "Left icon",
+      "description": "Icon placed before the label to represent meaning."
+    }
+  ],
+  "list": [
+    {
+      "name": "List title",
+      "description": "Heading that labels the list."
+    },
+    {
+      "name": "Description",
+      "description": "Supplementary text below the title."
+    },
+    {
+      "name": "List items",
+      "description": "Individual entries, which may include icons or images."
+    },
+    {
+      "name": "Item description",
+      "description": "Additional detail for an individual list item."
+    }
+  ],
+  "markdown": [
+    {
+      "name": "Document",
+      "description": "Root container for block or inline Markdown content."
+    },
+    {
+      "name": "Heading",
+      "description": "Rendered semantic heading block; a custom heading renderer replaces the built-in part."
+    },
+    {
+      "name": "Paragraph",
+      "description": "Rendered paragraph block; a custom paragraph renderer replaces the default part."
+    },
+    {
+      "name": "List",
+      "description": "Ordered, unordered, or task-list block rendered from Markdown items."
+    },
+    {
+      "name": "Code block",
+      "description": "Fenced code block; a custom code renderer replaces the default part."
+    },
+    {
+      "name": "Blockquote",
+      "description": "Quoted block; a custom blockquote renderer replaces the default part."
+    },
+    {
+      "name": "Table",
+      "description": "Table block rendered from Markdown rows and columns; its Table child owns horizontal scrolling."
+    },
+    {
+      "name": "Divider",
+      "description": "Horizontal rule block; a custom hr renderer replaces the default part."
+    },
+    {
+      "name": "Image",
+      "description": "Block image or unsafe-URL fallback; a custom image renderer replaces a safe default image."
+    }
+  ],
+  "metadata-list": [
+    {
+      "name": "Title",
+      "description": "Optional title for the metadata list."
+    },
+    {
+      "name": "Label",
+      "description": "The key label for each metadata entry."
+    },
+    {
+      "name": "Metadata",
+      "description": "The value displayed in various formats."
+    },
+    {
+      "name": "Disclosure",
+      "description": "Collapse/expand control for the list."
+    }
+  ],
+  "mobile-nav": [
+    {
+      "name": "Navigation overlay",
+      "description": "Full-viewport dialog overlay that hosts the mobile navigation drawer."
+    },
+    {
+      "name": "Drawer",
+      "description": "Painted panel that slides in from the resolved viewport edge."
+    },
+    {
+      "name": "Header",
+      "description": "Fixed row containing optional header content and the close button."
+    },
+    {
+      "name": "Content",
+      "description": "Scrollable region containing the navigation content."
+    },
+    {
+      "name": "Close button",
+      "description": "Button that closes the navigation drawer."
+    },
+    {
+      "name": "Toggle button",
+      "description": "AppShell-aware Button that opens or closes the drawer on mobile viewports."
+    }
+  ],
+  "more-menu": [
+    {
+      "name": "Trigger button",
+      "description": "Icon-only Button that provides the visible overflow-menu entry point."
+    },
+    {
+      "name": "Icon-resolved trigger icon",
+      "description": "Default semantic three-dot artwork resolved from the active Icon registry."
+    },
+    {
+      "name": "Caller-rendered trigger content",
+      "description": "Arbitrary slot content supplied directly as the trigger icon override."
+    },
+    {
+      "name": "Menu surface",
+      "description": "DropdownMenu panel that also carries MoreMenu’s current public target."
+    },
+    {
+      "name": "Pointer action row",
+      "description": "Action or nested-action trigger row rendered by DropdownMenu in the anchored presentation."
+    },
+    {
+      "name": "Touch action row",
+      "description": "ListItem button rendered by DropdownMenu in the BottomSheet presentation."
+    }
+  ],
+  "multi-selector": [
+    {
+      "name": "Field",
+      "description": "Standalone Field shell that provides the label and optional supporting content; omitted inside InputGroup."
+    },
+    {
+      "name": "Trigger",
+      "description": "Painted control that displays the current selection or placeholder and opens the selection surface when editable."
+    },
+    {
+      "name": "Icon-rendered start icon",
+      "description": "Optional leading semantic icon or icon component rendered through Icon."
+    },
+    {
+      "name": "Caller-rendered start content",
+      "description": "Optional arbitrary slot content rendered directly at the start of the trigger."
+    },
+    {
+      "name": "Trigger clear button",
+      "description": "Shared clear action that removes every selected value when clearable is set."
+    },
+    {
+      "name": "Status icon",
+      "description": "Status glyph shown in place of the disclosure indicator for attached or tooltip status."
+    },
+    {
+      "name": "Indicator icon",
+      "description": "Trailing chevron shown when status presentation does not replace it; reflects collapsed or expanded state."
+    },
+    {
+      "name": "Search row",
+      "description": "Panel header with a borderless search input and optional clear action."
+    },
+    {
+      "name": "Search icon",
+      "description": "Leading magnifier rendered through Icon inside the search row."
+    },
+    {
+      "name": "Search clear button",
+      "description": "Shared clear action shown in the search row while a query is present."
+    },
+    {
+      "name": "Option row",
+      "description": "Selectable row for an option or the optional select-all choice."
+    },
+    {
+      "name": "Option checkbox indicator",
+      "description": "CheckboxInput indicator that presents each row’s selected, unselected, or indeterminate state."
+    },
+    {
+      "name": "Option divider",
+      "description": "Divider supplied in the public options data to separate adjacent option groups."
+    },
+    {
+      "name": "Section heading",
+      "description": "Visible heading for a labeled group of option rows."
+    },
+    {
+      "name": "Empty state",
+      "description": "Message shown when the shared panel content has no options or no search matches."
+    },
+    {
+      "name": "Pointer popup",
+      "description": "Anchored painted surface that hosts the shared panel content for popover presentation."
+    },
+    {
+      "name": "Touch sheet heading",
+      "description": "Heading above the shared panel content in bottom-sheet presentation."
+    },
+    {
+      "name": "Touch sheet",
+      "description": "BottomSheet surface that hosts the same panel content for bottom-sheet presentation."
+    }
+  ],
+  "number-input": [
+    {
+      "name": "Label",
+      "description": "The label for the number input."
+    },
+    {
+      "name": "Description",
+      "description": "Additional description text below the label."
+    },
+    {
+      "name": "Icon",
+      "description": "An optional icon within the input."
+    },
+    {
+      "name": "Placeholder",
+      "description": "Placeholder text shown when the input is empty."
+    },
+    {
+      "name": "Number steppers",
+      "description": "Optional buttons that increment or decrement by the configured step."
+    }
+  ],
+  "outline": [
+    {
+      "name": "Outline",
+      "description": "Navigation container for the same-page heading links and indicator."
+    },
+    {
+      "name": "Heading link",
+      "description": "Anchor for one heading, indented by level and marked when active."
+    },
+    {
+      "name": "Label",
+      "description": "Heading text displayed inside its heading link."
+    },
+    {
+      "name": "Indicator track",
+      "description": "Painted vertical rule behind the active indicator."
+    },
+    {
+      "name": "Active indicator",
+      "description": "Sliding bar positioned beside the currently active heading link."
+    }
+  ],
+  "overflow-list": [
+    {
+      "name": "List",
+      "description": "Visible horizontal list container for the currently shown content."
+    },
+    {
+      "name": "Items",
+      "description": "Caller-supplied items selected for visible display by the current width and count limits."
+    },
+    {
+      "name": "Overflow indicator",
+      "description": "Optional caller-rendered indicator for items collapsed by width or count limits."
+    }
+  ],
+  "overlay": [
+    {
+      "name": "Base content",
+      "description": "The media, card, or bounded surface that the overlay sits on top of."
+    },
+    {
+      "name": "Scrim",
+      "description": "Optional dark or light overlay background that improves content contrast."
+    },
+    {
+      "name": "Overlay content",
+      "description": "Actions, labels, or supporting content rendered above the base surface."
+    }
+  ],
+  "pagination": [
+    {
+      "name": "Pagination",
+      "description": "Navigation landmark containing the current paging controls and optional page-size selector."
+    },
+    {
+      "name": "Page-size selector",
+      "description": "Optional Selector for choosing how many items appear per page."
+    },
+    {
+      "name": "First/last buttons",
+      "description": "Optional Button controls that jump to the first or last known page."
+    },
+    {
+      "name": "Previous/next buttons",
+      "description": "Button controls that move backward or forward through the pages."
+    },
+    {
+      "name": "Page number button",
+      "description": "Button for one directly selectable page in the numbered presentation."
+    },
+    {
+      "name": "Ellipsis",
+      "description": "Visual omission marker between non-adjacent page-number buttons."
+    },
+    {
+      "name": "Count readout",
+      "description": "Text showing the current item range and total item count."
+    },
+    {
+      "name": "Compact readout",
+      "description": "Text showing the current page and total page count."
+    },
+    {
+      "name": "Dot",
+      "description": "Page indicator control that reflects and changes the active page."
+    },
+    {
+      "name": "Page input label",
+      "description": "Leading visible label for the editable page-number field."
+    },
+    {
+      "name": "Page input",
+      "description": "NumberInput used to enter a page directly."
+    },
+    {
+      "name": "Page input total",
+      "description": "Trailing text showing the known total page count."
+    }
+  ],
+  "popover": [
+    {
+      "name": "Trigger element",
+      "description": "Caller-supplied or externally referenced control that anchors and toggles the popover."
+    },
+    {
+      "name": "Popover surface",
+      "description": "Painted surface owned and themed by Popover through the canonical popover target."
+    },
+    {
+      "name": "Popover content",
+      "description": "Caller-supplied content rendered inside the surface."
+    },
+    {
+      "name": "Fallback close control",
+      "description": "Keyboard-reachable close affordance appended by usePopover when enabled."
+    }
+  ],
+  "progress-bar": [
+    {
+      "name": "Progress bar",
+      "description": "Container arranging the label row and progress track."
+    },
+    {
+      "name": "Label",
+      "description": "Text naming the operation, optionally hidden visually while remaining accessible."
+    },
+    {
+      "name": "Value text",
+      "description": "Formatted determinate value shown beside the label when requested."
+    },
+    {
+      "name": "Track",
+      "description": "Remaining-progress rail that carries the progressbar semantics."
+    },
+    {
+      "name": "Fill",
+      "description": "Painted segment showing completed progress or indeterminate movement."
+    },
+    {
+      "name": "Mark",
+      "description": "Labeled target tick positioned on a determinate track."
+    }
+  ],
+  "radio-list": [
+    {
+      "name": "Header",
+      "description": "Optional heading above the radio list."
+    },
+    {
+      "name": "Children",
+      "description": "The radio list items rendered as selectable options."
+    },
+    {
+      "name": "Label/Value",
+      "description": "The text label and associated value for each radio item."
+    }
+  ],
+  "scrollable-area": [
+    {
+      "name": "Viewport",
+      "description": "The root native scroll container, accessible name owner, focus target while effective, and `astryx-scrollable-area` theme target."
+    },
+    {
+      "name": "Content box",
+      "description": "A real inner layout box observed together with the viewport. For inline scrolling it uses max-content inline sizing with a 100% minimum."
+    }
+  ],
+  "section": [
+    {
+      "name": "Section container",
+      "description": "Painted container that groups a page region."
+    },
+    {
+      "name": "Consumer content",
+      "description": "Caller-provided content rendered inside the section container."
+    }
+  ],
+  "segmented-control": [
+    {
+      "name": "Control",
+      "description": "Container for the mutually exclusive segment choices."
+    },
+    {
+      "name": "Segment",
+      "description": "Individual choice within the control."
+    },
+    {
+      "name": "Label",
+      "description": "Visible text identifying a segment when its label is not hidden."
+    },
+    {
+      "name": "Icon",
+      "description": "Optional caller-supplied icon shown inside a segment."
+    }
+  ],
+  "selectable-card": [
+    {
+      "name": "Container",
+      "description": "Interactive div with accent border on selection."
+    },
+    {
+      "name": "Content",
+      "description": "Children rendered inside the card."
+    }
+  ],
+  "selector": [
+    {
+      "name": "Field",
+      "description": "Standalone Field shell that provides the label and optional supporting content; omitted inside InputGroup."
+    },
+    {
+      "name": "Trigger",
+      "description": "Painted control that displays the current selection or placeholder and opens the selection surface when editable."
+    },
+    {
+      "name": "Icon-rendered start icon",
+      "description": "Optional leading semantic icon or icon component rendered through Icon."
+    },
+    {
+      "name": "Caller-rendered start content",
+      "description": "Optional arbitrary slot content rendered directly at the start of the trigger."
+    },
+    {
+      "name": "Trigger clear button",
+      "description": "Shared clear action that removes the selected value when clearable is set."
+    },
+    {
+      "name": "Status icon",
+      "description": "Status glyph shown in place of the disclosure indicator for attached or tooltip status."
+    },
+    {
+      "name": "Indicator icon",
+      "description": "Trailing chevron shown when status presentation does not replace it; reflects collapsed or expanded state."
+    },
+    {
+      "name": "Search row",
+      "description": "Panel header with a borderless search input and optional clear action."
+    },
+    {
+      "name": "Search icon",
+      "description": "Leading magnifier rendered through Icon inside the search row."
+    },
+    {
+      "name": "Search clear button",
+      "description": "Shared clear action shown in the search row while a query is present."
+    },
+    {
+      "name": "Option row",
+      "description": "Selectable row for one supplied option."
+    },
+    {
+      "name": "Default option content",
+      "description": "Label, description, and icon drawn from the option data when the option slot is not provided."
+    },
+    {
+      "name": "Option slot content",
+      "description": "Content supplied through the option slot, in place of the default label and description."
+    },
+    {
+      "name": "Option selection indicator",
+      "description": "Resolved selection mark rendered for each option in its checked or unchecked state. Its layout space collapses when the resolved indicator draws nothing."
+    },
+    {
+      "name": "Option divider",
+      "description": "Divider supplied in the public options data to separate adjacent option groups."
+    },
+    {
+      "name": "Section heading",
+      "description": "Visible heading for a labeled group of option rows."
+    },
+    {
+      "name": "Empty state",
+      "description": "Message shown when the shared panel content has no options or no search matches."
+    },
+    {
+      "name": "Pointer popup",
+      "description": "Anchored painted surface that hosts the shared panel content for popover presentation."
+    },
+    {
+      "name": "Touch sheet heading",
+      "description": "Heading above the shared panel content in bottom-sheet presentation."
+    },
+    {
+      "name": "Touch sheet",
+      "description": "BottomSheet surface that hosts the same panel content for bottom-sheet presentation."
+    }
+  ],
+  "side-nav": [
+    {
+      "name": "Product icon and name",
+      "description": "Branding area at the top of the nav."
+    },
+    {
+      "name": "Navigation items",
+      "description": "Sections and groups of navigable links."
+    },
+    {
+      "name": "Collapse/expand toggle",
+      "description": "Toggle to collapse or expand the side nav."
+    }
+  ],
+  "skeleton": [
+    {
+      "name": "Placeholder",
+      "description": "Painted shape that stands in for content while it loads."
+    }
+  ],
+  "slider": [
+    {
+      "name": "Label",
+      "description": "Text identifying the numeric setting controlled by the slider."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text between the label and the slider control."
+    },
+    {
+      "name": "Slider",
+      "description": "Control row containing the track, thumb or thumbs, and optional text value."
+    },
+    {
+      "name": "Interactive control",
+      "description": "Pointer and keyboard interaction surface containing the rail, fill, marks, and thumbs."
+    },
+    {
+      "name": "Track",
+      "description": "Background rail representing the available numeric range."
+    },
+    {
+      "name": "Filled range",
+      "description": "Accent segment from the minimum to a single value, or between two range values."
+    },
+    {
+      "name": "Tick mark",
+      "description": "Position marker supplied through the marks collection."
+    },
+    {
+      "name": "Mark label",
+      "description": "Optional text displayed beside a tick mark."
+    },
+    {
+      "name": "Thumb",
+      "description": "Draggable value indicator; range mode renders a minimum and maximum thumb."
+    },
+    {
+      "name": "Value display",
+      "description": "Formatted current value shown beside the slider when valueDisplay is text."
+    },
+    {
+      "name": "Value tooltip",
+      "description": "Formatted current value shown in a tooltip when valueDisplay is tooltip."
+    },
+    {
+      "name": "Status message",
+      "description": "Error, warning, or success message below the slider."
+    }
+  ],
+  "stack": [
+    {
+      "name": "Stack container",
+      "description": "Layout container that arranges content along one flex axis."
+    },
+    {
+      "name": "Item",
+      "description": "Optional StackItem wrapper that controls one item in the stack."
+    },
+    {
+      "name": "Content",
+      "description": "Caller-supplied content rendered by a Stack or StackItem."
+    }
+  ],
+  "status-dot": [
+    {
+      "name": "Dot",
+      "description": "Painted status dot that carries the selected semantic variant."
+    },
+    {
+      "name": "Status icon",
+      "description": "Optional caller-supplied icon rendered inside the dot."
+    }
+  ],
+  "stepper": [
+    {
+      "name": "Stepper",
+      "description": "The ordered list holding the steps. Owns the orientation and the indicator placement the whole flow is laid out on."
+    },
+    {
+      "name": "Frame",
+      "description": "The layout frame that groups the ordered steps with the optional compact summary shown at narrow widths."
+    },
+    {
+      "name": "Compact summary",
+      "description": "The optional row a horizontal Stepper adds directly beneath the track once it is too narrow to label every step. horizontalOptions.collapsedVariant chooses a label with Previous/Next controls, the label alone, or no row for a bare progress track. The on-track layout keeps its indicators on the rail instead of repeating the active indicator beside the label. Every step keeps its name in the accessible sequence at any width."
+    },
+    {
+      "name": "Step",
+      "description": "One step in the flow, and the element carrying its status. Wraps the indicator, label, description, and the track segments belonging to it."
+    },
+    {
+      "name": "Progress bar",
+      "description": "A 4px segmented bar per step. Filled for completed and active steps. Advancing one step grows the fill along the track it just covered, so the movement reads as progress rather than a bar changing color. Every other change applies at once: going back, jumping forward by more than one step, mounting mid-flow, and any change at all under prefers-reduced-motion. Where a span is drawn by more than one segment (the on-track layouts split it between two steps, three when a content slot sits between them), the segments run in track order at one constant speed, so the fill reads as a single line growing rather than pieces lighting in turn."
+    },
+    {
+      "name": "Connector",
+      "description": "The track drawn between indicators in the on-track layouts. Each connector paints an unfilled line and, over it, the accent fill covering the progress made. How many pieces a connector is drawn from is an implementation detail of the layout, not a themeable part; use --step-connector-gap to hold the track off the indicator."
+    },
+    {
+      "name": "Indicator",
+      "description": "A numbered badge, a check, or any custom icon. Controlled via the indicator prop."
+    },
+    {
+      "name": "Label",
+      "description": "Text identifying the step."
+    },
+    {
+      "name": "Description",
+      "description": "Supporting text below the label with additional context."
+    }
+  ],
+  "switch": [
+    {
+      "name": "Field",
+      "description": "Container arranging the switch, label, and feedback."
+    },
+    {
+      "name": "Track",
+      "description": "Pill-shaped surface that shows the off or on state."
+    },
+    {
+      "name": "Thumb",
+      "description": "Indicator that moves across the track when state changes."
+    },
+    {
+      "name": "Label",
+      "description": "Text identifying the setting controlled by the switch."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text below the label."
+    },
+    {
+      "name": "Spinner",
+      "description": "Loading indicator shown inside the thumb while busy."
+    },
+    {
+      "name": "Status message",
+      "description": "Error, warning, or success message below the switch."
+    }
+  ],
+  "tab-list": [
+    {
+      "name": "Left Content",
+      "description": "Most important area; hugs content width."
+    },
+    {
+      "name": "Center-Fill Content",
+      "description": "Stretches to fill available space."
+    },
+    {
+      "name": "Right Content",
+      "description": "Hugs content width."
+    }
+  ],
+  "table": [
+    {
+      "name": "Table",
+      "description": "Semantic table element that groups the table sections, rows, and cells."
+    },
+    {
+      "name": "Scroll region",
+      "description": "Outer region that scrolls horizontally, enters the keyboard order, and contains overscroll only while the columns overflow."
+    },
+    {
+      "name": "Header section",
+      "description": "Column-heading section generated when data-driven columns are present, or supplied with TableHeader when composing the table from slots."
+    },
+    {
+      "name": "Column header cell",
+      "description": "Cell that identifies one column and may contain sorting or bulk-selection controls."
+    },
+    {
+      "name": "Sort control",
+      "description": "Button that wraps a sortable column label and changes that column's sort direction."
+    },
+    {
+      "name": "Sort indicator glyph",
+      "description": "Directional symbol rendered by Icon inside a Sort control."
+    },
+    {
+      "name": "Sort priority",
+      "description": "Number shown for a sorted column when multi-column sorting is active."
+    },
+    {
+      "name": "Selection control",
+      "description": "CheckboxInput rendered in the header and selectable body rows by the selection plugin."
+    },
+    {
+      "name": "Body section",
+      "description": "Section containing data rows or the current empty state; data-driven mode renders it automatically."
+    },
+    {
+      "name": "Row",
+      "description": "Repeated TableRow that groups cells in a standard header, body, or footer row."
+    },
+    {
+      "name": "Cell",
+      "description": "TableCell containing one value or caller-provided content in a standard body or footer row."
+    },
+    {
+      "name": "Default empty state",
+      "description": "Compact EmptyState shown for an empty data array unless it is replaced or disabled."
+    },
+    {
+      "name": "Expansion control",
+      "description": "Button in a leading cell that expands or collapses one expandable row."
+    },
+    {
+      "name": "Expansion glyph",
+      "description": "Directional symbol rendered by Icon inside an Expansion control."
+    },
+    {
+      "name": "Expanded detail panel",
+      "description": "Detail row and spanning cell rendered below an expanded row around caller-provided content."
+    },
+    {
+      "name": "Footer section",
+      "description": "Optional summary or totals section supplied with TableFooter when composing the table from slots."
+    }
+  ],
+  "text": [
+    {
+      "name": "Text",
+      "description": "Polymorphic text element that renders the supplied content with themed typography."
+    },
+    {
+      "name": "Heading",
+      "description": "Referenced Heading member that renders the supplied content as a semantic h1–h6 element."
+    },
+    {
+      "name": "Truncation tooltip",
+      "description": "Tooltip-owned surface available only when Text or Heading is measured as truncated and truncation tooltips are enabled."
+    }
+  ],
+  "text-area": [
+    {
+      "name": "Label",
+      "description": "Text identifying the multi-line field."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text between the label and the input."
+    },
+    {
+      "name": "Input container",
+      "description": "Painted boundary containing the text area and its overlays."
+    },
+    {
+      "name": "Text area",
+      "description": "Multi-line control that displays and edits the value."
+    },
+    {
+      "name": "Placeholder",
+      "description": "Hint text shown inside the empty text area."
+    },
+    {
+      "name": "Start icon",
+      "description": "Astryx Icon rendered at the start when startIcon is a semantic name or icon component."
+    },
+    {
+      "name": "Custom start content",
+      "description": "Caller-provided slot content rendered at the start instead of an Astryx Icon."
+    },
+    {
+      "name": "Spinner",
+      "description": "Loading indicator shown at the end of the input container."
+    },
+    {
+      "name": "Status icon",
+      "description": "Error, warning, or success icon shown inside the input."
+    },
+    {
+      "name": "Character counter",
+      "description": "Current and maximum character counts shown inside the input container."
+    },
+    {
+      "name": "Field status message",
+      "description": "Attached or detached error, warning, or success message associated with the field."
+    },
+    {
+      "name": "Tooltip status message",
+      "description": "Tooltip surface presenting the status message for the tooltip variant."
+    }
+  ],
+  "text-input": [
+    {
+      "name": "Label",
+      "description": "Text that identifies the field. Always rendered for accessibility even when visually hidden."
+    },
+    {
+      "name": "Description",
+      "description": "Helper text between the label and the input that provides additional context or formatting hints."
+    },
+    {
+      "name": "Start icon",
+      "description": "A leading icon inside the input that hints at the expected content, like a magnifying glass for search."
+    },
+    {
+      "name": "Placeholder",
+      "description": "Hint text shown when the input is empty. Disappears on focus."
+    },
+    {
+      "name": "Clear button",
+      "description": "A trailing × button that resets the value and returns focus to the input."
+    },
+    {
+      "name": "Spinner",
+      "description": "Loading indicator that appears during async actions like server-side validation."
+    },
+    {
+      "name": "Status icon",
+      "description": "A trailing icon (error, warning, or success) that communicates validation state."
+    }
+  ],
+  "thumbnail": [
+    {
+      "name": "Image",
+      "description": "The preview image, displayed as a square with cover fit."
+    },
+    {
+      "name": "Placeholder",
+      "description": "An image silhouette icon shown when no src is provided."
+    },
+    {
+      "name": "Remove button",
+      "description": "An overlaid close button in the top-right corner. Visibility follows showRemoveOn, which defaults to hover. Activating it emits remove. Sits on a fixed --color-overlay scrim with an --color-on-dark icon to stay visible on any image."
+    },
+    {
+      "name": "Upload overlay",
+      "description": "A semi-transparent overlay with a spinner, shown when isLoading is true and a src preview is available."
+    },
+    {
+      "name": "Skeleton",
+      "description": "A shimmer animation shown when isLoading is true and no src is set."
+    }
+  ],
+  "time-input": [
+    {
+      "name": "Clock icon",
+      "description": "A leading clock icon that identifies the field and opens the browser/OS picker in native mode."
+    },
+    {
+      "name": "Time control",
+      "description": "A real input type=time in native modes, or Astryx's editable text field for fine pointers, presentation=\"text-input\", seconds, and custom increments."
+    },
+    {
+      "name": "Clear button",
+      "description": "A trailing button to reset the value, shown when hasClear is true and a value is set."
+    },
+    {
+      "name": "Status icon",
+      "description": "A trailing icon indicating error, warning, or success state."
+    },
+    {
+      "name": "Spinner",
+      "description": "Replaces trailing content during loading to show an async action is in progress."
+    }
+  ],
+  "timer": [
+    {
+      "name": "Elapsed time",
+      "description": "Semantic time element containing a standardized elapsed duration."
+    }
+  ],
+  "timestamp": [
+    {
+      "name": "Formatted text",
+      "description": "The rendered date, time, or relative label like \"2 hours ago\" or \"Mar 21, 2025\"."
+    },
+    {
+      "name": "Hover card",
+      "description": "A copyable hover card showing the full absolute date and time when the display is relative, or the rows configured via tooltipEntries. Its default single row carries the full absolute time."
+    },
+    {
+      "name": "Hover card row",
+      "description": "One row of the card: an optional label beside the instant rendered in one time zone and format. Rows opt into a copy button via isCopyable."
+    },
+    {
+      "name": "Copy button",
+      "description": "Per-row copy-to-clipboard button in the hover card; copies that row's formatted value."
+    }
+  ],
+  "toast": [
+    {
+      "name": "Body",
+      "description": "The primary message text describing what happened or what the user should know."
+    },
+    {
+      "name": "End content",
+      "description": "A trailing action like an Undo button or a link, placed after the body text."
+    },
+    {
+      "name": "Dismiss button",
+      "description": "A close button that lets the user manually dismiss the toast before auto-hide."
+    }
+  ],
+  "toggle-button": [
+    {
+      "name": "Icon",
+      "description": "A leading icon that represents the toggle action, like a star for favorite or bold \"B\" for formatting."
+    },
+    {
+      "name": "Pressed icon",
+      "description": "An alternate icon shown when pressed: typically a filled version of the default icon to reinforce the active state."
+    },
+    {
+      "name": "Label",
+      "description": "The visible text or accessible name. For icon-only toggles, used as the aria-label and auto-tooltip."
+    },
+    {
+      "name": "Spinner",
+      "description": "Replaces the icon during async operations triggered by pressedChangeAction."
+    }
+  ],
+  "token": [
+    {
+      "name": "Icon",
+      "description": "A leading icon that identifies the token type, like a user avatar or category symbol."
+    },
+    {
+      "name": "Label",
+      "description": "The visible text. Also used as the accessible name when labelHidden is true."
+    },
+    {
+      "name": "End content",
+      "description": "Trailing content after the label, like a count badge or status dot."
+    },
+    {
+      "name": "Remove button",
+      "description": "An X button that appears when removable is set. Activating it emits remove."
+    }
+  ],
+  "tokenizer": [
+    {
+      "name": "Label",
+      "description": "The visible text above the input describing what the user is selecting. Also used as the accessible name."
+    },
+    {
+      "name": "Token chips",
+      "description": "Removable chips representing each selected item. Each chip shows a label and a remove button."
+    },
+    {
+      "name": "Search input",
+      "description": "The text input where users type to search the data source. Hides when maxEntries is reached."
+    },
+    {
+      "name": "Dropdown menu",
+      "description": "The search results list that appears below the input as the user types."
+    },
+    {
+      "name": "Spinner",
+      "description": "Loading indicator shown at the end of the field while a search is in flight."
+    },
+    {
+      "name": "End content",
+      "description": "A trailing slot after the input for action buttons, counts, or other controls."
+    },
+    {
+      "name": "Clear button",
+      "description": "A button that removes all selected tokens at once. Shown when clearable is set and tokens are present."
+    }
+  ],
+  "toolbar": [
+    {
+      "name": "Outer chrome",
+      "description": "Section-owned container that supplies the toolbar surface, padding, and selected divider edges."
+    },
+    {
+      "name": "Toolbar",
+      "description": "Named toolbar row that owns toolbar semantics and the start, optional center, and end layout."
+    }
+  ],
+  "tooltip": [
+    {
+      "name": "Tooltip surface",
+      "description": "Painted overlay surface that presents the tooltip."
+    },
+    {
+      "name": "Tooltip text",
+      "description": "Tooltip content rendered within the surface."
+    }
+  ],
+  "top-nav": [
+    {
+      "name": "Product icon and name",
+      "description": "Identifies the product in the navigation bar."
+    },
+    {
+      "name": "Navigation items",
+      "description": "Primary links for product-level destinations."
+    },
+    {
+      "name": "More menu",
+      "description": "Overflow menu for additional navigation items."
+    },
+    {
+      "name": "Flex area",
+      "description": "Flexible region for search, primary action buttons, or other controls."
+    }
+  ],
+  "tree-list": [
+    {
+      "name": "Tree list",
+      "description": "Container that presents the hierarchical tree."
+    },
+    {
+      "name": "Header",
+      "description": "Caller-provided content that visibly names the tree."
+    },
+    {
+      "name": "Item",
+      "description": "Painted row for one node in the hierarchy."
+    },
+    {
+      "name": "Chevron",
+      "description": "Expand and collapse control rendered for an Item with children."
+    },
+    {
+      "name": "Chevron glyph",
+      "description": "Directional symbol rendered by Icon inside a Chevron."
+    },
+    {
+      "name": "Item label",
+      "description": "Primary content that identifies an Item."
+    },
+    {
+      "name": "Item description",
+      "description": "Secondary text rendered below an Item label."
+    },
+    {
+      "name": "Start content",
+      "description": "Caller-provided content rendered before an Item label."
+    },
+    {
+      "name": "End content",
+      "description": "Caller-provided content rendered after an Item label."
+    },
+    {
+      "name": "Guide",
+      "description": "Connector line that shows parent-child relationships."
+    }
+  ],
+  "typeahead": [
+    {
+      "name": "Field",
+      "description": "Standalone Field shell that provides the label and optional supporting content; omitted inside InputGroup."
+    },
+    {
+      "name": "Input surface",
+      "description": "Painted control surface containing the editable input or the selected token."
+    },
+    {
+      "name": "Icon-rendered start icon",
+      "description": "Optional leading semantic icon or icon component rendered through Icon."
+    },
+    {
+      "name": "Caller-rendered start content",
+      "description": "Optional arbitrary slot content rendered directly at the start of the input surface."
+    },
+    {
+      "name": "Selected token",
+      "description": "Token that presents the selected item while the control is not in edit mode."
+    },
+    {
+      "name": "Spinner",
+      "description": "Loading indicator shown at the end of the input surface while a search is in flight."
+    },
+    {
+      "name": "Clear button",
+      "description": "Shared clear action that removes the selected item when clearable is set."
+    },
+    {
+      "name": "Dropdown",
+      "description": "Anchored listbox surface containing the current search results."
+    },
+    {
+      "name": "Empty state",
+      "description": "Message shown after a completed search returns no results."
+    },
+    {
+      "name": "Result row",
+      "description": "Stable option wrapper that owns highlight, selection, pointer, and keyboard behavior."
+    },
+    {
+      "name": "Default item content",
+      "description": "The standard label and supporting content rendered inside a result row when the item slot is not provided."
+    },
+    {
+      "name": "Caller-rendered item content",
+      "description": "Caller-owned result content supplied through the item slot, inside the stable result row."
+    },
+    {
+      "name": "Result group heading",
+      "description": "Visible heading for a labeled group of result rows."
+    },
+    {
+      "name": "Selected result state",
+      "description": "Selected styling and trailing check presented on the current result row."
+    }
+  ]
+}

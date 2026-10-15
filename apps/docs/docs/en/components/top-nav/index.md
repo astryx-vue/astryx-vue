@@ -31,6 +31,9 @@ import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

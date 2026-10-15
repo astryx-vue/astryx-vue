@@ -43,6 +43,9 @@ const items = [
 
 打开状态既可以由组件自己管理，也可以由你管理。传入 `isMenuOpen` 就进入受控模式，配合 `v-model:isMenuOpen` 使用；`openChange` 在每次请求打开或关闭时触发。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

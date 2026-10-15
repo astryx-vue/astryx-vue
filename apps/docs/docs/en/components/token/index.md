@@ -44,6 +44,9 @@ The remove button’s accessible name defaults to `Remove Design review`. `provi
 | <Badge variant="success">Do</Badge> | Use `#icon` for the type. Keep the icon out of `label`. |
 | <Badge variant="error">Don't</Badge> | Use Token for success or warning status. Use `Badge` for that. |
 
+
+<ComponentAnatomy />
+
 ## Examples
 
 <DemoExample

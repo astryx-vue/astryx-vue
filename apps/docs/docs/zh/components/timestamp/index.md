@@ -38,6 +38,9 @@ import { Timestamp } from '@astryx-vue/core/Timestamp'
 | <Badge variant="error">避免</Badge> | 相对格式关掉提示，除非旁边已经写了绝对时间。 |
 | <Badge variant="error">避免</Badge> | 给系统格式再追加时区。那些字符串要保持机器可读。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample

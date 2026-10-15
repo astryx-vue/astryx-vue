@@ -47,6 +47,9 @@ Every segment becomes its own badge, so `mod+k` paints two keys. Whitespace arou
 
 To a screen reader the whole group is one image named "Command + K"; the glyphs inside the badges are hidden because `⌘` and `⇧` are announced as nothing useful. The keys are spoken as words instead. Note that `Kbd` only presents a shortcut: it does not listen for keystrokes, and the shortcut still has to be implemented by the product.
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

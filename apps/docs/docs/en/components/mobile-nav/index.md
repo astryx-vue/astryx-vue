@@ -32,6 +32,9 @@ const open = ref(false)
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practice |

@@ -32,6 +32,9 @@ import { Citation } from '@astryx-vue/core/Citation'
 </template>
 ```
 
+
+<ComponentAnatomy />
+
 ## Best practices
 
 | Guidance | Practices |

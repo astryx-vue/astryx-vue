@@ -76,6 +76,9 @@ const view = ref<string | null | string[]>('board')
 
 图标按钮请用 `isIconOnly`：按钮变成正方形，`label` 转为无障碍名称，鼠标悬停的文字提示由 `tooltip` 提供。按下时想换成实心图标，就把另一张图放进 `pressedIcon` 插槽；它留空时会退回 `icon`。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

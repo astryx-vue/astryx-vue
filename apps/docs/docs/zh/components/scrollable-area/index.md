@@ -32,6 +32,9 @@ import { ScrollableArea } from '@astryx-vue/core/ScrollableArea'
 
 视口和内容盒已经存在时，用 `useScrollableArea` 做同样的测量。`useScrollOverflow` 报告一个横向滚动容器的起始边和结束边有没有被挡住。
 
+
+<ComponentAnatomy />
+
 ## 最佳实践
 
 | 指引 | 实践 |

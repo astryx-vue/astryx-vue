@@ -38,6 +38,9 @@ import { Thumbnail } from '@astryx-vue/core/Thumbnail'
 | <Badge variant="error">避免</Badge> | 把文件名画进方块。提示里已经有 `label`。 |
 | <Badge variant="error">避免</Badge> | 在 `isDisabled` 或 `isLoading` 时还指望 `click` 会触发。 |
 
+
+<ComponentAnatomy />
+
 ## 示例
 
 <DemoExample
