@@ -412,6 +412,18 @@ importers:
         specifier: catalog:vue
         version: 3.3.12(@typescript/typescript6@6.0.2)
 
+  packages/cli:
+    devDependencies:
+      '@types/node':
+        specifier: catalog:language
+        version: 26.6.4
+      tsdown:
+        specifier: catalog:build
+        version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28(@typescript/typescript6@6.0.2))(@vue/language-core@3.3.12)(publint@0.3.25)(unrun@0.3.1(synckit@0.11.13))(vue-tsc@3.3.12(@typescript/typescript6@6.0.2))
+      typescript:
+        specifier: catalog:language
+        version: '@typescript/typescript6@6.0.2'
+
   packages/core:
     dependencies:
       '@internationalized/date':

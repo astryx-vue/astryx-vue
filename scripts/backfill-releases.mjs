@@ -7,7 +7,7 @@ import { execFileSync } from 'node:child_process'
 import { appendFileSync, readFileSync } from 'node:fs'
 import process from 'node:process'
 
-const PACKAGES = ['core', 'themes']
+const PACKAGES = ['core', 'themes', 'cli']
 const NPM_REGISTRY = 'https://registry.npmjs.org'
 
 function run(command, args, options = {}) {

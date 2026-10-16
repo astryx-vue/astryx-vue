@@ -27,6 +27,24 @@ pnpm add @astryx-vue/core @astryx-vue/themes
 
 Documentation site: <https://astryx-vue.pages.dev>
 
+## CLI
+
+`@astryx-vue/cli` looks up component docs for people and agents. The binary is `astryx-vue`. It is not the `astryx` package.
+
+```json
+{
+  "scripts": {
+    "astryx-vue": "node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs"
+  }
+}
+```
+
+```sh
+npm run astryx-vue -- component Button
+```
+
+Details are in [packages/cli/README.md](./packages/cli/README.md).
+
 The first npm release was `0.1.0`. Release steps are in [RELEASING.md](./RELEASING.md).
 
 ## Quick start

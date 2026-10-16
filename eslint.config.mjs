@@ -13,6 +13,7 @@ export default antfu({
     'apps/docs/scripts/build-dashboard-cohort-funnel.mjs',
     'apps/docs/scripts/port-playground-page.py',
     'packages/core/locales/**',
+    'packages/cli/src/generated/**',
   ],
   react: false,
   typescript: true,

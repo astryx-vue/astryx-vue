@@ -1,0 +1,57 @@
+{
+  "name": "@astryx-vue/cli",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Agent-friendly CLI for the unofficial astryx-vue community project.",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "homepage": "https://astryx-vue.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astryx-vue/astryx-vue.git",
+    "directory": "packages/cli"
+  },
+  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
+  "keywords": [
+    "vue",
+    "vue3",
+    "design-system",
+    "astryx",
+    "cli",
+    "agents"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "astryx-vue": "./bin/astryx-vue.mjs"
+  },
+  "files": [
+    "README.md",
+    "README.zh-CN.md",
+    "bin",
+    "dist"
+  ],
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+  },
+  "scripts": {
+    "generate": "node --disable-warning=ExperimentalWarning --import ./scripts/register-ts.mjs ./scripts/generate-catalog.mjs",
+    "generate:check": "node --disable-warning=ExperimentalWarning --import ./scripts/register-ts.mjs ./scripts/generate-catalog.mjs --check",
+    "build": "pnpm generate && tsdown",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:language",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:language"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

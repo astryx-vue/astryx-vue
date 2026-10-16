@@ -6,7 +6,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)))
-const packages = ['packages/core', 'packages/themes']
+const packages = ['packages/core', 'packages/themes', 'packages/cli']
 
 function run(command, args, options = {}) {
   try {

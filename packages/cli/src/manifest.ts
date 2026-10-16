@@ -1,0 +1,71 @@
+import type { CommandSpec, OptionSpec } from './spec.ts'
+import { API_VERSION, BINARY, COMMANDS, GLOBAL_OPTIONS, JSON_SUPPORTED, PACKAGE_NAME } from './spec.ts'
+
+export interface ManifestOption {
+  flag: string
+  type: 'boolean' | 'string'
+  description: string
+  choices?: string[]
+  default?: string
+}
+
+export interface ManifestCommand {
+  name: string
+  description: string
+  arguments: { name: string, required: boolean, variadic: boolean, description: string }[]
+  options: ManifestOption[]
+  json: boolean
+  responseTypes: string[]
+  examples: string[]
+  exitCodes: { code: number, when: string }[]
+}
+
+export interface ManifestData {
+  name: string
+  package: string
+  version: string
+  apiVersion: number
+  description: string
+  globalOptions: ManifestOption[]
+  commands: ManifestCommand[]
+  jsonSupported: string[]
+  responseTypes: Record<string, string[]>
+}
+
+export function buildManifest(version: string): ManifestData {
+  const commands = COMMANDS.map(toManifestCommand)
+  return {
+    name: BINARY,
+    package: PACKAGE_NAME,
+    version,
+    apiVersion: API_VERSION,
+    description: 'Agent-friendly CLI for astryx-vue. Reads component docs derived from the Vue docs site. Not Meta\'s astryx CLI.',
+    globalOptions: GLOBAL_OPTIONS.map(toManifestOption),
+    commands,
+    jsonSupported: [...JSON_SUPPORTED],
+    responseTypes: Object.fromEntries(commands.map(command => [command.name, command.responseTypes])),
+  }
+}
+
+function toManifestCommand(command: CommandSpec): ManifestCommand {
+  return {
+    name: command.name,
+    description: command.summary,
+    arguments: command.arguments.map(argument => ({ ...argument })),
+    options: command.options.map(toManifestOption),
+    json: command.json,
+    responseTypes: [...command.responseTypes],
+    examples: [...command.examples],
+    exitCodes: command.exitCodes.map(exit => ({ ...exit })),
+  }
+}
+
+function toManifestOption(option: OptionSpec): ManifestOption {
+  return {
+    flag: option.type === 'string' ? `${option.flag} <${option.name}>` : option.flag,
+    type: option.type,
+    description: option.description,
+    ...(option.choices ? { choices: [...option.choices] } : {}),
+    ...(option.default !== undefined ? { default: option.default } : {}),
+  }
+}

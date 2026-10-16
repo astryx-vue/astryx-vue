@@ -27,6 +27,24 @@ pnpm add @astryx-vue/core @astryx-vue/themes
 
 文档站：<https://astryx-vue.pages.dev>
 
+## 命令行
+
+`@astryx-vue/cli` 用来查组件文档，人和 agent 都可以用。可执行文件名是 `astryx-vue`，不是 `astryx` 这个包。
+
+```json
+{
+  "scripts": {
+    "astryx-vue": "node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs"
+  }
+}
+```
+
+```sh
+npm run astryx-vue -- component Button
+```
+
+说明见 [packages/cli/README.zh-CN.md](./packages/cli/README.zh-CN.md)。
+
 首次 npm 版本是 `0.1.0`。发布步骤见 [RELEASING.md](./RELEASING.md)。
 
 ## 快速开始
