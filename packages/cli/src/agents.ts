@@ -7,7 +7,7 @@ export const MANAGED_BLOCK_START = '<!-- Maintained by astryx-vue, do not edit m
 export const MANAGED_BLOCK_END = '<!-- astryx-vue block end -->'
 
 export type AgentName = 'agents' | 'cursor' | 'claude' | 'codex'
-export type BlockAction = 'created' | 'updated' | 'appended' | 'unchanged'
+export type BlockAction = 'created' | 'updated' | 'appended'
 
 const AGENT_FILES: Record<AgentName, string> = {
   agents: 'AGENTS.md',
@@ -38,7 +38,7 @@ export function applyManagedBlock(existing: string | null, inner: string): { con
     if (after.length > 0 && !after.startsWith('\n'))
       after = `\n${after}`
     const content = ensureTrailingNewline(`${before}${block}${after}`)
-    return { content, action: content === existing ? 'unchanged' : 'updated' }
+    return { content, action: 'updated' }
   }
 
   const separator = existing.endsWith('\n') ? '\n' : '\n\n'

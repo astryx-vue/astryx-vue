@@ -33,6 +33,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:linting",
     "@arethetypeswrong/cli": "catalog:release",
+    "@astryx-vue/cli": "workspace:*",
     "@changesets/changelog-github": "catalog:release",
     "@changesets/cli": "catalog:release",
     "@types/node": "catalog:language",

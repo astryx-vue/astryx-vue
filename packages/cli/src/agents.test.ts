@@ -34,17 +34,25 @@ describe('managed agent block', () => {
     expect(appended.content).toContain(INNER)
   })
 
-  it('is idempotent when the block is already current', () => {
+  it('rewrites the block on every call, including when the new text matches', () => {
     const created = applyManagedBlock(null, INNER)
     const again = applyManagedBlock(created.content, INNER)
-    expect(again.action).toBe('unchanged')
+    expect(again.action).toBe('updated')
     expect(again.content).toBe(created.content)
 
-    const withNotes = applyManagedBlock(`before\n\n${created.content}after\n`, INNER)
-    const twice = applyManagedBlock(withNotes.content, INNER)
-    expect(twice.action).toBe('unchanged')
-    expect(twice.content).toBe(withNotes.content)
-    expect(twice.content.startsWith('before\n\n')).toBe(true)
-    expect(twice.content.endsWith('after\n')).toBe(true)
+    const withNotes = `# Project notes\n\nKeep this paragraph.\n\n${MANAGED_BLOCK_START}\nstale instructions\n${MANAGED_BLOCK_END}\n\n## Local rules\n\nDo not touch this.\n`
+    const first = applyManagedBlock(withNotes, INNER)
+    const second = applyManagedBlock(first.content, NEXT)
+    expect(first.action).toBe('updated')
+    expect(second.action).toBe('updated')
+    expect(second.content.startsWith('# Project notes\n\nKeep this paragraph.\n\n')).toBe(true)
+    expect(second.content.endsWith('## Local rules\n\nDo not touch this.\n')).toBe(true)
+    expect(second.content).toContain(NEXT)
+    expect(second.content).not.toContain('stale instructions')
+    expect(second.content).not.toContain(INNER)
+
+    const third = applyManagedBlock(second.content, NEXT)
+    expect(third.action).toBe('updated')
+    expect(third.content).toBe(second.content)
   })
 })

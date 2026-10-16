@@ -205,13 +205,11 @@ async function initCommand(parsed: ParsedArgs, json: boolean, dense: boolean, lo
       throw new CliError(`Could not read ${filename}.`, 'ERR_WRITE_FAILED', 1)
   }
   const next = applyManagedBlock(existing, renderAgentBlock(catalog, locale, dense))
-  if (next.action !== 'unchanged') {
-    try {
-      await writeFile(target, next.content)
-    }
-    catch {
-      throw new CliError(`Could not write ${filename}.`, 'ERR_WRITE_FAILED', 1)
-    }
+  try {
+    await writeFile(target, next.content)
+  }
+  catch {
+    throw new CliError(`Could not write ${filename}.`, 'ERR_WRITE_FAILED', 1)
   }
   const data = {
     mode: 'features' as const,
@@ -225,9 +223,7 @@ async function initCommand(parsed: ParsedArgs, json: boolean, dense: boolean, lo
     ? 'Created'
     : next.action === 'appended'
       ? 'Appended the managed block to'
-      : next.action === 'updated'
-        ? 'Updated the managed block in'
-        : 'Left unchanged'
+      : 'Updated the managed block in'
   return `${verb} ${filename}\n`
 }
 

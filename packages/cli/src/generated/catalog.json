@@ -6756,7 +6756,7 @@
       "importPath": "@astryx-vue/core/Avatar",
       "exportName": "Avatar",
       "summary": {
-        "en": "Import the component from its dedicated entry. Structural styles are loaded automatically.",
+        "en": "Always provide `name` for fallback text and accessible labeling.",
         "zh": "`Avatar` 用于呈现用户的形象：有图片时显示图片，图片缺失或加载失败时回退到姓名首字母，两者都没有时显示默认的人物图标。它支持多种尺寸与形状，还可以通过状态点标示用户是否在线。"
       },
       "usage": {
@@ -7123,7 +7123,7 @@
       "importPath": "@astryx-vue/core/AvatarGroup",
       "exportName": "AvatarGroup",
       "summary": {
-        "en": "Import the components from their dedicated entry. Structural styles are loaded automatically.",
+        "en": "Set `size` and `shape` on `AvatarGroup` so child avatars inherit them.",
         "zh": "`AvatarGroup` 把多个头像重叠排列成一组，适合展示项目成员、协作者或群聊参与者。放不下的头像交给 `AvatarGroupOverflow`，它会把剩余人数概括为 +N。"
       },
       "usage": {
@@ -7326,7 +7326,7 @@
       "importPath": "@astryx-vue/core/Blockquote",
       "exportName": "Blockquote",
       "summary": {
-        "en": "Import the component from its dedicated entry. The component loads its structural styles.",
+        "en": "Use for quoted text, testimonials, or highlighted excerpts from external sources.",
         "zh": "`Blockquote` 用于展示引用的文本，例如推荐语、评论摘录或文档中引用的外部内容，在视觉上与普通段落区分开。从独立入口导入即可，结构样式会随组件自动加载："
       },
       "usage": {
@@ -8151,7 +8151,7 @@
       "importPath": "@astryx-vue/core/Heading",
       "exportName": "Heading",
       "summary": {
-        "en": "Import the component from its dedicated entry. Structural styles are loaded automatically.",
+        "en": "Choose `level` to match the document outline; avoid skipping levels.",
         "zh": "`Heading` 用于渲染页面和区块的标题：`level` 决定语义层级（h1–h6），`type` 可以在不改变语义的前提下调整视觉样式，两者搭配能同时照顾文档结构与视觉设计。从独立入口导入即可，结构样式会随组件自动加载："
       },
       "usage": {
@@ -9000,7 +9000,7 @@
       "importPath": "@astryx-vue/core/Text",
       "exportName": "Text",
       "summary": {
-        "en": "Import the component from its dedicated entry. Structural styles are loaded automatically.",
+        "en": "Use `type` for semantic hierarchy: `large` for emphasis, `supporting` for hints, `label` for form labels.",
         "zh": "`Text` 用于渲染正文、辅助说明、表单标签等文字内容，`type` 提供了一套预设的字号、字重和行高组合，让整站文字风格保持一致。从独立入口导入即可，结构样式会随组件自动加载："
       },
       "usage": {
@@ -10952,7 +10952,7 @@
       "importPath": "@astryx-vue/core/Badge",
       "exportName": "Badge",
       "summary": {
-        "en": "Import the component from its dedicated entry. The component loads its structural styles.",
+        "en": "Every status badge steals attention. Only badge states where the user needs to notice or act: errors, warnings, items requiring follow-up. If no action is needed, plain text is fine.",
         "zh": "`Badge` 用于标记状态或类别，例如处理结果、优先级或团队归属，适合在列表、卡片和表格中快速扫读。徽标是静态的状态或类别标记，需要可移除、可点击的标签请用 Token。从独立入口导入即可，结构样式会随组件自动加载："
       },
       "usage": {
@@ -11871,7 +11871,7 @@
       "importPath": "@astryx-vue/core/Skeleton",
       "exportName": "Skeleton",
       "summary": {
-        "en": "Import the component from its dedicated entry. The component loads its structural styles.",
+        "en": "Match the size and shape of the content being loaded to create a realistic placeholder.",
         "zh": "`Skeleton` 在内容尚未加载完成时渲染占位块，按最终内容的尺寸与形状撑起布局，减轻加载完成时的跳动。它适合内容尺寸已知的场景；尺寸未知时建议改用 `Spinner`。"
       },
       "usage": {
@@ -12219,7 +12219,7 @@
       "importPath": "@astryx-vue/core/StatusDot",
       "exportName": "StatusDot",
       "summary": {
-        "en": "Import the component from its dedicated entry. Structural styles are loaded automatically.",
+        "en": "Always provide `label`; screen readers announce it via `aria-label`.",
         "zh": "`StatusDot` 是一个轻量的状态指示点，常出现在头像角标、列表项和监控页面中，用颜色快速传达在线、异常等状态。从独立入口导入即可，结构样式会随组件自动加载："
       },
       "usage": {
@@ -25244,7 +25244,7 @@
       "importPath": "@astryx-vue/core/Stack",
       "exportName": "Stack",
       "summary": {
-        "en": "Import the component from its dedicated entry. The component loads its structural styles.",
+        "en": "Use the gap prop for spacing between items; don't add margins manually.",
         "zh": "`Stack` 系列组件用一套间距令牌管理一维布局：`Stack` 通过 `direction` 切换排列方向，`HStack`、`VStack` 分别固定水平与垂直方向，`StackItem` 负责子项的尺寸分配。需要沿同一方向排列多个元素、并保持间距一致时使用它们。"
       },
       "usage": {
@@ -27850,7 +27850,7 @@
       "importPath": "@astryx-vue/core/Breadcrumbs",
       "exportName": "Breadcrumbs",
       "summary": {
-        "en": "Import `Breadcrumbs` and `BreadcrumbItem` from their dedicated entry.",
+        "en": "A crumb in the middle of the trail can open a menu for sibling destinations. A short list is a menu array. Checkbox and radio rows go in the menu slot on that crumb, and the slot replaces the array. Those rows are exported from the breadcrumbs entry and are the same components the menu uses, so a choice opens and closes the same way.",
         "zh": "从独立入口导入 `Breadcrumbs` 与 `BreadcrumbItem`。"
       },
       "usage": {
@@ -36563,7 +36563,7 @@
       "importPath": "@astryx-vue/core/VisuallyHidden",
       "exportName": "VisuallyHidden",
       "summary": {
-        "en": "Import `VisuallyHidden` from its dedicated entry. The default slot is required:",
+        "en": "The default slot is required:",
         "zh": "从独立入口导入 `VisuallyHidden`。默认插槽为必需项："
       },
       "usage": {

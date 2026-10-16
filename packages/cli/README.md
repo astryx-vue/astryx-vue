@@ -61,7 +61,7 @@ Exit codes are `0` for success, `1` when the command ran but failed, and `2` for
 <!-- astryx-vue block end -->
 ```
 
-If the file is missing, the command creates it. If the markers are already there, only the block is replaced. Other text stays. If the file exists without the markers, the block is appended. Running it again with the same flags leaves the file unchanged.
+If the file is missing, the command creates it. If the markers are already there, every run replaces only the block with freshly generated text. Other text stays. If the file exists without the markers, the block is appended. A second run still rewrites the block; it does not skip because the markers are already present. When the generated text matches, the bytes stay the same.
 
 The block tells an agent how to query the CLI. It does not paste the component catalog.
 

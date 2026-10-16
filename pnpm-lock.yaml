@@ -302,6 +302,9 @@ importers:
       '@arethetypeswrong/cli':
         specifier: catalog:release
         version: 0.18.5
+      '@astryx-vue/cli':
+        specifier: workspace:*
+        version: link:packages/cli
       '@changesets/changelog-github':
         specifier: catalog:release
         version: 1.0.1

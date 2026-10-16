@@ -77,6 +77,56 @@ describe('markdown extraction', () => {
     expect(page.notes.map(note => note.heading)).toContain('Async actions')
   })
 
+  it('skips an import-only usage paragraph and keeps the next real sentence', () => {
+    const page = extractPage(`## Usage
+
+Import the component from its dedicated entry. Structural styles are loaded automatically.
+
+\`\`\`vue
+import { Avatar } from '@astryx-vue/core/Avatar'
+\`\`\`
+
+A photo, initials, or a fallback icon stands in for a person.
+
+## Best practices
+
+| Guidance | Practice |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Always provide a name. |
+`, 'Avatar')
+    expect(page.summary).toBe('A photo, initials, or a fallback icon stands in for a person.')
+    expect(page.summary).not.toContain('dedicated entry')
+  })
+
+  it('uses the first practice when the usage section is only the import boilerplate', () => {
+    const page = extractPage(`## Usage
+
+Import the component from its dedicated entry. The component loads its structural styles.
+
+\`\`\`vue
+<script setup lang="ts">
+import { Badge } from '@astryx-vue/core/Badge'
+</script>
+
+<template>
+  <Badge variant="success">Completed</Badge>
+</template>
+\`\`\`
+
+## Best practices
+
+| Guidance | Practices |
+| --- | --- |
+| <Badge variant="success">Do</Badge> | Always provide \`name\` for fallback text. |
+`, 'Badge')
+    expect(page.summary).toBe('Always provide `name` for fallback text.')
+  })
+
+  it('keeps a dedicated-entry sentence that also states how to use the component', () => {
+    const page = extractPage('## Usage\n\nImport `TabList` and `Tab` from their dedicated entry and control selection with `v-model:value`.\n', 'TabList')
+    expect(page.summary).toContain('v-model:value')
+  })
+
   it('finds a convention paragraph from a guide page', () => {
     const paragraph = paragraphContaining('# Guide\n\nImport each component from its own subpath. That entry loads the matching structural styles.\n', 'own subpath')
     expect(paragraph).toContain('own subpath')

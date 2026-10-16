@@ -167,8 +167,22 @@ describe('init --features agents', () => {
       expect(next.match(new RegExp(MANAGED_BLOCK_START, 'g'))).toHaveLength(1)
 
       const again = await run(['init', '--features', 'agents', '--zh', '--json'], cwd)
-      expect(assertResponse(again.stdout, 'init.run').data).toMatchObject({ files: [{ path: 'AGENTS.md', action: 'unchanged' }] })
+      expect(assertResponse(again.stdout, 'init.run').data).toMatchObject({ files: [{ path: 'AGENTS.md', action: 'updated' }] })
+      expect(again.stdout).not.toContain('Left unchanged')
       expect(await readFile(file, 'utf8')).toBe(next)
+
+      const stale = next.replace('怎么查', '过期的查找说明')
+      await writeFile(file, stale)
+      const refreshed = await run(['init', '--features', 'agents', '--zh'], cwd)
+      expect(refreshed.exitCode).toBe(0)
+      expect(refreshed.stdout).toContain('Updated the managed block')
+      expect(refreshed.stdout).not.toContain('Left unchanged')
+      const restored = await readFile(file, 'utf8')
+      expect(restored.startsWith('# My agent notes\n\nLeave this paragraph alone.\n\n')).toBe(true)
+      expect(restored).toContain('## Team rules\n\nShip on Tuesday.\n')
+      expect(restored).toContain('怎么查')
+      expect(restored).not.toContain('过期的查找说明')
+      expect(restored.match(new RegExp(MANAGED_BLOCK_START, 'g'))).toHaveLength(1)
     }
     finally {
       await rm(cwd, { recursive: true, force: true })
