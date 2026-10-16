@@ -150,6 +150,17 @@ describe('chat composer', () => {
     expect(inserted[0]).toHaveLength(201)
     expect(paste.onPaste('short')).toBe(false)
 
+    const pasted = mount(ChatComposerInput, { attachTo: document.body })
+    const pastedField = asHtml(pasted.get('.astryx-chat-composer-input__editable').element)
+    pastedField.focus()
+    const clipboard = new DataTransfer()
+    clipboard.setData('text/plain', 'y'.repeat(220))
+    pastedField.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: clipboard }))
+    await nextTick()
+    expect(pastedField.querySelector('[data-astryx-token]')).not.toBeNull()
+    expect((pasted.vm as unknown as { getValue: () => string }).getValue()).toContain('y'.repeat(220))
+    pasted.unmount()
+
     editable.textContent = ''
     editable.dispatchEvent(new InputEvent('input', { bubbles: true }))
     await editable.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
@@ -175,7 +186,7 @@ describe('chat composer', () => {
           menuLabel: 'People',
           searchSource: createStaticSource([
             { id: 'ada', label: 'Ada' },
-            { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Team' } },
+            { id: 'lin', label: 'Lin', description: 'Reviewer', auxiliaryData: { group: 'Team' } },
           ]),
           onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}` }),
         }],
@@ -202,6 +213,17 @@ describe('chat composer', () => {
     await nextTick()
     expect(editable.attributes('aria-expanded')).toBe('true')
     expect(document.body.textContent).toContain('Ada')
+    expect(document.body.textContent).toContain('Reviewer')
+
+    field.textContent = ''
+    field.dispatchEvent(new InputEvent('input', { bubbles: true }))
+    await nextTick()
+    const handle = wrapper.vm as unknown as { focus: () => void, insertText: (text: string) => void }
+    handle.focus()
+    handle.insertText('@')
+    await nextTick()
+    expect(editable.attributes('aria-expanded')).toBe('true')
+    expect(document.body.textContent).toContain('Lin')
 
     const text = mount(ChatTokenizedText, {
       props: {
@@ -218,7 +240,7 @@ describe('chat composer', () => {
     wrapper.unmount()
   })
 
-  it('hides dictation without speech recognition and localizes send and stop', () => {
+  it('hides dictation without speech recognition and localizes send and stop', async () => {
     const hidden = mount(ChatDictationButton, {
       props: {
         dictation: { isSupported: false, isListening: false, bands: [0, 0, 0, 0, 0], volume: 0, toggle: () => {} },
@@ -234,6 +256,29 @@ describe('chat composer', () => {
     })
     expect(shown.get('button').attributes('aria-label')).toBe('Start dictation')
     expect(shown.find('.astryx-icon--microphone').exists()).toBe(true)
+
+    const isSupported = ref(false)
+    const isListening = ref(false)
+    const fromComposable = mount(ChatDictationButton, {
+      props: {
+        dictation: {
+          isSupported,
+          isListening,
+          bands: ref([0.4, 0.2, 0, 0, 0]),
+          volume: ref(0),
+          toggle: () => {
+            isListening.value = !isListening.value
+          },
+        },
+      },
+    })
+    expect(fromComposable.find('button').exists()).toBe(false)
+    isSupported.value = true
+    await nextTick()
+    expect(fromComposable.get('button').attributes('aria-label')).toBe('Start dictation')
+    await fromComposable.get('button').trigger('click')
+    expect(fromComposable.find('.astryx-chat-dictation__bars').exists()).toBe(true)
+    expect(fromComposable.get('button').attributes('aria-label')).toBe('Stop dictation')
 
     const Probe = defineComponent({
       setup() {
