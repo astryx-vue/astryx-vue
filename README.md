@@ -2,22 +2,14 @@ English | [简体中文](./README.zh-CN.md)
 
 # astryx-vue
 
-An unofficial Vue 3 community implementation of the Astryx design system.
+Unofficial Vue 3 port of Astryx — components, themes, and an agent-friendly CLI.
 
 [![GitHub](https://img.shields.io/badge/GitHub-astryx--vue%2Fastryx--vue-181717?logo=github)](https://github.com/astryx-vue/astryx-vue)
 [![npm @astryx-vue/core](https://img.shields.io/npm/v/@astryx-vue/core?label=%40astryx-vue%2Fcore)](https://www.npmjs.com/package/@astryx-vue/core)
 [![npm @astryx-vue/themes](https://img.shields.io/npm/v/@astryx-vue/themes?label=%40astryx-vue%2Fthemes)](https://www.npmjs.com/package/@astryx-vue/themes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-> This project is not an official Meta project. The original Astryx is at <https://github.com/facebook/astryx>.
-
-## Features
-
-- A native Vue 3 API: props, events, slots, `v-model`, and composables.
-- Components and themes ship separately: `@astryx-vue/core` provides the components, and `@astryx-vue/themes` provides the themes.
-- Built with CSS variables and CSS cascade layers. UnoCSS and StyleX are not required.
-- Interactive documentation, with component examples, Chinese and English pages, and a theme playground.
-- Complete TypeScript types, with Vitest tests.
+> Not affiliated with, endorsed by, or supported by Meta. The original Astryx is at <https://github.com/facebook/astryx>.
 
 ## Install
 
@@ -25,21 +17,17 @@ An unofficial Vue 3 community implementation of the Astryx design system.
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-Documentation site: <https://astryx-vue.pages.dev>
-
-The first npm release was `0.1.0`. Release steps are in [RELEASING.md](./RELEASING.md).
+The only peer dependency is `vue` `^3.5.0`. npm and yarn use the same package names.
 
 ## Quick start
 
-Import the theme once at the application entry:
+Import one theme at the app entry. Neutral also applies on `:root`, and it brings Figtree and JetBrains Mono.
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-The monospace font stack is JetBrains Mono. Importing the Neutral theme also loads weights 400, 500, 600, and 700, plus 400 italic.
-
-Then use it from a component:
+Import each component from its own subpath. That entry loads the matching structural styles. StyleX and UnoCSS are not required.
 
 ```vue
 <script setup lang="ts">
@@ -51,28 +39,56 @@ import { Button } from '@astryx-vue/core/Button'
 </template>
 ```
 
-## Documentation
+## Packages
 
-Online docs: <https://astryx-vue.pages.dev>
+| Package | What it is |
+| --- | --- |
+| [`@astryx-vue/core`](./packages/core) | Vue components, composables, and structural styles |
+| [`@astryx-vue/themes`](./packages/themes) | One theme package: Neutral, Butter, Chocolate, Gothic, Matcha, Stone, and Y2K |
+| [`@astryx-vue/cli`](./packages/cli) | `astryx-vue` — component docs, search, and agent context. Not Meta's `astryx` |
 
-Playground: <https://astryx-vue.pages.dev/playground/> (English: <https://astryx-vue.pages.dev/en/playground/>)
+`core` and `themes` publish together. The CLI is in this repository and publishes with a later release.
 
-Start the docs site locally:
+## CLI
+
+Add the CLI as a dev dependency and call it through a project script:
+
+```json
+{
+  "scripts": {
+    "astryx-vue": "node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs"
+  }
+}
+```
 
 ```sh
-pnpm install
-pnpm dev
+npm run astryx-vue -- component Button
+npm run astryx-vue -- search dialog
+npm run astryx-vue -- manifest --json
+npm run astryx-vue -- init --features agents
 ```
+
+`init --features agents` refreshes only the managed block in `AGENTS.md`. Text outside the markers stays. The guide is [CLI](https://astryx-vue.pages.dev/en/guide/cli).
+
+## Resources
+
+- Docs: <https://astryx-vue.pages.dev> (English: <https://astryx-vue.pages.dev/en/>)
+- Playground: <https://astryx-vue.pages.dev/playground/> (English: <https://astryx-vue.pages.dev/en/playground/>)
+- Components: <https://astryx-vue.pages.dev/en/components/>
+- Themes: <https://astryx-vue.pages.dev/en/themes/>
 
 ## Development
 
-Node.js 22.18+ and pnpm 11.21+ are required.
+Node.js 22.18+ and pnpm 11.21+.
 
 ```sh
 pnpm install
-pnpm check   # lint + typecheck + test + build
+pnpm dev      # docs site
+pnpm check    # lint, typecheck, test, and build
 ```
+
+Release steps are in [RELEASING.md](./RELEASING.md).
 
 ## License
 
-[MIT](./LICENSE)
+[MIT](./LICENSE). Astryx is copyright Meta Platforms, Inc. This repository is an unofficial port of that design and is not affiliated with or endorsed by Meta.

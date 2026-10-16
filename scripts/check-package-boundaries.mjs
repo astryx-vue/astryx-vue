@@ -41,6 +41,7 @@ for (const packageFile of packageFiles) {
   const relativeFile = packageFile.slice(rootDir.length + 1)
   const isPublicPackage = packageJson.name === '@astryx-vue/core'
     || packageJson.name === '@astryx-vue/themes'
+    || packageJson.name === '@astryx-vue/cli'
 
   if (isPublicPackage && packageJson.private)
     errors.push(`${relativeFile}: public package cannot be private`)

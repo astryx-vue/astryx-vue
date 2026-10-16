@@ -36,3 +36,5 @@ Entries differ by what you need:
 Subpaths and the package root export the same components. Docs and examples use subpaths so the import says which component it is, and so only that component's structural sheet loads. Importing `useClipboard` from the package root can pull other component modules along if the bundler does not drop unused re-exports. Prefer a subpath when you only need a component.
 
 The two packages version together. The published release is `0.1.0`. See the [changelog](/en/guide/changelog).
+
+To look these docs up from the terminal, see [CLI](/en/guide/cli).

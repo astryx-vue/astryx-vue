@@ -2,22 +2,14 @@
 
 # astryx-vue
 
-Astryx 设计系统的非官方 Vue 3 社区实现。
+Astryx 的非官方 Vue 3 移植：组件、主题，以及给 agent 用的命令行。
 
 [![GitHub](https://img.shields.io/badge/GitHub-astryx--vue%2Fastryx--vue-181717?logo=github)](https://github.com/astryx-vue/astryx-vue)
 [![npm @astryx-vue/core](https://img.shields.io/npm/v/@astryx-vue/core?label=%40astryx-vue%2Fcore)](https://www.npmjs.com/package/@astryx-vue/core)
 [![npm @astryx-vue/themes](https://img.shields.io/npm/v/@astryx-vue/themes?label=%40astryx-vue%2Fthemes)](https://www.npmjs.com/package/@astryx-vue/themes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-> 本项目不是 Meta 官方项目。原版 Astryx 见 <https://github.com/facebook/astryx>。
-
-## 特性
-
-- Vue 3 原生 API：props、事件、插槽、`v-model` 与组合式函数。
-- 组件包与主题包分离：`@astryx-vue/core` 提供组件，`@astryx-vue/themes` 提供主题。
-- 基于 CSS 变量与 CSS 分层，不要求使用者安装 UnoCSS 或 StyleX。
-- 交互式文档，包含组件示例、中英文说明和主题演练场。
-- TypeScript 类型完整，配套 Vitest 测试。
+> 与 Meta 没有隶属、背书或支持关系。原版 Astryx 在 <https://github.com/facebook/astryx>。
 
 ## 安装
 
@@ -25,21 +17,17 @@ Astryx 设计系统的非官方 Vue 3 社区实现。
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-文档站：<https://astryx-vue.pages.dev>
-
-首次 npm 版本是 `0.1.0`。发布步骤见 [RELEASING.md](./RELEASING.md)。
+唯一的 peer 依赖是 `vue` `^3.5.0`。npm 和 yarn 用同样的包名。
 
 ## 快速开始
 
-在应用入口引入一次主题：
+在应用入口引入一套主题。Neutral 也会写到 `:root`，并带上 Figtree 和 JetBrains Mono。
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-等宽字体栈是 JetBrains Mono。引入 Neutral 主题时会一并加载 400、500、600、700 和 400 斜体。
-
-然后在组件中使用：
+每个组件从自己的子路径引入。那个入口会带上对应的结构样式。不需要 StyleX，也不需要 UnoCSS。
 
 ```vue
 <script setup lang="ts">
@@ -47,32 +35,60 @@ import { Button } from '@astryx-vue/core/Button'
 </script>
 
 <template>
-  <Button label="Get started" />
+  <Button label="开始" />
 </template>
 ```
 
-## 文档
+## 包
 
-在线文档：<https://astryx-vue.pages.dev>
+| 包 | 是什么 |
+| --- | --- |
+| [`@astryx-vue/core`](./packages/core) | Vue 组件、组合式函数和结构样式 |
+| [`@astryx-vue/themes`](./packages/themes) | 一个主题包：Neutral、Butter、Chocolate、Gothic、Matcha、Stone、Y2K |
+| [`@astryx-vue/cli`](./packages/cli) | `astryx-vue`：查组件文档、搜索、写 agent 上下文。不是 Meta 的 `astryx` |
 
-演练场：<https://astryx-vue.pages.dev/playground/>（英文：<https://astryx-vue.pages.dev/en/playground/>）
+`core` 和 `themes` 一起发布。命令行已经在这个仓库里，随之后的版本发到 npm。
 
-本地启动文档站点：
+## 命令行
+
+把 CLI 装成开发依赖，再用项目脚本调用：
+
+```json
+{
+  "scripts": {
+    "astryx-vue": "node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs"
+  }
+}
+```
 
 ```sh
-pnpm install
-pnpm dev
+npm run astryx-vue -- component Button
+npm run astryx-vue -- search dialog
+npm run astryx-vue -- manifest --json
+npm run astryx-vue -- init --features agents
 ```
+
+`init --features agents` 只刷新 `AGENTS.md` 里的托管块。标记外面的文字保持不动。说明见 [命令行](https://astryx-vue.pages.dev/guide/cli)。
+
+## 资源
+
+- 文档：<https://astryx-vue.pages.dev>（英文：<https://astryx-vue.pages.dev/en/>）
+- 演练场：<https://astryx-vue.pages.dev/playground/>（英文：<https://astryx-vue.pages.dev/en/playground/>）
+- 组件：<https://astryx-vue.pages.dev/components/>
+- 主题：<https://astryx-vue.pages.dev/themes/>
 
 ## 开发
 
-需要 Node.js 22.18+ 与 pnpm 11.21+。
+需要 Node.js 22.18+ 和 pnpm 11.21+。
 
 ```sh
 pnpm install
-pnpm check   # lint + typecheck + test + build
+pnpm dev      # 文档站
+pnpm check    # lint、类型检查、测试和构建
 ```
+
+发布步骤见 [RELEASING.md](./RELEASING.md)。
 
 ## 许可证
 
-[MIT](./LICENSE)
+[MIT](./LICENSE)。Astryx 的版权属于 Meta Platforms, Inc.。这个仓库是该设计的非官方移植，与 Meta 没有隶属或背书关系。
