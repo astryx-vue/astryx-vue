@@ -34,12 +34,14 @@ export function formatComponentDetail(component: ComponentRecord, locale: 'en' |
     const props = component.props[locale].flatMap(group => group.rows.map(row => propBrief(row)))
     const slots = component.slots[locale].flatMap(group => group.rows.map(row => row.name))
     const events = component.events[locale].flatMap(group => group.rows.map(row => row.name))
+    const examples = component.examples[locale].map(example => example.title).filter(Boolean)
     const lines = [
       [component.name, component.importPath ?? '', text(component.groupTitle, locale)].filter(Boolean).join('  '),
       firstSentence(summary),
       props.length > 0 ? `props: ${props.join(' | ')}` : '',
       slots.length > 0 ? `slots: ${slots.join(', ')}` : '',
       events.length > 0 ? `events: ${events.join(', ')}` : '',
+      examples.length > 0 ? `examples: ${examples.join(', ')}` : '',
       docsUrl,
     ].filter(Boolean)
     return `${lines.join('\n')}\n`
@@ -63,6 +65,19 @@ export function formatComponentDetail(component: ComponentRecord, locale: 'en' |
     lines.push('', '## Best practices', '')
     for (const practice of practices)
       lines.push(`- ${practice.guidance}: ${practice.text}`)
+  }
+  const examples = component.examples[locale]
+  if (examples.length > 0) {
+    lines.push('', '## Examples', '')
+    for (const example of examples) {
+      const title = example.title || 'Example'
+      lines.push(`### ${title}`)
+      if (example.description)
+        lines.push('', example.description)
+      if (example.code)
+        lines.push('', '```vue', example.code, '```')
+      lines.push('')
+    }
   }
   for (const group of component.props[locale])
     lines.push('', `## ${group.heading}`, '', formatTable(group, ['name', 'type', 'default', 'description']))
