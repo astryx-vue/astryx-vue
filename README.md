@@ -7,6 +7,7 @@ Unofficial Vue 3 port of Astryx — components, themes, and an agent-friendly CL
 [![GitHub](https://img.shields.io/badge/GitHub-astryx--vue%2Fastryx--vue-181717?logo=github)](https://github.com/astryx-vue/astryx-vue)
 [![npm @astryx-vue/core](https://img.shields.io/npm/v/@astryx-vue/core?label=%40astryx-vue%2Fcore)](https://www.npmjs.com/package/@astryx-vue/core)
 [![npm @astryx-vue/themes](https://img.shields.io/npm/v/@astryx-vue/themes?label=%40astryx-vue%2Fthemes)](https://www.npmjs.com/package/@astryx-vue/themes)
+[![npm @astryx-vue/cli](https://img.shields.io/npm/v/@astryx-vue/cli?label=%40astryx-vue%2Fcli)](https://www.npmjs.com/package/@astryx-vue/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 > Not affiliated with, endorsed by, or supported by Meta. The original Astryx is at <https://github.com/facebook/astryx>.
@@ -47,7 +48,7 @@ import { Button } from '@astryx-vue/core/Button'
 | [`@astryx-vue/themes`](./packages/themes) | One theme package: Neutral, Butter, Chocolate, Gothic, Matcha, Stone, and Y2K |
 | [`@astryx-vue/cli`](./packages/cli) | `astryx-vue` — component docs, search, and agent context. Not Meta's `astryx` |
 
-`core` and `themes` publish together. The CLI is in this repository and publishes with a later release.
+`core` and `themes` publish together. `@astryx-vue/cli` is already on npm and versions on its own.
 
 ## CLI
 
