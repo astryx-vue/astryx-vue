@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@11.21.0",
-  "description": "An unofficial community Vue port of the Astryx design system.",
+  "description": "Unofficial Vue 3 port of Astryx — components, themes, and an agent-friendly CLI. Not affiliated with Meta.",
   "license": "MIT",
   "engines": {
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0",

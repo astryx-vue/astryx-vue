@@ -2,9 +2,11 @@ English | [简体中文](./README.zh-CN.md)
 
 # @astryx-vue/cli
 
-Agent-friendly CLI for [astryx-vue](https://github.com/astryx-vue/astryx-vue), the Vue 3 community port of Astryx.
+Agent-friendly lookup for [astryx-vue](https://github.com/astryx-vue/astryx-vue), an unofficial Vue 3 port of Astryx. Not affiliated with Meta.
 
-The binary name is `astryx-vue`. This package is not Meta's CLI, and it does not provide the bare `astryx` command.
+The binary is `astryx-vue`. This package is not Meta's CLI, and it does not provide the bare `astryx` command.
+
+Guide: <https://astryx-vue.pages.dev/en/guide/cli>
 
 ```sh
 pnpm add -D @astryx-vue/cli
@@ -84,6 +86,17 @@ pnpm --filter @astryx-vue/cli generate
 `pnpm check` runs `generate:check` and fails if the file is stale.
 
 Theme, template, upgrade, doctor, swizzle, and MCP commands are not part of this package.
+
+## Related packages
+
+| Package | What it is |
+| --- | --- |
+| `@astryx-vue/core` | The Vue components this CLI documents |
+| `@astryx-vue/themes` | Neutral, Butter, Chocolate, Gothic, Matcha, Stone, and Y2K |
+
+## License
+
+MIT. Astryx is copyright Meta Platforms, Inc. This package is an unofficial port and is not affiliated with or endorsed by Meta.
 
 ## Try it in this repo
 

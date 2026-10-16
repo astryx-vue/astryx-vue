@@ -2,9 +2,11 @@
 
 # @astryx-vue/cli
 
-给 [astryx-vue](https://github.com/astryx-vue/astryx-vue) 用的命令行。人和 agent 都可以用它查组件文档。
+给 [astryx-vue](https://github.com/astryx-vue/astryx-vue) 用的命令行。人和 agent 都可以用它查组件文档。这是 Astryx 的非官方 Vue 3 移植，与 Meta 没有隶属关系。
 
 可执行文件名是 `astryx-vue`。这不是 Meta 的 CLI，也不提供裸命令 `astryx`。
+
+说明：<https://astryx-vue.pages.dev/guide/cli>
 
 ```sh
 pnpm add -D @astryx-vue/cli
@@ -84,6 +86,17 @@ pnpm --filter @astryx-vue/cli generate
 `pnpm check` 会跑 `generate:check`，文件过期就失败。
 
 这个包不做 theme、template、upgrade、doctor、swizzle 和 MCP。
+
+## 相关的包
+
+| 包 | 是什么 |
+| --- | --- |
+| `@astryx-vue/core` | 这份 CLI 所说明的 Vue 组件 |
+| `@astryx-vue/themes` | Neutral、Butter、Chocolate、Gothic、Matcha、Stone、Y2K |
+
+## 许可证
+
+MIT。Astryx 的版权属于 Meta Platforms, Inc.。这个包是非官方移植，与 Meta 没有隶属或背书关系。
 
 ## 在本仓库里试
 
