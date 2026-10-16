@@ -1,6 +1,7 @@
-import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentRecord, LocaleText, TopicRecord } from '../catalog-types.ts'
+import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentRecord, ExampleRecord, LocaleText, TopicRecord } from '../catalog-types.ts'
+import type { PageExample } from './markdown.ts'
 import { readdir, readFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { extractPage, extractTopic, paragraphContaining, pascalCase } from './markdown.ts'
 
 function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<typeof extractPage>): ReturnType<typeof extractPage> {
@@ -12,9 +13,21 @@ function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<t
     slots: [...index.slots, ...props.slots],
     events: [...index.events, ...props.events],
     notes: [...index.notes, ...props.notes],
+    examples: [...index.examples, ...props.examples],
     importPath: index.importPath ?? props.importPath,
     exportName: index.exportName ?? props.exportName,
   }
+}
+
+/** PascalCase subpath exports. Lowercase entries such as `./icons` and `./locale` are not components. */
+const COMPONENT_EXPORT = /^\.\/[A-Z][A-Za-z0-9]*$/
+
+export function componentExportsMissingDocs(exportKeys: readonly string[], importPaths: readonly (string | null)[]): string[] {
+  const referenced = new Set(importPaths.filter((path): path is string => Boolean(path)))
+  return exportKeys
+    .filter(key => COMPONENT_EXPORT.test(key))
+    .filter(key => !referenced.has(`@astryx-vue/core${key.slice(1)}`))
+    .sort((a, b) => a < b ? -1 : a > b ? 1 : 0)
 }
 
 const DOCS_ORIGIN = 'https://astryx-vue.pages.dev'
@@ -47,6 +60,7 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
 
   const missing: string[] = []
   const components: ComponentRecord[] = []
+  const demoSourceCache = new Map<string, Promise<Map<string, string>>>()
   for (const entry of entries) {
     const name = pascalCase(entry.slug)
     const pages = {
@@ -86,6 +100,10 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
       slots: { en: extracted.en.slots, zh: extracted.zh.slots },
       events: { en: extracted.en.events, zh: extracted.zh.events },
       notes: { en: extracted.en.notes, zh: extracted.zh.notes },
+      examples: {
+        en: await resolveExamples(repoRoot, entry.slug, 'en', extracted.en.examples, demoSourceCache),
+        zh: await resolveExamples(repoRoot, entry.slug, 'zh', extracted.zh.examples, demoSourceCache),
+      },
       anatomy: localizedAnatomy(anatomy.en[entry.slug] ?? [], anatomy.zh[entry.slug] ?? []),
       accessibility: localizedAccessibility(accessibility.en[entry.slug] ?? [], accessibility.zh[entry.slug] ?? []),
       docsUrl: {
@@ -97,9 +115,16 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
   if (missing.length > 0)
     throw new Error(`component pages did not yield a usage summary:\n${missing.join('\n')}`)
 
+  const undocumented = componentExportsMissingDocs([...exportKeys], components.map(component => component.importPath))
+  if (undocumented.length > 0) {
+    throw new Error(
+      `core export is missing docs metadata. Add demos/<slug>/meta.ts and a docs page that imports it, then run pnpm --filter @astryx-vue/cli generate:\n${undocumented.join('\n')}`,
+    )
+  }
+
   return {
     generator: 'packages/cli/scripts/generate-catalog.mjs',
-    description: 'Generated from apps/docs pages, demos/*/meta.ts, reference JSON, and @astryx-vue/core exports. Do not edit by hand.',
+    description: 'Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, and @astryx-vue/core exports. Do not edit by hand.',
     packageName: '@astryx-vue/core',
     themesPackage: '@astryx-vue/themes',
     conventions: await readConventions(repoRoot),
@@ -228,4 +253,63 @@ async function readJson<T>(path: string): Promise<T> {
 
 function isMissing(error: unknown): boolean {
   return typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT'
+}
+
+function demoSources(repoRoot: string, folder: string, cache: Map<string, Promise<Map<string, string>>>): Promise<Map<string, string>> {
+  const cached = cache.get(folder)
+  if (cached)
+    return cached
+  const pending = readDemoSources(repoRoot, folder)
+  cache.set(folder, pending)
+  return pending
+}
+
+async function resolveExamples(repoRoot: string, slug: string, locale: 'en' | 'zh', examples: readonly PageExample[], cache: Map<string, Promise<Map<string, string>>>): Promise<ExampleRecord[]> {
+  const resolved: ExampleRecord[] = []
+  for (const example of examples) {
+    if (!example.demo) {
+      resolved.push({ title: example.title, description: example.description, code: example.code })
+      continue
+    }
+    const folder = example.folder ?? slug
+    const exportName = example.exportName ?? example.demo
+    const code = (await demoSources(repoRoot, folder, cache)).get(exportName)
+    if (code === undefined) {
+      throw new Error(
+        `${locale} docs for ${slug} reference demo "${example.demo}" (${folder}#${exportName}), but apps/docs/components/demos/${folder}/index.ts does not export that Vue demo`,
+      )
+    }
+    resolved.push({ title: example.title, description: example.description, code })
+  }
+  return resolved
+}
+
+async function readDemoSources(repoRoot: string, slug: string): Promise<Map<string, string>> {
+  const indexPath = join(repoRoot, 'apps/docs/components/demos', slug, 'index.ts')
+  let source = ''
+  try {
+    source = await readFile(indexPath, 'utf8')
+  }
+  catch (error) {
+    if (isMissing(error))
+      return new Map()
+    throw error
+  }
+  const files = new Map<string, string>()
+  for (const match of source.matchAll(/import\s+(\w+)\s+from\s+['"](\.[^'"]+\.vue)['"]/g)) {
+    const local = match[1]
+    const relativePath = match[2]
+    if (local && relativePath)
+      files.set(local, relativePath)
+  }
+  const sources = new Map<string, string>()
+  for (const match of source.matchAll(/export\s+const\s+(\w+)\s*=\s*defineDemo\(\s*(\w+)/g)) {
+    const exported = match[1]
+    const local = match[2]
+    const relativePath = exported && local ? files.get(local) : undefined
+    if (!exported || !relativePath || sources.has(exported))
+      continue
+    sources.set(exported, (await readFile(join(dirname(indexPath), relativePath), 'utf8')).trimEnd())
+  }
+  return sources
 }

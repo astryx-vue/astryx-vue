@@ -127,6 +127,88 @@ import { Badge } from '@astryx-vue/core/Badge'
     expect(page.summary).toContain('v-model:value')
   })
 
+  it('reads prop tables nested under a component name, and leaves size notes alone', () => {
+    const page = extractPage(`## Props
+
+### Menu
+
+<div class="component-api-table" aria-label="Menu Props">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>required</td><td>Trigger name.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+### Sizes
+
+| Name | Pixel value |
+| --- | --- |
+| sm | 16px |
+`, 'Menu')
+    expect(page.props).toEqual([
+      { heading: 'Menu Props', rows: [{ name: '`label`', type: '`string`', default: 'required', description: 'Trigger name.' }] },
+    ])
+    expect(page.notes.some(note => note.heading === 'Sizes' && note.text.includes('16px'))).toBe(true)
+    expect(page.notes.some(note => note.text.includes('`label`'))).toBe(false)
+  })
+
+  it('splits prop and slot tables that share a heading', () => {
+    const page = extractPage(`## ChatLayout
+
+<div class="component-api-table" aria-label="ChatLayout Props"><table>
+<thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+<tbody><tr><td><code>density</code></td><td><code>string</code></td><td><code>'balanced'</code></td><td>Spacing.</td></tr></tbody>
+</table></div>
+
+<div class="component-api-table" aria-label="ChatLayout Slots"><table>
+<thead><tr><th>Name</th><th>Description</th></tr></thead>
+<tbody><tr><td><code>composer</code></td><td>Pinned to the bottom.</td></tr></tbody>
+</table></div>
+
+A template ref exposes element.
+`, 'Chat')
+    expect(page.props[0]?.rows[0]?.name).toBe('`density`')
+    expect(page.slots[0]?.heading).toBe('ChatLayout Slots')
+    expect(page.slots[0]?.rows[0]).toEqual({ name: '`composer`', description: 'Pinned to the bottom.' })
+    expect(page.notes.map(note => note.text).join('\n')).toContain('template ref')
+    expect(page.notes.map(note => note.text).join('\n')).not.toContain('`density`')
+  })
+
+  it('reads slot tables nested under a slots heading', () => {
+    const page = extractPage(`## Slots
+
+### List
+
+<table>
+<thead><tr><th>Name</th><th>Description</th></tr></thead>
+<tbody><tr><td><code>default</code></td><td>Entries.</td></tr></tbody>
+</table>
+`, 'List')
+    expect(page.slots[0]?.rows[0]).toEqual({ name: '`default`', description: 'Entries.' })
+  })
+
+  it('keeps demo examples from the page instead of dropping that section', () => {
+    const page = extractPage(`<script setup lang="ts">
+import { buttonFloating as floating } from '../../../../components/demos/button'
+</script>
+
+## Examples
+
+<DemoExample
+  :demo="floating"
+  description="Raised with elevation=&quot;med&quot;."
+  locale="en"
+  title="Floating"
+/>
+`, 'Button')
+    expect(page.examples).toEqual([
+      { title: 'Floating', description: 'Raised with elevation="med".', demo: 'floating', folder: 'button', exportName: 'buttonFloating', code: '' },
+    ])
+    expect(page.notes.some(note => note.text.includes('DemoExample'))).toBe(false)
+  })
+
   it('finds a convention paragraph from a guide page', () => {
     const paragraph = paragraphContaining('# Guide\n\nImport each component from its own subpath. That entry loads the matching structural styles.\n', 'own subpath')
     expect(paragraph).toContain('own subpath')

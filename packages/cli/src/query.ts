@@ -98,6 +98,7 @@ function scoreComponent(query: string, component: ComponentRecord, locale: 'en' 
     text(component.title, locale),
     component.group,
     ...component.props[locale].flatMap(group => group.rows.map(row => row.name)),
+    ...component.examples[locale].flatMap(example => [example.title, example.description]),
   ])
   if (!scored)
     return null

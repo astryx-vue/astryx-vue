@@ -35,7 +35,7 @@ npm run astryx-vue -- manifest --json
 | Command | What it prints |
 | --- | --- |
 | `astryx-vue component --list` | Every documented component |
-| `astryx-vue component <Name>` | Usage, props, slots, events, and notes for one component |
+| `astryx-vue component <Name>` | Usage, props, slots, events, examples, and notes for one component |
 | `astryx-vue search <query>` | Ranked components and guide topics |
 | `astryx-vue manifest --json` | Commands, options, response types, and exit codes |
 | `astryx-vue init --features agents` | Creates or refreshes the managed block in `AGENTS.md` |
@@ -72,18 +72,19 @@ The block tells an agent how to query the CLI. It does not paste the component c
 The CLI does not keep a second copy of the component docs. `packages/cli/scripts/generate-catalog.mjs` reads:
 
 - `apps/docs/components/demos/*/meta.ts` for names, groups, and order
-- `apps/docs/docs/{en,zh}/components/<slug>/` for usage, props, slots, and events
+- `apps/docs/docs/{en,zh}/components/<slug>/` for usage, props, slots, events, and example titles
+- `apps/docs/components/demos/<slug>/*.vue` for the example source those pages point at
 - `apps/docs/components/demo-infra/reference/*.json` for anatomy and accessibility
 - `apps/docs/docs/{en,zh}/guide` and `themes` for search topics
 - `packages/core/package.json` exports when a page does not show an import
 
-The result is committed at `packages/cli/src/generated/catalog.json`. After a docs change, regenerate it and commit the diff:
+The result is committed at `packages/cli/src/generated/catalog.json`. `pnpm --filter @astryx-vue/cli build` regenerates it and bundles it into `dist`, which is what the published tarball runs. After a docs change, regenerate it and commit the diff:
 
 ```sh
 pnpm --filter @astryx-vue/cli generate
 ```
 
-`pnpm check` runs `generate:check` and fails if the file is stale.
+`pnpm check` runs `generate:check`. That fails when `catalog.json` is stale, and when a PascalCase `@astryx-vue/core` export is not imported by any documented component. `./icons`, `./locale`, CSS, and the package root are not component exports.
 
 Theme, template, upgrade, doctor, swizzle, and MCP commands are not part of this package.
 

@@ -7,6 +7,7 @@ import { MANAGED_BLOCK_END, MANAGED_BLOCK_START } from './agents.ts'
 import { catalog } from './catalog.ts'
 import { runCli } from './cli.ts'
 import { assertResponse, isError, parseResponse } from './envelope.ts'
+import { componentExportsMissingDocs } from './generate/build-catalog.ts'
 import { extractPage } from './generate/markdown.ts'
 
 async function run(argv: string[], cwd?: string) {
@@ -36,6 +37,9 @@ describe('json envelopes', () => {
     expect(data.usage).toContain('@astryx-vue/core/Button')
     const label = data.props.flatMap(group => group.rows).find(row => row.name === '`label`')
     expect(label?.description).toContain('Names the action')
+    const examples = (envelope.data as { examples: { title: string, description: string, code: string }[] }).examples
+    expect(examples.find(example => example.title === 'Floating')?.description).toContain('elevation')
+    expect(examples.find(example => example.title === 'Floating')?.code).toContain('elevation="med"')
   })
 
   it('uses Simplified Chinese when --zh is set and keeps the full payload with --dense', async () => {
@@ -119,7 +123,10 @@ describe('component text', () => {
     const full = await run(['component', 'Button'])
     expect(dense.stdout.length).toBeLessThan(full.stdout.length)
     expect(dense.stdout).toContain('props:')
+    expect(dense.stdout).toContain('examples: Floating')
     expect(dense.stdout).not.toContain('## Usage')
+    expect(full.stdout).toContain('## Examples')
+    expect(full.stdout).toContain('elevation="med"')
 
     const chinese = await run(['component', '--list', '--zh', '--dense'])
     expect(chinese.stdout).toContain('按钮')
@@ -226,7 +233,19 @@ describe('catalog source', () => {
     expect(button?.summary.en).toBe(extracted.summary)
     expect(button?.importPath).toBe('@astryx-vue/core/Button')
     expect(button?.props.en).toEqual(api.props)
+    expect(button?.examples.en.find(example => example.title === 'Floating')?.description).toContain('floating action button')
+    expect(button?.examples.zh.find(example => example.title === '悬浮')?.code).toContain('elevation="med"')
+    const menu = catalog.components.find(component => component.slug === 'dropdown-menu')
+    expect(menu?.props.en.flatMap(group => group.rows).some(row => row.name === '`button`')).toBe(true)
+    const chat = catalog.components.find(component => component.slug === 'chat')
+    expect(chat?.slots.en.flatMap(group => group.rows).some(row => row.name === '`composer`')).toBe(true)
     expect(catalog.conventions.en.some(paragraph => paragraph.includes('own subpath'))).toBe(true)
     expect(catalog.topics.some(topic => topic.id === 'guide/installation')).toBe(true)
+  })
+
+  it('fails the catalog check when a PascalCase core export has no docs page', async () => {
+    const pkg = JSON.parse(await readFile(join(process.cwd(), 'packages/core/package.json'), 'utf8')) as { exports: Record<string, unknown> }
+    expect(componentExportsMissingDocs(Object.keys(pkg.exports), catalog.components.map(component => component.importPath))).toEqual([])
+    expect(componentExportsMissingDocs(['./Button', './icons', './NewWidget', '.'], ['@astryx-vue/core/Button'])).toEqual(['./NewWidget'])
   })
 })

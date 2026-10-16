@@ -79,6 +79,14 @@ for (const relativeDir of packages) {
       problems.push('catalog: 或 workspace: 没有被改写成具体版本')
     if (manifest.peerDependencies?.vue !== undefined && manifest.peerDependencies.vue !== '^3.5.0')
       problems.push(`vue peerDependencies 是 ${manifest.peerDependencies.vue}，期望 ^3.5.0`)
+    if (relativeDir === 'packages/cli') {
+      const bundlePath = join(temp, 'package', 'dist', 'index.js')
+      const bundle = readFileSync(bundlePath, 'utf8')
+      if (!bundle.includes('packages/cli/scripts/generate-catalog.mjs'))
+        problems.push('发布的 dist 没有打进从文档生成的组件目录')
+      if (bundle.includes('generated/catalog.json'))
+        problems.push('发布的 dist 仍在运行时读取 catalog.json，目录没有打进包里')
+    }
     if (problems.length > 0) {
       failed = true
       console.error(problems.join('\n'))
