@@ -77,7 +77,13 @@ function publish(next: string): void {
 }
 
 const defaultPaste = useChatPasteAsToken({ input: self })
-const pasteAsToken = computed(() => props.pasteAsToken === false ? null : (props.pasteAsToken ?? defaultPaste))
+const pastePassed = wasPropPassed('pasteAsToken')
+const pasteAsToken = computed(() => {
+  // `false` is a Boolean in the prop type, so an omitted value arrives as false.
+  if (!pastePassed)
+    return defaultPaste
+  return props.pasteAsToken === false ? null : (props.pasteAsToken ?? defaultPaste)
+})
 
 function insertText(text: string): void {
   const editable = editableRef.value
@@ -85,6 +91,7 @@ function insertText(text: string): void {
     return
   insertTextAtCursor(editable, text)
   publish(readValue())
+  menu.handleInput()
 }
 
 function focusEditable(): void {

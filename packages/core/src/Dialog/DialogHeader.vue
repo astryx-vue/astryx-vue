@@ -8,6 +8,7 @@ import '../../styles/dialog-header.css'
 defineOptions({ name: 'AstryxDialogHeader', inheritAttrs: false })
 const props = withDefaults(defineProps<DialogHeaderProps>(), {
   subtitle: undefined,
+  hasDivider: false,
   hasCloseButton: false,
   closeButtonLabel: 'Close',
 })
@@ -38,7 +39,7 @@ function rootAttrs(): Record<string, unknown> {
 </script>
 
 <template>
-  <div v-bind="rootAttrs()" class="astryx-dialog-header">
+  <div v-bind="rootAttrs()" class="astryx-dialog-header" :data-divider="hasDivider || undefined">
     <div v-if="slots.startContent" class="astryx-dialog-header__actions">
       <slot name="startContent" />
     </div>

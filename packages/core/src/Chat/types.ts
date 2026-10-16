@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { MaybeRefOrGetter, VNode } from 'vue'
 import type { BadgeVariant } from '../Badge/types.js'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
 import type { SpacingStep } from '../Stack/types.js'
@@ -504,12 +504,15 @@ export interface ChatComposerDrawerSlots {
 }
 
 export interface ChatDictationButtonProps {
-  /** Return value of `useChatDictation` or `useSpeechRecognition`. */
+  /**
+   * Return value of `useChatDictation` or `useSpeechRecognition`.
+   * Plain booleans work too, so a demo can drive the button without a microphone.
+   */
   dictation: {
-    isSupported: boolean
-    isListening: boolean
-    bands: readonly number[]
-    volume: number
+    isSupported: MaybeRefOrGetter<boolean>
+    isListening: MaybeRefOrGetter<boolean>
+    bands: MaybeRefOrGetter<readonly number[]>
+    volume: MaybeRefOrGetter<number>
     toggle: () => void
   }
   /** @default 'md' */

@@ -9,6 +9,11 @@
     gap: var(--astryx-spacing-3, 12px);
   }
 
+  .astryx-dialog-header[data-divider] {
+    padding-block-end: var(--astryx-spacing-3, 12px);
+    border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border);
+  }
+
   .astryx-dialog-header__title-block {
     display: flex;
     flex: 1 1 auto;

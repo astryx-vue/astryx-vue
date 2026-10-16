@@ -50,6 +50,11 @@ export interface DialogHeaderProps {
   title: string
   /** 标题下方的副标题。为空字符串时不渲染。 */
   subtitle?: string
+  /**
+   * 标题区底部的分隔线，用来把操作和正文分开。
+   * @default false
+   */
+  hasDivider?: boolean
   /** 是否显示关闭按钮。点击时发出 `openChange(false)`。 */
   hasCloseButton?: boolean
   /** 关闭按钮的无障碍名称。 */

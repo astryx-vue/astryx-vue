@@ -30,6 +30,14 @@ describe('dialogHeader', () => {
     expect(withoutSubtitle.find('.astryx-dialog-header__subtitle').exists()).toBe(false)
   })
 
+  it('draws a divider only when asked', () => {
+    const plain = mount(DialogHeader, { props: { title: 'Title' } })
+    expect(plain.attributes('data-divider')).toBeUndefined()
+
+    const divided = mount(DialogHeader, { props: { title: 'Title', hasDivider: true } })
+    expect(divided.attributes('data-divider')).toBe('true')
+  })
+
   it('omits the close button by default', () => {
     const wrapper = mount(DialogHeader, { props: { title: 'Title' } })
 
