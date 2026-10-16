@@ -37279,6 +37279,38 @@
       }
     },
     {
+      "id": "guide/cli",
+      "kind": "guide",
+      "title": {
+        "en": "CLI",
+        "zh": "命令行"
+      },
+      "summary": {
+        "en": "`@astryx-vue/cli` looks up astryx-vue component docs from the terminal, for people and for agents. The binary is `astryx-vue`. It is not Meta's `astryx` command, and it does not speak React or StyleX.",
+        "zh": "`@astryx-vue/cli` 用来在终端里查 astryx-vue 的组件文档，给人和 agent 用。二进制名字是 `astryx-vue`。它不是 Meta 的 `astryx`，也不提供 React 或 StyleX 的接口。"
+      },
+      "headings": {
+        "en": [
+          "Commands",
+          "Flags",
+          "Agent file"
+        ],
+        "zh": [
+          "命令",
+          "参数",
+          "Agent 文件"
+        ]
+      },
+      "keywords": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/guide/cli",
+        "zh": "https://astryx-vue.pages.dev/guide/cli"
+      }
+    },
+    {
       "id": "guide/composables",
       "kind": "guide",
       "title": {

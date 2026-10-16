@@ -15,6 +15,7 @@ export function guideSidebar(english: boolean): Sidebar {
         item(english ? 'Introduction' : '介绍', `${prefix}/guide/why`),
         item(english ? 'Quick start' : '快速开始', `${prefix}/guide/getting-started`),
         item(english ? 'Installation' : '安装', `${prefix}/guide/installation`),
+        item(english ? 'CLI' : '命令行', `${prefix}/guide/cli`),
       ],
     },
     {
