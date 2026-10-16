@@ -7,6 +7,7 @@ Astryx 的非官方 Vue 3 移植：组件、主题，以及给 agent 用的命�
 [![GitHub](https://img.shields.io/badge/GitHub-astryx--vue%2Fastryx--vue-181717?logo=github)](https://github.com/astryx-vue/astryx-vue)
 [![npm @astryx-vue/core](https://img.shields.io/npm/v/@astryx-vue/core?label=%40astryx-vue%2Fcore)](https://www.npmjs.com/package/@astryx-vue/core)
 [![npm @astryx-vue/themes](https://img.shields.io/npm/v/@astryx-vue/themes?label=%40astryx-vue%2Fthemes)](https://www.npmjs.com/package/@astryx-vue/themes)
+[![npm @astryx-vue/cli](https://img.shields.io/npm/v/@astryx-vue/cli?label=%40astryx-vue%2Fcli)](https://www.npmjs.com/package/@astryx-vue/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 > 与 Meta 没有隶属、背书或支持关系。原版 Astryx 在 <https://github.com/facebook/astryx>。
@@ -47,7 +48,7 @@ import { Button } from '@astryx-vue/core/Button'
 | [`@astryx-vue/themes`](./packages/themes) | 一个主题包：Neutral、Butter、Chocolate、Gothic、Matcha、Stone、Y2K |
 | [`@astryx-vue/cli`](./packages/cli) | `astryx-vue`：查组件文档、搜索、写 agent 上下文。不是 Meta 的 `astryx` |
 
-`core` 和 `themes` 一起发布。命令行已经在这个仓库里，随之后的版本发到 npm。
+`core` 和 `themes` 一起发布。`@astryx-vue/cli` 已经在 npm 上，版本号单独走。
 
 ## 命令行
 
