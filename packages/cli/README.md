@@ -94,10 +94,6 @@ Theme, template, upgrade, doctor, swizzle, and MCP commands are not part of this
 | `@astryx-vue/core` | The Vue components this CLI documents |
 | `@astryx-vue/themes` | Neutral, Butter, Chocolate, Gothic, Matcha, Stone, and Y2K |
 
-## License
-
-MIT. Astryx is copyright Meta Platforms, Inc. This package is an unofficial port and is not affiliated with or endorsed by Meta.
-
 ## Try it in this repo
 
 ```sh
@@ -106,3 +102,7 @@ node packages/cli/bin/astryx-vue.mjs component Button
 node packages/cli/bin/astryx-vue.mjs search installation --type doc
 node packages/cli/bin/astryx-vue.mjs manifest --json
 ```
+
+## License
+
+MIT. Astryx is copyright Meta Platforms, Inc. This package is an unofficial port and is not affiliated with or endorsed by Meta.

@@ -94,10 +94,6 @@ pnpm --filter @astryx-vue/cli generate
 | `@astryx-vue/core` | 这份 CLI 所说明的 Vue 组件 |
 | `@astryx-vue/themes` | Neutral、Butter、Chocolate、Gothic、Matcha、Stone、Y2K |
 
-## 许可证
-
-MIT。Astryx 的版权属于 Meta Platforms, Inc.。这个包是非官方移植，与 Meta 没有隶属或背书关系。
-
 ## 在本仓库里试
 
 ```sh
@@ -106,3 +102,7 @@ node packages/cli/bin/astryx-vue.mjs component Button
 node packages/cli/bin/astryx-vue.mjs search installation --type doc
 node packages/cli/bin/astryx-vue.mjs manifest --json
 ```
+
+## 许可证
+
+MIT。Astryx 的版权属于 Meta Platforms, Inc.。这个包是非官方移植，与 Meta 没有隶属或背书关系。
