@@ -1,0 +1,8 @@
+export { agentFile, applyManagedBlock, MANAGED_BLOCK_END, MANAGED_BLOCK_START } from './agents.ts'
+export { runCli } from './cli.ts'
+export type { CliIO, CliResult } from './cli.ts'
+export { assertResponse, errorEnvelope, isError, parseResponse, successEnvelope } from './envelope.ts'
+export type { AnyEnvelope, ErrorEnvelope, SuccessEnvelope } from './envelope.ts'
+export { CliError } from './error.ts'
+export type { Suggestion } from './error.ts'
+export { API_VERSION, BINARY, PACKAGE_NAME } from './spec.ts'

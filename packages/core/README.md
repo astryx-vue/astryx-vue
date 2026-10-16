@@ -1,54 +1,56 @@
 # @astryx-vue/core
 
-Vue components for astryx-vue.
+Vue 3 components for [astryx-vue](https://github.com/astryx-vue/astryx-vue), an unofficial port of Astryx. Not affiliated with Meta.
 
-Docs: <https://astryx-vue.pages.dev>
+> **Using an agent?** Install `@astryx-vue/cli` and run `astryx-vue component Button`, or `astryx-vue init --features agents` so the agent looks components up instead of guessing. The binary is `astryx-vue`, not `astryx`.
 
-```bash
+## Install
+
+```sh
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-Component entries load structural styles. Import a theme once at the app entry. To load every structural stylesheet yourself, also import `@astryx-vue/core/styles.css`.
+Peer dependency: `vue` `^3.5.0`.
+
+## Use
+
+Import a theme once at the app entry, then import the component you need from its subpath. The subpath loads that component's structural styles. You do not need StyleX or UnoCSS.
 
 ```ts
-import { Badge } from '@astryx-vue/core/Badge'
-import '@astryx-vue/core/styles.css'
 import '@astryx-vue/themes/neutral.css'
 ```
 
 ```vue
 <script setup lang="ts">
-import { Badge } from '@astryx-vue/core/Badge'
+import { Button } from '@astryx-vue/core/Button'
 </script>
 
 <template>
-  <Badge variant="success">
-    Ready
-  </Badge>
+  <Button label="Save changes" variant="primary" />
 </template>
 ```
 
-Text inputs include their own label, description and validation status:
+Prefer a subpath such as `@astryx-vue/core/Button` over the package root. The root re-exports the same components, and a bundler that keeps unused re-exports can pull in more than you asked for. Import `@astryx-vue/core/styles.css` only when you want every structural sheet in one file.
 
-```vue
-<script setup lang="ts">
-import { TextInput } from '@astryx-vue/core/TextInput'
-import { shallowRef } from 'vue'
+Props, slots, and events are on the docs site, or:
 
-const email = shallowRef('')
-</script>
-
-<template>
-  <TextInput v-model="email" label="Email" type="email" auto-complete="email" />
-</template>
+```sh
+npx @astryx-vue/cli component Button
 ```
 
-Use `Field` and `FieldLabel` from `@astryx-vue/core/Field`, and `FieldStatus` from `@astryx-vue/core/FieldStatus`, for custom controls. `Field` supplies association IDs through its default slot; forward them to the control's `id`, `aria-labelledby` and `aria-describedby`.
+## Related packages
 
-`TextInput` supports clear buttons, disabled reasons, read-only values, three sizes, status messages and asynchronous `changeAction`. Use `@action-error` to handle failed actions. Inputs remain editable while actions are pending; request cancellation and stale-result handling belong to the application.
+| Package | What it is |
+| --- | --- |
+| `@astryx-vue/themes` | Neutral, Butter, Chocolate, Gothic, Matcha, Stone, and Y2K |
+| `@astryx-vue/cli` | `astryx-vue` for component docs, search, and agent context |
 
-`CheckboxInput` from `@astryx-vue/core/CheckboxInput` supports `v-model` with `boolean | 'indeterminate'`. It includes a label, description, validation status, disabled reasons, native form submission and asynchronous `changeAction`. Pending actions block repeat activation. Failures emit `actionError`; the application decides whether to revert the model. `CheckboxIndicator` from `@astryx-vue/core/CheckboxIndicator` provides the decorative visual without input behavior.
+## Resources
 
-`Slider` from `@astryx-vue/core/Slider` accepts a numeric `v-model` or a `[number, number]` range. It supports marks, horizontal and vertical orientation, keyboard controls, value formatting, form values and disabled reasons. `changeEnd` fires when an adjustment ends.
+- [Documentation](https://astryx-vue.pages.dev/en/components/)
+- [CLI guide](https://astryx-vue.pages.dev/en/guide/cli)
+- [Repository](https://github.com/astryx-vue/astryx-vue)
 
-`Banner` from `@astryx-vue/core/Banner` shows persistent info, success, warning or error messages. It supports actions, dismissal, card and section containers, and optional details. Use `v-model:is-open` to control the details or `:collapsible="false"` to keep them visible.
+## License
+
+MIT. Astryx is copyright Meta Platforms, Inc. This package is an unofficial port and is not affiliated with or endorsed by Meta.

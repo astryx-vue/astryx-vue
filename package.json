@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@11.21.0",
-  "description": "An unofficial community Vue port of the Astryx design system.",
+  "description": "Unofficial Vue 3 port of Astryx — components, themes, and an agent-friendly CLI. Not affiliated with Meta.",
   "license": "MIT",
   "engines": {
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0",
@@ -17,9 +17,9 @@
     "changeset": "changeset",
     "lint:pkg": "node ./scripts/lint-published.mjs",
     "release": "pnpm build:packages && changeset publish",
-    "release:dry-run": "pnpm build:packages && pnpm --filter @astryx-vue/core --filter @astryx-vue/themes publish --dry-run --no-git-checks",
+    "release:dry-run": "pnpm build:packages && pnpm --filter @astryx-vue/core --filter @astryx-vue/themes --filter @astryx-vue/cli publish --dry-run --no-git-checks",
     "version-packages": "changeset version && pnpm install --lockfile-only",
-    "check:packages": "node ./scripts/check-package-boundaries.mjs && node ./scripts/sync-exports.mjs --check",
+    "check:packages": "node ./scripts/check-package-boundaries.mjs && node ./scripts/sync-exports.mjs --check && pnpm --filter @astryx-vue/cli generate:check",
     "sync": "node ./scripts/sync-exports.mjs",
     "dev": "pnpm build:packages && pnpm --filter @astryx-vue/docs dev",
     "docs:build": "pnpm --filter @astryx-vue/docs build",
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "catalog:linting",
     "@arethetypeswrong/cli": "catalog:release",
+    "@astryx-vue/cli": "workspace:*",
     "@changesets/changelog-github": "catalog:release",
     "@changesets/cli": "catalog:release",
     "@types/node": "catalog:language",

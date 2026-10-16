@@ -2,6 +2,8 @@
 
 `@astryx-vue/core` 和 `@astryx-vue/themes` 一起发版。版本号由 Changesets 固定成同一组，从 `0.0.0` 做 minor 就是 `0.1.0`。
 
+`@astryx-vue/cli` 不在这个 fixed 组里，单独走自己的 changeset。它在仓库里从 `0.0.0` 起，第一次 minor 会变成 `0.1.0`。
+
 `0.1.0` 由仓库所有者在自己的电脑上发布。之后的版本走 `.github/workflows/release.yml`。
 
 ## 流水线做什么
@@ -60,7 +62,7 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
 
 `NPM_TOKEN` 只作为备用，不建议使用。如果暂时不能在自己的电脑上发，可以在仓库 Settings、Secrets and variables、Actions 里添加 secret `NPM_TOKEN`（automation granular access token，不要写进仓库）。pnpm 会先尝试 OIDC，换票失败才退回这个 token。配好 Trusted Publisher，并打开上面的 “disallow tokens” 之后，这个 secret 就不再有效。
 
-`repository.url` 必须指向 `github.com/astryx-vue/astryx-vue`，大小写一致。两个包的 `repository.directory` 分别是 `packages/core` 和 `packages/themes`。包的 `homepage` 仍是文档站 <https://astryx-vue.pages.dev>，`bugs` 指向这个仓库的 issues。
+`repository.url` 必须指向 `github.com/astryx-vue/astryx-vue`，大小写一致。`repository.directory` 分别是 `packages/core`、`packages/themes` 和 `packages/cli`。包的 `homepage` 仍是文档站 <https://astryx-vue.pages.dev>，`bugs` 指向这个仓库的 issues。
 
 ## provenance
 
@@ -95,7 +97,7 @@ GitHub 这边：
 | 做法 | 结果 |
 | --- | --- |
 | 只发 npmjs.org | npm 包页通过 `repository` 链到 GitHub。仓库公开后，provenance 再链到 Actions。GitHub Release 里有 npm 链接。Packages 侧边栏仍然是空的。 |
-| npm 成功后再发到 GitHub Packages | 这是现在的默认。两个包会出现在本仓库的 Packages 侧边栏。用的是 workflow 里的 `GITHUB_TOKEN`，权限是 `packages: write`。 |
+| npm 成功后再发到 GitHub Packages | 这是现在的默认。这次发布的包会出现在本仓库的 Packages 侧边栏。用的是 workflow 里的 `GITHUB_TOKEN`，权限是 `packages: write`。 |
 
 `release.yml` 的 `github-packages` job 在 npm 发布成功后运行。它只上传 npmjs.org 上已经存在的同一版本；GitHub Packages 上已经有的版本会跳过。这个 job 失败不会撤回 npm 上的包。要关掉双发，把仓库变量 `PUBLISH_GITHUB_PACKAGES` 设为 `false`。不设这个变量时会发。
 
@@ -105,7 +107,7 @@ GitHub 这边：
 pnpm changeset
 ```
 
-写上要进 changelog 的说明。两个包是 fixed 组，动一个版本，另一个会跟着动。然后把 changeset 和代码一起合并到 `main`。
+写上要进 changelog 的说明。`@astryx-vue/core` 和 `@astryx-vue/themes` 是 fixed 组，动一个版本，另一个会跟着动。`@astryx-vue/cli` 不在这组里，只在自己的 changeset 里升版本。然后把 changeset 和代码一起合并到 `main`。
 
 ## 失败了怎么处理
 

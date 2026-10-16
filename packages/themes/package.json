@@ -2,7 +2,7 @@
   "name": "@astryx-vue/themes",
   "type": "module",
   "version": "0.2.4",
-  "description": "Themes for the unofficial astryx-vue community project.",
+  "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://astryx-vue.pages.dev",
@@ -17,7 +17,8 @@
     "vue3",
     "design-system",
     "astryx",
-    "components",
+    "css",
+    "themes",
     "ui"
   ],
   "sideEffects": [
