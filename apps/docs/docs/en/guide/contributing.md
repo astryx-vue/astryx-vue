@@ -30,3 +30,15 @@ pnpm dev
 Releases use Changesets. The steps are in `RELEASING.md`. A docs-only change does not need a changeset. Changesets keep the two package versions in one group.
 
 The upstream React implementation is a reference. APIs committed here stay on Vue props, events, slots, and composables. Do not add React or StyleX as a dependency of the public packages.
+
+## How close to upstream
+
+The goal is pixel-level parity: apart from being implemented in Vue instead of React, styles, layout, interactions, and copy should match upstream. React and Vue differ only at the implementation layer; a user should not be able to tell the two libraries apart.
+
+`packages/core/locales/*.json` follows the latest upstream. Re-vendor with `node scripts/vendor-astryx-locales.mjs`. With no argument it takes the newest commit on upstream `main`; the commit actually used is recorded in `SOURCE.json` next to the catalogs.
+
+## Comparison shots
+
+Any change to a component, style, or interaction must include comparison shots in the pull request: upstream Astryx on the left, astryx-vue on the right, covering at least desktop and a 390px viewport, each in light and dark.
+
+Reviewers judge the change by those shots and the resulting behaviour, not by reading every line of the diff. The shots are part of the submission, not optional. Docs-only, CI, and internal refactors do not need them.
