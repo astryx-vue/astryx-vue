@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/facebook/astryx",
   "path": "packages/core/locales",
-  "commit": "df75749470029f0b34680e13deac635f2d72c89d",
+  "commit": "fbc03f7b71eb093eb0283629dbc0820b12fb1710",
   "files": [
     "af-ZA.json",
     "ar-SA.json",
