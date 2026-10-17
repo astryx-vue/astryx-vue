@@ -1,7 +1,7 @@
 import type { VNodeChild } from 'vue'
-import type { SizeValue } from '../layout/size.js'
 import type { SpacingStep } from '../Stack/types.js'
 import type { LayoutHeight } from './context.js'
+import type { SizeValue } from './size.js'
 
 export type { LayoutHeight } from './context.js'
 
