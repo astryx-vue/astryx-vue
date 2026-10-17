@@ -3,7 +3,7 @@ import type { CSSProperties, StyleValue } from 'vue'
 import type { ScrollableAreaProps, ScrollableAreaSlots } from './types.js'
 import { computed, useAttrs } from 'vue'
 import { useScrollableArea } from '../composables/useScrollableArea.js'
-import { formatSize, resolvePadding, spacingVariable } from '../layout/size.js'
+import { formatSize, resolvePadding, spacingVariable } from '../Layout/size.js'
 import '../../styles/scrollable-area.css'
 
 defineOptions({

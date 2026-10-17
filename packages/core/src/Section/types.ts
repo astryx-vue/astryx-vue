@@ -1,5 +1,5 @@
 import type { VNodeChild } from 'vue'
-import type { PaddingInput, SizeValue } from '../layout/size.js'
+import type { PaddingInput, SizeValue } from '../Layout/size.js'
 
 export type SectionVariant = 'section' | 'transparent' | 'muted'
 export type SectionDivider = 'top' | 'bottom' | 'start' | 'end'

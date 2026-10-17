@@ -2,9 +2,9 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutFooterProps, LayoutFooterSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
-import { formatSize } from '../layout/size.js'
 import { useLayoutDividers } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
+import { formatSize } from './size.js'
 import '../../styles/layout.css'
 
 defineOptions({
