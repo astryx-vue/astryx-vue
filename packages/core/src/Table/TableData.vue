@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { CSSProperties, VNodeChild } from 'vue'
 import type { TableCellPatch, TableColumn, TablePlugin, TableRowMenuItem, TableRowPatch } from './types.js'
-import { computed, defineComponent, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { cellText, resolveColumnWidths } from './columnUtils.js'
+import { resolveColumnWidths } from './columnUtils.js'
 import { selectColumn } from './plugins/stickyColumns.js'
+import { CellContent, HeaderAddon, PluginFooter, RenderFn } from './TableDataRenderers.js'
 import TableFilterControl from './TableFilterControl.vue'
 import TableGroupHeader from './TableGroupHeader.vue'
 import TableRowMenu from './TableRowMenu.vue'
@@ -197,60 +198,6 @@ function openMenu(event: MouseEvent, items: readonly TableRowMenuItem[] | undefi
   menu.value = { x: event.clientX, y: event.clientY, items }
 }
 
-const CellContent = defineComponent({
-  name: 'AstryxTableCellContent',
-  props: {
-    column: { type: Object, required: true },
-    row: { type: Object, required: true },
-    index: { type: Number, required: true },
-  },
-  setup(cellProps) {
-    return () => {
-      const column = cellProps.column as TableColumn
-      const row = cellProps.row as Record<string, unknown>
-      const rendered = column.renderCell?.(row, cellProps.index)
-      if (rendered == null)
-        return cellText(row[column.key])
-      return rendered
-    }
-  },
-})
-
-const RenderFn = defineComponent({
-  name: 'AstryxTableRenderFn',
-  props: { render: { type: Function, required: true } },
-  setup(renderProps) {
-    return () => (renderProps.render as () => VNodeChild)()
-  },
-})
-
-const HeaderAddon = defineComponent({
-  name: 'AstryxTableHeaderAddon',
-  props: {
-    column: { type: Object, required: true },
-  },
-  setup(addonProps) {
-    return () => {
-      const column = addonProps.column as TableColumn
-      const nodes: VNodeChild[] = []
-      for (const plugin of props.plugins) {
-        const before = plugin.headerPatch?.(column)?.before?.()
-        if (before != null)
-          nodes.push(before)
-      }
-      return nodes
-    }
-  },
-})
-
-const PluginFooter = defineComponent({
-  name: 'AstryxTablePluginFooter',
-  props: { plugin: { type: Object, required: true } },
-  setup(footerProps) {
-    return () => (footerProps.plugin as TablePlugin).below?.() ?? null
-  },
-})
-
 function startResize(event: PointerEvent, column: TableColumn) {
   const handle = event.currentTarget
   if (!(handle instanceof HTMLElement))
@@ -329,7 +276,7 @@ function selectCellPatch(kind: 'header' | 'body', row: Record<string, unknown> |
           >
             <div class="astryx-table__header">
               <div class="astryx-table__header-line">
-                <HeaderAddon :column="column" />
+                <HeaderAddon :column="column" :plugins="plugins" />
                 <button
                   v-if="sortFor(column)"
                   type="button"
