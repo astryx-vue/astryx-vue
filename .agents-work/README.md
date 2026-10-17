@@ -1,7 +1,7 @@
 # Astryx Vue 调研与讨论记录
 
-> 状态：组件已经在写。总导出、样式汇总和文案汇总由 `pnpm sync` 生成，不要手改。  
-> 更新日期：2026-10-11
+> 状态：组件已经全部落地，三个包都已发布到 npm。
+> 更新日期：2026-10-18
 
 ## 写作方式
 
@@ -21,6 +21,22 @@
 - `@astryx-vue/core` 等公开组件包，以及新建空白 Vue 项目安装它们之后，都不能出现 React 依赖。
 - 样式先用 CSS 变量和 CSS 分层，不把 UnoCSS 或 StyleX 作为使用组件的前提。
 - Vue 版本使用 Vue 自己习惯的 props、事件、插槽、`v-model` 和组合式函数，不照抄 React 写法。
+
+## 对齐原版
+
+目标是像素级对齐：除了用 Vue 而不是 React 实现，样式、布局、交互和文案都应和原版 `facebook/astryx` 一致。React 与 Vue 的差别只在实现层，不该让使用者看出两个库的样子不一样。
+
+三份原版资料各有用途：
+
+| 原版文件 | 用途 |
+| --- | --- |
+| `<X>.doc.mjs` | 机器可读契约：`name`、`category`、`props`、`playground`、`theming` |
+| `<X>.spec.md` | 人读的详细规范：FR/AR 条款、验收检查、以及明确该被拒绝的做法 |
+| `<X>.tsx` 与 `__tests__` | React 实现和测试，用来核对行为语义 |
+
+改了组件、样式或交互，pull request 里要附对照图：左边原版，右边 astryx-vue，至少覆盖桌面与 390px 窄屏、浅色与深色四种组合。评审看这些图和实际效果，不逐行读代码。
+
+`packages/core/locales/*.json` 跟随原版最新。重新拉取用 `node scripts/vendor-astryx-locales.mjs`，不带参数就是原版 `main` 的最新提交；需要复现某次抓取时把提交号当参数传进去。实际用到的提交号记在 `SOURCE.json`。
 
 ## 新增一个组件
 
@@ -45,7 +61,7 @@
 
    `group` 写原版 Astryx 文档的分类名，必须是下面其中一个（顺序也是侧边栏和总览的顺序，英文标题用这个原文，中文标题在 `apps/docs/components/demo-infra/groups.ts`）：
 
-   `Action`、`Chat`、`Container`、`Content`、`Data Visualization`、`Feedback & Status`、`Form Controls`、`Layout`、`Navigation`、`Overlay`、`Table & List`、`Utility`。
+   `Action`、`Chat`、`Container`、`Content`、`Data Visualization`、`Feedback & Status`、`Form Controls`、`Indicator`、`Layout`、`Navigation`、`Overlay`、`Table & List`、`Utility`。
 
    分类以 facebook/astryx 里该组件 `.doc.mjs` 的 `category` 为准，和 `apps/docsite/src/app/(docs)/components/page.tsx` 的 `CATEGORIES` 同一套。原版没有的组件，归到最接近的这一组。
 
@@ -55,36 +71,14 @@
 
 `styles.css` 里原先没有汇总、由组件单文件自己引入的样式，以及 `composables/index.ts` 原先没有公开的 `useCalendar`、`usePagination`，生成脚本会继续留在外面，避免公开范围被悄悄改掉。新文件不在这份例外里，会自动收进汇总。
 
-## 第一轮做什么
+## 文档怎么维护
 
-先从头跑通一遍“整理原版资料 → 写 Vue 组件 → 测试 → 打包 → 放进空白 Vue 项目试装 → 写文档展示”。
+仓库里的工作文档只保留当前正确的结论，不写会和现状打架的内容。
 
-第一轮准备：
+结论被后来的迭代推翻时，直接改成新结论。需要留下时间沿革的，标明它属于哪个时间点或哪个版本，让读者一眼能分清"当时是这样"和"现在是这样"。
 
-- `@astryx-vue/core`：公开包，放 Vue 组件、共用代码、类型和组件样式；
-- `@astryx-vue/themes`：公开包，集中放所有主题；第一轮提供 `./neutral` 和 `./neutral.css`。
+## 历史
 
-Neutral 的样式这样引入：
+第一轮（2026-10 上旬，已完成）：先从头跑通一遍"整理原版资料 → 写 Vue 组件 → 测试 → 打包 → 放进空白 Vue 项目试装 → 写文档展示"。
 
-```ts
-import '@astryx-vue/themes/neutral.css'
-```
-
-第一轮组件：
-
-- Stack、StackItem、HStack、VStack；
-- Badge；
-- Blockquote；
-- Skeleton；
-- VisuallyHidden。
-
-第一轮完成后暂不发布到 npm，先在仓库和一个全新的 Vue 项目中验证。
-
-## 文件说明
-
-1. [原版 Astryx 调研](./00-upstream-research.md)
-2. [工具和工程方案的详细核对](./01-feasibility-and-architecture.md)——技术查证用，包含工具原名
-3. [已经确定和还没确定的事情](./02-discussion-log.md)
-4. [第一轮组件和文档方案](./03-pilot-slice.md)——建议先看这份
-
-基本工程已经按用户授权搭好，并通过代码检查、类型检查、测试、组件包构建和文档构建。打包后的 `core` 与 `themes` 也已放进一个全新的 Vue 项目试装，确认不会带入 React。下一步才开始整理 Neutral 的真实设计变量和第一个组件。
+当时准备的包是 `@astryx-vue/core` 和 `@astryx-vue/themes`，第一轮组件只有 Stack、StackItem、HStack、VStack、Badge、Blockquote、Skeleton、VisuallyHidden，暂不发布到 npm。这一阶段已经过去，现在的组件范围和发布流程以上面的章节为准。

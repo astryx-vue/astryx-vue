@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'vue'
 import type { SpacingStep } from '../Stack/types.js'
-import { spacingVariable } from '../layout/size.js'
+import { spacingVariable } from './size.js'
 
 export function regionPaddingStyle(
   prefix: string,
