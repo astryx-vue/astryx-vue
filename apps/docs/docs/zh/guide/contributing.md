@@ -30,3 +30,15 @@ pnpm dev
 发版用 Changesets，说明在仓库的 `RELEASING.md`。只改文档时不需要 changeset。两个包的版本号由 Changesets 收成同一组。
 
 原版 Astryx 的 React 实现只作对照。提交到这个仓库的接口应保持 Vue 的 props、事件、插槽和组合式函数，不要把 React 或 StyleX 加进公开包的依赖。
+
+## 对齐到什么程度
+
+目标是像素级对齐：除了用 Vue 而不是 React 实现，样式、布局、交互和文案都应和原版一致。React 和 Vue 的差别只在实现层，不该让使用者看出两个库的样子不一样。
+
+`packages/core/locales/*.json` 跟随原版最新。重新拉取用 `node scripts/vendor-astryx-locales.mjs`，不传参数就是原版 `main` 的最新提交，实际用到的提交号会记进同目录的 `SOURCE.json`。
+
+## 对照图
+
+改了组件、样式或交互，pull request 里要附对照图：左边原版 Astryx，右边 astryx-vue，至少覆盖桌面与 390px 窄屏、浅色与深色四种组合。
+
+评审主要看这些图和实际效果，而不是逐行读代码改动。所以对照图是提交的一部分，不是可选项。纯文档、CI 和内部重构不需要。
