@@ -1,6 +1,6 @@
 import type { VNodeChild } from 'vue'
 import type { ScrollAxis, ScrollOverscroll, ScrollRole, ScrollStickyContainment } from '../composables/useScrollableArea.js'
-import type { PaddingInput, SizeValue } from '../layout/size.js'
+import type { PaddingInput, SizeValue } from '../Layout/size.js'
 
 export interface ScrollableAreaProps extends PaddingInput {
   /** 允许滚动的逻辑轴。 @default 'block' */

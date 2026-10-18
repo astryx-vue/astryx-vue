@@ -2,9 +2,9 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutProps, LayoutSlots } from './types.js'
 import { computed, provide, useAttrs, useSlots, useTemplateRef } from 'vue'
-import { formatSize, spacingVariable, supportsInternalContentWidth } from '../layout/size.js'
 import { layoutDividerKey, layoutSlotsKey, useLayoutDividers } from './context.js'
 import LayoutRegion from './LayoutRegion.vue'
+import { formatSize, spacingVariable, supportsInternalContentWidth } from './size.js'
 import '../../styles/layout.css'
 
 defineOptions({
