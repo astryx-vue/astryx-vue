@@ -104,6 +104,7 @@ const expectedCatalog = [
   { slug: 'alert-dialog', group: 'Overlay', en: 'Alert Dialog', zh: '警告对话框' },
   { slug: 'bottom-sheet', group: 'Overlay', en: 'Bottom Sheet', zh: '底部弹窗' },
   { slug: 'dialog', group: 'Overlay', en: 'Dialog', zh: '对话框' },
+  { slug: 'dialog-header', group: 'Overlay', en: 'Dialog Header', zh: '对话框页眉' },
   { slug: 'hover-card', group: 'Overlay', en: 'Hover Card', zh: '悬浮卡片' },
   { slug: 'overlay', group: 'Overlay', en: 'Overlay', zh: '覆盖层' },
   { slug: 'popover', group: 'Overlay', en: 'Popover', zh: '弹出层' },

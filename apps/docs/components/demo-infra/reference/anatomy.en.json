@@ -2154,5 +2154,27 @@
       "name": "Selected result state",
       "description": "Selected styling and trailing check presented on the current result row."
     }
+  ],
+  "dialog-header": [
+    {
+      "name": "Header row",
+      "description": "Arranges the title block, optional start/end content, and close control."
+    },
+    {
+      "name": "Start content",
+      "description": "Wraps optional leading content."
+    },
+    {
+      "name": "Title block",
+      "description": "Groups the title and optional subtitle."
+    },
+    {
+      "name": "End content",
+      "description": "Groups optional trailing content with the optional close control."
+    },
+    {
+      "name": "Close icon",
+      "description": "Visual close glyph inside the close button."
+    }
   ]
 }

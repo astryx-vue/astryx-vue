@@ -3,15 +3,19 @@ import type { ComponentDocsRoute } from './componentDocsRoute'
 import { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
 import { useRoute } from 'vitepress'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { componentDemos } from '../demos/registry'
 import { catalogGroups } from './componentCatalog'
 import { componentDocsCopy } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
 import { hasAccessibility } from './reference/loadReference'
+import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ route: ComponentDocsRoute }>()
 const text = computed(() => componentDocsCopy[props.route.locale])
 const showAccessibility = computed(() => props.route.kind === 'detail' && hasAccessibility(props.route.slug))
+// 顶部演示用的是总览卡片那份 demo：它展示的是组件最基础的形态。
+const stageDemo = computed(() => (props.route.kind === 'detail' ? componentDemos[props.route.slug] : undefined))
 const groups = computed(() => catalogGroups(props.route.locale))
 const routePath = useRoute()
 const activeGroupId = computed(() => {
@@ -180,6 +184,13 @@ watch(() => routePath.path, () => {
           <a :href="path(`/components/${route.slug}/props`)" :aria-current="route.tab === 'props' ? 'page' : undefined">{{ text.props }}</a>
           <a v-if="showAccessibility" :href="path(`/components/${route.slug}/accessibility`)" :aria-current="route.tab === 'accessibility' ? 'page' : undefined">{{ text.accessibility }}</a>
         </nav>
+        <div v-if="route.tab === 'overview' && stageDemo" class="component-detail__stage">
+          <VueDemoHost
+            :class-name="stageDemo.className"
+            :component="stageDemo.component"
+            :data-kind="stageDemo.dataKind"
+          />
+        </div>
         <div class="component-detail__body vp-doc">
           <PropsPlayground v-if="route.tab === 'props'" :locale="route.locale" :slug="route.slug" />
           <slot />

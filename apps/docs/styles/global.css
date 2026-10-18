@@ -11,6 +11,7 @@
 @import './previews/code.css';
 @import './previews/collapsible.css';
 @import './previews/context-menu.css';
+@import './previews/dialog-header.css';
 @import './previews/dropdown-menu.css';
 @import './previews/empty-state.css';
 @import './previews/form-layout.css';
@@ -390,6 +391,9 @@ html.component-docs-scroll-lock body {
 
 .component-card__preview {
   display: grid;
+  /* 列宽必须受容器约束。默认的 auto 列会被内容撑开，子元素的
+     max-width: 100% 就失去了参照，表格和 Markdown 会顶出卡片。 */
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   min-height: 260px;
   /* 左右只留 12px：三列卡片里分页的可用宽度要留在 260px 以上，
@@ -547,6 +551,29 @@ html.dark .component-card__preview {
 
 .component-detail__tabs a[aria-current='page']::after {
   background: var(--astryx-text);
+}
+
+.component-detail__stage {
+  display: grid;
+  /* 和总览卡片一样：列宽必须受容器约束，否则宽内容会顶出画布。 */
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  min-height: 360px;
+  margin-top: 28px;
+  padding: 32px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 16px;
+  background: #f5f5f5;
+}
+
+html.dark .component-detail__stage {
+  background: #17181a;
+}
+
+.component-detail__stage > * {
+  max-width: 100%;
+  min-width: 0;
 }
 
 .component-detail__body {
