@@ -45109,6 +45109,778 @@
       }
     },
     {
+      "slug": "table-body",
+      "name": "TableBody",
+      "title": {
+        "en": "Table Body",
+        "zh": "表格主体"
+      },
+      "group": "Table & List",
+      "groupTitle": {
+        "en": "Table & List",
+        "zh": "表格与列表"
+      },
+      "importPath": "@astryx-vue/core/Table",
+      "exportName": "TableBody",
+      "summary": {
+        "en": "`TableBody` is the `<tbody>` wrapper for children mode. It holds the data rows. A row must sit inside a section: `<table>` cannot contain a `<tr>` directly, because the HTML parser inserts an implied `<tbody>` when it parses server-rendered markup and the client render does not, so rows written straight into `Table` mismatch on hydration. The data-driven `data={...}` mode renders this element itself; in children mode it is yours to supply.",
+        "zh": "`TableBody` 就是 children 模式里的 `<tbody>` 包装，数据行都放在它里面。行必须待在一个 section 里：`<table>` 不能直接套 `<tr>`，因为浏览器解析服务端渲染出来的 HTML 时会自动补一个隐含的 `<tbody>`，客户端渲染时却不会补，两边结构对不上，水合（hydration）就会报错。所以直接写进 `Table` 的行会出问题。用 `data={...}` 那套数据驱动模式时，这个元素由表格自己渲染；children 模式下就得你自己写。"
+      },
+      "usage": {
+        "en": "`TableBody` is the `<tbody>` wrapper for children mode. It holds the data rows. A row must sit inside a section: `<table>` cannot contain a `<tr>` directly, because the HTML parser inserts an implied `<tbody>` when it parses server-rendered markup and the client render does not, so rows written straight into `Table` mismatch on hydration. The data-driven `data={...}` mode renders this element itself; in children mode it is yours to supply.\n\n```ts\nimport { TableBody } from '@astryx-vue/core/Table'\n```",
+        "zh": "`TableBody` 就是 children 模式里的 `<tbody>` 包装，数据行都放在它里面。行必须待在一个 section 里：`<table>` 不能直接套 `<tr>`，因为浏览器解析服务端渲染出来的 HTML 时会自动补一个隐含的 `<tbody>`，客户端渲染时却不会补，两边结构对不上，水合（hydration）就会报错。所以直接写进 `Table` 的行会出问题。用 `data={...}` 那套数据驱动模式时，这个元素由表格自己渲染；children 模式下就得你自己写。\n\n```ts\nimport { TableBody } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [],
+        "zh": []
+      },
+      "slots": {
+        "en": [
+          {
+            "heading": "Table Body slots",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "The `<tbody>` rows. Required."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableBody 插槽",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "`<tbody>` 里的数据行。必填。"
+              }
+            ]
+          }
+        ]
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Props",
+            "text": "`TableBody` takes no props. Rows arrive through the default slot."
+          },
+          {
+            "heading": "Native attributes",
+            "text": "The root element is `<tbody>`.\n\nThe root element receives:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "属性",
+            "text": "`TableBody` 没有属性，行通过默认插槽传进来。"
+          },
+          {
+            "heading": "原生属性",
+            "text": "根元素是 `<tbody>`。\n\n根元素会接收：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [],
+        "zh": []
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/table-body",
+        "zh": "https://astryx-vue.pages.dev/components/table-body"
+      }
+    },
+    {
+      "slug": "table-cell",
+      "name": "TableCell",
+      "title": {
+        "en": "Table Cell",
+        "zh": "表格单元格"
+      },
+      "group": "Table & List",
+      "groupTitle": {
+        "en": "Table & List",
+        "zh": "表格与列表"
+      },
+      "importPath": "@astryx-vue/core/Table",
+      "exportName": "TableCell",
+      "summary": {
+        "en": "`<td>` wrapper that reads TableContext to apply density padding, font size, and divider borders when used inside Table.",
+        "zh": "`TableCell` 就是一个 `<td>`。放在 `Table` 里时，它会读父级表格的上下文，自动套上对应密度下的内边距、字号和分隔线。"
+      },
+      "usage": {
+        "en": "`<td>` wrapper that reads TableContext to apply density padding, font size, and divider borders when used inside Table.\n\n```ts\nimport { TableCell } from '@astryx-vue/core/Table'\n```",
+        "zh": "`TableCell` 就是一个 `<td>`。放在 `Table` 里时，它会读父级表格的上下文，自动套上对应密度下的内边距、字号和分隔线。\n\n```ts\nimport { TableCell } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TableCell props",
+            "rows": [
+              {
+                "name": "`align`",
+                "description": "`align`",
+                "type": "`'start' | 'center' | 'end'`",
+                "default": "—"
+              },
+              {
+                "name": "`colSpan`",
+                "description": "`colSpan`",
+                "type": "`number`",
+                "default": "—"
+              },
+              {
+                "name": "`rowSpan`",
+                "description": "`rowSpan`",
+                "type": "`number`",
+                "default": "—"
+              },
+              {
+                "name": "`headers`",
+                "description": "`headers`",
+                "type": "`string`",
+                "default": "—"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableCell 属性",
+            "rows": [
+              {
+                "name": "`align`",
+                "type": "`'start' | 'center' | 'end'`",
+                "default": "—",
+                "description": "单元格里文字的对齐方式。不传就跟随表格的默认对齐。"
+              },
+              {
+                "name": "`colSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "这个单元格横着跨几列。"
+              },
+              {
+                "name": "`rowSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "这个单元格竖着跨几行。"
+              },
+              {
+                "name": "`headers`",
+                "type": "`string`",
+                "default": "—",
+                "description": "描述这个单元格的表头单元格 id。读屏软件会连表头一起念出来。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Slots",
+            "text": "- `default`: the cell content."
+          },
+          {
+            "heading": "Native attributes",
+            "text": "The root element is `<td>`. Every other attribute and event lands on it, so `class`, `style`, and `id` behave as they do on a plain table cell."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "插槽",
+            "text": "- `default`：单元格里的内容。"
+          },
+          {
+            "heading": "原生属性",
+            "text": "根元素为 `<td>`。`class`、`style`、`id` 等其余属性和事件都直接落在它上面，用法和普通表格单元格一样。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [],
+        "zh": []
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/table-cell",
+        "zh": "https://astryx-vue.pages.dev/components/table-cell"
+      }
+    },
+    {
+      "slug": "table-footer",
+      "name": "TableFooter",
+      "title": {
+        "en": "Table Footer",
+        "zh": "表格页脚"
+      },
+      "group": "Table & List",
+      "groupTitle": {
+        "en": "Table & List",
+        "zh": "表格与列表"
+      },
+      "importPath": "@astryx-vue/core/Table",
+      "exportName": "TableFooter",
+      "summary": {
+        "en": "`<tfoot>` wrapper for children mode. Holds summary or total rows beneath the body. A row must sit inside a section: `<table>` cannot contain a `<tr>` directly, because the HTML parser inserts an implied `<tbody>` when it parses server-rendered markup and Vue does not when it renders on the client, so the two trees mismatch on hydration. Children mode only: the data-driven `data={...}` path renders a header and a body, never a footer.",
+        "zh": "`TableFooter` 是 `<tfoot>` 的包装，只在「自己拼表格」的写法里用。它放在表格主体的下面，用来放汇总行或合计行。每一行都必须放在一个表格分区里：`<table>` 不能直接放 `<tr>`，因为 HTML 解析器碰到服务端渲染出来的标记时会自动补一个 `<tbody>`，而客户端渲染时 Vue 不会补，两边的结构对不上，水合（hydration）就会出问题。它只在这种自己拼的写法里有作用：交给 `data={...}` 的数据驱动写法只渲染表头和表体，永远不会渲染页脚。"
+      },
+      "usage": {
+        "en": "`<tfoot>` wrapper for children mode. Holds summary or total rows beneath the body. A row must sit inside a section: `<table>` cannot contain a `<tr>` directly, because the HTML parser inserts an implied `<tbody>` when it parses server-rendered markup and Vue does not when it renders on the client, so the two trees mismatch on hydration. Children mode only: the data-driven `data={...}` path renders a header and a body, never a footer.\n\n```ts\nimport { TableFooter } from '@astryx-vue/core/Table'\n```",
+        "zh": "`TableFooter` 是 `<tfoot>` 的包装，只在「自己拼表格」的写法里用。它放在表格主体的下面，用来放汇总行或合计行。每一行都必须放在一个表格分区里：`<table>` 不能直接放 `<tr>`，因为 HTML 解析器碰到服务端渲染出来的标记时会自动补一个 `<tbody>`，而客户端渲染时 Vue 不会补，两边的结构对不上，水合（hydration）就会出问题。它只在这种自己拼的写法里有作用：交给 `data={...}` 的数据驱动写法只渲染表头和表体，永远不会渲染页脚。\n\n```ts\nimport { TableFooter } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [],
+        "zh": []
+      },
+      "slots": {
+        "en": [
+          {
+            "heading": "TableFooter slots",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "`default`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableFooter 插槽",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "`default`"
+              }
+            ]
+          }
+        ]
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Props",
+            "text": "`TableFooter` has no props of its own. Everything it shows comes in through the default slot, and anything else is a native attribute."
+          },
+          {
+            "heading": "Native attributes",
+            "text": "The root element is `<tfoot>`.\n\nThe root element receives:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`.\n- Native event listeners.\n\nThe React API styles the footer with `xstyle`, which takes a `stylex.create()` value. In Vue, pass `class` or `style` instead; both land on the `<tfoot>`."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "属性",
+            "text": "`TableFooter` 没有自己的属性。要显示的内容全部从默认插槽传进来，其余的都是原生属性。"
+          },
+          {
+            "heading": "原生属性",
+            "text": "根元素是 `<tfoot>`。\n\n以下内容落到根元素上：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。\n- 原生事件监听器。\n\nReact 版用 `xstyle` 写布局样式，要求传 `stylex.create()` 的值。Vue 版没有这个属性，改用 `class` 或 `style`，两者都会落到 `<tfoot>` 上。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [],
+        "zh": []
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/table-footer",
+        "zh": "https://astryx-vue.pages.dev/components/table-footer"
+      }
+    },
+    {
+      "slug": "table-header",
+      "name": "TableHeader",
+      "title": {
+        "en": "Table Header",
+        "zh": "表格表头"
+      },
+      "group": "Table & List",
+      "groupTitle": {
+        "en": "Table & List",
+        "zh": "表格与列表"
+      },
+      "importPath": "@astryx-vue/core/Table",
+      "exportName": "TableHeader",
+      "summary": {
+        "en": "`<thead>` wrapper for children mode. Holds the header row, whose cells are `TableHeaderCell`. A row must sit inside a section: `<table>` cannot contain a `<tr>` directly, because the HTML parser inserts an implied `<tbody>` when it parses server-rendered markup and the client renderer does not, so the two trees mismatch on hydration. The data-driven `data` mode renders this element itself whenever columns are supplied; in children mode it is yours to supply.",
+        "zh": "`TableHeader` 是 children（自写结构）模式下包住 `<thead>` 的那一层，里面放表头行，行里的单元格用 `TableHeaderCell`。表头行必须放在一个分组里：`<table>` 不能直接套 `<tr>`，因为 HTML 解析器在解析服务端渲染的标记时会自动补一个 `<tbody>`，而客户端渲染不会补，两棵树对不上，水合（hydration）就会出错。用 `data` 驱动表格时，只要传了列，表格自己会渲染这一层；用 children 模式时，这一层要你自己写。"
+      },
+      "usage": {
+        "en": "`<thead>` wrapper for children mode. Holds the header row, whose cells are `TableHeaderCell`. A row must sit inside a section: `<table>` cannot contain a `<tr>` directly, because the HTML parser inserts an implied `<tbody>` when it parses server-rendered markup and the client renderer does not, so the two trees mismatch on hydration. The data-driven `data` mode renders this element itself whenever columns are supplied; in children mode it is yours to supply.\n\n```ts\nimport { TableHeader } from '@astryx-vue/core/Table'\n```",
+        "zh": "`TableHeader` 是 children（自写结构）模式下包住 `<thead>` 的那一层，里面放表头行，行里的单元格用 `TableHeaderCell`。表头行必须放在一个分组里：`<table>` 不能直接套 `<tr>`，因为 HTML 解析器在解析服务端渲染的标记时会自动补一个 `<tbody>`，而客户端渲染不会补，两棵树对不上，水合（hydration）就会出错。用 `data` 驱动表格时，只要传了列，表格自己会渲染这一层；用 children 模式时，这一层要你自己写。\n\n```ts\nimport { TableHeader } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [],
+        "zh": []
+      },
+      "slots": {
+        "en": [
+          {
+            "heading": "TableHeader slots",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "The rows of the `<thead>`. Each row is a `TableRow`, and its cells are `TableHeaderCell`."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableHeader 插槽",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "`<thead>` 里的行。每一行是一个 `TableRow`，行里的单元格用 `TableHeaderCell`。"
+              }
+            ]
+          }
+        ]
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Props",
+            "text": "`TableHeader` takes no props. The header rows come from the default slot."
+          },
+          {
+            "heading": "Native attributes",
+            "text": "The root element is `<thead>`.\n\nThe root element receives:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`.\n- Native event listeners."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "属性",
+            "text": "`TableHeader` 没有属性。表头行从默认插槽传入。"
+          },
+          {
+            "heading": "原生属性",
+            "text": "根元素为 `<thead>`。\n\n以下内容传入根元素：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。\n- 原生事件监听器。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [],
+        "zh": []
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/table-header",
+        "zh": "https://astryx-vue.pages.dev/components/table-header"
+      }
+    },
+    {
+      "slug": "table-header-cell",
+      "name": "TableHeaderCell",
+      "title": {
+        "en": "Table Header Cell",
+        "zh": "表头单元格"
+      },
+      "group": "Table & List",
+      "groupTitle": {
+        "en": "Table & List",
+        "zh": "表格与列表"
+      },
+      "importPath": "@astryx-vue/core/Table",
+      "exportName": "TableHeaderCell",
+      "summary": {
+        "en": "`<th>` wrapper that reads TableContext to apply density padding, semibold weight, secondary text color, and divider borders when used inside Table.",
+        "zh": "`<th>` 的包装组件。放在 `Table` 里时，它会读取表格上下文，套上对应密度下的内边距、半粗字重、次要文字颜色和分隔边框。"
+      },
+      "usage": {
+        "en": "`<th>` wrapper that reads TableContext to apply density padding, semibold weight, secondary text color, and divider borders when used inside Table.\n\n```ts\nimport { TableHeaderCell } from '@astryx-vue/core/Table'\n```",
+        "zh": "`<th>` 的包装组件。放在 `Table` 里时，它会读取表格上下文，套上对应密度下的内边距、半粗字重、次要文字颜色和分隔边框。\n\n```ts\nimport { TableHeaderCell } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TableHeaderCell props",
+            "rows": [
+              {
+                "name": "`align`",
+                "description": "`align`",
+                "type": "`'start' | 'center' | 'end'`",
+                "default": "—"
+              },
+              {
+                "name": "`colSpan`",
+                "description": "`colSpan`",
+                "type": "`number`",
+                "default": "—"
+              },
+              {
+                "name": "`rowSpan`",
+                "description": "`rowSpan`",
+                "type": "`number`",
+                "default": "—"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableHeaderCell 属性",
+            "rows": [
+              {
+                "name": "`align`",
+                "type": "`'start' | 'center' | 'end'`",
+                "default": "—",
+                "description": "表头文字的对齐方式。不传就跟随表格的默认对齐。"
+              },
+              {
+                "name": "`colSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "这个表头单元格横着跨几列。"
+              },
+              {
+                "name": "`rowSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "这个表头单元格竖着跨几行。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Slots",
+            "text": "- `default`: the header cell content."
+          },
+          {
+            "heading": "Attributes",
+            "text": "The rest of the attributes land on the `<th>`, so `class`, `style`, and `id` work as they do on a plain header cell. The rendered element always carries `scope=\"col\"`, which is what lets a screen reader tie each column's cells to this header."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "插槽",
+            "text": "- `default`：表头单元格里的内容。"
+          },
+          {
+            "heading": "其它属性",
+            "text": "其余属性和事件直接落在 `<th>` 上，所以 `class`、`style`、`id` 的用法和普通表头单元格一样。渲染出来的元素固定带 `scope=\"col\"`，读屏软件靠它把每一列的数据单元格挂到这个表头上。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [],
+        "zh": []
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/table-header-cell",
+        "zh": "https://astryx-vue.pages.dev/components/table-header-cell"
+      }
+    },
+    {
+      "slug": "table-row",
+      "name": "TableRow",
+      "title": {
+        "en": "Table Row",
+        "zh": "表格行"
+      },
+      "group": "Table & List",
+      "groupTitle": {
+        "en": "Table & List",
+        "zh": "表格与列表"
+      },
+      "importPath": "@astryx-vue/core/Table",
+      "exportName": "TableRow",
+      "summary": {
+        "en": "&lt;tr&gt; wrapper that reads TableContext to apply striped, hover, and divider styles when used inside Table.",
+        "zh": "&lt;tr&gt; 包装组件。放在 Table 里时，它会读父级表格的上下文，套上斑马纹、悬停和行分隔线的样式。"
+      },
+      "usage": {
+        "en": "&lt;tr&gt; wrapper that reads TableContext to apply striped, hover, and divider styles when used inside Table.\n\n```ts\nimport { TableRow } from '@astryx-vue/core/Table'\n```",
+        "zh": "&lt;tr&gt; 包装组件。放在 Table 里时，它会读父级表格的上下文，套上斑马纹、悬停和行分隔线的样式。\n\n```ts\nimport { TableRow } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TableRow props",
+            "rows": [
+              {
+                "name": "`isHeaderRow`",
+                "description": "`isHeaderRow`",
+                "type": "`boolean`",
+                "default": "`false`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableRow 属性",
+            "rows": [
+              {
+                "name": "`isHeaderRow`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "把这一行标记为表头行，在 `<tr>` 上写出 `data-header-row`。放在 `TableHeader` 里的行用它。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Slots",
+            "text": "- `default`: Row cell elements. Required."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "插槽",
+            "text": "- `default`：行内的单元格元素。必填。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [],
+        "zh": []
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/table-row",
+        "zh": "https://astryx-vue.pages.dev/components/table-row"
+      }
+    },
+    {
+      "slug": "table-selection-toolbar",
+      "name": "TableSelectionToolbar",
+      "title": {
+        "en": "Table Selection Toolbar",
+        "zh": "表格选择工具栏"
+      },
+      "group": "Table & List",
+      "groupTitle": {
+        "en": "Table & List",
+        "zh": "表格与列表"
+      },
+      "importPath": "@astryx-vue/core/Table",
+      "exportName": "TableSelectionToolbar",
+      "summary": {
+        "en": "`TableSelectionToolbar` is the bulk-action bar for a table with row selection. Feed it what `useTableSelectionState` holds: pass the size of `selectedKeys` as `count`, and empty that set when the bar emits `clear`. The count and the clear command then stay in step with the row checkboxes.",
+        "zh": "`TableSelectionToolbar` 是配合「勾选行」用的批量操作条。把 `useTableSelectionState` 里的东西交给它：`selectedKeys` 里有几个键，就把这个数字传给 `count`；它发出 `clear` 时，就把这个集合清空。这样数字和「取消全选」永远跟勾选框对得上。"
+      },
+      "usage": {
+        "en": "`TableSelectionToolbar` is the bulk-action bar for a table with row selection. Feed it what `useTableSelectionState` holds: pass the size of `selectedKeys` as `count`, and empty that set when the bar emits `clear`. The count and the clear command then stay in step with the row checkboxes.\n\nProduct actions go in the default slot. The bar owns no table or sticky layout: place it in flow above the table, or pin it yourself with `class` or `style`.\n\n```ts\nimport { TableSelectionToolbar } from '@astryx-vue/core/Table'\n```",
+        "zh": "`TableSelectionToolbar` 是配合「勾选行」用的批量操作条。把 `useTableSelectionState` 里的东西交给它：`selectedKeys` 里有几个键，就把这个数字传给 `count`；它发出 `clear` 时，就把这个集合清空。这样数字和「取消全选」永远跟勾选框对得上。\n\n自己的操作按钮放进默认插槽。这条本身不管表格布局，也不管吸顶：放在表格上方跟着正常流排，或者用 `class`、`style` 自己固定住。\n\n```ts\nimport { TableSelectionToolbar } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Take the count straight from `useTableSelectionState`, so the count and the clear command stay synchronized with row selection."
+          },
+          {
+            "guidance": "Do",
+            "text": "Provide product actions in the default slot instead of encoding them as configuration objects."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Inject the toolbar through the Table plugin or its horizontal scroll wrapper."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TableSelectionToolbar props",
+            "rows": [
+              {
+                "name": "`count`",
+                "description": "`count`",
+                "type": "`number`",
+                "default": "—"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableSelectionToolbar 属性",
+            "rows": [
+              {
+                "name": "`count`",
+                "type": "`number`",
+                "default": "—",
+                "description": "选中了几行。这个数字会画成工具栏开头的计数文字。必填。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Events",
+            "text": "- `clear()`: fires when the clear command is clicked. Empty the selected keys and the count label follows."
+          },
+          {
+            "heading": "Slots",
+            "text": "- `default`: product actions. They sit between the count label and the clear command."
+          },
+          {
+            "heading": "Native attributes",
+            "text": "The root element is a `<div>` with `role=\"region\"`.\n\nThe root element receives:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`.\n- Native event listeners.\n\nThe bar reads three built-in strings: the region name, the count label, and the clear label. They default to `Bulk actions`, `{count} selected`, and `Unselect All`, and switch to Chinese after `provideAstryxLocale('zh-CN')`. The React API exposes `selection`, `label`, `renderSelectionLabel`, `clearLabel`, `size`, `variant`, `startContent`, and `xstyle`. In Vue, pass the count as `count`, put actions in the default slot, and style the bar with `class` or `style`; the copy comes from the locale messages instead of props."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免"
+          },
+          {
+            "heading": "事件",
+            "text": "- `clear()`：点击取消全选时触发。把选中的键清空，计数文字就会跟着变。"
+          },
+          {
+            "heading": "插槽",
+            "text": "- `default`：产品自己的操作按钮。位置在计数文字和取消全选之间。"
+          },
+          {
+            "heading": "原生属性",
+            "text": "根元素是一个带 `role=\"region\"` 的 `<div>`。\n\n以下内容落到根元素上：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。\n- 原生事件监听器。\n\n这条工具栏用三句内置文案：区域名称、计数文字和取消全选。默认是 `Bulk actions`、`{count} selected`、`Unselect All`，调用 `provideAstryxLocale('zh-CN')` 后变成中文。React 版的属性是 `selection`、`label`、`renderSelectionLabel`、`clearLabel`、`size`、`variant`、`startContent` 和 `xstyle`。Vue 版把条数交给 `count`，操作按钮放进默认插槽，样式用 `class` 或 `style`；文案改由多语言消息提供，不再通过属性传入。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [],
+        "zh": []
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/table-selection-toolbar",
+        "zh": "https://astryx-vue.pages.dev/components/table-selection-toolbar"
+      }
+    },
+    {
       "slug": "tree-list",
       "name": "TreeList",
       "title": {
