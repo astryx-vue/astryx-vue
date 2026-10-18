@@ -4,7 +4,7 @@ import { fieldStatusOverview as demo } from './index'
 export const meta = {
   slug: 'field-status',
   group: 'Form Controls',
-  order: 8,
+  order: 9,
   en: 'Field Status',
   zh: '字段状态',
   demo,

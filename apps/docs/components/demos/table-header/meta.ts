@@ -4,7 +4,7 @@ import { tableHeaderOverview as demo } from './index'
 export const meta = {
   slug: 'table-header',
   group: 'Table & List',
-  order: 7,
+  order: 9,
   en: 'Table Header',
   zh: '表格表头',
   demo,

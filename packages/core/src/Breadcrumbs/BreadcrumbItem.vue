@@ -4,6 +4,7 @@ import type { BreadcrumbItemProps } from './types.js'
 import { computed, inject, toRaw } from 'vue'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { breadcrumbContextKey } from './context.js'
 
 const props = defineProps<BreadcrumbItemProps>()
@@ -20,6 +21,7 @@ const slots = defineSlots<{
 }>()
 
 const context = inject(breadcrumbContextKey, undefined)
+const linkComponent = useLinkComponent()
 const variant = computed(() => context?.variant.value ?? 'default')
 const separator = computed(() => context?.separator.value ?? '/')
 const hasMenu = computed(() => props.menu != null || slots.menu != null)
@@ -36,8 +38,9 @@ const contentClasses = computed(() => [
 
 const menuSize = computed<DropdownMenuSize>(() => props.menuSize ?? (variant.value === 'supporting' ? 'sm' : 'md'))
 
-/** The link crumb keeps the anchor unless a router link is passed in. */
-const linkRoot = computed(() => (props.as == null ? 'a' : toRaw(props.as)))
+/** The link crumb keeps the anchor unless a router link is passed in or a LinkProvider supplies one. */
+const customLink = computed(() => props.as ?? linkComponent.value)
+const linkRoot = computed(() => (customLink.value == null ? 'a' : toRaw(customLink.value)))
 const rendersLink = computed(() => Boolean(props.href) && !props.isCurrent)
 
 const isDev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV !== false
@@ -87,7 +90,7 @@ function handleClick(event: MouseEvent) {
       :is="linkRoot"
       v-else-if="rendersLink"
       :href="href"
-      :to="as != null ? href : undefined"
+      :to="customLink != null ? href : undefined"
       class="astryx-breadcrumb-item__content"
       @click="handleClick"
     >

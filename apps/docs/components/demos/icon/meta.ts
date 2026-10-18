@@ -4,7 +4,7 @@ import { iconOverview as demo } from './index'
 export const meta = {
   slug: 'icon',
   group: 'Content',
-  order: 15,
+  order: 17,
   en: 'Icon',
   zh: '图标',
   demo,

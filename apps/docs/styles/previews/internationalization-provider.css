@@ -1,0 +1,9 @@
+.internationalization-provider-preview {
+  box-sizing: border-box;
+  width: min(100%, 320px);
+}
+
+.component-card__preview .internationalization-provider-preview {
+  width: 100%;
+  max-width: 100%;
+}

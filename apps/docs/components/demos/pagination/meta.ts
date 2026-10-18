@@ -4,7 +4,7 @@ import { paginationOverview as demo } from './index'
 export const meta = {
   slug: 'pagination',
   group: 'Navigation',
-  order: 4,
+  order: 8,
   en: 'Pagination',
   zh: '分页',
   demo,

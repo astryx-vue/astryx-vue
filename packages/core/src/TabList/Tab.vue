@@ -10,6 +10,7 @@ import {
   watch,
 } from 'vue'
 
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { tabListContextKey } from './context.js'
 import '../../styles/visually-hidden-utility.css'
 
@@ -23,6 +24,7 @@ const props = withDefaults(defineProps<TabProps>(), {
 defineSlots<TabSlots>()
 
 const context = inject(tabListContextKey)
+const linkComponent = useLinkComponent()
 const rootRef = ref<HTMLElement>()
 
 const isTabsPattern = computed(() => context?.isTabsPattern.value ?? false)
@@ -31,9 +33,11 @@ const tabIndex = computed(() => (isSelected.value && !props.disabled ? 0 : -1))
 const isLink = computed(() =>
   !isTabsPattern.value && props.href != null && props.href !== '' && !props.disabled,
 )
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
 const root = computed(() => {
   if (isLink.value)
-    return props.as == null ? 'a' : toRaw(props.as)
+    return customLink.value == null ? 'a' : toRaw(customLink.value)
   return 'button'
 })
 
@@ -118,7 +122,7 @@ watch(() => props.disabled, (disabled) => {
     :role="isTabsPattern ? 'tab' : undefined"
     :class="classes"
     :href="isLink ? href : undefined"
-    :to="isLink && as != null ? href : undefined"
+    :to="isLink && customLink != null ? href : undefined"
     :aria-selected="isTabsPattern ? isSelected : undefined"
     :aria-current="isTabsPattern ? undefined : isSelected ? 'true' : undefined"
     :aria-controls="isTabsPattern ? panelId : undefined"

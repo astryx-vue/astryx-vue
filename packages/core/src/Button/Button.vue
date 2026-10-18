@@ -2,6 +2,7 @@
 import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
 import { computed, inject, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import ButtonSpinner from './ButtonSpinner.vue'
 import ButtonTooltip from './ButtonTooltip.vue'
@@ -33,6 +34,7 @@ defineSlots<ButtonSlots>()
 const attrs = useAttrs()
 const slots = useSlots()
 const group = inject(buttonGroupContextKey, null)
+const linkComponent = useLinkComponent()
 const renderedRoot = useTemplateRef<ComponentPublicInstance | HTMLElement>('root')
 const tooltipId = `astryx-button-tooltip-${useId()}`
 
@@ -59,7 +61,7 @@ const hasTooltip = computed(() => (props.tooltip?.trim().length ?? 0) > 0)
 const useAriaDisabled = computed(() => hasTooltip.value && isDisabledState.value)
 const renderAsLink = computed(() => props.href != null && !isDisabledState.value)
 const rootComponent = computed<ButtonLinkElement | 'button'>(() =>
-  renderAsLink.value ? (props.as == null ? 'a' : toRaw(props.as)) : 'button',
+  renderAsLink.value ? toRaw(props.as ?? linkComponent.value ?? 'a') : 'button',
 )
 const isCustomLink = computed(() => renderAsLink.value && rootComponent.value !== 'a')
 const nativeDisabled = computed(() =>

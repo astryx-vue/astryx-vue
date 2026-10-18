@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { TreeListDensity, TreeListItemData, TreeListVariant } from './types.js'
-import { computed } from 'vue'
+import { computed, toRaw } from 'vue'
 import Badge from '../Badge/Badge.vue'
 import { isIconGlyph } from '../Icon/glyphs.js'
 import Icon from '../Icon/Icon.vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/context.js'
 import '../../styles/tree-list.css'
 
@@ -25,6 +26,9 @@ const props = defineProps<{
 
 const emit = defineEmits<{ toggle: [id: string] }>()
 const messages = useAstryxMessages()
+const linkComponent = useLinkComponent()
+/** 有链接时用的根组件，没有 provider 时还是 `<a>`。 */
+const linkRoot = computed(() => (linkComponent.value == null ? 'a' : toRaw(linkComponent.value)))
 
 const hasChildren = computed(() => (props.item.children?.length ?? 0) > 0)
 const isExpanded = computed(() => hasChildren.value && props.expanded[props.item.id] === true)
@@ -122,16 +126,18 @@ function onToggle(event: MouseEvent) {
             <i :class="item.icon" aria-hidden="true" />
           </span>
         </span>
-        <a
+        <component
+          :is="linkRoot"
           v-if="item.href"
           class="astryx-tree-list__action"
           :href="item.href"
+          :to="linkRoot === 'a' ? undefined : item.href"
           :target="item.target"
           tabindex="-1"
         >
           <span class="astryx-tree-list__label">{{ item.label }}</span>
           <span v-if="item.description" class="astryx-tree-list__description">{{ item.description }}</span>
-        </a>
+        </component>
         <button
           v-else-if="item.onClick"
           type="button"

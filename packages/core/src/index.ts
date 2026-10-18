@@ -572,8 +572,30 @@ export type {
   InputGroupTextProps,
   InputGroupTextSlots,
 } from './InputGroup/index.js'
+export {
+  getLocaleDirection,
+  InternationalizationProvider,
+  resolveProviderMessages,
+  useLocaleDirection,
+} from './InternationalizationProvider/index.js'
+export type {
+  InternationalizationProviderProps,
+  InternationalizationProviderSlots,
+  ProviderMessagesByLocale,
+  ProviderOverrides,
+  TextDirection,
+} from './InternationalizationProvider/index.js'
 export { Kbd } from './Kbd/index.js'
 export type { KbdKeyAlias, KbdKeyName, KbdProps, KbdSpecialKey } from './Kbd/index.js'
+export { LayerProvider, mergeInset, resolveInset, useLayerConfig, useLayerGutter } from './LayerProvider/index.js'
+export type {
+  LayerContextValue,
+  LayerInset,
+  LayerProviderProps,
+  LayerProviderSlots,
+  LayerToastConfig,
+  ResolvedLayerInset,
+} from './LayerProvider/index.js'
 export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from './Layout/index.js'
 export type {
   LayoutArea,
@@ -600,6 +622,8 @@ export type {
 } from './Lightbox/index.js'
 export { Link } from './Link/index.js'
 export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkWeight } from './Link/index.js'
+export { LinkProvider, useLinkComponent } from './LinkProvider/index.js'
+export type { LinkComponentType, LinkProviderProps, LinkProviderSlots } from './LinkProvider/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
 export type {
   ItemAlign,

@@ -1,0 +1,5 @@
+/* 舞台和示例画布共用：宽度收在这里，撑满空间的项才有剩余空间可占。 */
+.astryx-demo.stack-item-preview {
+  box-sizing: border-box;
+  width: min(100%, 31rem);
+}

@@ -1,0 +1,18 @@
+/* 对话布局自己会滚动，预览得给它一个固定高度，停靠区和滚到底按钮才有参照。 */
+.chat-layout-preview {
+  box-sizing: border-box;
+  width: min(100%, 450px);
+}
+
+.chat-layout-preview .astryx-chat-layout {
+  box-sizing: border-box;
+  height: 20rem;
+  overflow: hidden auto;
+  border: 1px solid var(--astryx-line);
+  border-radius: var(--astryx-radius-container, 0.75rem);
+  background: var(--astryx-bg);
+}
+
+.component-card__preview .chat-layout-preview .astryx-chat-layout {
+  height: 14rem;
+}

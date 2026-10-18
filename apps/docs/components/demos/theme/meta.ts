@@ -4,7 +4,7 @@ import { themeOverview as demo } from './index'
 export const meta = {
   slug: 'theme',
   group: 'Utility',
-  order: 3,
+  order: 6,
   en: 'Theme',
   zh: '主题',
   demo,

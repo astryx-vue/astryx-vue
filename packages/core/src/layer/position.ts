@@ -1,3 +1,6 @@
+import type { LayerGutter } from './gutter.js'
+import { resolveLayerGutter } from './gutter.js'
+
 export type LayerPlacement = 'above' | 'below' | 'start' | 'end'
 export type LayerAlignment = 'start' | 'center' | 'end'
 
@@ -11,8 +14,6 @@ export interface LayerBox {
   width: number
   height: number
 }
-
-const VIEWPORT_MARGIN = 8
 
 function alignOnAxis(start: number, size: number, own: number, alignment: LayerAlignment): number {
   if (alignment === 'start')
@@ -28,6 +29,7 @@ function clamp(value: number, min: number, max: number): number {
 
 /**
  * 计算浮层相对锚点的位置。空间不足时翻转到相反方向，最终位置保持在视口内。
+ * `gutter` 是浮层离视口每条边的最小空隙，不传就按基础空隙加设备安全区算。
  */
 export function computeLayerPosition(
   anchor: DOMRect,
@@ -36,6 +38,7 @@ export function computeLayerPosition(
   placement: LayerPlacement,
   alignment: LayerAlignment,
   gap: number,
+  gutter: LayerGutter = resolveLayerGutter(),
 ): LayerPosition {
   let resolved = placement
   if (resolved === 'above' && anchor.top - gap - layer.height < 0)
@@ -64,8 +67,8 @@ export function computeLayerPosition(
     return { top, left, placement: resolved }
 
   return {
-    top: clamp(top, VIEWPORT_MARGIN, viewport.height - layer.height - VIEWPORT_MARGIN),
-    left: clamp(left, VIEWPORT_MARGIN, viewport.width - layer.width - VIEWPORT_MARGIN),
+    top: clamp(top, gutter.blockStart, viewport.height - layer.height - gutter.blockEnd),
+    left: clamp(left, gutter.inlineStart, viewport.width - layer.width - gutter.inlineEnd),
     placement: resolved,
   }
 }

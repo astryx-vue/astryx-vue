@@ -4,6 +4,7 @@ import type { AvatarProps } from './types.js'
 import { computed, inject, ref, toRaw, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { resolveSize } from './utils.js'
 import '../../styles/avatar.css'
@@ -24,6 +25,8 @@ defineSlots<{
   default?: () => unknown
   status?: () => unknown
 }>()
+
+const linkComponent = useLinkComponent()
 
 const attrs = useAttrs()
 
@@ -95,10 +98,12 @@ const accessibleName = computed(() => {
 const isLink = computed(() => props.href != null && props.href !== '')
 const isButton = computed(() => !isLink.value && attrs.onClick != null)
 const isInteractive = computed(() => isLink.value || isButton.value)
-const isCustomLink = computed(() => isLink.value && props.as != null)
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
+const isCustomLink = computed(() => isLink.value && customLink.value != null)
 const rootTag = computed(() => {
   if (isLink.value)
-    return props.as == null ? 'a' : toRaw(props.as)
+    return customLink.value == null ? 'a' : toRaw(customLink.value)
   return isButton.value ? 'button' : 'span'
 })
 

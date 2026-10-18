@@ -4,7 +4,7 @@ import { timerOverview as demo } from './index'
 export const meta = {
   slug: 'timer',
   group: 'Content',
-  order: 14,
+  order: 16,
   en: 'Timer',
   zh: '计时',
   demo,

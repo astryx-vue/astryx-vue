@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
 import type { LayerAlignment, LayerPlacement, LayerPosition } from './position.js'
 import { nextTick, ref, watch } from 'vue'
+import { useLayerGutter } from '../LayerProvider/context.js'
 import { computeLayerPosition } from './position.js'
 
 const GEOMETRY_POLL_INTERVAL = 100
@@ -26,6 +27,8 @@ export interface PositionedLayer {
 export function usePositionedLayer(options: PositionedLayerOptions): PositionedLayer {
   const { anchor, layer, isOpen, placement, alignment, gap } = options
   const position = ref<LayerPosition>({ top: 0, left: 0, placement: placement.value })
+  // 视口边距由最近一个 LayerProvider 决定，没有 provider 时是基础空隙加设备安全区。
+  const gutter = useLayerGutter()
 
   function update(): void {
     const anchorEl = anchor.value
@@ -39,6 +42,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
       placement.value,
       alignment.value,
       gap,
+      gutter.value,
     )
   }
 
@@ -87,6 +91,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   })
 
   watch([placement, alignment], update)
+  watch(gutter, update)
 
   return { position, update, detach }
 }

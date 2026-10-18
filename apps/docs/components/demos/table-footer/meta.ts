@@ -4,7 +4,7 @@ import { tableFooterOverview as demo } from './index'
 export const meta = {
   slug: 'table-footer',
   group: 'Table & List',
-  order: 6,
+  order: 8,
   en: 'Table Footer',
   zh: '表格页脚',
   demo,

@@ -114,6 +114,16 @@
       "types": "./dist/Indicator/index.d.ts",
       "import": "./dist/Indicator/index.js"
     },
+    "./InternationalizationProvider": {
+      "source": "./src/InternationalizationProvider/index.ts",
+      "types": "./dist/InternationalizationProvider/index.d.ts",
+      "import": "./dist/InternationalizationProvider/index.js"
+    },
+    "./LayerProvider": {
+      "source": "./src/LayerProvider/index.ts",
+      "types": "./dist/LayerProvider/index.d.ts",
+      "import": "./dist/LayerProvider/index.js"
+    },
     "./Layout": {
       "source": "./src/Layout/index.ts",
       "types": "./dist/Layout/index.d.ts",
@@ -123,6 +133,11 @@
       "source": "./src/Lightbox/index.ts",
       "types": "./dist/Lightbox/index.d.ts",
       "import": "./dist/Lightbox/index.js"
+    },
+    "./LinkProvider": {
+      "source": "./src/LinkProvider/index.ts",
+      "types": "./dist/LinkProvider/index.d.ts",
+      "import": "./dist/LinkProvider/index.js"
     },
     "./MetadataList": {
       "source": "./src/MetadataList/index.ts",
@@ -649,6 +664,14 @@
         "types": "./dist/Indicator/index.d.ts",
         "import": "./dist/Indicator/index.js"
       },
+      "./InternationalizationProvider": {
+        "types": "./dist/InternationalizationProvider/index.d.ts",
+        "import": "./dist/InternationalizationProvider/index.js"
+      },
+      "./LayerProvider": {
+        "types": "./dist/LayerProvider/index.d.ts",
+        "import": "./dist/LayerProvider/index.js"
+      },
       "./Layout": {
         "types": "./dist/Layout/index.d.ts",
         "import": "./dist/Layout/index.js"
@@ -656,6 +679,10 @@
       "./Lightbox": {
         "types": "./dist/Lightbox/index.d.ts",
         "import": "./dist/Lightbox/index.js"
+      },
+      "./LinkProvider": {
+        "types": "./dist/LinkProvider/index.d.ts",
+        "import": "./dist/LinkProvider/index.js"
       },
       "./MetadataList": {
         "types": "./dist/MetadataList/index.d.ts",

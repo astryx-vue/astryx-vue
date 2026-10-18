@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavItemEmits, NavItemProps, NavItemSlots } from './types.js'
 import { computed, useAttrs, useSlots } from 'vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { isExternalNavTarget, resolveNavRoot } from './link.js'
 import '../../styles/nav-item.css'
 
@@ -19,6 +20,7 @@ const emit = defineEmits<NavItemEmits>()
 defineSlots<NavItemSlots>()
 const slots = useSlots()
 const attrs = useAttrs()
+const linkComponent = useLinkComponent()
 function forwardedAttrs(): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style'),
@@ -26,7 +28,9 @@ function forwardedAttrs(): Record<string, unknown> {
 }
 
 const isLink = computed(() => props.href != null && props.href !== '' && !props.isDisabled)
-const root = computed(() => resolveNavRoot(props.href, props.isDisabled, props.as))
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
+const root = computed(() => resolveNavRoot(props.href, props.isDisabled, customLink.value))
 const glyph = computed(() => {
   if (props.isSelected && props.selectedIconClass)
     return props.selectedIconClass
@@ -77,7 +81,7 @@ function onClick(event: MouseEvent): void {
     ]"
     :style="attrs.style"
     :href="isLink ? href : undefined"
-    :to="isLink && as != null ? href : undefined"
+    :to="isLink && customLink != null ? href : undefined"
     :target="isLink ? target : undefined"
     :rel="rel"
     :type="isLink ? undefined : 'button'"

@@ -4,7 +4,7 @@ import { linkOverview as demo } from './index'
 export const meta = {
   slug: 'link',
   group: 'Action',
-  order: 5,
+  order: 10,
   en: 'Link',
   zh: '链接',
   demo,
