@@ -1,8 +1,8 @@
 /* DialogHeader 的预览里用一段浅色块代表正文，让标题区在画布上不悬空。
    尺寸对齐原版：正文块内边距 12px、圆角 12px。 */
 .dialog-header-preview__body {
-  /* 上下不留白：原版正文区只保留左右 16px，垂直间距由 header 的 padding 决定。 */
-  margin: 0 16px;
+  /* 正文区左右和底部各留 16px，顶部紧贴 header 的底部内边距。 */
+  margin: 0 16px 16px;
   padding: 12px;
   border-radius: 12px;
   color: var(--astryx-color-text-secondary, #525252);

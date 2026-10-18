@@ -502,10 +502,10 @@ html.dark .component-card__preview {
 
 .component-detail__content {
   box-sizing: border-box;
-  width: min(100%, 1080px);
+  width: min(100%, 960px);
   min-width: 0;
   margin-inline: auto;
-  padding: 36px clamp(24px, 4vw, 48px) 80px;
+  padding: 36px 24px 80px;
 }
 
 .component-detail__header {

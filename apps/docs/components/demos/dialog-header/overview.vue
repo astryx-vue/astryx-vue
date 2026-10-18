@@ -4,7 +4,7 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 </script>
 
 <template>
-  <Dialog is-inline is-open width="400">
+  <Dialog is-inline is-open width="400" :padding="0">
     <Layout height="auto">
       <LayoutHeader :padding="4">
         <DialogHeader
