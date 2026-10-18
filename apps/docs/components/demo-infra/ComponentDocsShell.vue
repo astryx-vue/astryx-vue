@@ -9,6 +9,7 @@ import { componentDocsCopy, UPSTREAM_PACKAGE, UPSTREAM_VERSION } from './compone
 import { localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
 import { hasAccessibility } from './reference/loadReference'
+import StageFit from './StageFit.vue'
 import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ route: ComponentDocsRoute }>()
@@ -209,11 +210,13 @@ watch(() => routePath.path, () => {
           <a v-if="showAccessibility" :href="path(`/components/${route.slug}/accessibility`)" :aria-current="route.tab === 'accessibility' ? 'page' : undefined">{{ text.accessibility }}</a>
         </nav>
         <div v-if="route.tab === 'overview' && stageDemo" class="component-detail__stage">
-          <VueDemoHost
-            :class-name="stageDemo.className"
-            :component="stageDemo.component"
-            :data-kind="stageDemo.dataKind"
-          />
+          <StageFit>
+            <VueDemoHost
+              :class-name="stageDemo.className"
+              :component="stageDemo.component"
+              :data-kind="stageDemo.dataKind"
+            />
+          </StageFit>
         </div>
         <div class="component-detail__body vp-doc">
           <PropsPlayground v-if="route.tab === 'props'" :locale="route.locale" :slug="route.slug" />
