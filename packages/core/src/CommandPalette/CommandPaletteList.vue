@@ -11,14 +11,16 @@ const props = defineProps<CommandPaletteListProps>()
 const palette = inject(commandPaletteKey, null)
 const messages = useAstryxMessages()
 const label = computed(() => props.label ?? messages.value.commandPalette.listLabel)
+/** 没有可选项时它只是个空容器，不再当作 listbox 暴露给读屏。 */
+const hasOptions = computed(() => palette == null || palette.items.value.length > 0)
 </script>
 
 <template>
   <div
     :id="palette?.listId"
     class="astryx-command-palette-list"
-    role="listbox"
-    :aria-label="label"
+    :role="hasOptions ? 'listbox' : undefined"
+    :aria-label="hasOptions ? label : undefined"
   >
     <slot />
   </div>

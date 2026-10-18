@@ -17,7 +17,7 @@ footer: false
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用状态。Field 和 FieldLabel 只调整标签样式，控件本身由使用方禁用。</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示“可选”提示；与 <code>isRequired</code> 同时设置时优先。</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示“必填”提示；在 <code>TextInput</code> 中还会同时设置 <code>aria-required</code>。</td></tr>
-      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在标签前的 Vue 图标组件；<code>labelIcon</code> 插槽优先于该属性。</td></tr>
+      <tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>显示在标签前的 Vue 图标组件；<code>labelIcon</code> 插槽优先于该属性。</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息按钮，提示内容支持悬停、键盘聚焦和点击查看。</td></tr>
       <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>“可选”提示的本地化文字。</td></tr>
       <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>“必填”提示的本地化文字。</td></tr>
@@ -44,7 +44,7 @@ footer: false
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用状态。Field/FieldLabel 只改变标签样式，控件由使用方禁用。</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示可选提示。与 isRequired 同时设置时优先。</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示必填提示。TextInput 同时设置 aria-required。</td></tr>
-      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>标签前的 Vue 图标组件。labelIcon 插槽优先。</td></tr>
+      <tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>标签前的 Vue 图标组件。labelIcon 插槽优先。</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息按钮，支持悬停、键盘聚焦和点击。</td></tr>
       <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>可选提示的本地化文字。</td></tr>
       <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>必填提示的本地化文字。</td></tr>

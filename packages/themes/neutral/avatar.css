@@ -3,8 +3,8 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-avatar-fallback-background: light-dark(#e5e5e5, #525252);
-    --astryx-avatar-fallback-foreground: light-dark(#525252, #e5e5e5);
+    --astryx-avatar-fallback-background: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.1));
+    --astryx-avatar-fallback-foreground: light-dark(#474747, #9e9e9e);
     --astryx-avatar-status-dot-border-color: light-dark(#fff, #171717);
 
     --astryx-avatar-status-dot-neutral-background: light-dark(#fff, #171717);

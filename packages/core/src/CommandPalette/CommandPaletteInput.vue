@@ -27,7 +27,7 @@ const messages = useAstryxMessages()
 const inputRef = useTemplateRef<HTMLInputElement>('input')
 
 const placeholder = computed(() => props.placeholder ?? messages.value.commandPalette.placeholder)
-const label = computed(() => props.label ?? placeholder.value)
+const label = computed(() => props.label ?? messages.value.commandPalette.inputLabel)
 const value = computed(() => props.value ?? palette?.search.value ?? '')
 const activeDescendant = computed(() => {
   const index = palette?.highlightedIndex.value ?? -1
@@ -60,7 +60,7 @@ onMounted(() => {
       ref="input"
       :aria-activedescendant="activeDescendant"
       aria-autocomplete="list"
-      :aria-controls="palette?.listId"
+      :aria-controls="palette && palette.items.value.length > 0 ? palette.listId : undefined"
       :aria-expanded="palette ? true : undefined"
       :aria-label="label"
       class="astryx-command-palette-field"

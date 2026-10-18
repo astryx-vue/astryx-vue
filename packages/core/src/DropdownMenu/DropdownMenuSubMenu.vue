@@ -256,6 +256,7 @@ onBeforeUnmount(cancelClose)
 
 <template>
   <Item
+    v-bind="$attrs"
     ref="rowComponent"
     class="astryx-dropdown-menu-item"
     role="menuitem"

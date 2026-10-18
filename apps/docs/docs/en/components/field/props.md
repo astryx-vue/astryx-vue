@@ -17,7 +17,7 @@ footer: false
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>Disabled state. Field/FieldLabel only style the label. Consumers disable their custom control.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>Shows an optional indicator and takes precedence over isRequired.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>Shows a required indicator; TextInput also sets aria-required.</td></tr>
-      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Vue icon component before the label. The labelIcon slot takes precedence.</td></tr>
+      <tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>Vue icon component before the label. The labelIcon slot takes precedence.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Info button beside the label, available on hover, keyboard focus and click.</td></tr>
       <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>Localized optional indicator.</td></tr>
       <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>Localized required indicator.</td></tr>
@@ -44,7 +44,7 @@ footer: false
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>Disabled state. Field/FieldLabel only style the label. Consumers disable their custom control.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>Shows an optional indicator and takes precedence over isRequired.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>Shows a required indicator; TextInput also sets aria-required.</td></tr>
-      <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Vue icon component before the label. The labelIcon slot takes precedence.</td></tr>
+      <tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>Vue icon component before the label. The labelIcon slot takes precedence.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Info button beside the label, available on hover, keyboard focus and click.</td></tr>
       <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>Localized optional indicator.</td></tr>
       <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>Localized required indicator.</td></tr>

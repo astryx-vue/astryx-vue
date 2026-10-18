@@ -127,6 +127,7 @@ export const upstreamMessageMap: Record<string, readonly UpstreamTarget[]> = {
   ],
   '@astryx.commandPalette.emptyBootstrap': [{ path: 'commandPalette.emptyBootstrap' }],
   '@astryx.commandPalette.input.placeholder': [{ path: 'commandPalette.placeholder' }],
+  '@astryx.commandPalette.input.label': [{ path: 'commandPalette.inputLabel' }],
   '@astryx.commandPalette.list.label': [{ path: 'commandPalette.listLabel' }],
   '@astryx.commandPalette.loading': [{ path: 'commandPalette.loading' }],
   '@astryx.commandPalette.noResultsFor': [{ path: 'commandPalette.noResultsFor', args: ['query'] }],

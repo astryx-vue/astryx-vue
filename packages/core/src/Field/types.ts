@@ -1,4 +1,5 @@
 import type { Component, VNode } from 'vue'
+import type { IconName } from '../Icon/types.js'
 
 export type FieldStatusType = 'error' | 'warning' | 'success'
 export type FieldStatusVariant = 'attached' | 'detached'
@@ -20,7 +21,8 @@ export interface FieldLabelProps {
   isRequired?: boolean
   description?: string
   descriptionId?: string
-  labelIcon?: Component
+  /** 语义图标名（如 `'search'`），或一个图标组件。 */
+  labelIcon?: IconName | Component
   labelTooltip?: string
   optionalLabel?: string
   requiredLabel?: string

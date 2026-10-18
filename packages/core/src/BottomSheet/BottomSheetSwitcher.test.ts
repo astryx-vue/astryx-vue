@@ -105,4 +105,11 @@ describe('bottomSheetSwitcher', () => {
     expect(closing.vm.activeSheet).toBeNull()
     closing.unmount()
   })
+
+  it('passes extra attributes through to the dialog', () => {
+    const wrapper = mount(BottomSheetSwitcher, { attrs: { 'data-testid': 'switcher', 'id': 'my-switcher' } })
+    const dialog = wrapper.get('dialog')
+    expect(dialog.attributes('data-testid')).toBe('switcher')
+    expect(dialog.attributes('id')).toBe('my-switcher')
+  })
 })
