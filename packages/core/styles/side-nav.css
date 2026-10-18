@@ -267,6 +267,7 @@
     flex: none;
     align-items: center;
     justify-content: center;
+    gap: var(--astryx-spacing-1, 4px);
     width: 28px;
     height: 28px;
     padding: 0;
@@ -274,7 +275,26 @@
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: transparent;
     color: var(--astryx-color-text-secondary, #525252);
+    font: inherit;
     cursor: pointer;
+  }
+
+  .astryx-side-nav-collapse[data-size='md'] {
+    width: 32px;
+    height: 32px;
+  }
+
+  .astryx-side-nav-collapse[data-size='lg'] {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* With a visible label the button hugs its text instead of staying square. */
+  .astryx-side-nav-collapse--with-label {
+    width: auto;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
   }
 
   .astryx-side-nav-heading__chevron:hover,

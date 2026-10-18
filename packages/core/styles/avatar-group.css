@@ -34,6 +34,20 @@
     border-radius: var(--astryx-radius-full, 9999px);
   }
 
+  .astryx-avatar-group-overflow--interactive {
+    padding: 0;
+    font: inherit;
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .astryx-avatar-group-overflow--interactive:focus-visible {
+    outline: 2px solid var(--astryx-color-focus-ring, #0074e2);
+    outline-offset: 2px;
+  }
+
   .astryx-avatar-group-overflow--rounded {
     border-radius: var(--astryx-radius-element, 0.625rem);
   }

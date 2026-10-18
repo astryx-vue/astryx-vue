@@ -1,7 +1,7 @@
-import type { MultiSelectorHandle } from './types.js'
+import type { MultiSelectorHandle, MultiSelectorTriggerProps } from './types.js'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { nextTick, ref } from 'vue'
+import { h, nextTick, ref } from 'vue'
 import MultiSelector from './MultiSelector.vue'
 import { flattenOptions } from './options.js'
 
@@ -202,6 +202,113 @@ describe('multi selector', () => {
     handleRef.value?.open()
     await flush()
     expect(handleRef.value?.isOpen()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('clears every value through hasClear as well as clearable', async () => {
+    const wrapper = mountSelector({ modelValue: ['read', 'billing'], hasClear: true })
+    const clear = wrapper.get('.astryx-multi-selector-clear')
+    await clear.trigger('click')
+    await flush()
+    expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toEqual([])
+    wrapper.unmount()
+  })
+
+  it('keeps a disabled trigger focusable and explains why', async () => {
+    const wrapper = mountSelector({ disabled: true, disabledMessage: 'Ask an administrator' })
+    await flush()
+    const trigger = wrapper.get('.astryx-multi-selector-trigger')
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
+    const describedBy = trigger.attributes('aria-describedby') ?? ''
+    expect(wrapper.get(`#${describedBy}`).text()).toBe('Ask an administrator')
+
+    const tooltips = document.querySelectorAll<HTMLElement>('[role="tooltip"]')
+    const tooltip = tooltips[tooltips.length - 1]
+    expect(tooltip?.style.display).toBe('none')
+
+    vi.useFakeTimers()
+    await wrapper.get('.astryx-multi-selector-control').trigger('pointerenter')
+    vi.advanceTimersByTime(300)
+    await nextTick()
+    expect(tooltip?.textContent).toBe('Ask an administrator')
+    expect(tooltip?.style.display).not.toBe('none')
+    vi.useRealTimers()
+
+    await trigger.trigger('click')
+    await flush()
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    wrapper.unmount()
+  })
+
+  it('opens on mount with isDefaultOpen without stealing focus', async () => {
+    const wrapper = mountSelector({ isDefaultOpen: true, searchable: true })
+    await flush()
+    expect(wrapper.get('.astryx-multi-selector-trigger').attributes('aria-expanded')).toBe('true')
+    expect(document.querySelector('.astryx-multi-selector-listbox')).not.toBeNull()
+    expect(document.activeElement).not.toBe(document.querySelector('.astryx-multi-selector-search-input'))
+    wrapper.unmount()
+  })
+
+  it('emits click after the toggle and keydown only for the keys it leaves alone', async () => {
+    const order: string[] = []
+    const keys: string[] = []
+    const wrapper = mountSelector({
+      modelValue: ['read'],
+      onOpenChange: (isOpen: boolean) => order.push(isOpen ? 'open' : 'close'),
+      onClick: () => order.push('click'),
+      onKeydown: (event: KeyboardEvent) => keys.push(event.key),
+      onFocus: () => keys.push('focus'),
+    })
+    await flush()
+    const trigger = wrapper.get('.astryx-multi-selector-trigger')
+
+    await trigger.trigger('click')
+    await flush()
+    expect(order).toEqual(['open', 'click'])
+    await trigger.trigger('click')
+    await flush()
+    expect(order).toEqual(['open', 'click', 'close', 'click'])
+
+    await trigger.trigger('focus')
+    expect(keys).toEqual(['focus'])
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    expect(keys).toEqual(['focus'])
+    await trigger.trigger('keydown', { key: 'Shift' })
+    expect(keys).toEqual(['focus', 'Shift'])
+    wrapper.unmount()
+  })
+
+  it('hangs the panel off a custom trigger and drops the field chrome', async () => {
+    const wrapper = mount(MultiSelector, {
+      attachTo: document.body,
+      props: { label: 'Access', options, modelValue: ['read'] },
+      slots: {
+        trigger: (props: MultiSelectorTriggerProps) => h('button', {
+          'id': props.id,
+          'ref': props.triggerRef,
+          'data-testid': 'chip',
+          'aria-haspopup': props['aria-haspopup'],
+          'aria-expanded': props['aria-expanded'],
+          'aria-controls': props['aria-controls'],
+          'onClick': props.onClick,
+          'onKeyDown': props.onKeyDown,
+          'onFocus': props.onFocus,
+        }, 'Filters'),
+      },
+    })
+    await flush()
+    expect(wrapper.find('.astryx-field').exists()).toBe(false)
+    expect(wrapper.find('.astryx-multi-selector-trigger').exists()).toBe(false)
+
+    const chip = wrapper.get('[data-testid="chip"]')
+    expect(chip.attributes('aria-haspopup')).toBe('listbox')
+    expect(chip.attributes('aria-expanded')).toBe('false')
+
+    await chip.trigger('click')
+    await flush()
+    expect(chip.attributes('aria-expanded')).toBe('true')
+    expect(document.querySelector('.astryx-multi-selector-listbox')).not.toBeNull()
     wrapper.unmount()
   })
 })

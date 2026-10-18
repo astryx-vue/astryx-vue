@@ -251,7 +251,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
             <Heading v-if="!isNarrow" :level="2">
               Login & security
             </Heading>
-            <TabList v-model:value="activeTab" has-divider>
+            <TabList role="tablist" v-model:value="activeTab" has-divider>
               <Tab value="login" label="Login" />
               <Tab value="shared" label="Shared access" />
             </TabList>

@@ -4,6 +4,7 @@ import { ref } from 'vue'
 
 const columns = ref(['name', 'email'])
 const filters = ref<string[]>([])
+const lockedColumns = ref(['name'])
 </script>
 
 <template>
@@ -36,6 +37,16 @@ const filters = ref<string[]>([])
       placeholder="All statuses"
       optional
       trigger-display="badges"
+    />
+    <MultiSelector
+      v-model="lockedColumns"
+      :options="[
+        { value: 'name', label: 'Name' },
+        { value: 'email', label: 'Email' },
+      ]"
+      label="Locked columns"
+      disabled
+      disabled-message="Ask an administrator to change the saved view"
     />
   </div>
 </template>

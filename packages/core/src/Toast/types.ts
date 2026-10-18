@@ -1,6 +1,9 @@
-import type { Component } from 'vue'
+import type { Component, VNode } from 'vue'
 
 export type ToastType = 'info' | 'success' | 'warning' | 'error'
+
+/** 提示消失的原因：`auto` 是计时器关的，`manual` 是人或代码关的。 */
+export type ToastDismissReason = 'auto' | 'manual'
 
 /**
  * What happens when a new toast reuses a `uniqueID` that is already on screen.
@@ -20,13 +23,21 @@ export interface ToastOptions {
    */
   body: string
   /**
-   * Whether the toast should auto-dismiss.
-   * @default true
+   * Whether the toast dismisses itself. Defaults to true, except for
+   * `error`, which stays until it is dismissed.
    */
-  autoClose?: boolean
+  isAutoHide?: boolean
   /**
    * Auto-dismiss duration in milliseconds.
    * @default 5000
+   */
+  autoHideDuration?: number
+  /**
+   * Older name of `isAutoHide`. Both work; `isAutoHide` wins.
+   */
+  autoClose?: boolean
+  /**
+   * Older name of `autoHideDuration`. Both work; `autoHideDuration` wins.
    */
   duration?: number
   /**
@@ -45,16 +56,28 @@ export interface ToastOptions {
    * Pass a component; for a one-off render, pass a function component.
    */
   endContent?: Component
+  /**
+   * Runs when this toast is dismissed from inside the card: the timer, the
+   * close button, or a swipe.
+   */
+  onDismiss?: (reason: ToastDismissReason) => void
+  /**
+   * Runs when this toast is removed, however it was dismissed, including the
+   * programmatic dismiss returned by `useToast()`.
+   */
+  onHide?: (reason: ToastDismissReason) => void
 }
 
 export interface ToastItem {
   id: string
   type: ToastType
   body: string
-  autoClose: boolean
-  duration: number
+  isAutoHide: boolean
+  autoHideDuration: number
   uniqueID?: string
   endContent?: Component
+  onDismiss?: (reason: ToastDismissReason) => void
+  onHide?: (reason: ToastDismissReason) => void
   /**
    * True once the toast has been asked to close. The toast stays mounted so it
    * can play its exit transition, then leaves the store.
@@ -62,4 +85,29 @@ export interface ToastItem {
   isExiting: boolean
 }
 
+/** 传给 `content` 插槽的值。 */
+export interface ToastContentScope {
+  /** 提示正文，和 `body` 属性一致。 */
+  body: string
+  /** 末尾内容，和 `endContent` 属性一致。 */
+  endContent?: Component
+  /** 提示类型。 */
+  type: ToastType
+  /** 这条提示会不会自动消失。 */
+  isAutoHide: boolean
+  /** 自动消失的时长，单位毫秒。 */
+  autoHideDuration: number
+  /** 关掉这条提示。 */
+  dismiss: () => void
+}
+
 export type ToastPlacement = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end'
+
+export interface ToastSlots {
+  /** 替换正文文字。 */
+  default?: () => VNode[]
+  /** 末尾内容，替代 `endContent` 属性。 */
+  end?: () => VNode[]
+  /** 替换整块卡片内容，带 `ToastContentScope` 参数；这时不再渲染自带的关闭按钮。 */
+  content?: (scope: ToastContentScope) => VNode[]
+}

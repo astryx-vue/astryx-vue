@@ -17,10 +17,10 @@ footer: false
       <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Hides the label visually and keeps it available to assistive tech.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td>Search…</td><td>Placeholder while there are no filters.</td></tr>
       <tr><td><code>autofocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Focus the input after mount.</td></tr>
-      <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows clear all once a filter exists.</td></tr>
+      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows clear all once a filter exists. The older <code>clearable</code> name works too.</td></tr>
       <tr><td><code>readOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Blocks adding, editing, and removing.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Turns the whole search off.</td></tr>
-      <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>-</td><td>Why it is off. The input stays focusable when this is set.</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>-</td><td>Why it is off. With <code>disabled</code>, the message shows in a tooltip on hover or keyboard focus and the input stays focusable with <code>aria-disabled</code>. The older <code>disabledReason</code> name works too.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>default</code></td><td>Validation status.</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>-</td><td>Status text.</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached'</code></td><td><code>attached</code></td><td>Places the message against the field, or with a gap.</td></tr>
@@ -28,8 +28,8 @@ footer: false
       <tr><td><code>maxSearchResults</code></td><td><code>number</code></td><td><code>10</code></td><td>Ranked field results for a non-empty query. An empty query browses up to 1,000 fields.</td></tr>
       <tr><td><code>maxOperatorMenuItems</code></td><td><code>number</code></td><td><code>10</code></td><td>Suggestions in string and entity value editors. It does not cap the field menu or enum menus.</td></tr>
       <tr><td><code>menuWidth</code></td><td><code>number</code></td><td>-</td><td>Exact pixel width of the field menu. It does not size the value editor.</td></tr>
-      <tr><td><code>saveLabel</code></td><td><code>string</code></td><td>Apply</td><td>Label of the editor’s save button.</td></tr>
-      <tr><td><code>timeZone</code></td><td><code>string</code></td><td>-</td><td>Time zone used when a date is shown, such as America/New_York.</td></tr>
+      <tr><td><code>popoverSaveButtonLabel</code></td><td><code>string</code></td><td>Apply</td><td>Label of the save button in the filter editor popover. The older <code>saveLabel</code> name works too.</td></tr>
+      <tr><td><code>timezoneID</code></td><td><code>string</code></td><td>-</td><td>Time zone used when a date is shown, such as America/New_York. The older <code>timeZone</code> name works too.</td></tr>
       <tr><td><code>overflow</code></td><td><code>'none' | 'unfocused-inline' | 'unfocused-layer'</code></td><td><code>none</code></td><td>Wrap tokens, collapse them on blur, or expand them in a layer.</td></tr>
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>Match count. A number is formatted with the result plural. A string is shown as given.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>Size of the input and the tokens.</td></tr>
@@ -54,7 +54,7 @@ footer: false
 
 ## Slots
 
-The icon sits before the tokens. End content sits before the clear button and is the place for another action. The token and editor slots win over a component registered for a value type.
+The icon sits before the tokens. <code>endContent</code> (also accepted as <code>end</code>) sits before the clear button and is the place for another action. The token and editor slots win over a component registered for a value type.
 
 The component also exposes focus and blur methods, so a button outside the field can send the cursor back.
 

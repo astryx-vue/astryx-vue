@@ -1,6 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import Selector from '../Selector/Selector.vue'
 import Pagination from './Pagination.vue'
 
 describe('pagination', () => {
@@ -382,5 +383,39 @@ describe('pagination', () => {
 
     const labels = wrapper.findAll('.astryx-pagination-page').map(page => page.text())
     expect(labels).toEqual(['1', '...', '10', '...', '20'])
+  })
+
+  it('labels the landmark and lets the label be overridden', () => {
+    const fallback = mount(Pagination, { props: { page: 1, pageSize: 10, total: 100 } })
+    expect(fallback.get('nav').attributes('aria-label')).toBe('Pagination')
+
+    const labelled = mount(Pagination, { props: { page: 1, pageSize: 10, total: 100, label: 'Search results' } })
+    expect(labelled.get('nav').attributes('aria-label')).toBe('Search results')
+  })
+
+  it('accepts totalItems and isDisabled as names for total and disabled', () => {
+    const wrapper = mount(Pagination, { props: { page: 1, pageSize: 10, totalItems: 200 } })
+    const labels = wrapper.findAll('.astryx-pagination-page').map(page => page.text())
+    expect(labels[0]).toBe('1')
+    expect(labels.at(-1)).toBe('20')
+    expect(labels).toContain('...')
+
+    const disabled = mount(Pagination, { props: { page: 2, pageSize: 10, total: 100, isDisabled: true } })
+    expect(disabled.get('nav').classes()).toContain('is-disabled')
+    expect(disabled.get('.astryx-pagination-next').attributes('disabled')).toBeDefined()
+  })
+
+  it('reports pageSizeChange and returns to the first page', async () => {
+    const wrapper = mount(Pagination, {
+      props: { 'page': 4, 'pageSize': 10, 'total': 200, 'showSizeChanger': true, 'onUpdate:page': (page: number) => wrapper.setProps({ page }), 'onUpdate:pageSize': (pageSize: number) => wrapper.setProps({ pageSize }) },
+    })
+
+    wrapper.findComponent(Selector).vm.$emit('update:modelValue', 20)
+    await flushPromises()
+
+    expect(wrapper.emitted('pageSizeChange')?.[0]).toEqual([20])
+    expect(wrapper.emitted('update:pageSize')?.[0]).toEqual([20])
+    expect(wrapper.emitted('update:page')?.[0]).toEqual([1])
+    expect(wrapper.emitted('change')?.[0]).toEqual([1, 20])
   })
 })

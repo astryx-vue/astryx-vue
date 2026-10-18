@@ -9,19 +9,23 @@ const value = ref('inbox')
 <template>
   <TabList v-model:value="value">
     <Tab value="inbox">
+      <template #endContent>
+        <Badge variant="error">
+          5
+        </Badge>
+      </template>
       Inbox
-      <Badge variant="error">
-        5
-      </Badge>
     </Tab>
     <Tab value="sent">
       Sent
     </Tab>
     <Tab value="drafts">
+      <template #endContent>
+        <Badge variant="neutral">
+          2
+        </Badge>
+      </template>
       Drafts
-      <Badge variant="neutral">
-        2
-      </Badge>
     </Tab>
   </TabList>
 </template>

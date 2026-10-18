@@ -30,6 +30,8 @@ export interface CommandPaletteProps<T extends SearchableItem = SearchableItem> 
 
 export interface CommandPaletteEmits {
   openChange: [isOpen: boolean]
+  /** Selected value in picker mode. `onValueChange` in the original API. */
+  valueChange: [value: string]
 }
 
 export interface CommandPaletteItemSlotProps<T extends SearchableItem = SearchableItem> {
@@ -48,6 +50,17 @@ export interface CommandPaletteInputProps {
   label?: string
   /** @default true */
   hasAutoFocus?: boolean
+  /**
+   * Search value. Bind with `v-model:value`.
+   * Read from the surrounding CommandPalette when omitted.
+   */
+  value?: string
+}
+
+export interface CommandPaletteInputEmits {
+  /** Next search value. Fired by `onValueChange` in the original API. */
+  'valueChange': [value: string]
+  'update:value': [value: string]
 }
 
 export interface CommandPaletteListProps {
@@ -61,4 +74,21 @@ export interface CommandPaletteGroupProps {
 export interface CommandPaletteItemProps {
   value: string
   isDisabled?: boolean
+  /**
+   * Whether this item is the active keyboard result.
+   * Derived from the surrounding CommandPalette when omitted.
+   * @default false
+   */
+  isHighlighted?: boolean
+  /**
+   * Whether this item represents the selected value in picker mode.
+   * Derived from the surrounding CommandPalette when omitted.
+   * @default false
+   */
+  isSelected?: boolean
+}
+
+export interface CommandPaletteItemEmits {
+  /** Fired after the item is activated by pointer. */
+  select: [value: string]
 }

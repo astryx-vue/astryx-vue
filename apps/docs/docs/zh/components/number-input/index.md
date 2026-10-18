@@ -12,7 +12,7 @@ import { numberInputClearable, numberInputRange, numberInputStatus, numberInputU
 
 ## 使用方法
 
-`NumberInput` 是一个专门用于数字输入的组件，提供步进按钮、最小最大值限制、精度控制等功能。用户可以手动输入数字，也可以点击按钮增减。
+`NumberInput` 是一个专门用于数字输入的组件，提供最小最大值限制、精度控制等功能。用户可以手动输入数字；需要加减按钮时加上 `hasNumberSteppers`。
 
 基本用法只需要绑定一个数字值：
 
@@ -30,6 +30,8 @@ const count = ref(0)
 ```
 
 通过 `min` 和 `max` 属性设置数值范围，`step` 设置每次增减的步长。超出范围的值会被限制在有效区间内。步进按钮使用向上和向下的箭头。按钮的无障碍名称默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文；如果传了 `label`，名称里会带上它。
+
+还有三个属性让字段贴合它装的数字：`isIntegerOnly` 让小数进不了值；`formatValue` 让字段闲着时显示易读的样子，比如 `1234 件`，聚焦后换回原始数字；`isWheelEnabled={false}` 让滚轮只滚页面、不改数值。
 
 
 <ComponentAnatomy />

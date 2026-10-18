@@ -108,7 +108,7 @@ export type { MenuPress, MenuPressOptions } from './useMenuPress.js'
 export { addMonths, buildMonthGrid, parseISODate, todayISODate, toISODate } from './useMonthGrid.js'
 
 export { useNumberField } from './useNumberField.js'
-export type { NumberField, UseNumberFieldOptions } from './useNumberField.js'
+export type { NumberField, NumberStepDirection, UseNumberFieldOptions } from './useNumberField.js'
 
 export { computeOverflow, useOverflow } from './useOverflow.js'
 export type {

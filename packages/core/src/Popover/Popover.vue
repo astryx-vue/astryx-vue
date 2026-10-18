@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PopoverProps } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useId, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useId, watch, watchEffect } from 'vue'
 import { Button } from '../Button/index.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
@@ -25,16 +25,28 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   hasAutoFocus: true,
   hasLightDismiss: true,
   hasEscapeDismiss: true,
+  anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 
 const GAP = 4
 const DEFAULT_MAX_WIDTH = 320
 const popoverId = `astryx-popover-${useId()}`
+const wrapperRef = ref<HTMLElement | null>(null)
 const anchorRef = ref<HTMLElement | null>(null)
 const surfaceRef = ref<HTMLElement | null>(null)
 const isOpenState = ref(false)
 const anchorWidth = ref(0)
+
+// The layer follows the external anchor when there is one, and the wrapper
+// around the trigger content otherwise.
+watchEffect(() => {
+  anchorRef.value = triggerHost()
+})
+
+function triggerHost(): HTMLElement | null {
+  return props.anchor ?? wrapperRef.value
+}
 
 const { position, detach: detachPosition } = usePositionedLayer({
   anchor: anchorRef,
@@ -124,7 +136,7 @@ function onTriggerKeydown(event: KeyboardEvent): void {
 }
 
 function bindButton(): void {
-  const next = findTriggerButton(anchorRef.value)
+  const next = findTriggerButton(triggerHost())
   if (next === boundButton)
     return
   unbindButton()
@@ -162,7 +174,7 @@ function focusInitialTarget(): void {
 watch(isOpenState, (open) => {
   syncTriggerAttributes()
   if (open) {
-    anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
+    anchorWidth.value = triggerHost()?.getBoundingClientRect().width ?? 0
     if (props.hasAutoFocus && props.role === 'dialog')
       nextTick(focusInitialTarget)
     return
@@ -183,6 +195,10 @@ watch(() => props.isEnabled, (enabled) => {
     setOpen(false)
 })
 
+watch(() => props.anchor, () => {
+  void nextTick(bindButton)
+})
+
 onMounted(() => {
   bindButton()
   if (props.isOpen !== undefined)
@@ -198,9 +214,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <span ref="anchorRef" class="astryx-popover-trigger">
+  <span v-if="!anchor" ref="wrapperRef" class="astryx-popover-trigger">
     <slot />
   </span>
+  <slot v-else />
   <Teleport to="body">
     <div
       v-show="isOpenState"

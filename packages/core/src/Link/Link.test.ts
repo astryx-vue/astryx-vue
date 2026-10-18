@@ -149,4 +149,12 @@ describe('link', () => {
     expect(wrapper.text()).toContain('新标签页')
     expect(wrapper.get('.astryx-link__external').attributes('aria-hidden')).toBe('true')
   })
+
+  it('forwards referrerPolicy as the referrerpolicy attribute', () => {
+    const wrapper = mount(Link, { props: { href: '/docs', referrerPolicy: 'no-referrer' }, slots: { default: 'Docs' } })
+    expect(wrapper.get('a').attributes('referrerpolicy')).toBe('no-referrer')
+
+    const plain = mount(Link, { props: { href: '/docs' }, slots: { default: 'Docs' } })
+    expect(plain.get('a').attributes('referrerpolicy')).toBeUndefined()
+  })
 })

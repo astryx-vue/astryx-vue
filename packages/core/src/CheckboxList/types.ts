@@ -15,6 +15,8 @@ export interface CheckboxListProps {
    * 整组被禁用的原因。和 isDisabled 一起用时，每一行仍可聚焦，悬停或键盘聚焦能看到原因。
    * 单独禁用某一行时不用这句。
    */
+  disabledMessage?: string
+  /** 整组被禁用的原因。等同于 disabledMessage。 */
   disabledReason?: string
   /**
    * 整组只读。勾选状态还在，也不会变暗，但不能改。

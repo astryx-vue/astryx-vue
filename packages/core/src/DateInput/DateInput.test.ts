@@ -337,6 +337,53 @@ describe('dateInput', () => {
     expect(wrapper.get('input.astryx-date-input-field').attributes('aria-busy')).toBeUndefined()
   })
 
+  it('shows the clear button through hasClear and through the older clearable name', () => {
+    const viaHasClear = mount(DateInput, { props: { label: 'Due', modelValue: new Date(2026, 2, 15), hasClear: true } })
+    expect(viaHasClear.find('.astryx-date-input-clear').exists()).toBe(true)
+
+    const viaClearable = mount(DateInput, { props: { label: 'Due', modelValue: new Date(2026, 2, 15), clearable: true } })
+    expect(viaClearable.find('.astryx-date-input-clear').exists()).toBe(true)
+
+    const withoutClear = mount(DateInput, { props: { label: 'Due', modelValue: new Date(2026, 2, 15) } })
+    expect(withoutClear.find('.astryx-date-input-clear').exists()).toBe(false)
+  })
+
+  it('returns focus to the input after clearing', async () => {
+    const wrapper = mount(DateInput, {
+      props: { label: 'Due', modelValue: new Date(2026, 2, 15), hasClear: true },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-date-input-clear').trigger('click')
+    await nextTick()
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
+    expect(document.activeElement).toBe(wrapper.get('input.astryx-date-input-field').element)
+  })
+
+  it('keeps a disabled field focusable while a disabledMessage explains why', async () => {
+    const wrapper = mount(DateInput, {
+      props: { label: 'Due', modelValue: new Date(2026, 2, 15), disabled: true, disabledMessage: 'Only editors can change the date' },
+      attachTo: document.body,
+    })
+    const input = wrapper.get<HTMLInputElement>('input.astryx-date-input-field')
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('readonly')).toBe('')
+    expect(input.attributes('aria-disabled')).toBe('true')
+    expect(input.attributes('aria-describedby')?.split(' ')).toContain(`${input.attributes('id')}-disabled`)
+    expect(wrapper.text()).toContain('Only editors can change the date')
+
+    input.element.focus()
+    await nextTick()
+    const tooltip = document.querySelector<HTMLElement>('[role="tooltip"]')
+    expect(tooltip?.textContent).toBe('Only editors can change the date')
+    expect(tooltip?.style.display).not.toBe('none')
+  })
+
+  it('treats a blank disabledMessage as absent', () => {
+    const wrapper = mount(DateInput, { props: { label: 'Due', disabled: true, disabledMessage: '   ' } })
+    expect(wrapper.get('input.astryx-date-input-field').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('input.astryx-date-input-field').attributes('aria-disabled')).toBeUndefined()
+  })
+
   it('rejects a native date that fails a constraint', async () => {
     const wrapper = mount(DateInput, {
       props: {

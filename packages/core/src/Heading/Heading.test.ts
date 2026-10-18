@@ -62,4 +62,11 @@ describe('heading', () => {
     expect(heading.classes()).toContain('astryx-heading--justify-center')
     expect(heading.classes()).toContain('astryx-heading--strike')
   })
+
+  it('trims the leading with hasCapsize and drops the inline display', () => {
+    const capped = mount(Heading, { props: { level: 2, hasCapsize: true, display: 'inline' }, slots: { default: 'Title' } })
+    expect(capped.classes()).toContain('astryx-heading--capsize')
+    expect(capped.classes()).not.toContain('astryx-heading--inline')
+    expect(capped.element.tagName).toBe('H2')
+  })
 })

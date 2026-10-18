@@ -40,7 +40,12 @@ export interface SelectorProps {
   placeholder?: string
   /** 是否禁用 */
   disabled?: boolean
-  /** 禁用原因（鼠标悬停时显示） */
+  /**
+   * 禁用原因。禁用时鼠标悬停或键盘聚焦会弹出提示，触发器保持可聚焦（aria-disabled），
+   * 但打不开列表。不用再在外面套 Tooltip：禁用的控件收不到悬停事件。
+   */
+  disabledMessage?: string
+  /** 禁用原因（旧名，和 disabledMessage 等价） */
   disabledReason?: string
   /** 状态。可以是 `'error'`，也可以是 `{ type, message }`。 */
   status?: SelectorStatusInput
@@ -67,8 +72,10 @@ export interface SelectorProps {
   searchable?: boolean
   /** 搜索占位文本 */
   searchPlaceholder?: string
-  /** 是否可清除 */
+  /** 是否可清除。和 hasClear 等价，两者任一为真即生效。 */
   clearable?: boolean
+  /** 是否可清除（原版名字） */
+  hasClear?: boolean
   /** 清除按钮标签 */
   clearLabel?: string
   /** 没有任何选项时的空状态。 */
@@ -108,6 +115,12 @@ export interface SelectorEmits {
   'update:modelValue': [value: string | number | null]
   'change': [value: string | number | null]
   'search': [query: string]
+  /** 触发器上的点击。先执行，再切换面板；event.preventDefault() 不会阻止面板打开。 */
+  'click': [event: MouseEvent]
+  /** 触发器获得焦点时触发。 */
+  'focus': [event: FocusEvent]
+  /** 触发器上的按键。内置键盘模型处理（并取消）的按键不再透出。 */
+  'keydown': [event: KeyboardEvent]
 }
 
 export interface SelectorSlots {

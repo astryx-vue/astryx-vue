@@ -1,12 +1,19 @@
-import type { CSSProperties, Ref } from 'vue'
+import type { CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPosition } from '../layer/position.js'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, toValue, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 
 export interface AnchoredListbox {
   position: Ref<LayerPosition>
   style: Ref<CSSProperties>
+}
+
+/** 想要的宽度再宽也要给视口留边。没给就不插手宽度。 */
+export function requestedMenuWidth(menuWidth: number | undefined): string | undefined {
+  if (menuWidth == null)
+    return undefined
+  return `min(${menuWidth}px, calc(100vw - 16px))`
 }
 
 /**
@@ -16,6 +23,8 @@ export function useAnchoredListbox(options: {
   anchor: Ref<HTMLElement | null>
   layer: Ref<HTMLElement | null>
   isOpen: Ref<boolean>
+  /** 下拉想要的宽度，单位像素。再宽也会被视口截住。 */
+  menuWidth?: MaybeRefOrGetter<number | undefined>
   onDismiss: () => void
 }): AnchoredListbox {
   const placement = computed(() => 'below' as const)
@@ -42,7 +51,6 @@ export function useAnchoredListbox(options: {
   function syncWidth(): void {
     anchorWidth.value = options.anchor.value?.getBoundingClientRect().width ?? 0
   }
-
   watch(options.isOpen, (open) => {
     if (open)
       syncWidth()
@@ -53,7 +61,9 @@ export function useAnchoredListbox(options: {
   const style = computed<CSSProperties>(() => ({
     top: `${position.value.top}px`,
     left: `${position.value.left}px`,
+    // 不窄于锚点，宽的时候再按 menuWidth 来，太宽交给视口裁。
     minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
+    width: requestedMenuWidth(toValue(options.menuWidth)),
   }))
 
   return { position, style }

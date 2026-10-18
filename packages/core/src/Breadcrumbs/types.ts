@@ -1,5 +1,6 @@
 import type { ComputedRef } from 'vue'
 import type { DropdownMenuOption, DropdownMenuSize } from '../DropdownMenu/types.js'
+import type { NavLinkComponent } from '../NavItem/types.js'
 
 export type BreadcrumbsVariant = 'default' | 'supporting'
 
@@ -29,6 +30,11 @@ export interface BreadcrumbItemProps {
    * Mutually exclusive with `menu`: a menu crumb is a trigger, not a link.
    */
   href?: string
+  /**
+   * Link root component, such as a router link. Used instead of `a` for
+   * non-current items that have an `href`.
+   */
+  as?: NavLinkComponent
   /**
    * Marks this item as the current page. Renders as a span with aria-current="page".
    * A current crumb can still open `menu`.

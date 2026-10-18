@@ -36,9 +36,9 @@ const options = [
 
 Each option has a `value` and a `label`. Set `disabled` to skip an option, or `description` to add a second line of text.
 
-`searchable` shows a search field that filters the list. `clearable` adds a clear button next to the current value. The menu is at least as wide as the trigger, and grows when an option label is longer.
+`searchable` shows a search field that filters the list. `hasClear` adds a clear button next to the current value; `clearable` is the older name. The menu is at least as wide as the trigger, and grows when an option label is longer.
 
-A read-only field keeps the current value, stays focusable, and still submits with the form. It does not open, and it has no clear button or chevron. It does not dim. Disabled wins when both are set. While loading, the trigger shows a spinner and the menu does not claim that nothing was found. An empty catalog and a search with no matches use different sentences. The check mark sits at the end of a selected row by default, and can move to the start. An unselected row does not reserve space for it.
+A read-only field keeps the current value, stays focusable, and still submits with the form. It does not open, and it has no clear button or chevron. It does not dim. Disabled wins when both are set. While loading, the trigger shows a spinner and the menu does not claim that nothing was found. An empty catalog and a search with no matches use different sentences. The check mark sits at the end of a selected row by default, and can move to the start. An unselected row does not reserve space for it. `disabledMessage` explains a disabled field: a tooltip follows hover and keyboard focus, the trigger stays focusable through `aria-disabled`, and the list still does not open.
 
 Arrow keys move the highlight. Home and End jump to the ends. Enter selects the highlighted option, and Escape closes the list. Once the search field is open, the arrow keys and Enter apply there, and Space still types a character.
 
@@ -103,7 +103,7 @@ Built-in strings such as the placeholder and the empty state are English. Call `
 
 <DemoExample
   :demo="selectorStates"
-  description="Read-only keeps the current value. Loading does not claim the catalog is empty. Required is marked beside the label. A search with no matches uses its own sentence, and the check mark can sit at the start of the row."
+  description="Read-only keeps the current value. Loading does not claim the catalog is empty. Required is marked beside the label. A disabled field explains itself in a tooltip on hover or keyboard focus and stays focusable. A search with no matches uses its own sentence, and the check mark can sit at the start of the row."
   locale="en"
-  title="Read-only, loading, and search"
+  title="Read-only, disabled, loading, and search"
 />

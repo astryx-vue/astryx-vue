@@ -1,6 +1,6 @@
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { createStaticSource } from '../composables/useAsyncSource.js'
 import Tokenizer from './Tokenizer.vue'
@@ -15,6 +15,11 @@ async function flush(): Promise<void> {
   await Promise.resolve()
   await nextTick()
 }
+
+// 下拉挂在 body 上，前一个用例断言失败时可能留下节点，每个用例开始前清干净。
+afterEach(() => {
+  document.body.innerHTML = ''
+})
 
 function mountTokenizer(props: Record<string, unknown> = {}) {
   return mount(Tokenizer, {
@@ -83,6 +88,85 @@ describe('tokenizer', () => {
     await wrapper.get('input').trigger('blur')
     await flush()
     expect(wrapper.text()).toContain('+2')
+    wrapper.unmount()
+  })
+})
+
+describe('tokenizer aliases and additions', () => {
+  it('treats hasClear as the name for clearable', async () => {
+    const wrapper = mountTokenizer({ modelValue: [people[0]], hasClear: true })
+    expect(wrapper.find('.astryx-tokenizer-clear').exists()).toBe(true)
+    await wrapper.setProps({ hasClear: false })
+    expect(wrapper.find('.astryx-tokenizer-clear').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('treats hasCreate as the name for creatable and offers it below minQueryLength', async () => {
+    const wrapper = mountTokenizer({ hasCreate: true, minQueryLength: 3, showOnFocus: false })
+    const input = wrapper.get('input[role="combobox"]')
+    await input.setValue('Li')
+    await flush()
+    // 两个字符不到搜索下限，但「新建」是从输入的文字派生的，照样给。
+    expect(input.attributes('aria-expanded')).toBe('true')
+    const options = [...document.querySelectorAll<HTMLElement>('.astryx-typeahead-option')]
+    expect(options).toHaveLength(1)
+    expect(options[0]?.textContent).toContain('Create')
+    wrapper.unmount()
+  })
+
+  it('skips the search below minQueryLength', async () => {
+    const search = vi.fn(() => people)
+    const wrapper = mountTokenizer({ searchSource: { search }, minQueryLength: 3, showOnFocus: false })
+    const input = wrapper.get('input[role="combobox"]')
+    await input.setValue('ad')
+    await flush()
+    expect(search).not.toHaveBeenCalled()
+    expect(input.attributes('aria-expanded')).toBe('false')
+    wrapper.unmount()
+  })
+
+  it('emits changeQuery next to search', async () => {
+    const wrapper = mountTokenizer({ showOnFocus: false })
+    await wrapper.get('input[role="combobox"]').setValue('gr')
+    await flush()
+    expect(wrapper.emitted('search')?.[0]).toEqual(['gr'])
+    expect(wrapper.emitted('changeQuery')?.[0]).toEqual(['gr'])
+    wrapper.unmount()
+  })
+
+  it('emits focus and blur only when focus crosses the field boundary', async () => {
+    const wrapper = mountTokenizer({ modelValue: [people[0], people[1]] })
+    const control = wrapper.get('.astryx-tokenizer-control')
+    await control.trigger('focusin', { relatedTarget: document.body })
+    await flush()
+    expect(wrapper.emitted('focus')).toHaveLength(1)
+
+    // 在字段内部换焦点不算离开。
+    await control.trigger('focusout', { relatedTarget: wrapper.get('.astryx-tokenizer-token').element })
+    await flush()
+    expect(wrapper.emitted('blur')).toBeUndefined()
+
+    await control.trigger('focusout', { relatedTarget: document.body })
+    await flush()
+    expect(wrapper.emitted('blur')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('reads the disabled message out when disabled', async () => {
+    const wrapper = mountTokenizer({ disabled: true, disabledMessage: 'Admins only' })
+    const input = wrapper.get('input[role="combobox"]')
+    expect(input.attributes('aria-disabled')).toBe('true')
+    expect(input.attributes('disabled')).toBeUndefined()
+    await input.trigger('focus')
+    await flush()
+    expect(document.querySelector('[role="tooltip"]')?.textContent).toContain('Admins only')
+    wrapper.unmount()
+  })
+
+  it('focuses the input on mount with hasAutoFocus', async () => {
+    const wrapper = mountTokenizer({ hasAutoFocus: true })
+    await flush()
+    expect(document.activeElement).toBe(wrapper.get('input[role="combobox"]').element)
     wrapper.unmount()
   })
 })

@@ -47,6 +47,22 @@ footer: false
   </table>
 </div>
 
+<div class="component-api-table" role="region" aria-label="AvatarGroupOverflow 事件" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>click</code></td>
+        <td>点击这个指示器时触发。加了监听器后它变成可聚焦的按钮，不再是一个静止的图形。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+默认插槽会替换 <code>+N</code> 这段文字，例如写成 <code>12+</code>。
+
 ## 插槽
 
 <div class="component-api-table" role="region" aria-label="AvatarGroup 插槽" tabindex="0">

@@ -181,4 +181,13 @@
     overflow: hidden;
     -webkit-box-orient: vertical;
   }
+
+  /* Optical alignment: trim the leading above the cap height and below the
+     alphabetic baseline so the glyphs sit flush with the box edges. Kept last
+     so it also wins over the truncation display mode, like the original. */
+  .astryx-text--capsize {
+    display: block;
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
 }

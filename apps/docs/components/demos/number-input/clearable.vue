@@ -7,6 +7,6 @@ const value = ref<number | null>(75)
 
 <template>
   <div style="width: 300px; max-width: 100%">
-    <NumberInput v-model="value" label="Progress" units="%" :min="0" :max="100" clearable />
+    <NumberInput v-model="value" label="Progress" units="%" :min="0" :max="100" has-clear />
   </div>
 </template>

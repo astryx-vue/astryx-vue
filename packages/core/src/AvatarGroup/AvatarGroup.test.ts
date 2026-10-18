@@ -88,6 +88,30 @@ describe('avatarGroup', () => {
     expect(overflow.text()).toBe('+5')
   })
 
+  it('renders the overflow indicator as a button once it has a click listener', async () => {
+    const wrapper = mount(AvatarGroupOverflow, {
+      props: { count: 7 },
+      attrs: { onClick: () => {} },
+    })
+
+    expect(wrapper.element.tagName).toBe('BUTTON')
+    expect(wrapper.attributes('type')).toBe('button')
+    expect(wrapper.attributes('role')).toBeUndefined()
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('click')).toHaveLength(1)
+  })
+
+  it('keeps a static indicator without a click listener and accepts custom text', () => {
+    const wrapper = mount(AvatarGroupOverflow, {
+      props: { count: 12 },
+      slots: { default: '12+' },
+    })
+
+    expect(wrapper.element.tagName).toBe('SPAN')
+    expect(wrapper.attributes('role')).toBe('img')
+    expect(wrapper.text()).toBe('12+')
+  })
+
   it('names the group, and accepts a custom label', () => {
     const wrapper = mount(AvatarGroup, {
       slots: { default: '<span />' },

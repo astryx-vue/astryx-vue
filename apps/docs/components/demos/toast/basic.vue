@@ -4,15 +4,15 @@ import { ToastViewport, useToast } from '@astryx-vue/core/Toast'
 const toast = useToast()
 
 function showInfo() {
-  toast({ body: 'An update is available.', duration: 5000 })
+  toast({ body: 'An update is available.', autoHideDuration: 5000 })
 }
 
 function showSuccess() {
-  toast({ body: 'Changes saved.', type: 'success', duration: 5000 })
+  toast({ body: 'Changes saved.', type: 'success', autoHideDuration: 5000 })
 }
 
 function showError() {
-  toast({ body: 'Failed to upload file.', type: 'error', duration: 5000 })
+  toast({ body: 'Failed to upload file.', type: 'error', autoHideDuration: 5000 })
 }
 </script>
 

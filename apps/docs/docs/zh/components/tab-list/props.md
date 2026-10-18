@@ -37,6 +37,12 @@ footer: false
         <td><code>false</code></td>
         <td>是否在标签列表底部显示一条分隔线。</td>
       </tr>
+      <tr>
+        <td><code>role</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>标签条的无障碍角色。<code>tablist</code> 走标签页模式：每个标签带 <code>role="tab"</code> 和 <code>aria-selected</code>，并通过 <code>panelId</code> 指向对应的面板。不传时标签条是一个导航地标，用 <code>aria-current</code> 标出当前标签，带 <code>href</code> 的标签渲染成链接。其他值原样写到元素上。</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -92,6 +98,30 @@ footer: false
         <td>标签的唯一标识，在同一 TabList 内应保持唯一。</td>
       </tr>
       <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>标签的可见文字。<code>isLabelHidden</code> 为真时它也是无障碍名称。两者都给时默认插槽优先。</td>
+      </tr>
+      <tr>
+        <td><code>href</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>点击后跳转的地址。不在标签页模式时渲染成链接；在 <code>role="tablist"</code> 的标签条里会被忽略。</td>
+      </tr>
+      <tr>
+        <td><code>as</code></td>
+        <td><code>string | Component</code></td>
+        <td><code>'a'</code></td>
+        <td>链接的根组件，比如路由链接。只在有 <code>href</code> 且不在标签页模式时生效。</td>
+      </tr>
+      <tr>
+        <td><code>isLabelHidden</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>视觉上隐藏文字，只显示图标和尾部内容。文字仍然通过 <code>aria-label</code> 给读屏。</td>
+      </tr>
+      <tr>
         <td><code>panelId</code></td>
         <td><code>string</code></td>
         <td>-</td>
@@ -118,6 +148,18 @@ footer: false
       <tr>
         <td><code>default</code></td>
         <td>标签上显示的文本内容。</td>
+      </tr>
+      <tr>
+        <td><code>icon</code></td>
+        <td>未选中时显示的图标。</td>
+      </tr>
+      <tr>
+        <td><code>selectedIcon</code></td>
+        <td>选中时显示的图标，不传则沿用 <code>icon</code>。</td>
+      </tr>
+      <tr>
+        <td><code>endContent</code></td>
+        <td>文字之后的内容，例如角标数字或状态点。</td>
       </tr>
     </tbody>
   </table>

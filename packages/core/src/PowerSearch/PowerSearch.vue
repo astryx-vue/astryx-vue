@@ -33,6 +33,7 @@ defineOptions({ name: 'AstryxPowerSearch', inheritAttrs: false })
 
 const props = withDefaults(defineProps<PowerSearchProps>(), {
   labelHidden: true,
+  hasClear: true,
   clearable: true,
   readOnly: false,
   disabled: false,
@@ -82,7 +83,12 @@ const liveText = ref('')
 const text = computed(() => messages.value.powerSearch)
 const label = computed(() => props.label ?? text.value.label)
 const placeholder = computed(() => props.placeholder ?? text.value.placeholder)
-const focusableDisabled = computed(() => props.disabled && Boolean(props.disabledReason?.trim()))
+const disabledMessage = computed(() => (props.disabledMessage ?? props.disabledReason)?.trim() || undefined)
+const focusableDisabled = computed(() => props.disabled && disabledMessage.value != null)
+// 两个名字默认都是 true，任一传 false 就关掉。
+const showsClear = computed(() => props.hasClear && props.clearable)
+const resolvedSaveLabel = computed(() => props.popoverSaveButtonLabel ?? props.saveLabel)
+const resolvedTimeZone = computed(() => props.timezoneID ?? props.timeZone)
 const collapsed = computed(() => props.overflow !== 'none' && !focused.value)
 const floating = computed(() => props.overflow === 'unfocused-layer' && focused.value)
 const lookup = computed(() => createPowerSearchLookup(props.config))
@@ -495,7 +501,7 @@ defineExpose({
     :status-variant="statusVariant"
   >
     <div v-if="floating" class="astryx-power-search-placeholder" :style="{ height: `${placeholderHeight}px` }" />
-    <Tooltip :content="disabledReason" :is-enabled="focusableDisabled">
+    <Tooltip :content="disabledMessage" :is-enabled="focusableDisabled">
       <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 点空白处把焦点交给输入框。 -->
       <div
         ref="anchorRef"
@@ -549,7 +555,7 @@ defineExpose({
                 :max-length="maxTokenLength"
                 :messages="text"
                 :locale="locale"
-                :time-zone="timeZone"
+                :time-zone="resolvedTimeZone"
                 :size="size"
                 :disabled="disabled"
                 :removable="canRemove(filter)"
@@ -601,10 +607,11 @@ defineExpose({
           @focus="onInputFocus"
           @blur="emit('blur', $event)"
         >
-        <slot name="end" />
+        <slot v-if="slots.endContent" name="endContent" />
+        <slot v-else name="end" />
         <span v-if="displayCount" class="astryx-power-search-count">{{ displayCount }}</span>
         <button
-          v-if="clearable && filters.length > 0 && !disabled && !readOnly"
+          v-if="showsClear && filters.length > 0 && !disabled && !readOnly"
           type="button"
           class="astryx-power-search-clear"
           :aria-label="text.clear"
@@ -612,7 +619,7 @@ defineExpose({
         >
           <Icon icon="close" size="sm" />
         </button>
-        <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledReason }}</span>
+        <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
       </div>
     </Tooltip>
     <span class="astryx-visually-hidden" aria-live="polite">{{ liveText }}</span>
@@ -673,9 +680,9 @@ defineExpose({
         :config="config"
         :filter="session.filter"
         :mode="session.mode"
-        :save-label="saveLabel"
+        :save-label="resolvedSaveLabel"
         :read-only="readOnly"
-        :time-zone="timeZone"
+        :time-zone="resolvedTimeZone"
         :max-menu-items="maxOperatorMenuItems"
         :on-save="onEditorSave"
         :on-cancel="() => closeEditor(true)"
@@ -685,9 +692,9 @@ defineExpose({
           :config="config"
           :filter="session.filter"
           :mode="session.mode"
-          :save-label="saveLabel"
+          :save-label="resolvedSaveLabel"
           :read-only="readOnly"
-          :time-zone="timeZone"
+          :time-zone="resolvedTimeZone"
           :max-menu-items="maxOperatorMenuItems"
           :on-save="onEditorSave"
           :on-cancel="() => closeEditor(true)"

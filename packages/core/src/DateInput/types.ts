@@ -67,7 +67,12 @@ export interface DateInputProps {
   labelTooltip?: string
   /** 是否禁用 */
   disabled?: boolean
-  /** 禁用原因 */
+  /**
+   * 为什么禁用。和 disabled 一起用时，悬停或键盘聚焦会显示这段提示，
+   * 输入框仍可聚焦（带 aria-disabled），但改不了值。
+   */
+  disabledMessage?: string
+  /** 禁用原因。等同于 disabledMessage。 */
   disabledReason?: string
   /** 正在提交。字段不可改，并显示加载指示。 */
   isLoading?: boolean
@@ -75,7 +80,9 @@ export interface DateInputProps {
    * 值已经提交之后再跑。返回 Promise 时，字段保持加载直到它结束。
    */
   changeAction?: (value: Date | null) => void | Promise<void>
-  /** 是否可清除 */
+  /** 有值时显示清除按钮。点完值清空，焦点回到输入框。默认 false。 */
+  hasClear?: boolean
+  /** 有值时显示清除按钮。等同于 hasClear。 */
   clearable?: boolean
   /** 清除按钮标签 */
   clearLabel?: string

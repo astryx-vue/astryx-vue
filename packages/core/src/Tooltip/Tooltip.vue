@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TooltipProps } from './types.js'
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, onUpdated, ref, useAttrs, useId, watch } from 'vue'
+import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useAttrs, useId, watch } from 'vue'
 import { isFocusable } from '../layer/focus.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import '../../styles/tooltip.css'
@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<TooltipProps>(), {
   isOpen: undefined,
   isDefaultOpen: false,
   anchorsOnSelf: false,
+  anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 const attrs = useAttrs()
@@ -180,6 +181,10 @@ function shouldListenFocus(element: HTMLElement): boolean {
 }
 
 function resolveTrigger(): HTMLElement | null {
+  if (props.anchor) {
+    isTextTrigger.value = false
+    return props.anchor
+  }
   const wrapper = wrapperRef.value
   if (!wrapper)
     return null
@@ -199,7 +204,7 @@ function resolveTrigger(): HTMLElement | null {
 }
 
 function bindTrigger(): void {
-  if (props.anchorsOnSelf) {
+  if (props.anchorsOnSelf && !props.anchor) {
     const el = instance?.vnode.el
     wrapperRef.value = el instanceof HTMLElement ? el : null
   }
@@ -260,6 +265,11 @@ watch(() => props.isEnabled, (enabled) => {
     hideNow()
 })
 
+// A template ref filled in after mount arrives as a prop change, so rebind on it.
+watch(() => props.anchor, () => {
+  void nextTick(bindTrigger)
+})
+
 onMounted(() => {
   bindTrigger()
   if (props.isOpen !== undefined)
@@ -280,7 +290,7 @@ onBeforeUnmount(() => {
 
 <template>
   <span
-    v-if="!anchorsOnSelf"
+    v-if="!anchorsOnSelf && !anchor"
     ref="wrapperRef"
     v-bind="attrs"
     class="astryx-tooltip-trigger"

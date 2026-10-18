@@ -22,6 +22,10 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息的位置。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用字段。</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。和 <code>isDisabled</code> 一起用时，悬停或键盘聚焦会显示这段提示，输入框仍可聚焦（带 <code>aria-disabled</code>），但改不了值。</td></tr>
+<tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>字段不可改，并显示加载指示。</td></tr>
+<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>加载中</code></td><td>加载指示的读屏文本。</td></tr>
+<tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签末尾信息图标里的说明。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>选择时间</code></td><td>空值文案。聚焦且为空时，改成格式提示。</td></tr>
 </tbody></table>
 </div>

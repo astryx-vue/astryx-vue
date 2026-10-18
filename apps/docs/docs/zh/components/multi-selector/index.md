@@ -18,7 +18,7 @@ import { multiSelectorColumns, multiSelectorCreate, multiSelectorForm, multiSele
 
 `triggerDisplay` 决定关闭后怎么展示已选项：`count` 显示「已选 N 项」，`labels` 拼接文字，`badges` 用标签。`maxBadges` 限制露出的个数，放不下时末尾显示 `+N`。宽度更窄时还会再收一次。
 
-只读时已选值还在，可以聚焦并提交，但打不开列表，也没有清除和展开箭头，外观不会变暗。加载时触发器显示旋转指示，这时不提供创建行，也不说没有选项。
+只读时已选值还在，可以聚焦并提交，但打不开列表，也没有清除和展开箭头，外观不会变暗。加载时触发器显示旋转指示，这时不提供创建行，也不说没有选项。`disabledMessage` 用来解释为什么禁用：悬停和键盘聚焦时弹出提示，触发器靠 `aria-disabled` 保持可聚焦，菜单仍然打不开。
 
 关闭后的文字可以用函数改写，只对数量和标签两种展示生效，标签模式会忽略它。没有任何选中项时不调用，继续显示占位符。
 
@@ -57,7 +57,7 @@ import { multiSelectorColumns, multiSelectorCreate, multiSelectorForm, multiSele
 
 <DemoExample
   :demo="multiSelectorForm"
-  description="表单里两个多选器，分别标成必填和可选。"
+  description="表单里两个多选器，分别标成必填和可选，另有一个禁用的在悬停或键盘聚焦时说明原因。"
   locale="zh"
   title="表单组合"
 />

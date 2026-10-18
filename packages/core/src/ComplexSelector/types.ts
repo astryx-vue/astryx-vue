@@ -117,6 +117,15 @@ export interface ComplexSelectorProps<Value = unknown> {
 
 export interface ComplexSelectorEmits<Value> {
   change: [value: Value]
+  /**
+   * 触发器上的点击。打开之前先执行，event.preventDefault() 可以让弹层不打开。
+   * 用 trigger 插槽或 renderTrigger 自己画触发器时，它在开关之后执行，取消不了。
+   */
+  click: [event: MouseEvent]
+  /** 触发器上的按键。内置处理（包括 ArrowDown 打开）之后执行，每个键都会收到。 */
+  keydown: [event: KeyboardEvent]
+  /** 弹层每次开或关都会触发：触发器、键盘、点外面、Escape、close() 或命令式 handle。 */
+  openChange: [isOpen: boolean]
 }
 
 export interface ComplexSelectorSlots<Value> {

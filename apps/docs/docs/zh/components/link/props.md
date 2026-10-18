@@ -97,6 +97,12 @@ footer: false
         <td>-</td>
         <td>是否触发下载。</td>
       </tr>
+      <tr>
+        <td><code>referrerPolicy</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>链接的 referrer 策略，原样转成 <code>referrerpolicy</code> 属性。</td>
+      </tr>
     </tbody>
   </table>
 </div>

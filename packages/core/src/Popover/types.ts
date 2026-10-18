@@ -35,4 +35,9 @@ export interface PopoverProps {
   hasLightDismiss?: boolean
   /** 按下 Escape 时是否关闭。 */
   hasEscapeDismiss?: boolean
+  /**
+   * 外部元素当锚点。传了它就不再包一层触发容器，默认插槽可以不写；
+   * 点击、`aria-haspopup` 等会直接挂到这个元素里的按钮上。
+   */
+  anchor?: HTMLElement | null
 }

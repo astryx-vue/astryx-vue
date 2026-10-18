@@ -17,6 +17,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Progress bar label. Used as the accessible name.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Supplementary description.</td></tr>
 <tr><td><code>isIndeterminate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Indeterminate state. Shows a looping animation and removes aria-valuenow.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disabled look: the fill, label, value and marks all drop to the muted colors. Use it for canceled or inactive work.</td></tr>
 <tr><td><code>showValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show the percentage next to the label.</td></tr>
 <tr><td><code>valueText</code></td><td><code>string</code></td><td>—</td><td>Custom aria-valuetext and display text. Overrides the default percentage.</td></tr>
 <tr><td><code>marks</code></td><td><code>{ value: number, label: string }[]</code></td><td>—</td><td>Target ticks on the track. Hidden while indeterminate. <code>label</code> is the accessible name and the hover or focus tooltip.</td></tr>

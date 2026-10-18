@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { DateInputProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import ButtonTooltip from '../Button/ButtonTooltip.vue'
+import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { toCalendarDate } from '../Calendar/calendarDate.js'
 import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
@@ -10,11 +12,12 @@ import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
+import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/date-input.css'
 
 const props = withDefaults(defineProps<Pick<DateInputProps, 'id' | 'modelValue' | 'label' | 'description' | 'placeholder' | 'min' | 'max' | 'isDateDisabled' | 'dateConstraints'
-  | 'name' | 'isLabelHidden' | 'isOptional' | 'isRequired' | 'labelTooltip' | 'disabled' | 'disabledReason'
-  | 'isLoading' | 'changeAction' | 'clearable' | 'clearLabel' | 'size' | 'status' | 'statusVariant' | 'format'
+  | 'name' | 'isLabelHidden' | 'isOptional' | 'isRequired' | 'labelTooltip' | 'disabled' | 'disabledReason' | 'disabledMessage'
+  | 'isLoading' | 'changeAction' | 'hasClear' | 'clearable' | 'clearLabel' | 'size' | 'status' | 'statusVariant' | 'format'
   | 'describedBy' | 'width'> & { inputId: string }>(), {
   modelValue: null,
   disabled: false,
@@ -33,11 +36,17 @@ const emit = defineEmits<{
 const messages = useAstryxMessages()
 const locale = useAstryxLocale()
 const inputRef = useTemplateRef<HTMLInputElement>('input')
+const containerRef = useTemplateRef<HTMLDivElement>('container')
 const focused = ref(false)
 const rejected = ref(false)
 const pending = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || pending.busy.value)
 const locked = computed(() => props.disabled || busy.value)
+const disabledMessage = computed(() => (props.disabledMessage?.trim() || props.disabledReason?.trim()) || undefined)
+const disabledMessageId = `${props.inputId}-disabled`
+const showsDisabledMessage = computed(() => locked.value && disabledMessage.value != null)
+const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const showsClear = computed(() => (props.hasClear || props.clearable) && Boolean(props.modelValue) && !locked.value)
 
 function toIso(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -133,6 +142,16 @@ function onBlur(): void {
   write(nativeValue.value)
 }
 
+function onInputFocus(event: FocusEvent): void {
+  onFocus()
+  disabledTooltip.onFocus(event)
+}
+
+function onInputBlur(): void {
+  disabledTooltip.onBlur()
+  onBlur()
+}
+
 function openPicker(): void {
   if (locked.value)
     return
@@ -191,10 +210,13 @@ watch(nativeValue, (value) => {
   >
     <template #default="field">
       <div
+        ref="containerRef"
         class="astryx-date-input"
         :class="[statusType ? `status-${statusType}` : undefined, `size-${size}`]"
         :data-status="statusType"
         data-presentation="native"
+        @pointerenter="disabledTooltip.onPointerEnter"
+        @pointerleave="disabledTooltip.onPointerLeave"
       >
         <div
           class="astryx-date-input-wrapper"
@@ -220,25 +242,25 @@ watch(nativeValue, (value) => {
               type="date"
               :min="minIso"
               :max="maxIso"
-              :disabled="locked"
+              :disabled="locked && !showsDisabledMessage"
               :name="name"
               :aria-label="label ? undefined : messages.dateInput.dialogLabel"
               :aria-labelledby="label ? field.labelId : undefined"
               :aria-describedby="[describedBy, field.describedBy].filter(Boolean).join(' ') || undefined"
+              :aria-disabled="showsDisabledMessage || undefined"
               :aria-invalid="statusType === 'error' || rejected ? 'true' : undefined"
               :aria-required="isRequired || undefined"
               :aria-busy="busy || undefined"
-              :title="disabledReason"
               autocomplete="off"
-              @focus="onFocus"
-              @blur="onBlur"
+              @focus="onInputFocus"
+              @blur="onInputBlur"
             >
             <span class="astryx-date-input-overlay" :data-placeholder="modelValue ? undefined : 'true'" aria-hidden="true">
               {{ overlay }}
             </span>
           </span>
           <button
-            v-if="clearable && modelValue && !locked"
+            v-if="showsClear"
             type="button"
             class="astryx-date-input-clear"
             :aria-label="clearLabel || messages.dateInput.clear(label)"
@@ -256,4 +278,12 @@ watch(nativeValue, (value) => {
       </div>
     </template>
   </Field>
+  <VisuallyHidden v-if="showsDisabledMessage" :id="disabledMessageId">
+    {{ disabledMessage }}
+  </VisuallyHidden>
+  <ButtonTooltip
+    v-if="showsDisabledMessage"
+    :id="`${disabledMessageId}-tooltip`" :anchor="containerRef" :open="disabledTooltip.isOpen.value" :text="disabledMessage ?? ''"
+    @pointer-enter="disabledTooltip.onTooltipPointerEnter" @pointer-leave="disabledTooltip.onTooltipPointerLeave"
+  />
 </template>

@@ -60,8 +60,16 @@ export interface PaginationProps {
   pageSizeOptions?: number[]
   /** 是否显示总数 */
   showTotal?: boolean
-  /** 是否禁用 */
+  /** 是否禁用（旧名字，和新名字 `isDisabled` 等价） */
   disabled?: boolean
+  /** 是否禁用 */
+  isDisabled?: boolean
+  /** 导航区的无障碍名称。不传时用当前语言的「Pagination」或「分页」。 */
+  label?: string
+  /**
+   * 总条目数，用来算总页数。和新版同名属性一致，优先于 `total` 和 `totalPages`。
+   */
+  totalItems?: number
   /** 上一页按钮文本 */
   prevLabel?: string
   /** 下一页按钮文本 */
@@ -73,6 +81,8 @@ export interface PaginationProps {
 export interface PaginationEmits {
   (event: 'update:page', value: number): void
   (event: 'update:pageSize', value: number): void
+  /** 每页条目数变了，参数是新的页长。页码会同时回到第一页。 */
+  (event: 'pageSizeChange', pageSize: number): void
   (event: 'change', page: number, pageSize: number): void
 }
 

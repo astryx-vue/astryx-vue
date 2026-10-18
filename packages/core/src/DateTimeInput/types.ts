@@ -16,6 +16,18 @@ export interface DateTimeInputProps {
   hasClear?: boolean
   clearLabel?: string
   size?: DateTimeInputSize
+  /** 时间那段带秒。系统时间控件表达不了，所以会固定用 Astryx 的时间字段。 */
+  hasSeconds?: boolean
+  /** 方向键调整分钟的步长，默认 1 分钟。 */
+  timeIncrement?: 1 | 5 | 10 | 15 | 30
+  /** 时间那段的预设列表的分钟间隔。传了就会在时钟图标下弹出可选时间。 */
+  timeOptionInterval?: 5 | 10 | 15 | 30 | 60
+  /** 时间那段的读屏标签。默认用当前语言的「时间」。 */
+  timeLabel?: string
+  /** 时间那段的占位符。 */
+  timePlaceholder?: string
+  /** 为什么禁用。和 `isDisabled` 一起用时，两段都仍可聚焦（带 `aria-disabled`），但不能改值。 */
+  disabledMessage?: string
   min?: string
   max?: string
   /** 任一函数返回 false 时，日期那一半禁用这一天。 */

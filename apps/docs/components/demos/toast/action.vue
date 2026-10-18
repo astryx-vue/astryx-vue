@@ -9,7 +9,7 @@ const toast = useToast()
 
 <template>
   <VStack :gap="3">
-    <Toast :auto-close="false" body="Item deleted" type="info">
+    <Toast :is-auto-hide="false" body="Item deleted" type="info">
       <template #end>
         <Button
           label="Undo"
@@ -19,7 +19,7 @@ const toast = useToast()
         />
       </template>
     </Toast>
-    <Toast :auto-close="false" body="Your report is ready." type="info">
+    <Toast :is-auto-hide="false" body="Your report is ready." type="info">
       <template #end>
         <Link href="#" has-underline>
           View report

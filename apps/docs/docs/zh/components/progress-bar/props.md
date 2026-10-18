@@ -17,6 +17,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>进度条标签。同时作为无障碍名称。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>补充说明。</td></tr>
 <tr><td><code>isIndeterminate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>不确定状态。显示循环动画并移除 aria-valuenow。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用外观：填充、标签、数值和刻度都降为次要色。用于已取消或不再进行的任务。</td></tr>
 <tr><td><code>showValue</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在标签旁显示百分比。</td></tr>
 <tr><td><code>valueText</code></td><td><code>string</code></td><td>—</td><td>自定义 aria-valuetext 与显示文本。优先于默认百分比。</td></tr>
 <tr><td><code>marks</code></td><td><code>{ value: number, label: string }[]</code></td><td>—</td><td>轨道上的目标刻度。不确定进度时不画。 <code>label</code> 是无障碍名，也是悬停和聚焦时的提示。</td></tr>

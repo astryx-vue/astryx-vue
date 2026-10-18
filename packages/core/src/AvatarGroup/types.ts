@@ -24,3 +24,13 @@ export interface AvatarGroupOverflowProps {
    */
   count: number
 }
+
+export interface AvatarGroupOverflowEmits {
+  /** Fired when the indicator is clicked. */
+  click: [event: MouseEvent]
+}
+
+export interface AvatarGroupOverflowSlots {
+  /** Custom count text. Falls back to `+N`. */
+  default?: () => unknown
+}

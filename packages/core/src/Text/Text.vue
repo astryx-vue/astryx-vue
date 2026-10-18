@@ -17,10 +17,11 @@ const props = withDefaults(defineProps<TextProps>(), {
   justify: 'start',
   maxLines: 0,
   hasTruncateTooltip: true,
+  hasCapsize: false,
 })
 
 const weight = computed(() => props.weight === 'normal' ? 'regular' : props.weight)
-const isBlock = computed(() => props.display === 'block' || props.maxLines > 0)
+const isBlock = computed(() => props.display === 'block' || props.maxLines > 0 || props.hasCapsize)
 const wordBreak = computed(() => props.wordBreak ?? (props.maxLines === 1 ? 'break-all' : props.maxLines > 1 ? 'break-word' : undefined))
 const placement = computed(() => props.maxLines > 0 ? truncatePlacement(props.hasTruncateTooltip) : null)
 const truncation = useTruncation(computed(() => props.maxLines))
@@ -35,6 +36,7 @@ const classes = computed(() => [
   props.textWrap && `astryx-text--wrap-${props.textWrap}`,
   wordBreak.value && `astryx-text--word-${wordBreak.value}`,
   props.justify !== 'start' && `astryx-text--justify-${props.justify}`,
+  props.hasCapsize && 'astryx-text--capsize',
   props.hasStrikethrough && 'astryx-text--strike',
   props.hasTabularNumbers && 'astryx-text--tabular',
   isBlock.value && 'astryx-text--block',

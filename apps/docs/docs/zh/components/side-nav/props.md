@@ -108,3 +108,29 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## SideNavCollapseButton Props
+
+在展开和收起的侧栏之间切换。放在 `SideNav` 里时从侧栏读折叠状态；放在外面时用 `v-model:is-collapsed` 绑同一个状态。
+
+<div class="component-api-table" role="region" aria-label="SideNavCollapseButton Props" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>按钮文字。给了文字就渲染成「文字 + 箭头」的按钮；不给则只有箭头图标，无障碍名称用翻译好的「收起侧边栏 / 展开侧边栏」。</td></tr>
+      <tr><td><code>isCollapsed</code></td><td><code>boolean</code></td><td>-</td><td>折叠状态，用于 <code>v-model:is-collapsed</code>。按钮不在侧栏里时用它和侧栏连到同一个状态。</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td>在 SideNav 里是 <code>sm</code>，外面是 <code>md</code></td><td>按钮尺寸。按钮放在有尺寸的容器外面、又要和旁边对齐时指定。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## SideNavCollapseButton 插槽
+
+<div class="component-api-table" role="region" aria-label="SideNavCollapseButton 插槽" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>default</code></td><td>自定义按钮内容，替换默认的箭头图标和文字。</td></tr>
+    </tbody>
+  </table>
+</div>

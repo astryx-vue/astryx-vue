@@ -95,16 +95,38 @@ function onTriggerKeyDown(event: KeyboardEvent): void {
   }
 }
 
+/** 内置触发器：先让调用方有机会取消打开，再走自己的开关。 */
+function onBuiltinClick(event: MouseEvent): void {
+  emit('click', event)
+  // 用户在 preventDefault 里取消了打开，连带拦住 Popover 自己的点击监听。
+  if (event.defaultPrevented)
+    event.stopImmediatePropagation()
+}
+
+/** 内置触发器：内置处理完再透出，每个键都收到。 */
+function onBuiltinKeyDown(event: KeyboardEvent): void {
+  onTriggerKeyDown(event)
+  emit('keydown', event)
+}
+
+/** 自定义触发器：开关已经做完，点不能取消；内置处理取消的键不外透。 */
 function onCustomClick(event: MouseEvent): void {
   event.stopImmediatePropagation()
   toggle()
+  emit('click', event)
+}
+
+function onCustomKeyDown(event: KeyboardEvent): void {
+  onTriggerKeyDown(event)
+  if (!event.defaultPrevented)
+    emit('keydown', event)
 }
 
 const hasCustomTrigger = computed(() => props.renderTrigger != null || slots.trigger != null)
 const triggerProps = computed<ComplexSelectorTriggerProps>(() => ({
   'id': triggerId,
   'onClick': onCustomClick,
-  'onKeydown': onTriggerKeyDown,
+  'onKeydown': onCustomKeyDown,
   'aria-haspopup': 'dialog',
   'aria-expanded': isOpen.value,
   'aria-controls': isOpen.value ? contentId : undefined,
@@ -114,6 +136,11 @@ const triggerProps = computed<ComplexSelectorTriggerProps>(() => ({
 const triggerView: Component = () => props.renderTrigger?.(triggerProps.value) ?? null
 
 const handle: ComplexSelectorHandle = { open, close, toggle, isOpen: () => isOpen.value }
+
+// 任何途径的开/关都从这里透出去。
+watch(isOpen, (open) => {
+  emit('openChange', open)
+})
 
 function publishHandle(value: ComplexSelectorHandle | null): void {
   const target = props.handleRef
@@ -210,7 +237,8 @@ defineExpose(handle)
         :aria-required="isRequired || undefined"
         :disabled="isDisabled"
         type="button"
-        @keydown="onTriggerKeyDown"
+        @click="onBuiltinClick"
+        @keydown="onBuiltinKeyDown"
       >
         <Icon
           v-if="startIcon"

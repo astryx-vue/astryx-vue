@@ -42,4 +42,9 @@ export interface TooltipProps {
    * @default false
    */
   anchorsOnSelf?: boolean
+  /**
+   * 外部元素当触发器。传了它就不再包一层 span，可以不放默认插槽，
+   * 悬停、聚焦和 `aria-describedby` 都挂到这个元素上。
+   */
+  anchor?: HTMLElement | null
 }

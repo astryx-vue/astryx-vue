@@ -26,7 +26,7 @@ const people = computed(() => createStaticSource([
       :search-source="emptySource"
       label="Tags"
       placeholder="Type a tag and press Enter..."
-      creatable
+      has-create
       :debounce-ms="0"
     />
     <p class="demo-caption">
@@ -37,8 +37,8 @@ const people = computed(() => createStaticSource([
       :search-source="people"
       label="Team Members"
       placeholder="Search or type a new name..."
-      creatable
-      show-on-focus
+      has-create
+      has-entries-on-focus
       :debounce-ms="0"
     />
   </div>

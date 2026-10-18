@@ -115,6 +115,8 @@ export function resolveTimeSurface(options: {
   coarse: boolean
   hasSeconds: boolean
   increment: number
+  /** 额外的“系统控件表达不了”的信号，例如预设时间列表。 */
+  needsTypedField?: boolean
 }): 'text' | 'native' {
   const presentation = options.presentation ?? (
     options.nativePicker === 'always'
@@ -123,7 +125,7 @@ export function resolveTimeSurface(options: {
         ? 'text-input'
         : 'adaptive-native'
   )
-  const needsTypedField = options.hasSeconds || options.increment !== 1
+  const needsTypedField = options.hasSeconds || options.increment !== 1 || options.needsTypedField === true
   if (presentation === 'text-input' || presentation === 'popover' || presentation === 'bottom-sheet')
     return 'text'
   if (needsTypedField)

@@ -4,6 +4,7 @@ import type { Combobox } from '../composables/useCombobox.js'
 import { computed, ref, toValue, watch } from 'vue'
 import { useAsyncSource } from '../composables/useAsyncSource.js'
 import { useCombobox } from '../composables/useCombobox.js'
+import { isBelowMinQueryLength } from './queryLength.js'
 
 export interface TypeaheadMenuEntry<T extends SearchableItem = SearchableItem> {
   item: T
@@ -11,14 +12,26 @@ export interface TypeaheadMenuEntry<T extends SearchableItem = SearchableItem> {
   label: string
   description?: string
   disabled?: boolean
+  /** 分组标题。来自条目的 `auxiliaryData.group`。 */
+  group?: string
   /** 用户正在创建的新条目，不来自数据源。 */
   create?: boolean
+}
+
+/** 分组标题放在 `auxiliaryData.group` 上，和上游一致。 */
+function entryGroup(item: SearchableItem): string | undefined {
+  const aux = item.auxiliaryData
+  if (aux == null || typeof aux !== 'object')
+    return undefined
+  const group = (aux as { group?: unknown }).group
+  return typeof group === 'string' && group !== '' ? group : undefined
 }
 
 export interface UseTypeaheadMenuOptions<T extends SearchableItem = SearchableItem> {
   source: MaybeRefOrGetter<SearchSource<T>>
   debounceMs?: MaybeRefOrGetter<number>
   showOnFocus?: MaybeRefOrGetter<boolean>
+  minQueryLength?: MaybeRefOrGetter<number>
   maxItems?: MaybeRefOrGetter<number>
   disabled?: MaybeRefOrGetter<boolean>
   excludeIds?: MaybeRefOrGetter<readonly string[]>
@@ -43,6 +56,8 @@ export interface TypeaheadMenu<T extends SearchableItem = SearchableItem> {
   status: Ref<AsyncSourceStatus>
   error: ShallowRef<unknown>
   activeId: ComputedRef<string | undefined>
+  /** 输入还没到够搜的长度：此时不搜，下拉也不打开。 */
+  belowMinQueryLength: ComputedRef<boolean>
   setQuery: (value: string) => void
   open: () => void
   close: () => void
@@ -56,10 +71,13 @@ export interface TypeaheadMenu<T extends SearchableItem = SearchableItem> {
 export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeaheadMenuOptions<T>): TypeaheadMenu<T> {
   const query = ref('')
   const menuOpen = ref(false)
+  const minQueryLength = computed(() => toValue(options.minQueryLength) ?? 1)
+  const belowMinQueryLength = computed(() => isBelowMinQueryLength(query.value, minQueryLength.value))
   const asyncSource = useAsyncSource<T>({
     source: options.source,
     query,
-    enabled: menuOpen,
+    // 太短的查询不去打数据源，下拉里也就没有属于这次输入的结果。
+    enabled: computed(() => menuOpen.value && !belowMinQueryLength.value),
     debounceMs: options.debounceMs,
   })
 
@@ -67,16 +85,20 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
     const excluded = new Set(toValue(options.excludeIds) ?? [])
     const blocked = new Set((toValue(options.blockedLabels) ?? []).map(label => label.toLowerCase()))
     const max = toValue(options.maxItems) ?? 10
-    const list = asyncSource.items.value
-      .filter(item => !excluded.has(item.id))
-      .slice(0, max)
-      .map<TypeaheadMenuEntry<T>>(item => ({
-        item,
-        id: item.id,
-        label: item.label,
-        description: item.description,
-        disabled: item.disabled,
-      }))
+    // 查询太短就没有属于这次输入的结果；从文字派生的条目另外拼在后面。
+    const list = belowMinQueryLength.value
+      ? []
+      : asyncSource.items.value
+          .filter(item => !excluded.has(item.id))
+          .slice(0, max)
+          .map<TypeaheadMenuEntry<T>>(item => ({
+            item,
+            id: item.id,
+            label: item.label,
+            description: item.description,
+            disabled: item.disabled,
+            group: entryGroup(item),
+          }))
 
     const text = query.value.trim()
     if (toValue(options.creatable) && text !== '') {
@@ -123,8 +145,18 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
       combobox.highlightFirst()
   })
 
+  /**
+   * 太短的查询没东西可展示，此时不让下拉打开。
+   * 只有从文字自己派生的条目（比如「创建 xxx」）还值得看一眼。
+   */
+  function canOpen(): boolean {
+    if (!belowMinQueryLength.value)
+      return true
+    return entries.value.length > 0
+  }
+
   function open(): void {
-    if (toValue(options.disabled) || combobox.isOpen.value)
+    if (toValue(options.disabled) || combobox.isOpen.value || !canOpen())
       return
     combobox.open()
   }
@@ -140,8 +172,18 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
     options.onQueryChange?.(value)
     if (toValue(options.disabled))
       return
-    if (!combobox.isOpen.value && (value.length > 0 || toValue(options.showOnFocus)))
+    if (belowMinQueryLength.value) {
+      // 不搜，也不显示「没有结果」——这个查询根本没搜过。
+      if (entries.value.length > 0)
+        open()
+      else
+        close()
+      return
+    }
+    if (value.length > 0 || toValue(options.showOnFocus))
       open()
+    else
+      close()
   }
 
   function selectHighlighted(): void {
@@ -239,6 +281,7 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
     status: asyncSource.status,
     error: asyncSource.error,
     activeId,
+    belowMinQueryLength,
     setQuery,
     open,
     close,

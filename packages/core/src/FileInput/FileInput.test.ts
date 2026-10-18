@@ -59,4 +59,34 @@ describe('file input', () => {
     await input.trigger('change')
     expect(wrapper.text()).toContain('notes.txt is not an accepted file type')
   })
+
+  it('shows the labelTooltip from the field label', () => {
+    const wrapper = mount(FileInput, {
+      props: { label: 'Resume', modelValue: null, labelTooltip: 'PDF under 2 MB' },
+    })
+    expect(wrapper.html()).toContain('PDF under 2 MB')
+    wrapper.unmount()
+  })
+
+  it('keeps the trigger focusable while a disabledMessage explains why', async () => {
+    const wrapper = mount(FileInput, {
+      props: {
+        label: 'Resume',
+        modelValue: null,
+        isDisabled: true,
+        disabledMessage: 'Uploads are locked until your profile is verified',
+      },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.get<HTMLButtonElement>('.astryx-file-input-trigger')
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
+    expect(trigger.attributes('aria-describedby')?.split(' ')).toContain(`${trigger.attributes('id')}-disabled`)
+    trigger.element.focus()
+    await nextTick()
+    const tooltip = document.querySelector<HTMLElement>('[role="tooltip"]')
+    expect(tooltip?.textContent).toBe('Uploads are locked until your profile is verified')
+    expect(tooltip?.style.display).not.toBe('none')
+    wrapper.unmount()
+  })
 })

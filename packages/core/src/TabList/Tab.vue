@@ -1,34 +1,58 @@
 <script setup lang="ts">
-import type { TabProps } from './types.js'
+import type { TabProps, TabSlots } from './types.js'
 import {
   computed,
   inject,
   onMounted,
   onUnmounted,
   ref,
+  toRaw,
   watch,
 } from 'vue'
 
 import { tabListContextKey } from './context.js'
+import '../../styles/visually-hidden-utility.css'
+
+defineOptions({ name: 'AstryxTab' })
 
 const props = withDefaults(defineProps<TabProps>(), {
   disabled: false,
+  isLabelHidden: false,
 })
+
+defineSlots<TabSlots>()
 
 const context = inject(tabListContextKey)
 const rootRef = ref<HTMLElement>()
 
+const isTabsPattern = computed(() => context?.isTabsPattern.value ?? false)
 const isSelected = computed(() => context?.value.value === props.value)
 const tabIndex = computed(() => (isSelected.value && !props.disabled ? 0 : -1))
+const isLink = computed(() =>
+  !isTabsPattern.value && props.href != null && props.href !== '' && !props.disabled,
+)
+const root = computed(() => {
+  if (isLink.value)
+    return props.as == null ? 'a' : toRaw(props.as)
+  return 'button'
+})
 
 const classes = computed(() => [
   'astryx-tab',
   `astryx-tab--size-${context?.size.value ?? 'md'}`,
   isSelected.value && 'astryx-tab--selected',
   props.disabled && 'astryx-tab--disabled',
+  props.isLabelHidden && 'astryx-tab--label-hidden',
 ])
 
-function handleClick() {
+const isDev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV !== false
+if (isDev && props.panelId != null && !isTabsPattern.value) {
+  console.warn(
+    'Tab: `panelId` only applies under the tabs pattern; give the TabList `role="tablist"` to wire up aria-controls.',
+  )
+}
+
+function handleClick(): void {
   if (props.disabled || !context)
     return
   context.selectTab(props.value)
@@ -86,21 +110,55 @@ watch(() => props.disabled, (disabled) => {
 </script>
 
 <template>
-  <button
+  <component
+    :is="root"
     :id="`astryx-tab-${value}`"
     ref="rootRef"
-    type="button"
-    role="tab"
+    :type="isLink ? undefined : 'button'"
+    :role="isTabsPattern ? 'tab' : undefined"
     :class="classes"
-    :aria-selected="isSelected"
-    :aria-controls="panelId"
+    :href="isLink ? href : undefined"
+    :to="isLink && as != null ? href : undefined"
+    :aria-selected="isTabsPattern ? isSelected : undefined"
+    :aria-current="isTabsPattern ? undefined : isSelected ? 'true' : undefined"
+    :aria-controls="isTabsPattern ? panelId : undefined"
+    :aria-label="isLabelHidden ? label : undefined"
     :tabindex="tabIndex"
-    :disabled="disabled"
+    :disabled="isLink ? undefined : disabled"
+    :data-selected="isSelected ? 'selected' : undefined"
     @click="handleClick"
     @keydown="handleKeydown"
   >
-    <span class="astryx-tab__label">
-      <slot />
+    <span
+      v-if="$slots.icon || $slots.selectedIcon"
+      class="astryx-tab__icon"
+      aria-hidden="true"
+    >
+      <slot
+        v-if="isSelected && $slots.selectedIcon"
+        name="selectedIcon"
+      />
+      <slot
+        v-else
+        name="icon"
+      />
     </span>
-  </button>
+    <span
+      class="astryx-tab__label"
+      :class="{ 'astryx-visually-hidden': isLabelHidden }"
+    >
+      <span class="astryx-tab__label-text"><slot>{{ label }}</slot></span>
+      <span
+        v-if="!isLabelHidden"
+        class="astryx-tab__label-sizer"
+        aria-hidden="true"
+      ><slot>{{ label }}</slot></span>
+    </span>
+    <span
+      v-if="$slots.endContent"
+      class="astryx-tab__end"
+    >
+      <slot name="endContent" />
+    </span>
+  </component>
 </template>

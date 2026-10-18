@@ -155,6 +155,32 @@ describe('textArea', () => {
     expect(wrapper.get('.astryx-text-area').classes()).toContain('custom-area')
   })
 
+  it('turns spell checking on by default and lets autoComplete and hasSpellCheck through to the textarea', () => {
+    const wrapper = renderArea()
+    expect(wrapper.get('textarea').attributes('spellcheck')).toBe('true')
+
+    const configured = renderArea({ autoComplete: 'off', hasSpellCheck: false })
+    expect(configured.get('textarea').attributes('autocomplete')).toBe('off')
+    expect(configured.get('textarea').attributes('spellcheck')).toBe('false')
+
+    const nativeAttr = renderArea({}, { autocomplete: 'email' })
+    expect(nativeAttr.get('textarea').attributes('autocomplete')).toBe('email')
+  })
+
+  it('forwards focus, blur and paste listeners to the textarea', async () => {
+    const onFocus = vi.fn()
+    const onBlur = vi.fn()
+    const onPaste = vi.fn()
+    const wrapper = renderArea({}, { onFocus, onBlur, onPaste })
+    const textarea = wrapper.get('textarea')
+    await textarea.trigger('focus')
+    await textarea.trigger('blur')
+    await textarea.trigger('paste')
+    expect(onFocus).toHaveBeenCalledTimes(1)
+    expect(onBlur).toHaveBeenCalledTimes(1)
+    expect(onPaste).toHaveBeenCalledTimes(1)
+  })
+
   it('marks the character count when the value is longer than maxlength', () => {
     const wrapper = renderArea({ maxlength: 10, modelValue: 'This sentence is already too long.' })
     const count = wrapper.get('.astryx-text-area-count')

@@ -3,6 +3,8 @@ import type { FieldStatusInput } from '../Field/types.js'
 import type { SelectorEmits, SelectorEntry, SelectorOption, SelectorProps, SelectorSection, SelectorSlots } from './types.js'
 import { computed, inject, nextTick, onMounted, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
+import ButtonTooltip from '../Button/ButtonTooltip.vue'
+import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
@@ -16,7 +18,9 @@ import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
+import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
+import '../../styles/button.css'
 import '../../styles/selector.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -62,6 +66,13 @@ const control = useFieldControlState({
 })
 const announce = useAnnounce()
 const readOnlyId = `${selectorId}-readonly`
+const disabledMessageId = `${selectorId}-disabled-message`
+const disabledTooltipId = `${selectorId}-disabled-tooltip`
+/** 旧名 disabledReason 和新名 disabledMessage 等价。 */
+const resolvedDisabledMessage = computed(() => props.disabledMessage?.trim() || props.disabledReason?.trim())
+const showsDisabledMessage = computed(() => control.isDisabled.value && !!resolvedDisabledMessage.value)
+const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const hasClear = computed(() => props.hasClear || props.clearable)
 const fieldRef = useTemplateRef<HTMLElement>('fieldRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const searchInputRef = useTemplateRef<HTMLInputElement>('searchInputRef')
@@ -226,6 +237,7 @@ const describedBy = computed(() => {
   return [
     inGroup.value ? inputGroup?.describedBy.value : undefined,
     control.isReadOnly.value ? readOnlyId : undefined,
+    showsDisabledMessage.value ? disabledMessageId : undefined,
   ].filter(Boolean).join(' ') || undefined
 })
 const announcement = computed(() => searchResultMessage({
@@ -243,12 +255,27 @@ watch(announcement, (message) => {
     announce(message)
 })
 
-function onTriggerClick(): void {
+function onTriggerClick(event: MouseEvent): void {
+  // 先透出点击再切换面板，preventDefault 不阻断打开。
+  emit('click', event)
   if (control.canActivate.value)
     combobox.toggle()
 }
 
+function onTriggerFocus(event: FocusEvent): void {
+  emit('focus', event)
+  disabledTooltip.onFocus(event)
+}
+
 function onTriggerKeyDown(event: KeyboardEvent): void {
+  combobox.onKeyDown(event)
+  // 内置键盘模型处理并取消的按键不再透出。
+  if (!event.defaultPrevented)
+    emit('keydown', event)
+}
+
+/** 搜索框里的按键只走键盘模型，不当作触发器的事件透出。 */
+function onSearchKeyDown(event: KeyboardEvent): void {
   combobox.onKeyDown(event)
 }
 
@@ -348,26 +375,30 @@ watch(() => combobox.activeIndex.value, (index) => {
         'is-loading': control.isLoading.value,
         'is-ghost': props.variant === 'ghost',
       }"
+      @pointerenter="disabledTooltip.onPointerEnter"
+      @pointerleave="disabledTooltip.onPointerLeave"
     >
       <button
         :id="selectorId"
         type="button"
         class="astryx-selector-trigger"
         :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': control.isDisabled.value }"
-        :disabled="control.isDisabled.value"
+        :disabled="control.isDisabled.value && !showsDisabledMessage"
         :role="control.isReadOnly.value || !props.searchable ? 'combobox' : undefined"
         :aria-haspopup="control.isReadOnly.value ? undefined : 'listbox'"
         :aria-expanded="control.isReadOnly.value ? false : combobox.isOpen.value"
         :aria-controls="control.isReadOnly.value ? undefined : listboxId"
         :aria-readonly="control.isReadOnly.value || undefined"
+        :aria-disabled="showsDisabledMessage || undefined"
         :aria-busy="control.isLoading.value || undefined"
         :aria-required="props.isRequired || undefined"
         :aria-label="props.label"
         :aria-describedby="describedBy"
         :aria-autocomplete="props.searchable ? undefined : 'none'"
         :aria-activedescendant="!props.searchable && !control.isReadOnly.value && combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
-        :title="props.disabledReason"
         @click="onTriggerClick"
+        @focus="onTriggerFocus"
+        @blur="disabledTooltip.onBlur"
         @keydown="onTriggerKeyDown"
       >
         <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
@@ -380,7 +411,7 @@ watch(() => combobox.activeIndex.value, (index) => {
       </button>
       <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" :aria-label="messages.selector.loading" />
       <button
-        v-if="props.clearable && selectedOption && control.canActivate.value"
+        v-if="hasClear && selectedOption && control.canActivate.value"
         type="button"
         class="astryx-selector-clear"
         :aria-label="resolvedClearLabel"
@@ -397,6 +428,18 @@ watch(() => combobox.activeIndex.value, (index) => {
       <Icon v-else-if="control.canActivate.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
       <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.selector.readOnly }}</span>
     </div>
+    <VisuallyHidden v-if="showsDisabledMessage" :id="disabledMessageId">
+      {{ resolvedDisabledMessage }}
+    </VisuallyHidden>
+    <ButtonTooltip
+      v-if="showsDisabledMessage"
+      :id="disabledTooltipId"
+      :anchor="fieldRef"
+      :open="disabledTooltip.isOpen.value"
+      :text="resolvedDisabledMessage ?? ''"
+      @pointer-enter="disabledTooltip.onTooltipPointerEnter"
+      @pointer-leave="disabledTooltip.onTooltipPointerLeave"
+    />
 
     <BottomSheet
       v-if="isSheet"
@@ -440,7 +483,7 @@ watch(() => combobox.activeIndex.value, (index) => {
             :placeholder="resolvedSearchPlaceholder"
             :value="combobox.searchQuery.value"
             @input="onSearchInput"
-            @keydown="onTriggerKeyDown"
+            @keydown="onSearchKeyDown"
           >
           <button
             v-if="combobox.searchQuery.value"

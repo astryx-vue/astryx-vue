@@ -89,6 +89,11 @@ footer: false
         <td><code>string</code></td>
         <td>The id of the row that was selected.</td>
       </tr>
+      <tr>
+        <td><code>valueChange</code></td>
+        <td><code>string</code></td>
+        <td>The same selection under the original callback name, for code ported from React.</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -146,11 +151,31 @@ footer: false
         <td><code>true</code></td>
         <td>Focus the field when the palette opens. Inline palettes skip this.</td>
       </tr>
+      <tr>
+        <td><code>value</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Search value, bound with <code>v-model:value</code>. Read from the surrounding <code>CommandPalette</code> when omitted.</td>
+      </tr>
     </tbody>
   </table>
 </div>
 
-The input's default slot is trailing content, after the field.
+<div class="component-api-table" role="region" aria-label="CommandPaletteInput Events" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>valueChange</code></td>
+        <td>Next search value. Fired only while <code>value</code> is bound; otherwise the input writes to the palette.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+The <code>endContent</code> slot (also available as <code>end</code>) is trailing content after the spinner.
 
 ## CommandPaletteList
 
@@ -162,7 +187,7 @@ The input's default slot is trailing content, after the field.
 
 ## CommandPaletteItem
 
-`value` is the command id. `isDisabled` blocks selection. The default slot is the row content.
+`value` is the command id. `isDisabled` blocks selection. `isHighlighted` and `isSelected` override the state the row reads from the palette, which is what standalone previews need. `select` fires with the value when the row is activated by pointer. The default slot is the row content.
 
 ## CommandPaletteEmpty
 

@@ -9,6 +9,10 @@
     gap: var(--astryx-spacing-3, 12px);
   }
 
+  .astryx-dialog-header--divider {
+    border-block-end: var(--astryx-dialog-header-divider-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
+  }
+
   .astryx-dialog-header__title-block {
     display: flex;
     flex: 1 1 auto;

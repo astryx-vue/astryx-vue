@@ -39,4 +39,28 @@ describe('statusDot', () => {
 
     expect(wrapper.find('.astryx-status-dot').classes()).toContain('astryx-status-dot--pulsing')
   })
+
+  it('renders a caller supplied icon inside the dot, hidden from screen readers', () => {
+    const wrapper = mount(StatusDot, {
+      props: { label: 'Online', variant: 'success' },
+      slots: { icon: '<svg class="mark" />' },
+    })
+
+    const icon = wrapper.get('.astryx-status-dot__icon')
+    expect(icon.attributes('aria-hidden')).toBe('true')
+    expect(icon.find('.mark').exists()).toBe(true)
+    expect(wrapper.get('.astryx-status-dot').attributes('aria-label')).toBe('Online')
+  })
+
+  it('wraps the dot in a tooltip when tooltip text is given', async () => {
+    const wrapper = mount(StatusDot, {
+      attachTo: document.body,
+      props: { label: 'Degraded', tooltip: 'Degraded service', variant: 'warning' },
+    })
+
+    await wrapper.get('.astryx-status-dot').trigger('mouseenter')
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(document.body.textContent).toContain('Degraded service')
+    wrapper.unmount()
+  })
 })

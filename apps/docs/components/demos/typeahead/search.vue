@@ -21,7 +21,7 @@ const source = computed(() => createStaticSource([
       label="Team member"
       placeholder="Search people..."
       :debounce-ms="0"
-      show-on-focus
+      has-entries-on-focus
     >
       <template #icon>
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" /></svg>

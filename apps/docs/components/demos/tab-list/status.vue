@@ -9,12 +9,16 @@ const value = ref('production')
 <template>
   <TabList v-model:value="value">
     <Tab value="production">
+      <template #endContent>
+        <StatusDot label="Healthy" variant="success" />
+      </template>
       Production
-      <StatusDot label="Healthy" variant="success" />
     </Tab>
     <Tab value="staging">
+      <template #endContent>
+        <StatusDot label="Degraded" variant="warning" />
+      </template>
       Staging
-      <StatusDot label="Degraded" variant="warning" />
     </Tab>
     <Tab value="development">
       Development

@@ -29,6 +29,11 @@ export interface DateRangeInputProps {
   clearLabel?: string
   size?: 'sm' | 'md' | 'lg'
   isDisabled?: boolean
+  /**
+   * 为什么禁用。和 `isDisabled` 一起用时，悬停或键盘聚焦会显示这段提示，
+   * 按钮仍可聚焦（带 `aria-disabled`），但打不开日历也改不了值。
+   */
+  disabledMessage?: string
   isLoading?: boolean
   /** 值提交之后再跑。返回 Promise 时，字段保持加载直到它结束。 */
   changeAction?: (value: DateRange | null) => void | Promise<void>

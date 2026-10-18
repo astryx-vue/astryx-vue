@@ -33,7 +33,12 @@ export type {
   AvatarStatusDotVariant,
 } from './Avatar/index.js'
 export { AvatarGroup, AvatarGroupOverflow } from './AvatarGroup/index.js'
-export type { AvatarGroupOverflowProps, AvatarGroupProps } from './AvatarGroup/index.js'
+export type {
+  AvatarGroupOverflowEmits,
+  AvatarGroupOverflowProps,
+  AvatarGroupOverflowSlots,
+  AvatarGroupProps,
+} from './AvatarGroup/index.js'
 export { Badge } from './Badge/index.js'
 export type { BadgeProps, BadgeVariant, BadgeVariantMap } from './Badge/index.js'
 export { Banner } from './Banner/index.js'
@@ -307,7 +312,9 @@ export {
 export type {
   CommandPaletteEmits,
   CommandPaletteGroupProps,
+  CommandPaletteInputEmits,
   CommandPaletteInputProps,
+  CommandPaletteItemEmits,
   CommandPaletteItemProps,
   CommandPaletteItemSlotProps,
   CommandPaletteListProps,
@@ -887,6 +894,8 @@ export {
 } from './SideNav/index.js'
 export type {
   SideNavCollapseButtonProps,
+  SideNavCollapseButtonSize,
+  SideNavCollapseButtonSlots,
   SideNavCollapseContext,
   SideNavCollapsible,
   SideNavEmits,
@@ -1061,6 +1070,7 @@ export type {
   TabMenuOption,
   TabMenuProps,
   TabProps,
+  TabSlots,
 } from './TabList/index.js'
 export { Text } from './Text/index.js'
 export type {
@@ -1154,7 +1164,16 @@ export type {
   TimestampTooltipLine,
 } from './Timestamp/index.js'
 export { Toast, ToastViewport, useToast } from './Toast/index.js'
-export type { ToastCollisionBehavior, ToastItem, ToastOptions, ToastPlacement, ToastType } from './Toast/index.js'
+export type {
+  ToastCollisionBehavior,
+  ToastContentScope,
+  ToastDismissReason,
+  ToastItem,
+  ToastOptions,
+  ToastPlacement,
+  ToastSlots,
+  ToastType,
+} from './Toast/index.js'
 export { ToggleButton, ToggleButtonGroup } from './ToggleButton/index.js'
 export type {
   ToggleButtonChangeAction,

@@ -155,15 +155,28 @@ export interface SideNavItemSlots {
   end?: () => unknown
 }
 
+export type SideNavCollapseButtonSize = 'sm' | 'md' | 'lg'
+
 export interface SideNavCollapseButtonProps {
-  /** 覆盖默认的「收起侧边栏 / 展开侧边栏」。 */
+  /**
+   * 自定义按钮文字。给了就渲染成「文字 + 箭头」的按钮；不给就只显示箭头图标。
+   */
   label?: string
   /**
    * 按钮不在 SideNav 里面时，用 `v-model:isCollapsed` 和侧栏连到同一个状态。
    */
   isCollapsed?: boolean
+  /**
+   * 按钮尺寸。默认跟着容器走：SideNav 里面是 `sm`，外面是 `md`。
+   */
+  size?: SideNavCollapseButtonSize
 }
 
 export interface SideNavCollapseButtonEmits {
   'update:isCollapsed': [isCollapsed: boolean]
+}
+
+export interface SideNavCollapseButtonSlots {
+  /** 自定义按钮内容。给了就替换默认的箭头图标和文字。 */
+  default?: () => unknown
 }

@@ -12,7 +12,7 @@ import { numberInputClearable, numberInputRange, numberInputStatus, numberInputU
 
 ## Usage
 
-`NumberInput` is a numeric field. People can type a number or use the up and down chevrons. `min` and `max` clamp the value, and `step` sets how much each click changes it.
+`NumberInput` is a numeric field. People type a number; add `hasNumberSteppers` when they should also get up and down chevrons. `min` and `max` clamp the value, and `step` sets how much each click changes it.
 
 Bind a number:
 
@@ -30,6 +30,8 @@ const count = ref(0)
 ```
 
 Values outside `min` and `max` are pulled back into range. The stepper names are English unless the app calls `provideAstryxLocale('zh-CN')`. When `label` is set, it is included in those names.
+
+Three props adjust the field to the number it holds. `isIntegerOnly` keeps decimals out of the committed value. `formatValue` shows a readable form while the field is idle, such as `1,234 items`, and switches back to the raw number on focus. `isWheelEnabled={false}` stops the wheel from stepping the value where page scrolling matters more.
 
 
 <ComponentAnatomy />

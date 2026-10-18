@@ -133,6 +133,24 @@
     background: var(--astryx-progress-bar-info-fill, var(--astryx-input-info, #6d9cfe));
   }
 
+  /* A disabled bar dims everything it draws: the fill drops the variant color
+     for the disabled foreground, and the label, value and marks step down to
+     the muted ramp. */
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-fill {
+    background: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
+  }
+
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-label,
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-value {
+    color: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
+  }
+
+  /* The attribute selector is repeated so this also outranks the variant plus
+     placement rules above, which carry the same specificity. */
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-mark[data-placement] {
+    background: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
+  }
+
   .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill {
     width: 40%;
     animation: astryx-progress-bar-indeterminate 1.2s ease-in-out infinite;
