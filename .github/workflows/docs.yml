@@ -6,12 +6,36 @@ on:
     branches:
       - main
       - dev
+    # 只有会影响文档产物的文件变动才触发，省下 Pages 每月 500 次的构建额度
+    paths: &docs-paths
+      - 'apps/docs/**'
+      - 'packages/**'
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .github/workflows/docs.yml
   pull_request:
+    # 不写 types 时默认就是 opened / synchronize / reopened。
+    # synchronize 表示「PR 分支又推了新 commit」，这正是每次提交都部署的来源。
+    # 想进一步省额度：改成 [opened, reopened, synchronize, labeled]，
+    # 并在下面 Deploy 步骤的 if 里追加 label 判断（见该步骤注释）。
+    paths: *docs-paths
+
+# 同一个 PR（或同一分支）只保留最新一次运行，旧的在途运行直接取消，
+# 避免连续推送时每一次 commit 都吃掉一次构建额度。
+# main 不取消，防止生产部署被掐断在半路。
+concurrency:
+  group: pages-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   deploy:
     name: Build and Deploy Docs
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # 在 commit message 或 PR 标题里写 [skip deploy] 即可跳过本次部署
+    if: |
+      !contains(github.event.head_commit.message, '[skip deploy]') &&
+      !contains(github.event.pull_request.title, '[skip deploy]')
     permissions:
       contents: read
       pull-requests: write
@@ -29,11 +53,10 @@ jobs:
           node-version: '22.18'
           cache: pnpm
 
+      # esbuild / workerd 的构建许可已在 pnpm-workspace.yaml 的 allowBuilds 里声明，
+      # 这里一条命令装完即可，不需要再走 approve-builds 回头重装。
       - name: Install dependencies
-        run: |
-          pnpm install --frozen-lockfile || true
-          pnpm approve-builds esbuild workerd
-          pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build core package
         run: pnpm --filter @astryx-vue/core build
@@ -42,7 +65,18 @@ jobs:
         run: pnpm docs:build
 
       - name: Deploy to Cloudflare Pages
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        # 满足任一即部署：
+        #   - push 事件（main / dev）
+        #   - 自有仓库的 PR（fork PR 拿不到 secrets）
+        # 且 PR 的 head 分支不能是 main / dev，否则 push 事件已经部署过，会重复扣额度。
+        # 想启用 label 门控时，在最后一个右括号前追加：
+        #   && contains(github.event.pull_request.labels.*.name, 'docs-preview')
+        if: |
+          github.event_name == 'push' ||
+          (github.event_name == 'pull_request' &&
+           github.event.pull_request.head.repo.full_name == github.repository &&
+           github.event.pull_request.head.ref != 'main' &&
+           github.event.pull_request.head.ref != 'dev')
         id: deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -51,27 +85,46 @@ jobs:
           BRANCH="${{ github.head_ref || github.ref_name }}"
           DEPLOY_OUTPUT=$(pnpm exec wrangler pages deploy apps/docs/.vitepress/dist --project-name=astryx-vue --branch="$BRANCH" 2>&1)
           echo "$DEPLOY_OUTPUT"
-          DEPLOYMENT_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'https://[^\s]+\.pages\.dev' | head -1)
-          echo "deployment-url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          DEPLOYMENT_URL=$(echo "$DEPLOY_OUTPUT" | grep -oE 'https://[^[:space:]]+\.pages\.dev' | head -1)
+          echo "deployment-url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
 
       - name: Comment Preview URL
+        # 用一个固定的 Markdown 注释当标记：找到旧评论就原地更新，
+        # 不再每次部署都往 PR 里刷一条新评论。
         if: github.event_name == 'pull_request' && steps.deploy.outcome == 'success'
         uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.deployment-url }}
         with:
           script: |
-            const deploymentUrl = '${{ steps.deploy.outputs.deployment-url }}' || 'https://astryx-vue.pages.dev';
+            const marker = '<!-- cf-pages-preview -->'
+            const url = process.env.PREVIEW_URL || 'https://astryx-vue.pages.dev'
+            const body = [marker, '📚 **文档预览已更新**', '', `🔗 ${url}`].join('\n')
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `📚 Documentation preview deployed!\n\n🔗 **Preview URL**: ${deploymentUrl}`
-            });
+            const { owner, repo } = context.repo
+            const issue_number = context.issue.number
+            const { data: comments } = await github.rest.issues.listComments({
+              owner, repo, issue_number, per_page: 100,
+            })
+            const existing = comments.find(c => c.body?.includes(marker))
 
-      - name: Skip Deploy (Fork PR or Missing Secrets)
-        if: |
-          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) ||
-          (steps.deploy.outcome == 'skipped')
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner, repo, comment_id: existing.id, body,
+              })
+              core.info(`Updated existing preview comment #${existing.id}`)
+            } else {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number, body,
+              })
+              core.info('Created new preview comment')
+            }
+
+      - name: Deploy skipped
+        if: steps.deploy.outcome == 'skipped'
         run: |
-          echo "⚠️  Deployment skipped: Fork PR or missing Cloudflare secrets"
-          echo "📦 Docs built successfully and available in apps/docs/.vitepress/dist"
+          echo "⚠️  本次未部署，原因之一："
+          echo "   - 这是 fork PR，拿不到 Cloudflare secrets"
+          echo "   - PR 的 head 分支是 main/dev，push 事件已经部署过了"
+          echo "   - PR 没有 docs-preview 标签（启用 label 门控时）"
+          echo "📦 文档已成功构建，产物在 apps/docs/.vitepress/dist"
