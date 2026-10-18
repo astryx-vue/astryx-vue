@@ -46350,8 +46350,14 @@
         "zh": "仓库在 <https://github.com/astryx-vue/astryx-vue>。问题用 GitHub Issues。许可是 MIT。"
       },
       "headings": {
-        "en": [],
-        "zh": []
+        "en": [
+          "How close to upstream",
+          "Comparison shots"
+        ],
+        "zh": [
+          "对齐到什么程度",
+          "对照图"
+        ]
       },
       "keywords": {
         "en": [],
