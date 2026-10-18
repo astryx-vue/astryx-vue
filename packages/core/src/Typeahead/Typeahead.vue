@@ -2,9 +2,10 @@
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { TypeaheadEmits, TypeaheadProps, TypeaheadSlots } from './types.js'
-import { computed, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, provide, useAttrs, useId, useTemplateRef } from 'vue'
 import Field from '../Field/Field.vue'
 import BaseTypeahead from './BaseTypeahead.vue'
+import { typeaheadChromeKey } from './context.js'
 import '../../styles/typeahead.css'
 
 defineOptions({ name: 'AstryxTypeahead', inheritAttrs: false })
@@ -30,6 +31,7 @@ const emit = defineEmits<TypeaheadEmits<T>>()
 defineSlots<TypeaheadSlots<T>>()
 
 const attrs = useAttrs()
+provide(typeaheadChromeKey, true)
 const inputId = `astryx-typeahead-${useId()}`
 const base = useTemplateRef<{ focus: () => void, blur: () => void }>('base')
 

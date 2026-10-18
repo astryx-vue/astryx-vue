@@ -9,8 +9,8 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="CommandPaletteInput 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code></td><td>框里的灰色占位文字。没写 <code>label</code> 时，它也会被当作这个框的名字。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td><code>placeholder</code></td><td>这个框给读屏用的名字。默认就是占位文字；「Search…」说不清在搜什么的时候，自己传一个。</td></tr>
+<tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code></td><td>框里的灰色占位文字。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>按语言显示「搜索命令」</td><td>这个框给读屏用的名字。默认是按当前语言显示的「搜索命令」，不再用占位文字；搜的不是命令时自己传一个。</td></tr>
 <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>true</code></td><td>挂载时是否自动聚焦。面板是画在页面里的时候会自动跳过，免得打开文档示例就抢走焦点。</td></tr>
 <tr><td><code>value</code></td><td><code>string</code></td><td>—</td><td>搜索文字，用 <code>v-model:value</code> 绑定。不传时，读写的是外层 <code>CommandPalette</code> 的搜索文字。</td></tr>
 </tbody></table>

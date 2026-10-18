@@ -230,6 +230,23 @@
     min-width: 0;
   }
 
+  /* 单独使用的 BaseTypeahead 只有裸输入：没有边框、底色、内边距，悬停和聚焦也不画外圈。 */
+  .astryx-typeahead-control.is-bare {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .astryx-typeahead-control.is-bare:hover,
+  .astryx-typeahead-control.is-bare:focus-within,
+  .astryx-typeahead-control.is-bare.is-open {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
   .astryx-typeahead-item {
     display: flex;
     align-items: center;

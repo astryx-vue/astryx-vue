@@ -24832,7 +24832,7 @@
               },
               {
                 "name": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
                 "description": "Vue icon component before the label. The labelIcon slot takes precedence."
               },
@@ -24939,7 +24939,7 @@
               },
               {
                 "name": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
                 "description": "Vue icon component before the label. The labelIcon slot takes precedence."
               },
@@ -25059,7 +25059,7 @@
               },
               {
                 "name": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
                 "description": "显示在标签前的 Vue 图标组件；`labelIcon` 插槽优先于该属性。"
               },
@@ -25166,7 +25166,7 @@
               },
               {
                 "name": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
                 "description": "标签前的 Vue 图标组件。labelIcon 插槽优先。"
               },
@@ -25552,7 +25552,7 @@
               {
                 "name": "`labelIcon`",
                 "description": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—"
               },
               {
@@ -25642,7 +25642,7 @@
               },
               {
                 "name": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
                 "description": "标签文字前面的图标，放在 16px 的框里。外层是 `aria-hidden`，所以图标本身不该单独承载信息。"
               },
@@ -57239,7 +57239,7 @@
                 "name": "`label`",
                 "description": "`label`",
                 "type": "`string`",
-                "default": "`placeholder`"
+                "default": "Localized \"Search commands\""
               },
               {
                 "name": "`hasAutoFocus`",
@@ -57264,13 +57264,13 @@
                 "name": "`placeholder`",
                 "type": "`string`",
                 "default": "`Search…`",
-                "description": "框里的灰色占位文字。没写 `label` 时，它也会被当作这个框的名字。"
+                "description": "框里的灰色占位文字。"
               },
               {
                 "name": "`label`",
                 "type": "`string`",
-                "default": "`placeholder`",
-                "description": "这个框给读屏用的名字。默认就是占位文字；「Search…」说不清在搜什么的时候，自己传一个。"
+                "default": "按语言显示「搜索命令」",
+                "description": "这个框给读屏用的名字。默认是按当前语言显示的「搜索命令」，不再用占位文字；搜的不是命令时自己传一个。"
               },
               {
                 "name": "`hasAutoFocus`",

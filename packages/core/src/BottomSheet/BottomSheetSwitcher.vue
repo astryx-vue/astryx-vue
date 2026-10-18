@@ -184,6 +184,7 @@ onBeforeUnmount(() => {
 <template>
   <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 点在对话框空白处才关闭；键盘用 Escape，不给对话框再加一个按钮。 -->
   <dialog
+    v-bind="$attrs"
     ref="dialog"
     class="astryx-bottom-sheet-dialog astryx-bottom-sheet-switcher"
     :class="{

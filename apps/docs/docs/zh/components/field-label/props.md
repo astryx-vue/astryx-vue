@@ -19,7 +19,7 @@ footer: false
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签变淡，同时点说明也不会再聚焦控件。</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示可选标记。和 <code>isRequired</code> 同时写时以它为准。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示必填标记。放在 <code>defaultOptionality="required"</code> 的 <code>FormLayout</code> 里时不再显示，因为必填就是默认。</td></tr>
-<tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>标签文字前面的图标，放在 16px 的框里。外层是 <code>aria-hidden</code>，所以图标本身不该单独承载信息。</td></tr>
+<tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>标签文字前面的图标，放在 16px 的框里。外层是 <code>aria-hidden</code>，所以图标本身不该单独承载信息。</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签行末尾那个提示按钮的文字。</td></tr>
 <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td><code>'Optional'</code></td><td>可选标记的文字。要本地化就改它。</td></tr>
 <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td><code>'Required'</code></td><td>必填标记的文字。要本地化就改它。</td></tr>

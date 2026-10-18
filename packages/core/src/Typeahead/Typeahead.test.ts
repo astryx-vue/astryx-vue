@@ -132,6 +132,17 @@ describe('typeahead', () => {
     expect(wrapper.find('label').exists()).toBe(false)
     expect(wrapper.find('.astryx-typeahead--bare').exists()).toBe(true)
     expect(wrapper.get('input').attributes('aria-label')).toBe('Command')
+    expect(wrapper.get('.astryx-typeahead-control').classes()).toContain('is-bare')
+    wrapper.unmount()
+  })
+
+  it('keeps the border and chrome when wrapped by Typeahead', () => {
+    const wrapper = mount(Typeahead, {
+      attachTo: document.body,
+      props: { label: 'Fruit', searchSource: createStaticSource(fruits), debounceMs: 0 },
+    })
+    expect(wrapper.get('.astryx-typeahead-control').classes()).not.toContain('is-bare')
+    expect(wrapper.find('.astryx-typeahead--bare').exists()).toBe(false)
     wrapper.unmount()
   })
 })

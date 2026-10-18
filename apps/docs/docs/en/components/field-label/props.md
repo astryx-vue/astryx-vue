@@ -19,7 +19,7 @@ footer: false
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Dims the label and stops the description from focusing the control.</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the optional marker. Wins over <code>isRequired</code> when both are set.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the required marker. Inside a <code>FormLayout</code> with <code>defaultOptionality="required"</code> the marker is suppressed, because being required is the default.</td></tr>
-<tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Icon rendered before the label text, inside a 16px box. The wrapper is <code>aria-hidden</code>, so the icon must not carry meaning on its own.</td></tr>
+<tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>Icon rendered before the label text, inside a 16px box. The wrapper is <code>aria-hidden</code>, so the icon must not carry meaning on its own.</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip text for the info button at the end of the label row.</td></tr>
 <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td><code>'Optional'</code></td><td>Text of the optional marker. Override it to localize.</td></tr>
 <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td><code>'Required'</code></td><td>Text of the required marker. Override it to localize.</td></tr>

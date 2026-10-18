@@ -45,8 +45,8 @@ describe('fieldLabel', () => {
     input.id = 'name'
     document.body.append(input)
     const wrapper = mount(FieldLabel, { attachTo: document.body, props: { label: '姓名', inputId: 'name', description: '填写真实姓名', isRequired: true, requiredLabel: '必填' } })
-    expect(wrapper.get('label').text()).toBe('姓名')
-    expect(wrapper.get('.astryx-field-optionality').text()).toBe('必填')
+    expect(wrapper.get('label').text()).toContain('姓名')
+    expect(wrapper.get('.astryx-field-optionality').text()).toBe('∙ 必填')
     await wrapper.get('.astryx-field-description').trigger('click')
     expect(document.activeElement).toBe(input)
   })

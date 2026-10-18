@@ -1,12 +1,13 @@
 <script setup lang="ts" generic="T extends SearchableItem">
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { BaseTypeaheadProps, TypeaheadEmits, TypeaheadSlots } from './types.js'
-import { computed, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, inject, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
+import { typeaheadChromeKey } from './context.js'
 import TypeaheadMenu from './TypeaheadMenu.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from './useAnchoredListbox.js'
 import { useTypeaheadMenu } from './useTypeaheadMenu.js'
@@ -136,8 +137,10 @@ const anchored = useAnchoredListbox({
   },
 })
 
+/** 由 `Typeahead` 包着时才画边框和选中值标签；单独使用就是裸输入。 */
+const hasChrome = inject(typeaheadChromeKey, null) !== null
 const selected = computed(() => props.modelValue ?? null)
-const showToken = computed(() => selected.value != null && !editing.value)
+const showToken = computed(() => hasChrome && selected.value != null && !editing.value)
 /** 值的 Token 盖住输入框时，把看不见的输入框从 Tab 序里拿出去。 */
 const resolvedTabIndex = computed(() => props.inputTabIndex ?? (showToken.value ? -1 : undefined))
 
@@ -267,12 +270,12 @@ defineExpose({
 </script>
 
 <template>
-  <div class="astryx-typeahead astryx-typeahead--bare" :class="[`size-${props.size}`]">
+  <div class="astryx-typeahead" :class="[`size-${props.size}`, { 'astryx-typeahead--bare': !hasChrome }]">
     <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 点空白处只是把焦点交给组合框；键盘用户直接 Tab 到输入框。 -->
     <div
       ref="controlRef"
       class="astryx-typeahead-control"
-      :class="[`status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': props.disabled }]"
+      :class="[`status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': props.disabled, 'is-bare': !hasChrome }]"
       @click="onControlClick"
       @pointerenter="disabledTooltip.onPointerEnter"
       @pointerleave="disabledTooltip.onPointerLeave"
