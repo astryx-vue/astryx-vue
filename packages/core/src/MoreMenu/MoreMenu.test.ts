@@ -390,6 +390,7 @@ describe('moreMenu', () => {
     submenuRow.focus()
     keydown(submenuRow, 'ArrowRight')
     await flushPromises()
+    await vi.waitFor(() => expect(menus().length).toBe(2))
 
     const flyoutRow = Array.from(menus()[1].querySelectorAll<HTMLElement>('[role="menuitem"]'))
       .find(element => element.textContent?.includes('Archive')) as HTMLElement

@@ -1,4 +1,4 @@
-import type { MaybeRefOrGetter, VNodeChild } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
 import type { TablePlugin } from '../types.js'
 import { computed, toValue } from 'vue'
 
@@ -15,14 +15,31 @@ function rowId<T extends Record<string, unknown>>(row: T, idKey: string): string
   return String(row[idKey] ?? '')
 }
 
+/**
+ * 选择状态的只读快照。`useTableSelectionState` 返回它，选择相关的界面直接读这几个字段，
+ * 不用自己再数 `selectedKeys`。
+ */
+export interface TableSelectionState {
+  /** 选中的全部键，含不在当前页里的行。 */
+  readonly selectedKeys: ReadonlySet<string>
+  /** 选中的键的总数。 */
+  readonly selectedCount: number
+  /** 是否至少选中了一个键。 */
+  readonly hasSelection: boolean
+  /** 清空全部选中的键。 */
+  clearSelection: () => void
+}
+
 export function useTableSelectionState<T extends Record<string, unknown>>(config: UseTableSelectionStateConfig<T>): {
   selectionConfig: UseTableSelectionConfig<T> & { readonly rows: readonly T[] }
+  selectionState: TableSelectionState
 } {
   const selectable = computed(() => toValue(config.data))
+  const selectedKeys = computed(() => toValue(config.selectedKeys))
   const selectionConfig = {
-    getIsItemSelected: (item: T) => toValue(config.selectedKeys).has(rowId(item, config.idKey)),
+    getIsItemSelected: (item: T) => selectedKeys.value.has(rowId(item, config.idKey)),
     onSelectItem: ({ item, isSelected }: { item: T, isSelected: boolean }) => {
-      const next = new Set(toValue(config.selectedKeys))
+      const next = new Set(selectedKeys.value)
       const id = rowId(item, config.idKey)
       if (isSelected)
         next.add(id)
@@ -36,14 +53,12 @@ export function useTableSelectionState<T extends Record<string, unknown>>(config
         : new Set())
     },
     getIsAllSelected: () => {
-      const rows = toValue(config.data)
-      const selected = toValue(config.selectedKeys)
-      return rows.length > 0 && rows.every(item => selected.has(rowId(item, config.idKey)))
+      const rows = selectable.value
+      return rows.length > 0 && rows.every(item => selectedKeys.value.has(rowId(item, config.idKey)))
     },
     getIsIndeterminate: () => {
-      const rows = toValue(config.data)
-      const selected = toValue(config.selectedKeys)
-      const count = rows.filter(item => selected.has(rowId(item, config.idKey))).length
+      const rows = selectable.value
+      const count = rows.filter(item => selectedKeys.value.has(rowId(item, config.idKey))).length
       return count > 0 && count < rows.length
     },
     getRowLabel: config.getRowLabel,
@@ -52,7 +67,19 @@ export function useTableSelectionState<T extends Record<string, unknown>>(config
       return selectable.value
     },
   }
-  return { selectionConfig }
+  const selectionState: TableSelectionState = {
+    get selectedKeys() {
+      return selectedKeys.value
+    },
+    get selectedCount() {
+      return selectedKeys.value.size
+    },
+    get hasSelection() {
+      return selectedKeys.value.size > 0
+    },
+    clearSelection: () => config.setSelectedKeys(new Set()),
+  }
+  return { selectionConfig, selectionState }
 }
 
 export interface UseTableSelectionConfig<T extends Record<string, unknown>> {
@@ -81,12 +108,4 @@ export function useTableSelection<T extends Record<string, unknown>>(
       hasRowHighlight: toValue(config).hasRowHighlight,
     },
   }
-}
-
-export interface TableSelectionToolbarProps {
-  count: number
-}
-
-export function selectionSummary(count: number, label: (count: number) => string): VNodeChild {
-  return label(count)
 }

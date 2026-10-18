@@ -1,4 +1,7 @@
 import type { CSSProperties, VNode, VNodeChild } from 'vue'
+import type { SectionVariant } from '../Section/types.js'
+import type { ToolbarSize } from '../Toolbar/types.js'
+import type { TableSelectionState } from './plugins/selection.js'
 
 export type TableDensity = 'compact' | 'balanced' | 'spacious'
 export type TableDividers = 'rows' | 'columns' | 'grid' | 'none'
@@ -186,4 +189,44 @@ export interface TableCellProps {
   colSpan?: number
   rowSpan?: number
   headers?: string
+}
+
+export interface TableSelectionToolbarProps {
+  /**
+   * 选中的行数。`selection` 没给时用它。
+   * @default 0
+   */
+  count?: number
+  /**
+   * `useTableSelectionState` 返回的 `selectionState`。给了就代替 `count`，
+   * 并且一个都没选中时整条不渲染。
+   */
+  selection?: TableSelectionState
+  /**
+   * 工具栏的无障碍名称。不传用内置文案。
+   */
+  label?: string
+  /**
+   * 清空按钮的文字。不传用内置文案。
+   */
+  clearLabel?: string
+  /**
+   * 高度档，同时决定清空按钮的高度。
+   * @default 'sm'
+   */
+  size?: ToolbarSize
+  /**
+   * 底色。`section` 用表面色，`muted` 用弱化底，`transparent` 不铺底。
+   * @default 'muted'
+   */
+  variant?: SectionVariant
+}
+
+export interface TableSelectionToolbarSlots {
+  /** 产品自己的操作按钮，排在逻辑起点。 */
+  start?: () => VNodeChild
+  /** 计数文字的替代渲染，参数里带 `count`。 */
+  label?: (props: { count: number }) => VNodeChild
+  /** `start` 的旧写法，两者都没给时不用。 */
+  default?: () => VNodeChild
 }

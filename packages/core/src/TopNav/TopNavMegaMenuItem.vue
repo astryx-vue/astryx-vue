@@ -25,12 +25,11 @@ function onClick(): void {
     :href="href || undefined"
     :to="href && as != null ? href : undefined"
     :type="href ? undefined : 'button'"
-    tabindex="-1"
     @click="onClick"
   >
     <span v-if="iconClass || $slots.icon" class="astryx-top-nav-mega-item__icon" aria-hidden="true">
       <slot name="icon">
-        <span v-if="iconClass" class="astryx-top-nav-mega-item__glyph" :class="iconClass" />
+        <span v-if="iconClass" class="astryx-top-nav-mega-item__glyph-box"><span class="astryx-top-nav-mega-item__glyph" :class="iconClass" /></span>
       </slot>
     </span>
     <span class="astryx-top-nav-mega-item__text">

@@ -17,7 +17,7 @@ export type { UseTableRowIndexConfig } from './plugins/rowIndex.js'
 export { useTableRowStatus } from './plugins/rowStatus.js'
 export type { TableCustomRowStatus, TableRowStatus, TableRowStatusColor, TableRowStatusName, TableSemanticRowStatus, UseTableRowStatusConfig } from './plugins/rowStatus.js'
 export { useTableSelection, useTableSelectionState } from './plugins/selection.js'
-export type { UseTableSelectionConfig, UseTableSelectionStateConfig } from './plugins/selection.js'
+export type { TableSelectionState, UseTableSelectionConfig, UseTableSelectionStateConfig } from './plugins/selection.js'
 export { useTableSortable, useTableSortableState } from './plugins/sortable.js'
 export type { UseTableSortableConfig } from './plugins/sortable.js'
 export { resolveStickySide, stickyOffsets, useTableStickyColumns } from './plugins/stickyColumns.js'
@@ -53,6 +53,8 @@ export type {
   TableRowMenuItem,
   TableRowPatch,
   TableRowProps,
+  TableSelectionToolbarProps,
+  TableSelectionToolbarSlots,
   TableSortDirection,
   TableSortEntry,
   TableSortState,

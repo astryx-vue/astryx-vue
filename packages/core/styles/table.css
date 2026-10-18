@@ -261,12 +261,24 @@
     justify-content: flex-end;
   }
 
-  .astryx-table-selection-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--astryx-spacing-2, 8px);
-    margin-bottom: var(--astryx-spacing-2, 8px);
+  /*
+   * 选择工具栏复用 Toolbar 的骨架：产品操作排在逻辑起点，计数文字和清空命令排在末端。
+   */
+
+  /* Toolbar 只有透明和弱化底，表面色这一档在这里补上。 */
+  .astryx-table-selection-toolbar--section {
+    background: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-table-selection-toolbar__label {
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    white-space: nowrap;
+  }
+
+  /* 按钮按文字宽度排，空间紧张时不被压扁。 */
+  .astryx-table-selection-toolbar__clear {
+    flex: none;
   }
 
   .astryx-table__clickable {
