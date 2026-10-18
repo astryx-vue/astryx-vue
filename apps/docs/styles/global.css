@@ -558,7 +558,8 @@ html.dark .component-card__preview {
   /* 和总览卡片一样：列宽必须受容器约束，否则宽内容会顶出画布。 */
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  min-height: 360px;
+  /* 原版这块画布高 513px，组件在中间展示。 */
+  min-height: 513px;
   margin-top: 28px;
   padding: 32px;
   overflow: hidden;
@@ -574,6 +575,13 @@ html.dark .component-detail__stage {
 .component-detail__stage > * {
   max-width: 100%;
   min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .component-detail__stage {
+    min-height: 320px;
+    padding: 20px;
+  }
 }
 
 .component-detail__body {
