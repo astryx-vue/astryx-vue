@@ -27,6 +27,7 @@
 @import './previews/scrollable-area.css';
 @import './previews/section.css';
 @import './previews/segmented-control.css';
+@import './previews/table-parts.css';
 @import './previews/toggle-button.css';
 
 
@@ -502,10 +503,10 @@ html.dark .component-card__preview {
 
 .component-detail__content {
   box-sizing: border-box;
-  width: min(100%, 1080px);
+  width: min(100%, 960px);
   min-width: 0;
   margin-inline: auto;
-  padding: 36px clamp(24px, 4vw, 48px) 80px;
+  padding: 36px 24px 80px;
 }
 
 .component-detail__header {
@@ -558,9 +559,11 @@ html.dark .component-card__preview {
   /* 和总览卡片一样：列宽必须受容器约束，否则宽内容会顶出画布。 */
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  min-height: 360px;
+  /* 原版这块画布高 513px，组件在中间展示。 */
+  min-height: 513px;
   margin-top: 28px;
-  padding: 32px;
+  /* 原版画布自身没有内边距，靠居中规则摆放组件。 */
+  padding: 0;
   overflow: hidden;
   isolation: isolate;
   border-radius: 16px;
@@ -574,6 +577,13 @@ html.dark .component-detail__stage {
 .component-detail__stage > * {
   max-width: 100%;
   min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .component-detail__stage {
+    min-height: 320px;
+    padding: 20px;
+  }
 }
 
 .component-detail__body {
