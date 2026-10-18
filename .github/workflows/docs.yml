@@ -32,10 +32,12 @@ jobs:
     name: Build and Deploy Docs
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # 在 commit message 或 PR 标题里写 [skip deploy] 即可跳过本次部署
+    # 在 commit message 或 PR 标题的「开头」写 [skip deploy] 才跳过本次部署。
+    # 这里必须用 startsWith 而不是 contains：squash 合并会把 PR 正文并进 commit
+    # message，只要正文里提到过这个字符串，contains 就会把整次部署误跳过。
     if: |
-      !contains(github.event.head_commit.message, '[skip deploy]') &&
-      !contains(github.event.pull_request.title, '[skip deploy]')
+      !startsWith(github.event.head_commit.message, '[skip deploy]') &&
+      !startsWith(github.event.pull_request.title, '[skip deploy]')
     permissions:
       contents: read
       pull-requests: write
