@@ -3,6 +3,7 @@ import type { NavLinkComponent } from '../NavItem/types.js'
 import type { NavMenuFocusRequest } from './context.js'
 import { computed, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 import NavDisclosure from './NavDisclosure.vue'
@@ -32,6 +33,9 @@ defineSlots<{
 
 const slots = useSlots()
 const messages = useAstryxMessages()
+const linkComponent = useLinkComponent()
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
 const block = computed(() => props.kind === 'top' ? 'astryx-top-nav-heading' : 'astryx-side-nav-heading')
 const hasMenu = computed(() => slots.menu != null)
 const mode = computed(() => resolveNavHeadingMode({
@@ -41,12 +45,12 @@ const mode = computed(() => resolveNavHeadingMode({
   superheadingHref: props.superheadingHref,
   subheadingHref: props.subheadingHref,
 }))
-const headingRoot = computed(() => resolveNavRoot(props.headingHref, false, props.as))
+const headingRoot = computed(() => resolveNavRoot(props.headingHref, false, customLink.value))
 const logoName = computed(() => props.logoLabel || props.heading)
 const logoIsLink = computed(() => Boolean(props.headingHref) && mode.value !== 'whole-link' && mode.value !== 'logo')
 
 const textProps = computed(() => ({
-  as: props.as,
+  as: customLink.value,
   block: block.value,
   heading: props.heading,
   headingHref: props.headingHref,
@@ -63,7 +67,7 @@ const textProps = computed(() => ({
     v-if="mode === 'logo'"
     :class="[block, { [`${block}--link`]: headingHref }]"
     :href="headingHref"
-    :to="as != null ? headingHref : undefined"
+    :to="customLink != null ? headingHref : undefined"
     :aria-label="headingHref ? logoName : undefined"
   >
     <span v-if="$slots.icon" :class="`${block}__icon`">
@@ -76,7 +80,7 @@ const textProps = computed(() => ({
     v-else-if="mode === 'whole-link'"
     :class="[block, `${block}--link`]"
     :href="headingHref"
-    :to="as != null ? headingHref : undefined"
+    :to="customLink != null ? headingHref : undefined"
   >
     <span v-if="$slots.icon" :class="`${block}__icon`">
       <slot name="icon" />
@@ -100,7 +104,7 @@ const textProps = computed(() => ({
           v-if="logoIsLink && $slots.icon"
           :class="`${block}__icon`"
           :href="headingHref"
-          :to="as != null ? headingHref : undefined"
+          :to="customLink != null ? headingHref : undefined"
           :aria-label="logoName"
           @click.stop
         >
@@ -153,7 +157,7 @@ const textProps = computed(() => ({
       v-if="logoIsLink && $slots.icon"
       :class="`${block}__icon`"
       :href="headingHref"
-      :to="as != null ? headingHref : undefined"
+      :to="customLink != null ? headingHref : undefined"
       :aria-label="logoName"
     >
       <slot name="icon" />

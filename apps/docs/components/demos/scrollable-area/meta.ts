@@ -4,7 +4,7 @@ import { scrollableAreaOverview as demo } from './index'
 export const meta = {
   slug: 'scrollable-area',
   group: 'Layout',
-  order: 9,
+  order: 17,
   en: 'Scrollable Area',
   zh: '可滚动区域',
   demo,

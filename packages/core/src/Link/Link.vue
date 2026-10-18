@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { LinkProps } from './types.js'
 import { computed, toRaw } from 'vue'
 
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -28,13 +29,17 @@ defineSlots<{
 }>()
 
 const messages = useAstryxMessages()
+const linkComponent = useLinkComponent()
+
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
 
 const isButton = computed(() => props.href == null || props.href === '')
-const isCustomLink = computed(() => !isButton.value && !props.isDisabled && props.as != null)
+const isCustomLink = computed(() => !isButton.value && !props.isDisabled && customLink.value != null)
 const root = computed(() => {
-  if (isButton.value || props.isDisabled || props.as == null)
+  if (isButton.value || props.isDisabled || customLink.value == null)
     return isButton.value ? 'button' : 'a'
-  return toRaw(props.as)
+  return toRaw(customLink.value)
 })
 
 const computedTarget = computed(() => {

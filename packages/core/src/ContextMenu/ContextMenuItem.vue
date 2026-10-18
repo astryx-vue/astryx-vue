@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ContextMenuItemEmits, ContextMenuItemProps, ContextMenuItemSlots } from './types.js'
-import { computed, useTemplateRef } from 'vue'
+import { computed, toRaw, useTemplateRef } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useContextMenu, useContextMenuSize } from './context.js'
 import { isModifiedClick } from './menuNav.js'
 import '../../styles/context-menu.css'
@@ -18,6 +19,9 @@ const emit = defineEmits<ContextMenuItemEmits>()
 defineSlots<ContextMenuItemSlots>()
 
 const menu = useContextMenu()
+const linkComponent = useLinkComponent()
+/** 有链接时用的根组件，没有 provider 时还是 `<a>`。 */
+const linkRoot = computed(() => (linkComponent.value == null ? 'a' : toRaw(linkComponent.value)))
 const size = useContextMenuSize()
 const root = useTemplateRef<HTMLElement>('root')
 
@@ -69,7 +73,7 @@ function handlePointerMove(event: PointerEvent): void {
 
 <template>
   <component
-    :is="href != null ? 'a' : 'div'"
+    :is="href != null ? linkRoot : 'div'"
     ref="root"
     :aria-disabled="isDisabled || undefined"
     class="astryx-context-menu-item"
@@ -78,6 +82,7 @@ function handlePointerMove(event: PointerEvent): void {
     :data-size="size"
     :data-variant="variant"
     :href="href"
+    :to="href != null && linkRoot !== 'a' ? href : undefined"
     :rel="rel"
     role="menuitem"
     :tabindex="isDisabled ? undefined : -1"

@@ -4,7 +4,7 @@ import { dialogOverview as demo } from './index'
 export const meta = {
   slug: 'dialog',
   group: 'Overlay',
-  order: 2,
+  order: 3,
   en: 'Dialog',
   zh: '对话框',
   demo,

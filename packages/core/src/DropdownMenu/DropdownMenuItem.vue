@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { DropdownMenuItemEmits, DropdownMenuItemProps, DropdownMenuItemSlots } from './types.js'
-import { computed, useAttrs, useSlots } from 'vue'
+import { computed, toRaw, useAttrs, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import Item from '../List/Item.vue'
 import { useDropdownMenuContext } from './context.js'
 import { isModifiedClick } from './menuItemRoles.js'
@@ -22,6 +23,9 @@ defineSlots<DropdownMenuItemSlots>()
 const attrs = useAttrs()
 const slots = useSlots()
 const menu = useDropdownMenuContext()
+const linkComponent = useLinkComponent()
+/** 链接行用的根组件，没有 provider 时还是 `<a>`。 */
+const linkRoot = computed(() => (linkComponent.value == null ? 'a' : toRaw(linkComponent.value)))
 
 const menuSize = computed(() => menu?.menuSize.value ?? 'md')
 const density = computed(() => (menuSize.value === 'sm' ? 'compact' : 'balanced'))
@@ -94,7 +98,8 @@ function handlePointerMove(event: PointerEvent): void {
     anchor instead when a `role` is set, which would put two controls in one
     row, so the link row renders the same markup with the anchor as its root.
   -->
-  <a
+  <component
+    :is="linkRoot"
     v-if="isLink"
     v-bind="forwardedAttrs"
     class="astryx-item astryx-dropdown-menu-item"
@@ -108,6 +113,7 @@ function handlePointerMove(event: PointerEvent): void {
     :data-menu-size="menuSize"
     :data-variant="variant"
     :href="linkHref"
+    :to="linkRoot !== 'a' && !isDisabled ? linkHref : undefined"
     :rel="resolvedRel"
     :style="attrs.style as StyleValue"
     :tabindex="isDisabled ? undefined : -1"
@@ -136,7 +142,7 @@ function handlePointerMove(event: PointerEvent): void {
     <span v-if="hasEnd" class="astryx-item__end">
       <slot name="endContent" />
     </span>
-  </a>
+  </component>
 
   <Item
     v-else

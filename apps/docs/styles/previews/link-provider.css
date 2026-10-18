@@ -1,0 +1,15 @@
+.link-provider-preview {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  box-sizing: border-box;
+  width: min(100%, 480px);
+  text-align: center;
+}
+
+.link-provider-preview__status {
+  margin: 0;
+  color: var(--astryx-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}

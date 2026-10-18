@@ -4,7 +4,7 @@ import { appShellOverview as demo } from './index'
 export const meta = {
   slug: 'app-shell',
   group: 'Layout',
-  order: 4,
+  order: 8,
   en: 'App Shell',
   zh: '应用外壳',
   demo,

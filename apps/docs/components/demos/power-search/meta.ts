@@ -4,7 +4,7 @@ import { powerSearchOverview as demo } from './index'
 export const meta = {
   slug: 'power-search',
   group: 'Form Controls',
-  order: 25,
+  order: 31,
   en: 'Power Search',
   zh: '结构化搜索',
   demo,

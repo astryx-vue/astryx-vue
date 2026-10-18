@@ -1,0 +1,6 @@
+/* 舞台和示例画布共用：宽高收在这里，居中交给外层容器。 */
+.astryx-demo.layout-panel-preview {
+  box-sizing: border-box;
+  width: min(100%, 25rem);
+  height: 16rem;
+}

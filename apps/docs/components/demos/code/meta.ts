@@ -4,7 +4,7 @@ import { codeOverview as demo } from './index'
 export const meta = {
   slug: 'code',
   group: 'Content',
-  order: 4,
+  order: 6,
   en: 'Code',
   zh: '代码',
   demo,

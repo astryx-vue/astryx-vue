@@ -1,0 +1,21 @@
+.layer-provider-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: min(100%, 360px);
+}
+
+.layer-provider-preview__trigger {
+  padding: 8px 14px;
+  border: 1px solid var(--astryx-line);
+  border-radius: 8px;
+  color: var(--astryx-text);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.layer-provider-preview__trigger:hover {
+  border-color: var(--astryx-accent-bright);
+}

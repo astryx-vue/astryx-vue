@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TokenEmits, TokenProps, TokenSlots } from './types.js'
-import { computed, useAttrs } from 'vue'
+import { computed, toRaw, useAttrs } from 'vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/token.css'
 import '../../styles/visually-hidden-utility.css'
@@ -20,6 +21,9 @@ defineSlots<TokenSlots>()
 
 const attrs = useAttrs()
 const messages = useAstryxMessages()
+const linkComponent = useLinkComponent()
+/** 有链接时用的根组件，没有 provider 时还是 `<a>`。 */
+const linkRoot = computed(() => (linkComponent.value == null ? 'a' : toRaw(linkComponent.value)))
 const removeLabel = computed(() => messages.value.token.remove(props.label))
 const clickable = computed(() => typeof attrs.onClick === 'function')
 const linked = computed(() => Boolean(props.href))
@@ -60,12 +64,13 @@ function onKeydown(event: KeyboardEvent): void {
 
 <template>
   <component
-    :is="rootIsLink ? 'a' : 'span'"
+    :is="rootIsLink ? linkRoot : 'span'"
     v-bind="rootAttrs"
     class="astryx-token"
     :class="[`size-${props.size}`, { 'is-interactive': interactive, 'is-disabled': props.disabled }]"
     :data-color="props.color"
     :href="rootIsLink && !props.disabled ? props.href : undefined"
+    :to="rootIsLink && !props.disabled && linkRoot !== 'a' ? props.href : undefined"
     :aria-disabled="props.disabled && (rootIsLink || actionIsLink) ? 'true' : undefined"
     :aria-label="props.labelHidden ? props.label : undefined"
     :aria-description="props.description"
@@ -75,15 +80,17 @@ function onKeydown(event: KeyboardEvent): void {
     <span v-if="$slots.icon" class="astryx-token-icon" aria-hidden="true">
       <slot name="icon" />
     </span>
-    <a
+    <component
+      :is="actionIsLink ? linkRoot : 'a'"
       v-if="actionIsLink"
       class="astryx-token-action"
       :href="props.disabled ? undefined : props.href"
+      :to="props.disabled || linkRoot === 'a' ? undefined : props.href"
       :aria-disabled="props.disabled || undefined"
       :tabindex="props.disabled ? -1 : undefined"
     >
       <span class="astryx-token-label" :class="{ 'is-hidden': props.labelHidden }">{{ props.label }}</span>
-    </a>
+    </component>
     <button
       v-else-if="actionIsButton"
       type="button"

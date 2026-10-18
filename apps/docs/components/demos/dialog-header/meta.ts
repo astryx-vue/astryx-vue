@@ -4,7 +4,7 @@ import { dialogHeaderOverview as demo } from './index'
 export const meta = {
   slug: 'dialog-header',
   group: 'Overlay',
-  order: 3,
+  order: 4,
   en: 'Dialog Header',
   zh: '对话框页眉',
   demo,

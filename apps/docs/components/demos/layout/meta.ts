@@ -4,7 +4,7 @@ import { layoutOverview as demo } from './index'
 export const meta = {
   slug: 'layout',
   group: 'Layout',
-  order: 7,
+  order: 11,
   en: 'Layout',
   zh: '布局',
   demo,

@@ -4,7 +4,7 @@ import { sideNavOverview as demo } from './index'
 export const meta = {
   slug: 'side-nav',
   group: 'Navigation',
-  order: 5,
+  order: 9,
   en: 'Side Nav',
   zh: '侧边导航',
   demo,

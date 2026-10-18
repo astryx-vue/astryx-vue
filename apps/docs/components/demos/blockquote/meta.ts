@@ -4,7 +4,7 @@ import { blockquoteOverview as demo } from './index'
 export const meta = {
   slug: 'blockquote',
   group: 'Content',
-  order: 2,
+  order: 4,
   en: 'Blockquote',
   zh: '引用',
   demo,

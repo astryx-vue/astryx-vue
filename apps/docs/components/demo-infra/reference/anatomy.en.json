@@ -2176,5 +2176,407 @@
       "name": "Close icon",
       "description": "Visual close glyph inside the close button."
     }
+  ],
+  "avatar-group-overflow": [
+    {
+      "name": "Count label",
+      "description": "The compact `+N` or custom count text displayed inside the circular indicator."
+    },
+    {
+      "name": "Button behavior",
+      "description": "When `onClick` is provided, the indicator becomes an interactive button with focus and hover states."
+    }
+  ],
+  "base-typeahead": [
+    {
+      "name": "Input",
+      "description": "Bare combobox input. The caller supplies its visible field chrome and accessible name."
+    },
+    {
+      "name": "Loading status",
+      "description": "Named Spinner shown beside the input while an asynchronous source is pending, unless a composed owner takes over the busy indicator lane."
+    },
+    {
+      "name": "Dropdown",
+      "description": "Anchored listbox surface containing current search or bootstrap results."
+    },
+    {
+      "name": "Empty state",
+      "description": "Disabled listbox option shown after a completed search returns no results."
+    },
+    {
+      "name": "Result group heading",
+      "description": "Visible label for a group of result options."
+    },
+    {
+      "name": "Result row",
+      "description": "Option wrapper that owns highlight, selection, pointer, and keyboard behavior."
+    },
+    {
+      "name": "Default item content",
+      "description": "TypeaheadItem label and optional supporting content rendered inside a result row."
+    },
+    {
+      "name": "Caller-rendered item content",
+      "description": "Caller content supplied through renderItem or item.element inside the stable result row."
+    },
+    {
+      "name": "Selected result state",
+      "description": "Selected row weight and trailing check shown when a result matches value."
+    }
+  ],
+  "bottom-sheet-switcher": [
+    {
+      "name": "Shared dialog",
+      "description": "One native dialog that owns modality, focus, dismissal, and lifecycle for the complete flow."
+    },
+    {
+      "name": "Sheet panels",
+      "description": "Direct `BottomSheet` children; exactly one is interactive while a previous panel may remain visible and inert during a handoff."
+    },
+    {
+      "name": "Scrim",
+      "description": "Native dialog backdrop shown by the default scrim-backed modal presentation."
+    }
+  ],
+  "chat-composer-drawer": [
+    {
+      "name": "Root surface",
+      "description": "The drawer surface that composes above the ChatComposer body."
+    },
+    {
+      "name": "Disclosure toggle",
+      "description": "The keyboard- and pointer-operable collapse control rendered when count is provided."
+    },
+    {
+      "name": "Collapsed summary",
+      "description": "The default count Badge and label, or caller-provided visual content, presented while the drawer is collapsed."
+    },
+    {
+      "name": "Content area",
+      "description": "The caller-provided supplementary content; collapsed descendants are unavailable to keyboard and assistive technology."
+    }
+  ],
+  "chat-composer-input": [
+    {
+      "name": "Input root",
+      "description": "The themed container that forwards the root ref and BaseProps styling seams."
+    },
+    {
+      "name": "Editable surface",
+      "description": "The labeled contenteditable textbox or combobox that owns text, selection, keyboard, paste, and drop behavior."
+    },
+    {
+      "name": "Placeholder",
+      "description": "Visual guidance shown only while the serialized draft is empty."
+    },
+    {
+      "name": "Trigger menu",
+      "description": "The suggestion popup rendered while a configured trigger is active."
+    },
+    {
+      "name": "Inline token",
+      "description": "A non-editable badge or custom rendering with a stable serialized value."
+    }
+  ],
+  "chat-composer": [
+    {
+      "name": "Composer frame",
+      "description": "Outer composition root that groups the body with an optional status message above or below it."
+    },
+    {
+      "name": "Composer body",
+      "description": "Rounded, elevated surface containing the header, input, and footer."
+    },
+    {
+      "name": "Drawer",
+      "description": "Content before the body for attachments or other expandable context, typically ChatComposerDrawer."
+    },
+    {
+      "name": "Header",
+      "description": "Row for start-aligned actions and end-aligned contextual information."
+    },
+    {
+      "name": "Input",
+      "description": "Default ChatComposerInput or a custom editor connected through useChatComposerContext()."
+    },
+    {
+      "name": "Footer",
+      "description": "Row for caller-supplied footer and send actions plus the primary action."
+    },
+    {
+      "name": "Send or stop action",
+      "description": "Default ChatSendButton or a custom sendButton; it submits the current draft or requests interruption."
+    },
+    {
+      "name": "Status message",
+      "description": "Error or warning feedback rendered before or after the composer body."
+    }
+  ],
+  "chat-dictation-button": [
+    {
+      "name": "Microphone icon",
+      "description": "Shown in the idle state. Indicates that tapping will start voice input."
+    },
+    {
+      "name": "Frequency bars",
+      "description": "Animated equalizer bars that replace the icon during listening. React to real microphone volume."
+    },
+    {
+      "name": "Ghost button",
+      "description": "The underlying Button with ghost variant and isIconOnly, providing the hit target and focus ring."
+    }
+  ],
+  "chat-layout": [
+    {
+      "name": "Message area",
+      "description": "Scrollable region for messages. Renders children (typically ChatMessageList) in a flex column that pushes content to the bottom when the list is short."
+    },
+    {
+      "name": "Frosted glass dock",
+      "description": "Sticky or fixed container at the bottom with a backdrop-blur layer. Houses the scroll button and composer."
+    },
+    {
+      "name": "Scroll-to-bottom button",
+      "description": "Appears when the user scrolls up or new messages arrive. Defaults to ChatLayoutScrollButton; pass null to hide or a custom element to override."
+    },
+    {
+      "name": "Composer",
+      "description": "The input area for sending messages, typically ChatComposer. Docked at the bottom inside the frosted glass layer."
+    },
+    {
+      "name": "Empty state",
+      "description": "Centered placeholder shown when no messages exist. Use EmptyState for a consistent look."
+    }
+  ],
+  "chat-message-metadata": [
+    {
+      "name": "Metadata row",
+      "description": "Sender-aware line containing the visible metadata items."
+    },
+    {
+      "name": "Timestamp",
+      "description": "Caller-supplied time content at the start of the logical sequence."
+    },
+    {
+      "name": "Footer",
+      "description": "Caller-supplied information or actions between time and status."
+    },
+    {
+      "name": "Status",
+      "description": "Localized delivery icon and text when a status is supplied."
+    }
+  ],
+  "chat-send-button": [
+    {
+      "name": "Action button",
+      "description": "Circular icon-only Button that exposes the translated Send or Stop name and carries the chat-send-button theme target."
+    }
+  ],
+  "chat-system-message": [
+    {
+      "name": "System message",
+      "description": "The noninteractive status row that carries the chat-system-message theme target."
+    },
+    {
+      "name": "Content",
+      "description": "The concise caller-provided message or divider label."
+    },
+    {
+      "name": "Icon content",
+      "description": "Rendered before the message in the default variant; the divider variant currently does not render it."
+    },
+    {
+      "name": "Divider",
+      "description": "A labelled horizontal `Divider` rendered by the divider variant."
+    }
+  ],
+  "chat-tokenized-text": [
+    {
+      "name": "Tokenized text",
+      "description": "The inline root that preserves unmatched text and carries the chat-tokenized-text theme target."
+    },
+    {
+      "name": "Rendered token",
+      "description": "Inline token content rendered by `Badge` for structured tokens or by the caller for custom tokens."
+    }
+  ],
+  "chat-tool-calls": [
+    {
+      "name": "Status icon",
+      "description": "A themed semantic success/error icon, or a spinner while the call is pending or running."
+    },
+    {
+      "name": "Tool name",
+      "description": "The function or tool name displayed in monospace: bash, edit, read, web_search, etc."
+    },
+    {
+      "name": "Node badge",
+      "description": "A neutral pill badge showing which sandbox or environment ran the tool, like cli:remote-server or workspace."
+    },
+    {
+      "name": "Target label",
+      "description": "The target of the action (a file path, command, or search query) shown after the tool name."
+    },
+    {
+      "name": "Diff stats",
+      "description": "Green additions and red deletions counts for edit operations, displayed inline after the target."
+    },
+    {
+      "name": "Duration",
+      "description": "Execution time shown on the trailing edge for completed calls."
+    },
+    {
+      "name": "Group header",
+      "description": "A wrench icon with a call count, shown when multiple calls are present. Clicking toggles between the summary and the full list."
+    }
+  ],
+  "command-palette-footer": [
+    {
+      "name": "Footer",
+      "description": "Supporting region that presents default guidance or caller-provided footer content."
+    },
+    {
+      "name": "Keyboard shortcut",
+      "description": "Default Kbd badges for navigation, selection, and dismissal."
+    }
+  ],
+  "command-palette-input": [
+    {
+      "name": "Input",
+      "description": "The surrounding inline layout for the search glyph, query field, and trailing content."
+    },
+    {
+      "name": "Search glyph",
+      "description": "A decorative search icon before the query field."
+    },
+    {
+      "name": "Query field",
+      "description": "The native text field. It is a searchbox when standalone without popup attributes and a combobox when popup relationships are supplied or CommandPalette context is present."
+    },
+    {
+      "name": "Loading spinner",
+      "description": "A delayed pending indicator shown before trailing content while search is busy."
+    },
+    {
+      "name": "Trailing content",
+      "description": "Caller-provided supporting content such as a clear control or shortcut hint."
+    }
+  ],
+  "command-palette-item": [
+    {
+      "name": "Item",
+      "description": "The option root that carries selection, disabled, item identity, interaction, and theme state."
+    },
+    {
+      "name": "Content",
+      "description": "Caller-provided non-interactive label and supporting presentation."
+    }
+  ],
+  "h-stack": [
+    {
+      "name": "Stack container",
+      "description": "Layout container that arranges content along one flex axis."
+    },
+    {
+      "name": "Item",
+      "description": "Optional StackItem wrapper that controls one item in the stack."
+    },
+    {
+      "name": "Content",
+      "description": "Caller-supplied content rendered by a Stack or StackItem."
+    }
+  ],
+  "item": [
+    {
+      "name": "Marker",
+      "description": "Optional list bullet/counter rendered before start content."
+    },
+    {
+      "name": "Start content",
+      "description": "Leading visual: avatar, icon, image, or checkbox."
+    },
+    {
+      "name": "Label",
+      "description": "Primary text identifying the item."
+    },
+    {
+      "name": "Description",
+      "description": "Secondary supporting text below the label."
+    },
+    {
+      "name": "End content",
+      "description": "End-aligned content: badges, timestamps, or action buttons."
+    }
+  ],
+  "mobile-nav-toggle": [
+    {
+      "name": "Toggle button",
+      "description": "Button that opens or closes the drawer on mobile viewports."
+    }
+  ],
+  "nav-heading-menu": [
+    {
+      "name": "Menu",
+      "description": "Menu container for nav-heading actions, with menu semantics and keyboard navigation."
+    },
+    {
+      "name": "Item",
+      "description": "Selectable action or navigation link inside the Menu."
+    },
+    {
+      "name": "Icon",
+      "description": "Icon-rendered artwork shown before an Item label."
+    },
+    {
+      "name": "Text-rendered item label",
+      "description": "String Item label rendered through Text."
+    },
+    {
+      "name": "Caller-rendered item label",
+      "description": "Non-string Item label content rendered directly by the caller."
+    },
+    {
+      "name": "Item description",
+      "description": "Supporting description rendered through Text."
+    }
+  ],
+  "nav-icon": [
+    {
+      "name": "Container",
+      "description": "Circular painted container for the supplied icon."
+    },
+    {
+      "name": "Icon",
+      "description": "Caller-supplied visual content rendered inside the container."
+    }
+  ],
+  "stack-item": [
+    {
+      "name": "Stack container",
+      "description": "Layout container that arranges content along one flex axis."
+    },
+    {
+      "name": "Item",
+      "description": "Optional StackItem wrapper that controls one item in the stack."
+    },
+    {
+      "name": "Content",
+      "description": "Caller-supplied content rendered by a Stack or StackItem."
+    }
+  ],
+  "v-stack": [
+    {
+      "name": "Stack container",
+      "description": "Layout container that arranges content along one flex axis."
+    },
+    {
+      "name": "Item",
+      "description": "Optional StackItem wrapper that controls one item in the stack."
+    },
+    {
+      "name": "Content",
+      "description": "Caller-supplied content rendered by a Stack or StackItem."
+    }
   ]
 }

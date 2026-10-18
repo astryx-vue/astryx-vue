@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { MoreMenuRowProps } from './types.js'
-import { computed, onBeforeUnmount, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, toRaw, useTemplateRef, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useMoreMenuContext, useMoreMenuLevel } from './context.js'
 import { isModifiedClick, isRtl } from './menuNav.js'
 import '../../styles/more-menu.css'
@@ -11,6 +12,9 @@ defineOptions({ name: 'AstryxMoreMenuRow' })
 const props = defineProps<MoreMenuRowProps>()
 
 const menu = useMoreMenuContext()
+const linkComponent = useLinkComponent()
+/** 有链接时用的根组件，没有 provider 时还是 `<a>`。 */
+const linkRoot = computed(() => (linkComponent.value == null ? 'a' : toRaw(linkComponent.value)))
 const level = useMoreMenuLevel()
 const root = useTemplateRef<HTMLElement>('root')
 
@@ -158,7 +162,7 @@ onBeforeUnmount(() => {
 
 <template>
   <component
-    :is="isLink ? 'a' : 'div'"
+    :is="isLink ? linkRoot : 'div'"
     :id="rowId"
     ref="root"
     :aria-disabled="item.isDisabled || undefined"
@@ -170,6 +174,7 @@ onBeforeUnmount(() => {
     :data-disabled="item.isDisabled || undefined"
     :data-submenu="isSubmenu || undefined"
     :href="isLink ? item.href : undefined"
+    :to="isLink && linkRoot !== 'a' ? item.href : undefined"
     :rel="isLink ? resolvedRel : undefined"
     role="menuitem"
     :tabindex="item.isDisabled ? undefined : -1"

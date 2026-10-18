@@ -1,0 +1,5 @@
+/* 标题是侧栏里的一行，只放标题时高度跟着内容走。宽度由 demo 自己决定：
+   总览是两段并排，基础示例只有一段，都靠 overview-hug 收成内容宽度。 */
+.astryx-demo.side-nav-heading-preview .astryx-side-nav {
+  height: auto;
+}

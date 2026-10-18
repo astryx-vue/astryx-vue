@@ -1,0 +1,5 @@
+/* 舞台和示例画布共用：宽度收在这里，居中交给外层容器。 */
+.astryx-demo.grid-span-preview {
+  box-sizing: border-box;
+  width: min(100%, 25rem);
+}

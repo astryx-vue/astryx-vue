@@ -4,7 +4,7 @@ import { tabMenuOverview as demo } from './index'
 export const meta = {
   slug: 'tab-menu',
   group: 'Navigation',
-  order: 15,
+  order: 25,
   en: 'Tab Menu',
   zh: '标签菜单',
   demo,

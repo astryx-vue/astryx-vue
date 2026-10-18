@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { NavLinkComponent } from '../NavItem/types.js'
+import { computed } from 'vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 
 defineOptions({ name: 'AstryxNavHeadingText' })
@@ -21,8 +23,12 @@ defineSlots<{
   chevron?: () => unknown
 }>()
 
+const linkComponent = useLinkComponent()
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
+
 function root(href: string | undefined): string | object {
-  return props.independent && href ? resolveNavRoot(href, false, props.as) : 'span'
+  return props.independent && href ? resolveNavRoot(href, false, customLink.value) : 'span'
 }
 
 function hrefOf(href: string | undefined): string | undefined {
@@ -30,7 +36,7 @@ function hrefOf(href: string | undefined): string | undefined {
 }
 
 function toOf(href: string | undefined): string | undefined {
-  return props.independent && props.as != null ? href : undefined
+  return props.independent && customLink.value != null ? href : undefined
 }
 
 function stopIfLink(event: MouseEvent, href: string | undefined): void {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TopNavMegaMenuFeaturedCardProps, TopNavMegaMenuFeaturedCardSlots } from './types.js'
 import { computed, inject } from 'vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 import { navMenuCloseKey } from '../NavMenu/context.js'
 import '../../styles/top-nav.css'
@@ -11,14 +12,17 @@ const props = defineProps<TopNavMegaMenuFeaturedCardProps>()
 defineSlots<TopNavMegaMenuFeaturedCardSlots>()
 
 const closeMenu = inject(navMenuCloseKey, undefined)
+const linkComponent = useLinkComponent()
 const ctaHref = computed(() => {
   if (!props.linkLabel)
     return undefined
   return props.linkHref || props.href
 })
 const wholeHref = computed(() => ctaHref.value ? undefined : props.href)
-const root = computed(() => wholeHref.value ? resolveNavRoot(wholeHref.value, false, props.as) : 'div')
-const ctaRoot = computed(() => ctaHref.value ? resolveNavRoot(ctaHref.value, false, props.as) : 'span')
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
+const root = computed(() => wholeHref.value ? resolveNavRoot(wholeHref.value, false, customLink.value) : 'div')
+const ctaRoot = computed(() => ctaHref.value ? resolveNavRoot(ctaHref.value, false, customLink.value) : 'span')
 const imageIsDecorative = computed(() => props.image != null && !props.imageAlt)
 
 function onNavigate(): void {
@@ -32,7 +36,7 @@ function onNavigate(): void {
     class="astryx-top-nav-mega-card"
     :class="{ 'astryx-top-nav-mega-card--static': !wholeHref }"
     :href="wholeHref || undefined"
-    :to="wholeHref && as != null ? wholeHref : undefined"
+    :to="wholeHref && customLink != null ? wholeHref : undefined"
     @click="wholeHref ? onNavigate() : undefined"
   >
     <img
@@ -51,7 +55,7 @@ function onNavigate(): void {
         v-if="ctaHref && linkLabel"
         class="astryx-top-nav-mega-card__link"
         :href="ctaHref"
-        :to="as != null ? ctaHref : undefined"
+        :to="customLink != null ? ctaHref : undefined"
         @click.stop="onNavigate"
       >
         {{ linkLabel }} →
