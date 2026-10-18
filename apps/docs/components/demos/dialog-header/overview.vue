@@ -4,22 +4,20 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <Dialog is-inline is-open width="400">
-      <Layout height="auto">
-        <LayoutHeader :padding="4">
-          <DialogHeader
-            title="Edit Profile"
-            subtitle="Update your personal information"
-            has-close-button
-          />
-        </LayoutHeader>
-        <LayoutContent :padding="0" :is-scrollable="false">
-          <p class="dialog-header-preview__body">
-            Dialog body content goes here.
-          </p>
-        </LayoutContent>
-      </Layout>
-    </Dialog>
-  </div>
+  <Dialog is-inline is-open width="400">
+    <Layout height="auto">
+      <LayoutHeader :padding="4">
+        <DialogHeader
+          title="Edit Profile"
+          subtitle="Update your personal information"
+          has-close-button
+        />
+      </LayoutHeader>
+      <LayoutContent :padding="0" :is-scrollable="false">
+        <p class="dialog-header-preview__body">
+          Dialog body content goes here.
+        </p>
+      </LayoutContent>
+    </Layout>
+  </Dialog>
 </template>
