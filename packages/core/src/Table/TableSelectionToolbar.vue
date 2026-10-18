@@ -1,20 +1,66 @@
 <script setup lang="ts">
+import type { ToolbarVariant } from '../Toolbar/types.js'
+import type { TableSelectionToolbarProps, TableSelectionToolbarSlots } from './types.js'
+import { computed } from 'vue'
+import Button from '../Button/Button.vue'
 import { useAstryxMessages } from '../locale/context.js'
+import Toolbar from '../Toolbar/Toolbar.vue'
 import '../../styles/table.css'
 
 defineOptions({ name: 'AstryxTableSelectionToolbar' })
 
-defineProps<{ count: number }>()
+const props = withDefaults(defineProps<TableSelectionToolbarProps>(), {
+  count: 0,
+  size: 'sm',
+  variant: 'muted',
+})
+
 const emit = defineEmits<{ clear: [] }>()
+defineSlots<TableSelectionToolbarSlots>()
+
 const messages = useAstryxMessages()
+
+/** 有 selection 就用它的计数，否则回落到 count。 */
+const effectiveCount = computed(() => props.selection?.selectedCount ?? props.count)
+/** 走 selection 时，一个都没选中就整条不渲染。 */
+const isVisible = computed(() => props.selection == null || props.selection.hasSelection)
+const resolvedLabel = computed(() => props.label ?? messages.value.table.bulkActionsLabel)
+const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.table.clearAll)
+const resolvedCountLabel = computed(() => messages.value.table.selectedCount(effectiveCount.value))
+/** Toolbar 只有透明和弱化底，表面色这一档由本组件的类补上。 */
+const toolbarVariant = computed<ToolbarVariant>(() => (props.variant === 'muted' ? 'muted' : 'transparent'))
+
+function clearSelection(): void {
+  props.selection?.clearSelection()
+  emit('clear')
+}
 </script>
 
 <template>
-  <div class="astryx-table-selection-toolbar" role="region" :aria-label="messages.table.bulkActionsLabel">
-    <span>{{ messages.table.selectedCount(count) }}</span>
-    <slot />
-    <button type="button" class="astryx-table__sort" @click="emit('clear')">
-      {{ messages.table.clearAll }}
-    </button>
-  </div>
+  <Toolbar
+    v-if="isVisible"
+    class="astryx-table-selection-toolbar"
+    :class="{ 'astryx-table-selection-toolbar--section': variant === 'section' }"
+    :label="resolvedLabel"
+    :size="size"
+    :variant="toolbarVariant"
+  >
+    <template v-if="$slots.start || $slots.default" #start>
+      <slot name="start">
+        <slot name="default" />
+      </slot>
+    </template>
+    <template #end>
+      <span class="astryx-table-selection-toolbar__label">
+        <slot name="label" :count="effectiveCount">{{ resolvedCountLabel }}</slot>
+      </span>
+      <Button
+        class="astryx-table-selection-toolbar__clear"
+        :label="resolvedClearLabel"
+        :size="size"
+        variant="ghost"
+        @click="clearSelection"
+      />
+    </template>
+  </Toolbar>
 </template>

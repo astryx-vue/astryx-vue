@@ -46901,22 +46901,22 @@
       "importPath": "@astryx-vue/core/Table",
       "exportName": "TableSelectionToolbar",
       "summary": {
-        "en": "`TableSelectionToolbar` is the bulk-action bar for a table with row selection. Feed it what `useTableSelectionState` holds: pass the size of `selectedKeys` as `count`, and empty that set when the bar emits `clear`. The count and the clear command then stay in step with the row checkboxes.",
-        "zh": "`TableSelectionToolbar` 是配合「勾选行」用的批量操作条。把 `useTableSelectionState` 里的东西交给它：`selectedKeys` 里有几个键，就把这个数字传给 `count`；它发出 `clear` 时，就把这个集合清空。这样数字和「取消全选」永远跟勾选框对得上。"
+        "en": "`TableSelectionToolbar` is the bulk-action bar for a table with row selection. `useTableSelectionState` returns two pieces that go to matching consumers: `selectionConfig` to `useTableSelection`, `selectionState` to this bar. The bar reads the count from that state and clears every selected key, so it stays in step with the row checkboxes. Passing a plain `count` and handling `clear` yourself still works.",
+        "zh": "`TableSelectionToolbar` 是配合「勾选行」用的批量操作条。`useTableSelectionState` 返回两份东西，分别交给对应的使用者：`selectionConfig` 交给 `useTableSelection`，`selectionState` 交给这条工具栏。工具栏从这份状态里读条数，并负责清空全部选中的键，所以永远跟勾选框对得上。老写法传 `count` 并自己处理 `clear` 也照样能用。"
       },
       "usage": {
-        "en": "`TableSelectionToolbar` is the bulk-action bar for a table with row selection. Feed it what `useTableSelectionState` holds: pass the size of `selectedKeys` as `count`, and empty that set when the bar emits `clear`. The count and the clear command then stay in step with the row checkboxes.\n\nProduct actions go in the default slot. The bar owns no table or sticky layout: place it in flow above the table, or pin it yourself with `class` or `style`.\n\n```ts\nimport { TableSelectionToolbar } from '@astryx-vue/core/Table'\n```",
-        "zh": "`TableSelectionToolbar` 是配合「勾选行」用的批量操作条。把 `useTableSelectionState` 里的东西交给它：`selectedKeys` 里有几个键，就把这个数字传给 `count`；它发出 `clear` 时，就把这个集合清空。这样数字和「取消全选」永远跟勾选框对得上。\n\n自己的操作按钮放进默认插槽。这条本身不管表格布局，也不管吸顶：放在表格上方跟着正常流排，或者用 `class`、`style` 自己固定住。\n\n```ts\nimport { TableSelectionToolbar } from '@astryx-vue/core/Table'\n```"
+        "en": "`TableSelectionToolbar` is the bulk-action bar for a table with row selection. `useTableSelectionState` returns two pieces that go to matching consumers: `selectionConfig` to `useTableSelection`, `selectionState` to this bar. The bar reads the count from that state and clears every selected key, so it stays in step with the row checkboxes. Passing a plain `count` and handling `clear` yourself still works.\n\nProduct actions go in the `start` slot and the bar owns the count text and the clear command on the trailing side. The bar owns no table or sticky layout: place it in flow above the table, or pin it yourself with `class` or `style`.\n\n```ts\nimport { TableSelectionToolbar } from '@astryx-vue/core/Table'\n```",
+        "zh": "`TableSelectionToolbar` 是配合「勾选行」用的批量操作条。`useTableSelectionState` 返回两份东西，分别交给对应的使用者：`selectionConfig` 交给 `useTableSelection`，`selectionState` 交给这条工具栏。工具栏从这份状态里读条数，并负责清空全部选中的键，所以永远跟勾选框对得上。老写法传 `count` 并自己处理 `clear` 也照样能用。\n\n自己的操作按钮放进 `start` 插槽，计数文字和清空按钮由工具栏负责，排在末端。这条本身不管表格布局，也不管吸顶：放在表格上方跟着正常流排，或者用 `class`、`style` 自己固定住。\n\n```ts\nimport { TableSelectionToolbar } from '@astryx-vue/core/Table'\n```"
       },
       "practices": {
         "en": [
           {
             "guidance": "Do",
-            "text": "Take the count straight from `useTableSelectionState`, so the count and the clear command stay synchronized with row selection."
+            "text": "Pass `selectionState` straight from `useTableSelectionState`, so the count and the clear command stay synchronized with row selection."
           },
           {
             "guidance": "Do",
-            "text": "Provide product actions in the default slot instead of encoding them as configuration objects."
+            "text": "Provide product actions in the `start` slot instead of encoding them as configuration objects."
           },
           {
             "guidance": "Don't",
@@ -46934,7 +46934,37 @@
                 "name": "`count`",
                 "description": "`count`",
                 "type": "`number`",
+                "default": "`0`"
+              },
+              {
+                "name": "`selection`",
+                "description": "`selection`",
+                "type": "`TableSelectionState`",
                 "default": "—"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "Built-in copy"
+              },
+              {
+                "name": "`clearLabel`",
+                "description": "`clearLabel`",
+                "type": "`string`",
+                "default": "Built-in copy"
+              },
+              {
+                "name": "`size`",
+                "description": "`size`",
+                "type": "`'sm' | 'md' | 'lg'`",
+                "default": "`'sm'`"
+              },
+              {
+                "name": "`variant`",
+                "description": "`variant`",
+                "type": "`SectionVariant`",
+                "default": "`'muted'`"
               }
             ]
           }
@@ -46946,16 +46976,82 @@
               {
                 "name": "`count`",
                 "type": "`number`",
+                "default": "`0`",
+                "description": "选中了几行。没给 `selection` 时用它。"
+              },
+              {
+                "name": "`selection`",
+                "type": "`TableSelectionState`",
                 "default": "—",
-                "description": "选中了几行。这个数字会画成工具栏开头的计数文字。必填。"
+                "description": "`useTableSelectionState` 返回的 `selectionState`。给了就代替 `count`，并由它驱动清空命令。"
+              },
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "内置文案",
+                "description": "工具栏的无障碍名称。默认是 `Bulk actions`。"
+              },
+              {
+                "name": "`clearLabel`",
+                "type": "`string`",
+                "default": "内置文案",
+                "description": "清空整个选择的按钮文字。默认是 `Unselect All`。"
+              },
+              {
+                "name": "`size`",
+                "type": "`'sm' | 'md' | 'lg'`",
+                "default": "`'sm'`",
+                "description": "工具栏高度档。清空按钮跟着它走。"
+              },
+              {
+                "name": "`variant`",
+                "type": "`SectionVariant`",
+                "default": "`'muted'`",
+                "description": "底色：`section` 用表面色，`muted` 用弱化底，`transparent` 不铺底。"
               }
             ]
           }
         ]
       },
       "slots": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "heading": "TableSelectionToolbar slots",
+            "rows": [
+              {
+                "name": "`start`",
+                "description": "`start`"
+              },
+              {
+                "name": "`default`",
+                "description": "`default`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TableSelectionToolbar 插槽",
+            "rows": [
+              {
+                "name": "`start`",
+                "description": "`start`"
+              },
+              {
+                "name": "`default`",
+                "description": "`default`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`"
+              }
+            ]
+          }
+        ]
       },
       "events": {
         "en": [],
@@ -46965,15 +47061,11 @@
         "en": [
           {
             "heading": "Events",
-            "text": "- `clear()`: fires when the clear command is clicked. Empty the selected keys and the count label follows."
-          },
-          {
-            "heading": "Slots",
-            "text": "- `default`: product actions. They sit between the count label and the clear command."
+            "text": "- `clear()`: fires when the clear command is clicked. With `selection` passed, the bar empties the selected keys itself before emitting."
           },
           {
             "heading": "Native attributes",
-            "text": "The root element is a `<div>` with `role=\"region\"`.\n\nThe root element receives:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`.\n- Native event listeners.\n\nThe bar reads three built-in strings: the region name, the count label, and the clear label. They default to `Bulk actions`, `{count} selected`, and `Unselect All`, and switch to Chinese after `provideAstryxLocale('zh-CN')`. The React API exposes `selection`, `label`, `renderSelectionLabel`, `clearLabel`, `size`, `variant`, `startContent`, and `xstyle`. In Vue, pass the count as `count`, put actions in the default slot, and style the bar with `class` or `style`; the copy comes from the locale messages instead of props."
+            "text": "The root element is a `<div>` with `role=\"toolbar\"` and `aria-orientation=\"horizontal\"`.\n\nThe root element receives:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`.\n- Native event listeners.\n\nThree strings come from the locale messages: the accessible name (`Bulk actions`), the count text (`{count} selected`), and the clear label (`Unselect All`). They switch to Chinese after `provideAstryxLocale('zh-CN')`, and `label`, `clearLabel`, and the `label` slot replace them one by one.\n\nWhen `selection` is passed and nothing is selected, the bar renders nothing at all. The `count` form always renders, so a bar mounted for a fixed count keeps its place.\n\nTwo React-only props are not in the Vue API: `xstyle` becomes `class` or `style`, and the whole toolbar is placed by the surrounding layout. `renderSelectionLabel` and `startContent` become the `label` and `start` slots."
           }
         ],
         "zh": [
@@ -46983,15 +47075,11 @@
           },
           {
             "heading": "事件",
-            "text": "- `clear()`：点击取消全选时触发。把选中的键清空，计数文字就会跟着变。"
-          },
-          {
-            "heading": "插槽",
-            "text": "- `default`：产品自己的操作按钮。位置在计数文字和取消全选之间。"
+            "text": "- `clear()`：点击清空按钮时触发。传了 `selection` 时，组件自己先把选中的键清空，再发出这个事件。"
           },
           {
             "heading": "原生属性",
-            "text": "根元素是一个带 `role=\"region\"` 的 `<div>`。\n\n以下内容落到根元素上：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。\n- 原生事件监听器。\n\n这条工具栏用三句内置文案：区域名称、计数文字和取消全选。默认是 `Bulk actions`、`{count} selected`、`Unselect All`，调用 `provideAstryxLocale('zh-CN')` 后变成中文。React 版的属性是 `selection`、`label`、`renderSelectionLabel`、`clearLabel`、`size`、`variant`、`startContent` 和 `xstyle`。Vue 版把条数交给 `count`，操作按钮放进默认插槽，样式用 `class` 或 `style`；文案改由多语言消息提供，不再通过属性传入。"
+            "text": "根元素是一个带 `role=\"toolbar\"` 和 `aria-orientation=\"horizontal\"` 的 `<div>`。\n\n以下内容落到根元素上：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。\n- 原生事件监听器。\n\n三句文案来自多语言消息：无障碍名称（`Bulk actions`）、计数文字（`{count} selected`）和清空按钮文字（`Unselect All`）。调用 `provideAstryxLocale('zh-CN')` 后变成中文；`label`、`clearLabel` 和 `label` 插槽可以逐个替换它们。\n\n传了 `selection` 且一个都没选中时，整条不渲染。用 `count` 的老写法始终渲染，固定条数的工具栏位置不会跳。\n\nReact 专有的两个属性不在 Vue 版里：`xstyle` 换成 `class` 或 `style`，工具栏的位置交给外层布局。`renderSelectionLabel` 和 `startContent` 换成了 `label` 和 `start` 插槽。"
           }
         ]
       },
