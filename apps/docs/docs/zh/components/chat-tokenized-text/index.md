@@ -14,7 +14,7 @@ import { chatTokenizedTextBasic, chatTokenizedTextColors } from '../../../../com
 
 存下来的纯文本里如果带着「标记的值」，用 `ChatTokenizedText` 就能在消息里把它们显示成行内徽章，或者显示成你自己画的内容。没匹配上的文字原样保留；标记的值是空字符串时不参与匹配，所以渲染总能收尾。
 
-文字写在 `text` 属性上，不走默认插槽。每个标记的 `value` 按字面匹配，所以输入框触发器返回的那组标记对象可以原样搬过来复用。普通标记渲染成 `Badge`；带 `render` 函数的标记渲染成你自己的内容，那部分由你负责。
+文字写在默认插槽里。要直接传一个字符串时，用 `text` 属性也一样；两个都写以属性为准。每个标记的 `value` 按字面匹配，所以输入框触发器返回的那组标记对象可以原样搬过来复用。普通标记渲染成 `Badge`；带 `render` 函数的标记渲染成你自己的内容，那部分由你负责。
 
 ```vue
 <script setup lang="ts">
@@ -28,7 +28,9 @@ const tokens = [
 <template>
   <ChatMessage sender="user">
     <ChatMessageBubble>
-      <ChatTokenizedText text="Assign @Cindy as a reviewer." :tokens="tokens" />
+      <ChatTokenizedText :tokens="tokens">
+        Assign @Cindy as a reviewer.
+      </ChatTokenizedText>
     </ChatMessageBubble>
   </ChatMessage>
 </template>

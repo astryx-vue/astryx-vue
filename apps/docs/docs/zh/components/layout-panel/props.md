@@ -13,7 +13,7 @@ footer: false
 <tr><td><code>isScrollable</code></td><td><code>boolean</code></td><td><code>true</code></td><td>内容比面板高的时候，在面板里滚动。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>这个地标的无障碍名称。</td></tr>
 <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>用间距刻度写内边距，会盖掉外层布局传下来的值。写 <code>0</code> 就是通栏。</td></tr>
-<tr><td><code>resizable</code></td><td><code>LayoutResizable</code></td><td>—</td><td><code>useResizable</code> 返回的 <code>props</code>。传了它宽度就由那个 hook 说了算，<code>width</code> 不再生效。旁边要放一个 <code>ResizeHandle</code>，并把同一个对象交给它。</td></tr>
+<tr><td><code>resizable</code></td><td><code>LayoutResizable</code></td><td>—</td><td><code>useResizable</code> 返回的 <code>props</code>。传了它宽度就由那个 hook 说了算，<code>width</code> 不再生效。旁边要放一个 <code>ResizeHandle</code>，并把同一个对象交给它。对象里带着这块区域的轴 <code>_direction</code>（<code>'horizontal' | 'vertical'</code>），要和把手的 <code>direction</code> 一致。只有 <code>_size</code> 是必填的，手写 <code>{ _size: 250 }</code> 依然可用。</td></tr>
 <tr><td><code>role</code></td><td><code>string</code></td><td>—</td><td>ARIA 地标角色，例如 <code>navigation</code>。</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>面板宽度。写数字按像素，写字符串原样使用。传了 <code>resizable</code> 就不起作用。</td></tr>
 </tbody></table>

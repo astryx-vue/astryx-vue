@@ -7,6 +7,8 @@ footer: false
 
 `data` and `selectedKeys` are `MaybeRefOrGetter`, so a ref or a getter keeps the state live. The other fields are read from the config object you pass.
 
+Select-all only touches rows that can actually be checked: rows where `getIsItemSelectable` or `getIsItemEnabled` is false keep whatever selection they already had, and a key that is not in `data` stays selected too.
+
 ## Parameters
 
 <div class="component-api-table" role="region" aria-label="useTableSelectionState parameters" tabindex="0">
@@ -23,9 +25,9 @@ footer: false
       </tr>
       <tr>
         <td><code>idKey</code></td>
-        <td><code>keyof T &amp; string</code></td>
+        <td><code>(keyof T &amp; string) | ((item: T) =&gt; string)</code></td>
         <td>—</td>
-        <td>Key extractor: the property name that holds a unique string ID.</td>
+        <td>Key extractor: either the property name that holds a unique string ID, or a function that returns it.</td>
       </tr>
       <tr>
         <td><code>selectedKeys</code></td>
@@ -37,7 +39,19 @@ footer: false
         <td><code>setSelectedKeys</code></td>
         <td><code>(keys: Set&lt;string&gt;) =&gt; void</code></td>
         <td>—</td>
-        <td>Setter for the controlled selected keys. Receives a new <code>Set</code>; assign it to your own ref.</td>
+        <td>Setter for the controlled selected keys. It is always handed a ready-made <code>Set</code>; assign it to your own ref. A dispatcher that also accepts updater functions, such as React's <code>setState</code>, fits the same signature.</td>
+      </tr>
+      <tr>
+        <td><code>getIsItemSelectable</code></td>
+        <td><code>(item: T) =&gt; boolean</code></td>
+        <td><code>() =&gt; true</code></td>
+        <td>Should this row show a checkbox? Non-selectable rows render nothing in the selection cell and are excluded from select-all.</td>
+      </tr>
+      <tr>
+        <td><code>getIsItemEnabled</code></td>
+        <td><code>(item: T) =&gt; boolean</code></td>
+        <td><code>() =&gt; true</code></td>
+        <td>Is this row checkbox interactive? Disabled rows keep their checkbox, rendered disabled, and are frozen: select-all preserves their state.</td>
       </tr>
       <tr>
         <td><code>getRowLabel</code></td>

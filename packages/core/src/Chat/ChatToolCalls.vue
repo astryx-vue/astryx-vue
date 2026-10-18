@@ -38,8 +38,12 @@ function rowKey(call: ChatToolCallItem, index: number): string {
   return call.key ?? `${call.name}\u001F${call.target ?? ''}\u001F${call.node ?? ''}\u001F${index}`
 }
 
+function detailOf(call: ChatToolCallItem): string | undefined {
+  return call.resultDetail ?? call.detail
+}
+
 function expandable(call: ChatToolCallItem): boolean {
-  return Boolean(call.detail) || Boolean(slots.detail)
+  return detailOf(call) != null || Boolean(slots.detail)
 }
 
 defineExpose({ element: root })
@@ -50,7 +54,7 @@ defineExpose({ element: root })
     <ChatToolCallRow v-if="single" :call="single" :expandable="expandable(single)">
       <template v-if="expandable(single)" #detail>
         <slot name="detail" :call="single">
-          {{ single.detail }}
+          {{ detailOf(single) }}
         </slot>
       </template>
     </ChatToolCallRow>
@@ -100,7 +104,7 @@ defineExpose({ element: root })
             >
               <template v-if="expandable(call)" #detail>
                 <slot name="detail" :call="call">
-                  {{ call.detail }}
+                  {{ detailOf(call) }}
                 </slot>
               </template>
             </ChatToolCallRow>

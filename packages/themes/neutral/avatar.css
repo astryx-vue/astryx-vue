@@ -7,7 +7,8 @@
     --astryx-avatar-fallback-foreground: light-dark(#525252, #e5e5e5);
     --astryx-avatar-status-dot-border-color: light-dark(#fff, #171717);
 
-    --astryx-avatar-status-dot-neutral-background: light-dark(#a3a3a3, #737373);
+    --astryx-avatar-status-dot-neutral-background: light-dark(#fff, #171717);
+    --astryx-avatar-status-dot-neutral-foreground: light-dark(#737373, #9e9e9e);
     --astryx-avatar-status-dot-info-background: light-dark(#0074e2, #6d9cfe);
     --astryx-avatar-status-dot-success-background: light-dark(#198100, #64af4c);
     --astryx-avatar-status-dot-warning-background: #ffce2f;

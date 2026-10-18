@@ -52,6 +52,12 @@ footer: false
         <td>这一行要不要显示复选框。返回 false 的行，选择那一格是空的。</td>
       </tr>
       <tr>
+        <td><code>getIsItemEnabled</code></td>
+        <td><code>(item: T) =&gt; boolean</code></td>
+        <td><code>() =&gt; true</code></td>
+        <td>这一行的复选框能不能点。返回 false 时复选框还在，但是禁用状态，选择列不会因此错位。</td>
+      </tr>
+      <tr>
         <td><code>getRowLabel</code></td>
         <td><code>(item: T) =&gt; string</code></td>
         <td>—</td>
@@ -61,7 +67,7 @@ footer: false
         <td><code>hasRowHighlight</code></td>
         <td><code>boolean</code></td>
         <td><code>true</code></td>
-        <td>给选中的行铺一层浅色底。如果周围的界面已经用行底色表达别的意思（比如这一行正在详情面板里打开），就设成 false。这层底色是内联样式，外部改不掉。关掉的只是底色，<code>aria-selected</code> 照旧写在选中的行上。</td>
+        <td>给选中的行铺一层浅色底。如果周围的界面已经用行底色表达别的意思（比如这一行正在详情面板里打开），就设成 false。关掉的只是底色，<code>aria-selected</code> 照旧写在选中的行上，读屏仍然念得出这一行被选中了。</td>
       </tr>
     </tbody>
   </table>
@@ -99,6 +105,11 @@ footer: false
         <td><code>selection.isSelectable</code></td>
         <td><code>(row: T) =&gt; boolean</code></td>
         <td>转调 <code>getIsItemSelectable</code>；没传时返回 <code>true</code>。</td>
+      </tr>
+      <tr>
+        <td><code>selection.isEnabled</code></td>
+        <td><code>(row: T) =&gt; boolean</code></td>
+        <td>转调 <code>getIsItemEnabled</code>；没传时返回 <code>true</code>。</td>
       </tr>
       <tr>
         <td><code>selection.selectAll</code></td>

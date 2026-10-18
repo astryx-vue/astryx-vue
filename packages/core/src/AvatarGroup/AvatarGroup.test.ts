@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { h } from 'vue'
 import { Avatar } from '../Avatar/index.js'
+import InternationalizationProvider from '../InternationalizationProvider/InternationalizationProvider.vue'
 import AvatarGroup from './AvatarGroup.vue'
 import AvatarGroupOverflow from './AvatarGroupOverflow.vue'
 
@@ -110,6 +112,40 @@ describe('avatarGroup', () => {
     expect(wrapper.element.tagName).toBe('SPAN')
     expect(wrapper.attributes('role')).toBe('img')
     expect(wrapper.text()).toBe('12+')
+  })
+
+  it('names the indicator from the count, in the current language', () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(AvatarGroupOverflow, { props: { count: 5 } })
+    expect(wrapper.attributes('aria-label')).toBe('5 more')
+
+    const localized = mount({
+      render: () => h(InternationalizationProvider, { locale: 'zh-CN' }, {
+        default: () => h(AvatarGroupOverflow, { count: 5 }),
+      }),
+    })
+    expect(localized.get('.astryx-avatar-group-overflow').attributes('aria-label')).toBe('还有 5 个')
+  })
+
+  it('clamps a negative count to zero', () => {
+    const wrapper = mount(AvatarGroupOverflow, { props: { count: -3 } })
+
+    expect(wrapper.text()).toBe('+0')
+    expect(wrapper.attributes('aria-label')).toBe('0 more')
+  })
+
+  it('grows from a circle into a pill: width is a minimum, height is fixed', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { size: 'lg' },
+      slots: { default: '<AvatarGroupOverflow :count="5" />' },
+      global: { components: { AvatarGroupOverflow } },
+    })
+
+    const style = wrapper.get('.astryx-avatar-group-overflow').attributes('style') ?? ''
+    expect(style).toContain('min-width: 52px')
+    expect(style).toContain('height: 52px')
+    expect(style).not.toMatch(/(?:^|;\s)width:/)
+    expect(style).toContain('--astryx-avatar-group-overflow-computed-font-size: max(var(--astryx-text-supporting-size, 0.75rem), 16.8px)')
   })
 
   it('names the group, and accepts a custom label', () => {

@@ -14,7 +14,7 @@ import { chatTokenizedTextBasic, chatTokenizedTextColors } from '../../../../com
 
 Use ChatTokenizedText inside a chat message when stored plain text contains serialized token values that should be projected as inline badges or caller-rendered token content. Unmatched text is preserved exactly and empty token values are ignored so rendering always finishes.
 
-The text goes in the `text` prop, not the default slot. Every token `value` is matched literally and costs one pass over the string, so the same token objects a composer trigger returns can be reused here. A structured token renders a `Badge`; a token with its own `render` function renders that markup instead and stays caller-owned.
+The text goes in the default slot. The `text` prop does the same job when a string is easier to pass, and it wins when both are set. Every token `value` is matched literally and costs one pass over the string, so the same token objects a composer trigger returns can be reused here. A structured token renders a `Badge`; a token with its own `render` function renders that markup instead and stays caller-owned.
 
 ```vue
 <script setup lang="ts">
@@ -28,7 +28,9 @@ const tokens = [
 <template>
   <ChatMessage sender="user">
     <ChatMessageBubble>
-      <ChatTokenizedText text="Assign @Cindy as a reviewer." :tokens="tokens" />
+      <ChatTokenizedText :tokens="tokens">
+        Assign @Cindy as a reviewer.
+      </ChatTokenizedText>
     </ChatMessageBubble>
   </ChatMessage>
 </template>

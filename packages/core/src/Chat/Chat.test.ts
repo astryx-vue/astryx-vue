@@ -12,6 +12,7 @@ import ChatMessageList from './ChatMessageList.vue'
 import ChatMessageMetadata from './ChatMessageMetadata.vue'
 import ChatReasoning from './ChatReasoning.vue'
 import ChatSystemMessage from './ChatSystemMessage.vue'
+import ChatTokenizedText from './ChatTokenizedText.vue'
 import ChatToolCalls from './ChatToolCalls.vue'
 import ChatTypingIndicator from './ChatTypingIndicator.vue'
 import ChatUnreadDivider from './ChatUnreadDivider.vue'
@@ -107,6 +108,29 @@ describe('chat message list', () => {
 
     expect(wrapper.get('.astryx-chat-message-list').attributes('aria-label')).toBe('消息列表')
     expect(wrapper.text()).toContain('还没有消息')
+  })
+
+  it('sits messages above the composer by default and can start them at the top', () => {
+    const bottom = mount(ChatMessageList, { slots: { default: '<p>Hi</p>' } })
+    const inner = bottom.get('.astryx-chat-message-list__inner')
+    expect(inner.element.firstElementChild?.className).toBe('astryx-chat-message-list__spacer')
+
+    const top = mount(ChatMessageList, { props: { align: 'top' }, slots: { default: '<p>Hi</p>' } })
+    expect(top.find('.astryx-chat-message-list__spacer').exists()).toBe(false)
+    expect(top.get('.astryx-chat-message-list__inner').element.firstElementChild?.tagName).toBe('P')
+  })
+
+  it('takes the empty state from the emptyState slot and its empty alias', () => {
+    const primary = mount(ChatMessageList, { slots: { emptyState: '<p class="none">No messages</p>' } })
+    expect(primary.get('.astryx-chat-message-list__empty').text()).toBe('No messages')
+
+    const alias = mount(ChatMessageList, { slots: { empty: '<p class="none">No messages</p>' } })
+    expect(alias.get('.astryx-chat-message-list__empty').text()).toBe('No messages')
+
+    const provided = mount(ChatMessageList, {
+      slots: { default: '<p>Hi</p>', emptyState: '<p>No messages</p>' },
+    })
+    expect(provided.find('.astryx-chat-message-list__empty').exists()).toBe(false)
   })
 })
 
@@ -273,6 +297,76 @@ describe('chat tool calls', () => {
       },
     }))
     expect(wrapper.text()).toContain('2 个工具调用')
+  })
+
+  it('reveals resultDetail, keeps detail as an alias, and never renders data', async () => {
+    const result = mount(ChatToolCalls, {
+      props: {
+        calls: [{ name: 'bash', resultDetail: 'yarn test passed', detail: 'ignored', data: { id: 'x' } }],
+      },
+    })
+    expect(result.find('.astryx-chat-tool-calls__detail').exists()).toBe(false)
+    await result.get('button').trigger('click')
+    expect(result.get('.astryx-chat-tool-calls__detail').text()).toBe('yarn test passed')
+    expect(result.text()).not.toContain('id')
+
+    const alias = mount(ChatToolCalls, {
+      props: { calls: [{ name: 'bash', detail: 'yarn build passed' }] },
+    })
+    await alias.get('button').trigger('click')
+    expect(alias.get('.astryx-chat-tool-calls__detail').text()).toBe('yarn build passed')
+
+    const withoutDetail = mount(ChatToolCalls, {
+      props: { calls: [{ name: 'bash', data: 'payload' }] },
+    })
+    expect(withoutDetail.get('.astryx-chat-tool-calls__row').element.tagName).toBe('DIV')
+    expect(withoutDetail.find('.astryx-chat-tool-calls__detail').exists()).toBe(false)
+  })
+
+  it('keeps a rich detail slot above the item field', async () => {
+    const wrapper = mount(ChatToolCalls, {
+      props: { calls: [{ name: 'bash', resultDetail: 'plain' }] },
+      slots: { detail: '<pre class="rich">rich output</pre>' },
+    })
+    await wrapper.get('button').trigger('click')
+    expect(wrapper.get('.rich').text()).toBe('rich output')
+  })
+})
+
+describe('chat tokenized text', () => {
+  const tokens = [
+    { value: '@Cindy', label: '@Cindy', variant: 'blue' as const },
+    { value: '#bug', label: '#bug' },
+  ]
+
+  it('reads the message from the default slot', () => {
+    const wrapper = mount(ChatTokenizedText, {
+      props: { tokens },
+      slots: { default: 'Assign @Cindy to #bug.' },
+    })
+
+    const root = wrapper.get('.astryx-chat-tokenized')
+    expect(root.text()).toBe('Assign @Cindy to #bug.')
+    expect(root.findAll('.astryx-chat-token')).toHaveLength(2)
+  })
+
+  it('keeps the text prop as an alias and leaves plain text alone', () => {
+    const wrapper = mount(ChatTokenizedText, {
+      props: { text: 'Nothing to match', tokens },
+    })
+    expect(wrapper.get('.astryx-chat-tokenized').text()).toBe('Nothing to match')
+    expect(wrapper.find('.astryx-chat-token').exists()).toBe(false)
+
+    const noTokens = mount(ChatTokenizedText, { slots: { default: 'Use @Cindy here' } })
+    expect(noTokens.get('.astryx-chat-tokenized').text()).toBe('Use @Cindy here')
+  })
+
+  it('prefers the text prop when both the prop and the slot are set', () => {
+    const wrapper = mount(ChatTokenizedText, {
+      props: { text: 'from prop', tokens },
+      slots: { default: 'from slot' },
+    })
+    expect(wrapper.get('.astryx-chat-tokenized').text()).toBe('from prop')
   })
 })
 

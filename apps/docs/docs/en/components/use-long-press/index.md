@@ -13,10 +13,30 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 Detects a single-finger press-and-hold and reports where it happened, so touch users can reach affordances that a pointer gets from right-click. iOS Safari never synthesizes a `contextmenu` event on long-press, which makes this the only touch route into a cursor-positioned surface such as `ContextMenu`. The press cancels on movement, lift, multi-touch or unmount.
 
-The hook attaches no listeners itself. It returns `start`, `moveTo`, and `cancel` for the caller to bind: `start(point)` on `pointerdown`, `moveTo(point)` on `pointermove`, and `cancel` on `pointerup` and `pointercancel`. `ContextMenu` wires exactly that on its trigger, and skips mouse pointers so a right-click keeps its own path.
+The hook attaches no listeners itself. Two ways to bind it: spread the returned `handlers` onto the element (`<div v-on="longPress.handlers">`), or drive it yourself with `start(point)` on `pointerdown`, `moveTo(point)` on `pointermove`, and `cancel` on `pointerup` and `pointercancel`. `ContextMenu` wires the second form on its trigger, and skips mouse pointers so a right-click keeps its own path.
 
 ```ts
 import { useLongPress } from '@astryx-vue/core'
+```
+
+```vue
+<script setup lang="ts">
+import { useLongPress } from '@astryx-vue/core'
+import { ref } from 'vue'
+
+const isDisabled = ref(false)
+
+const longPress = useLongPress({
+  disabled: isDisabled,
+  onLongPress: (point) => { openMenuAt(point.x, point.y) },
+})
+</script>
+
+<template>
+  <button type="button" v-on="longPress.handlers">
+    Hold me
+  </button>
+</template>
 ```
 
 ## Best practices

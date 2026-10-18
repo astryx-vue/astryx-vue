@@ -95,7 +95,7 @@ footer: false
         <td><code>download</code></td>
         <td><code>string | boolean</code></td>
         <td>-</td>
-        <td>是否触发下载。</td>
+        <td>是否触发下载。写字符串就是建议的文件名。<code>true</code> 只写一个空的 <code>download</code> 属性，<code>false</code> 不写这个属性。</td>
       </tr>
       <tr>
         <td><code>referrerPolicy</code></td>

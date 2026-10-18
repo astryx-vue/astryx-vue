@@ -11,7 +11,7 @@ import { useTableSelectionStateRowSelection } from '../../../../components/demos
 
 ## Usage
 
-State management companion for `useTableSelection`. Returns `selectionConfig` for the behaviour plugin plus `selectionState` for selection-aware UI such as `TableSelectionToolbar`. The selection itself stays controlled: you own the `Set` of selected keys and pass a setter. Select-all takes every row in `data`.
+State management companion for `useTableSelection`. Returns `selectionConfig` for the behaviour plugin plus `selectionState` for selection-aware UI such as `TableSelectionToolbar`. The selection itself stays controlled: you own the `Set` of selected keys and pass a setter. Select-all only takes the rows that can be checked, so rows that are not selectable or are disabled keep whatever state they had. `idKey` takes a property name or a function that returns the key.
 
 ```ts
 import { useTableSelectionState } from '@astryx-vue/core/Table'

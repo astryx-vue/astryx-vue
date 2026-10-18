@@ -1,15 +1,34 @@
 export { capitalize, cellText, generateColumns, paginateData, pixel, proportional, resolveColumnFloorWidths, resolveColumnWidths, sortRows } from './columnUtils.js'
-export { useTableColumnResize } from './plugins/columnResize.js'
-export type { UseTableColumnResizeConfig } from './plugins/columnResize.js'
+export {
+  columnResizeDirectionSign,
+  columnResizeMinWidth,
+  columnResizeStep,
+  isProportionalColumnWidth,
+  resizeColumnWidths,
+  useTableColumnResize,
+} from './plugins/columnResize.js'
+export type {
+  ColumnResizePlan,
+  ColumnResizeSnapshot,
+  UseTableColumnResizeConfig,
+} from './plugins/columnResize.js'
 export { useTableColumnSettings, useTableColumnSettingsState } from './plugins/columnSettings.js'
-export type { ColumnSettingsOption, UseTableColumnSettingsConfig } from './plugins/columnSettings.js'
+export type {
+  ColumnSettingsOption,
+  TableColumnSettingsState,
+  UseTableColumnSettingsConfig,
+} from './plugins/columnSettings.js'
 export { applyTableFilters, useTableFiltering, useTableFilterState } from './plugins/filtering.js'
-export type { UseTableFilteringConfig } from './plugins/filtering.js'
+export type {
+  TableFilterStateHandle,
+  UseTableFilteringConfig,
+  UseTableFilterStateOptions,
+} from './plugins/filtering.js'
 export { buildGroupedRows, isTableGroupHeader, useTableGroupedRows } from './plugins/groupedRows.js'
 export type { UseTableGroupedRowsConfig } from './plugins/groupedRows.js'
 export { isInteractiveRowClick } from './plugins/interaction.js'
 export { paginateData as paginateTableData, useTablePagination } from './plugins/pagination.js'
-export type { UseTablePaginationConfig } from './plugins/pagination.js'
+export type { TablePaginationVariant, UseTablePaginationConfig } from './plugins/pagination.js'
 export { useTableRowExpansion } from './plugins/rowExpansion.js'
 export type { UseTableRowExpansionConfig } from './plugins/rowExpansion.js'
 export { useTableRowIndex } from './plugins/rowIndex.js'
@@ -17,7 +36,12 @@ export type { UseTableRowIndexConfig } from './plugins/rowIndex.js'
 export { useTableRowStatus } from './plugins/rowStatus.js'
 export type { TableCustomRowStatus, TableRowStatus, TableRowStatusColor, TableRowStatusName, TableSemanticRowStatus, UseTableRowStatusConfig } from './plugins/rowStatus.js'
 export { useTableSelection, useTableSelectionState } from './plugins/selection.js'
-export type { TableSelectionState, UseTableSelectionConfig, UseTableSelectionStateConfig } from './plugins/selection.js'
+export type {
+  TableSelectedKeysSetter,
+  TableSelectionState,
+  UseTableSelectionConfig,
+  UseTableSelectionStateConfig,
+} from './plugins/selection.js'
 export { useTableSortable, useTableSortableState } from './plugins/sortable.js'
 export type { UseTableSortableConfig } from './plugins/sortable.js'
 export { resolveStickySide, stickyOffsets, useTableStickyColumns } from './plugins/stickyColumns.js'
@@ -40,11 +64,14 @@ export type {
   TableCellProps,
   TableColumn,
   TableColumnAlign,
+  TableColumnResizeContribution,
   TableDensity,
   TableDividers,
   TableFilterField,
+  TableFilterFieldType,
   TableFilterState,
   TableFilterValue,
+  TableFilterVariant,
   TableGroupPatch,
   TableHeaderPatch,
   TablePanelPatch,

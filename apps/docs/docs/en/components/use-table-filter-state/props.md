@@ -7,7 +7,7 @@ footer: false
 
 ## Parameters
 
-`useTableFilterState()` takes one optional argument.
+`useTableFilterState()` takes one optional argument, in either of two shapes.
 
 <div class="component-api-table" role="region" aria-label="useTableFilterState parameters" tabindex="0">
   <table>
@@ -19,7 +19,13 @@ footer: false
         <td><code>initial</code></td>
         <td><code>TableFilterState</code></td>
         <td><code>{}</code></td>
-        <td>Optional initial filter state map. It is shallow copied, so the object you pass is never written to.</td>
+        <td>The initial filter map itself. It is shallow copied, so the object you pass is never written to.</td>
+      </tr>
+      <tr>
+        <td><code>initial.initialState</code></td>
+        <td><code>TableFilterState</code></td>
+        <td><code>{}</code></td>
+        <td>The same map behind an <code>initialState</code> key: <code>useTableFilterState({ initialState })</code>. A filter value is never an object, so a key named <code>initialState</code> with an object value can only be this form.</td>
       </tr>
     </tbody>
   </table>
@@ -63,7 +69,7 @@ footer: false
       <tr>
         <td><code>[fieldKey]</code></td>
         <td><code>TableFilterValue</code></td>
-        <td>Field key to filter value. <code>TableFilterValue</code> is <code>string | string[]</code>.</td>
+        <td>Field key to filter value. <code>TableFilterValue</code> is <code>string | number | string[]</code>.</td>
       </tr>
     </tbody>
   </table>

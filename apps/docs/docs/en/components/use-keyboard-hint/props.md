@@ -77,7 +77,7 @@ footer: false
       <tr>
         <td><code>onBlur</code></td>
         <td><code>(event: FocusEvent) =&gt; void</code></td>
-        <td>Bind to the container's <code>focusout</code> (<code>@focusout</code>). Hides the hint when focus leaves the composite entirely, and re-anchors when focus moves within.</td>
+        <td>Bind to the container's <code>focusout</code> (<code>@focusout</code>). Hides the hint when focus leaves the composite entirely and counts that as a dismissal, so it does not come back for this instance; focus moves within the composite only re-anchor it.</td>
       </tr>
       <tr>
         <td><code>onKeyDown</code></td>

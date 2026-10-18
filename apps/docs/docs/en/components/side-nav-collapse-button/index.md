@@ -13,7 +13,7 @@ import { sideNavCollapseButtonBasic } from '../../../../components/demos/side-na
 
 Toggle button for sidenav collapse. Place inside SideNav (reads context automatically) or outside it (hand the same controlled collapsible config to both). Renders as an icon-only ghost button by default.
 
-Inside a `SideNav` the button finds the collapse state by itself. Outside it, bind `v-model:is-collapsed` and give the same model to the `SideNav`, so the two stay in step. Pass `label` to turn the icon-only square into a text button.
+Inside a `SideNav` the button finds the collapse state by itself. Outside it, bind `v-model:is-collapsed`, or pass the same `collapsible` config (`{ isCollapsed, onCollapsedChange }`) to the button and the `SideNav`, so the two stay in step. Pass `label` to turn the icon-only square into a text button.
 
 ```ts
 import { SideNavCollapseButton } from '@astryx-vue/core/SideNav'

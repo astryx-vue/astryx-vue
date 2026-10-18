@@ -7,14 +7,14 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { avatarGroupOverflowCustomText, avatarGroupOverflowDefaultCount } from '../../../../components/demos/avatar-group-overflow'
+import { avatarGroupOverflowCustomText, avatarGroupOverflowDefaultCount, avatarGroupOverflowWideCount } from '../../../../components/demos/avatar-group-overflow'
 </script>
 
 ## Usage
 
 AvatarGroupOverflow appears at the end of an AvatarGroup to summarize people who are not shown individually. Use it when a group is sliced to a small number of visible avatars but the hidden count still matters.
 
-`count` is the number of hidden people, and it also builds the accessible name, so it should match what the indicator shows. The default slot replaces the `+N` text. A `@click` handler turns the indicator into a real button that can take focus; without one it stays a static figure.
+`count` is the number of hidden people, and it also builds the accessible name, so it should match what the indicator shows. The name comes from the current language, so English reads "5 more". The default slot replaces the `+N` text; short text keeps the indicator a circle and longer text widens it into a pill, so the count always fits. A `@click` handler turns the indicator into a real button that can take focus; without one it stays a static figure.
 
 ```vue
 <script setup lang="ts">
@@ -38,10 +38,10 @@ import { AvatarGroup, AvatarGroupOverflow } from '@astryx-vue/core/AvatarGroup'
 | Guidance | Practice |
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Pass the real hidden count to `count` so the accessible label matches the visible indicator. |
-| <Badge variant="success">Do</Badge> | Use short custom text such as `+12` or `99+`. Keep the indicator short so the number always fits. |
+| <Badge variant="success">Do</Badge> | Use short custom text such as `+12` or `99+`. The indicator is a circle for short counts and grows into a pill for wider counts, so the number always fits. |
 | <Badge variant="success">Do</Badge> | Provide `onClick` when the overflow opens a member list, popover, or detail view. |
 | <Badge variant="error">Don't</Badge> | Do not pass custom text that disagrees with `count`; `count` continues to provide the accessible label. |
-| <Badge variant="error">Don't</Badge> | Do not use long labels inside the indicator; place longer participant details next to the group instead. |
+| <Badge variant="error">Don't</Badge> | Do not use long labels inside the indicator. Even though it stretches into a pill, a sentence in there reads as noise; put longer participant details next to the group instead. |
 
 ## Examples
 
@@ -50,3 +50,5 @@ Common configurations, variations, and states.
 <DemoExample :demo="avatarGroupOverflowCustomText" title="Custom Text" description="Provide short custom children such as 12+ when the overflow count needs compact product-specific formatting." locale="en" />
 
 <DemoExample :demo="avatarGroupOverflowDefaultCount" title="Default Count" description="Use AvatarGroupOverflow without children to render the standard +N overflow count." locale="en" />
+
+<DemoExample :demo="avatarGroupOverflowWideCount" title="Wide Count" description="A wider count turns the circle into a pill: the height stays fixed and only the width grows, so a four digit number still fits." locale="en" />

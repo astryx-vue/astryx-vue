@@ -60,12 +60,18 @@ export const HeaderAddon = defineComponent({
 })
 
 /**
- * 渲染插件挂在表格下方的 footer 内容。
+ * 渲染插件挂在表格上方或下方的内容。
  */
 export const PluginFooter = defineComponent({
   name: 'AstryxTablePluginFooter',
-  props: { plugin: { type: Object, required: true } },
+  props: {
+    plugin: { type: Object, required: true },
+    place: { type: String, default: 'below' },
+  },
   setup(footerProps) {
-    return () => (footerProps.plugin as TablePlugin).below?.() ?? null
+    return () => {
+      const plugin = footerProps.plugin as TablePlugin
+      return (footerProps.place === 'above' ? plugin.above?.() : plugin.below?.()) ?? null
+    }
   },
 })

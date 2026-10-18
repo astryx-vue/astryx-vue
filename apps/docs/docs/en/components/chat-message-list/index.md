@@ -11,13 +11,15 @@ import { chatMessageListDensity, chatMessageListFullFeatured } from '../../../..
 
 ## Usage
 
-Presentational message container with density context and infinite scroll support. Provides role="log" with aria-live="polite" for accessibility. A flex spacer pushes messages to the bottom when the list isn't full.
+Presentational message container with density context and infinite scroll support. Provides role="log" with aria-live="polite" for accessibility. A flex spacer pushes messages to the bottom when the list isn't full; set `align="top"` to start them at the top instead.
 
 Rows go in the default slot: usually `ChatMessage` and `ChatSystemMessage`. `density` flows down to the rows that do not set their own. `gap` overrides the row gap alone, without touching padding, which is what LLM event streams with uneven spacing need.
 
 `scrollToTopAction` runs when a sentinel at the top of the list enters the scroll parent, and a spinner stays up until the promise settles. Pair it with an ancestor that scrolls; inside `ChatLayout` the layout owns that scroll.
 
 `isStreaming` marks the log `aria-busy`, so a screen reader waits and announces the finished message once instead of re-reading partial text on every token.
+
+`align` only changes where a short list rests. `bottom`, the default, keeps the spacer so a short conversation sits just above the composer; `top` drops it for document-style transcripts. Once rows overflow the container the spacer collapses either way, so scrolling and the layout's auto-scroll-to-bottom behave the same in both modes.
 
 ```vue
 <script setup lang="ts">

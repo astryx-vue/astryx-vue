@@ -1,3 +1,4 @@
+import type { MaybeRefOrGetter } from 'vue'
 import { onBeforeUnmount, toValue } from 'vue'
 
 interface Point {
@@ -8,8 +9,10 @@ interface Point {
 export interface LongPressOptions {
   /** Fired with the press point once the finger is held for `delayMs`. */
   onLongPress: (point: Point) => void
-  /** When true, the detector is inert. */
-  isDisabled: () => boolean
+  /** Read on each press. `true` keeps the detector inert. */
+  isDisabled?: MaybeRefOrGetter<boolean>
+  /** The same switch as `isDisabled`, under the original name. Either one being true keeps the detector inert. */
+  disabled?: MaybeRefOrGetter<boolean>
   /** Hold duration before the press fires, in ms. */
   delayMs?: number
   /** Movement past this distance on either axis cancels the press. */
@@ -23,10 +26,22 @@ export interface LongPressHandlers {
   moveTo: (point: Point) => boolean
   /** Drop any pending press. */
   cancel: () => void
+  /** Touch listeners for the target element, ready to spread: `<div v-on="longPress.handlers">`. */
+  handlers: {
+    onTouchStart: (event: TouchEvent) => void
+    onTouchMove: (event: TouchEvent) => void
+    onTouchEnd: (event: TouchEvent) => void
+    onTouchCancel: (event: TouchEvent) => void
+  }
 }
 
 const DEFAULT_DELAY_MS = 500
 const DEFAULT_MOVE_CANCEL_PX = 10
+
+function touchPoint(event: TouchEvent): Point | null {
+  const touch = event.touches?.[0] ?? event.changedTouches?.[0]
+  return touch == null ? null : { x: touch.clientX, y: touch.clientY }
+}
 
 /**
  * 对应原版 Astryx 的 `hooks/useLongPress`。
@@ -36,7 +51,10 @@ const DEFAULT_MOVE_CANCEL_PX = 10
  * iOS Safari never synthesizes a `contextmenu` event for a held finger, so a
  * long press is the only touch affordance that can open a cursor-positioned
  * surface. The press is cancelled when the finger travels past the tolerance,
- * lifts, or the touch is cancelled.
+ * lifts, a second finger lands, or the touch is cancelled.
+ *
+ * 两种绑法：自己接指针事件时用 `start` / `moveTo` / `cancel`；直接要触摸监听时
+ * 把 `handlers` 摊到元素上。
  */
 export function useLongPress(options: LongPressOptions): LongPressHandlers {
   const delayMs = options.delayMs ?? DEFAULT_DELAY_MS
@@ -44,6 +62,10 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
 
   let timer: ReturnType<typeof setTimeout> | null = null
   let origin: Point | null = null
+
+  function isDisabled(): boolean {
+    return toValue(options.isDisabled) === true || toValue(options.disabled) === true
+  }
 
   function cancel(): void {
     if (timer != null) {
@@ -54,7 +76,7 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
   }
 
   function start(point: Point): void {
-    if (toValue(options.isDisabled))
+    if (isDisabled())
       return
     // Clearing also nulls the origin, so the order matters.
     cancel()
@@ -78,7 +100,40 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
     return true
   }
 
+  /**
+   * A press needs exactly one finger. A second one cancels it, the way a
+   * lift does.
+   */
+  function onTouchStart(event: TouchEvent): void {
+    if ((event.touches?.length ?? 0) !== 1) {
+      cancel()
+      return
+    }
+    const point = touchPoint(event)
+    if (point != null)
+      start(point)
+  }
+
+  function onTouchMove(event: TouchEvent): void {
+    const point = touchPoint(event)
+    if (point != null)
+      moveTo(point)
+  }
+
+  function onTouchEnd(): void {
+    cancel()
+  }
+
+  function onTouchCancel(): void {
+    cancel()
+  }
+
   onBeforeUnmount(cancel)
 
-  return { cancel, moveTo, start }
+  return {
+    cancel,
+    handlers: { onTouchCancel, onTouchEnd, onTouchMove, onTouchStart },
+    moveTo,
+    start,
+  }
 }

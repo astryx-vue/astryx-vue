@@ -10,6 +10,7 @@ export type {
   SideNavCollapseButtonSize,
   SideNavCollapseButtonSlots,
   SideNavCollapsible,
+  SideNavControlledCollapsible,
   SideNavEmits,
   SideNavHandle,
   SideNavHeadingProps,

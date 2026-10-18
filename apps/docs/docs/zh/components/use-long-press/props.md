@@ -26,10 +26,16 @@ footer: false
         <td>按满 <code>delayMs</code> 之后触发，参数是按下时的坐标。必填。</td>
       </tr>
       <tr>
+        <td><code>options.disabled</code></td>
+        <td><code>MaybeRefOrGetter&lt;boolean&gt;</code></td>
+        <td><code>false</code></td>
+        <td>为 true 时这次不检测，所以被禁用的触发器只要改这个值，不用重新注册。每次按下时读，写普通布尔值、ref 或 getter 都行。</td>
+      </tr>
+      <tr>
         <td><code>options.isDisabled</code></td>
-        <td><code>() =&gt; boolean</code></td>
+        <td><code>MaybeRefOrGetter&lt;boolean&gt;</code></td>
         <td>—</td>
-        <td>一个 getter，每次 <code>start</code> 时读。返回 true 时这次不检测，所以被禁用的触发器只要改这个布尔值，不用重新注册。必填。</td>
+        <td>同一个开关的另一个名字，任一为真就不检测。</td>
       </tr>
       <tr>
         <td><code>options.delayMs</code></td>
@@ -55,6 +61,11 @@ footer: false
       <tr><th>名称</th><th>类型</th><th>说明</th></tr>
     </thead>
     <tbody>
+      <tr>
+        <td><code>handlers</code></td>
+        <td><code>{ onTouchStart, onTouchMove, onTouchEnd, onTouchCancel }</code></td>
+        <td>四个触摸监听，直接摊到目标元素上，例如 <code>&lt;button v-on="press.handlers"&gt;</code>。第二根手指、抬手、取消都会结束这次按住；移动超过 <code>moveCancelPx</code> 也一样。</td>
+      </tr>
       <tr>
         <td><code>start</code></td>
         <td><code>(point: { x: number, y: number }) =&gt; void</code></td>

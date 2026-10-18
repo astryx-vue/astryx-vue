@@ -11,7 +11,7 @@ import { sideNavCollapseButtonBasic } from '../../../../components/demos/side-na
 
 ## 使用方法
 
-侧边导航的收起开关。放在 `SideNav` 里面时，它自己就能找到收起状态；放在外面时，要用 `v-model:is-collapsed` 和侧栏绑同一个值，两边才一致。默认是一个只有图标的幽灵按钮。
+侧边导航的收起开关。放在 `SideNav` 里面时，它自己就能找到收起状态；放在外面时，要用 `v-model:is-collapsed` 或者 `collapsible`（`{ isCollapsed, onCollapsedChange }`，同一个对象也交给侧栏）和侧栏绑同一个值，两边才一致。默认是一个只有图标的幽灵按钮。
 
 `label` 一传，方形的图标按钮就变成带文字的按钮。不传时，文字跟着状态在「展开侧栏」和「收起侧栏」之间切换，读屏读到的就是这句话。
 

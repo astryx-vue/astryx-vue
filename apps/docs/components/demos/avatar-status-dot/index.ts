@@ -1,4 +1,6 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
+import iconDemo from './icon.vue'
+import iconSource from './icon.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 import variantsDemo from './variants.vue'
@@ -8,3 +10,4 @@ const options = { className: 'overview-row' }
 
 export const avatarStatusDotOverview = defineDemo(overviewDemo, overviewSource, options)
 export const avatarStatusDotVariants = defineDemo(variantsDemo, variantsSource, options)
+export const avatarStatusDotIcon = defineDemo(iconDemo, iconSource, options)

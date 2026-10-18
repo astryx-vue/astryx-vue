@@ -1846,6 +1846,16 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   height: auto;
 }
 
+/* 折叠按钮的概览：SideNav 撑满舞台高度，按钮落在底部。 */
+.side-nav-preview:has(.side-nav-collapse-button-overview) {
+  align-self: stretch;
+  height: 100%;
+}
+
+.side-nav-preview .side-nav-collapse-button-overview > .astryx-side-nav {
+  height: 100%;
+}
+
 .side-nav-preview__mark {
   display: inline-flex;
   align-items: center;

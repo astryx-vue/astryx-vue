@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
+import { mountComposable } from './testing/mountComposable.js'
 import { useFocusTrap } from './useFocusTrap.js'
 
 describe('useFocusTrap', () => {
@@ -123,5 +124,94 @@ describe('useFocusTrap', () => {
     await nextTick()
 
     expect(document.activeElement).toBe(button2)
+  })
+
+  it('把 isActive 当 isEnabled 的另一个名字', async () => {
+    const isActive = ref(false)
+
+    useFocusTrap({ container: ref(container), isActive })
+
+    await nextTick()
+    isActive.value = true
+    await nextTick()
+    button2.focus()
+
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+    button2.dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+  })
+
+  it('容器里按下 Escape 时调用 onEscape', async () => {
+    const onEscape = vi.fn()
+
+    useFocusTrap({ container: ref(container), isEnabled: ref(true), onEscape })
+    await nextTick()
+
+    button1.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    expect(onEscape).toHaveBeenCalledOnce()
+
+    button1.blur()
+    const outside = document.createElement('button')
+    document.body.append(outside)
+    outside.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    expect(onEscape).toHaveBeenCalledOnce()
+    outside.remove()
+  })
+
+  it('不传 container 时返回自己建的 containerRef', async () => {
+    const trap = useFocusTrap({ isEnabled: ref(true) })
+    trap.containerRef.value = container
+    await nextTick()
+
+    button2.focus()
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+    button2.dispatchEvent(event)
+
+    expect(event.defaultPrevented).toBe(true)
+  })
+
+  it('关闭时把焦点还给打开前的元素', async () => {
+    const trigger = document.createElement('button')
+    document.body.append(trigger)
+    trigger.focus()
+    const isEnabled = ref(false)
+
+    useFocusTrap({ container: ref(container), isEnabled })
+    await nextTick()
+
+    isEnabled.value = true
+    await nextTick()
+    expect(document.activeElement).toBe(button1)
+
+    isEnabled.value = false
+    await nextTick()
+    expect(document.activeElement).toBe(trigger)
+    trigger.remove()
+  })
+
+  it('焦点没进过陷阱就不还焦点，卸载时也一样', async () => {
+    const trigger = document.createElement('button')
+    const empty = document.createElement('div')
+    document.body.append(trigger, empty)
+    trigger.focus()
+
+    const isEnabled = ref(false)
+    useFocusTrap({ container: ref(empty), isEnabled })
+    await nextTick()
+
+    isEnabled.value = true
+    await nextTick()
+    isEnabled.value = false
+    await nextTick()
+    expect(document.activeElement).toBe(trigger)
+
+    const emptyRef = ref<HTMLElement | null>(empty)
+    const mounted = mountComposable(() => useFocusTrap({ container: emptyRef, isEnabled: ref(true) }))
+    trigger.focus()
+    mounted.wrapper.unmount()
+    expect(document.activeElement).toBe(trigger)
+
+    trigger.remove()
+    empty.remove()
   })
 })

@@ -17,6 +17,21 @@ import { useTableSelectionRowSelection } from '../../../../components/demos/use-
 import { useTableSelection } from '@astryx-vue/core/Table'
 ```
 
+两个 getter 决定一行长什么样。`getIsItemSelectable` 让没什么可选的行连复选框都不显示；`getIsItemEnabled` 保留复选框但把它禁用，用在「这一行现在不能选」的场合。
+
+```ts
+const selection = useTableSelection({
+  getIsItemSelected: item => selectedKeys.value.has(item.id),
+  onSelectItem: ({ item, isSelected }) => { /* ... */ },
+  onSelectAll: ({ isAllSelected }) => { /* ... */ },
+  getIsAllSelected: () => /* ... */ false,
+  getIsItemSelectable: item => item.role !== 'System',
+  getIsItemEnabled: item => item.status !== 'Locked',
+})
+```
+
+`hasRowHighlight` 只管选中行上那层浅色底。`aria-selected` 无论如何都写在选中的行上，所以就算周围界面已经用行底色表达别的意思，选中状态照样念得出来。
+
 ## 示例
 
 <DemoExample

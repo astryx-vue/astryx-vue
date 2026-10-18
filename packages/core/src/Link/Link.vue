@@ -93,6 +93,20 @@ const tooltipText = computed(() => {
 const newTabText = computed(() => props.newTabLabel || messages.value.nav.opensInNewTab)
 const showNewTab = computed(() => props.isExternalLink && !isButton.value)
 
+/**
+ * `download` 只有三种写法：没有、空属性（= 用服务器给的文件名）、指定文件名。
+ * `false` 不能落到 DOM 上变成 `download="false"`，那样会被当成文件名。
+ */
+const downloadAttribute = computed<string | undefined>(() => {
+  if (isButton.value || props.isDisabled)
+    return undefined
+  if (props.download === true)
+    return ''
+  if (props.download === false)
+    return undefined
+  return props.download
+})
+
 function handleClick(event: MouseEvent) {
   if (props.isDisabled) {
     event.preventDefault()
@@ -113,7 +127,7 @@ function handleClick(event: MouseEvent) {
       :to="isCustomLink ? href : undefined"
       :target="!isButton && !isDisabled ? computedTarget : undefined"
       :rel="!isButton && !isDisabled ? computedRel : undefined"
-      :download="!isButton && !isDisabled ? download : undefined"
+      :download="downloadAttribute"
       :referrerpolicy="!isButton ? referrerPolicy : undefined"
       :type="isButton ? 'button' : undefined"
       :disabled="isButton ? isDisabled : undefined"
@@ -141,7 +155,7 @@ function handleClick(event: MouseEvent) {
     :to="isCustomLink ? href : undefined"
     :target="!isButton && !isDisabled ? computedTarget : undefined"
     :rel="!isButton && !isDisabled ? computedRel : undefined"
-    :download="!isButton && !isDisabled ? download : undefined"
+    :download="downloadAttribute"
     :referrerpolicy="!isButton ? referrerPolicy : undefined"
     :type="isButton ? 'button' : undefined"
     :disabled="isButton ? isDisabled : undefined"

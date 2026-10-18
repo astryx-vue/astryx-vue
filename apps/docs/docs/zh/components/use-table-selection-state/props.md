@@ -7,6 +7,8 @@ footer: false
 
 `data` 和 `selectedKeys` 是 `MaybeRefOrGetter`，传 ref 或 getter 才能保持实时。其它字段从你传入的配置对象上读。
 
+全选只动真的能勾的行：`getIsItemSelectable` 或 `getIsItemEnabled` 返回 false 的行保留原来的状态，不在 `data` 里的键也照样留着。
+
 ## 参数
 
 <div class="component-api-table" role="region" aria-label="useTableSelectionState 参数" tabindex="0">
@@ -23,9 +25,9 @@ footer: false
       </tr>
       <tr>
         <td><code>idKey</code></td>
-        <td><code>keyof T &amp; string</code></td>
+        <td><code>(keyof T &amp; string) | ((item: T) =&gt; string)</code></td>
         <td>—</td>
-        <td>键提取：存放唯一字符串 ID 的属性名。</td>
+        <td>键提取：存放唯一字符串 ID 的属性名，或者从行里取出这个 ID 的函数。</td>
       </tr>
       <tr>
         <td><code>selectedKeys</code></td>
@@ -37,7 +39,19 @@ footer: false
         <td><code>setSelectedKeys</code></td>
         <td><code>(keys: Set&lt;string&gt;) =&gt; void</code></td>
         <td>—</td>
-        <td>选中集合的写回函数。它给的是一个新 <code>Set</code>，你把它赋给自己的 ref 就行。</td>
+        <td>选中集合的写回函数。它每次给的都是一个算好的 <code>Set</code>，你把它赋给自己的 ref 就行。原版那种同时接受 updater 的派发器（例如 React 的 <code>setState</code>）也符合这个签名，可以直接传。</td>
+      </tr>
+      <tr>
+        <td><code>getIsItemSelectable</code></td>
+        <td><code>(item: T) =&gt; boolean</code></td>
+        <td><code>() =&gt; true</code></td>
+        <td>这一行要不要显示复选框。返回 false 的行连复选框都没有，也不算进全选。</td>
+      </tr>
+      <tr>
+        <td><code>getIsItemEnabled</code></td>
+        <td><code>(item: T) =&gt; boolean</code></td>
+        <td><code>() =&gt; true</code></td>
+        <td>这一行的复选框能不能点。返回 false 时复选框还在但是禁用，而且被冻结：全选会保留它原来的状态。</td>
       </tr>
       <tr>
         <td><code>getRowLabel</code></td>
