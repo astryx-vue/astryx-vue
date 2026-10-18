@@ -19,10 +19,11 @@ import { useTableFilterState } from '@astryx-vue/core/Table'
 
 A filter is "off" when its key is missing. Setting `null`, an empty string, or an empty array removes the key instead of storing an empty value, so a truthy key in the map always means a live filter.
 
-Give it an initial map when the table should open with a filter already applied. The initial object is shallow copied, so later writes never touch it.
+Give it an initial map when the table should open with a filter already applied. Pass the map directly, or wrap it as `initialState`. The initial object is shallow copied, so later writes never touch it.
 
 ```ts
-const { filters, onFilterChange, clearAll } = useTableFilterState({ role: 'Engineer' })
+const direct = useTableFilterState({ role: 'Engineer' })
+const wrapped = useTableFilterState({ initialState: { role: 'Engineer' } })
 ```
 
 ## Examples

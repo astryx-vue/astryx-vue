@@ -11,6 +11,8 @@ export interface NavMessages {
   close: string
   more: string
   moreItems: (count: number) => string
+  avatarOverflow: (count: number) => string
+  avatarNameWithStatus: (name: string, status: string) => string
   expandItem: (label: string) => string
   collapseItem: (label: string) => string
   submenu: (label: string) => string
@@ -30,6 +32,8 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     close: 'Close',
     more: 'More',
     moreItems: count => `${count} more`,
+    avatarOverflow: count => `${count} more`,
+    avatarNameWithStatus: (name, status) => `${name}, ${status}`,
     expandItem: label => `Expand ${label}`,
     collapseItem: label => `Collapse ${label}`,
     submenu: label => `${label} submenu`,
@@ -47,6 +51,8 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     close: '关闭',
     more: '更多',
     moreItems: count => `还有 ${count} 项`,
+    avatarOverflow: count => `还有 ${count} 个`,
+    avatarNameWithStatus: (name, status) => `${name}，${status}`,
     expandItem: label => `展开${label}`,
     collapseItem: label => `收起${label}`,
     submenu: label => `${label}子菜单`,

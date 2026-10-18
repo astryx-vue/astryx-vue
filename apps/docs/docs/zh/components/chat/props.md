@@ -98,6 +98,12 @@ footer: false
     </thead>
     <tbody>
       <tr>
+        <td><code>align</code></td>
+        <td><code>'top' | 'bottom'</code></td>
+        <td><code>'bottom'</code></td>
+        <td>消息不到一屏时贴顶还是贴底。<code>'bottom'</code> 在消息前面留一块弹性空白；<code>'top'</code> 不留，消息从顶上排。</td>
+      </tr>
+      <tr>
         <td><code>density</code></td>
         <td><code>'compact' | 'balanced' | 'spacious'</code></td>
         <td><code>'balanced'</code></td>
@@ -131,7 +137,7 @@ footer: false
   </table>
 </div>
 
-<code>default</code> 插槽是各行。<code>empty</code> 在没有 <code>default</code> 时显示。根节点是 <code>role="log"</code>，<code>aria-live="polite"</code>。
+<code>default</code> 插槽是各行。<code>emptyState</code> 在没有 <code>default</code> 时显示，<code>empty</code> 是它的别名。根节点是 <code>role="log"</code>，<code>aria-live="polite"</code>。
 
 ## ChatMessage
 
@@ -261,7 +267,7 @@ footer: false
         <td><code>calls</code></td>
         <td><code>ChatToolCallItem[]</code></td>
         <td>-</td>
-        <td>一轮回复里的工具调用。空数组不渲染。每项可以带 <code>name</code>、<code>status</code>、<code>target</code>、<code>duration</code>、<code>node</code>、<code>additions</code>、<code>deletions</code>、<code>stats</code>、<code>errorMessage</code>、<code>key</code>、<code>detail</code>。</td>
+        <td>一轮回复里的工具调用。空数组不渲染。每项可以带 <code>name</code>、<code>status</code>、<code>target</code>、<code>duration</code>、<code>node</code>、<code>additions</code>、<code>deletions</code>、<code>stats</code>、<code>errorMessage</code>、<code>key</code>、<code>resultDetail</code>、<code>data</code>。<code>detail</code> 是 <code>resultDetail</code> 的别名。</td>
       </tr>
       <tr>
         <td><code>label</code></td>
@@ -285,7 +291,7 @@ footer: false
   </table>
 </div>
 
-发出 <code>expandedChange</code>，参数是下一个布尔值。<code>detail</code> 插槽收到 <code>{ call }</code>，用来替换 <code>call.detail</code>。分组收起时只显示最新一条；面板在打开前是 <code>inert</code>。等待中和进行中用加载指示。错误会放进一段视觉隐藏的文字里读出来。
+发出 <code>expandedChange</code>，参数是下一个布尔值。<code>detail</code> 插槽收到 <code>{ call }</code>，用来替换 <code>call.resultDetail</code>。分组收起时只显示最新一条；面板在打开前是 <code>inert</code>。等待中和进行中用加载指示。错误会放进一段视觉隐藏的文字里读出来。
 
 ## ChatReasoning
 
@@ -613,7 +619,7 @@ send、stop、click 三个事件。sendIcon 和 stopIcon 替换上箭头和方�
 
 ## ChatTokenizedText
 
-text 是可能含有标记值的字符串。tokens 里每个非空 value 按字面替换成徽章或自定义内容。空 value 会被忽略。同一组对象可以同时给输入框的 onSelect 和这里用。
+默认插槽放消息文字；要直接传字符串时用 text 属性，效果一样。tokens 里每个非空 value 按字面替换成徽章或自定义内容。空 value 会被忽略。同一组对象可以同时给输入框的 onSelect 和这里用。
 
 ## ChatComposerTokenElement
 

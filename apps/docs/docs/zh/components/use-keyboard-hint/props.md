@@ -77,7 +77,7 @@ footer: false
       <tr>
         <td><code>onBlur</code></td>
         <td><code>(event: FocusEvent) =&gt; void</code></td>
-        <td>绑在容器的 <code>focusout</code> 上（<code>@focusout</code>）。焦点彻底离开这一组时藏起提示；在组内移动时把提示挪到新的当前项。</td>
+        <td>绑在容器的 <code>focusout</code> 上（<code>@focusout</code>）。焦点彻底离开这一组时藏起提示，并算作这次提示已经用完，这个实例不会再提示；焦点在组内移动时只把提示挪到新的当前项。</td>
       </tr>
       <tr>
         <td><code>onKeyDown</code></td>

@@ -30,8 +30,20 @@ footer: false
       <tr>
         <td><code>totalItems</code></td>
         <td><code>number</code></td>
-        <td><code>0</code></td>
-        <td>Total number of items across all pages. Used to calculate total page count. Without it the controls see zero items.</td>
+        <td>—</td>
+        <td>Total number of items across all pages, used to calculate the page count. Without it, and without <code>totalPages</code>, the controls only know about <code>hasMore</code>.</td>
+      </tr>
+      <tr>
+        <td><code>totalPages</code></td>
+        <td><code>number</code></td>
+        <td>—</td>
+        <td>Total number of pages. Use it when you know the page count but not the item count. It wins over the count derived from <code>totalItems</code>.</td>
+      </tr>
+      <tr>
+        <td><code>hasMore</code></td>
+        <td><code>boolean</code></td>
+        <td>—</td>
+        <td>Whether more pages exist after the current one. Use it for cursor-based data where the total is unknown; the next button stays enabled while it is true.</td>
       </tr>
       <tr>
         <td><code>pageSize</code></td>
@@ -52,10 +64,16 @@ footer: false
         <td>Available page size options. The selector still needs <code>onPageSizeChange</code> to be shown.</td>
       </tr>
       <tr>
+        <td><code>variant</code></td>
+        <td><code>'pages' | 'count' | 'compact' | 'dots' | 'none'</code></td>
+        <td><code>'pages'</code></td>
+        <td>What the controls show between the previous and next buttons: page number buttons, a "X-Y of Z" count, a compact "page X of Y", dot indicators, or nothing.</td>
+      </tr>
+      <tr>
         <td><code>position</code></td>
         <td><code>'below' | 'above' | 'both' | 'none'</code></td>
         <td><code>'below'</code></td>
-        <td>Where the controls render. A plugin can only fill the area under the table, so <code>'below'</code> and <code>'both'</code> render there; <code>'above'</code> and <code>'none'</code> render nothing.</td>
+        <td>Where the controls render relative to the table. With <code>'both'</code> there are two sets, one on each side.</td>
       </tr>
       <tr>
         <td><code>align</code></td>
@@ -64,10 +82,16 @@ footer: false
         <td>Horizontal alignment of the controls.</td>
       </tr>
       <tr>
+        <td><code>size</code></td>
+        <td><code>'sm' | 'md'</code></td>
+        <td><code>'md'</code></td>
+        <td>Height of the controls.</td>
+      </tr>
+      <tr>
         <td><code>label</code></td>
         <td><code>string</code></td>
-        <td>—</td>
-        <td>Accessible name for the pagination nav landmark. When omitted, the pagination uses its own localized name.</td>
+        <td>localized "Table pagination"</td>
+        <td>Accessible name for the pagination nav landmark. With <code>position: 'both'</code> the two navs get distinct names, the label suffixed with "(top)" and "(bottom)", so same-type landmarks stay unique.</td>
       </tr>
     </tbody>
   </table>
@@ -75,7 +99,7 @@ footer: false
 
 ## Returns
 
-`useTablePagination()` returns one `TablePlugin&lt;T&gt;`. Pass it to `Table` in `plugins`. The plugin fills one field of the plugin contract:
+`useTablePagination()` returns one `TablePlugin&lt;T&gt;`. Pass it to `Table` in `plugins`. The plugin fills two fields of the plugin contract:
 
 <div class="component-api-table" role="region" aria-label="useTablePagination returns" tabindex="0">
   <table>
@@ -84,10 +108,17 @@ footer: false
     </thead>
     <tbody>
       <tr>
+        <td><code>above</code></td>
+        <td><code>() =&gt; VNodeChild</code></td>
+        <td>Renders the controls above the table for <code>position: 'above'</code> and <code>'both'</code>.</td>
+      </tr>
+      <tr>
         <td><code>below</code></td>
         <td><code>() =&gt; VNodeChild</code></td>
-        <td>Renders the <code>Pagination</code> controls under the table, or <code>null</code> when <code>position</code> keeps them out.</td>
+        <td>Renders the controls under the table for <code>position: 'below'</code> and <code>'both'</code>.</td>
       </tr>
     </tbody>
   </table>
 </div>
+
+Both return <code>null</code> when <code>position</code> is <code>'none'</code>, or when the table holds a single page and <code>hasMore</code> is not <code>true</code>.

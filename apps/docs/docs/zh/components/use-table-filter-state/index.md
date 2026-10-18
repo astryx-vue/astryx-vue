@@ -19,10 +19,11 @@ import { useTableFilterState } from '@astryx-vue/core/Table'
 
 一条过滤「关掉」的意思是它的 key 不在映射里。写 `null`、空字符串或空数组时，key 会被删掉，而不是存一个空值，所以映射里还留着的 key 一定是生效的过滤。
 
-需要打开页面就带着过滤时，给一个初始映射。初始对象是浅拷贝的，后面怎么写都不会改到你传进去的那份。
+需要打开页面就带着过滤时，给一个初始映射。可以直接把映射传进去，也可以写成 `initialState`。初始对象是浅拷贝的，后面怎么写都不会改到你传进去的那份。
 
 ```ts
-const { filters, onFilterChange, clearAll } = useTableFilterState({ role: 'Engineer' })
+const direct = useTableFilterState({ role: 'Engineer' })
+const wrapped = useTableFilterState({ initialState: { role: 'Engineer' } })
 ```
 
 ## 示例

@@ -12,7 +12,7 @@ const calls = computed<ChatToolCallItem[]>(() => [
     additions: 6,
     deletions: 3,
     duration: '85ms',
-    detail: 'diff',
+    resultDetail: 'diff',
   },
   {
     name: 'bash',
@@ -20,14 +20,14 @@ const calls = computed<ChatToolCallItem[]>(() => [
     node: 'cli:remote-server',
     target: 'yarn test',
     duration: '1.8s',
-    detail: 'ok',
+    resultDetail: 'ok',
   },
   {
     name: 'web_search',
     status: 'complete',
     target: 'Intl.DateTimeFormat locale options',
     duration: '1.2s',
-    detail: 'ok',
+    resultDetail: 'ok',
   },
 ])
 

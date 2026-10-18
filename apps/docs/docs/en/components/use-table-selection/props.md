@@ -52,6 +52,12 @@ The config is a `MaybeRefOrGetter`, so pass a getter or a ref to keep the plugin
         <td>Returns whether a row should show a checkbox. Non-selectable rows render nothing in the selection cell.</td>
       </tr>
       <tr>
+        <td><code>getIsItemEnabled</code></td>
+        <td><code>(item: T) =&gt; boolean</code></td>
+        <td><code>() =&gt; true</code></td>
+        <td>Returns whether a row checkbox is interactive. Disabled rows keep their checkbox, rendered disabled, so the selection column stays aligned.</td>
+      </tr>
+      <tr>
         <td><code>getRowLabel</code></td>
         <td><code>(item: T) =&gt; string</code></td>
         <td>—</td>
@@ -61,7 +67,7 @@ The config is a `MaybeRefOrGetter`, so pass a getter or a ref to keep the plugin
         <td><code>hasRowHighlight</code></td>
         <td><code>boolean</code></td>
         <td><code>true</code></td>
-        <td>Paints checked rows with the accent wash. Set false when the surrounding UI already uses row background to mean something else (a row open in a detail panel, say). The wash is an inline style, so it cannot be overridden from userland. Only the background is dropped: <code>aria-selected</code> is still set on checked rows either way.</td>
+        <td>Paints checked rows with the accent wash. Set false when the surrounding UI already uses row background to mean something else (a row open in a detail panel, say). Only the background is dropped: <code>aria-selected</code> is still set on checked rows either way.</td>
       </tr>
     </tbody>
   </table>
@@ -99,6 +105,11 @@ The config is a `MaybeRefOrGetter`, so pass a getter or a ref to keep the plugin
         <td><code>selection.isSelectable</code></td>
         <td><code>(row: T) =&gt; boolean</code></td>
         <td>Wraps <code>getIsItemSelectable</code>, or <code>true</code> when it is omitted.</td>
+      </tr>
+      <tr>
+        <td><code>selection.isEnabled</code></td>
+        <td><code>(row: T) =&gt; boolean</code></td>
+        <td>Wraps <code>getIsItemEnabled</code>, or <code>true</code> when it is omitted.</td>
       </tr>
       <tr>
         <td><code>selection.selectAll</code></td>

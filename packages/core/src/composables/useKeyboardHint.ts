@@ -80,6 +80,8 @@ export function useKeyboardHint(options: UseKeyboardHintOptions = {}): UseKeyboa
       return
     if (event.relatedTarget instanceof Node && current.contains(event.relatedTarget))
       return
+    // 焦点离开这一组也算这次提示用完了，不再为同一个实例重放。
+    dismissed = true
     hide()
   }
 

@@ -46,14 +46,34 @@ export interface TableColumn<T extends Record<string, unknown> = Record<string, 
   renderCell?: (item: T, index: number) => VNodeChild
 }
 
+/**
+ * 过滤控件的输入类型。
+ * - `string`：文本，匹配子串。
+ * - `enum`：单选，命中其中一个选项。
+ * - `multi-select`：多选，命中其中任意一个选项。
+ * - `number`：数字，数值相等才算命中。
+ * - `date`：日期，单元格日期晚于选中日期才算命中。
+ */
+export type TableFilterFieldType = 'string' | 'enum' | 'multi-select' | 'number' | 'date'
+
 export interface TableFilterField {
   key: string
   label: string
-  type: 'string' | 'enum'
+  type: TableFilterFieldType
+  /** `enum` 和 `multi-select` 的选项。 */
   options?: readonly { value: string, label: string }[]
+  /** `number` 字段允许的最小值。 */
+  min?: number
+  /** `number` 字段允许的最大值。 */
+  max?: number
+  /** `number` 字段的步进。`isIntegerOnly` 为真时默认 1。 */
+  step?: number
+  /** `number` 字段只接受整数。 */
+  isIntegerOnly?: boolean
 }
 
-export type TableFilterValue = string | string[]
+/** 过滤值。`number` 字段存数字，`multi-select` 存字符串数组，其余存字符串。 */
+export type TableFilterValue = string | number | string[]
 export type TableFilterState = Record<string, TableFilterValue>
 
 export interface TableSortContribution {
@@ -63,8 +83,11 @@ export interface TableSortContribution {
   onClick: (event: MouseEvent) => void
 }
 
+/** 过滤控件的摆放方式。`inline-compact` 和 `inline` 同位置，但控件更紧凑。 */
+export type TableFilterVariant = 'inline' | 'inline-compact' | 'popover'
+
 export interface TableFilterContribution {
-  variant: 'inline' | 'popover'
+  variant: TableFilterVariant
   field: TableFilterField
   value: TableFilterValue | null
   onChange: (value: TableFilterValue | null) => void
@@ -75,6 +98,8 @@ export interface TableSelectionContribution<T> {
   isIndeterminate: () => boolean
   isSelected: (row: T) => boolean
   isSelectable?: (row: T) => boolean
+  /** 为 false 时这一行的复选框渲染成禁用状态。 */
+  isEnabled?: (row: T) => boolean
   selectAll: (selected: boolean) => void
   selectRow: (row: T, selected: boolean) => void
   rowLabel?: (row: T) => string
@@ -129,13 +154,37 @@ export interface TableHeaderPatch {
   before?: () => VNodeChild
 }
 
+/**
+ * 一列参与拖动改宽的方式。`Table` 用它画把手的无障碍属性，并在拖动时算出每一列的新宽度。
+ */
+export interface TableColumnResizeContribution {
+  /** 当前生效的像素宽度。没被拖过时是 `undefined`，按 DOM 实际宽度算。 */
+  currentWidth?: number
+  /** 这一列能拖到的最窄像素。 */
+  minWidth: number
+  /** 这一列能拖到的最宽像素。 */
+  maxWidth: number
+  /** 拖动时把宽度让给这一列的相邻列 key；`null` 表示这一列自己伸缩。 */
+  neighborKey: string | null
+  /** 是否画把手。最后一列按比例伸缩时不画。 */
+  hasHandle: boolean
+}
+
 export interface TablePlugin<T extends Record<string, unknown> = Record<string, unknown>> {
   transformColumns?: (columns: TableColumn<T>[]) => TableColumn<T>[]
   sortFor?: (column: TableColumn<T>) => TableSortContribution | null
   filterFor?: (column: TableColumn<T>) => TableFilterContribution | null
   selection?: TableSelectionContribution<T>
   widthFor?: (column: TableColumn<T>) => number | undefined
-  onColumnResizeEnd?: (key: string, width: number) => void
+  /**
+   * 一列怎么参与拖动改宽。`columns` 是当前表格里的全部列，用来找相邻列和最后一列。
+   * 返回 `null` 的列不参与。
+   */
+  resizeFor?: (column: TableColumn<T>, columns: readonly TableColumn<T>[]) => TableColumnResizeContribution | null
+  /** 一次调整结束时调用（松开指针，或按方向键 / Home / End），带上所有宽度变了的列。 */
+  onColumnResizeEnd?: (updates: Record<string, number>) => void
+  /** 渲染在表格上方的内容，分页这类插件用。 */
+  above?: () => VNodeChild
   below?: () => VNodeChild
   /** 改一行的属性、点击、分组头或展开面板。多个插件的结果会合并。 */
   rowPatch?: (row: T, index: number, columnCount: number) => TableRowPatch | null

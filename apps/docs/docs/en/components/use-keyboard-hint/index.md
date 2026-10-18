@@ -12,7 +12,7 @@ import { useKeyboardHintToolbar } from '../../../../components/demos/use-keyboar
 
 ## Usage
 
-Shows an ephemeral "← → to navigate" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It auto-dismisses on the first arrow press or on timeout, hides when focus leaves the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.
+Shows an ephemeral "← → to navigate" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It dismisses on the first arrow press, on timeout, or when focus leaves the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.
 
 The `Hint` component returned by the hook is rendered inside the composite container, as its last child.
 

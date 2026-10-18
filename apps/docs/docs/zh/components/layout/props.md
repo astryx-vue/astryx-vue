@@ -201,9 +201,9 @@ footer: false
       </tr>
       <tr>
         <td><code>resizable</code></td>
-        <td><code>{ _size: number }</code></td>
+        <td><code>LayoutResizable</code></td>
         <td>-</td>
-        <td><code>useResizable</code> 返回的 <code>props</code>。面板宽度跟着 <code>_size</code>。</td>
+        <td><code>useResizable</code> 返回的 <code>props</code>。面板宽度跟着 <code>_size</code>；对象里还带着这块区域的轴 <code>_direction</code>（<code>'horizontal' | 'vertical'</code>），要和旁边的 <code>ResizeHandle</code> 一致。</td>
       </tr>
       <tr>
         <td><code>label</code></td>

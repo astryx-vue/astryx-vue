@@ -9,7 +9,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="AvatarGroupOverflow props" tabindex="0">
 <table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>count</code></td><td><code>number</code></td><td>—</td><td>Number of hidden avatars. Rendered as <code>+N</code> and also used to build the accessible name. Required.</td></tr>
+<tr><td><code>count</code></td><td><code>number</code></td><td>—</td><td>Number of hidden avatars. Rendered as <code>+N</code> and also used to build the accessible name, which follows the current language (English reads <code>5 more</code>). A negative count is clamped to 0. Required.</td></tr>
 </tbody></table>
 </div>
 
@@ -19,4 +19,4 @@ footer: false
 
 ## Slots
 
-- `default`: custom count text, such as `12+`. Falls back to `+N`.
+- `default`: custom count text, such as `12+`. Falls back to `+N`. Short text keeps the indicator a circle; longer text widens it into a pill, so the count always fits.

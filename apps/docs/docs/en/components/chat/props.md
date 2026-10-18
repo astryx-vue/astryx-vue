@@ -98,6 +98,12 @@ Emits <code>click</code> when the button is pressed.
     </thead>
     <tbody>
       <tr>
+        <td><code>align</code></td>
+        <td><code>'top' | 'bottom'</code></td>
+        <td><code>'bottom'</code></td>
+        <td>Vertical alignment when the list is shorter than its container. <code>'bottom'</code> keeps a spacer above the rows; <code>'top'</code> drops it so rows start at the top.</td>
+      </tr>
+      <tr>
         <td><code>density</code></td>
         <td><code>'compact' | 'balanced' | 'spacious'</code></td>
         <td><code>'balanced'</code></td>
@@ -131,7 +137,7 @@ Emits <code>click</code> when the button is pressed.
   </table>
 </div>
 
-The <code>default</code> slot is the rows. The <code>empty</code> slot shows when <code>default</code> is omitted. The root is <code>role="log"</code> with <code>aria-live="polite"</code>.
+The <code>default</code> slot is the rows. The <code>emptyState</code> slot shows when <code>default</code> is omitted; <code>empty</code> is its alias. The root is <code>role="log"</code> with <code>aria-live="polite"</code>.
 
 ## ChatMessage
 
@@ -261,7 +267,7 @@ Slots: <code>default</code>, and <code>icon</code> (ignored for <code>divider</c
         <td><code>calls</code></td>
         <td><code>ChatToolCallItem[]</code></td>
         <td>-</td>
-        <td>Tool calls from one assistant turn. An empty array renders nothing. Each item may set <code>name</code>, <code>status</code>, <code>target</code>, <code>duration</code>, <code>node</code>, <code>additions</code>, <code>deletions</code>, <code>stats</code>, <code>errorMessage</code>, <code>key</code>, and <code>detail</code>.</td>
+        <td>Tool calls from one assistant turn. An empty array renders nothing. Each item may set <code>name</code>, <code>status</code>, <code>target</code>, <code>duration</code>, <code>node</code>, <code>additions</code>, <code>deletions</code>, <code>stats</code>, <code>errorMessage</code>, <code>key</code>, <code>resultDetail</code>, and <code>data</code>. <code>detail</code> is an alias of <code>resultDetail</code>.</td>
       </tr>
       <tr>
         <td><code>label</code></td>
@@ -285,7 +291,7 @@ Slots: <code>default</code>, and <code>icon</code> (ignored for <code>divider</c
   </table>
 </div>
 
-Emits <code>expandedChange</code> with the next boolean. The <code>detail</code> slot receives <code>{ call }</code> and replaces <code>call.detail</code>. A collapsed group shows the latest call; the panel is <code>inert</code> until opened. Pending and running calls use a spinner. An error is spoken from a visually hidden string.
+Emits <code>expandedChange</code> with the next boolean. The <code>detail</code> slot receives <code>{ call }</code> and replaces <code>call.resultDetail</code>. A collapsed group shows the latest call; the panel is <code>inert</code> until opened. Pending and running calls use a spinner. An error is spoken from a visually hidden string.
 
 ## ChatReasoning
 
@@ -613,7 +619,7 @@ Pass the return value of useChatDictation or useSpeechRecognition. size defaults
 
 ## ChatTokenizedText
 
-text is a string that may contain serialized chip values. Each non-empty value in tokens is matched literally and replaced with a badge or custom content. Empty values are ignored. The same objects a trigger returns can be reused here.
+The default slot holds the message text, and the text prop does the same job when a string is easier to pass. Each non-empty value in tokens is matched literally and replaced with a badge or custom content. Empty values are ignored. The same objects a trigger returns can be reused here.
 
 ## ChatComposerTokenElement
 

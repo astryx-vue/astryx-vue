@@ -3,7 +3,7 @@ import { SideNav, SideNavCollapseButton, SideNavHeading, SideNavItem, SideNavSec
 </script>
 
 <template>
-  <SideNav :collapsible="{ hasButton: false }">
+  <SideNav class="side-nav-collapse-button-overview" :collapsible="{ hasButton: false }">
     <template #header>
       <SideNavHeading heading="Workspace" />
     </template>

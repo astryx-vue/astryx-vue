@@ -26,10 +26,16 @@ footer: false
         <td>Fired with the press start point once the press is held for <code>delayMs</code>. Required.</td>
       </tr>
       <tr>
+        <td><code>options.disabled</code></td>
+        <td><code>MaybeRefOrGetter&lt;boolean&gt;</code></td>
+        <td><code>false</code></td>
+        <td>When true the detector is inert, so a disabled trigger can flip the flag without re-registering anything. Read on each press, so a ref or a getter works as well as a plain boolean.</td>
+      </tr>
+      <tr>
         <td><code>options.isDisabled</code></td>
-        <td><code>() =&gt; boolean</code></td>
+        <td><code>MaybeRefOrGetter&lt;boolean&gt;</code></td>
         <td>—</td>
-        <td>A getter, read on each <code>start</code>. When it returns true the detector stays inert, so a disabled trigger can flip the flag without re-registering anything. Required.</td>
+        <td>The same switch under its other name; either one being true keeps the detector inert.</td>
       </tr>
       <tr>
         <td><code>options.delayMs</code></td>
@@ -55,6 +61,11 @@ footer: false
       <tr><th>Name</th><th>Type</th><th>Description</th></tr>
     </thead>
     <tbody>
+      <tr>
+        <td><code>handlers</code></td>
+        <td><code>{ onTouchStart, onTouchMove, onTouchEnd, onTouchCancel }</code></td>
+        <td>The four touch listeners to spread onto the target element, e.g. <code>&lt;button v-on="press.handlers"&gt;</code>. A second finger, a lift, or a cancel ends the press; a move past <code>moveCancelPx</code> does too.</td>
+      </tr>
       <tr>
         <td><code>start</code></td>
         <td><code>(point: { x: number, y: number }) =&gt; void</code></td>

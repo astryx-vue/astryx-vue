@@ -201,9 +201,9 @@ footer: false
       </tr>
       <tr>
         <td><code>resizable</code></td>
-        <td><code>{ _size: number }</code></td>
+        <td><code>LayoutResizable</code></td>
         <td>-</td>
-        <td>The <code>props</code> object from <code>useResizable</code>. The panel width follows <code>_size</code>.</td>
+        <td>The <code>props</code> object from <code>useResizable</code>. The panel width follows <code>_size</code>, and the object also carries the region's axis as <code>_direction</code> (<code>'horizontal' | 'vertical'</code>), which must match the adjacent <code>ResizeHandle</code>.</td>
       </tr>
       <tr>
         <td><code>label</code></td>
