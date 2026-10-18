@@ -1,5 +1,17 @@
 import type { Practice, TableGroup, TableRow } from '../catalog-types.ts'
 
+export interface PageExample {
+  title: string
+  description: string
+  /** Binding passed to `<DemoExample :demo="...">`, resolved to a Vue file while building the catalog. */
+  demo: string | null
+  /** `demos/<folder>` the page imports that binding from. Null when the page does not import it. */
+  folder: string | null
+  /** Export name inside that folder. Differs from `demo` only when the page aliases the import. */
+  exportName: string | null
+  code: string
+}
+
 export interface PageExtract {
   summary: string
   usage: string
@@ -8,16 +20,27 @@ export interface PageExtract {
   slots: TableGroup[]
   events: TableGroup[]
   notes: { heading: string, text: string }[]
+  examples: PageExample[]
   importPath: string | null
   exportName: string | null
 }
 
 type SectionKind = 'usage' | 'practices' | 'examples' | 'props' | 'slots' | 'events' | 'note'
+type ApiKind = 'props' | 'slots' | 'events'
+type ColumnKind = 'name' | 'type' | 'default' | 'payload' | 'guidance' | 'description'
 
 interface Section {
   heading: string
   kind: SectionKind
+  /** Kind of the enclosing h2. h3 sections use this when their own heading is only a component name. */
+  parentKind: SectionKind
   body: string
+}
+
+interface ParsedTable {
+  label: string
+  kinds: ColumnKind[]
+  rows: TableRow[]
 }
 
 const IMPORT_PATTERN = /import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['"](@astryx-vue\/core(?:\/[^'"]+)?)['"]/g
@@ -45,26 +68,36 @@ export function extractPage(markdown: string, exportName: string): PageExtract {
     if (section.kind === 'usage')
       continue
     if (section.kind === 'practices') {
-      const items = practicesFrom(tables)
+      const items = practicesFrom(tables.map(table => table.rows))
       practices.push(...items)
       if (prose)
         notes.push({ heading: section.heading, text: prose })
       continue
     }
-    const groups = tables.map(table => ({ heading: section.heading, rows: table })).filter(group => group.rows.length > 0)
-    if (section.kind === 'props')
-      props.push(...groups)
-    else if (section.kind === 'slots')
-      slots.push(...groups)
-    else if (section.kind === 'events')
-      events.push(...groups)
-    if (section.kind === 'props' || section.kind === 'slots' || section.kind === 'events') {
+    const leftover: TableRow[][] = []
+    for (const table of tables) {
+      const kind = tableApiKind(section, table)
+      if (!kind) {
+        leftover.push(table.rows)
+        continue
+      }
+      const group = { heading: groupHeading(section.heading, table.label, kind), rows: table.rows }
+      if (kind === 'props')
+        props.push(group)
+      else if (kind === 'slots')
+        slots.push(group)
+      else
+        events.push(group)
+    }
+    const rendered = leftover.map(rows => renderRows(rows)).filter(Boolean)
+    if (isApiKind(section.kind)) {
       if (prose)
         notes.push({ heading: section.heading, text: prose })
+      if (rendered.length > 0)
+        notes.push({ heading: section.heading, text: rendered.join('\n\n') })
       continue
     }
-    if (groups.length > 0 || prose) {
-      const rendered = groups.map(group => renderRows(group.rows)).filter(Boolean)
+    if (rendered.length > 0 || prose) {
       notes.push({
         heading: section.heading,
         text: [prose, ...rendered].filter(Boolean).join('\n\n'),
@@ -81,9 +114,53 @@ export function extractPage(markdown: string, exportName: string): PageExtract {
     slots: slots.filter(group => group.rows.length > 0),
     events: events.filter(group => group.rows.length > 0),
     notes: notes.filter(note => note.text.trim()),
+    examples: extractExamples(markdown),
     importPath: imported?.importPath ?? null,
     exportName: imported?.exportName ?? null,
   }
+}
+
+export function extractExamples(markdown: string): PageExample[] {
+  const bindings = demoBindings(markdown)
+  const examples: PageExample[] = []
+  for (const match of markdown.matchAll(/<DemoExample\b([\s\S]*?)\/>/g)) {
+    const attrs = match[1] ?? ''
+    const title = readAttr(attrs, 'title')
+    const description = decodeHtml(readAttr(attrs, 'description'))
+    const demo = readDemo(attrs)
+    if (!title && !description && !demo)
+      continue
+    const binding = demo ? bindings.get(demo) : undefined
+    examples.push({
+      title,
+      description,
+      demo,
+      folder: binding?.folder ?? null,
+      exportName: binding?.exportName ?? demo,
+      code: '',
+    })
+  }
+  return examples
+}
+
+function demoBindings(markdown: string): Map<string, { folder: string, exportName: string }> {
+  const bindings = new Map<string, { folder: string, exportName: string }>()
+  for (const match of markdown.matchAll(/import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['"][^'"]*components\/demos\/([^/'"]+)/g)) {
+    const folder = match[2]
+    if (!folder)
+      continue
+    for (const part of (match[1] ?? '').split(',')) {
+      const trimmed = part.trim().replace(/^type\s+/, '')
+      if (!trimmed)
+        continue
+      const [exported, alias] = trimmed.split(/\s+as\s+/)
+      const exportName = exported?.trim()
+      const binding = (alias ?? exported)?.trim()
+      if (binding && exportName)
+        bindings.set(binding, { folder, exportName })
+    }
+  }
+  return bindings
 }
 
 export function extractTopic(markdown: string): { title: string, summary: string, headings: string[], keywords: string[] } {
@@ -251,10 +328,13 @@ export function cleanMarkdown(markdown: string): string {
 function splitSections(markdown: string): Section[] {
   const sections: Section[] = []
   let heading = ''
+  let kind: SectionKind = 'note'
+  let parentKind: SectionKind = 'note'
+  let h2Kind: SectionKind = 'note'
   let body: string[] = []
   let fence = false
   const push = (): void => {
-    sections.push({ heading, kind: heading ? classify(heading) : 'note', body: body.join('\n') })
+    sections.push({ heading, kind, parentKind, body: body.join('\n') })
   }
   for (const line of markdown.split('\n')) {
     if (line.startsWith('```'))
@@ -263,6 +343,16 @@ function splitSections(markdown: string): Section[] {
     if (match && match.level >= 2 && match.level <= 3) {
       push()
       heading = match.text
+      const own = classify(heading)
+      if (match.level === 2) {
+        kind = own
+        h2Kind = own
+        parentKind = 'note'
+      }
+      else {
+        kind = own
+        parentKind = h2Kind
+      }
       body = []
     }
     else {
@@ -271,6 +361,46 @@ function splitSections(markdown: string): Section[] {
   }
   push()
   return sections
+}
+
+function isApiKind(kind: SectionKind): kind is ApiKind {
+  return kind === 'props' || kind === 'slots' || kind === 'events'
+}
+
+function tableApiKind(section: Section, table: ParsedTable): ApiKind | null {
+  const labelKind = classify(table.label)
+  if (isApiKind(labelKind))
+    return labelKind
+  const has = (kind: ColumnKind): boolean => table.kinds.includes(kind)
+  if (has('type') || has('default'))
+    return 'props'
+  if (has('payload'))
+    return 'events'
+  const context = section.kind === 'note' ? section.parentKind : section.kind
+  if (context === 'slots' && has('name'))
+    return 'slots'
+  if (context === 'events')
+    return 'events'
+  return null
+}
+
+function groupHeading(sectionHeading: string, label: string, kind: ApiKind): string {
+  if (label && classify(label) === kind)
+    return label
+  return sectionHeading || label
+}
+
+function readAttr(source: string, name: string): string {
+  const match = source.match(new RegExp(`(?:^|\\s)${name}\\s*=\\s*"([^"]*)"`))
+  return match?.[1]?.trim() ?? ''
+}
+
+function readDemo(source: string): string | null {
+  const match = source.match(/:demo\s*=\s*"([^"]+)"/) ?? source.match(/(?:^|\s)demo\s*=\s*"([^"]+)"/)
+  const value = match?.[1]?.trim() ?? ''
+  if (!/^[a-z_$][\w$]*$/i.test(value))
+    return null
+  return value
 }
 
 function classify(heading: string): SectionKind {
@@ -290,25 +420,41 @@ function classify(heading: string): SectionKind {
   return 'note'
 }
 
-function parseTables(source: string): TableRow[][] {
+function parseTables(source: string): ParsedTable[] {
   return [...parseHtmlTables(source), ...parseMarkdownTables(source)]
 }
 
-function parseHtmlTables(source: string): TableRow[][] {
-  const tables: TableRow[][] = []
-  for (const table of source.matchAll(/<table\b[^>]*>([\s\S]*?)<\/table>/gi)) {
-    const rows = [...table[1].matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((row) => {
-      return [...row[1].matchAll(/<t[hd]\b[^>]*>([\s\S]*?)<\/t[hd]>/gi)].map(cell => cellText(cell[1]))
-    })
-    const mapped = mapRows(rows)
-    if (mapped.length > 0)
-      tables.push(mapped)
+function parseHtmlTables(source: string): ParsedTable[] {
+  const tables: ParsedTable[] = []
+  const wrapped = /<div\b([^>]+\bclass="[^"]*component-api-table[^"]*"[^>]*)>([\s\S]*?)<\/div>/gi
+  const rest = source.replace(wrapped, (_full, attrs: string, inner: string) => {
+    const table = inner.match(/<table\b[^>]*>([\s\S]*?)<\/table>/i)
+    const mapped = table ? mapRows(htmlRows(table[1] ?? '')) : null
+    if (mapped)
+      tables.push({ label: ariaLabel(attrs), ...mapped })
+    return ''
+  })
+  for (const table of rest.matchAll(/<table\b([^>]*)>([\s\S]*?)<\/table>/gi)) {
+    const mapped = mapRows(htmlRows(table[2] ?? ''))
+    if (mapped)
+      tables.push({ label: ariaLabel(table[1] ?? ''), ...mapped })
   }
   return tables
 }
 
-function parseMarkdownTables(source: string): TableRow[][] {
-  const tables: TableRow[][] = []
+function htmlRows(source: string): string[][] {
+  return [...source.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((row) => {
+    return [...row[1].matchAll(/<t[hd]\b[^>]*>([\s\S]*?)<\/t[hd]>/gi)].map(cell => cellText(cell[1] ?? ''))
+  })
+}
+
+function ariaLabel(attrs: string): string {
+  const match = attrs.match(/\baria-label="([^"]*)"/)
+  return match?.[1] ? decodeHtml(match[1]) : ''
+}
+
+function parseMarkdownTables(source: string): ParsedTable[] {
+  const tables: ParsedTable[] = []
   let current: string[] = []
   let fence = false
   const flush = (): void => {
@@ -316,8 +462,8 @@ function parseMarkdownTables(source: string): TableRow[][] {
       return
     const rows = current.filter(line => !isSeparator(line)).map(splitMarkdownRow)
     const mapped = mapRows(rows)
-    if (mapped.length > 0)
-      tables.push(mapped)
+    if (mapped)
+      tables.push({ label: '', ...mapped })
     current = []
   }
   for (const line of source.split('\n')) {
@@ -335,15 +481,15 @@ function parseMarkdownTables(source: string): TableRow[][] {
   return tables
 }
 
-function mapRows(rows: string[][]): TableRow[] {
+function mapRows(rows: string[][]): { kinds: ColumnKind[], rows: TableRow[] } | null {
   if (rows.length < 2)
-    return []
-  const headers = rows[0].map(header => header.toLowerCase())
-  const columns = headers.map(header => columnKind(header))
-  return rows.slice(1).filter(row => row.some(Boolean)).map((row) => {
+    return null
+  const headers = rows[0]?.map(header => header.toLowerCase()) ?? []
+  const kinds = headers.map(header => columnKind(header))
+  const mapped = rows.slice(1).filter(row => row.some(Boolean)).map((row) => {
     const record: TableRow = { name: '' }
     row.forEach((value, index) => {
-      const kind = columns[index] ?? 'description'
+      const kind = kinds[index] ?? 'description'
       if (!value)
         return
       if (kind === 'name')
@@ -363,9 +509,12 @@ function mapRows(rows: string[][]): TableRow[] {
       record.name = row[0] ?? ''
     return record
   }).filter(row => row.name)
+  if (mapped.length === 0)
+    return null
+  return { kinds, rows: mapped }
 }
 
-function columnKind(header: string): 'name' | 'type' | 'default' | 'payload' | 'guidance' | 'description' {
+function columnKind(header: string): ColumnKind {
   const normalized = header.replace(/[`*]/g, '').trim()
   if (['name', 'property', '名称', '属性', 'function', 'element'].includes(normalized))
     return 'name'

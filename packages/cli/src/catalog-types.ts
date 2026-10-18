@@ -26,6 +26,13 @@ export interface Note {
   text: string
 }
 
+export interface ExampleRecord {
+  title: string
+  description: string
+  /** Vue source of the docs demo. Empty when the page has no demo binding. */
+  code: string
+}
+
 export interface AnatomyPart {
   name: string
   description: string
@@ -56,6 +63,7 @@ export interface ComponentRecord {
   slots: { en: TableGroup[], zh: TableGroup[] }
   events: { en: TableGroup[], zh: TableGroup[] }
   notes: { en: Note[], zh: Note[] }
+  examples: { en: ExampleRecord[], zh: ExampleRecord[] }
   anatomy: { en: AnatomyPart[], zh: AnatomyPart[] }
   accessibility: { en: AccessibilityItem[], zh: AccessibilityItem[] }
   docsUrl: LocaleText

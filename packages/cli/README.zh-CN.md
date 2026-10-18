@@ -35,7 +35,7 @@ npm run astryx-vue -- manifest --json
 | 命令 | 输出 |
 | --- | --- |
 | `astryx-vue component --list` | 列出文档里的全部组件 |
-| `astryx-vue component <Name>` | 打印一个组件的用法、props、插槽、事件和补充说明 |
+| `astryx-vue component <Name>` | 打印一个组件的用法、props、插槽、事件、示例和补充说明 |
 | `astryx-vue search <query>` | 按相关度搜索组件和指南 |
 | `astryx-vue manifest --json` | 命令、选项、响应类型和退出码 |
 | `astryx-vue init --features agents` | 创建或刷新 `AGENTS.md` 里的托管区块 |
@@ -72,18 +72,19 @@ npm run astryx-vue -- manifest --json
 CLI 不另写一套组件说明。`packages/cli/scripts/generate-catalog.mjs` 读取：
 
 - `apps/docs/components/demos/*/meta.ts`：名称、分组和顺序
-- `apps/docs/docs/{en,zh}/components/<slug>/`：用法、props、插槽、事件
+- `apps/docs/docs/{en,zh}/components/<slug>/`：用法、props、插槽、事件和示例标题
+- `apps/docs/components/demos/<slug>/*.vue`：页面对应的示例源码
 - `apps/docs/components/demo-infra/reference/*.json`：结构和无障碍要求
 - `apps/docs/docs/{en,zh}/guide` 与 `themes`：搜索用的主题
 - 页面里没有 import 时，再用 `packages/core/package.json` 的 exports
 
-生成结果提交在 `packages/cli/src/generated/catalog.json`。文档改了之后重新生成并提交：
+生成结果提交在 `packages/cli/src/generated/catalog.json`。`pnpm --filter @astryx-vue/cli build` 会重新生成，并打进 `dist`。发布出去的包跑的就是这份。文档改了之后重新生成并提交：
 
 ```sh
 pnpm --filter @astryx-vue/cli generate
 ```
 
-`pnpm check` 会跑 `generate:check`，文件过期就失败。
+`pnpm check` 会跑 `generate:check`。`catalog.json` 过期会失败。`@astryx-vue/core` 里大写开头的导出没有被任何已文档化的组件 import，也会失败。`./icons`、`./locale`、CSS 和包根不算组件导出。
 
 这个包不做 theme、template、upgrade、doctor、swizzle 和 MCP。
 

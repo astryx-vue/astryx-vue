@@ -36,7 +36,7 @@ npm run astryx-vue -- component Button
 
 ## 命令
 
-`astryx-vue component --list` 列出文档里的组件。`astryx-vue component Button` 打印一个组件的用法、props、插槽和事件。`astryx-vue search dialog` 在组件和指南里按相关度搜索。`astryx-vue manifest --json` 说明命令、选项、响应类型和退出码。`astryx-vue init --features agents` 写入给 agent 看的上下文文件。
+`astryx-vue component --list` 列出文档里的组件。`astryx-vue component Button` 打印一个组件的用法、props、插槽、事件和示例。`astryx-vue search dialog` 在组件和指南里按相关度搜索。`astryx-vue manifest --json` 说明命令、选项、响应类型和退出码。`astryx-vue init --features agents` 写入给 agent 看的上下文文件。
 
 ## 参数
 
