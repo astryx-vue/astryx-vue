@@ -4,7 +4,7 @@ import { overlayOverview as demo } from './index'
 export const meta = {
   slug: 'overlay',
   group: 'Overlay',
-  order: 4,
+  order: 5,
   en: 'Overlay',
   zh: '覆盖层',
   demo,

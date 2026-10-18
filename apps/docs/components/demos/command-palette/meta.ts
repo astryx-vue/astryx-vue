@@ -4,7 +4,7 @@ import { commandPaletteOverview as demo } from './index'
 export const meta = {
   slug: 'command-palette',
   group: 'Overlay',
-  order: 8,
+  order: 9,
   en: 'Command Palette',
   zh: '命令面板',
   demo,

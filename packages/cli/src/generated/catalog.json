@@ -40043,6 +40043,205 @@
       }
     },
     {
+      "slug": "dialog-header",
+      "name": "DialogHeader",
+      "title": {
+        "en": "Dialog Header",
+        "zh": "对话框页眉"
+      },
+      "group": "Overlay",
+      "groupTitle": {
+        "en": "Overlay",
+        "zh": "浮层"
+      },
+      "importPath": "@astryx-vue/core/Dialog",
+      "exportName": "DialogHeader",
+      "summary": {
+        "en": "`DialogHeader` gives a dialog a labelled title area and an optional close control. It reads context from the parent `Dialog`: the title becomes the dialog's accessible name, and focus lands on it when the dialog opens.",
+        "zh": "`DialogHeader` 给对话框提供一块带标签的标题区，以及可选的关闭按钮。它从父级 `Dialog` 读取上下文：标题会成为对话框的无障碍名称，对话框打开时焦点也落在标题上。"
+      },
+      "usage": {
+        "en": "`DialogHeader` gives a dialog a labelled title area and an optional close control. It reads context from the parent `Dialog`: the title becomes the dialog's accessible name, and focus lands on it when the dialog opens.\n\n`title` is required. A subtitle is skipped when it is an empty string. The close button only appears when you pass `hasCloseButton`; clicking it emits `openChange(false)` and the parent decides whether to close.\n\n```vue\n<script setup lang=\"ts\">\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Dialog :is-open=\"isOpen\" @open-change=\"isOpen = $event\">\n    <DialogHeader\n      title=\"Edit profile\"\n      subtitle=\"Update your personal information\"\n      has-close-button\n      @open-change=\"isOpen = $event\"\n    />\n    <p>Dialog body content goes here.</p>\n  </Dialog>\n</template>\n```\n\nWithout a parent `Dialog`, the title is not associated with any dialog and the close button does not take part in the dialog's default focus behaviour. Render it inside the default slot of `Dialog`.",
+        "zh": "`DialogHeader` 给对话框提供一块带标签的标题区，以及可选的关闭按钮。它从父级 `Dialog` 读取上下文：标题会成为对话框的无障碍名称，对话框打开时焦点也落在标题上。\n\n标题是必填的。副标题为空字符串时不渲染。传入 `hasCloseButton` 才会出现关闭按钮，点击时发出 `openChange(false)`，由父组件决定是否真的关闭。\n\n```vue\n<script setup lang=\"ts\">\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Dialog :is-open=\"isOpen\" @open-change=\"isOpen = $event\">\n    <DialogHeader\n      title=\"编辑资料\"\n      subtitle=\"更新你的个人信息\"\n      has-close-button\n      @open-change=\"isOpen = $event\"\n    />\n    <p>对话框正文。</p>\n  </Dialog>\n</template>\n```\n\n单独使用 `DialogHeader` 时没有父级上下文，标题不会关联到任何对话框，关闭按钮也不会获得默认聚焦行为。它应当始终放在 `Dialog` 的默认插槽里。"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "DialogHeader props",
+            "rows": [
+              {
+                "name": "`title`",
+                "description": "`title`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`subtitle`",
+                "description": "`subtitle`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`hasCloseButton`",
+                "description": "`hasCloseButton`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`closeButtonLabel`",
+                "description": "`closeButtonLabel`",
+                "type": "`string`",
+                "default": "`'Close'`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "DialogHeader 属性",
+            "rows": [
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "—",
+                "description": "对话框标题。打开时获得默认焦点，并为对话框命名。必填。"
+              },
+              {
+                "name": "`subtitle`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题下方的次要文字。为空字符串时不渲染。"
+              },
+              {
+                "name": "`hasCloseButton`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "显示关闭按钮，点击时发出 `openChange(false)`。"
+              },
+              {
+                "name": "`closeButtonLabel`",
+                "type": "`string`",
+                "default": "`'Close'`",
+                "description": "关闭按钮的无障碍名称。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Accessibility",
+            "text": "The title is exposed as a heading through `role=\"heading\"` and `aria-level=\"2\"`, and it labels the parent dialog through `aria-labelledby`. A screen reader announces the dialog by its title text.\n\nWhen the dialog opens, the title carries `tabindex=\"-1\"` and receives initial focus, so keyboard users hear the name right away instead of starting in the middle of the body.\n\nThe close control is an `IconButton` whose accessible name defaults to `Close`. Override it with `closeButtonLabel` when the copy needs localizing."
+          },
+          {
+            "heading": "Events",
+            "text": "- `openChange(isOpen: boolean)`: fires with `false` when the close button is clicked."
+          },
+          {
+            "heading": "Slots",
+            "text": "- `startContent`: content before the title, such as a back button.\n- `endContent`: content before the close button."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "无障碍",
+            "text": "标题通过 `role=\"heading\"` 和 `aria-level=\"2\"` 暴露给辅助技术，同时用 `aria-labelledby` 与父级对话框关联，所以屏幕阅读器读到的对话框名称就是标题文字。\n\n对话框打开时，标题带 `tabindex=\"-1\"` 并接收初始焦点。这让键盘用户一进入对话框就听到名称，而不是从正文中间开始。\n\n关闭按钮是 `IconButton`，默认无障碍名称是 `Close`。文案需要本地化时用 `closeButtonLabel` 覆盖。"
+          },
+          {
+            "heading": "事件",
+            "text": "- `openChange(isOpen: boolean)`：点击关闭按钮时以 `false` 触发。"
+          },
+          {
+            "heading": "插槽",
+            "text": "- `startContent`：标题之前的内容，例如返回按钮。\n- `endContent`：关闭按钮之前的内容。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [
+          {
+            "title": "Basic",
+            "description": "A title, subtitle, and close button inside the default slot of Dialog. The close button renders only when hasCloseButton is passed.",
+            "code": "<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <div class=\"input-preview-grid\">\n    <Button label=\"Invite teammates\" variant=\"secondary\" @click=\"isOpen = true\" />\n    <Dialog :is-open=\"isOpen\" width=\"420\" @open-change=\"isOpen = $event\">\n      <DialogHeader\n        title=\"Invite teammates\"\n        subtitle=\"Send invitations to join your workspace\"\n        has-close-button\n        @open-change=\"isOpen = $event\"\n      />\n      <p>Anyone you invite can view the workspace right away. You can change their access later.</p>\n      <Button label=\"Send invites\" variant=\"primary\" @click=\"isOpen = false\" />\n    </Dialog>\n  </div>\n</template>"
+          }
+        ],
+        "zh": [
+          {
+            "title": "基础",
+            "description": "标题、副标题和关闭按钮放在 Dialog 的默认插槽里。传入 hasCloseButton 才会渲染关闭按钮。",
+            "code": "<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <div class=\"input-preview-grid\">\n    <Button label=\"Invite teammates\" variant=\"secondary\" @click=\"isOpen = true\" />\n    <Dialog :is-open=\"isOpen\" width=\"420\" @open-change=\"isOpen = $event\">\n      <DialogHeader\n        title=\"Invite teammates\"\n        subtitle=\"Send invitations to join your workspace\"\n        has-close-button\n        @open-change=\"isOpen = $event\"\n      />\n      <p>Anyone you invite can view the workspace right away. You can change their access later.</p>\n      <Button label=\"Send invites\" variant=\"primary\" @click=\"isOpen = false\" />\n    </Dialog>\n  </div>\n</template>"
+          }
+        ]
+      },
+      "anatomy": {
+        "en": [
+          {
+            "name": "Header row",
+            "description": "Arranges the title block, optional start/end content, and close control."
+          },
+          {
+            "name": "Start content",
+            "description": "Wraps optional leading content."
+          },
+          {
+            "name": "Title block",
+            "description": "Groups the title and optional subtitle."
+          },
+          {
+            "name": "End content",
+            "description": "Groups optional trailing content with the optional close control."
+          },
+          {
+            "name": "Close icon",
+            "description": "Visual close glyph inside the close button."
+          }
+        ],
+        "zh": [
+          {
+            "name": "标题行",
+            "description": "排列标题块、可选的首尾内容和关闭按钮。"
+          },
+          {
+            "name": "前置内容",
+            "description": "包裹可选的前导内容。"
+          },
+          {
+            "name": "标题块",
+            "description": "组合标题与可选副标题。"
+          },
+          {
+            "name": "后置内容",
+            "description": "组合可选的尾部内容与关闭按钮。"
+          },
+          {
+            "name": "关闭图标",
+            "description": "关闭按钮内部的关闭图形。"
+          }
+        ]
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/dialog-header",
+        "zh": "https://astryx-vue.pages.dev/components/dialog-header"
+      }
+    },
+    {
       "slug": "hover-card",
       "name": "HoverCard",
       "title": {

@@ -1,0 +1,8 @@
+/* DialogHeader 的预览里用一段浅色块代表正文，让标题区在画布上不悬空。 */
+.dialog-header-preview__body {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--astryx-radius-element, 8px);
+  color: var(--astryx-text-muted, #6b7280);
+  background: var(--astryx-surface-sunken, #f4f4f5);
+}
