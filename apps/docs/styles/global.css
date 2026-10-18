@@ -607,7 +607,9 @@ html.dark .component-detail__stage {
   background: #17181a;
 }
 
-.component-detail__stage > * {
+/* StageFit 的两层外壳是 display: contents，demo 根节点仍要受这条限制。 */
+.component-detail__stage > *,
+.component-detail__stage > .stage-fit > .stage-fit__inner > * {
   max-width: 100%;
   min-width: 0;
 }
@@ -847,6 +849,12 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .skeleton-preview .astryx-skeleton {
+  max-width: 100%;
+}
+
+/* 总览卡片里的骨架屏：头像 + 两行标题，下面三行正文，整体 300px 宽，对齐原版。 */
+.skeleton-overview {
+  width: 300px;
   max-width: 100%;
 }
 
