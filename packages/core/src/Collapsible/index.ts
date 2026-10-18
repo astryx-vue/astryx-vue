@@ -16,3 +16,5 @@ export type {
   CollapsibleProps,
   CollapsibleSlots,
 } from './types.js'
+export type { CollapsibleConfig, UseCollapsibleOptions, UseCollapsibleReturn } from './useCollapsible.js'
+export { useCollapsible } from './useCollapsible.js'

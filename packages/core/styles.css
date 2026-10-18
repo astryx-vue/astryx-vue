@@ -42,6 +42,7 @@
 @import './styles/heading.css';
 @import './styles/hover-card.css';
 @import './styles/icon.css';
+@import './styles/indicator-focus-ring.css';
 @import './styles/kbd.css';
 @import './styles/keyboard-hint.css';
 @import './styles/layout.css';
@@ -62,6 +63,7 @@
 @import './styles/overlay.css';
 @import './styles/popover.css';
 @import './styles/power-search.css';
+@import './styles/pressable.css';
 @import './styles/progress-bar.css';
 @import './styles/radio.css';
 @import './styles/radio-indicator.css';

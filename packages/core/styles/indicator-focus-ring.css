@@ -1,0 +1,18 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * 焦点环画在指示器自己的元素上，只有它自己的圆角能决定环的形状。
+ * `useIndicatorFocusRing` 负责在 `:focus-visible` 时加上这个属性。
+ */
+@layer astryx.components {
+  [data-astryx-focus-ring] {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    [data-astryx-focus-ring] {
+      outline-color: Highlight;
+    }
+  }
+}

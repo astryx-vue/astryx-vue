@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TokenEmits, TokenProps, TokenSlots } from './types.js'
 import { computed, toRaw, useAttrs } from 'vue'
+import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/token.css'
@@ -30,8 +31,13 @@ const linked = computed(() => Boolean(props.href))
 const interactive = computed(() => clickable.value || linked.value || props.removable)
 
 const rootIsLink = computed(() => linked.value && !props.removable)
-const actionIsLink = computed(() => linked.value && props.removable)
-const actionIsButton = computed(() => clickable.value && !linked.value)
+/** 删除按钮旁边那个动作元素是什么，由 `useInteractiveRole` 统一排序。 */
+const actionRole = useInteractiveRole({
+  href: () => (props.removable ? props.href : undefined),
+  hasOnClick: () => clickable.value && !linked.value,
+})
+const actionIsLink = computed(() => actionRole.role.value === 'link')
+const actionIsButton = computed(() => actionRole.role.value === 'button')
 
 const rootAttrs = computed(() => {
   return Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'onClick'))

@@ -11,5 +11,5 @@ const metaModules = import.meta.glob<DemoMeta>(
  * from `demos/<slug>/meta.ts`.
  */
 export const componentDemos: Record<string, DemoModule> = Object.fromEntries(
-  Object.values(metaModules).map(meta => [meta.slug, meta.demo]),
+  Object.values(metaModules).flatMap(meta => meta.demo ? [[meta.slug, meta.demo] as const] : []),
 )

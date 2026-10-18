@@ -7,15 +7,14 @@ import { localePath } from './docs-i18n'
 import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ locale: DocsLocale }>()
+// 没有 demo 的页面（组合式函数）只在侧栏出现，不占总览卡片。
 const groups = computed(() => catalogGroups(props.locale).map(group => ({
   id: group.id,
   title: group.title,
-  cards: group.entries.map(entry => ({
-    demo: componentDemos[entry.slug],
-    name: entry[props.locale],
-    slug: entry.slug,
-  })),
-})))
+  cards: group.entries.flatMap(entry => componentDemos[entry.slug]
+    ? [{ demo: componentDemos[entry.slug], name: entry[props.locale], slug: entry.slug }]
+    : []),
+})).filter(group => group.cards.length > 0))
 </script>
 
 <template>
