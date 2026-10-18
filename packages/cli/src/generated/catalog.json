@@ -37726,6 +37726,1138 @@
       }
     },
     {
+      "slug": "top-nav-heading",
+      "name": "TopNavHeading",
+      "title": {
+        "en": "Top Nav Heading",
+        "zh": "顶部导航标题"
+      },
+      "group": "Navigation",
+      "groupTitle": {
+        "en": "Navigation",
+        "zh": "导航"
+      },
+      "importPath": "@astryx-vue/core/TopNav",
+      "exportName": "TopNavHeading",
+      "summary": {
+        "en": "Product/suite/account heading for the `TopNav` heading slot. Supports smart interaction boundary logic: logo, heading text, superheading/subheading with independent links, and an optional menu popover with automatic chevron indicator.",
+        "zh": "`TopNavHeading` 是顶部导航里的那块名字，写产品名、套件名或账户名。它按「有没有链接」自动决定点哪里起作用：左边可以放标志，中间是标题，标题上面和下边还能各放一行小字，这两行小字可以单独成链接；再给一个菜单，标题旁边就会自己长出箭头。"
+      },
+      "usage": {
+        "en": "Product/suite/account heading for the `TopNav` heading slot. Supports smart interaction boundary logic: logo, heading text, superheading/subheading with independent links, and an optional menu popover with automatic chevron indicator.\n\n```ts\nimport { TopNavHeading } from '@astryx-vue/core/TopNav'\n```",
+        "zh": "`TopNavHeading` 是顶部导航里的那块名字，写产品名、套件名或账户名。它按「有没有链接」自动决定点哪里起作用：左边可以放标志，中间是标题，标题上面和下边还能各放一行小字，这两行小字可以单独成链接；再给一个菜单，标题旁边就会自己长出箭头。\n\n```ts\nimport { TopNavHeading } from '@astryx-vue/core/TopNav'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TopNavHeading props",
+            "rows": [
+              {
+                "name": "`heading`",
+                "description": "`heading`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`href`",
+                "description": "`href`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`headingHref`",
+                "description": "`headingHref`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`superheading`",
+                "description": "`superheading`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`superheadingHref`",
+                "description": "`superheadingHref`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`subheading`",
+                "description": "`subheading`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`subheadingHref`",
+                "description": "`subheadingHref`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`logoLabel`",
+                "description": "`logoLabel`",
+                "type": "`string`",
+                "default": "`heading`"
+              },
+              {
+                "name": "`as`",
+                "description": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "`'a'`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TopNavHeading 属性",
+            "rows": [
+              {
+                "name": "`heading`",
+                "type": "`string`",
+                "default": "—",
+                "description": "产品或应用的名字，就是标题本身。只有标志、没有文字时可以不传。"
+              },
+              {
+                "name": "`href`",
+                "type": "`string`",
+                "default": "—",
+                "description": "和 `headingHref` 是同一个意思，写出来是为了让顶栏和侧栏的标题用同样的属性名。两个都写时以 `headingHref` 为准。"
+              },
+              {
+                "name": "`headingHref`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题的链接，一般指向产品首页。没有菜单、而且只有这一处链接时，整段标题是一个大链接。"
+              },
+              {
+                "name": "`superheading`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题上面那行小字，例如套件名。字号更小、颜色更淡。"
+              },
+              {
+                "name": "`superheadingHref`",
+                "type": "`string`",
+                "default": "—",
+                "description": "上方小字的链接，例如套件首页。和菜单一起用时，这行小字自己是一个独立链接。"
+              },
+              {
+                "name": "`subheading`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题下面那行小字，例如当前账户。字号更小、颜色更淡。"
+              },
+              {
+                "name": "`subheadingHref`",
+                "type": "`string`",
+                "default": "—",
+                "description": "下方小字的链接。和菜单一起用时，这行小字自己是一个独立链接。"
+              },
+              {
+                "name": "`logoLabel`",
+                "type": "`string`",
+                "default": "`heading`",
+                "description": "标志单独成链接、旁边又没有可读文字时，给读屏用的名字。不传就用标题文字。标志不是链接时这个属性不起作用。"
+              },
+              {
+                "name": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "`'a'`",
+                "description": "链接换成别的根组件时用，例如 `RouterLink`。只有写了地址才会用到。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Slots",
+            "text": "- `logo`: logo rendered before the heading text. An image, a `NavIcon`, or any element.\n- `icon`: same place as `logo`. `logo` wins when both are passed.\n- `end`: content at the trailing edge of the heading row, such as a badge.\n- `menu`: menu content shown in a popover. A chevron indicator appears automatically. With no href the whole header opens the menu; with hrefs the links are independent and the chevron area opens it. Receives `close` and `focusRequest`."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "插槽",
+            "text": "- `logo`：标题左边的标志，可以是图片、`NavIcon`，或者任意元素。\n- `icon`：和 `logo` 是同一个位置。两个都写时用 `logo`。\n- `end`：标题这一行的末尾，例如放一个徽章。\n- `menu`：弹出菜单的内容。给了它，标题旁边会自动出现箭头。没有链接时点整段标题打开菜单；有链接时链接各管各的，只有箭头打开菜单。插槽参数有 `close` 和 `focusRequest`。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [
+          {
+            "title": "Basic",
+            "description": "A product heading with a logo inside a TopNav, linked to the home page. Use as the leading brand element of a top navigation bar.",
+            "code": "<script setup lang=\"ts\">\nimport { NavIcon } from '@astryx-vue/core/NavItem'\nimport { TopNav, TopNavHeading } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Product navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"Acme Platform\" heading-href=\"#home\">\n        <template #logo>\n          <NavIcon icon-class=\"i-carbon-cube\" />\n        </template>\n      </TopNavHeading>\n    </template>\n  </TopNav>\n</template>"
+          }
+        ],
+        "zh": [
+          {
+            "title": "基础",
+            "description": "顶部导航里带标志的产品名，链接到首页。放在顶栏最前面当品牌用。",
+            "code": "<script setup lang=\"ts\">\nimport { NavIcon } from '@astryx-vue/core/NavItem'\nimport { TopNav, TopNavHeading } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Product navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"Acme Platform\" heading-href=\"#home\">\n        <template #logo>\n          <NavIcon icon-class=\"i-carbon-cube\" />\n        </template>\n      </TopNavHeading>\n    </template>\n  </TopNav>\n</template>"
+          }
+        ]
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/top-nav-heading",
+        "zh": "https://astryx-vue.pages.dev/components/top-nav-heading"
+      }
+    },
+    {
+      "slug": "top-nav-item",
+      "name": "TopNavItem",
+      "title": {
+        "en": "Top Nav Item",
+        "zh": "顶部导航项"
+      },
+      "group": "Navigation",
+      "groupTitle": {
+        "en": "Navigation",
+        "zh": "导航"
+      },
+      "importPath": "@astryx-vue/core/TopNav",
+      "exportName": "TopNavItem",
+      "summary": {
+        "en": "`TopNavItem` is a navigation link item for the `start` slot or the default slot of `TopNav`: it renders as an anchor with hover and selected states.",
+        "zh": "`TopNavItem` 是顶部导航里的一条链接，放在 `TopNav` 的 `start` 插槽或默认插槽里。它渲染成一个链接，带悬停和选中两种样式。"
+      },
+      "usage": {
+        "en": "`TopNavItem` is a navigation link item for the `start` slot or the default slot of `TopNav`: it renders as an anchor with hover and selected states.\n\nWith `href` set, the item is a link. Without an address, or with `isDisabled`, it renders as a button instead, so it cannot navigate.\n\n```ts\nimport { TopNavItem } from '@astryx-vue/core/TopNav'\n```",
+        "zh": "`TopNavItem` 是顶部导航里的一条链接，放在 `TopNav` 的 `start` 插槽或默认插槽里。它渲染成一个链接，带悬停和选中两种样式。\n\n写了 `href` 就是链接。没有地址，或者设置了 `isDisabled`，它就渲染成按钮，点不动也跳不走。\n\n```ts\nimport { TopNavItem } from '@astryx-vue/core/TopNav'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TopNavItem props",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`href`",
+                "description": "`href`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`as`",
+                "description": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "`'a'`"
+              },
+              {
+                "name": "`target`",
+                "description": "`target`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`rel`",
+                "description": "`rel`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`iconClass`",
+                "description": "`iconClass`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`isSelected`",
+                "description": "`isSelected`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`isDisabled`",
+                "description": "`isDisabled`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`isIconOnly`",
+                "description": "`isIconOnly`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`size`",
+                "description": "`size`",
+                "type": "`NavItemSize`",
+                "default": "`'md'`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TopNavItem 属性",
+            "rows": [
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "—",
+                "description": "这条导航的名字，默认显示成可见文字。打开 `isIconOnly` 后改成读屏用的 `aria-label`。必填。"
+              },
+              {
+                "name": "`href`",
+                "type": "`string`",
+                "default": "—",
+                "description": "要跳去的地址。"
+              },
+              {
+                "name": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "`'a'`",
+                "description": "链接换成别的根组件时用，例如 `RouterLink`，它还会一并收到 `to`。只有写了地址才会用到。"
+              },
+              {
+                "name": "`target`",
+                "type": "`string`",
+                "default": "—",
+                "description": "链接的 `target`。指明在新窗口打开时，会自己补上 `noopener noreferrer`。"
+              },
+              {
+                "name": "`rel`",
+                "type": "`string`",
+                "default": "—",
+                "description": "链接的 `rel`。和上面自动补的 `noopener noreferrer` 合并，不会互相顶掉。"
+              },
+              {
+                "name": "`iconClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "文字前面那个图标，传 CSS icon 的类名，例如 `i-carbon-home`。"
+              },
+              {
+                "name": "`isSelected`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "是不是当前这一页。会写上 `aria-current=\"page\"`，并套上选中样式。"
+              },
+              {
+                "name": "`isDisabled`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "禁用这一项。会写上 `aria-disabled`，去掉 href 和 target，让它既跳不走也点不动。"
+              },
+              {
+                "name": "`isIconOnly`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "只显示图标，做成一个方形的按钮，文字收进 `aria-label`。收进移动端抽屉时文字会重新显示出来。"
+              },
+              {
+                "name": "`size`",
+                "type": "`NavItemSize`",
+                "default": "`'md'`",
+                "description": "这一项的高和左右内边距：`'sm'` 是 28px，`'md'` 是 32px，`'lg'` 是 36px。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Events",
+            "text": "- `click(event: MouseEvent)`: fires when the item is clicked. A disabled item blocks the default action and emits nothing."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "事件",
+            "text": "- `click(event: MouseEvent)`：点击时触发。禁用的项会先挡掉默认行为，也不会触发事件。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [
+          {
+            "title": "Basic",
+            "description": "Navigation links inside a TopNav with one item marked as selected. Use for top-level pages of an application.",
+            "code": "<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"App\" />\n    </template>\n    <TopNavItem href=\"#\" is-selected label=\"Dashboard\" />\n    <TopNavItem href=\"#\" label=\"Projects\" />\n    <TopNavItem href=\"#\" label=\"Reports\" />\n  </TopNav>\n</template>"
+          }
+        ],
+        "zh": [
+          {
+            "title": "基础",
+            "description": "顶部导航里的几条链接，其中一条标记为选中。当作应用的一级页面入口。",
+            "code": "<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"App\" />\n    </template>\n    <TopNavItem href=\"#\" is-selected label=\"Dashboard\" />\n    <TopNavItem href=\"#\" label=\"Projects\" />\n    <TopNavItem href=\"#\" label=\"Reports\" />\n  </TopNav>\n</template>"
+          }
+        ]
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/top-nav-item",
+        "zh": "https://astryx-vue.pages.dev/components/top-nav-item"
+      }
+    },
+    {
+      "slug": "top-nav-mega-menu",
+      "name": "TopNavMegaMenu",
+      "title": {
+        "en": "Top Nav Mega Menu",
+        "zh": "顶部导航大菜单"
+      },
+      "group": "Navigation",
+      "groupTitle": {
+        "en": "Navigation",
+        "zh": "导航"
+      },
+      "importPath": "@astryx-vue/core/TopNav",
+      "exportName": "TopNavMegaMenu",
+      "summary": {
+        "en": "Navigation item that displays a full-width mega menu panel on hover. Uses a slots API with items and featured props. TopNavMegaMenuItem renders itself in both desktop and mobile drawer modes. Supports inline collapsible drawer via render mode context.",
+        "zh": "鼠标移上去就往下弹出一整块面板的导航项。面板内容用插槽写：格子里的链接放默认插槽，右侧的推荐卡放 `featured` 插槽。每个链接都用 `TopNavMegaMenuItem` 写，桌面面板和手机抽屉共用同一份写法。放进手机抽屉时，它自己会变成一行可以展开收起的小标题。"
+      },
+      "usage": {
+        "en": "Navigation item that displays a full-width mega menu panel on hover. Uses a slots API with items and featured props. TopNavMegaMenuItem renders itself in both desktop and mobile drawer modes. Supports inline collapsible drawer via render mode context.\n\n```vue\n<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeaturedCard, TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"DevTools\" href=\"#home\" />\n    </template>\n    <TopNavItem href=\"#overview\" label=\"Overview\" />\n    <TopNavMegaMenu label=\"Products\">\n      <TopNavMegaMenuItem title=\"Deploy\" description=\"Ship to production in seconds\" href=\"#deploy\" />\n      <TopNavMegaMenuItem title=\"Documentation\" description=\"Guides, references, and tutorials\" href=\"#documentation\" />\n      <template #featured>\n        <TopNavMegaMenuFeaturedCard\n          title=\"What's New\"\n          description=\"Check out our latest features and improvements in the Q2 release.\"\n          link-label=\"Read the changelog\"\n          link-href=\"#changelog\"\n        />\n      </template>\n    </TopNavMegaMenu>\n  </TopNav>\n</template>\n```",
+        "zh": "鼠标移上去就往下弹出一整块面板的导航项。面板内容用插槽写：格子里的链接放默认插槽，右侧的推荐卡放 `featured` 插槽。每个链接都用 `TopNavMegaMenuItem` 写，桌面面板和手机抽屉共用同一份写法。放进手机抽屉时，它自己会变成一行可以展开收起的小标题。\n\n```vue\n<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeaturedCard, TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"DevTools\" href=\"#home\" />\n    </template>\n    <TopNavItem href=\"#overview\" label=\"Overview\" />\n    <TopNavMegaMenu label=\"Products\">\n      <TopNavMegaMenuItem title=\"Deploy\" description=\"Ship to production in seconds\" href=\"#deploy\" />\n      <TopNavMegaMenuItem title=\"Documentation\" description=\"Guides, references, and tutorials\" href=\"#documentation\" />\n      <template #featured>\n        <TopNavMegaMenuFeaturedCard\n          title=\"What's New\"\n          description=\"Check out our latest features and improvements in the Q2 release.\"\n          link-label=\"Read the changelog\"\n          link-href=\"#changelog\"\n        />\n      </template>\n    </TopNavMegaMenu>\n  </TopNav>\n</template>\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TopNavMegaMenu props",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`showDelay`",
+                "description": "`showDelay`",
+                "type": "`number`",
+                "default": "`150`"
+              },
+              {
+                "name": "`hideDelay`",
+                "description": "`hideDelay`",
+                "type": "`number`",
+                "default": "`250`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TopNavMegaMenu 属性",
+            "rows": [
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "—",
+                "description": "触发按钮上显示的文字。必填。"
+              },
+              {
+                "name": "`showDelay`",
+                "type": "`number`",
+                "default": "`150`",
+                "description": "鼠标移上去之后，等多少毫秒才展开面板。"
+              },
+              {
+                "name": "`hideDelay`",
+                "type": "`number`",
+                "default": "`250`",
+                "description": "鼠标移开之后，等多少毫秒才收起面板。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Events",
+            "text": "- `openChange(isOpen: boolean)`: fires when the mega menu opens or closes. Useful for coordinating wrapper styles."
+          },
+          {
+            "heading": "Slots",
+            "text": "- `default`: menu items. Typically `TopNavMegaMenuItem` components, but any content works.\n- `featured`: featured content. Rendered as the right-hand panel on desktop, and below the items in the mobile drawer."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "事件",
+            "text": "- `openChange(isOpen: boolean)`：面板展开或收起时触发。想把外层样式跟展开状态绑在一起时用它。"
+          },
+          {
+            "heading": "插槽",
+            "text": "- `default`：面板里的链接，一般写 `TopNavMegaMenuItem`，写别的内容也可以。\n- `featured`：推荐内容。桌面上面板排在右侧，手机抽屉里排在链接下面。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [
+          {
+            "title": "TopNavMegaMenu — Basic",
+            "description": "A mega menu trigger inside a TopNav that opens a panel of rich link items. Use when a navigation section has multiple destinations worth describing.",
+            "code": "<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeaturedCard, TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"DevTools\" href=\"#home\" />\n    </template>\n    <TopNavItem href=\"#overview\" is-selected label=\"Overview\" />\n    <TopNavMegaMenu label=\"Products\">\n      <TopNavMegaMenuItem\n        description=\"Ship to production in seconds\"\n        href=\"#deploy\"\n        icon-class=\"i-carbon-rocket\"\n        title=\"Deploy\"\n      />\n      <TopNavMegaMenuItem\n        description=\"Guides, references, and tutorials\"\n        href=\"#documentation\"\n        icon-class=\"i-carbon-book\"\n        title=\"Documentation\"\n      />\n      <TopNavMegaMenuItem\n        description=\"Programmatic access to all features\"\n        href=\"#api\"\n        icon-class=\"i-carbon-code\"\n        title=\"API\"\n      />\n      <TopNavMegaMenuItem\n        description=\"Enterprise-grade protection\"\n        href=\"#security\"\n        icon-class=\"i-carbon-security\"\n        title=\"Security\"\n      />\n      <template #featured>\n        <TopNavMegaMenuFeaturedCard\n          description=\"Check out our latest features and improvements in the Q2 release.\"\n          link-href=\"#changelog\"\n          link-label=\"Read the changelog\"\n          title=\"What's New\"\n        />\n      </template>\n    </TopNavMegaMenu>\n  </TopNav>\n</template>"
+          }
+        ],
+        "zh": [
+          {
+            "title": "基础",
+            "description": "顶栏里一个大菜单入口，点开是带说明的链接格子。一个栏目下有多个去处、而且每个去处都值得解释一句时用它。",
+            "code": "<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeaturedCard, TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"DevTools\" href=\"#home\" />\n    </template>\n    <TopNavItem href=\"#overview\" is-selected label=\"Overview\" />\n    <TopNavMegaMenu label=\"Products\">\n      <TopNavMegaMenuItem\n        description=\"Ship to production in seconds\"\n        href=\"#deploy\"\n        icon-class=\"i-carbon-rocket\"\n        title=\"Deploy\"\n      />\n      <TopNavMegaMenuItem\n        description=\"Guides, references, and tutorials\"\n        href=\"#documentation\"\n        icon-class=\"i-carbon-book\"\n        title=\"Documentation\"\n      />\n      <TopNavMegaMenuItem\n        description=\"Programmatic access to all features\"\n        href=\"#api\"\n        icon-class=\"i-carbon-code\"\n        title=\"API\"\n      />\n      <TopNavMegaMenuItem\n        description=\"Enterprise-grade protection\"\n        href=\"#security\"\n        icon-class=\"i-carbon-security\"\n        title=\"Security\"\n      />\n      <template #featured>\n        <TopNavMegaMenuFeaturedCard\n          description=\"Check out our latest features and improvements in the Q2 release.\"\n          link-href=\"#changelog\"\n          link-label=\"Read the changelog\"\n          title=\"What's New\"\n        />\n      </template>\n    </TopNavMegaMenu>\n  </TopNav>\n</template>"
+          }
+        ]
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/top-nav-mega-menu",
+        "zh": "https://astryx-vue.pages.dev/components/top-nav-mega-menu"
+      }
+    },
+    {
+      "slug": "top-nav-mega-menu-featured-card",
+      "name": "TopNavMegaMenuFeaturedCard",
+      "title": {
+        "en": "Top Nav Mega Menu Featured Card",
+        "zh": "顶部导航大菜单特色卡片"
+      },
+      "group": "Navigation",
+      "groupTitle": {
+        "en": "Navigation",
+        "zh": "导航"
+      },
+      "importPath": "@astryx-vue/core/TopNav",
+      "exportName": "TopNavMegaMenuFeaturedCard",
+      "summary": {
+        "en": "Standard featured card for the `TopNavMegaMenu` featured slot. Provides a consistent card with optional image, title, description, and CTA link.",
+        "zh": "这是放在 `TopNavMegaMenu` 的 `featured` 插槽里的标准推荐卡片。它把「图片 + 标题 + 说明 + 行动链接」固定成一套版式，各个大菜单里看起来都一致。"
+      },
+      "usage": {
+        "en": "Standard featured card for the `TopNavMegaMenu` featured slot. Provides a consistent card with optional image, title, description, and CTA link.\n\n```vue\n<script setup lang=\"ts\">\nimport { TopNavMegaMenuFeaturedCard } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNavMegaMenuFeaturedCard\n    title=\"What's New\"\n    description=\"Check out the latest features and improvements in the Q2 release.\"\n    link-label=\"Read the changelog\"\n    link-href=\"#changelog\"\n  />\n</template>\n```\n\n`title` is required. `image` renders above the body; without `imageAlt` the image stays decorative, which is usually right because the card already carries a visible title. `linkLabel` and `linkHref` add the action at the bottom of the card, and `linkHref` falls back to `href`. Pass `href` without `linkLabel` to make the whole card one link. Text in the default slot lands under the description.",
+        "zh": "这是放在 `TopNavMegaMenu` 的 `featured` 插槽里的标准推荐卡片。它把「图片 + 标题 + 说明 + 行动链接」固定成一套版式，各个大菜单里看起来都一致。\n\n```vue\n<script setup lang=\"ts\">\nimport { TopNavMegaMenuFeaturedCard } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNavMegaMenuFeaturedCard\n    title=\"What's New\"\n    description=\"Check out the latest features and improvements in the Q2 release.\"\n    link-label=\"Read the changelog\"\n    link-href=\"#changelog\"\n  />\n</template>\n```\n\n标题是必填的。传了 `image` 就在正文上方显示图片；不传 `imageAlt` 时图片只当装饰，因为卡片上已经有可见标题，读屏跳过它反而更干净。`linkLabel` 加 `linkHref` 会在卡片底部多出一个行动链接，`linkHref` 不传就用 `href`。只传 `href`、不传 `linkLabel` 时，整张卡片本身就是一个链接。默认插槽里的内容显示在说明文字下方。"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TopNavMegaMenuFeaturedCard props",
+            "rows": [
+              {
+                "name": "`title`",
+                "description": "`title`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`description`",
+                "description": "`description`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`href`",
+                "description": "`href`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`image`",
+                "description": "`image`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`imageAlt`",
+                "description": "`imageAlt`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`linkLabel`",
+                "description": "`linkLabel`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`linkHref`",
+                "description": "`linkHref`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`as`",
+                "description": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "`'a'`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TopNavMegaMenuFeaturedCard 属性",
+            "rows": [
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "—",
+                "description": "卡片标题。必填。"
+              },
+              {
+                "name": "`description`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题下面的说明文字。"
+              },
+              {
+                "name": "`href`",
+                "type": "`string`",
+                "default": "—",
+                "description": "让整张卡片变成一个链接。同时写了 `linkLabel` 时，链接改到卡片底部的行动文字上。"
+              },
+              {
+                "name": "`image`",
+                "type": "`string`",
+                "default": "—",
+                "description": "正文上方的图片地址，可以不传。"
+              },
+              {
+                "name": "`imageAlt`",
+                "type": "`string`",
+                "default": "—",
+                "description": "图片的替代文本。不传时图片被明确当成装饰（`alt=\"\"`、`role=\"presentation\"`、`aria-hidden`）。因为卡片上已经有可见标题，这通常是正确的做法。只有当图片本身带了标题和说明以外的信息时，才需要写它。"
+              },
+              {
+                "name": "`linkLabel`",
+                "type": "`string`",
+                "default": "—",
+                "description": "底部行动链接的文字。要和 `linkHref` 或 `href` 一起用。"
+              },
+              {
+                "name": "`linkHref`",
+                "type": "`string`",
+                "default": "—",
+                "description": "行动链接的地址。不传则用 `href`。"
+              },
+              {
+                "name": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "`'a'`",
+                "description": "卡片和行动文字共用的链接根组件。只有存在地址时才使用。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Slots",
+            "text": "- `default`: custom content rendered below the standard body."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "插槽",
+            "text": "- `default`：显示在标准正文下方的自定义内容。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [
+          {
+            "title": "TopNavMegaMenuFeaturedCard — Basic",
+            "description": "A promotional card with a title, description, and call-to-action link. Pass it to the featured slot of a TopNavMegaMenu to highlight announcements.",
+            "code": "<script setup lang=\"ts\">\nimport { TopNavMegaMenuFeaturedCard } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNavMegaMenuFeaturedCard\n    title=\"What's New\"\n    description=\"Check out the latest features and improvements in the Q2 release.\"\n    link-label=\"Read the changelog\"\n    link-href=\"#changelog\"\n  />\n</template>"
+          }
+        ],
+        "zh": [
+          {
+            "title": "基础",
+            "description": "带标题、说明和行动链接的推广卡片。放进 TopNavMegaMenu 的 featured 插槽，用来突出公告类内容。",
+            "code": "<script setup lang=\"ts\">\nimport { TopNavMegaMenuFeaturedCard } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNavMegaMenuFeaturedCard\n    title=\"What's New\"\n    description=\"Check out the latest features and improvements in the Q2 release.\"\n    link-label=\"Read the changelog\"\n    link-href=\"#changelog\"\n  />\n</template>"
+          }
+        ]
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/top-nav-mega-menu-featured-card",
+        "zh": "https://astryx-vue.pages.dev/components/top-nav-mega-menu-featured-card"
+      }
+    },
+    {
+      "slug": "top-nav-mega-menu-item",
+      "name": "TopNavMegaMenuItem",
+      "title": {
+        "en": "Top Nav Mega Menu Item",
+        "zh": "顶部导航大菜单项"
+      },
+      "group": "Navigation",
+      "groupTitle": {
+        "en": "Navigation",
+        "zh": "导航"
+      },
+      "importPath": "@astryx-vue/core/TopNav",
+      "exportName": "TopNavMegaMenuItem",
+      "summary": {
+        "en": "An individual item inside an TopNavMegaMenu. Renders itself in both desktop (popover grid) and mobile drawer modes via render mode context.",
+        "zh": "`TopNavMegaMenuItem` 是大菜单（`TopNavMegaMenu`）里的一项，一项就是一个去处。桌面端它排在弹出面板的网格里，手机端排在抽屉的列表里，用哪种形态跟着所在菜单走，你不用自己切换。"
+      },
+      "usage": {
+        "en": "An individual item inside an TopNavMegaMenu. Renders itself in both desktop (popover grid) and mobile drawer modes via render mode context.\n\n```ts\nimport { TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n```\n\nOne item stands for one destination: a title, an optional description under it, and an optional leading icon. Pass `href` to render a link; leave it out and the item is a `<button type=\"button\">`. The icon comes from an `iconClass` CSS icon class or from the `icon` slot, which wins when both are present.\n\nItems go in the default slot of `TopNavMegaMenu`, next to the optional `featured` slot. Clicking an item closes the menu it sits in. Rendered on its own it still shows the title, description, and icon, but there is no menu around it to close.",
+        "zh": "`TopNavMegaMenuItem` 是大菜单（`TopNavMegaMenu`）里的一项，一项就是一个去处。桌面端它排在弹出面板的网格里，手机端排在抽屉的列表里，用哪种形态跟着所在菜单走，你不用自己切换。\n\n```ts\nimport { TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n```\n\n传了 `href` 这一项就是链接，不传就是一个 `<button type=\"button\">` 按钮，两种样子一样。左边的图标用 `iconClass` 给一个 CSS 图标类名，或者用 `icon` 插槽放自己的图标，两个都给时插槽优先。`description` 可以不传，传了就显示在标题下面一行小字。\n\n点一下会关掉它所在的大菜单。单独拿出来用也能正常显示标题、描述和图标，只是身边没有菜单可关。"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TopNavMegaMenuItem props",
+            "rows": [
+              {
+                "name": "`title`",
+                "description": "`title`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`description`",
+                "description": "`description`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`href`",
+                "description": "`href`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`as`",
+                "description": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "—"
+              },
+              {
+                "name": "`iconClass`",
+                "description": "`iconClass`",
+                "type": "`string`",
+                "default": "—"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TopNavMegaMenuItem 属性",
+            "rows": [
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "—",
+                "description": "这一项的标题。必填。"
+              },
+              {
+                "name": "`description`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题下面的一行说明文字。不传就不显示。"
+              },
+              {
+                "name": "`href`",
+                "type": "`string`",
+                "default": "—",
+                "description": "点击后跳转的地址。不传这一项就渲染成按钮。"
+              },
+              {
+                "name": "`as`",
+                "type": "`NavLinkComponent`",
+                "default": "—",
+                "description": "有链接时用来替换 `<a>` 的组件，优先于 `LinkProvider` 给的默认值。"
+              },
+              {
+                "name": "`iconClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "左侧图标框里的 CSS 图标类名，例如 `i-carbon-flash`。同时有 `icon` 插槽时以插槽为准。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Events",
+            "text": "The item emits no events of its own. A click closes the surrounding <code>TopNavMegaMenu</code>, and navigation goes through <code>href</code> or the component passed to <code>as</code>."
+          },
+          {
+            "heading": "Slots",
+            "text": "- `icon`: icon content placed ahead of the title. Replaces the glyph from `iconClass`. Hidden from assistive technology, so the title carries the meaning."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "事件",
+            "text": "这一项自己不发出事件。点击时会关闭外层的大菜单（<code>TopNavMegaMenu</code>），跳转由 <code>href</code> 或 <code>as</code> 指定的组件负责。"
+          },
+          {
+            "heading": "插槽",
+            "text": "- `icon`：标题前面的图标，会替代 `iconClass` 的字形。这块对读屏隐藏，含义由标题承担。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [
+          {
+            "title": "Basic",
+            "description": "Rich link items with an icon, title, and description. Use inside the items slot of a TopNavMegaMenu to describe each destination.",
+            "code": "<script setup lang=\"ts\">\nimport { TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <div class=\"top-nav-mega-menu-item-preview__grid\">\n    <TopNavMegaMenuItem\n      description=\"Run serverless code at the network edge\"\n      href=\"#edge\"\n      icon-class=\"i-carbon-flash\"\n      title=\"Edge Functions\"\n    />\n    <TopNavMegaMenuItem\n      description=\"Object and file storage for your application\"\n      href=\"#storage\"\n      icon-class=\"i-carbon-data-base\"\n      title=\"Storage\"\n    />\n  </div>\n</template>"
+          }
+        ],
+        "zh": [
+          {
+            "title": "基础",
+            "description": "带图标、标题和描述的链接项。放进 TopNavMegaMenu 的默认插槽里，用来介绍每个去处。",
+            "code": "<script setup lang=\"ts\">\nimport { TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <div class=\"top-nav-mega-menu-item-preview__grid\">\n    <TopNavMegaMenuItem\n      description=\"Run serverless code at the network edge\"\n      href=\"#edge\"\n      icon-class=\"i-carbon-flash\"\n      title=\"Edge Functions\"\n    />\n    <TopNavMegaMenuItem\n      description=\"Object and file storage for your application\"\n      href=\"#storage\"\n      icon-class=\"i-carbon-data-base\"\n      title=\"Storage\"\n    />\n  </div>\n</template>"
+          }
+        ]
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/top-nav-mega-menu-item",
+        "zh": "https://astryx-vue.pages.dev/components/top-nav-mega-menu-item"
+      }
+    },
+    {
+      "slug": "top-nav-menu",
+      "name": "TopNavMenu",
+      "title": {
+        "en": "Top Nav Menu",
+        "zh": "顶部导航菜单"
+      },
+      "group": "Navigation",
+      "groupTitle": {
+        "en": "Navigation",
+        "zh": "导航"
+      },
+      "importPath": "@astryx-vue/core/TopNav",
+      "exportName": "TopNavMenu",
+      "summary": {
+        "en": "`TopNavMenu` is a navigation item that shows a hover-triggered popover menu. Its entries are rich: each one carries an icon, a title, and an optional description.",
+        "zh": "`TopNavMenu` 是顶栏里的一个导航项。鼠标移上去会弹出一个菜单，菜单里的每一项都比较丰盛：一个图标、一行标题，还可以带一行说明。"
+      },
+      "usage": {
+        "en": "`TopNavMenu` is a navigation item that shows a hover-triggered popover menu. Its entries are rich: each one carries an icon, a title, and an optional description.\n\nAn entry writes its title in `label`, its supporting line in `description`, and its icon class in `iconClass`.\n\n```ts\nimport { TopNavMenu } from '@astryx-vue/core/TopNav'\n```",
+        "zh": "`TopNavMenu` 是顶栏里的一个导航项。鼠标移上去会弹出一个菜单，菜单里的每一项都比较丰盛：一个图标、一行标题，还可以带一行说明。\n\n每一项的标题写在 `label` 里，说明写在 `description` 里，图标 class 写在 `iconClass` 里。\n\n```ts\nimport { TopNavMenu } from '@astryx-vue/core/TopNav'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "TopNavMenu props",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`items`",
+                "description": "`items`",
+                "type": "`readonly TopNavMenuItem[]`",
+                "default": "—"
+              },
+              {
+                "name": "`showDelay`",
+                "description": "`showDelay`",
+                "type": "`number`",
+                "default": "`150`"
+              },
+              {
+                "name": "`hideDelay`",
+                "description": "`hideDelay`",
+                "type": "`number`",
+                "default": "`200`"
+              }
+            ]
+          },
+          {
+            "heading": "TopNavMenuItem fields",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`description`",
+                "description": "`description`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`href`",
+                "description": "`href`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`iconClass`",
+                "description": "`iconClass`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`isDisabled`",
+                "description": "`isDisabled`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`id`",
+                "description": "`id`",
+                "type": "`string`",
+                "default": "—"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TopNavMenu 属性",
+            "rows": [
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "—",
+                "description": "触发器按钮上的文字。必填。"
+              },
+              {
+                "name": "`items`",
+                "type": "`readonly TopNavMenuItem[]`",
+                "default": "—",
+                "description": "弹出菜单里的条目。需要自定义内容时，改用默认插槽写 `NavMenuItem`。"
+              },
+              {
+                "name": "`showDelay`",
+                "type": "`number`",
+                "default": "`150`",
+                "description": "悬停多久之后打开菜单，毫秒。"
+              },
+              {
+                "name": "`hideDelay`",
+                "type": "`number`",
+                "default": "`200`",
+                "description": "指针离开后等多久关闭菜单，毫秒。"
+              }
+            ]
+          },
+          {
+            "heading": "TopNavMenuItem 字段",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`description`",
+                "description": "`description`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`href`",
+                "description": "`href`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`iconClass`",
+                "description": "`iconClass`",
+                "type": "`string`",
+                "default": "—"
+              },
+              {
+                "name": "`isDisabled`",
+                "description": "`isDisabled`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`id`",
+                "description": "`id`",
+                "type": "`string`",
+                "default": "—"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Events",
+            "text": "- `openChange(isOpen: boolean)`: fires with `true` when the menu opens and `false` when it closes."
+          },
+          {
+            "heading": "Slots",
+            "text": "- `default`: extra entries rendered as menu items, for example `NavMenuItem` elements."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "事件",
+            "text": "- `openChange(isOpen: boolean)`：菜单打开时传 `true`，关闭时传 `false`。"
+          },
+          {
+            "heading": "插槽",
+            "text": "- `default`：额外的菜单项，例如直接写 `NavMenuItem` 元素。"
+          }
+        ]
+      },
+      "examples": {
+        "en": [
+          {
+            "title": "Basic",
+            "description": "A dropdown menu inside a TopNav built from an items array with icons and descriptions. Use it to group related destinations under a single trigger.",
+            "code": "<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem, TopNavMenu } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"Platform\" />\n    </template>\n    <TopNavItem href=\"#\" is-selected label=\"Home\" />\n    <TopNavMenu\n      label=\"Tools\"\n      :items=\"[\n        { description: 'View traffic and engagement metrics', href: '#analytics', iconClass: 'i-carbon-analytics', label: 'Analytics' },\n        { description: 'Configure your workspace', href: '#settings', iconClass: 'i-carbon-settings', label: 'Settings' },\n      ]\"\n    />\n  </TopNav>\n</template>"
+          }
+        ],
+        "zh": [
+          {
+            "title": "基础",
+            "description": "顶栏里的下拉菜单，菜单由 items 数组生成，每一项都有图标和说明。相关去向可以收在同一个触发器下面。",
+            "code": "<script setup lang=\"ts\">\nimport { TopNav, TopNavHeading, TopNavItem, TopNavMenu } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Main navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"Platform\" />\n    </template>\n    <TopNavItem href=\"#\" is-selected label=\"Home\" />\n    <TopNavMenu\n      label=\"Tools\"\n      :items=\"[\n        { description: 'View traffic and engagement metrics', href: '#analytics', iconClass: 'i-carbon-analytics', label: 'Analytics' },\n        { description: 'Configure your workspace', href: '#settings', iconClass: 'i-carbon-settings', label: 'Settings' },\n      ]\"\n    />\n  </TopNav>\n</template>"
+          }
+        ]
+      },
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/top-nav-menu",
+        "zh": "https://astryx-vue.pages.dev/components/top-nav-menu"
+      }
+    },
+    {
       "slug": "stepper",
       "name": "Stepper",
       "title": {

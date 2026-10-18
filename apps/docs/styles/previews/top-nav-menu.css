@@ -1,0 +1,4 @@
+/* TopNavMenu 的预览是一条 600px 宽的顶栏，和原版画布同宽；窄卡片里按容器收。 */
+.top-nav-menu-preview {
+  width: min(100%, 600px);
+}

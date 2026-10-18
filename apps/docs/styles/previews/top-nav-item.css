@@ -1,0 +1,4 @@
+/* TopNavItem 的预览和原版画布一样按 600px 铺一条顶栏；宫格卡片里按容器收窄。 */
+.top-nav-item-preview {
+  width: min(100%, 600px);
+}
