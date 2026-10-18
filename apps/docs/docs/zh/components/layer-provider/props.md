@@ -26,7 +26,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="LayerToastConfig 字段" tabindex="0">
 <table><thead><tr><th>字段</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>position</code></td><td><code>ToastPlacement</code></td><td><code>'bottom-center'</code></td><td>toast 视口贴在哪个角：<code>top-start</code>、<code>top-center</code>、<code>top-end</code>、<code>bottom-start</code>、<code>bottom-center</code>、<code>bottom-end</code>。直接写在 <code>ToastViewport</code> 上的 <code>placement</code> 优先。</td></tr>
+<tr><td><code>position</code></td><td><code>ToastPlacement</code></td><td><code>'bottom-end'</code></td><td>toast 视口贴在哪个角：<code>top-start</code>、<code>top-center</code>、<code>top-end</code>、<code>bottom-start</code>、<code>bottom-center</code>、<code>bottom-end</code>。直接写在 <code>ToastViewport</code> 上的 <code>placement</code> 优先。</td></tr>
 <tr><td><code>maxVisible</code></td><td><code>number</code></td><td>不限制</td><td>同时最多显示几条。超出的先不渲染，只留最新的那几条。</td></tr>
 <tr><td><code>inset</code></td><td><code>LayerInset</code></td><td>—</td><td>只对 toast 视口生效的逐边偏移。这条边写了就用它，没写的边继续用 provider 的 <code>inset</code>。</td></tr>
 </tbody></table>

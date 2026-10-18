@@ -164,6 +164,9 @@ export const upstreamMessageMap: Record<string, readonly UpstreamTarget[]> = {
   '@astryx.fileInput.errorInvalidType': [{ path: 'fileInput.errorType', args: ['fileName'] }],
   '@astryx.fileInput.errorMaxSize': [{ path: 'fileInput.errorSize', args: ['fileName', 'maxSize'] }],
   '@astryx.fileInput.errorMaxFiles': [{ path: 'fileInput.errorCount', args: ['maxFiles'] }],
+  '@astryx.selector.clearLabel': [{ path: 'selector.clearField', args: ['label'] }],
+  '@astryx.multiSelector.clearAll': [{ path: 'multiSelector.clearAll', args: ['label'] }],
+  '@astryx.tabList.label': [{ path: 'tabList.label' }],
   '@astryx.inputClearButton.tooltip': [
     { path: 'fileInput.clear' },
     { path: 'selector.clear' },

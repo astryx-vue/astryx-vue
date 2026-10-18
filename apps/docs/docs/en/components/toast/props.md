@@ -138,7 +138,7 @@ footer: false
       <tr>
         <td><code>placement</code></td>
         <td><code>ToastPlacement</code></td>
-        <td><code>'bottom-center'</code></td>
+        <td><code>'bottom-end'</code></td>
         <td>Position of the toast stack in the viewport. Optional: top-start, top-center, top-end, bottom-start, bottom-center, bottom-end.</td>
       </tr>
     </tbody>

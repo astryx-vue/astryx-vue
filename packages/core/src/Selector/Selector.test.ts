@@ -519,6 +519,13 @@ describe('selector', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
   })
 
+  it('names the clear button after the field label', () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'banana', hasClear: true, label: 'Fruit' },
+    })
+    expect(wrapper.get('.astryx-selector-clear').attributes('aria-label')).toBe('Clear Fruit')
+  })
+
   it('keeps a disabled trigger focusable and explains why', async () => {
     const wrapper = mount(Selector, {
       props: { options, disabled: true, disabledMessage: 'Only owners can change this', label: 'Fruit' },

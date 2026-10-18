@@ -567,7 +567,7 @@ defineExpose({
         v-if="hasClear && selectedValues.length > 0 && control.canActivate.value"
         type="button"
         class="astryx-multi-selector-clear"
-        :aria-label="messages.multiSelector.clear"
+        :aria-label="messages.multiSelector.clearAll(props.label)"
         @click.stop="commit([])"
       >
         <Icon icon="close" size="sm" />

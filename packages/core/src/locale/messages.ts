@@ -25,6 +25,7 @@ import type { PaginationMessages } from './messages/pagination.js'
 import type { PowerSearchMessages } from './messages/power-search.js'
 import type { SelectorMessages } from './messages/selector.js'
 import type { StepperMessages } from './messages/stepper.js'
+import type { TabListMessages } from './messages/tab-list.js'
 import type { TableMessages } from './messages/table.js'
 import type { ThumbnailMessages } from './messages/thumbnail.js'
 import type { TimeInputMessages } from './messages/time-input.js'
@@ -59,6 +60,7 @@ import { paginationMessages } from './messages/pagination.js'
 import { powerSearchMessages } from './messages/power-search.js'
 import { selectorMessages } from './messages/selector.js'
 import { stepperMessages } from './messages/stepper.js'
+import { tabListMessages } from './messages/tab-list.js'
 import { tableMessages } from './messages/table.js'
 import { thumbnailMessages } from './messages/thumbnail.js'
 import { timeInputMessages } from './messages/time-input.js'
@@ -94,6 +96,7 @@ export interface AstryxMessages {
   powerSearch: PowerSearchMessages
   selector: SelectorMessages
   stepper: StepperMessages
+  tabList: TabListMessages
   table: TableMessages
   thumbnail: ThumbnailMessages
   timeInput: TimeInputMessages
@@ -131,6 +134,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     powerSearch: powerSearchMessages.en,
     selector: selectorMessages.en,
     stepper: stepperMessages.en,
+    tabList: tabListMessages.en,
     table: tableMessages.en,
     thumbnail: thumbnailMessages.en,
     timeInput: timeInputMessages.en,
@@ -166,6 +170,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     powerSearch: powerSearchMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
     stepper: stepperMessages['zh-CN'],
+    tabList: tabListMessages['zh-CN'],
     table: tableMessages['zh-CN'],
     thumbnail: thumbnailMessages['zh-CN'],
     timeInput: timeInputMessages['zh-CN'],

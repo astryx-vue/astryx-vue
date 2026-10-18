@@ -55527,7 +55527,7 @@
               {
                 "name": "`placement`",
                 "type": "`ToastPlacement`",
-                "default": "`'bottom-center'`",
+                "default": "`'bottom-end'`",
                 "description": "Position of the toast stack in the viewport. Optional: top-start, top-center, top-end, bottom-start, bottom-center, bottom-end."
               }
             ]
@@ -55611,7 +55611,7 @@
               {
                 "name": "`placement`",
                 "type": "`ToastPlacement`",
-                "default": "`'bottom-center'`",
+                "default": "`'bottom-end'`",
                 "description": "提示在屏幕上的弹出位置，可选 top-start、top-center、top-end、bottom-start、bottom-center、bottom-end。"
               }
             ]
@@ -61951,7 +61951,7 @@
                 "name": "`position`",
                 "description": "`position`",
                 "type": "`ToastPlacement`",
-                "default": "`'bottom-center'`"
+                "default": "`'bottom-end'`"
               },
               {
                 "name": "`maxVisible`",
@@ -62043,7 +62043,7 @@
                 "name": "`position`",
                 "description": "`position`",
                 "type": "`ToastPlacement`",
-                "default": "`'bottom-center'`"
+                "default": "`'bottom-end'`"
               },
               {
                 "name": "`maxVisible`",

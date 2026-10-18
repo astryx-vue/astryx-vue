@@ -215,7 +215,7 @@ describe('toastViewport under a layerProvider', () => {
     wrapper.unmount()
   })
 
-  it('keeps the bottom-center placement without a provider', async () => {
+  it('keeps the bottom-end placement without a provider', async () => {
     const toast = useToast()
     const wrapper = mount(ToastViewport, { attachTo: document.body })
 
@@ -223,7 +223,7 @@ describe('toastViewport under a layerProvider', () => {
     await nextTick()
 
     const viewport = document.body.querySelector('.astryx-toast-viewport')
-    expect(viewport?.classList.contains('astryx-toast-viewport--placement-bottom-center')).toBe(true)
+    expect(viewport?.classList.contains('astryx-toast-viewport--placement-bottom-end')).toBe(true)
     expect(viewport?.getAttribute('style')).toBeNull()
 
     wrapper.unmount()

@@ -57,8 +57,8 @@ export interface ToastOptions {
    */
   endContent?: Component
   /**
-   * Runs when this toast is dismissed from inside the card: the timer, the
-   * close button, or a swipe.
+   * Runs when this toast is dismissed from inside the card: the timer or the
+   * close button.
    */
   onDismiss?: (reason: ToastDismissReason) => void
   /**

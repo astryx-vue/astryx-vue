@@ -26,7 +26,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="LayerToastConfig fields" tabindex="0">
 <table><thead><tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>position</code></td><td><code>ToastPlacement</code></td><td><code>'bottom-center'</code></td><td>Corner the toast viewport sits in: <code>top-start</code>, <code>top-center</code>, <code>top-end</code>, <code>bottom-start</code>, <code>bottom-center</code>, or <code>bottom-end</code>. A <code>placement</code> on <code>ToastViewport</code> still wins.</td></tr>
+<tr><td><code>position</code></td><td><code>ToastPlacement</code></td><td><code>'bottom-end'</code></td><td>Corner the toast viewport sits in: <code>top-start</code>, <code>top-center</code>, <code>top-end</code>, <code>bottom-start</code>, <code>bottom-center</code>, or <code>bottom-end</code>. A <code>placement</code> on <code>ToastViewport</code> still wins.</td></tr>
 <tr><td><code>maxVisible</code></td><td><code>number</code></td><td>no limit</td><td>How many toasts stay on screen at once. When more are queued, only the newest ones render.</td></tr>
 <tr><td><code>inset</code></td><td><code>LayerInset</code></td><td>—</td><td>Per-edge offset for the toast viewport only. An edge written here replaces the provider <code>inset</code> for that edge; edges left out keep the provider value.</td></tr>
 </tbody></table>

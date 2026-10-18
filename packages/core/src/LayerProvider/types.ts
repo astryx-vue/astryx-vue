@@ -13,7 +13,7 @@ export interface LayerInset {
 
 /** `useToast` 用的 toast 视口配置。 */
 export interface LayerToastConfig {
-  /** toast 视口贴在哪个角。 @default 'bottom-center' */
+  /** toast 视口贴在哪个角。 @default 'bottom-end' */
   position?: ToastPlacement
   /** 同时最多显示几条，多出来的先不渲染。不传则不限制。 */
   maxVisible?: number
