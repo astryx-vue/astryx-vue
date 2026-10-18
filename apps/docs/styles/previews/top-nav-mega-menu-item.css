@@ -1,0 +1,14 @@
+/* 详情画布、示例区和总览宫格共用这份预览：
+   宽的地方排成两列（每列约 316px，和原版一致），窄的地方收成一列。 */
+.top-nav-mega-menu-item-preview {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.top-nav-mega-menu-item-preview__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 4px;
+  width: min(100%, 640px);
+}

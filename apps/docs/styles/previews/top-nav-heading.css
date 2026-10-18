@@ -1,0 +1,6 @@
+/* 总览卡片和详情页画布共用：宽度收在这里，居中交给外层容器。 */
+.astryx-demo.top-nav-heading-preview {
+  box-sizing: border-box;
+  width: min(100%, 24rem);
+  max-width: 100%;
+}
