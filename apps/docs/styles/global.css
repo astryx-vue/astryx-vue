@@ -529,28 +529,40 @@ html.dark .component-card__preview {
 }
 
 .component-detail__header {
-  padding-bottom: 24px;
+  /* 原版版本行到 tab 条隔 16px。 */
+  padding-bottom: 16px;
 }
 
 .component-detail__header h1 {
   margin: 0;
-  font-size: clamp(40px, 5vw, 56px);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  /* 原版标题 42px / 600 / 行高 52px，桌面和 390px 屏都一样。 */
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 52px;
+  letter-spacing: normal;
+}
+
+.component-detail__version {
+  /* 原版标题下的版本行：12px / 行高 20px，和标题隔 8px。 */
+  margin: 8px 0 0;
+  color: var(--astryx-text-muted);
+  font-size: 12px;
+  line-height: 20px;
 }
 
 .component-detail__tabs {
   display: flex;
-  gap: 24px;
+  gap: 2px;
   border-bottom: 1px solid var(--astryx-line);
 }
 
+/* 原版 tab：14px / 行高 20px，左右内边距 12px，选中 600、未选中 400。 */
 .component-detail__tabs a {
   position: relative;
-  padding: 0 2px 12px;
+  padding: 0 12px 16px;
   color: var(--astryx-text-muted);
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 20px;
   text-decoration: none;
 }
 
@@ -567,6 +579,7 @@ html.dark .component-card__preview {
 .component-detail__tabs a:hover,
 .component-detail__tabs a[aria-current='page'] {
   color: var(--astryx-text);
+  font-weight: 600;
 }
 
 .component-detail__tabs a[aria-current='page']::after {
@@ -580,7 +593,8 @@ html.dark .component-card__preview {
   place-items: center;
   /* 原版这块画布高 513px，组件在中间展示。 */
   min-height: 513px;
-  margin-top: 28px;
+  /* 原版 tab 条到画布隔 16px。 */
+  margin-top: 16px;
   /* 原版画布自身没有内边距，靠居中规则摆放组件。 */
   padding: 0;
   overflow: hidden;
@@ -1356,10 +1370,6 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 
   .component-detail__content {
     padding: 32px 18px 64px;
-  }
-
-  .component-detail__header {
-    padding-bottom: 20px;
   }
 
   .component-detail__body div[class*='language-'] {

@@ -5,7 +5,7 @@ import { useRoute } from 'vitepress'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { componentDemos } from '../demos/registry'
 import { catalogGroups } from './componentCatalog'
-import { componentDocsCopy } from './componentDocsRoute'
+import { componentDocsCopy, UPSTREAM_PACKAGE, UPSTREAM_VERSION } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
 import { hasAccessibility } from './reference/loadReference'
@@ -23,6 +23,27 @@ const activeGroupId = computed(() => {
   if (route.kind !== 'detail')
     return undefined
   return groups.value.find(group => group.entries.some(entry => entry.slug === route.slug))?.id
+})
+/** 上游没有同名导出、标题下不显示版本行的页面（Chat 是一组组件的概览）。 */
+const NO_EXPORT_SLUGS: ReadonlySet<string> = new Set(['chat'])
+
+/** 导出名不是 slug 驼峰形式的少数组件。 */
+const EXPORT_NAME_EXCEPTIONS: Readonly<Record<string, string>> = {
+  'dropdown-menu-submenu': 'DropdownMenuSubMenu',
+}
+
+/** 页面标题下那行小字里的导出名：`base-typeahead` → `BaseTypeahead`，`use-clipboard` → `useClipboard`。 */
+const exportName = computed(() => {
+  if (props.route.kind !== 'detail')
+    return ''
+  if (NO_EXPORT_SLUGS.has(props.route.slug))
+    return ''
+  const special = EXPORT_NAME_EXCEPTIONS[props.route.slug]
+  if (special)
+    return special
+  const parts = props.route.slug.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1))
+  const pascal = parts.join('')
+  return props.route.slug.startsWith('use-') ? pascal.charAt(0).toLowerCase() + pascal.slice(1) : pascal
 })
 const sidebarOpen = ref(false)
 const isNarrow = ref(false)
@@ -178,6 +199,9 @@ watch(() => routePath.path, () => {
       <article v-else class="component-detail__content">
         <header class="component-detail__header">
           <h1>{{ route.name }}</h1>
+          <p v-if="exportName" class="component-detail__version">
+            {{ UPSTREAM_PACKAGE }} v{{ UPSTREAM_VERSION }} · {{ exportName }}
+          </p>
         </header>
         <nav class="component-detail__tabs" :aria-label="`${route.name} ${text.documentation}`">
           <a :href="path(`/components/${route.slug}`)" :aria-current="route.tab === 'overview' ? 'page' : undefined">{{ text.overview }}</a>
