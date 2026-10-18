@@ -126,4 +126,101 @@ describe('complex selector', () => {
     expect(trigger.attributes('data-variant')).toBe('ghost')
     expect(trigger.find('.astryx-complex-selector-start').exists()).toBe(true)
   })
+
+  it('emits click before opening and lets preventDefault keep it closed', async () => {
+    const states: (string | null)[] = []
+    const wrapper = mount(ComplexSelector, {
+      props: {
+        label: 'Fruit',
+        modelValue: 'apple',
+        onClick: (event: MouseEvent) => {
+          states.push((event.currentTarget as HTMLElement).getAttribute('aria-expanded'))
+          event.preventDefault()
+        },
+      },
+      slots: { default: 'Body' },
+    })
+    const trigger = wrapper.get('button.astryx-complex-selector')
+    await trigger.trigger('click')
+    await nextTick()
+    expect(states).toEqual(['false'])
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.emitted('click')).toHaveLength(1)
+  })
+
+  it('opens on a click the handler leaves alone', async () => {
+    const wrapper = mount(ComplexSelector, {
+      props: { label: 'Fruit', modelValue: 'apple', onClick: () => {} },
+      slots: { default: 'Body' },
+    })
+    const trigger = wrapper.get('button.astryx-complex-selector')
+    await trigger.trigger('click')
+    await nextTick()
+    expect(trigger.attributes('aria-expanded')).toBe('true')
+  })
+
+  it('emits keydown for every key, including the arrow that opens', async () => {
+    const keys: string[] = []
+    const wrapper = mount(ComplexSelector, {
+      props: { label: 'Fruit', modelValue: 'apple', onKeydown: (event: KeyboardEvent) => keys.push(event.key) },
+      slots: { default: 'Body' },
+    })
+    const trigger = wrapper.get('button.astryx-complex-selector')
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+    expect(keys).toEqual(['ArrowDown'])
+    expect(trigger.attributes('aria-expanded')).toBe('true')
+    await trigger.trigger('keydown', { key: 'a' })
+    expect(keys).toEqual(['ArrowDown', 'a'])
+  })
+
+  it('reports every open and close', async () => {
+    const states: boolean[] = []
+    const handle = shallowRef<ComplexSelectorHandle | null>(null)
+    const wrapper = mount(ComplexSelector, {
+      props: { label: 'Fruit', modelValue: 'apple', handleRef: handle, onOpenChange: (isOpen: boolean) => states.push(isOpen) },
+      slots: { default: 'Body' },
+    })
+    handle.value?.open()
+    await nextTick()
+    handle.value?.close()
+    await nextTick()
+    await wrapper.get('button.astryx-complex-selector').trigger('click')
+    await nextTick()
+    expect(states).toEqual([true, false, true])
+  })
+
+  it('runs a custom trigger click after the toggle and cannot cancel it', async () => {
+    const states: (string | null)[] = []
+    const Triggered = defineComponent({
+      components: { ComplexSelector },
+      setup() {
+        const value = ref('apple')
+        function renderTrigger(props: ComplexSelectorTriggerProps) {
+          return h('button', {
+            ...props,
+            'type': 'button',
+            'data-testid': 'custom',
+            'onClick': (event: MouseEvent) => {
+              props.onClick(event)
+              states.push((event.currentTarget as HTMLElement).getAttribute('aria-expanded'))
+              event.preventDefault()
+            },
+          }, 'Pick')
+        }
+        return { renderTrigger, value }
+      },
+      template: `
+        <ComplexSelector v-model="value" label="Fruit" :render-trigger="renderTrigger">
+          Body
+        </ComplexSelector>
+      `,
+    })
+    const wrapper = mount(Triggered, { attachTo: document.body })
+    const custom = wrapper.get('[data-testid="custom"]')
+    await custom.trigger('click')
+    await nextTick()
+    expect(custom.attributes('aria-expanded')).toBe('true')
+    wrapper.unmount()
+  })
 })

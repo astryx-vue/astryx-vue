@@ -49,6 +49,9 @@ footer: false
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>Value</code></td><td><code>commit</code> 写入的值。</td></tr>
       <tr><td><code>change</code></td><td><code>Value</code></td><td>和 <code>update:modelValue</code> 一起发出。</td></tr>
+      <tr><td><code>click</code></td><td><code>event: MouseEvent</code></td><td>触发器上的点击，在弹层打开之前触发。调用 <code>event.preventDefault()</code> 可以让它不打开。用 <code>trigger</code> 插槽或 <code>renderTrigger</code> 自己画触发器时，它在开关之后触发，取消不了。</td></tr>
+      <tr><td><code>keydown</code></td><td><code>event: KeyboardEvent</code></td><td>触发器上的按键，在内置处理之后触发，每个键都会收到，包括打开弹层的 ArrowDown。换成自制触发器时，内置处理取消的按键不再透出。</td></tr>
+      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>弹层每次打开或关闭都会触发：触发器、键盘、点外面、Escape、<code>close()</code> 或命令式 handle。</td></tr>
     </tbody>
   </table>
 </div>

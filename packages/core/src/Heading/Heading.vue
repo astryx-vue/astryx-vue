@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<HeadingProps>(), {
   justify: 'start',
   maxLines: 0,
   hasTruncateTooltip: true,
+  hasCapsize: false,
 })
 
 const tag = computed(() => `h${props.level}` as const)
@@ -30,7 +31,8 @@ const classes = computed(() => [
   props.type && `astryx-heading--type-${props.type}`,
   `astryx-heading--color-${props.color}`,
   props.weight && `astryx-heading--weight-${props.weight}`,
-  props.display === 'inline' && props.maxLines === 0 && 'astryx-heading--inline',
+  props.display === 'inline' && props.maxLines === 0 && !props.hasCapsize && 'astryx-heading--inline',
+  props.hasCapsize && 'astryx-heading--capsize',
   props.textWrap && `astryx-heading--wrap-${props.textWrap}`,
   wordBreak.value && `astryx-heading--word-${wordBreak.value}`,
   props.justify !== 'start' && `astryx-heading--justify-${props.justify}`,

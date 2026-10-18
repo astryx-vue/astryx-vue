@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<DialogHeaderProps>(), {
   subtitle: undefined,
   hasCloseButton: false,
   closeButtonLabel: 'Close',
+  hasDivider: false,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 const slots = defineSlots<{
@@ -38,7 +39,7 @@ function rootAttrs(): Record<string, unknown> {
 </script>
 
 <template>
-  <div v-bind="rootAttrs()" class="astryx-dialog-header">
+  <div v-bind="rootAttrs()" class="astryx-dialog-header" :class="{ 'astryx-dialog-header--divider': hasDivider }">
     <div v-if="slots.startContent" class="astryx-dialog-header__actions">
       <slot name="startContent" />
     </div>

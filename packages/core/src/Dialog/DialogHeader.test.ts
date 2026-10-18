@@ -67,4 +67,12 @@ describe('dialogHeader', () => {
 
     expect(wrapper.find('.astryx-dialog-header__title').attributes('data-dialog-default-focus')).toBeUndefined()
   })
+
+  it('draws a bottom divider only when hasDivider is set', () => {
+    const plain = mount(DialogHeader, { props: { title: 'Title' } })
+    expect(plain.get('.astryx-dialog-header').classes()).not.toContain('astryx-dialog-header--divider')
+
+    const divided = mount(DialogHeader, { props: { title: 'Title', hasDivider: true } })
+    expect(divided.get('.astryx-dialog-header').classes()).toContain('astryx-dialog-header--divider')
+  })
 })

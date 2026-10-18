@@ -89,6 +89,11 @@ footer: false
         <td><code>string</code></td>
         <td>刚选中的那一行的 id。</td>
       </tr>
+      <tr>
+        <td><code>valueChange</code></td>
+        <td><code>string</code></td>
+        <td>同一次选中，用原版的回调名字，方便从 React 迁过来的代码。</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -146,11 +151,31 @@ footer: false
         <td><code>true</code></td>
         <td>面板打开时聚焦输入框。内联面板会跳过。</td>
       </tr>
+      <tr>
+        <td><code>value</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>搜索词，用 <code>v-model:value</code> 绑定。不传时读写外层 <code>CommandPalette</code> 的搜索词。</td>
+      </tr>
     </tbody>
   </table>
 </div>
 
-输入框的默认插槽是字段后面的内容。
+<div class="component-api-table" role="region" aria-label="CommandPaletteInput 事件" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>名称</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>valueChange</code></td>
+        <td>下一个搜索词。只在绑定了 <code>value</code> 时触发，否则输入框直接写到面板里。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<code>endContent</code> 插槽（也可以写成 <code>end</code>）是转圈图标后面的内容。
 
 ## CommandPaletteList
 
@@ -162,7 +187,7 @@ footer: false
 
 ## CommandPaletteItem
 
-`value` 是命令 id。`isDisabled` 会挡住选择。默认插槽是行内容。
+`value` 是命令 id。`isDisabled` 会挡住选择。`isHighlighted` 和 `isSelected` 会盖掉从面板读到的状态，单独展示某一行时用得上。鼠标点击激活时发出 <code>select</code>，参数是这一行的值。默认插槽是行内容。
 
 ## CommandPaletteEmpty
 

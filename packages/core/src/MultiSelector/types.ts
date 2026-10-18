@@ -61,6 +61,12 @@ export interface MultiSelectorProps {
   description?: string
   placeholder?: string
   disabled?: boolean
+  /**
+   * 禁用原因。禁用时鼠标悬停或键盘聚焦会弹出提示，触发器保持可聚焦（aria-disabled），
+   * 但打不开面板。不用再在外面套 Tooltip：禁用的控件收不到悬停事件。
+   */
+  disabledMessage?: string
+  /** 禁用原因（旧名，和 disabledMessage 等价） */
   disabledReason?: string
   status?: MultiSelectorStatus
   statusMessage?: string
@@ -74,7 +80,12 @@ export interface MultiSelectorProps {
   variant?: MultiSelectorVariant
   /** popover 锚在触发器下，bottom-sheet 在底部弹层里展开。 */
   presentation?: MultiSelectorPresentation
+  /** 是否可清除。和 hasClear 等价，两者任一为真即生效。 */
   clearable?: boolean
+  /** 是否可清除（原版名字） */
+  hasClear?: boolean
+  /** 挂载后就展开面板。 */
+  isDefaultOpen?: boolean
   searchable?: boolean
   searchPlaceholder?: string
   /** 列表顶部的全选行。 */
@@ -122,10 +133,34 @@ export interface MultiSelectorEmits {
   'change': [value: (string | number)[], change?: MultiSelectorCreateChange]
   'search': [query: string]
   'openChange': [isOpen: boolean]
+  /** 触发器（或 trigger 插槽里的控件）上的点击。面板切换之后才触发，取消不了。 */
+  'click': [event: MouseEvent]
+  /** 触发器获得焦点时触发。 */
+  'focus': [event: FocusEvent]
+  /** 触发器上的按键。内置键盘模型处理并取消的按键不再透出。 */
+  'keydown': [event: KeyboardEvent]
+}
+
+/** 自定义触发器要接的绑定。用 triggerRef 把控件交给面板做锚点。 */
+export interface MultiSelectorTriggerProps {
+  'id': string
+  'onClick': (event: MouseEvent) => void
+  'onKeyDown': (event: KeyboardEvent) => void
+  'onFocus': (event: FocusEvent) => void
+  'aria-haspopup': 'listbox'
+  'aria-expanded': boolean
+  'aria-controls': string
+  'aria-busy': true | undefined
+  'triggerRef': (element: unknown) => void
 }
 
 export interface MultiSelectorSlots {
   icon?: () => unknown
   option?: (props: { option: MultiSelectorOptionData, selected: boolean, active: boolean }) => unknown
   empty?: () => unknown
+  /**
+   * 替掉整个字段和触发器，用一个自制控件（行内图标、芯片、图标按钮）挂面板。
+   * 把拿到的绑定铺到控件上，字段外壳（标签、状态、清除、加载）都不再渲染。
+   */
+  trigger?: (props: MultiSelectorTriggerProps) => unknown
 }

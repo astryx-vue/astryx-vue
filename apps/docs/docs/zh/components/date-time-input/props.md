@@ -20,6 +20,12 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>这一对字段的错误、警告或成功。</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息的位置。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>同时禁用两个字段。</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>为什么禁用。和 <code>isDisabled</code> 一起用时，悬停或键盘聚焦会显示这段提示，两段都仍可聚焦（带 <code>aria-disabled</code>）。</td></tr>
+<tr><td><code>hasSeconds</code></td><td><code>boolean</code></td><td><code>false</code></td><td>时间那段带秒，模型值变成 <code>YYYY-MM-DDTHH:MM:SS</code>。系统时间控件表达不了秒，所以固定用 Astryx 的时间字段。</td></tr>
+<tr><td><code>timeIncrement</code></td><td><code>1 | 5 | 10 | 15 | 30</code></td><td><code>1</code></td><td>时间那段方向键调整分钟的步长。不是默认值时固定用 Astryx 的时间字段。</td></tr>
+<tr><td><code>timeOptionInterval</code></td><td><code>5 | 10 | 15 | 30 | 60</code></td><td>—</td><td>预设时间的分钟间隔。设置后点时钟图标会按这个间隔列出可选时间，并按 <code>min</code>、<code>max</code> 的时刻裁剪；即使处于系统控件模式也用 Astryx 的时间字段。</td></tr>
+<tr><td><code>timeLabel</code></td><td><code>string</code></td><td><code>时间</code></td><td>时间那段的读屏标签。</td></tr>
+<tr><td><code>timePlaceholder</code></td><td><code>string</code></td><td><code>选择时间</code></td><td>时间那段没选值时显示的占位文本。</td></tr>
 <tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>日期那一半里，任一函数返回 false 时该日不可选。</td></tr>
 <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td>—</td><td>日期月历并排的月份数。</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>日期月历从哪一天开始一周。</td></tr>

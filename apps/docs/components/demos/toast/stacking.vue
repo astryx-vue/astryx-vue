@@ -25,7 +25,7 @@ function show(): void {
     <Toast
       v-for="message in messages"
       :key="message.body"
-      :auto-close="false"
+      :is-auto-hide="false"
       :body="message.body"
       :type="message.type"
     />

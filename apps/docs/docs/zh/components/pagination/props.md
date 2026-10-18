@@ -14,10 +14,13 @@ footer: false
       <tr><td><code>page</code></td><td><code>number</code></td><td><code>1</code></td><td>当前页码，从 1 开始。</td></tr>
       <tr><td><code>pageSize</code></td><td><code>number</code></td><td><code>10</code></td><td>每页条目数。</td></tr>
       <tr><td><code>total</code></td><td><code>number</code></td><td><code>0</code></td><td>总条目数。</td></tr>
+      <tr><td><code>totalItems</code></td><td><code>number</code></td><td>—</td><td>总条目数，<code>total</code> 的原版名字。同时设置时优先于 <code>total</code> 和 <code>totalPages</code>。</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td><code>Pagination</code> / <code>分页</code></td><td>导航区的无障碍名称。</td></tr>
       <tr><td><code>showSizeChanger</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否显示每页数量选择器。</td></tr>
       <tr><td><code>pageSizeOptions</code></td><td><code>number[]</code></td><td><code>[10, 20, 50, 100]</code></td><td>每页数量选项。</td></tr>
       <tr><td><code>showTotal</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否显示总条目数。</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td><code>isDisabled</code> 的旧名字，任一为真即禁用。</td></tr>
       <tr><td><code>prevLabel</code></td><td><code>string</code></td><td><code>Previous</code> / <code>上一页</code></td><td>上一页按钮文字。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>nextLabel</code></td><td><code>string</code></td><td><code>Next</code> / <code>下一页</code></td><td>下一页按钮文字。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>pageSizeLabel</code></td><td><code>string</code></td><td><code>Per page</code> / <code>每页</code></td><td>每页数量选择器的标签。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
@@ -40,6 +43,7 @@ footer: false
     <tbody>
       <tr><td><code>update:page</code></td><td><code>page: number</code></td><td>页码变化时触发。</td></tr>
       <tr><td><code>update:pageSize</code></td><td><code>pageSize: number</code></td><td>每页数量变化时触发。</td></tr>
+      <tr><td><code>pageSizeChange</code></td><td><code>pageSize: number</code></td><td>每页数量变化时触发，在页码回到第一页之前发出。</td></tr>
       <tr><td><code>change</code></td><td><code>page: number, pageSize: number</code></td><td>页码或每页数量变化时触发。</td></tr>
     </tbody>
   </table>

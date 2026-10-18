@@ -17,7 +17,7 @@ const options = [
     label="Department"
     :options="options"
     placeholder="Choose a department..."
-    clearable
+    has-clear
     :width="300"
   />
 </template>

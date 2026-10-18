@@ -282,9 +282,15 @@ export interface PowerSearchProps {
   labelHidden?: boolean
   placeholder?: string
   autofocus?: boolean
+  /** 有筛选条件时显示全部清空按钮。默认 true。 */
+  hasClear?: boolean
+  /** 有筛选条件时显示全部清空按钮。等同于 hasClear。 */
   clearable?: boolean
   readOnly?: boolean
   disabled?: boolean
+  /** 为什么禁用。和 `disabled` 一起用时，输入框仍可聚焦，但不能用。 */
+  disabledMessage?: string
+  /** 禁用原因。等同于 disabledMessage。 */
   disabledReason?: string
   status?: PowerSearchStatus
   statusMessage?: string
@@ -293,7 +299,13 @@ export interface PowerSearchProps {
   maxOperatorMenuItems?: number
   maxSearchResults?: number
   menuWidth?: number
+  /** 筛选编辑器里保存按钮的文字。默认「Apply」。 */
+  popoverSaveButtonLabel?: string
+  /** 筛选编辑器里保存按钮的文字。等同于 popoverSaveButtonLabel。 */
   saveLabel?: string
+  /** 日期类筛选格式化用的时区 ID，例如 `America/New_York`。 */
+  timezoneID?: string
+  /** 日期类筛选格式化用的时区 ID。等同于 timezoneID。 */
   timeZone?: string
   overflow?: PowerSearchOverflow
   resultCount?: number | string
@@ -310,6 +322,9 @@ export interface PowerSearchEmits {
 
 export interface PowerSearchSlots {
   icon?: () => VNodeChild
+  /** 输入行末尾的内容，放操作按钮之类的控件。 */
+  endContent?: () => VNodeChild
+  /** 输入行末尾的内容。等同于 endContent。 */
   end?: () => VNodeChild
   token?: (props: PowerSearchTokenProps) => VNodeChild
   editor?: (props: PowerSearchEditorProps) => VNodeChild

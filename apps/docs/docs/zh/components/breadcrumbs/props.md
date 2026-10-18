@@ -66,6 +66,12 @@ footer: false
         <td>链接地址。未提供时渲染为按钮。</td>
       </tr>
       <tr>
+        <td><code>as</code></td>
+        <td><code>string | Component</code></td>
+        <td><code>'a'</code></td>
+        <td>链接的根组件，比如路由链接。有 <code>href</code> 且不是当前页的项会用它代替 <code>a</code>。</td>
+      </tr>
+      <tr>
         <td><code>isCurrent</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>

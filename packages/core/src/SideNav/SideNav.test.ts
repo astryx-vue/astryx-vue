@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { h, nextTick, ref } from 'vue'
 import SideNav from './SideNav.vue'
+import SideNavCollapseButton from './SideNavCollapseButton.vue'
 import SideNavItem from './SideNavItem.vue'
 import SideNavSection from './SideNavSection.vue'
 
@@ -118,5 +119,25 @@ describe('side-nav', () => {
     expect(wrapper.get('nav').attributes('data-collapsed')).toBe('true')
     expect(handle.value?.isCollapsed).toBe(true)
     wrapper.unmount()
+  })
+
+  it('gives the collapse button the container size and shows a label when asked', async () => {
+    const inside = mount(SideNav, {
+      props: { collapsible: true },
+      slots: { default: () => h(SideNavItem, { href: '/home', label: 'Home' }) },
+    })
+    expect(inside.get('[aria-label="Collapse sidebar"]').attributes('data-size')).toBe('sm')
+
+    const outside = mount(SideNavCollapseButton, {
+      props: { isCollapsed: false, label: 'Hide rail' },
+    })
+    const button = outside.get('button')
+    expect(button.attributes('data-size')).toBe('md')
+    expect(button.attributes('aria-label')).toBeUndefined()
+    expect(button.text()).toContain('Hide rail')
+
+    await outside.setProps({ size: 'lg' })
+    expect(outside.get('button').attributes('data-size')).toBe('lg')
+    outside.unmount()
   })
 })

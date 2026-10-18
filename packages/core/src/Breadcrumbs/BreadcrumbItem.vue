@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
-import { computed, inject } from 'vue'
+import { computed, inject, toRaw } from 'vue'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
 import { breadcrumbContextKey } from './context.js'
@@ -35,6 +35,10 @@ const contentClasses = computed(() => [
 ])
 
 const menuSize = computed<DropdownMenuSize>(() => props.menuSize ?? (variant.value === 'supporting' ? 'sm' : 'md'))
+
+/** The link crumb keeps the anchor unless a router link is passed in. */
+const linkRoot = computed(() => (props.as == null ? 'a' : toRaw(props.as)))
+const rendersLink = computed(() => Boolean(props.href) && !props.isCurrent)
 
 const isDev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV !== false
 if (isDev && hasMenu.value && props.href) {
@@ -79,9 +83,11 @@ function handleClick(event: MouseEvent) {
         </button>
       </template>
     </DropdownMenu>
-    <a
-      v-else-if="href && !isCurrent"
+    <component
+      :is="linkRoot"
+      v-else-if="rendersLink"
       :href="href"
+      :to="as != null ? href : undefined"
       class="astryx-breadcrumb-item__content"
       @click="handleClick"
     >
@@ -89,7 +95,7 @@ function handleClick(event: MouseEvent) {
         <slot name="startIcon" />
       </span>
       <slot />
-    </a>
+    </component>
     <button
       v-else-if="!isCurrent"
       type="button"

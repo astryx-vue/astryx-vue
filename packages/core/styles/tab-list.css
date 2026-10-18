@@ -49,7 +49,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--astryx-spacing-0-5, 2px);
+    gap: var(--astryx-spacing-1, 4px);
     flex: 0 0 auto;
     padding-inline: var(--astryx-spacing-3, 12px);
     border: 0;
@@ -57,7 +57,7 @@
     background: transparent;
     color: var(--astryx-color-text-secondary, #525252);
     font: inherit;
-    font-weight: var(--astryx-font-weight-medium, 500);
+    font-weight: var(--astryx-font-weight-regular, 400);
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
@@ -90,6 +90,7 @@
 
   .astryx-tab--selected {
     color: var(--astryx-color-text-primary, #171717);
+    font-weight: var(--astryx-font-weight-semibold, 600);
   }
 
   .astryx-tab--selected::after {
@@ -119,7 +120,42 @@
   }
 
   .astryx-tab__label {
+    display: inline-grid;
+    align-items: center;
+  }
+
+  .astryx-tab__label-text,
+  .astryx-tab__label-sizer {
+    grid-area: 1 / 1;
     display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  /* 同一格里叠一份半粗字重的隐形副本，选中前后标签宽度不变。 */
+  .astryx-tab__label-sizer {
+    visibility: hidden;
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    pointer-events: none;
+  }
+
+  .astryx-tab__icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+  }
+
+  .astryx-tab__icon > * {
+    width: 100%;
+    height: 100%;
+  }
+
+  .astryx-tab__end {
+    display: inline-flex;
+    flex: none;
     align-items: center;
     gap: inherit;
   }

@@ -19,7 +19,7 @@ const source = computed(() => createStaticSource([
       label="Command"
       placeholder="Type a command"
       :debounce-ms="0"
-      show-on-focus
+      has-entries-on-focus
     />
   </div>
 </template>

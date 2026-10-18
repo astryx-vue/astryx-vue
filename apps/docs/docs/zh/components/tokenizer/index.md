@@ -14,7 +14,7 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 `Tokenizer` 把多条搜索结果收成可删除的标签。数据源和自动补全相同，本地用 `createStaticSource`，远程实现 `search`。已选条目不会再次出现在列表里。
 
-`creatable` 允许把当前输入收成一条新标签。`clearable` 一次清空。输入框为空时，`Backspace` 删掉最后一条。方向键可以在标签之间移动焦点，`Backspace` 或 `Delete` 删除当前标签。
+`hasCreate` 允许把当前输入收成一条新标签。`hasClear` 一次清空。输入框为空时，`Backspace` 删掉最后一条。方向键可以在标签之间移动焦点，`Backspace` 或 `Delete` 删除当前标签。
 
 `overflow` 控制放不下时的表现：
 
@@ -34,7 +34,7 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 | 指引 | 实践 |
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 标签会很多、字段又要保持一行时，用 `unfocused-inline`。 |
-| <Badge variant="success">推荐</Badge> | 允许用户自造条目时打开 `creatable`，并在变更事件里区分 `add` 和 `create`。 |
+| <Badge variant="success">推荐</Badge> | 允许用户自造条目时打开 `hasCreate`，并在变更事件里区分 `add` 和 `create`。 |
 | <Badge variant="error">避免</Badge> | 选项是短小的固定清单时用标签输入框。那种场景用多选器。 |
 
 ## 示例

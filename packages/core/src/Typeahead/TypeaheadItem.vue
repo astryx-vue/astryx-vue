@@ -4,6 +4,7 @@ import '../../styles/typeahead.css'
 
 defineOptions({ name: 'AstryxTypeaheadItem' })
 
+// group 只为和同名属性对得上而接受；分组标题由下拉按 item.auxiliaryData.group 画。
 const props = defineProps<TypeaheadItemProps>()
 </script>
 

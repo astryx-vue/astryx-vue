@@ -19,6 +19,8 @@ footer: false
 <tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>Native textarea maxlength. When set, a live character count is shown. It turns red when the value is longer than the limit.</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>Native textarea wrap.</td></tr>
 <tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>Native textarea resize. Vertical dragging is enabled by default.</td></tr>
+<tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>Native textarea autocomplete token, such as <code>off</code> or <code>email</code>. Forwarded unchanged; the controlled value is not affected.</td></tr>
+<tr><td><code>hasSpellCheck</code></td><td><code>boolean</code></td><td>true</td><td>Turns the browser spell checker on or off for the textarea.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>Placeholder text.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Description below the label.</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>Hide the visual label. Keep the accessible name.</td></tr>
@@ -61,7 +63,8 @@ Cancelling the `change` event prevents `changeAction` from running.
 
 - `class`, `style`, and other attributes are applied to the field wrapper.
 - `aria-labelledby` and `aria-describedby` are merged into the native textarea.
-- The component manages `disabled`, `readonly`, and `aria-invalid`.
+- `focus`, `blur` and `paste` listeners land on the native textarea.
+- The component manages `disabled`, `readonly`, `spellcheck`, and `aria-invalid`.
 - The `icon` slot shows a decorative icon on the left.
 - The `end` slot shows extra content on the right.
 - The `labelIcon` slot replaces the icon before the label.

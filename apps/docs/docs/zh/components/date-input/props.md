@@ -33,8 +33,8 @@ footer: false
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>字段不可改，并显示加载指示。</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value: Date | null) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>值提交之后再跑。返回 Promise 时，字段保持加载直到它结束。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整段字段的宽度。数字按像素算。</td></tr>
-      <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>禁用原因。</td></tr>
-      <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否显示清除按钮。</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。和 <code>disabled</code> 一起用时，悬停或键盘聚焦会显示这段提示，输入框仍可聚焦（带 <code>aria-disabled</code>），但改不了值。旧名 <code>disabledReason</code> 同样可用。</td></tr>
+      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有值时显示清除按钮，清空后焦点回到输入框。旧名 <code>clearable</code> 同样可用。</td></tr>
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td><code>Clear</code> / <code>清除</code></td><td>清除按钮的无障碍名称。设置了 <code>label</code> 时会带上它。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>校验状态。对象带 <code>message</code> 时，说明会显示在字段下方。</td></tr>

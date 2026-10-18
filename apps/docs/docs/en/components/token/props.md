@@ -41,7 +41,7 @@ footer: false
     <thead><tr><th>Name</th><th>Parameters</th><th>Description</th></tr></thead>
     <tbody>
       <tr><td><code>icon</code></td><td>—</td><td>Icon before the text.</td></tr>
-      <tr><td><code>end</code></td><td>—</td><td>Content after the text and before the remove button.</td></tr>
+      <tr><td><code>end</code></td><td>—</td><td>Content after the text and before the remove button. Also available as <code>endContent</code>.</td></tr>
     </tbody>
   </table>
 </div>

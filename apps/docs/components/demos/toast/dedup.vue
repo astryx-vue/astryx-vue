@@ -8,19 +8,19 @@ const toast = useToast()
 
 <template>
   <VStack :gap="3">
-    <Toast :auto-close="false" body="You are offline" type="info" />
+    <Toast :is-auto-hide="false" body="You are offline" type="info" />
     <HStack align="center" :gap="3">
       <Button
         label="Offline (ignore)"
         size="sm"
         variant="secondary"
-        @click="toast({ body: 'You are offline', uniqueID: 'offline', collisionBehavior: 'ignore', autoClose: false })"
+        @click="toast({ body: 'You are offline', uniqueID: 'offline', collisionBehavior: 'ignore', isAutoHide: false })"
       />
       <Button
         label="Progress (overwrite)"
         size="sm"
         variant="secondary"
-        @click="toast({ body: `Uploading… ${Math.floor(Math.random() * 100)}%`, uniqueID: 'upload-progress', collisionBehavior: 'overwrite', autoClose: false })"
+        @click="toast({ body: `Uploading… ${Math.floor(Math.random() * 100)}%`, uniqueID: 'upload-progress', collisionBehavior: 'overwrite', isAutoHide: false })"
       />
     </HStack>
     <ToastViewport />

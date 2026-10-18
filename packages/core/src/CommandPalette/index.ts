@@ -8,7 +8,9 @@ export { default as CommandPaletteList } from './CommandPaletteList.vue'
 export type {
   CommandPaletteEmits,
   CommandPaletteGroupProps,
+  CommandPaletteInputEmits,
   CommandPaletteInputProps,
+  CommandPaletteItemEmits,
   CommandPaletteItemProps,
   CommandPaletteItemSlotProps,
   CommandPaletteListProps,

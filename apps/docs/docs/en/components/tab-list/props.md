@@ -37,6 +37,12 @@ footer: false
         <td><code>false</code></td>
         <td>Whether to show a bottom divider.</td>
       </tr>
+      <tr>
+        <td><code>role</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>ARIA role of the strip. <code>tablist</code> selects the tabs pattern: tabs get <code>role="tab"</code> with <code>aria-selected</code>, and each tab points at its panel through <code>panelId</code>. Left unset, the strip is a navigation landmark that marks the current tab with <code>aria-current</code> and renders a tab with <code>href</code> as a link. Any other value is passed through to the element.</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -92,6 +98,30 @@ footer: false
         <td>Unique tab value.</td>
       </tr>
       <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Visible text of the tab, also used as the accessible name when <code>isLabelHidden</code> is set. The default slot wins when both are given.</td>
+      </tr>
+      <tr>
+        <td><code>href</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>URL to navigate to. Outside the tabs pattern the tab renders as a link; inside a <code>role="tablist"</code> strip it is ignored.</td>
+      </tr>
+      <tr>
+        <td><code>as</code></td>
+        <td><code>string | Component</code></td>
+        <td><code>'a'</code></td>
+        <td>Link root component, such as a router link. Only applies when <code>href</code> is given and the strip is not a tablist.</td>
+      </tr>
+      <tr>
+        <td><code>isLabelHidden</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Visually hides the label so only the icon and end content show. The label stays available through <code>aria-label</code>.</td>
+      </tr>
+      <tr>
         <td><code>panelId</code></td>
         <td><code>string</code></td>
         <td>-</td>
@@ -118,6 +148,18 @@ footer: false
       <tr>
         <td><code>default</code></td>
         <td>Tab label text.</td>
+      </tr>
+      <tr>
+        <td><code>icon</code></td>
+        <td>Icon shown while the tab is not selected.</td>
+      </tr>
+      <tr>
+        <td><code>selectedIcon</code></td>
+        <td>Icon shown while the tab is selected. Falls back to <code>icon</code>.</td>
+      </tr>
+      <tr>
+        <td><code>endContent</code></td>
+        <td>Content after the label, such as a badge count or a status dot.</td>
       </tr>
     </tbody>
   </table>

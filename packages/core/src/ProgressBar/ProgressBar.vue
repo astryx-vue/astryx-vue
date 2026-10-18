@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<ProgressBarProps>(), {
   size: 'md',
   variant: 'neutral',
   isLabelHidden: false,
+  isDisabled: false,
 })
 const attrs = useAttrs()
 const generatedId = `astryx-progress-bar-${useId()}`
@@ -65,6 +66,7 @@ const resolvedMarks = computed(() => {
   <div
     class="astryx-progress-bar" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size"
     :data-variant="variant" :data-indeterminate="isIndeterminate || undefined"
+    :data-disabled="isDisabled || undefined"
   >
     <div v-if="label && (!isLabelHidden || showsValue)" class="astryx-progress-bar-header">
       <span

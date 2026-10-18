@@ -20,6 +20,12 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success for the pair.</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables both fields.</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why both fields are disabled. With <code>isDisabled</code>, the message shows in a tooltip on hover or keyboard focus and both halves stay focusable with <code>aria-disabled</code>.</td></tr>
+<tr><td><code>hasSeconds</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Includes seconds in the time half. The model then uses <code>YYYY-MM-DDTHH:MM:SS</code>. The system time control cannot express seconds, so the Astryx time field is kept.</td></tr>
+<tr><td><code>timeIncrement</code></td><td><code>1 | 5 | 10 | 15 | 30</code></td><td><code>1</code></td><td>Minute step for the arrow keys in the time half. A non-default value keeps the Astryx time field.</td></tr>
+<tr><td><code>timeOptionInterval</code></td><td><code>5 | 10 | 15 | 30 | 60</code></td><td>—</td><td>Minute cadence of preset times. Setting it opens a list of times under the clock icon, trimmed to the <code>min</code> and <code>max</code> time of day, and keeps the Astryx time field even in native modes.</td></tr>
+<tr><td><code>timeLabel</code></td><td><code>string</code></td><td><code>Time</code> / <code>时间</code></td><td>Accessible name of the time half.</td></tr>
+<tr><td><code>timePlaceholder</code></td><td><code>string</code></td><td><code>Select a time</code></td><td>Placeholder of the time half when no time is set.</td></tr>
 <tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>On the date half, a day is disabled when any function returns false.</td></tr>
 <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td>—</td><td>Months shown side by side in the date calendar.</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>First day of the week in the date calendar.</td></tr>

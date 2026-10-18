@@ -5,6 +5,8 @@ import { defineComponent, nextTick, ref } from 'vue'
 import { resetLiveRegionsForTest } from '../composables/testing/resetLiveRegions.js'
 import { createStaticSource } from '../composables/useAsyncSource.js'
 import CommandPalette from './CommandPalette.vue'
+import CommandPaletteInput from './CommandPaletteInput.vue'
+import CommandPaletteItem from './CommandPaletteItem.vue'
 import { moveHighlight } from './keyboard.js'
 
 const items: SearchableItem[] = [
@@ -98,6 +100,71 @@ describe('command palette', () => {
     await nextTick()
     expect(wrapper.text()).not.toContain('Stale item')
     wrapper.unmount()
+  })
+})
+
+describe('command palette item and input overrides', () => {
+  it('lets an explicit isHighlighted / isSelected win outside a palette', () => {
+    const plain = mount(CommandPaletteItem, {
+      props: { value: 'a' },
+      slots: { default: () => 'Item A' },
+    })
+    expect(plain.attributes('data-highlighted')).toBeUndefined()
+    expect(plain.attributes('aria-selected')).toBe('false')
+
+    const marked = mount(CommandPaletteItem, {
+      props: { isHighlighted: true, isSelected: true, value: 'a' },
+      slots: { default: () => 'Item A' },
+    })
+    expect(marked.attributes('data-highlighted')).toBe('true')
+    expect(marked.attributes('data-selected')).toBe('true')
+    expect(marked.attributes('aria-selected')).toBe('true')
+  })
+
+  it('emits select with the value when activated by pointer', async () => {
+    const wrapper = mount(CommandPaletteItem, {
+      props: { value: 'a' },
+      slots: { default: () => 'Item A' },
+    })
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('select')).toEqual([['a']])
+  })
+
+  it('does not emit select for a disabled item', async () => {
+    const wrapper = mount(CommandPaletteItem, {
+      props: { isDisabled: true, value: 'a' },
+      slots: { default: () => 'Item A' },
+    })
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('select')).toBeUndefined()
+  })
+
+  it('reports the picked value under the original callback name', async () => {
+    const wrapper = mount(Harness, { attachTo: document.body })
+    await nextTick()
+    const input = wrapper.get('[role="combobox"]')
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    await input.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.findComponent(CommandPalette).emitted('valueChange')).toEqual([['home']])
+    wrapper.unmount()
+    resetLiveRegionsForTest()
+  })
+
+  it('takes a value prop and reports changes when it is controlled', async () => {
+    const wrapper = mount(CommandPaletteInput, { props: { value: 'set' } })
+    const input = wrapper.get('input')
+    expect((input.element as HTMLInputElement).value).toBe('set')
+
+    await input.setValue('settings')
+    expect(wrapper.emitted('valueChange')).toEqual([['settings']])
+    expect(wrapper.emitted('update:value')).toEqual([['settings']])
+  })
+
+  it('renders trailing content from the endContent slot', () => {
+    const wrapper = mount(CommandPaletteInput, {
+      slots: { endContent: '<kbd class="hint">/</kbd>' },
+    })
+    expect(wrapper.find('.astryx-command-palette-end .hint').exists()).toBe(true)
   })
 })
 

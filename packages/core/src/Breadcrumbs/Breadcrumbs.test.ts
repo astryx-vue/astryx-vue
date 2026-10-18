@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
 import BreadcrumbItem from './BreadcrumbItem.vue'
 import Breadcrumbs from './Breadcrumbs.vue'
 
@@ -77,6 +77,22 @@ describe('breadcrumbs', () => {
 
     await wrapper.find('a').trigger('click')
     expect(onClick).toHaveBeenCalled()
+  })
+
+  it('renders the passed link component for a non-current crumb', () => {
+    const RouterLink = defineComponent({
+      props: { to: { type: String, default: '' } },
+      setup(_props, { slots }) {
+        return () => h('a', { 'data-router-link': 'true' }, slots.default?.())
+      },
+    })
+    const wrapper = mount(BreadcrumbItem, {
+      props: { as: RouterLink, href: '/docs' },
+      slots: { default: 'Docs' },
+    })
+
+    expect(wrapper.get('[data-router-link="true"]').text()).toBe('Docs')
+    expect(wrapper.get('a').attributes('href')).toBe('/docs')
   })
 
   it('applies variant class to items', () => {

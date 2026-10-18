@@ -13,6 +13,7 @@ footer: false
 <tr><td><code>subtitle</code></td><td><code>string</code></td><td>—</td><td>Secondary text under the title. An empty string renders nothing.</td></tr>
 <tr><td><code>hasCloseButton</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the close button, which emits <code>openChange(false)</code> when clicked.</td></tr>
 <tr><td><code>closeButtonLabel</code></td><td><code>string</code></td><td><code>'Close'</code></td><td>Accessible name for the close button.</td></tr>
+<tr><td><code>hasDivider</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Draws a themed rule along the bottom edge. The rule uses <code>--astryx-color-border</code>.</td></tr>
 </tbody></table>
 </div>
 

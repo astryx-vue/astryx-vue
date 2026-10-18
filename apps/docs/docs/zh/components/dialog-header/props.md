@@ -13,6 +13,7 @@ footer: false
 <tr><td><code>subtitle</code></td><td><code>string</code></td><td>—</td><td>标题下方的次要文字。为空字符串时不渲染。</td></tr>
 <tr><td><code>hasCloseButton</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示关闭按钮，点击时发出 <code>openChange(false)</code>。</td></tr>
 <tr><td><code>closeButtonLabel</code></td><td><code>string</code></td><td><code>'Close'</code></td><td>关闭按钮的无障碍名称。</td></tr>
+<tr><td><code>hasDivider</code></td><td><code>boolean</code></td><td><code>false</code></td><td>底部画一条主题分隔线，颜色取 <code>--astryx-color-border</code>。</td></tr>
 </tbody></table>
 </div>
 

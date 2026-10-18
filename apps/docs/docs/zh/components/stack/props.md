@@ -18,6 +18,10 @@ footer: false
       <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>容器全部方向的内边距。</td></tr>
       <tr><td><code>paddingInline</code></td><td><code>SpacingStep</code></td><td>—</td><td>行内轴内边距。覆盖对应的 padding。</td></tr>
       <tr><td><code>paddingBlock</code></td><td><code>SpacingStep</code></td><td>—</td><td>块轴内边距。覆盖对应的 padding。</td></tr>
+      <tr><td><code>paddingBlockStart</code></td><td><code>SpacingStep</code></td><td>—</td><td>块轴起始（上）内边距。只覆盖这一条边的 <code>paddingBlock</code> 和 <code>padding</code>。</td></tr>
+      <tr><td><code>paddingBlockEnd</code></td><td><code>SpacingStep</code></td><td>—</td><td>块轴结束（下）内边距。只覆盖这一条边的 <code>paddingBlock</code> 和 <code>padding</code>。</td></tr>
+      <tr><td><code>paddingInlineStart</code></td><td><code>SpacingStep</code></td><td>—</td><td>行内轴起始（LTR 为左）内边距。只覆盖这一条边的 <code>paddingInline</code> 和 <code>padding</code>。</td></tr>
+      <tr><td><code>paddingInlineEnd</code></td><td><code>SpacingStep</code></td><td>—</td><td>行内轴结束（LTR 为右）内边距。只覆盖这一条边的 <code>paddingInline</code> 和 <code>padding</code>。</td></tr>
       <tr><td><code>hAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>根据方向控制水平主轴或交叉轴对齐。</td></tr>
       <tr><td><code>vAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>根据方向控制垂直主轴或交叉轴对齐。</td></tr>
       <tr><td><code>justify</code></td><td><code>StackMainAlignment</code></td><td>—</td><td>主轴对齐别名。</td></tr>

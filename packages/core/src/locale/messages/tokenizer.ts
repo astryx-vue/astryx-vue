@@ -16,7 +16,7 @@ export interface TokenizerMessages {
 export const tokenizerMessages: Record<AstryxLocale, TokenizerMessages> = {
   'en': {
     placeholder: 'Add…',
-    empty: 'No results',
+    empty: 'No results found',
     loading: 'Loading results',
     error: 'Couldn\'t load results',
     clear: 'Clear all',
@@ -28,7 +28,7 @@ export const tokenizerMessages: Record<AstryxLocale, TokenizerMessages> = {
   },
   'zh-CN': {
     placeholder: '添加…',
-    empty: '没有结果',
+    empty: '未找到结果',
     loading: '正在加载',
     error: '加载失败',
     clear: '全部清除',

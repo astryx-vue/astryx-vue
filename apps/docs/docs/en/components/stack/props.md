@@ -18,6 +18,10 @@ footer: false
       <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>Padding on every side of the container.</td></tr>
       <tr><td><code>paddingInline</code></td><td><code>SpacingStep</code></td><td>—</td><td>Inline-axis padding. Overrides padding on this axis.</td></tr>
       <tr><td><code>paddingBlock</code></td><td><code>SpacingStep</code></td><td>—</td><td>Block-axis padding. Overrides padding on this axis.</td></tr>
+      <tr><td><code>paddingBlockStart</code></td><td><code>SpacingStep</code></td><td>—</td><td>Block-start (top) padding. Overrides <code>paddingBlock</code> and <code>padding</code> on that edge only.</td></tr>
+      <tr><td><code>paddingBlockEnd</code></td><td><code>SpacingStep</code></td><td>—</td><td>Block-end (bottom) padding. Overrides <code>paddingBlock</code> and <code>padding</code> on that edge only.</td></tr>
+      <tr><td><code>paddingInlineStart</code></td><td><code>SpacingStep</code></td><td>—</td><td>Inline-start (left in LTR) padding. Overrides <code>paddingInline</code> and <code>padding</code> on that edge only.</td></tr>
+      <tr><td><code>paddingInlineEnd</code></td><td><code>SpacingStep</code></td><td>—</td><td>Inline-end (right in LTR) padding. Overrides <code>paddingInline</code> and <code>padding</code> on that edge only.</td></tr>
       <tr><td><code>hAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>Controls horizontal main- or cross-axis alignment according to direction.</td></tr>
       <tr><td><code>vAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>Controls vertical main- or cross-axis alignment according to direction.</td></tr>
       <tr><td><code>justify</code></td><td><code>StackMainAlignment</code></td><td>—</td><td>Alias for main-axis alignment.</td></tr>

@@ -8,7 +8,7 @@ const toast = useToast()
 const dismiss = ref<(() => void) | null>(null)
 
 function show(): void {
-  dismiss.value = toast({ body: 'Uploading file…', autoClose: false })
+  dismiss.value = toast({ body: 'Uploading file…', isAutoHide: false })
 }
 
 function dismissFromCode(): void {
@@ -19,7 +19,7 @@ function dismissFromCode(): void {
 
 <template>
   <VStack :gap="3">
-    <Toast :auto-close="false" body="Uploading file…" type="info" />
+    <Toast :is-auto-hide="false" body="Uploading file…" type="info" />
     <HStack align="center" :gap="3">
       <Button label="Show toast" size="sm" variant="secondary" @click="show" />
       <Button label="Dismiss via code" size="sm" variant="ghost" @click="dismissFromCode" />

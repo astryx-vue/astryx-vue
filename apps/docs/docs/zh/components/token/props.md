@@ -41,7 +41,7 @@ footer: false
     <thead><tr><th>名称</th><th>参数</th><th>说明</th></tr></thead>
     <tbody>
       <tr><td><code>icon</code></td><td>—</td><td>文字前面的图标。</td></tr>
-      <tr><td><code>end</code></td><td>—</td><td>文字后面、删除按钮前面的内容。</td></tr>
+      <tr><td><code>end</code></td><td>—</td><td>文字后面、删除按钮前面的内容。也可以写成 <code>endContent</code>。</td></tr>
     </tbody>
   </table>
 </div>

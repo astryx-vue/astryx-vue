@@ -18,6 +18,7 @@ const model = defineModel<RadioValue>({ required: true })
     v-model="model"
     :label="label" :description="description" :width="width"
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
+    :disabled-message="disabledMessage"
     :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
     :status="status" :status-variant="statusVariant" :name="name" :options="options"
     :size="size" :orientation="orientation"

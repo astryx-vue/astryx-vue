@@ -115,4 +115,15 @@ describe('progressBar', () => {
     expect(html).toContain('aria-valuenow="60"')
     expect(html).toContain('60%')
   })
+
+  it('marks a disabled bar so the stylesheet can dim it', () => {
+    const live = renderProgressBar()
+    expect(live.get('.astryx-progress-bar').attributes('data-disabled')).toBeUndefined()
+
+    const disabled = renderProgressBar({ isDisabled: true, hasValueLabel: true, variant: 'success' })
+    const root = disabled.get('.astryx-progress-bar')
+    expect(root.attributes('data-disabled')).toBe('true')
+    expect(root.attributes('data-variant')).toBe('success')
+    expect(disabled.get('.astryx-progress-bar-value').text()).toBe('50%')
+  })
 })

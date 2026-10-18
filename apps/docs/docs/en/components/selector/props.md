@@ -16,7 +16,9 @@ footer: false
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>Placeholder text. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether to support search.</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether clearable.</td></tr>
+      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button when a value is selected. The clear also passes <code>null</code> to <code>change</code>. <code>clearable</code> is the older name; either one turns it on.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether disabled.</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Why the field is disabled. With <code>disabled</code>, hovering or keyboard focus shows a tooltip and the trigger stays focusable through <code>aria-disabled</code>; it still cannot open the list. Do not wrap a disabled selector in a tooltip: it would swallow the hover. <code>disabledReason</code> is the older name.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Size.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success'</code></td><td><code>'default'</code></td><td>Status.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Visible label. Without it, the placeholder is the hidden accessible name.</td></tr>
@@ -41,6 +43,9 @@ footer: false
       <tr><td><code>update:modelValue</code></td><td><code>value: string | number | null</code></td><td>Emitted when value changes.</td></tr>
       <tr><td><code>change</code></td><td><code>value: string | number | null</code></td><td>Emitted when value changes.</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td>Emitted when search input changes.</td></tr>
+      <tr><td><code>click</code></td><td><code>event: MouseEvent</code></td><td>Emitted for a click on the trigger, before the list toggles. <code>preventDefault()</code> does not keep it closed.</td></tr>
+      <tr><td><code>focus</code></td><td><code>event: FocusEvent</code></td><td>Emitted when the trigger takes focus.</td></tr>
+      <tr><td><code>keydown</code></td><td><code>event: KeyboardEvent</code></td><td>Emitted for keys on the trigger that the built-in keyboard model leaves alone. Keys it handles and cancels are not emitted.</td></tr>
     </tbody>
   </table>
 </div>

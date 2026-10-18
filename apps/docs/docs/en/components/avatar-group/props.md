@@ -47,6 +47,22 @@ footer: false
   </table>
 </div>
 
+<div class="component-api-table" role="region" aria-label="AvatarGroupOverflow Events" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>click</code></td>
+        <td>Fired when the indicator is clicked. With a listener the indicator becomes a focusable button instead of a static figure.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+The <code>default</code> slot replaces the <code>+N</code> text, for wordings such as <code>12+</code>.
+
 ## Slots
 
 <div class="component-api-table" role="region" aria-label="AvatarGroup Slots" tabindex="0">

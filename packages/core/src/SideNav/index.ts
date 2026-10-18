@@ -7,6 +7,8 @@ export { default as SideNavItem } from './SideNavItem.vue'
 export { default as SideNavSection } from './SideNavSection.vue'
 export type {
   SideNavCollapseButtonProps,
+  SideNavCollapseButtonSize,
+  SideNavCollapseButtonSlots,
   SideNavCollapsible,
   SideNavEmits,
   SideNavHandle,

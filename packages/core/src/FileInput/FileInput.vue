@@ -2,6 +2,8 @@
 import type { FieldStatusInput } from '../Field/types.js'
 import type { FileInputEmits, FileInputProps, FileInputValue } from './types.js'
 import { computed, shallowRef, useId, useTemplateRef } from 'vue'
+import ButtonTooltip from '../Button/ButtonTooltip.vue'
+import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { formatFileSize, selectFiles } from '../composables/useFileSelection.js'
 import Field from '../Field/Field.vue'
@@ -32,8 +34,13 @@ const generatedId = `astryx-file-input-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
 const requiredId = `${generatedId}-required`
 const fileInput = useTemplateRef<HTMLInputElement>('file')
+const controlRef = useTemplateRef<HTMLDivElement>('control')
 const validationError = shallowRef<string | null>(null)
 const dragOver = shallowRef(false)
+const disabledMessageId = `${generatedId}-disabled`
+const disabledMessage = computed(() => props.disabledMessage?.trim() || undefined)
+const showsDisabledMessage = computed(() => props.isDisabled === true && disabledMessage.value != null)
+const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 
 const placeholder = computed(() => props.placeholder ?? (
   props.isMultiple ? messages.value.fileInput.placeholderMultiple : messages.value.fileInput.placeholder
@@ -134,12 +141,15 @@ function onDrop(event: DragEvent): void {
   <Field
     :label="label" :input-id="inputId" :description="description" :width="width"
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
-    :status="status" :status-variant="statusVariant"
+    :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
   >
     <template #default="field">
       <div
+        ref="control"
         class="astryx-file-input astryx-bordered-control"
         :data-mode="mode" :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-drag="dragOver || undefined"
+        @pointerenter="disabledTooltip.onPointerEnter"
+        @pointerleave="disabledTooltip.onPointerLeave"
       >
         <input
           :id="`${inputId}-file`" ref="file" class="astryx-file-input-native" type="file"
@@ -148,9 +158,10 @@ function onDrop(event: DragEvent): void {
         >
         <button
           :id="inputId" type="button" class="astryx-file-input-trigger"
-          :disabled="isDisabled" :aria-invalid="status?.type === 'error' || undefined"
-          :aria-describedby="[field.describedBy, conveysRequired ? requiredId : undefined].filter(Boolean).join(' ') || undefined"
+          :disabled="isDisabled && !showsDisabledMessage" :aria-disabled="showsDisabledMessage || undefined" :aria-invalid="status?.type === 'error' || undefined"
+          :aria-describedby="[field.describedBy, conveysRequired ? requiredId : undefined, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
           @click="openPicker" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop"
+          @focus="disabledTooltip.onFocus" @blur="disabledTooltip.onBlur"
         >
           <Icon class="astryx-file-input-icon" icon="upload" size="sm" />
           <span class="astryx-file-input-text" :data-placeholder="!fileLabel || undefined">{{ fileLabel || placeholder }}</span>
@@ -166,4 +177,12 @@ function onDrop(event: DragEvent): void {
       </VisuallyHidden>
     </template>
   </Field>
+  <VisuallyHidden v-if="showsDisabledMessage" :id="disabledMessageId">
+    {{ disabledMessage }}
+  </VisuallyHidden>
+  <ButtonTooltip
+    v-if="showsDisabledMessage"
+    :id="`${disabledMessageId}-tooltip`" :anchor="controlRef" :open="disabledTooltip.isOpen.value" :text="disabledMessage ?? ''"
+    @pointer-enter="disabledTooltip.onTooltipPointerEnter" @pointer-leave="disabledTooltip.onTooltipPointerLeave"
+  />
 </template>

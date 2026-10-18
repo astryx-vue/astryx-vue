@@ -37,6 +37,12 @@ export interface TextProps {
    */
   wordBreak?: TextWordBreak
   /**
+   * 用 `text-box-trim` 裁掉文字上下多余的留白，让首行字形贴住盒子边缘。
+   * 打开后强制块级布局。
+   * @default false
+   */
+  hasCapsize?: boolean
+  /**
    * Draws a line through the text.
    * @default false
    */

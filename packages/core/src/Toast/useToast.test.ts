@@ -113,4 +113,62 @@ describe('useToast', () => {
 
     wrapper.unmount()
   })
+
+  it('resolves isAutoHide from the toast type and keeps the older names', () => {
+    const toast = useToast()
+    toast({ body: 'Info' })
+    toast({ body: 'Error', type: 'error' })
+    toast({ body: 'Sticky', isAutoHide: false })
+    toast({ body: 'Legacy off', autoClose: false })
+    toast({ body: 'Legacy duration', autoHideDuration: 1200 })
+    toast({ body: 'Legacy duration alias', duration: 900 })
+
+    const [info, error, sticky, legacyOff, explicit, legacyDuration] = toastStore.toasts
+    expect(info.isAutoHide).toBe(true)
+    expect(error.isAutoHide).toBe(false)
+    expect(sticky.isAutoHide).toBe(false)
+    expect(legacyOff.isAutoHide).toBe(false)
+    expect(info.autoHideDuration).toBe(5000)
+    expect(explicit.autoHideDuration).toBe(1200)
+    expect(legacyDuration.autoHideDuration).toBe(900)
+  })
+
+  it('reports a programmatic dismissal through onHide only', () => {
+    vi.useFakeTimers()
+    const toast = useToast()
+    const onDismiss = vi.fn()
+    const onHide = vi.fn()
+
+    const dismiss = toast({ body: 'Saved', isAutoHide: false, onDismiss, onHide })
+    dismiss()
+    dismiss()
+
+    expect(onDismiss).not.toHaveBeenCalled()
+    expect(onHide).toHaveBeenCalledTimes(1)
+    expect(onHide).toHaveBeenCalledWith('manual')
+    vi.useRealTimers()
+  })
+
+  it('reports a card dismissal through onDismiss and then onHide', async () => {
+    vi.useFakeTimers()
+    const toast = useToast()
+    const calls: string[] = []
+    const wrapper = mount(ToastViewport, { attachTo: document.body })
+
+    toast({
+      body: 'Uploaded',
+      autoHideDuration: 100,
+      onDismiss: reason => calls.push(`dismiss:${reason}`),
+      onHide: reason => calls.push(`hide:${reason}`),
+    })
+    await nextTick()
+
+    vi.advanceTimersByTime(100)
+    await nextTick()
+    expect(calls).toEqual(['dismiss:auto', 'hide:auto'])
+    expect(toastStore.toasts[0].isExiting).toBe(true)
+
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
 })

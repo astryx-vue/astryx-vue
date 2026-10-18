@@ -18,6 +18,7 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>Where the status message sits.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the group.</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Why the whole group is disabled. With <code>isDisabled</code>, the message shows in a tooltip on hover or keyboard focus and every option stays focusable with <code>aria-disabled</code>; selection stays blocked.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the group required.</td></tr>
 </tbody></table>
 </div>

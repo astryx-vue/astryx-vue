@@ -94,7 +94,9 @@ function onKeydown(event: KeyboardEvent): void {
       <span class="astryx-token-label" :class="{ 'is-hidden': props.labelHidden }">{{ props.label }}</span>
     </button>
     <span v-else class="astryx-token-label" :class="{ 'is-hidden': props.labelHidden }">{{ props.label }}</span>
-    <slot name="end" />
+    <slot name="end">
+      <slot name="endContent" />
+    </slot>
     <button
       v-if="props.removable"
       type="button"

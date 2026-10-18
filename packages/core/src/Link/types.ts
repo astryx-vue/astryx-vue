@@ -60,6 +60,10 @@ export interface LinkProps {
    */
   download?: string | boolean
   /**
+   * 链接的 referrer 策略，原样转成 `referrerpolicy` 属性。
+   */
+  referrerPolicy?: string
+  /**
    * Tooltip text shown on hover and keyboard focus.
    */
   tooltip?: string

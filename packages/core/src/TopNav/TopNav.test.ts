@@ -211,4 +211,27 @@ describe('top-nav', () => {
     const box = wrapper.get('.astryx-top-nav-mega-item__icon > .astryx-top-nav-mega-item__glyph-box')
     expect(box.get('.astryx-top-nav-mega-item__glyph').classes()).toContain('i-carbon-rocket')
   })
+
+  it('calls a click listener on a mega menu item and still closes the menu', async () => {
+    const onClick = vi.fn()
+    const wrapper = mount(TopNav, {
+      attachTo: document.body,
+      slots: {
+        default: () => h(TopNavMegaMenu, { label: 'Solutions' }, () => h(TopNavMegaMenuItem, {
+          href: '/teams',
+          onClick,
+          title: 'Teams',
+        })),
+      },
+    })
+
+    await wrapper.findAll('button')[0].trigger('click')
+    await nextTick()
+    const item = document.body.querySelector('.astryx-top-nav-mega-item') as HTMLElement
+    item.click()
+    await nextTick()
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(document.body.querySelector('[role="group"]')).toBeNull()
+    wrapper.unmount()
+  })
 })

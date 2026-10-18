@@ -167,4 +167,38 @@ describe('power search', () => {
     expect(filters.value).toHaveLength(0)
     wrapper.unmount()
   })
+
+  it('translates the original prop and slot names onto the same behaviour', async () => {
+    const filters = ref<PowerSearchFilter[]>([
+      { field: 'active', operator: 'is_true', value: { type: 'empty' } },
+    ])
+    const wrapper = mount(PowerSearch, {
+      props: {
+        config,
+        'filters': filters.value,
+        'hasClear': false,
+        'disabled': true,
+        'disabledMessage': 'You need edit access',
+        'onUpdate:filters': (next: typeof filters.value) => {
+          filters.value = next
+        },
+      },
+      slots: { endContent: '<span class="end-content">Save view</span>' },
+      attachTo: document.body,
+    })
+    expect(wrapper.find('.astryx-power-search-clear').exists()).toBe(false)
+    expect(wrapper.find('.end-content').text()).toBe('Save view')
+    expect(wrapper.text()).toContain('You need edit access')
+    wrapper.unmount()
+  })
+
+  it('hides the clear button through hasClear and shows it by default', () => {
+    const enabled = mount(PowerSearch, { props: { config, filters: [{ field: 'active', operator: 'is_true', value: { type: 'empty' } }] } })
+    expect(enabled.find('.astryx-power-search-clear').exists()).toBe(true)
+    enabled.unmount()
+
+    const legacy = mount(PowerSearch, { props: { config, filters: [{ field: 'active', operator: 'is_true', value: { type: 'empty' } }], clearable: false } })
+    expect(legacy.find('.astryx-power-search-clear').exists()).toBe(false)
+    legacy.unmount()
+  })
 })

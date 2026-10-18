@@ -12,7 +12,7 @@ export interface TypeaheadMessages {
 export const typeaheadMessages: Record<AstryxLocale, TypeaheadMessages> = {
   'en': {
     placeholder: 'Search…',
-    empty: 'No results',
+    empty: 'No results found',
     loading: 'Loading results',
     error: 'Couldn\'t load results',
     clear: 'Clear',
@@ -20,7 +20,7 @@ export const typeaheadMessages: Record<AstryxLocale, TypeaheadMessages> = {
   },
   'zh-CN': {
     placeholder: '搜索…',
-    empty: '没有结果',
+    empty: '未找到结果',
     loading: '正在加载',
     error: '加载失败',
     clear: '清除',

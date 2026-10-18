@@ -18,7 +18,7 @@ An option can be a string, an object with a description, a divider, or a labeled
 
 `triggerDisplay` controls the closed trigger. `count` shows how many are selected, `labels` joins the text, and `badges` uses tokens. `maxBadges` limits how many are visible, and the rest collapse to `+N`. A narrower trigger collapses further.
 
-Read-only keeps the selection, stays focusable, and still submits. It does not open, and it has no clear button or chevron. It does not dim. While loading, the trigger shows a spinner, the create row stays hidden, and the menu does not claim the list is empty.
+Read-only keeps the selection, stays focusable, and still submits. It does not open, and it has no clear button or chevron. It does not dim. While loading, the trigger shows a spinner, the create row stays hidden, and the menu does not claim the list is empty. `disabledMessage` explains a disabled field: a tooltip follows hover and keyboard focus, the trigger stays focusable through `aria-disabled`, and the menu still does not open.
 
 A function can replace the closed text for the count and labels displays. Badges ignore it. An empty selection does not call it and keeps the placeholder.
 
@@ -57,7 +57,7 @@ Arrow keys move the highlight. Enter and Space toggle the highlighted option. Sp
 
 <DemoExample
   :demo="multiSelectorForm"
-  description="Two multi-selectors in a form with required and optional states."
+  description="Two multi-selectors in a form with required and optional states, plus a disabled one that explains itself on hover or keyboard focus."
   locale="en"
   title="Form Composition"
 />

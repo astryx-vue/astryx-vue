@@ -21,6 +21,11 @@ export interface ProgressBarProps {
   isLabelHidden?: boolean
   description?: string
   isIndeterminate?: boolean
+  /**
+   * 变灰的禁用外观：填充和文字都降为次要色。用于已取消或不再进行的任务。
+   * @default false
+   */
+  isDisabled?: boolean
   /** 在标签旁显示当前进度。`hasValueLabel` 是同一开关。 */
   showValue?: boolean
   /** 与 `showValue` 相同，对齐原版属性名。 */

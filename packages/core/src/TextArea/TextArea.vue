@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   statusVariant: 'detached',
   resize: 'vertical',
   loadingLabel: 'Loading',
+  hasSpellCheck: true,
 })
 const emit = defineEmits<TextAreaEmits>()
 defineSlots<TextAreaSlots>()
@@ -56,7 +57,7 @@ function select(): void {
 }
 defineExpose({ element, focus, blur, select })
 
-const controlledAttrs = new Set(['class', 'style', 'id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'])
+const controlledAttrs = new Set(['class', 'style', 'id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'spellcheck', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'])
 function inputAttrs(): TextareaHTMLAttributes {
   return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as TextareaHTMLAttributes
 }
@@ -135,6 +136,8 @@ onMounted(() => {
           :value="action.value.value" :placeholder="placeholder" :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)"
           :style="{ '--astryx-text-area-resize': resize }"
           :rows="rows" :cols="cols" :minlength="minlength" :maxlength="maxlength" :wrap="wrap"
+          :autocomplete="(autoComplete ?? inputAttrs().autocomplete) as TextareaHTMLAttributes['autocomplete']"
+          :spellcheck="hasSpellCheck"
           :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || showsDisabledMessage"
           :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
           :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"

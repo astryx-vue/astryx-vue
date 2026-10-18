@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<PaginationProps>(), {
   pageSizeOptions: () => [10, 20, 50, 100],
   showTotal: false,
   disabled: false,
+  isDisabled: false,
   step: 1,
   hasFirstLast: null,
 })
@@ -29,6 +30,8 @@ const emit = defineEmits<PaginationEmits>()
 defineSlots<PaginationSlots>()
 
 const messages = useAstryxMessages()
+const disabledControl = computed(() => props.isDisabled || props.disabled)
+const regionLabel = computed(() => props.label ?? messages.value.pagination.nav)
 const stride = computed(() => Number.isInteger(props.step) && props.step >= 1 ? props.step : 1)
 const resolvedPrevLabel = computed(() => props.prevLabel ?? (stride.value > 1 ? messages.value.pagination.previousBy(stride.value) : messages.value.pagination.previous))
 const resolvedNextLabel = computed(() => props.nextLabel ?? (stride.value > 1 ? messages.value.pagination.nextBy(stride.value) : messages.value.pagination.next))
@@ -37,6 +40,8 @@ const resolvedPageLabel = computed(() => props.pageLabel ?? messages.value.pagin
 const pending = usePendingChange(() => props.changeAction)
 
 function resolvedItemTotal(): number {
+  if (props.totalItems != null && props.totalItems > 0)
+    return props.totalItems
   if (props.total > 0)
     return props.total
   if (props.totalPages != null && props.totalPages > 0)
@@ -93,7 +98,12 @@ const pagination = usePagination({
   onPageSizeChange: (size) => {
     pageSizeRef.value = size
     emit('update:pageSize', size)
-    emit('change', pageRef.value, size)
+    emit('pageSizeChange', size)
+    // A new page length restarts the list from the first page.
+    pageRef.value = 1
+    emit('update:page', 1)
+    emit('change', 1, size)
+    void pending.run(1)
   },
 })
 
@@ -116,7 +126,7 @@ watch(() => props.pageSize, (pageSize) => {
     pageSizeRef.value = pageSize
 })
 
-watch(() => [props.total, props.totalPages, props.pageSize] as const, () => {
+watch(() => [props.total, props.totalItems, props.totalPages, props.pageSize] as const, () => {
   totalRef.value = resolvedItemTotal()
 })
 
@@ -154,7 +164,7 @@ function isEllipsis(page: number): boolean {
 }
 
 function onPageClick(page: number): void {
-  if (!props.disabled && !isEllipsis(page)) {
+  if (!disabledControl.value && !isEllipsis(page)) {
     pagination.goto(page)
   }
 }
@@ -165,14 +175,14 @@ function onPageClick(page: number): void {
     ref="root"
     class="astryx-pagination"
     :class="{
-      'is-disabled': props.disabled,
+      'is-disabled': disabledControl,
       'astryx-pagination--sm': props.size === 'sm',
     }"
     :data-density="density"
     :data-variant="variant"
     :data-size="props.size"
     role="navigation"
-    :aria-label="messages.pagination.nav"
+    :aria-label="regionLabel"
     :aria-busy="pending.busy.value || undefined"
   >
     <div v-if="props.showTotal" class="astryx-pagination-total">
@@ -186,7 +196,7 @@ function onPageClick(page: number): void {
         v-if="showFirstLast"
         type="button"
         class="astryx-pagination-button astryx-pagination-first"
-        :disabled="props.disabled || !pagination.canPrevious.value"
+        :disabled="disabledControl || !pagination.canPrevious.value"
         :aria-label="messages.pagination.first"
         @click="pagination.first"
       >
@@ -198,7 +208,7 @@ function onPageClick(page: number): void {
       <button
         type="button"
         class="astryx-pagination-button astryx-pagination-prev"
-        :disabled="props.disabled || !pagination.canPrevious.value"
+        :disabled="disabledControl || !pagination.canPrevious.value"
         :aria-label="resolvedPrevLabel"
         @click="pagination.previous"
       >
@@ -217,7 +227,7 @@ function onPageClick(page: number): void {
           :min="1"
           :max="pagination.isCursor.value ? undefined : pagination.totalPages.value"
           :value="pageRef"
-          :disabled="props.disabled || pagination.isCursor.value"
+          :disabled="disabledControl || pagination.isCursor.value"
           :aria-label="messages.pagination.goToPage"
           @change="onInputCommit"
           @keydown.enter="onInputCommit"
@@ -245,7 +255,7 @@ function onPageClick(page: number): void {
           type="button"
           class="astryx-pagination-dot"
           :class="{ 'is-active': dotPage === pageRef }"
-          :disabled="props.disabled"
+          :disabled="disabledControl"
           :aria-current="dotPage === pageRef ? 'page' : undefined"
           :aria-label="messages.pagination.page(dotPage)"
           @click="onPageClick(dotPage)"
@@ -270,7 +280,7 @@ function onPageClick(page: number): void {
             'is-active': page === pageRef,
             'is-ellipsis': isEllipsis(page),
           }"
-          :disabled="props.disabled || isEllipsis(page)"
+          :disabled="disabledControl || isEllipsis(page)"
           :aria-label="isEllipsis(page) ? messages.pagination.more : messages.pagination.page(page)"
           :aria-current="page === pageRef ? 'page' : undefined"
           @click="onPageClick(page)"
@@ -282,7 +292,7 @@ function onPageClick(page: number): void {
       <button
         type="button"
         class="astryx-pagination-button astryx-pagination-next"
-        :disabled="props.disabled || !pagination.canNext.value"
+        :disabled="disabledControl || !pagination.canNext.value"
         :aria-label="resolvedNextLabel"
         @click="pagination.next"
       >
@@ -296,7 +306,7 @@ function onPageClick(page: number): void {
         v-if="showFirstLast"
         type="button"
         class="astryx-pagination-button astryx-pagination-last"
-        :disabled="props.disabled || !pagination.canNext.value"
+        :disabled="disabledControl || !pagination.canNext.value"
         :aria-label="messages.pagination.last"
         @click="pagination.last"
       >
@@ -310,7 +320,7 @@ function onPageClick(page: number): void {
         <Selector
           :model-value="pageSizeRef"
           :options="pageSizeOptions"
-          :disabled="props.disabled"
+          :disabled="disabledControl"
           size="sm"
           @update:model-value="(size: string | number | null) => size && pagination.setPageSize(Number(size))"
         />

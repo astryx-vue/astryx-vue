@@ -97,6 +97,12 @@ footer: false
         <td>-</td>
         <td>Triggers a download of the linked URL.</td>
       </tr>
+      <tr>
+        <td><code>referrerPolicy</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Referrer policy for the link, forwarded as the <code>referrerpolicy</code> attribute.</td>
+      </tr>
     </tbody>
   </table>
 </div>

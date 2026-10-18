@@ -25,6 +25,10 @@ const bleedsInline = computed(() =>
   props.edgeCompensation === 'inline' || (props.edgeCompensation == null && props.isFullBleed),
 )
 
+/** `role="tablist"` switches the strip from a nav landmark to the tabs pattern. */
+const isTabsPattern = computed(() => props.role === 'tablist')
+const rootTag = computed(() => (props.role == null ? 'nav' : 'div'))
+
 const tabs = reactive<TabListTab[]>([])
 const focusedValue = ref(props.value)
 
@@ -93,6 +97,7 @@ provide(tabListContextKey, {
   size: computed(() => props.size),
   layout: computed(() => props.layout),
   hasDivider: computed(() => props.hasDivider),
+  isTabsPattern,
   tabs,
   focusedValue,
   registerTab,
@@ -103,7 +108,8 @@ provide(tabListContextKey, {
 </script>
 
 <template>
-  <div
+  <component
+    :is="rootTag"
     class="astryx-tab-list"
     :class="[
       `astryx-tab-list--size-${size}`,
@@ -111,10 +117,10 @@ provide(tabListContextKey, {
       hasDivider && 'astryx-tab-list--has-divider',
       bleedsInline && 'astryx-tab-list--full-bleed',
     ]"
-    role="tablist"
+    :role="role"
   >
     <div class="astryx-tab-list__strip">
       <slot />
     </div>
-  </div>
+  </component>
 </template>

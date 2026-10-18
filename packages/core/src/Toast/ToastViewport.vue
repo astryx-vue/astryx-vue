@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ToastPlacement } from './types.js'
+import type { ToastDismissReason, ToastPlacement } from './types.js'
 import { computed, reactive, watch } from 'vue'
 
 import { toastStore } from './store.js'
@@ -34,9 +34,9 @@ function handleRowTransitionEnd(id: string, event: TransitionEvent) {
     settled.add(id)
 }
 
-function handleClose(id: string) {
+function handleDismiss(id: string, reason: ToastDismissReason) {
   settled.delete(id)
-  toastStore.requestClose(id)
+  toastStore.dismissFromCard(id, reason)
 }
 
 watch(
@@ -75,11 +75,11 @@ watch(
           <Toast
             :type="toast.type"
             :body="toast.body"
-            :auto-close="toast.autoClose"
-            :duration="toast.duration"
+            :is-auto-hide="toast.isAutoHide"
+            :auto-hide-duration="toast.autoHideDuration"
             :end-content="toast.endContent"
             :is-exiting="toast.isExiting"
-            @close="handleClose(toast.id)"
+            @dismiss="handleDismiss(toast.id, $event)"
           />
         </div>
       </div>

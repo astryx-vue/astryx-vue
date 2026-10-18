@@ -32,4 +32,6 @@ export interface TokenSlots {
   icon?: () => unknown
   /** 文字后面、删除按钮前面的内容。 */
   end?: () => unknown
+  /** 和 `end` 是同一个插槽，用原版的属性名。 */
+  endContent?: () => unknown
 }
