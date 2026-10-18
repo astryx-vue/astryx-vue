@@ -390,6 +390,9 @@ html.component-docs-scroll-lock body {
 
 .component-card__preview {
   display: grid;
+  /* 列宽必须受容器约束。默认的 auto 列会被内容撑开，子元素的
+     max-width: 100% 就失去了参照，表格和 Markdown 会顶出卡片。 */
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   min-height: 260px;
   /* 左右只留 12px：三列卡片里分页的可用宽度要留在 260px 以上，
