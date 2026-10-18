@@ -291,4 +291,13 @@ describe('tab content', () => {
     expect(wrapper.get('.astryx-tab__label').classes()).toContain('astryx-visually-hidden')
     expect(wrapper.find('.astryx-tab__icon .box-icon').exists()).toBe(true)
   })
+
+  it('names the nav landmark "Tabs" unless the caller supplies a label', () => {
+    const plain = mount(TabList, { props: { value: 'a' } })
+    expect(plain.get('nav').attributes('aria-label')).toBe('Tabs')
+    const named = mount(TabList, { props: { value: 'a' }, attrs: { 'aria-label': 'Sections' } })
+    expect(named.get('nav').attributes('aria-label')).toBe('Sections')
+    const tabs = mount(TabList, { props: { value: 'a', role: 'tablist' } })
+    expect(tabs.get('[role="tablist"]').attributes('aria-label')).toBeUndefined()
+  })
 })

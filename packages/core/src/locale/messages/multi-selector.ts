@@ -1,9 +1,11 @@
 import type { AstryxLocale } from '../types.js'
+import { clearLabel } from './shared.js'
 
 export interface MultiSelectorMessages {
   placeholder: string
   search: string
   clear: string
+  clearAll: (label?: string) => string
   empty: string
   emptySearch: string
   selectAll: string
@@ -21,6 +23,7 @@ export const multiSelectorMessages: Record<AstryxLocale, MultiSelectorMessages> 
     placeholder: 'Select…',
     search: 'Search…',
     clear: 'Clear',
+    clearAll: label => clearLabel(label, 'Clear all', 'Clear all '),
     empty: 'No matches',
     emptySearch: 'No results found',
     selectAll: 'Select all',
@@ -36,6 +39,7 @@ export const multiSelectorMessages: Record<AstryxLocale, MultiSelectorMessages> 
     placeholder: '请选择',
     search: '搜索…',
     clear: '清除',
+    clearAll: label => clearLabel(label, '清除全部', '清除全部'),
     empty: '无匹配项',
     emptySearch: '未找到结果',
     selectAll: '全选',

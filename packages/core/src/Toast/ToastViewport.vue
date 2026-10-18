@@ -14,7 +14,7 @@ const props = defineProps<{
 // LayerProvider 可以给 toast 视口定位置、可见上限和逐边偏移。
 const layer = useLayerConfig()
 
-const placement = computed(() => props.placement ?? layer?.value.toast.position ?? 'bottom-center')
+const placement = computed(() => props.placement ?? layer?.value.toast.position ?? 'bottom-end')
 
 const isTopPlacement = computed(() => placement.value.startsWith('top'))
 

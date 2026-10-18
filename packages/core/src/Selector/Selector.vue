@@ -55,6 +55,8 @@ const messages = useAstryxMessages()
 const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
 const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.selector.search)
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clear)
+/** 值上的清除按钮带着字段名，读屏能听出清的是哪一项。 */
+const valueClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clearField(props.label))
 const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selector.empty)
 const resolvedEmptySearchText = computed(() => props.emptySearchText ?? messages.value.selector.emptySearch)
 const inputGroup = inject(INPUT_GROUP_KEY, null)
@@ -414,7 +416,7 @@ watch(() => combobox.activeIndex.value, (index) => {
         v-if="hasClear && selectedOption && control.canActivate.value"
         type="button"
         class="astryx-selector-clear"
-        :aria-label="resolvedClearLabel"
+        :aria-label="valueClearLabel"
         @click="onClear"
       >
         <Icon icon="close" size="sm" />

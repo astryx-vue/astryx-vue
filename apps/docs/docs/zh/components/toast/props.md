@@ -138,7 +138,7 @@ footer: false
       <tr>
         <td><code>placement</code></td>
         <td><code>ToastPlacement</code></td>
-        <td><code>'bottom-center'</code></td>
+        <td><code>'bottom-end'</code></td>
         <td>提示在屏幕上的弹出位置，可选 top-start、top-center、top-end、bottom-start、bottom-center、bottom-end。</td>
       </tr>
     </tbody>
