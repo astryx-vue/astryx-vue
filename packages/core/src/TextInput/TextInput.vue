@@ -5,9 +5,10 @@ import { computed, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useT
 import ButtonSpinner from '../Button/ButtonSpinner.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useInputContainer } from '../composables/useInputContainer.js'
+import { useInputStatusIcon } from '../composables/useInputStatusIcon.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
-import FieldInfoTip from '../Field/FieldInfoTip.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -97,16 +98,15 @@ async function clear(event: MouseEvent): Promise<void> {
   await nextTick()
   focus({ preventScroll: true })
 }
-function focusFromContainer(event: MouseEvent): void {
-  if (props.isDisabled)
-    return
-  const target = event.target
-  if (target instanceof Element && target.closest('input,button,a,select,textarea,[role="button"]'))
-    return
-  if (input.value?.ownerDocument.getSelection()?.toString())
-    return
-  focus({ preventScroll: true })
-}
+const { statusIcon, statusIconProps } = useInputStatusIcon({
+  status: () => props.status,
+  statusVariant: () => props.statusVariant,
+})
+const inputContainer = useInputContainer({
+  containerRef: container,
+  inputRef: input,
+  disabled: () => props.isDisabled,
+})
 onMounted(() => {
   if (props.hasAutoFocus)
     focus({ preventScroll: true })
@@ -127,7 +127,8 @@ onMounted(() => {
       <div
         ref="container" class="astryx-text-input" :class="attrs.class" :style="attrs.style"
         :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
-        @pointerup="focusFromContainer" @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"
+        @click="inputContainer.onClick" @mouseup="inputContainer.onMouseUp"
+        @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"
       >
         <span v-if="$slots.icon || icon" class="astryx-text-input-icon" aria-hidden="true"><slot name="icon"><component :is="icon" v-if="icon" /></slot></span>
         <input
@@ -145,8 +146,7 @@ onMounted(() => {
           <FieldIcon type="clear" />
         </IconButton>
         <ButtonSpinner v-if="busy" class="astryx-text-input-spinner" :label="loadingLabel" />
-        <FieldInfoTip v-if="status?.message && statusVariant === 'tooltip'" :text="status.message" :type="status.type" />
-        <FieldIcon v-else-if="status" :type="status.type" />
+        <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
       </div>
     </template>
   </Field>

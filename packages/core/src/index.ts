@@ -287,9 +287,10 @@ export type {
   TokenLine,
   UseSyntaxThemeReturn,
 } from './Code/index.js'
-export { Collapsible, CollapsibleGroup } from './Collapsible/index.js'
+export { Collapsible, CollapsibleGroup, useCollapsible } from './Collapsible/index.js'
 export type {
   CollapsibleChevronPosition,
+  CollapsibleConfig,
   CollapsibleEmits,
   CollapsibleGroupDensity,
   CollapsibleGroupEmits,
@@ -299,6 +300,8 @@ export type {
   CollapsibleGroupValue,
   CollapsibleProps,
   CollapsibleSlots,
+  UseCollapsibleOptions,
+  UseCollapsibleReturn,
 } from './Collapsible/index.js'
 export {
   CommandPalette,
@@ -506,7 +509,7 @@ export type {
   HeadingWordBreak,
   HeadingWrap,
 } from './Heading/index.js'
-export { HoverCard } from './HoverCard/index.js'
+export { HoverCard, useHoverCard } from './HoverCard/index.js'
 export type {
   HoverCardAlignment,
   HoverCardEmits,
@@ -516,6 +519,8 @@ export type {
   HoverCardProps,
   HoverCardSlots,
   HoverCardTouchTrigger,
+  UseHoverCardOptions,
+  UseHoverCardReturn,
 } from './HoverCard/index.js'
 export {
   addCollection,
@@ -654,6 +659,8 @@ export {
   useAstryxLocale,
   useAstryxMessages,
   useCollator,
+  useLocale,
+  useTranslator,
 } from './locale/index.js'
 export type {
   AstryxLocale,
@@ -661,8 +668,12 @@ export type {
   AstryxUpstreamCatalog,
   AstryxUpstreamMessage,
   LoadedAstryxLocale,
+  Translator,
+  TranslatorValues,
   UnmappedUpstreamEntry,
   UnmappedUpstreamReason,
+  UseLocaleReturn,
+  UseTranslatorReturn,
 } from './locale/index.js'
 export {
   applyInlinePlugins,
@@ -805,8 +816,16 @@ export type {
   PaginationSlots,
   PaginationVariant,
 } from './Pagination/index.js'
-export { Popover } from './Popover/index.js'
-export type { PopoverAlignment, PopoverPadding, PopoverPlacement, PopoverProps, PopoverRole } from './Popover/index.js'
+export { Popover, usePopover } from './Popover/index.js'
+export type {
+  PopoverAlignment,
+  PopoverPadding,
+  PopoverPlacement,
+  PopoverProps,
+  PopoverRole,
+  UsePopoverOptions,
+  UsePopoverReturn,
+} from './Popover/index.js'
 export {
   applyPowerSearchFilters,
   completePowerSearchFilter,
@@ -1231,13 +1250,15 @@ export type {
 } from './Tokenizer/index.js'
 export { Toolbar } from './Toolbar/index.js'
 export type { ToolbarOrientation, ToolbarProps, ToolbarSize } from './Toolbar/index.js'
-export { Tooltip } from './Tooltip/index.js'
+export { Tooltip, useTooltip } from './Tooltip/index.js'
 export type {
   TooltipAlignment,
   TooltipFocusTrigger,
   TooltipPlacement,
   TooltipProps,
   TooltipTouchTrigger,
+  UseTooltipOptions,
+  UseTooltipReturn,
 } from './Tooltip/index.js'
 export {
   TopNav,

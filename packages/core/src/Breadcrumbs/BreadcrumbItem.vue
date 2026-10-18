@@ -2,6 +2,7 @@
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
 import { computed, inject, toRaw } from 'vue'
+import { useDevWarning } from '../composables/useDevWarning.js'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
@@ -43,12 +44,11 @@ const customLink = computed(() => props.as ?? linkComponent.value)
 const linkRoot = computed(() => (customLink.value == null ? 'a' : toRaw(customLink.value)))
 const rendersLink = computed(() => Boolean(props.href) && !props.isCurrent)
 
-const isDev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV !== false
-if (isDev && hasMenu.value && props.href) {
-  console.warn(
-    'BreadcrumbItem: `menu` and `href` are mutually exclusive; `menu` takes precedence and `href` is ignored.',
-  )
-}
+useDevWarning(
+  'BreadcrumbItem',
+  '`menu` and `href` are mutually exclusive; `menu` takes precedence and `href` is ignored.',
+  () => hasMenu.value && Boolean(props.href),
+)
 
 function handleClick(event: MouseEvent) {
   if (props.isCurrent) {

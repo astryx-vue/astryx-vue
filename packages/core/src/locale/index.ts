@@ -5,3 +5,7 @@ export type { AstryxUpstreamCatalog, AstryxUpstreamMessage, LoadedAstryxLocale, 
 export type { AstryxMessages } from './messages.js'
 export type { AstryxLocale } from './types.js'
 export { useCollator } from './useCollator.js'
+export { useLocale } from './useLocale.js'
+export type { UseLocaleReturn } from './useLocale.js'
+export { useTranslator } from './useTranslator.js'
+export type { Translator, TranslatorValues, UseTranslatorReturn } from './useTranslator.js'

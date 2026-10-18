@@ -10,6 +10,7 @@ import {
   watch,
 } from 'vue'
 
+import { useDevWarning } from '../composables/useDevWarning.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { tabListContextKey } from './context.js'
 import '../../styles/visually-hidden-utility.css'
@@ -49,12 +50,11 @@ const classes = computed(() => [
   props.isLabelHidden && 'astryx-tab--label-hidden',
 ])
 
-const isDev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV !== false
-if (isDev && props.panelId != null && !isTabsPattern.value) {
-  console.warn(
-    'Tab: `panelId` only applies under the tabs pattern; give the TabList `role="tablist"` to wire up aria-controls.',
-  )
-}
+useDevWarning(
+  'Tab',
+  '`panelId` only applies under the tabs pattern; give the TabList `role="tablist"` to wire up aria-controls.',
+  () => props.panelId != null && !isTabsPattern.value,
+)
 
 function handleClick(): void {
   if (props.disabled || !context)

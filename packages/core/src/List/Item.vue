@@ -2,6 +2,7 @@
 import type { Component, ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ItemProps, ItemSlots } from './types.js'
 import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { itemDescriptionContextKey } from './context.js'
 import { useItemSwipe } from './useItemSwipe.js'
@@ -138,14 +139,16 @@ const labelStyle = computed(() => clampStyle(labelClamp.value))
 const descriptionClasses = computed(() => clampClass(descriptionClamp.value))
 const descriptionStyle = computed(() => clampStyle(descriptionClamp.value))
 
-const contentTag = computed(() => {
-  if (hasParentRole.value || isDelegate.value)
-    return 'span'
+const contentRole = useInteractiveRole({
+  href: () => (hasParentRole.value || isDelegate.value ? undefined : props.href),
+  hasOnClick: () => !hasParentRole.value && !isDelegate.value && props.onClick != null,
+})
 
-  if (props.href != null)
+const contentTag = computed(() => {
+  if (contentRole.role.value === 'link')
     return isLinkContent.value ? toRaw(customLink.value as Component) : 'a'
 
-  return props.onClick != null ? 'button' : 'span'
+  return contentRole.role.value === 'button' ? 'button' : 'span'
 })
 
 function handleContentClick(event: MouseEvent): void {

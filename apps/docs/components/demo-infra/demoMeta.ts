@@ -9,7 +9,8 @@ export interface DemoMeta {
   order: number
   en: string
   zh: string
-  demo: DemoModule
+  /** 总览网格卡片和详情页顶部演示用的那份 demo。没有可视形态的页面（组合式函数）不写。 */
+  demo?: DemoModule
 }
 
 export interface CatalogEntry {

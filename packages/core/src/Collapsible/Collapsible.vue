@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './types.js'
-import { computed, inject, shallowRef, useId, useTemplateRef } from 'vue'
+import { computed, inject, useId, useTemplateRef } from 'vue'
 import Icon from '../Icon/Icon.vue'
-import { collapsibleGroupKey, collapsibleGroupPresentationKey } from './context.js'
+import { collapsibleGroupPresentationKey } from './context.js'
+import { useCollapsible } from './useCollapsible.js'
 import '../../styles/collapsible.css'
 
 defineOptions({ name: 'AstryxCollapsible' })
@@ -15,15 +16,16 @@ const props = withDefaults(defineProps<Omit<CollapsibleProps, 'isOpen'>>(), {
 const emit = defineEmits<CollapsibleEmits>()
 defineSlots<CollapsibleSlots>()
 const open = defineModel<boolean | undefined>('isOpen', { default: undefined })
-const localIsOpen = shallowRef(props.defaultIsOpen)
-const group = inject(collapsibleGroupKey, null)
-const presentation = inject(collapsibleGroupPresentationKey, null)
-const isGrouped = computed(() => group != null && props.value != null && props.value !== '')
-const isOpen = computed(() => {
-  if (isGrouped.value && group != null && props.value != null)
-    return group.isOpen(props.value)
-  return open.value ?? localIsOpen.value
+const collapsible = useCollapsible({
+  value: () => props.value,
+  isCollapsible: {
+    isOpen: open,
+    defaultIsOpen: () => props.defaultIsOpen,
+    onOpenChange: isOpen => emit('openChange', isOpen),
+  },
 })
+const isOpen = collapsible.isOpen
+const presentation = inject(collapsibleGroupPresentationKey, null)
 const density = computed(() => presentation?.density.value ?? null)
 const hasDividers = computed(() => presentation?.hasDividers.value ?? false)
 const chevronPosition = computed(() => props.chevronPosition ?? presentation?.chevronPosition.value ?? 'end')
@@ -38,15 +40,7 @@ function toggle(): void {
   if (props.isDisabled)
     return
 
-  if (isGrouped.value && group != null && props.value != null) {
-    group.toggle(props.value)
-    return
-  }
-
-  const next = !isOpen.value
-  localIsOpen.value = next
-  open.value = next
-  emit('openChange', next)
+  collapsible.toggle()
 }
 </script>
 
