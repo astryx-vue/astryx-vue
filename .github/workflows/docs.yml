@@ -93,10 +93,14 @@ jobs:
       - name: Comment Preview URL
         # 用一个固定的 Markdown 注释当标记：找到旧评论就原地更新，
         # 不再每次部署都往 PR 里刷一条新评论。
-        if: github.event_name == 'pull_request' && steps.deploy.outcome == 'success'
+        # head 是 dev 的 PR（dev → main）不会重复部署，预览就是 dev 分支的固定地址，
+        # 该地址由 dev 的 push 事件部署，所以这里只贴链接。
+        if: |
+          github.event_name == 'pull_request' &&
+          (steps.deploy.outcome == 'success' || github.event.pull_request.head.ref == 'dev')
         uses: actions/github-script@v7
         env:
-          PREVIEW_URL: ${{ steps.deploy.outputs.deployment-url }}
+          PREVIEW_URL: ${{ github.event.pull_request.head.ref == 'dev' && 'https://dev.astryx-vue.pages.dev' || steps.deploy.outputs.deployment-url }}
         with:
           script: |
             const marker = '<!-- cf-pages-preview -->'
