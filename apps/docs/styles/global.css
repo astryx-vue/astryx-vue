@@ -411,7 +411,8 @@ html.component-docs-scroll-lock body {
 
 .component-card__frame {
   position: relative;
-  /* 和原版一样：卡片固定 8:5，里面的示例画在 2 倍大的画布上，再整体缩到一半。 */
+  /* 卡片固定 8:5，示例画在放大的画布上再整体缩小，这样内容大小一致、都能居中。 */
+  --component-card-scale: 0.7;
   aspect-ratio: 8 / 5;
   overflow: hidden;
   isolation: isolate;
@@ -435,13 +436,13 @@ html.dark .component-card__frame {
      max-width: 100% 就失去了参照，表格和 Markdown 会顶出卡片。 */
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  width: 200%;
-  height: 200%;
-  /* 画布按 2 倍尺寸排版，四周留 24px（缩小后 12px），分页的可用宽度仍在 260px 以上。 */
+  width: calc(100% / var(--component-card-scale));
+  height: calc(100% / var(--component-card-scale));
+  /* 画布按放大后的尺寸排版，四周留 24px（缩小后约 17px）。 */
   box-sizing: border-box;
   padding: 24px;
   overflow: hidden;
-  transform: scale(0.5);
+  transform: scale(var(--component-card-scale));
   transform-origin: 0 0;
 }
 
@@ -2160,6 +2161,20 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   box-sizing: border-box;
   width: min(100%, 20rem) !important;
   max-width: 100% !important;
+}
+
+/* 代码块有 13 行、最长一行 50 多个字符，按卡片默认比例放不下。单独再缩小一点，
+   宽度仍取整个画布，这样每行都完整、上下也不被截。 */
+.component-card__preview > .overview-wide {
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100% !important;
+  zoom: 0.72;
+}
+
+/* 头像状态点的示例用 128px 大头像，放进卡片要再缩小，和其他卡片大小接近。 */
+.component-card__preview > .overview-status-dots {
+  zoom: 0.4;
 }
 
 .component-card__preview > .overview-hug {
