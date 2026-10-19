@@ -2,44 +2,30 @@
 title: 应用模式
 ---
 
-# 应用模式
-
-组件按原版的粒度拆开，同一类界面可以叠在一起用。目前成套提供的是对话这一种：消息列表、气泡、引用和 Markdown 各自是组件，由应用决定怎么拼。
-
-对话从 `@astryx-vue/core/Chat` 引入。`ChatLayout` 是一列，记录放进 `ChatMessageList`，输入套件 `ChatComposer` 放进 `composer` 插槽。布局默认自己滚动。阅读位置在底部时，新内容会继续贴底；向上滚之后贴底停止，并出现回到底部的按钮。这件事内部用 `useChatStreamScroll` 和 `useChatNewMessages`。
-
-```vue
 <script setup lang="ts">
-import { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'
-
-function onSubmit(value: string) {
-  console.log(value)
-}
+import { chatPatternConversation, chatPatternLanding } from '../../../components/demos/chat'
 </script>
 
-<template>
-  <ChatLayout>
-    <ChatMessageList>
-      <ChatMessage sender="user">
-        <ChatMessageBubble>
-          帮我看一下发布说明。
-        </ChatMessageBubble>
-      </ChatMessage>
-      <ChatMessage sender="assistant">
-        <ChatMessageBubble name="助手">
-          说明在文档里。
-        </ChatMessageBubble>
-      </ChatMessage>
-    </ChatMessageList>
-    <template #composer>
-      <ChatComposer @submit="onSubmit" />
-    </template>
-  </ChatLayout>
-</template>
-```
+# 应用模式
 
-这套组件不连接模型，也不渲染 Markdown。正文是插槽。要排版回复，用 `@astryx-vue/core/Markdown` 的 `Markdown`。要标来源，用 `@astryx-vue/core/Citation` 的 `Citation`。工具调用、推理过程和正在输入分别是 `ChatToolCalls`、`ChatReasoning` 和 `ChatTypingIndicator`，都从 `Chat` 入口导出。
+对话按场景叠起来用。记录、气泡、推理、工具调用、引用和输入区各自是组件，页面决定它们怎么坐在一起。组件不连接模型。正文是插槽，长回复用 Markdown 排版，来源写成引用。
 
-`sender` 取 `user`、`assistant` 或 `system`。系统消息用 `ChatSystemMessage`，居中，不渲染头像和名字。
+还没有记录的时候，页面中间是一句问候和一块输入区。模式可以切到写作、编程、研究或创作；敏感和深度会插进输入区里的标记。输入 @ 提及一个人，输入 / 选择一条命令。附件收在抽屉里，较长的粘贴也会收成标记。麦克风只在浏览器能识别语音时出现。选一个分类，建议会写进输入区。
 
-更完整的示例、密度和未读分隔请参阅 [对话](/components/chat)。引用和 Markdown 各自设有独立的组件说明页。
+已经有来回的时候，一列记录贴着底部的输入区。助手还在写时，发送换成停止，记录标成正在输出。推理先展开，工具调用从运行变成完成，回答里带上引用，生成的文档可以从卡片打开。整页演练场在宽屏上把文档放进可拖动的侧栏，窄于 768px 时改成全屏对话框。
+
+下面两块可以直接操作。完整页面在演练场里：[AI 对话落地页](/playground/?template=ai-chat-landing)和 [AI 对话](/playground/?template=ai-chat)。零件的密度、未读分隔和元信息见 [对话](/components/chat)。
+
+<DemoExample
+  :demo="chatPatternLanding"
+  description="问候、模式、提及、命令、附件和分类建议放在同一块输入区里。点一张建议卡，这句话会写进输入区并切到对应模式。"
+  locale="zh"
+  title="落地"
+/>
+
+<DemoExample
+  :demo="chatPatternConversation"
+  description="记录里同时有推理、工具调用、引用和文档卡片。发送之后，回复会按这个顺序长出来；生成过程中可以停止。点文档卡片会打开全屏对话框。"
+  locale="zh"
+  title="会话"
+/>

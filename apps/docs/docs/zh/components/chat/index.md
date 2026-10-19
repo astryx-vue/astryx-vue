@@ -18,7 +18,7 @@ import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMeta
 
 阅读位置在底部时，新文字会把视图继续贴在底部。一旦向上滚，贴底立刻停下，并出现回到底部的按钮。没贴底时又来了新消息，按钮文案会换成当前语言的「有新消息」，屏幕阅读器也会播报，`ChatUnreadDivider` 用来标出分界。`ChatLayout` 内部用 `useChatStreamScroll` 和 `useChatNewMessages` 串起这件事。`showScrollButton` 设为 `false` 可以拿掉内置按钮，也可以用 `scrollButton` 插槽换成自己的。
 
-输入区用 ChatComposer，放进布局的 composer 插槽。外壳管草稿、发送和停止。默认输入框能插入标记，回车发送，Shift 加回车换行。附件抽屉、顶栏和底栏都是插槽。语音听写走浏览器自己的语音识别，没有识别能力时麦克风不出现。
+输入区用 ChatComposer，放进布局的 composer 插槽。外壳管草稿、发送和停止。默认输入框能插入标记，回车发送，Shift 加回车换行。附件抽屉、顶栏和底栏都是插槽。语音听写走浏览器自己的语音识别，没有识别能力时麦克风不出现。落地页和带文档面板的整页会话见[应用模式](/guide/patterns)。
 
 ```vue
 <script setup lang="ts">

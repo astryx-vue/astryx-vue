@@ -1265,10 +1265,26 @@
     background-color: var(--astryx-color-overlay-hover);
   }
 
-  .astryx-chat-trigger__label {
+  .astryx-chat-trigger__copy {
+    display: flex;
     flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .astryx-chat-trigger__label {
     min-width: 0;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .astryx-chat-trigger__description {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--astryx-color-text-secondary);
+    font-size: var(--astryx-text-supporting-size);
+    line-height: var(--astryx-text-supporting-leading);
     text-overflow: ellipsis;
     white-space: nowrap;
   }

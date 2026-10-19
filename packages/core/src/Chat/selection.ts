@@ -88,7 +88,9 @@ export function insertTextAtCursor(editable: HTMLElement, text: string): boolean
   range.deleteContents()
   const textNode = document.createTextNode(text)
   range.insertNode(textNode)
-  range.setStartAfter(textNode)
+  // Stay inside the new text node. A caret on the parent element hides the
+  // trigger menu, which only reads the text node in front of the caret.
+  range.setStart(textNode, textNode.textContent?.length ?? 0)
   range.collapse(true)
   selection.removeAllRanges()
   selection.addRange(range)
