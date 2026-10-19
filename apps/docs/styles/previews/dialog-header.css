@@ -5,6 +5,6 @@
   margin: 0 16px 16px;
   padding: 12px;
   border-radius: 12px;
-  color: var(--astryx-color-text-secondary, #525252);
-  background: var(--astryx-color-surface-sunken, #f4f4f5);
+  color: #9e9e9e;
+  background: var(--astryx-color-background-body, #1b1b1b);
 }

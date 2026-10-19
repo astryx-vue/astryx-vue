@@ -15,7 +15,8 @@ const inner = ref<HTMLElement | null>(null)
 const naturalHeight = ref(0)
 const limit = ref(0)
 
-// offsetHeight 是布局高度，不受 transform 影响，所以缩放不会反过来改变测量值。
+// 量 demo 根节点的 offsetHeight：它是布局高度，不受 transform 影响，缩放不会反过来改变测量值；
+// 外框不缩放时是 display: contents，自己没有盒子，所以不能量外框。
 const scale = computed(() => {
   const max = props.maxHeight ?? limit.value
   if (max <= 0 || naturalHeight.value <= max)
@@ -26,8 +27,11 @@ const frameStyle = computed(() => (scale.value === 1 ? undefined : { height: `${
 const innerStyle = computed(() => (scale.value === 1 ? undefined : { transform: `scale(${scale.value})` }))
 
 let observer: ResizeObserver | undefined
+function content(): HTMLElement | null {
+  return inner.value?.firstElementChild as HTMLElement | null
+}
 function measure(): void {
-  const el = inner.value
+  const el = content()
   if (el == null)
     return
   naturalHeight.value = el.offsetHeight
@@ -39,7 +43,7 @@ function measure(): void {
   }
 }
 onMounted(() => {
-  const el = inner.value
+  const el = content()
   if (el == null)
     return
   measure()
@@ -50,7 +54,8 @@ onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>
-  <div class="stage-fit" :style="frameStyle">
+  <!-- 不缩放时外框和内层都是 display: contents，等于不存在，demo 仍是舞台的直接子元素，布局和以前一样。 -->
+  <div class="stage-fit" :class="{ 'is-scaled': scale !== 1 }" :style="frameStyle">
     <div ref="inner" class="stage-fit__inner" :style="innerStyle">
       <slot />
     </div>
@@ -58,13 +63,21 @@ onBeforeUnmount(() => observer?.disconnect())
 </template>
 
 <style scoped>
-.stage-fit {
-  width: 100%;
-  min-width: 0;
+.stage-fit,
+.stage-fit__inner {
+  display: contents;
 }
 
-.stage-fit__inner {
-  /* 从顶部中线缩：外框高度已经按缩放后的值算好，水平方向保持居中。 */
+/* 只有真的缩小时才让外框占位：高度按缩放后的值算，宽度仍是内容宽度，由舞台居中。 */
+.stage-fit.is-scaled {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.stage-fit.is-scaled .stage-fit__inner {
+  display: block;
+  /* 从顶部中线缩，水平方向保持居中。 */
   transform-origin: top center;
 }
 </style>
