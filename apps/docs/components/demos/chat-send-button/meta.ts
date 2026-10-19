@@ -4,6 +4,7 @@ import { chatSendButtonOverview as demo } from './index'
 export const meta = {
   slug: 'chat-send-button',
   group: 'Chat',
+  family: 'Chat',
   order: 11,
   en: 'Chat Send Button',
   zh: '发送按钮',

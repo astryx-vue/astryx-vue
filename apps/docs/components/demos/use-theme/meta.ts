@@ -3,6 +3,7 @@ import type { DemoMeta } from '../../demo-infra/demoMeta'
 export const meta = {
   slug: 'use-theme',
   group: 'Utility',
+  family: 'Utilities',
   order: 151,
   en: 'useTheme',
   zh: 'useTheme',

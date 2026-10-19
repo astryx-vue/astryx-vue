@@ -4,6 +4,7 @@ import { segmentedControlOverview as demo } from './index'
 export const meta = {
   slug: 'segmented-control',
   group: 'Action',
+  family: 'Segmented Control',
   order: 12,
   en: 'Segmented Control',
   zh: '分段控件',

@@ -4,6 +4,7 @@ import { radioListItemOverview as demo } from './index'
 export const meta = {
   slug: 'radio-list-item',
   group: 'Form Controls',
+  family: 'Radio',
   order: 18,
   en: 'Radio List Item',
   zh: '单选列表项',

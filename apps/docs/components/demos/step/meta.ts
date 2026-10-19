@@ -4,6 +4,7 @@ import { stepOverview as demo } from './index'
 export const meta = {
   slug: 'step',
   group: 'Navigation',
+  family: 'Stepper',
   order: 24,
   en: 'Step',
   zh: '步骤',

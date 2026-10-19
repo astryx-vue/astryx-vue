@@ -4,6 +4,7 @@ import { resizeHandleOverview as demo } from './index'
 export const meta = {
   slug: 'resize-handle',
   group: 'Layout',
+  family: 'Resizable',
   order: 16,
   en: 'Resize Handle',
   zh: '拖拽分隔条',

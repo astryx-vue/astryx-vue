@@ -4,6 +4,7 @@ import { stackItemOverview as demo } from './index'
 export const meta = {
   slug: 'stack-item',
   group: 'Layout',
+  family: 'Layout',
   order: 7,
   en: 'Stack Item',
   zh: '堆叠项',

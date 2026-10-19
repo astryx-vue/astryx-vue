@@ -4,6 +4,7 @@ import { selectorOptionOverview as demo } from './index'
 export const meta = {
   slug: 'selector-option',
   group: 'Form Controls',
+  family: 'Selector',
   order: 20,
   en: 'Selector Option',
   zh: '选择器选项',

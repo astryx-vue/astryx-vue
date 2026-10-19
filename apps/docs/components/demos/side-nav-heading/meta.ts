@@ -4,6 +4,7 @@ import { sideNavHeadingOverview as demo } from './index'
 export const meta = {
   slug: 'side-nav-heading',
   group: 'Navigation',
+  family: 'Navigation',
   order: 11,
   en: 'Side Nav Heading',
   zh: '侧边导航标题',

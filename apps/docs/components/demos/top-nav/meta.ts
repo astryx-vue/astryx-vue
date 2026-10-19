@@ -4,6 +4,7 @@ import { topNavOverview as demo } from './index'
 export const meta = {
   slug: 'top-nav',
   group: 'Navigation',
+  family: 'Navigation',
   order: 16,
   en: 'Top Nav',
   zh: '顶部导航',

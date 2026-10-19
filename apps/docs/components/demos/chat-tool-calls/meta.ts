@@ -4,6 +4,7 @@ import { chatToolCallsOverview as demo } from './index'
 export const meta = {
   slug: 'chat-tool-calls',
   group: 'Chat',
+  family: 'Chat',
   order: 4,
   en: 'Chat Tool Calls',
   zh: '对话工具调用',

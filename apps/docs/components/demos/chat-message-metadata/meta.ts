@@ -4,6 +4,7 @@ import { chatMessageMetadataOverview as demo } from './index'
 export const meta = {
   slug: 'chat-message-metadata',
   group: 'Chat',
+  family: 'Chat',
   order: 9,
   en: 'Chat Message Metadata',
   zh: '对话消息元信息',

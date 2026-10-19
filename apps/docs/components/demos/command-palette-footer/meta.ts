@@ -4,6 +4,7 @@ import { commandPaletteFooterOverview as demo } from './index'
 export const meta = {
   slug: 'command-palette-footer',
   group: 'Overlay',
+  family: 'Command Palette',
   order: 16,
   en: 'Command Palette Footer',
   zh: '命令面板页脚',
