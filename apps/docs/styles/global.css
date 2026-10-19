@@ -409,16 +409,10 @@ html.component-docs-scroll-lock body {
   color: var(--astryx-text-muted);
 }
 
-.component-card__preview {
-  display: grid;
-  /* 列宽必须受容器约束。默认的 auto 列会被内容撑开，子元素的
-     max-width: 100% 就失去了参照，表格和 Markdown 会顶出卡片。 */
-  grid-template-columns: minmax(0, 1fr);
-  place-items: center;
-  min-height: 260px;
-  /* 左右只留 12px：三列卡片里分页的可用宽度要留在 260px 以上，
-     否则组件会收成「1 / 20」，看不到页码。 */
-  padding: 28px 12px;
+.component-card__frame {
+  position: relative;
+  /* 和原版一样：卡片固定 8:5，里面的示例画在 2 倍大的画布上，再整体缩到一半。 */
+  aspect-ratio: 8 / 5;
   overflow: hidden;
   isolation: isolate;
   border: 1px solid transparent;
@@ -428,8 +422,27 @@ html.component-docs-scroll-lock body {
   transition: border-color 180ms ease-out, transform 180ms ease-out;
 }
 
-html.dark .component-card__preview {
+html.dark .component-card__frame {
   background: #151619;
+}
+
+.component-card__preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  /* 列宽必须受容器约束。默认的 auto 列会被内容撑开，子元素的
+     max-width: 100% 就失去了参照，表格和 Markdown 会顶出卡片。 */
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  width: 200%;
+  height: 200%;
+  /* 画布按 2 倍尺寸排版，四周留 24px（缩小后 12px），分页的可用宽度仍在 260px 以上。 */
+  box-sizing: border-box;
+  padding: 24px;
+  overflow: hidden;
+  transform: scale(0.5);
+  transform-origin: 0 0;
 }
 
 /* 预览子元素默认 min-width: auto，内容一宽就会撑出格子。允许收缩后，分页才能按容器宽度收起。 */
@@ -468,7 +481,7 @@ html.dark .component-card__preview {
   width: 100%;
 }
 
-.component-card:hover .component-card__preview {
+.component-card:hover .component-card__frame {
   border-color: var(--astryx-accent-bright);
   transform: translateY(-2px);
 }
@@ -1419,10 +1432,6 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 
   .component-overview__grid {
     grid-template-columns: 1fr;
-  }
-
-  .component-card__preview {
-    min-height: 220px;
   }
 }
 

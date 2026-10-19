@@ -29,8 +29,10 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
       </h2>
       <div class="component-overview__grid">
         <article v-for="card in group.cards" :key="card.slug" class="component-card">
-          <div aria-hidden="true" class="component-card__preview" inert>
-            <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
+          <div aria-hidden="true" class="component-card__frame" inert>
+            <div class="component-card__preview">
+              <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
+            </div>
           </div>
           <a class="component-card__name" :href="localePath(locale, `/components/${card.slug}`)">{{ card.name }}</a>
         </article>
