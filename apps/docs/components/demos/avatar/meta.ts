@@ -4,6 +4,7 @@ import { avatarOverview as demo } from './index'
 export const meta = {
   slug: 'avatar',
   group: 'Content',
+  family: 'Avatar',
   order: 0,
   en: 'Avatar',
   zh: '头像',

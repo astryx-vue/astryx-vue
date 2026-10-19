@@ -4,6 +4,7 @@ import { syntaxThemeOverview as demo } from './index'
 export const meta = {
   slug: 'syntax-theme',
   group: 'Utility',
+  family: 'Utilities',
   order: 5,
   en: 'Syntax Theme',
   zh: '语法主题',

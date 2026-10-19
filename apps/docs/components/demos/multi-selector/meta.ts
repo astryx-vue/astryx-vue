@@ -4,6 +4,7 @@ import { multiSelectorOverview as demo } from './index'
 export const meta = {
   slug: 'multi-selector',
   group: 'Form Controls',
+  family: 'Selector',
   order: 13,
   en: 'Multi Selector',
   zh: '多选器',

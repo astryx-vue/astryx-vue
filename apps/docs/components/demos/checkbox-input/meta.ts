@@ -4,6 +4,7 @@ import { checkboxInputOverview as demo } from './index'
 export const meta = {
   slug: 'checkbox-input',
   group: 'Form Controls',
+  family: 'Checkbox',
   order: 1,
   en: 'Checkbox Input',
   zh: '复选框',

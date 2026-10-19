@@ -4,6 +4,7 @@ import { mediaThemeOverview as demo } from './index'
 export const meta = {
   slug: 'media-theme',
   group: 'Utility',
+  family: 'Utilities',
   order: 4,
   en: 'Media Theme',
   zh: '媒体主题',

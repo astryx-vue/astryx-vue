@@ -4,6 +4,7 @@ import { radioIndicatorOverview as demo } from './index'
 export const meta = {
   slug: 'radio-indicator',
   group: 'Indicator',
+  family: 'Indicator',
   order: 3,
   en: 'Radio Indicator',
   zh: '单选指示器',

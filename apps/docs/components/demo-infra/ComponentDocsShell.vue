@@ -4,7 +4,7 @@ import { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
 import { useRoute } from 'vitepress'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { componentDemos } from '../demos/registry'
-import { catalogGroups } from './componentCatalog'
+import { sidebarItems } from './componentCatalog'
 import { componentDocsCopy, UPSTREAM_PACKAGE, UPSTREAM_VERSION } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
@@ -17,13 +17,18 @@ const text = computed(() => componentDocsCopy[props.route.locale])
 const showAccessibility = computed(() => props.route.kind === 'detail' && hasAccessibility(props.route.slug))
 // 顶部演示用的是总览卡片那份 demo：它展示的是组件最基础的形态。
 const stageDemo = computed(() => (props.route.kind === 'detail' ? componentDemos[props.route.slug] : undefined))
-const groups = computed(() => catalogGroups(props.route.locale))
+const sidebar = computed(() => sidebarItems(props.route.locale))
 const routePath = useRoute()
-const activeGroupId = computed(() => {
+// 当前页所在的家族默认展开，其余收起。
+const activeFamilyId = computed(() => {
   const route = props.route
   if (route.kind !== 'detail')
     return undefined
-  return groups.value.find(group => group.entries.some(entry => entry.slug === route.slug))?.id
+  for (const item of sidebar.value) {
+    if (item.kind === 'family' && item.entries.some(entry => entry.slug === route.slug))
+      return item.id
+  }
+  return undefined
 })
 /** 上游没有同名导出、标题下不显示版本行的页面（Chat 是一组组件的概览）。 */
 const NO_EXPORT_SLUGS: ReadonlySet<string> = new Set(['chat'])
@@ -176,21 +181,30 @@ watch(() => routePath.path, () => {
               :label="text.overview"
               @click="closeSidebar(false)"
             />
-            <SideNavItem
-              v-for="group in groups"
-              :key="activeGroupId === group.id ? `${group.id}-open` : group.id"
-              :collapsible="{ defaultIsCollapsed: activeGroupId !== group.id }"
-              :label="group.title"
-            >
+            <template v-for="item in sidebar" :key="item.kind === 'family' ? item.id : item.entry.slug">
               <SideNavItem
-                v-for="entry in group.entries"
-                :key="entry.slug"
-                :href="path(`/components/${entry.slug}`)"
-                :is-selected="route.kind === 'detail' && route.slug === entry.slug"
-                :label="entry[route.locale]"
+                v-if="item.kind === 'family'"
+                :key="activeFamilyId === item.id ? `${item.id}-open` : item.id"
+                :collapsible="{ defaultIsCollapsed: activeFamilyId !== item.id }"
+                :label="item.title"
+              >
+                <SideNavItem
+                  v-for="entry in item.entries"
+                  :key="entry.slug"
+                  :href="path(`/components/${entry.slug}`)"
+                  :is-selected="route.kind === 'detail' && route.slug === entry.slug"
+                  :label="entry[route.locale]"
+                  @click="closeSidebar(false)"
+                />
+              </SideNavItem>
+              <SideNavItem
+                v-else
+                :href="path(`/components/${item.entry.slug}`)"
+                :is-selected="route.kind === 'detail' && route.slug === item.entry.slug"
+                :label="item.entry[route.locale]"
                 @click="closeSidebar(false)"
               />
-            </SideNavItem>
+            </template>
           </SideNavSection>
         </SideNav>
       </aside>

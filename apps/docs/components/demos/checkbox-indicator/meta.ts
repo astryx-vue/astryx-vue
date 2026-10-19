@@ -4,6 +4,7 @@ import { checkboxIndicatorOverview as demo } from './index'
 export const meta = {
   slug: 'checkbox-indicator',
   group: 'Indicator',
+  family: 'Indicator',
   order: 0,
   en: 'Checkbox Indicator',
   zh: '复选指示器',

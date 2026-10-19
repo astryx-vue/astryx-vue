@@ -4,6 +4,7 @@ import { listOverview as demo } from './index'
 export const meta = {
   slug: 'list',
   group: 'Table & List',
+  family: 'List',
   order: 0,
   en: 'List',
   zh: '列表',

@@ -4,6 +4,7 @@ import { dateTimeInputOverview as demo } from './index'
 export const meta = {
   slug: 'date-time-input',
   group: 'Form Controls',
+  family: 'Date Input',
   order: 6,
   en: 'Date Time Input',
   zh: '日期时间输入框',

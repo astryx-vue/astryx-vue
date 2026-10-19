@@ -4,6 +4,7 @@ import { chatComposerOverview as demo } from './index'
 export const meta = {
   slug: 'chat-composer',
   group: 'Chat',
+  family: 'Chat',
   order: 10,
   en: 'Chat Composer',
   zh: '对话输入区',

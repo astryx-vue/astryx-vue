@@ -4,6 +4,7 @@ import { selectableCardOverview as demo } from './index'
 export const meta = {
   slug: 'selectable-card',
   group: 'Container',
+  family: 'Card',
   order: 3,
   en: 'Selectable Card',
   zh: '可选卡片',

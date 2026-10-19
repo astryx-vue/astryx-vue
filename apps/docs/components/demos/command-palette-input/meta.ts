@@ -4,6 +4,7 @@ import { commandPaletteInputOverview as demo } from './index'
 export const meta = {
   slug: 'command-palette-input',
   group: 'Overlay',
+  family: 'Command Palette',
   order: 15,
   en: 'Command Palette Input',
   zh: '命令面板输入框',

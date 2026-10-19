@@ -3,6 +3,7 @@ import type { DemoMeta } from '../../demo-infra/demoMeta'
 export const meta = {
   slug: 'use-media-query',
   group: 'Utility',
+  family: 'Utilities',
   order: 125,
   en: 'useMediaQuery',
   zh: 'useMediaQuery',

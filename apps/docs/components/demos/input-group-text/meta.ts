@@ -4,6 +4,7 @@ import { inputGroupTextOverview as demo } from './index'
 export const meta = {
   slug: 'input-group-text',
   group: 'Form Controls',
+  family: 'Field',
   order: 12,
   en: 'Input Group Text',
   zh: '输入框组文本',

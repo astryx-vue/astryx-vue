@@ -4,6 +4,7 @@ import { popoverOverview as demo } from './index'
 export const meta = {
   slug: 'popover',
   group: 'Overlay',
+  family: 'Popover',
   order: 7,
   en: 'Popover',
   zh: '弹出层',

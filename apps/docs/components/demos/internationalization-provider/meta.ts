@@ -4,6 +4,7 @@ import { internationalizationProviderOverview as demo } from './index'
 export const meta = {
   slug: 'internationalization-provider',
   group: 'Utility',
+  family: 'Utilities',
   order: 0,
   en: 'Internationalization Provider',
   zh: '国际化 Provider',
