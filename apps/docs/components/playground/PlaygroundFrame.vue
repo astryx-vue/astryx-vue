@@ -6,10 +6,10 @@ import * as core from '@astryx-vue/core'
 import * as Vue from 'vue'
 import { compilePlaygroundSfc } from './compileSfc'
 import * as playgroundCharts from './playgroundCharts'
-import { templateIcons } from './templateIcons'
 import { PreviewHost } from './previewHost'
 import { previewLayoutMode } from './previewLayout'
 import { isHostMessage, PLAYGROUND_CHANNEL } from './protocol'
+import { templateIcons } from './templateIcons'
 
 const { createApp, onBeforeUnmount, onMounted, ref } = Vue
 

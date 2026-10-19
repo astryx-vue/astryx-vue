@@ -19,9 +19,9 @@ import {
   Layout,
   LayoutContent,
   Text,
-  Token,
   ToggleButton,
   ToggleButtonGroup,
+  Token,
   useChatDictation,
   VStack,
 } from '@astryx-vue/core'
@@ -353,4 +353,9 @@ function chooseMode(key: string) {
 .composer { width: 100%; }
 .composer-input { min-height: 84px; }
 .categories { padding-inline: var(--astryx-spacing-3); width: 100%; }
+
+/* 窄屏放不下一整行：分类按钮可以换行，输入框页脚里的模式 / 设置按钮可以收缩。 */
+.categories :deep(.astryx-toggle-button-group) { flex-wrap: wrap; justify-content: center; }
+.composer :deep(.astryx-chat-composer__footer-start) { min-width: 0; flex-wrap: wrap; flex-shrink: 1; }
+.composer :deep(.astryx-chat-composer__footer-end) { flex-shrink: 0; }
 </style>
