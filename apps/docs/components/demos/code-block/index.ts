@@ -14,7 +14,7 @@ import snippetSource from './snippet.vue?raw&highlighted'
 import terminalDemo from './terminal.vue'
 import terminalSource from './terminal.vue?raw&highlighted'
 
-export const codeBlockOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const codeBlockOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-wide' })
 export const codeBlockSnippet = defineDemo(snippetDemo, snippetSource)
 export const codeBlockHighlighted = defineDemo(highlightedDemo, highlightedSource)
 export const codeBlockConfig = defineDemo(configDemo, configSource)

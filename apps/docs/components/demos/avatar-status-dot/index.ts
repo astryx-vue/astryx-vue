@@ -8,6 +8,6 @@ import variantsSource from './variants.vue?raw&highlighted'
 
 const options = { className: 'overview-row' }
 
-export const avatarStatusDotOverview = defineDemo(overviewDemo, overviewSource, options)
+export const avatarStatusDotOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-row overview-status-dots' })
 export const avatarStatusDotVariants = defineDemo(variantsDemo, variantsSource, options)
 export const avatarStatusDotIcon = defineDemo(iconDemo, iconSource, options)
