@@ -77,15 +77,13 @@ function publish(next: string): void {
 }
 
 const defaultPaste = useChatPasteAsToken({ input: self })
-const pasteAsToken = computed(() => props.pasteAsToken === false ? null : (props.pasteAsToken ?? defaultPaste))
-
-function insertText(text: string): void {
-  const editable = editableRef.value
-  if (!editable)
-    return
-  insertTextAtCursor(editable, text)
-  publish(readValue())
-}
+const pastePassed = wasPropPassed('pasteAsToken')
+const pasteAsToken = computed(() => {
+  // `false` is a Boolean in the prop type, so an omitted value arrives as false.
+  if (!pastePassed)
+    return defaultPaste
+  return props.pasteAsToken === false ? null : (props.pasteAsToken ?? defaultPaste)
+})
 
 function focusEditable(): void {
   const editable = editableRef.value
@@ -108,20 +106,6 @@ function focusAtEnd(): void {
   placeCaretAtEnd(editable)
 }
 
-const handle: ChatComposerInputHandle = {
-  insertToken: (token) => {
-    const id = tokens.insertToken(token)
-    if (id)
-      publish(readValue())
-    return id
-  },
-  expandToken: id => tokens.expandToken(id),
-  insertText,
-  focus: focusEditable,
-  getValue: readValue,
-}
-self.value = handle
-
 const history = useComposerHistory({
   enabled: historyEnabled,
   editable: editableRef,
@@ -142,6 +126,29 @@ const menu = useTriggerMenu({
   },
   onEmitChange: () => publish(readValue()),
 })
+
+function insertText(text: string): void {
+  const editable = editableRef.value
+  if (!editable)
+    return
+  insertTextAtCursor(editable, text)
+  publish(readValue())
+  menu.handleInput()
+}
+
+const handle: ChatComposerInputHandle = {
+  insertToken: (token) => {
+    const id = tokens.insertToken(token)
+    if (id)
+      publish(readValue())
+    return id
+  },
+  expandToken: id => tokens.expandToken(id),
+  insertText,
+  focus: focusEditable,
+  getValue: readValue,
+}
+self.value = handle
 
 const activeDescendant = computed(() => {
   if (!menu.state.isActive || menu.state.highlightedIndex < 0)

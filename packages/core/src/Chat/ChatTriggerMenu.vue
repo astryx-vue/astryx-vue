@@ -149,7 +149,10 @@ function onSelect(item: SearchableItem, event: MouseEvent): void {
                 @focus="emit('hover', flatIndex(group, index))"
               >
                 <component :is="itemView" v-if="itemView" :item="item" />
-                <span v-else class="astryx-chat-trigger__label">{{ item.label }}</span>
+                <span v-else class="astryx-chat-trigger__copy">
+                  <span class="astryx-chat-trigger__label">{{ item.label }}</span>
+                  <span v-if="item.description" class="astryx-chat-trigger__description">{{ item.description }}</span>
+                </span>
               </div>
             </div>
             <template v-else>
@@ -167,7 +170,10 @@ function onSelect(item: SearchableItem, event: MouseEvent): void {
                 @focus="emit('hover', flatIndex(group, index))"
               >
                 <component :is="itemView" v-if="itemView" :item="item" />
-                <span v-else class="astryx-chat-trigger__label">{{ item.label }}</span>
+                <span v-else class="astryx-chat-trigger__copy">
+                  <span class="astryx-chat-trigger__label">{{ item.label }}</span>
+                  <span v-if="item.description" class="astryx-chat-trigger__description">{{ item.description }}</span>
+                </span>
               </div>
             </template>
           </template>

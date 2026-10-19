@@ -18,7 +18,7 @@ The chat display is a set of pieces that stack into a transcript: a scrolling la
 
 While the reader is at the bottom, new text keeps the view pinned there. Scrolling up lets go immediately and reveals the scroll-to-bottom button. If messages arrive while the view is unlocked, the button label changes to the localized “New messages” string, a live region announces it, and `ChatUnreadDivider` can mark the boundary. `ChatLayout` wires this through `useChatStreamScroll` and `useChatNewMessages`. Set `showScrollButton` to `false` to hide the built-in button, or replace it with the `scrollButton` slot.
 
-The field is ChatComposer, placed in the layout's composer slot. The shell owns the draft, send, and stop. The default editor accepts chips, sends on Enter, and inserts a newline on Shift+Enter. The attachment drawer, header, and footer are slots. Dictation uses the browser's speech recognition, and the microphone stays hidden when that API is missing.
+The field is ChatComposer, placed in the layout's composer slot. The shell owns the draft, send, and stop. The default editor accepts chips, sends on Enter, and inserts a newline on Shift+Enter. The attachment drawer, header, and footer are slots. Dictation uses the browser's speech recognition, and the microphone stays hidden when that API is missing. The landing page and the transcript with a document panel are in [Patterns](/en/guide/patterns).
 
 ```vue
 <script setup lang="ts">
