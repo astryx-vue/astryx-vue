@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { MobileNavEmits, MobileNavProps, MobileNavSide, MobileNavSlots } from './types.js'
-import { computed, nextTick, onMounted, provide, ref, useId, watch } from 'vue'
+import { computed, nextTick, onMounted, provide, ref, useId, useTemplateRef, watch } from 'vue'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { mobileNavKey } from './context.js'
 import '../../styles/mobile-nav.css'
 
@@ -20,6 +21,8 @@ defineSlots<MobileNavSlots>()
 const messages = useAstryxMessages()
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const dialogRef = ref<HTMLDialogElement | null>(null)
+const bodyEl = useTemplateRef<HTMLElement>('body')
+useScrollbars(bodyEl)
 const resolvedSide = ref<'start' | 'end'>(props.side === 'end' ? 'end' : 'start')
 const generatedId = `astryx-mobile-nav-${useId()}`
 const dialogId = computed(() => props.id || generatedId)
@@ -129,7 +132,7 @@ onMounted(() => {
           <span class="astryx-mobile-nav__close-glyph" aria-hidden="true" />
         </button>
       </div>
-      <div class="astryx-mobile-nav__body">
+      <div ref="body" class="astryx-mobile-nav__body">
         <slot />
       </div>
     </div>

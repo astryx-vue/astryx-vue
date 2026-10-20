@@ -9,6 +9,7 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
 import { useAstryxMessages } from '../locale/index.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Token from '../Token/Token.vue'
 import TypeaheadMenu from '../Typeahead/TypeaheadMenu.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
@@ -54,6 +55,7 @@ const placeholderHeight = ref(0)
 const announce = useAnnounce()
 const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
+useScrollbars(listboxRef)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const tokenEls = new Map<number, HTMLElement>()
 

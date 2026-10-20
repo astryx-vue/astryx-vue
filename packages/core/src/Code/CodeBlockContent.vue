@@ -3,6 +3,7 @@ import type { CSSProperties, StyleValue } from 'vue'
 import type { DiffLines } from './diff.js'
 import type { CodeBlockSize, SyntaxToken, TokenLine } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { applyHighlightRanges } from './highlightRanges.js'
 
 defineOptions({ name: 'AstryxCodeBlockContent' })
@@ -35,6 +36,8 @@ const CHUNK_SIZE = 20
 const CHUNK_THRESHOLD = 100
 
 const code = useTemplateRef<HTMLElement>('code')
+const scrollEl = useTemplateRef<HTMLElement>('scroll')
+useScrollbars(scrollEl)
 
 const chunks = computed<LineChunk[]>(() => {
   const lines = props.lines
@@ -161,6 +164,7 @@ onBeforeUnmount(() => removeRanges?.())
 
 <template>
   <div
+    ref="scroll"
     class="astryx-code-block__scroll"
     role="group"
     tabindex="0"

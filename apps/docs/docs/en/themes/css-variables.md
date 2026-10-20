@@ -24,6 +24,20 @@ Names follow the upstream tokens and add `--astryx-`. The primary text color is 
 
 Components also have their own variables, such as `--astryx-button-primary-background`. Those names are defined in `packages/themes/neutral/<component>.css` and usually point at a semantic token. Prefer overriding the semantic token. Override the component variable only when that component has to diverge.
 
+## Scrollbar variables
+
+With a [`ScrollbarsProvider`](/en/components/scrollbars-provider) in place, these variables control how the scrollbar looks. They all have defaults that follow the theme tokens, so changing them is optional.
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `--astryx-scrollbar-size` | `10px` | Scrollbar thickness |
+| `--astryx-scrollbar-thumb` | Secondary text color at 45% | Thumb color |
+| `--astryx-scrollbar-thumb-hover` | Secondary text color at 70% | Thumb color on hover and drag |
+| `--astryx-scrollbar-track` | `transparent` | Track background |
+| `--astryx-scrollbar-radius` | `9999px` | Corner radius of track and thumb |
+
+You can set them on any ancestor, and they only affect scrollbars inside it. See the [component page](/en/components/scrollbars-provider) for details and examples.
+
 `@astryx-vue/core/reset.css` is a single declaration, `@layer astryx.reset`. It is not a browser reset. Import it only when you need that layer to exist first.
 
 Load every structural sheet at once with:

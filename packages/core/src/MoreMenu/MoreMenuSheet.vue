@@ -7,6 +7,7 @@ import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { focusElement, getFocusables } from '../layer/focus.js'
 import List from '../List/List.vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { isDividerOption, isSectionOption } from './menuItems.js'
 import MoreMenuSheetRow from './MoreMenuSheetRow.vue'
 import '../../styles/more-menu.css'
@@ -24,6 +25,8 @@ const emit = defineEmits<MoreMenuSheetEmits>()
 const ROW_CONTROL_SELECTOR = 'a[href], button:not([disabled])'
 
 const sheet = useTemplateRef<HTMLElement>('sheet')
+const sheetBody = useTemplateRef<HTMLElement>('sheetBody')
+useScrollbars(sheetBody)
 const path = ref<MoreMenuItem[]>([])
 const drilledRowIds = ref<string[]>([])
 
@@ -239,7 +242,7 @@ function onKeydown(event: KeyboardEvent): void {
               {{ title }}
             </Heading>
           </div>
-          <div class="astryx-more-menu__sheet-body">
+          <div ref="sheetBody" class="astryx-more-menu__sheet-body">
             <List class="astryx-more-menu__sheet-list" density="spacious">
               <template v-for="entry in entries" :key="entry.key">
                 <li

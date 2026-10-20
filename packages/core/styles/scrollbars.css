@@ -1,0 +1,28 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+@import 'overlayscrollbars/overlayscrollbars.css' layer(astryx.base);
+
+@layer astryx.components {
+  .os-scrollbar.os-theme-astryx {
+    --os-size: var(--astryx-scrollbar-size, 10px);
+    --os-padding-perpendicular: 2px;
+    --os-padding-axis: 2px;
+    --os-track-border-radius: var(--astryx-scrollbar-radius, 9999px);
+    --os-track-bg: var(--astryx-scrollbar-track, transparent);
+    --os-handle-border-radius: var(--astryx-scrollbar-radius, 9999px);
+    --os-handle-bg: var(--astryx-scrollbar-thumb, color-mix(in srgb, var(--astryx-color-text-secondary, #737373) 45%, transparent));
+    --os-handle-bg-hover: var(--astryx-scrollbar-thumb-hover, color-mix(in srgb, var(--astryx-color-text-secondary, #737373) 70%, transparent));
+    --os-handle-bg-active: var(--astryx-scrollbar-thumb-hover, color-mix(in srgb, var(--astryx-color-text-secondary, #737373) 70%, transparent));
+    --os-handle-min-size: 32px;
+    --os-handle-interactive-area-offset: 4px;
+    box-sizing: border-box;
+    /* 盖在表格吸顶表头这类 z-index 1~2 的内容上面。 */
+    z-index: 3;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .os-scrollbar.os-theme-astryx,
+    .os-scrollbar.os-theme-astryx .os-scrollbar-handle {
+      transition: none;
+    }
+  }
+}

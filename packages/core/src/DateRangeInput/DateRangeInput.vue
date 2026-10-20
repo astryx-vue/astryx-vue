@@ -12,6 +12,7 @@ import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import RangeCalendar from './RangeCalendar.vue'
@@ -48,6 +49,8 @@ const disabledMessage = computed(() => props.disabledMessage?.trim() || undefine
 const showsDisabledMessage = computed(() => locked.value && disabledMessage.value != null)
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
+const panelEl = useTemplateRef<HTMLElement>('panelEl')
+useScrollbars(panelEl)
 const visibleMonths = computed(() => props.numberOfMonths ?? props.monthCount)
 
 const display = computed(() => formatDateRange(model.value, locale.value))
@@ -143,7 +146,7 @@ function clear(): void {
         </div>
         <template #content>
           <div class="astryx-date-range-popover">
-            <div class="astryx-date-range-panel">
+            <div ref="panelEl" class="astryx-date-range-panel">
               <div v-if="presets?.length" class="astryx-date-range-presets">
                 <button
                   v-for="preset in presets" :key="preset.label" type="button" class="astryx-date-range-preset"

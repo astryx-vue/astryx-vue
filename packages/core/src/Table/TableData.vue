@@ -13,6 +13,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/context.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { resolveColumnWidths } from './columnUtils.js'
 import { columnResizeDirectionSign, columnResizeStep, resizeColumnWidths } from './plugins/columnResize.js'
@@ -43,6 +44,7 @@ defineSlots<{ empty?: () => VNodeChild }>()
 
 const messages = useAstryxMessages()
 const scrollRoot = ref<HTMLElement | null>(null)
+useScrollbars(scrollRoot)
 const menu = ref<{ x: number, y: number, items: readonly TableRowMenuItem[] } | null>(null)
 
 const resolvedColumns = computed(() => props.plugins.reduce(

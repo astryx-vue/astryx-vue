@@ -92,6 +92,12 @@ footer: false
         <td>Lets the viewport escape an ancestor's padding. Content padding stays as set.</td>
       </tr>
       <tr>
+        <td><code>scrollbars</code></td>
+        <td><code>boolean</code></td>
+        <td><code>true</code></td>
+        <td>Whether this area uses the custom scrollbar when a <code>ScrollbarsProvider</code> is above it. Set <code>false</code> to keep the native scrollbar.</td>
+      </tr>
+      <tr>
         <td><code>width</code></td>
         <td><code>number | string</code></td>
         <td>-</td>

@@ -5,6 +5,7 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { useChatNewMessages } from '../composables/useChatNewMessages.js'
 import { useChatStreamScroll } from '../composables/useChatStreamScroll.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import ChatLayoutScrollButton from './ChatLayoutScrollButton.vue'
 import { chatLayoutContextKey } from './context.js'
 import '../../styles/chat.css'
@@ -22,6 +23,7 @@ const announce = useAnnounce()
 const root = useTemplateRef<HTMLDivElement>('root')
 const scrollTarget = computed(() => props.scrollRef ?? root.value)
 const isSelfScrolling = computed(() => props.scrollRef == null)
+useScrollbars(root, { enabled: isSelfScrolling })
 
 const scroll = useChatStreamScroll({ scrollRef: scrollTarget })
 const newMessages = useChatNewMessages({

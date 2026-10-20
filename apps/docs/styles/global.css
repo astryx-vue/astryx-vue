@@ -25,6 +25,7 @@
 @import './previews/overlay.css';
 @import './previews/resize-handle.css';
 @import './previews/scrollable-area.css';
+@import './previews/scrollbars-provider.css';
 @import './previews/section.css';
 @import './previews/segmented-control.css';
 @import './previews/table-parts.css';

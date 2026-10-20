@@ -13,6 +13,7 @@ import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/bordered-control.css'
@@ -63,6 +64,7 @@ const focused = shallowRef(false)
 const draft = shallowRef('')
 const container = useTemplateRef<HTMLDivElement>('container')
 const optionsRef = useTemplateRef<HTMLDivElement>('options')
+useScrollbars(optionsRef)
 const generatedId = `astryx-time-field-${useId()}`
 const listboxId = `${props.inputId ?? generatedId}-options`
 const disabledMessageId = `${props.inputId ?? generatedId}-disabled`

@@ -33,6 +33,12 @@ import { ScrollableArea } from '@astryx-vue/core/ScrollableArea'
 视口和内容盒已经存在时，用 `useScrollableArea` 做同样的测量。`useScrollOverflow` 报告一个横向滚动容器的起始边和结束边有没有被挡住。
 
 
+## 配合 ScrollbarsProvider
+
+外层套了 [`ScrollbarsProvider`](/components/scrollbars-provider) 时，`ScrollableArea` 会自动换成自绘的覆盖式滚动条，不用改任何代码。不套就还是原生滚动条。
+
+某一块想保留原生滚动条，给它写 `:scrollbars="false"`。
+
 <ComponentAnatomy />
 
 ## 最佳实践

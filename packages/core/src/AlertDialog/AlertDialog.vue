@@ -7,6 +7,7 @@ import Button from '../Button/Button.vue'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import Dialog from '../Dialog/Dialog.vue'
 import Heading from '../Heading/Heading.vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Stack from '../Stack/Stack.vue'
 import Text from '../Text/Text.vue'
 import { ALERT_DIALOG_CONTEXT_KEY } from './context.js'
@@ -36,6 +37,8 @@ const isSmallScreen = useMediaQuery('(max-width: 640px)')
 provide(ALERT_DIALOG_CONTEXT_KEY, { descriptionId, isSmallScreen, titleId })
 
 const dialog = useTemplateRef<ComponentPublicInstance>('dialog')
+const contentEl = useTemplateRef<HTMLElement>('content')
+useScrollbars(contentEl)
 const element = computed<HTMLElement | null>(() => {
   const rendered: unknown = dialog.value?.$el
   return rendered instanceof HTMLElement ? rendered : null
@@ -108,7 +111,7 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
     :width="width"
     @open-change="emit('openChange', $event)"
   >
-    <div class="astryx-alert-dialog__content">
+    <div ref="content" class="astryx-alert-dialog__content">
       <Heading :id="titleId" class="astryx-alert-dialog__title" :level="2">
         <slot name="title">
           {{ title }}

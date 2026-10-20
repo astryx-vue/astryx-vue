@@ -43,3 +43,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## OverlayScrollbars
+
+`ScrollbarsProvider` uses OverlayScrollbars as a runtime dependency. It is installed from npm and is not copied into this package. `styles/scrollbars.css` imports its stylesheet into the `astryx.base` layer and defines the `os-theme-astryx` theme.
+
+- Repository: <https://github.com/KingSora/OverlayScrollbars>
+- Version: `2.16.0`
+- License: MIT
+- Copyright: (c) Rene Haas | KingSora

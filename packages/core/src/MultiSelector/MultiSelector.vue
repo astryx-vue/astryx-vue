@@ -17,6 +17,7 @@ import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { searchResultMessage } from '../Selector/searchResultMessage.js'
 import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
@@ -75,6 +76,7 @@ const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const triggerRef = useTemplateRef<HTMLElement>('triggerRef')
 const searchRef = useTemplateRef<HTMLInputElement>('searchRef')
+useScrollbars(listboxRef)
 const query = ref('')
 const readOnlyId = `${triggerId}-readonly`
 const disabledTooltipId = `${triggerId}-disabled-tooltip`

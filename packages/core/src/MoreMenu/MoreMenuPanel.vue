@@ -6,6 +6,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useId, us
 import { useOverflow } from '../composables/useOverflow.js'
 import Divider from '../Divider/Divider.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { moreMenuLevelKey, useMoreMenuLevel, useMoreMenuSize } from './context.js'
 import { isDividerOption, isSectionOption } from './menuItems.js'
 import { isRtl, useMenuNav } from './menuNav.js'
@@ -41,6 +42,7 @@ const layer = useTemplateRef<HTMLElement>('layer')
 const panel = useTemplateRef<HTMLElement>('panel')
 const isPanelOpen = computed(() => props.isOpen)
 const hasOverflow = useOverflow(panel, isPanelOpen)
+useScrollbars(panel)
 const openRowKey = ref<string | null>(null)
 const renderedRowKey = ref<string | null>(null)
 const flyoutFocus = ref<MoreMenuInitialFocus>('none')
