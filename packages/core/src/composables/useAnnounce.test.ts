@@ -67,4 +67,13 @@ describe('useAnnounce', () => {
     await flushFrame()
     expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('第二次')
   })
+
+  it('清空时取消还没写进去的那一帧，旧文字不会在清空之后冒出来', async () => {
+    const announce = useAnnounce()
+    announce('还在加载')
+    announce('')
+    await flushFrame()
+    const polite = document.querySelector('[data-astryx-live-region="polite"]')
+    expect(polite?.textContent).toBe('')
+  })
 })

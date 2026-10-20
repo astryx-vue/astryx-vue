@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { ChatComposerEmits, ChatComposerInputControl, ChatComposerProps, ChatComposerSlots } from './types.js'
 import { computed, provide, ref, useSlots, useTemplateRef } from 'vue'
+import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import ChatComposerInput from './ChatComposerInput.vue'
 import ChatSendButton from './ChatSendButton.vue'
 import { chatComposerContextKey } from './context.js'
-import { isKeyboardModality, trackInteractionModality } from './modality.js'
 import '../../styles/chat.css'
 
 defineOptions({ name: 'AstryxChatComposer', inheritAttrs: false })

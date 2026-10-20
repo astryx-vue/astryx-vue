@@ -408,7 +408,7 @@ describe('contextMenu', () => {
     expect(isShown(panel)).toBe(true)
 
     row.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 10, clientY: 10, pointerId: 4, pointerType: 'mouse' }))
-    document.body.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: 10, clientY: 400 }))
+    document.body.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: 10, clientY: 400, pointerId: 4, pointerType: 'mouse' }))
     await flushPromises()
     expect(isShown(panel)).toBe(false)
   })

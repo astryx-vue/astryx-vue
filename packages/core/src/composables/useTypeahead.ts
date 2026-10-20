@@ -1,4 +1,5 @@
 import { onScopeDispose, ref } from 'vue'
+import { isImeKeyEvent } from './internal/ime.js'
 
 export interface UseTypeaheadOptions {
   /** 当前 DOM 顺序上的标签。某一项可以是 null，表示这个下标不能匹配。 */
@@ -25,16 +26,13 @@ export interface UseTypeaheadReturn {
 
 const DEFAULT_RESET_MS = 750
 
-function isComposing(event: KeyboardEvent): boolean {
-  return event.isComposing === true
-}
-
 /**
  * 对应原版 Astryx 的 `hooks/useTypeahead`。
  * 以前放在 DropdownMenu，名字是 `useMenuTypeahead`，旧名字仍可从原路径引用。
  *
  * 反复按同一个字母会在匹配项之间循环，而不是把查询收得更窄。
  * 空格留给激活；只有缓冲里已经有字时，空格才算查询的一部分。
+ * 输入法拼字时的按键属于输入法，不算跳转。
  * 这个函数自己不移动焦点，调用方在 `onMatch` 里接 `useListFocus` 或其他集合。
  */
 export function useTypeahead(options: UseTypeaheadOptions): UseTypeaheadReturn {
@@ -58,8 +56,8 @@ export function useTypeahead(options: UseTypeaheadOptions): UseTypeaheadReturn {
   }
 
   function onKeyDown(event: KeyboardEvent): boolean {
-    const extendsQuery = event.key === ' ' && !event.ctrlKey && !event.metaKey && !isComposing(event) && buffer.value.length > 0
-    const isPrintable = event.key.length === 1 && !event.ctrlKey && !event.metaKey && !isComposing(event) && event.key !== ' '
+    const extendsQuery = event.key === ' ' && !event.ctrlKey && !event.metaKey && !isImeKeyEvent(event) && buffer.value.length > 0
+    const isPrintable = event.key.length === 1 && !event.ctrlKey && !event.metaKey && !isImeKeyEvent(event) && event.key !== ' '
 
     if (!isPrintable && !extendsQuery)
       return false

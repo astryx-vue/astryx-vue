@@ -26,7 +26,12 @@ export type {
   UseChatStreamScrollReturn,
 } from './useChatStreamScroll.js'
 
-export { INTERACTIVE_SELECTORS, useClickableContainer } from './useClickableContainer.js'
+export {
+  hasInteractiveAncestor,
+  hasTextSelection,
+  INTERACTIVE_SELECTORS,
+  useClickableContainer,
+} from './useClickableContainer.js'
 export type { ClickableContainerHandlers, UseClickableContainerOptions } from './useClickableContainer.js'
 
 export { useClipboard } from './useClipboard.js'
@@ -129,8 +134,23 @@ export type { LongPressHandlers, LongPressOptions } from './useLongPress.js'
 
 export { useMediaQuery } from './useMediaQuery.js'
 
-export { resetMenuPress, useMenuPress } from './useMenuPress.js'
-export type { MenuPress, MenuPressOptions } from './useMenuPress.js'
+export {
+  isMenuPressActivation,
+  MENU_PRESS_MARKER,
+  MENU_PRESS_SETTLE_MS,
+  menuPressStep,
+  resetMenuPress,
+  useMenuPress,
+} from './useMenuPress.js'
+export type {
+  MenuPress,
+  MenuPressEffect,
+  MenuPressEvent,
+  MenuPressGesture,
+  MenuPressOptions,
+  MenuPressPointerType,
+  MenuPressStep,
+} from './useMenuPress.js'
 
 export { useMergedRefs } from './useMergedRefs.js'
 export type { MergedRef, MergedRefHandle } from './useMergedRefs.js'
@@ -152,7 +172,7 @@ export { usePendingChange } from './usePendingChange.js'
 export type { PendingChange } from './usePendingChange.js'
 
 export { usePressFeedback } from './usePressFeedback.js'
-export type { UsePressFeedbackReturn } from './usePressFeedback.js'
+export type { UsePressFeedbackOptions, UsePressFeedbackReturn } from './usePressFeedback.js'
 
 export { percent, useResizable } from './useResizable.js'
 export type {
@@ -177,6 +197,7 @@ export type {
   ScrollableAreaState,
   ScrollAxis,
   ScrollAxisState,
+  ScrollKeyboardAccess,
   ScrollOverscroll,
   ScrollRole,
   ScrollStickyContainment,
