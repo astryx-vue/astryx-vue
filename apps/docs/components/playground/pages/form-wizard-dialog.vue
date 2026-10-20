@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { ISODateString } from '@astryx-vue/core'
 import type { ISOTimeString } from '@astryx-vue/core'
 import { computed, ref, useId } from 'vue'
 import {
@@ -101,7 +100,7 @@ const cadence = ref('weekly')
 const weekday = ref('mon')
 const time = ref<ISOTimeString | undefined>('08:00' as ISOTimeString)
 const timezone = ref('pt')
-const startDate = ref<ISODateString | undefined>()
+const startDate = ref<Date | null>(null)
 
 const recipients = ref<string[]>(['exec'])
 const format = ref('pdf')
@@ -118,7 +117,7 @@ function resetDraft() {
   weekday.value = 'mon'
   time.value = '08:00' as ISOTimeString
   timezone.value = 'pt'
-  startDate.value = undefined
+  startDate.value = null
   recipients.value = ['exec']
   format.value = 'pdf'
   skipEmpty.value = true
@@ -129,8 +128,11 @@ function handleOpenChange(isOpen: boolean) {
     resetDraft()
 }
 
-function errorsForStep(index: number) {
-  const base = [
+type StepErrors = Partial<Record<'name' | 'sections' | 'time' | 'startDate' | 'recipients', string>>
+
+/** 每个步骤的必填项检查，顺序和 STEPS 一致。 */
+function collectErrors(): StepErrors[] {
+  return [
     {
       ...(name.value.trim() ? {} : { name: 'Give the report a name.' }),
       ...(sections.value.length === 0 ? { sections: 'Include at least one section.' } : {}),
@@ -143,7 +145,10 @@ function errorsForStep(index: number) {
       ...(recipients.value.length === 0 ? { recipients: 'Add at least one recipient.' } : {}),
     },
   ]
-  return attempted.value.has(index) ? base[index] : {}
+}
+
+function errorsForStep(index: number): StepErrors {
+  return attempted.value.has(index) ? collectErrors()[index]! : {}
 }
 
 const currentErrors = computed(() => errorsForStep(step.value))
@@ -159,20 +164,8 @@ const cadenceSummary = computed(() => {
 
 function goNext() {
   attempted.value = new Set(attempted.value).add(step.value)
-  const errs = [
-    {
-      ...(name.value.trim() ? {} : { name: 'Give the report a name.' }),
-      ...(sections.value.length === 0 ? { sections: 'Include at least one section.' } : {}),
-    },
-    {
-      ...(time.value ? {} : { time: 'Pick a send time.' }),
-      ...(startDate.value ? {} : { startDate: 'Pick a start date.' }),
-    },
-    {
-      ...(recipients.value.length === 0 ? { recipients: 'Add at least one recipient.' } : {}),
-    },
-  ]
-  if (Object.keys(errs[step.value]).length !== 0)
+  const errs = collectErrors()
+  if (Object.keys(errs[step.value]!).length !== 0)
     return
   if (!isLastStep.value) {
     step.value += 1
@@ -247,8 +240,8 @@ function goNext() {
               <FormLayout v-else-if="step === 1" default-optionality="optional">
                 <Field
                   label="How often"
-                  :input-i-d="cadenceInputID"
-                  :label-i-d="cadenceLabelID"
+                  :input-id="cadenceInputID"
+                  :label-id="cadenceLabelID"
                   is-group-label
                 >
                   <SegmentedControl
@@ -299,7 +292,8 @@ function goNext() {
                   has-search
                   trigger-display="badges"
                   description="Groups resolve at send time, so new members are included automatically."
-                  :status="currentErrors.recipients ? { type: 'error', message: currentErrors.recipients } : undefined"
+                  :status="currentErrors.recipients ? 'error' : 'default'"
+                  :status-message="currentErrors.recipients"
                 />
                 <RadioList v-model="format" label="Attachment format" size="sm">
                   <RadioListItem value="pdf" label="PDF" description="Best for reading. Charts render as images." />

@@ -51,8 +51,18 @@ const TIMELINE_DAYS = 90
 const TIMELINE_TICKS = Array.from({ length: TIMELINE_DAYS / 15 + 1 }, (_, i) => i * 15)
 const PROJECT_DAY = 58
 
-const MILESTONES = [
-  { id: 'm1', name: 'Kickoff & scoping', phase: 'build' as ReleasePhase, start: 0, end: 8, status: 'onTrack' as Rag, dateLabel: 'Apr 1 – Apr 9' },
+interface Milestone {
+  id: string
+  name: string
+  phase: ReleasePhase
+  start: number
+  end: number
+  status: Rag
+  dateLabel: string
+}
+
+const MILESTONES: Milestone[] = [
+  { id: 'm1', name: 'Kickoff & scoping', phase: 'build', start: 0, end: 8, status: 'onTrack', dateLabel: 'Apr 1 – Apr 9' },
   { id: 'm2', name: 'Architecture sign-off', phase: 'build', start: 8, end: 20, status: 'onTrack', dateLabel: 'Apr 9 – Apr 21' },
   { id: 'm3', name: 'Feature complete', phase: 'build', start: 20, end: 44, status: 'atRisk', dateLabel: 'Apr 21 – May 15' },
   { id: 'm4', name: 'Private beta', phase: 'beta', start: 44, end: 62, status: 'atRisk', dateLabel: 'May 15 – Jun 2' },
@@ -90,8 +100,18 @@ const WORKSTREAMS: Workstream[] = [
   { id: 'w8', name: 'Go-to-market ops', owner: 'Lena Fischer', phase: 'ga', percent: 30, due: '2026-06-30', status: 'atRisk' },
 ]
 
-const RISKS = [
-  { id: 'r1', title: 'Load tests failing at 3x target concurrency', workstream: 'Load & reliability', phase: 'beta' as ReleasePhase, severity: 'blocked' as Rag, owner: 'Dana Whitfield', detail: 'p99 latency degrades past SLO above 12k concurrent sessions.' },
+interface Risk {
+  id: string
+  title: string
+  workstream: string
+  phase: ReleasePhase
+  severity: Rag
+  owner: string
+  detail: string
+}
+
+const RISKS: Risk[] = [
+  { id: 'r1', title: 'Load tests failing at 3x target concurrency', workstream: 'Load & reliability', phase: 'beta', severity: 'blocked', owner: 'Dana Whitfield', detail: 'p99 latency degrades past SLO above 12k concurrent sessions.' },
   { id: 'r2', title: 'Data pipeline backfill slower than planned', workstream: 'Data pipeline', phase: 'build', severity: 'atRisk', owner: 'Marcus Webb', detail: 'Historical backfill is tracking two days behind.' },
   { id: 'r3', title: 'Beta onboarding email deliverability', workstream: 'Beta onboarding', phase: 'beta', severity: 'atRisk', owner: 'Tom Okafor', detail: 'Invite emails landing in spam for two enterprise domains.' },
 ]

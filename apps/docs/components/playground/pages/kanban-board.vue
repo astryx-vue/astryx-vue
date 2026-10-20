@@ -40,7 +40,7 @@ interface WorkItem {
 interface ColumnMeta {
   id: ColumnId
   title: string
-  variant: 'neutral' | 'accent' | 'warning' | 'success'
+  variant: 'neutral' | 'info' | 'warning' | 'success'
   tooltip: string
   emptyTitle: string
   emptyDescription: string
@@ -76,7 +76,7 @@ const COLUMNS: ColumnMeta[] = [
   {
     id: 'in-progress',
     title: 'In progress',
-    variant: 'accent',
+    variant: 'info',
     tooltip: 'Items currently in progress.',
     emptyTitle: 'Nothing in progress',
     emptyDescription: 'Items being worked on appear here.',
@@ -182,7 +182,6 @@ const INITIAL_ITEMS: WorkItem[] = [
 ]
 
 const DRAG_THRESHOLD = 5
-const COLUMN_WIDTH = 300
 
 const items = ref<WorkItem[]>([...INITIAL_ITEMS])
 const sprint = ref('003')

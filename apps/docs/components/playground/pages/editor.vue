@@ -40,7 +40,9 @@ interface Block {
   props: Record<string, unknown>
 }
 
-interface Transaction {
+// 用类型别名而不是 interface：Table 的泛型约束是 Record<string, unknown>，
+// 只有对象字面量类型别名才会拿到隐式索引签名。
+type Transaction = {
   id: string
   name: string
   category: string

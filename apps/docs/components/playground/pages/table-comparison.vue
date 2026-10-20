@@ -207,7 +207,7 @@ const rowsByGroup = computed(() => {
                 description: option.provider,
                 disabled: option.id !== slotId && slots.includes(option.id),
               }))"
-              @update:model-value="(next: string) => selectSlot(index, next)"
+              @update:model-value="(next: string | number | null) => next != null && selectSlot(index, String(next))"
             />
           </VStack>
         </HStack>

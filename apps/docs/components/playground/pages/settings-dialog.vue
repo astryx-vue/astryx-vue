@@ -24,7 +24,6 @@ import {
   SideNav,
   SideNavItem,
   SideNavSection,
-  Stack,
   StackItem,
   Switch,
   Text,
@@ -128,6 +127,13 @@ const settings = ref({
 function update<K extends keyof typeof settings.value>(key: K, value: (typeof settings.value)[K]) {
   settings.value = { ...settings.value, [key]: value }
 }
+
+// SegmentedControl 的 update:modelValue 事件参数在我们的类型里是 unknown，用可写
+// computed 走 v-model，让 defineModel 那侧的 string 类型生效。
+const density = computed({
+  get: () => settings.value.density,
+  set: (value: string) => update('density', value),
+})
 
 const activePanel = ref<PanelId>('profile')
 const titleId = 'settings-dialog-title'
@@ -412,10 +418,9 @@ const SearchIcon = iconComponent('i-heroicons-magnifying-glass')
                       Interface density
                     </Text>
                     <SegmentedControl
-                      :model-value="settings.density"
+                      v-model="density"
                       label="Interface density"
                       size="sm"
-                      @update:model-value="v => update('density', v)"
                     >
                       <SegmentedControlItem value="comfortable" label="Comfortable" />
                       <SegmentedControlItem value="compact" label="Compact" />
@@ -701,7 +706,7 @@ const SearchIcon = iconComponent('i-heroicons-magnifying-glass')
                     { value: 'en-US', label: 'English (US)' },
                     { value: 'fr', label: 'Français' },
                   ]"
-                  @update:model-value="v => update('language', v)"
+                  @update:model-value="(v: string | number | null) => update('language', v == null ? settings.language : String(v))"
                 />
                 <Switch
                   v-if="activePanel === 'notifications'"
