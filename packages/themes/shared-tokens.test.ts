@@ -1,5 +1,5 @@
 /**
- * Spacing and data-color tokens across the shipped themes.
+ * Spacing and data-color tokens shared by the shipped themes.
  *
  * Spacing steps are rem, so gaps and padding grow with the reader's root font
  * size the same way the rem type scale does. At the default 16px root every
@@ -70,14 +70,39 @@ describe('spacing tokens', () => {
   })
 })
 
+/** Upstream dataTokens.stylex.ts names, in its order. */
+const DATA_TOKEN_NAMES = [
+  ...['blue', 'orange', 'purple', 'green', 'pink', 'cyan', 'red', 'teal', 'brown', 'indigo'].map(name => `--astryx-color-data-categorical-${name}`),
+  '--astryx-color-data-neutral',
+  ...['blue', 'shamrock', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow', 'gray'].flatMap(hue =>
+    [5, 4, 3, 2, 1].map(step => `--astryx-color-data-${hue}-${step}`),
+  ),
+]
+
 describe('data color tokens', () => {
-  it('declare the same 56 values in every theme', () => {
-    const reference = [...declarations('neutral')].filter(([name]) => name.startsWith('--astryx-color-data-'))
-    expect(reference).toHaveLength(56)
+  const dataCss = readFileSync(join(root, 'packages/themes/data.css'), 'utf8')
+  const declared = parseCustomProperties(dataCss)
+
+  it('declare the complete upstream group once, on :root', () => {
+    expect(DATA_TOKEN_NAMES).toHaveLength(56)
+    expect(declared.map(property => property.name)).toEqual(DATA_TOKEN_NAMES)
+    expect(dataCss).toContain(':root {')
+    expect(dataCss).not.toContain('data-astryx-theme')
+    const values = new Map(declared.map(property => [property.name, property.value]))
+    expect(values.get('--astryx-color-data-categorical-blue')).toBe('light-dark(#0171E3, #0171E3)')
+    expect(values.get('--astryx-color-data-neutral')).toBe('light-dark(#8494A3, #8C939B)')
+    expect(values.get('--astryx-color-data-gray-5')).toBe('light-dark(#25363F, #333338)')
+  })
+
+  it('stay out of the per-theme stylesheets, so nested themes inherit them', () => {
+    for (const theme of ALL_THEMES)
+      expect([...declarations(theme).keys()].filter(name => name.startsWith('--astryx-color-data-')), theme).toEqual([])
+  })
+
+  it('reach every theme entry', () => {
     for (const theme of ALL_THEMES) {
-      const declared = declarations(theme)
-      for (const [name, value] of reference)
-        expect(declared.get(name), `${theme} ${name}`).toBe(value)
+      const entry = readFileSync(join(root, `packages/themes/${theme}.css`), 'utf8')
+      expect(entry, theme).toContain('@import \'./data.css\';')
     }
   })
 })

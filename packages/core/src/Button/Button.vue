@@ -82,12 +82,7 @@ const element = computed<ButtonRootElement | null>(() => {
 
 const buttonTooltip = useButtonTooltip(hasTooltip)
 
-const rootClass = computed(() => [
-  'astryx-button',
-  props.variant,
-  effectiveSize.value,
-  attrs.class,
-])
+const rootClass = computed(() => ['astryx-button', attrs.class])
 
 interface ButtonInlineStyle extends CSSProperties {
   '--astryx-button-width'?: string

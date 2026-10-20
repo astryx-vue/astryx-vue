@@ -109,6 +109,13 @@ describe('button', () => {
     expect(wrapper.attributes('style')).toContain('margin-top: 4px')
   })
 
+  it('reflects variant and size as data attributes, not bare value classes', () => {
+    const wrapper = mount(Button, { props: { label: 'Save', variant: 'primary', size: 'sm' } })
+    expect(wrapper.classes()).toEqual(['astryx-button'])
+    expect(wrapper.attributes('data-variant')).toBe('primary')
+    expect(wrapper.attributes('data-size')).toBe('sm')
+  })
+
   it('formats numeric width as pixels and preserves CSS string widths', async () => {
     const wrapper = mount(Button, {
       props: {

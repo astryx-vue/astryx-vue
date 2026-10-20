@@ -1,9 +1,10 @@
 /**
- * `<TokenReference>` 要渲染的数据：把 neutral/base.css 的变量按分区、按颜色分组整理好，
- * 并把颜色解析成浅色和深色两个最终值。都是纯函数，组件只负责渲染。
+ * `<TokenReference>` 要渲染的数据：把 neutral/base.css 和共用的 data.css 里的变量
+ * 按分区、按颜色分组整理好，并把颜色解析成浅色和深色两个最终值。都是纯函数，组件只负责渲染。
  */
 import type { ColorBucket, CustomProperty, TokenSectionId } from './parseTokens'
 import type { LocalizedText, SectionCopy } from './tokenReferenceCopy'
+import dataCss from '../../../../packages/themes/data.css?raw'
 import baseCss from '../../../../packages/themes/neutral/base.css?raw'
 import { colorBucket, parseCustomProperties, resolveStop, sectionId, splitLightDark, TOKEN_SECTION_ORDER } from './parseTokens'
 import { BUCKET_COPY, SECTION_COPY } from './tokenReferenceCopy'
@@ -50,7 +51,7 @@ export const MOTION_SAMPLES = [
   { className: 'astryx-motion-slide-in-end', label: 'end' },
 ]
 
-const properties = parseCustomProperties(baseCss)
+const properties = [...parseCustomProperties(baseCss), ...parseCustomProperties(dataCss)]
 const byName = new Map(properties.map(property => [property.name, property.value]))
 
 /** 按固定顺序列出分区。传了 `wanted` 就只留这些分区。 */

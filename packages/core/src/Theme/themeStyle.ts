@@ -55,9 +55,12 @@ export function bridgeSurfaceTokens(tokens: Readonly<Record<string, string>>): R
   return bridgeComponentTokens(tokens, SURFACE_BRIDGES)
 }
 
-/** Inline custom properties for a theme subtree, including syntax colors. */
+/**
+ * Inline custom properties for a theme subtree: semantic tokens with their
+ * component aliases, theme-local tokens by exact name, and syntax colors.
+ */
 export function themeStyle(theme: ThemeDefinition): Record<string, string> {
-  const style = bridgeComponentTokens(theme.tokens)
+  const style = { ...bridgeComponentTokens(theme.tokens), ...theme.localTokens }
   if (theme.syntax)
     Object.assign(style, syntaxThemeStyle(theme.syntax))
   return style

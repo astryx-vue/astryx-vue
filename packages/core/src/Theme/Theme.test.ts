@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { computed, defineComponent, h } from 'vue'
+import { computed, createSSRApp, defineComponent, h } from 'vue'
+import { renderToString } from 'vue/server-renderer'
 import { defineSyntaxTheme } from '../Code/syntaxTheme.js'
 import { useSyntaxTheme } from '../Code/useSyntaxTheme.js'
 import { defineTheme } from './defineTheme.js'
@@ -89,8 +90,8 @@ describe('theme', () => {
       slots: { default: 'Ruled' },
     })
     const style = wrapper.get('[data-astryx-theme-style]')
-    expect(style.text()).toContain('[data-astryx-theme="ruled"] .astryx-button')
-    expect(style.text()).toContain('font-weight: 600;')
+    expect(style.text()).toContain('@scope ([data-astryx-theme="ruled"]) to ([data-astryx-theme])')
+    expect(style.text()).toContain('.astryx-button {\n  font-weight: 600;')
     wrapper.unmount()
   })
 
@@ -128,6 +129,22 @@ describe('theme', () => {
     expect(wrapper.get('.mode').text()).toBe('dark')
     expect(wrapper.get('.accent').text()).toBe('#86EFAC')
     expect(wrapper.get('.syntax').text()).toBe('#eeeeee')
+    wrapper.unmount()
+  })
+
+  it('server-renders the theme sheet as raw text, so its selectors survive', async () => {
+    const theme = defineTheme({ name: 'ssr', components: { card: { 'variant:muted': { borderWidth: '2px' } } } })
+    const html = await renderToString(createSSRApp({ render: () => h(Theme, { theme }, () => 'x') }))
+    expect(html).toContain('@scope ([data-astryx-theme="ssr"]) to ([data-astryx-theme])')
+    expect(html).toContain('.astryx-card[data-variant="muted"]')
+    expect(html).not.toContain('&quot;')
+  })
+
+  it('keeps the body font on the theme wrapper, so inheriting components follow it', () => {
+    const theme = defineTheme({ name: 'fonted', typography: { body: { family: 'Geist', fallbacks: 'sans-serif' } } })
+    const wrapper = mount(Theme, { props: { theme }, slots: { default: 'x' } })
+    expect(wrapper.element.style.getPropertyValue('--astryx-font-family-body')).toBe('Geist, sans-serif')
+    expect(wrapper.classes()).toContain('astryx-theme')
     wrapper.unmount()
   })
 })

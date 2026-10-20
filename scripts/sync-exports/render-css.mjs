@@ -5,9 +5,12 @@ import { compareName } from './source-layout.mjs'
 
 const CSS_BANNER = '/* 这个文件由 `pnpm sync` 生成，不要手改。 */\n'
 
-// 各主题入口都引入同一份 fonts.css。以后新增主题时，生成的入口同样加上这行。
-const THEME_FONT_IMPORTS = [
+// 各主题入口都先引入两份共用样式：fonts.css 是字体，data.css 是数据可视化配色的默认值。
+// 数据配色只在 :root 声明一次，主题只写自己改动的那几档，嵌套主题不会把外层的改动盖回默认值。
+// 以后新增主题时，生成的入口同样加上这两行。
+const THEME_SHARED_IMPORTS = [
   '@import \'./fonts.css\';',
+  '@import \'./data.css\';',
 ]
 
 // 这些样式由组件单文件直接引入，styles.css 原来没有汇总。新的 css 会自动汇总。
@@ -67,6 +70,6 @@ export function renderCoreStyles(rootDir) {
 export function renderThemeEntries(rootDir) {
   return themeStylesheetDirs(rootDir).map(name => [
     join(rootDir, 'packages/themes', `${name}.css`),
-    renderCss(join(rootDir, 'packages/themes', name), `./${name}/`, new Set(), THEME_FONT_IMPORTS),
+    renderCss(join(rootDir, 'packages/themes', name), `./${name}/`, new Set(), THEME_SHARED_IMPORTS),
   ])
 }

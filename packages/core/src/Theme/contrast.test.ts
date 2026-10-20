@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { contrastRatio, parseColor, pickMediaMode } from './contrast.js'
+import { compositeOver, contrastRatio, parseColor, pickMediaMode } from './contrast.js'
+
+const WHITE = parseColor('#ffffff')!
+const INK = parseColor('#171717')!
 
 describe('media contrast', () => {
   it('parses hex and rgb colors', () => {
@@ -9,19 +12,29 @@ describe('media contrast', () => {
   })
 
   it('skips a surface the ambient text already reads on', () => {
-    const background = parseColor('#ffffff')!
-    const ambient = parseColor('#171717')!
-    expect(contrastRatio(ambient, background)).toBeGreaterThan(3)
-    expect(pickMediaMode(background, ambient)).toBe('off')
+    expect(contrastRatio(INK, WHITE)).toBeGreaterThan(3)
+    expect(pickMediaMode(WHITE, INK, WHITE, INK)).toBe('off')
   })
 
-  it('picks dark text treatment for a dark painted surface', () => {
-    const background = parseColor('#0a1317')!
-    const ambient = parseColor('#0a1317')!
-    expect(pickMediaMode(background, ambient)).toBe('dark')
+  it('picks the side whose text contrasts more on the painted surface', () => {
+    const dark = parseColor('#0a1317')!
+    expect(pickMediaMode(dark, dark, WHITE, INK)).toBe('dark')
+    const pale = parseColor('#e5e5e5')!
+    expect(pickMediaMode(pale, pale, WHITE, INK)).toBe('light')
   })
 
-  it('returns null when the background is transparent', () => {
-    expect(pickMediaMode(parseColor('transparent')!, parseColor('#171717')!)).toBeNull()
+  it('reads the theme text colors instead of fixed white and ink', () => {
+    const mid = parseColor('#7a7a7a')!
+    const cream = parseColor('#fff7d6')!
+    const coffee = parseColor('#2a1a05')!
+    expect(pickMediaMode(mid, mid, cream, coffee)).toBe(contrastRatio(cream, mid) >= contrastRatio(coffee, mid) ? 'dark' : 'light')
+  })
+
+  it('returns null when a text color cannot be read', () => {
+    expect(pickMediaMode(WHITE, INK, null, INK)).toBeNull()
+  })
+
+  it('composites a translucent layer over its backdrop', () => {
+    expect(compositeOver({ r: 0, g: 0, b: 0, a: 0.5 }, WHITE)).toEqual({ r: 127.5, g: 127.5, b: 127.5, a: 1 })
   })
 })
