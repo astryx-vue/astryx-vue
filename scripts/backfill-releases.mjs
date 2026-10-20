@@ -6,8 +6,9 @@
 import { execFileSync } from 'node:child_process'
 import { appendFileSync, readFileSync } from 'node:fs'
 import process from 'node:process'
+import { listPublicPackages } from './list-public-packages.mjs'
 
-const PACKAGES = ['core', 'themes', 'cli']
+const PACKAGES = listPublicPackages()
 const NPM_REGISTRY = 'https://registry.npmjs.org'
 
 function run(command, args, options = {}) {

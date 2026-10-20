@@ -99,7 +99,7 @@ GitHub 这边：
 | 只发 npmjs.org | npm 包页通过 `repository` 链到 GitHub。仓库公开后，provenance 再链到 Actions。GitHub Release 里有 npm 链接。Packages 侧边栏仍然是空的。 |
 | npm 成功后再发到 GitHub Packages | 这是现在的默认。这次发布的包会出现在本仓库的 Packages 侧边栏。用的是 workflow 里的 `GITHUB_TOKEN`，权限是 `packages: write`。 |
 
-`release.yml` 的 `github-packages` job 在 npm 发布成功后运行。它只上传 npmjs.org 上已经存在的同一版本；GitHub Packages 上已经有的版本会跳过。这个 job 失败不会撤回 npm 上的包。要关掉双发，把仓库变量 `PUBLISH_GITHUB_PACKAGES` 设为 `false`。不设这个变量时会发。
+`release.yml` 的 `github-packages` job 在 npm 发布成功后运行。要发哪些包由 `scripts/list-public-packages.mjs` 决定：`packages/` 下没有标 `private: true` 的包都会发，现在是 `cli`、`core`、`themes`。新增包不用改 workflow。它只上传 npmjs.org 上已经存在的同一版本；GitHub Packages 上已经有的版本会跳过。所以某个包漏发了，下一次 Release 运行会自动补上。这个 job 失败不会撤回 npm 上的包。要关掉双发，把仓库变量 `PUBLISH_GITHUB_PACKAGES` 设为 `false`。不设这个变量时会发。
 
 ## 日常发版
 
