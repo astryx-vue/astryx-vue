@@ -1,6 +1,10 @@
+import { enableAutoUnmount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
+import { mountComposable } from './testing/mountComposable.js'
 import { useDismiss } from './useDismiss.js'
+
+enableAutoUnmount(afterEach)
 
 describe('useDismiss', () => {
   let container: HTMLDivElement
@@ -26,12 +30,12 @@ describe('useDismiss', () => {
     const triggerRef = ref(trigger)
     const isEnabled = ref(true)
 
-    useDismiss({
+    mountComposable(() => useDismiss({
       container: containerRef,
       trigger: triggerRef,
       isEnabled,
       onDismiss: dismissSpy,
-    })
+    }))
 
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
@@ -48,12 +52,12 @@ describe('useDismiss', () => {
     const triggerRef = ref(trigger)
     const isEnabled = ref(true)
 
-    useDismiss({
+    mountComposable(() => useDismiss({
       container: containerRef,
       trigger: triggerRef,
       isEnabled,
       onDismiss: dismissSpy,
-    })
+    }))
 
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
@@ -70,12 +74,12 @@ describe('useDismiss', () => {
     const triggerRef = ref(trigger)
     const isEnabled = ref(true)
 
-    useDismiss({
+    mountComposable(() => useDismiss({
       container: containerRef,
       trigger: triggerRef,
       isEnabled,
       onDismiss: dismissSpy,
-    })
+    }))
 
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
@@ -91,11 +95,11 @@ describe('useDismiss', () => {
     const containerRef = ref(container)
     const isEnabled = ref(true)
 
-    useDismiss({
+    mountComposable(() => useDismiss({
       container: containerRef,
       isEnabled,
       onDismiss: dismissSpy,
-    })
+    }))
 
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
@@ -113,12 +117,12 @@ describe('useDismiss', () => {
     const isEnabled = ref(true)
     const enableEscape = ref(false)
 
-    useDismiss({
+    mountComposable(() => useDismiss({
       container: containerRef,
       isEnabled,
       enableEscape,
       onDismiss: dismissSpy,
-    })
+    }))
 
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
@@ -134,11 +138,11 @@ describe('useDismiss', () => {
     const containerRef = ref(container)
     const isEnabled = ref(false)
 
-    useDismiss({
+    mountComposable(() => useDismiss({
       container: containerRef,
       isEnabled,
       onDismiss: dismissSpy,
-    })
+    }))
 
     await nextTick()
 

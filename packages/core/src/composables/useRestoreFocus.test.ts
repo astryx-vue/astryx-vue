@@ -1,6 +1,10 @@
+import { enableAutoUnmount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick, ref } from 'vue'
+import { mountComposable } from './testing/mountComposable.js'
 import { useRestoreFocus } from './useRestoreFocus.js'
+
+enableAutoUnmount(afterEach)
 
 describe('useRestoreFocus', () => {
   let button1: HTMLButtonElement
@@ -26,10 +30,10 @@ describe('useRestoreFocus', () => {
     button1.focus()
     expect(document.activeElement).toBe(button1)
 
-    useRestoreFocus({
+    mountComposable(() => useRestoreFocus({
       isEnabled,
       shouldRestore,
-    })
+    }))
 
     await nextTick()
     shouldRestore.value = true
@@ -50,10 +54,10 @@ describe('useRestoreFocus', () => {
 
     button1.focus()
 
-    useRestoreFocus({
+    mountComposable(() => useRestoreFocus({
       isEnabled,
       shouldRestore,
-    })
+    }))
 
     await nextTick()
     shouldRestore.value = true
@@ -74,10 +78,10 @@ describe('useRestoreFocus', () => {
 
     button1.focus()
 
-    const focus = useRestoreFocus({
+    const { result: focus } = mountComposable(() => useRestoreFocus({
       isEnabled,
       shouldRestore,
-    })
+    }))
 
     await nextTick()
     focus.save()

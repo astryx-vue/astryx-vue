@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { CarouselHandle, CarouselProps, CarouselSlots } from './types.js'
-import { computed, nextTick, ref, useSlots, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/context.js'
-import { CarouselSlideHost, flattenSlides } from './slides.js'
+import { CarouselItems } from './slides.js'
 import { useCarouselScroller } from './useCarouselScroll.js'
 import '../../styles/carousel.css'
 
@@ -20,7 +20,6 @@ const props = withDefaults(defineProps<CarouselProps>(), {
 
 defineSlots<CarouselSlots>()
 
-const slots = useSlots()
 const messages = useAstryxMessages()
 const scroller = ref<HTMLElement | null>(null)
 const startButton = ref<HTMLButtonElement | null>(null)
@@ -28,7 +27,6 @@ const endButton = ref<HTMLButtonElement | null>(null)
 const focusedNav = ref<'start' | 'end' | null>(null)
 const { measure, onKeyDown, overflow, scrollByDirection, scrollToIndex } = useCarouselScroller(scroller)
 
-const slides = computed(() => flattenSlides(slots.default?.() ?? []))
 const regionLabel = computed(() => props.label ?? messages.value.carousel.label)
 
 const canScrollStart = computed(() => props.hasLoop && overflow.value.hasOverflow
@@ -128,9 +126,9 @@ const handle: CarouselHandle = {
 
 defineExpose(handle)
 
-watch(slides, () => {
-  void nextTick(measure)
-})
+function slideLabel(position: number, total: number): string {
+  return messages.value.carousel.slide(position, total)
+}
 </script>
 
 <template>
@@ -156,16 +154,7 @@ watch(slides, () => {
       :style="scrollerStyle"
       @keydown="onKeyDown($event, hasLoop)"
     >
-      <div
-        v-for="(slide, index) in slides"
-        :key="index"
-        class="astryx-carousel__item"
-        role="group"
-        aria-roledescription="slide"
-        :aria-label="messages.carousel.slide(index + 1, slides.length)"
-      >
-        <CarouselSlideHost :node="slide" />
-      </div>
+      <CarouselItems :content="$slots.default" :label="slideLabel" @update="measure" />
     </div>
     <div v-if="hasButtons" class="astryx-carousel__controls">
       <div class="astryx-carousel__pill astryx-carousel__pill--start" :data-hidden="!canScrollStart || undefined">
