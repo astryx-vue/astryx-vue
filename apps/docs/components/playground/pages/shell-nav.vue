@@ -122,7 +122,14 @@ const MENUS: { label: string, groups: MenuEntry[][] }[] = [
   },
   {
     label: 'Help',
-    groups: [['Documentation', ''], ['Release Notes', ''], ['Report Issue', ''], ['About', '']],
+    groups: [
+      [
+        ['Documentation', ''],
+        ['Release Notes', ''],
+        ['Report Issue', ''],
+        ['About', ''],
+      ],
+    ],
   },
 ]
 

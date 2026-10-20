@@ -211,7 +211,7 @@ const columns: TableColumn<RepoEntry>[] = [
 ]
 
 const { sortedData, sortConfig } = useTableSortableState({ data: rows, columns })
-const sortPlugin = useTableSortable(sortConfig)
+const sortPlugin = useTableSortable<RepoEntry>(sortConfig)
 
 const crumbs = computed(() => {
   const segments = selectedFolderId.value?.split('/') ?? []
