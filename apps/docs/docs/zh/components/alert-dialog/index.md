@@ -12,9 +12,16 @@ import { alertDialogLoading } from '../../../../components/demos/alert-dialog'
 
 ## 使用方法
 
-`AlertDialog` 是一个只做一件事的模态对话框：在破坏性或不可逆的操作真正发生之前，再向用户确认一次。删除内容、撤销授权、丢弃未保存的修改都属于这类场景——操作一旦执行就无法回头，所以值得打断用户，把后果讲清楚，再由用户自己决定。
+`AlertDialog`（警告对话框）只专心做一件事：在具有破坏性或无法撤回的操作（比如永久删除文件、清空数据、注销账户）真正执行前，跳出来跟用户再次确认。因为这些动作做完就没法反悔，所以必须郑重其事地停下来，向用户说清楚后果，再交由用户自己做决定。
 
-它实现了 WAI-ARIA 的 Alert Dialog 模式。根元素使用 `role="alertdialog"`，标题通过 `aria-labelledby` 为对话框命名，后果描述通过 `aria-describedby` 一起播报。打开时焦点移入对话框并落在「取消」上，关闭后再回到触发它的元素。它不能通过点击遮罩关闭，Escape 则等同于取消。
+**什么时候用：**
+- 执行无法挽回或后果严重的破坏性操作前，需要用户郑重确认时。
+
+**什么时候不要用：**
+- 需要用户在弹窗里填写表单、编辑复杂内容时，请改用普通对话框 [Dialog](/components/dialog)。
+- 普通的状态提醒或操作成功通知，请改用轻提示 [useToast](/components/use-toast)，不要频繁打断用户。
+
+它实现了 WAI-ARIA 规范中的 Alert Dialog 模式。根元素带有 `role="alertdialog"`，标题通过 `aria-labelledby` 作为弹窗名称，后果描述通过 `aria-describedby` 连同标题一起被读屏工具念出。打开时焦点会自动落在最为安全的「取消」按钮上，关闭后再把焦点还给触发它的元素。为了防止误触，点击背景遮罩不会关闭它，按键盘上的 Escape 键则等同于点击取消。
 
 ```vue
 <script setup lang="ts">

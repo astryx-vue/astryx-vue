@@ -42,6 +42,12 @@ jobs:
       - name: Check
         run: pnpm check
 
+      # 演练场页面在仓库里能过类型检查，不代表 CLI 复制到用户项目后也能过：
+      # 用户项目看不到演练场的 tsconfig 别名。这里把 isReady 的模板落到一个临时项目，
+      # 只用 vue 和 @astryx-vue/core 的包导出再检查一遍（约 15 秒）。
+      - name: Check templates land cleanly
+        run: pnpm check:templates
+
       - name: Dry-run pack
         run: pnpm release:dry-run
 
@@ -216,9 +222,10 @@ jobs:
           fi
           touch "${HOME}/.npmrc"
           printf '%s\n' '@astryx-vue:registry=https://npm.pkg.github.com' "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> "${HOME}/.npmrc"
-          for spec in core themes; do
-            name="@astryx-vue/${spec}"
-            version="$(node -p "require('./packages/${spec}/package.json').version")"
+          # packages/ 下每个不是 private 的包都发，新增包不用改这里。
+          for dir in $(node ./scripts/list-public-packages.mjs); do
+            name="$(node -p "require('./packages/${dir}/package.json').name")"
+            version="$(node -p "require('./packages/${dir}/package.json').version")"
             # 上面已把 @astryx-vue scope 指向 GitHub Packages，scope 配置优先于 --registry，
             # 所以这里必须同时覆盖 scope registry，才真的是在查 npmjs.org。
             if ! npm view "${name}@${version}" version --registry https://registry.npmjs.org --@astryx-vue:registry=https://registry.npmjs.org >/dev/null 2>&1; then

@@ -175,7 +175,7 @@ function toggleReason(reason: string) {
                 placeholder="Project details*"
                 :status="errors.details ? { type: 'error', message: errors.details } : undefined"
               />
-              <VStack justify="stretch">
+              <VStack hAlign="stretch">
                 <Button label="Let's connect" variant="primary" @click="handleSubmit" />
               </VStack>
             </VStack>

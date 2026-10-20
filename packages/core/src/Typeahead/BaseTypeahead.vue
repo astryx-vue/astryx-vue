@@ -5,6 +5,7 @@ import { computed, inject, nextTick, onMounted, ref, useAttrs, useId, useTemplat
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
 import { typeaheadChromeKey } from './context.js'
@@ -45,6 +46,7 @@ let suppressFocusOpen = false
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const controlRef = useTemplateRef<HTMLElement>('controlRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
+useScrollbars(listboxRef)
 
 const placeholder = computed(() => props.placeholder ?? messages.value.typeahead.placeholder)
 const emptyText = computed(() => props.emptySearchText ?? props.emptyText ?? messages.value.typeahead.empty)

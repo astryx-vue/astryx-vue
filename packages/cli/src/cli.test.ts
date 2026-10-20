@@ -86,12 +86,14 @@ describe('json envelopes', () => {
     }
     expect(data.name).toBe('astryx-vue')
     expect(data.package).toBe('@astryx-vue/cli')
-    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'manifest', 'init'])
+    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'init'])
     expect(data.commands.every(command => command.json)).toBe(true)
     expect(data.commands.find(command => command.name === 'component')?.responseTypes).toEqual(['component.list', 'component.detail'])
     expect(data.commands.find(command => command.name === 'composable')?.responseTypes).toEqual(['composable.list', 'composable.detail'])
     expect(data.commands.find(command => command.name === 'docs')?.responseTypes).toEqual(['docs.list', 'docs.detail'])
-    expect(data.commands.find(command => command.name === 'search')?.options.find(option => option.flag.startsWith('--type'))?.choices).toEqual(['component', 'composable', 'doc'])
+    expect(data.commands.find(command => command.name === 'search')?.options.find(option => option.flag.startsWith('--type'))?.choices).toEqual(['component', 'composable', 'doc', 'template'])
+    expect(data.commands.find(command => command.name === 'template')?.responseTypes).toEqual(['template.list', 'template.show', 'template.skeleton', 'template.copy'])
+    expect(data.commands.find(command => command.name === 'template')?.exitCodes.map(exit => exit.code)).toEqual([0, 1, 2])
     expect(data.commands[0]?.exitCodes.map(exit => exit.code)).toEqual([0, 1, 2])
     expect(data.jsonSupported).toEqual(expect.arrayContaining(['component', 'composable', 'docs']))
     expect(data.globalOptions.map(option => option.flag)).toEqual(expect.arrayContaining(['--json', '--dense', '--zh']))
@@ -100,7 +102,7 @@ describe('json envelopes', () => {
   it('embeds the manifest in a bare --json call', async () => {
     const result = await run(['--json'])
     const data = assertResponse(result.stdout, 'help').data as { manifest: { commands: unknown[] } }
-    expect(data.manifest.commands).toHaveLength(6)
+    expect(data.manifest.commands).toHaveLength(8)
   })
 
   it('lists composables apart from components', async () => {
@@ -359,7 +361,7 @@ describe('init --features agents', () => {
 
       const updated = await run(['init', '--features', 'agents', '--zh'], cwd)
       expect(updated.exitCode).toBe(0)
-      expect(updated.stdout).toContain('Updated')
+      expect(updated.stdout).toContain('已更新')
       const next = await readFile(file, 'utf8')
       expect(next.startsWith('# My agent notes\n\nLeave this paragraph alone.\n\n')).toBe(true)
       expect(next).toContain('## Team rules\n\nShip on Tuesday.\n')
@@ -376,7 +378,7 @@ describe('init --features agents', () => {
       await writeFile(file, stale)
       const refreshed = await run(['init', '--features', 'agents', '--zh'], cwd)
       expect(refreshed.exitCode).toBe(0)
-      expect(refreshed.stdout).toContain('Updated the managed block')
+      expect(refreshed.stdout).toContain('已更新受管理区块')
       expect(refreshed.stdout).not.toContain('Left unchanged')
       const restored = await readFile(file, 'utf8')
       expect(restored.startsWith('# My agent notes\n\nLeave this paragraph alone.\n\n')).toBe(true)
@@ -415,6 +417,81 @@ describe('init --features agents', () => {
     expect(result.exitCode).toBe(2)
     expect(parseResponse(result.stdout)).toMatchObject({ code: 'ERR_UNKNOWN_FEATURE' })
   })
+
+  it('reuses an agent file the project already has', async () => {
+    const cwd = await mkdtemp(join(tmpdir(), 'astryx-vue-cli-'))
+    try {
+      await writeFile(join(cwd, 'CLAUDE.md'), '# Claude notes\n\nKeep this.\n')
+      const result = await run(['init', '--features', 'agents', '--json'], cwd)
+      const data = assertResponse(result.stdout, 'init.run').data as { agent: string, files: { path: string, action: string }[] }
+      expect(data.agent).toBe('auto')
+      expect(data.files).toEqual([{ path: 'CLAUDE.md', action: 'appended' }])
+      const written = await readFile(join(cwd, 'CLAUDE.md'), 'utf8')
+      expect(written.startsWith('# Claude notes\n\nKeep this.\n')).toBe(true)
+      expect(written).toContain(MANAGED_BLOCK_START)
+      expect(await readFile(join(cwd, 'AGENTS.md'), 'utf8').catch(() => null)).toBeNull()
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('writes .hermes.md for the hermes target', async () => {
+    const cwd = await mkdtemp(join(tmpdir(), 'astryx-vue-cli-'))
+    try {
+      const result = await run(['init', '--features', 'agents', '--agent', 'hermes', '--json'], cwd)
+      expect(assertResponse(result.stdout, 'init.run').data).toMatchObject({ agent: 'hermes', files: [{ path: '.hermes.md', action: 'created' }] })
+      expect(await readFile(join(cwd, '.hermes.md'), 'utf8')).toContain(MANAGED_BLOCK_END)
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('writes every existing agent file with --agent all, and creates AGENTS.md when none exists', async () => {
+    const cwd = await mkdtemp(join(tmpdir(), 'astryx-vue-cli-'))
+    try {
+      const empty = await run(['init', '--features', 'agents', '--agent', 'all', '--json'], cwd)
+      expect(assertResponse(empty.stdout, 'init.run').data).toMatchObject({ files: [{ path: 'AGENTS.md', action: 'created' }] })
+
+      await writeFile(join(cwd, 'CLAUDE.md'), '# Claude\n')
+      const all = await run(['init', '--features', 'agents', '--agent', 'all', '--json'], cwd)
+      const data = assertResponse(all.stdout, 'init.run').data as { files: { path: string, action: string }[] }
+      expect(data.files.map(file => file.path)).toEqual(['AGENTS.md', 'CLAUDE.md'])
+      expect(data.files.every(file => file.action === 'updated' || file.action === 'appended')).toBe(true)
+      expect(await readFile(join(cwd, 'AGENTS.md'), 'utf8')).toContain(MANAGED_BLOCK_START)
+      expect(await readFile(join(cwd, 'CLAUDE.md'), 'utf8')).toContain(MANAGED_BLOCK_START)
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('writes an explicit --agent-docs-path, creates its directory, and refuses to escape', async () => {
+    const cwd = await mkdtemp(join(tmpdir(), 'astryx-vue-cli-'))
+    try {
+      const result = await run(['init', '--features', 'agents', '--agent-docs-path', 'docs/TEAM.md', '--json'], cwd)
+      expect(assertResponse(result.stdout, 'init.run').data).toMatchObject({ files: [{ path: 'docs/TEAM.md', action: 'created' }] })
+      expect(await readFile(join(cwd, 'docs/TEAM.md'), 'utf8')).toContain(MANAGED_BLOCK_START)
+
+      const repeat = await run(['init', '--features', 'agents', '--agent-docs-path', 'docs/TEAM.md'], cwd)
+      expect(repeat.stdout).toContain('Updated the managed block in docs/TEAM.md')
+      expect((await readFile(join(cwd, 'docs/TEAM.md'), 'utf8')).match(new RegExp(MANAGED_BLOCK_START, 'g'))).toHaveLength(1)
+
+      const escape = await run(['init', '--features', 'agents', '--agent-docs-path', '../escape.md', '--json'], cwd)
+      expect(escape.exitCode).toBe(2)
+      expect(parseResponse(escape.stdout)).toMatchObject({ code: 'ERR_PATH_TRAVERSAL' })
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('rejects an unknown agent target', async () => {
+    const result = await run(['init', '--features', 'agents', '--agent', 'windsurf', '--json'])
+    expect(result.exitCode).toBe(2)
+    expect(parseResponse(result.stdout)).toMatchObject({ code: 'ERR_UNKNOWN_AGENT' })
+  })
 })
 
 describe('catalog source', () => {
@@ -427,8 +504,8 @@ describe('catalog source', () => {
     expect(button?.summary.en).toBe(extracted.summary)
     expect(button?.importPath).toBe('@astryx-vue/core/Button')
     expect(button?.props.en).toEqual(api.props)
-    expect(button?.examples.en.find(example => example.title === 'Floating')?.description).toContain('floating action button')
-    expect(button?.examples.zh.find(example => example.title === '悬浮')?.code).toContain('elevation="med"')
+    expect(button?.examples.find(example => example.title.en === 'Floating')?.description.en).toContain('floating action button')
+    expect(button?.examples.find(example => example.title.zh === '悬浮')?.code).toContain('elevation="med"')
     const menu = catalog.components.find(component => component.slug === 'dropdown-menu')
     expect(menu?.props.en.flatMap(group => group.rows).some(row => row.name === '`button`')).toBe(true)
     const chat = catalog.components.find(component => component.slug === 'chat')
@@ -439,7 +516,7 @@ describe('catalog source', () => {
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
     expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(57)
-    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(187)
+    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(188)
     const clipboard = catalog.components.find(component => component.slug === 'use-clipboard')
     expect(clipboard?.kind).toBe('composable')
     expect(clipboard?.name).toBe('UseClipboard')

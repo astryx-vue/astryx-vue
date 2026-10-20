@@ -232,6 +232,14 @@ describe('tab strip role', () => {
   })
 })
 
+/** 把单个 Tab 放进 TabList，让它能拿到 TabList 提供的上下文。 */
+function mountTab(props: InstanceType<typeof Tab>['$props'], slots: Record<string, () => unknown> = {}) {
+  return mount(TabList, {
+    props: { role: 'tablist', value: 'a' },
+    slots: { default: () => h(Tab, props, slots) },
+  })
+}
+
 describe('tab content', () => {
   it('shows the icon, the selected icon, and the end content', () => {
     const wrapper = mount(TabList, {
@@ -254,22 +262,19 @@ describe('tab content', () => {
   })
 
   it('falls back to the icon when no selected icon is given', () => {
-    const wrapper = mount(Tab, {
-      props: { value: 'a' },
-      slots: { default: () => 'Tab A', icon: () => h('span', { class: 'plain-icon' }) },
-    })
+    const wrapper = mountTab(
+      { value: 'a' },
+      { default: () => 'Tab A', icon: () => h('span', { class: 'plain-icon' }) },
+    )
 
     expect(wrapper.get('.astryx-tab__icon .plain-icon').attributes('class')).toBe('plain-icon')
   })
 
   it('uses the label prop as text, and the slot wins when both are given', () => {
-    const fromProp = mount(Tab, { props: { label: 'From prop', value: 'a' } })
+    const fromProp = mountTab({ label: 'From prop', value: 'a' })
     expect(fromProp.get('.astryx-tab__label-text').text()).toBe('From prop')
 
-    const fromSlot = mount(Tab, {
-      props: { label: 'From prop', value: 'a' },
-      slots: { default: () => 'From slot' },
-    })
+    const fromSlot = mountTab({ label: 'From prop', value: 'a' }, { default: () => 'From slot' })
     expect(fromSlot.get('.astryx-tab__label-text').text()).toBe('From slot')
   })
 

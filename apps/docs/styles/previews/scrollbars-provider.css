@@ -1,0 +1,29 @@
+.scrollbars-provider-preview {
+  display: grid;
+  gap: 16px;
+  box-sizing: border-box;
+  width: min(100%, 560px);
+}
+
+.scrollbars-provider-preview__panes {
+  display: grid;
+  gap: 16px;
+}
+
+/* A hand-written scroll container. The thicker, tinted bar comes from the variables. */
+.scrollbars-provider-preview__feed {
+  --astryx-scrollbar-size: 14px;
+  --astryx-scrollbar-thumb: color-mix(in srgb, var(--astryx-accent) 55%, transparent);
+  --astryx-scrollbar-thumb-hover: var(--astryx-accent);
+
+  box-sizing: border-box;
+  height: 180px;
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid var(--astryx-line);
+  border-radius: 8px;
+}
+
+.scrollbars-provider-preview__row {
+  padding-block: 4px;
+}

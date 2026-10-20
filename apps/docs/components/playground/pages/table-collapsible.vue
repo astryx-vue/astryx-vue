@@ -241,13 +241,13 @@ const investmentColumns: TableColumn<InvestmentAccount>[] = [
 ]
 
 const { sortedData: bankData, sortConfig: bankSortConfig } = useTableSortableState({ data: BANK_ACCOUNTS, columns: bankColumns })
-const bankPlugin = useTableSortable(bankSortConfig)
+const bankPlugin = useTableSortable<BankAccount>(bankSortConfig)
 const { sortedData: cardData, sortConfig: cardSortConfig } = useTableSortableState({ data: CREDIT_CARDS, columns: creditColumns })
-const cardPlugin = useTableSortable(cardSortConfig)
+const cardPlugin = useTableSortable<CreditCardAccount>(cardSortConfig)
 const { sortedData: procData, sortConfig: procSortConfig } = useTableSortableState({ data: PROCESSORS, columns: processorColumns })
-const procPlugin = useTableSortable(procSortConfig)
+const procPlugin = useTableSortable<ProcessorAccount>(procSortConfig)
 const { sortedData: invData, sortConfig: invSortConfig } = useTableSortableState({ data: INVESTMENTS, columns: investmentColumns })
-const invPlugin = useTableSortable(invSortConfig)
+const invPlugin = useTableSortable<InvestmentAccount>(invSortConfig)
 
 const chartSeries = computed(() => {
   if (!chartAccountId.value)

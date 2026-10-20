@@ -32,6 +32,16 @@ To keep bundle footprints minimal, the library does not package a proprietary ic
 
 For specialized workflows, the library provides cohesive component patterns including `Chat` layouts, `Citation` elements, and `Markdown` presentations.
 
+## Differences from the Original
+
+Most components map one-to-one to the original. The table below lists what this repository adds on top, things the original does not have. Each one is off by default or leaves existing behavior alone.
+
+| Feature | Entry | Description |
+| --- | --- | --- |
+| Custom scrollbars | [`ScrollbarsProvider`](/en/components/scrollbars-provider) | Wrap your app once and scrolling components swap native scrollbars for thin overlay ones. Without it nothing changes, and no extra code is bundled. |
+
+New extras will keep being added to this table.
+
 ---
 
 The public API strictly reflects current repository exports. Core styles and components follow native Web standards and modern Vue 3 patterns.

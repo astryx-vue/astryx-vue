@@ -95,7 +95,7 @@ function onPasswordChange(value: string) {
                         <Icon icon="i-heroicons-check-circle" size="lg" />
                       </template>
                     </EmptyState>
-                    <VStack v-else :gap="4" justify="stretch" width="100%">
+                    <VStack v-else :gap="4" hAlign="stretch" width="100%">
                       <VStack :gap="1">
                         <Text type="display-1" as="h2">
                           Welcome back

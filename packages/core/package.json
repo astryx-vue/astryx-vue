@@ -169,6 +169,11 @@
       "types": "./dist/ScrollableArea/index.d.ts",
       "import": "./dist/ScrollableArea/index.js"
     },
+    "./Scrollbars": {
+      "source": "./src/Scrollbars/index.ts",
+      "types": "./dist/Scrollbars/index.d.ts",
+      "import": "./dist/Scrollbars/index.js"
+    },
     "./Section": {
       "source": "./src/Section/index.ts",
       "types": "./dist/Section/index.d.ts",
@@ -708,6 +713,10 @@
         "types": "./dist/ScrollableArea/index.d.ts",
         "import": "./dist/ScrollableArea/index.js"
       },
+      "./Scrollbars": {
+        "types": "./dist/Scrollbars/index.d.ts",
+        "import": "./dist/Scrollbars/index.js"
+      },
       "./Section": {
         "types": "./dist/Section/index.d.ts",
         "import": "./dist/Section/index.js"
@@ -1036,7 +1045,8 @@
     "@internationalized/date": "catalog:runtime",
     "mdast-util-from-markdown": "catalog:runtime",
     "mdast-util-gfm": "catalog:runtime",
-    "micromark-extension-gfm": "catalog:runtime"
+    "micromark-extension-gfm": "catalog:runtime",
+    "overlayscrollbars": "catalog:runtime"
   },
   "devDependencies": {
     "@types/node": "catalog:language",

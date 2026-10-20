@@ -12,15 +12,7 @@ import { badgeColors, badgeCounts, badgeStatus } from '../../../../components/de
 
 ## 使用方法
 
-`Badge` 用于标记状态或类别，例如处理结果、优先级或团队归属，适合在列表、卡片和表格中快速扫读。徽标是静态的状态或类别标记，需要可移除、可点击的标签请用 Token。从独立入口导入即可，结构样式会随组件自动加载：
-
-主题在应用入口引入一次：
-
-```ts
-import '@astryx-vue/themes/neutral.css'
-```
-
-组件用法：
+`Badge`（徽标）是一块小小的只读标记，用来告诉用户某项内容的状态或所属分类，例如「已完成」、「待审核」或团队名称等。它很适合放在列表、卡片和表格行里，方便大家一眼扫过去就看清概况。
 
 ```vue
 <script setup lang="ts">
@@ -32,6 +24,19 @@ import { Badge } from '@astryx-vue/core/Badge'
     已完成
   </Badge>
 </template>
+```
+
+**什么时候用：**
+- 需要用颜色和简短词语突出展示某个条目的状态（如成功、警告、失败）或类别时。
+
+**什么时候不要用：**
+- 徽标是纯展示用的，不能点击也不能关闭。如果需要一个可以点击、勾选或带删除叉号的标签，请改用 [Token](/components/token)。
+- 如果只需要展示普通文字描述、日期或数量，请直接使用普通的排版文本（如 `Text` 组件），不要给每条普通信息都套上徽标。
+
+样式主题只需在整个应用的主入口（如 `main.ts`）引入一次：
+
+```ts
+import '@astryx-vue/themes/neutral.css'
 ```
 
 

@@ -1,7 +1,10 @@
+import { enableAutoUnmount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
 import { mountComposable } from './testing/mountComposable.js'
 import { useFocusTrap } from './useFocusTrap.js'
+
+enableAutoUnmount(afterEach)
 
 describe('useFocusTrap', () => {
   let container: HTMLDivElement
@@ -26,10 +29,10 @@ describe('useFocusTrap', () => {
     const containerRef = ref(container)
     const isEnabled = ref(true)
 
-    useFocusTrap({
+    mountComposable(() => useFocusTrap({
       container: containerRef,
       isEnabled,
-    })
+    }))
 
     await nextTick()
     button2.focus()
@@ -46,10 +49,10 @@ describe('useFocusTrap', () => {
     const containerRef = ref(container)
     const isEnabled = ref(true)
 
-    useFocusTrap({
+    mountComposable(() => useFocusTrap({
       container: containerRef,
       isEnabled,
-    })
+    }))
 
     await nextTick()
     button1.focus()
@@ -65,10 +68,10 @@ describe('useFocusTrap', () => {
     const containerRef = ref(container)
     const isEnabled = ref(false)
 
-    useFocusTrap({
+    mountComposable(() => useFocusTrap({
       container: containerRef,
       isEnabled,
-    })
+    }))
 
     await nextTick()
     button1.focus()
@@ -85,10 +88,10 @@ describe('useFocusTrap', () => {
     const containerRef = ref(container)
     const isEnabled = ref(false)
 
-    const trap = useFocusTrap({
+    const { result: trap } = mountComposable(() => useFocusTrap({
       container: containerRef,
       isEnabled,
-    })
+    }))
 
     await nextTick()
     trap.focusFirst()
@@ -99,10 +102,10 @@ describe('useFocusTrap', () => {
     const containerRef = ref(container)
     const isEnabled = ref(false)
 
-    const trap = useFocusTrap({
+    const { result: trap } = mountComposable(() => useFocusTrap({
       container: containerRef,
       isEnabled,
-    })
+    }))
 
     await nextTick()
     trap.focusLast()
@@ -113,11 +116,11 @@ describe('useFocusTrap', () => {
     const containerRef = ref(container)
     const isEnabled = ref(false)
 
-    useFocusTrap({
+    mountComposable(() => useFocusTrap({
       container: containerRef,
       isEnabled,
       initialFocus: () => button2,
-    })
+    }))
 
     await nextTick()
     isEnabled.value = true
@@ -129,7 +132,7 @@ describe('useFocusTrap', () => {
   it('把 isActive 当 isEnabled 的另一个名字', async () => {
     const isActive = ref(false)
 
-    useFocusTrap({ container: ref(container), isActive })
+    mountComposable(() => useFocusTrap({ container: ref(container), isActive }))
 
     await nextTick()
     isActive.value = true
@@ -144,7 +147,7 @@ describe('useFocusTrap', () => {
   it('容器里按下 Escape 时调用 onEscape', async () => {
     const onEscape = vi.fn()
 
-    useFocusTrap({ container: ref(container), isEnabled: ref(true), onEscape })
+    mountComposable(() => useFocusTrap({ container: ref(container), isEnabled: ref(true), onEscape }))
     await nextTick()
 
     button1.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
@@ -159,7 +162,7 @@ describe('useFocusTrap', () => {
   })
 
   it('不传 container 时返回自己建的 containerRef', async () => {
-    const trap = useFocusTrap({ isEnabled: ref(true) })
+    const { result: trap } = mountComposable(() => useFocusTrap({ isEnabled: ref(true) }))
     trap.containerRef.value = container
     await nextTick()
 
@@ -176,7 +179,7 @@ describe('useFocusTrap', () => {
     trigger.focus()
     const isEnabled = ref(false)
 
-    useFocusTrap({ container: ref(container), isEnabled })
+    mountComposable(() => useFocusTrap({ container: ref(container), isEnabled }))
     await nextTick()
 
     isEnabled.value = true
@@ -196,7 +199,7 @@ describe('useFocusTrap', () => {
     trigger.focus()
 
     const isEnabled = ref(false)
-    useFocusTrap({ container: ref(empty), isEnabled })
+    mountComposable(() => useFocusTrap({ container: ref(empty), isEnabled }))
     await nextTick()
 
     isEnabled.value = true

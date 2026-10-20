@@ -124,7 +124,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
               <StatusDot variant="success" label="Live" is-pulsing tooltip="Auto-refreshing every 30s" />
               <Text type="supporting" color="secondary">
                 Updated
-                <Timestamp value="2026-06-30T21:15:00Z" format="relative" type="inherit" color="inherit" />
+                <Timestamp value="2026-06-30T21:15:00Z" format="relative" color="inherit" />
               </Text>
             </HStack>
           </VStack>
@@ -196,7 +196,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                   </Heading>
                   <PlaygroundResponsive :height="280">
                     <PlaygroundLineChart
-                      :data="LATENCY_SERIES.map((p, i) => ({ t: i, useast: 9200 + i * 40, uswest: 6100 + i * 20, euwest: 3900 + i * 15 }))"
+                      :data="LATENCY_SERIES.map((_, i) => ({ t: i, useast: 9200 + i * 40, uswest: 6100 + i * 20, euwest: 3900 + i * 15 }))"
                       x-key="t"
                       :series="[
                         { key: 'useast', color: 'var(--color-data-categorical-blue, #0171E3)', name: 'us-east-1' },

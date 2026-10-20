@@ -92,6 +92,12 @@ footer: false
         <td>让视口逃出祖先的内边距。内容内边距保持不变。</td>
       </tr>
       <tr>
+        <td><code>scrollbars</code></td>
+        <td><code>boolean</code></td>
+        <td><code>true</code></td>
+        <td>外层有 <code>ScrollbarsProvider</code> 时，这块区域要不要换成自绘滚动条。设为 <code>false</code> 就保留原生滚动条。</td>
+      </tr>
+      <tr>
         <td><code>width</code></td>
         <td><code>number | string</code></td>
         <td>-</td>

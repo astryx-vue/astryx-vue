@@ -12,7 +12,7 @@ import { textInputIcon, textInputSearch, textInputSizes, textInputStates, textIn
 
 ## 使用方法
 
-`TextInput` 用于输入邮箱、姓名、搜索词等单行文本。标签、说明与校验消息由内置的 `Field` 自动关联，通过 `v-model` 管理输入值即可：
+`TextInput`（单行文本输入框）供用户输入一行简短文字，例如电子邮箱、姓名、搜索词或密码等。它内置了 `Field` 组件，会自动把标签文字、辅助说明以及校验报错信息与输入框关联在一起。平时只需配合 `v-model` 绑定输入值即可：
 
 ```vue
 <script setup lang="ts">
@@ -27,7 +27,15 @@ const email = shallowRef('')
 </template>
 ```
 
-自定义控件可使用 [Field](/components/field)。主题在应用入口引入一次：
+**什么时候用：**
+- 需要用户输入较短的一行文字时（如登录账号、联系方式、单行搜索）。
+
+**什么时候不要用：**
+- 需要输入文章、留言或详细备注等多行长篇内容时，请改用多行文本域 [TextArea](/components/text-area)。
+- 需要用户从预设列表中挑选已有选项时，请改用 [Selector](/components/selector) 或下拉菜单。
+- 需要完全自定义输入控件的外壳与结构时，可以直接使用底层原子组件 [Field](/components/field)。
+
+主题只需在整个应用的主入口（如 `main.ts`）引入一次：
 
 ```ts
 import '@astryx-vue/themes/neutral.css'

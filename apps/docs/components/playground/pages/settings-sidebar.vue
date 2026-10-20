@@ -120,7 +120,6 @@ const mobileView = ref<'nav' | 'detail'>('nav')
 const activeNav = ref('Personal information')
 const activeTab = ref('login')
 const readReceipts = ref(true)
-const searchEngines = ref(true)
 const showCity = ref(true)
 const showTripType = ref(true)
 const showStayLength = ref(true)
@@ -133,10 +132,6 @@ const timezone = ref('ET')
 const legalName = ref('Alex Johnson')
 const preferredName = ref('')
 const email = ref('a***n@example.com')
-const phone = ref('+1 ***-***-0123')
-const address = ref('')
-const mailingAddress = ref('')
-const emergencyContact = ref('Provided')
 
 function selectNav(label: string) {
   activeNav.value = label

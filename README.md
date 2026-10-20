@@ -52,21 +52,21 @@ import { Button } from '@astryx-vue/core/Button'
 
 ## CLI
 
-Add the CLI as a dev dependency and call it through a project script:
-
-```json
-{
-  "scripts": {
-    "astryx-vue": "node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs"
-  }
-}
-```
+Install the CLI as a dev dependency. The package declares a `bin`, so the command lands on `node_modules/.bin`:
 
 ```sh
-npm run astryx-vue -- component Button
-npm run astryx-vue -- search dialog
-npm run astryx-vue -- manifest --json
-npm run astryx-vue -- init --features agents
+pnpm add -D @astryx-vue/cli
+pnpm exec astryx-vue component Button
+npx astryx-vue search dialog
+```
+
+Without installing it, run `npx @astryx-vue/cli …`; the scope is required, because the bare `astryx-vue` name on npm is not this package.
+
+```sh
+pnpm exec astryx-vue build "login page with SSO"
+pnpm exec astryx-vue template login-card ./src/pages
+pnpm exec astryx-vue manifest --json
+pnpm exec astryx-vue init --features agents
 ```
 
 `init --features agents` refreshes only the managed block in `AGENTS.md`. Text outside the markers stays. The guide is [CLI](https://astryx-vue.pages.dev/en/guide/cli).

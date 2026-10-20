@@ -2,9 +2,10 @@
 import type { CSSProperties, VNode } from 'vue'
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { SearchItemGroup } from './groupSearchItems.js'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, useTemplateRef, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { groupSearchItems } from './groupSearchItems.js'
 import '../../styles/popover.css'
 import '../../styles/chat.css'
@@ -99,6 +100,9 @@ watch(() => props.highlightedIndex, (index) => {
   document.getElementById(optionId(index))?.scrollIntoView({ block: 'nearest' })
 })
 
+const listEl = useTemplateRef<HTMLElement>('list')
+useScrollbars(listEl)
+
 function onSelect(item: SearchableItem, event: MouseEvent): void {
   event.preventDefault()
   emit('select', item)
@@ -116,6 +120,7 @@ function onSelect(item: SearchableItem, event: MouseEvent): void {
     >
       <div
         :id="listboxId"
+        ref="list"
         class="astryx-chat-trigger__list"
         role="listbox"
         :aria-label="label"

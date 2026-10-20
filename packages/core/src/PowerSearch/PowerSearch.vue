@@ -17,6 +17,7 @@ import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/context.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
@@ -61,6 +62,7 @@ const placeholderHeight = ref(0)
 const queryMirror = ref('')
 const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
+useScrollbars(listboxRef)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const editorRef = useTemplateRef<HTMLElement>('editorRef')
 const tokenEls = new Map<number, HTMLElement>()

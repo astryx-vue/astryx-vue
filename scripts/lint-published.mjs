@@ -4,9 +4,10 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { listPublicPackages } from './list-public-packages.mjs'
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)))
-const packages = ['packages/core', 'packages/themes', 'packages/cli']
+const packages = listPublicPackages(rootDir).map(dir => `packages/${dir}`)
 
 function run(command, args, options = {}) {
   try {

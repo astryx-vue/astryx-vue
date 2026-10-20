@@ -69,7 +69,7 @@ describe('linkProvider', () => {
           h(Breadcrumbs, null, {
             default: () => h(BreadcrumbItem, { href: '/crumb' }, { default: () => 'Crumb' }),
           }),
-          h(TabList, null, {
+          h(TabList, { value: 'one' }, {
             default: () => h(Tab, { value: 'one', label: 'Tab', href: '/tab' }),
           }),
         ]),

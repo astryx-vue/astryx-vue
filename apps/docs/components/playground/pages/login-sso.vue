@@ -100,7 +100,7 @@ function onPasswordChange(value: string) {
 <template>
   <Center axis="both" :padding="6" :style="pageStyle">
     <Card :padding="8" width="100%" :max-width="400">
-      <VStack :gap="4" justify="stretch">
+      <VStack :gap="4" hAlign="stretch">
         <template v-if="step === 'email'">
           <VStack :gap="1" justify="center">
             <Text type="display-1" as="h2">

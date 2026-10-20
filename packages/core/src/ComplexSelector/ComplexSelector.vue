@@ -1,11 +1,12 @@
 <script setup lang="ts" generic="Value">
 import type { Component } from 'vue'
 import type { ComplexSelectorEmits, ComplexSelectorHandle, ComplexSelectorProps, ComplexSelectorSlots, ComplexSelectorState, ComplexSelectorTriggerProps } from './types.js'
-import { computed, onBeforeUnmount, ref, useId, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, useId, useTemplateRef, watch } from 'vue'
 import Field from '../Field/Field.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
 import '../../styles/complex-selector.css'
 
@@ -31,6 +32,8 @@ const model = defineModel<Value>({ required: true })
 const messages = useAstryxMessages()
 const isOpen = ref(false)
 const isPending = ref(false)
+const contentEl = useTemplateRef<HTMLElement>('contentEl')
+useScrollbars(contentEl)
 const optimistic = ref<Value | undefined>(undefined)
 
 const uid = useId()
@@ -184,7 +187,7 @@ defineExpose(handle)
       <component :is="triggerView" />
     </slot>
     <template #content>
-      <div :id="contentId" class="astryx-complex-selector-content">
+      <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content">
         <slot
           :close="close"
           :commit="commit"
@@ -258,7 +261,7 @@ defineExpose(handle)
         />
       </button>
       <template #content>
-        <div :id="contentId" class="astryx-complex-selector-content">
+        <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content">
           <slot
             :close="close"
             :commit="commit"

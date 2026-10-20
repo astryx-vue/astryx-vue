@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { ComponentPublicInstance } from 'vue'
 import type { ChatComposerInputHandle, ChatComposerToken, ChatComposerTrigger, ChatToolCallItem } from '@astryx-vue/core'
 import {
   Avatar,
-  Button,
   Card,
   ChatComposer,
   ChatComposerDrawer,
@@ -222,7 +222,7 @@ const answerSource = ref('')
 const answerLive = ref(false)
 const reasoningText = useStreamingText(reasoningSource, reasoningLive)
 const answerText = useStreamingText(answerSource, answerLive)
-const rootRef = useTemplateRef<HTMLElement>('root')
+const rootRef = useTemplateRef<ComponentPublicInstance>('root')
 const composerInputRef = useTemplateRef<ChatComposerInputHandle>('composerInput')
 const fileInputRef = useTemplateRef<HTMLInputElement>('fileInput')
 
@@ -239,8 +239,8 @@ let nextId = 1
 let timers: number[] = []
 
 function rootWidth(): number {
-  const node = rootRef.value as ({ $el?: unknown } & HTMLElement) | null
-  const element = node instanceof HTMLElement ? node : node?.$el
+  // ref 落在 VStack 组件上，量宽度要拿组件根元素。
+  const element = rootRef.value?.$el
   return element instanceof HTMLElement ? element.offsetWidth : Number.POSITIVE_INFINITY
 }
 

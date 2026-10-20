@@ -23,7 +23,6 @@ import {
   Step,
   Stepper,
   Switch,
-  Text,
   TextArea,
   TextInput,
   useMediaQuery,

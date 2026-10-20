@@ -2,6 +2,7 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutPanelProps, LayoutPanelSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLayoutArea, useLayoutSlots } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
 import { formatSize } from './size.js'
@@ -21,6 +22,7 @@ defineSlots<LayoutPanelSlots>()
 
 const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
+useScrollbars(root, { enabled: () => props.isScrollable })
 const area = useLayoutArea()
 const slots = useLayoutSlots()
 

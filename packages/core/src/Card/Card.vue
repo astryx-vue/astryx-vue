@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue'
 import type { CardProps, CardSizeValue, CardSlots } from './types.js'
 import { computed, useTemplateRef } from 'vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 
 import '../../styles/card.css'
 
@@ -17,6 +18,7 @@ defineSlots<CardSlots>()
 const element = useTemplateRef<HTMLDivElement>('element')
 
 const hasFixedHeight = computed(() => props.height != null && props.height !== 'auto')
+useScrollbars(element, { enabled: hasFixedHeight })
 
 function formatSize(value: CardSizeValue | undefined): string | undefined {
   if (value == null)

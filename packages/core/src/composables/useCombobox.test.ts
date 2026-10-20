@@ -1,7 +1,11 @@
 import type { ComboboxOption } from './useCombobox'
-import { describe, expect, it, vi } from 'vitest'
+import { enableAutoUnmount } from '@vue/test-utils'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
+import { mountComposable } from './testing/mountComposable.js'
 import { useCombobox } from './useCombobox'
+
+enableAutoUnmount(afterEach)
 
 describe('useCombobox', () => {
   const createOptions = (): ComboboxOption[] => [
@@ -16,7 +20,7 @@ describe('useCombobox', () => {
     const modelValue = ref<string | null>(null)
     const onChange = vi.fn()
 
-    const combobox = useCombobox({ options, modelValue, onChange })
+    const { result: combobox } = mountComposable(() => useCombobox({ options, modelValue, onChange }))
 
     expect(combobox.isOpen.value).toBe(false)
 
@@ -32,7 +36,7 @@ describe('useCombobox', () => {
     const modelValue = ref<string | null>(null)
     const onChange = vi.fn()
 
-    const combobox = useCombobox({ options, modelValue, onChange })
+    const { result: combobox } = mountComposable(() => useCombobox({ options, modelValue, onChange }))
     combobox.open()
 
     expect(combobox.activeIndex.value).toBe(0)
@@ -56,7 +60,7 @@ describe('useCombobox', () => {
     const modelValue = ref<string | null>(null)
     const onChange = vi.fn()
 
-    const combobox = useCombobox({ options, modelValue, onChange })
+    const { result: combobox } = mountComposable(() => useCombobox({ options, modelValue, onChange }))
     combobox.open()
 
     combobox.highlightNext() // Apple -> Banana
@@ -72,7 +76,7 @@ describe('useCombobox', () => {
     const onChange = vi.fn()
     const isSearchable = ref(true)
 
-    const combobox = useCombobox({ options, modelValue, onChange, isSearchable })
+    const { result: combobox } = mountComposable(() => useCombobox({ options, modelValue, onChange, isSearchable }))
 
     expect(combobox.filteredOptions.value).toHaveLength(4)
 
@@ -88,7 +92,7 @@ describe('useCombobox', () => {
     const modelValue = ref<string | null>(null)
     const onChange = vi.fn()
 
-    const combobox = useCombobox({ options, modelValue, onChange })
+    const { result: combobox } = mountComposable(() => useCombobox({ options, modelValue, onChange }))
     combobox.open()
 
     combobox.jumpToMatch('c')
@@ -106,7 +110,7 @@ describe('useCombobox', () => {
     const modelValue = ref<string | null>(null)
     const onChange = vi.fn()
 
-    const combobox = useCombobox({ options, modelValue, onChange })
+    const { result: combobox } = mountComposable(() => useCombobox({ options, modelValue, onChange }))
 
     const downEvent = new KeyboardEvent('keydown', { key: 'ArrowDown' })
     const preventDefaultSpy = vi.spyOn(downEvent, 'preventDefault')

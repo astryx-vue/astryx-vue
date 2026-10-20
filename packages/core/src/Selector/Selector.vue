@@ -17,6 +17,7 @@ import { useIndicator } from '../Indicator/useIndicator.js'
 import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
@@ -79,6 +80,7 @@ const fieldRef = useTemplateRef<HTMLElement>('fieldRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const searchInputRef = useTemplateRef<HTMLInputElement>('searchInputRef')
 const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
+useScrollbars(listboxRef)
 const isSheet = computed(() => props.presentation === 'bottom-sheet')
 const sheetLabel = computed(() => props.label || resolvedPlaceholder.value)
 

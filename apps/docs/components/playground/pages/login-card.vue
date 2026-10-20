@@ -58,7 +58,7 @@ function onPasswordChange(value: string) {
         </Text>
       </VStack>
       <Card :padding="8" width="100%">
-        <VStack :gap="4" justify="stretch">
+        <VStack :gap="4" hAlign="stretch">
           <VStack :gap="1" justify="center">
             <Heading :level="2">
               Welcome back
@@ -102,7 +102,7 @@ function onPasswordChange(value: string) {
             @click="handleLogin"
           />
           <Divider label="Or continue with" />
-          <VStack :gap="3" justify="stretch">
+          <VStack :gap="3" hAlign="stretch">
             <Button label="Login with Apple" variant="secondary" size="lg">
               <template #icon>
                 <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true">

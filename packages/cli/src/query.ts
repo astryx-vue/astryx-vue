@@ -1,7 +1,7 @@
-import type { ComponentRecord, TopicRecord } from './catalog-types.ts'
+import type { ComponentRecord, TemplateRecord, TopicRecord } from './catalog-types.ts'
 import type { Suggestion } from './error.ts'
 import type { SearchType } from './spec.ts'
-import { catalog, componentNames, text } from './catalog.ts'
+import { catalog, componentNames, examplesFor, text } from './catalog.ts'
 import { CliError } from './error.ts'
 import { BINARY } from './spec.ts'
 
@@ -102,7 +102,7 @@ export function searchCatalog(query: string, locale: 'en' | 'zh', options: { lim
 
   const type = options.type
   const hits: SearchHit[] = []
-  if (type !== 'doc') {
+  if (type === undefined || type === 'component' || type === 'composable') {
     for (const record of catalog.components) {
       if (type !== undefined && record.kind !== type)
         continue
@@ -114,6 +114,13 @@ export function searchCatalog(query: string, locale: 'en' | 'zh', options: { lim
   if (type === undefined || type === 'doc') {
     for (const topic of catalog.topics) {
       const scored = scoreTopic(needle, topic, locale)
+      if (scored)
+        hits.push(scored)
+    }
+  }
+  if (type === undefined || type === 'template') {
+    for (const template of catalog.templates) {
+      const scored = scoreTemplate(needle, template, locale)
       if (scored)
         hits.push(scored)
     }
@@ -177,20 +184,29 @@ function nameDistanceLimit(length: number): number {
 }
 
 function suggestRecords<T>(query: string, candidates: readonly T[], lookup: Lookup<T>): Suggestion[] {
+  return suggestByNames(query, candidates, item => names(lookup, item), lookup.label)
+}
+
+/**
+ * Names within the typo distance of the query, or that contain it. Shared by
+ * components, composables, topics, and templates so a misspelling is answered
+ * the same way everywhere.
+ */
+export function suggestByNames<T>(query: string, candidates: readonly T[], namesOf: (item: T) => string[], labelOf: (item: T) => string): Suggestion[] {
   const key = normalize(query)
   if (key.length < 2)
     return []
   return candidates
     .map((candidate) => {
-      const values = names(lookup, candidate)
+      const values = [...new Set(namesOf(candidate).map(normalize))].filter(Boolean)
       const distance = Math.min(...values.map(value => levenshtein(key, value)))
       const included = values.some(value => value.includes(key) || key.includes(value))
       return { candidate, distance, included }
     })
     .filter(entry => entry.included || entry.distance <= nameDistanceLimit(key.length))
-    .sort((a, b) => a.distance - b.distance || lookup.label(a.candidate).localeCompare(lookup.label(b.candidate)))
+    .sort((a, b) => a.distance - b.distance || labelOf(a.candidate).localeCompare(labelOf(b.candidate)))
     .slice(0, 5)
-    .map(entry => ({ name: lookup.label(entry.candidate), reason: 'similar name' }))
+    .map(entry => ({ name: labelOf(entry.candidate), reason: 'similar name' }))
 }
 
 function scoreComponent(query: string, record: ComponentRecord, locale: 'en' | 'zh'): SearchHit | null {
@@ -199,7 +215,7 @@ function scoreComponent(query: string, record: ComponentRecord, locale: 'en' | '
     text(record.title, locale),
     record.group,
     ...record.props[locale].flatMap(group => group.rows.map(row => row.name)),
-    ...record.examples[locale].flatMap(example => [example.title, example.description]),
+    ...examplesFor(record, locale).flatMap(example => [example.title, example.description]),
   ])
   if (!scored)
     return null
@@ -237,6 +253,28 @@ function scoreTopic(query: string, topic: TopicRecord, locale: 'en' | 'zh'): Sea
     command: `${BINARY} docs ${topic.id}`,
     title: text(topic.title, locale),
     docsUrl: text(topic.docsUrl, locale),
+  }
+}
+
+function scoreTemplate(query: string, template: TemplateRecord, locale: 'en' | 'zh'): SearchHit | null {
+  const scored = scoreText(query, [template.slug, template.title.en, template.title.zh], [
+    text(template.description, locale),
+    text(template.category, locale),
+    ...template.keywords[locale],
+    ...template.componentsUsed,
+  ])
+  if (!scored)
+    return null
+  return {
+    domain: 'template',
+    name: template.slug,
+    package: '@astryx-vue/cli',
+    score: scored.score,
+    reason: scored.reason,
+    description: text(template.description, locale),
+    command: `${BINARY} template ${template.slug}`,
+    title: text(template.title, locale),
+    docsUrl: text(template.docsUrl, locale),
   }
 }
 

@@ -1,8 +1,9 @@
-import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentKind, ComponentRecord, ExampleRecord, LocaleText, TopicRecord } from '../catalog-types.ts'
+import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentKind, ComponentRecord, ExampleEntry, ExampleRecord, LocaleText, TemplateRecord, TopicRecord } from '../catalog-types.ts'
 import type { PageExample } from './markdown.ts'
 import { readdir, readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { cleanMarkdown, extractPage, extractTopic, paragraphContaining, pascalCase } from './markdown.ts'
+import { TEMPLATE_META } from './template-meta.ts'
 
 function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<typeof extractPage>): ReturnType<typeof extractPage> {
   return {
@@ -58,7 +59,7 @@ interface AccessibilitySource {
   description: string
 }
 
-export async function buildCatalog(repoRoot: string, entries: readonly CatalogEntryInput[], groupTitles: { en: Record<string, string>, zh: Record<string, string> }): Promise<Catalog> {
+export async function buildCatalog(repoRoot: string, entries: readonly CatalogEntryInput[], groupTitles: { en: Record<string, string>, zh: Record<string, string> }, templates: readonly PlaygroundTemplateSummary[]): Promise<Catalog> {
   const corePackage = JSON.parse(await readFile(join(repoRoot, 'packages/core/package.json'), 'utf8')) as { exports?: Record<string, unknown> }
   const exportKeys = new Set(Object.keys(corePackage.exports ?? {}))
   const anatomy = {
@@ -82,6 +83,10 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
     const extracted = {
       en: mergeExtract(extractPage(pages.en.index, name), extractPage(pages.en.props, name)),
       zh: mergeExtract(extractPage(pages.zh.index, name), extractPage(pages.zh.props, name)),
+    }
+    const examples = {
+      en: await resolveExamples(repoRoot, entry.slug, 'en', extracted.en.examples, demoSourceCache),
+      zh: await resolveExamples(repoRoot, entry.slug, 'zh', extracted.zh.examples, demoSourceCache),
     }
     if (!extracted.en.summary)
       missing.push(`${entry.slug} (en summary)`)
@@ -113,10 +118,7 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
       slots: { en: extracted.en.slots, zh: extracted.zh.slots },
       events: { en: extracted.en.events, zh: extracted.zh.events },
       notes: { en: extracted.en.notes, zh: extracted.zh.notes },
-      examples: {
-        en: await resolveExamples(repoRoot, entry.slug, 'en', extracted.en.examples, demoSourceCache),
-        zh: await resolveExamples(repoRoot, entry.slug, 'zh', extracted.zh.examples, demoSourceCache),
-      },
+      examples: pairExamples(entry.slug, examples.en, examples.zh),
       anatomy: localizedAnatomy(anatomy.en[entry.slug] ?? [], anatomy.zh[entry.slug] ?? []),
       accessibility: localizedAccessibility(accessibility.en[entry.slug] ?? [], accessibility.zh[entry.slug] ?? []),
       docsUrl: {
@@ -137,13 +139,136 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
 
   return {
     generator: 'packages/cli/scripts/generate-catalog.mjs',
-    description: 'Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, and @astryx-vue/core exports. Do not edit by hand.',
+    description: 'Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, @astryx-vue/core exports, and the playground templates. Do not edit by hand.',
     packageName: '@astryx-vue/core',
     themesPackage: '@astryx-vue/themes',
     conventions: await readConventions(repoRoot),
     components,
     topics: await readTopics(repoRoot),
+    templates: await buildTemplates(repoRoot, templates),
   }
+}
+
+/** What the playground manifest knows about a page: its slug, its two titles, and its category. */
+export interface PlaygroundTemplateSummary {
+  slug: string
+  title: LocaleText
+  category: LocaleText
+}
+
+/** Packages a project can install. Everything else makes a template unready. */
+const INSTALLABLE_PACKAGES = new Set(['vue', '@astryx-vue/core'])
+
+/**
+ * Builds the `templates` catalog from the playground pages plus the hand-written
+ * metadata. Throws when a page has no metadata or metadata names a page that no
+ * longer exists, so adding or deleting a playground page without touching
+ * `template-meta.ts` fails the build instead of shipping a half-described template.
+ */
+export async function buildTemplates(repoRoot: string, summaries: readonly PlaygroundTemplateSummary[]): Promise<TemplateRecord[]> {
+  const known = new Set(summaries.map(summary => summary.slug))
+  const missing = summaries.map(summary => summary.slug).filter(slug => !TEMPLATE_META[slug])
+  if (missing.length > 0)
+    throw new Error(`playground templates are missing metadata in packages/cli/src/generate/template-meta.ts:\n${missing.join('\n')}`)
+  const stale = Object.keys(TEMPLATE_META).filter(slug => !known.has(slug))
+  if (stale.length > 0)
+    throw new Error(`template-meta.ts describes templates that are not in the playground manifest:\n${stale.join('\n')}`)
+
+  const records: TemplateRecord[] = []
+  for (const summary of summaries) {
+    const meta = TEMPLATE_META[summary.slug]!
+    const source = await readFile(join(repoRoot, 'apps/docs/components/playground/pages', `${summary.slug}.vue`), 'utf8')
+    const { componentsUsed, foreignPackages } = analyzeTemplateImports(source)
+    const category = summary.category.en || summary.category.zh ? summary.category : (meta.category ?? { en: 'Other', zh: '其他' })
+    records.push({
+      slug: summary.slug,
+      title: summary.title,
+      description: meta.description,
+      keywords: meta.keywords,
+      category,
+      kind: 'page',
+      componentsUsed,
+      ...(foreignPackages.length > 0
+        ? { isReady: false, notReadyReason: notReadyReason(foreignPackages) }
+        : { isReady: true }),
+      source,
+      docsUrl: {
+        en: `${DOCS_ORIGIN}/en/playground/?template=${summary.slug}`,
+        zh: `${DOCS_ORIGIN}/playground/?template=${summary.slug}`,
+      },
+    })
+  }
+  return records
+}
+
+/**
+ * Reads a template's imports. Components are the names it pulls from
+ * `@astryx-vue/core`; anything else outside `vue` and relative files is a package
+ * the reader's project may not have.
+ */
+export function analyzeTemplateImports(source: string): { componentsUsed: string[], foreignPackages: string[] } {
+  const componentsUsed: string[] = []
+  const foreign = new Set<string>()
+  for (const match of source.matchAll(/(?:^|\n)import (type )?([\s\S]*?) from (['"])([^'"]+)\3/g)) {
+    const typeOnly = match[1] !== undefined
+    const clause = match[2] ?? ''
+    const specifier = match[4] ?? ''
+    if (specifier.startsWith('.'))
+      continue
+    const root = packageRoot(specifier)
+    if (root === '@astryx-vue/core') {
+      // Types and lowercase helpers (`pixel`, `proportional`) are not components,
+      // so only PascalCase names are listed as what the page uses.
+      if (!typeOnly)
+        componentsUsed.push(...importedNames(clause, specifier))
+      continue
+    }
+    if (INSTALLABLE_PACKAGES.has(root))
+      continue
+    foreign.add(root)
+  }
+  for (const match of source.matchAll(/(?:^|\n)import (['"])([^'"]+)\1/g)) {
+    const specifier = match[2] ?? ''
+    if (specifier.startsWith('.'))
+      continue
+    const root = packageRoot(specifier)
+    if (!INSTALLABLE_PACKAGES.has(root))
+      foreign.add(root)
+  }
+  return { componentsUsed: [...new Set(componentsUsed)], foreignPackages: [...foreign].sort() }
+}
+
+/** `@scope/name/sub/path` becomes `@scope/name`; `name/sub` becomes `name`. */
+function packageRoot(specifier: string): string {
+  const parts = specifier.split('/')
+  return specifier.startsWith('@') ? parts.slice(0, 2).join('/') : (parts[0] ?? specifier)
+}
+
+/** PascalCase names only: the design system names components that way, and helpers do not. */
+function importedNames(clause: string, specifier: string): string[] {
+  const named = /\{([\s\S]*?)\}/.exec(clause)?.[1] ?? ''
+  const fromBraces = named
+    .split(',')
+    .map(entry => entry.trim().split(/\s+as\s+/)[0] ?? '')
+    .filter(name => /^[A-Z]/.test(name))
+  if (fromBraces.length > 0)
+    return fromBraces
+  const subpath = specifier.slice('@astryx-vue/core'.length).replace(/^\//, '')
+  return subpath && /^[A-Z]/.test(subpath) ? [subpath] : []
+}
+
+function notReadyReason(packages: readonly string[]): LocaleText {
+  const others = packages.filter(item => item !== '@astryx-vue/playground-charts')
+  const parts = { en: [] as string[], zh: [] as string[] }
+  if (packages.includes('@astryx-vue/playground-charts')) {
+    parts.en.push('It imports @astryx-vue/playground-charts, which exists only inside the docs playground and is not a published package.')
+    parts.zh.push('它引用了 @astryx-vue/playground-charts，这个包只存在于本站演练场，没有发布到 npm。')
+  }
+  if (others.length > 0) {
+    parts.en.push(`It imports ${others.join(', ')}, which this package does not document.`)
+    parts.zh.push(`它引用了 ${others.join(', ')}，本工具没有为这些包提供文档。`)
+  }
+  return { en: parts.en.join(' '), zh: parts.zh.join(' ') }
 }
 
 async function readLocalePage(repoRoot: string, locale: 'en' | 'zh', slug: string): Promise<{ index: string, props: string }> {
@@ -278,6 +403,35 @@ function demoSources(repoRoot: string, folder: string, cache: Map<string, Promis
   const pending = readDemoSources(repoRoot, folder)
   cache.set(folder, pending)
   return pending
+}
+
+/**
+ * Folds the examples of both locale pages into one array. Each page lists the
+ * same demos in the same order and points at the same `.vue` file, so the code
+ * is stored once. Titles and descriptions stay separate per language.
+ *
+ * Throws instead of dropping a language when the two pages drift apart, because
+ * the alternative is shipping an English snippet under a Chinese heading.
+ */
+export function pairExamples(slug: string, en: readonly ExampleRecord[], zh: readonly ExampleRecord[]): ExampleEntry[] {
+  if (en.length !== zh.length) {
+    throw new Error(
+      `${slug}: the en page lists ${en.length} examples and the zh page lists ${zh.length}. Both pages must document the same examples, in the same order, so the code can be stored once.`,
+    )
+  }
+  return en.map((example, index) => {
+    const translated = zh[index]!
+    if (example.code !== translated.code) {
+      throw new Error(
+        `${slug}: example ${index + 1} (en "${example.title}", zh "${translated.title}") uses different code on the en and zh pages. Point both pages at the same demo, or remove the example from one of them.`,
+      )
+    }
+    return {
+      title: { en: example.title, zh: translated.title },
+      description: { en: example.description, zh: translated.description },
+      code: example.code,
+    }
+  })
 }
 
 async function resolveExamples(repoRoot: string, slug: string, locale: 'en' | 'zh', examples: readonly PageExample[], cache: Map<string, Promise<Map<string, string>>>): Promise<ExampleRecord[]> {

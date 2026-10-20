@@ -4,7 +4,6 @@ import {
   Button,
   CodeBlock,
   Heading,
-  Icon,
   Layout,
   LayoutContent,
   LayoutPanel,

@@ -26,9 +26,22 @@ export interface Note {
   text: string
 }
 
+/** One example written for one language, which is what the CLI prints. */
 export interface ExampleRecord {
   title: string
   description: string
+  /** Vue source of the docs demo. Empty when the page has no demo binding. */
+  code: string
+}
+
+/**
+ * One example as the catalog stores it. The title and description are written
+ * once per language, but the demo source is the same file on both pages, so the
+ * code is kept once.
+ */
+export interface ExampleEntry {
+  title: LocaleText
+  description: LocaleText
   /** Vue source of the docs demo. Empty when the page has no demo binding. */
   code: string
 }
@@ -67,7 +80,7 @@ export interface ComponentRecord {
   slots: { en: TableGroup[], zh: TableGroup[] }
   events: { en: TableGroup[], zh: TableGroup[] }
   notes: { en: Note[], zh: Note[] }
-  examples: { en: ExampleRecord[], zh: ExampleRecord[] }
+  examples: ExampleEntry[]
   anatomy: { en: AnatomyPart[], zh: AnatomyPart[] }
   accessibility: { en: AccessibilityItem[], zh: AccessibilityItem[] }
   docsUrl: LocaleText
@@ -85,6 +98,28 @@ export interface TopicRecord {
   docsUrl: LocaleText
 }
 
+/** Pages are full screens. Blocks are page sections, and none exist yet. */
+export type TemplateKind = 'page' | 'block'
+
+export interface TemplateRecord {
+  slug: string
+  title: LocaleText
+  /** One sentence, written by hand in `generate/template-meta.ts`. */
+  description: LocaleText
+  /** Words a person would type when asking `build` for this page. */
+  keywords: { en: string[], zh: string[] }
+  category: LocaleText
+  kind: TemplateKind
+  /** Component names imported from `@astryx-vue/core`, in source order. */
+  componentsUsed: string[]
+  /** False when the page imports something a project without the playground cannot install. */
+  isReady: boolean
+  notReadyReason?: LocaleText
+  /** The `.vue` file, unchanged. One copy, shared by both locales. */
+  source: string
+  docsUrl: LocaleText
+}
+
 export interface Catalog {
   generator: string
   description: string
@@ -93,6 +128,7 @@ export interface Catalog {
   conventions: { en: string[], zh: string[] }
   components: ComponentRecord[]
   topics: TopicRecord[]
+  templates: TemplateRecord[]
 }
 
 export interface CatalogEntryInput {
