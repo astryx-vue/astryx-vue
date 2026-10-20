@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { applyManagedBlock, MANAGED_BLOCK_END, MANAGED_BLOCK_START } from './agents.ts'
+import { applyManagedBlock, MANAGED_BLOCK_END, MANAGED_BLOCK_START, renderAgentBlock } from './agents.ts'
+import { catalog } from './catalog.ts'
 
 const INNER = 'Look up components with `astryx-vue component Button`.'
 const NEXT = 'Look up components with `astryx-vue search`.'
@@ -54,5 +55,27 @@ describe('managed agent block', () => {
     const third = applyManagedBlock(second.content, NEXT)
     expect(third.action).toBe('updated')
     expect(third.content).toBe(second.content)
+  })
+})
+
+describe('agent block text', () => {
+  it('names every lookup command and does not paste the catalog', () => {
+    const english = renderAgentBlock(catalog, 'en', false)
+    expect(english).toContain('astryx-vue component --list')
+    expect(english).toContain('astryx-vue composable --list')
+    expect(english).toContain('astryx-vue composable <Name>')
+    expect(english).toContain('astryx-vue docs <topic>')
+    expect(english).toContain('astryx-vue search <query>')
+    expect(english).toContain('astryx-vue manifest --json')
+    expect(english).not.toContain('CheckboxList')
+    expect(english.split('\n').length).toBeLessThan(60)
+  })
+
+  it('uses the same commands in Simplified Chinese', () => {
+    const chinese = renderAgentBlock(catalog, 'zh', false)
+    expect(chinese).toContain('astryx-vue composable --list')
+    expect(chinese).toContain('组合式函数')
+    expect(chinese).toContain('astryx-vue docs')
+    expect(chinese).toContain('astryx-vue search <query>')
   })
 })

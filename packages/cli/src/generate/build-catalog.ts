@@ -1,8 +1,8 @@
-import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentRecord, ExampleRecord, LocaleText, TopicRecord } from '../catalog-types.ts'
+import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentKind, ComponentRecord, ExampleRecord, LocaleText, TopicRecord } from '../catalog-types.ts'
 import type { PageExample } from './markdown.ts'
 import { readdir, readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
-import { extractPage, extractTopic, paragraphContaining, pascalCase } from './markdown.ts'
+import { cleanMarkdown, extractPage, extractTopic, paragraphContaining, pascalCase } from './markdown.ts'
 
 function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<typeof extractPage>): ReturnType<typeof extractPage> {
   return {
@@ -21,6 +21,18 @@ function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<t
 
 /** PascalCase subpath exports. Lowercase entries such as `./icons` and `./locale` are not components. */
 const COMPONENT_EXPORT = /^\.\/[A-Z][A-Za-z0-9]*$/
+
+/**
+ * Composables are the `use*` functions documented under Utility. They have no visual demo,
+ * so their page has nothing to render and their meta.ts omits `demo`.
+ */
+export function componentKind(slug: string, group: string): ComponentKind {
+  if (!slug.startsWith('use-'))
+    return 'component'
+  if (group !== 'Utility')
+    throw new Error(`composable ${slug} must stay in the Utility group, found ${group}`)
+  return 'composable'
+}
 
 export function componentExportsMissingDocs(exportKeys: readonly string[], importPaths: readonly (string | null)[]): string[] {
   const referenced = new Set(importPaths.filter((path): path is string => Boolean(path)))
@@ -85,6 +97,7 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
     components.push({
       slug: entry.slug,
       name,
+      kind: componentKind(entry.slug, entry.group),
       title: { en: entry.en, zh: entry.zh },
       group: entry.group,
       groupTitle: {
@@ -156,15 +169,18 @@ async function readTopics(repoRoot: string): Promise<TopicRecord[]> {
         return a < b ? -1 : a > b ? 1 : 0
       })
     for (const id of ids) {
-      const en = extractTopic(await readFile(join(repoRoot, 'apps/docs/docs/en', directory, `${id}.md`), 'utf8'))
-      const zh = extractTopic(await readFile(join(repoRoot, 'apps/docs/docs/zh', directory, `${id}.md`), 'utf8'))
+      const en = await readFile(join(repoRoot, 'apps/docs/docs/en', directory, `${id}.md`), 'utf8')
+      const zh = await readFile(join(repoRoot, 'apps/docs/docs/zh', directory, `${id}.md`), 'utf8')
+      const enTopic = extractTopic(en)
+      const zhTopic = extractTopic(zh)
       topics.push({
         id: id === 'index' ? kind : `${kind}/${id}`,
         kind,
-        title: { en: en.title, zh: zh.title },
-        summary: { en: en.summary, zh: zh.summary },
-        headings: { en: en.headings, zh: zh.headings },
-        keywords: { en: en.keywords, zh: zh.keywords },
+        title: { en: enTopic.title, zh: zhTopic.title },
+        summary: { en: enTopic.summary, zh: zhTopic.summary },
+        headings: { en: enTopic.headings, zh: zhTopic.headings },
+        keywords: { en: enTopic.keywords, zh: zhTopic.keywords },
+        body: { en: cleanMarkdown(en), zh: cleanMarkdown(zh) },
         docsUrl: docsUrl(kind, id),
       })
     }

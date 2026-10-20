@@ -47,10 +47,14 @@ export interface AccessibilityItem {
   description: string
 }
 
+export type ComponentKind = 'component' | 'composable'
+
 export interface ComponentRecord {
   slug: string
   /** PascalCase identifier used by `component <Name>`. */
   name: string
+  /** `composable` entries are the functions the docs list under Utility. They have no demo. */
+  kind: ComponentKind
   title: LocaleText
   group: string
   groupTitle: LocaleText
@@ -76,6 +80,8 @@ export interface TopicRecord {
   summary: LocaleText
   headings: { en: string[], zh: string[] }
   keywords: { en: string[], zh: string[] }
+  /** Page markdown without frontmatter, scripts, and docs-site component tags. */
+  body: LocaleText
   docsUrl: LocaleText
 }
 
