@@ -10,3 +10,4 @@ coverage/
 # 蜂群运行时产物
 .agents-work/upstream-sync/locks/
 .agents-work/upstream-sync/nodes/*/evidence/
+.agents-work/upstream-sync/visual/

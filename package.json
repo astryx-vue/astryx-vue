@@ -29,7 +29,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter './packages/*' --filter './apps/*' --recursive --if-present run typecheck",
-    "docs:preview": "pnpm --filter @astryx-vue/docs preview"
+    "docs:preview": "pnpm --filter @astryx-vue/docs preview",
+    "visual": "node scripts/swarm/visual-compare.mjs"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:linting",
@@ -38,6 +39,7 @@
     "@changesets/changelog-github": "catalog:release",
     "@changesets/cli": "catalog:release",
     "@types/node": "catalog:language",
+    "@types/pngjs": "catalog:visual",
     "@typescript/native": "catalog:language",
     "@vitejs/plugin-vue": "catalog:build",
     "@vue/compiler-dom": "catalog:vue",
@@ -48,6 +50,9 @@
     "eslint-plugin-vuejs-accessibility": "catalog:linting",
     "globals": "catalog:linting",
     "happy-dom": "catalog:testing",
+    "pixelmatch": "catalog:visual",
+    "playwright": "catalog:visual",
+    "pngjs": "catalog:visual",
     "publint": "catalog:release",
     "typescript": "catalog:language",
     "vite": "catalog:build",
