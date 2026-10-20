@@ -2,6 +2,7 @@
 import type { VNode } from 'vue'
 import type { BottomSheetHeight, BottomSheetMotion, BottomSheetPadding, BottomSheetSnapPoint, BottomSheetState } from './types.js'
 import { computed, onMounted, onUpdated, useTemplateRef, watch } from 'vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { resolveSnapPoints } from './snapOffsets.js'
 import { useSheetGestures, waitForTransition } from './useSheetGestures.js'
 
@@ -39,6 +40,7 @@ const HEIGHT_BUDGETS: Record<BottomSheetHeight, string> = {
 
 const panel = useTemplateRef<HTMLElement>('panel')
 const body = useTemplateRef<HTMLElement>('body')
+useScrollbars(body)
 const isInteractive = computed(() => props.state === 'open')
 
 const heightKind = computed(() => {

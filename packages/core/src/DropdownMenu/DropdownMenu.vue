@@ -9,6 +9,7 @@ import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { dropdownMenuContextKey } from './context.js'
 import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
 import { DropdownMenuItems } from './renderItems.js'
@@ -49,6 +50,7 @@ const triggerId = `astryx-dropdown-menu-trigger-${uid}`
 
 const anchorRef = ref<HTMLElement | null>(null)
 const surfaceRef = ref<HTMLElement | null>(null)
+useScrollbars(surfaceRef)
 const popoverRef = ref<HTMLElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
 const footerRef = ref<HTMLElement | null>(null)

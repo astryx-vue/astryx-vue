@@ -43670,6 +43670,12 @@
                 "description": "Lets the viewport escape an ancestor's padding. Content padding stays as set."
               },
               {
+                "name": "`scrollbars`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "Whether this area uses the custom scrollbar when a `ScrollbarsProvider` is above it. Set `false` to keep the native scrollbar."
+              },
+              {
                 "name": "`width`",
                 "type": "`number | string`",
                 "default": "-",
@@ -43779,6 +43785,12 @@
                 "description": "让视口逃出祖先的内边距。内容内边距保持不变。"
               },
               {
+                "name": "`scrollbars`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "外层有 `ScrollbarsProvider` 时，这块区域要不要换成自绘滚动条。设为 `false` 就保留原生滚动条。"
+              },
+              {
                 "name": "`width`",
                 "type": "`number | string`",
                 "default": "-",
@@ -43837,6 +43849,10 @@
       "notes": {
         "en": [
           {
+            "heading": "Working with ScrollbarsProvider",
+            "text": "When a [`ScrollbarsProvider`](/en/components/scrollbars-provider) sits above it, `ScrollableArea` switches to the custom overlay scrollbar on its own. You change no code. Without a provider you still get native scrollbars.\n\nTo keep the native scrollbar on one area, set `:scrollbars=\"false\"`."
+          },
+          {
             "heading": "Scrollable Area Props",
             "text": "`SpacingStep` accepts `0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10`."
           },
@@ -43854,6 +43870,10 @@
           }
         ],
         "zh": [
+          {
+            "heading": "配合 ScrollbarsProvider",
+            "text": "外层套了 [`ScrollbarsProvider`](/components/scrollbars-provider) 时，`ScrollableArea` 会自动换成自绘的覆盖式滚动条，不用改任何代码。不套就还是原生滚动条。\n\n某一块想保留原生滚动条，给它写 `:scrollbars=\"false\"`。"
+          },
           {
             "heading": "Scrollable Area Props",
             "text": "`SpacingStep` 的取值是 `0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10`。"
@@ -63151,6 +63171,462 @@
       }
     },
     {
+      "slug": "scrollbars-provider",
+      "name": "ScrollbarsProvider",
+      "kind": "component",
+      "title": {
+        "en": "Scrollbars Provider",
+        "zh": "滚动条 Provider"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": "@astryx-vue/core/Scrollbars",
+      "exportName": "ScrollbarsProvider",
+      "summary": {
+        "en": "Wrap your app once, and every scrolling Astryx component swaps the browser's native scrollbar for a custom overlay one. It is thin, takes no layout width, hides itself when idle, and follows the light and dark theme.",
+        "zh": "把应用包一层，所有会滚动的 Astryx 组件就从浏览器自带的滚动条，换成一套自绘的覆盖式滚动条：细、不占宽度、不滚的时候自己收起来，明暗主题自动跟着走。"
+      },
+      "usage": {
+        "en": "Wrap your app once, and every scrolling Astryx component swaps the browser's native scrollbar for a custom overlay one. It is thin, takes no layout width, hides itself when idle, and follows the light and dark theme.\n\nThis is an extra in astryx-vue. The original Astryx does not have it. It is built on [OverlayScrollbars](https://kingsora.github.io/OverlayScrollbars/) (MIT), which ships inside `@astryx-vue/core`, so you install nothing extra.\n\n**It is off by default.** Without a `ScrollbarsProvider`, components behave exactly as before. And without one, neither the OverlayScrollbars JS nor its CSS ends up in your bundle, because only `ScrollbarsProvider` imports them.\n\n```ts\nimport { ScrollbarsProvider } from '@astryx-vue/core/Scrollbars'\n```\n\nSetup takes about 30 seconds. Wrap your app in `App.vue`:\n\n```vue\n<script setup lang=\"ts\">\nimport { ScrollbarsProvider } from '@astryx-vue/core/Scrollbars'\n</script>\n\n<template>\n  <ScrollbarsProvider>\n    <RouterView />\n  </ScrollbarsProvider>\n</template>\n```\n\nThe props you will use most:\n\n- `enabled`: the switch, `true` by default. Set it to `false` and the whole subtree goes back to native scrollbars.\n- `autoHide`: when the scrollbar hides. `'scroll'` (default) shows it while scrolling, `'leave'` hides it after the pointer leaves, `'move'` shows it while the pointer moves, `'never'` keeps it visible.\n- `autoHideDelay`: how many milliseconds to wait before hiding. Default 800.\n- `options`: passed straight to OverlayScrollbars and wins over everything else. Examples are below.",
+        "zh": "把应用包一层，所有会滚动的 Astryx 组件就从浏览器自带的滚动条，换成一套自绘的覆盖式滚动条：细、不占宽度、不滚的时候自己收起来，明暗主题自动跟着走。\n\n这是 astryx-vue 额外加的能力，原版 Astryx 没有。底层用的是 [OverlayScrollbars](https://kingsora.github.io/OverlayScrollbars/)（MIT 协议），已经内置在 `@astryx-vue/core` 里，不用自己装。\n\n**默认是关的。** 不套 `ScrollbarsProvider`，组件和以前完全一样。而且没套的时候，OverlayScrollbars 的 JS 和 CSS 都不会进你的包，因为只有 `ScrollbarsProvider` 会引它们。\n\n```ts\nimport { ScrollbarsProvider } from '@astryx-vue/core/Scrollbars'\n```\n\n30 秒接入，在 `App.vue` 里套一层就行：\n\n```vue\n<script setup lang=\"ts\">\nimport { ScrollbarsProvider } from '@astryx-vue/core/Scrollbars'\n</script>\n\n<template>\n  <ScrollbarsProvider>\n    <RouterView />\n  </ScrollbarsProvider>\n</template>\n```\n\n常用的几个属性：\n\n- `enabled`：开关，默认 `true`。设成 `false` 就整棵子树回到原生滚动条。\n- `autoHide`：什么时候把滚动条收起来。`'scroll'`（默认）是滚的时候才出现，`'leave'` 是鼠标离开后收起，`'move'` 是鼠标动的时候出现，`'never'` 是一直显示。\n- `autoHideDelay`：收起前等多少毫秒，默认 800。\n- `options`：直接传给 OverlayScrollbars 的选项，优先级最高，后面有例子。"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Changing the look",
+            "rows": [
+              {
+                "name": "`--astryx-scrollbar-size`",
+                "description": "`--astryx-scrollbar-size`",
+                "default": "`10px`"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb`",
+                "description": "`--astryx-scrollbar-thumb`",
+                "default": "Secondary text color at 45%"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb-hover`",
+                "description": "`--astryx-scrollbar-thumb-hover`",
+                "default": "Secondary text color at 70%"
+              },
+              {
+                "name": "`--astryx-scrollbar-track`",
+                "description": "`--astryx-scrollbar-track`",
+                "default": "`transparent`"
+              },
+              {
+                "name": "`--astryx-scrollbar-radius`",
+                "description": "`--astryx-scrollbar-radius`",
+                "default": "`9999px`"
+              }
+            ]
+          },
+          {
+            "heading": "ScrollbarsProvider props",
+            "rows": [
+              {
+                "name": "`enabled`",
+                "description": "`enabled`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`autoHide`",
+                "description": "`autoHide`",
+                "type": "`'never' | 'scroll' | 'leave' | 'move'`",
+                "default": "`'scroll'`"
+              },
+              {
+                "name": "`autoHideDelay`",
+                "description": "`autoHideDelay`",
+                "type": "`number`",
+                "default": "`800`"
+              },
+              {
+                "name": "`options`",
+                "description": "`options`",
+                "type": "`ScrollbarsOptions`",
+                "default": "—"
+              }
+            ]
+          },
+          {
+            "heading": "Exports",
+            "rows": [
+              {
+                "name": "`useScrollbars`",
+                "description": "`useScrollbars`",
+                "type": "`(target: MaybeRefOrGetter<HTMLElement | null | undefined>, options?: UseScrollbarsOptions) => UseScrollbarsResult`"
+              },
+              {
+                "name": "`UseScrollbarsOptions`",
+                "description": "`UseScrollbarsOptions`",
+                "type": "`{ enabled?: MaybeRefOrGetter<boolean> }`"
+              },
+              {
+                "name": "`UseScrollbarsResult`",
+                "description": "`UseScrollbarsResult`",
+                "type": "`{ active: Readonly<Ref<boolean>> }`"
+              },
+              {
+                "name": "`ScrollbarsProviderProps`",
+                "description": "`ScrollbarsProviderProps`",
+                "type": "Type"
+              },
+              {
+                "name": "`ScrollbarsProviderSlots`",
+                "description": "`ScrollbarsProviderSlots`",
+                "type": "Type"
+              },
+              {
+                "name": "`ScrollbarsOptions`",
+                "description": "`ScrollbarsOptions`",
+                "type": "`PartialOptions`"
+              },
+              {
+                "name": "`ScrollbarsAutoHide`",
+                "description": "`ScrollbarsAutoHide`",
+                "type": "`'never' | 'scroll' | 'leave' | 'move'`"
+              },
+              {
+                "name": "`ScrollbarsContext`",
+                "description": "`ScrollbarsContext`",
+                "type": "Type"
+              },
+              {
+                "name": "`ScrollbarsHandle`",
+                "description": "`ScrollbarsHandle`",
+                "type": "`{ update, destroy }`"
+              },
+              {
+                "name": "`scrollbarsKey`",
+                "description": "`scrollbarsKey`",
+                "type": "`InjectionKey<ScrollbarsContext>`"
+              }
+            ]
+          },
+          {
+            "heading": "Appearance variables",
+            "rows": [
+              {
+                "name": "`--astryx-scrollbar-size`",
+                "description": "`--astryx-scrollbar-size`",
+                "default": "`10px`"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb`",
+                "description": "`--astryx-scrollbar-thumb`",
+                "default": "Secondary text color at 45%"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb-hover`",
+                "description": "`--astryx-scrollbar-thumb-hover`",
+                "default": "Secondary text color at 70%"
+              },
+              {
+                "name": "`--astryx-scrollbar-track`",
+                "description": "`--astryx-scrollbar-track`",
+                "default": "`transparent`"
+              },
+              {
+                "name": "`--astryx-scrollbar-radius`",
+                "description": "`--astryx-scrollbar-radius`",
+                "default": "`9999px`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "改外观",
+            "rows": [
+              {
+                "name": "`--astryx-scrollbar-size`",
+                "description": "`--astryx-scrollbar-size`",
+                "default": "`10px`"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb`",
+                "description": "`--astryx-scrollbar-thumb`",
+                "default": "次要文字色的 45% 透明度"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb-hover`",
+                "description": "`--astryx-scrollbar-thumb-hover`",
+                "default": "次要文字色的 70% 透明度"
+              },
+              {
+                "name": "`--astryx-scrollbar-track`",
+                "description": "`--astryx-scrollbar-track`",
+                "default": "`transparent`"
+              },
+              {
+                "name": "`--astryx-scrollbar-radius`",
+                "description": "`--astryx-scrollbar-radius`",
+                "default": "`9999px`"
+              }
+            ]
+          },
+          {
+            "heading": "ScrollbarsProvider 属性",
+            "rows": [
+              {
+                "name": "`enabled`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "子树里要不要用自绘滚动条。设为 `false` 时子树不初始化，已经挂上的会被销毁。嵌套时内层覆盖外层。"
+              },
+              {
+                "name": "`autoHide`",
+                "type": "`'never' | 'scroll' | 'leave' | 'move'`",
+                "default": "`'scroll'`",
+                "description": "滚动条自动收起的时机。`never` 一直显示，`scroll` 滚动时显示，`leave` 指针离开后收起，`move` 指针移动时显示。"
+              },
+              {
+                "name": "`autoHideDelay`",
+                "type": "`number`",
+                "default": "`800`",
+                "description": "自动收起前等待的毫秒数。"
+              },
+              {
+                "name": "`options`",
+                "type": "`ScrollbarsOptions`",
+                "default": "—",
+                "description": "透传给 OverlayScrollbars 的选项（`PartialOptions`）。最后深合并，优先级最高。"
+              }
+            ]
+          },
+          {
+            "heading": "其它导出",
+            "rows": [
+              {
+                "name": "`useScrollbars`",
+                "description": "`useScrollbars`",
+                "type": "`(target: MaybeRefOrGetter<HTMLElement | null | undefined>, options?: UseScrollbarsOptions) => UseScrollbarsResult`"
+              },
+              {
+                "name": "`UseScrollbarsOptions`",
+                "description": "`UseScrollbarsOptions`",
+                "type": "`{ enabled?: MaybeRefOrGetter<boolean> }`"
+              },
+              {
+                "name": "`UseScrollbarsResult`",
+                "description": "`UseScrollbarsResult`",
+                "type": "`{ active: Readonly<Ref<boolean>> }`"
+              },
+              {
+                "name": "`ScrollbarsProviderProps`",
+                "description": "`ScrollbarsProviderProps`",
+                "type": "类型"
+              },
+              {
+                "name": "`ScrollbarsProviderSlots`",
+                "description": "`ScrollbarsProviderSlots`",
+                "type": "类型"
+              },
+              {
+                "name": "`ScrollbarsOptions`",
+                "description": "`ScrollbarsOptions`",
+                "type": "`PartialOptions`"
+              },
+              {
+                "name": "`ScrollbarsAutoHide`",
+                "description": "`ScrollbarsAutoHide`",
+                "type": "`'never' | 'scroll' | 'leave' | 'move'`"
+              },
+              {
+                "name": "`ScrollbarsContext`",
+                "description": "`ScrollbarsContext`",
+                "type": "类型"
+              },
+              {
+                "name": "`ScrollbarsHandle`",
+                "description": "`ScrollbarsHandle`",
+                "type": "`{ update, destroy }`"
+              },
+              {
+                "name": "`scrollbarsKey`",
+                "description": "`scrollbarsKey`",
+                "type": "`InjectionKey<ScrollbarsContext>`"
+              }
+            ]
+          },
+          {
+            "heading": "外观变量",
+            "rows": [
+              {
+                "name": "`--astryx-scrollbar-size`",
+                "description": "`--astryx-scrollbar-size`",
+                "default": "`10px`"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb`",
+                "description": "`--astryx-scrollbar-thumb`",
+                "default": "次要文字色 45%"
+              },
+              {
+                "name": "`--astryx-scrollbar-thumb-hover`",
+                "description": "`--astryx-scrollbar-thumb-hover`",
+                "default": "次要文字色 70%"
+              },
+              {
+                "name": "`--astryx-scrollbar-track`",
+                "description": "`--astryx-scrollbar-track`",
+                "default": "`transparent`"
+              },
+              {
+                "name": "`--astryx-scrollbar-radius`",
+                "description": "`--astryx-scrollbar-radius`",
+                "default": "`9999px`"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [
+          {
+            "heading": "ScrollbarsProvider slots",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "`default`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "ScrollbarsProvider 插槽",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "`default`"
+              }
+            ]
+          }
+        ]
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Components that switch automatically",
+            "text": "Inside a provider, the scroll areas of these components switch to the custom scrollbar. You do not change any code:\n\n- Scroll containers: `ScrollableArea`, `Layout` (`LayoutContent` and `LayoutPanel` when they scroll), `Card`, `Stack` and `StackItem` (when they scroll)\n- Menus and pickers: `DropdownMenu`, `ContextMenu`, `MoreMenu`, `Selector`, `MultiSelector`, `ComplexSelector`, `CommandPalette`\n- Suggestion lists: the lists in `Typeahead`, `Tokenizer` and `PowerSearch`, plus `TimeInput` and `DateRangeInput`\n- Overlays: `Popover`, `AlertDialog`, `BottomSheet`\n- Navigation: `SideNav`, `MobileNav`\n- Data display: `Table`, `CodeBlock`\n- Conversation: the `Chat` message area and its trigger menu"
+          },
+          {
+            "heading": "What stays native",
+            "text": "- The `Chat` input. It is an editable area, and swapping it would get in the way of typing.\n- `<textarea>`.\n- Horizontal scrolling of tables inside `Markdown`.\n- The page's own scrollbar (`body`).\n\nThese keep the native scrollbar."
+          },
+          {
+            "heading": "Your own scroll containers",
+            "text": "Reach for [`ScrollableArea`](/en/components/scrollable-area) first. It already comes with an accessible name, keyboard focus and overflow detection, and inside a provider it gets the custom scrollbar for free.\n\nUse `useScrollbars` only when you already have a hand-written scroll container and do not want to move to `ScrollableArea`. Pass it the element's ref:\n\n```vue\n<script setup lang=\"ts\">\nimport { useScrollbars } from '@astryx-vue/core/Scrollbars'\nimport { shallowRef } from 'vue'\n\nconst el = shallowRef<HTMLElement | null>(null)\nconst { active } = useScrollbars(el)\n</script>\n\n<template>\n  <div ref=\"el\" class=\"feed\">\n    <!-- long content -->\n  </div>\n</template>\n\n<style scoped>\n.feed {\n  height: 240px;\n  overflow: auto;\n}\n</style>\n```\n\nA few things to know:\n\n- The container itself is the scrolling viewport. Its children are not moved. The hook only appends two extra `div`s at the end of the container for the scrollbars.\n- With no `ScrollbarsProvider` above it, `useScrollbars` does nothing and `active` stays `false`.\n- The scrollbar follows whatever `overflow` the container has. Making it scrollable is up to you.\n- Call `useScrollbars` in a **descendant** of `ScrollbarsProvider`. Calling it in the same component that renders the provider will not find it."
+          },
+          {
+            "heading": "Turning it off locally",
+            "text": "To keep native scrollbars on just one part, pick the scope you need.\n\n**One `ScrollableArea`:**\n\n```vue\n<ScrollableArea label=\"Logs\" :height=\"240\" :scrollbars=\"false\">\n  ...\n</ScrollableArea>\n```\n\n**One subtree.** Nest another provider. The inner one wins:\n\n```vue\n<ScrollbarsProvider>\n  <Main />\n  <ScrollbarsProvider :enabled=\"false\">\n    <Sidebar />\n  </ScrollbarsProvider>\n</ScrollbarsProvider>\n```\n\n**One of your own containers.** Pass `enabled` to `useScrollbars`. It can be a boolean, a ref or a getter:\n\n```ts\nconst { active } = useScrollbars(el, { enabled: () => props.fancy })\n```\n\nIf the outer provider is off, `true` here does not turn it on."
+          },
+          {
+            "heading": "Changing the look",
+            "text": "The look is driven by CSS variables. They all have defaults that follow the theme tokens, so light and dark need no extra work.\n\nTo change it site-wide, put the values in the `astryx.overrides` layer:\n\n```css\n@layer astryx.overrides {\n  :root {\n    --astryx-scrollbar-size: 12px;\n    --astryx-scrollbar-thumb: color-mix(in srgb, var(--astryx-color-text-primary) 35%, transparent);\n    --astryx-scrollbar-radius: 4px;\n  }\n}\n```\n\nYou can set these variables on any ancestor, so to change just one area, set them in that area's selector. You can also put them in the variables of a [`Theme`](/en/components/theme) so they switch with it. More on variables in [CSS variables](/en/themes/css-variables)."
+          },
+          {
+            "heading": "Changing behavior with options",
+            "text": "`options` goes to OverlayScrollbars as is. It is deep-merged and has the highest priority, so it even overrides `autoHide`.\n\n```vue\n<ScrollbarsProvider\n  :options=\"{\n    scrollbars: {\n      clickScroll: 'instant',\n      visibility: 'visible',\n    },\n  }\"\n>\n  <App />\n</ScrollbarsProvider>\n```\n\n- `clickScroll: 'instant'`: clicking the track jumps the viewport there. Off by default. The animated variant (`true`) also needs OverlayScrollbars' `ClickScrollPlugin` registered.\n- `visibility: 'visible'`: the scrollbar is always shown. The default is `'auto'`, which shows it only when content overflows.\n\nSee the [OverlayScrollbars docs](https://kingsora.github.io/OverlayScrollbars/) for the full option list."
+          },
+          {
+            "heading": "Notes",
+            "text": "- **Server rendering**: the first paint shows native scrollbars. They swap to the custom ones after the page mounts, so you may see a brief style change on load.\n- **macOS**: the system default is \"Show scroll bars: when scrolling\", so native scrollbars there are already overlay ones. After the swap, the main difference is a consistent look across platforms.\n- **Reduced motion**: when the user's system asks for reduced motion, scrollbar transitions are turned off.\n- **Keyboard, touch and screen readers**: no change. The element that scrolls is still the original one. The scrollbar is only drawn on top of it.\n- **No provider**: nothing happens, and no extra code is loaded."
+          },
+          {
+            "heading": "Native attributes",
+            "text": "The component renders no element of its own, so <code>class</code> and <code>style</code> are not forwarded."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "会自动换上的组件",
+            "text": "套了 Provider 之后，下面这些组件里的滚动区域会自动换成自绘滚动条，不用你改代码：\n\n- 滚动容器：`ScrollableArea`、`Layout`（`LayoutContent` 和 `LayoutPanel` 可滚动时）、`Card`、`Stack` 和 `StackItem`（可滚动时）\n- 菜单和选择：`DropdownMenu`、`ContextMenu`、`MoreMenu`、`Selector`、`MultiSelector`、`ComplexSelector`、`CommandPalette`\n- 输入候选：`Typeahead`、`Tokenizer`、`PowerSearch` 的候选列表，`TimeInput`、`DateRangeInput`\n- 浮层：`Popover`、`AlertDialog`、`BottomSheet`\n- 导航：`SideNav`、`MobileNav`\n- 数据展示：`Table`、`CodeBlock`\n- 对话：`Chat` 的消息区和触发菜单"
+          },
+          {
+            "heading": "不会换的地方",
+            "text": "- `Chat` 的输入框。它是可编辑区，换了会影响输入。\n- `<textarea>`。\n- `Markdown` 里表格的横向滚动。\n- 页面本身（`body`）的滚动条。\n\n这些地方还是原生滚动条。"
+          },
+          {
+            "heading": "自己的滚动容器",
+            "text": "首选 [`ScrollableArea`](/components/scrollable-area)。它自带无障碍名称、键盘聚焦和溢出判断，套了 Provider 就自动换上自绘滚动条，不用再想别的。\n\n只有一种情况需要 `useScrollbars`：你已经有一个自己写的滚动容器，不想换成 `ScrollableArea`。把这个元素的 ref 交给它：\n\n```vue\n<script setup lang=\"ts\">\nimport { useScrollbars } from '@astryx-vue/core/Scrollbars'\nimport { shallowRef } from 'vue'\n\nconst el = shallowRef<HTMLElement | null>(null)\nconst { active } = useScrollbars(el)\n</script>\n\n<template>\n  <div ref=\"el\" class=\"feed\">\n    <!-- 很长的内容 -->\n  </div>\n</template>\n\n<style scoped>\n.feed {\n  height: 240px;\n  overflow: auto;\n}\n</style>\n```\n\n几个要点：\n\n- 容器自己就是滚动的视口，里面的子节点不会被搬动。它只会在容器末尾多追加两个滚动条用的 `div`。\n- 外层没有 `ScrollbarsProvider` 时，`useScrollbars` 什么都不做，`active` 一直是 `false`。\n- 容器的 `overflow` 是什么，滚动条就跟着是什么。你自己要保证它能滚。\n- `useScrollbars` 要在 `ScrollbarsProvider` 的**后代组件**里调用。在写 Provider 的那个组件里直接调，是读不到的。"
+          },
+          {
+            "heading": "局部关掉",
+            "text": "只想让某一块保留原生滚动条，有三种办法，看你想关多大的范围。\n\n**关掉一块 `ScrollableArea`：**\n\n```vue\n<ScrollableArea label=\"日志\" :height=\"240\" :scrollbars=\"false\">\n  ...\n</ScrollableArea>\n```\n\n**关掉一棵子树。** 嵌套一层 Provider，里面的覆盖外面的：\n\n```vue\n<ScrollbarsProvider>\n  <Main />\n  <ScrollbarsProvider :enabled=\"false\">\n    <Sidebar />\n  </ScrollbarsProvider>\n</ScrollbarsProvider>\n```\n\n**关掉自己的某个容器。** 给 `useScrollbars` 传 `enabled`，可以是布尔值、ref 或者 getter：\n\n```ts\nconst { active } = useScrollbars(el, { enabled: () => props.fancy })\n```\n\n外层 Provider 是关的时候，这里写 `true` 也不会生效。"
+          },
+          {
+            "heading": "改外观",
+            "text": "外观走 CSS 变量，都有默认值，并且跟着主题 token 走，不用额外配明暗。\n\n想全站统一改，写在 `astryx.overrides` 层里：\n\n```css\n@layer astryx.overrides {\n  :root {\n    --astryx-scrollbar-size: 12px;\n    --astryx-scrollbar-thumb: color-mix(in srgb, var(--astryx-color-text-primary) 35%, transparent);\n    --astryx-scrollbar-radius: 4px;\n  }\n}\n```\n\n变量可以写在任何祖先元素上，所以只想改某一块，就写在那一块的选择器里。也可以放进 [`Theme`](/components/theme) 的主题变量里，跟着主题一起切。更多变量的约定见 [CSS 变量](/themes/css-variables)。"
+          },
+          {
+            "heading": "用 options 改行为",
+            "text": "`options` 会原样传给 OverlayScrollbars，深合并，并且优先级最高，连 `autoHide` 都会被它盖掉。\n\n```vue\n<ScrollbarsProvider\n  :options=\"{\n    scrollbars: {\n      clickScroll: 'instant',\n      visibility: 'visible',\n    },\n  }\"\n>\n  <App />\n</ScrollbarsProvider>\n```\n\n- `clickScroll: 'instant'`：点一下轨道，视口直接跳到那里。默认是关的。想要平滑滚过去（`true`），得另外注册 OverlayScrollbars 的 `ClickScrollPlugin`。\n- `visibility: 'visible'`：滚动条一直显示。默认 `'auto'`，只在内容溢出时显示。\n\n完整的选项见 [OverlayScrollbars 文档](https://kingsora.github.io/OverlayScrollbars/)。"
+          },
+          {
+            "heading": "注意事项",
+            "text": "- **服务端渲染**：首屏先显示原生滚动条，页面挂载后才换成自绘的。所以刚打开页面时可能有一瞬间的样式变化。\n- **macOS**：系统默认「滚动时显示滚动条」，原生滚动条本来就是覆盖式的。在 macOS 上换完以后，主要差别是各个平台的样式统一了。\n- **减少动效**：用户系统开了「减少动效」时，滚动条的过渡会关掉。\n- **键盘、触屏、读屏**：行为不变。因为真正在滚动的，仍然是原来的那个元素，滚动条只是画在它上面。\n- **没套 Provider**：什么都不会发生，也不会多加载任何代码。"
+          },
+          {
+            "heading": "原生属性",
+            "text": "组件本身不渲染元素，<code>class</code> 和 <code>style</code> 不会传下去。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "Scrollbars Provider — Toggle Comparison",
+            "zh": "Scrollbars Provider — 开关对比"
+          },
+          "description": {
+            "en": "A ScrollableArea with a long list and a CodeBlock that scrolls sideways, both inside one ScrollbarsProvider. Flip the switch to compare the native scrollbars with the custom ones.",
+            "zh": "一块带长列表的 ScrollableArea，一块有横向滚动的 CodeBlock，一起包在 ScrollbarsProvider 里。打开和关掉开关，对比原生滚动条和自绘滚动条。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { CodeBlock } from '@astryx-vue/core/Code'\nimport { ScrollableArea } from '@astryx-vue/core/ScrollableArea'\nimport { ScrollbarsProvider } from '@astryx-vue/core/Scrollbars'\nimport { Switch } from '@astryx-vue/core/Switch'\nimport { Text } from '@astryx-vue/core/Text'\nimport { shallowRef } from 'vue'\n\nconst on = shallowRef(true)\n\nconst notes = Array.from({ length: 24 }, (_, index) => `Release note ${index + 1}`)\n\nconst code = [\n  'const message = \"This line is long enough that it has to scroll sideways, so the horizontal scrollbar shows up under the code.\";',\n  'const another = \"Hover the code block, or scroll it, and the thin bar appears without taking any width from the content.\";',\n  'export { message, another };',\n].join('\\n')\n</script>\n\n<template>\n  <div class=\"scrollbars-provider-preview\">\n    <Switch v-model=\"on\" label=\"Custom scrollbars\" />\n    <ScrollbarsProvider :enabled=\"on\">\n      <div class=\"scrollbars-provider-preview__panes\">\n        <ScrollableArea label=\"Release notes\" :height=\"200\" :padding=\"3\">\n          <div v-for=\"note in notes\" :key=\"note\" class=\"scrollbars-provider-preview__row\">\n            <Text type=\"body\">\n              {{ note }}\n            </Text>\n          </div>\n        </ScrollableArea>\n        <CodeBlock :code=\"code\" language=\"typescript\" title=\"long-lines.ts\" />\n      </div>\n    </ScrollbarsProvider>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Scrollbars Provider — Your Own Scroll Container",
+            "zh": "Scrollbars Provider — 自己的滚动容器"
+          },
+          "description": {
+            "en": "A hand-written overflow: auto div that gets the custom scrollbar through useScrollbars. The look is tuned with CSS variables: a thicker bar in the accent color.",
+            "zh": "一个自己写的 overflow: auto 的 div，用 useScrollbars 接上自绘滚动条。外观用 CSS 变量改：这里调粗了滚动条，换成了强调色。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { ScrollbarsProvider, useScrollbars } from '@astryx-vue/core/Scrollbars'\nimport { Text } from '@astryx-vue/core/Text'\nimport { defineComponent, h, shallowRef } from 'vue'\n\n/**\n * `useScrollbars` reads the nearest provider, so the hook lives in a child\n * component that sits inside `ScrollbarsProvider`.\n */\nconst Feed = defineComponent({\n  name: 'DemoFeed',\n  setup() {\n    const el = shallowRef<HTMLElement | null>(null)\n    const { active } = useScrollbars(el)\n    const rows = Array.from({ length: 20 }, (_, index) => `Event ${index + 1}`)\n    return () => h('div', {\n      'ref': el,\n      'class': 'scrollbars-provider-preview__feed',\n      'data-active': String(active.value),\n      'tabindex': 0,\n      'role': 'region',\n      'aria-label': 'Event feed',\n    }, rows.map(row => h('div', { key: row, class: 'scrollbars-provider-preview__row' }, h(Text, { type: 'body' }, () => row))))\n  },\n})\n</script>\n\n<template>\n  <ScrollbarsProvider>\n    <Feed />\n  </ScrollbarsProvider>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/scrollbars-provider",
+        "zh": "https://astryx-vue.pages.dev/components/scrollbars-provider"
+      }
+    },
+    {
       "slug": "use-announce",
       "name": "UseAnnounce",
       "kind": "composable",
@@ -76244,21 +76720,29 @@
         "en": [
           "Core Focus",
           "Architecture and Packages",
-          "Icons and Patterns"
+          "Icons and Patterns",
+          "Differences from the Original"
         ],
         "zh": [
           "我们是怎么做的",
           "两个包各司其职",
-          "图标与成套界面"
+          "图标与成套界面",
+          "和原版的差别"
         ]
       },
       "keywords": {
-        "en": [],
-        "zh": []
+        "en": [
+          "Feature",
+          "Custom scrollbars"
+        ],
+        "zh": [
+          "特性",
+          "自绘滚动条"
+        ]
       },
       "body": {
-        "en": "# Introduction\n\nastryx-vue is an open-source Vue 3 reimplementation of Meta's [Astryx](https://github.com/facebook/astryx) design language. The upstream documentation is located at <https://astryx.atmeta.com>, built on React 19 and StyleX. astryx-vue is an independent community project bringing the aesthetics and engineering precision of Astryx to the Vue ecosystem.\n\n## Core Focus\n\nRather than wrapping React components or introducing runtime adapters, astryx-vue reimagines Astryx natively for Vue. The implementation strictly mirrors four foundations:\n\n1. **Design Tokens**: Structured design tokens across color, spacing, radius, and elevation.\n2. **CSS Variables**: Unified light/dark theme variables leveraging native `light-dark()`.\n3. **Motion System**: Calibrated durations and easing curves with built-in reduced-motion support.\n4. **Component Grain**: Faithful component divisions matching the original design system.\n\nAll APIs embrace standard Vue 3 idioms: typed props, events, slots, `v-model`, and composables without unnecessary runtime abstractions.\n\n## Architecture and Packages\n\nThe project separates component structure from visual theming:\n\n- `@astryx-vue/core`: Component implementations, composables, and structural CSS.\n- `@astryx-vue/themes`: Theme tokens, typography, and color definitions (currently providing Neutral).\n\nThe styles use standard CSS layers (`@layer astryx.*`), requiring no specialized CSS-in-JS toolchains.\n\n## Icons and Patterns\n\nTo keep bundle footprints minimal, the library does not package a proprietary icon font or heavy component suite. Controls such as `IconButton` and `NavItem` accept CSS icon classes, seamlessly integrating with solutions like UnoCSS `presetIcons`, Iconify, or Lucide.\n\nFor specialized workflows, the library provides cohesive component patterns including `Chat` layouts, `Citation` elements, and `Markdown` presentations.\n\n---\n\nThe public API strictly reflects current repository exports. Core styles and components follow native Web standards and modern Vue 3 patterns.",
-        "zh": "# 介绍\n\nastryx-vue 是用 Vue 3 重新实现的开源组件库，它的设计灵感和视觉规范来自 Meta 的 [Astryx](https://github.com/facebook/astryx) 设计系统。原版文档在 <https://astryx.atmeta.com>，基于 React 19 和 StyleX 开发。本项目由开源社区独立维护，目标是让 Vue 开发者不用换技术栈，就能直接用上这套做工精细、现代好看的界面。\n\n## 我们是怎么做的\n\n我们并不是在 React 组件外面套一层壳，而是用 Vue 3 把整套界面的质感、排版与工程规范从底层重新做了一遍。组件库严格对齐原版的四个基础：\n\n1. **设计变量（Tokens）**：规范统一的间距、圆角与字号，语义清晰，改一处处处生效。\n2. **CSS 变量系统**：原生支持 `light-dark()`，不用写两套样式表，就能在浅色和深色之间自如切换，也方便层层覆盖。\n3. **细腻动效（Motion）**：带有自然的缓动节奏与层级过渡；当用户在系统里开启「减少动效」时，会自动收起大幅位移，保护阅读体验。\n4. **完整的组件阵容**：从小小的按钮、图标，到整套 AI 对话窗口和后台布局，原版有的常用界面这里都给你备齐了。\n\n所有组件完全按照 Vue 3 的标准习惯来写：支持标准的 Props、事件、插槽、`v-model` 和组合式函数（Composables）。不需要任何奇怪的运行时转换胶水层，代码打包出来干净又小巧。\n\n## 两个包各司其职\n\n项目拆成了两个清晰的包，各管各的事：\n\n- `@astryx-vue/core`：核心组件库，里面是所有 Vue 组件、常用工具函数（Composables）和组件骨架样式。\n- `@astryx-vue/themes`：主题包，提供 Neutral 等配色变量和字体排版规则。\n\n所有样式都基于现代标准 CSS 编写，你的项目不需要引入 StyleX，也不需要配置专门的 CSS 编译器。\n\n## 图标与成套界面\n\n组件库本身不强行捆绑任何一套体积庞大的图标库。像 `IconButton`（图标按钮）或 `NavItem`（导航项）这样需要放图标的地方，支持直接传 CSS 类名。你可以随心挑选自己喜欢的方案，无论是 UnoCSS `presetIcons`、Tailwind、Iconify 还是自己手写的 SVG，都能轻松放进去。\n\n对于当下高频使用的 AI 与协作界面，我们还成套准备好了可以直接拿来用的组合模式。比如 `Chat`（连续对话流）、`Citation`（参考来源标记）和 `Markdown`（长文排版渲染），不用你再从零开始到处拼装零件。\n\n---\n\n当前所有公开可用的功能，请以仓库实际导出的内容为准。核心样式与组件均遵循原生 Web 标准与现代 Vue 3 规范打造。"
+        "en": "# Introduction\n\nastryx-vue is an open-source Vue 3 reimplementation of Meta's [Astryx](https://github.com/facebook/astryx) design language. The upstream documentation is located at <https://astryx.atmeta.com>, built on React 19 and StyleX. astryx-vue is an independent community project bringing the aesthetics and engineering precision of Astryx to the Vue ecosystem.\n\n## Core Focus\n\nRather than wrapping React components or introducing runtime adapters, astryx-vue reimagines Astryx natively for Vue. The implementation strictly mirrors four foundations:\n\n1. **Design Tokens**: Structured design tokens across color, spacing, radius, and elevation.\n2. **CSS Variables**: Unified light/dark theme variables leveraging native `light-dark()`.\n3. **Motion System**: Calibrated durations and easing curves with built-in reduced-motion support.\n4. **Component Grain**: Faithful component divisions matching the original design system.\n\nAll APIs embrace standard Vue 3 idioms: typed props, events, slots, `v-model`, and composables without unnecessary runtime abstractions.\n\n## Architecture and Packages\n\nThe project separates component structure from visual theming:\n\n- `@astryx-vue/core`: Component implementations, composables, and structural CSS.\n- `@astryx-vue/themes`: Theme tokens, typography, and color definitions (currently providing Neutral).\n\nThe styles use standard CSS layers (`@layer astryx.*`), requiring no specialized CSS-in-JS toolchains.\n\n## Icons and Patterns\n\nTo keep bundle footprints minimal, the library does not package a proprietary icon font or heavy component suite. Controls such as `IconButton` and `NavItem` accept CSS icon classes, seamlessly integrating with solutions like UnoCSS `presetIcons`, Iconify, or Lucide.\n\nFor specialized workflows, the library provides cohesive component patterns including `Chat` layouts, `Citation` elements, and `Markdown` presentations.\n\n## Differences from the Original\n\nMost components map one-to-one to the original. The table below lists what this repository adds on top, things the original does not have. Each one is off by default or leaves existing behavior alone.\n\n| Feature | Entry | Description |\n| --- | --- | --- |\n| Custom scrollbars | [`ScrollbarsProvider`](/en/components/scrollbars-provider) | Wrap your app once and scrolling components swap native scrollbars for thin overlay ones. Without it nothing changes, and no extra code is bundled. |\n\nNew extras will keep being added to this table.\n\n---\n\nThe public API strictly reflects current repository exports. Core styles and components follow native Web standards and modern Vue 3 patterns.",
+        "zh": "# 介绍\n\nastryx-vue 是用 Vue 3 重新实现的开源组件库，它的设计灵感和视觉规范来自 Meta 的 [Astryx](https://github.com/facebook/astryx) 设计系统。原版文档在 <https://astryx.atmeta.com>，基于 React 19 和 StyleX 开发。本项目由开源社区独立维护，目标是让 Vue 开发者不用换技术栈，就能直接用上这套做工精细、现代好看的界面。\n\n## 我们是怎么做的\n\n我们并不是在 React 组件外面套一层壳，而是用 Vue 3 把整套界面的质感、排版与工程规范从底层重新做了一遍。组件库严格对齐原版的四个基础：\n\n1. **设计变量（Tokens）**：规范统一的间距、圆角与字号，语义清晰，改一处处处生效。\n2. **CSS 变量系统**：原生支持 `light-dark()`，不用写两套样式表，就能在浅色和深色之间自如切换，也方便层层覆盖。\n3. **细腻动效（Motion）**：带有自然的缓动节奏与层级过渡；当用户在系统里开启「减少动效」时，会自动收起大幅位移，保护阅读体验。\n4. **完整的组件阵容**：从小小的按钮、图标，到整套 AI 对话窗口和后台布局，原版有的常用界面这里都给你备齐了。\n\n所有组件完全按照 Vue 3 的标准习惯来写：支持标准的 Props、事件、插槽、`v-model` 和组合式函数（Composables）。不需要任何奇怪的运行时转换胶水层，代码打包出来干净又小巧。\n\n## 两个包各司其职\n\n项目拆成了两个清晰的包，各管各的事：\n\n- `@astryx-vue/core`：核心组件库，里面是所有 Vue 组件、常用工具函数（Composables）和组件骨架样式。\n- `@astryx-vue/themes`：主题包，提供 Neutral 等配色变量和字体排版规则。\n\n所有样式都基于现代标准 CSS 编写，你的项目不需要引入 StyleX，也不需要配置专门的 CSS 编译器。\n\n## 图标与成套界面\n\n组件库本身不强行捆绑任何一套体积庞大的图标库。像 `IconButton`（图标按钮）或 `NavItem`（导航项）这样需要放图标的地方，支持直接传 CSS 类名。你可以随心挑选自己喜欢的方案，无论是 UnoCSS `presetIcons`、Tailwind、Iconify 还是自己手写的 SVG，都能轻松放进去。\n\n对于当下高频使用的 AI 与协作界面，我们还成套准备好了可以直接拿来用的组合模式。比如 `Chat`（连续对话流）、`Citation`（参考来源标记）和 `Markdown`（长文排版渲染），不用你再从零开始到处拼装零件。\n\n## 和原版的差别\n\n绝大部分组件和原版一一对应。下面是本仓库额外加的、原版没有的能力。它们都默认关闭，或者不影响原有行为。\n\n| 特性 | 入口 | 说明 |\n| --- | --- | --- |\n| 自绘滚动条 | [`ScrollbarsProvider`](/components/scrollbars-provider) | 在应用外层套一层，滚动组件就从原生滚动条换成覆盖式的细滚动条。不套就没有任何变化，也不会多打包任何代码。 |\n\n以后新增扩展能力，会继续加在这张表里。\n\n---\n\n当前所有公开可用的功能，请以仓库实际导出的内容为准。核心样式与组件均遵循原生 Web 标准与现代 Vue 3 规范打造。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/why",
@@ -76405,23 +76889,40 @@
         "zh": "astryx-vue 的所有主题和组件样式，完全基于现代 CSS 标准规范构建（采用 CSS 变量与 `@layer` 级联层）。这意味着你的项目不需要安装 UnoCSS、Tailwind CSS，也不需要安装 StyleX 编译器，就能原生获得清晰可控的样式优先级。"
       },
       "headings": {
-        "en": [],
+        "en": [
+          "Scrollbar variables"
+        ],
         "zh": [
           "样式的五个层级（@layer）",
           "变量命名与双模配色",
           "组件专用变量 vs 全局语义变量",
+          "滚动条变量",
           "如何引入样式",
           "方式一：按需引入（推荐）",
           "方式二：一次性引入全部组件结构样式"
         ]
       },
       "keywords": {
-        "en": [],
-        "zh": []
+        "en": [
+          "Variable",
+          "--astryx-scrollbar-size",
+          "--astryx-scrollbar-thumb",
+          "--astryx-scrollbar-thumb-hover",
+          "--astryx-scrollbar-track",
+          "--astryx-scrollbar-radius"
+        ],
+        "zh": [
+          "变量",
+          "--astryx-scrollbar-size",
+          "--astryx-scrollbar-thumb",
+          "--astryx-scrollbar-thumb-hover",
+          "--astryx-scrollbar-track",
+          "--astryx-scrollbar-radius"
+        ]
       },
       "body": {
-        "en": "# CSS variables\n\nThemes and component styles use CSS variables and cascade layers. You do not install UnoCSS or StyleX to use them.\n\n`packages/themes/neutral/base.css` declares the layer order:\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\nSemantic tokens sit in `astryx.tokens`. Structural component styles sit in `astryx.components` and come from `@astryx-vue/core`. Application overrides belong in the last layer, `astryx.overrides`. Unlayered styles, and later layers, both beat earlier layers.\n\nNames follow the upstream tokens and add `--astryx-`. The primary text color is `--astryx-color-text-primary`. Colors are written as:\n\n```css\n--astryx-color-text-primary: light-dark(#171717, #fafafa);\n```\n\n`light-dark()` reads the element's `color-scheme`. Neutral sets `color-scheme: light dark` on `:root` and `[data-astryx-theme='neutral']`, so the result follows the system or whatever the docs site already set. Forcing one side is described in [Dark mode](/en/guide/dark-mode). [`Theme`](/en/components/theme) can set the same variables on one subtree.\n\nComponents also have their own variables, such as `--astryx-button-primary-background`. Those names are defined in `packages/themes/neutral/<component>.css` and usually point at a semantic token. Prefer overriding the semantic token. Override the component variable only when that component has to diverge.\n\n`@astryx-vue/core/reset.css` is a single declaration, `@layer astryx.reset`. It is not a browser reset. Import it only when you need that layer to exist first.\n\nLoad every structural sheet at once with:\n\n```ts\nimport '@astryx-vue/core/styles.css'\n```\n\nImporting a component from a subpath such as `@astryx-vue/core/Button` loads that component's structural sheet. The theme is still a separate import. See [Theme and styles](/en/guide/styling).",
-        "zh": "# CSS 变量与样式分层\n\nastryx-vue 的所有主题和组件样式，完全基于现代 CSS 标准规范构建（采用 CSS 变量与 `@layer` 级联层）。这意味着你的项目不需要安装 UnoCSS、Tailwind CSS，也不需要安装 StyleX 编译器，就能原生获得清晰可控的样式优先级。\n\n## 样式的五个层级（@layer）\n\n为了防止自定义样式和组件内置样式“打架”，我们在 `packages/themes/neutral/base.css` 开头预先规定了五个样式的加载顺序：\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\n从左到右，优先级依次由低到高递增：\n\n1. **`astryx.reset`（重置层）：** 最底层的基准样式。\n2. **`astryx.tokens`（设计令牌层）：** 定义通用的颜色、字号、圆角和间距等 CSS 变量。\n3. **`astryx.base`（全局基础层）：** 网页的基础排版和通用样式规则。\n4. **`astryx.components`（组件结构层）：** `@astryx-vue/core` 中所有组件的基础结构、布局与默认外观。\n5. **`astryx.overrides`（用户覆盖层）：** 留给你在项目中写业务自定义样式的地方。排在最右侧，保证你写的样式能够稳稳压过前面所有默认样式。\n\n**规则很直观：** 排在更靠后层级的样式，会自动覆盖排在前面的层级；而在 `@layer` 之外手写的未分层普通 CSS，优先级比所有分层样式都高。\n\n## 变量命名与双模配色\n\n所有通用设计变量的命名直接对应 Astryx 原始规范，并统一带上 `--astryx-` 前缀。\n\n例如，文本主色的变量名就是 `--astryx-color-text-primary`。它的值定义如下：\n\n```css\n--astryx-color-text-primary: light-dark(#171717, #fafafa);\n```\n\n`light-dark()` 函数会根据当前元素的 `color-scheme` 属性自动在浅色（第一个值）和深色（第二个值）之间切换。Neutral 主题在 `:root` 和 `[data-astryx-theme='neutral']` 上声明了 `color-scheme: light dark`，因此默认能够自动跟随操作系统或文档站的明暗开关变化。如果需要强制某一侧，请参阅 [深色模式配置指南](/guide/dark-mode)。\n\n## 组件专用变量 vs 全局语义变量\n\n除了全局的 `--astryx-color-*` 这类语义变量，部分组件还拥有自己的细分变量（例如按钮的背景色 `--astryx-button-primary-background`）：\n\n- **平时换外观：** 强烈建议优先修改全局语义变量（如改变文字主色、基础圆角），这样整个系统的所有组件都能整齐划一地改变。\n- **个别组件特殊定制：** 只有当你只想让某个组件“特立独行”时，才去针对性地覆盖它自己的专用变量。\n\n## 如何引入样式\n\n### 方式一：按需引入（推荐）\n\n当你从组件子路径（例如 `@astryx-vue/core/Button`）引入单个组件时，该组件所需的骨架样式会自动打包并加载进来。你只需要在应用根入口引入一次主题样式文件即可：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n### 方式二：一次性引入全部组件结构样式\n\n如果你希望一次性把所有组件的结构样式都准备好，可以显式引入全局包样式：\n\n```ts\nimport '@astryx-vue/core/styles.css'\nimport '@astryx-vue/themes/neutral.css'\n```\n\n更多细节请查阅 [主题与样式使用指南](/guide/styling)。"
+        "en": "# CSS variables\n\nThemes and component styles use CSS variables and cascade layers. You do not install UnoCSS or StyleX to use them.\n\n`packages/themes/neutral/base.css` declares the layer order:\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\nSemantic tokens sit in `astryx.tokens`. Structural component styles sit in `astryx.components` and come from `@astryx-vue/core`. Application overrides belong in the last layer, `astryx.overrides`. Unlayered styles, and later layers, both beat earlier layers.\n\nNames follow the upstream tokens and add `--astryx-`. The primary text color is `--astryx-color-text-primary`. Colors are written as:\n\n```css\n--astryx-color-text-primary: light-dark(#171717, #fafafa);\n```\n\n`light-dark()` reads the element's `color-scheme`. Neutral sets `color-scheme: light dark` on `:root` and `[data-astryx-theme='neutral']`, so the result follows the system or whatever the docs site already set. Forcing one side is described in [Dark mode](/en/guide/dark-mode). [`Theme`](/en/components/theme) can set the same variables on one subtree.\n\nComponents also have their own variables, such as `--astryx-button-primary-background`. Those names are defined in `packages/themes/neutral/<component>.css` and usually point at a semantic token. Prefer overriding the semantic token. Override the component variable only when that component has to diverge.\n\n## Scrollbar variables\n\nWith a [`ScrollbarsProvider`](/en/components/scrollbars-provider) in place, these variables control how the scrollbar looks. They all have defaults that follow the theme tokens, so changing them is optional.\n\n| Variable | Default | What it does |\n| --- | --- | --- |\n| `--astryx-scrollbar-size` | `10px` | Scrollbar thickness |\n| `--astryx-scrollbar-thumb` | Secondary text color at 45% | Thumb color |\n| `--astryx-scrollbar-thumb-hover` | Secondary text color at 70% | Thumb color on hover and drag |\n| `--astryx-scrollbar-track` | `transparent` | Track background |\n| `--astryx-scrollbar-radius` | `9999px` | Corner radius of track and thumb |\n\nYou can set them on any ancestor, and they only affect scrollbars inside it. See the [component page](/en/components/scrollbars-provider) for details and examples.\n\n`@astryx-vue/core/reset.css` is a single declaration, `@layer astryx.reset`. It is not a browser reset. Import it only when you need that layer to exist first.\n\nLoad every structural sheet at once with:\n\n```ts\nimport '@astryx-vue/core/styles.css'\n```\n\nImporting a component from a subpath such as `@astryx-vue/core/Button` loads that component's structural sheet. The theme is still a separate import. See [Theme and styles](/en/guide/styling).",
+        "zh": "# CSS 变量与样式分层\n\nastryx-vue 的所有主题和组件样式，完全基于现代 CSS 标准规范构建（采用 CSS 变量与 `@layer` 级联层）。这意味着你的项目不需要安装 UnoCSS、Tailwind CSS，也不需要安装 StyleX 编译器，就能原生获得清晰可控的样式优先级。\n\n## 样式的五个层级（@layer）\n\n为了防止自定义样式和组件内置样式“打架”，我们在 `packages/themes/neutral/base.css` 开头预先规定了五个样式的加载顺序：\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\n从左到右，优先级依次由低到高递增：\n\n1. **`astryx.reset`（重置层）：** 最底层的基准样式。\n2. **`astryx.tokens`（设计令牌层）：** 定义通用的颜色、字号、圆角和间距等 CSS 变量。\n3. **`astryx.base`（全局基础层）：** 网页的基础排版和通用样式规则。\n4. **`astryx.components`（组件结构层）：** `@astryx-vue/core` 中所有组件的基础结构、布局与默认外观。\n5. **`astryx.overrides`（用户覆盖层）：** 留给你在项目中写业务自定义样式的地方。排在最右侧，保证你写的样式能够稳稳压过前面所有默认样式。\n\n**规则很直观：** 排在更靠后层级的样式，会自动覆盖排在前面的层级；而在 `@layer` 之外手写的未分层普通 CSS，优先级比所有分层样式都高。\n\n## 变量命名与双模配色\n\n所有通用设计变量的命名直接对应 Astryx 原始规范，并统一带上 `--astryx-` 前缀。\n\n例如，文本主色的变量名就是 `--astryx-color-text-primary`。它的值定义如下：\n\n```css\n--astryx-color-text-primary: light-dark(#171717, #fafafa);\n```\n\n`light-dark()` 函数会根据当前元素的 `color-scheme` 属性自动在浅色（第一个值）和深色（第二个值）之间切换。Neutral 主题在 `:root` 和 `[data-astryx-theme='neutral']` 上声明了 `color-scheme: light dark`，因此默认能够自动跟随操作系统或文档站的明暗开关变化。如果需要强制某一侧，请参阅 [深色模式配置指南](/guide/dark-mode)。\n\n## 组件专用变量 vs 全局语义变量\n\n除了全局的 `--astryx-color-*` 这类语义变量，部分组件还拥有自己的细分变量（例如按钮的背景色 `--astryx-button-primary-background`）：\n\n- **平时换外观：** 强烈建议优先修改全局语义变量（如改变文字主色、基础圆角），这样整个系统的所有组件都能整齐划一地改变。\n- **个别组件特殊定制：** 只有当你只想让某个组件“特立独行”时，才去针对性地覆盖它自己的专用变量。\n\n## 滚动条变量\n\n套了 [`ScrollbarsProvider`](/components/scrollbars-provider) 后，滚动条的外观由下面这几个变量控制。它们都有默认值，并且跟着主题 token 走，改不改都行。\n\n| 变量 | 默认值 | 作用 |\n| --- | --- | --- |\n| `--astryx-scrollbar-size` | `10px` | 滚动条粗细 |\n| `--astryx-scrollbar-thumb` | 次要文字色 45% | 滑块颜色 |\n| `--astryx-scrollbar-thumb-hover` | 次要文字色 70% | 悬停和拖动时的滑块颜色 |\n| `--astryx-scrollbar-track` | `transparent` | 轨道背景 |\n| `--astryx-scrollbar-radius` | `9999px` | 轨道和滑块圆角 |\n\n这些变量可以写在任何祖先元素上，只影响它里面的滚动条。完整说明和示例见 [组件页](/components/scrollbars-provider)。\n\n## 如何引入样式\n\n### 方式一：按需引入（推荐）\n\n当你从组件子路径（例如 `@astryx-vue/core/Button`）引入单个组件时，该组件所需的骨架样式会自动打包并加载进来。你只需要在应用根入口引入一次主题样式文件即可：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n### 方式二：一次性引入全部组件结构样式\n\n如果你希望一次性把所有组件的结构样式都准备好，可以显式引入全局包样式：\n\n```ts\nimport '@astryx-vue/core/styles.css'\nimport '@astryx-vue/themes/neutral.css'\n```\n\n更多细节请查阅 [主题与样式使用指南](/guide/styling)。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/css-variables",

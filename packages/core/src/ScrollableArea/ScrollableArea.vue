@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
 import type { ScrollableAreaProps, ScrollableAreaSlots } from './types.js'
-import { computed, useAttrs } from 'vue'
+import { computed, shallowRef, useAttrs } from 'vue'
 import { useScrollableArea } from '../composables/useScrollableArea.js'
 import { formatSize, resolvePadding, spacingVariable } from '../Layout/size.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import '../../styles/scrollable-area.css'
 
 defineOptions({
@@ -18,12 +19,20 @@ const props = withDefaults(defineProps<ScrollableAreaProps>(), {
   stickyContainment: 'whenScrollable',
   padding: 0,
   isFullBleed: false,
+  scrollbars: true,
 })
 
 defineSlots<ScrollableAreaSlots>()
 
 const attrs = useAttrs()
 const scroll = useScrollableArea(props)
+
+const viewportEl = shallowRef<HTMLElement | null>(null)
+function bindViewport(el: unknown) {
+  scroll.viewport(el)
+  viewportEl.value = el instanceof HTMLElement ? el : null
+}
+useScrollbars(viewportEl, { enabled: () => props.scrollbars })
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style'),
@@ -57,7 +66,7 @@ const contentStyle = computed<CSSProperties>(() => {
 
 <template>
   <div
-    :ref="scroll.viewport"
+    :ref="bindViewport"
     v-bind="{ ...forwardedAttrs, ...scroll.viewportAttrs.value }"
     :class="rootClass"
     :style="rootStyle"

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
 import type { SpacingStep, StackCrossAlignment, StackMainAlignment, StackProps, StackSizeValue } from './types.js'
-import { computed, useAttrs } from 'vue'
-
+import { computed, useAttrs, useTemplateRef } from 'vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import '../../styles/stack.css'
 
 defineOptions({
@@ -22,6 +22,8 @@ defineSlots<{
 }>()
 
 const attrs = useAttrs()
+const root = useTemplateRef<HTMLElement>('root')
+useScrollbars(root, { enabled: () => props.isScrollable })
 
 const spacingVariables: Record<SpacingStep, string> = {
   0: 'var(--astryx-spacing-0, 0px)',
@@ -107,6 +109,7 @@ const rootStyle = computed<StyleValue>(() => {
 <template>
   <component
     :is="as"
+    ref="root"
     v-bind="forwardedAttrs"
     :class="rootClass"
     :data-cross-align="crossAlign"

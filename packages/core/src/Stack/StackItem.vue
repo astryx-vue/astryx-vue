@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { StackItemProps } from './types.js'
-import { computed, useAttrs } from 'vue'
+import { computed, useAttrs, useTemplateRef } from 'vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 
 import '../../styles/stack.css'
 
@@ -10,7 +11,7 @@ defineOptions({
   inheritAttrs: false,
 })
 
-withDefaults(defineProps<StackItemProps>(), {
+const props = withDefaults(defineProps<StackItemProps>(), {
   as: 'div',
   isScrollable: false,
   size: 'static',
@@ -21,6 +22,8 @@ defineSlots<{
 }>()
 
 const attrs = useAttrs()
+const root = useTemplateRef<HTMLElement>('root')
+useScrollbars(root, { enabled: () => props.isScrollable })
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style'),
@@ -33,6 +36,7 @@ const rootStyle = computed<StyleValue>(() => attrs.style as StyleValue)
 <template>
   <component
     :is="as"
+    ref="root"
     v-bind="forwardedAttrs"
     :class="rootClass"
     :data-cross-align-self="crossAlignSelf"

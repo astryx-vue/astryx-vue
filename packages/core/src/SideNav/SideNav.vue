@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { SideNavCollapsible, SideNavEmits, SideNavHandle, SideNavProps, SideNavSlots } from './types.js'
-import { computed, provide, ref, useId, watch } from 'vue'
+import { computed, provide, ref, useId, useTemplateRef, watch } from 'vue'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import { useHotkeys } from '../composables/useHotkeys.js'
 import { useAstryxMessages } from '../locale/index.js'
 import ResizeHandle from '../Resizable/ResizeHandle.vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { sideNavCollapseKey, useSideNavRenderMode } from './context.js'
 import SideNavCollapseButton from './SideNavCollapseButton.vue'
 import { useSideNavResize } from './useSideNavResize.js'
@@ -23,6 +24,8 @@ const slots = defineSlots<SideNavSlots>()
 const messages = useAstryxMessages()
 const navId = `astryx-side-nav-${useId()}`
 const localCollapsed = ref(false)
+const bodyEl = useTemplateRef<HTMLElement>('body')
+useScrollbars(bodyEl)
 
 const config = computed<SideNavCollapsible>(() =>
   typeof props.collapsible === 'object' ? props.collapsible : {},
@@ -131,7 +134,7 @@ provide(sideNavCollapseKey, {
     <div v-if="slots.top" class="astryx-side-nav__top-content">
       <slot name="top" />
     </div>
-    <div class="astryx-side-nav__body">
+    <div ref="body" class="astryx-side-nav__body">
       <slot />
     </div>
     <div v-if="hasBottom" class="astryx-side-nav__bottom">
@@ -166,7 +169,7 @@ provide(sideNavCollapseKey, {
           <slot name="top" />
         </div>
       </div>
-      <div class="astryx-side-nav__body">
+      <div ref="body" class="astryx-side-nav__body">
         <slot />
       </div>
       <div v-if="hasBottom" class="astryx-side-nav__bottom">

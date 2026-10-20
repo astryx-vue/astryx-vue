@@ -43,6 +43,20 @@ astryx-vue 的所有主题和组件样式，完全基于现代 CSS 标准规范�
 - **平时换外观：** 强烈建议优先修改全局语义变量（如改变文字主色、基础圆角），这样整个系统的所有组件都能整齐划一地改变。
 - **个别组件特殊定制：** 只有当你只想让某个组件“特立独行”时，才去针对性地覆盖它自己的专用变量。
 
+## 滚动条变量
+
+套了 [`ScrollbarsProvider`](/components/scrollbars-provider) 后，滚动条的外观由下面这几个变量控制。它们都有默认值，并且跟着主题 token 走，改不改都行。
+
+| 变量 | 默认值 | 作用 |
+| --- | --- | --- |
+| `--astryx-scrollbar-size` | `10px` | 滚动条粗细 |
+| `--astryx-scrollbar-thumb` | 次要文字色 45% | 滑块颜色 |
+| `--astryx-scrollbar-thumb-hover` | 次要文字色 70% | 悬停和拖动时的滑块颜色 |
+| `--astryx-scrollbar-track` | `transparent` | 轨道背景 |
+| `--astryx-scrollbar-radius` | `9999px` | 轨道和滑块圆角 |
+
+这些变量可以写在任何祖先元素上，只影响它里面的滚动条。完整说明和示例见 [组件页](/components/scrollbars-provider)。
+
 ## 如何引入样式
 
 ### 方式一：按需引入（推荐）

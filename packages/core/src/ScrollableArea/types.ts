@@ -19,6 +19,12 @@ export interface ScrollableAreaProps extends PaddingInput {
   stickyContainment?: ScrollStickyContainment
   /** 视口本身逃出父级内边距。内容的内边距不变。 @default false */
   isFullBleed?: boolean
+  /**
+   * 外层有 `ScrollbarsProvider` 时是否换成自绘滚动条。
+   * 设为 `false` 时这块区域保留原生滚动条。
+   * @default true
+   */
+  scrollbars?: boolean
 }
 
 export interface ScrollableAreaSlots {

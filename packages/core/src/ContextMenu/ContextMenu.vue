@@ -8,6 +8,7 @@ import { useLongPress } from '../composables/useLongPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
 import { useMenuNav } from './menuNav.js'
@@ -62,6 +63,7 @@ const menuId = `astryx-context-menu-${useId()}`
 const trigger = useTemplateRef<HTMLElement>('trigger')
 const cursorAnchor = useTemplateRef<HTMLElement>('cursorAnchor')
 const panel = useTemplateRef<HTMLElement>('panel')
+useScrollbars(panel)
 const cursorPoint = ref({ x: 0, y: 0 })
 
 let previouslyFocused: HTMLElement | null = null

@@ -899,6 +899,17 @@ export type {
 } from './Resizable/index.js'
 export { ScrollableArea } from './ScrollableArea/index.js'
 export type { ScrollableAreaProps, ScrollableAreaSlots } from './ScrollableArea/index.js'
+export { ScrollbarsProvider, useScrollbars } from './Scrollbars/index.js'
+export type {
+  ScrollbarsAutoHide,
+  ScrollbarsContext,
+  ScrollbarsHandle,
+  ScrollbarsOptions,
+  ScrollbarsProviderProps,
+  ScrollbarsProviderSlots,
+  UseScrollbarsOptions,
+  UseScrollbarsResult,
+} from './Scrollbars/index.js'
 export { Section } from './Section/index.js'
 export type { SectionDivider, SectionProps, SectionSlots, SectionVariant } from './Section/index.js'
 export { SegmentedControl, SegmentedControlItem } from './SegmentedControl/index.js'

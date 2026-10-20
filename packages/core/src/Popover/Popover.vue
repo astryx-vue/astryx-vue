@@ -3,6 +3,7 @@ import type { PopoverProps } from './types.js'
 import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import { Button } from '../Button/index.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { usePopover } from './usePopover.js'
 import '../../styles/popover.css'
 
@@ -57,6 +58,8 @@ const {
 const setContentRef = useMergedRefs<HTMLElement>([contentRef])
 
 const wrapperRef = ref<HTMLElement | null>(null)
+const bodyRef = ref<HTMLElement | null>(null)
+useScrollbars(bodyRef)
 const anchorWidth = ref(0)
 // 组件自己再算一层位置样式：宽高和 padding 是 Popover 自己的外观，不属于浮层内核。
 const surfaceStyle = computed(() => {
@@ -123,7 +126,7 @@ onUpdated(syncTrigger)
       :style="surfaceStyle"
       v-bind="surfaceProps"
     >
-      <div class="astryx-popover__body">
+      <div ref="bodyRef" class="astryx-popover__body">
         <slot name="content" />
       </div>
       <div v-if="hasCloseButton" class="astryx-popover__close">

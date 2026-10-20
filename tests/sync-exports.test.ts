@@ -195,6 +195,7 @@ const expectedCatalog = [
   { slug: 'media-theme', group: 'Utility', family: 'Utilities', en: 'Media Theme', zh: '媒体主题' },
   { slug: 'syntax-theme', group: 'Utility', family: 'Utilities', en: 'Syntax Theme', zh: '语法主题' },
   { slug: 'theme', group: 'Utility', family: 'Utilities', en: 'Theme', zh: '主题' },
+  { slug: 'scrollbars-provider', group: 'Utility', family: 'Utilities', en: 'Scrollbars Provider', zh: '滚动条 Provider' },
   { slug: 'use-announce', group: 'Utility', family: 'Utilities', en: 'useAnnounce', zh: 'useAnnounce' },
   { slug: 'use-app-shell-mobile', group: 'Utility', family: 'App Shell', en: 'useAppShellMobile', zh: 'useAppShellMobile' },
   { slug: 'use-clickable-container', group: 'Utility', family: 'Utilities', en: 'useClickableContainer', zh: 'useClickableContainer' },

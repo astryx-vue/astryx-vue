@@ -2,6 +2,7 @@
 import type { StyleValue } from 'vue'
 import type { LayoutContentProps, LayoutContentSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
+import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLayoutSlots } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
 import '../../styles/layout.css'
@@ -19,6 +20,7 @@ defineSlots<LayoutContentSlots>()
 
 const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
+useScrollbars(root, { enabled: () => props.isScrollable })
 const slots = useLayoutSlots()
 
 defineExpose({ element: root })
