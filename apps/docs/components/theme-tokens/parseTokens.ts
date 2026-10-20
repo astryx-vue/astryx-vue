@@ -16,6 +16,20 @@ export type TokenSectionId
     | 'font'
     | 'type'
 
+export const TOKEN_SECTION_ORDER: readonly TokenSectionId[] = [
+  'color',
+  'spacing',
+  'size',
+  'border',
+  'focus',
+  'radius',
+  'shadow',
+  'duration',
+  'ease',
+  'font',
+  'type',
+]
+
 const hues = ['blue', 'cyan', 'gray', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'] as const
 
 export type ColorBucket = 'core' | 'text' | 'icon' | 'status' | 'line' | 'data' | (typeof hues)[number]

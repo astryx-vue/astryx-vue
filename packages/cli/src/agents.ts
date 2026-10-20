@@ -1,23 +1,53 @@
 import type { Catalog } from './catalog-types.ts'
 import { BINARY } from './spec.ts'
 
-const PACKAGE_PATH = '@astryx-vue/cli'
-
 export const MANAGED_BLOCK_START = '<!-- Maintained by astryx-vue, do not edit manually -->'
 export const MANAGED_BLOCK_END = '<!-- astryx-vue block end -->'
 
-export type AgentName = 'agents' | 'cursor' | 'claude' | 'codex'
+/** Targets `init --agent` accepts. `all` and the absent target follow the project. */
+export type AgentName = 'agents' | 'cursor' | 'claude' | 'codex' | 'hermes' | 'all'
 export type BlockAction = 'created' | 'updated' | 'appended'
 
-const AGENT_FILES: Record<AgentName, string> = {
+const AGENT_FILES: Record<Exclude<AgentName, 'all'>, string> = {
   agents: 'AGENTS.md',
   cursor: 'AGENTS.md',
   claude: 'CLAUDE.md',
   codex: 'AGENTS.md',
+  hermes: '.hermes.md',
 }
 
-export function agentFile(agent: AgentName): string {
+/**
+ * Every agent file this command knows, in the order automatic detection prefers
+ * them: the tool-agnostic standard first, then the tool-specific files.
+ */
+export const AGENT_DOC_CANDIDATES = ['AGENTS.md', 'CLAUDE.md', '.cursorrules', '.hermes.md', 'HERMES.md'] as const
+
+export function agentFile(agent: Exclude<AgentName, 'all'>): string {
   return AGENT_FILES[agent]
+}
+
+export function existingAgentDocs(exists: (file: string) => boolean): string[] {
+  return AGENT_DOC_CANDIDATES.filter(file => exists(file))
+}
+
+/**
+ * The files to write. No `--agent` reuses whatever the project already has, so a
+ * Claude Code repo keeps its instructions in CLAUDE.md. `all` writes every known
+ * file that exists, and creates `AGENTS.md` when the project has none.
+ */
+export function resolveAgentTargets(agent: AgentName | null, existing: readonly string[]): string[] {
+  // Sorted by the detection order, so the answer does not depend on how the
+  // caller listed the files it found.
+  const known = AGENT_DOC_CANDIDATES.filter(file => existing.includes(file))
+  if (agent === 'all')
+    return known.length > 0 ? [...known] : ['AGENTS.md']
+  if (agent === null)
+    return [known[0] ?? 'AGENTS.md']
+  // Hermes reads `.hermes.md`, and a project that already keeps `HERMES.md`
+  // keeps it rather than getting a second file.
+  if (agent === 'hermes')
+    return existing.includes('HERMES.md') && !existing.includes('.hermes.md') ? ['HERMES.md'] : ['.hermes.md']
+  return [agentFile(agent)]
 }
 
 export function renderAgentBlock(catalog: Catalog, locale: 'en' | 'zh', dense: boolean): string {
@@ -55,21 +85,26 @@ function renderEnglish(conventions: string[]): string {
     '',
     'This project uses astryx-vue, an unofficial Vue 3 community port of the Astryx design system. Components come from `@astryx-vue/core`. Themes come from `@astryx-vue/themes`. Do not use Meta\'s React packages, StyleX, or the bare `astryx` command.',
     '',
+    '## Workflow',
+    '',
+    `1. Start from a page. \`${BINARY} build "<what you are building>"\` names the closest template, two alternatives, and the components to use. \`${BINARY} template --list\` shows every template.`,
+    `2. Copy it and make it yours. \`${BINARY} template <slug> ./src/pages\` writes \`<Name>.vue\`, swaps the docs-site demo photos for a grey placeholder, and reports the packages the project is missing. Only \`--overwrite\` (or \`-f\`) replaces an existing file.`,
+    `3. Look it up before writing. \`${BINARY} component <Name>\` prints usage, props, slots, and events. \`${BINARY} composable <Name>\` prints parameters and returns. Do not guess props, and do not paste the component catalog into this file.`,
+    '',
     '## How to look things up',
     '',
-    `Run \`${BINARY}\`. Do not guess props, and do not paste the component catalog into this file.`,
-    '',
     `- \`${BINARY} component --list\` lists components.`,
-    `- \`${BINARY} component <Name>\` prints one component's usage, props, slots, and events from the docs.`,
-    `- \`${BINARY} search <query>\` searches components and guide topics.`,
-    '- Add `--json` for a typed envelope, `--zh` for Simplified Chinese, and `--dense` for a shorter reply.',
-    `- \`${BINARY} manifest --json\` describes commands, options, response types, and exit codes.`,
+    `- \`${BINARY} composable --list\` lists composables, the \`use*\` functions.`,
+    `- \`${BINARY} docs\` lists guide and theme topics; \`${BINARY} docs <topic>\` prints one page, such as \`${BINARY} docs guide/dark-mode\`.`,
+    `- \`${BINARY} search <query>\` searches components, composables, docs topics, and templates.`,
+    `- Add \`--json\` for a typed envelope, \`--zh\` for Simplified Chinese, and \`--dense\` for a shorter reply.`,
+    `- \`${BINARY} manifest --json\` describes commands, options, response types, and error codes.`,
     '',
-    'If the binary is not on PATH, add a script and call it with `npm run astryx-vue -- component Button`:',
+    '## Running it',
     '',
-    '```json',
-    `"astryx-vue": "node node_modules/${PACKAGE_PATH}/bin/astryx-vue.mjs"`,
-    '```',
+    `After \`npm install -D @astryx-vue/cli\` (or pnpm or yarn), the binary is already on \`node_modules/.bin\`: use \`npx ${BINARY} …\` or \`pnpm exec ${BINARY} …\`. Without installing it, run \`npx @astryx-vue/cli …\`; the scope is required, because the bare \`${BINARY}\` name on npm is not this package.`,
+    '',
+    `Optional: add \`"${BINARY}": "${BINARY}"\` to \`scripts\` when an agent shell does not put \`node_modules/.bin\` on PATH, then call \`npm run ${BINARY} -- component Button\`.`,
   ]
   if (conventions.length > 0) {
     lines.push('', '## Conventions', '')
@@ -86,21 +121,26 @@ function renderChinese(conventions: string[]): string {
     '',
     '这个项目使用 astryx-vue，它是 Astryx 设计系统的非官方 Vue 3 社区实现。组件在 `@astryx-vue/core`，主题在 `@astryx-vue/themes`。不要使用 Meta 的 React 包、StyleX，也不要调用裸命令 `astryx`。',
     '',
+    '## 工作流',
+    '',
+    `1. 先从页面模板起步。\`${BINARY} build "<你要做的东西>"\` 会给出最接近的模板、另外两个备选，以及要用的组件。\`${BINARY} template --list\` 列出全部模板。`,
+    `2. 复制出来再改。\`${BINARY} template <slug> ./src/pages\` 写出 \`<Name>.vue\`，把文档站的演示图片换成灰色占位图，并列出项目还缺哪些包。已存在的文件只有加 \`--overwrite\`（或 \`-f\`）才会被替换。`,
+    `3. 写代码前先查。\`${BINARY} component <Name>\` 打印用法、props、插槽和事件；\`${BINARY} composable <Name>\` 打印参数和返回值。不要猜 props，也不要把整份组件目录贴进这个文件。`,
+    '',
     '## 怎么查',
     '',
-    `用 \`${BINARY}\` 查。不要猜 props，也不要把整份组件目录贴进这个文件。`,
-    '',
     `- \`${BINARY} component --list\` 列出组件。`,
-    `- \`${BINARY} component <Name>\` 打印一个组件的用法、props、插槽和事件，内容来自文档。`,
-    `- \`${BINARY} search <query>\` 搜索组件和指南。`,
-    '- 加 `--json` 得到类型化的 JSON；加 `--zh` 输出简体中文；加 `--dense` 缩短文本。',
-    `- \`${BINARY} manifest --json\` 说明命令、选项、响应类型和退出码。`,
+    `- \`${BINARY} composable --list\` 列出组合式函数（\`use*\` 函数）。`,
+    `- \`${BINARY} docs\` 列出指南和主题；\`${BINARY} docs <topic>\` 打印一篇正文，例如 \`${BINARY} docs guide/dark-mode\`。`,
+    `- \`${BINARY} search <query>\` 搜索组件、组合式函数、文档主题和模板。`,
+    `- 加 \`--json\` 得到类型化的 JSON；加 \`--zh\` 输出简体中文；加 \`--dense\` 缩短文本。`,
+    `- \`${BINARY} manifest --json\` 说明命令、选项、响应类型和错误码。`,
     '',
-    '如果 PATH 里没有这个命令，加上脚本后用 `npm run astryx-vue -- component Button`：',
+    '## 怎么运行',
     '',
-    '```json',
-    `"astryx-vue": "node node_modules/${PACKAGE_PATH}/bin/astryx-vue.mjs"`,
-    '```',
+    `\`npm install -D @astryx-vue/cli\`（或 pnpm、yarn）装好后，命令已经在 \`node_modules/.bin\` 里：用 \`npx ${BINARY} …\` 或 \`pnpm exec ${BINARY} …\`。不装、只想临时用，就运行 \`npx @astryx-vue/cli …\`；scope 不能省，因为 npm 上裸名 \`${BINARY}\` 不是这个包。`,
+    '',
+    `可选：如果 agent 的外壳没有把 \`node_modules/.bin\` 放进 PATH，可以在 \`scripts\` 里加 \`"${BINARY}": "${BINARY}"\`，再用 \`npm run ${BINARY} -- component Button\` 调用。`,
   ]
   if (conventions.length > 0) {
     lines.push('', '## 约定', '')

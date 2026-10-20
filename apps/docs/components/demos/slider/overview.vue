@@ -10,5 +10,7 @@ function formatPercent(value: number): string {
 </script>
 
 <template>
-  <Slider v-model="volume" label="Volume" value-display="text" :format-value="formatPercent" />
+  <div style="width: 300px; max-width: 100%">
+    <Slider v-model="volume" label="Volume" value-display="text" :format-value="formatPercent" />
+  </div>
 </template>

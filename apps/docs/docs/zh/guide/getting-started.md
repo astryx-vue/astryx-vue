@@ -36,4 +36,14 @@ import { Button } from '@astryx-vue/core/Button'
 import '@astryx-vue/core/styles.css'
 ```
 
-接下来，你可以阅读 [安装](/guide/installation) 了解更详细的包导出结构，阅读 [主题与样式](/guide/styling) 了解样式的分层与变量配置，或者直接在 [组件列表](/components/) 里挑选组件上手。想了解设计初衷与实现思路，请参阅 [介绍](/guide/why)。
+下一步看 [安装](/guide/installation) 里的包入口，看 [主题与样式](/guide/styling) 里层和变量怎么接，或者直接打开 [组件](/components/)。想了解设计初衷与实现思路，请参阅 [介绍](/guide/why)。
+
+## 给 AI Agent 使用
+
+每一页文档都贴心地提供了一份纯文本，AI Agent 不需要额外安装工具就能直接读取：
+
+- [/llms.txt](https://astryx-vue.pages.dev/llms.txt) 是英文目录，每页一行说明；中文版是 [/llms-zh.txt](https://astryx-vue.pages.dev/llms-zh.txt)。
+- [/llms-full.txt](https://astryx-vue.pages.dev/llms-full.txt) 把全部英文文档合成一个完整文件；中文版是 [/llms-full-zh.txt](https://astryx-vue.pages.dev/llms-full-zh.txt)。
+- 任意页面网址后面加上 `.md` 就能直接获取这一页的原生 Markdown，例如 [/components/button.md](https://astryx-vue.pages.dev/components/button.md)。中文页面没有 `/zh` 前缀，英文页面在 `/en/` 路径下。
+
+组件的 Markdown 把总览介绍、属性表、带演示源码的示例和无障碍检查整合在同一篇里。每个 HTML 页面都在 `<head>` 里指向自己的 Markdown 版；命令行里的组件文本提取见 [命令行](/guide/cli)。

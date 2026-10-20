@@ -56,30 +56,21 @@ import { Button } from '@astryx-vue/core/Button'
 
 ## 命令行工具 (CLI)
 
-建议将 CLI 安装到项目的开发依赖中，并在 `package.json` 的 `scripts` 里配置快捷调用方式：
-
-```json
-{
-  "scripts": {
-    "astryx-vue": "node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs"
-  }
-}
-```
-
-常用命令示例：
+建议将 CLI 安装到项目的开发依赖中。包里声明了 `bin`，装完命令就在 `node_modules/.bin` 里：
 
 ```sh
-# 查看某个组件的使用说明与参数列表
-npm run astryx-vue -- component Button
+pnpm add -D @astryx-vue/cli
+pnpm exec astryx-vue component Button
+npx astryx-vue search dialog
+```
 
-# 快速搜索包含 dialog 的组件或主题属性
-npm run astryx-vue -- search dialog
+不安装、只想临时用时，运行 `npx @astryx-vue/cli …`（注意：scope 不能省，因为 npm 上裸名 `astryx-vue` 不是这个包）。
 
-# 以 JSON 格式输出所有组件清单
-npm run astryx-vue -- manifest --json
-
-# 初始化或更新 AGENTS.md 里的组件上下文
-npm run astryx-vue -- init --features agents
+```sh
+pnpm exec astryx-vue build "带单点登录的登录页"
+pnpm exec astryx-vue template login-card ./src/pages
+pnpm exec astryx-vue manifest --json
+pnpm exec astryx-vue init --features agents
 ```
 
 其中 `init --features agents` 命令仅会刷新 `AGENTS.md` 文件中由本工具托管的代码块，你在托管标记之外手写的说明文字都会完整保留。具体用法详见 [CLI 使用指南](https://astryx-vue.pages.dev/guide/cli)。

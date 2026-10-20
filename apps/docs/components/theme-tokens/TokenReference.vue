@@ -9,6 +9,7 @@ import {
   resolveStop,
   sectionId,
   splitLightDark,
+  TOKEN_SECTION_ORDER,
 
 } from './parseTokens'
 
@@ -181,9 +182,7 @@ const notes: Record<string, { zh: string, en: string }> = {
   },
 }
 
-const sectionOrder: TokenSectionId[] = ['color', 'spacing', 'size', 'border', 'focus', 'radius', 'shadow', 'duration', 'ease', 'font', 'type']
-
-const sections = computed(() => sectionOrder.flatMap((id) => {
+const sections = computed(() => TOKEN_SECTION_ORDER.flatMap((id) => {
   if (props.sections != null && !props.sections.includes(id))
     return []
   const items = properties.filter(property => sectionId(property.name) === id)

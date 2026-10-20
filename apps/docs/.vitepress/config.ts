@@ -5,6 +5,7 @@ import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import unoConfig from '../uno.config.ts'
 import { demoSourcePlugin } from './demoSourcePlugin.ts'
+import { llmsAlternateLinks, writeLlmsArtifacts } from './llms.ts'
 import { guideSidebar, themeSidebar } from './sidebar.ts'
 
 function navigation(english: boolean): DefaultTheme.NavItem[] {
@@ -28,6 +29,8 @@ export default defineConfig({
     'zh/:rest*': ':rest*',
   },
   head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
+  transformHead: llmsAlternateLinks,
+  buildEnd: writeLlmsArtifacts,
   appearance: 'dark',
   locales: {
     root: {

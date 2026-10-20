@@ -7,6 +7,7 @@ export interface ManifestOption {
   description: string
   choices?: string[]
   default?: string
+  aliases?: string[]
 }
 
 export interface ManifestCommand {
@@ -18,6 +19,8 @@ export interface ManifestCommand {
   responseTypes: string[]
   examples: string[]
   exitCodes: { code: number, when: string }[]
+  /** Error codes the JSON envelope can carry for this command. */
+  errors?: { code: string, when: string }[]
 }
 
 export interface ManifestData {
@@ -57,6 +60,7 @@ function toManifestCommand(command: CommandSpec): ManifestCommand {
     responseTypes: [...command.responseTypes],
     examples: [...command.examples],
     exitCodes: command.exitCodes.map(exit => ({ ...exit })),
+    ...(command.errors ? { errors: command.errors.map(error => ({ ...error })) } : {}),
   }
 }
 
@@ -67,5 +71,6 @@ function toManifestOption(option: OptionSpec): ManifestOption {
     description: option.description,
     ...(option.choices ? { choices: [...option.choices] } : {}),
     ...(option.default !== undefined ? { default: option.default } : {}),
+    ...(option.aliases ? { aliases: [...option.aliases] } : {}),
   }
 }

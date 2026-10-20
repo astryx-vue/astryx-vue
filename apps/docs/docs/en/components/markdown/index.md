@@ -45,6 +45,21 @@ Code blocks go through the existing `CodeBlock`, quotes through `Blockquote`, he
 
 `components` replaces the renderer for one kind of node. A custom component receives the node data as props and, when the node has content, that content as the default slot.
 
+The values in `components` are component definitions and do not need to be reactive. A plain object works. If you put them inside `ref()` or `reactive()`, Vue makes the component definitions reactive too, and in development it logs `Vue received a Component that was made a reactive object`. Rendering is not affected; the cost is some unnecessary overhead. To avoid the warning, use any one of these:
+
+```ts
+import { markRaw, ref, shallowRef } from 'vue'
+
+// A plain object, not wrapped in reactivity
+const components = { paragraph: MyParagraph }
+
+// Use shallowRef (or shallowReactive) when you need to swap the whole object
+const swappable = shallowRef({ paragraph: MyParagraph })
+
+// Or wrap each component with markRaw; an outer ref then does not warn
+const marked = ref({ paragraph: markRaw(MyParagraph) })
+```
+
 `plugins` run on the parsed tree. `transform` receives the root and returns the next one. Return the same root when nothing changed, so a streaming render can keep settled blocks. `render` draws an `extension` node whose `plugin` equals that name. `inlinePlugins` match ordinary text nodes. `pattern` needs the `g` flag. Earlier plugins match first, and the first plugin wins when two matches overlap. Inline code and fenced code are left alone. `replace` returns the node that takes the match, or `null` to skip it. An extension node is drawn by the plugin `render` of the same `name`. A `link` node uses the normal link renderer.
 
 `defineMarkdownPlugin` returns the plugin object unchanged, which narrows the type. `isMarkdownExtensionNode` checks that a node belongs to a plugin.

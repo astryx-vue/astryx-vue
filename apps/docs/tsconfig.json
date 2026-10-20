@@ -23,7 +23,8 @@
     ".vitepress/**/*.vue",
     "uno.config.ts",
     "components/**/*.ts",
-    "components/**/*.vue"
+    "components/**/*.vue",
+    "scripts/**/*.ts"
   ],
   "exclude": [
     "components/playground/pages"
