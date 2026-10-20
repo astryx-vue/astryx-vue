@@ -33,22 +33,29 @@ function shortHash(hash) {
   return hash.slice(0, 9)
 }
 
+/**
+ * 节点台账里每条下面由脚本生成的子项标签，顺序就是输出顺序。
+ * 不在这里的子项（比如「结论：」）是节点自己写的备注，重新生成时会保留，见 annotations.mjs。
+ */
+export const ENTRY_LABELS = Object.freeze(['文件', '规范文档', '测试', '归入原因', '还涉及', '链接'])
+
 function renderNodeEntry(commit, node) {
   const files = commit.nodes.get(node)
   const lines = [`- [ ] \`${shortHash(commit.hash)}\` ${commit.subject}`]
-  lines.push(`  - 文件：${listFiles(files)}`)
+  const item = (label, value) => lines.push(`  - ${label}：${value}`)
+  item('文件', listFiles(files))
   const specs = files.filter(isSpecDoc)
   if (specs.length > 0)
-    lines.push(`  - 规范文档：${specs.map(displayPath).join('、')}`)
+    item('规范文档', specs.map(displayPath).join('、'))
   const tests = files.filter(isTestFile)
   if (tests.length > 0)
-    lines.push(`  - 测试：${listFiles(tests)}`)
+    item('测试', listFiles(tests))
   if (commit.pinned.has(node))
-    lines.push(`  - 归入原因：${commit.pinned.get(node)}`)
+    item('归入原因', commit.pinned.get(node))
   const others = [...commit.nodes.keys()].filter(other => other !== node)
   if (others.length > 0)
-    lines.push(`  - 还涉及：${others.join('、')}`)
-  lines.push(`  - 链接：${UPSTREAM_COMMIT_URL}${commit.hash}`)
+    item('还涉及', others.join('、'))
+  item('链接', `${UPSTREAM_COMMIT_URL}${commit.hash}`)
   return lines.join('\n')
 }
 

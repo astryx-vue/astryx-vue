@@ -3,7 +3,8 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import { buildLedger, main, parseArgs, UnmatchedFilesError } from '../scripts/upstream-ledger.mjs'
+import { buildLedger, main, parseArgs, UnmatchedFilesError, writeLedger } from '../scripts/upstream-ledger.mjs'
+import { ORPHAN_HEADING, readAnnotations, stripAnnotations } from '../scripts/upstream-ledger/annotations.mjs'
 import { commitType, isBreaking, parseLog, pullRequestNumber } from '../scripts/upstream-ledger/commits.mjs'
 import { isSpecDoc, isTestFile } from '../scripts/upstream-ledger/render.mjs'
 import { classifyPath, NODES, validateRules } from '../scripts/upstream-ledger/rules.mjs'
@@ -263,6 +264,84 @@ describe('在临时仓库上生成台账', () => {
       err.mockRestore()
       rmSync(out, { recursive: true, force: true })
     }
+  })
+
+  it('重新生成保留勾选和备注，--check 忽略它们', () => {
+    const out = mkdtempSync(join(tmpdir(), 'upstream-ledger-keep-'))
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const err = vi.spyOn(console, 'error').mockImplementation(() => {})
+    try {
+      const args = ['--upstream', repo, '--from', base, '--to', 'v1', '--out', out]
+      expect(main(args)).toBe(0)
+      const fresh = readFileSync(join(out, 'C3.md'), 'utf8')
+      const hash = /`([0-9a-f]{9})` fix\(Selector\): keep focus/.exec(fresh)![1]
+      // 节点打勾，并在链接下面写结论。
+      const annotated = fresh
+        .replace(`- [ ] \`${hash}\``, `- [x] \`${hash}\``)
+        .replace(/(keep focus[\s\S]*? {2}- 链接：\S+)/, '$1\n  - 结论：不适用：我们已经保留焦点\n    证据在 Selector.test.ts')
+      writeFileSync(join(out, 'C3.md'), annotated)
+      expect(main([...args, '--check'])).toBe(0)
+      expect(main(args)).toBe(0)
+      expect(readFileSync(join(out, 'C3.md'), 'utf8')).toBe(annotated)
+      expect(log.mock.calls.at(-1)![0]).toContain('保留了 1 条')
+      // 生成的部分被手改仍然会被 --check 发现。
+      const tampered = annotated.replace(/(keep focus[\s\S]*? {2}- 文件：)[^\n]+/, '$1手改.tsx')
+      expect(tampered).not.toBe(annotated)
+      writeFileSync(join(out, 'C3.md'), tampered)
+      expect(main([...args, '--check'])).toBe(1)
+    }
+    finally {
+      log.mockRestore()
+      err.mockRestore()
+      rmSync(out, { recursive: true, force: true })
+    }
+  })
+
+  it('提交不再归这个节点时，旧结论移到文件末尾；整份台账消失且有结论时拒绝写入', () => {
+    const out = mkdtempSync(join(tmpdir(), 'upstream-ledger-orphan-'))
+    try {
+      writeLedger(out, build())
+      const c3 = readFileSync(join(out, 'C3.md'), 'utf8')
+      const hash = /`([0-9a-f]{9})` feat\(selectors\): share a trigger/.exec(c3)![1]
+      writeFileSync(join(out, 'C3.md'), c3.replace(`- [ ] \`${hash}\``, `- [x] \`${hash}\``))
+      // 模拟改了归类：这次生成的 C3 里没有这个提交。
+      const files = build()
+      const blocks = files.get('C3.md')!.split('\n- ')
+      files.set('C3.md', blocks.filter(block => !block.includes(hash)).join('\n- '))
+      const result = writeLedger(out, files)
+      expect(result.orphans.get('C3.md')).toEqual([hash])
+      const written = readFileSync(join(out, 'C3.md'), 'utf8')
+      expect(written).toContain(`${ORPHAN_HEADING}\n`)
+      expect(written.slice(written.indexOf(ORPHAN_HEADING))).toContain(`- [x] \`${hash}\` feat(selectors): share a trigger with menus (#2)`)
+      expect(stripAnnotations(written)).toBe(files.get('C3.md'))
+      // 下一次生成又归回来了，结论认回原位，末尾那一节消失。
+      writeLedger(out, build())
+      const back = readFileSync(join(out, 'C3.md'), 'utf8')
+      expect(back).not.toContain(ORPHAN_HEADING)
+      expect(back).toContain(`- [x] \`${hash}\``)
+
+      const withoutC3 = build()
+      withoutC3.delete('C3.md')
+      expect(() => writeLedger(out, withoutC3)).toThrow(/C3\.md/)
+      expect(readFileSync(join(out, 'C3.md'), 'utf8')).toBe(back)
+    }
+    finally {
+      rmSync(out, { recursive: true, force: true })
+    }
+  })
+
+  it('只认节点台账里人写的内容', () => {
+    const text = [
+      '- [x] `abc123456` feat: a',
+      '  - 文件：a.ts',
+      '  - 结论：已采纳',
+      '  - 链接：https://x',
+      '- [ ] `def123456` fix: b',
+      '  - 文件：b.ts',
+      '',
+    ].join('\n')
+    expect([...readAnnotations(text)]).toEqual([['abc123456', { checked: true, notes: ['  - 结论：已采纳'], title: 'feat: a' }]])
+    expect(stripAnnotations(text)).toBe(text.replace('- [x]', '- [ ]').replace('  - 结论：已采纳\n', ''))
   })
 
   it('总表列出每个节点', () => {

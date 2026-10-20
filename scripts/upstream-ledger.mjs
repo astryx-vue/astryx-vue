@@ -9,6 +9,9 @@
 //   --out       输出目录，默认 .agents-work/upstream-sync/ledger
 //   --check     只比较不写入，产物和磁盘上的不一致时退出码为 1
 //
+// 节点台账里已经打的勾和条目下的备注会保留下来，见 upstream-ledger/annotations.mjs。
+// `--check` 比较时忽略这些人写的内容。
+//
 // 有文件没被任何规则命中时，脚本列出这些文件并以退出码 2 结束，不写任何产物。
 
 import { execFileSync } from 'node:child_process'
@@ -16,6 +19,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { dirname, join, resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { applyAnnotations, isNodeLedger, readAnnotations, stripAnnotations } from './upstream-ledger/annotations.mjs'
 import { classifyCommits, readCommits } from './upstream-ledger/commits.mjs'
 import { renderLedger } from './upstream-ledger/render.mjs'
 import { validateRules } from './upstream-ledger/rules.mjs'
@@ -51,12 +55,17 @@ export function buildLedger({ upstream, from = DEFAULT_FROM, to = DEFAULT_TO, ru
   return renderLedger({ range: `${from}..${to}`, commits })
 }
 
-/** 比较产物和输出目录。返回不一致的文件名列表（缺失、内容不同、多余的都算）。 */
+/** 磁盘上的台账去掉人写的勾选和备注以后的内容，用来和生成结果比较。 */
+function generatedPart(name, text) {
+  return isNodeLedger(name) ? stripAnnotations(text) : text
+}
+
+/** 比较产物和输出目录。返回不一致的文件名列表（缺失、内容不同、多余的都算）。勾选和备注不算不一致。 */
 export function diffLedger(outDir, files) {
   const differences = []
   for (const [name, content] of files) {
     const path = join(outDir, name)
-    if (!existsSync(path) || readFileSync(path, 'utf8') !== content)
+    if (!existsSync(path) || generatedPart(name, readFileSync(path, 'utf8')) !== content)
       differences.push(name)
   }
   for (const name of listGenerated(outDir)) {
@@ -66,15 +75,38 @@ export function diffLedger(outDir, files) {
   return differences.sort()
 }
 
-/** 写入产物，并删掉上次生成、这次不再产出的台账文件。 */
+/**
+ * 写入产物，并删掉上次生成、这次不再产出的台账文件。
+ * 节点台账先读出旧文件里的勾选和备注，再放回新内容里。
+ * 要删的旧台账里还有勾选或备注时，什么都不写，直接报错，免得人写的结论丢掉。
+ * @returns {{ restored: number, orphans: Map<string, string[]> }} 认回去的条数，以及每个文件里放进「旧结论」一节的短哈希
+ */
 export function writeLedger(outDir, files) {
   mkdirSync(outDir, { recursive: true })
-  for (const name of listGenerated(outDir)) {
-    if (!files.has(name))
-      rmSync(join(outDir, name))
+  const stale = listGenerated(outDir).filter(name => !files.has(name))
+  const annotated = stale.filter(name => isNodeLedger(name) && readAnnotations(readFileSync(join(outDir, name), 'utf8')).size > 0)
+  if (annotated.length > 0)
+    throw new Error(`这些台账这次不再生成，但里面还有勾选或备注：${annotated.join('、')}。先把结论挪走再重新生成。`)
+  const outputs = new Map()
+  let restored = 0
+  const orphans = new Map()
+  for (const [name, content] of files) {
+    const path = join(outDir, name)
+    if (!isNodeLedger(name) || !existsSync(path)) {
+      outputs.set(name, content)
+      continue
+    }
+    const merged = applyAnnotations(content, readAnnotations(readFileSync(path, 'utf8')))
+    outputs.set(name, merged.text)
+    restored += merged.restored
+    if (merged.orphans.length > 0)
+      orphans.set(name, merged.orphans)
   }
-  for (const [name, content] of files)
+  for (const name of stale)
+    rmSync(join(outDir, name))
+  for (const [name, content] of outputs)
     writeFileSync(join(outDir, name), content)
+  return { restored, orphans }
 }
 
 function listGenerated(outDir) {
@@ -133,8 +165,10 @@ export function main(argv = process.argv.slice(2)) {
     console.log(`台账是最新的（${files.size} 个文件）。`)
     return 0
   }
-  writeLedger(outDir, files)
-  console.log(`已生成 ${files.size} 个台账文件到 ${outDir}`)
+  const { restored, orphans } = writeLedger(outDir, files)
+  console.log(`已生成 ${files.size} 个台账文件到 ${outDir}，保留了 ${restored} 条已有的勾选或备注`)
+  for (const [name, hashes] of orphans)
+    console.error(`${name}：${hashes.join('、')} 不再归这个节点，原来的结论移到了文件末尾的「已不在本节点的旧结论」`)
   return 0
 }
 
