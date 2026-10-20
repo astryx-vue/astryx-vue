@@ -124,7 +124,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
               <StatusDot variant="success" label="Live" is-pulsing tooltip="Auto-refreshing every 30s" />
               <Text type="supporting" color="secondary">
                 Updated
-                <Timestamp value="2026-06-30T21:15:00Z" format="relative" type="inherit" color="inherit" />
+                <Timestamp value="2026-06-30T21:15:00Z" format="relative" color="inherit" />
               </Text>
             </HStack>
           </VStack>

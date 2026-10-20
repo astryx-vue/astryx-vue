@@ -47,7 +47,7 @@ const WORKSPACES: Workspace[] = [
     name: 'Acme Corp',
     icon: 'i-heroicons-building-office-2',
     chats: [
-      { label: 'Q3 roadmap draft', status: 'accent', statusLabel: 'In progress' },
+      { label: 'Q3 roadmap draft', status: 'info', statusLabel: 'In progress' },
       { label: 'Customer onboarding flow', status: 'success', statusLabel: 'Active' },
       { label: 'Pricing strategy review', status: 'warning', statusLabel: 'Needs review' },
       { label: 'Standup summary', status: 'neutral', statusLabel: 'Idle' },
@@ -57,7 +57,7 @@ const WORKSPACES: Workspace[] = [
     name: 'Open Source',
     icon: 'i-heroicons-code-bracket',
     chats: [
-      { label: 'StyleX migration notes', status: 'accent', statusLabel: 'In progress' },
+      { label: 'StyleX migration notes', status: 'info', statusLabel: 'In progress' },
       { label: 'Skeleton loading states', status: 'success', statusLabel: 'Active' },
       { label: 'Accessibility audit', status: 'error', statusLabel: 'Blocked' },
       { label: 'Release notes v4.0', status: 'neutral', statusLabel: 'Idle' },

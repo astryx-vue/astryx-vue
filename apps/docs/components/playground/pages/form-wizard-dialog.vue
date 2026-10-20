@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { ISODateString } from '@astryx-vue/core'
 import type { ISOTimeString } from '@astryx-vue/core'
 import { computed, ref, useId } from 'vue'
 import {
@@ -101,7 +100,7 @@ const cadence = ref('weekly')
 const weekday = ref('mon')
 const time = ref<ISOTimeString | undefined>('08:00' as ISOTimeString)
 const timezone = ref('pt')
-const startDate = ref<ISODateString | undefined>()
+const startDate = ref<Date | null>(null)
 
 const recipients = ref<string[]>(['exec'])
 const format = ref('pdf')
@@ -118,7 +117,7 @@ function resetDraft() {
   weekday.value = 'mon'
   time.value = '08:00' as ISOTimeString
   timezone.value = 'pt'
-  startDate.value = undefined
+  startDate.value = null
   recipients.value = ['exec']
   format.value = 'pdf'
   skipEmpty.value = true

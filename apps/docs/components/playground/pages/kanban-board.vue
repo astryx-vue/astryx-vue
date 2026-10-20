@@ -40,7 +40,7 @@ interface WorkItem {
 interface ColumnMeta {
   id: ColumnId
   title: string
-  variant: 'neutral' | 'accent' | 'warning' | 'success'
+  variant: 'neutral' | 'info' | 'warning' | 'success'
   tooltip: string
   emptyTitle: string
   emptyDescription: string
@@ -76,7 +76,7 @@ const COLUMNS: ColumnMeta[] = [
   {
     id: 'in-progress',
     title: 'In progress',
-    variant: 'accent',
+    variant: 'info',
     tooltip: 'Items currently in progress.',
     emptyTitle: 'Nothing in progress',
     emptyDescription: 'Items being worked on appear here.',

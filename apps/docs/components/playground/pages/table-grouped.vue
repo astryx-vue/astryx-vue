@@ -72,8 +72,8 @@ const STATUS_LABEL: Record<TaskStatus, string> = {
   done: 'Done',
 }
 
-const STATUS_DOT: Record<TaskStatus, 'accent' | 'warning' | 'neutral' | 'success'> = {
-  in_progress: 'accent',
+const STATUS_DOT: Record<TaskStatus, 'info' | 'warning' | 'neutral' | 'success'> = {
+  in_progress: 'info',
   todo: 'warning',
   backlog: 'neutral',
   done: 'success',
