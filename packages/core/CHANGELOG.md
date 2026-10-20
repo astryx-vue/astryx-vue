@@ -1,5 +1,17 @@
 # @astryx-vue/core
 
+## 0.3.0
+
+### Minor Changes
+
+- [#124](https://github.com/astryx-vue/astryx-vue/pull/124) [`64f55ac`](https://github.com/astryx-vue/astryx-vue/commit/64f55ac66dc2d54a2e681bec8967b06dc66d4dc9) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `@astryx-vue/core/Scrollbars`：`ScrollbarsProvider` 和 `useScrollbars`。在应用外层套上 `ScrollbarsProvider`，组件里的滚动区域会换成 OverlayScrollbars 画的覆盖式滚动条。外观用 `--astryx-scrollbar-*` 变量调整。不套 Provider 时组件行为不变，OverlayScrollbars 的 JS 和 CSS 也不会打进包。`ScrollableArea` 新增 `scrollbars` 属性，设为 `false` 时这块区域保留原生滚动条。原版 Astryx 没有这个能力。
+
+### Patch Changes
+
+- [#119](https://github.com/astryx-vue/astryx-vue/pull/119) [`7df1c8c`](https://github.com/astryx-vue/astryx-vue/commit/7df1c8c6491010de8b8668e92d58ea0bf6232971) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 轮播在渲染时读取默认插槽，不再触发 Vue 的 `Slot "default" invoked outside of the render function` 警告。用渲染函数或 JSX 写轮播时，父组件重新渲染后传下的新卡片会立刻显示，之前会停在旧的一批。卡片的数量或内容变化后，滚动范围会重新测量。页面上的 DOM 结构和卡片自身的状态都没有变化。
+
+- [#123](https://github.com/astryx-vue/astryx-vue/pull/123) [`6181330`](https://github.com/astryx-vue/astryx-vue/commit/6181330956d6ac8b18186177cf9b5aec938330e2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Text` 的 `as` 现在接受 `h1`–`h6`。模板页面里 `Text as="h1"` 这类写法本来就渲染出真正的标题元素，只是类型没列出来；现在类型对上了。字号仍由 `type` 决定，要标题字号请用 `Heading`。
+
 ## 0.2.6
 
 ### Patch Changes
