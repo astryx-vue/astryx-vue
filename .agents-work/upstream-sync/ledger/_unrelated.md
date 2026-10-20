@@ -1,0 +1,1377 @@
+# 无关提交 · 上游改动台账
+
+范围：96f9917f..v0.7.1 · 共 343 个提交
+
+这些提交改到的每个文件都被归类规则判为和 Vue 移植无关。原因来自 `scripts/upstream-ledger/rules.mjs`。
+
+- `116350750` feat(sandbox): refine mobile date-input prototypes (#5041)
+  - 原因：上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/src/app/(raw)/pages/mobile-prototypes/page.tsx、apps/sandbox/src/app/(raw)/pages/mobile-prototypes/primitives.tsx、apps/sandbox/src/app/(raw)/pages/mobile-prototypes/prototypes.tsx
+  - 链接：https://github.com/facebook/astryx/commit/11635075085384c42e8288caf4faa6455b386925
+- `8138bfca7` fix(sandbox): reject a ledger evidence shape that reds every build (#5033)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本；上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/scripts/generate-score-ledger.mjs、scripts/score-ledger.mjs、scripts/score-ledger.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/8138bfca723f4fbe1bd3c24ec6888319d7ed4d84
+- `4dd9f2774` fix(lab,charts): portable build scripts + a guard so they stay portable (#3917)
+  - 原因：上游 monorepo 根配置与锁文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点
+  - 文件：package.json、packages/charts/package.json、packages/lab/package.json、packages/richtext/package.json、pnpm-lock.yaml、scripts/check-portable-scripts.mjs、scripts/check-portable-scripts.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/4dd9f2774fee306651f8d387cfb86d0074028399
+- `c350043fb` docs(lab): showcase long-content hug sheet (#5060)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/BottomSheet.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/c350043fbf2f182c3a964ec282e475939766a739
+- `b91f1059a` docs: credit and backfill PR refs on v0.4.2 changesets (#5061)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/avatar-audit-theme-box-blank-name.md、.changeset/command-palette-footer-i18n.md、.changeset/context-menu-derived-vars.md、.changeset/document-private-theming-vars.md、.changeset/focus-trap-no-tabbable-controls.md、.changeset/heading-type-theming-target.md、.changeset/lucky-layers-travel.md、.changeset/slider-thumb-bounds.md 等 9 个
+  - 链接：https://github.com/facebook/astryx/commit/b91f1059a90a6cc1b1a97f918298f1f67e6b5448
+- `77c59e729` docs(review): lab is exempt from the codemod requirement (#5072)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/instructions/packages.instructions.md
+  - 链接：https://github.com/facebook/astryx/commit/77c59e729125de738cbd2829b6d8667e3b3c9448
+- `791f39504` chore: version packages for v0.4.2 (#5083)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/avatar-audit-theme-box-blank-name.md、.changeset/avatar-group-overflow-size-target.md、.changeset/chat-chatmessagebubble-width-prop-overrides-cap-l41o.md、.changeset/command-palette-footer-i18n.md、.changeset/context-menu-derived-vars.md、.changeset/document-private-theming-vars.md、.changeset/focus-trap-no-tabbable-controls.md、.changeset/heading-type-theming-target.md 等 44 个
+  - 链接：https://github.com/facebook/astryx/commit/791f3950496384f90bc058a54603fa1cb39cb87f
+- `464a44560` docs(storybook): add capped Bottom Sheet example (#5085)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/LOCAL_STARTUP_INVESTIGATION.md、apps/storybook/README.md、apps/storybook/stories/BottomSheet.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/464a44560a2d6b870d8fe7dfe7cfc751ef5c9035
+- `dab28aee8` chore(deps): bump @vercel/speed-insights from 1.3.1 to 2.0.0 (#4836)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游 monorepo 根配置与锁文件
+  - 文件：apps/docsite/package.json、pnpm-lock.yaml
+  - 链接：https://github.com/facebook/astryx/commit/dab28aee8a51864af89faf5ef2d2e1de99379e87
+- `4064c0a01` fix(deps): resolve brace-expansion and nanoid audit vulnerabilities (#5106)
+  - 原因：上游 monorepo 根配置与锁文件
+  - 文件：pnpm-lock.yaml、pnpm-workspace.yaml
+  - 链接：https://github.com/facebook/astryx/commit/4064c0a01921ef8902a191a0db9d52d5d14fea74
+- `d2963e56f` fix(sandbox): reject a bare-array blocks, which zeroes the BLOCK count (#5097)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本；上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/scripts/generate-score-ledger.mjs、scripts/score-ledger.mjs、scripts/score-ledger.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/d2963e56fce30525be232cf8829d3636f8224ddb
+- `7c8623154` fix(storybook): resolve @astryxdesign/richtext from source in dev (#5100)
+  - 原因：上游 React Storybook 故事与配置；上游 monorepo 根配置与锁文件
+  - 文件：apps/storybook/.storybook/main.test.ts、apps/storybook/.storybook/main.ts、vitest.config.ts
+  - 链接：https://github.com/facebook/astryx/commit/7c8623154c48418f47c13cc440447a43e7cf0e4a
+- `d9189c9e5` chore: version packages for v0.4.3
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/banner-dismiss-focus-and-status-fallthrough.md、.changeset/character-safe-strings.md、.changeset/character-utils-api.md、.changeset/complex-selector-composition-api.md、.changeset/complex-selector-size-heights.md、.changeset/container-reveal-hover-intent-and-force-state.md、.changeset/extensible-axes-guard.md、.changeset/font-advisory-is-a-notice.md 等 35 个
+  - 链接：https://github.com/facebook/astryx/commit/d9189c9e50fb4095269c29b6c9dae0613627570d
+- `b3dd67961` docs(storybook): remove redundant Bottom Sheet close button (#5131)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/BottomSheet.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/b3dd67961906c2023c9c30f2c64d52c3e2dd01c7
+- `ba74b4411` feat(lint): @astryx/no-unguarded-ime-keydown — enforce IME composition guards (#4909)
+  - 原因：上游 React、StyleX 专用的 ESLint 规则
+  - 文件：internal/eslint-plugin-astryx/README.md、internal/eslint-plugin-astryx/index.js、internal/eslint-plugin-astryx/no-unguarded-ime-keydown.js、internal/eslint-plugin-astryx/no-unguarded-ime-keydown.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/ba74b44112c6039ab2ce3c748e8d337da1afa783
+- `9e9d82703` fix(sandbox): surface richtext in the component audit ledger (#5166)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游内部 React 实验沙盒，不对外发布
+  - 文件：.github/scripts/analyze-pr.js、apps/sandbox/scripts/generate-score-ledger.mjs、apps/sandbox/src/app/(sandbox)/pages/component-scores/page.tsx、scripts/score-ledger.mjs、scripts/score-ledger.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/9e9d82703107f85f74ca62363ccccb14902e80f4
+- `6b6ec634e` docs: add PR references to all 19 v0.4.4 changesets
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/banner-endcontent-wrap.md、.changeset/bottom-sheet-continuous-handoff.md、.changeset/bottom-sheet-lint-suppressions.md、.changeset/bottom-sheet-scroll-drag-handoff.md、.changeset/bottom-sheet-showcase-checkbox-state.md、.changeset/bottom-sheet-viewport-resize.md、.changeset/cli-theme-build-multi.md、.changeset/datetime-input-icon-targets.md 等 15 个
+  - 链接：https://github.com/facebook/astryx/commit/6b6ec634ec09c45cf4b0d0f3486df4b2ff712af7
+- `14ba912f6` chore: version packages for v0.4.4
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/banner-endcontent-wrap.md、.changeset/bottom-sheet-continuous-handoff.md、.changeset/bottom-sheet-lint-suppressions.md、.changeset/bottom-sheet-scroll-drag-handoff.md、.changeset/bottom-sheet-showcase-checkbox-state.md、.changeset/bottom-sheet-viewport-resize.md、.changeset/bottomsheet-keeps-the-page-still-when-the-mobile-xlk2.md、.changeset/cdn-remove-umd.md 等 44 个
+  - 链接：https://github.com/facebook/astryx/commit/14ba912f678e956cb9972346b35d90c75ec87dc5
+- `eb069fd09` ci(i18n): download Crowdin translations nightly (#5186)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/crowdin-download.yml
+  - 链接：https://github.com/facebook/astryx/commit/eb069fd0966fca4e00a12f43ec7d6bb466ff99ef
+- `39d8a5a3e` ci(i18n): let Crowdin PRs trigger CI (#5189)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/crowdin-download.yml
+  - 链接：https://github.com/facebook/astryx/commit/39d8a5a3e01a3ed2ca7d5040154df0ade658baf3
+- `575b24867` docs: reference the v0.4.5 changesets, and credit the Crowdin locale drop
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/bottom-sheet-configurable-snap-points.md、.changeset/bottom-sheet-ios-pointer-id-collision.md、.changeset/crowdin-28-locales.md、.changeset/daterange-max-span.md、.changeset/formlayout-default-optionality.md、.changeset/input-clear-button-theme-target.md、.changeset/render-generated-id-attributes-on-markdown-headi-qcnn.md、.changeset/statusdot-icon-prop.md 等 9 个
+  - 链接：https://github.com/facebook/astryx/commit/575b2486753af889e7c9ba519ba6dfd70bddafff
+- `683015aa9` chore: version packages for v0.4.5
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/bottom-sheet-configurable-snap-points.md、.changeset/bottom-sheet-ios-pointer-id-collision.md、.changeset/calendar-weekday-headers-now-follow-the-selected-a95h.md、.changeset/crowdin-28-locales.md、.changeset/daterange-max-span.md、.changeset/formlayout-default-optionality.md、.changeset/input-clear-button-theme-target.md、.changeset/render-generated-id-attributes-on-markdown-headi-qcnn.md 等 34 个
+  - 链接：https://github.com/facebook/astryx/commit/683015aa9b3f4ba258dc7e4c8f2cc274afce46a5
+- `1dc3e5d63` feat(internal): lab readiness audit tooling + CI a11y/RTL gate for lab, charts, richtext (#5197)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置；上游 lab 组件转正的审计工具；上游 monorepo 根配置与锁文件
+  - 文件：.github/workflows/ci.yml、.github/workflows/rtl-weekly.yml、.gitignore、apps/storybook/rtl-audit/README.md、apps/storybook/rtl-audit/rtl-audit.mjs、internal/lab-readiness/audit.mjs、internal/lab-readiness/audit.test.mjs、internal/lab-readiness/automated.mjs 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/1dc3e5d63433edc4d2d33037e25e7c27c21e4308
+- `3e3299a96` fix(ci): don't let a transient 503 silently drop the review-required gate (#5227)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/review-clear.yml、.github/workflows/review-signal.yml
+  - 链接：https://github.com/facebook/astryx/commit/3e3299a9670f51e8a3d75ccff82d546276cb7e56
+- `840d66f06` fix(build): make fully-specified diagnostics theme-aware (#5126)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/check-fully-specified.mjs、scripts/check-fully-specified.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/840d66f0669fa28f68ce6083b0d3dd2342ed3fc0
+- `3691910cf` build(themes): clean dist before artifact validation (#5127)
+  - 原因：上游 monorepo 根配置与锁文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点
+  - 文件：packages/themes/butter/package.json、packages/themes/chocolate/package.json、packages/themes/gothic/package.json、packages/themes/matcha/package.json、packages/themes/neutral/package.json、packages/themes/stone/package.json、packages/themes/y2k/package.json、pnpm-lock.yaml 等 9 个
+  - 链接：https://github.com/facebook/astryx/commit/3691910cfec5048172db969fd15ae8faf8a60d73
+- `383e17645` feat(lint): require provider-backed locale APIs (#5171)
+  - 原因：上游 React、StyleX 专用的 ESLint 规则；上游 monorepo 根配置与锁文件
+  - 文件：eslint.config.js、internal/eslint-plugin-astryx/README.md、internal/eslint-plugin-astryx/index.js、internal/eslint-plugin-astryx/no-raw-intl-locale.js、internal/eslint-plugin-astryx/no-raw-intl-locale.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/383e1764563856bb22cb182a34bb85b89e22eaf7
+- `1b6ec82d2` chore(deps): prune stale pnpm overrides, move workspace pins to the catalog (#4101)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游 monorepo 根配置与锁文件；上游内部 React 实验沙盒，不对外发布；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点
+  - 文件：apps/docsite/package.json、apps/sandbox/package.json、package.json、packages/build/package.json、packages/core/package.json、pnpm-lock.yaml、pnpm-workspace.yaml
+  - 链接：https://github.com/facebook/astryx/commit/1b6ec82d2c3f5f46ff6946588cb87fcf52a92f26
+- `0dfce0282` feat(eslint): catch a theme target rendered on nothing (spread-vs-spread className clobber) (#5334)
+  - 原因：上游 React、StyleX 专用的 ESLint 规则
+  - 文件：internal/eslint-plugin-astryx/README.md、internal/eslint-plugin-astryx/index.js、internal/eslint-plugin-astryx/no-classname-clobber.js、internal/eslint-plugin-astryx/no-classname-clobber.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/0dfce028258964d605e1939b2e1e15fa0846df9a
+- `52851129c` docs: reference, credit and complete the v0.4.6 changesets
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/avatargroup-audit-hardening.md、.changeset/blockquote-attribution-landmark.md、.changeset/bottom-sheet-floating-handle.md、.changeset/bottom-sheet-scrim-edge-hairline.md、.changeset/breadcrumbs-audit-20260822.md、.changeset/cli-fix-integration-import-specifier.md、.changeset/codemod-jsx-rename-whitespace.md、.changeset/codemod-xds-prefix-alias-collision.md 等 35 个
+  - 链接：https://github.com/facebook/astryx/commit/52851129c9e90c50fdfa38fe805c14c697f5bd20
+- `f1d403475` chore: version packages for v0.4.6
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/avatar-interactive-name-status-label.md、.changeset/avatargroup-audit-hardening.md、.changeset/blockquote-attribution-landmark.md、.changeset/bottom-sheet-floating-handle.md、.changeset/bottom-sheet-scrim-edge-hairline.md、.changeset/breadcrumbs-audit-20260822.md、.changeset/cli-fix-integration-import-specifier.md、.changeset/cli-integration-docs-root.md 等 61 个
+  - 链接：https://github.com/facebook/astryx/commit/f1d403475708d58a0a17bff063350101f6abf7c8
+- `6a53e69bd` docs: add PR references to the v0.4.7 changesets
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/bottom-sheet-noscrim-edge-tint.md、.changeset/bottom-sheet-tap-and-exit.md、.changeset/list-focus-escape-passthrough.md
+  - 链接：https://github.com/facebook/astryx/commit/6a53e69bd82729b89c60ea05ea1f05788ea1b4d6
+- `2ce198374` chore: version packages for v0.4.7
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/bottom-sheet-noscrim-edge-tint.md、.changeset/bottom-sheet-tap-and-exit.md、.changeset/list-focus-escape-passthrough.md、.changeset/tab-generic-aria-current.md、packages/build/CHANGELOG.md、packages/build/package.json、packages/charts/package.json、packages/cli/CHANGELOG.md 等 28 个
+  - 链接：https://github.com/facebook/astryx/commit/2ce198374b10dfa45f04f9cacccc0430c949970c
+- `94c2d8b5a` feat(docsite): guard BlogShowcase against empty and single-post registries (#4083)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/app/(site)/_landing/BlogShowcase.tsx
+  - 链接：https://github.com/facebook/astryx/commit/94c2d8b5a3d8586aabf216afbf0709622db47091
+- `29be96d6a` fix(storybook): use a size token Avatar still has in the Chat align story (#5381)
+  - 原因：提交没有改动任何文件（空提交）
+  - 链接：https://github.com/facebook/astryx/commit/29be96d6a44bce0f1bab57a5ac60ac6bef5b8523
+- `674b8b8bb` Visual regression testing, as a release gate (#5372)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置；上游 monorepo 根配置与锁文件
+  - 文件：.github/scripts/lib/visual-format.js、.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/baseline.mjs、.github/scripts/visual-gate/lib/baseline.test.mjs、.github/scripts/visual-gate/lib/capture.mjs、.github/scripts/visual-gate/lib/compare.mjs、.github/scripts/visual-gate/lib/compare.test.mjs 等 23 个
+  - 链接：https://github.com/facebook/astryx/commit/674b8b8bb45624d12830f5b78a43bcc4adc29531
+- `152e956f3` fix(ci): fall back to two-dot diff in analyze-pr when merge base is missing (#4914)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/analyze-pr.js、.github/scripts/analyze-pr.test.mjs、.github/scripts/generate-pr-comment.js、.github/scripts/generate-pr-comment.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/152e956f32982e61eb5fe07f1582c7a4f0637634
+- `78e8e1ce7` fix(docsite): render the component anatomy table (#4847)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/anatomy-helpers.test.ts、apps/docsite/src/__tests__/component-detail-wiring.test.ts、apps/docsite/src/components/component-detail/Anatomy.tsx、apps/docsite/src/components/component-detail/ComponentDetailClient.tsx、apps/docsite/src/components/component-detail/anatomyHelpers.ts
+  - 链接：https://github.com/facebook/astryx/commit/78e8e1ce7788836d1a917e2c113ab75796075ecc
+- `535f32709` fix(docsite): anatomy guard misses dark renderers; part names break mid-word (#5391)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/anatomy-helpers.test.ts、apps/docsite/src/__tests__/component-detail-wiring.test.ts、apps/docsite/src/components/component-detail/Anatomy.tsx、apps/docsite/src/components/component-detail/anatomyHelpers.ts
+  - 链接：https://github.com/facebook/astryx/commit/535f32709934ac7687f448f7b65df7df922fc9dd
+- `99884f5dd` fix(sandbox): prune unknown ledger keys one level down, not just the top (#5390)
+  - 原因：上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/scripts/generate-score-ledger.mjs
+  - 链接：https://github.com/facebook/astryx/commit/99884f5dde431fbe2d3a141757ddad8042fe9597
+- `1dab141b1` ci: unbreak the two red scheduled maintenance jobs (#5380)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：.github/scripts/compact-gh-pages-history.sh、scripts/prune-branches.sh
+  - 链接：https://github.com/facebook/astryx/commit/1dab141b1de3f3943b4a88857b077048f55fbb3e
+- `a7a247ea9` fix(release-gate): run at 06:00 PT and give a11y a 90-minute budget (#5388)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/workflows/release-gate.yml
+  - 链接：https://github.com/facebook/astryx/commit/a7a247ea947fdf1dfe37ac9c62a3e2c9f4963a94
+- `fe95cd50a` ci(a11y): baseline MediaTheme Auto's deliberate bad-contrast demo (#5401)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/a11y-baseline.json
+  - 链接：https://github.com/facebook/astryx/commit/fe95cd50a2a679d56d24eda90dd07661dce58414
+- `7e1475b48` test: give the ui vitest project the same timeout budget as node (#5404)
+  - 原因：上游 monorepo 根配置与锁文件
+  - 文件：vitest.config.ts
+  - 链接：https://github.com/facebook/astryx/commit/7e1475b480b264979bc3f34f74ee30b4bfde589a
+- `ef60ab0d1` docs(core): correct the v0.4.5 StatusDot entry to match what #4373 shipped (#5265)
+  - 原因：上游各包的更新日志，由上游发布流程生成
+  - 文件：packages/core/CHANGELOG.md
+  - 链接：https://github.com/facebook/astryx/commit/ef60ab0d139dc75a4e8285f52e6a19bc035c4d1b
+- `44d464d63` fix(a11y-audit): scan a still page, so a fade cannot read as low contrast (#5427)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/accessibility-audit.js
+  - 链接：https://github.com/facebook/astryx/commit/44d464d6368b397e69eae1baa0422152edbe6fab
+- `2eb194f36` docs: consolidate + credit changesets for v0.5.0 (#5432)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/a11y-table-pagination-both-labels.md、.changeset/a11y-table-row-expansion-header.md、.changeset/a11y-table-row-status-header.md、.changeset/allow-multiselector-count-labels-to-be-customize-6kj4.md、.changeset/api-contract-drift-docs-tjsk.md、.changeset/aspectratio-responsive-ratio.md、.changeset/badge-error-contrast-aa.md、.changeset/bottom-sheet-ime-escape-guard.md 等 46 个
+  - 链接：https://github.com/facebook/astryx/commit/2eb194f36be64f68cef4cec5a6b78f9ba22cd1ca
+- `019ae5a8f` fix(storybook): use a reserved example address in Stepper demo data (#5437)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/Stepper.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/019ae5a8faffe833017c3f4fa5c3254bd356f965
+- `e6dc4bda5` fix(visual-gate): freeze the clock at capture time (#5434)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/lib/capture.mjs
+  - 链接：https://github.com/facebook/astryx/commit/e6dc4bda57d6888b8cbaf264cbd916319e0b5900
+- `c050bc5a8` docsite: link hook param and return types to their definitions (#5443)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/scripts/generate-data.mjs、apps/docsite/src/__tests__/type-definitions.test.ts、apps/docsite/src/components/component-detail/ComponentDetailClient.tsx、apps/docsite/src/components/component-detail/HookSignature.tsx、apps/docsite/src/components/component-detail/PlaygroundPropsTable.tsx、apps/docsite/src/components/component-detail/TypeRefText.tsx
+  - 链接：https://github.com/facebook/astryx/commit/c050bc5a8d13d1edfa52fb82bbed31ecac422213
+- `cd1a2daa5` fix(charts,richtext,lab): declare `"type": "module"` for the ESM-only dist (#5001)
+  - 原因：上游 Babel、tsup、TypeScript 构建配置；Vue 版用自己的 tsdown 与 tsconfig；上游 monorepo 的构建、发布与 CI 辅助脚本；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点
+  - 文件：packages/charts/babel.config.js、packages/charts/babel.config.json、packages/charts/package.json、packages/lab/babel.config.js、packages/lab/babel.config.json、packages/lab/package.json、packages/richtext/babel.config.js、packages/richtext/babel.config.json 等 10 个
+  - 链接：https://github.com/facebook/astryx/commit/cd1a2daa59afd5113aee60f0d75a612a2ca8ca1b
+- `57e7a7018` feat(lint): catch raw colours anywhere in component source, not just in `stylex.create()` (#5446)
+  - 原因：上游 React、StyleX 专用的 ESLint 规则；上游 monorepo 根配置与锁文件
+  - 文件：eslint.config.js、internal/eslint-plugin-astryx/README.md、internal/eslint-plugin-astryx/index.js、internal/eslint-plugin-astryx/no-raw-color.js、internal/eslint-plugin-astryx/no-raw-color.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/57e7a70180f52d81d93d7d49102f514d5037b0cb
+- `f2eec7115` fix(docsite): restore pull-to-refresh on mobile, scope the overscroll suppression to desktop (#5415)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/app/(site)/_landing/hero/HeroThemeReel.tsx、apps/docsite/src/app/globals.css
+  - 链接：https://github.com/facebook/astryx/commit/f2eec711572b187aaf5d30c0e44e4d137ec229c7
+- `b0a09a630` docs(Icon): storybook demo for theming the icon size scale (#5465)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/IconSizeTheming.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/b0a09a630f5c3f1a678e93301c6d19401189e1d5
+- `b79f0db6d` ci: ship the built themes to the PR visual gate (#5477)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/b79f0db6dc6796347c96270a7ad2ad691d31ea34
+- `41246035e` ci: ship core's dist to the PR visual gate alongside the themes (#5481)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/41246035e0db1fd5ccd4e21bc5ccdec6d1e032f0
+- `cb20a0185` ci: build Core before inspecting downloaded themes (#5482)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/cb20a01853a70a74e4e65d98ba4a05e557922cbb
+- `e314f1913` fix(storybook): replace failing WCAG AA annotation colours across all stories (#4311)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/Button.stories.tsx、apps/storybook/stories/Calendar.stories.tsx、apps/storybook/stories/Chat.stories.tsx、apps/storybook/stories/ChatComposerInput.stories.tsx、apps/storybook/stories/ChatReasoning.stories.tsx、apps/storybook/stories/CodeEditorPerf.stories.tsx、apps/storybook/stories/CodeEditorTheme.stories.tsx、apps/storybook/stories/Icon.stories.tsx 等 23 个
+  - 链接：https://github.com/facebook/astryx/commit/e314f1913bbafb0c5e288aabb0485a1d391cfdbb
+- `5acbac870` ci: re-deploy previews from CI artifacts instead of rebuilding (#5519)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/redeploy-preview.yml
+  - 链接：https://github.com/facebook/astryx/commit/5acbac87006ef1b18595af01d85b1c72fb9dd264
+- `d77c666d4` ci: render report fields in the PR comment as literal text (#5521)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/generate-pr-comment.js、.github/scripts/lib/a11y-format.js、.github/scripts/lib/a11y-format.test.mjs、.github/scripts/lib/report-text.js、.github/scripts/lib/report-text.test.mjs、.github/scripts/lib/visual-format.js、.github/scripts/lib/visual-format.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/d77c666d4cc5c88d2fb0300a2700f8ad92cc8b35
+- `0de34db64` fix(scripts): trusted-publishing default points at release.yml (#5533)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/npm/setup-trusted-publishing.mjs
+  - 链接：https://github.com/facebook/astryx/commit/0de34db64949671ddb53802d09753d425d0dd5cc
+- `baa01b1c2` fix(docsite): state the playground page's own framing headers (#5532)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/next.config.mjs
+  - 链接：https://github.com/facebook/astryx/commit/baa01b1c25355a85f26c7363f5c98b4d6e806c6b
+- `cf7722940` docs(docsite): correct two stale backdropGlow comments left by #5415 (#5467)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/app/(site)/_landing/hero/HeroThemeReel.tsx
+  - 链接：https://github.com/facebook/astryx/commit/cf7722940c0383e9ed250de455a62cda22475cd1
+- `f0c3ea564` fix(docsite): unify underline + hover treatment for inline prose links (#4929)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/prose-link.test.ts、apps/docsite/src/__tests__/type-definitions.test.ts、apps/docsite/src/components/InlineCode.tsx、apps/docsite/src/components/MarkdownText.tsx、apps/docsite/src/components/component-detail/TypeRefText.tsx、apps/docsite/src/components/docs/inlineMarkdown.tsx、apps/docsite/src/components/proseLink.ts
+  - 链接：https://github.com/facebook/astryx/commit/f0c3ea564d89f2e82b5064ec944521a580cc2f60
+- `445233f6a` fix(docsite): stop registering the preview theme's icons globally (#5540)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/component-preview-theme.test.ts、apps/docsite/src/components/component-detail/ComponentPreviewTheme.tsx
+  - 链接：https://github.com/facebook/astryx/commit/445233f6a44243b53767d0dc15c78b14b8f399e0
+- `c333a1c7c` fix(docsite): server-render the gallery previews above the fold (#5545)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/data-extraction.test.ts、apps/docsite/src/app/(docs)/components/page.tsx、apps/docsite/src/components/ShowcaseThumbnail.tsx、apps/docsite/src/components/eagerShowcases.ts
+  - 链接：https://github.com/facebook/astryx/commit/c333a1c7cdb0467dc989a106812f2645f0d328ab
+- `fb17bfee8` ci(visual-gate): build the theme dists the gate needs instead of crashing (#5514)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/lib/sources.mjs、.github/scripts/visual-gate/lib/sources.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/fb17bfee85151b900accb892c2729a894096da57
+- `7bd80db99` fix(storybook): keep AlertDialog references inline (#5569)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/AlertDialog.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/7bd80db9929787c45e18c0f6aa27584bb7c9da78
+- `824a181db` fix(storybook): stabilize useChartRange captures (#5573)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置
+  - 文件：.github/scripts/visual-gate/visual-gate.config.json、apps/storybook/stories/useChartRange.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/824a181dba0ba57c89a52e84f818a5d1f096e930
+- `6efc31b10` Storybook: add the missing Probe Theme all-axes page (#5570)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/ProbeTheme.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/6efc31b10923e34c4d668b4823d25625cbc1228c
+- `d4d4fc58b` Motion Lab: a decision bench for the motion proposals (#5574)
+  - 原因：上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/package.json、apps/sandbox/scripts/generate-motion-audit.mjs、apps/sandbox/src/app/(sandbox)/pages/motion-lab/bugs/page.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/exit-gap/page.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/export/page.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/js-mirror/page.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/layout.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/library/page.tsx 等 50 个
+  - 链接：https://github.com/facebook/astryx/commit/d4d4fc58b0bd2e21ad7ab23a492edcb4aafa4bc5
+- `9859514d1` fix(docsite): add dismiss button to canary banner (#5576)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/components/CanaryBanner.tsx
+  - 链接：https://github.com/facebook/astryx/commit/9859514d140e9dcfb022ca71956980f805fac1a1
+- `64feb1e3f` docs(DateInput): add native picker modes story (#5577)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/DateInput.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/64feb1e3fe2202b881927c325191872c10ea965c
+- `0ac4e83df` pr-visual: show before, after, and diff in the PR comment (#5572)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/generate-pr-comment.js、.github/scripts/lib/visual-format.js、.github/scripts/lib/visual-format.test.mjs、.github/scripts/visual-gate/publish-pr-report.mjs、.github/scripts/visual-gate/publish-pr-report.test.mjs、.github/workflows/pr-comment.yml
+  - 链接：https://github.com/facebook/astryx/commit/0ac4e83df879f79fa6fb2293e293e75c56944a96
+- `a7ad8f982` ci(pr-visual): compare only the stable published surface (#5575)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 lab 组件转正的审计工具
+  - 文件：.github/scripts/analyze-pr.js、.github/scripts/analyze-pr.test.mjs、.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/compare.mjs、.github/scripts/visual-gate/lib/compare.test.mjs、.github/scripts/visual-gate/lib/plan.mjs、.github/scripts/visual-gate/lib/plan.test.mjs 等 14 个
+  - 链接：https://github.com/facebook/astryx/commit/a7ad8f982f9e6b2056db1bfbd9a37da9c6b83a60
+- `4e1b670b9` fix(ci): stop shipping template-assets into every PR preview (#5565)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游内部 React 实验沙盒，不对外发布
+  - 文件：.github/workflows/ci.yml、.github/workflows/cleanup-previews.yml、.github/workflows/deploy-preview.yml、.github/workflows/deploy.yml、.github/workflows/redeploy-preview.yml、apps/sandbox/babel.config.js、apps/sandbox/scripts/rewrite-template-asset-paths.cjs、scripts/rewrite-template-asset-paths.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/4e1b670b90674d7d94d05373834860ea75dd9f4d
+- `51aa5eb72` build(themes): emit standalone icons as ESM only (#5512)
+  - 原因：上游 Babel、tsup、TypeScript 构建配置；Vue 版用自己的 tsdown 与 tsconfig；上游 monorepo 的构建、发布与 CI 辅助脚本；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/theme-icons-esm-only.md、packages/themes/butter/tsup.config.ts、packages/themes/chocolate/tsup.config.ts、packages/themes/gothic/tsup.config.ts、packages/themes/matcha/tsup.config.ts、packages/themes/neutral/tsup.config.ts、packages/themes/stone/tsup.config.ts、packages/themes/y2k/tsup.config.ts 等 9 个
+  - 链接：https://github.com/facebook/astryx/commit/51aa5eb728fddad357d43ffa8bda61f3ead1f37f
+- `38e58e402` docs(storybook): show how to theme a toast's chrome and its content (#5458)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/Toast.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/38e58e4026a08475280ba6d5737708c8cce5140c
+- `08a3758d7` ci(visual): require explicit reviewed baseline promotion (#5578)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/visual-format.js、.github/scripts/lib/visual-format.test.mjs、.github/scripts/visual-gate/activate-visual-acceptance.mjs、.github/scripts/visual-gate/activate-visual-acceptance.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/capture.mjs、.github/scripts/visual-gate/lib/capture.test.mjs、.github/scripts/visual-gate/lib/report.mjs 等 18 个
+  - 链接：https://github.com/facebook/astryx/commit/08a3758d7a2a85a208c1fa3398b4f2eb0f57fc5b
+- `d1cab79fb` feat(lint): enforce BaseProps styling passthrough (#4528)
+  - 原因：上游 React、StyleX 专用的 ESLint 规则
+  - 文件：internal/eslint-plugin-astryx/README.md、internal/eslint-plugin-astryx/index.js、internal/eslint-plugin-astryx/require-baseprops-passthrough.js、internal/eslint-plugin-astryx/require-baseprops-passthrough.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/d1cab79fbbf0528408343d179df927477680427d
+- `081a777b6` docs(core): correct popup dismissal release note (#5589)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/layer-dismiss-gesture.md
+  - 链接：https://github.com/facebook/astryx/commit/081a777b6af5efa78ea6139cb165e2af430f5892
+- `c0c7f8b99` fix(ci): preserve trusted visual run identity (#5587)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/gate-context.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pr-comment.yml、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/c0c7f8b991c4f6be5c26d2aaf9604bb835379fa2
+- `9e2f1e109` fix(ci): restore visual acceptance publication (#5588)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/gate-context.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/visual-acceptance.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pr-comment.yml、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/9e2f1e109572223e25c3a88d547a49413fbe88b2
+- `6f7da5ca9` fix(ci): recognize repository maintainers for visual acceptance (#5591)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/6f7da5ca9d39005cf377ecbd4a9d0603a6699d8b
+- `bef71c4fa` fix(ci): install visual acceptance dependencies (#5593)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/bef71c4fa335b7fafed484413683b0e81c3f6e84
+- `d0536cdd9` fix(ci): authorize Repo Owners for visual acceptance (#5592)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/authorization.mjs、.github/scripts/visual-gate/authorization.test.mjs、.github/scripts/visual-gate/visual-acceptance.mjs、.github/scripts/visual-gate/visual-acceptance.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/d0536cdd9c52b41931f7850a873ae68587112c1d
+- `1d94f85fd` fix(ci): authorize visual acceptance by capability (#5594)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/authorization.mjs、.github/scripts/visual-gate/authorization.test.mjs、.github/scripts/visual-gate/visual-acceptance.mjs、.github/scripts/visual-gate/visual-acceptance.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/1d94f85fd07420c6b55fd001234081f7444255f8
+- `9fb614469` fix(ci): retry visual promotion from archived acceptance (#5595)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/lib/canonical-png.mjs、.github/scripts/visual-gate/lib/canonical-png.test.mjs、.github/scripts/visual-gate/publish-pr-report.mjs、.github/scripts/visual-gate/publish-pr-report.test.mjs、.github/scripts/visual-gate/visual-acceptance.mjs、.github/scripts/visual-gate/visual-acceptance.test.mjs、.github/scripts/visual-gate/visual-promotion-workflow.test.mjs、.github/workflows/visual-acceptance-promote.yml
+  - 链接：https://github.com/facebook/astryx/commit/9fb6144691f48d35263d8ae81e6399487fd6223d
+- `143c51974` ci: resolve fork PRs by head repo and branch; exec the generator without a shell (#5517)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/pr-comment.yml
+  - 链接：https://github.com/facebook/astryx/commit/143c51974480dc7a6cf8f3afd942a4965467219e
+- `fbd838ea1` fix(ci): defer broad trusted visual acceptance (#5604)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/visual-format.test.mjs、.github/scripts/visual-gate/lib/report.mjs、.github/scripts/visual-gate/visual-acceptance.mjs、.github/scripts/visual-gate/visual-acceptance.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pr-comment.yml
+  - 链接：https://github.com/facebook/astryx/commit/fbd838ea14ecf482a9c2a9e1dada9e37206ef9f3
+- `adafac94e` fix(docsite): improve changelog package navigation (#5309)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/changelog-linkify.test.ts、apps/docsite/src/__tests__/changelog-view.test.ts、apps/docsite/src/app/(docs)/changelog/page.tsx、apps/docsite/src/components/ChangelogView.tsx、apps/docsite/src/components/changelogLinkify.ts
+  - 链接：https://github.com/facebook/astryx/commit/adafac94e3a41b1a24fb5bf7a04de307ffb0dea2
+- `c5c27761a` fix(storybook): correct Probe Theme heading outline (#5607)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/ProbeTheme.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/c5c27761a38cc6127558b1a35b485beb0849c53b
+- `c7a6a49af` refactor(sandbox): keep the Motion Lab in one folder (#5579)
+  - 原因：上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/package.json、apps/sandbox/scripts/generate-motion-audit.mjs、apps/sandbox/src/app/(sandbox)/pages/motion-lab/LabDemos.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/LabPrimitives.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/MotionControlRail.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/MotionLab.module.css、apps/sandbox/src/app/(sandbox)/pages/motion-lab/MotionLabShell.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/MotionLabStore.tsx 等 67 个
+  - 链接：https://github.com/facebook/astryx/commit/c7a6a49af0ec3e49293c80fd8e0f3bbb6b1e2e74
+- `e6507a95f` Add trusted visual acceptance recovery dispatch (#5600)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/lib/baseline-publication-lock.mjs、.github/scripts/visual-gate/lib/baseline-publication-lock.test.mjs、.github/scripts/visual-gate/lib/promotion-identity.mjs、.github/scripts/visual-gate/lib/promotion-identity.test.mjs、.github/scripts/visual-gate/visual-promotion-workflow.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pr-comment.yml、.github/workflows/release-gate.yml 等 10 个
+  - 链接：https://github.com/facebook/astryx/commit/e6507a95fb13cae83f94e2d4b58009eaf584f1c6
+- `9ece7846d` fix(ci): bind recovery capture to merged SHA (#5611)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/visual-promotion-workflow.test.mjs、.github/workflows/visual-acceptance-promote.yml
+  - 链接：https://github.com/facebook/astryx/commit/9ece7846d64dbe5374bf97aedf37c9d2889cc8d9
+- `d42f87a85` fix(vercel): rebuild cached workspace installs (#5625)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：apps/docsite/vercel.json、scripts/clean-workspace-node-modules.mjs、scripts/clean-workspace-node-modules.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/d42f87a850f5758141ed66db379e65839ab69a0c
+- `9e477b0c8` fix(ci): skip nonvisual acceptance work (#5626)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/scripts/visual-scope.mjs、.github/scripts/visual-scope.test.mjs、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/9e477b0c8dacaa691da501cce0b5e8b099ef8874
+- `a83c559a5` fix(ci): keep accepted stable shots in the release gate (#5608)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/compare.mjs、.github/scripts/visual-gate/lib/compare.test.mjs、.github/scripts/visual-gate/lib/plan.mjs、.github/scripts/visual-gate/lib/plan.test.mjs、.github/scripts/visual-gate/publish-pr-report.mjs、.github/scripts/visual-gate/publish-pr-report.test.mjs、.github/scripts/visual-gate/visual-acceptance.mjs 等 10 个
+  - 链接：https://github.com/facebook/astryx/commit/a83c559a51fb86260f8309f695b68acd612b2eef
+- `fa6756fe3` feat(vibe-tests): add execution provenance sidecars (#5500)
+  - 原因：上游 AI 代理生成效果的评测用例；上游贡献者与 AI 代理的工作说明
+  - 文件：CLAUDE.md、internal/vibe-tests/README.md、internal/vibe-tests/docs/execution-provenance.md、internal/vibe-tests/schema/execution-provenance-v1.schema.json、internal/vibe-tests/src/collect-results.mjs、internal/vibe-tests/src/collect-results.test.mjs、internal/vibe-tests/src/index.ts、internal/vibe-tests/src/provenance-aggregation.test.ts 等 16 个
+  - 链接：https://github.com/facebook/astryx/commit/fa6756fe3bbffde71da5082a8ed29d01996a7dd2
+- `00a4c9285` test(vibe-tests): add an established shadcn app for setup testing (#5535)
+  - 原因：上游 AI 代理生成效果的评测用例
+  - 文件：internal/vibe-tests/README.md、internal/vibe-tests/fixture-recipes/shadcn-tailwind-v4-established.json、internal/vibe-tests/fixtures/README.md、internal/vibe-tests/fixtures/assets/shadcn-tailwind-v4-established-dark-dialog.png、internal/vibe-tests/fixtures/assets/shadcn-tailwind-v4-established-light.png、internal/vibe-tests/fixtures/shadcn-tailwind-v4-established/components.json、internal/vibe-tests/fixtures/shadcn-tailwind-v4-established/index.html、internal/vibe-tests/fixtures/shadcn-tailwind-v4-established/package.json 等 19 个
+  - 链接：https://github.com/facebook/astryx/commit/00a4c9285dedd180566db46caea6d1348179c49e
+- `4013182fa` test(vibe-tests): add a plain Tailwind app for setup testing (#5499)
+  - 原因：上游 AI 代理生成效果的评测用例；上游 monorepo 根配置与锁文件
+  - 文件：.gitignore、eslint.config.js、internal/vibe-tests/.gitignore、internal/vibe-tests/README.md、internal/vibe-tests/fixture-recipes/tailwind-v4-control.json、internal/vibe-tests/fixtures/README.md、internal/vibe-tests/fixtures/assets/tailwind-v4-control-light.png、internal/vibe-tests/fixtures/tailwind-v4-control/index.html 等 21 个
+  - 链接：https://github.com/facebook/astryx/commit/4013182fa7571d54bbb1c8f527449561e74e2e8f
+- `1b706d5d2` test(vibe-tests): add a scoped enterprise app for setup testing (#5536)
+  - 原因：上游 AI 代理生成效果的评测用例；上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml、internal/vibe-tests/README.md、internal/vibe-tests/fixture-recipes/enterprise-scoped-synthetic.json、internal/vibe-tests/fixtures/README.md、internal/vibe-tests/fixtures/assets/enterprise-scoped-synthetic-dark-dialog.png、internal/vibe-tests/fixtures/assets/enterprise-scoped-synthetic-light.png、internal/vibe-tests/fixtures/enterprise-scoped-synthetic/index.html、internal/vibe-tests/fixtures/enterprise-scoped-synthetic/package.json 等 18 个
+  - 链接：https://github.com/facebook/astryx/commit/1b706d5d2d35cf141fd8384ce9952d660d0a9221
+- `f0043d8f8` feat(vibe-tests): test adding Astryx to existing Tailwind apps (#5268)
+  - 原因：上游 AI 代理生成效果的评测用例；上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml、internal/vibe-tests/README.md、internal/vibe-tests/fixture-recipes/tailwind-v4-control.json、internal/vibe-tests/fixtures/tailwind-v4-control/src/App.tsx、internal/vibe-tests/package.json、internal/vibe-tests/setup-test/PLAN.md、internal/vibe-tests/setup-test/apply-recipe.mjs、internal/vibe-tests/setup-test/apply-recipe.test.mjs 等 36 个
+  - 链接：https://github.com/facebook/astryx/commit/f0043d8f8cf7bf6c8f9fa5b7517738ed6a80d39c
+- `b4ffc91e1` docs: consolidate and credit changesets for v0.5.1 (#5658)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/alert-dialog-responsive-actions.md、.changeset/avatar-shape-prop-xkvw.md、.changeset/badge-clamp-long-label.md、.changeset/banner-dismiss-accessible-name.md、.changeset/baseprops-passthrough-forwarding.md、.changeset/build-retrieval-scoring.md、.changeset/button-elevation-theme-target.md、.changeset/calendar-nightly-audit-20260824.md 等 80 个
+  - 链接：https://github.com/facebook/astryx/commit/b4ffc91e13b90efd76623b63cfc200535297b203
+- `7cb5bac59` Motion Lab: narrow the exit rule, mount real components, add an idle-cost criterion (#5613)
+  - 原因：上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/src/app/(sandbox)/pages/motion-lab/LabDemos.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/MotionLab.module.css、apps/sandbox/src/app/(sandbox)/pages/motion-lab/MotionLabShell.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/__generated__/motionAudit.ts、apps/sandbox/src/app/(sandbox)/pages/motion-lab/exit-gap/page.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/layout.tsx、apps/sandbox/src/app/(sandbox)/pages/motion-lab/motionCost.ts、apps/sandbox/src/app/(sandbox)/pages/motion-lab/motionTokens.ts 等 23 个
+  - 链接：https://github.com/facebook/astryx/commit/7cb5bac59e62b8879a2cf036976204192d6055aa
+- `8692106e2` fix(previews): give both template hosts a definite height so page roots fill them (#5665)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游 React 模板预览宿主；模板本身的改动已随 CLI 模板进入 D5
+  - 文件：apps/docsite/src/components/TemplatePreviewSurface.module.css、apps/docsite/src/components/TemplatePreviewSurface.tsx、apps/template-viewer/src/index.css
+  - 链接：https://github.com/facebook/astryx/commit/8692106e2f801cec0fd96578d17bb6178ef60303
+- `677d68ea8` ci: centralize gh-pages publishing (#5629)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/deploy.yml、.github/workflows/release-gate.yml
+  - 链接：https://github.com/facebook/astryx/commit/677d68ea8f64bb0f9539cb499f4537bd98d2d7ca
+- `20cf2b575` ci: route visual gh-pages writers through publisher (#5631)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs、.github/scripts/visual-gate/visual-promotion-workflow.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pr-comment.yml、.github/workflows/visual-acceptance-promote.yml、.github/workflows/visual-acceptance.yml、.github/workflows/visual-baseline.yml
+  - 链接：https://github.com/facebook/astryx/commit/20cf2b575d162a2c825b1511922f049023dfb352
+- `c2ae093f4` ci: route remaining gh-pages writers through publisher (#5674)
+  - 原因：上游 AI 代理生成效果的评测用例；上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/compact-gh-pages-history.sh、.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/cleanup-previews.yml、.github/workflows/compact-gh-pages.yml、.github/workflows/deploy-preview.yml、.github/workflows/redeploy-preview.yml 等 10 个
+  - 链接：https://github.com/facebook/astryx/commit/c2ae093f4e82c23ae419602cdd2186c464e1e159
+- `f64186a9b` chore: version packages for v0.5.1 (#5661)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/alert-dialog-responsive-actions.md、.changeset/avatar-shape-prop-xkvw.md、.changeset/badge-clamp-long-label.md、.changeset/banner-dismiss-accessible-name.md、.changeset/baseprops-passthrough-forwarding.md、.changeset/build-retrieval-scoring.md、.changeset/button-elevation-theme-target.md、.changeset/calendar-nightly-audit-20260824.md 等 88 个
+  - 链接：https://github.com/facebook/astryx/commit/f64186a9ba0c9817522e1c8c8585a09025479856
+- `89610aa59` fix(docsite): normalize legacy input category (#5688)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/component-categories.test.ts、apps/docsite/src/__tests__/data-extraction.test.ts、apps/docsite/src/app/(docs)/components/page.tsx、apps/docsite/src/lib/componentCategories.ts
+  - 链接：https://github.com/facebook/astryx/commit/89610aa59d1f273b326769a56de7cfaed01eb656
+- `70169cdce` docs: fix changeset coverage for v0.5.2 (#5694)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/improve-translation-lookup-performance.md、.changeset/rename-the-data-input-component-category-to-form-cfkv.md
+  - 链接：https://github.com/facebook/astryx/commit/70169cdceb16dcf563836b2353b9b757f9c9a7d9
+- `c7df10cd4` chore: version packages for v0.5.2 (#5695)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/improve-translation-lookup-performance.md、.changeset/rename-the-data-input-component-category-to-form-cfkv.md、packages/build/CHANGELOG.md、packages/build/package.json、packages/charts/package.json、packages/cli/CHANGELOG.md、packages/cli/package.json、packages/core/CHANGELOG.md 等 27 个
+  - 链接：https://github.com/facebook/astryx/commit/c7df10cd444c3f40abf360cc2553db2065c8dde3
+- `1e5db77c6` build: bootstrap owner-gated knowledge contracts (#5702)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游贡献者与 AI 代理的工作说明；知识库目录索引；规范记录目录索引
+  - 文件：.github/DESIGNOWNERS、.github/REVIEW_GATE.md、.github/scripts/change-scope.cjs、.github/scripts/change-scope.test.mjs、.github/scripts/knowledge-frontmatter.cjs、.github/scripts/spec-owner-decision.cjs、.github/scripts/spec-owner-decision.test.mjs、.github/scripts/spec-owner-workflow.test.mjs 等 30 个
+  - 链接：https://github.com/facebook/astryx/commit/1e5db77c6e6a405891d204dd199ed5f910a5df82
+- `2da7a39af` docs: define knowledge-contract architecture (#5704)
+  - 原因：上游知识库记录格式约定
+  - 文件：docs/architecture/knowledge-contracts.md
+  - 链接：https://github.com/facebook/astryx/commit/2da7a39afdaed6efb7eb405fb1c10a0674c87aa1
+- `0b3711320` ci: keep spec-only changes out of releases (#5722)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）
+  - 文件：.github/REVIEW_GATE.md、.github/scripts/change-scope.cjs、.github/scripts/change-scope.test.mjs、docs/README.md
+  - 链接：https://github.com/facebook/astryx/commit/0b3711320d8f933fdba4fe11777228917ff60f06
+- `0a6a1eb53` docs: define decision recording flow (#5721)
+  - 原因：上游知识库记录格式约定
+  - 文件：docs/architecture/knowledge-contracts.md
+  - 链接：https://github.com/facebook/astryx/commit/0a6a1eb53c544c763318795bf194a209145bc818
+- `212c4fdad` docs: add contributor API conventions guide (#5725)
+  - 原因：上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游贡献者与 AI 代理的工作说明
+  - 文件：CONTRIBUTING.md、docs/README.md、docs/contributing/README.md、docs/contributing/api-conventions.md
+  - 链接：https://github.com/facebook/astryx/commit/212c4fdad45b8387aac8f5cc3280e1e1700b7b3f
+- `a400ffc38` docs: record only durable decisions (#5730)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游知识库记录格式约定
+  - 文件：docs/architecture/knowledge-contracts.md、docs/templates/knowledge/component-spec.md、docs/templates/knowledge/versions.json、scripts/check-knowledge.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/a400ffc38be2ad6c114cdebb7d1f23c654e59b44
+- `8cc13720b` fix(ci): preserve visual reports during preview deploy (#5696)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/8cc13720bf310849aa7da2540490f71337f7ca0a
+- `a8a0a2e98` fix(ci): checkout publisher for preview recovery (#5698)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/redeploy-preview.yml
+  - 链接：https://github.com/facebook/astryx/commit/a8a0a2e9800043d477583ea637941349f9e03cb7
+- `4696013f9` fix(ci): accept tall visual regression sheets (#5699)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/publish-pr-report.mjs、.github/scripts/visual-gate/publish-pr-report.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/4696013f9bd135ec3e93f4ce5894b70cf7d1118a
+- `f83cae87d` fix(ci): only link deployed PR previews (#5697)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/generate-pr-comment.js、.github/scripts/generate-pr-comment.test.mjs、.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs、.github/scripts/lib/pr-preview.mjs、.github/scripts/lib/pr-preview.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/ci.yml 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/f83cae87ddf4b5036e06f2aa284f4cc8eb3f455d
+- `1f1809fd1` ci: reconcile spec owner events safely (#5731)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/spec-owner-decision.cjs、.github/scripts/spec-owner-decision.test.mjs、.github/scripts/spec-owner-reconcile.cjs、.github/scripts/spec-owner-reconcile.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/spec-owner-gate.yml
+  - 链接：https://github.com/facebook/astryx/commit/1f1809fd132980cd401ffadde83ac0f336bda29e
+- `e13faef95` fix(ci): accept trusted legacy PR metadata (#5740)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/pr-preview.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pr-comment.yml
+  - 链接：https://github.com/facebook/astryx/commit/e13faef9596a25fe6de471bde9020dc4a5c2efa5
+- `9ace7d2a2` docs: fix changeset attribution for v0.5.3 (#5785)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/adaptive-menu-presentation.md、.changeset/adaptive-selector-presentation.md、.changeset/add-component-accessibility-coverage.md、.changeset/bottom-sheet-modal-edge-tint.md、.changeset/button-loading-disabled-states.md、.changeset/carousel-rtl-edge-fade.md、.changeset/deduplicate-parent-theme-targets.md、.changeset/direct-loader-anatomy-fallback.md 等 12 个
+  - 链接：https://github.com/facebook/astryx/commit/9ace7d2a217076468ceb4c0b5414217a3db0a48c
+- `cc643d03b` fix(ci): install dependencies before spec validation (#5788)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/cc643d03ba899eb3d608fb54b8695e6cf541d2bd
+- `d7bb4bff3` feat(docsite): suggest matching pages on 404s (#5669)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/did-you-mean.test.ts、apps/docsite/src/__tests__/sitemap.test.ts、apps/docsite/src/app/(docs)/changelog/page.tsx、apps/docsite/src/app/(site)/community/page.tsx、apps/docsite/src/app/not-found.tsx、apps/docsite/src/app/sitemap.ts、apps/docsite/src/components/ChangelogView.tsx、apps/docsite/src/components/DidYouMean.tsx 等 10 个
+  - 链接：https://github.com/facebook/astryx/commit/d7bb4bff3b0762f40ce84f9ce30a4fe020e48e6c
+- `9da7cb3f5` fix(docsite): stabilize PPR loading states (#5548)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/static-shell.test.ts、apps/docsite/src/app/(site)/themes/page.tsx、apps/docsite/src/components/SiteFooter.tsx、apps/docsite/src/components/ThemeExplorerLayout.tsx、apps/docsite/src/components/ThemeHeading.tsx、apps/docsite/src/components/ThemePackagePage.tsx、apps/docsite/src/components/component-detail/ComponentDetailClient.tsx
+  - 链接：https://github.com/facebook/astryx/commit/9da7cb3f5ea9a858d9238a7bce006d8905505298
+- `91a12c017` ci: pin pnpm/action-setup by commit SHA (#5526)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/actions/setup/action.yml
+  - 链接：https://github.com/facebook/astryx/commit/91a12c017718509b3aa38f802b8493583ed8de0f
+- `ba1aebe8e` fix(ci): skip fork spec-owner review reconciliation (#5799)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/REVIEW_GATE.md、.github/scripts/spec-owner-reconcile.cjs、.github/scripts/spec-owner-reconcile.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/spec-owner-gate.yml
+  - 链接：https://github.com/facebook/astryx/commit/ba1aebe8e666293e4a0719b242730cc5daf5cbed
+- `a1f0ddebd` fix(ci): guide visual acceptance reliably (#5791)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/visual-format.js、.github/scripts/lib/visual-format.test.mjs、.github/scripts/visual-gate/authorization.mjs、.github/scripts/visual-gate/authorization.test.mjs、.github/scripts/visual-gate/publish-pr-report.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/visual-acceptance.yml
+  - 链接：https://github.com/facebook/astryx/commit/a1f0ddebd355e99e33732f4be89aa8d69da84f2f
+- `dad85eeb4` fix(ci): preserve approved spec owner status (#5814)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/spec-owner-reconcile.cjs、.github/scripts/spec-owner-reconcile.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/dad85eeb48325e1d161f7aebae1ed9535b8e5f04
+- `e1462fb72` ci: protect DESIGNOWNER self-merge for design records (#5816)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；知识库目录索引
+  - 文件：.github/DESIGNOWNERS、.github/REVIEW_GATE.md、.github/scripts/spec-owner-reconcile.test.mjs、docs/design/README.md
+  - 链接：https://github.com/facebook/astryx/commit/e1462fb723f2f63cdd5a0eda3d7ca12dbaba4f14
+- `4c302ae0d` fix(ci): parallelize visual capture by story (#5828)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/capture.mjs、.github/scripts/visual-gate/lib/capture.test.mjs、.github/scripts/visual-gate/lib/sources.mjs、.github/scripts/visual-gate/visual-gate.config.json
+  - 链接：https://github.com/facebook/astryx/commit/4c302ae0dce011ba05ba3c509eb238f084dc9c11
+- `4a882996a` fix(ci): parallelize visual gate planning and comparison (#5831)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/capture.mjs、.github/scripts/visual-gate/lib/capture.test.mjs、.github/scripts/visual-gate/lib/compare-worker.mjs、.github/scripts/visual-gate/lib/compare.mjs、.github/scripts/visual-gate/lib/compare.test.mjs、.github/scripts/visual-gate/lib/sources.mjs 等 9 个
+  - 链接：https://github.com/facebook/astryx/commit/4a882996ad1be2a9d8c9985d38ea6f97adad0781
+- `780d85b23` ci: point Dependabot at the setup composite action (#5599)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/dependabot.yml
+  - 链接：https://github.com/facebook/astryx/commit/780d85b239bbefabaf2af139274ec44f3ee34efb
+- `237d82a6b` fix(ci): make visual capture plan-order independent (#5837)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/capture.mjs、.github/scripts/visual-gate/lib/capture.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/237d82a6b0126ad4530145fbf169dbcc68dde633
+- `a05c13734` feat(sandbox): add tonal palette decision lab (#5818)
+  - 原因：上游 monorepo 根配置与锁文件；上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/package.json、apps/sandbox/src/app/(sandbox)/pages/palette-generator/README.md、apps/sandbox/src/app/(sandbox)/pages/palette-generator/generator.test.ts、apps/sandbox/src/app/(sandbox)/pages/palette-generator/generator.ts、apps/sandbox/src/app/(sandbox)/pages/palette-generator/neutralThemePaletteReference.ts、apps/sandbox/src/app/(sandbox)/pages/palette-generator/page.tsx、apps/sandbox/src/app/(sandbox)/pages/palette-generator/themeCorpus.ts、apps/sandbox/src/app/SandboxShell.tsx 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/a05c13734451725d5d4d4c7a3f93efaf831a3f27
+- `b71982937` Correct WCAG AA target-size guidance (#5874)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/instructions/docsite.instructions.md
+  - 链接：https://github.com/facebook/astryx/commit/b7198293739b2f36b383696f0feae77704c4f5bc
+- `501e97588` test(rtl): cover AppShell side placement (#5876)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/rtl-audit/targets.json
+  - 链接：https://github.com/facebook/astryx/commit/501e97588c87b59fc0fba9e65df9b4a440619dd9
+- `d6ee70ce0` chore(changesets): add missing PR references (#5878)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/appshell-auto-header-background.md、.changeset/banner-theme-targets.md、.changeset/date-time-input-native-picker-option.md、.changeset/neutral-syntax-theme-name.md、.changeset/resize-handle-pointer-capture.md、.changeset/selector-read-only.md、.changeset/theme-status-icons.md、.changeset/time-input-native-picker-option.md 等 9 个
+  - 链接：https://github.com/facebook/astryx/commit/d6ee70ce055e1c4b8bac0a947eda19dbcf736754
+- `a3e3d179d` chore(changesets): add remaining PR references (#5883)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/rtl-contextual-separators.md、.changeset/theming-targets-guard-nested.md
+  - 链接：https://github.com/facebook/astryx/commit/a3e3d179dd3d55da102e92a08860343bff48f489
+- `b89b2ec25` fix(ci): resolve package for new PR stories (#5879)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/lib/plan.mjs、.github/scripts/visual-gate/lib/plan.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/b89b2ec25eabbed56eceaf1e8c84a292e6e82857
+- `1365cf702` fix(ci): queue GitHub Pages deployments (#5880)
+  - 原因：上游 AI 代理生成效果的评测用例；上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pages-deploy.yml、internal/vibe-tests/src/deploy-report.ts
+  - 链接：https://github.com/facebook/astryx/commit/1365cf7021a3c3def1f7e4f3481067f4bb165e23
+- `5c7e31aaf` test(Toast): measure logical placement under RTL (#5872)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/rtl-audit/targets.json、apps/storybook/stories/Toast.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/5c7e31aaf2d47efbe4f710c59c54162831c6dfbf
+- `a16a82c2e` fix(ci): give Pages uploads a full runner (#5924)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pages-deploy.yml
+  - 链接：https://github.com/facebook/astryx/commit/a16a82c2efed40905d498041624e907a2de8f0ba
+- `74490c638` ci(visual): bound component screenshot scope (#5840)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate-context.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/plan.mjs、.github/scripts/visual-gate/lib/plan.test.mjs、.github/scripts/visual-gate/lib/sources.mjs、.github/scripts/visual-gate/publish-pr-report.mjs、.github/scripts/visual-gate/publish-pr-report.test.mjs 等 12 个
+  - 链接：https://github.com/facebook/astryx/commit/74490c638ae95471b1059f7881bb97d35d14b2f7
+- `65be21b69` docs: backfill changesets for two merged doc-prose PRs (#5863)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/icons-sidenavitem-doc-prose.md、.changeset/template-description-em-dashes.md
+  - 链接：https://github.com/facebook/astryx/commit/65be21b6943684bdf6fc6f90f82c7fa4f2c9f3a7
+- `6e84905d7` Add mobile spacing scale sandbox preview (#5877)
+  - 原因：上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/src/app/(sandbox)/pages/mobile-spacing/page.tsx、apps/sandbox/src/app/SandboxShell.tsx、apps/sandbox/src/app/sandboxPages.ts
+  - 链接：https://github.com/facebook/astryx/commit/6e84905d7a6c66513a9c0fc79812a49aec7fa35e
+- `702661891` docs: add plain-language spec writing guidance (#5945)
+  - 原因：上游知识库记录格式约定
+  - 文件：docs/architecture/knowledge-contracts.md
+  - 链接：https://github.com/facebook/astryx/commit/70266189188a31c7fbfb8852caa7af860421bfe5
+- `dc5565edc` chore: add josephfarina as a code owner across the repository (#5947)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/CODEOWNERS
+  - 链接：https://github.com/facebook/astryx/commit/dc5565edcef5a8ffd2e327c6c04bfbc842880b2a
+- `a69076d41` docs: preserve qualifiers in spec rewrites (#5954)
+  - 原因：上游知识库记录格式约定
+  - 文件：docs/architecture/knowledge-contracts.md
+  - 链接：https://github.com/facebook/astryx/commit/a69076d41a7b5f166084e2b24bc31ec0fb2a9f99
+- `adf002a44` fix(ci): prevent opportunistic visual baselines (#5948)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/plan.mjs、.github/scripts/visual-gate/lib/plan.test.mjs、.github/scripts/visual-gate/visual-acceptance.mjs、.github/scripts/visual-gate/visual-acceptance.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/adf002a4471776d5c3d46dd62c0babd2e635e2e7
+- `1b1ef573d` fix(ci): reduce the visual baseline to canonical frames (#5950)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate-context.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/compare.test.mjs、.github/scripts/visual-gate/lib/plan.mjs、.github/scripts/visual-gate/lib/plan.test.mjs、.github/scripts/visual-gate/lib/sources.mjs、.github/scripts/visual-gate/publish-pr-report.mjs 等 12 个
+  - 链接：https://github.com/facebook/astryx/commit/1b1ef573d4f899d8198cbf7134d53ab35db60fe7
+- `10c764bf3` test(vibe-tests): measure setup arms without writing to them (#5855)
+  - 原因：上游 AI 代理生成效果的评测用例
+  - 文件：internal/vibe-tests/README.md、internal/vibe-tests/setup-test/PLAN.md、internal/vibe-tests/setup-test/setup-canonical.test.ts、internal/vibe-tests/setup-test/setup-measure.browser.test.mjs、internal/vibe-tests/setup-test/setup-measure.mjs、internal/vibe-tests/setup-test/setup-measure.test.mjs、internal/vibe-tests/setup-test/setup-workspace.mjs、internal/vibe-tests/setup-test/setup-workspace.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/10c764bf36f56cbdf5630560da294a152b82a053
+- `08db6e9af` test(vibe-tests): compare established Tailwind adoption strategies (#5821)
+  - 原因：上游 AI 代理生成效果的评测用例
+  - 文件：internal/vibe-tests/README.md、internal/vibe-tests/setup-test/PLAN.md、internal/vibe-tests/setup-test/conditions.json、internal/vibe-tests/setup-test/guidance/guest-contained.md、internal/vibe-tests/setup-test/guidance/host-aligned.md、internal/vibe-tests/setup-test/matrix.json、internal/vibe-tests/setup-test/prompts.json、internal/vibe-tests/setup-test/run-setup.mjs 等 14 个
+  - 链接：https://github.com/facebook/astryx/commit/08db6e9af25613a356f3b2742b69da8b3404db58
+- `70328cf92` test(vibe-tests): stop the setup evaluator reporting unchanged hosts as damaged (#5856)
+  - 原因：上游 AI 代理生成效果的评测用例
+  - 文件：internal/vibe-tests/README.md、internal/vibe-tests/setup-test/PLAN.md、internal/vibe-tests/setup-test/probes.json、internal/vibe-tests/setup-test/prompts.json、internal/vibe-tests/setup-test/setup-aggregate.ts、internal/vibe-tests/setup-test/setup-canonical.test.ts、internal/vibe-tests/setup-test/setup-eval.test.ts、internal/vibe-tests/setup-test/setup-eval.ts 等 15 个
+  - 链接：https://github.com/facebook/astryx/commit/70328cf925b2dd17c8de635cce0a1633a48e5787
+- `5d8732816` fix(ci): let release visual plans use safety budget (#5968)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/gate-context.test.mjs、.github/scripts/visual-gate/gate.mjs
+  - 链接：https://github.com/facebook/astryx/commit/5d873281643e752567722ecb691325de1b8b2f86
+- `2e51213e7` chore(changesets): cover final v0.6.0 behavior (#5969)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/cli-debug-command-log.md、.changeset/searchable-table-template.md、.changeset/work-item-detail-template.md
+  - 链接：https://github.com/facebook/astryx/commit/2e51213e7584c9161bd652259d6832dab999184f
+- `be67ed585` fix(lint): catch unmirrored logical centering (#5864)
+  - 原因：上游 React、StyleX 专用的 ESLint 规则；上游 monorepo 根配置与锁文件
+  - 文件：eslint.config.js、internal/eslint-plugin-astryx/index.js、internal/eslint-plugin-astryx/no-physical-properties.js、internal/eslint-plugin-astryx/no-physical-properties.test.mjs、internal/eslint-plugin-astryx/prefer-center-inline.js、internal/eslint-plugin-astryx/prefer-center-inline.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/be67ed585a0e6d6a0c487b21aa80b91addad82ee
+- `89374ed6e` fix(release): classify template slug rename as nonbreaking (#5970)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/dashboard-template-pattern-slugs.md
+  - 链接：https://github.com/facebook/astryx/commit/89374ed6e600b8ec1db068c34d60867099a2301f
+- `97a55c8a3` fix(eslint-plugin): match no-react-introspection allowFiles on Windows (#5639)
+  - 原因：上游 React、StyleX 专用的 ESLint 规则
+  - 文件：internal/eslint-plugin-astryx/no-react-introspection.js、internal/eslint-plugin-astryx/no-react-introspection.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/97a55c8a360e66c0933fb81ee0927d4024f61d37
+- `0274067b8` fix(vibe-tests): run pnpm through cmd.exe on Windows in fixture-suite (#5841)
+  - 原因：上游 AI 代理生成效果的评测用例
+  - 文件：internal/vibe-tests/src/fixture-suite.mjs
+  - 链接：https://github.com/facebook/astryx/commit/0274067b8c036f1e75b4b7c5edce721b36aa7745
+- `03feefdad` fix(vibe-tests): run tsx through cmd.exe on Windows in public-artifact-cli.test.mjs (#5908)
+  - 原因：上游 AI 代理生成效果的评测用例
+  - 文件：internal/vibe-tests/setup-test/public-artifact-cli.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/03feefdada13c309e6b8cf9b9d2a58682cde3cda
+- `debb82b90` fix(storybook): load the Vite plugin from source (#5133)
+  - 原因：上游 React Storybook 故事与配置；上游贡献者与 AI 代理的工作说明
+  - 文件：CONTRIBUTING.md、apps/storybook/.storybook/main.test.ts、apps/storybook/.storybook/main.ts、apps/storybook/tsconfig.json
+  - 链接：https://github.com/facebook/astryx/commit/debb82b9033675492ec5e9cfd549526aeb90ddc7
+- `f0c15b1d5` chore(changesets): add exact phrase hardening receipt (#6002)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/cli-search-exact-keyword-phrase-ranking.md
+  - 链接：https://github.com/facebook/astryx/commit/f0c15b1d5e97fb2420f42dc4df83341a84cda324
+- `a37a8951d` fix(cli): align search test with internal coverage (#6023)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/cli-search-exact-keyword-phrase-ranking.md
+  - 链接：https://github.com/facebook/astryx/commit/a37a8951d0eb7d4a5793599962c5fc90240e5bc1
+- `7409f9f2f` docs: consolidate agent guidance in AGENTS.md (#6033)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游贡献者与 AI 代理的工作说明
+  - 文件：.github/ENGOWNERS、.github/REVIEW_GATE.md、.github/copilot-instructions.md、.github/instructions/blog.instructions.md、.github/instructions/docsite.instructions.md、.github/instructions/packages.instructions.md、.github/instructions/templates.instructions.md、.github/workflows/review-signal.yml 等 10 个
+  - 链接：https://github.com/facebook/astryx/commit/7409f9f2faaa5d4414a0a7f45926d519a41e3a6f
+- `d043454d5` fix(docsite): bridge Selector's onChange preview even without a seeded value (#6035)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/component-preview-state.test.ts、apps/docsite/src/components/component-detail/interactiveState.ts
+  - 链接：https://github.com/facebook/astryx/commit/d043454d5fe37cb26e35c2a74914f0e4adb1d766
+- `9bc4a62fd` fix(docsite): close the template preview on teardown, and cap its header height (#6075)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/components/TemplatePreviewDialog.tsx
+  - 链接：https://github.com/facebook/astryx/commit/9bc4a62fd327ec2b5d90821689fb70c6fe2b2c2f
+- `ad4939221` chore: version packages for v0.5.3 (#6087)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/adaptive-menu-presentation.md、.changeset/adaptive-selector-presentation.md、.changeset/add-component-accessibility-coverage.md、.changeset/appshell-auto-header-background.md、.changeset/attached-field-status-overlap.md、.changeset/banner-theme-targets.md、.changeset/bottom-sheet-modal-edge-tint.md、.changeset/build-kit-coverage-gate.md 等 129 个
+  - 链接：https://github.com/facebook/astryx/commit/ad4939221c1521d4ff1c57d1678d43bf3059e648
+- `87970aa76` docs: make AGENTS the canonical agent guide (#6098)
+  - 原因：上游贡献者与 AI 代理的工作说明
+  - 文件：AGENTS.md、CLAUDE.md
+  - 链接：https://github.com/facebook/astryx/commit/87970aa764de01ef50eac2bbccbf29b370decbd7
+- `bfee43a14` ci: skip all Storybook work for spec-only PRs (#6102)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/bfee43a14c82ce3f0d9d7dfe384b5eb75ffb646f
+- `4a8ded06f` docs: specify component audit backfills (#6032)
+  - 原因：上游组件审计与自动合并流程规范
+  - 文件：docs/specs/AST-029/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/4a8ded06fbc33df70829e87ea1a7c3e22131d7b3
+- `b92b07613` chore: version packages for v0.5.4 (#6100)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/dropdown-menu-mount-open-focus.md、.changeset/dropdown-menu-radio-group-playground.md、.changeset/integration-owned-showcases.md、packages/build/CHANGELOG.md、packages/build/package.json、packages/charts/package.json、packages/cli/CHANGELOG.md、packages/cli/package.json 等 28 个
+  - 链接：https://github.com/facebook/astryx/commit/b92b07613fbf941392a2138bd22b42c71e2707f0
+- `cd70861fb` feat: unify component audit roster (#6105)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游内部 React 实验沙盒，不对外发布；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）
+  - 文件：.github/scripts/change-scope.test.mjs、.github/scripts/knowledge-paths.cjs、.github/scripts/knowledge-paths.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/ci.yml、.github/workflows/lint.yml、apps/sandbox/scripts/generate-score-ledger.mjs、docs/README.md 等 13 个
+  - 链接：https://github.com/facebook/astryx/commit/cd70861fbd70fd7907c807fc8ffe4687a30107a7
+- `1da01a2d3` docs: clarify audit data storage (#6103)
+  - 原因：上游知识库记录格式约定
+  - 文件：docs/architecture/knowledge-contracts.md
+  - 链接：https://github.com/facebook/astryx/commit/1da01a2d3562e87bbc027f01b5a09d026d8f9a60
+- `f0aea42c9` docs: require overlap search before new authority (#6104)
+  - 原因：上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游知识库记录格式约定；上游贡献者与 AI 代理的工作说明
+  - 文件：AGENTS.md、docs/README.md、docs/architecture/knowledge-contracts.md
+  - 链接：https://github.com/facebook/astryx/commit/f0aea42c950e7fe70c446fbe66cf8002ed5e4375
+- `bceae22b7` feat: enforce component audit modes (#6111)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/score-ledger.mjs、scripts/score-ledger.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/bceae22b7d3a5d15282591209b1f77ccb55ed3f9
+- `2f93b146f` docs: define positive CI surface routing (#6112)
+  - 原因：上游 CI 路由流程规范
+  - 文件：docs/specs/AST-030/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/2f93b146fc30cb9e482947127eafddddf3e4d4c7
+- `fd90faa7d` ci: add positive tooling-only lane (#6113)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/change-scope.cjs、.github/scripts/change-scope.test.mjs、.github/scripts/ci-tooling-routing.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/scripts/tooling-surface-contract.test.mjs、.github/workflows/ci.yml、.github/workflows/lint.yml、.github/workflows/pr-comment.yml
+  - 链接：https://github.com/facebook/astryx/commit/fd90faa7d05df91f70eb1b73cac56e994806a39f
+- `20d1a4084` perf(ci): give the heavier test lane the larger runner (#6080)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml、.github/workflows/deploy.yml
+  - 链接：https://github.com/facebook/astryx/commit/20d1a4084f66d9b3f809472a420258264ede6b3f
+- `a8b08f399` docs: make Astryx CLI bootstrap shell-portable (#6119)
+  - 原因：上游贡献者与 AI 代理的工作说明
+  - 文件：AGENTS.md
+  - 链接：https://github.com/facebook/astryx/commit/a8b08f399c192ffe2d7d3c2245d109cee1d20232
+- `32e06af84` docs: define React component runtime architecture (#6122)
+  - 原因：React 组件运行时约定（Effect、ref 等），Vue 无对应
+  - 文件：docs/architecture/react-component-runtime.md
+  - 链接：https://github.com/facebook/astryx/commit/32e06af848efc4d3339660eeff95f4bdfc4c5b96
+- `5123978ef` docs: define component test sufficiency architecture (#6140)
+  - 原因：上游 React 组件测试充分性约定
+  - 文件：docs/architecture/component-test-sufficiency.md
+  - 链接：https://github.com/facebook/astryx/commit/5123978efbcd3f824f88a626cc1fea738faee87a
+- `53bc34db7` chore: normalize line endings to LF via .gitattributes (#5229)
+  - 原因：上游 monorepo 根配置与锁文件
+  - 文件：.gitattributes
+  - 链接：https://github.com/facebook/astryx/commit/53bc34db7c9dd40c3fe0f0e0f419adaea71a73cd
+- `b6ee0ef11` fix(ci): use stable fallback for CDN smoke (#6193)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/cdn-template-smoke-test.mjs、.github/scripts/lib/cdn-version.mjs、.github/scripts/lib/cdn-version.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/b6ee0ef11bbff53d2580ec66964c4ce1bee4c4ab
+- `1e0c2acf2` fix(ci): skip stale post-merge preview reruns (#6191)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/pr-preview.mjs、.github/scripts/lib/pr-preview.test.mjs、.github/workflows/pr-comment.yml
+  - 链接：https://github.com/facebook/astryx/commit/1e0c2acf27b7c0a1d56f64088aaa664cf15be6bc
+- `6ea8cf57b` docs: define Docsite interaction baseline (#6201)
+  - 原因：上游 Next.js 文档站的交互与数据约定
+  - 文件：docs/specs/AST-033/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/6ea8cf57be7caa67fe5f2eb9f02bab4d5a513953
+- `ae2cefbf4` docs: Fix docsite URL in contributing guide (#6011)
+  - 原因：上游贡献者与 AI 代理的工作说明
+  - 文件：CONTRIBUTING.md
+  - 链接：https://github.com/facebook/astryx/commit/ae2cefbf4638223fc084ebe86783fc4b35a2e9b5
+- `6c5304cd5` docs: add intent-specific pull request templates (#6257)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游贡献者与 AI 代理的工作说明
+  - 文件：.github/PULL_REQUEST_TEMPLATE/bug-fix.md、.github/PULL_REQUEST_TEMPLATE/documentation.md、.github/PULL_REQUEST_TEMPLATE/maintenance.md、.github/PULL_REQUEST_TEMPLATE/new-feature.md、.github/PULL_REQUEST_TEMPLATE/other.md、.github/PULL_REQUEST_TEMPLATE/specification.md、.github/PULL_REQUEST_TEMPLATE/visual-update.md、.github/pull_request_template.md 等 13 个
+  - 链接：https://github.com/facebook/astryx/commit/6c5304cd590ae79c99fb50f2ed1856368007ea3e
+- `1e98bf3ff` fix(a11y): keep resizable story content keyboard-reachable (#6269)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/.storybook/useResizableStory.test.mjs、apps/storybook/stories/useResizable.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/1e98bf3ff166d578ec844cba033c49d223e94510
+- `6942460bd` fix(docsite): tighten template gallery columns (#6274)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/app/(site)/templates/page.tsx
+  - 链接：https://github.com/facebook/astryx/commit/6942460bd32699402df8467adf4370ce84fd3688
+- `0e3f116a4` fix(docsite): keep the template preview header inside the dialog (#6276)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/components/TemplatePreviewDialog.tsx
+  - 链接：https://github.com/facebook/astryx/commit/0e3f116a412b7e7dd00e207fe793c523ebedae95
+- `47ba5526f` test(rtl): route Charts package audits (#6252)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置；上游 lab 组件转正的审计工具；上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：.github/scripts/accessibility-audit.integration.test.mjs、.github/scripts/accessibility-audit.js、.github/scripts/accessibility-audit.test.mjs、.github/scripts/analyze-pr.js、.github/scripts/analyze-pr.test.mjs、.github/scripts/ci-test-routing.test.mjs、.github/scripts/ci-tooling-routing.test.mjs、.github/scripts/component-audit-scope.cjs 等 32 个
+  - 链接：https://github.com/facebook/astryx/commit/47ba5526fa93f2bbcb7c0c26ab0a49d86cf37825
+- `df22b36b0` docs: link v0.6.1 changesets to their PRs (#6284)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/base-typeahead-audit-fixes.md、.changeset/bottom-sheet-switcher-dismissal-order.md、.changeset/breadcrumb-item-menu-accessibility.md、.changeset/build-kit-skeleton-command.md、.changeset/calm-gap-routes.md、.changeset/center-owned-axis.md、.changeset/chart-audit-contract.md、.changeset/defer-clear-focus-tap.md 等 16 个
+  - 链接：https://github.com/facebook/astryx/commit/df22b36b0483c051f7e95572626182b9ab937064
+- `819816f39` perf(docsite): defer template gallery payloads and rendering (#6275)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/package.json、apps/docsite/scripts/check-template-gallery-bundle.mjs、apps/docsite/scripts/generate-data.mjs、apps/docsite/src/__tests__/data-extraction.test.ts、apps/docsite/src/__tests__/search-palette.test.ts、apps/docsite/src/__tests__/shared-top-nav-search.test.tsx、apps/docsite/src/__tests__/sitemap.test.ts、apps/docsite/src/__tests__/template-gallery-performance.test.ts 等 22 个
+  - 链接：https://github.com/facebook/astryx/commit/819816f39adad2c76d7e1d34ca4dacf55adb0e7b
+- `a8f2807ca` fix(docsite): alphabetize the all templates view (#6297)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/template-gallery-order.test.tsx、apps/docsite/src/app/(site)/templates/page.tsx、apps/docsite/src/components/templateGalleryOrder.ts
+  - 链接：https://github.com/facebook/astryx/commit/a8f2807ca2eba6ab72e8ea455517ec2a6722ee25
+- `186a1b366` docs: link new v0.6.1 changesets to their PRs (#6308)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/cli-component-detail-import-hint-ownership.md、.changeset/scrollable-area-system.md、.changeset/shadcn-js-receipts.md
+  - 链接：https://github.com/facebook/astryx/commit/186a1b36660e174563f77f5af9f7e148324b5904
+- `82c3188a0` chore: version packages for v0.6.1 (#6286)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/aspect-ratio-ratio-jsx.md、.changeset/autolink-installed-integrations.md、.changeset/base-typeahead-audit-fixes.md、.changeset/bottom-sheet-switcher-dismissal-order.md、.changeset/breadcrumb-item-menu-accessibility.md、.changeset/build-kit-skeleton-command.md、.changeset/calm-gap-routes.md、.changeset/center-owned-axis.md 等 49 个
+  - 链接：https://github.com/facebook/astryx/commit/82c3188a09e9e8e4caf58fa1be68de31fbed6f7d
+- `8a2a62631` feat(shadcn): enable hidden production registry (#6260)
+  - 原因：shadcn 组件注册表，只服务 React 生态；上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：.github/scripts/shadcn-registry-ci.test.mjs、.github/workflows/ci.yml、apps/docsite/scripts/generate-data.mjs、apps/docsite/scripts/generate-shadcn-registry.mjs、apps/docsite/src/__tests__/hidden-shadcn-production.test.ts、apps/docsite/src/__tests__/robots.test.ts、apps/docsite/src/app/robots.ts、internal/shadcn-registry/generate-shadcn-registry.test.mjs 等 10 个
+  - 链接：https://github.com/facebook/astryx/commit/8a2a626312c276e2bc0392692f8917907d90280e
+- `bdea6e22c` fix(ci): scope component browser audits (#6316)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/component-audit-scope.cjs、.github/scripts/component-audit-scope.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/bdea6e22c0e7150f600fb922d745ebaf9daffaa3
+- `1c4033d49` docs(specs): add reader-first contract summaries (#6317)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游知识库记录格式约定
+  - 文件：docs/architecture/knowledge-contracts.md、docs/templates/knowledge/architecture.md、docs/templates/knowledge/component-spec.md、docs/templates/knowledge/module-spec.md、docs/templates/knowledge/versions.json、scripts/check-knowledge.mjs、scripts/check-knowledge.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/1c4033d4978fec47be12e9be239cafbcfda93ec8
+- `29f69f272` docs: define surface-owned CI lanes (#6294)
+  - 原因：上游 CI 路由流程规范
+  - 文件：docs/specs/AST-030/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/29f69f2729b0ee60c29823eb7f5ba7fd8d41c3e1
+- `c87f73fb0` ci: name the Build test owner explicitly (#6327)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/ci-test-join.mjs、.github/scripts/ci-test-join.test.mjs、.github/scripts/ci-test-routing.test.mjs、.github/scripts/ci-tooling-routing.test.mjs、.github/scripts/shadcn-registry-ci.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/c87f73fb0cedc16c78b60bcbb43e11a8d23af12e
+- `70cd7a55b` chore: add v0.6.2 release references (#6332)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/chat-typing-indicator-i18n.md、.changeset/curly-math-renderer.md、.changeset/dialog-header-theme-targets.md、.changeset/expose-daterangeinput-preset-theming-targets-m3p8.md、.changeset/expose-the-slider-interactive-control-as-a-theme-mez1.md、.changeset/fix-default-export-component-loader.md、.changeset/fix-hyphenated-theme-identifiers.md、.changeset/muse-agent-preset.md 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/70cd7a55b247dcaad61653d90f3480f391040cf8
+- `bc93547cf` chore: version packages for v0.6.2 (#6333)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/chat-typing-indicator-i18n.md、.changeset/curly-math-renderer.md、.changeset/dialog-header-theme-targets.md、.changeset/doctor-peer-resolution.md、.changeset/expose-daterangeinput-preset-theming-targets-m3p8.md、.changeset/expose-the-slider-interactive-control-as-a-theme-mez1.md、.changeset/file-input-icon-target.md、.changeset/fix-default-export-component-loader.md 等 40 个
+  - 链接：https://github.com/facebook/astryx/commit/bc93547cf59532ea6d8c4bea9c70e3d3fb05bcc3
+- `a4bcbeb02` chore(i18n): widen Crowdin screenshot coverage and keep every tag in frame (#6334)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 Crowdin 翻译平台的截图上传脚本
+  - 文件：.github/workflows/crowdin-upload.yml、internal/scripts/README.md、internal/scripts/lib/crowdin-strategies.mjs、internal/scripts/upload-crowdin-screenshots.mjs
+  - 链接：https://github.com/facebook/astryx/commit/a4bcbeb026ae6904a962d9b1eab4715fe3b73ab4
+- `b6c720c8c` docs: sanitize historical CLI changelog example (#6336)
+  - 原因：上游各包的更新日志，由上游发布流程生成
+  - 文件：packages/cli/CHANGELOG.md
+  - 链接：https://github.com/facebook/astryx/commit/b6c720c8c9d8c9ca395bee040c9182fd027e60e1
+- `605fa9aa7` chore: add v0.6.3 release reference (#6351)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/bottom-sheet-keyboard-scroll.md
+  - 链接：https://github.com/facebook/astryx/commit/605fa9aa70543cfe43227cf67b80a671e6dc9fed
+- `241471263` chore: link PowerSearch changeset to PR #6357 (#6375)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/powersearch-stale-value-menu.md
+  - 链接：https://github.com/facebook/astryx/commit/2414712631a54f5951ab868ab68a18be040fdc5a
+- `5dcd8dd92` fix: require distinct review head for global routing (#6390)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/check-knowledge.mjs、scripts/check-knowledge.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/5dcd8dd9240f78c43e5aef9b9c0233a919f1c139
+- `907e960ef` feat(sandbox): add Markdown performance lab (#6378)
+  - 原因：上游内部 React 实验沙盒，不对外发布
+  - 文件：apps/sandbox/src/app/(fullscreen)/pages/markdown-perf/benchmark.test.ts、apps/sandbox/src/app/(fullscreen)/pages/markdown-perf/benchmark.ts、apps/sandbox/src/app/(fullscreen)/pages/markdown-perf/page.tsx、apps/sandbox/src/app/sandboxPages.ts
+  - 链接：https://github.com/facebook/astryx/commit/907e960efaa6a671aada306fd12ea779809e2c6d
+- `44e3e84b9` docs: recommend partial clone (#6401)
+  - 原因：上游贡献者与 AI 代理的工作说明
+  - 文件：CONTRIBUTING.md
+  - 链接：https://github.com/facebook/astryx/commit/44e3e84b98ce6ddc3bd8a9e969ab635051979c30
+- `f8de57b78` chore: link v0.6.3 changesets to introducing PRs (#6396)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/clip-the-resizable-sidenav-handle-within-the-sid-r265.md、.changeset/markdown-frontmatter.md、.changeset/markdown-plugin-core.md、.changeset/markdown-remark-adapter.md、.changeset/markdown-semantic-fence.md、.changeset/markdown-source-decoration.md、.changeset/markdown-text-transform.md、.changeset/pressed-state-eight-components.md
+  - 链接：https://github.com/facebook/astryx/commit/f8de57b78776d5f05a412a1d721a6010cb240525
+- `4f5e785d4` refactor(storybook): derive workspace aliases from one table (#6299)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/.storybook/main.test.ts、apps/storybook/.storybook/main.ts、apps/storybook/README.md
+  - 链接：https://github.com/facebook/astryx/commit/4f5e785d42b1c3a5e6c424a3fddd419e1dc91c2b
+- `3d1d29892` ci: align spec approval with repository owners (#6320)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游知识库记录格式约定；知识库目录索引
+  - 文件：.github/DESIGNOWNERS、.github/ENGOWNERS、.github/REVIEW_GATE.md、.github/scripts/spec-owner-decision.test.mjs、.github/scripts/spec-owner-reconcile.cjs、.github/scripts/spec-owner-reconcile.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/spec-owner-gate.yml 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/3d1d2989234f21c5bf2028c6a565dc5d9bb48879
+- `62ef02c57` ci: skip unrelated checks for spec-only PRs (#6405)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/ci-test-routing.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/ci.yml、.github/workflows/cli-smoke-test.yml、.github/workflows/internal-registry.yml、.github/workflows/lint.yml
+  - 链接：https://github.com/facebook/astryx/commit/62ef02c57a54e5ae89d3bdf3bc96df361ee5c674
+- `595cfd38f` fix(vibe-tests): run pnpm through cmd.exe on Windows in more scripts (#5843)
+  - 原因：上游 AI 代理生成效果的评测用例
+  - 文件：internal/vibe-tests/scripts/fixture-browser.mjs、internal/vibe-tests/setup-test/run-setup.mjs、internal/vibe-tests/setup-test/setup-canonical.test.ts、internal/vibe-tests/setup-test/setup-measure.mjs
+  - 链接：https://github.com/facebook/astryx/commit/595cfd38f2ccaef9c640212655fecb3d6532bb8d
+- `df835ceb6` Document review scope preservation (#6403)
+  - 原因：上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）
+  - 文件：docs/contributing/pull-requests.md
+  - 链接：https://github.com/facebook/astryx/commit/df835ceb645b70eef8729e6da49335e678d0133b
+- `191935548` chore: link current changesets to introducing PRs (#6421)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/chat-composer-contracts.md、.changeset/chat-composer-drawer-hidden-focus.md、.changeset/chat-composer-input-observable-edits.md、.changeset/layout-footer-playground-wrapper.md、.changeset/table-conditional-overscroll.md
+  - 链接：https://github.com/facebook/astryx/commit/191935548d2d3e1aba6ffa5337dda4ca39f27faa
+- `17f2a58da` docs: fix two inaccuracies in CONTRIBUTING.md pnpm setup section (#6392)
+  - 原因：上游贡献者与 AI 代理的工作说明
+  - 文件：CONTRIBUTING.md
+  - 链接：https://github.com/facebook/astryx/commit/17f2a58dac128e9159a5a8cb4693720cdbfe2ff0
+- `9f61a7994` chore: link three changesets to introducing PRs (#6432)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/input-floor-ios-only.md、.changeset/kbd-key-aliases.md、.changeset/spinner-ios-rotation-wobble.md
+  - 链接：https://github.com/facebook/astryx/commit/9f61a7994c612141a799020575c1d8057ed9be30
+- `4720e0f26` feat(docsite): refine template gallery previews (#6434)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/hidden-shadcn-production.test.ts、apps/docsite/src/app/(site)/templates/page.tsx、apps/docsite/src/components/TemplatePreviewDialog.tsx、apps/docsite/src/components/TemplatePreviewSurface.module.css、apps/docsite/src/components/TemplateThumbnail.tsx
+  - 链接：https://github.com/facebook/astryx/commit/4720e0f2607a89f1ed40ff45e8b8a2ae95698952
+- `9f0783f12` fix(docsite): fill constrained template previews (#6436)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/components/TemplatePreviewDialog.tsx、apps/docsite/src/components/TemplatePreviewSurface.module.css、apps/docsite/src/components/TemplatePreviewSurface.tsx
+  - 链接：https://github.com/facebook/astryx/commit/9f0783f1272676e998c5340c849644b6858f9e49
+- `bf7eb8905` Migrate Crowdin GitHub Actions integration to native OAuth sync (#6433)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件
+  - 文件：.github/workflows/crowdin-download.yml、.github/workflows/crowdin-upload.yml、crowdin.yml
+  - 链接：https://github.com/facebook/astryx/commit/bf7eb89054d76add4edde830185647d901149dd0
+- `5471bed65` docs: add missing v0.6.3 changeset references (#6446)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/chat-composer-token-element-contract.md、.changeset/chat-dictation-button-unsupported-state.md
+  - 链接：https://github.com/facebook/astryx/commit/5471bed656093d51c4f630d71f21c4eea418156f
+- `2fedb8219` Configure Crowdin translation commits for PR CI (#6449)
+  - 原因：上游 monorepo 根配置与锁文件
+  - 文件：crowdin.yml
+  - 链接：https://github.com/facebook/astryx/commit/2fedb8219900f792c4ebd445036b7424b59f0e9a
+- `fc74d7eac` ci: skip component checks for internal scripts (#6337)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 CI 路由流程规范
+  - 文件：.github/scripts/change-scope.cjs、.github/scripts/change-scope.test.mjs、.github/scripts/component-audit-scope.cjs、.github/scripts/component-audit-scope.test.mjs、docs/specs/AST-030/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/fc74d7eacc818ddce913a6c1b7e70074fbbeb930
+- `7f5bd120a` docs: add final v0.6.3 changeset reference (#6452)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/bright-waves-clear.md
+  - 链接：https://github.com/facebook/astryx/commit/7f5bd120aba84e9dd9d299edf06d87a4004de433
+- `14d5f95d9` docs: add final v0.6.3 changeset references (#6468)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/chat-composer-drawer-badge-placement-8cq6.md、.changeset/selector-empty-mark-column.md、.changeset/slider-marks-fill-color.md、.changeset/slider-uses-the-track-token-for-unfilled-tick-ma-5nd1.md、.changeset/theme-scope-root-base-font.md、.changeset/toggle-button-click-action.md
+  - 链接：https://github.com/facebook/astryx/commit/14d5f95d931b4baf1538d153a66581bd02d66c87
+- `2932950a6` docs: add final v0.6.3 changeset reference (#6475)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/dialog-header-end-content-edge-compensation.md
+  - 链接：https://github.com/facebook/astryx/commit/2932950a69e7511482c8b6d8322538dca112ba72
+- `8492ddeee` chore: version packages for v0.6.3 (#6358)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/bottom-sheet-keyboard-scroll.md、.changeset/bright-waves-clear.md、.changeset/canvas-editor-template.md、.changeset/chat-composer-contracts.md、.changeset/chat-composer-drawer-badge-placement-8cq6.md、.changeset/chat-composer-drawer-hidden-focus.md、.changeset/chat-composer-input-observable-edits.md、.changeset/chat-composer-token-element-contract.md 等 57 个
+  - 链接：https://github.com/facebook/astryx/commit/8492ddeee2aab94cfc715384beb305d70bf9e5a6
+- `518bee8f1` chore(deps): bump the github-actions group across 2 directories with 2 updates (#6447)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/actions/setup/action.yml、.github/workflows/visual-acceptance-promote.yml
+  - 链接：https://github.com/facebook/astryx/commit/518bee8f120ef97c15c96022e87ab98eb06512f3
+- `ea2f048a7` ci: validate Visual Baseline inputs before promotion (#5520)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/gh-pages-publisher.test.mjs、.github/scripts/visual-gate/README.md、.github/scripts/visual-gate/gate-accept.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/baseline.mjs、.github/scripts/visual-gate/lib/baseline.test.mjs、.github/scripts/visual-gate/visual-baseline-workflow.test.mjs、.github/workflows/visual-baseline.yml
+  - 链接：https://github.com/facebook/astryx/commit/ea2f048a74804a114087c02f4d9951b4ded72243
+- `1f7db5ba2` ci: use one Storybook visual-regression workflow (#6486)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 CI 路由流程规范；上游 monorepo 根配置与锁文件；上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：.github/scripts/ci-tooling-routing.test.mjs、.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs、.github/scripts/lib/pr-preview.mjs、.github/scripts/lib/pr-preview.test.mjs、.github/scripts/lib/visual-format.js、.github/scripts/lib/visual-format.test.mjs、.github/scripts/spec-owner-reconcile.cjs 等 42 个
+  - 链接：https://github.com/facebook/astryx/commit/1f7db5ba2f997c9e8eaa86783cd9f5a66138581a
+- `1748644c1` fix(ci): release publication tickets when waiting fails (#6489)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/1748644c1597bef2e1a40e1e1df018ec4222c694
+- `9e4c5458d` Add component-local design decisions (#6502)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游知识库记录格式约定；上游贡献者与 AI 代理的工作说明
+  - 文件：.github/DESIGNOWNERS、.github/PULL_REQUEST_TEMPLATE/visual-update.md、.github/scripts/component-design-decisions.cjs、.github/scripts/component-design-decisions.test.mjs、.github/scripts/lib/classify-visual.js、.github/scripts/lib/classify-visual.test.mjs、.github/scripts/review-clear-workflow.test.mjs、.github/scripts/review-signal-decision.cjs 等 25 个
+  - 链接：https://github.com/facebook/astryx/commit/9e4c5458d2109fb175bec948a7520c8f8bdcc4b9
+- `fe3bf3a60` docs(spec): isolate playground storage and parent-page access (#6497)
+  - 原因：上游 CI 路由流程规范；上游 Next.js 文档站的交互与数据约定
+  - 文件：docs/specs/AST-030/spec.md、docs/specs/AST-033/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/fe3bf3a60c2db27015dffd78f3aed3c8999381a1
+- `c13ef6bc5` cli: drop the unused gpt-tokenizer peer (#6508)
+  - 原因：上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/cli-drop-gpt-tokenizer-peer.md、packages/cli/package.json、pnpm-lock.yaml
+  - 链接：https://github.com/facebook/astryx/commit/c13ef6bc576e4f5065e52d94084f484b985f00e9
+- `bea59f609` ci: dispatch canonical release checks on exact main (#6504)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 CI 路由流程规范
+  - 文件：.github/scripts/a11y-pr-scope.mjs、.github/scripts/a11y-pr-scope.test.mjs、.github/scripts/ci-test-routing.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/scripts/visual-gate/README.md、.github/scripts/visual-maintenance-workflow.test.mjs、.github/workflows/ci.yml、docs/specs/AST-030/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/bea59f609fdb4d9a7ddacf9dec969a8f640e3fb0
+- `c946b3b38` fix(ci): load review helper from the trusted workflow SHA (#6512)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/review-signal-workflow.test.mjs、.github/workflows/review-signal.yml
+  - 链接：https://github.com/facebook/astryx/commit/c946b3b386e722775128a7199b970e4282542fb2
+- `ebaebc469` ci: host PR Storybook previews with the docsite (#6506)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：.github/scripts/generate-pr-comment.js、.github/scripts/generate-pr-comment.test.mjs、.github/scripts/lib/gh-pages-publisher.mjs、.github/scripts/lib/gh-pages-publisher.test.mjs、.github/scripts/lib/pr-preview.mjs、.github/scripts/lib/pr-preview.test.mjs、.github/scripts/lib/vercel-preview.mjs、.github/scripts/lib/vercel-preview.test.mjs 等 20 个
+  - 链接：https://github.com/facebook/astryx/commit/ebaebc469a0c8315ee6364d6ed864e76b321e20f
+- `685131cad` docs(changesets): link v0.7.0 entries (#6602)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/add-non-rendering-timer.md、.changeset/authoring-docs-match-types.md、.changeset/authoring-types-nodenext.md、.changeset/button-icon-default-size.md、.changeset/cli-drop-gpt-tokenizer-peer.md、.changeset/codeblock-escape-highlight-names.md、.changeset/core-imperative-href-rule.md、.changeset/dialog-header-content-targets.md 等 19 个
+  - 链接：https://github.com/facebook/astryx/commit/685131cadfbd117db736a1af60cf63d55a0478c0
+- `ebdea30e9` fix(ci): resolve a11y scope from canonical component owners (#6562)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/a11y-pr-scope.mjs、.github/scripts/a11y-pr-scope.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/ebdea30e906934efb4ed090a90ea832085a2df24
+- `7210f0dc4` build(sandbox): migrate static export from Next to Vite (#6627)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游 monorepo 根配置与锁文件；上游内部 React 实验沙盒，不对外发布；上游自动生成的文档路由清单，随源码重生成
+  - 文件：apps/docsite/e2e/playground-preview-isolation.spec.ts、apps/sandbox/README.md、apps/sandbox/babel.config.js、apps/sandbox/css.d.ts、apps/sandbox/index.html、apps/sandbox/next-env.d.ts、apps/sandbox/next.config.mjs、apps/sandbox/package.json 等 46 个
+  - 链接：https://github.com/facebook/astryx/commit/7210f0dc49cb4c613485bf15a831768ea0c9692b
+- `29be688a6` ci: stage Vite Sandbox alongside Storybook in docsite previews (#6601)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：.github/scripts/generate-pr-comment.js、.github/scripts/lib/pr-preview.mjs、.github/scripts/lib/pr-preview.test.mjs、.github/scripts/lib/vercel-preview.mjs、.github/scripts/lib/vercel-preview.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/pr-comment.yml、apps/docsite/.gitignore 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/29be688a68ccc9179ad2150d36a82d1d7d0237fb
+- `ca469c764` docs(changesets): add missing PR citations (#6639)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/authoring-docs-debug-and-gap-report.md、.changeset/build-packed-consumer-dependencies.md、.changeset/chat-message-bubble-slots.md、.changeset/chat-message-list-numeric-empty-state.md、.changeset/cli-docs-topic.md、.changeset/cli-spec-agent-docs-confine-writes.md、.changeset/cli-spec-ascii-doc-text.md、.changeset/cli-spec-ascii-init-output.md 等 87 个
+  - 链接：https://github.com/facebook/astryx/commit/ca469c764479febbff61e310300cf1dcf960f229
+- `df1837b0a` chore: classify integration theme migration as patch (#6703)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/typed-theme-descriptors.md
+  - 链接：https://github.com/facebook/astryx/commit/df1837b0a219c2f4bb2f4054ed51491189104b6b
+- `395846ba4` feat: add experimental changeset category (#6705)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本；上游贡献者与 AI 代理的工作说明
+  - 文件：CONTRIBUTING.md、scripts/changeset-entry-format.cjs、scripts/changeset-new.mjs、scripts/check-changesets.mjs、scripts/check-changesets.test.mjs、scripts/format-changelogs.mjs、scripts/format-changelogs.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/395846ba4ff431c74abcb2c0c29a50a4d94464ce
+- `ca632c659` fix(crowdin): target GitHub-managed source context (#6713)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/crowdin-upload.yml
+  - 链接：https://github.com/facebook/astryx/commit/ca632c6594b03aa3933ce9b35d1f6128fbad7a47
+- `35a722f0b` fix(a11y): map ChatAdditions stories to Lab Chat scope (#6649)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/a11y-pr-scope.test.mjs、.github/scripts/lib/a11y-story-identity.js
+  - 链接：https://github.com/facebook/astryx/commit/35a722f0b56457f2cb075a55245c9760c7b6814a
+- `58ae2714a` ci: allow existing changeset reclassification with specs (#6775)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/change-scope.cjs、.github/scripts/change-scope.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/58ae2714a12620b2d4b1d9925b366a6efc5246af
+- `1687d46e9` chore: classify Layer boundary as patch (#6751)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/layer-text-boundary.md
+  - 链接：https://github.com/facebook/astryx/commit/1687d46e9d6c1958b2e8b07b2442f74a8ddcdf63
+- `dc3e46d2a` docs: complete v0.6.4 changeset audit (#6788)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/add-a-reusable-item-document-tabs-block-template-spdp.md、.changeset/avatar-group-wrapped-overlap.md、.changeset/avatar-initials-skip-punctuation.md、.changeset/chat-composer-input-disabled-height.md、.changeset/chat-metadata-empty-slots.md、.changeset/chat-system-message-wrap.md、.changeset/chat-tokenized-text-matching.md、.changeset/chat-tool-calls-accessibility.md 等 26 个
+  - 链接：https://github.com/facebook/astryx/commit/dc3e46d2abbfb4e709f81cc2ee47470cb907cc98
+- `9f3908b65` feat(docsite): host stable apps in production (#6763)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 Next.js 文档站的交互与数据约定；上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：.github/scripts/visual-gate/workflow-concurrency.test.mjs、apps/docsite/.gitignore、apps/docsite/next.config.mjs、apps/docsite/scripts/build-previews.mjs、apps/docsite/scripts/build-previews.test.mjs、apps/docsite/src/components/SiteFooter.tsx、docs/specs/AST-033/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/9f3908b6572ecb184b383c41fc07cc55fc853fec
+- `caa129cc6` fix(DropdownMenu): restore closed default story (#6806)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/DropdownMenu.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/caa129cc65a2d843de0a5505348b0e5309976e6d
+- `217f41d74` build(deps): bump next from 16.3.0-preview.5 to 16.3.6 in /apps/docsite (#6780)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游 monorepo 根配置与锁文件
+  - 文件：apps/docsite/package.json、pnpm-lock.yaml
+  - 链接：https://github.com/facebook/astryx/commit/217f41d74ec41aee7f6895ea53e8b6035831f3b7
+- `7ec7be07f` fix(docsite): show mobile navigation before hydration (#6786)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/e2e/mobile-navigation.spec.ts、apps/docsite/src/app/globals.css、apps/docsite/src/components/SharedTopNav.tsx
+  - 链接：https://github.com/facebook/astryx/commit/7ec7be07fd535eff1217bd1b32f3c51375ba70f8
+- `737ec59c2` fix(docsite): measure the whole AppShell header for --appshell-header-height (#6856)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）
+  - 文件：apps/docsite/e2e/header-offset.spec.ts、apps/docsite/src/__tests__/app-shell-header-height.test.tsx、apps/docsite/src/app/(site)/page.tsx、apps/docsite/src/app/globals.css、apps/docsite/src/components/SharedTopNav.tsx、apps/docsite/src/lib/useAppShellHeaderHeight.ts、docs/pr-assets/6856/docs-1440-scrolled-after.png、docs/pr-assets/6856/docs-1440-scrolled-before.png 等 12 个
+  - 链接：https://github.com/facebook/astryx/commit/737ec59c2909c23b33de6bb6e7df6fa0079eed2c
+- `77172aa36` fix(pages): restore Astryx landing (#6864)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/pages/assets/astryx.css、.github/pages/assets/manifest.json、.github/pages/assets/reset.css、.github/pages/assets/theme.css、.github/pages/index.html、.github/scripts/pages-landing.test.mjs、.github/workflows/pages-deploy.yml
+  - 链接：https://github.com/facebook/astryx/commit/77172aa365a59e9b0b048d2dc05f209737c75998
+- `10dd6839a` chore(i18n): add CommandPalette screenshot coverage (#6348)
+  - 原因：上游 Crowdin 翻译平台的截图上传脚本；上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/CommandPalette.stories.tsx、internal/scripts/README.md、internal/scripts/lib/crowdin-strategies.mjs、internal/scripts/upload-crowdin-screenshots.mjs
+  - 链接：https://github.com/facebook/astryx/commit/10dd6839aa91aa8750a71dca4a10af078fd8ef49
+- `2982c6157` fix(docsite): prevent stale template previews on opening and reopening (#6167)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/src/__tests__/template-preview-dialog.test.ts、apps/docsite/src/components/TemplatePreviewDialog.tsx
+  - 链接：https://github.com/facebook/astryx/commit/2982c61577f966bd176546a6445cdaa70c10bf13
+- `9711e3d44` ci: bind releases to marked branches (#6860)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：.github/scripts/ci-docsite-browser.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/scripts/release-publish-workflow.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/ci.yml、.github/workflows/release.yml、scripts/prune-branches.sh、scripts/release/active-release.mjs 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/9711e3d4483c7374e42318e03448aa14e31aeaed
+- `9cc70a9d4` chore: remove environment-specific metadata (#6881)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置；上游 monorepo 根配置与锁文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/public-package-identifiers.md、.github/scripts/release-publish-workflow.test.mjs、.github/workflows/release.yml、apps/storybook/stories/Markdown.stories.tsx、package.json、scripts/check-public-package-identifiers.mjs、scripts/check-public-package-identifiers.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/9cc70a9d4b820916fcbdc1c4d6ea97ff9388f3c2
+- `5e0f026f5` ci(changesets): refuse breaking work until a minor is scheduled (#6889)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本；上游贡献者与 AI 代理的工作说明
+  - 文件：CONTRIBUTING.md、scripts/check-changesets.mjs、scripts/release-admission.mjs、scripts/release-admission.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/5e0f026f5155af57beac06aa6278083379a98999
+- `078fd25e6` ci: match release sync to publisher runner (#6932)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/078fd25e6700fde0218362b8f2be1568febdb4d9
+- `1745a95d4` fix(release): compare packed manifests deterministically (#6936)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/release/verify-published.mjs、scripts/release/verify-published.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/1745a95d496290c11c41b3d3d359f9f215b547ba
+- `b2383744f` chore: sync v0.6.5 bookkeeping to main (#6931)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/button-shrinks-in-narrow-rows.md、.changeset/cli-component-batch-lookups.md、.changeset/cli-docs-last-pass.md、.changeset/cli-doctor-validates-integrations.md、.changeset/cli-files-changed-counts-files.md、.changeset/cli-parse-error-astryx-format.md、.changeset/cli-reference-last-pass.md、.changeset/cli-spec-pack-check-lifecycle-output.md 等 49 个
+  - 链接：https://github.com/facebook/astryx/commit/b2383744f4b7f666e6e9ecc4e82d948a5e9c7936
+- `760be1519` test(storybook): label the Markdown Serializers story's input textarea (#6982)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置
+  - 文件：.github/a11y-baseline.json、apps/storybook/stories/RichTextEditor.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/760be1519c6a6d5c9b48c46a339bb9418a91098b
+- `3811094fa` test(Layer): cover a side placement, which no viewport story exercised (#7011)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/Layer.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/3811094fa3ad63bb899c8625f1baa464c850953c
+- `a8b225143` fix(rtl-audit): give a worker a fresh page after a story fails on it (#7023)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置
+  - 文件：.github/scripts/rtl-audit-pool.test.mjs、apps/storybook/rtl-audit/rtl-audit-pool.mjs、apps/storybook/rtl-audit/rtl-audit.mjs
+  - 链接：https://github.com/facebook/astryx/commit/a8b2251434e185ebafab76679b45cb1a3b1c6049
+- `daa1c04f3` fix(ci): gate releases on exact main checks (#7105)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/daa1c04f3ccba7599c0e65104b787172f7c32b4f
+- `55fe415d7` Wait for Storybook interactions before visual capture (#6646)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/visual-gate/lib/capture.mjs、.github/scripts/visual-gate/lib/capture.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/55fe415d7deadd1a73f6e42eb08d0596eb545757
+- `a08120314` build(deps): update Next.js examples to 16.3.6 (#6808)
+  - 原因：上游 Next.js、Vite 的 React 示例应用
+  - 文件：apps/example-nextjs-source/README.md、apps/example-nextjs-source/next-env.d.ts、apps/example-nextjs-source/package.json、apps/example-nextjs-source/tsconfig.json、apps/example-nextjs-stylex/next-env.d.ts、apps/example-nextjs-stylex/package.json、apps/example-nextjs-stylex/tsconfig.json、apps/example-nextjs-tailwind/next-env.d.ts 等 13 个
+  - 链接：https://github.com/facebook/astryx/commit/a08120314795e22e4c3cd25abc7ae89517b285f7
+- `44f7fdac9` fix(ci): load the review-clear decision helper from the workflow's own commit, not the PR base (#7108)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/review-clear-workflow.test.mjs、.github/workflows/review-clear.yml
+  - 链接：https://github.com/facebook/astryx/commit/44f7fdac9138a19af2a6bbe881dca312be4cd8be
+- `9a35bb574` fix(release): preserve post-cut manifest fields (#7159)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/release/active-release.mjs、scripts/release/active-release.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/9a35bb574b706b88a3619d59996240acfee4477f
+- `e1dda1738` chore: sync v0.6.6 release bookkeeping (#7155)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/add-upload-semantic-icon.md、.changeset/announce-the-empty-state-shown.md、.changeset/base-typeahead-reopen-on-click.md、.changeset/bottom-sheet-container-padding.md、.changeset/build-template-keywords.md、.changeset/build-word-weights.md、.changeset/card-yields-to-track.md、.changeset/chat-token-line-alignment.md 等 119 个
+  - 链接：https://github.com/facebook/astryx/commit/e1dda173838f570f526814e94f696f6ce9a1e0bf
+- `408ad59b0` docs: allow release cuts from checked main ancestors (#7121)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 CI 路由流程规范
+  - 文件：.github/scripts/visual-gate/README.md、docs/specs/AST-030/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/408ad59b0fed2100fe19726820f5246b91a5d3c9
+- `dc3a939c9` test(command-palette): add group audit fixture (#7166)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/rtl-audit/verified-not-applicable.json、apps/storybook/stories/CommandPaletteGroup.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/dc3a939c9ab82a0809067bc2f7c90e99f30a4bef
+- `1f4eb3c7f` docs(changeset): record layout namespace guides (#7171)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/layout-docs-namespace.md
+  - 链接：https://github.com/facebook/astryx/commit/1f4eb3c7fe6f0076bd92a8361742f166795fc523
+- `13d926e28` fix(docsite): expose sidebar search before hydration (#7178)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/e2e/mobile-navigation.spec.ts、apps/docsite/src/app/globals.css、apps/docsite/src/components/DocsShell.tsx
+  - 链接：https://github.com/facebook/astryx/commit/13d926e283709f24d01adde9394f07f388e62608
+- `d8becc8a2` ci(changesets): check Changeset coverage on pull requests with the release classifier (#7195)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游贡献者与 AI 代理的工作说明
+  - 文件：.github/scripts/change-scope.cjs、.github/workflows/lint.yml、CONTRIBUTING.md、scripts/lib/workspace-globs.mjs、scripts/release/active-release.mjs、scripts/release/changeset-coverage.mjs、scripts/release/changeset-coverage.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/d8becc8a204a55f26778376651250d3aeced554c
+- `c4df65c16` fix(docsite): keep one full page per topic when the CLI splits its docs (#7199)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/next.config.mjs、apps/docsite/scripts/docs-pages.mjs、apps/docsite/scripts/generate-data.mjs、apps/docsite/src/__tests__/docs-pages.test.ts、apps/docsite/src/__tests__/route-resolution.test.ts、apps/docsite/src/components/codeLinkifiers.ts、apps/docsite/src/components/docs/ReferenceDocView.tsx、apps/docsite/src/components/docs/docOutline.ts
+  - 链接：https://github.com/facebook/astryx/commit/c4df65c164f0cd3e1089a2a530230fc61de55338
+- `0d27f8379` test(richtext): give the readout panels in two RichText stories theme colors, so they read in dark mode (#7218)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/RichTextEditor.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/0d27f8379374e5a4165baa0554c6fe8045fd749b
+- `8442f2df3` docs: restore v0.6.7 Changeset coverage (#7234)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/styling-overview-theme-workflow.md、.changeset/theme-guides-split.md
+  - 链接：https://github.com/facebook/astryx/commit/8442f2df37588df82bdcd09b35456fff3180296b
+- `951ef200b` docsite: bring back the CLI Integrations and Writing docs pages (#7230)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/next.config.mjs、apps/docsite/scripts/docs-pages.mjs、apps/docsite/scripts/generate-data.mjs、apps/docsite/src/__tests__/docs-pages.test.ts、apps/docsite/src/__tests__/route-resolution.test.ts
+  - 链接：https://github.com/facebook/astryx/commit/951ef200bf77fc4e7c84fb91a6e5dbb195cba049
+- `7c8ddf211` [Component Audit] ContextMenuItem: make browser evidence trustworthy (#7237)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置
+  - 文件：.github/scripts/accessibility-audit.integration.test.mjs、.github/scripts/accessibility-audit.js、.github/workflows/ci.yml、apps/storybook/rtl-audit/targets.json、apps/storybook/stories/ContextMenuItem.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/7c8ddf211857860971bf3c57d755742bc52bcad1
+- `2531d8d23` docs(spec): define the human presentation of a spec (AST-070) (#7244)
+  - 原因：上游规范记录的写作格式约定（草稿已删除）
+  - 文件：docs/specs/AST-070-spec-human-presentation/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/2531d8d238bc5ca11b5c2437970b396f439c096a
+- `4447ae704` fix(release): accept tag-owned sync renames (#7254)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/release/active-release.mjs、scripts/release/active-release.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/4447ae70499ac4188c7184d56ec8afd6492ed08d
+- `5275d894a` fix(ci): route validated release syncs around Changeset coverage (#7258)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-publish-workflow.test.mjs、.github/workflows/lint.yml
+  - 链接：https://github.com/facebook/astryx/commit/5275d894a0030a526e8d4475a2e643b05627251e
+- `724a02b93` Accept relayed owner decisions in the spec owner gate (#7282)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）
+  - 文件：.github/REVIEW_GATE.md、.github/scripts/spec-owner-decision.cjs、.github/scripts/spec-owner-decision.test.mjs、.github/scripts/spec-owner-reconcile.cjs、.github/scripts/spec-owner-reconcile.test.mjs、.github/scripts/spec-owner-workflow.test.mjs、.github/workflows/spec-owner-gate.yml、docs/README.md
+  - 链接：https://github.com/facebook/astryx/commit/724a02b93c8c571b3c3dd3caa0908dc783537f41
+- `037dfb6a8` docs(spec): remove draft AST-070 spec human-presentation record (#7278)
+  - 原因：上游规范记录的写作格式约定（草稿已删除）
+  - 文件：docs/specs/AST-070-spec-human-presentation/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/037dfb6a89c6d5bba7a6af9c8d59b7a5476890de
+- `97372707d` ci(release): main declares the version; release branches admit and version against it (#7249)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游 monorepo 的构建、发布与 CI 辅助脚本；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游贡献者与 AI 代理的工作说明
+  - 文件：.github/scripts/release-publish-workflow.test.mjs、.github/workflows/ci.yml、.github/workflows/lint.yml、.github/workflows/release.yml、CONTRIBUTING.md、docs/release.md、package.json、scripts/check-changesets.mjs 等 18 个
+  - 链接：https://github.com/facebook/astryx/commit/97372707d365f0d9967759c5c05c648507fff45f
+- `83f635a8e` fix(ci): keep checked release heads valid as main advances (#7119)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/83f635a8e4f93f1a585901b5e982cb12e0cdfdec
+- `4b7e277d6` chore(release): declare v0.6.8 on main (#7285)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点
+  - 文件：.github/pages/assets/manifest.json、.github/pages/assets/theme.css、packages/build/package.json、packages/charts/package.json、packages/cli/package.json、packages/core/package.json、packages/lab/package.json、packages/richtext/package.json 等 17 个
+  - 链接：https://github.com/facebook/astryx/commit/4b7e277d641383943fa94a85debb4204fec60a62
+- `47eb0dde0` chore: sync v0.6.8 release bookkeeping (#7314)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/appshell-preserve-breakpoint-state.md、.changeset/calm-colors-guide.md、.changeset/column-resize-coarse-pointer-keyboard.md、.changeset/column-resize-hover-affordance.md、.changeset/daterangeinput-audit-semantics.md、.changeset/datetimeinput-controlled-empty-calendar.md、.changeset/dropdown-menu-held-finger-lift.md、.changeset/dropdown-menu-item-host-attributes.md 等 43 个
+  - 链接：https://github.com/facebook/astryx/commit/47eb0dde0458660e2587e328ff553caaa706ac39
+- `1699958bd` chore: declare v0.7.0 as the next release plan (#7315)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点
+  - 文件：.github/pages/assets/manifest.json、.github/pages/assets/theme.css、packages/build/package.json、packages/charts/package.json、packages/cli/package.json、packages/core/package.json、packages/lab/package.json、packages/richtext/package.json 等 17 个
+  - 链接：https://github.com/facebook/astryx/commit/1699958bd05ffd7645574375e905d46ca6d7c14c
+- `450c68db9` fix(changesets): block breaking work on patch plans (#7290)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/check-changesets.mjs、scripts/check-changesets.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/450c68db9b03216010b6d863324a27cc2fd92ae4
+- `0686fad6b` ci(release): separate merge-back from next plan (#7292)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：.github/scripts/release-publish-workflow.test.mjs、.github/workflows/ci.yml、.github/workflows/lint.yml、.github/workflows/release.yml、scripts/release/active-release.mjs、scripts/release/active-release.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/0686fad6b6c9405f39c500a350e09b1a060c88ee
+- `8e468f0ca` release: generate the minor description at cut (#7317)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/release/active-release.mjs、scripts/release/active-release.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/8e468f0ca3b2252e652d1faa5b0b3854d9871cfb
+- `5b6c74784` fix(ci): check:changesets fails closed when no plain minor is declared (#7361)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/check-changesets.mjs、scripts/check-changesets.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/5b6c74784f2b9b578f6fec99becc98f81e01b82e
+- `ed0723395` docs(release): clear the editorial gate on the Version Packages PR before it merges; finish the CDN smoke-test comment (#7362)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）；上游贡献者与 AI 代理的工作说明
+  - 文件：.github/scripts/cdn-template-smoke-test.mjs、CONTRIBUTING.md、docs/release.md
+  - 链接：https://github.com/facebook/astryx/commit/ed072339529a71b3c648160af9838c12f235c90e
+- `ac4cb8cd1` ci(pr-comment): a rerun of the trusted source run is not a new identity (#7377)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/lib/pr-preview.mjs、.github/scripts/lib/pr-preview.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/ac4cb8cd157198a249e1da8a2d8671f2ab24d08a
+- `d60038b04` fix(docsite): generated theming docs keep only the fields the registry types declare (#7376)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/scripts/generate-data.mjs、apps/docsite/scripts/lib/theming-doc.mjs、apps/docsite/src/__tests__/theming-doc-projection.test.ts
+  - 链接：https://github.com/facebook/astryx/commit/d60038b04987181f14e6b84fdbe7d29274797ddb
+- `19b1c00b5` docs(blog): post headings get copy-link anchors (#7384)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/e2e/blog-heading-links.spec.ts、apps/docsite/src/__tests__/blog-heading-links.test.tsx、apps/docsite/src/components/blog/BlogArticle.tsx、apps/docsite/src/components/blog/BlogPostBody.module.css、apps/docsite/src/components/blog/BlogPostBody.tsx
+  - 链接：https://github.com/facebook/astryx/commit/19b1c00b5ab68403e46f6b3e1bbdfbb94c5f5747
+- `eaca8ebae` docs(site): blog images named @2x render at half their pixel width (#7385)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/scripts/generate-data.mjs、apps/docsite/scripts/lib/blog-images.mjs、apps/docsite/src/__tests__/blog-image-sizes.test.ts、apps/docsite/src/__tests__/themed-image-2x.test.tsx、apps/docsite/src/components/blog/ThemedImage.tsx、apps/docsite/src/content/blog/README.md
+  - 链接：https://github.com/facebook/astryx/commit/eaca8ebae6b86a37dee7357905d0285863733e9f
+- `97a0d3109` chore: drop reverted Toolbar changeset (#7394)
+  - 原因：上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/compact-toolbar-padding-alignment-7zb3.md
+  - 链接：https://github.com/facebook/astryx/commit/97a0d31091483ea2a3041abdb11e7b49330f3959
+- `f82a7c636` ci(rtl-audit): one LTR story load for D5 and D6 (#7398)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/rtl-audit/README.md、apps/storybook/rtl-audit/rtl-audit.mjs
+  - 链接：https://github.com/facebook/astryx/commit/f82a7c63670d4789d2f9079375734c3142162762
+- `ed2c62f75` ci: run typechecks beside build-storybook, not before it (#7399)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/ci-tooling-routing.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/ed2c62f75951ba3d974ca8fe5f361fde8ce52eb0
+- `121e8c521` ci(analyze-pr): stop doc anatomy parts from widening PR audits (#7396)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/analyze-pr.js、.github/scripts/analyze-pr.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/121e8c5210d1c00f6a75725e142841bedf7f0ec0
+- `25c0653b7` ci: run release a11y contracts beside the axe audit (#7407)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/ci-test-routing.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/25c0653b7067b4252c3dc1ce04b3a8c7783d7f77
+- `9db7a36ba` docs(spec): AST-030 no longer lists the Probe reach sweep as release-only work (#7406)
+  - 原因：上游 CI 路由流程规范
+  - 文件：docs/specs/AST-030/spec.md
+  - 链接：https://github.com/facebook/astryx/commit/9db7a36ba2f545adf5e27da41b00fe44837db5bd
+- `4bcf9c76a` ci(a11y): scan stories on four pages at once, after layout settles (#7410)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/accessibility-audit.integration.test.mjs、.github/scripts/accessibility-audit.js、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/4bcf9c76a0ade580694c67ed9450a7adee5d8e91
+- `d24b0d4ac` ci(rtl): run eight pages per RTL shard instead of four (#7411)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/ci-test-routing.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/d24b0d4acc082757298ec17ec7818b5ca3959f3d
+- `5c2d7f75c` ci(a11y): scan the release check's full axe roster in three shards (#7416)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/accessibility-audit.js、.github/scripts/ci-test-routing.test.mjs、.github/scripts/lib/a11y-shards.js、.github/scripts/lib/a11y-shards.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/5c2d7f75c9ad5d29a89bc2d93bf414e2e0b8559a
+- `ff40b78b5` chore: plan v0.7.1 (#7423)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点
+  - 文件：.github/pages/assets/manifest.json、.github/pages/assets/theme.css、packages/build/package.json、packages/charts/package.json、packages/cli/package.json、packages/core/package.json、packages/lab/package.json、packages/richtext/package.json 等 17 个
+  - 链接：https://github.com/facebook/astryx/commit/ff40b78b5b34bb549905ad0672425ea51d830306
+- `302fcd28d` ci(rtl): audit Core RTL in three parts and join them (#7419)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置
+  - 文件：.github/scripts/ci-test-routing.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/scripts/rtl-audit-shards.test.mjs、.github/scripts/rtl-scorecard-summary.mjs、.github/workflows/ci.yml、apps/storybook/rtl-audit/README.md、apps/storybook/rtl-audit/rtl-audit-shards.mjs、apps/storybook/rtl-audit/rtl-audit.mjs
+  - 链接：https://github.com/facebook/astryx/commit/302fcd28d75696ba581349b61eccade13467e5ad
+- `526363d5c` ci(visual): scout the full visual plan in three parallel shards (#7414)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/scripts/visual-gate/lib/scout-shards.mjs、.github/scripts/visual-gate/lib/scout-shards.test.mjs、.github/scripts/visual-gate/workflow-concurrency.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/526363d5c48ab18aa522a6c18a177c4cb0f83978
+- `bdb880192` ci: run the Node test suite on four cores (#7418)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/ci-test-routing.test.mjs、.github/workflows/ci.yml、.github/workflows/deploy.yml
+  - 链接：https://github.com/facebook/astryx/commit/bdb88019274c0a6d87907137e88b86bc9fd23fb1
+- `30b6e1bb7` ci(a11y): run the release spec-test contracts on four workers (#7415)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 monorepo 根配置与锁文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml、playwright.config.ts
+  - 链接：https://github.com/facebook/astryx/commit/30b6e1bb73b80c34516a44f148a7df47783c51bc
+- `88f3aa570` ci(a11y): split the release spec-test contracts into three shards (#7432)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/ci-test-routing.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/88f3aa57089d7945a5781b3c612ca49d688b000d
+- `e897146a3` ci(a11y): run the contract shards on four cores (#7439)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/e897146a31707b73869a823a2e119580b70194c9
+- `06e35f5a8` ci: run the visual scout and axe shard legs on four cores (#7441)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/scripts/visual-gate/gate.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/06e35f5a82646bfca9e667ea2dc2b1ea6f45460c
+- `95509222d` ci: shallow-clone check-scope except for release-branch validation (#7448)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/95509222de668ab1f81b5d362ef381b05f91e327
+- `1ed2b258b` ci(visual): use the downloaded Core dist instead of rebuilding Core (#7449)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/1ed2b258b5a72d0ae9707d712721e8534bea3530
+- `2b6d1299a` ci: overlap the package builds and the Storybook build (#7447)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/build-packages-and-storybook.mjs、.github/scripts/build-packages-and-storybook.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/2b6d1299a6272e5788d78534c915fc48f31749f9
+- `f939111e2` ci(a11y): split the contract legs by recorded duration (#7450)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/a11y-contract-durations.json、.github/scripts/a11y-contract-shard.mjs、.github/scripts/a11y-contract-shard.test.mjs、.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/f939111e231ff7c9034fd3537ea517c30d84913e
+- `a4ad9fd03` ci(a11y): pass contract file filters before --project (#7453)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/release-check-workflow.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/a4ad9fd0335e8e327c54cf16ac422923bc3e9fbc
+- `c4df9223b` test(a11y): give contract tests a 60 s default timeout (#7456)
+  - 原因：上游 monorepo 根配置与锁文件
+  - 文件：playwright.config.ts
+  - 链接：https://github.com/facebook/astryx/commit/c4df9223bbff84472b67176b569857a3bb83f40c
+- `7d9d2970a` ci(a11y): scope PR evidence steps by the merge-base diff (#7470)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/scripts/pr-scope-touches.sh、.github/scripts/pr-scope-touches.test.mjs、.github/workflows/ci.yml
+  - 链接：https://github.com/facebook/astryx/commit/7d9d2970add7df943328bd512e74d0dd9d943e9a
+- `328a1c788` build(core): fail the core build on unsupported StyleX declarations (#6830)
+  - 原因：StyleX 专用校验，Vue 版不用 StyleX；上游 Babel、tsup、TypeScript 构建配置；Vue 版用自己的 tsdown 与 tsconfig；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/core-stylex-throw-validation.md、packages/core/babel.config.json、stylexValidation.source-build.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/328a1c788744738553b121f7ea17f297fa1f0752
+- `17306ce7a` test(storybook): add chart theming evidence (#7486)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件；上游 React Storybook 故事与配置；上游 monorepo 根配置与锁文件
+  - 文件：.github/scripts/story-play-guard.js、apps/storybook/package.json、apps/storybook/stories/ChartThemingCanvas.stories.tsx、apps/storybook/stories/ChartThemingColorPicker.stories.tsx、apps/storybook/stories/ChartThemingRecharts.stories.tsx、apps/storybook/stories/ChartThemingVega.stories.tsx、apps/storybook/stories/chartThemingUtils.ts、pnpm-lock.yaml
+  - 链接：https://github.com/facebook/astryx/commit/17306ce7a4a3a50161065a2d8347ebe6d44d390c
+- `9d2b65628` chore(storybook): ChatComposerInput punctuation trigger story (#7553)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/ChatComposerInput.stories.tsx
+  - 链接：https://github.com/facebook/astryx/commit/9d2b65628e7057582510acbaa71cbf4e2bf5d243
+- `9e09cec49` feat(docsite): document stable integration packages on the production site (#7393)
+  - 原因：上游 Next.js 文档站的框架代码、博客与配置，Vue 版文档站自成体系
+  - 文件：apps/docsite/README.md、apps/docsite/astryx.config.mjs、apps/docsite/scripts/generate-data.mjs、apps/docsite/scripts/generate-playground-types.mjs、apps/docsite/scripts/generate-scope.mjs、apps/docsite/scripts/resolve-content-root.mjs、apps/docsite/src/__tests__/data-extraction.test.ts、apps/docsite/src/__tests__/integration-targets.test.ts 等 11 个
+  - 链接：https://github.com/facebook/astryx/commit/9e09cec496fd69f77d4f5a24ec66c0098aad6105
+- `4fe4a3c4a` spec(react-component-runtime): INV2 names consumer callbacks fired from Effects (#7348)
+  - 原因：React 组件运行时约定（Effect、ref 等），Vue 无对应
+  - 文件：docs/architecture/react-component-runtime.md
+  - 链接：https://github.com/facebook/astryx/commit/4fe4a3c4a62ae6c2465be914c26f6aa7db5c7801
+- `9025ab343` fix(storybook): the RichText playground imports Lexical's Transformer type from @lexical/markdown (#7571)
+  - 原因：上游 React Storybook 故事与配置
+  - 文件：apps/storybook/stories/RichTextEditor.playground.tsx
+  - 链接：https://github.com/facebook/astryx/commit/9025ab3434c5489570d0a355d04bc1be6026406d
+- `878fad9d7` test(visual): adopt the RichText stable story baselines (#7574)
+  - 原因：上游 CI 工作流、视觉回归基线截图和仓库治理文件
+  - 文件：.github/visual-baseline/manifest.json、.github/visual-baseline/shots/richtext-richtexteditor--default__neutral-dark.png、.github/visual-baseline/shots/richtext-richtexteditor--default__neutral-light.png、.github/visual-baseline/shots/richtext-richtexteditor--markdown-parity__probe-dark.png、.github/visual-baseline/shots/richtext-richtexteditor--markdown-parity__probe-light.png
+  - 链接：https://github.com/facebook/astryx/commit/878fad9d7ac23cd3f4c5def64595abd770bb01a3
+- `3649b4370` fix(packages): richtext, lab, and charts keep their stylesheet in bundles (AST-080 FR4) (#7586)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本；上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/package-stylesheet-side-effects.md、packages/charts/package.json、packages/lab/package.json、packages/richtext/package.json、scripts/package-stylesheet-side-effects.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/3649b43706e58f739c175649037f87a22b5f0fc7
+- `c529db222` fix(specs): use current repository approver membership (#7538)
+  - 原因：上游 monorepo 的构建、发布与 CI 辅助脚本
+  - 文件：scripts/check-knowledge.mjs、scripts/check-knowledge.test.mjs
+  - 链接：https://github.com/facebook/astryx/commit/c529db22253b66d5a28ba665a4cd0c1be74c4a60
+- `6243dfd0f` chore: mark v0.7.1 release branch
+  - 原因：上游发布流程的状态文件
+  - 文件：.release/active.json、.release/plan.json
+  - 链接：https://github.com/facebook/astryx/commit/6243dfd0fc3ee647c30d2ca0a09370cda070f298
+- `44f7244dd` chore: version packages for v0.7.1 (#7593)
+  - 原因：上游各包的更新日志，由上游发布流程生成；上游的 changeset 变更记录，我们有自己的 changeset
+  - 文件：.changeset/alert-dialog-doc-surface-part.md、.changeset/base-typeahead-stale-focus-bootstrap.md、.changeset/bottom-sheet-focus-return-last-input.md、.changeset/calendar-controlled-empty.md、.changeset/calendar-page-keys.md、.changeset/calendar-skip-outside-days.md、.changeset/calendar-week-corner-role.md、.changeset/chat-trigger-allow-spaces.md 等 76 个
+  - 链接：https://github.com/facebook/astryx/commit/44f7244dd518ca07f8cc9f238fad8c0495b2f44e
