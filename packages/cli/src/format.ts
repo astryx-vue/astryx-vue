@@ -2,7 +2,7 @@ import type { BuildKit, KitComponent, TemplateMatch } from './build.ts'
 import type { ComponentRecord, TableGroup, TableRow, TemplateRecord, TopicRecord } from './catalog-types.ts'
 import type { SearchHit } from './query.ts'
 import type { CopyReceipt } from './templates.ts'
-import { text } from './catalog.ts'
+import { examplesFor, text } from './catalog.ts'
 import { firstSentence } from './generate/markdown.ts'
 import { displayName } from './query.ts'
 import { BINARY } from './spec.ts'
@@ -79,7 +79,7 @@ function formatDetail(record: ComponentRecord, locale: 'en' | 'zh', dense: boole
         : []
     const slots = record.slots[locale].flatMap(group => group.rows.map(row => row.name))
     const events = record.events[locale].flatMap(group => group.rows.map(row => row.name))
-    const examples = record.examples[locale].map(example => example.title).filter(Boolean)
+    const examples = examplesFor(record, locale).map(example => example.title).filter(Boolean)
     const lines = [
       [name, record.importPath ?? '', text(record.groupTitle, locale)].filter(Boolean).join('  '),
       firstSentence(summary),
@@ -111,7 +111,7 @@ function formatDetail(record: ComponentRecord, locale: 'en' | 'zh', dense: boole
     for (const practice of practices)
       lines.push(`- ${practice.guidance}: ${practice.text}`)
   }
-  const examples = record.examples[locale]
+  const examples = examplesFor(record, locale)
   if (examples.length > 0) {
     lines.push('', '## Examples', '')
     for (const example of examples) {

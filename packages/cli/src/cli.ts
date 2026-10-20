@@ -9,7 +9,7 @@ import process from 'node:process'
 import packageJson from '../package.json' with { type: 'json' }
 import { applyManagedBlock, existingAgentDocs, renderAgentBlock, resolveAgentTargets } from './agents.ts'
 import { buildKit } from './build.ts'
-import { catalog, localeOf, text } from './catalog.ts'
+import { catalog, examplesFor, localeOf, text } from './catalog.ts'
 import { errorEnvelope, successEnvelope } from './envelope.ts'
 import { CliError } from './error.ts'
 import { formatBuildHelp, formatBuildKit, formatComponentDetail, formatComponentList, formatComposableDetail, formatComposableList, formatRootHelp, formatSearch, formatTemplateCopy, formatTemplateDetail, formatTemplateList, formatTemplateSkeleton, formatTopicDetail, formatTopicList } from './format.ts'
@@ -348,7 +348,7 @@ function recordDetail(record: ComponentRecord, locale: 'en' | 'zh'): Record<stri
     slots: record.slots[locale],
     events: record.events[locale],
     notes: record.notes[locale],
-    examples: record.examples[locale],
+    examples: examplesFor(record, locale),
     anatomy: record.anatomy[locale],
     accessibility: record.accessibility[locale],
     docsUrl: text(record.docsUrl, locale),

@@ -1,7 +1,7 @@
 import type { ComponentRecord, TemplateRecord, TopicRecord } from './catalog-types.ts'
 import type { Suggestion } from './error.ts'
 import type { SearchType } from './spec.ts'
-import { catalog, componentNames, text } from './catalog.ts'
+import { catalog, componentNames, examplesFor, text } from './catalog.ts'
 import { CliError } from './error.ts'
 import { BINARY } from './spec.ts'
 
@@ -215,7 +215,7 @@ function scoreComponent(query: string, record: ComponentRecord, locale: 'en' | '
     text(record.title, locale),
     record.group,
     ...record.props[locale].flatMap(group => group.rows.map(row => row.name)),
-    ...record.examples[locale].flatMap(example => [example.title, example.description]),
+    ...examplesFor(record, locale).flatMap(example => [example.title, example.description]),
   ])
   if (!scored)
     return null

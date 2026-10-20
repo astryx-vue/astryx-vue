@@ -166,6 +166,8 @@ The CLI does not keep a second copy of the component docs. `packages/cli/scripts
 
 The template descriptions and keywords are hand-written in `packages/cli/src/generate/template-meta.ts`. They are source data, not a generated file.
 
+Example titles and descriptions are kept once per language, but the example code is stored once for both: both pages point at the same `.vue` file. The generator stops with an error naming the component and the example number if the two pages ever show different code, so one language cannot silently borrow the other's snippet. `examplesFor()` in `packages/cli/src/catalog.ts` is the only place that picks a language back out.
+
 The result is committed at `packages/cli/src/generated/catalog.json`. `pnpm --filter @astryx-vue/cli build` regenerates it and bundles it into `dist`, which is what the published tarball runs. After a docs or template change, regenerate it and commit the diff:
 
 ```sh
