@@ -5,16 +5,47 @@ title: 主题概览
 
 # 主题概览
 
-主题决定组件的颜色、字体、圆角、阴影和动画时长。组件的结构样式在 `@astryx-vue/core`。
+如果把组件看作房子的骨架，那主题就是给房子做硬装和软装：它决定了按钮是什么颜色、文字用什么字体、卡片四角有多圆润、阴影有多深，以及点一下时动画动得多快。组件本身的骨架和排版结构已经内置在 `@astryx-vue/core` 里，样式和配色则全部由主题包 `@astryx-vue/themes` 提供。
+
+## 最简单的起步方式
+
+在整个应用的主入口（如 `main.ts`）引入默认的 Neutral 主题样式文件：
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-把 `data-astryx-theme="neutral"` 写在要使用这套主题的元素上。写在 `html` 上就是整站，写在更小的元素上就只影响那一块。Neutral 还会把同一批变量写到 `:root`，所以只使用 Neutral 时，引入 `neutral.css` 即可。其余主题不会改 `:root`。
+因为 Neutral 会自动把一套基础变量写入根节点 `:root`，所以只要引入了 `neutral.css`，你的整个网页就默认拥有了标准的黑白灰配色与字体，甚至不需要在标签上手动加任何属性。
 
-每套主题都会带上 Figtree 和 JetBrains Mono。Butter、Chocolate、Gothic、Matcha、Stone 和 Y2K 还会加载各自的正文字体。
+## 切换或局部使用其他主题
+
+如果你想让整个网站或者某个局部区块换上别的主题（例如温暖柔和的 Butter、清新自然的 Matcha），只需给对应的 HTML 标签加上 `data-astryx-theme` 属性：
+
+```html
+<!-- 整个网页换主题：直接加在 html 或 body 标签上 -->
+<html data-astryx-theme="butter">
+  ...
+</html>
+
+<!-- 局部区块换主题：只让这个卡片使用巧克力主题 -->
+<div data-astryx-theme="chocolate">
+  <Button label="特色操作" />
+</div>
+```
+
+**提示：**
+- 只有默认的 Neutral 会改动全局的 `:root`。其他预设主题（Butter、Chocolate、Gothic、Matcha、Stone、Y2K）都严格通过属性选择器 `[data-astryx-theme='...']` 生效，绝不会悄悄污染外部其他区域的样式。
+- 所有主题都会自带并加载西文字体 Figtree 与等宽代码字体 JetBrains Mono。像 Butter、Chocolate、Gothic、Matcha、Stone、Y2K 还会额外按需下载它们特有的特色标题字体。
+
+## 主题画廊
+
+你可以点击下方画廊直观感受每套主题的视觉风格：
 
 <ThemeGallery />
 
-各套主题的引入方式见 [Neutral](/themes/neutral)、[Butter](/themes/butter)、[Chocolate](/themes/chocolate)、[Gothic](/themes/gothic)、[Matcha](/themes/matcha)、[Stone](/themes/stone)、[Y2K](/themes/y2k)。变量名是共用的，说明在 [CSS 变量](/themes/css-variables)。[Design token](/themes/tokens) 和这些变量怎么对应，以及 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画](/themes/motion)，都写在旁边。只改个别取值时，看 [扩展主题](/themes/extending)。要把一份主题对象套到某一棵子树上，用 [主题](/components/theme)、[媒体主题](/components/media-theme) 和 [语法主题](/components/syntax-theme)。
+## 深入了解更多
+
+- **查看各套主题详细信息：** [Neutral](/themes/neutral)、[Butter](/themes/butter)、[Chocolate](/themes/chocolate)、[Gothic](/themes/gothic)、[Matcha](/themes/matcha)、[Stone](/themes/stone)、[Y2K](/themes/y2k)。
+- **底层原理与变量规范：** 想知道所有可用的样式变量名，看 [CSS 变量](/themes/css-variables)；想了解变量与原始设计规范的映射关系，看 [Design token](/themes/tokens)。
+- **各维度配置详解：** 查看 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画刻度](/themes/motion) 以及 [间距、圆角与阴影](/themes/scale)。
+- **自定义微调：** 如果只想改某几个数值或品牌色，可以参考 [扩展主题](/themes/extending)；若需要在 Vue 模板里动态给局部子组件树套用计算后的主题对象，推荐使用 [Theme 主题容器](/components/theme)、[MediaTheme 媒体主题](/components/media-theme) 和 [SyntaxTheme 语法高亮主题](/components/syntax-theme)。

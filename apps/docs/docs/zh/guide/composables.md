@@ -4,48 +4,50 @@ title: 组合式函数
 
 # 组合式函数
 
-组合式函数从包根引入：
+组件库将许多强大的交互逻辑和无障碍底层能力，封装成了易于复用的 Vue 3 组合式函数（Composables）。通用函数可以直接从包根统一引入：
 
 ```ts
 import { useClipboard, useControllableState } from '@astryx-vue/core'
 ```
 
-没有 `@astryx-vue/core/composables` 这个子路径。`packages/core/src/composables/index.ts` 里导出的函数如下。参数以类型定义为准。
+> **注意**：包内没有 `@astryx-vue/core/composables` 这种子路径。所有在 `packages/core/src/composables/index.ts` 中导出的通用函数如下表所示，具体参数签名以 TypeScript 类型定义为准：
 
-| 函数 | 做什么 |
+| 函数名称 | 主要用途 |
 | --- | --- |
-| `useControllableState` | 受控或自己管的 `v-model`。setup 时没传入值就一直自己管。 |
-| `useAnnounce` | 向读屏播报。对应原版 `useAnnounce`。 |
-| `useClipboard` | 写入剪贴板，并在一段时间内把 `isCopied` 设为 true。 |
-| `useHotkeys` | 全局快捷键。`mod+k` 这种写法，`mod` 在 Apple 平台是 ⌘。 |
-| `useMediaQuery` | 把一条 media query 收成 ref。setup 时就读一次。 |
-| `useDismiss` | 浮层的点击外部和 Escape。Escape 走一层栈，最内层先处理。 |
-| `useFocusTrap` | 在容器里循环 Tab。 |
-| `useRestoreFocus` | 浮层打开时记住焦点，关闭时还回去。 |
-| `useScrollLock` | 按引用计数锁住 `body` 滚动。 |
-| `useListFocus` | 一维列表的方向键。默认选择器是 `[role="menuitem"]`。 |
-| `useClickableContainer` | 让一整块区域可以点击，点到里面的按钮、链接或输入框时不触发外层。 |
-| `useGridRovingFocus` | 网格的方向键。 |
-| `useTypeahead` | 按字母在一组标签里循环匹配。它不移动焦点，匹配结果交给 `onMatch`。 |
-| `useCombobox` | 可搜索的选项列表和当前值。 |
-| `useNumberField` | 带最小、最大和步进的数字。 |
-| `useAsyncSource`、`createStaticSource` | 可取消的搜索数据源，以及一份本地静态源。 |
-| `useOverflow`、`computeOverflow` | 按宽度把多余项收进指示器。`computeOverflow` 是纯计算。 |
-| `useLongPress` | 按住超过一段时间后触发，移动过头会取消。 |
-| `useStreamingText` | 把已经到达的文本按 `natural`、`fast` 或 `instant` 露出来。 |
-| `snapToGraphemeBoundary` | 把偏移对齐到字素边界，给流式文本用。 |
-| `useChatStreamScroll` | 对话记录贴底或停住。减少动态效果时，弹簧滚动会改成直接跳。 |
-| `useChatNewMessages` | 读者没贴在底部时，标出新长出来的消息。 |
-| `useKeyboardHint` | 一组方向键控件第一次被键盘点进来时，在当前项旁边短暂提示怎么移动。 |
-| `useImageMode` | 按图片亮度判断该用深色还是浅色前景。采样失败时返回 `fallback`。 |
-| `useContainerReveal` | 悬停或键盘焦点时才露出行内操作。返回容器和内容上的 class。 |
-| `useMenuPress` | 菜单按下后，吞掉浏览器补发的那一下点击。`resetMenuPress` 用于卸载和测试。 |
+| `useControllableState` | 统一管理受控与非受控状态。常用于封装兼容 `v-model` 的自定义输入控件。 |
+| `useAnnounce` | 触发屏幕阅读器读屏语音播报，帮助视障用户获取动态操作反馈。 |
+| `useClipboard` | 将指定文本写入系统剪贴板，并在短时间内提供响应式的 `isCopied` 状态。 |
+| `useHotkeys` | 注册页面全局快捷键。支持 `mod+k` 等直观写法，其中 `mod` 在 macOS 上对应 ⌘ 键。 |
+| `useMediaQuery` | 响应式监听 CSS 媒体查询（Media Query），将其转化为响应式 Ref。 |
+| `useDismiss` | 统一处理浮层的外部点击（Click Outside）与按下 Escape 键退出，内置撤销栈确保内层弹层优先响应。 |
+| `useFocusTrap` | 在模态弹窗或抽屉容器内循环限制键盘 Tab 焦点，防止焦点跑出容器。 |
+| `useRestoreFocus` | 弹窗打开时自动记住触发源，弹窗关闭后将焦点智能送回原来的按钮。 |
+| `useScrollLock` | 带有引用计数的背景滚动锁定。即使打开多个嵌套弹窗，关闭时也能准确恢复页面滚动。 |
+| `useListFocus` | 处理一维垂直或水平列表的键盘上下左右键导航，默认查找 `[role="menuitem"]` 元素。 |
+| `useClickableContainer` | 让整块卡片区域都能点击，且点击卡片内部的按钮、输入框或超链接时，不会误触发外层容器的点击。 |
+| `useGridRovingFocus` | 二维卡片网格的键盘方向键流转导航（Roving tabindex）。 |
+| `useTypeahead` | 支持输入首字母在列表中快速定位匹配条目，不强行移动焦点，而是把匹配结果传递给 `onMatch` 回调。 |
+| `useCombobox` | 封装可筛选、带联想搜索的下拉选择框状态与当前选中值。 |
+| `useNumberField` | 封装支持最大值、最小值、步进（step）的数值微调输入逻辑。 |
+| `useAsyncSource`、`createStaticSource` | 支持可取消的异步搜索数据源，以及本地纯前端静态数据集管理。 |
+| `useOverflow`、`computeOverflow` | 当容器宽度不够时，智能计算哪些菜单项需要折叠收录到「更多」下拉菜单中。 |
+| `useLongPress` | 移动端与桌面端的长按触发手势。若手指滑动超过阈值会自动取消长按。 |
+| `useStreamingText` | 处理 AI 打字机流式输出的平滑文本呈现，支持自然停顿（`natural`）、快速（`fast`）与瞬间显示（`instant`）。 |
+| `snapToGraphemeBoundary` | 将字符串截断偏移智能对齐到文字的「字素边界」（避免生硬切断 Emoji 或复合字符）。 |
+| `useChatStreamScroll` | 智能跟随 AI 聊天对话流滚动。用户向上翻阅时保持原位，生成结束或位于底部时平滑吸底。 |
+| `useChatNewMessages` | 当读者未贴合在对话流底部时，在页面上浮动提示有未读的新消息产生。 |
+| `useKeyboardHint` | 当用户第一次通过键盘方向键切入一组控件时，在当前焦点项旁边短暂弹出操作提示气泡。 |
+| `useImageMode` | 自动采样图片亮度，智能推断上层该使用深色还是浅色的前景文字；若采样失败则采用安全回退值。 |
+| `useContainerReveal` | 仅在鼠标悬停或键盘聚焦到容器时，才优雅露出操作按钮，返回对应的样式类名。 |
+| `useMenuPress` | 在菜单项按下后，吸收吞掉浏览器可能冗余触发的随后那次点击事件，防止误触。 |
 
-`useClipboard` 还有一个旧名字 `useCopyToClipboard`，从 `@astryx-vue/core` 和 `@astryx-vue/core/Code` 都能引入，类型是同一套。
+> **别名提示**：`useClipboard` 拥有一个兼容旧版的名字 `useCopyToClipboard`，从包根或 `@astryx-vue/core/Code` 均可引入，底层完全等价。
 
-有些函数跟单个组件走，不在上面这张表里。它们从该组件的子路径引入，也从包根重新导出：
+## 随特定组件绑定的组合式函数
 
-| 函数 | 入口 |
+部分与特定组件深度绑定的函数，既可以从该组件的专用子路径引入，也可以直接从包根引入：
+
+| 函数名称 | 对应组件入口 |
 | --- | --- |
 | `useToast` | `@astryx-vue/core/Toast` |
 | `useImperativeDialog` | `@astryx-vue/core/Dialog` |
@@ -61,4 +63,4 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `useSyntaxTheme` | `@astryx-vue/core/Code` |
 | `useChatComposerContext`、`useChatComposerTokens`、`useChatPasteAsToken`、`useChatDictation`、`useSpeechRecognition` | `@astryx-vue/core/Chat` |
 
-语言环境的 `provideAstryxLocale` 和 `useAstryxMessages` 见 [国际化](/guide/i18n)。
+多语言与国际化相关的 `provideAstryxLocale` 和 `useAstryxMessages`，请参阅 [国际化](/guide/i18n)。

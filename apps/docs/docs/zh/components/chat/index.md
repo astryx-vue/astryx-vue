@@ -12,13 +12,20 @@ import { chatBubbleCustom, chatBubbleDensity, chatBubbleGrouping, chatBubbleMeta
 
 ## 使用方法
 
-对话展示是一组可以叠成会话记录的部件：滚动布局、消息列表、不同发送者的消息行、气泡、工具调用、推理折叠、正在输入，以及未读分隔。消息正文走插槽。这套组件不渲染 Markdown，正文用纯文本，或者换成你自己的渲染器。
+`Chat` 这一套组件，就像积木一样，包含搭建完整聊天窗口所需的各个部件：滚动的对话外框、消息列表、区分发送者的消息行、聊天气泡、AI 工具调用折叠栏、思考过程折叠、正在输入动画，以及未读消息提示线。消息正文通过插槽传入。组件本身不带 Markdown 解析器，你可以直接放纯文本，也可以接上你自己喜欢的 Markdown 渲染库。
 
-`ChatLayout` 是一列。记录区往上长，输入区贴在底部，下面有一层磨砂。默认由布局自己滚动。外面已经有滚动容器时传入 `scrollRef`，底部停靠会从 sticky 改成 fixed。
+**什么时候用：**
+- 搭建大模型 AI 对话界面、客服客服聊天窗口或即时聊天应用时。
 
-阅读位置在底部时，新文字会把视图继续贴在底部。一旦向上滚，贴底立刻停下，并出现回到底部的按钮。没贴底时又来了新消息，按钮文案会换成当前语言的「有新消息」，屏幕阅读器也会播报，`ChatUnreadDivider` 用来标出分界。`ChatLayout` 内部用 `useChatStreamScroll` 和 `useChatNewMessages` 串起这件事。`showScrollButton` 设为 `false` 可以拿掉内置按钮，也可以用 `scrollButton` 插槽换成自己的。
+**什么时候不要用：**
+- 如果只是为了让用户留个言、发一条评论，用普通的表单评论区组件更轻快。
+- 如果只是通知中心的一串流水消息，用时间线列表或通知流即可。
 
-输入区用 ChatComposer，放进布局的 composer 插槽。外壳管草稿、发送和停止。默认输入框能插入标记，回车发送，Shift 加回车换行。附件抽屉、顶栏和底栏都是插槽。语音听写走浏览器自己的语音识别，没有识别能力时麦克风不出现。落地页和带文档面板的整页会话见[应用模式](/guide/patterns)。
+各个积木的组装分工如下：
+
+- `ChatLayout` 是最外层的纵向布局容器。消息记录区在上方自适应伸展，输入框贴在底部，底部还带有一层毛玻璃磨砂效果。默认由布局自己滚动；如果外层已经有滚动容器，可以传入 `scrollRef`，底部停靠会自动调整为跟随固定的模式。
+- 当用户浏览到最底部时，新生成的内容会自动把滚动条继续贴在底部。如果用户往上翻看历史记录，自动贴底会立刻暂停，并浮现一个回到最底部的圆形按钮。在没有贴底时来了新消息，按钮文字会变成「有新消息」，未读分割线 `ChatUnreadDivider` 也会标出新旧分界线。
+- `ChatComposer` 是底部的输入套件，放进 `ChatLayout` 的 `composer` 插槽里。它负责草稿状态、回车发送、Shift 加回车换行、停止生成按钮等。它还支持附件抽屉以及基于浏览器原生语音识别的麦克风听写功能。落地页和带文档面板的整页会话见[应用模式](/guide/patterns)。
 
 ```vue
 <script setup lang="ts">
@@ -50,15 +57,11 @@ function onSubmit(value: string) {
 </template>
 ```
 
-`ChatMessageList` 是 `role="log"`。助手回复还在增长时传入 `isStreaming`，屏幕阅读器会等这段结束再读一次。`scrollToTopAction` 在顶部哨兵进入滚动容器时执行，Promise 结束前顶部一直显示加载指示。
-
-`ChatMessage` 是一条 `article`。`sender` 取 `user`、`assistant` 或 `system`。系统消息居中，头像、名字和元信息插槽都不会渲染。正文以气泡开头时，把可见名字放在 `ChatMessageBubble` 上，名字才能和气泡内边距对齐。
-
-`ChatToolCalls` 接收一轮回复里已经有的工具调用。只有一条时就是一行。多条收在一个标题后面；展开时 `label` 会替换掉按数量生成的文案。某条带了 `detail`，或者提供了 `detail` 插槽，这一行自己还能再展开。分组用 `v-model:is-expanded` 控制。
-
-`ChatReasoning` 是同样的折叠，用来放推理过程，默认收起。默认插槽如果是纯文本，会同时当作收起时的一行预览。`isStreaming` 会让标题闪动，并藏起预览和 `duration`。
-
-`ChatTypingIndicator` 画三个点。传入 `names` 后，一个人、两个人、以及「某人和其他几人」各有一句文案。根节点是 `role="status"`，由它播报这一句。`ChatUnreadDivider` 标出第一条未读消息，新到的内容放在它下面。
+- `ChatMessageList` 是承载消息记录的列表容器，带有 `role="log"`。当 AI 助手的文字还在持续生成时传入 `isStreaming`，读屏软件会等整段输出完毕后再统一朗读，避免不断打扰用户。当用户向上翻到顶部时，`scrollToTopAction` 会触发加载历史消息，加载完成前顶部会显示旋转动画。
+- `ChatMessage` 代表单条消息行。`sender` 可以是 `user`（用户）、`assistant`（AI 助手）或 `system`（系统通知）。系统通知会默认水平居中。
+- `ChatToolCalls` 用来展示 AI 调用的外部工具或函数。只有一次调用时直接显示一行；多次调用时会收拢进折叠栏，点击可以查看参数与结果明细。
+- `ChatReasoning` 是折叠卡片，用来展示 AI 的思考推理过程，默认折叠收起。
+- `ChatTypingIndicator` 用来展示「正在输入」的跳动三个小圆点，告诉用户对方正在打字或 AI 正在构思。
 
 下面先看输入套件和消息列表放在一起的样子，再按布局、回到底部、消息、气泡、列表、元信息、系统消息、工具调用往下排。
 

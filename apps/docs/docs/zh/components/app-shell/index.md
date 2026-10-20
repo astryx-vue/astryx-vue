@@ -12,7 +12,14 @@ import { appShellBanner, appShellContentOnly, appShellSideNav, appShellTopAndSid
 
 ## 使用方法
 
-`AppShell` 是页面外框。默认插槽是页面正文。`topNav`、`sideNav`、`banner`、`mobileNav` 是具名插槽。
+`AppShell`（应用外壳）是承载整个网站或管理后台的大骨架，用来规整地安排顶部导航、侧边菜单、重要横幅以及中间的主内容区。默认插槽放页面的正文，其余重要区域通过具名插槽放入：`topNav`（顶栏）、`sideNav`（侧栏）、`banner`（通知横幅）和 `mobileNav`（移动端导航）。
+
+**什么时候用：**
+- 构建后台管理系统、多页面 SaaS 应用或需要统一导航布局的完整平台时。
+
+**什么时候不要用：**
+- 如果只是页面内部的一小块局部排版（例如卡片内的两栏布局），请使用专门的 [Layout](/components/layout) 或弹性盒/网格，不要滥用 AppShell。
+- 独立的单页落地页、注册登录页或全屏沉浸式预览，通常不需要复杂的外壳，使用纯正文模式或直接排版即可。
 
 ```vue
 <script setup lang="ts">
@@ -32,13 +39,14 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 </template>
 ```
 
-`variant` 取 `wash`、`surface`、`section` 或 `elevated`（默认）。`contentPadding` 是正文区域的间距刻度。`height` 取 `fill` 或 `auto`。`fill` 使用 `100dvh`；外壳放在已经有高度的预览里时，行内 `height: 100%` 可以盖过它。
+外壳的常用配置项如下：
 
-`mobileNav` 可以是 `false`，或 `{ breakpoint, isOpen, hasToggle }`。默认断点是 `md`（768px）。窄于断点时侧栏收进抽屉。外壳里的顶栏使用这只抽屉，不再自己打开另一只。`v-model:mobile-nav-open` 控制抽屉，组件同时发出 `mobileNavOpenChange`。
-
-跳过链接指向 `#astryx-app-shell-main`。主区域是带 `role="main"` 和 `tabindex="-1"` 的 `div`。`variant` 为 `elevated`、同时有顶栏和侧栏、而且视口够宽时，正文坐在圆角背板上。
-
-`useAppShellMobile` 读取最近的外壳。在外壳外面，或关掉了移动导航时，`isMobile` 和 `isMobileNavEnabled` 都是 false，打开和关闭方法不做任何事。
+- `variant` 可以调整底色风格：包含纯净底色 `wash`、面板底色 `surface`、区块底色 `section`，或者默认的浮起卡片质感 `elevated`。
+- `contentPadding` 控制正文区域四周的留白间距等级。
+- `height` 设置外壳的高度模式，可以填满全屏（`fill`，使用现代的 `100dvh`），也可以随内容自适应撑开（`auto`）。
+- `mobileNav` 用来控制手机端的抽屉导航。默认在宽度低于 768px（`md` 断点）时，原本在左侧的侧边菜单会自动收拢进一个侧滑抽屉里。顶栏里的汉堡按钮会自动连接并控制这只抽屉，无需自己重复写逻辑。可以通过 `v-model:mobile-nav-open` 双向绑定抽屉的打开状态。
+- 组件内置了专门为键盘操作和读屏用户准备的「跳转到主内容」快捷链接，回车即可将光标焦点直接定位到带有 `role="main"` 的正文容器上。
+- `useAppShellMobile` 组合式函数可以在任何子组件里读取当前外壳的移动端适配状态（如抽屉是否开启、是否处于手机屏幕断点下）。
 
 
 <ComponentAnatomy />
