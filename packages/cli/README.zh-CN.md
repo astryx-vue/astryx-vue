@@ -74,7 +74,7 @@ npm run astryx-vue -- component Button
 
 `template --list` 列出全部 53 个演练场页面。目前 `--type` 只有 `page` 一种；`--type block` 会给一句说明，不报错。
 
-每个模板都有一句手写说明和中英两套关键词，放在 `src/generate/template-meta.ts`。组件清单从页面里 `@astryx-vue/core` 的 import 自动提取，不会和源码脱节。
+每个模板都有一句手写说明和中英两套关键词，放在 `src/generate/template-meta/`，每类模板一个文件。组件清单从页面里 `@astryx-vue/core` 的 import 自动提取，不会和源码脱节。
 
 有些页面引用了用户项目装不上的包：5 个用 `@astryx-vue/playground-charts`（只存在于文档站演练场的路径别名）。这些标为 `isReady: false` 并写明原因。判断标准是页面真正执行的导入：只要非相对导入都是 `vue` 或 `@astryx-vue/core` 就算可复制；页面里展示的示例代码文本（例如 `@astryxdesign/core`）属于页面内容，不算导入。`--list` 和 `template <slug>` 照样能看，复制会被拒绝，报 `ERR_TEMPLATE_NOT_READY`。
 
@@ -164,7 +164,7 @@ CLI 不另存一份组件文档。`packages/cli/scripts/generate-catalog.mjs` �
 - `apps/docs/components/playground/pages/*.vue`：模板源码；`templateManifest.ts`：模板标题和分类
 - 页面里没写 import 时，用 `packages/core/package.json` 的 exports 推断
 
-模板的说明和关键词是手写的，在 `packages/cli/src/generate/template-meta.ts`，属于源数据，不是生成物。
+模板的说明和关键词是手写的，在 `packages/cli/src/generate/template-meta/`，每类模板一个文件，由 `template-meta.ts` 合并，属于源数据，不是生成物。
 
 示例的标题和说明按语言各存一份，但示例代码两种语言只存一份：两个页面指向的是同一个 `.vue` 文件。以后要是一个页面改了代码、另一个没改，生成时直接报错并指出是哪个组件的第几个示例，不会让一种语言悄悄用上另一种的代码。取回某种语言的示例只走 `packages/cli/src/catalog.ts` 里的 `examplesFor()`。
 
