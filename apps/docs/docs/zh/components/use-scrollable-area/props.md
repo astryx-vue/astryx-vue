@@ -26,10 +26,16 @@ footer: false
         <td>哪个逻辑轴可以滚。</td>
       </tr>
       <tr>
+        <td><code>options.keyboardAccess</code></td>
+        <td><code>ScrollKeyboardAccess</code></td>
+        <td><code>{ owner: 'viewport', label, role }</code></td>
+        <td>能滚动时键盘从哪里进来。<code>{ owner: 'content' }</code>：内容自己有可聚焦的东西，视口不进 Tab 顺序、不带名字。<code>{ owner: 'viewport', label, role? }</code>：视口能滚时成为 Tab 停靠点。<code>{ owner: 'contentOrViewport', label, role? }</code>：同上，但 Tab 进来时如果内容里第一个就是普通按钮或链接，焦点直接交给它，方向键滚动仍归浏览器。</td>
+      </tr>
+      <tr>
         <td><code>options.label</code></td>
         <td><code>string</code></td>
         <td>—</td>
-        <td>视口的无障碍名称。必填。</td>
+        <td>视口的无障碍名称。没传 <code>keyboardAccess</code> 时用。</td>
       </tr>
       <tr>
         <td><code>options.role</code></td>

@@ -65149,8 +65149,8 @@
         "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。"
       },
       "usage": {
-        "en": "Traps focus within a container element following the WAI-ARIA dialog focus trap pattern. While the trap is active it listens to `keydown` on the document and wraps Tab and Shift+Tab, so focus cycles inside the container instead of leaving it. Turning the trap on also moves focus in: the element returned by `initialFocus`, or else the first focusable element. Turning it off is the whole teardown, so a dialog can toggle the state without unmounting the hook.\n\nWhen the trap deactivates or unmounts, focus goes back to the element that was focused before activation. It stays put when focus was already moved elsewhere, or when focus never entered the trap — so a popup that keeps focus on its trigger, like a combobox, is left alone. Mouse clicks outside the container are not intercepted; use a light-dismiss handler for that.\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      First field\n    </button>\n  </div>\n</template>\n```",
-        "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。\n\n当弹窗打开并且焦点陷阱激活时，用户不断按下 Tab 键切换焦点，如果按到了容器里的最后一个按钮，再按 Tab 键就会悄悄绕回容器的第一个元素，焦点永远在弹窗内部循环，绝对不会不小心跳到背景网页上。打开陷阱时，它还会把光标焦点送进容器内部：优先定位到 `initialFocus` 指定的元素上，如果没有指定就会自动停留在第一个可以聚焦的元素上。\n\n当弹窗关闭或陷阱解除时，它会把焦点原路还给刚才点开它的那个元素，确保键盘操作流程顺畅完整。在容器外面用鼠标点击不会被拦截，方便实现点击遮罩空白处关闭弹窗。\n\n**什么时候用：**\n- 编写自定义的模态对话框（Modal）、抽屉（Drawer）等全屏遮罩浮层，需要限制键盘焦点不能跑到弹窗外面时。\n\n**什么时候不要用：**\n- 像 Tooltip（文字提示）、下拉菜单（DropdownMenu）这类普通的浮层，请不要把焦点强行关在里面；它们需要的是轻量的点击外部关闭，而不是把焦点牢牢锁死。\n- 如果已经使用了官方的 [Dialog](/components/dialog) 或 [AlertDialog](/components/alert-dialog)，它们底层已经内置好了完备的焦点管理逻辑，无需再手动调用 `useFocusTrap`。\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      第一个输入项\n    </button>\n  </div>\n</template>\n```"
+        "en": "Traps focus within a container element following the WAI-ARIA dialog focus trap pattern. While the trap is active it listens to `keydown` on the document and wraps Tab and Shift+Tab, so focus cycles inside the container instead of leaving it. Turning the trap on also moves focus in: the element returned by `initialFocus`, or else the first focusable element. Turning it off is the whole teardown, so a dialog can toggle the state without unmounting the hook.\n\nWhen the trap deactivates or unmounts, focus goes back to the element that was focused before activation. It stays put when focus was already moved elsewhere, or when focus never entered the trap — so a popup that keeps focus on its trigger, like a combobox, is left alone. Focus returned after a pointer close lands on the trigger without a focus ring; after a keyboard close the ring shows as usual.\n\nTab is cancelled only while focus is inside the container, so a layer that is open while focus legitimately sits outside it does not take Tab away from the page. When initial focus sits on the container itself, Tab moves into the tabbable cycle. An Escape that cancels an input-method composition does not call `onEscape`. Mouse clicks outside the container are not intercepted; use a light-dismiss handler for that.\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      First field\n    </button>\n  </div>\n</template>\n```",
+        "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。\n\n当弹窗打开并且焦点陷阱激活时，用户不断按下 Tab 键切换焦点，如果按到了容器里的最后一个按钮，再按 Tab 键就会悄悄绕回容器的第一个元素，焦点永远在弹窗内部循环，绝对不会不小心跳到背景网页上。打开陷阱时，它还会把光标焦点送进容器内部：优先定位到 `initialFocus` 指定的元素上，如果没有指定就会自动停留在第一个可以聚焦的元素上。\n\n当弹窗关闭或陷阱解除时，它会把焦点原路还给刚才点开它的那个元素，确保键盘操作流程顺畅完整。焦点从没进过容器（比如焦点一直留在输入框上的下拉列表），或者已经被挪到别处时，就不还。用鼠标或手指关掉的，焦点回到触发器上但不画焦点环；用键盘关掉的照常画。\n\nTab 键只在焦点真的在容器里面时才会被拦下，浮层开着、焦点合理地留在外面时，整个页面照样能用 Tab。程序把初始焦点放在容器自己身上时，按 Tab 会进入里面的循环。输入法正在拼字时按的 Escape 是取消拼字，不会触发 `onEscape`。在容器外面用鼠标点击不会被拦截，方便实现点击遮罩空白处关闭弹窗。\n\n**什么时候用：**\n- 编写自定义的模态对话框（Modal）、抽屉（Drawer）等全屏遮罩浮层，需要限制键盘焦点不能跑到弹窗外面时。\n\n**什么时候不要用：**\n- 像 Tooltip（文字提示）、下拉菜单（DropdownMenu）这类普通的浮层，请不要把焦点强行关在里面；它们需要的是轻量的点击外部关闭，而不是把焦点牢牢锁死。\n- 如果已经使用了官方的 [Dialog](/components/dialog) 或 [AlertDialog](/components/alert-dialog)，它们底层已经内置好了完备的焦点管理逻辑，无需再手动调用 `useFocusTrap`。\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      第一个输入项\n    </button>\n  </div>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -68833,15 +68833,15 @@
               },
               {
                 "name": "`options.isEnabled`",
-                "type": "`() => boolean`",
-                "default": "—",
-                "description": "Whether the model is live, read on each press. Pass the menu's open state. Required."
+                "type": "`MaybeRefOrGetter<boolean>`",
+                "default": "`true`",
+                "description": "Whether the model is live, read on each press. Pass the menu's open state."
               },
               {
                 "name": "`options.onDismiss`",
                 "type": "`() => void`",
                 "default": "—",
-                "description": "A mouse was released outside the menu with nothing acting: close it. A finger released outside leaves the menu open, so this is never called then. Required."
+                "description": "A mouse was released outside the menu with nothing acting: close it. A finger released outside leaves the menu open, so this is never called then."
               },
               {
                 "name": "`options.itemSelector`",
@@ -68857,7 +68857,7 @@
               },
               {
                 "name": "`options.onTriggerPress`",
-                "type": "`(pointerType: 'mouse' | 'pen' | 'touch') => boolean`",
+                "type": "`(pointerType: MenuPressPointerType) => boolean`",
                 "default": "—",
                 "description": "A mouse pressed the trigger, or a finger rested on it for `longPressDelayMs`: open the menu under the held pointer and return whether it opened. Return false when the press closed an open menu instead."
               },
@@ -68874,6 +68874,18 @@
                 "description": "Act on the row under the release. Defaults to dispatching a click on the row that carries the release button and modifier keys."
               },
               {
+                "name": "`options.getScroller`",
+                "type": "`() => HTMLElement | null`",
+                "default": "the overflowing menu root",
+                "description": "The element to scroll while a held pointer rests within 24 px of its top or bottom edge. Return null for none."
+              },
+              {
+                "name": "`options.hitTest`",
+                "type": "`(x: number, y: number) => Element | null`",
+                "default": "`document.elementFromPoint`",
+                "description": "Resolves the element under a viewport point. A finger's events stay with the element it landed on, so the row under it is found by position. A test seam."
+              },
+              {
                 "name": "`options.longPressDelayMs`",
                 "type": "`number`",
                 "default": "`500`",
@@ -68886,17 +68898,17 @@
             "rows": [
               {
                 "name": "`menuProps`",
-                "type": "`{ onPointerDown, 'data-astryx-menu-press': '' }`",
+                "type": "`{ onPointerdown, 'data-astryx-menu-press': '' }`",
                 "description": "Spread onto the menu root (`v-bind=\"press.menuProps\"`). Claims presses that begin inside it and marks the root as carrying the press model."
               },
               {
                 "name": "`onPointerDown`",
                 "type": "`(event: PointerEvent) => void`",
-                "description": "The same handler as `menuProps.onPointerDown`, on its own. Bind it to the menu root's `pointerdown` when an object spread is not an option."
+                "description": "The same handler as `menuProps.onPointerdown`, on its own. Bind it to the menu root's `pointerdown` when an object spread is not an option."
               },
               {
                 "name": "`triggerProps`",
-                "type": "`{ onPointerDown, onContextMenu }`",
+                "type": "`{ onPointerdown, onContextmenu }`",
                 "description": "Spread onto the trigger: a primary-button press opens the menu at once; a finger held for the delay opens it with the finger still down. A right-click is left alone, so its `contextmenu` route keeps working. The `contextmenu` handler suppresses the browser's own long-press menu for a finger, and leaves a mouse's right-click to the application."
               },
               {
@@ -68930,15 +68942,15 @@
               },
               {
                 "name": "`options.isEnabled`",
-                "type": "`() => boolean`",
-                "default": "—",
-                "description": "这套按压模型当前是否生效，每次按下时读。传菜单的打开状态即可。必填。"
+                "type": "`MaybeRefOrGetter<boolean>`",
+                "default": "`true`",
+                "description": "这套按压模型当前是否生效，每次按下时读。传菜单的打开状态即可。"
               },
               {
                 "name": "`options.onDismiss`",
                 "type": "`() => void`",
                 "default": "—",
-                "description": "鼠标在菜单外松开、且什么都没执行时调用：关闭菜单。手指在菜单外松开则让菜单继续开着，那种情况不会调用它。必填。"
+                "description": "鼠标在菜单外松开、且什么都没执行时调用：关闭菜单。手指在菜单外松开则让菜单继续开着，那种情况不会调用它。"
               },
               {
                 "name": "`options.itemSelector`",
@@ -68954,7 +68966,7 @@
               },
               {
                 "name": "`options.onTriggerPress`",
-                "type": "`(pointerType: 'mouse' | 'pen' | 'touch') => boolean`",
+                "type": "`(pointerType: MenuPressPointerType) => boolean`",
                 "default": "—",
                 "description": "鼠标按下了触发器，或者手指在触发器上按满了 `longPressDelayMs`：在按住的指针下面打开菜单，并返回是否打开了。这一次按压其实是关掉已开的菜单时返回 false。"
               },
@@ -68971,6 +68983,18 @@
                 "description": "执行松开时指针下面的那一行。不传就替它派发一次 click，带上松开时的按钮和修饰键。"
               },
               {
+                "name": "`options.getScroller`",
+                "type": "`() => HTMLElement | null`",
+                "default": "溢出的菜单根",
+                "description": "按住时指针停在上下边缘 24 像素内要自动滚动的元素。返回 null 表示不滚。"
+              },
+              {
+                "name": "`options.hitTest`",
+                "type": "`(x: number, y: number) => Element | null`",
+                "default": "`document.elementFromPoint`",
+                "description": "按视口坐标找元素。手指的事件一直发给它落下的元素，所以靠坐标判断现在在哪一行。测试里用来替换。"
+              },
+              {
                 "name": "`options.longPressDelayMs`",
                 "type": "`number`",
                 "default": "`500`",
@@ -68983,17 +69007,17 @@
             "rows": [
               {
                 "name": "`menuProps`",
-                "type": "`{ onPointerDown, 'data-astryx-menu-press': '' }`",
+                "type": "`{ onPointerdown, 'data-astryx-menu-press': '' }`",
                 "description": "摊到菜单根上（`v-bind=\"press.menuProps\"`）。接下从根内开始的按压，并在根上标记「这里用了这套按压模型」。"
               },
               {
                 "name": "`onPointerDown`",
                 "type": "`(event: PointerEvent) => void`",
-                "description": "和 `menuProps.onPointerDown` 是同一个函数，单独拿出来。不好摊对象时直接绑到菜单根的 `pointerdown` 上。"
+                "description": "和 `menuProps.onPointerdown` 是同一个函数，单独拿出来。不好摊对象时直接绑到菜单根的 `pointerdown` 上。"
               },
               {
                 "name": "`triggerProps`",
-                "type": "`{ onPointerDown, onContextMenu }`",
+                "type": "`{ onPointerdown, onContextmenu }`",
                 "description": "摊到触发器上：主键一按下就打开菜单；手指按满延时之后，手指还按着的时候打开。右键不碰，它自己的 `contextmenu` 照旧能用。`contextmenu` 那个只挡掉手指长按时浏览器自带的菜单，鼠标右键仍然交给应用。"
               },
               {
@@ -69022,7 +69046,7 @@
         "en": [
           {
             "heading": "Returns",
-            "text": "The module also exports `resetMenuPress()`, which forgets an armed stray-click swallower. Call it when a surface unmounts outside the hook's own teardown, and in tests."
+            "text": "The module also exports:\n\n- `resetMenuPress()`: forgets an armed stray-click swallower. Call it when a surface unmounts outside the hook's own teardown, and in tests.\n- `isMenuPressActivation()`: true for the synchronous extent of a row activation the model dispatched, so a row that forwards activation to a link inside it can tell the model's click from the browser's stray one.\n- `MENU_PRESS_MARKER`: the attribute name that marks a menu root.\n- `menuPressStep`, `MENU_PRESS_SETTLE_MS` and their types: the pure state machine. The release of the press that opened the menu acts only once the pointer has entered the menu or the press has lasted 300 ms; otherwise the menu stays open and nothing acts."
           }
         ],
         "zh": [
@@ -69032,7 +69056,7 @@
           },
           {
             "heading": "返回值",
-            "text": "模块还导出 `resetMenuPress()`，用来清掉已经布好的「吞掉多余 click」。表面在 hook 自己的拆卸之外被移除时调用它，测试里也用得上。"
+            "text": "模块还导出：\n\n- `resetMenuPress()`：清掉已经布好的「吞掉多余 click」。表面在 hook 自己的拆卸之外被移除时调用它，测试里也用得上。\n- `isMenuPressActivation()`：按压模型派发的那次行激活正在同步进行时为 true。把激活转交给里面链接的行用它分清这是模型的 click 还是浏览器多出来的那个。\n- `MENU_PRESS_MARKER`：菜单根上的标记属性名。\n- `menuPressStep`、`MENU_PRESS_SETTLE_MS` 和相关类型：不碰 DOM 的纯状态机。打开菜单的那次按压，只有指针进过菜单、或者按满 300 毫秒，松开时才执行下面那一行；否则菜单留着、什么都不执行。"
           }
         ]
       },
@@ -69925,8 +69949,8 @@
         "zh": "Astryx 里每个可按的地方都用的触摸按压模型，给自己画按压反馈的组件也用这一套。手指按下去的时候，CSS 的 `:active` 会立刻亮，而且滚动已经开始了它还可能亮着；按压模型反过来：先等 150 毫秒，确认这真是按压；手指一动超过 10 像素、或者页面滚走了，马上作废，这次手势里不再亮回来；快速点一下则在抬手时补上；松手后用 200 毫秒淡出。这几个时间和系统列表的手感一致。一个文档级控制器给所有带标记的元素做这件事（第一个用到的组件装上，最后一个卸载时拆掉），所以调用这个函数不会给你的元素加监听，也不加状态。鼠标上的表现不变：留着你的 `:active`，按内置组件的写法在 `@media (pointer: coarse)` 里把它丢掉就行。"
       },
       "usage": {
-        "en": "The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead waits 150 ms before believing a press, cancels it the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release over 200 ms — the clocks a native list uses. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    Press me\n  </button>\n</template>\n```\n\nThe hook brings `styles/pressable.css` along. It paints the pressed token on a `::after` layer of the marked element, keeps `:active` for a coarse-pointer-free pointer, and fades the release; the element only needs to be a positioned box, which the stylesheet sets.",
-        "zh": "Astryx 里每个可按的地方都用的触摸按压模型，给自己画按压反馈的组件也用这一套。手指按下去的时候，CSS 的 `:active` 会立刻亮，而且滚动已经开始了它还可能亮着；按压模型反过来：先等 150 毫秒，确认这真是按压；手指一动超过 10 像素、或者页面滚走了，马上作废，这次手势里不再亮回来；快速点一下则在抬手时补上；松手后用 200 毫秒淡出。这几个时间和系统列表的手感一致。一个文档级控制器给所有带标记的元素做这件事（第一个用到的组件装上，最后一个卸载时拆掉），所以调用这个函数不会给你的元素加监听，也不加状态。鼠标上的表现不变：留着你的 `:active`，按内置组件的写法在 `@media (pointer: coarse)` 里把它丢掉就行。\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    按我\n  </button>\n</template>\n```\n\n样式文件 `styles/pressable.css` 会跟着这个函数一起带上：它在带标记的元素上铺一层 `::after` 画按下的颜色，给鼠标留着 `:active`，松手时淡出。元素只要是个定位盒子就行，样式表会设好。"
+        "en": "The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead waits 150 ms before believing a press, cancels it the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release over 200 ms — the clocks a native list uses. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    Press me\n  </button>\n</template>\n```\n\nThe hook brings `styles/pressable.css` along. The default `astryx-pressable` class paints the pressed token on a `::after` layer, keeps `:active` for a mouse, and under a finger reads the `data-astryx-press` attribute the controller writes (`on` while held, `fading` for the release). The press's strength is the registered `--astryx-press-alpha`; the release animates it from 1 to 0. A component that paints its own press passes `{ hasOverlay: false }` and paints both `[data-astryx-press]` states from `var(--_press-paint-image)` in its own styles.",
+        "zh": "Astryx 里每个可按的地方都用的触摸按压模型，给自己画按压反馈的组件也用这一套。手指按下去的时候，CSS 的 `:active` 会立刻亮，而且滚动已经开始了它还可能亮着；按压模型反过来：先等 150 毫秒，确认这真是按压；手指一动超过 10 像素、或者页面滚走了，马上作废，这次手势里不再亮回来；快速点一下则在抬手时补上；松手后用 200 毫秒淡出。这几个时间和系统列表的手感一致。一个文档级控制器给所有带标记的元素做这件事（第一个用到的组件装上，最后一个卸载时拆掉），所以调用这个函数不会给你的元素加监听，也不加状态。鼠标上的表现不变：留着你的 `:active`，按内置组件的写法在 `@media (pointer: coarse)` 里把它丢掉就行。\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    按我\n  </button>\n</template>\n```\n\n样式文件 `styles/pressable.css` 会跟着这个函数一起带上：默认的 `astryx-pressable` 类在元素的 `::after` 上画按下的颜色，给鼠标留着 `:active`，手指下读控制器写的 `data-astryx-press`（`on` 是按住，`fading` 是抬手淡出）。按压强度是注册过的 `--astryx-press-alpha`，淡出就是它从 1 降到 0。组件想自己画按压时传 `{ hasOverlay: false }`，在自己的样式里用 `var(--_press-paint-image)` 画 `[data-astryx-press]` 两种状态。"
       },
       "practices": {
         "en": [
@@ -69952,24 +69976,46 @@
       "props": {
         "en": [
           {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options.hasOverlay`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "Whether to bring the default press paint (the `astryx-pressable` class, a layer on `::after`). Pass false when the component paints the press itself from `--_press-paint-image` and only needs the marker."
+              }
+            ]
+          },
+          {
             "heading": "Returns",
             "rows": [
               {
                 "name": "`pressableProps`",
                 "type": "`Record<string, string>`",
-                "description": "The marker attribute to spread on the element that paints the press (`data-astryx-pressable`). The styles this hook brings along paint `--astryx-color-overlay-pressed` at the press's strength on the first frame of a believed press and fade it over the release, keeping `:active` for a mouse."
+                "description": "Spread with `v-bind` on the element that paints the press: the `data-astryx-pressable` marker, plus `class: 'astryx-pressable'` by default. Under a finger the controller writes `data-astryx-press=\"on\"` while the press is believed and `\"fading\"` for the release. The default style paints `--astryx-color-overlay-pressed` at the press's strength on the first frame and fades it over 200 ms, keeping `:active` for a mouse."
               }
             ]
           }
         ],
         "zh": [
           {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options.hasOverlay`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "要不要带上默认的按压色（`astryx-pressable` 类，在 `::after` 上画一层）。组件自己在样式里读 `--_press-paint-image` 画按压时传 false，只拿标记。"
+              }
+            ]
+          },
+          {
             "heading": "返回值",
             "rows": [
               {
                 "name": "`pressableProps`",
                 "type": "`Record<string, string>`",
-                "description": "铺到「背景画按压」的元素上的标记属性（`data-astryx-pressable`）。这个函数带上的样式会在按压成立的第一帧画出 `--astryx-color-overlay-pressed`，松手时淡出，鼠标仍然走 `:active`。"
+                "description": "用 `v-bind` 铺到「画按压」的元素上：标记属性 `data-astryx-pressable`，默认还有 `class: 'astryx-pressable'`。手指按压成立时控制器在元素上写 `data-astryx-press=\"on\"`，抬手淡出时写 `\"fading\"`。默认样式在按压成立的第一帧画出 `--astryx-color-overlay-pressed`，抬手后 200 毫秒淡出，鼠标仍然走 `:active`。"
               }
             ]
           }
@@ -69984,20 +70030,11 @@
         "zh": []
       },
       "notes": {
-        "en": [
-          {
-            "heading": "Parameters",
-            "text": "This composable takes no parameters."
-          }
-        ],
+        "en": [],
         "zh": [
           {
             "heading": "建议",
             "text": "- 推荐: 结果铺在「背景画按压」的那个元素上，用 `--astryx-color-overlay-pressed` 调颜色。\n- 推荐: 各种指针都交给自带的样式：它给鼠标留着 `:active`，在 `@media (pointer: coarse)` 里丢掉，手指只会看到按压模型。自己再写一条 `:active`，手指下也会亮，落手就亮、滚动也不灭。\n- 不要: 为了跟按压给元素加指针监听或者组件状态；控制器已经写好属性了，每个元素一套监听正是长列表受不了的。\n- 不要: 给 Astryx 组件渲染出来的控件再调一次；那些本来就有标记，最里面那个带标记的元素才算数。"
-          },
-          {
-            "heading": "参数",
-            "text": "这个组合式函数不接收参数。"
           }
         ]
       },
@@ -70400,8 +70437,8 @@
         "zh": "`isLocked` 为 true 的时候把 `body` 的滚动锁住，弹层后面的页面就停在原地不动。`isLocked` 是个 ref：把打开弹层的那个开关传进来，它自己跟着走。"
       },
       "usage": {
-        "en": "Locks `body` scroll while `isLocked` is true, so the page behind a modal or a dialog stays where it is. `isLocked` is a ref: pass the same flag that opens the overlay, and the hook follows it.\n\nThe lock is reference counted. The page is released only when the outermost lock goes away, so closing a sheet that sits inside a dialog does not unlock the page under it. The inline `overflow` that `body` had before is put back when the last lock is released, and a scope that goes away releases its own lock.\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```",
-        "zh": "`isLocked` 为 true 的时候把 `body` 的滚动锁住，弹层后面的页面就停在原地不动。`isLocked` 是个 ref：把打开弹层的那个开关传进来，它自己跟着走。\n\n这个锁按次数算。最外层的锁都放开，页面才真的松开，所以对话框里再叠一个抽屉，抽屉关掉不会把下面那层解锁。锁住之前 `body` 上原本的 `overflow` 会记下来，最后一层解开时写回去。作用域被清理掉的时候，它自己那一层也会放开。\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```"
+        "en": "Locks `body` scroll while `isLocked` is true, so the page behind a modal or a dialog stays where it is. `isLocked` is a ref: pass the same flag that opens the overlay, and the hook follows it.\n\nThe lock is reference counted. The page is released only when the outermost lock goes away, so closing a sheet that sits inside a dialog does not unlock the page under it. The inline `overflow` that `body` had before is put back when the last lock is released. Where the scrollbar takes space (Windows and Linux desktops, or macOS set to always show scroll bars), its gutter is held open while locked (`scrollbar-gutter: stable`, with padding as the fallback), so neither the page nor its fixed-position chrome jumps sideways, and a scope that goes away releases its own lock.\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```",
+        "zh": "`isLocked` 为 true 的时候把 `body` 的滚动锁住，弹层后面的页面就停在原地不动。`isLocked` 是个 ref：把打开弹层的那个开关传进来，它自己跟着走。\n\n这个锁按次数算。最外层的锁都放开，页面才真的松开，所以对话框里再叠一个抽屉，抽屉关掉不会把下面那层解锁。锁住之前 `body` 上原本的 `overflow` 会记下来，最后一层解开时写回去。滚动条是占地方的那种（Windows、Linux 桌面，或者 macOS 设成始终显示滚动条）时，锁住期间给它留住位置（`scrollbar-gutter: stable`，不支持的浏览器补 padding），页面和固定定位的元素都不会左右跳。作用域被清理掉的时候，它自己那一层也会放开。\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```"
       },
       "practices": {
         "en": [
@@ -70649,8 +70686,8 @@
         "zh": "给调用方自己搭的结构加上一套标准的、跟着书写方向走的滚动行为。一个轴要真的能用，得同时满足两件事：这一轴算出来的 `overflow` 是能滚的，并且内容和盒子差得超过共用的 1px 容差。视口和内容盒两块都在观察范围里。"
       },
       "usage": {
-        "en": "Adds canonical axis-aware scroll behavior to structure owned by the caller. An axis is effective only when its computed overflow is scroll-capable and geometry exceeds the shared 1px tolerance. Both viewport and content boxes are observed.\n\nBind `viewport` to the scrolling box as a function ref, and `content` to the box your content sits in. `viewportAttrs` carries `role`, `aria-label`, `tabindex`, and the `data-scroll-*` attributes written from the current measurement. `viewportStyle` carries `overflow` and `overscroll-behavior`. `label` is required. Options are read reactively, so a component's `props` object can be passed straight in and later changes are picked up.\n\n```ts\nimport { useScrollableArea } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useScrollableArea } from '@astryx-vue/core'\n\nconst { content, viewport, viewportAttrs, viewportStyle } = useScrollableArea({\n  axis: 'block',\n  label: 'Release notes',\n})\n</script>\n\n<template>\n  <div :ref=\"viewport\" v-bind=\"viewportAttrs\" :style=\"viewportStyle\">\n    <div :ref=\"content\">\n      Long content\n    </div>\n  </div>\n</template>\n```",
-        "zh": "给调用方自己搭的结构加上一套标准的、跟着书写方向走的滚动行为。一个轴要真的能用，得同时满足两件事：这一轴算出来的 `overflow` 是能滚的，并且内容和盒子差得超过共用的 1px 容差。视口和内容盒两块都在观察范围里。\n\n把 `viewport` 当函数 ref 绑到滚动的那块上，把 `content` 绑到装内容的盒子上。`viewportAttrs` 里是 `role`、`aria-label`、`tabindex`，还有按当前测量结果写出的 `data-scroll-*`；`viewportStyle` 里是 `overflow` 和 `overscroll-behavior`。`label` 是必填的。选项是按响应式读取的，所以组件的 `props` 也可以直接传进来，后面变了也会跟着更新。\n\n```ts\nimport { useScrollableArea } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useScrollableArea } from '@astryx-vue/core'\n\nconst { content, viewport, viewportAttrs, viewportStyle } = useScrollableArea({\n  axis: 'block',\n  label: '更新日志',\n})\n</script>\n\n<template>\n  <div :ref=\"viewport\" v-bind=\"viewportAttrs\" :style=\"viewportStyle\">\n    <div :ref=\"content\">\n      很长很长的内容\n    </div>\n  </div>\n</template>\n```"
+        "en": "Adds canonical axis-aware scroll behavior to structure owned by the caller. An axis is effective only when its computed overflow is scroll-capable and geometry exceeds the shared 1px tolerance. Both viewport and content boxes are observed.\n\nBind `viewport` to the scrolling box as a function ref, and `content` to the box your content sits in. `viewportAttrs` carries `role`, `aria-label`, `tabindex`, and the `data-scroll-*` attributes written from the current measurement. `viewportStyle` carries `overflow` and `overscroll-behavior`. Name and role come from `label` and `role`, or from `keyboardAccess`, which also says where the keyboard enters. The measured state is registered as a scroll owner, so nested areas and focus delegation can tell which level scrolls. A hidden or zero-size viewport cannot be measured and keeps its last state. Options are read reactively, so a component's `props` object can be passed straight in and later changes are picked up.\n\n```ts\nimport { useScrollableArea } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useScrollableArea } from '@astryx-vue/core'\n\nconst { content, viewport, viewportAttrs, viewportStyle } = useScrollableArea({\n  axis: 'block',\n  label: 'Release notes',\n})\n</script>\n\n<template>\n  <div :ref=\"viewport\" v-bind=\"viewportAttrs\" :style=\"viewportStyle\">\n    <div :ref=\"content\">\n      Long content\n    </div>\n  </div>\n</template>\n```",
+        "zh": "给调用方自己搭的结构加上一套标准的、跟着书写方向走的滚动行为。一个轴要真的能用，得同时满足两件事：这一轴算出来的 `overflow` 是能滚的，并且内容和盒子差得超过共用的 1px 容差。视口和内容盒两块都在观察范围里。\n\n把 `viewport` 当函数 ref 绑到滚动的那块上，把 `content` 绑到装内容的盒子上。`viewportAttrs` 里是 `role`、`aria-label`、`tabindex`，还有按当前测量结果写出的 `data-scroll-*`；`viewportStyle` 里是 `overflow` 和 `overscroll-behavior`。名字和角色用 `label`、`role` 给，或者用 `keyboardAccess` 说清键盘从哪里进来。量出来的状态会登记成「滚动归属」，嵌套的滚动区域和焦点委托靠它分清哪一层在滚。视口藏起来、尺寸为 0 时量不出来，保留上一次的结果。选项是按响应式读取的，所以组件的 `props` 也可以直接传进来，后面变了也会跟着更新。\n\n```ts\nimport { useScrollableArea } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useScrollableArea } from '@astryx-vue/core'\n\nconst { content, viewport, viewportAttrs, viewportStyle } = useScrollableArea({\n  axis: 'block',\n  label: '更新日志',\n})\n</script>\n\n<template>\n  <div :ref=\"viewport\" v-bind=\"viewportAttrs\" :style=\"viewportStyle\">\n    <div :ref=\"content\">\n      很长很长的内容\n    </div>\n  </div>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -70699,10 +70736,16 @@
                 "description": "Which logical axis may scroll."
               },
               {
+                "name": "`options.keyboardAccess`",
+                "type": "`ScrollKeyboardAccess`",
+                "default": "`{ owner: 'viewport', label, role }`",
+                "description": "Where the keyboard enters a scrolling area. `{ owner: 'content' }`: the content has its own focusable cells, so the viewport stays out of the Tab order and unnamed. `{ owner: 'viewport', label, role? }`: the viewport becomes a Tab stop while it scrolls. `{ owner: 'contentOrViewport', label, role? }`: the same, but a Tab into it hands focus straight to a plain leading button or link inside; arrow-key scrolling stays with the browser."
+              },
+              {
                 "name": "`options.label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Accessible name for the viewport. Required."
+                "description": "Accessible name for the viewport. Used when `keyboardAccess` is not given."
               },
               {
                 "name": "`options.role`",
@@ -70774,11 +70817,18 @@
                 "description": "哪个逻辑轴可以滚。"
               },
               {
+                "name": "`options.keyboardAccess`",
+                "payload": "`options.keyboardAccess`",
+                "type": "`ScrollKeyboardAccess`",
+                "default": "`{ owner: 'viewport', label, role }`",
+                "description": "能滚动时键盘从哪里进来。`{ owner: 'content' }`：内容自己有可聚焦的东西，视口不进 Tab 顺序、不带名字。`{ owner: 'viewport', label, role? }`：视口能滚时成为 Tab 停靠点。`{ owner: 'contentOrViewport', label, role? }`：同上，但 Tab 进来时如果内容里第一个就是普通按钮或链接，焦点直接交给它，方向键滚动仍归浏览器。"
+              },
+              {
                 "name": "`options.label`",
                 "payload": "`options.label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "视口的无障碍名称。必填。"
+                "description": "视口的无障碍名称。没传 `keyboardAccess` 时用。"
               },
               {
                 "name": "`options.role`",

@@ -13,7 +13,9 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 Traps focus within a container element following the WAI-ARIA dialog focus trap pattern. While the trap is active it listens to `keydown` on the document and wraps Tab and Shift+Tab, so focus cycles inside the container instead of leaving it. Turning the trap on also moves focus in: the element returned by `initialFocus`, or else the first focusable element. Turning it off is the whole teardown, so a dialog can toggle the state without unmounting the hook.
 
-When the trap deactivates or unmounts, focus goes back to the element that was focused before activation. It stays put when focus was already moved elsewhere, or when focus never entered the trap — so a popup that keeps focus on its trigger, like a combobox, is left alone. Mouse clicks outside the container are not intercepted; use a light-dismiss handler for that.
+When the trap deactivates or unmounts, focus goes back to the element that was focused before activation. It stays put when focus was already moved elsewhere, or when focus never entered the trap — so a popup that keeps focus on its trigger, like a combobox, is left alone. Focus returned after a pointer close lands on the trigger without a focus ring; after a keyboard close the ring shows as usual.
+
+Tab is cancelled only while focus is inside the container, so a layer that is open while focus legitimately sits outside it does not take Tab away from the page. When initial focus sits on the container itself, Tab moves into the tabbable cycle. An Escape that cancels an input-method composition does not call `onEscape`. Mouse clicks outside the container are not intercepted; use a light-dismiss handler for that.
 
 ```ts
 import { useFocusTrap } from '@astryx-vue/core'

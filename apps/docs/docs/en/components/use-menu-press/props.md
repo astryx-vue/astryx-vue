@@ -27,15 +27,15 @@ footer: false
       </tr>
       <tr>
         <td><code>options.isEnabled</code></td>
-        <td><code>() =&gt; boolean</code></td>
-        <td>—</td>
-        <td>Whether the model is live, read on each press. Pass the menu's open state. Required.</td>
+        <td><code>MaybeRefOrGetter&lt;boolean&gt;</code></td>
+        <td><code>true</code></td>
+        <td>Whether the model is live, read on each press. Pass the menu's open state.</td>
       </tr>
       <tr>
         <td><code>options.onDismiss</code></td>
         <td><code>() =&gt; void</code></td>
         <td>—</td>
-        <td>A mouse was released outside the menu with nothing acting: close it. A finger released outside leaves the menu open, so this is never called then. Required.</td>
+        <td>A mouse was released outside the menu with nothing acting: close it. A finger released outside leaves the menu open, so this is never called then.</td>
       </tr>
       <tr>
         <td><code>options.itemSelector</code></td>
@@ -51,7 +51,7 @@ footer: false
       </tr>
       <tr>
         <td><code>options.onTriggerPress</code></td>
-        <td><code>(pointerType: 'mouse' | 'pen' | 'touch') =&gt; boolean</code></td>
+        <td><code>(pointerType: MenuPressPointerType) =&gt; boolean</code></td>
         <td>—</td>
         <td>A mouse pressed the trigger, or a finger rested on it for <code>longPressDelayMs</code>: open the menu under the held pointer and return whether it opened. Return false when the press closed an open menu instead.</td>
       </tr>
@@ -66,6 +66,18 @@ footer: false
         <td><code>(row: HTMLElement, release: PointerEvent) =&gt; void</code></td>
         <td>—</td>
         <td>Act on the row under the release. Defaults to dispatching a click on the row that carries the release button and modifier keys.</td>
+      </tr>
+      <tr>
+        <td><code>options.getScroller</code></td>
+        <td><code>() =&gt; HTMLElement | null</code></td>
+        <td>the overflowing menu root</td>
+        <td>The element to scroll while a held pointer rests within 24 px of its top or bottom edge. Return null for none.</td>
+      </tr>
+      <tr>
+        <td><code>options.hitTest</code></td>
+        <td><code>(x: number, y: number) =&gt; Element | null</code></td>
+        <td><code>document.elementFromPoint</code></td>
+        <td>Resolves the element under a viewport point. A finger's events stay with the element it landed on, so the row under it is found by position. A test seam.</td>
       </tr>
       <tr>
         <td><code>options.longPressDelayMs</code></td>
@@ -87,17 +99,17 @@ footer: false
     <tbody>
       <tr>
         <td><code>menuProps</code></td>
-        <td><code>{ onPointerDown, 'data-astryx-menu-press': '' }</code></td>
+        <td><code>{ onPointerdown, 'data-astryx-menu-press': '' }</code></td>
         <td>Spread onto the menu root (<code>v-bind="press.menuProps"</code>). Claims presses that begin inside it and marks the root as carrying the press model.</td>
       </tr>
       <tr>
         <td><code>onPointerDown</code></td>
         <td><code>(event: PointerEvent) =&gt; void</code></td>
-        <td>The same handler as <code>menuProps.onPointerDown</code>, on its own. Bind it to the menu root's <code>pointerdown</code> when an object spread is not an option.</td>
+        <td>The same handler as <code>menuProps.onPointerdown</code>, on its own. Bind it to the menu root's <code>pointerdown</code> when an object spread is not an option.</td>
       </tr>
       <tr>
         <td><code>triggerProps</code></td>
-        <td><code>{ onPointerDown, onContextMenu }</code></td>
+        <td><code>{ onPointerdown, onContextmenu }</code></td>
         <td>Spread onto the trigger: a primary-button press opens the menu at once; a finger held for the delay opens it with the finger still down. A right-click is left alone, so its <code>contextmenu</code> route keeps working. The <code>contextmenu</code> handler suppresses the browser's own long-press menu for a finger, and leaves a mouse's right-click to the application.</td>
       </tr>
       <tr>
@@ -114,4 +126,9 @@ footer: false
   </table>
 </div>
 
-The module also exports `resetMenuPress()`, which forgets an armed stray-click swallower. Call it when a surface unmounts outside the hook's own teardown, and in tests.
+The module also exports:
+
+- `resetMenuPress()`: forgets an armed stray-click swallower. Call it when a surface unmounts outside the hook's own teardown, and in tests.
+- `isMenuPressActivation()`: true for the synchronous extent of a row activation the model dispatched, so a row that forwards activation to a link inside it can tell the model's click from the browser's stray one.
+- `MENU_PRESS_MARKER`: the attribute name that marks a menu root.
+- `menuPressStep`, `MENU_PRESS_SETTLE_MS` and their types: the pure state machine. The release of the press that opened the menu acts only once the pointer has entered the menu or the press has lasted 300 ms; otherwise the menu stays open and nothing acts.

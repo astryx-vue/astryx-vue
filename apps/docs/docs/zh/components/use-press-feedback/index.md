@@ -31,7 +31,7 @@ const { pressableProps } = usePressFeedback()
 </template>
 ```
 
-样式文件 `styles/pressable.css` 会跟着这个函数一起带上：它在带标记的元素上铺一层 `::after` 画按下的颜色，给鼠标留着 `:active`，松手时淡出。元素只要是个定位盒子就行，样式表会设好。
+样式文件 `styles/pressable.css` 会跟着这个函数一起带上：默认的 `astryx-pressable` 类在元素的 `::after` 上画按下的颜色，给鼠标留着 `:active`，手指下读控制器写的 `data-astryx-press`（`on` 是按住，`fading` 是抬手淡出）。按压强度是注册过的 `--astryx-press-alpha`，淡出就是它从 1 降到 0。组件想自己画按压时传 `{ hasOverlay: false }`，在自己的样式里用 `var(--_press-paint-image)` 画 `[data-astryx-press]` 两种状态。
 
 ## 建议
 

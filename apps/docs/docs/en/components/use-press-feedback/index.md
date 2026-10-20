@@ -31,7 +31,7 @@ const { pressableProps } = usePressFeedback()
 </template>
 ```
 
-The hook brings `styles/pressable.css` along. It paints the pressed token on a `::after` layer of the marked element, keeps `:active` for a coarse-pointer-free pointer, and fades the release; the element only needs to be a positioned box, which the stylesheet sets.
+The hook brings `styles/pressable.css` along. The default `astryx-pressable` class paints the pressed token on a `::after` layer, keeps `:active` for a mouse, and under a finger reads the `data-astryx-press` attribute the controller writes (`on` while held, `fading` for the release). The press's strength is the registered `--astryx-press-alpha`; the release animates it from 1 to 0. A component that paints its own press passes `{ hasOverlay: false }` and paints both `[data-astryx-press]` states from `var(--_press-paint-image)` in its own styles.
 
 ## Best practices
 
