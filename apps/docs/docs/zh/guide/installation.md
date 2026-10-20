@@ -4,7 +4,7 @@ title: 安装
 
 # 安装
 
-两个公开包一起装：
+astryx-vue 拆分为核心包与主题包两个部分，通常建议一起安装：
 
 ```sh
 pnpm add @astryx-vue/core @astryx-vue/themes
@@ -18,23 +18,23 @@ npm install @astryx-vue/core @astryx-vue/themes
 yarn add @astryx-vue/core @astryx-vue/themes
 ```
 
-`@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包依赖 `@fontsource/figtree` 和 `@fontsource/jetbrains-mono`，用来提供正文和等宽字体。两个包都只发布 ESM。
+`@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包附带了 `@fontsource/figtree` 与 `@fontsource/jetbrains-mono`，用来提供正文与等宽代码字体。两个包均采用纯 ESM 格式发布。
 
-组件、组合式函数和语言环境的入口不同：
+组件、组合式函数（Composables）与样式有各自清晰的引入路径：
 
-| 需要的东西 | 从哪里引入 |
+| 需要的内容 | 引入路径 |
 | --- | --- |
-| 某一个组件 | `@astryx-vue/core/Button` 这种子路径 |
-| 组合式函数，以及根入口重新导出的组件 | `@astryx-vue/core` |
-| `provideAstryxLocale`、`useAstryxMessages` | `@astryx-vue/core/locale`，根入口也能拿到 |
-| 一套主题 | `@astryx-vue/themes/neutral.css`。Butter、Chocolate、Gothic、Matcha、Stone、Y2K 也是这个路径，换成各自的文件名。 |
-| 全部结构样式 | `@astryx-vue/core/styles.css` |
-| 层声明 | `@astryx-vue/core/reset.css` |
+| 具体的某个组件（推荐） | `@astryx-vue/core/Button` 等独立子路径 |
+| 通用组合式函数与包根快捷导出 | `@astryx-vue/core` |
+| `provideAstryxLocale`、`useAstryxMessages` | `@astryx-vue/core/locale`（包根也能拿到） |
+| 主题样式 | `@astryx-vue/themes/neutral.css`（Butter、Chocolate、Gothic、Matcha、Stone、Y2K 等主题也是同样路径，替换为对应文件名即可） |
+| 所有组件的全部结构样式 | `@astryx-vue/core/styles.css` |
+| CSS 层级声明 | `@astryx-vue/core/reset.css` |
 
-`reset.css` 目前只有 `@layer astryx.reset;`，不是一份浏览器重置。结构样式和主题样式自己也会声明层的顺序。
+请注意，`reset.css` 目前主要用于声明 `@layer astryx.reset;` 层级，并不是一份修改页面全局标签的激进重置表。各组件的结构样式与主题样式自身都会自动声明好层级的先后顺序。
 
-子路径和包根导出的是同一批组件。文档和示例使用子路径，这样意图更清楚，也只加载该组件那份结构样式。从包根引入 `useClipboard` 这类函数时，打包器若不能摇掉未使用的重导出，可能会把其他组件模块一起算进去。只使用组件时，优先写子路径。
+虽然子路径和包根导出的是同一批组件，但在文档和日常开发中，我们强烈推荐使用子路径（例如 `@astryx-vue/core/Button`）。这样引用意图十分清晰，而且打包器只会按需打包该组件独有的结构样式。如果你从包根引入 `useClipboard` 这类通用函数，在部分未能精细摇树（Tree-shaking）的打包配置下，可能会把其余组件也一同打包进来。所以仅仅使用组件时，请优先写子路径。
 
-版本号两个包一起走。已经发布的是 `0.1.0`。记录见 [更新日志](/guide/changelog)。
+核心包与主题包保持相同的版本号节奏。当前已发布的版本为 `0.1.0`，版本演进记录可参阅 [更新日志](/guide/changelog)。
 
-要在终端里查这些文档，看 [命令行](/guide/cli)。
+如果你希望在本地终端或借助 AI Agent 快速检索组件文档，可以了解我们的 [命令行工具](/guide/cli)。

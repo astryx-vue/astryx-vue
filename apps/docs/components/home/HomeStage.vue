@@ -28,9 +28,9 @@ const copy = {
     placeholder: '写一句...',
     send: '发送',
     script: {
-      userQuestion: 'astryx 设计语言是否有 Vue 版本实现的组件库？',
+      userQuestion: 'Astryx 设计语言有对应的 Vue 组件库吗？',
       toolName: 'pnpm add @astryx-vue/core @astryx-vue/themes',
-      assistantLead: '有的，astryx-vue 就是面向 Vue 3 的社区实现。底层严格对齐 design token、CSS 变量与动画刻度，按 Vue 规范提供原生组件：',
+      assistantLead: '有的！astryx-vue 就是专门为 Vue 3 开发的社区开源版本。它把颜色、排版、间距和动效细节都原汁原味还原了过来，写起来就是大家熟悉的 Vue 组件用法：',
       codeSnippet: `<script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import '@astryx-vue/themes/neutral.css'
@@ -39,20 +39,20 @@ import '@astryx-vue/themes/neutral.css'
 <template>
   <Button variant="primary" label="快速开始" />
 </template>`,
-      assistantEnding: '准备好开始使用 astryx-vue 了吗？相信它一定不会让你失望！',
+      assistantEnding: '按上面的方式把样式和组件引进来就能用啦，挑个组件去你的页面里试试看吧！',
     },
     features: [
       {
-        title: '久经考验的完备设计系统',
-        subtitle: '源自 Meta 生产环境打磨，严格对齐设计令牌、CSS 变量与微动效规范。',
+        title: '做工扎实的设计系统',
+        subtitle: '吸收了 Meta 设计规范的精细做工，不管是颜色、间距还是动效过渡，每一处细节都耐看好用。',
       },
       {
-        title: '丰富多样的组件类型',
-        subtitle: '从底层通用交互控件到复杂多模态对话流，覆盖现代全栈界面开发。',
+        title: '常用组件一应俱全',
+        subtitle: '从小巧的按钮、输入框，到现成的整套 AI 对话窗口，日常做页面要用的零件都备齐了。',
       },
       {
-        title: '场景化的使用案例',
-        subtitle: '开箱即用的真实业务落地模板与演练场，让界面搭建即刻进入快车道。',
+        title: '有现成模板，也有演练场',
+        subtitle: '提供整套可以直接参考的页面例子，还有在线演练场供你随手调试，做页面不用从零猜效果。',
       },
     ],
   },

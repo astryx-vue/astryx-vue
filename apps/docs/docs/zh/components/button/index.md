@@ -13,7 +13,7 @@ import { buttonEndSlot, buttonFloating, buttonIcon, buttonSizes, buttonVariants 
 
 ## 使用方法
 
-`Button` 用来触发界面中的各类操作，保存、删除、提交这些动作都可以交给它。每个按钮都必须通过 `label` 指定操作名称，它既是默认的可见文字，也是屏幕阅读器朗读的无障碍标签。没有默认插槽时，按钮直接显示 `label`：
+`Button`（按钮）用来触发界面里的各种操作，像保存资料、提交表单、删除项目都可以交给它。每个按钮都需要通过 `label` 清楚说明它要做什么，这个文字既会直接显示在按钮上，也会被读屏软件朗读出来。在没有传入默认插槽时，按钮会直接展示 `label` 的内容：
 
 ```vue
 <script setup lang="ts">
@@ -25,10 +25,15 @@ import { Button } from '@astryx-vue/core/Button'
 </template>
 ```
 
-- 需要把一组相关操作并排放在一起时，使用 [ButtonGroup](/components/button-group)。
-- 操作只需要一个图标时，使用 [IconButton](/components/icon-button)。
+**什么时候用：**
+- 用户点击后需要执行一个具体动作时（例如保存、发布、确认或删除）。
 
-`icon` 插槽位于文字之前，放在一个已经定好尺寸的盒子里，`end` 插槽与之对称。放一个 [Icon](/components/icon)，不要再设 `size`，盒子由槽决定：
+**什么时候不要用：**
+- 如果只是为了跳转到另一个页面或外部网址，请直接使用普通的网页链接（`<a>` 标签），不要用按钮做纯跳转。
+- 如果按钮只有图标、没有文字，请改用专用的 [IconButton](/components/icon-button)。
+- 如果要把几个相关操作整齐并排拼成一组，请改用 [ButtonGroup](/components/button-group)。
+
+按钮前后的图标通过插槽传入。`icon` 插槽位于文字前面，`end` 插槽位于文字后面，两者的尺寸已经内部规范好。直接放进一个 [Icon](/components/icon) 即可，不需要单独设置 `size`：
 
 ```vue
 <script setup lang="ts">
@@ -50,7 +55,7 @@ import { Icon } from '@astryx-vue/core/Icon'
 </template>
 ```
 
-槽里仍然可以放 CSS 图标类，前提是你的构建会生成这个类。不必为了按钮去装 UnoCSS。
+插槽里也可以直接使用 CSS 图标类名，前提是你的项目构建流程支持解析该类名。不必为了一个图标特意引入 UnoCSS。
 
 
 

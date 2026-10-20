@@ -11,9 +11,9 @@
       "These styles do not require UnoCSS. The docs site uses UnoCSS only so example classes such as `i-carbon-*` can draw icons. That is the icon approach, not a styling dependency. See [Icons](/en/guide/icons)."
     ],
     "zh": [
-      "组件从自己的子路径引入。那个入口会带上对应的结构样式。",
-      "`@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包依赖 `@fontsource/figtree` 和 `@fontsource/jetbrains-mono`，用来提供正文和等宽字体。两个包都只发布 ESM。",
-      "子路径和包根导出的是同一批组件。文档和示例使用子路径，这样意图更清楚，也只加载该组件那份结构样式。从包根引入 `useClipboard` 这类函数时，打包器若不能摇掉未使用的重导出，可能会把其他组件模块一起算进去。只使用组件时，优先写子路径。",
+      "接着就可以直接在页面里使用组件了。推荐直接从具体的子路径引入组件，这样打包器只会加载该组件对应的样式，代码体积最轻巧：",
+      "`@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包附带了 `@fontsource/figtree` 与 `@fontsource/jetbrains-mono`，用来提供正文与等宽代码字体。两个包均采用纯 ESM 格式发布。",
+      "虽然子路径和包根导出的是同一批组件，但在文档和日常开发中，我们强烈推荐使用子路径（例如 `@astryx-vue/core/Button`）。这样引用意图十分清晰，而且打包器只会按需打包该组件独有的结构样式。如果你从包根引入 `useClipboard` 这类通用函数，在部分未能精细摇树（Tree-shaking）的打包配置下，可能会把其余组件也一同打包进来。所以仅仅使用组件时，请优先写子路径。",
       "这套样式不要求 UnoCSS。文档站用 UnoCSS 只为了给示例里的 `i-carbon-*` 类提供图标，那是图标方案，不是组件样式的依赖。见 [图标](/guide/icons)。"
     ]
   },
@@ -34,11 +34,11 @@
       "exportName": "Button",
       "summary": {
         "en": "`Button` triggers an action. Set `label` to name the action.",
-        "zh": "`Button` 用来触发界面中的各类操作，保存、删除、提交这些动作都可以交给它。每个按钮都必须通过 `label` 指定操作名称，它既是默认的可见文字，也是屏幕阅读器朗读的无障碍标签。没有默认插槽时，按钮直接显示 `label`："
+        "zh": "`Button`（按钮）用来触发界面里的各种操作，像保存资料、提交表单、删除项目都可以交给它。每个按钮都需要通过 `label` 清楚说明它要做什么，这个文字既会直接显示在按钮上，也会被读屏软件朗读出来。在没有传入默认插槽时，按钮会直接展示 `label` 的内容："
       },
       "usage": {
         "en": "`Button` triggers an action. Set `label` to name the action.\n\nWithout a default slot, the button displays `label`:\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\n</script>\n\n<template>\n  <Button label=\"Save changes\" variant=\"primary\" />\n</template>\n```\n\nUse the dedicated [ButtonGroup](/en/components/button-group) and [IconButton](/en/components/icon-button) components when you need connected actions or an explicit icon-only button.\n\nThe `icon` slot sits in a sized box before the label, and the `end` slot mirrors it. Put an [Icon](/en/components/icon) there and leave its `size` unset; the slot already decides the box:\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Icon } from '@astryx-vue/core/Icon'\n</script>\n\n<template>\n  <Button label=\"Upload file\">\n    <template #icon>\n      <Icon name=\"carbon:upload\" />\n    </template>\n  </Button>\n  <Button label=\"Continue\" variant=\"secondary\">\n    <template #end>\n      <Icon name=\"carbon:chevron-right\" />\n    </template>\n  </Button>\n</template>\n```\n\nA CSS icon class still works in the slot if you already generate one. UnoCSS is not required.",
-        "zh": "`Button` 用来触发界面中的各类操作，保存、删除、提交这些动作都可以交给它。每个按钮都必须通过 `label` 指定操作名称，它既是默认的可见文字，也是屏幕阅读器朗读的无障碍标签。没有默认插槽时，按钮直接显示 `label`：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\n</script>\n\n<template>\n  <Button label=\"保存更改\" variant=\"primary\" />\n</template>\n```\n\n- 需要把一组相关操作并排放在一起时，使用 [ButtonGroup](/components/button-group)。\n- 操作只需要一个图标时，使用 [IconButton](/components/icon-button)。\n\n`icon` 插槽位于文字之前，放在一个已经定好尺寸的盒子里，`end` 插槽与之对称。放一个 [Icon](/components/icon)，不要再设 `size`，盒子由槽决定：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Icon } from '@astryx-vue/core/Icon'\n</script>\n\n<template>\n  <Button label=\"上传文件\">\n    <template #icon>\n      <Icon name=\"carbon:upload\" />\n    </template>\n  </Button>\n  <Button label=\"继续\" variant=\"secondary\">\n    <template #end>\n      <Icon name=\"carbon:chevron-right\" />\n    </template>\n  </Button>\n</template>\n```\n\n槽里仍然可以放 CSS 图标类，前提是你的构建会生成这个类。不必为了按钮去装 UnoCSS。"
+        "zh": "`Button`（按钮）用来触发界面里的各种操作，像保存资料、提交表单、删除项目都可以交给它。每个按钮都需要通过 `label` 清楚说明它要做什么，这个文字既会直接显示在按钮上，也会被读屏软件朗读出来。在没有传入默认插槽时，按钮会直接展示 `label` 的内容：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\n</script>\n\n<template>\n  <Button label=\"保存更改\" variant=\"primary\" />\n</template>\n```\n\n**什么时候用：**\n- 用户点击后需要执行一个具体动作时（例如保存、发布、确认或删除）。\n\n**什么时候不要用：**\n- 如果只是为了跳转到另一个页面或外部网址，请直接使用普通的网页链接（`<a>` 标签），不要用按钮做纯跳转。\n- 如果按钮只有图标、没有文字，请改用专用的 [IconButton](/components/icon-button)。\n- 如果要把几个相关操作整齐并排拼成一组，请改用 [ButtonGroup](/components/button-group)。\n\n按钮前后的图标通过插槽传入。`icon` 插槽位于文字前面，`end` 插槽位于文字后面，两者的尺寸已经内部规范好。直接放进一个 [Icon](/components/icon) 即可，不需要单独设置 `size`：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Icon } from '@astryx-vue/core/Icon'\n</script>\n\n<template>\n  <Button label=\"上传文件\">\n    <template #icon>\n      <Icon name=\"carbon:upload\" />\n    </template>\n  </Button>\n  <Button label=\"继续\" variant=\"secondary\">\n    <template #end>\n      <Icon name=\"carbon:chevron-right\" />\n    </template>\n  </Button>\n</template>\n```\n\n插槽里也可以直接使用 CSS 图标类名，前提是你的项目构建流程支持解析该类名。不必为了一个图标特意引入 UnoCSS。"
       },
       "practices": {
         "en": [
@@ -1728,11 +1728,11 @@
       "exportName": "DropdownMenu",
       "summary": {
         "en": "`DropdownMenu` turns a button into the entry point for a small set of actions. The button stays quiet; the menu appears next to it when opened, closes as soon as an action is picked, and gives focus back to the button. It is the right shape for \"what do I do next\" — rename, duplicate, archive, delete — when the actions are one flat level deep.",
-        "zh": "`DropdownMenu` 把一个按钮变成一组操作的入口。按钮本身很轻，真正的菜单在点击后才出现，浮在触发按钮旁边，选完一项就收起，焦点回到按钮上。它适合放“下一步要做什么”——重命名、复制、归档、删除这类只有一层的动作。"
+        "zh": "`DropdownMenu`（下拉菜单）把一个按钮变成一组操作的快捷入口。触发按钮平时不占地方，点击后才会在旁边弹出一列菜单项；用户点选其中一项后菜单就会自动收起，光标焦点也会自然地还给原按钮。它非常适合用来承载下一步要做的事情，比如表格行右侧的“更多操作”（重命名、复制、导出、删除等）。"
       },
       "usage": {
         "en": "`DropdownMenu` turns a button into the entry point for a small set of actions. The button stays quiet; the menu appears next to it when opened, closes as soon as an action is picked, and gives focus back to the button. It is the right shape for \"what do I do next\" — rename, duplicate, archive, delete — when the actions are one flat level deep.\n\nThe shortest form is an `items` array, where each entry is one action:\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\n</script>\n\n<template>\n  <DropdownMenu\n    :button=\"{ label: 'Actions' }\"\n    :items=\"[\n      { label: 'Edit project', icon: 'i-carbon-tools', onClick: () => edit() },\n      { label: 'Duplicate project', icon: 'i-carbon-copy', onClick: () => duplicate() },\n      { label: 'Delete project', icon: 'i-carbon-trash-can', variant: 'destructive', onClick: () => remove() },\n    ]\"\n  />\n</template>\n```\n\nAn entry can be an action, a divider, a titled group, a checkbox row, or a radio group. An action says what happens next. A checkbox row carries whether it is on. A radio group carries the selected value and lists its options. Those rows are also documented on their own pages: [Dropdown Menu Checkbox Item](/en/components/dropdown-menu-checkbox-item), [Dropdown Menu Radio Group](/en/components/dropdown-menu-radio-group), and [Dropdown Menu Radio Item](/en/components/dropdown-menu-radio-item). When the rows follow page state, or you want to lay them out yourself, use the default slot and the matching row components. Both forms draw the same structure. In a template, put the built-in icon in the icon slot and pass its name. In the data array, pass an icon component or a CSS icon class.\n\nThe trigger is the design system's `Button` by default. Pass its props through `button` (`variant`, `size`, `isIconOnly`, …); `size` also sets the height of the menu rows, so a `size=\"sm\"` button goes with a compact menu. When the trigger is not a plain button — an icon button, an avatar, a row in a list — use the `trigger` slot instead and `v-bind` everything the slot hands you onto your own control. The menu then hangs off that control and takes its name from it.\n\n```vue\n<template>\n  <DropdownMenu>\n    <template #trigger=\"triggerProps\">\n      <IconButton v-bind=\"triggerProps\" icon=\"i-carbon-overflow-menu-horizontal\" label=\"More actions\" />\n    </template>\n\n    <DropdownMenuItem icon=\"i-carbon-tools\" label=\"Edit project\" @click=\"edit\" />\n  </DropdownMenu>\n</template>\n```\n\nOnce open, the menu owns the keyboard. The arrow keys move between rows and wrap at both ends, `Home` and `End` jump to the first and last row, `PageUp` and `PageDown` page through a long menu, and typing a letter jumps to the next row that starts with it (pressing the same letter again cycles through the matches). `Enter` and Space run the highlighted row, `Escape` or a press outside closes the menu and returns focus to the trigger, and `Tab` closes the menu as well so the browser keeps its own tab order. Moving the pointer over a row moves focus to it, so keyboard and pointer share one highlight and two rows are never lit at once.\n\nWhere the menu opens differs by how it was opened. A keyboard open puts focus on the first row (or the last one for `ArrowUp`); a pointer open only focuses the menu itself, so no row reads as already selected.\n\nThe panel places itself: it opens below the trigger, aligned to its start, and flips to the other side when there is no room — `placement` and `alignment` select among above/below/start/end and start/center/end. The width matches the trigger up to a 320px cap, or follows `menuWidth` (a length, or an intrinsic keyword such as `max-content`). The height is capped at 300px and scrolls past that; `menuMaxHeight` raises the cap in pixels for a menu that must fit all of its rows.\n\nUse a two-way binding on the open state when something outside the menu drives it. A menu that is mounted already open does not move focus — nobody asked for that open, and pulling focus out of the page loses the user's place.\n\nA checkbox row toggles one view setting. Activating it flips the state and leaves the menu open, so several settings can change in one visit. Radio rows belong in a radio group, and only one of them can be selected. Choosing one closes the menu, because the choice is made. Arrow keys still move across these rows, and Space or Enter toggles the highlighted one. A disabled row stays in the menu, but the arrows skip it and a click does not change it. The check mark and the radio dot are decorative; the whole row is the control. On a coarse pointer the mark moves to the end of the row.\n\nContent that is not an option can sit above or below the rows: a filter field, or a button that creates something. It is drawn in the same frame and is not part of the menu. Typing there does not jump to a row by its first letter. The menu itself is one tab stop in that frame. Shift+Tab from a row skips the menu element and lands on the last focusable control above it. Tab onward from the last control below, or Shift+Tab from the first control above, closes the menu. A pointer open does not paint a focus ring on the menu; the ring appears once keyboard focus later tabs onto it.\n\nA submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row at the top, named after the parent. That choice is made when the menu opens and does not change while it stays open. A submenu can also be forced to always fly out, or always replace the rows. While its children are still loading, the caret can become a spinner, and the submenu can still be opened. A flyout is at least about 160 pixels wide unless a width is set, and it never grows past the viewport.",
-        "zh": "`DropdownMenu` 把一个按钮变成一组操作的入口。按钮本身很轻，真正的菜单在点击后才出现，浮在触发按钮旁边，选完一项就收起，焦点回到按钮上。它适合放“下一步要做什么”——重命名、复制、归档、删除这类只有一层的动作。\n\n最小用法只需要一个 `items` 数组，每一项就是一条动作：\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\n</script>\n\n<template>\n  <DropdownMenu\n    :button=\"{ label: '操作' }\"\n    :items=\"[\n      { label: '编辑项目', icon: 'i-carbon-tools', onClick: () => edit() },\n      { label: '复制项目', icon: 'i-carbon-copy', onClick: () => duplicate() },\n      { label: '删除项目', icon: 'i-carbon-trash-can', variant: 'destructive', onClick: () => remove() },\n    ]\"\n  />\n</template>\n```\n\n数组里可以放动作、分隔线、带标题的分组，也可以放勾选行和单选组。动作行写出要做的事；勾选行带着当前是否选中；单选组带着当前选中的值，里面再列各个选项。这几类行也有各自的页面：[下拉菜单勾选项](/components/dropdown-menu-checkbox-item)、[下拉菜单单选组](/components/dropdown-menu-radio-group)、[下拉菜单单选项](/components/dropdown-menu-radio-item)。菜单要跟着页面状态变，或者想自己排版时，改用默认插槽写对应的行组件，两种写法画出来的结构一致。自己写行时，把内置图标放进图标插槽并传入图标名；数据数组里则传入一个图标组件，或一个 CSS 图标类。\n\n触发按钮默认由设计系统的 `Button` 渲染，通过 `button` 传入它的属性（`variant`、`size`、`isIconOnly` 等）；`size` 会同时决定菜单行的高度，所以 `size=\"sm\"` 的按钮配一组紧凑的菜单行。当触发按钮不是普通按钮时——比如一个纯图标按钮、一个头像、列表里的一行——改用 `trigger` 插槽，并把插槽给出的属性整个 `v-bind` 到自己的控件上，菜单就会挂在这个控件旁边，并用它的名字作为无障碍名称。\n\n```vue\n<template>\n  <DropdownMenu>\n    <template #trigger=\"triggerProps\">\n      <IconButton v-bind=\"triggerProps\" icon=\"i-carbon-overflow-menu-horizontal\" label=\"更多操作\" />\n    </template>\n\n    <DropdownMenuItem icon=\"i-carbon-tools\" label=\"编辑项目\" @click=\"edit\" />\n  </DropdownMenu>\n</template>\n```\n\n打开之后，菜单接管键盘：上下方向键在动作之间移动并循环，`Home` 和 `End` 跳到首尾，`PageUp`/`PageDown` 翻一屏，直接键入字母会跳到以该字母开头的下一行（连续按同一个字母会在多个匹配项之间轮换），`Enter` 和空格执行当前这一行，`Escape` 或点击菜单外部收起菜单并把焦点还给触发按钮，`Tab` 也会收起菜单，然后按浏览器的顺序继续往后走。鼠标划过某一行时焦点会跟到那一行，所以键盘高亮和鼠标高亮永远是同一个，不会同时亮两行。\n\n用键盘打开和用鼠标打开有一个区别：键盘打开会把焦点放在第一行（按 `ArrowUp` 打开则放在最后一行），鼠标打开只把焦点放在菜单本身，不预选任何一行——否则用户会以为那一行已经被选中了。\n\n弹层会自己找位置：默认开在触发按钮下方左对齐，空间不够时翻到上方；`placement` 和 `alignment` 可以改成上/下/左/右和起点/居中/终点。菜单宽度默认与触发按钮齐平并封顶在 320px，`menuWidth` 可以给定宽度或 `max-content` 之类的关键字宽度；高度默认封顶 300px，超出就滚动，`menuMaxHeight` 可以按像素把上限抬高到刚好放下所有行。\n\n需要外部控制开关时用双向绑定菜单的展开状态。菜单在挂载时就处于打开状态的话，不会抢走焦点——这不是用户要求的打开动作，把焦点从页面里拽走会让人丢失位置。\n\n勾选行用来开关一项视图设置。点一下只翻转状态，菜单保持打开，方便连续改好几项。单选行必须放在单选组里，一组里一次只能选中一个；选完菜单收起，因为这次选择已经确定。方向键仍然在这些行之间移动，空格和回车会切换当前这一行。禁用的行留在菜单里，方向键会跳过它，点击也不会改变状态。勾选标记和单选圆点只是装饰，整行才是可操作的控件。粗指针设备上，标记会挪到行的末尾。\n\n菜单上方和下方可以放不属于选项的内容，比如一个筛选框，或一个新建按钮。它们画在同一个框里，但不算菜单项：在里面打字不会按字母跳行。菜单本身是这一段里的一个 Tab 停靠点。从某一行按 Shift+Tab，会跳过菜单元素，落到上方最后一个可聚焦控件；从下方最后一个控件继续往后 Tab，或从上方第一个控件往前 Tab，菜单就会收起。用指针打开时，菜单上不会先画出焦点环；之后用键盘 Tab 到菜单上，焦点环才出现。\n\n子菜单在宽屏上向旁边展开。在紧凑的触控界面上，同一级内容会换掉当前菜单里的行，并在顶部给出返回，返回文案会带上父级的名字。这个选择在菜单打开时定下来，打开期间不会再变。也可以强制始终旁边展开，或强制始终在原处替换。子菜单的行还在加载时，行尾的箭头可以换成转圈，菜单仍然能打开。飞出的面板默认至少大约 160 像素宽，也可以单独指定宽度，并且不会超出视口。"
+        "zh": "`DropdownMenu`（下拉菜单）把一个按钮变成一组操作的快捷入口。触发按钮平时不占地方，点击后才会在旁边弹出一列菜单项；用户点选其中一项后菜单就会自动收起，光标焦点也会自然地还给原按钮。它非常适合用来承载下一步要做的事情，比如表格行右侧的“更多操作”（重命名、复制、导出、删除等）。\n\n**什么时候用：**\n- 需要在一个轻巧的按钮下折叠收起多个操作项，避免界面被过多按钮挤满时。\n\n**什么时候不要用：**\n- 如果是用于在网站的不同页面之间切换跳转，请使用专门的导航组件，不要用操作菜单来做网页导航。\n- 如果需要用户在里面填写复杂表单或输入文字，请改用模态对话框 [Dialog](/components/dialog)。\n- 如果核心操作只有一两个且非常高频，直接平铺摆放按钮比把它们藏进下拉菜单里更高效。\n\n最基础的用法只需要传一个 `items` 数组，每一项代表一个可执行动作：\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\n</script>\n\n<template>\n  <DropdownMenu\n    :button=\"{ label: '操作' }\"\n    :items=\"[\n      { label: '编辑项目', icon: 'i-carbon-tools', onClick: () => edit() },\n      { label: '复制项目', icon: 'i-carbon-copy', onClick: () => duplicate() },\n      { label: '删除项目', icon: 'i-carbon-trash-can', variant: 'destructive', onClick: () => remove() },\n    ]\"\n  />\n</template>\n```\n\n数组里可以放动作、分隔线、带标题的分组，也可以放勾选行和单选组。动作行写出要做的事；勾选行带着当前是否选中；单选组带着当前选中的值，里面再列各个选项。这几类行也有各自的页面：[下拉菜单勾选项](/components/dropdown-menu-checkbox-item)、[下拉菜单单选组](/components/dropdown-menu-radio-group)、[下拉菜单单选项](/components/dropdown-menu-radio-item)。菜单要跟着页面状态变，或者想自己排版时，改用默认插槽写对应的行组件，两种写法画出来的结构一致。自己写行时，把内置图标放进图标插槽并传入图标名；数据数组里则传入一个图标组件，或一个 CSS 图标类。\n\n触发按钮默认由设计系统的 `Button` 渲染，通过 `button` 传入它的属性（`variant`、`size`、`isIconOnly` 等）；`size` 会同时决定菜单行的高度，所以 `size=\"sm\"` 的按钮配一组紧凑的菜单行。当触发按钮不是普通按钮时——比如一个纯图标按钮、一个头像、列表里的一行——改用 `trigger` 插槽，并把插槽给出的属性整个 `v-bind` 到自己的控件上，菜单就会挂在这个控件旁边，并用它的名字作为无障碍名称。\n\n```vue\n<template>\n  <DropdownMenu>\n    <template #trigger=\"triggerProps\">\n      <IconButton v-bind=\"triggerProps\" icon=\"i-carbon-overflow-menu-horizontal\" label=\"更多操作\" />\n    </template>\n\n    <DropdownMenuItem icon=\"i-carbon-tools\" label=\"编辑项目\" @click=\"edit\" />\n  </DropdownMenu>\n</template>\n```\n\n打开之后，菜单接管键盘：上下方向键在动作之间移动并循环，`Home` 和 `End` 跳到首尾，`PageUp`/`PageDown` 翻一屏，直接键入字母会跳到以该字母开头的下一行（连续按同一个字母会在多个匹配项之间轮换），`Enter` 和空格执行当前这一行，`Escape` 或点击菜单外部收起菜单并把焦点还给触发按钮，`Tab` 也会收起菜单，然后按浏览器的顺序继续往后走。鼠标划过某一行时焦点会跟到那一行，所以键盘高亮和鼠标高亮永远是同一个，不会同时亮两行。\n\n用键盘打开和用鼠标打开有一个区别：键盘打开会把焦点放在第一行（按 `ArrowUp` 打开则放在最后一行），鼠标打开只把焦点放在菜单本身，不预选任何一行——否则用户会以为那一行已经被选中了。\n\n弹层会自己找位置：默认开在触发按钮下方左对齐，空间不够时翻到上方；`placement` 和 `alignment` 可以改成上/下/左/右和起点/居中/终点。菜单宽度默认与触发按钮齐平并封顶在 320px，`menuWidth` 可以给定宽度或 `max-content` 之类的关键字宽度；高度默认封顶 300px，超出就滚动，`menuMaxHeight` 可以按像素把上限抬高到刚好放下所有行。\n\n需要外部控制开关时用双向绑定菜单的展开状态。菜单在挂载时就处于打开状态的话，不会抢走焦点——这不是用户要求的打开动作，把焦点从页面里拽走会让人丢失位置。\n\n勾选行用来开关一项视图设置。点一下只翻转状态，菜单保持打开，方便连续改好几项。单选行必须放在单选组里，一组里一次只能选中一个；选完菜单收起，因为这次选择已经确定。方向键仍然在这些行之间移动，空格和回车会切换当前这一行。禁用的行留在菜单里，方向键会跳过它，点击也不会改变状态。勾选标记和单选圆点只是装饰，整行才是可操作的控件。粗指针设备上，标记会挪到行的末尾。\n\n菜单上方和下方可以放不属于选项的内容，比如一个筛选框，或一个新建按钮。它们画在同一个框里，但不算菜单项：在里面打字不会按字母跳行。菜单本身是这一段里的一个 Tab 停靠点。从某一行按 Shift+Tab，会跳过菜单元素，落到上方最后一个可聚焦控件；从下方最后一个控件继续往后 Tab，或从上方第一个控件往前 Tab，菜单就会收起。用指针打开时，菜单上不会先画出焦点环；之后用键盘 Tab 到菜单上，焦点环才出现。\n\n子菜单在宽屏上向旁边展开。在紧凑的触控界面上，同一级内容会换掉当前菜单里的行，并在顶部给出返回，返回文案会带上父级的名字。这个选择在菜单打开时定下来，打开期间不会再变。也可以强制始终旁边展开，或强制始终在原处替换。子菜单的行还在加载时，行尾的箭头可以换成转圈，菜单仍然能打开。飞出的面板默认至少大约 160 像素宽，也可以单独指定宽度，并且不会超出视口。"
       },
       "practices": {
         "en": [
@@ -7158,11 +7158,11 @@
       "exportName": "Chat",
       "summary": {
         "en": "The chat display is a set of pieces that stack into a transcript: a scrolling layout, a message log, rows for each sender, bubbles, tool calls, a reasoning disclosure, a typing line, and an unread rule. Message bodies are slots. This suite does not render Markdown; pass plain text, or bring your own renderer.",
-        "zh": "对话展示是一组可以叠成会话记录的部件：滚动布局、消息列表、不同发送者的消息行、气泡、工具调用、推理折叠、正在输入，以及未读分隔。消息正文走插槽。这套组件不渲染 Markdown，正文用纯文本，或者换成你自己的渲染器。"
+        "zh": "`Chat` 这一套组件，就像积木一样，包含搭建完整聊天窗口所需的各个部件：滚动的对话外框、消息列表、区分发送者的消息行、聊天气泡、AI 工具调用折叠栏、思考过程折叠、正在输入动画，以及未读消息提示线。消息正文通过插槽传入。组件本身不带 Markdown 解析器，你可以直接放纯文本，也可以接上你自己喜欢的 Markdown 渲染库。"
       },
       "usage": {
         "en": "The chat display is a set of pieces that stack into a transcript: a scrolling layout, a message log, rows for each sender, bubbles, tool calls, a reasoning disclosure, a typing line, and an unread rule. Message bodies are slots. This suite does not render Markdown; pass plain text, or bring your own renderer.\n\n`ChatLayout` is a column. The transcript grows, and the composer stays pinned to the bottom over a frosted scrim. By default the layout itself scrolls. Pass `scrollRef` when an ancestor should scroll instead, and the dock switches from sticky to fixed.\n\nWhile the reader is at the bottom, new text keeps the view pinned there. Scrolling up lets go immediately and reveals the scroll-to-bottom button. If messages arrive while the view is unlocked, the button label changes to the localized “New messages” string, a live region announces it, and `ChatUnreadDivider` can mark the boundary. `ChatLayout` wires this through `useChatStreamScroll` and `useChatNewMessages`. Set `showScrollButton` to `false` to hide the built-in button, or replace it with the `scrollButton` slot.\n\nThe field is ChatComposer, placed in the layout's composer slot. The shell owns the draft, send, and stop. The default editor accepts chips, sends on Enter, and inserts a newline on Shift+Enter. The attachment drawer, header, and footer are slots. Dictation uses the browser's speech recognition, and the microphone stays hidden when that API is missing. The landing page and the transcript with a document panel are in [Patterns](/en/guide/patterns).\n\n```vue\n<script setup lang=\"ts\">\nimport { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'\n\nfunction onSubmit(value: string) {\n  console.log(value)\n}\n</script>\n\n<template>\n  <ChatLayout>\n    <ChatMessageList>\n      <ChatMessage sender=\"user\">\n        <ChatMessageBubble>\n          Check the release notes for me.\n        </ChatMessageBubble>\n      </ChatMessage>\n      <ChatMessage sender=\"assistant\">\n        <ChatMessageBubble name=\"Assistant\">\n          The notes are in the docs.\n        </ChatMessageBubble>\n      </ChatMessage>\n    </ChatMessageList>\n    <template #composer>\n      <ChatComposer placeholder=\"Type a message…\" @submit=\"onSubmit\" />\n    </template>\n  </ChatLayout>\n</template>\n```\n\n`ChatMessageList` is a `role=\"log\"`. Pass `isStreaming` while an assistant reply is still growing, so a screen reader waits and announces the finished message once. `scrollToTopAction` runs when the top sentinel enters the scroll parent, and a spinner stays up until the promise settles.\n\n`ChatMessage` is an article. `sender` is `user`, `assistant`, or `system`. A system row is centered and ignores the avatar, name, and metadata slots. Put the visible name on `ChatMessageBubble` when the body starts with a bubble, so the name lines up with the bubble padding.\n\n`ChatToolCalls` takes the tool list an assistant turn already produced. One call is a single row. Several calls collapse behind a header; `label` replaces the localized count while the group is open. A call with `detail`, or the `detail` slot, can expand on its own. `v-model:is-expanded` controls the group.\n\n`ChatReasoning` is the same kind of disclosure for a thinking trace. It starts collapsed. A plain-text default slot is reused as the one-line preview. `isStreaming` shimmers the label and hides both the preview and `duration`.\n\n`ChatTypingIndicator` draws three dots. Pass `names` and it writes a sentence for one person, two people, or a named person plus a count. The root is `role=\"status\"`, and that region is the only announcement. `ChatUnreadDivider` marks the first unread message, and new rows go below it.\n\nThe examples start with the composer beside the transcript, then follow layout, scroll button, message, bubble, list, metadata, system message, and tool calls.",
-        "zh": "对话展示是一组可以叠成会话记录的部件：滚动布局、消息列表、不同发送者的消息行、气泡、工具调用、推理折叠、正在输入，以及未读分隔。消息正文走插槽。这套组件不渲染 Markdown，正文用纯文本，或者换成你自己的渲染器。\n\n`ChatLayout` 是一列。记录区往上长，输入区贴在底部，下面有一层磨砂。默认由布局自己滚动。外面已经有滚动容器时传入 `scrollRef`，底部停靠会从 sticky 改成 fixed。\n\n阅读位置在底部时，新文字会把视图继续贴在底部。一旦向上滚，贴底立刻停下，并出现回到底部的按钮。没贴底时又来了新消息，按钮文案会换成当前语言的「有新消息」，屏幕阅读器也会播报，`ChatUnreadDivider` 用来标出分界。`ChatLayout` 内部用 `useChatStreamScroll` 和 `useChatNewMessages` 串起这件事。`showScrollButton` 设为 `false` 可以拿掉内置按钮，也可以用 `scrollButton` 插槽换成自己的。\n\n输入区用 ChatComposer，放进布局的 composer 插槽。外壳管草稿、发送和停止。默认输入框能插入标记，回车发送，Shift 加回车换行。附件抽屉、顶栏和底栏都是插槽。语音听写走浏览器自己的语音识别，没有识别能力时麦克风不出现。落地页和带文档面板的整页会话见[应用模式](/guide/patterns)。\n\n```vue\n<script setup lang=\"ts\">\nimport { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'\n\nfunction onSubmit(value: string) {\n  console.log(value)\n}\n</script>\n\n<template>\n  <ChatLayout>\n    <ChatMessageList>\n      <ChatMessage sender=\"user\">\n        <ChatMessageBubble>\n          帮我看一下发布说明。\n        </ChatMessageBubble>\n      </ChatMessage>\n      <ChatMessage sender=\"assistant\">\n        <ChatMessageBubble name=\"助手\">\n          说明在文档里。\n        </ChatMessageBubble>\n      </ChatMessage>\n    </ChatMessageList>\n    <template #composer>\n      <ChatComposer placeholder=\"输入消息……\" @submit=\"onSubmit\" />\n    </template>\n  </ChatLayout>\n</template>\n```\n\n`ChatMessageList` 是 `role=\"log\"`。助手回复还在增长时传入 `isStreaming`，屏幕阅读器会等这段结束再读一次。`scrollToTopAction` 在顶部哨兵进入滚动容器时执行，Promise 结束前顶部一直显示加载指示。\n\n`ChatMessage` 是一条 `article`。`sender` 取 `user`、`assistant` 或 `system`。系统消息居中，头像、名字和元信息插槽都不会渲染。正文以气泡开头时，把可见名字放在 `ChatMessageBubble` 上，名字才能和气泡内边距对齐。\n\n`ChatToolCalls` 接收一轮回复里已经有的工具调用。只有一条时就是一行。多条收在一个标题后面；展开时 `label` 会替换掉按数量生成的文案。某条带了 `detail`，或者提供了 `detail` 插槽，这一行自己还能再展开。分组用 `v-model:is-expanded` 控制。\n\n`ChatReasoning` 是同样的折叠，用来放推理过程，默认收起。默认插槽如果是纯文本，会同时当作收起时的一行预览。`isStreaming` 会让标题闪动，并藏起预览和 `duration`。\n\n`ChatTypingIndicator` 画三个点。传入 `names` 后，一个人、两个人、以及「某人和其他几人」各有一句文案。根节点是 `role=\"status\"`，由它播报这一句。`ChatUnreadDivider` 标出第一条未读消息，新到的内容放在它下面。\n\n下面先看输入套件和消息列表放在一起的样子，再按布局、回到底部、消息、气泡、列表、元信息、系统消息、工具调用往下排。"
+        "zh": "`Chat` 这一套组件，就像积木一样，包含搭建完整聊天窗口所需的各个部件：滚动的对话外框、消息列表、区分发送者的消息行、聊天气泡、AI 工具调用折叠栏、思考过程折叠、正在输入动画，以及未读消息提示线。消息正文通过插槽传入。组件本身不带 Markdown 解析器，你可以直接放纯文本，也可以接上你自己喜欢的 Markdown 渲染库。\n\n**什么时候用：**\n- 搭建大模型 AI 对话界面、客服客服聊天窗口或即时聊天应用时。\n\n**什么时候不要用：**\n- 如果只是为了让用户留个言、发一条评论，用普通的表单评论区组件更轻快。\n- 如果只是通知中心的一串流水消息，用时间线列表或通知流即可。\n\n各个积木的组装分工如下：\n\n- `ChatLayout` 是最外层的纵向布局容器。消息记录区在上方自适应伸展，输入框贴在底部，底部还带有一层毛玻璃磨砂效果。默认由布局自己滚动；如果外层已经有滚动容器，可以传入 `scrollRef`，底部停靠会自动调整为跟随固定的模式。\n- 当用户浏览到最底部时，新生成的内容会自动把滚动条继续贴在底部。如果用户往上翻看历史记录，自动贴底会立刻暂停，并浮现一个回到最底部的圆形按钮。在没有贴底时来了新消息，按钮文字会变成「有新消息」，未读分割线 `ChatUnreadDivider` 也会标出新旧分界线。\n- `ChatComposer` 是底部的输入套件，放进 `ChatLayout` 的 `composer` 插槽里。它负责草稿状态、回车发送、Shift 加回车换行、停止生成按钮等。它还支持附件抽屉以及基于浏览器原生语音识别的麦克风听写功能。落地页和带文档面板的整页会话见[应用模式](/guide/patterns)。\n\n```vue\n<script setup lang=\"ts\">\nimport { ChatComposer, ChatLayout, ChatMessage, ChatMessageBubble, ChatMessageList } from '@astryx-vue/core/Chat'\n\nfunction onSubmit(value: string) {\n  console.log(value)\n}\n</script>\n\n<template>\n  <ChatLayout>\n    <ChatMessageList>\n      <ChatMessage sender=\"user\">\n        <ChatMessageBubble>\n          帮我看一下发布说明。\n        </ChatMessageBubble>\n      </ChatMessage>\n      <ChatMessage sender=\"assistant\">\n        <ChatMessageBubble name=\"助手\">\n          说明在文档里。\n        </ChatMessageBubble>\n      </ChatMessage>\n    </ChatMessageList>\n    <template #composer>\n      <ChatComposer placeholder=\"输入消息……\" @submit=\"onSubmit\" />\n    </template>\n  </ChatLayout>\n</template>\n```\n\n- `ChatMessageList` 是承载消息记录的列表容器，带有 `role=\"log\"`。当 AI 助手的文字还在持续生成时传入 `isStreaming`，读屏软件会等整段输出完毕后再统一朗读，避免不断打扰用户。当用户向上翻到顶部时，`scrollToTopAction` 会触发加载历史消息，加载完成前顶部会显示旋转动画。\n- `ChatMessage` 代表单条消息行。`sender` 可以是 `user`（用户）、`assistant`（AI 助手）或 `system`（系统通知）。系统通知会默认水平居中。\n- `ChatToolCalls` 用来展示 AI 调用的外部工具或函数。只有一次调用时直接显示一行；多次调用时会收拢进折叠栏，点击可以查看参数与结果明细。\n- `ChatReasoning` 是折叠卡片，用来展示 AI 的思考推理过程，默认折叠收起。\n- `ChatTypingIndicator` 用来展示「正在输入」的跳动三个小圆点，告诉用户对方正在打字或 AI 正在构思。\n\n下面先看输入套件和消息列表放在一起的样子，再按布局、回到底部、消息、气泡、列表、元信息、系统消息、工具调用往下排。"
       },
       "practices": {
         "en": [
@@ -19732,11 +19732,11 @@
       "exportName": "Badge",
       "summary": {
         "en": "Every status badge steals attention. Only badge states where the user needs to notice or act: errors, warnings, items requiring follow-up. If no action is needed, plain text is fine.",
-        "zh": "`Badge` 用于标记状态或类别，例如处理结果、优先级或团队归属，适合在列表、卡片和表格中快速扫读。徽标是静态的状态或类别标记，需要可移除、可点击的标签请用 Token。从独立入口导入即可，结构样式会随组件自动加载："
+        "zh": "`Badge`（徽标）是一块小小的只读标记，用来告诉用户某项内容的状态或所属分类，例如「已完成」、「待审核」或团队名称等。它很适合放在列表、卡片和表格行里，方便大家一眼扫过去就看清概况。"
       },
       "usage": {
         "en": "Import the component from its dedicated entry. The component loads its structural styles.\n\nImport the theme in your application entry:\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\nComponent usage:\n\n```vue\n<script setup lang=\"ts\">\nimport { Badge } from '@astryx-vue/core/Badge'\n</script>\n\n<template>\n  <Badge variant=\"success\">\n    Completed\n  </Badge>\n</template>\n```",
-        "zh": "`Badge` 用于标记状态或类别，例如处理结果、优先级或团队归属，适合在列表、卡片和表格中快速扫读。徽标是静态的状态或类别标记，需要可移除、可点击的标签请用 Token。从独立入口导入即可，结构样式会随组件自动加载：\n\n主题在应用入口引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n组件用法：\n\n```vue\n<script setup lang=\"ts\">\nimport { Badge } from '@astryx-vue/core/Badge'\n</script>\n\n<template>\n  <Badge variant=\"success\">\n    已完成\n  </Badge>\n</template>\n```"
+        "zh": "`Badge`（徽标）是一块小小的只读标记，用来告诉用户某项内容的状态或所属分类，例如「已完成」、「待审核」或团队名称等。它很适合放在列表、卡片和表格行里，方便大家一眼扫过去就看清概况。\n\n```vue\n<script setup lang=\"ts\">\nimport { Badge } from '@astryx-vue/core/Badge'\n</script>\n\n<template>\n  <Badge variant=\"success\">\n    已完成\n  </Badge>\n</template>\n```\n\n**什么时候用：**\n- 需要用颜色和简短词语突出展示某个条目的状态（如成功、警告、失败）或类别时。\n\n**什么时候不要用：**\n- 徽标是纯展示用的，不能点击也不能关闭。如果需要一个可以点击、勾选或带删除叉号的标签，请改用 [Token](/components/token)。\n- 如果只需要展示普通文字描述、日期或数量，请直接使用普通的排版文本（如 `Text` 组件），不要给每条普通信息都套上徽标。\n\n样式主题只需在整个应用的主入口（如 `main.ts`）引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```"
       },
       "practices": {
         "en": [
@@ -32210,11 +32210,11 @@
       "exportName": "TextInput",
       "summary": {
         "en": "`TextInput` accepts single-line text. The component includes `Field`.",
-        "zh": "`TextInput` 用于输入邮箱、姓名、搜索词等单行文本。标签、说明与校验消息由内置的 `Field` 自动关联，通过 `v-model` 管理输入值即可："
+        "zh": "`TextInput`（单行文本输入框）供用户输入一行简短文字，例如电子邮箱、姓名、搜索词或密码等。它内置了 `Field` 组件，会自动把标签文字、辅助说明以及校验报错信息与输入框关联在一起。平时只需配合 `v-model` 绑定输入值即可："
       },
       "usage": {
         "en": "`TextInput` accepts single-line text. The component includes `Field`.\n\n```vue\n<script setup lang=\"ts\">\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { shallowRef } from 'vue'\n\nconst email = shallowRef('')\n</script>\n\n<template>\n  <TextInput v-model=\"email\" label=\"Email\" type=\"email\" auto-complete=\"email\" />\n</template>\n```\n\nFor a custom control, use [Field](/en/components/field). Import the theme once in your app entry:\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```",
-        "zh": "`TextInput` 用于输入邮箱、姓名、搜索词等单行文本。标签、说明与校验消息由内置的 `Field` 自动关联，通过 `v-model` 管理输入值即可：\n\n```vue\n<script setup lang=\"ts\">\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { shallowRef } from 'vue'\n\nconst email = shallowRef('')\n</script>\n\n<template>\n  <TextInput v-model=\"email\" label=\"邮箱\" type=\"email\" auto-complete=\"email\" />\n</template>\n```\n\n自定义控件可使用 [Field](/components/field)。主题在应用入口引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```"
+        "zh": "`TextInput`（单行文本输入框）供用户输入一行简短文字，例如电子邮箱、姓名、搜索词或密码等。它内置了 `Field` 组件，会自动把标签文字、辅助说明以及校验报错信息与输入框关联在一起。平时只需配合 `v-model` 绑定输入值即可：\n\n```vue\n<script setup lang=\"ts\">\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { shallowRef } from 'vue'\n\nconst email = shallowRef('')\n</script>\n\n<template>\n  <TextInput v-model=\"email\" label=\"邮箱\" type=\"email\" auto-complete=\"email\" />\n</template>\n```\n\n**什么时候用：**\n- 需要用户输入较短的一行文字时（如登录账号、联系方式、单行搜索）。\n\n**什么时候不要用：**\n- 需要输入文章、留言或详细备注等多行长篇内容时，请改用多行文本域 [TextArea](/components/text-area)。\n- 需要用户从预设列表中挑选已有选项时，请改用 [Selector](/components/selector) 或下拉菜单。\n- 需要完全自定义输入控件的外壳与结构时，可以直接使用底层原子组件 [Field](/components/field)。\n\n主题只需在整个应用的主入口（如 `main.ts`）引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```"
       },
       "practices": {
         "en": [
@@ -40804,11 +40804,11 @@
       "exportName": "AppShell",
       "summary": {
         "en": "`AppShell` is the page frame. The default slot is the page content. `topNav`, `sideNav`, `banner`, and `mobileNav` are named slots.",
-        "zh": "`AppShell` 是页面外框。默认插槽是页面正文。`topNav`、`sideNav`、`banner`、`mobileNav` 是具名插槽。"
+        "zh": "`AppShell`（应用外壳）是承载整个网站或管理后台的大骨架，用来规整地安排顶部导航、侧边菜单、重要横幅以及中间的主内容区。默认插槽放页面的正文，其余重要区域通过具名插槽放入：`topNav`（顶栏）、`sideNav`（侧栏）、`banner`（通知横幅）和 `mobileNav`（移动端导航）。"
       },
       "usage": {
         "en": "`AppShell` is the page frame. The default slot is the page content. `topNav`, `sideNav`, `banner`, and `mobileNav` are named slots.\n\n```vue\n<script setup lang=\"ts\">\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <AppShell :content-padding=\"6\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"#orders\" is-selected label=\"Orders\" />\n      </SideNav>\n    </template>\n    <p>Orders</p>\n  </AppShell>\n</template>\n```\n\n`variant` is `wash`, `surface`, `section`, or `elevated` (the default). `contentPadding` is a spacing step for the content region. `height` is `fill` or `auto`. `fill` uses `100dvh`; an inline `height: 100%` overrides it when the shell sits in a sized preview.\n\n`mobileNav` is `false` or `{ breakpoint, isOpen, hasToggle }`. The default breakpoint is `md` (768px). Below the breakpoint the side nav moves into a drawer. A top nav inside the shell uses that drawer instead of opening one of its own. `v-model:mobile-nav-open` controls the drawer, and the component emits `mobileNavOpenChange`.\n\nA skip link points at `#astryx-app-shell-main`. The main region is a `div` with `role=\"main\"` and `tabindex=\"-1\"`. With `variant=\"elevated\"` and both a top nav and a side nav on a wide viewport, the content sits on a rounded backdrop.\n\n`useAppShellMobile` reads the nearest shell. Outside a shell, or when mobile nav is off, `isMobile` and `isMobileNavEnabled` are false and the open and close methods do nothing.",
-        "zh": "`AppShell` 是页面外框。默认插槽是页面正文。`topNav`、`sideNav`、`banner`、`mobileNav` 是具名插槽。\n\n```vue\n<script setup lang=\"ts\">\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <AppShell :content-padding=\"6\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"#orders\" is-selected label=\"订单\" />\n      </SideNav>\n    </template>\n    <p>订单</p>\n  </AppShell>\n</template>\n```\n\n`variant` 取 `wash`、`surface`、`section` 或 `elevated`（默认）。`contentPadding` 是正文区域的间距刻度。`height` 取 `fill` 或 `auto`。`fill` 使用 `100dvh`；外壳放在已经有高度的预览里时，行内 `height: 100%` 可以盖过它。\n\n`mobileNav` 可以是 `false`，或 `{ breakpoint, isOpen, hasToggle }`。默认断点是 `md`（768px）。窄于断点时侧栏收进抽屉。外壳里的顶栏使用这只抽屉，不再自己打开另一只。`v-model:mobile-nav-open` 控制抽屉，组件同时发出 `mobileNavOpenChange`。\n\n跳过链接指向 `#astryx-app-shell-main`。主区域是带 `role=\"main\"` 和 `tabindex=\"-1\"` 的 `div`。`variant` 为 `elevated`、同时有顶栏和侧栏、而且视口够宽时，正文坐在圆角背板上。\n\n`useAppShellMobile` 读取最近的外壳。在外壳外面，或关掉了移动导航时，`isMobile` 和 `isMobileNavEnabled` 都是 false，打开和关闭方法不做任何事。"
+        "zh": "`AppShell`（应用外壳）是承载整个网站或管理后台的大骨架，用来规整地安排顶部导航、侧边菜单、重要横幅以及中间的主内容区。默认插槽放页面的正文，其余重要区域通过具名插槽放入：`topNav`（顶栏）、`sideNav`（侧栏）、`banner`（通知横幅）和 `mobileNav`（移动端导航）。\n\n**什么时候用：**\n- 构建后台管理系统、多页面 SaaS 应用或需要统一导航布局的完整平台时。\n\n**什么时候不要用：**\n- 如果只是页面内部的一小块局部排版（例如卡片内的两栏布局），请使用专门的 [Layout](/components/layout) 或弹性盒/网格，不要滥用 AppShell。\n- 独立的单页落地页、注册登录页或全屏沉浸式预览，通常不需要复杂的外壳，使用纯正文模式或直接排版即可。\n\n```vue\n<script setup lang=\"ts\">\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <AppShell :content-padding=\"6\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"#orders\" is-selected label=\"订单\" />\n      </SideNav>\n    </template>\n    <p>订单</p>\n  </AppShell>\n</template>\n```\n\n外壳的常用配置项如下：\n\n- `variant` 可以调整底色风格：包含纯净底色 `wash`、面板底色 `surface`、区块底色 `section`，或者默认的浮起卡片质感 `elevated`。\n- `contentPadding` 控制正文区域四周的留白间距等级。\n- `height` 设置外壳的高度模式，可以填满全屏（`fill`，使用现代的 `100dvh`），也可以随内容自适应撑开（`auto`）。\n- `mobileNav` 用来控制手机端的抽屉导航。默认在宽度低于 768px（`md` 断点）时，原本在左侧的侧边菜单会自动收拢进一个侧滑抽屉里。顶栏里的汉堡按钮会自动连接并控制这只抽屉，无需自己重复写逻辑。可以通过 `v-model:mobile-nav-open` 双向绑定抽屉的打开状态。\n- 组件内置了专门为键盘操作和读屏用户准备的「跳转到主内容」快捷链接，回车即可将光标焦点直接定位到带有 `role=\"main\"` 的正文容器上。\n- `useAppShellMobile` 组合式函数可以在任何子组件里读取当前外壳的移动端适配状态（如抽屉是否开启、是否处于手机屏幕断点下）。"
       },
       "practices": {
         "en": [
@@ -52286,11 +52286,11 @@
       "exportName": "AlertDialog",
       "summary": {
         "en": "`AlertDialog` is a modal with a single job: it asks the user to confirm a destructive or irreversible action before that action happens. Deleting content, revoking access, and discarding unsaved work all belong here — the work cannot be undone, so it is worth interrupting the user, stating the consequence, and letting them decide.",
-        "zh": "`AlertDialog` 是一个只做一件事的模态对话框：在破坏性或不可逆的操作真正发生之前，再向用户确认一次。删除内容、撤销授权、丢弃未保存的修改都属于这类场景——操作一旦执行就无法回头，所以值得打断用户，把后果讲清楚，再由用户自己决定。"
+        "zh": "`AlertDialog`（警告对话框）只专心做一件事：在具有破坏性或无法撤回的操作（比如永久删除文件、清空数据、注销账户）真正执行前，跳出来跟用户再次确认。因为这些动作做完就没法反悔，所以必须郑重其事地停下来，向用户说清楚后果，再交由用户自己做决定。"
       },
       "usage": {
         "en": "`AlertDialog` is a modal with a single job: it asks the user to confirm a destructive or irreversible action before that action happens. Deleting content, revoking access, and discarding unsaved work all belong here — the work cannot be undone, so it is worth interrupting the user, stating the consequence, and letting them decide.\n\nIt implements the WAI-ARIA Alert Dialog pattern. The root element uses `role=\"alertdialog\"`, the title names the dialog through `aria-labelledby`, and the consequence description is announced with it through `aria-describedby`. Focus moves into the dialog on open and lands on Cancel, then returns to the element that opened it on close. The dialog cannot be dismissed by clicking the backdrop, and Escape is the same as canceling.\n\n```vue\n<script setup lang=\"ts\">\nimport { AlertDialog } from '@astryx-vue/core/AlertDialog'\nimport { Button } from '@astryx-vue/core/Button'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button label=\"Delete project\" variant=\"destructive\" @click=\"isOpen = true\" />\n  <AlertDialog\n    :is-open=\"isOpen\"\n    title=\"Delete this project?\"\n    description=\"This cannot be undone. Its deployments and every dashboard built on it go with it.\"\n    action-label=\"Delete project\"\n    @action=\"isOpen = false\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\nThe parent owns the open state. Cancel and Escape only emit `openChange(false)`, so the dialog never closes itself, and the confirm action only emits `action` without closing either. That gap is deliberate: real work takes time, so you close the dialog when the work settles. While it runs, set `isActionLoading` to show a spinner on the confirm button and hold the dialog open:\n\n```vue\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst isActionLoading = ref(false)\n\nasync function revoke(): Promise<void> {\n  isActionLoading.value = true\n  await revokeAccess()\n  isActionLoading.value = false\n  isOpen.value = false\n}\n</script>\n\n<template>\n  <AlertDialog\n    :is-action-loading=\"isActionLoading\"\n    :is-open=\"isOpen\"\n    action-label=\"Revoke access\"\n    description=\"This member loses access to every shared folder and draft immediately.\"\n    title=\"Revoke access?\"\n    @action=\"revoke\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\nThe confirm action uses the `destructive` variant by default, because the dialog exists to confirm destructive work. When the confirmation is not destructive — publishing a draft, for instance — set `actionVariant` to `primary` so the color matches the meaning.\n\nThe action layout follows the available width. Above 640px the actions sit in one row, Cancel then confirm, and the row wraps when the labels are long. At 640px and below both buttons fill the width and the confirm action sits above Cancel. Either way, initial focus stays on Cancel, the least destructive choice, and the narrow layout keeps visual, DOM, and tab order aligned so screen readers read the actions in the order they are shown.\n\n`isInline` renders the whole surface in normal flow for documentation previews, without the `<dialog>` element, the backdrop, or focus behavior. Because it is not modal, it does not claim to be: the root element uses `role=\"group\"` instead.",
-        "zh": "`AlertDialog` 是一个只做一件事的模态对话框：在破坏性或不可逆的操作真正发生之前，再向用户确认一次。删除内容、撤销授权、丢弃未保存的修改都属于这类场景——操作一旦执行就无法回头，所以值得打断用户，把后果讲清楚，再由用户自己决定。\n\n它实现了 WAI-ARIA 的 Alert Dialog 模式。根元素使用 `role=\"alertdialog\"`，标题通过 `aria-labelledby` 为对话框命名，后果描述通过 `aria-describedby` 一起播报。打开时焦点移入对话框并落在「取消」上，关闭后再回到触发它的元素。它不能通过点击遮罩关闭，Escape 则等同于取消。\n\n```vue\n<script setup lang=\"ts\">\nimport { AlertDialog } from '@astryx-vue/core/AlertDialog'\nimport { Button } from '@astryx-vue/core/Button'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button label=\"删除项目\" variant=\"destructive\" @click=\"isOpen = true\" />\n  <AlertDialog\n    :is-open=\"isOpen\"\n    title=\"要删除这个项目吗？\"\n    description=\"删除后无法恢复，项目下的部署与所有仪表盘都会一并移除。\"\n    action-label=\"删除项目\"\n    @action=\"isOpen = false\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n打开状态完全由父组件掌握。按下「取消」或按 Escape 只会发出 `openChange(false)`，组件不会自己关闭；确认按钮同样只发出 `action` 事件，也不会关闭对话框。这是刻意留出的位置：异步操作需要时间，你可以在操作结束后再设置 `isOpen`。等待期间把 `isActionLoading` 设为 `true`，确认按钮会显示加载指示，对话框保持打开：\n\n```vue\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst isActionLoading = ref(false)\n\nasync function revoke(): Promise<void> {\n  isActionLoading.value = true\n  await revokeAccess()\n  isActionLoading.value = false\n  isOpen.value = false\n}\n</script>\n\n<template>\n  <AlertDialog\n    :is-action-loading=\"isActionLoading\"\n    :is-open=\"isOpen\"\n    action-label=\"撤销授权\"\n    description=\"该成员会立即失去所有共享文件夹和草稿的访问权限。\"\n    title=\"要撤销授权吗？\"\n    @action=\"revoke\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n确认按钮默认使用 `destructive` 变体，因为对话框本身就是为确认破坏性操作而存在的。如果这次确认并不具有破坏性，例如「发布变更」，把 `actionVariant` 改成 `primary`，颜色就会和语义一致。\n\n按钮的排列会随可用宽度变化。宽于 640px 时，操作区是一行，按「取消 → 确认」的顺序排列，标签过长时整行自动换行；640px 及以下时两个按钮都占满宽度，确认操作排在「取消」上方。无论哪种排列，初始焦点始终落在「取消」上，因为那是破坏性最小的选择；窄屏下的层级、DOM 顺序与 Tab 顺序保持一致，屏幕阅读器读到的顺序和眼睛看到的顺序不会打架。\n\n`isInline` 用于文档预览：它以普通文档流渲染整个表面，不使用 `<dialog>`、遮罩与焦点限制。既然没有模态行为，它也不会声称自己是模态的，根元素的角色改为 `role=\"group\"`。"
+        "zh": "`AlertDialog`（警告对话框）只专心做一件事：在具有破坏性或无法撤回的操作（比如永久删除文件、清空数据、注销账户）真正执行前，跳出来跟用户再次确认。因为这些动作做完就没法反悔，所以必须郑重其事地停下来，向用户说清楚后果，再交由用户自己做决定。\n\n**什么时候用：**\n- 执行无法挽回或后果严重的破坏性操作前，需要用户郑重确认时。\n\n**什么时候不要用：**\n- 需要用户在弹窗里填写表单、编辑复杂内容时，请改用普通对话框 [Dialog](/components/dialog)。\n- 普通的状态提醒或操作成功通知，请改用轻提示 [useToast](/components/use-toast)，不要频繁打断用户。\n\n它实现了 WAI-ARIA 规范中的 Alert Dialog 模式。根元素带有 `role=\"alertdialog\"`，标题通过 `aria-labelledby` 作为弹窗名称，后果描述通过 `aria-describedby` 连同标题一起被读屏工具念出。打开时焦点会自动落在最为安全的「取消」按钮上，关闭后再把焦点还给触发它的元素。为了防止误触，点击背景遮罩不会关闭它，按键盘上的 Escape 键则等同于点击取消。\n\n```vue\n<script setup lang=\"ts\">\nimport { AlertDialog } from '@astryx-vue/core/AlertDialog'\nimport { Button } from '@astryx-vue/core/Button'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button label=\"删除项目\" variant=\"destructive\" @click=\"isOpen = true\" />\n  <AlertDialog\n    :is-open=\"isOpen\"\n    title=\"要删除这个项目吗？\"\n    description=\"删除后无法恢复，项目下的部署与所有仪表盘都会一并移除。\"\n    action-label=\"删除项目\"\n    @action=\"isOpen = false\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n打开状态完全由父组件掌握。按下「取消」或按 Escape 只会发出 `openChange(false)`，组件不会自己关闭；确认按钮同样只发出 `action` 事件，也不会关闭对话框。这是刻意留出的位置：异步操作需要时间，你可以在操作结束后再设置 `isOpen`。等待期间把 `isActionLoading` 设为 `true`，确认按钮会显示加载指示，对话框保持打开：\n\n```vue\n<script setup lang=\"ts\">\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst isActionLoading = ref(false)\n\nasync function revoke(): Promise<void> {\n  isActionLoading.value = true\n  await revokeAccess()\n  isActionLoading.value = false\n  isOpen.value = false\n}\n</script>\n\n<template>\n  <AlertDialog\n    :is-action-loading=\"isActionLoading\"\n    :is-open=\"isOpen\"\n    action-label=\"撤销授权\"\n    description=\"该成员会立即失去所有共享文件夹和草稿的访问权限。\"\n    title=\"要撤销授权吗？\"\n    @action=\"revoke\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n确认按钮默认使用 `destructive` 变体，因为对话框本身就是为确认破坏性操作而存在的。如果这次确认并不具有破坏性，例如「发布变更」，把 `actionVariant` 改成 `primary`，颜色就会和语义一致。\n\n按钮的排列会随可用宽度变化。宽于 640px 时，操作区是一行，按「取消 → 确认」的顺序排列，标签过长时整行自动换行；640px 及以下时两个按钮都占满宽度，确认操作排在「取消」上方。无论哪种排列，初始焦点始终落在「取消」上，因为那是破坏性最小的选择；窄屏下的层级、DOM 顺序与 Tab 顺序保持一致，屏幕阅读器读到的顺序和眼睛看到的顺序不会打架。\n\n`isInline` 用于文档预览：它以普通文档流渲染整个表面，不使用 `<dialog>`、遮罩与焦点限制。既然没有模态行为，它也不会声称自己是模态的，根元素的角色改为 `role=\"group\"`。"
       },
       "practices": {
         "en": [
@@ -53459,11 +53459,11 @@
       "exportName": "Dialog",
       "summary": {
         "en": "`Dialog` presents one modal task above the page. It uses the native `<dialog>` element, so it traps focus, locks the page behind a backdrop, and returns focus to the element that opened it. Pair it with `DialogHeader` to get a focusable title, an optional subtitle, and a close button.",
-        "zh": "`Dialog` 在页面内容上方呈现一个模态对话框，用来承载需要用户专注处理的任务。它基于原生 `<dialog>` 元素，会自动锁定背景、把焦点限制在对话框内，关闭后焦点还会还给打开它的元素。搭配 `DialogHeader` 使用，可以获得可聚焦的标题、可选的副标题和关闭按钮："
+        "zh": "`Dialog`（模态对话框）会在当前页面之上浮起一个独立的小窗口，并把背景内容锁住，用来让用户集中精力完成某个具体任务，比如填写表单、配置选项或编辑资料。"
       },
       "usage": {
         "en": "`Dialog` presents one modal task above the page. It uses the native `<dialog>` element, so it traps focus, locks the page behind a backdrop, and returns focus to the element that opened it. Pair it with `DialogHeader` to get a focusable title, an optional subtitle, and a close button.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button label=\"Share project\" variant=\"secondary\" @click=\"isOpen = true\" />\n  <Dialog :is-open=\"isOpen\" @open-change=\"isOpen = $event\">\n    <DialogHeader title=\"Share project\" has-close-button @open-change=\"isOpen = $event\" />\n    <p>Copy the link and send it to your team.</p>\n  </Dialog>\n</template>\n```",
-        "zh": "`Dialog` 在页面内容上方呈现一个模态对话框，用来承载需要用户专注处理的任务。它基于原生 `<dialog>` 元素，会自动锁定背景、把焦点限制在对话框内，关闭后焦点还会还给打开它的元素。搭配 `DialogHeader` 使用，可以获得可聚焦的标题、可选的副标题和关闭按钮：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button label=\"分享项目\" variant=\"secondary\" @click=\"isOpen = true\" />\n  <Dialog :is-open=\"isOpen\" @open-change=\"isOpen = $event\">\n    <DialogHeader title=\"分享项目\" has-close-button @open-change=\"isOpen = $event\" />\n    <p>复制链接并发送给团队成员。</p>\n  </Dialog>\n</template>\n```"
+        "zh": "`Dialog`（模态对话框）会在当前页面之上浮起一个独立的小窗口，并把背景内容锁住，用来让用户集中精力完成某个具体任务，比如填写表单、配置选项或编辑资料。\n\n它基于浏览器原生的 `<dialog>` 元素构建，打开时会自动锁定网页背景、把光标焦点限制在窗口内部，关闭后还会贴心地把焦点还给刚才点开它的那个按钮。搭配 `DialogHeader` 一起使用，可以自带标题、副标题以及右上角的关闭叉号：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button label=\"分享项目\" variant=\"secondary\" @click=\"isOpen = true\" />\n  <Dialog :is-open=\"isOpen\" @open-change=\"isOpen = $event\">\n    <DialogHeader title=\"分享项目\" has-close-button @open-change=\"isOpen = $event\" />\n    <p>复制链接并发送给团队成员。</p>\n  </Dialog>\n</template>\n```\n\n**什么时候用：**\n- 需要打断用户当前操作，让他们专注完成一步独立任务（如输入资料、配置参数）时。\n\n**什么时候不要用：**\n- 如果只是为了在删除、覆盖或撤销授权等不可逆操作前确认一下，请改用专门的 [AlertDialog](/components/alert-dialog)。\n- 如果只是一句轻量的成功反馈（如“保存成功”），不要弹对话框打断用户，请改用轻提示 [useToast](/components/use-toast)。\n- 如果流程很长很复杂、需要来回切换多个页面，请直接做成独立的新页面，不要在一个小弹窗里硬塞太多东西。\n- 不要在一个对话框里再弹出一个新的对话框。如有分步需求，请在同一个弹窗内部切换步骤。"
       },
       "practices": {
         "en": [
@@ -56160,11 +56160,11 @@
       "exportName": "CommandPalette",
       "summary": {
         "en": "`CommandPalette` is a searchable command list. It owns the dialog, the search field, grouping, the empty state, and keyboard movement. The commands themselves come from a `SearchSource`. An empty query calls `bootstrap`; a typed query calls `search`.",
-        "zh": "`CommandPalette` 是一个可搜索的命令列表。对话框、搜索框、分组、空状态和键盘移动都由它负责。命令从 `SearchSource` 来：空查询走 `bootstrap`，有输入走 `search`。"
+        "zh": "`CommandPalette`（命令面板）是一个可以通过键盘全局唤起、支持即时搜索的指令弹窗，类似于 VS Code 或 Mac 上的 Spotlight 搜索。它把居中弹窗、输入搜索框、指令分组、键盘上下选行、以及搜不到时的空状态都封装在了一起。只要传入数据源 `SearchSource`，输入框为空时它会展示推荐列表（`bootstrap`），用户打字时则会即时进行关键词搜索（`search`）。"
       },
       "usage": {
         "en": "`CommandPalette` is a searchable command list. It owns the dialog, the search field, grouping, the empty state, and keyboard movement. The commands themselves come from a `SearchSource`. An empty query calls `bootstrap`; a typed query calls `search`.\n\n`isInline` draws the palette in the page instead of a modal. Production palettes leave it off. Opening from a shortcut is the page's job: `useHotkeys` already handles `mod+k`.\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource, useHotkeys } from '@astryx-vue/core'\nimport { CommandPalette } from '@astryx-vue/core/CommandPalette'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst source = createStaticSource([\n  { id: 'home', label: 'Home' },\n  { id: 'settings', label: 'Settings' },\n])\n\nfunction openPalette() {\n  isOpen.value = true\n}\n\nuseHotkeys([{ keys: 'mod+k', onPress: openPalette }])\n</script>\n\n<template>\n  <CommandPalette\n    :is-open=\"isOpen\"\n    :search-source=\"source\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n`v-model:value` turns the palette into a picker: the matching row stays selected, and choosing a row writes that id. `auxiliaryData.group` splits the list into groups in first-seen order. The `item` slot replaces the row label; `footer` replaces the hint row.\n\nArrow keys, Home, End, Page Up, and Page Down move the highlight and do not wrap. Enter selects the highlighted row. Escape closes the palette and drops an in-flight search. The highlight stays empty until the pointer or the keyboard moves it.",
-        "zh": "`CommandPalette` 是一个可搜索的命令列表。对话框、搜索框、分组、空状态和键盘移动都由它负责。命令从 `SearchSource` 来：空查询走 `bootstrap`，有输入走 `search`。\n\n`isInline` 把面板画在页面里，而不是模态对话框。正式环境不要开。用快捷键打开是页面自己的事，`useHotkeys` 已经能处理 `mod+k`。\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource, useHotkeys } from '@astryx-vue/core'\nimport { CommandPalette } from '@astryx-vue/core/CommandPalette'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst source = createStaticSource([\n  { id: 'home', label: 'Home' },\n  { id: 'settings', label: 'Settings' },\n])\n\nfunction openPalette() {\n  isOpen.value = true\n}\n\nuseHotkeys([{ keys: 'mod+k', onPress: openPalette }])\n</script>\n\n<template>\n  <CommandPalette\n    :is-open=\"isOpen\"\n    :search-source=\"source\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n`v-model:value` 把它变成选择器：匹配的行保持选中，选中一行会写入这个 id。`auxiliaryData.group` 按第一次出现的顺序分组。`item` 插槽替换行内文字，`footer` 插槽替换底部提示。\n\n方向键、Home、End、Page Up、Page Down 移动高亮，到头不停。Enter 选中高亮行。Escape 关闭面板，并丢掉还没回来的搜索。高亮在鼠标或键盘移动之前保持为空。"
+        "zh": "`CommandPalette`（命令面板）是一个可以通过键盘全局唤起、支持即时搜索的指令弹窗，类似于 VS Code 或 Mac 上的 Spotlight 搜索。它把居中弹窗、输入搜索框、指令分组、键盘上下选行、以及搜不到时的空状态都封装在了一起。只要传入数据源 `SearchSource`，输入框为空时它会展示推荐列表（`bootstrap`），用户打字时则会即时进行关键词搜索（`search`）。\n\n**什么时候用：**\n- 需要为高级用户提供全局快捷键（如 `Cmd + K` 或 `Ctrl + K`），让他们能够秒级搜索页面、执行快捷操作或跳转路由时。\n\n**什么时候不要用：**\n- 普通表单里的局部下拉选择，请使用 [Selector](/components/selector) 或下拉菜单。\n- 站内文章的全文搜索结果页，更适合使用带翻页的专属搜索大页面。\n\n通过快捷键打开面板非常简单，配合 `useHotkeys` 监听快捷键，控制 `isOpen` 开关即可：\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource, useHotkeys } from '@astryx-vue/core'\nimport { CommandPalette } from '@astryx-vue/core/CommandPalette'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst source = createStaticSource([\n  { id: 'home', label: 'Home' },\n  { id: 'settings', label: 'Settings' },\n])\n\nfunction openPalette() {\n  isOpen.value = true\n}\n\nuseHotkeys([{ keys: 'mod+k', onPress: openPalette }])\n</script>\n\n<template>\n  <CommandPalette\n    :is-open=\"isOpen\"\n    :search-source=\"source\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n其他好用的配置包括：\n\n- `v-model:value`：可以把命令面板变成单选选择器，当前选中的项会保留打勾标记。\n- 在数据项里配置 `auxiliaryData.group`，组件就会自动将菜单整理成带标题的分类区域。\n- 键盘体验非常流畅：按上下方向键、Home、End、Page Up、Page Down 可以在选项间快速移动；按 Enter 键执行当前高亮行；按 Escape 键关闭面板并自动清空尚未返回的异步搜索请求。\n- 只有在做组件文档演示或特殊内嵌时才开启 `isInline`（将面板平铺在页面里），正常的实际业务项目中请保持默认的模态弹窗形式。"
       },
       "practices": {
         "en": [],
@@ -59422,11 +59422,11 @@
       "exportName": "Table",
       "summary": {
         "en": "`Table` renders from `data` and `columns`. Each column has a `key`, a `header`, and an optional `width` from `proportional()` or `pixel()`. A cell shows `row[key]` unless `renderCell` returns something else. `idKey` identifies a row. The default is `id`.",
-        "zh": "`Table` 用 `data` 和 `columns` 渲染。每一列有 `key`、`header`，以及可选的 `proportional()` 或 `pixel()` 宽度。单元格默认显示 `row[key]`，`renderCell` 可以换成别的内容。`idKey` 用来认出一行，默认是 `id`。"
+        "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。"
       },
       "usage": {
         "en": "`Table` renders from `data` and `columns`. Each column has a `key`, a `header`, and an optional `width` from `proportional()` or `pixel()`. A cell shows `row[key]` unless `renderCell` returns something else. `idKey` identifies a row. The default is `id`.\n\nBehavior is added with plugins, composed in the `plugins` object:\n\n- `useTableSortable` cycles a header through ascending, descending, and unsorted. Shift-click adds a column when `isMultiSortEnabled` is set. `useTableSortableState` holds the sort and returns the sorted rows.\n- `useTableSelection` adds a checkbox column and highlights selected rows. `useTableSelectionState` holds the selected ids.\n- `useTablePagination` renders a pager under the table. Slice the rows with `paginateData` before passing `data`.\n- `useTableColumnSettings` shows only the active column keys, and keeps `isAlwaysVisible` columns on.\n- `useTableColumnResize` lets a header edge be dragged. The smallest width is 60px.\n- `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly. This filtering stays separate from Power Search.\n- `useTableGroupedRows` turns the rows you already filtered, sorted, and sliced into sections. Pass its data, plugin, and row identity back to the table together. A collapsed section keeps its header. Replace the collapsed set instead of mutating it.\n- `useTableTreeState` decides which nodes are open. `useTableTreeData` draws the indent and the buttons. Child rows reuse the parent columns. The header button expands or collapses every branch, and a cycle is skipped.\n- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. Use the tree plugins when the children should reuse the columns.\n- `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.\n- `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.\n- `useTableRowIndex` numbers real rows. Group headers do not take a number.\n\n`density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.\n\nWithout `data`, the table is composed from `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHeaderCell`, and `TableCell`.\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\nPass the column filter state through a getter so the table reads the latest value:\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` and `rowIndexStart` report where the visible window sits in the full result. Setting either one numbers the data rows. When only the start is set, the total count is unknown. Group headers and detail panels are not numbered.",
-        "zh": "`Table` 用 `data` 和 `columns` 渲染。每一列有 `key`、`header`，以及可选的 `proportional()` 或 `pixel()` 宽度。单元格默认显示 `row[key]`，`renderCell` 可以换成别的内容。`idKey` 用来认出一行，默认是 `id`。\n\n行为通过 `plugins` 加进去：\n\n- `useTableSortable` 让表头在升序、降序和未排序之间切换。打开 `isMultiSortEnabled` 后，按住 Shift 再点可以加一列。`useTableSortableState` 保存排序并返回排好的行。\n- `useTableSelection` 加上复选框列，并高亮选中的行。`useTableSelectionState` 保存选中的 id。\n- `useTablePagination` 在表格下方放分页。传给 `data` 之前用 `paginateData` 切好当前页。\n- `useTableColumnSettings` 只显示当前选中的列，`isAlwaysVisible` 的列会留着。\n- `useTableColumnResize` 允许拖表头边缘。最窄 60px。\n- `useTableFiltering` 给 `filter` 指向某个字段的列加上字符串或枚举过滤。`applyTableFilters` 返回匹配的行。字符串是包含匹配，枚举是精确匹配。这套过滤和结构化搜索是分开的。\n- `useTableGroupedRows` 把已经排好、切好的行收成分组。返回的数据、插件和行身份要一起传给表格。折叠后表头还在，里面的行先藏起来。切换时换成一个新的集合，表格才会重画。\n- `useTableTreeState` 负责展开哪些节点，`useTableTreeData` 负责缩进和按钮。子行继续用原来的列。点表头上的按钮可以一次展开或折叠。有环的节点会被跳过。\n- `useTableRowExpansion` 在一行下面放一整块详情。右键也能展开或折叠。详情和树形子行不是一回事。\n- `useTableStickyColumns` 把从第一列到指定列、或从指定列到最后一列的连续区间钉住。只有横向溢出时才出现阴影。空配置什么也不钉。\n- `useTableRowStatus` 在行首放成功、警告或错误标记，也可以换成自定义颜色。悬停能看到说明。\n- `useTableRowIndex` 给真实行编号。分组表头不占号。\n\n`density` 是 `compact`、`balanced` 或 `spacious`。`dividers` 是 `rows`、`columns`、`grid` 或 `none`。`isStriped` 和 `hasHover` 互不影响。`data` 为空时显示本地化的空状态，也可以用 `empty` 插槽替换。\n\n不传 `data` 时，用 `TableHeader`、`TableBody`、`TableFooter`、`TableRow`、`TableHeaderCell` 和 `TableCell` 自己拼。\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\n列上的过滤状态要用 getter 传进去，表格才会读到最新的值：\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` 和 `rowIndexStart` 用来报告当前窗口在整表里的位置。两个只要设置一个，数据行就会带上行号；只给起点时，总行数按未知处理。分组表头和展开出来的详情不编号。"
+        "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。\n\n**什么时候用：**\n- 需要对比多条结构相似的数据（例如订单列表、用户清单、财务账目），或者需要对数据进行排序、筛选、分页和多选时。\n\n**什么时候不要用：**\n- 数据结构不规则，或者更适合用卡片呈现视觉封面时，请改用网格或卡片列表。\n- 在屏幕极窄的手机端，普通大表格容易被挤压，可以考虑使用精简列表或折叠详情面板。\n\n常用的高级功能可以通过配套的函数插件（`plugins`）按需开启：\n\n- `useTableSortable`：让用户点击表头在升序、降序和恢复默认之间切换。开启 `isMultiSortEnabled` 后，按住 Shift 键再点表头可以同时按多个列排序。搭配 `useTableSortableState` 保存排序规则并返回排好序的数据。\n- `useTableSelection`：在每行最左侧添加复选框，点击可以选中或高亮当前行。搭配 `useTableSelectionState` 保存选中的行 ID。\n- `useTablePagination`：在表格底部添加分页器。在传给表格前，用 `paginateData` 把总数据切出当前页的内容。\n- `useTableColumnSettings`：让用户自己勾选显示或隐藏哪些列，带有 `isAlwaysVisible` 的列会固定保留。\n- `useTableColumnResize`：允许用户拖动表头边缘自由调整列宽，最小宽度为 60px。\n- `useTableFiltering`：为指定列开启文字模糊搜索或选项精确匹配。搭配 `applyTableFilters` 过滤出符合条件的行。\n- `useTableGroupedRows`：把已经排好序的数据按某个分类整理成分组折叠行。\n- `useTableTreeState` 与 `useTableTreeData`：支持像文件夹树一样展开或折叠带有层级关系的子行。\n- `useTableRowExpansion`：允许点击行首箭头在某一行下方展开一整块详情面板。\n- `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。\n- `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。\n- `useTableRowIndex`：自动为真正的数据行生成连续的序号。\n\n表格的显示风格也很灵活：`density` 可以调节行高间距（紧凑 `compact`、适中 `balanced` 或宽松 `spacious`）；`dividers` 控制网格线的样式（仅行线 `rows`、仅列线 `columns`、全网格 `grid` 或无边框 `none`）；`isStriped` 开启隔行换色的斑马纹，`hasHover` 开启鼠标悬停高亮。当 `data` 为空时，表格会自动显示贴心的缺省提示，也可以通过 `empty` 插槽换成自己的图文。\n\n如果不需要配置式的驱动，也可以直接使用 `TableHeader`、`TableBody`、`TableFooter`、`TableRow`、`TableHeaderCell` 和 `TableCell` 这些原子组件像写普通 HTML 表格一样自由拼接。\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\n如果开启了列过滤，状态要用函数（getter）的形式传进去，表格才能敏锐察觉到过滤词的变化：\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` 和 `rowIndexStart` 用来告诉读屏软件当前这一页数据在全表里的位置。两者只要填了一个，读屏就能准确播报当前行号。分组的表头和展开的详情面板不会占用行号。"
       },
       "practices": {
         "en": [
@@ -63669,11 +63669,11 @@
       "exportName": null,
       "summary": {
         "en": "Copy-to-clipboard behavior: the clipboard write, a transient `isCopied` flag with its own reset timer, and an optional polite screen-reader announcement. Extracted so every copy affordance is a thin control over one implementation instead of re-deriving the timer and announcement. Rapid re-copies restart the reset timer so the confirmation always lasts the full duration, and the timer is cleaned up when the effect scope is disposed. `CodeBlock` builds its built-in copy button on it; reach for it directly when building a copy affordance that is not a plain icon button (a menu item, a labeled text button, a copy-on-click value chip).",
-        "zh": "复制到剪贴板这件事只写一遍：写入剪贴板、复制成功后短暂为真的 `isCopied`、它自己的重置定时器，以及可选的读屏播报。抽出来之后，每个复制入口都只是套一层的薄控件，不必各自再算一遍定时器和播报。连续复制会把倒计时重新算满，所以提示总是完整地显示一遍；定时器在作用域销毁时清掉。`CodeBlock` 自带的复制按钮就建在它上面；要做的复制入口不是普通图标按钮时（菜单项、带文字的按钮、点一下就复制的值），可以直接用它。"
+        "zh": "`useClipboard` 把「复制文本到剪贴板」这件常见的小事封装好了。它帮我们打理好了一整套细节：写入剪贴板、复制成功后在短暂时间内变成 `true` 的 `isCopied` 状态、自动恢复默认状态的倒计时定时器，以及读屏软件的无障碍朗读播报。"
       },
       "usage": {
         "en": "Copy-to-clipboard behavior: the clipboard write, a transient `isCopied` flag with its own reset timer, and an optional polite screen-reader announcement. Extracted so every copy affordance is a thin control over one implementation instead of re-deriving the timer and announcement. Rapid re-copies restart the reset timer so the confirmation always lasts the full duration, and the timer is cleaned up when the effect scope is disposed. `CodeBlock` builds its built-in copy button on it; reach for it directly when building a copy affordance that is not a plain icon button (a menu item, a labeled text button, a copy-on-click value chip).\n\n```ts\nimport { useClipboard } from '@astryx-vue/core'\n```\n\nThe same function is also exported as `useCopyToClipboard`, from `@astryx-vue/core` and from `@astryx-vue/core/Code`. `isCopied` is a `ref`, so the template unwraps it.",
-        "zh": "复制到剪贴板这件事只写一遍：写入剪贴板、复制成功后短暂为真的 `isCopied`、它自己的重置定时器，以及可选的读屏播报。抽出来之后，每个复制入口都只是套一层的薄控件，不必各自再算一遍定时器和播报。连续复制会把倒计时重新算满，所以提示总是完整地显示一遍；定时器在作用域销毁时清掉。`CodeBlock` 自带的复制按钮就建在它上面；要做的复制入口不是普通图标按钮时（菜单项、带文字的按钮、点一下就复制的值），可以直接用它。\n\n```ts\nimport { useClipboard } from '@astryx-vue/core'\n```\n\n同一个函数也以 `useCopyToClipboard` 的名字导出，`@astryx-vue/core` 和 `@astryx-vue/core/Code` 都能引。`isCopied` 是 `ref`，模板里会自动解包。"
+        "zh": "`useClipboard` 把「复制文本到剪贴板」这件常见的小事封装好了。它帮我们打理好了一整套细节：写入剪贴板、复制成功后在短暂时间内变成 `true` 的 `isCopied` 状态、自动恢复默认状态的倒计时定时器，以及读屏软件的无障碍朗读播报。\n\n这样一来，我们在写复制按钮时就不必到处重复写 `setTimeout` 和重置逻辑。当用户连续多次点击复制时，它还会自动重新计算等待时间，确保「复制成功」的提示完整展示给用户看。代码组件 `CodeBlock` 右上角的复制按钮就是基于它构建的。\n\n**什么时候用：**\n- 需要在点击按钮或文字后把一段字符串（如兑换码、分享链接、代码片段）快速写进系统剪贴板时。\n\n**什么时候不要用：**\n- 如果是浏览器普通的表单全选复制，或者用户习惯性的划词右键复制，不需要特意使用这个组合式函数。\n\n```ts\nimport { useClipboard } from '@astryx-vue/core'\n```\n\n同一个函数也可以通过 `useCopyToClipboard` 的别名导入，`@astryx-vue/core` 和 `@astryx-vue/core/Code` 都支持引用。导出的 `isCopied` 是 Vue 的 `ref` 对象，在模板里直接写名字即可自动解包。"
       },
       "practices": {
         "en": [
@@ -64676,11 +64676,11 @@
       "exportName": null,
       "summary": {
         "en": "Traps focus within a container element following the WAI-ARIA dialog focus trap pattern. While the trap is active it listens to `keydown` on the document and wraps Tab and Shift+Tab, so focus cycles inside the container instead of leaving it. Turning the trap on also moves focus in: the element returned by `initialFocus`, or else the first focusable element. Turning it off is the whole teardown, so a dialog can toggle the state without unmounting the hook.",
-        "zh": "按 WAI-ARIA 的对话框焦点陷阱做法，把焦点关在一个容器里。陷阱开着的时候会监听文档上的 `keydown`，Tab 和 Shift+Tab 到头就绕回另一头，焦点在容器里循环，走不出去。打开陷阱时也会把焦点送进去：优先用 `initialFocus` 返回的元素，没有就用第一个可聚焦元素。关掉就是全部拆卸，所以对话框只要切换开关，不必卸载 hook。"
+        "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。"
       },
       "usage": {
         "en": "Traps focus within a container element following the WAI-ARIA dialog focus trap pattern. While the trap is active it listens to `keydown` on the document and wraps Tab and Shift+Tab, so focus cycles inside the container instead of leaving it. Turning the trap on also moves focus in: the element returned by `initialFocus`, or else the first focusable element. Turning it off is the whole teardown, so a dialog can toggle the state without unmounting the hook.\n\nWhen the trap deactivates or unmounts, focus goes back to the element that was focused before activation. It stays put when focus was already moved elsewhere, or when focus never entered the trap — so a popup that keeps focus on its trigger, like a combobox, is left alone. Mouse clicks outside the container are not intercepted; use a light-dismiss handler for that.\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      First field\n    </button>\n  </div>\n</template>\n```",
-        "zh": "按 WAI-ARIA 的对话框焦点陷阱做法，把焦点关在一个容器里。陷阱开着的时候会监听文档上的 `keydown`，Tab 和 Shift+Tab 到头就绕回另一头，焦点在容器里循环，走不出去。打开陷阱时也会把焦点送进去：优先用 `initialFocus` 返回的元素，没有就用第一个可聚焦元素。关掉就是全部拆卸，所以对话框只要切换开关，不必卸载 hook。\n\n陷阱关闭或卸载时，焦点会还给打开前聚焦的那个元素。焦点已经被别处拿走、或者从头到尾没进过容器，就不动它——像下拉框这种把焦点留在触发器上的浮层不会被打扰。容器外面的鼠标点击不拦，那是轻关闭要处理的。\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      第一个输入项\n    </button>\n  </div>\n</template>\n```"
+        "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。\n\n当弹窗打开并且焦点陷阱激活时，用户不断按下 Tab 键切换焦点，如果按到了容器里的最后一个按钮，再按 Tab 键就会悄悄绕回容器的第一个元素，焦点永远在弹窗内部循环，绝对不会不小心跳到背景网页上。打开陷阱时，它还会把光标焦点送进容器内部：优先定位到 `initialFocus` 指定的元素上，如果没有指定就会自动停留在第一个可以聚焦的元素上。\n\n当弹窗关闭或陷阱解除时，它会把焦点原路还给刚才点开它的那个元素，确保键盘操作流程顺畅完整。在容器外面用鼠标点击不会被拦截，方便实现点击遮罩空白处关闭弹窗。\n\n**什么时候用：**\n- 编写自定义的模态对话框（Modal）、抽屉（Drawer）等全屏遮罩浮层，需要限制键盘焦点不能跑到弹窗外面时。\n\n**什么时候不要用：**\n- 像 Tooltip（文字提示）、下拉菜单（DropdownMenu）这类普通的浮层，请不要把焦点强行关在里面；它们需要的是轻量的点击外部关闭，而不是把焦点牢牢锁死。\n- 如果已经使用了官方的 [Dialog](/components/dialog) 或 [AlertDialog](/components/alert-dialog)，它们底层已经内置好了完备的焦点管理逻辑，无需再手动调用 `useFocusTrap`。\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      第一个输入项\n    </button>\n  </div>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -74589,11 +74589,11 @@
       "exportName": null,
       "summary": {
         "en": "Hook for showing toast notifications from anywhere in your component tree. Returns a function that accepts toast options and shows the notification. Toasts live in a module-level store, so the hook works in any component; render `ToastViewport` once to give them a place to appear. `LayerProvider` only supplies the viewport's placement and visible limit.",
-        "zh": "在组件树的任何位置弹出轻提示。返回一个函数，传入提示配置就会弹出来。提示数据放在模块级的 store 里，所以这个 hook 在任何组件里都能用；再渲染一次 `ToastViewport` 给它们一个出现的位置。`LayerProvider` 只负责给视口定位置和可见条数。"
+        "zh": "`useToast` 是一个在页面的任何地方都能随时呼叫的组合式函数，用来向用户弹出一句轻量、会自动消失的文字提示（Toast，又称轻提示），比如「保存成功」或「复制到剪贴板」。"
       },
       "usage": {
         "en": "Hook for showing toast notifications from anywhere in your component tree. Returns a function that accepts toast options and shows the notification. Toasts live in a module-level store, so the hook works in any component; render `ToastViewport` once to give them a place to appear. `LayerProvider` only supplies the viewport's placement and visible limit.\n\n```ts\nimport { useToast } from '@astryx-vue/core/Toast'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n</script>\n\n<template>\n  <button type=\"button\" @click=\"toast({ body: 'Document saved successfully', type: 'success' })\">\n    Show toast\n  </button>\n  <ToastViewport />\n</template>\n```",
-        "zh": "在组件树的任何位置弹出轻提示。返回一个函数，传入提示配置就会弹出来。提示数据放在模块级的 store 里，所以这个 hook 在任何组件里都能用；再渲染一次 `ToastViewport` 给它们一个出现的位置。`LayerProvider` 只负责给视口定位置和可见条数。\n\n```ts\nimport { useToast } from '@astryx-vue/core/Toast'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n</script>\n\n<template>\n  <button type=\"button\" @click=\"toast({ body: '文档已保存', type: 'success' })\">\n    弹出提示\n  </button>\n  <ToastViewport />\n</template>\n```"
+        "zh": "`useToast` 是一个在页面的任何地方都能随时呼叫的组合式函数，用来向用户弹出一句轻量、会自动消失的文字提示（Toast，又称轻提示），比如「保存成功」或「复制到剪贴板」。\n\n它返回一个调用函数，只要传入提示内容和类型就能触发显示。所有的提示消息都统一保存在底层的全局状态里，所以在任何深层子组件里调用都管用。只需要在应用外层（或根组件）挂载一个 `<ToastViewport />`，提示就会整整齐齐地呈现在那里。\n\n**什么时候用：**\n- 用户完成某个操作后，给出短暂且不打扰人的成功反馈（如“更新成功”、“已发送”）。\n- 轻微且不致命的操作错误提示。\n\n**什么时候不要用：**\n- 如果是不可逆的危险操作（如永久删除数据）或者需要用户仔细确认的报错，严禁使用 Toast，必须改用会锁屏确认的 [AlertDialog](/components/alert-dialog)。\n- 如果提示需要用户驻足阅读并点击多个按钮处理，请改用对话框 [Dialog](/components/dialog) 或顶部常驻横幅。\n\n```ts\nimport { useToast } from '@astryx-vue/core/Toast'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n</script>\n\n<template>\n  <button type=\"button\" @click=\"toast({ body: '文档已保存', type: 'success' })\">\n    弹出提示\n  </button>\n  <ToastViewport />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -75724,11 +75724,17 @@
       },
       "summary": {
         "en": "Components are built around accessible names, the keyboard, and screen readers. Docs and examples do not drop the focus ring or the contrast to get a look.",
-        "zh": "组件按可访问名称、键盘和读屏来做。文档和示例不靠拿掉焦点环或降低对比度来换外观。"
+        "zh": "让所有人都能顺畅使用界面，是组件库的基础设计原则。无论是仅靠键盘操作的用户，还是依赖读屏软件（屏幕阅读器）视障朋友，都能获得良好、完整的体验。我们的组件与示例绝不会为了追求好看而盲目抹除焦点环，也不会为了极简而牺牲色彩对比度。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "键盘焦点指示",
+          "给无文字的按钮起名字",
+          "浮层与弹窗处理",
+          "读屏播报与 AI 对话交互",
+          "尊重减少动效设置"
+        ]
       },
       "keywords": {
         "en": [],
@@ -75776,7 +75782,7 @@
       },
       "summary": {
         "en": "`@astryx-vue/cli` looks up astryx-vue component docs from the terminal, for people and for agents. The binary is `astryx-vue`. It is not Meta's `astryx` command, and it does not speak React or StyleX.",
-        "zh": "`@astryx-vue/cli` 用来在终端里查 astryx-vue 的组件文档，给人和 agent 用。二进制名字是 `astryx-vue`。它不是 Meta 的 `astryx`，也不提供 React 或 StyleX 的接口。"
+        "zh": "`@astryx-vue/cli` 是一个轻巧的命令行工具，方便开发者或 AI Agent 直接在终端里随时检索 astryx-vue 的组件文档。它的命令别名是 `astryx-vue`（请注意：它专为本项目服务，并非 Meta 原版的 `astryx` 命令，也不提供 React 或 StyleX 的功能）。"
       },
       "headings": {
         "en": [
@@ -75785,9 +75791,9 @@
           "Agent file"
         ],
         "zh": [
-          "命令",
-          "参数",
-          "Agent 文件"
+          "核心命令",
+          "常用参数",
+          "配合 AI Agent（生成上下文文件）"
         ]
       },
       "keywords": {
@@ -75808,11 +75814,13 @@
       },
       "summary": {
         "en": "Import composables from the package root:",
-        "zh": "组合式函数从包根引入："
+        "zh": "组件库将许多强大的交互逻辑和无障碍底层能力，封装成了易于复用的 Vue 3 组合式函数（Composables）。通用函数可以直接从包根统一引入："
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "随特定组件绑定的组合式函数"
+        ]
       },
       "keywords": {
         "en": [
@@ -75857,7 +75865,7 @@
           "useChatComposerContext, useChatComposerTokens, useChatPasteAsToken, useChatDictation, useSpeechRecognition"
         ],
         "zh": [
-          "函数",
+          "函数名称",
           "useControllableState",
           "useAnnounce",
           "useClipboard",
@@ -75913,7 +75921,7 @@
       },
       "summary": {
         "en": "The repository is <https://github.com/astryx-vue/astryx-vue>. Use GitHub Issues. The license is MIT.",
-        "zh": "仓库在 <https://github.com/astryx-vue/astryx-vue>。问题用 GitHub Issues。许可是 MIT。"
+        "zh": "感谢你对 astryx-vue 的关注！本项目完全开源，代码仓库托管在 <https://github.com/astryx-vue/astryx-vue>。如果你发现了 Bug 或有好的建议，欢迎在 GitHub Issues 提交讨论。本项目采用宽松友好的 MIT 开源许可证。"
       },
       "headings": {
         "en": [
@@ -75921,8 +75929,12 @@
           "Comparison shots"
         ],
         "zh": [
-          "对齐到什么程度",
-          "对照图"
+          "本地开发环境准备",
+          "自动生成的代码与同步",
+          "本地启动文档站",
+          "版本发布流程（Changesets）",
+          "设计对齐原则：追求像素级一致",
+          "Pull Request 规范：必须附带对照截图"
         ]
       },
       "keywords": {
@@ -75943,11 +75955,15 @@
       },
       "summary": {
         "en": "Neutral does not ship a separate dark stylesheet. Each color is `light-dark(light, dark)`, and the element's `color-scheme` picks the stop.",
-        "zh": "Neutral 不提供单独的深色样式表。每条颜色写成 `light-dark(浅色, 深色)`，用元素的 `color-scheme` 决定取哪一边。"
+        "zh": "Neutral 主题不需要单独引入一份额外的深色 CSS 样式表。所有颜色变量在底层均直接采用现代 CSS 标准的 `light-dark(浅色值, 深色值)` 语法，浏览器会根据元素当前所处的 `color-scheme` 状态，自动决定显示浅色还是深色。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "手动强制指定浅色或深色",
+          "文档站的实现方式",
+          "局部区域独立切换明暗"
+        ]
       },
       "keywords": {
         "en": [],
@@ -75967,7 +75983,7 @@
       },
       "summary": {
         "en": "Install the components and the theme. The peer dependency is Vue `^3.5.0`.",
-        "zh": "安装组件和主题。Peer 依赖是 Vue `^3.5.0`。"
+        "zh": "只要几分钟，就能在你的 Vue 3 项目里用上 astryx-vue。"
       },
       "headings": {
         "en": [],
@@ -75991,7 +76007,7 @@
       },
       "summary": {
         "en": "Strings that the components speak come from a message catalog. They are not hard-coded at every call site. The built-in locales are `en` and `zh-CN`. The type `AstryxLocale` is that pair.",
-        "zh": "组件里需要句子的地方走语言包，不把中文或英文写死在每个调用点。随包带上的语言是 `en` 和 `zh-CN`。类型名 `AstryxLocale` 指的就是这两种。"
+        "zh": "组件内部自带的提示文本（如搜索占位符、复制成功提示、清空按钮等）均走统一的语言环境管理，绝不把死板的中文或英文硬编码在每个组件里。随包默认内置的语言是英文（`en`）和简体中文（`zh-CN`）。在 TypeScript 类型定义中，`AstryxLocale` 指的就是这两种内置语言代码。"
       },
       "headings": {
         "en": [
@@ -75999,8 +76015,9 @@
           "Locale-aware comparison"
         ],
         "zh": [
-          "中文和英文以外",
-          "按语言比较字符串"
+          "支持中文和英文以外的更多语言",
+          "按当前语言排序字符串（useCollator）",
+          "区分组件内置文案与业务文案"
         ]
       },
       "keywords": {
@@ -76021,7 +76038,7 @@
       },
       "summary": {
         "en": "Draw an icon with `Icon` and an Iconify name. You do not import a component for each glyph.",
-        "zh": "用 `Icon` 和一个 Iconify 名字来画图标。不需要为每个图形单独 import 组件。"
+        "zh": "在 astryx-vue 中，你可以直接使用 `Icon` 组件配合标准的 Iconify 图标名称来展示图标，再也不需要为每一个小图形单独繁琐地 `import` 不同的组件文件。"
       },
       "headings": {
         "en": [
@@ -76032,11 +76049,11 @@
           "Semantic names"
         ],
         "zh": [
-          "只打包写到的图标",
-          "名字不在源码里",
-          "槽位",
-          "CSS 类名",
-          "语义名"
+          "按需打包：只打包用到的图标",
+          "动态生成的图标名称",
+          "插槽搭配与尺寸",
+          "兼容 CSS 类名图标",
+          "语义化图标（跟随主题自由切换）"
         ]
       },
       "keywords": {
@@ -76057,7 +76074,7 @@
       },
       "summary": {
         "en": "Install the two public packages together:",
-        "zh": "两个公开包一起装："
+        "zh": "astryx-vue 拆分为核心包与主题包两个部分，通常建议一起安装："
       },
       "headings": {
         "en": [],
@@ -76073,12 +76090,13 @@
           "The layer declaration"
         ],
         "zh": [
-          "某一个组件",
-          "组合式函数，以及根入口重新导出的组件",
+          "需要的内容",
+          "具体的某个组件（推荐）",
+          "通用组合式函数与包根快捷导出",
           "provideAstryxLocale、useAstryxMessages",
-          "一套主题",
-          "全部结构样式",
-          "层声明"
+          "主题样式",
+          "所有组件的全部结构样式",
+          "CSS 层级声明"
         ]
       },
       "docsUrl": {
@@ -76095,11 +76113,15 @@
       },
       "summary": {
         "en": "A jump in the app is one of two things. A normal `href` lets the browser open the address. A route that should stay inside Vue Router, without a full page load, swaps the root for `RouterLink`.",
-        "zh": "应用里的跳转有两种。一种是浏览器自己打开的地址，用普通的 `href`。一种要留在 Vue Router 里，不整页刷新，这时把根换成 `RouterLink`。"
+        "zh": "在单页应用（SPA）中，页面跳转通常分为两种情况： 1. **外部网站跳转**：由浏览器原生打开一个外部网址，这时使用普通的 HTML `href`。 2. **应用内部导航**：希望走 Vue Router 的路由拦截，实现无刷新的丝滑切换，这时需要把组件底层的渲染根节点替换为 `RouterLink`。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "使用 `as` 属性无缝配合 Vue Router",
+          "按钮当作路由链接使用",
+          "注意事项：普通超链接组件"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76119,11 +76141,15 @@
       },
       "summary": {
         "en": "A conversation is a composition. The transcript, bubbles, reasoning, tool calls, citations, and the composer are separate components, and the page decides how they sit together. Nothing here calls a model. The body is a slot. Long replies are Markdown, and a source becomes a citation.",
-        "zh": "对话按场景叠起来用。记录、气泡、推理、工具调用、引用和输入区各自是组件，页面决定它们怎么坐在一起。组件不连接模型。正文是插槽，长回复用 Markdown 排版，来源写成引用。"
+        "zh": "现代应用（尤其是 AI 产品）通常由许多部件紧密配合而成。在 astryx-vue 中，消息气泡、推理过程、工具调用（Tool Calls）、参考引用以及底部输入框等，都是一个个高内聚的独立组件，你可以根据具体场景自由组合，决定它们如何在页面上协同工作。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "场景一：初始落地页（无聊天记录时）",
+          "场景二：对话进行中（有聊天往来时）",
+          "交互演示"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76143,7 +76169,7 @@
       },
       "summary": {
         "en": "Decide what each region does as the width drops, then wire the components. A region can stay and get narrower, move into a layer that opens on demand, or leave the page. When three regions are sharing a row and none of them has room, drop one. Do not shrink all of them by the same amount.",
-        "zh": "先定每个区域在变窄时做什么，再写组件。一个区域可以留下来并变窄，可以收到按需打开的层里，也可以直接拿掉。三个区域挤在同一行、谁都放不开时，拿掉一个，不要把它们等比缩小。"
+        "zh": "良好的响应式设计应当顺应内容，而不是生硬地等比压缩。在开始搭界面之前，先思考各个区块在屏幕变窄时应当如何演变：某些辅助区域可以留下来并适当收缩；某些可以暂时收进按需展开的抽屉浮层中；而某些不关键的次要内容则可以直接隐藏。当三栏内容并排太挤时，应果断把次要的一栏收起或折叠，绝不要把文字和按钮压得面目全非。"
       },
       "headings": {
         "en": [
@@ -76152,9 +76178,9 @@
           "Columns that reflow"
         ],
         "zh": [
-          "外壳的断点",
-          "内容区",
-          "会重排的列"
+          "页面外壳（AppShell）断点设置",
+          "内容版心与布局（Layout）",
+          "自动换行的网格布局（Grid）"
         ]
       },
       "keywords": {
@@ -76168,7 +76194,7 @@
           "none"
         ],
         "zh": [
-          "值",
+          "选项值",
           "sm",
           "md",
           "lg",
@@ -76191,11 +76217,14 @@
       },
       "summary": {
         "en": "An app imports two things at minimum: a theme, and structural styles for the components it uses.",
-        "zh": "一个应用最少引入两样东西：主题，以及组件的结构样式。"
+        "zh": "要让组件漂亮且正确地呈现出来，一个应用通常需要引入两样东西：主题变量，以及组件的结构样式。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "样式的层级顺序（CSS Layers）",
+          "关于样式依赖"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76215,7 +76244,7 @@
       },
       "summary": {
         "en": "Each playground page is a starting point you can edit. Choosing one puts its source in the editor, and the preview follows the theme. Add `?template=` to open a page directly, for example the [blank page](/en/playground/?template=blank).",
-        "zh": "演练场里的每一页都是一个可以改的起点。选中之后，源码出现在编辑器里，预览跟着主题走。地址加上 `?template=` 会直接打开那一页，例如 [空白页](/playground/?template=blank)。"
+        "zh": "演练场（Playground）里的每个完整页面都是一个极佳的实践起点。在这里，你可以直观查看组件在真实业务场景中的排版组合方式。选中模板后，对应的完整 Vue 源码会直接呈现在内置编辑器中，右侧预览也会跟随当前主题与深色模式即时响应。"
       },
       "headings": {
         "en": [],
@@ -76239,7 +76268,7 @@
       },
       "summary": {
         "en": "astryx-vue is an open-source Vue 3 reimplementation of Meta's [Astryx](https://github.com/facebook/astryx) design language. The upstream documentation is located at <https://astryx.atmeta.com>, built on React 19 and StyleX. astryx-vue is an independent community project bringing the aesthetics and engineering precision of Astryx to the Vue ecosystem.",
-        "zh": "astryx-vue 是用 Vue 3 重新实现 [Astryx](https://github.com/facebook/astryx) 设计语言的开源组件库。原版文档位于 <https://astryx.atmeta.com>，基于 React 19 与 StyleX 构建。本项目由社区独立维护，旨在为 Vue 开发者提供高质感、现代化的企业级设计系统实现。"
+        "zh": "astryx-vue 是用 Vue 3 重新实现的开源组件库，它的设计灵感和视觉规范来自 Meta 的 [Astryx](https://github.com/facebook/astryx) 设计系统。原版文档在 <https://astryx.atmeta.com>，基于 React 19 和 StyleX 开发。本项目由开源社区独立维护，目标是让 Vue 开发者不用换技术栈，就能直接用上这套做工精细、现代好看的界面。"
       },
       "headings": {
         "en": [
@@ -76248,9 +76277,9 @@
           "Icons and Patterns"
         ],
         "zh": [
-          "核心定位",
-          "架构与包划分",
-          "图标与复杂模式"
+          "我们是怎么做的",
+          "两个包各司其职",
+          "图标与成套界面"
         ]
       },
       "keywords": {
@@ -76271,11 +76300,16 @@
       },
       "summary": {
         "en": "A theme sets the color, type, radius, shadow, and motion the components use. Structural styles stay in `@astryx-vue/core`.",
-        "zh": "主题决定组件的颜色、字体、圆角、阴影和动画时长。组件的结构样式在 `@astryx-vue/core`。"
+        "zh": "如果把组件看作房子的骨架，那主题就是给房子做硬装和软装：它决定了按钮是什么颜色、文字用什么字体、卡片四角有多圆润、阴影有多深，以及点一下时动画动得多快。组件本身的骨架和排版结构已经内置在 `@astryx-vue/core` 里，样式和配色则全部由主题包 `@astryx-vue/themes` 提供。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "最简单的起步方式",
+          "切换或局部使用其他主题",
+          "主题画廊",
+          "深入了解更多"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76291,15 +76325,18 @@
       "kind": "theme",
       "title": {
         "en": "Butter",
-        "zh": "Butter"
+        "zh": "Butter 主题"
       },
       "summary": {
         "en": "Golden surfaces, blue accents. Outfit for text, Sarina for display sizes.",
-        "zh": "暖金色表面，蓝色点缀。正文用 Outfit，展示字号用 Sarina。"
+        "zh": "Butter 是一套温暖、明亮而亲切的主题。它采用柔和的暖金色作为背景表面，并搭配清爽的蓝色作为视觉点缀，非常适合生活方式类、创意展示或温暖调性的产品界面。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "引入与使用",
+          "视觉预览"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76315,15 +76352,18 @@
       "kind": "theme",
       "title": {
         "en": "Chocolate",
-        "zh": "Chocolate"
+        "zh": "Chocolate 主题"
       },
       "summary": {
         "en": "Warm brown and beige. Albert Sans for text, Fraunces for headings.",
-        "zh": "暖棕色和米色。正文用 Albert Sans，标题用 Fraunces。"
+        "zh": "Chocolate 是一套沉稳、典雅的暖色系主题。它以醇厚的暖棕色与温润的米色为主基调，散发出精致的人文质感，适合阅读类产品、品质博客或咖啡生活等调性鲜明的页面。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "引入与使用",
+          "视觉预览"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76343,11 +76383,16 @@
       },
       "summary": {
         "en": "Neutral colors are `--astryx-color-*`. Each one uses `light-dark()` for the light stop and the dark stop. In the grid below, the left chip is light and the right chip is dark. Translucent colors sit on a checkerboard.",
-        "zh": "Neutral 的颜色都是 `--astryx-color-*`。每一项用 `light-dark()` 写下浅色和深色。下面每一格左边是浅色，右边是深色。带透明度的颜色垫了棋盘格。"
+        "zh": "在 Neutral 主题中，所有颜色变量都统一以 `--astryx-color-*` 开头。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "颜色是如何组织的？",
+          "语义色与状态色",
+          "数据可视化与图表色",
+          "颜色变量参考"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76363,15 +76408,22 @@
       "kind": "theme",
       "title": {
         "en": "CSS variables",
-        "zh": "CSS 变量"
+        "zh": "CSS 变量与样式分层"
       },
       "summary": {
         "en": "Themes and component styles use CSS variables and cascade layers. You do not install UnoCSS or StyleX to use them.",
-        "zh": "主题和组件样式都走 CSS 变量和 CSS 分层。使用方不需要安装 UnoCSS 或 StyleX。"
+        "zh": "astryx-vue 的所有主题和组件样式，完全基于现代 CSS 标准规范构建（采用 CSS 变量与 `@layer` 级联层）。这意味着你的项目不需要安装 UnoCSS、Tailwind CSS，也不需要安装 StyleX 编译器，就能原生获得清晰可控的样式优先级。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "样式的五个层级（@layer）",
+          "变量命名与双模配色",
+          "组件专用变量 vs 全局语义变量",
+          "如何引入样式",
+          "方式一：按需引入（推荐）",
+          "方式二：一次性引入全部组件结构样式"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76387,15 +76439,20 @@
       "kind": "theme",
       "title": {
         "en": "Extending a theme",
-        "zh": "扩展主题"
+        "zh": "扩展与自定义主题"
       },
       "summary": {
         "en": "`@astryx-vue/themes` ships Neutral, Butter, Chocolate, Gothic, Matcha, Stone, and Y2K. Each one is a CSS entry such as `butter.css` plus the stylesheets in that theme's directory. There is no runtime theme registry.",
-        "zh": "`@astryx-vue/themes` 提供 Neutral、Butter、Chocolate、Gothic、Matcha、Stone 和 Y2K。每一套都是类似 `butter.css` 的入口，加上该主题目录里的样式。包里没有运行时的主题注册函数。"
+        "zh": "`@astryx-vue/themes` 开箱自带了 7 套主题：Neutral（中性默认）、Butter（黄油暖金）、Chocolate（巧克力暖棕）、Gothic（哥特深邃）、Matcha（抹茶淡绿）、Stone（石石板岩）与 Y2K（复古千禧）。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "场景一：只修改个别变量（最常用的做法）",
+          "场景二：在页面局部区域套用计算主题",
+          "场景三：只让某个组件与众不同",
+          "注意事项"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76411,15 +76468,18 @@
       "kind": "theme",
       "title": {
         "en": "Gothic",
-        "zh": "Gothic"
+        "zh": "Gothic 主题"
       },
       "summary": {
         "en": "Dark only. Deep blue-gray surfaces stay dark when the rest of the page is light. Fustat for text, Manufacturing Consent for display sizes.",
-        "zh": "只有深色。页面其余部分是浅色时，这套蓝灰色表面仍然保持深色。正文用 Fustat，展示字号用 Manufacturing Consent。"
+        "zh": "Gothic 是一套专为沉浸式夜间体验打造的纯深色主题。它采用深邃的冷感蓝灰色作为表面底色。即使你的外部宿主页面当前处于浅色白天模式，应用了 Gothic 的容器依然会坚定地保持冷峻的深色暗夜质感。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "引入与使用",
+          "视觉预览"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76435,15 +76495,18 @@
       "kind": "theme",
       "title": {
         "en": "Matcha",
-        "zh": "Matcha"
+        "zh": "Matcha 主题"
       },
       "summary": {
         "en": "Earthy greens. DM Sans for text, Playwrite US Trad for headings.",
-        "zh": "草木绿。正文用 DM Sans，标题用 Playwrite US Trad。"
+        "zh": "Matcha 是一套自然、宁静、呼吸感十足的绿色系主题。它以低饱和度的草木绿与温和灰绿为基调，给人以放松、专注的心流感受，适合笔记软件、健康生活、个人知识库或自然系网站。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "引入与使用",
+          "视觉预览"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76459,15 +76522,21 @@
       "kind": "theme",
       "title": {
         "en": "Motion",
-        "zh": "动画"
+        "zh": "动画与过渡"
       },
       "summary": {
         "en": "Durations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. There is one easing token, `--astryx-ease-standard`: `cubic-bezier(0.24, 1, 0.4, 1)`.",
-        "zh": "时长按 Neutral 的运动刻度生成。基准是 fast 125、medium 300、slow 700，相邻档的比例 0.75，结果四舍五入到 5 毫秒。缓动只有一条，`--astryx-ease-standard`，值是 `cubic-bezier(0.24, 1, 0.4, 1)`。"
+        "zh": "界面的动效就像演员走位时的节奏感：太快了显得生硬突兀，太慢了又让人觉得卡顿拖沓。astryx-vue 的动效体系沿袭了 Astryx 的标准规范，旨在提供干脆、克制且符合物理规律的交互体验。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "动画时长梯级（Duration）",
+          "缓动曲线（Easing）",
+          "共享进出场关键帧",
+          "关爱易眩晕用户：无障碍减少动效支持",
+          "动态效果预览"
+        ]
       },
       "keywords": {
         "en": [
@@ -76480,9 +76549,9 @@
           "astryx-motion-slide-in-end / out"
         ],
         "zh": [
-          "类名",
-          "astryx-motion-fade-in / fade-out",
-          "astryx-motion-scale-in / scale-out",
+          "进场类名 / 出场类名",
+          "astryx-motion-fade-in / astryx-motion-fade-out",
+          "astryx-motion-scale-in / astryx-motion-scale-out",
           "astryx-motion-slide-in-above / out",
           "astryx-motion-slide-in-below / out",
           "astryx-motion-slide-in-start / out",
@@ -76499,15 +76568,20 @@
       "kind": "theme",
       "title": {
         "en": "Neutral",
-        "zh": "Neutral"
+        "zh": "Neutral 主题"
       },
       "summary": {
         "en": "Neutral is the theme `@astryx-vue/themes` ships today. Load it with:",
-        "zh": "Neutral 是 `@astryx-vue/themes` 目前提供的主题。页面和组件通过下面这行样式使用它："
+        "zh": "Neutral 是 astryx-vue 最核心、也是默认开箱即用的主题。它的基调是经典耐看的中性黑白灰，克制内敛，适用于各类企业级后台、中台系统和工具型网页。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "引入方式",
+          "字体回退栈（Font Stack）",
+          "与原版设计的两处微调说明",
+          "明暗深色模式"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76527,11 +76601,18 @@
       },
       "summary": {
         "en": "Spacing runs from `--astryx-spacing-0` through `--astryx-spacing-12`, in 4px steps, with `0.5` and `1.5` in between. Control heights are `--astryx-size-element-sm` (28px), `md` (32px), and `lg` (36px).",
-        "zh": "间距从 `--astryx-spacing-0` 到 `--astryx-spacing-12`，步长是 4px，中间有 `0.5` 和 `1.5`。控件高度是 `--astryx-size-element-sm`（28px）、`md`（32px）、`lg`（36px）。"
+        "zh": "做界面就像搭积木，间距、圆角和阴影是保证整个网页视觉呼吸感和层次感的“度量衡”。astryx-vue 将这些基础尺度做成了规整的标尺，让不同组件拼在一起时浑然一体。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "间距标尺（Spacing）",
+          "交互控件高度（Size）",
+          "圆角系统（Radius）",
+          "阴影与景深（Shadow）",
+          "键盘焦点环（Focus Outline）",
+          "标尺尺寸与视觉参考"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76547,15 +76628,18 @@
       "kind": "theme",
       "title": {
         "en": "Stone",
-        "zh": "Stone"
+        "zh": "Stone 主题"
       },
       "summary": {
         "en": "Warm stone and slate. Figtree for text, Montserrat for headings.",
-        "zh": "暖石色和板岩灰。正文用 Figtree，标题用 Montserrat。"
+        "zh": "Stone 是一套克制、坚韧、极富现代建筑质感的主题。它融合了温暖的天然石材色与冷静的板岩灰，质朴而高级，适合设计工作室官网、高品质文档站、技术博客或极简作品集。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "引入与使用",
+          "视觉预览"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76575,11 +76659,16 @@
       },
       "summary": {
         "en": "A design token is a decision the system can reuse: a color, a space step, a radius, a duration. Components read tokens instead of hard-coding those numbers. Changing theme means changing the numbers.",
-        "zh": "Design token 是这套设计语言里可以复用的决定：一种颜色、一档间距、一个圆角、一段时长。组件不把这些数写死，而是读 token。换主题，就是换这批数。"
+        "zh": "做界面时，我们经常会遇到很多重复出现的设计决定：比如主色调选哪个蓝、按钮圆角是多大、卡片之间空开几像素、弹窗弹出来要花几毫秒。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "什么是 Design token？",
+          "在 astryx-vue 中是如何实现的？",
+          "Token 分类总览",
+          "在组件外部使用"
+        ]
       },
       "keywords": {
         "en": [
@@ -76590,10 +76679,10 @@
           "[Space, radius, shadow](/en/themes/scale)"
         ],
         "zh": [
-          "页面",
+          "类别文档",
           "[颜色](/themes/color)",
           "[排版与字体](/themes/typography)",
-          "[动画](/themes/motion)",
+          "[动画刻度](/themes/motion)",
           "[间距、圆角与阴影](/themes/scale)"
         ]
       },
@@ -76611,11 +76700,16 @@
       },
       "summary": {
         "en": "Two font stacks live on Neutral's semantic tokens.",
-        "zh": "字体分两套栈，都写在 Neutral 的语义 token 里。"
+        "zh": "文字是界面传递信息最核心的媒介。好的排版能让内容层次分明，读起来眼睛轻松不累。astryx-vue 的排版系统在字体、字重和字号层级上都设定了清晰易用的规范。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "预置字体与字体栈（Font Family）",
+          "字重标准（Font Weight）",
+          "文本与标题尺寸阶梯（Type Scale）",
+          "排版阶梯与字体预览"
+        ]
       },
       "keywords": {
         "en": [],
@@ -76631,15 +76725,18 @@
       "kind": "theme",
       "title": {
         "en": "Y2K",
-        "zh": "Y2K"
+        "zh": "Y2K 主题"
       },
       "summary": {
         "en": "Periwinkle, cream, and sharp corners. Poppins for text, Crimson Text for display sizes.",
-        "zh": "长春花色、奶油色，圆角收成直角。正文用 Poppins，展示字号用 Crimson Text。"
+        "zh": "Y2K 是一套致敬 2000 年代早期互联网先锋美学的主题。它采用清爽的长春花蓝与温暖的奶油色碰撞，并将所有组件的圆角全部收紧为坚决的纯直角（90 度硬朗直角边缘），视觉风格棱角分明、个性鲜明。"
       },
       "headings": {
         "en": [],
-        "zh": []
+        "zh": [
+          "引入与使用",
+          "视觉预览"
+        ]
       },
       "keywords": {
         "en": [],

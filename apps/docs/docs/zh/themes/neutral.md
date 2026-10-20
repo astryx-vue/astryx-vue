@@ -1,26 +1,42 @@
 ---
-title: Neutral
+title: Neutral 主题
 ---
 
-# Neutral
+# Neutral（中性默认主题）
 
-Neutral 是 `@astryx-vue/themes` 目前提供的主题。页面和组件通过下面这行样式使用它：
+Neutral 是 astryx-vue 最核心、也是默认开箱即用的主题。它的基调是经典耐看的中性黑白灰，克制内敛，适用于各类企业级后台、中台系统和工具型网页。
+
+## 引入方式
+
+只需在你的前端入口文件（如 `main.ts`）中加入这行引入：
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-这个入口会先加载 `fonts.css`，再按文件名引入 `neutral/` 目录里的每一份主题样式，其中包含 `base.css`。`fonts.css` 装 Figtree 和 JetBrains Mono 的 400、500、600、700，以及 400 斜体。Figtree 另外包含 600 斜体。这些字重和斜体对应 `font-synthesis: none`：缺了的字重或斜体，浏览器不会自己造。
+这一行代码在背后默默为你做好了这几件事：
+1. **自动加载字体资源：** 加载西文字体 Figtree 与等宽代码字体 JetBrains Mono（包含 400 常规、500 中粗、600 半粗、700 加粗以及 400/600 斜体）。因为声明了 `font-synthesis: none`，所以系统严格使用真实设计的字重，绝不会让浏览器去硬拉变形生成伪粗体或伪斜体。
+2. **引入所有组件主题样式：** 依次加载 `neutral/` 目录下的所有样式，包括全局基准 `base.css`。
+3. **注入全局根节点：** 会自动将基础变量挂载在 `:root` 和 `[data-astryx-theme='neutral']` 上，因此无需任何额外配置，引入即全站生效。
 
-`--astryx-font-family-body` 和 `--astryx-font-family-heading` 以 Figtree 开头，后面是 `-apple-system`、`BlinkMacSystemFont`、`Segoe UI`、`Roboto`、`Helvetica`、`Arial` 和 `sans-serif`。`--astryx-font-family-code` 以 JetBrains Mono 开头，后面是 `ui-monospace`、`SFMono-Regular`、`Menlo`、`Consolas` 和 `monospace`。
+## 字体回退栈（Font Stack）
 
-语义变量写在 `packages/themes/neutral/base.css`。名字对应原版 `tokens.stylex.ts`，统一加上 `--astryx-` 前缀。浅色和深色放在同一个 `light-dark()` 里。取值优先用 Neutral 主题覆盖过的结果；Neutral 没有覆盖的，用原版默认值。
+- **正文与标题（Body & Heading）：**
+  `--astryx-font-family-body` 和 `--astryx-font-family-heading` 优先使用 Figtree，随后按系统习惯回退：
+  `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`。
+- **等宽代码（Code）：**
+  `--astryx-font-family-code` 优先使用 JetBrains Mono，随后回退至：
+  `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`。
 
-有两个值和原版 Neutral 故意保持不一致，避免已经发出去的组件改外观：
+## 与原版设计的两处微调说明
 
-- `--astryx-radius-none` 保持 `0`。原版 Neutral 写成 `0.25rem`。方形头像和圆角为 none 的骨架屏用它表示直角。
-- `--astryx-color-text-secondary` 的浅色值保持 `#525252`。原版 Neutral 用 `#737373`。输入框、选择器和辅助文字已经在用这个值。
+为了让现有组件在实际业务中表现更稳定、更符合直觉，我们在复刻原版 Neutral 时，审慎地保留了两处实用微调：
 
-变量挂在 `:root` 和 `[data-astryx-theme='neutral']` 上，并声明 `color-scheme: light dark`。明暗跟随元素的 `color-scheme`。要用其中一边，在祖先上设置 `data-astryx-color-mode="light"` 或 `"dark"`。说明见 [深色模式](/guide/dark-mode)。
+1. **直角定义 `--astryx-radius-none`：** 保持为严格的 `0`。原版 Neutral 将该变量设成了 `0.25rem`（4px），但系统中的方形头像（Avatar）和完全不带圆角的骨架屏（Skeleton）在语义上必须呈现纯粹的直角，因此我们坚持将 `none` 锚定为 `0`。
+2. **辅助文本色 `--astryx-color-text-secondary`（浅色模式）：** 浅色模式下的色值保持为 `#525252`。原版 Neutral 使用的是稍淡一些的 `#737373`。考虑到输入框占位符、选择器提示语以及辅助说明需要更好的对比度可读性，这里采用了对比度更扎实、文字更易认的数值。
 
-有几个同名变量仍写在组件自己的主题文件里，例如 `text.css` 的字号，以及 `--astryx-color-text-accent` 的蓝色。那些声明排在后面，会盖住这里的语义值，现有组件的外观保持一致。
+## 明暗深色模式
+
+Neutral 在定义时就声明了 `color-scheme: light dark`。因此只要你使用 `light-dark()` 变量，它会自动跟随操作系统或文档站当前的外观切换。
+
+如果你需要在页面的某一个特定区域固定显示深色或浅色，只需在父容器元素上添加属性 `data-astryx-color-mode="light"` 或 `"dark"`。具体说明请参阅 [深色模式指南](/guide/dark-mode)。

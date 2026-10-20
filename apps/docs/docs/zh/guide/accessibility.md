@@ -4,18 +4,41 @@ title: 无障碍
 
 # 无障碍
 
-组件按可访问名称、键盘和读屏来做。文档和示例不靠拿掉焦点环或降低对比度来换外观。
+让所有人都能顺畅使用界面，是组件库的基础设计原则。无论是仅靠键盘操作的用户，还是依赖读屏软件（屏幕阅读器）视障朋友，都能获得良好、完整的体验。我们的组件与示例绝不会为了追求好看而盲目抹除焦点环，也不会为了极简而牺牲色彩对比度。
 
-键盘焦点使用 `--astryx-focus-outline-*`。宽度 2px，样式 `solid`，颜色是 `--astryx-color-accent`，偏移 3px。不要在应用样式里把 `outline` 全局清掉。文档站只在组件自己画出焦点的控件上取消额外的轮廓，例如已经有圆角焦点样式的输入框。
+## 键盘焦点指示
 
-只有图标的按钮必须有名字。`IconButton` 的 `label` 会成为可访问名称。`NavItem` 的 `label` 同样必填。装饰性图形用 `aria-hidden`，不要把图标 class 当成文字。
+键盘操作时，焦点外边框是告诉用户「我当前聚焦在哪」的关键向导。组件库统一采用 `--astryx-focus-outline-*` 变量来管理焦点外观：宽度固定为 2px，实线样式，颜色采用主题强调色 `--astryx-color-accent`，并保持 3px 的向外间距。
 
-需要把内容留在可访问树里、但视觉上藏起来时，用 `@astryx-vue/core/VisuallyHidden` 的 `VisuallyHidden`。
+请切勿在全局样式中粗暴地写 `outline: none`。文档站仅在部分已经自带内部圆角焦点效果的控件（如特定输入框）上，才会略微调整外轮廓，避免出现突兀的双层边框。
 
-读屏播报用 `useAnnounce`。复制成功如果只改按钮文字，读屏经常不念，所以 `useClipboard` 可以传 `announce`，在写入成功时播报一句。浮层关闭走 `useDismiss` 的 Escape 栈。对话框一类浮层用 `useFocusTrap` 把 Tab 留在里面，并用 `useRestoreFocus` 在关闭后把焦点还回触发器。`useScrollLock` 在浮层打开时锁住背景滚动。
+## 给无文字的按钮起名字
 
-列表和菜单的方向键在 `useListFocus`、`useGridRovingFocus` 和 `useTypeahead`。`ChatMessageList` 是 `role="log"`。助手回复还在增长时，把 `isStreaming` 保持为 true，读屏会等这段结束再读，而不是每个 token 都念一遍。
+如果一个按钮只有图标没有文字，读屏软件就无法知道它是做什么的。因此，纯图标按钮必须提供可访问名称（Accessible Name）：
 
-动画尊重 `prefers-reduced-motion`。共享运动类会把位移和缩放收成 0。见 [动画](/themes/motion)。
+- `IconButton` 组件的 `label` 属性是必填的，它会直接作为无障碍名称念给读屏用户听。
+- `NavItem` 的 `label` 同样必填。
+- 纯装饰性的图形应当使用 `aria-hidden="true"` 隐藏，不要试图直接用图标类名充当文字内容。
 
-这里没有一份独立的第三方审计报告。某个组件的键盘和读屏行为，以该组件文档里的说明和仓库里的测试为准。
+如果你需要让某些说明文字能够被读屏软件听到、但又不想在视觉界面上占用版面，可以使用 `@astryx-vue/core/VisuallyHidden` 提供的 `VisuallyHidden` 组件。
+
+## 浮层与弹窗处理
+
+弹窗和下拉浮层需要精细的无障碍焦点流转管理：
+
+- **限制焦点**：使用 `useFocusTrap` 将用户在浮层里的键盘 Tab 切换锁定在弹窗内，防止焦点悄悄跳到背后的主页面上。
+- **还原焦点**：使用 `useRestoreFocus`，在弹窗关闭后，自动把焦点送回到刚才点击打开它的那个按钮上。
+- **便捷关闭**：浮层的按下 Escape 键退出逻辑统一交给 `useDismiss` 的撤销栈管理，按由内向外的顺序逐层关闭。
+- **锁定滚动**：浮层打开时，通过 `useScrollLock` 锁定背景的滚动，避免误触。
+
+## 读屏播报与 AI 对话交互
+
+- **主动通知**：某些操作完成后（比如点击复制按钮成功），如果界面只变化了按钮文字，读屏软件往往不会自动读取。此时可以通过 `useAnnounce` 触发语音播报；`useClipboard` 函数也支持传入 `announce` 参数，写入剪贴板成功后会主动提醒读者。
+- **键盘导航**：列表和菜单的上下左右方向键切换，分别封装在 `useListFocus`、`useGridRovingFocus` 和 `useTypeahead`（字母快速跳转匹配）组合式函数中。
+- **AI 流式输出**：`ChatMessageList` 的底层角色被标记为 `role="log"`。当 AI 助手的文本还在打字机式流式增长时，请保持 `isStreaming` 为 `true`，这样读屏软件会等到本轮打字停顿或完成后再朗读，而不会每个字 token 冒出来时都吵闹地念一遍。
+
+## 尊重减少动效设置
+
+对于容易产生晕动反应的用户，组件库所有共享动画都严格遵循系统的 `prefers-reduced-motion` 设置。当用户开启「减少动效」时，大幅度的平移与缩放会自动降为 0，仅保留平滑的淡入淡出，具体细节可查看 [动画](/themes/motion)。
+
+组件库的无障碍表现以各组件文档中的无障碍说明和代码库中的自动化测试为准。

@@ -4,28 +4,31 @@ title: 响应式布局
 
 # 响应式布局
 
-先定每个区域在变窄时做什么，再写组件。一个区域可以留下来并变窄，可以收到按需打开的层里，也可以直接拿掉。三个区域挤在同一行、谁都放不开时，拿掉一个，不要把它们等比缩小。
+良好的响应式设计应当顺应内容，而不是生硬地等比压缩。在开始搭界面之前，先思考各个区块在屏幕变窄时应当如何演变：某些辅助区域可以留下来并适当收缩；某些可以暂时收进按需展开的抽屉浮层中；而某些不关键的次要内容则可以直接隐藏。当三栏内容并排太挤时，应果断把次要的一栏收起或折叠，绝不要把文字和按钮压得面目全非。
 
-## 外壳的断点
+## 页面外壳（AppShell）断点设置
 
-`AppShell` 的 `mobileNav.breakpoint` 决定侧栏什么时候收进抽屉。默认是 `md`。
+`AppShell` 的 `mobileNav.breakpoint` 决定了侧边导航栏（SideNav）在什么时候自动折叠进移动端抽屉里。默认的折叠断点是 `md`。
 
-| 值 | 宽度 |
-| --- | --- |
-| `sm` | 640px |
-| `md` | 768px |
-| `lg` | 1024px |
-| `xl` | 1280px |
-| `2xl` | 1536px |
-| `none` | 不收起 |
+| 选项值 | 触发宽度 | 说明 |
+| --- | --- | --- |
+| `sm` | 640px | 仅在超小手机屏幕上折叠 |
+| `md` | 768px | 平板及以下屏幕折叠（默认推荐） |
+| `lg` | 1024px | 小屏笔记本或横屏平板以下折叠 |
+| `xl` | 1280px | 普通桌面屏幕以下折叠 |
+| `2xl` | 1536px | 大屏幕以下折叠 |
+| `none` | 不收起 | 始终保持左侧栏常驻，不使用移动端抽屉 |
 
-窄于这个宽度时，侧栏离开页面，抽屉接管。同一只外壳里的顶栏用这只抽屉，不再自己打开另一只。`mobileNav` 设成 `false` 就关掉。外壳里面可以用 `useAppShellMobile()` 读到现在是不是窄屏，以及抽屉开没开。它从 `@astryx-vue/core` 引入。
+当视口宽度小于所设断点时，原本常驻的左侧栏会移出主版面，转由汉堡按钮和呼出的抽屉来接管。同属于一个外壳内的顶栏也会复用这只抽屉，避免重复生成弹层。如果传入 `:mobile-nav="false"`，则完全关闭移动端抽屉行为。
 
-## 内容区
+在 `AppShell` 内部的任何子组件里，你都可以随时调用 `useAppShellMobile()` 组合式函数，实时读取当前是否处于窄屏移动状态，以及抽屉是否正处于打开状态。
 
-`Layout` 把页眉、起始、内容、结束、页脚分成槽。`contentWidth` 限制正文这一列有多宽，分隔线仍然拉满。数字是像素。一行正文大约 40 到 60 个字符时最好读，列宽用这个属性卡住，而不是让每一节自己再包一层容器。
+## 内容版心与布局（Layout）
 
-结束槽里的 `LayoutPanel` 用 `width` 占掉固定的一列。变窄以后这一列没有地方时，不要把它和侧栏一起留在页面上。
+`Layout` 负责把页面的布局结构清晰切分为：页眉（header）、起始侧（start）、主要内容（content）、结束侧（end）和页脚（footer）等插槽。
+
+- **舒适阅读宽度**：通常一行正文文本在 40 到 60 个中文字符（或 60 到 80 个英文字符）时人眼读起来最不容易疲劳。`Layout` 提供了 `contentWidth` 属性（单位是像素），能方便地限制中间正文栏的宽度，同时保持上下的分隔线横向拉通铺满，无需在每个段落里层层包裹容器。
+- **自适应侧面板**：放在结束插槽（end slot）里的 `LayoutPanel` 经常用来展示选中的条目详情。当屏幕变窄空间不够时，可以借助条件渲染在窄屏时隐藏它，改为需要时通过弹窗或底部抽屉查看。
 
 ```vue
 <script setup lang="ts">
@@ -34,6 +37,7 @@ import { AppShell } from '@astryx-vue/core/AppShell'
 import { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'
 import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 
+// 监听屏幕是否小于 1024px
 const isNarrow = useMediaQuery('(max-width: 1024px)')
 </script>
 
@@ -44,13 +48,16 @@ const isNarrow = useMediaQuery('(max-width: 1024px)')
         <SideNavItem href="/orders" label="订单" />
       </SideNav>
     </template>
+
     <Layout :content-width="720">
       <LayoutContent>
-        <p>订单</p>
+        <p>订单列表</p>
       </LayoutContent>
+
+      <!-- 仅在宽屏展示右侧面板，窄屏时隐藏以保证阅读体验 -->
       <template v-if="!isNarrow" #end>
         <LayoutPanel :width="380" has-divider>
-          <p>详情</p>
+          <p>订单详情</p>
         </LayoutPanel>
       </template>
     </Layout>
@@ -58,20 +65,35 @@ const isNarrow = useMediaQuery('(max-width: 1024px)')
 </template>
 ```
 
-宽于 1024px 时是三列：侧栏、正文、380px 的侧面板。到了 1024px，侧面板离开这一行，需要时再用 [Dialog](/components/dialog) 或 [BottomSheet](/components/bottom-sheet) 打开。到了 `md`（768px），侧栏收进外壳的抽屉。`useMediaQuery` 在 setup 时就读一次当前是否匹配，之后跟着变。
+在这个例子里：
+1. 当屏幕宽于 1024px 时，呈现舒适的三栏结构：侧导航、正文、380px 的右侧面板；
+2. 宽度小于 1024px 时，右侧面板优雅退场，腾出完整空间显示正文；需要看详情时可通过 [Dialog](/components/dialog) 或 [BottomSheet](/components/bottom-sheet) 调出；
+3. 进一步变窄到 `md`（768px）以下时，侧导航自动收录到移动端抽屉里。
 
-## 会重排的列
+`useMediaQuery` 在组件 setup 初始化时就会同步计算一次状态，并在窗口缩放时平滑响应。
 
-`Grid` 的 `columns` 写成数字时，每一档宽度都是那么多列，不会自己减少。`:columns="7"` 在手机上仍是七列。要随宽度减少列数，写成 `{ minWidth, max }`。`minWidth` 是每一列至少多少像素，`max` 是最多几列。放不下 `minWidth` 时会少一列；窄到一列时，这一列可以缩到容器宽度。`gap` 占掉列与列之间的空间，算进能不能再放一列。
+## 自动换行的网格布局（Grid）
+
+`Grid` 组件的 `columns` 属性如果直接写成固定的数字，例如 `:columns="7"`，那么即便在屏幕极窄的手机上，它也依旧会死板地强行挤成 7 列（适合用来做固定星期的日历排版）。
+
+如果你希望网格能根据容器宽度自动增减列数，可以传入 `{ minWidth, max }` 配置对象：
+- `minWidth`：每列最小允许的宽度（像素）；
+- `max`：最多允许排成多少列。
+
+容器放不下更多列时会自动少一列，并把剩余卡片顺延换行；当缩窄到只剩一列时，卡片宽度会自动伸展填满整个容器。`gap` 属性设置的卡片间隙，也会被精准计算进列宽的容量判断中。
 
 ```vue
+<!-- 宽屏时最多 4 列，屏幕变窄时自动减少列数换行 -->
 <Grid :columns="{ minWidth: 240, max: 4 }" :gap="3">
-  <!-- 宽的时候四列，窄的时候减少 -->
+  <!-- 卡片内容 -->
 </Grid>
 
+<!-- 一周 7 天的日历视图，每一档宽度都保持固定的 7 列 -->
 <Grid :columns="7" :gap="1">
-  <!-- 一周七天，每一档都是七列 -->
+  <!-- 日期内容 -->
 </Grid>
 ```
 
-同一份列配置里，`repeat` 为 `fit` 时，排不满的空列会收掉，已有的列把这一行撑满。默认 `fill` 会留下那些空列，让每一列保持同样的宽度。
+此外，你还可以通过 `repeat` 属性控制未填满时的排版策略：
+- `repeat="fill"`（默认值）：保留空列占位，确保每一列的卡片都保持相同宽度。
+- `repeat="fit"`：收起多余的空列，让已有的卡片均分并撑满整行空间。
