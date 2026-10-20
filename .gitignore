@@ -6,3 +6,7 @@ coverage/
 *.log
 *.tsbuildinfo
 .DS_Store
+
+# 蜂群运行时产物
+.agents-work/upstream-sync/locks/
+.agents-work/upstream-sync/nodes/*/evidence/
