@@ -17,6 +17,8 @@ import {
   backgroundColor,
   compareImages,
   contentBox,
+  CORNER_RADIUS,
+  isOutsideCorner,
   PAD_COLOR,
   padTo,
   readPng,
@@ -25,6 +27,7 @@ import {
   writePng,
 } from '../scripts/swarm/visual-compare/image.mjs'
 import { COMBOS, componentUrls, outputPaths, parseCombos, toSlug, toUpstreamName } from '../scripts/swarm/visual-compare/names.mjs'
+import { oursPageFile, preflight, probeStatus } from '../scripts/swarm/visual-compare/preflight.mjs'
 import { buildReportJson, buildReportMd, sizeDelta } from '../scripts/swarm/visual-compare/report.mjs'
 
 type RGB = [number, number, number]
@@ -180,6 +183,31 @@ describe('差异分数', () => {
     expect(contentBox(solid(10, 10, [1, 2, 3]))).toBeNull()
   })
 
+  it('只排除四个圆角：贴着左右边的内容照样算进内容框', () => {
+    // 模拟窄屏上游：按钮行从 x=0 开始，右边被裁到最后一列。
+    const png = fill(solid(200, 120, [241, 241, 241]), 0, 50, 200, 20, [27, 27, 27])
+    expect(contentBox(png)).toEqual({ x: 0, y: 50, width: 200, height: 20 })
+    // 贴上边和下边的内容也一样。
+    const tall = fill(solid(120, 200, [241, 241, 241]), 50, 0, 20, 200, [27, 27, 27])
+    expect(contentBox(tall)).toEqual({ x: 50, y: 0, width: 20, height: 200 })
+  })
+
+  it('圆角区域的判断：角上排除，边的中段和圆内不排除', () => {
+    const w = 200
+    const h = 120
+    expect(CORNER_RADIUS).toBe(32)
+    expect(isOutsideCorner(0, 0, w, h)).toBe(true)
+    expect(isOutsideCorner(w - 1, h - 1, w, h)).toBe(true)
+    expect(isOutsideCorner(5, 5, w, h)).toBe(true)
+    expect(isOutsideCorner(0, 60, w, h)).toBe(false)
+    expect(isOutsideCorner(100, 0, w, h)).toBe(false)
+    expect(isOutsideCorner(20, 20, w, h)).toBe(false)
+    expect(isOutsideCorner(32, 0, w, h)).toBe(false)
+    // 图比两个半径还小时，半径跟着缩小。
+    expect(isOutsideCorner(0, 0, 10, 10)).toBe(true)
+    expect(isOutsideCorner(5, 5, 10, 10)).toBe(false)
+  })
+
   it('结论阈值', () => {
     expect(verdictFor(1.99)).toBe('same')
     expect(verdictFor(2)).toBe('review')
@@ -330,5 +358,64 @@ describe('浏览器锁', () => {
       timeoutMs: 5 * 60 * 1000,
       cmd: ['node', '-e', '1'],
     })
+  })
+})
+
+describe('起服务前的预检', () => {
+  const root = join(import.meta.dirname, '..')
+  const urls = (name: string, slug: string) => ({ name, slug, upstream: `https://astryx.atmeta.com/components/${name}` })
+
+  it('我们的组件页按文档源文件判断', () => {
+    expect(oursPageFile(root, 'button')).toMatch(/apps\/docs\/docs\/en\/components\/button\/index\.md$/)
+    expect(oursPageFile(root, 'not-a-thing')).toBeNull()
+  })
+
+  it('两边都在时没有错误；拼错时两边都报，不开浏览器', async () => {
+    const calls: string[] = []
+    const probe = async (url: string) => {
+      calls.push(url)
+      return url.endsWith('/Button') ? 200 : 404
+    }
+    expect(await preflight({ root, urls: urls('Button', 'button'), probe })).toEqual({ errors: [], warnings: [] })
+    const bad = await preflight({ root, urls: urls('NotAThing', 'not-a-thing'), probe })
+    expect(bad.errors).toHaveLength(2)
+    expect(bad.errors[0]).toContain('我们的文档站没有 not-a-thing')
+    expect(bad.errors[1]).toContain('上游没有 NotAThing')
+    expect(calls).toEqual(['https://astryx.atmeta.com/components/Button', 'https://astryx.atmeta.com/components/NotAThing'])
+  })
+
+  it('上游连不上或返回 5xx 时只提示，不拦', async () => {
+    const unreachable = async () => {
+      throw new Error('ECONNREFUSED')
+    }
+    const offline = await preflight({ root, urls: urls('Button', 'button'), probe: unreachable })
+    expect(offline.errors).toEqual([])
+    expect(offline.warnings[0]).toContain('ECONNREFUSED')
+    const flaky = await preflight({ root, urls: urls('Button', 'button'), probe: async () => 503 })
+    expect(flaky).toMatchObject({ errors: [], warnings: [expect.stringContaining('HTTP 503')] })
+  })
+
+  it('probeStatus 读本机 HTTP 服务的状态码，并跟随跳转', async () => {
+    const { createServer } = await import('node:http')
+    const server = createServer((req, res) => {
+      if (req.url === '/old') {
+        res.writeHead(301, { location: '/missing' })
+        res.end()
+        return
+      }
+      res.writeHead(req.url === '/ok' ? 200 : 404)
+      res.end()
+    })
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+    const { port } = server.address() as { port: number }
+    try {
+      // 本机地址不走代理，即使传了一个连不上的代理也能拿到结果。
+      const proxy = 'http://127.0.0.1:1'
+      expect(await probeStatus(`http://127.0.0.1:${port}/ok`, { proxy })).toBe(200)
+      expect(await probeStatus(`http://127.0.0.1:${port}/old`, { proxy })).toBe(404)
+    }
+    finally {
+      server.close()
+    }
   })
 })

@@ -4,8 +4,9 @@
  * 拼成「左上游、右我们」的对照图并给出像素差异分数。用法见 scripts/swarm/README.md。
  *
  * 资源纪律：
+ * - 先用 HTTP 和文档源文件确认两边的组件页都存在，再起服务、拿锁；组件名拼错时不占用任何资源。
  * - 浏览器通过 browser-lock 拿锁，整台机器最多 2 个；本进程只开 1 个 Chromium，组合按顺序跑。
- * - 文档站固定 5172 端口，多个进程共用，最后一个使用者负责关掉。
+ * - 文档站端口：--port，否则本工作区登记的槽位端口，否则 5172。同一端口上的服务多个进程共用，最后一个使用者负责关掉。
  * - 正常结束、出错、Ctrl+C 都会关浏览器、关服务、释放锁。
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -18,8 +19,10 @@ import { parseVisualArgs, USAGE } from './visual-compare/args.mjs'
 import { capturePage } from './visual-compare/capture.mjs'
 import { compareImages, sideBySide, VERDICT_TEXT, writePng } from './visual-compare/image.mjs'
 import { COMBOS, componentUrls, OURS_PORT, outputPaths, UPSTREAM_ORIGIN } from './visual-compare/names.mjs'
+import { preflight } from './visual-compare/preflight.mjs'
 import { buildReportJson, buildReportMd, sizeDelta } from './visual-compare/report.mjs'
 import { acquireDocsServer } from './visual-compare/serve.mjs'
+import { slotPortFor } from './worktree/slots.mjs'
 
 export const TOOL_VERSION = '1.0.0'
 
@@ -110,12 +113,16 @@ function onSignal(signal) {
     .finally(() => process.exit(signal === 'SIGINT' ? 130 : 143))
 }
 
-async function runAll(options, oursOrigin) {
-  const { chromium } = await import('playwright')
-  const urls = componentUrls(options.component, {
+function resolveUrls(options, oursOrigin) {
+  return componentUrls(options.component, {
     upstreamOrigin: options.upstreamOrigin ?? UPSTREAM_ORIGIN,
     oursOrigin,
   })
+}
+
+async function runAll(options, oursOrigin) {
+  const { chromium } = await import('playwright')
+  const urls = resolveUrls(options, oursOrigin)
   const outDir = resolve(ROOT, options.outDir)
   const startedAt = new Date().toISOString()
   const results = []
@@ -191,9 +198,19 @@ async function main() {
   process.on('SIGINT', onSignal)
   process.on('SIGTERM', onSignal)
   try {
-    let oursOrigin = options.oursOrigin ?? `http://localhost:${OURS_PORT}`
+    const port = options.port ?? slotPortFor(ROOT) ?? OURS_PORT
+    let oursOrigin = options.oursOrigin ?? `http://localhost:${port}`
+    const check = await preflight({ root: ROOT, urls: resolveUrls(options, oursOrigin), proxy: options.proxy })
+    for (const warning of check.warnings)
+      log(`[visual] 注意：${warning}`)
+    if (check.errors.length > 0) {
+      for (const error of check.errors)
+        log(`[visual] ${error}`)
+      process.exitCode = 1
+      return
+    }
     if (options.serve) {
-      server = await acquireDocsServer({ root: ROOT, port: OURS_PORT, log })
+      server = await acquireDocsServer({ root: ROOT, port, log })
       cleanups.push(releaseServer)
       oursOrigin = server.origin
     }

@@ -89,13 +89,30 @@ const BACKGROUND_TOLERANCE = 8
 /** 背景取色那一圈向内缩的距离，躲开描边。 */
 const EDGE_INSET = 4
 /**
- * 内容框忽略的边缘宽度：预览区圆角最大 16 CSS 像素，2 倍图上是 32 像素，这里按 2 倍图取。
- * 组件内容都在预览区中部，丢掉这一圈不影响内容框。
+ * 预览区圆角半径的上限：两边站点的圆角最大 16 CSS 像素，2 倍图上是 32 像素，这里按 2 倍图取。
+ * 半径更小的圆角切掉的区域被半径更大的圆角包含，所以按上限排除不会漏掉圆角外的像素。
  */
-const CORNER_INSET = 32
+export const CORNER_RADIUS = 32
+/** 圆弧上的抗锯齿像素会混进背景色，向圆内多让出这么多像素。 */
+const CORNER_ANTIALIAS = 2
 
 function clampInset(png, inset) {
   return Math.max(0, Math.min(inset, Math.floor((Math.min(png.width, png.height) - 1) / 2)))
+}
+
+/**
+ * 像素是否落在四个圆角切掉的区域（含弧线上的抗锯齿像素）。
+ * 只看四个角，四条边的中段照常参与内容框计算，贴边的组件内容不会被漏掉。
+ */
+export function isOutsideCorner(x, y, width, height, radius = CORNER_RADIUS) {
+  const r = Math.min(radius, Math.floor(Math.min(width, height) / 2))
+  if (r <= 0)
+    return false
+  const dx = x < r ? r - x - 0.5 : x >= width - r ? x - (width - r) + 0.5 : 0
+  const dy = y < r ? r - y - 0.5 : y >= height - r ? y - (height - r) + 0.5 : 0
+  if (dx === 0 || dy === 0)
+    return false
+  return Math.hypot(dx, dy) > r - CORNER_ANTIALIAS
 }
 
 /** 向内缩 EDGE_INSET 的一圈像素里出现最多的颜色，当作背景色。圆角外的像素占比很小，不影响取众数。 */
@@ -129,18 +146,19 @@ export function backgroundColor(png) {
 
 /**
  * 内容框：和背景色不同的像素的外接矩形，坐标相对图片本身。
- * 离边缘 CORNER_INSET 以内的像素不看，圆角和描边不算内容。整张图都是背景时返回 null。
+ * 四个圆角切掉的区域不看（见 isOutsideCorner），其余像素包括贴边的都算。整张图都是背景时返回 null。
  */
 export function contentBox(png) {
   const { data, width, height } = png
   const bg = backgroundColor(png)
-  const inset = clampInset(png, CORNER_INSET)
   let minX = width
   let minY = height
   let maxX = -1
   let maxY = -1
-  for (let y = inset; y < height - inset; y++) {
-    for (let x = inset; x < width - inset; x++) {
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (isOutsideCorner(x, y, width, height))
+        continue
       const o = (y * width + x) * 4
       if (Math.abs(data[o] - bg[0]) <= BACKGROUND_TOLERANCE
         && Math.abs(data[o + 1] - bg[1]) <= BACKGROUND_TOLERANCE
