@@ -1,12 +1,13 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { parseWorktreeArgs, runWorktree } from '../scripts/swarm/worktree.mjs'
 import { mergeWorktree, RebaseConflictError, rebaseWorktree } from '../scripts/swarm/worktree/integrate.mjs'
 import { claimSlot, readSlots, SlotError } from '../scripts/swarm/worktree/slots.mjs'
 import { adoptWorktree, branchName, createWorktree, formatList, listNodeWorktrees, removeWorktree, WorktreeError } from '../scripts/swarm/worktree/workspaces.mjs'
+import { syncExports } from '../scripts/sync-exports.mjs'
 
 const INDEX = 'packages/core/src/index.ts'
 /** 假的 `pnpm sync`：按 packages/core/src 下的组件目录重写总入口，和真的 sync 一样只看源码目录。 */
@@ -14,6 +15,12 @@ const FAKE_SYNC = ['node', '-e', `
 const fs = require('fs')
 const dirs = fs.readdirSync('packages/core/src', { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name).sort()
 fs.writeFileSync('${INDEX}', dirs.map(d => "export * from './" + d + "'").join('\\n') + '\\n')
+`]
+const PKG = 'packages/core/package.json'
+/** 真的 sync 生成器（只是不跑 eslint），package.json 的 exports 由它写。 */
+const REAL_SYNC = ['node', '--input-type=module', '-e', `
+import { syncExports } from ${JSON.stringify(resolve('scripts/sync-exports.mjs'))}
+await syncExports({ rootDir: process.cwd(), eslint: false })
 `]
 const PASS = ['node', '-e', 'process.exit(0)']
 const FAIL = ['node', '-e', 'process.exit(3)']
@@ -94,6 +101,18 @@ describe('new、ls、rm', () => {
     expect(existsSync(c1.path)).toBe(false)
     expect(git(repo, 'branch', '--list', 'sync/*')).toBe('')
     expect(readSlots(join(repo, '.git'))).toEqual([])
+  })
+
+  it('释放最后一个槽位时删掉空的 swarm-slots/，还有登记时保留，之后可以再占', () => {
+    const dir = join(repo, '.git/swarm-slots')
+    newNode('C1')
+    newNode('C2')
+    removeWorktree({ cwd: repo, node: 'C1' })
+    expect(readdirSync(dir)).toEqual(['2.json'])
+    removeWorktree({ cwd: repo, node: 'C2' })
+    expect(existsSync(dir)).toBe(false)
+    expect(newNode('C3').slot).toBe(1)
+    expect(readdirSync(dir)).toEqual(['1.json'])
   })
 
   it('rm 遇到没提交的改动时拒绝；已合入的分支不用 --force', () => {
@@ -214,6 +233,120 @@ describe('rebase', () => {
   })
 })
 
+describe('rebase 时 package.json 的冲突', () => {
+  type Pkg = Record<string, any>
+
+  function readPkg(cwd: string): Pkg {
+    return JSON.parse(readFileSync(join(cwd, PKG), 'utf8'))
+  }
+
+  /** 加一个组件（可以顺手改 package.json 的其它字段），跑真的 sync，一起提交。 */
+  function addReal(cwd: string, name: string | null, editPkg?: (pkg: Pkg) => void) {
+    if (name)
+      write(cwd, `packages/core/src/${name}/index.ts`, `export const ${name} = 1\n`)
+    if (editPkg) {
+      const pkg = readPkg(cwd)
+      editPkg(pkg)
+      write(cwd, PKG, `${JSON.stringify(pkg, null, 2)}\n`)
+    }
+    execFileSync(REAL_SYNC[0], REAL_SYNC.slice(1), { cwd })
+    git(cwd, 'add', '-A')
+    git(cwd, 'commit', '-q', '-m', `add ${name ?? 'pkg edit'}`)
+  }
+
+  async function expectSyncClean(cwd: string) {
+    expect((await syncExports({ rootDir: cwd, check: true, eslint: false })).ok).toBe(true)
+  }
+
+  beforeEach(() => {
+    write(repo, PKG, `${JSON.stringify({
+      name: '@astryx-vue/core',
+      description: '旧描述',
+      exports: { '.': { source: './src/index.ts', types: './dist/index.d.ts', import: './dist/index.js' }, './package.json': './package.json' },
+      publishConfig: { access: 'public' },
+      dependencies: { a: '1.0.0' },
+    }, null, 2)}\n`)
+    addReal(repo, null)
+  })
+
+  it('两边各新增一个组件：自动合并，两个组件都在 exports 里，sync --check 通过', async () => {
+    const c1 = newNode('C1')
+    addReal(c1.path, 'Zzzz')
+    addReal(repo, 'Zzaa')
+    const result = rebaseWorktree({ cwd: repo, node: 'C1', sync: REAL_SYNC })
+    expect(result.autoResolved).toHaveLength(1)
+    expect(result.autoResolved[0].files).toEqual(expect.arrayContaining([INDEX, PKG]))
+    const pkg = readPkg(c1.path)
+    expect(Object.keys(pkg.exports)).toEqual(['.', './Button', './Zzaa', './Zzzz', './package.json'])
+    expect(Object.keys(pkg.publishConfig.exports)).toEqual(['.', './Button', './Zzaa', './Zzzz', './package.json'])
+    expect(pkg.publishConfig.access).toBe('public')
+    const index = readFileSync(join(c1.path, INDEX), 'utf8')
+    expect(index).toContain('./Zzaa/index.js')
+    expect(index).toContain('./Zzzz/index.js')
+    expect(git(c1.path, 'status', '--porcelain')).toBe('')
+    expect(git(c1.path, 'log', '--format=%s', 'swarm-tree..HEAD')).toBe('add Zzzz')
+    await expectSyncClean(c1.path)
+  })
+
+  it('基线改了 description、节点改了依赖并新增组件：两边的改动都保留', async () => {
+    const c1 = newNode('C1')
+    addReal(c1.path, 'Zzzz', (pkg) => {
+      pkg.dependencies.b = '2.0.0'
+    })
+    addReal(repo, 'Zzaa', (pkg) => {
+      pkg.description = '新描述'
+      pkg.publishConfig.access = 'restricted'
+    })
+    const result = rebaseWorktree({ cwd: repo, node: 'C1', sync: REAL_SYNC })
+    expect(result.autoResolved[0].files).toContain(PKG)
+    const pkg = readPkg(c1.path)
+    expect(pkg.description).toBe('新描述')
+    expect(pkg.publishConfig.access).toBe('restricted')
+    expect(pkg.dependencies).toEqual({ a: '1.0.0', b: '2.0.0' })
+    expect(Object.keys(pkg.exports)).toEqual(['.', './Button', './Zzaa', './Zzzz', './package.json'])
+    expect(Object.keys(pkg)).toEqual(['name', 'description', 'exports', 'publishConfig', 'dependencies'])
+    expect(git(c1.path, 'status', '--porcelain')).toBe('')
+    await expectSyncClean(c1.path)
+  })
+
+  it('两边把同一个非 sync 字段改成不同的值：停下、报出字段，分支回到原样', () => {
+    const c1 = newNode('C1')
+    addReal(c1.path, 'Zzzz', (pkg) => {
+      pkg.description = '节点的描述'
+    })
+    const before = git(c1.path, 'rev-parse', 'HEAD')
+    addReal(repo, 'Zzaa', (pkg) => {
+      pkg.description = '基线的描述'
+    })
+    let error: unknown
+    try {
+      rebaseWorktree({ cwd: repo, node: 'C1', sync: REAL_SYNC })
+    }
+    catch (caught) {
+      error = caught
+    }
+    expect(error).toBeInstanceOf(RebaseConflictError)
+    const conflict = error as RebaseConflictError
+    expect(conflict.files).toEqual([PKG])
+    expect(conflict.message).toContain('两边都改了 description，改法不同')
+    expect(git(c1.path, 'rev-parse', 'HEAD')).toBe(before)
+    expect(git(c1.path, 'status', '--porcelain')).toBe('')
+    expect(readPkg(c1.path).description).toBe('节点的描述')
+  })
+
+  it('exports 里手写的条目不归 sync 管，两边改法不同也要停下', () => {
+    const c1 = newNode('C1')
+    addReal(c1.path, 'Zzzz', (pkg) => {
+      pkg.exports['./locale'] = './src/locale/node.ts'
+    })
+    addReal(repo, 'Zzaa', (pkg) => {
+      pkg.exports['./locale'] = './src/locale/base.ts'
+    })
+    expect(() => rebaseWorktree({ cwd: repo, node: 'C1', sync: REAL_SYNC })).toThrow(/exports\["\.\/locale"\]/)
+    expect(git(c1.path, 'status', '--porcelain')).toBe('')
+  })
+})
+
 describe('merge', () => {
   it('检查全部通过后 fast-forward 合入 swarm-tree，再删工作区', () => {
     const c1 = newNode('C1')
@@ -257,6 +390,27 @@ describe('merge', () => {
     const base = git(repo, 'rev-parse', 'swarm-tree')
     expect(() => mergeWorktree({ cwd: repo, node: 'C1', sync: FAKE_SYNC, checks: [FAIL] })).toThrow(RebaseConflictError)
     expect(git(repo, 'rev-parse', 'swarm-tree')).toBe(base)
+  })
+
+  it('在要删的工作区里执行时一开始就拒绝：不 rebase、不跑检查、不拿锁，什么都不变', () => {
+    const c1 = newNode('C1')
+    addComponent(c1.path, 'Card')
+    addComponent(repo, 'Avatar')
+    const nodeHead = git(c1.path, 'rev-parse', 'HEAD')
+    const baseHead = git(repo, 'rev-parse', 'swarm-tree')
+    const marker = ['node', '-e', `require('fs').writeFileSync(${JSON.stringify(join(sandbox, 'ran.txt'))}, 'x')`]
+    for (const cwd of [c1.path, join(c1.path, 'packages/core')])
+      expect(() => mergeWorktree({ cwd, node: 'C1', sync: FAKE_SYNC, checks: [marker] })).toThrow(/请在主工作区里执行.*什么都没有改/)
+    expect(existsSync(join(sandbox, 'ran.txt'))).toBe(false)
+    expect(git(c1.path, 'rev-parse', 'HEAD')).toBe(nodeHead)
+    expect(git(repo, 'rev-parse', 'swarm-tree')).toBe(baseHead)
+    expect(git(c1.path, 'status', '--porcelain')).toBe('')
+    expect(existsSync(join(repo, '.git/swarm-locks/merge'))).toBe(false)
+    expect(readSlots(join(repo, '.git'))).toHaveLength(1)
+    // 加 keep 就可以在节点工作区里合入。
+    const result = mergeWorktree({ cwd: c1.path, node: 'C1', sync: FAKE_SYNC, checks: [PASS], keep: true })
+    expect(git(repo, 'rev-parse', 'swarm-tree')).toBe(result.merged)
+    expect(existsSync(c1.path)).toBe(true)
   })
 
   it('基线没有在任何工作区检出时直接更新引用', () => {

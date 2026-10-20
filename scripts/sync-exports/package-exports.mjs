@@ -123,9 +123,25 @@ function replaceOrInsertTopLevel(text, key, value) {
   return `${body}${comma}\n  "${key}": ${serializeJsonValue(value)}\n}\n`
 }
 
+export function packageJsonFile(rootDir) {
+  return join(rootDir, 'packages/core/package.json')
+}
+
+/**
+ * 判断 package.json 里某个 JSON 路径（键名数组）的值是不是完全由 `pnpm sync` 算出来的：
+ * - `publishConfig.exports`：整份由 exports 推出来；
+ * - `exports["./<组件目录>"]`：组件目录存在时，值总是被改写成标准的三件套。
+ * 其它字段（含 exports 里手写的 `.`、`./locale` 等条目）由人维护。
+ */
+export function syncOwnedPackagePath(rootDir) {
+  const dirs = new Set(componentDirs(rootDir))
+  return path => (path[0] === 'publishConfig' && path[1] === 'exports')
+    || (path[0] === 'exports' && path.length >= 2 && path[1].startsWith('./') && dirs.has(path[1].slice(2)))
+}
+
 /** 返回 `{ file, text, changed }`。`changed` 为 false 时 `text` 就是原文。 */
 export function renderPackageExports(rootDir) {
-  const file = join(rootDir, 'packages/core/package.json')
+  const file = packageJsonFile(rootDir)
   const text = readFileSync(file, 'utf8')
   const json = JSON.parse(text)
   const current = json.exports ?? {}

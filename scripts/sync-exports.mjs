@@ -5,14 +5,14 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { renderPackageExports } from './sync-exports/package-exports.mjs'
+import { packageJsonFile, renderPackageExports, syncOwnedPackagePath } from './sync-exports/package-exports.mjs'
 import { renderCoreStyles, renderThemeEntries } from './sync-exports/render-css.mjs'
 import { renderComposables, renderIndex } from './sync-exports/render-index.mjs'
 import { renderMessages } from './sync-exports/render-messages.mjs'
 
 /**
  * 整个文件都由 `pnpm sync` 生成的文件：绝对路径 → 内容。
- * `packages/core/package.json` 只有 exports 字段是生成的，不在这里，见 syncOutputs。
+ * `packages/core/package.json` 只有部分字段是生成的，不在这里，见 partlyGeneratedFiles。
  * 合并工具（scripts/swarm/worktree.mjs rebase）按这份清单判断哪些冲突可以重新生成。
  */
 export function generatedFiles(rootDir) {
@@ -26,6 +26,14 @@ export function generatedFiles(rootDir) {
   for (const [file, contents] of renderThemeEntries(rootDir))
     files.set(file, contents)
   return files
+}
+
+/**
+ * 只有部分字段由 `pnpm sync` 生成的 JSON 文件：绝对路径 → 判断函数。
+ * 判断函数接收一个 JSON 路径（键名数组），返回这个位置的值是不是完全由 sync 算出来的。
+ */
+export function partlyGeneratedFiles(rootDir) {
+  return new Map([[packageJsonFile(rootDir), syncOwnedPackagePath(rootDir)]])
 }
 
 /** `pnpm sync` 要写的全部文件：整份生成的文件，加上 exports 有变化时的 package.json。 */

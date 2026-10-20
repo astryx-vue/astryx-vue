@@ -16,10 +16,10 @@ import { resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
-import { canonical, CommandError } from './worktree/git.mjs'
+import { CommandError } from './worktree/git.mjs'
 import { mergeWorktree, rebaseWorktree } from './worktree/integrate.mjs'
 import { SlotError } from './worktree/slots.mjs'
-import { adoptWorktree, createWorktree, DEFAULT_BASE, formatList, listNodeWorktrees, removeWorktree, WorktreeError } from './worktree/workspaces.mjs'
+import { adoptWorktree, createWorktree, DEFAULT_BASE, formatList, removeWorktree, WorktreeError } from './worktree/workspaces.mjs'
 
 export const USAGE = `用法: node scripts/swarm/worktree.mjs <子命令> [参数]
 
@@ -31,7 +31,7 @@ export const USAGE = `用法: node scripts/swarm/worktree.mjs <子命令> [参�
   rm <节点ID>             删工作区、分支，释放槽位。分支没合入或有未提交改动时拒绝
       --force             不管合没合入都删
   adopt <节点ID> <槽位>   给已经存在、还没登记槽位的工作区补登记
-  rebase <节点ID>         rebase 到最新的 ${DEFAULT_BASE}；只有生成文件冲突时自动重新生成
+  rebase <节点ID>         rebase 到最新的 ${DEFAULT_BASE}；冲突都能交给 pnpm sync 时自动合并并重新生成
   merge <节点ID>          rebase → 完整检查 → fast-forward 合入 ${DEFAULT_BASE} → 删工作区
       --keep              合入后保留工作区`
 
@@ -119,10 +119,6 @@ export function runWorktree(argv, { cwd = process.cwd(), log = message => consol
         print(describeRebase(rebaseWorktree({ cwd, node: options.node, log })))
         return 0
       case 'merge': {
-        const target = listNodeWorktrees(cwd).worktrees.find(item => item.node === options.node)
-        const here = canonical(cwd)
-        if (!options.keep && target && (here === target.path || here.startsWith(`${target.path}/`)))
-          throw new WorktreeError('merge 结束时会删掉这个工作区，请在主工作区里执行，或者加 --keep')
         const result = mergeWorktree({ cwd, node: options.node, keep: options.keep, log })
         const lines = [describeRebase(result.rebase), `已合入 ${DEFAULT_BASE}：${result.merged.slice(0, 9)}`]
         if (result.removed)

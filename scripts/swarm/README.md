@@ -240,8 +240,15 @@ node scripts/swarm/worktree.mjs adopt E2 3      # 给手工建的旧工作区补
   - 任何一步失败（比如装依赖失败）都会回滚：工作区、分支、槽位都不留。
 - **rm**：删工作区、分支，释放槽位，顺手删掉这个工作区里已经退出的进程留下的浏览器锁。分支没合入 `swarm-tree`、或者工作区有没提交的改动时拒绝，加 `--force` 才删。
 - **rebase**：工作区必须干净。
-  - 冲突全部落在 `pnpm sync` 生成的文件上（清单取自 `scripts/sync-exports.mjs` 的 `generatedFiles`）时，取节点这一边的版本，再在工作区跑一次 `pnpm sync` 重新生成，然后继续。
-  - 还有别的冲突就放弃这次 rebase，分支回到原样，报出冲突文件。需要人手动解决。
+  - 冲突都能交给 `pnpm sync` 重新生成时自动处理，然后继续。两类文件的清单都取自 `scripts/sync-exports.mjs`：
+    - 整份生成的文件（`generatedFiles`，比如 `packages/core/src/index.ts`）：取节点这一边的版本。
+    - 部分字段生成的文件（`partlyGeneratedFiles`，目前只有 `packages/core/package.json`）：做 JSON 三方合并。
+      - 归 sync 管的字段不比较：`publishConfig.exports`，以及 `exports` 里指向组件目录的 `./<组件>` 条目。
+      - 其它字段（description、依赖、`publishConfig.access`、exports 里手写的 `.`、`./locale` 等）两边的改动都保留。
+      - 两边把同一个字段改成不同的值，就算人工冲突，报出字段名。
+      - 合并结果按两格缩进重新写出，和仓库现在的写法一致。
+    - 之后在工作区跑一次 `pnpm sync` 重新生成。sync 改到生成范围以外的文件就停下。
+  - 还有别的冲突，或者 package.json 不能自动合并，就放弃这次 rebase，分支回到原样，报出冲突文件和原因。需要人手动解决。
 - **merge**：这就是总控「复核加合入」的那一步。
   1. 拿合并锁 `swarm-locks/merge`，同一时刻只有一个 merge。生成文件排队合入就靠它。
   2. rebase。
@@ -250,4 +257,5 @@ node scripts/swarm/worktree.mjs adopt E2 3      # 给手工建的旧工作区补
   5. `swarm-tree` fast-forward 到节点分支。主工作区检出的就是 `swarm-tree` 时，在主工作区里 `git merge --ff-only`，文件跟着更新。
   6. 删工作区、分支，释放槽位。加 `--keep` 保留工作区。
   - 任何一步失败都停下，不合入。
-- 在主工作区或任何节点工作区里执行都行。`rm` 和 `merge` 不能在要删的那个工作区里执行。
+- 在主工作区或任何节点工作区里执行都行。`rm` 和不带 `--keep` 的 `merge` 不能在要删的那个工作区里执行，会一开始就拒绝，什么都不改。
+- 最后一个槽位释放后，空的 `swarm-slots/` 目录也会删掉，下次 `new` 时重建。

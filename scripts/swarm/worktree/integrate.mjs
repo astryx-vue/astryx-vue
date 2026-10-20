@@ -1,17 +1,17 @@
 /**
  * 把节点分支并回 swarm-tree：rebase 到最新基线，跑完整检查，fast-forward 合入，再删工作区。
  *
- * rebase 遇到冲突时，只有冲突全部落在 `pnpm sync` 生成的文件上才自动处理：
- * 取节点这一边的版本，再在工作区跑一次 `pnpm sync` 按当前代码重新生成，然后继续。
- * 生成文件清单取自 scripts/sync-exports.mjs 的 generatedFiles。
- * 还有别的冲突就放弃这次 rebase（分支回到 rebase 之前），报出冲突文件。
+ * rebase 遇到冲突时，只有冲突全部能交给 `pnpm sync` 重新生成才自动处理（规则见 sync-conflicts.mjs）：
+ * 整份生成的文件取节点版本，package.json 做 JSON 三方合并，再在工作区跑一次 `pnpm sync`
+ * 按当前代码重新生成，然后继续。
+ * 还有别的冲突就放弃这次 rebase（分支回到 rebase 之前），报出冲突文件和原因。
  */
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { join, relative } from 'node:path'
+import { join } from 'node:path'
 import process from 'node:process'
-import { generatedFiles } from '../../sync-exports.mjs'
 import { isPidAlive } from '../browser-lock.mjs'
-import { conflictedFiles, dirtyEntries, exec, git, gitOk, gitText, isAncestor, listWorktrees, rebaseInProgress } from './git.mjs'
+import { canonical, conflictedFiles, dirtyEntries, exec, git, gitOk, gitText, isAncestor, listWorktrees, rebaseInProgress } from './git.mjs'
+import { manualConflicts, resolveSyncConflicts, stageSyncOutputs, syncManagedFiles } from './sync-conflicts.mjs'
 import { DEFAULT_BASE, listNodeWorktrees, removeWorktree, WorktreeError } from './workspaces.mjs'
 
 export const DEFAULT_SYNC = Object.freeze(['pnpm', 'sync'])
@@ -24,20 +24,19 @@ export const DEFAULT_CHECKS = Object.freeze([
   ['pnpm', 'build'],
   ['pnpm', 'lint:pkg'],
 ])
-/** `pnpm sync` 除了整份生成的文件，还会改写这个文件里的 exports 字段。 */
-const SYNC_TOUCHED_EXTRA = 'packages/core/package.json'
-
 export class RebaseConflictError extends WorktreeError {
-  constructor(files, commit) {
-    super(`rebase 在提交 ${commit} 上遇到冲突，已放弃这次 rebase，分支保持原样。冲突文件：\n${files.map(file => `  ${file}`).join('\n')}\n请在工作区里手动 git rebase ${DEFAULT_BASE} 解决`)
+  /**
+   * @param {string[]} files 要人处理的冲突文件
+   * @param {string} commit 停下来的提交
+   * @param {Map<string, string[]>} [reasons] 部分文件不能自动合并的原因
+   */
+  constructor(files, commit, reasons = new Map()) {
+    const lines = files.map(file => `  ${file}${reasons.has(file) ? `：${reasons.get(file).join('；')}` : ''}`)
+    super(`rebase 在提交 ${commit} 上遇到冲突，已放弃这次 rebase，分支保持原样。冲突文件：\n${lines.join('\n')}\n请在工作区里手动 git rebase ${DEFAULT_BASE} 解决`)
     this.files = files
     this.commit = commit
+    this.reasons = reasons
   }
-}
-
-/** 工作区里由 `pnpm sync` 整份生成的文件，路径相对工作区根目录。 */
-export function generatedPaths(root) {
-  return new Set([...generatedFiles(root).keys()].map(file => relative(root, file)))
 }
 
 function requireNodeWorktree(cwd, node) {
@@ -56,37 +55,6 @@ function assertClean(path) {
   const dirty = dirtyEntries(path)
   if (dirty.length > 0)
     throw new WorktreeError(`${path} 有没提交的改动，先提交或清理：\n${dirty.map(line => `  ${line}`).join('\n')}`)
-}
-
-/**
- * 冲突的生成文件取节点这一边（rebase 里的 theirs）并加进暂存区；节点这边删掉了就跟着删。
- * 之后工作区和暂存区一致，重新生成带来的改动都会体现为未暂存的改动。
- */
-function takeNodeSide(path, files) {
-  for (const file of files) {
-    if (gitOk(path, ['checkout', '--theirs', '--', file]))
-      git(path, ['add', '--', file])
-    else
-      git(path, ['rm', '--quiet', '-f', '--', file])
-  }
-}
-
-/** 工作区里相对暂存区变化了的文件，含未跟踪的新文件。 */
-function unstagedFiles(path) {
-  const changed = git(path, ['diff', '--name-only']).stdout.split('\n')
-  const untracked = git(path, ['ls-files', '--others', '--exclude-standard']).stdout.split('\n')
-  return [...new Set([...changed, ...untracked].filter(Boolean))]
-}
-
-/** 跑完 sync 后把它改过的文件加进暂存区。出现生成范围以外的改动就停下。 */
-function stageSyncOutputs(path, generated) {
-  const allowed = new Set([...generated, SYNC_TOUCHED_EXTRA])
-  const changed = unstagedFiles(path)
-  const unexpected = changed.filter(file => !allowed.has(file))
-  if (unexpected.length > 0)
-    throw new WorktreeError(`pnpm sync 改到了生成范围以外的文件：${unexpected.join('、')}`)
-  if (changed.length > 0)
-    git(path, ['add', '-A', '--', ...changed])
 }
 
 function continueRebase(path) {
@@ -125,9 +93,9 @@ export function rebaseWorktree({ cwd, node, base = DEFAULT_BASE, sync = DEFAULT_
       throw new WorktreeError(`rebase 失败：\n${result.stdout}${result.stderr}`)
     const commit = gitText(path, ['rev-parse', '--short', 'REBASE_HEAD'])
     const conflicts = conflictedFiles(path)
-    let generated
+    let managed
     try {
-      generated = generatedPaths(path)
+      managed = syncManagedFiles(path)
     }
     catch (error) {
       // 源码里带着冲突标记时生成器可能读不懂，这种情况一定需要人来处理。
@@ -136,20 +104,29 @@ export function rebaseWorktree({ cwd, node, base = DEFAULT_BASE, sync = DEFAULT_
       conflict.message += `\n（生成文件清单算不出来：${error.message}）`
       throw conflict
     }
-    const manual = conflicts.filter(file => !generated.has(file))
+    const manual = manualConflicts(conflicts, managed)
     if (conflicts.length === 0 || manual.length > 0) {
       git(path, ['rebase', '--abort'], { allowFail: true })
       throw new RebaseConflictError(manual.length > 0 ? manual : ['（没有冲突文件，但 rebase 停下了）'], commit)
     }
-    log(`[worktree]   提交 ${commit} 的生成文件冲突，取节点版本后重新生成：${conflicts.join('、')}`)
-    takeNodeSide(path, conflicts)
+    const resolved = resolveSyncConflicts(path, conflicts, managed)
+    if (!resolved.ok) {
+      git(path, ['rebase', '--abort'], { allowFail: true })
+      throw new RebaseConflictError([...resolved.problems.keys()], commit, resolved.problems)
+    }
+    log(`[worktree]   提交 ${commit} 的生成文件冲突已合并，重新生成：${conflicts.join('、')}`)
+    let unexpected
     try {
       exec(sync[0], sync.slice(1), { cwd: path, inherit: false })
-      stageSyncOutputs(path, generated)
+      unexpected = stageSyncOutputs(path, managed)
     }
     catch (error) {
       git(path, ['rebase', '--abort'], { allowFail: true })
       throw new WorktreeError(`重新生成失败，已放弃这次 rebase：${error.message}`)
+    }
+    if (unexpected.length > 0) {
+      git(path, ['rebase', '--abort'], { allowFail: true })
+      throw new WorktreeError(`pnpm sync 改到了生成范围以外的文件，已放弃这次 rebase：${unexpected.join('、')}`)
     }
     autoResolved.push({ commit, files: conflicts })
     result = continueRebase(path)
@@ -202,12 +179,16 @@ function fastForward(cwd, base, target, expectedOld) {
 
 /**
  * 复核并合入：rebase → 全部检查 → fast-forward 合入基线 → 删工作区。任何一步失败都不合入。
+ * 不带 keep 时不能在要删的工作区里执行：一开始就拒绝，不拿锁、不 rebase。
  * @param {{ cwd: string, node: string, base?: string, checks?: string[][], sync?: string[],
  *   keep?: boolean, log?: (message: string) => void }} options checks 默认 DEFAULT_CHECKS；keep 为 true 时合入后保留工作区
  * @returns {{ node: string, branch: string, merged: string, rebase: object, removed: object | null }} 合入结果
  */
 export function mergeWorktree({ cwd, node, base = DEFAULT_BASE, checks = DEFAULT_CHECKS, sync = DEFAULT_SYNC, keep = false, log = () => {} }) {
   const { layout, entry } = requireNodeWorktree(cwd, node)
+  const here = canonical(cwd)
+  if (!keep && (here === entry.path || here.startsWith(`${entry.path}/`)))
+    throw new WorktreeError('merge 结束时会删掉这个工作区，请在主工作区里执行，或者加 --keep。什么都没有改')
   return withMergeLock(layout.commonDir, node, () => {
     const rebase = rebaseWorktree({ cwd, node, base, sync, log })
     const path = entry.path
