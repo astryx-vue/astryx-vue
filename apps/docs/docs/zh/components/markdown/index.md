@@ -45,6 +45,21 @@ import { Markdown } from '@astryx-vue/core/Markdown'
 
 `components` 可以换掉某一类节点的渲染。自定义组件通过 props 拿到节点数据，有内容的节点还会收到默认插槽。
 
+`components` 里放的是组件定义，不需要是响应式的。直接写成普通对象就行。如果放进了 `ref()` 或 `reactive()`，Vue 会把组件定义也变成响应式对象，开发模式下控制台会出现 `Vue received a Component that was made a reactive object` 的警告。渲染结果不受影响，只是多了不必要的开销。要避免它，用下面任意一种：
+
+```ts
+import { markRaw, ref, shallowRef } from 'vue'
+
+// 普通对象，不包响应式
+const components = { paragraph: MyParagraph }
+
+// 需要整体替换时，用 shallowRef（或 shallowReactive）
+const swappable = shallowRef({ paragraph: MyParagraph })
+
+// 或者给每个组件套 markRaw，外层再用 ref 也不会警告
+const marked = ref({ paragraph: markRaw(MyParagraph) })
+```
+
 `plugins` 挂在解析之后的语法树上。`transform` 拿到根节点，返回下一棵树；没有改动时把原来的根返回去，流式渲染才能继续复用已经稳定的块。`render` 画出 `type` 为 `extension`、并且 `plugin` 等于这个名字的节点。`inlinePlugins` 只在普通文本里做匹配，`pattern` 要带 `g`。列表里靠前的先匹配，同一位置重叠时前面的赢。行内代码和围栏代码不会被碰到。`replace` 返回替换进去的节点，返回 `null` 就跳过这次匹配。扩展节点如果带了 `name`，就由同名插件的 `render` 来画；返回一个普通的 `link` 节点时，走原来的链接渲染。
 
 `defineMarkdownPlugin` 把插件对象原样返回，用来收窄类型。`isMarkdownExtensionNode` 用来确认一个节点是不是某个插件的扩展节点。
