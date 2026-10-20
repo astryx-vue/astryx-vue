@@ -55,6 +55,17 @@ describe('json envelopes', () => {
     expect(data.usage.length).toBeGreaterThan(40)
   })
 
+  it('ranks entries whose name contains the query above prose-only matches', async () => {
+    const clipboard = await run(['search', 'clipboard', '--json', '--limit', '5'])
+    const clipboardData = assertResponse(clipboard.stdout, 'search').data as { results: { domain: string, name: string, score: number, reason: string }[] }
+    expect(clipboardData.results[0]).toMatchObject({ domain: 'composable', name: 'useClipboard', reason: 'name' })
+    expect(clipboardData.results[0]?.score ?? 0).toBeGreaterThan(clipboardData.results[1]?.score ?? 0)
+
+    const button = await run(['search', 'button', '--json', '--limit', '5'])
+    const buttonData = assertResponse(button.stdout, 'search').data as { results: { domain: string, name: string, score: number }[] }
+    expect(buttonData.results[0]).toMatchObject({ domain: 'component', name: 'Button', score: 100 })
+  })
+
   it('searches components and docs', async () => {
     const result = await run(['search', 'button', '--json', '--limit', '5'])
     const data = assertResponse(result.stdout, 'search').data as { query: string, matchCount: number, results: { domain: string, name: string, command: string, score: number }[] }
@@ -168,6 +179,26 @@ describe('json envelopes', () => {
     const zh = assertResponse(chinese.stdout, 'docs.detail').data as { locale: string, title: string, body: string }
     expect(zh).toMatchObject({ locale: 'zh', title: '深色模式' })
     expect(zh.body).toContain('深色')
+  })
+
+  it('stays quiet when no topic name is close, and still suggests a near miss', async () => {
+    const nothing = await run(['docs', 'nope', '--json'])
+    expect(nothing.exitCode).toBe(1)
+    const empty = parseResponse(nothing.stdout)
+    expect(isError(empty)).toBe(true)
+    if (!isError(empty))
+      return
+    expect(empty.code).toBe('ERR_UNKNOWN_TOPIC')
+    expect(empty.suggestions).toBeUndefined()
+
+    const near = await run(['docs', 'dark-mod', '--json'])
+    expect(near.exitCode).toBe(1)
+    const envelope = parseResponse(near.stdout)
+    expect(isError(envelope)).toBe(true)
+    if (!isError(envelope))
+      return
+    expect(envelope.code).toBe('ERR_UNKNOWN_TOPIC')
+    expect(envelope.suggestions?.map(item => item.name)).toContain('guide/dark-mode')
   })
 
   it('reports unknown topics with suggestions', async () => {

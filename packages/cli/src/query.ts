@@ -24,18 +24,22 @@ interface Lookup<T> {
   id: (item: T) => string
   names: (item: T) => string[]
   label: (item: T) => string
+  /** Components accept a fragment of a name; topics accept ids, aliases, and exact bare names only. */
+  partial: boolean
 }
 
 const COMPONENT_LOOKUP: Lookup<ComponentRecord> = {
   id: component => component.slug,
   names: component => componentNames(component),
   label: displayName,
+  partial: true,
 }
 
 const TOPIC_LOOKUP: Lookup<TopicRecord> = {
   id: topic => topic.id,
   names: topicNames,
   label: topic => topic.id,
+  partial: false,
 }
 
 const COMPONENT_PACKAGE = catalog.packageName
@@ -131,7 +135,7 @@ function resolveRecord<T>(query: string, candidates: readonly T[], lookup: Looku
   if (exact.length > 1)
     throw failure(exact)
 
-  if (key.length >= 3) {
+  if (lookup.partial && key.length >= 3) {
     const partial = unique(candidates.filter(candidate => names(lookup, candidate).some(name => name.includes(key))), lookup)
     if (partial.length === 1)
       return partial[0]!
@@ -164,8 +168,18 @@ function ambiguous<T>(what: 'component' | 'composable' | 'topic', query: string,
   )
 }
 
+/**
+ * How many edits still count as the same name. Two characters away is a typo only once the
+ * query is long enough for that to stay meaningful; `nope` is not close to any topic.
+ */
+function nameDistanceLimit(length: number): number {
+  return length >= 6 ? 2 : 1
+}
+
 function suggestRecords<T>(query: string, candidates: readonly T[], lookup: Lookup<T>): Suggestion[] {
   const key = normalize(query)
+  if (key.length < 2)
+    return []
   return candidates
     .map((candidate) => {
       const values = names(lookup, candidate)
@@ -173,7 +187,7 @@ function suggestRecords<T>(query: string, candidates: readonly T[], lookup: Look
       const included = values.some(value => value.includes(key) || key.includes(value))
       return { candidate, distance, included }
     })
-    .filter(entry => entry.included || entry.distance <= 3)
+    .filter(entry => entry.included || entry.distance <= nameDistanceLimit(key.length))
     .sort((a, b) => a.distance - b.distance || lookup.label(a.candidate).localeCompare(lookup.label(b.candidate)))
     .slice(0, 5)
     .map(entry => ({ name: lookup.label(entry.candidate), reason: 'similar name' }))
@@ -234,8 +248,12 @@ function scoreText(query: string, lookupNames: string[], prose: string[]): { sco
     return { score: 100, reason: 'name' }
   if (lookupNames.some(name => name.startsWith(key) || (key.startsWith(name) && name.length >= 4)))
     return { score: 80, reason: 'prefix' }
+  // A query that sits inside a name, such as `clipboard` in `useClipboard`, still names the entry.
+  // This outranks prose matches, which are only on the page text.
+  if (key.length >= 3 && lookupNames.some(name => name.includes(key)))
+    return { score: 75, reason: 'name' }
   const distance = Math.min(...lookupNames.map(name => levenshtein(key, name)))
-  if (key.length >= 4 && distance <= (key.length >= 6 ? 2 : 1))
+  if (key.length >= 4 && distance <= nameDistanceLimit(key.length))
     return { score: 70, reason: 'similar name' }
   if (tokens.length > 0 && tokens.every(token => haystack.includes(token)))
     return { score: 50 + tokens.length, reason: 'text' }
