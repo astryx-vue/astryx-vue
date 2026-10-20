@@ -52,21 +52,21 @@ import { Button } from '@astryx-vue/core/Button'
 
 ## 命令行
 
-把 CLI 装成开发依赖，再用项目脚本调用：
-
-```json
-{
-  "scripts": {
-    "astryx-vue": "node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs"
-  }
-}
-```
+把 CLI 装成开发依赖。包里声明了 `bin`，装完命令就在 `node_modules/.bin` 里：
 
 ```sh
-npm run astryx-vue -- component Button
-npm run astryx-vue -- search dialog
-npm run astryx-vue -- manifest --json
-npm run astryx-vue -- init --features agents
+pnpm add -D @astryx-vue/cli
+pnpm exec astryx-vue component Button
+npx astryx-vue search dialog
+```
+
+不安装、只想临时用，运行 `npx @astryx-vue/cli …`；scope 不能省，因为 npm 上裸名 `astryx-vue` 不是这个包。
+
+```sh
+pnpm exec astryx-vue build "带单点登录的登录页"
+pnpm exec astryx-vue template login-card ./src/pages
+pnpm exec astryx-vue manifest --json
+pnpm exec astryx-vue init --features agents
 ```
 
 `init --features agents` 只刷新 `AGENTS.md` 里的托管块。标记外面的文字保持不动。说明见 [命令行](https://astryx-vue.pages.dev/guide/cli)。
