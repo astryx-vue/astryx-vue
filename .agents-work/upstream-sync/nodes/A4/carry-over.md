@@ -10,3 +10,7 @@
 来自 A3 第 2 轮回报（`nodes/A3/impl-2.md` 第 3 节）：
 
 5. 测试配置不要受外部 `NODE_ENV` 的影响。可以在 `vitest.config.ts` 里给 `vue()` 显式传 `template.compilerOptions.comments: true`，也可以由 `test` 脚本统一设置。这样就不用每个人都记得加 `env -u NODE_ENV`。
+
+来自 E4 验收（`nodes/E4/verify-1.md` 第 4 项）。这一条不归 A4，等 A4 合入以后，交给下一个改视觉工具的节点：
+
+6. 本机通过代理访问上游官网很慢，`page.goto` 偶尔会碰到 60 秒超时，导致整组对照图失败，验收者只能手动重跑。建议给上游页面的导航加 1 到 2 次重试，或者把超时时间做成可配置项。
