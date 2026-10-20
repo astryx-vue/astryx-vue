@@ -39,6 +39,14 @@ export const EXCLUDES = [
     reason: '由 pnpm --filter @astryx-vue/cli generate 生成。',
   },
   {
+    pattern: /^apps\/docs\/components\/playground\/templateManifest\.ts$/,
+    reason: '由 apps/docs/scripts/generate-template-manifest.mjs 生成。',
+  },
+  {
+    pattern: /^apps\/docs\/components\/playground\/pages\/[^/]+\.vue$/,
+    reason: '演练场模板页是给用户的整页示例代码：演练场把源码放进编辑器，`astryx-vue template <slug>` 把这一个文件原样复制到用户项目，所以必须是能直接用的单文件。上游同名模板也是单个 page.tsx，不少超过 500 行。',
+  },
+  {
     pattern: /(?:^|\/)dist\//,
     reason: '构建产物。',
   },
