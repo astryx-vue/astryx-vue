@@ -3,6 +3,7 @@
 这里放给任务树总控和子代理用的小工具：
 
 - `visual-compare.mjs`：视觉对照。把上游官网和我们文档站上同一个组件页截图，左右拼在一起，再给一个像素差异分数。
+- `a11y-scan.mjs`：可访问性扫描。对每个组件页的示例区跑 axe，浅色深色各一遍，和已知问题名单对照。
 - `browser-lock.mjs`：浏览器锁。整台电脑同时最多开 2 个浏览器，谁要开浏览器都得先拿锁。
 - `status.mjs`：进度看板。检查、查询、修改 `ROADMAP.md` 里的节点状态。
 - `worktree.mjs`：节点工作区。建、列、删、rebase，以及「复核加合入」。
@@ -151,6 +152,67 @@ pnpm visual <组件> [--section overview|all]
 - 最后一个离开的进程把服务整组关掉。
 
 只有同一个工作区的进程能共用。
+
+## 可访问性扫描
+
+### 一句话用法
+
+```sh
+pnpm a11y
+```
+
+它会做这几件事：
+
+1. 从 `apps/docs/components/demos/*/meta.ts` 读出全部组件页（现在 245 个），不手写清单。
+2. 在 5172 端口起文档站（和 `pnpm visual` 共用租约），排队拿浏览器锁，只开 1 个 Chromium。
+3. 对每个 `/en/components/<slug>/` 页面，浅色、深色各开一次，等示例渲染完，只对示例区（`.astryx-demo`，也就是 `VueDemoHost` 渲染的每个示例，包括顶部预览舞台）跑 axe。侧栏、导航、标题、说明、代码都不扫。
+4. 写 `report.json` 和 `report.md`，再和 `scripts/guardrails/a11y-known-issues.json` 对照。
+5. 关浏览器、关文档站、还锁。
+
+一次完整扫描大约 11 分钟。它要起服务、开浏览器，所以**不在 `pnpm check` 里**。
+
+### axe 规则
+
+跑 axe-core 的全部规则，关掉和上游 `.github/scripts/accessibility-audit.js` 一样的 5 条页面级规则：`html-has-lang`、`document-title`、`landmark-one-main`、`page-has-heading-one`、`region`。示例只是页面片段，不负责这些。
+
+### 已知问题名单
+
+`scripts/guardrails/a11y-known-issues.json` 按「组件 slug + 规则 id」记录现有违规，值写由哪个节点修、出现在哪些颜色模式。
+
+| 情况 | 结果 |
+| --- | --- |
+| 扫出名单外的违规 | 失败，列出 `+ <slug> <rule>` |
+| 名单里的条目这次没出现 | 失败，列出 `- <slug> <rule>`，提示删掉 |
+| 名单和实际一致 | 通过 |
+| 有页面扫描失败（超时、404） | 失败 |
+
+「没出现」只在浅色、深色都扫了的时候判定，并且只看这次扫过的页面；用 `--only` 扫一部分时，没扫到的页面不算消失。
+
+`--update` 只删已经不再出现的条目，不会把新违规加进去。确实要暂缓的新问题，要在评审里说明理由后手动加。
+
+### 参数
+
+```
+pnpm a11y [--only <slug,...>] [--schemes light,dark] [--update] [--init]
+          [--out <dir>] [--ours <url>] [--no-serve] [--concurrency <n>] [--lock-timeout <分钟>]
+```
+
+| 参数 | 说明 |
+| --- | --- |
+| `--only` | 只扫这些组件页，逗号分隔的 slug。 |
+| `--schemes` | 只扫某种颜色模式。只扫一种时不判定「消失」。 |
+| `--update` | 删掉名单里已经不再出现的条目。 |
+| `--init` | 名单文件不存在时，用这次结果建第一份名单。 |
+| `--out` | 输出目录，默认 `.agents-work/upstream-sync/a11y/`（已加进 `.gitignore`）。 |
+| `--ours` / `--no-serve` | 和 `pnpm visual` 一样。 |
+| `--concurrency` | 同一个浏览器里同时开几个页面，默认 2。 |
+
+### 输出
+
+- `report.json`：每页每种模式的违规（规则 id、影响级别、节点选择器、失败说明，节点最多留 5 个），汇总，名单对照结果。
+- `report.md`：按规则、按组件汇总，以及只在深色或只在浅色出现的问题。
+
+计数口径：一条违规是「一页 × 一种颜色模式 × 一条规则」，节点数另算。
 
 ## 浏览器锁
 

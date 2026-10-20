@@ -30,12 +30,14 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter './packages/*' --filter './apps/*' --recursive --if-present run typecheck",
     "docs:preview": "pnpm --filter @astryx-vue/docs preview",
-    "visual": "node scripts/swarm/visual-compare.mjs"
+    "visual": "node scripts/swarm/visual-compare.mjs",
+    "a11y": "node scripts/swarm/a11y-scan.mjs"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:linting",
     "@arethetypeswrong/cli": "catalog:release",
     "@astryx-vue/cli": "workspace:*",
+    "@axe-core/playwright": "catalog:visual",
     "@changesets/changelog-github": "catalog:release",
     "@changesets/cli": "catalog:release",
     "@types/node": "catalog:language",
@@ -46,6 +48,7 @@
     "@vue/compiler-sfc": "catalog:vue",
     "@vue/server-renderer": "catalog:vue",
     "@vue/test-utils": "catalog:testing",
+    "dom-accessibility-api": "catalog:testing",
     "eslint": "catalog:linting",
     "eslint-plugin-vuejs-accessibility": "catalog:linting",
     "globals": "catalog:linting",

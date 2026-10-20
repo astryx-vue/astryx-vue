@@ -11,5 +11,6 @@ coverage/
 .agents-work/upstream-sync/locks/
 .agents-work/upstream-sync/nodes/*/evidence/
 .agents-work/upstream-sync/visual/
+.agents-work/upstream-sync/a11y/
 # CI 视觉对照的输出目录（.github/workflows/visual-compare.yml）
 visual-out/
