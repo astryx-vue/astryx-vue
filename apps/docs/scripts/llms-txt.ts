@@ -8,21 +8,21 @@
  * 组件页在源文件里拆成 `index.md`、`props.md`、`accessibility.md` 三份，这里合并成一篇文章，
  * 只输出总览那一份 Markdown。
  */
-import type { CatalogEntry } from '../components/demo-infra/demoMeta'
-import type { DocsLocale } from '../components/demo-infra/docs-i18n'
-import type { CustomProperty } from '../components/theme-tokens/parseTokens'
-import type { BlockExpander, BlockTag } from './llms-markdown'
+import type { CatalogEntry } from '../components/demo-infra/demoMeta.ts'
+import type { DocsLocale } from '../components/demo-infra/docs-i18n.ts'
+import type { CustomProperty } from '../components/theme-tokens/parseTokens.ts'
+import type { BlockExpander, BlockTag } from './llms-markdown.ts'
 import { Buffer } from 'node:buffer'
 import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { guideSidebar, themeSidebar } from '../.vitepress/sidebar'
-import { assembleCatalog, parseDemoMetaFields } from '../components/demo-infra/demoMeta'
-import { componentDocsCopy } from '../components/demo-infra/docs-i18n'
-import { COMPONENT_GROUPS, GROUP_TITLES } from '../components/demo-infra/groups'
-import { accessibilityFor, anatomyFor } from '../components/demo-infra/reference/loadReference'
-import { parseCustomProperties, sectionId, splitLightDark, TOKEN_SECTION_ORDER } from '../components/theme-tokens/parseTokens'
-import { fenceBlock, firstParagraph, mergeSections, parseStringArray, stripFrontmatter, toPlainMarkdown, truncate } from './llms-markdown'
+import { guideSidebar, themeSidebar } from '../.vitepress/sidebar.ts'
+import { assembleCatalog, parseDemoMetaFields } from '../components/demo-infra/demoMeta.ts'
+import { componentDocsCopy } from '../components/demo-infra/docs-i18n.ts'
+import { COMPONENT_GROUPS, GROUP_TITLES } from '../components/demo-infra/groups.ts'
+import { accessibilityFor, anatomyFor } from '../components/demo-infra/reference/loadReference.ts'
+import { parseCustomProperties, sectionId, splitLightDark, TOKEN_SECTION_ORDER } from '../components/theme-tokens/parseTokens.ts'
+import { fenceBlock, firstParagraph, mergeSections, parseStringArray, stripFrontmatter, toPlainMarkdown, truncate } from './llms-markdown.ts'
 
 /** 线上站点地址。`llms.txt` 里的链接用绝对网址，方便别的机器直接抓。 */
 export const SITE_URL = 'https://astryx-vue.pages.dev'

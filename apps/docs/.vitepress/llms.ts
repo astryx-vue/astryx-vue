@@ -1,5 +1,5 @@
 import type { HeadConfig, SiteConfig, TransformContext } from 'vitepress'
-import { generateLlmsArtifacts, markdownPathFor } from '../scripts/llms-txt'
+import { generateLlmsArtifacts, markdownPathFor } from '../scripts/llms-txt.ts'
 
 /**
  * 在页面 `<head>` 里指向同内容的 Markdown 版，顺便声明 `llms.txt` 是这份文档的索引。
