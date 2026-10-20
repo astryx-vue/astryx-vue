@@ -182,7 +182,6 @@ const INITIAL_ITEMS: WorkItem[] = [
 ]
 
 const DRAG_THRESHOLD = 5
-const COLUMN_WIDTH = 300
 
 const items = ref<WorkItem[]>([...INITIAL_ITEMS])
 const sprint = ref('003')

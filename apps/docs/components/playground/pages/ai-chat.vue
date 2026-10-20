@@ -2,7 +2,6 @@
 import type { ChatComposerInputHandle, ChatComposerToken, ChatComposerTrigger, ChatToolCallItem } from '@astryx-vue/core'
 import {
   Avatar,
-  Button,
   Card,
   ChatComposer,
   ChatComposerDrawer,

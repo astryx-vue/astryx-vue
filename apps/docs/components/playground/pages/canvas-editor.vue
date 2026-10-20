@@ -19,7 +19,6 @@ import {
   Section,
   SegmentedControl,
   SegmentedControlItem,
-  Selector,
   Slider,
   StackItem,
   Text,

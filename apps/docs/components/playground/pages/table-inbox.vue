@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   Avatar,
-  Badge,
   Button,
   Divider,
   Heading,

@@ -24,7 +24,6 @@ import {
   SideNav,
   SideNavItem,
   SideNavSection,
-  Stack,
   StackItem,
   Switch,
   Text,

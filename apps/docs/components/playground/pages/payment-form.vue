@@ -15,7 +15,6 @@ import {
   Icon,
   Layout,
   LayoutContent,
-  Link,
   NumberInput,
   RadioList,
   RadioListItem,
@@ -24,7 +23,6 @@ import {
   Stack,
   StackItem,
   Text,
-  TextArea,
   TextInput,
   Thumbnail,
   useMediaQuery,
@@ -167,33 +165,6 @@ const summarySticky: CSSProperties = {
 };
 // On mobile the summary moves above the form.
 const summaryMobileOrder: CSSProperties = {order: -1};
-// Express-checkout brand buttons (fixed brand colors).
-const paypalButton: CSSProperties = {
-  backgroundColor: '#FFC439',
-  borderColor: '#FFC439',
-};
-// Official Google Pay dark button: black background with the unaltered
-// dark-variant mark (white "Google Pay" text + full-color G), per the
-// Google Pay brand guidelines.
-const gpayButton: CSSProperties = {
-  backgroundColor: '#000',
-  borderColor: '#000',
-};
-// Brand logos inside the express-checkout buttons.
-const brandLogo: CSSProperties = {height: 'var(--spacing-5)', width: 'auto'};
-// Accepted card-network marks (Visa/Mastercard/Amex), shared style.
-const cardLogo: CSSProperties = {
-  height: 'var(--spacing-7)',
-  width: 'auto',
-  borderRadius: 'var(--radius-element)',
-  borderWidth: 'var(--border-width)',
-  borderStyle: 'solid',
-  borderColor: 'var(--color-border)',
-  backgroundColor: 'var(--color-background-surface)',
-};
-
-
-
 const isMobile = useMediaQuery('(max-width: 767px)')
 const firstName = ref('')
 const lastName = ref('')
@@ -215,13 +186,8 @@ const billingAddress = ref('')
 const billingCity = ref('')
 const billingZip = ref('')
 const billingState = ref('')
-const addGiftMessage = ref(false)
-const giftTo = ref('')
-const giftFrom = ref('')
-const giftMessage = ref('')
 const cvc = ref('')
 const cardName = ref('')
-const promo = ref('')
 const quantities = ref<Record<string, number>>({ '1': 1, '2': 1, '3': 1 })
 const submitted = ref(false)
 
