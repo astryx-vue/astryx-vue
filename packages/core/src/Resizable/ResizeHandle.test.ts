@@ -1,3 +1,4 @@
+import type { VueWrapper } from '@vue/test-utils'
 import type { ResizableProps } from '../composables/useResizable.js'
 import type { ResizeHandleProps } from './types.js'
 import { mount } from '@vue/test-utils'
@@ -42,6 +43,14 @@ function mountStub(resizable: ResizableProps, props: Partial<ResizeHandleProps> 
   return mount(ResizeHandle, { props: { resizable, label: 'Resize', ...props }, attachTo: document.body })
 }
 
+/**
+ * 拿到 separator 元素本身。开发模式下 Vue 保留模板注释，组件根节点是 Fragment，
+ * 所以断言和事件都要落在这个元素上，不能直接用 wrapper 的根节点。
+ */
+function separatorOf(wrapper: VueWrapper) {
+  return wrapper.get('[role="separator"]')
+}
+
 function nextFrame() {
   return new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
 }
@@ -78,41 +87,41 @@ describe('resizeHandle structure and ARIA', () => {
 
   it('splits along the cross axis: a horizontal handle is a vertical separator', () => {
     const horizontal = mountStub(makeResizable())
-    expect(horizontal.attributes('aria-orientation')).toBe('vertical')
-    expect(horizontal.attributes('data-direction')).toBe('horizontal')
+    expect(separatorOf(horizontal).attributes('aria-orientation')).toBe('vertical')
+    expect(separatorOf(horizontal).attributes('data-direction')).toBe('horizontal')
     const vertical = mountStub(makeResizable(), { direction: 'vertical' })
-    expect(vertical.attributes('aria-orientation')).toBe('horizontal')
-    expect(vertical.attributes('data-direction')).toBe('vertical')
+    expect(separatorOf(vertical).attributes('aria-orientation')).toBe('horizontal')
+    expect(separatorOf(vertical).attributes('data-direction')).toBe('vertical')
   })
 
   it('falls back to the localized default name', () => {
     const wrapper = mount(ResizeHandle, { props: { resizable: makeResizable() } })
-    expect(wrapper.attributes('aria-label')).toBe('Resize handle')
+    expect(separatorOf(wrapper).attributes('aria-label')).toBe('Resize handle')
   })
 
   it('leaves out the value attributes when no region is wired', () => {
     const wrapper = mount(ResizeHandle)
-    expect(wrapper.attributes('role')).toBe('separator')
-    expect(wrapper.attributes('aria-valuenow')).toBeUndefined()
-    expect(wrapper.attributes('aria-valuemin')).toBeUndefined()
-    expect(wrapper.attributes('aria-valuemax')).toBeUndefined()
+    expect(separatorOf(wrapper).attributes('role')).toBe('separator')
+    expect(separatorOf(wrapper).attributes('aria-valuenow')).toBeUndefined()
+    expect(separatorOf(wrapper).attributes('aria-valuemin')).toBeUndefined()
+    expect(separatorOf(wrapper).attributes('aria-valuemax')).toBeUndefined()
   })
 
   it('omits aria-valuemax for an unbounded region', () => {
     const wrapper = mountStub(makeResizable({ _maxSizePx: Number.POSITIVE_INFINITY }))
-    expect(wrapper.attributes('aria-valuemax')).toBeUndefined()
+    expect(separatorOf(wrapper).attributes('aria-valuemax')).toBeUndefined()
   })
 
   it('keeps aria-valuenow at or above the minimum and announces "Collapsed" while collapsed', () => {
     const wrapper = mountStub(makeResizable({ _size: 40, _isCollapsed: true, _collapsible: true }))
-    expect(wrapper.attributes('aria-valuenow')).toBe('100')
-    expect(wrapper.attributes('aria-valuetext')).toBe('Collapsed')
+    expect(separatorOf(wrapper).attributes('aria-valuenow')).toBe('100')
+    expect(separatorOf(wrapper).attributes('aria-valuetext')).toBe('Collapsed')
   })
 
   it('reflects position, divider and pill visibility as data attributes', () => {
     const wrapper = mountStub(makeResizable(), { position: 'overlay', hasDivider: true, isAlwaysVisible: false })
-    expect(wrapper.attributes('data-position')).toBe('overlay')
-    expect(wrapper.attributes('data-divider')).toBe('true')
+    expect(separatorOf(wrapper).attributes('data-position')).toBe('overlay')
+    expect(separatorOf(wrapper).attributes('data-divider')).toBe('true')
     expect(wrapper.get('.astryx-resize-handle-pill').attributes('data-hidden')).toBe('true')
   })
 
@@ -139,18 +148,18 @@ describe('resizeHandle structure and ARIA', () => {
       props: { resizable: makeResizable() },
       attrs: { 'class': 'extra', 'style': 'color: red;', 'data-testid': 'handle' },
     })
-    expect(wrapper.classes()).toEqual(expect.arrayContaining(['astryx-resize-handle', 'extra']))
-    expect(wrapper.attributes('style')).toContain('color: red')
-    expect(wrapper.attributes('data-testid')).toBe('handle')
+    expect(separatorOf(wrapper).classes()).toEqual(expect.arrayContaining(['astryx-resize-handle', 'extra']))
+    expect(separatorOf(wrapper).attributes('style')).toContain('color: red')
+    expect(separatorOf(wrapper).attributes('data-testid')).toBe('handle')
   })
 
   it('marks the handle active while focused', async () => {
     const wrapper = mountStub(makeResizable())
-    expect(wrapper.attributes('data-active')).toBeUndefined()
-    await wrapper.trigger('focus')
-    expect(wrapper.attributes('data-active')).toBe('true')
-    await wrapper.trigger('blur')
-    expect(wrapper.attributes('data-active')).toBeUndefined()
+    expect(separatorOf(wrapper).attributes('data-active')).toBeUndefined()
+    await separatorOf(wrapper).trigger('focus')
+    expect(separatorOf(wrapper).attributes('data-active')).toBe('true')
+    await separatorOf(wrapper).trigger('blur')
+    expect(separatorOf(wrapper).attributes('data-active')).toBeUndefined()
   })
 })
 
@@ -174,14 +183,14 @@ describe('resizeHandle keyboard', () => {
   it('reverses the arrows when the panel sits at the end edge', async () => {
     const resizable = makeResizable()
     const wrapper = mountStub(resizable, { isReversed: true })
-    await wrapper.trigger('keydown', { key: 'ArrowRight' })
+    await separatorOf(wrapper).trigger('keydown', { key: 'ArrowRight' })
     expect(resizable._onResizeMove).toHaveBeenLastCalledWith(-KEYBOARD_STEP)
   })
 
   it('wraps every key move in a start, move and end', async () => {
     const resizable = makeResizable()
     const wrapper = mountStub(resizable)
-    await wrapper.trigger('keydown', { key: 'ArrowRight' })
+    await separatorOf(wrapper).trigger('keydown', { key: 'ArrowRight' })
     expect(resizable._onResizeStart).toHaveBeenCalledTimes(1)
     expect(resizable._onResizeMove).toHaveBeenCalledWith(KEYBOARD_STEP)
     expect(resizable._onResizeEnd).toHaveBeenCalledTimes(1)
@@ -190,29 +199,29 @@ describe('resizeHandle keyboard', () => {
   it('leaves an unbounded region alone on End', async () => {
     const resizable = makeResizable({ _maxSizePx: Number.POSITIVE_INFINITY })
     const wrapper = mountStub(resizable)
-    await wrapper.trigger('keydown', { key: 'End' })
+    await separatorOf(wrapper).trigger('keydown', { key: 'End' })
     expect(resizable._onResizeMove).not.toHaveBeenCalled()
   })
 
   it('collapses and reopens a collapsible region on Enter', async () => {
     const open = makeResizable({ _collapsible: true })
-    await mountStub(open).trigger('keydown', { key: 'Enter' })
+    await separatorOf(mountStub(open)).trigger('keydown', { key: 'Enter' })
     expect(open._onResizeMove).toHaveBeenLastCalledWith(-200)
 
     const closed = makeResizable({ _collapsible: true, _isCollapsed: true, _size: 40 })
-    await mountStub(closed).trigger('keydown', { key: 'Enter' })
+    await separatorOf(mountStub(closed)).trigger('keydown', { key: 'Enter' })
     expect(closed._onResizeMove).toHaveBeenLastCalledWith(100)
   })
 
   it('ignores Enter when the region is not collapsible', async () => {
     const resizable = makeResizable()
-    await mountStub(resizable).trigger('keydown', { key: 'Enter' })
+    await separatorOf(mountStub(resizable)).trigger('keydown', { key: 'Enter' })
     expect(resizable._onResizeMove).not.toHaveBeenCalled()
   })
 
   it('toggles a collapsible region on double-click', async () => {
     const resizable = makeResizable({ _collapsible: true })
-    await mountStub(resizable).trigger('dblclick')
+    await separatorOf(mountStub(resizable)).trigger('dblclick')
     expect(resizable._onResizeMove).toHaveBeenLastCalledWith(-200)
   })
 })
@@ -234,7 +243,7 @@ describe('resizeHandle pointer drag', () => {
 
     await hit.trigger('pointerdown', { pointerId: 1, clientX: 0, clientY: 0 })
     expect(resizable._onResizeStart).toHaveBeenCalledTimes(1)
-    expect(wrapper.attributes('data-resizing')).toBe('true')
+    expect(separatorOf(wrapper).attributes('data-resizing')).toBe('true')
     expect(document.body.style.cursor).toBe('col-resize')
     expect(document.body.style.userSelect).toBe('none')
 
@@ -244,7 +253,7 @@ describe('resizeHandle pointer drag', () => {
 
     await hit.trigger('pointerup', { pointerId: 1, clientX: 30, clientY: 0 })
     expect(resizable._onResizeEnd).toHaveBeenCalledTimes(1)
-    expect(wrapper.attributes('data-resizing')).toBeUndefined()
+    expect(separatorOf(wrapper).attributes('data-resizing')).toBeUndefined()
     expect(document.body.style.cursor).toBe('')
     expect(document.body.style.userSelect).toBe('')
 
@@ -307,7 +316,7 @@ describe('resizeHandle pointer drag', () => {
   it('inverts the pointer delta under RTL', async () => {
     const resizable = makeResizable()
     const wrapper = mountStub(resizable)
-    const separator = wrapper.element
+    const separator = separatorOf(wrapper).element
     const real = window.getComputedStyle
     const spy = vi.spyOn(window, 'getComputedStyle').mockImplementation((el: Element, pseudo?: string | null) =>
       el === separator ? ({ direction: 'rtl' } as CSSStyleDeclaration) : real(el, pseudo ?? undefined))
@@ -333,17 +342,17 @@ describe('resizeHandle pointer drag', () => {
 describe('resizeHandle disabled', () => {
   it('drops out of the tab order and marks itself disabled', () => {
     const wrapper = mountStub(makeResizable(), { isDisabled: true })
-    expect(wrapper.attributes('tabindex')).toBe('-1')
-    expect(wrapper.attributes('aria-disabled')).toBe('true')
-    expect(wrapper.attributes('data-disabled')).toBe('true')
+    expect(separatorOf(wrapper).attributes('tabindex')).toBe('-1')
+    expect(separatorOf(wrapper).attributes('aria-disabled')).toBe('true')
+    expect(separatorOf(wrapper).attributes('data-disabled')).toBe('true')
   })
 
   it('ignores keyboard, double-click and drag', async () => {
     const resizable = makeResizable({ _collapsible: true })
     const wrapper = mountStub(resizable, { isDisabled: true })
-    await wrapper.trigger('keydown', { key: 'ArrowRight' })
-    await wrapper.trigger('keydown', { key: 'Enter' })
-    await wrapper.trigger('dblclick')
+    await separatorOf(wrapper).trigger('keydown', { key: 'ArrowRight' })
+    await separatorOf(wrapper).trigger('keydown', { key: 'Enter' })
+    await separatorOf(wrapper).trigger('dblclick')
     await wrapper.get('.astryx-resize-handle__hit').trigger('pointerdown', { pointerId: 1, clientX: 0, clientY: 0 })
     expect(resizable._onResizeStart).not.toHaveBeenCalled()
     expect(resizable._onResizeMove).not.toHaveBeenCalled()
