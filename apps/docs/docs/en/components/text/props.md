@@ -77,7 +77,7 @@ footer: false
         <td><code>as</code></td>
         <td><code>TextAs</code></td>
         <td><code>'span'</code></td>
-        <td>HTML element to render. Optional: span, p, div, label.</td>
+        <td>HTML element to render. Optional: span, p, div, label, h1, h2, h3, h4, h5, h6. Heading tags render a real heading element but keep <code>Text</code> typography; use <code>Heading</code> for heading sizing.</td>
       </tr>
       <tr>
         <td><code>justify</code></td>

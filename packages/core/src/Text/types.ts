@@ -5,7 +5,7 @@ export type TextWeight = 'regular' | 'normal' | 'medium' | 'semibold' | 'bold'
 export type TextWrap = 'wrap' | 'nowrap' | 'balance' | 'pretty'
 export type TextWordBreak = 'normal' | 'break-word' | 'break-all'
 export type TextDisplay = 'block' | 'inline'
-export type TextAs = 'span' | 'p' | 'div' | 'label'
+export type TextAs = 'span' | 'p' | 'div' | 'label' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 export type TextJustify = 'start' | 'center' | 'end'
 export type TextTruncateTooltip = boolean | 'above' | 'below' | 'start' | 'end'
 
@@ -58,7 +58,8 @@ export interface TextProps {
    */
   display?: TextDisplay
   /**
-   * HTML element to render.
+   * HTML element to render. Heading tags render a real `h1`–`h6`, but keep
+   * `Text` typography; use `Heading` when you also want heading sizing.
    * @default 'span'
    */
   as?: TextAs

@@ -26,7 +26,5 @@
     "components/**/*.vue",
     "scripts/**/*.ts"
   ],
-  "exclude": [
-    "components/playground/pages"
-  ]
+  "exclude": []
 }

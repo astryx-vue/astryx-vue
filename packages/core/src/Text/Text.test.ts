@@ -21,6 +21,16 @@ describe('text', () => {
     expect(wrapper.element.tagName).toBe('P')
   })
 
+  it('renders heading tags via as prop and keeps the text classes', () => {
+    const wrapper = mount(Text, {
+      props: { as: 'h2', type: 'display-1' },
+      slots: { default: 'Heading' },
+    })
+
+    expect(wrapper.element.tagName).toBe('H2')
+    expect(wrapper.classes()).toContain('astryx-text--type-display-1')
+  })
+
   it('applies type and size classes', () => {
     const wrapper = mount(Text, {
       props: { type: 'supporting', size: 'sm' },

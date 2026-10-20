@@ -77,7 +77,7 @@ footer: false
         <td><code>as</code></td>
         <td><code>TextAs</code></td>
         <td><code>'span'</code></td>
-        <td>实际渲染的 HTML 元素，可选 span、p、div、label。</td>
+        <td>实际渲染的 HTML 元素，可选 span、p、div、label、h1、h2、h3、h4、h5、h6。标题标签渲染真正的标题元素，但保留 <code>Text</code> 的字号体系；要标题字号请用 <code>Heading</code>。</td>
       </tr>
       <tr>
         <td><code>justify</code></td>
