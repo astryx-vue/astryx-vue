@@ -22,31 +22,6 @@ export type ComponentDocsRoute
 export const UPSTREAM_PACKAGE = '@astryxdesign/core'
 export const UPSTREAM_VERSION = '0.7.1'
 
-export const componentDocsCopy = {
-  en: {
-    catalogTitle: 'Components',
-    closeNavigation: 'Close navigation',
-    documentation: 'documentation',
-    menu: 'Menu',
-    navigation: 'Component navigation',
-    accessibility: 'Accessibility',
-    overview: 'Overview',
-    props: 'Properties',
-    returnToTop: 'Return to top',
-  },
-  zh: {
-    catalogTitle: '组件',
-    closeNavigation: '关闭导航',
-    documentation: '文档',
-    menu: '菜单',
-    navigation: '组件导航',
-    accessibility: '无障碍',
-    overview: '总览',
-    props: '属性',
-    returnToTop: '返回顶部',
-  },
-} as const
-
 function normalizeDocsPathname(pathname: string): string {
   const withoutHtml = pathname.replace(/\.html$/i, '')
   const withoutIndex = withoutHtml.replace(/\/index$/i, '')

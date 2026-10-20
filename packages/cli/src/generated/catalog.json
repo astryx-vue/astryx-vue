@@ -76238,8 +76238,12 @@
         "zh": "安装组件和主题。Peer 依赖是 Vue `^3.5.0`。"
       },
       "headings": {
-        "en": [],
-        "zh": []
+        "en": [
+          "For AI agents"
+        ],
+        "zh": [
+          "给 AI agent 用"
+        ]
       },
       "keywords": {
         "en": [],
