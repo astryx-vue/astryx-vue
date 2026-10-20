@@ -36,7 +36,13 @@ npm run astryx-vue -- component Button
 
 ## Commands
 
-`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, events, and examples. `astryx-vue search dialog` ranks components and guide topics. `astryx-vue manifest --json` describes the commands, options, response types, and exit codes. `astryx-vue init --features agents` writes the agent context file.
+`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, events, and examples.
+
+`astryx-vue composable --list` lists the composables, and `astryx-vue composable useClipboard` prints one composable's parameters and return values. Vue calls these functions composables, so the CLI never says hook. `component useClipboard` still finds it and points at the `composable` command.
+
+`astryx-vue docs` lists the guide and theme topics. `astryx-vue docs guide/dark-mode` prints one page's text, and `astryx-vue docs themes/tokens` works too.
+
+`astryx-vue search dialog` ranks components, composables, and docs topics. `astryx-vue manifest --json` describes the commands, options, response types, and exit codes. `astryx-vue init --features agents` writes the agent context file.
 
 ## Flags
 
