@@ -11,7 +11,7 @@ mindmap
     阶段 A 准备工作：工具与护栏
       🟡 A1 上游差异台账
       🟡 A2 视觉对照工具
-      🟡 A3 工程质量护栏
+      ✅ A3 工程质量护栏
       ⬜ A4 蜂群基础设施
     阶段 B 公共底座：核心共享层
       ⬜ B1 主题系统与设计变量
@@ -298,7 +298,7 @@ flowchart TB
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | A1 | 上游差异台账 | — | 🟡 实现中 | 1 | 已派出 | | | |
 | A2 | 视觉对照工具 | — | 🟡 实现中 | 1 | 已派出 | | | |
-| A3 | 工程护栏 | — | 🟡 实现中 | 1 | 已派出 | | | |
+| A3 | 工程护栏 | — | ✅ 已完成 | 1 | A3-impl | A3-verify | 通过 22/22 | 163f333 |
 | A4 | 蜂群基础设施 | A1 A2 A3 | ⬜ 未开始 | 0 | | | | |
 | B1 | 主题系统与 token | A4 | ⬜ 未开始 | 0 | | | | |
 | B2 | reset 与基础样式 | A4 | ⬜ 未开始 | 0 | | | | |
@@ -415,7 +415,7 @@ flowchart TB
 | C11 Table | Table 全家族 | 表格行展开行为与其他插件统一对齐；支持按选中项批量执行操作；主动拆分大文件 `TableData.vue`。 | C2 C6 |
 | C12 列表与树 | List、Item、TreeList、Outline、OverflowList、MetadataList | Item 列表项支持在手机上左右滑动操作（对应上游 AST-057）。 | B3 C6 |
 | C13 导航家族 | SideNav、TopNav、MobileNav、NavMenu、NavItem、NavIcon、Breadcrumbs、TabList、Pagination | 同步上游关于页面框架导航、面包屑与分页器的全部更新。 | B4 C6 |
-| C14 布局与容器 | AppShell、Layout、Grid、Stack、Center、AspectRatio、Section、ScrollableArea、Resizable、Collapsible、Card、ClickableCard、SelectableCard、Toolbar、Divider | 重点同步 Resizable 调整大小组件的 61 处改动。 | B1 B3 B6 |
+| C14 布局与容器 | AppShell、Layout、Grid、Stack、Center、AspectRatio、Section、ScrollableArea、Resizable、Collapsible、Card、ClickableCard、SelectableCard、Toolbar、Divider | 重点同步 Resizable 调整大小组件的 61 处改动。A3 已查出它和上游的 8 处差距，必须全部处理，见 `nodes/A3/impl-1.md` 第 4 节。其中「使用者绑定的 `@keydown` 不会被调用」像是 bug。 | B1 B3 B6 |
 | C15 反馈与状态 | Banner、Spinner、ProgressBar、Indicator、StatusDot、Skeleton、Stepper、EmptyState | Banner 默认直接展开展示内容，折叠功能改为显式声明 `collapsible` 属性（上游 PR #5255）。 | B1 B6 |
 | C16 基础展示与动作 | Button、ButtonGroup、IconButton、Link、Avatar、AvatarGroup、Badge、Token、Thumbnail、Kbd、Citation、Carousel、Heading、Text、Blockquote、Icon | 全面接入 B3 节点做好的触屏统一按压模型。 | B1 B3 B5 B6 |
 
