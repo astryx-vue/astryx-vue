@@ -150,6 +150,8 @@ footer: false
   </table>
 </div>
 
+- `cancel(event: Event)`：切换器处理原生 dialog 的取消请求（例如 Escape）之前触发。调用 `event.preventDefault()` 可以留住这段流程。
+
 子级 `BottomSheet` 加上 `sheetId` 后不再自己打开对话框，由切换器决定哪一张可见。
 
 ## 原生属性

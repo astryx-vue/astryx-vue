@@ -2,17 +2,14 @@
 import { Markdown } from '@astryx-vue/core/Markdown'
 
 const content = [
-  '# Markdown Demo',
+  '## Markdown',
   '',
-  'Renders **markdown** with *design-system-consistent* styling.',
+  '**粗体**、*斜体* 和 `代码`。',
   '',
-  '## Features',
+  '- 标题、列表按设计规范排版',
+  '- 链接自动识别外链',
   '',
-  '- Headings mapped to the Astryx type scale',
-  '- **Bold**, *italic*, and ~~strikethrough~~ text',
-  '- [Links](https://example.com) with external detection',
-  '',
-  '> Block quote indented text',
+  '> 引用也会缩进显示',
 ].join('\n')
 </script>
 

@@ -4,9 +4,9 @@ import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 
 const users = [
-  { name: 'Itai Jordaan', src: '/template-assets/DATA-Itai-Jordaan.png', role: 'Engineering Lead', variant: 'success' as const },
-  { name: 'Margot Schroder', src: '/template-assets/DATA-Margot-Schroder.png', role: 'Product Designer', variant: 'neutral' as const },
-  { name: 'Daniela Gimenez', src: '/template-assets/DATA-Daniela-Gimenez.png', role: 'Engineering Manager', variant: 'error' as const },
+  { name: 'Itai Jordaan', src: '/template-assets/DATA-Itai-Jordaan.png', role: 'Engineering Lead', variant: 'success' as const, status: 'Online' },
+  { name: 'Margot Schroder', src: '/template-assets/DATA-Margot-Schroder.png', role: 'Product Designer', variant: 'neutral' as const, status: 'Away' },
+  { name: 'Daniela Gimenez', src: '/template-assets/DATA-Daniela-Gimenez.png', role: 'Engineering Manager', variant: 'error' as const, status: 'Busy' },
 ]
 </script>
 
@@ -15,7 +15,7 @@ const users = [
     <Stack v-for="user in users" :key="user.name" align="center" direction="horizontal" :gap="3">
       <Avatar :src="user.src" :name="user.name" size="lg">
         <template #status>
-          <AvatarStatusDot :variant="user.variant" :label="user.variant" />
+          <AvatarStatusDot :variant="user.variant" :label="user.status" />
         </template>
       </Avatar>
       <Stack direction="vertical" :gap="0">

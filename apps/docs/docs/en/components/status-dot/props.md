@@ -31,6 +31,28 @@ footer: false
         <td><code>false</code></td>
         <td>Whether the dot pulses to indicate an active state.</td>
       </tr>
+      <tr>
+        <td><code>tooltip</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Tooltip text shown on hover and on keyboard focus, for when the status needs a sentence to explain it.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## Slots
+
+<div class="component-api-table" role="region" aria-label="StatusDot Slots" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>icon</code></td>
+        <td>Icon drawn centered inside the dot, in the variant ink. Use a different icon per status so the meaning survives without color. Hidden from screen readers, which read <code>label</code>.</td>
+      </tr>
     </tbody>
   </table>
 </div>

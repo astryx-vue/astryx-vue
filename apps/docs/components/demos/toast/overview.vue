@@ -4,7 +4,7 @@ import { Toast } from '@astryx-vue/core/Toast'
 
 <template>
   <div class="overview-fill">
-    <Toast body="Changes saved." type="success" :auto-close="false" />
-    <Toast body="Failed to upload file." type="error" :auto-close="false" />
+    <Toast body="Changes saved." type="success" :is-auto-hide="false" />
+    <Toast body="Failed to upload file." type="error" :is-auto-hide="false" />
   </div>
 </template>

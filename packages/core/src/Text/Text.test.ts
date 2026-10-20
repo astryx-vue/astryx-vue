@@ -92,4 +92,14 @@ describe('text', () => {
     expect(wrapper.classes()).toContain('astryx-text--justify-end')
     expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
   })
+
+  it('trims the leading with hasCapsize and forces a block box', () => {
+    const plain = mount(Text, { slots: { default: 'Body' } })
+    expect(plain.classes()).not.toContain('astryx-text--capsize')
+    expect(plain.classes()).not.toContain('astryx-text--block')
+
+    const capsize = mount(Text, { props: { hasCapsize: true, display: 'inline' }, slots: { default: 'Body' } })
+    expect(capsize.classes()).toContain('astryx-text--capsize')
+    expect(capsize.classes()).toContain('astryx-text--block')
+  })
 })

@@ -70,4 +70,33 @@ describe('layout', () => {
     expect(panel.attributes('data-bleed')).toBe('true')
     expect(wrapper.get('.astryx-layout-content').attributes('data-bleed')).toBe('true')
   })
+
+  it('takes its width from the resizable props and ignores width', () => {
+    const panel = mount(LayoutPanel, {
+      props: {
+        width: 320,
+        resizable: {
+          _size: 248,
+          _direction: 'horizontal',
+          _isCollapsed: false,
+          _minSizePx: 180,
+          _maxSizePx: 420,
+        },
+      },
+    })
+
+    expect((panel.element as HTMLElement).style.width).toBe('248px')
+    panel.unmount()
+  })
+
+  it('collapses to zero width when the hook reports a collapsed region', () => {
+    const panel = mount(LayoutPanel, {
+      props: {
+        resizable: { _size: 0, _direction: 'horizontal', _isCollapsed: true },
+      },
+    })
+
+    expect((panel.element as HTMLElement).style.width).toBe('0px')
+    panel.unmount()
+  })
 })

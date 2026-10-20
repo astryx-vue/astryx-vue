@@ -61,16 +61,35 @@ export interface AvatarProps {
   tooltip?: boolean | string
 }
 
-export type AvatarStatusDotVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error'
+/**
+ * 状态点的语义变体。每个变体把颜色和形状绑在一起，不只靠颜色区分状态：
+ * `success` 实心圆、`neutral` 空心环、`error` 圆点加一道减号。
+ */
+export type AvatarStatusDotVariantName = 'success' | 'neutral' | 'error'
+
+/**
+ * 状态点接受的变体名。`info` 和 `warning` 是旧名字，保留兼容：
+ * `info` 按 `success` 画，`warning` 按 `error` 画。
+ */
+export type AvatarStatusDotVariant = AvatarStatusDotVariantName | 'info' | 'warning'
 
 export interface AvatarStatusDotProps {
   /**
-   * The visual variant of the status dot.
-   * @default 'neutral'
+   * 状态点的语义变体。`success` 是实心圆，`neutral` 是空心环，`error` 是圆点加一道减号。
+   * @default 'success'
    */
   variant?: AvatarStatusDotVariant
   /**
-   * Accessible name for the status. When omitted the dot is hidden from assistive technology.
+   * 状态的读屏名称，例如 `Online`。放进头像里时会并进头像自己的无障碍名称
+   * （`Jane Doe, Online`）；单独使用时圆点自己带这个名字。
    */
   label?: string
+}
+
+export interface AvatarStatusDotSlots {
+  /**
+   * 圆点中间的图标。传了就顶掉自带的形状（实心 / 空心环 / 减号），
+   * 小尺寸头像上放不下图标，此时不显示。
+   */
+  icon?: () => unknown
 }

@@ -74,13 +74,17 @@
     align-items: center;
   }
 
+  .astryx-side-nav__bottom {
+    padding-block-start: var(--astryx-spacing-1, 4px);
+  }
+
   .astryx-side-nav__body {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
     gap: var(--astryx-spacing-1, 4px);
     min-height: 0;
-    padding-inline: var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
     overflow: auto;
   }
 
@@ -261,12 +265,12 @@
     text-decoration: underline;
   }
 
-  .astryx-side-nav-heading__chevron,
-  .astryx-side-nav-collapse {
+  .astryx-side-nav-heading__chevron {
     display: inline-flex;
     flex: none;
     align-items: center;
     justify-content: center;
+    gap: var(--astryx-spacing-1, 4px);
     width: 28px;
     height: 28px;
     padding: 0;
@@ -274,16 +278,26 @@
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: transparent;
     color: var(--astryx-color-text-secondary, #525252);
+    font: inherit;
     cursor: pointer;
   }
 
-  .astryx-side-nav-heading__chevron:hover,
-  .astryx-side-nav-collapse:hover {
+  /* The collapse button itself is a ghost Button; only SideNav's placement stays here. */
+  .astryx-side-nav-collapse {
+    flex: none;
+  }
+
+  /* 图标按钮在上下两栏里保持方块，靠起始侧，不被列方向拉成整行。 */
+  .astryx-side-nav__top > .astryx-side-nav-collapse[data-icon-only='true'],
+  .astryx-side-nav__bottom > .astryx-side-nav-collapse[data-icon-only='true'] {
+    align-self: flex-start;
+  }
+
+  .astryx-side-nav-heading__chevron:hover {
     background: var(--astryx-color-overlay-hover);
   }
 
   .astryx-side-nav-heading__chevron:focus-visible,
-  .astryx-side-nav-collapse:focus-visible,
   .astryx-side-nav-heading--collapsed:focus-visible {
     outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
     outline-offset: var(--astryx-focus-outline-offset);

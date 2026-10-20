@@ -66,6 +66,12 @@ footer: false
         <td>Link URL. Renders as a button when omitted.</td>
       </tr>
       <tr>
+        <td><code>as</code></td>
+        <td><code>string | Component</code></td>
+        <td><code>'a'</code></td>
+        <td>Link root component, such as a router link. Used instead of <code>a</code> for items that have an <code>href</code> and are not current.</td>
+      </tr>
+      <tr>
         <td><code>isCurrent</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>

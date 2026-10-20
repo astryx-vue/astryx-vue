@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { ToastOptions } from './types.js'
+import type { ToastContentScope, ToastDismissReason, ToastOptions, ToastSlots } from './types.js'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { resolveAutoHide, resolveAutoHideDuration } from './options.js'
 
 import '../../styles/toast.css'
 
-const props = withDefaults(defineProps<ToastOptions & {
+const props = withDefaults(defineProps<Omit<ToastOptions, 'onDismiss' | 'onHide'> & {
   /**
    * Set by the viewport once the toast is asked to close. Keeps the toast
    * mounted so it can play its exit transition.
@@ -12,21 +13,25 @@ const props = withDefaults(defineProps<ToastOptions & {
   isExiting?: boolean
 }>(), {
   type: 'info',
-  autoClose: true,
-  duration: 5000,
   isExiting: false,
+  // `undefined` keeps an absent boolean prop absent instead of casting it to
+  // false, so the resolved default can still follow the toast type.
+  isAutoHide: undefined,
+  autoClose: undefined,
 })
 
 const emit = defineEmits<{
-  (e: 'close'): void
+  /** 卡片自己关掉了提示，带上原因。 */
+  dismiss: [reason: ToastDismissReason]
+  /** `dismiss` 的旧名字。 */
+  close: []
 }>()
 
-defineSlots<{
-  default: () => unknown
-  end: () => unknown
-}>()
+defineSlots<ToastSlots>()
 
-const remaining = ref(props.duration)
+const duration = computed(() => resolveAutoHideDuration(props))
+const autoHide = computed(() => resolveAutoHide(props))
+const remaining = ref(duration.value)
 const isPaused = ref(false)
 const timer = ref<ReturnType<typeof setTimeout> | null>(null)
 const startTime = ref<number | null>(null)
@@ -41,19 +46,38 @@ const classes = computed(() => [
   { 'astryx-toast--exiting': props.isExiting },
 ])
 
+// A pause never takes back more than the whole duration, but it also never
+// leaves a toast that is already running with less than a second, so a short
+// hover cannot expire it on the way out.
+const MIN_REMAINING_MS = 1000
+
+const contentScope = computed<ToastContentScope>(() => ({
+  body: props.body,
+  endContent: props.endContent,
+  type: props.type,
+  isAutoHide: autoHide.value,
+  autoHideDuration: duration.value,
+  dismiss: () => dismiss('manual'),
+}))
+
+function dismiss(reason: ToastDismissReason): void {
+  emit('dismiss', reason)
+  emit('close')
+}
+
 function startTimer() {
-  if (!props.autoClose || isPaused.value)
+  if (!autoHide.value || isPaused.value)
     return
   if (timer.value)
     clearTimeout(timer.value)
   startTime.value = Date.now()
   timer.value = setTimeout(() => {
-    emit('close')
+    dismiss('auto')
   }, remaining.value)
 }
 
 function pauseTimer() {
-  if (!props.autoClose || isPaused.value)
+  if (!autoHide.value || isPaused.value)
     return
   isPaused.value = true
   if (timer.value) {
@@ -62,19 +86,28 @@ function pauseTimer() {
   }
   if (startTime.value != null) {
     const elapsed = Date.now() - startTime.value
-    remaining.value = Math.max(remaining.value - elapsed, 0)
+    remaining.value = Math.max(remaining.value - elapsed, MIN_REMAINING_MS)
   }
 }
 
 function resumeTimer() {
-  if (!props.autoClose || !isPaused.value)
+  if (!autoHide.value || !isPaused.value)
     return
   isPaused.value = false
   startTimer()
 }
 
 function handleClose() {
-  emit('close')
+  dismiss('manual')
+}
+
+// A toast should not expire while the user is in another window or tab.
+function onWindowBlur(): void {
+  pauseTimer()
+}
+
+function onWindowFocus(): void {
+  resumeTimer()
 }
 
 watch(() => props.isExiting, (exiting) => {
@@ -84,13 +117,26 @@ watch(() => props.isExiting, (exiting) => {
   timer.value = null
 })
 
+// A new duration restarts the countdown, so a toast that is already showing
+// gets the full new time instead of the leftover of the old one.
+watch(duration, (next) => {
+  remaining.value = next
+  startTimer()
+})
+
 onMounted(() => {
   startTimer()
+  if (autoHide.value) {
+    window.addEventListener('blur', onWindowBlur)
+    window.addEventListener('focus', onWindowFocus)
+  }
 })
 
 onUnmounted(() => {
   if (timer.value)
     clearTimeout(timer.value)
+  window.removeEventListener('blur', onWindowBlur)
+  window.removeEventListener('focus', onWindowFocus)
 })
 </script>
 
@@ -106,21 +152,24 @@ onUnmounted(() => {
     @focusin="pauseTimer"
     @focusout="resumeTimer"
   >
-    <span class="astryx-toast__body">
-      <slot>{{ body }}</slot>
-    </span>
-    <span v-if="endContent || $slots.end" class="astryx-toast__end">
-      <slot name="end">
-        <component :is="endContent" v-if="endContent" />
-      </slot>
-    </span>
-    <button
-      type="button"
-      class="astryx-toast__close"
-      aria-label="Close"
-      @click="handleClose"
-    >
-      ×
-    </button>
+    <slot v-if="$slots.content" name="content" v-bind="contentScope" />
+    <template v-else>
+      <span class="astryx-toast__body">
+        <slot>{{ body }}</slot>
+      </span>
+      <span v-if="endContent || $slots.end" class="astryx-toast__end">
+        <slot name="end">
+          <component :is="endContent" v-if="endContent" />
+        </slot>
+      </span>
+      <button
+        type="button"
+        class="astryx-toast__close"
+        aria-label="Close"
+        @click="handleClose"
+      >
+        ×
+      </button>
+    </template>
   </div>
 </template>

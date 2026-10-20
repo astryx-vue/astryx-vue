@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
-import { computed, inject } from 'vue'
+import { computed, inject, toRaw } from 'vue'
+import { useDevWarning } from '../composables/useDevWarning.js'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { breadcrumbContextKey } from './context.js'
 
 const props = defineProps<BreadcrumbItemProps>()
@@ -20,6 +22,7 @@ const slots = defineSlots<{
 }>()
 
 const context = inject(breadcrumbContextKey, undefined)
+const linkComponent = useLinkComponent()
 const variant = computed(() => context?.variant.value ?? 'default')
 const separator = computed(() => context?.separator.value ?? '/')
 const hasMenu = computed(() => props.menu != null || slots.menu != null)
@@ -36,12 +39,16 @@ const contentClasses = computed(() => [
 
 const menuSize = computed<DropdownMenuSize>(() => props.menuSize ?? (variant.value === 'supporting' ? 'sm' : 'md'))
 
-const isDev = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV !== false
-if (isDev && hasMenu.value && props.href) {
-  console.warn(
-    'BreadcrumbItem: `menu` and `href` are mutually exclusive; `menu` takes precedence and `href` is ignored.',
-  )
-}
+/** The link crumb keeps the anchor unless a router link is passed in or a LinkProvider supplies one. */
+const customLink = computed(() => props.as ?? linkComponent.value)
+const linkRoot = computed(() => (customLink.value == null ? 'a' : toRaw(customLink.value)))
+const rendersLink = computed(() => Boolean(props.href) && !props.isCurrent)
+
+useDevWarning(
+  'BreadcrumbItem',
+  '`menu` and `href` are mutually exclusive; `menu` takes precedence and `href` is ignored.',
+  () => hasMenu.value && Boolean(props.href),
+)
 
 function handleClick(event: MouseEvent) {
   if (props.isCurrent) {
@@ -79,9 +86,11 @@ function handleClick(event: MouseEvent) {
         </button>
       </template>
     </DropdownMenu>
-    <a
-      v-else-if="href && !isCurrent"
+    <component
+      :is="linkRoot"
+      v-else-if="rendersLink"
       :href="href"
+      :to="customLink != null ? href : undefined"
       class="astryx-breadcrumb-item__content"
       @click="handleClick"
     >
@@ -89,7 +98,7 @@ function handleClick(event: MouseEvent) {
         <slot name="startIcon" />
       </span>
       <slot />
-    </a>
+    </component>
     <button
       v-else-if="!isCurrent"
       type="button"

@@ -7,5 +7,7 @@ export type {
   AvatarShape,
   AvatarSize,
   AvatarStatusDotProps,
+  AvatarStatusDotSlots,
   AvatarStatusDotVariant,
+  AvatarStatusDotVariantName,
 } from './types.js'

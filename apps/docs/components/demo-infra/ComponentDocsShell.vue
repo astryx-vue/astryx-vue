@@ -3,22 +3,53 @@ import type { ComponentDocsRoute } from './componentDocsRoute'
 import { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
 import { useRoute } from 'vitepress'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { catalogGroups } from './componentCatalog'
-import { componentDocsCopy } from './componentDocsRoute'
+import { componentDemos } from '../demos/registry'
+import { sidebarItems } from './componentCatalog'
+import { componentDocsCopy, UPSTREAM_PACKAGE, UPSTREAM_VERSION } from './componentDocsRoute'
 import { localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
 import { hasAccessibility } from './reference/loadReference'
+import StageFit from './StageFit.vue'
+import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ route: ComponentDocsRoute }>()
 const text = computed(() => componentDocsCopy[props.route.locale])
 const showAccessibility = computed(() => props.route.kind === 'detail' && hasAccessibility(props.route.slug))
-const groups = computed(() => catalogGroups(props.route.locale))
+// 顶部演示用的是总览卡片那份 demo：它展示的是组件最基础的形态。
+const stageDemo = computed(() => (props.route.kind === 'detail' ? componentDemos[props.route.slug] : undefined))
+const sidebar = computed(() => sidebarItems(props.route.locale))
 const routePath = useRoute()
-const activeGroupId = computed(() => {
+// 当前页所在的家族默认展开，其余收起。
+const activeFamilyId = computed(() => {
   const route = props.route
   if (route.kind !== 'detail')
     return undefined
-  return groups.value.find(group => group.entries.some(entry => entry.slug === route.slug))?.id
+  for (const item of sidebar.value) {
+    if (item.kind === 'family' && item.entries.some(entry => entry.slug === route.slug))
+      return item.id
+  }
+  return undefined
+})
+/** 上游没有同名导出、标题下不显示版本行的页面（Chat 是一组组件的概览）。 */
+const NO_EXPORT_SLUGS: ReadonlySet<string> = new Set(['chat'])
+
+/** 导出名不是 slug 驼峰形式的少数组件。 */
+const EXPORT_NAME_EXCEPTIONS: Readonly<Record<string, string>> = {
+  'dropdown-menu-submenu': 'DropdownMenuSubMenu',
+}
+
+/** 页面标题下那行小字里的导出名：`base-typeahead` → `BaseTypeahead`，`use-clipboard` → `useClipboard`。 */
+const exportName = computed(() => {
+  if (props.route.kind !== 'detail')
+    return ''
+  if (NO_EXPORT_SLUGS.has(props.route.slug))
+    return ''
+  const special = EXPORT_NAME_EXCEPTIONS[props.route.slug]
+  if (special)
+    return special
+  const parts = props.route.slug.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1))
+  const pascal = parts.join('')
+  return props.route.slug.startsWith('use-') ? pascal.charAt(0).toLowerCase() + pascal.slice(1) : pascal
 })
 const sidebarOpen = ref(false)
 const isNarrow = ref(false)
@@ -150,21 +181,30 @@ watch(() => routePath.path, () => {
               :label="text.overview"
               @click="closeSidebar(false)"
             />
-            <SideNavItem
-              v-for="group in groups"
-              :key="activeGroupId === group.id ? `${group.id}-open` : group.id"
-              :collapsible="{ defaultIsCollapsed: activeGroupId !== group.id }"
-              :label="group.title"
-            >
+            <template v-for="item in sidebar" :key="item.kind === 'family' ? item.id : item.entry.slug">
               <SideNavItem
-                v-for="entry in group.entries"
-                :key="entry.slug"
-                :href="path(`/components/${entry.slug}`)"
-                :is-selected="route.kind === 'detail' && route.slug === entry.slug"
-                :label="entry[route.locale]"
+                v-if="item.kind === 'family'"
+                :key="activeFamilyId === item.id ? `${item.id}-open` : item.id"
+                :collapsible="{ defaultIsCollapsed: activeFamilyId !== item.id }"
+                :label="item.title"
+              >
+                <SideNavItem
+                  v-for="entry in item.entries"
+                  :key="entry.slug"
+                  :href="path(`/components/${entry.slug}`)"
+                  :is-selected="route.kind === 'detail' && route.slug === entry.slug"
+                  :label="entry[route.locale]"
+                  @click="closeSidebar(false)"
+                />
+              </SideNavItem>
+              <SideNavItem
+                v-else
+                :href="path(`/components/${item.entry.slug}`)"
+                :is-selected="route.kind === 'detail' && route.slug === item.entry.slug"
+                :label="item.entry[route.locale]"
                 @click="closeSidebar(false)"
               />
-            </SideNavItem>
+            </template>
           </SideNavSection>
         </SideNav>
       </aside>
@@ -174,12 +214,24 @@ watch(() => routePath.path, () => {
       <article v-else class="component-detail__content">
         <header class="component-detail__header">
           <h1>{{ route.name }}</h1>
+          <p v-if="exportName" class="component-detail__version">
+            {{ UPSTREAM_PACKAGE }} v{{ UPSTREAM_VERSION }} · {{ exportName }}
+          </p>
         </header>
         <nav class="component-detail__tabs" :aria-label="`${route.name} ${text.documentation}`">
           <a :href="path(`/components/${route.slug}`)" :aria-current="route.tab === 'overview' ? 'page' : undefined">{{ text.overview }}</a>
           <a :href="path(`/components/${route.slug}/props`)" :aria-current="route.tab === 'props' ? 'page' : undefined">{{ text.props }}</a>
           <a v-if="showAccessibility" :href="path(`/components/${route.slug}/accessibility`)" :aria-current="route.tab === 'accessibility' ? 'page' : undefined">{{ text.accessibility }}</a>
         </nav>
+        <div v-if="route.tab === 'overview' && stageDemo" class="component-detail__stage">
+          <StageFit>
+            <VueDemoHost
+              :class-name="stageDemo.className"
+              :component="stageDemo.component"
+              :data-kind="stageDemo.dataKind"
+            />
+          </StageFit>
+        </div>
         <div class="component-detail__body vp-doc">
           <PropsPlayground v-if="route.tab === 'props'" :locale="route.locale" :slug="route.slug" />
           <slot />

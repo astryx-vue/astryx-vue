@@ -199,6 +199,17 @@
     color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
   }
 
+  /* 标签旁的提示图标和上游一样是 16px 方块，独立的 FieldLabel 里也一样。 */
+  .astryx-field-label-row .astryx-field-info-tip {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    min-height: 0;
+    padding: 0;
+    border-radius: var(--astryx-radius-inner, 0.375rem);
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
   .astryx-field-info-tip:focus-visible,
   .astryx-input-clear-button:focus-visible {
     outline-offset: 1px;

@@ -1,22 +1,60 @@
 <script setup lang="ts">
-import type { ToastPlacement } from './types.js'
+import type { CSSProperties } from 'vue'
+import type { ResolvedLayerInset } from '../LayerProvider/context.js'
+import type { ToastDismissReason, ToastPlacement } from './types.js'
 import { computed, reactive, watch } from 'vue'
-
+import { useLayerConfig } from '../LayerProvider/context.js'
 import { toastStore } from './store.js'
 import Toast from './Toast.vue'
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   placement?: ToastPlacement
-}>(), {
-  placement: 'bottom-center',
-})
+}>()
 
-const isTopPlacement = computed(() => props.placement.startsWith('top'))
+// LayerProvider 可以给 toast 视口定位置、可见上限和逐边偏移。
+const layer = useLayerConfig()
+
+const placement = computed(() => props.placement ?? layer?.value.toast.position ?? 'bottom-end')
+
+const isTopPlacement = computed(() => placement.value.startsWith('top'))
 
 const classes = computed(() => [
   'astryx-toast-viewport',
-  `astryx-toast-viewport--placement-${props.placement}`,
+  `astryx-toast-viewport--placement-${placement.value}`,
 ])
+
+/** 超出可见上限时只渲染最新的几条。 */
+const visibleToasts = computed(() => {
+  const max = layer?.value.toast.maxVisible
+  const toasts = toastStore.toasts
+  if (max == null || max < 0 || toasts.length <= max)
+    return toasts
+  return toasts.slice(toasts.length - max)
+})
+
+const INSET_EDGES = [
+  ['padding-block-start', 'blockStart', 'top'],
+  ['padding-block-end', 'blockEnd', 'bottom'],
+  ['padding-inline-start', 'inlineStart', 'left'],
+  ['padding-inline-end', 'inlineEnd', 'right'],
+] as const
+
+/**
+ * 逐边偏移叠在基础内边距上。基础内边距取间距第 4 档和设备安全区的较大者，
+ * 和锚定浮层的视口空隙保持一致。没有 provider 时不写内联样式，保持原来的样子。
+ */
+const viewportStyle = computed<CSSProperties | undefined>(() => {
+  const inset: ResolvedLayerInset | undefined = layer?.value.toast.inset
+  if (inset == null)
+    return undefined
+
+  const style: Record<string, string> = {}
+  for (const [property, edge, areaEdge] of INSET_EDGES) {
+    const extra = inset[edge] ?? 0
+    style[property] = `calc(max(var(--astryx-spacing-4, 16px), env(safe-area-inset-${areaEdge}, 0px)) + ${extra}px)`
+  }
+  return style as CSSProperties
+})
 
 // Rows clip their toast while the row track opens and closes. Once a row has
 // settled the clip is released so the card shadow can paint.
@@ -34,9 +72,9 @@ function handleRowTransitionEnd(id: string, event: TransitionEvent) {
     settled.add(id)
 }
 
-function handleClose(id: string) {
+function handleDismiss(id: string, reason: ToastDismissReason) {
   settled.delete(id)
-  toastStore.requestClose(id)
+  toastStore.dismissFromCard(id, reason)
 }
 
 watch(
@@ -55,11 +93,12 @@ watch(
   <Teleport to="body">
     <div
       :class="classes"
+      :style="viewportStyle"
       aria-live="polite"
       aria-atomic="false"
     >
       <div
-        v-for="toast in toastStore.toasts"
+        v-for="toast in visibleToasts"
         :key="toast.id"
         class="astryx-toast-viewport__row"
         :class="[
@@ -75,11 +114,11 @@ watch(
           <Toast
             :type="toast.type"
             :body="toast.body"
-            :auto-close="toast.autoClose"
-            :duration="toast.duration"
+            :is-auto-hide="toast.isAutoHide"
+            :auto-hide-duration="toast.autoHideDuration"
             :end-content="toast.endContent"
             :is-exiting="toast.isExiting"
-            @close="handleClose(toast.id)"
+            @dismiss="handleDismiss(toast.id, $event)"
           />
         </div>
       </div>

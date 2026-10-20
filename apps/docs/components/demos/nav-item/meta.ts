@@ -4,7 +4,8 @@ import { navItemOverview as demo } from './index'
 export const meta = {
   slug: 'nav-item',
   group: 'Navigation',
-  order: 2,
+  family: 'Navigation',
+  order: 4,
   en: 'Nav Item',
   zh: '导航项',
   demo,

@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { LinkProps } from './types.js'
 import { computed, toRaw } from 'vue'
 
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -28,13 +29,17 @@ defineSlots<{
 }>()
 
 const messages = useAstryxMessages()
+const linkComponent = useLinkComponent()
+
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
 
 const isButton = computed(() => props.href == null || props.href === '')
-const isCustomLink = computed(() => !isButton.value && !props.isDisabled && props.as != null)
+const isCustomLink = computed(() => !isButton.value && !props.isDisabled && customLink.value != null)
 const root = computed(() => {
-  if (isButton.value || props.isDisabled || props.as == null)
+  if (isButton.value || props.isDisabled || customLink.value == null)
     return isButton.value ? 'button' : 'a'
-  return toRaw(props.as)
+  return toRaw(customLink.value)
 })
 
 const computedTarget = computed(() => {
@@ -88,6 +93,20 @@ const tooltipText = computed(() => {
 const newTabText = computed(() => props.newTabLabel || messages.value.nav.opensInNewTab)
 const showNewTab = computed(() => props.isExternalLink && !isButton.value)
 
+/**
+ * `download` 只有三种写法：没有、空属性（= 用服务器给的文件名）、指定文件名。
+ * `false` 不能落到 DOM 上变成 `download="false"`，那样会被当成文件名。
+ */
+const downloadAttribute = computed<string | undefined>(() => {
+  if (isButton.value || props.isDisabled)
+    return undefined
+  if (props.download === true)
+    return ''
+  if (props.download === false)
+    return undefined
+  return props.download
+})
+
 function handleClick(event: MouseEvent) {
   if (props.isDisabled) {
     event.preventDefault()
@@ -108,7 +127,8 @@ function handleClick(event: MouseEvent) {
       :to="isCustomLink ? href : undefined"
       :target="!isButton && !isDisabled ? computedTarget : undefined"
       :rel="!isButton && !isDisabled ? computedRel : undefined"
-      :download="!isButton && !isDisabled ? download : undefined"
+      :download="downloadAttribute"
+      :referrerpolicy="!isButton ? referrerPolicy : undefined"
       :type="isButton ? 'button' : undefined"
       :disabled="isButton ? isDisabled : undefined"
       :role="isDisabled && !isButton ? 'link' : undefined"
@@ -135,7 +155,8 @@ function handleClick(event: MouseEvent) {
     :to="isCustomLink ? href : undefined"
     :target="!isButton && !isDisabled ? computedTarget : undefined"
     :rel="!isButton && !isDisabled ? computedRel : undefined"
-    :download="!isButton && !isDisabled ? download : undefined"
+    :download="downloadAttribute"
+    :referrerpolicy="!isButton ? referrerPolicy : undefined"
     :type="isButton ? 'button' : undefined"
     :disabled="isButton ? isDisabled : undefined"
     :role="isDisabled && !isButton ? 'link' : undefined"

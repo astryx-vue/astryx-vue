@@ -108,3 +108,30 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## SideNavCollapseButton Props
+
+Toggles the rail between its expanded and collapsed states. Inside a `SideNav` it reads the collapse state from the sidebar; outside one, bind it with `v-model:is-collapsed`.
+
+<div class="component-api-table" role="region" aria-label="SideNavCollapseButton Props" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Button text. With a label the button renders the chevron plus the text; without one it is icon only and the translated “Collapse sidebar” / “Expand sidebar” becomes its accessible name.</td></tr>
+      <tr><td><code>collapsible</code></td><td><code>SideNavControlledCollapsible</code></td><td>-</td><td>Controlled <code>{ isCollapsed, onCollapsedChange }</code> config, for buttons rendered outside the sidebar. Pass the same object to <code>SideNav</code>. It wins over <code>isCollapsed</code>.</td></tr>
+      <tr><td><code>isCollapsed</code></td><td><code>boolean</code></td><td>-</td><td>Controlled collapsed state for <code>v-model:is-collapsed</code>, for buttons rendered outside the sidebar.</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td>Container: <code>sm</code> in a SideNav, otherwise <code>md</code></td><td>Button size. Set it when the button sits outside a sized container and has to match its neighbours.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+## SideNavCollapseButton slots
+
+<div class="component-api-table" role="region" aria-label="SideNavCollapseButton slots" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>default</code></td><td>Custom content for the button's icon slot. Replaces the chevron; the visible text still comes from <code>label</code>.</td></tr>
+    </tbody>
+  </table>
+</div>

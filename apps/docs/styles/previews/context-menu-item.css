@@ -1,0 +1,15 @@
+/* 右键区域画成虚线框，提示这里可以右键，同时不抢组件的配色。 */
+.context-menu-item-preview {
+  width: min(100%, 24rem);
+  max-width: 100%;
+}
+
+.context-menu-item-preview__trigger {
+  padding: 48px;
+  border: 2px dashed var(--astryx-line);
+  border-radius: 8px;
+  color: var(--astryx-text-muted);
+  font-size: 14px;
+  text-align: center;
+  user-select: none;
+}

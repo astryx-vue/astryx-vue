@@ -7,7 +7,9 @@
     padding-inline-start: var(--astryx-avatar-group-overlap, 0px);
   }
 
+  /* 组内头像的描边画在 size 之外：外框 = size + 2 × 描边宽度。 */
   .astryx-avatar--group-item {
+    box-sizing: content-box;
     border-style: solid;
     border-color: var(--astryx-avatar-group-border-color, #fff);
   }
@@ -23,15 +25,31 @@
     border-style: solid;
     border-color: var(--astryx-avatar-group-border-color, #fff);
     border-width: 2px;
+    padding-inline: var(--astryx-avatar-group-overflow-padding, var(--astryx-spacing-2, 8px));
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
-    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-size: var(--astryx-avatar-group-overflow-font-size, var(--astryx-avatar-group-overflow-computed-font-size, 0.75rem));
     font-weight: var(--astryx-font-weight-medium, 500);
     line-height: 1;
+    white-space: nowrap;
     user-select: none;
   }
 
   .astryx-avatar-group-overflow--circle {
     border-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-avatar-group-overflow--interactive {
+    padding: 0 var(--astryx-avatar-group-overflow-padding, var(--astryx-spacing-2, 8px));
+    font: inherit;
+    font-size: var(--astryx-avatar-group-overflow-font-size, var(--astryx-avatar-group-overflow-computed-font-size, 0.75rem));
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .astryx-avatar-group-overflow--interactive:focus-visible {
+    outline: 2px solid var(--astryx-color-focus-ring, #0074e2);
+    outline-offset: 2px;
   }
 
   .astryx-avatar-group-overflow--rounded {

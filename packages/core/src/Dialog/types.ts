@@ -52,6 +52,11 @@ export interface DialogHeaderProps {
   subtitle?: string
   /** 是否显示关闭按钮。点击时发出 `openChange(false)`。 */
   hasCloseButton?: boolean
+  /**
+   * 底部是否画一条分隔线。
+   * @default false
+   */
+  hasDivider?: boolean
   /** 关闭按钮的无障碍名称。 */
   closeButtonLabel?: string
 }

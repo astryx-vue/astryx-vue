@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { useItemDescriptionId } from './context.js'
@@ -277,7 +277,11 @@ describe('list item', () => {
       },
     })
 
+    // 等 List 把 interactiveRef 传到 ListItem，再等 Item 依据它切换成委托模式。
+    // 少等一轮时，点击会落在还没进入委托状态的根元素上。
+    await flushPromises()
     controlElement = wrapper.find<HTMLInputElement>('.control').element
+    await flushPromises()
 
     expect(wrapper.find('button.astryx-item__content').exists()).toBe(false)
 

@@ -24,7 +24,7 @@ selected.value = people.value.slice(0, 2)
       label="Team Members"
       placeholder="Search people..."
       :debounce-ms="0"
-      clearable
+      has-clear
     />
   </div>
 </template>

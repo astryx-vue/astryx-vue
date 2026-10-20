@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { TopNavMegaMenuEmits, TopNavMegaMenuProps } from './types.js'
-import { inject, ref } from 'vue'
-import { useListFocus } from '../composables/useListFocus.js'
+import type { TopNavMegaMenuEmits, TopNavMegaMenuProps, TopNavMegaMenuSlots } from './types.js'
+import { inject, ref, useId } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import { mobileNavKey } from '../MobileNav/context.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
+import TopNavMegaMenuPanel from './TopNavMegaMenuPanel.vue'
 import '../../styles/top-nav.css'
 
 defineOptions({ name: 'AstryxTopNavMegaMenu' })
@@ -15,15 +15,11 @@ withDefaults(defineProps<TopNavMegaMenuProps>(), {
 })
 
 const emit = defineEmits<TopNavMegaMenuEmits>()
+defineSlots<TopNavMegaMenuSlots>()
+
 const inDrawer = inject(mobileNavKey, false)
 const expanded = ref(false)
-const { listRef, handleKeyDown } = useListFocus({
-  hasHomeEnd: true,
-  itemSelector: '.astryx-top-nav-mega-item',
-  orientation: 'both',
-  wrap: true,
-})
-void listRef.value
+const drawerItemsId = `astryx-top-nav-mega-items-${useId()}`
 </script>
 
 <template>
@@ -31,14 +27,15 @@ void listRef.value
     <button
       type="button"
       class="astryx-top-nav-menu__drawer-trigger"
+      :aria-controls="drawerItemsId"
       :aria-expanded="expanded ? 'true' : 'false'"
       @click="expanded = !expanded"
     >
       <span>{{ label }}</span>
       <Icon icon="chevronDown" size="sm" :class="{ 'astryx-top-nav-menu__chevron--open': expanded }" />
     </button>
-    <div v-show="expanded" class="astryx-top-nav-mega__drawer">
-      <div class="astryx-top-nav-mega__items">
+    <div v-show="expanded" :id="drawerItemsId" class="astryx-top-nav-mega__drawer">
+      <div class="astryx-top-nav-mega__drawer-items">
         <slot />
       </div>
       <div v-if="$slots.featured" class="astryx-top-nav-mega__featured">
@@ -68,22 +65,13 @@ void listRef.value
         <Icon icon="chevronDown" size="sm" class="astryx-top-nav-menu__chevron" :class="{ 'astryx-top-nav-menu__chevron--open': isOpen }" />
       </button>
     </template>
-    <template #default>
-      <div class="astryx-top-nav-mega__layout">
-        <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 方向键从内部链接冒泡上来；这一层只负责在大菜单里移动焦点。 -->
-        <div
-          ref="listRef"
-          class="astryx-top-nav-mega__items"
-          role="group"
-          :aria-label="label"
-          @keydown="handleKeyDown"
-        >
-          <slot />
-        </div>
-        <div v-if="$slots.featured" class="astryx-top-nav-mega__featured">
+    <template #default="{ focusRequest }">
+      <TopNavMegaMenuPanel :focus-request="focusRequest" :label="label">
+        <slot />
+        <template #featured>
           <slot name="featured" />
-        </div>
-      </div>
+        </template>
+      </TopNavMegaMenuPanel>
     </template>
   </NavDisclosure>
 </template>

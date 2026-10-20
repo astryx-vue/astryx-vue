@@ -20,10 +20,13 @@ footer: false
       <tr><td><code>triggerDisplay</code></td><td><code>'count' | 'labels' | 'badges'</code></td><td><code>'count'</code></td><td>关闭后如何展示已选项。</td></tr>
       <tr><td><code>maxBadges</code></td><td><code>number</code></td><td><code>3</code></td><td><code>badges</code> 和 <code>labels</code> 最多露出几项，更窄时还会按宽度再收。</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否可清除。</td></tr>
+      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有选中项时显示清除按钮。和旧名 <code>clearable</code> 等价，两者任一为真即生效。</td></tr>
       <tr><td><code>checkboxPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'start'</code></td><td>勾选标记的位置。</td></tr>
       <tr><td><code>variant</code></td><td><code>'input' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> 带边框，<code>ghost</code> 适合工具栏。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
-      <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>禁用原因。有值时控件仍可聚焦。</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。和 <code>disabled</code> 一起用时，鼠标悬停或键盘聚焦会弹出提示，触发器靠 <code>aria-disabled</code> 保持可聚焦，但仍然打不开列表。不用再在外面套 Tooltip：禁用的控件收不到悬停事件。旧名 <code>disabledReason</code> 等价。</td></tr>
+      <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>禁用原因。有值时控件仍可聚焦。和 <code>disabledMessage</code> 等价。</td></tr>
+      <tr><td><code>isDefaultOpen</code></td><td><code>boolean</code></td><td><code>false</code></td><td>挂载后就展开列表。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>字段下方的状态说明。</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明的位置。ghost 会把 attached 收成独立说明。tooltip 把说明留在字段里的图标上。</td></tr>
@@ -50,6 +53,9 @@ footer: false
       <tr><td><code>change</code></td><td><code>value, change?</code></td><td>选中项变化时触发。创建时第二参是 <code>{ type: 'create', query }</code>。</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td>搜索文字变化时触发。</td></tr>
       <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>列表打开或关闭时触发。</td></tr>
+      <tr><td><code>click</code></td><td><code>event: MouseEvent</code></td><td>触发器上的点击，在列表切换之后触发。取消不了切换。</td></tr>
+      <tr><td><code>focus</code></td><td><code>event: FocusEvent</code></td><td>触发器获得焦点时触发。</td></tr>
+      <tr><td><code>keydown</code></td><td><code>event: KeyboardEvent</code></td><td>触发器上内置键盘模型没处理的按键才触发。它处理并取消的按键不再透出。</td></tr>
     </tbody>
   </table>
 </div>
@@ -63,6 +69,7 @@ footer: false
       <tr><td><code>icon</code></td><td>—</td><td>触发器开头的图标。</td></tr>
       <tr><td><code>option</code></td><td><code>{ option, selected, active }</code></td><td>自定义选项。</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>自定义空状态。</td></tr>
+      <tr><td><code>trigger</code></td><td><code>{ id, onClick, onKeyDown, onFocus, aria-haspopup, aria-expanded, aria-controls, aria-busy, triggerRef }</code></td><td>用一个自制控件（行内图标、芯片、图标按钮）替掉整个字段和触发器。把绑定铺到控件上，并把 <code>triggerRef</code> 作为 <code>:ref</code> 传进去，列表就以它为锚点。字段外壳（标签、状态、清除、加载）都不再渲染。</td></tr>
     </tbody>
   </table>
 </div>

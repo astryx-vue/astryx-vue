@@ -1,8 +1,10 @@
 import type { CatalogEntry, DemoMeta } from './demoMeta'
 import type { DocsLocale } from './docs-i18n'
 import type { ComponentGroup } from './groups'
+import type { SidebarItem } from './sidebarTree'
 import { assembleCatalog } from './demoMeta'
 import { COMPONENT_GROUPS, GROUP_TITLES } from './groups'
+import { buildSidebar } from './sidebarTree'
 
 export type { ComponentGroup }
 export { COMPONENT_GROUPS, GROUP_TITLES }
@@ -51,4 +53,10 @@ export function catalogGroups(locale: DocsLocale): CatalogGroup[] {
       entries: COMPONENT_CATALOG.filter(entry => entry.group === group),
     }))
     .filter(group => group.entries.length > 0)
+}
+
+export type { SidebarFamily, SidebarItem, SidebarLink } from './sidebarTree'
+
+export function sidebarItems(locale: DocsLocale): SidebarItem[] {
+  return buildSidebar(COMPONENT_CATALOG, locale)
 }

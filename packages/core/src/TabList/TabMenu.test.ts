@@ -12,7 +12,7 @@ const Harness = defineComponent({
     return { value }
   },
   template: `
-    <TabList v-model:value="value">
+    <TabList v-model:value="value" role="tablist">
       <Tab value="home">Home</Tab>
       <TabMenu
         label="More"

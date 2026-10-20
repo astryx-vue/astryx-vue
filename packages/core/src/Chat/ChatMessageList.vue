@@ -9,6 +9,7 @@ import '../../styles/chat.css'
 defineOptions({ name: 'AstryxChatMessageList', inheritAttrs: false })
 
 const props = withDefaults(defineProps<ChatMessageListProps>(), {
+  align: 'bottom',
   density: 'balanced',
   isStreaming: false,
 })
@@ -74,10 +75,11 @@ watch(
       <div v-if="isLoadingTop" class="astryx-chat-message-list__loading">
         <Spinner size="md" :aria-label="messages.chat.toolRunning" />
       </div>
-      <div class="astryx-chat-message-list__spacer" aria-hidden="true" />
+      <div v-if="align === 'bottom'" class="astryx-chat-message-list__spacer" aria-hidden="true" />
       <slot v-if="$slots.default" />
-      <div v-else-if="$slots.empty" class="astryx-chat-message-list__empty">
-        <slot name="empty" />
+      <div v-else-if="$slots.emptyState || $slots.empty" class="astryx-chat-message-list__empty">
+        <slot v-if="$slots.emptyState" name="emptyState" />
+        <slot v-else name="empty" />
       </div>
     </div>
   </div>

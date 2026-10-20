@@ -4,7 +4,7 @@ import { tokenizerOverview as demo } from './index'
 export const meta = {
   slug: 'tokenizer',
   group: 'Form Controls',
-  order: 22,
+  order: 26,
   en: 'Tokenizer',
   zh: '标签输入框',
   demo,

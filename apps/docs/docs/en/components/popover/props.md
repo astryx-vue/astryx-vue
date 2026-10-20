@@ -23,6 +23,7 @@ footer: false
 <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Moves focus into the surface when it opens.</td></tr>
 <tr><td><code>hasLightDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Closes when the user presses outside the surface and the trigger.</td></tr>
 <tr><td><code>hasEscapeDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Closes when the user presses Escape.</td></tr>
+<tr><td><code>anchor</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>External element to anchor to. No trigger wrapper is rendered and the default slot can be omitted; click, keydown and ARIA wiring land on the button inside that element.</td></tr>
 </tbody></table>
 </div>
 
@@ -32,7 +33,7 @@ footer: false
 
 ## Slots
 
-- `default`: the trigger. Use a `button` or an element with `role="button"`.
+- `default`: the trigger. Use a `button` or an element with `role="button"`. Not needed when `anchor` is set.
 - `content`: the surface content.
 
 ## Theme

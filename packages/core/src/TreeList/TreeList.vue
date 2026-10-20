@@ -79,6 +79,7 @@ function initialTabbable(items: TreeListItemData[]): string | undefined {
 const tabbableId = computed(() => initialTabbable(props.items))
 
 const { treeRef, handleKeyDown, handleFocus } = useTreeFocus({
+  hasRovingTabIndex: true,
   onToggleExpand: toggle,
   onActivate: (current) => {
     const candidates = current.querySelectorAll<HTMLElement>('a[href], button:not([data-tree-toggle])')

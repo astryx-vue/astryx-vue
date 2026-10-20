@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { MaybeRefOrGetter, VNode } from 'vue'
 import type { BadgeVariant } from '../Badge/types.js'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
 import type { SpacingStep } from '../Stack/types.js'
@@ -9,6 +9,7 @@ export type ChatMessageSender = 'user' | 'assistant' | 'system'
 /** Spacing and width preset shared by the layout, the list, and each message. */
 export type ChatDensity = 'compact' | 'balanced' | 'spacious'
 
+export type ChatMessageListAlign = 'top' | 'bottom'
 export type ChatMessageBubbleVariant = 'filled' | 'ghost'
 export type ChatMessageBubbleGroup = 'first' | 'middle' | 'last'
 export type ChatMessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'error'
@@ -40,8 +41,15 @@ export interface ChatToolCallItem {
   errorMessage?: string
   /** Stable identity. Derived from the other fields when omitted. */
   key?: string
-  /** Plain-text detail revealed when the row is expanded. */
+  /**
+   * Inline detail revealed when the row is expanded, such as a diff or command
+   * output. For rich content use the `detail` slot instead.
+   */
+  resultDetail?: string
+  /** Alias of `resultDetail`. `resultDetail` wins when both are set. */
   detail?: string
+  /** Arbitrary caller data kept on the item. Never rendered. */
+  data?: unknown
 }
 
 export interface ChatLayoutProps {
@@ -120,12 +128,22 @@ export interface ChatMessageListProps {
   isStreaming?: boolean
   /** Accessible name of the log. Defaults to the localized "Messages". */
   label?: string
+  /**
+   * Vertical alignment when the list is shorter than its container.
+   * `'bottom'` adds a spacer so a short conversation sits above the composer;
+   * `'top'` leaves the spacer out so messages start at the top. A list that
+   * already overflows scrolls the same way in both modes.
+   * @default 'bottom'
+   */
+  align?: ChatMessageListAlign
 }
 
 export interface ChatMessageListSlots {
   /** Message rows, system lines, and unread dividers. */
   default?: () => VNode[]
   /** Shown when the default slot is omitted. */
+  emptyState?: () => VNode[]
+  /** Alias of `emptyState`. */
   empty?: () => VNode[]
 }
 
@@ -236,7 +254,7 @@ export interface ChatToolCallsEmits {
 }
 
 export interface ChatToolCallsSlots {
-  /** Rich detail for one call. Falls back to `call.detail` when omitted. */
+  /** Rich detail for one call. Falls back to `call.resultDetail` when omitted. */
   detail?: (props: { call: ChatToolCallItem }) => VNode[]
 }
 
@@ -504,12 +522,15 @@ export interface ChatComposerDrawerSlots {
 }
 
 export interface ChatDictationButtonProps {
-  /** Return value of `useChatDictation` or `useSpeechRecognition`. */
+  /**
+   * Return value of `useChatDictation` or `useSpeechRecognition`.
+   * Plain booleans work too, so a demo can drive the button without a microphone.
+   */
   dictation: {
-    isSupported: boolean
-    isListening: boolean
-    bands: readonly number[]
-    volume: number
+    isSupported: MaybeRefOrGetter<boolean>
+    isListening: MaybeRefOrGetter<boolean>
+    bands: MaybeRefOrGetter<readonly number[]>
+    volume: MaybeRefOrGetter<number>
     toggle: () => void
   }
   /** @default 'md' */
@@ -525,11 +546,20 @@ export interface ChatDictationButtonProps {
 }
 
 export interface ChatTokenizedTextProps {
-  /** Message text that may contain serialized token values. */
+  /**
+   * Message text that may contain serialized token values.
+   * The default slot is the usual place for it; this prop does the same and
+   * wins when both are set.
+   */
   text?: string
   /**
    * Chips to substitute. Each non-empty `value` is matched literally.
    * The same objects a trigger's `onSelect` returns can be reused here.
    */
   tokens?: ChatComposerToken[]
+}
+
+export interface ChatTokenizedTextSlots {
+  /** The message text. Plain text only: tokens come from the `tokens` prop. */
+  default?: () => VNode[]
 }

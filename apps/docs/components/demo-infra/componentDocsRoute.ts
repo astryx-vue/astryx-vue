@@ -18,6 +18,10 @@ export type ComponentDocsRoute
     tab: 'overview' | 'props' | 'accessibility'
   }
 
+/** 本站文档对齐的上游包名和版本，显示在组件页标题下面。 */
+export const UPSTREAM_PACKAGE = '@astryxdesign/core'
+export const UPSTREAM_VERSION = '0.7.1'
+
 export const componentDocsCopy = {
   en: {
     catalogTitle: 'Components',
@@ -27,7 +31,7 @@ export const componentDocsCopy = {
     navigation: 'Component navigation',
     accessibility: 'Accessibility',
     overview: 'Overview',
-    props: 'Props',
+    props: 'Properties',
     returnToTop: 'Return to top',
   },
   zh: {

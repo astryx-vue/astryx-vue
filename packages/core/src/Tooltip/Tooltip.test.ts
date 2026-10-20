@@ -137,4 +137,30 @@ describe('tooltip', () => {
     const wrapper = document.querySelector('.astryx-tooltip-trigger') as HTMLElement
     expect(wrapper.classList.contains('astryx-tooltip-trigger--indicated')).toBe(false)
   })
+
+  it('attaches to an external anchor element instead of wrapping one', async () => {
+    const anchor = document.createElement('button')
+    anchor.type = 'button'
+    anchor.textContent = 'Sibling trigger'
+    document.body.append(anchor)
+
+    const wrapper = mount(Tooltip, {
+      attachTo: document.body,
+      props: { content: 'Helpful text', anchor },
+    })
+    await nextTick()
+
+    expect(wrapper.find('.astryx-tooltip-trigger').exists()).toBe(false)
+    const bubble = document.querySelector('[role="tooltip"]') as HTMLElement
+    expect(anchor.getAttribute('aria-describedby')).toBe(bubble.id)
+
+    anchor.dispatchEvent(new MouseEvent('mouseenter'))
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    expect(bubble.style.display).not.toBe('none')
+
+    wrapper.unmount()
+    expect(anchor.hasAttribute('aria-describedby')).toBe(false)
+    anchor.remove()
+  })
 })

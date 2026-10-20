@@ -4,7 +4,7 @@ import { switchOverview as demo } from './index'
 export const meta = {
   slug: 'switch',
   group: 'Form Controls',
-  order: 18,
+  order: 22,
   en: 'Switch',
   zh: '开关',
   demo,

@@ -6,6 +6,7 @@ export interface CommandPaletteMessages {
   emptyBootstrap: string
   placeholder: string
   listLabel: string
+  inputLabel: string
   loading: string
   noResultsFor: (query: string) => string
   resultCount: (count: number) => string
@@ -21,6 +22,7 @@ export const commandPaletteMessages: Record<AstryxLocale, CommandPaletteMessages
     emptyBootstrap: 'Type to search',
     placeholder: 'Search…',
     listLabel: 'Commands',
+    inputLabel: 'Search commands',
     loading: 'Loading',
     noResultsFor: query => `No results for ${query}`,
     resultCount: count => `${count} ${count === 1 ? 'result' : 'results'}`,
@@ -34,6 +36,7 @@ export const commandPaletteMessages: Record<AstryxLocale, CommandPaletteMessages
     emptyBootstrap: '输入以搜索',
     placeholder: '搜索…',
     listLabel: '命令',
+    inputLabel: '搜索命令',
     loading: '正在加载',
     noResultsFor: query => `没有与 ${query} 匹配的结果`,
     resultCount: count => `${count} 个结果`,

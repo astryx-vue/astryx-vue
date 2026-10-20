@@ -121,6 +121,22 @@ describe('useStreamingText', () => {
     expect(wrapper.text()).toBe('abcdef')
   })
 
+  it('restarts when a new source replaces the previous one', async () => {
+    stubMotion()
+    const frames = installFrames()
+    const text = ref('hello world!!')
+    const streaming = ref(true)
+    const wrapper = mountText(text, streaming)
+    await frames.flush(2)
+    expect(wrapper.text()).toBe('hello world!!')
+
+    text.value = 'abcdefghij extra'
+    await nextTick()
+    expect(wrapper.text()).toBe('')
+    await frames.flush(1)
+    expect(wrapper.text()).toBe('abcdefghij')
+  })
+
   it('uses the faster step when speed is fast', async () => {
     stubMotion()
     const frames = installFrames()

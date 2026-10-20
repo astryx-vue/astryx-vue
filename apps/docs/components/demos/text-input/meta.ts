@@ -4,7 +4,7 @@ import { textInputOverview as demo } from './index'
 export const meta = {
   slug: 'text-input',
   group: 'Form Controls',
-  order: 20,
+  order: 24,
   en: 'Text Input',
   zh: '文本输入框',
   demo,

@@ -41,6 +41,20 @@ import '@astryx-vue/themes/neutral.css'
 </template>`,
       assistantEnding: '准备好开始使用 astryx-vue 了吗？相信它一定不会让你失望！',
     },
+    features: [
+      {
+        title: '久经考验的完备设计系统',
+        subtitle: '源自 Meta 生产环境打磨，严格对齐设计令牌、CSS 变量与微动效规范。',
+      },
+      {
+        title: '丰富多样的组件类型',
+        subtitle: '从底层通用交互控件到复杂多模态对话流，覆盖现代全栈界面开发。',
+      },
+      {
+        title: '场景化的使用案例',
+        subtitle: '开箱即用的真实业务落地模板与演练场，让界面搭建即刻进入快车道。',
+      },
+    ],
   },
   en: {
     mark: 'astryx-vue',
@@ -67,6 +81,20 @@ import '@astryx-vue/themes/neutral.css'
 </template>`,
       assistantEnding: 'Ready to start using astryx-vue? It won\'t let you down.',
     },
+    features: [
+      {
+        title: 'Battle-tested design system',
+        subtitle: 'Proven at Meta scale, faithfully aligned with design tokens, CSS variables, and motion scales.',
+      },
+      {
+        title: 'Rich component library',
+        subtitle: 'From essential foundational controls to complex AI chat layouts for modern web apps.',
+      },
+      {
+        title: 'Scenario-driven use cases',
+        subtitle: 'Production-ready templates and an interactive playground to ship complete pages faster.',
+      },
+    ],
   },
 } as const
 
@@ -136,6 +164,21 @@ function handleSend(): void {
               aria-hidden="true"
             />
           </IconButton>
+        </div>
+
+        <div class="home-features">
+          <div
+            v-for="feat in text.features"
+            :key="feat.title"
+            class="home-feature-item"
+          >
+            <h2 class="home-feature-title">
+              {{ feat.title }}
+            </h2>
+            <p class="home-feature-subtitle">
+              {{ feat.subtitle }}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -365,6 +408,38 @@ html.dark .home-chat-code .shiki span {
 .home-copy-icon {
   width: 1rem;
   height: 1rem;
+}
+
+.home-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding-top: clamp(2rem, 4vw, 2.75rem);
+  border-top: 1px solid var(--astryx-color-border);
+}
+
+.home-feature-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.home-feature-title {
+  margin: 0;
+  font-family: var(--astryx-font-family-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--astryx-color-text-primary);
+  letter-spacing: -0.015em;
+}
+
+.home-feature-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--astryx-color-text-secondary);
 }
 
 .home-chat-column {

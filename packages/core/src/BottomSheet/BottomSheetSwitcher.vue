@@ -25,6 +25,14 @@ const props = withDefaults(defineProps<{
   hasScrim: true,
 })
 
+const emit = defineEmits<{
+  /**
+   * 原生 dialog 收到取消请求时先发这个事件。调用 `event.preventDefault()`
+   * 可以留住这段流程，不让它关掉。
+   */
+  cancel: [event: Event]
+}>()
+
 const activeSheet = defineModel<string | null>('activeSheet', { default: null })
 const retainedId = ref<string | null>(null)
 const alignmentOffset = ref(0)
@@ -138,6 +146,11 @@ function onKeydown(event: KeyboardEvent): void {
 }
 
 function onCancel(event: Event): void {
+  emit('cancel', event)
+  // 原生 <dialog> 的 cancel 会自己关掉对话框，所以这里先拦下来；
+  // 消费者已经 preventDefault 时视为不同意关闭。
+  if (event.defaultPrevented)
+    return
   event.preventDefault()
   requestClose()
 }
@@ -171,6 +184,7 @@ onBeforeUnmount(() => {
 <template>
   <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 点在对话框空白处才关闭；键盘用 Escape，不给对话框再加一个按钮。 -->
   <dialog
+    v-bind="$attrs"
     ref="dialog"
     class="astryx-bottom-sheet-dialog astryx-bottom-sheet-switcher"
     :class="{

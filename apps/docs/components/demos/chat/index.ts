@@ -35,6 +35,10 @@ import metadataTimeDemo from './metadata-time.vue'
 import metadataTimeSource from './metadata-time.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
+import patternConversationDemo from './pattern-conversation.vue'
+import patternConversationSource from './pattern-conversation.vue?raw&highlighted'
+import patternLandingDemo from './pattern-landing.vue'
+import patternLandingSource from './pattern-landing.vue?raw&highlighted'
 import scrollLabelsDemo from './scroll-labels.vue'
 import scrollLabelsSource from './scroll-labels.vue?raw&highlighted'
 import systemIconDemo from './system-icon.vue'
@@ -56,6 +60,8 @@ const stack = { className: 'chat-preview-stack' }
 const wide = { className: 'chat-preview-wide' }
 
 export const chatOverview = defineDemo(overviewDemo, overviewSource, { className: 'chat-overview' })
+export const chatPatternConversation = defineDemo(patternConversationDemo, patternConversationSource, { className: 'chat-pattern' })
+export const chatPatternLanding = defineDemo(patternLandingDemo, patternLandingSource, { className: 'chat-pattern-landing' })
 export const chatLayoutPanel = defineDemo(layoutPanelDemo, layoutPanelSource, { className: 'chat-preview' })
 export const chatComposerShell = defineDemo(composerShellDemo, composerShellSource, { className: 'chat-preview' })
 export const chatComposerStates = defineDemo(composerStatesDemo, composerStatesSource, { className: 'chat-preview' })

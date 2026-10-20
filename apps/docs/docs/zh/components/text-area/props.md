@@ -19,6 +19,8 @@ footer: false
 <tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 maxlength。设置后会显示实时字数，超过上限时字数变红。</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>原生 textarea 的 wrap 属性。</td></tr>
 <tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>原生 resize 样式，控制可拖拽调整的方向。默认 vertical，只允许垂直拖动。</td></tr>
+<tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原生 textarea 的 autocomplete，例如 <code>off</code>、<code>email</code>。原样透传，不影响受控值。</td></tr>
+<tr><td><code>hasSpellCheck</code></td><td><code>boolean</code></td><td>true</td><td>是否启用浏览器拼写检查。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>输入为空时显示的占位文本，不能替代 label。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>显示在标签下方的补充说明。</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>在视觉上隐藏标签，仍保留无障碍名称。</td></tr>
@@ -61,7 +63,8 @@ footer: false
 
 - `class`、`style` 和其他属性应用于字段外层。
 - `aria-labelledby` 与 `aria-describedby` 合并到原生 textarea。
-- 组件管理 textarea 的 `disabled`、`readonly` 与 `aria-invalid`。
+- `focus`、`blur`、`paste` 监听器落在原生 textarea 上。
+- 组件管理 textarea 的 `disabled`、`readonly`、`spellcheck` 与 `aria-invalid`。
 - `icon` 插槽在文本域左侧显示装饰图标。
 - `end` 插槽在文本域右侧显示附加内容。
 - `labelIcon` 插槽替换标签前的图标。

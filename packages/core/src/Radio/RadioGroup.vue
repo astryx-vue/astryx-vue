@@ -3,6 +3,8 @@ import type { CSSProperties } from 'vue'
 import type { RadioChangeEvent, RadioGroupEmits, RadioGroupProps, RadioGroupSlots, RadioValue } from './types.js'
 import { computed, provide, useId, useTemplateRef } from 'vue'
 import Field from '../Field/Field.vue'
+import Tooltip from '../Tooltip/Tooltip.vue'
+import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import Radio from './Radio.vue'
 import { radioContextKey } from './types.js'
 import '../../styles/radio.css'
@@ -20,6 +22,8 @@ const group = useTemplateRef<HTMLDivElement>('group')
 const generatedId = `astryx-radio-group-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
 const style = computed<CSSProperties>(() => ({ '--astryx-field-width': typeof props.width === 'number' ? `${props.width}px` : props.width }))
+const disabledMessage = computed(() => props.disabledMessage?.trim() || undefined)
+const disabledMessageId = computed(() => disabledMessage.value ? `${inputId.value}-disabled` : undefined)
 
 defineExpose({ element: group })
 
@@ -40,6 +44,8 @@ provide(radioContextKey, {
   isGroupDisabled: computed(() => props.isDisabled ?? false),
   isGroupReadOnly: computed(() => props.isReadOnly ?? false),
   isRequired: computed(() => (props.isRequired && !props.isOptional) ?? false),
+  disabledMessage,
+  disabledMessageId,
   size: computed(() => props.size),
 })
 </script>
@@ -56,14 +62,19 @@ provide(radioContextKey, {
       <slot name="labelIcon" />
     </template>
     <template #default="field">
-      <div class="astryx-radio-group-list" role="radiogroup" :aria-labelledby="field.labelId" :aria-describedby="field.describedBy">
-        <Radio
-          v-for="option in options" :key="option.value"
-          :value="option.value" :label="option.label" :description="option.description"
-          :is-disabled="option.isDisabled"
-        />
-        <slot />
-      </div>
+      <Tooltip :content="disabledMessage" :is-enabled="disabledMessage != null" focus-trigger="always" placement="above">
+        <div class="astryx-radio-group-list" role="radiogroup" :aria-labelledby="field.labelId" :aria-describedby="[field.describedBy, isDisabled ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined">
+          <Radio
+            v-for="option in options" :key="option.value"
+            :value="option.value" :label="option.label" :description="option.description"
+            :is-disabled="option.isDisabled"
+          />
+          <slot />
+        </div>
+      </Tooltip>
+      <VisuallyHidden v-if="isDisabled && disabledMessageId" :id="disabledMessageId">
+        {{ disabledMessage }}
+      </VisuallyHidden>
     </template>
   </Field>
 </template>

@@ -36,6 +36,7 @@ footer: false
 <tr><td><code>subtitle</code></td><td><code>string</code></td><td>—</td><td>Secondary text below the title. Not rendered when empty.</td></tr>
 <tr><td><code>hasCloseButton</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a close button that emits <code>openChange(false)</code>.</td></tr>
 <tr><td><code>closeButtonLabel</code></td><td><code>string</code></td><td><code>'Close'</code></td><td>Accessible name of the close button.</td></tr>
+<tr><td><code>hasDivider</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Draws a themed rule along the bottom edge, using <code>--astryx-color-border</code>.</td></tr>
 </tbody></table>
 </div>
 

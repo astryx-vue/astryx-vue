@@ -1,0 +1,5 @@
+/* 舞台和示例画布共用：宽度收在这里，对齐方式仍由 Stack 自己决定。 */
+.astryx-demo.h-stack-preview {
+  box-sizing: border-box;
+  width: min(100%, 25rem);
+}

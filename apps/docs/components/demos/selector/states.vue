@@ -13,6 +13,7 @@ const saved = ref('banana')
 const pending = ref<string | null>(null)
 const required = ref<string | null>(null)
 const search = ref<string | null>('apple')
+const locked = ref<string | null>('banana')
 </script>
 
 <template>
@@ -21,6 +22,13 @@ const search = ref<string | null>('apple')
       <Selector v-model="saved" label="Saved fruit" :options="fruits" is-read-only />
       <Selector v-model="pending" label="Catalog" :options="[]" is-loading placeholder="Loading fruit" />
       <Selector v-model="required" label="Required fruit" :options="fruits" is-required />
+      <Selector
+        v-model="locked"
+        label="Locked fruit"
+        :options="fruits"
+        disabled
+        disabled-message="Only the owner of this list can change it"
+      />
       <Selector
         v-model="search"
         label="Search fruit"

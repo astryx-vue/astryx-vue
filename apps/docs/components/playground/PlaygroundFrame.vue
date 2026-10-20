@@ -9,8 +9,11 @@ import * as playgroundCharts from './playgroundCharts'
 import { PreviewHost } from './previewHost'
 import { previewLayoutMode } from './previewLayout'
 import { isHostMessage, PLAYGROUND_CHANNEL } from './protocol'
+import { templateIcons } from './templateIcons'
 
 const { createApp, onBeforeUnmount, onMounted, ref } = Vue
+
+void templateIcons
 
 const mountEl = ref<HTMLElement | null>(null)
 let app: ReturnType<typeof createApp> | null = null

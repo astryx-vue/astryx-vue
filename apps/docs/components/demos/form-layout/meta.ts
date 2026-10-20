@@ -4,7 +4,8 @@ import { formLayoutOverview as demo } from './index'
 export const meta = {
   slug: 'form-layout',
   group: 'Layout',
-  order: 6,
+  family: 'Layout',
+  order: 10,
   en: 'Form Layout',
   zh: '表单布局',
   demo,

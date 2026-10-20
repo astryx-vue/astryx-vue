@@ -179,6 +179,20 @@
     gap: var(--astryx-spacing-1, 4px);
   }
 
+  /* 分组只是把选项归堆，布局仍然由上面那层 flex 排。 */
+  .astryx-typeahead-group {
+    display: contents;
+  }
+
+  .astryx-typeahead-group-heading {
+    padding: var(--astryx-spacing-1-5, 6px) var(--astryx-spacing-2, 8px) var(--astryx-spacing-1, 4px);
+    color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    text-align: start;
+  }
+
   .astryx-typeahead-option {
     box-sizing: border-box;
     display: flex;
@@ -214,6 +228,23 @@
   .astryx-typeahead--bare {
     width: 100%;
     min-width: 0;
+  }
+
+  /* 单独使用的 BaseTypeahead 只有裸输入：没有边框、底色、内边距，悬停和聚焦也不画外圈。 */
+  .astryx-typeahead-control.is-bare {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .astryx-typeahead-control.is-bare:hover,
+  .astryx-typeahead-control.is-bare:focus-within,
+  .astryx-typeahead-control.is-bare.is-open {
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .astryx-typeahead-item {

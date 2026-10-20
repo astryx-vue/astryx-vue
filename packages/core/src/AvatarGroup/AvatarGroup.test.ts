@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { h } from 'vue'
 import { Avatar } from '../Avatar/index.js'
+import InternationalizationProvider from '../InternationalizationProvider/InternationalizationProvider.vue'
 import AvatarGroup from './AvatarGroup.vue'
 import AvatarGroupOverflow from './AvatarGroupOverflow.vue'
 
@@ -86,6 +88,64 @@ describe('avatarGroup', () => {
     const overflow = wrapper.find('.astryx-avatar-group-overflow')
     expect(overflow.exists()).toBe(true)
     expect(overflow.text()).toBe('+5')
+  })
+
+  it('renders the overflow indicator as a button once it has a click listener', async () => {
+    const wrapper = mount(AvatarGroupOverflow, {
+      props: { count: 7 },
+      attrs: { onClick: () => {} },
+    })
+
+    expect(wrapper.element.tagName).toBe('BUTTON')
+    expect(wrapper.attributes('type')).toBe('button')
+    expect(wrapper.attributes('role')).toBeUndefined()
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('click')).toHaveLength(1)
+  })
+
+  it('keeps a static indicator without a click listener and accepts custom text', () => {
+    const wrapper = mount(AvatarGroupOverflow, {
+      props: { count: 12 },
+      slots: { default: '12+' },
+    })
+
+    expect(wrapper.element.tagName).toBe('SPAN')
+    expect(wrapper.attributes('role')).toBe('img')
+    expect(wrapper.text()).toBe('12+')
+  })
+
+  it('names the indicator from the count, in the current language', () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(AvatarGroupOverflow, { props: { count: 5 } })
+    expect(wrapper.attributes('aria-label')).toBe('5 more')
+
+    const localized = mount({
+      render: () => h(InternationalizationProvider, { locale: 'zh-CN' }, {
+        default: () => h(AvatarGroupOverflow, { count: 5 }),
+      }),
+    })
+    expect(localized.get('.astryx-avatar-group-overflow').attributes('aria-label')).toBe('还有 5 个')
+  })
+
+  it('clamps a negative count to zero', () => {
+    const wrapper = mount(AvatarGroupOverflow, { props: { count: -3 } })
+
+    expect(wrapper.text()).toBe('+0')
+    expect(wrapper.attributes('aria-label')).toBe('0 more')
+  })
+
+  it('grows from a circle into a pill: width is a minimum, height is fixed', () => {
+    const wrapper = mount(AvatarGroup, {
+      props: { size: 'lg' },
+      slots: { default: '<AvatarGroupOverflow :count="5" />' },
+      global: { components: { AvatarGroupOverflow } },
+    })
+
+    const style = wrapper.get('.astryx-avatar-group-overflow').attributes('style') ?? ''
+    expect(style).toContain('min-width: 52px')
+    expect(style).toContain('height: 52px')
+    expect(style).not.toMatch(/(?:^|;\s)width:/)
+    expect(style).toContain('--astryx-avatar-group-overflow-computed-font-size: max(var(--astryx-text-supporting-size, 0.75rem), 16.8px)')
   })
 
   it('names the group, and accepts a custom label', () => {

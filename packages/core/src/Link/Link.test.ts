@@ -149,4 +149,32 @@ describe('link', () => {
     expect(wrapper.text()).toContain('新标签页')
     expect(wrapper.get('.astryx-link__external').attributes('aria-hidden')).toBe('true')
   })
+
+  it('forwards referrerPolicy as the referrerpolicy attribute', () => {
+    const wrapper = mount(Link, { props: { href: '/docs', referrerPolicy: 'no-referrer' }, slots: { default: 'Docs' } })
+    expect(wrapper.get('a').attributes('referrerpolicy')).toBe('no-referrer')
+
+    const plain = mount(Link, { props: { href: '/docs' }, slots: { default: 'Docs' } })
+    expect(plain.get('a').attributes('referrerpolicy')).toBeUndefined()
+  })
+
+  it('keeps a false download off the DOM and renders a true one as an empty attribute', () => {
+    const off = mount(Link, { props: { href: '/report.pdf', download: false }, slots: { default: 'Report' } })
+    expect(off.get('a').attributes('download')).toBeUndefined()
+
+    const on = mount(Link, { props: { href: '/report.pdf', download: true }, slots: { default: 'Report' } })
+    expect(on.get('a').attributes('download')).toBe('')
+
+    const named = mount(Link, { props: { href: '/report.pdf', download: 'q3.pdf' }, slots: { default: 'Report' } })
+    expect(named.get('a').attributes('download')).toBe('q3.pdf')
+  })
+
+  it('drops download from a disabled link alongside href', () => {
+    const wrapper = mount(Link, {
+      props: { href: '/report.pdf', download: true, isDisabled: true },
+      slots: { default: 'Report' },
+    })
+    expect(wrapper.get('a').attributes('download')).toBeUndefined()
+    expect(wrapper.get('a').attributes('href')).toBeUndefined()
+  })
 })

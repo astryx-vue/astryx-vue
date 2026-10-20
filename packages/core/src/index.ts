@@ -30,10 +30,17 @@ export type {
   AvatarShape,
   AvatarSize,
   AvatarStatusDotProps,
+  AvatarStatusDotSlots,
   AvatarStatusDotVariant,
+  AvatarStatusDotVariantName,
 } from './Avatar/index.js'
 export { AvatarGroup, AvatarGroupOverflow } from './AvatarGroup/index.js'
-export type { AvatarGroupOverflowProps, AvatarGroupProps } from './AvatarGroup/index.js'
+export type {
+  AvatarGroupOverflowEmits,
+  AvatarGroupOverflowProps,
+  AvatarGroupOverflowSlots,
+  AvatarGroupProps,
+} from './AvatarGroup/index.js'
 export { Badge } from './Badge/index.js'
 export type { BadgeProps, BadgeVariant, BadgeVariantMap } from './Badge/index.js'
 export { Banner } from './Banner/index.js'
@@ -161,6 +168,7 @@ export type {
   ChatMessageBubbleProps,
   ChatMessageBubbleSlots,
   ChatMessageBubbleVariant,
+  ChatMessageListAlign,
   ChatMessageListProps,
   ChatMessageListSlots,
   ChatMessageMetadataProps,
@@ -179,6 +187,7 @@ export type {
   ChatSystemMessageSlots,
   ChatSystemMessageVariant,
   ChatTokenizedTextProps,
+  ChatTokenizedTextSlots,
   ChatToolCallItem,
   ChatToolCallsEmits,
   ChatToolCallsProps,
@@ -282,9 +291,10 @@ export type {
   TokenLine,
   UseSyntaxThemeReturn,
 } from './Code/index.js'
-export { Collapsible, CollapsibleGroup } from './Collapsible/index.js'
+export { Collapsible, CollapsibleGroup, useCollapsible } from './Collapsible/index.js'
 export type {
   CollapsibleChevronPosition,
+  CollapsibleConfig,
   CollapsibleEmits,
   CollapsibleGroupDensity,
   CollapsibleGroupEmits,
@@ -294,6 +304,8 @@ export type {
   CollapsibleGroupValue,
   CollapsibleProps,
   CollapsibleSlots,
+  UseCollapsibleOptions,
+  UseCollapsibleReturn,
 } from './Collapsible/index.js'
 export {
   CommandPalette,
@@ -307,7 +319,9 @@ export {
 export type {
   CommandPaletteEmits,
   CommandPaletteGroupProps,
+  CommandPaletteInputEmits,
   CommandPaletteInputProps,
+  CommandPaletteItemEmits,
   CommandPaletteItemProps,
   CommandPaletteItemSlotProps,
   CommandPaletteListProps,
@@ -499,7 +513,7 @@ export type {
   HeadingWordBreak,
   HeadingWrap,
 } from './Heading/index.js'
-export { HoverCard } from './HoverCard/index.js'
+export { HoverCard, useHoverCard } from './HoverCard/index.js'
 export type {
   HoverCardAlignment,
   HoverCardEmits,
@@ -509,6 +523,8 @@ export type {
   HoverCardProps,
   HoverCardSlots,
   HoverCardTouchTrigger,
+  UseHoverCardOptions,
+  UseHoverCardReturn,
 } from './HoverCard/index.js'
 export {
   addCollection,
@@ -565,8 +581,30 @@ export type {
   InputGroupTextProps,
   InputGroupTextSlots,
 } from './InputGroup/index.js'
+export {
+  getLocaleDirection,
+  InternationalizationProvider,
+  resolveProviderMessages,
+  useLocaleDirection,
+} from './InternationalizationProvider/index.js'
+export type {
+  InternationalizationProviderProps,
+  InternationalizationProviderSlots,
+  ProviderMessagesByLocale,
+  ProviderOverrides,
+  TextDirection,
+} from './InternationalizationProvider/index.js'
 export { Kbd } from './Kbd/index.js'
 export type { KbdKeyAlias, KbdKeyName, KbdProps, KbdSpecialKey } from './Kbd/index.js'
+export { LayerProvider, mergeInset, resolveInset, useLayerConfig, useLayerGutter } from './LayerProvider/index.js'
+export type {
+  LayerContextValue,
+  LayerInset,
+  LayerProviderProps,
+  LayerProviderSlots,
+  LayerToastConfig,
+  ResolvedLayerInset,
+} from './LayerProvider/index.js'
 export { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from './Layout/index.js'
 export type {
   LayoutArea,
@@ -593,6 +631,8 @@ export type {
 } from './Lightbox/index.js'
 export { Link } from './Link/index.js'
 export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkWeight } from './Link/index.js'
+export { LinkProvider, useLinkComponent } from './LinkProvider/index.js'
+export type { LinkComponentType, LinkProviderProps, LinkProviderSlots } from './LinkProvider/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
 export type {
   ItemAlign,
@@ -623,6 +663,8 @@ export {
   useAstryxLocale,
   useAstryxMessages,
   useCollator,
+  useLocale,
+  useTranslator,
 } from './locale/index.js'
 export type {
   AstryxLocale,
@@ -630,8 +672,12 @@ export type {
   AstryxUpstreamCatalog,
   AstryxUpstreamMessage,
   LoadedAstryxLocale,
+  Translator,
+  TranslatorValues,
   UnmappedUpstreamEntry,
   UnmappedUpstreamReason,
+  UseLocaleReturn,
+  UseTranslatorReturn,
 } from './locale/index.js'
 export {
   applyInlinePlugins,
@@ -774,8 +820,16 @@ export type {
   PaginationSlots,
   PaginationVariant,
 } from './Pagination/index.js'
-export { Popover } from './Popover/index.js'
-export type { PopoverAlignment, PopoverPadding, PopoverPlacement, PopoverProps, PopoverRole } from './Popover/index.js'
+export { Popover, usePopover } from './Popover/index.js'
+export type {
+  PopoverAlignment,
+  PopoverPadding,
+  PopoverPlacement,
+  PopoverProps,
+  PopoverRole,
+  UsePopoverOptions,
+  UsePopoverReturn,
+} from './Popover/index.js'
 export {
   applyPowerSearchFilters,
   completePowerSearchFilter,
@@ -887,8 +941,11 @@ export {
 } from './SideNav/index.js'
 export type {
   SideNavCollapseButtonProps,
+  SideNavCollapseButtonSize,
+  SideNavCollapseButtonSlots,
   SideNavCollapseContext,
   SideNavCollapsible,
+  SideNavControlledCollapsible,
   SideNavEmits,
   SideNavHandle,
   SideNavHeadingProps,
@@ -961,14 +1018,19 @@ export {
   buildGroupedRows,
   capitalize,
   cellText,
+  columnResizeDirectionSign,
+  columnResizeMinWidth,
+  columnResizeStep,
   flattenTree,
   generateColumns,
   isInteractiveRowClick,
+  isProportionalColumnWidth,
   isTableGroupHeader,
   paginateData,
   paginateTableData,
   pixel,
   proportional,
+  resizeColumnWidths,
   resolveColumnFloorWidths,
   resolveColumnWidths,
   resolveStickySide,
@@ -1001,6 +1063,8 @@ export {
   useTableTreeState,
 } from './Table/index.js'
 export type {
+  ColumnResizePlan,
+  ColumnResizeSnapshot,
   ColumnSettingsOption,
   ColumnWidth,
   PixelWidth,
@@ -1010,14 +1074,20 @@ export type {
   TableCellProps,
   TableColumn,
   TableColumnAlign,
+  TableColumnResizeContribution,
+  TableColumnSettingsState,
   TableCustomRowStatus,
   TableDensity,
   TableDividers,
   TableFilterField,
+  TableFilterFieldType,
   TableFilterState,
+  TableFilterStateHandle,
   TableFilterValue,
+  TableFilterVariant,
   TableGroupPatch,
   TableHeaderPatch,
+  TablePaginationVariant,
   TablePanelPatch,
   TablePlugin,
   TableProps,
@@ -1027,6 +1097,10 @@ export type {
   TableRowStatus,
   TableRowStatusColor,
   TableRowStatusName,
+  TableSelectedKeysSetter,
+  TableSelectionState,
+  TableSelectionToolbarProps,
+  TableSelectionToolbarSlots,
   TableSemanticRowStatus,
   TableSortDirection,
   TableSortEntry,
@@ -1037,6 +1111,7 @@ export type {
   UseTableColumnResizeConfig,
   UseTableColumnSettingsConfig,
   UseTableFilteringConfig,
+  UseTableFilterStateOptions,
   UseTableGroupedRowsConfig,
   UseTablePaginationConfig,
   UseTableRowExpansionConfig,
@@ -1058,6 +1133,7 @@ export type {
   TabMenuOption,
   TabMenuProps,
   TabProps,
+  TabSlots,
 } from './TabList/index.js'
 export { Text } from './Text/index.js'
 export type {
@@ -1151,7 +1227,16 @@ export type {
   TimestampTooltipLine,
 } from './Timestamp/index.js'
 export { Toast, ToastViewport, useToast } from './Toast/index.js'
-export type { ToastCollisionBehavior, ToastItem, ToastOptions, ToastPlacement, ToastType } from './Toast/index.js'
+export type {
+  ToastCollisionBehavior,
+  ToastContentScope,
+  ToastDismissReason,
+  ToastItem,
+  ToastOptions,
+  ToastPlacement,
+  ToastSlots,
+  ToastType,
+} from './Toast/index.js'
 export { ToggleButton, ToggleButtonGroup } from './ToggleButton/index.js'
 export type {
   ToggleButtonChangeAction,
@@ -1185,13 +1270,15 @@ export type {
 } from './Tokenizer/index.js'
 export { Toolbar } from './Toolbar/index.js'
 export type { ToolbarOrientation, ToolbarProps, ToolbarSize } from './Toolbar/index.js'
-export { Tooltip } from './Tooltip/index.js'
+export { Tooltip, useTooltip } from './Tooltip/index.js'
 export type {
   TooltipAlignment,
   TooltipFocusTrigger,
   TooltipPlacement,
   TooltipProps,
   TooltipTouchTrigger,
+  UseTooltipOptions,
+  UseTooltipReturn,
 } from './Tooltip/index.js'
 export {
   TopNav,

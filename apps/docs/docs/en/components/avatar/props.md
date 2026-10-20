@@ -142,8 +142,14 @@ The component does not restrict you to these values. Passing any number will sti
       <tr>
         <td><code>variant</code></td>
         <td><code>AvatarStatusDotVariant</code></td>
-        <td><code>'neutral'</code></td>
-        <td>Status dot color variant: <code>neutral</code>, <code>info</code>, <code>success</code>, <code>warning</code>, or <code>error</code>.</td>
+        <td><code>'success'</code></td>
+        <td>Semantic status: <code>success</code> (filled dot), <code>neutral</code> (hollow ring), or <code>error</code> (dot with a minus bar). <code>info</code> and <code>warning</code> are older names and still draw as <code>success</code> and <code>error</code>.</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>—</td>
+        <td>Accessible name for the status, composed into the avatar's own name (<code>Jane Doe, Online</code>).</td>
       </tr>
     </tbody>
   </table>

@@ -18,6 +18,29 @@
   width: min(100%, 20rem);
 }
 
+.chat-pattern {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 40rem;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--astryx-line);
+  border-radius: var(--astryx-radius-container, 0.75rem);
+  background: var(--astryx-bg);
+}
+
+.chat-pattern > * {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.chat-pattern-landing {
+  width: min(100%, 46rem);
+}
+
 .chat-preview__layout,
 .chat-preview__panel {
   overflow: hidden;

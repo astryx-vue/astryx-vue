@@ -2,6 +2,7 @@
 import type { OverflowListEmits, OverflowListItem, OverflowListProps, OverflowListSlots } from './types.js'
 import { computed } from 'vue'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 import OverflowMore from './OverflowMore.vue'
@@ -20,6 +21,9 @@ const emit = defineEmits<OverflowListEmits>()
 defineSlots<OverflowListSlots>()
 
 const messages = useAstryxMessages()
+const linkComponent = useLinkComponent()
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
 const gapPx: Record<number, number> = {
   0: 0,
   0.5: 2,
@@ -104,10 +108,10 @@ function onSelect(item: OverflowListItem, event: MouseEvent): void {
       <div v-for="(item, index) in visibleItems" :key="itemKey(item, index)" class="astryx-overflow-list__item">
         <slot name="item" :item="item" :index="index">
           <component
-            :is="resolveNavRoot(item.href, Boolean(item.isDisabled), as)"
+            :is="resolveNavRoot(item.href, Boolean(item.isDisabled), customLink)"
             class="astryx-overflow-list__chip"
             :href="item.href && !item.isDisabled ? item.href : undefined"
-            :to="item.href && as != null && !item.isDisabled ? item.href : undefined"
+            :to="item.href && customLink != null && !item.isDisabled ? item.href : undefined"
             :type="item.href && !item.isDisabled ? undefined : 'button'"
             :disabled="item.isDisabled || undefined"
             @click="onSelect(item, $event)"

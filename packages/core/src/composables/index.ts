@@ -64,11 +64,16 @@ export {
 } from './useDateRange.js'
 export type { ISODateRange, RangeClickResult, WeekStartsOn } from './useDateRange.js'
 
+export { devWarn, useDevWarning } from './useDevWarning.js'
+
 export { useDisclosureHandle } from './useDisclosureHandle.js'
 export type { DisclosureHandle, DisclosureHandleRef } from './useDisclosureHandle.js'
 
 export { useDismiss } from './useDismiss.js'
 export type { UseDismissOptions } from './useDismiss.js'
+
+export { useEntryAnimation } from './useEntryAnimation.js'
+export type { EntryAnimationPreset, UseEntryAnimationOptions, UseEntryAnimationReturn } from './useEntryAnimation.js'
 
 export { useFieldControlState } from './useFieldControlState.js'
 export type { FieldControlState, FieldControlStateInput } from './useFieldControlState.js'
@@ -78,6 +83,9 @@ export type { FileRejection, FileSelectionOptions, FileSelectionResult } from '.
 
 export { useFocusTrap } from './useFocusTrap.js'
 export type { FocusTrap, UseFocusTrapOptions } from './useFocusTrap.js'
+
+export { useGridFocus } from './useGridFocus.js'
+export type { UseGridFocusOptions, UseGridFocusReturn } from './useGridFocus.js'
 
 export { useGridRovingFocus } from './useGridRovingFocus.js'
 export type { GridRovingFocus, UseGridRovingFocusOptions } from './useGridRovingFocus.js'
@@ -91,8 +99,27 @@ export type { Hotkey } from './useHotkeys.js'
 export { imageModeFromPixels, perceptualLightness, useImageMode } from './useImageMode.js'
 export type { ImageSampleRegion, UseImageModeOptions } from './useImageMode.js'
 
+export { useIndicatorFocusRing } from './useIndicatorFocusRing.js'
+export type {
+  IndicatorFocusRingHandlers,
+  UseIndicatorFocusRingOptions,
+  UseIndicatorFocusRingReturn,
+} from './useIndicatorFocusRing.js'
+
+export { useInputContainer } from './useInputContainer.js'
+export type { InputContainerHandlers, UseInputContainerOptions } from './useInputContainer.js'
+
+export { useInputStatusIcon } from './useInputStatusIcon.js'
+export type { InputStatusVariant, UseInputStatusIconOptions, UseInputStatusIconReturn } from './useInputStatusIcon.js'
+
+export { useInteractiveRole } from './useInteractiveRole.js'
+export type { InteractiveRole, UseInteractiveRoleOptions, UseInteractiveRoleReturn } from './useInteractiveRole.js'
+
 export { useKeyboardHint } from './useKeyboardHint.js'
 export type { KeyboardHintOrientation, UseKeyboardHint, UseKeyboardHintOptions } from './useKeyboardHint.js'
+
+export { useLayer } from './useLayer.js'
+export type { LayerMode, UseLayerOptions, UseLayerReturn } from './useLayer.js'
 
 export { useListFocus } from './useListFocus.js'
 export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './useListFocus.js'
@@ -105,10 +132,13 @@ export { useMediaQuery } from './useMediaQuery.js'
 export { resetMenuPress, useMenuPress } from './useMenuPress.js'
 export type { MenuPress, MenuPressOptions } from './useMenuPress.js'
 
+export { useMergedRefs } from './useMergedRefs.js'
+export type { MergedRef, MergedRefHandle } from './useMergedRefs.js'
+
 export { addMonths, buildMonthGrid, parseISODate, todayISODate, toISODate } from './useMonthGrid.js'
 
 export { useNumberField } from './useNumberField.js'
-export type { NumberField, UseNumberFieldOptions } from './useNumberField.js'
+export type { NumberField, NumberStepDirection, UseNumberFieldOptions } from './useNumberField.js'
 
 export { computeOverflow, useOverflow } from './useOverflow.js'
 export type {
@@ -120,6 +150,9 @@ export type {
 
 export { usePendingChange } from './usePendingChange.js'
 export type { PendingChange } from './usePendingChange.js'
+
+export { usePressFeedback } from './usePressFeedback.js'
+export type { UsePressFeedbackReturn } from './usePressFeedback.js'
 
 export { percent, useResizable } from './useResizable.js'
 export type {

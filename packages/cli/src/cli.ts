@@ -124,6 +124,7 @@ function componentCommand(parsed: ParsedArgs, json: boolean, dense: boolean, loc
       slots: component.slots[locale],
       events: component.events[locale],
       notes: component.notes[locale],
+      examples: component.examples[locale],
       anatomy: component.anatomy[locale],
       accessibility: component.accessibility[locale],
       docsUrl: text(component.docsUrl, locale),

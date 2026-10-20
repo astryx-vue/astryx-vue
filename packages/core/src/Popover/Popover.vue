@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import type { PopoverProps } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useId, watch } from 'vue'
+import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import { Button } from '../Button/index.js'
-import { useDismiss } from '../composables/useDismiss.js'
-import { useFocusTrap } from '../composables/useFocusTrap.js'
-import { useRestoreFocus } from '../composables/useRestoreFocus.js'
-import { focusElement, getFocusables } from '../layer/focus.js'
-import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useMergedRefs } from '../composables/useMergedRefs.js'
+import { usePopover } from './usePopover.js'
 import '../../styles/popover.css'
 
 defineOptions({ name: 'AstryxPopover' })
@@ -25,55 +22,48 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   hasAutoFocus: true,
   hasLightDismiss: true,
   hasEscapeDismiss: true,
+  anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 
-const GAP = 4
 const DEFAULT_MAX_WIDTH = 320
-const popoverId = `astryx-popover-${useId()}`
-const anchorRef = ref<HTMLElement | null>(null)
-const surfaceRef = ref<HTMLElement | null>(null)
-const isOpenState = ref(false)
-const anchorWidth = ref(0)
+const popover = usePopover({
+  placement: () => props.placement,
+  alignment: () => props.alignment,
+  isOpen: () => props.isOpen,
+  isEnabled: () => props.isEnabled,
+  hasLightDismiss: () => props.hasLightDismiss,
+  hasEscapeDismiss: () => props.hasEscapeDismiss,
+  hasAutoFocus: () => props.hasAutoFocus,
+  closeButtonSelector: '.astryx-popover__close',
+  dialogLabel: () => props.label,
+  role: () => props.role,
+  isModal: () => props.isModal,
+  onShow: () => emit('openChange', true),
+  onHide: () => emit('openChange', false),
+})
 
-const { position, detach: detachPosition } = usePositionedLayer({
-  anchor: anchorRef,
-  layer: surfaceRef,
+const {
+  triggerRef,
+  anchorRef,
+  contentRef,
   isOpen: isOpenState,
-  placement: computed(() => props.placement),
-  alignment: computed(() => props.alignment),
-  gap: GAP,
-})
+  contentStyle: layerStyle,
+  resolvedPlacement,
+  surfaceProps,
+} = popover
 
-const isModalDialog = computed(() => props.role === 'dialog' && props.isModal)
+// 浮层元素挂进 hook 的内容 ref，定位和关闭逻辑都靠它。
+const setContentRef = useMergedRefs<HTMLElement>([contentRef])
 
-useFocusTrap({
-  container: surfaceRef,
-  isEnabled: computed(() => isOpenState.value && isModalDialog.value),
-})
-
-useRestoreFocus({
-  isEnabled: computed(() => props.role === 'dialog'),
-  shouldRestore: isOpenState,
-})
-
-useDismiss({
-  container: surfaceRef,
-  trigger: anchorRef,
-  isEnabled: computed(() => isOpenState.value && props.hasLightDismiss),
-  enableEscape: computed(() => props.hasEscapeDismiss),
-  onDismiss: () => setOpen(false),
-})
-
-const surfaceRole = computed(() => (props.role === 'dialog' ? 'dialog' : undefined))
-const surfaceAriaModal = computed(() => (props.role === 'dialog' && props.isModal ? 'true' : undefined))
-const surfaceAriaLabel = computed(() => (props.role === 'dialog' ? props.label : undefined))
-const surfaceTabIndex = computed(() => (props.role === 'dialog' ? -1 : undefined))
+const wrapperRef = ref<HTMLElement | null>(null)
+const anchorWidth = ref(0)
+// 组件自己再算一层位置样式：宽高和 padding 是 Popover 自己的外观，不属于浮层内核。
 const surfaceStyle = computed(() => {
   const style: Record<string, string> = {
     '--_popover-padding': `var(--astryx-spacing-${String(props.padding).replace('.', '-')})`,
-    'top': `${position.value.top}px`,
-    'left': `${position.value.left}px`,
+    'top': layerStyle.value.top as string,
+    'left': layerStyle.value.left as string,
   }
   if (props.width != null) {
     style.width = typeof props.width === 'number' ? `${props.width}px` : props.width
@@ -85,13 +75,9 @@ const surfaceStyle = computed(() => {
   return style
 })
 
-let boundButton: HTMLElement | null = null
-
-function setOpen(next: boolean): void {
-  if (isOpenState.value === next)
-    return
-  isOpenState.value = next
-  emit('openChange', next)
+// 浮层跟着外部锚点走，没有外部锚点就跟着包住触发器内容的这层 span。
+function triggerHost(): HTMLElement | null {
+  return props.anchor ?? wrapperRef.value
 }
 
 function findTriggerButton(element: HTMLElement | null): HTMLElement | null {
@@ -102,123 +88,46 @@ function findTriggerButton(element: HTMLElement | null): HTMLElement | null {
   return element.querySelector<HTMLElement>('button, [role="button"]')
 }
 
-function syncTriggerAttributes(): void {
-  if (!boundButton)
-    return
-  boundButton.setAttribute('aria-haspopup', props.role === 'dialog' ? 'dialog' : 'true')
-  boundButton.setAttribute('aria-expanded', String(isOpenState.value))
-  boundButton.setAttribute('aria-controls', popoverId)
+function syncTrigger(): void {
+  anchorRef.value = triggerHost()
+  triggerRef.value = findTriggerButton(triggerHost())
 }
 
-function onTriggerClick(): void {
-  if (!props.isEnabled)
-    return
-  setOpen(!isOpenState.value)
-}
-
-function onTriggerKeydown(event: KeyboardEvent): void {
-  if (event.key !== 'Enter' && event.key !== ' ')
-    return
-  event.preventDefault()
-  onTriggerClick()
-}
-
-function bindButton(): void {
-  const next = findTriggerButton(anchorRef.value)
-  if (next === boundButton)
-    return
-  unbindButton()
-  boundButton = next
-  if (!next)
-    return
-  next.addEventListener('click', onTriggerClick)
-  if (next.tagName !== 'BUTTON' && next.getAttribute('role') === 'button')
-    next.addEventListener('keydown', onTriggerKeydown)
-  syncTriggerAttributes()
-}
-
-function unbindButton(): void {
-  if (!boundButton)
-    return
-  boundButton.removeEventListener('click', onTriggerClick)
-  boundButton.removeEventListener('keydown', onTriggerKeydown)
-  boundButton.removeAttribute('aria-haspopup')
-  boundButton.removeAttribute('aria-expanded')
-  boundButton.removeAttribute('aria-controls')
-  boundButton = null
-}
-
-function focusInitialTarget(): void {
-  const surface = surfaceRef.value
-  if (!surface)
-    return
-  const first = getFocusables(surface).find(element => !element.closest('.astryx-popover__close'))
-  if (first && focusElement(first))
-    return
-  if (props.role === 'dialog')
-    focusElement(surface)
-}
-
+// 打开时按触发器宽度算最小宽度，浮层不会比触发器还窄。
 watch(isOpenState, (open) => {
-  syncTriggerAttributes()
-  if (open) {
-    anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
-    if (props.hasAutoFocus && props.role === 'dialog')
-      nextTick(focusInitialTarget)
+  if (!open)
     return
-  }
-  const hadFocus = surfaceRef.value?.contains(typeof document !== 'undefined' ? document.activeElement : null) ?? false
-  if (hadFocus && boundButton)
-    nextTick(() => focusElement(boundButton as HTMLElement))
+  anchorWidth.value = triggerHost()?.getBoundingClientRect().width ?? 0
 })
 
-watch(() => props.isOpen, (open) => {
-  if (open === undefined || open === isOpenState.value)
-    return
-  isOpenState.value = open
+// 挂载后才拿到的模板 ref 是以 prop 变更的形式到达的，所以要在它变化时重新绑定。
+watch(() => props.anchor, () => {
+  void nextTick(syncTrigger)
 })
 
-watch(() => props.isEnabled, (enabled) => {
-  if (!enabled && isOpenState.value)
-    setOpen(false)
-})
-
-onMounted(() => {
-  bindButton()
-  if (props.isOpen !== undefined)
-    isOpenState.value = props.isOpen
-})
-
-onUpdated(bindButton)
-
-onBeforeUnmount(() => {
-  unbindButton()
-  detachPosition()
-})
+onMounted(syncTrigger)
+onUpdated(syncTrigger)
 </script>
 
 <template>
-  <span ref="anchorRef" class="astryx-popover-trigger">
+  <span v-if="!anchor" ref="wrapperRef" class="astryx-popover-trigger">
     <slot />
   </span>
+  <slot v-else />
   <Teleport to="body">
     <div
       v-show="isOpenState"
-      :id="popoverId"
-      ref="surfaceRef"
+      :ref="setContentRef"
       class="astryx-popover"
-      :role="surfaceRole"
-      :aria-modal="surfaceAriaModal"
-      :aria-label="surfaceAriaLabel"
-      :tabindex="surfaceTabIndex"
-      :data-placement="position.placement"
+      :data-placement="resolvedPlacement"
       :style="surfaceStyle"
+      v-bind="surfaceProps"
     >
       <div class="astryx-popover__body">
         <slot name="content" />
       </div>
       <div v-if="hasCloseButton" class="astryx-popover__close">
-        <Button variant="secondary" :label="closeButtonLabel" @click="setOpen(false)" />
+        <Button variant="secondary" :label="closeButtonLabel" @click="popover.hide()" />
       </div>
     </div>
   </Teleport>

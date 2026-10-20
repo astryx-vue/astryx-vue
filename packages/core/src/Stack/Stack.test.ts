@@ -19,6 +19,24 @@ describe('stack', () => {
     expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-inline')).toBe('var(--astryx-spacing-2, 8px)')
   })
 
+  it('passes each single-edge padding as its own variable, including with zero', () => {
+    const wrapper = mount(Stack, {
+      props: {
+        padding: 4,
+        paddingBlockEnd: 0,
+        paddingBlockStart: 6,
+        paddingInlineEnd: 1.5,
+        paddingInlineStart: 3,
+      },
+    })
+
+    expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-block')).toBe('var(--astryx-spacing-4, 16px)')
+    expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-block-start')).toBe('var(--astryx-spacing-6, 24px)')
+    expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-block-end')).toBe('var(--astryx-spacing-0, 0px)')
+    expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-inline-start')).toBe('var(--astryx-spacing-3, 12px)')
+    expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-inline-end')).toBe('var(--astryx-spacing-1-5, 6px)')
+  })
+
   it('formats numeric sizes as pixels and preserves string sizes', () => {
     const wrapper = mount(Stack, {
       props: {

@@ -49,3 +49,44 @@
 .astryx-time-input-control:focus-visible {
   outline: none;
 }
+
+@layer astryx.components {
+  /* 预设时间列表：贴着时间字段下方弹出，宽度随内容，最高 300px 滚动。 */
+  .astryx-time-input-options {
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--astryx-popover-z-index, 1000);
+    width: max-content;
+    max-width: calc(100vw - 16px);
+    max-block-size: min(300px, calc(100dvh - 16px));
+    padding: var(--astryx-spacing-1, 4px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    border-radius: var(--astryx-popover-radius, var(--astryx-radius-container, 0.75rem));
+    background: var(--astryx-popover-background, light-dark(#ffffff, #1b1b1b));
+    color: var(--astryx-popover-foreground, light-dark(#171717, #fafafa));
+    box-shadow: var(
+      --astryx-popover-shadow,
+      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
+      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
+      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%))
+    );
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    outline: none;
+  }
+
+  .astryx-time-input-option {
+    box-sizing: border-box;
+    padding: var(--astryx-spacing-1-5, 6px) var(--astryx-spacing-2, 8px);
+    border-radius: max(0px, calc(var(--astryx-radius-container, 0.75rem) - var(--astryx-spacing-1, 4px)));
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .astryx-time-input-option.is-active,
+  .astryx-time-input-option:hover {
+    background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+  }
+}

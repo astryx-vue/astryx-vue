@@ -17,7 +17,7 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>Where the status message sits.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables every row.</td></tr>
-<tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Why the whole group is disabled. With disabled, every row stays focusable.</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Why the whole group is disabled. With <code>isDisabled</code>, the message shows in a tooltip on hover or keyboard focus and every row stays focusable with <code>aria-disabled</code>. The older <code>disabledReason</code> name works too.</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Read-only group. Checks stay and do not dim, but cannot change. Disabled wins when both are set.</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(values) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs after a check changes. The row shows a spinner and cannot be toggled until it finishes.</td></tr>
 </tbody></table>

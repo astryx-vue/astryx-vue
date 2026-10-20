@@ -102,13 +102,23 @@ export interface TopNavMenuEmits {
 }
 
 export interface TopNavMegaMenuProps {
+  /** 触发按钮上的文字。 */
   label: string
+  /** 悬停打开前的等待。 @default 150 */
   showDelay?: number
+  /** 指针离开后的关闭等待。 @default 250 */
   hideDelay?: number
 }
 
 export interface TopNavMegaMenuEmits {
   openChange: [isOpen: boolean]
+}
+
+export interface TopNavMegaMenuSlots {
+  /** 菜单项。通常写 `TopNavMegaMenuItem`。 */
+  default?: () => unknown
+  /** 特色内容。桌面端在右侧栏，抽屉里排在本项下面。 */
+  featured?: () => unknown
 }
 
 export interface TopNavMegaMenuItemProps {

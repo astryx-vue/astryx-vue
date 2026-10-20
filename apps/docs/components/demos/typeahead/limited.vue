@@ -25,7 +25,7 @@ const source = computed(() => createStaticSource([
       placeholder="Search countries..."
       :debounce-ms="0"
       :max-menu-items="3"
-      show-on-focus
+      has-entries-on-focus
     />
   </div>
 </template>

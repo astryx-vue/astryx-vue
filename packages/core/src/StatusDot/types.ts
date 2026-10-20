@@ -15,4 +15,8 @@ export interface StatusDotProps {
    * @default false
    */
   isPulsing?: boolean
+  /**
+   * Tooltip text shown on hover and on keyboard focus to explain the status.
+   */
+  tooltip?: string
 }

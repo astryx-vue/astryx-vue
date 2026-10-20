@@ -2,7 +2,7 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { SectionProps, SectionSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
-import { formatSize, spacingEdgeVars } from '../layout/size.js'
+import { formatSize, spacingEdgeVars } from '../Layout/size.js'
 import '../../styles/section.css'
 
 defineOptions({

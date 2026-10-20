@@ -36,7 +36,7 @@ npm run astryx-vue -- component Button
 
 ## Commands
 
-`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, and events. `astryx-vue search dialog` ranks components and guide topics. `astryx-vue manifest --json` describes the commands, options, response types, and exit codes. `astryx-vue init --features agents` writes the agent context file.
+`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, events, and examples. `astryx-vue search dialog` ranks components and guide topics. `astryx-vue manifest --json` describes the commands, options, response types, and exit codes. `astryx-vue init --features agents` writes the agent context file.
 
 ## Flags
 

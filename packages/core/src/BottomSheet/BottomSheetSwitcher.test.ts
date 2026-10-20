@@ -1,6 +1,6 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
-import { defineComponent, ref } from 'vue'
+import { defineComponent, nextTick, ref } from 'vue'
 import BottomSheet from './BottomSheet.vue'
 import BottomSheetSwitcher from './BottomSheetSwitcher.vue'
 
@@ -70,5 +70,46 @@ describe('bottomSheetSwitcher', () => {
     expect(document.body.textContent).toContain('Payment')
     expect(wrapper.vm.activeSheet).toBe('pay')
     wrapper.unmount()
+  })
+
+  it('reports a cancel request and lets the consumer keep the flow open', async () => {
+    const host = (onCancel?: (event: Event) => void) => defineComponent({
+      components: { BottomSheet, BottomSheetSwitcher },
+      setup() {
+        const activeSheet = ref<string | null>('details')
+        return { activeSheet, onCancel }
+      },
+      template: `
+        <BottomSheetSwitcher v-model:active-sheet="activeSheet" label="Checkout" @cancel="onCancel">
+          <BottomSheet sheet-id="details" label="Details"><p>Details</p></BottomSheet>
+        </BottomSheetSwitcher>
+      `,
+    })
+
+    const canceled: Event[] = []
+    const blocking = mount(host((event) => {
+      canceled.push(event)
+      event.preventDefault()
+    }), { attachTo: document.body })
+    const dialog = document.querySelector('dialog') as HTMLDialogElement
+    dialog.dispatchEvent(new Event('cancel', { cancelable: true }))
+    await nextTick()
+    expect(canceled).toHaveLength(1)
+    expect(blocking.vm.activeSheet).toBe('details')
+    blocking.unmount()
+
+    const closing = mount(host(), { attachTo: document.body })
+    const closingDialog = document.querySelector('dialog') as HTMLDialogElement
+    closingDialog.dispatchEvent(new Event('cancel', { cancelable: true }))
+    await nextTick()
+    expect(closing.vm.activeSheet).toBeNull()
+    closing.unmount()
+  })
+
+  it('passes extra attributes through to the dialog', () => {
+    const wrapper = mount(BottomSheetSwitcher, { attrs: { 'data-testid': 'switcher', 'id': 'my-switcher' } })
+    const dialog = wrapper.get('dialog')
+    expect(dialog.attributes('data-testid')).toBe('switcher')
+    expect(dialog.attributes('id')).toBe('my-switcher')
   })
 })

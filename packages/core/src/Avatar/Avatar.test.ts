@@ -1,8 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import Avatar from './Avatar.vue'
 import AvatarStatusDot from './AvatarStatusDot.vue'
+import { resolveStatusDotMetrics } from './utils.js'
 
 describe('avatar', () => {
   it('renders a span with role img and aria-label from name', () => {
@@ -180,6 +181,89 @@ describe('avatarStatusDot', () => {
     expect(dot.attributes('data-variant')).toBe('success')
   })
 
+  it('defaults to the success variant', () => {
+    const wrapper = mount(AvatarStatusDot)
+
+    expect(wrapper.find('.astryx-avatar-status-dot').attributes('data-variant')).toBe('success')
+  })
+
+  it('maps the legacy info and warning names onto the current variants', () => {
+    const info = mount(AvatarStatusDot, { props: { variant: 'info' } })
+    const warning = mount(AvatarStatusDot, { props: { variant: 'warning' } })
+
+    expect(info.find('.astryx-avatar-status-dot').attributes('data-variant')).toBe('success')
+    expect(warning.find('.astryx-avatar-status-dot').attributes('data-variant')).toBe('error')
+  })
+
+  it('draws no glyph for success and a shape per variant otherwise', () => {
+    const success = mount(AvatarStatusDot, { props: { variant: 'success' } })
+    const neutral = mount(AvatarStatusDot, { props: { variant: 'neutral' } })
+    const error = mount(AvatarStatusDot, { props: { variant: 'error' } })
+
+    expect(success.find('.astryx-avatar-status-dot__glyph').exists()).toBe(false)
+    expect(neutral.find('.astryx-avatar-status-dot__glyph').attributes('data-shape')).toBe('ring')
+    expect(neutral.find('circle').exists()).toBe(true)
+    expect(error.find('.astryx-avatar-status-dot__glyph').attributes('data-shape')).toBe('minus')
+    expect(error.find('line').exists()).toBe(true)
+  })
+
+  it('sizes itself from the enclosing avatar', async () => {
+    const wrapper = mount({
+      components: { Avatar, AvatarStatusDot },
+      data: () => ({ size: 'lg' }),
+      template: `
+        <Avatar name="Ana Thomas" :size="size">
+          <template #status><AvatarStatusDot variant="success" label="Online" /></template>
+        </Avatar>`,
+    })
+
+    const dot = wrapper.get('.astryx-avatar-status-dot')
+    expect(dot.attributes('style')).toContain('--astryx-avatar-status-dot-computed-size: 20px')
+    expect(dot.attributes('style')).toContain('--astryx-avatar-status-dot-computed-border-width: 2px')
+
+    wrapper.setData({ size: 'xl' })
+    await nextTick()
+
+    expect(dot.attributes('style')).toContain('--astryx-avatar-status-dot-computed-size: 32px')
+    expect(dot.attributes('style')).toContain('--astryx-avatar-status-dot-computed-border-width: 4px')
+  })
+
+  it('uses the small tier and hides the icon on tiny avatars', () => {
+    const wrapper = mount({
+      components: { Avatar, AvatarStatusDot },
+      template: `
+        <Avatar name="Ana Thomas" size="sm">
+          <template #status>
+            <AvatarStatusDot label="Online"><template #icon><svg data-testid="glyph" /></template></AvatarStatusDot>
+          </template>
+        </Avatar>`,
+    })
+
+    const dot = wrapper.get('.astryx-avatar-status-dot')
+    expect(dot.attributes('style')).toContain('--astryx-avatar-status-dot-computed-size: 10px')
+    expect(dot.find('[data-testid="glyph"]').exists()).toBe(false)
+    expect(dot.find('circle').exists()).toBe(false)
+  })
+
+  it('renders the icon slot and drops the built-in glyph', () => {
+    const wrapper = mount({
+      components: { Avatar, AvatarStatusDot },
+      template: `
+        <Avatar name="Ana Thomas" size="lg">
+          <template #status>
+            <AvatarStatusDot variant="neutral" label="Verified">
+              <template #icon><svg data-testid="glyph" /></template>
+            </AvatarStatusDot>
+          </template>
+        </Avatar>`,
+    })
+
+    const dot = wrapper.get('.astryx-avatar-status-dot')
+    expect(dot.find('[data-testid="glyph"]').exists()).toBe(true)
+    expect(dot.find('.astryx-avatar-status-dot__glyph').exists()).toBe(false)
+    expect(dot.find('.astryx-avatar-status-dot__icon').attributes('style')).toContain('width: 12px')
+  })
+
   it('exposes a label when one is provided', () => {
     const wrapper = mount(AvatarStatusDot, {
       props: { label: 'Online', variant: 'success' },
@@ -189,6 +273,67 @@ describe('avatarStatusDot', () => {
     expect(dot.attributes('role')).toBe('img')
     expect(dot.attributes('aria-label')).toBe('Online')
     expect(dot.attributes('aria-hidden')).toBeUndefined()
+  })
+
+  it('composes the status label into the avatar accessible name', async () => {
+    const wrapper = mount({
+      components: { Avatar, AvatarStatusDot },
+      template: `
+        <Avatar name="Jane Doe">
+          <template #status><AvatarStatusDot variant="success" label="Online" /></template>
+        </Avatar>`,
+    })
+
+    await nextTick()
+
+    const root = wrapper.get('.astryx-avatar')
+    expect(root.attributes('role')).toBe('img')
+    expect(root.attributes('aria-label')).toBe('Jane Doe, Online')
+  })
+
+  it('names the avatar from the status label alone', async () => {
+    const wrapper = mount({
+      components: { Avatar, AvatarStatusDot },
+      template: `
+        <Avatar>
+          <template #status><AvatarStatusDot variant="neutral" label="Offline" /></template>
+        </Avatar>`,
+    })
+
+    await nextTick()
+
+    const root = wrapper.get('.astryx-avatar')
+    expect(root.attributes('aria-label')).toBe('Offline')
+    expect(root.attributes('aria-hidden')).toBeUndefined()
+  })
+
+  it('follows a status label that changes later', async () => {
+    const wrapper = mount({
+      components: { Avatar, AvatarStatusDot },
+      data: () => ({ label: 'Online' }),
+      template: `
+        <Avatar name="Jane Doe">
+          <template #status><AvatarStatusDot :label="label" /></template>
+        </Avatar>`,
+    })
+
+    await nextTick()
+    expect(wrapper.get('.astryx-avatar').attributes('aria-label')).toBe('Jane Doe, Online')
+
+    wrapper.setData({ label: 'Busy' })
+    await nextTick()
+    expect(wrapper.get('.astryx-avatar').attributes('aria-label')).toBe('Jane Doe, Busy')
+  })
+})
+
+describe('resolveStatusDotMetrics', () => {
+  it('picks a discrete tier per avatar size', () => {
+    expect(resolveStatusDotMetrics(20)).toEqual({ size: 10, borderWidth: 1, iconSize: 0, field: 8, stroke: 1 })
+    expect(resolveStatusDotMetrics(36)).toEqual({ size: 10, borderWidth: 1, iconSize: 0, field: 8, stroke: 1 })
+    expect(resolveStatusDotMetrics(40)).toEqual({ size: 20, borderWidth: 2, iconSize: 12, field: 16, stroke: 1.5 })
+    expect(resolveStatusDotMetrics(72)).toEqual({ size: 20, borderWidth: 2, iconSize: 12, field: 16, stroke: 1.5 })
+    expect(resolveStatusDotMetrics(96)).toEqual({ size: 32, borderWidth: 4, iconSize: 18, field: 24, stroke: 2 })
+    expect(resolveStatusDotMetrics(128)).toEqual({ size: 32, borderWidth: 4, iconSize: 18, field: 24, stroke: 2 })
   })
 })
 

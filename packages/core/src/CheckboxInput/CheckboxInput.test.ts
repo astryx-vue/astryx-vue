@@ -138,7 +138,7 @@ describe('checkboxInput', () => {
     await wrapper.setProps({ isOptional: true })
     expect(wrapper.get('input').element.required).toBe(false)
     expect(wrapper.get('input').attributes('aria-required')).toBeUndefined()
-    expect(wrapper.get('.astryx-field-optionality').text()).toBe('Optional')
+    expect(wrapper.get('.astryx-field-optionality').text()).toBe('∙ Optional')
   })
 
   it('blocks repeat activation while saving and accepts explicit parent updates', async () => {

@@ -196,4 +196,35 @@ describe('popover', () => {
 
     expect(surface.style.getPropertyValue('--_popover-padding')).toBe('var(--astryx-spacing-1-5)')
   })
+
+  it('opens from an external anchor element without a trigger wrapper', async () => {
+    const anchor = document.createElement('button')
+    anchor.type = 'button'
+    anchor.textContent = 'External'
+    document.body.append(anchor)
+
+    const wrapper = mount(Popover, {
+      attachTo: document.body,
+      props: { label: 'Options', anchor },
+      slots: { content: CONTENT },
+    })
+    await flushPromises()
+
+    expect(wrapper.find('.astryx-popover-trigger').exists()).toBe(false)
+    expect(anchor.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(anchor.getAttribute('aria-expanded')).toBe('false')
+
+    anchor.click()
+    await flushPromises()
+    expect(anchor.getAttribute('aria-expanded')).toBe('true')
+    expect(wrapper.emitted('openChange')?.[0]).toEqual([true])
+
+    anchor.click()
+    await flushPromises()
+    expect(anchor.getAttribute('aria-expanded')).toBe('false')
+
+    wrapper.unmount()
+    expect(anchor.hasAttribute('aria-haspopup')).toBe(false)
+    anchor.remove()
+  })
 })

@@ -50,6 +50,12 @@ footer: false
         <td>How a long unbroken string breaks: normal, break-word, or break-all.</td>
       </tr>
       <tr>
+        <td><code>hasCapsize</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>Trims the leading above the cap height and below the baseline with <code>text-box-trim</code>, so glyphs sit flush with the box edges. Forces block layout.</td>
+      </tr>
+      <tr>
         <td><code>hasStrikethrough</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>

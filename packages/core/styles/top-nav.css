@@ -232,24 +232,37 @@
 
   .astryx-top-nav-menu__drawer-items { padding-inline-start: var(--astryx-spacing-4, 16px); }
 
-  .astryx-top-nav-mega__panel { min-width: min(640px, calc(100vw - 32px)); padding: var(--astryx-spacing-3, 12px); }
+  .astryx-top-nav-mega__panel {
+    min-width: min(640px, calc(100vw - 32px));
+    max-width: min(1248px, calc(100vw - 32px));
+    padding: var(--astryx-spacing-3, 12px);
+  }
 
   .astryx-top-nav-mega__layout {
     display: flex;
     align-items: stretch;
-    gap: var(--astryx-spacing-4, 16px);
+    gap: var(--astryx-spacing-6, 24px);
   }
 
   .astryx-top-nav-mega__items {
     display: grid;
-    flex: 1 1 auto;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: var(--astryx-spacing-1, 4px);
+    flex: 2 1 300px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--astryx-spacing-2, 8px);
     min-width: 0;
   }
 
+  .astryx-top-nav-mega__drawer-items {
+    padding-inline-start: var(--astryx-spacing-4, 16px);
+  }
+
   .astryx-top-nav-mega__featured {
-    flex: 0 0 200px;
+    overflow: hidden;
+    border-radius: var(--astryx-radius-container, 0.75rem);
+  }
+
+  .astryx-top-nav-mega__layout > .astryx-top-nav-mega__featured {
+    flex: 1 1 200px;
   }
 
   .astryx-top-nav-mega-item,
@@ -264,6 +277,8 @@
     background: transparent;
     color: inherit;
     font: inherit;
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
     text-align: start;
     text-decoration: none;
     cursor: pointer;
@@ -275,7 +290,6 @@
     height: 100%;
     padding: 0;
     overflow: hidden;
-    background: var(--astryx-color-neutral);
     cursor: pointer;
   }
 
@@ -293,31 +307,32 @@
   .astryx-top-nav-mega-card__body {
     display: flex;
     flex-direction: column;
-    gap: var(--astryx-spacing-1, 4px);
-    padding: var(--astryx-spacing-3, 12px);
+    gap: var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-spacing-4, 16px);
   }
 
   .astryx-top-nav-mega-card__link {
-    color: var(--astryx-color-text-accent, #0074e2);
+    color: var(--astryx-color-text-primary, #171717);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: var(--astryx-font-weight-semibold, 600);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     text-decoration: none;
   }
 
-  .astryx-top-nav-mega-card__link:hover {
-    text-decoration: underline;
-  }
-
   .astryx-top-nav-mega-item:hover,
-  .astryx-top-nav-mega-item:focus-visible,
   .astryx-top-nav-mega-card:hover {
     background: var(--astryx-color-overlay-hover);
-    outline: none;
+  }
+
+  .astryx-top-nav-mega-item:focus-visible,
+  .astryx-top-nav-mega-card:focus-visible {
+    background: var(--astryx-color-overlay-hover);
+    outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
   }
 
   .astryx-top-nav-mega-card--static:hover {
-    background: var(--astryx-color-neutral);
+    background: transparent;
   }
 
   .astryx-top-nav-mega-item__icon {
@@ -331,7 +346,19 @@
     background: var(--astryx-color-neutral);
   }
 
-  .astryx-top-nav-mega-item__glyph { display: block; width: 1.25rem; height: 1.25rem; }
+  /* 图标类（如 i-carbon-*）按父盒子的 100% 铺满，所以由这层固定为 20px。 */
+  .astryx-top-nav-mega-item__glyph-box {
+    display: block;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .astryx-top-nav-mega-item__glyph-box > .astryx-top-nav-mega-item__glyph {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
   .astryx-top-nav-mega-item__text,
   .astryx-top-nav-mega-card {
@@ -343,7 +370,7 @@
 
   .astryx-top-nav-mega-item__title,
   .astryx-top-nav-mega-card__title {
-    font-weight: var(--astryx-font-weight-bold, 700);
+    font-weight: var(--astryx-font-weight-semibold, 600);
   }
 
   .astryx-top-nav-mega-item__description,
@@ -356,6 +383,6 @@
 
   @media (max-width: 720px) {
     .astryx-top-nav-mega__layout { flex-direction: column; }
-    .astryx-top-nav-mega__featured { flex-basis: auto; }
+    .astryx-top-nav-mega__layout > .astryx-top-nav-mega__featured { flex-basis: auto; }
   }
 }

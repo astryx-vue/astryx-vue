@@ -8,11 +8,15 @@ const value = ref('home')
 <template>
   <TabList v-model:value="value">
     <Tab value="home">
-      <span class="css-icon css-icon--sm i-carbon-home" />
+      <template #icon>
+        <span class="css-icon css-icon--sm i-carbon-home" />
+      </template>
       Home
     </Tab>
     <Tab value="settings">
-      <span class="css-icon css-icon--sm i-carbon-settings" />
+      <template #icon>
+        <span class="css-icon css-icon--sm i-carbon-settings" />
+      </template>
       Settings
     </Tab>
   </TabList>

@@ -280,7 +280,7 @@ describe('textInput', () => {
     const wrapper = renderInput({ isRequired: true, isOptional: true, optionalLabel: '可选', status: { type: 'success' } })
     expect(wrapper.get('input').attributes('aria-required')).toBeUndefined()
     expect(wrapper.get('input').attributes('aria-describedby')).toBeUndefined()
-    expect(wrapper.get('.astryx-field-optionality').text()).toBe('可选')
+    expect(wrapper.get('.astryx-field-optionality').text()).toBe('∙ 可选')
     expect(wrapper.get('.astryx-text-input').attributes('data-status')).toBe('success')
   })
 

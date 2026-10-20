@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
-import type { MultiSelectorCreateChange, MultiSelectorEmits, MultiSelectorHandle, MultiSelectorOptionData, MultiSelectorProps, MultiSelectorSlots } from './types.js'
-import { computed, inject, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
+import type { MultiSelectorCreateChange, MultiSelectorEmits, MultiSelectorHandle, MultiSelectorOptionData, MultiSelectorProps, MultiSelectorSlots, MultiSelectorTriggerProps } from './types.js'
+import { computed, inject, nextTick, onMounted, ref, shallowRef, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
+import ButtonTooltip from '../Button/ButtonTooltip.vue'
+import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDisclosureHandle } from '../composables/useDisclosureHandle.js'
@@ -22,6 +24,7 @@ import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchor
 import { createOptionValue, readCreateQuery, resolveCreateQuery } from './createOption.js'
 import { isKeyboardModality, trackInteractionModality } from './interactionModality.js'
 import { flattenOptions, SELECT_ALL_VALUE } from './options.js'
+import '../../styles/button.css'
 import '../../styles/multi-selector.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -51,7 +54,7 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
 
 const emit = defineEmits<MultiSelectorEmits>()
 
-defineSlots<MultiSelectorSlots>()
+const slots = defineSlots<MultiSelectorSlots>()
 
 const CheckboxMark = useIndicator('checkbox')
 
@@ -74,7 +77,19 @@ const triggerRef = useTemplateRef<HTMLElement>('triggerRef')
 const searchRef = useTemplateRef<HTMLInputElement>('searchRef')
 const query = ref('')
 const readOnlyId = `${triggerId}-readonly`
-const focusableDisabled = computed(() => control.isDisabled.value && Boolean(props.disabledReason?.trim()))
+const disabledTooltipId = `${triggerId}-disabled-tooltip`
+/** 旧名 disabledReason 和新名 disabledMessage 等价。 */
+const resolvedDisabledMessage = computed(() => props.disabledMessage?.trim() || props.disabledReason?.trim())
+const showsDisabledMessage = computed(() => control.isDisabled.value && !!resolvedDisabledMessage.value)
+const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const hasClear = computed(() => props.hasClear || props.clearable)
+const hasCustomTrigger = computed(() => slots.trigger != null)
+const customAnchor = shallowRef<HTMLElement | null>(null)
+const anchor = computed(() => customAnchor.value ?? anchorRef.value)
+
+function setCustomTrigger(element: unknown): void {
+  customAnchor.value = element instanceof HTMLElement ? element : null
+}
 const selectedValues = computed(() => props.modelValue ?? [])
 const placeholder = computed(() => props.placeholder ?? messages.value.multiSelector.placeholder)
 const searchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.multiSelector.search)
@@ -132,6 +147,7 @@ const comboboxOptions = computed(() => selectable.value.map(option => ({
   description: option.description,
 })))
 const dummyValue = ref<string | number | null>(null)
+let openingFromMount = false
 const selectAllIndex = computed(() => props.selectAll ? (createOption.value ? 1 : 0) : -1)
 
 const combobox = useCombobox({
@@ -142,7 +158,8 @@ const combobox = useCombobox({
   onChange: () => {},
   onOpenChange: (isOpen) => {
     emit('openChange', isOpen)
-    if (isOpen && props.searchable) {
+    // 挂载时就打开的面板不抢页面焦点。
+    if (isOpen && props.searchable && !openingFromMount) {
       void nextTick(() => searchRef.value?.focus())
     }
     if (!isOpen)
@@ -172,7 +189,7 @@ function onSearchBlur(): void {
 }
 
 const anchored = useAnchoredListbox({
-  anchor: anchorRef,
+  anchor,
   layer: listboxRef,
   isOpen: computed(() => combobox.isOpen.value && !isSheet.value),
   onDismiss: () => {
@@ -228,7 +245,7 @@ const describedBy = computed(() => {
     inGroup.value ? inputGroup?.describedBy.value : undefined,
     !inGroup.value && props.description ? `${triggerId}-description` : undefined,
     !inGroup.value && props.statusMessage ? `${triggerId}-status` : undefined,
-    focusableDisabled.value ? disabledId : undefined,
+    showsDisabledMessage.value ? disabledId : undefined,
   ].filter(Boolean).join(' ') || undefined
 })
 
@@ -292,10 +309,44 @@ function toggleValue(value: string | number): void {
   commit(isSelected(value) ? selectedValues.value.filter(item => item !== value) : [...selectedValues.value, value])
 }
 
-function onTriggerClick(): void {
+function onTriggerClick(event: MouseEvent): void {
   if (control.canActivate.value)
     combobox.toggle()
+  // 面板已经切换完，这里取消不了。
+  emit('click', event)
 }
+
+function onTriggerFocus(event: FocusEvent): void {
+  emit('focus', event)
+  disabledTooltip.onFocus(event)
+}
+
+function onTriggerKeyDown(event: KeyboardEvent): void {
+  applyKeyboardModel(event)
+  // 内置键盘模型处理并取消的按键不再透出。
+  if (!event.defaultPrevented)
+    emit('keydown', event)
+}
+
+const triggerProps = computed<MultiSelectorTriggerProps>(() => ({
+  'id': triggerId,
+  'onClick': onTriggerClick,
+  'onKeyDown': onTriggerKeyDown,
+  'onFocus': onTriggerFocus,
+  'aria-haspopup': 'listbox',
+  'aria-expanded': combobox.isOpen.value,
+  'aria-controls': listboxId,
+  'aria-busy': control.isLoading.value ? true : undefined,
+  'triggerRef': setCustomTrigger,
+}))
+
+onMounted(() => {
+  if (!props.isDefaultOpen)
+    return
+  openingFromMount = true
+  openPanel()
+  openingFromMount = false
+})
 
 function openPanel(): void {
   if (control.canActivate.value)
@@ -319,7 +370,7 @@ const handle: MultiSelectorHandle = {
 }
 useDisclosureHandle(() => props.handleRef, handle)
 
-function onKeyDown(event: KeyboardEvent): void {
+function applyKeyboardModel(event: KeyboardEvent): void {
   if (!control.canActivate.value || event.isComposing)
     return
   const searchInput = props.searchable && event.target instanceof HTMLInputElement
@@ -436,14 +487,16 @@ function checkboxState(option: MultiSelectorOptionData) {
 }
 
 defineExpose({
-  focus: () => (props.searchable && combobox.isOpen.value ? searchRef.value : triggerRef.value)?.focus(),
-  blur: () => triggerRef.value?.blur(),
+  focus: () => (props.searchable && combobox.isOpen.value ? searchRef.value : anchor.value)?.focus(),
+  blur: () => anchor.value?.blur(),
   ...handle,
 })
 </script>
 
 <template>
+  <slot v-if="hasCustomTrigger" name="trigger" v-bind="triggerProps" />
   <Field
+    v-else
     class="astryx-multi-selector"
     :class="[`size-${props.size}`, `variant-${props.variant}`]"
     :label="props.label"
@@ -467,6 +520,8 @@ defineExpose({
         'is-loading': control.isLoading.value,
         'is-ghost': props.variant === 'ghost',
       }]"
+      @pointerenter="disabledTooltip.onPointerEnter"
+      @pointerleave="disabledTooltip.onPointerLeave"
     >
       <span v-if="$slots.icon" class="astryx-multi-selector-icon" aria-hidden="true">
         <slot name="icon" />
@@ -476,8 +531,8 @@ defineExpose({
         ref="triggerRef"
         type="button"
         class="astryx-multi-selector-trigger"
-        :disabled="control.isDisabled.value && !focusableDisabled"
-        :aria-disabled="focusableDisabled ? 'true' : undefined"
+        :disabled="control.isDisabled.value && !showsDisabledMessage"
+        :aria-disabled="showsDisabledMessage ? 'true' : undefined"
         :aria-readonly="control.isReadOnly.value || undefined"
         :aria-busy="control.isLoading.value || undefined"
         :role="props.searchable && !control.isReadOnly.value ? undefined : 'combobox'"
@@ -487,9 +542,10 @@ defineExpose({
         :aria-autocomplete="props.searchable ? undefined : 'none'"
         :aria-activedescendant="!props.searchable && combobox.isOpen.value && combobox.activeIndex.value >= 0 ? optionDomId(combobox.activeIndex.value) : undefined"
         :aria-describedby="[describedBy, control.isReadOnly.value ? readOnlyId : undefined].filter(Boolean).join(' ') || undefined"
-        :title="props.disabledReason"
         @click="onTriggerClick"
-        @keydown="onKeyDown"
+        @focus="onTriggerFocus"
+        @blur="disabledTooltip.onBlur"
+        @keydown="onTriggerKeyDown"
       >
         <span v-if="selectedOptions.length === 0" class="astryx-multi-selector-placeholder">{{ placeholder }}</span>
         <span v-else-if="props.triggerDisplay === 'count'" class="astryx-multi-selector-value">{{ formattedValue ?? messages.multiSelector.selected(selectedOptions.length) }}</span>
@@ -508,10 +564,10 @@ defineExpose({
       </button>
       <Spinner v-if="control.isLoading.value" class="astryx-multi-selector-spinner" size="sm" :aria-label="messages.multiSelector.loading" />
       <button
-        v-if="props.clearable && selectedValues.length > 0 && control.canActivate.value"
+        v-if="hasClear && selectedValues.length > 0 && control.canActivate.value"
         type="button"
         class="astryx-multi-selector-clear"
-        :aria-label="messages.multiSelector.clear"
+        :aria-label="messages.multiSelector.clearAll(props.label)"
         @click.stop="commit([])"
       >
         <Icon icon="close" size="sm" />
@@ -533,7 +589,7 @@ defineExpose({
         />
         <span class="astryx-multi-selector-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>
-      <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ props.disabledReason }}</span>
+      <span v-if="showsDisabledMessage" :id="disabledId" class="astryx-visually-hidden">{{ resolvedDisabledMessage }}</span>
       <input v-for="value in selectedValues" :key="value" type="hidden" :name="props.name" :value="value" :disabled="!props.name">
     </div>
   </Field>
@@ -583,7 +639,7 @@ defineExpose({
           @input="onSearchInput"
           @focus="onSearchFocus"
           @blur="onSearchBlur"
-          @keydown="onKeyDown"
+          @keydown="applyKeyboardModel"
         >
         <button
           v-if="query"
@@ -693,4 +749,13 @@ defineExpose({
       </div>
     </div>
   </Teleport>
+  <ButtonTooltip
+    v-if="showsDisabledMessage"
+    :id="disabledTooltipId"
+    :anchor="anchor"
+    :open="disabledTooltip.isOpen.value"
+    :text="resolvedDisabledMessage ?? ''"
+    @pointer-enter="disabledTooltip.onTooltipPointerEnter"
+    @pointer-leave="disabledTooltip.onTooltipPointerLeave"
+  />
 </template>

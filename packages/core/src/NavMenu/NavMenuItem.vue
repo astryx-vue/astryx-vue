@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavMenuItemEmits, NavMenuItemProps, NavMenuItemSlots } from './types.js'
 import { computed, inject } from 'vue'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 import { navMenuCloseKey, navMenuKey } from './context.js'
 import '../../styles/nav-menu.css'
@@ -18,9 +19,12 @@ defineSlots<NavMenuItemSlots>()
 
 const menu = inject(navMenuKey, null)
 const closeMenu = inject(navMenuCloseKey, undefined)
+const linkComponent = useLinkComponent()
 const size = computed(() => menu?.size.value ?? 'md')
 const isLink = computed(() => props.href != null && props.href !== '' && !props.isDisabled)
-const root = computed(() => resolveNavRoot(props.href, props.isDisabled, props.as))
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
+const root = computed(() => resolveNavRoot(props.href, props.isDisabled, customLink.value))
 
 function onClick(event: MouseEvent): void {
   if (props.isDisabled) {
@@ -45,7 +49,7 @@ function onClick(event: MouseEvent): void {
     :class="[`astryx-nav-menu-item--${size}`, { 'astryx-nav-menu-item--disabled': isDisabled }]"
     :role="isMenuItem ? 'menuitem' : undefined"
     :href="isLink ? href : undefined"
-    :to="isLink && as != null ? href : undefined"
+    :to="isLink && customLink != null ? href : undefined"
     :type="isLink ? undefined : 'button'"
     :disabled="isLink ? undefined : isDisabled"
     :aria-disabled="isDisabled || undefined"

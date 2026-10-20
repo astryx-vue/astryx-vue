@@ -26,7 +26,7 @@ const inputId = computed(() => props.id ?? generatedId)
   <Field
     :label="label" :input-id="inputId" :description="description" :width="width"
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
-    :status="status" :status-variant="statusVariant"
+    :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
   >
     <template #default="field">
       <TimeField
@@ -36,6 +36,7 @@ const inputId = computed(() => props.id ?? generatedId)
         :min="min" :max="max" :presentation="presentation" :native-picker="nativePicker"
         :has-clear="hasClear" :clear-label="clearLabel" :size="size"
         :is-disabled="isDisabled" :is-read-only="isReadOnly" :is-required="isRequired && !isOptional"
+        :is-loading="isLoading" :loading-label="loadingLabel" :disabled-message="disabledMessage"
         :status="status"
       />
     </template>

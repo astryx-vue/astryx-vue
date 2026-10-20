@@ -29,6 +29,24 @@
     background-color: var(--astryx-status-dot-error-background, #e33f4a);
   }
 
+  .astryx-status-dot__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--astryx-status-dot-icon-foreground, #fff);
+  }
+
+  .astryx-status-dot__icon > * {
+    width: 75%;
+    height: 75%;
+  }
+
+  .astryx-status-dot[data-variant='warning'] .astryx-status-dot__icon {
+    color: var(--astryx-status-dot-warning-icon-foreground, #171717);
+  }
+
   .astryx-status-dot--pulsing {
     animation: astryx-status-dot-pulse 2s ease-in-out infinite;
   }

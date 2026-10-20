@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CommandPaletteItemProps } from './types.js'
-import { computed, inject, onMounted, watch } from 'vue'
+import type { CommandPaletteItemEmits, CommandPaletteItemProps } from './types.js'
+import { computed, getCurrentInstance, inject, watch } from 'vue'
 import { commandPaletteKey } from './context.js'
 import '../../styles/command-palette.css'
 
@@ -10,11 +10,31 @@ const props = withDefaults(defineProps<CommandPaletteItemProps>(), {
   isDisabled: false,
 })
 
+const emit = defineEmits<CommandPaletteItemEmits>()
+
 const palette = inject(commandPaletteKey, null)
+const instance = getCurrentInstance()
+
+/**
+ * Vue turns an omitted boolean prop into `false`, so a `??` fallback cannot
+ * tell "not passed" from "passed false". The vnode props can.
+ */
+function wasPassed(name: string): boolean {
+  const vnodeProps = instance?.vnode.props
+  if (vnodeProps == null)
+    return false
+  if (Object.hasOwn(vnodeProps, name))
+    return true
+  const kebab = name.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
+  return Object.hasOwn(vnodeProps, kebab)
+}
 
 const index = computed(() => palette?.items.value.findIndex(item => item.id === props.value) ?? -1)
-const isHighlighted = computed(() => index.value >= 0 && palette?.highlightedIndex.value === index.value)
-const isSelected = computed(() => palette?.value.value != null && palette.value.value === props.value)
+const derivedHighlighted = computed(() => index.value >= 0 && palette?.highlightedIndex.value === index.value)
+const derivedSelected = computed(() => palette?.value.value != null && palette.value.value === props.value)
+/** An explicit prop wins; without it the state comes from the surrounding palette. */
+const isHighlighted = computed(() => (wasPassed('isHighlighted') ? props.isHighlighted : derivedHighlighted.value))
+const isSelected = computed(() => (wasPassed('isSelected') ? props.isSelected : derivedSelected.value))
 
 function onKeyDown(event: KeyboardEvent): void {
   if (event.key !== 'Enter' && event.key !== ' ')
@@ -24,7 +44,10 @@ function onKeyDown(event: KeyboardEvent): void {
 }
 
 function select(): void {
-  if (props.isDisabled || palette == null || index.value < 0)
+  if (props.isDisabled)
+    return
+  emit('select', props.value)
+  if (palette == null || index.value < 0)
     return
   const item = palette.items.value[index.value]
   if (item != null)
@@ -43,10 +66,6 @@ function scrollIntoView(element: Element): void {
     return
   element.scrollIntoView({ block: 'nearest' })
 }
-
-onMounted(() => {
-  // The first highlighted row in an inline preview stays put.
-})
 
 watch(isHighlighted, (highlighted, _previous, onCleanup) => {
   if (!highlighted)

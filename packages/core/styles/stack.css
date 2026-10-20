@@ -5,8 +5,10 @@
     box-sizing: border-box;
     display: flex;
     gap: var(--astryx-stack-gap, normal);
-    padding-block: var(--astryx-stack-padding-block, 0);
-    padding-inline: var(--astryx-stack-padding-inline, 0);
+    padding-block-start: var(--astryx-stack-padding-block-start, var(--astryx-stack-padding-block, 0));
+    padding-block-end: var(--astryx-stack-padding-block-end, var(--astryx-stack-padding-block, 0));
+    padding-inline-start: var(--astryx-stack-padding-inline-start, var(--astryx-stack-padding-inline, 0));
+    padding-inline-end: var(--astryx-stack-padding-inline-end, var(--astryx-stack-padding-inline, 0));
   }
 
   .astryx-stack[data-direction='horizontal'] {

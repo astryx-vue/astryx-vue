@@ -1,0 +1,44 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * 按压反馈。`usePressFeedback` 给元素加 `data-astryx-pressable`，
+ * 手指按实了再临时加 `data-astryx-pressed`。
+ *
+ * 按下时立刻亮（不给过渡），抬手后靠 200ms 的 opacity 过渡淡出。
+ * 鼠标不看按压模型，仍然用 `:active`；手指走的是 `@media (pointer: coarse)` 之外不生效的那条。
+ */
+@layer astryx.components {
+  [data-astryx-pressable] {
+    position: relative;
+    --astryx-pressable-fade: 200ms;
+  }
+
+  [data-astryx-pressable]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--astryx-pressable-fade, 200ms) linear;
+  }
+
+  [data-astryx-pressed]::after {
+    opacity: 1;
+    transition: none;
+  }
+
+  @media (pointer: fine) {
+    [data-astryx-pressable]:active::after {
+      opacity: 1;
+      transition: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-astryx-pressable]::after {
+      transition: none;
+    }
+  }
+}

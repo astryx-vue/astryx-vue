@@ -2154,5 +2154,429 @@
       "name": "已选结果状态",
       "description": "当前结果行上的选中样式，以及尾部的勾。"
     }
+  ],
+  "dialog-header": [
+    {
+      "name": "标题行",
+      "description": "排列标题块、可选的首尾内容和关闭按钮。"
+    },
+    {
+      "name": "前置内容",
+      "description": "包裹可选的前导内容。"
+    },
+    {
+      "name": "标题块",
+      "description": "组合标题与可选副标题。"
+    },
+    {
+      "name": "后置内容",
+      "description": "组合可选的尾部内容与关闭按钮。"
+    },
+    {
+      "name": "关闭图标",
+      "description": "关闭按钮内部的关闭图形。"
+    }
+  ],
+  "avatar-group-overflow": [
+    {
+      "name": "计数文字",
+      "description": "圆圈里那段紧凑的 `+N`，或者自己写的计数文字。"
+    },
+    {
+      "name": "按钮行为",
+      "description": "传了 `onClick` 之后，这个圆圈变成可交互的按钮，有聚焦和悬停状态。"
+    }
+  ],
+  "base-typeahead": [
+    {
+      "name": "输入框",
+      "description": "一个裸的 combobox 输入框。看得见的外壳和无障碍名由调用方提供。"
+    },
+    {
+      "name": "加载状态",
+      "description": "异步数据源还在跑时，输入框旁边显示一个带无障碍名的转圈。如果外层组件自己接管了这个忙碌提示的位置，就不再显示。"
+    },
+    {
+      "name": "下拉",
+      "description": "挂靠定位的 listbox 面板，装着当前的搜索或者首屏结果。"
+    },
+    {
+      "name": "空状态",
+      "description": "搜索完成但一条结果都没有时，显示一个禁用的 listbox 选项。"
+    },
+    {
+      "name": "结果分组标题",
+      "description": "一组结果选项上方看得见的标题。"
+    },
+    {
+      "name": "结果行",
+      "description": "选项外壳，负责高亮、选中、指针和键盘行为。"
+    },
+    {
+      "name": "默认条目内容",
+      "description": "结果行里默认画的 TypeaheadItem，也就是主文字加可选的辅助内容。"
+    },
+    {
+      "name": "调用方画的条目内容",
+      "description": "调用方通过 renderItem（这版是 item 插槽）塞进稳定结果行里的内容。"
+    },
+    {
+      "name": "选中结果状态",
+      "description": "某条结果和当前值对上时，这一行加粗，并在末尾画一个勾。"
+    }
+  ],
+  "bottom-sheet-switcher": [
+    {
+      "name": "共享对话框",
+      "description": "一个原生对话框，整段流程的模态、焦点、关闭方式和生命周期都由它负责。"
+    },
+    {
+      "name": "面板",
+      "description": "直接放在里面的 `BottomSheet` 子节点；同一时刻只有一张可以交互，交接过程中上一张可能还看得见，但已经不可交互。"
+    },
+    {
+      "name": "遮罩",
+      "description": "默认带遮罩的呈现方式里，原生对话框背后那层背景。"
+    }
+  ],
+  "chat-composer-drawer": [
+    {
+      "name": "抽屉表面",
+      "description": "抽屉本身，叠在对话输入区主体之上。"
+    },
+    {
+      "name": "收起开关",
+      "description": "传了 count 才出现，键盘和鼠标都能操作。"
+    },
+    {
+      "name": "收起摘要",
+      "description": "收起时显示的东西：默认是总数徽标加一行文字，也可以换成调用方给的内容。"
+    },
+    {
+      "name": "内容区",
+      "description": "调用方给的补充内容；收起来时里面的东西键盘和读屏都碰不到。"
+    }
+  ],
+  "chat-composer-input": [
+    {
+      "name": "输入根节点",
+      "description": "主题化的容器，负责转发根节点引用和样式入口。"
+    },
+    {
+      "name": "可编辑区",
+      "description": "带名字的 contenteditable 文本框或组合框，文字、选区、键盘、粘贴、拖放都由它管。"
+    },
+    {
+      "name": "占位文字",
+      "description": "只有序列化后的草稿为空时才会出现的提示。"
+    },
+    {
+      "name": "候选列表",
+      "description": "配置的触发字符生效时弹出的建议列表。"
+    },
+    {
+      "name": "行内标签",
+      "description": "不可编辑的徽标或自定义内容，带一个稳定的序列化值。"
+    }
+  ],
+  "chat-composer": [
+    {
+      "name": "输入区框架",
+      "description": "最外层。把主体包起来，上面或下面还能各挂一条状态提示。"
+    },
+    {
+      "name": "输入区主体",
+      "description": "圆角的抬升表面，里面放页眉、输入框和页脚。"
+    },
+    {
+      "name": "抽屉",
+      "description": "主体上方的内容，放附件之类可以展开的东西，一般用 ChatComposerDrawer。"
+    },
+    {
+      "name": "页眉",
+      "description": "一行，开头放操作，末尾放上下文信息。"
+    },
+    {
+      "name": "输入框",
+      "description": "默认的 ChatComposerInput，或者通过 useChatComposerContext() 接进来的自定义编辑器。"
+    },
+    {
+      "name": "页脚",
+      "description": "一行，放调用方给的操作和发送操作，外加那颗主按钮。"
+    },
+    {
+      "name": "发送或停止",
+      "description": "默认的 ChatSendButton，或者自定义的 sendButton；它提交当前草稿，或者请求中断。"
+    },
+    {
+      "name": "状态提示",
+      "description": "错误或警告反馈，画在输入区主体的上面或下面。"
+    }
+  ],
+  "chat-dictation-button": [
+    {
+      "name": "话筒图标",
+      "description": "空闲状态下显示。点它就开始语音输入。"
+    },
+    {
+      "name": "音量条",
+      "description": "正在听的时候顶替图标的跳动竖条，跟着真实麦克风音量动。"
+    },
+    {
+      "name": "幽灵按钮",
+      "description": "底下的 Button，variant 为 ghost、isIconOnly，负责点击区域和聚焦环。"
+    }
+  ],
+  "chat-layout": [
+    {
+      "name": "消息区",
+      "description": "可滚动的消息区域。默认插槽（一般是 ChatMessageList）排成纵向 flex，消息少的时候把内容推到底部。"
+    },
+    {
+      "name": "毛玻璃停靠区",
+      "description": "底部粘住或固定的容器，带一层背景模糊。里面放滚到底按钮和输入区。"
+    },
+    {
+      "name": "滚到底按钮",
+      "description": "用户往上滚、或者有新消息时出现。默认是 ChatLayoutScrollButton；传 null 就隐藏，换成自己的控件也可以。"
+    },
+    {
+      "name": "输入区",
+      "description": "发消息的输入区域，一般是 ChatComposer。停在毛玻璃层里的底部。"
+    },
+    {
+      "name": "空状态",
+      "description": "还没有消息时居中显示的占位。用 EmptyState 可以保持外观一致。"
+    }
+  ],
+  "chat-message-metadata": [
+    {
+      "name": "元信息行",
+      "description": "一行跟着发送者走的说明文字，装着所有可见的元信息。"
+    },
+    {
+      "name": "时间",
+      "description": "调用方给的时间内容，排在最前面。"
+    },
+    {
+      "name": "页脚",
+      "description": "时间和状态之间的信息或操作，内容由调用方给。"
+    },
+    {
+      "name": "状态",
+      "description": "传了状态时显示的本地化送达图标和文字。"
+    }
+  ],
+  "chat-send-button": [
+    {
+      "name": "操作按钮",
+      "description": "圆形的纯图标 Button，暴露本地化的「发送」或「停止」名字，同时是 chat-send-button 主题的挂载点。"
+    }
+  ],
+  "chat-system-message": [
+    {
+      "name": "系统消息",
+      "description": "一行不可交互的状态文字，样式挂在 chat-system-message 上。"
+    },
+    {
+      "name": "内容",
+      "description": "简短的消息文字，或者分隔线上的标签，由调用方给。"
+    },
+    {
+      "name": "图标内容",
+      "description": "在 default 变体里排在文字前面；divider 变体不渲染它。"
+    },
+    {
+      "name": "分隔线",
+      "description": "divider 变体渲染的一条带标签的横向 `Divider`。"
+    }
+  ],
+  "chat-tokenized-text": [
+    {
+      "name": "标记文本",
+      "description": "行内的根元素。没匹配上的文字原样保留，样式挂在 chat-tokenized-text 上。"
+    },
+    {
+      "name": "渲染出的标记",
+      "description": "行内的标记内容。普通标记由 `Badge` 渲染，自定义标记由调用方渲染。"
+    }
+  ],
+  "chat-tool-calls": [
+    {
+      "name": "状态图标",
+      "description": "跟着主题走的成功或失败图标；调用还在等待或运行中时换成加载动画。"
+    },
+    {
+      "name": "工具名",
+      "description": "函数或工具的名字，用等宽字体显示，例如 bash、edit、read、web_search。"
+    },
+    {
+      "name": "环境小条",
+      "description": "一个灰色小圆角条，标出这次调用跑在哪个沙箱或环境里，例如 cli:remote-server 或 workspace。"
+    },
+    {
+      "name": "目标文字",
+      "description": "这次动作的目标，例如文件路径、命令或搜索词，排在工具名后面。"
+    },
+    {
+      "name": "增删行数",
+      "description": "修改类操作的绿色新增数和红色删除数，跟在目标后面。"
+    },
+    {
+      "name": "耗时",
+      "description": "已完成的调用在行尾显示的执行时间。"
+    },
+    {
+      "name": "组表头",
+      "description": "有一条以上调用时出现，带扳手图标和条数。点一下就在摘要和完整列表之间切换。"
+    }
+  ],
+  "command-palette-footer": [
+    {
+      "name": "页脚",
+      "description": "承载默认提示或使用方内容的支撑区域。"
+    },
+    {
+      "name": "快捷键",
+      "description": "默认画出来的导航、选中和关闭按键徽章。"
+    }
+  ],
+  "command-palette-input": [
+    {
+      "name": "输入区",
+      "description": "把搜索符号、查询框和尾部内容装在一起的行内布局。"
+    },
+    {
+      "name": "搜索符号",
+      "description": "查询框前面那个装饰用的搜索图标。"
+    },
+    {
+      "name": "查询框",
+      "description": "原生文本框。单独用、没有弹层关系时是 searchbox；给了弹层关系，或者身处 CommandPalette 里时是 combobox。"
+    },
+    {
+      "name": "加载转圈",
+      "description": "搜索进行中时，出现在尾部内容前面的转圈，会先等一小会儿再出现。"
+    },
+    {
+      "name": "尾部内容",
+      "description": "使用方放在尾部的内容，例如清空按钮或快捷键提示。"
+    }
+  ],
+  "command-palette-item": [
+    {
+      "name": "项",
+      "description": "选项的根元素，负责选中、禁用、身份、交互和主题状态。"
+    },
+    {
+      "name": "内容",
+      "description": "使用方放进去的、不带交互的文字和辅助展示。"
+    }
+  ],
+  "h-stack": [
+    {
+      "name": "堆叠容器",
+      "description": "沿一条 flex 轴排列内容的布局容器。"
+    },
+    {
+      "name": "项",
+      "description": "可选的 StackItem，用来控制堆叠里的一项。"
+    },
+    {
+      "name": "内容",
+      "description": "Stack 或 StackItem 画出的、由使用方提供的内容。"
+    }
+  ],
+  "item": [
+    {
+      "name": "行首标记",
+      "description": "可选的列表圆点或序号，排在前面那块内容之前。"
+    },
+    {
+      "name": "前缀内容",
+      "description": "前面那块：头像、图标、图片或者复选框。"
+    },
+    {
+      "name": "主文字",
+      "description": "这一行到底说的是什么。"
+    },
+    {
+      "name": "说明",
+      "description": "主文字下面那行补充文字。"
+    },
+    {
+      "name": "末尾内容",
+      "description": "靠右对齐的那块：徽章、时间或者操作按钮。"
+    }
+  ],
+  "mobile-nav-toggle": [
+    {
+      "name": "开关按钮",
+      "description": "在移动视口上打开或关闭抽屉的按钮。"
+    }
+  ],
+  "nav-heading-menu": [
+    {
+      "name": "菜单",
+      "description": "导航标题菜单的容器，带菜单语义和键盘导航。"
+    },
+    {
+      "name": "条目",
+      "description": "菜单里可选的动作，或者一个导航链接。"
+    },
+    {
+      "name": "图标",
+      "description": "条目文字前面用 Icon 画出来的图标。"
+    },
+    {
+      "name": "用 Text 渲染的条目文字",
+      "description": "字符串形式的条目文字，交给 Text 渲染。"
+    },
+    {
+      "name": "调用方渲染的条目文字",
+      "description": "条目文字不是字符串时，内容由调用方直接渲染。"
+    },
+    {
+      "name": "条目说明",
+      "description": "条目下面那行辅助说明，交给 Text 渲染。"
+    }
+  ],
+  "nav-icon": [
+    {
+      "name": "圆形底",
+      "description": "圆形的着色容器，里面装着传进来的图标。"
+    },
+    {
+      "name": "图标",
+      "description": "调用方给的可视内容，画在圆形底里。"
+    }
+  ],
+  "stack-item": [
+    {
+      "name": "堆叠容器",
+      "description": "沿一条 flex 轴排列内容的布局容器。"
+    },
+    {
+      "name": "项",
+      "description": "可选的 StackItem，用来控制堆叠里的一项。"
+    },
+    {
+      "name": "内容",
+      "description": "Stack 或 StackItem 画出的、由使用方提供的内容。"
+    }
+  ],
+  "v-stack": [
+    {
+      "name": "堆叠容器",
+      "description": "沿一条 flex 轴排列内容的布局容器。"
+    },
+    {
+      "name": "项",
+      "description": "可选的 StackItem，用来控制堆叠里的一项。"
+    },
+    {
+      "name": "内容",
+      "description": "Stack 或 StackItem 画出的、由使用方提供的内容。"
+    }
   ]
 }

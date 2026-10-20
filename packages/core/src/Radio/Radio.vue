@@ -17,6 +17,9 @@ const selectedValue = computed(() => context?.selectedValue.value ?? null)
 const isSelected = computed(() => selectedValue.value === props.value)
 const isDisabled = computed(() => props.isDisabled || context?.isGroupDisabled.value)
 const isReadOnly = computed(() => props.isReadOnly || context?.isGroupReadOnly.value)
+const groupMessage = computed(() => context?.disabledMessage.value)
+const explainedByMessage = computed(() => isDisabled.value && groupMessage.value != null)
+const messageDescriptionId = computed(() => explainedByMessage.value ? context?.disabledMessageId.value : undefined)
 const RadioMark = useIndicator('radio')
 const indicatorSize = computed(() => context?.size?.value)
 
@@ -28,15 +31,27 @@ function change(event: Event): void {
   else
     emit('change', props.value, event as CustomEvent)
 }
+
+/** 只因 `disabledMessage` 而“禁用”时，仍然能聚焦，用取消点击来拦住切换。 */
+function click(event: MouseEvent): void {
+  if (explainedByMessage.value)
+    event.preventDefault()
+}
+
+function describedBy(): string | undefined {
+  return [props.description ? `${inputId.value}-description` : undefined, messageDescriptionId.value].filter(Boolean).join(' ') || undefined
+}
 </script>
 
 <template>
   <label :for="inputId" class="astryx-radio" :class="{ 'astryx-indicator-scope': !isDisabled }" :data-size="indicatorSize" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined">
     <input
       :id="inputId" class="astryx-radio-native" type="radio" :name="name" :value="value"
-      :checked="isSelected" :disabled="isDisabled" :readonly="isReadOnly"
-      :aria-describedby="description ? `${inputId}-description` : undefined"
-      @change="change"
+      :checked="isSelected" :disabled="isDisabled && !explainedByMessage" :readonly="isReadOnly"
+      :form="explainedByMessage ? '' : undefined"
+      :aria-disabled="explainedByMessage || undefined"
+      :aria-describedby="describedBy()"
+      @click="click" @change="change"
     >
     <component
       :is="RadioMark"

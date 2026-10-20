@@ -142,8 +142,14 @@ footer: false
       <tr>
         <td><code>variant</code></td>
         <td><code>AvatarStatusDotVariant</code></td>
-        <td><code>'neutral'</code></td>
-        <td>状态点颜色变体：<code>neutral</code>、<code>info</code>、<code>success</code>、<code>warning</code>、<code>error</code>。</td>
+        <td><code>'success'</code></td>
+        <td>状态语义：<code>success</code>（实心圆点）、<code>neutral</code>（空心环）、<code>error</code>（圆点加减号）。<code>info</code> 和 <code>warning</code> 是旧名字，仍然可以用，分别按 <code>success</code> 和 <code>error</code> 画。</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string</code></td>
+        <td>—</td>
+        <td>状态的读屏名称，会并进头像自己的无障碍名称（<code>Jane Doe, Online</code>）。</td>
       </tr>
     </tbody>
   </table>

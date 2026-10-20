@@ -5,6 +5,7 @@ import { computed, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useT
 import ButtonSpinner from '../Button/ButtonSpinner.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useInputContainer } from '../composables/useInputContainer.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   statusVariant: 'detached',
   resize: 'vertical',
   loadingLabel: 'Loading',
+  hasSpellCheck: true,
 })
 const emit = defineEmits<TextAreaEmits>()
 defineSlots<TextAreaSlots>()
@@ -56,7 +58,7 @@ function select(): void {
 }
 defineExpose({ element, focus, blur, select })
 
-const controlledAttrs = new Set(['class', 'style', 'id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'])
+const controlledAttrs = new Set(['class', 'style', 'id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'spellcheck', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'])
 function inputAttrs(): TextareaHTMLAttributes {
   return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as TextareaHTMLAttributes
 }
@@ -97,16 +99,11 @@ async function clear(event: MouseEvent): Promise<void> {
   await nextTick()
   focus({ preventScroll: true })
 }
-function focusFromContainer(event: MouseEvent): void {
-  if (props.isDisabled)
-    return
-  const target = event.target
-  if (target instanceof Element && target.closest('input,textarea,button,a,select,[role="button"]'))
-    return
-  if (input.value?.ownerDocument.getSelection()?.toString())
-    return
-  focus({ preventScroll: true })
-}
+const inputContainer = useInputContainer({
+  containerRef: container,
+  inputRef: input,
+  disabled: () => props.isDisabled,
+})
 onMounted(() => {
   if (props.hasAutoFocus)
     focus({ preventScroll: true })
@@ -127,7 +124,8 @@ onMounted(() => {
       <div
         ref="container" class="astryx-text-area" :class="attrs.class" :style="attrs.style"
         :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
-        @pointerup="focusFromContainer" @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"
+        @click="inputContainer.onClick" @mouseup="inputContainer.onMouseUp"
+        @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"
       >
         <span v-if="$slots.icon || icon" class="astryx-text-area-icon" aria-hidden="true"><slot name="icon"><component :is="icon" v-if="icon" /></slot></span>
         <textarea
@@ -135,6 +133,8 @@ onMounted(() => {
           :value="action.value.value" :placeholder="placeholder" :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)"
           :style="{ '--astryx-text-area-resize': resize }"
           :rows="rows" :cols="cols" :minlength="minlength" :maxlength="maxlength" :wrap="wrap"
+          :autocomplete="(autoComplete ?? inputAttrs().autocomplete) as TextareaHTMLAttributes['autocomplete']"
+          :spellcheck="hasSpellCheck"
           :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || showsDisabledMessage"
           :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
           :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"

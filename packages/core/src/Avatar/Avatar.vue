@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { AvatarProps } from './types.js'
-import { computed, inject, ref, toRaw, useAttrs } from 'vue'
+import { computed, inject, provide, ref, toRaw, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
+import { useLinkComponent } from '../LinkProvider/context.js'
+import { useAstryxMessages } from '../locale/context.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
-import { resolveSize } from './utils.js'
+import { AvatarSizeContext, AvatarStatusLabelContext } from './context.js'
+import { composeAccessibleName, resolveSize } from './utils.js'
 import '../../styles/avatar.css'
 
 defineOptions({ inheritAttrs: false })
@@ -25,9 +28,11 @@ defineSlots<{
   status?: () => unknown
 }>()
 
+const linkComponent = useLinkComponent()
+
 const attrs = useAttrs()
 
-const INITIALS_FONT_SIZE_RATIO = 16 / 36
+const INITIALS_FONT_SIZE_RATIO = 0.4
 const DEFAULT_ICON_RATIO = 0.6
 
 const erroredSrc = ref<string | undefined>(undefined)
@@ -38,6 +43,13 @@ const resolvedSize = computed(() => avatarGroup?.size.value ?? props.size)
 const resolvedShape = computed(() => avatarGroup?.shape.value ?? props.shape)
 
 const numericSize = computed(() => resolveSize(resolvedSize.value))
+
+/** 状态点这类子组件靠它把自己的尺寸跟着头像走。 */
+provide(AvatarSizeContext, numericSize)
+
+/** 状态插槽里的圆点把读屏名字写在这里，下面会拼进头像自己的名字。 */
+const statusLabel = ref<string | undefined>(undefined)
+provide(AvatarStatusLabelContext, statusLabel)
 
 const groupStyle = computed<CSSProperties>(() => {
   if (!avatarGroup) {
@@ -88,17 +100,22 @@ const initials = computed(() => {
 const showInitials = computed(() => !showImage.value && !showFallbackImage.value && initials.value !== '')
 const showIcon = computed(() => !showImage.value && !showFallbackImage.value && initials.value === '')
 
+const messages = useAstryxMessages()
 const accessibleName = computed(() => {
-  return meaningfulAlt.value || meaningfulName.value
+  const label = statusLabel.value
+  const status = typeof label === 'string' && label.trim() !== '' ? label.trim() : undefined
+  return composeAccessibleName(meaningfulAlt.value || meaningfulName.value, status, messages.value.nav.avatarNameWithStatus)
 })
 
 const isLink = computed(() => props.href != null && props.href !== '')
 const isButton = computed(() => !isLink.value && attrs.onClick != null)
 const isInteractive = computed(() => isLink.value || isButton.value)
-const isCustomLink = computed(() => isLink.value && props.as != null)
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+const customLink = computed(() => props.as ?? linkComponent.value)
+const isCustomLink = computed(() => isLink.value && customLink.value != null)
 const rootTag = computed(() => {
   if (isLink.value)
-    return props.as == null ? 'a' : toRaw(props.as)
+    return customLink.value == null ? 'a' : toRaw(customLink.value)
   return isButton.value ? 'button' : 'span'
 })
 

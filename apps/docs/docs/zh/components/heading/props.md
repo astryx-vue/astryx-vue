@@ -68,6 +68,12 @@ footer: false
         <td>对齐方式。<code>start</code> 和 <code>end</code> 跟随书写方向。</td>
       </tr>
       <tr>
+        <td><code>hasCapsize</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>用 <code>text-box-trim</code> 裁掉大写字母高度以上的空白和基线以下的空白，让字形贴住盒子边缘。打开后强制块级布局。</td>
+      </tr>
+      <tr>
         <td><code>hasStrikethrough</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>

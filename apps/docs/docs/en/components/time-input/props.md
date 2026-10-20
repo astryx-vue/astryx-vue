@@ -22,6 +22,10 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the field.</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why the field is disabled. With <code>isDisabled</code>, the message shows in a tooltip on hover or keyboard focus and the input stays focusable with <code>aria-disabled</code>; the value still cannot change.</td></tr>
+<tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The field cannot be edited and shows a spinner.</td></tr>
+<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>Loading</code> / <code>加载中</code></td><td>Screen-reader text for the spinner.</td></tr>
+<tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Hint shown from the info icon at the end of the label.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select a time</code></td><td>Empty-state text. While the field is focused and empty, a format hint replaces it.</td></tr>
 </tbody></table>
 </div>

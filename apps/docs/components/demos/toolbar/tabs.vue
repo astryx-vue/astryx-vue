@@ -12,7 +12,7 @@ const tab = ref('overview')
   <Card width="min(100%, 32rem)">
     <Toolbar :dividers="['bottom']" label="Section navigation">
       <template #start>
-        <TabList v-model:value="tab">
+        <TabList v-model:value="tab" role="tablist">
           <Tab value="overview">
             Overview
           </Tab>

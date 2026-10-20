@@ -40,6 +40,19 @@ describe('token', () => {
     expect(link.element.contains(wrapper.get('button').element)).toBe(false)
   })
 
+  it('renders the endContent slot after the label, before the remove button', () => {
+    const wrapper = mount(Token, {
+      props: { label: 'Ada', removable: true },
+      slots: { endContent: '<span class="extra">2</span>' },
+    })
+
+    const children = [...(wrapper.element as HTMLElement).children]
+    const extra = children.findIndex(child => child.classList.contains('extra'))
+    const remove = children.findIndex(child => child.classList.contains('astryx-token-remove'))
+    expect(extra).toBeGreaterThan(-1)
+    expect(extra).toBeLessThan(remove)
+  })
+
   it('uses a button for a click handler so the token can take focus', () => {
     const wrapper = mount(Token, { props: { label: 'Ada' }, attrs: { onClick: () => {} } })
     expect(wrapper.find('button.astryx-token-action').exists()).toBe(true)

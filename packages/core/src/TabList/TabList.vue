@@ -2,6 +2,7 @@
 import type { TabListProps, TabListTab } from './types.js'
 import { computed, provide, reactive, ref } from 'vue'
 
+import { useAstryxMessages } from '../locale/index.js'
 import { tabListContextKey } from './context.js'
 import '../../styles/tab-list.css'
 
@@ -24,6 +25,14 @@ defineSlots<{
 const bleedsInline = computed(() =>
   props.edgeCompensation === 'inline' || (props.edgeCompensation == null && props.isFullBleed),
 )
+
+/** `role="tablist"` switches the strip from a nav landmark to the tabs pattern. */
+const isTabsPattern = computed(() => props.role === 'tablist')
+const rootTag = computed(() => (props.role == null ? 'nav' : 'div'))
+
+const messages = useAstryxMessages()
+/** 导航模式的标签条是个 landmark，没有名字读屏没法区分；调用方用 `aria-label` 覆盖。 */
+const defaultLabel = computed(() => props.role == null ? messages.value.tabList.label : undefined)
 
 const tabs = reactive<TabListTab[]>([])
 const focusedValue = ref(props.value)
@@ -93,6 +102,7 @@ provide(tabListContextKey, {
   size: computed(() => props.size),
   layout: computed(() => props.layout),
   hasDivider: computed(() => props.hasDivider),
+  isTabsPattern,
   tabs,
   focusedValue,
   registerTab,
@@ -103,7 +113,8 @@ provide(tabListContextKey, {
 </script>
 
 <template>
-  <div
+  <component
+    :is="rootTag"
     class="astryx-tab-list"
     :class="[
       `astryx-tab-list--size-${size}`,
@@ -111,10 +122,11 @@ provide(tabListContextKey, {
       hasDivider && 'astryx-tab-list--has-divider',
       bleedsInline && 'astryx-tab-list--full-bleed',
     ]"
-    role="tablist"
+    :role="role"
+    :aria-label="defaultLabel"
   >
     <div class="astryx-tab-list__strip">
       <slot />
     </div>
-  </div>
+  </component>
 </template>

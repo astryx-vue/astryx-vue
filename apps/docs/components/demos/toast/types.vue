@@ -8,7 +8,7 @@ const toast = useToast()
 
 <template>
   <VStack :gap="3">
-    <Toast :auto-close="false" body="Changes saved successfully." type="info">
+    <Toast :is-auto-hide="false" body="Changes saved successfully." type="info">
       <template #end>
         <Button
           label="Show toast"
@@ -18,7 +18,7 @@ const toast = useToast()
         />
       </template>
     </Toast>
-    <Toast :auto-close="false" body="Failed to save changes." type="error">
+    <Toast :is-auto-hide="false" body="Failed to save changes." type="error">
       <template #end>
         <Button
           label="Show toast"

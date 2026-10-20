@@ -25,6 +25,11 @@ export interface RadioGroupProps extends Omit<FieldLabelProps, 'inputId' | 'labe
   width?: number | string
   isDisabled?: boolean
   isReadOnly?: boolean
+  /**
+   * 整组被禁用的原因。和 `isDisabled` 一起用时，悬停或键盘聚焦会显示这段提示，
+   * 每个选项仍可聚焦（带 `aria-disabled`），但选不中。
+   */
+  disabledMessage?: string
   /** 只在单选列表里使用。sm 为 20px，md 为 24px。普通 Radio 不传，保持 18px。 */
   size?: RadioSize
   /** 选项排列方向。只在单选列表里默认垂直。 */
@@ -68,6 +73,10 @@ export interface RadioContext {
   isGroupDisabled: ComputedRef<boolean>
   isGroupReadOnly: ComputedRef<boolean>
   isRequired: ComputedRef<boolean>
+  /** 整组禁用时对外解释用的文字，没传就没有。 */
+  disabledMessage: ComputedRef<string | undefined>
+  /** 上面那段文字对应的元素 id，给 `aria-describedby` 用。 */
+  disabledMessageId: ComputedRef<string | undefined>
   size?: ComputedRef<RadioSize | undefined>
 }
 

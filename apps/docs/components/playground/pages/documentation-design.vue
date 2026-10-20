@@ -71,7 +71,7 @@ const COMPONENT = {
           />
         </VStack>
 
-        <TabList v-model:value="activeTab" class="tab-flush">
+        <TabList role="tablist" v-model:value="activeTab" class="tab-flush">
           <Tab value="overview" label="Overview" />
           <Tab value="api" label="API" />
           <Tab value="examples" label="Examples" />

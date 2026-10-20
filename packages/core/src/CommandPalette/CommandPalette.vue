@@ -100,6 +100,7 @@ function selectItem(item: SearchableItem): void {
   if (item.disabled)
     return
   value.value = item.id
+  emit('valueChange', item.id)
   close()
 }
 

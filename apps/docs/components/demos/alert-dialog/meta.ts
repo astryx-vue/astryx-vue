@@ -4,6 +4,7 @@ import { alertDialogOverview as demo } from './index'
 export const meta = {
   slug: 'alert-dialog',
   group: 'Overlay',
+  family: 'Dialog',
   order: 0,
   en: 'Alert Dialog',
   zh: '警告对话框',

@@ -24,7 +24,7 @@ const pending = ref<string[]>([])
 const optimistic = ref<string[] | null>(null)
 const shown = computed(() => optimistic.value ?? model.value)
 const groupDisabled = computed(() => props.isDisabled ?? false)
-const disabledReason = computed(() => props.disabledReason?.trim() || undefined)
+const disabledReason = computed(() => (props.disabledMessage ?? props.disabledReason)?.trim() || undefined)
 const showsReason = computed(() => groupDisabled.value && disabledReason.value != null)
 
 function toggle(value: string, checked: boolean): void {

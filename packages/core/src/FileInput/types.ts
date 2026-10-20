@@ -21,7 +21,14 @@ export interface FileInputProps {
   isRequired?: boolean
   isOptional?: boolean
   isLabelHidden?: boolean
+  /** 标签末尾信息图标里的说明。 */
+  labelTooltip?: string
   isLoading?: boolean
+  /**
+   * 为什么禁用。和 `isDisabled` 一起用时，悬停或键盘聚焦会显示这段提示，
+   * 触发按钮仍可聚焦（带 `aria-disabled`），但打不开文件选择框。
+   */
+  disabledMessage?: string
   status?: FileInputStatus
   statusVariant?: FieldStatusVariant | 'tooltip'
   width?: number | string

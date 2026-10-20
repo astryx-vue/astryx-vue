@@ -20,6 +20,8 @@ footer: false
 <tr><td><code>hasHoverIndication</code></td><td><code>'auto' | boolean</code></td><td><code>'auto'</code></td><td>是否在纯文字触发元素上显示虚线下划线。auto 时仅对纯文字触发元素生效。</td></tr>
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>受控显示状态。设置后悬停与聚焦不再触发提示。</td></tr>
 <tr><td><code>isDefaultOpen</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否在挂载时就显示提示。仅在未设置 isOpen 时生效。</td></tr>
+<tr><td><code>anchorsOnSelf</code></td><td><code>boolean</code></td><td><code>false</code></td><td>不再包一层 span，插槽的根元素自己当触发器。标题和段落必须这样用。</td></tr>
+<tr><td><code>anchor</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>用外部元素当触发器。这时不渲染外层 span，默认插槽可以不写，悬停、聚焦和 <code>aria-describedby</code> 都挂到该元素上。</td></tr>
 </tbody></table>
 </div>
 

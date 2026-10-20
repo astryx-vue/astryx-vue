@@ -4,7 +4,8 @@ import { iconButtonOverview as demo } from './index'
 export const meta = {
   slug: 'icon-button',
   group: 'Action',
-  order: 4,
+  family: 'Button',
+  order: 9,
   en: 'Icon Button',
   zh: '纯图标按钮',
   demo,

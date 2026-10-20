@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './types.js'
-import { computed, shallowRef, useId } from 'vue'
+import { computed, shallowRef, useId, useTemplateRef } from 'vue'
+import ButtonTooltip from '../Button/ButtonTooltip.vue'
+import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { applyRangeClick, formatDateRange, isRangeWithinSpan } from '../composables/useDateRange.js'
 import { addMonths, todayISODate } from '../composables/useMonthGrid.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
@@ -11,6 +13,7 @@ import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
 import Spinner from '../Spinner/Spinner.vue'
+import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import RangeCalendar from './RangeCalendar.vue'
 import '../../styles/bordered-control.css'
 import '../../styles/date-range-input.css'
@@ -40,6 +43,11 @@ const cursor = shallowRef({ year: Number(today.slice(0, 4)), month: Number(today
 const action = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || action.busy.value)
 const locked = computed(() => props.isDisabled || busy.value)
+const disabledMessageId = `${generatedId}-disabled`
+const disabledMessage = computed(() => props.disabledMessage?.trim() || undefined)
+const showsDisabledMessage = computed(() => locked.value && disabledMessage.value != null)
+const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
 const visibleMonths = computed(() => props.numberOfMonths ?? props.monthCount)
 
 const display = computed(() => formatDateRange(model.value, locale.value))
@@ -110,13 +118,19 @@ function clear(): void {
         role="dialog" :label="messages.dateRangeInput.dialogLabel" @open-change="onOpenChange"
       >
         <div
+          ref="containerRef"
           class="astryx-date-range-input astryx-bordered-control" :data-size="size"
           :data-status="status?.type" :data-disabled="locked || undefined"
+          @pointerenter="disabledTooltip.onPointerEnter"
+          @pointerleave="disabledTooltip.onPointerLeave"
         >
           <button
-            :id="inputId" type="button" class="astryx-date-range-trigger" :disabled="locked"
-            :aria-describedby="field.describedBy" :aria-invalid="status?.type === 'error' || undefined"
+            :id="inputId" type="button" class="astryx-date-range-trigger" :disabled="locked && !showsDisabledMessage"
+            :aria-describedby="[field.describedBy, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
+            :aria-invalid="status?.type === 'error' || undefined"
             :aria-busy="busy || undefined" :aria-required="isRequired || undefined"
+            :aria-disabled="showsDisabledMessage || undefined"
+            @focus="disabledTooltip.onFocus" @blur="disabledTooltip.onBlur"
           >
             <Icon class="astryx-date-range-icon" icon="calendar" size="sm" />
             <span class="astryx-date-range-value" :data-placeholder="!display || undefined">{{ display || placeholder }}</span>
@@ -150,4 +164,12 @@ function clear(): void {
       </Popover>
     </template>
   </Field>
+  <VisuallyHidden v-if="showsDisabledMessage" :id="disabledMessageId">
+    {{ disabledMessage }}
+  </VisuallyHidden>
+  <ButtonTooltip
+    v-if="showsDisabledMessage"
+    :id="`${disabledMessageId}-tooltip`" :anchor="containerRef" :open="disabledTooltip.isOpen.value" :text="disabledMessage ?? ''"
+    @pointer-enter="disabledTooltip.onTooltipPointerEnter" @pointer-leave="disabledTooltip.onTooltipPointerLeave"
+  />
 </template>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
+import type { Component, ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ItemProps, ItemSlots } from './types.js'
-import { computed, provide, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { useInteractiveRole } from '../composables/useInteractiveRole.js'
+import { useLinkComponent } from '../LinkProvider/context.js'
 import { itemDescriptionContextKey } from './context.js'
 import { useItemSwipe } from './useItemSwipe.js'
 import '../../styles/list.css'
@@ -19,6 +21,8 @@ const props = withDefaults(defineProps<ItemProps>(), {
 })
 
 defineSlots<ItemSlots>()
+
+const linkComponent = useLinkComponent()
 
 const ARIA_SELECTED_ROLES = new Set(['option', 'tab', 'row', 'gridcell', 'columnheader', 'rowheader', 'treeitem'])
 
@@ -93,7 +97,9 @@ const ariaCurrent = computed(() =>
 
 const isDelegate = computed(() => props.interactiveRef != null)
 const isInteractive = computed(() => props.onClick != null || props.href != null || isDelegate.value)
-const isLinkRoot = computed(() => typeof props.as !== 'string' && props.href != null)
+/** 链接内容用的根组件：`as` 写了组件就用它，否则用 LinkProvider 给的默认值。 */
+const customLink = computed(() => (typeof props.as === 'string' ? linkComponent.value : props.as))
+const isLinkContent = computed(() => props.href != null && customLink.value != null)
 
 const resolvedTarget = computed(() => props.target)
 const resolvedRel = computed(() => {
@@ -133,14 +139,16 @@ const labelStyle = computed(() => clampStyle(labelClamp.value))
 const descriptionClasses = computed(() => clampClass(descriptionClamp.value))
 const descriptionStyle = computed(() => clampStyle(descriptionClamp.value))
 
+const contentRole = useInteractiveRole({
+  href: () => (hasParentRole.value || isDelegate.value ? undefined : props.href),
+  hasOnClick: () => !hasParentRole.value && !isDelegate.value && props.onClick != null,
+})
+
 const contentTag = computed(() => {
-  if (hasParentRole.value || isDelegate.value)
-    return 'span'
+  if (contentRole.role.value === 'link')
+    return isLinkContent.value ? toRaw(customLink.value as Component) : 'a'
 
-  if (props.href != null && !isLinkRoot.value)
-    return 'a'
-
-  return props.onClick != null ? 'button' : 'span'
+  return contentRole.role.value === 'button' ? 'button' : 'span'
 })
 
 function handleContentClick(event: MouseEvent): void {
@@ -148,9 +156,10 @@ function handleContentClick(event: MouseEvent): void {
 }
 
 const contentAttrs = computed<Record<string, unknown>>(() => {
-  if (contentTag.value === 'a') {
+  if (props.href != null && !hasParentRole.value && !isDelegate.value) {
     return {
       'href': props.href,
+      'to': isLinkContent.value ? props.href : undefined,
       'rel': resolvedRel.value,
       'target': resolvedTarget.value,
       'aria-disabled': props.isDisabled || undefined,

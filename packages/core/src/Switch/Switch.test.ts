@@ -69,6 +69,20 @@ describe('switch', () => {
     expect(document.querySelector('[role="tooltip"]')?.textContent).toBe('Admin only')
   })
 
+  it('forwards focus and blur listeners to the native input', async () => {
+    const onFocus = vi.fn()
+    const onBlur = vi.fn()
+    const wrapper = mount(Switch, {
+      attachTo: document.body,
+      attrs: { onFocus, onBlur },
+      props: { 'label': 'Notify', 'modelValue': false, 'onUpdate:modelValue': () => {} },
+    })
+    await wrapper.get('input').trigger('focus')
+    await wrapper.get('input').trigger('blur')
+    expect(onFocus).toHaveBeenCalledTimes(1)
+    expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
   it('renders server-side with linked IDs', async () => {
     const html = await renderToString(createSSRApp({ render: () => h(Switch, { label: 'Notify', modelValue: true }) }))
     expect(html).toContain('role="switch"')

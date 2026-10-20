@@ -150,6 +150,8 @@ A multi-step flow shares one dialog. `v-model:active-sheet` names the child `Bot
   </table>
 </div>
 
+- `cancel(event: Event)`: fires before the switcher acts on a native dialog cancel, such as Escape. Call `event.preventDefault()` to keep the flow open.
+
 A child `BottomSheet` with `sheetId` no longer opens its own dialog. The switcher decides which one is visible.
 
 ## Native attributes

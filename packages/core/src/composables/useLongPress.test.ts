@@ -3,6 +3,11 @@ import { ref } from 'vue'
 import { mountComposable } from './testing/mountComposable.js'
 import { useLongPress } from './useLongPress.js'
 
+function touchEvent(points: Array<{ x: number, y: number }>): TouchEvent {
+  const touches = points.map(point => ({ clientX: point.x, clientY: point.y }))
+  return { changedTouches: touches, touches } as unknown as TouchEvent
+}
+
 describe('useLongPress', () => {
   afterEach(() => {
     vi.useRealTimers()
@@ -63,6 +68,50 @@ describe('useLongPress', () => {
     disabled.value = false
     result.start({ x: 4, y: 5 })
     wrapper.unmount()
+    vi.advanceTimersByTime(100)
+    expect(onLongPress).not.toHaveBeenCalled()
+  })
+
+  it('disabled 是 isDisabled 的另一个名字，任一为真就停用', () => {
+    vi.useFakeTimers()
+    const onLongPress = vi.fn()
+    const { result } = mountComposable(() => useLongPress({
+      delayMs: 100,
+      disabled: () => true,
+      onLongPress,
+    }))
+
+    result.start({ x: 1, y: 1 })
+    vi.advanceTimersByTime(100)
+    expect(onLongPress).not.toHaveBeenCalled()
+  })
+
+  it('摊到元素上的触摸处理函数按触摸事件走', () => {
+    vi.useFakeTimers()
+    const onLongPress = vi.fn()
+    const { result } = mountComposable(() => useLongPress({ delayMs: 100, onLongPress }))
+
+    result.handlers.onTouchStart(touchEvent([{ x: 8, y: 9 }]))
+    vi.advanceTimersByTime(100)
+    expect(onLongPress).toHaveBeenCalledExactlyOnceWith({ x: 8, y: 9 })
+  })
+
+  it('触摸移动超出容差、抬起、第二根手指都会取消', () => {
+    vi.useFakeTimers()
+    const onLongPress = vi.fn()
+    const { result } = mountComposable(() => useLongPress({ delayMs: 100, moveCancelPx: 10, onLongPress }))
+
+    result.handlers.onTouchStart(touchEvent([{ x: 0, y: 0 }]))
+    result.handlers.onTouchMove(touchEvent([{ x: 0, y: 40 }]))
+    vi.advanceTimersByTime(100)
+    expect(onLongPress).not.toHaveBeenCalled()
+
+    result.handlers.onTouchStart(touchEvent([{ x: 0, y: 0 }]))
+    result.handlers.onTouchEnd(touchEvent([]))
+    vi.advanceTimersByTime(100)
+    expect(onLongPress).not.toHaveBeenCalled()
+
+    result.handlers.onTouchStart(touchEvent([{ x: 0, y: 0 }, { x: 50, y: 50 }]))
     vi.advanceTimersByTime(100)
     expect(onLongPress).not.toHaveBeenCalled()
   })

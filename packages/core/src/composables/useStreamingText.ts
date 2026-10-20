@@ -86,7 +86,9 @@ export function useStreamingText(
   const instant = computed(() => !streaming.value || speed.value === 'instant' || prefersReducedMotion.value)
 
   watch(target, (next, previous) => {
-    if (next.length === 0 && (previous?.length ?? 0) > 0)
+    const revealed = (previous ?? '').slice(0, displayedLen.value)
+    // A cleared or replaced source starts over. Text that only grows keeps its place.
+    if (next.length === 0 || (revealed.length > 0 && !next.startsWith(revealed)))
       displayedLen.value = 0
   })
 

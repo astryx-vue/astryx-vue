@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatDictationButtonProps } from './types.js'
-import { computed } from 'vue'
+import { computed, toValue } from 'vue'
 import Button from '../Button/Button.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
@@ -14,7 +14,8 @@ const props = withDefaults(defineProps<ChatDictationButtonProps>(), {
 })
 
 const messages = useAstryxMessages()
-const listening = computed(() => props.dictation.isListening)
+const supported = computed(() => toValue(props.dictation.isSupported))
+const listening = computed(() => toValue(props.dictation.isListening))
 const label = computed(() => props.label ?? (
   listening.value ? messages.value.chat.stopDictation : messages.value.chat.startDictation
 ))
@@ -27,12 +28,12 @@ const sizes = {
 } as const
 
 const metrics = computed(() => sizes[props.size])
-const bars = computed(() => props.dictation.bands.slice(0, BAR_COUNT).map((level, index) => ({
+const bars = computed(() => toValue(props.dictation.bands).slice(0, BAR_COUNT).map((level, index) => ({
   key: `band-${index}`,
   scale: BAR_MIN + Math.min(Math.sqrt(level / 0.2), 1) * (1 - BAR_MIN),
 })))
 const clipping = computed(() => {
-  const volume = props.dictation.volume
+  const volume = toValue(props.dictation.volume)
   if (volume < 0.2)
     return 0
   return Math.min((volume - 0.2) / 0.1, 1) * 100
@@ -44,7 +45,7 @@ const barColor = computed(() => clipping.value > 0
 
 <template>
   <span
-    v-if="dictation.isSupported || !isHiddenWhenUnsupported"
+    v-if="supported || !isHiddenWhenUnsupported"
     v-bind="$attrs"
     class="astryx-chat-dictation"
   >
@@ -70,7 +71,7 @@ const barColor = computed(() => clipping.value > 0
       variant="ghost"
       :size="size"
       is-icon-only
-      :is-disabled="!dictation.isSupported"
+      :is-disabled="!supported"
       @click="dictation.toggle()"
     >
       <template v-if="!listening" #icon>

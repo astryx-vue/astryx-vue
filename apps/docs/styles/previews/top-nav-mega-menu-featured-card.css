@@ -1,0 +1,5 @@
+/* 特色卡片的宽度写在预览里：总览宫格（约 340px）和详情页画布共用这一份，
+   卡片本身是 width: 100%，没有外层约束就会被画布撑满。 */
+.top-nav-mega-menu-featured-card-preview {
+  width: min(100%, 320px);
+}

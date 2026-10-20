@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CommandPaletteInputProps } from './types.js'
+import type { CommandPaletteInputEmits, CommandPaletteInputProps } from './types.js'
 import { computed, inject, onMounted, useTemplateRef } from 'vue'
 import { DIALOG_CONTEXT_KEY } from '../Dialog/context.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -13,14 +13,22 @@ const props = withDefaults(defineProps<CommandPaletteInputProps>(), {
   hasAutoFocus: true,
 })
 
+const emit = defineEmits<CommandPaletteInputEmits>()
+
+defineSlots<{
+  end?: () => unknown
+  /** Same slot under the original prop name. */
+  endContent?: () => unknown
+}>()
+
 const palette = inject(commandPaletteKey, null)
 const dialog = inject(DIALOG_CONTEXT_KEY, null)
 const messages = useAstryxMessages()
 const inputRef = useTemplateRef<HTMLInputElement>('input')
 
 const placeholder = computed(() => props.placeholder ?? messages.value.commandPalette.placeholder)
-const label = computed(() => props.label ?? placeholder.value)
-const value = computed(() => palette?.search.value ?? '')
+const label = computed(() => props.label ?? messages.value.commandPalette.inputLabel)
+const value = computed(() => props.value ?? palette?.search.value ?? '')
 const activeDescendant = computed(() => {
   const index = palette?.highlightedIndex.value ?? -1
   if (palette == null || index < 0)
@@ -30,7 +38,13 @@ const activeDescendant = computed(() => {
 const shouldFocus = computed(() => props.hasAutoFocus && dialog?.isInline.value !== true)
 
 function onInput(event: Event): void {
-  palette?.setSearch((event.target as HTMLInputElement).value)
+  const next = (event.target as HTMLInputElement).value
+  if (props.value == null) {
+    palette?.setSearch(next)
+    return
+  }
+  emit('valueChange', next)
+  emit('update:value', next)
 }
 
 onMounted(() => {
@@ -46,7 +60,7 @@ onMounted(() => {
       ref="input"
       :aria-activedescendant="activeDescendant"
       aria-autocomplete="list"
-      :aria-controls="palette?.listId"
+      :aria-controls="palette && palette.items.value.length > 0 ? palette.listId : undefined"
       :aria-expanded="palette ? true : undefined"
       :aria-label="label"
       class="astryx-command-palette-field"
@@ -59,7 +73,9 @@ onMounted(() => {
     >
     <span class="astryx-command-palette-end">
       <Spinner v-if="palette?.isBusy.value" class="astryx-command-palette-spinner" size="sm" />
-      <slot name="end" />
+      <slot name="end">
+        <slot name="endContent" />
+      </slot>
     </span>
   </div>
 </template>

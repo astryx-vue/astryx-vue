@@ -20,6 +20,8 @@ footer: false
 <tr><td><code>hasHoverIndication</code></td><td><code>'auto' | boolean</code></td><td><code>'auto'</code></td><td>Dashed underline on a text-only trigger. auto applies it only to text.</td></tr>
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>Controlled visibility. Hover and focus are ignored when set.</td></tr>
 <tr><td><code>isDefaultOpen</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show on mount.</td></tr>
+<tr><td><code>anchorsOnSelf</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Skips the wrapper span so the slot root element is the trigger. Needed for headings and paragraphs.</td></tr>
+<tr><td><code>anchor</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>External element used as the trigger. No wrapper is rendered, the default slot can be omitted, and focus, hover and <code>aria-describedby</code> are wired to that element.</td></tr>
 </tbody></table>
 </div>
 

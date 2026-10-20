@@ -1,0 +1,22 @@
+---
+layout: component-docs
+title: Avatar Group Overflow
+outline: false
+footer: false
+---
+
+## Props
+
+<div class="component-api-table" role="region" aria-label="AvatarGroupOverflow props" tabindex="0">
+<table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>count</code></td><td><code>number</code></td><td>—</td><td>Number of hidden avatars. Rendered as <code>+N</code> and also used to build the accessible name, which follows the current language (English reads <code>5 more</code>). A negative count is clamped to 0. Required.</td></tr>
+</tbody></table>
+</div>
+
+## Events
+
+- `click(event: MouseEvent)`: fires when the indicator is clicked. The listener also turns the figure into a button that can take focus.
+
+## Slots
+
+- `default`: custom count text, such as `12+`. Falls back to `+N`. Short text keeps the indicator a circle; longer text widens it into a pill, so the count always fits.

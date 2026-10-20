@@ -52,4 +52,38 @@ describe('time input', () => {
     await wrapper.get('input').trigger('keydown', { key: 'ArrowUp' })
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
+
+  it('shows the labelTooltip through the field label', () => {
+    const wrapper = mount(TimeInput, {
+      props: { label: 'Start time', modelValue: null, labelTooltip: 'Local time zone' },
+    })
+    expect(wrapper.html()).toContain('Local time zone')
+    wrapper.unmount()
+  })
+
+  it('keeps the field focusable while a disabledMessage explains why', async () => {
+    const wrapper = mount(TimeInput, {
+      props: { label: 'Start time', modelValue: '10:00', isDisabled: true, disabledMessage: 'You need the Editor role' },
+      attachTo: document.body,
+    })
+    const input = wrapper.get('input')
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('readonly')).toBe('')
+    expect(input.attributes('aria-disabled')).toBe('true')
+    expect(input.attributes('aria-describedby')).toContain('disabled')
+    input.element.focus()
+    await wrapper.vm.$nextTick()
+    const tooltip = document.querySelector<HTMLElement>('[role="tooltip"]')
+    expect(tooltip?.textContent).toBe('You need the Editor role')
+    expect(tooltip?.style.display).not.toBe('none')
+    wrapper.unmount()
+  })
+
+  it('locks the field and shows a spinner while isLoading', async () => {
+    const wrapper = mount(TimeInput, { props: { label: 'Start time', modelValue: '10:00', isLoading: true } })
+    expect(wrapper.find('.astryx-spinner').exists()).toBe(true)
+    expect(wrapper.get('input').attributes('readonly')).toBe('')
+    await wrapper.get('input').trigger('keydown', { key: 'ArrowUp' })
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
 })

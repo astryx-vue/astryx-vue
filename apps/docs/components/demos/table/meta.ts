@@ -4,7 +4,8 @@ import { tableOverview as demo } from './index'
 export const meta = {
   slug: 'table',
   group: 'Table & List',
-  order: 3,
+  family: 'Table',
+  order: 5,
   en: 'Table',
   zh: '表格',
   demo,

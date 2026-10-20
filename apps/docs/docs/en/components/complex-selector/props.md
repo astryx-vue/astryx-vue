@@ -49,6 +49,9 @@ footer: false
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>Value</code></td><td>The value passed to <code>commit</code>.</td></tr>
       <tr><td><code>change</code></td><td><code>Value</code></td><td>Emitted with <code>update:modelValue</code>.</td></tr>
+      <tr><td><code>click</code></td><td><code>event: MouseEvent</code></td><td>Emitted for a click on the trigger, before the popup opens. Call <code>event.preventDefault()</code> to keep it closed. With the <code>trigger</code> slot or <code>renderTrigger</code> it runs after the toggle and cannot cancel it.</td></tr>
+      <tr><td><code>keydown</code></td><td><code>event: KeyboardEvent</code></td><td>Emitted for keys on the trigger after the built-in handling, and receives every key, including the ArrowDown that opens the popup. With a custom trigger, keys the built-in handling cancels are not emitted.</td></tr>
+      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>Emitted whenever the surface opens or closes, however it happened: trigger, keyboard, light dismiss, Escape, <code>close()</code>, or the imperative handle.</td></tr>
     </tbody>
   </table>
 </div>

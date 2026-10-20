@@ -3,6 +3,8 @@ import type { FieldStatusInput, FieldStatusType } from '../Field/types.js'
 import type { DateInputEmits, DateInputProps, DateInputSlots, DateInputStatus } from './types.js'
 import { computed, defineComponent, ref, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
+import ButtonTooltip from '../Button/ButtonTooltip.vue'
+import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import Calendar from '../Calendar/Calendar.vue'
 import { toCalendarDate } from '../Calendar/calendarDate.js'
 import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
@@ -16,6 +18,7 @@ import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
 import Spinner from '../Spinner/Spinner.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
+import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import NativeDateField from './NativeDateField.vue'
 import '../../styles/date-input.css'
 
@@ -54,12 +57,18 @@ const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.d
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.dateInput.clear(props.label))
 const dialogLabel = computed(() => props.label || messages.value.dateInput.dialogLabel)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
+const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
 const isOpen = ref(false)
 const inputValue = ref('')
+const disabledMessageId = `${generatedId}-disabled`
 
 const pending = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || pending.busy.value)
 const locked = computed(() => props.disabled || busy.value)
+const disabledMessage = computed(() => (props.disabledMessage?.trim() || props.disabledReason?.trim()) || undefined)
+const showsDisabledMessage = computed(() => locked.value && disabledMessage.value != null)
+const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const showsClear = computed(() => (props.hasClear || props.clearable) && Boolean(props.modelValue) && !locked.value)
 const policy = computed(() => resolveDatePresentation(props.presentation, props.nativePicker))
 const surface = computed(() => resolveDateSurface(policy.value, isCoarsePointer.value))
 const useSheet = computed(() => surface.value === 'sheet')
@@ -163,7 +172,7 @@ const toggleLabel = computed(() => isOpen.value
   : messages.value.dateInput.openCalendar)
 
 function describedBy(fieldIds?: string): string | undefined {
-  return [props.describedBy, fieldIds].filter(Boolean).join(' ') || undefined
+  return [props.describedBy, fieldIds, showsDisabledMessage.value ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined
 }
 
 function onInput(event: Event): void {
@@ -179,6 +188,7 @@ function onInput(event: Event): void {
 }
 
 function onBlur(): void {
+  disabledTooltip.onBlur()
   if (!parseDate(inputValue.value.trim()))
     syncDisplayValue()
 }
@@ -218,6 +228,12 @@ function onClear(event: Event): void {
   modelValueRef.value = null
   inputValue.value = ''
   isOpen.value = false
+  inputRef.value?.focus({ preventScroll: true })
+}
+
+function onToggleKeyDown(event: KeyboardEvent): void {
+  if (event.key === 'Escape')
+    disabledTooltip.hideImmediately()
 }
 
 defineExpose({
@@ -258,16 +274,20 @@ syncDisplayValue()
     :status-variant="statusVariant"
     :format="format"
     :described-by="props.describedBy"
+    :disabled-message="disabledMessage"
     :width="width"
     @update:model-value="commit"
   />
   <component :is="shell" v-else v-bind="fieldBindings">
     <template #default="field">
       <div
+        ref="containerRef"
         class="astryx-date-input"
         :class="[statusType ? `status-${statusType}` : undefined, `size-${props.size}`]"
         :data-status="statusType"
         :data-presentation="useSheet ? 'bottom-sheet' : 'popover'"
+        @pointerenter="disabledTooltip.onPointerEnter"
+        @pointerleave="disabledTooltip.onPointerLeave"
       >
         <Popover
           :is-open="useSheet ? false : isOpen"
@@ -293,6 +313,7 @@ syncDisplayValue()
               :disabled="locked"
               :aria-label="toggleLabel"
               @click="onToggleClick"
+              @keydown="onToggleKeyDown"
             >
               <Icon icon="calendar" size="sm" />
             </button>
@@ -304,8 +325,9 @@ syncDisplayValue()
               role="combobox"
               :value="inputValue"
               :placeholder="resolvedPlaceholder"
-              :disabled="locked"
-              :readonly="useSheet"
+              :disabled="locked && !showsDisabledMessage"
+              :readonly="useSheet || showsDisabledMessage"
+              :aria-disabled="showsDisabledMessage || undefined"
               :inputmode="useSheet ? 'none' : undefined"
               :aria-label="showsField ? undefined : props.label"
               :aria-labelledby="showsField ? field?.labelId : undefined"
@@ -316,15 +338,15 @@ syncDisplayValue()
               :aria-controls="popupId"
               :aria-expanded="isOpen"
               aria-haspopup="dialog"
-              :title="props.disabledReason"
               autocomplete="off"
               @input="onInput"
               @blur="onBlur"
+              @focus="disabledTooltip.onFocus"
               @click="openCalendar"
               @keydown="onInputKeyDown"
             >
             <button
-              v-if="props.clearable && props.modelValue && !locked"
+              v-if="showsClear"
               type="button"
               class="astryx-date-input-clear"
               :aria-label="resolvedClearLabel"
@@ -384,4 +406,12 @@ syncDisplayValue()
       </div>
     </template>
   </component>
+  <VisuallyHidden v-if="showsDisabledMessage && surface !== 'native'" :id="disabledMessageId">
+    {{ disabledMessage }}
+  </VisuallyHidden>
+  <ButtonTooltip
+    v-if="showsDisabledMessage && surface !== 'native'"
+    :id="`${disabledMessageId}-tooltip`" :anchor="containerRef" :open="disabledTooltip.isOpen.value" :text="disabledMessage ?? ''"
+    @pointer-enter="disabledTooltip.onTooltipPointerEnter" @pointer-leave="disabledTooltip.onTooltipPointerLeave"
+  />
 </template>

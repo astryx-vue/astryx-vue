@@ -1,6 +1,6 @@
 import type { SelectorOption } from './types.js'
 import { mount } from '@vue/test-utils'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import Selector from './Selector.vue'
 
@@ -507,5 +507,111 @@ describe('selector', () => {
     const hiddenSelect = wrapper.find('select[name="fruit"]')
     expect(hiddenSelect.exists()).toBe(true)
     expect((hiddenSelect.element as HTMLSelectElement).value).toBe('banana')
+  })
+
+  it('clears the value through hasClear as well as clearable', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'banana', hasClear: true },
+    })
+    const clear = wrapper.get('.astryx-selector-clear')
+    await clear.trigger('click')
+    await flushPromises()
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
+  })
+
+  it('names the clear button after the field label', () => {
+    const wrapper = mount(Selector, {
+      props: { options, modelValue: 'banana', hasClear: true, label: 'Fruit' },
+    })
+    expect(wrapper.get('.astryx-selector-clear').attributes('aria-label')).toBe('Clear Fruit')
+  })
+
+  it('keeps a disabled trigger focusable and explains why', async () => {
+    const wrapper = mount(Selector, {
+      props: { options, disabled: true, disabledMessage: 'Only owners can change this', label: 'Fruit' },
+    })
+    await nextTick()
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
+
+    const describedBy = trigger.attributes('aria-describedby') ?? ''
+    expect(wrapper.get(`#${describedBy}`).text()).toBe('Only owners can change this')
+
+    const tooltips = document.querySelectorAll<HTMLElement>('[role="tooltip"]')
+    const tooltip = tooltips[tooltips.length - 1]
+    expect(tooltip?.style.display).toBe('none')
+
+    vi.useFakeTimers()
+    await wrapper.get('.astryx-selector-field').trigger('pointerenter')
+    vi.advanceTimersByTime(300)
+    await nextTick()
+    expect(tooltip?.textContent).toBe('Only owners can change this')
+    expect(tooltip?.style.display).not.toBe('none')
+    vi.useRealTimers()
+
+    await trigger.trigger('click')
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+  })
+
+  it('keeps the plain disabled button when the message is blank', () => {
+    const wrapper = mount(Selector, { props: { options, disabled: true, disabledMessage: '   ' } })
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    expect(trigger.attributes('disabled')).toBeDefined()
+    expect(trigger.attributes('aria-disabled')).toBeUndefined()
+  })
+
+  it('takes disabledReason as another name for disabledMessage', async () => {
+    const wrapper = mount(Selector, { props: { options, disabled: true, disabledReason: 'Locked' } })
+    await nextTick()
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    expect(trigger.attributes('aria-disabled')).toBe('true')
+    vi.useFakeTimers()
+    await wrapper.get('.astryx-selector-field').trigger('pointerenter')
+    vi.advanceTimersByTime(300)
+    await nextTick()
+    const tooltips = document.querySelectorAll<HTMLElement>('[role="tooltip"]')
+    expect(tooltips[tooltips.length - 1]?.textContent).toBe('Locked')
+    expect(tooltips[tooltips.length - 1]?.style.display).not.toBe('none')
+    vi.useRealTimers()
+  })
+
+  it('runs click before the toggle and cannot be kept closed', async () => {
+    const states: (string | null)[] = []
+    const wrapper = mount(Selector, {
+      props: {
+        options,
+        onClick: (event: MouseEvent) => {
+          states.push((event.currentTarget as HTMLElement).getAttribute('aria-expanded'))
+          event.preventDefault()
+        },
+      },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    await trigger.trigger('click')
+    await flushPromises()
+    expect(states).toEqual(['false'])
+    expect(trigger.attributes('aria-expanded')).toBe('true')
+    expect(wrapper.emitted('click')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('emits focus and only the keys the built-in model leaves alone', async () => {
+    const keys: string[] = []
+    const wrapper = mount(Selector, {
+      props: { options, onKeydown: (event: KeyboardEvent) => keys.push(event.key) },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.get('.astryx-selector-trigger')
+    await trigger.trigger('focus')
+    expect(wrapper.emitted('focus')).toHaveLength(1)
+
+    // 箭头被内置模型处理并取消，不再透出。
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    expect(keys).toEqual([])
+    await trigger.trigger('keydown', { key: 'Shift' })
+    expect(keys).toEqual(['Shift'])
+    wrapper.unmount()
   })
 })

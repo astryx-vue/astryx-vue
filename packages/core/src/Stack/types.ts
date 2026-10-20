@@ -36,8 +36,16 @@ export interface StackProps {
   padding?: SpacingStep
   /** Block-axis padding; overrides padding on this axis. */
   paddingBlock?: SpacingStep
+  /** Block-end (bottom) padding; overrides `paddingBlock` and `padding` on that edge only. */
+  paddingBlockEnd?: SpacingStep
+  /** Block-start (top) padding; overrides `paddingBlock` and `padding` on that edge only. */
+  paddingBlockStart?: SpacingStep
   /** Inline-axis padding; overrides padding on this axis. */
   paddingInline?: SpacingStep
+  /** Inline-end (right in LTR) padding; overrides `paddingInline` and `padding` on that edge only. */
+  paddingInlineEnd?: SpacingStep
+  /** Inline-start (left in LTR) padding; overrides `paddingInline` and `padding` on that edge only. */
+  paddingInlineStart?: SpacingStep
   /** Vertical alignment, resolved according to direction. */
   vAlign?: StackAlignment
   /** Width of the stack. Numbers are interpreted as pixels. */

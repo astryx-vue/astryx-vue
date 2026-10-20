@@ -23,6 +23,7 @@ footer: false
 <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>true</code></td><td>打开时是否把焦点移入浮层。仅对 <code>dialog</code> 角色生效。</td></tr>
 <tr><td><code>hasLightDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否允许点击浮层与触发元素以外的区域来关闭。</td></tr>
 <tr><td><code>hasEscapeDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否允许按下 Escape 关闭浮层。</td></tr>
+<tr><td><code>anchor</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>用外部元素当锚点。这时不渲染触发容器，默认插槽可以不写；点击、键盘和 ARIA 属性都挂到该元素里的按钮上。</td></tr>
 </tbody></table>
 </div>
 
@@ -32,7 +33,7 @@ footer: false
 
 ## 插槽
 
-- `default`：触发元素。请使用 `button` 或带有 `role="button"` 的元素。
+- `default`：触发元素。请使用 `button` 或带有 `role="button"` 的元素。设置 `anchor` 后可以不写。
 - `content`：浮层内容。
 
 ## 主题

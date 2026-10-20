@@ -1,4 +1,5 @@
 import type { ComputedRef, Ref } from 'vue'
+import type { NavLinkComponent } from '../NavItem/types.js'
 
 export type TabListSize = 'sm' | 'md' | 'lg'
 export type TabListLayout = 'hug' | 'fill'
@@ -37,6 +38,20 @@ export interface TabListProps {
    * when this is omitted.
    */
   edgeCompensation?: TabListEdgeCompensation
+  /**
+   * ARIA role for the strip.
+   *
+   * `tablist` asks for the WAI-ARIA tabs pattern: `role="tab"` and
+   * `aria-selected` on every tab, and each tab points at the panel it
+   * controls through its `panelId`. Only tabs belong in a tablist strip, and
+   * a tab's `href` is ignored there.
+   *
+   * Left unset, the strip is a navigation landmark that marks the current tab
+   * with `aria-current`, and tabs with an `href` render as links.
+   *
+   * Any other value is passed through to the element unchanged.
+   */
+  role?: string
 }
 
 export interface TabMenuOption {
@@ -62,7 +77,13 @@ export interface TabProps {
    */
   value: string
   /**
+   * Visible text of the tab. Used as `aria-label` when `isLabelHidden` is set.
+   * The default slot wins when both are given.
+   */
+  label?: string
+  /**
    * ID of the controlled panel for aria-controls.
+   * Only used inside a `role="tablist"` strip.
    */
   panelId?: string
   /**
@@ -70,6 +91,33 @@ export interface TabProps {
    * @default false
    */
   disabled?: boolean
+  /**
+   * URL to navigate to. Outside the tabs pattern the tab renders as a link.
+   * Ignored inside a `role="tablist"` strip.
+   */
+  href?: string
+  /**
+   * Link root component, such as a router link. Only applies when `href` is
+   * given and the strip is not a tablist.
+   */
+  as?: NavLinkComponent
+  /**
+   * Visually hides the label. Only the icon and the end content show, and
+   * `label` becomes the accessible name.
+   * @default false
+   */
+  isLabelHidden?: boolean
+}
+
+export interface TabSlots {
+  /** Visible text. Falls back to the `label` prop. */
+  default?: () => unknown
+  /** Icon shown while the tab is not selected. */
+  icon?: () => unknown
+  /** Icon shown while the tab is selected. Falls back to `icon`. */
+  selectedIcon?: () => unknown
+  /** Content after the label, such as a badge count or a status dot. */
+  endContent?: () => unknown
 }
 
 export interface TabListTab {
@@ -94,6 +142,8 @@ export interface TabListContextValue {
   size: ComputedRef<TabListSize>
   layout: ComputedRef<TabListLayout>
   hasDivider: ComputedRef<boolean>
+  /** Whether the strip speaks the WAI-ARIA tabs pattern (`role="tablist"`). */
+  isTabsPattern: ComputedRef<boolean>
   tabs: TabListTab[]
   focusedValue: Ref<string>
   registerTab: (tab: TabListTab) => void

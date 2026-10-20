@@ -18,6 +18,7 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>状态消息的位置。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用整组。</td></tr>
+<tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>整组被禁用的原因。和 <code>isDisabled</code> 一起用时，悬停或键盘聚焦会显示这段提示，每个选项仍可聚焦（带 <code>aria-disabled</code>），但选不中。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标记为必填。</td></tr>
 </tbody></table>
 </div>

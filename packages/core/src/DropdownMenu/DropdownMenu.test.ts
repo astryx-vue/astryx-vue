@@ -484,7 +484,8 @@ describe('dropdownMenu', () => {
       const surface = document.querySelector<HTMLElement>('.astryx-dropdown-menu')!
       // Trigger bottom (120) plus the 4px gap.
       expect(surface.style.top).toBe('124px')
-      expect(surface.style.left).toBe('10px')
+      // The anchor sits 10px from the edge, inside the 16px viewport gutter, so it clamps.
+      expect(surface.style.left).toBe('16px')
     }
     finally {
       HTMLElement.prototype.getBoundingClientRect = original

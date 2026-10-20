@@ -24,6 +24,15 @@ export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelI
   width?: number | string
   rows?: number
   cols?: number
+  /**
+   * 原生的 `autocomplete` 属性，原样转给 textarea。
+   */
+  autoComplete?: string
+  /**
+   * 是否启用浏览器拼写检查。
+   * @default true
+   */
+  hasSpellCheck?: boolean
   minlength?: number | string
   maxlength?: number | string
   wrap?: TextAreaWrap

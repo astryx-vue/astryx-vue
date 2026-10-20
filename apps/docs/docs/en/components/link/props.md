@@ -95,7 +95,13 @@ footer: false
         <td><code>download</code></td>
         <td><code>string | boolean</code></td>
         <td>-</td>
-        <td>Triggers a download of the linked URL.</td>
+        <td>Triggers a download of the linked URL. A string is the suggested filename. <code>true</code> renders a bare <code>download</code> attribute, <code>false</code> renders no attribute at all.</td>
+      </tr>
+      <tr>
+        <td><code>referrerPolicy</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>Referrer policy for the link, forwarded as the <code>referrerpolicy</code> attribute.</td>
       </tr>
     </tbody>
   </table>

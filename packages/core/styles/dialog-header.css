@@ -9,6 +9,10 @@
     gap: var(--astryx-spacing-3, 12px);
   }
 
+  .astryx-dialog-header--divider {
+    border-block-end: var(--astryx-dialog-header-divider-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
+  }
+
   .astryx-dialog-header__title-block {
     display: flex;
     flex: 1 1 auto;
@@ -32,7 +36,7 @@
   .astryx-dialog-header__subtitle {
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
-    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   .astryx-dialog-header__actions {

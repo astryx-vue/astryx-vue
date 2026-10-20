@@ -27,15 +27,44 @@
   }
 
   .astryx-number-input[data-status='error'] {
+    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
     border-color: var(--astryx-input-error, #e33f4a);
   }
 
   .astryx-number-input[data-status='warning'] {
+    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
     border-color: var(--astryx-input-warning, #a67a00);
   }
 
   .astryx-number-input[data-status='success'] {
+    --astryx-input-status-color: var(--astryx-input-success, #198100);
     border-color: var(--astryx-input-success, #198100);
+  }
+
+  /* The icon before the input text. */
+  .astryx-number-input-icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    padding-inline-start: var(--astryx-spacing-2, 8px);
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-number-input-icon > * {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* The status glyph and the info-tip button sit after the input. */
+  .astryx-number-input > .astryx-field-icon,
+  .astryx-number-input > .astryx-field-info-tip {
+    flex: none;
+    align-self: center;
+    margin-inline-end: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-number-input > .astryx-field-icon {
+    color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
   }
 
   .astryx-number-input-units,
@@ -77,6 +106,10 @@
   }
 
   .astryx-number-input-field:disabled {
+    cursor: default;
+  }
+
+  .astryx-number-input[data-readonly='true'] .astryx-number-input-field {
     cursor: default;
   }
 

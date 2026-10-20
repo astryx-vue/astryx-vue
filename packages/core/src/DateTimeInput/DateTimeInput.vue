@@ -3,6 +3,7 @@ import type { DatePresentation } from '../composables/useDatePresentation.js'
 import type { DateTimeInputEmits, DateTimeInputProps } from './types.js'
 import { computed, ref, useId, watch } from 'vue'
 import { usePendingChange } from '../composables/usePendingChange.js'
+import { formatISOTime, parseISOTime } from '../composables/useTimeValue.js'
 import DateInput from '../DateInput/DateInput.vue'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
@@ -19,6 +20,8 @@ const props = withDefaults(defineProps<Omit<DateTimeInputProps, 'modelValue'>>()
   hourFormat: '12h',
   size: 'md',
   hasClear: false,
+  hasSeconds: false,
+  timeIncrement: 1,
   statusVariant: 'attached',
   isLoading: false,
 })
@@ -48,8 +51,8 @@ function parseDate(value: string | null): Date | null {
 }
 
 function parseTime(value: string | null): string | null {
-  const time = value?.slice(11, 16) ?? ''
-  return /^\d{2}:\d{2}$/.test(time) ? time : null
+  const parsed = parseISOTime(value?.slice(11) ?? '')
+  return parsed ? formatISOTime(parsed, props.hasSeconds) : null
 }
 
 function formatDate(date: Date): string {
@@ -58,9 +61,20 @@ function formatDate(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`
 }
 
+/** 取 ISO 日期时间里的时间部分，给只用时间的那一半做范围限制。 */
+function timePart(value?: string): string | undefined {
+  const raw = value?.slice(11) ?? ''
+  const parsed = parseISOTime(raw)
+  return parsed ? formatISOTime(parsed, true) : undefined
+}
+
+const timeMin = computed(() => timePart(props.min))
+const timeMax = computed(() => timePart(props.max))
+
 const dateValue = computed(() => draftDate.value !== undefined ? draftDate.value : parseDate(model.value))
 const timeValue = computed(() => draftTime.value !== undefined ? draftTime.value : parseTime(model.value))
 const clearLabel = computed(() => messages.value.dateTimeInput.clear())
+const resolvedTimeLabel = computed(() => props.timeLabel || messages.value.dateTimeInput.timeLabel)
 
 function publish(): void {
   const date = dateValue.value
@@ -120,12 +134,16 @@ watch(model, (value) => {
             :placeholder="placeholder" :disabled="locked" :size="size" :described-by="field.describedBy"
             :date-constraints="dateConstraints" :number-of-months="numberOfMonths" :week-starts-on="weekStartsOn"
             :presentation="datePresentation" :native-picker="nativePicker"
+            :disabled-message="disabledMessage"
             @update:model-value="onDate"
           />
           <TimeField
-            :model-value="timeValue" :label="messages.dateTimeInput.timeLabel" :described-by="field.describedBy"
+            :model-value="timeValue" :label="resolvedTimeLabel" :described-by="field.describedBy"
+            :placeholder="timePlaceholder"
             :hour-format="hourFormat" :presentation="presentation" :native-picker="nativePicker"
-            :min="min" :max="max" :size="size" :is-disabled="locked" :is-read-only="isReadOnly"
+            :has-seconds="hasSeconds" :increment="timeIncrement" :option-interval="timeOptionInterval"
+            :min="timeMin" :max="timeMax" :size="size" :is-disabled="locked" :is-read-only="isReadOnly"
+            :disabled-message="disabledMessage"
             :status="status" @update:model-value="onTime"
           />
         </div>
