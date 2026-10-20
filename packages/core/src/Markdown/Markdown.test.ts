@@ -1,7 +1,7 @@
 import type { MarkdownComponents } from './types.js'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, nextTick, ref } from 'vue'
+import { defineComponent, h, markRaw, nextTick, ref } from 'vue'
 import { provideAstryxLocale } from '../locale/index.js'
 import Markdown from './Markdown.vue'
 
@@ -155,17 +155,18 @@ describe('markdown', () => {
 
   it('lets components replace a node kind', () => {
     const components: MarkdownComponents = {
-      paragraph: defineComponent({
+      // props 会被 VTU 包成响应式，组件定义要 markRaw，免得被一并代理。
+      paragraph: markRaw(defineComponent({
         setup(_, { slots }) {
           return () => h('p', { class: 'custom-p' }, slots.default?.())
         },
-      }),
-      code: defineComponent({
+      })),
+      code: markRaw(defineComponent({
         props: { code: { type: String, required: true } },
         setup(props) {
           return () => h('pre', { class: 'custom-code' }, props.code)
         },
-      }),
+      })),
     }
     const wrapper = mount(Markdown, {
       props: {
