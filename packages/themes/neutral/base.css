@@ -192,21 +192,21 @@
     --astryx-color-data-gray-2: light-dark(#CCD3DB, #D0D3D6);
     --astryx-color-data-gray-1: light-dark(#F1F4F7, #F2F4F6);
 
-    --astryx-spacing-0: 0;
-    --astryx-spacing-0-5: 2px;
-    --astryx-spacing-1: 4px;
-    --astryx-spacing-1-5: 6px;
-    --astryx-spacing-2: 8px;
-    --astryx-spacing-3: 12px;
-    --astryx-spacing-4: 16px;
-    --astryx-spacing-5: 20px;
-    --astryx-spacing-6: 24px;
-    --astryx-spacing-7: 28px;
-    --astryx-spacing-8: 32px;
-    --astryx-spacing-9: 36px;
-    --astryx-spacing-10: 40px;
-    --astryx-spacing-11: 44px;
-    --astryx-spacing-12: 48px;
+    --astryx-spacing-0: 0rem;
+    --astryx-spacing-0-5: 0.125rem;
+    --astryx-spacing-1: 0.25rem;
+    --astryx-spacing-1-5: 0.375rem;
+    --astryx-spacing-2: 0.5rem;
+    --astryx-spacing-3: 0.75rem;
+    --astryx-spacing-4: 1rem;
+    --astryx-spacing-5: 1.25rem;
+    --astryx-spacing-6: 1.5rem;
+    --astryx-spacing-7: 1.75rem;
+    --astryx-spacing-8: 2rem;
+    --astryx-spacing-9: 2.25rem;
+    --astryx-spacing-10: 2.5rem;
+    --astryx-spacing-11: 2.75rem;
+    --astryx-spacing-12: 3rem;
 
     --astryx-size-element-sm: 28px;
     --astryx-size-element-md: 32px;

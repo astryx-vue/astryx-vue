@@ -188,7 +188,7 @@
     --astryx-color-data-gray-2: light-dark(#CCD3DB, #D0D3D6);
     --astryx-color-data-gray-1: light-dark(#F1F4F7, #F2F4F6);
 
-    --astryx-spacing-0: 0;
+    --astryx-spacing-0: 0rem;
     --astryx-spacing-0-5: 0.1875rem;
     --astryx-spacing-1: 0.375rem;
     --astryx-spacing-1-5: 0.5625rem;

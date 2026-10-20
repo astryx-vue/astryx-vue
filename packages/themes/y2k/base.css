@@ -188,7 +188,7 @@
     --astryx-color-data-gray-2: light-dark(#CCD3DB, #D0D3D6);
     --astryx-color-data-gray-1: light-dark(#F1F4F7, #F2F4F6);
 
-    --astryx-spacing-0: 0;
+    --astryx-spacing-0: 0rem;
     --astryx-spacing-0-5: 0.1875rem;
     --astryx-spacing-1: 0.375rem;
     --astryx-spacing-1-5: 0.5625rem;
@@ -199,10 +199,10 @@
     --astryx-spacing-6: 2.25rem;
     --astryx-spacing-7: 2.625rem;
     --astryx-spacing-8: 3rem;
-    --astryx-spacing-9: 36px;
-    --astryx-spacing-10: 40px;
-    --astryx-spacing-11: 44px;
-    --astryx-spacing-12: 48px;
+    --astryx-spacing-9: 2.25rem;
+    --astryx-spacing-10: 2.5rem;
+    --astryx-spacing-11: 2.75rem;
+    --astryx-spacing-12: 3rem;
 
     --astryx-size-element-sm: 32px;
     --astryx-size-element-md: 40px;

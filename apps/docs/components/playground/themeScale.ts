@@ -35,6 +35,11 @@ const TYPE_STEPS = [
 
 const SPACING_STEPS = [0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
+/** px 换成 rem，按 16px 根字号。间距写成 rem，读者调大根字号时会跟着放大。 */
+function pxToRem(px: number): string {
+  return `${Math.round((px / 16) * 10000) / 10000}rem`
+}
+
 interface RadiusScale {
   inner: number
   element: number
@@ -63,8 +68,7 @@ export function scaleVariables(theme: ThemeState): Record<string, string> {
 
   for (const step of SPACING_STEPS) {
     const name = String(step).replace('.', '-')
-    const value = theme.spacing * step
-    variables[`--astryx-spacing-${name}`] = value === 0 ? '0' : `${value}px`
+    variables[`--astryx-spacing-${name}`] = pxToRem(theme.spacing * step)
   }
 
   const element = elementSizes(theme)
