@@ -2,6 +2,28 @@
 
 > 这份文档规定主会话（总指挥）如何派出多个 AI 子代理协同写代码、验收和推进任务。
 > 具体的任务清单和先后依赖关系，请看 `ROADMAP.md`。
+> 下面提到的命令都在 `scripts/swarm/` 里，详细用法见 `scripts/swarm/README.md`。
+
+## 总控派活速查
+
+| 时机 | 命令 |
+| --- | --- |
+| 派活前看谁该开工 | `node scripts/swarm/status.mjs ready` |
+| 建工作区 | `node scripts/swarm/worktree.mjs new <节点ID> <简短名>` |
+| 写计划 | 复制 `templates/plan.md`、`templates/verify.md` 到 `nodes/<节点ID>/` 再填 |
+| 改状态 | `node scripts/swarm/status.mjs set <节点ID> <状态> [--round N] [--impl 名字] [--verify 名字] [--result 文本] [--pr 文本]` |
+| 看现状 | `node scripts/swarm/status.mjs show`、`node scripts/swarm/worktree.mjs ls` |
+| 复核加合入 | `node scripts/swarm/worktree.mjs merge <节点ID>` |
+
+一个节点从开工到合入，总控依次执行：
+
+1. `status.mjs ready`：看哪些节点该解锁、谁卡住的下游最多。
+2. `worktree.mjs new C1 inputs`：记下打印出来的槽位和端口，写进计划。
+3. 照模板写 `plan.md` 和 `verify.md`。
+4. `status.mjs set C1 实现中 --round 1 --impl C1-impl`，派出实现者。
+5. 实现者回报后：`status.mjs set C1 待验收`，再 `status.mjs set C1 验收中 --verify C1-verify`，派出验收者。
+6. 验收不通过：`status.mjs set C1 返工中 --result "第 1 轮不通过 15/18"`，再 `status.mjs set C1 实现中 --round 2`。
+7. 验收通过：读完 `verify-<N>.md`，然后 `worktree.mjs merge C1`。合入成功后 `status.mjs set C1 已完成 --result "通过 18/18" --pr <提交号>`，下游会自动变成「可开工」。
 
 ## 节点生命周期状态图
 
@@ -45,7 +67,7 @@ stateDiagram-v2
 
 | 角色 | 由谁担任 | 负责做什么 | 绝对不能做什么 |
 | --- | --- | --- | --- |
-| **总控** | 主会话（你正在对话的我） | ① 编写执行计划与验收计划<br/>② 创建独立工作区<br/>③ 派发子代理<br/>④ 更新地图进度<br/>⑤ 合入最终代码 | 绝对不亲自直接编写节点的业务代码。 |
+| **总控** | 主会话（你正在对话的我） | ① 编写执行计划与验收计划（`templates/`）<br/>② 创建独立工作区（`worktree.mjs new`）<br/>③ 派发子代理<br/>④ 更新地图进度（`status.mjs set`）<br/>⑤ 合入最终代码（`worktree.mjs merge`） | 绝对不亲自直接编写节点的业务代码。不手改 ROADMAP 里的节点状态，一律用 `status.mjs set`。 |
 | **实现者** | 独立的子代理<br/>（使用默认模型） | ① 按照 `plan.md` 的计划动手修改代码<br/>② 跑通本地自动化测试<br/>③ 提交代码到节点专属分支并写汇报 | 绝对不擅自修改 `ROADMAP.md` 的任务状态，绝对不自己宣布做完了。 |
 | **验收者** | 独立的质检子代理<br/>（固定使用模型：<br/>`sub2tok/claude-sonnet-5-5`） | ① 严格按照 `verify.md` 逐条核对<br/>② 必须在后台打开真实浏览器亲眼查看界面<br/>③ 给出客观明确的验收通过或不通过结论 | 绝对不修改任何源码，绝对不替实现者动手修 Bug。保持工作区完全干净。 |
 
@@ -66,6 +88,8 @@ stateDiagram-v2
 > **注意**：截图等证明材料统一放在 `.agents-work/upstream-sync/nodes/<节点ID>/evidence/<N>/`。这个目录体积较大，配置了忽略规则，不需要提交到 Git。
 
 ### 两份核心计划书的编写要求
+
+模板在 `.agents-work/upstream-sync/templates/`：`plan.md`、`verify.md` 是两份计划书，`impl-report.md`、`verify-report.md` 是两份回报的格式。复制到节点目录后再填，下表是每份必须包含的内容。
 
 | 文件名 | 必须包含的关键内容 | 编写原则 |
 | --- | --- | --- |
@@ -90,9 +114,9 @@ stateDiagram-v2
 
 1. **内存压力检测**：总控每次派出新的子代理前，先在终端检查系统内存。如果可用内存低于 **25%**，暂停派发新任务，等待正在跑的子代理结束后再继续。
 2. **浏览器互斥锁**：排队专用锁目录放在 git 的公共目录里：`$(git rev-parse --git-common-dir)/swarm-locks/browser-1` 和 `browser-2`。所有工作区看到的是同一份锁。
-   - 任何子代理想要打开浏览器，必须先用 `mkdir` 命令创建其中一个文件夹来拿到锁。
-   - 关掉浏览器后，必须立刻用 `rmdir` 删掉文件夹把锁交还。
-   - 拿不到锁就必须等待，严禁私自多开浏览器。A2 节点做好的视觉对照工具会自动带上这把锁。在 A2 完成前，由总控人工排期保证不超量。
+   - 视觉对照 `pnpm visual <组件> --out /tmp/...` 会自动拿锁、排队、还锁。
+   - 其它要开浏览器的命令（自己写的 Playwright 脚本等），一律套上 `node scripts/swarm/browser-lock.mjs run --purpose <说明> -- <命令>`。命令结束、出错、按 Ctrl+C 都会自动还锁。
+   - 拿不到锁就排队等待，严禁私自多开浏览器。`node scripts/swarm/browser-lock.mjs status` 能看到谁占着。
 
 ---
 
@@ -102,11 +126,11 @@ stateDiagram-v2
 
 | 项目 | 约定与规范 |
 | --- | --- |
-| **创建工作区命令** | `git worktree add ../astryx-vue-wt/<节点ID> -b sync/<节点ID小写>-<简短名> swarm-tree` |
+| **创建工作区命令** | `node scripts/swarm/worktree.mjs new <节点ID> <简短名>`。它从 `swarm-tree` 切出 `sync/<节点ID小写>-<简短名>`，建到 `../astryx-vue-wt/<节点ID>`，分配槽位，装好依赖。`worktree.mjs ls` 列出所有工作区和槽位。 |
 | **共用工作区原则** | 同一个任务节点的实现者和验收者使用**同一个工作区**。 |
 | **验收者只读铁律** | 验收者只看不改。验收工作结束时，终端运行 `git status` 必须没有任何改动文件，否则本次验收成绩直接作废。 |
-| **槽位与端口分配** | 每个活跃的工作区分配一个专属槽位编号（**1 到 4 号**）。<br/>该工作区启动文档站时的专属端口为：**`5170 + 槽位号`**（例如 1 号槽位为 5171，2 号为 5172）。用完后必须及时关闭该服务。 |
-| **完工清理** | 任务节点通过验收并合入 `swarm-tree` 分支后，总控负责彻底删除该工作区文件夹及对应锁。 |
+| **槽位与端口分配** | 每个活跃的工作区分配一个专属槽位编号（**1 到 4 号**），由 `worktree.mjs new` 自动分配，登记在 `$(git rev-parse --git-common-dir)/swarm-slots/`。<br/>该工作区启动文档站时的专属端口为：**`5170 + 槽位号`**（例如 1 号槽位为 5171，2 号为 5172）。`pnpm visual` 会自动用本工作区的端口。用完后必须及时关闭该服务。<br/>手工建的旧工作区用 `worktree.mjs adopt <节点ID> <槽位>` 补登记。 |
+| **完工清理** | `worktree.mjs merge` 合入成功后会自动删除工作区、分支和槽位登记。只删不合用 `worktree.mjs rm <节点ID>`，分支没合入时要加 `--force`。 |
 
 ---
 
@@ -116,7 +140,9 @@ stateDiagram-v2
 
 1. **谁卡住的人多就先派谁**：在当前所有「可开工」的节点里，看谁下游依赖的节点最多，优先派谁开工。
 2. **验收比新活更着急**：只要有节点处于「待验收」状态，优先派出 Sonnet 验收者去检查，然后再去开新的开发任务。
-3. **公共生成文件排队合入**：运行 `pnpm sync` 产生的公共导出文件，同一时间只允许一个节点往主分支合并。后合并的节点必须先 `git rebase` 同步最新主分支代码，再在本地重新跑一次 `pnpm sync`，绝不手动解决生成文件冲突。
+3. **公共生成文件排队合入**：运行 `pnpm sync` 产生的公共导出文件，同一时间只允许一个节点往主分支合并。`worktree.mjs merge` 用合并锁保证这一点，并且先 rebase：冲突只落在生成文件上时，它自动取节点的版本、重新跑 `pnpm sync`；还有别的冲突就停下，报出冲突文件。绝不手动解决生成文件冲突。只想同步最新代码、不合入时用 `worktree.mjs rebase <节点ID>`。
+
+派活前先跑 `node scripts/swarm/status.mjs ready`。它列出两张清单，都按下游节点数从多到少排：一张是依赖已经全部完成、还标着「未开始」的节点，用 `status.mjs set <节点> 可开工` 解锁；另一张是已经「可开工」、等着派发的节点，排在前面的先派。
 
 ---
 
@@ -142,14 +168,16 @@ stateDiagram-v2
 
 主会话所在的终端默认带着 `NODE_ENV=production`。Vue 在生产模式下会删掉模板里的注释，在开发模式下会保留。所以同一份测试，在两种模式下可能一个通过、一个失败。CI 里没有这个变量。
 
+测试本身已经不受这个变量影响：`vitest.config.ts` 先把 `NODE_ENV` 设成 `test`，再加载 Vue 插件，所以运行时和模板编译都固定在开发模式，和 CI 一样。`tests/test-env.test.ts` 守着这一点。构建、文档站等其它命令仍然会受影响。
+
 规定：
-- 所有子代理和总控跑测试、跑 `pnpm check` 时，命令前面都加上 `env -u NODE_ENV`，让环境和 CI 一样。
-- 验收计划里，测试相关的检查项要求跑两遍：一遍不设 `NODE_ENV`，一遍设成 `NODE_ENV=production`。两遍都要通过。
+- 所有子代理和总控跑测试、跑 `pnpm check` 时，命令前面都加上 `env -u NODE_ENV`，让环境和 CI 一样。`worktree.mjs merge` 跑检查时会自动去掉它。
+- 验收计划里，测试相关的检查项要求跑两遍：一遍不设 `NODE_ENV`，一遍设成 `NODE_ENV=production`。两遍都要通过，用例数要相同。
 
 ## 总控验收后的终审复核
 
 当 Sonnet 验收者给出「通过」结论后，总控在把节点标记为「已完成」前，必须亲手完成以下 3 件事：
 
 1. **查验真凭实据**：完整通读 `verify-<N>.md`，确认每一条检查项都附带了明确的命令输出、截图或证据，没有任何一项目测敷衍或留空。
-2. **亲自跑一遍命令**：总控亲自进入该节点的工作区，运行一次 `pnpm check`，确保类型检查、代码规范、测试全绿。
-3. **安全合入并更新看板**：把节点分支合入 `swarm-tree` 分支，删掉临时工作区，在 `ROADMAP.md` 中把该节点状态改成「✅ 已完成」，并同步更新树状图中的颜色与状态。
+2. **复核并合入**：在主工作区运行 `node scripts/swarm/worktree.mjs merge <节点ID>`。它先 rebase 到最新的 `swarm-tree`，再在节点工作区里跑完整检查（check:packages、lint、typecheck、vitest、build、lint:pkg，不带 `NODE_ENV`），全部通过才 fast-forward 合入，最后删掉工作区。任何一步失败都不合入，按报错处理后重跑。
+3. **更新看板**：`node scripts/swarm/status.mjs set <节点ID> 已完成 --result "通过 X/Y" --pr <提交号>`。它同时改树状图和总表，并把依赖已经全部完成的下游节点改成「可开工」。改完跑一次 `status.mjs check` 确认一致。

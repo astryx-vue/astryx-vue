@@ -1,21 +1,28 @@
 # 蜂群工具
 
-这里放给任务树子代理用的两个小工具：
+这里放给任务树总控和子代理用的小工具：
 
 - `visual-compare.mjs`：视觉对照。把上游官网和我们文档站上同一个组件页截图，左右拼在一起，再给一个像素差异分数。
 - `browser-lock.mjs`：浏览器锁。整台电脑同时最多开 2 个浏览器，谁要开浏览器都得先拿锁。
+- `status.mjs`：进度看板。检查、查询、修改 `ROADMAP.md` 里的节点状态。
+- `worktree.mjs`：节点工作区。建、列、删、rebase，以及「复核加合入」。
+
+后两个的用法见本文末尾，它们在规程里的位置见 `.agents-work/upstream-sync/SWARM.md`。
 
 ## 视觉对照
 
 ### 一句话用法
 
 ```sh
-pnpm visual Button
+pnpm visual Button --out /tmp/<节点>-visual
 ```
+
+> **验收者请一定加 `--out /tmp/...`。** 不加时产物写进当前工作区的 `.agents-work/upstream-sync/visual/`。这个目录虽然被 `.gitignore` 忽略了，但会占工作区的磁盘，删工作区前还得记着清理。
 
 它会做这几件事：
 
-1. 在 5172 端口起我们的文档站（`packages/*/dist` 不在就先跑 `pnpm build:packages`）。
+0. 先检查两边的组件页存不存在：我们这边看 `apps/docs/docs/en/components/<slug>/index.md` 在不在，上游发一次 HTTP 请求看是不是 404。任何一边不存在就立刻报错退出，不起服务、不拿锁、不开浏览器。上游暂时连不上时只打印提示，照常往下走。
+1. 在本工作区的槽位端口（`worktree.mjs new` 分配的 5170 + 槽位号；没登记槽位就是 5172）起我们的文档站（`packages/*/dist` 不在就先跑 `pnpm build:packages`）。
 2. 排队拿浏览器锁，只开 1 个 Chromium。
 3. 四种组合按顺序截图：`desktop-light`、`desktop-dark`、`mobile-light`、`mobile-dark`。
 4. 每种组合拼一张「左上游、右我们」的对照图，算分，写报告。
@@ -26,7 +33,7 @@ pnpm visual Button
 ```
 pnpm visual <组件> [--section overview|all]
                   [--combos desktop-light,desktop-dark,mobile-light,mobile-dark]
-                  [--ours <url>] [--upstream <url>] [--out <dir>] [--no-serve]
+                  [--ours <url>] [--upstream <url>] [--out <dir>] [--port <n>] [--no-serve]
                   [--proxy <url>] [--no-proxy] [--lock-timeout <分钟>]
 ```
 
@@ -38,8 +45,9 @@ pnpm visual <组件> [--section overview|all]
 | `--combos` | 只跑其中几种组合，逗号分隔。 |
 | `--ours <url>` | 我们站点的地址，只写到域名，例如 `http://localhost:5173`。给了就不起服务。 |
 | `--upstream <url>` | 上游地址，默认 `https://astryx.atmeta.com`。 |
-| `--out <dir>` | 输出目录，默认 `.agents-work/upstream-sync/visual/`（已加进 `.gitignore`）。 |
-| `--no-serve` | 假设 5172 端口上已经有本工作区的文档站在跑，不自己起。 |
+| `--out <dir>` | 输出目录，默认 `.agents-work/upstream-sync/visual/`（已加进 `.gitignore`）。验收时请用 `--out /tmp/...`，别让产物落进工作区。 |
+| `--port <n>` | 自己起文档站用的端口。默认取本工作区在 `worktree.mjs` 里登记的槽位端口，没登记就用 5172。 |
+| `--no-serve` | 假设端口上已经有本工作区的文档站在跑，不自己起。 |
 | `--proxy <url>` | 访问上游用的代理。默认取 `https_proxy` 环境变量，没有就用 `http://127.0.0.1:7890`。只有上游走代理，本地文档站直连。 |
 | `--no-proxy` | 访问上游不走代理。 |
 | `--lock-timeout` | 等浏览器锁最多等几分钟，默认 30。 |
@@ -74,7 +82,7 @@ pnpm visual <组件> [--section overview|all]
 
 | 站点 | 选择器 | 说明 |
 | --- | --- | --- |
-| 上游 | `[data-astryx-theme="neutral"] > .astryx-card` | 组件详情页 Overview 顶部的预览卡片：`ComponentPreviewTheme`（嵌套的 neutral 主题）里那张 muted `Card`。 |
+| 上游 | `[data-astryx-theme="neutral"]:first-child > .astryx-card:only-child`，并且卡片的第一个子元素带内联的 `aspect-ratio` 或 `min-height` 样式 | 组件详情页 Overview 顶部的预览卡片：`ComponentPreviewTheme`（嵌套的 neutral 主题）里那张 muted `Card`。下面的示例区也有同样的包裹层，所以要求包裹层是父元素的第一个子元素、卡片是包裹层唯一的子元素；第一个子元素就是展示舞台，靠它的内联样式和别的卡片区分开。 |
 | 我们 | `.component-detail__stage` | `ComponentDocsShell.vue` 里的预览舞台。 |
 
 截图用「整页截图再按元素位置裁切」的方式，不用元素截图，免得吸顶导航盖住预览区顶部。
@@ -99,7 +107,7 @@ pnpm visual <组件> [--section overview|all]
 分数是「不同像素的百分比」，用 pixelmatch 数，单像素容差 0.1（pixelmatch 默认值，抗锯齿像素不算差异）。报告里有两个分数，区别只在分母：
 
 - **内容区分数**（结论按它给）：分母是两边组件内容所在矩形的并集。
-  - 内容矩形就是「和背景色不一样的像素」的外接框。离边缘 32 像素以内的像素不看，因为圆角和描边不算内容。
+  - 内容矩形就是「和背景色不一样的像素」的外接框。四个圆角切掉的区域不看（按半径 32 像素算，也就是 2 倍图上 16 CSS 像素的圆角，再往里让 2 像素躲开抗锯齿）。四条边的中段照常算，所以窄屏上贴边的组件内容不会被漏掉。
   - 背景色取预览区向内缩 4 像素那一圈里最常见的颜色。
   - 这样大片空白背景不会把差异冲淡。比如 Button 桌面端：按钮的样式一样，但文案不同（上游 Primary/Secondary/Ghost/Destructive，我们 Save/Cancel/Delete），整图分数只有 1.5%，内容区分数却有 60% 左右。
 - **整图分数**：分母是对齐后的整张画布。
@@ -122,19 +130,21 @@ pnpm visual <组件> [--section overview|all]
 
 **页面一直 404，或者 VitePress 报 `__VP_HASH_MAP__ is not defined`。** 起服务的环境里有 `NODE_ENV=production`。工具自己起服务时会强制改成 `development`。如果是你手动起服务再配 `--no-serve`，要自己带上 `NODE_ENV=development`。
 
-**`端口 5172 已被别的进程占用`。** 有别的东西占着端口。如果它就是本工作区的文档站，加 `--no-serve`。否则先关掉它。
+**`端口 517x 已被别的进程占用`。** 有别的东西占着端口。如果它就是本工作区的文档站，加 `--no-serve`。否则先关掉它。
 
-**`端口 5172 上的文档站属于另一个工作区`。** 另一个工作区正在用 5172 跑对照。等它跑完，或者用 `--ours` 指向你自己起的服务。
+**`端口 517x 上的文档站属于另一个工作区`。** 另一个工作区正在用这个端口跑对照。通常是两边都没登记槽位、都落到了 5172。用 `worktree.mjs adopt` 给本工作区登记槽位，或者用 `--port` 换一个端口。
 
 **一直打印「排队中」。** 两个浏览器槽都被占了。用 `node scripts/swarm/browser-lock.mjs status` 看谁占着。持有进程已经不在、或者持有超过 2 小时的槽，会被自动回收。
 
+**报「我们的文档站没有 xxx 这个组件页」或「上游没有 Xxx 这个组件页」。** 组件名拼错了，或者有一边确实没有这个页面。上游用 PascalCase（`DropdownMenu`），我们用 kebab-case slug（`dropdown-menu`），两种写法都能传。这一步在起服务之前就做了，不会占用浏览器锁。
+
 **某个组件报「没有这个组件的预览区」。** 上游有一部分页面（多为 hook 和子组件）没有顶部预览。这种页面改用 `--section all` 看整页。
 
-**文档站启动失败。** 看日志：`$TMPDIR/astryx-visual-serve-5172/server.log`。
+**文档站启动失败。** 看日志：`$TMPDIR/astryx-visual-serve-<端口>/server.log`。
 
 ### 文档站服务怎么共用
 
-5172 端口上的文档站可以被多个 `pnpm visual` 进程共用。租约记在 `$TMPDIR/astryx-visual-serve-5172/`：
+同一个端口上的文档站可以被多个 `pnpm visual` 进程共用。租约记在 `$TMPDIR/astryx-visual-serve-<端口>/`：
 
 - 第一个进程启动服务。
 - 后来的进程直接复用。
@@ -175,3 +185,69 @@ await withBrowserLock('我要截图', async (lock) => {
 ```
 
 可选参数：`root`（锁目录，测试时传临时目录）、`timeoutMs`、`retryMs`、`onSignal`（收到信号时先做的清理，比如关浏览器）、`handleSignals`（传 `false` 表示调用方自己处理信号）。
+
+### 验收者手动开浏览器
+
+任何不经过 `pnpm visual` 的浏览器（自己写的 Playwright 脚本、`npx playwright` 命令）都要套上锁：
+
+```sh
+node scripts/swarm/browser-lock.mjs run --purpose "<节点>-verify 看键盘交互" -- node /tmp/verify-<节点>/check.mjs
+```
+
+锁在命令结束时自动释放。脚本里只开 1 个浏览器，用完关掉。
+
+## 进度看板：status.mjs
+
+`ROADMAP.md` 是唯一的进度来源。节点状态在里面出现两次：「全局进度树状图」的 emoji，和「当前状态总表」的「状态」列。这个脚本让两处始终一致，并按依赖关系算出谁该开工。
+
+```sh
+node scripts/swarm/status.mjs check     # 检查一致性，有问题退出码 1
+node scripts/swarm/status.mjs ready     # 该解锁的节点 + 等待派发的节点，按下游数量排序
+node scripts/swarm/status.mjs show      # 按阶段打印现状
+node scripts/swarm/status.mjs set C1 实现中 --round 1 --impl C1-impl
+node scripts/swarm/status.mjs set C1 verifying --verify C1-verify
+node scripts/swarm/status.mjs set C1 done --result "通过 18/18" --pr abc1234
+```
+
+- 状态可以写中文（`验收中`）、英文简写（`verifying`）、别名（`verify`）或 emoji（`🔷`）。`--help` 列出全部写法。
+- `check` 检查：
+  - 两边节点集合相同，没有重复。
+  - 树状图 emoji 和总表状态一致。
+  - 依赖都存在，没有环。「C全部」「F3a–F3e」这类简写会展开。
+  - 「可开工」及之后的节点，依赖都已「已完成」或「不做」。
+- `set` 只改两行：树状图里这个节点那一行的 emoji，和总表里这个节点那一行。文件其它字节都不动。
+  - 节点变成「已完成」或「不做」时，依赖已经全部结束的「未开始」下游节点自动改成「可开工」，同样只改它们各自的两行。
+  - 状态流转按 SWARM.md 的生命周期图检查，比如「实现中」不能直接跳到「已完成」。确实要跳就加 `--force`。
+  - 依赖没完成的节点不能开工。
+  - 写入前自检三遍：只有计划要改的行变了；重新解析后状态和字段对得上；`check` 没有多出新问题。任何一遍不过都不写。
+  - `--dry-run` 只打印会改哪些行。
+- 只操作当前工作区里的 `ROADMAP.md`。总控在主工作区里运行。要改别的副本用 `--file`。
+
+## 节点工作区：worktree.mjs
+
+```sh
+node scripts/swarm/worktree.mjs new C1 inputs   # 建工作区、分配槽位、装依赖
+node scripts/swarm/worktree.mjs ls              # 列出工作区、槽位、端口、分支、领先几个提交
+node scripts/swarm/worktree.mjs rebase C1       # rebase 到最新的 swarm-tree
+node scripts/swarm/worktree.mjs merge C1        # rebase → 完整检查 → 合入 → 删工作区
+node scripts/swarm/worktree.mjs rm C1           # 只删不合
+node scripts/swarm/worktree.mjs adopt E2 3      # 给手工建的旧工作区补登记槽位
+```
+
+- **new**：从 `swarm-tree` 切出 `sync/<小写节点ID>-<简短名>`，建到 `../astryx-vue-wt/<节点ID>`，执行 `pnpm install --frozen-lockfile`，打印路径、分支、槽位、端口。
+  - 槽位登记在 `$(git rev-parse --git-common-dir)/swarm-slots/<槽位>.json`，端口是 5170 + 槽位号。`pnpm visual` 在这个工作区里会自动用这个端口。
+  - 4 个槽位都被占了就报错。已经存在、但没有登记槽位的节点工作区也算占位。这时脚本不知道哪个号是空的，会要求先用 `adopt` 登记，或者用 `--slot` 指定。
+  - 任何一步失败（比如装依赖失败）都会回滚：工作区、分支、槽位都不留。
+- **rm**：删工作区、分支，释放槽位，顺手删掉这个工作区里已经退出的进程留下的浏览器锁。分支没合入 `swarm-tree`、或者工作区有没提交的改动时拒绝，加 `--force` 才删。
+- **rebase**：工作区必须干净。
+  - 冲突全部落在 `pnpm sync` 生成的文件上（清单取自 `scripts/sync-exports.mjs` 的 `generatedFiles`）时，取节点这一边的版本，再在工作区跑一次 `pnpm sync` 重新生成，然后继续。
+  - 还有别的冲突就放弃这次 rebase，分支回到原样，报出冲突文件。需要人手动解决。
+- **merge**：这就是总控「复核加合入」的那一步。
+  1. 拿合并锁 `swarm-locks/merge`，同一时刻只有一个 merge。生成文件排队合入就靠它。
+  2. rebase。
+  3. 在工作区里按顺序跑：`pnpm check:packages`、`pnpm lint`、`pnpm typecheck`、`pnpm vitest run --maxWorkers=2`、`pnpm build`、`pnpm lint:pkg`。子进程环境里去掉了 `NODE_ENV`。
+  4. 检查跑完后工作区必须仍然干净。
+  5. `swarm-tree` fast-forward 到节点分支。主工作区检出的就是 `swarm-tree` 时，在主工作区里 `git merge --ff-only`，文件跟着更新。
+  6. 删工作区、分支，释放槽位。加 `--keep` 保留工作区。
+  - 任何一步失败都停下，不合入。
+- 在主工作区或任何节点工作区里执行都行。`rm` 和 `merge` 不能在要删的那个工作区里执行。
