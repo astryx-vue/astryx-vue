@@ -16,7 +16,7 @@ mindmap
     阶段 B 公共底座：核心共享层
       🟡 B1 主题系统与设计变量
       🔵 B2 基础重置样式
-      🟡 B3 交互逻辑常用函数
+      🔷 B3 交互逻辑常用函数
       ⬜ B4 浮层图层运行时
       🟡 B5 界面文案与图标
       ⬜ B6 属性规则与样式分层
@@ -315,7 +315,7 @@ flowchart TB
 | A4 | 蜂群基础设施 | A1 A2 A3 | ✅ 已完成 | 2 | A4-impl-r2 | A4-verify-r2 | 第 2 轮通过 33/33 | 00fd7d0 |
 | B1 | 主题系统与 token | A4 | 🟡 实现中 | 1 | B1-impl | | | |
 | B2 | reset 与基础样式 | A4 | 🔵 可开工 | 0 | | | | |
-| B3 | 交互底座 composables | A4 | 🟡 实现中 | 1 | B3-impl | | | |
+| B3 | 交互底座 composables | A4 | 🔷 验收中 | 1 | B3-impl | B3-verify | | |
 | B4 | 浮层运行时 Layer | B3 | ⬜ 未开始 | 0 | | | | |
 | B5 | 文案与图标 | A4 | 🟡 实现中 | 1 | B5-impl | | | |
 | B6 | 公共 props 规则 | B1 | ⬜ 未开始 | 0 | | | | |
@@ -425,7 +425,7 @@ flowchart TB
 | C4 PowerSearch / CommandPalette | PowerSearch、CommandPalette | 接入破坏性改动（上游 PR #7347）；主动拆分大文件 `PowerSearch.vue`。 | C3 |
 | C5 日期时间家族 | Calendar、DateInput、DateRangeInput、DateTimeInput、TimeInput、Timestamp、Timer | 接入 FR10 改动（上游 PR #7337）；根据鼠标或触屏类型智能切换选择器（上游 PR #5243）；新增 presentation 展现模式属性。 | C1 B4 B7 |
 | C6 菜单家族 | DropdownMenu、ContextMenu、MoreMenu | 增加 DropdownMenuGroup 分组组件；手机触屏支持子菜单逐级滑入；鼠标滑动支持安全三角区防误触；方向键循环与按字母快速跳转；菜单行支持真实链接跳转；主动拆分大文件 `DropdownMenu.vue` 和 `types.ts`。 | B3 B4 B6 |
-| C7 浮层家族 | Dialog、AlertDialog、Popover、HoverCard、Tooltip、Lightbox、Toast | DialogHeader 增加 theme target 换肤挂载点；主动拆分大文件 `useHoverCard.ts`。 | B4 B6 |
+| C7 浮层家族 | Dialog、AlertDialog、Popover、HoverCard、Tooltip、Lightbox、Toast | DialogHeader 增加 theme target 换肤挂载点；决定 `useScrollLock` 要不要照上游改成 `position:fixed`（上游是为了 iOS Safari，会影响打开浮层时的滚动位置，见 `nodes/B3/impl-1.md` 第 6 节）；主动拆分大文件 `useHoverCard.ts`。 | B4 B6 |
 | C8 BottomSheet | BottomSheet | 默认自带页面内边距（上游 PR #6884）；主动拆分大文件 `useSheetGestures.ts`。 | C7 |
 | C9 Markdown 与代码 | Markdown、CodeBlock、Code | 标题自动生成跳转锚点；嵌套多层列表展示不同标记符号；字符实体引用解码；源码行号标记插件；超长代码行自动折行；代码 diff 对比层（上游 PR #7389）；主动拆分大文件 `render.ts`；清理 `tokenizer.ts` 里残留的 TODO 事项。**必做**：Markdown 解析器要提供和上游一样的接口，包括 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及插件能力协议，因为 F1a richtext 有 26 个测试依赖它们（见 ADR 0001 第 2.7 节）。 | B1 B2 |
 | C10 Chat | Chat 全家族 | 输入框支持连续输入多个关键词触发补全；主动拆分大文件 `Chat/types.ts`。 | C9 C6 C1 |
