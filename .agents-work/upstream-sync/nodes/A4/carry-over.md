@@ -14,3 +14,7 @@
 来自 E4 验收（`nodes/E4/verify-1.md` 第 4 项）。这一条不归 A4，等 A4 合入以后，交给下一个改视觉工具的节点：
 
 6. 本机通过代理访问上游官网很慢，`page.goto` 偶尔会碰到 60 秒超时，导致整组对照图失败，验收者只能手动重跑。建议给上游页面的导航加 1 到 2 次重试，或者把超时时间做成可配置项。
+
+来自总控在 F0 合入时的观察（A4 已完成，下一个改 worktree.mjs 的节点顺手修）：
+
+7. `worktree.mjs merge` 和 `rebase` 在 rebase 之后没有重新安装依赖。如果 swarm-tree 期间新增了依赖（这次是 E3 加的 `dom-accessibility-api`），节点工作区的 node_modules 就会过期，typecheck 报「找不到模块」，合入被拦下。这是误报。修法：rebase 之后，只要 `pnpm-lock.yaml` 有变化，就先跑一次 `pnpm install --frozen-lockfile`，再跑检查。

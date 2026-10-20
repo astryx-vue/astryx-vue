@@ -54,22 +54,25 @@ mindmap
       ✅ E3 页面无障碍自动检查
       ✅ E4 自动对比页面外观
     阶段 F 全新扩展包
-      🔷 F0 新包技术选型决策
+      ✅ F0 新包技术选型决策
       ⬜ F1a 富文本核心逻辑
       ⬜ F1b 富文本编辑器组件
       ⬜ F1c 富文本使用文档
       ⬜ F2a 图表纯计算逻辑
       ⬜ F2b 图表展示组件
       ⬜ F2c 图表使用文档
+      ⬜ F2d 图表 WebGL 标记
       ⬜ F3a 实验包：输入类组件
       ⬜ F3b 实验包：展示类组件
+      ⬜ F3g 实验包：日程表
       ⬜ F3c 实验包：浮层与引导
-      ⬜ F3d 实验包：图表与编辑器
+      ⬜ F3d 实验包：图表类
+      ⬜ F3h 实验包：代码类
       ⬜ F3e 实验包：对话类组件
       ⬜ F3f 实验包：使用文档
       ⬜ F4 Nuxt 模块
-      ⬜ F5 vega 包
-      ⬜ F6 build 构建插件
+      ➖ F5 vega 包
+      ➖ F6 build 构建插件
     阶段 G 发布与持续维护
       ⬜ G1 发布核心组件与主题包
       ⬜ G2 发布命令行工具
@@ -251,17 +254,20 @@ flowchart TB
   F0["F0 新包选型"]
   F0 --> F1a["F1a richtext 纯逻辑"] --> F1b["F1b richtext 编辑器"] --> F1c["F1c richtext 文档"]
   F0 --> F2a["F2a charts 纯逻辑"] --> F2b["F2b charts 组件"] --> F2c["F2c charts 文档"]
+  F2b --> F2d["F2d charts WebGL 延后"]
   F0 --> F3a["F3a lab 输入类"]
   F0 --> F3b["F3b lab 展示类"]
+  F0 --> F3g["F3g lab 日程表"]
   F0 --> F3c["F3c lab 浮层与引导"]
-  F2b --> F3d["F3d lab 可视化与编辑器"]
+  F2b --> F3d["F3d lab 图表类"]
+  F0 --> F3h["F3h lab 代码类"]
   F0 --> F3e["F3e lab 对话"]
-  F3a & F3b & F3c & F3d & F3e --> F3f["F3f lab 文档"]
-  F0 --> F5["F5 vega"]
-  F0 --> F6["F6 build"]
+  F3a & F3b & F3g & F3c & F3d & F3h & F3e --> F3f["F3f lab 文档"]
+  F0 -.-> F5["F5 vega 不做"]
+  F0 -.-> F6["F6 build 不做"]
   CALL["C 全部"]:::ext --> F4["F4 Nuxt 模块"]
   A3["A3 工程护栏"]:::ext --> F4
-  CX["还要等的 B C 节点 见总表"]:::ext -.-> F1a & F1b & F2a & F2b & F3a & F3b & F3c & F3d & F3e
+  CX["还要等的 B C 节点 见总表"]:::ext -.-> F1a & F1b & F2b & F3a & F3b & F3g & F3c & F3h & F3e
 ```
 
 ---
@@ -343,22 +349,25 @@ flowchart TB
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
 | E3 | 可访问性自动检查 | A2 | ✅ 已完成 | 1 | E3-impl | E3-verify | 通过 20/20 | 09c400b |
 | E4 | CI 接入视觉对照 | A2 | ✅ 已完成 | 1 | E4-impl | E4-verify | 通过 22/22 | a5fcfe5 |
-| F0 | 新包选型决策 | A1 | 🔷 验收中 | 2 | F0-impl-r2 | F0-verify-r2 | 第 1 轮不通过：事实描述 3 处、依赖 1 处、术语解释 1 处 | |
+| F0 | 新包选型决策 | A1 | ✅ 已完成 | 2 | F0-impl-r2 | F0-verify-r2 | 第 2 轮通过 17/17 | e48b073 |
 | F1a | richtext 纯逻辑 | F0 C9 | ⬜ 未开始 | 0 | | | | |
-| F1b | richtext 编辑器 | F1a C6 C16 | ⬜ 未开始 | 0 | | | | |
+| F1b | richtext 编辑器 | F1a C1 C2 C3 C7 C14 C16 | ⬜ 未开始 | 0 | | | | |
 | F1c | richtext 文档 | F1b | ⬜ 未开始 | 0 | | | | |
 | F2a | charts 纯逻辑 | F0 B1 | ⬜ 未开始 | 0 | | | | |
-| F2b | charts 组件 | F2a C7 | ⬜ 未开始 | 0 | | | | |
+| F2b | charts 组件 | F2a B7 C7 C14 C16 | ⬜ 未开始 | 0 | | | | |
 | F2c | charts 文档 | F2b | ⬜ 未开始 | 0 | | | | |
-| F3a | lab 输入类 | F0 C3 | ⬜ 未开始 | 0 | | | | |
-| F3b | lab 展示类 | F0 C15 C7 | ⬜ 未开始 | 0 | | | | |
-| F3c | lab 浮层与引导 | F0 C7 C8 | ⬜ 未开始 | 0 | | | | |
-| F3d | lab 可视化与编辑器 | F2b C9 | ⬜ 未开始 | 0 | | | | |
-| F3e | lab 对话 | F0 C10 | ⬜ 未开始 | 0 | | | | |
-| F3f | lab 文档 | F3a–F3e | ⬜ 未开始 | 0 | | | | |
+| F2d | charts WebGL 标记 | F2b | ⬜ 未开始 | 0 | | | 延后：等上游这部分成熟 | |
+| F3a | lab 输入类 | F0 C3 C8 C11 C12 C14 C15 C16 | ⬜ 未开始 | 0 | | | | |
+| F3b | lab 展示类 | F0 C7 C16 | ⬜ 未开始 | 0 | | | | |
+| F3g | lab 日程表 | F0 B7 C6 C7 C14 C15 C16 | ⬜ 未开始 | 0 | | | | |
+| F3c | lab 浮层与引导 | F0 C7 C14 C16 | ⬜ 未开始 | 0 | | | | |
+| F3d | lab 图表类 | F2b C16 | ⬜ 未开始 | 0 | | | | |
+| F3h | lab 代码类 | F0 C9 | ⬜ 未开始 | 0 | | | | |
+| F3e | lab 对话 | F0 C7 C10 | ⬜ 未开始 | 0 | | | | |
+| F3f | lab 文档 | F3a F3b F3g F3c F3d F3h F3e | ⬜ 未开始 | 0 | | | | |
 | F4 | Nuxt 模块 | A3 C全部 | ⬜ 未开始 | 0 | | | | |
-| F5 | vega | F0 | ⬜ 未开始 | 0 | | | | |
-| F6 | build | F0 | ⬜ 未开始 | 0 | | | | |
+| F5 | vega | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 5 节 | |
+| F6 | build | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 6 节 | |
 | G1 | 发布 core + themes | C全部 D2 D7 | ⬜ 未开始 | 0 | | | | |
 | G2 | 发布 CLI | G1 D4b D5 D6 | ⬜ 未开始 | 0 | | | | |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
@@ -460,22 +469,25 @@ flowchart TB
 
 | 节点 | 要做什么 | 依赖谁 | 怎么算做完 |
 | --- | --- | --- | --- |
-| F0 新包选型决策 | 编写一份架构决策记录（ADR），明确回答：richtext 富文本选用哪个现成 Vue 绑定库还是手写；charts 图表库如何渲染（上游使用了 WebGL 技术）；lab 实验组件与 vega 是否同样只发 canary 测试版；`build` 包是否不做（因为它是 StyleX 专用的打包插件，而 Vue 版不用 StyleX）。F5 和 F6 节点的状态依此决定。 | A1 | 决策文档成文；回答了上述全部关键问题。 |
-| F1a richtext 纯逻辑 | 实现与界面无关的 Markdown 内容导入和导出纯逻辑。 | F0 C9 | Markdown 导入导出双向解析单测全通。 |
-| F1b richtext 编辑器 | 实现富文本编辑器组件、工具栏、只读展示模式以及各项常用插件。 | F1a C6 C16 | 编辑器组件交互正常；文字样式修改与输入功能完整。 |
-| F1c richtext 文档 | 编写富文本组件的中英文文档与交互示例。 | F1b | 文档站页面正常访问；示例能在线输入操作。 |
-| F2a charts 纯逻辑 | 实现图表纯逻辑层（数值格式化、配色方案、坐标系布局、图例、悬浮提示框计算）。 | F0 B1 | 纯数学与几何排版计算单测全通。 |
-| F2b charts 组件 | 实现具体的图表展示组件与图形绘制。 | F2a C7 | 图表组件在浏览器中渲染正确；缩放与提示框交互正常。 |
-| F2c charts 文档 | 编写图表组件的中英文文档与交互示例。 | F2b | 文档与示例展示完整，无报错。 |
-| F3a lab 输入类 | 移植 3 个实验性输入组件：ListInput、MobileTokenizer、TransferList。 | F0 C3 | 3 个组件在浏览器中交互正常，测试通过。 |
-| F3b lab 展示类 | 移植 6 个实验性展示组件：Stat、CircularProgress、InfoTip、SVGIcon、LogStream、Schedule。 | F0 C15 C7 | 6 个组件渲染正常，样式无破损。 |
-| F3c lab 浮层与引导 | 移植 2 个实验性浮层引导组件：Drawer、Tour。 | F0 C7 C8 | 抽屉弹出与操作指引流程完整可用。 |
-| F3d lab 可视化与编辑器 | 移植 6 个实验性组件：Chart、Radial、Sankey、ThreeD、CodeEditor、DiffViewer。 | F2b C9 | 6 个高级组件正常加载，交互无卡顿。 |
-| F3e lab 对话 | 移植 2 个实验性 AI 对话组件：Chat、ChatReasoning。 | F0 C10 | 思考链折叠与对话消息渲染正确。 |
-| F3f lab 文档 | 编写 lab 实验包的专属文档分区与交互示例。 | F3a–F3e | lab 独立文档区建立完成，示例全可用。 |
-| F4 Nuxt 模块 | 新建官方模块 `@astryx-vue/nuxt`，支持组件按需自动导入、主题自动注入，并在 Nuxt 测试项目中跑通 SSR 服务端渲染。 | A3 C全部 | 在真实的 Nuxt 示例项目中跑通开发与打包部署。 |
-| F5 vega | 根据 F0 选型决策，决定是否移植 Vega 数据可视化包。 | F0 | 移植完成或在地图中注明不做的理由。 |
-| F6 build | 根据 F0 选型决策，决定是否移植 StyleX 构建打包插件。 | F0 | 移植完成或在地图中注明不做的理由。 |
+| F0 新包选型决策 | 已完成，产物是 `docs/adr/0001-new-packages.md`。下面各 F 节点的范围以 ADR 第 8 节为准。 | A1 | ADR 通过验收。 |
+| F1a richtext 纯逻辑 | 内核用 Lexical（ADR 第 2 节），Vue 绑定层我们自己写。范围见 ADR 2.6 的 F1a 清单：新建 `packages/richtext` 包骨架、`./markdown` 子路径，Markdown 往返逻辑和纯逻辑测试。 | F0 C9 | 上游纯逻辑测试的 Vue 版全部通过；Markdown 往返结果和上游一致。**C9 必须提供上游那样的 Markdown 解析器接口**，见 ADR 2.7。 |
+| F1b richtext 编辑器 | ADR 2.6 的 F1b 清单：编辑器、工具栏、只读视图、各插件。第一步先验证装饰节点在 Vue 里的渲染方式。 | F1a C1 C2 C3 C7 C14 C16 | 编辑手感（快捷键、Markdown 快捷输入、粘贴、撤销、表格操作）和上游一致，用浏览器实测。 |
+| F1c richtext 文档 | 中英文文档和示例。 | F1b | 文档站可以访问，示例可以在线编辑。 |
+| F2a charts 纯逻辑 | ADR 3.4：格式化、配色、比例尺、布局、图例、提示框计算；新建 `packages/charts` 包骨架（private，只发 canary）。 | F0 B1 | 纯逻辑测试全部通过；`--astryx-color-data-*` 齐全。 |
+| F2b charts 组件 | 6 个配套组件，加上 8 个 SVG 标记的渲染。**不含** WebGL。 | F2a B7 C7 C14 C16 | 图表的样子、提示框、图例和上游对照一致。 |
+| F2c charts 文档 | 中英文文档和示例，另加一小节「和 Vega-Lite 一起用」，给出主题配置片段。 | F2b | 文档和示例完整。 |
+| F2d charts WebGL 标记 | `dotGL`、`dotGLInteractive`、`heatmapGL`、`streamGL`，以及 lab 的 GL 系列和 `ThreeDScatterGL`。**延后**，等上游这部分成熟再开工。 | F2b | 开工前先重新评估。 |
+| F3a lab 输入类 | ListInput、TransferList、MobileTokenizer；新建 `packages/lab` 包骨架（private，只发 canary）。 | F0 C3 C8 C11 C12 C14 C15 C16 | 3 个组件和上游对照一致。 |
+| F3b lab 展示类 | Stat、CircularProgress、InfoTip、SVGIcon、LogStream。 | F0 C7 C16 | 5 个组件和上游对照一致。 |
+| F3g lab 日程表 | Schedule，约 5700 行，单独一个节点。 | F0 B7 C6 C7 C14 C15 C16 | 日程表的视图切换、拖动、键盘操作和上游一致。 |
+| F3c lab 浮层与引导 | Drawer、Tour。 | F0 C7 C14 C16 | 抽屉和引导流程和上游一致。 |
+| F3d lab 图表类 | Chart 组合写法、Brush、Zoom、Select、m4Reduce、useChartRange、Radial、Sankey，以及 ThreeD 的 SVG 部分。不含 GL。 | F2b C16 | 和上游对照一致。 |
+| F3h lab 代码类 | CodeEditor、DiffViewer。 | F0 C9 | 和上游对照一致。 |
+| F3e lab 对话 | 只做 ChatEmojiPicker、ChatReactionBar。另外 3 个组件已经在 core 里，核对上游 lab 的改动，有差异就交给 C10。 | F0 C7 C10 | 和上游对照一致。 |
+| F3f lab 文档 | 文档站里单独开一个 lab 分区，页面标上 canary。 | F3a F3b F3g F3c F3d F3h F3e | 分区和示例都可以用。 |
+| F4 Nuxt 模块 | `@astryx-vue/nuxt`：只注册 core 和 themes，给新包留开关；在 Nuxt 示例项目里跑通 SSR。 | A3 C全部 | 开发和打包部署都能跑通。 |
+| F5 vega | **不做**。理由见 ADR 第 5 节。替代做法：在 F2c 文档里写「和 Vega-Lite 一起用」。台账 4 条标「不适用」。 | F0 | — |
+| F6 build | **不做**。它只服务 StyleX，我们不用。理由见 ADR 第 6 节。台账 11 条标「不适用」。 | F0 | — |
 
 ---
 
