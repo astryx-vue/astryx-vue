@@ -1,4 +1,4 @@
-import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentKind, ComponentRecord, ExampleRecord, LocaleText, TemplateRecord, TopicRecord } from '../catalog-types.ts'
+import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, ComponentKind, ComponentRecord, ExampleEntry, ExampleRecord, LocaleText, TemplateRecord, TopicRecord } from '../catalog-types.ts'
 import type { PageExample } from './markdown.ts'
 import { readdir, readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
@@ -84,6 +84,10 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
       en: mergeExtract(extractPage(pages.en.index, name), extractPage(pages.en.props, name)),
       zh: mergeExtract(extractPage(pages.zh.index, name), extractPage(pages.zh.props, name)),
     }
+    const examples = {
+      en: await resolveExamples(repoRoot, entry.slug, 'en', extracted.en.examples, demoSourceCache),
+      zh: await resolveExamples(repoRoot, entry.slug, 'zh', extracted.zh.examples, demoSourceCache),
+    }
     if (!extracted.en.summary)
       missing.push(`${entry.slug} (en summary)`)
     if (!extracted.zh.summary)
@@ -114,10 +118,7 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
       slots: { en: extracted.en.slots, zh: extracted.zh.slots },
       events: { en: extracted.en.events, zh: extracted.zh.events },
       notes: { en: extracted.en.notes, zh: extracted.zh.notes },
-      examples: {
-        en: await resolveExamples(repoRoot, entry.slug, 'en', extracted.en.examples, demoSourceCache),
-        zh: await resolveExamples(repoRoot, entry.slug, 'zh', extracted.zh.examples, demoSourceCache),
-      },
+      examples: pairExamples(entry.slug, examples.en, examples.zh),
       anatomy: localizedAnatomy(anatomy.en[entry.slug] ?? [], anatomy.zh[entry.slug] ?? []),
       accessibility: localizedAccessibility(accessibility.en[entry.slug] ?? [], accessibility.zh[entry.slug] ?? []),
       docsUrl: {
@@ -402,6 +403,35 @@ function demoSources(repoRoot: string, folder: string, cache: Map<string, Promis
   const pending = readDemoSources(repoRoot, folder)
   cache.set(folder, pending)
   return pending
+}
+
+/**
+ * Folds the examples of both locale pages into one array. Each page lists the
+ * same demos in the same order and points at the same `.vue` file, so the code
+ * is stored once. Titles and descriptions stay separate per language.
+ *
+ * Throws instead of dropping a language when the two pages drift apart, because
+ * the alternative is shipping an English snippet under a Chinese heading.
+ */
+export function pairExamples(slug: string, en: readonly ExampleRecord[], zh: readonly ExampleRecord[]): ExampleEntry[] {
+  if (en.length !== zh.length) {
+    throw new Error(
+      `${slug}: the en page lists ${en.length} examples and the zh page lists ${zh.length}. Both pages must document the same examples, in the same order, so the code can be stored once.`,
+    )
+  }
+  return en.map((example, index) => {
+    const translated = zh[index]!
+    if (example.code !== translated.code) {
+      throw new Error(
+        `${slug}: example ${index + 1} (en "${example.title}", zh "${translated.title}") uses different code on the en and zh pages. Point both pages at the same demo, or remove the example from one of them.`,
+      )
+    }
+    return {
+      title: { en: example.title, zh: translated.title },
+      description: { en: example.description, zh: translated.description },
+      code: example.code,
+    }
+  })
 }
 
 async function resolveExamples(repoRoot: string, slug: string, locale: 'en' | 'zh', examples: readonly PageExample[], cache: Map<string, Promise<Map<string, string>>>): Promise<ExampleRecord[]> {

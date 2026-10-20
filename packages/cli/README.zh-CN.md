@@ -166,6 +166,8 @@ CLI 不另存一份组件文档。`packages/cli/scripts/generate-catalog.mjs` �
 
 模板的说明和关键词是手写的，在 `packages/cli/src/generate/template-meta.ts`，属于源数据，不是生成物。
 
+示例的标题和说明按语言各存一份，但示例代码两种语言只存一份：两个页面指向的是同一个 `.vue` 文件。以后要是一个页面改了代码、另一个没改，生成时直接报错并指出是哪个组件的第几个示例，不会让一种语言悄悄用上另一种的代码。取回某种语言的示例只走 `packages/cli/src/catalog.ts` 里的 `examplesFor()`。
+
 结果提交在 `packages/cli/src/generated/catalog.json`。`pnpm --filter @astryx-vue/cli build` 会重新生成并打进 `dist`，也就是 npm 包实际运行的那份。文档或模板改过之后，重新生成并提交 diff：
 
 ```sh
