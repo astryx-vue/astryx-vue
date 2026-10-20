@@ -68,3 +68,12 @@
 - 只要有一条不过，结论就是「不通过」。
 - 报告写到 `/Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync/nodes/A3/verify-<N>.md`。格式同 A1：先写结论，然后是一张逐条的表格，表头为「编号 | 检查项 | 结果 | 证据」，最后写「不通过的项要怎么改」。所有临时改动都要写明已经还原。
 - 最终回复用中文，200 字以内。
+
+## 第 2 轮新增的检查项
+
+第 1 轮合入后发现一个问题：不设 `NODE_ENV` 时，`ResizeHandle.test.ts` 有 14 条用例失败。原因是 Vue 在开发模式下会保留模板注释，组件根节点就成了 Fragment，测试直接读 wrapper 根上的属性，读到的是 undefined。之前三道检查都是在 `NODE_ENV=production` 下跑的，所以没有发现。
+
+23. 运行 `env -u NODE_ENV pnpm vitest run --maxWorkers=2`（全量），全部通过。再运行 `NODE_ENV=production pnpm vitest run --maxWorkers=2`（全量），也全部通过。两次的用例数要一样。
+24. 修复方式要对：测试改为通过 `[role="separator"]` 之类的选择器定位元素，不再依赖根节点。确认 `ResizeHandle.vue` 没有被改动，也没有靠「删掉组件里的注释」来让测试通过。
+25. 两种模式下，SSR 冒烟测试和 `tests/check-line-limit.test.ts` 都要通过。
+26. 第 1 轮的 1 到 22 项，用 `env -u NODE_ENV` 重新跑一遍和测试相关的项（9 到 18、20），结论不变。
