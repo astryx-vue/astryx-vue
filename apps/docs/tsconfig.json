@@ -25,6 +25,5 @@
     "components/**/*.ts",
     "components/**/*.vue",
     "scripts/**/*.ts"
-  ],
-  "exclude": []
+  ]
 }

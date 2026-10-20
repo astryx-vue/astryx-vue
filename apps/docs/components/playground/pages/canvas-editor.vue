@@ -102,7 +102,7 @@ const zoom = ref(0.45)
 const activeTab = ref('poster')
 
 const rail = useResizable({ defaultSize: 240, minSize: 200, maxSize: 320 })
-const inspector = useResizable({ defaultSize: 300, minSize: 260, maxSize: 400, isReversed: true })
+const inspector = useResizable({ defaultSize: 300, minSize: 260, maxSize: 400 })
 
 const selected = computed(() => layers.value.find(l => l.id === selectedId.value) ?? null)
 
@@ -114,6 +114,17 @@ const treeItems = computed<TreeListItemData[]>(() =>
     children: undefined,
   })),
 )
+
+type NumericField = 'x' | 'y' | 'width' | 'height' | 'rotation' | 'size'
+
+/** NumberInput 清空输入时会发 null，这种时候保留上一个数字。 */
+function updateNumber(key: NumericField, value: number | null): void {
+  if (value == null)
+    return
+  const patch: Partial<Layer> = {}
+  patch[key] = value
+  updateSelected(patch)
+}
 
 function updateSelected(patch: Partial<Layer>): void {
   if (!selected.value)
@@ -248,14 +259,14 @@ const canvasScale = computed(() => ({
           </Text>
           <Divider />
           <HStack :gap="2">
-            <NumberInput label="X" :model-value="selected.x" size="sm" @update:model-value="updateSelected({ x: $event })" />
-            <NumberInput label="Y" :model-value="selected.y" size="sm" @update:model-value="updateSelected({ y: $event })" />
+            <NumberInput label="X" :model-value="selected.x" size="sm" @update:model-value="(value: number | null) => updateNumber('x', value)" />
+            <NumberInput label="Y" :model-value="selected.y" size="sm" @update:model-value="(value: number | null) => updateNumber('y', value)" />
           </HStack>
           <HStack :gap="2">
-            <NumberInput label="W" :model-value="selected.width" size="sm" @update:model-value="updateSelected({ width: $event })" />
-            <NumberInput label="H" :model-value="selected.height" size="sm" @update:model-value="updateSelected({ height: $event })" />
+            <NumberInput label="W" :model-value="selected.width" size="sm" @update:model-value="(value: number | null) => updateNumber('width', value)" />
+            <NumberInput label="H" :model-value="selected.height" size="sm" @update:model-value="(value: number | null) => updateNumber('height', value)" />
           </HStack>
-          <NumberInput label="Rotation" :model-value="selected.rotation" size="sm" @update:model-value="updateSelected({ rotation: $event })" />
+          <NumberInput label="Rotation" :model-value="selected.rotation" size="sm" @update:model-value="(value: number | null) => updateNumber('rotation', value)" />
           <template v-if="selected.kind === 'text'">
             <TextArea
               label="Content"
@@ -264,7 +275,7 @@ const canvasScale = computed(() => ({
               @update:model-value="updateSelected({ content: $event })"
             />
             <TextInput label="Color" :model-value="selected.color ?? ''" @update:model-value="updateSelected({ color: $event })" />
-            <NumberInput label="Size" :model-value="selected.size ?? 16" @update:model-value="updateSelected({ size: $event })" />
+            <NumberInput label="Size" :model-value="selected.size ?? 16" @update:model-value="(value: number | null) => updateNumber('size', value)" />
           </template>
           <template v-else>
             <TextInput label="Alt text" :model-value="selected.content" @update:model-value="updateSelected({ content: $event })" />
