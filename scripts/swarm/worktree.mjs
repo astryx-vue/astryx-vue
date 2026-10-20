@@ -12,6 +12,7 @@
  * 可以在主工作区或任何一个节点工作区里执行，都操作同一个仓库。
  * 退出码：0 成功；1 操作被拒绝或检查失败；2 参数不对。
  */
+import { realpathSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -138,5 +139,6 @@ export function runWorktree(argv, { cwd = process.cwd(), log = message => consol
   return 2
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]))
+// 比较真实路径：经软链接（例如 macOS 的 /tmp）调用时也能认出是直接运行。
+if (process.argv[1] && realpathSync(fileURLToPath(import.meta.url)) === realpathSync(resolve(process.argv[1])))
   process.exitCode = runWorktree(process.argv.slice(2))

@@ -10,7 +10,7 @@
  * 所有子命令都接受 --file <路径>，默认是本仓库的 .agents-work/upstream-sync/ROADMAP.md。
  * 退出码：0 正常；1 check 发现问题或 set 被拒绝；2 参数或文件格式不对。
  */
-import { readFileSync, renameSync, writeFileSync } from 'node:fs'
+import { readFileSync, realpathSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -165,7 +165,8 @@ export function runStatus(argv) {
   }
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+// 比较真实路径：经软链接（例如 macOS 的 /tmp）调用时也能认出是直接运行。
+if (process.argv[1] && realpathSync(fileURLToPath(import.meta.url)) === realpathSync(resolve(process.argv[1]))) {
   const { code, stdout, stderr } = runStatus(process.argv.slice(2))
   if (stdout)
     console.log(stdout)
