@@ -10,7 +10,12 @@ import { renderCoreStyles, renderThemeEntries } from './sync-exports/render-css.
 import { renderComposables, renderIndex } from './sync-exports/render-index.mjs'
 import { renderMessages } from './sync-exports/render-messages.mjs'
 
-function generatedFiles(rootDir) {
+/**
+ * 整个文件都由 `pnpm sync` 生成的文件：绝对路径 → 内容。
+ * `packages/core/package.json` 只有 exports 字段是生成的，不在这里，见 syncOutputs。
+ * 合并工具（scripts/swarm/worktree.mjs rebase）按这份清单判断哪些冲突可以重新生成。
+ */
+export function generatedFiles(rootDir) {
   const composables = renderComposables(rootDir)
   const files = new Map([
     [join(rootDir, 'packages/core/src/index.ts'), renderIndex(rootDir)],
@@ -20,6 +25,12 @@ function generatedFiles(rootDir) {
   ])
   for (const [file, contents] of renderThemeEntries(rootDir))
     files.set(file, contents)
+  return files
+}
+
+/** `pnpm sync` 要写的全部文件：整份生成的文件，加上 exports 有变化时的 package.json。 */
+function syncOutputs(rootDir) {
+  const files = generatedFiles(rootDir)
   const packageExports = renderPackageExports(rootDir)
   if (packageExports.changed)
     files.set(packageExports.file, packageExports.text)
@@ -71,7 +82,7 @@ function diffSummary(before, after) {
 }
 
 export async function syncExports({ rootDir, check = false, eslint = true }) {
-  const files = generatedFiles(rootDir)
+  const files = syncOutputs(rootDir)
   const originals = new Map([...files.keys()].map(file => [file, readOptional(file)]))
   writeFiles(files)
   const tsFiles = [...files.keys()].filter(file => file.endsWith('.ts'))
