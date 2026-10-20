@@ -26,6 +26,8 @@ pnpm add -D @astryx-vue/cli
 
 ```sh
 npm run astryx-vue -- component Button
+npm run astryx-vue -- composable useClipboard
+npm run astryx-vue -- docs guide/dark-mode
 npm run astryx-vue -- search dialog --json
 npm run astryx-vue -- manifest --json
 ```
@@ -36,7 +38,11 @@ npm run astryx-vue -- manifest --json
 | --- | --- |
 | `astryx-vue component --list` | 列出文档里的全部组件 |
 | `astryx-vue component <Name>` | 打印一个组件的用法、props、插槽、事件、示例和补充说明 |
-| `astryx-vue search <query>` | 按相关度搜索组件和指南 |
+| `astryx-vue composable --list` | 列出文档里的全部组合式函数 |
+| `astryx-vue composable <Name>` | 打印一个组合式函数的参数、返回值、用法和示例 |
+| `astryx-vue docs` | 列出全部指南和主题 |
+| `astryx-vue docs <topic>` | 打印一篇正文，例如 `docs guide/dark-mode` 或 `docs themes/tokens` |
+| `astryx-vue search <query>` | 按相关度搜索组件、组合式函数和文档主题 |
 | `astryx-vue manifest --json` | 命令、选项、响应类型和退出码 |
 | `astryx-vue init --features agents` | 创建或刷新 `AGENTS.md` 里的托管区块 |
 
@@ -48,6 +54,10 @@ npm run astryx-vue -- manifest --json
 | `--dense` | 缩短给人看的文本。和 `--json` 一起用时忽略，JSON 始终是完整内容。 |
 | `--zh` | 文档有简体中文时输出中文。 |
 | `--cwd <dir>` | `init` 写入的目录。 |
+
+组合式函数可以写 `useClipboard`，也可以写 `use-clipboard`。`component useClipboard` 仍然能查到，末尾会多一行提示，让你改用 `composable` 命令。`component --list` 只列组件。`search --type` 接受 `component`、`composable` 或 `doc`；组合式函数的结果 `domain` 是 `composable`，`command` 指向 `composable <Name>`。
+
+`docs` 接受主题 id，也接受把 `theme/` 换成 `themes/` 的写法，或能唯一对上的短名字，例如 `dark-mode`。`--json` 返回 `docs.list` 或 `docs.detail`，`docs.detail` 里带正文 `body`。
 
 `init` 可以用 `--agent cursor|claude|codex`。`cursor` 和 `codex` 写 `AGENTS.md`，`claude` 写 `CLAUDE.md`。不传时写 `AGENTS.md`。
 
@@ -75,7 +85,7 @@ CLI 不另写一套组件说明。`packages/cli/scripts/generate-catalog.mjs` �
 - `apps/docs/docs/{en,zh}/components/<slug>/`：用法、props、插槽、事件和示例标题
 - `apps/docs/components/demos/<slug>/*.vue`：页面对应的示例源码
 - `apps/docs/components/demo-infra/reference/*.json`：结构和无障碍要求
-- `apps/docs/docs/{en,zh}/guide` 与 `themes`：搜索用的主题
+- `apps/docs/docs/{en,zh}/guide` 与 `themes`：搜索用的主题，以及主题正文
 - 页面里没有 import 时，再用 `packages/core/package.json` 的 exports
 
 生成结果提交在 `packages/cli/src/generated/catalog.json`。`pnpm --filter @astryx-vue/cli build` 会重新生成，并打进 `dist`。发布出去的包跑的就是这份。文档改了之后重新生成并提交：
@@ -100,6 +110,8 @@ pnpm --filter @astryx-vue/cli generate
 ```sh
 pnpm --filter @astryx-vue/cli build
 node packages/cli/bin/astryx-vue.mjs component Button
+node packages/cli/bin/astryx-vue.mjs composable useClipboard
+node packages/cli/bin/astryx-vue.mjs docs guide/dark-mode --dense
 node packages/cli/bin/astryx-vue.mjs search installation --type doc
 node packages/cli/bin/astryx-vue.mjs manifest --json
 ```

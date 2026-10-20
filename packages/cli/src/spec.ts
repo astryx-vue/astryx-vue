@@ -4,6 +4,11 @@ export const BINARY = 'astryx-vue'
 
 export const PACKAGE_NAME = '@astryx-vue/cli'
 
+/** Values `search --type` accepts. Each one names a search domain. */
+export const SEARCH_TYPES = ['component', 'composable', 'doc'] as const
+
+export type SearchType = typeof SEARCH_TYPES[number]
+
 export interface OptionSpec {
   name: string
   flag: string
@@ -102,14 +107,50 @@ export const COMMANDS: readonly CommandSpec[] = [
     exitCodes: USAGE_EXIT,
   },
   {
+    name: 'composable',
+    summary: 'List composables or print one composable\'s parameters and returns.',
+    arguments: [
+      { name: 'name', required: false, variadic: false, description: 'Composable name, such as useClipboard or use-clipboard. Omit with --list.' },
+    ],
+    options: [
+      { name: 'list', flag: '--list', type: 'boolean', description: 'List every documented composable.' },
+    ],
+    json: true,
+    responseTypes: ['composable.list', 'composable.detail'],
+    examples: [
+      `${BINARY} composable --list`,
+      `${BINARY} composable useClipboard`,
+      `${BINARY} composable useClipboard --json`,
+      `${BINARY} composable use-clipboard --zh --dense`,
+    ],
+    exitCodes: USAGE_EXIT,
+  },
+  {
+    name: 'docs',
+    summary: 'List guide and theme topics, or print one topic\'s page.',
+    arguments: [
+      { name: 'topic', required: false, variadic: false, description: 'Topic id such as guide/dark-mode or themes/tokens, or a unique bare name such as dark-mode. Omit to list every topic.' },
+    ],
+    options: [],
+    json: true,
+    responseTypes: ['docs.list', 'docs.detail'],
+    examples: [
+      `${BINARY} docs`,
+      `${BINARY} docs guide/dark-mode`,
+      `${BINARY} docs themes/tokens --json`,
+      `${BINARY} docs dark-mode --zh --dense`,
+    ],
+    exitCodes: USAGE_EXIT,
+  },
+  {
     name: 'search',
-    summary: 'Search components and docs topics.',
+    summary: 'Search components, composables, and docs topics.',
     arguments: [
       { name: 'query', required: true, variadic: true, description: 'Words to search for.' },
     ],
     options: [
       { name: 'limit', flag: '--limit', type: 'string', description: 'Maximum number of results.', default: '20' },
-      { name: 'type', flag: '--type', type: 'string', description: 'Restrict the domain.', choices: ['component', 'doc'] },
+      { name: 'type', flag: '--type', type: 'string', description: 'Restrict the domain.', choices: SEARCH_TYPES },
     ],
     json: true,
     responseTypes: ['search'],
@@ -147,7 +188,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
 ]
 
-export const JSON_SUPPORTED = ['component', 'search', 'manifest', 'init', 'help', 'version'] as const
+export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'manifest', 'init', 'help', 'version'] as const
 
 export function commandByName(name: string): CommandSpec | undefined {
   return COMMANDS.find(command => command.name === name)

@@ -36,7 +36,13 @@ npm run astryx-vue -- component Button
 
 ## 命令
 
-`astryx-vue component --list` 列出文档里的组件。`astryx-vue component Button` 打印一个组件的用法、props、插槽、事件和示例。`astryx-vue search dialog` 在组件和指南里按相关度搜索。`astryx-vue manifest --json` 说明命令、选项、响应类型和退出码。`astryx-vue init --features agents` 写入给 agent 看的上下文文件。
+`astryx-vue component --list` 列出文档里的组件。`astryx-vue component Button` 打印一个组件的用法、props、插槽、事件和示例。
+
+`astryx-vue composable --list` 列出组合式函数，`astryx-vue composable useClipboard` 打印一个组合式函数的参数和返回值。Vue 里这类函数叫组合式函数（composable），所以命令、文案和文档里都不用 hook 这个词。`component useClipboard` 仍然能查到，并提示改用 `composable` 命令。
+
+`astryx-vue docs` 列出指南和主题。`astryx-vue docs guide/dark-mode` 打印一篇正文，写成 `astryx-vue docs themes/tokens` 也可以。
+
+`astryx-vue search dialog` 在组件、组合式函数和文档主题里按相关度搜索。`astryx-vue manifest --json` 说明命令、选项、响应类型和退出码。`astryx-vue init --features agents` 写入给 agent 看的上下文文件。
 
 ## 参数
 

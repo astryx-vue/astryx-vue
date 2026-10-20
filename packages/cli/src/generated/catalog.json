@@ -21,6 +21,7 @@
     {
       "slug": "button",
       "name": "Button",
+      "kind": "component",
       "title": {
         "en": "Button",
         "zh": "按钮"
@@ -708,6 +709,7 @@
     {
       "slug": "button-group",
       "name": "ButtonGroup",
+      "kind": "component",
       "title": {
         "en": "Button Group",
         "zh": "按钮组"
@@ -1047,6 +1049,7 @@
     {
       "slug": "context-menu",
       "name": "ContextMenu",
+      "kind": "component",
       "title": {
         "en": "Context Menu",
         "zh": "上下文菜单"
@@ -1480,6 +1483,7 @@
     {
       "slug": "context-menu-item",
       "name": "ContextMenuItem",
+      "kind": "component",
       "title": {
         "en": "Context Menu Item",
         "zh": "上下文菜单项"
@@ -1715,6 +1719,7 @@
     {
       "slug": "dropdown-menu",
       "name": "DropdownMenu",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu",
         "zh": "下拉菜单"
@@ -2836,6 +2841,7 @@
     {
       "slug": "dropdown-menu-item",
       "name": "DropdownMenuItem",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu Item",
         "zh": "下拉菜单项"
@@ -3067,6 +3073,7 @@
     {
       "slug": "dropdown-menu-group",
       "name": "DropdownMenuGroup",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu Group",
         "zh": "下拉菜单分组"
@@ -3168,6 +3175,7 @@
     {
       "slug": "dropdown-menu-divider",
       "name": "DropdownMenuDivider",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu Divider",
         "zh": "下拉菜单分隔线"
@@ -3237,6 +3245,7 @@
     {
       "slug": "dropdown-menu-submenu",
       "name": "DropdownMenuSubmenu",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu Submenu",
         "zh": "下拉菜单子菜单"
@@ -3432,6 +3441,7 @@
     {
       "slug": "icon-button",
       "name": "IconButton",
+      "kind": "component",
       "title": {
         "en": "Icon Button",
         "zh": "纯图标按钮"
@@ -3849,6 +3859,7 @@
     {
       "slug": "link",
       "name": "Link",
+      "kind": "component",
       "title": {
         "en": "Link",
         "zh": "链接"
@@ -4286,6 +4297,7 @@
     {
       "slug": "more-menu",
       "name": "MoreMenu",
+      "kind": "component",
       "title": {
         "en": "More Menu",
         "zh": "更多菜单"
@@ -4911,6 +4923,7 @@
     {
       "slug": "segmented-control",
       "name": "SegmentedControl",
+      "kind": "component",
       "title": {
         "en": "Segmented Control",
         "zh": "分段控件"
@@ -5458,6 +5471,7 @@
     {
       "slug": "segmented-control-item",
       "name": "SegmentedControlItem",
+      "kind": "component",
       "title": {
         "en": "Segmented Control Item",
         "zh": "分段控件项"
@@ -5599,6 +5613,7 @@
     {
       "slug": "toggle-button",
       "name": "ToggleButton",
+      "kind": "component",
       "title": {
         "en": "Toggle Button",
         "zh": "切换按钮"
@@ -6276,6 +6291,7 @@
     {
       "slug": "toolbar",
       "name": "Toolbar",
+      "kind": "component",
       "title": {
         "en": "Toolbar",
         "zh": "工具栏"
@@ -6527,6 +6543,7 @@
     {
       "slug": "toggle-button-group",
       "name": "ToggleButtonGroup",
+      "kind": "component",
       "title": {
         "en": "Toggle Button Group",
         "zh": "切换按钮组"
@@ -6734,6 +6751,7 @@
     {
       "slug": "dropdown-menu-checkbox-item",
       "name": "DropdownMenuCheckboxItem",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu Checkbox Item",
         "zh": "下拉菜单勾选项"
@@ -6887,6 +6905,7 @@
     {
       "slug": "dropdown-menu-radio-group",
       "name": "DropdownMenuRadioGroup",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu Radio Group",
         "zh": "下拉菜单单选组"
@@ -7004,6 +7023,7 @@
     {
       "slug": "dropdown-menu-radio-item",
       "name": "DropdownMenuRadioItem",
+      "kind": "component",
       "title": {
         "en": "Dropdown Menu Radio Item",
         "zh": "下拉菜单单选项"
@@ -7145,6 +7165,7 @@
     {
       "slug": "chat",
       "name": "Chat",
+      "kind": "component",
       "title": {
         "en": "Chat",
         "zh": "对话"
@@ -8661,6 +8682,7 @@
     {
       "slug": "chat-layout",
       "name": "ChatLayout",
+      "kind": "component",
       "title": {
         "en": "Chat Layout",
         "zh": "对话布局"
@@ -8922,6 +8944,7 @@
     {
       "slug": "chat-layout-scroll-button",
       "name": "ChatLayoutScrollButton",
+      "kind": "component",
       "title": {
         "en": "Chat Layout Scroll Button",
         "zh": "滚到底按钮"
@@ -9051,6 +9074,7 @@
     {
       "slug": "chat-message",
       "name": "ChatMessage",
+      "kind": "component",
       "title": {
         "en": "Chat Message",
         "zh": "对话消息"
@@ -9208,6 +9232,7 @@
     {
       "slug": "chat-tool-calls",
       "name": "ChatToolCalls",
+      "kind": "component",
       "title": {
         "en": "Chat Tool Calls",
         "zh": "对话工具调用"
@@ -9628,6 +9653,7 @@
     {
       "slug": "chat-message-list",
       "name": "ChatMessageList",
+      "kind": "component",
       "title": {
         "en": "Chat Message List",
         "zh": "对话消息列表"
@@ -9811,6 +9837,7 @@
     {
       "slug": "chat-message-bubble",
       "name": "ChatMessageBubble",
+      "kind": "component",
       "title": {
         "en": "Chat Message Bubble",
         "zh": "对话消息气泡"
@@ -10000,6 +10027,7 @@
     {
       "slug": "chat-system-message",
       "name": "ChatSystemMessage",
+      "kind": "component",
       "title": {
         "en": "Chat System Message",
         "zh": "对话系统消息"
@@ -10180,6 +10208,7 @@
     {
       "slug": "chat-tokenized-text",
       "name": "ChatTokenizedText",
+      "kind": "component",
       "title": {
         "en": "Chat Tokenized Text",
         "zh": "对话标记文本"
@@ -10346,6 +10375,7 @@
     {
       "slug": "chat-message-metadata",
       "name": "ChatMessageMetadata",
+      "kind": "component",
       "title": {
         "en": "Chat Message Metadata",
         "zh": "对话消息元信息"
@@ -10550,6 +10580,7 @@
     {
       "slug": "chat-composer",
       "name": "ChatComposer",
+      "kind": "component",
       "title": {
         "en": "Chat Composer",
         "zh": "对话输入区"
@@ -10995,6 +11026,7 @@
     {
       "slug": "chat-send-button",
       "name": "ChatSendButton",
+      "kind": "component",
       "title": {
         "en": "Chat Send Button",
         "zh": "发送按钮"
@@ -11240,6 +11272,7 @@
     {
       "slug": "chat-composer-input",
       "name": "ChatComposerInput",
+      "kind": "component",
       "title": {
         "en": "Chat Composer Input",
         "zh": "对话输入框"
@@ -11665,6 +11698,7 @@
     {
       "slug": "chat-composer-drawer",
       "name": "ChatComposerDrawer",
+      "kind": "component",
       "title": {
         "en": "Chat Composer Drawer",
         "zh": "对话输入抽屉"
@@ -11928,6 +11962,7 @@
     {
       "slug": "chat-dictation-button",
       "name": "ChatDictationButton",
+      "kind": "component",
       "title": {
         "en": "Chat Dictation Button",
         "zh": "语音输入按钮"
@@ -12120,6 +12155,7 @@
     {
       "slug": "chat-composer-token-element",
       "name": "ChatComposerTokenElement",
+      "kind": "component",
       "title": {
         "en": "Chat Composer Token Element",
         "zh": "对话标签元素"
@@ -12235,6 +12271,7 @@
     {
       "slug": "card",
       "name": "Card",
+      "kind": "component",
       "title": {
         "en": "Card",
         "zh": "卡片"
@@ -12664,6 +12701,7 @@
     {
       "slug": "collapsible",
       "name": "Collapsible",
+      "kind": "component",
       "title": {
         "en": "Collapsible",
         "zh": "折叠面板"
@@ -13061,6 +13099,7 @@
     {
       "slug": "clickable-card",
       "name": "ClickableCard",
+      "kind": "component",
       "title": {
         "en": "Clickable Card",
         "zh": "可点击卡片"
@@ -13324,6 +13363,7 @@
     {
       "slug": "selectable-card",
       "name": "SelectableCard",
+      "kind": "component",
       "title": {
         "en": "Selectable Card",
         "zh": "可选卡片"
@@ -13585,6 +13625,7 @@
     {
       "slug": "collapsible-group",
       "name": "CollapsibleGroup",
+      "kind": "component",
       "title": {
         "en": "Collapsible Group",
         "zh": "折叠组"
@@ -13782,6 +13823,7 @@
     {
       "slug": "carousel",
       "name": "Carousel",
+      "kind": "component",
       "title": {
         "en": "Carousel",
         "zh": "轮播"
@@ -14044,6 +14086,7 @@
     {
       "slug": "avatar",
       "name": "Avatar",
+      "kind": "component",
       "title": {
         "en": "Avatar",
         "zh": "头像"
@@ -14499,6 +14542,7 @@
     {
       "slug": "avatar-status-dot",
       "name": "AvatarStatusDot",
+      "kind": "component",
       "title": {
         "en": "Avatar Status Dot",
         "zh": "头像状态点"
@@ -14642,6 +14686,7 @@
     {
       "slug": "avatar-group",
       "name": "AvatarGroup",
+      "kind": "component",
       "title": {
         "en": "Avatar Group",
         "zh": "头像组"
@@ -14899,6 +14944,7 @@
     {
       "slug": "avatar-group-overflow",
       "name": "AvatarGroupOverflow",
+      "kind": "component",
       "title": {
         "en": "Avatar Group Overflow",
         "zh": "头像组溢出"
@@ -15075,6 +15121,7 @@
     {
       "slug": "blockquote",
       "name": "Blockquote",
+      "kind": "component",
       "title": {
         "en": "Blockquote",
         "zh": "引用"
@@ -15270,6 +15317,7 @@
     {
       "slug": "citation",
       "name": "Citation",
+      "kind": "component",
       "title": {
         "en": "Citation",
         "zh": "引文"
@@ -15484,6 +15532,7 @@
     {
       "slug": "code",
       "name": "Code",
+      "kind": "component",
       "title": {
         "en": "Code",
         "zh": "代码"
@@ -15985,6 +16034,7 @@
     {
       "slug": "empty-state",
       "name": "EmptyState",
+      "kind": "component",
       "title": {
         "en": "Empty State",
         "zh": "空状态"
@@ -16282,6 +16332,7 @@
     {
       "slug": "heading",
       "name": "Heading",
+      "kind": "component",
       "title": {
         "en": "Heading",
         "zh": "标题"
@@ -16603,6 +16654,7 @@
     {
       "slug": "kbd",
       "name": "Kbd",
+      "kind": "component",
       "title": {
         "en": "Kbd",
         "zh": "快捷键"
@@ -16820,6 +16872,7 @@
     {
       "slug": "markdown",
       "name": "Markdown",
+      "kind": "component",
       "title": {
         "en": "Markdown",
         "zh": "Markdown"
@@ -17303,6 +17356,7 @@
     {
       "slug": "text",
       "name": "Text",
+      "kind": "component",
       "title": {
         "en": "Text",
         "zh": "文本"
@@ -17702,6 +17756,7 @@
     {
       "slug": "thumbnail",
       "name": "Thumbnail",
+      "kind": "component",
       "title": {
         "en": "Thumbnail",
         "zh": "缩略图"
@@ -17996,6 +18051,7 @@
     {
       "slug": "timestamp",
       "name": "Timestamp",
+      "kind": "component",
       "title": {
         "en": "Timestamp",
         "zh": "时间戳"
@@ -18338,6 +18394,7 @@
     {
       "slug": "token",
       "name": "Token",
+      "kind": "component",
       "title": {
         "en": "Token",
         "zh": "标签"
@@ -18668,6 +18725,7 @@
     {
       "slug": "code-block",
       "name": "CodeBlock",
+      "kind": "component",
       "title": {
         "en": "Code Block",
         "zh": "代码块"
@@ -19170,6 +19228,7 @@
     {
       "slug": "timer",
       "name": "Timer",
+      "kind": "component",
       "title": {
         "en": "Timer",
         "zh": "计时"
@@ -19390,6 +19449,7 @@
     {
       "slug": "icon",
       "name": "Icon",
+      "kind": "component",
       "title": {
         "en": "Icon",
         "zh": "图标"
@@ -19719,6 +19779,7 @@
     {
       "slug": "badge",
       "name": "Badge",
+      "kind": "component",
       "title": {
         "en": "Badge",
         "zh": "徽标"
@@ -19972,6 +20033,7 @@
     {
       "slug": "banner",
       "name": "Banner",
+      "kind": "component",
       "title": {
         "en": "Banner",
         "zh": "提示条"
@@ -20435,6 +20497,7 @@
     {
       "slug": "progress-bar",
       "name": "ProgressBar",
+      "kind": "component",
       "title": {
         "en": "Progress Bar",
         "zh": "进度条"
@@ -20808,6 +20871,7 @@
     {
       "slug": "skeleton",
       "name": "Skeleton",
+      "kind": "component",
       "title": {
         "en": "Skeleton",
         "zh": "骨架屏"
@@ -21029,6 +21093,7 @@
     {
       "slug": "spinner",
       "name": "Spinner",
+      "kind": "component",
       "title": {
         "en": "Spinner",
         "zh": "加载态"
@@ -21228,6 +21293,7 @@
     {
       "slug": "status-dot",
       "name": "StatusDot",
+      "kind": "component",
       "title": {
         "en": "Status Dot",
         "zh": "状态点"
@@ -21469,6 +21535,7 @@
     {
       "slug": "calendar",
       "name": "Calendar",
+      "kind": "component",
       "title": {
         "en": "Calendar",
         "zh": "日历"
@@ -21984,6 +22051,7 @@
     {
       "slug": "checkbox-input",
       "name": "CheckboxInput",
+      "kind": "component",
       "title": {
         "en": "Checkbox Input",
         "zh": "复选框"
@@ -22529,6 +22597,7 @@
     {
       "slug": "checkbox-list",
       "name": "CheckboxList",
+      "kind": "component",
       "title": {
         "en": "Checkbox List",
         "zh": "复选列表"
@@ -22964,6 +23033,7 @@
     {
       "slug": "checkbox-list-item",
       "name": "CheckboxListItem",
+      "kind": "component",
       "title": {
         "en": "Checkbox List Item",
         "zh": "复选列表项"
@@ -23137,6 +23207,7 @@
     {
       "slug": "date-input",
       "name": "DateInput",
+      "kind": "component",
       "title": {
         "en": "Date Input",
         "zh": "日期输入框"
@@ -23760,6 +23831,7 @@
     {
       "slug": "date-range-input",
       "name": "DateRangeInput",
+      "kind": "component",
       "title": {
         "en": "Date Range Input",
         "zh": "日期区间输入框"
@@ -24205,6 +24277,7 @@
     {
       "slug": "date-time-input",
       "name": "DateTimeInput",
+      "kind": "component",
       "title": {
         "en": "Date Time Input",
         "zh": "日期时间输入框"
@@ -24708,6 +24781,7 @@
     {
       "slug": "field",
       "name": "Field",
+      "kind": "component",
       "title": {
         "en": "Field",
         "zh": "表单字段"
@@ -25461,6 +25535,7 @@
     {
       "slug": "field-label",
       "name": "FieldLabel",
+      "kind": "component",
       "title": {
         "en": "Field Label",
         "zh": "字段标签"
@@ -25730,6 +25805,7 @@
     {
       "slug": "field-status",
       "name": "FieldStatus",
+      "kind": "component",
       "title": {
         "en": "Field Status",
         "zh": "字段状态"
@@ -25915,6 +25991,7 @@
     {
       "slug": "file-input",
       "name": "FileInput",
+      "kind": "component",
       "title": {
         "en": "File Input",
         "zh": "文件输入框"
@@ -26346,6 +26423,7 @@
     {
       "slug": "input-group",
       "name": "InputGroup",
+      "kind": "component",
       "title": {
         "en": "Input Group",
         "zh": "输入框组"
@@ -26679,6 +26757,7 @@
     {
       "slug": "input-group-text",
       "name": "InputGroupText",
+      "kind": "component",
       "title": {
         "en": "Input Group Text",
         "zh": "输入框组文本"
@@ -26780,6 +26859,7 @@
     {
       "slug": "multi-selector",
       "name": "MultiSelector",
+      "kind": "component",
       "title": {
         "en": "Multi Selector",
         "zh": "多选器"
@@ -27554,6 +27634,7 @@
     {
       "slug": "number-input",
       "name": "NumberInput",
+      "kind": "component",
       "title": {
         "en": "Number Input",
         "zh": "数字输入框"
@@ -28251,6 +28332,7 @@
     {
       "slug": "radio",
       "name": "Radio",
+      "kind": "component",
       "title": {
         "en": "Radio",
         "zh": "单选按钮"
@@ -28458,6 +28540,7 @@
     {
       "slug": "radio-group",
       "name": "RadioGroup",
+      "kind": "component",
       "title": {
         "en": "Radio Group",
         "zh": "单选组"
@@ -28825,6 +28908,7 @@
     {
       "slug": "radio-list",
       "name": "RadioList",
+      "kind": "component",
       "title": {
         "en": "Radio List",
         "zh": "单选列表"
@@ -29218,6 +29302,7 @@
     {
       "slug": "radio-list-item",
       "name": "RadioListItem",
+      "kind": "component",
       "title": {
         "en": "Radio List Item",
         "zh": "单选列表项"
@@ -29371,6 +29456,7 @@
     {
       "slug": "selector",
       "name": "Selector",
+      "kind": "component",
       "title": {
         "en": "Selector",
         "zh": "选择器"
@@ -30051,6 +30137,7 @@
     {
       "slug": "selector-option",
       "name": "SelectorOption",
+      "kind": "component",
       "title": {
         "en": "Selector Option",
         "zh": "选择器选项"
@@ -30212,6 +30299,7 @@
     {
       "slug": "slider",
       "name": "Slider",
+      "kind": "component",
       "title": {
         "en": "Slider",
         "zh": "滑块"
@@ -30873,6 +30961,7 @@
     {
       "slug": "switch",
       "name": "Switch",
+      "kind": "component",
       "title": {
         "en": "Switch",
         "zh": "开关"
@@ -31458,6 +31547,7 @@
     {
       "slug": "text-area",
       "name": "TextArea",
+      "kind": "component",
       "title": {
         "en": "Text Area",
         "zh": "文本域"
@@ -32197,6 +32287,7 @@
     {
       "slug": "text-input",
       "name": "TextInput",
+      "kind": "component",
       "title": {
         "en": "Text Input",
         "zh": "文本输入框"
@@ -33040,6 +33131,7 @@
     {
       "slug": "time-input",
       "name": "TimeInput",
+      "kind": "component",
       "title": {
         "en": "Time Input",
         "zh": "时间输入框"
@@ -33437,6 +33529,7 @@
     {
       "slug": "tokenizer",
       "name": "Tokenizer",
+      "kind": "component",
       "title": {
         "en": "Tokenizer",
         "zh": "标签输入框"
@@ -34190,6 +34283,7 @@
     {
       "slug": "typeahead",
       "name": "Typeahead",
+      "kind": "component",
       "title": {
         "en": "Typeahead",
         "zh": "自动补全"
@@ -35380,6 +35474,7 @@
     {
       "slug": "base-typeahead",
       "name": "BaseTypeahead",
+      "kind": "component",
       "title": {
         "en": "Base Typeahead",
         "zh": "基础自动补全"
@@ -35908,6 +36003,7 @@
     {
       "slug": "typeahead-item",
       "name": "TypeaheadItem",
+      "kind": "component",
       "title": {
         "en": "Typeahead Item",
         "zh": "自动补全项"
@@ -36049,6 +36145,7 @@
     {
       "slug": "complex-selector",
       "name": "ComplexSelector",
+      "kind": "component",
       "title": {
         "en": "Complex Selector",
         "zh": "复合选择器"
@@ -36528,6 +36625,7 @@
     {
       "slug": "power-search",
       "name": "PowerSearch",
+      "kind": "component",
       "title": {
         "en": "Power Search",
         "zh": "结构化搜索"
@@ -37008,6 +37106,7 @@
     {
       "slug": "checkbox-indicator",
       "name": "CheckboxIndicator",
+      "kind": "component",
       "title": {
         "en": "Checkbox Indicator",
         "zh": "复选指示器"
@@ -37239,6 +37338,7 @@
     {
       "slug": "check-indicator",
       "name": "CheckIndicator",
+      "kind": "component",
       "title": {
         "en": "Check Indicator",
         "zh": "勾选指示器"
@@ -37470,6 +37570,7 @@
     {
       "slug": "item",
       "name": "Item",
+      "kind": "component",
       "title": {
         "en": "Item",
         "zh": "条目"
@@ -37896,6 +37997,7 @@
     {
       "slug": "radio-indicator",
       "name": "RadioIndicator",
+      "kind": "component",
       "title": {
         "en": "Radio Indicator",
         "zh": "单选指示器"
@@ -38107,6 +38209,7 @@
     {
       "slug": "center",
       "name": "Center",
+      "kind": "component",
       "title": {
         "en": "Center",
         "zh": "居中容器"
@@ -38462,6 +38565,7 @@
     {
       "slug": "divider",
       "name": "Divider",
+      "kind": "component",
       "title": {
         "en": "Divider",
         "zh": "分隔线"
@@ -38683,6 +38787,7 @@
     {
       "slug": "grid",
       "name": "Grid",
+      "kind": "component",
       "title": {
         "en": "Grid",
         "zh": "网格布局"
@@ -39110,6 +39215,7 @@
     {
       "slug": "grid-span",
       "name": "GridSpan",
+      "kind": "component",
       "title": {
         "en": "Grid Span",
         "zh": "网格跨列"
@@ -39251,6 +39357,7 @@
     {
       "slug": "stack",
       "name": "Stack",
+      "kind": "component",
       "title": {
         "en": "Stack",
         "zh": "堆叠布局"
@@ -39804,6 +39911,7 @@
     {
       "slug": "h-stack",
       "name": "HStack",
+      "kind": "component",
       "title": {
         "en": "H Stack",
         "zh": "水平堆叠"
@@ -40193,6 +40301,7 @@
     {
       "slug": "v-stack",
       "name": "VStack",
+      "kind": "component",
       "title": {
         "en": "V Stack",
         "zh": "垂直堆叠"
@@ -40582,6 +40691,7 @@
     {
       "slug": "stack-item",
       "name": "StackItem",
+      "kind": "component",
       "title": {
         "en": "Stack Item",
         "zh": "堆叠项"
@@ -40791,6 +40901,7 @@
     {
       "slug": "app-shell",
       "name": "AppShell",
+      "kind": "component",
       "title": {
         "en": "App Shell",
         "zh": "应用外壳"
@@ -41244,6 +41355,7 @@
     {
       "slug": "aspect-ratio",
       "name": "AspectRatio",
+      "kind": "component",
       "title": {
         "en": "Aspect Ratio",
         "zh": "宽高比"
@@ -41493,6 +41605,7 @@
     {
       "slug": "form-layout",
       "name": "FormLayout",
+      "kind": "component",
       "title": {
         "en": "Form Layout",
         "zh": "表单布局"
@@ -41720,6 +41833,7 @@
     {
       "slug": "layout",
       "name": "Layout",
+      "kind": "component",
       "title": {
         "en": "Layout",
         "zh": "布局"
@@ -42313,6 +42427,7 @@
     {
       "slug": "layout-panel",
       "name": "LayoutPanel",
+      "kind": "component",
       "title": {
         "en": "Layout Panel",
         "zh": "布局面板"
@@ -42514,6 +42629,7 @@
     {
       "slug": "layout-footer",
       "name": "LayoutFooter",
+      "kind": "component",
       "title": {
         "en": "Layout Footer",
         "zh": "布局页脚"
@@ -42691,6 +42807,7 @@
     {
       "slug": "layout-header",
       "name": "LayoutHeader",
+      "kind": "component",
       "title": {
         "en": "Layout Header",
         "zh": "布局页眉"
@@ -42880,6 +42997,7 @@
     {
       "slug": "layout-content",
       "name": "LayoutContent",
+      "kind": "component",
       "title": {
         "en": "Layout Content",
         "zh": "布局正文"
@@ -43045,6 +43163,7 @@
     {
       "slug": "resize-handle",
       "name": "ResizeHandle",
+      "kind": "component",
       "title": {
         "en": "Resize Handle",
         "zh": "拖拽分隔条"
@@ -43490,6 +43609,7 @@
     {
       "slug": "scrollable-area",
       "name": "ScrollableArea",
+      "kind": "component",
       "title": {
         "en": "Scrollable Area",
         "zh": "可滚动区域"
@@ -43923,6 +44043,7 @@
     {
       "slug": "section",
       "name": "Section",
+      "kind": "component",
       "title": {
         "en": "Section",
         "zh": "区块"
@@ -44262,6 +44383,7 @@
     {
       "slug": "breadcrumbs",
       "name": "Breadcrumbs",
+      "kind": "component",
       "title": {
         "en": "Breadcrumbs",
         "zh": "面包屑"
@@ -44651,6 +44773,7 @@
     {
       "slug": "breadcrumb-item",
       "name": "BreadcrumbItem",
+      "kind": "component",
       "title": {
         "en": "Breadcrumb Item",
         "zh": "面包屑项"
@@ -44812,6 +44935,7 @@
     {
       "slug": "mobile-nav",
       "name": "MobileNav",
+      "kind": "component",
       "title": {
         "en": "Mobile Nav",
         "zh": "移动端导航"
@@ -45125,6 +45249,7 @@
     {
       "slug": "mobile-nav-toggle",
       "name": "MobileNavToggle",
+      "kind": "component",
       "title": {
         "en": "Mobile Nav Toggle",
         "zh": "移动端导航开关"
@@ -45320,6 +45445,7 @@
     {
       "slug": "nav-item",
       "name": "NavItem",
+      "kind": "component",
       "title": {
         "en": "Nav Item",
         "zh": "导航项"
@@ -45731,6 +45857,7 @@
     {
       "slug": "nav-icon",
       "name": "NavIcon",
+      "kind": "component",
       "title": {
         "en": "Nav Icon",
         "zh": "导航图标"
@@ -45904,6 +46031,7 @@
     {
       "slug": "nav-heading-menu",
       "name": "NavHeadingMenu",
+      "kind": "component",
       "title": {
         "en": "Nav Heading Menu",
         "zh": "导航标题菜单"
@@ -46251,6 +46379,7 @@
     {
       "slug": "nav-menu",
       "name": "NavMenu",
+      "kind": "component",
       "title": {
         "en": "Nav Menu",
         "zh": "导航菜单"
@@ -46762,6 +46891,7 @@
     {
       "slug": "pagination",
       "name": "Pagination",
+      "kind": "component",
       "title": {
         "en": "Pagination",
         "zh": "分页"
@@ -47320,6 +47450,7 @@
     {
       "slug": "side-nav",
       "name": "SideNav",
+      "kind": "component",
       "title": {
         "en": "Side Nav",
         "zh": "侧边导航"
@@ -47999,6 +48130,7 @@
     {
       "slug": "side-nav-item",
       "name": "SideNavItem",
+      "kind": "component",
       "title": {
         "en": "Side Nav Item",
         "zh": "侧边导航项"
@@ -48232,6 +48364,7 @@
     {
       "slug": "side-nav-heading",
       "name": "SideNavHeading",
+      "kind": "component",
       "title": {
         "en": "Side Nav Heading",
         "zh": "侧边导航标题"
@@ -48421,6 +48554,7 @@
     {
       "slug": "side-nav-section",
       "name": "SideNavSection",
+      "kind": "component",
       "title": {
         "en": "Side Nav Section",
         "zh": "侧边导航分组"
@@ -48550,6 +48684,7 @@
     {
       "slug": "side-nav-collapse-button",
       "name": "SideNavCollapseButton",
+      "kind": "component",
       "title": {
         "en": "Side Nav Collapse Button",
         "zh": "侧边导航收起按钮"
@@ -48707,6 +48842,7 @@
     {
       "slug": "tab-list",
       "name": "TabList",
+      "kind": "component",
       "title": {
         "en": "Tab List",
         "zh": "标签列表"
@@ -49180,6 +49316,7 @@
     {
       "slug": "tab",
       "name": "Tab",
+      "kind": "component",
       "title": {
         "en": "Tab",
         "zh": "标签"
@@ -49357,6 +49494,7 @@
     {
       "slug": "top-nav",
       "name": "TopNav",
+      "kind": "component",
       "title": {
         "en": "Top Nav",
         "zh": "顶部导航"
@@ -50024,6 +50162,7 @@
     {
       "slug": "top-nav-heading",
       "name": "TopNavHeading",
+      "kind": "component",
       "title": {
         "en": "Top Nav Heading",
         "zh": "顶部导航标题"
@@ -50225,6 +50364,7 @@
     {
       "slug": "top-nav-item",
       "name": "TopNavItem",
+      "kind": "component",
       "title": {
         "en": "Top Nav Item",
         "zh": "顶部导航项"
@@ -50438,6 +50578,7 @@
     {
       "slug": "top-nav-mega-menu",
       "name": "TopNavMegaMenu",
+      "kind": "component",
       "title": {
         "en": "Top Nav Mega Menu",
         "zh": "顶部导航大菜单"
@@ -50575,6 +50716,7 @@
     {
       "slug": "top-nav-mega-menu-featured-card",
       "name": "TopNavMegaMenuFeaturedCard",
+      "kind": "component",
       "title": {
         "en": "Top Nav Mega Menu Featured Card",
         "zh": "顶部导航大菜单特色卡片"
@@ -50764,6 +50906,7 @@
     {
       "slug": "top-nav-mega-menu-item",
       "name": "TopNavMegaMenuItem",
+      "kind": "component",
       "title": {
         "en": "Top Nav Mega Menu Item",
         "zh": "顶部导航大菜单项"
@@ -50925,6 +51068,7 @@
     {
       "slug": "top-nav-menu",
       "name": "TopNavMenu",
+      "kind": "component",
       "title": {
         "en": "Top Nav Menu",
         "zh": "顶部导航菜单"
@@ -51156,6 +51300,7 @@
     {
       "slug": "stepper",
       "name": "Stepper",
+      "kind": "component",
       "title": {
         "en": "Stepper",
         "zh": "步骤条"
@@ -51601,6 +51746,7 @@
     {
       "slug": "step",
       "name": "Step",
+      "kind": "component",
       "title": {
         "en": "Step",
         "zh": "步骤"
@@ -51810,6 +51956,7 @@
     {
       "slug": "tab-menu",
       "name": "TabMenu",
+      "kind": "component",
       "title": {
         "en": "Tab Menu",
         "zh": "标签菜单"
@@ -51967,6 +52114,7 @@
     {
       "slug": "outline",
       "name": "Outline",
+      "kind": "component",
       "title": {
         "en": "Outline",
         "zh": "大纲"
@@ -52273,6 +52421,7 @@
     {
       "slug": "alert-dialog",
       "name": "AlertDialog",
+      "kind": "component",
       "title": {
         "en": "Alert Dialog",
         "zh": "警告对话框"
@@ -52694,6 +52843,7 @@
     {
       "slug": "bottom-sheet",
       "name": "BottomSheet",
+      "kind": "component",
       "title": {
         "en": "Bottom Sheet",
         "zh": "底部弹窗"
@@ -53237,6 +53387,7 @@
     {
       "slug": "bottom-sheet-switcher",
       "name": "BottomSheetSwitcher",
+      "kind": "component",
       "title": {
         "en": "Bottom Sheet Switcher",
         "zh": "底部弹窗切换器"
@@ -53446,6 +53597,7 @@
     {
       "slug": "dialog",
       "name": "Dialog",
+      "kind": "component",
       "title": {
         "en": "Dialog",
         "zh": "对话框"
@@ -53903,6 +54055,7 @@
     {
       "slug": "dialog-header",
       "name": "DialogHeader",
+      "kind": "component",
       "title": {
         "en": "Dialog Header",
         "zh": "对话框页眉"
@@ -54114,6 +54267,7 @@
     {
       "slug": "hover-card",
       "name": "HoverCard",
+      "kind": "component",
       "title": {
         "en": "Hover Card",
         "zh": "悬浮卡片"
@@ -54531,6 +54685,7 @@
     {
       "slug": "overlay",
       "name": "Overlay",
+      "kind": "component",
       "title": {
         "en": "Overlay",
         "zh": "覆盖层"
@@ -54962,6 +55117,7 @@
     {
       "slug": "popover",
       "name": "Popover",
+      "kind": "component",
       "title": {
         "en": "Popover",
         "zh": "弹出层"
@@ -55383,6 +55539,7 @@
     {
       "slug": "toast",
       "name": "Toast",
+      "kind": "component",
       "title": {
         "en": "Toast",
         "zh": "轻提示"
@@ -55802,6 +55959,7 @@
     {
       "slug": "tooltip",
       "name": "Tooltip",
+      "kind": "component",
       "title": {
         "en": "Tooltip",
         "zh": "提示框"
@@ -56147,6 +56305,7 @@
     {
       "slug": "command-palette",
       "name": "CommandPalette",
+      "kind": "component",
       "title": {
         "en": "Command Palette",
         "zh": "命令面板"
@@ -56683,6 +56842,7 @@
     {
       "slug": "command-palette-item",
       "name": "CommandPaletteItem",
+      "kind": "component",
       "title": {
         "en": "Command Palette Item",
         "zh": "命令面板项"
@@ -56876,6 +57036,7 @@
     {
       "slug": "command-palette-list",
       "name": "CommandPaletteList",
+      "kind": "component",
       "title": {
         "en": "Command Palette List",
         "zh": "命令面板列表"
@@ -56981,6 +57142,7 @@
     {
       "slug": "command-palette-empty",
       "name": "CommandPaletteEmpty",
+      "kind": "component",
       "title": {
         "en": "Command Palette Empty",
         "zh": "命令面板空状态"
@@ -57070,6 +57232,7 @@
     {
       "slug": "command-palette-group",
       "name": "CommandPaletteGroup",
+      "kind": "component",
       "title": {
         "en": "Command Palette Group",
         "zh": "命令面板分组"
@@ -57175,6 +57338,7 @@
     {
       "slug": "command-palette-input",
       "name": "CommandPaletteInput",
+      "kind": "component",
       "title": {
         "en": "Command Palette Input",
         "zh": "命令面板输入框"
@@ -57392,6 +57556,7 @@
     {
       "slug": "command-palette-footer",
       "name": "CommandPaletteFooter",
+      "kind": "component",
       "title": {
         "en": "Command Palette Footer",
         "zh": "命令面板页脚"
@@ -57499,6 +57664,7 @@
     {
       "slug": "lightbox",
       "name": "Lightbox",
+      "kind": "component",
       "title": {
         "en": "Lightbox",
         "zh": "灯箱"
@@ -57815,6 +57981,7 @@
     {
       "slug": "list",
       "name": "List",
+      "kind": "component",
       "title": {
         "en": "List",
         "zh": "列表"
@@ -58426,6 +58593,7 @@
     {
       "slug": "list-item",
       "name": "ListItem",
+      "kind": "component",
       "title": {
         "en": "List Item",
         "zh": "列表项"
@@ -58691,6 +58859,7 @@
     {
       "slug": "metadata-list",
       "name": "MetadataList",
+      "kind": "component",
       "title": {
         "en": "Metadata List",
         "zh": "元数据列表"
@@ -58963,6 +59132,7 @@
     {
       "slug": "metadata-list-item",
       "name": "MetadataListItem",
+      "kind": "component",
       "title": {
         "en": "Metadata List Item",
         "zh": "元数据列表项"
@@ -59068,6 +59238,7 @@
     {
       "slug": "overflow-list",
       "name": "OverflowList",
+      "kind": "component",
       "title": {
         "en": "Overflow List",
         "zh": "溢出列表"
@@ -59409,6 +59580,7 @@
     {
       "slug": "table",
       "name": "Table",
+      "kind": "component",
       "title": {
         "en": "Table",
         "zh": "表格"
@@ -60351,6 +60523,7 @@
     {
       "slug": "table-body",
       "name": "TableBody",
+      "kind": "component",
       "title": {
         "en": "Table Body",
         "zh": "表格主体"
@@ -60448,6 +60621,7 @@
     {
       "slug": "table-cell",
       "name": "TableCell",
+      "kind": "component",
       "title": {
         "en": "Table Cell",
         "zh": "表格单元格"
@@ -60585,6 +60759,7 @@
     {
       "slug": "table-footer",
       "name": "TableFooter",
+      "kind": "component",
       "title": {
         "en": "Table Footer",
         "zh": "表格页脚"
@@ -60682,6 +60857,7 @@
     {
       "slug": "table-header",
       "name": "TableHeader",
+      "kind": "component",
       "title": {
         "en": "Table Header",
         "zh": "表格表头"
@@ -60779,6 +60955,7 @@
     {
       "slug": "table-header-cell",
       "name": "TableHeaderCell",
+      "kind": "component",
       "title": {
         "en": "Table Header Cell",
         "zh": "表头单元格"
@@ -60904,6 +61081,7 @@
     {
       "slug": "table-row",
       "name": "TableRow",
+      "kind": "component",
       "title": {
         "en": "Table Row",
         "zh": "表格行"
@@ -60997,6 +61175,7 @@
     {
       "slug": "table-selection-toolbar",
       "name": "TableSelectionToolbar",
+      "kind": "component",
       "title": {
         "en": "Table Selection Toolbar",
         "zh": "表格选择工具栏"
@@ -61211,6 +61390,7 @@
     {
       "slug": "tree-list",
       "name": "TreeList",
+      "kind": "component",
       "title": {
         "en": "Tree List",
         "zh": "树形列表"
@@ -61649,6 +61829,7 @@
     {
       "slug": "internationalization-provider",
       "name": "InternationalizationProvider",
+      "kind": "component",
       "title": {
         "en": "Internationalization Provider",
         "zh": "国际化 Provider"
@@ -61885,6 +62066,7 @@
     {
       "slug": "layer-provider",
       "name": "LayerProvider",
+      "kind": "component",
       "title": {
         "en": "Layer Provider",
         "zh": "浮层 Provider"
@@ -62189,6 +62371,7 @@
     {
       "slug": "link-provider",
       "name": "LinkProvider",
+      "kind": "component",
       "title": {
         "en": "Link Provider",
         "zh": "链接 Provider"
@@ -62342,6 +62525,7 @@
     {
       "slug": "visually-hidden",
       "name": "VisuallyHidden",
+      "kind": "component",
       "title": {
         "en": "Visually Hidden",
         "zh": "视觉隐藏"
@@ -62537,6 +62721,7 @@
     {
       "slug": "media-theme",
       "name": "MediaTheme",
+      "kind": "component",
       "title": {
         "en": "Media Theme",
         "zh": "媒体主题"
@@ -62734,6 +62919,7 @@
     {
       "slug": "syntax-theme",
       "name": "SyntaxTheme",
+      "kind": "component",
       "title": {
         "en": "Syntax Theme",
         "zh": "语法主题"
@@ -62919,6 +63105,7 @@
     {
       "slug": "theme",
       "name": "Theme",
+      "kind": "component",
       "title": {
         "en": "Theme",
         "zh": "主题"
@@ -63142,6 +63329,7 @@
     {
       "slug": "use-announce",
       "name": "UseAnnounce",
+      "kind": "composable",
       "title": {
         "en": "useAnnounce",
         "zh": "useAnnounce"
@@ -63245,6 +63433,7 @@
     {
       "slug": "use-app-shell-mobile",
       "name": "UseAppShellMobile",
+      "kind": "composable",
       "title": {
         "en": "useAppShellMobile",
         "zh": "useAppShellMobile"
@@ -63453,6 +63642,7 @@
     {
       "slug": "use-clickable-container",
       "name": "UseClickableContainer",
+      "kind": "composable",
       "title": {
         "en": "useClickableContainer",
         "zh": "useClickableContainer"
@@ -63656,6 +63846,7 @@
     {
       "slug": "use-clipboard",
       "name": "UseClipboard",
+      "kind": "composable",
       "title": {
         "en": "useClipboard",
         "zh": "useClipboard"
@@ -63815,6 +64006,7 @@
     {
       "slug": "use-collapsible",
       "name": "UseCollapsible",
+      "kind": "composable",
       "title": {
         "en": "useCollapsible",
         "zh": "useCollapsible"
@@ -64045,6 +64237,7 @@
     {
       "slug": "use-collator",
       "name": "UseCollator",
+      "kind": "composable",
       "title": {
         "en": "useCollator",
         "zh": "useCollator"
@@ -64162,6 +64355,7 @@
     {
       "slug": "use-container-reveal",
       "name": "UseContainerReveal",
+      "kind": "composable",
       "title": {
         "en": "useContainerReveal",
         "zh": "useContainerReveal"
@@ -64397,6 +64591,7 @@
     {
       "slug": "use-dev-warning",
       "name": "UseDevWarning",
+      "kind": "composable",
       "title": {
         "en": "useDevWarning",
         "zh": "useDevWarning"
@@ -64542,6 +64737,7 @@
     {
       "slug": "use-entry-animation",
       "name": "UseEntryAnimation",
+      "kind": "composable",
       "title": {
         "en": "useEntryAnimation",
         "zh": "useEntryAnimation"
@@ -64663,6 +64859,7 @@
     {
       "slug": "use-focus-trap",
       "name": "UseFocusTrap",
+      "kind": "composable",
       "title": {
         "en": "useFocusTrap",
         "zh": "useFocusTrap"
@@ -64878,6 +65075,7 @@
     {
       "slug": "use-grid-focus",
       "name": "UseGridFocus",
+      "kind": "composable",
       "title": {
         "en": "useGridFocus",
         "zh": "useGridFocus"
@@ -65161,6 +65359,7 @@
     {
       "slug": "use-hotkeys",
       "name": "UseHotkeys",
+      "kind": "composable",
       "title": {
         "en": "useHotkeys",
         "zh": "useHotkeys"
@@ -65334,6 +65533,7 @@
     {
       "slug": "use-hover-card",
       "name": "UseHoverCard",
+      "kind": "composable",
       "title": {
         "en": "useHoverCard",
         "zh": "useHoverCard"
@@ -65721,6 +65921,7 @@
     {
       "slug": "use-image-mode",
       "name": "UseImageMode",
+      "kind": "composable",
       "title": {
         "en": "useImageMode",
         "zh": "useImageMode"
@@ -65899,6 +66100,7 @@
     {
       "slug": "use-imperative-alert-dialog",
       "name": "UseImperativeAlertDialog",
+      "kind": "composable",
       "title": {
         "en": "useImperativeAlertDialog",
         "zh": "useImperativeAlertDialog"
@@ -66128,6 +66330,7 @@
     {
       "slug": "use-imperative-dialog",
       "name": "UseImperativeDialog",
+      "kind": "composable",
       "title": {
         "en": "useImperativeDialog",
         "zh": "useImperativeDialog"
@@ -66385,6 +66588,7 @@
     {
       "slug": "use-indicator-focus-ring",
       "name": "UseIndicatorFocusRing",
+      "kind": "composable",
       "title": {
         "en": "useIndicatorFocusRing",
         "zh": "useIndicatorFocusRing"
@@ -66518,6 +66722,7 @@
     {
       "slug": "use-input-container",
       "name": "UseInputContainer",
+      "kind": "composable",
       "title": {
         "en": "useInputContainer",
         "zh": "useInputContainer"
@@ -66685,6 +66890,7 @@
     {
       "slug": "use-input-status-icon",
       "name": "UseInputStatusIcon",
+      "kind": "composable",
       "title": {
         "en": "useInputStatusIcon",
         "zh": "useInputStatusIcon"
@@ -66840,6 +67046,7 @@
     {
       "slug": "use-interactive-role",
       "name": "UseInteractiveRole",
+      "kind": "composable",
       "title": {
         "en": "useInteractiveRole",
         "zh": "useInteractiveRole"
@@ -66985,6 +67192,7 @@
     {
       "slug": "use-keyboard-hint",
       "name": "UseKeyboardHint",
+      "kind": "composable",
       "title": {
         "en": "useKeyboardHint",
         "zh": "useKeyboardHint"
@@ -67218,6 +67426,7 @@
     {
       "slug": "use-layer",
       "name": "UseLayer",
+      "kind": "composable",
       "title": {
         "en": "useLayer",
         "zh": "useLayer"
@@ -67589,6 +67798,7 @@
     {
       "slug": "use-list-focus",
       "name": "UseListFocus",
+      "kind": "composable",
       "title": {
         "en": "useListFocus",
         "zh": "useListFocus"
@@ -67892,6 +68102,7 @@
     {
       "slug": "use-locale",
       "name": "UseLocale",
+      "kind": "composable",
       "title": {
         "en": "useLocale",
         "zh": "useLocale"
@@ -67987,6 +68198,7 @@
     {
       "slug": "use-long-press",
       "name": "UseLongPress",
+      "kind": "composable",
       "title": {
         "en": "useLongPress",
         "zh": "useLongPress"
@@ -68198,6 +68410,7 @@
     {
       "slug": "use-media-query",
       "name": "UseMediaQuery",
+      "kind": "composable",
       "title": {
         "en": "useMediaQuery",
         "zh": "useMediaQuery"
@@ -68331,6 +68544,7 @@
     {
       "slug": "use-menu-press",
       "name": "UseMenuPress",
+      "kind": "composable",
       "title": {
         "en": "useMenuPress",
         "zh": "useMenuPress"
@@ -68617,6 +68831,7 @@
     {
       "slug": "use-merged-refs",
       "name": "UseMergedRefs",
+      "kind": "composable",
       "title": {
         "en": "useMergedRefs",
         "zh": "useMergedRefs"
@@ -68738,6 +68953,7 @@
     {
       "slug": "use-overflow",
       "name": "UseOverflow",
+      "kind": "composable",
       "title": {
         "en": "useOverflow",
         "zh": "useOverflow"
@@ -69060,6 +69276,7 @@
     {
       "slug": "use-popover",
       "name": "UsePopover",
+      "kind": "composable",
       "title": {
         "en": "usePopover",
         "zh": "usePopover"
@@ -69478,6 +69695,7 @@
     {
       "slug": "use-press-feedback",
       "name": "UsePressFeedback",
+      "kind": "composable",
       "title": {
         "en": "usePressFeedback",
         "zh": "usePressFeedback"
@@ -69590,6 +69808,7 @@
     {
       "slug": "use-resizable",
       "name": "UseResizable",
+      "kind": "composable",
       "title": {
         "en": "useResizable",
         "zh": "useResizable"
@@ -69956,6 +70175,7 @@
     {
       "slug": "use-scroll-lock",
       "name": "UseScrollLock",
+      "kind": "composable",
       "title": {
         "en": "useScrollLock",
         "zh": "useScrollLock"
@@ -70071,6 +70291,7 @@
     {
       "slug": "use-scroll-overflow",
       "name": "UseScrollOverflow",
+      "kind": "composable",
       "title": {
         "en": "useScrollOverflow",
         "zh": "useScrollOverflow"
@@ -70209,6 +70430,7 @@
     {
       "slug": "use-scrollable-area",
       "name": "UseScrollableArea",
+      "kind": "composable",
       "title": {
         "en": "useScrollableArea",
         "zh": "useScrollableArea"
@@ -70448,6 +70670,7 @@
     {
       "slug": "use-streaming-text",
       "name": "UseStreamingText",
+      "kind": "composable",
       "title": {
         "en": "useStreamingText",
         "zh": "useStreamingText"
@@ -70625,6 +70848,7 @@
     {
       "slug": "use-table-column-resize",
       "name": "UseTableColumnResize",
+      "kind": "composable",
       "title": {
         "en": "useTableColumnResize",
         "zh": "useTableColumnResize"
@@ -70910,6 +71134,7 @@
     {
       "slug": "use-table-column-settings",
       "name": "UseTableColumnSettings",
+      "kind": "composable",
       "title": {
         "en": "useTableColumnSettings",
         "zh": "useTableColumnSettings"
@@ -71235,6 +71460,7 @@
     {
       "slug": "use-table-filter-state",
       "name": "UseTableFilterState",
+      "kind": "composable",
       "title": {
         "en": "useTableFilterState",
         "zh": "useTableFilterState"
@@ -71422,6 +71648,7 @@
     {
       "slug": "use-table-filtering",
       "name": "UseTableFiltering",
+      "kind": "composable",
       "title": {
         "en": "useTableFiltering",
         "zh": "useTableFiltering"
@@ -71787,6 +72014,7 @@
     {
       "slug": "use-table-grouped-rows",
       "name": "UseTableGroupedRows",
+      "kind": "composable",
       "title": {
         "en": "useTableGroupedRows",
         "zh": "useTableGroupedRows"
@@ -72052,6 +72280,7 @@
     {
       "slug": "use-table-pagination",
       "name": "UseTablePagination",
+      "kind": "composable",
       "title": {
         "en": "useTablePagination",
         "zh": "useTablePagination"
@@ -72339,6 +72568,7 @@
     {
       "slug": "use-table-row-expansion",
       "name": "UseTableRowExpansion",
+      "kind": "composable",
       "title": {
         "en": "useTableRowExpansion",
         "zh": "useTableRowExpansion"
@@ -72624,6 +72854,7 @@
     {
       "slug": "use-table-row-index",
       "name": "UseTableRowIndex",
+      "kind": "composable",
       "title": {
         "en": "useTableRowIndex",
         "zh": "useTableRowIndex"
@@ -72779,6 +73010,7 @@
     {
       "slug": "use-table-row-status",
       "name": "UseTableRowStatus",
+      "kind": "composable",
       "title": {
         "en": "useTableRowStatus",
         "zh": "useTableRowStatus"
@@ -72945,6 +73177,7 @@
     {
       "slug": "use-table-selection",
       "name": "UseTableSelection",
+      "kind": "composable",
       "title": {
         "en": "useTableSelection",
         "zh": "useTableSelection"
@@ -73255,6 +73488,7 @@
     {
       "slug": "use-table-selection-state",
       "name": "UseTableSelectionState",
+      "kind": "composable",
       "title": {
         "en": "useTableSelectionState",
         "zh": "useTableSelectionState"
@@ -73512,6 +73746,7 @@
     {
       "slug": "use-table-sortable",
       "name": "UseTableSortable",
+      "kind": "composable",
       "title": {
         "en": "useTableSortable",
         "zh": "useTableSortable"
@@ -73707,6 +73942,7 @@
     {
       "slug": "use-table-sticky-columns",
       "name": "UseTableStickyColumns",
+      "kind": "composable",
       "title": {
         "en": "useTableStickyColumns",
         "zh": "useTableStickyColumns"
@@ -73856,6 +74092,7 @@
     {
       "slug": "use-table-tree-data",
       "name": "UseTableTreeData",
+      "kind": "composable",
       "title": {
         "en": "useTableTreeData",
         "zh": "useTableTreeData"
@@ -74109,6 +74346,7 @@
     {
       "slug": "use-table-tree-state",
       "name": "UseTableTreeState",
+      "kind": "composable",
       "title": {
         "en": "useTableTreeState",
         "zh": "useTableTreeState"
@@ -74418,6 +74656,7 @@
     {
       "slug": "use-theme",
       "name": "UseTheme",
+      "kind": "composable",
       "title": {
         "en": "useTheme",
         "zh": "useTheme"
@@ -74576,6 +74815,7 @@
     {
       "slug": "use-toast",
       "name": "UseToast",
+      "kind": "composable",
       "title": {
         "en": "useToast",
         "zh": "useToast"
@@ -74829,6 +75069,7 @@
     {
       "slug": "use-tooltip",
       "name": "UseTooltip",
+      "kind": "composable",
       "title": {
         "en": "useTooltip",
         "zh": "useTooltip"
@@ -75173,6 +75414,7 @@
     {
       "slug": "use-translator",
       "name": "UseTranslator",
+      "kind": "composable",
       "title": {
         "en": "useTranslator",
         "zh": "useTranslator"
@@ -75254,6 +75496,7 @@
     {
       "slug": "use-tree-focus",
       "name": "UseTreeFocus",
+      "kind": "composable",
       "title": {
         "en": "useTreeFocus",
         "zh": "useTreeFocus"
@@ -75515,6 +75758,7 @@
     {
       "slug": "use-typeahead",
       "name": "UseTypeahead",
+      "kind": "composable",
       "title": {
         "en": "useTypeahead",
         "zh": "useTypeahead"
@@ -75734,6 +75978,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Accessibility\n\nComponents are built around accessible names, the keyboard, and screen readers. Docs and examples do not drop the focus ring or the contrast to get a look.\n\nKeyboard focus uses `--astryx-focus-outline-*`: 2px, `solid`, the color `--astryx-color-accent`, and a 3px offset. Do not zero `outline` globally. The docs site removes the extra outline only on controls that already draw their own focus, such as inputs with a rounded focus treatment.\n\nAn icon-only button needs a name. `IconButton`'s `label` is that name. `NavItem`'s `label` is required too. Decorative graphics use `aria-hidden`. An icon class is not text.\n\nWhen content has to stay in the accessibility tree and disappear visually, use `VisuallyHidden` from `@astryx-vue/core/VisuallyHidden`.\n\nAnnouncements go through `useAnnounce`. Changing a button's text after a copy often is not spoken, so `useClipboard` accepts `announce` and speaks that string after a successful write. Popup dismissal uses the Escape stack in `useDismiss`. Dialogs trap Tab with `useFocusTrap` and return focus with `useRestoreFocus`. `useScrollLock` locks background scroll while a popup is open.\n\nArrow keys for lists and menus live in `useListFocus`, `useGridRovingFocus`, and `useTypeahead`. `ChatMessageList` is `role=\"log\"`. Keep `isStreaming` true while an assistant reply is still growing so a screen reader waits for the finished message instead of speaking every token.\n\nMotion follows `prefers-reduced-motion`. The shared motion classes collapse distance and scale to zero. See [Motion](/en/themes/motion).\n\nThere is no separate third-party audit to cite. Keyboard and screen reader behavior for a component is what that component's docs and the repository tests say.",
+        "zh": "# 无障碍\n\n组件按可访问名称、键盘和读屏来做。文档和示例不靠拿掉焦点环或降低对比度来换外观。\n\n键盘焦点使用 `--astryx-focus-outline-*`。宽度 2px，样式 `solid`，颜色是 `--astryx-color-accent`，偏移 3px。不要在应用样式里把 `outline` 全局清掉。文档站只在组件自己画出焦点的控件上取消额外的轮廓，例如已经有圆角焦点样式的输入框。\n\n只有图标的按钮必须有名字。`IconButton` 的 `label` 会成为可访问名称。`NavItem` 的 `label` 同样必填。装饰性图形用 `aria-hidden`，不要把图标 class 当成文字。\n\n需要把内容留在可访问树里、但视觉上藏起来时，用 `@astryx-vue/core/VisuallyHidden` 的 `VisuallyHidden`。\n\n读屏播报用 `useAnnounce`。复制成功如果只改按钮文字，读屏经常不念，所以 `useClipboard` 可以传 `announce`，在写入成功时播报一句。浮层关闭走 `useDismiss` 的 Escape 栈。对话框一类浮层用 `useFocusTrap` 把 Tab 留在里面，并用 `useRestoreFocus` 在关闭后把焦点还回触发器。`useScrollLock` 在浮层打开时锁住背景滚动。\n\n列表和菜单的方向键在 `useListFocus`、`useGridRovingFocus` 和 `useTypeahead`。`ChatMessageList` 是 `role=\"log\"`。助手回复还在增长时，把 `isStreaming` 保持为 true，读屏会等这段结束再读，而不是每个 token 都念一遍。\n\n动画尊重 `prefers-reduced-motion`。共享运动类会把位移和缩放收成 0。见 [动画](/themes/motion)。\n\n这里没有一份独立的第三方审计报告。某个组件的键盘和读屏行为，以该组件文档里的说明和仓库里的测试为准。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/accessibility",
         "zh": "https://astryx-vue.pages.dev/guide/accessibility"
@@ -75761,6 +76009,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Changelog\n\nThe two packages publish together. This page repeats what `CHANGELOG.md` already records. It is not a roadmap.\n\n## 0.1.0\n\nFirst release. `@astryx-vue/core` provides the Vue 3 components, and `@astryx-vue/themes` provides the Neutral theme.\n\nThe change landed in pull request [#13](https://github.com/astryx-vue/astryx-vue/pull/13), commit [`85aa073`](https://github.com/astryx-vue/astryx-vue/commit/85aa073fb5f855847b6951528e5743dc50bc99aa).\n\nFull files:\n\n- [packages/core/CHANGELOG.md](https://github.com/astryx-vue/astryx-vue/blob/main/packages/core/CHANGELOG.md)\n- [packages/themes/CHANGELOG.md](https://github.com/astryx-vue/astryx-vue/blob/main/packages/themes/CHANGELOG.md)",
+        "zh": "# 更新日志\n\n两个包的版本一起发布。下面是仓库里 `CHANGELOG.md` 已经写下的版本，不是路线图。\n\n## 0.1.0\n\n首次发布。`@astryx-vue/core` 提供 Vue 3 组件，`@astryx-vue/themes` 提供 Neutral 主题。\n\n来源是 pull request [#13](https://github.com/astryx-vue/astryx-vue/pull/13)，提交 [`85aa073`](https://github.com/astryx-vue/astryx-vue/commit/85aa073fb5f855847b6951528e5743dc50bc99aa)。\n\n完整记录：\n\n- [packages/core/CHANGELOG.md](https://github.com/astryx-vue/astryx-vue/blob/main/packages/core/CHANGELOG.md)\n- [packages/themes/CHANGELOG.md](https://github.com/astryx-vue/astryx-vue/blob/main/packages/themes/CHANGELOG.md)"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/changelog",
@@ -75793,6 +76045,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# CLI\n\n`@astryx-vue/cli` looks up astryx-vue component docs from the terminal, for people and for agents. The binary is `astryx-vue`. It is not Meta's `astryx` command, and it does not speak React or StyleX.\n\nInstall it as a dev dependency:\n\n```sh\npnpm add -D @astryx-vue/cli\n```\n\n```sh\nnpm install -D @astryx-vue/cli\n```\n\n```sh\nyarn add -D @astryx-vue/cli\n```\n\nCall it through a project script so the path stays stable:\n\n```json\n{\n  \"scripts\": {\n    \"astryx-vue\": \"node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs\"\n  }\n}\n```\n\n```sh\nnpm run astryx-vue -- component Button\n```\n\n## Commands\n\n`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, events, and examples.\n\n`astryx-vue composable --list` lists the composables, and `astryx-vue composable useClipboard` prints one composable's parameters and return values. Vue calls these functions composables, so the CLI never says hook. `component useClipboard` still finds it and points at the `composable` command.\n\n`astryx-vue docs` lists the guide and theme topics. `astryx-vue docs guide/dark-mode` prints one page's text, and `astryx-vue docs themes/tokens` works too.\n\n`astryx-vue search dialog` ranks components, composables, and docs topics. `astryx-vue manifest --json` describes the commands, options, response types, and exit codes. `astryx-vue init --features agents` writes the agent context file.\n\n## Flags\n\n`--json` prints a typed envelope on stdout. `--dense` shortens the text people read; together with `--json` it is ignored, and the envelope stays complete. `--zh` uses Simplified Chinese where this site has a translation. `--cwd` is the directory `init` writes into.\n\n## Agent file\n\n`init --features agents` creates `AGENTS.md` when that file is missing. `--agent claude` writes `CLAUDE.md`. `cursor` and `codex` write `AGENTS.md`.\n\nThe command owns only the block between these markers:\n\n```html\n<!-- Maintained by astryx-vue, do not edit manually -->\n...\n<!-- astryx-vue block end -->\n```\n\nEvery run replaces that block with freshly generated text. Text outside the markers stays. If the file exists and the markers are missing, the block is appended.\n\nThe sentences the CLI prints come from this docs site. After a docs change, regenerate the catalog in the CLI package. The maintainer steps are in the `packages/cli` README.\n\nThis version does not include theme, template, upgrade, doctor, or MCP commands.",
+        "zh": "# 命令行\n\n`@astryx-vue/cli` 用来在终端里查 astryx-vue 的组件文档，给人和 agent 用。二进制名字是 `astryx-vue`。它不是 Meta 的 `astryx`，也不提供 React 或 StyleX 的接口。\n\n作为开发依赖安装：\n\n```sh\npnpm add -D @astryx-vue/cli\n```\n\n```sh\nnpm install -D @astryx-vue/cli\n```\n\n```sh\nyarn add -D @astryx-vue/cli\n```\n\n建议在项目里加一个脚本，这样路径是固定的：\n\n```json\n{\n  \"scripts\": {\n    \"astryx-vue\": \"node node_modules/@astryx-vue/cli/bin/astryx-vue.mjs\"\n  }\n}\n```\n\n```sh\nnpm run astryx-vue -- component Button\n```\n\n## 命令\n\n`astryx-vue component --list` 列出文档里的组件。`astryx-vue component Button` 打印一个组件的用法、props、插槽、事件和示例。\n\n`astryx-vue composable --list` 列出组合式函数，`astryx-vue composable useClipboard` 打印一个组合式函数的参数和返回值。Vue 里这类函数叫组合式函数（composable），所以命令、文案和文档里都不用 hook 这个词。`component useClipboard` 仍然能查到，并提示改用 `composable` 命令。\n\n`astryx-vue docs` 列出指南和主题。`astryx-vue docs guide/dark-mode` 打印一篇正文，写成 `astryx-vue docs themes/tokens` 也可以。\n\n`astryx-vue search dialog` 在组件、组合式函数和文档主题里按相关度搜索。`astryx-vue manifest --json` 说明命令、选项、响应类型和退出码。`astryx-vue init --features agents` 写入给 agent 看的上下文文件。\n\n## 参数\n\n`--json` 在标准输出打印一份带类型的信封。`--dense` 把给人看的文本缩短；和 `--json` 一起用时忽略，信封仍是完整的。`--zh` 在文档有译文时输出简体中文。`--cwd` 是 `init` 写入的目录。\n\n## Agent 文件\n\n`init --features agents` 在文件不存在时创建 `AGENTS.md`。`--agent claude` 写 `CLAUDE.md`。`cursor` 和 `codex` 写 `AGENTS.md`。\n\n命令只维护这两行标记之间的区块：\n\n```html\n<!-- Maintained by astryx-vue, do not edit manually -->\n...\n<!-- astryx-vue block end -->\n```\n\n每次运行都用新生成的文字替换这块。标记外面的文字保持不动。文件已经存在但没有这些标记时，把区块接到末尾。\n\n命令打印的句子来自这个文档站。文档改过之后，要重新生成 CLI 包里的目录。维护者的步骤写在 `packages/cli` 的 README 里。\n\n这一版不包括主题、模板、升级、诊断和 MCP 命令。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/cli",
@@ -75899,6 +76155,10 @@
           "useChatComposerContext、useChatComposerTokens、useChatPasteAsToken、useChatDictation、useSpeechRecognition"
         ]
       },
+      "body": {
+        "en": "# Composables\n\nImport composables from the package root:\n\n```ts\nimport { useClipboard, useControllableState } from '@astryx-vue/core'\n```\n\nThere is no `@astryx-vue/core/composables` subpath. The functions exported from `packages/core/src/composables/index.ts` are below. Parameters are the TypeScript types.\n\n| Function | What it does |\n| --- | --- |\n| `useControllableState` | A `v-model` that is controlled or internal. If the value is missing at setup, it stays internal. |\n| `useAnnounce` | Announces to screen readers. Matches upstream `useAnnounce`. |\n| `useClipboard` | Writes to the clipboard and keeps `isCopied` true for a short time. |\n| `useHotkeys` | Global shortcuts. `mod+k` uses ⌘ on Apple platforms. |\n| `useMediaQuery` | A media query as a ref, read once during setup. |\n| `useDismiss` | Outside press and Escape for popups. Escape uses a stack; the innermost layer handles it. |\n| `useFocusTrap` | Cycles Tab inside a container. |\n| `useRestoreFocus` | Remembers focus when a popup opens and returns it on close. |\n| `useScrollLock` | Locks `body` scroll with a reference count. |\n| `useListFocus` | Arrow keys for a one-dimensional list. The default selector is `[role=\"menuitem\"]`. |\n| `useClickableContainer` | Makes a region activate on click, and leaves nested buttons, links, and inputs alone. |\n| `useGridRovingFocus` | Arrow keys for a grid. |\n| `useTypeahead` | Cycles matches as the same letter is pressed. It does not move focus; `onMatch` does. |\n| `useCombobox` | A searchable option list and the current value. |\n| `useNumberField` | A number with min, max, and step. |\n| `useAsyncSource`, `createStaticSource` | A cancellable search source, and a local static source. |\n| `useOverflow`, `computeOverflow` | Folds items that do not fit into an indicator. `computeOverflow` is pure. |\n| `useLongPress` | Fires after a hold. Moving too far cancels it. |\n| `useStreamingText` | Reveals text that has already arrived, at `natural`, `fast`, or `instant`. |\n| `snapToGraphemeBoundary` | Snaps an offset to a grapheme boundary for streaming text. |\n| `useChatStreamScroll` | Pins a transcript to the bottom, or lets it go. Reduced motion jumps instead of springing. |\n| `useChatNewMessages` | Marks rows that arrived while the reader was not pinned to the bottom. |\n| `useKeyboardHint` | The first time keyboard focus enters a group of arrow-key controls, shows a short hint beside the current item. |\n| `useImageMode` | Decides whether a foreground should be dark or light from an image's brightness. Returns `fallback` when sampling fails. |\n| `useContainerReveal` | Reveals inline actions on hover or keyboard focus. Returns classes for the container and the content. |\n| `useMenuPress` | After a menu press, swallows the browser's extra click. `resetMenuPress` is for unmount and tests. |\n\n`useClipboard` is also exported as `useCopyToClipboard` from `@astryx-vue/core` and from `@astryx-vue/core/Code`. The types are the same.\n\nSome functions belong to one component and are not in the table above. Import them from that component's subpath. The package root re-exports them too:\n\n| Function | Entry |\n| --- | --- |\n| `useToast` | `@astryx-vue/core/Toast` |\n| `useImperativeDialog` | `@astryx-vue/core/Dialog` |\n| `useImperativeAlertDialog` | `@astryx-vue/core/AlertDialog` |\n| `useOverlay` | `@astryx-vue/core/Overlay` |\n| `useContextMenu`, `useContextMenuSize` | `@astryx-vue/core/ContextMenu` |\n| `useDropdownMenuContext` | `@astryx-vue/core/DropdownMenu` |\n| `useSideNavCollapse` | `@astryx-vue/core/SideNav` |\n| `useListContext`, `useItemDescriptionId` | `@astryx-vue/core/List` |\n| `useTheme`, `useMediaTheme` | `@astryx-vue/core/Theme` |\n| `useIndicator` | `@astryx-vue/core/Indicator` |\n| `useSemanticIcon` | `@astryx-vue/core/Icon` |\n| `useSyntaxTheme` | `@astryx-vue/core/Code` |\n| `useChatComposerContext`, `useChatComposerTokens`, `useChatPasteAsToken`, `useChatDictation`, `useSpeechRecognition` | `@astryx-vue/core/Chat` |\n\n`provideAstryxLocale` and `useAstryxMessages` are in [Internationalization](/en/guide/i18n).",
+        "zh": "# 组合式函数\n\n组合式函数从包根引入：\n\n```ts\nimport { useClipboard, useControllableState } from '@astryx-vue/core'\n```\n\n没有 `@astryx-vue/core/composables` 这个子路径。`packages/core/src/composables/index.ts` 里导出的函数如下。参数以类型定义为准。\n\n| 函数 | 做什么 |\n| --- | --- |\n| `useControllableState` | 受控或自己管的 `v-model`。setup 时没传入值就一直自己管。 |\n| `useAnnounce` | 向读屏播报。对应原版 `useAnnounce`。 |\n| `useClipboard` | 写入剪贴板，并在一段时间内把 `isCopied` 设为 true。 |\n| `useHotkeys` | 全局快捷键。`mod+k` 这种写法，`mod` 在 Apple 平台是 ⌘。 |\n| `useMediaQuery` | 把一条 media query 收成 ref。setup 时就读一次。 |\n| `useDismiss` | 浮层的点击外部和 Escape。Escape 走一层栈，最内层先处理。 |\n| `useFocusTrap` | 在容器里循环 Tab。 |\n| `useRestoreFocus` | 浮层打开时记住焦点，关闭时还回去。 |\n| `useScrollLock` | 按引用计数锁住 `body` 滚动。 |\n| `useListFocus` | 一维列表的方向键。默认选择器是 `[role=\"menuitem\"]`。 |\n| `useClickableContainer` | 让一整块区域可以点击，点到里面的按钮、链接或输入框时不触发外层。 |\n| `useGridRovingFocus` | 网格的方向键。 |\n| `useTypeahead` | 按字母在一组标签里循环匹配。它不移动焦点，匹配结果交给 `onMatch`。 |\n| `useCombobox` | 可搜索的选项列表和当前值。 |\n| `useNumberField` | 带最小、最大和步进的数字。 |\n| `useAsyncSource`、`createStaticSource` | 可取消的搜索数据源，以及一份本地静态源。 |\n| `useOverflow`、`computeOverflow` | 按宽度把多余项收进指示器。`computeOverflow` 是纯计算。 |\n| `useLongPress` | 按住超过一段时间后触发，移动过头会取消。 |\n| `useStreamingText` | 把已经到达的文本按 `natural`、`fast` 或 `instant` 露出来。 |\n| `snapToGraphemeBoundary` | 把偏移对齐到字素边界，给流式文本用。 |\n| `useChatStreamScroll` | 对话记录贴底或停住。减少动态效果时，弹簧滚动会改成直接跳。 |\n| `useChatNewMessages` | 读者没贴在底部时，标出新长出来的消息。 |\n| `useKeyboardHint` | 一组方向键控件第一次被键盘点进来时，在当前项旁边短暂提示怎么移动。 |\n| `useImageMode` | 按图片亮度判断该用深色还是浅色前景。采样失败时返回 `fallback`。 |\n| `useContainerReveal` | 悬停或键盘焦点时才露出行内操作。返回容器和内容上的 class。 |\n| `useMenuPress` | 菜单按下后，吞掉浏览器补发的那一下点击。`resetMenuPress` 用于卸载和测试。 |\n\n`useClipboard` 还有一个旧名字 `useCopyToClipboard`，从 `@astryx-vue/core` 和 `@astryx-vue/core/Code` 都能引入，类型是同一套。\n\n有些函数跟单个组件走，不在上面这张表里。它们从该组件的子路径引入，也从包根重新导出：\n\n| 函数 | 入口 |\n| --- | --- |\n| `useToast` | `@astryx-vue/core/Toast` |\n| `useImperativeDialog` | `@astryx-vue/core/Dialog` |\n| `useImperativeAlertDialog` | `@astryx-vue/core/AlertDialog` |\n| `useOverlay` | `@astryx-vue/core/Overlay` |\n| `useContextMenu`、`useContextMenuSize` | `@astryx-vue/core/ContextMenu` |\n| `useDropdownMenuContext` | `@astryx-vue/core/DropdownMenu` |\n| `useSideNavCollapse` | `@astryx-vue/core/SideNav` |\n| `useListContext`、`useItemDescriptionId` | `@astryx-vue/core/List` |\n| `useTheme`、`useMediaTheme` | `@astryx-vue/core/Theme` |\n| `useIndicator` | `@astryx-vue/core/Indicator` |\n| `useSemanticIcon` | `@astryx-vue/core/Icon` |\n| `useSyntaxTheme` | `@astryx-vue/core/Code` |\n| `useChatComposerContext`、`useChatComposerTokens`、`useChatPasteAsToken`、`useChatDictation`、`useSpeechRecognition` | `@astryx-vue/core/Chat` |\n\n语言环境的 `provideAstryxLocale` 和 `useAstryxMessages` 见 [国际化](/guide/i18n)。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/composables",
         "zh": "https://astryx-vue.pages.dev/guide/composables"
@@ -75929,6 +76189,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Contributing\n\nThe repository is <https://github.com/astryx-vue/astryx-vue>. Use GitHub Issues. The license is MIT.\n\nLocal development needs Node.js `^22.18.0`, `^24.11.0`, or `>=26`, and pnpm `>=11.21.0`. The root `package.json` `engines` field is the source of those ranges.\n\n```sh\npnpm install\npnpm check\n```\n\n`pnpm check` runs the package-boundary check, the export sync check, lint, typecheck, tests, the build, and publint on the published packages. A component or theme change is done when that command passes.\n\n`packages/core/src/index.ts`, `composables/index.ts`, `styles.css`, and `neutral.css` are generated by `pnpm sync`. The file headers say not to edit them by hand. After adding an export or a style entry, run `pnpm sync` and commit the generated result.\n\n`packages/core/locales/*.json` is the upstream Astryx catalog, vendored as data. Do not hand-copy it into `messages.ts`. Extra locales go through `loadAstryxCatalog`. The internationalization guide explains how.\n\nDocs:\n\n```sh\npnpm dev\n```\n\n`pnpm docs:build` builds the site only. Component sidebar groups come from each demo's `meta.ts`. Guide and theme pages should leave that grouping alone.\n\nReleases use Changesets. The steps are in `RELEASING.md`. A docs-only change does not need a changeset. Changesets keep the two package versions in one group.\n\nThe upstream React implementation is a reference. APIs committed here stay on Vue props, events, slots, and composables. Do not add React or StyleX as a dependency of the public packages.\n\n## How close to upstream\n\nThe goal is pixel-level parity: apart from being implemented in Vue instead of React, styles, layout, interactions, and copy should match upstream. React and Vue differ only at the implementation layer; a user should not be able to tell the two libraries apart.\n\n`packages/core/locales/*.json` follows the latest upstream. Re-vendor with `node scripts/vendor-astryx-locales.mjs`. With no argument it takes the newest commit on upstream `main`; the commit actually used is recorded in `SOURCE.json` next to the catalogs.\n\n## Comparison shots\n\nAny change to a component, style, or interaction must include comparison shots in the pull request: upstream Astryx on the left, astryx-vue on the right, covering at least desktop and a 390px viewport, each in light and dark.\n\nReviewers judge the change by those shots and the resulting behaviour, not by reading every line of the diff. The shots are part of the submission, not optional. Docs-only, CI, and internal refactors do not need them.",
+        "zh": "# 贡献指南\n\n仓库在 <https://github.com/astryx-vue/astryx-vue>。问题用 GitHub Issues。许可是 MIT。\n\n本地需要 Node.js `^22.18.0`、`^24.11.0` 或 `>=26`，以及 pnpm `>=11.21.0`。版本以根目录 `package.json` 的 `engines` 为准。\n\n```sh\npnpm install\npnpm check\n```\n\n`pnpm check` 会跑包边界检查、导出同步检查、lint、类型检查、测试、构建，以及发布包的 publint 检查。改组件或主题时，以这条命令通过为完成标准。\n\n`packages/core/src/index.ts`、`composables/index.ts`、`styles.css` 和 `neutral.css` 由 `pnpm sync` 生成，文件头写着不要手改。新增导出或样式入口后运行 `pnpm sync`，再把生成结果一起提交。\n\n`packages/core/locales/*.json` 是从原版 Astryx 拉下来的语言目录，不要手抄进 `messages.ts`。额外语言用 `loadAstryxCatalog`，说明在国际化那一页。\n\n文档站：\n\n```sh\npnpm dev\n```\n\n只构建文档是 `pnpm docs:build`。组件文档的侧边栏分组来自每个示例的 `meta.ts`，不要在改指南或主题页时重排那一组。\n\n发版用 Changesets，说明在仓库的 `RELEASING.md`。只改文档时不需要 changeset。两个包的版本号由 Changesets 收成同一组。\n\n原版 Astryx 的 React 实现只作对照。提交到这个仓库的接口应保持 Vue 的 props、事件、插槽和组合式函数，不要把 React 或 StyleX 加进公开包的依赖。\n\n## 对齐到什么程度\n\n目标是像素级对齐：除了用 Vue 而不是 React 实现，样式、布局、交互和文案都应和原版一致。React 和 Vue 的差别只在实现层，不该让使用者看出两个库的样子不一样。\n\n`packages/core/locales/*.json` 跟随原版最新。重新拉取用 `node scripts/vendor-astryx-locales.mjs`，不传参数就是原版 `main` 的最新提交，实际用到的提交号会记进同目录的 `SOURCE.json`。\n\n## 对照图\n\n改了组件、样式或交互，pull request 里要附对照图：左边原版 Astryx，右边 astryx-vue，至少覆盖桌面与 390px 窄屏、浅色与深色四种组合。\n\n评审主要看这些图和实际效果，而不是逐行读代码改动。所以对照图是提交的一部分，不是可选项。纯文档、CI 和内部重构不需要。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/contributing",
         "zh": "https://astryx-vue.pages.dev/guide/contributing"
@@ -75953,6 +76217,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Dark mode\n\nNeutral does not ship a separate dark stylesheet. Each color is `light-dark(light, dark)`, and the element's `color-scheme` picks the stop.\n\nAfter `@astryx-vue/themes/neutral.css` loads, `:root` and `[data-astryx-theme='neutral']` set `color-scheme` to `light dark`. The result follows the system, and it follows a `color-scheme` an ancestor already set.\n\nTo force one side, set the attribute on an element that wraps the UI:\n\n```html\n<html data-astryx-color-mode=\"dark\">\n```\n\n```html\n<html data-astryx-color-mode=\"light\">\n```\n\nThose attributes set `color-scheme` to `dark` or `light`. You do not swap stylesheets.\n\nThe docs site's switch is VitePress `appearance`. Dark mode adds `dark` on `html` and sets `color-scheme: dark`, so Neutral's `light-dark()` uses the dark stop. That class belongs to the docs site. It is not an API the components require. In an app, use `data-astryx-color-mode` or set `color-scheme` yourself.\n\n`Theme` can force one side for a subtree with `mode=\"dark\"` or `mode=\"light\"`. See [Theme](/en/components/theme). There is no parallel set of dark token names. To change a stop, override the original variable and write both sides inside `light-dark()`. See [Extending a theme](/en/themes/extending).",
+        "zh": "# 深色模式\n\nNeutral 不提供单独的深色样式表。每条颜色写成 `light-dark(浅色, 深色)`，用元素的 `color-scheme` 决定取哪一边。\n\n引入 `@astryx-vue/themes/neutral.css` 之后，`:root` 和 `[data-astryx-theme='neutral']` 上的 `color-scheme` 是 `light dark`，因此跟随系统，也跟随祖先已经设定的 `color-scheme`。\n\n只要一边时，写在会包住界面的元素上：\n\n```html\n<html data-astryx-color-mode=\"dark\">\n```\n\n```html\n<html data-astryx-color-mode=\"light\">\n```\n\n这两个属性分别把 `color-scheme` 设成 `dark` 或 `light`。不用再换一份 CSS。\n\n文档站的明暗开关是 VitePress 的 `appearance`。打开深色时，站点在 `html` 上加 `dark`，并把 `color-scheme` 设成 `dark`，Neutral 的 `light-dark()` 就取深色那一档。这是文档站的做法，不是组件要求的 class 名。应用里用 `data-astryx-color-mode` 或自己设置 `color-scheme` 即可。\n\n`Theme` 可以用 `mode=\"dark\"` 或 `mode=\"light\"` 强制一块子树的明暗。见 [主题](/components/theme)。不要同时维护一套深色 token 名字。要改某一档的颜色，仍覆盖原来的变量，并在 `light-dark()` 里写下两边。见 [扩展主题](/themes/extending)。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/dark-mode",
         "zh": "https://astryx-vue.pages.dev/guide/dark-mode"
@@ -75976,6 +76244,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Quick start\n\nInstall the components and the theme. The peer dependency is Vue `^3.5.0`.\n\n```sh\npnpm add @astryx-vue/core @astryx-vue/themes\n```\n\nLoad the theme once from the app entry. Neutral includes Figtree and JetBrains Mono.\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\nImport each component from its own subpath. That entry loads the matching structural styles.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\n</script>\n\n<template>\n  <Button label=\"Get started\" />\n</template>\n```\n\nImport every structural stylesheet at once with:\n\n```ts\nimport '@astryx-vue/core/styles.css'\n```\n\nNext, see how package entries work in [Installation](/en/guide/installation), how layers and variables connect in [Theme and styles](/en/guide/styling), or open [Components](/en/components/). To learn more about the background and design decisions, see [Introduction](/en/guide/why).",
+        "zh": "# 快速开始\n\n安装组件和主题。Peer 依赖是 Vue `^3.5.0`。\n\n```sh\npnpm add @astryx-vue/core @astryx-vue/themes\n```\n\n在应用入口引入一次主题。Neutral 会带上 Figtree 和 JetBrains Mono。\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n组件从自己的子路径引入。那个入口会带上对应的结构样式。\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\n</script>\n\n<template>\n  <Button label=\"开始\" />\n</template>\n```\n\n也可以一次引入全部结构样式：\n\n```ts\nimport '@astryx-vue/core/styles.css'\n```\n\n下一步看 [安装](/guide/installation) 里的包入口，看 [主题与样式](/guide/styling) 里层和变量怎么接，或者直接打开 [组件](/components/)。了解设计初衷与实现思路，请参阅 [介绍](/guide/why)。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/getting-started",
@@ -76006,6 +76278,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Internationalization\n\nStrings that the components speak come from a message catalog. They are not hard-coded at every call site. The built-in locales are `en` and `zh-CN`. The type `AstryxLocale` is that pair.\n\nProvide the locale once at the root. Descendants read it with `useAstryxLocale` and `useAstryxMessages`. If nobody provides one, the locale is `en`.\n\n```ts\nimport { provideAstryxLocale } from '@astryx-vue/core/locale'\n\nprovideAstryxLocale('zh-CN')\n```\n\n`provideAstryxLocale`, `useAstryxLocale`, `useAstryxMessages`, `normalizeLocale`, `loadAstryxCatalog`, and `useCollator` come from `@astryx-vue/core/locale` and are re-exported from `@astryx-vue/core`. `formatCalendarMonth` and `weekdayNames` stay on `@astryx-vue/core/locale`.\n\n`normalizeLocale` maps `en` and any `en-` tag to `en`, and maps `zh`, `zh-CN`, and `zh-Hans` to `zh-CN`. Tags such as `zh-TW` and `ja-JP` keep their canonical form so an extra catalog can use them. An empty or unparseable tag becomes `en`.\n\n## Locales besides Chinese and English\n\nUpstream Astryx ships about 30 React Intl JSON files in `packages/core/locales`, including `ja-JP`, `zh-TW`, and `ar-SA`. Those files are vendored, unchanged, under this package's `locales/` directory. They are not copied into TypeScript by hand. `loadAstryxCatalog` maps their keys onto `AstryxMessages`. Pass the result as the second argument of `provideAstryxLocale`.\n\nKeys that do not fit a field are returned in `unmapped`, with the original sentence still attached. Nothing in the file is dropped quietly. Fields the file never fills stay in English; their paths are `fallbackFields`. Mapped keys missing from that file are `missingKeys`.\n\nThe built-in `en` and `zh-CN` catalogs are maintained here. Do not replace them with upstream `en.json` or `zh-CN.json`. The wording is not the same. Use the loader for the other locales.\n\n```ts\nimport { loadAstryxCatalog, provideAstryxLocale } from '@astryx-vue/core/locale'\nimport catalog from '@astryx-vue/core/locales/ja-JP.json'\n\nconst loaded = loadAstryxCatalog('ja-JP', catalog)\nprovideAstryxLocale(loaded.locale, loaded.messages)\n```\n\n`provideAstryxLocale('ja-JP')` without `messages` still formats dates and `useCollator` in Japanese, but component sentences stay in English. `zh-TW` does not silently become Simplified Chinese.\n\nTo refresh the JSON, change the commit in `scripts/vendor-astryx-locales.mjs` and run `node scripts/vendor-astryx-locales.mjs`. The source and license are recorded in `packages/core/THIRD_PARTY_NOTICES.md`.\n\n## Locale-aware comparison\n\n`useCollator` returns an `Intl.Collator` for the active locale, wrapped in a computed. With no provider, the locale is `en`.\n\n```ts\nimport { useCollator } from '@astryx-vue/core/locale'\n\nconst collator = useCollator({ numeric: true })\nitems.sort((a, b) => collator.value.compare(a.name, b.name))\n```\n\n`AstryxMessages` is the copy components actually read. Text that is not in that type is the `label` you passed, and it does not change with the locale.\n\nThe Chinese and English docs are two VitePress trees, `/` and `/en/`. That is the documentation language, not `provideAstryxLocale`. Component examples call `provideAstryxLocale` for the language of the page you are reading.",
+        "zh": "# 国际化\n\n组件里需要句子的地方走语言包，不把中文或英文写死在每个调用点。随包带上的语言是 `en` 和 `zh-CN`。类型名 `AstryxLocale` 指的就是这两种。\n\n在应用根上提供一次。子组件用 `useAstryxLocale` 和 `useAstryxMessages` 读取。没提供时，语言是 `en`。\n\n```ts\nimport { provideAstryxLocale } from '@astryx-vue/core/locale'\n\nprovideAstryxLocale('zh-CN')\n```\n\n`provideAstryxLocale`、`useAstryxLocale`、`useAstryxMessages`、`normalizeLocale`、`loadAstryxCatalog` 和 `useCollator` 从 `@astryx-vue/core/locale` 引入，也会从 `@astryx-vue/core` 重新导出。`formatCalendarMonth` 和 `weekdayNames` 只在 `@astryx-vue/core/locale`。\n\n`normalizeLocale` 把 `en` 和 `en-` 开头的标签收成 `en`，把 `zh`、`zh-CN`、`zh-Hans` 收成 `zh-CN`。`zh-TW`、`ja-JP` 会保留规范写法，用来接下面的额外语言。空的或解析不了的标签回到 `en`。\n\n## 中文和英文以外\n\n原版 Astryx 在 `packages/core/locales` 放了大约 30 份 React Intl JSON，包括 `ja-JP`、`zh-TW`、`ar-SA`。这些文件原样放在本包的 `locales/` 目录，没有手抄进 TypeScript。`loadAstryxCatalog` 按键映射进 `AstryxMessages`，再交给 `provideAstryxLocale` 的第二个参数。\n\n对不上字段的键在返回值的 `unmapped` 里，原文还在，不会悄悄丢掉。这份 JSON 没覆盖到的字段继续用英文，路径在 `fallbackFields`。映射表里有、但这份 JSON 没给的键在 `missingKeys`。\n\n内置的 `en` 和 `zh-CN` 仍是我们自己维护的短句。不要用原版 `en.json` 或 `zh-CN.json` 覆盖它们，两边用词并不相同。额外语言才走加载器。\n\n```ts\nimport { loadAstryxCatalog, provideAstryxLocale } from '@astryx-vue/core/locale'\nimport catalog from '@astryx-vue/core/locales/ja-JP.json'\n\nconst loaded = loadAstryxCatalog('ja-JP', catalog)\nprovideAstryxLocale(loaded.locale, loaded.messages)\n```\n\n只调用 `provideAstryxLocale('ja-JP')`、不传入 `messages` 时，日期和 `useCollator` 会按日语工作，组件句子仍是英文。`zh-TW` 也不会自动改用简体中文。\n\n要更新这些 JSON，改 `scripts/vendor-astryx-locales.mjs` 里的提交号，再运行 `node scripts/vendor-astryx-locales.mjs`。来源和许可证记在 `packages/core/THIRD_PARTY_NOTICES.md`。\n\n## 按语言比较字符串\n\n`useCollator` 返回当前语言的 `Intl.Collator`，包在 computed 里。没提供语言时用 `en`。\n\n```ts\nimport { useCollator } from '@astryx-vue/core/locale'\n\nconst collator = useCollator({ numeric: true })\nitems.sort((a, b) => collator.value.compare(a.name, b.name))\n```\n\n`AstryxMessages` 是组件实际会读的句子。没出现在这个类型里的文字，由你传进去的 `label` 决定，切换语言不会改写它们。\n\n文档站的中英文是 VitePress 的两套页面，地址分别在 `/` 和 `/en/`。那是文档的语言，不是 `provideAstryxLocale`。组件示例会按当前文档语言调用 `provideAstryxLocale`。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/i18n",
@@ -76042,6 +76318,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Icons\n\nDraw an icon with `Icon` and an Iconify name. You do not import a component for each glyph.\n\n```vue\n<script setup lang=\"ts\">\nimport { Icon } from '@astryx-vue/core/Icon'\n</script>\n\n<template>\n  <Icon name=\"carbon:settings\" />\n</template>\n```\n\n`carbon:settings` is the Carbon collection's settings icon. `carbon-settings` is the same name once that collection is registered. A collection id that already contains a hyphen keeps the colon, as in `material-symbols:home`.\n\n## Bundle only the icons you name\n\n`@astryx-vue/core` does not include a collection. Install the one you want, and add the Vite plugin:\n\n```bash\npnpm add -D @iconify-json/carbon\n```\n\n```ts\nimport { astryxIcons } from '@astryx-vue/core/icons'\nimport vue from '@vitejs/plugin-vue'\nimport { defineConfig } from 'vite'\n\nexport default defineConfig({\n  plugins: [vue(), astryxIcons()],\n})\n```\n\nThe plugin looks at `@iconify-json/*` in the nearest `package.json`. It scans source for static names and emits a module per icon, so the client bundle contains those drawings and not the rest of the JSON. If the Vite root has no `package.json` — VitePress points its root at the docs directory — the plugin walks up until it finds one. A second collection is another package: install `@iconify-json/lucide` and write `name=\"lucide:settings\"`. You do not need UnoCSS for this.\n\nPass `collections: ['carbon']` when you want the plugin to ignore every other installed set.\n\n## Names that are not written in source\n\nThe plugin cannot see a name built at runtime. Register the collection in the app entry, before anything renders. This includes the whole set in the bundle:\n\n```ts\nimport { addCollection } from '@astryx-vue/core/Icon'\nimport carbon from '@iconify-json/carbon/icons.json'\n\naddCollection(carbon)\n```\n\n`addIcon('carbon:settings', data)` registers one icon when you already have its Iconify body.\n\n## Slots\n\nWith no `size`, the icon is `1em` and uses `currentColor`. Button's `icon` and `end` slots, IconButton, and a field's start and end slots already size the box, so the icon fills it:\n\n```vue\n<Button label=\"Settings\">\n  <template #icon>\n    <Icon name=\"carbon:settings\" />\n  </template>\n</Button>\n\n<IconButton label=\"Search\">\n  <Icon name=\"carbon:search\" />\n</IconButton>\n```\n\nA decorative icon is hidden from assistive technology. Set `label` only when the icon itself is the message. The component page has the sizes, colors, and slot examples.\n\n## CSS classes\n\n`icon` still accepts a CSS class, and so does `iconClass` on navigation and menu items. A class only draws something if your build generates it. UnoCSS is one way to do that. It is what the docs site uses for older examples. An application does not have to use it.\n\nThe glyphs the components draw themselves (`chevronDown`, `check`, and the rest) are not a general icon set. Use `name` for product icons.\n\n## Semantic names\n\nInside the components, a semantic name is the job: search, close, check. Each one points at the Lucide icon that does the same job. Until that collection is registered, the built-in glyph stays.\n\nThe set follows the theme. `defineTheme({ icons })` points a semantic name at an Iconify id, and a child theme only lists the names it changes. `Icon`'s `icon` prop resolves those names. `name` is still a direct Iconify id, and it wins.\n\n```vue\n<script setup lang=\"ts\">\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { defineTheme, Theme } from '@astryx-vue/core/Theme'\n\nconst carbon = defineTheme({\n  name: 'withCarbon',\n  icons: { search: 'carbon:search', close: 'carbon:close' },\n})\n</script>\n\n<template>\n  <Theme :theme=\"carbon\">\n    <Icon icon=\"search\" />\n  </Theme>\n</template>\n```\n\nRead the current id with `useSemanticIcon` from `@astryx-vue/core/Icon`. The name-to-id table is on the Icon props page.",
+        "zh": "# 图标\n\n用 `Icon` 和一个 Iconify 名字来画图标。不需要为每个图形单独 import 组件。\n\n```vue\n<script setup lang=\"ts\">\nimport { Icon } from '@astryx-vue/core/Icon'\n</script>\n\n<template>\n  <Icon name=\"carbon:settings\" />\n</template>\n```\n\n`carbon:settings` 是 Carbon 集合里的 settings。这个集合注册之后，`carbon-settings` 是同一个名字。集合 id 本身带连字符时保留冒号，例如 `material-symbols:home`。\n\n## 只打包写到的图标\n\n`@astryx-vue/core` 不带任何集合。装你要用的那一套，再接上 Vite 插件：\n\n```bash\npnpm add -D @iconify-json/carbon\n```\n\n```ts\nimport { astryxIcons } from '@astryx-vue/core/icons'\nimport vue from '@vitejs/plugin-vue'\nimport { defineConfig } from 'vite'\n\nexport default defineConfig({\n  plugins: [vue(), astryxIcons()],\n})\n```\n\n插件读取最近一份 `package.json` 里的 `@iconify-json/*`，扫描源码中的静态名字，每个图标生成一个模块。打进浏览器的只有这些图形，不是整份 JSON。Vite 的 root 如果没有 `package.json`（VitePress 的文档目录就是这样），插件会向上找。再加一套就是再装一个包：安装 `@iconify-json/lucide`，然后写 `name=\"lucide:settings\"`。这件事不需要 UnoCSS。\n\n如果只想让插件认其中几套，传入 `collections: ['carbon']`。\n\n## 名字不在源码里\n\n运行时拼出来的名字，插件看不到。在应用入口、任何图标渲染之前注册整套集合。这样做会把整套打进包：\n\n```ts\nimport { addCollection } from '@astryx-vue/core/Icon'\nimport carbon from '@iconify-json/carbon/icons.json'\n\naddCollection(carbon)\n```\n\n已经有某一枚的 Iconify 数据时，用 `addIcon('carbon:settings', data)` 注册这一枚。\n\n## 槽位\n\n不传 `size` 时，图标是 `1em`，颜色是 `currentColor`。Button 的 `icon` 和 `end` 槽、IconButton，以及输入框开头和结尾的槽已经定好盒子，图标会铺满它：\n\n```vue\n<Button label=\"设置\">\n  <template #icon>\n    <Icon name=\"carbon:settings\" />\n  </template>\n</Button>\n\n<IconButton label=\"搜索\">\n  <Icon name=\"carbon:search\" />\n</IconButton>\n```\n\n装饰性图标对辅助技术隐藏。只有图标自己在传达含义时才设置 `label`。尺寸、颜色和放进按钮的例子在组件页。\n\n## CSS 类名\n\n`icon` 仍然接受 CSS 类名，导航和菜单上的 `iconClass` 也是。类名要在你的构建里真正生成，才会画出来。UnoCSS 是其中一种办法，文档站的一些旧示例还在用它。应用不必装 UnoCSS。\n\n组件自己画的 `chevronDown`、`check` 这些字形不是通用图标集。产品里的图标用 `name`。\n\n## 语义名\n\n组件内部用语义名描述用途，例如搜索、关闭、勾选。默认指向 Lucide 里做同一件事的图标。那一套还没注册时，仍画内置字形。\n\n整套跟着主题换。`defineTheme({ icons })` 把语义名指到 Iconify 的 id，子主题只写要改的名字。`Icon` 的 `icon` 收到这些名字时会去解析；`name` 仍是直接的 Iconify id，并且优先。\n\n```vue\n<script setup lang=\"ts\">\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { defineTheme, Theme } from '@astryx-vue/core/Theme'\n\nconst carbon = defineTheme({\n  name: 'withCarbon',\n  icons: { search: 'carbon:search', close: 'carbon:close' },\n})\n</script>\n\n<template>\n  <Theme :theme=\"carbon\">\n    <Icon icon=\"search\" />\n  </Theme>\n</template>\n```\n\n当前 id 用 `useSemanticIcon` 读取，从 `@astryx-vue/core/Icon` 引入。名字和默认 id 的对照在图标组件的属性页。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/icons",
@@ -76081,6 +76361,10 @@
           "层声明"
         ]
       },
+      "body": {
+        "en": "# Installation\n\nInstall the two public packages together:\n\n```sh\npnpm add @astryx-vue/core @astryx-vue/themes\n```\n\n```sh\nnpm install @astryx-vue/core @astryx-vue/themes\n```\n\n```sh\nyarn add @astryx-vue/core @astryx-vue/themes\n```\n\n`@astryx-vue/core` peers on `vue: ^3.5.0`. The theme package depends on `@fontsource/figtree` and `@fontsource/jetbrains-mono` for the body and monospace faces. Both packages publish ESM only.\n\nEntries differ by what you need:\n\n| You need | Import |\n| --- | --- |\n| One component | A subpath such as `@astryx-vue/core/Button` |\n| Composables, and components re-exported from the root | `@astryx-vue/core` |\n| `provideAstryxLocale`, `useAstryxMessages` | `@astryx-vue/core/locale`, also on the root |\n| A theme | `@astryx-vue/themes/neutral.css`. Butter, Chocolate, Gothic, Matcha, Stone, and Y2K use the same path with their own file name. |\n| Every structural sheet | `@astryx-vue/core/styles.css` |\n| The layer declaration | `@astryx-vue/core/reset.css` |\n\n`reset.css` is currently just `@layer astryx.reset;`. It is not a browser reset. The structural sheets and the theme declare the layer order themselves.\n\nSubpaths and the package root export the same components. Docs and examples use subpaths so the import says which component it is, and so only that component's structural sheet loads. Importing `useClipboard` from the package root can pull other component modules along if the bundler does not drop unused re-exports. Prefer a subpath when you only need a component.\n\nThe two packages version together. The published release is `0.1.0`. See the [changelog](/en/guide/changelog).\n\nTo look these docs up from the terminal, see [CLI](/en/guide/cli).",
+        "zh": "# 安装\n\n两个公开包一起装：\n\n```sh\npnpm add @astryx-vue/core @astryx-vue/themes\n```\n\n```sh\nnpm install @astryx-vue/core @astryx-vue/themes\n```\n\n```sh\nyarn add @astryx-vue/core @astryx-vue/themes\n```\n\n`@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包依赖 `@fontsource/figtree` 和 `@fontsource/jetbrains-mono`，用来提供正文和等宽字体。两个包都只发布 ESM。\n\n组件、组合式函数和语言环境的入口不同：\n\n| 需要的东西 | 从哪里引入 |\n| --- | --- |\n| 某一个组件 | `@astryx-vue/core/Button` 这种子路径 |\n| 组合式函数，以及根入口重新导出的组件 | `@astryx-vue/core` |\n| `provideAstryxLocale`、`useAstryxMessages` | `@astryx-vue/core/locale`，根入口也能拿到 |\n| 一套主题 | `@astryx-vue/themes/neutral.css`。Butter、Chocolate、Gothic、Matcha、Stone、Y2K 也是这个路径，换成各自的文件名。 |\n| 全部结构样式 | `@astryx-vue/core/styles.css` |\n| 层声明 | `@astryx-vue/core/reset.css` |\n\n`reset.css` 目前只有 `@layer astryx.reset;`，不是一份浏览器重置。结构样式和主题样式自己也会声明层的顺序。\n\n子路径和包根导出的是同一批组件。文档和示例使用子路径，这样意图更清楚，也只加载该组件那份结构样式。从包根引入 `useClipboard` 这类函数时，打包器若不能摇掉未使用的重导出，可能会把其他组件模块一起算进去。只使用组件时，优先写子路径。\n\n版本号两个包一起走。已经发布的是 `0.1.0`。记录见 [更新日志](/guide/changelog)。\n\n要在终端里查这些文档，看 [命令行](/guide/cli)。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/installation",
         "zh": "https://astryx-vue.pages.dev/guide/installation"
@@ -76105,6 +76389,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Links and routers\n\nA jump in the app is one of two things. A normal `href` lets the browser open the address. A route that should stay inside Vue Router, without a full page load, swaps the root for `RouterLink`.\n\nComponents that can swap their root take the same `as` prop. It accepts a component or a tag name. The swap happens only when `href` is set and the item is not disabled. Otherwise the root stays a button and `as` is ignored. On a custom component the same address is passed as both `href` and `to`. `RouterLink` reads `to`.\n\n```vue\n<script setup lang=\"ts\">\nimport { NavItem } from '@astryx-vue/core/NavItem'\nimport { RouterLink } from 'vue-router'\n</script>\n\n<template>\n  <NavItem :as=\"RouterLink\" href=\"/orders\" label=\"Orders\" />\n</template>\n```\n\n`SideNavItem`, `TopNavItem`, `TopNavHeading`, `NavMenuItem`, and `SideNavHeading` work the same way. Top-nav mega-menu items and featured cards take `as` too. On `OverflowList`, `as` belongs to the list and is applied to visible items that have an `href` and are not disabled.\n\nA button can swap its root when it has an `href` and is not disabled. While it is loading or disabled it goes back to a `<button>`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { RouterLink } from 'vue-router'\n</script>\n\n<template>\n  <Button :as=\"RouterLink\" href=\"/orders\" label=\"View orders\" />\n</template>\n```\n\n`Link`, `Avatar`, and `BreadcrumbItem` render an `<a>` when they have an address. They do not take `as`. An in-app path in `href` loads as a full page. When that jump has to stay inside the router, use one of the components above, or use the button.\n\n`isExternalLink` on `Link` opens a new tab and adds `noopener noreferrer`. That is an address outside the app, not a route.",
+        "zh": "# 链接与路由\n\n应用里的跳转有两种。一种是浏览器自己打开的地址，用普通的 `href`。一种要留在 Vue Router 里，不整页刷新，这时把根换成 `RouterLink`。\n\n会换根的组件都用同一个 `as`。它接受组件，也接受标签名。有 `href`、并且这一项没有禁用时，根才换成 `as`；否则还是按钮，`as` 不生效。换成自定义组件时，同一段地址会同时写到 `href` 和 `to`，`RouterLink` 读的是 `to`。\n\n```vue\n<script setup lang=\"ts\">\nimport { NavItem } from '@astryx-vue/core/NavItem'\nimport { RouterLink } from 'vue-router'\n</script>\n\n<template>\n  <NavItem :as=\"RouterLink\" href=\"/orders\" label=\"订单\" />\n</template>\n```\n\n`SideNavItem`、`TopNavItem`、`TopNavHeading`、`NavMenuItem` 和 `SideNavHeading` 都是这样。顶栏的大型菜单项和推荐卡片也接受 `as`。`OverflowList` 的 `as` 写在列表上，用在那些带了 `href`、而且没有禁用的可见项上。\n\n按钮在带了 `href` 且没有禁用时同样可以换根。加载中或禁用时它回到 `<button>`。\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { RouterLink } from 'vue-router'\n</script>\n\n<template>\n  <Button :as=\"RouterLink\" href=\"/orders\" label=\"去订单\" />\n</template>\n```\n\n`Link`、`Avatar` 和 `BreadcrumbItem` 有地址时就是 `<a>`。它们没有 `as`。站内路径写在 `href` 上会整页打开。这条跳转必须留在路由里时，改用上面那些带 `as` 的组件，或者让按钮来做。\n\n`Link` 的 `isExternalLink` 会打开新标签，并补上 `noopener noreferrer`。那是站外地址，不是路由。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/links",
         "zh": "https://astryx-vue.pages.dev/guide/links"
@@ -76128,6 +76416,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Patterns\n\nA conversation is a composition. The transcript, bubbles, reasoning, tool calls, citations, and the composer are separate components, and the page decides how they sit together. Nothing here calls a model. The body is a slot. Long replies are Markdown, and a source becomes a citation.\n\nBefore any transcript exists, the page is a greeting and one composer. The mode can move among writing, coding, research, and creative work. Sensitive and deep modes insert a chip instead. @ opens people, and / opens commands. Files sit in the drawer, and a long paste becomes a chip too. The microphone appears only when the browser can recognize speech. Choosing a category writes that suggestion into the composer.\n\nOnce a thread exists, the transcript is a column and the composer stays at the bottom. While the assistant is still writing, send becomes stop and the log is marked as streaming. Reasoning opens first, a tool call moves from running to complete, and the answer carries a citation. A generated document opens from a card. The full playground page keeps that document in a resizable side panel, and below 768px it becomes a full-screen dialog.\n\nBoth examples below can be used. The full pages are in the playground: [AI Chat Landing](/en/playground/?template=ai-chat-landing) and [AI Chat Conversation](/en/playground/?template=ai-chat). Density, unread rules, and metadata are documented on [Chat](/en/components/chat).",
+        "zh": "# 应用模式\n\n对话按场景叠起来用。记录、气泡、推理、工具调用、引用和输入区各自是组件，页面决定它们怎么坐在一起。组件不连接模型。正文是插槽，长回复用 Markdown 排版，来源写成引用。\n\n还没有记录的时候，页面中间是一句问候和一块输入区。模式可以切到写作、编程、研究或创作；敏感和深度会插进输入区里的标记。输入 @ 提及一个人，输入 / 选择一条命令。附件收在抽屉里，较长的粘贴也会收成标记。麦克风只在浏览器能识别语音时出现。选一个分类，建议会写进输入区。\n\n已经有来回的时候，一列记录贴着底部的输入区。助手还在写时，发送换成停止，记录标成正在输出。推理先展开，工具调用从运行变成完成，回答里带上引用，生成的文档可以从卡片打开。整页演练场在宽屏上把文档放进可拖动的侧栏，窄于 768px 时改成全屏对话框。\n\n下面两块可以直接操作。完整页面在演练场里：[AI 对话落地页](/playground/?template=ai-chat-landing)和 [AI 对话](/playground/?template=ai-chat)。零件的密度、未读分隔和元信息见 [对话](/components/chat)。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/patterns",
@@ -76177,6 +76469,10 @@
           "none"
         ]
       },
+      "body": {
+        "en": "# Responsive layout\n\nDecide what each region does as the width drops, then wire the components. A region can stay and get narrower, move into a layer that opens on demand, or leave the page. When three regions are sharing a row and none of them has room, drop one. Do not shrink all of them by the same amount.\n\n## The shell breakpoint\n\n`mobileNav.breakpoint` on `AppShell` is the width where the side navigation moves into the drawer. The default is `md`.\n\n| Value | Width |\n| --- | --- |\n| `sm` | 640px |\n| `md` | 768px |\n| `lg` | 1024px |\n| `xl` | 1280px |\n| `2xl` | 1536px |\n| `none` | stays inline |\n\nBelow that width the side navigation leaves the page and the drawer takes over. A top navigation inside the same shell uses that drawer instead of opening a second one. Set `mobileNav` to `false` to turn this off. Inside the shell, `useAppShellMobile()` reports whether the viewport is narrow and whether the drawer is open. Import it from `@astryx-vue/core`.\n\n## Content\n\n`Layout` splits the page into header, start, content, end, and footer slots. `contentWidth` caps the content column. Dividers still run the full width. A number is pixels. Body text is easiest to read at about 40 to 60 characters a line, so hold the column with this prop instead of wrapping every section in its own container.\n\nA `LayoutPanel` in the end slot takes a fixed column with `width`. When the row gets too narrow for that column, do not keep it on the page next to the side navigation.\n\n```vue\n<script setup lang=\"ts\">\nimport { useMediaQuery } from '@astryx-vue/core'\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n\nconst isNarrow = useMediaQuery('(max-width: 1024px)')\n</script>\n\n<template>\n  <AppShell :mobile-nav=\"{ breakpoint: 'md' }\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"/orders\" label=\"Orders\" />\n      </SideNav>\n    </template>\n    <Layout :content-width=\"720\">\n      <LayoutContent>\n        <p>Orders</p>\n      </LayoutContent>\n      <template v-if=\"!isNarrow\" #end>\n        <LayoutPanel :width=\"380\" has-divider>\n          <p>Details</p>\n        </LayoutPanel>\n      </template>\n    </Layout>\n  </AppShell>\n</template>\n```\n\nAbove 1024px the page has three regions: the side navigation, the content, and a 380px side panel. At 1024px the side panel leaves the row. Open it in a [Dialog](/en/components/dialog) or a [BottomSheet](/en/components/bottom-sheet) when it is needed. At `md` (768px) the side navigation moves into the shell drawer. `useMediaQuery` reads the match during setup, then follows changes.\n\n## Columns that reflow\n\nA numeric `columns` on `Grid` is that many columns at every width. It does not drop a column on its own. `:columns=\"7\"` is still seven columns on a phone. To drop columns as the width drops, pass `{ minWidth, max }`. `minWidth` is the minimum pixel width of a column, and `max` is the most columns the grid will create. When another column would fall short of `minWidth`, the grid uses fewer columns. The last remaining column can shrink to the container. `gap` takes space between columns and counts toward whether another column fits.\n\n```vue\n<Grid :columns=\"{ minWidth: 240, max: 4 }\" :gap=\"3\">\n  <!-- Four columns when there is room, fewer when there is not -->\n</Grid>\n\n<Grid :columns=\"7\" :gap=\"1\">\n  <!-- Seven days, seven columns at every width -->\n</Grid>\n```\n\nOn that same columns object, `repeat: 'fit'` collapses empty tracks so the columns that are present stretch across the row. The default, `fill`, keeps the empty tracks so every column stays the same width.",
+        "zh": "# 响应式布局\n\n先定每个区域在变窄时做什么，再写组件。一个区域可以留下来并变窄，可以收到按需打开的层里，也可以直接拿掉。三个区域挤在同一行、谁都放不开时，拿掉一个，不要把它们等比缩小。\n\n## 外壳的断点\n\n`AppShell` 的 `mobileNav.breakpoint` 决定侧栏什么时候收进抽屉。默认是 `md`。\n\n| 值 | 宽度 |\n| --- | --- |\n| `sm` | 640px |\n| `md` | 768px |\n| `lg` | 1024px |\n| `xl` | 1280px |\n| `2xl` | 1536px |\n| `none` | 不收起 |\n\n窄于这个宽度时，侧栏离开页面，抽屉接管。同一只外壳里的顶栏用这只抽屉，不再自己打开另一只。`mobileNav` 设成 `false` 就关掉。外壳里面可以用 `useAppShellMobile()` 读到现在是不是窄屏，以及抽屉开没开。它从 `@astryx-vue/core` 引入。\n\n## 内容区\n\n`Layout` 把页眉、起始、内容、结束、页脚分成槽。`contentWidth` 限制正文这一列有多宽，分隔线仍然拉满。数字是像素。一行正文大约 40 到 60 个字符时最好读，列宽用这个属性卡住，而不是让每一节自己再包一层容器。\n\n结束槽里的 `LayoutPanel` 用 `width` 占掉固定的一列。变窄以后这一列没有地方时，不要把它和侧栏一起留在页面上。\n\n```vue\n<script setup lang=\"ts\">\nimport { useMediaQuery } from '@astryx-vue/core'\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n\nconst isNarrow = useMediaQuery('(max-width: 1024px)')\n</script>\n\n<template>\n  <AppShell :mobile-nav=\"{ breakpoint: 'md' }\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"/orders\" label=\"订单\" />\n      </SideNav>\n    </template>\n    <Layout :content-width=\"720\">\n      <LayoutContent>\n        <p>订单</p>\n      </LayoutContent>\n      <template v-if=\"!isNarrow\" #end>\n        <LayoutPanel :width=\"380\" has-divider>\n          <p>详情</p>\n        </LayoutPanel>\n      </template>\n    </Layout>\n  </AppShell>\n</template>\n```\n\n宽于 1024px 时是三列：侧栏、正文、380px 的侧面板。到了 1024px，侧面板离开这一行，需要时再用 [Dialog](/components/dialog) 或 [BottomSheet](/components/bottom-sheet) 打开。到了 `md`（768px），侧栏收进外壳的抽屉。`useMediaQuery` 在 setup 时就读一次当前是否匹配，之后跟着变。\n\n## 会重排的列\n\n`Grid` 的 `columns` 写成数字时，每一档宽度都是那么多列，不会自己减少。`:columns=\"7\"` 在手机上仍是七列。要随宽度减少列数，写成 `{ minWidth, max }`。`minWidth` 是每一列至少多少像素，`max` 是最多几列。放不下 `minWidth` 时会少一列；窄到一列时，这一列可以缩到容器宽度。`gap` 占掉列与列之间的空间，算进能不能再放一列。\n\n```vue\n<Grid :columns=\"{ minWidth: 240, max: 4 }\" :gap=\"3\">\n  <!-- 宽的时候四列，窄的时候减少 -->\n</Grid>\n\n<Grid :columns=\"7\" :gap=\"1\">\n  <!-- 一周七天，每一档都是七列 -->\n</Grid>\n```\n\n同一份列配置里，`repeat` 为 `fit` 时，排不满的空列会收掉，已有的列把这一行撑满。默认 `fill` 会留下那些空列，让每一列保持同样的宽度。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/responsive",
         "zh": "https://astryx-vue.pages.dev/guide/responsive"
@@ -76201,6 +76497,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Theme and styles\n\nAn app imports two things at minimum: a theme, and structural styles for the components it uses.\n\n```ts\nimport { Button } from '@astryx-vue/core/Button'\nimport '@astryx-vue/themes/neutral.css'\n```\n\nThe `Button` entry loads the structural sheet for `button`. The theme entry loads Neutral's variables, including the `--astryx-button-*` names that button reads. Without the theme, the structure is there and the color and metrics are not. Without the structural sheet, the variables have no rules to feed.\n\nTo load every structural sheet once, add this at the entry:\n\n```ts\nimport '@astryx-vue/core/styles.css'\nimport '@astryx-vue/themes/neutral.css'\n```\n\n`styles.css` gathers the sheets in `packages/core/styles/`, including the shared motion in `motion.css`. `neutral.css` gathers the theme files in `packages/themes/neutral/` and loads Figtree and JetBrains Mono.\n\nThe layer order is:\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\nApplication overrides belong in `astryx.overrides`. Unlayered global CSS beats these layers, so a bare `button { }` will paint over the component unless that is what you want.\n\nThese styles do not require UnoCSS. The docs site uses UnoCSS only so example classes such as `i-carbon-*` can draw icons. That is the icon approach, not a styling dependency. See [Icons](/en/guide/icons).\n\nVariable names, `light-dark()`, and what the theme covers today are in [CSS variables](/en/themes/css-variables) and [Neutral](/en/themes/neutral).",
+        "zh": "# 主题与样式\n\n一个应用最少引入两样东西：主题，以及组件的结构样式。\n\n```ts\nimport { Button } from '@astryx-vue/core/Button'\nimport '@astryx-vue/themes/neutral.css'\n```\n\n`Button` 的入口会带上 `button` 的结构样式。主题入口带上 Neutral 的变量，包括按钮用到的 `--astryx-button-*`。缺了主题，组件仍有结构，但没有这套颜色和度量。缺了结构样式，变量没有对应的规则可用。\n\n不想逐个组件带样式时，在入口加一次：\n\n```ts\nimport '@astryx-vue/core/styles.css'\nimport '@astryx-vue/themes/neutral.css'\n```\n\n`styles.css` 汇总 `packages/core/styles/` 里的结构样式，包含共享动画 `motion.css`。`neutral.css` 汇总 `packages/themes/neutral/` 里的主题文件，并引入 Figtree 和 JetBrains Mono。\n\n层的顺序是：\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\n应用自己的覆盖放在 `astryx.overrides`。未分层的全局 CSS 会压过这些层，所以不要用一条未分层的 `button { }` 去打所有按钮，除非你确实要盖住组件。\n\n这套样式不要求 UnoCSS。文档站用 UnoCSS 只为了给示例里的 `i-carbon-*` 类提供图标，那是图标方案，不是组件样式的依赖。见 [图标](/guide/icons)。\n\n变量名、`light-dark()` 和主题目前的边界，写在 [CSS 变量](/themes/css-variables) 和 [Neutral](/themes/neutral)。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/styling",
         "zh": "https://astryx-vue.pages.dev/guide/styling"
@@ -76224,6 +76524,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Templates\n\nEach playground page is a starting point you can edit. Choosing one puts its source in the editor, and the preview follows the theme. Add `?template=` to open a page directly, for example the [blank page](/en/playground/?template=blank).\n\nThe blank page is a title and an empty content area. It has no navigation and no other chrome. Start there when every other template brings more structure than you want.\n\nTemplates are grouped by job. The name on the right opens that source in the playground.\n\n<TemplateIndex locale=\"en\" />",
+        "zh": "# 模板\n\n演练场里的每一页都是一个可以改的起点。选中之后，源码出现在编辑器里，预览跟着主题走。地址加上 `?template=` 会直接打开那一页，例如 [空白页](/playground/?template=blank)。\n\n空白页只有一个标题和一块空的内容区，没有导航，也没有别的结构。别的模板都会多带一块结构。那些结构用不上时，从这里开始。\n\n模板按用途分组。点右侧的名字会在演练场里打开对应源码。\n\n<TemplateIndex locale=\"zh\" />"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/templates",
@@ -76257,6 +76561,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Introduction\n\nastryx-vue is an open-source Vue 3 reimplementation of Meta's [Astryx](https://github.com/facebook/astryx) design language. The upstream documentation is located at <https://astryx.atmeta.com>, built on React 19 and StyleX. astryx-vue is an independent community project bringing the aesthetics and engineering precision of Astryx to the Vue ecosystem.\n\n## Core Focus\n\nRather than wrapping React components or introducing runtime adapters, astryx-vue reimagines Astryx natively for Vue. The implementation strictly mirrors four foundations:\n\n1. **Design Tokens**: Structured design tokens across color, spacing, radius, and elevation.\n2. **CSS Variables**: Unified light/dark theme variables leveraging native `light-dark()`.\n3. **Motion System**: Calibrated durations and easing curves with built-in reduced-motion support.\n4. **Component Grain**: Faithful component divisions matching the original design system.\n\nAll APIs embrace standard Vue 3 idioms: typed props, events, slots, `v-model`, and composables without unnecessary runtime abstractions.\n\n## Architecture and Packages\n\nThe project separates component structure from visual theming:\n\n- `@astryx-vue/core`: Component implementations, composables, and structural CSS.\n- `@astryx-vue/themes`: Theme tokens, typography, and color definitions (currently providing Neutral).\n\nThe styles use standard CSS layers (`@layer astryx.*`), requiring no specialized CSS-in-JS toolchains.\n\n## Icons and Patterns\n\nTo keep bundle footprints minimal, the library does not package a proprietary icon font or heavy component suite. Controls such as `IconButton` and `NavItem` accept CSS icon classes, seamlessly integrating with solutions like UnoCSS `presetIcons`, Iconify, or Lucide.\n\nFor specialized workflows, the library provides cohesive component patterns including `Chat` layouts, `Citation` elements, and `Markdown` presentations.\n\n---\n\nThe public API strictly reflects current repository exports. Core styles and components follow native Web standards and modern Vue 3 patterns.",
+        "zh": "# 介绍\n\nastryx-vue 是用 Vue 3 重新实现 [Astryx](https://github.com/facebook/astryx) 设计语言的开源组件库。原版文档位于 <https://astryx.atmeta.com>，基于 React 19 与 StyleX 构建。本项目由社区独立维护，旨在为 Vue 开发者提供高质感、现代化的企业级设计系统实现。\n\n## 核心定位\n\n我们复刻的是设计语言的质感与工程标准，而不是对 React 进行适配包装。组件库严格对齐四大核心基础：\n\n1. **Design Token**：语义化的设计令牌规范。\n2. **CSS 变量系统**：支持 `light-dark()` 统一双模配色与层级覆盖。\n3. **动效系统（Motion）**：标准缓动与层级时间刻度，开箱支持系统减少动效偏好。\n4. **组件颗粒度**：从基础控件到复杂应用界面均与原版对应。\n\n所有组件完全采用 Vue 3 习惯的原生接口设计：Props、事件、插槽、`v-model` 与组合式函数（Composables），无需任何外部运行时桥接，打包干净无冗余。\n\n## 架构与包划分\n\n项目采用清晰的分层架构：\n\n- `@astryx-vue/core`：提供核心组件、组合式函数与基础结构样式。\n- `@astryx-vue/themes`：提供 Neutral 等主题变量与排版支持。\n\n样式基于现代 CSS 原生规范编写，使用方无需在项目中引入 StyleX 或配置特定的 CSS 编译器。\n\n## 图标与复杂模式\n\n组件库不捆绑预置的图标组件集合。需要图标的组件（如 `IconButton`、`NavItem`）接受标准的 CSS 类名，开发者可根据项目偏好自由选用 UnoCSS `presetIcons`、Tailwind、Iconify 或自定义 SVG 图标。\n\n对于高频出现的协同交互界面，组件库成套提供组合模式，例如 `Chat`（对话流）、`Citation`（引用）和 `Markdown`。\n\n---\n\n当前公开接口均以仓库实际导出为准。核心样式与组件均遵循原生 Web 标准与现代 Vue 3 模式构建。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/why",
         "zh": "https://astryx-vue.pages.dev/guide/why"
@@ -76280,6 +76588,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Themes\n\nA theme sets the color, type, radius, shadow, and motion the components use. Structural styles stay in `@astryx-vue/core`.\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\nPut `data-astryx-theme=\"neutral\"` on the element that should take the theme. On `html`, that is the whole app. On a smaller element, only that subtree. Neutral also writes the same variables on `:root`, so importing `neutral.css` is enough for a single-theme app. The other themes do not touch `:root`.\n\nFigtree and JetBrains Mono load with every theme. Butter, Chocolate, Gothic, Matcha, Stone, and Y2K also load their own text faces.\n\n<ThemeGallery />\n\n[Neutral](/en/themes/neutral), [Butter](/en/themes/butter), [Chocolate](/en/themes/chocolate), [Gothic](/en/themes/gothic), [Matcha](/en/themes/matcha), [Stone](/en/themes/stone), and [Y2K](/en/themes/y2k) each have an import snippet. Token names are shared; see [CSS variables](/en/themes/css-variables). How [design tokens](/en/themes/tokens) map onto those variables, and the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages, sit next to that. To change one value, read [Extending a theme](/en/themes/extending). To apply a theme object to one subtree, use the [Theme](/en/components/theme), [Media Theme](/en/components/media-theme), and [Syntax Theme](/en/components/syntax-theme) components.",
+        "zh": "# 主题概览\n\n主题决定组件的颜色、字体、圆角、阴影和动画时长。组件的结构样式在 `@astryx-vue/core`。\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n把 `data-astryx-theme=\"neutral\"` 写在要使用这套主题的元素上。写在 `html` 上就是整站，写在更小的元素上就只影响那一块。Neutral 还会把同一批变量写到 `:root`，所以只使用 Neutral 时，引入 `neutral.css` 即可。其余主题不会改 `:root`。\n\n每套主题都会带上 Figtree 和 JetBrains Mono。Butter、Chocolate、Gothic、Matcha、Stone 和 Y2K 还会加载各自的正文字体。\n\n<ThemeGallery />\n\n各套主题的引入方式见 [Neutral](/themes/neutral)、[Butter](/themes/butter)、[Chocolate](/themes/chocolate)、[Gothic](/themes/gothic)、[Matcha](/themes/matcha)、[Stone](/themes/stone)、[Y2K](/themes/y2k)。变量名是共用的，说明在 [CSS 变量](/themes/css-variables)。[Design token](/themes/tokens) 和这些变量怎么对应，以及 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画](/themes/motion)，都写在旁边。只改个别取值时，看 [扩展主题](/themes/extending)。要把一份主题对象套到某一棵子树上，用 [主题](/components/theme)、[媒体主题](/components/media-theme) 和 [语法主题](/components/syntax-theme)。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes",
@@ -76305,6 +76617,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Butter\n\nGolden surfaces, blue accents. Outfit for text, Sarina for display sizes.\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n```html\n<div data-astryx-theme=\"butter\">\n```\n\n<ThemeStage theme=\"butter\" />",
+        "zh": "# Butter\n\n暖金色表面，蓝色点缀。正文用 Outfit，展示字号用 Sarina。\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n```html\n<div data-astryx-theme=\"butter\">\n```\n\n<ThemeStage theme=\"butter\" />"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/butter",
         "zh": "https://astryx-vue.pages.dev/themes/butter"
@@ -76328,6 +76644,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Chocolate\n\nWarm brown and beige. Albert Sans for text, Fraunces for headings.\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n```html\n<div data-astryx-theme=\"chocolate\">\n```\n\n<ThemeStage theme=\"chocolate\" />",
+        "zh": "# Chocolate\n\n暖棕色和米色。正文用 Albert Sans，标题用 Fraunces。\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n```html\n<div data-astryx-theme=\"chocolate\">\n```\n\n<ThemeStage theme=\"chocolate\" />"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/chocolate",
@@ -76353,6 +76673,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Color\n\nNeutral colors are `--astryx-color-*`. Each one uses `light-dark()` for the light stop and the dark stop. In the grid below, the left chip is light and the right chip is dark. Translucent colors sit on a checkerboard.\n\nThe set covers surfaces, text, icons, success, warning, error, and the blue, cyan, gray, green, orange, pink, purple, red, teal, and yellow groups for background, border, icon, and text. `Badge` variants use those names, for example `variant=\"blue\"`.\n\nThere is no charts package yet. The palette still lives on the themes, under `--astryx-color-data-*`. Categorical colors give one color to each series, for example `--astryx-color-data-categorical-blue`, and the light and dark stops are the same hex. Sequential ramps run from 5 to 1, 5 darkest and 1 lightest, for example `--astryx-color-data-blue-5`. The gray ramp and `--astryx-color-data-neutral` change with the color scheme. The neutral one is for labels and reference lines. All seven themes declare these same stops. The other themes do not recolor them.\n\n<TokenReference locale=\"en\" :headings=\"false\" :sections=\"['color']\" />",
+        "zh": "# 颜色\n\nNeutral 的颜色都是 `--astryx-color-*`。每一项用 `light-dark()` 写下浅色和深色。下面每一格左边是浅色，右边是深色。带透明度的颜色垫了棋盘格。\n\n语义色包括表面、文字、图标、成功、警告、错误，以及蓝、青、灰、绿、橙、粉、紫、红、茶、黄这几组背景、边框、图标和文字色。组件上的 `Badge` 变体和这些色名对应，例如 `variant=\"blue\"`。\n\n图表还没有独立的组件包。配色先放在主题里，变量名是 `--astryx-color-data-*`。分类色一条系列一个颜色，例如 `--astryx-color-data-categorical-blue`，明暗用同一个色值。连续色阶从 5 到 1，5 最深、1 最浅，例如 `--astryx-color-data-blue-5`。灰阶和 `--astryx-color-data-neutral` 会随明暗变化，后者用来画标签和参考线。七套主题写的是同一组数值，其余主题没有另外配色。\n\n<TokenReference locale=\"zh\" :headings=\"false\" :sections=\"['color']\" />"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/color",
         "zh": "https://astryx-vue.pages.dev/themes/color"
@@ -76376,6 +76700,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# CSS variables\n\nThemes and component styles use CSS variables and cascade layers. You do not install UnoCSS or StyleX to use them.\n\n`packages/themes/neutral/base.css` declares the layer order:\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\nSemantic tokens sit in `astryx.tokens`. Structural component styles sit in `astryx.components` and come from `@astryx-vue/core`. Application overrides belong in the last layer, `astryx.overrides`. Unlayered styles, and later layers, both beat earlier layers.\n\nNames follow the upstream tokens and add `--astryx-`. The primary text color is `--astryx-color-text-primary`. Colors are written as:\n\n```css\n--astryx-color-text-primary: light-dark(#171717, #fafafa);\n```\n\n`light-dark()` reads the element's `color-scheme`. Neutral sets `color-scheme: light dark` on `:root` and `[data-astryx-theme='neutral']`, so the result follows the system or whatever the docs site already set. Forcing one side is described in [Dark mode](/en/guide/dark-mode). [`Theme`](/en/components/theme) can set the same variables on one subtree.\n\nComponents also have their own variables, such as `--astryx-button-primary-background`. Those names are defined in `packages/themes/neutral/<component>.css` and usually point at a semantic token. Prefer overriding the semantic token. Override the component variable only when that component has to diverge.\n\n`@astryx-vue/core/reset.css` is a single declaration, `@layer astryx.reset`. It is not a browser reset. Import it only when you need that layer to exist first.\n\nLoad every structural sheet at once with:\n\n```ts\nimport '@astryx-vue/core/styles.css'\n```\n\nImporting a component from a subpath such as `@astryx-vue/core/Button` loads that component's structural sheet. The theme is still a separate import. See [Theme and styles](/en/guide/styling).",
+        "zh": "# CSS 变量\n\n主题和组件样式都走 CSS 变量和 CSS 分层。使用方不需要安装 UnoCSS 或 StyleX。\n\n`packages/themes/neutral/base.css` 开头声明层的顺序：\n\n```css\n@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;\n```\n\n语义 token 写在 `astryx.tokens`。组件的结构样式写在 `astryx.components`，由 `@astryx-vue/core` 提供。应用自定义覆盖属于最后一层 `astryx.overrides`。未分层的样式，以及排在更后面的层，都会压过前面的层。\n\n变量名跟原版 token 走，前面加 `--astryx-`。例如原版的文本主色，这里是 `--astryx-color-text-primary`。颜色值写成：\n\n```css\n--astryx-color-text-primary: light-dark(#171717, #fafafa);\n```\n\n`light-dark()` 看的是元素的 `color-scheme`。Neutral 在 `:root` 和 `[data-astryx-theme='neutral']` 上把 `color-scheme` 设成 `light dark`，于是跟随系统或文档站自己的明暗开关。强制一边的写法在 [深色模式](/guide/dark-mode)。[`Theme`](/components/theme) 可以把同一批变量写到某一棵子树上。\n\n组件还会有自己的变量，例如按钮的 `--astryx-button-primary-background`。这些名字定义在 `packages/themes/neutral/<组件>.css`，通常引用语义 token。换外观时优先改语义 token；只有某个组件要单独偏离时，再改它自己的变量。\n\n`@astryx-vue/core/reset.css` 目前只有一行，用来声明 `@layer astryx.reset`。它不是一份完整的浏览器重置。需要这份层存在时再引入。\n\n一次引入全部结构样式：\n\n```ts\nimport '@astryx-vue/core/styles.css'\n```\n\n只从 `@astryx-vue/core/Button` 这类子路径引入组件时，那个入口会带上自己的结构样式。主题样式仍然要单独引入，见 [主题与样式](/guide/styling)。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/css-variables",
@@ -76401,6 +76729,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Extending a theme\n\n`@astryx-vue/themes` ships Neutral, Butter, Chocolate, Gothic, Matcha, Stone, and Y2K. Each one is a CSS entry such as `butter.css` plus the stylesheets in that theme's directory. There is no runtime theme registry.\n\nChange the look by overriding CSS variables. Put the override in the `astryx.overrides` layer so it beats the token layer without rewriting structural styles:\n\n```css\n@layer astryx.overrides {\n  :root {\n    --astryx-color-text-primary: light-dark(#1a1a1a, #f5f5f5);\n    --astryx-radius-element: 0.5rem;\n  }\n}\n```\n\nLoad that sheet after the theme CSS, for example `@astryx-vue/themes/neutral.css`. To change one subtree in Vue, wrap it in [`Theme`](/en/components/theme) and pass a `defineTheme()` object. That writes the variables on the subtree and rebinds text, heading, and button aliases that would otherwise stay stuck on the `:root` values.\n\nTo build the token set from an accent, a type ratio, a radius, or a duration scale, use `color`, `typography`, `radius`, and `motion` on `defineTheme()`. The seven shipped themes stay handwritten CSS.\n\nEvery theme selects `[data-astryx-theme='…']`. Neutral also selects `:root`, so importing `neutral.css` applies it globally. The other themes stay on the attribute.\n\nWhen one component has to diverge, override the variable from that theme's component file, for example `--astryx-button-primary-background` in `packages/themes/neutral/button.css`. Use the names in that file.\n\nOverriding `--astryx-*` variables is the extension path. The shipped themes already do that under their own attribute.\n\nDo not keep a separate dark palette. Colors are already `light-dark()`. Switching is described in [Dark mode](/en/guide/dark-mode).",
+        "zh": "# 扩展主题\n\n`@astryx-vue/themes` 提供 Neutral、Butter、Chocolate、Gothic、Matcha、Stone 和 Y2K。每一套都是类似 `butter.css` 的入口，加上该主题目录里的样式。包里没有运行时的主题注册函数。\n\n要改外观，覆盖 CSS 变量。把覆盖放在 `astryx.overrides` 层，这样会压过 token 层，又不会打乱组件的结构样式：\n\n```css\n@layer astryx.overrides {\n  :root {\n    --astryx-color-text-primary: light-dark(#1a1a1a, #f5f5f5);\n    --astryx-radius-element: 0.5rem;\n  }\n}\n```\n\n这条样式要排在主题样式之后，例如 `@astryx-vue/themes/neutral.css`。只想在 Vue 里改一个子树时，用 [`Theme`](/components/theme) 包住它，并传入 `defineTheme()` 的结果。它会把变量写到这棵子树上，并重新绑定文字、标题和按钮的别名，避免这些别名停在 `:root` 上已经算好的颜色。\n\n要从一个强调色、一组字号比例、圆角或时长生成整份 token，用 `defineTheme()` 的 `color`、`typography`、`radius` 和 `motion`。现成的七套主题仍然是手写 CSS。\n\n每套主题都选择 `[data-astryx-theme='…']`。Neutral 同时还选择 `:root`，所以引入 `neutral.css` 之后变量是全局的。其余主题只挂在这个属性上。\n\n某个组件要单独偏离时，覆盖它在该主题组件文件里的变量，例如 `packages/themes/neutral/button.css` 里的 `--astryx-button-primary-background`。名字以那份文件为准。\n\n扩展方式是覆盖 `--astryx-*` 变量。包里的主题已经按各自的属性做了这件事。\n\n明暗不要另做一套色板文件。颜色已经在 `light-dark()` 里。切换方式见 [深色模式](/guide/dark-mode)。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/extending",
         "zh": "https://astryx-vue.pages.dev/themes/extending"
@@ -76425,6 +76757,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Gothic\n\nDark only. Deep blue-gray surfaces stay dark when the rest of the page is light. Fustat for text, Manufacturing Consent for display sizes.\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n```html\n<div data-astryx-theme=\"gothic\">\n```\n\n<ThemeStage theme=\"gothic\" />",
+        "zh": "# Gothic\n\n只有深色。页面其余部分是浅色时，这套蓝灰色表面仍然保持深色。正文用 Fustat，展示字号用 Manufacturing Consent。\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n```html\n<div data-astryx-theme=\"gothic\">\n```\n\n<ThemeStage theme=\"gothic\" />"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/gothic",
         "zh": "https://astryx-vue.pages.dev/themes/gothic"
@@ -76448,6 +76784,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Matcha\n\nEarthy greens. DM Sans for text, Playwrite US Trad for headings.\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n```html\n<div data-astryx-theme=\"matcha\">\n```\n\n<ThemeStage theme=\"matcha\" />",
+        "zh": "# Matcha\n\n草木绿。正文用 DM Sans，标题用 Playwrite US Trad。\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n```html\n<div data-astryx-theme=\"matcha\">\n```\n\n<ThemeStage theme=\"matcha\" />"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/matcha",
@@ -76489,6 +76829,10 @@
           "astryx-motion-slide-in-end / out"
         ]
       },
+      "body": {
+        "en": "# Motion\n\nDurations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. There is one easing token, `--astryx-ease-standard`: `cubic-bezier(0.24, 1, 0.4, 1)`.\n\nShared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css`. They are available when you import `@astryx-vue/core/styles.css`, or any component sheet that pulls that file in. Existing components still use their own animation names, and these shared utility classes provide reusable motion primitives:\n\n| Class | Keyframes |\n| --- | --- |\n| `astryx-motion-fade-in` / `fade-out` | `astryx-fade-in` / `astryx-fade-out` |\n| `astryx-motion-scale-in` / `scale-out` | `astryx-scale-in` / `astryx-scale-out` |\n| `astryx-motion-slide-in-above` / `out` | from above |\n| `astryx-motion-slide-in-below` / `out` | from below |\n| `astryx-motion-slide-in-start` / `out` | from the start side |\n| `astryx-motion-slide-in-end` / `out` | from the end side |\n\nDistance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, and the opacity variables. When the system asks for reduced motion, those distances and the scale collapse to zero, opacity jumps to the end state, and the shared classes use a duration of `0.01ms`. Component duration tokens are left alone.\n\nReplay the samples below. With reduced motion on, they sit at the end state.\n\n<TokenReference locale=\"en\" motion :sections=\"['duration', 'ease']\" />",
+        "zh": "# 动画\n\n时长按 Neutral 的运动刻度生成。基准是 fast 125、medium 300、slow 700，相邻档的比例 0.75，结果四舍五入到 5 毫秒。缓动只有一条，`--astryx-ease-standard`，值是 `cubic-bezier(0.24, 1, 0.4, 1)`。\n\n共享的进入和退出关键帧在 `@astryx-vue/core` 的 `styles/motion.css` 里，引入 `@astryx-vue/core/styles.css` 或任意会带上它的组件样式时可用。现有组件仍使用自己的动画名，这组共享类供页面编排与组件动效复用：\n\n| 类名 | 关键帧 |\n| --- | --- |\n| `astryx-motion-fade-in` / `fade-out` | `astryx-fade-in` / `astryx-fade-out` |\n| `astryx-motion-scale-in` / `scale-out` | `astryx-scale-in` / `astryx-scale-out` |\n| `astryx-motion-slide-in-above` / `out` | 从上 |\n| `astryx-motion-slide-in-below` / `out` | 从下 |\n| `astryx-motion-slide-in-start` / `out` | 从起始侧 |\n| `astryx-motion-slide-in-end` / `out` | 从结束侧 |\n\n位移和缩放读 `--astryx-motion-offset`、`--astryx-motion-scale-from` 和透明度变量。系统开启「减少动态效果」时，这些距离和缩放收成 0，透明度直接落到结束状态，共享类的时长变成 `0.01ms`。组件自己的时长 token 不会被改写。\n\n下面可以再播一次。开启减少动态效果时，样块会直接停在结束状态。\n\n<TokenReference locale=\"zh\" motion :sections=\"['duration', 'ease']\" />"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/motion",
         "zh": "https://astryx-vue.pages.dev/themes/motion"
@@ -76512,6 +76856,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Neutral\n\nNeutral is the theme `@astryx-vue/themes` ships today. Load it with:\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\nThat entry loads `fonts.css`, then each file under `neutral/` in name order, including `base.css`. `fonts.css` loads Figtree and JetBrains Mono at 400, 500, 600, 700, and 400 italic. Figtree also includes 600 italic. Those are the faces `font-synthesis: none` can use. The browser does not invent a missing weight or italic.\n\n`--astryx-font-family-body` and `--astryx-font-family-heading` name Figtree first, then `-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Roboto`, `Helvetica`, `Arial`, and `sans-serif`. `--astryx-font-family-code` names JetBrains Mono first, then `ui-monospace`, `SFMono-Regular`, `Menlo`, `Consolas`, and `monospace`.\n\nSemantic tokens live in `packages/themes/neutral/base.css`. Names follow upstream `tokens.stylex.ts` and add an `--astryx-` prefix. Each token writes its light and dark stops with `light-dark()`. A value comes from the Neutral theme when that theme overrides it, and from the upstream default otherwise.\n\nTwo values stay where this package already shipped them, so existing components do not change appearance:\n\n- `--astryx-radius-none` stays `0`. Upstream Neutral uses `0.25rem`. Square avatars and skeletons with radius none use this token for a square corner.\n- The light stop of `--astryx-color-text-secondary` stays `#525252`. Upstream Neutral uses `#737373`. Inputs, selectors, and supporting text already use this value.\n\nThe variables sit on `:root` and `[data-astryx-theme='neutral']`, with `color-scheme: light dark`. Light and dark follow the element's `color-scheme`. Force one side with `data-astryx-color-mode=\"light\"` or `\"dark\"` on an ancestor. See [Dark mode](/en/guide/dark-mode).\n\nA few of the same names are still declared in component theme files, including the type sizes in `text.css` and the blue `--astryx-color-text-accent`. Those later declarations take precedence, preserving current component appearances.",
+        "zh": "# Neutral\n\nNeutral 是 `@astryx-vue/themes` 目前提供的主题。页面和组件通过下面这行样式使用它：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n这个入口会先加载 `fonts.css`，再按文件名引入 `neutral/` 目录里的每一份主题样式，其中包含 `base.css`。`fonts.css` 装 Figtree 和 JetBrains Mono 的 400、500、600、700，以及 400 斜体。Figtree 另外包含 600 斜体。这些字重和斜体对应 `font-synthesis: none`：缺了的字重或斜体，浏览器不会自己造。\n\n`--astryx-font-family-body` 和 `--astryx-font-family-heading` 以 Figtree 开头，后面是 `-apple-system`、`BlinkMacSystemFont`、`Segoe UI`、`Roboto`、`Helvetica`、`Arial` 和 `sans-serif`。`--astryx-font-family-code` 以 JetBrains Mono 开头，后面是 `ui-monospace`、`SFMono-Regular`、`Menlo`、`Consolas` 和 `monospace`。\n\n语义变量写在 `packages/themes/neutral/base.css`。名字对应原版 `tokens.stylex.ts`，统一加上 `--astryx-` 前缀。浅色和深色放在同一个 `light-dark()` 里。取值优先用 Neutral 主题覆盖过的结果；Neutral 没有覆盖的，用原版默认值。\n\n有两个值和原版 Neutral 故意保持不一致，避免已经发出去的组件改外观：\n\n- `--astryx-radius-none` 保持 `0`。原版 Neutral 写成 `0.25rem`。方形头像和圆角为 none 的骨架屏用它表示直角。\n- `--astryx-color-text-secondary` 的浅色值保持 `#525252`。原版 Neutral 用 `#737373`。输入框、选择器和辅助文字已经在用这个值。\n\n变量挂在 `:root` 和 `[data-astryx-theme='neutral']` 上，并声明 `color-scheme: light dark`。明暗跟随元素的 `color-scheme`。要用其中一边，在祖先上设置 `data-astryx-color-mode=\"light\"` 或 `\"dark\"`。说明见 [深色模式](/guide/dark-mode)。\n\n有几个同名变量仍写在组件自己的主题文件里，例如 `text.css` 的字号，以及 `--astryx-color-text-accent` 的蓝色。那些声明排在后面，会盖住这里的语义值，现有组件的外观保持一致。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/neutral",
@@ -76537,6 +76885,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Space, radius, and shadow\n\nSpacing runs from `--astryx-spacing-0` through `--astryx-spacing-12`, in 4px steps, with `0.5` and `1.5` in between. Control heights are `--astryx-size-element-sm` (28px), `md` (32px), and `lg` (36px).\n\nRadii run from `--astryx-radius-none` to `--astryx-radius-full`. `--astryx-radius-none` stays `0` in this package. It does not adopt upstream Neutral's `0.25rem`. `--astryx-radius-chat` is 28px. Neutral does not override it. At a 16px root that equals the `1.75rem` page radius.\n\nShadows have three elevations, `low`, `med`, and `high`, plus inset shadows for hover, selected, success, warning, and error. The outer shadows use offset and blur, and the light and dark stops differ.\n\nThe focus ring uses `--astryx-focus-outline-width`, `style`, `color`, and `offset`. The color follows `--astryx-color-accent`.\n\n<TokenReference :headings=\"true\" locale=\"en\" :sections=\"['spacing', 'size', 'border', 'focus', 'radius', 'shadow']\" />",
+        "zh": "# 间距、圆角与阴影\n\n间距从 `--astryx-spacing-0` 到 `--astryx-spacing-12`，步长是 4px，中间有 `0.5` 和 `1.5`。控件高度是 `--astryx-size-element-sm`（28px）、`md`（32px）、`lg`（36px）。\n\n圆角从 `--astryx-radius-none` 到 `--astryx-radius-full`。`--astryx-radius-none` 在这个包里保持 `0`，不采用原版 Neutral 的 `0.25rem`。`--astryx-radius-chat` 是 28px；Neutral 没有单独覆盖它，在 16px 根字号下等于页面圆角 `1.75rem`。\n\n阴影有 `low`、`med`、`high` 三档外阴影，以及悬停、选中、成功、警告、错误五种内阴影。外阴影带偏移和模糊，明暗两套不一样。\n\n焦点环用 `--astryx-focus-outline-width`、`style`、`color`、`offset`。颜色跟随 `--astryx-color-accent`。\n\n<TokenReference :headings=\"true\" locale=\"zh\" :sections=\"['spacing', 'size', 'border', 'focus', 'radius', 'shadow']\" />"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/scale",
         "zh": "https://astryx-vue.pages.dev/themes/scale"
@@ -76560,6 +76912,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Stone\n\nWarm stone and slate. Figtree for text, Montserrat for headings.\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n```html\n<div data-astryx-theme=\"stone\">\n```\n\n<ThemeStage theme=\"stone\" />",
+        "zh": "# Stone\n\n暖石色和板岩灰。正文用 Figtree，标题用 Montserrat。\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n```html\n<div data-astryx-theme=\"stone\">\n```\n\n<ThemeStage theme=\"stone\" />"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/stone",
@@ -76597,6 +76953,10 @@
           "[间距、圆角与阴影](/themes/scale)"
         ]
       },
+      "body": {
+        "en": "# Design tokens\n\nA design token is a decision the system can reuse: a color, a space step, a radius, a duration. Components read tokens instead of hard-coding those numbers. Changing theme means changing the numbers.\n\nastryx-vue follows upstream Astryx `tokens.stylex.ts`. The public form is a CSS variable, not a StyleX object. Every semantic token has an `--astryx-` prefix. Color tokens use `light-dark()` so both schemes live in one declaration.\n\nWhere a value comes from:\n\n1. If Neutral overrides it, that override is used.\n2. If Neutral does not override it, the upstream default is used.\n3. If a component theme file declares the same name again, the later declaration wins. Style extensions should target the semantic layer.\n\nThe token name is the stable interface. The current number lives in `packages/themes/neutral/base.css`. The swatches and bars in these docs are parsed from that file. There is no second list to keep in sync.\n\n| Page | Variables |\n| --- | --- |\n| [Color](/en/themes/color) | `--astryx-color-*`, including `--astryx-color-data-*` for chart categories and sequential ramps |\n| [Typography](/en/themes/typography) | `--astryx-font-*`, `--astryx-text-*` |\n| [Motion](/en/themes/motion) | `--astryx-duration-*`, `--astryx-ease-*`, and the shared keyframes |\n| [Space, radius, shadow](/en/themes/scale) | `--astryx-spacing-*`, `--astryx-size-*`, `--astryx-radius-*`, `--astryx-shadow-*`, border and focus |\n\nOutside a component, reference `var(--astryx-color-text-primary)`. Naming and cascade layers are in [CSS variables](/en/themes/css-variables).",
+        "zh": "# Design token\n\nDesign token 是这套设计语言里可以复用的决定：一种颜色、一档间距、一个圆角、一段时长。组件不把这些数写死，而是读 token。换主题，就是换这批数。\n\nastryx-vue 的 token 对齐原版 Astryx 的 `tokens.stylex.ts`，公开形式是 CSS 变量，不是 StyleX 对象。每条语义 token 都有 `--astryx-` 前缀。颜色类 token 用 `light-dark()` 同时写下浅色和深色，不拆成两份样式表。\n\n值从哪来，按这个顺序：\n\n1. Neutral 覆盖过的，用 Neutral 的值。\n2. Neutral 没覆盖的，用原版默认值。\n3. 组件主题文件若重复声明了同名变量，后声明的规则具有更高优先级；扩展样式时请通过语义层覆盖。\n\n所以 token 名是稳定的接口，某一条现在的具体数值以 `packages/themes/neutral/base.css` 为准。文档里的色板和尺寸条就是从这个文件解析出来的，不另维护一份名单。\n\n分类如下：\n\n| 页面 | 变量 |\n| --- | --- |\n| [颜色](/themes/color) | `--astryx-color-*`，其中 `--astryx-color-data-*` 是图表用的分类色和连续色阶 |\n| [排版与字体](/themes/typography) | `--astryx-font-*`、`--astryx-text-*` |\n| [动画](/themes/motion) | `--astryx-duration-*`、`--astryx-ease-*`，以及共享关键帧 |\n| [间距、圆角与阴影](/themes/scale) | `--astryx-spacing-*`、`--astryx-size-*`、`--astryx-radius-*`、`--astryx-shadow-*`、边框和焦点环 |\n\n在组件外面使用时，直接写 `var(--astryx-color-text-primary)` 这种引用。变量名和层的规则见 [CSS 变量](/themes/css-variables)。"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/tokens",
         "zh": "https://astryx-vue.pages.dev/themes/tokens"
@@ -76621,6 +76981,10 @@
         "en": [],
         "zh": []
       },
+      "body": {
+        "en": "# Typography\n\nTwo font stacks live on Neutral's semantic tokens.\n\n`--astryx-font-family-body` and `--astryx-font-family-heading` start with Figtree, then `-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Roboto`, `Helvetica`, `Arial`, and `sans-serif`. `--astryx-font-family-code` starts with JetBrains Mono, then `ui-monospace`, `SFMono-Regular`, `Menlo`, `Consolas`, and `monospace`.\n\nThe theme package loads Figtree and JetBrains Mono at 400, 500, 600, 700, and 400 italic. Figtree also includes 600 italic. Importing a theme entry loads both faces.\n\nWeight tokens are `--astryx-font-weight-normal` (400), `medium` (500), `semibold` (600), and `bold` (700). `--astryx-font-weight-regular` points at `normal`. Components already use that name. Upstream calls the token `normal`.\n\nThe `type` values on `Text` and `Heading` map to the `--astryx-text-*` sizes, weights, and line heights: `display-1` through `display-3`, headings 1 through 6, and body, large, label, code, and supporting. Display sizes use weight 400. Scale comes from size, not from bold.\n\n<TokenReference locale=\"en\" :sections=\"['font', 'type']\" />",
+        "zh": "# 排版与字体\n\n字体分两套栈，都写在 Neutral 的语义 token 里。\n\n`--astryx-font-family-body` 和 `--astryx-font-family-heading` 以 Figtree 开头，后面是 `-apple-system`、`BlinkMacSystemFont`、`Segoe UI`、`Roboto`、`Helvetica`、`Arial`、`sans-serif`。`--astryx-font-family-code` 以 JetBrains Mono 开头，后面是 `ui-monospace`、`SFMono-Regular`、`Menlo`、`Consolas`、`monospace`。\n\n主题包加载 Figtree 和 JetBrains Mono，字重 400、500、600、700，以及 400 斜体。Figtree 另外包含 600 斜体。引入主题入口就会带上这两种字体。\n\n字重 token 是 `--astryx-font-weight-normal`（400）、`medium`（500）、`semibold`（600）、`bold`（700）。`--astryx-font-weight-regular` 指向 `normal`，组件已经在用这个名字。原版对应的变量名是 `normal`。\n\n`Text` 和 `Heading` 的 `type` 对上 `--astryx-text-*` 这组尺寸、字重和行高，包括 `display-1` 到 `display-3`、标题 1 到 6，以及 body、large、label、code、supporting。显示字号的字重 token 是 400，靠尺寸而不是加粗拉开层次。\n\n<TokenReference locale=\"zh\" :sections=\"['font', 'type']\" />"
+      },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/typography",
         "zh": "https://astryx-vue.pages.dev/themes/typography"
@@ -76644,6 +77008,10 @@
       "keywords": {
         "en": [],
         "zh": []
+      },
+      "body": {
+        "en": "# Y2K\n\nPeriwinkle, cream, and sharp corners. Poppins for text, Crimson Text for display sizes.\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n```html\n<div data-astryx-theme=\"y2k\">\n```\n\n<ThemeStage theme=\"y2k\" />",
+        "zh": "# Y2K\n\n长春花色、奶油色，圆角收成直角。正文用 Poppins，展示字号用 Crimson Text。\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n```html\n<div data-astryx-theme=\"y2k\">\n```\n\n<ThemeStage theme=\"y2k\" />"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/y2k",
