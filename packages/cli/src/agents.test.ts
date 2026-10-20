@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyManagedBlock, MANAGED_BLOCK_END, MANAGED_BLOCK_START, renderAgentBlock } from './agents.ts'
+import { applyManagedBlock, existingAgentDocs, MANAGED_BLOCK_END, MANAGED_BLOCK_START, renderAgentBlock, resolveAgentTargets } from './agents.ts'
 import { catalog } from './catalog.ts'
 
 const INNER = 'Look up components with `astryx-vue component Button`.'
@@ -77,5 +77,51 @@ describe('agent block text', () => {
     expect(chinese).toContain('组合式函数')
     expect(chinese).toContain('astryx-vue docs')
     expect(chinese).toContain('astryx-vue search <query>')
+  })
+
+  it('teaches the three-step workflow and the corrected way to run the binary', () => {
+    const english = renderAgentBlock(catalog, 'en', false)
+    expect(english).toContain('## Workflow')
+    expect(english).toContain('1. Start from a page. `astryx-vue build')
+    expect(english).toContain('2. Copy it and make it yours. `astryx-vue template <slug>')
+    expect(english).toContain('3. Look it up before writing.')
+    expect(english).toContain('npx @astryx-vue/cli')
+    expect(english).toContain('pnpm exec astryx-vue')
+    expect(english).toContain('`"astryx-vue": "astryx-vue"`')
+    expect(english).not.toContain('node node_modules')
+    expect(english).not.toContain('path stays stable')
+
+    const chinese = renderAgentBlock(catalog, 'zh', false)
+    expect(chinese).toContain('## 工作流')
+    expect(chinese).toContain('npx @astryx-vue/cli')
+    expect(chinese).not.toContain('node node_modules')
+  })
+
+  it('drops the conventions in dense text but keeps the workflow', () => {
+    const dense = renderAgentBlock(catalog, 'en', true)
+    expect(dense).toContain('## Workflow')
+    expect(dense).not.toContain('## Conventions')
+    expect(dense.split('\n').length).toBeLessThan(renderAgentBlock(catalog, 'en', false).split('\n').length)
+  })
+})
+
+describe('agent targets', () => {
+  it('reuses what the project has, and falls back to AGENTS.md', () => {
+    expect(resolveAgentTargets(null, [])).toEqual(['AGENTS.md'])
+    expect(resolveAgentTargets(null, ['CLAUDE.md'])).toEqual(['CLAUDE.md'])
+    expect(resolveAgentTargets(null, ['.cursorrules', 'AGENTS.md'])).toEqual(['AGENTS.md'])
+    expect(resolveAgentTargets('claude', ['AGENTS.md'])).toEqual(['CLAUDE.md'])
+    expect(resolveAgentTargets('hermes', [])).toEqual(['.hermes.md'])
+    expect(resolveAgentTargets('hermes', ['HERMES.md'])).toEqual(['HERMES.md'])
+  })
+
+  it('writes every known file that exists for all, and one default when none do', () => {
+    expect(resolveAgentTargets('all', [])).toEqual(['AGENTS.md'])
+    expect(resolveAgentTargets('all', ['CLAUDE.md', '.hermes.md', 'package.json'])).toEqual(['CLAUDE.md', '.hermes.md'])
+  })
+
+  it('detects the known files in preference order', () => {
+    const existing = new Set(['HERMES.md', 'CLAUDE.md'])
+    expect(existingAgentDocs(file => existing.has(file))).toEqual(['CLAUDE.md', 'HERMES.md'])
   })
 })

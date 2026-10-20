@@ -11,6 +11,16 @@ const check = process.argv.includes('--check')
 const { assembleCatalog, parseDemoMetaFields } = await import('../../../apps/docs/components/demo-infra/demoMeta.ts')
 const { GROUP_TITLES } = await import('../../../apps/docs/components/demo-infra/groups.ts')
 const { buildCatalog } = await import('../src/generate/build-catalog.ts')
+const { PLAYGROUND_TEMPLATE_META, PLAYGROUND_TEMPLATE_SLUGS } = await import('../../../apps/docs/components/playground/templateManifest.ts')
+
+const templates = PLAYGROUND_TEMPLATE_SLUGS.map((slug) => {
+  const meta = PLAYGROUND_TEMPLATE_META[slug]
+  return {
+    slug,
+    title: { en: meta.nameEn, zh: meta.nameZh },
+    category: { en: meta.groupEn, zh: meta.categoryZh },
+  }
+})
 
 const demosDir = join(repoRoot, 'apps/docs/components/demos')
 const metas = []
@@ -21,7 +31,7 @@ for (const entry of await readdir(demosDir, { withFileTypes: true })) {
   metas.push(parseDemoMetaFields(source))
 }
 
-const catalog = await buildCatalog(repoRoot, assembleCatalog(metas), GROUP_TITLES)
+const catalog = await buildCatalog(repoRoot, assembleCatalog(metas), GROUP_TITLES, templates)
 const json = `${JSON.stringify(catalog, null, 2)}\n`
 if (check) {
   const current = await readFile(outputPath, 'utf8')
@@ -30,11 +40,11 @@ if (check) {
     process.exitCode = 1
   }
   else {
-    console.log(`catalog is up to date (${catalog.components.length} components, ${catalog.topics.length} topics)`)
+    console.log(`catalog is up to date (${catalog.components.length} components, ${catalog.topics.length} topics, ${catalog.templates.length} templates)`)
   }
 }
 else {
   await mkdir(dirname(outputPath), { recursive: true })
   await writeFile(outputPath, json)
-  console.log(`wrote ${outputPath} (${catalog.components.length} components, ${catalog.topics.length} topics)`)
+  console.log(`wrote ${outputPath} (${catalog.components.length} components, ${catalog.topics.length} topics, ${catalog.templates.length} templates)`)
 }
