@@ -72,3 +72,19 @@
 - 任何一条不过，结论就是「不通过」。
 - 报告写到 `/Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync/nodes/A4/verify-<N>.md`。
 - 最终回复用中文，200 字以内。
+
+## 第 2 轮新增的检查项
+
+第 1 轮验收发现一个问题：两边各新增一个组件时，`packages/core/src/index.ts` 和 `packages/core/package.json` 的 `exports` 会同时冲突，而工具只会自动处理前一个，遇到后一个就放弃。计划要求「冲突的只是 `pnpm sync` 生成的那些文件时自动处理」，`exports` 也是 `pnpm sync` 生成的，所以这一项本该做到。
+
+29. **真实场景**：在仓库的克隆里，节点分支新增一个组件 A，基线新增一个组件 B，两边都各自跑过 `pnpm sync` 并提交。然后执行 `worktree.mjs rebase`，期望：
+    - 自动完成。
+    - `index.ts` 和 `package.json` 的 exports 里同时有 A 和 B。
+    - `pnpm sync --check` 通过。
+    - 工作区是干净的。
+30. **不能吃掉别人的改动**：基线改了 `packages/core/package.json` 里 exports 以外的字段（比如 `description` 或某个依赖版本），节点分支新增一个组件。rebase 以后，基线对那个字段的改动要保留下来，exports 也要正确。
+31. **该停的时候要停**：节点分支和基线都改了 `package.json` 里 exports 以外的同一个字段，而且改得不一样。这时工具必须停下来，报出冲突的文件，并让分支回到原来的样子。
+32. 第 29、30、31 条在测试里都要有对应的用例，并且在两种 NODE_ENV 下都通过。
+33. 第 1 轮验收报告里的两个小提示，确认已经处理，或者写明了理由：
+    - 释放最后一个槽位后，留下了空的 `swarm-slots/` 目录。
+    - 不能在要删除的工作区里执行 merge，这一条要实际跑一次确认，不要只看代码。
