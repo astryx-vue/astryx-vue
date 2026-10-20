@@ -144,8 +144,8 @@ interface TemplateDoc {
 /**
  * Splits an idea into matchable terms. English and digits split on anything that
  * is not a letter or digit; a Chinese run has no spaces, so it becomes
- * overlapping two-character terms, which is how Chinese words are found without
- * a dictionary.
+ * overlapping two-character terms (plus the whole run when it is short), which is
+ * how Chinese words are found without a dictionary.
  */
 export function ideaTerms(idea: string): string[] {
   const runs = idea.toLowerCase().match(/[a-z0-9]+|[\u4E00-\u9FFF]+/g) ?? []
@@ -156,6 +156,10 @@ export function ideaTerms(idea: string): string[] {
         terms.push(run)
         continue
       }
+      // The whole run is a term too, so a keyword written out in full ("数据看板")
+      // beats the pieces ("看板") that other pages also contain.
+      if (run.length > 2 && run.length <= 6)
+        terms.push(run)
       for (let index = 0; index < run.length - 1; index++)
         terms.push(run.slice(index, index + 2))
       continue

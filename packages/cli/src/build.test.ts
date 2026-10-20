@@ -32,6 +32,14 @@ describe('build ranking', () => {
     expect(kit.locale).toBe('zh')
   })
 
+  it('sends 数据看板 to a dashboard and 任务看板 to the kanban board', async () => {
+    const data = await kitFor('数据看板', 'zh')
+    expect(data.template?.slug.startsWith('dashboard')).toBe(true)
+    // A bare 看板 is ambiguous; it leans to the dashboards. 任务看板 names the kanban.
+    const tasks = await kitFor('任务看板', 'zh')
+    expect(tasks.template?.slug).toBe('kanban-board')
+  })
+
   it('sends an admin dashboard idea to a dashboard, and the ready one wins the tie', async () => {
     const kit = await kitFor('admin dashboard with charts')
     // Observed: the base analytics dashboard leads. `dashboard` and

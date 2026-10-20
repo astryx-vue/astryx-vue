@@ -127,7 +127,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['dashboard', 'analytics', 'admin dashboard', 'metrics', 'kpi', 'charts', 'chart', 'overview', 'stats', 'reports'],
-      zh: ['仪表盘', '分析', '后台', '指标', '图表', '概览', '统计', '报表'],
+      zh: ['仪表盘', '分析', '后台', '指标', '图表', '概览', '统计', '报表', '数据看板', '数据面板', '数据大屏', '驾驶舱'],
     },
   },
   'dashboard-comparison': {
@@ -137,7 +137,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['dashboard', 'comparison', 'compare', 'period', 'trend', 'metrics', 'data', 'analytics'],
-      zh: ['仪表盘', '对比', '比较', '周期', '趋势', '指标', '数据'],
+      zh: ['仪表盘', '对比', '比较', '周期', '趋势', '指标', '数据', '数据看板', '数据面板', '数据大屏', '驾驶舱'],
     },
   },
   'dashboard-scorecard': {
@@ -147,7 +147,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['dashboard', 'scorecard', 'executive', 'summary', 'kpi', 'numbers', 'report', 'business review'],
-      zh: ['仪表盘', '记分卡', '高管', '摘要', '指标', '报表'],
+      zh: ['仪表盘', '记分卡', '高管', '摘要', '指标', '报表', '数据看板', '数据面板', '数据大屏', '驾驶舱'],
     },
   },
   'dashboard-cohort-funnel': {
@@ -157,7 +157,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['dashboard', 'funnel', 'cohort', 'retention', 'conversion', 'bar chart', 'charts', 'growth'],
-      zh: ['仪表盘', '漏斗', '群组', '留存', '转化', '柱状图', '增长'],
+      zh: ['仪表盘', '漏斗', '群组', '留存', '转化', '柱状图', '增长', '数据看板', '数据面板', '数据大屏', '驾驶舱'],
     },
   },
   'dashboard-composition': {
@@ -167,7 +167,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['dashboard', 'portfolio', 'projects', 'composition', 'area chart', 'breakdown', 'charts'],
-      zh: ['仪表盘', '组合', '项目', '构成', '面积图', '占比'],
+      zh: ['仪表盘', '组合', '项目', '构成', '面积图', '占比', '数据看板', '数据面板', '数据大屏', '驾驶舱'],
     },
   },
   'dashboard-progress': {
@@ -177,7 +177,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['dashboard', 'progress', 'project status', 'gantt', 'timeline', 'donut', 'roadmap', 'charts'],
-      zh: ['仪表盘', '进度', '项目状态', '甘特图', '时间线', '环形图', '路线图'],
+      zh: ['仪表盘', '进度', '项目状态', '甘特图', '时间线', '环形图', '路线图', '数据看板', '数据面板', '数据大屏', '驾驶舱'],
     },
   },
   'dashboard-alert-rail': {
@@ -187,7 +187,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['dashboard', 'monitoring', 'alert', 'alerts', 'status', 'uptime', 'service', 'sparkline', 'ops', 'charts'],
-      zh: ['仪表盘', '监控', '告警', '状态', '服务', '运维', '迷你图'],
+      zh: ['仪表盘', '监控', '告警', '状态', '服务', '运维', '迷你图', '数据看板', '数据面板', '数据大屏', '驾驶舱'],
     },
   },
   'payment-form': {
@@ -537,7 +537,7 @@ export const TEMPLATE_META: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['kanban', 'board', 'cards', 'columns', 'tasks', 'project', 'drag', 'sprint'],
-      zh: ['看板', '板', '卡片', '列', '任务', '项目', '拖拽', '迭代'],
+      zh: ['任务看板', '看板', '卡片', '列', '任务', '项目', '拖拽', '迭代', '泳道'],
     },
   },
   'editor': {
