@@ -101,8 +101,9 @@ describe('build ranking', () => {
 })
 
 describe('build terms', () => {
-  it('splits Chinese into character pairs and drops English filler', () => {
-    expect(ideaTerms('登录页')).toEqual(['登录', '录页'])
+  it('splits Chinese into character pairs plus the whole short run, and drops English filler', () => {
+    expect(ideaTerms('登录页')).toEqual(['登录页', '登录', '录页'])
+    expect(ideaTerms('登录')).toEqual(['登录'])
     expect(ideaTerms('build an admin dashboard with charts')).toEqual(['admin', 'dashboard', 'charts'])
     expect(ideaTerms('   ')).toEqual([])
   })

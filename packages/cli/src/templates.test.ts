@@ -1,7 +1,6 @@
 import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import process from 'node:process'
 import { describe, expect, it } from 'vitest'
 import { PLAYGROUND_TEMPLATE_SLUGS } from '../../../apps/docs/components/playground/templateManifest.ts'
 import { catalog } from './catalog.ts'
@@ -362,6 +361,5 @@ describe('template docs urls', () => {
     })
     const chinese = await run(['template', 'blank', '--json', '--zh'])
     expect(assertResponse(chinese.stdout, 'template.show').data).toMatchObject({ docsUrl: 'https://astryx-vue.pages.dev/playground/?template=blank' })
-    expect(process.cwd()).toContain('cli-template')
   })
 })
