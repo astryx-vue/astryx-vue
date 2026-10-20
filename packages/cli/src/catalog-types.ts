@@ -85,6 +85,28 @@ export interface TopicRecord {
   docsUrl: LocaleText
 }
 
+/** Pages are full screens. Blocks are page sections, and none exist yet. */
+export type TemplateKind = 'page' | 'block'
+
+export interface TemplateRecord {
+  slug: string
+  title: LocaleText
+  /** One sentence, written by hand in `generate/template-meta.ts`. */
+  description: LocaleText
+  /** Words a person would type when asking `build` for this page. */
+  keywords: { en: string[], zh: string[] }
+  category: LocaleText
+  kind: TemplateKind
+  /** Component names imported from `@astryx-vue/core`, in source order. */
+  componentsUsed: string[]
+  /** False when the page imports something a project without the playground cannot install. */
+  isReady: boolean
+  notReadyReason?: LocaleText
+  /** The `.vue` file, unchanged. One copy, shared by both locales. */
+  source: string
+  docsUrl: LocaleText
+}
+
 export interface Catalog {
   generator: string
   description: string
@@ -93,6 +115,7 @@ export interface Catalog {
   conventions: { en: string[], zh: string[] }
   components: ComponentRecord[]
   topics: TopicRecord[]
+  templates: TemplateRecord[]
 }
 
 export interface CatalogEntryInput {
