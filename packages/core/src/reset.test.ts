@@ -80,8 +80,9 @@ describe('reset.css structure', () => {
     let depth = 0
     let layerEnd = -1
     for (let index = layerStart; index < afterOrder.length; index++) {
-      if (afterOrder[index] === '{')
+      if (afterOrder[index] === '{') {
         depth++
+      }
       else if (afterOrder[index] === '}' && --depth === 0) {
         layerEnd = index
         break
@@ -137,7 +138,8 @@ describe('reset.css pseudo-element rules', () => {
       for (const argument of forgivingListArguments(selector)) {
         expect
           .soft(argument, `"${selector}" puts a pseudo-element in a list`)
-          .not.toMatch(/::|:(?:before|after|first-line|first-letter)\b/)
+          .not
+          .toMatch(/::|:(?:before|after|first-line|first-letter)\b/)
       }
     }
   })
@@ -161,7 +163,7 @@ describe('reset.css pseudo-element rules', () => {
   it('falls back to the neutral --astryx-color-text-secondary for placeholders', () => {
     // 只引入 reset 的页面没有这个变量，兜底值和中性主题的默认值保持一致。
     const neutral = readFileSync(resolve(__dirname, '../../themes/neutral/base.css'), 'utf8')
-    const tokenDefault = neutral.match(/--astryx-color-text-secondary:\s*([^;]+);/)?.[1]
+    const tokenDefault = neutral.match(/--astryx-color-text-secondary:\s*([^;\s][^;]*);/)?.[1]
     expect(tokenDefault).toMatch(/^light-dark\(/)
     const placeholder = blocks.find(({ selector }) => selector.endsWith('::placeholder'))
     expect(placeholder?.body).toContain(`color: var(--astryx-color-text-secondary, ${tokenDefault});`)
