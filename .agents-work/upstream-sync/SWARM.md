@@ -218,7 +218,7 @@ stateDiagram-v2
    3. 开 PR，方向是 `sync/<节点>-<简短名>` → `swarm-tree`：
       - 标题写 `<节点ID> <节点名称>`。
       - 正文照 `pr` skill 的模板写，要说明三件事：这个节点改了什么、验收结论（附 `nodes/<ID>/verify-<N>.md` 的路径），以及复核时 `merge` 的检查结果。
-   4. **不等人工评审**，用 `gh pr merge <PR号> --rebase` 直接合入。本地的 `swarm-tree` 已经是同样的提交，所以 GitHub 上的合并也只是 fast-forward。如果 GitHub 报告分支已经落后，就先 `git push origin swarm-tree`，再合。
-   5. 推送本地的 `swarm-tree`（`git push origin swarm-tree`），确认它和远程一致。然后运行 `worktree.mjs rm <节点ID>`，清掉工作区和本地分支。
+   4. **不等人工评审**，直接推送本地的 `swarm-tree`（`git push origin swarm-tree`）。它已经包含节点分支的全部提交，GitHub 会自动把这个 PR 标成 Merged，PR 页面上保留完整的提交和正文。如果 PR 没有自动变成 Merged，再执行 `gh pr merge <PR号> --rebase`。
+   5. 运行 `worktree.mjs rm <节点ID>`，清掉工作区和本地分支。
    6. 节点合向 `swarm-tree` 的 PR **不部署文档预览**，`docs.yml` 只在合向 `main` 或 `dev` 的 PR 上部署。`swarm-tree` 一更新，总 PR #128（`swarm-tree` → `dev`）会自动重新部署，用户在那个预览站上验收。
 3. **更新看板**：`node scripts/swarm/status.mjs set <节点ID> 已完成 --result "通过 X/Y" --pr #<PR号>`。它同时改树状图和总表，并把依赖已经全部完成的下游节点改成「可开工」。改完跑一次 `status.mjs check` 确认一致。
