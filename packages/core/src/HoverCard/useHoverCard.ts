@@ -4,7 +4,7 @@ import type { HoverCardAlignment, HoverCardFocusTrigger, HoverCardPlacement, Hov
 import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
 import { useLayer } from '../composables/useLayer.js'
 import { isFocusable } from '../layer/focus.js'
-import { registerHoverCardDismiss } from './escapeDismiss.js'
+import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
 
 export interface UseHoverCardOptions {
   /**
@@ -376,7 +376,7 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     }
   }
 
-  registerHoverCardDismiss({
+  useHoverLayerDismiss({
     isPresent: () => isOpen.value,
     getContainer: () => layer.contentRef.value,
     onDismiss: dismissFromEscape,

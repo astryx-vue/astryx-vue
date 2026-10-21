@@ -202,6 +202,45 @@ describe('关闭栈：登记顺序', () => {
   })
 })
 
+describe('关闭栈：嵌套深度', () => {
+  it('更深的层在上面，哪怕它登记得更早，容器也不互相包含', () => {
+    const inner = openLayer('inner', { depth: 1 })
+    const outer = openLayer('outer', { depth: 0 })
+
+    pressEscape()
+
+    expect(inner.onDismiss).toHaveBeenCalledOnce()
+    expect(outer.onDismiss).not.toHaveBeenCalled()
+  })
+
+  it('同一层再登记仍用旧排位，更深的深度仍然压过后开的外层', () => {
+    let showing = false
+    const tip = openLayer('tip', {
+      depth: 1,
+      dismissOnPointerOutside: false,
+      isPresent: () => showing,
+    })
+    tip.remove()
+    const again = pushLayer({
+      token: tip.token,
+      depth: 1,
+      getContainer: () => tip.el,
+      dismissOnPointerOutside: false,
+      dismissOnEscape: 'close',
+      isPresent: () => showing,
+      onDismiss: tip.onDismiss,
+    })
+    const outer = openLayer('outer', { depth: 0 })
+
+    showing = true
+    pressEscape()
+
+    expect(tip.onDismiss).toHaveBeenCalledOnce()
+    expect(outer.onDismiss).not.toHaveBeenCalled()
+    again()
+  })
+})
+
 describe('关闭栈：登记了但不在屏幕上', () => {
   it('跳过不在屏幕上的层，把按键交给下面那层', () => {
     const host = openLayer('host')

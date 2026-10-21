@@ -2,6 +2,7 @@ import type { MaybeRefOrGetter, Ref } from 'vue'
 import type { DismissEscape } from '../layer/dismissStack.js'
 import { onScopeDispose, toValue, watch } from 'vue'
 import { pushLayer } from '../layer/dismissStack.js'
+import { useLayerDepth } from '../layer/layerDepth.js'
 
 export interface UseDismissOptions {
   /** 要监听点击外部的容器元素 */
@@ -40,12 +41,15 @@ export function useDismiss(options: UseDismissOptions): void {
   const { container, trigger, isEnabled, onDismiss } = options
   // 身份跟着这一次 composable 调用走，重新登记时排位不变。
   const token = {}
+  // 这一层自己的深度：内容边界会再加一，里面打开的层因此更深。
+  const depth = useLayerDepth()
 
   let unregister: (() => void) | null = null
 
   function register(): void {
     unregister = pushLayer({
       token,
+      depth,
       getContainer: () => container.value,
       getTrigger: () => trigger?.value ?? null,
       dismissOnPointerOutside: true,

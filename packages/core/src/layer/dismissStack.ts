@@ -13,9 +13,9 @@ import { isImeKeyEvent } from '../composables/internal/ime.js'
  * - 点在某一层里面（含它的触发器）就只关掉它上面那些层，这一层自己不动；
  *   点在所有层外面时只关最上面那一层。
  *
- * 「哪一层在上面」用三条线索判断，和上游一致：登记顺序（后开的在上）、
- * 容器互相包含（DOM 上包着别人的在上），以及每个身份只认一次的序号
- * （同一层因为选项变化重新登记时，不许插到上面那层的头顶去）。
+ * 「哪一层在上面」用三条线索判断，和上游一致：嵌套深度（组件树里更深的在上，
+ * Teleport 切不断）、容器互相包含（同一深度时，DOM 上包着别人的在上），
+ * 以及每个身份只认一次的序号（同一层重新登记时不许插队）。
  */
 
 /**
@@ -31,6 +31,11 @@ export interface DismissStackEntry {
    * 这样它的排位保持不变，不会突然跑到后开的层上面。
    */
   token: object
+  /**
+   * 嵌套深度，从组件树读，不看 DOM。不传当作 0。
+   * 数字更大的在上面。同一提示再打开仍用旧排位号时，靠它压过外面那一层。
+   */
+  depth?: number
   /** 这一层的容器元素，按下时读。没给就只按触发器和顺序判断。 */
   getContainer?: () => HTMLElement | null
   /** 这一层的触发器元素。点在它上面不算「点外面」，交给触发器自己开关。 */
@@ -55,6 +60,8 @@ export interface DismissStackEntry {
 }
 
 interface StackEntry extends DismissStackEntry {
+  /** 嵌套深度。登记时落成数字，比较时不再处理「没传」。 */
+  depth: number
   /** 登记顺序。同一身份沿用第一次拿到的号，重新登记不会插队。 */
   seq: number
   /** 登记那一刻的按压编号。用来忽略「打开这一次按压自己」。 */
@@ -88,10 +95,12 @@ function isPresent(entry: StackEntry): boolean {
 /**
  * 比较两层谁在上面：正数表示 `a` 在上面，负数表示在下面。
  *
- * 这是一个偏序，只能两两比较求最大值，不能排序：容器包含关系只在有包含关系的
- * 那一对之间有定义，排序用到的比较器不满足传递性时结果没有意义。
+ * 先比嵌套深度，再比 DOM 包含，最后比排位号。这是一个偏序，只能两两比较求最大值，
+ * 不能排序：容器包含关系只在有包含关系的那一对之间有定义。
  */
 function compareEntries(a: StackEntry, b: StackEntry): number {
+  if (a.depth !== b.depth)
+    return a.depth - b.depth
   const aEl = a.getContainer?.() ?? null
   const bEl = b.getContainer?.() ?? null
   if (aEl != null && bEl != null && aEl !== bEl) {
@@ -231,6 +240,7 @@ function stopListening(): void {
 export function pushLayer(entry: DismissStackEntry): () => void {
   const full: StackEntry = {
     ...entry,
+    depth: entry.depth ?? 0,
     seq: seqFor(entry.token),
     bornPress: pressSerial,
   }
