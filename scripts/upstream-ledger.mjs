@@ -6,7 +6,7 @@
 //   --from      起点（不含），默认 96f9917f（上游 0.4.1）
 //   --to        终点（含），默认 v0.7.1
 //   --upstream  上游仓库目录，默认 ../astryx-upstream（相对仓库根目录），也可用环境变量 ASTRYX_UPSTREAM_DIR
-//   --out       输出目录，默认 .agents-work/upstream-sync/ledger
+//   --out       输出目录，默认 .agents-work/upstream-sync-0.7.1/ledger
 //   --check     只比较不写入，产物和磁盘上的不一致时退出码为 1
 //
 // 节点台账里已经打的勾和条目下的备注会保留下来，见 upstream-ledger/annotations.mjs。
@@ -26,7 +26,7 @@ import { validateRules } from './upstream-ledger/rules.mjs'
 
 export const DEFAULT_FROM = '96f9917f'
 export const DEFAULT_TO = 'v0.7.1'
-export const DEFAULT_OUT = '.agents-work/upstream-sync/ledger'
+export const DEFAULT_OUT = '.agents-work/upstream-sync-0.7.1/ledger'
 
 /** 输出目录里由人维护、脚本不会覆盖也不会删除的文件。 */
 const PRESERVED_FILES = new Set(['README.md'])

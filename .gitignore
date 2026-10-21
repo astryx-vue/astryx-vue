@@ -8,9 +8,9 @@ coverage/
 .DS_Store
 
 # 蜂群运行时产物
-.agents-work/upstream-sync/locks/
-.agents-work/upstream-sync/nodes/*/evidence/
-.agents-work/upstream-sync/visual/
-.agents-work/upstream-sync/a11y/
+.agents-work/upstream-sync-0.7.1/locks/
+.agents-work/upstream-sync-0.7.1/nodes/*/evidence/
+.agents-work/upstream-sync-0.7.1/visual/
+.agents-work/upstream-sync-0.7.1/a11y/
 # CI 视觉对照的输出目录（.github/workflows/visual-compare.yml）
 visual-out/

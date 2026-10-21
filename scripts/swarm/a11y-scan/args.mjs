@@ -3,7 +3,7 @@
  */
 import { parseArgs } from 'node:util'
 
-export const DEFAULT_OUT_DIR = '.agents-work/upstream-sync/a11y'
+export const DEFAULT_OUT_DIR = '.agents-work/upstream-sync-0.7.1/a11y'
 export const KNOWN_ISSUES_FILE = 'scripts/guardrails/a11y-known-issues.json'
 export const SCHEMES = ['light', 'dark']
 

@@ -3,9 +3,15 @@
 > 状态：组件已经全部落地，三个包都已发布到 npm。
 > 更新日期：2026-10-18
 
-## 正在进行：追上游 v0.7.1
+## 追上游的工作区
 
-工作区在 `upstream-sync/`。新会话接手总控时，先读 `upstream-sync/HANDOFF.md`，再按里面的指引去读 `SWARM.md` 和 `ROADMAP.md`。
+每追一个上游版本，就单独开一个目录，名字是 `upstream-sync-<上游版本号>/`。目录里放这次的规程（`SWARM.md`）、任务树（`ROADMAP.md`）、各节点的计划和报告（`nodes/`）、上游提交台账（`ledger/`）和交接文档（`HANDOFF.md`）。追完一个版本，它的目录就不再改动，留作记录。下次追新版本时，新建一个目录，`SWARM.md` 和 `templates/` 可以从上一次的目录复制过来。
+
+| 目录 | 状态 |
+| --- | --- |
+| `upstream-sync-0.7.1/` | 进行中。新会话接手总控时，先读里面的 `HANDOFF.md` |
+
+`scripts/swarm/` 里的工具默认读写当前在追的那个目录，路径写在 `status.mjs`、`upstream-ledger.mjs` 和 `visual-compare`、`a11y-scan` 的 `args.mjs` 里。换版本时，要把这些默认路径和 `.gitignore` 里的对应条目一起改掉。
 
 ## 写作方式
 

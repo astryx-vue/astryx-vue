@@ -8,7 +8,7 @@
 - `status.mjs`：进度看板。检查、查询、修改 `ROADMAP.md` 里的节点状态。
 - `worktree.mjs`：节点工作区。建、列、删、rebase，以及「复核加合入」。
 
-后两个的用法见本文末尾，它们在规程里的位置见 `.agents-work/upstream-sync/SWARM.md`。
+后两个的用法见本文末尾，它们在规程里的位置见 `.agents-work/upstream-sync-0.7.1/SWARM.md`。
 
 ## 视觉对照
 
@@ -18,7 +18,7 @@
 pnpm visual Button --out /tmp/<节点>-visual
 ```
 
-> **验收者请一定加 `--out /tmp/...`。** 不加时产物写进当前工作区的 `.agents-work/upstream-sync/visual/`。这个目录虽然被 `.gitignore` 忽略了，但会占工作区的磁盘，删工作区前还得记着清理。
+> **验收者请一定加 `--out /tmp/...`。** 不加时产物写进当前工作区的 `.agents-work/upstream-sync-0.7.1/visual/`。这个目录虽然被 `.gitignore` 忽略了，但会占工作区的磁盘，删工作区前还得记着清理。
 
 它会做这几件事：
 
@@ -46,7 +46,7 @@ pnpm visual <组件> [--section overview|all]
 | `--combos` | 只跑其中几种组合，逗号分隔。 |
 | `--ours <url>` | 我们站点的地址，只写到域名，例如 `http://localhost:5173`。给了就不起服务。 |
 | `--upstream <url>` | 上游地址，默认 `https://astryx.atmeta.com`。 |
-| `--out <dir>` | 输出目录，默认 `.agents-work/upstream-sync/visual/`（已加进 `.gitignore`）。验收时请用 `--out /tmp/...`，别让产物落进工作区。 |
+| `--out <dir>` | 输出目录，默认 `.agents-work/upstream-sync-0.7.1/visual/`（已加进 `.gitignore`）。验收时请用 `--out /tmp/...`，别让产物落进工作区。 |
 | `--port <n>` | 自己起文档站用的端口。默认取本工作区在 `worktree.mjs` 里登记的槽位端口，没登记就用 5172。 |
 | `--no-serve` | 假设端口上已经有本工作区的文档站在跑，不自己起。 |
 | `--proxy <url>` | 访问上游用的代理。默认取 `https_proxy` 环境变量，没有就用 `http://127.0.0.1:7890`。只有上游走代理，本地文档站直连。 |
@@ -203,7 +203,7 @@ pnpm a11y [--only <slug,...>] [--schemes light,dark] [--update] [--init]
 | `--schemes` | 只扫某种颜色模式。只扫一种时不判定「消失」。 |
 | `--update` | 删掉名单里已经不再出现的条目。 |
 | `--init` | 名单文件不存在时，用这次结果建第一份名单。 |
-| `--out` | 输出目录，默认 `.agents-work/upstream-sync/a11y/`（已加进 `.gitignore`）。 |
+| `--out` | 输出目录，默认 `.agents-work/upstream-sync-0.7.1/a11y/`（已加进 `.gitignore`）。 |
 | `--ours` / `--no-serve` | 和 `pnpm visual` 一样。 |
 | `--concurrency` | 同一个浏览器里同时开几个页面，默认 2。 |
 

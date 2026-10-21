@@ -52,7 +52,7 @@
 - 公开包不能出现 React 依赖，这条由 `scripts/check-package-boundaries.mjs` 检查。
 - 版本发布用 Changesets（一个管版本号和更新日志的工具：每次改动写一个小说明文件，发布时它统一算出新版本号）。core 和 themes 绑定成同一个版本号，cli 自己走，见 `.changeset/config.json` 和 `RELEASING.md`。
 
-项目的总原则（见 `.agents-work/upstream-sync/SWARM.md`「对齐上游的标准」一节）：**用户看到的样子、用起来的手感要和上游一致，代码不用一行一行照抄。** 选型时优先选 Vue 生态里成熟、合适的方案。
+项目的总原则（见 `.agents-work/upstream-sync-0.7.1/SWARM.md`「对齐上游的标准」一节）：**用户看到的样子、用起来的手感要和上游一致，代码不用一行一行照抄。** 选型时优先选 Vue 生态里成熟、合适的方案。
 
 ---
 

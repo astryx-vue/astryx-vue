@@ -5,7 +5,7 @@ import process from 'node:process'
 import { parseArgs } from 'node:util'
 import { parseCombos } from './names.mjs'
 
-export const DEFAULT_OUT_DIR = '.agents-work/upstream-sync/visual'
+export const DEFAULT_OUT_DIR = '.agents-work/upstream-sync-0.7.1/visual'
 export const DEFAULT_PROXY = 'http://127.0.0.1:7890'
 
 export const USAGE = `用法: pnpm visual <组件> [选项]

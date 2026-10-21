@@ -7,7 +7,7 @@
  *   node scripts/swarm/status.mjs show
  *   node scripts/swarm/status.mjs set <节点> <状态> [--round N] [--impl 名字] [--verify 名字] [--result 文本] [--pr 文本] [--force] [--dry-run]
  *
- * 所有子命令都接受 --file <路径>，默认是本仓库的 .agents-work/upstream-sync/ROADMAP.md。
+ * 所有子命令都接受 --file <路径>，默认是本仓库的 .agents-work/upstream-sync-0.7.1/ROADMAP.md。
  * 退出码：0 正常；1 check 发现问题或 set 被拒绝；2 参数或文件格式不对。
  */
 import { readFileSync, realpathSync, renameSync, writeFileSync } from 'node:fs'
@@ -21,7 +21,7 @@ import { parseRoadmap, RoadmapParseError } from './status/roadmap.mjs'
 import { describeStates, resolveState } from './status/states.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-export const DEFAULT_ROADMAP = resolve(ROOT, '.agents-work/upstream-sync/ROADMAP.md')
+export const DEFAULT_ROADMAP = resolve(ROOT, '.agents-work/upstream-sync-0.7.1/ROADMAP.md')
 
 export const USAGE = `用法: node scripts/swarm/status.mjs <子命令> [选项]
 
