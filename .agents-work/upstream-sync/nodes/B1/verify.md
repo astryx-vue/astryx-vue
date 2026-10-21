@@ -92,3 +92,15 @@
 20. **文档补了一句说明**：环境适配规则里的 token 在条件成立时，会盖过 Theme 外层元素上的样式表和普通内联值。想覆盖它，要写在子元素上，或者用 `!important`。中英文都要有。
 21. 回报里「交给 Cx」的清单，`d30591054` 写到了具体的 C 节点。
 22. 第 1 轮通过的 1 到 17 项：本轮改动碰到的要重新验，至少重验 1、6、7、11、15、16。没碰到的可以写「沿用第 1 轮」，但要用 `git diff HEAD~N --stat` 证明。
+
+## 第 2 轮追加：去掉 `!important`
+
+第 2 轮途中，总控追加了一条要求：组件库里不允许出现 `!important`。环境适配规则不能再靠 `!important` 去压内联的根 token，要改成把根 token 写进样式表，按 CSS 层的先后顺序生效。
+
+23. `node scripts/check-no-important.mjs` 能通过。另外对 `packages/core` 和 `packages/themes` 跑一遍 `grep -rn '!important'`，除测试文件以外，结果为 0。
+24. `Theme.vue` 不再把根 token 写进 `:style`，用户自己传的 `attrs.style` 照常生效。
+25. **适配规则仍然生效**：触发适配条件（比如模拟窄屏加粗指针），确认适配规则里的 token 盖过了根 token。用浏览器读出计算后的值来确认。
+26. **用户能覆盖**：在 Theme 外层元素上，用一条普通的样式表规则覆盖某个 token，在适配条件成立时也能生效。第 1 轮验收时这一条是失败的，这正是去掉 `!important` 要解决的问题。
+27. **多个 Theme 互不干扰**：两个 Theme 并列，再测两个 Theme 嵌套，各自的 token 值都正确。同名主题按实现者回报里写的方案（照上游，或者用唯一作用域标记）做验证。
+28. **SSR 没有闪动**：服务端渲染出来的 HTML 里已经包含根 token 的样式表，首屏不依赖客户端脚本就能拿到正确的 token。用 `renderToString` 输出的 HTML 来确认。
+29. 默认外观不变：Button、Dialog、Card 三个组件的 `ours.png` 和 BASE 对比，像素差为 0。

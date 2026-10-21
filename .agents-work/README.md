@@ -24,6 +24,8 @@
 
 - 图标用我们自己的方案，不照搬上游的 React 图标注册表：`Icon` 按 Iconify 名字画图标，`astryxIcons()` Vite 插件从 `@iconify-json/*` 按需打包，组件内部只用语义名（默认是 Lucide，没注册时退回内置图形），主题用 `defineTheme({ icons })` 覆盖。详细说明在 `apps/docs/docs/zh/guide/icons.md`。
 
+- 组件库和主题里一处 `!important` 都不用。优先级靠 `@layer` 顺序和选择器解决，让使用者能在自己的样式表里覆盖。`pnpm check` 里的 `check-no-important.mjs` 会拦截。
+
 ## 对齐原版
 
 目标是像素级对齐：除了用 Vue 而不是 React 实现，样式、布局、交互和文案都应和原版 `facebook/astryx` 一致。React 与 Vue 的差别只在实现层，不该让使用者看出两个库的样子不一样。
