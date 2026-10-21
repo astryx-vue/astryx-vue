@@ -3,6 +3,7 @@
 - 工作区：`/workspace`，分支 `sync/c9-markdown`，从 `swarm-tree` 的 `202336f` 切出。
 - 提交（基于 `202336f`）：
   - `5c42fc2` feat(markdown): 补上解析器子路径、行号插件和围栏折行
+  - `d2161af` docs(C9): 写第 1 轮实现回报，并补上 data URL 台账结论
 
 ## 1. 做了什么
 
