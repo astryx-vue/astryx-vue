@@ -1,4 +1,4 @@
-import { countCharacters } from '../text/countCharacters.js'
+import { countCharacters } from '../composables/countCharacters.js'
 
 export { countCharacters }
 
