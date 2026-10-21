@@ -1,7 +1,9 @@
 import type { Ref } from 'vue'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
+import type { OptionActionNode } from '../selectors/optionAction.js'
 
 export type MultiSelectorSize = 'sm' | 'md' | 'lg'
-export type MultiSelectorVariant = 'input' | 'ghost'
+export type MultiSelectorVariant = 'input' | 'secondary' | 'ghost'
 export type MultiSelectorPresentation = 'popover' | 'bottom-sheet'
 export type MultiSelectorStatus = 'default' | 'success' | 'warning' | 'error'
 export type MultiSelectorStatusVariant = 'attached' | 'detached' | 'tooltip'
@@ -39,6 +41,8 @@ export interface MultiSelectorOptionData {
   label: string
   disabled?: boolean
   description?: string
+  /** 这一项旁边的操作。点它不会改选择。有一项带了操作，面板就变成两列网格。 */
+  action?: OptionActionNode | null
 }
 
 export interface MultiSelectorDivider {
@@ -53,7 +57,7 @@ export interface MultiSelectorSection {
 
 export type MultiSelectorOption = string | MultiSelectorOptionData | MultiSelectorDivider | MultiSelectorSection
 
-export interface MultiSelectorProps {
+export interface MultiSelectorProps extends FieldPartStylingProps {
   modelValue?: readonly (string | number)[]
   options: readonly MultiSelectorOption[]
   label: string
@@ -79,7 +83,7 @@ export interface MultiSelectorProps {
    */
   statusVariant?: MultiSelectorStatusVariant
   size?: MultiSelectorSize
-  /** input 是带边框的表单控件，ghost 适合放在工具栏里。 */
+  /** input 是带边框的表单控件。secondary 对齐次要按钮。ghost 适合放在工具栏里。 */
   variant?: MultiSelectorVariant
   /** popover 锚在触发器下，bottom-sheet 在底部弹层里展开。 */
   presentation?: MultiSelectorPresentation
@@ -150,7 +154,7 @@ export interface MultiSelectorTriggerProps {
   'onClick': (event: MouseEvent) => void
   'onKeyDown': (event: KeyboardEvent) => void
   'onFocus': (event: FocusEvent) => void
-  'aria-haspopup': 'listbox'
+  'aria-haspopup': 'listbox' | 'grid' | 'dialog'
   'aria-expanded': boolean
   'aria-controls': string
   'aria-busy': true | undefined

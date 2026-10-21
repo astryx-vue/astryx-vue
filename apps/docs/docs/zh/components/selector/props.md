@@ -12,7 +12,7 @@ footer: false
     <thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead>
     <tbody>
       <tr><td><code>modelValue</code></td><td><code>string | number | null</code></td><td><code>null</code></td><td>选中的值。</td></tr>
-      <tr><td><code>options</code></td><td><code>SelectorOption[]</code></td><td>必需</td><td>选项数组，每项包含 value、label 和可选的 disabled、description。</td></tr>
+      <tr><td><code>options</code></td><td><code>SelectorOption[]</code></td><td>必需</td><td>选项数组。每项可以带 <code>disabled</code>、<code>description</code> 和 <code>action</code>。只要有一项的 <code>action</code> 不是空的，弹出层就变成两列网格，点操作不会改选择。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>占位符文本。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否支持搜索。</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否可清除。</td></tr>
@@ -20,6 +20,10 @@ footer: false
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。和 <code>disabled</code> 一起用时，鼠标悬停或键盘聚焦会弹出提示，触发器靠 <code>aria-disabled</code> 保持可聚焦，但仍然打不开列表。不用再在外面套 Tooltip：禁用的控件收不到悬停事件。旧名 <code>disabledReason</code> 等价。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>选择器尺寸。</td></tr>
+      <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost' | 'default'</code></td><td><code>'default'</code></td><td><code>input</code> 和旧名 <code>default</code> 都是带边框的输入框。<code>secondary</code> 对齐次要按钮。<code>ghost</code> 去掉边框，适合工具栏。后两种上的 attached 状态会收成独立说明。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。</td></tr>
+      <tr><td><code>containerClass</code> / <code>containerStyle</code></td><td><code>class</code> / <code>style</code></td><td>—</td><td>加到字段外壳。不会落到触发按钮上。</td></tr>
+      <tr><td><code>controlClass</code> / <code>controlStyle</code></td><td><code>class</code> / <code>style</code></td><td>—</td><td>加到画边框的本体。根上直接写的 class 和 style 也落在这里。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>可见标签。不传时用占位文本作为隐藏的无障碍名称。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>

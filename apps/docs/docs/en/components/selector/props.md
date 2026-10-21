@@ -12,7 +12,7 @@ footer: false
     <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
     <tbody>
       <tr><td><code>modelValue</code></td><td><code>string | number | null</code></td><td><code>null</code></td><td>Selected value.</td></tr>
-      <tr><td><code>options</code></td><td><code>SelectorOption[]</code></td><td>Required</td><td>Options array.</td></tr>
+      <tr><td><code>options</code></td><td><code>SelectorOption[]</code></td><td>Required</td><td>Options. An <code>action</code> on any item latches the popup into a two-column grid. Activating the action does not change the selection.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>Placeholder text. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether to support search.</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether clearable.</td></tr>
@@ -20,6 +20,10 @@ footer: false
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether disabled.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Why the field is disabled. With <code>disabled</code>, hovering or keyboard focus shows a tooltip and the trigger stays focusable through <code>aria-disabled</code>; it still cannot open the list. Do not wrap a disabled selector in a tooltip: it would swallow the hover. <code>disabledReason</code> is the older name.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Size.</td></tr>
+      <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost' | 'default'</code></td><td><code>'default'</code></td><td><code>input</code> and the older name <code>default</code> are the bordered field. <code>secondary</code> matches a secondary button. <code>ghost</code> is borderless. On the latter two, an attached status becomes detached.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually. The accessible name stays.</td></tr>
+      <tr><td><code>containerClass</code> / <code>containerStyle</code></td><td><code>class</code> / <code>style</code></td><td>—</td><td>Styles for the field shell. They do not land on the trigger button.</td></tr>
+      <tr><td><code>controlClass</code> / <code>controlStyle</code></td><td><code>class</code> / <code>style</code></td><td>—</td><td>Styles for the bordered box. A class or style on the component root lands here too.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success'</code></td><td><code>'default'</code></td><td>Status.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Visible label. Without it, the placeholder is the hidden accessible name.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Help text under the label.</td></tr>

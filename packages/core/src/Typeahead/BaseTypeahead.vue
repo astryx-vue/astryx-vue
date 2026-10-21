@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends SearchableItem">
+import type { StyleValue } from 'vue'
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { BaseTypeaheadProps, TypeaheadEmits, TypeaheadSlots } from './types.js'
 import { computed, inject, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
@@ -6,8 +7,10 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { useLatchedOptionGrid } from '../selectors/useLatchedOptionGrid.js'
 import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
+import { isImeKeyEvent } from '../utils/ime.js'
 import { typeaheadChromeKey } from './context.js'
 import TypeaheadMenu from './TypeaheadMenu.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from './useAnchoredListbox.js'
@@ -233,8 +236,18 @@ function onBlur(event: FocusEvent): void {
  * 外面的 keydown 先跑，它 preventDefault 就不再走内部导航。
  * 顺序靠模板里 `v-bind` 写在 `@keydown` 前面保证。
  */
+const optionGrid = useLatchedOptionGrid({
+  entries: () => menu.entries.value,
+  isOpen: () => menu.combobox.isOpen.value,
+  activeIndex: menu.combobox.activeIndex,
+  getListbox: () => listboxRef.value,
+  listboxId: () => listboxId.value,
+})
+
 function onKeydown(event: KeyboardEvent): void {
-  if (event.defaultPrevented)
+  if (event.defaultPrevented || isImeKeyEvent(event))
+    return
+  if (optionGrid.actionGrid.onKeyDown(event))
     return
   menu.onKeyDown(event)
 }
@@ -278,7 +291,8 @@ defineExpose({
     <div
       ref="controlRef"
       class="astryx-typeahead-control"
-      :class="[`status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': props.disabled, 'is-bare': !hasChrome }]"
+      :class="[attrs.class, props.controlClass, `status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': props.disabled, 'is-bare': !hasChrome }]"
+      :style="[attrs.style as StyleValue, props.controlStyle]"
       @click="onControlClick"
       @pointerenter="disabledTooltip.onPointerEnter"
       @pointerleave="disabledTooltip.onPointerLeave"
@@ -313,10 +327,11 @@ defineExpose({
         :aria-disabled="focusableDisabled ? 'true' : undefined"
         :aria-expanded="menu.combobox.isOpen.value"
         :aria-controls="listboxId"
+        :aria-haspopup="optionGrid.popupKind.value"
         :aria-label="ariaLabel"
         :aria-labelledby="labelledBy"
         aria-autocomplete="list"
-        :aria-activedescendant="menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined"
+        :aria-activedescendant="optionGrid.gridMode.value ? optionGrid.actionGrid.activeDescendant.value : (menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined)"
         :aria-describedby="describedBy"
         :aria-required="props.required || undefined"
         @input="onInput"
@@ -355,15 +370,17 @@ defineExpose({
       :id="listboxId"
       ref="listboxRef"
       class="astryx-typeahead-listbox astryx-layer"
-      role="listbox"
+      :role="optionGrid.gridMode.value ? 'grid' : 'listbox'"
       :aria-label="messages.typeahead.results"
       :data-placement="anchored.position.value.placement"
       :style="anchored.style.value"
       tabindex="-1"
     >
       <TypeaheadMenu
-        :entries="menu.entries.value.map(entry => ({ id: entry.id, label: entry.label, description: entry.description, disabled: entry.disabled, group: entry.group, selected: optionSelected(entry.item.id) }))"
+        :entries="menu.entries.value.map(entry => ({ id: entry.id, label: entry.label, description: entry.description, disabled: entry.disabled, group: entry.group, action: entry.action, selected: optionSelected(entry.item.id) }))"
         :active-index="menu.combobox.activeIndex.value"
+        :grid="optionGrid.gridMode.value"
+        :action-index="optionGrid.actionGrid.column.value === 'action' ? menu.combobox.activeIndex.value : -1"
         :status="menu.status.value"
         :listbox-id="listboxId"
         :empty-text="emptyText"
