@@ -22,6 +22,7 @@ import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
 import '../../styles/button.css'
+import '../../styles/layer.css'
 import '../../styles/selector.css'
 import '../../styles/visually-hidden-utility.css'
 

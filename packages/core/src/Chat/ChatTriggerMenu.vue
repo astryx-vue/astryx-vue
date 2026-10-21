@@ -8,6 +8,7 @@ import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { groupSearchItems } from './groupSearchItems.js'
 import '../../styles/popover.css'
+import '../../styles/layer.css'
 import '../../styles/chat.css'
 
 const props = defineProps<{

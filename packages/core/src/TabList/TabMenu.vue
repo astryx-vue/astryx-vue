@@ -7,6 +7,7 @@ import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { tabListContextKey } from './context.js'
 import '../../styles/tab-list.css'
+import '../../styles/layer.css'
 import '../../styles/tab-menu.css'
 
 defineOptions({ name: 'AstryxTabMenu' })

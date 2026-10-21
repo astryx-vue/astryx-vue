@@ -17,6 +17,7 @@ import { navMenuKey } from '../NavMenu/context.js'
 import { radioContextKey } from '../Radio/types.js'
 import { segmentedControlContextKey } from '../SegmentedControl/context.js'
 import { toggleButtonGroupContextKey } from '../ToggleButton/context.js'
+import '../../styles/layer.css'
 
 /**
  * @file scopedProvide.ts
