@@ -145,7 +145,8 @@ describe('media theme', () => {
     try {
       expect(wrapper.get('.astryx-media-theme').attributes('data-astryx-media')).toBe('dark')
       // Stands in for `light-dark()` flipping the ambient text color.
-      wrapper.get('.ambient').element.style.setProperty('--astryx-color-text-primary', '#fafafa')
+      const ambient = wrapper.get('.ambient').element as HTMLElement
+      ambient.style.setProperty('--astryx-color-text-primary', '#fafafa')
       heard.listener?.({ matches: true } as MediaQueryListEvent)
       await nextTick()
       await nextTick()
