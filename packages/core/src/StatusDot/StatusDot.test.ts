@@ -1,6 +1,13 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { defineComponent, h } from 'vue'
 import StatusDot from './StatusDot.vue'
+
+const Mark = defineComponent({
+  setup() {
+    return () => h('svg', { class: 'mark' })
+  },
+})
 
 describe('statusDot', () => {
   it('renders a span with role img and aria-label', () => {
@@ -50,6 +57,16 @@ describe('statusDot', () => {
     expect(icon.attributes('aria-hidden')).toBe('true')
     expect(icon.find('.mark').exists()).toBe(true)
     expect(wrapper.get('.astryx-status-dot').attributes('aria-label')).toBe('Online')
+  })
+
+  it('draws an icon prop inside the dot without renaming it', () => {
+    const wrapper = mount(StatusDot, {
+      props: { label: 'Verified', variant: 'success', icon: Mark },
+    })
+    const icon = wrapper.get('.astryx-status-dot__icon')
+    expect(icon.attributes('aria-hidden')).toBe('true')
+    expect(icon.find('.mark').exists()).toBe(true)
+    expect(wrapper.get('.astryx-status-dot').attributes('aria-label')).toBe('Verified')
   })
 
   it('wraps the dot in a tooltip when tooltip text is given', async () => {

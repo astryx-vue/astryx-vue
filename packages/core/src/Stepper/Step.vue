@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StepProgress, StepProps, StepSlots } from './types.js'
 import { computed, onUnmounted, watch } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useStepperContext } from './context.js'
@@ -20,6 +21,7 @@ defineSlots<StepSlots>()
 
 const stepper = useStepperContext()
 const messages = useAstryxMessages()
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 
 const progress = computed<StepProgress>(() => {
   const active = stepper.activeStep.value
@@ -98,6 +100,7 @@ onUnmounted(() => stepper.unregister(props.step))
     :data-density="density"
     :data-indicator-position="indicatorPosition"
     :data-orientation="orientation"
+    :data-glyph="glyph"
     :data-progress="progress"
     :data-status="status"
   >
@@ -112,6 +115,7 @@ onUnmounted(() => stepper.unregister(props.step))
     </span>
     <component
       :is="isClickable ? 'button' : 'div'"
+      v-bind="isClickable ? pressableProps : undefined"
       class="astryx-step-control"
       :aria-label="isClickable ? accessibleName : undefined"
       :type="isClickable ? 'button' : undefined"
@@ -123,12 +127,12 @@ onUnmounted(() => stepper.unregister(props.step))
       <StepMarker v-else :glyph="glyph" :number-label="numberLabel" />
       <span class="astryx-step-copy">
         <span class="astryx-step-label-row">
-          <span class="astryx-step-label">{{ label }}</span>
+          <span class="astryx-step-label" :data-disabled="isDisabled || undefined" :data-progress="progress" :data-status="status">{{ label }}</span>
           <VisuallyHidden v-if="hiddenStatus">{{ hiddenStatus }}</VisuallyHidden>
           <span v-if="isOptional" class="astryx-step-optional">• {{ messages.stepper.optional }}</span>
           <slot name="end" />
         </span>
-        <span v-if="description" class="astryx-step-description">{{ description }}</span>
+        <span v-if="description" class="astryx-step-description" :data-progress="progress" :data-status="status">{{ description }}</span>
       </span>
     </component>
     <div v-if="$slots.default" class="astryx-step-content">

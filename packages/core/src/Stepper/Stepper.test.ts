@@ -141,6 +141,40 @@ describe('stepper', () => {
   })
 })
 
+describe('stepper connector gap', () => {
+  it('declares the public gap on the horizontal frame and inherits it on the list', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 0, indicatorPosition: 'on-track' },
+      slots: {
+        default: '<span />',
+      },
+    })
+    expect(wrapper.classes()).toContain('astryx-stepper-frame')
+    expect(wrapper.get('.astryx-stepper').element).toBeTruthy()
+  })
+
+  it('marks a clickable step as pressable and leaves a gapless track when the indicator is none', () => {
+    const wrapper = mount(Stepper, {
+      props: {
+        activeStep: 0,
+        indicatorPosition: 'on-track',
+        onStepClick: () => {},
+      },
+      slots: {
+        default: `
+          <Step :step="0" label="One" indicator="none" />
+          <Step :step="1" label="Two" />
+        `,
+      },
+      global: { components: { Step } },
+    })
+    const steps = wrapper.findAll('.astryx-step')
+    expect(steps[0].attributes('data-glyph')).toBe('none')
+    expect(steps[1].attributes('data-glyph')).not.toBe('none')
+    expect(steps[1].get('button').attributes('data-astryx-pressable')).toBe('')
+  })
+})
+
 describe('stepper logic', () => {
   it('collapses only when the row is narrower than count times minimumStepWidth', () => {
     expect(shouldCollapseStepper(640, 5, undefined, 'horizontal')).toBe(false)
