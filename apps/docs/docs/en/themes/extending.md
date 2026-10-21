@@ -60,7 +60,7 @@ const brand = defineTheme({
 `Theme` writes its tokens into a `<style>` that sits inside the wrapper element. The rule selector is `:scope.astryx-theme`, which weighs as much as two classes, and that `<style>` comes later in the document than your stylesheets. So a plain rule on the wrapper loses when it sits inside `@layer astryx.overrides` and names fewer than three classes. Pick one of these:
 
 - Put the override in CSS that is not inside any `@layer`. Unlayered styles beat every layered style, so this always wins. It is the simplest choice.
-- Inside `@layer astryx.overrides`, use an id (`#brand-wrapper`), or at least three classes (`.wrapper.wrapper.wrapper`).
+- Inside `@layer astryx.overrides`, stack at least three classes on the wrapper (`.wrapper.wrapper.wrapper`), or wrap the `Theme` in your own element with an id and select through it (`#brand .wrapper`). `Theme` does not put an `id` on its wrapper, so `#id` alone does not match it.
 
 The same holds for adapted tokens, with or without a matching condition. A value passed in the wrapper's own `style` attribute also wins.
 

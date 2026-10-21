@@ -62,7 +62,7 @@ const brand = defineTheme({
 `Theme` 会把变量写进外层元素里面的一个 `<style>` 里。这条规则的选择器是 `:scope.astryx-theme`，权重相当于两个 class，而且这个 `<style>` 在文档里排在你的样式表后面。所以，如果你的覆盖写在 `@layer astryx.overrides` 里，只用一个或两个 class 去选外层元素，是压不过它的。可以这样选：
 
 - 把覆盖写在没放进任何 `@layer` 的普通样式里。不分层的样式总是赢过分层里的，所以一定能赢。这是最省事的办法。
-- 如果一定要写在 `@layer astryx.overrides` 里，就用 id（`#brand-wrapper`），或者至少叠 3 个 class（`.wrapper.wrapper.wrapper`）。
+- 如果一定要写在 `@layer astryx.overrides` 里，可以在外层元素上叠至少 3 个 class（`.wrapper.wrapper.wrapper`）；也可以在 `Theme` 外面自己再包一个带 id 的元素，用 `#brand .wrapper` 这样的写法去选。`Theme` 不会把 `id` 写到它的外层元素上，所以单写 `#id` 是选不中的。
 
 适配出来的变量也一样，不管条件有没有成立。直接写在外层元素 `style` 属性里的值同样会赢。
 
