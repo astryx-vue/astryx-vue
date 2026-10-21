@@ -19,18 +19,18 @@ describe('useTheme', () => {
         watch(result.tokens, () => {
           tokenRuns += 1
         })
-        return () => h('span', `${tick.value}:${result.token('--color-accent')}`)
+        return () => h('span', { class: 'probe' }, `${tick.value}:${result.token('--color-accent')}`)
       },
     })
     const wrapper = mount(Theme, { props: { theme, mode: 'light' }, slots: { default: () => h(Probe) } })
     const before = first
     tick.value += 1
     await nextTick()
-    expect(wrapper.text()).toBe('1:#111111')
+    expect(wrapper.get('.probe').text()).toBe('1:#111111')
     expect(first).toBe(before)
     expect(tokenRuns).toBe(0)
     await wrapper.setProps({ mode: 'dark' })
-    expect(wrapper.text()).toBe('1:#eeeeee')
+    expect(wrapper.get('.probe').text()).toBe('1:#eeeeee')
     expect(tokenRuns).toBe(1)
     wrapper.unmount()
   })

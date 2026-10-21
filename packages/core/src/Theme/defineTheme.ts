@@ -111,6 +111,7 @@ export function defineTheme(input: DefineThemeInput): ThemeDefinition {
     adaptationRules,
     onDarkComponents,
     onLightComponents,
+    syntax: input.syntax ?? base?.syntax,
   })
 
   return {

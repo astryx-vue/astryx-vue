@@ -67,19 +67,25 @@ describe('rule writes', () => {
       { when: { pointer: 'coarse' }, value: { tokens: { '--spacing-4': '16px' } } },
     ], { name: 'ordered', tokens: { '--spacing-4': '16px' } })
     const css = theme.css ?? ''
-    expect(css.split('@media (pointer: coarse)')).toHaveLength(3)
-    expect(css.indexOf('--astryx-spacing-4: 12px !important')).toBeLessThan(css.indexOf('--astryx-spacing-4: 16px !important'))
+    const blocks = css.split('@media (pointer: coarse)')
+    expect(blocks).toHaveLength(3)
+    expect(blocks[1]).toContain('--astryx-spacing-4: 12px;')
+    expect(blocks[2]).toContain('--astryx-spacing-4: 16px;')
   })
 
-  it('beat the inline root values only while the condition matches', () => {
+  it('win over the root token by source order, not by !important', () => {
     const theme = themeWith([{ when: { pointer: 'coarse' }, value: { tokens: { '--color-accent': 'red' } } }], {
       name: 'pinned',
       tokens: { '--color-accent': 'blue' },
     })
     expect(theme.tokens['--astryx-color-accent']).toBe('blue')
     expect(theme.adaptationRules?.[0]?.tokens['--astryx-color-accent']).toBe('red')
-    expect(theme.css).toContain(':scope.astryx-theme {\n  --astryx-color-accent: red !important;')
-    expect(theme.css).toContain('--astryx-button-primary-background: red !important;')
+    const css = theme.css ?? ''
+    expect(css).toContain(':scope.astryx-theme {\n  --astryx-color-accent: blue;')
+    expect(css).toContain(':scope.astryx-theme {\n  --astryx-color-accent: red;')
+    expect(css).toContain('--astryx-button-primary-background: red;')
+    expect(css.indexOf('--astryx-color-accent: blue;')).toBeLessThan(css.indexOf('--astryx-color-accent: red;'))
+    expect(css).not.toContain('!important')
   })
 
   it('complete a partial type scale from the root theme', () => {

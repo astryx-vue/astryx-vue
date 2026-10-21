@@ -1,6 +1,3 @@
-import type { ThemeDefinition } from './types.js'
-import { syntaxThemeStyle } from '../Code/syntaxTheme.js'
-
 /**
  * Aliases declared on `:root` are substituted there. A later override of the
  * semantic token does not flow through that already-substituted value, so the
@@ -50,18 +47,10 @@ export function bridgeComponentTokens(
   return style
 }
 
-/** Token bridges for an inverted surface. Button colors stay with MediaTheme. */
+/**
+ * Inline custom properties for an inverted media surface: the surface's
+ * semantic tokens with their component aliases.
+ */
 export function bridgeSurfaceTokens(tokens: Readonly<Record<string, string>>): Record<string, string> {
   return bridgeComponentTokens(tokens, SURFACE_BRIDGES)
-}
-
-/**
- * Inline custom properties for a theme subtree: semantic tokens with their
- * component aliases, theme-local tokens by exact name, and syntax colors.
- */
-export function themeStyle(theme: ThemeDefinition): Record<string, string> {
-  const style = { ...bridgeComponentTokens(theme.tokens), ...theme.localTokens }
-  if (theme.syntax)
-    Object.assign(style, syntaxThemeStyle(theme.syntax))
-  return style
 }

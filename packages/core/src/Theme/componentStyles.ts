@@ -109,13 +109,12 @@ function cssProperty(name: string): string {
 
 interface DeclarationOptions {
   toProperty?: (name: string) => string
-  important?: boolean
 }
 
 function declarationBlock(
   entries: readonly (readonly [string, string])[],
   location: string,
-  { toProperty = cssProperty, important = false }: DeclarationOptions = {},
+  { toProperty = cssProperty }: DeclarationOptions = {},
 ): string {
   const lines: string[] = []
   for (const [raw, rawValue] of entries) {
@@ -126,7 +125,7 @@ function declarationBlock(
       warnDroppedDeclaration(property, value, location, reason)
       continue
     }
-    lines.push(`  ${property}: ${value}${important ? ' !important' : ''};`)
+    lines.push(`  ${property}: ${value};`)
   }
   return lines.join('\n')
 }
@@ -186,19 +185,15 @@ export function compileComponentRules(
  * One `selector { name: value; }` block from a resolved token map, or nothing
  * when empty. Names are written exactly as given: shared tokens already carry
  * the `--astryx-` prefix and theme-local tokens keep their own names.
- *
- * `important` lets a conditional write beat the theme's inline root values
- * while its media query matches, and only then.
  */
 export function tokenRule(
   selector: string,
   tokens: Readonly<Record<string, string>> | undefined,
   location: string,
-  important = false,
 ): string[] {
   const entries = Object.entries(tokens ?? {})
   if (entries.length === 0)
     return []
-  const body = declarationBlock(entries, location, { toProperty: name => name, important })
+  const body = declarationBlock(entries, location, { toProperty: name => name })
   return body ? [`${selector} {\n${body}\n}`] : []
 }

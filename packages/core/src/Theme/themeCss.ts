@@ -1,6 +1,8 @@
+import type { SyntaxThemeDefinition } from '../Code/syntaxTheme.js'
 import type { ResolvedThemeAdaptationRule } from './adaptationTypes.js'
 import type { MediaSurface } from './componentStyles.js'
 import type { ComponentStyleMap } from './types.js'
+import { syntaxThemeStyle } from '../Code/syntaxTheme.js'
 import { compileComponentRules, tokenRule } from './componentStyles.js'
 import { propGuardRules, touchesGuardedTargets } from './propGuards.js'
 import { bridgeComponentTokens } from './themeStyle.js'
@@ -16,6 +18,7 @@ export interface ThemeCssSource {
   onLight?: Readonly<Record<string, string>>
   onDarkComponents?: ComponentStyleMap
   onLightComponents?: ComponentStyleMap
+  syntax?: SyntaxThemeDefinition
 }
 
 /** Wrap rules in this theme's subtree, stopping at a nested theme. */
@@ -25,16 +28,29 @@ function scoped(themeName: string, rules: readonly string[]): string {
 }
 
 /**
- * Adapted tokens target the `Theme` wrapper only. `<html>` also carries the
- * outermost theme's name, so content teleported to `<body>` picks up the
- * component rules; tokens stay on the wrapper, where `Theme` writes the root
- * values inline, so a `Theme` that wraps one part of a page does not
- * recolor the rest of it.
+ * Token writes target the `Theme` wrapper itself, the scope root, and never
+ * `<html>`. `<html>` also carries the outermost theme's name so component rules
+ * reach content teleported to `<body>`; tokens stay on the wrapper, so a
+ * `Theme` that wraps one part of a page does not recolor the rest of it.
  */
-const TOKEN_TARGET = ':scope.astryx-theme'
+const TOKEN_SCOPE = ':scope.astryx-theme'
+
+/** Root token values: semantic tokens with their aliases, locals, syntax. */
+function rootTokens(source: ThemeCssSource): Record<string, string> {
+  const tokens = { ...bridgeComponentTokens(source.tokens), ...source.localTokens }
+  if (source.syntax)
+    Object.assign(tokens, syntaxThemeStyle(source.syntax))
+  return tokens
+}
+
+/** Token values one adaptation rule rewrites. */
+function adaptedTokens(rule: ResolvedThemeAdaptationRule): Record<string, string> {
+  return { ...bridgeComponentTokens(rule.tokens), ...rule.localTokens }
+}
 
 function rootRules(source: ThemeCssSource): string[] {
   const rules: string[] = []
+  rules.push(...tokenRule(TOKEN_SCOPE, rootTokens(source), ''))
   rules.push(...compileComponentRules(source.components, ''))
   rules.push(...propGuardRules(source.components))
   return rules
@@ -46,7 +62,7 @@ function adaptationBlocks(source: ThemeCssSource): string[] {
   for (const [index, rule] of rules.entries()) {
     const location = `adaptations[${index}].`
     const inner = [
-      ...tokenRule(TOKEN_TARGET, { ...bridgeComponentTokens(rule.tokens), ...rule.localTokens }, `${location}tokens`, true),
+      ...tokenRule(TOKEN_SCOPE, adaptedTokens(rule), `${location}tokens`),
       ...compileComponentRules(rule.components, location),
     ]
     if (inner.length > 0)
@@ -86,11 +102,11 @@ function surfaceRules(source: ThemeCssSource, surface: MediaSurface): string[] {
  * specificity. Every block is scoped to this theme and stops at a nested
  * theme, so an inner theme's components keep their own styling.
  *
- * Root tokens are not in the sheet: `Theme` writes them inline on its
- * wrapper, so two `Theme`s that share a name still keep their own values. An
- * adaptation's token writes are `!important`, which is what lets them beat
- * those inline values while their media query matches. A nested theme
- * inherits every token it does not set, adapted or not.
+ * Root tokens are the first rule of the sheet, written on the `Theme` wrapper.
+ * An adaptation's token writes land in a later block with the same selector, so
+ * a matching media query wins by source order. No declaration here outranks a
+ * user rule, so a user can still override a token with ordinary specificity.
+ * A nested theme inherits every token it does not set, adapted or not.
  */
 export function compileThemeCss(source: ThemeCssSource): string | undefined {
   const blocks: string[] = []

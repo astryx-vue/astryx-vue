@@ -22,7 +22,7 @@ describe('theme-local tokens', () => {
   it('reach the Theme root with their exact names', () => {
     const theme = defineTheme({ name: 'brand-root', localTokens: { '--brand-ink': '#123456' } })
     const wrapper = mount(Theme, { props: { theme }, slots: { default: 'x' } })
-    expect(wrapper.element.style.getPropertyValue('--brand-ink')).toBe('#123456')
+    expect(wrapper.get('[data-astryx-theme-style]').text()).toContain('--brand-ink: #123456;')
     wrapper.unmount()
   })
 
@@ -63,7 +63,9 @@ describe('theme-local tokens', () => {
       adaptations: { rules: [{ when: { pointer: 'coarse' }, value: { localTokens: { '--brand-ink': '#222222' } } }] },
     })
     expect(theme.adaptationRules?.[0]?.localTokens).toEqual({ '--brand-ink': '#222222' })
-    expect(theme.css).toContain('--brand-ink: #222222 !important;')
+    expect(theme.css).toContain('--brand-ink: #222222;')
+    // The root value stays first, so the matching rule wins by source order.
+    expect(theme.css!.indexOf('--brand-ink: #111111;')).toBeLessThan(theme.css!.indexOf('--brand-ink: #222222;'))
     expect(() => defineTheme({
       name: 'adapt-new',
       adaptations: { rules: [{ when: { pointer: 'coarse' }, value: { localTokens: { '--brand-new': 'red' } } }] },
