@@ -83,7 +83,7 @@ const brand = defineTheme({
 几点细节：
 
 - `:hover` 只对能点的控件生效，禁用的按钮不会因为鼠标悬停而变色。
-- `card`、`dialog`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。
+- `card`、`dialog`、`bottom-sheet`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。`chat` 的 `borderRadius` 和 `padding` 会写到输入区的圆角和内边距上，`progress-bar-mark` 的 `width` 和 `height` 会写到那根刻度线上。
 
 ### 旧写法已经不再支持
 
@@ -154,6 +154,7 @@ defineTheme({
 - `value` 能写的东西和主题本身一样。只写了一半的字号阶梯、圆角或动效，缺的部分会从主题自己的设置里补上。
 - 规则按顺序在主题之后生效，同时满足好几条时，后面的赢。
 - 这些规则只通过 CSS 生效，`useTheme().token()` 读到的始终是主题本身的值。
+- 规则里的变量在条件成立时是带着 `!important` 写进样式表的，所以它会盖过 `Theme` 外层元素上同名变量的样式表声明和普通内联值。想覆盖它，就把值写在子元素上，或者自己也用 `!important`。
 
 ### 继承 `extends`
 

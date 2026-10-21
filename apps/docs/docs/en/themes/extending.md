@@ -77,7 +77,7 @@ Run-together and camelCase names are not targets. `defineTheme()` throws for `bu
 
 Components also do not render bare value classes such as `.primary` or `.sm`. A selector like `.astryx-button.primary` in your own CSS becomes `.astryx-button[data-variant="primary"]`.
 
-A `:hover` style applies to the enabled control only. Disabled and `aria-disabled` elements skip it. For `card`, `dialog`, `dropdown-menu`, `context-menu`, and `segmented-control`, a themed `borderRadius` or `padding` also reaches the inner parts that follow it, such as a card's header corners.
+A `:hover` style applies to the enabled control only. Disabled and `aria-disabled` elements skip it. For `card`, `dialog`, `bottom-sheet`, `dropdown-menu`, `context-menu`, and `segmented-control`, a themed `borderRadius` or `padding` also reaches the inner parts that follow it, such as a card's header corners. On `chat` a themed `borderRadius` and `padding` land on the composer, and on `progress-bar-mark` a themed `width` and `height` land on the tick itself.
 
 ### Local tokens
 
@@ -85,7 +85,7 @@ A `:hover` style applies to the enabled control only. Disabled and `aria-disable
 
 ### Adaptations
 
-`adaptations.rules` is an ordered list of `{ when, value }`. `when` can hold a width range by named breakpoint (`sm` 640, `md` 768, `lg` 1024, `xl` 1280, `2xl` 1536 CSS px; change them with `widthBreakpoints`), a `pointer` of `coarse` or `fine`, a `contrast` preference, and a reduced-`motion` preference. Every field in one `when` must match. `value` can set the same things a theme does. A partial type scale, radius, or motion is completed from the theme's own config. Rules apply after the theme, in order, so a later matching rule wins. They apply through CSS only: `useTheme().token()` keeps returning the theme's root values.
+`adaptations.rules` is an ordered list of `{ when, value }`. `when` can hold a width range by named breakpoint (`sm` 640, `md` 768, `lg` 1024, `xl` 1280, `2xl` 1536 CSS px; change them with `widthBreakpoints`), a `pointer` of `coarse` or `fine`, a `contrast` preference, and a reduced-`motion` preference. Every field in one `when` must match. `value` can set the same things a theme does. A partial type scale, radius, or motion is completed from the theme's own config. Rules apply after the theme, in order, so a later matching rule wins. They apply through CSS only: `useTheme().token()` keeps returning the theme's root values. An adapted token is written with `!important`, so while its condition matches it overrides stylesheet declarations and plain inline values for the same token on the `Theme` wrapper. To override it, set the value on a child element, or use `!important` yourself.
 
 ### `extends`
 
