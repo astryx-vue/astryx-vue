@@ -14,11 +14,11 @@ mindmap
       ✅ A3 工程质量护栏
       ✅ A4 蜂群基础设施
     阶段 B 公共底座：核心共享层
-      🔴 B1 主题系统与设计变量
+      🔷 B1 主题系统与设计变量
       🔵 B2 基础重置样式
       ✅ B3 交互逻辑常用函数
       🔷 B4 浮层图层运行时
-      🔴 B5 界面文案与图标
+      🔷 B5 界面文案与图标
       ⬜ B6 属性规则与样式分层
       🔵 B7 常用工具函数
     阶段 C 组件家族同步
@@ -313,11 +313,11 @@ flowchart TB
 | A2 | 视觉对照工具 | — | ✅ 已完成 | 1 | A2-impl | A2-verify | 通过 24/24 | 8d35ed7 |
 | A3 | 工程护栏 | — | ✅ 已完成 | 2 | A3-impl-r2 | A3-verify-r2 | 第 2 轮通过 26/26，两种模式都通过 | 163f333 9a1d2f2 |
 | A4 | 蜂群基础设施 | A1 A2 A3 | ✅ 已完成 | 2 | A4-impl-r2 | A4-verify-r2 | 第 2 轮通过 33/33 | 00fd7d0 |
-| B1 | 主题系统与 token | A4 | 🔴 返工中 | 2 | B1-impl-r2 | B1-verify | 第 1 轮 16/17：MediaTheme auto 在 mode 切换后不重测 | |
+| B1 | 主题系统与 token | A4 | 🔷 验收中 | 2 | B1-impl-r2 | B1-verify-r2 | 第 1 轮 16/17：MediaTheme auto 在 mode 切换后不重测 | |
 | B2 | reset 与基础样式 | A4 | 🔵 可开工 | 0 | | | | |
 | B3 | 交互底座 composables | A4 | ✅ 已完成 | 1 | B3-impl | B3-verify | 通过 17/17 | 2b22513 |
 | B4 | 浮层运行时 Layer | B3 | 🔷 验收中 | 1 | B4-impl | B4-verify | | |
-| B5 | 文案与图标 | A4 | 🔴 返工中 | 2 | B5-impl-r2 | B5-verify | 第 1 轮 15/16：回报里 Pagination 读屏名的说法和事实不符 | |
+| B5 | 文案与图标 | A4 | 🔷 验收中 | 2 | B5-impl-r2 | B5-verify-r2 | 第 1 轮 15/16：回报里 Pagination 读屏名的说法和事实不符 | |
 | B6 | 公共 props 规则 | B1 | ⬜ 未开始 | 0 | | | | |
 | B7 | 工具函数 utils | A4 | 🔵 可开工 | 0 | | | | |
 | C1 | 基础输入 | B1 B2 B3 B5 B6 | ⬜ 未开始 | 0 | | | | |
