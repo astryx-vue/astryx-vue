@@ -1,5 +1,6 @@
-import type { ComputedRef, InjectionKey } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { ButtonSize } from '../Button/types.js'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
 /**
  * What a ToggleButton reads from its group.
@@ -19,4 +20,7 @@ export interface ToggleButtonGroupContextValue {
   isDisabled: ComputedRef<boolean>
 }
 
-export const toggleButtonGroupContextKey: InjectionKey<ToggleButtonGroupContextValue> = Symbol('astryx-toggle-button-group')
+export const toggleButtonGroupContextKey = defineLayerScopedKey<ToggleButtonGroupContextValue | null>(
+  'astryx-toggle-button-group',
+  null,
+)

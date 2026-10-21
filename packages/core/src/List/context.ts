@@ -1,6 +1,7 @@
 import type { ComputedRef, InjectionKey } from 'vue'
 import type { ListDensity, ListEdgeCompensation, ListMarkerStyle } from './types.js'
 import { computed, inject } from 'vue'
+import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
 /**
  * What a `List` tells the rows inside it.
@@ -16,11 +17,11 @@ export interface ListContextValue {
   edgeCompensation: ComputedRef<ListEdgeCompensation | undefined>
 }
 
-export const listContextKey: InjectionKey<ListContextValue> = Symbol('astryx-list-context')
+export const listContextKey = defineLayerScopedKey<ListContextValue | undefined>('astryx-list-context', undefined)
 
 /** The surrounding list, or `undefined` when the row stands alone. */
 export function useListContext(): ListContextValue | undefined {
-  return inject(listContextKey, undefined)
+  return readLayerScoped(listContextKey)
 }
 
 export const itemDescriptionContextKey: InjectionKey<ComputedRef<string | null>> = Symbol('astryx-item-description')

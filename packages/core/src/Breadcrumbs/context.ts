@@ -1,4 +1,7 @@
-import type { InjectionKey } from 'vue'
 import type { BreadcrumbContextValue } from './types.js'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
-export const breadcrumbContextKey: InjectionKey<Readonly<BreadcrumbContextValue>> = Symbol('breadcrumbContext')
+export const breadcrumbContextKey = defineLayerScopedKey<Readonly<BreadcrumbContextValue> | undefined>(
+  'breadcrumbContext',
+  undefined,
+)

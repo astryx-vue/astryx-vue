@@ -2,7 +2,7 @@ import type { ComputedRef, InjectionKey } from 'vue'
 import type { DropdownMenuSize } from './types.js'
 import type { MenuDrillIn } from './useMenuDrillIn.js'
 import { inject } from 'vue'
-import { registerLayerScopedContext } from '../layer/scopedProvide.js'
+import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
 /**
  * What a `DropdownMenu` tells the rows inside it.
@@ -30,14 +30,15 @@ export interface DropdownMenuContextValue {
   moveDialogTab: (event: KeyboardEvent, isFromFlyout?: boolean) => void
 }
 
-export const dropdownMenuContextKey: InjectionKey<DropdownMenuContextValue> = Symbol('astryx-dropdown-menu-context')
-
 // 菜单的关闭入口只在这一层菜单里成立。进了别的浮层要丢掉外层那份，所以登记成成员关系。
-registerLayerScopedContext(dropdownMenuContextKey, undefined)
+export const dropdownMenuContextKey = defineLayerScopedKey<DropdownMenuContextValue | undefined>(
+  'astryx-dropdown-menu-context',
+  undefined,
+)
 
 /** The surrounding menu, or `undefined` when a row stands alone. */
 export function useDropdownMenuContext(): DropdownMenuContextValue | undefined {
-  return inject(dropdownMenuContextKey, undefined)
+  return readLayerScoped(dropdownMenuContextKey)
 }
 
 /** Single-select state owned by `DropdownMenuRadioGroup`. */

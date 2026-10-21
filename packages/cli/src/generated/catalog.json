@@ -1061,12 +1061,12 @@
       "importPath": "@astryx-vue/core/ContextMenu",
       "exportName": "ContextMenu",
       "summary": {
-        "en": "`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.",
-        "zh": "`ContextMenu` 为某一块界面提供上下文操作：用户在触发器区域内点右键（或按下键盘的菜单键、在触屏上长按），菜单就在指针位置展开。它适合列表行、画布、文件节点、表格单元格这类「操作属于某个具体对象、又不想为每个对象摆一排按钮」的场景。菜单里的每一行和普通菜单一样可以带图标、说明、快捷键位和禁用状态。"
+        "en": "`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. When `label` is omitted, the menu's name follows the active locale (`Context menu` in English). It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.",
+        "zh": "`ContextMenu` 为某一块界面提供上下文操作：用户在触发器区域内点右键（或按下键盘的菜单键、在触屏上长按），菜单就在指针位置展开。不写 `label` 时，菜单名字跟着当前语言，中文是「快捷菜单」。它适合列表行、画布、文件节点、表格单元格这类「操作属于某个具体对象、又不想为每个对象摆一排按钮」的场景。菜单里的每一行和普通菜单一样可以带图标、说明、快捷键位和禁用状态。"
       },
       "usage": {
-        "en": "`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.\n\nThe pointer position is converted into the trigger's own coordinates and materialized as a zero-size anchor, so the panel is positioned relative to the trigger rather than the viewport. It follows the content when the page scrolls, flips above the pointer near the bottom edge, and never leaves the screen.\n\nThere are two ways to describe the content. The data-driven one hands the rows to `items`:\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: 'Rename', icon: 'i-carbon-tools' },\n  { label: 'Copy link', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: 'Delete', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"File actions\">\n    <div>Right-click here</div>\n  </ContextMenu>\n</template>\n```\n\nAn entry can be an action, a divider, a section, a checkbox row, or a radio group. An action that also carries nested entries becomes a submenu. A checkbox row carries whether it is on and a change callback, and toggling it leaves the menu open. A radio group carries the current value and its options, and choosing one closes the menu. When the menu is composed by hand, those rows go in the content slot under the context menu's own names, and they behave like the dropdown menu's rows. Put the built-in icon in the icon slot and pass its name.\n\nWhen the menu needs to be composed by hand, use the `content` slot with the exported menu components instead. Both styles share one keyboard model:\n\n```vue\n<template>\n  <ContextMenu label=\"File actions\">\n    <div>Right-click here</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"Rename\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"Danger zone\">\n        <ContextMenuItem label=\"Delete\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\nOpen state is managed for you: a right-click opens the menu, and a click outside, Escape, or Tab closes it. Every change is reported through the `openChange` event. Bind `v-model:is-open` when something outside the component should decide, and the menu renders exactly the bound value.\n\nFocus lands on the first available row when the menu opens. The arrow keys move between rows and wrap at both ends, Home and End jump to the first and last row, PageDown and PageUp move by a screenful, and typing letters jumps to the next row whose label starts with them — pressing the same letter again cycles through the matches. Enter and Space activate the focused row, Escape closes the menu and returns focus to whatever was focused before it opened, and Tab closes the menu while letting the browser move focus on from there. A disabled row is marked `aria-disabled`, leaves the tab order, and is skipped by both the arrow keys and typeahead. The surface is `role=\"menu\"`, rows are `role=\"menuitem\"`, sections are `role=\"group\"`, and dividers are `role=\"separator\"`.\n\nA submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row. It can also be forced to always fly out or always replace the rows. While the next level is loading, the caret can become a spinner.\n\n`isDisabled` stops the component intercepting the right-click, so the browser's own menu still appears and people keep their spell-check, copy, and inspect tools. `triggerAs` decides whether the trigger renders as a block `div` or an inline `span`; the inline form lets a word inside running prose own a context menu without breaking the layout.\n\nThe panel is at least 160px wide and grows with its rows unless `menuWidth` pins a width; either way it is capped to the viewport, and content taller than 300px scrolls inside it. `size` changes only the rows' block padding, from `sm` to `lg`.",
-        "zh": "`ContextMenu` 为某一块界面提供上下文操作：用户在触发器区域内点右键（或按下键盘的菜单键、在触屏上长按），菜单就在指针位置展开。它适合列表行、画布、文件节点、表格单元格这类「操作属于某个具体对象、又不想为每个对象摆一排按钮」的场景。菜单里的每一行和普通菜单一样可以带图标、说明、快捷键位和禁用状态。\n\n指针位置会被换算成触发器内部的坐标，并落在一个零尺寸的锚点上，因此菜单是相对触发器定位而不是相对视口定位的：页面滚动时它跟着内容走，靠近视口下缘时会自动翻到上方，而不会跑出屏幕。\n\n内容有两种写法。数据驱动的方式把菜单项交给 `items`：\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: '重命名', icon: 'i-carbon-tools' },\n  { label: '复制链接', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: '删除', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"文件操作\">\n    <div>在这里点右键</div>\n  </ContextMenu>\n</template>\n```\n\n数组里的元素可以是动作、分隔线、分组、勾选行或单选组。动作再带上下一级条目就会变成子菜单。勾选行用当前是否选中和变更回调描述，点一下默认不关闭菜单；单选组用当前值和选项列表描述，选中一项后默认关闭。自己组合菜单时，这些行写进内容插槽，组件名是上下文菜单自己的，行为和上面的下拉菜单相同。图标放进图标插槽，使用内置图标并传入图标名。\n\n菜单内容需要自己组合时，改用 `content` 插槽，并用导出的菜单组件搭出结构。两种写法共用同一套键盘行为：\n\n```vue\n<template>\n  <ContextMenu label=\"文件操作\">\n    <div>在这里点右键</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"重命名\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"危险操作\">\n        <ContextMenuItem label=\"删除\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\n开关状态默认由组件自己管理：右键打开，点击菜单外部、按 Escape、按 Tab 都会关闭。每次开关都会通过 `openChange` 事件报告新状态。需要由外部决定是否展开时，用 `v-model:is-open` 绑定状态，此时组件完全跟随绑定的值。\n\n打开后焦点会落到第一个可用的条目上。上下方向键在条目之间移动并在两端循环，Home/End 跳到首尾，PageDown/PageUp 按一屏翻动，直接键入字母会跳到标签以这些字母开头的条目（反复按同一个字母会在匹配项之间轮转）。Enter 和空格执行当前条目，Escape 关闭菜单并把焦点交还给打开菜单前聚焦的元素，Tab 则关闭菜单并让浏览器继续从那里往后移动焦点。被禁用的条目会带 `aria-disabled`、退出 Tab 顺序，同时被方向键和键入跳转跳过。菜单本身是 `role=\"menu\"`，条目是 `role=\"menuitem\"`，分组是 `role=\"group\"`，分隔线是 `role=\"separator\"`。\n\n子菜单在宽屏上向旁边展开。在紧凑触控界面上，下一级会换掉当前面板里的行，并在顶部给出返回。也可以强制始终飞出或始终钻入。行还在加载时，箭头可以换成转圈。\n\n`isDisabled` 会让组件不再拦截右键：原生浏览器菜单照常出现，这样用户可以复制文字或使用浏览器自带的功能。`triggerAs` 决定触发器渲染成块级 `div` 还是行内 `span`，后者让一段行文中的词也能拥有自己的上下文菜单而不破坏排版。\n\n菜单面板的宽度默认至少 160px 并随内容伸缩，`menuWidth` 可以给出确定宽度；无论哪种方式，面板都不会超出视口，超长内容会换行并被限制在最高 300px 的滚动区域内。`size` 只改变条目的上下内边距，`sm`、`md`、`lg` 依次更宽松。"
+        "en": "`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. When `label` is omitted, the menu's name follows the active locale (`Context menu` in English). It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.\n\nThe pointer position is converted into the trigger's own coordinates and materialized as a zero-size anchor, so the panel is positioned relative to the trigger rather than the viewport. It follows the content when the page scrolls, flips above the pointer near the bottom edge, and never leaves the screen.\n\nThere are two ways to describe the content. The data-driven one hands the rows to `items`:\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: 'Rename', icon: 'i-carbon-tools' },\n  { label: 'Copy link', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: 'Delete', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"File actions\">\n    <div>Right-click here</div>\n  </ContextMenu>\n</template>\n```\n\nAn entry can be an action, a divider, a section, a checkbox row, or a radio group. An action that also carries nested entries becomes a submenu. A checkbox row carries whether it is on and a change callback, and toggling it leaves the menu open. A radio group carries the current value and its options, and choosing one closes the menu. When the menu is composed by hand, those rows go in the content slot under the context menu's own names, and they behave like the dropdown menu's rows. Put the built-in icon in the icon slot and pass its name.\n\nWhen the menu needs to be composed by hand, use the `content` slot with the exported menu components instead. Both styles share one keyboard model:\n\n```vue\n<template>\n  <ContextMenu label=\"File actions\">\n    <div>Right-click here</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"Rename\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"Danger zone\">\n        <ContextMenuItem label=\"Delete\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\nOpen state is managed for you: a right-click opens the menu, and a click outside, Escape, or Tab closes it. Every change is reported through the `openChange` event. Bind `v-model:is-open` when something outside the component should decide, and the menu renders exactly the bound value.\n\nFocus lands on the first available row when the menu opens. The arrow keys move between rows and wrap at both ends, Home and End jump to the first and last row, PageDown and PageUp move by a screenful, and typing letters jumps to the next row whose label starts with them — pressing the same letter again cycles through the matches. Enter and Space activate the focused row, Escape closes the menu and returns focus to whatever was focused before it opened, and Tab closes the menu while letting the browser move focus on from there. A disabled row is marked `aria-disabled`, leaves the tab order, and is skipped by both the arrow keys and typeahead. The surface is `role=\"menu\"`, rows are `role=\"menuitem\"`, sections are `role=\"group\"`, and dividers are `role=\"separator\"`.\n\nA submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row. It can also be forced to always fly out or always replace the rows. While the next level is loading, the caret can become a spinner.\n\n`isDisabled` stops the component intercepting the right-click, so the browser's own menu still appears and people keep their spell-check, copy, and inspect tools. `triggerAs` decides whether the trigger renders as a block `div` or an inline `span`; the inline form lets a word inside running prose own a context menu without breaking the layout.\n\nThe panel is at least 160px wide and grows with its rows unless `menuWidth` pins a width; either way it is capped to the viewport, and content taller than 300px scrolls inside it. `size` changes only the rows' block padding, from `sm` to `lg`.",
+        "zh": "`ContextMenu` 为某一块界面提供上下文操作：用户在触发器区域内点右键（或按下键盘的菜单键、在触屏上长按），菜单就在指针位置展开。不写 `label` 时，菜单名字跟着当前语言，中文是「快捷菜单」。它适合列表行、画布、文件节点、表格单元格这类「操作属于某个具体对象、又不想为每个对象摆一排按钮」的场景。菜单里的每一行和普通菜单一样可以带图标、说明、快捷键位和禁用状态。\n\n指针位置会被换算成触发器内部的坐标，并落在一个零尺寸的锚点上，因此菜单是相对触发器定位而不是相对视口定位的：页面滚动时它跟着内容走，靠近视口下缘时会自动翻到上方，而不会跑出屏幕。\n\n内容有两种写法。数据驱动的方式把菜单项交给 `items`：\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: '重命名', icon: 'i-carbon-tools' },\n  { label: '复制链接', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: '删除', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"文件操作\">\n    <div>在这里点右键</div>\n  </ContextMenu>\n</template>\n```\n\n数组里的元素可以是动作、分隔线、分组、勾选行或单选组。动作再带上下一级条目就会变成子菜单。勾选行用当前是否选中和变更回调描述，点一下默认不关闭菜单；单选组用当前值和选项列表描述，选中一项后默认关闭。自己组合菜单时，这些行写进内容插槽，组件名是上下文菜单自己的，行为和上面的下拉菜单相同。图标放进图标插槽，使用内置图标并传入图标名。\n\n菜单内容需要自己组合时，改用 `content` 插槽，并用导出的菜单组件搭出结构。两种写法共用同一套键盘行为：\n\n```vue\n<template>\n  <ContextMenu label=\"文件操作\">\n    <div>在这里点右键</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"重命名\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"危险操作\">\n        <ContextMenuItem label=\"删除\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\n开关状态默认由组件自己管理：右键打开，点击菜单外部、按 Escape、按 Tab 都会关闭。每次开关都会通过 `openChange` 事件报告新状态。需要由外部决定是否展开时，用 `v-model:is-open` 绑定状态，此时组件完全跟随绑定的值。\n\n打开后焦点会落到第一个可用的条目上。上下方向键在条目之间移动并在两端循环，Home/End 跳到首尾，PageDown/PageUp 按一屏翻动，直接键入字母会跳到标签以这些字母开头的条目（反复按同一个字母会在匹配项之间轮转）。Enter 和空格执行当前条目，Escape 关闭菜单并把焦点交还给打开菜单前聚焦的元素，Tab 则关闭菜单并让浏览器继续从那里往后移动焦点。被禁用的条目会带 `aria-disabled`、退出 Tab 顺序，同时被方向键和键入跳转跳过。菜单本身是 `role=\"menu\"`，条目是 `role=\"menuitem\"`，分组是 `role=\"group\"`，分隔线是 `role=\"separator\"`。\n\n子菜单在宽屏上向旁边展开。在紧凑触控界面上，下一级会换掉当前面板里的行，并在顶部给出返回。也可以强制始终飞出或始终钻入。行还在加载时，箭头可以换成转圈。\n\n`isDisabled` 会让组件不再拦截右键：原生浏览器菜单照常出现，这样用户可以复制文字或使用浏览器自带的功能。`triggerAs` 决定触发器渲染成块级 `div` 还是行内 `span`，后者让一段行文中的词也能拥有自己的上下文菜单而不破坏排版。\n\n菜单面板的宽度默认至少 160px 并随内容伸缩，`menuWidth` 可以给出确定宽度；无论哪种方式，面板都不会超出视口，超长内容会换行并被限制在最高 300px 的滚动区域内。`size` 只改变条目的上下内边距，`sm`、`md`、`lg` 依次更宽松。"
       },
       "practices": {
         "en": [
@@ -1164,7 +1164,7 @@
               {
                 "name": "`label`",
                 "type": "`string`",
-                "default": "`'Context menu'`",
+                "default": "the active locale (`Context menu` in English)",
                 "description": "Accessible name of the menu, announced through the panel's `aria-label` when it opens."
               },
               {
@@ -1213,7 +1213,7 @@
               {
                 "name": "`label`",
                 "type": "`string`",
-                "default": "`'Context menu'`",
+                "default": "随当前语言，英文 `Context menu`，中文「快捷菜单」",
                 "description": "菜单的无障碍名称，作为面板的 `aria-label` 在打开时被朗读。"
               },
               {
@@ -1731,8 +1731,8 @@
         "zh": "`DropdownMenu`（下拉菜单）把一个按钮变成一组操作的快捷入口。触发按钮平时不占地方，点击后才会在旁边弹出一列菜单项；用户点选其中一项后菜单就会自动收起，光标焦点也会自然地还给原按钮。它非常适合用来承载下一步要做的事情，比如表格行右侧的“更多操作”（重命名、复制、导出、删除等）。"
       },
       "usage": {
-        "en": "`DropdownMenu` turns a button into the entry point for a small set of actions. The button stays quiet; the menu appears next to it when opened, closes as soon as an action is picked, and gives focus back to the button. It is the right shape for \"what do I do next\" — rename, duplicate, archive, delete — when the actions are one flat level deep.\n\nThe shortest form is an `items` array, where each entry is one action:\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\n</script>\n\n<template>\n  <DropdownMenu\n    :button=\"{ label: 'Actions' }\"\n    :items=\"[\n      { label: 'Edit project', icon: 'i-carbon-tools', onClick: () => edit() },\n      { label: 'Duplicate project', icon: 'i-carbon-copy', onClick: () => duplicate() },\n      { label: 'Delete project', icon: 'i-carbon-trash-can', variant: 'destructive', onClick: () => remove() },\n    ]\"\n  />\n</template>\n```\n\nAn entry can be an action, a divider, a titled group, a checkbox row, or a radio group. An action says what happens next. A checkbox row carries whether it is on. A radio group carries the selected value and lists its options. Those rows are also documented on their own pages: [Dropdown Menu Checkbox Item](/en/components/dropdown-menu-checkbox-item), [Dropdown Menu Radio Group](/en/components/dropdown-menu-radio-group), and [Dropdown Menu Radio Item](/en/components/dropdown-menu-radio-item). When the rows follow page state, or you want to lay them out yourself, use the default slot and the matching row components. Both forms draw the same structure. In a template, put the built-in icon in the icon slot and pass its name. In the data array, pass an icon component or a CSS icon class.\n\nThe trigger is the design system's `Button` by default. Pass its props through `button` (`variant`, `size`, `isIconOnly`, …); `size` also sets the height of the menu rows, so a `size=\"sm\"` button goes with a compact menu. When the trigger is not a plain button — an icon button, an avatar, a row in a list — use the `trigger` slot instead and `v-bind` everything the slot hands you onto your own control. The menu then hangs off that control and takes its name from it.\n\n```vue\n<template>\n  <DropdownMenu>\n    <template #trigger=\"triggerProps\">\n      <IconButton v-bind=\"triggerProps\" icon=\"i-carbon-overflow-menu-horizontal\" label=\"More actions\" />\n    </template>\n\n    <DropdownMenuItem icon=\"i-carbon-tools\" label=\"Edit project\" @click=\"edit\" />\n  </DropdownMenu>\n</template>\n```\n\nOnce open, the menu owns the keyboard. The arrow keys move between rows and wrap at both ends, `Home` and `End` jump to the first and last row, `PageUp` and `PageDown` page through a long menu, and typing a letter jumps to the next row that starts with it (pressing the same letter again cycles through the matches). `Enter` and Space run the highlighted row, `Escape` or a press outside closes the menu and returns focus to the trigger, and `Tab` closes the menu as well so the browser keeps its own tab order. Moving the pointer over a row moves focus to it, so keyboard and pointer share one highlight and two rows are never lit at once.\n\nWhere the menu opens differs by how it was opened. A keyboard open puts focus on the first row (or the last one for `ArrowUp`); a pointer open only focuses the menu itself, so no row reads as already selected.\n\nThe panel places itself: it opens below the trigger, aligned to its start, and flips to the other side when there is no room — `placement` and `alignment` select among above/below/start/end and start/center/end. The width matches the trigger up to a 320px cap, or follows `menuWidth` (a length, or an intrinsic keyword such as `max-content`). The height is capped at 300px and scrolls past that; `menuMaxHeight` raises the cap in pixels for a menu that must fit all of its rows.\n\nUse a two-way binding on the open state when something outside the menu drives it. A menu that is mounted already open does not move focus — nobody asked for that open, and pulling focus out of the page loses the user's place.\n\nA checkbox row toggles one view setting. Activating it flips the state and leaves the menu open, so several settings can change in one visit. Radio rows belong in a radio group, and only one of them can be selected. Choosing one closes the menu, because the choice is made. Arrow keys still move across these rows, and Space or Enter toggles the highlighted one. A disabled row stays in the menu, but the arrows skip it and a click does not change it. The check mark and the radio dot are decorative; the whole row is the control. On a coarse pointer the mark moves to the end of the row.\n\nContent that is not an option can sit above or below the rows: a filter field, or a button that creates something. It is drawn in the same frame and is not part of the menu. Typing there does not jump to a row by its first letter. The menu itself is one tab stop in that frame. Shift+Tab from a row skips the menu element and lands on the last focusable control above it. Tab onward from the last control below, or Shift+Tab from the first control above, closes the menu. A pointer open does not paint a focus ring on the menu; the ring appears once keyboard focus later tabs onto it.\n\nA submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row at the top, named after the parent. That choice is made when the menu opens and does not change while it stays open. A submenu can also be forced to always fly out, or always replace the rows. While its children are still loading, the caret can become a spinner, and the submenu can still be opened. A flyout is at least about 160 pixels wide unless a width is set, and it never grows past the viewport.",
-        "zh": "`DropdownMenu`（下拉菜单）把一个按钮变成一组操作的快捷入口。触发按钮平时不占地方，点击后才会在旁边弹出一列菜单项；用户点选其中一项后菜单就会自动收起，光标焦点也会自然地还给原按钮。它非常适合用来承载下一步要做的事情，比如表格行右侧的“更多操作”（重命名、复制、导出、删除等）。\n\n**什么时候用：**\n- 需要在一个轻巧的按钮下折叠收起多个操作项，避免界面被过多按钮挤满时。\n\n**什么时候不要用：**\n- 如果是用于在网站的不同页面之间切换跳转，请使用专门的导航组件，不要用操作菜单来做网页导航。\n- 如果需要用户在里面填写复杂表单或输入文字，请改用模态对话框 [Dialog](/components/dialog)。\n- 如果核心操作只有一两个且非常高频，直接平铺摆放按钮比把它们藏进下拉菜单里更高效。\n\n最基础的用法只需要传一个 `items` 数组，每一项代表一个可执行动作：\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\n</script>\n\n<template>\n  <DropdownMenu\n    :button=\"{ label: '操作' }\"\n    :items=\"[\n      { label: '编辑项目', icon: 'i-carbon-tools', onClick: () => edit() },\n      { label: '复制项目', icon: 'i-carbon-copy', onClick: () => duplicate() },\n      { label: '删除项目', icon: 'i-carbon-trash-can', variant: 'destructive', onClick: () => remove() },\n    ]\"\n  />\n</template>\n```\n\n数组里可以放动作、分隔线、带标题的分组，也可以放勾选行和单选组。动作行写出要做的事；勾选行带着当前是否选中；单选组带着当前选中的值，里面再列各个选项。这几类行也有各自的页面：[下拉菜单勾选项](/components/dropdown-menu-checkbox-item)、[下拉菜单单选组](/components/dropdown-menu-radio-group)、[下拉菜单单选项](/components/dropdown-menu-radio-item)。菜单要跟着页面状态变，或者想自己排版时，改用默认插槽写对应的行组件，两种写法画出来的结构一致。自己写行时，把内置图标放进图标插槽并传入图标名；数据数组里则传入一个图标组件，或一个 CSS 图标类。\n\n触发按钮默认由设计系统的 `Button` 渲染，通过 `button` 传入它的属性（`variant`、`size`、`isIconOnly` 等）；`size` 会同时决定菜单行的高度，所以 `size=\"sm\"` 的按钮配一组紧凑的菜单行。当触发按钮不是普通按钮时——比如一个纯图标按钮、一个头像、列表里的一行——改用 `trigger` 插槽，并把插槽给出的属性整个 `v-bind` 到自己的控件上，菜单就会挂在这个控件旁边，并用它的名字作为无障碍名称。\n\n```vue\n<template>\n  <DropdownMenu>\n    <template #trigger=\"triggerProps\">\n      <IconButton v-bind=\"triggerProps\" icon=\"i-carbon-overflow-menu-horizontal\" label=\"更多操作\" />\n    </template>\n\n    <DropdownMenuItem icon=\"i-carbon-tools\" label=\"编辑项目\" @click=\"edit\" />\n  </DropdownMenu>\n</template>\n```\n\n打开之后，菜单接管键盘：上下方向键在动作之间移动并循环，`Home` 和 `End` 跳到首尾，`PageUp`/`PageDown` 翻一屏，直接键入字母会跳到以该字母开头的下一行（连续按同一个字母会在多个匹配项之间轮换），`Enter` 和空格执行当前这一行，`Escape` 或点击菜单外部收起菜单并把焦点还给触发按钮，`Tab` 也会收起菜单，然后按浏览器的顺序继续往后走。鼠标划过某一行时焦点会跟到那一行，所以键盘高亮和鼠标高亮永远是同一个，不会同时亮两行。\n\n用键盘打开和用鼠标打开有一个区别：键盘打开会把焦点放在第一行（按 `ArrowUp` 打开则放在最后一行），鼠标打开只把焦点放在菜单本身，不预选任何一行——否则用户会以为那一行已经被选中了。\n\n弹层会自己找位置：默认开在触发按钮下方左对齐，空间不够时翻到上方；`placement` 和 `alignment` 可以改成上/下/左/右和起点/居中/终点。菜单宽度默认与触发按钮齐平并封顶在 320px，`menuWidth` 可以给定宽度或 `max-content` 之类的关键字宽度；高度默认封顶 300px，超出就滚动，`menuMaxHeight` 可以按像素把上限抬高到刚好放下所有行。\n\n需要外部控制开关时用双向绑定菜单的展开状态。菜单在挂载时就处于打开状态的话，不会抢走焦点——这不是用户要求的打开动作，把焦点从页面里拽走会让人丢失位置。\n\n勾选行用来开关一项视图设置。点一下只翻转状态，菜单保持打开，方便连续改好几项。单选行必须放在单选组里，一组里一次只能选中一个；选完菜单收起，因为这次选择已经确定。方向键仍然在这些行之间移动，空格和回车会切换当前这一行。禁用的行留在菜单里，方向键会跳过它，点击也不会改变状态。勾选标记和单选圆点只是装饰，整行才是可操作的控件。粗指针设备上，标记会挪到行的末尾。\n\n菜单上方和下方可以放不属于选项的内容，比如一个筛选框，或一个新建按钮。它们画在同一个框里，但不算菜单项：在里面打字不会按字母跳行。菜单本身是这一段里的一个 Tab 停靠点。从某一行按 Shift+Tab，会跳过菜单元素，落到上方最后一个可聚焦控件；从下方最后一个控件继续往后 Tab，或从上方第一个控件往前 Tab，菜单就会收起。用指针打开时，菜单上不会先画出焦点环；之后用键盘 Tab 到菜单上，焦点环才出现。\n\n子菜单在宽屏上向旁边展开。在紧凑的触控界面上，同一级内容会换掉当前菜单里的行，并在顶部给出返回，返回文案会带上父级的名字。这个选择在菜单打开时定下来，打开期间不会再变。也可以强制始终旁边展开，或强制始终在原处替换。子菜单的行还在加载时，行尾的箭头可以换成转圈，菜单仍然能打开。飞出的面板默认至少大约 160 像素宽，也可以单独指定宽度，并且不会超出视口。"
+        "en": "`DropdownMenu` turns a button into the entry point for a small set of actions. The button stays quiet; the menu appears next to it when opened, closes as soon as an action is picked, and gives focus back to the button. It is the right shape for \"what do I do next\" — rename, duplicate, archive, delete — when the actions are one flat level deep.\n\nThe shortest form is an `items` array, where each entry is one action:\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\n</script>\n\n<template>\n  <DropdownMenu\n    :button=\"{ label: 'Actions' }\"\n    :items=\"[\n      { label: 'Edit project', icon: 'i-carbon-tools', onClick: () => edit() },\n      { label: 'Duplicate project', icon: 'i-carbon-copy', onClick: () => duplicate() },\n      { label: 'Delete project', icon: 'i-carbon-trash-can', variant: 'destructive', onClick: () => remove() },\n    ]\"\n  />\n</template>\n```\n\nAn entry can be an action, a divider, a titled group, a checkbox row, or a radio group. An action says what happens next. A checkbox row carries whether it is on. A radio group carries the selected value and lists its options. Those rows are also documented on their own pages: [Dropdown Menu Checkbox Item](/en/components/dropdown-menu-checkbox-item), [Dropdown Menu Radio Group](/en/components/dropdown-menu-radio-group), and [Dropdown Menu Radio Item](/en/components/dropdown-menu-radio-item). When the rows follow page state, or you want to lay them out yourself, use the default slot and the matching row components. Both forms draw the same structure. In a template, put the built-in icon in the icon slot and pass its name. In the data array, pass an icon component or a CSS icon class.\n\nThe trigger is the design system's `Button` by default. Pass its props through `button` (`variant`, `size`, `isIconOnly`, …); `size` also sets the height of the menu rows, so a `size=\"sm\"` button goes with a compact menu. When the trigger is not a plain button — an icon button, an avatar, a row in a list — use the `trigger` slot instead and `v-bind` everything the slot hands you onto your own control. The menu then hangs off that control and takes its name from it.\n\n```vue\n<template>\n  <DropdownMenu>\n    <template #trigger=\"triggerProps\">\n      <IconButton v-bind=\"triggerProps\" icon=\"i-carbon-overflow-menu-horizontal\" label=\"More actions\" />\n    </template>\n\n    <DropdownMenuItem icon=\"i-carbon-tools\" label=\"Edit project\" @click=\"edit\" />\n  </DropdownMenu>\n</template>\n```\n\nOnce open, the menu owns the keyboard. The arrow keys move between rows and wrap at both ends, `Home` and `End` jump to the first and last row, `PageUp` and `PageDown` page through a long menu, and typing a letter jumps to the next row that starts with it (pressing the same letter again cycles through the matches). `Enter` and Space run the highlighted row, `Escape` or a press outside closes the menu and returns focus to the trigger, and `Tab` closes the menu as well so the browser keeps its own tab order. Moving the pointer over a row moves focus to it, so keyboard and pointer share one highlight and two rows are never lit at once.\n\nWhere the menu opens differs by how it was opened. A keyboard open puts focus on the first row (or the last one for `ArrowUp`); a pointer open only focuses the menu itself, so no row reads as already selected.\n\nThe panel places itself: it opens below the trigger, aligned to its start, and flips to the other side when there is no room — `placement` and `alignment` select among above/below/start/end and start/center/end. The width matches the trigger up to a 320px cap, or follows `menuWidth` (a length, or an intrinsic keyword such as `max-content`). The height is capped at 300px and scrolls past that; `menuMaxHeight` raises the cap in pixels for a menu that must fit all of its rows.\n\nUse a two-way binding on the open state when something outside the menu drives it. A menu that is mounted already open does not move focus — nobody asked for that open, and pulling focus out of the page loses the user's place.\n\nA checkbox row toggles one view setting. Activating it flips the state and leaves the menu open, so several settings can change in one visit. Radio rows belong in a radio group, and only one of them can be selected. Choosing one closes the menu, because the choice is made. Arrow keys still move across these rows, and Space or Enter toggles the highlighted one. A disabled row stays in the menu, but the arrows skip it and a click does not change it. The check mark and the radio dot are decorative; the whole row is the control. On a coarse pointer the mark moves to the end of the row.\n\nContent that is not an option can sit above or below the rows: a filter field, or a button that creates something. The popover is then a modal dialog, and the trigger's `aria-haspopup` is `dialog`. Tab cycles the header, the menu as one stop, and the footer, wrapping at both ends, and the menu stays open. Typing in the header does not jump to a row by its first letter. Shift+Tab from a row lands on the last focusable control in the header. Without a header or a footer, Tab still closes the menu. A pointer open does not paint a focus ring on the menu; the ring appears once keyboard focus later returns to the trigger.\n\nA submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row at the top, named after the parent. That choice is made when the menu opens and does not change while it stays open. A submenu can also be forced to always fly out, or always replace the rows. While its children are still loading, the caret can become a spinner, and the submenu can still be opened. A flyout is at least about 160 pixels wide unless a width is set, and it never grows past the viewport.",
+        "zh": "`DropdownMenu`（下拉菜单）把一个按钮变成一组操作的快捷入口。触发按钮平时不占地方，点击后才会在旁边弹出一列菜单项；用户点选其中一项后菜单就会自动收起，光标焦点也会自然地还给原按钮。它非常适合用来承载下一步要做的事情，比如表格行右侧的“更多操作”（重命名、复制、导出、删除等）。\n\n**什么时候用：**\n- 需要在一个轻巧的按钮下折叠收起多个操作项，避免界面被过多按钮挤满时。\n\n**什么时候不要用：**\n- 如果是用于在网站的不同页面之间切换跳转，请使用专门的导航组件，不要用操作菜单来做网页导航。\n- 如果需要用户在里面填写复杂表单或输入文字，请改用模态对话框 [Dialog](/components/dialog)。\n- 如果核心操作只有一两个且非常高频，直接平铺摆放按钮比把它们藏进下拉菜单里更高效。\n\n最基础的用法只需要传一个 `items` 数组，每一项代表一个可执行动作：\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\n</script>\n\n<template>\n  <DropdownMenu\n    :button=\"{ label: '操作' }\"\n    :items=\"[\n      { label: '编辑项目', icon: 'i-carbon-tools', onClick: () => edit() },\n      { label: '复制项目', icon: 'i-carbon-copy', onClick: () => duplicate() },\n      { label: '删除项目', icon: 'i-carbon-trash-can', variant: 'destructive', onClick: () => remove() },\n    ]\"\n  />\n</template>\n```\n\n数组里可以放动作、分隔线、带标题的分组，也可以放勾选行和单选组。动作行写出要做的事；勾选行带着当前是否选中；单选组带着当前选中的值，里面再列各个选项。这几类行也有各自的页面：[下拉菜单勾选项](/components/dropdown-menu-checkbox-item)、[下拉菜单单选组](/components/dropdown-menu-radio-group)、[下拉菜单单选项](/components/dropdown-menu-radio-item)。菜单要跟着页面状态变，或者想自己排版时，改用默认插槽写对应的行组件，两种写法画出来的结构一致。自己写行时，把内置图标放进图标插槽并传入图标名；数据数组里则传入一个图标组件，或一个 CSS 图标类。\n\n触发按钮默认由设计系统的 `Button` 渲染，通过 `button` 传入它的属性（`variant`、`size`、`isIconOnly` 等）；`size` 会同时决定菜单行的高度，所以 `size=\"sm\"` 的按钮配一组紧凑的菜单行。当触发按钮不是普通按钮时——比如一个纯图标按钮、一个头像、列表里的一行——改用 `trigger` 插槽，并把插槽给出的属性整个 `v-bind` 到自己的控件上，菜单就会挂在这个控件旁边，并用它的名字作为无障碍名称。\n\n```vue\n<template>\n  <DropdownMenu>\n    <template #trigger=\"triggerProps\">\n      <IconButton v-bind=\"triggerProps\" icon=\"i-carbon-overflow-menu-horizontal\" label=\"更多操作\" />\n    </template>\n\n    <DropdownMenuItem icon=\"i-carbon-tools\" label=\"编辑项目\" @click=\"edit\" />\n  </DropdownMenu>\n</template>\n```\n\n打开之后，菜单接管键盘：上下方向键在动作之间移动并循环，`Home` 和 `End` 跳到首尾，`PageUp`/`PageDown` 翻一屏，直接键入字母会跳到以该字母开头的下一行（连续按同一个字母会在多个匹配项之间轮换），`Enter` 和空格执行当前这一行，`Escape` 或点击菜单外部收起菜单并把焦点还给触发按钮，`Tab` 也会收起菜单，然后按浏览器的顺序继续往后走。鼠标划过某一行时焦点会跟到那一行，所以键盘高亮和鼠标高亮永远是同一个，不会同时亮两行。\n\n用键盘打开和用鼠标打开有一个区别：键盘打开会把焦点放在第一行（按 `ArrowUp` 打开则放在最后一行），鼠标打开只把焦点放在菜单本身，不预选任何一行——否则用户会以为那一行已经被选中了。\n\n弹层会自己找位置：默认开在触发按钮下方左对齐，空间不够时翻到上方；`placement` 和 `alignment` 可以改成上/下/左/右和起点/居中/终点。菜单宽度默认与触发按钮齐平并封顶在 320px，`menuWidth` 可以给定宽度或 `max-content` 之类的关键字宽度；高度默认封顶 300px，超出就滚动，`menuMaxHeight` 可以按像素把上限抬高到刚好放下所有行。\n\n需要外部控制开关时用双向绑定菜单的展开状态。菜单在挂载时就处于打开状态的话，不会抢走焦点——这不是用户要求的打开动作，把焦点从页面里拽走会让人丢失位置。\n\n勾选行用来开关一项视图设置。点一下只翻转状态，菜单保持打开，方便连续改好几项。单选行必须放在单选组里，一组里一次只能选中一个；选完菜单收起，因为这次选择已经确定。方向键仍然在这些行之间移动，空格和回车会切换当前这一行。禁用的行留在菜单里，方向键会跳过它，点击也不会改变状态。勾选标记和单选圆点只是装饰，整行才是可操作的控件。粗指针设备上，标记会挪到行的末尾。\n\n菜单上方和下方可以放不属于选项的内容，比如一个筛选框，或一个新建按钮。这时整块弹出层是一个模态对话框：触发器的 `aria-haspopup` 是 `dialog`。页眉、菜单（算一个停靠点）和页脚里的控件用 Tab 循环，到头之后回到另一头，菜单保持打开。在页眉里打字不会按字母跳到某一行。从某一行按 Shift+Tab，会落到页眉里最后一个可聚焦控件。没有页眉和页脚时，Tab 仍然收起菜单。用指针打开时，菜单上不会先画出焦点环；之后用键盘把焦点移回触发器，焦点环才出现。\n\n子菜单在宽屏上向旁边展开。在紧凑的触控界面上，同一级内容会换掉当前菜单里的行，并在顶部给出返回，返回文案会带上父级的名字。这个选择在菜单打开时定下来，打开期间不会再变。也可以强制始终旁边展开，或强制始终在原处替换。子菜单的行还在加载时，行尾的箭头可以换成转圈，菜单仍然能打开。飞出的面板默认至少大约 160 像素宽，也可以单独指定宽度，并且不会超出视口。"
       },
       "practices": {
         "en": [
@@ -1828,7 +1828,7 @@
               {
                 "name": "`button`",
                 "type": "`DropdownMenuButtonProps`",
-                "default": "`{ label: 'Menu' }`",
+                "default": "the active locale (`{ label: 'Menu' }` in English)",
                 "description": "Props for the trigger button — every `Button` prop except `clickAction`, which would compete with the menu for the same click. `size` also sets the height of the menu rows."
               },
               {
@@ -2105,7 +2105,7 @@
               {
                 "name": "`button`",
                 "type": "`DropdownMenuButtonProps`",
-                "default": "`{ label: 'Menu' }`",
+                "default": "随当前语言，英文 `{ label: 'Menu' }`，中文按钮文案是「菜单」",
                 "description": "触发按钮的属性，等同于 `Button` 的属性（其中 `clickAction` 除外，避免和菜单抢同一次点击）。`size` 会同时决定菜单行的高度。"
               },
               {
@@ -4302,8 +4302,8 @@
         "zh": "`MoreMenu` 是一个以 `⋯` 图标为触发器的溢出菜单，用来收纳那些不需要一直显示的操作：表格行、卡片标题、工具栏的次要动作。触发器本身只是一个纯图标按钮，动作都在它展开的菜单里。"
       },
       "usage": {
-        "en": "`MoreMenu` is an overflow menu behind a `⋯` trigger. It holds the actions that do not need to stay visible: secondary actions in a table row, a card header, or a toolbar. The trigger is an icon-only button; everything it offers lives in the menu it opens.\n\nThe menu's content is described by an `items` array. A plain entry is one action, `type: 'divider'` is a hairline between groups, and `type: 'section'` is a titled group:\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\nThe trigger is icon-only, so `label` is its accessible name, the name of the menu itself, and the text of its tooltip. The default, `More options`, fits most interfaces; when the menu holds the actions of one specific thing, a more concrete phrase such as \"Project actions\" reads better. Use the `icon` slot to replace the three-dot artwork.\n\nWhere focus lands when the menu opens depends on how it was opened. A keyboard open (`Enter`, `Space`, `ArrowDown`, or `ArrowUp` on the trigger) lands on the first or the last row; a pointer open puts focus on the menu container and pre-highlights nothing, so no row reads as already selected. Once open, `ArrowDown` and `ArrowUp` move between rows and wrap at both ends, `Home` and `End` jump to the ends, typing a letter jumps to the next row starting with it, `Enter` and `Space` run the focused row, `Escape` closes the menu and returns focus to the trigger, and `Tab` closes the menu and lets the browser move on from the trigger. Disabled rows are skipped and stay out of the keyboard path.\n\nMouse and touch behave differently on purpose. With a mouse, the highlight follows the pointer while it is held and the release decides which row acts; releasing outside the menu dismisses it. With a finger, a release off the menu leaves it open, because the highlight is following the finger — the gesture ends when a row is picked, the trigger is tapped, or `Escape` is pressed. The `placement` and `alignment` props place the anchored menu beside the trigger and flip it when there is no room; an overflow menu usually wants `alignment=\"end\"`, so the menu lines up with the trigger's trailing edge.\n\n`presentation` decides the shape the actions arrive in. `popover` (the default) is the anchored surface; `bottom-sheet` is a modal panel at the bottom of the screen, sized for a thumb; `adaptive` keeps the anchored menu on pointer-driven layouts and uses the bottom panel at 768px and below when the primary pointer is coarse. Inside the bottom panel a submenu does not open a second panel: the view is replaced, its title becomes the submenu's own label, a back button appears, and `Escape` leaves the submenu before it closes the panel.\n\nThe open state can belong to the component or to you. Pass `isMenuOpen` to control it, usually with `v-model:isMenuOpen`; `openChange` fires every time an open or close is requested.",
-        "zh": "`MoreMenu` 是一个以 `⋯` 图标为触发器的溢出菜单，用来收纳那些不需要一直显示的操作：表格行、卡片标题、工具栏的次要动作。触发器本身只是一个纯图标按钮，动作都在它展开的菜单里。\n\n菜单的内容由 `items` 数组描述。普通项就是一次操作，`type: 'divider'` 是一条分隔线，`type: 'section'` 是一个带标题的分组：\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\n触发器只有图标，所以 `label` 就是它的无障碍名称，同时也是菜单本身的名字，以及悬停时的提示文字。默认值 `More options` 在大多数界面里都够用；当菜单里装的是特定对象的操作时，换成更具体的说法（例如“项目操作”）会更好。想换掉三点图标，用 `icon` 插槽。\n\n菜单打开的瞬间，焦点落在哪里取决于你是用什么方式打开的：键盘打开（在触发器上按 `Enter`、`Space`、`ArrowDown`、`ArrowUp`）落在第一项或最后一项上；鼠标点击打开则挂在菜单容器上，不预先高亮任何一行，避免看起来像是已经选中了什么。打开之后 `ArrowDown` 和 `ArrowUp` 在各项之间移动并首尾相接，`Home` 和 `End` 跳到首尾，输入字母会跳转到以该字母开头的下一项，`Enter` 和 `Space` 执行当前项，`Escape` 关闭并把焦点交回触发器，`Tab` 关闭菜单后让浏览器继续往后移动焦点。禁用项会被跳过，也不会进入键盘路径。\n\n鼠标的按下与抬起是被区分的：按住鼠标时高亮跟着指针走，抬起的落点决定执行哪一项；如果抬起时指针在菜单之外，菜单就关闭。触摸设备上的行为不同——手指松开不会关闭菜单，因为高亮正在跟着手指移动，只有点中某一项、点中触发器或按下 `Escape` 才算结束。点开菜单时用的如果是鼠标，菜单与触发器之间的距离和方向由 `placement` 与 `alignment` 决定，空间不足时会自动翻到另一侧；溢出菜单通常希望 `alignment=\"end\"`，让菜单和触发器的尾部对齐。\n\n`presentation` 决定动作以什么形态出现：`popover`（默认）是锚定在触发器旁边的浮层；`bottom-sheet` 是从底部弹出的模态面板，适合手指操作；`adaptive` 在“主指针为粗略指针且宽度不超过 768px”时用底部面板，其余情况用浮层。底部面板里子菜单不是飞出的小面板，而是就地换一个视图，面板中间的标题会跟着变成该子菜单的名字，左上角出现返回按钮，`Escape` 先退出子菜单再关闭整个面板。\n\n打开状态既可以由组件自己管理，也可以由你管理。传入 `isMenuOpen` 就进入受控模式，配合 `v-model:isMenuOpen` 使用；`openChange` 在每次请求打开或关闭时触发。"
+        "en": "`MoreMenu` is an overflow menu behind a `⋯` trigger. It holds the actions that do not need to stay visible: secondary actions in a table row, a card header, or a toolbar. The trigger is an icon-only button; everything it offers lives in the menu it opens.\n\nThe menu's content is described by an `items` array. A plain entry is one action, `type: 'divider'` is a hairline between groups, and `type: 'section'` is a titled group:\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\nThe trigger is icon-only, so `label` is its accessible name, the name of the menu itself, and the text of its tooltip. When `label` is omitted it follows the active locale: `More options` in English, 「更多选项」 in Chinese. When the menu holds the actions of one specific thing, a more concrete phrase such as \"Project actions\" reads better. Use the `icon` slot to replace the three-dot artwork.\n\nWhere focus lands when the menu opens depends on how it was opened. A keyboard open (`Enter`, `Space`, `ArrowDown`, or `ArrowUp` on the trigger) lands on the first or the last row; a pointer open puts focus on the menu container and pre-highlights nothing, so no row reads as already selected. Once open, `ArrowDown` and `ArrowUp` move between rows and wrap at both ends, `Home` and `End` jump to the ends, typing a letter jumps to the next row starting with it, `Enter` and `Space` run the focused row, `Escape` closes the menu and returns focus to the trigger, and `Tab` closes the menu and lets the browser move on from the trigger. Disabled rows are skipped and stay out of the keyboard path.\n\nMouse and touch behave differently on purpose. With a mouse, the highlight follows the pointer while it is held and the release decides which row acts; releasing outside the menu dismisses it. With a finger, a release off the menu leaves it open, because the highlight is following the finger — the gesture ends when a row is picked, the trigger is tapped, or `Escape` is pressed. The `placement` and `alignment` props place the anchored menu beside the trigger and flip it when there is no room; an overflow menu usually wants `alignment=\"end\"`, so the menu lines up with the trigger's trailing edge.\n\n`presentation` decides the shape the actions arrive in. `popover` (the default) is the anchored surface; `bottom-sheet` is a modal panel at the bottom of the screen, sized for a thumb; `adaptive` keeps the anchored menu on pointer-driven layouts and uses the bottom panel at 768px and below when the primary pointer is coarse. Inside the bottom panel a submenu does not open a second panel: the view is replaced, its title becomes the submenu's own label, a back button appears, and `Escape` leaves the submenu before it closes the panel.\n\nThe open state can belong to the component or to you. Pass `isMenuOpen` to control it, usually with `v-model:isMenuOpen`; `openChange` fires every time an open or close is requested.",
+        "zh": "`MoreMenu` 是一个以 `⋯` 图标为触发器的溢出菜单，用来收纳那些不需要一直显示的操作：表格行、卡片标题、工具栏的次要动作。触发器本身只是一个纯图标按钮，动作都在它展开的菜单里。\n\n菜单的内容由 `items` 数组描述。普通项就是一次操作，`type: 'divider'` 是一条分隔线，`type: 'section'` 是一个带标题的分组：\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\n触发器只有图标，所以 `label` 就是它的无障碍名称，同时也是菜单本身的名字，以及悬停时的提示文字。不写 `label` 时跟着当前语言，中文是「更多选项」，英文是 `More options`。当菜单里装的是特定对象的操作时，换成更具体的说法（例如“项目操作”）会更好。想换掉三点图标，用 `icon` 插槽。\n\n菜单打开的瞬间，焦点落在哪里取决于你是用什么方式打开的：键盘打开（在触发器上按 `Enter`、`Space`、`ArrowDown`、`ArrowUp`）落在第一项或最后一项上；鼠标点击打开则挂在菜单容器上，不预先高亮任何一行，避免看起来像是已经选中了什么。打开之后 `ArrowDown` 和 `ArrowUp` 在各项之间移动并首尾相接，`Home` 和 `End` 跳到首尾，输入字母会跳转到以该字母开头的下一项，`Enter` 和 `Space` 执行当前项，`Escape` 关闭并把焦点交回触发器，`Tab` 关闭菜单后让浏览器继续往后移动焦点。禁用项会被跳过，也不会进入键盘路径。\n\n鼠标的按下与抬起是被区分的：按住鼠标时高亮跟着指针走，抬起的落点决定执行哪一项；如果抬起时指针在菜单之外，菜单就关闭。触摸设备上的行为不同——手指松开不会关闭菜单，因为高亮正在跟着手指移动，只有点中某一项、点中触发器或按下 `Escape` 才算结束。点开菜单时用的如果是鼠标，菜单与触发器之间的距离和方向由 `placement` 与 `alignment` 决定，空间不足时会自动翻到另一侧；溢出菜单通常希望 `alignment=\"end\"`，让菜单和触发器的尾部对齐。\n\n`presentation` 决定动作以什么形态出现：`popover`（默认）是锚定在触发器旁边的浮层；`bottom-sheet` 是从底部弹出的模态面板，适合手指操作；`adaptive` 在“主指针为粗略指针且宽度不超过 768px”时用底部面板，其余情况用浮层。底部面板里子菜单不是飞出的小面板，而是就地换一个视图，面板中间的标题会跟着变成该子菜单的名字，左上角出现返回按钮，`Escape` 先退出子菜单再关闭整个面板。\n\n打开状态既可以由组件自己管理，也可以由你管理。传入 `isMenuOpen` 就进入受控模式，配合 `v-model:isMenuOpen` 使用；`openChange` 在每次请求打开或关闭时触发。"
       },
       "practices": {
         "en": [
@@ -4389,7 +4389,7 @@
               {
                 "name": "`label`",
                 "type": "`string`",
-                "default": "`'More options'`",
+                "default": "the active locale (`More options` in English)",
                 "description": "The trigger's accessible name, which is also the name of the menu itself and the text of its tooltip."
               },
               {
@@ -4559,7 +4559,7 @@
               {
                 "name": "`label`",
                 "type": "`string`",
-                "default": "`'More options'`",
+                "default": "随当前语言，英文 `More options`，中文「更多选项」",
                 "description": "触发按钮的无障碍名称，同时也是菜单本身的名字和悬停时的提示文字。"
               },
               {
@@ -16854,8 +16854,8 @@
         "zh": "`Markdown` 把 Markdown 源码渲染成正文。标题、段落、强调、链接、行内代码、代码块、引用、列表、任务列表、表格、分隔线和图片都可以用。表格、删除线和任务列表按 GFM 处理。尖括号里的网址和邮箱一直是链接。裸网址、`www.` 开头的主机名和裸邮箱，要等 `autolink` 设为 `gfm` 才变成链接。句末的标点留在链接外面。"
       },
       "usage": {
-        "en": "`Markdown` renders a Markdown source as prose. It covers headings, paragraphs, emphasis, links, inline code, code blocks, quotes, lists, task lists, tables, thematic breaks, and images. Tables, strikethrough, and task lists follow GFM. Angle-bracket URLs and emails are always links. A bare URL, a `www.` host, or a bare email becomes a link only when `autolink` is `gfm`. Trailing sentence punctuation stays outside the link.\n\nImport it from its own entry. Structural styles load with the component. Import the theme once in the application entry:\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## Title\\n\\nA **note**.\" />\n</template>\n```\n\nWhen `content` is omitted, text in the default slot is the source. The slot reads text only. It does not accept nodes that are already rendered.\n\nLinks have control characters removed. `javascript:`, `vbscript:`, and `data:text/html` do not become clickable targets; the link text stays. Images also reject every `data:` URL. Raw HTML is never executed. Tags are shown as text.\n\nCode blocks go through the existing `CodeBlock`, quotes through `Blockquote`, headings through `Heading`, and links through `Link`. Lists and tables use semantic elements, because the existing `List` component and the table export are interface controls rather than prose.\n\n`components` replaces the renderer for one kind of node. A custom component receives the node data as props and, when the node has content, that content as the default slot.\n\nThe values in `components` are component definitions and do not need to be reactive. A plain object works. If you put them inside `ref()` or `reactive()`, Vue makes the component definitions reactive too, and in development it logs `Vue received a Component that was made a reactive object`. Rendering is not affected; the cost is some unnecessary overhead. To avoid the warning, use any one of these:\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// A plain object, not wrapped in reactivity\nconst components = { paragraph: MyParagraph }\n\n// Use shallowRef (or shallowReactive) when you need to swap the whole object\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// Or wrap each component with markRaw; an outer ref then does not warn\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` run on the parsed tree. `transform` receives the root and returns the next one. Return the same root when nothing changed, so a streaming render can keep settled blocks. `render` draws an `extension` node whose `plugin` equals that name. `inlinePlugins` match ordinary text nodes. `pattern` needs the `g` flag. Earlier plugins match first, and the first plugin wins when two matches overlap. Inline code and fenced code are left alone. `replace` returns the node that takes the match, or `null` to skip it. An extension node is drawn by the plugin `render` of the same `name`. A `link` node uses the normal link renderer.\n\n`defineMarkdownPlugin` returns the plugin object unchanged, which narrows the type. `isMarkdownExtensionNode` checks that a node belongs to a plugin.\n\nWith `sources`, `[id]` and `【id】` render as citation chips. `citationStyle` defaults to `label`, which shows the source title. `number` shows a compact badge, and the same id keeps the same number.\n\nA fence info string of `diff` or `diff-ts` turns the diff layer on for the built-in code block. A custom `components.code` still receives the info string as written.\n\n`isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the fade is skipped.\n\n`isStreaming` does not reveal the string character by character. Use `useStreamingText` for that, then pass its string as `content`. Markdown does not smooth that string again. To simulate a model, pass the accumulated source as `content` and leave `isStreaming` on until the reply is finished.\n\nThis version does not render math.",
-        "zh": "`Markdown` 把 Markdown 源码渲染成正文。标题、段落、强调、链接、行内代码、代码块、引用、列表、任务列表、表格、分隔线和图片都可以用。表格、删除线和任务列表按 GFM 处理。尖括号里的网址和邮箱一直是链接。裸网址、`www.` 开头的主机名和裸邮箱，要等 `autolink` 设为 `gfm` 才变成链接。句末的标点留在链接外面。\n\n从独立入口导入，结构样式会随组件加载。主题在应用入口引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## 标题\\n\\n一段 **说明**。\" />\n</template>\n```\n\n`content` 没传时，默认插槽里的文本会当作源码。插槽只读取文本，不接受已经渲染好的节点。\n\n链接会去掉控制字符。`javascript:`、`vbscript:` 和 `data:text/html` 不会变成可点击的地址，只留下链接文字。图片另外拒绝所有 `data:` 地址。原始 HTML 不会执行，标签会按普通文字显示。\n\n代码块交给已有的 `CodeBlock`，引用交给 `Blockquote`，标题交给 `Heading`，链接交给 `Link`。列表和表格用语义元素，因为现有的 `List` 和表格组件是界面控件，不是正文排版。\n\n`components` 可以换掉某一类节点的渲染。自定义组件通过 props 拿到节点数据，有内容的节点还会收到默认插槽。\n\n`components` 里放的是组件定义，不需要是响应式的。直接写成普通对象就行。如果放进了 `ref()` 或 `reactive()`，Vue 会把组件定义也变成响应式对象，开发模式下控制台会出现 `Vue received a Component that was made a reactive object` 的警告。渲染结果不受影响，只是多了不必要的开销。要避免它，用下面任意一种：\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// 普通对象，不包响应式\nconst components = { paragraph: MyParagraph }\n\n// 需要整体替换时，用 shallowRef（或 shallowReactive）\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// 或者给每个组件套 markRaw，外层再用 ref 也不会警告\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` 挂在解析之后的语法树上。`transform` 拿到根节点，返回下一棵树；没有改动时把原来的根返回去，流式渲染才能继续复用已经稳定的块。`render` 画出 `type` 为 `extension`、并且 `plugin` 等于这个名字的节点。`inlinePlugins` 只在普通文本里做匹配，`pattern` 要带 `g`。列表里靠前的先匹配，同一位置重叠时前面的赢。行内代码和围栏代码不会被碰到。`replace` 返回替换进去的节点，返回 `null` 就跳过这次匹配。扩展节点如果带了 `name`，就由同名插件的 `render` 来画；返回一个普通的 `link` 节点时，走原来的链接渲染。\n\n`defineMarkdownPlugin` 把插件对象原样返回，用来收窄类型。`isMarkdownExtensionNode` 用来确认一个节点是不是某个插件的扩展节点。\n\n传入 `sources` 后，正文里的 `[id]` 和 `【id】` 会画成引用芯片。`citationStyle` 默认 `label`，芯片上是来源标题。设成 `number` 后变成带序号的小徽章，同一个 id 共用一个序号。\n\n围栏信息是 `diff` 或 `diff-ts` 这种时，默认的代码块会打开差异层。换掉 `components.code` 时，语言字符串仍原样传进去。\n\n`isStreaming` 打开流式模式。内容只在末尾追加时，已经闭合的块保持原来的节点，只重新解析最后一个还没写完的块。新出现的文字用 `--astryx-duration-fast-max` 淡入。系统开启「减少动态效果」时不播放淡入。\n\n`isStreaming` 不做逐字平滑。字符级揭示用 `useStreamingText`，再把返回的字符串交给 `content`。组件不会把这段字符串再平滑一次。模拟模型输出时，把累积的原文交给 `content`，并在输出结束前保持 `isStreaming` 即可。\n\n这一版不渲染数学公式。"
+        "en": "`Markdown` renders a Markdown source as prose. It covers headings, paragraphs, emphasis, links, inline code, code blocks, quotes, lists, task lists, tables, thematic breaks, and images. Tables, strikethrough, and task lists follow GFM. Angle-bracket URLs and emails are always links. A bare URL, a `www.` host, or a bare email becomes a link only when `autolink` is `gfm`. Trailing sentence punctuation stays outside the link.\n\nImport it from its own entry. Structural styles load with the component. Import the theme once in the application entry:\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## Title\\n\\nA **note**.\" />\n</template>\n```\n\nWhen `content` is omitted, text in the default slot is the source. The slot reads text only. It does not accept nodes that are already rendered.\n\nLinks have control characters removed. `javascript:`, `vbscript:`, and `data:text/html` do not become clickable targets; the link text stays. Images also reject every `data:` URL. Raw HTML is never executed. Tags are shown as text.\n\nCode blocks go through the existing `CodeBlock`, quotes through `Blockquote`, headings through `Heading`, and links through `Link`. Lists and tables use semantic elements, because the existing `List` component and the table export are interface controls rather than prose.\n\n`components` replaces the renderer for one kind of node. A custom component receives the node data as props and, when the node has content, that content as the default slot.\n\nThe values in `components` are component definitions and do not need to be reactive. A plain object works. If you put them inside `ref()` or `reactive()`, Vue makes the component definitions reactive too, and in development it logs `Vue received a Component that was made a reactive object`. Rendering is not affected; the cost is some unnecessary overhead. To avoid the warning, use any one of these:\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// A plain object, not wrapped in reactivity\nconst components = { paragraph: MyParagraph }\n\n// Use shallowRef (or shallowReactive) when you need to swap the whole object\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// Or wrap each component with markRaw; an outer ref then does not warn\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` run on the parsed tree. `transform` receives the root and returns the next one. Return the same root when nothing changed, so a streaming render can keep settled blocks. `render` draws an `extension` node whose `plugin` equals that name. `inlinePlugins` match ordinary text nodes. `pattern` needs the `g` flag. Earlier plugins match first, and the first plugin wins when two matches overlap. Inline code and fenced code are left alone. `replace` returns the node that takes the match, or `null` to skip it. An extension node is drawn by the plugin `render` of the same `name`. A `link` node uses the normal link renderer.\n\n`defineMarkdownPlugin` returns the plugin object unchanged, which narrows the type. `isMarkdownExtensionNode` checks that a node belongs to a plugin.\n\nWith `sources`, `[id]` and `【id】` render as citation chips. `citationStyle` defaults to `label`, which shows the source title. `number` shows a compact badge, and the same id keeps the same number.\n\nA heading gets a focusable anchor whose `href` is the heading id, with an `aria-label`. Nested list markers cycle by depth: disc, circle, and square for bullets, and decimal, lower-alpha, and lower-roman for numbers.\n\nCharacter references in prose are decoded, so `&amp;` shows as `&` and `&copy;` shows as ©. A fenced `&copy;` stays as written.\n\nFenced code wraps long lines. The code element carries `data-wrapped=\"true\"`.\n\nA fence info string of `diff` or `diff-ts` turns the diff layer on for the built-in code block. A custom `components.code` still receives the info string as written.\n\nImport `markdownSourceLinesPlugin` from `@astryx-vue/core/Markdown/plugins` and pass it in `plugins`. Headings, paragraphs, list items, quotes, the code wrapper, the table wrapper, and rules then get `data-source-line` and `data-source-line-end`. Without that plugin, those attributes are absent.\n\n`@astryx-vue/core/Markdown/parser` exports `parseMarkdownAst`, `parseInlineAst`, `decodeMarkdownCharacterReferences`, plus the legacy block list `parseMarkdown` and inline `parseInline`. The `parseMarkdown` used by the component still returns the syntax-tree root, not that block list. `math: true` does not emit math nodes.\n\n`isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the fade is skipped.\n\n`isStreaming` does not reveal the string character by character. Use `useStreamingText` for that, then pass its string as `content`. Markdown does not smooth that string again. To simulate a model, pass the accumulated source as `content` and leave `isStreaming` on until the reply is finished.\n\nThis version does not render math.",
+        "zh": "`Markdown` 把 Markdown 源码渲染成正文。标题、段落、强调、链接、行内代码、代码块、引用、列表、任务列表、表格、分隔线和图片都可以用。表格、删除线和任务列表按 GFM 处理。尖括号里的网址和邮箱一直是链接。裸网址、`www.` 开头的主机名和裸邮箱，要等 `autolink` 设为 `gfm` 才变成链接。句末的标点留在链接外面。\n\n从独立入口导入，结构样式会随组件加载。主题在应用入口引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## 标题\\n\\n一段 **说明**。\" />\n</template>\n```\n\n`content` 没传时，默认插槽里的文本会当作源码。插槽只读取文本，不接受已经渲染好的节点。\n\n链接会去掉控制字符。`javascript:`、`vbscript:` 和 `data:text/html` 不会变成可点击的地址，只留下链接文字。图片另外拒绝所有 `data:` 地址。原始 HTML 不会执行，标签会按普通文字显示。\n\n代码块交给已有的 `CodeBlock`，引用交给 `Blockquote`，标题交给 `Heading`，链接交给 `Link`。列表和表格用语义元素，因为现有的 `List` 和表格组件是界面控件，不是正文排版。\n\n`components` 可以换掉某一类节点的渲染。自定义组件通过 props 拿到节点数据，有内容的节点还会收到默认插槽。\n\n`components` 里放的是组件定义，不需要是响应式的。直接写成普通对象就行。如果放进了 `ref()` 或 `reactive()`，Vue 会把组件定义也变成响应式对象，开发模式下控制台会出现 `Vue received a Component that was made a reactive object` 的警告。渲染结果不受影响，只是多了不必要的开销。要避免它，用下面任意一种：\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// 普通对象，不包响应式\nconst components = { paragraph: MyParagraph }\n\n// 需要整体替换时，用 shallowRef（或 shallowReactive）\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// 或者给每个组件套 markRaw，外层再用 ref 也不会警告\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` 挂在解析之后的语法树上。`transform` 拿到根节点，返回下一棵树；没有改动时把原来的根返回去，流式渲染才能继续复用已经稳定的块。`render` 画出 `type` 为 `extension`、并且 `plugin` 等于这个名字的节点。`inlinePlugins` 只在普通文本里做匹配，`pattern` 要带 `g`。列表里靠前的先匹配，同一位置重叠时前面的赢。行内代码和围栏代码不会被碰到。`replace` 返回替换进去的节点，返回 `null` 就跳过这次匹配。扩展节点如果带了 `name`，就由同名插件的 `render` 来画；返回一个普通的 `link` 节点时，走原来的链接渲染。\n\n`defineMarkdownPlugin` 把插件对象原样返回，用来收窄类型。`isMarkdownExtensionNode` 用来确认一个节点是不是某个插件的扩展节点。\n\n传入 `sources` 后，正文里的 `[id]` 和 `【id】` 会画成引用芯片。`citationStyle` 默认 `label`，芯片上是来源标题。设成 `number` 后变成带序号的小徽章，同一个 id 共用一个序号。\n\n标题会生成可聚焦的锚点，`href` 指向标题 id，并带有 `aria-label`。嵌套列表的记号按层循环：无序是圆点、圆圈、方块，有序是数字、小写字母、小写罗马数字。\n\n正文里的字符实体会解码，`&amp;` 显示成 `&`，`&copy;` 显示成 ©。围栏代码里的 `&copy;` 保持原文。\n\n围栏代码默认折行。一行超过容器宽度时，代码元素带 `data-wrapped=\"true\"`。\n\n围栏信息是 `diff` 或 `diff-ts` 这种时，默认的代码块会打开差异层。换掉 `components.code` 时，语言字符串仍原样传进去。\n\n`markdownSourceLinesPlugin` 从 `@astryx-vue/core/Markdown/plugins` 引入，放进 `plugins` 后，标题、段落、列表项、引用、代码块外层、表格外层和分隔线会带上 `data-source-line` 与 `data-source-line-end`。不传这个插件时没有这些属性。\n\n`@astryx-vue/core/Markdown/parser` 提供 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及旧的块列表 `parseMarkdown` 和行内 `parseInline`。组件自己用的 `parseMarkdown` 仍返回语法树根，不返回那份块列表。`math: true` 不会产生数学节点。\n\n`isStreaming` 打开流式模式。内容只在末尾追加时，已经闭合的块保持原来的节点，只重新解析最后一个还没写完的块。新出现的文字用 `--astryx-duration-fast-max` 淡入。系统开启「减少动态效果」时不播放淡入。\n\n`isStreaming` 不做逐字平滑。字符级揭示用 `useStreamingText`，再把返回的字符串交给 `content`。组件不会把这段字符串再平滑一次。模拟模型输出时，把累积的原文交给 `content`，并在输出结束前保持 `isStreaming` 即可。\n\n这一版不渲染数学公式。"
       },
       "practices": {
         "en": [
@@ -17230,7 +17230,7 @@
             "en": "Headings, emphasis, a list, a link, a code block, and a task list.",
             "zh": "标题、强调、列表、链接、代码块和任务列表。"
           },
-          "code": "<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n\nconst content = [\n  '# Markdown Demo',\n  '',\n  'Renders **markdown** with *Astryx* styling.',\n  '',\n  '## Features',\n  '',\n  '- **Bold**, *italic*, `code`',\n  '- [Links](https://example.com)',\n  '',\n  '```typescript',\n  'interface User {name: string;}',\n  '```',\n  '',\n  '- [x] Parser',\n  '- [ ] Stories',\n].join('\\n')\n</script>\n\n<template>\n  <Markdown :content=\"content\" />\n</template>"
+          "code": "<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n\nconst content = [\n  '# Markdown Demo',\n  '',\n  'Renders **markdown** with *Astryx* styling.',\n  '',\n  '## Features',\n  '',\n  'Fish &amp; chips &copy; 2026',\n  '',\n  '- **Bold**, *italic*, `code`',\n  '  1. Nested number',\n  '     - Nested square',\n  '- [Links](https://example.com)',\n  '',\n  '```typescript',\n  'interface User {name: string;}',\n  '```',\n  '',\n  '- [x] Parser',\n  '- [ ] Stories',\n].join('\\n')\n</script>\n\n<template>\n  <Markdown :content=\"content\" />\n</template>"
         }
       ],
       "anatomy": {
@@ -20123,7 +20123,7 @@
                 "name": "`dismissLabel`",
                 "type": "`string`",
                 "default": "Dismiss {title}",
-                "description": "Accessible name for the dismiss button."
+                "description": "Accessible name for the dismiss button. The tooltip stays the short word Dismiss unless this is set."
               },
               {
                 "name": "`container`",
@@ -20158,14 +20158,14 @@
               {
                 "name": "`expandLabel`",
                 "type": "`string`",
-                "default": "Expand details",
-                "description": "Accessible name for the expand button."
+                "default": "Expand",
+                "description": "Accessible name and tooltip for the expand button. Follows the active locale."
               },
               {
                 "name": "`collapseLabel`",
                 "type": "`string`",
-                "default": "Collapse details",
-                "description": "Accessible name for the collapse button."
+                "default": "Collapse",
+                "description": "Accessible name and tooltip for the collapse button. Follows the active locale."
               }
             ]
           }
@@ -20207,8 +20207,8 @@
               {
                 "name": "`dismissLabel`",
                 "type": "`string`",
-                "default": "Dismiss {title}",
-                "description": "关闭按钮的无障碍名称。"
+                "default": "跟随语言：关闭“标题”",
+                "description": "关闭按钮的无障碍名称。不写时，英文是 Dismiss 加标题，简体中文是关闭“标题”。提示文字只写关闭。"
               },
               {
                 "name": "`container`",
@@ -20243,14 +20243,14 @@
               {
                 "name": "`expandLabel`",
                 "type": "`string`",
-                "default": "Expand details",
-                "description": "展开按钮的无障碍名称。"
+                "default": "跟随语言：展开",
+                "description": "展开按钮的无障碍名称和提示。英文默认 Expand。"
               },
               {
                 "name": "`collapseLabel`",
                 "type": "`string`",
-                "default": "Collapse details",
-                "description": "收起按钮的无障碍名称。"
+                "default": "跟随语言：收起",
+                "description": "收起按钮的无障碍名称和提示。英文默认 Collapse。"
               }
             ]
           }
@@ -20268,7 +20268,7 @@
         "en": [
           {
             "heading": "Usage guidance",
-            "text": "The `status` prop sets the tone of a banner, and picking the wrong one makes readers misjudge how urgent the message is. The list below covers which status fits which kind of message, plus two usages that are easy to overlook.\n\n- Use `info` for general information and updates.\n- Use `success` for the result of a successful action.\n- Use `warning` for situations that call for caution.\n- Use `error` for problems that block progress.\n- Set `:collapsible=\"false\"` for details that users must read, so those details stay visible and no click is needed to open them.\n- Mount urgent messages when the user action that triggers them happens.\n\nThe status also decides the role the banner exposes to screen readers: `warning` and `error` use `role=\"alert\"`, while `info` and `success` use `role=\"status\"`. Note that messages already present in the initial page render may not be announced by screen readers, so the more urgent a message is, the better it works when mounted in response to a user action.\n\nFor a single field validation message, use [FieldStatus](/en/components/field-status)."
+            "text": "The `status` prop sets the tone of a banner, and picking the wrong one makes readers misjudge how urgent the message is. The list below covers which status fits which kind of message, plus two usages that are easy to overlook.\n\n- Use `info` for general information and updates.\n- Use `success` for the result of a successful action.\n- Use `warning` for situations that call for caution.\n- Use `error` for problems that block progress.\n- Set `:collapsible=\"false\"` for details that users must read, so those details stay visible and no click is needed to open them. Keep the default toggle when the detail is long enough to bury the banner's own message.\n- Announce an async outcome from the transition that produced it, with `useAnnounce`.\n\n`status` controls color and icon only. It does not create a live region. Add `role=\"status\"` only when the visible banner should stay a persistent semantic mirror, and reserve `role=\"alert\"` for genuinely urgent content that should interrupt current speech. Content already on the page at first render is not guaranteed to be announced again.\n\nFor a single field validation message, use [FieldStatus](/en/components/field-status)."
           },
           {
             "heading": "Slots",
@@ -20298,7 +20298,7 @@
         "zh": [
           {
             "heading": "使用建议",
-            "text": "提示条的语气由 `status` 决定，选错状态会让用户误判消息的紧迫程度。下面按消息的性质说明该选哪个状态，以及两个容易忽略的用法。\n\n- 一般的信息和更新使用 `info`。\n- 操作成功的结果使用 `success`。\n- 需要提醒用户注意的情况使用 `warning`。\n- 阻止用户继续操作的问题使用 `error`。\n- 用户必须读到的详情传入 `:collapsible=\"false\"`，这样详情会始终显示，不需要再点开。\n- 用户操作之后才出现的紧急消息，在操作发生时动态挂载。\n\n状态同时还决定组件向屏幕阅读器呈现的角色：`warning` 和 `error` 使用 `role=\"alert\"`，`info` 和 `success` 使用 `role=\"status\"`。需要注意的是，页面初次渲染时就已存在的消息不保证被屏幕阅读器播报，所以越紧急的消息，越适合在用户操作之后再挂载。\n\n如果只是单个字段的校验消息，应改用 [FieldStatus](/components/field-status)。"
+            "text": "提示条的语气由 `status` 决定，选错状态会让用户误判消息的紧迫程度。下面按消息的性质说明该选哪个状态，以及两个容易忽略的用法。\n\n- 一般的信息和更新使用 `info`。\n- 操作成功的结果使用 `success`。\n- 需要提醒用户注意的情况使用 `warning`。\n- 阻止用户继续操作的问题使用 `error`。\n- 用户必须读到的详情传入 `:collapsible=\"false\"`，这样详情会始终显示，不需要再点开。详情很长、会把提示本身盖住时，保持默认可折叠。\n- 用户操作之后才出现的结果，在这次操作的处理函数里用 `useAnnounce` 播报。\n\n`status` 只决定颜色和图标，不会自己变成实时区域。需要一直被读屏当成状态时，显式写上 `role=\"status\"`。只有真正紧急、必须打断当前朗读的内容才写 `role=\"alert\"`。页面初次渲染时就已经在的内容，读屏不一定会再念一遍。\n\n如果只是单个字段的校验消息，应改用 [FieldStatus](/components/field-status)。"
           },
           {
             "heading": "插槽",
@@ -20318,7 +20318,7 @@
           },
           {
             "heading": "本地化",
-            "text": "中文界面可设置以下文本：\n\n- `dismissLabel=\"关闭提示\"`。\n- `expandLabel=\"展开详情\"`。\n- `collapseLabel=\"收起详情\"`。"
+            "text": "关闭、展开、收起跟着文档或应用当前的语言。英文是 Dismiss、Expand、Collapse；简体中文是关闭、展开、收起。需要改成别的说法时，再传 `dismissLabel`、`expandLabel`、`collapseLabel`。"
           },
           {
             "heading": "主题",
@@ -20557,8 +20557,8 @@
               },
               {
                 "name": "`variant`",
-                "type": "`'neutral' | 'success' | 'warning' | 'error' | 'info'`",
-                "default": "`'neutral'`",
+                "type": "`'accent' | 'neutral' | 'success' | 'warning' | 'error' | 'info'`",
+                "default": "`'accent'`",
                 "description": "Fill color."
               },
               {
@@ -20577,7 +20577,7 @@
                 "name": "`isIndeterminate`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Indeterminate state. Shows a looping animation and removes aria-valuenow."
+                "description": "Indeterminate state. Shows a looping animation and omits aria-valuenow, aria-valuemin, aria-valuemax, and aria-valuetext."
               },
               {
                 "name": "`isDisabled`",
@@ -20642,8 +20642,8 @@
               },
               {
                 "name": "`variant`",
-                "type": "`'neutral' | 'success' | 'warning' | 'error' | 'info'`",
-                "default": "`'neutral'`",
+                "type": "`'accent' | 'neutral' | 'success' | 'warning' | 'error' | 'info'`",
+                "default": "`'accent'`",
                 "description": "填充条颜色。"
               },
               {
@@ -20662,7 +20662,7 @@
                 "name": "`isIndeterminate`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "不确定状态。显示循环动画并移除 aria-valuenow。"
+                "description": "不确定状态。显示循环动画，并且不报 aria-valuenow、aria-valuemin、aria-valuemax、aria-valuetext。"
               },
               {
                 "name": "`isDisabled`",
@@ -21198,7 +21198,7 @@
           },
           {
             "heading": "Slots",
-            "text": "- `label`: rich content below the spinner. Replaces the `label` prop text. The default accessible name is `Loading`."
+            "text": "- `label`: rich content below the spinner. Replaces the `label` prop text. With no visible text and no `aria-label`, the accessible name follows the locale: Loading in English, 加载中 in Simplified Chinese."
           },
           {
             "heading": "Theme",
@@ -21212,7 +21212,7 @@
           },
           {
             "heading": "插槽",
-            "text": "- `label`：加载态下方的富文本内容，会替代 `label` 属性的文字。未提供文字时，无障碍名称默认为 `Loading`。"
+            "text": "- `label`：加载态下方的富文本内容，会替代 `label` 属性的文字。没有可见文字、也没有 `aria-label` 时，读屏念当前语言的默认名：英文 Loading，简体中文「加载中」。"
           },
           {
             "heading": "主题",
@@ -21361,6 +21361,12 @@
                 "description": "Whether the dot pulses to indicate an active state."
               },
               {
+                "name": "`icon`",
+                "type": "`Component`",
+                "default": "-",
+                "description": "Icon drawn inside the dot. Omit it to keep a color-only signal. The `icon` slot wins. The icon is hidden from assistive tech; the name stays `label`."
+              },
+              {
                 "name": "`tooltip`",
                 "type": "`string`",
                 "default": "-",
@@ -21390,6 +21396,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "是否显示脉冲动画，开启后状态点会呼吸闪烁，用于提示正在进行中的活动。"
+              },
+              {
+                "name": "`icon`",
+                "type": "`Component`",
+                "default": "-",
+                "description": "画在圆点里的图标。不传时圆点只靠颜色表达。插槽 `icon` 优先。图标对读屏隐藏，名字仍是 `label`。"
               },
               {
                 "name": "`tooltip`",
@@ -22119,7 +22131,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Required. The accessible name."
+                "description": "Required accessible name. The label carries both `astryx-field-label` and `astryx-checkbox-label`, so a theme can style the checkbox label apart from a field label."
               },
               {
                 "name": "`id`",
@@ -22258,7 +22270,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "必需，作为控件无障碍名称的文本。"
+                "description": "必需，作为控件无障碍名称的文本。标签同时带 `astryx-field-label` 和 `astryx-checkbox-label`，主题可以单独改复选框的标签。"
               },
               {
                 "name": "`id`",
@@ -22687,6 +22699,30 @@
                 "type": "`(values) => void | Promise<void>`",
                 "default": "—",
                 "description": "Runs after a check changes. The row shows a spinner and cannot be toggled until it finishes."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Class on the field shell. It has no effect inside a horizontal-labels form."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style on the field shell. Same placement as `containerClass`."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Class on the option group (`role=\"group\"`). It does not land on each checkbox."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style on the option group."
               }
             ]
           },
@@ -22697,7 +22733,13 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Required row label. It names the checkbox."
+                "description": "Required row label. It names the checkbox. Use the `label` slot for rich content such as a link; the checkbox name comes from the visible text."
+              },
+              {
+                "name": "`ariaLabel`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Overrides the checkbox name. Use it when a rich label has no readable text."
               },
               {
                 "name": "`value`",
@@ -22709,7 +22751,7 @@
                 "name": "`description`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Secondary text, also the checkbox description."
+                "description": "Secondary text, also the checkbox description. Rich content goes in the `description` slot and stays linked with `aria-describedby`."
               },
               {
                 "name": "`isChecked`",
@@ -22801,6 +22843,30 @@
                 "type": "`(values) => void | Promise<void>`",
                 "default": "—",
                 "description": "勾选变化之后执行。进行中的那一行显示加载，并且不能再点。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "加到字段外壳上的 class。横向标签的表单里没有外壳，这时不生效。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳上的行内样式。落点同 `containerClass`。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "加到选项组（`role=\"group\"`）上的 class，不会落到每一行的复选框上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到选项组上的行内样式。"
               }
             ]
           },
@@ -22811,7 +22877,13 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "必填。行标题，也是复选框的名称。"
+                "description": "必填。行标题，也是复选框的名称。需要链接等富内容时用 `label` 插槽，复选框的名字取可见文字。"
+              },
+              {
+                "name": "`ariaLabel`",
+                "type": "`string`",
+                "default": "—",
+                "description": "覆盖复选框的无障碍名称。富文本标题没有可读文字时使用。"
               },
               {
                 "name": "`value`",
@@ -22823,7 +22895,7 @@
                 "name": "`description`",
                 "type": "`string`",
                 "default": "—",
-                "description": "次要文字，同时作为复选框的说明。"
+                "description": "次要文字，同时作为复选框的说明。富内容用 `description` 插槽，仍然通过 `aria-describedby` 关联。"
               },
               {
                 "name": "`isChecked`",
@@ -22859,13 +22931,13 @@
         "en": [
           {
             "heading": "CheckboxListItem events and slots",
-            "text": "`check` emits the next boolean for a standalone row. The `end` slot renders after the label."
+            "text": "`check` emits the next boolean for a standalone row. The `label` and `description` slots accept rich content. The `end` slot renders after the label."
           }
         ],
         "zh": [
           {
             "heading": "CheckboxListItem 事件和插槽",
-            "text": "独立行通过 `check` 发出下一个布尔值。`end` 插槽画在标题后面。"
+            "text": "独立行通过 `check` 发出下一个布尔值。`label` 和 `description` 插槽放富文本。`end` 插槽画在标题后面。"
           }
         ]
       },
@@ -29127,6 +29199,30 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "Marks the group required."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Class on the field shell. It has no effect inside a horizontal-labels form."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style on the field shell."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Class on the radio group (`role=\"radiogroup\"`)."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style on the radio group."
               }
             ]
           },
@@ -29143,13 +29239,13 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Required row label."
+                "description": "Required row label. Use the `label` slot for rich content such as a link; activating the link does not select the row."
               },
               {
                 "name": "`description`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Secondary text under the label."
+                "description": "Secondary text under the label. Rich content goes in the `description` slot."
               },
               {
                 "name": "`isDisabled`",
@@ -29229,6 +29325,30 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "标记为必填。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "加到字段外壳上的 class。横向标签的表单里没有外壳，这时不生效。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳上的行内样式。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "加到单选组（`role=\"radiogroup\"`）上的 class。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到单选组上的行内样式。"
               }
             ]
           },
@@ -29245,13 +29365,13 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "必填。行标题。"
+                "description": "必填。行标题。需要链接等富内容时用 `label` 插槽，点链接不会选中这一行。"
               },
               {
                 "name": "`description`",
                 "type": "`string`",
                 "default": "—",
-                "description": "标题下的说明。"
+                "description": "标题下的说明。富内容用 `description` 插槽。"
               },
               {
                 "name": "`isDisabled`",
@@ -30627,6 +30747,30 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "Information tooltip beside the label."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Class on the field shell. It has no effect inside a horizontal-labels form."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style on the field shell."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Class on the track container. It does not land on the thumb."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style on the track container."
               }
             ]
           }
@@ -30796,6 +30940,30 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "标签旁的信息提示。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "加到字段外壳上的 class。横向标签的表单里没有外壳，这时不生效。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳上的行内样式。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "—",
+                "description": "加到轨道容器上的 class，不会落到滑块拇指上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到轨道容器上的行内样式。"
               }
             ]
           }
@@ -31189,8 +31357,8 @@
               {
                 "name": "`loadingLabel`",
                 "type": "`string`",
-                "default": "`'Loading'`",
-                "description": "Accessible text for the loading state."
+                "default": "Current locale",
+                "description": "Text announced while the switch is busy. Defaults to the active locale: Loading in English, 加载中 in Chinese."
               },
               {
                 "name": "`isRequired`",
@@ -31340,8 +31508,8 @@
               {
                 "name": "`loadingLabel`",
                 "type": "`string`",
-                "default": "`'Loading'`",
-                "description": "加载状态的无障碍文本。"
+                "default": "跟随当前语言",
+                "description": "忙碌时读屏念的文字。不传时用当前语言，英文是 Loading，中文是加载中。"
               },
               {
                 "name": "`isRequired`",

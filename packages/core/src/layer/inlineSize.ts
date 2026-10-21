@@ -44,3 +44,50 @@ const INTRINSIC_INLINE_SIZE = /^(?:auto|contain|fit-content|fit-content\(.*\)|in
 export function isIntrinsicInlineSize(value: string): boolean {
   return INTRINSIC_INLINE_SIZE.test(value.trim())
 }
+
+interface InlineSizeHold {
+  token: object
+  value: string
+}
+
+const holders: InlineSizeHold[] = []
+
+function applyLayerMaxInlineSize(): void {
+  if (typeof document === 'undefined')
+    return
+  const top = holders[holders.length - 1]
+  const style = document.documentElement.style
+  if (top == null)
+    style.removeProperty(LAYER_MAX_INLINE_SIZE_VAR)
+  else
+    style.setProperty(LAYER_MAX_INLINE_SIZE_VAR, top.value)
+}
+
+/**
+ * 根上的 LayerProvider 持有全局宽度上限。
+ * 同时存在多个根时，后登记的那份写在 html 上；卸掉以后回到上一份。
+ * 不是栈顶的那份只把新值记下来，等它重新成为栈顶再写出去。
+ */
+export function retainLayerMaxInlineSize(token: object, value: string): void {
+  const existing = holders.find(hold => hold.token === token)
+  if (existing != null)
+    existing.value = value
+  else
+    holders.push({ token, value })
+  applyLayerMaxInlineSize()
+}
+
+/** 这一份根 provider 卸掉了。最后一份卸掉时，变量从 html 上删掉。 */
+export function releaseLayerMaxInlineSize(token: object): void {
+  const index = holders.findIndex(hold => hold.token === token)
+  if (index !== -1)
+    holders.splice(index, 1)
+  applyLayerMaxInlineSize()
+}
+
+/** 只给测试用：清掉持有者，并删掉 html 上的变量。 */
+export function resetLayerMaxInlineSizeForTests(): void {
+  holders.length = 0
+  if (typeof document !== 'undefined')
+    document.documentElement.style.removeProperty(LAYER_MAX_INLINE_SIZE_VAR)
+}

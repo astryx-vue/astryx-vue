@@ -9,12 +9,13 @@ import {
   LAYER_MAX_INLINE_SIZE,
   LAYER_MAX_INLINE_SIZE_VAR,
   layerMaxInlineSize,
+  resetLayerMaxInlineSizeForTests,
 } from './inlineSize.js'
 
 enableAutoUnmount(afterEach)
 
 afterEach(() => {
-  document.documentElement.style.removeProperty(LAYER_MAX_INLINE_SIZE_VAR)
+  resetLayerMaxInlineSizeForTests()
   document.body.innerHTML = ''
 })
 
@@ -83,5 +84,45 @@ describe('layerProvider 写出的宽度上限', () => {
 
     wrapper.unmount()
     expect(document.documentElement.style.getPropertyValue(LAYER_MAX_INLINE_SIZE_VAR)).toBe('')
+  })
+
+  it('后挂上的根 provider 写变量，卸掉以后回到先挂的那份', async () => {
+    const first = mount(LayerProvider, {
+      attachTo: document.body,
+      props: { inset: { inlineStart: 8 } },
+      slots: { default: () => h(Probe) },
+    })
+    await nextTick()
+    const firstValue = 'calc(100vw - 24px - 16px)'
+    expect(document.documentElement.style.getPropertyValue(LAYER_MAX_INLINE_SIZE_VAR)).toBe(firstValue)
+
+    const second = mount(LayerProvider, {
+      attachTo: document.body,
+      props: { inset: { inlineEnd: 24 } },
+      slots: { default: () => h(Probe) },
+    })
+    await nextTick()
+    expect(document.documentElement.style.getPropertyValue(LAYER_MAX_INLINE_SIZE_VAR))
+      .toBe('calc(100vw - 16px - 40px)')
+
+    second.unmount()
+    expect(document.documentElement.style.getPropertyValue(LAYER_MAX_INLINE_SIZE_VAR)).toBe(firstValue)
+
+    first.unmount()
+    expect(document.documentElement.style.getPropertyValue(LAYER_MAX_INLINE_SIZE_VAR)).toBe('')
+  })
+
+  it('嵌套 provider 只收紧子树定位，不改根上的宽度上限', async () => {
+    mount(LayerProvider, {
+      attachTo: document.body,
+      props: { inset: { inlineStart: 8 } },
+      slots: {
+        default: () => h(LayerProvider, { inset: { inlineEnd: 24 } }, { default: () => h(Probe) }),
+      },
+    })
+    await nextTick()
+
+    expect(document.documentElement.style.getPropertyValue(LAYER_MAX_INLINE_SIZE_VAR))
+      .toBe('calc(100vw - 24px - 16px)')
   })
 })

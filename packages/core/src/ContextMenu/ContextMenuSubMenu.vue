@@ -103,7 +103,7 @@ useDismiss({
   container: flyout,
   trigger: row,
   isEnabled: showsFlyout,
-  enableEscape: computed(() => true),
+  dismissOnEscape: 'close',
   onDismiss: () => close(true),
 })
 

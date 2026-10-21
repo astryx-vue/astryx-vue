@@ -1,4 +1,5 @@
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
 /**
  * 头像换算出来的像素尺寸。子组件（例如 `AvatarStatusDot`）靠它把自身大小
@@ -6,7 +7,7 @@ import type { ComputedRef, InjectionKey, Ref } from 'vue'
  *
  * 没有住在任何头像里时取默认的 36，和默认尺寸 `md` 一致。
  */
-export const AvatarSizeContext: InjectionKey<ComputedRef<number>> = Symbol('AvatarSizeContext')
+export const AvatarSizeContext = defineLayerScopedKey<ComputedRef<number> | null>('AvatarSizeContext', null)
 
 /**
  * 状态元素往外层头像报自己读屏名字的入口。

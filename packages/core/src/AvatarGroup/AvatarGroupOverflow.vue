@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { AvatarGroupOverflowEmits, AvatarGroupOverflowProps, AvatarGroupOverflowSlots } from './types.js'
-import { computed, getCurrentInstance, inject } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 
 import { resolveSize } from '../Avatar/utils.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { AvatarGroupContext } from './context.js'
 import '../../styles/avatar-group.css'
@@ -18,7 +19,7 @@ const instance = getCurrentInstance()
 const messages = useAstryxMessages()
 const press = usePressFeedback()
 
-const avatarGroup = inject(AvatarGroupContext, undefined)
+const avatarGroup = readLayerScoped(AvatarGroupContext)
 const OVERFLOW_BORDER = 2
 const size = computed(() => avatarGroup?.size.value ?? 'md')
 const shape = computed(() => avatarGroup?.shape.value ?? 'circle')
