@@ -6,8 +6,6 @@ import FieldIcon from './FieldIcon.vue'
 
 defineOptions({ name: 'AstryxInputClearButton', inheritAttrs: false })
 
-const attrs = useAttrs()
-
 defineProps<{
   /** 读屏用的名字，例如「Clear Name」。提示文字另算，固定是「Clear」。 */
   label: string
@@ -16,6 +14,8 @@ defineProps<{
 const emit = defineEmits<{
   click: [event: MouseEvent]
 }>()
+
+const attrs = useAttrs()
 
 const { t } = useTranslator()
 

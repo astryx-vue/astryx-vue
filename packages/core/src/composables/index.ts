@@ -1,5 +1,7 @@
 // 这个文件由 `pnpm sync` 生成，不要手改。
 
+export { countCharacters } from './countCharacters.js'
+
 export { useAnnounce } from './useAnnounce.js'
 export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
 
