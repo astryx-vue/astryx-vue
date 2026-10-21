@@ -17,6 +17,8 @@ footer: false
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Helper text under the label.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip text on an info icon next to the label.</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
+      <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>Field shell and input box. A root class lands on the box, not the native input. An item <code>action</code> turns the menu into two columns and does not select the item.</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>Icon at the start of the input. An <code>icon</code> slot replaces it.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code> / <code>搜索…</code></td><td>Placeholder. English unless a locale is provided.</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>Wait after typing before searching. Use 0 for local data.</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>Shortest query that gets searched, counted in visible characters. Below it nothing is searched and the menu stays closed, so a query nobody searched never reports "no results". An empty query is not "too short": it still bootstraps.</td></tr>

@@ -14,6 +14,7 @@ export interface TypeaheadMenuEntry<T extends SearchableItem = SearchableItem> {
   disabled?: boolean
   /** 分组标题。来自条目的 `auxiliaryData.group`。 */
   group?: string
+  action?: SearchableItem['action']
   /** 用户正在创建的新条目，不来自数据源。 */
   create?: boolean
 }
@@ -98,6 +99,7 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
             description: item.description,
             disabled: item.disabled,
             group: entryGroup(item),
+            action: item.action,
           }))
 
     const text = query.value.trim()

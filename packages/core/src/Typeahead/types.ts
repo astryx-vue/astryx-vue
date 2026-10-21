@@ -1,4 +1,6 @@
+import type { HTMLAttributes, StyleValue } from 'vue'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 
 export type TypeaheadSize = 'sm' | 'md' | 'lg'
 export type TypeaheadStatus = 'default' | 'success' | 'warning' | 'error'
@@ -55,9 +57,12 @@ export interface BaseTypeaheadProps<T extends SearchableItem = SearchableItem> {
   name?: string
   /** 输入框在 Tab 序里的位置。 */
   inputTabIndex?: number
+  /** 加到输入外框上，不落到原生 input。 */
+  controlClass?: HTMLAttributes['class']
+  controlStyle?: StyleValue
 }
 
-export interface TypeaheadProps<T extends SearchableItem = SearchableItem> {
+export interface TypeaheadProps<T extends SearchableItem = SearchableItem> extends FieldPartStylingProps {
   /** 当前选中的条目。空表示还没选。 */
   modelValue?: T | null
   /** 静态或异步搜索源。 */
@@ -105,6 +110,8 @@ export interface TypeaheadProps<T extends SearchableItem = SearchableItem> {
   /** 表单字段名。选中后提交条目的 id。 */
   name?: string
   width?: number | string
+  /** 输入框起始侧的图标。没有 icon 插槽时使用。 */
+  startIcon?: unknown
 }
 
 export interface TypeaheadEmits<T extends SearchableItem = SearchableItem> {

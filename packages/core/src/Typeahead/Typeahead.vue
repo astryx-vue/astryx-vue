@@ -5,6 +5,7 @@ import type { TypeaheadEmits, TypeaheadProps, TypeaheadSlots } from './types.js'
 import { computed, provide, useAttrs, useId, useTemplateRef } from 'vue'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import BaseTypeahead from './BaseTypeahead.vue'
 import { typeaheadChromeKey } from './context.js'
 import '../../styles/typeahead.css'
@@ -32,6 +33,12 @@ const emit = defineEmits<TypeaheadEmits<T>>()
 defineSlots<TypeaheadSlots<T>>()
 
 const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'Typeahead',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-activedescendant', 'aria-autocomplete', 'aria-disabled', 'aria-required'],
+})
 provide(typeaheadChromeKey, true)
 const inputId = `astryx-typeahead-${useId()}`
 const base = useTemplateRef<{ focus: () => void, blur: () => void }>('base')
@@ -64,7 +71,8 @@ defineExpose({
 <template>
   <Field
     class="astryx-typeahead"
-    :class="[`size-${props.size}`]"
+    :class="[parts.containerClass.value, `size-${props.size}`]"
+    :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="inputId"
     :description="props.description"
@@ -79,7 +87,9 @@ defineExpose({
     <template #default="field">
       <BaseTypeahead
         ref="base"
-        v-bind="attrs"
+        v-bind="parts.forwardedAttrs()"
+        :control-class="parts.controlClass()"
+        :control-style="parts.controlStyle()"
         :model-value="props.modelValue"
         :search-source="props.searchSource"
         :input-id="field.inputId"
@@ -104,8 +114,10 @@ defineExpose({
         @change-query="emit('changeQuery', $event)"
         @open-change="emit('openChange', $event)"
       >
-        <template v-if="$slots.icon" #icon>
-          <slot name="icon" />
+        <template v-if="$slots.icon || props.startIcon" #icon>
+          <slot name="icon">
+            <component :is="props.startIcon" />
+          </slot>
         </template>
         <template v-if="$slots.item" #item="slotProps">
           <slot name="item" :item="slotProps.item" :is-active="slotProps.isActive" :is-selected="slotProps.isSelected" />
