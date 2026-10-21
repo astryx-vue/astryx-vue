@@ -8,6 +8,7 @@ import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useInputContainer } from '../composables/useInputContainer.js'
 import Field from '../Field/Field.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -59,9 +60,14 @@ function select(): void {
 }
 defineExpose({ element, focus, blur, select })
 
-const controlledAttrs = new Set(['class', 'style', 'id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'spellcheck', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'])
+const parts = useFieldPartStyling({
+  component: 'TextArea',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'spellcheck', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'],
+})
 function inputAttrs(): TextareaHTMLAttributes {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as TextareaHTMLAttributes
+  return parts.forwardedAttrs() as TextareaHTMLAttributes
 }
 function describedBy(fieldIds?: string): string | undefined {
   return [attrs['aria-describedby'], fieldIds, showsDisabledMessage.value ? disabledDescriptionId : undefined].filter(Boolean).join(' ') || undefined
@@ -118,13 +124,14 @@ onMounted(() => {
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
     :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
     :status="status" :status-variant="statusVariant"
+    :class="parts.containerClass.value" :style="parts.containerStyle.value"
   >
     <template v-if="$slots.labelIcon" #labelIcon>
       <slot name="labelIcon" />
     </template>
     <template #default="field">
       <div
-        ref="container" class="astryx-text-area" :class="attrs.class" :style="attrs.style"
+        ref="container" class="astryx-text-area" :class="parts.controlClass()" :style="parts.controlStyle()"
         :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
         @click="inputContainer.onClick" @mouseup="inputContainer.onMouseUp"
         @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"

@@ -5,8 +5,10 @@ import type { NumberInputEmits, NumberInputProps, NumberInputSlots, NumberInputS
 import { computed, defineComponent, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useDevWarning } from '../composables/useDevWarning.js'
 import { useNumberField } from '../composables/useNumberField.js'
 import Field from '../Field/Field.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
 import InputClearButton from '../Field/InputClearButton.vue'
@@ -159,31 +161,19 @@ const fieldBindings = computed(() => showsField.value
     }
   : {})
 
-// 原生属性透传到输入框，容器自己管 class 和 style。
-const controlledAttrs = new Set([
-  'class',
-  'style',
-  'id',
-  'value',
-  'type',
-  'disabled',
-  'readonly',
-  'autofocus',
-  'role',
-  'inputmode',
-  'aria-labelledby',
-  'aria-describedby',
-  'aria-required',
-  'aria-invalid',
-  'aria-disabled',
-  'aria-valuenow',
-  'aria-valuemin',
-  'aria-valuemax',
-  'aria-valuetext',
-  'name',
-])
+const parts = useFieldPartStyling({
+  component: 'NumberInput',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'value', 'type', 'disabled', 'readonly', 'autofocus', 'role', 'inputmode', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-invalid', 'aria-disabled', 'aria-valuenow', 'aria-valuemin', 'aria-valuemax', 'aria-valuetext', 'name'],
+})
+useDevWarning(
+  'NumberInput',
+  '`containerClass`/`containerStyle` have no effect here because no Field box renders.',
+  () => !showsField.value && ((props.containerClass != null && props.containerClass !== false) || (props.containerStyle != null && props.containerStyle !== false)),
+)
 function inputAttrs(): InputHTMLAttributes {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
+  return parts.forwardedAttrs() as InputHTMLAttributes
 }
 
 function describedBy(fieldIds?: string): string | undefined {
@@ -309,14 +299,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <component :is="shell" v-bind="fieldBindings">
+  <component :is="shell" v-bind="fieldBindings" :class="showsField ? parts.containerClass.value : undefined" :style="showsField ? parts.containerStyle.value : undefined">
     <template v-if="$slots.labelIcon" #labelIcon>
       <slot name="labelIcon" />
     </template>
     <template #default="field">
       <div
         ref="container"
-        class="astryx-number-input" :class="[`size-${props.size}`, attrs.class]" :style="attrs.style"
+        class="astryx-number-input" :class="[`size-${props.size}`, parts.controlClass()]" :style="parts.controlStyle()"
         :data-status="statusType"
         :data-disabled="isDisabled || undefined"
         :data-readonly="isReadOnly || undefined"

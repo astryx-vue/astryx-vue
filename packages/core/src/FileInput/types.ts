@@ -1,3 +1,4 @@
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 
 export type FileInputMode = 'input' | 'dropzone'
@@ -5,7 +6,7 @@ export type FileInputSize = 'sm' | 'md' | 'lg'
 export type FileInputValue = File | File[] | null
 export type FileInputStatus = FieldStatusInput
 
-export interface FileInputProps {
+export interface FileInputProps extends FieldPartStylingProps {
   label: string
   modelValue?: FileInputValue
   id?: string

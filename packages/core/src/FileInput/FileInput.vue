@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
 import type { FileInputEmits, FileInputProps, FileInputValue } from './types.js'
-import { computed, shallowRef, useId, useTemplateRef } from 'vue'
+import { computed, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { formatFileSize, selectFiles } from '../composables/useFileSelection.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
@@ -28,6 +29,13 @@ const props = withDefaults(defineProps<Omit<FileInputProps, 'modelValue'>>(), {
 
 const emit = defineEmits<FileInputEmits>()
 const model = defineModel<FileInputValue>({ default: null })
+const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'FileInput',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'accept', 'multiple', 'disabled', 'type', 'tabindex', 'aria-disabled', 'aria-invalid', 'aria-describedby'],
+})
 const messages = useAstryxMessages()
 const announce = useAnnounce()
 const generatedId = `astryx-file-input-${useId()}`
@@ -142,11 +150,13 @@ function onDrop(event: DragEvent): void {
     :label="label" :input-id="inputId" :description="description" :width="width"
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
     :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
+    :class="parts.containerClass.value" :style="parts.containerStyle.value"
   >
     <template #default="field">
       <div
         ref="control"
         class="astryx-file-input astryx-bordered-control"
+        :class="parts.controlClass()" :style="parts.controlStyle()"
         :data-mode="mode" :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-drag="dragOver || undefined"
         @pointerenter="disabledTooltip.onPointerEnter"
         @pointerleave="disabledTooltip.onPointerLeave"
@@ -157,6 +167,7 @@ function onDrop(event: DragEvent): void {
           @change="onChange"
         >
         <button
+          v-bind="parts.forwardedAttrs()"
           :id="inputId" type="button" class="astryx-file-input-trigger"
           :disabled="isDisabled && !showsDisabledMessage" :aria-disabled="showsDisabledMessage || undefined" :aria-invalid="status?.type === 'error' || undefined"
           :aria-describedby="[field.describedBy, conveysRequired ? requiredId : undefined, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
