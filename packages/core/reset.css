@@ -180,6 +180,25 @@
     height: auto;
   }
 
+  /*
+   * AspectRatio 的 fit 子元素尺寸。组件样式 `aspect-ratio.css` 里也有同样几条，
+   * 没引入 reset 时靠那里生效。这里再写一遍，是为了让它们排在上面
+   * `height: auto` 的后面：两者同在 reset 层、特异性都是 0，后出现的赢，
+   * 所以不管 reset.css 和组件样式谁先加载，fit 的子元素都能填满容器。
+   */
+  :where([data-astryx-aspect-ratio-override='cover'], [data-astryx-aspect-ratio-override='contain']) > :where(*) {
+    width: 100%;
+    height: 100%;
+  }
+
+  :where([data-astryx-aspect-ratio-override='cover']) > :where(img, video) {
+    object-fit: cover;
+  }
+
+  :where([data-astryx-aspect-ratio-override='contain']) > :where(img, video) {
+    object-fit: contain;
+  }
+
   /* ===========================================================================
      表单
      =========================================================================== */

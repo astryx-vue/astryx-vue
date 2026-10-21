@@ -182,3 +182,15 @@ describe('reset.css and hidden="until-found"', () => {
     }
   })
 })
+
+describe('reset.css and AspectRatio fit', () => {
+  it('sizes fit children after the media height: auto rule, so load order does not matter', () => {
+    // 两条规则同在 reset 层、特异性都是 0，后出现的赢。fit 子元素的规则排在
+    // `:where(img, video) { height: auto }` 后面，图片才能填满 AspectRatio。
+    const blocks = parseRuleBlocks(css)
+    const media = blocks.findIndex(({ selector, body }) => selector === ':where(img, video)' && /height:\s*auto/.test(body))
+    const fit = blocks.findIndex(({ selector, body }) => selector.includes('data-astryx-aspect-ratio-override') && /height:\s*100%/.test(body))
+    expect(media).toBeGreaterThanOrEqual(0)
+    expect(fit).toBeGreaterThan(media)
+  })
+})
