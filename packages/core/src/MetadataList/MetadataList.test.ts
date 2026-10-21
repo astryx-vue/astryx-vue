@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import MetadataList from './MetadataList.vue'
 import MetadataListItem from './MetadataListItem.vue'
 
@@ -60,5 +60,18 @@ describe('metadata list', () => {
     expect(wrapper.get('dl').attributes('data-layout')).toBe('horizontal')
     expect(wrapper.findAll('.astryx-metadata-list__item')).toHaveLength(2)
     expect(wrapper.find('button').exists()).toBe(false)
+  })
+
+  it('透传属性落在根元素上，组件自己管的 data-columns 优先', async () => {
+    const onClick = vi.fn()
+    const wrapper = mount(MetadataList, {
+      attrs: { 'aria-label': 'Details', 'id': 'details', 'data-testid': 'metadata', 'data-columns': 'x', 'onClick': onClick },
+    })
+    expect(wrapper.attributes('aria-label')).toBe('Details')
+    expect(wrapper.attributes('id')).toBe('details')
+    expect(wrapper.attributes('data-testid')).toBe('metadata')
+    expect(wrapper.attributes('data-columns')).toBe('single')
+    await wrapper.trigger('click')
+    expect(onClick).toHaveBeenCalledOnce()
   })
 })

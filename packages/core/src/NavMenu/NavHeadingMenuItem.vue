@@ -5,7 +5,7 @@ import { useLinkComponent } from '../LinkProvider/context.js'
 import { navMenuCloseKey, navMenuKey } from './context.js'
 import '../../styles/nav-menu.css'
 
-defineOptions({ name: 'AstryxNavHeadingMenuItem' })
+defineOptions({ name: 'AstryxNavHeadingMenuItem', inheritAttrs: false })
 
 const props = withDefaults(defineProps<NavHeadingMenuItemProps>(), {
   isDisabled: false,
@@ -46,6 +46,7 @@ function onClick(event: MouseEvent): void {
 <template>
   <component
     :is="root"
+    v-bind="$attrs"
     class="astryx-nav-heading-menu-item astryx-nav-menu-item"
     :class="[`astryx-nav-menu-item--${size}`, { 'astryx-nav-menu-item--disabled': isDisabled }]"
     role="menuitem"

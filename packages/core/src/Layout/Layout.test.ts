@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
 import Layout from './Layout.vue'
 import LayoutContent from './LayoutContent.vue'
@@ -98,5 +98,20 @@ describe('layout', () => {
 
     expect((panel.element as HTMLElement).style.width).toBe('0px')
     panel.unmount()
+  })
+
+  it('透传属性落在根元素上，组件自己管的 data-height 优先', async () => {
+    const onClick = vi.fn()
+    const wrapper = mount(Layout, {
+      attrs: { 'aria-label': 'Records workspace', 'id': 'records-layout', 'data-testid': 'layout-root', 'data-zone': 'admin', 'data-height': 'auto', 'onClick': onClick },
+      slots: { default: () => h('div', 'c') },
+    })
+    expect(wrapper.attributes('aria-label')).toBe('Records workspace')
+    expect(wrapper.attributes('id')).toBe('records-layout')
+    expect(wrapper.attributes('data-testid')).toBe('layout-root')
+    expect(wrapper.attributes('data-zone')).toBe('admin')
+    expect(wrapper.attributes('data-height')).toBe('fill')
+    await wrapper.trigger('click')
+    expect(onClick).toHaveBeenCalledOnce()
   })
 })
