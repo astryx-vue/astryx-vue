@@ -57,10 +57,27 @@ describe('@astryx-vue/core/Markdown/parser', () => {
     })
     expect(packageJson.exports['./Markdown/plugins']).toMatchObject({
       source: './src/Markdown/plugin-protocol/index.ts',
+      types: './dist/Markdown/plugin-protocol/index.d.ts',
+      import: './dist/Markdown/plugin-protocol/index.js',
     })
     expect(packageJson.exports['./Markdown/plugin-renderer']).toMatchObject({
       source: './src/Markdown/plugin-renderer/index.ts',
+      types: './dist/Markdown/plugin-renderer/index.d.ts',
+      import: './dist/Markdown/plugin-renderer/index.js',
     })
+    const publishExports = (packageJson as {
+      publishConfig?: { exports?: Record<string, { types?: string, import?: string }> }
+    }).publishConfig?.exports
+    for (const key of ['./Markdown/parser', './Markdown/plugins', './Markdown/plugin-renderer']) {
+      expect(publishExports?.[key]).toEqual({
+        types: packageJson.exports[key].types,
+        import: packageJson.exports[key].import,
+      })
+    }
+    const tsdown = readFileSync(join(process.cwd(), 'packages/core/tsdown.config.ts'), 'utf8')
+    expect(tsdown).toContain('src/Markdown/parser/index.ts')
+    expect(tsdown).toContain('src/Markdown/plugin-protocol/index.ts')
+    expect(tsdown).toContain('src/Markdown/plugin-renderer/index.ts')
     expect(typeof (await loadSubpath('@astryx-vue/core/Markdown/parser')).parseMarkdownAst).toBe('function')
     expect(typeof (await loadSubpath('@astryx-vue/core/Markdown/plugins')).createMarkdownPlugin).toBe('function')
     expect(typeof (await loadSubpath('@astryx-vue/core/Markdown/plugin-renderer')).MarkdownPluginNodeRenderer).toBe('object')

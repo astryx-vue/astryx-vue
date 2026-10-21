@@ -1,5 +1,6 @@
-import type { ComputedRef, InjectionKey } from 'vue'
-import { computed, inject } from 'vue'
+import type { ComputedRef } from 'vue'
+import { computed } from 'vue'
+import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
 export type FormLayoutDirection = 'vertical' | 'horizontal' | 'horizontal-labels'
 export type FormOptionality = 'optional' | 'required'
@@ -9,10 +10,12 @@ export interface FormLayoutContextValue {
   defaultOptionality?: FormOptionality
 }
 
-export const formLayoutKey: InjectionKey<ComputedRef<FormLayoutContextValue | null>> = Symbol('astryx-form-layout')
+const NO_FORM_LAYOUT = computed<FormLayoutContextValue | null>(() => null)
+
+export const formLayoutKey = defineLayerScopedKey('astryx-form-layout', NO_FORM_LAYOUT)
 
 export function useFormLayout(): ComputedRef<FormLayoutContextValue | null> {
-  return inject(formLayoutKey, computed<FormLayoutContextValue | null>(() => null))
+  return readLayerScoped(formLayoutKey)
 }
 
 /**

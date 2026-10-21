@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
-import { useLayerMountTarget, useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
+import { useLayerMountTarget, useLayerTeleportTarget, useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { provideLayerMountTarget, resolveLayerMountTarget } from './mount.js'
 
 beforeEach(() => {
@@ -98,5 +98,77 @@ describe('useLayerMountTarget', () => {
     expect(wrapper.get('[data-teleport]').attributes('data-teleport')).toBe('DIV')
     wrapper.unmount()
     host.remove()
+  })
+})
+
+describe('useResolvedLayerTeleport', () => {
+  it('挂到不安全祖先的外面，安全祖先仍挂到 body', () => {
+    const safe = document.createElement('div')
+    safe.id = 'safe'
+    const paragraph = document.createElement('p')
+    const here = document.createElement('span')
+    paragraph.append(here)
+    safe.append(paragraph)
+    document.body.append(safe)
+
+    const inside = mount(defineComponent({
+      setup() {
+        const sentinel = ref(here)
+        const target = useResolvedLayerTeleport(sentinel)
+        return () => h('i', {
+          'data-to': typeof target.value === 'string' ? target.value : target.value.id,
+        })
+      },
+    }))
+    expect(inside.get('i').attributes('data-to')).toBe('safe')
+    inside.unmount()
+
+    const plain = document.createElement('div')
+    const marker = document.createElement('span')
+    plain.append(marker)
+    document.body.append(plain)
+    const outside = mount(defineComponent({
+      setup() {
+        const sentinel = ref(marker)
+        const target = useResolvedLayerTeleport(sentinel)
+        return () => h('i', {
+          'data-to': typeof target.value === 'string' ? target.value : 'element',
+        })
+      },
+    }))
+    expect(outside.get('i').attributes('data-to')).toBe('body')
+    outside.unmount()
+  })
+
+  it('对话框提供了挂载点时，不再搬到段落外面', () => {
+    const safe = document.createElement('div')
+    safe.id = 'safe'
+    const paragraph = document.createElement('p')
+    const here = document.createElement('span')
+    paragraph.append(here)
+    safe.append(paragraph)
+    document.body.append(safe)
+    const host = document.createElement('section')
+    host.id = 'dialog-host'
+    document.body.append(host)
+
+    const Probe = defineComponent({
+      setup() {
+        const sentinel = ref(here)
+        const target = useResolvedLayerTeleport(sentinel)
+        return () => h('i', {
+          'data-to': typeof target.value === 'string' ? target.value : target.value.id,
+        })
+      },
+    })
+    const Parent = defineComponent({
+      setup() {
+        provideLayerMountTarget(ref(host))
+        return () => h(Probe)
+      },
+    })
+    const wrapper = mount(Parent)
+    expect(wrapper.get('i').attributes('data-to')).toBe('dialog-host')
+    wrapper.unmount()
   })
 })

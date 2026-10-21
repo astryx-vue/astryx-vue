@@ -2,7 +2,7 @@
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { TimeInputSize } from './types.js'
-import { computed, nextTick, ref, shallowRef, useId, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, shallowRef, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useCoarsePointer } from '../composables/useCoarsePointer.js'
@@ -167,7 +167,7 @@ useDismiss({
   container: optionsRef,
   trigger: container,
   isEnabled: isOptionsOpen,
-  enableEscape: ref(false),
+  dismissOnEscape: 'ignore',
   onDismiss: () => closeOptions(),
 })
 

@@ -28,9 +28,26 @@
 
 ## 现在的状态
 
-**阶段 B 除了 B7 都完成了**：B1（#130）、B2（#131）、B3、B4（#132）、B5（#129）、B6（#133）。阶段 A、E 和 F0 也已完成。C16 已合入 #135（通过 15/15，文档补了 Ghost）。C14 已合入 #134（通过 28/28）。C1 已合入 #136（通过 22/22）。C1 合入后 C3 自动变成可开工。现在没有在跑的子代理，也没有节点工作区。
+阶段 A、B、E 和 F0 都已完成：B1（#130）、B2（#131）、B3、B4（#132）、B5（#129）、B6（#133）、B7（#137，通过 25/25）。C 阶段已合入：C16 #135（通过 15/15，文档补了 Ghost）、C14 #134（通过 28/28）、C1 #136（通过 22/22）、C9 #138（第 2 轮通过 28/28）、C2 #140（通过 20/20）、C6 #143（通过 26/26）、C15 #141（通过 26/26）。
 
-可以开工的节点按 `node scripts/swarm/status.mjs ready` 的顺序排：C7、B7、C6、C9、C2、C3、C15、D1、F2a、D4a。其中 D4a 要等用户签字。
+**B4-fix 不是总表节点，已合入 #142。** 补的是关闭顺序：Escape 只打最上面一层，并补上嵌套深度；同时刷新了 CLI catalog。B4 本身仍是已完成（#132），不要把 B4-fix 写进状态总表。
+
+依赖齐了之后，`status.mjs` 已自动改成可开工：C5（B7 完成后）、F1a 和 F3h（C9 完成后）、C11、C12、C13（C6 完成后；C11 还依赖已经完成的 C2）。C10 的依赖（C9、C6、C1）也齐了，但已经派了实现，所以总表是实现中，不再排在可开工里。
+
+当前并行：
+
+- 🟡 **C3** 选择器家族：实现中。
+- 🟡 **C10** Chat：实现中。
+- 🟡 **C9-exports**（不是总表节点）：修 C9 #138 留下的 Markdown 子路径导出，用来把总 PR #128 的 CI 救绿。
+- 🟡 **C7** 浮层家族：已开工，实现中。
+
+可以开工、等待派发的节点按 `node scripts/swarm/status.mjs ready` 的顺序排：C11、C12、C5、C13、D1、F2a、D4a、F1a、F3h。其中 D4a 要等用户签字。
+
+## 后续
+
+**#128 的 CI 还可能是红的，直到 C9-exports 合入。** catalog 在 #142 里已经修好，不要把剩下的红当成 catalog 没过。根因是 C9 #138 留下的：`packages/core/package.json` 的 `./Markdown/parser`、`./Markdown/plugins`、`./Markdown/plugin-renderer` 指向 `dist/Markdown/...`，但这三份 dist 没有生成。`packages/core/tsdown.config.ts` 的入口扫不到 `src/Markdown/parser`、`src/Markdown/plugin-protocol`、`src/Markdown/plugin-renderer`。交给 C9-exports 修构建入口或导出。进度文档的 PR 不要改组件或打包配置。
+
+#128 的描述不要用云代理自己的 PR 正文通道去改标记块以外的内容，否则会叠成重复的两份。整篇新正文在 `.agents-work/upstream-sync-0.7.1/PR128-BODY.md`。请总控用 `cursor-github update_pull_request` 整篇覆盖。
 
 ## 用户最新的工作方式要求
 

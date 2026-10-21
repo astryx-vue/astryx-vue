@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
 import type { MultiSelectorEmits, MultiSelectorHandle, MultiSelectorProps, MultiSelectorSlots, MultiSelectorTriggerProps } from './types.js'
-import { computed, inject, onMounted, ref, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, onMounted, ref, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
@@ -17,7 +17,7 @@ import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
-import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
+import { useInputGroupContext } from '../InputGroup/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
@@ -70,7 +70,7 @@ const CheckboxMark = useIndicator('checkbox')
 
 const messages = useAstryxMessages()
 const announce = useAnnounce()
-const inputGroup = inject(INPUT_GROUP_KEY, null)
+const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)
 const control = useFieldControlState({
   disabled: () => props.disabled || (inputGroup?.disabled.value ?? false),

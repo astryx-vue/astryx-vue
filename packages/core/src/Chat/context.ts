@@ -1,6 +1,7 @@
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
 import type { ChatComposerInputControl, ChatDensity, ChatMessageSender } from './types.js'
 import { inject } from 'vue'
+import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
 /** What a `ChatMessage` tells the bubble and metadata inside it. */
 export interface ChatMessageContextValue {
@@ -8,10 +9,13 @@ export interface ChatMessageContextValue {
   density: ComputedRef<ChatDensity>
 }
 
-export const chatMessageContextKey: InjectionKey<ChatMessageContextValue> = Symbol('astryx-chat-message')
+export const chatMessageContextKey = defineLayerScopedKey<ChatMessageContextValue | undefined>(
+  'astryx-chat-message',
+  undefined,
+)
 
 export function useChatMessageContext(): ChatMessageContextValue | undefined {
-  return inject(chatMessageContextKey, undefined)
+  return readLayerScoped(chatMessageContextKey)
 }
 
 /** What a `ChatMessageList` tells the messages inside it. */
@@ -19,10 +23,10 @@ export interface ChatListContextValue {
   density: ComputedRef<ChatDensity>
 }
 
-export const chatListContextKey: InjectionKey<ChatListContextValue> = Symbol('astryx-chat-list')
+export const chatListContextKey = defineLayerScopedKey<ChatListContextValue | undefined>('astryx-chat-list', undefined)
 
 export function useChatListContext(): ChatListContextValue | undefined {
-  return inject(chatListContextKey, undefined)
+  return readLayerScoped(chatListContextKey)
 }
 
 /** What a `ChatLayout` tells the message list so scroll and resize stay in sync. */

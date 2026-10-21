@@ -198,6 +198,23 @@ describe('dialog', () => {
     expect(wrapper.find('.astryx-dialog__inner').element.getAttribute('style')).toContain('--astryx-spacing-2')
   })
 
+  it('keeps a click listener placed on the dialog root', async () => {
+    let seen = 0
+    const wrapper = mount(Dialog, {
+      attachTo: document.body,
+      props: {
+        isOpen: true,
+        purpose: 'required',
+        onClick: () => {
+          seen += 1
+        },
+      },
+    })
+
+    await wrapper.get('dialog').trigger('click')
+    expect(seen).toBe(1)
+  })
+
   it('maps fractional padding to a hyphenated token', () => {
     const wrapper = renderDialog({ isOpen: true, padding: 1.5 })
 

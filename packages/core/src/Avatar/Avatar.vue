@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { AvatarProps } from './types.js'
-import { computed, inject, provide, ref, toRaw, useAttrs } from 'vue'
+import { computed, provide, ref, toRaw, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/context.js'
@@ -40,7 +41,7 @@ const DEFAULT_ICON_RATIO = 0.6
 const erroredSrc = ref<string | undefined>(undefined)
 const erroredFallbackSrc = ref<string | undefined>(undefined)
 
-const avatarGroup = inject(AvatarGroupContext, undefined)
+const avatarGroup = readLayerScoped(AvatarGroupContext)
 const resolvedSize = computed(() => avatarGroup?.size.value ?? props.size)
 const resolvedShape = computed(() => avatarGroup?.shape.value ?? props.shape)
 

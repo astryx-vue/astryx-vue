@@ -128,7 +128,7 @@ export type { KeyboardHintOrientation, UseKeyboardHint, UseKeyboardHintOptions }
 export { useLayer } from './useLayer.js'
 export type { LayerMode, UseLayerOptions, UseLayerReturn } from './useLayer.js'
 
-export { useLayerMountTarget, useLayerTeleportTarget } from './useLayerMountTarget.js'
+export { useLayerMountTarget, useLayerTeleportTarget, useResolvedLayerTeleport } from './useLayerMountTarget.js'
 
 export { useListFocus } from './useListFocus.js'
 export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './useListFocus.js'

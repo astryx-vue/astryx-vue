@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HoverCardEmits, HoverCardProps, HoverCardSlots } from './types.js'
 import { computed, onMounted, onUpdated, ref } from 'vue'
-import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
+import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useHoverCard } from './useHoverCard.js'
@@ -25,9 +25,6 @@ const props = withDefaults(defineProps<HoverCardProps>(), {
 
 const emit = defineEmits<HoverCardEmits>()
 defineSlots<HoverCardSlots>()
-
-// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
-const teleportTarget = useLayerTeleportTarget()
 
 const hoverCard = useHoverCard({
   placement: () => props.placement,
@@ -59,6 +56,8 @@ const {
 const setContentRef = useMergedRefs<HTMLElement>([surfaceRef])
 
 const wrapperRef = ref<HTMLElement | null>(null)
+// Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。
+const teleportTarget = useResolvedLayerTeleport(wrapperRef)
 // 触发器是插槽内容，这里只负责从包裹元素里把它找出来，再交给 hook 挂事件。
 const isTextTrigger = ref(false)
 const showIndication = computed(() => props.hasHoverIndication === true || (props.hasHoverIndication === 'auto' && isTextTrigger.value))

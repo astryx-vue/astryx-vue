@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
 import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
-import { computed, inject, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
@@ -15,7 +15,7 @@ import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
-import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
+import { useInputGroupContext } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
@@ -75,7 +75,7 @@ const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.sel
 const valueClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clearField(props.label))
 const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selector.empty)
 const resolvedEmptySearchText = computed(() => props.emptySearchText ?? messages.value.selector.emptySearch)
-const inputGroup = inject(INPUT_GROUP_KEY, null)
+const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)
 const control = useFieldControlState({
   disabled: () => props.disabled || (inputGroup?.disabled.value ?? false),
@@ -160,7 +160,7 @@ useDismiss({
   container: listboxRef,
   trigger: fieldRef,
   isEnabled: popoverOpen,
-  enableEscape: ref(true),
+  dismissOnEscape: 'close',
   onDismiss: () => {
     combobox.close()
   },

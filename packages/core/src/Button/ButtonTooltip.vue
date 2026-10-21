@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { nextTick, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
-import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
+import { computed, nextTick, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
+import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import '../../styles/layer.css'
 
 defineOptions({
@@ -20,8 +20,8 @@ const emit = defineEmits<{
   pointerLeave: []
 }>()
 
-// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
-const teleportTarget = useLayerTeleportTarget()
+// Dialog 里挂进对话框；按钮在段落或链接里时挂到安全的父级；其余挂到 body。
+const teleportTarget = useResolvedLayerTeleport(computed(() => props.anchor))
 
 const isMounted = shallowRef(false)
 const tooltip = useTemplateRef<HTMLElement>('tooltip')

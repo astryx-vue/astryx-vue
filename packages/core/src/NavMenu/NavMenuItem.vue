@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavMenuItemEmits, NavMenuItemProps, NavMenuItemSlots } from './types.js'
 import { computed, inject } from 'vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 import { navMenuCloseKey, navMenuKey } from './context.js'
@@ -17,7 +18,7 @@ const props = withDefaults(defineProps<NavMenuItemProps>(), {
 const emit = defineEmits<NavMenuItemEmits>()
 defineSlots<NavMenuItemSlots>()
 
-const menu = inject(navMenuKey, null)
+const menu = readLayerScoped(navMenuKey)
 const closeMenu = inject(navMenuCloseKey, undefined)
 const linkComponent = useLinkComponent()
 const size = computed(() => menu?.size.value ?? 'md')
