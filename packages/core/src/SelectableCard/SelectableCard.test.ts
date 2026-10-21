@@ -40,11 +40,28 @@ describe('selectable card', () => {
 
   it('ignores activation while disabled', async () => {
     const wrapper = mount(SelectableCard, {
+      attachTo: document.body,
       props: { label: 'Pro', isSelected: false, isDisabled: true },
       slots: { default: 'Pro' },
     })
     await wrapper.get('.astryx-card').trigger('click')
     expect(wrapper.emitted('change')).toBeUndefined()
-    expect(wrapper.get('input').attributes('disabled')).toBeDefined()
+    const input = wrapper.get('input')
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
+    input.element.focus()
+    expect(document.activeElement).toBe(input.element)
+    await input.trigger('keydown', { key: ' ' })
+    await input.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('change')).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('marks an enabled card as pressable', () => {
+    const wrapper = mount(SelectableCard, {
+      props: { isSelected: false, label: 'Pro' },
+      slots: { default: 'Pro' },
+    })
+    expect(wrapper.get('.astryx-card').attributes('data-astryx-pressable')).toBe('')
   })
 })

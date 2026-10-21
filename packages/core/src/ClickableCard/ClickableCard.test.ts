@@ -46,5 +46,14 @@ describe('clickable card', () => {
     expect(link.attributes('aria-disabled')).toBe('true')
     expect(link.attributes('tabindex')).toBe('-1')
     expect(wrapper.get('.astryx-card').attributes('data-disabled')).toBe('true')
+    expect(wrapper.get('.astryx-card').attributes('data-astryx-pressable')).toBeUndefined()
+  })
+
+  it('marks an enabled card as pressable', () => {
+    const wrapper = mount(ClickableCard, {
+      props: { label: 'Docs' },
+      slots: { default: 'Docs' },
+    })
+    expect(wrapper.get('.astryx-card').attributes('data-astryx-pressable')).toBe('')
   })
 })
