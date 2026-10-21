@@ -55,6 +55,17 @@ const brand = defineTheme({
 })
 ```
 
+### Overriding theme tokens
+
+`Theme` writes its tokens into a `<style>` that sits inside the wrapper element. The rule selector is `:scope.astryx-theme`, which weighs as much as two classes, and that `<style>` comes later in the document than your stylesheets. So a plain rule on the wrapper loses when it sits inside `@layer astryx.overrides` and names fewer than three classes. Pick one of these:
+
+- Put the override in CSS that is not inside any `@layer`. Unlayered styles beat every layered style, so this always wins. It is the simplest choice.
+- Inside `@layer astryx.overrides`, use an id (`#brand-wrapper`), or at least three classes (`.wrapper.wrapper.wrapper`).
+
+The same holds for adapted tokens, with or without a matching condition. A value passed in the wrapper's own `style` attribute also wins.
+
+Theme names must be unique. Two `Theme` components with the same `name` share one set of rules. If their values differ, the one that renders later wins for both. Give different themes different names.
+
 ### Theme targets
 
 Keys under `components` are theme targets, named `<component-kebab>-<part>`: `button`, `card-header`, `radio-indicator`, `progress-bar-fill`. Each target is a stable `astryx-*` class on one element. Style keys under a target match the attributes that element reflects: `variant:primary` matches `[data-variant="primary"]`, a state such as `checked` matches `[data-checked="checked"]`, and `+` joins two keys.
@@ -85,7 +96,7 @@ A `:hover` style applies to the enabled control only. Disabled and `aria-disable
 
 ### Adaptations
 
-`adaptations.rules` is an ordered list of `{ when, value }`. `when` can hold a width range by named breakpoint (`sm` 640, `md` 768, `lg` 1024, `xl` 1280, `2xl` 1536 CSS px; change them with `widthBreakpoints`), a `pointer` of `coarse` or `fine`, a `contrast` preference, and a reduced-`motion` preference. Every field in one `when` must match. `value` can set the same things a theme does. A partial type scale, radius, or motion is completed from the theme's own config. Rules apply after the theme, in order, so a later matching rule wins. They apply through CSS only: `useTheme().token()` keeps returning the theme's root values. An adapted token sits after the root tokens with the same selector, so while its condition matches it wins by cascade order; no `!important` is involved. To override it, use a more specific selector, such as one naming the wrapper's id or class, or put the override in CSS that is not inside an `@layer` — unlayered styles always beat layered ones.
+`adaptations.rules` is an ordered list of `{ when, value }`. `when` can hold a width range by named breakpoint (`sm` 640, `md` 768, `lg` 1024, `xl` 1280, `2xl` 1536 CSS px; change them with `widthBreakpoints`), a `pointer` of `coarse` or `fine`, a `contrast` preference, and a reduced-`motion` preference. Every field in one `when` must match. `value` can set the same things a theme does. A partial type scale, radius, or motion is completed from the theme's own config. Rules apply after the theme, in order, so a later matching rule wins. They apply through CSS only: `useTheme().token()` keeps returning the theme's root values. An adapted token sits after the root tokens with the same selector, so while its condition matches it wins by cascade order; no `!important` is involved. To override an adapted token, follow the rules in [Overriding theme tokens](#overriding-theme-tokens).
 
 ### `extends`
 

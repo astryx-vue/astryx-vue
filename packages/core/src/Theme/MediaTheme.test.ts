@@ -110,6 +110,53 @@ describe('media theme', () => {
     wrapper.unmount()
   })
 
+  it('re-measures on a color mode switch even when nothing re-renders', async () => {
+    // The OS color scheme is the only input that moves. No component props or
+    // slots change, so only the watcher on the effective mode can trigger a
+    // new measurement.
+    const original = window.matchMedia
+    const heard: { listener: ((event: MediaQueryListEvent) => void) | null } = { listener: null }
+    window.matchMedia = ((query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: (_type: string, callback: (event: MediaQueryListEvent) => void) => {
+        heard.listener = callback
+      },
+      removeEventListener: () => {
+        heard.listener = null
+      },
+    })) as unknown as typeof window.matchMedia
+
+    const wrapper = mount(defineComponent({
+      render: () => h('div', {
+        class: 'ambient',
+        style: {
+          '--astryx-color-text-primary': '#171717',
+          '--astryx-color-on-dark': '#ffffff',
+          '--astryx-color-on-light': '#171717',
+        },
+      }, [
+        h('div', { style: { background: 'rgb(10, 19, 23)' } }, [
+          h(MediaTheme, { mode: 'auto' } as never, () => h('span', { class: 'child' }, 'content')),
+        ]),
+      ]),
+    }), { attachTo: document.body })
+
+    try {
+      expect(wrapper.get('.astryx-media-theme').attributes('data-astryx-media')).toBe('dark')
+      // Stands in for `light-dark()` flipping the ambient text color.
+      wrapper.get('.ambient').element.style.setProperty('--astryx-color-text-primary', '#fafafa')
+      heard.listener?.({ matches: true } as MediaQueryListEvent)
+      await nextTick()
+      await nextTick()
+      expect(wrapper.get('.astryx-media-theme').attributes('data-astryx-media')).toBeUndefined()
+    }
+    finally {
+      wrapper.unmount()
+      window.matchMedia = original
+    }
+  })
+
   it('applies the theme onDark tokens inside a dark media theme', () => {
     const wrapper = mount(Theme, {
       props: { theme: ocean },
