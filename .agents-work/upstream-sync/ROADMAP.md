@@ -15,7 +15,7 @@ mindmap
       ✅ A4 蜂群基础设施
     阶段 B 公共底座：核心共享层
       🔷 B1 主题系统与设计变量
-      🔵 B2 基础重置样式
+      🟡 B2 基础重置样式
       ✅ B3 交互逻辑常用函数
       🔴 B4 浮层图层运行时
       ✅ B5 界面文案与图标
@@ -314,7 +314,7 @@ flowchart TB
 | A3 | 工程护栏 | — | ✅ 已完成 | 2 | A3-impl-r2 | A3-verify-r2 | 第 2 轮通过 26/26，两种模式都通过 | 163f333 9a1d2f2 |
 | A4 | 蜂群基础设施 | A1 A2 A3 | ✅ 已完成 | 2 | A4-impl-r2 | A4-verify-r2 | 第 2 轮通过 33/33 | 00fd7d0 |
 | B1 | 主题系统与 token | A4 | 🔷 验收中 | 2 | B1-impl-r2 | B1-verify-r2 | 第 1 轮 16/17：MediaTheme auto 在 mode 切换后不重测 | |
-| B2 | reset 与基础样式 | A4 | 🔵 可开工 | 0 | | | | |
+| B2 | reset 与基础样式 | A4 | 🟡 实现中 | 1 | B2-impl | | | |
 | B3 | 交互底座 composables | A4 | ✅ 已完成 | 1 | B3-impl | B3-verify | 通过 17/17 | 2b22513 |
 | B4 | 浮层运行时 Layer | B3 | 🔴 返工中 | 2 | B4-impl-r2 | B4-verify | 第 1 轮 17/19 + 3 项补充发现不过 | |
 | B5 | 文案与图标 | A4 | ✅ 已完成 | 3 | B5-impl-r3 | B5-verify-r3 | 第 3 轮通过 | #129 |
