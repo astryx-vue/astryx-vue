@@ -16,6 +16,10 @@
 | `.agents-work/upstream-sync/ledger/<ID>.md` | 每个节点对应的上游提交台账。每一条都要打勾，并写上结论 |
 | `docs/adr/0001-new-packages.md` | 新包选型 |
 | PR #128（`swarm-tree` → `dev`，草稿） | 总 PR，Cloudflare 预览站从这里出 |
+| `templates/dispatch.md` | **派子代理时用的提示词模板**，里面有每次都要交代的纪律 |
+| `nodes/A4/carry-over.md` | 工具遗留问题。#6（上游页面偶尔超时，没有重试）和 #7（`worktree.mjs` 在 rebase 之后不重装依赖）还没修。在修好之前，rebase 或 merge 后如果 lockfile 变了，要手动在节点工作区跑 `pnpm install --frozen-lockfile` |
+
+上游参考仓库在 `/Users/shenqingchuan/workspace/astryx-upstream`，只读。对齐的目标是标签 `v0.7.1`，台账范围是 `96f9917f..v0.7.1`。读文件用 `git -C ../astryx-upstream show v0.7.1:<路径>`，看某个提交用 `git -C ../astryx-upstream show <sha>`。如果这个仓库不在，就从 github.com/facebook/astryx clone 一份，并 fetch 标签。
 
 工具：
 

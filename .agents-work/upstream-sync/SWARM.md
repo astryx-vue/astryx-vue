@@ -12,6 +12,7 @@
 | 派活前看谁该开工 | `node scripts/swarm/status.mjs ready` |
 | 建工作区 | `node scripts/swarm/worktree.mjs new <节点ID> <简短名>` |
 | 写计划 | 复制 `templates/plan.md`、`templates/verify.md` 到 `nodes/<节点ID>/` 再填 |
+| 派子代理 | 提示词照 `templates/dispatch.md` 填 |
 | 改状态 | `node scripts/swarm/status.mjs set <节点ID> <状态> [--round N] [--impl 名字] [--verify 名字] [--result 文本] [--pr 文本]` |
 | 看现状 | `node scripts/swarm/status.mjs show`、`node scripts/swarm/worktree.mjs ls` |
 | 复核加合入 | `node scripts/swarm/worktree.mjs merge <节点ID>` |
@@ -24,6 +25,13 @@
 4. `status.mjs set C1 实现中 --round 1 --impl C1-impl`，派出实现者。
 5. 实现者回报后：`status.mjs set C1 待验收`，再 `status.mjs set C1 验收中 --verify C1-verify`，派出验收者。
 6. 验收不通过：`status.mjs set C1 返工中 --result "第 1 轮不通过 15/18"`，再 `status.mjs set C1 实现中 --round 2`。
+返工轮次的文件约定：
+
+- 第 N 轮（N ≥ 2）的返工计划写成 `nodes/<ID>/plan-r<N>.md`。里面只写这一轮要改什么，并注明依据是 `verify-<N-1>.md` 的哪些项。`plan.md` 不动。
+- 新的检查项追加到 `verify.md` 末尾，编号接着往下排，开头标上「（第 N 轮）」。已有的编号不改。
+- 实现者的回报写成 `impl-<N>.md`，验收报告写成 `verify-<N>.md`，N 是轮次。
+- 连续 3 轮都不通过，就停下来问用户，不要自己派第 4 轮。
+
 7. 验收通过：读完 `verify-<N>.md`，按「总控验收后的终审复核」的第 2 步，用 `merge --keep` 复核，再开节点 PR 合进 `swarm-tree`。合入后执行 `status.mjs set C1 已完成 --result "通过 18/18" --pr #<PR号>`，下游会自动变成「可开工」。
 
 ## 节点生命周期状态图
