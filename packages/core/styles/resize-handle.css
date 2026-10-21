@@ -89,6 +89,48 @@
     cursor: row-resize;
   }
 
+  /*
+   * 抓取区跟握把走同一套物理偏移。6.5px 是 (16px - 3px) / 2，用来把更宽的抓取区中心对齐握把。
+   * 这段位移在行内轴上，从右到左时要改号，否则抓取区会偏到握把旁边。
+   */
+  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='center'] {
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+
+  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle__hit[data-bias='center'] {
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+  }
+
+  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='start'] {
+    inset-inline-start: 0;
+    transform: translateX(calc(-1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
+  }
+
+  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='end'] {
+    inset-inline-start: 0;
+    transform: translateX(calc(1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
+  }
+
+  :is([dir='rtl'] .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='start']) {
+    transform: translateX(calc(-1 * (3px + var(--astryx-spacing-1, 4px)) + 6.5px));
+  }
+
+  :is([dir='rtl'] .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='end']) {
+    transform: translateX(calc(1 * (3px + var(--astryx-spacing-1, 4px)) + 6.5px));
+  }
+
+  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle__hit[data-bias='start'] {
+    inset-block-start: 0;
+    transform: translateY(calc(-1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
+  }
+
+  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle__hit[data-bias='end'] {
+    inset-block-start: 0;
+    transform: translateY(calc(1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
+  }
+
   .astryx-resize-handle-pill {
     position: absolute;
     z-index: 2;

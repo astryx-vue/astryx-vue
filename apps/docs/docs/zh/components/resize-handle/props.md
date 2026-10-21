@@ -193,7 +193,7 @@ footer: false
 
 <code>percent(value, { min })</code> 或 <code>percent(value, { max })</code> 用来写百分比尺寸。<code>min</code> 和 <code>max</code> 的形状是 <code>{ type: 'pixel', value }</code>。
 
-方向键移动 10px，按住 Shift 移动 50px。Home、End、Enter 分别跳到最小值、最大值和展开时的尺寸。
+方向键移动 10px，按住 Shift 移动 50px。有吸附点时改为跳到相邻吸附点，Shift 跳两个。Home、End、Enter 分别跳到最小值、配置过的最大值和折叠前的尺寸。没写最大值时 End 不动。
 
 ## 原生属性
 

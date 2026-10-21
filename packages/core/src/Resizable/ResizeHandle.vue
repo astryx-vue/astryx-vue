@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
 import type { ResizeHandleProps, ResizeHandleSlots, ResizePillPlacement } from './types.js'
-import { computed, onBeforeUnmount, ref, useAttrs, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, ref, useAttrs, useTemplateRef, watch } from 'vue'
+import { getEffectiveMaxPx } from '../composables/internal/resizableChannel.js'
+import { devWarn } from '../composables/useDevWarning.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { handleResizeKey, toggleCollapse } from './resizeKeyboard.js'
 import '../../styles/resize-handle.css'
 
 defineOptions({
@@ -40,7 +43,7 @@ const active = computed(() => hovered.value || focused.value || dragging.value)
 const pillSide = computed(() => resolveSide(props.pillPlacement, props.isReversed, collapsed.value))
 
 const forwardedAttrs = computed(() => Object.fromEntries(
-  Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style' && key !== 'onKeydown'),
+  Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style' && key !== 'onKeydown' && key !== 'onKeyDown'),
 ))
 
 const rootClass = computed(() => ['astryx-resize-handle', attrs.class])
@@ -54,14 +57,30 @@ const ariaNow = computed(() => {
 })
 
 const ariaMax = computed(() => {
-  const max = props.resizable?._maxSizePx
-  return max != null && max !== Number.POSITIVE_INFINITY ? max : undefined
+  const resizable = props.resizable
+  if (resizable == null)
+    return undefined
+  const reported = getEffectiveMaxPx(resizable)
+  if (reported != null && Number.isFinite(reported))
+    return reported
+  const max = resizable._maxSizePx
+  return max != null && Number.isFinite(max) ? max : undefined
 })
+
+let warnedAxis = false
+watch(() => [props.direction, props.resizable?._direction] as const, ([direction, hookDirection]) => {
+  if (warnedAxis || hookDirection == null || hookDirection === direction)
+    return
+  warnedAxis = true
+  devWarn(
+    'ResizeHandle',
+    `direction="${direction}" but its useResizable region is "${hookDirection}". They must match: the hook measures one axis and the handle drags the other.`,
+  )
+}, { immediate: true })
 
 const ariaText = computed(() => collapsed.value && props.resizable ? messages.value.layout.collapsed : undefined)
 
-const pillStyle = computed<CSSProperties>(() => offsetStyle(props.direction, pillSide.value, true))
-const hitStyle = computed<CSSProperties>(() => offsetStyle(props.direction, pillSide.value, false))
+const pillStyle = computed<CSSProperties>(() => offsetStyle(props.direction, pillSide.value))
 
 function resolveSide(placement: ResizePillPlacement, reversed: boolean, isCollapsed: boolean): 'start' | 'end' | 'center' {
   if (placement !== 'auto')
@@ -72,21 +91,27 @@ function resolveSide(placement: ResizePillPlacement, reversed: boolean, isCollap
   return panelSide
 }
 
-function offsetStyle(direction: 'horizontal' | 'vertical', side: 'start' | 'end' | 'center', pill: boolean): CSSProperties {
+function offsetStyle(direction: 'horizontal' | 'vertical', side: 'start' | 'end' | 'center'): CSSProperties {
   const dir = side === 'center' ? 0 : side === 'start' ? -1 : 1
   const gap = 'var(--astryx-spacing-1, 4px)'
   if (direction === 'horizontal') {
     if (side === 'center')
       return { insetInlineStart: '50%', transform: 'translateX(-50%)' }
-    if (pill)
-      return { insetInlineStart: '0', transform: `translate(calc(${dir} * (100% + ${gap})), -50%)` }
-    return { insetInlineStart: '0', transform: `translateX(calc(${dir} * (3px + ${gap}) - 6.5px))` }
+    return { insetInlineStart: '0', transform: `translate(calc(${dir} * (100% + ${gap})), -50%)` }
   }
   if (side === 'center')
     return { insetBlockStart: '50%', transform: 'translateY(-50%)' }
-  if (pill)
-    return { top: '0', transform: `translate(-50%, calc(${dir} * (100% + ${gap})))` }
-  return { insetBlockStart: '0', transform: `translateY(calc(${dir} * (3px + ${gap}) - 6.5px))` }
+  return { top: '0', transform: `translate(-50%, calc(${dir} * (100% + ${gap})))` }
+}
+
+function callKeydown(handler: unknown, event: KeyboardEvent): void {
+  if (Array.isArray(handler)) {
+    for (const item of handler)
+      callKeydown(item, event)
+    return
+  }
+  if (typeof handler === 'function')
+    (handler as (event: KeyboardEvent) => void)(event)
 }
 
 function rtlMultiplier(): number {
@@ -165,46 +190,21 @@ function pointerCancel(event: PointerEvent) {
   props.resizable?._onResizeCancel?.()
 }
 
-function keydown(event: KeyboardEvent) {
+function onRootKeyDown(event: KeyboardEvent) {
+  callKeydown(attrs.onKeydown, event)
+  if (attrs.onKeyDown !== attrs.onKeydown)
+    callKeydown(attrs.onKeyDown, event)
   const resizable = props.resizable
   if (props.isDisabled || resizable == null)
     return
-  const step = event.shiftKey ? 50 : 10
-  const rtl = rtlMultiplier()
-  const move = (delta: number) => {
-    resizable._onResizeStart()
-    resizable._onResizeMove(delta)
-    resizable._onResizeEnd()
-  }
-  if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-    event.preventDefault()
-    move(step * rtl * sign.value)
-  }
-  else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-    event.preventDefault()
-    move(-step * rtl * sign.value)
-  }
-  else if (event.key === 'Home') {
-    event.preventDefault()
-    move(resizable._minSizePx - resizable._size)
-  }
-  else if (event.key === 'End' && resizable._maxSizePx !== Number.POSITIVE_INFINITY) {
-    event.preventDefault()
-    move(resizable._maxSizePx - resizable._size)
-  }
-  else if (event.key === 'Enter' && resizable._collapsible) {
-    event.preventDefault()
-    move(resizable._isCollapsed ? resizable._minSizePx : -resizable._size)
-  }
+  handleResizeKey(event, resizable, sign.value, rtlMultiplier(), props.direction === 'horizontal')
 }
 
 function doubleClick() {
   const resizable = props.resizable
   if (props.isDisabled || resizable == null || !resizable._collapsible)
     return
-  resizable._onResizeStart()
-  resizable._onResizeMove(resizable._isCollapsed ? resizable._minSizePx : -resizable._size)
-  resizable._onResizeEnd()
+  toggleCollapse(resizable)
 }
 
 onBeforeUnmount(() => {
@@ -239,14 +239,14 @@ onBeforeUnmount(() => {
     :data-disabled="isDisabled || undefined"
     :data-active="active || undefined"
     :data-resizing="dragging || undefined"
-    @keydown="keydown"
+    @keydown="onRootKeyDown"
     @dblclick="doubleClick"
     @focus="focused = true"
     @blur="focused = false"
   >
     <div
       class="astryx-resize-handle__hit"
-      :style="hitStyle"
+      :data-bias="pillSide"
       @pointerdown="pointerDown"
       @pointermove="pointerMove"
       @pointerup="pointerUp"
