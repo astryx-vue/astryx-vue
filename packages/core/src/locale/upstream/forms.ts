@@ -16,6 +16,7 @@ export const formsUpstreamMap: UpstreamMapPart = {
   '@astryx.field.optional': [{ path: 'field.optional' }],
   '@astryx.field.required': [{ path: 'field.required' }],
   '@astryx.inputClearButton.tooltip': [
+    { path: 'input.tooltip' },
     { path: 'fileInput.clear' },
     { path: 'selector.clear' },
     { path: 'multiSelector.clear' },

@@ -8,8 +8,8 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { formatFileSize, selectFiles } from '../composables/useFileSelection.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import InputClearButton from '../Field/InputClearButton.vue'
 import Icon from '../Icon/Icon.vue'
-import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -45,7 +45,7 @@ const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 const placeholder = computed(() => props.placeholder ?? (
   props.isMultiple ? messages.value.fileInput.placeholderMultiple : messages.value.fileInput.placeholder
 ))
-const clearLabel = computed(() => props.clearLabel ?? messages.value.fileInput.clear)
+const clearLabel = computed(() => props.clearLabel ?? messages.value.fileInput.clearField(props.label))
 const status = computed<FieldStatusInput | undefined>(() => props.status ?? (
   validationError.value ? { type: 'error', message: validationError.value } : undefined
 ))
@@ -166,9 +166,7 @@ function onDrop(event: DragEvent): void {
           <Icon class="astryx-file-input-icon" icon="upload" size="sm" />
           <span class="astryx-file-input-text" :data-placeholder="!fileLabel || undefined">{{ fileLabel || placeholder }}</span>
         </button>
-        <IconButton v-if="fileLabel && !isDisabled" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel" @click="clear">
-          <FieldIcon type="clear" />
-        </IconButton>
+        <InputClearButton v-if="fileLabel && !isDisabled" :label="clearLabel" @click="clear" />
         <Spinner v-if="isLoading" size="sm" />
         <FieldIcon v-else-if="status" :type="status.type" />
       </div>
