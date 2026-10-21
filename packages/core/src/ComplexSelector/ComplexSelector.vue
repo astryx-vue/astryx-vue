@@ -1,16 +1,20 @@
 <script setup lang="ts" generic="Value">
 import type { Component } from 'vue'
 import type { ComplexSelectorEmits, ComplexSelectorHandle, ComplexSelectorProps, ComplexSelectorSlots, ComplexSelectorState, ComplexSelectorTriggerProps } from './types.js'
-import { computed, onBeforeUnmount, ref, useId, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { useDevWarning } from '../composables/useDevWarning.js'
 import Field from '../Field/Field.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import Spinner from '../Spinner/Spinner.vue'
 import '../../styles/complex-selector.css'
 
-defineOptions({ name: 'AstryxComplexSelector' })
+defineOptions({ name: 'AstryxComplexSelector', inheritAttrs: false })
 
 const props = withDefaults(defineProps<ComplexSelectorProps<Value>>(), {
   alignment: 'start',
@@ -27,6 +31,21 @@ const props = withDefaults(defineProps<ComplexSelectorProps<Value>>(), {
 
 const emit = defineEmits<ComplexSelectorEmits<Value>>()
 const slots = defineSlots<ComplexSelectorSlots<Value>>()
+const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'ComplexSelector',
+  props,
+  attrs: new Proxy(attrs, {
+    get(target, key, receiver) {
+      if (key === 'class' || key === 'style')
+        return undefined
+      return Reflect.get(target, key, receiver)
+    },
+  }),
+  reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-busy', 'aria-invalid', 'aria-required', 'disabled'],
+})
+const triggerVariant = computed(() => normalizeTriggerVariant(props.variant))
+const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
 
 const model = defineModel<Value>({ required: true })
 const messages = useAstryxMessages()
@@ -126,6 +145,16 @@ function onCustomKeyDown(event: KeyboardEvent): void {
 }
 
 const hasCustomTrigger = computed(() => props.renderTrigger != null || slots.trigger != null)
+useDevWarning(
+  'ComplexSelector',
+  '`containerClass`/`containerStyle` have no effect on a custom trigger.',
+  () => hasCustomTrigger.value && (props.containerClass != null || props.containerStyle != null),
+)
+useDevWarning(
+  'ComplexSelector',
+  '`controlClass`/`controlStyle` have no effect on a custom trigger.',
+  () => hasCustomTrigger.value && (props.controlClass != null || props.controlStyle != null),
+)
 const triggerProps = computed<ComplexSelectorTriggerProps>(() => ({
   'id': triggerId,
   'onClick': onCustomClick,
@@ -172,6 +201,9 @@ defineExpose(handle)
 <template>
   <Popover
     v-if="hasCustomTrigger"
+    v-bind="parts.forwardedAttrs()"
+    :class="attrs.class"
+    :style="attrs.style"
     :alignment="alignment"
     :has-auto-focus="true"
     :has-close-button="false"
@@ -200,7 +232,9 @@ defineExpose(handle)
   <Field
     v-else
     class="astryx-complex-selector-field"
-    :data-variant="variant"
+    :class="[attrs.class, parts.containerClass.value]"
+    :style="[attrs.style, parts.containerStyle.value]"
+    :data-variant="triggerVariant"
     :description="description"
     :input-id="triggerId"
     :is-disabled="isDisabled"
@@ -211,7 +245,7 @@ defineExpose(handle)
     :label-id="labelId"
     :label-tooltip="labelTooltip"
     :status="status"
-    :status-variant="statusVariant"
+    :status-variant="effectiveStatusVariant"
     :width="width"
   >
     <Popover
@@ -227,12 +261,15 @@ defineExpose(handle)
       @open-change="setOpen"
     >
       <button
+        v-bind="parts.forwardedAttrs()"
         :id="triggerId"
         class="astryx-complex-selector"
+        :class="controlClass"
+        :style="controlStyle"
         :data-placeholder="hasTriggerLabel ? undefined : ''"
         :data-size="size"
-        :data-status="status?.type"
-        :data-variant="variant"
+        :data-status="triggerVariant === 'input' ? status?.type : undefined"
+        :data-variant="triggerVariant"
         :aria-busy="isBusy || undefined"
         :aria-expanded="isOpen"
         :aria-invalid="status?.type === 'error' || undefined"

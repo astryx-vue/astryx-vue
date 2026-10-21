@@ -1,4 +1,5 @@
 import type { MaybeRefOrGetter, Ref, ShallowRef } from 'vue'
+import type { OptionActionNode } from '../selectors/optionAction.js'
 import { onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
 
 /**
@@ -9,6 +10,8 @@ export interface SearchableItem<TAux = unknown> {
   label: string
   disabled?: boolean
   description?: string
+  /** 这一项旁边的操作。点它不会改选择。有一项带了操作，菜单就变成两列网格。 */
+  action?: OptionActionNode | null
   auxiliaryData?: TAux
 }
 

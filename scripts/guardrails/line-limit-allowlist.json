@@ -1,8 +1,6 @@
 {
   "packages/cli/src/cli.ts": 623,
   "packages/core/src/BottomSheet/useSheetGestures.ts": 620,
-  "packages/core/src/MultiSelector/MultiSelector.vue": 763,
   "packages/core/src/PowerSearch/PowerSearch.vue": 706,
-  "packages/core/src/Selector/Selector.vue": 584,
   "packages/core/src/Table/TableData.vue": 596
 }
