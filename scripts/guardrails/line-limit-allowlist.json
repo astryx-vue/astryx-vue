@@ -5,7 +5,6 @@
   "packages/core/src/DropdownMenu/DropdownMenu.vue": 517,
   "packages/core/src/DropdownMenu/types.ts": 532,
   "packages/core/src/HoverCard/useHoverCard.ts": 592,
-  "packages/core/src/Markdown/render.ts": 599,
   "packages/core/src/MultiSelector/MultiSelector.vue": 763,
   "packages/core/src/PowerSearch/PowerSearch.vue": 707,
   "packages/core/src/Selector/Selector.vue": 584,

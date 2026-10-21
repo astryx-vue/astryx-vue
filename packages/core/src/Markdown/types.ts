@@ -1,4 +1,5 @@
 import type { Component, VNodeChild } from 'vue'
+import type { MarkdownPluginEntry } from './plugin-protocol/protocol.js'
 import type { MarkdownInlinePlugin, MarkdownPlugin } from './plugins.js'
 
 export type MarkdownDisplay = 'block' | 'inline'
@@ -111,10 +112,12 @@ export interface MarkdownProps {
    */
   onLinkClick?: (href: string, event: MouseEvent) => void | false
   /**
-   * Document plugins. Each one may replace the parsed tree and draw the
-   * extension nodes it owns. An empty list leaves the document unchanged.
+   * Document plugins. A `MarkdownPlugin` may replace the parsed tree and draw
+   * the extension nodes it owns. A `MarkdownPluginEntry` from
+   * `createMarkdownPlugin` runs syntax and transforms, including
+   * `markdownSourceLinesPlugin`. An empty list leaves the document unchanged.
    */
-  plugins?: readonly MarkdownPlugin[]
+  plugins?: readonly (MarkdownPlugin | MarkdownPluginEntry)[]
   /**
    * Patterns matched against text nodes, in order. The first match at a
    * position wins. Inline code and fenced code are left alone.

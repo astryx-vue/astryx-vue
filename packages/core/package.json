@@ -474,6 +474,21 @@
       "types": "./dist/Markdown/index.d.ts",
       "import": "./dist/Markdown/index.js"
     },
+    "./Markdown/parser": {
+      "source": "./src/Markdown/parser/index.ts",
+      "types": "./dist/Markdown/parser/index.d.ts",
+      "import": "./dist/Markdown/parser/index.js"
+    },
+    "./Markdown/plugins": {
+      "source": "./src/Markdown/plugin-protocol/index.ts",
+      "types": "./dist/Markdown/plugin-protocol/index.d.ts",
+      "import": "./dist/Markdown/plugin-protocol/index.js"
+    },
+    "./Markdown/plugin-renderer": {
+      "source": "./src/Markdown/plugin-renderer/index.ts",
+      "types": "./dist/Markdown/plugin-renderer/index.d.ts",
+      "import": "./dist/Markdown/plugin-renderer/index.js"
+    },
     "./Chat": {
       "source": "./src/Chat/index.ts",
       "types": "./dist/Chat/index.d.ts",
@@ -961,6 +976,18 @@
       "./Markdown": {
         "types": "./dist/Markdown/index.d.ts",
         "import": "./dist/Markdown/index.js"
+      },
+      "./Markdown/parser": {
+        "types": "./dist/Markdown/parser/index.d.ts",
+        "import": "./dist/Markdown/parser/index.js"
+      },
+      "./Markdown/plugins": {
+        "types": "./dist/Markdown/plugin-protocol/index.d.ts",
+        "import": "./dist/Markdown/plugin-protocol/index.js"
+      },
+      "./Markdown/plugin-renderer": {
+        "types": "./dist/Markdown/plugin-renderer/index.d.ts",
+        "import": "./dist/Markdown/plugin-renderer/index.js"
       },
       "./Chat": {
         "types": "./dist/Chat/index.d.ts",
