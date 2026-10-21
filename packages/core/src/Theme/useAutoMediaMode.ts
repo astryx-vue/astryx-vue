@@ -101,8 +101,9 @@ export function useAutoMediaMode(
       && key.mode === lastKey.mode
       && key.tokens === lastKey.tokens
       && detected.value !== null
-    )
+    ) {
       return
+    }
     lastKey = key
     const [ambient, onDark, onLight] = paintedColors(surface, [
       '--astryx-color-text-primary',
