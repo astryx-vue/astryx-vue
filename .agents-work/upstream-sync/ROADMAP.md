@@ -279,7 +279,7 @@ flowchart TB
 整个地图分三层：**阶段 → 任务树节点 → 检查项**。
 **任务树节点**是最小管理单位。每个节点由两个不同的子代理配合完成：
 
-1. **实现者**（固定使用 `deepseek/deepseek-flash`）：按照总控写好的 `plan.md` 动手改代码。
+1. **实现者**（固定使用 `sub2tok/claude-sonnet-5-5`）：按照总控写好的 `plan.md` 动手改代码。
 2. **验收者**（固定使用 `sub2tok/claude-sonnet-5-5`）：按照总控写好的 `verify.md` 逐项检查，必须打开浏览器亲眼看。
 
 ### 推进原则
@@ -421,7 +421,7 @@ flowchart TB
 | --- | --- | --- | --- |
 | C1 基础输入 | TextInput、TextArea、NumberInput、FileInput、InputGroup、InputClearButton、Field、FieldLabel、FieldStatus、FormLayout | 接入 FR10 破坏性改动（上游 PR #7336）；清除按钮增加无障碍提示文字。 | B1 B2 B3 B5 B6 |
 | C2 勾选与开关 | CheckboxInput、CheckboxList、RadioList、Radio、Switch、Slider、SegmentedControl、ToggleButton | 接入部分 FR10 改动（上游 PR #7339）。 | B3 B6 |
-| C3 选择器家族 | Selector、MultiSelector、ComplexSelector、Typeahead、Tokenizer | 接入 FR10 改动（上游 PR #7341）；支持 secondary 次要样式；支持 hasCreate 新建选项；支持 trigger 触发器自定义插槽；完善选项操作；主动拆分大文件 `MultiSelector.vue` 和 `Selector.vue`。 | C1 B4 |
+| C3 选择器家族 | Selector、MultiSelector、ComplexSelector、Typeahead、Tokenizer | 接入 FR10 改动（上游 PR #7341）；**用户报告的 bug**：演练场 `settings` 模板顶部的 Typeahead 写的是上游的 `is-label-hidden`，而我们的属性叫 `labelHidden`，结果「Search」标签照样显示出来，把 Settings 标题挤得折行（origin/dev 上就已经存在）。属性名要和上游对齐成 `isLabelHidden`（旧名先保留作为别名），然后在浏览器里确认这个模板的标题不再折行；支持 secondary 次要样式；支持 hasCreate 新建选项；支持 trigger 触发器自定义插槽；完善选项操作；主动拆分大文件 `MultiSelector.vue` 和 `Selector.vue`。 | C1 B4 |
 | C4 PowerSearch / CommandPalette | PowerSearch、CommandPalette | 接入破坏性改动（上游 PR #7347）；主动拆分大文件 `PowerSearch.vue`。 | C3 |
 | C5 日期时间家族 | Calendar、DateInput、DateRangeInput、DateTimeInput、TimeInput、Timestamp、Timer | 接入 FR10 改动（上游 PR #7337）；根据鼠标或触屏类型智能切换选择器（上游 PR #5243）；新增 presentation 展现模式属性。 | C1 B4 B7 |
 | C6 菜单家族 | DropdownMenu、ContextMenu、MoreMenu | 增加 DropdownMenuGroup 分组组件；手机触屏支持子菜单逐级滑入；鼠标滑动支持安全三角区防误触；方向键循环与按字母快速跳转；菜单行支持真实链接跳转；主动拆分大文件 `DropdownMenu.vue` 和 `types.ts`。 | B3 B4 B6 |
