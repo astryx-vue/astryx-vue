@@ -45,6 +45,7 @@
 - <总控复核时特别要盯的点，比如「第 26 项是重点，因为……」>
 - **验证要短小**：一次只验证一件事，每条命令都要有时间上限。浏览器命令用 `browser-lock.mjs run --max-run <秒>`，默认 180 秒；其他命令前面加 `timeout <秒>`。超时了不要原样重跑，先把卡住的那一步拆出来单独跑。实在测不了的，就读代码确认，并在报告里注明。能用 `git show BASE:<文件>` 回答的问题，不要为了对比去新建一个要装依赖的 BASE 工作区。
 - 浏览器：整台机器同时最多开 2 个浏览器会话，你同一时刻只开 1 个。只能通过 browser-lock.mjs run 或者 pnpm visual 打开浏览器。
+- 交给总控给用户看的主证据必须是文档站整页截图（中文 `/components/<slug>`，需要时 `/en/components/<slug>`，能看到侧栏或顶栏，并滚到有实质 Demo 的位置）。夹具和 `pnpm visual` 只能作内部核对，不能拿 overview 或单组件页冒充。详见 SWARM.md「发给用户的验收对照图」。
 - 命令：vitest 一律加 --maxWorkers=2，所有命令前加 env -u NODE_ENV。测试相关的检查项要在两种 NODE_ENV 下各跑一遍。
 - 访问外网前先设代理：export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890 。上游官网偶尔会超时，超时就重跑。
 - 临时文件放在 /tmp/verify-<ID>/。开始和结束时各跑一次 git status，两次结果要一样。

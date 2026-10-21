@@ -28,6 +28,7 @@
   - 只能这样开：`pnpm visual <组件> --out /tmp/verify-<节点ID>/visual`，或者 `node scripts/swarm/browser-lock.mjs run --purpose <节点ID>-verify -- <命令>`。拿不到锁就排队，不许私开。
   - 文档站用 **<5170 + 槽位号>** 端口（`node scripts/swarm/worktree.mjs ls` 能看到本工作区的槽位），同一时刻只开一个，用完关掉。
   - 看截图用读图工具直接读 PNG 文件。
+  - **涉及界面时，给总控、再转给用户的主证据图必须来自文档站组件页整页。** 中文打开 `http://127.0.0.1:<端口>/components/<slug>`（源文件在 `apps/docs/docs/zh/components/<slug>/`，地址里没有 `/zh/`），需要英文时再打开 `/en/components/<slug>`。图里要能看到文档壳（侧栏，或顶栏和标题区），并滚到有实质 Demo 的段落，不能只剩标题。节点夹具页、Vite preview 单页、`pnpm visual` 的 overview 和卡片拼图、只有一两行示例的首屏，都不能冒充这组图。`pnpm visual` 和夹具只用于内部对像素，报告里要标明。截图放 evidence 或 `/tmp`。evidence 目录已被 gitignore，不要 `git add -f`。详见 SWARM.md「发给用户的验收对照图」。
 
 ## 检查项
 
@@ -37,7 +38,7 @@
 
 <涉及界面的节点必写。每条：打开哪个页面、做什么操作、应该看到什么。>
 
-1. `pnpm visual <组件> --out /tmp/verify-<节点ID>/visual`，四种组合（桌面/390px 窄屏 × 浅色/深色）的对照图逐张用读图工具看：<应该看到什么一致>。
+1. 涉及界面时，主证据是文档站组件页整页的四种组合（桌面/390px 窄屏 × 浅色/深色），逐张用读图工具看：<应该看到什么一致>。中文页 `http://127.0.0.1:<端口>/components/<slug>`，需要时再看 `/en/components/<slug>`。每张图都能看到文档壳，并滚到有实质 Demo 的段落。`pnpm visual <组件> --out /tmp/verify-<节点ID>/visual` 只作内部像素核对；overview、夹具页、Vite preview 单页不能冒充这一条。
 2. <交互：键盘、鼠标、触屏、焦点怎么移动、动画节奏。>
 3. <读屏：role、名称、状态。>
 
@@ -59,7 +60,7 @@
 10. 上游新增或改动的测试用例，都有对应的 Vue 测试，两种 NODE_ENV 下都通过。
 11. 中英文文档、交互示例、`meta.ts` 都更新了：打开中英文两个页面，示例能操作。
 12. 本节点涉及的组件都不在 SSR 已知失败名单 `ssr-known-failures.json` 里。
-13. 附带了四种组合的视觉对比图，并且你亲眼看过。
+13. 附带了四种组合的文档站整页对照图，并且你亲眼看过。报告里每张图标明是「文档站整页」还是「内部 visual/夹具」；给用户的必须写文档站 URL。夹具或 overview 不算这一条。
 14. 改到的超过 500 行的源码文件都拆开了，并从 `scripts/guardrails/line-limit-allowlist.json` 里移出。
 
 ### 四、整体
