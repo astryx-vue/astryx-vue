@@ -23,7 +23,7 @@
 4. `status.mjs set C1 实现中 --round 1 --impl C1-impl`，派出实现者。
 5. 实现者回报后：`status.mjs set C1 待验收`，再 `status.mjs set C1 验收中 --verify C1-verify`，派出验收者。
 6. 验收不通过：`status.mjs set C1 返工中 --result "第 1 轮不通过 15/18"`，再 `status.mjs set C1 实现中 --round 2`。
-7. 验收通过：读完 `verify-<N>.md`，然后 `worktree.mjs merge C1`。合入成功后 `status.mjs set C1 已完成 --result "通过 18/18" --pr <提交号>`，下游会自动变成「可开工」。
+7. 验收通过：读完 `verify-<N>.md`，按「总控验收后的终审复核」的第 2 步，用 `merge --keep` 复核，再开节点 PR 合进 `swarm-tree`。合入后执行 `status.mjs set C1 已完成 --result "通过 18/18" --pr #<PR号>`，下游会自动变成「可开工」。
 
 ## 节点生命周期状态图
 
@@ -212,5 +212,13 @@ stateDiagram-v2
 当 Sonnet 验收者给出「通过」结论后，总控在把节点标记为「已完成」前，必须亲手完成以下 3 件事：
 
 1. **查验真凭实据**：完整通读 `verify-<N>.md`，确认每一条检查项都附带了明确的命令输出、截图或证据，没有任何一项目测敷衍或留空。
-2. **复核并合入**：在主工作区运行 `node scripts/swarm/worktree.mjs merge <节点ID>`。它先 rebase 到最新的 `swarm-tree`，再在节点工作区里跑完整检查（check:packages、lint、typecheck、vitest、build、lint:pkg，不带 `NODE_ENV`），全部通过才 fast-forward 合入，最后删掉工作区。任何一步失败都不合入，按报错处理后重跑。
-3. **更新看板**：`node scripts/swarm/status.mjs set <节点ID> 已完成 --result "通过 X/Y" --pr <提交号>`。它同时改树状图和总表，并把依赖已经全部完成的下游节点改成「可开工」。改完跑一次 `status.mjs check` 确认一致。
+2. **复核并合入（在 GitHub 上留痕）**：
+   1. 在主工作区运行 `node scripts/swarm/worktree.mjs merge <节点ID> --keep`。它会先 rebase 到最新的 `swarm-tree`，然后在节点工作区里跑完整检查（check:packages、lint、typecheck、vitest、build、lint:pkg，不带 `NODE_ENV`）。全部通过后，在本地把节点分支 fast-forward 合进 `swarm-tree`，并保留工作区。任何一步失败都不会合入，按报错处理后重跑。
+   2. 推送节点分支：`git push -u origin sync/<节点>-<简短名>`。
+   3. 开 PR，方向是 `sync/<节点>-<简短名>` → `swarm-tree`：
+      - 标题写 `<节点ID> <节点名称>`。
+      - 正文照 `pr` skill 的模板写，要说明三件事：这个节点改了什么、验收结论（附 `nodes/<ID>/verify-<N>.md` 的路径），以及复核时 `merge` 的检查结果。
+   4. **不等人工评审**，用 `gh pr merge <PR号> --rebase` 直接合入。本地的 `swarm-tree` 已经是同样的提交，所以 GitHub 上的合并也只是 fast-forward。如果 GitHub 报告分支已经落后，就先 `git push origin swarm-tree`，再合。
+   5. 推送本地的 `swarm-tree`（`git push origin swarm-tree`），确认它和远程一致。然后运行 `worktree.mjs rm <节点ID>`，清掉工作区和本地分支。
+   6. 节点合向 `swarm-tree` 的 PR **不部署文档预览**，`docs.yml` 只在合向 `main` 或 `dev` 的 PR 上部署。`swarm-tree` 一更新，总 PR #128（`swarm-tree` → `dev`）会自动重新部署，用户在那个预览站上验收。
+3. **更新看板**：`node scripts/swarm/status.mjs set <节点ID> 已完成 --result "通过 X/Y" --pr #<PR号>`。它同时改树状图和总表，并把依赖已经全部完成的下游节点改成「可开工」。改完跑一次 `status.mjs check` 确认一致。
