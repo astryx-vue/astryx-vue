@@ -1,7 +1,8 @@
 import type { ContextMenuItemData, ContextMenuOption } from './types.js'
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { h, nextTick } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
+import { provideAstryxLocale } from '../locale/index.js'
 import ContextMenu from './ContextMenu.vue'
 import ContextMenuItem from './ContextMenuItem.vue'
 import { resetMenuPress } from './useMenuPress.js'
@@ -79,6 +80,19 @@ describe('contextMenu', () => {
     expect(trigger.hasAttribute('aria-haspopup')).toBe(false)
     expect(trigger.hasAttribute('aria-expanded')).toBe(false)
     expect(trigger.hasAttribute('role')).toBe(false)
+  })
+
+  it('names an unlabelled menu from the active locale', () => {
+    const Host = defineComponent({
+      components: { ContextMenu },
+      setup() {
+        provideAstryxLocale('zh-CN')
+        return { items: [{ label: '编辑' }] }
+      },
+      template: '<ContextMenu :items="items" />',
+    })
+    mount(Host, { attachTo: document.body })
+    expect(document.querySelector('.astryx-context-menu')?.getAttribute('aria-label')).toBe('快捷菜单')
   })
 
   it('renders an inline trigger with triggerAs="span"', () => {
