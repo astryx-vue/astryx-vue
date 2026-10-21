@@ -260,7 +260,8 @@ C9 Markdown 第 2 轮 checklist 28/28 通过之后，总控把对照图发给用
    3. 开 PR，方向是 `sync/<节点>-<简短名>` → `swarm-tree`：
       - 标题写 `<节点ID> <节点名称>`。
       - 正文照 `pr` skill 的模板写，要说明三件事：这个节点改了什么、验收结论（附 `nodes/<ID>/verify-<N>.md` 的路径），以及复核时 `merge` 的检查结果。
-   4. **不等人工评审**，直接推送本地的 `swarm-tree`（`git push origin swarm-tree`）。它已经包含节点分支的全部提交，GitHub 会自动把这个 PR 标成 Merged，PR 页面上保留完整的提交和正文。如果 PR 没有自动变成 Merged，再执行 `gh pr merge <PR号> --rebase`。
-   5. 运行 `worktree.mjs rm <节点ID>`，清掉工作区和本地分支。
-   6. 节点合向 `swarm-tree` 的 PR **不部署文档预览**，`docs.yml` 只在合向 `main` 或 `dev` 的 PR 上部署。`swarm-tree` 一更新，总 PR #128（`swarm-tree` → `dev`）会自动重新部署，用户在那个预览站上验收。
+   4. **节点 PR 的 CI 必须全绿，才能合进 `swarm-tree`。** `Check and dry-run` 和 `Test under production shell` 都绿了再做下一步。节点验收只跑相关测试，不跑全量套件，也不跑 `check:packages`，服务端渲染和 catalog 过期只有 CI 能拦住。若这两项是红的，而且红在别的节点留下的问题上，PR 正文必须点名这个问题，并写明已经有人认领，否则不能合。
+   5. **不等人工评审**。上一步通过之后，推送本地的 `swarm-tree`（`git push origin swarm-tree`）。它已经包含节点分支的全部提交，GitHub 会自动把这个 PR 标成 Merged，PR 页面上保留完整的提交和正文。如果 PR 没有自动变成 Merged，再执行 `gh pr merge <PR号> --rebase`。
+   6. 运行 `worktree.mjs rm <节点ID>`，清掉工作区和本地分支。
+   7. 节点合向 `swarm-tree` 的 PR **不部署文档预览**，`docs.yml` 只在合向 `main` 或 `dev` 的 PR 上部署。`swarm-tree` 一更新，总 PR #128（`swarm-tree` → `dev`）会自动重新部署，用户在那个预览站上验收。
 3. **更新看板**：`node scripts/swarm/status.mjs set <节点ID> 已完成 --result "通过 X/Y" --pr #<PR号>`。它同时改树状图和总表，并把依赖已经全部完成的下游节点改成「可开工」。改完跑一次 `status.mjs check` 确认一致。
