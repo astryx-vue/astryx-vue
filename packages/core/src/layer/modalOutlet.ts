@@ -48,3 +48,26 @@ export function resetModalOutletsForTests(): void {
   outlets.length = 0
   sync()
 }
+
+/**
+ * 等模态对话框把进场动画跑完。
+ *
+ * 动画里的 `transform` 会让对话框成为子元素 `position: fixed` 的参照物，而顶层
+ * （`popover`）元素只在已经被定位好之后才豁免。所以正在放动画的对话框里不能
+ * 搬东西进去，等它稳定了再搬。
+ *
+ * 没有动画、不支持 Web Animations API 时立刻返回；兜底最长等 `timeout` 毫秒。
+ */
+export function whenModalSettled(element: HTMLElement, timeout = 600): Promise<void> {
+  const animations = typeof element.getAnimations === 'function' ? element.getAnimations() : []
+  const running = animations.filter(animation => animation.playState === 'running')
+  if (running.length === 0)
+    return Promise.resolve()
+
+  const settled = Promise.all(running.map(animation => animation.finished.catch(() => undefined)))
+    .then(() => undefined)
+  const capped = new Promise<void>((resolve) => {
+    setTimeout(resolve, timeout)
+  })
+  return Promise.race([settled, capped])
+}

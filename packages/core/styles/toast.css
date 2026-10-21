@@ -12,13 +12,38 @@
     box-sizing: border-box;
     width: auto;
     margin: 0;
+    /* 先把浏览器给 popover 的默认外边距式 inset 清掉，再由下面的定位类定边。 */
+    inset: auto;
     inset-inline: 0;
+    /* popover="manual" 让视口进顶层，浏览器同时会给一份弹窗默认样式，这里清掉。 */
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
     padding: var(--astryx-spacing-4, 16px);
     pointer-events: none;
   }
 
   .astryx-toast-viewport > * {
     pointer-events: auto;
+  }
+
+  /* 视口搬进/搬出模态对话框时，节点等于重新插入文档，浏览器会把 `@starting-style`
+     里的进场动画重放一遍：toast 会在原来的位置上下一跳。搬的这一帧先关掉过渡。 */
+  .astryx-toast-viewport--rehosting,
+  .astryx-toast-viewport--rehosting * {
+    transition-property: none;
+  }
+
+  /* 搬的这一下不要让「刚进来」的起始值生效：起始值一恢复就成了动画的起点，
+     toast 会从 8px 下方滑上来，看上去就是位置跳了一下。 */
+  .astryx-toast-viewport--rehosting .astryx-toast-viewport__row {
+    grid-template-rows: 1fr;
+  }
+
+  .astryx-toast-viewport--rehosting .astryx-toast:not(.astryx-toast--exiting) {
+    opacity: 1;
+    transform: none;
   }
 
   .astryx-toast-viewport--placement-top-start,

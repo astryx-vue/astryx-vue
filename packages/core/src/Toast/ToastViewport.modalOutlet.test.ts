@@ -1,5 +1,5 @@
-import { enableAutoUnmount, mount } from '@vue/test-utils'
-import { afterEach, beforeAll, describe, expect, it } from 'vitest'
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
 import Dialog from '../Dialog/Dialog.vue'
 import { ensureDialogModalApi } from '../Dialog/testUtils.js'
@@ -33,7 +33,11 @@ describe('toast viewport and an open dialog', () => {
     const viewport = mount(ToastViewport, { attachTo: document.body })
 
     showToast('Saved')
-    await nextTick()
+    // 搬运要等对话框把进场动画跑完、再等两帧，所以这里是异步的。
+    await flushPromises()
+    await vi.waitFor(() => {
+      expect(document.body.querySelector('dialog')?.contains(document.querySelector('.astryx-toast-viewport'))).toBe(true)
+    })
 
     const element = document.body.querySelector('.astryx-toast-viewport')
     const dialogEl = document.body.querySelector('dialog')
@@ -54,8 +58,10 @@ describe('toast viewport and an open dialog', () => {
     const viewport = mount(ToastViewport, { attachTo: document.body })
 
     showToast('Saved')
-    await nextTick()
-    expect(document.body.querySelector('dialog')?.contains(document.querySelector('.astryx-toast-viewport'))).toBe(true)
+    await flushPromises()
+    await vi.waitFor(() => {
+      expect(document.body.querySelector('dialog')?.contains(document.querySelector('.astryx-toast-viewport'))).toBe(true)
+    })
 
     await dialog.setProps({ isOpen: false })
     await nextTick()

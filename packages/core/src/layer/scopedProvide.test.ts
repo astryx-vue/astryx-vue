@@ -26,6 +26,13 @@ describe('resetLayerScopedContext', () => {
     expect(registeredLayerScopedContexts()).toContain(buttonGroupContextKey)
   })
 
+  it('登记表里的每一项都是真的 key，不是未定义的导入', () => {
+    const keys = registeredLayerScopedContexts()
+    expect(keys.length).toBeGreaterThanOrEqual(20)
+    for (const key of keys)
+      expect(typeof key).toBe('symbol')
+  })
+
   it('按钮组里的浮层，里面的按钮不继承尺寸', async () => {
     mount(defineComponent({
       components: { Button, ButtonGroup, Popover },

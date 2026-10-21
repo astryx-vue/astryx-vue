@@ -1,6 +1,7 @@
 import type { InjectionKey } from 'vue'
 import { computed, provide } from 'vue'
-import { AvatarGroupContext, AvatarSizeContext } from '../Avatar/context.js'
+import { AvatarSizeContext } from '../Avatar/context.js'
+import { AvatarGroupContext } from '../AvatarGroup/context.js'
 import { breadcrumbContextKey } from '../Breadcrumbs/context.js'
 import { buttonGroupContextKey } from '../Button/context.js'
 import { chatListContextKey, chatMessageContextKey } from '../Chat/context.js'
