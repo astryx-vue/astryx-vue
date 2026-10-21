@@ -9,6 +9,7 @@ import { useOverflow } from '../composables/useOverflow.js'
 import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
@@ -18,7 +19,6 @@ import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenu', inheritAttrs: false })
 const props = withDefaults(defineProps<ContextMenuProps>(), {
-  label: 'Context menu',
   isDisabled: false,
   presentation: 'popover',
   size: 'md',
@@ -30,6 +30,8 @@ const emit = defineEmits<ContextMenuEmits>()
 defineSlots<ContextMenuSlots>()
 
 const attrs = useAttrs()
+const messages = useAstryxMessages()
+const menuName = computed(() => props.label ?? messages.value.contextMenu.label)
 
 /**
  * `class` and `style` describe the painted menu surface, the way upstream's
@@ -222,7 +224,7 @@ provide(contextMenuContextKey, {
   closeMenu,
   drillIn,
   isOpen,
-  menuLabel: computed(() => props.label),
+  menuLabel: menuName,
   menuSize: computed(() => props.size),
 })
 
@@ -297,7 +299,7 @@ defineExpose({
         v-show="isOpen && !isSheet"
         :id="menuId"
         ref="panel"
-        :aria-label="label"
+        :aria-label="menuName"
         class="astryx-context-menu"
         :class="attrs.class"
         :data-overflow="hasOverflow || undefined"
@@ -329,10 +331,10 @@ defineExpose({
   <BottomSheet
     v-if="isSheet"
     :is-open="isOpen"
-    :label="label"
+    :label="menuName"
     @update:is-open="onSheetOpen"
   >
-    <div class="astryx-context-menu-sheet" role="menu" :aria-label="label">
+    <div class="astryx-context-menu-sheet" role="menu" :aria-label="menuName">
       <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
         <ContextMenuItems
           v-if="items != null"

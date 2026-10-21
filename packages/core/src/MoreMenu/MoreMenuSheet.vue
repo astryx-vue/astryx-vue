@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { MoreMenuItem, MoreMenuOption, MoreMenuSection, MoreMenuSheetEmits, MoreMenuSheetProps } from './types.js'
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import Divider from '../Divider/Divider.vue'
 import Heading from '../Heading/Heading.vue'
 import Icon from '../Icon/Icon.vue'
@@ -25,6 +26,7 @@ const emit = defineEmits<MoreMenuSheetEmits>()
 
 const ROW_CONTROL_SELECTOR = 'a[href], button:not([disabled])'
 
+const teleportTarget = useLayerTeleportTarget()
 const sheet = useTemplateRef<HTMLElement>('sheet')
 const sheetBody = useTemplateRef<HTMLElement>('sheetBody')
 useScrollbars(sheetBody)
@@ -207,7 +209,7 @@ function onKeydown(event: KeyboardEvent): void {
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <Transition appear name="astryx-more-menu-sheet">
       <div v-if="isOpen" class="astryx-more-menu__sheet-layer astryx-layer">
         <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 按下遮罩关闭是纯指针的快捷方式；键盘用户走对话框自身的 Escape 路径。 -->

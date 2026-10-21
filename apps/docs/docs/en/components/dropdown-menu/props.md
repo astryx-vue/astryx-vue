@@ -18,7 +18,7 @@ footer: false
       <tr>
         <td><code>button</code></td>
         <td><code>DropdownMenuButtonProps</code></td>
-        <td><code>{ label: 'Menu' }</code></td>
+        <td>the active locale (<code>{ label: 'Menu' }</code> in English)</td>
         <td>Props for the trigger button — every <code>Button</code> prop except <code>clickAction</code>, which would compete with the menu for the same click. <code>size</code> also sets the height of the menu rows.</td>
       </tr>
       <tr>

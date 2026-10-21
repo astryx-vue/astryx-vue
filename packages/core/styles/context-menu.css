@@ -119,8 +119,8 @@
     font-size: var(--astryx-text-label-size, 0.875rem);
     line-height: var(--astryx-text-label-leading, 1.25);
     text-align: start;
-    /* Scroll ownership follows the menu's own overflow; see data-overflow. */
-    touch-action: none;
+    /* A menu that fits keeps the pinch gesture. Scrolling is opted in below. */
+    touch-action: pinch-zoom;
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;
@@ -143,7 +143,7 @@
    * menu that does not scroll keeps the gesture for the press model.
    */
   .astryx-context-menu[data-overflow='true'] {
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
   }
 
   .astryx-context-menu[data-placement='below'] {

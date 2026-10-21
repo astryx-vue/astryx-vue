@@ -2,7 +2,10 @@ import type { DropdownMenuOption } from './types.js'
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
+import { getInteractionModality, resetInteractionModalityForTest } from '../composables/internal/interactionModality.js'
+import { resetMenuPress } from '../composables/useMenuPress.js'
 import { LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
+import { provideAstryxLocale } from '../locale/index.js'
 import DropdownMenu from './DropdownMenu.vue'
 import DropdownMenuDivider from './DropdownMenuDivider.vue'
 import DropdownMenuGroup from './DropdownMenuGroup.vue'
@@ -13,6 +16,10 @@ enableAutoUnmount(afterEach)
 
 afterEach(() => {
   document.body.innerHTML = ''
+  resetInteractionModalityForTest()
+  resetMenuPress()
+  vi.useRealTimers()
+  vi.unstubAllGlobals()
 })
 
 function items(): DropdownMenuOption[] {
@@ -580,6 +587,7 @@ describe('dropdownMenu', () => {
       const row = rows()[0]!
       expect(row.tagName).toBe('A')
       expect(row.getAttribute('href')).toBe('#docs')
+      expect(row.getAttribute('draggable')).toBe('false')
       expect(row.getAttribute('rel')).toBe('noopener noreferrer')
 
       row.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, metaKey: true }))
@@ -694,5 +702,261 @@ describe('dropdownMenu', () => {
     const flyout = document.querySelector('.astryx-dropdown-submenu')
     expect(flyout).not.toBeNull()
     expect((flyout as HTMLElement).style.display).not.toBe('none')
+  })
+
+  it('opens on pointerdown and activates the row the pointer releases on', async () => {
+    const onClick = vi.fn()
+    const { surface, trigger } = renderMenu({ items: [{ label: 'Edit', onClick: vi.fn() }, { label: 'Copy', onClick }] })
+    const fromPoint = document.elementFromPoint.bind(document)
+    document.elementFromPoint = () => null
+
+    try {
+      const anchor = trigger.parentElement!
+      anchor.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 1, pointerType: 'mouse' }))
+      const row = rows().find(item => item.textContent?.includes('Copy'))!
+      row.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, button: 0, pointerId: 1, pointerType: 'mouse' }))
+      row.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, button: 0, pointerId: 1, pointerType: 'mouse' }))
+      await flushPromises()
+      expect(onClick).toHaveBeenCalledTimes(1)
+      expect(isShown(surface)).toBe(false)
+    }
+    finally {
+      document.elementFromPoint = fromPoint
+    }
+  })
+
+  it('keeps a touch press on the trigger from opening until the long press', async () => {
+    vi.useFakeTimers()
+    const { surface, trigger } = renderMenu()
+    trigger.parentElement!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 1, pointerType: 'touch' }))
+    await flushPromises()
+    expect(isShown(surface)).toBe(false)
+    vi.advanceTimersByTime(499)
+    expect(isShown(surface)).toBe(false)
+    vi.advanceTimersByTime(1)
+    await flushPromises()
+    expect(isShown(surface)).toBe(true)
+  })
+
+  it('does not open from a disabled trigger', async () => {
+    const { surface, trigger } = renderMenu({ button: { isDisabled: true, label: 'Menu' } })
+    trigger.click()
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }))
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }))
+    trigger.parentElement!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 1, pointerType: 'mouse' }))
+    await flushPromises()
+    expect(isShown(surface)).toBe(false)
+
+    const Host = defineComponent({
+      components: { DropdownMenu },
+      template: `
+        <DropdownMenu :items="[{ label: 'Edit' }]">
+          <template #trigger="props">
+            <button type="button" aria-disabled="true" v-bind="props">Custom</button>
+          </template>
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    const custom = [...document.querySelectorAll('button')].find(button => button.textContent === 'Custom')!
+    custom.click()
+    custom.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }))
+    custom.parentElement!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 2, pointerType: 'mouse' }))
+    await flushPromises()
+    const surfaces = [...document.querySelectorAll<HTMLElement>('.astryx-dropdown-menu')]
+    expect(surfaces.every(item => !isShown(item))).toBe(true)
+  })
+
+  it('suppresses the focus ring after a pointer pick and restores it for a keyboard focus', async () => {
+    const { surface, trigger } = renderMenu({ items: [{ label: 'Edit' }] })
+    trigger.click()
+    await flushPromises()
+    document.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse' }))
+    rows()[0]!.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))
+    await flushPromises()
+    expect(isShown(surface)).toBe(false)
+    expect(document.activeElement).toBe(trigger)
+    expect(trigger.getAttribute('data-astryx-focus-ring')).toBe('off')
+
+    trigger.blur()
+    document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }))
+    trigger.focus()
+    await nextTick()
+    expect(getInteractionModality()).toBe('keyboard')
+    expect(trigger.hasAttribute('data-astryx-focus-ring')).toBe(false)
+  })
+
+  it('closes only the top flyout on Escape', async () => {
+    const Host = defineComponent({
+      components: { DropdownMenu, DropdownMenuItem, DropdownMenuSubMenu },
+      template: `
+        <DropdownMenu :button="{ label: 'Actions' }">
+          <DropdownMenuSubMenu label="Move to">
+            <DropdownMenuItem label="Projects" />
+          </DropdownMenuSubMenu>
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    const trigger = document.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-trigger > .astryx-button')!
+    trigger.click()
+    await flushPromises()
+    const row = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(item => item.textContent?.includes('Move to'))!
+    row.click()
+    await flushPromises()
+    const flyout = document.querySelector<HTMLElement>('.astryx-dropdown-submenu')!
+    const parent = document.querySelector<HTMLElement>('.astryx-dropdown-menu:not(.astryx-dropdown-submenu)')!
+    expect(flyout.style.display).not.toBe('none')
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }))
+    await flushPromises()
+    expect(flyout.style.display).toBe('none')
+    expect(isShown(parent)).toBe(true)
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }))
+    await flushPromises()
+    expect(isShown(parent)).toBe(false)
+  })
+
+  it('treats a menu with a header or footer as a dialog and wraps Tab inside it', async () => {
+    const Host = defineComponent({
+      components: { DropdownMenu, DropdownMenuItem },
+      template: `
+        <DropdownMenu :button="{ label: 'Labels' }">
+          <template #header>
+            <input aria-label="Filter labels" />
+          </template>
+          <template #footer>
+            <button type="button">Create label</button>
+          </template>
+          <DropdownMenuItem label="Bug" />
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    const trigger = document.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-trigger > .astryx-button')!
+    trigger.click()
+    await flushPromises()
+    const dialog = document.querySelector<HTMLElement>('[role="dialog"]')!
+    const menu = dialog.querySelector<HTMLElement>('[role="menu"]')!
+    expect(dialog.getAttribute('aria-modal')).toBe('true')
+    expect(trigger.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(trigger.getAttribute('aria-controls')).toBe(dialog.id)
+
+    const row = menu.querySelector<HTMLElement>('[role="menuitem"]')!
+    row.focus()
+    row.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab' }))
+    await nextTick()
+    const footer = [...dialog.querySelectorAll('button')].find(button => button.textContent === 'Create label')!
+    expect(document.activeElement).toBe(footer)
+
+    footer.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab' }))
+    await nextTick()
+    const filter = dialog.querySelector('input')!
+    expect(document.activeElement).toBe(filter)
+    expect(dialog.style.display).not.toBe('none')
+
+    filter.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'b' }))
+    await nextTick()
+    expect(document.activeElement).toBe(filter)
+  })
+
+  it('names the default trigger from the active locale', () => {
+    const { surface, trigger } = renderMenu()
+    expect(trigger.textContent).toContain('Menu')
+    expect(surface.getAttribute('aria-label')).toBe('Menu')
+
+    const Host = defineComponent({
+      components: { DropdownMenu },
+      setup() {
+        provideAstryxLocale('zh-CN')
+        return {}
+      },
+      template: '<DropdownMenu :items="[{ label: \'编辑\' }]" />',
+    })
+    mount(Host, { attachTo: document.body })
+    const named = [...document.querySelectorAll('.astryx-dropdown-menu-trigger > .astryx-button')].at(-1)!
+    const panel = [...document.querySelectorAll('.astryx-dropdown-menu')].at(-1)!
+    expect(named.textContent).toContain('菜单')
+    expect(panel.getAttribute('aria-label')).toBe('菜单')
+  })
+
+  it('opens a flyout after the hover delay and keeps it while the pointer is over the flyout', async () => {
+    vi.useFakeTimers()
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: query === '(hover: hover)',
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+      onchange: null,
+    }))
+    const Host = defineComponent({
+      components: { DropdownMenu, DropdownMenuItem, DropdownMenuSubMenu },
+      template: `
+        <DropdownMenu :button="{ label: 'Actions' }">
+          <DropdownMenuSubMenu label="Move to">
+            <DropdownMenuItem label="Projects" />
+          </DropdownMenuSubMenu>
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    document.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-trigger > .astryx-button')!.click()
+    await flushPromises()
+    const row = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(item => item.textContent?.includes('Move to'))!
+    row.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    vi.advanceTimersByTime(149)
+    const flyout = () => document.querySelector<HTMLElement>('.astryx-dropdown-submenu')!
+    expect(flyout().style.display).toBe('none')
+    vi.advanceTimersByTime(1)
+    await flushPromises()
+    expect(flyout().style.display).not.toBe('none')
+
+    row.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true, clientX: 0, clientY: 0 }))
+    flyout().dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }))
+    vi.advanceTimersByTime(1000)
+    expect(flyout().style.display).not.toBe('none')
+  })
+
+  it('pops one drill-in level on Escape and leaves the menu open', async () => {
+    const Host = defineComponent({
+      components: { DropdownMenu, DropdownMenuSubMenu },
+      template: `
+        <DropdownMenu :button="{ label: 'Actions' }">
+          <DropdownMenuSubMenu label="Move to" presentation="drill-in">
+            <span role="menuitem" tabindex="-1">Projects</span>
+          </DropdownMenuSubMenu>
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    const trigger = document.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-trigger > .astryx-button')!
+    trigger.click()
+    await flushPromises()
+    const row = document.querySelector<HTMLElement>('.astryx-dropdown-menu [aria-haspopup="menu"]')!
+    row.click()
+    await flushPromises()
+    const parent = document.querySelector<HTMLElement>('.astryx-dropdown-menu')!
+    const drill = document.querySelector<HTMLElement>('.astryx-dropdown-menu-drill')!
+    expect(drill.hidden).toBe(false)
+
+    drill.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }))
+    await flushPromises()
+    expect(drill.hidden).toBe(true)
+    expect(isShown(parent)).toBe(true)
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }))
+    await flushPromises()
+    expect(isShown(parent)).toBe(false)
+  })
+
+  it('does not mark an ordinary row as draggable', async () => {
+    const { trigger } = renderMenu({ items: [{ label: 'Edit' }] })
+    trigger.click()
+    await flushPromises()
+    expect(rows()[0]!.hasAttribute('draggable')).toBe(false)
   })
 })
