@@ -19,7 +19,6 @@ import { useMenuRegions } from './useMenuRegions.js'
 import '../../styles/dropdown-menu.css'
 
 defineOptions({ name: 'AstryxDropdownMenu', inheritAttrs: false })
-
 const props = withDefaults(defineProps<DropdownMenuProps>(), {
   alignment: 'start',
   button: () => ({ label: 'Menu' }),
@@ -123,7 +122,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
  */
 const layerIsOpen = ref(false)
 
-const { position, detach: detachPosition } = usePositionedLayer({
+const { position, teleportTarget, detach: detachPosition } = usePositionedLayer({
   anchor: anchorRef,
   layer: positionedEl,
   isOpen: layerIsOpen,
@@ -442,7 +441,7 @@ onBeforeUnmount(() => {
       <slot name="footer" />
     </div>
   </BottomSheet>
-  <Teleport v-else to="body">
+  <Teleport v-else :to="teleportTarget">
     <Transition name="astryx-dropdown-menu">
       <div
         v-if="hasRegions"

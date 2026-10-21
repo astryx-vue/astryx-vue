@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { HoverCardEmits, HoverCardProps, HoverCardSlots } from './types.js'
 import { computed, onMounted, onUpdated, ref } from 'vue'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { useHoverCard } from './useHoverCard.js'
 import '../../styles/hover-card.css'
 
 defineOptions({ name: 'AstryxHoverCard', inheritAttrs: false })
-
 const props = withDefaults(defineProps<HoverCardProps>(), {
   content: '',
   placement: 'above',
@@ -24,6 +24,9 @@ const props = withDefaults(defineProps<HoverCardProps>(), {
 
 const emit = defineEmits<HoverCardEmits>()
 defineSlots<HoverCardSlots>()
+
+// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
+const teleportTarget = useLayerTeleportTarget()
 
 const hoverCard = useHoverCard({
   placement: () => props.placement,
@@ -97,7 +100,7 @@ defineExpose({ element, show, hide })
   >
     <slot />
   </span>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <Transition name="astryx-hover-card">
       <!-- eslint-disable-next-line vue-a11y/mouse-events-have-key-events, vue-a11y/no-static-element-interactions -- The card's pointer handlers only keep it open while the pointer is inside it; opening and closing by keyboard are handled on the trigger and by Escape. -->
       <div

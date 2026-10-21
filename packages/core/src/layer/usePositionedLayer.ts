@@ -1,6 +1,7 @@
-import type { Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import type { LayerAlignment, LayerPlacement, LayerPosition } from './position.js'
 import { nextTick, ref, watch } from 'vue'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { computeLayerPosition } from './position.js'
 
@@ -20,6 +21,11 @@ export interface PositionedLayerOptions {
  */
 export interface PositionedLayer {
   position: Ref<LayerPosition>
+  /**
+   * 这一层该挂到哪里的 `Teleport` 目标。Dialog 打开时是它内部的挂载点，
+   * 没有就是 `'body'`。
+   */
+  teleportTarget: ComputedRef<string | HTMLElement>
   update: () => void
   detach: () => void
 }
@@ -29,6 +35,8 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   const position = ref<LayerPosition>({ top: 0, left: 0, placement: placement.value })
   // 视口边距由最近一个 LayerProvider 决定，没有 provider 时是基础空隙加设备安全区。
   const gutter = useLayerGutter()
+  // 浮层实际挂到哪里：Dialog 打开时挂进对话框里面，否则挂到 body。
+  const teleportTarget = useLayerTeleportTarget()
 
   function update(): void {
     const anchorEl = anchor.value
@@ -93,5 +101,5 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   watch([placement, alignment], update)
   watch(gutter, update)
 
-  return { position, update, detach }
+  return { position, teleportTarget, update, detach }
 }

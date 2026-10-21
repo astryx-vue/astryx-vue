@@ -1,6 +1,8 @@
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
-import { h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
+import { useLayerMountTarget } from '../composables/useLayerMountTarget.js'
+import { useActiveModalOutlet } from '../layer/modalOutlet.js'
 import Dialog from './Dialog.vue'
 import DialogHeader from './DialogHeader.vue'
 import { ensureDialogModalApi } from './testUtils.js'
@@ -191,5 +193,51 @@ describe('dialog', () => {
     const wrapper = renderDialog({ isOpen: true, padding: 1.5 })
 
     expect(wrapper.find('.astryx-dialog__inner').element.getAttribute('style')).toContain('--astryx-spacing-1-5')
+  })
+})
+
+describe('dialog as a layer host', () => {
+  const MountProbe = defineComponent({
+    setup() {
+      const mountTarget = useLayerMountTarget()
+      const activeModal = useActiveModalOutlet()
+      return () => h('div', {
+        'data-mount': mountTarget.value?.className ?? 'none',
+        'data-modal': activeModal.value?.tagName ?? 'none',
+      })
+    },
+  })
+
+  it('offers its own layer mount point to the content', async () => {
+    const wrapper = mount(Dialog, {
+      attachTo: document.body,
+      props: { isOpen: true },
+      slots: { default: () => h(MountProbe) },
+    })
+    await nextTick()
+
+    const probe = wrapper.get('[data-mount]')
+    expect(probe.attributes('data-mount')).toBe('astryx-dialog__layer-host')
+    // 挂载点在对话框里面，浮层才会一起进原生模态层。
+    const host = document.querySelector('.astryx-dialog__layer-host')
+    expect(dialogEl().contains(host)).toBe(true)
+  })
+
+  it('registers itself as the modal outlet while open and drops it on close', async () => {
+    const wrapper = mount(Dialog, {
+      attachTo: document.body,
+      props: { isOpen: false },
+      slots: { default: () => h(MountProbe) },
+    })
+
+    expect(wrapper.get('[data-modal]').attributes('data-modal')).toBe('none')
+
+    await wrapper.setProps({ isOpen: true })
+    await nextTick()
+    expect(wrapper.get('[data-modal]').attributes('data-modal')).toBe('DIALOG')
+
+    await wrapper.setProps({ isOpen: false })
+    await nextTick()
+    expect(wrapper.get('[data-modal]').attributes('data-modal')).toBe('none')
   })
 })

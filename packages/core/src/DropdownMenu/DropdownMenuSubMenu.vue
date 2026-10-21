@@ -17,7 +17,6 @@ import { useSubmenuMode } from './useSubmenuMode.js'
 import '../../styles/dropdown-menu.css'
 
 defineOptions({ name: 'AstryxDropdownMenuSubMenu', inheritAttrs: false })
-
 const props = withDefaults(defineProps<DropdownMenuSubMenuProps>(), {
   isDisabled: false,
   hasSpinner: false,
@@ -25,6 +24,7 @@ const props = withDefaults(defineProps<DropdownMenuSubMenuProps>(), {
 })
 
 const emit = defineEmits<DropdownMenuSubMenuEmits>()
+
 defineSlots<DropdownMenuSubMenuSlots>()
 
 const INTRINSIC_SIZE = /^(?:auto|min-content|max-content|fit-content|fit-content\(.*\)|inherit|initial|unset|revert|revert-layer)$/i
@@ -62,7 +62,7 @@ const backLabel = computed(() => {
     : messages.value.dropdownMenu.back
 })
 
-const { position } = usePositionedLayer({
+const { position, teleportTarget } = usePositionedLayer({
   anchor: rowRef,
   layer: flyoutRef,
   isOpen: flyoutOpen,
@@ -313,7 +313,7 @@ onBeforeUnmount(cancelClose)
       <slot />
     </div>
   </Teleport>
-  <Teleport v-else to="body">
+  <Teleport v-else :to="teleportTarget">
     <div
       v-show="flyoutOpen"
       ref="flyoutRef"

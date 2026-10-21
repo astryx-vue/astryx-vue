@@ -10,7 +10,6 @@ import '../../styles/tab-list.css'
 import '../../styles/tab-menu.css'
 
 defineOptions({ name: 'AstryxTabMenu' })
-
 const props = defineProps<TabMenuProps>()
 
 const context = inject(tabListContextKey)
@@ -29,7 +28,7 @@ const triggerLabel = computed(() => selectedOption.value?.label ?? props.label)
 const hasSelectedOption = computed(() => selectedOption.value != null)
 const sizeClass = computed(() => `astryx-tab--size-${context?.size.value ?? 'md'}`)
 
-const { position, detach } = usePositionedLayer({
+const { position, teleportTarget, detach } = usePositionedLayer({
   alignment,
   anchor: anchorRef,
   gap: 4,
@@ -165,7 +164,7 @@ onUnmounted(() => {
       size="sm"
     />
   </button>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       v-if="isOpen"
       :id="menuId"

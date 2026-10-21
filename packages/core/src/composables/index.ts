@@ -126,6 +126,8 @@ export type { KeyboardHintOrientation, UseKeyboardHint, UseKeyboardHintOptions }
 export { useLayer } from './useLayer.js'
 export type { LayerMode, UseLayerOptions, UseLayerReturn } from './useLayer.js'
 
+export { useLayerMountTarget, useLayerTeleportTarget } from './useLayerMountTarget.js'
+
 export { useListFocus } from './useListFocus.js'
 export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './useListFocus.js'
 
@@ -222,6 +224,9 @@ export {
   shiftTime,
 } from './useTimeValue.js'
 export type { HourFormat, ISOTimeString, NativePicker, ParsedTime, TimePresentation } from './useTimeValue.js'
+
+export { isActionTrigger, useTouchTrigger } from './useTouchTrigger.js'
+export type { LayerTouchTrigger, UseTouchTriggerOptions, UseTouchTriggerReturn } from './useTouchTrigger.js'
 
 export { useTypeahead } from './useTypeahead.js'
 export type { UseTypeaheadOptions, UseTypeaheadReturn } from './useTypeahead.js'

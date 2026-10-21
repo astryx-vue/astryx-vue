@@ -61995,8 +61995,8 @@
         "zh": "浮层这一套东西有一个应用级的 provider。要配 toast 或者整个应用的浮层参数，就在应用最外层放一个 `LayerProvider`；一般的浮层界面直接用 `Popover`、`HoverCard`、`Tooltip` 这些更上层的组件就行。浮层内容渲染出来之后，用的是主题里正文的默认文字样式，也不再继承外面那层 surface/group 的成员关系，所以每个浮层里该有的分组和必需的 provider 都要自己补上。每个贴着触发器定位的浮层，离视口四条边都留着一段空隙：间距第 4 档和设备安全区取较大的那个；它只受视口限制，不会被触发器旁边的空间限制。"
       },
       "usage": {
-        "en": "Layer utilities provide the app-level provider used by overlay systems. Use `LayerProvider` at the app root for toast/layer configuration; use higher-level `Popover`, `HoverCard`, or `Tooltip` APIs for most overlay UI. Rendered layer content, not the provider's application subtree, uses theme body text defaults and exits ancestor surface/group membership. Establish intentional groups and complete required providers inside each layer. Every anchored layer keeps a gutter from each viewport edge — the spacing-4 step or the device safe-area inset, whichever is larger — and is capped to the viewport, never to the room beside its trigger. An app that floats a persistent bar over a viewport edge declares it once as `inset` on `LayerProvider` (`blockStart`, `blockEnd`, `inlineStart`, `inlineEnd`); each edge adds to that edge's gutter for every anchored layer and moves the toast viewport by the same amount, and defaults to zero. The inset is app configuration, not a theme value.\n\n```ts\nimport { LayerProvider } from '@astryx-vue/core/LayerProvider'\n```\n\n`toast` takes `position` (the toast viewport corner), `maxVisible` (how many toasts are on screen at once), and its own `inset`, which overrides the provider inset per edge for toasts only.\n\nNested `LayerProvider` instances are ignored: the outer one stays in charge.",
-        "zh": "浮层这一套东西有一个应用级的 provider。要配 toast 或者整个应用的浮层参数，就在应用最外层放一个 `LayerProvider`；一般的浮层界面直接用 `Popover`、`HoverCard`、`Tooltip` 这些更上层的组件就行。浮层内容渲染出来之后，用的是主题里正文的默认文字样式，也不再继承外面那层 surface/group 的成员关系，所以每个浮层里该有的分组和必需的 provider 都要自己补上。每个贴着触发器定位的浮层，离视口四条边都留着一段空隙：间距第 4 档和设备安全区取较大的那个；它只受视口限制，不会被触发器旁边的空间限制。\n\n如果应用有一条常驻的条子浮在视口某条边上，就在 `LayerProvider` 上用 `inset` 声明一次，写明 `blockStart`、`blockEnd`、`inlineStart`、`inlineEnd`。每条边上的值会加到所有贴边浮层离那条边的空隙上，toast 视口也按同样的量挪进去。不写就是每条边都是 0。这份 inset 属于应用配置，不是主题里的值。\n\n```ts\nimport { LayerProvider } from '@astryx-vue/core/LayerProvider'\n```\n\n`toast` 里有三样：`position` 是 toast 视口贴哪个角，`maxVisible` 是同时最多显示几条，还有一个只对 toast 生效的 `inset`，会逐边盖掉 provider 上的同一条边。\n\n嵌套的 `LayerProvider` 会被忽略，永远是外面那层说了算。"
+        "en": "Layer utilities provide the app-level provider used by overlay systems. Use `LayerProvider` at the app root for toast/layer configuration; use higher-level `Popover`, `HoverCard`, or `Tooltip` APIs for most overlay UI. Rendered layer content, not the provider's application subtree, uses theme body text defaults and exits ancestor surface/group membership. Establish intentional groups and complete required providers inside each layer. Every anchored layer keeps a gutter from each viewport edge — the spacing-4 step or the device safe-area inset, whichever is larger — and is capped to the viewport, never to the room beside its trigger. An app that floats a persistent bar over a viewport edge declares it once as `inset` on `LayerProvider` (`blockStart`, `blockEnd`, `inlineStart`, `inlineEnd`); each edge adds to that edge's gutter for every anchored layer and moves the toast viewport by the same amount, and defaults to zero. The inset is app configuration, not a theme value.\n\n```ts\nimport { LayerProvider } from '@astryx-vue/core/LayerProvider'\n```\n\n`toast` takes `position` (the toast viewport corner), `maxVisible` (how many toasts are on screen at once), and its own `inset`, which overrides the provider inset per edge for toasts only.\n\nNested `LayerProvider` instances never open a second toast viewport: the outer one stays in charge of toasts. One that declares its own `inset`, though, narrows that inset for the anchored layers in its subtree.",
+        "zh": "浮层这一套东西有一个应用级的 provider。要配 toast 或者整个应用的浮层参数，就在应用最外层放一个 `LayerProvider`；一般的浮层界面直接用 `Popover`、`HoverCard`、`Tooltip` 这些更上层的组件就行。浮层内容渲染出来之后，用的是主题里正文的默认文字样式，也不再继承外面那层 surface/group 的成员关系，所以每个浮层里该有的分组和必需的 provider 都要自己补上。每个贴着触发器定位的浮层，离视口四条边都留着一段空隙：间距第 4 档和设备安全区取较大的那个；它只受视口限制，不会被触发器旁边的空间限制。\n\n如果应用有一条常驻的条子浮在视口某条边上，就在 `LayerProvider` 上用 `inset` 声明一次，写明 `blockStart`、`blockEnd`、`inlineStart`、`inlineEnd`。每条边上的值会加到所有贴边浮层离那条边的空隙上，toast 视口也按同样的量挪进去。不写就是每条边都是 0。这份 inset 属于应用配置，不是主题里的值。\n\n```ts\nimport { LayerProvider } from '@astryx-vue/core/LayerProvider'\n```\n\n`toast` 里有三样：`position` 是 toast 视口贴哪个角，`maxVisible` 是同时最多显示几条，还有一个只对 toast 生效的 `inset`，会逐边盖掉 provider 上的同一条边。\n\n嵌套的 `LayerProvider` 是个例外：它不会再开一套 toast 视口，但如果它自己声明了 `inset`，这份 inset 只收紧它子树里的锚定浮层，toast 视口仍然看最外层。不声明 `inset` 的内层 provider 什么也不做。"
       },
       "practices": {
         "en": [
@@ -62014,7 +62014,7 @@
           },
           {
             "guidance": "Don't",
-            "text": "Add nested `LayerProvider` instances: nested providers are ignored and add unnecessary tree depth."
+            "text": "Add nested `LayerProvider` instances for anything but a subtree that declares its own `inset`: they add depth without a second toast viewport."
           }
         ],
         "zh": []
@@ -62243,7 +62243,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- Do: 视口边上有常驻条子时，在 `LayerProvider` 的 `inset` 里声明一次，之后所有贴边浮层和 toast 都会绕开它。\n- Do: 需要全局共享 toast 或浮层配置时，在应用根部附近放一个 `LayerProvider`。\n- Do: 常见的浮层场景用更上层的 `Popover`、`HoverCard`、`Tooltip`，不用自己拼。\n- Don't: 不要嵌套 `LayerProvider`：内层会被忽略，只是白白多一层。"
+            "text": "- Do: 视口边上有常驻条子时，在 `LayerProvider` 的 `inset` 里声明一次，之后所有贴边浮层和 toast 都会绕开它。\n- Do: 需要全局共享 toast 或浮层配置时，在应用根部附近放一个 `LayerProvider`。\n- Do: 常见的浮层场景用更上层的 `Popover`、`HoverCard`、`Tooltip`，不用自己拼。\n- Don't: 不要嵌套 `LayerProvider`：内层不再开 toast 视口，只是白白多一层；确实要给某块子树单独声明常驻条时，才用内层的 `inset`。"
           },
           {
             "heading": "原生属性",
@@ -67739,8 +67739,8 @@
         "zh": "渲染浮层内容的内核：定位、开合、点击外部关闭都在这里。想自己搭 popover、hover card、tooltip 或固定坐标浮层，而现成组件又不够用时，从它开始。"
       },
       "usage": {
-        "en": "Core positioning hook for rendering overlay content. Use it as the foundation for custom popovers, hover cards, tooltips, and fixed-position layers when the higher-level components are not enough.\n\n```ts\nimport { useLayer } from '@astryx-vue/core'\n```\n\n`context` mode follows an anchor element; `fixed` mode places the layer at explicit `x` / `y` viewport coordinates. The hook owns the open state, the measured coordinates, click-outside dismissal, and the layer ID. It renders nothing: you decide where the layer lives and what it looks like.\n\n```vue\n<script setup lang=\"ts\">\nimport { useLayer } from '@astryx-vue/core'\n\nconst layer = useLayer({ mode: 'context', placement: 'below', lightDismiss: true })\n</script>\n\n<template>\n  <button :ref=\"layer.anchorRef\" type=\"button\" @click=\"layer.show()\">\n    Show layer\n  </button>\n  <Teleport to=\"body\">\n    <div\n      v-if=\"layer.isMounted\"\n      v-show=\"layer.isOpen\"\n      :id=\"layer.id\"\n      :ref=\"layer.contentRef\"\n      :style=\"layer.contentStyle\"\n    >\n      Anchored layer\n    </div>\n  </Teleport>\n</template>\n```\n\n`contentStyle` carries the measured `top` / `left` (plus `position: fixed` in fixed mode), so the surface only needs its own background, radius, and shadow. Positions are measured in the viewport, so render the layer into a `Teleport` — that also keeps it out of ancestor clipping and stacking.",
-        "zh": "渲染浮层内容的内核：定位、开合、点击外部关闭都在这里。想自己搭 popover、hover card、tooltip 或固定坐标浮层，而现成组件又不够用时，从它开始。\n\n```ts\nimport { useLayer } from '@astryx-vue/core'\n```\n\n`context` 模式跟着锚点元素走；`fixed` 模式放在 `x` / `y` 指定的视口坐标上。开合状态、量出来的坐标、点击外部关闭和浮层 ID 都由它管。它不渲染任何东西：浮层放哪里、长什么样，你自己决定。\n\n```vue\n<script setup lang=\"ts\">\nimport { useLayer } from '@astryx-vue/core'\n\nconst layer = useLayer({ mode: 'context', placement: 'below', lightDismiss: true })\n</script>\n\n<template>\n  <button :ref=\"layer.anchorRef\" type=\"button\" @click=\"layer.show()\">\n    Show layer\n  </button>\n  <Teleport to=\"body\">\n    <div\n      v-if=\"layer.isMounted\"\n      v-show=\"layer.isOpen\"\n      :id=\"layer.id\"\n      :ref=\"layer.contentRef\"\n      :style=\"layer.contentStyle\"\n    >\n      Anchored layer\n    </div>\n  </Teleport>\n</template>\n```\n\n`contentStyle` 里是量出来的 `top` / `left`（fixed 模式还带 `position: fixed`），所以浮层只需要管自己的背景、圆角和阴影。坐标是按视口算的，请把浮层放进 `Teleport` 渲染，这样也顺带躲开了祖先的裁剪和层叠。"
+        "en": "Core positioning hook for rendering overlay content. Use it as the foundation for custom popovers, hover cards, tooltips, and fixed-position layers when the higher-level components are not enough.\n\n```ts\nimport { useLayer } from '@astryx-vue/core'\n```\n\n`context` mode follows an anchor element; `fixed` mode places the layer at explicit `x` / `y` viewport coordinates. The hook owns the open state, the measured coordinates, click-outside dismissal, and the layer ID. It renders nothing: you decide where the layer lives and what it looks like.\n\n```vue\n<script setup lang=\"ts\">\nimport { useLayer, useLayerTeleportTarget } from '@astryx-vue/core'\n\nconst layer = useLayer({ mode: 'context', placement: 'below', lightDismiss: true })\n// Inside an open Dialog the layer mounts into it; everywhere else, into the body.\nconst teleportTarget = useLayerTeleportTarget()\n</script>\n\n<template>\n  <button :ref=\"layer.anchorRef\" type=\"button\" @click=\"layer.show()\">\n    Show layer\n  </button>\n  <Teleport :to=\"teleportTarget\">\n    <div\n      v-if=\"layer.isMounted\"\n      v-show=\"layer.isOpen\"\n      :id=\"layer.id\"\n      :ref=\"layer.contentRef\"\n      :style=\"layer.contentStyle\"\n    >\n      Anchored layer\n    </div>\n  </Teleport>\n</template>\n```\n\n`contentStyle` carries the measured `top` / `left` (plus `position: fixed` in fixed mode), so the surface only needs its own background, radius, and shadow. Positions are measured in the viewport, so render the layer into a `Teleport` — that also keeps it out of ancestor clipping and stacking.",
+        "zh": "渲染浮层内容的内核：定位、开合、点击外部关闭都在这里。想自己搭 popover、hover card、tooltip 或固定坐标浮层，而现成组件又不够用时，从它开始。\n\n```ts\nimport { useLayer } from '@astryx-vue/core'\n```\n\n`context` 模式跟着锚点元素走；`fixed` 模式放在 `x` / `y` 指定的视口坐标上。开合状态、量出来的坐标、点击外部关闭和浮层 ID 都由它管。它不渲染任何东西：浮层放哪里、长什么样，你自己决定。\n\n```vue\n<script setup lang=\"ts\">\nimport { useLayer, useLayerTeleportTarget } from '@astryx-vue/core'\n\nconst layer = useLayer({ mode: 'context', placement: 'below', lightDismiss: true })\n// Dialog 打开时浮层挂进 Dialog 里面，其余情况挂到 body。\nconst teleportTarget = useLayerTeleportTarget()\n</script>\n\n<template>\n  <button :ref=\"layer.anchorRef\" type=\"button\" @click=\"layer.show()\">\n    Show layer\n  </button>\n  <Teleport :to=\"teleportTarget\">\n    <div\n      v-if=\"layer.isMounted\"\n      v-show=\"layer.isOpen\"\n      :id=\"layer.id\"\n      :ref=\"layer.contentRef\"\n      :style=\"layer.contentStyle\"\n    >\n      Anchored layer\n    </div>\n  </Teleport>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -68054,8 +68054,33 @@
         "zh": []
       },
       "notes": {
-        "en": [],
+        "en": [
+          {
+            "heading": "Dismissal: one press closes the top layer",
+            "text": "Every layer shares one dismissal stack. Escape, and a press outside a layer, close only the top-most layer: with a menu open inside a Dialog, the first Escape closes the menu and leaves the Dialog up, and the second closes the Dialog. A press outside the menu but inside the Dialog closes the menu only.\n\nA press on the layer's own trigger does not count as an outside press — the trigger owns that toggle, so the layer cannot be dismissed and reopened in one click. Escape during an IME composition cancels the composition and dismisses nothing.\n\nA layer that drills into its own sub-levels can handle Escape itself through `useDismiss`'s `onEscape`; an outside press still closes the whole layer."
+          },
+          {
+            "heading": "Where the layer lands",
+            "text": "Layers render into the body by default. An open Dialog is a native modal, so a layer outside it is painted over by the backdrop and cannot be clicked; the Dialog therefore provides its own mount point and layers prefer it. `useLayerTeleportTarget()` returns that target (or `'body'`), ready for `Teleport`."
+          },
+          {
+            "heading": "Text styles",
+            "text": "A teleported layer still inherits the typography of where it was written. Put `astryx-layer` on the layer root and font size, weight, line height, alignment, letter spacing, and wrapping fall back to the body baseline; the container-padding variables are zeroed there too. Our `Popover`, `Tooltip`, `HoverCard`, `DropdownMenu`, `ContextMenu`, `TabMenu`, and `Selector` surfaces already carry these resets."
+          }
+        ],
         "zh": [
+          {
+            "heading": "关闭：一次只关最上面那一层",
+            "text": "所有浮层共用一个关闭栈。按 Escape、或者点在浮层外面，都只关最上面那一层：Dialog 里开一个下拉菜单，第一次 Escape 只关菜单，Dialog 还在；再按一次才关 Dialog。点在菜单外面、Dialog 里面，也只关菜单。\n\n点浮层自己的触发器不算「点外面」，那一下交给触发器自己开关，所以不会出现「先被点外面关掉、又被点击重新打开」的闪一下。输入法拼字过程中按 Escape 是取消拼字，不关浮层。\n\n菜单这类要逐层退栈的浮层，可以用 `useDismiss` 的 `onEscape` 单独处理 Escape，点击外面仍然整层关闭。"
+          },
+          {
+            "heading": "落在哪里",
+            "text": "浮层平时挂在 `body`。Dialog 打开时它是一个原生模态层，挂在外面的浮层会被遮罩挡住、也点不到，所以 Dialog 会提供自己内部的挂载点，浮层优先挂进去。`useLayerTeleportTarget()` 会把这目标算好（没有就是 `'body'`），直接给 `Teleport` 用：\n\n```vue\n<Teleport :to=\"teleportTarget\">\n```"
+          },
+          {
+            "heading": "文字样式",
+            "text": "浮层离开原来的位置之后，仍然会继承触发器所在位置的排版。给浮层根元素加上 `astryx-layer` 类，字号、字重、行高、对齐、字距、换行这些会回到正文的基准，容器内边距系统的变量也会在这里归零。组件自己的 `Popover`、`Tooltip`、`HoverCard`、`DropdownMenu`、`ContextMenu`、`TabMenu`、`Selector` 已经自动带上这些重置。\n\n`contentStyle` 里是量出来的 `top` / `left`（fixed 模式还带 `position: fixed`），所以浮层只需要管自己的背景、圆角和阴影。坐标是按视口算的，请把浮层放进 `Teleport` 渲染，这样也顺带躲开了祖先的裁剪和层叠。"
+          },
           {
             "heading": "建议",
             "text": "- Do: 相对某个触发器定位的浮层用 context 模式；要放在指定坐标上的浮层用 fixed 模式。\n- Do: 常见的浮层形态优先用 `Popover`、`HoverCard`、`Tooltip` 这些更上层的组件。\n- Do: 用 `Teleport` 渲染浮层，躲开祖先的裁剪和层叠；同时保证它落地的地方拿得到需要的主题变量。\n- Don't: 除非整套无障碍行为也由你负责，否则不要在浮层里直接手写 ARIA 模式。"

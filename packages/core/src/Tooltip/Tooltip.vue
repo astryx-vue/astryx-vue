@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TooltipProps } from './types.js'
 import { computed, getCurrentInstance, nextTick, onMounted, onUpdated, ref, useAttrs, watch } from 'vue'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { useTooltip } from './useTooltip.js'
 import '../../styles/tooltip.css'
@@ -22,6 +23,10 @@ const props = withDefaults(defineProps<TooltipProps>(), {
   anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
+
+// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
+const teleportTarget = useLayerTeleportTarget()
+
 const attrs = useAttrs()
 const instance = getCurrentInstance()
 
@@ -107,7 +112,7 @@ onUpdated(syncTrigger)
     <slot />
   </span>
   <slot v-else />
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <!-- eslint-disable-next-line vue-a11y/mouse-events-have-key-events, vue-a11y/no-static-element-interactions -- 气泡上的鼠标事件仅用于指针移入气泡时保持显示；键盘焦点由触发元素的 focusin / focusout 处理。 -->
     <div
       v-show="isOpen"

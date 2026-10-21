@@ -34,9 +34,20 @@ const config = computed<LayerContextValue>(() => {
   }
 })
 
+/** 外面那层 provider 的配置。没有就是 null。 */
+const outer = inject(layerContextKey, null)
+
 if (!isNested) {
   provide(layerNestingKey, true)
   provide(layerContextKey, config)
+}
+else if (outer != null && props.inset != null) {
+  // 嵌在另一层 provider 里，自己又声明了常驻条：只把这一条的偏移收紧给子树里的锚定浮层，
+  // toast 仍然是根那层的配置（toast 视口只有一份）。
+  provide(layerContextKey, computed<LayerContextValue>(() => ({
+    ...outer.value,
+    inset: resolveInset(props.inset) ?? {},
+  })))
 }
 </script>
 

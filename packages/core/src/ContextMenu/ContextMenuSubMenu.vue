@@ -17,7 +17,6 @@ import { useSubmenuHover } from './useSubmenuHover.js'
 import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenuSubMenu', inheritAttrs: false })
-
 const props = withDefaults(defineProps<ContextMenuSubMenuProps>(), {
   isDisabled: false,
   hasSpinner: false,
@@ -25,7 +24,9 @@ const props = withDefaults(defineProps<ContextMenuSubMenuProps>(), {
 })
 
 const emit = defineEmits<ContextMenuSubMenuEmits>()
+
 defineSlots<ContextMenuSubMenuSlots>()
+
 const attrs = useAttrs()
 
 const menu = useContextMenu()
@@ -62,7 +63,7 @@ const showsFlyout = computed(() => isOpen.value && (menu?.isOpen.value ?? true) 
 // them on screen. Descendants read this level's visibility and close with it.
 provide(submenuAncestorOpenKey, showsFlyout)
 
-const { position } = usePositionedLayer({
+const { position, teleportTarget } = usePositionedLayer({
   anchor: row,
   layer: flyout,
   isOpen: showsFlyout,
@@ -318,7 +319,7 @@ watch(ancestorOpen, (visible) => {
       </slot>
     </div>
   </Teleport>
-  <Teleport v-else to="body">
+  <Teleport v-else :to="teleportTarget">
     <Transition name="astryx-context-menu-flyout">
       <div
         v-show="showsFlyout"

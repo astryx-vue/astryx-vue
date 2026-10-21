@@ -22,16 +22,18 @@ import { useLayer } from '@astryx-vue/core'
 
 ```vue
 <script setup lang="ts">
-import { useLayer } from '@astryx-vue/core'
+import { useLayer, useLayerTeleportTarget } from '@astryx-vue/core'
 
 const layer = useLayer({ mode: 'context', placement: 'below', lightDismiss: true })
+// Inside an open Dialog the layer mounts into it; everywhere else, into the body.
+const teleportTarget = useLayerTeleportTarget()
 </script>
 
 <template>
   <button :ref="layer.anchorRef" type="button" @click="layer.show()">
     Show layer
   </button>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       v-if="layer.isMounted"
       v-show="layer.isOpen"
@@ -46,6 +48,22 @@ const layer = useLayer({ mode: 'context', placement: 'below', lightDismiss: true
 ```
 
 `contentStyle` carries the measured `top` / `left` (plus `position: fixed` in fixed mode), so the surface only needs its own background, radius, and shadow. Positions are measured in the viewport, so render the layer into a `Teleport` — that also keeps it out of ancestor clipping and stacking.
+
+### Dismissal: one press closes the top layer
+
+Every layer shares one dismissal stack. Escape, and a press outside a layer, close only the top-most layer: with a menu open inside a Dialog, the first Escape closes the menu and leaves the Dialog up, and the second closes the Dialog. A press outside the menu but inside the Dialog closes the menu only.
+
+A press on the layer's own trigger does not count as an outside press — the trigger owns that toggle, so the layer cannot be dismissed and reopened in one click. Escape during an IME composition cancels the composition and dismisses nothing.
+
+A layer that drills into its own sub-levels can handle Escape itself through `useDismiss`'s `onEscape`; an outside press still closes the whole layer.
+
+### Where the layer lands
+
+Layers render into the body by default. An open Dialog is a native modal, so a layer outside it is painted over by the backdrop and cannot be clicked; the Dialog therefore provides its own mount point and layers prefer it. `useLayerTeleportTarget()` returns that target (or `'body'`), ready for `Teleport`.
+
+### Text styles
+
+A teleported layer still inherits the typography of where it was written. Put `astryx-layer` on the layer root and font size, weight, line height, alignment, letter spacing, and wrapping fall back to the body baseline; the container-padding variables are zeroed there too. Our `Popover`, `Tooltip`, `HoverCard`, `DropdownMenu`, `ContextMenu`, `TabMenu`, and `Selector` surfaces already carry these resets.
 
 ## Best practices
 

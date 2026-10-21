@@ -2,6 +2,7 @@
 import type { PopoverProps } from './types.js'
 import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import { Button } from '../Button/index.js'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { usePopover } from './usePopover.js'
@@ -26,6 +27,9 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
+
+// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
+const teleportTarget = useLayerTeleportTarget()
 
 const DEFAULT_MAX_WIDTH = 320
 const popover = usePopover({
@@ -117,7 +121,7 @@ onUpdated(syncTrigger)
     <slot />
   </span>
   <slot v-else />
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       v-show="isOpenState"
       :ref="setContentRef"

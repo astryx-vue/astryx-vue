@@ -16,7 +16,6 @@ import { resetMenuPress, useMenuPress } from './useMenuPress.js'
 import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenu', inheritAttrs: false })
-
 const props = withDefaults(defineProps<ContextMenuProps>(), {
   label: 'Context menu',
   isDisabled: false,
@@ -26,7 +25,9 @@ const props = withDefaults(defineProps<ContextMenuProps>(), {
 })
 
 const emit = defineEmits<ContextMenuEmits>()
+
 defineSlots<ContextMenuSlots>()
+
 const attrs = useAttrs()
 
 /**
@@ -68,7 +69,7 @@ const cursorPoint = ref({ x: 0, y: 0 })
 
 let previouslyFocused: HTMLElement | null = null
 
-const { position, update: updatePosition } = usePositionedLayer({
+const { position, teleportTarget, update: updatePosition } = usePositionedLayer({
   anchor: cursorAnchor,
   layer: panel,
   isOpen,
@@ -289,7 +290,7 @@ defineExpose({
     />
   </component>
 
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <Transition name="astryx-context-menu">
       <div
         v-show="isOpen && !isSheet"

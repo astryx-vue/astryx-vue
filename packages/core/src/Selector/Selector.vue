@@ -146,9 +146,8 @@ const sheetOpen = computed({
   },
 })
 const popoverOpen = computed(() => combobox.isOpen.value && !isSheet.value)
-const listboxTarget = computed(() => isSheet.value && sheetSlot.value ? sheetSlot.value : 'body')
 
-const { position } = usePositionedLayer({
+const { position, teleportTarget } = usePositionedLayer({
   anchor: fieldRef,
   layer: listboxRef,
   isOpen: popoverOpen,
@@ -458,7 +457,7 @@ watch(() => combobox.activeIndex.value, (index) => {
         </div>
       </div>
     </BottomSheet>
-    <Teleport :to="listboxTarget">
+    <Teleport :to="(isSheet && sheetSlot) ? sheetSlot : teleportTarget">
       <div
         v-show="combobox.isOpen.value"
         :id="listboxId"

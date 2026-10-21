@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { ResolvedLayerInset } from '../LayerProvider/context.js'
 import type { ToastDismissReason, ToastPlacement } from './types.js'
 import { computed, reactive, watch } from 'vue'
+import { useActiveModalOutlet } from '../layer/modalOutlet.js'
 import { useLayerConfig } from '../LayerProvider/context.js'
 import { toastStore } from './store.js'
 import Toast from './Toast.vue'
@@ -13,6 +14,10 @@ const props = defineProps<{
 
 // LayerProvider 可以给 toast 视口定位置、可见上限和逐边偏移。
 const layer = useLayerConfig()
+
+// 打开的模态对话框会压住页面其它部分，toast 得搬进去才能看见、才能点。
+const activeModal = useActiveModalOutlet()
+const teleportTarget = computed<string | HTMLElement>(() => activeModal.value ?? 'body')
 
 const placement = computed(() => props.placement ?? layer?.value.toast.position ?? 'bottom-end')
 
@@ -90,7 +95,7 @@ watch(
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       :class="classes"
       :style="viewportStyle"
