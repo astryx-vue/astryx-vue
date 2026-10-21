@@ -418,6 +418,9 @@ flowchart TB
 #### C 阶段组件细节清单
 
 | 节点 | 涵盖组件 | 要特别注意的事项 | 依赖谁 |
+
+> **C 阶段全体的共同要求（来自 B2）**：上游规定禁用的控件一律显示默认指针 `default`，不用 `not-allowed`（#5335）。B2 已经改好了 Button。其余的由各自的 C 节点顺手改掉，并在浏览器里确认。涉及：command-palette（C11）、overflow-list（C12）、token（C3）、clickable-card（C10）、complex-selector（C3）、stepper（C13）、nav-menu（C12）。如果节点编号对不上，以组件实际所属的节点为准。
+
 | --- | --- | --- | --- |
 | C1 基础输入 | TextInput、TextArea、NumberInput、FileInput、InputGroup、InputClearButton、Field、FieldLabel、FieldStatus、FormLayout | 接入 FR10 破坏性改动（上游 PR #7336）；清除按钮增加无障碍提示文字。 | B1 B2 B3 B5 B6 |
 | C2 勾选与开关 | CheckboxInput、CheckboxList、RadioList、Radio、Switch、Slider、SegmentedControl、ToggleButton | 接入部分 FR10 改动（上游 PR #7339）。 | B3 B6 |
