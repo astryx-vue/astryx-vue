@@ -6,6 +6,7 @@ import { defineConfig } from 'vitepress'
 import unoConfig from '../uno.config.ts'
 import { demoSourcePlugin } from './demoSourcePlugin.ts'
 import { llmsAlternateLinks, writeLlmsArtifacts } from './llms.ts'
+import { renderForSearch } from './searchRender.ts'
 import { guideSidebar, themeSidebar } from './sidebar.ts'
 
 function navigation(english: boolean): DefaultTheme.NavItem[] {
@@ -59,7 +60,7 @@ export default defineConfig({
   },
   themeConfig: {
     logo: '/icon-logo.svg',
-    search: { provider: 'local' },
+    search: { provider: 'local', options: { _render: renderForSearch } },
   },
   vite: {
     publicDir: fileURLToPath(new URL('../public', import.meta.url)),
