@@ -42,6 +42,15 @@ describe('dialog', () => {
     expect(dialogEl().getAttribute('aria-modal')).toBe('true')
   })
 
+  it('carries the layer text reset class on both of its roots', () => {
+    const modal = renderDialog({ isOpen: true })
+    expect(dialogEl().classList.contains('astryx-layer')).toBe(true)
+    modal.unmount()
+
+    renderDialog({ isOpen: true, isInline: true })
+    expect(document.querySelector('.astryx-dialog--inline')?.classList.contains('astryx-layer')).toBe(true)
+  })
+
   it('focuses the header title as the default target', async () => {
     renderDialog({ isOpen: true }, { default: () => h(DialogHeader, { title: 'Delete project' }) })
     await flushPromises()

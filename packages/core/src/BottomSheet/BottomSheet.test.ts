@@ -111,6 +111,7 @@ describe('bottom sheet', () => {
     expect(dialog.getAttribute('aria-label')).toBe('Filters')
     expect(dialog.getAttribute('aria-modal')).toBe('true')
     expect(dialog.classList.contains('astryx-bottom-sheet-dialog--scrim')).toBe(true)
+    expect(dialog.querySelector('.astryx-bottom-sheet')?.classList.contains('astryx-layer')).toBe(true)
   })
 
   it('uses alertdialog semantics for the required purpose', async () => {

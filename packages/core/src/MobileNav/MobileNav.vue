@@ -112,7 +112,7 @@ onMounted(() => {
   <dialog
     :id="dialogId"
     ref="dialogRef"
-    class="astryx-mobile-nav"
+    class="astryx-mobile-nav astryx-layer"
     :class="sideIsStart ? 'astryx-mobile-nav--start' : 'astryx-mobile-nav--end'"
     :style="{ '--astryx-mobile-nav-width': `${width}px` }"
     aria-modal="true"

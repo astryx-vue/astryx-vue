@@ -38,6 +38,7 @@ describe('toast viewport and an open dialog', () => {
     const element = document.body.querySelector('.astryx-toast-viewport')
     const dialogEl = document.body.querySelector('dialog')
     expect(element).not.toBeNull()
+    expect(element?.classList.contains('astryx-layer')).toBe(true)
     expect(dialogEl?.contains(element ?? null)).toBe(true)
 
     viewport.unmount()

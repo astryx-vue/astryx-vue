@@ -214,7 +214,7 @@ watch(dragging, (isDragging, wasDragging) => {
   <dialog
     v-if="current"
     ref="dialog"
-    class="astryx-lightbox"
+    class="astryx-lightbox astryx-layer"
     :class="$attrs.class"
     :style="$attrs.style"
     :aria-label="current.alt || messages.lightbox.mediaViewer"

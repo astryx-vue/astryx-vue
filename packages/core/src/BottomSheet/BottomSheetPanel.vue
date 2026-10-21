@@ -135,7 +135,7 @@ defineExpose({
 <template>
   <div
     ref="panel"
-    class="astryx-bottom-sheet"
+    class="astryx-bottom-sheet astryx-layer"
     :data-state="state"
     :data-height="heightKind"
     :data-dragging="gestures.isDragging.value || undefined"

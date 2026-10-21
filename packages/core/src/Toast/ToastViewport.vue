@@ -25,6 +25,8 @@ const isTopPlacement = computed(() => placement.value.startsWith('top'))
 
 const classes = computed(() => [
   'astryx-toast-viewport',
+  // 浮层根：切断外面继承进来的排版（`layer.css` 的重置）。
+  'astryx-layer',
   `astryx-toast-viewport--placement-${placement.value}`,
 ])
 

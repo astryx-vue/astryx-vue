@@ -32,6 +32,7 @@ describe('mobile-nav', () => {
 
     const dialog = document.body.querySelector('dialog')
     expect(dialog?.hasAttribute('open')).toBe(true)
+    expect(dialog?.classList.contains('astryx-layer')).toBe(true)
     expect(dialog?.textContent).toContain('Menu')
     expect(dialog?.textContent).toContain('Inbox')
 

@@ -221,7 +221,7 @@ onBeforeUnmount(() => {
     <div
       v-if="isOpen"
       v-bind="rootAttrs()"
-      class="astryx-dialog astryx-dialog--inline"
+      class="astryx-dialog astryx-dialog--inline astryx-layer"
       :class="{ 'astryx-dialog--fullscreen': isFullscreen }"
       :data-variant="variant"
       :data-padded="padding == null ? undefined : ''"
@@ -238,7 +238,7 @@ onBeforeUnmount(() => {
     v-else
     ref="dialogRef"
     v-bind="rootAttrs()"
-    class="astryx-dialog"
+    class="astryx-dialog astryx-layer"
     :class="{ 'astryx-dialog--fullscreen': isFullscreen }"
     :data-variant="variant"
     :data-padded="padding == null ? undefined : ''"
