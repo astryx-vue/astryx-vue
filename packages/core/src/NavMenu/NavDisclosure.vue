@@ -6,6 +6,7 @@ import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { navMenuCloseKey, navMenuFocusKey } from './context.js'
 import '../../styles/nav-menu.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxNavDisclosure' })
 
@@ -160,7 +161,7 @@ watch(isOpen, (open) => {
       v-if="isOpen"
       :id="panelId"
       ref="surfaceRef"
-      class="astryx-nav-disclosure__panel"
+      class="astryx-nav-disclosure__panel astryx-layer"
       :class="panelClass"
       :style="panelStyle"
       :data-placement="position.placement"

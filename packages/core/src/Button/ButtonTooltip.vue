@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue'
 import { nextTick, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
+import '../../styles/layer.css'
 
 defineOptions({
   name: 'ButtonTooltip',
@@ -112,7 +113,7 @@ onBeforeUnmount(stopListening)
       v-show="open"
       :id="id"
       ref="tooltip"
-      class="astryx-button-tooltip"
+      class="astryx-button-tooltip astryx-layer"
       role="tooltip"
       :style="tooltipStyle"
       @pointerenter="emit('pointerEnter')"

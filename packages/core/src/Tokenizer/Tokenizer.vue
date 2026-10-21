@@ -17,6 +17,7 @@ import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
 import '../../styles/typeahead.css'
 import '../../styles/tokenizer.css'
 import '../../styles/visually-hidden-utility.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxTokenizer', inheritAttrs: false })
 
@@ -434,7 +435,7 @@ defineExpose({
       v-show="menu.combobox.isOpen.value"
       :id="listboxId"
       ref="listboxRef"
-      class="astryx-typeahead-listbox"
+      class="astryx-typeahead-listbox astryx-layer"
       role="listbox"
       :aria-label="messages.tokenizer.results"
       :data-placement="anchored.position.value.placement"

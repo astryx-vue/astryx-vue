@@ -12,6 +12,7 @@ import { isDividerOption, isSectionOption } from './menuItems.js'
 import { isRtl, useMenuNav } from './menuNav.js'
 import MoreMenuRow from './MoreMenuRow.vue'
 import '../../styles/more-menu.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxMoreMenuPanel' })
 
@@ -317,7 +318,7 @@ defineExpose({
         v-if="isOpen"
         ref="layer"
         class="astryx-more-menu__layer"
-        :class="{ 'astryx-more-menu__layer--inline': isInline }"
+        :class="{ 'astryx-more-menu__layer--inline': isInline, 'astryx-layer': !isInline }"
         :data-level="level"
         :data-placement="resolvedPlacement"
         :style="layerStyle"

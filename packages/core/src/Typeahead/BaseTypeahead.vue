@@ -14,6 +14,7 @@ import { scrollOptionIntoView, useAnchoredListbox } from './useAnchoredListbox.j
 import { useTypeaheadMenu } from './useTypeaheadMenu.js'
 import '../../styles/typeahead.css'
 import '../../styles/visually-hidden-utility.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxBaseTypeahead', inheritAttrs: false })
 
@@ -353,7 +354,7 @@ defineExpose({
       v-show="menu.combobox.isOpen.value"
       :id="listboxId"
       ref="listboxRef"
-      class="astryx-typeahead-listbox"
+      class="astryx-typeahead-listbox astryx-layer"
       role="listbox"
       :aria-label="messages.typeahead.results"
       :data-placement="anchored.position.value.placement"

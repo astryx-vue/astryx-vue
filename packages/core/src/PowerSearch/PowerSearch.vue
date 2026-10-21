@@ -29,6 +29,7 @@ import { searchPowerSearchFields } from './source.js'
 import '../../styles/power-search.css'
 import '../../styles/typeahead.css'
 import '../../styles/visually-hidden-utility.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxPowerSearch', inheritAttrs: false })
 
@@ -631,7 +632,7 @@ defineExpose({
       v-show="menu.combobox.isOpen.value"
       :id="listboxId"
       ref="listboxRef"
-      class="astryx-typeahead-listbox"
+      class="astryx-typeahead-listbox astryx-layer"
       role="listbox"
       :aria-label="text.results"
       :data-placement="anchored.position.value.placement"

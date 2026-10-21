@@ -1,95 +1,86 @@
 import { readdirSync, readFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 /**
- * 按子路径引入组件时不会加载总的 `styles.css`，浮层的文字重置（`styles/layer.css`）
- * 只能靠组件自己的 import 链带进来。这里保证：模板里用了 `layer.css` 所列类名的
- * 每个组件，都能沿 import 链走到 `layer.css`。
+ * 浮层的文字重置写在 `styles/layer.css` 里。按子路径引入组件时不会加载总的 `styles.css`，
+ * 所以每个把内容 Teleport 出去的组件，都要满足两条：
+ *
+ * 1. 自己直接引入 `layer.css`：直接 import 它，或者 import 会引入它的 `layer/scopedProvide`
+ *    或 `layer/LayerContentBoundary`。只靠别的组件间接带进来不算数，那条链随时可能断。
+ * 2. Teleport 出去的根元素带有 `layer.css` 重置规则能命中的类名，比如 `astryx-layer`。
+ *
+ * 不是新浮层根的 Teleport（挂进组件自己的某个位置，或者挂进已经重置过的浮层里面）
+ * 列在 `NOT_A_LAYER_ROOT` 里，并写明原因。
  */
 
 const SRC = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const LAYER_CSS = resolve(SRC, '../styles/layer.css')
 
-function sourceFiles(dir: string): string[] {
+const NOT_A_LAYER_ROOT: Record<string, string> = {
+  'Chat/ChatComposerInput.vue': '挂进输入框里自己的 span，不离开组件',
+  'TopNav/TopNav.vue': '挂进 MobileNav 的抽屉，MobileNav 的根已经重置',
+  'DropdownMenu/DropdownMenuSubMenu.vue': '下钻面板挂进父菜单内部，父菜单的根已经重置',
+  'ContextMenu/ContextMenuSubMenu.vue': '下钻面板挂进父菜单内部，父菜单的根已经重置',
+}
+
+const LOADS_LAYER_CSS = /import\s+(?:[\w{},\s]+\sfrom\s+)?['"][^'"]*(?:styles\/layer\.css|layer\/scopedProvide(?:\.js)?|layer\/LayerContentBoundary\.vue)['"]/
+
+function vueFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = join(dir, entry.name)
     if (entry.isDirectory())
-      return sourceFiles(full)
-    const isSource = /\.(?:vue|ts)$/.test(entry.name) && !/\.(?:test|spec)\.ts$/.test(entry.name) && !entry.name.endsWith('.d.ts')
-    return isSource ? [full] : []
+      return vueFiles(full)
+    return entry.name.endsWith('.vue') ? [full] : []
   })
 }
 
-/** `layer.css` 里 `:where(...)` 列出的类名。 */
+/** `layer.css` 重置规则里 `:where(...)` 列出的类名。 */
 function layerClassNames(): string[] {
   const css = readFileSync(LAYER_CSS, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
   const group = /:where\(([^)]*)\)/.exec(css)?.[1] ?? ''
   return [...group.matchAll(/\.([\w-]+)/g)].map(match => match[1]!)
 }
 
-const files = sourceFiles(SRC)
-const sources = new Map(files.map(file => [file, readFileSync(file, 'utf8')]))
-
-/** 一个文件的相对 import，解析成 src 里真实存在的文件。 */
-function localImports(file: string): string[] {
-  const code = sources.get(file) ?? ''
-  const found: string[] = []
-  for (const match of code.matchAll(/(?:from|import)\s+['"](\.[^'"]+)['"]/g)) {
-    const target = resolve(dirname(file), match[1]!)
-    const candidates = [target, target.replace(/\.js$/, '.ts'), target.replace(/\.js$/, '.vue'), join(target, 'index.ts')]
-    const hit = candidates.find(candidate => sources.has(candidate))
-    if (hit)
-      found.push(hit)
-  }
-  return found
+/** 每个 `<Teleport>` 里第一个元素的开始标签（含 class 和 :class）。 */
+function teleportRoots(code: string): string[] {
+  return [...code.matchAll(/<Teleport\b[^>]*>\s*(?:<!--[\s\S]*?-->\s*)*(?:<Transition\b[^>]*>\s*(?:<!--[\s\S]*?-->\s*)*)?(<[a-z][^>]*>)/g)]
+    .map(match => match[1]!)
 }
 
-function importsLayerCss(file: string): boolean {
-  return /import\s+['"][^'"]*styles\/layer\.css['"]/.test(sources.get(file) ?? '')
-}
+const teleporters = vueFiles(SRC)
+  .map(file => ({ name: relative(SRC, file), code: readFileSync(file, 'utf8') }))
+  .filter(({ code }) => code.includes('<Teleport'))
+  .filter(({ name }) => !(name in NOT_A_LAYER_ROOT))
 
-function reachesLayerCss(start: string): boolean {
-  const seen = new Set<string>()
-  const queue = [start]
-  while (queue.length > 0) {
-    const file = queue.pop()!
-    if (seen.has(file))
-      continue
-    seen.add(file)
-    if (importsLayerCss(file))
-      return true
-    queue.push(...localImports(file))
-  }
-  return false
-}
+describe('浮层的文字重置', () => {
+  const classes = layerClassNames()
 
-/** 类名作为完整的 class 词出现在这个文件里（不是 `astryx-popover-foo` 这种更长的名字）。 */
-function usesClass(code: string, name: string): boolean {
-  return new RegExp(`(?<![\\w-])${name}(?![\\w-])`).test(code)
-}
-
-describe('layer.css 的加载链', () => {
-  const names = layerClassNames()
-
-  it('能从 layer.css 读出浮层类名', () => {
-    expect(names).toContain('astryx-layer')
-    expect(names).toContain('astryx-popover')
+  it('能从 layer.css 读出类名', () => {
+    expect(classes).toContain('astryx-layer')
   })
 
-  it.each(names)('用到 .%s 的组件都能走到 layer.css', (name) => {
-    const users = files.filter((file) => {
-      if (!file.endsWith('.vue'))
-        return false
-      const code = sources.get(file) ?? ''
-      return usesClass(code, name) && new RegExp(`class=["'][^"']*(?<![\\w-])${name}(?![\\w-])`).test(code)
-    })
-    const missing = users.filter(file => !reachesLayerCss(file))
-    expect(missing.map(file => file.slice(SRC.length + 1))).toEqual([])
+  it('找到了全部浮层组件', () => {
+    expect(teleporters.length).toBeGreaterThan(15)
   })
 
-  it('toast 视口（用字符串列表声明 astryx-layer）也能走到 layer.css', () => {
-    expect(reachesLayerCss(join(SRC, 'Toast/ToastViewport.vue'))).toBe(true)
+  it('scopedProvide 直接引入 layer.css', () => {
+    const code = readFileSync(join(SRC, 'layer/scopedProvide.ts'), 'utf8')
+    expect(code).toMatch(/import\s+['"]\.\.\/\.\.\/styles\/layer\.css['"]/)
+  })
+
+  it.each(teleporters.map(t => [t.name, t] as const))('%s 自己引入 layer.css', (_name, { code }) => {
+    expect(code).toMatch(LOADS_LAYER_CSS)
+  })
+
+  it.each(teleporters.map(t => [t.name, t] as const))('%s 的浮层根带有重置类名', (_name, { code }) => {
+    const roots = teleportRoots(code)
+    expect(roots.length).toBeGreaterThan(0)
+    for (const root of roots) {
+      const covered = classes.some(name => new RegExp(`(?<![\\w-])${name}(?![\\w-])`).test(root))
+      const usesClassesBinding = /:class="classes"/.test(root) && /['"]astryx-layer['"]/.test(code)
+      expect(covered || usesClassesBinding, root).toBe(true)
+    }
   })
 })

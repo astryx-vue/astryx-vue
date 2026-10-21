@@ -3,6 +3,7 @@ import type { TableRowMenuItem } from './types.js'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import Icon from '../Icon/Icon.vue'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxTableRowMenu' })
 
@@ -79,7 +80,7 @@ onBeforeUnmount(() => {
   <Teleport :to="teleportTarget">
     <div
       ref="root"
-      class="astryx-table-menu"
+      class="astryx-table-menu astryx-layer"
       role="menu"
       tabindex="-1"
       :style="{ top: `${y}px`, left: `${x}px` }"

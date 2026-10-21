@@ -18,6 +18,7 @@ import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/bordered-control.css'
 import '../../styles/time-input.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxTimeField', inheritAttrs: false })
 
@@ -352,7 +353,7 @@ function onInputClick(): void {
       v-show="isOptionsOpen"
       :id="listboxId"
       ref="options"
-      class="astryx-time-input-options"
+      class="astryx-time-input-options astryx-layer"
       role="listbox"
       :aria-label="resolvedOptionsLabel"
       :style="optionsStyle"

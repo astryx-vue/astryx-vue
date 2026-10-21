@@ -28,6 +28,7 @@ import { flattenOptions, SELECT_ALL_VALUE } from './options.js'
 import '../../styles/button.css'
 import '../../styles/multi-selector.css'
 import '../../styles/visually-hidden-utility.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxMultiSelector', inheritAttrs: false })
 
@@ -613,7 +614,7 @@ defineExpose({
       v-show="combobox.isOpen.value"
       :id="listboxId"
       ref="listboxRef"
-      class="astryx-multi-selector-listbox"
+      class="astryx-multi-selector-listbox astryx-layer"
       :class="{ 'is-sheet': isSheet }"
       role="listbox"
       aria-multiselectable="true"
