@@ -1,4 +1,5 @@
 import type { Component, VNode } from 'vue'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldLabelProps, FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
 
 export type TextAreaSize = 'sm' | 'md' | 'lg'
@@ -9,7 +10,7 @@ export type TextAreaChangeAction = (value: string, event: TextAreaChangeEvent) =
 export type TextAreaWrap = 'soft' | 'hard'
 export type TextAreaResize = 'none' | 'both' | 'horizontal' | 'vertical'
 
-export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'> {
+export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'>, FieldPartStylingProps {
   modelValue: string
   id?: string
   size?: TextAreaSize
