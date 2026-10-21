@@ -24,18 +24,30 @@ export interface DerivedVarEntry {
 }
 
 export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> = {
+  'bottom-sheet': [{ property: 'padding', expand: 'container' }],
   'card': [
     { property: 'borderRadius', vars: ['--_card-radius'] },
     { property: 'padding', expand: 'container' },
+  ],
+  'chat': [
+    { property: 'borderRadius', vars: ['--_chat-composer-radius'] },
+    { property: 'padding', vars: ['--_chat-composer-padding'] },
   ],
   'context-menu': [
     { property: 'borderRadius', vars: ['--_context-menu-radius'] },
     { property: 'padding', vars: ['--_context-menu-padding'] },
   ],
-  'dialog': [{ property: 'borderRadius', vars: ['--_dialog-radius'] }],
+  'dialog': [
+    { property: 'borderRadius', vars: ['--_dialog-radius'] },
+    { property: 'padding', expand: 'container' },
+  ],
   'dropdown-menu': [
     { property: 'borderRadius', vars: ['--_dropdown-menu-radius'] },
     { property: 'padding', vars: ['--_dropdown-menu-padding'] },
+  ],
+  'progress-bar-mark': [
+    { property: 'width', vars: ['--_progressbar-mark-width'] },
+    { property: 'height', vars: ['--_progressbar-mark-height'] },
   ],
   'segmented-control': [
     { property: 'borderRadius', vars: ['--_segmented-control-radius'] },

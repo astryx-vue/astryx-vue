@@ -119,6 +119,26 @@ describe('theme targets', () => {
     expect(theme.css).toContain('--_dropdown-menu-padding: 6px;')
   })
 
+  it('expands dialog, bottom-sheet, chat and progress-bar-mark into their own variables', () => {
+    const theme = defineTheme({
+      name: 'surfaces',
+      components: {
+        'dialog': { base: { padding: '24px' } },
+        'bottom-sheet': { base: { paddingBlock: '12px', paddingInline: '20px' } },
+        'chat': { base: { borderRadius: '18px', padding: '10px' } },
+        'progress-bar-mark': { base: { width: '4px', height: '12px' } },
+      },
+    })
+    expect(theme.css).toContain('--astryx-dialog-padding: 24px;')
+    expect(theme.css).not.toMatch(/[;{]\s*padding: 24px/)
+    expect(theme.css).toContain('--astryx-bottom-sheet-padding-inline: 20px;')
+    expect(theme.css).toContain('--astryx-bottom-sheet-padding-block-start: 12px;')
+    expect(theme.css).toContain('--_chat-composer-radius: 18px;')
+    expect(theme.css).toContain('--_chat-composer-padding: 10px;')
+    expect(theme.css).toContain('--_progressbar-mark-width: 4px;')
+    expect(theme.css).toContain('--_progressbar-mark-height: 12px;')
+  })
+
   it('maps physical block padding through the container expansion', () => {
     const theme = defineTheme({ name: 'physical', components: { card: { base: { paddingTop: '4px' } } } })
     expect(theme.css).toContain('--astryx-card-padding-block-start: 4px;')
