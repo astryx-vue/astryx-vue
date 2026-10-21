@@ -10,7 +10,7 @@ astryx-vue 是用 Vue 3 重新实现 [Astryx](https://github.com/facebook/astryx
 - 用户说「合」后，节点 PR 合进 `swarm-tree`；本总 PR 会自动更新并重新部署文档预览，方便从用户视角验收。
 - 进度唯一来源：`.agents-work/upstream-sync-0.7.1/`（`ROADMAP.md` / `SWARM.md` / `ledger/` / `nodes/<ID>/`）。
 
-图例：✅已完成 · 🟡实现中 · 🔷验收中 · 🔵可开工 · ⬜未开始 · 🔴返工中
+图例：✅已完成 · 🟡实现中 · 🔷验收中 · 🔵可开工 · ⬜未开始
 
 > 本描述会在节点合入或状态变更时由总控整篇覆盖。不要在标记块外再贴一份，否则会叠成重复的两段。
 
@@ -36,15 +36,15 @@ mindmap
     阶段 C 组件
       ✅ C1 基础输入 #136
       ✅ C2 勾选与开关 #140
-      🟡 C3 选择器
+      🔷 C3 选择器 #149
       ⬜ C4 搜索与命令面板
       🔵 C5 日期时间
       ✅ C6 菜单 #143
-      🟡 C7 浮层家族
+      ✅ C7 浮层家族 #148
       ⬜ C8 BottomSheet
       ✅ C9 Markdown 与代码 #138
-      🟡 C9-exports Markdown 导出
-      🟡 C10 Chat
+      ✅ C9-exports Markdown 导出 #146
+      🔷 C10 Chat 第2轮 #147
       🔵 C11 表格
       🔵 C12 列表与树
       🔵 C13 导航
@@ -69,11 +69,13 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| C7 浮层家族 | [#148](https://github.com/astryx-vue/astryx-vue/pull/148) | 通过 24/24。对话框页眉换肤、悬停卡片、轻提示滑动；滚动锁仍不钉 `position: fixed` |
+| C9-exports Markdown 子路径 | [#146](https://github.com/astryx-vue/astryx-vue/pull/146) | 不是总表节点。通过 10/10。构建产出 `parser`、`plugins`、`plugin-renderer` 的 dist |
 | C15 反馈与状态 | [#141](https://github.com/astryx-vue/astryx-vue/pull/141) | 通过 26/26。提示条、加载圈、进度条、步骤条对齐上游 |
 | B4-fix 关闭顺序 | [#142](https://github.com/astryx-vue/astryx-vue/pull/142) | 不是总表节点。Escape 只关最上面一层，补上嵌套深度，并刷新 CLI catalog |
 | C6 菜单家族 | [#143](https://github.com/astryx-vue/astryx-vue/pull/143) | 通过 26/26。按压打开、悬停飞出、Escape 只关最上面一层 |
 | C2 勾选与开关 | [#140](https://github.com/astryx-vue/astryx-vue/pull/140) | 通过 20/20。勾选、单选、开关、滑块、分段，对齐上游 v0.7.1 |
-| C9 Markdown 与代码 | [#138](https://github.com/astryx-vue/astryx-vue/pull/138) | 第 2 轮通过 28/28。子路径导出还没生成 dist，见下面的 C9-exports |
+| C9 Markdown 与代码 | [#138](https://github.com/astryx-vue/astryx-vue/pull/138) | 第 2 轮通过 28/28。子路径 dist 已由 C9-exports #146 补上 |
 | B7 工具函数 | [#137](https://github.com/astryx-vue/astryx-vue/pull/137) | 通过 25/25。时间、日期、可见字符、安全地址等 utils |
 | C1 基础输入 | [#136](https://github.com/astryx-vue/astryx-vue/pull/136) | 通过 22/22。FR10 分层、`isLabelHidden`、数字提交与字数 |
 | C16 基础展示与动作 | [#135](https://github.com/astryx-vue/astryx-vue/pull/135) | 通过 15/15。触屏按压、安全 URL、ButtonGroup 漫游焦点、头像重叠 |
@@ -82,14 +84,12 @@ mindmap
 
 ## 当前并行
 
-- 🟡 **C3** 选择器家族：实现中。
-- 🟡 **C10** Chat：实现中。依赖的 C9、C6、C1 都已完成。
-- 🟡 **C9-exports**（不是总表节点）：修 Markdown 子路径导出，用来把本 PR 的 CI 救绿。
-- 🟡 **C7** 浮层家族：已开工，实现中。
+- 🔷 **C3** 选择器家族（[#149](https://github.com/astryx-vue/astryx-vue/pull/149)）：验收中。
+- 🔷 **C10** Chat（[#147](https://github.com/astryx-vue/astryx-vue/pull/147)）：第 2 轮验收中。第 1 轮因分组后 Enter 选错项、空输入时发送按钮未禁用而返工。
 
-**本 PR 的 CI 还可能是红的，直到 C9-exports 合入。** #142 已经把 CLI catalog 修好了。剩下的失败来自 C9 #138：`packages/core/package.json` 的 `./Markdown/parser`、`./Markdown/plugins`、`./Markdown/plugin-renderer` 指向还没生成的 `dist/Markdown/...`。`tsdown.config.ts` 的入口扫不到这三份源文件。
+可以开工、等待派发：C5、C11、C12、C13、D1、F1a、F2a、F3h。D4a 仍标着可开工，要等用户签字，签字前不要派。
 
-下一步可开工（按下游数量）：C11、C12、C5、C13、D1、F2a、D4a、F1a、F3h。D4a 要等用户签字。
+**本 PR 的 CI：** Markdown 三个子路径缺 dist，是 #146 合入前的预期失败，现已由 #146 修好。#142 已经把 CLI catalog 修好了。还剩一处要单独修：`DropdownMenuSubMenu` 的服务端渲染测试失败，报 `HTMLElement is not defined`（run [39594900200](https://github.com/astryx-vue/astryx-vue/actions/runs/39594900200)）。这次跑在 `pnpm test` 就停了，还没跑到构建。
 
 ## 怎么验收这个总 PR
 
