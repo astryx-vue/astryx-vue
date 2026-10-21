@@ -1,5 +1,6 @@
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
+import { LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import Popover from './Popover.vue'
 
 enableAutoUnmount(afterEach)
@@ -189,6 +190,19 @@ describe('popover', () => {
 
     expect(surface.style.width).toBe('240px')
     expect(surface.style.getPropertyValue('--_popover-padding')).toBe('var(--astryx-spacing-2)')
+  })
+
+  it('caps an explicit width at the shared viewport cap', () => {
+    const { surface } = renderPopover({ width: 400 })
+
+    expect(surface.style.width).toBe('400px')
+    expect(surface.style.maxWidth).toBe(LAYER_MAX_INLINE_SIZE)
+  })
+
+  it('caps its default width at 320px and the viewport', () => {
+    const { surface } = renderPopover()
+
+    expect(surface.style.maxWidth).toBe(`min(320px, ${LAYER_MAX_INLINE_SIZE})`)
   })
 
   it('uses fractional padding tokens with a hyphen', () => {

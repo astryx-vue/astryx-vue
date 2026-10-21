@@ -5,6 +5,7 @@ import type { MenuDrillIn } from './useMenuDrillIn.js'
 import { computed, nextTick, onBeforeUnmount, provide, ref, useId, useSlots, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import Icon from '../Icon/Icon.vue'
+import { clampInlineSize, isIntrinsicInlineSize } from '../layer/inlineSize.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import Item from '../List/Item.vue'
 import { useAstryxMessages } from '../locale/index.js'
@@ -26,8 +27,6 @@ const props = withDefaults(defineProps<DropdownMenuSubMenuProps>(), {
 const emit = defineEmits<DropdownMenuSubMenuEmits>()
 
 defineSlots<DropdownMenuSubMenuSlots>()
-
-const INTRINSIC_SIZE = /^(?:auto|min-content|max-content|fit-content|fit-content\(.*\)|inherit|initial|unset|revert|revert-layer)$/i
 
 const slots = useSlots()
 const messages = useAstryxMessages()
@@ -80,10 +79,10 @@ const flyoutStyle = computed<CSSProperties>(() => {
   if (props.menuWidth == null)
     return style
   const width = (typeof props.menuWidth === 'number' ? `${props.menuWidth}px` : props.menuWidth).trim()
-  if (INTRINSIC_SIZE.test(width))
+  if (isIntrinsicInlineSize(width))
     style.width = width
   else
-    style.minWidth = `min(${width}, calc(100vw - 16px))`
+    style.minWidth = clampInlineSize(width)
   return style
 })
 

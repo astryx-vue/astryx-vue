@@ -2,6 +2,7 @@ import type { DropdownMenuOption } from './types.js'
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
+import { LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import DropdownMenu from './DropdownMenu.vue'
 import DropdownMenuDivider from './DropdownMenuDivider.vue'
 import DropdownMenuGroup from './DropdownMenuGroup.vue'
@@ -604,7 +605,8 @@ describe('dropdownMenu', () => {
     await flushPromises()
 
     expect(surface.style.minWidth).toContain('240px')
-    expect(surface.style.maxWidth).toBe('calc(100vw - 16px)')
+    expect(surface.style.minWidth).toContain(LAYER_MAX_INLINE_SIZE)
+    expect(surface.style.maxWidth).toBe(LAYER_MAX_INLINE_SIZE)
     expect(surface.style.getPropertyValue('--_dropdown-menu-max-block')).toContain('480px')
   })
 
@@ -615,7 +617,8 @@ describe('dropdownMenu', () => {
     await flushPromises()
 
     expect(surface.style.getPropertyValue('--_dropdown-menu-max-block')).toBe('min(300px, calc(100dvh - 16px))')
-    expect(surface.style.maxWidth).toContain('calc(100vw - 16px)')
+    expect(surface.style.maxWidth).toContain('320px')
+    expect(surface.style.maxWidth).toContain(LAYER_MAX_INLINE_SIZE)
   })
 
   it('takes an intrinsic width keyword as the preferred width still capped by the viewport', async () => {
@@ -625,7 +628,7 @@ describe('dropdownMenu', () => {
     await flushPromises()
 
     expect(surface.style.width).toBe('max-content')
-    expect(surface.style.maxWidth).toBe('calc(100vw - 16px)')
+    expect(surface.style.maxWidth).toBe(LAYER_MAX_INLINE_SIZE)
   })
 
   it('routes native attributes to the menu surface and keeps aria-controls consistent', () => {

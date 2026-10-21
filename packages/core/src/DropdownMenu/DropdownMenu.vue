@@ -8,6 +8,7 @@ import { useDismiss } from '../composables/useDismiss.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
+import { clampInlineSize, isIntrinsicInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { dropdownMenuContextKey } from './context.js'
@@ -36,7 +37,6 @@ const slots = useSlots()
 const GAP = 4
 const DEFAULT_MAX_WIDTH = 320
 const DEFAULT_MAX_HEIGHT = '300px'
-const INTRINSIC_SIZE = /^(?:auto|min-content|max-content|fit-content|fit-content\(.*\)|inherit|initial|unset|revert|revert-layer)$/i
 
 const open = defineModel<boolean | undefined>('isMenuOpen', { default: undefined })
 
@@ -143,9 +143,7 @@ const surfaceStyle = computed<CSSProperties>(() => {
     'left': `${position.value.left}px`,
     '--_dropdown-menu-max-block': `min(${props.menuMaxHeight == null ? DEFAULT_MAX_HEIGHT : `${props.menuMaxHeight}px`}, calc(100dvh - 16px))`,
     // Whatever width the menu prefers, the viewport keeps the last word.
-    'maxWidth': props.menuWidth == null
-      ? `min(${DEFAULT_MAX_WIDTH}px, calc(100vw - 16px))`
-      : 'calc(100vw - 16px)',
+    'maxWidth': props.menuWidth == null ? clampInlineSize(`${DEFAULT_MAX_WIDTH}px`) : LAYER_MAX_INLINE_SIZE,
   }
 
   if (props.menuWidth == null) {
@@ -154,10 +152,10 @@ const surfaceStyle = computed<CSSProperties>(() => {
   }
 
   const width = (typeof props.menuWidth === 'number' ? `${props.menuWidth}px` : props.menuWidth).trim()
-  if (INTRINSIC_SIZE.test(width))
+  if (isIntrinsicInlineSize(width))
     style.width = width
   else
-    style.minWidth = `min(${width}, calc(100vw - 16px))`
+    style.minWidth = clampInlineSize(width)
 
   return style
 })

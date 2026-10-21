@@ -4,6 +4,7 @@ import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import { Button } from '../Button/index.js'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
+import { clampInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { usePopover } from './usePopover.js'
 import '../../styles/popover.css'
@@ -71,13 +72,14 @@ const surfaceStyle = computed(() => {
     '--_popover-padding': `var(--astryx-spacing-${String(props.padding).replace('.', '-')})`,
     'top': layerStyle.value.top as string,
     'left': layerStyle.value.left as string,
+    // 视口上限永远管着宽度：显式 width 也不能把它顶破。
+    'maxWidth': props.width == null ? clampInlineSize(`${DEFAULT_MAX_WIDTH}px`) : LAYER_MAX_INLINE_SIZE,
   }
   if (props.width != null) {
     style.width = typeof props.width === 'number' ? `${props.width}px` : props.width
   }
   else {
     style.minWidth = `min(${anchorWidth.value}px, ${DEFAULT_MAX_WIDTH}px)`
-    style.maxWidth = `min(${DEFAULT_MAX_WIDTH}px, calc(100vw - 16px))`
   }
   return style
 })
