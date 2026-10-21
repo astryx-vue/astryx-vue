@@ -4,9 +4,9 @@
 
 ## 根因
 
-提及列表画出来的顺序和搜索结果的原始顺序不是同一份。`groupSearchItems` 把有分组的人放在前面，没分组的放在最后。文档站示例的原始顺序是 Ada、María、Lin、Grace，屏幕上却是 Lin、Grace、Ada、María。
+提及列表画出来的顺序和搜索结果的原始顺序不是同一份。`groupSearchItems` 把有分组的人放在前面，没分组的放在最后。高亮（`data-highlighted`、`aria-selected`、`aria-activedescendant`）用的是屏幕上的序号。回车和 Tab 却用 `state.items[highlightedIndex]` 去原始数组里取人。
 
-方向键和高亮（`data-highlighted`、`aria-selected`、`aria-activedescendant`）用的是屏幕上的序号。回车和 Tab 却用 `state.items[highlightedIndex]` 去原始数组里取人。屏幕第 1 行是 Lin，回车插入的却是原始第 1 条 Ada。高亮移到 Grace（屏幕序号 1）时，旧逻辑插入的是原始第 2 条 María，同样不是当前高亮的人。验收记录里写成插进了 Ada。鼠标点某一行没有这个问题，因为点击直接把那一行的对象交出去。
+验收第 4 条就是这件事。输入 `@a` 时 Lin 被滤掉，剩下的原始顺序是 Ada、María、Grace。画面顺序是 Grace Hopper、Ada Lovelace、María José García。默认高亮停在第一行 Grace，回车却插入原始第 0 项 Ada。鼠标点某一行没有这个问题，因为点击直接把那一行的对象交出去。
 
 发送按钮这边，上游 `canSend` 是「去掉首尾空白后还有字，并且输入区没有被停用」。附件抽屉不参与这个判断。Vue 侧本来就是这套条件，空草稿时按钮也有 `disabled`。可是停用样式只把实心强调色的透明度降到 0.5，空草稿时看起来仍是一颗可点的黑钮。这一轮让停用中的发送按钮改用中性浅底和次要文字色，写上可发送内容后才回到实心强调色。停止按钮不带 `disabled`，不受这条影响。
 
@@ -21,7 +21,7 @@
 
 ## 验证
 
-两条命令都是 5 个文件、79 条（这一轮新增 4 条，两种 `NODE_ENV` 数量相同）：
+两条命令都是 5 个文件、81 条（这一轮新增 6 条，两种 `NODE_ENV` 数量相同）：
 
 ```bash
 env -u NODE_ENV pnpm vitest run --maxWorkers=2 packages/core/src/Chat packages/core/src/composables/useChatNewMessages.test.ts packages/core/src/composables/useChatStreamScroll.test.ts

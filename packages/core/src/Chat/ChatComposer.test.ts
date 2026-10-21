@@ -114,6 +114,47 @@ describe('chat composer', () => {
     wrapper.unmount()
   })
 
+  it('inserts Grace when @a highlights her before any arrow key', async () => {
+    const wrapper = mount(ChatComposerInput, {
+      attachTo: document.body,
+      props: {
+        triggers: [{
+          character: '@',
+          hasMultiWordQuery: true,
+          searchSource: createStaticSource([
+            { id: 'ada', label: 'Ada Lovelace' },
+            { id: 'maria', label: 'María José García' },
+            { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },
+            { id: 'grace', label: 'Grace Hopper', auxiliaryData: { group: 'Reviewers' } },
+          ]),
+          onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}` }),
+        }],
+      },
+    })
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    const field = asHtml(editable.element)
+    field.focus()
+    field.textContent = '@a'
+    const textNode = field.firstChild
+    const selection = window.getSelection()
+    const range = document.createRange()
+    if (textNode)
+      range.setStart(textNode, textNode.textContent?.length ?? 0)
+    range.collapse(true)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+    field.dispatchEvent(new InputEvent('input', { bubbles: true }))
+    await nextTick()
+
+    const activeId = editable.attributes('aria-activedescendant')
+    const option = document.getElementById(activeId ?? '')
+    expect(option?.textContent).toContain('Grace Hopper')
+    await editable.trigger('keydown', { key: 'Enter' })
+    await nextTick()
+    expect(field.querySelector('[data-astryx-token-value]')?.getAttribute('data-astryx-token-value')).toBe('@grace')
+    wrapper.unmount()
+  })
+
   it('keeps Shift+Enter and an IME commit from sending', async () => {
     const wrapper = mount(ChatComposer)
     const editable = wrapper.get('.astryx-chat-composer-input__editable')

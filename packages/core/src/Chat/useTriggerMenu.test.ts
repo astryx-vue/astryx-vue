@@ -293,6 +293,27 @@ describe('useTriggerMenu', () => {
     expect(selected).toEqual(['grace'])
   })
 
+  it('inserts Grace when @a highlights her on the first visual row', async () => {
+    const selected: string[] = []
+    const menu = mountMenu([mention({
+      searchSource: createStaticSource([
+        { id: 'ada', label: 'Ada Lovelace' },
+        { id: 'maria', label: 'María José García' },
+        { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },
+        { id: 'grace', label: 'Grace Hopper', auxiliaryData: { group: 'Reviewers' } },
+      ]),
+      onSelect: (item) => {
+        selected.push(item.id)
+        return { value: `@${item.id}`, label: `@${item.label}` }
+      },
+    })])
+    await type(menu, '@a')
+    expect(menu.state.items.map(item => item.id)).toEqual(['ada', 'maria', 'grace'])
+    expect(menu.state.highlightedIndex).toBe(0)
+    expect(menu.handleKeyDown(key('Enter'))).toBe(true)
+    expect(selected).toEqual(['grace'])
+  })
+
   it('inserts the grouped row under the highlight, not the first source item', async () => {
     const selected: string[] = []
     const menu = mountMenu([mention({
