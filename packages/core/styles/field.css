@@ -190,6 +190,7 @@
 
   .astryx-field .astryx-field-info-tip,
   .astryx-field .astryx-input-clear-button {
+    position: relative;
     flex: none;
     width: 20px;
     height: 20px;
@@ -242,6 +243,10 @@
   .astryx-field-status-glyph:focus-visible {
     outline: var(--astryx-focus-outline-width, 2px) solid var(--astryx-focus-outline-color, currentcolor);
     outline-offset: 1px;
+  }
+
+  .astryx-input-clear-button {
+    position: relative;
   }
 
   @media (pointer: coarse) {

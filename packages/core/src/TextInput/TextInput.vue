@@ -8,10 +8,10 @@ import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useInputContainer } from '../composables/useInputContainer.js'
 import { useInputStatusIcon } from '../composables/useInputStatusIcon.js'
 import Field from '../Field/Field.vue'
-import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
-import IconButton from '../IconButton/IconButton.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextInputAction } from './useTextInputAction.js'
 import '../../styles/text-input.css'
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<Omit<TextInputProps, 'modelValue'>>(), {
 const emit = defineEmits<TextInputEmits>()
 defineSlots<TextInputSlots>()
 const ariaRequired = useAriaRequired(props)
+const messages = useAstryxMessages()
 const model = defineModel<string>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')
@@ -104,6 +105,7 @@ async function clear(event: MouseEvent): Promise<void> {
   await nextTick()
   focus({ preventScroll: true })
 }
+const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.textInput.clear(props.label))
 const { statusIcon, statusIconProps } = useInputStatusIcon({
   status: () => props.status,
   statusVariant: () => props.statusVariant,
@@ -149,9 +151,7 @@ onMounted(() => {
           @focus="disabledTooltip.onTooltipPointerEnter" @blur="disabledTooltip.onBlur"
         >
         <span v-if="$slots.end" class="astryx-text-input-end"><slot name="end" /></span>
-        <IconButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel ?? `Clear ${label}`" @click="clear">
-          <FieldIcon type="clear" />
-        </IconButton>
+        <InputClearButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" :label="resolvedClearLabel" @click="clear" />
         <ButtonSpinner v-if="busy" class="astryx-text-input-spinner" :label="loadingLabel" />
         <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
       </div>

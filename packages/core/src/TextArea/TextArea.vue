@@ -7,10 +7,10 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useInputContainer } from '../composables/useInputContainer.js'
 import Field from '../Field/Field.vue'
-import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
+import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
-import IconButton from '../IconButton/IconButton.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextAreaAction } from './useTextAreaAction.js'
 import '../../styles/text-area.css'
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
 const emit = defineEmits<TextAreaEmits>()
 defineSlots<TextAreaSlots>()
 const ariaRequired = useAriaRequired(props)
+const messages = useAstryxMessages()
 const model = defineModel<string>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLTextAreaElement>('input')
@@ -99,6 +100,7 @@ async function clear(event: MouseEvent): Promise<void> {
   await nextTick()
   focus({ preventScroll: true })
 }
+const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.textInput.clear(props.label))
 const inputContainer = useInputContainer({
   containerRef: container,
   inputRef: input,
@@ -148,9 +150,7 @@ onMounted(() => {
           :data-over="action.value.value.length > Number(maxlength) || undefined"
         >{{ action.value.value.length }} / {{ maxlength }}</span>
         <span v-if="$slots.end" class="astryx-text-area-end"><slot name="end" /></span>
-        <IconButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" variant="ghost" size="sm" :label="clearLabel ?? `Clear ${label}`" @click="clear">
-          <FieldIcon type="clear" />
-        </IconButton>
+        <InputClearButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" :label="resolvedClearLabel" @click="clear" />
         <ButtonSpinner v-if="busy" class="astryx-text-area-spinner" :label="loadingLabel" />
         <FieldInfoTip v-if="status?.message && statusVariant === 'tooltip'" :text="status.message" :type="status.type" />
       </div>

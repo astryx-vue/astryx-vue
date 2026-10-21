@@ -9,6 +9,7 @@ import { useNumberField } from '../composables/useNumberField.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
+import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -46,6 +47,7 @@ const inputId = computed(() => props.id ?? generatedId)
 const messages = useAstryxMessages()
 const incrementLabel = computed(() => messages.value.numberInput.increment(props.label))
 const decrementLabel = computed(() => messages.value.numberInput.decrement(props.label))
+const resolvedClearLabel = computed(() => messages.value.numberInput.clear(props.label))
 const ariaRequired = useAriaRequired(props)
 
 const isDisabled = computed(() => Boolean(props.isDisabled || props.disabled))
@@ -357,15 +359,12 @@ onMounted(() => {
           @wheel="onWheel"
         >
         <span v-if="props.units" :id="unitsId" class="astryx-number-input-units">{{ props.units }}</span>
-        <button
+        <InputClearButton
           v-if="hasClear && props.modelValue != null && !isDisabled && !isReadOnly"
-          type="button"
           class="astryx-number-input-clear"
-          :aria-label="props.label ? `Clear ${props.label}` : 'Clear'"
+          :label="resolvedClearLabel"
           @click="clearValue"
-        >
-          <FieldIcon type="clear" />
-        </button>
+        />
         <FieldInfoTip
           v-if="statusValue?.message && props.statusVariant === 'tooltip'"
           :text="statusValue.message" :type="statusValue.type"
