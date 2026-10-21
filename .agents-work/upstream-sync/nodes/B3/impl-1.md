@@ -279,3 +279,14 @@
 3. **`data-astryx-pressed` 改名为 `data-astryx-press`**，和上游保持一致。全库没有组件读过旧名字。
 4. **DropdownMenu 页的 openOnPress 读数**：页面上本来就有一个展开的菜单，这个读数没有意义。验收时请在单独打开的那个示例上看。
 5. 测试页脚本没有进仓库，放在 evidence 目录（这个目录被 gitignore 忽略），验收者想复现可以直接用。
+
+## 总控补充（来自 B3 验收报告的改进建议，C 节点接入时以这里为准）
+
+- **C2**：Slider **不**按通用步骤接入按压，上游 `usePressFeedback` 的使用者只有 Switch、SegmentedControlItem、CheckboxInput、RadioListItem。Slider 只用 `isKeyboardModality()`。
+- **IME 替换**，以下几处还在内联判断 `isComposing`，要改成 `composables/internal/ime`：
+  - `CommandPalette.vue` → C4
+  - `PowerSearch/PowerSearchEditor.vue` → C4
+  - `MultiSelector.vue`（约第 376 行）→ C3
+- **菜单 `touch-action`**：`context-menu.css` 的 `none`、`dropdown-menu.css` 的 `pan-y` 会挡住双指缩放。C6 要改成 `pinch-zoom` 和 `pan-y pinch-zoom`，并补一条浏览器测试。
+- **按压盖过悬停**：现在没有自动化测试。接入按压的 C 节点（C1、C2、C6、C16）要各补一条浏览器测试，确认按压层画在悬停层上面。
+- **更正**：第 3 节说旧键名 `onPointerDown` 经 `v-bind` 绑定后「也能触发」，这个说法不对。验收实测触发次数是 0。所有调用方都要用 Vue 的事件键名 `onPointerdown`。
