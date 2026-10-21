@@ -34,9 +34,14 @@ export interface FileInputProps extends FieldPartStylingProps {
   statusVariant?: FieldStatusVariant | 'tooltip'
   width?: number | string
   clearLabel?: string
+  /**
+   * 选中或清除之后调用。失败时组件发出 `actionError`，值保持这次提交的结果。
+   */
+  changeAction?: (files: FileInputValue) => void | Promise<void>
 }
 
 export interface FileInputEmits {
   'update:modelValue': [value: FileInputValue]
   'change': [value: FileInputValue]
+  'actionError': [error: unknown, value: FileInputValue]
 }
