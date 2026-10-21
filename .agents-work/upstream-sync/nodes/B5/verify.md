@@ -80,3 +80,11 @@
 17. `impl-2.md`（或者改正后的 `impl-1.md`）第 8 节，已经不再说 Pagination 的读屏名会变。第 8 节列出的「英文会变的组件」，每一个都要自己验证：挂载组件，或者看文案文件，确认这个组件的英文在 BASE 和 B5 之间**确实**不同。只要有一个组件没变却被写成会变，或者变了却没写进去，就判「不过」。
 18. C13 清单里写明：Pagination 的读屏名现在是 "Previous" / "Page 3" / "Pagination"，上游是 "Go to previous page" / "Go to page 3" / "Page indicators"，要接 `previousPage`、`nextPage`、`goToPageNumber`、`pageIndicators`。
 19. 第 2 轮只改了文档，没有改代码。用 `git diff HEAD~N --stat` 确认，N 是第 2 轮新增的提交数。第 1 轮其余 15 项沿用原结论。
+
+## 第 3 轮新增的检查项
+
+20. `impl-3.md` 第 8 节是一份完整清单，覆盖 `verify-2.md`「反向」表里列出的全部遗漏。具体要求：
+    - 补上 `MobileNavToggle` 的 `nav.close`、`MultiSelector` 的 `readOnly`。
+    - 单独加一小节「数字达到 1000 以上时多了千分位」，列出 Pagination、Selector、MultiSelector、Carousel、CommandPalette、Lightbox、AvatarGroupOverflow、TableSelectionToolbar。
+    - 行号要写对，比如 PowerSearch 写 `operators.ts:49`。
+    验收者要把 BASE 和 HEAD 的英文逐个字段对比一遍，确认清单里没有遗漏，也没有写错。

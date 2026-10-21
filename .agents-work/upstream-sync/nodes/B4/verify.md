@@ -64,3 +64,16 @@
 - 任何一条不过，结论就是「不通过」。
 - 报告写到 `/Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync/nodes/B4/verify-<N>.md`，格式照 `templates/verify-report.md`。
 - 最终回复用中文，200 字以内。
+
+## 第 2 轮新增的检查项
+
+第 1 轮发现了 5 个问题，见 `verify-1.md` 里的「不通过的项要怎么改」。第 2 轮逐条复测：
+
+20. **超宽浮层两边都留内边距**：视口宽 390，打开 `<Popover :width="400">`，左右两边到视口边缘的距离都要不小于内边距。DropdownMenu 的 `menuWidth=400`、SubMenu 用同样的方法测。另外再测一种情况：`LayerProvider` 设了额外的 `inset`，结果也要正确。
+21. **文字重置覆盖到所有浮层根**：外层容器设成粗体、大写、居中，然后分别打开 Dialog、Toast、Lightbox、MobileNav 抽屉、BottomSheet。它们内容的 `font-weight`、`text-transform`、`text-align` 都不能继承外层，要和上游 `layerTextReset` 的效果一致。
+22. **浮层内容不继承「成员关系」类 context**：
+    - 在 `ButtonGroup`（`isDisabled`，再试 `size=lg`）里放一个 Popover，Popover 里的 Button 不能继承禁用状态和尺寸。
+    - 回报里要有一张对照表，把上游 `LayerContentBoundary` 截断的 context 和我们的 `provide` 键逐个列出来，每一个都写清楚「截断」或「不适用 + 理由」。从表里抽 2 个，用测试验证。
+23. **Toast 在 Dialog 打开时不跳**：先显示一个 Toast，再打开 Dialog。每 50ms 记录一次 Toast 的 `getBoundingClientRect`，一共记 1 秒。位置变化要不超过 2px。然后反过来测：Dialog 开着时出现 Toast，再关掉 Dialog，Toast 同样不能跳。
+24. 台账 #6919、#6457 的结论和实际情况一致。改进建议里提到的 `ButtonTooltip.vue`、`TableData.vue` 两处写死的 `to="body"` 要处理掉，或者在交接清单里写明交给哪个 C 节点。
+25. 第 1 轮通过的 1 到 19 项中，被第 2 轮改动碰到的要重新验证，至少包括 1、2、5、6、7、13、18。
