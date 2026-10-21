@@ -1189,6 +1189,8 @@ export type {
   TextInputType,
 } from './TextInput/index.js'
 export {
+  DATA_TOKEN_DEFAULTS,
+  DEFAULT_WIDTH_BREAKPOINTS,
   defineTheme,
   expandColorScale,
   expandMotionScale,
@@ -1201,16 +1203,24 @@ export {
   Theme,
   useMediaTheme,
   useTheme,
+  WIDTH_BREAKPOINT_NAMES,
 } from './Theme/index.js'
 export type {
   ColorScaleConfig,
   ComponentStyleMap,
+  DataTokenName,
   DefineThemeInput,
   MediaThemeMode,
   MediaThemeProps,
   MotionScaleConfig,
   RadiusScaleConfig,
   StyleOverrides,
+  ThemeAdaptationCondition,
+  ThemeAdaptationRule,
+  ThemeAdaptations,
+  ThemeAdaptationTypographyConfig,
+  ThemeAdaptationValue,
+  ThemeAdaptationWidthCondition,
   ThemeDefinition,
   ThemeMode,
   ThemeProps,
@@ -1222,6 +1232,8 @@ export type {
   TypographyRole,
   UseMediaThemeReturn,
   UseThemeReturn,
+  WidthBreakpointName,
+  WidthBreakpoints,
 } from './Theme/index.js'
 export { Thumbnail } from './Thumbnail/index.js'
 export type { ThumbnailEmits, ThumbnailProps, ThumbnailRemoveVisibility } from './Thumbnail/index.js'

@@ -28,22 +28,19 @@ title: 扩展与自定义主题
 
 ## 场景二：在页面局部区域套用计算主题
 
-如果不是全站修改，而是希望某个特定的弹窗、侧边栏或卡片拥有一套独立生成的品牌色，可以使用 Vue 组件 [`Theme`](/components/theme)，搭配核心包导出的 `defineTheme()` 工具函数：
+如果不是全站修改，而是希望某个特定的弹窗、侧边栏或卡片拥有一套独立生成的品牌色，可以使用 Vue 组件 [`Theme`](/components/theme)，搭配 `defineTheme()` 工具函数。`color`、`typography`、`radius`、`motion` 这几项只要给几个数，就能算出一整套变量：
 
 ```vue
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
-import { Theme } from '@astryx-vue/core/Theme'
-import { defineTheme } from '@astryx-vue/core/theme'
+import { defineTheme, Theme } from '@astryx-vue/core/Theme'
 
-// 基于新的主题色与圆角配置生成主题对象
-const customBrandTheme = defineTheme({
-  color: {
-    accent: '#2563eb', // 将强调色改成品牌蓝
-  },
-  radius: {
-    element: '0.75rem',
-  },
+const brand = defineTheme({
+  name: 'brand',
+  // 一个颜色；也可以写 [浅色种子, 深色种子]，深浅两套各自从自己的种子算
+  color: { accent: ['#0064E0', '#48CAE4'] },
+  typography: { scale: { base: 14, ratio: 1.2 } },
+  radius: { base: 4, multiplier: 1.5 },
 })
 </script>
 
@@ -52,21 +49,65 @@ const customBrandTheme = defineTheme({
   <Button label="默认风格按钮" />
 
   <!-- 局部子树应用新主题 -->
-  <Theme :theme="customBrandTheme">
-    <div class="brand-panel">
-      <Button variant="primary" label="品牌风格按钮" />
-    </div>
+  <Theme :theme="brand">
+    <Button variant="primary" label="品牌风格按钮" />
   </Theme>
 </template>
 ```
 
-`Theme` 组件会自动把这一组 CSS 变量注入到当前子树的根节点上，并且会智能重新计算文字、按钮等别名映射，防止样式意外继承到外层已经算好的全局色彩。
+`Theme` 会把这组 CSS 变量写到子树的根节点上，并且会重新绑定文字、按钮等别名，防止它们停留在外层已经算好的颜色上。
 
 ## 场景三：只让某个组件与众不同
 
-如果你希望“所有的输入框保持默认，只有主要按钮单独改用定制背景”，可以针对性覆盖该组件的专属变量。
+### 用 `components` 给组件的某个部位换样式
 
-例如在 `packages/themes/neutral/button.css` 里，按钮背景对应的是 `--astryx-button-primary-background`：
+`components` 里的每个键叫「换肤挂点」（theme target），写法是 `组件名-部位`，全部小写、用短横线连起来，例如 `button`、`card-header`、`radio-indicator`、`progress-bar-fill`。每个挂点就是元素上一个固定的 `astryx-*` 类名。
+
+挂点下面的键用来挑选状态：
+
+- `base`：这个部位本身。
+- `variant:primary`：`variant` 等于 `primary` 的时候，对应元素上的 `[data-variant="primary"]`。
+- `checked` 这种单个词：对应 `[data-checked="checked"]`。
+- 用 `+` 把两个条件连起来，两个都满足才生效。
+
+```ts
+const brand = defineTheme({
+  name: 'brand',
+  components: {
+    'button': { 'variant:primary': { borderRadius: '999px' } },
+    'card-header': { base: { color: 'var(--brand-ink)' } },
+  },
+})
+```
+
+几点细节：
+
+- `:hover` 只对能点的控件生效，禁用的按钮不会因为鼠标悬停而变色。
+- `card`、`dialog`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。
+
+### 旧写法已经不再支持
+
+上游在 0.7.0 删掉了一批旧名字，我们也跟着删了。驼峰写法（比如 `buttonIcon`）或者大写开头（比如 `Card`）会直接报错；连在一起的旧名（比如 `progressbar`）不会报错，但什么都匹配不到。请改成右边的新名字：
+
+| 已删除 | 请改用 |
+| --- | --- |
+| `base-table` | `table` |
+| `checkbox` | `checkbox-indicator` |
+| `codeblock`、`codeblock-copy-button`、`codeblock-header`、`codeblock-title` | `code-block`、`code-block-copy-button`、`code-block-header`、`code-block-title` |
+| `date-input-clear-icon`、`date-range-input-clear-icon`、`multi-selector-clear-icon`、`selector-clear-icon` | `input-clear-icon` |
+| `hovercard` | `hover-card` |
+| `navicon` | `nav-icon` |
+| `popover-surface` | `popover` |
+| `progressbar`、`progressbar-fill`、`progressbar-mark`、`progressbar-track` | `progress-bar`、`progress-bar-fill`、`progress-bar-mark`、`progress-bar-track` |
+| `radio`、`radio-dot` | `radio-indicator`、`radio-indicator-dot` |
+| `statusdot` | `status-dot` |
+| `textarea` | `text-area` |
+
+组件也不再输出 `.primary`、`.sm` 这种光秃秃的类名。你自己的 CSS 里如果写了 `.astryx-button.primary`，请改成 `.astryx-button[data-variant="primary"]`。
+
+### 直接覆盖组件变量
+
+如果你只想覆盖单个组件的颜色，也可以直接改它的专属变量。例如 `packages/themes/neutral/button.css` 里，按钮背景对应的是 `--astryx-button-primary-background`：
 
 ```css
 @layer astryx.overrides {
@@ -76,7 +117,54 @@ const customBrandTheme = defineTheme({
 }
 ```
 
+## 进阶：主题自己的变量、环境适配和继承
+
+### 主题局部变量 `localTokens`
+
+有些值只有你这一套主题用得上，比如品牌的墨水色。把它放进 `localTokens`，键就是完整的 CSS 变量名，原样保存，不会加前缀：
+
+```ts
+defineTheme({
+  name: 'brand',
+  localTokens: { '--brand-ink': ['#0A2540', '#E6F0FF'] },
+  components: { 'card-header': { base: { color: 'var(--brand-ink)' } } },
+})
+```
+
+不能拿共享的名字（比如 `--color-accent`）来当局部变量，因为组件已经在读它了。继承这套主题的子主题会一起继承局部变量，也可以改它们的值。局部变量之间不能互相引用成一个圈，否则会报错。
+
+### 按环境调整 `adaptations`
+
+有时候只想在某些环境下换一组值，比如「手机这类触屏、而且屏幕比较窄的时候，正文字号放大一点」。`adaptations.rules` 是一串按顺序排好的规则，每条写成 `{ when, value }`：
+
+```ts
+defineTheme({
+  name: 'brand',
+  typography: { scale: { base: 14, ratio: 1.2 } },
+  adaptations: {
+    rules: [{
+      when: { pointer: 'coarse', width: { below: 'lg' } },
+      value: { typography: { scale: { base: 16, ratio: 1.1736 } } },
+    }],
+  },
+})
+```
+
+- `when` 可以写屏幕宽度范围（用断点名：`sm` 640、`md` 768、`lg` 1024、`xl` 1280、`2xl` 1536，单位都是 CSS 像素，可以用 `widthBreakpoints` 改）、`pointer`（`coarse` 粗指针，也就是手指；`fine` 细指针，也就是鼠标）、`contrast`（对比度偏好）、`motion`（是否减弱动效）。同一条 `when` 里写的条件要全部满足。
+- `value` 能写的东西和主题本身一样。只写了一半的字号阶梯、圆角或动效，缺的部分会从主题自己的设置里补上。
+- 规则按顺序在主题之后生效，同时满足好几条时，后面的赢。
+- 这些规则只通过 CSS 生效，`useTheme().token()` 读到的始终是主题本身的值。
+
+### 继承 `extends`
+
+`extends` 会把另一套主题算好的东西全部带过来：变量、局部变量、组件样式、`onDark` 和 `onLight`、环境规则、图标和指示器。新主题自己写的值优先。继承来的环境规则会按新主题的字号阶梯重新算一遍。
+
+### 写错的值会被丢掉
+
+如果某个值会提前结束这条 CSS 声明，比如 `red; } body { display: none`，它会被丢掉，控制台里会有一条警告，主题里其他的值照常生效。看起来奇怪但其实合法的 CSS，比如引号里的分号、data URL，会原样保留。
+
 ## 注意事项
 
 1. **不需要另外准备深浅两套样式表：** 因为变量本身采用 `light-dark()` 机制，覆盖时也推荐同时写下浅色和深色两个取值。
 2. **多主题隔离：** 预设主题除了 Neutral 会同时挂在 `:root` 上，其他 6 套都是通过属性选择器 `[data-astryx-theme='...']` 局部隔离的，多主题并存时互不干扰。关于明暗切换的完整细节，请参阅 [深色模式配置](/guide/dark-mode)。
+3. **Tailwind：** 本包不提供 Tailwind 桥接文件。样式本身就是普通的 CSS 变量和 `@layer`，Tailwind 或 UnoCSS 项目可以直接写 `bg-[var(--astryx-color-background-surface)]`，或者在自己的主题配置里做映射。

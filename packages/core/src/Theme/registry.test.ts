@@ -6,7 +6,6 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parseCustomProperties } from '../../../../apps/docs/components/theme-tokens/parseTokens'
 import { DATA_TOKEN_DEFAULTS } from './dataTokens.js'
 import { DERIVED_VARS } from './derivedVars.js'
 import { normalizeTokenName } from './tokenName.js'
@@ -39,7 +38,13 @@ describe('derived variables', () => {
 describe('data token defaults', () => {
   it('match packages/themes/data.css name for name and value for value', () => {
     const css = readFileSync(join(root, 'packages/themes/data.css'), 'utf8')
-    const declared = parseCustomProperties(css).map(property => [property.name, property.value])
+    const declared = css.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.startsWith('--astryx-'))
+      .map((line) => {
+        const colon = line.indexOf(':')
+        return [line.slice(0, colon), line.slice(colon + 1, line.lastIndexOf(';')).trim()]
+      })
     const fromTable = Object.entries(DATA_TOKEN_DEFAULTS).map(([name, value]) => [normalizeTokenName(name), value])
     expect(fromTable).toEqual(declared)
   })

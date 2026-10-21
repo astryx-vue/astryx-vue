@@ -6,7 +6,7 @@ title: Design tokens
 
 A design token is a decision the system can reuse: a color, a space step, a radius, a duration. Components read tokens instead of hard-coding those numbers. Changing theme means changing the numbers.
 
-astryx-vue follows upstream Astryx `tokens.stylex.ts`. The public form is a CSS variable, not a StyleX object. Every semantic token has an `--astryx-` prefix. Color tokens use `light-dark()` so both schemes live in one declaration.
+astryx-vue follows upstream Astryx `tokens.stylex.ts` and `dataTokens.stylex.ts`. The public form is a CSS variable, not a StyleX object. Names and values match upstream, with one difference: every semantic token here has an `--astryx-` prefix, so upstream's `--spacing-4` is `--astryx-spacing-4` here. The prefix stays because existing custom themes already use these names. `defineTheme()` accepts either spelling. Color tokens use `light-dark()` so both schemes live in one declaration.
 
 Where a value comes from:
 
@@ -14,7 +14,7 @@ Where a value comes from:
 2. If Neutral does not override it, the upstream default is used.
 3. If a component theme file declares the same name again, the later declaration wins. Style extensions should target the semantic layer.
 
-The token name is the stable interface. The current number lives in `packages/themes/neutral/base.css`. The swatches and bars in these docs are parsed from that file. There is no second list to keep in sync.
+The token name is the stable interface. The current numbers live in `packages/themes/neutral/base.css`, and the chart colors in `packages/themes/data.css`. The swatches and bars in these docs are parsed from those files. There is no second list to keep in sync.
 
 | Page | Variables |
 | --- | --- |
