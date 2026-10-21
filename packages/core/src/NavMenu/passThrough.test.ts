@@ -49,4 +49,31 @@ describe('navHeadingMenu 键盘导航', () => {
     expect(document.activeElement).toBe(second.element)
     wrapper.unmount()
   })
+
+  it.each(['onKeydown', 'onKeydownCapture'])('在菜单上用 %s 取消按键，菜单不再导航', async (handler) => {
+    const cancel = vi.fn((event: KeyboardEvent) => event.preventDefault())
+    const wrapper = mount(NavHeadingMenu, {
+      attachTo: document.body,
+      attrs: { [handler]: cancel },
+      slots: {
+        default: () => [
+          h(NavHeadingMenuItem, { label: 'First' }),
+          h(NavHeadingMenuItem, { label: 'Second' }),
+        ],
+      },
+    })
+    const first = wrapper.findAll('[role="menuitem"]')[0]
+    ;(first.element as HTMLElement).focus()
+    await first.trigger('keydown', { key: 'ArrowDown' })
+    expect(cancel).toHaveBeenCalledOnce()
+    expect(document.activeElement).toBe(first.element)
+    wrapper.unmount()
+  })
+
+  it('菜单上的 id、aria-*、data-* 透传到菜单根元素', () => {
+    const wrapper = mount(NavHeadingMenu, { attrs: { 'id': 'menu', 'data-testid': 'menu', 'class': 'mine' } })
+    expect(wrapper.attributes('id')).toBe('menu')
+    expect(wrapper.attributes('data-testid')).toBe('menu')
+    expect(wrapper.classes()).toEqual(expect.arrayContaining(['astryx-nav-heading-menu', 'mine']))
+  })
 })
