@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref } from 'vue'
 import type { LayerAlignment, LayerPlacement, LayerPosition } from './position.js'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, onScopeDispose, ref, watch } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { computeLayerPosition } from './position.js'
@@ -39,6 +39,9 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   const teleportTarget = useLayerTeleportTarget()
 
   function update(): void {
+    // 卸载后若还有一次轮询赶在定时器清掉之前进来，测试环境可能已经拆掉 window。
+    if (typeof window === 'undefined')
+      return
     const anchorEl = anchor.value
     const layerEl = layer.value
     if (!anchorEl || !layerEl || !isOpen.value)
@@ -82,8 +85,10 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   }
 
   function detach(): void {
-    window.removeEventListener('scroll', update, true)
-    window.removeEventListener('resize', update)
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('scroll', update, true)
+      window.removeEventListener('resize', update)
+    }
     clearInterval(pollId)
     pollId = undefined
   }
@@ -100,6 +105,9 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
 
   watch([placement, alignment], update)
   watch(gutter, update)
+
+  // 只在 isOpen 变成 false 时拆监听的话，调用方不调 detach、组件直接卸载，轮询还会继续。
+  onScopeDispose(detach)
 
   return { position, teleportTarget, update, detach }
 }

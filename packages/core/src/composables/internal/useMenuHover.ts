@@ -255,7 +255,8 @@ export function useMenuHover(options: UseMenuHoverOptions): UseMenuHoverReturn {
   }
 
   function setTriggerEl(el: Element | null): void {
-    triggerEl = el instanceof HTMLElement ? el : null
+    // 服务端没有 HTMLElement。`null instanceof HTMLElement` 会先求右边，直接 ReferenceError。
+    triggerEl = typeof HTMLElement !== 'undefined' && el instanceof HTMLElement ? el : null
   }
 
   const triggerProps: UseMenuHoverReturn['triggerProps'] = {
