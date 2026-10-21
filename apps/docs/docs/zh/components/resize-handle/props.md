@@ -101,7 +101,7 @@ footer: false
         <td><code>defaultSize</code></td>
         <td><code>number | string | ResizablePercentSize</code></td>
         <td><code>250</code></td>
-        <td>初始尺寸。数字是像素。只有已经落在吸附点 8px 以内时，初值才会被吸住。</td>
+        <td>初始尺寸。数字是像素。有吸附点时，初值会落到最近的点上。</td>
       </tr>
       <tr>
         <td><code>minSize</code></td>
@@ -131,7 +131,7 @@ footer: false
         <td><code>snaps</code></td>
         <td><code>number[]</code></td>
         <td>-</td>
-        <td>指针进入 8px 以内时吸住的像素值。</td>
+        <td>尺寸只会停在这些像素点上。离两个点一样远时，留在更靠前的那个。</td>
       </tr>
       <tr>
         <td><code>shrinkOrder</code></td>
