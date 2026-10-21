@@ -14,14 +14,14 @@ footer: false
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标题下方的说明。</td></tr>
 <tr><td><code>icon</code></td><td><code>Component</code></td><td>—</td><td>自定义装饰图标。</td></tr>
 <tr><td><code>isDismissable</code></td><td><code>boolean</code></td><td>false</td><td>显示关闭按钮。关闭后组件自行隐藏。</td></tr>
-<tr><td><code>dismissLabel</code></td><td><code>string</code></td><td>Dismiss {title}</td><td>关闭按钮的无障碍名称。</td></tr>
+<tr><td><code>dismissLabel</code></td><td><code>string</code></td><td>跟随语言：关闭“标题”</td><td>关闭按钮的无障碍名称。不写时，英文是 Dismiss 加标题，简体中文是关闭“标题”。提示文字只写关闭。</td></tr>
 <tr><td><code>container</code></td><td><code>&#x27;card&#x27; | &#x27;section&#x27;</code></td><td>card</td><td>card 使用圆角。section 使用直角。</td></tr>
 <tr><td><code>elevation</code></td><td><code>&#x27;none&#x27; | &#x27;low&#x27; | &#x27;med&#x27; | &#x27;high&#x27;</code></td><td>none</td><td>整体阴影层级。</td></tr>
 <tr><td><code>collapsible</code></td><td><code>boolean</code></td><td>true</td><td>默认插槽内容是否可折叠。</td></tr>
 <tr><td><code>defaultIsOpen</code></td><td><code>boolean</code></td><td>false</td><td>未绑定 isOpen 时的初始展开状态。</td></tr>
 <tr><td><code>v-model:isOpen</code></td><td><code>boolean</code></td><td>—</td><td>由父组件控制展开状态。</td></tr>
-<tr><td><code>expandLabel</code></td><td><code>string</code></td><td>Expand details</td><td>展开按钮的无障碍名称。</td></tr>
-<tr><td><code>collapseLabel</code></td><td><code>string</code></td><td>Collapse details</td><td>收起按钮的无障碍名称。</td></tr>
+<tr><td><code>expandLabel</code></td><td><code>string</code></td><td>跟随语言：展开</td><td>展开按钮的无障碍名称和提示。英文默认 Expand。</td></tr>
+<tr><td><code>collapseLabel</code></td><td><code>string</code></td><td>跟随语言：收起</td><td>收起按钮的无障碍名称和提示。英文默认 Collapse。</td></tr>
 </tbody></table>
 </div>
 
@@ -67,11 +67,7 @@ footer: false
 
 ## 本地化
 
-中文界面可设置以下文本：
-
-- `dismissLabel="关闭提示"`。
-- `expandLabel="展开详情"`。
-- `collapseLabel="收起详情"`。
+关闭、展开、收起跟着文档或应用当前的语言。英文是 Dismiss、Expand、Collapse；简体中文是关闭、展开、收起。需要改成别的说法时，再传 `dismissLabel`、`expandLabel`、`collapseLabel`。
 
 ## 主题
 
