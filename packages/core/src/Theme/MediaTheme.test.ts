@@ -77,6 +77,39 @@ describe('media theme', () => {
     wrapper.unmount()
   })
 
+  it('re-measures an auto surface when the theme color mode switches', async () => {
+    const mode = ref<'light' | 'dark'>('light')
+    // Token values are per mode here, standing in for the `light-dark()` pairs
+    // a real theme writes. They sit one level above the measured surface so the
+    // surface's own style never changes: only the mode switch can move the
+    // result.
+    const tokensFor = (current: 'light' | 'dark') => ({
+      '--astryx-color-text-primary': current === 'dark' ? '#fafafa' : '#171717',
+      '--astryx-color-on-dark': '#ffffff',
+      '--astryx-color-on-light': '#171717',
+    })
+    const wrapper = mount(defineComponent({
+      render: () => h(Theme, { theme: ocean, mode: mode.value }, {
+        default: () => h('div', { style: tokensFor(mode.value) }, [
+          h('div', { style: { background: 'rgb(10, 19, 23)' } }, [
+            h(MediaTheme, { mode: 'auto' } as never, () => h('span', { class: 'child' }, 'content')),
+          ]),
+        ]),
+      }),
+    }), { attachTo: document.body })
+
+    expect(wrapper.get('.astryx-media-theme').attributes('data-astryx-media')).toBe('dark')
+    mode.value = 'dark'
+    await nextTick()
+    await nextTick()
+    expect(wrapper.get('.astryx-media-theme').attributes('data-astryx-media')).toBeUndefined()
+    mode.value = 'light'
+    await nextTick()
+    await nextTick()
+    expect(wrapper.get('.astryx-media-theme').attributes('data-astryx-media')).toBe('dark')
+    wrapper.unmount()
+  })
+
   it('applies the theme onDark tokens inside a dark media theme', () => {
     const wrapper = mount(Theme, {
       props: { theme: ocean },

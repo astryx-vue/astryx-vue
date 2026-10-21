@@ -1,9 +1,18 @@
 import type { ComputedRef, Ref } from 'vue'
+import type { ResolvedColorMode } from './colorMode.js'
 import type { RgbColor } from './contrast.js'
 import { onBeforeUnmount, onMounted, onUpdated, ref, watch } from 'vue'
 import { compositeOver, parseColor, pickMediaMode } from './contrast.js'
+import { useTheme } from './useTheme.js'
 
 export type DetectedMediaMode = 'dark' | 'light' | 'off' | null
+
+/** What the last measurement read, to skip the probe when nothing moved. */
+interface MeasurementKey {
+  backdrop: string
+  mode: ResolvedColorMode
+  tokens: unknown
+}
 
 /**
  * The opaque color behind `start`: every translucent layer up the tree,
@@ -15,7 +24,10 @@ function resolveBackdrop(start: HTMLElement): RgbColor | null {
   const layers: RgbColor[] = []
   for (let node: HTMLElement | null = start; node; node = node.parentElement) {
     const style = getComputedStyle(node)
-    if (style.backgroundImage !== 'none')
+    // An unset background image reads as `none` in a browser, and as `initial`
+    // or an empty string where the engine reports the initial value verbatim.
+    const image = style.backgroundImage
+    if (image !== 'none' && image !== 'initial' && image !== '')
       return null
     const color = parseColor(style.backgroundColor)
     if (color && color.a > 0) {
@@ -54,18 +66,20 @@ function paintedColors(host: HTMLElement, tokens: readonly string[]): (RgbColor 
  * Measure the element that actually paints behind a `display: contents`
  * media theme, its parent, and pick a surface for it.
  *
- * Measures after mount, after every update of the owning component, and
- * whenever the parent's `style` or `class` changes, so a surface recolored
- * by its own prop is picked up without the media theme re-rendering. The
- * probe is only appended when the painted backdrop changed. `null` until the
- * surface can be read.
+ * Measures after mount, after every update of the owning component, whenever
+ * the parent's `style` or `class` changes, and whenever the theme's color mode
+ * or tokens change, so a surface recolored by its own prop and a surface
+ * repainted by a theme switch are both picked up without the media theme
+ * re-rendering. The probe is only appended when the painted backdrop or the
+ * theme moved. `null` until the surface can be read.
  */
 export function useAutoMediaMode(
   element: Ref<HTMLElement | null>,
   enabled: ComputedRef<boolean>,
 ): Ref<DetectedMediaMode> {
   const detected = ref<DetectedMediaMode>(null)
-  let lastBackdrop: string | null = null
+  const { mode, tokens } = useTheme()
+  let lastKey: MeasurementKey | null = null
 
   function measure(): void {
     if (!enabled.value || typeof getComputedStyle !== 'function')
@@ -76,10 +90,20 @@ export function useAutoMediaMode(
     const backdrop = resolveBackdrop(surface)
     if (!backdrop)
       return
-    const key = `${backdrop.r},${backdrop.g},${backdrop.b}`
-    if (key === lastBackdrop && detected.value !== null)
+    const key: MeasurementKey = {
+      backdrop: `${backdrop.r},${backdrop.g},${backdrop.b}`,
+      mode: mode.value,
+      tokens: tokens.value,
+    }
+    if (
+      lastKey !== null
+      && key.backdrop === lastKey.backdrop
+      && key.mode === lastKey.mode
+      && key.tokens === lastKey.tokens
+      && detected.value !== null
+    )
       return
-    lastBackdrop = key
+    lastKey = key
     const [ambient, onDark, onLight] = paintedColors(surface, [
       '--astryx-color-text-primary',
       '--astryx-color-on-dark',
@@ -109,13 +133,17 @@ export function useAutoMediaMode(
   onUpdated(measure)
   onBeforeUnmount(() => observer?.disconnect())
   watch(enabled, (isOn) => {
-    lastBackdrop = null
+    lastKey = null
     observe()
     if (isOn)
       measure()
     else
       detected.value = null
   })
+  // A color mode switch repaints the ambient text and the `on-*` colors
+  // through `light-dark()`, which only the DOM knows. Measure after the new
+  // inline styles land, so the read sees the new mode.
+  watch([mode, tokens], measure, { flush: 'post' })
 
   return detected
 }
