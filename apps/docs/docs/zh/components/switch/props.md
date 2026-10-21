@@ -20,7 +20,7 @@ footer: false
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。提供原因时，禁用控件仍可聚焦。</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>阻止修改。值仍参与表单提交。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示加载状态。阻止重复切换。</td></tr>
-<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>'Loading'</code></td><td>加载状态的无障碍文本。</td></tr>
+<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>跟随当前语言</td><td>忙碌时读屏念的文字。不传时用当前语言，英文是 Loading，中文是加载中。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示必填提示。启用原生必填校验。</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示可选提示。优先于 isRequired。</td></tr>
 <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td><code>'Optional'</code></td><td>可选提示文本。</td></tr>

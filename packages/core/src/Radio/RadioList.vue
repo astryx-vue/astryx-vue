@@ -22,6 +22,8 @@ const model = defineModel<RadioValue>({ required: true })
     :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
     :status="status" :status-variant="statusVariant" :name="name" :options="options"
     :size="size" :orientation="orientation"
+    :container-class="containerClass" :container-style="containerStyle"
+    :control-class="controlClass" :control-style="controlStyle"
     @change="(value, event) => emit('change', value, event)"
   >
     <template v-if="$slots.labelIcon" #labelIcon>

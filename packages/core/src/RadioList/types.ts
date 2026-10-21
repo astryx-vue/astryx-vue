@@ -12,5 +12,7 @@ export interface RadioListItemProps {
 }
 
 export interface RadioListItemSlots {
+  label?: () => VNode[]
+  description?: () => VNode[]
   end?: () => VNode[]
 }
