@@ -146,9 +146,11 @@
     box-shadow: 0 4px 24px rgb(0 0 0 / 16%);
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
+    opacity: var(--_toast-swipe-opacity, 1);
     transition-property: opacity, transform;
     transition-duration: var(--astryx-toast-motion-duration, 165ms);
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transform: translateY(var(--_toast-swipe-y, 0px)) scale(var(--_toast-swipe-scale, 1));
 
     @starting-style {
       opacity: 0;
@@ -158,7 +160,7 @@
 
   .astryx-toast--exiting {
     opacity: 0;
-    transform: translateY(var(--astryx-toast-slide-y, var(--astryx-spacing-2, 8px)));
+    transform: translateY(var(--_toast-swipe-exit-y, var(--astryx-toast-slide-y, var(--astryx-spacing-2, 8px)))) scale(var(--_toast-swipe-scale, 1));
   }
 
   .astryx-toast--type-success {
@@ -174,6 +176,11 @@
   .astryx-toast--type-error {
     background-color: var(--astryx-toast-error-background, #c52626);
     color: var(--astryx-toast-type-foreground, #fff);
+  }
+
+  /* 量到卡片底色后再选深浅，自己不占一层盒子，里面的按钮仍按卡片排成一行。 */
+  .astryx-toast__surface {
+    display: contents;
   }
 
   .astryx-toast__body {

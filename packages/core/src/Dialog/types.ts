@@ -45,18 +45,30 @@ export interface DialogProps {
   padding?: DialogPadding
 }
 
+/**
+ * 末尾槽位补偿哪几条边。
+ * `inline` 只补偿逻辑上的行末，`block` 补偿上下两边，`all` 两边都补。
+ * 不传时，有关闭按钮就按 `all`，没有就不补。
+ */
+export type DialogHeaderEdgeCompensation = 'inline' | 'block' | 'all'
+
 export interface DialogHeaderProps {
   /** 对话框标题。它会命名父级对话框，并在对话框打开时获得默认焦点。 */
   title: string
-  /** 标题下方的副标题。为空字符串时不渲染。 */
+  /** 标题下方的副标题。为空字符串时不渲染。富文本用 `subtitle` 插槽。 */
   subtitle?: string
   /** 是否显示关闭按钮。点击时发出 `openChange(false)`。 */
   hasCloseButton?: boolean
+  /**
+   * 末尾槽位（尾部内容和关闭按钮）往外补多少边。
+   * 不传时，有关闭按钮就补上下和行末，用来抵消按钮自己的内边距。
+   */
+  endContentEdgeCompensation?: DialogHeaderEdgeCompensation
   /**
    * 底部是否画一条分隔线。
    * @default false
    */
   hasDivider?: boolean
-  /** 关闭按钮的无障碍名称。 */
+  /** 关闭按钮的无障碍名称。不传时跟界面语言走。 */
   closeButtonLabel?: string
 }

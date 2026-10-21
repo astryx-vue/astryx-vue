@@ -47,8 +47,11 @@
   }
 
   /* 关闭按钮的视觉内边距由按钮自身承担，此处抵消以对齐边缘 */
-  .astryx-dialog-header__actions--compensated {
+  .astryx-dialog-header__actions--compensate-block {
     margin-block: calc(-1 * var(--astryx-spacing-2, 8px));
+  }
+
+  .astryx-dialog-header__actions--compensate-inline {
     margin-inline-end: calc(-1 * var(--astryx-spacing-2, 8px));
   }
 }

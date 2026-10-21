@@ -2,6 +2,7 @@ import type { UseHoverCardOptions, UseHoverCardReturn } from './useHoverCard.js'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
+import { pushLayer } from '../layer/dismissStack.js'
 import { useHoverCard } from './useHoverCard.js'
 
 beforeEach(() => {
@@ -209,6 +210,32 @@ describe('useHoverCard', () => {
     tapped.trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
     await nextTick()
     expect(tapped.card.isOpen.value).toBe(true)
+  })
+
+  it('上面还有浮层时，点外面不关卡片', async () => {
+    const { card, trigger, wrapper } = setupHoverCard({}, 'span')
+    trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
+    trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    await nextTick()
+    expect(card.isOpen.value).toBe(true)
+
+    const stop = pushLayer({
+      token: {},
+      depth: 1,
+      dismissOnPointerOutside: false,
+      dismissOnEscape: 'ignore',
+      isPresent: () => true,
+      onDismiss: () => {},
+    })
+    document.body.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    await nextTick()
+    expect(card.isOpen.value).toBe(true)
+
+    stop()
+    document.body.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    await nextTick()
+    expect(card.isOpen.value).toBe(false)
+    wrapper.unmount()
   })
 
   it('触摸轻点卡片外部会关闭', async () => {

@@ -2,7 +2,7 @@
 import type { PopoverProps } from './types.js'
 import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import { Button } from '../Button/index.js'
-import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
+import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { clampInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
@@ -29,9 +29,6 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
-
-// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
-const teleportTarget = useLayerTeleportTarget()
 
 const DEFAULT_MAX_WIDTH = 320
 const popover = usePopover({
@@ -64,6 +61,8 @@ const {
 const setContentRef = useMergedRefs<HTMLElement>([contentRef])
 
 const wrapperRef = ref<HTMLElement | null>(null)
+// Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。
+const teleportTarget = useResolvedLayerTeleport(computed(() => props.anchor ?? wrapperRef.value))
 const bodyRef = ref<HTMLElement | null>(null)
 useScrollbars(bodyRef)
 const anchorWidth = ref(0)
