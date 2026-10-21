@@ -1,4 +1,6 @@
-export { countCharacters } from '../text/countCharacters.js'
+import { countCharacters } from '../text/countCharacters.js'
+
+export { countCharacters }
 
 /**
  * 查询短于下限时不该去搜数据源。
