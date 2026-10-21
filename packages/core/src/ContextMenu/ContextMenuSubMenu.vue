@@ -10,6 +10,7 @@ import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
+import { isImeKeyEvent } from '../utils/ime.js'
 import { submenuAncestorOpenKey, useContextMenu, useContextMenuSize } from './context.js'
 import ContextMenuItem from './ContextMenuItem.vue'
 import ContextMenuItems from './ContextMenuItems.vue'
@@ -170,7 +171,7 @@ function close(focusRow: boolean): void {
 }
 
 function onRowKeyDown(event: KeyboardEvent): void {
-  if (props.isDisabled || event.isComposing)
+  if (props.isDisabled || isImeKeyEvent(event))
     return
   if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowRight') {
     event.preventDefault()
@@ -214,7 +215,7 @@ function onRowPointerMove(event: PointerEvent): void {
 }
 
 function onFlyoutKeyDown(event: KeyboardEvent): void {
-  if (event.isComposing)
+  if (isImeKeyEvent(event))
     return
   if (event.key === 'ArrowLeft') {
     event.preventDefault()

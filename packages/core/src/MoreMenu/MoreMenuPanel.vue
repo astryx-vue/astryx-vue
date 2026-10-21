@@ -5,6 +5,7 @@ import type { MoreMenuInitialFocus, MoreMenuItem, MoreMenuPanelEmits, MoreMenuPa
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useId, useTemplateRef, watch } from 'vue'
 import { useOverflow } from '../composables/useOverflow.js'
 import Divider from '../Divider/Divider.vue'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { moreMenuLevelKey, useMoreMenuLevel, useMoreMenuSize } from './context.js'
@@ -217,7 +218,7 @@ const anchor = computed(() => (props.isInline ? null : props.anchor ?? null))
 const isLayerActive = ref(false)
 const anchorWidth = ref(0)
 
-const { position, detach } = usePositionedLayer({
+const { position, detach, teleportTarget } = usePositionedLayer({
   anchor,
   layer,
   isOpen: isLayerActive,
@@ -312,7 +313,7 @@ defineExpose({
 </script>
 
 <template>
-  <Teleport :disabled="isInline" to="body">
+  <Teleport :disabled="isInline" :to="teleportTarget">
     <Transition appear name="astryx-more-menu" @after-leave="emit('settled')">
       <div
         v-if="isOpen"
@@ -339,41 +340,43 @@ defineExpose({
           @keydown="onKeydown"
           @pointermove="onPointerMove"
         >
-          <template v-for="entry in entries" :key="entry.key">
-            <Divider
-              v-if="entry.kind === 'divider'"
-              class="astryx-more-menu__divider"
-            />
-            <div
-              v-else-if="entry.kind === 'section'"
-              :aria-label="entry.section.title"
-              class="astryx-more-menu__group"
-              role="group"
-            >
+          <LayerContentBoundary>
+            <template v-for="entry in entries" :key="entry.key">
+              <Divider
+                v-if="entry.kind === 'divider'"
+                class="astryx-more-menu__divider"
+              />
               <div
-                v-if="entry.section.title != null && entry.section.title !== ''"
-                aria-hidden="true"
-                class="astryx-more-menu__heading"
+                v-else-if="entry.kind === 'section'"
+                :aria-label="entry.section.title"
+                class="astryx-more-menu__group"
+                role="group"
               >
-                {{ entry.section.title }}
+                <div
+                  v-if="entry.section.title != null && entry.section.title !== ''"
+                  aria-hidden="true"
+                  class="astryx-more-menu__heading"
+                >
+                  {{ entry.section.title }}
+                </div>
+                <MoreMenuRow
+                  v-for="row in entry.rows"
+                  :key="row.key"
+                  :item="row.item"
+                  :row-id="row.rowId"
+                  :row-key="row.key"
+                />
               </div>
               <MoreMenuRow
-                v-for="row in entry.rows"
-                :key="row.key"
-                :item="row.item"
-                :row-id="row.rowId"
-                :row-key="row.key"
+                v-else
+                :item="entry.row.item"
+                :row-id="entry.row.rowId"
+                :row-key="entry.row.key"
               />
-            </div>
-            <MoreMenuRow
-              v-else
-              :item="entry.row.item"
-              :row-id="entry.row.rowId"
-              :row-key="entry.row.key"
-            />
-          </template>
+            </template>
+          </LayerContentBoundary>
         </div>
-        <Teleport to="body">
+        <Teleport :to="teleportTarget">
           <MoreMenuPanel
             v-if="renderedRow != null && renderedRow.item.items != null"
             :id="`${menuId}-flyout`"

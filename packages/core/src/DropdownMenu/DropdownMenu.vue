@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
+import type { DropdownMenuContextValue } from './context.js'
+import type { DropdownMenuFrameState } from './frame.js'
 import type { DropdownMenuEmits, DropdownMenuProps, DropdownMenuSlots, DropdownMenuTriggerProps } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useId, useSlots, watch } from 'vue'
-import BottomSheet from '../BottomSheet/BottomSheet.vue'
+import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, shallowRef, useAttrs, useId, useSlots, watch } from 'vue'
 import Button from '../Button/Button.vue'
+import { useFocusReturnVisibility } from '../composables/internal/useFocusReturnVisibility.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
+import { useMenuPress } from '../composables/useMenuPress.js'
+import { useOverflow } from '../composables/useOverflow.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
 import { clampInlineSize, isIntrinsicInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
-import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
-import { dropdownMenuContextKey } from './context.js'
+import DropdownMenuFrame from './DropdownMenuFrame.vue'
+import { dropdownMenuFrameKey } from './frame.js'
 import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
-import { DropdownMenuItems } from './renderItems.js'
 import { useMenuDrillIn } from './useMenuDrillIn.js'
 import { useMenuFocus } from './useMenuFocus.js'
 import { useMenuRegions } from './useMenuRegions.js'
@@ -23,7 +27,6 @@ import '../../styles/dropdown-menu.css'
 defineOptions({ name: 'AstryxDropdownMenu', inheritAttrs: false })
 const props = withDefaults(defineProps<DropdownMenuProps>(), {
   alignment: 'start',
-  button: () => ({ label: 'Menu' }),
   hasChevron: true,
   placement: 'below',
   presentation: 'popover',
@@ -34,6 +37,8 @@ defineSlots<DropdownMenuSlots>()
 
 const attrs = useAttrs()
 const slots = useSlots()
+const messages = useAstryxMessages()
+const focusReturn = useFocusReturnVisibility()
 
 const GAP = 4
 const DEFAULT_MAX_WIDTH = 320
@@ -62,7 +67,7 @@ const focusLastOnOpen = shallowRef(false)
 let openModality: 'keyboard' | 'pointer' = 'keyboard'
 let armedTriggerClickGuard = false
 
-const COMPACT_TOUCH_QUERY = '(max-width: 639px) and (pointer: coarse) and (hover: none)'
+const COMPACT_TOUCH_QUERY = '(max-width: 768px) and (pointer: coarse)'
 const isCompactTouch = useMediaQuery(COMPACT_TOUCH_QUERY)
 const hasRegions = computed(() => slots.header != null || slots.footer != null)
 const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen, COMPACT_TOUCH_QUERY)
@@ -76,8 +81,11 @@ const sheetOpen = computed({
   },
 })
 
-const buttonProps = computed(() => props.button ?? {})
-const sheetLabel = computed(() => typeof buttonProps.value.label === 'string' ? buttonProps.value.label : 'Menu')
+const buttonProps = computed(() => ({
+  label: messages.value.dropdownMenu.label,
+  ...props.button,
+}))
+const sheetLabel = computed(() => typeof buttonProps.value.label === 'string' ? buttonProps.value.label : messages.value.dropdownMenu.label)
 const menuSize = computed(() => buttonProps.value.size ?? 'md')
 const isIconOnly = computed(() => buttonProps.value.isIconOnly === true)
 const hasChevron = computed(() => props.hasChevron && !isIconOnly.value)
@@ -102,6 +110,13 @@ const menuAriaLabel = computed(() => {
     return undefined
   return typeof buttonProps.value.label === 'string' ? buttonProps.value.label : undefined
 })
+
+const dialogLabel = computed(() => menuLabel.value ?? messages.value.dropdownMenu.label)
+const dialogId = `${menuId}-dialog`
+const popupKind = computed(() => (hasRegions.value ? 'dialog' : 'menu'))
+const controlsId = computed(() => (hasRegions.value ? dialogId : surfaceId.value))
+const focusRing = computed(() => (focusReturn.isFocusRingSuppressed.value ? 'off' : undefined))
+const hasOverflow = useOverflow(surfaceRef, isOpen)
 
 const menuAriaLabelledBy = computed(() => {
   const explicit = attrs['aria-labelledby']
@@ -205,21 +220,48 @@ function onSurfaceFocus(event: FocusEvent): void {
   regionFocus.value = hasRegions.value && !suppressRegionRing
 }
 
+function assignElement(target: { value: HTMLElement | null }, element: unknown): void {
+  target.value = element instanceof HTMLElement ? element : null
+}
+
 function assignHost(element: unknown): void {
   host.value = element instanceof HTMLElement ? element : null
 }
 
-function openMenu(modality: 'keyboard' | 'pointer'): void {
-  if (isOpen.value)
-    return
+function isTriggerDisabled(): boolean {
+  const control = getTriggerControl()
+  return control?.matches(':disabled, [aria-disabled="true"]') === true
+}
+
+function openMenu(modality: 'keyboard' | 'pointer'): boolean {
+  if (isTriggerDisabled() || isOpen.value)
+    return false
+  focusReturn.resetFocusReturn()
   openModality = modality
   shouldFocusOnOpen.value = true
   emitOpenChange(true)
+  return true
 }
+
+const press = useMenuPress({
+  menuRef: surfaceRef,
+  triggerRef: anchorRef,
+  isEnabled: () => !isSheet.value && !isTriggerDisabled(),
+  onTriggerPress: () => {
+    if (isOpen.value) {
+      closeMenu()
+      return false
+    }
+    return openMenu('pointer')
+  },
+  onDismiss: () => closeMenu(),
+})
 
 function closeMenu(): void {
   if (!isOpen.value)
     return
+  focusReturn.prepareFocusReturn()
+  press.cancel()
   emitOpenChange(false)
 }
 
@@ -252,8 +294,10 @@ watch(isOpen, async (nowOpen) => {
   const active = typeof document !== 'undefined' ? document.activeElement : null
   const surface = surfaceRef.value
   const focusWasLost = active == null || active === (typeof document !== 'undefined' ? document.body : null)
-  if (focusWasLost || (surface != null && surface.contains(active as Node)))
+  if (focusWasLost || (surface != null && surface.contains(active as Node))) {
+    await nextTick()
     getTriggerControl()?.focus({ preventScroll: true })
+  }
 })
 
 const regions = useMenuRegions({
@@ -266,10 +310,8 @@ const regions = useMenuRegions({
 
 function onSurfaceKeydown(event: KeyboardEvent): void {
   if (!focusNav.ownsEvent(event)) {
-    if (event.key === 'Tab' && hasRegions.value) {
-      event.preventDefault()
-      regions.focusRegion(event.shiftKey ? 'previous' : 'next')
-    }
+    if (event.key === 'Tab' && hasRegions.value)
+      regions.moveDialogTab(event, true)
     return
   }
   if (event.key === 'Enter' || event.key === ' ') {
@@ -281,10 +323,11 @@ function onSurfaceKeydown(event: KeyboardEvent): void {
       activateMenuItem(focused, event)
     return
   }
-  if (regions.onMenuTab(event))
-    return
   if (event.key === 'Tab') {
-    closeMenu()
+    if (hasRegions.value)
+      regions.moveDialogTab(event)
+    else
+      closeMenu()
     return
   }
   if (typeahead.onKeyDown(event)) {
@@ -295,9 +338,8 @@ function onSurfaceKeydown(event: KeyboardEvent): void {
 }
 
 function onTriggerClick(event: MouseEvent): void {
-  // Enter and Space already opened the menu; the activation's own click, if the
-  // browser still reports one, is spent.
-  if (armedTriggerClickGuard) {
+  // Enter, Space, and a press that already opened the menu spend their click.
+  if (armedTriggerClickGuard || press.isTriggerClickFromPress()) {
     armedTriggerClickGuard = false
     return
   }
@@ -341,22 +383,63 @@ function onTriggerKeydown(event: KeyboardEvent): void {
 
 const triggerProps = computed<DropdownMenuTriggerProps>(() => ({
   'id': triggerId,
-  'aria-haspopup': 'menu',
+  'aria-haspopup': popupKind.value,
   'aria-expanded': isOpen.value,
-  'aria-controls': surfaceId.value,
+  'aria-controls': controlsId.value,
+  'data-astryx-focus-ring': focusRing.value,
   'onClick': onTriggerClick,
   'onKeyDown': onTriggerKeydown,
+  'onFocus': focusReturn.onFocusReturnTargetFocus,
 }))
 
-provide(dropdownMenuContextKey, {
+const menuContext: DropdownMenuContextValue = markRaw({
   closeMenu,
   drillIn,
   focusRegion: regions.focusRegion,
+  moveDialogTab: regions.moveDialogTab,
   hasRegions,
   isOpen,
   menuLabel,
   menuSize,
 })
+
+const paintedStyle = computed(() => [surfaceStyle.value, attrs.style as CSSProperties])
+const menuBindings = computed(() => ({
+  ...forwardedAttrs.value,
+  ...press.menuProps,
+}))
+
+provide(dropdownMenuFrameKey, reactive({
+  isSheet,
+  sheetOpen,
+  sheetLabel,
+  hasRegions,
+  isOpen,
+  isDrilled,
+  hasOverflow,
+  regionFocus,
+  surfaceId,
+  dialogId,
+  dialogLabel,
+  menuAriaLabel,
+  menuAriaLabelledBy,
+  forwardedAttrs,
+  menuBindings,
+  surfaceClass: computed(() => attrs.class),
+  surfaceStyle: paintedStyle,
+  placement: computed(() => position.value.placement),
+  teleportTarget,
+  items: computed(() => props.items),
+  menuContext,
+  regions,
+  setSurface: (element: unknown) => assignElement(surfaceRef, element),
+  setPopover: (element: unknown) => assignElement(popoverRef, element),
+  setHeader: (element: unknown) => assignElement(headerRef, element),
+  setFooter: (element: unknown) => assignElement(footerRef, element),
+  setHost: assignHost,
+  onSurfaceKeydown,
+  onSurfaceFocus,
+}) as unknown as DropdownMenuFrameState)
 
 onMounted(() => {
   if (!isOpen.value)
@@ -375,17 +458,22 @@ onBeforeUnmount(() => {
     ref="anchorRef"
     class="astryx-dropdown-menu-trigger"
     :data-open="isOpen ? 'true' : undefined"
+    @contextmenu="press.triggerProps.onContextmenu"
+    @focusin="focusReturn.onFocusReturnTargetFocus"
+    @pointerdown="press.triggerProps.onPointerdown"
   >
     <slot v-if="slots.trigger" name="trigger" v-bind="triggerProps" />
     <Button
       v-else
       v-bind="buttonProps"
       :id="triggerId"
-      :aria-controls="surfaceId"
+      :aria-controls="controlsId"
       :aria-expanded="isOpen"
-      aria-haspopup="menu"
+      :aria-haspopup="popupKind"
+      :data-astryx-focus-ring="focusRing"
       :tooltip="isOpen ? undefined : buttonProps.tooltip"
       @click="onTriggerClick"
+      @focus="focusReturn.onFocusReturnTargetFocus"
       @keydown="onTriggerKeydown"
     >
       <template v-if="hasChevron" #end>
@@ -393,122 +481,13 @@ onBeforeUnmount(() => {
       </template>
     </Button>
   </span>
-  <BottomSheet
-    v-if="isSheet"
-    v-model:is-open="sheetOpen"
-    height="hug"
-    :label="sheetLabel"
-    :padding="2"
-  >
-    <div
-      v-if="slots.header"
-      ref="headerRef"
-      class="astryx-dropdown-menu-region"
-      @keydown="regions.onRegionKeydown"
-    >
+  <DropdownMenuFrame>
+    <template v-if="slots.header" #header>
       <slot name="header" />
-    </div>
-    <div
-      :id="surfaceId"
-      ref="surfaceRef"
-      v-bind="forwardedAttrs"
-      :aria-labelledby="menuAriaLabelledBy"
-      :aria-label="menuAriaLabel"
-      class="astryx-dropdown-menu is-sheet"
-      :class="attrs.class"
-      role="menu"
-      tabindex="-1"
-      @keydown="onSurfaceKeydown"
-    >
-      <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
-        <DropdownMenuItems v-if="items != null" :items="items" />
-        <slot v-else />
-      </div>
-      <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
-    </div>
-    <div
-      v-if="slots.footer"
-      ref="footerRef"
-      class="astryx-dropdown-menu-region"
-      @keydown="regions.onRegionKeydown"
-    >
+    </template>
+    <slot />
+    <template v-if="slots.footer" #footer>
       <slot name="footer" />
-    </div>
-  </BottomSheet>
-  <Teleport v-else :to="teleportTarget">
-    <Transition name="astryx-dropdown-menu">
-      <div
-        v-if="hasRegions"
-        v-show="isOpen"
-        ref="popoverRef"
-        class="astryx-dropdown-menu-popover"
-        :data-placement="position.placement"
-        :style="[surfaceStyle, attrs.style as CSSProperties]"
-      >
-        <LayerContentBoundary>
-          <div
-            v-if="slots.header"
-            ref="headerRef"
-            class="astryx-dropdown-menu-region"
-            @keydown="regions.onRegionKeydown"
-          >
-            <slot name="header" />
-          </div>
-          <div
-            :id="surfaceId"
-            ref="surfaceRef"
-            v-bind="forwardedAttrs"
-            :aria-labelledby="menuAriaLabelledBy"
-            :aria-label="menuAriaLabel"
-            class="astryx-dropdown-menu is-in-frame"
-            :class="attrs.class"
-            :data-region-focus="regionFocus || undefined"
-            role="menu"
-            tabindex="0"
-            @focus="onSurfaceFocus"
-            @keydown="onSurfaceKeydown"
-          >
-            <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
-              <DropdownMenuItems v-if="items != null" :items="items" />
-              <slot v-else />
-            </div>
-            <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
-          </div>
-          <div
-            v-if="slots.footer"
-            ref="footerRef"
-            class="astryx-dropdown-menu-region"
-            @keydown="regions.onRegionKeydown"
-          >
-            <slot name="footer" />
-          </div>
-        </LayerContentBoundary>
-      </div>
-      <div
-        v-else
-        v-show="isOpen"
-        :id="surfaceId"
-        ref="surfaceRef"
-        v-bind="forwardedAttrs"
-        :aria-labelledby="menuAriaLabelledBy"
-        :aria-label="menuAriaLabel"
-        class="astryx-dropdown-menu"
-        :class="attrs.class"
-        :data-placement="position.placement"
-        role="menu"
-        :style="[surfaceStyle, attrs.style as CSSProperties]"
-        tabindex="-1"
-        @focus="onSurfaceFocus"
-        @keydown="onSurfaceKeydown"
-      >
-        <LayerContentBoundary>
-          <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
-            <DropdownMenuItems v-if="items != null" :items="items" />
-            <slot v-else />
-          </div>
-          <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
-        </LayerContentBoundary>
-      </div>
-    </Transition>
-  </Teleport>
+    </template>
+  </DropdownMenuFrame>
 </template>

@@ -33,7 +33,7 @@ const items = [
 </template>
 ```
 
-The trigger is icon-only, so `label` is its accessible name, the name of the menu itself, and the text of its tooltip. The default, `More options`, fits most interfaces; when the menu holds the actions of one specific thing, a more concrete phrase such as "Project actions" reads better. Use the `icon` slot to replace the three-dot artwork.
+The trigger is icon-only, so `label` is its accessible name, the name of the menu itself, and the text of its tooltip. When `label` is omitted it follows the active locale: `More options` in English, 「更多选项」 in Chinese. When the menu holds the actions of one specific thing, a more concrete phrase such as "Project actions" reads better. Use the `icon` slot to replace the three-dot artwork.
 
 Where focus lands when the menu opens depends on how it was opened. A keyboard open (`Enter`, `Space`, `ArrowDown`, or `ArrowUp` on the trigger) lands on the first or the last row; a pointer open puts focus on the menu container and pre-highlights nothing, so no row reads as already selected. Once open, `ArrowDown` and `ArrowUp` move between rows and wrap at both ends, `Home` and `End` jump to the ends, typing a letter jumps to the next row starting with it, `Enter` and `Space` run the focused row, `Escape` closes the menu and returns focus to the trigger, and `Tab` closes the menu and lets the browser move on from the trigger. Disabled rows are skipped and stay out of the keyboard path.
 

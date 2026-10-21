@@ -18,7 +18,7 @@ footer: false
       <tr>
         <td><code>button</code></td>
         <td><code>DropdownMenuButtonProps</code></td>
-        <td><code>{ label: 'Menu' }</code></td>
+        <td>随当前语言，英文 <code>{ label: 'Menu' }</code>，中文按钮文案是「菜单」</td>
         <td>触发按钮的属性，等同于 <code>Button</code> 的属性（其中 <code>clickAction</code> 除外，避免和菜单抢同一次点击）。<code>size</code> 会同时决定菜单行的高度。</td>
       </tr>
       <tr>

@@ -34,7 +34,7 @@ footer: false
       <tr>
         <td><code>label</code></td>
         <td><code>string</code></td>
-        <td><code>'Context menu'</code></td>
+        <td>the active locale (<code>Context menu</code> in English)</td>
         <td>Accessible name of the menu, announced through the panel's <code>aria-label</code> when it opens.</td>
       </tr>
       <tr>

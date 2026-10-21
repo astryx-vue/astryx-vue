@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { CheckboxValue } from '../CheckboxInput/types.js'
 import type { CheckboxListItemEmits, CheckboxListItemProps, CheckboxListItemSlots } from './types.js'
-import { computed, inject, useTemplateRef } from 'vue'
-import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
-import { useItemDescriptionId } from '../List/context.js'
+import { computed, inject, useId, useSlots, useTemplateRef } from 'vue'
 import ListItem from '../List/ListItem.vue'
 import { useAstryxMessages } from '../locale/index.js'
+import CheckboxListControl from './CheckboxListControl.vue'
 import { checkboxListKey } from './context.js'
 
 defineOptions({ name: 'AstryxCheckboxListItem' })
@@ -15,9 +14,11 @@ const emit = defineEmits<CheckboxListItemEmits>()
 defineSlots<CheckboxListItemSlots>()
 
 const context = inject(checkboxListKey, undefined)
+const slots = useSlots()
 const messages = useAstryxMessages()
-const descriptionId = useItemDescriptionId()
-const checkbox = useTemplateRef<InstanceType<typeof CheckboxInput>>('checkbox')
+const richLabel = computed(() => slots.label != null)
+const visibleLabelId = `astryx-checkbox-item-label-${useId()}`
+const checkbox = useTemplateRef<InstanceType<typeof CheckboxListControl>>('checkbox')
 const interactiveRef = computed(() => checkbox.value?.element ?? null)
 const collection = computed(() => context != null && context.values.value != null)
 
@@ -53,14 +54,18 @@ function onChecked(value: CheckboxValue): void {
     :aria-busy="loading || undefined" :interactive-ref="interactiveRef"
   >
     <template #label>
-      <span aria-hidden="true">{{ label }}</span>
+      <span v-if="richLabel" :id="visibleLabelId"><slot name="label" /></span>
+      <span v-else aria-hidden="true">{{ label }}</span>
+    </template>
+    <template v-if="$slots.description" #description>
+      <slot name="description" />
     </template>
     <template #startContent>
-      <CheckboxInput
-        ref="checkbox" :model-value="checked" :label="label" is-label-hidden
+      <CheckboxListControl
+        ref="checkbox" :model-value="checked" :label="ariaLabel ?? (richLabel ? messages.checkboxList.checkbox : label)"
         :size="context?.size.value ?? 'md'" :is-disabled="disabled" :is-read-only="readOnly"
         :is-loading="loading" :loading-label="messages.checkboxList.loading" :disabled-message="reason"
-        :aria-describedby="descriptionId ?? undefined"
+        :aria-labelledby="richLabel && !ariaLabel ? visibleLabelId : undefined"
         @update:model-value="onChecked"
       />
     </template>
