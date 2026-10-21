@@ -24,6 +24,18 @@ function showToast(body: string): void {
 }
 
 describe('toast viewport and an open dialog', () => {
+  it('把视口做成顶层 popover，并带上重新挂载时用的类名', async () => {
+    const viewport = mount(ToastViewport, { attachTo: document.body })
+    showToast('Saved')
+    await nextTick()
+
+    const element = document.body.querySelector('.astryx-toast-viewport')
+    expect(element?.getAttribute('popover')).toBe('manual')
+    expect(element?.classList.contains('astryx-toast-viewport--rehosting')).toBe(false)
+
+    viewport.unmount()
+  })
+
   it('moves into the open dialog so it stays visible above it', async () => {
     const dialog = mount(Dialog, {
       attachTo: document.body,
