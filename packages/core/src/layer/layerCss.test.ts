@@ -25,7 +25,7 @@ const NOT_A_LAYER_ROOT: Record<string, string> = {
   'ContextMenu/ContextMenuSubMenu.vue': '下钻面板挂进父菜单内部，父菜单的根已经重置',
 }
 
-const LOADS_LAYER_CSS = /import\s+(?:[\w{},\s]+\sfrom\s+)?['"][^'"]*(?:styles\/layer\.css|layer\/scopedProvide(?:\.js)?|layer\/LayerContentBoundary\.vue)['"]/
+const LOADS_LAYER_CSS = /(?:import|from)\s*['"][^'"]*(?:styles\/layer\.css|layer\/scopedProvide(?:\.js)?|layer\/LayerContentBoundary\.vue)['"]/
 
 function vueFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
