@@ -2,7 +2,8 @@ import type { BannerStatus } from './types.js'
 import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { createSSRApp, h, nextTick } from 'vue'
+import { createSSRApp, defineComponent, h, nextTick } from 'vue'
+import { provideAstryxLocale } from '../locale/index.js'
 import Banner from './Banner.vue'
 
 enableAutoUnmount(afterEach)
@@ -11,11 +12,42 @@ afterEach(() => {
 })
 
 describe('banner', () => {
-  it.each<[BannerStatus, string]>([['info', 'status'], ['success', 'status'], ['error', 'alert'], ['warning', 'alert']])('uses the right live role for %s', (status, role) => {
+  it.each<BannerStatus>(['info', 'success', 'error', 'warning'])('does not invent a live role for %s', (status) => {
     const wrapper = mount(Banner, { props: { status, title: 'Update', description: 'Please review the details.' } })
-    expect(wrapper.attributes('role')).toBe(role)
+    expect(wrapper.attributes('role')).toBeUndefined()
+    expect(wrapper.attributes('aria-live')).toBeUndefined()
+    expect(wrapper.classes()).toContain('astryx-banner-frame')
+    expect(wrapper.get('.astryx-banner').attributes('data-status')).toBe(status)
     expect(wrapper.text()).toContain('Please review the details.')
     expect(wrapper.get('.astryx-banner-icon').attributes('aria-hidden')).toBe('true')
+  })
+
+  it('keeps an explicit role the caller asked for', () => {
+    const wrapper = mount(Banner, { props: { status: 'error', title: 'Failed' }, attrs: { role: 'alert' } })
+    expect(wrapper.attributes('role')).toBe('alert')
+  })
+
+  it('names the dismiss control after the banner, and localizes both surfaces', () => {
+    const english = mount(Banner, { props: { status: 'success', title: 'Saved', isDismissable: true } })
+    const button = english.get('button')
+    expect(button.attributes('aria-label')).toBe('Dismiss Saved')
+    expect(button.attributes('aria-describedby')).toBeTruthy()
+
+    const Host = defineComponent({
+      components: { Banner },
+      setup() {
+        provideAstryxLocale('zh-CN')
+        return () => h(Banner, { status: 'info', title: '维护', isDismissable: true })
+      },
+    })
+    const chinese = mount(Host)
+    expect(chinese.get('button').attributes('aria-label')).toBe('关闭“维护”')
+  })
+
+  it('leaves an unknown status without a status fill or a default glyph', () => {
+    const wrapper = mount(Banner, { props: { status: 'neutral' as BannerStatus, title: 'Note' } })
+    expect(wrapper.get('.astryx-banner').attributes('data-status')).toBeUndefined()
+    expect(wrapper.find('.astryx-field-icon').exists()).toBe(false)
   })
 
   it('starts closed and connects the disclosure to its content when expanded', async () => {
