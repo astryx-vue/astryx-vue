@@ -2,7 +2,7 @@ import type { BannerStatus } from './types.js'
 import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { createSSRApp, defineComponent, h, nextTick } from 'vue'
+import { createSSRApp, defineComponent, h, nextTick, ref } from 'vue'
 import { provideAstryxLocale } from '../locale/index.js'
 import Banner from './Banner.vue'
 
@@ -118,6 +118,80 @@ describe('banner', () => {
     await wrapper.get('button[aria-label="展开"]').trigger('click')
     expect(wrapper.find('button[aria-label="收起"]').exists()).toBe(true)
     expect(wrapper.find('button[aria-label="关闭设置提示"]').exists()).toBe(true)
+  })
+
+  describe('empty slots', () => {
+    it.each([
+      ['null', () => null],
+      ['false', () => false],
+      ['empty string', () => ''],
+      ['empty array', () => []],
+    ])('does not offer expand or a content region when the default slot returns %s', (_label, slot) => {
+      const wrapper = mount(Banner, { props: { status: 'info', title: 'Heads up' }, slots: { default: slot } })
+      expect(wrapper.find('button').exists()).toBe(false)
+      expect(wrapper.find('.astryx-banner-content').exists()).toBe(false)
+    })
+
+    it.each([
+      ['null', () => null],
+      ['false', () => false],
+      ['empty string', () => ''],
+      ['empty array', () => []],
+    ])('leaves the header alone when collapsible is off and the slot returns %s', (_label, slot) => {
+      const wrapper = mount(Banner, { props: { status: 'info', title: 'Heads up', collapsible: false }, slots: { default: slot } })
+      expect(wrapper.find('button').exists()).toBe(false)
+      expect(wrapper.find('.astryx-banner-content').exists()).toBe(false)
+      expect(wrapper.element.children).toHaveLength(1)
+    })
+
+    it('still offers expand for a slot that renders a node', () => {
+      const wrapper = mount(Banner, { props: { status: 'info', title: 'Heads up' }, slots: { default: '<p>Detail</p>' } })
+      expect(wrapper.get('button').attributes('aria-label')).toBe('Expand')
+      expect(wrapper.find('.astryx-banner-content').exists()).toBe(false)
+    })
+
+    it('does not render a description for an empty string', () => {
+      const wrapper = mount(Banner, { props: { status: 'info', title: 'Heads up', description: '' } })
+      expect(wrapper.find('.astryx-banner-description').exists()).toBe(false)
+    })
+
+    it('treats a v-if that is false as empty, then shows expand once it renders', async () => {
+      const Host = defineComponent({
+        components: { Banner },
+        setup() {
+          const show = ref(false)
+          return { show }
+        },
+        template: `
+          <button type="button" class="reveal" @click="show = true">Reveal</button>
+          <Banner status="info" title="Heads up">
+            <span v-if="false">Hidden</span>
+            <p v-if="show">Detail</p>
+          </Banner>
+        `,
+      })
+      const wrapper = mount(Host)
+      expect(wrapper.find('.astryx-banner-content').exists()).toBe(false)
+      expect(wrapper.find('button[aria-expanded]').exists()).toBe(false)
+      await wrapper.get('.reveal').trigger('click')
+      expect(wrapper.get('button[aria-expanded]').attributes('aria-expanded')).toBe('false')
+      expect(wrapper.find('.astryx-banner-content').exists()).toBe(false)
+    })
+
+    it('does not leave an empty content region when a false v-if is pinned open', () => {
+      const Host = defineComponent({
+        components: { Banner },
+        template: `
+          <Banner status="info" title="Heads up" :collapsible="false">
+            <span v-if="false">Hidden</span>
+          </Banner>
+        `,
+      })
+      const wrapper = mount(Host)
+      expect(wrapper.find('button').exists()).toBe(false)
+      expect(wrapper.find('.astryx-banner-content').exists()).toBe(false)
+      expect(wrapper.get('.astryx-banner-frame').element.children).toHaveLength(1)
+    })
   })
 
   it('renders open content and stable disclosure associations during SSR', async () => {

@@ -3,6 +3,7 @@ import type { BannerEmits, BannerProps, BannerSlots, BannerStatus } from './type
 import { computed, shallowRef, toRaw, useId, useTemplateRef, watch } from 'vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import IconButton from '../IconButton/IconButton.vue'
+import { isRenderable } from '../Indicator/isRenderable.js'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/banner.css'
 import '../../styles/field.css'
@@ -21,7 +22,10 @@ const openModel = defineModel<boolean | undefined>('isOpen', { default: undefine
 const localOpen = shallowRef(props.defaultIsOpen ?? false)
 const dismissed = shallowRef(false)
 const expanded = computed(() => !props.collapsible || (openModel.value ?? localOpen.value))
-const hasContent = computed(() => !!slots.default)
+// 每次渲染都重新看插槽画出来的节点。null、false、空字符串、空数组和 v-if 留下的注释都不算出内容。
+function hasContent(): boolean {
+  return isRenderable(slots.default?.())
+}
 const icon = computed(() => props.icon ? toRaw(props.icon) : undefined)
 const root = useTemplateRef<HTMLDivElement>('root')
 const content = useTemplateRef<HTMLDivElement>('content')
@@ -81,7 +85,7 @@ watch(expanded, (value) => {
     class="astryx-banner-frame"
     :data-container="container"
     :data-elevation="elevation"
-    :data-expanded="hasContent && expanded || undefined"
+    :data-expanded="hasContent() && expanded || undefined"
     @focusin="focusin"
     @pointerdown.capture="pointerdown"
   >
@@ -109,10 +113,10 @@ watch(expanded, (value) => {
           </slot>
         </div>
       </div>
-      <div v-if="hasEnd || isDismissable || (hasContent && collapsible)" class="astryx-banner-actions">
+      <div v-if="hasEnd || isDismissable || (hasContent() && collapsible)" class="astryx-banner-actions">
         <slot name="end" />
         <IconButton
-          v-if="hasContent && collapsible"
+          v-if="hasContent() && collapsible"
           ref="toggleButton"
           variant="ghost"
           size="sm"
@@ -137,8 +141,8 @@ watch(expanded, (value) => {
       </div>
     </div>
     <div
-      v-if="hasContent && expanded"
-      :id="hasContent && collapsible ? contentId : undefined"
+      v-if="hasContent() && expanded"
+      :id="hasContent() && collapsible ? contentId : undefined"
       ref="content"
       class="astryx-banner-content"
       :data-container="container"
