@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AvatarStatusDotProps, AvatarStatusDotSlots, AvatarStatusDotVariantName } from './types.js'
 import { computed, inject, onUnmounted, useSlots, watch } from 'vue'
-
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { AvatarSizeContext, AvatarStatusLabelContext } from './context.js'
 import { resolveStatusDotMetrics, resolveStatusDotVariant } from './utils.js'
 import '../../styles/avatar.css'
@@ -17,7 +17,7 @@ defineSlots<AvatarStatusDotSlots>()
 const slots = useSlots()
 
 /** 头像没给尺寸时按默认的 `md`（36px）算，单独放着用也是这个尺寸。 */
-const avatarSize = inject(AvatarSizeContext, null)
+const avatarSize = readLayerScoped(AvatarSizeContext)
 const statusLabel = inject(AvatarStatusLabelContext, null)
 
 /**

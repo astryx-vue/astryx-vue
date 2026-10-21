@@ -43,7 +43,7 @@ function openLayer(name: string, extra: Partial<Parameters<typeof pushLayer>[0]>
     getContainer: () => el,
     getTrigger: () => trigger,
     dismissOnPointerOutside: true,
-    dismissOnEscape: true,
+    dismissOnEscape: 'close',
     onDismiss,
     ...extra,
   })
@@ -158,7 +158,7 @@ describe('关闭栈：登记顺序', () => {
       getContainer: () => host.el,
       getTrigger: () => host.trigger,
       dismissOnPointerOutside: true,
-      dismissOnEscape: true,
+      dismissOnEscape: 'close',
       onDismiss: host.onDismiss,
     })
     created.push(host.el)
@@ -180,7 +180,7 @@ describe('关闭栈：登记顺序', () => {
       getContainer: () => outerEl,
       getTrigger: () => outerTrigger,
       dismissOnPointerOutside: true,
-      dismissOnEscape: true,
+      dismissOnEscape: 'close',
       onDismiss: outerDismiss,
     })
 
@@ -191,7 +191,7 @@ describe('关闭栈：登记顺序', () => {
       token: {},
       getContainer: () => inner,
       dismissOnPointerOutside: true,
-      dismissOnEscape: true,
+      dismissOnEscape: 'close',
       onDismiss: innerDismiss,
     })
 
@@ -261,7 +261,7 @@ describe('关闭栈：边界情况', () => {
         token: {},
         getContainer: () => trigger,
         dismissOnPointerOutside: true,
-        dismissOnEscape: true,
+        dismissOnEscape: 'close',
         onDismiss,
       })
     })
@@ -274,14 +274,26 @@ describe('关闭栈：边界情况', () => {
     expect(onDismiss).toHaveBeenCalledOnce()
   })
 
-  it('dismissOnEscape 为假的层把按键让给下面那层', () => {
+  it('最上层是 block 时吃掉按键，下面那层不关', () => {
     const lower = openLayer('lower')
-    const upper = openLayer('upper', { dismissOnEscape: false })
+    const upper = openLayer('upper', { dismissOnEscape: 'block' })
 
-    pressEscape()
+    const event = pressEscape()
 
+    expect(event.defaultPrevented).toBe(true)
     expect(upper.onDismiss).not.toHaveBeenCalled()
-    expect(lower.onDismiss).toHaveBeenCalledOnce()
+    expect(lower.onDismiss).not.toHaveBeenCalled()
+  })
+
+  it('最上层是 ignore 时栈不处理，下面那层也不关', () => {
+    const lower = openLayer('lower')
+    const upper = openLayer('upper', { dismissOnEscape: 'ignore' })
+
+    const event = pressEscape()
+
+    expect(event.defaultPrevented).toBe(false)
+    expect(upper.onDismiss).not.toHaveBeenCalled()
+    expect(lower.onDismiss).not.toHaveBeenCalled()
   })
 
   it('dismissOnPointerOutside 为假的层不会被点外面关掉', () => {
@@ -314,7 +326,7 @@ describe('关闭栈：边界情况', () => {
       getContainer: () => el,
       getTrigger: () => trigger,
       dismissOnPointerOutside: true,
-      dismissOnEscape: true,
+      dismissOnEscape: 'close',
       onDismiss,
       onEscape,
     })

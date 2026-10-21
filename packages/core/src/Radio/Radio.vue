@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { RadioEmits, RadioProps, RadioSlots } from './types.js'
-import { computed, inject, useAttrs, useId, useSlots } from 'vue'
+import { computed, useAttrs, useId, useSlots } from 'vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { radioContextKey } from './types.js'
 
 defineOptions({ name: 'AstryxRadio' })
@@ -12,7 +13,7 @@ defineSlots<RadioSlots>()
 const attrs = useAttrs()
 const slots = useSlots()
 const press = usePressFeedback({ hasOverlay: false })
-const context = inject(radioContextKey, undefined)
+const context = readLayerScoped(radioContextKey)
 const generatedId = `astryx-radio-option-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
 const name = computed(() => context?.name.value ?? attrs.name as string ?? inputId.value)

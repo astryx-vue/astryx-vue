@@ -1,5 +1,6 @@
-import type { ComputedRef, InjectionKey } from 'vue'
-import { computed, inject } from 'vue'
+import type { ComputedRef } from 'vue'
+import { computed } from 'vue'
+import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
 export type LayoutArea = 'header' | 'start' | 'content' | 'end' | 'footer'
 export type LayoutHeight = 'fill' | 'auto'
@@ -11,10 +12,6 @@ export interface LayoutSlotsState {
   hasEnd: boolean
 }
 
-export const layoutSlotsKey: InjectionKey<ComputedRef<LayoutSlotsState>> = Symbol('astryx-layout-slots')
-export const layoutAreaKey: InjectionKey<ComputedRef<LayoutArea | null>> = Symbol('astryx-layout-area')
-export const layoutDividerKey: InjectionKey<ComputedRef<boolean | undefined>> = Symbol('astryx-layout-dividers')
-
 /** 没有任何 `Layout` 时的槽位状态：都没有。 */
 export const emptyLayoutSlots = computed<LayoutSlotsState>(() => ({
   hasHeader: false,
@@ -23,14 +20,21 @@ export const emptyLayoutSlots = computed<LayoutSlotsState>(() => ({
   hasEnd: false,
 }))
 
+const NO_LAYOUT_AREA = computed<LayoutArea | null>(() => null)
+const NO_LAYOUT_DIVIDERS = computed<boolean | undefined>(() => undefined)
+
+export const layoutSlotsKey = defineLayerScopedKey('astryx-layout-slots', emptyLayoutSlots)
+export const layoutAreaKey = defineLayerScopedKey('astryx-layout-area', NO_LAYOUT_AREA)
+export const layoutDividerKey = defineLayerScopedKey('astryx-layout-dividers', NO_LAYOUT_DIVIDERS)
+
 export function useLayoutSlots(): ComputedRef<LayoutSlotsState> {
-  return inject(layoutSlotsKey, emptyLayoutSlots)
+  return readLayerScoped(layoutSlotsKey)
 }
 
 export function useLayoutArea(): ComputedRef<LayoutArea | null> {
-  return inject(layoutAreaKey, computed<LayoutArea | null>(() => null))
+  return readLayerScoped(layoutAreaKey)
 }
 
 export function useLayoutDividers(): ComputedRef<boolean | undefined> {
-  return inject(layoutDividerKey, computed(() => undefined))
+  return readLayerScoped(layoutDividerKey)
 }

@@ -8,7 +8,8 @@ import { isImeKeyEvent } from '../composables/internal/ime.js'
  * 一次 Escape 连 Dialog 也关了。这里把这件事收成一处：
  *
  * - document 上只有一套监听，栈里有层才挂上去，栈空了就摘掉。
- * - Escape 只交给「最上面那一层」，一次按键只关一层。
+ * - Escape 永远只看「最上面那一层」：`'close'` 关掉它，`'block'` 吃掉按键但不关，
+ *   `'ignore'` 留给这一层自己处理。不会把按键交给下面那层。
  * - 点在某一层里面（含它的触发器）就只关掉它上面那些层，这一层自己不动；
  *   点在所有层外面时只关最上面那一层。
  *
@@ -16,6 +17,13 @@ import { isImeKeyEvent } from '../composables/internal/ime.js'
  * 容器互相包含（DOM 上包着别人的在上），以及每个身份只认一次的序号
  * （同一层因为选项变化重新登记时，不许插到上面那层的头顶去）。
  */
+
+/**
+ * Escape 到达某一层时的三种处理。
+ *
+ * 按键永远只打最上面那一层，没有「让给下面」这一档。
+ */
+export type DismissEscape = 'close' | 'block' | 'ignore'
 
 export interface DismissStackEntry {
   /**
@@ -34,8 +42,12 @@ export interface DismissStackEntry {
   isPresent?: () => boolean
   /** 点在这一层外面时，是否关闭这一层。 */
   dismissOnPointerOutside: boolean
-  /** Escape 到达这一层时，是否关闭这一层。 */
-  dismissOnEscape: boolean
+  /**
+   * Escape 到达这一层时怎么处理。
+   * `'close'` 关掉这一层，`'block'` 吃掉按键但不关，
+   * `'ignore'` 什么都不做，留给自己会 `preventDefault` 的输入组件。
+   */
+  dismissOnEscape: DismissEscape
   /** Escape 关闭这一层时调用。不传就用 `onDismiss`，菜单逐层退栈时用得上。 */
   onEscape?: () => void
   /** 关闭这一层。 */
@@ -181,16 +193,19 @@ function handleKeyDown(event: KeyboardEvent): void {
   if (event.defaultPrevented)
     return
 
-  const owner = presentEntriesTopFirst().find(entry => entry.dismissOnEscape)
-  if (owner == null)
+  // 只看最上面那一层。不在屏幕上的层已经被 topPresentEntry 跳过。
+  if (top.dismissOnEscape === 'ignore')
     return
 
   // 吃掉按键，免得浏览器自己再去关一层（原生 dialog 的 cancel 事件）。
   event.preventDefault()
-  if (owner.onEscape != null)
-    owner.onEscape()
+  if (top.dismissOnEscape === 'block')
+    return
+
+  if (top.onEscape != null)
+    top.onEscape()
   else
-    owner.onDismiss()
+    top.onDismiss()
 }
 
 function startListening(): void {

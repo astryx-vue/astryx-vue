@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { ButtonClickAction, ButtonRootElement } from '../Button/types.js'
 import type { ToggleButtonEmits, ToggleButtonProps, ToggleButtonSlots } from './types.js'
-import { computed, inject, shallowRef, useTemplateRef } from 'vue'
+import { computed, shallowRef, useTemplateRef } from 'vue'
 
 import Button from '../Button/Button.vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { toggleButtonGroupContextKey } from './context.js'
 import '../../styles/toggle-button.css'
 
@@ -20,7 +21,7 @@ const emit = defineEmits<ToggleButtonEmits>()
 defineSlots<ToggleButtonSlots>()
 
 const isPressedModel = defineModel<boolean>('isPressed', { default: false })
-const group = inject(toggleButtonGroupContextKey, null)
+const group = readLayerScoped(toggleButtonGroupContextKey)
 const button = useTemplateRef<InstanceType<typeof Button>>('button')
 const optimisticPressed = shallowRef<boolean | null>(null)
 const pendingActions = shallowRef(0)

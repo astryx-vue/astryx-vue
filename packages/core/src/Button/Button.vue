@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
-import { computed, inject, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -36,7 +37,7 @@ defineSlots<ButtonSlots>()
 
 const attrs = useAttrs()
 const slots = useSlots()
-const group = inject(buttonGroupContextKey, null)
+const group = readLayerScoped(buttonGroupContextKey)
 const linkComponent = useLinkComponent()
 const renderedRoot = useTemplateRef<ComponentPublicInstance | HTMLElement>('root')
 const tooltipId = `astryx-button-tooltip-${useId()}`

@@ -135,7 +135,7 @@ useDismiss({
   container: editorRef,
   trigger: openingControl,
   isEnabled: editorOpen,
-  enableEscape: ref(false),
+  dismissOnEscape: 'ignore',
   onDismiss: () => closeEditor(true),
 })
 

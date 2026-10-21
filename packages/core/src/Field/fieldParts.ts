@@ -1,8 +1,8 @@
 import type { ComputedRef, HTMLAttributes, StyleValue } from 'vue'
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { useFormLayout } from '../FormLayout/context.js'
-import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
+import { useInputGroupContext } from '../InputGroup/context.js'
 
 /**
  * 带 Field 的输入组件共用的样式分层属性。
@@ -85,7 +85,7 @@ function isSet(value: unknown): boolean {
 export function useFieldPartStyling(options: UseFieldPartStylingOptions): FieldPartStyling {
   const { component, props, attrs } = options
   const reserved = new Set<string>(['class', 'style', ...(options.reservedAttrs ?? [])])
-  const inputGroup = inject(INPUT_GROUP_KEY, null)
+  const inputGroup = useInputGroupContext()
   const formLayout = useFormLayout()
   const hasFieldBox = computed(() => inputGroup == null && formLayout.value?.direction !== 'horizontal-labels')
 

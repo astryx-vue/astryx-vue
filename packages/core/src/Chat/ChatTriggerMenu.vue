@@ -52,7 +52,7 @@ useDismiss({
   container: surfaceRef,
   trigger: anchorWritable,
   isEnabled: open,
-  enableEscape: computed(() => false),
+  dismissOnEscape: 'ignore',
   onDismiss: () => emit('dismiss'),
 })
 

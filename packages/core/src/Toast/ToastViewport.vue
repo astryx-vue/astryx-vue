@@ -6,6 +6,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useActiveModalOutlet, whenModalSettled } from '../layer/modalOutlet.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useLayerConfig } from '../LayerProvider/context.js'
+import { readToastMotionDurationMs } from './motionDuration.js'
 import { toastStore } from './store.js'
 import Toast from './Toast.vue'
 
@@ -81,7 +82,7 @@ watch(mountTarget, () => {
   // `@starting-style` 当成了起始值，一恢复过渡它就会从起始值补一遍动画。
   setTimeout(() => {
     isRehosting.value = false
-  }, 250)
+  }, readToastMotionDurationMs(viewportRef.value))
 }, { flush: 'post' })
 
 /**

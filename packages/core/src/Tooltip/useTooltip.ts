@@ -3,6 +3,7 @@ import type { LayerPlacement } from '../layer/position.js'
 import type { TooltipAlignment, TooltipFocusTrigger, TooltipPlacement, TooltipTouchTrigger } from './types.js'
 import { computed, onMounted, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
 import { useLayer } from '../composables/useLayer.js'
+import { pushLayer } from '../layer/dismissStack.js'
 import { isFocusable } from '../layer/focus.js'
 
 export interface UseTooltipOptions {
@@ -222,16 +223,22 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     scheduleHide()
   }
 
-  function onDocumentKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Escape' || !isOpen.value)
-      return
-    clearTimers()
-    if (isControlled.value) {
-      options.onHide?.()
-      return
-    }
-    layer.hide()
-  }
+  // 整段生命周期都留在关闭栈里。没打开时 isPresent 为假，不会吃掉别人的 Escape。
+  const stopDismiss = pushLayer({
+    token: {},
+    getContainer: () => layer.contentRef.value,
+    dismissOnPointerOutside: false,
+    dismissOnEscape: 'close',
+    isPresent: () => isOpen.value,
+    onDismiss() {
+      clearTimers()
+      if (isControlled.value) {
+        options.onHide?.()
+        return
+      }
+      layer.hide()
+    },
+  })
 
   function shouldListenFocus(element: HTMLElement): boolean {
     return focusTriggerMode() === 'always' || (focusTriggerMode() === 'auto' && isFocusable(element))
@@ -282,15 +289,6 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
       bind(element)
   }, { flush: 'sync' })
 
-  watch(isOpen, (open) => {
-    if (typeof document === 'undefined')
-      return
-    if (open)
-      document.addEventListener('keydown', onDocumentKeydown)
-    else
-      document.removeEventListener('keydown', onDocumentKeydown)
-  }, { immediate: true })
-
   // 受控值落到内部状态上，只同步不生事件：这是使用方自己设的值，不该再回报给它。
   function syncControlled(open: boolean): void {
     layer.isOpen.value = open
@@ -316,8 +314,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   onScopeDispose(() => {
     clearTimers()
     unbind()
-    if (typeof document !== 'undefined')
-      document.removeEventListener('keydown', onDocumentKeydown)
+    stopDismiss()
   })
 
   const contentProps = computed<Record<string, unknown>>(() => ({

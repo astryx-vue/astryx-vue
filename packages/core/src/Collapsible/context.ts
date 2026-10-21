@@ -1,5 +1,6 @@
-import type { ComputedRef, InjectionKey } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { CollapsibleChevronPosition } from './types.js'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
 export type CollapsibleGroupDensity = 'compact' | 'balanced' | 'spacious'
 export type CollapsibleGroupType = 'single' | 'multiple'
@@ -16,5 +17,8 @@ export interface CollapsibleGroupPresentation {
   chevronPosition: ComputedRef<CollapsibleChevronPosition>
 }
 
-export const collapsibleGroupKey: InjectionKey<CollapsibleGroupContextValue> = Symbol('collapsibleGroup')
-export const collapsibleGroupPresentationKey: InjectionKey<CollapsibleGroupPresentation> = Symbol('collapsibleGroupPresentation')
+export const collapsibleGroupKey = defineLayerScopedKey<CollapsibleGroupContextValue | null>('collapsibleGroup', null)
+export const collapsibleGroupPresentationKey = defineLayerScopedKey<CollapsibleGroupPresentation | null>(
+  'collapsibleGroupPresentation',
+  null,
+)

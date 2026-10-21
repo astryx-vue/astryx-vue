@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
-import { computed, inject, toRaw } from 'vue'
+import { computed, toRaw } from 'vue'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { breadcrumbContextKey } from './context.js'
 
@@ -21,7 +22,7 @@ const slots = defineSlots<{
   menu?: () => unknown
 }>()
 
-const context = inject(breadcrumbContextKey, undefined)
+const context = readLayerScoped(breadcrumbContextKey)
 const linkComponent = useLinkComponent()
 const variant = computed(() => context?.variant.value ?? 'default')
 const separator = computed(() => context?.separator.value ?? '/')

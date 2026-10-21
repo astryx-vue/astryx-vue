@@ -4,6 +4,7 @@ import type { HoverCardAlignment, HoverCardFocusTrigger, HoverCardPlacement, Hov
 import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
 import { useLayer } from '../composables/useLayer.js'
 import { isFocusable } from '../layer/focus.js'
+import { registerHoverCardDismiss } from './escapeDismiss.js'
 
 export interface UseHoverCardOptions {
   /**
@@ -362,15 +363,11 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     scheduleHide()
   }
 
-  function onDocumentKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Escape' || !isOpen.value)
-      return
+  function dismissFromEscape(): void {
     clearTimers()
     isHoveringContent = false
-    if (isControlled.value) {
-      options.onHide?.()
-      return
-    }
+    if (isControlled.value)
+      return options.onHide?.()
     const hadFocus = layer.contentRef.value?.contains(document.activeElement) ?? false
     layer.hide()
     if (hadFocus && triggerRef.value) {
@@ -378,6 +375,12 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
       triggerRef.value.focus()
     }
   }
+
+  registerHoverCardDismiss({
+    isPresent: () => isOpen.value,
+    getContainer: () => layer.contentRef.value,
+    onDismiss: dismissFromEscape,
+  })
 
   function onDocumentPointerDown(event: PointerEvent): void {
     if (!TOUCH_POINTER_TYPES.has(event.pointerType) || !isOpen.value || isControlled.value)
@@ -505,13 +508,10 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     applyTriggerAttributes()
     if (typeof document === 'undefined')
       return
-    if (visible) {
-      document.addEventListener('keydown', onDocumentKeydown)
+    if (visible)
       document.addEventListener('pointerdown', onDocumentPointerDown, true)
-      return
-    }
-    document.removeEventListener('keydown', onDocumentKeydown)
-    document.removeEventListener('pointerdown', onDocumentPointerDown, true)
+    else
+      document.removeEventListener('pointerdown', onDocumentPointerDown, true)
   }, { immediate: true })
 
   watch(() => toValue(options.isOpen), (open) => {
@@ -548,7 +548,6 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
       return
     document.removeEventListener('pointerdown', onModalityPointerDown, true)
     document.removeEventListener('keydown', onModalityKeyDown, true)
-    document.removeEventListener('keydown', onDocumentKeydown)
     document.removeEventListener('pointerdown', onDocumentPointerDown, true)
   })
 
