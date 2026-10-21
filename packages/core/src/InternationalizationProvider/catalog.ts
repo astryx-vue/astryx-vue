@@ -1,9 +1,8 @@
 import type { AstryxUpstreamCatalog, AstryxUpstreamMessage } from '../locale/loadCatalog.js'
 import type { AstryxMessages } from '../locale/messages.js'
-import { normalizeLocale } from '../locale/context.js'
+import { builtInMessages, normalizeLocale } from '../locale/context.js'
 import { formatIcu, icuPlaceholderNames } from '../locale/icu.js'
 import { loadAstryxCatalog } from '../locale/loadCatalog.js'
-import { astryxMessages } from '../locale/messages.js'
 import { upstreamMessageMap } from '../locale/upstreamMap.js'
 
 /**
@@ -18,9 +17,6 @@ export type ProviderOverrides = ProviderMessagesByLocale
 interface MessageTree {
   [key: string]: string | ((...args: never[]) => string) | MessageTree
 }
-
-/** 内置文案只有这两种语言，其余语言都从英文兜底。 */
-const BUILT_IN_LOCALES = new Set<string>(['en', 'zh-CN'])
 
 /**
  * 把 `messages` 和 `overrides` 合成本次渲染要用的文案树。
@@ -40,10 +36,10 @@ export function resolveProviderMessages(
   const sparse = pickLocale(overrides, tag, baseLanguage)
 
   if (catalog == null && sparse == null)
-    return defaultMessages(tag)
+    return builtInMessages(tag)
 
   const base = catalog == null
-    ? defaultMessages(tag)
+    ? builtInMessages(tag)
     : loadAstryxCatalog(tag, catalog).messages
 
   return sparse == null ? base : applyCatalog(base, tag, sparse)
@@ -58,12 +54,6 @@ function pickLocale(
   if (map == null)
     return undefined
   return map[tag] ?? (baseLanguage === tag ? undefined : map[baseLanguage])
-}
-
-function defaultMessages(tag: string): AstryxMessages {
-  return BUILT_IN_LOCALES.has(tag)
-    ? astryxMessages[tag as 'en' | 'zh-CN']
-    : astryxMessages.en
 }
 
 /**

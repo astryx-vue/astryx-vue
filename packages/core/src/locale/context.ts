@@ -7,9 +7,9 @@ export const astryxLocaleKey: InjectionKey<MaybeRefOrGetter<string>> = Symbol('a
 export const astryxMessagesKey: InjectionKey<MaybeRefOrGetter<AstryxMessages>> = Symbol('astryx-messages')
 
 /**
- * 把语言标签收成组件能用的写法。
- * `en` 和 `en-*` 收成 `en`。`zh`、`zh-CN`、`zh-Hans` 收成 `zh-CN`。
- * `zh-TW` 以及其他标签保留规范写法，用来接 `loadAstryxCatalog` 的结果。
+ * 把语言标签收成规范写法。
+ * `zh`、`zh-CN`、`zh-Hans` 收成 `zh-CN`，对上内置的简体中文文案。
+ * 其余标签只做大小写规范，例如 `en-gb` 收成 `en-GB`，日期和数字因此按这个地区的习惯排。
  * 空值和解析不了的标签回到 `en`。
  */
 export function normalizeLocale(locale: string | null | undefined): string {
@@ -25,8 +25,6 @@ export function normalizeLocale(locale: string | null | undefined): string {
   }
   const base = parsed.baseName
   const lower = base.toLowerCase()
-  if (lower === 'en' || lower.startsWith('en-'))
-    return 'en'
   if (lower === 'zh' || lower === 'zh-cn' || lower === 'zh-hans' || lower.startsWith('zh-hans-'))
     return 'zh-CN'
   return base
@@ -46,12 +44,20 @@ export function useAstryxLocale(): ComputedRef<string> {
   return computed(() => injected == null ? 'en' : normalizeLocale(toValue(injected)))
 }
 
+/**
+ * 一个语言标签对应的内置文案。只有简体中文有自己的一份，其余语言都用英文。
+ * 别的语言要显示本地文字，得通过 `messages` 交进来。
+ */
+export function builtInMessages(locale: string): AstryxMessages {
+  return locale === 'zh-CN' ? astryxMessages['zh-CN'] : astryxMessages.en
+}
+
 export function useAstryxMessages(): ComputedRef<AstryxMessages> {
   const locale = useAstryxLocale()
   const provided = inject(astryxMessagesKey, undefined)
   return computed(() => {
     if (provided != null)
       return toValue(provided)
-    return locale.value === 'zh-CN' ? astryxMessages['zh-CN'] : astryxMessages.en
+    return builtInMessages(locale.value)
   })
 }
