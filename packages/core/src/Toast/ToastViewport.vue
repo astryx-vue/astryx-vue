@@ -225,6 +225,7 @@ watch(
             :auto-hide-duration="toast.autoHideDuration"
             :end-content="toast.endContent"
             :is-exiting="toast.isExiting"
+            :swipe-direction="isTopPlacement ? -1 : 1"
             @dismiss="handleDismiss(toast.id, $event)"
           />
         </div>

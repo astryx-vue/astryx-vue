@@ -1,5 +1,5 @@
 import { onScopeDispose } from 'vue'
-import { pushLayer } from './dismissStack.js'
+import { isTopLayer, pushLayer } from './dismissStack.js'
 import { useLayerDepth } from './layerDepth.js'
 
 /**
@@ -16,10 +16,11 @@ export function useHoverLayerDismiss(options: {
   getContainer: () => HTMLElement | null
   /** Escape 打到这一层时关掉它。 */
   onDismiss: () => void
-}): void {
+}): { isTop: () => boolean } {
   const depth = useLayerDepth()
+  const token = {}
   const stop = pushLayer({
-    token: {},
+    token,
     depth,
     getContainer: options.getContainer,
     dismissOnPointerOutside: false,
@@ -28,4 +29,5 @@ export function useHoverLayerDismiss(options: {
     onDismiss: options.onDismiss,
   })
   onScopeDispose(stop)
+  return { isTop: () => isTopLayer(token) }
 }

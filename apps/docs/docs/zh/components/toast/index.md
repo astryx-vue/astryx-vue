@@ -12,7 +12,9 @@ import { toastAction, toastDedup, toastDismiss, toastStacking, toastTypes } from
 
 ## 使用方法
 
-`Toast` 是一种不打断操作的轻量反馈，用来确认操作结果或提示状态变化，数秒后自动消失。使用时，在应用根节点放置一次 `ToastViewport`，然后在任意组件中调用 `useToast` 弹出提示：
+`Toast` 是一种不打断操作的轻量反馈，用来确认操作结果或提示状态变化，数秒后自动消失。使用时，在应用根节点放置一次 `ToastViewport`，然后在任意组件中调用 `useToast` 弹出提示。
+
+在触摸屏上，朝提示所在的那条边滑动可以关掉它：贴在屏幕下方的向下滑，贴在上方的向上滑。横向滑动留给页面滚动。滑在按钮或链接上时不关，那一下属于控件自己。鼠标拖动不会关掉提示。
 
 ```vue
 <script setup lang="ts">

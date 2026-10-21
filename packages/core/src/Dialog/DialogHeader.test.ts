@@ -1,6 +1,8 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
+import { provideAstryxLocale } from '../locale/context.js'
+import { defineTheme } from '../Theme/defineTheme.js'
 import Dialog from './Dialog.vue'
 import DialogHeader from './DialogHeader.vue'
 
@@ -66,6 +68,88 @@ describe('dialogHeader', () => {
     })
 
     expect(wrapper.find('.astryx-dialog-header__title').attributes('data-dialog-default-focus')).toBeUndefined()
+  })
+
+  it('puts theme targets on the row, slots, title block, and close icon', () => {
+    const wrapper = mount(DialogHeader, {
+      props: { title: 'Title', hasCloseButton: true },
+      slots: {
+        startContent: () => h('span', 'Back'),
+        endContent: () => h('span', 'Help'),
+      },
+    })
+
+    expect(wrapper.get('.astryx-dialog-header-start-content').text()).toContain('Back')
+    expect(wrapper.get('.astryx-dialog-header-title-block').text()).toContain('Title')
+    expect(wrapper.get('.astryx-dialog-header-end-content').text()).toContain('Help')
+    expect(wrapper.find('.astryx-dialog-header-close-icon').exists()).toBe(true)
+
+    const theme = defineTheme({
+      name: 'dialog-header-targets-test',
+      components: {
+        'dialog-header': { base: { gap: '8px' } },
+        'dialog-header-start-content': { base: { gap: '5px' } },
+        'dialog-header-title-block': { base: { gap: '4px' } },
+        'dialog-header-end-content': { base: { gap: '6px' } },
+        'dialog-header-close-icon': { base: { color: 'red' } },
+      },
+    })
+    expect(theme.css).toContain('.astryx-dialog-header {')
+    expect(theme.css).toContain('.astryx-dialog-header-start-content {')
+    expect(theme.css).toContain('.astryx-dialog-header-title-block {')
+    expect(theme.css).toContain('.astryx-dialog-header-end-content {')
+    expect(theme.css).toContain('.astryx-dialog-header-close-icon {')
+  })
+
+  it('renders rich title and subtitle slots, and skips an empty subtitle', () => {
+    const rich = mount(DialogHeader, {
+      props: { title: 'Fallback', subtitle: '' },
+      slots: {
+        title: () => h('span', { class: 'rich-title' }, 'Rich'),
+        subtitle: () => h('span', { class: 'rich-sub' }, 'More'),
+      },
+    })
+    expect(rich.get('.rich-title').text()).toBe('Rich')
+    expect(rich.get('.rich-sub').text()).toBe('More')
+    expect(rich.get('.astryx-dialog-header__title').text()).toBe('Rich')
+
+    const empty = mount(DialogHeader, { props: { title: 'Title', subtitle: '' } })
+    expect(empty.find('.astryx-dialog-header__subtitle').exists()).toBe(false)
+  })
+
+  it('compensates the end slot on the axes that were asked for', () => {
+    const automatic = mount(DialogHeader, { props: { title: 'Title', hasCloseButton: true } })
+    const end = automatic.get('.astryx-dialog-header-end-content')
+    expect(end.classes()).toContain('astryx-dialog-header__actions--compensate-block')
+    expect(end.classes()).toContain('astryx-dialog-header__actions--compensate-inline')
+
+    const inlineOnly = mount(DialogHeader, {
+      props: { title: 'Title', hasCloseButton: true, endContentEdgeCompensation: 'inline' },
+    })
+    const inlineEnd = inlineOnly.get('.astryx-dialog-header-end-content')
+    expect(inlineEnd.classes()).toContain('astryx-dialog-header__actions--compensate-inline')
+    expect(inlineEnd.classes()).not.toContain('astryx-dialog-header__actions--compensate-block')
+
+    const noClose = mount(DialogHeader, {
+      props: { title: 'Title' },
+      slots: { endContent: () => h('span', 'Help') },
+    })
+    const plainEnd = noClose.get('.astryx-dialog-header-end-content')
+    expect(plainEnd.classes()).not.toContain('astryx-dialog-header__actions--compensate-inline')
+    expect(plainEnd.classes()).not.toContain('astryx-dialog-header__actions--compensate-block')
+  })
+
+  it('names the close button in the active language', () => {
+    const english = mount(DialogHeader, { props: { title: 'Title', hasCloseButton: true } })
+    expect(english.get('.astryx-dialog-header__close').attributes('aria-label')).toBe('Close')
+
+    const Host = defineComponent({
+      setup() {
+        provideAstryxLocale('zh-CN')
+        return () => h(DialogHeader, { title: '标题', hasCloseButton: true })
+      },
+    })
+    expect(mount(Host).get('.astryx-dialog-header__close').attributes('aria-label')).toBe('关闭')
   })
 
   it('draws a bottom divider only when hasDivider is set', () => {

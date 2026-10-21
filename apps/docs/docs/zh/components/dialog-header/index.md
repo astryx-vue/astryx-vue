@@ -51,4 +51,8 @@ const isOpen = ref(false)
 
 对话框打开时，标题带 `tabindex="-1"` 并接收初始焦点。这让键盘用户一进入对话框就听到名称，而不是从正文中间开始。
 
-关闭按钮是 `IconButton`，默认无障碍名称是 `Close`。文案需要本地化时用 `closeButtonLabel` 覆盖。
+关闭按钮是 `IconButton`。没写 `closeButtonLabel` 时，无障碍名称跟界面语言走：英文 Close，中文「关闭」。
+
+标题和副标题都可以用插槽放行内内容，例如一段强调或一个链接。副标题是空字符串、又没有插槽时，那一行不渲染。
+
+换肤挂点是 `dialog-header`、`dialog-header-start-content`、`dialog-header-title-block`、`dialog-header-end-content`、`dialog-header-close-icon`，分别落在标题行、前置槽、标题块、后置槽和关闭图标上。有关闭按钮时，后置槽默认把上下和行末各收进一档间距，用来抵消按钮自己的内边距。`endContentEdgeCompensation` 可以只收行末（`inline`）、只收上下（`block`），或两边都收（`all`）。

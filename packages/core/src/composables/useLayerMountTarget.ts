@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref } from 'vue'
 import { computed, inject, ref } from 'vue'
-import { layerMountKey } from '../layer/mount.js'
+import { layerMountKey, resolveLayerMountTarget } from '../layer/mount.js'
 
 /**
  * 读最近的浮层挂载点。Dialog 打开时是它内部的挂载点，其余情况是 `null`。
@@ -24,4 +24,24 @@ export function useLayerMountTarget(): Readonly<Ref<HTMLElement | null>> {
 export function useLayerTeleportTarget(): ComputedRef<string | HTMLElement> {
   const mount = useLayerMountTarget()
   return computed(() => mount.value ?? 'body')
+}
+
+/**
+ * 浮层该挂到哪。
+ *
+ * Dialog 提供了挂载点时优先用它，再往外挂就出了模态层。
+ * 否则看触发器旁边有没有不能挂浮层的祖先（段落、链接、按钮）。
+ * 有的话挂到那个祖先的外面、尽量靠近原位，嵌套主题和 Tab 顺序还在。
+ * 两边都没有，才挂到 `body`。
+ *
+ * `sentinel` 是触发器所在的元素。函数看的是它的父元素。
+ */
+export function useResolvedLayerTeleport(sentinel: Ref<HTMLElement | null>): ComputedRef<string | HTMLElement> {
+  const mount = useLayerMountTarget()
+  return computed(() => {
+    if (mount.value)
+      return mount.value
+    const corrected = resolveLayerMountTarget(sentinel.value?.parentElement ?? null)
+    return corrected ?? 'body'
+  })
 }
