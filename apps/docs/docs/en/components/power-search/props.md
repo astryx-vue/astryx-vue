@@ -14,7 +14,7 @@ footer: false
       <tr><td><code>config</code></td><td><code>PowerSearchConfig</code></td><td>required</td><td>Fields, operators, and the value each operator expects.</td></tr>
       <tr><td><code>filters</code></td><td><code>PowerSearchFilter[]</code></td><td>-</td><td>Current filters. When passed, the parent owns them and listens for updates.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>Search</td><td>Accessible name of the input.</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Hides the label visually and keeps it available to assistive tech.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Hides the label visually and keeps it available to assistive tech. Omitted means hidden; <code>false</code> shows it. <code>labelHidden</code> is the older name. When both are set, this one wins.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td>Search…</td><td>Placeholder while there are no filters.</td></tr>
       <tr><td><code>autofocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Focus the input after mount.</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows clear all once a filter exists. The older <code>clearable</code> name works too.</td></tr>

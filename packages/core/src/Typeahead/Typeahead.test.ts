@@ -311,6 +311,20 @@ describe('base typeahead', () => {
     wrapper.unmount()
   })
 
+  it('hides the label when isLabelHidden is set, and the old name still works', () => {
+    const hidden = mountTypeahead({ isLabelHidden: true })
+    expect(hidden.get('.astryx-field-label-group').attributes('data-hidden')).toBe('true')
+    hidden.unmount()
+
+    const aliased = mountTypeahead({ labelHidden: true })
+    expect(aliased.get('.astryx-field-label-group').attributes('data-hidden')).toBe('true')
+    aliased.unmount()
+
+    const visible = mountTypeahead()
+    expect(visible.get('.astryx-field-label-group').attributes('data-hidden')).toBeUndefined()
+    visible.unmount()
+  })
+
   it('groups options by item.auxiliaryData.group', async () => {
     const grouped: SearchableItem[] = [
       { id: 'apple', label: 'Apple', auxiliaryData: { group: 'Fruit' } },

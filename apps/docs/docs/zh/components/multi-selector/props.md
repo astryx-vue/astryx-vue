@@ -14,6 +14,7 @@ footer: false
       <tr><td><code>modelValue</code></td><td><code>(string | number)[]</code></td><td><code>[]</code></td><td>已选值。</td></tr>
       <tr><td><code>options</code></td><td><code>MultiSelectorOption[]</code></td><td>必需</td><td>字符串、选项对象、分隔线或分组。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段标签。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>没有选中项时的占位符。</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在列表里显示搜索框。</td></tr>
       <tr><td><code>selectAll</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示全选行。跳过禁用项。</td></tr>

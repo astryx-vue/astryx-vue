@@ -3,6 +3,7 @@ import type { TokenEmits, TokenProps, TokenSlots } from './types.js'
 import { computed, toRaw, useAttrs } from 'vue'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -24,6 +25,8 @@ defineSlots<TokenSlots>()
 
 const attrs = useAttrs()
 const messages = useAstryxMessages()
+/** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起文字。 */
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const linkComponent = useLinkComponent()
 const press = usePressFeedback()
 /** 有链接时用的根组件，没有 provider 时还是 `<a>`。危险协议退回普通锚点。 */
@@ -89,7 +92,7 @@ function onKeydown(event: KeyboardEvent): void {
     :href="rootIsLink && !props.disabled ? safeHref : undefined"
     :to="rootIsLink && !props.disabled && linkRoot !== 'a' ? safeHref : undefined"
     :aria-disabled="props.disabled && (rootIsLink || actionIsLink) ? 'true' : undefined"
-    :aria-label="props.labelHidden ? props.label : undefined"
+    :aria-label="hideLabel ? props.label : undefined"
     :aria-description="props.description"
     :tabindex="rootIsLink && props.disabled ? -1 : undefined"
     @keydown="onKeydown"
@@ -106,7 +109,7 @@ function onKeydown(event: KeyboardEvent): void {
       :aria-disabled="props.disabled || undefined"
       :tabindex="props.disabled ? -1 : undefined"
     >
-      <span class="astryx-token-label" :class="{ 'is-hidden': props.labelHidden }">{{ props.label }}</span>
+      <span class="astryx-token-label" :class="{ 'is-hidden': hideLabel }">{{ props.label }}</span>
     </component>
     <button
       v-else-if="actionIsButton"
@@ -115,9 +118,9 @@ function onKeydown(event: KeyboardEvent): void {
       :disabled="props.disabled"
       @click="runClick"
     >
-      <span class="astryx-token-label" :class="{ 'is-hidden': props.labelHidden }">{{ props.label }}</span>
+      <span class="astryx-token-label" :class="{ 'is-hidden': hideLabel }">{{ props.label }}</span>
     </button>
-    <span v-else class="astryx-token-label" :class="{ 'is-hidden': props.labelHidden }">{{ props.label }}</span>
+    <span v-else class="astryx-token-label" :class="{ 'is-hidden': hideLabel }">{{ props.label }}</span>
     <slot name="end">
       <slot name="endContent" />
     </slot>

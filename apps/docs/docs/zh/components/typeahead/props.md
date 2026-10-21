@@ -16,7 +16,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段标签。屏幕阅读器始终读得到。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁边信息图标里的提示文字。</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code> / <code>搜索…</code></td><td>占位符。未设置语言时为英文。</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>输入停顿后再搜索。本地数据可设为 0。</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>够长才去搜索的下限，按人眼看到的字符数算。太短就完全不搜，下拉也不打开，免得为一个没搜过的查询显示「没有结果」。空查询不算太短，照旧走 bootstrap。</td></tr>
