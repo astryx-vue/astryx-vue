@@ -65,3 +65,18 @@
 - 任何一条不过，结论就是「不通过」。
 - 报告写到 `/Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync/nodes/B5/verify-<N>.md`，格式照 `templates/verify-report.md`。
 - 最终回复用中文，200 字以内。
+
+## 第 2 轮：总控对第 4a 项的裁定
+
+第 1 轮第 4a 项判为不过。原因是实现者回报第 8 节写着「Pagination 的读屏名会变」，实际上没有变：Pagination 还在用旧字段，要接新字段属于 C13 的组件接入。
+
+总控选择方案 A：
+- B5 不改 `Pagination.vue`。
+- 回报里与事实不符的说法要改正。
+- C13 清单要写清「Pagination 的读屏名现在和上游不同」。
+
+第 2 轮只检查下面几项：
+
+17. `impl-2.md`（或者改正后的 `impl-1.md`）第 8 节，已经不再说 Pagination 的读屏名会变。第 8 节列出的「英文会变的组件」，每一个都要自己验证：挂载组件，或者看文案文件，确认这个组件的英文在 BASE 和 B5 之间**确实**不同。只要有一个组件没变却被写成会变，或者变了却没写进去，就判「不过」。
+18. C13 清单里写明：Pagination 的读屏名现在是 "Previous" / "Page 3" / "Pagination"，上游是 "Go to previous page" / "Go to page 3" / "Page indicators"，要接 `previousPage`、`nextPage`、`goToPageNumber`、`pageIndicators`。
+19. 第 2 轮只改了文档，没有改代码。用 `git diff HEAD~N --stat` 确认，N 是第 2 轮新增的提交数。第 1 轮其余 15 项沿用原结论。
