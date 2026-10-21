@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import { nextTick, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 
 defineOptions({
   name: 'ButtonTooltip',
@@ -17,6 +18,9 @@ const emit = defineEmits<{
   pointerEnter: []
   pointerLeave: []
 }>()
+
+// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
+const teleportTarget = useLayerTeleportTarget()
 
 const isMounted = shallowRef(false)
 const tooltip = useTemplateRef<HTMLElement>('tooltip')
@@ -102,7 +106,7 @@ onBeforeUnmount(stopListening)
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       v-if="isMounted"
       v-show="open"

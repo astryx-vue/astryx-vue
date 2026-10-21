@@ -585,14 +585,12 @@ function isEnabled(row: Record<string, unknown>): boolean {
       </tbody>
     </table>
     <PluginFooter v-for="(plugin, index) in plugins.filter(item => item.below)" :key="`below-${index}`" :plugin="plugin" place="below" />
-    <Teleport to="body">
-      <TableRowMenu
-        v-if="menu"
-        :x="menu.x"
-        :y="menu.y"
-        :items="menu.items"
-        @close="menu = null"
-      />
-    </Teleport>
+    <TableRowMenu
+      v-if="menu"
+      :x="menu.x"
+      :y="menu.y"
+      :items="menu.items"
+      @close="menu = null"
+    />
   </div>
 </template>
