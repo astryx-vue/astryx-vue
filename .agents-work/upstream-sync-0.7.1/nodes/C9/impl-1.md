@@ -48,6 +48,8 @@
 
 不适用里，32 条左右是上游自研解析器的 CommonMark 修补（含图片 alt 实体、围栏缩进、链接括号）。这里用 micromark，没有把那份 parser 逐行搬过来，也没有为每一条单独补失败用例。其余不适用是主题、文档规格、性能夹具、数学公式、remark，以及 text transform、semantic fence、source decoration、soft breaks 这些可选辅助函数。
 
+验收第 19 条：`a4ed39905` 仍标不适用，结论改为与代码一致。代码视口始终是 `tabindex="0"`，短代码和长代码一样，本轮没有改 CodeBlock 的停靠规则。
+
 ## 5. 自测结果
 
 | # | 自测项 | 结果 | 证据 |
