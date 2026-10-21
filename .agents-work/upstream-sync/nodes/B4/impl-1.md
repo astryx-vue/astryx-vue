@@ -88,14 +88,14 @@
 
 ## 4. 台账处理
 
-一共 29 条：**已采纳 12 条、部分采纳 1 条、交给其他节点 5 条、不适用 11 条**。每条的理由写在分支里的 `ledger/B4.md` 条目下面。
+一共 29 条：**已采纳 10 条、部分采纳 2 条、交给其他节点 4 条、不适用 13 条**（10 + 2 + 4 + 13 = 29）。每条的理由写在分支里的 `ledger/B4.md` 条目下面。
 
 | 类别 | 条目 |
 | --- | --- |
-| 已采纳（12） | #4881 `47d5160dc`、#7225 相关栈规则、#5004/#5018 `009bcb37f`、#6919 `d45599cb8`、#5064 `77b013d2a`、#5231 `4aacbbedc`、#6941 `d4d2151b8`、#7172 `fcf255b26`、#7238 `4607f2fbc`、#5248 `5d8ece19c`、#5881 `de72688e7`、#7167 `5c3d45821`（栈相关部分） |
-| 部分采纳（1） | #5039 `5db7f15bd`：`resolveLayerMountTarget` 已实现并测过，组件侧是否按 sentinel 方式接入交 C7 |
-| 交给其他节点（5） | #6184 `65dedfe9d`→C8、#6073 `189056a43`→F3c、#7225 `516c4541c`→C8、#6950 `2710a135a`→C4、#7167 的组件行为→C6 |
-| 不适用（11） | #5267 `540f19e62`、#5272 `f67544e1c`（Vue 无 ref 抖动）、#5507 `bdbda6dc4`（StyleX 优先级语义）、#7287 `684b56d19`（我们没有那个结构变量）、#6457 的 `layerScopedContext` 部分、以及 6 条上游文档/规范/审阅流程：`397e0c68b`、`a9f6cf4a8`、`176dfa624`、`6ef7b746a`、`3ee796ccc`、`17044ab1e`、`0788c49ae`、`f37274447` |
+| 已采纳（10） | #4881 `47d5160dc`、#6919 `d45599cb8`、#5064 `77b013d2a`、#5231 `4aacbbedc`、#5004/#5018 `009bcb37f`、#6941 `d4d2151b8`、#7172 `fcf255b26`、#7238 `4607f2fbc`、#5248 `5d8ece19c`、#5881 `de72688e7` |
+| 部分采纳（2） | #5039 `5db7f15bd`：`resolveLayerMountTarget` 已实现并测过，组件侧要不要按 sentinel 的方式接入交 C7。#7167 `5c3d45821`：栈相关（`onEscape` 逐层退栈、`ContextMenuSubMenu` 的挂载点）已采纳，触发器事件和嵌套层次的其它行为交 C6 |
+| 交给其他节点（4） | #6184 `65dedfe9d` → C8、#6073 `189056a43` → F3c、#7225 `516c4541c` → C8、#6950 `2710a135a` → C4 |
+| 不适用（13） | #5267 `540f19e62`、#5272 `f67544e1c`（Vue 的返回引用天生稳定）、#5507 `bdbda6dc4`（StyleX 的 xstyle 优先级语义）、#7287 `684b56d19`（我们的 Stepper 没有那条结构变量）、#6457 `4ec26d757`（文字重置已采纳，`layerScopedContext` 那半不适用）、以及 8 条上游文档/规范/审阅流程：`397e0c68b`、`a9f6cf4a8`、`176dfa624`、`6ef7b746a`、`3ee796ccc`、`17044ab1e`、`0788c49ae`、`f37274447` |
 
 ## 5. 自测结果
 
@@ -107,7 +107,7 @@
 | 4 | E3 交互契约 + SSR 冒烟 | 过 | 在 3 的全量里；`known-failures.ts`、`ssr-known-failures.json` 没有改动 |
 | 5 | `env -u NODE_ENV pnpm check`（test 换成 `vitest run --maxWorkers=2`） | 过 | check:packages / lint / typecheck / vitest / build:packages / docs:build / lint:pkg 全部退出码 0 |
 | 6 | 浏览器实测（套 browser-lock，同一时刻只开一个浏览器） | 11/11 过 | 见下 |
-| 7 | 视觉对照 | 过 | 8 个可对照的组合全部 **0 像素差**，见下 |
+| 7 | 视觉对照 | 过 | 13 个「改动前后都截到」的组合全部 **0 像素差**，见下 |
 | 8 | 单文件不超过 500 行 | 过 | `check-line-limit` 通过 |
 
 ### 浏览器实测
@@ -142,7 +142,7 @@ node scripts/swarm/browser-lock.mjs run --purpose B4 -- node .agents-work/upstre
 | Popover | desktop-light / mobile-dark | 0 像素差 |
 | Tooltip | desktop-light / mobile-dark / mobile-light | 0 像素差 |
 
-说明：上游站点多次 `page.goto` 超时（60s），所以每次只截到一部分组合；上面列的每一行都是「改动前」和「改动后」都截到了的组合，逐像素比较。其余组合缺一边，没法比，缺失清单在 `/tmp/B4-before/run.log`、`/tmp/B4-after/run.log`、`/tmp/B4-after/run2.log`。文档站这几个组件页在默认状态下没有展开的浮层，所以 0 像素差是符合预期的——文字重置的实际效果由上面第 5 项浏览器实测覆盖。
+说明：上游站点多次 `page.goto` 超时（60s），所以每次只截到一部分组合；上面列的每一行都是「改动前」和「改动后」都截到了的组合，逐像素比较。其余组合缺一边，没法比，缺失清单在 `/tmp/B4-before/run.log`、`/tmp/B4-after/run.log`、`/tmp/B4-after/run2.log`。文档站这几个组件页在默认状态下没有展开的浮层，所以 0 像素差是符合预期的——文字重置的实际效果由下面「浏览器实测」表里的第 5 行覆盖。
 
 ## 6. 拿不准的地方
 
