@@ -56,8 +56,9 @@
 1. 读验收报告，确认每一项都有证据。
 2. `env -u NODE_ENV node scripts/swarm/worktree.mjs merge <ID> --keep`。如果 package.json 冲突，进工作区手动 `git rebase swarm-tree` 解决；依赖有变化时跑 `pnpm install --frozen-lockfile`。
 3. 推送节点分支，然后 `gh pr create --base swarm-tree`。正文用中文，格式照 pr skill。
-4. **先 `git push origin swarm-tree`**，GitHub 会自动把 PR 标成 Merged。不会自动变的话，再执行 `gh pr merge --rebase`。
-5. `worktree.mjs rm <ID>`，然后 `status.mjs set <ID> 已完成 --pr #N`，提交 `.agents-work` 并推送。
+4. **节点 PR 的 CI 必须全绿，才能合进 `swarm-tree`。** `Check and dry-run` 和 `Test under production shell` 都绿了再做下一步。节点验收只跑相关测试，不跑全量套件，也不跑 `check:packages`，服务端渲染和 catalog 过期只有 CI 能拦住。若这两项是红的，而且红在别的节点留下的问题上，PR 正文必须点名这个问题，并写明已经有人认领，否则不能合。改动如果会在组件服务端渲染时执行，合入前要在本地跑一遍 `pnpm docs:build`，因为节点 PR 不跑 `Build and Deploy Docs`，那一项只出现在总 PR #128 上。
+5. **先 `git push origin swarm-tree`**，GitHub 会自动把 PR 标成 Merged。不会自动变的话，再执行 `gh pr merge --rebase`。
+6. `worktree.mjs rm <ID>`，然后 `status.mjs set <ID> 已完成 --pr #N`，提交 `.agents-work` 并推送。
 
 推送前要先设代理：`export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890`
 
