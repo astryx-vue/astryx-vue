@@ -1,4 +1,5 @@
 import type { AstryxLocale } from '../types.js'
+import { englishPlural, formatCount } from './shared.js'
 
 export interface PowerSearchOperatorMessages {
   contains: string
@@ -44,6 +45,8 @@ export interface PowerSearchMessages {
     addFilter: string
     removeFilter: string
     group: string
+    /** 组内 AND / OR 切换按钮的无障碍名。 */
+    groupOperator: string
     delete: string
     cancel: string
     apply: string
@@ -76,8 +79,8 @@ const operatorsEn: PowerSearchOperatorMessages = {
   notEndsWith: 'does not end with',
   is: 'is',
   isNot: 'is not',
-  equals: 'equals',
-  notEquals: 'does not equal',
+  equals: 'is',
+  notEquals: 'is not',
   greaterThan: 'is greater than',
   lessThan: 'is less than',
   greaterThanOrEqual: 'is greater than or equal to',
@@ -123,11 +126,11 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
     results: 'Search results',
     empty: 'No results',
     removeFilter: label => `Remove ${label}`,
-    resultCount: count => `${new Intl.NumberFormat('en').format(count)} ${count === 1 ? 'result' : 'results'}`,
-    itemsCount: count => `${new Intl.NumberFormat('en').format(count)} ${count === 1 ? 'item' : 'items'}`,
-    entitiesCount: count => `${new Intl.NumberFormat('en').format(count)} ${count === 1 ? 'entity' : 'entities'}`,
-    filtersCount: count => `${new Intl.NumberFormat('en').format(count)} ${count === 1 ? 'filter' : 'filters'}`,
-    more: count => `${new Intl.NumberFormat('en').format(count)} more`,
+    resultCount: count => `${formatCount(count, 'en')} ${englishPlural(count, 'result', 'results')}`,
+    itemsCount: count => `${formatCount(count, 'en')} ${englishPlural(count, 'item', 'items')}`,
+    entitiesCount: count => `${formatCount(count, 'en')} ${englishPlural(count, 'entity', 'entities')}`,
+    filtersCount: count => `${formatCount(count, 'en')} ${englishPlural(count, 'filter', 'filters')}`,
+    more: count => `${formatCount(count, 'en')} more`,
     dateRange: 'date range',
     operators: operatorsEn,
     editor: {
@@ -136,6 +139,7 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
       addFilter: '+ Add filter',
       removeFilter: 'Remove filter',
       group: 'Group',
+      groupOperator: 'Group operator',
       delete: 'Delete',
       cancel: 'Cancel',
       apply: 'Apply',
@@ -165,11 +169,11 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
     results: '搜索结果',
     empty: '没有结果',
     removeFilter: label => `移除${label}`,
-    resultCount: count => `${new Intl.NumberFormat('zh-CN').format(count)} 个结果`,
-    itemsCount: count => `${new Intl.NumberFormat('zh-CN').format(count)} 个项目`,
-    entitiesCount: count => `${new Intl.NumberFormat('zh-CN').format(count)} 个实体`,
-    filtersCount: count => `${new Intl.NumberFormat('zh-CN').format(count)} 个筛选条件`,
-    more: count => `另外 ${new Intl.NumberFormat('zh-CN').format(count)} 个`,
+    resultCount: count => `${formatCount(count, 'zh-CN')} 个结果`,
+    itemsCount: count => `${formatCount(count, 'zh-CN')} 个项目`,
+    entitiesCount: count => `${formatCount(count, 'zh-CN')} 个实体`,
+    filtersCount: count => `${formatCount(count, 'zh-CN')} 个筛选条件`,
+    more: count => `另外 ${formatCount(count, 'zh-CN')} 个`,
     dateRange: '日期范围',
     operators: operatorsZh,
     editor: {
@@ -178,6 +182,7 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
       addFilter: '＋ 添加筛选条件',
       removeFilter: '移除筛选条件',
       group: '分组',
+      groupOperator: '组内条件关系',
       delete: '删除',
       cancel: '取消',
       apply: '应用',

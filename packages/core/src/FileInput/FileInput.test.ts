@@ -57,7 +57,7 @@ describe('file input', () => {
     transfer.items.add(file('notes.txt', 'text/plain'))
     Object.defineProperty(input.element, 'files', { value: transfer.files })
     await input.trigger('change')
-    expect(wrapper.text()).toContain('notes.txt is not an accepted file type')
+    expect(wrapper.text()).toContain('"notes.txt" is not an accepted file type')
   })
 
   it('shows the labelTooltip from the field label', () => {

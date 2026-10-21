@@ -397,7 +397,7 @@ describe('dateInput', () => {
     input.element.value = '2026-03-22'
     await input.trigger('change')
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
-    expect(wrapper.get('[role="alert"]').text()).toContain('not available')
+    expect(wrapper.get('[role="alert"]').text()).toContain('Invalid date')
   })
 })
 

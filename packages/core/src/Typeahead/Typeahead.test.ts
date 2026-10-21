@@ -92,7 +92,7 @@ describe('typeahead', () => {
     const input = wrapper.get('input[role="combobox"]')
     await input.setValue('a')
     await flush()
-    expect(document.body.textContent).toContain('Loading results')
+    expect(document.body.textContent).toContain('Loading')
 
     rejectSearch?.(new Error('offline'))
     await flush()

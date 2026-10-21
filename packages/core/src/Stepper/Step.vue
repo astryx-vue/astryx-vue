@@ -54,8 +54,8 @@ const accessibleName = computed(() => {
         ? messages.value.stepper.status.completed
         : null
   if (status == null)
-    return messages.value.stepper.goToStep(stepNumber)
-  return messages.value.stepper.goToStepWithStatus(stepNumber, status)
+    return messages.value.stepper.goToStep(stepNumber, props.label)
+  return messages.value.stepper.goToStepWithStatus(stepNumber, props.label, status)
 })
 
 const hiddenStatus = computed(() => {

@@ -35,7 +35,7 @@ describe('mobile-nav', () => {
     expect(dialog?.textContent).toContain('Menu')
     expect(dialog?.textContent).toContain('Inbox')
 
-    await wrapper.get('[aria-label="Close"]').trigger('click')
+    await wrapper.get('.astryx-mobile-nav__close').trigger('click')
     await nextTick()
     expect(document.body.querySelector('dialog')?.hasAttribute('open')).toBe(false)
     wrapper.unmount()

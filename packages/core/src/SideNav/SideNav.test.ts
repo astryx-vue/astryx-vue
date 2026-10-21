@@ -22,7 +22,7 @@ describe('side-nav', () => {
     })
 
     const nav = wrapper.get('nav')
-    expect(nav.attributes('aria-label')).toBe('Sidebar')
+    expect(nav.attributes('aria-label')).toBe('Side navigation')
     expect(nav.attributes('data-collapsed')).toBeUndefined()
     expect(wrapper.get('.astryx-side-nav__heading-row').find('[aria-label="Collapse sidebar"]').exists()).toBe(true)
     expect(wrapper.find('.astryx-side-nav__bottom [aria-label="Collapse sidebar"]').exists()).toBe(false)
