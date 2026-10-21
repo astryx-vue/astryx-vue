@@ -686,15 +686,26 @@ export type {
 export {
   applyInlinePlugins,
   applyMarkdownPlugins,
+  createIncrementalState,
+  decodeMarkdownCharacterReferences,
   defineMarkdownPlugin,
   isMarkdownExtensionNode,
   Markdown,
+  parseInline,
+  parseInlineAst,
   parseMarkdown,
+  parseMarkdownAst,
+  parseMarkdownIncremental,
   slugify,
   uniqueSlug,
+  visitMarkdownNodes,
 } from './Markdown/index.js'
 export type {
+  BlockNode,
+  InlineNode,
   MarkdownAlign,
+  MarkdownAstPhrasingContent,
+  MarkdownAstRoot,
   MarkdownAutolink,
   MarkdownCitationStyle,
   MarkdownCodeProps,
@@ -715,6 +726,8 @@ export type {
   MarkdownSource,
   MarkdownTransformContext,
   ParseMarkdownOptions,
+  ParseOptions,
+  SourceRange,
 } from './Markdown/index.js'
 export { MetadataList, MetadataListItem } from './MetadataList/index.js'
 export type {
