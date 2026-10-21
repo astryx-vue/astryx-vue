@@ -59,6 +59,7 @@ describe('icon', () => {
       'stop',
       'microphone',
       'image',
+      'number-input-stepper-down',
     ])
     expect(new Set(slugs).size).toBe(slugs.length)
   })

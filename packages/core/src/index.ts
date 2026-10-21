@@ -538,14 +538,17 @@ export {
   useSemanticIcon,
 } from './Icon/index.js'
 export type {
+  ExtendedIconName,
   IconColor,
   IconGlyphName,
   IconifyCollection,
   IconifyIcon,
   IconName,
   IconProps,
+  IconRegistry,
   IconSize,
   IconSlots,
+  NamespacedIconName,
   SemanticIconMap,
 } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
