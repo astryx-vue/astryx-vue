@@ -64,12 +64,20 @@
     font-family: var(--astryx-font-family-body, Figtree, sans-serif);
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
-    /* A held pointer drives the highlight; the browser's own press and preview
-       affordances must not compete with it. */
-    touch-action: pan-y;
+    /* A menu that fits keeps the pinch gesture. Scrolling is opted in below. */
+    touch-action: pinch-zoom;
     user-select: none;
     -webkit-touch-callout: none;
     /* The surface is an internal focus target for pointer opens, not a control. */
+    outline: none;
+  }
+
+  .astryx-dropdown-menu[data-overflow='true'] {
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* A pointer close returns focus without painting the button's focus ring. */
+  .astryx-button[data-astryx-focus-ring='off']:focus-visible {
     outline: none;
   }
 
@@ -269,6 +277,7 @@
     gap: var(--astryx-spacing-0-5, 2px);
     min-width: 0;
     outline: none;
+    touch-action: pinch-zoom;
   }
 
   .astryx-dropdown-menu-drill[hidden] {

@@ -106,7 +106,7 @@ export interface MoreMenuProps {
   /**
    * Accessible name of the trigger button and of the menu itself, and the text
    * of the trigger's tooltip.
-   * @default 'More options'
+   * @default the active locale (`More options` in English)
    */
   label?: string
   /**

@@ -191,7 +191,7 @@ export interface ContextMenuProps {
   size?: ContextMenuSize
   /**
    * Accessible name of the menu panel, announced when it opens.
-   * @default 'Context menu'
+   * @default the active locale (`Context menu` in English)
    */
   label?: string
   /**
