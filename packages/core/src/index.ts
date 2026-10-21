@@ -467,6 +467,7 @@ export { Field, FieldLabel } from './Field/index.js'
 export type {
   FieldLabelProps,
   FieldLabelSlots,
+  FieldPartStylingProps,
   FieldProps,
   FieldSlotProps,
   FieldSlots,

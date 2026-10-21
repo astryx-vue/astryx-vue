@@ -40,6 +40,10 @@ footer: false
       <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>Forwarded unchanged to native autocomplete.</td></tr>
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>Localized clear-button name.</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>Localized loading-indicator name.</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container: the Field box around the label, control box, and status message. Has no effect, and warns in development, where no Field box renders (inside InputGroup and in a horizontal-labels FormLayout).</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the control box: the element that paints the border and background and holds the icons and clear button. Never reaches the native input.</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the control box.</td></tr>
     </tbody>
   </table>
 </div>
@@ -128,7 +132,7 @@ Template refs expose these properties and methods:
 ## Native attributes
 
 - `maxlength`, `minlength`, `pattern`, `required`, `form`, `aria-*`, `data-*` and native event listeners are forwarded to the native `input`.
-- `class` and `style` apply to the input wrapper; `width` applies to the whole `Field`.
+- `class` and `style` apply to the control box and combine with `controlClass` and `controlStyle`. Use `containerClass` and `containerStyle` for the Field container. `width` applies to the whole `Field`.
 - The component manages `value`, `type`, `disabled`, `readonly`, `autofocus` and core ARIA state. Use the corresponding component props.
 - `aria-describedby` and `aria-labelledby` merge with the component's internal association IDs.
 

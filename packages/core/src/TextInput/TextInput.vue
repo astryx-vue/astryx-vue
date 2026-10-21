@@ -9,6 +9,7 @@ import { useInputContainer } from '../composables/useInputContainer.js'
 import { useInputStatusIcon } from '../composables/useInputStatusIcon.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { useAriaRequired } from '../FormLayout/context.js'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -57,9 +58,14 @@ function select(): void {
 }
 defineExpose({ element, focus, blur, select })
 
-const controlledAttrs = new Set(['class', 'style', 'id', 'value', 'type', 'disabled', 'readonly', 'autofocus', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'])
+const parts = useFieldPartStyling({
+  component: 'TextInput',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'value', 'type', 'disabled', 'readonly', 'autofocus', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'],
+})
 function inputAttrs(): InputHTMLAttributes {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
+  return parts.forwardedAttrs() as InputHTMLAttributes
 }
 function describedBy(fieldIds?: string): string | undefined {
   return [attrs['aria-describedby'], fieldIds, showsDisabledMessage.value ? disabledDescriptionId : undefined].filter(Boolean).join(' ') || undefined
@@ -119,13 +125,14 @@ onMounted(() => {
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
     :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
     :status="status" :status-variant="statusVariant"
+    :class="parts.containerClass.value" :style="parts.containerStyle.value"
   >
     <template v-if="$slots.labelIcon" #labelIcon>
       <slot name="labelIcon" />
     </template>
     <template #default="field">
       <div
-        ref="container" class="astryx-text-input" :class="attrs.class" :style="attrs.style"
+        ref="container" class="astryx-text-input" :class="parts.controlClass()" :style="parts.controlStyle()"
         :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
         @click="inputContainer.onClick" @mouseup="inputContainer.onMouseUp"
         @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"

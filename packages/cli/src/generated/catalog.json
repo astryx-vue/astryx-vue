@@ -32477,6 +32477,30 @@
                 "type": "`string`",
                 "default": "Loading",
                 "description": "Localized loading-indicator name."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container: the Field box around the label, control box, and status message. Has no effect, and warns in development, where no Field box renders (inside InputGroup and in a horizontal-labels FormLayout)."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the control box: the element that paints the border and background and holds the icons and clear button. Never reaches the native input."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the control box."
               }
             ]
           },
@@ -32678,6 +32702,30 @@
                 "type": "`string`",
                 "default": "Loading",
                 "description": "加载指示器的无障碍名称，用于本地化。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳（Field 那一层，包着标签、输入框和状态消息）的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到输入框本体（画边框和背景、装着图标和清除按钮的盒子）的 class。不会落到原生 input 上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到输入框本体的行内样式。"
               }
             ]
           },
@@ -32846,6 +32894,10 @@
       "notes": {
         "en": [
           {
+            "heading": "Styling the container and the control",
+            "text": "`TextInput` has two parts you can style:\n\n- **Container**: the `Field` box around the label, the control box, and the status message. Use `container-class` and `container-style`.\n- **Control**: the box that paints the border and background and holds the icons and the clear button. Use `control-class` and `control-style`.\n\nEach set stays on its own part. Neither set reaches the native `<input>`.\n\n```vue\n<TextInput\n  v-model=\"name\"\n  label=\"Name\"\n  container-class=\"my-field\"\n  :control-style=\"{ borderRadius: '12px' }\"\n/>\n```\n\nA `class` or `style` written directly on `<TextInput>` still lands on the control box and applies together with `control-class`. `id`, `data-*`, `aria-*`, and event listeners land on the native `<input>`.\n\nInside an `InputGroup`, and inside a `horizontal-labels` `FormLayout`, no container renders, so `container-*` has no effect and warns in development. To style an `InputGroup`, put the class on the `InputGroup` itself."
+          },
+          {
             "heading": "Accessibility",
             "text": "A `label` is required. Screen readers rely on it to describe what the field is for, and a `placeholder` is only visible while the field is empty, so it cannot stand in for a label.\n\nThe component wires the label, description and status message together with ARIA attributes, so assistive technology reads them as one unit:\n\n- `description` and `status.message` connect to `aria-describedby`.\n- An error status sets `aria-invalid`.\n- A required field sets `aria-required`.\n\n`isRequired` renders the required indicator and sets the ARIA state. When you also need native browser validation — for example when you rely on form submission to block an incomplete field — pass `required` as well."
           },
@@ -32871,7 +32923,7 @@
           },
           {
             "heading": "Native attributes",
-            "text": "- `maxlength`, `minlength`, `pattern`, `required`, `form`, `aria-*`, `data-*` and native event listeners are forwarded to the native `input`.\n- `class` and `style` apply to the input wrapper; `width` applies to the whole `Field`.\n- The component manages `value`, `type`, `disabled`, `readonly`, `autofocus` and core ARIA state. Use the corresponding component props.\n- `aria-describedby` and `aria-labelledby` merge with the component's internal association IDs."
+            "text": "- `maxlength`, `minlength`, `pattern`, `required`, `form`, `aria-*`, `data-*` and native event listeners are forwarded to the native `input`.\n- `class` and `style` apply to the control box and combine with `controlClass` and `controlStyle`. Use `containerClass` and `containerStyle` for the Field container. `width` applies to the whole `Field`.\n- The component manages `value`, `type`, `disabled`, `readonly`, `autofocus` and core ARIA state. Use the corresponding component props.\n- `aria-describedby` and `aria-labelledby` merge with the component's internal association IDs."
           },
           {
             "heading": "Disabled and read-only states",
@@ -32895,6 +32947,10 @@
           }
         ],
         "zh": [
+          {
+            "heading": "给外壳和本体加样式",
+            "text": "`TextInput` 有两个可以加样式的部件：\n\n- **外壳**：`Field` 那一层，包着标签、输入框和状态消息。用 `container-class` 和 `container-style`。\n- **本体**：画边框和背景、里面装着图标和清除按钮的那个盒子。用 `control-class` 和 `control-style`。\n\n两组属性各落各的位置，不会改道，也不会落到原生 `<input>` 上。\n\n```vue\n<TextInput\n  v-model=\"name\"\n  label=\"姓名\"\n  container-class=\"my-field\"\n  :control-style=\"{ borderRadius: '12px' }\"\n/>\n```\n\n直接写在 `<TextInput>` 上的 `class` 和 `style` 仍然落在本体上，和 `control-class` 一起生效。`id`、`data-*`、`aria-*` 和事件监听则落在原生 `<input>` 上。\n\n在 `InputGroup` 里，以及横向标签的 `FormLayout` 里，字段没有外壳，`container-*` 不生效，开发环境会给出警告。要给 `InputGroup` 加样式，请直接写在 `InputGroup` 上。"
+          },
           {
             "heading": "无障碍",
             "text": "`label` 是必填项。屏幕阅读器靠它说明这个字段是做什么的；`placeholder` 只在输入框为空时可见，用户一开始输入就消失，不能用它代替标签。\n\n标签、说明和状态消息由组件通过 ARIA 属性串联起来，辅助技术能把它们当成一个整体读出：\n\n- `description` 与 `status.message` 关联到 `aria-describedby`。\n- 出错时自动设置 `aria-invalid`。\n- 字段必填时自动设置 `aria-required`。\n\n`isRequired` 负责显示必填提示并设置 ARIA 状态。如果还需要浏览器原生的必填校验——例如依赖表单提交来拦截未填写的字段——再额外传入 `required`。"
@@ -32921,7 +32977,7 @@
           },
           {
             "heading": "原生属性",
-            "text": "- `maxlength`、`minlength`、`pattern`、`required`、`form`、`aria-*`、`data-*` 和原生事件监听器传入原生 `input`。\n- `class` 和 `style` 作用于输入框外层。`width` 作用于整个 `Field`。\n- `value`、`type`、`disabled`、`readonly`、`autofocus` 与核心 ARIA 状态由组件管理，请使用对应的组件属性。\n- `aria-describedby` 和 `aria-labelledby` 会与组件内部的关联 ID 合并。"
+            "text": "- `maxlength`、`minlength`、`pattern`、`required`、`form`、`aria-*`、`data-*` 和原生事件监听器传入原生 `input`。\n- `class` 和 `style` 作用于输入框本体，和 `controlClass`、`controlStyle` 一起生效；给外壳加样式用 `containerClass`、`containerStyle`。`width` 作用于整个 `Field`。\n- `value`、`type`、`disabled`、`readonly`、`autofocus` 与核心 ARIA 状态由组件管理，请使用对应的组件属性。\n- `aria-describedby` 和 `aria-labelledby` 会与组件内部的关联 ID 合并。"
           },
           {
             "heading": "禁用与只读",
