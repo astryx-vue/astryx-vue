@@ -28,9 +28,18 @@
 
 ## 现在的状态
 
-**阶段 B 除了 B7 都完成了**：B1（#130）、B2（#131）、B3、B4（#132）、B5（#129）、B6（#133）。阶段 A、E 和 F0 也已完成。C16 已合入 #135（通过 15/15，文档补了 Ghost）。C14 已合入 #134（通过 28/28）。C1 已合入 #136（通过 22/22）。C1 合入后 C3 自动变成可开工。现在没有在跑的子代理，也没有节点工作区。
+阶段 A、B、E 和 F0 都已完成。B7 已合入 #137（通过 25/25）。C 阶段已合入：C16 #135、C14 #134、C1 #136、C9 #138（第 2 轮通过 28/28）、C2 #140（通过 20/20）、C6 #143（通过 26/26）。依赖齐了之后自动改成可开工的是：C5（B7 完成后）、F1a 和 F3h（C9 完成后）、C10、C11、C12、C13（C6 完成后；C10 还依赖已经完成的 C9 和 C1，C11 还依赖已经完成的 C2）。
 
-可以开工的节点按 `node scripts/swarm/status.mjs ready` 的顺序排：C7、B7、C6、C9、C2、C3、C15、D1、F2a、D4a。其中 D4a 要等用户签字。
+当前并行，都还没合进 `swarm-tree`：
+
+- 🔷 **C15** [#141](https://github.com/astryx-vue/astryx-vue/pull/141)（`sync/c15-feedback`）：第 2 轮验收中。
+- 🔴 **B4-fix** [#142](https://github.com/astryx-vue/astryx-vue/pull/142)（`sync/b4-fix-layer-escape`）：第 2 轮返工，Escape 嵌套深度。这不是总表里的新节点，B4 本身仍是已完成；不要把它写进状态总表。
+
+可以开工的节点按 `node scripts/swarm/status.mjs ready` 的顺序排：C7、C3、C10、C11、C12、C5、C13、D1、F2a、D4a、F1a、F3h。其中 D4a 要等用户签字。
+
+## 后续
+
+- **#128 CI 可能继续红。** catalog 修好之后也不要当成过了。根因是 C9 #138 留下的：`packages/core/package.json` 的 `./Markdown/parser`、`./Markdown/plugins`、`./Markdown/plugin-renderer` 指向 `dist/Markdown/...`，但这三份 dist 没有生成。`packages/core/tsdown.config.ts` 的入口只有 `src/*/index.ts` 和 `src/Icon/plugin.ts`，扫不到 `src/Markdown/parser`、`src/Markdown/plugin-protocol`、`src/Markdown/plugin-renderer`。交给后面的节点修构建入口或导出，不要在进度文档的 PR 里改组件或打包配置。
 
 ## 用户最新的工作方式要求
 
