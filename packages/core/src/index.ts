@@ -463,7 +463,7 @@ export type {
 } from './DropdownMenu/index.js'
 export { EmptyState } from './EmptyState/index.js'
 export type { EmptyStateHeadingLevel, EmptyStateProps, EmptyStateSlots } from './EmptyState/index.js'
-export { Field, FieldLabel } from './Field/index.js'
+export { Field, FieldLabel, InputClearButton } from './Field/index.js'
 export type {
   FieldLabelProps,
   FieldLabelSlots,

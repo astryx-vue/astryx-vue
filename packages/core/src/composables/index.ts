@@ -159,7 +159,7 @@ export type { MergedRef, MergedRefHandle } from './useMergedRefs.js'
 
 export { addMonths, buildMonthGrid, parseISODate, todayISODate, toISODate } from './useMonthGrid.js'
 
-export { useNumberField } from './useNumberField.js'
+export { computeSteppedValue, useNumberField } from './useNumberField.js'
 export type { NumberField, NumberStepDirection, UseNumberFieldOptions } from './useNumberField.js'
 
 export { computeOverflow, useOverflow } from './useOverflow.js'
@@ -189,6 +189,8 @@ export type {
   UseResizableOptions,
   UseResizableSingleOptions,
 } from './useResizable.js'
+
+export { useResolvedLabelHidden } from './useResolvedLabelHidden.js'
 
 export { useRestoreFocus } from './useRestoreFocus.js'
 export type { RestoreFocus, UseRestoreFocusOptions } from './useRestoreFocus.js'
