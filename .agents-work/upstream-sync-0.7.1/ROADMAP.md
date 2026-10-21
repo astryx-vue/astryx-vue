@@ -453,7 +453,7 @@ flowchart TB
 | D4b CLI 选定能力实现 | 实现 D4a 选定的能力。已知要做的有：搜索排序、`docs --depth`、结果标明来源包、`build` 选起始模板的逻辑、顺手拆开 `cli.ts`。上游已经删除 `astryx layout` 命令组，我们如果有对应的命令也一并删除。 | D4a A4 E1 | D4a 清单逐项完成；命令行各子命令的测试全部通过；`cli.ts` 不超过 500 行。 |
 | D5 CLI 页面模板 | 命令行新增「模型对比、可折叠表格、树形表格、画布编辑器」4 个全新模板，并更新已有模板，让每个模板的样子和上游一致。**用户已报告的问题（必做）**：① 28 个模板里有 163 处设计变量没加 `--astryx-` 前缀（比如 `var(--spacing-4)`）。这些变量不存在，内边距、间距、背景色、圆角都会失效。settings-dialog 的设置行挤成一团就是这个原因。全部补上前缀，并加一道检查：模板里出现不带前缀的设计变量时，检查失败。② settings-dialog 的设置行版式改成和上游 `SettingsRow`、`SettingsCard` 一致：每行带图标，标题和说明分两行，控件靠右，窄屏时换成上下排列。③ settings 等 10 个模板用了 `is-label-hidden`，在 C1、C3 统一属性名之前不生效，标签照样显示，把标题挤得折行。C1、C3 完成后，在浏览器里确认这 10 个模板都恢复正常。每个模板都要用 `pnpm visual` 或截图和上游对照。 | D4b C全部 | 模板均能成功生成并能在浏览器中正常运行。 |
 | D6 FR10 迁移 codemod | 为用户提供自动化改代码脚本，把旧组件根元素样式写法自动改为 container\* / control\* 形式。先评估在 Vue 单文件组件里是否能稳定自动改；不能的话就退化为输出一份迁移核对清单。 | D4b C1 C2 C3 C5 | 脚本能正常运行并提供准确的代码修改或清晰的指引清单。 |
-| D7 迁移指南与版本信息 | 编写中英文版本升级迁移指南，逐条写清每个破坏性改动（改动前、改动后、怎么改）；更新文档站版本信息；重新生成供 AI 查阅的 llms.txt 文档。 | C全部 | 文档描述清晰无遗漏；版本号更新正确；llms.txt 文件内容最新。 |
+| D7 迁移指南与版本信息 | 编写中英文版本升级迁移指南，逐条写清每个破坏性改动（改动前、改动后、怎么改）；更新文档站版本信息；重新生成供 AI 查阅的 llms.txt 文档。 **（用户已确认）** 清理 36 个文档示例里写死的 `provideAstryxLocale('en')`，让示例跟随文档站当前的语言。 | C全部 | 文档描述清晰无遗漏；版本号更新正确；llms.txt 文件内容最新。 |
 | D8 演练场同步 | 把 D5 中做好的全新页面模板同步放入在线演练场供体验。 | D5 E2 | 演练场能在线无报错加载所有新模板。 |
 
 ---
@@ -487,7 +487,7 @@ flowchart TB
 | F3c lab 浮层与引导 | Drawer、Tour。 | F0 C7 C14 C16 | 抽屉和引导流程和上游一致。 |
 | F3d lab 图表类 | Chart 组合写法、Brush、Zoom、Select、m4Reduce、useChartRange、Radial、Sankey，以及 ThreeD 的 SVG 部分。不含 GL。 | F2b C16 | 和上游对照一致。 |
 | F3h lab 代码类 | CodeEditor、DiffViewer。 | F0 C9 | 和上游对照一致。 |
-| F3e lab 对话 | 只做 ChatEmojiPicker、ChatReactionBar。另外 3 个组件已经在 core 里，核对上游 lab 的改动，有差异就交给 C10。 | F0 C7 C10 | 和上游对照一致。 |
+| F3e lab 对话 | 只做 ChatEmojiPicker、ChatReactionBar。另外 3 个组件已经在 core 里，核对上游 lab 的改动，有差异就交给 C10。 **（用户已确认）** 接入上游 lab 里 Comments 的 76 个 i18n 键。 | F0 C7 C10 | 和上游对照一致。 |
 | F3f lab 文档 | 文档站里单独开一个 lab 分区，页面标上 canary。 | F3a F3b F3g F3c F3d F3h F3e | 分区和示例都可以用。 |
 | F4 Nuxt 模块 | `@astryx-vue/nuxt`：只注册 core 和 themes，给新包留开关；在 Nuxt 示例项目里跑通 SSR。 | A3 C全部 | 开发和打包部署都能跑通。 |
 | F5 vega | **不做**。理由见 ADR 第 5 节。替代做法：在 F2c 文档里写「和 Vega-Lite 一起用」。台账 4 条标「不适用」。 | F0 | — |

@@ -56,12 +56,12 @@
 - **B1**：连续 3 轮不过之后，用户同意由总控直接改那一句文档，再派人复查。以后遇到「只差一句文字」的情况，也可以先问用户能不能这样处理。
 - ROADMAP 里新增了一条 C 阶段共同要求：禁用控件的指针一律用 `default`，不用 `not-allowed`（来自 B2）。
 
-## 还在等用户回答的问题
+## 用户已经答复的问题
 
-- 要不要写入记忆：「不用 `!important`，由 check-no-important.mjs 强制」。
-- 36 个文档示例写死了 `provideAstryxLocale('en')`：建议交给 D7。
-- 上游 lab 的 Comments 有 76 个 i18n 键：建议交给 F3e。
-- D4a（CLI 能力对照与取舍）需要用户签字。
+- 「不用 `!important`」不写进长期记忆。仓库总纲和 `check-no-important.mjs` 已经足够。
+- 36 个文档示例写死了 `provideAstryxLocale('en')`，**交给 D7** 统一清理。
+- 上游 lab 里 Comments 的 76 个 i18n 键，**交给 F3e**，做 Comments 组件时一起接入。
+- D4a 要用户签字。等 D4a 出了对照清单再找用户，在那之前不用问。
 
 ## 复核时要特别留意的坑（这几轮总结出来的）
 
