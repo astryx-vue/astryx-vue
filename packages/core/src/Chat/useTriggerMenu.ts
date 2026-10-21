@@ -3,6 +3,7 @@ import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { ChatComposerToken, ChatComposerTrigger } from './types.js'
 import { computed, onScopeDispose, reactive, ref, useId } from 'vue'
 import { isImeKeyEvent } from '../composables/internal/ime.js'
+import { flattenSearchItems } from './groupSearchItems.js'
 import { caretTextNode, findActiveTrigger, isUnmatchedMultiWordQuery, textBeforeCursor } from './triggerQuery.js'
 
 export interface TriggerMenuState {
@@ -280,6 +281,10 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
     state.highlightedIndex = next
   }
 
+  function highlightedItem(): SearchableItem | undefined {
+    return flattenSearchItems(state.items)[state.highlightedIndex]
+  }
+
   const isMenuVisible = computed(() => state.isActive && !state.isHidden)
 
   function handleKeyDown(event: KeyboardEvent): boolean {
@@ -323,7 +328,7 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
       return true
     }
     if (event.key === 'Enter' || event.key === 'Tab') {
-      const item = state.items[state.highlightedIndex]
+      const item = highlightedItem()
       if (!item)
         return false
       event.preventDefault()

@@ -1074,6 +1074,16 @@
     border-radius: var(--astryx-button-radius, var(--astryx-radius-full, 9999px));
   }
 
+  /* 没有可发送内容时不要留着实心强调色。停用只盖住发送，停止按钮不带 disabled。 */
+  .astryx-chat-send:disabled,
+  .astryx-chat-send[aria-disabled='true'] {
+    color: var(--astryx-color-text-secondary);
+    background-color: var(--astryx-color-neutral);
+    background-image: none;
+    opacity: 1;
+    cursor: default;
+  }
+
   .astryx-chat-drawer {
     position: relative;
     z-index: 1;

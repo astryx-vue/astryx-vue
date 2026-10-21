@@ -274,6 +274,46 @@ describe('useTriggerMenu', () => {
     expect(enter.defaultPrevented).toBe(false)
   })
 
+  it('inserts the highlighted row on Enter when it is not the first item', async () => {
+    const selected: string[] = []
+    const menu = mountMenu([mention({
+      searchSource: createStaticSource([
+        { id: 'ada', label: 'Ada Lovelace' },
+        { id: 'grace', label: 'Grace Hopper' },
+      ]),
+      onSelect: (item) => {
+        selected.push(item.id)
+        return `@${item.id}`
+      },
+    })])
+    await type(menu, '@')
+    expect(menu.handleKeyDown(key('ArrowDown'))).toBe(true)
+    expect(menu.state.highlightedIndex).toBe(1)
+    expect(menu.handleKeyDown(key('Enter'))).toBe(true)
+    expect(selected).toEqual(['grace'])
+  })
+
+  it('inserts the grouped row under the highlight, not the first source item', async () => {
+    const selected: string[] = []
+    const menu = mountMenu([mention({
+      searchSource: createStaticSource([
+        { id: 'ada', label: 'Ada Lovelace' },
+        { id: 'maria', label: 'María José García' },
+        { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },
+        { id: 'grace', label: 'Grace Hopper', auxiliaryData: { group: 'Reviewers' } },
+      ]),
+      onSelect: (item) => {
+        selected.push(item.id)
+        return { value: `@${item.id}`, label: `@${item.label}` }
+      },
+    })])
+    await type(menu, '@')
+    expect(menu.handleKeyDown(key('ArrowDown'))).toBe(true)
+    expect(menu.state.highlightedIndex).toBe(1)
+    expect(menu.handleKeyDown(key('Enter'))).toBe(true)
+    expect(selected).toEqual(['grace'])
+  })
+
   it('does not pick a row while an IME composition key is pressed', async () => {
     const menu = mountMenu([mention(), command()])
     await type(menu, '@Cindy')

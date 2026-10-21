@@ -39,3 +39,8 @@ export function groupSearchItems<T extends SearchableItem>(items: readonly T[]):
   const named = order.map(heading => ({ heading, items: groups.get(heading) ?? [] }))
   return ungrouped.length > 0 ? [...named, { heading: null, items: ungrouped }] : named
 }
+
+/** Same order as the rendered options: named groups first, ungrouped last. */
+export function flattenSearchItems<T extends SearchableItem>(items: readonly T[]): T[] {
+  return groupSearchItems(items).flatMap(group => group.items)
+}

@@ -42,6 +42,78 @@ describe('chat composer', () => {
     expect(wrapper.emitted('submit')).toHaveLength(1)
   })
 
+  it('keeps send disabled for an empty or whitespace draft, including attachments', async () => {
+    const wrapper = mount(ChatComposer, {
+      slots: { drawer: '<div class="drawer-slot">notes.md</div>' },
+    })
+    const button = wrapper.get('button.astryx-chat-send')
+    expect(button.attributes('disabled')).toBe('')
+    expect(button.attributes('aria-disabled')).toBeUndefined()
+
+    await button.trigger('click')
+    expect(wrapper.emitted('submit')).toBeUndefined()
+
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    typeInto(editable.element, ' \n\t ')
+    await nextTick()
+    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBe('')
+
+    typeInto(editable.element, 'hello')
+    await nextTick()
+    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBeUndefined()
+    await wrapper.get('button.astryx-chat-send').trigger('click')
+    expect(wrapper.emitted('submit')).toEqual([['hello']])
+  })
+
+  it('inserts the highlighted mention on Enter, not the first source item', async () => {
+    const wrapper = mount(ChatComposerInput, {
+      attachTo: document.body,
+      props: {
+        triggers: [{
+          character: '@',
+          hasMultiWordQuery: true,
+          menuLabel: 'People',
+          searchSource: createStaticSource([
+            { id: 'ada', label: 'Ada Lovelace' },
+            { id: 'maria', label: 'María José García' },
+            { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },
+            { id: 'grace', label: 'Grace Hopper', auxiliaryData: { group: 'Reviewers' } },
+          ]),
+          onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}` }),
+        }],
+      },
+    })
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    const field = asHtml(editable.element)
+    field.focus()
+    field.textContent = '@'
+    const textNode = field.firstChild
+    const selection = window.getSelection()
+    const range = document.createRange()
+    if (textNode)
+      range.setStart(textNode, textNode.textContent?.length ?? 0)
+    else
+      range.selectNodeContents(field)
+    range.collapse(true)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+    field.dispatchEvent(new InputEvent('input', { bubbles: true }))
+    await nextTick()
+
+    await editable.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+    const activeId = editable.attributes('aria-activedescendant')
+    expect(activeId).toBeTruthy()
+    const option = document.getElementById(activeId ?? '')
+    expect(option?.textContent).toContain('Grace Hopper')
+    expect(option?.getAttribute('aria-selected')).toBe('true')
+
+    await editable.trigger('keydown', { key: 'Enter' })
+    await nextTick()
+    expect(field.querySelector('[data-astryx-token-value]')?.getAttribute('data-astryx-token-value')).toBe('@grace')
+    wrapper.unmount()
+  })
+
   it('keeps Shift+Enter and an IME commit from sending', async () => {
     const wrapper = mount(ChatComposer)
     const editable = wrapper.get('.astryx-chat-composer-input__editable')

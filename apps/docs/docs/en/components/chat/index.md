@@ -87,7 +87,7 @@ The examples start with the composer beside the transcript, then follow layout, 
 
 <DemoExample
   :demo="chatComposerShell"
-  description="A field with an attachment drawer, a header button, and dictation. The drawer handle collapses the attachments. The microphone starts listening in browsers that support speech recognition."
+  description="A field with an attachment drawer, a header button, and dictation. With no text the send button is muted and cannot be clicked; it turns into the solid button once there is something to send. Attachments alone do not enable it. The drawer handle collapses the attachments. The microphone starts listening in browsers that support speech recognition."
   locale="en"
   title="ChatComposer — Shell"
 />
@@ -101,7 +101,7 @@ The examples start with the composer beside the transcript, then follow layout, 
 
 <DemoExample
   :demo="chatComposerMentions"
-  description="Type @ at the start of a word and keep going through spaces, as in Ada Lov, and the list narrows to Ada Lovelace. A phrase with no match hides the list and leaves the typed text alone. Type / for a one-word command; a space closes that list. A person becomes a chip. A command is inserted as text."
+  description="Type @ at the start of a word and keep going through spaces, as in Ada Lov, and the list narrows to Ada Lovelace. Arrow keys move the highlight, and Enter inserts that row rather than the first person in the list. A phrase with no match hides the list and leaves the typed text alone. Type / for a one-word command; a space closes that list. A person becomes a chip. A command is inserted as text."
   locale="en"
   title="ChatComposerInput — Mentions"
 />
