@@ -49,7 +49,6 @@ const props = withDefaults(defineProps<PowerSearchProps>(), {
 
 const emit = defineEmits<PowerSearchEmits>()
 const slots = defineSlots<PowerSearchSlots>()
-
 const messages = useAstryxMessages()
 const locale = useAstryxLocale()
 const announce = useAnnounce()

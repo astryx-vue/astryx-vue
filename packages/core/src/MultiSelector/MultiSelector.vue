@@ -55,7 +55,6 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
 })
 
 const emit = defineEmits<MultiSelectorEmits>()
-
 const slots = defineSlots<MultiSelectorSlots>()
 
 const CheckboxMark = useIndicator('checkbox')
