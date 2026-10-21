@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TooltipProps } from './types.js'
 import { computed, getCurrentInstance, nextTick, onMounted, onUpdated, ref, useAttrs, watch } from 'vue'
-import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
+import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useTooltip } from './useTooltip.js'
@@ -24,9 +24,6 @@ const props = withDefaults(defineProps<TooltipProps>(), {
   anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
-
-// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
-const teleportTarget = useLayerTeleportTarget()
 
 const attrs = useAttrs()
 const instance = getCurrentInstance()
@@ -58,6 +55,8 @@ const {
 const setContentRef = useMergedRefs<HTMLElement>([contentRef])
 
 const wrapperRef = ref<HTMLElement | null>(null)
+// Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。
+const teleportTarget = useResolvedLayerTeleport(computed(() => props.anchor ?? wrapperRef.value))
 // 触发器是插槽内容，这里只负责从包裹元素里把它找出来，再交给 hook 挂事件。
 const isTextTrigger = ref(false)
 const showIndication = computed(() => props.hasHoverIndication === true || (props.hasHoverIndication === 'auto' && isTextTrigger.value))

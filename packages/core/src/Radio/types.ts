@@ -1,6 +1,7 @@
-import type { ComputedRef, InjectionKey, Ref, VNode } from 'vue'
+import type { ComputedRef, Ref, VNode } from 'vue'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldLabelProps, FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
 export type RadioValue = string | number
 export type RadioSize = 'sm' | 'md'
@@ -85,4 +86,4 @@ export interface RadioContext {
   size?: ComputedRef<RadioSize | undefined>
 }
 
-export const radioContextKey: InjectionKey<RadioContext> = Symbol('astryx-radio-context')
+export const radioContextKey = defineLayerScopedKey<RadioContext | undefined>('astryx-radio-context', undefined)

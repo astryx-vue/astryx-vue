@@ -28,7 +28,7 @@
   - 只能这样开：`pnpm visual <组件> --out /tmp/verify-<节点ID>/visual`，或者 `node scripts/swarm/browser-lock.mjs run --purpose <节点ID>-verify -- <命令>`。拿不到锁就排队，不许私开。
   - 文档站用 **<5170 + 槽位号>** 端口（`node scripts/swarm/worktree.mjs ls` 能看到本工作区的槽位），同一时刻只开一个，用完关掉。
   - 看截图用读图工具直接读 PNG 文件。
-  - **涉及界面时，给总控、再转给用户的主证据图必须来自文档站组件页整页。** 中文打开 `http://127.0.0.1:<端口>/components/<slug>`（源文件在 `apps/docs/docs/zh/components/<slug>/`，地址里没有 `/zh/`），需要英文时再打开 `/en/components/<slug>`。图里要能看到文档壳（侧栏，或顶栏和标题区），并滚到有实质 Demo 的段落，不能只剩标题。节点夹具页、Vite preview 单页、`pnpm visual` 的 overview 和卡片拼图、只有一两行示例的首屏，都不能冒充这组图。`pnpm visual` 和夹具只用于内部对像素，报告里要标明。截图放 evidence 或 `/tmp`。evidence 目录已被 gitignore，不要 `git add -f`。详见 SWARM.md「发给用户的验收对照图」。
+  - **涉及界面时，给总控、再转给用户的主证据图必须来自文档站组件页整页。** 中文打开 `http://127.0.0.1:<端口>/components/<slug>`（源文件在 `apps/docs/docs/zh/components/<slug>/`，地址里没有 `/zh/`），需要英文时再打开 `/en/components/<slug>`。桌面图里要看见侧栏，390 宽时要看见顶栏上的「菜单」，并滚到有实质 Demo 的段落，不能只剩标题。节点夹具页、Vite preview 单页、`pnpm visual` 的 overview 和卡片拼图、只有一两行示例的首屏，都不能冒充这组图。`pnpm visual` 和夹具只用于内部对像素，报告里要标明。截图放 evidence 或 `/tmp`。evidence 目录已被 gitignore，不要 `git add -f`。左右对照时，两边必须是同一组件、同一 Demo 区块标题、同一滚动位置、同一交互状态（开/关一致）。原版只截 Overview 里的 Demo，禁止截 Guidance / Practices。没有对位就写「无对位」并发单侧整页，禁止把无关区块拼成对照图。详见 SWARM.md「发给用户的验收对照图」。
 
 ## 检查项
 
@@ -60,7 +60,7 @@
 10. 上游新增或改动的测试用例，都有对应的 Vue 测试，两种 NODE_ENV 下都通过。
 11. 中英文文档、交互示例、`meta.ts` 都更新了：打开中英文两个页面，示例能操作。
 12. 本节点涉及的组件都不在 SSR 已知失败名单 `ssr-known-failures.json` 里。
-13. 附带了四种组合的文档站整页对照图，并且你亲眼看过。报告里每张图标明是「文档站整页」还是「内部 visual/夹具」；给用户的必须写文档站 URL。夹具或 overview 不算这一条。
+13. 附带了四种组合的文档站整页图，并且你亲眼看过。报告里每张图标明是「文档站整页」还是「内部 visual/夹具」；给用户的必须写文档站 URL。夹具或 overview 不算这一条。若做左右对照，左右必须是同一组件、同一 Demo 区块标题、同一滚动位置、同一交互状态（开/关一致）；原版只截 Overview 里的 Demo，禁止截 Guidance / Practices。本地必须是能看到侧栏的 VitePress 文档站整页（390 宽时侧栏收起，改为能看到顶栏上的「菜单」）。没有对位 Demo 就不要硬拼，报告写「无对位」，改发单侧整页。无关区块拼成的图，这一条判不过。
 14. 改到的超过 500 行的源码文件都拆开了，并从 `scripts/guardrails/line-limit-allowlist.json` 里移出。
 
 ### 四、整体

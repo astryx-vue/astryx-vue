@@ -28,9 +28,24 @@
 
 ## 现在的状态
 
-**阶段 B 除了 B7 都完成了**：B1（#130）、B2（#131）、B3、B4（#132）、B5（#129）、B6（#133）。阶段 A、E 和 F0 也已完成。C16 已合入 #135（通过 15/15，文档补了 Ghost）。C14 已合入 #134（通过 28/28）。C1 已合入 #136（通过 22/22）。C1 合入后 C3 自动变成可开工。现在没有在跑的子代理，也没有节点工作区。
+阶段 A、B、E 和 F0 都已完成：B1（#130）、B2（#131）、B3、B4（#132）、B5（#129）、B6（#133）、B7（#137，通过 25/25）。C 阶段已合入：C16 #135（通过 15/15，文档补了 Ghost）、C14 #134（通过 28/28）、C1 #136（通过 22/22）、C9 #138（第 2 轮通过 28/28）、C2 #140（通过 20/20）、C6 #143（通过 26/26）、C15 #141（通过 26/26）、C7 #148（通过 24/24）。
 
-可以开工的节点按 `node scripts/swarm/status.mjs ready` 的顺序排：C7、B7、C6、C9、C2、C3、C15、D1、F2a、D4a。其中 D4a 要等用户签字。
+**B4-fix 不是总表节点，已合入 #142。** 补的是关闭顺序：Escape 只打最上面一层，并补上嵌套深度；同时刷新了 CLI catalog。B4 本身仍是已完成（#132），不要把 B4-fix 写进状态总表。
+
+**C9-exports 不是总表节点，已合入 #146（通过 10/10）。** 修的是 C9 #138 留下的 Markdown 子路径导出：构建会产出 `dist/Markdown/parser`、`plugin-protocol`、`plugin-renderer`。不要把它写进状态总表。
+
+当前并行：
+
+- 🔷 **C3** 选择器家族（#149）：验收中。
+- 🔷 **C10** Chat（#147）：第 2 轮验收中。第 1 轮因分组后 Enter 选错项、空输入时发送按钮未禁用而返工。
+
+可以开工、等待派发：C5、C11、C12、C13、D1、F1a、F2a、F3h。D4a 仍标着可开工，要等用户签字，签字前不要派。
+
+## 后续
+
+**#128 的 CI：** Markdown 三个子路径缺 dist，是 #146 合入前的预期失败，现已由 #146 修好。#142 已经把 CLI catalog 修好了，不要把剩下的红当成 catalog 或 dist 没过。还剩一处要单独修：`DropdownMenuSubMenu` 的服务端渲染测试失败，报 `HTMLElement is not defined`（run [39594900200](https://github.com/astryx-vue/astryx-vue/actions/runs/39594900200)，提交 `0f6f605`，Check and dry-run 与 Test under production shell 都红在 `packages/core/src/ssr-smoke.test.ts`）。这次跑在 `pnpm test` 就停了，还没跑到 `pnpm build`。进度文档的 PR 不要改组件或打包配置。
+
+#128 的描述不要用云代理自己的 PR 正文通道去改标记块以外的内容，否则会叠成重复的两份。整篇新正文在 `.agents-work/upstream-sync-0.7.1/PR128-BODY.md`。请总控用 `cursor-github update_pull_request` 整篇覆盖。
 
 ## 用户最新的工作方式要求
 
@@ -68,6 +83,7 @@
 - **用户明确要求：每一次验证操作都要短小精干、可重复，不要整一个耗时很长、一直阻塞的大操作。** 规则见 SWARM.md 的「验证操作要短小、可重复」。起因是 B2 的验收者写了一个大探测脚本，在 WebKit 那一步卡了 52 分钟，整轮验收最后没做完。现在 `browser-lock.mjs run` 默认最多跑 180 秒，超时会被强制结束；`--max-run` 可以改这个上限。
 
 - **C9 教训：发给用户的图必须是文档站整页，不是夹具或 `pnpm visual` 的 overview，内容要够。** checklist 全过也不代表图能交差。夹具页和 overview 卡片没有文档壳，看起来不像文档。总控发出去的图要能看到侧栏或顶栏，并滚到有实质示例的区域。规则见 SWARM.md「发给用户的验收对照图」。截图不入库。
+- **C3 教训：左右对照必须是同一处 Demo，不能把无关区块拼在一起。** 2026-10-21 用户指出上一轮 C3 左边是「次要样式 / 选项操作」，右边却是原版 Guidance 的 Do/Don't 或 Validation States，两边不是同一位置。原版只截 Overview 里的 Demo，禁止截 Guidance / Practices。本地必须是能看到侧栏的 VitePress 文档站整页。没有对位 Demo 就写「无对位」，改发单侧整页。规则见 SWARM.md「发给用户的验收对照图」。
 - 验收者通过了也要自己复核。A3、A4、B4 都是复核时才发现问题的，比如 B4「按子路径引入组件时 layer.css 不生效」。
 - 文档里的说法必须在浏览器里实测过（B1 卡了 3 轮就是因为这个）。
 - 所有测试和构建命令都要加 `env -u NODE_ENV`，因为 shell 默认是 production。vitest 要加 `--maxWorkers=2`。

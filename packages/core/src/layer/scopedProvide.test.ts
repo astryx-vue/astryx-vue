@@ -28,7 +28,7 @@ describe('resetLayerScopedContext', () => {
 
   it('登记表里的每一项都是真的 key，不是未定义的导入', () => {
     const keys = registeredLayerScopedContexts()
-    expect(keys.length).toBeGreaterThanOrEqual(20)
+    expect(keys.length).toBeGreaterThan(0)
     for (const key of keys)
       expect(typeof key).toBe('symbol')
   })

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavHeadingMenuItemEmits, NavHeadingMenuItemProps, NavHeadingMenuItemSlots } from './types.js'
 import { computed, inject, toRaw } from 'vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { navMenuCloseKey, navMenuKey } from './context.js'
 import '../../styles/nav-menu.css'
@@ -14,7 +15,7 @@ const props = withDefaults(defineProps<NavHeadingMenuItemProps>(), {
 const emit = defineEmits<NavHeadingMenuItemEmits>()
 defineSlots<NavHeadingMenuItemSlots>()
 
-const menu = inject(navMenuKey, null)
+const menu = readLayerScoped(navMenuKey)
 const closeMenu = inject(navMenuCloseKey, undefined)
 const linkComponent = useLinkComponent()
 const size = computed(() => menu?.size.value ?? 'md')

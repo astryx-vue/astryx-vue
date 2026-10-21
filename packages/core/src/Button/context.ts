@@ -1,5 +1,6 @@
-import type { ComputedRef, InjectionKey } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { ButtonSize } from './types.js'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
 export type ButtonGroupOrientation = 'horizontal' | 'vertical'
 
@@ -9,4 +10,4 @@ export interface ButtonGroupContextValue {
   size: ComputedRef<ButtonSize>
 }
 
-export const buttonGroupContextKey: InjectionKey<ButtonGroupContextValue> = Symbol('astryx-button-group')
+export const buttonGroupContextKey = defineLayerScopedKey<ButtonGroupContextValue | null>('astryx-button-group', null)

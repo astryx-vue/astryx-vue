@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { CheckboxValue } from '../CheckboxInput/types.js'
 import type { CheckboxListItemEmits, CheckboxListItemProps, CheckboxListItemSlots } from './types.js'
-import { computed, inject, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, useId, useSlots, useTemplateRef } from 'vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import ListItem from '../List/ListItem.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import CheckboxListControl from './CheckboxListControl.vue'
@@ -13,7 +14,7 @@ const props = defineProps<CheckboxListItemProps>()
 const emit = defineEmits<CheckboxListItemEmits>()
 defineSlots<CheckboxListItemSlots>()
 
-const context = inject(checkboxListKey, undefined)
+const context = readLayerScoped(checkboxListKey)
 const slots = useSlots()
 const messages = useAstryxMessages()
 const richLabel = computed(() => slots.label != null)

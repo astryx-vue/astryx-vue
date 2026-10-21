@@ -42,7 +42,7 @@ export function useAnchoredListbox(options: {
     container: options.layer,
     trigger: options.anchor,
     isEnabled: options.isOpen,
-    enableEscape: ref(false),
+    dismissOnEscape: 'ignore',
     onDismiss: options.onDismiss,
   })
 

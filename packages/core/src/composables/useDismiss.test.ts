@@ -112,26 +112,26 @@ describe('useDismiss', () => {
     expect(event.defaultPrevented).toBe(true)
   })
 
-  it('当 enableEscape 为 false 时按 Escape 键不应该触发关闭', async () => {
+  it('dismissOnEscape 为 block 时不关闭，但吃掉按键', async () => {
     const containerRef = ref(container)
     const isEnabled = ref(true)
-    const enableEscape = ref(false)
 
     mountComposable(() => useDismiss({
       container: containerRef,
       isEnabled,
-      enableEscape,
+      dismissOnEscape: 'block',
       onDismiss: dismissSpy,
     }))
 
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 10))
 
-    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
     document.dispatchEvent(event)
 
     await nextTick()
     expect(dismissSpy).not.toHaveBeenCalled()
+    expect(event.defaultPrevented).toBe(true)
   })
 
   it('当禁用时不应该响应任何事件', async () => {

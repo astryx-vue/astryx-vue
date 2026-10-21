@@ -150,6 +150,68 @@ describe('toast', () => {
     expect(wrapper.emitted('dismiss')?.[0]).toEqual(['manual'])
   })
 
+  function touchEvent(type: string, x: number, y: number, touches: number): Event {
+    const point = { identifier: 1, clientX: x, clientY: y }
+    const extra = touches > 1 ? [{ identifier: 2, clientX: x, clientY: y }] : []
+    const event = new Event(type, { bubbles: true, cancelable: true })
+    const active = type === 'touchend' || type === 'touchcancel' ? [] : [point, ...extra]
+    Object.defineProperty(event, 'touches', { value: active })
+    Object.defineProperty(event, 'changedTouches', { value: [point] })
+    return event
+  }
+
+  it('dismisses when a touch swipe passes the edge threshold', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      right: 200,
+      bottom: 80,
+      width: 200,
+      height: 80,
+      toJSON: () => ({}),
+    })
+    const wrapper = mount(Toast, { props: { body: 'Saved', isAutoHide: false } })
+    const root = wrapper.get('.astryx-toast').element as HTMLElement
+
+    root.dispatchEvent(touchEvent('touchstart', 0, 0, 1))
+    root.dispatchEvent(touchEvent('touchmove', 0, 30, 1))
+    root.dispatchEvent(touchEvent('touchend', 0, 60, 1))
+    await nextTick()
+
+    expect(wrapper.emitted('dismiss')?.[0]).toEqual(['manual'])
+    expect(root.style.getPropertyValue('--_toast-swipe-exit-y')).toBe('120%')
+    vi.restoreAllMocks()
+  })
+
+  it('leaves a horizontal drag and a second finger to the page', async () => {
+    const wrapper = mount(Toast, { props: { body: 'Saved', isAutoHide: false } })
+    const root = wrapper.get('.astryx-toast').element as HTMLElement
+
+    root.dispatchEvent(touchEvent('touchstart', 0, 0, 1))
+    root.dispatchEvent(touchEvent('touchmove', 40, 2, 1))
+    root.dispatchEvent(touchEvent('touchend', 40, 2, 1))
+    expect(wrapper.emitted('dismiss')).toBeUndefined()
+    expect(root.style.getPropertyValue('--_toast-swipe-y')).toBe('')
+
+    root.dispatchEvent(touchEvent('touchstart', 0, 0, 2))
+    root.dispatchEvent(touchEvent('touchmove', 0, 80, 1))
+    root.dispatchEvent(touchEvent('touchend', 0, 80, 1))
+    expect(wrapper.emitted('dismiss')).toBeUndefined()
+  })
+
+  it('does not start a swipe on the close button', async () => {
+    const wrapper = mount(Toast, { props: { body: 'Saved', isAutoHide: false } })
+    const close = wrapper.get('.astryx-toast__close').element as HTMLElement
+
+    close.dispatchEvent(touchEvent('touchstart', 0, 0, 1))
+    close.dispatchEvent(touchEvent('touchmove', 0, 80, 1))
+    close.dispatchEvent(touchEvent('touchend', 0, 80, 1))
+    await nextTick()
+    expect(wrapper.emitted('dismiss')).toBeUndefined()
+  })
+
   it('stops the timer once the toast starts leaving', async () => {
     vi.useFakeTimers()
     const wrapper = mount(Toast, {

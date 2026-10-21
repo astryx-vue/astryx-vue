@@ -10,6 +10,25 @@ describe('useScrollLock', () => {
     resetScrollLockForTest()
   })
 
+  it('锁定时不把 body 钉成 position:fixed，也不改滚动位置', () => {
+    document.body.style.position = 'relative'
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+    const isLocked = ref(true)
+    const { wrapper } = mountComposable(() => useScrollLock(isLocked))
+
+    expect(document.body.style.overflow).toBe('hidden')
+    expect(document.body.style.position).toBe('relative')
+    expect(document.body.style.top).toBe('')
+    expect(scrollTo).not.toHaveBeenCalled()
+
+    isLocked.value = false
+    expect(document.body.style.position).toBe('relative')
+    expect(scrollTo).not.toHaveBeenCalled()
+    wrapper.unmount()
+    scrollTo.mockRestore()
+    document.body.style.position = ''
+  })
+
   it('锁定时隐藏滚动，放开时恢复原来的 overflow', () => {
     document.body.style.overflow = 'auto'
     const isLocked = ref(false)

@@ -20,23 +20,23 @@ mindmap
       ✅ B4 浮层图层运行时
       ✅ B5 界面文案与图标
       ✅ B6 属性规则与样式分层
-      🟡 B7 常用工具函数
+      ✅ B7 常用工具函数
     阶段 C 组件家族同步
       ✅ C1 基础输入框
-      🔵 C2 勾选与开关
-      🔵 C3 选择器家族
+      ✅ C2 勾选与开关
+      🔷 C3 选择器家族
       ⬜ C4 快捷搜索与命令面板
-      ⬜ C5 日期与时间
-      🔵 C6 菜单家族
-      🔵 C7 弹出浮层家族
+      🔵 C5 日期与时间
+      ✅ C6 菜单家族
+      ✅ C7 弹出浮层家族
       ⬜ C8 底部抽屉
-      🟡 C9 文档排版与代码高亮
-      ⬜ C10 对话组件
-      ⬜ C11 数据表格
-      ⬜ C12 列表与树形结构
-      ⬜ C13 页面导航
+      ✅ C9 文档排版与代码高亮
+      🔷 C10 对话组件
+      🔵 C11 数据表格
+      🔵 C12 列表与树形结构
+      🔵 C13 页面导航
       ✅ C14 布局与排版容器
-      🔵 C15 状态反馈与加载
+      ✅ C15 状态反馈与加载
       ✅ C16 基础展示与动作按钮
     阶段 D 汇总整合：主题包与工具
       🔵 D1 Neutral 主题底色
@@ -55,7 +55,7 @@ mindmap
       ✅ E4 自动对比页面外观
     阶段 F 全新扩展包
       ✅ F0 新包技术选型决策
-      ⬜ F1a 富文本核心逻辑
+      🔵 F1a 富文本核心逻辑
       ⬜ F1b 富文本编辑器组件
       ⬜ F1c 富文本使用文档
       🔵 F2a 图表纯计算逻辑
@@ -67,7 +67,7 @@ mindmap
       ⬜ F3g 实验包：日程表
       ⬜ F3c 实验包：浮层与引导
       ⬜ F3d 实验包：图表类
-      ⬜ F3h 实验包：代码类
+      🔵 F3h 实验包：代码类
       ⬜ F3e 实验包：对话类组件
       ⬜ F3f 实验包：使用文档
       ⬜ F4 Nuxt 模块
@@ -300,7 +300,7 @@ flowchart TB
 - 终端运行 `pnpm check` 必须全绿通过，不能有任何报错。
 - 本节点修改的源码文件，单文件不能超过 500 行。如果改到了原来就超标的文件，顺手拆成小文件。
 - 不要手动修改自动生成的文件。改完后运行 `pnpm sync` 重新生成。
-- 只要改到了组件外观或交互，PR 里必须附上 4 种外观对比截图：上游与我们对比，包含桌面端与 390px 手机窄屏、浅色模式与深色模式。
+- 只要改到了组件外观或交互，PR 里必须附上 4 种外观对比截图：桌面端与 390px 手机窄屏、浅色模式与深色模式。左右对照必须是同一组件、同一 Demo 区块标题、同一滚动位置、同一交互状态；原版只截 Overview 里的 Demo，不截 Guidance / Practices；本地是能看到侧栏的 VitePress 文档站整页。没有对位就写「无对位」并改发单侧整页，禁止把无关区块拼成对照图。细则见 `SWARM.md`「发给用户的验收对照图」。
 - 凡是用到了 A1 差异台账的节点，台账里属于本节点的每一项，都要标为「已采纳」或注明「不适用及理由」，不能留空。
 
 ---
@@ -319,22 +319,22 @@ flowchart TB
 | B4 | 浮层运行时 Layer | B3 | ✅ 已完成 | 4 | B4-impl-r3 | orchestrator | 第 4 轮通过（总控） | #132 |
 | B5 | 文案与图标 | A4 | ✅ 已完成 | 3 | B5-impl-r3 | B5-verify-r3 | 第 3 轮通过 | #129 |
 | B6 | 公共 props 规则 | B1 | ✅ 已完成 | 1 | B6-impl | orchestrator | 通过 15/15（总控） | #133 |
-| B7 | 工具函数 utils | A4 | 🟡 实现中 | 1 | B7-impl | | | |
+| B7 | 工具函数 utils | A4 | ✅ 已完成 | 1 | B7-impl | | 通过 25/25 | #137 |
 | C1 | 基础输入 | B1 B2 B3 B5 B6 | ✅ 已完成 | 1 | | | 通过 22/22 | #136 |
-| C2 | 勾选与开关 | B3 B6 | 🔵 可开工 | 0 | | | | |
-| C3 | 选择器家族 | C1 B4 | 🔵 可开工 | 0 | | | | |
+| C2 | 勾选与开关 | B3 B6 | ✅ 已完成 | 1 | | | 通过 20/20 | #140 |
+| C3 | 选择器家族 | C1 B4 | 🔷 验收中 | 1 | C3-impl | | | #149 |
 | C4 | PowerSearch / CommandPalette | C3 | ⬜ 未开始 | 0 | | | | |
-| C5 | 日期时间家族 | C1 B4 B7 | ⬜ 未开始 | 0 | | | | |
-| C6 | 菜单家族 | B3 B4 B6 | 🔵 可开工 | 0 | | | | |
-| C7 | 浮层家族 | B4 B6 | 🔵 可开工 | 0 | | | | |
+| C5 | 日期时间家族 | C1 B4 B7 | 🔵 可开工 | 0 | | | | |
+| C6 | 菜单家族 | B3 B4 B6 | ✅ 已完成 | 1 | | | 通过 26/26 | #143 |
+| C7 | 浮层家族 | B4 B6 | ✅ 已完成 | 1 | C7-impl | | 通过 24/24 | #148 |
 | C8 | BottomSheet | C7 | ⬜ 未开始 | 0 | | | | |
-| C9 | Markdown 与代码 | B1 B2 | 🟡 实现中 | 1 | C9-impl | | | |
-| C10 | Chat | C9 C6 C1 | ⬜ 未开始 | 0 | | | | |
-| C11 | Table | C2 C6 | ⬜ 未开始 | 0 | | | | |
-| C12 | 列表与树 | B3 C6 | ⬜ 未开始 | 0 | | | | |
-| C13 | 导航家族 | B4 C6 | ⬜ 未开始 | 0 | | | | |
+| C9 | Markdown 与代码 | B1 B2 | ✅ 已完成 | 2 | C9-impl | | 第 2 轮通过 28/28 | #138 |
+| C10 | Chat | C9 C6 C1 | 🔷 验收中 | 2 | C10-impl | | 第 1 轮返工：分组后 Enter 选错项，空输入时发送按钮未禁用 | #147 |
+| C11 | Table | C2 C6 | 🔵 可开工 | 0 | | | | |
+| C12 | 列表与树 | B3 C6 | 🔵 可开工 | 0 | | | | |
+| C13 | 导航家族 | B4 C6 | 🔵 可开工 | 0 | | | | |
 | C14 | 布局与容器 | B1 B3 B6 | ✅ 已完成 | 1 | | | 通过 28/28 | #134 |
-| C15 | 反馈与状态 | B1 B6 | 🔵 可开工 | 0 | | | | |
+| C15 | 反馈与状态 | B1 B6 | ✅ 已完成 | 2 | | | 通过 26/26 | #141 |
 | C16 | 基础展示与动作 | B1 B3 B5 B6 | ✅ 已完成 | 1 | | | 通过 15/15（文档补 Ghost） | #135 |
 | D1 | Neutral 主题底色 | B1 | 🔵 可开工 | 0 | | | | |
 | D2 | 其余 6 套主题适配 | D1 C全部 | ⬜ 未开始 | 0 | | | | |
@@ -350,7 +350,7 @@ flowchart TB
 | E3 | 可访问性自动检查 | A2 | ✅ 已完成 | 1 | E3-impl | E3-verify | 通过 20/20 | 09c400b |
 | E4 | CI 接入视觉对照 | A2 | ✅ 已完成 | 1 | E4-impl | E4-verify | 通过 22/22 | a5fcfe5 |
 | F0 | 新包选型决策 | A1 | ✅ 已完成 | 2 | F0-impl-r2 | F0-verify-r2 | 第 2 轮通过 17/17 | e48b073 |
-| F1a | richtext 纯逻辑 | F0 C9 | ⬜ 未开始 | 0 | | | | |
+| F1a | richtext 纯逻辑 | F0 C9 | 🔵 可开工 | 0 | | | | |
 | F1b | richtext 编辑器 | F1a C1 C2 C3 C7 C14 C16 | ⬜ 未开始 | 0 | | | | |
 | F1c | richtext 文档 | F1b | ⬜ 未开始 | 0 | | | | |
 | F2a | charts 纯逻辑 | F0 B1 | 🔵 可开工 | 0 | | | | |
@@ -362,7 +362,7 @@ flowchart TB
 | F3g | lab 日程表 | F0 B7 C6 C7 C14 C15 C16 | ⬜ 未开始 | 0 | | | | |
 | F3c | lab 浮层与引导 | F0 C7 C14 C16 | ⬜ 未开始 | 0 | | | | |
 | F3d | lab 图表类 | F2b C16 | ⬜ 未开始 | 0 | | | | |
-| F3h | lab 代码类 | F0 C9 | ⬜ 未开始 | 0 | | | | |
+| F3h | lab 代码类 | F0 C9 | 🔵 可开工 | 0 | | | | |
 | F3e | lab 对话 | F0 C7 C10 | ⬜ 未开始 | 0 | | | | |
 | F3f | lab 文档 | F3a F3b F3g F3c F3d F3h F3e | ⬜ 未开始 | 0 | | | | |
 | F4 | Nuxt 模块 | A3 C全部 | ⬜ 未开始 | 0 | | | | |
@@ -372,6 +372,8 @@ flowchart TB
 | G2 | 发布 CLI | G1 D4b D5 D6 | ⬜ 未开始 | 0 | | | | |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
 | G4 | 持续同步机制 | A1 G1 | ⬜ 未开始 | 0 | | | | |
+
+C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 10/10），修的是 Markdown 子路径 `parser`、`plugins`、`plugin-renderer` 的 dist 导出。
 
 ---
 
@@ -412,7 +414,7 @@ flowchart TB
 2. 上游新增或改动的测试用例，全部改写成 Vue 测试并跑通。
 3. 中英文说明文档、交互示例代码、组件元数据 `meta.ts` 全部更新到位。
 4. 本节点涉及的全部组件，必须从 SSR 服务端渲染的已知失败名单中移出。
-5. 附带 4 种组合的视觉对比图（桌面/窄屏 × 浅色/深色）。
+5. 附带 4 种组合的视觉对比图（桌面/窄屏 × 浅色/深色）。做左右对照时，左右必须是同一组件、同一 Demo 区块标题、同一滚动位置、同一交互状态（开/关一致）；原版只截 Overview 里的 Demo，禁止截 Guidance / Practices；本地必须是能看到侧栏的 VitePress 文档站整页（390 宽时改为能看到顶栏上的「菜单」）。没有对位 Demo 就写「无对位」，改发单侧整页。禁止把无关区块拼成对照图。细则见 `SWARM.md`「发给用户的验收对照图」。
 6. 改动到的超过 500 行的源码文件全部拆开，并从白名单中移出。
 
 #### C 阶段组件细节清单
@@ -425,11 +427,11 @@ flowchart TB
 | --- | --- | --- | --- |
 | C1 基础输入 | TextInput、TextArea、NumberInput、FileInput、InputGroup、InputClearButton、Field、FieldLabel、FieldStatus、FormLayout | 接入 FR10 破坏性改动（上游 PR #7336）；清除按钮增加无障碍提示文字。 | B1 B2 B3 B5 B6 |
 | C2 勾选与开关 | CheckboxInput、CheckboxList、RadioList、Radio、Switch、Slider、SegmentedControl、ToggleButton | 接入部分 FR10 改动（上游 PR #7339）。 | B3 B6 |
-| C3 选择器家族 | Selector、MultiSelector、ComplexSelector、Typeahead、Tokenizer | 接入 FR10 改动（上游 PR #7341）；**用户报告的 bug**：演练场 `settings` 模板顶部的 Typeahead 写的是上游的 `is-label-hidden`，而我们的属性叫 `labelHidden`，结果「Search」标签照样显示出来，把 Settings 标题挤得折行（origin/dev 上就已经存在）。原因是隐藏标签的属性名在各组件里不统一：Selector、NumberInput、DateInput 用 `isLabelHidden`，Typeahead、Tokenizer、MultiSelector 用 `labelHidden`。C1、C3 都要把属性名统一成上游的 `isLabelHidden`（旧名 `labelHidden` 暂时保留为别名，并写进 D7 迁移指南），然后在浏览器里打开所有用到 `is-label-hidden` 的演练场模板，确认标签都已经隐藏、标题不再折行；支持 secondary 次要样式；支持 hasCreate 新建选项；支持 trigger 触发器自定义插槽；完善选项操作；主动拆分大文件 `MultiSelector.vue` 和 `Selector.vue`。 | C1 B4 |
-| C4 PowerSearch / CommandPalette | PowerSearch、CommandPalette | 接入破坏性改动（上游 PR #7347）；主动拆分大文件 `PowerSearch.vue`。 | C3 |
+| C3 选择器家族 | Selector、MultiSelector、ComplexSelector、Typeahead、Tokenizer | 接入 FR10 改动（上游 PR #7341）；**用户报告的 bug**：演练场 `settings` 模板顶部的 Typeahead 写的是上游的 `is-label-hidden`，而我们的属性叫 `labelHidden`，结果「Search」标签照样显示出来，把 Settings 标题挤得折行（origin/dev 上就已经存在）。原因是隐藏标签的属性名在各组件里不统一：Selector、NumberInput、DateInput 用 `isLabelHidden`，Typeahead、Tokenizer、MultiSelector 用 `labelHidden`。C1、C3 都要把属性名统一成上游的 `isLabelHidden`（旧名 `labelHidden` 暂时保留为别名，并写进 D7 迁移指南），然后在浏览器里打开所有用到 `is-label-hidden` 的演练场模板，确认标签都已经隐藏、标题不再折行；支持 secondary 次要样式；支持 hasCreate 新建选项；支持 trigger 触发器自定义插槽；完善选项操作；主动拆分大文件 `MultiSelector.vue` 和 `Selector.vue`。`4672361` 用删空行躲开了行数白名单，必须真的拆开。 | C1 B4 |
+| C4 PowerSearch / CommandPalette | PowerSearch、CommandPalette | 接入破坏性改动（上游 PR #7347）；主动拆分大文件 `PowerSearch.vue`。`4672361` 用删空行躲开了行数白名单，必须真的拆开。 | C3 |
 | C5 日期时间家族 | Calendar、DateInput、DateRangeInput、DateTimeInput、TimeInput、Timestamp、Timer | 接入 FR10 改动（上游 PR #7337）；根据鼠标或触屏类型智能切换选择器（上游 PR #5243）；新增 presentation 展现模式属性。 | C1 B4 B7 |
 | C6 菜单家族 | DropdownMenu、ContextMenu、MoreMenu | 增加 DropdownMenuGroup 分组组件；手机触屏支持子菜单逐级滑入；鼠标滑动支持安全三角区防误触；方向键循环与按字母快速跳转；菜单行支持真实链接跳转；主动拆分大文件 `DropdownMenu.vue` 和 `types.ts`。 | B3 B4 B6 |
-| C7 浮层家族 | Dialog、AlertDialog、Popover、HoverCard、Tooltip、Lightbox、Toast | DialogHeader 增加 theme target 换肤挂载点；决定 `useScrollLock` 要不要照上游改成 `position:fixed`（上游是为了 iOS Safari，会影响打开浮层时的滚动位置，见 `nodes/B3/impl-1.md` 第 6 节）；主动拆分大文件 `useHoverCard.ts`。 | B4 B6 |
+| C7 浮层家族 | Dialog、AlertDialog、Popover、HoverCard、Tooltip、Lightbox、Toast | DialogHeader 增加 theme target 换肤挂载点；决定 `useScrollLock` 要不要照上游改成 `position:fixed`（上游是为了 iOS Safari，会影响打开浮层时的滚动位置，见 `nodes/B3/impl-1.md` 第 6 节）；主动拆分大文件 `useHoverCard.ts`。`resolveLayerMountTarget` 和 `isTopLayer` 必须接入或删除。 | B4 B6 |
 | C8 BottomSheet | BottomSheet | 默认自带页面内边距（上游 PR #6884）；主动拆分大文件 `useSheetGestures.ts`。 | C7 |
 | C9 Markdown 与代码 | Markdown、CodeBlock、Code | 标题自动生成跳转锚点；嵌套多层列表展示不同标记符号；字符实体引用解码；源码行号标记插件；超长代码行自动折行；代码 diff 对比层（上游 PR #7389）；主动拆分大文件 `render.ts`；清理 `tokenizer.ts` 里残留的 TODO 事项。**必做**：Markdown 解析器要提供和上游一样的接口，包括 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及插件能力协议，因为 F1a richtext 有 26 个测试依赖它们（见 ADR 0001 第 2.7 节）。 | B1 B2 |
 | C10 Chat | Chat 全家族 | 输入框支持连续输入多个关键词触发补全；主动拆分大文件 `Chat/types.ts`。 | C9 C6 C1 |
@@ -453,7 +455,7 @@ flowchart TB
 | D4b CLI 选定能力实现 | 实现 D4a 选定的能力。已知要做的有：搜索排序、`docs --depth`、结果标明来源包、`build` 选起始模板的逻辑、顺手拆开 `cli.ts`。上游已经删除 `astryx layout` 命令组，我们如果有对应的命令也一并删除。 | D4a A4 E1 | D4a 清单逐项完成；命令行各子命令的测试全部通过；`cli.ts` 不超过 500 行。 |
 | D5 CLI 页面模板 | 命令行新增「模型对比、可折叠表格、树形表格、画布编辑器」4 个全新模板，并更新已有模板，让每个模板的样子和上游一致。**用户已报告的问题（必做）**：① 28 个模板里有 163 处设计变量没加 `--astryx-` 前缀（比如 `var(--spacing-4)`）。这些变量不存在，内边距、间距、背景色、圆角都会失效。settings-dialog 的设置行挤成一团就是这个原因。全部补上前缀，并加一道检查：模板里出现不带前缀的设计变量时，检查失败。② settings-dialog 的设置行版式改成和上游 `SettingsRow`、`SettingsCard` 一致：每行带图标，标题和说明分两行，控件靠右，窄屏时换成上下排列。③ settings 等 10 个模板用了 `is-label-hidden`，在 C1、C3 统一属性名之前不生效，标签照样显示，把标题挤得折行。C1、C3 完成后，在浏览器里确认这 10 个模板都恢复正常。每个模板都要用 `pnpm visual` 或截图和上游对照。 | D4b C全部 | 模板均能成功生成并能在浏览器中正常运行。 |
 | D6 FR10 迁移 codemod | 为用户提供自动化改代码脚本，把旧组件根元素样式写法自动改为 container\* / control\* 形式。先评估在 Vue 单文件组件里是否能稳定自动改；不能的话就退化为输出一份迁移核对清单。 | D4b C1 C2 C3 C5 | 脚本能正常运行并提供准确的代码修改或清晰的指引清单。 |
-| D7 迁移指南与版本信息 | 编写中英文版本升级迁移指南，逐条写清每个破坏性改动（改动前、改动后、怎么改）；更新文档站版本信息；重新生成供 AI 查阅的 llms.txt 文档。 **（用户已确认）** 清理 36 个文档示例里写死的 `provideAstryxLocale('en')`，让示例跟随文档站当前的语言。 | C全部 | 文档描述清晰无遗漏；版本号更新正确；llms.txt 文件内容最新。 |
+| D7 迁移指南与版本信息 | 编写中英文版本升级迁移指南，逐条写清每个破坏性改动（改动前、改动后、怎么改）；更新文档站版本信息；重新生成供 AI 查阅的 llms.txt 文档。 **（用户已确认）** 清理 36 个文档示例里写死的 `provideAstryxLocale('en')`，让示例跟随文档站当前的语言。Tab、TabMenu 必须放在 TabList 里，Step 必须放在 Stepper 里；放在外面（包括浮层边界把 context 重置掉的时候）会抛错，以前是静默退化。迁移：包进 TabList / Stepper，或在浮层内容里再放一层本地的 TabList / Stepper。`useDismiss` 的 `enableEscape` 改为 `dismissOnEscape`，取值 close、block、ignore。 | C全部 | 文档描述清晰无遗漏；版本号更新正确；llms.txt 文件内容最新。 |
 | D8 演练场同步 | 把 D5 中做好的全新页面模板同步放入在线演练场供体验。 | D5 E2 | 演练场能在线无报错加载所有新模板。 |
 
 ---
