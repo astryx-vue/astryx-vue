@@ -104,6 +104,7 @@ export const ssrFixtures: Record<string, SsrFixture> = {
   FileInput: { props: fieldLabel },
   Heading: { props: { level: 2 }, slots: { default: text('Title') } },
   IconButton: { props: { label: 'Close', icon: 'close' } },
+  InputClearButton: { props: { label: 'Clear Name' } },
   InternationalizationProvider: { props: { locale: 'en' }, slots: { default: text('Content') } },
   Kbd: { props: { keys: 'mod+k' } },
   LayerProvider: { slots: { default: text('Content') } },
