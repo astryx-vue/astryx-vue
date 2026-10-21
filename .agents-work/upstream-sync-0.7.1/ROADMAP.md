@@ -17,7 +17,7 @@ mindmap
       ✅ B1 主题系统与设计变量
       🔷 B2 基础重置样式
       ✅ B3 交互逻辑常用函数
-      🔷 B4 浮层图层运行时
+      🔴 B4 浮层图层运行时
       ✅ B5 界面文案与图标
       🟡 B6 属性规则与样式分层
       🔵 B7 常用工具函数
@@ -316,7 +316,7 @@ flowchart TB
 | B1 | 主题系统与 token | A4 | ✅ 已完成 | 3 | orchestrator | B1-verify-r4 | 复查通过（第 3 轮后总控改文档） | #130 |
 | B2 | reset 与基础样式 | A4 | 🔷 验收中 | 1 | B2-impl | B2-verify | | |
 | B3 | 交互底座 composables | A4 | ✅ 已完成 | 1 | B3-impl | B3-verify | 通过 17/17 | 2b22513 |
-| B4 | 浮层运行时 Layer | B3 | 🔷 验收中 | 3 | B4-impl-r3 | B4-verify-r3 | 第 2 轮 26 项不过（子路径引入） | |
+| B4 | 浮层运行时 Layer | B3 | 🔴 返工中 | 3 | B4-impl-r3 | B4-verify-r3 | 第 3 轮 28 项不过（守护测试有洞、4 个浮层没重置），按规则暂停 | |
 | B5 | 文案与图标 | A4 | ✅ 已完成 | 3 | B5-impl-r3 | B5-verify-r3 | 第 3 轮通过 | #129 |
 | B6 | 公共 props 规则 | B1 | 🟡 实现中 | 1 | B6-impl | | | |
 | B7 | 工具函数 utils | A4 | 🔵 可开工 | 0 | | | | |
