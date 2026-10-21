@@ -1,10 +1,12 @@
 <script setup lang="ts" generic="T extends SliderValue">
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, StyleValue } from 'vue'
 import type { SliderEmits, SliderProps, SliderSlots, SliderValue } from './types.js'
 import { computed, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Field from '../Field/Field.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { percent, position } from './sliderMath.js'
 import SliderThumb from './SliderThumb.vue'
@@ -17,6 +19,13 @@ const emit = defineEmits<SliderEmits<T>>()
 defineSlots<SliderSlots>()
 const model = defineModel<T>({ required: true })
 const attrs = useAttrs()
+const press = usePressFeedback({ hasOverlay: false })
+const parts = useFieldPartStyling({
+  component: 'Slider',
+  props,
+  attrs,
+  reservedAttrs: ['aria-labelledby', 'aria-describedby', 'onPointerdown', 'onPointermove', 'onPointerup', 'onPointercancel', 'onPointerDown', 'onPointerMove', 'onPointerUp', 'onPointerCancel'],
+})
 const track = useTemplateRef<HTMLDivElement>('track')
 const generatedId = `astryx-slider-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
@@ -54,9 +63,37 @@ function markStyle(value: number): CSSProperties {
 function isFilled(value: number): boolean {
   return value <= values.value.at(-1)! && (!isRange.value || value >= values.value[0]!)
 }
-function rootAttrs(): Record<string, unknown> {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !['aria-labelledby', 'aria-describedby'].includes(key)))
+function callConsumerPointer(event: PointerEvent): void {
+  const names: Record<string, string[]> = {
+    pointerdown: ['onPointerdown', 'onPointerDown'],
+    pointermove: ['onPointermove', 'onPointerMove'],
+    pointerup: ['onPointerup', 'onPointerUp'],
+    pointercancel: ['onPointercancel', 'onPointerCancel'],
+  }
+  for (const name of names[event.type] ?? []) {
+    const handler = attrs[name]
+    if (typeof handler === 'function')
+      handler(event)
+  }
 }
+function onPointerDown(event: PointerEvent): void {
+  control.pointerDown(event)
+  callConsumerPointer(event)
+}
+function onPointerMove(event: PointerEvent): void {
+  control.pointerMove(event)
+  callConsumerPointer(event)
+}
+function onPointerEnd(event: PointerEvent): void {
+  control.pointerEnd(event)
+  callConsumerPointer(event)
+}
+const shellStyle = computed<StyleValue>(() => [attrs.style as StyleValue, parts.containerStyle.value])
+const thumbAttrs = computed(() => isRange.value ? {} : parts.forwardedAttrs())
+const trackAttrs = computed(() => ({
+  ...(isRange.value ? parts.forwardedAttrs() : {}),
+  ...(props.isDisabled ? {} : press.pressableProps),
+}))
 function focus(index = 0, options?: FocusOptions): void {
   track.value?.querySelectorAll<HTMLElement>('[role="slider"]')[index]?.focus(options)
 }
@@ -65,13 +102,17 @@ function blur(): void {
   if (active instanceof HTMLElement && track.value?.contains(active))
     active.blur()
 }
-const element = computed(() => track.value)
+const element = computed(() => {
+  if (isRange.value)
+    return track.value
+  return track.value?.querySelector<HTMLElement>('[role="slider"]') ?? null
+})
 defineExpose({ element, focus, blur })
 </script>
 
 <template>
   <Field
-    v-bind="rootAttrs()" class="astryx-slider" :data-orientation="orientation" :data-disabled="isDisabled || undefined" :data-mark-labels="hasMarkLabels || undefined"
+    class="astryx-slider" :class="[attrs.class, parts.containerClass.value]" :style="shellStyle" :data-orientation="orientation" :data-disabled="isDisabled || undefined" :data-mark-labels="hasMarkLabels || undefined"
     :label="label" :input-id="inputId" is-group-label :description="description" :width="width" :is-label-hidden="isLabelHidden"
     :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired" :label-icon="labelIcon" :label-tooltip="labelTooltip"
     :optional-label="optionalLabel" :required-label="requiredLabel" :status="status" status-variant="detached"
@@ -83,8 +124,10 @@ defineExpose({ element, focus, blur })
       <div class="astryx-slider-row">
         <input v-for="(value, index) in values" :key="index" type="hidden" :name="htmlName" :value="value" :disabled="isDisabled" :form="form">
         <div
-          ref="track" class="astryx-slider-control" :role="isRange ? 'group' : undefined" :aria-labelledby="isRange ? field.labelId : undefined"
-          @pointerdown="control.pointerDown" @pointermove="control.pointerMove" @pointerup="control.pointerEnd" @pointercancel="control.pointerEnd" @lostpointercapture="control.pointerEnd"
+          ref="track" v-bind="trackAttrs" class="astryx-slider-control" :class="controlClass" :style="controlStyle"
+          :data-orientation="orientation" :data-disabled="isDisabled || undefined"
+          :role="isRange ? 'group' : undefined" :aria-labelledby="isRange ? field.labelId : undefined"
+          @pointerdown="onPointerDown" @pointermove="onPointerMove" @pointerup="onPointerEnd" @pointercancel="onPointerEnd" @lostpointercapture="onPointerEnd"
           @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave" @focusin="tooltip.onTooltipPointerEnter" @focusout="tooltip.onBlur" @keydown.esc="tooltip.hideImmediately"
         >
           <div class="astryx-slider-track" aria-hidden="true" />
@@ -95,10 +138,12 @@ defineExpose({ element, focus, blur })
           <SliderThumb
             v-for="(value, index) in values" :id="`${inputId}-${index}`" :key="index" :index="index" :value="value" :percentage="percent(value, min, max)"
             :min="control.bounds(index)[0]" :max="control.bounds(index)[1]" :orientation="orientation"
-            :labelled-by="[field.labelId, isRange ? `${inputId}-label-${index}` : undefined, attrs['aria-labelledby']].filter(Boolean).join(' ')"
+            :labelled-by="[field.labelId, isRange ? `${inputId}-label-${index}` : undefined, isRange ? undefined : attrs['aria-labelledby']].filter(Boolean).join(' ')"
             :described-by="describedBy(field.describedBy)" :value-text="formatValue ? format(value) : undefined" :is-invalid="status?.type === 'error'"
-            :is-disabled="isDisabled" :is-focusable="!isDisabled || showsDisabledMessage" :dragging="dragging === index" :tooltip-text="valueDisplay === 'tooltip' ? format(value) : undefined"
-            @keydown="control.keydown(index, $event)"
+            :is-disabled="isDisabled" :is-focusable="!isDisabled || showsDisabledMessage" :dragging="dragging === index"
+            :keyboard-focus="control.keyboardFocus.value === index" :extra-attrs="thumbAttrs"
+            :tooltip-text="valueDisplay === 'tooltip' ? format(value) : undefined"
+            @keydown="control.keydown(index, $event)" @focus="control.thumbFocus(index)" @blur="control.thumbBlur()"
           />
         </div>
         <span v-if="valueDisplay === 'text'" class="astryx-slider-value" aria-hidden="true">{{ displayText }}</span>

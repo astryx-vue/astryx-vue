@@ -4,6 +4,7 @@ import type { CheckboxInputEmits, CheckboxInputProps, CheckboxInputSlots, Checkb
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
@@ -35,6 +36,7 @@ const busy = computed(() => !!props.isLoading || action.isPending.value)
 const blocked = computed(() => props.isDisabled || props.isReadOnly || busy.value)
 const state = computed(() => action.value.value === 'indeterminate' ? 'indeterminate' : action.value.value ? 'checked' : 'unchecked')
 const CheckboxMark = useIndicator('checkbox')
+const press = usePressFeedback({ hasOverlay: false })
 const widthStyle = computed<CSSProperties>(() => ({ width: typeof props.width === 'number' ? `${props.width}px` : props.width }))
 const element = computed(() => input.value ?? null)
 function focus(options?: FocusOptions): void {
@@ -51,6 +53,12 @@ function inputAttrs(): InputHTMLAttributes {
 }
 function describedBy(): string | undefined {
   return [attrs['aria-describedby'], descriptionId.value, statusId.value, showsDisabledMessage.value ? disabledId : undefined, busy.value ? loadingId : undefined].filter(Boolean).join(' ') || undefined
+}
+function labelledBy(): string {
+  const external = attrs['aria-labelledby']
+  if (typeof external === 'string' && external.trim() !== '')
+    return external
+  return [labelId.value, external].filter(Boolean).join(' ')
 }
 function syncNative(): void {
   if (input.value) {
@@ -93,14 +101,14 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
 
 <template>
   <div class="astryx-checkbox-input" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-status="status?.type" :data-blocked="blocked || undefined">
-    <div class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked }" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
+    <div class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked }" v-bind="blocked ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
       <span class="astryx-checkbox-control">
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-checkbox-native" type="checkbox"
           :checked="action.value.value === true" :disabled="isDisabled && !showsDisabledMessage"
           :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)" :form="showsDisabledMessage ? '' : inputAttrs().form"
           :required="(isRequired && !isOptional) || inputAttrs().required" :readonly="isReadOnly || showsDisabledMessage"
-          :aria-labelledby="[labelId, attrs['aria-labelledby']].filter(Boolean).join(' ')" :aria-describedby="describedBy()"
+          :aria-labelledby="labelledBy()" :aria-describedby="describedBy()"
           :aria-disabled="showsDisabledMessage || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
           :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
@@ -111,7 +119,7 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
       </span>
       <FieldLabel
         :label="label" :input-id="inputId" :label-id="labelId" :description="description" :description-id="descriptionId"
-        :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
+        :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired" target-class="astryx-checkbox-label"
         :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
       >
         <template v-if="$slots.labelIcon" #labelIcon>

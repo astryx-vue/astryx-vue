@@ -43,7 +43,7 @@ function focusFromDescription(event: MouseEvent): void {
 <template>
   <div class="astryx-field-label-group" :data-hidden="isLabelHidden || undefined" :data-disabled="isDisabled || undefined">
     <div class="astryx-field-label-row">
-      <component :is="isGroupLabel ? 'span' : 'label'" :id="labelId" ref="label" class="astryx-field-label" :for="isGroupLabel ? undefined : inputId">
+      <component :is="isGroupLabel ? 'span' : 'label'" :id="labelId" ref="label" class="astryx-field-label" :class="targetClass" :for="isGroupLabel ? undefined : inputId">
         <span v-if="$slots.labelIcon || icon || iconName" class="astryx-field-label-icon" aria-hidden="true">
           <slot name="labelIcon">
             <Icon v-if="iconName" :icon="iconName" size="sm" />

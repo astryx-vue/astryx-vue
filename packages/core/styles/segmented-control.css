@@ -113,12 +113,20 @@
     forced-color-adjust: none;
   }
 
-  .astryx-segmented-control-item:not([aria-disabled='true']):not([data-selected='true']):hover {
-    background-color: var(--astryx-segmented-control-item-hover-background, light-dark(#0000000d, #ffffff0d));
+  @media (hover: hover) {
+    .astryx-segmented-control-item:not([aria-disabled='true']):not([data-selected='true']):hover {
+      background-color: var(--astryx-segmented-control-item-hover-background, light-dark(#0000000d, #ffffff0d));
+    }
   }
 
-  .astryx-segmented-control-item:not([aria-disabled='true']):not([data-selected='true']):active {
-    background-color: var(--astryx-segmented-control-item-pressed-background, light-dark(#0000001a, #ffffff1a));
+  @media not all and (pointer: coarse) {
+    .astryx-segmented-control-item:not([aria-disabled='true']):not([data-selected='true']):active {
+      background-color: var(--astryx-segmented-control-item-pressed-background, light-dark(#0000001a, #ffffff1a));
+    }
+  }
+
+  .astryx-segmented-control-item[data-astryx-press]:not([aria-disabled='true']):not([data-selected='true']) {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-segmented-control-item[aria-disabled='true'] {
