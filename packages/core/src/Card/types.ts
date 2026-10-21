@@ -10,20 +10,37 @@ export type CardSizeValue = number | string
  * and `muted` uses the muted surface for a de-emphasised card. The remaining
  * names are the non-semantic hues and use the tint for that hue.
  */
-export type CardVariant
-  = | 'default'
-    | 'transparent'
-    | 'muted'
-    | 'blue'
-    | 'cyan'
-    | 'gray'
-    | 'green'
-    | 'orange'
-    | 'pink'
-    | 'purple'
-    | 'red'
-    | 'teal'
-    | 'yellow'
+/**
+ * 卡片背景变体。主题可以扩充这张表，从而给 `variant` 增加自己的名字：
+ *
+ * ```ts
+ * declare module '@astryx-vue/core' {
+ *   interface CardVariantMap {
+ *     brand: true
+ *   }
+ * }
+ * ```
+ *
+ * 新增的变体要在主题里自己写背景。可选卡片的描边读 `--astryx-selectable-card-accent`，
+ * 主题在同一条规则里指定它，避免组件去猜一种和填充色对比得过来的颜色。
+ */
+export interface CardVariantMap {
+  default: true
+  transparent: true
+  muted: true
+  blue: true
+  cyan: true
+  gray: true
+  green: true
+  orange: true
+  pink: true
+  purple: true
+  red: true
+  teal: true
+  yellow: true
+}
+
+export type CardVariant = keyof CardVariantMap
 
 /**
  * Resting shadow depth. `none` is flat; `low`, `med`, and `high` follow the

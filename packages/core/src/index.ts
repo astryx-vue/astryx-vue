@@ -101,7 +101,7 @@ export type {
   CalendarSlots,
 } from './Calendar/index.js'
 export { Card } from './Card/index.js'
-export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
+export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant, CardVariantMap } from './Card/index.js'
 export { Carousel } from './Carousel/index.js'
 export type { CarouselGap, CarouselHandle, CarouselProps, CarouselSlots } from './Carousel/index.js'
 export { Center } from './Center/index.js'
