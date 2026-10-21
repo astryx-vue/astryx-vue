@@ -146,7 +146,7 @@ describe('textArea', () => {
     const wrapper = renderArea({ rows: 4, maxlength: 200, minlength: 10, wrap: 'hard' as const, cols: 60 }, { 'class': 'custom-area', 'data-testid': 'bio-control' })
     const textarea = wrapper.get('textarea')
     expect(textarea.attributes('rows')).toBe('4')
-    expect(textarea.attributes('maxlength')).toBe('200')
+    expect(textarea.attributes('maxlength')).toBeUndefined()
     expect(wrapper.get('.astryx-text-area-count').text()).toBe('0 / 200')
     expect(wrapper.get('.astryx-text-area-count').attributes('data-over')).toBeUndefined()
     expect(textarea.attributes('minlength')).toBe('10')
@@ -181,11 +181,30 @@ describe('textArea', () => {
     expect(onPaste).toHaveBeenCalledTimes(1)
   })
 
-  it('marks the character count when the value is longer than maxlength', () => {
-    const wrapper = renderArea({ maxlength: 10, modelValue: 'This sentence is already too long.' })
-    const count = wrapper.get('.astryx-text-area-count')
+  it('counts visible characters, allows typing past the limit, and announces the zone', async () => {
+    const over = renderArea({ maxlength: 10, modelValue: 'This sentence is already too long.' })
+    const count = over.get('.astryx-text-area-count')
     expect(count.attributes('data-over')).toBe('true')
     expect(count.text()).toContain('/ 10')
+    expect(over.get('textarea').attributes('aria-invalid')).toBe('true')
+
+    const family = renderArea({ maxlength: 2, modelValue: '👍👍' })
+    expect(family.get('.astryx-text-area-count').text()).toBe('2 / 2')
+    expect(family.get('.astryx-text-area-count').attributes('data-over')).toBeUndefined()
+
+    const wrapper = renderArea({ maxlength: 10 })
+    const textarea = wrapper.get('textarea')
+    ;(textarea.element as HTMLTextAreaElement).value = '12345678'
+    await textarea.trigger('input')
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('2 characters remaining')
+
+    ;(textarea.element as HTMLTextAreaElement).value = '12345678901'
+    await textarea.trigger('input')
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    expect(document.querySelector('[data-astryx-live-region="assertive"]')?.textContent).toBe('1 character over the limit')
+    expect(wrapper.get('textarea').attributes('maxlength')).toBeUndefined()
+    expect(wrapper.get('.astryx-text-area-count').attributes('data-over')).toBe('true')
   })
 
   it('renders all slots and a component startIcon', () => {
