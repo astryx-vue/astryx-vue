@@ -38,7 +38,7 @@ footer: false
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>Focuses the native input after mounting.</td></tr>
       <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>Native name, taking precedence over a forwarded name and removed when disabled.</td></tr>
       <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>Forwarded unchanged to native autocomplete.</td></tr>
-      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>Localized clear-button name.</td></tr>
+      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>Accessible name of the clear button. It includes the field label by default. The tooltip only says “Clear”.</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>Localized loading-indicator name.</td></tr>
       <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container: the Field box around the label, control box, and status message. Has no effect, and warns in development, where no Field box renders (inside InputGroup and in a horizontal-labels FormLayout).</td></tr>
       <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>

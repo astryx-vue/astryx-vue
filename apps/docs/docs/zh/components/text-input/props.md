@@ -38,7 +38,7 @@ footer: false
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>组件挂载后自动聚焦原生 input。</td></tr>
       <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>原生 input 的 name 属性，优先于通过原生属性传入的 name。字段禁用时会被移除。</td></tr>
       <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原样透传给原生 input 的 autocomplete 属性。</td></tr>
-      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>清除按钮的无障碍名称，用于本地化。</td></tr>
+      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>清除按钮的读屏名称，默认带字段名。悬停或键盘聚焦时，提示只说「清除」。</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>加载指示器的无障碍名称，用于本地化。</td></tr>
       <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳（Field 那一层，包着标签、输入框和状态消息）的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
       <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。落点规则同 containerClass。</td></tr>

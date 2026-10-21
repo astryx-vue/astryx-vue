@@ -113,6 +113,14 @@
     cursor: default;
   }
 
+  @media (pointer: coarse) {
+    @supports (-webkit-touch-callout: none) {
+      .astryx-number-input-field {
+        font-size: max(1rem, var(--astryx-text-body-size, 14px));
+      }
+    }
+  }
+
   .astryx-number-input-buttons {
     display: flex;
     flex-direction: column;
