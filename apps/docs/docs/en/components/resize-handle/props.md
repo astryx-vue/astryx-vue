@@ -193,7 +193,7 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
 
 <code>percent(value, { min })</code> or <code>percent(value, { max })</code> builds a percentage size. <code>min</code> and <code>max</code> use <code>{ type: 'pixel', value }</code>.
 
-Arrow keys move 10px. Shift moves 50px. Home, End, and Enter jump to the minimum, the maximum, and the expanded size.
+Arrow keys move 10px. Shift moves 50px. With snap points, an arrow jumps to the next point and Shift jumps two. Home, End, and Enter jump to the minimum, a configured maximum, and the size from before collapse. End does nothing when no maximum is set.
 
 ## Native attributes
 

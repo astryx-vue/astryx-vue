@@ -1,9 +1,12 @@
 import type { VueWrapper } from '@vue/test-utils'
-import type { ResizableProps } from '../composables/useResizable.js'
+import type { ResizableProps, UseResizableSingleOptions } from '../composables/useResizable.js'
 import type { ResizeHandleProps } from './types.js'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { renderToString } from '@vue/server-renderer'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { createSSRApp, defineComponent, h, nextTick, ref } from 'vue'
 import { useResizable } from '../composables/useResizable.js'
 import ResizeHandle from './ResizeHandle.vue'
 
@@ -357,5 +360,219 @@ describe('resizeHandle disabled', () => {
     expect(resizable._onResizeStart).not.toHaveBeenCalled()
     expect(resizable._onResizeMove).not.toHaveBeenCalled()
     expect(document.body.style.cursor).toBe('')
+  })
+})
+
+function setWindowSize(width: number, height = window.innerHeight): () => void {
+  const previousWidth = window.innerWidth
+  const previousHeight = window.innerHeight
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: width })
+  Object.defineProperty(window, 'innerHeight', { configurable: true, value: height })
+  return () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: previousWidth })
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: previousHeight })
+  }
+}
+
+function mountUnbounded(options: UseResizableSingleOptions = {}, handleProps: Partial<ResizeHandleProps> = {}) {
+  const Host = defineComponent({
+    setup() {
+      const region = useResizable({ defaultSize: 200, minSize: 100, ...options })
+      return () => h(ResizeHandle, {
+        resizable: region.props,
+        label: 'Resize',
+        direction: options.direction,
+        ...handleProps,
+      })
+    },
+  })
+  return mount(Host, { attachTo: document.body })
+}
+
+describe('resizeHandle reported maximum', () => {
+  it('reports the window width when no maximum is configured, and End stays put', async () => {
+    const restore = setWindowSize(1000, 700)
+    const wrapper = mountUnbounded()
+    await nextTick()
+    const separator = wrapper.get('[role="separator"]')
+    expect(separator.attributes('aria-valuemax')).toBe('1000')
+    await separator.trigger('keydown', { key: 'End' })
+    expect(separator.attributes('aria-valuenow')).toBe('200')
+    restore()
+  })
+
+  it('reports the window height for an unbounded vertical region', async () => {
+    const restore = setWindowSize(1000, 700)
+    const wrapper = mountUnbounded({ direction: 'vertical' })
+    await nextTick()
+    expect(wrapper.get('[role="separator"]').attributes('aria-valuemax')).toBe('700')
+    restore()
+  })
+
+  it('never reports a maximum below the current size', async () => {
+    const restore = setWindowSize(500)
+    const wrapper = mountUnbounded({ defaultSize: 800, minSize: 100 })
+    await nextTick()
+    const separator = wrapper.get('[role="separator"]')
+    expect(separator.attributes('aria-valuenow')).toBe('800')
+    expect(separator.attributes('aria-valuemax')).toBe('800')
+    await separator.trigger('keydown', { key: 'End' })
+    expect(separator.attributes('aria-valuenow')).toBe('800')
+    restore()
+  })
+
+  it('never reports a maximum below the minimum while collapsed in a small window', async () => {
+    const restore = setWindowSize(375)
+    const wrapper = mountUnbounded({ defaultSize: 500, minSize: 400, collapsible: true })
+    const separator = wrapper.get('[role="separator"]')
+    await separator.trigger('keydown', { key: 'Enter' })
+    expect(separator.attributes('aria-valuetext')).toBe('Collapsed')
+    expect(separator.attributes('aria-valuemin')).toBe('400')
+    expect(Number(separator.attributes('aria-valuemax'))).toBeGreaterThanOrEqual(400)
+    restore()
+  })
+
+  it('omits aria-valuemax on the server and reports the window after hydration', async () => {
+    const restore = setWindowSize(1000)
+    const Host = defineComponent({
+      setup() {
+        const region = useResizable({ defaultSize: 200, minSize: 100 })
+        return () => h(ResizeHandle, { resizable: region.props, label: 'Resize' })
+      },
+    })
+    const html = await renderToString(createSSRApp(Host))
+    expect(html).not.toContain('aria-valuemax')
+    // Vue 3.5 没有具名导出 hydrate。服务端渲染发生在 onMounted 之前，
+    // 客户端挂载后才会读窗口尺寸，两边分开断言同一份契约。
+    const wrapper = mount(Host, { attachTo: document.body })
+    await nextTick()
+    expect(wrapper.get('[role="separator"]').attributes('aria-valuemax')).toBe('1000')
+    wrapper.unmount()
+    restore()
+  })
+
+  it('reports the container content box while a percentage bound observes it', async () => {
+    const width = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(640)
+    const style = vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+      paddingTop: '0px',
+      paddingBottom: '0px',
+      paddingLeft: '0px',
+      paddingRight: '0px',
+      direction: 'ltr',
+    } as CSSStyleDeclaration)
+    const Host = defineComponent({
+      components: { ResizeHandle },
+      setup() {
+        const container = ref<HTMLElement | null>(null)
+        const region = useResizable({ defaultSize: 200, minSize: '10%', containerRef: container })
+        return { container, region }
+      },
+      template: '<div ref="container"><ResizeHandle :resizable="region.props" label="Resize" /></div>',
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    await nextTick()
+    expect(wrapper.get('[role="separator"]').attributes('aria-valuemax')).toBe('640')
+    width.mockRestore()
+    style.mockRestore()
+  })
+
+  it('reports no maximum for an unbounded pixel region inside a container', () => {
+    const Host = defineComponent({
+      components: { ResizeHandle },
+      setup() {
+        const container = ref<HTMLElement | null>(null)
+        const region = useResizable({ defaultSize: 200, minSize: 100, containerRef: container })
+        return { container, region }
+      },
+      template: '<div ref="container"><ResizeHandle :resizable="region.props" label="Resize" /></div>',
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    expect(wrapper.get('[role="separator"]').attributes('aria-valuemax')).toBeUndefined()
+  })
+})
+
+describe('resizeHandle collapse and snaps', () => {
+  it('warns when the handle axis disagrees with the region', () => {
+    mountStub(makeResizable({ _direction: 'vertical' }), { direction: 'horizontal' })
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('direction="horizontal" but its useResizable region is "vertical"'))
+    warn.mockClear()
+  })
+
+  it('calls a consumer keydown and still resizes', async () => {
+    const onKeydown = vi.fn()
+    const resizable = makeResizable()
+    const wrapper = mount(ResizeHandle, {
+      attrs: { onKeydown },
+      props: { label: 'Resize', resizable },
+    })
+    await separatorOf(wrapper).trigger('keydown', { key: 'ArrowRight' })
+    expect(onKeydown).toHaveBeenCalledTimes(1)
+    expect(resizable._onResizeMove).toHaveBeenCalledWith(KEYBOARD_STEP)
+  })
+
+  it('restores the previous size when Enter or a double-click reopens a collapsed pane', async () => {
+    const wrapper = mountUnbounded({ collapsible: true, maxSize: 400 })
+    const separator = wrapper.get('[role="separator"]')
+    await separator.trigger('keydown', { key: 'Enter' })
+    expect(separator.attributes('aria-valuetext')).toBe('Collapsed')
+    await separator.trigger('keydown', { key: 'Enter' })
+    expect(separator.attributes('aria-valuetext')).toBeUndefined()
+    expect(separator.attributes('aria-valuenow')).toBe('200')
+
+    const again = mountUnbounded({ collapsible: true, maxSize: 400 })
+    const second = again.get('[role="separator"]')
+    await second.trigger('dblclick')
+    await second.trigger('dblclick')
+    expect(second.attributes('aria-valuenow')).toBe('200')
+  })
+
+  it('opens a collapsed pane from the grow arrow only', async () => {
+    const closed = makeResizable({ _collapsible: true, _collapsedSize: 40, _isCollapsed: true, _size: 0 })
+    const wrapper = mountStub(closed)
+    await separatorOf(wrapper).trigger('keydown', { key: 'ArrowLeft' })
+    expect(closed._onResizeMove).not.toHaveBeenCalled()
+    await separatorOf(wrapper).trigger('keydown', { key: 'ArrowRight' })
+    expect(closed._onResizeMove).toHaveBeenLastCalledWith(closed._minSizePx + KEYBOARD_STEP)
+
+    const region = mountUnbounded({ collapsedSize: 50, collapsible: true, maxSize: 400, minSize: 20 })
+    const separator = region.get('[role="separator"]')
+    await separator.trigger('keydown', { key: 'Enter' })
+    await separator.trigger('keydown', { key: 'ArrowRight' })
+    expect(separator.attributes('aria-valuenow')).toBe('50')
+  })
+
+  it('moves between snap points, and clamps points that sit outside the bounds', async () => {
+    const snapped = mountUnbounded({ maxSize: 400, snaps: [100, 200, 300, 400] })
+    const separator = snapped.get('[role="separator"]')
+    await separator.trigger('keydown', { key: 'ArrowRight' })
+    expect(separator.attributes('aria-valuenow')).toBe('300')
+    await separator.trigger('keydown', { key: 'ArrowLeft', shiftKey: true })
+    expect(separator.attributes('aria-valuenow')).toBe('100')
+
+    const bounded = mountUnbounded({ maxSize: 400, snaps: [50, 100, 200, 300, 450] })
+    const handle = bounded.get('[role="separator"]')
+    await handle.trigger('keydown', { key: 'ArrowRight' })
+    expect(handle.attributes('aria-valuenow')).toBe('300')
+    await handle.trigger('keydown', { key: 'ArrowRight' })
+    expect(handle.attributes('aria-valuenow')).toBe('400')
+  })
+
+  it('follows a reversed layout when jumping between snap points', async () => {
+    const wrapper = mountUnbounded({ maxSize: 400, snaps: [100, 200, 300, 400] }, { isReversed: true })
+    const separator = wrapper.get('[role="separator"]')
+    await separator.trigger('keydown', { key: 'ArrowLeft' })
+    expect(separator.attributes('aria-valuenow')).toBe('300')
+    await separator.trigger('keydown', { key: 'ArrowRight' })
+    expect(separator.attributes('aria-valuenow')).toBe('200')
+  })
+
+  it('flips the grab-zone centering shift under RTL', () => {
+    const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/resize-handle.css'), 'utf8')
+    expect(css).toContain('- 6.5px')
+    expect(css).toMatch(/\[dir='rtl'\][\s\S]*\+ 6\.5px/)
+    const wrapper = mountStub(makeResizable(), { pillPlacement: 'start' })
+    expect(wrapper.get('.astryx-resize-handle__hit').attributes('data-bias')).toBe('start')
+    const centered = mountStub(makeResizable(), { pillPlacement: 'center' })
+    expect(centered.get('.astryx-resize-handle__hit').attributes('data-bias')).toBe('center')
   })
 })

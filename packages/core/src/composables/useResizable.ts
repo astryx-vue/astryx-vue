@@ -1,6 +1,8 @@
 import type { Ref } from 'vue'
 import type { PixelWidth } from '../Table/types.js'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { registerResizableChannel } from './internal/resizableChannel.js'
+import { loadPersistedState, savePersistedState } from './internal/resizableStorage.js'
 
 export type ResizableDirection = 'horizontal' | 'vertical'
 
@@ -82,9 +84,7 @@ interface CascadeLink {
 const DEFAULT_SIZE = 250
 const DEFAULT_MIN = 50
 const DEFAULT_COLLAPSED_SIZE = 40
-const SNAP_DISTANCE = 8
 const UNMEASURED_BASIS = 1200
-const STORAGE_PREFIX = 'astryx-resizable:'
 
 export function percent(
   value: number,
@@ -149,44 +149,21 @@ function clampSize(size: number, min: number, max: number, snaps: number[]): num
       nearestDist = dist
     }
   }
-  if (nearestDist > SNAP_DISTANCE)
-    return clamped
   return Math.min(max, Math.max(min, nearest))
 }
 
-interface PersistedResizableState {
-  size: number | null
-  isCollapsed: boolean | null
+function sizeDependsOnBasis(value: ResizableSize | string | undefined): boolean {
+  if (typeof value === 'string')
+    return value.trim().endsWith('%')
+  return typeof value === 'object' && value != null && value.type === 'percent'
 }
 
-function loadPersistedState(key: string): PersistedResizableState | null {
-  if (typeof window === 'undefined')
-    return null
-  try {
-    const raw = localStorage.getItem(STORAGE_PREFIX + key)
-    if (raw == null)
-      return null
-    const parsed: unknown = JSON.parse(raw)
-    if (typeof parsed === 'number' && Number.isFinite(parsed)) {
-      return parsed === 0
-        ? { size: null, isCollapsed: true }
-        : { size: parsed, isCollapsed: null }
-    }
-    if (typeof parsed === 'object' && parsed != null) {
-      const record = parsed as { size?: unknown, isCollapsed?: unknown }
-      const hasSize = typeof record.size === 'number' && Number.isFinite(record.size) && record.size > 0
-      if (hasSize || record.isCollapsed === true) {
-        return {
-          size: hasSize ? record.size as number : null,
-          isCollapsed: record.isCollapsed === true,
-        }
-      }
-    }
-  }
-  catch {
-    return null
-  }
-  return null
+function contentBox(element: HTMLElement, direction: ResizableDirection): number | null {
+  const style = getComputedStyle(element)
+  const size = direction === 'vertical'
+    ? element.clientHeight - Number.parseFloat(style.paddingTop) - Number.parseFloat(style.paddingBottom)
+    : element.clientWidth - Number.parseFloat(style.paddingLeft) - Number.parseFloat(style.paddingRight)
+  return Number.isFinite(size) ? size : null
 }
 
 function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLink): ResizableRegion {
@@ -199,10 +176,37 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
   const isCollapsed = ref(false)
   const basisMeasured = ref(true)
   const controlledCollapse = computed(() => options.isCollapsed)
+  const clientExtent = ref<number | null>(null)
   let origin = DEFAULT_SIZE
   let settledDefault = false
   let dragging = false
   let dragLimits: { min: number, max: number } | null = null
+
+  function observesContainer(): boolean {
+    return options.containerRef != null && (
+      sizeDependsOnBasis(options.minSize)
+      || sizeDependsOnBasis(options.maxSize)
+      || sizeDependsOnBasis(options.defaultSize)
+    )
+  }
+
+  function reportedMax(min: number, max: number): number | undefined {
+    if (Number.isFinite(max))
+      return max
+    let basis: number | null
+    if (options.containerRef != null) {
+      if (!sizeDependsOnBasis(options.minSize) && !sizeDependsOnBasis(options.maxSize))
+        return undefined
+      const element = options.containerRef.value
+      basis = element == null ? null : contentBox(element, direction)
+    }
+    else {
+      basis = clientExtent.value
+    }
+    if (basis == null || !(basis > 0))
+      return undefined
+    return Math.max(basis, isCollapsed.value ? min : size.value)
+  }
 
   function currentBasis(): Basis {
     return readBasis(options.containerRef?.value, direction)
@@ -252,15 +256,7 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
   function persist(): void {
     if (!options.autoSaveId || !basisMeasured.value)
       return
-    try {
-      localStorage.setItem(STORAGE_PREFIX + options.autoSaveId, JSON.stringify({
-        size: expandedSize.value,
-        isCollapsed: isCollapsed.value,
-      }))
-    }
-    catch {
-      /* ignore */
-    }
+    savePersistedState(options.autoSaveId, expandedSize.value, isCollapsed.value)
   }
 
   function setCollapsed(next: boolean): void {
@@ -334,7 +330,7 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
 
   const props = computed<ResizableProps>(() => {
     const { min, max } = limits()
-    return {
+    const value: ResizableProps = {
       _size: size.value,
       _isCollapsed: isCollapsed.value,
       _onResizeStart: onResizeStart,
@@ -349,6 +345,11 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
       _direction: direction,
       _isResizableProps: true,
     }
+    registerResizableChannel(value, {
+      collapse: () => setCollapsed(true),
+      expand: () => setCollapsed(false),
+    }, reportedMax(min, max))
+    return value
   })
 
   function measureDefault(): void {
@@ -370,9 +371,11 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
 
   let observer: ResizeObserver | undefined
   onMounted(() => {
+    if (options.containerRef == null && typeof window !== 'undefined')
+      clientExtent.value = direction === 'vertical' ? window.innerHeight : window.innerWidth
     measureDefault()
     const element = options.containerRef?.value
-    if (element == null || typeof ResizeObserver === 'undefined')
+    if (element == null || typeof ResizeObserver === 'undefined' || !observesContainer())
       return
     observer = new ResizeObserver(() => measureDefault())
     observer.observe(element)
