@@ -77,3 +77,5 @@
 23. **Toast 在 Dialog 打开时不跳**：先显示一个 Toast，再打开 Dialog。每 50ms 记录一次 Toast 的 `getBoundingClientRect`，一共记 1 秒。位置变化要不超过 2px。然后反过来测：Dialog 开着时出现 Toast，再关掉 Dialog，Toast 同样不能跳。
 24. 台账 #6919、#6457 的结论和实际情况一致。改进建议里提到的 `ButtonTooltip.vue`、`TableData.vue` 两处写死的 `to="body"` 要处理掉，或者在交接清单里写明交给哪个 C 节点。
 25. 第 1 轮通过的 1 到 19 项中，被第 2 轮改动碰到的要重新验证，至少包括 1、2、5、6、7、13、18。
+26. **按子路径单独引入时也要生效**：README 推荐用户按组件单独引入，比如 `import { Popover } from '@astryx-vue/core/Popover'`，这时不会引入总的 `styles.css`。用一个空白的 Vite 项目验证，可以参考 `scripts/check-templates.mjs` 的做法，也可以在 /tmp 里起一个最小页面：只按子路径引入 Popover 和 Dialog，外层设成粗体、大写、居中，打开这两个浮层后，里面的文字不能继承外层的这些样式。如果文字重置没有生效（因为 `layer.css` 没有被各组件引入），就判不过。
+27. 实现者回报第 6 节第 1 条的取舍：打开 Dialog 以后，大约有 400ms Toast 是点不到的。请判断这样会不会让用户感到不对劲。和上游对比一下：上游是立刻把 Toast 搬过去，代价是位置会跳。哪一种更接近「用户感受和上游一致」？如实写进报告，这一条只记录，不影响结论。
