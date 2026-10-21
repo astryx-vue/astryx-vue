@@ -59,8 +59,10 @@
   }
 
   @media (pointer: coarse) {
-    .astryx-command-palette-field {
-      font-size: max(1rem, var(--astryx-text-body-size, 0.875rem));
+    @supports (-webkit-touch-callout: none) {
+      .astryx-command-palette-field {
+        font-size: max(1rem, var(--astryx-text-body-size, 0.875rem));
+      }
     }
   }
 

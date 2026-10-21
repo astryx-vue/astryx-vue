@@ -33,8 +33,10 @@
   }
 
   @media (pointer: coarse) {
-    .astryx-complex-selector {
-      font-size: max(1rem, var(--astryx-text-label-size, 0.875rem));
+    @supports (-webkit-touch-callout: none) {
+      .astryx-complex-selector {
+        font-size: max(1rem, var(--astryx-text-label-size, 0.875rem));
+      }
     }
   }
 
