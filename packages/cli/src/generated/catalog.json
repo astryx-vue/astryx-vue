@@ -18465,10 +18465,10 @@
                 "description": "Extra text for assistive technology."
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Hide the text visually while keeping the accessible name."
+                "description": "Hide the text visually while keeping the accessible name. `labelHidden` is the older name; either one hides it."
               }
             ]
           }
@@ -18520,10 +18520,10 @@
                 "description": "补充说明，读屏可读。"
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "视觉上隐藏文字，仍然作为无障碍名称。"
+                "description": "视觉上隐藏文字，仍然作为无障碍名称。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
               }
             ]
           }
@@ -26118,6 +26118,42 @@
                 "type": "`number | string`",
                 "default": "—",
                 "description": "Width of the whole field. Numbers are pixels."
+              },
+              {
+                "name": "`changeAction`",
+                "type": "`(files) => void | Promise<void>`",
+                "default": "—",
+                "description": "Called after a selection and after a clear. A rejection emits `actionError`. A spinner shows while it is pending."
+              },
+              {
+                "name": "`clearLabel`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Accessible name of the clear button. It includes the field label by default. The tooltip only says “Clear”."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the file field box. A class written on the component lands here too, with no warning."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the file field box. A style written on the component lands here too."
               }
             ]
           }
@@ -26233,6 +26269,42 @@
                 "type": "`number | string`",
                 "default": "—",
                 "description": "整个字段的宽度。数字按像素处理。"
+              },
+              {
+                "name": "`changeAction`",
+                "type": "`(files) => void | Promise<void>`",
+                "default": "—",
+                "description": "选中和清除之后调用。失败时发出 `actionError`，等待期间显示加载指示。"
+              },
+              {
+                "name": "`clearLabel`",
+                "type": "`string`",
+                "default": "—",
+                "description": "清除按钮的读屏名称，默认带字段名。提示只说「清除」。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到文件框本体的 class。直接写在组件上的 class 也落在本体，不会警告。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到文件框本体的行内样式。直接写在组件上的 style 也落在本体。"
               }
             ]
           }
@@ -26255,7 +26327,12 @@
               {
                 "name": "`change`",
                 "payload": "`File | File[] | null`",
-                "description": "Emitted with the same value."
+                "description": "Emitted with the same value, before `changeAction`."
+              },
+              {
+                "name": "`actionError`",
+                "payload": "`unknown, File | File[] | null`",
+                "description": "Emitted when `changeAction` rejects."
               }
             ]
           }
@@ -26272,7 +26349,12 @@
               {
                 "name": "`change`",
                 "payload": "`File | File[] | null`",
-                "description": "携带同一个值。"
+                "description": "携带同一个值。发生在 `changeAction` 之前。"
+              },
+              {
+                "name": "`actionError`",
+                "payload": "`unknown, File | File[] | null`",
+                "description": "`changeAction` 抛错时触发。"
               }
             ]
           }
@@ -26891,6 +26973,12 @@
                 "description": "Field label."
               },
               {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
+              },
+              {
                 "name": "`placeholder`",
                 "type": "`string`",
                 "default": "`Select…` / `请选择`",
@@ -27064,6 +27152,12 @@
                 "type": "`string`",
                 "default": "必需",
                 "description": "字段标签。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
               },
               {
                 "name": "`placeholder`",
@@ -27686,13 +27780,13 @@
                 "name": "`min`",
                 "type": "`number | null`",
                 "default": "—",
-                "description": "Minimum value. A smaller entry commits at this value."
+                "description": "Minimum value. On blur or Enter, a smaller entry commits at this value. While typing, it is marked invalid."
               },
               {
                 "name": "`max`",
                 "type": "`number | null`",
                 "default": "—",
-                "description": "Maximum value. A larger entry commits at this value."
+                "description": "Maximum value. On blur or Enter, a larger entry commits at this value. While typing, it is marked invalid."
               },
               {
                 "name": "`step`",
@@ -27734,7 +27828,7 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Shows a clear button when the field has a value. Clearing sets the value to `null`."
+                "description": "Shows a clear button when the field has a value. The tooltip only says “Clear”; the accessible name includes the field label. Clearing sets the value to `null`. An emptied draft commits `null` on blur only when this is on; otherwise it reverts."
               },
               {
                 "name": "`isDisabled`",
@@ -27861,6 +27955,30 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "Same as `htmlName`."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, when no Field box renders, including inside InputGroup and a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the number field box. A class written on the component lands here too, with no warning."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the number field box. A style written on the component lands here too."
               }
             ]
           }
@@ -27897,13 +28015,13 @@
                 "name": "`min`",
                 "type": "`number | null`",
                 "default": "—",
-                "description": "最小值。比它小的输入按这个值提交。"
+                "description": "最小值。离开或按 Enter 时，比它小的输入收到这个值。输入过程中先标成无效。"
               },
               {
                 "name": "`max`",
                 "type": "`number | null`",
                 "default": "—",
-                "description": "最大值。比它大的输入按这个值提交。"
+                "description": "最大值。离开或按 Enter 时，比它大的输入收到这个值。输入过程中先标成无效。"
               },
               {
                 "name": "`step`",
@@ -27945,7 +28063,7 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "有值时显示清除按钮。清除后值为 `null`。"
+                "description": "有值时显示清除按钮。提示只说「清除」，读屏名称带字段名。清除后值为 `null`。把内容删空后离开，只有开了这个按钮才会提交 `null`，否则回到原值。"
               },
               {
                 "name": "`isDisabled`",
@@ -28072,6 +28190,30 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "等同于 `htmlName`。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。没有外壳时不生效，开发环境会警告。在 InputGroup 和横向标签的 FormLayout 里也是这样。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到数字框本体的 class。直接写在组件上的 class 也落在本体，不会警告。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到数字框本体的行内样式。直接写在组件上的 style 也落在本体。"
               }
             ]
           }
@@ -31789,6 +31931,30 @@
                 "default": "—"
               },
               {
+                "name": "`containerClass`",
+                "description": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—"
+              },
+              {
+                "name": "`containerStyle`",
+                "description": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—"
+              },
+              {
+                "name": "`controlClass`",
+                "description": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—"
+              },
+              {
+                "name": "`controlStyle`",
+                "description": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—"
+              },
+              {
                 "name": "`loadingLabel`",
                 "description": "`loadingLabel`",
                 "type": "`string`",
@@ -31859,7 +32025,7 @@
                 "name": "`maxlength`",
                 "type": "`number | string`",
                 "default": "—",
-                "description": "原生 textarea 的 maxlength。设置后会显示实时字数，超过上限时字数变红。"
+                "description": "可见字符上限，一个 emoji 算一个。可以继续输入，超出后字数变红，接近上限和超出时读屏会播报。不会写进原生 maxlength。"
               },
               {
                 "name": "`wrap`",
@@ -32003,7 +32169,31 @@
                 "name": "`clearLabel`",
                 "type": "`string`",
                 "default": "—",
-                "description": "清空按钮的无障碍标签。"
+                "description": "清空按钮的读屏名称，默认带字段名。悬停或键盘聚焦时，提示只说「清除」。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到文本域本体的 class。直接写在组件上的 class 也落在本体，不会警告。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到文本域本体的行内样式。直接写在组件上的 style 也落在本体。"
               },
               {
                 "name": "`loadingLabel`",
@@ -32470,7 +32660,7 @@
                 "name": "`clearLabel`",
                 "type": "`string`",
                 "default": "Clear {label}",
-                "description": "Localized clear-button name."
+                "description": "Accessible name of the clear button. It includes the field label by default. The tooltip only says “Clear”."
               },
               {
                 "name": "`loadingLabel`",
@@ -32695,7 +32885,7 @@
                 "name": "`clearLabel`",
                 "type": "`string`",
                 "default": "Clear {label}",
-                "description": "清除按钮的无障碍名称，用于本地化。"
+                "description": "清除按钮的读屏名称，默认带字段名。悬停或键盘聚焦时，提示只说「清除」。"
               },
               {
                 "name": "`loadingLabel`",
@@ -33627,10 +33817,10 @@
                 "description": "Tooltip text on an info icon next to the label."
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Hides the label visually while keeping it accessible."
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
               },
               {
                 "name": "`placeholder`",
@@ -33826,10 +34016,10 @@
                 "description": "标签旁边信息图标里的提示文字。"
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "视觉上隐藏标签，读屏仍然读得到。"
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
               },
               {
                 "name": "`placeholder`",
@@ -34384,10 +34574,10 @@
                 "description": "Tooltip text on an info icon next to the label."
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Hides the label visually while keeping it accessible."
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
               },
               {
                 "name": "`placeholder`",
@@ -34770,10 +34960,10 @@
                 "description": "标签旁边信息图标里的提示文字。"
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "视觉上隐藏标签，读屏仍然读得到。"
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
               },
               {
                 "name": "`placeholder`",
@@ -36698,10 +36888,10 @@
                 "description": "Accessible name of the input."
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "Hides the label visually and keeps it available to assistive tech."
+                "description": "Hides the label visually and keeps it available to assistive tech. Omitted means hidden; `false` shows it. `labelHidden` is the older name. When both are set, this one wins."
               },
               {
                 "name": "`placeholder`",
@@ -36843,10 +37033,10 @@
                 "description": "输入框的无障碍名称。"
               },
               {
-                "name": "`labelHidden`",
+                "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "视觉上藏起标签，读屏仍然读得到。"
+                "description": "视觉上藏起标签，读屏仍然读得到。不传就隐藏；传 `false` 会显示。旧名 `labelHidden` 同样可用。两个都传时听正名。"
               },
               {
                 "name": "`placeholder`",
