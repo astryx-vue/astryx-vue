@@ -153,7 +153,11 @@
 
   .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill {
     width: 40%;
-    animation: astryx-progress-bar-indeterminate 1.2s ease-in-out infinite;
+    animation: astryx-progress-bar-indeterminate 1.5s ease-in-out infinite;
+  }
+
+  :is([dir='rtl'] .astryx-progress-bar[data-indeterminate='true']) .astryx-progress-bar-fill {
+    animation-name: astryx-progress-bar-indeterminate-rtl;
   }
 
   @keyframes astryx-progress-bar-indeterminate {
@@ -165,14 +169,22 @@
     }
   }
 
+  @keyframes astryx-progress-bar-indeterminate-rtl {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-250%);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .astryx-progress-bar-fill {
       transition: none;
     }
 
     .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill {
-      animation: none;
-      width: 100%;
+      animation-duration: 3s;
     }
   }
 }

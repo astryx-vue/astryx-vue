@@ -43,8 +43,9 @@ describe('progressBar', () => {
     const track = wrapper.get('[role="progressbar"]')
     expect(track.attributes('aria-valuenow')).toBeUndefined()
     expect(track.attributes('aria-valuetext')).toBeUndefined()
-    expect(track.attributes('aria-valuemin')).toBe('0')
-    expect(track.attributes('aria-valuemax')).toBe('100')
+    expect(track.attributes('aria-valuemin')).toBeUndefined()
+    expect(track.attributes('aria-valuemax')).toBeUndefined()
+    expect(wrapper.get('.astryx-progress-bar-track').element.contains(wrapper.get('.astryx-progress-bar-fill').element)).toBe(true)
   })
 
   it('keeps a hidden label in the accessibility tree', () => {
@@ -75,7 +76,7 @@ describe('progressBar', () => {
     })
     expect(wrapper.get('.astryx-progress-bar-value').text()).toBe('3.2 GB / 5 GB')
     expect(wrapper.get('[role="progressbar"]').attributes('aria-valuetext')).toBe('3.2 GB / 5 GB')
-    expect(wrapper.attributes('data-variant')).toBe('neutral')
+    expect(wrapper.attributes('data-variant')).toBe('accent')
   })
 
   it('paints the accent variant', () => {
@@ -107,6 +108,22 @@ describe('progressBar', () => {
       marks: [{ value: 50, label: 'Halfway' }],
     })
     expect(wrapper.find('.astryx-progress-bar-mark').exists()).toBe(false)
+  })
+
+  it('keeps focusable marks outside the progressbar subtree', () => {
+    const wrapper = renderProgressBar({
+      marks: [{ value: 40, label: 'Goal' }],
+    })
+    const track = wrapper.get('[role="progressbar"]')
+    const mark = wrapper.get('.astryx-progress-bar-mark')
+    expect(track.element.contains(mark.element)).toBe(false)
+    expect(mark.attributes('tabindex')).toBe('0')
+  })
+
+  it('treats a non-finite value as empty progress', () => {
+    const wrapper = renderProgressBar({ value: Number.NaN, max: 100 })
+    expect(wrapper.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('0')
+    expect(wrapper.get('.astryx-progress-bar-fill').attributes('style')).toContain('width: 0%')
   })
 
   it('renders server-side', async () => {

@@ -5,6 +5,14 @@
     width: 100%;
   }
 
+  .astryx-stepper-frame {
+    --astryx-step-connector-gap: 0px;
+  }
+
+  .astryx-stepper {
+    --astryx-step-connector-gap: inherit;
+  }
+
   .astryx-stepper-root[data-collapsed] {
     display: flex;
     flex-direction: column;
@@ -108,9 +116,34 @@
   }
 
   .astryx-step-connector {
+    --_step-connector-gap: max(0px, min(var(--astryx-step-connector-gap, 0px), var(--astryx-spacing-2, 8px)));
     flex: 1 1 auto;
     min-width: var(--astryx-spacing-2, 8px);
     border-radius: 0;
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track']:not([data-glyph='none']) .astryx-step-connector-lead {
+    clip-path: inset(0 0 var(--_step-connector-gap) 0);
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track']:not([data-glyph='none']) .astryx-step-connector-trail {
+    clip-path: inset(var(--_step-connector-gap) 0 0 0);
+  }
+
+  .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track']:not([data-glyph='none']) .astryx-step-connector-lead {
+    clip-path: inset(0 var(--_step-connector-gap) 0 0);
+  }
+
+  .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track']:not([data-glyph='none']) .astryx-step-connector-trail {
+    clip-path: inset(0 0 0 var(--_step-connector-gap));
+  }
+
+  :is([dir='rtl'] .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track']:not([data-glyph='none'])) .astryx-step-connector-lead {
+    clip-path: inset(0 0 0 var(--_step-connector-gap));
+  }
+
+  :is([dir='rtl'] .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track']:not([data-glyph='none'])) .astryx-step-connector-trail {
+    clip-path: inset(0 var(--_step-connector-gap) 0 0);
   }
 
   .astryx-step[data-orientation='horizontal'] .astryx-step-connector {
@@ -150,13 +183,21 @@
   }
 
   @media (hover: hover) {
-    button.astryx-step-control:hover {
+    button.astryx-step-control:where(:not(:disabled, [aria-disabled='true'])):hover {
       background: var(--astryx-color-overlay-hover, light-dark(#0536590c, #ffffff0c));
     }
   }
 
-  button.astryx-step-control:active {
-    background: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+  @media not all and (pointer: coarse) {
+    button.astryx-step-control:where(:not(:disabled, [aria-disabled='true'])):active {
+      background: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+    }
+  }
+
+  button.astryx-step-control[data-astryx-press='on'],
+  button.astryx-step-control[data-astryx-press='fading'] {
+    background-color: transparent;
+    background-image: var(--_press-paint-image);
   }
 
   button.astryx-step-control:focus-visible {
@@ -340,7 +381,7 @@
 
   .astryx-stepper-nav:disabled {
     opacity: 0.4;
-    cursor: not-allowed;
+    cursor: default;
   }
 
   @container astryx-stepper (max-width: 480px) {

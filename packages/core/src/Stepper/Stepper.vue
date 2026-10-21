@@ -112,6 +112,7 @@ provide(stepperContextKey, {
   <div
     ref="root"
     class="astryx-stepper-root"
+    :class="{ 'astryx-stepper-frame': orientation === 'horizontal' }"
     :data-collapsed="collapsed || undefined"
   >
     <ol
@@ -136,7 +137,7 @@ provide(stepperContextKey, {
           <path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" />
         </svg>
       </button>
-      <span class="astryx-stepper-summary-body">
+      <span class="astryx-stepper-summary-body" aria-hidden="true">
         <span class="astryx-stepper-summary-row">
           <StepMarker :glyph="currentGlyph" :number-label="String(activeStep + 1)" />
           <span class="astryx-step-label">{{ current.label }}</span>
