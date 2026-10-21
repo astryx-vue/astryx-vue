@@ -7516,7 +7516,7 @@
                 "name": "`triggers`",
                 "type": "`ChatComposerTrigger[]`",
                 "default": "-",
-                "description": "A trigger character at a word boundary opens suggestions. The editor becomes a combobox."
+                "description": "A trigger character at a word boundary opens suggestions. `hasMultiWordQuery` on a trigger keeps the query through spaces and punctuation until a line break, 64 characters, or the same trigger character again. Without it, a space or tab ends the query. An unmatched multi-word query hides the list when `emptySearchText` is omitted. The editor becomes a combobox."
               },
               {
                 "name": "`debounceMs`",
@@ -7935,7 +7935,7 @@
                 "name": "`triggers`",
                 "type": "`ChatComposerTrigger[]`",
                 "default": "-",
-                "description": "在词首输入触发字符时打开建议列表。有触发器时编辑器是 combobox。"
+                "description": "在词首输入触发字符时打开建议列表。触发器上的 `hasMultiWordQuery` 让查询穿过空格和标点，直到换行、超过 64 个字符，或同一个触发字符再次出现。不设时，空格或制表符结束查询。多词查询没有匹配、也没写 `emptySearchText` 时，列表先藏起来。有触发器时编辑器是 combobox。"
               },
               {
                 "name": "`debounceMs`",
@@ -8329,8 +8329,8 @@
             "zh": "ChatComposer — 外壳"
           },
           "description": {
-            "en": "A field with an attachment drawer, a header button, and dictation. The drawer handle collapses the attachments. The microphone starts listening in browsers that support speech recognition.",
-            "zh": "带附件抽屉、顶栏按钮和语音按钮的输入区。点抽屉把手可以收起附件。点麦克风会在支持语音的浏览器里开始听写。"
+            "en": "A field with an attachment drawer, a header button, and dictation. With no text the send button is muted and cannot be clicked; it turns into the solid button once there is something to send. Attachments alone do not enable it. The drawer handle collapses the attachments. The microphone starts listening in browsers that support speech recognition.",
+            "zh": "带附件抽屉、顶栏按钮和语音按钮的输入区。没有字时发送按钮是浅色并且不能点，写上字才变成可点的实心按钮。只有附件、没有字，仍然不能发送。点抽屉把手可以收起附件。点麦克风会在支持语音的浏览器里开始听写。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Badge } from '@astryx-vue/core/Badge'\nimport { ChatComposer, ChatComposerDrawer, ChatDictationButton } from '@astryx-vue/core/Chat'\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { IconButton } from '@astryx-vue/core/IconButton'\nimport { reactive, ref } from 'vue'\n\nconst listening = ref(false)\nconst dictation = reactive({\n  isSupported: true,\n  bands: [0.12, 0.4, 0.72, 0.36, 0.16],\n  volume: 0.05,\n  get isListening() {\n    return listening.value\n  },\n  toggle() {\n    listening.value = !listening.value\n  },\n})\nconst sent = ref('')\n\nfunction onSubmit(value: string): void {\n  sent.value = value\n}\n</script>\n\n<template>\n  <div class=\"chat-preview-composer\">\n    <ChatComposer placeholder=\"Ask about the notes...\" @submit=\"onSubmit\">\n      <template #drawer>\n        <ChatComposerDrawer :count=\"2\" label=\"Attachments\">\n          <Badge label=\"notes.md\" variant=\"neutral\" />\n          <Badge label=\"focus.png\" variant=\"neutral\" />\n        </ChatComposerDrawer>\n      </template>\n      <template #headerActions>\n        <IconButton label=\"Add attachment\" size=\"sm\" variant=\"ghost\">\n          <Icon name=\"carbon:attachment\" />\n        </IconButton>\n      </template>\n      <template #headerContext>\n        Balanced\n      </template>\n      <template #footerActions>\n        <ChatDictationButton :dictation=\"dictation\" />\n      </template>\n    </ChatComposer>\n    <p v-if=\"sent\" class=\"chat-preview__caption\">\n      {{ sent }}\n    </p>\n  </div>\n</template>"
         },
@@ -8351,10 +8351,10 @@
             "zh": "ChatComposerInput — 提及"
           },
           "description": {
-            "en": "Type @ at the start of a word to list people. Choosing one leaves a chip in the draft. The submitted string contains the chip value.",
-            "zh": "在词首输入 @，会列出可以插入的人。选中后草稿里留下这个人的标记，发送出去的是标记的值。"
+            "en": "Type @ at the start of a word and keep going through spaces, as in Ada Lov, and the list narrows to Ada Lovelace. Arrow keys move the highlight, and Enter inserts that row rather than the first person in the list. A phrase with no match hides the list and leaves the typed text alone. Type / for a one-word command; a space closes that list. A person becomes a chip. A command is inserted as text.",
+            "zh": "词首输入 @ 可以连续打多个词，比如 Ada Lov，列表会跟着缩到 Ada Lovelace。方向键把高亮移到某一行，回车插入的是这一行，不是列表里的第一条。没有匹配的句子会把列表藏起来，已经打的字还在。词首输入 / 是单词命令，打一个空格列表就关上。选中的人变成标记，命令按原文插入。"
           },
-          "code": "<script setup lang=\"ts\">\nimport type { ChatComposerTrigger } from '@astryx-vue/core/Chat'\nimport { createStaticSource } from '@astryx-vue/core'\nimport { ChatComposer, ChatComposerInput } from '@astryx-vue/core/Chat'\nimport { ref } from 'vue'\n\nconst people = createStaticSource([\n  { id: 'ada', label: 'Ada Lovelace' },\n  { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },\n  { id: 'grace', label: 'Grace', auxiliaryData: { group: 'Reviewers' } },\n])\n\nconst triggers: ChatComposerTrigger[] = [{\n  character: '@',\n  menuLabel: 'People',\n  searchSource: people,\n  onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}`, variant: 'blue' }),\n}]\n\nconst sent = ref('')\n\nfunction onSubmit(value: string): void {\n  sent.value = value\n}\n</script>\n\n<template>\n  <div class=\"chat-preview-composer\">\n    <ChatComposer placeholder=\"Mention someone with @\" @submit=\"onSubmit\">\n      <template #input>\n        <ChatComposerInput :triggers=\"triggers\" />\n      </template>\n    </ChatComposer>\n    <p v-if=\"sent\" class=\"chat-preview__caption\">\n      {{ sent }}\n    </p>\n  </div>\n</template>"
+          "code": "<script setup lang=\"ts\">\nimport type { ChatComposerTrigger } from '@astryx-vue/core/Chat'\nimport { createStaticSource } from '@astryx-vue/core'\nimport { ChatComposer, ChatComposerInput } from '@astryx-vue/core/Chat'\nimport { ref } from 'vue'\n\nconst people = createStaticSource([\n  { id: 'ada', label: 'Ada Lovelace' },\n  { id: 'maria', label: 'María José García' },\n  { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },\n  { id: 'grace', label: 'Grace Hopper', auxiliaryData: { group: 'Reviewers' } },\n])\n\nconst commands = createStaticSource([\n  { id: 'summarize', label: 'summarize' },\n  { id: 'translate', label: 'translate' },\n])\n\nconst triggers: ChatComposerTrigger[] = [\n  {\n    character: '@',\n    hasMultiWordQuery: true,\n    menuLabel: 'People',\n    searchSource: people,\n    onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}`, variant: 'blue' }),\n  },\n  {\n    character: '/',\n    menuLabel: 'Commands',\n    searchSource: commands,\n    onSelect: item => `/${item.label} `,\n  },\n]\n\nconst sent = ref('')\n\nfunction onSubmit(value: string): void {\n  sent.value = value\n}\n</script>\n\n<template>\n  <div class=\"chat-preview-composer\">\n    <ChatComposer placeholder=\"Mention with @, or run /summarize\" @submit=\"onSubmit\">\n      <template #input>\n        <ChatComposerInput :triggers=\"triggers\" />\n      </template>\n    </ChatComposer>\n    <p v-if=\"sent\" class=\"chat-preview__caption\">\n      {{ sent }}\n    </p>\n  </div>\n</template>"
         },
         {
           "title": {
@@ -27100,9 +27100,15 @@
               },
               {
                 "name": "`variant`",
-                "type": "`'input' | 'ghost'`",
+                "type": "`'input' | 'secondary' | 'ghost'`",
                 "default": "`'input'`",
-                "description": "`input` has a border. `ghost` fits a toolbar."
+                "description": "`input` has a border. `secondary` matches a secondary button. `ghost` fits a toolbar. On the latter two, an attached status becomes detached."
+              },
+              {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "Shell and trigger box. A root class lands on the box. An option `action` latches a two-column grid and does not change the selection."
               },
               {
                 "name": "`disabled`",
@@ -27281,9 +27287,15 @@
               },
               {
                 "name": "`variant`",
-                "type": "`'input' | 'ghost'`",
+                "type": "`'input' | 'secondary' | 'ghost'`",
                 "default": "`'input'`",
-                "description": "`input` 带边框，`ghost` 适合工具栏。"
+                "description": "`input` 带边框。`secondary` 对齐次要按钮。`ghost` 适合工具栏。后两种上的 attached 状态会收成独立说明。"
+              },
+              {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "分别加到字段外壳和触发器本体。根上的 class 落在本体。选项上的 `action` 和单选一样：点它不改选择，面板变成两列网格。"
               },
               {
                 "name": "`disabled`",
@@ -29753,7 +29765,7 @@
                 "name": "`options`",
                 "type": "`SelectorOption[]`",
                 "default": "Required",
-                "description": "Options array."
+                "description": "Options. An `action` on any item latches the popup into a two-column grid. Activating the action does not change the selection."
               },
               {
                 "name": "`placeholder`",
@@ -29796,6 +29808,30 @@
                 "type": "`'sm' | 'md' | 'lg'`",
                 "default": "`'md'`",
                 "description": "Size."
+              },
+              {
+                "name": "`variant`",
+                "type": "`'input' | 'secondary' | 'ghost' | 'default'`",
+                "default": "`'default'`",
+                "description": "`input` and the older name `default` are the bordered field. `secondary` matches a secondary button. `ghost` is borderless. On the latter two, an attached status becomes detached."
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually. The accessible name stays."
+              },
+              {
+                "name": "`containerClass` / `containerStyle`",
+                "type": "`class` / `style`",
+                "default": "—",
+                "description": "Styles for the field shell. They do not land on the trigger button."
+              },
+              {
+                "name": "`controlClass` / `controlStyle`",
+                "type": "`class` / `style`",
+                "default": "—",
+                "description": "Styles for the bordered box. A class or style on the component root lands here too."
               },
               {
                 "name": "`status`",
@@ -29874,7 +29910,7 @@
                 "name": "`options`",
                 "type": "`SelectorOption[]`",
                 "default": "必需",
-                "description": "选项数组，每项包含 value、label 和可选的 disabled、description。"
+                "description": "选项数组。每项可以带 `disabled`、`description` 和 `action`。只要有一项的 `action` 不是空的，弹出层就变成两列网格，点操作不会改选择。"
               },
               {
                 "name": "`placeholder`",
@@ -29917,6 +29953,30 @@
                 "type": "`'sm' | 'md' | 'lg'`",
                 "default": "`'md'`",
                 "description": "选择器尺寸。"
+              },
+              {
+                "name": "`variant`",
+                "type": "`'input' | 'secondary' | 'ghost' | 'default'`",
+                "default": "`'default'`",
+                "description": "`input` 和旧名 `default` 都是带边框的输入框。`secondary` 对齐次要按钮。`ghost` 去掉边框，适合工具栏。后两种上的 attached 状态会收成独立说明。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。"
+              },
+              {
+                "name": "`containerClass` / `containerStyle`",
+                "type": "`class` / `style`",
+                "default": "—",
+                "description": "加到字段外壳。不会落到触发按钮上。"
+              },
+              {
+                "name": "`controlClass` / `controlStyle`",
+                "type": "`class` / `style`",
+                "default": "—",
+                "description": "加到画边框的本体。根上直接写的 class 和 style 也落在这里。"
               },
               {
                 "name": "`status`",
@@ -30132,6 +30192,28 @@
             "zh": "无边框的选择器和幽灵按钮一起放在工具栏里。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { HStack } from '@astryx-vue/core/Stack'\nimport { ref } from 'vue'\n\nconst view = ref<string | undefined>('week')\nconst density = ref<string | undefined>('comfortable')\n</script>\n\n<template>\n  <HStack align=\"center\" :gap=\"2\">\n    <Button label=\"Today\" variant=\"ghost\" />\n    <Selector\n      v-model=\"view\"\n      label=\"Calendar view\"\n      is-label-hidden\n      variant=\"ghost\"\n      :options=\"[\n        { value: 'day', label: 'Day' },\n        { value: 'week', label: 'Week' },\n        { value: 'month', label: 'Month' },\n      ]\"\n    />\n    <Selector\n      v-model=\"density\"\n      label=\"Density\"\n      is-label-hidden\n      variant=\"ghost\"\n      status=\"warning\"\n      status-message=\"This setting affects all users\"\n      status-variant=\"tooltip\"\n      :options=\"[\n        { value: 'compact', label: 'Compact' },\n        { value: 'comfortable', label: 'Comfortable' },\n        { value: 'spacious', label: 'Spacious' },\n      ]\"\n    />\n    <Button label=\"Export\" variant=\"ghost\" />\n  </HStack>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Secondary",
+            "zh": "次要样式"
+          },
+          "description": {
+            "en": "The secondary trigger rests like a secondary button: no border, and a neutral fill.",
+            "zh": "次要样式和次要按钮同一套静止外观：没有边框，铺一层中性底。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst priority = ref('normal')\n</script>\n\n<template>\n  <Selector\n    v-model=\"priority\"\n    label=\"Priority\"\n    variant=\"secondary\"\n    :options=\"[\n      { value: 'low', label: 'Low' },\n      { value: 'normal', label: 'Normal' },\n      { value: 'high', label: 'High' },\n    ]\"\n  />\n</template>"
+        },
+        {
+          "title": {
+            "en": "Option actions",
+            "zh": "选项操作"
+          },
+          "description": {
+            "en": "An option can carry an action. Activating it does not change the selection. Once any option has an action, the menu becomes two columns.",
+            "zh": "选项可以带一个操作。点操作不会改当前选择。只要有一项带了操作，列表就变成两列。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { h, ref } from 'vue'\n\nconst city = ref('paris')\nconst edited = ref('')\n\nfunction edit(name: string) {\n  return h('button', {\n    type: 'button',\n    onClick: () => {\n      edited.value = name\n    },\n  }, 'Edit')\n}\n</script>\n\n<template>\n  <div>\n    <Selector\n      v-model=\"city\"\n      label=\"City\"\n      :options=\"[\n        { value: 'paris', label: 'Paris', action: edit('Paris') },\n        { value: 'lyon', label: 'Lyon', action: edit('Lyon') },\n      ]\"\n    />\n    <p v-if=\"edited\">\n      Last edited: {{ edited }}\n    </p>\n  </div>\n</template>"
         },
         {
           "title": {
@@ -33991,6 +34073,12 @@
                 "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
               },
               {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "Field shell and input box. A root class lands on the box, not the native input. Item actions behave like Typeahead."
+              },
+              {
                 "name": "`placeholder`",
                 "type": "`string`",
                 "default": "`Add…` / `添加…`",
@@ -34188,6 +34276,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
+              },
+              {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "外壳和输入外框。根上的 class 落在外框，不落到原生 input。候选项的 `action` 和自动完成一样。"
               },
               {
                 "name": "`placeholder`",
@@ -34748,6 +34842,18 @@
                 "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
               },
               {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "Field shell and input box. A root class lands on the box, not the native input. An item `action` turns the menu into two columns and does not select the item."
+              },
+              {
+                "name": "`startIcon`",
+                "type": "`Component`",
+                "default": "—",
+                "description": "Icon at the start of the input. An `icon` slot replaces it."
+              },
+              {
                 "name": "`placeholder`",
                 "type": "`string`",
                 "default": "`Search…` / `搜索…`",
@@ -35132,6 +35238,18 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
+              },
+              {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "外壳和输入外框。根上的 class 落在外框，不落到原生 input。候选项的 `action` 把菜单变成两列，点操作不会选中这一项。"
+              },
+              {
+                "name": "`startIcon`",
+                "type": "`Component`",
+                "default": "—",
+                "description": "输入框起始侧的图标。已有 `icon` 插槽时以插槽为准。"
               },
               {
                 "name": "`placeholder`",
@@ -36652,9 +36770,15 @@
               },
               {
                 "name": "`variant`",
-                "type": "`'input' | 'ghost'`",
+                "type": "`'input' | 'secondary' | 'ghost'`",
                 "default": "`'input'`",
-                "description": "`input` is the bordered field. `ghost` matches a toolbar button."
+                "description": "`input` is the bordered field. `secondary` matches a secondary button. `ghost` matches a toolbar button. On the latter two, an attached status becomes detached."
+              },
+              {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "The shell takes `container*` and the root class. The built-in button takes `control*`. A custom trigger ignores both and warns in development."
               },
               {
                 "name": "`renderTrigger`",
@@ -36791,9 +36915,15 @@
               },
               {
                 "name": "`variant`",
-                "type": "`'input' | 'ghost'`",
+                "type": "`'input' | 'secondary' | 'ghost'`",
                 "default": "`'input'`",
-                "description": "`input` 是带边框的字段。`ghost` 看起来像工具栏按钮。"
+                "description": "`input` 是带边框的字段。`secondary` 对齐次要按钮。`ghost` 看起来像工具栏按钮。后两种上的 attached 状态会收成独立说明。"
+              },
+              {
+                "name": "`containerClass` / `controlClass`",
+                "type": "`class`",
+                "default": "—",
+                "description": "外壳接收 `container*` 和根上的 class。内置按钮接收 `control*`。自定义触发器上这两类样式不生效，开发环境会警告。"
               },
               {
                 "name": "`renderTrigger`",
@@ -54050,7 +54180,7 @@
                 "name": "`subtitle`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Secondary text below the title. Not rendered when empty."
+                "description": "Secondary text below the title. Not rendered when empty and no `subtitle` slot is set."
               },
               {
                 "name": "`hasCloseButton`",
@@ -54059,10 +54189,16 @@
                 "description": "Shows a close button that emits `openChange(false)`."
               },
               {
+                "name": "`endContentEdgeCompensation`",
+                "type": "`'inline' | 'block' | 'all'`",
+                "default": "`all` when a close button is shown",
+                "description": "Which edges of the trailing slot are compensated. Omitted with a close button compensates block and inline end."
+              },
+              {
                 "name": "`closeButtonLabel`",
                 "type": "`string`",
-                "default": "`'Close'`",
-                "description": "Accessible name of the close button."
+                "default": "Active language",
+                "description": "Accessible name of the close button. Defaults to Close in English and 关闭 in Chinese."
               },
               {
                 "name": "`hasDivider`",
@@ -54140,7 +54276,7 @@
                 "name": "`subtitle`",
                 "type": "`string`",
                 "default": "—",
-                "description": "标题下方的次要文字。为空时不渲染。"
+                "description": "标题下方的次要文字。为空且没有 `subtitle` 插槽时不渲染。"
               },
               {
                 "name": "`hasCloseButton`",
@@ -54149,10 +54285,16 @@
                 "description": "显示关闭按钮，点击时发出 `openChange(false)`。"
               },
               {
+                "name": "`endContentEdgeCompensation`",
+                "type": "`'inline' | 'block' | 'all'`",
+                "default": "有关闭按钮时为 `all`",
+                "description": "后置槽补偿哪几条边。不传时，有关闭按钮就补上下和行末。"
+              },
+              {
                 "name": "`closeButtonLabel`",
                 "type": "`string`",
-                "default": "`'Close'`",
-                "description": "关闭按钮的无障碍名称。"
+                "default": "跟界面语言",
+                "description": "关闭按钮的无障碍名称。不传时英文 Close、中文「关闭」。"
               },
               {
                 "name": "`hasDivider`",
@@ -54196,7 +54338,7 @@
           },
           {
             "heading": "DialogHeader Events and Slots",
-            "text": "- `openChange(isOpen: boolean)`: fires with `false` from the close button.\n- `startContent`: content before the title, such as a back button.\n- `endContent`: content after the title, before the close button."
+            "text": "- `openChange(isOpen: boolean)`: fires with `false` from the close button.\n- `title`: inline content in place of the title string.\n- `subtitle`: inline content for the subtitle.\n- `startContent`: content before the title, such as a back button.\n- `endContent`: content after the title, before the close button."
           },
           {
             "heading": "useImperativeDialog",
@@ -54230,7 +54372,7 @@
           },
           {
             "heading": "DialogHeader 事件与插槽",
-            "text": "- `openChange(isOpen: boolean)`：点击关闭按钮时以 `false` 触发。\n- `startContent`：标题之前的内容，例如返回按钮。\n- `endContent`：标题之后、关闭按钮之前的内容。"
+            "text": "- `openChange(isOpen: boolean)`：点击关闭按钮时以 `false` 触发。\n- `title`：替换标题文字的行内内容。\n- `subtitle`：副标题的行内内容。\n- `startContent`：标题之前的内容，例如返回按钮。\n- `endContent`：标题之后、关闭按钮之前的内容。"
           },
           {
             "heading": "useImperativeDialog",
@@ -54408,10 +54550,16 @@
                 "default": "`false`"
               },
               {
+                "name": "`endContentEdgeCompensation`",
+                "description": "`endContentEdgeCompensation`",
+                "type": "`'inline' | 'block' | 'all'`",
+                "default": "`all` when a close button is shown"
+              },
+              {
                 "name": "`closeButtonLabel`",
                 "description": "`closeButtonLabel`",
                 "type": "`string`",
-                "default": "`'Close'`"
+                "default": "Active language"
               },
               {
                 "name": "`hasDivider`",
@@ -54436,7 +54584,7 @@
                 "name": "`subtitle`",
                 "type": "`string`",
                 "default": "—",
-                "description": "标题下方的次要文字。为空字符串时不渲染。"
+                "description": "标题下方的次要文字。为空字符串且没有 `subtitle` 插槽时不渲染。"
               },
               {
                 "name": "`hasCloseButton`",
@@ -54445,10 +54593,16 @@
                 "description": "显示关闭按钮，点击时发出 `openChange(false)`。"
               },
               {
+                "name": "`endContentEdgeCompensation`",
+                "type": "`'inline' | 'block' | 'all'`",
+                "default": "有关闭按钮时为 `all`",
+                "description": "后置槽补偿哪几条边。`inline` 只收行末，`block` 只收上下，`all` 两边都收。没有关闭按钮且不传这个属性时不补偿。"
+              },
+              {
                 "name": "`closeButtonLabel`",
                 "type": "`string`",
-                "default": "`'Close'`",
-                "description": "关闭按钮的无障碍名称。"
+                "default": "跟界面语言",
+                "description": "关闭按钮的无障碍名称。英文默认 Close，中文默认「关闭」。"
               },
               {
                 "name": "`hasDivider`",
@@ -54472,7 +54626,7 @@
         "en": [
           {
             "heading": "Accessibility",
-            "text": "The title is exposed as a heading through `role=\"heading\"` and `aria-level=\"2\"`, and it labels the parent dialog through `aria-labelledby`. A screen reader announces the dialog by its title text.\n\nWhen the dialog opens, the title carries `tabindex=\"-1\"` and receives initial focus, so keyboard users hear the name right away instead of starting in the middle of the body.\n\nThe close control is an `IconButton` whose accessible name defaults to `Close`. Override it with `closeButtonLabel` when the copy needs localizing."
+            "text": "The title is exposed as a heading through `role=\"heading\"` and `aria-level=\"2\"`, and it labels the parent dialog through `aria-labelledby`. A screen reader announces the dialog by its title text.\n\nWhen the dialog opens, the title carries `tabindex=\"-1\"` and receives initial focus, so keyboard users hear the name right away instead of starting in the middle of the body.\n\nThe close control is an `IconButton`. When `closeButtonLabel` is omitted, its accessible name follows the active language: Close in English, 关闭 in Chinese.\n\nThe `title` and `subtitle` slots take inline content, such as emphasis or a link. An empty subtitle string with no slot renders nothing.\n\nTheme targets are `dialog-header`, `dialog-header-start-content`, `dialog-header-title-block`, `dialog-header-end-content`, and `dialog-header-close-icon`. They sit on the row, the leading slot, the title block, the trailing slot, and the close glyph. With a close button, the trailing slot pulls in on the block edges and the inline end, cancelling the button's own padding. `endContentEdgeCompensation` selects `inline`, `block`, or `all`."
           },
           {
             "heading": "Events",
@@ -54480,13 +54634,13 @@
           },
           {
             "heading": "Slots",
-            "text": "- `startContent`: content before the title, such as a back button.\n- `endContent`: content before the close button."
+            "text": "- `title`: inline content in place of the title string. The heading still names the dialog.\n- `subtitle`: inline content for the subtitle.\n- `startContent`: content before the title, such as a back button.\n- `endContent`: content before the close button."
           }
         ],
         "zh": [
           {
             "heading": "无障碍",
-            "text": "标题通过 `role=\"heading\"` 和 `aria-level=\"2\"` 暴露给辅助技术，同时用 `aria-labelledby` 与父级对话框关联，所以屏幕阅读器读到的对话框名称就是标题文字。\n\n对话框打开时，标题带 `tabindex=\"-1\"` 并接收初始焦点。这让键盘用户一进入对话框就听到名称，而不是从正文中间开始。\n\n关闭按钮是 `IconButton`，默认无障碍名称是 `Close`。文案需要本地化时用 `closeButtonLabel` 覆盖。"
+            "text": "标题通过 `role=\"heading\"` 和 `aria-level=\"2\"` 暴露给辅助技术，同时用 `aria-labelledby` 与父级对话框关联，所以屏幕阅读器读到的对话框名称就是标题文字。\n\n对话框打开时，标题带 `tabindex=\"-1\"` 并接收初始焦点。这让键盘用户一进入对话框就听到名称，而不是从正文中间开始。\n\n关闭按钮是 `IconButton`。没写 `closeButtonLabel` 时，无障碍名称跟界面语言走：英文 Close，中文「关闭」。\n\n标题和副标题都可以用插槽放行内内容，例如一段强调或一个链接。副标题是空字符串、又没有插槽时，那一行不渲染。\n\n换肤挂点是 `dialog-header`、`dialog-header-start-content`、`dialog-header-title-block`、`dialog-header-end-content`、`dialog-header-close-icon`，分别落在标题行、前置槽、标题块、后置槽和关闭图标上。有关闭按钮时，后置槽默认把上下和行末各收进一档间距，用来抵消按钮自己的内边距。`endContentEdgeCompensation` 可以只收行末（`inline`）、只收上下（`block`），或两边都收（`all`）。"
           },
           {
             "heading": "事件",
@@ -54494,7 +54648,7 @@
           },
           {
             "heading": "插槽",
-            "text": "- `startContent`：标题之前的内容，例如返回按钮。\n- `endContent`：关闭按钮之前的内容。"
+            "text": "- `title`：替换标题里的文字，适合放行内内容。标题元素仍是对话框的名字。\n- `subtitle`：副标题里的行内内容。\n- `startContent`：标题之前的内容，例如返回按钮。\n- `endContent`：关闭按钮之前的内容。"
           }
         ]
       },
@@ -55853,11 +56007,11 @@
       "exportName": "Toast",
       "summary": {
         "en": "Place `ToastViewport` once near the root of your app, then call `useToast` from any component.",
-        "zh": "`Toast` 是一种不打断操作的轻量反馈，用来确认操作结果或提示状态变化，数秒后自动消失。使用时，在应用根节点放置一次 `ToastViewport`，然后在任意组件中调用 `useToast` 弹出提示："
+        "zh": "`Toast` 是一种不打断操作的轻量反馈，用来确认操作结果或提示状态变化，数秒后自动消失。使用时，在应用根节点放置一次 `ToastViewport`，然后在任意组件中调用 `useToast` 弹出提示。"
       },
       "usage": {
-        "en": "Place `ToastViewport` once near the root of your app, then call `useToast` from any component.\n\n```vue\n<script setup lang=\"ts\">\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n\ntoast({ body: 'Saved successfully', type: 'success' })\n</script>\n\n<template>\n  <div>\n    <button @click=\"toast({ body: 'Saved' })\">\n      Save\n    </button>\n    <ToastViewport />\n  </div>\n</template>\n```",
-        "zh": "`Toast` 是一种不打断操作的轻量反馈，用来确认操作结果或提示状态变化，数秒后自动消失。使用时，在应用根节点放置一次 `ToastViewport`，然后在任意组件中调用 `useToast` 弹出提示：\n\n```vue\n<script setup lang=\"ts\">\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n\ntoast({ body: '操作成功', type: 'success' })\n</script>\n\n<template>\n  <div>\n    <button @click=\"toast({ body: '已保存' })\">\n      保存\n    </button>\n    <ToastViewport />\n  </div>\n</template>\n```"
+        "en": "Place `ToastViewport` once near the root of your app, then call `useToast` from any component.\n\nOn a touch screen, a swipe toward the toast's edge dismisses it: down when it sits at the bottom, up when it sits at the top. A horizontal drag is left to the page. A swipe that starts on a button or link does not dismiss. A mouse drag does not dismiss either.\n\n```vue\n<script setup lang=\"ts\">\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n\ntoast({ body: 'Saved successfully', type: 'success' })\n</script>\n\n<template>\n  <div>\n    <button @click=\"toast({ body: 'Saved' })\">\n      Save\n    </button>\n    <ToastViewport />\n  </div>\n</template>\n```",
+        "zh": "`Toast` 是一种不打断操作的轻量反馈，用来确认操作结果或提示状态变化，数秒后自动消失。使用时，在应用根节点放置一次 `ToastViewport`，然后在任意组件中调用 `useToast` 弹出提示。\n\n在触摸屏上，朝提示所在的那条边滑动可以关掉它：贴在屏幕下方的向下滑，贴在上方的向上滑。横向滑动留给页面滚动。滑在按钮或链接上时不关，那一下属于控件自己。鼠标拖动不会关掉提示。\n\n```vue\n<script setup lang=\"ts\">\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n\ntoast({ body: '操作成功', type: 'success' })\n</script>\n\n<template>\n  <div>\n    <button @click=\"toast({ body: '已保存' })\">\n      保存\n    </button>\n    <ToastViewport />\n  </div>\n</template>\n```"
       },
       "practices": {
         "en": [
