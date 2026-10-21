@@ -36,6 +36,12 @@
    - 还没接好的（属于 C 节点的工作），在回报的「交给 Cx」清单里要能找到对应条目。
    - 截一张图，用读图工具看一下。
 
+8b. **图标符合我们自己的方案**（规则见 `SWARM.md`「图标用我们自己的方案」）：
+   - 图标相关的改动，都建在 Iconify 名字、语义表（`semantic.ts`）、内置图形（`glyphs.ts`）和 `defineTheme({ icons })` 这套方案上。
+   - 没有新增别的图标注册机制，也没有把上游的图标 React 组件翻译过来。
+   - 新增的语义名都有默认的 Lucide 图标；需要兜底的，都有内置图形。
+   - 写一个临时测试：用 `defineTheme({ icons: { upload: 'carbon:upload' } })` 覆盖 `upload`，再覆盖一个带命名空间的组件图标，比如 `numberInput:stepperDown`，两个都能生效。
+
 ### 二、检查脚本有效
 
 9. 新的 i18n 目录检查接进了 `pnpm check`，可以看 `package.json` 确认。然后做三个反向测试，每个测完都要还原：

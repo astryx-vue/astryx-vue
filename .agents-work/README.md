@@ -22,6 +22,8 @@
 - 样式先用 CSS 变量和 CSS 分层，不把 UnoCSS 或 StyleX 作为使用组件的前提。
 - Vue 版本使用 Vue 自己习惯的 props、事件、插槽、`v-model` 和组合式函数，不照抄 React 写法。
 
+- 图标用我们自己的方案，不照搬上游的 React 图标注册表：`Icon` 按 Iconify 名字画图标，`astryxIcons()` Vite 插件从 `@iconify-json/*` 按需打包，组件内部只用语义名（默认是 Lucide，没注册时退回内置图形），主题用 `defineTheme({ icons })` 覆盖。详细说明在 `apps/docs/docs/zh/guide/icons.md`。
+
 ## 对齐原版
 
 目标是像素级对齐：除了用 Vue 而不是 React 实现，样式、布局、交互和文案都应和原版 `facebook/astryx` 一致。React 与 Vue 的差别只在实现层，不该让使用者看出两个库的样子不一样。
