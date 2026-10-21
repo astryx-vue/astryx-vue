@@ -2,6 +2,8 @@ import type { ComputedRef, Ref } from 'vue'
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { ChatComposerToken, ChatComposerTrigger } from './types.js'
 import { computed, onScopeDispose, reactive, ref, useId } from 'vue'
+import { isImeKeyEvent } from '../composables/internal/ime.js'
+import { caretTextNode, findActiveTrigger, isUnmatchedMultiWordQuery, textBeforeCursor } from './triggerQuery.js'
 
 export interface TriggerMenuState {
   isActive: boolean
@@ -10,6 +12,8 @@ export interface TriggerMenuState {
   items: SearchableItem[]
   highlightedIndex: number
   isLoading: boolean
+  /** The query is still active, but an unmatched multi-word phrase hides the menu. */
+  isHidden: boolean
 }
 
 export interface UseTriggerMenuOptions {
@@ -22,34 +26,11 @@ export interface UseTriggerMenuOptions {
   debounceMs?: Ref<number>
 }
 
-function textBeforeCursor(editable: HTMLElement): string | null {
-  const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0 || !selection.getRangeAt(0).collapsed)
-    return null
-  const range = selection.getRangeAt(0)
-  if (!editable.contains(range.startContainer) || range.startContainer.nodeType !== Node.TEXT_NODE)
-    return null
-  return (range.startContainer.textContent ?? '').slice(0, range.startOffset)
-}
-
-function findActiveTrigger(text: string, triggers: readonly ChatComposerTrigger[]): {
-  trigger: ChatComposerTrigger
-  query: string
+interface DismissedQuery {
+  character: string
   triggerStart: number
-} | null {
-  for (let index = text.length - 1; index >= 0; index -= 1) {
-    const char = text[index]
-    if (char === ' ' || char === '\n')
-      return null
-    for (const trigger of triggers) {
-      if (char !== trigger.character)
-        continue
-      const previous = index > 0 ? text[index - 1] : null
-      if (previous === null || previous === ' ' || previous === '\n')
-        return { trigger, query: text.slice(index + 1), triggerStart: index }
-    }
-  }
-  return null
+  dismissedQuery: string
+  textNode: Node | null
 }
 
 function deleteTriggerText(triggerStart: number): void {
@@ -75,6 +56,7 @@ export interface UseTriggerMenuReturn {
   anchor: Ref<HTMLElement | null>
   keyboardMove: Ref<boolean>
   hasTriggers: ComputedRef<boolean>
+  isMenuVisible: ComputedRef<boolean>
   handleInput: () => void
   handleKeyDown: (event: KeyboardEvent) => boolean
   selectItem: (item: SearchableItem) => void
@@ -88,6 +70,8 @@ function isPromise<T>(value: T | Promise<T>): value is Promise<T> {
 
 /**
  * Opens a suggestion list when a trigger character is typed at a word boundary.
+ * A trigger may opt into a multi-word query. Results apply only while that
+ * query is still the one at the caret.
  */
 export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuReturn {
   const listboxId = useId()
@@ -98,16 +82,19 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
     items: [],
     highlightedIndex: 0,
     isLoading: false,
+    isHidden: false,
   })
   const anchor = ref<HTMLElement | null>(null)
   const keyboardMove = ref(false)
   let triggerStart = -1
   let timer: ReturnType<typeof setTimeout> | undefined
   let requestId = 0
+  let dismissed: DismissedQuery | null = null
   const asyncSources = new WeakSet<object>()
 
   function removeAnchor(): void {
-    anchor.value?.remove()
+    if (anchor.value?.getAttribute('data-astryx-trigger-anchor') != null)
+      anchor.value.remove()
     anchor.value = null
   }
 
@@ -144,29 +131,42 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
     anchor.value = span
   }
 
-  function applyItems(items: SearchableItem[], captured: number): void {
+  function queryStillCurrent(captured: number, trigger: ChatComposerTrigger): boolean {
     if (captured !== requestId)
+      return false
+    const editable = options.editable.value
+    const before = editable ? textBeforeCursor(editable) : null
+    const triggers = options.triggers.value
+    const found = before == null || !triggers ? null : findActiveTrigger(before, triggers)
+    if (found?.trigger.character !== trigger.character || found.triggerStart !== triggerStart) {
+      reset()
+      return false
+    }
+    return true
+  }
+
+  function applyItems(items: SearchableItem[], captured: number, trigger: ChatComposerTrigger): void {
+    if (!queryStillCurrent(captured, trigger))
       return
     state.items = items
     state.highlightedIndex = items.length > 0 ? 0 : -1
     state.isLoading = false
+    state.isHidden = isUnmatchedMultiWordQuery(trigger, items, false)
   }
 
-  function runSearch(trigger: ChatComposerTrigger, query: string): void {
+  function runSearch(trigger: ChatComposerTrigger, query: string, captured: number): void {
     const source = trigger.searchSource
-    source.cancel?.()
-    const captured = ++requestId
     state.isLoading = true
     const result = source.search(query)
     if (isPromise(result)) {
       asyncSources.add(source)
       void result.then(
-        items => applyItems(items, captured),
-        () => applyItems([], captured),
+        items => applyItems(items, captured, trigger),
+        () => applyItems([], captured, trigger),
       )
       return
     }
-    applyItems(result, captured)
+    applyItems(result, captured, trigger)
   }
 
   function searchItems(trigger: ChatComposerTrigger, query: string): void {
@@ -174,16 +174,18 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
       clearTimeout(timer)
       timer = undefined
     }
+    const captured = ++requestId
+    trigger.searchSource.cancel?.()
     const delay = options.debounceMs?.value ?? 150
     if (asyncSources.has(trigger.searchSource) && delay > 0) {
       state.isLoading = true
       timer = setTimeout(() => {
         timer = undefined
-        runSearch(trigger, query)
+        runSearch(trigger, query, captured)
       }, delay)
       return
     }
-    runSearch(trigger, query)
+    runSearch(trigger, query, captured)
   }
 
   function reset(): void {
@@ -195,12 +197,14 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
     requestId += 1
     removeAnchor()
     triggerStart = -1
+    dismissed = null
     state.isActive = false
     state.activeTrigger = null
     state.query = ''
     state.items = []
     state.highlightedIndex = 0
     state.isLoading = false
+    state.isHidden = false
   }
 
   function selectItem(item: SearchableItem): void {
@@ -226,22 +230,41 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
       return
     const before = textBeforeCursor(editable)
     if (before === null) {
+      dismissed = null
       if (state.isActive)
         reset()
       return
     }
     const found = findActiveTrigger(before, triggers)
     if (!found) {
+      dismissed = null
       if (state.isActive)
         reset()
       return
     }
-    if (!state.isActive || state.activeTrigger !== found.trigger) {
+    const remembered = dismissed
+    if (
+      remembered
+      && remembered.character === found.trigger.character
+      && remembered.triggerStart === found.triggerStart
+      && remembered.textNode !== null
+      && remembered.textNode.isConnected
+      && remembered.textNode === caretTextNode(editable)
+    ) {
+      if (found.query.startsWith(remembered.dismissedQuery))
+        return
+      dismissed = null
+    }
+    else {
+      dismissed = null
+    }
+    if (!state.isActive || state.activeTrigger?.character !== found.trigger.character || triggerStart !== found.triggerStart) {
       triggerStart = found.triggerStart
       state.isActive = true
       state.activeTrigger = found.trigger
       state.query = found.query
       state.highlightedIndex = 0
+      state.isHidden = false
       placeAnchor()
       searchItems(found.trigger, found.query)
       return
@@ -257,8 +280,36 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
     state.highlightedIndex = next
   }
 
+  const isMenuVisible = computed(() => state.isActive && !state.isHidden)
+
   function handleKeyDown(event: KeyboardEvent): boolean {
-    if (!state.isActive)
+    if (isImeKeyEvent(event))
+      return false
+    if (!isMenuVisible.value)
+      return false
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      const editable = options.editable.value
+      const nextDismissed = state.activeTrigger
+        ? {
+            character: state.activeTrigger.character,
+            triggerStart,
+            dismissedQuery: state.query,
+            textNode: editable ? caretTextNode(editable) : null,
+          }
+        : null
+      reset()
+      dismissed = nextDismissed
+      return true
+    }
+    const hasPickableRows = !state.isLoading && state.items.length > 0
+    if (!hasPickableRows && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+      event.preventDefault()
+      return true
+    }
+    if (!hasPickableRows)
+      return false
+    if (event.key === 'Enter' && event.shiftKey)
       return false
     const last = state.items.length - 1
     if (event.key === 'ArrowDown') {
@@ -277,11 +328,6 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
         return false
       event.preventDefault()
       selectItem(item)
-      return true
-    }
-    if (event.key === 'Escape') {
-      event.preventDefault()
-      reset()
       return true
     }
     return false
@@ -306,6 +352,7 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
     anchor,
     keyboardMove,
     hasTriggers,
+    isMenuVisible,
     handleInput,
     handleKeyDown,
     selectItem,

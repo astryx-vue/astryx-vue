@@ -469,19 +469,19 @@
   }
 
   .astryx-chat-system-message__content {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--astryx-spacing-1-5, 6px);
+    display: inline-block;
     max-width: 100%;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
+    text-align: center;
+    white-space: normal;
   }
 
   .astryx-chat-system-message__icon {
     display: inline-flex;
     flex-shrink: 0;
+    margin-inline-end: var(--astryx-spacing-1-5, 6px);
+    vertical-align: middle;
   }
 
   .astryx-chat-system-message[data-variant='divider'] {

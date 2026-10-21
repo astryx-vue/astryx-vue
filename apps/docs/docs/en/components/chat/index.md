@@ -101,7 +101,7 @@ The examples start with the composer beside the transcript, then follow layout, 
 
 <DemoExample
   :demo="chatComposerMentions"
-  description="Type @ at the start of a word to list people. Choosing one leaves a chip in the draft. The submitted string contains the chip value."
+  description="Type @ at the start of a word and keep going through spaces, as in Ada Lov, and the list narrows to Ada Lovelace. A phrase with no match hides the list and leaves the typed text alone. Type / for a one-word command; a space closes that list. A person becomes a chip. A command is inserted as text."
   locale="en"
   title="ChatComposerInput — Mentions"
 />

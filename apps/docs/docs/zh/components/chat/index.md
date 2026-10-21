@@ -104,7 +104,7 @@ function onSubmit(value: string) {
 
 <DemoExample
   :demo="chatComposerMentions"
-  description="在词首输入 @，会列出可以插入的人。选中后草稿里留下这个人的标记，发送出去的是标记的值。"
+  description="词首输入 @ 可以连续打多个词，比如 Ada Lov，列表会跟着缩到 Ada Lovelace。没有匹配的句子会把列表藏起来，已经打的字还在。词首输入 / 是单词命令，打一个空格列表就关上。选中的人变成标记，命令按原文插入。"
   locale="zh"
   title="ChatComposerInput — 提及"
 />

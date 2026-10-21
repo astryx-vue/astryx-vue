@@ -1,7 +1,6 @@
 {
   "packages/cli/src/cli.ts": 623,
   "packages/core/src/BottomSheet/useSheetGestures.ts": 620,
-  "packages/core/src/Chat/types.ts": 565,
   "packages/core/src/HoverCard/useHoverCard.ts": 592,
   "packages/core/src/MultiSelector/MultiSelector.vue": 763,
   "packages/core/src/PowerSearch/PowerSearch.vue": 707,

@@ -240,6 +240,68 @@ describe('chat composer', () => {
     wrapper.unmount()
   })
 
+  it('keeps a multi-word mention open and hides it when nothing matches', async () => {
+    const wrapper = mount(ChatComposerInput, {
+      attachTo: document.body,
+      props: {
+        triggers: [
+          {
+            character: '@',
+            hasMultiWordQuery: true,
+            searchSource: createStaticSource([
+              { id: 'ada', label: 'Ada Lovelace' },
+              { id: 'maria', label: 'María José García' },
+            ]),
+            onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}` }),
+          },
+          {
+            character: '/',
+            searchSource: createStaticSource([{ id: 'summarize', label: 'summarize' }]),
+            onSelect: item => `/${item.label} `,
+          },
+        ],
+      },
+    })
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    const field = asHtml(editable.element)
+
+    function write(text: string): void {
+      field.focus()
+      const existing = field.firstChild
+      if (existing?.nodeType === Node.TEXT_NODE && field.childNodes.length === 1 && text !== '')
+        (existing as Text).data = text
+      else
+        field.textContent = text
+      const textNode = field.firstChild
+      const selection = window.getSelection()
+      const range = document.createRange()
+      if (textNode && textNode.nodeType === Node.TEXT_NODE)
+        range.setStart(textNode, textNode.textContent?.length ?? 0)
+      else
+        range.selectNodeContents(field)
+      range.collapse(true)
+      selection?.removeAllRanges()
+      selection?.addRange(range)
+      field.dispatchEvent(new InputEvent('input', { bubbles: true }))
+    }
+
+    write('@Ada Lov')
+    await nextTick()
+    expect(editable.attributes('aria-expanded')).toBe('true')
+    expect(document.body.textContent).toContain('Ada Lovelace')
+    expect(document.body.textContent).not.toContain('María José García')
+
+    write('@Ada Lov nobody')
+    await nextTick()
+    expect(editable.attributes('aria-expanded')).toBe('false')
+    expect(field.textContent).toBe('@Ada Lov nobody')
+
+    write('/sum ')
+    await nextTick()
+    expect(editable.attributes('aria-expanded')).toBe('false')
+    wrapper.unmount()
+  })
+
   it('hides dictation without speech recognition and localizes send and stop', async () => {
     const hidden = mount(ChatDictationButton, {
       props: {
