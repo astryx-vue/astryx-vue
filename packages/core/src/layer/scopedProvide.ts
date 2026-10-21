@@ -16,6 +16,8 @@ import { metadataListKey } from '../MetadataList/context.js'
 import { navMenuKey } from '../NavMenu/context.js'
 import { radioContextKey } from '../Radio/types.js'
 import { segmentedControlContextKey } from '../SegmentedControl/context.js'
+import { stepperContextKey } from '../Stepper/context.js'
+import { tabListContextKey } from '../TabList/context.js'
 import { toggleButtonGroupContextKey } from '../ToggleButton/context.js'
 import '../../styles/layer.css'
 
@@ -95,3 +97,5 @@ registerLayerScopedContext(layoutAreaKey, NO_LAYOUT_AREA)
 registerLayerScopedContext(layoutDividerKey, NO_LAYOUT_DIVIDERS)
 registerLayerScopedContext(metadataListKey, null)
 registerLayerScopedContext(navMenuKey, null)
+registerLayerScopedContext(tabListContextKey, null)
+registerLayerScopedContext(stepperContextKey, null)

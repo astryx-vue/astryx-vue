@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { StepProgress, StepProps, StepSlots } from './types.js'
-import { computed, inject, onUnmounted, watch } from 'vue'
+import { computed, onUnmounted, watch } from 'vue'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { stepperContextKey } from './context.js'
+import { useStepperContext } from './context.js'
 import { resolveStepGlyph } from './logic.js'
 import StepMarker from './StepMarker.vue'
 import '../../styles/stepper.css'
@@ -18,11 +18,11 @@ const props = withDefaults(defineProps<StepProps>(), {
 
 defineSlots<StepSlots>()
 
-const stepper = inject(stepperContextKey)
+const stepper = useStepperContext()
 const messages = useAstryxMessages()
 
 const progress = computed<StepProgress>(() => {
-  const active = stepper?.activeStep.value ?? 0
+  const active = stepper.activeStep.value
   if (props.step === active)
     return 'in-progress'
   if (props.step < active)
@@ -30,19 +30,19 @@ const progress = computed<StepProgress>(() => {
   return 'not-started'
 })
 
-const density = computed(() => props.density ?? stepper?.density.value ?? 'balanced')
-const orientation = computed(() => stepper?.orientation.value ?? 'horizontal')
-const indicatorPosition = computed(() => stepper?.indicatorPosition.value ?? 'separated')
-const isClickable = computed(() => stepper?.isNonLinear.value === true && !props.isDisabled)
+const density = computed(() => props.density ?? stepper.density.value)
+const orientation = computed(() => stepper.orientation.value)
+const indicatorPosition = computed(() => stepper.indicatorPosition.value)
+const isClickable = computed(() => stepper.isNonLinear.value === true && !props.isDisabled)
 const numberLabel = computed(() => String(props.step + 1))
 const glyph = computed(() => resolveStepGlyph({
   progress: progress.value,
   indicator: props.indicator,
   status: props.status,
 }))
-const collapsed = computed(() => stepper?.collapsed.value === true)
-const leadFilled = computed(() => props.step <= (stepper?.activeStep.value ?? 0))
-const trailFilled = computed(() => props.step < (stepper?.activeStep.value ?? 0))
+const collapsed = computed(() => stepper.collapsed.value === true)
+const leadFilled = computed(() => props.step <= stepper.activeStep.value)
+const trailFilled = computed(() => props.step < stepper.activeStep.value)
 
 const accessibleName = computed(() => {
   const stepNumber = props.step + 1
@@ -73,25 +73,22 @@ const hiddenStatus = computed(() => {
 function activate(): void {
   if (!isClickable.value)
     return
-  stepper?.select.value?.(props.step)
+  stepper.select.value?.(props.step)
 }
 
-if (stepper) {
-  const context = stepper
-  watch(
-    () => ({
-      step: props.step,
-      label: props.label,
-      description: props.description,
-      indicator: props.indicator,
-      status: props.status,
-      isDisabled: props.isDisabled,
-    }),
-    record => context.register(record),
-    { immediate: true },
-  )
-  onUnmounted(() => context.unregister(props.step))
-}
+watch(
+  () => ({
+    step: props.step,
+    label: props.label,
+    description: props.description,
+    indicator: props.indicator,
+    status: props.status,
+    isDisabled: props.isDisabled,
+  }),
+  record => stepper.register(record),
+  { immediate: true },
+)
+onUnmounted(() => stepper.unregister(props.step))
 </script>
 
 <template>

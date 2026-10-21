@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TabMenuProps } from './types.js'
-import { computed, inject, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useListFocus } from '../composables/useListFocus.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { tabListContextKey } from './context.js'
+import { useTabListContext } from './context.js'
 import '../../styles/tab-list.css'
 import '../../styles/layer.css'
 import '../../styles/tab-menu.css'
@@ -13,7 +13,7 @@ import '../../styles/tab-menu.css'
 defineOptions({ name: 'AstryxTabMenu' })
 const props = defineProps<TabMenuProps>()
 
-const context = inject(tabListContextKey)
+const context = useTabListContext()
 const uid = useId()
 const stopValue = `tab-menu:${uid}`
 const menuId = `astryx-tab-menu-${uid}`
@@ -24,10 +24,10 @@ const isOpen = ref(false)
 const placement = computed(() => 'below' as const)
 const alignment = computed(() => 'start' as const)
 
-const selectedOption = computed(() => props.options.find(option => option.value === context?.value.value))
+const selectedOption = computed(() => props.options.find(option => option.value === context.value.value))
 const triggerLabel = computed(() => selectedOption.value?.label ?? props.label)
 const hasSelectedOption = computed(() => selectedOption.value != null)
-const sizeClass = computed(() => `astryx-tab--size-${context?.size.value ?? 'md'}`)
+const sizeClass = computed(() => `astryx-tab--size-${context.size.value}`)
 
 const { position, teleportTarget, detach } = usePositionedLayer({
   alignment,
@@ -56,7 +56,7 @@ useDismiss({
 })
 
 function register(): void {
-  if (!context || anchorRef.value == null)
+  if (anchorRef.value == null)
     return
   context.registerTab({
     disabled: false,
@@ -71,12 +71,12 @@ function toggle(): void {
 }
 
 function select(value: string): void {
-  context?.selectTab(value)
+  context.selectTab(value)
   isOpen.value = false
 }
 
 function onTriggerKeyDown(event: KeyboardEvent): void {
-  if (!context || isOpen.value)
+  if (isOpen.value)
     return
   switch (event.key) {
     case 'ArrowRight':
@@ -133,7 +133,7 @@ watch(isOpen, async (open) => {
 
 onMounted(register)
 onUnmounted(() => {
-  context?.unregisterTab(stopValue)
+  context.unregisterTab(stopValue)
   detach()
 })
 </script>
@@ -147,11 +147,11 @@ onUnmounted(() => {
     :class="[sizeClass, hasSelectedOption && 'astryx-tab--selected']"
     data-tab-menu=""
     :aria-controls="menuId"
-    :aria-current="!context?.isTabsPattern.value && hasSelectedOption ? 'true' : undefined"
-    :aria-selected="context?.isTabsPattern.value ? hasSelectedOption : undefined"
+    :aria-current="!context.isTabsPattern.value && hasSelectedOption ? 'true' : undefined"
+    :aria-selected="context.isTabsPattern.value ? hasSelectedOption : undefined"
     aria-haspopup="menu"
     :aria-expanded="isOpen"
-    :role="context?.isTabsPattern.value ? 'tab' : undefined"
+    :role="context.isTabsPattern.value ? 'tab' : undefined"
     :tabindex="hasSelectedOption ? 0 : -1"
     @click="toggle"
     @keydown="onTriggerKeyDown"
@@ -183,9 +183,9 @@ onUnmounted(() => {
         v-for="option in options"
         :key="option.value"
         class="astryx-tab-menu-item"
-        :data-selected="option.value === context?.value.value || undefined"
+        :data-selected="option.value === context.value.value || undefined"
         role="menuitemradio"
-        :aria-checked="option.value === context?.value.value"
+        :aria-checked="option.value === context.value.value"
         tabindex="-1"
         @click="select(option.value)"
         @keydown="onItemKeyDown($event, option.value)"
@@ -194,7 +194,7 @@ onUnmounted(() => {
           <span v-if="option.iconClass" class="astryx-tab-menu-icon" :class="option.iconClass" />
           {{ option.label }}
         </span>
-        <Icon v-if="option.value === context?.value.value" color="accent" icon="check" size="sm" />
+        <Icon v-if="option.value === context.value.value" color="accent" icon="check" size="sm" />
       </div>
     </div>
   </Teleport>

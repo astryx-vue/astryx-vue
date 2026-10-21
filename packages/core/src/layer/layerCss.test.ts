@@ -89,7 +89,7 @@ describe('layer.css 的加载链', () => {
     expect(missing.map(file => file.slice(SRC.length + 1))).toEqual([])
   })
 
-  it('Toast 视口（用字符串列表声明 astryx-layer）也能走到 layer.css', () => {
+  it('toast 视口（用字符串列表声明 astryx-layer）也能走到 layer.css', () => {
     expect(reachesLayerCss(join(SRC, 'Toast/ToastViewport.vue'))).toBe(true)
   })
 })
