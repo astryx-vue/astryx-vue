@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { RadioEmits, RadioProps, RadioSlots } from './types.js'
-import { computed, inject, useAttrs, useId } from 'vue'
+import { computed, inject, useAttrs, useId, useSlots } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { radioContextKey } from './types.js'
 
@@ -9,6 +10,8 @@ const props = defineProps<RadioProps>()
 const emit = defineEmits<RadioEmits>()
 defineSlots<RadioSlots>()
 const attrs = useAttrs()
+const slots = useSlots()
+const press = usePressFeedback({ hasOverlay: false })
 const context = inject(radioContextKey, undefined)
 const generatedId = `astryx-radio-option-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
@@ -38,13 +41,20 @@ function click(event: MouseEvent): void {
     event.preventDefault()
 }
 
+const hasDescription = computed(() => !!props.description || slots.description != null)
 function describedBy(): string | undefined {
-  return [props.description ? `${inputId.value}-description` : undefined, messageDescriptionId.value].filter(Boolean).join(' ') || undefined
+  return [hasDescription.value ? `${inputId.value}-description` : undefined, messageDescriptionId.value].filter(Boolean).join(' ') || undefined
+}
+function rowClick(event: MouseEvent): void {
+  const target = event.target
+  if (target instanceof Element && target.closest('a, button, select, textarea, [role="button"], [role="link"]'))
+    event.preventDefault()
 }
 </script>
 
 <template>
-  <label :for="inputId" class="astryx-radio" :class="{ 'astryx-indicator-scope': !isDisabled }" :data-size="indicatorSize" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined">
+  <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 标签包住整行。点到链接时取消标签的默认选中，键盘仍由单选框处理。 -->
+  <label :for="inputId" class="astryx-radio" :class="{ 'astryx-indicator-scope': !isDisabled }" v-bind="isDisabled ? undefined : press.pressableProps" :data-size="indicatorSize" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined" @click="rowClick">
     <input
       :id="inputId" class="astryx-radio-native" type="radio" :name="name" :value="value"
       :checked="isSelected" :disabled="isDisabled && !explainedByMessage" :readonly="isReadOnly"
@@ -60,8 +70,12 @@ function describedBy(): string | undefined {
       :is-disabled="isDisabled"
     />
     <span class="astryx-radio-content">
-      <span class="astryx-radio-label">{{ label }}</span>
-      <span v-if="description" :id="`${inputId}-description`" class="astryx-radio-description">{{ description }}</span>
+      <span class="astryx-radio-label">
+        <slot name="label">{{ label }}</slot>
+      </span>
+      <span v-if="hasDescription" :id="`${inputId}-description`" class="astryx-radio-description">
+        <slot name="description">{{ description }}</slot>
+      </span>
     </span>
     <span v-if="$slots.end" class="astryx-radio-end"><slot name="end" /></span>
   </label>

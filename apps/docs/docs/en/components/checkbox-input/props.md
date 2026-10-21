@@ -10,7 +10,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="Properties" tabindex="0">
 <table><thead><tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>v-model</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>Required. The current selection.</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required. The accessible name.</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required accessible name. The label carries both <code>astryx-field-label</code> and <code>astryx-checkbox-label</code>, so a theme can style the checkbox label apart from a field label.</td></tr>
 <tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>Native input ID. Generated when omitted.</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>sm is 20px. md is 24px.</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Component width. Numbers use pixels.</td></tr>

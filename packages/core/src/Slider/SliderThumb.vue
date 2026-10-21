@@ -21,8 +21,14 @@ const props = defineProps<{
   isFocusable: boolean
   tooltipText?: string
   dragging: boolean
+  keyboardFocus?: boolean
+  extraAttrs?: Record<string, unknown>
 }>()
-const emit = defineEmits<{ keydown: [event: KeyboardEvent] }>()
+const emit = defineEmits<{
+  keydown: [event: KeyboardEvent]
+  focus: []
+  blur: []
+}>()
 const thumb = useTemplateRef<HTMLDivElement>('thumb')
 const tooltip = useTemplateRef<InstanceType<typeof ButtonTooltip>>('tooltip')
 const tabIndex = computed(() => props.isFocusable ? 0 : -1)
@@ -45,6 +51,11 @@ function keydown(event: KeyboardEvent): void {
 function focus(): void {
   focused.value = true
   dismissed.value = false
+  emit('focus')
+}
+function blur(): void {
+  focused.value = false
+  emit('blur')
 }
 function enter(): void {
   hovered.value = true
@@ -55,11 +66,12 @@ function enter(): void {
 <template>
   <!-- eslint-disable-next-line vue-a11y/interactive-supports-focus -- The tested dynamic tabindex is always 0 or -1. -->
   <div
-    :id="id" ref="thumb" class="astryx-slider-thumb" role="slider" :style="style" :tabindex="tabIndex"
-    :data-thumb-index="index" :data-dragging="dragging || undefined" :aria-valuemin="min" :aria-valuemax="max" :aria-valuenow="value"
+    v-bind="extraAttrs" :id="id" ref="thumb" class="astryx-slider-thumb" role="slider" :style="style" :tabindex="tabIndex"
+    :data-thumb-index="index" :data-dragging="dragging || undefined" :data-keyboard-focus="keyboardFocus || undefined"
+    :aria-valuemin="min" :aria-valuemax="max" :aria-valuenow="value"
     :aria-valuetext="valueText" :aria-orientation="orientation" :aria-labelledby="labelledBy" :aria-describedby="describedBy"
     :aria-disabled="isDisabled || undefined" :aria-invalid="isInvalid || undefined"
-    @keydown="keydown" @focus="focus" @blur="focused = false" @pointerenter="enter" @pointerleave="hovered = false"
+    @keydown="keydown" @focus="focus" @blur="blur" @pointerenter="enter" @pointerleave="hovered = false"
   />
   <ButtonTooltip v-if="tooltipText" :id="`${id}-tooltip`" ref="tooltip" :anchor="thumb" :open="open" :text="tooltipText" @pointer-enter="hovered = true" @pointer-leave="hovered = false" />
 </template>

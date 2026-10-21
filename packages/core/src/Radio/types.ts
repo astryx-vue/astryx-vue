@@ -1,4 +1,5 @@
 import type { ComputedRef, InjectionKey, Ref, VNode } from 'vue'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldLabelProps, FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
 
 export type RadioValue = string | number
@@ -15,7 +16,7 @@ export interface RadioOption {
   isDisabled?: boolean
 }
 
-export interface RadioGroupProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'> {
+export interface RadioGroupProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'>, FieldPartStylingProps {
   modelValue: RadioValue
   id?: string
   name?: string
@@ -63,6 +64,10 @@ export interface RadioEmits {
 
 export interface RadioSlots {
   labelIcon?: () => VNode[]
+  /** 富文本标题。里面的链接可以单独点，不会选中这一项。 */
+  label?: () => VNode[]
+  /** 富文本说明。 */
+  description?: () => VNode[]
   end?: () => VNode[]
 }
 

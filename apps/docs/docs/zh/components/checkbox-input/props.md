@@ -10,7 +10,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="属性列表" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>v-model</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>必需，当前的选中状态，支持布尔值与半选。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必需，作为控件无障碍名称的文本。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必需，作为控件无障碍名称的文本。标签同时带 <code>astryx-field-label</code> 和 <code>astryx-checkbox-label</code>，主题可以单独改复选框的标签。</td></tr>
 <tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>原生输入元素的 ID，省略时由组件自动生成。</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>控件尺寸，sm 为 20px，md 为 24px。</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>组件宽度，传入数字时按像素处理。</td></tr>
