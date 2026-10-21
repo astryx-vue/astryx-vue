@@ -5,6 +5,7 @@ import { Button } from '../Button/index.js'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { clampInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { usePopover } from './usePopover.js'
 import '../../styles/popover.css'
@@ -133,7 +134,9 @@ onUpdated(syncTrigger)
       v-bind="surfaceProps"
     >
       <div ref="bodyRef" class="astryx-popover__body">
-        <slot name="content" />
+        <LayerContentBoundary>
+          <slot name="content" />
+        </LayerContentBoundary>
       </div>
       <div v-if="hasCloseButton" class="astryx-popover__close">
         <Button variant="secondary" :label="closeButtonLabel" @click="popover.hide()" />

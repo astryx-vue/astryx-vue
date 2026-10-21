@@ -1,6 +1,7 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
+import LayerProvider from '../LayerProvider/LayerProvider.vue'
 import { resolveLayerGutter } from './gutter.js'
 import {
   clampInlineSize,
@@ -9,7 +10,6 @@ import {
   LAYER_MAX_INLINE_SIZE_VAR,
   layerMaxInlineSize,
 } from './inlineSize.js'
-import LayerProvider from '../LayerProvider/LayerProvider.vue'
 
 enableAutoUnmount(afterEach)
 
@@ -53,7 +53,7 @@ describe('isIntrinsicInlineSize', () => {
   })
 })
 
-describe('LayerProvider 写出的宽度上限', () => {
+describe('layerProvider 写出的宽度上限', () => {
   const Probe = defineComponent({
     name: 'Probe',
     setup() {

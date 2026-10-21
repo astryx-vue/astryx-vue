@@ -9,6 +9,7 @@ import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
 import { clampInlineSize, isIntrinsicInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { dropdownMenuContextKey } from './context.js'
@@ -115,11 +116,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !['class', 'style', 'id', 'aria-label', 'aria-labelledby'].includes(key)),
 ))
 
-/**
- * The layer tracks its own open state so a menu that mounts already open still
- * gets one open transition: the layer's own watcher only reacts to a change,
- * and a controlled menu renders open from the first frame.
- */
+// 浮层自己跟踪开合：挂载时就已经展开的受控菜单也要有一次进场。
 const layerIsOpen = ref(false)
 
 const { position, teleportTarget, detach: detachPosition } = usePositionedLayer({
@@ -396,7 +393,6 @@ onBeforeUnmount(() => {
       </template>
     </Button>
   </span>
-
   <BottomSheet
     v-if="isSheet"
     v-model:is-open="sheetOpen"
@@ -449,42 +445,44 @@ onBeforeUnmount(() => {
         :data-placement="position.placement"
         :style="[surfaceStyle, attrs.style as CSSProperties]"
       >
-        <div
-          v-if="slots.header"
-          ref="headerRef"
-          class="astryx-dropdown-menu-region"
-          @keydown="regions.onRegionKeydown"
-        >
-          <slot name="header" />
-        </div>
-        <div
-          :id="surfaceId"
-          ref="surfaceRef"
-          v-bind="forwardedAttrs"
-          :aria-labelledby="menuAriaLabelledBy"
-          :aria-label="menuAriaLabel"
-          class="astryx-dropdown-menu is-in-frame"
-          :class="attrs.class"
-          :data-region-focus="regionFocus || undefined"
-          role="menu"
-          tabindex="0"
-          @focus="onSurfaceFocus"
-          @keydown="onSurfaceKeydown"
-        >
-          <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
-            <DropdownMenuItems v-if="items != null" :items="items" />
-            <slot v-else />
+        <LayerContentBoundary>
+          <div
+            v-if="slots.header"
+            ref="headerRef"
+            class="astryx-dropdown-menu-region"
+            @keydown="regions.onRegionKeydown"
+          >
+            <slot name="header" />
           </div>
-          <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
-        </div>
-        <div
-          v-if="slots.footer"
-          ref="footerRef"
-          class="astryx-dropdown-menu-region"
-          @keydown="regions.onRegionKeydown"
-        >
-          <slot name="footer" />
-        </div>
+          <div
+            :id="surfaceId"
+            ref="surfaceRef"
+            v-bind="forwardedAttrs"
+            :aria-labelledby="menuAriaLabelledBy"
+            :aria-label="menuAriaLabel"
+            class="astryx-dropdown-menu is-in-frame"
+            :class="attrs.class"
+            :data-region-focus="regionFocus || undefined"
+            role="menu"
+            tabindex="0"
+            @focus="onSurfaceFocus"
+            @keydown="onSurfaceKeydown"
+          >
+            <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+              <DropdownMenuItems v-if="items != null" :items="items" />
+              <slot v-else />
+            </div>
+            <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
+          </div>
+          <div
+            v-if="slots.footer"
+            ref="footerRef"
+            class="astryx-dropdown-menu-region"
+            @keydown="regions.onRegionKeydown"
+          >
+            <slot name="footer" />
+          </div>
+        </LayerContentBoundary>
       </div>
       <div
         v-else
@@ -503,11 +501,13 @@ onBeforeUnmount(() => {
         @focus="onSurfaceFocus"
         @keydown="onSurfaceKeydown"
       >
-        <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
-          <DropdownMenuItems v-if="items != null" :items="items" />
-          <slot v-else />
-        </div>
-        <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
+        <LayerContentBoundary>
+          <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+            <DropdownMenuItems v-if="items != null" :items="items" />
+            <slot v-else />
+          </div>
+          <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
+        </LayerContentBoundary>
       </div>
     </Transition>
   </Teleport>

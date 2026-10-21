@@ -3,6 +3,7 @@ import type { MobileNavEmits, MobileNavProps, MobileNavSide, MobileNavSlots } fr
 import { computed, nextTick, onMounted, provide, ref, useId, useTemplateRef, watch } from 'vue'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
+import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { mobileNavKey } from './context.js'
@@ -19,6 +20,10 @@ const emit = defineEmits<Omit<MobileNavEmits, 'update:isOpen'>>()
 defineSlots<MobileNavSlots>()
 
 const messages = useAstryxMessages()
+
+// 抽屉内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
+resetLayerScopedContext()
+
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const bodyEl = useTemplateRef<HTMLElement>('body')

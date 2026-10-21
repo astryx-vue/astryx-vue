@@ -5,6 +5,7 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
+import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useAstryxMessages } from '../locale/context.js'
 import '../../styles/lightbox.css'
 
@@ -19,6 +20,9 @@ const emit = defineEmits<LightboxEmits>()
 
 const messages = useAstryxMessages()
 const announce = useAnnounce()
+
+// 灯箱内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
+resetLayerScopedContext()
 const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
 const containerRef = ref<HTMLElement | null>(null)
 useScrollLock(toRef(props, 'isOpen'))

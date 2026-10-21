@@ -3,6 +3,7 @@ import type { TooltipProps } from './types.js'
 import { computed, getCurrentInstance, nextTick, onMounted, onUpdated, ref, useAttrs, watch } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useTooltip } from './useTooltip.js'
 import '../../styles/tooltip.css'
 
@@ -122,9 +123,11 @@ onUpdated(syncTrigger)
       :style="bubbleStyle"
       v-bind="contentProps"
     >
-      <slot name="content">
-        {{ content }}
-      </slot>
+      <LayerContentBoundary>
+        <slot name="content">
+          {{ content }}
+        </slot>
+      </LayerContentBoundary>
     </div>
   </Teleport>
 </template>

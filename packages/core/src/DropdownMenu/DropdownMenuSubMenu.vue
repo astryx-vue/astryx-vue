@@ -6,6 +6,7 @@ import { computed, nextTick, onBeforeUnmount, provide, ref, useId, useSlots, wat
 import { useDismiss } from '../composables/useDismiss.js'
 import Icon from '../Icon/Icon.vue'
 import { clampInlineSize, isIntrinsicInlineSize } from '../layer/inlineSize.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import Item from '../List/Item.vue'
 import { useAstryxMessages } from '../locale/index.js'
@@ -304,12 +305,14 @@ onBeforeUnmount(cancelClose)
       tabindex="-1"
       @keydown="onDrillKeydown"
     >
-      <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
-        <template #icon>
-          <Icon color="secondary" icon="chevronLeft" size="sm" />
-        </template>
-      </DropdownMenuItem>
-      <slot />
+      <LayerContentBoundary>
+        <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
+          <template #icon>
+            <Icon color="secondary" icon="chevronLeft" size="sm" />
+          </template>
+        </DropdownMenuItem>
+        <slot />
+      </LayerContentBoundary>
     </div>
   </Teleport>
   <Teleport v-else :to="teleportTarget">
@@ -324,7 +327,9 @@ onBeforeUnmount(cancelClose)
       @pointerenter="cancelClose"
       @pointerleave="scheduleClose"
     >
-      <slot />
+      <LayerContentBoundary>
+        <slot />
+      </LayerContentBoundary>
     </div>
   </Teleport>
 </template>

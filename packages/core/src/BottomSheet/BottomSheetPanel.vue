@@ -2,6 +2,7 @@
 import type { VNode } from 'vue'
 import type { BottomSheetHeight, BottomSheetMotion, BottomSheetPadding, BottomSheetSnapPoint, BottomSheetState } from './types.js'
 import { computed, onMounted, onUpdated, useTemplateRef, watch } from 'vue'
+import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { resolveSnapPoints } from './snapOffsets.js'
 import { useSheetGestures, waitForTransition } from './useSheetGestures.js'
@@ -31,6 +32,9 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{ default?: () => VNode[] }>()
+
+// 面板内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
+resetLayerScopedContext()
 
 const HEIGHT_BUDGETS: Record<BottomSheetHeight, string> = {
   hug: '92dvh',

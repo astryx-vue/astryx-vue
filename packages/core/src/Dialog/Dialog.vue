@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, us
 import { useFocusTrap, useRestoreFocus, useScrollLock } from '../composables/index.js'
 import { addModalOutlet, removeModalOutlet } from '../layer/modalOutlet.js'
 import { provideLayerMountTarget } from '../layer/mount.js'
+import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
 import '../../styles/dialog.css'
@@ -20,6 +21,9 @@ const props = withDefaults(defineProps<DialogProps>(), {
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 const attrs = useAttrs()
+
+// 对话框内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
+resetLayerScopedContext()
 
 const titleId = `astryx-dialog-title-${useId()}`
 const hasTitle = ref(false)

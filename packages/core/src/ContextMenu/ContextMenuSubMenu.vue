@@ -6,6 +6,7 @@ import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useSubmenuMode } from '../DropdownMenu/useSubmenuMode.js'
 import Icon from '../Icon/Icon.vue'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
@@ -309,14 +310,16 @@ watch(ancestorOpen, (visible) => {
       tabindex="-1"
       @keydown="onFlyoutKeyDown"
     >
-      <ContextMenuItem :has-close-on-select="false" :label="backLabel" @click="close(true)">
-        <template #icon>
-          <Icon color="secondary" icon="chevronLeft" size="sm" />
-        </template>
-      </ContextMenuItem>
-      <slot>
-        <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
-      </slot>
+      <LayerContentBoundary>
+        <ContextMenuItem :has-close-on-select="false" :label="backLabel" @click="close(true)">
+          <template #icon>
+            <Icon color="secondary" icon="chevronLeft" size="sm" />
+          </template>
+        </ContextMenuItem>
+        <slot>
+          <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
+        </slot>
+      </LayerContentBoundary>
     </div>
   </Teleport>
   <Teleport v-else :to="teleportTarget">
@@ -338,9 +341,11 @@ watch(ancestorOpen, (visible) => {
         @pointerenter="hover.onFlyoutPointerEnter"
         @pointerleave="hover.onFlyoutPointerLeave"
       >
-        <slot>
-          <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
-        </slot>
+        <LayerContentBoundary>
+          <slot>
+            <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
+          </slot>
+        </LayerContentBoundary>
       </div>
     </Transition>
   </Teleport>

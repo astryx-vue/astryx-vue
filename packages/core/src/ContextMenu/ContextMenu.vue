@@ -7,6 +7,7 @@ import { useDismiss } from '../composables/useDismiss.js'
 import { useLongPress } from '../composables/useLongPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { contextMenuContextKey } from './context.js'
@@ -311,15 +312,17 @@ defineExpose({
         @keydown="nav.handleKeyDown"
         @pointerdown="menuPress.onPointerDown"
       >
-        <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
-          <ContextMenuItems
-            v-if="items != null"
-            :items="items"
-            @select="onSelect"
-          />
-          <slot v-else name="content" />
-        </div>
-        <div v-if="!isSheet" :ref="assignHost" class="astryx-dropdown-menu-tree" />
+        <LayerContentBoundary>
+          <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+            <ContextMenuItems
+              v-if="items != null"
+              :items="items"
+              @select="onSelect"
+            />
+            <slot v-else name="content" />
+          </div>
+          <div v-if="!isSheet" :ref="assignHost" class="astryx-dropdown-menu-tree" />
+        </LayerContentBoundary>
       </div>
     </Transition>
   </Teleport>

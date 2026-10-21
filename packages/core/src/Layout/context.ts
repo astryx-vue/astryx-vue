@@ -15,7 +15,8 @@ export const layoutSlotsKey: InjectionKey<ComputedRef<LayoutSlotsState>> = Symbo
 export const layoutAreaKey: InjectionKey<ComputedRef<LayoutArea | null>> = Symbol('astryx-layout-area')
 export const layoutDividerKey: InjectionKey<ComputedRef<boolean | undefined>> = Symbol('astryx-layout-dividers')
 
-const emptySlots = computed<LayoutSlotsState>(() => ({
+/** 没有任何 `Layout` 时的槽位状态：都没有。 */
+export const emptyLayoutSlots = computed<LayoutSlotsState>(() => ({
   hasHeader: false,
   hasFooter: false,
   hasStart: false,
@@ -23,7 +24,7 @@ const emptySlots = computed<LayoutSlotsState>(() => ({
 }))
 
 export function useLayoutSlots(): ComputedRef<LayoutSlotsState> {
-  return inject(layoutSlotsKey, emptySlots)
+  return inject(layoutSlotsKey, emptyLayoutSlots)
 }
 
 export function useLayoutArea(): ComputedRef<LayoutArea | null> {

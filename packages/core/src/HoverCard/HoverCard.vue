@@ -3,6 +3,7 @@ import type { HoverCardEmits, HoverCardProps, HoverCardSlots } from './types.js'
 import { computed, onMounted, onUpdated, ref } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useHoverCard } from './useHoverCard.js'
 import '../../styles/hover-card.css'
 
@@ -112,9 +113,11 @@ defineExpose({ element, show, hide })
         v-bind="contentProps"
       >
         <div class="astryx-hover-card__content">
-          <slot name="content">
-            {{ content }}
-          </slot>
+          <LayerContentBoundary>
+            <slot name="content">
+              {{ content }}
+            </slot>
+          </LayerContentBoundary>
         </div>
       </div>
     </Transition>

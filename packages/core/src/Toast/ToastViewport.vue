@@ -4,6 +4,7 @@ import type { ResolvedLayerInset } from '../LayerProvider/context.js'
 import type { ToastDismissReason, ToastPlacement } from './types.js'
 import { computed, reactive, watch } from 'vue'
 import { useActiveModalOutlet } from '../layer/modalOutlet.js'
+import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useLayerConfig } from '../LayerProvider/context.js'
 import { toastStore } from './store.js'
 import Toast from './Toast.vue'
@@ -11,6 +12,9 @@ import Toast from './Toast.vue'
 const props = defineProps<{
   placement?: ToastPlacement
 }>()
+
+// toast 内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
+resetLayerScopedContext()
 
 // LayerProvider 可以给 toast 视口定位置、可见上限和逐边偏移。
 const layer = useLayerConfig()
