@@ -356,8 +356,10 @@ describe('浏览器锁', () => {
       command: 'run',
       purpose: '手动看图',
       timeoutMs: 5 * 60 * 1000,
+      maxRunMs: 180 * 1000,
       cmd: ['node', '-e', '1'],
     })
+    expect(parseLockCli(['run', '--purpose', 'x', '--max-run', '30', '--', 'node']).maxRunMs).toBe(30 * 1000)
   })
 })
 
