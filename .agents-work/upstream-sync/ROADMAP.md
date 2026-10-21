@@ -17,7 +17,7 @@ mindmap
       🔴 B1 主题系统与设计变量
       🔵 B2 基础重置样式
       ✅ B3 交互逻辑常用函数
-      🟡 B4 浮层图层运行时
+      🔷 B4 浮层图层运行时
       🔷 B5 界面文案与图标
       ⬜ B6 属性规则与样式分层
       🔵 B7 常用工具函数
@@ -316,7 +316,7 @@ flowchart TB
 | B1 | 主题系统与 token | A4 | 🔴 返工中 | 2 | B1-impl-r2 | B1-verify | 第 1 轮 16/17：MediaTheme auto 在 mode 切换后不重测 | |
 | B2 | reset 与基础样式 | A4 | 🔵 可开工 | 0 | | | | |
 | B3 | 交互底座 composables | A4 | ✅ 已完成 | 1 | B3-impl | B3-verify | 通过 17/17 | 2b22513 |
-| B4 | 浮层运行时 Layer | B3 | 🟡 实现中 | 1 | B4-impl | | | |
+| B4 | 浮层运行时 Layer | B3 | 🔷 验收中 | 1 | B4-impl | B4-verify | | |
 | B5 | 文案与图标 | A4 | 🔷 验收中 | 1 | B5-impl | B5-verify | | |
 | B6 | 公共 props 规则 | B1 | ⬜ 未开始 | 0 | | | | |
 | B7 | 工具函数 utils | A4 | 🔵 可开工 | 0 | | | | |
