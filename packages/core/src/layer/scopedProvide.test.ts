@@ -47,8 +47,7 @@ describe('resetLayerScopedContext', () => {
     }), { attachTo: document.body })
     await flushPromises()
 
-    expect(popoverButton().classList.contains('md')).toBe(true)
-    expect(popoverButton().classList.contains('lg')).toBe(false)
+    expect(popoverButton().dataset.size).toBe('md')
   })
 
   it('禁用的按钮组里的浮层，里面的按钮点得动', async () => {
@@ -85,9 +84,8 @@ describe('resetLayerScopedContext', () => {
 
     const trigger = document.querySelector('.astryx-dropdown-menu-trigger .astryx-button') as HTMLElement
     const footerButton = document.querySelector('.astryx-dropdown-menu-region .astryx-button') as HTMLElement
-    expect(trigger.classList.contains('lg')).toBe(true)
-    expect(footerButton.classList.contains('md')).toBe(true)
-    expect(footerButton.classList.contains('lg')).toBe(false)
+    expect(trigger.dataset.size).toBe('lg')
+    expect(footerButton.dataset.size).toBe('md')
   })
 
   it('浮层里的内容根可以重复调用，不会报错', async () => {
