@@ -36,15 +36,15 @@ mindmap
     阶段 C 组件
       ✅ C1 基础输入 #136
       ✅ C2 勾选与开关 #140
-      🔷 C3 选择器 #149
-      ⬜ C4 搜索与命令面板
+      ✅ C3 选择器 #149
+      🔵 C4 搜索与命令面板
       🔵 C5 日期时间
       ✅ C6 菜单 #143
       ✅ C7 浮层家族 #148
-      ⬜ C8 BottomSheet
+      🔵 C8 BottomSheet
       ✅ C9 Markdown 与代码 #138
       ✅ C9-exports Markdown 导出 #146
-      🔷 C10 Chat 第2轮 #147
+      ✅ C10 Chat #147
       🔵 C11 表格
       🔵 C12 列表与树
       🔵 C13 导航
@@ -61,6 +61,10 @@ mindmap
       ✅ F0 选型 ADR
       🔵 F1a richtext 纯逻辑
       🔵 F2a charts 纯逻辑
+      🔵 F3b lab 展示类
+      🔵 F3c lab 浮层与引导
+      🔵 F3e lab 对话
+      🔵 F3g lab 日程表
       🔵 F3h lab 代码类
       ⬜ F1b 与其余 F 节点
 ```
@@ -69,6 +73,8 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| C10 Chat | [#147](https://github.com/astryx-vue/astryx-vue/pull/147) | 第 2 轮通过。Enter 选中当前高亮项；空草稿时发送按钮禁用 |
+| C3 选择器家族 | [#149](https://github.com/astryx-vue/astryx-vue/pull/149) | 第 3 轮通过 21/21。Escape 后焦点回到触发器 |
 | C7 浮层家族 | [#148](https://github.com/astryx-vue/astryx-vue/pull/148) | 通过 24/24。对话框页眉换肤、悬停卡片、轻提示滑动；滚动锁仍不钉 `position: fixed` |
 | C9-exports Markdown 子路径 | [#146](https://github.com/astryx-vue/astryx-vue/pull/146) | 不是总表节点。通过 10/10。构建产出 `parser`、`plugins`、`plugin-renderer` 的 dist |
 | C15 反馈与状态 | [#141](https://github.com/astryx-vue/astryx-vue/pull/141) | 通过 26/26。提示条、加载圈、进度条、步骤条对齐上游 |
@@ -84,15 +90,14 @@ mindmap
 
 ## 当前并行
 
-- 🔷 **C3** 选择器家族（[#149](https://github.com/astryx-vue/astryx-vue/pull/149)）：验收中。
-- 🔷 **C10** Chat（[#147](https://github.com/astryx-vue/astryx-vue/pull/147)）：第 2 轮验收中。第 1 轮因分组后 Enter 选错项、空输入时发送按钮未禁用而返工。
+没有正在实现或验收的节点。
 
-可以开工、等待派发：C5、C11、C12、C13、D1、F1a、F2a、F3h。D4a 仍标着可开工，要等用户签字，签字前不要派。
+可以开工、等待派发：C4、C5、C8、C11、C12、C13、D1、F1a、F2a、F3b、F3c、F3e、F3g、F3h。C4 随 C3 完成解锁，F3e 随 C10 完成解锁。C8、F3b、F3c、F3g 是 C7 完成后补进可开工的。D4a 仍标着可开工，要等用户签字，签字前不要派。
 
-**本 PR 的 CI：** Markdown 三个子路径缺 dist，是 #146 合入前的预期失败，现已由 #146 修好。#142 已经把 CLI catalog 修好了。还剩一处要单独修：`DropdownMenuSubMenu` 的服务端渲染测试失败，报 `HTMLElement is not defined`（run [39594900200](https://github.com/astryx-vue/astryx-vue/actions/runs/39594900200)）。这次跑在 `pnpm test` 就停了，还没跑到构建。
+**本 PR 的 CI：** Markdown 三个子路径的 dist 已由 [#146](https://github.com/astryx-vue/astryx-vue/pull/146) 修好。#142 已经把 CLI catalog 修好了。还剩一处要单独修：`DropdownMenuSubMenu` 的服务端渲染测试失败，报 `HTMLElement is not defined`（run [39594900200](https://github.com/astryx-vue/astryx-vue/actions/runs/39594900200)，提交 `0f6f605`）。这次跑在 `pnpm test` 就停了，还没跑到构建。
 
 ## 怎么验收这个总 PR
 
 - 文档预览随 `swarm-tree` 更新自动部署（节点合向 `swarm-tree` 的小 PR 本身不部署）。
-- 对照原版：[Astryx](https://astryx.atmeta.com) 和本预览站；桌面 / 390px，浅色 / 深色。
+- 对照原版：[Astryx](https://astryx.atmeta.com) 和本预览站；桌面 / 390px，浅色 / 深色。左右对照必须是同一处 Demo（#151 已合入这条规则）。
 - 细项证据在各节点 `nodes/<ID>/verify-N.md`。对齐的是观感和手感，不是 React 一行对一行。
