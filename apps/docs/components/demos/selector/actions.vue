@@ -25,6 +25,8 @@ function edit(name: string) {
         { value: 'lyon', label: 'Lyon', action: edit('Lyon') },
       ]"
     />
-    <p v-if="edited">Last edited: {{ edited }}</p>
+    <p v-if="edited">
+      Last edited: {{ edited }}
+    </p>
   </div>
 </template>
