@@ -229,8 +229,9 @@ pnpm a11y [--only <slug,...>] [--schemes light,dark] [--update] [--init]
 # 拿到锁后执行命令，命令结束后自动还锁。验收者手动开浏览器时用这个。
 node scripts/swarm/browser-lock.mjs run --purpose "A3 验收看 Button" -- <命令...>
 
-# 指定最多等几分钟
-node scripts/swarm/browser-lock.mjs run --purpose "..." --timeout 10 -- <命令...>
+# --timeout：排队等锁最多等几分钟
+# --max-run：拿到锁后命令最多跑几秒，默认 180。超时会结束整个进程组，退出码 124
+node scripts/swarm/browser-lock.mjs run --purpose "..." --timeout 10 --max-run 120 -- <命令...>
 
 # 看两个槽现在被谁占着
 node scripts/swarm/browser-lock.mjs status
@@ -257,6 +258,8 @@ node scripts/swarm/browser-lock.mjs run --purpose "<节点>-verify 看键盘交�
 ```
 
 锁在命令结束时自动释放。脚本里只开 1 个浏览器，用完关掉。
+
+**一个脚本只测一件事。** 不要把十几项检查塞进同一个大脚本：中间哪一步卡住，前面跑出来的结果就全丢了，也看不出到底卡在哪里。每个检查项单独写一个小脚本，结果写进 `/tmp/verify-<节点>/item<N>.json`。如果命令超过 `--max-run` 被强制结束，先把卡住的那一步拆出来单独跑，不要原样重跑。
 
 ## 进度看板：status.mjs
 

@@ -19,6 +19,7 @@
 规则：
 - 工作区：/Users/shenqingchuan/workspace/astryx-vue-wt/<ID>，分支 sync/<id>-<名>，槽位 <S>，端口 <P>。只在这个工作区里改代码、提交，不要推送。每做完一步就提交一次。
 - 不要读同目录下的 verify.md，验收由另一个子代理独立完成。也不要改 ROADMAP.md 和 SWARM.md。
+- **验证要短小**：一次只验证一件事，每条命令都要有时间上限。浏览器命令用 `browser-lock.mjs run --max-run <秒>`，默认 180 秒；其他命令前面加 `timeout <秒>`。超时了不要原样重跑，先把卡住的那一步拆出来单独跑。实在测不了的，就读代码确认，并在报告里注明。
 - 浏览器：整台机器同时最多开 2 个浏览器会话。只能通过 `node scripts/swarm/browser-lock.mjs run --purpose <ID> -- <命令>` 或者 `pnpm visual ... --out /tmp/<ID>-...` 打开浏览器。你同一时刻只开 1 个，文档站只用 <P> 端口，用完就关。
 - 命令：vitest 一律加 --maxWorkers=2。所有测试和构建命令前面都加 env -u NODE_ENV。
 - 读上游代码：git -C /Users/shenqingchuan/workspace/astryx-upstream show v0.7.1:<路径>
@@ -42,6 +43,7 @@
 补充：
 - 工作区：/Users/shenqingchuan/workspace/astryx-vue-wt/<ID>，槽位 <S>，端口 <P>。用 `BASE=$(git merge-base HEAD swarm-tree)` 求出基准提交。
 - <总控复核时特别要盯的点，比如「第 26 项是重点，因为……」>
+- **验证要短小**：一次只验证一件事，每条命令都要有时间上限。浏览器命令用 `browser-lock.mjs run --max-run <秒>`，默认 180 秒；其他命令前面加 `timeout <秒>`。超时了不要原样重跑，先把卡住的那一步拆出来单独跑。实在测不了的，就读代码确认，并在报告里注明。能用 `git show BASE:<文件>` 回答的问题，不要为了对比去新建一个要装依赖的 BASE 工作区。
 - 浏览器：整台机器同时最多开 2 个浏览器会话，你同一时刻只开 1 个。只能通过 browser-lock.mjs run 或者 pnpm visual 打开浏览器。
 - 命令：vitest 一律加 --maxWorkers=2，所有命令前加 env -u NODE_ENV。测试相关的检查项要在两种 NODE_ENV 下各跑一遍。
 - 访问外网前先设代理：export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890 。上游官网偶尔会超时，超时就重跑。

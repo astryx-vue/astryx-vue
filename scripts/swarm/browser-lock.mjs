@@ -10,7 +10,11 @@
  *   import { withBrowserLock } from './browser-lock.mjs'
  *   await withBrowserLock('截图 Button', async () => { ... })
  *
- *   node scripts/swarm/browser-lock.mjs run --purpose <说明> [--timeout <分钟>] -- <命令...>
+ *   node scripts/swarm/browser-lock.mjs run --purpose <说明> [--timeout <分钟>] [--max-run <秒>] -- <命令...>
+ *
+ * `--timeout` 是排队等锁的上限。`--max-run` 是拿到锁之后命令最多跑多久，默认 180 秒，
+ * 超时先发 SIGTERM，5 秒后还没退就 SIGKILL，并以 124 退出。浏览器脚本要拆成短小的单项探测，
+ * 一次只验证一件事，不要写一个长时间跑的大脚本。
  *   node scripts/swarm/browser-lock.mjs status
  */
 import { execFileSync, spawn } from 'node:child_process'
@@ -23,6 +27,8 @@ import { fileURLToPath } from 'node:url'
 export const LOCK_SLOTS = ['browser-1', 'browser-2']
 export const LOCK_RETRY_MS = 5_000
 export const LOCK_DEFAULT_TIMEOUT_MS = 30 * 60 * 1000
+/** 拿到锁后命令默认最多跑多久。 */
+export const RUN_DEFAULT_MAX_MS = 180 * 1000
 export const LOCK_STALE_MS = 2 * 60 * 60 * 1000
 
 /** 所有 worktree 共用的锁根目录：`<git-common-dir>/swarm-locks`。 */
@@ -181,18 +187,20 @@ export async function withBrowserLock(purpose, fn, options = {}) {
   }
 }
 
-/** 解析 `run --purpose x --timeout 10 -- cmd args` 形式的参数。 */
+/** 解析 `run --purpose x --timeout 10 --max-run 120 -- cmd args` 形式的参数。 */
 export function parseLockCli(argv) {
   const [command, ...rest] = argv
   const separator = rest.indexOf('--')
   const flags = separator === -1 ? rest : rest.slice(0, separator)
   const cmd = separator === -1 ? [] : rest.slice(separator + 1)
-  const result = { command, purpose: undefined, timeoutMs: LOCK_DEFAULT_TIMEOUT_MS, cmd }
+  const result = { command, purpose: undefined, timeoutMs: LOCK_DEFAULT_TIMEOUT_MS, maxRunMs: RUN_DEFAULT_MAX_MS, cmd }
   for (let i = 0; i < flags.length; i++) {
     if (flags[i] === '--purpose')
       result.purpose = flags[++i]
     else if (flags[i] === '--timeout')
       result.timeoutMs = Number(flags[++i]) * 60 * 1000
+    else if (flags[i] === '--max-run')
+      result.maxRunMs = Number(flags[++i]) * 1000
   }
   return result
 }
@@ -207,22 +215,45 @@ async function main() {
     return
   }
   if (args.command !== 'run' || !args.purpose || args.cmd.length === 0) {
-    console.error('用法: node scripts/swarm/browser-lock.mjs run --purpose <说明> [--timeout <分钟>] -- <命令...>')
+    console.error('用法: node scripts/swarm/browser-lock.mjs run --purpose <说明> [--timeout <分钟>] [--max-run <秒>] -- <命令...>')
     console.error('      node scripts/swarm/browser-lock.mjs status')
     process.exit(2)
   }
   let child
   const code = await withBrowserLock(args.purpose, lock => new Promise((resolvePromise) => {
     console.error(`[browser-lock] 已拿到 ${lock.slot}`)
-    child = spawn(args.cmd[0], args.cmd.slice(1), { stdio: 'inherit' })
-    child.on('exit', (exitCode, signal) => resolvePromise(exitCode ?? (signal ? 1 : 0)))
+    child = spawn(args.cmd[0], args.cmd.slice(1), { stdio: 'inherit', detached: true })
+    let timedOut = false
+    const killGroup = (sig) => {
+      try {
+        process.kill(-child.pid, sig)
+      }
+      catch {}
+    }
+    const timer = setTimeout(() => {
+      timedOut = true
+      console.error(`[browser-lock] 命令超过 ${Math.round(args.maxRunMs / 1000)} 秒，强制结束。请把它拆成更短的单项探测。`)
+      killGroup('SIGTERM')
+      setTimeout(killGroup, 5000, 'SIGKILL').unref()
+    }, args.maxRunMs)
+    child.on('exit', (exitCode, signal) => {
+      clearTimeout(timer)
+      resolvePromise(timedOut ? 124 : (exitCode ?? (signal ? 1 : 0)))
+    })
     child.on('error', (error) => {
       console.error(error.message)
       resolvePromise(127)
     })
   }), {
     timeoutMs: args.timeoutMs,
-    onSignal: signal => child?.kill(signal),
+    onSignal: (signal) => {
+      try {
+        process.kill(-child.pid, signal)
+      }
+      catch {
+        child?.kill(signal)
+      }
+    },
   })
   process.exit(code)
 }

@@ -86,3 +86,7 @@
 - 不要改 `ROADMAP.md` 的节点状态。
 - 回报写到 `/Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync-0.7.1/nodes/<节点ID>/impl-<N>.md`，格式见 `templates/impl-report.md`。
 - 最终回复用中文，300 字以内。
+
+## 验证操作要短小
+
+每次验证只测一件事，每条命令都要有时间上限：浏览器命令用 `browser-lock.mjs run --max-run <秒>`，默认 180 秒；其他命令用 `timeout <秒>`。超时了不要原样重跑，先把卡住的那一步单独拆出来。脚本和结果都放在 `/tmp/verify-<ID>/`（实现者放在 `/tmp/<ID>-*`），保证可以重跑。详见 SWARM.md 的「验证操作要短小、可重复」。
