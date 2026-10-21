@@ -69,3 +69,11 @@
 - 任何一条不过，结论就是「不通过」。
 - 报告写到 `/Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync/nodes/B1/verify-<N>.md`，格式照 `templates/verify-report.md`。
 - 最终回复用中文，200 字以内。
+
+## 总控对第 1 轮范围的修订
+
+实现者把 matcha 和 y2k 的间距也改成了 rem。按原计划，这件事属于 D2。总控认可这次越界：B1 的目标是「间距跟随根字号」，如果只留这两套主题用 px，用户在这两套主题下就感受不到这个效果。上游 #7374 也是这样改的。D2 的范围已经相应缩小。
+
+因此第 17 项里「没有改 matcha、y2k 的间距」这一条作废，改为下面这条：
+
+17b. matcha 和 y2k 的 `--astryx-spacing-*` 取值，和上游 `6ecd41722`（#7374）里这两套主题的取值一致，名字只差前缀。在默认根字号下，用这两套主题渲染 Button 和 Card，像素和 BASE 相同。可以在文档站切换主题，或者用 `pnpm visual` 之外的临时 Playwright 脚本截图对比。
