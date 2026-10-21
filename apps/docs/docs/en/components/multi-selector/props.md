@@ -14,6 +14,7 @@ footer: false
       <tr><td><code>modelValue</code></td><td><code>(string | number)[]</code></td><td><code>[]</code></td><td>Selected values.</td></tr>
       <tr><td><code>options</code></td><td><code>MultiSelectorOption[]</code></td><td>Required</td><td>Strings, option objects, dividers, or sections.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>Required</td><td>Field label.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>Placeholder when nothing is selected.</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a search field in the menu.</td></tr>
       <tr><td><code>selectAll</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a select-all row. Disabled options are skipped.</td></tr>

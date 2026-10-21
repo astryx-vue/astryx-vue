@@ -14,6 +14,7 @@ import { computed, nextTick, onMounted, ref, useId, useTemplateRef, watch } from
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/context.js'
@@ -49,6 +50,7 @@ const props = withDefaults(defineProps<PowerSearchProps>(), {
 
 const emit = defineEmits<PowerSearchEmits>()
 const slots = defineSlots<PowerSearchSlots>()
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden, true)
 const messages = useAstryxMessages()
 const locale = useAstryxLocale()
 const announce = useAnnounce()
@@ -87,7 +89,6 @@ const label = computed(() => props.label ?? text.value.label)
 const placeholder = computed(() => props.placeholder ?? text.value.placeholder)
 const disabledMessage = computed(() => (props.disabledMessage ?? props.disabledReason)?.trim() || undefined)
 const focusableDisabled = computed(() => props.disabled && disabledMessage.value != null)
-// 两个名字默认都是 true，任一传 false 就关掉。
 const showsClear = computed(() => props.hasClear && props.clearable)
 const resolvedSaveLabel = computed(() => props.popoverSaveButtonLabel ?? props.saveLabel)
 const resolvedTimeZone = computed(() => props.timezoneID ?? props.timeZone)
@@ -99,12 +100,10 @@ const fieldStatus = computed<FieldStatusInput | undefined>(() => {
     return undefined
   return { type: props.status, message: props.statusMessage }
 })
-const describedBy = computed(() => {
-  return [
-    focusableDisabled.value ? disabledId : undefined,
-    props.statusMessage ? `${inputId}-status` : undefined,
-  ].filter(Boolean).join(' ') || undefined
-})
+const describedBy = computed(() => [
+  focusableDisabled.value ? disabledId : undefined,
+  props.statusMessage ? `${inputId}-status` : undefined,
+].filter(Boolean).join(' ') || undefined)
 
 const source = computed(() => ({
   search(query: string) {
@@ -497,7 +496,7 @@ defineExpose({
     :class="[`size-${size}`, { 'is-floating': floating }]"
     :label="label"
     :input-id="inputId"
-    :is-label-hidden="labelHidden"
+    :is-label-hidden="hideLabel"
     :is-disabled="disabled && !focusableDisabled"
     :status="fieldStatus"
     :status-variant="statusVariant"

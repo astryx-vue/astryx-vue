@@ -18,7 +18,7 @@ footer: false
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the token. The remove button stops responding.</td></tr>
       <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>Render a link. With a remove button, the link and button are siblings.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Extra text for assistive technology.</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hide the text visually while keeping the accessible name.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hide the text visually while keeping the accessible name. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
     </tbody>
   </table>
 </div>

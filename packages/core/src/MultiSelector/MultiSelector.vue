@@ -503,7 +503,7 @@ defineExpose({
     :class="[`size-${props.size}`, `variant-${props.variant}`]"
     :label="props.label"
     :input-id="props.searchable && combobox.isOpen.value ? searchId : triggerId"
-    :is-label-hidden="inGroup || props.labelHidden"
+    :is-label-hidden="inGroup || props.isLabelHidden || props.labelHidden"
     :is-disabled="control.isDisabled.value"
     :is-required="inGroup ? false : props.required"
     :is-optional="inGroup ? false : props.optional"

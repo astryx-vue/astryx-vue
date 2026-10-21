@@ -57,6 +57,9 @@ export interface MultiSelectorProps {
   modelValue?: readonly (string | number)[]
   options: readonly MultiSelectorOption[]
   label: string
+  /** 视觉上隐藏标签。读屏仍然读得到。 */
+  isLabelHidden?: boolean
+  /** `isLabelHidden` 的旧名。两者任一为真就隐藏。 */
   labelHidden?: boolean
   description?: string
   placeholder?: string

@@ -16,7 +16,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段标签。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁边信息图标里的提示文字。</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Add…</code> / <code>添加…</code></td><td>输入框占位符。只在还没有标签时显示。</td></tr>
       <tr><td><code>hasCreate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>允许把输入的文字收成新标签。没匹配到结果时下拉会多出「新建 …」一项，此时变化的类型是 <code>create</code>。</td></tr>
       <tr><td><code>creatable</code></td><td><code>boolean</code></td><td><code>false</code></td><td><code>hasCreate</code> 的旧名。两者任一为真即生效。</td></tr>

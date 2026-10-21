@@ -279,6 +279,9 @@ export interface PowerSearchProps {
   config: PowerSearchConfig
   filters?: readonly PowerSearchFilter[]
   label?: string
+  /** 视觉上隐藏标签。没传时隐藏。传 false 会把标签显示出来。 */
+  isLabelHidden?: boolean
+  /** `isLabelHidden` 的旧名。两个都传时听正名。 */
   labelHidden?: boolean
   placeholder?: string
   autofocus?: boolean

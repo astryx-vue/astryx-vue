@@ -7,6 +7,7 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
@@ -46,6 +47,8 @@ defineSlots<TokenizerSlots<T>>()
 
 const attrs = useAttrs()
 const messages = useAstryxMessages()
+/** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起标签。 */
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const inputId = `astryx-tokenizer-${useId()}`
 const listboxId = `${inputId}-listbox`
 const disabledId = `${inputId}-disabled`
@@ -331,7 +334,7 @@ defineExpose({
     :input-id="inputId"
     :description="props.description"
     :label-tooltip="props.labelTooltip"
-    :is-label-hidden="props.labelHidden"
+    :is-label-hidden="hideLabel"
     :is-disabled="props.disabled"
     :is-required="props.required"
     :is-optional="props.optional"

@@ -20,6 +20,9 @@ export interface TokenizerProps<T extends SearchableItem = SearchableItem> {
   modelValue?: readonly T[]
   searchSource: SearchSource<T>
   label: string
+  /** 视觉上隐藏标签。读屏仍然读得到。 */
+  isLabelHidden?: boolean
+  /** `isLabelHidden` 的旧名。两者任一为真就隐藏。 */
   labelHidden?: boolean
   description?: string
   /** 标签旁边信息图标里的提示文字。 */

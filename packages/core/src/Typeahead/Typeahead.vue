@@ -3,6 +3,7 @@ import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { TypeaheadEmits, TypeaheadProps, TypeaheadSlots } from './types.js'
 import { computed, provide, useAttrs, useId, useTemplateRef } from 'vue'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import BaseTypeahead from './BaseTypeahead.vue'
 import { typeaheadChromeKey } from './context.js'
@@ -44,6 +45,8 @@ const disabledMessage = computed(() => {
 const showsClear = computed(() => props.hasClear && props.clearable)
 /** 两个名字任一为真就在聚焦时先展开。 */
 const showsEntriesOnFocus = computed(() => props.hasEntriesOnFocus || props.showOnFocus)
+/** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起标签。 */
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const emptySearchText = computed(() => props.emptySearchText ?? props.emptyText)
 
 const fieldStatus = computed<FieldStatusInput | undefined>(() => {
@@ -66,7 +69,7 @@ defineExpose({
     :input-id="inputId"
     :description="props.description"
     :label-tooltip="props.labelTooltip"
-    :is-label-hidden="props.labelHidden"
+    :is-label-hidden="hideLabel"
     :is-disabled="props.disabled"
     :is-required="props.required"
     :is-optional="props.optional"

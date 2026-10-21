@@ -16,7 +16,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>Required</td><td>Field label.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Helper text under the label.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip text on an info icon next to the label.</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Add…</code> / <code>添加…</code></td><td>Input placeholder. Shown only while no tokens are selected.</td></tr>
       <tr><td><code>hasCreate</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Let users turn free text into a new token. A "Create …" row appears for text that matches nothing else, and the change type is <code>create</code>.</td></tr>
       <tr><td><code>creatable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Legacy name for <code>hasCreate</code>. Either one turns it on.</td></tr>
