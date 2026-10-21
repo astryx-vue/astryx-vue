@@ -1,7 +1,11 @@
 # C6 菜单家族 · 第 1 轮实现回报
 
 - 工作区：`/workspace`，分支 `sync/c6-menus`。
-- 提交（基于 swarm-tree `4a5b9a4`）：见本文件提交后的 `git log`。
+- 提交（基于 swarm-tree `4a5b9a4`）：
+  - `d962313` docs(C6): 写下菜单家族的执行计划和验收清单
+  - `3085ff2` feat(C6): 菜单接上按压、悬停飞出和对话框 Tab
+  - `646ab86` test(C6): 补菜单按压、顶层 Escape 和对话框 Tab
+  - `d8e5148` docs(C6): 更新菜单文档、台账和第 1 轮回报
 
 ## 1. 做了什么
 
