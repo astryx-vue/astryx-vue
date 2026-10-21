@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 import Button from '../Button/Button.vue'
 import ButtonGroup from './ButtonGroup.vue'
 
@@ -189,6 +189,32 @@ describe('buttonGroup', () => {
     const children = Array.from(wrapper.element.children) as Element[]
     expect(children).toHaveLength(2)
     expect(children.every(child => child.classList.contains('astryx-button'))).toBe(true)
+
+    wrapper.unmount()
+  })
+
+  it('keeps a single tab stop and leaves arrow keys inside an open popover', async () => {
+    const wrapper = mount(ButtonGroup, {
+      attachTo: document.body,
+      props: { label: 'Actions' },
+      slots: {
+        default: () => [
+          h(Button, { label: 'First' }),
+          h(Button, { label: 'Second' }),
+          h('div', { popover: 'manual' }, [h('button', { class: 'menu-item', type: 'button' }, 'Inside')]),
+        ],
+      },
+    })
+
+    await nextTick()
+    const [first, second] = wrapper.findAll<HTMLButtonElement>('.astryx-button')
+    expect(first?.attributes('tabindex')).toBe('0')
+    expect(second?.attributes('tabindex')).toBe('-1')
+
+    const menuItem = wrapper.get<HTMLButtonElement>('.menu-item')
+    menuItem.element.focus()
+    await menuItem.trigger('keydown', { key: 'ArrowRight' })
+    expect(document.activeElement).toBe(menuItem.element)
 
     wrapper.unmount()
   })

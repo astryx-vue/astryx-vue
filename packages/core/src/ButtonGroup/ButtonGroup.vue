@@ -1,9 +1,11 @@
 <script setup lang="ts">
+/* eslint-disable vue-a11y/no-static-element-interactions -- 焦点在内部按钮上，这一层只接冒泡上来的方向键。 */
 import type { StyleValue } from 'vue'
 import type { ButtonGroupProps, ButtonGroupSlots } from './types.js'
-import { computed, onBeforeUnmount, onMounted, provide, useAttrs, useTemplateRef } from 'vue'
+import { computed, provide, useAttrs } from 'vue'
 import { buttonGroupContextKey } from '../Button/context.js'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { useListFocus } from '../composables/useListFocus.js'
 import '../../styles/button-group.css'
 
 defineOptions({
@@ -21,8 +23,14 @@ const props = withDefaults(defineProps<ButtonGroupProps>(), {
 defineSlots<ButtonGroupSlots>()
 
 const attrs = useAttrs()
-const element = useTemplateRef<HTMLDivElement>('root')
 const orientation = computed(() => props.orientation)
+const { listRef: element, handleKeyDown, handleFocus } = useListFocus({
+  // `[tabindex]` 会在漫游改写后继续匹配成员。弹出层比组更近，方向键留给那一层。
+  itemSelector: 'button, a[href], [tabindex]',
+  boundarySelector: '[role="group"], [popover]',
+  orientation: () => props.orientation,
+  hasRovingTabIndex: true,
+})
 const isDisabled = computed(() => props.isDisabled)
 const size = computed(() => props.size)
 
@@ -50,111 +58,12 @@ function getForwardedAttrs(): Record<string, unknown> {
   )
 }
 
-function getItems(): HTMLElement[] {
-  const root = element.value
-
-  if (root == null)
-    return []
-
-  return Array.from(root.children).filter((child): child is HTMLElement =>
-    child instanceof HTMLElement && child.classList.contains('astryx-button'),
-  )
-}
-
-function isItemDisabled(item: HTMLElement): boolean {
-  return item.getAttribute('aria-disabled') === 'true'
-    || item.hasAttribute('disabled')
-    || (item as HTMLButtonElement).disabled === true
-}
-
-function findEnabledIndex(
-  items: HTMLElement[],
-  start: number,
-  step: 1 | -1,
-  wrap: boolean,
-): number {
-  let index = start
-
-  for (let visited = 0; visited < items.length; visited += 1) {
-    if (index < 0 || index >= items.length) {
-      if (!wrap)
-        return -1
-
-      index = (index + items.length) % items.length
-    }
-
-    const item = items[index]
-    if (item != null && !isItemDisabled(item))
-      return index
-
-    index += step
-  }
-
-  return -1
-}
-
-function focusItem(items: HTMLElement[], index: number): void {
-  items[index]?.focus()
-}
-
-function handleKeydown(event: KeyboardEvent): void {
+function onKeydown(event: KeyboardEvent): void {
   invokeNativeEventHandler(attrs.onKeydown ?? attrs.onKeyDown, event)
-
-  if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey)
+  if (event.defaultPrevented)
     return
-
-  if (event.key === 'Escape') {
-    event.preventDefault()
-    return
-  }
-
-  const items = getItems()
-  if (items.length === 0)
-    return
-
-  const activeElement = typeof document === 'undefined' ? null : document.activeElement
-  const currentIndex = items.findIndex(item => item === activeElement || item.contains(activeElement))
-  const root = element.value
-  const isRtl = root != null
-    && typeof getComputedStyle !== 'undefined'
-    && getComputedStyle(root).direction === 'rtl'
-  const nextKey = props.orientation === 'horizontal'
-    ? (isRtl ? 'ArrowLeft' : 'ArrowRight')
-    : 'ArrowDown'
-  const previousKey = props.orientation === 'horizontal'
-    ? (isRtl ? 'ArrowRight' : 'ArrowLeft')
-    : 'ArrowUp'
-  let targetIndex = -1
-
-  if (event.key === nextKey) {
-    targetIndex = findEnabledIndex(items, currentIndex === -1 ? 0 : currentIndex + 1, 1, true)
-  }
-  else if (event.key === previousKey) {
-    targetIndex = findEnabledIndex(items, currentIndex === -1 ? items.length - 1 : currentIndex - 1, -1, true)
-  }
-  else if (event.key === 'Home') {
-    targetIndex = findEnabledIndex(items, 0, 1, false)
-  }
-  else if (event.key === 'End') {
-    targetIndex = findEnabledIndex(items, items.length - 1, -1, false)
-  }
-  else {
-    return
-  }
-
-  if (targetIndex !== -1)
-    focusItem(items, targetIndex)
-
-  event.preventDefault()
+  handleKeyDown(event)
 }
-
-onMounted(() => {
-  element.value?.addEventListener('keydown', handleKeydown)
-})
-
-onBeforeUnmount(() => {
-  element.value?.removeEventListener('keydown', handleKeydown)
-})
 
 defineExpose({
   element,
@@ -163,7 +72,7 @@ defineExpose({
 
 <template>
   <div
-    ref="root"
+    ref="element"
     v-bind="getForwardedAttrs()"
     :aria-disabled="isDisabled || undefined"
     :aria-label="label"
@@ -173,6 +82,8 @@ defineExpose({
     :data-size="size"
     role="group"
     :style="rootStyle"
+    @focusin="handleFocus"
+    @keydown="onKeydown"
   >
     <slot />
   </div>

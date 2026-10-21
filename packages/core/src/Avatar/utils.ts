@@ -1,5 +1,45 @@
 import type { AvatarSize, AvatarStatusDotVariant, AvatarStatusDotVariantName } from './types.js'
 
+const INITIAL_CHARACTER = /[\p{L}\p{N}\p{Extended_Pictographic}\p{Regional_Indicator}]/u
+
+const characterSegmenter = typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function'
+  ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
+  : null
+
+/** 用户眼里的第一个字，避免把表情切成半个。 */
+function firstCharacter(value: string): string {
+  if (characterSegmenter != null) {
+    const first = characterSegmenter.segment(value)[Symbol.iterator]().next()
+    return first.done ? '' : first.value.segment
+  }
+  const codePoint = value.codePointAt(0)
+  return codePoint == null ? '' : String.fromCodePoint(codePoint)
+}
+
+/** 跳过词首的标点，取第一个能代表这个词的字母、数字或表情。 */
+function initialCharacter(word: string): string {
+  const index = word.search(INITIAL_CHARACTER)
+  return index === -1 ? '' : firstCharacter(word.slice(index))
+}
+
+/**
+ * 用名字生成首字母：取第一个词和最后一个词里能站出来的那个字。
+ * 纯标点的词跳过。没有任何可用字符时返回空字符串，调用方改画默认图标。
+ */
+export function getInitials(name: string): string {
+  const initials = name
+    .trim()
+    .split(/\s+/)
+    .map(initialCharacter)
+    .filter(initial => initial !== '')
+
+  if (initials.length === 0)
+    return ''
+  if (initials.length === 1)
+    return initials[0]!.toUpperCase()
+  return `${initials[0]!.toUpperCase()}${initials[initials.length - 1]!.toUpperCase()}`
+}
+
 export function resolveSize(size: AvatarSize): number {
   if (typeof size === 'number') {
     return size
