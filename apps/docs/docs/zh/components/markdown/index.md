@@ -66,7 +66,17 @@ const marked = ref({ paragraph: markRaw(MyParagraph) })
 
 传入 `sources` 后，正文里的 `[id]` 和 `【id】` 会画成引用芯片。`citationStyle` 默认 `label`，芯片上是来源标题。设成 `number` 后变成带序号的小徽章，同一个 id 共用一个序号。
 
+标题会生成可聚焦的锚点，`href` 指向标题 id，并带有 `aria-label`。嵌套列表的记号按层循环：无序是圆点、圆圈、方块，有序是数字、小写字母、小写罗马数字。
+
+正文里的字符实体会解码，`&amp;` 显示成 `&`，`&copy;` 显示成 ©。围栏代码里的 `&copy;` 保持原文。
+
+围栏代码默认折行。一行超过容器宽度时，代码元素带 `data-wrapped="true"`。
+
 围栏信息是 `diff` 或 `diff-ts` 这种时，默认的代码块会打开差异层。换掉 `components.code` 时，语言字符串仍原样传进去。
+
+`markdownSourceLinesPlugin` 从 `@astryx-vue/core/Markdown/plugins` 引入，放进 `plugins` 后，标题、段落、列表项、引用、代码块外层、表格外层和分隔线会带上 `data-source-line` 与 `data-source-line-end`。不传这个插件时没有这些属性。
+
+`@astryx-vue/core/Markdown/parser` 提供 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及旧的块列表 `parseMarkdown` 和行内 `parseInline`。组件自己用的 `parseMarkdown` 仍返回语法树根，不返回那份块列表。`math: true` 不会产生数学节点。
 
 `isStreaming` 打开流式模式。内容只在末尾追加时，已经闭合的块保持原来的节点，只重新解析最后一个还没写完的块。新出现的文字用 `--astryx-duration-fast-max` 淡入。系统开启「减少动态效果」时不播放淡入。
 
