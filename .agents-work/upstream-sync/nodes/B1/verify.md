@@ -77,3 +77,18 @@
 因此第 17 项里「没有改 matcha、y2k 的间距」这一条作废，改为下面这条：
 
 17b. matcha 和 y2k 的 `--astryx-spacing-*` 取值，和上游 `6ecd41722`（#7374）里这两套主题的取值一致，名字只差前缀。在默认根字号下，用这两套主题渲染 Button 和 Card，像素和 BASE 相同。可以在文档站切换主题，或者用 `pnpm visual` 之外的临时 Playwright 脚本截图对比。
+
+## 第 2 轮新增的检查项
+
+18. **MediaTheme `mode="auto"` 会跟着颜色模式重新测量**：用第 1 轮留下的复现脚本 `nodes/B1/browse2.mjs` 和页面 `nodes/B1/vt2.md` 来测。
+    - 浅色挂载，结果是 `dark / off`。切到深色后，结果应变成 `off / light`。
+    - 深色挂载，结果是 `off / light`。切到浅色后，结果应变成 `dark / off`。
+    - 切换后的结果，要和「直接在那个模式下挂载」的结果一样。
+    - 有对应的单元测试，在两种 NODE_ENV 下都能通过。
+    - 反向检查：临时把颜色模式从缓存键里去掉，这个测试要失败。做完还原。
+19. **派生变量表补齐**：chat（`--_chat-composer-radius`、`--_chat-composer-padding`）、progress-bar-mark（`--_progressbar-mark-width`、`--_progressbar-mark-height`）、dialog 的 padding、bottom-sheet 的 padding，都已登记。
+    - 用 `defineTheme({ components: { dialog: { base: { padding: '24px' } } } })` 生成 CSS，输出里要有 `--astryx-dialog-padding`，不能直接写成 `padding`。
+    - 在浏览器里打开一个用这个主题的 Dialog，量内容区到边框的距离，要等于 24px，不能多出一圈。
+20. **文档补了一句说明**：环境适配规则里的 token 在条件成立时，会盖过 Theme 外层元素上的样式表和普通内联值。想覆盖它，要写在子元素上，或者用 `!important`。中英文都要有。
+21. 回报里「交给 Cx」的清单，`d30591054` 写到了具体的 C 节点。
+22. 第 1 轮通过的 1 到 17 项：本轮改动碰到的要重新验，至少重验 1、6、7、11、15、16。没碰到的可以写「沿用第 1 轮」，但要用 `git diff HEAD~N --stat` 证明。
