@@ -71,3 +71,5 @@
 - 任何一条不过，结论就是「不通过」。
 - 报告写到 `/Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync/nodes/B2/verify-<N>.md`，格式照 `templates/verify-report.md`。
 - 最终回复用中文，200 字以内。
+18. **没有搬过来的两段，效果仍然一样**：实现者没有把上游 reset 里 AspectRatio（`data-astryx-aspect-ratio-override`）和 `[data-astryx-media]` 这两段搬进 reset.css，理由是我们在组件样式里已经实现了。请找到我们对应的组件样式，在浏览器里实测。AspectRatio 的 cover 和 contain 两种模式下，里面的 img、video 填充方式要和上游官网一致；带 `data-astryx-media` 的媒体元素也要和上游一致。第 1 项比对规则时，这两段不算差异，但前提是这一项通过。
+19. **Button 的禁用指针**：实现者改了 `button.css`，把禁用状态的 `not-allowed` 改成了 `default`。这是因为 Button 自己的样式会盖掉 reset 的规则，不改就看不到 reset 的效果。请确认上游 v0.7.1 的 Button 禁用时也是 `default`，并在浏览器里实测：禁用的 Button 上，指针确实是 `default`。
