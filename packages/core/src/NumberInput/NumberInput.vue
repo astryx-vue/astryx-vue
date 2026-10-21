@@ -6,15 +6,18 @@ import { computed, defineComponent, nextTick, onMounted, shallowRef, toRaw, useA
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
-import { useNumberField } from '../composables/useNumberField.js'
+import { computeSteppedValue, useNumberField } from '../composables/useNumberField.js'
 import Field from '../Field/Field.vue'
-import { useFieldPartStyling } from '../Field/fieldParts.js'
 import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import Icon from '../Icon/Icon.vue'
+import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import { parseNumberInput, resolveNumberInputCommit } from './numberInputCommit.js'
+import { formatEditableNumber } from './numberParser.js'
 import '../../styles/number-input.css'
 
 defineOptions({ name: 'AstryxNumberInput', inheritAttrs: false })
@@ -47,6 +50,7 @@ const disabledDescriptionId = `${generatedId}-disabled`
 const disabledTooltipId = `${generatedId}-tooltip`
 const inputId = computed(() => props.id ?? generatedId)
 const messages = useAstryxMessages()
+const locale = useAstryxLocale()
 const incrementLabel = computed(() => messages.value.numberInput.increment(props.label))
 const decrementLabel = computed(() => messages.value.numberInput.decrement(props.label))
 const resolvedClearLabel = computed(() => messages.value.numberInput.clear(props.label))
@@ -79,32 +83,32 @@ const displayValue = computed(() => {
     return draft.value
   if (props.modelValue == null)
     return ''
-  return isFocused.value ? String(props.modelValue) : formattedText.value
+  return isFocused.value ? formatEditableNumber(props.modelValue, locale.value) : formattedText.value
 })
 
-const NUMBER_PATTERN = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i
-
-/** 读一段文字里的数字。读不出数字返回 null。 */
-function parseInputText(text: string): number | null {
-  const trimmed = text.trim()
-  if (trimmed === '' || !NUMBER_PATTERN.test(trimmed))
-    return null
-  const parsed = Number(trimmed)
-  return Number.isFinite(parsed) ? parsed : null
+function draftOptions() {
+  return {
+    min: props.min,
+    max: props.max,
+    isIntegerOnly: isIntegerOnly.value,
+    locale: locale.value,
+  }
 }
 
-/** 草稿文本是否有问题：解析不出数字，或者跑出范围 */
+/** 草稿文本是否有问题：解析不出数字，或者跑出范围。空草稿不算无效。 */
 const isDraftValid = computed(() => {
   if (draft.value === null || draft.value.trim() === '')
     return true
-  const parsed = parseInputText(draft.value)
-  if (parsed == null)
-    return false
-  if (props.min != null && parsed < props.min)
-    return false
-  if (props.max != null && parsed > props.max)
-    return false
-  return !isIntegerOnly.value || Number.isInteger(parsed)
+  return parseNumberInput(draft.value, draftOptions()) !== null
+})
+
+/** 步进从草稿的读数走。读不出来就用已经提交的值。 */
+const valueForStepping = computed(() => {
+  if (draft.value === null)
+    return props.modelValue ?? null
+  if (draft.value.trim() === '')
+    return null
+  return parseNumberInput(draft.value, draftOptions()) ?? props.modelValue ?? null
 })
 
 const modelValueRef = computed<number | null>({
@@ -188,11 +192,29 @@ function labelledBy(fieldLabelId?: string): string | undefined {
   return [fieldLabelId, attrs['aria-labelledby']].filter(Boolean).join(' ') || undefined
 }
 
+function nextStep(direction: 1 | -1): number | null {
+  return computeSteppedValue({
+    currentValue: valueForStepping.value,
+    direction,
+    min: props.min ?? null,
+    max: props.max ?? null,
+    step: props.step,
+    integerOnly: isIntegerOnly.value,
+  })
+}
+
+const canIncrement = computed(() => nextStep(1) !== valueForStepping.value)
+const canDecrement = computed(() => nextStep(-1) !== valueForStepping.value)
+
 function stepBy(direction: 1 | -1): void {
   if (isDisabled.value || isReadOnly.value)
     return
-  if (numberField.step(direction))
-    draft.value = null
+  const next = nextStep(direction)
+  if (next == null)
+    return
+  draft.value = null
+  if (next !== (props.modelValue ?? null))
+    numberField.setValue(next)
 }
 
 function focusInput(): void {
@@ -205,17 +227,25 @@ function onInput(event: Event): void {
     target.value = displayValue.value
     return
   }
-  const text = target.value
-  draft.value = text
-  if (text.trim() === '') {
-    numberField.setValue(null)
+  draft.value = target.value
+}
+
+function commitDraft(trigger: 'blur' | 'enter'): void {
+  if (draft.value === null)
     return
+  const decision = resolveNumberInputCommit(draft.value, {
+    ...draftOptions(),
+    hasClear: hasClear.value,
+  })
+  if (trigger === 'blur' || (decision.type === 'commit' && decision.didClamp))
+    draft.value = null
+  if (decision.type === 'clear') {
+    if (hasClear.value && props.modelValue != null)
+      numberField.setValue(null)
   }
-  // 读不出数字时只保留文字，不拦截输入；离开输入框后自然回到上一个值
-  const parsed = parseInputText(text)
-  if (parsed == null)
-    return
-  numberField.setValue(parsed)
+  else if (decision.type === 'commit' && decision.value !== props.modelValue) {
+    numberField.setValue(decision.value)
+  }
 }
 
 function onFocus(event: FocusEvent): void {
@@ -226,7 +256,7 @@ function onFocus(event: FocusEvent): void {
 }
 
 function onBlur(event: FocusEvent): void {
-  draft.value = null
+  commitDraft('blur')
   isFocused.value = false
   disabledTooltip.onBlur()
   emit('blur', event)
@@ -248,7 +278,7 @@ function onKeyDown(event: KeyboardEvent): void {
   }
 
   if (event.key === 'Enter') {
-    draft.value = null
+    commitDraft('enter')
     emit('enter', event)
   }
   emit('keydown', event)
@@ -349,6 +379,9 @@ onMounted(() => {
           @wheel="onWheel"
         >
         <span v-if="props.units" :id="unitsId" class="astryx-number-input-units">{{ props.units }}</span>
+        <VisuallyHidden as="div" role="alert" aria-live="assertive">
+          {{ isDraftValid ? '' : messages.numberInput.invalidNumber }}
+        </VisuallyHidden>
         <InputClearButton
           v-if="hasClear && props.modelValue != null && !isDisabled && !isReadOnly"
           class="astryx-number-input-clear"
@@ -364,28 +397,24 @@ onMounted(() => {
           <button
             type="button"
             class="astryx-number-input-button increment"
-            :disabled="isDisabled || isReadOnly || !numberField.canIncrement.value"
+            :disabled="isDisabled || isReadOnly || !canIncrement"
             :aria-label="incrementLabel"
             tabindex="-1"
             @pointerdown.prevent
             @click="stepFromButton(1)"
           >
-            <svg class="astryx-number-input-chevron" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" fill="none">
-              <path d="M1.5 1.75 6 6.25 10.5 1.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            <Icon class="astryx-number-input-chevron" icon="numberInput:stepperDown" size="xsm" />
           </button>
           <button
             type="button"
             class="astryx-number-input-button decrement"
-            :disabled="isDisabled || isReadOnly || !numberField.canDecrement.value"
+            :disabled="isDisabled || isReadOnly || !canDecrement"
             :aria-label="decrementLabel"
             tabindex="-1"
             @pointerdown.prevent
             @click="stepFromButton(-1)"
           >
-            <svg class="astryx-number-input-chevron" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" fill="none">
-              <path d="M1.5 1.75 6 6.25 10.5 1.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            <Icon class="astryx-number-input-chevron" icon="numberInput:stepperDown" size="xsm" />
           </button>
         </div>
 
