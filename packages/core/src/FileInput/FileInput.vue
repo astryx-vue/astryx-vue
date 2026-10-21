@@ -44,6 +44,8 @@ const requiredId = `${generatedId}-required`
 const fileInput = useTemplateRef<HTMLInputElement>('file')
 const controlRef = useTemplateRef<HTMLDivElement>('control')
 const validationError = shallowRef<string | null>(null)
+const pendingCount = shallowRef(0)
+const isPending = computed(() => pendingCount.value > 0)
 const dragOver = shallowRef(false)
 const disabledMessageId = `${generatedId}-disabled`
 const disabledMessage = computed(() => props.disabledMessage?.trim() || undefined)
@@ -75,6 +77,30 @@ function commit(value: FileInputValue): void {
   emit('change', value)
 }
 
+function runChangeAction(value: FileInputValue): void {
+  const action = props.changeAction
+  if (action == null)
+    return
+  pendingCount.value += 1
+  try {
+    const result = action(value)
+    if (result == null) {
+      pendingCount.value -= 1
+      return
+    }
+    void Promise.resolve(result).then(() => {
+      pendingCount.value -= 1
+    }, (error: unknown) => {
+      pendingCount.value -= 1
+      emit('actionError', error, value)
+    })
+  }
+  catch (error) {
+    pendingCount.value -= 1
+    emit('actionError', error, value)
+  }
+}
+
 function applyFiles(list: FileList | File[] | null | undefined): void {
   if (props.isDisabled)
     return
@@ -96,6 +122,8 @@ function applyFiles(list: FileList | File[] | null | undefined): void {
 
   const files = result.files
   commit(files)
+  if (files != null)
+    runChangeAction(files)
   if (validationError.value == null && files != null) {
     const selected = Array.isArray(files) ? files : [files]
     if (selected.length === 1 && selected[0])
@@ -121,6 +149,7 @@ function clear(): void {
     return
   validationError.value = null
   commit(null)
+  runChangeAction(null)
   if (fileInput.value)
     fileInput.value.value = ''
 }
@@ -170,6 +199,7 @@ function onDrop(event: DragEvent): void {
           v-bind="parts.forwardedAttrs()"
           :id="inputId" type="button" class="astryx-file-input-trigger"
           :disabled="isDisabled && !showsDisabledMessage" :aria-disabled="showsDisabledMessage || undefined" :aria-invalid="status?.type === 'error' || undefined"
+          :aria-busy="isPending || props.isLoading || undefined"
           :aria-describedby="[field.describedBy, conveysRequired ? requiredId : undefined, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
           @click="openPicker" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop"
           @focus="disabledTooltip.onFocus" @blur="disabledTooltip.onBlur"
@@ -178,7 +208,7 @@ function onDrop(event: DragEvent): void {
           <span class="astryx-file-input-text" :data-placeholder="!fileLabel || undefined">{{ fileLabel || placeholder }}</span>
         </button>
         <InputClearButton v-if="fileLabel && !isDisabled" :label="clearLabel" @click="clear" />
-        <Spinner v-if="isLoading" size="sm" />
+        <Spinner v-if="isLoading || isPending" size="sm" />
         <FieldIcon v-else-if="status" :type="status.type" />
       </div>
       <VisuallyHidden v-if="conveysRequired" :id="requiredId">
