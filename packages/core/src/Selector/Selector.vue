@@ -23,6 +23,7 @@ import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
+import { bindListboxEscape, dismissSelectorEscape, focusSelectorTrigger, onSelectorListboxEscape } from './selectorEscape.js'
 import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } from './selectorOptions.js'
 import SelectorPanel from './SelectorPanel.vue'
 import { useSelectorPopup } from './useSelectorPopup.js'
@@ -156,14 +157,26 @@ const { position, teleportTarget } = usePositionedLayer({
   gap: 4,
 })
 
+function focusTrigger(): void {
+  focusSelectorTrigger(fieldRef.value)
+}
+
+bindListboxEscape(listboxRef, (event) => {
+  onSelectorListboxEscape(event, {
+    isOpen: combobox.isOpen.value,
+    layer: listboxRef.value,
+    close: () => combobox.close(),
+    focusTrigger,
+  })
+})
+
 useDismiss({
   container: listboxRef,
   trigger: fieldRef,
   isEnabled: popoverOpen,
   dismissOnEscape: 'close',
-  onDismiss: () => {
-    combobox.close()
-  },
+  onEscape: () => dismissSelectorEscape(listboxRef.value, () => combobox.close(), focusTrigger),
+  onDismiss: () => combobox.close(),
 })
 
 const selectedOption = computed(() => {
@@ -252,7 +265,12 @@ const popup = useSelectorPopup({
   listboxRef,
   isOpen: combobox.isOpen,
   activeIndex: combobox.activeIndex,
-  onListKeyDown: event => combobox.onKeyDown(event),
+  onListKeyDown: (event) => {
+    const wasOpen = combobox.isOpen.value
+    combobox.onKeyDown(event)
+    if (event.key === 'Escape' && wasOpen)
+      focusTrigger()
+  },
   isReadOnly: () => control.isReadOnly.value,
   isSheet: () => isSheet.value,
   emitKeydown: event => emit('keydown', event),

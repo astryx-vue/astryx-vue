@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
 import type { MultiSelectorEmits, MultiSelectorHandle, MultiSelectorProps, MultiSelectorSlots, MultiSelectorTriggerProps } from './types.js'
-import { computed, onMounted, ref, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, nextTick, onMounted, onScopeDispose, ref, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
@@ -18,6 +18,7 @@ import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { useInputGroupContext } from '../InputGroup/context.js'
+import { focusElement } from '../layer/focus.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
@@ -126,7 +127,11 @@ const menu = useMultiSelectorMenu({
   announce,
   listboxRef,
   getSearchInput: () => panelRef.value ? (panelRef.value as { searchInput?: HTMLInputElement | null }).searchInput ?? null : null,
-  focusTrigger: () => triggerRef.value?.focus(),
+  focusTrigger: () => {
+    const trigger = triggerRef.value ?? customAnchor.value
+    if (trigger != null)
+      void nextTick(() => focusElement(trigger))
+  },
   listboxId,
 })
 const { combobox, selectedValues, selectedOptions } = menu
@@ -215,6 +220,19 @@ function onTriggerKeyDown(event: KeyboardEvent): void {
   if (!event.defaultPrevented)
     emit('keydown', event)
 }
+
+/** 选项和操作按钮上的 Escape 不会经过搜索框，在列表根上接住并回到触发器。 */
+function onListboxEscape(event: KeyboardEvent): void {
+  if (event.key !== 'Escape' || event.defaultPrevented || event.isComposing)
+    return
+  menu.onKeyDown(event)
+}
+
+watch(listboxRef, (el, prev) => {
+  prev?.removeEventListener('keydown', onListboxEscape)
+  el?.addEventListener('keydown', onListboxEscape)
+}, { flush: 'sync' })
+onScopeDispose(() => listboxRef.value?.removeEventListener('keydown', onListboxEscape))
 
 const triggerProps = computed<MultiSelectorTriggerProps>(() => ({
   'id': triggerId,
