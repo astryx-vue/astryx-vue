@@ -32,9 +32,9 @@
 
 | 节点 | 状态 | 工作区 / 槽位 | 待办 |
 | --- | --- | --- | --- |
-| B2 reset | 第 1 轮验收中（Sonnet 验收者 `5538f83b-45d4-4dd`） | `../astryx-vue-wt/B2` 槽位 3 | 等 `nodes/B2/verify-1.md` |
-| B4 浮层运行时 | 第 3 轮验收中（`f17035f8-a682-427`） | `../astryx-vue-wt/B4` 槽位 2 | 等 `nodes/B4/verify-3.md`。**这是第 3 轮，再不过就先停下来问用户** |
-| B6 公共 props | 第 1 轮实现中（Sonnet `9622eee8-c456-4c9`） | `../astryx-vue-wt/B6` 槽位 1 | 等 `nodes/B6/impl-1.md`，然后派验收 |
+| B2 reset | 第 1 轮验收中（Sonnet 验收者 `5538f83b-45d4-4dd`，上一个会话派出） | `../astryx-vue-wt/B2` 槽位 3 | 等 `nodes/B2/verify-1.md`。如果迟迟没出现，就当它已中断，重新派验收者 |
+| B4 浮层运行时 | ⏸️ 第 3 轮不过，**暂停，等用户拍板** | `../astryx-vue-wt/B4` 槽位 2 | 见 `nodes/B4/verify-3.md` 第 28 项。总控建议的方案 A：直接合入，把剩下两件事写进 C3、C6 的交接清单，作为必做项。一是 MultiSelector、Typeahead、Tokenizer、MoreMenu 这四个浮层要加上文字重置；二是守卫测试要求组件自己直接 import `layer.css`，不能靠别的组件间接带进来。方案 B：做第 4 轮 |
+| B6 公共 props | 第 1 轮实现完成，**待验收**，还没派验收者 | `../astryx-vue-wt/B6` 槽位 1 | 回报在 `nodes/B6/impl-1.md`。派验收者时照 `templates/dispatch.md` 写提示词，检查项按 `nodes/B6/verify.md` |
 | 可开工 | B7、D1、F2a、D4a（D4a 要用户签字确认） | — | 有空位时按 `status.mjs ready` 列出的顺序派 |
 
 上面表里的子代理 ID 是上一个会话里的，**你在新会话里拿不到它们的通知**。所以接手第一件事是逐个查这三个节点：
