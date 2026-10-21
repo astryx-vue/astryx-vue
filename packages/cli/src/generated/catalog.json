@@ -38629,9 +38629,9 @@
               },
               {
                 "name": "`label`",
-                "type": "`string`",
+                "type": "`string | number`",
                 "default": "—",
-                "description": "Text centered on the divider. Also used as the accessible name."
+                "description": "Text centered on the divider. Also used as the accessible name. Numeric zero stays visible; an empty string does not."
               },
               {
                 "name": "`variant`",
@@ -38660,9 +38660,9 @@
               },
               {
                 "name": "`label`",
-                "type": "`string`",
+                "type": "`string | number`",
                 "default": "—",
-                "description": "显示在分隔线中间的文字，同时作为分隔线的无障碍名称。"
+                "description": "显示在分隔线中间的文字，同时作为分隔线的无障碍名称。数字 0 会显示出来，空字符串不显示。"
               },
               {
                 "name": "`variant`",
@@ -43158,8 +43158,8 @@
         "zh": "`ResizeHandle` 是两个区域之间的分隔条。尺寸由 `useResizable` 管理。把 `sidebar.props` 同时传给分隔条和面板。"
       },
       "usage": {
-        "en": "`ResizeHandle` is the separator between two regions. `useResizable` owns the size. Pass `sidebar.props` to both the handle and the panel.\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` is `horizontal` (width) or `vertical` (height). `position` is `inline` or `overlay`. `isReversed` flips the drag when the panel sits on the end edge. `hasDivider` draws the 1px line; the line is the handle. `isAlwaysVisible` keeps the grip visible at rest. `pillPlacement` is `auto`, `start`, `end`, or `center`.\n\nThe handle is `role=\"separator\"`. A horizontal handle sets `aria-orientation=\"vertical\"`. Arrow keys move 10px, and Shift moves 50px. Home and End jump to the limits. Enter restores the expanded size.\n\n`useResizable` accepts one region, or a `regions` map. `snaps` holds the size when the pointer comes within 8px of a listed value, and the drag otherwise follows the pointer. A drag below `collapsedSize` (default 40) collapses a collapsible region to 0. `autoSaveId` stores the size under `astryx-resizable:` in `localStorage`. `percent()` builds a percentage size with a pixel minimum or maximum.",
-        "zh": "`ResizeHandle` 是两个区域之间的分隔条。尺寸由 `useResizable` 管理。把 `sidebar.props` 同时传给分隔条和面板。\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` 取 `horizontal`（改宽度）或 `vertical`（改高度）。`position` 取 `inline` 或 `overlay`。面板在结束边时用 `isReversed` 把拖拽方向反过来。`hasDivider` 画出 1px 的线，线本身就是把手。`isAlwaysVisible` 让握把在静止时也可见。`pillPlacement` 取 `auto`、`start`、`end` 或 `center`。\n\n分隔条的角色是 `separator`。横向分隔条的 `aria-orientation` 是 `vertical`。方向键每次移动 10px，按住 Shift 移动 50px。Home 和 End 跳到边界。Enter 恢复展开时的尺寸。\n\n`useResizable` 可以管一个区域，也可以用 `regions` 一次管多个。`snaps` 在指针进入某个点 8px 以内时吸住，其余时候跟着指针走。可收起的区域被拖到低于 `collapsedSize`（默认 40）时，尺寸变成 0。`autoSaveId` 把尺寸存在 `localStorage`，键名以 `astryx-resizable:` 开头。`percent()` 用来写带像素上下限的百分比尺寸。"
+        "en": "`ResizeHandle` is the separator between two regions. `useResizable` owns the size. Pass `sidebar.props` to both the handle and the panel.\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` is `horizontal` (width) or `vertical` (height). `position` is `inline` or `overlay`. `isReversed` flips the drag when the panel sits on the end edge. `hasDivider` draws the 1px line; the line is the handle. `isAlwaysVisible` keeps the grip visible at rest. `pillPlacement` is `auto`, `start`, `end`, or `center`.\n\nThe handle is `role=\"separator\"`. A horizontal handle sets `aria-orientation=\"vertical\"`. Arrow keys move 10px, and Shift moves 50px. With snap points, an arrow jumps to the next point and Shift jumps two. Home and End jump to the limits. End does nothing when no maximum is set; the separator then reports the window or container size as its maximum. While collapsed, only the arrow that grows the pane reopens it. Enter and double-click restore the size from before the collapse.\n\n`useResizable` accepts one region, or a `regions` map. `snaps` keeps the size on the nearest listed point. An equal distance stays on the earlier point. A drag below `collapsedSize` (default 40) collapses a collapsible region to 0. `autoSaveId` stores the size under `astryx-resizable:` in `localStorage`. `percent()` builds a percentage size with a pixel minimum or maximum.",
+        "zh": "`ResizeHandle` 是两个区域之间的分隔条。尺寸由 `useResizable` 管理。把 `sidebar.props` 同时传给分隔条和面板。\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` 取 `horizontal`（改宽度）或 `vertical`（改高度）。`position` 取 `inline` 或 `overlay`。面板在结束边时用 `isReversed` 把拖拽方向反过来。`hasDivider` 画出 1px 的线，线本身就是把手。`isAlwaysVisible` 让握把在静止时也可见。`pillPlacement` 取 `auto`、`start`、`end` 或 `center`。\n\n分隔条的角色是 `separator`。横向分隔条的 `aria-orientation` 是 `vertical`。方向键每次移动 10px，按住 Shift 移动 50px。有吸附点时，方向键改成跳到相邻的点，Shift 跳两个。Home 和 End 跳到边界；没写最大尺寸时 End 不动，读屏用的最大值改报窗口或容器尺寸。折叠后只有让面板变大的方向键会展开。Enter 和双击恢复折叠前的尺寸。\n\n`useResizable` 可以管一个区域，也可以用 `regions` 一次管多个。`snaps` 让尺寸只停在列出的点上。离两个点一样远时，留在更靠前的那个。可收起的区域被拖到低于 `collapsedSize`（默认 40）时，尺寸变成 0。`autoSaveId` 把尺寸存在 `localStorage`，键名以 `astryx-resizable:` 开头。`percent()` 用来写带像素上下限的百分比尺寸。"
       },
       "practices": {
         "en": [
@@ -43259,7 +43259,7 @@
                 "name": "`defaultSize`",
                 "type": "`number | string | ResizablePercentSize`",
                 "default": "`250`",
-                "description": "Starting size. A number is pixels. A listed snap holds it only when the value is already within 8px."
+                "description": "Starting size. A number is pixels. With snap points, the starting value moves to the nearest point."
               },
               {
                 "name": "`minSize`",
@@ -43289,7 +43289,7 @@
                 "name": "`snaps`",
                 "type": "`number[]`",
                 "default": "-",
-                "description": "Pixel values that hold the size when the pointer is within 8px."
+                "description": "The size stops only on these pixel points. An equal distance stays on the earlier point."
               },
               {
                 "name": "`shrinkOrder`",
@@ -43415,7 +43415,7 @@
                 "name": "`defaultSize`",
                 "type": "`number | string | ResizablePercentSize`",
                 "default": "`250`",
-                "description": "初始尺寸。数字是像素。只有已经落在吸附点 8px 以内时，初值才会被吸住。"
+                "description": "初始尺寸。数字是像素。有吸附点时，初值会落到最近的点上。"
               },
               {
                 "name": "`minSize`",
@@ -43445,7 +43445,7 @@
                 "name": "`snaps`",
                 "type": "`number[]`",
                 "default": "-",
-                "description": "指针进入 8px 以内时吸住的像素值。"
+                "description": "尺寸只会停在这些像素点上。离两个点一样远时，留在更靠前的那个。"
               },
               {
                 "name": "`shrinkOrder`",
@@ -43537,7 +43537,7 @@
         "en": [
           {
             "heading": "useResizable",
-            "text": "Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ size, isCollapsed, collapse, expand, resize, props }</code>. A <code>regions</code> map returns one of those objects per key.\n\n<code>percent(value, { min })</code> or <code>percent(value, { max })</code> builds a percentage size. <code>min</code> and <code>max</code> use <code>{ type: 'pixel', value }</code>.\n\nArrow keys move 10px. Shift moves 50px. Home, End, and Enter jump to the minimum, the maximum, and the expanded size."
+            "text": "Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ size, isCollapsed, collapse, expand, resize, props }</code>. A <code>regions</code> map returns one of those objects per key.\n\n<code>percent(value, { min })</code> or <code>percent(value, { max })</code> builds a percentage size. <code>min</code> and <code>max</code> use <code>{ type: 'pixel', value }</code>.\n\nArrow keys move 10px. Shift moves 50px. With snap points, an arrow jumps to the next point and Shift jumps two. Home, End, and Enter jump to the minimum, a configured maximum, and the size from before collapse. End does nothing when no maximum is set."
           },
           {
             "heading": "Native attributes",
@@ -43547,7 +43547,7 @@
         "zh": [
           {
             "heading": "useResizable",
-            "text": "从 <code>@astryx-vue/core</code> 引入。单个区域返回 <code>{ size, isCollapsed, collapse, expand, resize, props }</code>。传入 <code>regions</code> 时，每个键各返回一份。\n\n<code>percent(value, { min })</code> 或 <code>percent(value, { max })</code> 用来写百分比尺寸。<code>min</code> 和 <code>max</code> 的形状是 <code>{ type: 'pixel', value }</code>。\n\n方向键移动 10px，按住 Shift 移动 50px。Home、End、Enter 分别跳到最小值、最大值和展开时的尺寸。"
+            "text": "从 <code>@astryx-vue/core</code> 引入。单个区域返回 <code>{ size, isCollapsed, collapse, expand, resize, props }</code>。传入 <code>regions</code> 时，每个键各返回一份。\n\n<code>percent(value, { min })</code> 或 <code>percent(value, { max })</code> 用来写百分比尺寸。<code>min</code> 和 <code>max</code> 的形状是 <code>{ type: 'pixel', value }</code>。\n\n方向键移动 10px，按住 Shift 移动 50px。有吸附点时改为跳到相邻吸附点，Shift 跳两个。Home、End、Enter 分别跳到最小值、配置过的最大值和折叠前的尺寸。没写最大值时 End 不动。"
           },
           {
             "heading": "原生属性",
@@ -70236,7 +70236,7 @@
                 "name": "`snaps`",
                 "type": "`number[]`",
                 "default": "`[]`",
-                "description": "Pixel values to snap to during drag. The size holds when the pointer comes within 8px of a listed value."
+                "description": "The size stops only on these pixel points. An equal distance stays on the earlier point."
               },
               {
                 "name": "`autoSaveId`",
@@ -70356,7 +70356,7 @@
                 "name": "`snaps`",
                 "type": "`number[]`",
                 "default": "`[]`",
-                "description": "拖动时要吸过去的像素值。指针离某个值不到 8px 时，尺寸就停在那里。"
+                "description": "尺寸只会停在这些像素点上。离两个点一样远时，留在更靠前的那个。"
               },
               {
                 "name": "`autoSaveId`",

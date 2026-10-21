@@ -59,7 +59,7 @@ footer: false
         <td><code>snaps</code></td>
         <td><code>number[]</code></td>
         <td><code>[]</code></td>
-        <td>拖动时要吸过去的像素值。指针离某个值不到 8px 时，尺寸就停在那里。</td>
+        <td>尺寸只会停在这些像素点上。离两个点一样远时，留在更靠前的那个。</td>
       </tr>
       <tr>
         <td><code>autoSaveId</code></td>
