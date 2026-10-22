@@ -40,8 +40,6 @@
 
 可以开工、等待派发：C11、C12、C13、D1、F2a、D4a、F1a、F3b、F3g、F3c、F3h、F3e。这是 `node scripts/swarm/status.mjs ready` 按下游数量排出的顺序。D4a 仍标着可开工，要等用户签字，签字前不要派。F3a 仍要等 C11、C12，保持未开始。
 
-看板同步 PR #160 仍开着，等用户说「合」之后再合进 `swarm-tree`。
-
 ## 后续
 
 **#128 的 CI：** Markdown 三个子路径的 dist 已由 #146 修好。#142 修过当时的 CLI catalog。#156 已合入，收掉了子菜单服务端渲染里的 `HTMLElement is not defined`、当时过期的 catalog，以及浮层 `window is not defined`。不要再把这三处当成还没人认领的红。C4 #159、C5 #158 已经在 `swarm-tree` 上。进度文档的 PR 不要改组件或打包配置。
