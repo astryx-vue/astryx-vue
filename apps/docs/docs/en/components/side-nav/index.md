@@ -13,7 +13,7 @@ import SideNavCollapseFigure from '../../../../components/demos/side-nav/collaps
 
 ## Usage
 
-`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu.
+`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu. The `actions` slot on `SideNavItem` sits beside the primary control, outside the link, and is not rendered while the rail is collapsed.
 
 Control it with `v-model:is-collapsed`. Pass an object to `collapsible` to hide the built-in button or to set a hotkey such as `mod+\\`. With `resizable`, the trailing edge can be dragged. The width starts at 260px and stays between 180px and 480px. The handle hides while the bar is collapsed. Dragging below 160px collapses the bar when collapse is also enabled.
 

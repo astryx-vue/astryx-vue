@@ -44,7 +44,7 @@ const value = ref('overview')
 
 | Guidance | Practice |
 | --- | --- |
-| <Badge variant="success">Recommended</Badge> | Use semantic `role="tablist"`, `role="tab"`, and `aria-selected` for accessible tabs. |
+| <Badge variant="success">Recommended</Badge> | Leave `role` unset for a navigation landmark that marks the current tab with `aria-current="true"`. Set `role="tablist"` to opt into the tabs pattern, with `role="tab"` and `aria-selected`. Tabs wider than the strip scroll sideways by default. |
 | <Badge variant="success">Recommended</Badge> | Give each `Tab` a unique `value` for selection and keyboard navigation. |
 | <Badge variant="success">Recommended</Badge> | Use `disabled` for unavailable tabs; keyboard navigation skips them automatically. |
 | <Badge variant="error">Don't</Badge> | Put too many tabs in a single strip; consider scrolling or reorganizing content when it overflows. |

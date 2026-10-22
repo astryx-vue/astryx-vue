@@ -12,7 +12,7 @@ import { mobileNavDrawer, mobileNavEnd, mobileNavUntitled } from '../../../../co
 
 ## 使用方法
 
-`MobileNav` 是从屏幕一侧滑入的对话框抽屉，不是底部弹层。`MobileNavToggle` 和它绑同一个 `v-model:is-open`。打开后焦点留在抽屉里，Escape 或点遮罩关闭，并回到原来的焦点。
+`MobileNav` 是从屏幕一侧滑入的对话框抽屉，不是底部弹层。`MobileNavToggle` 和它绑同一个 `v-model:is-open`。打开后焦点留在抽屉里，Escape 或点遮罩关闭，并回到原来的焦点。抽屉里面再开一层浮层时，Escape 先关最上面那一层。双指缩放留给浏览器，内容区仍可以竖着滚。
 
 `side` 可以是 `start`、`end` 或 `auto`。`auto` 按打开时焦点的位置决定从哪一侧进入。顶栏的窄屏模式会自己创建这一对组件。
 
