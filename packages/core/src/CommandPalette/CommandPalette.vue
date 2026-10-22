@@ -31,6 +31,7 @@ const messages = useAstryxMessages()
 const announce = useAnnounce()
 const search = ref('')
 const highlightedIndex = ref(-1)
+const highlightCause = ref<'keyboard' | 'pointer' | 'sync'>('sync')
 const listId = `astryx-command-palette-${useId()}`
 const enabled = computed(() => props.isOpen)
 const source = computed(() => props.searchSource)
@@ -84,7 +85,8 @@ function setSearch(next: string): void {
   search.value = next
 }
 
-function setHighlightedIndex(index: number): void {
+function setHighlightedIndex(index: number, cause: 'keyboard' | 'pointer' | 'sync' = 'keyboard'): void {
+  highlightCause.value = cause
   highlightedIndex.value = index
 }
 
@@ -108,8 +110,12 @@ function onKeyDown(event: KeyboardEvent): void {
   if (event.isComposing || event.key === 'Process')
     return
   if (event.key === 'Escape') {
-    event.preventDefault()
-    close()
+    // 模态面板把 Escape 留给对话框的关闭栈，里面还有一层时先关里面。
+    // 内嵌预览不进那一层栈，所以仍在这里关掉。
+    if (props.isInline) {
+      event.preventDefault()
+      close()
+    }
     return
   }
   if (event.key === ' ')
@@ -121,20 +127,22 @@ function onKeyDown(event: KeyboardEvent): void {
       selectItem(item)
     return
   }
+  if (event.key === 'Home' || event.key === 'End')
+    return
 
   const direction = event.key === 'ArrowDown'
     ? 'next'
     : event.key === 'ArrowUp'
       ? 'previous'
-      : event.key === 'Home' || event.key === 'PageUp'
+      : event.key === 'PageUp'
         ? 'first'
-        : event.key === 'End' || event.key === 'PageDown'
+        : event.key === 'PageDown'
           ? 'last'
           : null
   if (direction == null)
     return
   event.preventDefault()
-  highlightedIndex.value = moveHighlight(items.value, highlightedIndex.value, direction)
+  setHighlightedIndex(moveHighlight(items.value, highlightedIndex.value, direction), 'keyboard')
 }
 
 function onOpenChange(open: boolean): void {
@@ -145,6 +153,7 @@ function onOpenChange(open: boolean): void {
 }
 
 watch(items, (list) => {
+  highlightCause.value = 'sync'
   if (search.value.trim() === '' && value.value) {
     highlightedIndex.value = list.findIndex(item => item.id === value.value && !item.disabled)
     return
@@ -169,12 +178,14 @@ watch(() => props.isOpen, (open) => {
   if (!open) {
     results.cancel()
     search.value = ''
+    highlightCause.value = 'sync'
     highlightedIndex.value = -1
   }
 })
 
 provide(commandPaletteKey, {
   highlightedIndex,
+  highlightCause,
   isBusy,
   isInline,
   items,
