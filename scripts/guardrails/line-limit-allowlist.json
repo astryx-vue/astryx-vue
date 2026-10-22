@@ -1,5 +1,4 @@
 {
   "packages/cli/src/cli.ts": 623,
-  "packages/core/src/BottomSheet/useSheetGestures.ts": 620,
   "packages/core/src/Table/TableData.vue": 596
 }

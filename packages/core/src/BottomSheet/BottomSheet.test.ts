@@ -1,7 +1,11 @@
 import type { DOMWrapper } from '@vue/test-utils'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
+import { resetInteractionModalityForTest } from '../composables/internal/interactionModality.js'
+import { pushLayer, resetDismissStackForTests } from '../layer/dismissStack.js'
 import BottomSheet from './BottomSheet.vue'
 
 enableAutoUnmount(afterEach)
@@ -36,6 +40,8 @@ beforeAll(ensureDialogModalApi)
 afterEach(() => {
   document.body.innerHTML = ''
   document.body.style.overflow = ''
+  resetDismissStackForTests()
+  resetInteractionModalityForTest()
   vi.restoreAllMocks()
 })
 
@@ -275,16 +281,36 @@ describe('bottom sheet', () => {
   })
 
   it('maps the padding step to a spacing token and falls back to the theme', async () => {
+    const css = readFileSync(join(process.cwd(), 'packages/core/styles/bottom-sheet.css'), 'utf8')
+    const contentRule = css.slice(css.indexOf('.astryx-bottom-sheet__content {'))
+    expect(contentRule).toContain('--container-padding-inline-start: var(--_sheet-pad-inline-start)')
+    expect(contentRule).toContain('--container-padding-block-end: var(--_sheet-pad-block-end)')
+    expect(contentRule).toContain('var(--astryx-bottom-sheet-padding-inline-start, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)))')
+    expect(contentRule).toContain('var(--astryx-bottom-sheet-padding-block-start, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)))')
+    expect(contentRule).toContain('padding-inline: var(--container-padding-inline-start) var(--container-padding-inline-end)')
+    expect(contentRule).toContain('padding-block: var(--container-padding-block-start) var(--container-padding-block-end)')
+    expect(contentRule).toContain('--layout-padding-outer-x: var(--_sheet-pad-inline-start)')
+    expect(contentRule).toContain('--layout-padding-inner-y: var(--_sheet-pad-block-start)')
+    expect(contentRule).toContain('[data-padding=\'1.5\']')
+    expect(contentRule).toContain('var(--astryx-spacing-1-5, 6px)')
+    expect(contentRule).toContain('[data-padding=\'0\']')
+    expect(contentRule).toContain('var(--astryx-spacing-0, 0px)')
+    expect(contentRule).toContain('--_sheet-pad-inline-start: var(--_sheet-padding-step)')
+
+    const layerCss = readFileSync(join(process.cwd(), 'packages/core/styles/layer.css'), 'utf8')
+    expect(layerCss).toContain('--container-padding-inline-start: 0px')
+
     const wrapper = renderSheet({ padding: 1.5 })
     await wrapper.setProps({ isOpen: true })
     const content = wrapper.find('.astryx-bottom-sheet__content')
-    expect(content.attributes('style')).toContain('--astryx-spacing-1-5')
+    expect(content.attributes('data-padding')).toBe('1.5')
+    expect(panelEl().classList.contains('astryx-layer')).toBe(true)
 
     await wrapper.setProps({ padding: 0 })
-    expect(content.attributes('style')).toContain('--astryx-spacing-0')
+    expect(content.attributes('data-padding')).toBe('0')
 
     await wrapper.setProps({ padding: undefined })
-    expect(wrapper.find('.astryx-bottom-sheet__content').attributes('style')).toBeUndefined()
+    expect(wrapper.find('.astryx-bottom-sheet__content').attributes('data-padding')).toBeUndefined()
   })
 
   it('renders the named, numeric, and custom height budgets', async () => {
@@ -311,7 +337,7 @@ describe('bottom sheet', () => {
     await wrapper.setProps({ height: 'hug', padding: 4 })
 
     expect(panelEl().getAttribute('data-height')).toBe('hug')
-    expect(wrapper.find('.astryx-bottom-sheet__content').attributes('style')).toContain('--astryx-spacing-4')
+    expect(wrapper.find('.astryx-bottom-sheet__content').attributes('data-padding')).toBe('4')
   })
 
   it('dismisses on a slow pull past the shortest stop and snaps to a detent otherwise', async () => {
@@ -403,6 +429,96 @@ describe('bottom sheet', () => {
     await flushPromises()
 
     expect(panel.attributes('data-state')).toBe('hidden')
+  })
+
+  it('lets a layer above the sheet take Escape first', async () => {
+    const wrapper = renderSheet()
+    await wrapper.setProps({ isOpen: true })
+    const nested = vi.fn()
+    const stop = pushLayer({
+      token: {},
+      depth: 5,
+      dismissOnPointerOutside: false,
+      dismissOnEscape: 'close',
+      onDismiss: nested,
+    })
+
+    dialogEl().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    expect(nested).toHaveBeenCalledOnce()
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+
+    stop()
+    dialogEl().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    expect(wrapper.emitted('openChange')).toEqual([[false]])
+  })
+
+  it('ignores Escape outside a non-modal sheet', async () => {
+    const wrapper = renderSheet({ hasScrim: false })
+    await wrapper.setProps({ isOpen: true })
+
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+
+    dialogEl().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    expect(wrapper.emitted('openChange')).toEqual([[false]])
+  })
+
+  it('returns focus without a ring after a pointer close', async () => {
+    const trigger = document.createElement('button')
+    trigger.textContent = 'Open filters'
+    document.body.appendChild(trigger)
+    trigger.focus()
+    const focus = vi.spyOn(trigger, 'focus')
+
+    const wrapper = renderSheet()
+    await wrapper.setProps({ isOpen: true })
+    await flushPromises()
+    document.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1 }))
+
+    await wrapper.setProps({ isOpen: false })
+    await flushPromises()
+
+    expect(document.activeElement).toBe(trigger)
+    expect(focus).toHaveBeenCalled()
+    expect(focus.mock.calls.at(-1)?.[0]).toMatchObject({ focusVisible: false })
+  })
+
+  it('does not drag the sheet while a nested scroller can still move', async () => {
+    const wrapper = renderSheet({ height: 'tall' }, {
+      default: () => h('div', { class: 'nested' }, [h('div', { style: 'height: 200px' }, 'tall')]),
+    })
+    await wrapper.setProps({ isOpen: true })
+    await flushPromises()
+    stubPanelHeight(600)
+
+    const nested = wrapper.find('.nested').element as HTMLElement
+    Object.defineProperty(nested, 'scrollHeight', { configurable: true, value: 200 })
+    Object.defineProperty(nested, 'clientHeight', { configurable: true, value: 40 })
+    Object.defineProperty(nested, 'scrollTop', { configurable: true, value: 20 })
+
+    nested.dispatchEvent(pointerEvent('pointerdown', { clientY: 100 }))
+    window.dispatchEvent(pointerEvent('pointermove', { clientY: 220 }))
+    window.dispatchEvent(pointerEvent('pointerup', { clientY: 220 }))
+    await flushPromises()
+
+    expect(wrapper.emitted('snap')).toBeUndefined()
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+  })
+
+  it('drops a drag when a second finger lands', async () => {
+    const wrapper = renderSheet({ height: 'tall', snapPoints: [0.5] })
+    await wrapper.setProps({ isOpen: true })
+    await flushPromises()
+    stubPanelHeight(600)
+
+    const handle = panelEl().querySelector('.astryx-bottom-sheet__handle') as Element
+    handle.dispatchEvent(pointerEvent('pointerdown', { clientY: 100, pointerId: 1, timeStamp: 100 }))
+    window.dispatchEvent(pointerEvent('pointermove', { clientY: 180, pointerId: 1, timeStamp: 160 }))
+    handle.dispatchEvent(pointerEvent('pointerdown', { clientY: 180, pointerId: 2, timeStamp: 180 }))
+    window.dispatchEvent(pointerEvent('pointerup', { clientY: 520, pointerId: 1, timeStamp: 240 }))
+    await flushPromises()
+
+    expect(wrapper.emitted('openChange')).toBeUndefined()
   })
 
   it('keeps passthrough attributes on the panel rather than the dialog', async () => {
