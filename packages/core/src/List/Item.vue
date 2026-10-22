@@ -3,7 +3,9 @@ import type { Component, ComponentPublicInstance, CSSProperties, StyleValue } fr
 import type { ItemProps, ItemSlots } from './types.js'
 import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { isSafeUrl } from '../utils/safeUrl.js'
 import { itemDescriptionContextKey } from './context.js'
 import { useItemSwipe } from './useItemSwipe.js'
 import '../../styles/list.css'
@@ -96,10 +98,17 @@ const ariaCurrent = computed(() =>
 )
 
 const isDelegate = computed(() => props.interactiveRef != null)
-const isInteractive = computed(() => props.onClick != null || props.href != null || isDelegate.value)
+/** `javascript:` 这类地址不交给浏览器，行也就不是链接。 */
+const safeHref = computed(() => {
+  const href = props.href
+  return href != null && href !== '' && isSafeUrl(href) ? href : undefined
+})
+const isInteractive = computed(() => props.onClick != null || safeHref.value != null || isDelegate.value)
 /** 链接内容用的根组件：`as` 写了组件就用它，否则用 LinkProvider 给的默认值。 */
 const customLink = computed(() => (typeof props.as === 'string' ? linkComponent.value : props.as))
-const isLinkContent = computed(() => props.href != null && customLink.value != null)
+const isLinkContent = computed(() => safeHref.value != null && customLink.value != null)
+usePressFeedback()
+const pressable = computed(() => isInteractive.value && !props.isDisabled)
 
 const resolvedTarget = computed(() => props.target)
 const resolvedRel = computed(() => {
@@ -140,7 +149,7 @@ const descriptionClasses = computed(() => clampClass(descriptionClamp.value))
 const descriptionStyle = computed(() => clampStyle(descriptionClamp.value))
 
 const contentRole = useInteractiveRole({
-  href: () => (hasParentRole.value || isDelegate.value ? undefined : props.href),
+  href: () => (hasParentRole.value || isDelegate.value ? undefined : safeHref.value),
   hasOnClick: () => !hasParentRole.value && !isDelegate.value && props.onClick != null,
 })
 
@@ -156,10 +165,11 @@ function handleContentClick(event: MouseEvent): void {
 }
 
 const contentAttrs = computed<Record<string, unknown>>(() => {
-  if (props.href != null && !hasParentRole.value && !isDelegate.value) {
+  const href = safeHref.value
+  if (href != null && !hasParentRole.value && !isDelegate.value) {
     return {
-      'href': props.href,
-      'to': isLinkContent.value ? props.href : undefined,
+      'href': href,
+      'to': isLinkContent.value ? href : undefined,
       'rel': resolvedRel.value,
       'target': resolvedTarget.value,
       'aria-disabled': props.isDisabled || undefined,
@@ -282,7 +292,7 @@ const rootClick = computed(() => {
   return isInteractive.value ? handleContainerClick : undefined
 })
 
-const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', attrs.class])
+const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', pressable.value && 'astryx-pressable', attrs.class])
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !CONTROLLED_ATTRS.has(key)),
@@ -319,6 +329,7 @@ defineExpose({ element, focus, blur })
     :data-inert="isDisabled && !hasParentRole ? true : undefined"
     :data-interactive="isInteractive || undefined"
     :data-selected="isSelected || undefined"
+    :data-astryx-pressable="pressable ? '' : undefined"
     :data-swipe="swipeEnabled ? swipe.phase.value : undefined"
     :role="role"
     :style="attrs.style as StyleValue"

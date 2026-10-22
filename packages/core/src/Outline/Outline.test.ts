@@ -30,6 +30,13 @@ describe('outline', () => {
     expect(wrapper.get('nav').attributes('data-density')).toBe('compact')
   })
 
+  it('marks each link as pressable', () => {
+    const wrapper = mount(Outline, {
+      props: { items: [{ id: 'overview', label: 'Overview', level: 2 }] },
+    })
+    expect(wrapper.get('a').attributes('data-astryx-pressable')).toBe('')
+  })
+
   it('maps heading levels onto four indents', () => {
     expect(indentLevel(1)).toBe(1)
     expect(indentLevel(2)).toBe(1)

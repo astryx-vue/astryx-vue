@@ -38,6 +38,17 @@ export interface OverflowListSlots {
   overflow?: (props: { items: OverflowListItem[] }) => unknown
 }
 
+/** 被收进溢出区的一项，以及它在 `items` 里的原下标。 */
+export interface OverflowListCollapsedItem {
+  item: OverflowListItem
+  index: number
+}
+
 export interface OverflowListEmits {
   select: [item: OverflowListItem, event: MouseEvent]
+  /**
+   * 收起的那一组变了才发。一开始就放得下时不发。
+   * 重新放得下时发一次空数组。
+   */
+  overflowChange: [items: OverflowListCollapsedItem[]]
 }

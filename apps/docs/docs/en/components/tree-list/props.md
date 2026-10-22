@@ -63,8 +63,12 @@ footer: false
 | <code>isDisabled</code> | <code>boolean</code> | The row does not take focus or activation. |
 | <code>isSelected</code> | <code>boolean</code> | Marks the current item. |
 | <code>isExpanded</code> | <code>boolean</code> | Starting expansion. Later toggles are owned by the tree. |
+| <code>className</code> | <code>string</code> | Extra class on that row. |
+| <code>style</code> | <code>CSSProperties</code> | Inline style on that row. |
 
 The <code>start</code> and <code>end</code> slots receive <code>{ item }</code> and replace <code>icon</code> and <code>endIcon</code>.
+
+A row's accessible name is its label. The description is exposed with <code>aria-describedby</code>, so the chevron and icons stay out of the name. Typeahead matches the label only. A visible <code>header</code> names the tree and wins over a passed <code>aria-label</code>. A keydown listener on the root that calls <code>preventDefault</code> keeps arrow keys from moving focus inside the tree.
 
 ## Theming
 

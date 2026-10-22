@@ -92,7 +92,7 @@
   }
 
   @media (hover: hover) {
-    .astryx-tree-list__content[data-interactive='true']:hover::before {
+    .astryx-tree-list__content[data-interactive='true']:not([data-disabled='true']):hover::before {
       background-color: var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d));
     }
 

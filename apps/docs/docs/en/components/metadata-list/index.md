@@ -14,7 +14,7 @@ import { metadataListBasic, metadataListCollapsible, metadataListHorizontal, met
 
 `MetadataList` lays out label and value pairs. `MetadataListItem` is one pair. A single column places the label beside the value. Several columns, or a numeric column count, stack the label above the value and repeat the track. `columns="multi"` uses `repeat(auto-fill, minmax(280px, 1fr))`.
 
-`orientation="horizontal"` wraps the pairs in one row and ignores `columns`, `label`, and `maxNumOfItems`. `maxNumOfItems` hides the rest behind a show more control. `label.width` only applies when the label sits beside the value.
+`orientation="horizontal"` wraps the pairs in one row and ignores `columns`, `label`, and `maxNumOfItems`. `maxNumOfItems` hides the rest behind a show more control. `label.width` only applies when the label sits beside the value. A long label or value can break inside a word so a narrow container is not pushed wider. Extra attributes on `MetadataListItem` land on the `dt` when the label sits beside the value, and on the wrapper around the pair when the label is stacked above it.
 
 ```vue
 <script setup lang="ts">

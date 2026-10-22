@@ -31,6 +31,7 @@ footer: false
     <thead><tr><th>Name</th><th>Description</th></tr></thead>
     <tbody>
       <tr><td><code>select</code></td><td>Fired when an item is chosen, with the item and the click event.</td></tr>
+      <tr><td><code>overflowChange</code></td><td>Fired when the collapsed set changes. The payload is <code>{ item, index }[]</code>, where <code>index</code> is the item's original place in <code>items</code>. A list that fits from the start never fires. When everything fits again, it fires once with an empty array.</td></tr>
     </tbody>
   </table>
 </div>

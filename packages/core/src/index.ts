@@ -811,10 +811,21 @@ export type {
 } from './NavMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'
 export type { NumberInputEmits, NumberInputProps, NumberInputStatus } from './NumberInput/index.js'
-export { Outline } from './Outline/index.js'
-export type { OutlineDensity, OutlineEmits, OutlineItem, OutlineProps } from './Outline/index.js'
+export { Outline, parseOutlineFromMarkdown, useOutlineFromDOM, useOutlineFromMarkdown } from './Outline/index.js'
+export type {
+  OutlineDensity,
+  OutlineEmits,
+  OutlineItem,
+  OutlineProps,
+  ParseOutlineFromMarkdownOptions,
+} from './Outline/index.js'
 export { OverflowList } from './OverflowList/index.js'
-export type { OverflowListEmits, OverflowListItem, OverflowListProps } from './OverflowList/index.js'
+export type {
+  OverflowListCollapsedItem,
+  OverflowListEmits,
+  OverflowListItem,
+  OverflowListProps,
+} from './OverflowList/index.js'
 export { Overlay, OverlayScrim, useOverlay } from './Overlay/index.js'
 export type {
   OverlayAlign,
