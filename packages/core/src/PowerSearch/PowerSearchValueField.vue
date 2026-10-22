@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { PowerSearchMessages } from '../locale/messages/power-search.js'
+import type { NumberInputCommitDecision } from '../NumberInput/numberInputCommit.js'
 import type { DateTimeRange, FilterValue, OperatorValue, PowerSearchEntity } from './types.js'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { createStaticSource } from '../composables/useAsyncSource.js'
 import DateInput from '../DateInput/DateInput.vue'
 import DateRangeInput from '../DateRangeInput/DateRangeInput.vue'
 import DateTimeInput from '../DateTimeInput/DateTimeInput.vue'
+import { useAstryxLocale } from '../locale/context.js'
 import MultiSelector from '../MultiSelector/MultiSelector.vue'
 import NumberInput from '../NumberInput/NumberInput.vue'
+import { resolveNumberInputCommit } from '../NumberInput/numberInputCommit.js'
 import Selector from '../Selector/Selector.vue'
 import TextInput from '../TextInput/TextInput.vue'
 import TimeInput from '../TimeInput/TimeInput.vue'
@@ -32,6 +35,33 @@ const emit = defineEmits<{
 }>()
 
 const text = computed(() => props.messages.value)
+const locale = useAstryxLocale()
+const numberDecision = ref<NumberInputCommitDecision | null>(null)
+
+function rememberNumberDraft(event: Event): void {
+  const target = event.target
+  const operator = props.operatorValue
+  if (!(target instanceof HTMLInputElement) || target.getAttribute('role') !== 'spinbutton')
+    return
+  if (operator.type !== 'integer' && operator.type !== 'float')
+    return
+  numberDecision.value = resolveNumberInputCommit(target.value, {
+    min: operator.minValue,
+    max: operator.maxValue,
+    isIntegerOnly: operator.type === 'integer',
+    locale: locale.value,
+    hasClear: false,
+  })
+}
+
+function onNumberKeydown(event: KeyboardEvent): void {
+  if (event.key !== 'Enter' || event.isComposing)
+    return
+  const decision = numberDecision.value
+  numberDecision.value = null
+  if (decision != null && decision.type !== 'commit')
+    event.stopPropagation()
+}
 const stringValue = computed(() => props.filterValue?.type === 'string' ? props.filterValue.value : '')
 const numberValue = computed(() => props.filterValue?.type === 'integer' || props.filterValue?.type === 'float' ? props.filterValue.value : null)
 const timeValue = computed(() => props.filterValue?.type === 'time' ? props.filterValue.value : null)
@@ -222,19 +252,27 @@ function applyPreset(range: DateTimeRange): void {
       :max-menu-items="maxMenuItems"
       @update:model-value="commitStringList"
     />
-    <NumberInput
+    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 只听里面数字框冒上来的输入和回车，自己不是控件。 -->
+    <div
       v-else-if="operatorValue.type === 'integer' || operatorValue.type === 'float'"
-      :label="text.value"
-      is-label-hidden
-      :model-value="numberValue"
-      :placeholder="text.enterNumberPlaceholder"
-      :disabled="disabled"
-      :min="operatorValue.minValue"
-      :max="operatorValue.maxValue"
-      :step="operatorValue.type === 'integer' ? 1 : undefined"
-      :units="operatorValue.units"
-      @update:model-value="value => value != null && emit('change', { type: operatorValue.type === 'integer' ? 'integer' : 'float', value })"
-    />
+      class="astryx-power-search-value"
+      @focusin="numberDecision = null"
+      @input="rememberNumberDraft"
+      @keydown="onNumberKeydown"
+    >
+      <NumberInput
+        :label="text.value"
+        is-label-hidden
+        :model-value="numberValue"
+        :placeholder="text.enterNumberPlaceholder"
+        :disabled="disabled"
+        :min="operatorValue.minValue"
+        :max="operatorValue.maxValue"
+        :step="operatorValue.type === 'integer' ? 1 : undefined"
+        :units="operatorValue.units"
+        @update:model-value="value => value != null && emit('change', { type: operatorValue.type === 'integer' ? 'integer' : 'float', value })"
+      />
+    </div>
     <TimeInput
       v-else-if="operatorValue.type === 'time'"
       :label="text.time"

@@ -124,7 +124,7 @@ describe('power search placement and menu', () => {
       viewportWidth: 300,
       direction: 'ltr',
     })
-    expect(narrow.width).toBe(284)
+    expect(narrow.width).toBe(268)
     expect(narrow.capped).toBe(true)
   })
 
@@ -135,6 +135,30 @@ describe('power search placement and menu', () => {
     const typed = searchPowerSearchFields(lookup, 'zzz', powerSearchMessages.en, 10)
     expect(typed[0]?.label).toBe('"zzz"')
     expect(typed[0]?.auxiliaryData?.filterValue).toEqual({ type: 'string', value: 'zzz' })
+  })
+
+  it('lists ungrouped fields before named groups and stops at 1,000', () => {
+    const operator = { key: 'is', label: 'is', value: { type: 'string' as const } }
+    const ordered = createPowerSearchLookup({
+      name: 'ordered',
+      fields: [
+        { key: 'loose', label: 'Loose', operators: [operator] },
+        { key: 'grouped', label: 'Grouped', group: 'People', operators: [operator] },
+      ],
+    })
+    const browse = searchPowerSearchFields(ordered, '', powerSearchMessages.en, 10)
+    expect(browse.map(item => item.label)).toEqual(['Loose', 'Grouped'])
+    expect(browse[1]?.auxiliaryData?.group).toBe('People')
+
+    const capped = createPowerSearchLookup({
+      name: 'capped',
+      fields: Array.from({ length: 1001 }, (_, index) => ({
+        key: `extra-${index}`,
+        label: `Extra ${index}`,
+        operators: [operator],
+      })),
+    })
+    expect(searchPowerSearchFields(capped, '', powerSearchMessages.en, 10)).toHaveLength(1000)
   })
 })
 
@@ -200,5 +224,53 @@ describe('power search', () => {
     const legacy = mount(PowerSearch, { props: { config, filters: [{ field: 'active', operator: 'is_true', value: { type: 'empty' } }], clearable: false } })
     expect(legacy.find('.astryx-power-search-clear').exists()).toBe(false)
     legacy.unmount()
+  })
+
+  it('commits an empty-operator token once and does not open the editor', async () => {
+    const changes: string[] = []
+    const wrapper = mount(PowerSearch, {
+      props: {
+        config,
+        filters: [{ field: 'active', operator: 'is_true', value: { type: 'empty' } }],
+        onChange: (_filters, changeType) => changes.push(changeType),
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-power-search-token').trigger('keydown', { key: 'Enter' })
+    expect(changes).toEqual(['edit'])
+    expect(document.querySelector('.astryx-power-search-editor')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('opens a consumer empty editor instead of committing', async () => {
+    const changes: string[] = []
+    const wrapper = mount(PowerSearch, {
+      props: {
+        config,
+        filters: [{ field: 'active', operator: 'is_true', value: { type: 'empty' } }],
+        components: { empty: { editor: { template: '<p class="custom-empty-editor">Custom</p>' } } },
+        onChange: (_filters, changeType) => changes.push(changeType),
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-power-search-token').trigger('keydown', { key: 'Enter' })
+    expect(changes).toEqual([])
+    expect(document.querySelector('.custom-empty-editor')?.textContent).toBe('Custom')
+    wrapper.unmount()
+  })
+
+  it('puts container and control classes on their own boxes', () => {
+    const wrapper = mount(PowerSearch, {
+      props: { config, containerClass: 'box-a', controlClass: 'ctl-a' },
+      attrs: { 'class': 'root-a', 'id': 'search-id', 'data-track': 'yes' },
+    })
+    expect(wrapper.get('.astryx-field').classes()).toContain('box-a')
+    expect(wrapper.get('.astryx-power-search-control').classes()).toEqual(expect.arrayContaining(['root-a', 'ctl-a']))
+    const input = wrapper.get('input')
+    expect(input.classes()).not.toContain('root-a')
+    expect(input.classes()).not.toContain('box-a')
+    expect(input.attributes('id')).toBe('search-id')
+    expect(input.attributes('data-track')).toBe('yes')
+    expect(wrapper.get('.astryx-field').attributes('for') ?? wrapper.get('label').attributes('for')).toBe('search-id')
   })
 })

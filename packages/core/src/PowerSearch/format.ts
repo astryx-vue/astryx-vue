@@ -1,11 +1,9 @@
 import type { PowerSearchMessages } from '../locale/messages/power-search.js'
 import type { EnumItem, FilterValue, OperatorValue } from './types.js'
+import { characterCount, truncateCharacters } from '../utils/characters.js'
 
 function truncate(value: string, maxLength: number): string {
-  const chars = Array.from(value)
-  if (chars.length <= maxLength)
-    return value
-  return `${chars.slice(0, Math.max(0, maxLength)).join('')}…`
+  return truncateCharacters(value, maxLength)
 }
 
 function enumLabel(value: string, values: readonly EnumItem[]): string {
@@ -45,7 +43,7 @@ function joinOrCount(labels: readonly string[], maxLength: number, countLabel: (
   if (labels.length === 1)
     return truncate(labels[0] ?? '', maxLength)
   const joined = labels.join(', ')
-  if (Array.from(joined).length <= maxLength)
+  if (characterCount(joined) <= maxLength)
     return joined
   return countLabel(labels.length)
 }
