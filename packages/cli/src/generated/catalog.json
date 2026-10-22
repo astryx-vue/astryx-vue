@@ -45738,12 +45738,12 @@
       "importPath": "@astryx-vue/core/MobileNav",
       "exportName": "MobileNav",
       "summary": {
-        "en": "`MobileNav` is a dialog drawer that slides in from one side of the screen, not a bottom sheet. Bind `MobileNavToggle` to the same `v-model:is-open`. While open, focus stays in the drawer. Escape or a press on the scrim closes it and returns focus to where it was.",
-        "zh": "`MobileNav` 是从屏幕一侧滑入的对话框抽屉，不是底部弹层。`MobileNavToggle` 和它绑同一个 `v-model:is-open`。打开后焦点留在抽屉里，Escape 或点遮罩关闭，并回到原来的焦点。"
+        "en": "`MobileNav` is a dialog drawer that slides in from one side of the screen, not a bottom sheet. Bind `MobileNavToggle` to the same `v-model:is-open`. While open, focus stays in the drawer. Escape or a press on the scrim closes it and returns focus to where it was. If another layer opens inside the drawer, Escape closes that top layer first. Pinch-zoom stays with the browser, and the body can still scroll vertically.",
+        "zh": "`MobileNav` 是从屏幕一侧滑入的对话框抽屉，不是底部弹层。`MobileNavToggle` 和它绑同一个 `v-model:is-open`。打开后焦点留在抽屉里，Escape 或点遮罩关闭，并回到原来的焦点。抽屉里面再开一层浮层时，Escape 先关最上面那一层。双指缩放留给浏览器，内容区仍可以竖着滚。"
       },
       "usage": {
-        "en": "`MobileNav` is a dialog drawer that slides in from one side of the screen, not a bottom sheet. Bind `MobileNavToggle` to the same `v-model:is-open`. While open, focus stays in the drawer. Escape or a press on the scrim closes it and returns focus to where it was.\n\n`side` is `start`, `end`, or `auto`. `auto` picks the side from where focus was when the drawer opened. The top nav creates this pair for you when its media query matches.\n\n```vue\n<script setup lang=\"ts\">\nimport { MobileNav, MobileNavToggle } from '@astryx-vue/core/MobileNav'\nimport { ref } from 'vue'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <MobileNavToggle v-model:is-open=\"open\" controls=\"app-nav\" />\n  <MobileNav id=\"app-nav\" v-model:is-open=\"open\" header=\"Menu\" side=\"start\">\n    <!-- items -->\n  </MobileNav>\n</template>\n```",
-        "zh": "`MobileNav` 是从屏幕一侧滑入的对话框抽屉，不是底部弹层。`MobileNavToggle` 和它绑同一个 `v-model:is-open`。打开后焦点留在抽屉里，Escape 或点遮罩关闭，并回到原来的焦点。\n\n`side` 可以是 `start`、`end` 或 `auto`。`auto` 按打开时焦点的位置决定从哪一侧进入。顶栏的窄屏模式会自己创建这一对组件。\n\n```vue\n<script setup lang=\"ts\">\nimport { MobileNav, MobileNavToggle } from '@astryx-vue/core/MobileNav'\nimport { ref } from 'vue'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <MobileNavToggle v-model:is-open=\"open\" controls=\"app-nav\" />\n  <MobileNav id=\"app-nav\" v-model:is-open=\"open\" header=\"菜单\" side=\"start\">\n    <!-- 导航项 -->\n  </MobileNav>\n</template>\n```"
+        "en": "`MobileNav` is a dialog drawer that slides in from one side of the screen, not a bottom sheet. Bind `MobileNavToggle` to the same `v-model:is-open`. While open, focus stays in the drawer. Escape or a press on the scrim closes it and returns focus to where it was. If another layer opens inside the drawer, Escape closes that top layer first. Pinch-zoom stays with the browser, and the body can still scroll vertically.\n\n`side` is `start`, `end`, or `auto`. `auto` picks the side from where focus was when the drawer opened. The top nav creates this pair for you when its media query matches.\n\n```vue\n<script setup lang=\"ts\">\nimport { MobileNav, MobileNavToggle } from '@astryx-vue/core/MobileNav'\nimport { ref } from 'vue'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <MobileNavToggle v-model:is-open=\"open\" controls=\"app-nav\" />\n  <MobileNav id=\"app-nav\" v-model:is-open=\"open\" header=\"Menu\" side=\"start\">\n    <!-- items -->\n  </MobileNav>\n</template>\n```",
+        "zh": "`MobileNav` 是从屏幕一侧滑入的对话框抽屉，不是底部弹层。`MobileNavToggle` 和它绑同一个 `v-model:is-open`。打开后焦点留在抽屉里，Escape 或点遮罩关闭，并回到原来的焦点。抽屉里面再开一层浮层时，Escape 先关最上面那一层。双指缩放留给浏览器，内容区仍可以竖着滚。\n\n`side` 可以是 `start`、`end` 或 `auto`。`auto` 按打开时焦点的位置决定从哪一侧进入。顶栏的窄屏模式会自己创建这一对组件。\n\n```vue\n<script setup lang=\"ts\">\nimport { MobileNav, MobileNavToggle } from '@astryx-vue/core/MobileNav'\nimport { ref } from 'vue'\n\nconst open = ref(false)\n</script>\n\n<template>\n  <MobileNavToggle v-model:is-open=\"open\" controls=\"app-nav\" />\n  <MobileNav id=\"app-nav\" v-model:is-open=\"open\" header=\"菜单\" side=\"start\">\n    <!-- 导航项 -->\n  </MobileNav>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -48237,12 +48237,12 @@
       "importPath": "@astryx-vue/core/SideNav",
       "exportName": "SideNav",
       "summary": {
-        "en": "`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu.",
-        "zh": "`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，`SideNavCollapseButton` 在侧栏顶部靠右。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。"
+        "en": "`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu. The `actions` slot on `SideNavItem` sits beside the primary control, outside the link, and is not rendered while the rail is collapsed.",
+        "zh": "`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，`SideNavCollapseButton` 在侧栏顶部靠右。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。`SideNavItem` 的 `actions` 插槽和主控件并排，不放进链接里面，侧栏收起后不再渲染。"
       },
       "usage": {
-        "en": "`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu.\n\nControl it with `v-model:is-collapsed`. Pass an object to `collapsible` to hide the built-in button or to set a hotkey such as `mod+\\\\`. With `resizable`, the trailing edge can be dragged. The width starts at 260px and stays between 180px and 480px. The handle hides while the bar is collapsed. Dragging below 160px collapses the bar when collapse is also enabled.\n\n```vue\n<script setup lang=\"ts\">\nimport { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'\nimport { ref } from 'vue'\n\nconst collapsed = ref(false)\n</script>\n\n<template>\n  <SideNav v-model:is-collapsed=\"collapsed\" collapsible>\n    <SideNavSection title=\"Workspace\">\n      <SideNavItem href=\"/home\" icon-class=\"i-carbon-home\" label=\"Home\" />\n    </SideNavSection>\n  </SideNav>\n</template>\n```\n\n<SideNavCollapseFigure class=\"nav-collapse-figure\" />",
-        "zh": "`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，`SideNavCollapseButton` 在侧栏顶部靠右。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。\n\n用 `v-model:is-collapsed` 受控。`collapsible` 也可以传对象，关掉内置按钮，或给一个快捷键，例如 `mod+\\\\`。`resizable` 打开后，结束边上可以拖宽度，默认从 260px 起，范围是 180px 到 480px。收起后把手会藏起来。拖到 160px 以下、并且侧栏可以收起时，栏会收成图标条。\n\n```vue\n<script setup lang=\"ts\">\nimport { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'\nimport { ref } from 'vue'\n\nconst collapsed = ref(false)\n</script>\n\n<template>\n  <SideNav v-model:is-collapsed=\"collapsed\" collapsible>\n    <SideNavSection title=\"工作区\">\n      <SideNavItem href=\"/home\" icon-class=\"i-carbon-home\" label=\"首页\" />\n    </SideNavSection>\n  </SideNav>\n</template>\n```\n\n<SideNavCollapseFigure class=\"nav-collapse-figure\" />"
+        "en": "`SideNav` is the navigation landmark along one side of a page. Compose it with `SideNavSection`, `SideNavHeading`, and `SideNavItem`. With `collapsible`, the bar can shrink to an icon rail. `SideNavCollapseButton` sits at the top end of the sidebar. Items without an icon are omitted while collapsed. Items with children open in a side menu. The `actions` slot on `SideNavItem` sits beside the primary control, outside the link, and is not rendered while the rail is collapsed.\n\nControl it with `v-model:is-collapsed`. Pass an object to `collapsible` to hide the built-in button or to set a hotkey such as `mod+\\\\`. With `resizable`, the trailing edge can be dragged. The width starts at 260px and stays between 180px and 480px. The handle hides while the bar is collapsed. Dragging below 160px collapses the bar when collapse is also enabled.\n\n```vue\n<script setup lang=\"ts\">\nimport { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'\nimport { ref } from 'vue'\n\nconst collapsed = ref(false)\n</script>\n\n<template>\n  <SideNav v-model:is-collapsed=\"collapsed\" collapsible>\n    <SideNavSection title=\"Workspace\">\n      <SideNavItem href=\"/home\" icon-class=\"i-carbon-home\" label=\"Home\" />\n    </SideNavSection>\n  </SideNav>\n</template>\n```\n\n<SideNavCollapseFigure class=\"nav-collapse-figure\" />",
+        "zh": "`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，`SideNavCollapseButton` 在侧栏顶部靠右。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。`SideNavItem` 的 `actions` 插槽和主控件并排，不放进链接里面，侧栏收起后不再渲染。\n\n用 `v-model:is-collapsed` 受控。`collapsible` 也可以传对象，关掉内置按钮，或给一个快捷键，例如 `mod+\\\\`。`resizable` 打开后，结束边上可以拖宽度，默认从 260px 起，范围是 180px 到 480px。收起后把手会藏起来。拖到 160px 以下、并且侧栏可以收起时，栏会收成图标条。\n\n```vue\n<script setup lang=\"ts\">\nimport { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'\nimport { ref } from 'vue'\n\nconst collapsed = ref(false)\n</script>\n\n<template>\n  <SideNav v-model:is-collapsed=\"collapsed\" collapsible>\n    <SideNavSection title=\"工作区\">\n      <SideNavItem href=\"/home\" icon-class=\"i-carbon-home\" label=\"首页\" />\n    </SideNavSection>\n  </SideNav>\n</template>\n```\n\n<SideNavCollapseFigure class=\"nav-collapse-figure\" />"
       },
       "practices": {
         "en": [
@@ -48682,6 +48682,31 @@
             ]
           },
           {
+            "heading": "SideNavItem slots",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "Child items."
+              },
+              {
+                "name": "`icon`",
+                "description": "Icon before the label."
+              },
+              {
+                "name": "`selectedIcon`",
+                "description": "Icon shown while the item is selected."
+              },
+              {
+                "name": "`end`",
+                "description": "Content at the end of the primary control, still inside the link or button."
+              },
+              {
+                "name": "`actions`",
+                "description": "Controls beside the primary control, such as an icon button. They stay outside the link and are omitted while the rail is collapsed."
+              }
+            ]
+          },
+          {
             "heading": "SideNavHeading slots",
             "rows": [
               {
@@ -48731,6 +48756,31 @@
               {
                 "name": "`footerIcons`",
                 "description": "和收起按钮同一行的图标。"
+              }
+            ]
+          },
+          {
+            "heading": "SideNavItem Slots",
+            "rows": [
+              {
+                "name": "`default`",
+                "description": "下级项。"
+              },
+              {
+                "name": "`icon`",
+                "description": "项前面的图标。"
+              },
+              {
+                "name": "`selectedIcon`",
+                "description": "选中时替换默认图标。"
+              },
+              {
+                "name": "`end`",
+                "description": "主控件末尾的内容，仍在链接或按钮里面。"
+              },
+              {
+                "name": "`actions`",
+                "description": "和主控件并排的操作，例如图标按钮。不放进链接里面。侧栏收起后不渲染。"
               }
             ]
           },
@@ -49628,7 +49678,7 @@
         "en": [
           {
             "guidance": "Recommended",
-            "text": "Use semantic `role=\"tablist\"`, `role=\"tab\"`, and `aria-selected` for accessible tabs."
+            "text": "Leave `role` unset for a navigation landmark that marks the current tab with `aria-current=\"true\"`. Set `role=\"tablist\"` to opt into the tabs pattern, with `role=\"tab\"` and `aria-selected`. Tabs wider than the strip scroll sideways by default."
           },
           {
             "guidance": "Recommended",
@@ -49650,7 +49700,7 @@
         "zh": [
           {
             "guidance": "推荐",
-            "text": "组件自带 `role=\"tablist\"`、`role=\"tab\"` 与 `aria-selected` 语义，配合方向键导航，无需额外补齐无障碍属性。"
+            "text": "不传 `role` 时，标签条是导航地标，当前项用 `aria-current=\"true\"`。写成 `role=\"tablist\"` 才进入标签页模式，带 `role=\"tab\"` 和 `aria-selected`。标签比条宽时默认横向滚动。"
           },
           {
             "guidance": "推荐",
@@ -49698,6 +49748,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "Whether to show a bottom divider."
+              },
+              {
+                "name": "`overflow`",
+                "type": "`'auto' | 'scroll' | 'visible'`",
+                "default": "`'auto'`",
+                "description": "What happens when the tabs are wider than the strip. `auto` and `scroll` scroll sideways, fade the hidden edge, and offer page arrows. `visible` does not scroll. A selected tab that is out of view scrolls back into view immediately."
               },
               {
                 "name": "`role`",
@@ -49782,6 +49838,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "是否在标签列表底部显示一条分隔线。"
+              },
+              {
+                "name": "`overflow`",
+                "type": "`'auto' | 'scroll' | 'visible'`",
+                "default": "`'auto'`",
+                "description": "标签比条宽时怎么处理。`auto` 和 `scroll` 都会横向滚动，挡住的一端淡出，并给出翻页箭头。`visible` 不滚动。选中项如果被挡住，会立刻滚回可见区域。"
               },
               {
                 "name": "`role`",
