@@ -2,7 +2,7 @@
 import type { TopNavMegaMenuItemProps, TopNavMegaMenuItemSlots } from './types.js'
 import { computed, inject } from 'vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { resolveNavRoot } from '../NavItem/link.js'
+import { isNavigableHref, resolveNavRoot } from '../NavItem/link.js'
 import { navMenuCloseKey } from '../NavMenu/context.js'
 import '../../styles/top-nav.css'
 
@@ -15,7 +15,8 @@ const closeMenu = inject(navMenuCloseKey, undefined)
 const linkComponent = useLinkComponent()
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
-const root = computed(() => resolveNavRoot(props.href, false, customLink.value))
+const navigableHref = computed(() => isNavigableHref(props.href) ? props.href : undefined)
+const root = computed(() => resolveNavRoot(navigableHref.value, false, customLink.value))
 
 function onClick(): void {
   closeMenu?.()
@@ -26,9 +27,9 @@ function onClick(): void {
   <component
     :is="root"
     class="astryx-top-nav-mega-item"
-    :href="href || undefined"
-    :to="href && customLink != null ? href : undefined"
-    :type="href ? undefined : 'button'"
+    :href="navigableHref"
+    :to="navigableHref && customLink != null ? navigableHref : undefined"
+    :type="navigableHref ? undefined : 'button'"
     @click="onClick"
   >
     <span v-if="iconClass || $slots.icon" class="astryx-top-nav-mega-item__icon" aria-hidden="true">

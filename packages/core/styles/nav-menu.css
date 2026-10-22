@@ -55,15 +55,19 @@
   .astryx-nav-menu-item--md { padding: var(--astryx-spacing-2, 8px); }
   .astryx-nav-menu-item--lg { padding: var(--astryx-spacing-3, 12px); }
 
-  .astryx-nav-menu-item:hover:not(:disabled),
+  .astryx-nav-menu-item:hover:not(:disabled, .astryx-nav-menu-item--disabled),
   .astryx-nav-menu-item:focus-visible {
     background: var(--astryx-color-overlay-hover);
     outline: none;
   }
 
+  .astryx-nav-menu-item:active:not(:disabled, .astryx-nav-menu-item--disabled) {
+    background: var(--astryx-color-overlay-pressed);
+  }
+
   .astryx-nav-menu-item--disabled,
   .astryx-nav-menu-item:disabled {
-    cursor: not-allowed;
+    cursor: default;
     opacity: 0.5;
   }
 

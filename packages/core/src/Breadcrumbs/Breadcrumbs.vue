@@ -2,6 +2,7 @@
 import type { BreadcrumbsProps } from './types.js'
 import { computed, provide } from 'vue'
 
+import { useBreadcrumbTrail } from './breadcrumbTrail.js'
 import { breadcrumbContextKey } from './context.js'
 import '../../styles/breadcrumbs.css'
 
@@ -15,9 +16,15 @@ defineSlots<{
   default: () => unknown
 }>()
 
+const trail = useBreadcrumbTrail()
+
 provide(breadcrumbContextKey, {
   variant: computed(() => props.variant),
   separator: computed(() => props.separator),
+  autoCurrentId: trail.autoCurrentId,
+  registerItem: trail.registerItem,
+  updateItem: trail.updateItem,
+  unregisterItem: trail.unregisterItem,
 })
 </script>
 

@@ -48,6 +48,22 @@ describe('nav-item', () => {
     expect(link.attributes('data-to')).toBe('/inbox')
   })
 
+  it('does not render a javascript href as a link', () => {
+    const wrapper = mount(NavItem, {
+      props: { href: 'javascript:alert(1)', label: 'Bad' },
+    })
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(wrapper.get('button').text()).toBe('Bad')
+  })
+
+  it('keeps a caller aria-label when the item shows its text', () => {
+    const wrapper = mount(NavItem, {
+      attrs: { 'aria-label': 'Go home' },
+      props: { href: '/home', label: 'Home' },
+    })
+    expect(wrapper.get('a').attributes('aria-label')).toBe('Go home')
+  })
+
   it('adds a safe rel when the link opens a new tab', () => {
     const wrapper = mount(NavItem, {
       props: { href: 'https://example.com', label: 'Docs', target: '_blank' },

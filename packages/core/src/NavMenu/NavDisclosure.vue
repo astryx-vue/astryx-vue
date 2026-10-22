@@ -2,6 +2,7 @@
 import type { NavMenuFocusRequest } from './context.js'
 import type { NavDisclosureProps, NavDisclosureSlots } from './types.js'
 import { computed, nextTick, provide, ref, useId, watch } from 'vue'
+import { MENU_HOVER_CLICK_GUARD_MS, MENU_HOVER_REOPEN_SUPPRESS_MS } from '../composables/internal/useMenuHover.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { navMenuCloseKey, navMenuFocusKey } from './context.js'
@@ -28,6 +29,8 @@ const focusRequest = ref<NavMenuFocusRequest>(null)
 const panelId = `astryx-nav-panel-${useId()}`
 let showTimer: ReturnType<typeof setTimeout> | undefined
 let hideTimer: ReturnType<typeof setTimeout> | undefined
+let hoverOpenedAt = 0
+let closedAt = 0
 
 const placement = computed(() => props.placement)
 const alignment = computed(() => props.alignment)
@@ -61,6 +64,8 @@ function focusTrigger(): void {
 
 function close(restoreFocus = false): void {
   clearTimers()
+  hoverOpenedAt = 0
+  closedAt = Date.now()
   const shouldRestore = restoreFocus || (surfaceRef.value?.contains(document.activeElement) ?? false)
   focusRequest.value = null
   if (!isOpen.value)
@@ -80,11 +85,26 @@ function onTriggerClick(event: MouseEvent): void {
   const target = event.target
   if (target instanceof Element && target.closest('a'))
     return
-  if (isOpen.value) {
-    close(event.detail === 0)
+  clearTimers()
+  // 键盘产生的 click 没有 detail。悬停刚打开时，鼠标的第一下是确认，菜单钉住。
+  if (event.detail === 0) {
+    hoverOpenedAt = 0
+    if (isOpen.value)
+      close(true)
+    else
+      open('first')
     return
   }
-  open(event.detail === 0 ? 'first' : null)
+  if (!isOpen.value) {
+    hoverOpenedAt = 0
+    open(null)
+    return
+  }
+  if (hoverOpenedAt > 0 && Date.now() - hoverOpenedAt < MENU_HOVER_CLICK_GUARD_MS) {
+    hoverOpenedAt = 0
+    return
+  }
+  close(false)
 }
 
 function onTriggerKeydown(event: KeyboardEvent): void {
@@ -110,12 +130,17 @@ function onTriggerKeydown(event: KeyboardEvent): void {
 function onPointerEnter(): void {
   if (!props.hover)
     return
+  if (closedAt > 0 && Date.now() - closedAt < MENU_HOVER_REOPEN_SUPPRESS_MS)
+    return
   clearTimeout(hideTimer)
   hideTimer = undefined
   if (isOpen.value)
     return
   clearTimeout(showTimer)
-  showTimer = setTimeout(open, props.showDelay, null)
+  showTimer = setTimeout(() => {
+    hoverOpenedAt = Date.now()
+    open(null)
+  }, props.showDelay)
 }
 
 function onPointerLeave(): void {

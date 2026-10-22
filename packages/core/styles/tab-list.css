@@ -21,6 +21,65 @@
     padding: 0;
   }
 
+  .astryx-tab-list__strip--scroll {
+    --astryx-tab-strip-bleed: 0px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    margin-inline: calc(-1 * var(--astryx-tab-strip-bleed));
+    padding-inline: var(--astryx-tab-strip-bleed);
+    scroll-behavior: smooth;
+    scroll-padding-inline: 2rem;
+    scrollbar-width: none;
+  }
+
+  .astryx-tab-list__strip--scroll:focus-within {
+    --astryx-tab-strip-bleed: 4px;
+  }
+
+  .astryx-tab-list__strip--scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .astryx-tab-list__strip--fade-end {
+    mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent);
+  }
+
+  .astryx-tab-list__strip--fade-start {
+    mask-image: linear-gradient(to left, #000 calc(100% - 2rem), transparent);
+  }
+
+  .astryx-tab-list__strip--fade-both {
+    mask-image: linear-gradient(to right, transparent, #000 2rem, #000 calc(100% - 2rem), transparent);
+  }
+
+  .astryx-tab-scroll-button {
+    position: absolute;
+    z-index: 1;
+    inset-block: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    padding: 0;
+    border: 0;
+    background: var(--astryx-color-background, #fff);
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .astryx-tab-scroll-button--start { inset-inline-start: 0; }
+  .astryx-tab-scroll-button--end { inset-inline-end: 0; }
+
+  .astryx-tab-scroll-button:focus-visible {
+    outline: 2px solid var(--astryx-color-text-primary, #171717);
+    outline-offset: 2px;
+  }
+
+  [dir='rtl'] .astryx-tab-scroll-button__icon {
+    transform: scaleX(-1);
+  }
+
   .astryx-tab-list--layout-fill .astryx-tab-list__strip {
     width: 100%;
   }
@@ -86,6 +145,10 @@
 
   .astryx-tab:hover:not(:disabled, [aria-disabled='true']) {
     background-color: color-mix(in srgb, currentColor 6%, transparent);
+  }
+
+  .astryx-tab:active:not(:disabled, [aria-disabled='true']) {
+    background-color: var(--astryx-color-overlay-pressed, color-mix(in srgb, currentColor 12%, transparent));
   }
 
   .astryx-tab--selected {

@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
-import { computed, toRaw } from 'vue'
+import { computed, onScopeDispose, toRaw, useId, watch } from 'vue'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { isNavigableHref } from '../NavItem/link.js'
 import { breadcrumbContextKey } from './context.js'
 
-const props = defineProps<BreadcrumbItemProps>()
+const props = withDefaults(defineProps<BreadcrumbItemProps>(), {
+  // 不写这一项时必须保持「没说」，不能被布尔属性收成 false，否则没法自动标当前页。
+  isCurrent: undefined,
+})
 
 const emit = defineEmits<{
   (e: 'click', event: MouseEvent): void
@@ -24,9 +28,19 @@ const slots = defineSlots<{
 
 const context = readLayerScoped(breadcrumbContextKey)
 const linkComponent = useLinkComponent()
+const itemId = useId()
 const variant = computed(() => context?.variant.value ?? 'default')
 const separator = computed(() => context?.separator.value ?? '/')
+const mirrorsSlash = computed(() => separator.value === '/')
 const hasMenu = computed(() => props.menu != null || slots.menu != null)
+const explicitCurrent = computed(() => props.isCurrent === true)
+const showsCurrent = computed(() => explicitCurrent.value || (props.isCurrent == null && context?.autoCurrentId.value === itemId))
+
+if (context != null) {
+  context.registerItem(itemId, props.isCurrent)
+  watch(() => props.isCurrent, value => context.updateItem(itemId, value))
+  onScopeDispose(() => context.unregisterItem(itemId))
+}
 
 const classes = computed(() => [
   'astryx-breadcrumb-item',
@@ -35,7 +49,7 @@ const classes = computed(() => [
 
 const contentClasses = computed(() => [
   'astryx-breadcrumb-item__content',
-  props.isCurrent && 'astryx-breadcrumb-item__content--current',
+  showsCurrent.value && 'astryx-breadcrumb-item__content--current',
 ])
 
 const menuSize = computed<DropdownMenuSize>(() => props.menuSize ?? (variant.value === 'supporting' ? 'sm' : 'md'))
@@ -43,7 +57,7 @@ const menuSize = computed<DropdownMenuSize>(() => props.menuSize ?? (variant.val
 /** The link crumb keeps the anchor unless a router link is passed in or a LinkProvider supplies one. */
 const customLink = computed(() => props.as ?? linkComponent.value)
 const linkRoot = computed(() => (customLink.value == null ? 'a' : toRaw(customLink.value)))
-const rendersLink = computed(() => Boolean(props.href) && !props.isCurrent)
+const rendersLink = computed(() => isNavigableHref(props.href) && !explicitCurrent.value)
 
 useDevWarning(
   'BreadcrumbItem',
@@ -52,7 +66,7 @@ useDevWarning(
 )
 
 function handleClick(event: MouseEvent) {
-  if (props.isCurrent) {
+  if (explicitCurrent.value) {
     event.preventDefault()
     return
   }
@@ -62,7 +76,10 @@ function handleClick(event: MouseEvent) {
 
 <template>
   <li :class="classes">
-    <span class="astryx-breadcrumb-item__separator" aria-hidden="true">{{ separator }}</span>
+    <span class="astryx-breadcrumb-item__separator" aria-hidden="true">
+      <span v-if="mirrorsSlash" class="astryx-breadcrumb-item__slash">/</span>
+      <template v-else>{{ separator }}</template>
+    </span>
     <DropdownMenu
       v-if="hasMenu"
       :button="{ label: 'Menu', size: menuSize }"
@@ -75,9 +92,10 @@ function handleClick(event: MouseEvent) {
       <template #trigger="triggerProps">
         <button
           type="button"
+          class="astryx-breadcrumb-item-menu-trigger"
           :class="contentClasses"
           v-bind="triggerProps"
-          :aria-current="isCurrent ? 'page' : undefined"
+          :aria-current="showsCurrent ? 'page' : undefined"
         >
           <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
             <slot name="startIcon" />
@@ -92,7 +110,8 @@ function handleClick(event: MouseEvent) {
       v-else-if="rendersLink"
       :href="href"
       :to="customLink != null ? href : undefined"
-      class="astryx-breadcrumb-item__content"
+      :class="contentClasses"
+      :aria-current="showsCurrent ? 'page' : undefined"
       @click="handleClick"
     >
       <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
@@ -101,9 +120,10 @@ function handleClick(event: MouseEvent) {
       <slot />
     </component>
     <button
-      v-else-if="!isCurrent"
+      v-else-if="!explicitCurrent"
       type="button"
-      class="astryx-breadcrumb-item__content"
+      :class="contentClasses"
+      :aria-current="showsCurrent ? 'page' : undefined"
       @click="handleClick"
     >
       <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">

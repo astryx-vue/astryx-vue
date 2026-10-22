@@ -2,7 +2,7 @@
 import type { TopNavMegaMenuFeaturedCardProps, TopNavMegaMenuFeaturedCardSlots } from './types.js'
 import { computed, inject } from 'vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { resolveNavRoot } from '../NavItem/link.js'
+import { resolveNavRoot, safeNavHref } from '../NavItem/link.js'
 import { navMenuCloseKey } from '../NavMenu/context.js'
 import '../../styles/top-nav.css'
 
@@ -16,9 +16,9 @@ const linkComponent = useLinkComponent()
 const ctaHref = computed(() => {
   if (!props.linkLabel)
     return undefined
-  return props.linkHref || props.href
+  return safeNavHref(props.linkHref || props.href)
 })
-const wholeHref = computed(() => ctaHref.value ? undefined : props.href)
+const wholeHref = computed(() => ctaHref.value ? undefined : safeNavHref(props.href))
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
 const root = computed(() => wholeHref.value ? resolveNavRoot(wholeHref.value, false, customLink.value) : 'div')

@@ -2,7 +2,7 @@
 import type { NavItemEmits, NavItemProps, NavItemSlots } from './types.js'
 import { computed, useAttrs, useSlots } from 'vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { isExternalNavTarget, resolveNavRoot } from './link.js'
+import { isExternalNavTarget, isNavigableHref, resolveNavRoot } from './link.js'
 import '../../styles/nav-item.css'
 
 defineOptions({ name: 'AstryxNavItem', inheritAttrs: false })
@@ -27,7 +27,15 @@ function forwardedAttrs(): Record<string, unknown> {
   )
 }
 
-const isLink = computed(() => props.href != null && props.href !== '' && !props.isDisabled)
+const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))
+const iconOnlyName = computed(() => {
+  const given = attrs['aria-label']
+  if (!props.isIconOnly)
+    return typeof given === 'string' ? given : undefined
+  if (typeof given === 'string' && given.trim() !== '')
+    return given
+  return props.label
+})
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
 const root = computed(() => resolveNavRoot(props.href, props.isDisabled, customLink.value))
@@ -88,7 +96,7 @@ function onClick(event: MouseEvent): void {
     :disabled="isLink ? undefined : isDisabled"
     :aria-current="isSelected ? 'page' : undefined"
     :aria-disabled="isDisabled || undefined"
-    :aria-label="isIconOnly ? label : undefined"
+    :aria-label="iconOnlyName"
     :aria-expanded="expanded == null ? undefined : expanded ? 'true' : 'false'"
     :aria-controls="controls"
     :aria-haspopup="hasPopup"
