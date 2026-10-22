@@ -12,7 +12,7 @@ astryx-vue 是用 Vue 3 重新实现 [Astryx](https://github.com/facebook/astryx
 
 图例：✅已完成 · 🟡实现中 · 🔷验收中 · 🔵可开工 · ⬜未开始
 
-> 本描述会在节点合入或状态变更时由总控整篇覆盖。不要在标记块外再贴一份，否则会叠成重复的两段。
+> 本描述会在节点合入或状态变更时由总控整篇覆盖。不要在标记块外再贴一份，否则会叠成重复的两段。**已合入节点表要保留完整历史**（节点 / PR / 验收结果），只在表头追加新行，不要改成只留「本轮」。
 
 ## 进度（mindmap）
 
@@ -37,11 +37,11 @@ mindmap
       ✅ C1 基础输入 #136
       ✅ C2 勾选与开关 #140
       ✅ C3 选择器 #149
-      🔵 C4 搜索与命令面板
-      🔵 C5 日期时间
+      ✅ C4 搜索与命令面板 #159
+      ✅ C5 日期时间 #158
       ✅ C6 菜单 #143
       ✅ C7 浮层家族 #148
-      🔵 C8 BottomSheet
+      ✅ C8 BottomSheet #157
       ✅ C9 Markdown 与代码 #138
       ✅ C9-exports Markdown 导出 #146
       ✅ C10 Chat #147
@@ -73,6 +73,10 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| C4 搜索与命令面板 | [#159](https://github.com/astryx-vue/astryx-vue/pull/159) | squash 合入 `swarm-tree`（`cb8c3e12`）。验收通过 23/23 |
+| C5 日期时间家族 | [#158](https://github.com/astryx-vue/astryx-vue/pull/158) | squash 合入 `swarm-tree`（`27e43c5e`）。验收通过 23/23；返工 1 轮，补了 touch 路径的 change 与 `isReadOnly` 锁 |
+| C8 BottomSheet | [#157](https://github.com/astryx-vue/astryx-vue/pull/157) | squash 合入 `swarm-tree`（`56fee620`）。验收通过 21/21。默认内边距交给内容区，拖动手势已拆开 |
+| 子菜单 SSR、catalog 门禁、浮层 window | [#156](https://github.com/astryx-vue/astryx-vue/pull/156) | 不是总表节点。收掉 `HTMLElement is not defined`、当时过期的 catalog，以及 `window is not defined`（`dd1967e`） |
 | C10 Chat | [#147](https://github.com/astryx-vue/astryx-vue/pull/147) | 第 2 轮通过。Enter 选中当前高亮项；空草稿时发送按钮禁用 |
 | C3 选择器家族 | [#149](https://github.com/astryx-vue/astryx-vue/pull/149) | 第 3 轮通过 21/21。Escape 后焦点回到触发器 |
 | C7 浮层家族 | [#148](https://github.com/astryx-vue/astryx-vue/pull/148) | 通过 24/24。对话框页眉换肤、悬停卡片、轻提示滑动；滚动锁仍不钉 `position: fixed` |
@@ -92,9 +96,9 @@ mindmap
 
 没有正在实现或验收的节点。
 
-可以开工、等待派发：C4、C5、C8、C11、C12、C13、D1、F1a、F2a、F3b、F3c、F3e、F3g、F3h。C4 随 C3 完成解锁，F3e 随 C10 完成解锁。C8、F3b、F3c、F3g 是 C7 完成后补进可开工的。D4a 仍标着可开工，要等用户签字，签字前不要派。
+可以开工、等待派发：C11、C12、C13、D1、F2a、D4a、F1a、F3b、F3g、F3c、F3h、F3e。D4a 仍要等用户签字，签字前不要派。C8 合入后 F3a 仍要等 C11、C12，保持未开始。
 
-**本 PR 的 CI：** Markdown 三个子路径的 dist 已由 [#146](https://github.com/astryx-vue/astryx-vue/pull/146) 修好。#142 已经把 CLI catalog 修好了。还剩一处要单独修：`DropdownMenuSubMenu` 的服务端渲染测试失败，报 `HTMLElement is not defined`（run [39594900200](https://github.com/astryx-vue/astryx-vue/actions/runs/39594900200)，提交 `0f6f605`）。这次跑在 `pnpm test` 就停了，还没跑到构建。
+**本 PR 的 CI：** 当前 tip 含 C4（`cb8c3e12`）。节点 PR 合入前仍须 Check + Test 绿。#156 已收掉子菜单 SSR、catalog 门禁与浮层 window 问题。
 
 ## 怎么验收这个总 PR
 

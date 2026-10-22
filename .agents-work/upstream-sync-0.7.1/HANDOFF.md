@@ -28,7 +28,7 @@
 
 ## 现在的状态
 
-阶段 A、B、E 和 F0 都已完成：B1（#130）、B2（#131）、B3、B4（#132）、B5（#129）、B6（#133）、B7（#137，通过 25/25）。C 阶段已合入：C16 #135（通过 15/15，文档补了 Ghost）、C14 #134（通过 28/28）、C1 #136（通过 22/22）、C9 #138（第 2 轮通过 28/28）、C2 #140（通过 20/20）、C6 #143（通过 26/26）、C15 #141（通过 26/26）、C7 #148（通过 24/24）、C3 #149（第 3 轮通过 21/21，Escape 焦点回到触发器）、C10 #147（第 2 轮通过：Enter 选中当前高亮项，空草稿时发送按钮禁用）。
+阶段 A、B、E 和 F0 都已完成：B1（#130）、B2（#131）、B3、B4（#132）、B5（#129）、B6（#133）、B7（#137，通过 25/25）。C 阶段已合入：C16 #135（通过 15/15，文档补了 Ghost）、C14 #134（通过 28/28）、C1 #136（通过 22/22）、C9 #138（第 2 轮通过 28/28）、C2 #140（通过 20/20）、C6 #143（通过 26/26）、C15 #141（通过 26/26）、C7 #148（通过 24/24）、C3 #149（第 3 轮通过 21/21，Escape 焦点回到触发器）、C10 #147（第 2 轮通过：Enter 选中当前高亮项，空草稿时发送按钮禁用）、C8 #157（通过 21/21，squash 合入 `56fee620`。默认内边距交给内容区，拖动手势已拆开）、C5 #158（通过 23/23，返工 1 轮，补了 touch 路径的 change 与 `isReadOnly` 锁，squash `27e43c5e`）、C4 #159（通过 23/23，squash `cb8c3e12`）。
 
 **B4-fix 不是总表节点，已合入 #142。** 补的是关闭顺序：Escape 只打最上面一层，并补上嵌套深度；同时刷新了 CLI catalog。B4 本身仍是已完成（#132），不要把 B4-fix 写进状态总表。
 
@@ -38,11 +38,11 @@
 
 当前并行：没有正在实现或验收的节点。
 
-可以开工、等待派发：C4、C5、C8、C11、C12、C13、D1、F1a、F2a、F3b、F3c、F3e、F3g、F3h。C4 是 C3 做完后按依赖自动解锁的，F3e 是 C10 做完后自动解锁的。C8、F3b、F3c、F3g 是 C7 做完后就该开工的，这轮补进可开工。D4a 仍标着可开工，要等用户签字，签字前不要派。派活顺序以 `node scripts/swarm/status.mjs ready` 为准。
+可以开工、等待派发：C11、C12、C13、D1、F2a、D4a、F1a、F3b、F3g、F3c、F3h、F3e。这是 `node scripts/swarm/status.mjs ready` 按下游数量排出的顺序。D4a 仍标着可开工，要等用户签字，签字前不要派。F3a 仍要等 C11、C12，保持未开始。
 
 ## 后续
 
-**#128 的 CI：** Markdown 三个子路径缺 dist，是 #146 合入前的预期失败，现已由 #146 修好。#142 已经把 CLI catalog 修好了，不要把剩下的红当成 catalog 或 dist 没过。还剩一处要单独修：`DropdownMenuSubMenu` 的服务端渲染测试失败，报 `HTMLElement is not defined`（run [39594900200](https://github.com/astryx-vue/astryx-vue/actions/runs/39594900200)，提交 `0f6f605`，Check and dry-run 与 Test under production shell 都红在 `packages/core/src/ssr-smoke.test.ts`）。这次跑在 `pnpm test` 就停了，还没跑到 `pnpm build`。进度文档的 PR 不要改组件或打包配置。
+**#128 的 CI：** Markdown 三个子路径的 dist 已由 #146 修好。#142 修过当时的 CLI catalog。#156 已合入，收掉了子菜单服务端渲染里的 `HTMLElement is not defined`、当时过期的 catalog，以及浮层 `window is not defined`。不要再把这三处当成还没人认领的红。C4 #159、C5 #158 已经在 `swarm-tree` 上。进度文档的 PR 不要改组件或打包配置。
 
 #128 的描述不要用云代理自己的 PR 正文通道去改标记块以外的内容，否则会叠成重复的两份。整篇新正文在 `.agents-work/upstream-sync-0.7.1/PR128-BODY.md`。请总控用 `cursor-github update_pull_request` 整篇覆盖。
 
@@ -84,6 +84,7 @@
 
 - **C9 教训：发给用户的图必须是文档站整页，不是夹具或 `pnpm visual` 的 overview，内容要够。** checklist 全过也不代表图能交差。夹具页和 overview 卡片没有文档壳，看起来不像文档。总控发出去的图要能看到侧栏或顶栏，并滚到有实质示例的区域。规则见 SWARM.md「发给用户的验收对照图」。截图不入库。
 - **C3 教训：左右对照必须是同一处 Demo，不能把无关区块拼在一起。** 2026-10-21 用户指出上一轮 C3 左边是「次要样式 / 选项操作」，右边却是原版 Guidance 的 Do/Don't 或 Validation States，两边不是同一位置。原版只截 Overview 里的 Demo，禁止截 Guidance / Practices。本地必须是能看到侧栏的 VitePress 文档站整页。没有对位 Demo 就写「无对位」，改发单侧整页。规则见 SWARM.md「发给用户的验收对照图」。
+- **合入前人工审阅发现 touch 路径事件漏发；行数白名单并行删行容易冲突，先合一边再解。**
 - 验收者通过了也要自己复核。A3、A4、B4 都是复核时才发现问题的，比如 B4「按子路径引入组件时 layer.css 不生效」。
 - 文档里的说法必须在浏览器里实测过（B1 卡了 3 轮就是因为这个）。
 - 所有测试和构建命令都要加 `env -u NODE_ENV`，因为 shell 默认是 production。vitest 要加 `--maxWorkers=2`。
