@@ -49,6 +49,7 @@ const draftTime = ref<string | null | undefined>(undefined)
 const action = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || action.busy.value)
 const locked = computed(() => props.isDisabled || busy.value)
+const sheetLocked = computed(() => locked.value || props.isReadOnly === true)
 const datePresentation = computed<DatePresentation | undefined>(() => {
   const value = props.presentation
   if (value == null || value === 'text-input')
@@ -109,6 +110,24 @@ function publish(): void {
   }
 }
 
+function onSheetDate(value: Date | null): void {
+  if (sheetLocked.value)
+    return
+  onDate(value)
+}
+
+function onSheetTime(value: string | null): void {
+  if (sheetLocked.value)
+    return
+  onTime(value)
+}
+
+function onSheetReset(): void {
+  if (sheetLocked.value)
+    return
+  clear()
+}
+
 function onDate(value: Date | null): void {
   draftDate.value = value
   publish()
@@ -153,7 +172,8 @@ watch(model, (value) => {
       >
         <TouchDateTimeField
           v-if="useSheet"
-          v-model="model"
+          :date="dateValue"
+          :time="timeValue"
           :label="label"
           :input-id="generatedId"
           :described-by="[attrs['aria-describedby'], field.describedBy].filter(Boolean).join(' ') || undefined"
@@ -166,7 +186,10 @@ watch(model, (value) => {
           :max="max"
           :date-constraints="dateConstraints"
           :week-starts-on="weekStartsOn"
-          :is-disabled="locked"
+          :is-disabled="sheetLocked"
+          @pick-date="onSheetDate"
+          @pick-time="onSheetTime"
+          @reset="onSheetReset"
         />
         <div v-else class="astryx-date-time-fields">
           <DateInput

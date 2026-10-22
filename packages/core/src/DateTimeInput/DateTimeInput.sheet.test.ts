@@ -53,6 +53,55 @@ describe('dateTimeInput 底部面板', () => {
     const wrapper = mount(DateTimeInput, { props: { label: 'Meeting', modelValue: null, labelHidden: true } })
     expect(wrapper.get('.astryx-field-label-group').attributes('data-hidden')).toBe('true')
   })
+
+  it('底部面板改值后触发 change 和 changeAction', async () => {
+    ensureDialogModalApi()
+    const changeAction = vi.fn()
+    const wrapper = mount(DateTimeInput, {
+      attachTo: document.body,
+      props: {
+        label: 'Meeting',
+        presentation: 'bottom-sheet',
+        modelValue: '2026-03-21T14:30',
+        changeAction,
+      },
+    })
+    await wrapper.get('.astryx-date-touch-segment').trigger('click')
+    await nextTick()
+    const day = document.querySelector<HTMLButtonElement>('dialog button[data-date="2026-03-22"]:not(.is-disabled)')
+    expect(day).toBeTruthy()
+    day?.click()
+    await nextTick()
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['2026-03-22T14:30'])
+    expect(wrapper.emitted('change')).toEqual([['2026-03-22T14:30']])
+    expect(changeAction).toHaveBeenCalledTimes(1)
+    expect(changeAction).toHaveBeenCalledWith('2026-03-22T14:30')
+  })
+
+  it('isReadOnly 时底部面板不能改', async () => {
+    ensureDialogModalApi()
+    const changeAction = vi.fn()
+    const wrapper = mount(DateTimeInput, {
+      attachTo: document.body,
+      props: {
+        label: 'Meeting',
+        presentation: 'bottom-sheet',
+        modelValue: '2026-03-21T14:30',
+        isReadOnly: true,
+        changeAction,
+      },
+    })
+    const segments = wrapper.findAll('.astryx-date-touch-segment')
+    expect(segments).toHaveLength(2)
+    for (const segment of segments)
+      expect(segment.attributes('disabled')).toBe('')
+    await segments[0]?.trigger('click')
+    await nextTick()
+    expect(document.querySelector('dialog')?.hasAttribute('open')).not.toBe(true)
+    expect(wrapper.emitted('change')).toBeUndefined()
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(changeAction).not.toHaveBeenCalled()
+  })
 })
 
 describe('dateRangeInput 样式分层', () => {

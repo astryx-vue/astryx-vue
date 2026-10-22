@@ -13,6 +13,8 @@ import { formatInstant } from '../Timestamp/formatInstant.js'
 const props = withDefaults(defineProps<{
   label: string
   inputId: string
+  date?: Date | null
+  time?: string | null
   describedBy?: string
   placeholder?: string
   timePlaceholder?: string
@@ -25,17 +27,21 @@ const props = withDefaults(defineProps<{
   weekStartsOn?: WeekStartsOn
   isDisabled?: boolean
 }>(), {
+  date: null,
+  time: null,
   hourFormat: '12h',
   hasSeconds: false,
 })
 
-const model = defineModel<string | null>({ default: null })
+const emit = defineEmits<{
+  pickDate: [value: Date]
+  pickTime: [value: string]
+  reset: []
+}>()
 const messages = useAstryxMessages()
 const locale = useAstryxLocale()
 const open = ref(false)
 const panel = ref<'date' | 'time'>('date')
-const draftDate = ref<Date | null | undefined>(undefined)
-const draftTime = ref<string | null | undefined>(undefined)
 
 function datePart(value: string | null): Date | null {
   const date = value?.slice(0, 10) ?? ''
@@ -45,15 +51,8 @@ function datePart(value: string | null): Date | null {
   return new Date(year!, month! - 1, day)
 }
 
-function timePart(value: string | null): string | null {
-  const parsed = parseISOTime(value?.slice(11) ?? '')
-  return parsed ? formatISOTime(parsed, props.hasSeconds) : null
-}
-
-const dateValue = computed(() => draftDate.value !== undefined ? draftDate.value : datePart(model.value))
-const timeValue = computed(() => draftTime.value !== undefined ? draftTime.value : timePart(model.value))
-const dateText = computed(() => dateValue.value ? formatInstant(dateValue.value, 'date_long', locale.value) : '')
-const timeText = computed(() => timeValue.value ? formatDisplayTime(timeValue.value, props.hourFormat, props.hasSeconds) : '')
+const dateText = computed(() => props.date ? formatInstant(props.date, 'date_long', locale.value) : '')
+const timeText = computed(() => props.time ? formatDisplayTime(props.time, props.hourFormat, props.hasSeconds) : '')
 
 function clockBound(value?: string): string | undefined {
   const parsed = parseISOTime(value?.slice(11) ?? '')
@@ -64,20 +63,6 @@ function dateBound(value?: string): Date | undefined {
   return datePart(value ?? null) ?? undefined
 }
 
-function publish(): void {
-  const date = dateValue.value
-  const time = timeValue.value
-  if (!date || !time)
-    return
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const next = `${date.getFullYear()}-${month}-${day}T${time}`
-  draftDate.value = undefined
-  draftTime.value = undefined
-  if (next !== model.value)
-    model.value = next
-}
-
 function show(next: 'date' | 'time'): void {
   if (props.isDisabled)
     return
@@ -86,31 +71,31 @@ function show(next: 'date' | 'time'): void {
 }
 
 function onDate(value: Date): void {
-  draftDate.value = value
-  publish()
+  if (props.isDisabled)
+    return
+  emit('pickDate', value)
 }
 
 function onTime(value: string): void {
-  draftTime.value = value
-  publish()
+  if (props.isDisabled)
+    return
+  emit('pickTime', value)
 }
 
 function onReset(): void {
-  draftDate.value = null
-  draftTime.value = null
-  model.value = null
+  if (props.isDisabled)
+    return
+  emit('reset')
 }
 
 function saveDate(): void {
-  if (!dateValue.value)
+  if (!props.date)
     return
   panel.value = 'time'
 }
 
 function close(): void {
   open.value = false
-  draftDate.value = undefined
-  draftTime.value = undefined
 }
 </script>
 
@@ -151,20 +136,20 @@ function close(): void {
       </div>
       <TouchDateSheet
         v-if="panel === 'date'"
-        :selected="dateValue"
+        :selected="date"
         :min="dateBound(min)"
         :max="dateBound(max)"
         :date-constraints="dateConstraints"
         :week-starts-on="weekStartsOn"
         :save-label="messages.dateTimeInput.saveDatePicking"
-        :save-disabled="!dateValue"
+        :save-disabled="!date"
         @pick="onDate"
         @save="saveDate"
         @reset="onReset"
       />
       <div v-else class="astryx-date-time-touch-time">
         <TouchTimeWheels
-          :model-value="timeValue"
+          :model-value="time"
           :hour-format="hourFormat"
           :has-seconds="hasSeconds"
           :min="clockBound(min)"
