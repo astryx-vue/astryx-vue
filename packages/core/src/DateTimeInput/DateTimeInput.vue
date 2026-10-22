@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import type { DatePresentation } from '../composables/useDatePresentation.js'
 import type { DateTimeInputEmits, DateTimeInputProps } from './types.js'
-import { computed, ref, useId, watch } from 'vue'
+import { computed, ref, useAttrs, useId, watch } from 'vue'
+import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import { formatISOTime, parseISOTime } from '../composables/useTimeValue.js'
 import DateInput from '../DateInput/DateInput.vue'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
 import TimeField from '../TimeInput/TimeField.vue'
+import { effectivePickerPresentation, resolvePickerPresentation } from '../utils/inputPresentation.js'
+import TouchDateTimeField from './TouchDateTimeField.vue'
 import '../../styles/date-time-input.css'
 
-defineOptions({ name: 'AstryxDateTimeInput' })
+defineOptions({ name: 'AstryxDateTimeInput', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Omit<DateTimeInputProps, 'modelValue'>>(), {
   modelValue: null,
@@ -28,6 +33,15 @@ const props = withDefaults(defineProps<Omit<DateTimeInputProps, 'modelValue'>>()
 
 const emit = defineEmits<DateTimeInputEmits>()
 const model = defineModel<string | null>({ default: null })
+const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'DateTimeInput',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled', 'aria-invalid'],
+})
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
+const coarse = useMediaQuery('(pointer: coarse)')
 const messages = useAstryxMessages()
 const generatedId = `astryx-date-time-${useId()}`
 const draftDate = ref<Date | null | undefined>(undefined)
@@ -41,6 +55,10 @@ const datePresentation = computed<DatePresentation | undefined>(() => {
     return undefined
   return value
 })
+const useSheet = computed(() => resolvePickerPresentation(
+  effectivePickerPresentation(datePresentation.value, props.nativePicker),
+  coarse.value,
+) === 'sheet')
 
 function parseDate(value: string | null): Date | null {
   const date = value?.slice(0, 10) ?? ''
@@ -121,24 +139,47 @@ watch(model, (value) => {
 
 <template>
   <Field
+    :class="parts.containerClass.value" :style="parts.containerStyle.value"
     :label="label" :input-id="generatedId" :description="description" :width="width"
-    :is-label-hidden="isLabelHidden" :is-disabled="locked" :is-optional="isOptional" :is-required="isRequired"
+    :is-label-hidden="hideLabel" :is-disabled="locked" :is-optional="isOptional" :is-required="isRequired"
     :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
   >
     <template #default="field">
-      <div class="astryx-date-time-input" :data-size="size" :data-status="status?.type" :data-disabled="locked || undefined" :aria-busy="busy || undefined">
-        <div class="astryx-date-time-fields">
+      <div
+        class="astryx-date-time-input"
+        :class="parts.controlClass()"
+        :style="parts.controlStyle()"
+        :data-size="size" :data-status="status?.type" :data-disabled="locked || undefined" :aria-busy="busy || undefined"
+      >
+        <TouchDateTimeField
+          v-if="useSheet"
+          v-model="model"
+          :label="label"
+          :input-id="generatedId"
+          :described-by="[attrs['aria-describedby'], field.describedBy].filter(Boolean).join(' ') || undefined"
+          :placeholder="placeholder"
+          :time-placeholder="timePlaceholder"
+          :time-label="resolvedTimeLabel"
+          :hour-format="hourFormat"
+          :has-seconds="hasSeconds"
+          :min="min"
+          :max="max"
+          :date-constraints="dateConstraints"
+          :week-starts-on="weekStartsOn"
+          :is-disabled="locked"
+        />
+        <div v-else class="astryx-date-time-fields">
           <DateInput
             :id="generatedId" :model-value="dateValue" :label="messages.dateTimeInput.dateLabel"
             is-label-hidden
-            :placeholder="placeholder" :disabled="locked" :size="size" :described-by="field.describedBy"
+            :placeholder="placeholder" :disabled="locked" :size="size" :described-by="[attrs['aria-describedby'], field.describedBy].filter(Boolean).join(' ') || undefined"
             :date-constraints="dateConstraints" :number-of-months="numberOfMonths" :week-starts-on="weekStartsOn"
             :presentation="datePresentation" :native-picker="nativePicker"
             :disabled-message="disabledMessage"
             @update:model-value="onDate"
           />
           <TimeField
-            :model-value="timeValue" :label="resolvedTimeLabel" :described-by="field.describedBy"
+            :model-value="timeValue" :label="resolvedTimeLabel" :described-by="[attrs['aria-describedby'], field.describedBy].filter(Boolean).join(' ') || undefined"
             :placeholder="timePlaceholder"
             :hour-format="hourFormat" :presentation="presentation" :native-picker="nativePicker"
             :has-seconds="hasSeconds" :increment="timeIncrement" :option-interval="timeOptionInterval"

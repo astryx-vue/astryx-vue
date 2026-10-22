@@ -1,10 +1,11 @@
 import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 
 export type DateTimeInputSize = 'sm' | 'md' | 'lg'
 
-export interface DateTimeInputProps {
+export interface DateTimeInputProps extends FieldPartStylingProps {
   label: string
   modelValue?: string | null
   id?: string
@@ -42,6 +43,8 @@ export interface DateTimeInputProps {
   isRequired?: boolean
   isOptional?: boolean
   isLabelHidden?: boolean
+  /** 旧名。和 `isLabelHidden` 任一为真就藏起标签。 */
+  labelHidden?: boolean
   labelTooltip?: string
   status?: FieldStatusInput
   statusVariant?: FieldStatusVariant | 'tooltip'

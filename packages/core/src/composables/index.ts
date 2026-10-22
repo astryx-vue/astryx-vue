@@ -227,7 +227,14 @@ export {
   resolveTimeSurface,
   shiftTime,
 } from './useTimeValue.js'
-export type { HourFormat, ISOTimeString, NativePicker, ParsedTime, TimePresentation } from './useTimeValue.js'
+export type {
+  HourFormat,
+  ISOTimeString,
+  NativePicker,
+  ParsedTime,
+  TimePresentation,
+  TimeSurface,
+} from './useTimeValue.js'
 
 export { isActionTrigger, useTouchTrigger } from './useTouchTrigger.js'
 export type { LayerTouchTrigger, UseTouchTriggerOptions, UseTouchTriggerReturn } from './useTouchTrigger.js'

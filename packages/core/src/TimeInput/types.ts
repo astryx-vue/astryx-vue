@@ -1,9 +1,10 @@
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 
 export type TimeInputSize = 'sm' | 'md' | 'lg'
 
-export interface TimeInputProps {
+export interface TimeInputProps extends FieldPartStylingProps {
   label: string
   modelValue?: string | null
   id?: string
@@ -24,6 +25,8 @@ export interface TimeInputProps {
   isRequired?: boolean
   isOptional?: boolean
   isLabelHidden?: boolean
+  /** 旧名。和 `isLabelHidden` 任一为真就藏起标签。 */
+  labelHidden?: boolean
   labelTooltip?: string
   /** 正在加载。字段不可改，并显示加载指示。 */
   isLoading?: boolean
