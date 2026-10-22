@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FieldStatusInput, FieldStatusType } from '../Field/types.js'
 import type { DateInputEmits, DateInputProps, DateInputSlots, DateInputStatus } from './types.js'
-import { computed, defineComponent, ref, useId, useTemplateRef, watch } from 'vue'
+import { computed, defineComponent, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
@@ -11,18 +11,23 @@ import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
 import { resolveDatePresentation, resolveDateSurface } from '../composables/useDatePresentation.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
 import Spinner from '../Spinner/Spinner.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import NativeDateField from './NativeDateField.vue'
+import TouchDateSheet from './TouchDateSheet.vue'
 import '../../styles/date-input.css'
 
-defineOptions({ name: 'AstryxDateInput' })
+defineOptions({ name: 'AstryxDateInput', inheritAttrs: false })
 
 const props = withDefaults(defineProps<DateInputProps>(), {
   modelValue: null,
@@ -37,6 +42,15 @@ const props = withDefaults(defineProps<DateInputProps>(), {
 
 const emit = defineEmits<DateInputEmits>()
 defineSlots<DateInputSlots>()
+const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'DateInput',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'value', 'type', 'disabled', 'readonly', 'name', 'min', 'max', 'placeholder', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled', 'aria-invalid', 'aria-expanded', 'aria-controls', 'aria-haspopup'],
+})
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
+const ariaRequired = useAriaRequired(props)
 
 const TOUCH_POINTER_QUERY = '(pointer: coarse)'
 
@@ -146,18 +160,14 @@ function resolvedStatus(status: DateInputStatus | undefined): FieldStatusInput |
 
 const statusValue = computed(() => resolvedStatus(props.status))
 const statusType = computed<FieldStatusType | undefined>(() => statusValue.value?.type)
-const showsField = computed(() => {
-  if (props.isLabelHidden && !props.description && !statusValue.value?.message)
-    return false
-  return Boolean(props.label || props.description || statusValue.value?.message)
-})
+const showsField = computed(() => Boolean(props.label || props.description || statusValue.value?.message))
 const shell = computed(() => showsField.value ? Field : PassThrough)
 const fieldBindings = computed(() => showsField.value
   ? {
       label: props.label ?? '',
       inputId: inputId.value,
       description: props.description,
-      isLabelHidden: props.isLabelHidden || !props.label,
+      isLabelHidden: hideLabel.value || !props.label,
       isDisabled: locked.value,
       isOptional: props.isOptional,
       isRequired: props.isRequired,
@@ -172,11 +182,15 @@ const toggleLabel = computed(() => isOpen.value
   : messages.value.dateInput.openCalendar)
 
 function describedBy(fieldIds?: string): string | undefined {
-  return [props.describedBy, fieldIds, showsDisabledMessage.value ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined
+  return [attrs['aria-describedby'], props.describedBy, fieldIds, showsDisabledMessage.value ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined
+}
+
+function inputAttrs(): Record<string, unknown> {
+  return parts.forwardedAttrs()
 }
 
 function onInput(event: Event): void {
-  if (useSheet.value)
+  if (useSheet.value || (event instanceof InputEvent && event.isComposing))
     return
   const target = event.target as HTMLInputElement
   const value = target.value.trim()
@@ -209,7 +223,7 @@ function onToggleClick(): void {
 }
 
 function onInputKeyDown(event: KeyboardEvent): void {
-  if (locked.value || isOpen.value)
+  if (isImeKeyEvent(event) || locked.value || isOpen.value)
     return
   if (event.key === 'ArrowDown' || (event.altKey && event.key === 'ArrowDown')) {
     event.preventDefault()
@@ -219,8 +233,18 @@ function onInputKeyDown(event: KeyboardEvent): void {
 
 function onCalendarChange(date: Date | null): void {
   modelValueRef.value = date
+  if (!useSheet.value) {
+    isOpen.value = false
+    inputRef.value?.blur()
+  }
+}
+
+function onSheetSave(): void {
   isOpen.value = false
-  inputRef.value?.blur()
+}
+
+function onSheetReset(): void {
+  modelValueRef.value = null
 }
 
 function onClear(event: Event): void {
@@ -260,7 +284,7 @@ syncDisplayValue()
     :is-date-disabled="isDateDisabled"
     :date-constraints="dateConstraints"
     :name="name"
-    :is-label-hidden="isLabelHidden"
+    :is-label-hidden="hideLabel"
     :is-optional="isOptional"
     :is-required="isRequired"
     :label-tooltip="labelTooltip"
@@ -273,17 +297,23 @@ syncDisplayValue()
     :status="status"
     :status-variant="statusVariant"
     :format="format"
-    :described-by="props.describedBy"
+    :described-by="[attrs['aria-describedby'], props.describedBy].filter(Boolean).join(' ') || undefined"
     :disabled-message="disabledMessage"
     :width="width"
+    :container-class="parts.containerClass.value"
+    :container-style="parts.containerStyle.value"
+    :control-class="parts.controlClass()"
+    :control-style="parts.controlStyle()"
+    v-bind="inputAttrs()"
     @update:model-value="commit"
   />
-  <component :is="shell" v-else v-bind="fieldBindings">
+  <component :is="shell" v-else v-bind="fieldBindings" :class="parts.containerClass.value" :style="parts.containerStyle.value">
     <template #default="field">
       <div
         ref="containerRef"
         class="astryx-date-input"
-        :class="[statusType ? `status-${statusType}` : undefined, `size-${props.size}`]"
+        :class="[statusType ? `status-${statusType}` : undefined, `size-${props.size}`, parts.controlClass()]"
+        :style="parts.controlStyle()"
         :data-status="statusType"
         :data-presentation="useSheet ? 'bottom-sheet' : 'popover'"
         @pointerenter="disabledTooltip.onPointerEnter"
@@ -318,6 +348,7 @@ syncDisplayValue()
               <Icon icon="calendar" size="sm" />
             </button>
             <input
+              v-bind="inputAttrs()"
               :id="inputId"
               ref="inputRef"
               type="text"
@@ -333,7 +364,7 @@ syncDisplayValue()
               :aria-labelledby="showsField ? field?.labelId : undefined"
               :aria-describedby="describedBy(field?.describedBy)"
               :aria-invalid="statusType === 'error' ? 'true' : undefined"
-              :aria-required="isRequired || undefined"
+              :aria-required="ariaRequired"
               :aria-busy="busy || undefined"
               :aria-controls="popupId"
               :aria-expanded="isOpen"
@@ -384,15 +415,16 @@ syncDisplayValue()
           :padding="0"
         >
           <div :id="popupId">
-            <Calendar
-              :model-value="props.modelValue"
+            <TouchDateSheet
+              :selected="props.modelValue"
               :min="props.min"
               :max="props.max"
               :is-date-disabled="props.isDateDisabled"
               :date-constraints="props.dateConstraints"
-              :number-of-months="props.numberOfMonths"
               :week-starts-on="props.weekStartsOn"
-              @update:model-value="onCalendarChange"
+              @pick="onCalendarChange"
+              @save="onSheetSave"
+              @reset="onSheetReset"
             />
           </div>
         </BottomSheet>

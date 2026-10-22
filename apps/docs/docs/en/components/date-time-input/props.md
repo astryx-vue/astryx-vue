@@ -13,7 +13,12 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required accessible name of the pair.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>Placeholder for the date field.</td></tr>
 <tr><td><code>hourFormat</code></td><td><code>'12h' | '24h'</code></td><td><code>'12h'</code></td><td>Display format of the time. The model stays ISO.</td></tr>
-<tr><td><code>presentation</code></td><td><code>TimePresentation</code></td><td>—</td><td>Passed through to the time field.</td></tr>
+<tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native' | 'text-input'</code></td><td>—</td><td>How both halves open. bottom-sheet, and adaptive-bottom-sheet on a coarse pointer, use one bottom sheet with Date and Time tabs. text-input applies only to the time. Omitted means a popover on a fine pointer and the platform controls on a coarse pointer. An explicit value wins over nativePicker.</td></tr>
+<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the bordered control box. A class written on the component lands here too.</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the bordered control box.</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Clears the date and the time together.</td></tr>
 <tr><td><code>min</code> / <code>max</code></td><td><code>string</code></td><td>—</td><td>ISO bounds for the time portion.</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Height of both fields.</td></tr>

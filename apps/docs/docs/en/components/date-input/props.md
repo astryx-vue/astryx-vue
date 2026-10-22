@@ -20,13 +20,13 @@ footer: false
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Field label.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Helper text under the label.</td></tr>
-      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps the label for screen readers and hides it visually.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps the label for screen readers and hides it visually. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>Marks the label as optional.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>Marks the field required and sets aria-required on the input.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Hint shown from the info icon at the end of the label.</td></tr>
       <tr><td><code>format</code></td><td><code>'date' | 'date_long' | 'date_weekday' | 'system_date' | ((iso: string) =&gt; string)</code></td><td><code>'date_long'</code></td><td>How a committed date is displayed. A function receives <code>YYYY-MM-DD</code>.</td></tr>
       <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native'</code></td><td>adaptive-native when omitted</td><td>Popover, bottom sheet, system date control, or a switch between them based on the pointer. presentation wins when nativePicker is also set.</td></tr>
-      <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>Older surface name. touch follows the pointer, always uses the system control, never keeps the calendar.</td></tr>
+      <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>Older surface name. touch follows the pointer, always uses the system control, and never switches between the popover and the bottom sheet by pointer. presentation wins when both are set.</td></tr>
       <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>Months shown side by side in the calendar. The system date control cannot express this.</td></tr>
       <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>First day of the week in the calendar. The system date control cannot express this.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the field.</td></tr>
@@ -39,6 +39,10 @@ footer: false
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Field size.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>Validation status. An object with <code>message</code> shows that text under the field.</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the bordered control box. A class written on the component lands here too, not on the inner input.</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the bordered control box.</td></tr>
     </tbody>
   </table>
 </div>

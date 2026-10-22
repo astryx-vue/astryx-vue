@@ -20,13 +20,13 @@ footer: false
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>字段标签。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
-      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签只留给读屏，页面上不显示。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签只留给读屏，页面上不显示。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>在标签旁标成可选。</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>把字段标成必填，输入框带上 aria-required。</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签末尾信息图标里的说明。</td></tr>
       <tr><td><code>format</code></td><td><code>'date' | 'date_long' | 'date_weekday' | 'system_date' | ((iso: string) =&gt; string)</code></td><td><code>'date_long'</code></td><td>已提交日期的显示方式。函数收到的是 <code>YYYY-MM-DD</code>。</td></tr>
       <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native'</code></td><td>未设置时为 adaptive-native</td><td>弹出层、底部面板、系统日期控件，或按指针在它们之间切换。同时传了 nativePicker 时以这项为准。</td></tr>
-      <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>旧的打开方式。touch 跟随指针，always 用系统控件，never 用日历。</td></tr>
+      <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>旧的打开方式。touch 跟随指针，always 用系统控件，never 按指针在弹出层和底部面板之间切换。同时传了 presentation 时以 presentation 为准。</td></tr>
       <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>弹出日历并排的月份数。系统日期控件表达不了这项。</td></tr>
       <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>弹出日历从哪一天开始一周。系统日期控件表达不了这项。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
@@ -39,6 +39,10 @@ footer: false
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>校验状态。对象带 <code>message</code> 时，说明会显示在字段下方。</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明的位置。</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。落点规则同 containerClass。</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到内部输入框上。</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到带边框本体的行内样式。</td></tr>
     </tbody>
   </table>
 </div>

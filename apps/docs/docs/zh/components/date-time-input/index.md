@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateTimeInputValidation } from '../../../../components/demos/date-time-input'
+import { dateTimeInputSheet, dateTimeInputValidation } from '../../../../components/demos/date-time-input'
 </script>
 
 ## 使用方法
@@ -27,7 +27,7 @@ const meeting = shallowRef<string | null>(null)
 </template>
 ```
 
-日期用日期输入框，时间用和时间输入框相同的字段。两个字段默认左右并排，并随行宽一起变窄。行宽小于 16rem 时才换行。清除会同时清掉日期和时间。日期那一半可以一次显示两个月，并指定一周从哪一天开始。正在保存时两个字段都不能改。
+日期用日期输入框，时间用和时间输入框相同的字段。两个字段默认左右并排，并随行宽一起变窄。行宽小于 16rem 时才换行。`bottom-sheet` 时日期和时间共用一个底部面板，顶上在日期和时间之间切换。清除会同时清掉日期和时间。日期那一半可以一次显示两个月，并指定一周从哪一天开始。正在保存时两个字段都不能改。
 
 
 <ComponentAnatomy />
@@ -42,3 +42,4 @@ const meeting = shallowRef<string | null>(null)
 ## 示例
 
 <DemoExample :demo="dateTimeInputValidation" description="已填好的日期时间上的错误、警告和成功。" locale="zh" title="校验" />
+<DemoExample :demo="dateTimeInputSheet" description="一个底部面板里切换日期和时间。" locale="zh" title="底部面板" />
