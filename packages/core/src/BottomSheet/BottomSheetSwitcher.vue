@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { DismissEscape } from '../layer/dismissStack.js'
 import type { BottomSheetRegistration } from './switcher.js'
 import type { BottomSheetPurpose } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { isImeKeyEvent } from '../composables/internal/ime.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import { bottomSheetSwitcherKey } from './switcher.js'
+import { useSheetLayerDismiss } from './useSheetLayerDismiss.js'
 import '../../styles/bottom-sheet.css'
 
 defineOptions({ name: 'AstryxBottomSheetSwitcher', inheritAttrs: false })
@@ -138,10 +141,28 @@ function requestClose(): void {
   setActive(null)
 }
 
+const flowVisible = computed(() => activeSheet.value != null || retainedId.value != null)
+const layerEscape = computed<DismissEscape>(() => {
+  if (activeSheet.value == null || flowPurpose.value === 'required')
+    return 'block'
+  if (!props.hasScrim)
+    return 'ignore'
+  return 'close'
+})
+const layer = useSheetLayerDismiss({
+  isActive: flowVisible,
+  escape: layerEscape,
+  getContainer: () => dialog.value ?? null,
+  isPresent: () => dialog.value?.open ?? false,
+  onDismiss: requestClose,
+})
+
 function onKeydown(event: KeyboardEvent): void {
-  if (event.key !== 'Escape' || event.isComposing)
+  if (event.key !== 'Escape' || !layer.isTop())
     return
   event.preventDefault()
+  if (isImeKeyEvent(event))
+    return
   requestClose()
 }
 
@@ -152,6 +173,8 @@ function onCancel(event: Event): void {
   if (event.defaultPrevented)
     return
   event.preventDefault()
+  if (!layer.isTop())
+    return
   requestClose()
 }
 
