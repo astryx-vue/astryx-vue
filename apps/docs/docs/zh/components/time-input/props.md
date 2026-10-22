@@ -16,7 +16,12 @@ footer: false
 <tr><td><code>increment</code></td><td><code>number</code></td><td><code>1</code></td><td>方向键每次增减的分钟数。</td></tr>
 <tr><td><code>min</code></td><td><code>string</code></td><td>—</td><td>最早的 ISO 时间。</td></tr>
 <tr><td><code>max</code></td><td><code>string</code></td><td>—</td><td>最晚的 ISO 时间。</td></tr>
-<tr><td><code>presentation</code></td><td><code>'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'</code></td><td><code>'adaptive-native'</code></td><td>文本框，或在粗指针上使用系统时间输入。有秒或步进不是 1 分钟时仍用文本框。</td></tr>
+<tr><td><code>presentation</code></td><td><code>'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'</code></td><td><code>'adaptive-native'</code></td><td>文本框、系统时间控件，或底部时分滚轮。不传时细指针用文本框，粗指针用系统控件。adaptive-bottom-sheet 只在粗指针上用滚轮；bottom-sheet 始终用滚轮。有秒、步进不是 1，或设了预设间隔时，系统控件退回文本框，滚轮不受影响。显式值压过 nativePicker。</td></tr>
+<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。落点规则同 containerClass。</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到内部输入框上。</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到带边框本体的行内样式。</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示清除按钮。</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>字段高度。</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。</td></tr>

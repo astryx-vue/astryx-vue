@@ -23270,8 +23270,8 @@
         "zh": "`DateInput` 是一个日期输入组件，结合了文本输入框和日历弹出层。用户可以手动输入日期文本，也可以点击打开日历选择。"
       },
       "usage": {
-        "en": "`DateInput` is a text field with a calendar button. People can type a date or open the calendar and pick a day.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" />\n</template>\n```\n\nThe value is a local date. The field writes it back as a long date, such as March 21, 2026. It can also show a short date, a weekday, the system date, or custom text. A description can sit under the label, and validation can change the border or add a message under the field.\n\nThe calendar can open in a popover or a bottom sheet. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.",
-        "zh": "`DateInput` 是一个日期输入组件，结合了文本输入框和日历弹出层。用户可以手动输入日期文本，也可以点击打开日历选择。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" placeholder=\"选择日期\" />\n</template>\n```\n\n绑定值是本地日期。写回字段时默认排成完整日期，例如 March 21, 2026。也可以改成短日期、带星期、系统日期，或自己排版。标签下面可以放说明。校验可以只改边框，也可以在字段下面写出原因。\n\n日历可以从弹出层或底部面板打开。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。"
+        "en": "`DateInput` is a text field with a calendar button. People can type a date or open the calendar and pick a day.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" />\n</template>\n```\n\nThe value is a local date. The field writes it back as a long date, such as March 21, 2026. It can also show a short date, a weekday, the system date, or custom text. A description can sit under the label, and validation can change the border or add a message under the field.\n\nThe calendar can open in a popover or a bottom sheet. The sheet shows one month. Picking a day writes it immediately, and Save closes the sheet. The month title opens month and year wheels. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.",
+        "zh": "`DateInput` 是一个日期输入组件，结合了文本输入框和日历弹出层。用户可以手动输入日期文本，也可以点击打开日历选择。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" placeholder=\"选择日期\" />\n</template>\n```\n\n绑定值是本地日期。写回字段时默认排成完整日期，例如 March 21, 2026。也可以改成短日期、带星期、系统日期，或自己排版。标签下面可以放说明。校验可以只改边框，也可以在字段下面写出原因。\n\n日历可以从弹出层或底部面板打开。底部面板一次显示一个月，点一天就写入，保存才收起；点月份标题可以改月份和年份。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。"
       },
       "practices": {
         "en": [
@@ -23374,7 +23374,7 @@
                 "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Keeps the label for screen readers and hides it visually."
+                "description": "Keeps the label for screen readers and hides it visually. `labelHidden` is the older name; either one hides it."
               },
               {
                 "name": "`isOptional`",
@@ -23410,7 +23410,7 @@
                 "name": "`nativePicker`",
                 "type": "`'touch' | 'always' | 'never'`",
                 "default": "—",
-                "description": "Older surface name. touch follows the pointer, always uses the system control, never keeps the calendar."
+                "description": "Older surface name. touch follows the pointer, always uses the system control, and never switches between the popover and the bottom sheet by pointer. presentation wins when both are set."
               },
               {
                 "name": "`numberOfMonths`",
@@ -23483,6 +23483,30 @@
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
                 "description": "Where the status message sits."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too, not on the inner input."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               }
             ]
           }
@@ -23549,7 +23573,7 @@
                 "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "标签只留给读屏，页面上不显示。"
+                "description": "标签只留给读屏，页面上不显示。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
               },
               {
                 "name": "`isOptional`",
@@ -23585,7 +23609,7 @@
                 "name": "`nativePicker`",
                 "type": "`'touch' | 'always' | 'never'`",
                 "default": "—",
-                "description": "旧的打开方式。touch 跟随指针，always 用系统控件，never 用日历。"
+                "description": "旧的打开方式。touch 跟随指针，always 用系统控件，never 按指针在弹出层和底部面板之间切换。同时传了 presentation 时以 presentation 为准。"
               },
               {
                 "name": "`numberOfMonths`",
@@ -23658,6 +23682,30 @@
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
                 "description": "状态说明的位置。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到内部输入框上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               }
             ]
           }
@@ -23812,6 +23860,17 @@
             "zh": "直接使用系统日期控件，字段上仍按完整日期显示。"
           },
           "code": "<script setup lang=\"ts\">\nimport { provideAstryxLocale } from '@astryx-vue/core'\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nprovideAstryxLocale('en')\n\nconst date = ref<Date | null>(new Date(2026, 2, 21))\n</script>\n\n<template>\n  <div style=\"width: 240px; max-width: 100%\">\n    <DateInput\n      v-model=\"date\"\n      label=\"System date\"\n      description=\"This field opens the browser date control.\"\n      presentation=\"native\"\n      clearable\n    />\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Bottom sheet",
+            "zh": "底部面板"
+          },
+          "description": {
+            "en": "A bottom sheet on both mouse and touch. Picking a day writes it, and Save closes the sheet.",
+            "zh": "不论鼠标还是触屏，都从底部面板选日期。点一天就写入，保存才收起。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { provideAstryxLocale } from '@astryx-vue/core'\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nprovideAstryxLocale('en')\n\nconst date = ref<Date | null>(new Date(2026, 2, 21))\n</script>\n\n<template>\n  <div style=\"width: 240px; max-width: 100%\">\n    <DateInput\n      v-model=\"date\"\n      label=\"Due\"\n      description=\"Opens a one-month sheet. Save closes it.\"\n      presentation=\"bottom-sheet\"\n    />\n  </div>\n</template>"
         }
       ],
       "anatomy": {
@@ -23999,7 +24058,37 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "Shows a clear button."
+                "description": "Shows a clear button. Keyboard activation returns focus to the trigger without scrolling the page."
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it. Playground templates use `is-label-hidden`."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too, not on the trigger button."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               },
               {
                 "name": "`placeholder`",
@@ -24132,7 +24221,37 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "显示清除按钮。"
+                "description": "显示清除按钮。键盘激活清除时，焦点回到触发按钮，并避免页面滚动。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。演练场里写 `is-label-hidden`。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到触发按钮上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               },
               {
                 "name": "`placeholder`",
@@ -24341,8 +24460,8 @@
         "zh": "`DateTimeInput` 把日期和时间放在一起。值是 `YYYY-MM-DDTHH:MM`。两部分都有了才会写出这个值，否则是 `null`。"
       },
       "usage": {
-        "en": "`DateTimeInput` combines a date and a time. The value is `YYYY-MM-DDTHH:MM`, or `null` until both parts are set.\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"Meeting time\" has-clear />\n</template>\n```\n\nThe date uses the date field. The time uses the same field as the time input. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. Clear removes both parts. The date half can show two months and can start the week on a chosen day. While a change is saving, neither field can be edited.",
-        "zh": "`DateTimeInput` 把日期和时间放在一起。值是 `YYYY-MM-DDTHH:MM`。两部分都有了才会写出这个值，否则是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"会议时间\" has-clear />\n</template>\n```\n\n日期用日期输入框，时间用和时间输入框相同的字段。两个字段默认左右并排，并随行宽一起变窄。行宽小于 16rem 时才换行。清除会同时清掉日期和时间。日期那一半可以一次显示两个月，并指定一周从哪一天开始。正在保存时两个字段都不能改。"
+        "en": "`DateTimeInput` combines a date and a time. The value is `YYYY-MM-DDTHH:MM`, or `null` until both parts are set.\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"Meeting time\" has-clear />\n</template>\n```\n\nThe date uses the date field. The time uses the same field as the time input. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. `bottom-sheet` puts the date and the time in one bottom sheet, with tabs to move between them. Clear removes both parts. The date half can show two months and can start the week on a chosen day. While a change is saving, neither field can be edited.",
+        "zh": "`DateTimeInput` 把日期和时间放在一起。值是 `YYYY-MM-DDTHH:MM`。两部分都有了才会写出这个值，否则是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"会议时间\" has-clear />\n</template>\n```\n\n日期用日期输入框，时间用和时间输入框相同的字段。两个字段默认左右并排，并随行宽一起变窄。行宽小于 16rem 时才换行。`bottom-sheet` 时日期和时间共用一个底部面板，顶上在日期和时间之间切换。清除会同时清掉日期和时间。日期那一半可以一次显示两个月，并指定一周从哪一天开始。正在保存时两个字段都不能改。"
       },
       "practices": {
         "en": [
@@ -24397,9 +24516,39 @@
               },
               {
                 "name": "`presentation`",
-                "type": "`TimePresentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native' | 'text-input'`",
                 "default": "—",
-                "description": "Passed through to the time field."
+                "description": "How both halves open. bottom-sheet, and adaptive-bottom-sheet on a coarse pointer, use one bottom sheet with Date and Time tabs. text-input applies only to the time. Omitted means a popover on a fine pointer and the platform controls on a coarse pointer. An explicit value wins over nativePicker."
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               },
               {
                 "name": "`hasClear`",
@@ -24560,9 +24709,39 @@
               },
               {
                 "name": "`presentation`",
-                "type": "`TimePresentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native' | 'text-input'`",
                 "default": "—",
-                "description": "传给时间字段。"
+                "description": "日期和时间共用的打开方式。bottom-sheet，以及粗指针上的 adaptive-bottom-sheet，合成一个底部面板，在日期和时间之间切换。text-input 只作用于时间。不传时细指针弹出，粗指针用系统控件。显式值压过 nativePicker。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               },
               {
                 "name": "`hasClear`",
@@ -24717,6 +24896,17 @@
             "zh": "已填好的日期时间上的错误、警告和成功。"
           },
           "code": "<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { shallowRef } from 'vue'\n\nconst errorVal = shallowRef('2026-01-25T09:00')\nconst warningVal = shallowRef('2026-12-25T14:00')\nconst successVal = shallowRef('2026-03-10T10:30')\n</script>\n\n<template>\n  <div class=\"date-time-demo\">\n    <VStack :gap=\"4\">\n      <DateTimeInput v-model=\"errorVal\" label=\"Meeting time\" :status=\"{ type: 'error', message: 'This time slot is already booked' }\" />\n      <DateTimeInput v-model=\"warningVal\" label=\"Preferred time\" :status=\"{ type: 'warning', message: 'This falls outside business hours' }\" />\n      <DateTimeInput v-model=\"successVal\" label=\"Start time\" :status=\"{ type: 'success', message: 'Time confirmed' }\" />\n    </VStack>\n  </div>\n</template>\n\n<style scoped>\n.date-time-demo {\n  width: 400px;\n  max-width: 100%;\n}\n</style>"
+        },
+        {
+          "title": {
+            "en": "Bottom sheet",
+            "zh": "底部面板"
+          },
+          "description": {
+            "en": "One bottom sheet switches between the date and the time.",
+            "zh": "一个底部面板里切换日期和时间。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>('2026-03-21T14:30')\n</script>\n\n<template>\n  <div style=\"width: 320px; max-width: 100%\">\n    <DateTimeInput\n      v-model=\"meeting\"\n      label=\"Meeting\"\n      presentation=\"bottom-sheet\"\n      has-clear\n    />\n  </div>\n</template>"
         }
       ],
       "anatomy": {
@@ -33600,8 +33790,8 @@
         "zh": "`TimeInput` 编辑一天里的时间。值是 ISO 时间，`HH:MM` 或 `HH:MM:SS`，没有选择时是 `null`。"
       },
       "usage": {
-        "en": "`TimeInput` edits a time of day. The value is an ISO time, `HH:MM` or `HH:MM:SS`, or `null`.\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"Time\" />\n</template>\n```\n\nThe default hour format is 12-hour. Arrow keys step by `increment` minutes. On a fine pointer the field is typed text. On a coarse pointer, `adaptive-native` and `adaptive-bottom-sheet` use the platform time input, unless the field needs seconds or a step other than one minute. Placeholder and clear text follow the locale.",
-        "zh": "`TimeInput` 编辑一天里的时间。值是 ISO 时间，`HH:MM` 或 `HH:MM:SS`，没有选择时是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"时间\" />\n</template>\n```\n\n默认按 12 小时显示。方向键按 `increment` 分钟步进。细指针下是文本框。粗指针下，`adaptive-native` 和 `adaptive-bottom-sheet` 使用系统时间输入；需要秒，或步进不是 1 分钟时，仍保留文本框。占位符和清除文案跟随语言。"
+        "en": "`TimeInput` edits a time of day. The value is an ISO time, `HH:MM` or `HH:MM:SS`, or `null`.\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"Time\" />\n</template>\n```\n\nThe default hour format is 12-hour. Arrow keys step by `increment` minutes. A fine pointer gets a typed field. `adaptive-native` uses the platform time control on a coarse pointer. `adaptive-bottom-sheet` uses hour and minute wheels on a coarse pointer. `bottom-sheet` uses those wheels on every pointer. Seconds, a step other than one minute, or a preset interval send the platform control back to typed text; the wheels still show seconds. Placeholder and clear text follow the locale.",
+        "zh": "`TimeInput` 编辑一天里的时间。值是 ISO 时间，`HH:MM` 或 `HH:MM:SS`，没有选择时是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"时间\" />\n</template>\n```\n\n默认按 12 小时显示。方向键按 `increment` 分钟步进。细指针下是文本框。`adaptive-native` 在粗指针上用系统时间控件；`adaptive-bottom-sheet` 在粗指针上用底部时分滚轮；`bottom-sheet` 不论指针都用滚轮。需要秒、步进不是 1 分钟，或设了预设间隔时，系统控件退回文本框，滚轮不受这个限制。占位符和清除文案跟随语言。"
       },
       "practices": {
         "en": [
@@ -33684,7 +33874,37 @@
                 "name": "`presentation`",
                 "type": "`'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'`",
                 "default": "`'adaptive-native'`",
-                "description": "Typed field, or the platform time input on a coarse pointer. Seconds and a non-1 increment stay typed."
+                "description": "Typed field, platform time control, or hour and minute wheels. Omitted means typed text on a fine pointer and the platform control on a coarse pointer. adaptive-bottom-sheet uses wheels only on a coarse pointer; bottom-sheet always uses wheels. Seconds, a step other than 1, or a preset interval send the platform control back to typed text. The wheels are unaffected. An explicit value wins over nativePicker."
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too, not on the inner input."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               },
               {
                 "name": "`hasClear`",
@@ -33799,7 +34019,37 @@
                 "name": "`presentation`",
                 "type": "`'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'`",
                 "default": "`'adaptive-native'`",
-                "description": "文本框，或在粗指针上使用系统时间输入。有秒或步进不是 1 分钟时仍用文本框。"
+                "description": "文本框、系统时间控件，或底部时分滚轮。不传时细指针用文本框，粗指针用系统控件。adaptive-bottom-sheet 只在粗指针上用滚轮；bottom-sheet 始终用滚轮。有秒、步进不是 1，或设了预设间隔时，系统控件退回文本框，滚轮不受影响。显式值压过 nativePicker。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到内部输入框上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               },
               {
                 "name": "`hasClear`",
@@ -33921,6 +34171,17 @@
             "zh": "禁用、错误、警告和成功。"
           },
           "code": "<script setup lang=\"ts\">\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst disabledVal = shallowRef('10:00')\nconst errorVal = shallowRef('22:00')\nconst warningVal = shallowRef('07:00')\nconst successVal = shallowRef('10:00')\n</script>\n\n<template>\n  <VStack :gap=\"3\">\n    <TimeInput v-model=\"disabledVal\" label=\"Disabled field\" is-disabled />\n    <TimeInput v-model=\"errorVal\" label=\"Error message\" :status=\"{ type: 'error', message: 'Time must be during business hours' }\" />\n    <TimeInput v-model=\"warningVal\" label=\"Warning message\" :status=\"{ type: 'warning', message: 'Early morning — are you sure?' }\" />\n    <TimeInput v-model=\"successVal\" label=\"Success message\" :status=\"{ type: 'success', message: 'Time slot is available' }\" />\n  </VStack>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Bottom sheet",
+            "zh": "底部面板"
+          },
+          "description": {
+            "en": "Hour and minute wheels, on both a mouse and a coarse pointer.",
+            "zh": "不论指针类型，都用底部的小时和分钟滚轮。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <div style=\"width: 240px; max-width: 100%\">\n    <TimeInput\n      v-model=\"time\"\n      label=\"Start\"\n      presentation=\"bottom-sheet\"\n    />\n  </div>\n</template>"
         }
       ],
       "anatomy": {
@@ -37134,12 +37395,12 @@
       "importPath": "@astryx-vue/core/PowerSearch",
       "exportName": "PowerSearch",
       "summary": {
-        "en": "Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field and a content search become a filter immediately. Each filter sits in the input as a token that can be opened again.",
-        "zh": "结构化搜索把一条查询拆成字段、运算符和值。聚焦输入框会列出字段。选中之后，如果这个运算符还要填值，就打开编辑器；布尔值和全文搜索会直接变成一条条件。条件以标签的形式排在输入框里，点开可以修改。"
+        "en": "Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field, an empty operator, and a content search become a filter immediately: the editor closes and focus returns to the search field. Clicking an existing empty-operator token does not open the built-in editor. It commits one edit. A consumer editor registered as `components.empty.editor`, or the editor slot, still opens.",
+        "zh": "结构化搜索把一条查询拆成字段、运算符和值。聚焦输入框会列出字段。选中之后，如果这个运算符还要填值，就打开编辑器；布尔值、空运算符和全文搜索会直接变成一条条件，编辑器不留在页面上，焦点回到搜索框。再点一条已经存在的空条件，内置编辑器不会打开，只会再提交一次修改。如果调用方用 `components.empty.editor` 或编辑器插槽换了空运算符的编辑器，点这条条件仍会打开那个编辑器。"
       },
       "usage": {
-        "en": "Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field and a content search become a filter immediately. Each filter sits in the input as a token that can be opened again.\n\nBackspace on an empty input removes the last token. The arrow keys move between tokens, Enter opens the focused one, and Backspace or Delete removes it. A read-only token cannot be edited or removed. Escape cancels the editor and returns focus.\n\nThe editor follows the width of the search field, from about 400 to 720. When the viewport cannot hold the minimum, the floor gives way. The editor hugs the side that opened it only after the maximum has squeezed it. The position is taken once, while it is open.\n\n`createPowerSearchConfig` builds the operators from field definitions and returns `applyFilters`. That function filters rows on its own. It does not go through a table’s column filters. Time, relative dates, entities, and custom values keep every row unless the caller interprets them. A nested filter requires every child by default. An operator named or, or one whose name contains any, requires only one child.\n\nTokens can collapse to one line when the field loses focus. The inline mode expands in place. The layer mode floats over the field and leaves the content below where it is. A numeric result count is read with plural wording. A string is shown as given. Changes are announced politely, and the first paint is silent.\n\nPass a disabled reason together with the disabled state. The input stays focusable, and the reason appears on hover and keyboard focus. Do not wrap the field in another tooltip. A natively disabled control swallows the hover.\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```",
-        "zh": "结构化搜索把一条查询拆成字段、运算符和值。聚焦输入框会列出字段。选中之后，如果这个运算符还要填值，就打开编辑器；布尔值和全文搜索会直接变成一条条件。条件以标签的形式排在输入框里，点开可以修改。\n\n输入为空时，退格键删掉最后一条。左右方向键在标签之间移动，回车打开当前标签，退格或删除键去掉它。只读的条件不能改，也不能删。按 Esc 会取消编辑并把焦点还回去。\n\n编辑器的宽度跟搜索条走，最窄大约 400，最宽 720。窗口放不下一个最小宽度时，下限让给窗口。只有被最大宽度压窄时，编辑器才改贴打开它的那一侧。打开之后位置先定住，关掉之前不跟着搜索条挪。\n\n`createPowerSearchConfig` 根据字段定义生成运算符，并返回一个独立的 `applyFilters`。它只负责把行滤出来，不经过表格自己的列过滤。时间、相对日期、实体和自定义值默认全部保留，调用方要自己解释。嵌套条件默认每一条都要满足；运算符名字里带 any，或者就是 or，则满足任意一条即可。\n\n失焦时标签可以收成一行。`unfocused-inline` 在原处展开，`unfocused-layer` 浮在字段上，不把下面的内容往下推。结果数量是数字时会按单复数读出来，是字符串时原样显示。数量变化会礼貌地播报，第一次出现不播。\n\n禁用原因和禁用一起用时，输入框仍然可以聚焦，悬停或键盘聚焦能看到原因。不要再在外面套一层提示，原生禁用会把悬停吃掉。\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```"
+        "en": "Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field, an empty operator, and a content search become a filter immediately: the editor closes and focus returns to the search field. Clicking an existing empty-operator token does not open the built-in editor. It commits one edit. A consumer editor registered as `components.empty.editor`, or the editor slot, still opens.\n\nBackspace on an empty input removes the last token. The arrow keys move between tokens, Enter opens the focused one, and Backspace or Delete removes it. A read-only token cannot be edited or removed. Escape cancels the editor and returns focus.\n\nThe editor follows the width of the search field, from about 400 to 720, and stays inside the layer gutter (16 on each side of the viewport). When the viewport cannot hold the minimum, the floor gives way to that gutter. The editor hugs the side that opened it only after the maximum has squeezed it. The position is taken once, while it is open. When the editor itself is narrower than 400, the fields stack. That follows the editor’s width, not the window’s.\n\n`createPowerSearchConfig` builds the operators from field definitions and returns `applyFilters`. That function filters rows on its own. It does not go through a table’s column filters. Time, relative dates, entities, and custom values keep every row unless the caller interprets them. A nested filter requires every child by default. An operator named or, or one whose name contains any, requires only one child.\n\nTokens can collapse to one line when the field loses focus. The inline mode expands in place. The layer mode floats over the field and leaves the content below where it is. A numeric result count is read with plural wording. A string is shown as given. Changes are announced politely, and the first paint is silent.\n\nPass a disabled reason together with the disabled state. The input stays focusable, and the reason appears on hover and keyboard focus. Do not wrap the field in another tooltip. A natively disabled control swallows the hover.\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```",
+        "zh": "结构化搜索把一条查询拆成字段、运算符和值。聚焦输入框会列出字段。选中之后，如果这个运算符还要填值，就打开编辑器；布尔值、空运算符和全文搜索会直接变成一条条件，编辑器不留在页面上，焦点回到搜索框。再点一条已经存在的空条件，内置编辑器不会打开，只会再提交一次修改。如果调用方用 `components.empty.editor` 或编辑器插槽换了空运算符的编辑器，点这条条件仍会打开那个编辑器。\n\n输入为空时，退格键删掉最后一条。左右方向键在标签之间移动，回车打开当前标签，退格或删除键去掉它。只读的条件不能改，也不能删。按 Esc 会取消编辑并把焦点还回去。\n\n编辑器的宽度跟搜索条走，最窄大约 400，最宽 720，并且不越过浮层留白（视口两侧各 16）。窗口放不下一个最小宽度时，下限让给这道留白。只有被最大宽度压窄时，编辑器才贴向打开它的那一侧。位置在打开时定住，关掉以后不再跟着搜索条挪。编辑器自己窄于 400 时，字段上下排列，不看整个窗口有多宽。\n\n`createPowerSearchConfig` 根据字段定义生成运算符，并返回一个独立的 `applyFilters`。它只负责把行滤出来，不经过表格自己的列过滤。时间、相对日期、实体和自定义值默认全部保留，调用方要自己解释。嵌套条件默认每一条都要满足；运算符名字里带 any，或者就是 or，则满足任意一条即可。\n\n失焦时标签可以收成一行。`unfocused-inline` 在原处展开，`unfocused-layer` 浮在字段上，不把下面的内容往下推。结果数量是数字时会按单复数读出来，是字符串时原样显示。数量变化会礼貌地播报，第一次出现不播。\n\n禁用原因和禁用一起用时，输入框仍然可以聚焦，悬停或键盘聚焦能看到原因。不要再在外面套一层提示，原生禁用会把悬停吃掉。\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -37304,6 +37565,30 @@
                 "type": "`PowerSearchComponents`",
                 "default": "-",
                 "description": "Replace the token or the editor for one value type."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "-",
+                "description": "Added to the field shell, the layer that holds the label and the status message. It does not land on the bordered box or the native input."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "-",
+                "description": "Inline style for the field shell. Same landing as `containerClass`."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "-",
+                "description": "Added to the bordered box. A `class` on the component lands there too, not on the native input."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "-",
+                "description": "Inline style for the bordered box. A `style` on the component lands there too."
               }
             ]
           }
@@ -37449,6 +37734,30 @@
                 "type": "`PowerSearchComponents`",
                 "default": "-",
                 "description": "按值的类型替换标签或编辑器。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string`",
+                "default": "-",
+                "description": "加到字段外壳，也就是标签和状态说明那一层。不会进到画边框的外框，也不会进到原生 input。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "-",
+                "description": "字段外壳的行内样式。落点和 `containerClass` 相同。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string`",
+                "default": "-",
+                "description": "加到画边框的外框。写在组件上的 `class` 也落在这里，不会进到原生 input。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "-",
+                "description": "外框的行内样式。写在组件上的 `style` 也落在这里。"
               }
             ]
           }
@@ -56776,8 +57085,8 @@
         "zh": "`CommandPalette`（命令面板）是一个可以通过键盘全局唤起、支持即时搜索的指令弹窗，类似于 VS Code 或 Mac 上的 Spotlight 搜索。它把居中弹窗、输入搜索框、指令分组、键盘上下选行、以及搜不到时的空状态都封装在了一起。只要传入数据源 `SearchSource`，输入框为空时它会展示推荐列表（`bootstrap`），用户打字时则会即时进行关键词搜索（`search`）。"
       },
       "usage": {
-        "en": "`CommandPalette` is a searchable command list. It owns the dialog, the search field, grouping, the empty state, and keyboard movement. The commands themselves come from a `SearchSource`. An empty query calls `bootstrap`; a typed query calls `search`.\n\n`isInline` draws the palette in the page instead of a modal. Production palettes leave it off. Opening from a shortcut is the page's job: `useHotkeys` already handles `mod+k`.\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource, useHotkeys } from '@astryx-vue/core'\nimport { CommandPalette } from '@astryx-vue/core/CommandPalette'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst source = createStaticSource([\n  { id: 'home', label: 'Home' },\n  { id: 'settings', label: 'Settings' },\n])\n\nfunction openPalette() {\n  isOpen.value = true\n}\n\nuseHotkeys([{ keys: 'mod+k', onPress: openPalette }])\n</script>\n\n<template>\n  <CommandPalette\n    :is-open=\"isOpen\"\n    :search-source=\"source\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n`v-model:value` turns the palette into a picker: the matching row stays selected, and choosing a row writes that id. `auxiliaryData.group` splits the list into groups in first-seen order. The `item` slot replaces the row label; `footer` replaces the hint row.\n\nArrow keys, Home, End, Page Up, and Page Down move the highlight and do not wrap. Enter selects the highlighted row. Escape closes the palette and drops an in-flight search. The highlight stays empty until the pointer or the keyboard moves it.",
-        "zh": "`CommandPalette`（命令面板）是一个可以通过键盘全局唤起、支持即时搜索的指令弹窗，类似于 VS Code 或 Mac 上的 Spotlight 搜索。它把居中弹窗、输入搜索框、指令分组、键盘上下选行、以及搜不到时的空状态都封装在了一起。只要传入数据源 `SearchSource`，输入框为空时它会展示推荐列表（`bootstrap`），用户打字时则会即时进行关键词搜索（`search`）。\n\n**什么时候用：**\n- 需要为高级用户提供全局快捷键（如 `Cmd + K` 或 `Ctrl + K`），让他们能够秒级搜索页面、执行快捷操作或跳转路由时。\n\n**什么时候不要用：**\n- 普通表单里的局部下拉选择，请使用 [Selector](/components/selector) 或下拉菜单。\n- 站内文章的全文搜索结果页，更适合使用带翻页的专属搜索大页面。\n\n通过快捷键打开面板非常简单，配合 `useHotkeys` 监听快捷键，控制 `isOpen` 开关即可：\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource, useHotkeys } from '@astryx-vue/core'\nimport { CommandPalette } from '@astryx-vue/core/CommandPalette'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst source = createStaticSource([\n  { id: 'home', label: 'Home' },\n  { id: 'settings', label: 'Settings' },\n])\n\nfunction openPalette() {\n  isOpen.value = true\n}\n\nuseHotkeys([{ keys: 'mod+k', onPress: openPalette }])\n</script>\n\n<template>\n  <CommandPalette\n    :is-open=\"isOpen\"\n    :search-source=\"source\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n其他好用的配置包括：\n\n- `v-model:value`：可以把命令面板变成单选选择器，当前选中的项会保留打勾标记。\n- 在数据项里配置 `auxiliaryData.group`，组件就会自动将菜单整理成带标题的分类区域。\n- 键盘体验非常流畅：按上下方向键、Home、End、Page Up、Page Down 可以在选项间快速移动；按 Enter 键执行当前高亮行；按 Escape 键关闭面板并自动清空尚未返回的异步搜索请求。\n- 只有在做组件文档演示或特殊内嵌时才开启 `isInline`（将面板平铺在页面里），正常的实际业务项目中请保持默认的模态弹窗形式。"
+        "en": "`CommandPalette` is a searchable command list. It owns the dialog, the search field, grouping, the empty state, and keyboard movement. The commands themselves come from a `SearchSource`. An empty query calls `bootstrap`; a typed query calls `search`.\n\n`isInline` draws the palette in the page instead of a modal. Production palettes leave it off. Opening from a shortcut is the page's job: `useHotkeys` already handles `mod+k`.\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource, useHotkeys } from '@astryx-vue/core'\nimport { CommandPalette } from '@astryx-vue/core/CommandPalette'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst source = createStaticSource([\n  { id: 'home', label: 'Home' },\n  { id: 'settings', label: 'Settings' },\n])\n\nfunction openPalette() {\n  isOpen.value = true\n}\n\nuseHotkeys([{ keys: 'mod+k', onPress: openPalette }])\n</script>\n\n<template>\n  <CommandPalette\n    :is-open=\"isOpen\"\n    :search-source=\"source\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n`v-model:value` turns the palette into a picker: the matching row stays selected, and choosing a row writes that id. `auxiliaryData.group` splits the list into groups in first-seen order. The `item` slot replaces the row label; `footer` replaces the hint row.\n\nArrow keys move the highlight and do not wrap. Home and End stay in the input and leave the highlight where it is. Page Up jumps to the first enabled row, and Page Down jumps to the last. Enter selects the highlighted row. Escape closes the palette and drops an in-flight search. Moving the pointer highlights a row without scrolling the list. The highlight stays empty until the pointer or the keyboard moves it.",
+        "zh": "`CommandPalette`（命令面板）是一个可以通过键盘全局唤起、支持即时搜索的指令弹窗，类似于 VS Code 或 Mac 上的 Spotlight 搜索。它把居中弹窗、输入搜索框、指令分组、键盘上下选行、以及搜不到时的空状态都封装在了一起。只要传入数据源 `SearchSource`，输入框为空时它会展示推荐列表（`bootstrap`），用户打字时则会即时进行关键词搜索（`search`）。\n\n**什么时候用：**\n- 需要为高级用户提供全局快捷键（如 `Cmd + K` 或 `Ctrl + K`），让他们能够秒级搜索页面、执行快捷操作或跳转路由时。\n\n**什么时候不要用：**\n- 普通表单里的局部下拉选择，请使用 [Selector](/components/selector) 或下拉菜单。\n- 站内文章的全文搜索结果页，更适合使用带翻页的专属搜索大页面。\n\n通过快捷键打开面板非常简单，配合 `useHotkeys` 监听快捷键，控制 `isOpen` 开关即可：\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource, useHotkeys } from '@astryx-vue/core'\nimport { CommandPalette } from '@astryx-vue/core/CommandPalette'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nconst source = createStaticSource([\n  { id: 'home', label: 'Home' },\n  { id: 'settings', label: 'Settings' },\n])\n\nfunction openPalette() {\n  isOpen.value = true\n}\n\nuseHotkeys([{ keys: 'mod+k', onPress: openPalette }])\n</script>\n\n<template>\n  <CommandPalette\n    :is-open=\"isOpen\"\n    :search-source=\"source\"\n    @open-change=\"isOpen = $event\"\n  />\n</template>\n```\n\n其他好用的配置包括：\n\n- `v-model:value`：可以把命令面板变成单选选择器，当前选中的项会保留打勾标记。\n- 在数据项里配置 `auxiliaryData.group`，组件就会自动将菜单整理成带标题的分类区域。\n- 上下方向键在选项间移动高亮，到头就停住。Home 和 End 留在输入框里，不改高亮。Page Up 跳到第一项可用项，Page Down 跳到最后一项可用项。Enter 执行当前高亮行。Escape 关掉面板，并丢掉还没回来的异步搜索。鼠标划过只会移动高亮，不会把列表滚走。\n- 只有在做组件文档演示或特殊内嵌时才开启 `isInline`（将面板平铺在页面里），正常的实际业务项目中请保持默认的模态弹窗形式。"
       },
       "practices": {
         "en": [],

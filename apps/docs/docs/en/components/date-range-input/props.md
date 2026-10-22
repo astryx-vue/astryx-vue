@@ -19,7 +19,12 @@ footer: false
 <tr><td><code>minRangeSpan</code></td><td><code>number</code></td><td><code>1</code></td><td>Shortest span in days, including both ends.</td></tr>
 <tr><td><code>maxRangeSpan</code></td><td><code>number</code></td><td>—</td><td>Longest span in days, including both ends.</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>Sunday, Monday for zh-CN</td><td>First column of the calendar.</td></tr>
-<tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows a clear button.</td></tr>
+<tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows a clear button. Keyboard activation returns focus to the trigger without scrolling the page.</td></tr>
+<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it. Playground templates use <code>is-label-hidden</code>.</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the bordered control box. A class written on the component lands here too, not on the trigger button.</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the bordered control box.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select date range</code></td><td>Empty-state text. Follows the locale.</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>

@@ -12,8 +12,17 @@ export interface EditorPlacementInput {
   control: EditorBox
   viewportWidth: number
   direction: 'ltr' | 'rtl'
-  /** 视口左右各留出的安全距离。 */
+  /**
+   * 视口左右共用的留白。没单独给左右边时用它。
+   * 默认跟浮层基础留白一样，是 16。
+   */
   viewportInset?: number
+  /** 视口左侧留白。没传时用 `viewportInset`。 */
+  inlineStart?: number
+  /** 视口右侧留白。没传时用 `viewportInset`。 */
+  inlineEnd?: number
+  /** 视口上下留白。没传时用 `viewportInset`。 */
+  blockInset?: number
 }
 
 export interface EditorPlacement {
@@ -30,8 +39,11 @@ export interface EditorPlacement {
  * 视口放不下 400 时，下限让给视口。只有被 720 压窄时，才改贴打开控件更近的外缘。
  */
 export function resolveEditorPlacement(input: EditorPlacementInput & { anchorTop: number, anchorBottom: number, viewportHeight: number }): EditorPlacement {
-  const inset = input.viewportInset ?? 8
-  const available = Math.max(0, input.viewportWidth - inset * 2)
+  const fallback = input.viewportInset ?? 16
+  const inlineStart = input.inlineStart ?? fallback
+  const inlineEnd = input.inlineEnd ?? fallback
+  const blockInset = input.blockInset ?? fallback
+  const available = Math.max(0, input.viewportWidth - inlineStart - inlineEnd)
   const floor = Math.min(EDITOR_MIN_WIDTH, available)
   const ceiling = Math.min(EDITOR_MAX_WIDTH, available)
   let width = input.outer.width
@@ -57,16 +69,16 @@ export function resolveEditorPlacement(input: EditorPlacementInput & { anchorTop
   }
 
   let left = edge === 'left' ? input.outer.left : input.outer.right - width
-  const maxLeft = input.viewportWidth - inset - width
-  if (left < inset)
-    left = inset
+  const maxLeft = input.viewportWidth - inlineEnd - width
+  if (left < inlineStart)
+    left = inlineStart
   if (left > maxLeft)
-    left = Math.max(inset, maxLeft)
+    left = Math.max(inlineStart, maxLeft)
 
   const gap = 4
   const estimatedHeight = 280
   let top = input.anchorBottom + gap
-  if (top + estimatedHeight > input.viewportHeight - inset && input.anchorTop - gap - estimatedHeight > inset)
+  if (top + estimatedHeight > input.viewportHeight - blockInset && input.anchorTop - gap - estimatedHeight > blockInset)
     top = input.anchorTop - gap - estimatedHeight
 
   return { width, capped, edge, top, left }

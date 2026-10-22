@@ -34,6 +34,10 @@ footer: false
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>Match count. A number is formatted with the result plural. A string is shown as given.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>Size of the input and the tokens.</td></tr>
       <tr><td><code>components</code></td><td><code>PowerSearchComponents</code></td><td>-</td><td>Replace the token or the editor for one value type.</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string</code></td><td>-</td><td>Added to the field shell, the layer that holds the label and the status message. It does not land on the bordered box or the native input.</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>Inline style for the field shell. Same landing as <code>containerClass</code>.</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string</code></td><td>-</td><td>Added to the bordered box. A <code>class</code> on the component lands there too, not on the native input.</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>Inline style for the bordered box. A <code>style</code> on the component lands there too.</td></tr>
     </tbody>
   </table>
 </div>
