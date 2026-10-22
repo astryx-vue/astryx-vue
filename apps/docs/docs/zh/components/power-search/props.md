@@ -34,6 +34,10 @@ footer: false
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>匹配数量。数字会按结果的单复数格式化。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>输入框和标签的尺寸。</td></tr>
       <tr><td><code>components</code></td><td><code>PowerSearchComponents</code></td><td>-</td><td>按值的类型替换标签或编辑器。</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string</code></td><td>-</td><td>加到字段外壳，也就是标签和状态说明那一层。不会进到画边框的外框，也不会进到原生 input。</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>字段外壳的行内样式。落点和 <code>containerClass</code> 相同。</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string</code></td><td>-</td><td>加到画边框的外框。写在组件上的 <code>class</code> 也落在这里，不会进到原生 input。</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>外框的行内样式。写在组件上的 <code>style</code> 也落在这里。</td></tr>
     </tbody>
   </table>
 </div>
