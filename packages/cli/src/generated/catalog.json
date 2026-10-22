@@ -52948,8 +52948,8 @@
         "zh": "`Outline` 是目录。每一项是 `{ id, label, level }`。`id` 对应页面上标题元素的 id。`level` 从 1 到 6。1 和 2 共用第一档缩进，3、4、以及 5–6 再逐档往里收。"
       },
       "usage": {
-        "en": "`Outline` is a table of contents. Each item is `{ id, label, level }`. `id` matches a heading element on the page. `level` is 1 through 6. Levels 1 and 2 share the first indent. Level 3, 4, and 5–6 step inward after that.\n\nLeave `activeId` unset and the outline follows scroll. It uses `scrollContainer` when you pass one, otherwise the nearest scrollable ancestor, otherwise the viewport. The active item is the last heading whose top has passed the resting line. At the bottom of the scroll, the last item is active. `offset` shifts that line and the scroll landing by the same amount, on top of each heading’s own `scroll-margin-top`.\n\nPass `activeId` and scroll-spy stays off. `v-model:active-id` keeps the highlight in your own state. `navigateStart` fires when a click starts a scroll. `navigateEnd` fires once for that navigation, when the scroll settles, when the reader interrupts it, or after 1.2 seconds.\n\n`hasScrollOnClick` is on by default. A click with a modifier key, or a click whose target id is missing, does not take over the browser’s own behavior. Activating an item writes the hash with `history.pushState`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Outline } from '@astryx-vue/core/Outline'\n\nconst items = [\n  { id: 'overview', label: 'Overview', level: 2 },\n  { id: 'theming', label: 'Theming', level: 2 },\n  { id: 'tokens', label: 'Tokens', level: 3 },\n]\n</script>\n\n<template>\n  <Outline :items=\"items\" />\n</template>\n```",
-        "zh": "`Outline` 是目录。每一项是 `{ id, label, level }`。`id` 对应页面上标题元素的 id。`level` 从 1 到 6。1 和 2 共用第一档缩进，3、4、以及 5–6 再逐档往里收。\n\n不传 `activeId` 时，大纲跟着滚动走。传了 `scrollContainer` 就盯这个容器，否则找最近的可滚动祖先，再没有就用视口。当前项是顶部已经越过停留线的最后一个标题。滚到底时，最后一项为当前项。`offset` 把停留线和滚动落点一起下移，标题自己的 `scroll-margin-top` 仍然算在里面。\n\n传入 `activeId` 后，滚动侦测关闭。`v-model:active-id` 把高亮留在你自己的状态里。点击开始滚动时发出 `navigateStart`。同一次导航结束时发出一次 `navigateEnd`：滚动停稳、读者中途打断，或超过 1.2 秒，都会结束。\n\n`hasScrollOnClick` 默认打开。带修饰键的点击，或目标 id 在页面上不存在时，不接管浏览器自己的行为。激活一项会用 `history.pushState` 写入 hash。\n\n```vue\n<script setup lang=\"ts\">\nimport { Outline } from '@astryx-vue/core/Outline'\n\nconst items = [\n  { id: 'overview', label: 'Overview', level: 2 },\n  { id: 'theming', label: 'Theming', level: 2 },\n  { id: 'tokens', label: 'Tokens', level: 3 },\n]\n</script>\n\n<template>\n  <Outline :items=\"items\" />\n</template>\n```"
+        "en": "`Outline` is a table of contents. Each item is `{ id, label, level }`. `id` matches a heading element on the page. `level` is 1 through 6. Levels 1 and 2 share the first indent. Level 3, 4, and 5–6 step inward after that.\n\nLeave `activeId` unset and the outline follows scroll. It uses `scrollContainer` when you pass one, otherwise the nearest scrollable ancestor, otherwise the viewport. The active item is the last heading whose top has passed the resting line. At the bottom of the scroll, the last item is active. `offset` shifts that line and the scroll landing by the same amount, on top of each heading’s own `scroll-margin-top`.\n\nPass `activeId` and scroll-spy stays off. `v-model:active-id` keeps the highlight in your own state. `navigateStart` fires when a click starts a scroll. `navigateEnd` fires once for that navigation, when the scroll settles, when the reader interrupts it, or after 1.2 seconds.\n\n`hasScrollOnClick` is on by default. A click with a modifier key, or a click whose target id is missing, does not take over the browser’s own behavior. Activating an item writes the hash with `history.pushState`.\n\n`parseOutlineFromMarkdown` builds the outline from Markdown. The ids match the anchors `Markdown` renders on its headings. A hash inside a fence is not a heading. A heading inside a quote or a list consumes a duplicate id and stays out of the outline. `useOutlineFromMarkdown` recomputes when the source changes. `useOutlineFromDOM` reads h1–h6 that already have an id inside a container.\n\n```vue\n<script setup lang=\"ts\">\nimport { Outline } from '@astryx-vue/core/Outline'\n\nconst items = [\n  { id: 'overview', label: 'Overview', level: 2 },\n  { id: 'theming', label: 'Theming', level: 2 },\n  { id: 'tokens', label: 'Tokens', level: 3 },\n]\n</script>\n\n<template>\n  <Outline :items=\"items\" />\n</template>\n```",
+        "zh": "`Outline` 是目录。每一项是 `{ id, label, level }`。`id` 对应页面上标题元素的 id。`level` 从 1 到 6。1 和 2 共用第一档缩进，3、4、以及 5–6 再逐档往里收。\n\n不传 `activeId` 时，大纲跟着滚动走。传了 `scrollContainer` 就盯这个容器，否则找最近的可滚动祖先，再没有就用视口。当前项是顶部已经越过停留线的最后一个标题。滚到底时，最后一项为当前项。`offset` 把停留线和滚动落点一起下移，标题自己的 `scroll-margin-top` 仍然算在里面。\n\n传入 `activeId` 后，滚动侦测关闭。`v-model:active-id` 把高亮留在你自己的状态里。点击开始滚动时发出 `navigateStart`。同一次导航结束时发出一次 `navigateEnd`：滚动停稳、读者中途打断，或超过 1.2 秒，都会结束。\n\n`hasScrollOnClick` 默认打开。带修饰键的点击，或目标 id 在页面上不存在时，不接管浏览器自己的行为。激活一项会用 `history.pushState` 写入 hash。\n\n`parseOutlineFromMarkdown` 从 Markdown 抽出目录，id 和 `Markdown` 写到标题上的锚点是同一套。围栏代码里的井号不算标题。引用或列表里的标题会占掉重复 id，但不出现在目录里。`useOutlineFromMarkdown` 在正文变化时重算。`useOutlineFromDOM` 读取容器里带 id 的 h1 到 h6。\n\n```vue\n<script setup lang=\"ts\">\nimport { Outline } from '@astryx-vue/core/Outline'\n\nconst items = [\n  { id: 'overview', label: 'Overview', level: 2 },\n  { id: 'theming', label: 'Theming', level: 2 },\n  { id: 'tokens', label: 'Tokens', level: 3 },\n]\n</script>\n\n<template>\n  <Outline :items=\"items\" />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -59694,8 +59694,8 @@
         "zh": "`MetadataList` 排列一组标签和值。`MetadataListItem` 是其中一对。单列时标签在值旁边。多列或数字列数时，标签叠在值上面，轨道按列数重复。`columns=\"multi\"` 使用 `repeat(auto-fill, minmax(280px, 1fr))`。"
       },
       "usage": {
-        "en": "`MetadataList` lays out label and value pairs. `MetadataListItem` is one pair. A single column places the label beside the value. Several columns, or a numeric column count, stack the label above the value and repeat the track. `columns=\"multi\"` uses `repeat(auto-fill, minmax(280px, 1fr))`.\n\n`orientation=\"horizontal\"` wraps the pairs in one row and ignores `columns`, `label`, and `maxNumOfItems`. `maxNumOfItems` hides the rest behind a show more control. `label.width` only applies when the label sits beside the value.\n\n```vue\n<script setup lang=\"ts\">\nimport { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'\n</script>\n\n<template>\n  <MetadataList>\n    <MetadataListItem label=\"Name\">\n      MetadataList\n    </MetadataListItem>\n    <MetadataListItem label=\"Status\">\n      Active\n    </MetadataListItem>\n  </MetadataList>\n</template>\n```",
-        "zh": "`MetadataList` 排列一组标签和值。`MetadataListItem` 是其中一对。单列时标签在值旁边。多列或数字列数时，标签叠在值上面，轨道按列数重复。`columns=\"multi\"` 使用 `repeat(auto-fill, minmax(280px, 1fr))`。\n\n`orientation=\"horizontal\"` 把每一对排成可换行的一行，并忽略 `columns`、`label` 和 `maxNumOfItems`。`maxNumOfItems` 把多出来的项收进「显示更多」。`label.width` 只在标签位于值旁边时生效。\n\n```vue\n<script setup lang=\"ts\">\nimport { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'\n</script>\n\n<template>\n  <MetadataList>\n    <MetadataListItem label=\"名称\">\n      MetadataList\n    </MetadataListItem>\n    <MetadataListItem label=\"状态\">\n      使用中\n    </MetadataListItem>\n  </MetadataList>\n</template>\n```"
+        "en": "`MetadataList` lays out label and value pairs. `MetadataListItem` is one pair. A single column places the label beside the value. Several columns, or a numeric column count, stack the label above the value and repeat the track. `columns=\"multi\"` uses `repeat(auto-fill, minmax(280px, 1fr))`.\n\n`orientation=\"horizontal\"` wraps the pairs in one row and ignores `columns`, `label`, and `maxNumOfItems`. `maxNumOfItems` hides the rest behind a show more control. `label.width` only applies when the label sits beside the value. A long label or value can break inside a word so a narrow container is not pushed wider. Extra attributes on `MetadataListItem` land on the `dt` when the label sits beside the value, and on the wrapper around the pair when the label is stacked above it.\n\n```vue\n<script setup lang=\"ts\">\nimport { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'\n</script>\n\n<template>\n  <MetadataList>\n    <MetadataListItem label=\"Name\">\n      MetadataList\n    </MetadataListItem>\n    <MetadataListItem label=\"Status\">\n      Active\n    </MetadataListItem>\n  </MetadataList>\n</template>\n```",
+        "zh": "`MetadataList` 排列一组标签和值。`MetadataListItem` 是其中一对。单列时标签在值旁边。多列或数字列数时，标签叠在值上面，轨道按列数重复。`columns=\"multi\"` 使用 `repeat(auto-fill, minmax(280px, 1fr))`。\n\n`orientation=\"horizontal\"` 把每一对排成可换行的一行，并忽略 `columns`、`label` 和 `maxNumOfItems`。`maxNumOfItems` 把多出来的项收进「显示更多」。`label.width` 只在标签位于值旁边时生效。长标签和长值会在单词内部断开，避免把窄容器撑开。写在 `MetadataListItem` 上的其余属性，并排时落在 `dt` 上，标签叠在值上面时落在包住这一对的那一层上。\n\n```vue\n<script setup lang=\"ts\">\nimport { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'\n</script>\n\n<template>\n  <MetadataList>\n    <MetadataListItem label=\"名称\">\n      MetadataList\n    </MetadataListItem>\n    <MetadataListItem label=\"状态\">\n      使用中\n    </MetadataListItem>\n  </MetadataList>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -60267,6 +60267,10 @@
               {
                 "name": "`select`",
                 "description": "Fired when an item is chosen, with the item and the click event."
+              },
+              {
+                "name": "`overflowChange`",
+                "description": "Fired when the collapsed set changes. The payload is `{ item, index }[]`, where `index` is the item's original place in `items`. A list that fits from the start never fires. When everything fits again, it fires once with an empty array."
               }
             ]
           }
@@ -60278,6 +60282,10 @@
               {
                 "name": "`select`",
                 "description": "选中一项时触发，参数是该项和点击事件。"
+              },
+              {
+                "name": "`overflowChange`",
+                "description": "被收起的那一组变了才触发，参数是 `{ item, index }[]`。`index` 是该项在 `items` 里的下标。一开始就放得下时不触发。重新放得下时再触发一次空数组。"
               }
             ]
           }
@@ -62342,6 +62350,16 @@
                 "name": "`isExpanded`",
                 "description": "`isExpanded`",
                 "type": "`boolean`"
+              },
+              {
+                "name": "`className`",
+                "description": "`className`",
+                "type": "`string`"
+              },
+              {
+                "name": "`style`",
+                "description": "`style`",
+                "type": "`CSSProperties`"
               }
             ]
           }
@@ -62444,6 +62462,16 @@
                 "name": "`isExpanded`",
                 "description": "`isExpanded`",
                 "type": "`boolean`"
+              },
+              {
+                "name": "`className`",
+                "description": "`className`",
+                "type": "`string`"
+              },
+              {
+                "name": "`style`",
+                "description": "`style`",
+                "type": "`CSSProperties`"
               }
             ]
           }
@@ -62461,7 +62489,7 @@
         "en": [
           {
             "heading": "TreeListItemData",
-            "text": "The <code>start</code> and <code>end</code> slots receive <code>{ item }</code> and replace <code>icon</code> and <code>endIcon</code>."
+            "text": "The <code>start</code> and <code>end</code> slots receive <code>{ item }</code> and replace <code>icon</code> and <code>endIcon</code>.\n\nA row's accessible name is its label. The description is exposed with <code>aria-describedby</code>, so the chevron and icons stay out of the name. Typeahead matches the label only. A visible <code>header</code> names the tree and wins over a passed <code>aria-label</code>. A keydown listener on the root that calls <code>preventDefault</code> keeps arrow keys from moving focus inside the tree."
           },
           {
             "heading": "Theming",
@@ -62475,7 +62503,7 @@
           },
           {
             "heading": "TreeListItemData",
-            "text": "<code>start</code> 和 <code>end</code> 插槽收到 <code>{ item }</code>，用来替换 <code>icon</code> 和 <code>endIcon</code>。"
+            "text": "<code>start</code> 和 <code>end</code> 插槽收到 <code>{ item }</code>，用来替换 <code>icon</code> 和 <code>endIcon</code>。\n\n读屏时一行的名字只有标题。说明通过 <code>aria-describedby</code> 单独读出，展开按钮和图标不进名字。敲字符跳转也只匹配标题。有可见 <code>header</code> 时，树的名字用这个标题，不用外面传来的 <code>aria-label</code>。在根上监听按键并 <code>preventDefault</code> 之后，方向键不再移动树里的焦点。"
           },
           {
             "heading": "主题",
