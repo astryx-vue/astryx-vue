@@ -13,6 +13,8 @@ import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 import rangeDemo from './range.vue'
 import rangeSource from './range.vue?raw&highlighted'
+import sheetDemo from './sheet.vue'
+import sheetSource from './sheet.vue?raw&highlighted'
 import validationDemo from './validation.vue'
 import validationSource from './validation.vue?raw&highlighted'
 
@@ -22,6 +24,7 @@ export const dateInputRange = defineDemo(rangeDemo, rangeSource, options)
 export const dateInputFormats = defineDemo(formatsDemo, formatsSource, options)
 export const dateInputField = defineDemo(fieldDemo, fieldSource, options)
 export const dateInputNative = defineDemo(nativeDemo, nativeSource, options)
+export const dateInputSheet = defineDemo(sheetDemo, sheetSource, options)
 export const dateInputDescription = defineDemo(descriptionDemo, descriptionSource, options)
 export const dateInputValidation = defineDemo(validationDemo, validationSource, options)
 

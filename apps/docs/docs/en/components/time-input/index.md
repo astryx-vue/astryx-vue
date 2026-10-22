@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { timeInputConstrained, timeInputFormats, timeInputIncrement, timeInputStates } from '../../../../components/demos/time-input'
+import { timeInputConstrained, timeInputFormats, timeInputIncrement, timeInputStates, timeInputSheet } from '../../../../components/demos/time-input'
 </script>
 
 ## Usage
@@ -27,7 +27,7 @@ const time = shallowRef<string | null>('14:30')
 </template>
 ```
 
-The default hour format is 12-hour. Arrow keys step by `increment` minutes. On a fine pointer the field is typed text. On a coarse pointer, `adaptive-native` and `adaptive-bottom-sheet` use the platform time input, unless the field needs seconds or a step other than one minute. Placeholder and clear text follow the locale.
+The default hour format is 12-hour. Arrow keys step by `increment` minutes. A fine pointer gets a typed field. `adaptive-native` uses the platform time control on a coarse pointer. `adaptive-bottom-sheet` uses hour and minute wheels on a coarse pointer. `bottom-sheet` uses those wheels on every pointer. Seconds, a step other than one minute, or a preset interval send the platform control back to typed text; the wheels still show seconds. Placeholder and clear text follow the locale.
 
 
 <ComponentAnatomy />
@@ -46,3 +46,4 @@ The default hour format is 12-hour. Arrow keys step by `increment` minutes. On a
 <DemoExample :demo="timeInputFormats" description="24-hour time, and a value that keeps seconds." locale="en" title="Formats" />
 <DemoExample :demo="timeInputIncrement" description="Arrow keys move the value by 15 minutes." locale="en" title="Increment" />
 <DemoExample :demo="timeInputStates" description="Disabled, error, warning, and success." locale="en" title="States" />
+<DemoExample :demo="timeInputSheet" description="Hour and minute wheels, on both a mouse and a coarse pointer." locale="en" title="Bottom sheet" />

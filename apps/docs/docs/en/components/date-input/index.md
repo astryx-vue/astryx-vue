@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation, dateInputField, dateInputNative } from '../../../../components/demos/date-input'
+import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation, dateInputField, dateInputNative, dateInputSheet } from '../../../../components/demos/date-input'
 </script>
 
 ## Usage
@@ -31,7 +31,7 @@ const date = ref(null)
 
 The value is a local date. The field writes it back as a long date, such as March 21, 2026. It can also show a short date, a weekday, the system date, or custom text. A description can sit under the label, and validation can change the border or add a message under the field.
 
-The calendar can open in a popover or a bottom sheet. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.
+The calendar can open in a popover or a bottom sheet. The sheet shows one month. Picking a day writes it immediately, and Save closes the sheet. The month title opens month and year wheels. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.
 
 
 <ComponentAnatomy />
@@ -94,4 +94,11 @@ The calendar can open in a popover or a bottom sheet. The system date control ca
   description="The browser date control, with the committed day still shown as a long date."
   locale="en"
   title="System date"
+/>
+
+<DemoExample
+  :demo="dateInputSheet"
+  description="A bottom sheet on both mouse and touch. Picking a day writes it, and Save closes the sheet."
+  locale="en"
+  title="Bottom sheet"
 />

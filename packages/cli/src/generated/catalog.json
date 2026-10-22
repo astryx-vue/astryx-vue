@@ -23270,8 +23270,8 @@
         "zh": "`DateInput` 是一个日期输入组件，结合了文本输入框和日历弹出层。用户可以手动输入日期文本，也可以点击打开日历选择。"
       },
       "usage": {
-        "en": "`DateInput` is a text field with a calendar button. People can type a date or open the calendar and pick a day.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" />\n</template>\n```\n\nThe value is a local date. The field writes it back as a long date, such as March 21, 2026. It can also show a short date, a weekday, the system date, or custom text. A description can sit under the label, and validation can change the border or add a message under the field.\n\nThe calendar can open in a popover or a bottom sheet. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.",
-        "zh": "`DateInput` 是一个日期输入组件，结合了文本输入框和日历弹出层。用户可以手动输入日期文本，也可以点击打开日历选择。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" placeholder=\"选择日期\" />\n</template>\n```\n\n绑定值是本地日期。写回字段时默认排成完整日期，例如 March 21, 2026。也可以改成短日期、带星期、系统日期，或自己排版。标签下面可以放说明。校验可以只改边框，也可以在字段下面写出原因。\n\n日历可以从弹出层或底部面板打开。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。"
+        "en": "`DateInput` is a text field with a calendar button. People can type a date or open the calendar and pick a day.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" />\n</template>\n```\n\nThe value is a local date. The field writes it back as a long date, such as March 21, 2026. It can also show a short date, a weekday, the system date, or custom text. A description can sit under the label, and validation can change the border or add a message under the field.\n\nThe calendar can open in a popover or a bottom sheet. The sheet shows one month. Picking a day writes it immediately, and Save closes the sheet. The month title opens month and year wheels. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.",
+        "zh": "`DateInput` 是一个日期输入组件，结合了文本输入框和日历弹出层。用户可以手动输入日期文本，也可以点击打开日历选择。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nconst date = ref(null)\n</script>\n\n<template>\n  <DateInput v-model=\"date\" placeholder=\"选择日期\" />\n</template>\n```\n\n绑定值是本地日期。写回字段时默认排成完整日期，例如 March 21, 2026。也可以改成短日期、带星期、系统日期，或自己排版。标签下面可以放说明。校验可以只改边框，也可以在字段下面写出原因。\n\n日历可以从弹出层或底部面板打开。底部面板一次显示一个月，点一天就写入，保存才收起；点月份标题可以改月份和年份。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。"
       },
       "practices": {
         "en": [
@@ -23374,7 +23374,7 @@
                 "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Keeps the label for screen readers and hides it visually."
+                "description": "Keeps the label for screen readers and hides it visually. `labelHidden` is the older name; either one hides it."
               },
               {
                 "name": "`isOptional`",
@@ -23410,7 +23410,7 @@
                 "name": "`nativePicker`",
                 "type": "`'touch' | 'always' | 'never'`",
                 "default": "—",
-                "description": "Older surface name. touch follows the pointer, always uses the system control, never keeps the calendar."
+                "description": "Older surface name. touch follows the pointer, always uses the system control, and never switches between the popover and the bottom sheet by pointer. presentation wins when both are set."
               },
               {
                 "name": "`numberOfMonths`",
@@ -23483,6 +23483,30 @@
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
                 "description": "Where the status message sits."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too, not on the inner input."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               }
             ]
           }
@@ -23549,7 +23573,7 @@
                 "name": "`isLabelHidden`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "标签只留给读屏，页面上不显示。"
+                "description": "标签只留给读屏，页面上不显示。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
               },
               {
                 "name": "`isOptional`",
@@ -23585,7 +23609,7 @@
                 "name": "`nativePicker`",
                 "type": "`'touch' | 'always' | 'never'`",
                 "default": "—",
-                "description": "旧的打开方式。touch 跟随指针，always 用系统控件，never 用日历。"
+                "description": "旧的打开方式。touch 跟随指针，always 用系统控件，never 按指针在弹出层和底部面板之间切换。同时传了 presentation 时以 presentation 为准。"
               },
               {
                 "name": "`numberOfMonths`",
@@ -23658,6 +23682,30 @@
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
                 "description": "状态说明的位置。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到内部输入框上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               }
             ]
           }
@@ -23812,6 +23860,17 @@
             "zh": "直接使用系统日期控件，字段上仍按完整日期显示。"
           },
           "code": "<script setup lang=\"ts\">\nimport { provideAstryxLocale } from '@astryx-vue/core'\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nprovideAstryxLocale('en')\n\nconst date = ref<Date | null>(new Date(2026, 2, 21))\n</script>\n\n<template>\n  <div style=\"width: 240px; max-width: 100%\">\n    <DateInput\n      v-model=\"date\"\n      label=\"System date\"\n      description=\"This field opens the browser date control.\"\n      presentation=\"native\"\n      clearable\n    />\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Bottom sheet",
+            "zh": "底部面板"
+          },
+          "description": {
+            "en": "A bottom sheet on both mouse and touch. Picking a day writes it, and Save closes the sheet.",
+            "zh": "不论鼠标还是触屏，都从底部面板选日期。点一天就写入，保存才收起。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { provideAstryxLocale } from '@astryx-vue/core'\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { ref } from 'vue'\n\nprovideAstryxLocale('en')\n\nconst date = ref<Date | null>(new Date(2026, 2, 21))\n</script>\n\n<template>\n  <div style=\"width: 240px; max-width: 100%\">\n    <DateInput\n      v-model=\"date\"\n      label=\"Due\"\n      description=\"Opens a one-month sheet. Save closes it.\"\n      presentation=\"bottom-sheet\"\n    />\n  </div>\n</template>"
         }
       ],
       "anatomy": {
@@ -23999,7 +24058,37 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "Shows a clear button."
+                "description": "Shows a clear button. Keyboard activation returns focus to the trigger without scrolling the page."
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it. Playground templates use `is-label-hidden`."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too, not on the trigger button."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               },
               {
                 "name": "`placeholder`",
@@ -24132,7 +24221,37 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "显示清除按钮。"
+                "description": "显示清除按钮。键盘激活清除时，焦点回到触发按钮，并避免页面滚动。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。演练场里写 `is-label-hidden`。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到触发按钮上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               },
               {
                 "name": "`placeholder`",
@@ -24341,8 +24460,8 @@
         "zh": "`DateTimeInput` 把日期和时间放在一起。值是 `YYYY-MM-DDTHH:MM`。两部分都有了才会写出这个值，否则是 `null`。"
       },
       "usage": {
-        "en": "`DateTimeInput` combines a date and a time. The value is `YYYY-MM-DDTHH:MM`, or `null` until both parts are set.\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"Meeting time\" has-clear />\n</template>\n```\n\nThe date uses the date field. The time uses the same field as the time input. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. Clear removes both parts. The date half can show two months and can start the week on a chosen day. While a change is saving, neither field can be edited.",
-        "zh": "`DateTimeInput` 把日期和时间放在一起。值是 `YYYY-MM-DDTHH:MM`。两部分都有了才会写出这个值，否则是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"会议时间\" has-clear />\n</template>\n```\n\n日期用日期输入框，时间用和时间输入框相同的字段。两个字段默认左右并排，并随行宽一起变窄。行宽小于 16rem 时才换行。清除会同时清掉日期和时间。日期那一半可以一次显示两个月，并指定一周从哪一天开始。正在保存时两个字段都不能改。"
+        "en": "`DateTimeInput` combines a date and a time. The value is `YYYY-MM-DDTHH:MM`, or `null` until both parts are set.\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"Meeting time\" has-clear />\n</template>\n```\n\nThe date uses the date field. The time uses the same field as the time input. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. `bottom-sheet` puts the date and the time in one bottom sheet, with tabs to move between them. Clear removes both parts. The date half can show two months and can start the week on a chosen day. While a change is saving, neither field can be edited.",
+        "zh": "`DateTimeInput` 把日期和时间放在一起。值是 `YYYY-MM-DDTHH:MM`。两部分都有了才会写出这个值，否则是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>(null)\n</script>\n\n<template>\n  <DateTimeInput v-model=\"meeting\" label=\"会议时间\" has-clear />\n</template>\n```\n\n日期用日期输入框，时间用和时间输入框相同的字段。两个字段默认左右并排，并随行宽一起变窄。行宽小于 16rem 时才换行。`bottom-sheet` 时日期和时间共用一个底部面板，顶上在日期和时间之间切换。清除会同时清掉日期和时间。日期那一半可以一次显示两个月，并指定一周从哪一天开始。正在保存时两个字段都不能改。"
       },
       "practices": {
         "en": [
@@ -24397,9 +24516,39 @@
               },
               {
                 "name": "`presentation`",
-                "type": "`TimePresentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native' | 'text-input'`",
                 "default": "—",
-                "description": "Passed through to the time field."
+                "description": "How both halves open. bottom-sheet, and adaptive-bottom-sheet on a coarse pointer, use one bottom sheet with Date and Time tabs. text-input applies only to the time. Omitted means a popover on a fine pointer and the platform controls on a coarse pointer. An explicit value wins over nativePicker."
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               },
               {
                 "name": "`hasClear`",
@@ -24560,9 +24709,39 @@
               },
               {
                 "name": "`presentation`",
-                "type": "`TimePresentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native' | 'text-input'`",
                 "default": "—",
-                "description": "传给时间字段。"
+                "description": "日期和时间共用的打开方式。bottom-sheet，以及粗指针上的 adaptive-bottom-sheet，合成一个底部面板，在日期和时间之间切换。text-input 只作用于时间。不传时细指针弹出，粗指针用系统控件。显式值压过 nativePicker。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               },
               {
                 "name": "`hasClear`",
@@ -24717,6 +24896,17 @@
             "zh": "已填好的日期时间上的错误、警告和成功。"
           },
           "code": "<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { shallowRef } from 'vue'\n\nconst errorVal = shallowRef('2026-01-25T09:00')\nconst warningVal = shallowRef('2026-12-25T14:00')\nconst successVal = shallowRef('2026-03-10T10:30')\n</script>\n\n<template>\n  <div class=\"date-time-demo\">\n    <VStack :gap=\"4\">\n      <DateTimeInput v-model=\"errorVal\" label=\"Meeting time\" :status=\"{ type: 'error', message: 'This time slot is already booked' }\" />\n      <DateTimeInput v-model=\"warningVal\" label=\"Preferred time\" :status=\"{ type: 'warning', message: 'This falls outside business hours' }\" />\n      <DateTimeInput v-model=\"successVal\" label=\"Start time\" :status=\"{ type: 'success', message: 'Time confirmed' }\" />\n    </VStack>\n  </div>\n</template>\n\n<style scoped>\n.date-time-demo {\n  width: 400px;\n  max-width: 100%;\n}\n</style>"
+        },
+        {
+          "title": {
+            "en": "Bottom sheet",
+            "zh": "底部面板"
+          },
+          "description": {
+            "en": "One bottom sheet switches between the date and the time.",
+            "zh": "一个底部面板里切换日期和时间。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { DateTimeInput } from '@astryx-vue/core/DateTimeInput'\nimport { shallowRef } from 'vue'\n\nconst meeting = shallowRef<string | null>('2026-03-21T14:30')\n</script>\n\n<template>\n  <div style=\"width: 320px; max-width: 100%\">\n    <DateTimeInput\n      v-model=\"meeting\"\n      label=\"Meeting\"\n      presentation=\"bottom-sheet\"\n      has-clear\n    />\n  </div>\n</template>"
         }
       ],
       "anatomy": {
@@ -33600,8 +33790,8 @@
         "zh": "`TimeInput` 编辑一天里的时间。值是 ISO 时间，`HH:MM` 或 `HH:MM:SS`，没有选择时是 `null`。"
       },
       "usage": {
-        "en": "`TimeInput` edits a time of day. The value is an ISO time, `HH:MM` or `HH:MM:SS`, or `null`.\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"Time\" />\n</template>\n```\n\nThe default hour format is 12-hour. Arrow keys step by `increment` minutes. On a fine pointer the field is typed text. On a coarse pointer, `adaptive-native` and `adaptive-bottom-sheet` use the platform time input, unless the field needs seconds or a step other than one minute. Placeholder and clear text follow the locale.",
-        "zh": "`TimeInput` 编辑一天里的时间。值是 ISO 时间，`HH:MM` 或 `HH:MM:SS`，没有选择时是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"时间\" />\n</template>\n```\n\n默认按 12 小时显示。方向键按 `increment` 分钟步进。细指针下是文本框。粗指针下，`adaptive-native` 和 `adaptive-bottom-sheet` 使用系统时间输入；需要秒，或步进不是 1 分钟时，仍保留文本框。占位符和清除文案跟随语言。"
+        "en": "`TimeInput` edits a time of day. The value is an ISO time, `HH:MM` or `HH:MM:SS`, or `null`.\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"Time\" />\n</template>\n```\n\nThe default hour format is 12-hour. Arrow keys step by `increment` minutes. A fine pointer gets a typed field. `adaptive-native` uses the platform time control on a coarse pointer. `adaptive-bottom-sheet` uses hour and minute wheels on a coarse pointer. `bottom-sheet` uses those wheels on every pointer. Seconds, a step other than one minute, or a preset interval send the platform control back to typed text; the wheels still show seconds. Placeholder and clear text follow the locale.",
+        "zh": "`TimeInput` 编辑一天里的时间。值是 ISO 时间，`HH:MM` 或 `HH:MM:SS`，没有选择时是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <TimeInput v-model=\"time\" label=\"时间\" />\n</template>\n```\n\n默认按 12 小时显示。方向键按 `increment` 分钟步进。细指针下是文本框。`adaptive-native` 在粗指针上用系统时间控件；`adaptive-bottom-sheet` 在粗指针上用底部时分滚轮；`bottom-sheet` 不论指针都用滚轮。需要秒、步进不是 1 分钟，或设了预设间隔时，系统控件退回文本框，滚轮不受这个限制。占位符和清除文案跟随语言。"
       },
       "practices": {
         "en": [
@@ -33684,7 +33874,37 @@
                 "name": "`presentation`",
                 "type": "`'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'`",
                 "default": "`'adaptive-native'`",
-                "description": "Typed field, or the platform time input on a coarse pointer. Seconds and a non-1 increment stay typed."
+                "description": "Typed field, platform time control, or hour and minute wheels. Omitted means typed text on a fine pointer and the platform control on a coarse pointer. adaptive-bottom-sheet uses wheels only on a coarse pointer; bottom-sheet always uses wheels. Seconds, a step other than 1, or a preset interval send the platform control back to typed text. The wheels are unaffected. An explicit value wins over nativePicker."
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Hides the label visually while keeping it accessible. `labelHidden` is the older name; either one hides it."
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout."
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the field container. Same targeting as containerClass."
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "Class for the bordered control box. A class written on the component lands here too, not on the inner input."
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "Inline style for the bordered control box."
               },
               {
                 "name": "`hasClear`",
@@ -33799,7 +34019,37 @@
                 "name": "`presentation`",
                 "type": "`'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'`",
                 "default": "`'adaptive-native'`",
-                "description": "文本框，或在粗指针上使用系统时间输入。有秒或步进不是 1 分钟时仍用文本框。"
+                "description": "文本框、系统时间控件，或底部时分滚轮。不传时细指针用文本框，粗指针用系统控件。adaptive-bottom-sheet 只在粗指针上用滚轮；bottom-sheet 始终用滚轮。有秒、步进不是 1，或设了预设间隔时，系统控件退回文本框，滚轮不受影响。显式值压过 nativePicker。"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视觉上隐藏标签，读屏仍然读得到。旧名 `labelHidden` 同样可用，两者任一为真就隐藏。"
+              },
+              {
+                "name": "`containerClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。"
+              },
+              {
+                "name": "`containerStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到字段外壳的行内样式。落点规则同 containerClass。"
+              },
+              {
+                "name": "`controlClass`",
+                "type": "`string | object | array`",
+                "default": "—",
+                "description": "加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到内部输入框上。"
+              },
+              {
+                "name": "`controlStyle`",
+                "type": "`StyleValue`",
+                "default": "—",
+                "description": "加到带边框本体的行内样式。"
               },
               {
                 "name": "`hasClear`",
@@ -33921,6 +34171,17 @@
             "zh": "禁用、错误、警告和成功。"
           },
           "code": "<script setup lang=\"ts\">\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst disabledVal = shallowRef('10:00')\nconst errorVal = shallowRef('22:00')\nconst warningVal = shallowRef('07:00')\nconst successVal = shallowRef('10:00')\n</script>\n\n<template>\n  <VStack :gap=\"3\">\n    <TimeInput v-model=\"disabledVal\" label=\"Disabled field\" is-disabled />\n    <TimeInput v-model=\"errorVal\" label=\"Error message\" :status=\"{ type: 'error', message: 'Time must be during business hours' }\" />\n    <TimeInput v-model=\"warningVal\" label=\"Warning message\" :status=\"{ type: 'warning', message: 'Early morning — are you sure?' }\" />\n    <TimeInput v-model=\"successVal\" label=\"Success message\" :status=\"{ type: 'success', message: 'Time slot is available' }\" />\n  </VStack>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Bottom sheet",
+            "zh": "底部面板"
+          },
+          "description": {
+            "en": "Hour and minute wheels, on both a mouse and a coarse pointer.",
+            "zh": "不论指针类型，都用底部的小时和分钟滚轮。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { TimeInput } from '@astryx-vue/core/TimeInput'\nimport { shallowRef } from 'vue'\n\nconst time = shallowRef<string | null>('14:30')\n</script>\n\n<template>\n  <div style=\"width: 240px; max-width: 100%\">\n    <TimeInput\n      v-model=\"time\"\n      label=\"Start\"\n      presentation=\"bottom-sheet\"\n    />\n  </div>\n</template>"
         }
       ],
       "anatomy": {
