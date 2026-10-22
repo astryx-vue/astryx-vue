@@ -69,3 +69,13 @@
 ## 验证操作要短小
 
 每次验证只测一件事，每条命令都要有时间上限：浏览器命令用 `browser-lock.mjs run --max-run <秒>`，默认 180 秒；其他命令用 `timeout <秒>`。超时了不要原样重跑，先把卡住的那一步单独拆出来。脚本和结果都放在 `/tmp/verify-C12/`。
+
+## 第 2 轮
+
+第 1 轮第 13 条不过。这一轮只复查那两处，外加回归。每一项仍只能判「过」或「不过」。
+
+23. 树行链接：`href` 安全且 `target="_blank"` 时，渲染出的 `<a>` 的 `rel` 拆开后包含 `noopener` 和 `noreferrer`。同页链接不带 `rel`。`TreeList.test.ts` 有这两条，并且在第 26 项的两种 `NODE_ENV` 里通过。
+24. 台账 `17b2fcfed` 是「不适用」。理由写明上游选择是条目上的 `isSelected`，树没有根上的选中值。`TreeList` 的 props 里没有 `modelValue`，也没有 `v-model`。条目 `isSelected` 仍写到 `aria-selected`。中英文文档和这句一致，没有把选择说成根上的 `v-model`。
+25. 台账 `c3f64eff9` 仍是「已采纳」，结论里的树行 `target="_blank"` 和现在的 `rel` 一致。54 条仍全是 `- [x]`，没有空结论。已采纳 32 条，不适用 22 条。
+26. `env -u NODE_ENV pnpm exec vitest run --maxWorkers=2 packages/core/src/List packages/core/src/TreeList packages/core/src/Outline packages/core/src/OverflowList packages/core/src/MetadataList` 通过；`NODE_ENV=production` 同一命令通过；用例数相同。`env -u NODE_ENV pnpm --filter @astryx-vue/core typecheck`、改过源码的 eslint `--max-warnings 0`、`node scripts/check-line-limit.mjs`、`node scripts/check-no-important.mjs`、`node scripts/sync-exports.mjs --check` 通过。
+27. `git diff $BASE --stat` 没有 `ROADMAP.md`、`HANDOFF.md`、`PR128-BODY.md`、行数白名单、`catalog.json`。用第 22 项的同一条正则搜 `git diff da79c71b` 的新增行，没有命中，或者命中的都不是在讲修改历史。

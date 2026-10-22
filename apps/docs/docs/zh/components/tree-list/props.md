@@ -58,10 +58,10 @@ footer: false
 | <code>endIcon</code> | <code>string</code> | 末尾字形或 CSS 图标类。 |
 | <code>badge</code> | <code>string</code> | 末尾计数。 |
 | <code>children</code> | <code>TreeListItemData[]</code> | 子项。有这个字段的行可以展开。 |
-| <code>href</code> / <code>target</code> | <code>string</code> | 把这一行渲染成链接。 |
+| <code>href</code> / <code>target</code> | <code>string</code> | 把这一行渲染成链接。<code>target="_blank"</code> 会带上 <code>rel="noopener noreferrer"</code>。 |
 | <code>onClick</code> | <code>(event: MouseEvent) =&gt; void</code> | 把叶子渲染成按钮。 |
 | <code>isDisabled</code> | <code>boolean</code> | 这一行不接受焦点，也不能激活。 |
-| <code>isSelected</code> | <code>boolean</code> | 标出当前项。 |
+| <code>isSelected</code> | <code>boolean</code> | 由调用方标出当前项。树没有根上的选中值，也不强制只有一行选中。 |
 | <code>isExpanded</code> | <code>boolean</code> | 初始是否展开。之后的切换由树自己记住。 |
 | <code>className</code> | <code>string</code> | 额外类名，落在这一行上。 |
 | <code>style</code> | <code>CSSProperties</code> | 行内样式，落在这一行上。 |

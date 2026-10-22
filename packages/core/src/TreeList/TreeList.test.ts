@@ -180,6 +180,23 @@ describe('tree list', () => {
     wrapper.unmount()
   })
 
+  it('adds noopener and noreferrer when a tree link opens in a new tab', () => {
+    const wrapper = mount(TreeList, {
+      props: { items: [{ id: 'a', label: 'Docs', href: 'https://example.com', target: '_blank' }] },
+    })
+    const anchor = wrapper.get('a')
+    expect(anchor.attributes('target')).toBe('_blank')
+    expect(anchor.attributes('rel')?.split(' ').sort()).toEqual(['noopener', 'noreferrer'])
+  })
+
+  it('leaves rel unset when a tree link stays in the same tab', () => {
+    const wrapper = mount(TreeList, {
+      props: { items: [{ id: 'a', label: 'Docs', href: '/docs' }] },
+    })
+    expect(wrapper.get('a').attributes('rel')).toBeUndefined()
+    expect(wrapper.get('a').attributes('target')).toBeUndefined()
+  })
+
   it('does not render a link for a blocked destination', () => {
     const wrapper = mount(TreeList, {
       props: { items: [{ id: 'a', label: 'A', href: 'javascript:alert(1)' }] },

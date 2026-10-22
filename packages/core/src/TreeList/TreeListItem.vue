@@ -37,6 +37,10 @@ const safeHref = computed(() => {
   const href = props.item.href
   return href != null && href !== '' && isSafeUrl(href) ? href : undefined
 })
+/** 新窗口打开时补上和列表行相同的关系标记。 */
+const linkRel = computed(() => (
+  props.item.target === '_blank' ? 'noopener noreferrer' : undefined
+))
 
 const hasChildren = computed(() => (props.item.children?.length ?? 0) > 0)
 const isExpanded = computed(() => hasChildren.value && props.expanded[props.item.id] === true)
@@ -152,6 +156,7 @@ const rowPress = computed(() => {
           :href="safeHref"
           :to="linkRoot === 'a' ? undefined : safeHref"
           :target="item.target"
+          :rel="linkRel"
           :aria-labelledby="labelId"
           :aria-describedby="item.description ? descriptionId : undefined"
           tabindex="-1"
