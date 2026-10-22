@@ -37,8 +37,8 @@ mindmap
       ✅ C1 基础输入 #136
       ✅ C2 勾选与开关 #140
       ✅ C3 选择器 #149
-      🟡 C4 搜索与命令面板 #159 等合
-      🟡 C5 日期时间 #158 等再审
+      ✅ C4 搜索与命令面板 #159
+      ✅ C5 日期时间 #158
       ✅ C6 菜单 #143
       ✅ C7 浮层家族 #148
       ✅ C8 BottomSheet #157
@@ -73,6 +73,8 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| C4 搜索与命令面板 | [#159](https://github.com/astryx-vue/astryx-vue/pull/159) | squash 合入 `swarm-tree`（`cb8c3e12`）。验收通过 23/23 |
+| C5 日期时间家族 | [#158](https://github.com/astryx-vue/astryx-vue/pull/158) | squash 合入 `swarm-tree`（`27e43c5e`）。验收通过 23/23；返工 1 轮，补了 touch 路径的 change 与 `isReadOnly` 锁 |
 | C8 BottomSheet | [#157](https://github.com/astryx-vue/astryx-vue/pull/157) | squash 合入 `swarm-tree`（`56fee620`）。验收通过 21/21。默认内边距交给内容区，拖动手势已拆开 |
 | 子菜单 SSR、catalog 门禁、浮层 window | [#156](https://github.com/astryx-vue/astryx-vue/pull/156) | 不是总表节点。收掉 `HTMLElement is not defined`、当时过期的 catalog，以及 `window is not defined`（`dd1967e`） |
 | C10 Chat | [#147](https://github.com/astryx-vue/astryx-vue/pull/147) | 第 2 轮通过。Enter 选中当前高亮项；空草稿时发送按钮禁用 |
@@ -92,15 +94,11 @@ mindmap
 
 ## 当前并行
 
-| 节点 | PR | 状态 |
-| --- | --- | --- |
-| C4 搜索与命令面板 | [#159](https://github.com/astryx-vue/astryx-vue/pull/159) | 已合最新 `swarm-tree`、解白名单冲突、重生 catalog（`10f5754c`）。Check / Test / Compare 已绿，等「合」 |
-| C5 日期时间家族 | [#158](https://github.com/astryx-vue/astryx-vue/pull/158) | 返工已推（`ac3d052d`）：面板改值统一走外层 `publish`；`isReadOnly` 已锁。等再审 |
-| 看板同步 | [#160](https://github.com/astryx-vue/astryx-vue/pull/160) | ROADMAP / HANDOFF / 教训；`PR128-BODY.md` 正在按「保留完整历史表」改回。等「合」 |
+没有正在实现或验收的节点。
 
-可以开工、等待派发：C11、C12、C13、D1、F1a、F2a、F3b、F3c、F3e、F3g、F3h。C8 合入后 F3a 仍要等 C11、C12，保持未开始。D4a 仍要等用户签字，签字前不要派。
+可以开工、等待派发：C11、C12、C13、D1、F2a、D4a、F1a、F3b、F3g、F3c、F3h、F3e。D4a 仍要等用户签字，签字前不要派。C8 合入后 F3a 仍要等 C11、C12，保持未开始。
 
-**本 PR 的 CI：** #156 合入后四项曾全绿；当前 tip 含 C8（`56fee620`）。节点 PR 合入前仍须 Check + Test 绿。
+**本 PR 的 CI：** 当前 tip 含 C4（`cb8c3e12`）。节点 PR 合入前仍须 Check + Test 绿。#156 已收掉子菜单 SSR、catalog 门禁与浮层 window 问题。
 
 ## 怎么验收这个总 PR
 
