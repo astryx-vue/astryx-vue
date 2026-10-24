@@ -1,5 +1,6 @@
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, StyleValue } from 'vue'
 import type { PixelWidth, ProportionalWidth, TableColumn } from './types.js'
+import { firstCharacter } from '../utils/characters.js'
 
 export const DEFAULT_MIN_COLUMN_WIDTH = 120
 export const DEFAULT_FLEXIBLE_COLUMN_MIN_WIDTH = 60
@@ -80,6 +81,124 @@ export function resolveColumnFloorWidths<T extends Record<string, unknown>>(colu
   return widths
 }
 
+const MAX_COMPATIBLE_FUNCTION = /^(?:calc|min|max|clamp|var)\(/i
+const PX_LENGTH = /^(\d+(?:\.\d+)?)px$/i
+const LENGTH_UNITS = new Set([
+  'px',
+  'em',
+  'rem',
+  'lh',
+  'rlh',
+  'ex',
+  'rex',
+  'ch',
+  'rch',
+  'cap',
+  'rcap',
+  'ic',
+  'ric',
+  'vw',
+  'vh',
+  'vi',
+  'vb',
+  'vmin',
+  'vmax',
+  'svw',
+  'svh',
+  'svi',
+  'svb',
+  'svmin',
+  'svmax',
+  'lvw',
+  'lvh',
+  'lvi',
+  'lvb',
+  'lvmin',
+  'lvmax',
+  'dvw',
+  'dvh',
+  'dvi',
+  'dvb',
+  'dvmin',
+  'dvmax',
+  'cqw',
+  'cqh',
+  'cqi',
+  'cqb',
+  'cqmin',
+  'cqmax',
+  'cm',
+  'mm',
+  'q',
+  'in',
+  'pt',
+  'pc',
+  '%',
+])
+
+function isZeroLength(value: string): boolean {
+  const magnitude = value.trim().replace(/[a-z%]+$/i, '')
+  if (!/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(magnitude))
+    return false
+  return Number(magnitude) === 0
+}
+
+function isCssMaxLength(value: string): boolean {
+  if (value.endsWith('%'))
+    return /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(value.slice(0, -1))
+  const unit = value.match(/[a-z]+$/i)?.[0]?.toLowerCase()
+  if (unit == null || !LENGTH_UNITS.has(unit))
+    return false
+  return /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(value.slice(0, -unit.length))
+}
+
+/**
+ * 数据表的内联最小宽度：列宽下限和调用方写的 `minWidth` 里较大的那个。
+ *
+ * 数字、0 和 px 直接比较。其它长度、百分比、`calc()` / `var()` 交给 CSS `max()`。
+ * `auto`、`max-content` 这类关键字不能放进 `max()`，这时列宽下限胜出。
+ */
+export function resolveTableMinWidth(consumer: CSSProperties['minWidth'], floorPx: number): string {
+  const floor = `${floorPx}px`
+  if (consumer == null)
+    return floor
+  if (typeof consumer === 'number')
+    return `${Math.max(consumer, floorPx)}px`
+  const value = consumer.trim()
+  if (value === '' || isZeroLength(value))
+    return floor
+  const px = PX_LENGTH.exec(value)
+  if (px)
+    return `${Math.max(Number(px[1]), floorPx)}px`
+  if (isCssMaxLength(value) || MAX_COMPATIBLE_FUNCTION.test(value))
+    return `max(${value}, ${floor})`
+  return floor
+}
+
+/** 把样式里的 `minWidth` 拆出来，剩下的继续留给滚动容器。字符串样式拆不开，原样返回。 */
+export function splitStyleMinWidth(style: StyleValue | undefined): {
+  minWidth: CSSProperties['minWidth']
+  style: StyleValue | undefined
+} {
+  if (style == null || typeof style === 'string')
+    return { minWidth: undefined, style }
+  if (Array.isArray(style)) {
+    let minWidth: CSSProperties['minWidth']
+    const next = style.map((item) => {
+      const split = splitStyleMinWidth(item as StyleValue)
+      if (split.minWidth != null)
+        minWidth = split.minWidth
+      return split.style
+    })
+    return { minWidth, style: next as StyleValue }
+  }
+  if (typeof style === 'object') {
+    const { minWidth, ...rest } = style as CSSProperties
+    return { minWidth, style: rest }
+  }
+  return { minWidth: undefined, style }
+}
+
 export function resolveColumnWidths<T extends Record<string, unknown>>(columns: readonly TableColumn<T>[]): ResolvedColumnWidths {
   const { totalProportion, pixelTotal, maxProportionalSpace } = planColumnSpace(columns)
   const result = new Map<string, ResolvedColumnWidth>()
@@ -104,7 +223,8 @@ export function resolveColumnWidths<T extends Record<string, unknown>>(columns: 
 export function capitalize(value: string): string {
   if (value.length === 0)
     return value
-  return value.charAt(0).toUpperCase() + value.slice(1)
+  const first = firstCharacter(value)
+  return first.toUpperCase() + value.slice(first.length)
 }
 
 export function cellText(value: unknown): string {
@@ -162,6 +282,7 @@ export function sortRows<T extends Record<string, unknown>>(
   rows: readonly T[],
   sort: readonly { sortKey: string, direction: 'ascending' | 'descending' }[],
   columns: readonly TableColumn<T>[] = [],
+  collator?: Pick<Intl.Collator, 'compare'>,
 ): T[] {
   if (sort.length === 0)
     return [...rows]
@@ -178,7 +299,7 @@ export function sortRows<T extends Record<string, unknown>>(
   copy.sort((a, b) => {
     for (const entry of sort) {
       const custom = comparators.get(entry.sortKey)
-      const result = custom ? custom(a, b) : compareValues(a[entry.sortKey], b[entry.sortKey])
+      const result = custom ? custom(a, b) : compareValues(a[entry.sortKey], b[entry.sortKey], collator)
       if (result !== 0)
         return entry.direction === 'ascending' ? result : -result
     }
@@ -187,7 +308,7 @@ export function sortRows<T extends Record<string, unknown>>(
   return copy
 }
 
-function compareValues(a: unknown, b: unknown): number {
+function compareValues(a: unknown, b: unknown, collator?: Pick<Intl.Collator, 'compare'>): number {
   if (a == null && b == null)
     return 0
   if (a == null)
@@ -196,5 +317,7 @@ function compareValues(a: unknown, b: unknown): number {
     return -1
   if (typeof a === 'number' && typeof b === 'number')
     return a - b
-  return String(a).localeCompare(String(b))
+  const left = String(a)
+  const right = String(b)
+  return collator ? collator.compare(left, right) : left.localeCompare(right)
 }

@@ -2,6 +2,7 @@ import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { TableColumn, TablePlugin, TableSortDirection, TableSortState } from '../types.js'
 import { computed, ref, toValue } from 'vue'
 import { useAstryxMessages } from '../../locale/context.js'
+import { useCollator } from '../../locale/useCollator.js'
 import { sortRows } from '../columnUtils.js'
 
 export interface UseTableSortableConfig<TSortKey extends string = string> {
@@ -21,7 +22,8 @@ export function useTableSortableState<T extends Record<string, unknown>>(options
   sortConfig: UseTableSortableConfig
 } {
   const sort = ref<TableSortState>(options.defaultSort ?? [])
-  const sortedData = computed(() => sortRows(toValue(options.data), sort.value, toValue(options.columns) ?? []))
+  const collator = useCollator({ numeric: true })
+  const sortedData = computed(() => sortRows(toValue(options.data), sort.value, toValue(options.columns) ?? [], collator.value))
   const sortConfig: UseTableSortableConfig = {
     get sort() {
       return sort.value

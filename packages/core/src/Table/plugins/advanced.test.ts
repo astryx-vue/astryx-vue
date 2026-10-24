@@ -154,6 +154,45 @@ describe('row expansion, status, sticky columns, and windowed indexes', () => {
     await wrapper.get('tbody tr').trigger('contextmenu')
     await nextTick()
     expect(document.body.textContent).toContain('Collapse row')
+    expect(wrapper.get('tbody button').classes()).not.toContain('is-expanded')
+    expect(wrapper.get('.astryx-table__chevron-icon').classes()).toContain('is-expanded')
+  })
+
+  it('expands from the row but leaves editable text and the chevron alone', async () => {
+    const expanded = ref(new Set<string>())
+    const wrapper = mount({
+      components: { Table },
+      setup() {
+        const expansion = useTableRowExpansion<Person>(() => ({
+          expandedKeys: expanded.value,
+          onToggle(key) {
+            const next = new Set(expanded.value)
+            if (next.has(key))
+              next.delete(key)
+            else
+              next.add(key)
+            expanded.value = next
+          },
+          getRowKey: person => person.id,
+          renderExpanded: person => h('p', `Detail ${person.name}`),
+          hasRowClickExpansion: true,
+        }))
+        const columns: TableColumn<Person>[] = [{
+          key: 'name',
+          header: 'Name',
+          width: pixel(160),
+          renderCell: person => h('span', { contenteditable: 'true' }, person.name),
+        }]
+        return { people: people.slice(0, 1), columns, expansion }
+      },
+      template: '<Table :data="people" :columns="columns" id-key="id" :plugins="{ expansion }" />',
+    })
+    await wrapper.get('[contenteditable]').trigger('click')
+    expect(wrapper.find('[data-expansion-panel]').exists()).toBe(false)
+    await wrapper.get('tbody tr').trigger('click')
+    expect(wrapper.get('[data-expansion-panel]').text()).toContain('Detail Alice')
+    await wrapper.get('tbody button').trigger('click')
+    expect(wrapper.find('[data-expansion-panel]').exists()).toBe(false)
   })
 
   it('pins a contiguous run and does nothing when no keys are given', () => {

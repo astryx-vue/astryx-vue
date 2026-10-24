@@ -2,7 +2,6 @@
 
 @layer astryx.components {
   .astryx-table-scroll {
-    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
     margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
@@ -167,6 +166,10 @@
     cursor: pointer;
   }
 
+  .astryx-table__sort:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
   .astryx-table__sort[data-align='center'] {
     justify-content: center;
   }
@@ -217,6 +220,10 @@
     position: relative;
   }
 
+  .astryx-table thead tr {
+    --resize-hint: transparent;
+  }
+
   .astryx-table__resize {
     position: absolute;
     top: 0;
@@ -226,6 +233,11 @@
     cursor: col-resize;
     touch-action: none;
     border-radius: var(--astryx-radius-inner, 0.375rem);
+    --indicator-color: var(--resize-hint, transparent);
+  }
+
+  .astryx-table__resize:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
   }
 
   .astryx-table__resize::after {
@@ -235,18 +247,22 @@
     inset-inline-end: 2px;
     width: 2px;
     height: 100%;
-    background-color: transparent;
+    background-color: var(--indicator-color);
   }
 
   @media (hover: hover) {
-    .astryx-table__resize:hover::after {
-      background-color: var(--astryx-color-border-strong, light-dark(#a3a3a3, #525252));
+    .astryx-table thead tr:hover {
+      --resize-hint: var(--astryx-color-border-strong, light-dark(#a3a3a3, #525252));
+    }
+
+    .astryx-table__resize:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      --indicator-color: var(--astryx-color-accent, light-dark(#0064e0, #4d9bff));
     }
   }
 
-  .astryx-table__resize[data-resizing='true']::after,
-  .astryx-table__resize:focus-visible::after {
-    background-color: var(--astryx-color-accent, light-dark(#0064e0, #4d9bff));
+  .astryx-table__resize[data-resizing='true'],
+  .astryx-table__resize:focus-visible {
+    --indicator-color: var(--astryx-color-accent, light-dark(#0064e0, #4d9bff));
   }
 
   .astryx-table__resize:focus-visible {
@@ -333,6 +349,10 @@
     cursor: pointer;
   }
 
+  .astryx-table__clickable:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
   .astryx-table tr[data-group-header] {
     cursor: pointer;
     user-select: none;
@@ -385,6 +405,11 @@
     cursor: pointer;
   }
 
+  .astryx-table__group-chevron:is(:disabled, [aria-disabled='true']),
+  .astryx-table__expander:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
   .astryx-table__group-chevron {
     color: var(--astryx-color-icon-secondary, light-dark(#737373, #a3a3a3));
   }
@@ -397,12 +422,12 @@
   }
 
   @media (hover: hover) {
-    .astryx-table__group-chevron:hover,
-    .astryx-table__expander:hover {
+    .astryx-table__group-chevron:hover:where(:not(:disabled, [aria-disabled='true'])),
+    .astryx-table__expander:hover:where(:not(:disabled, [aria-disabled='true'])) {
       color: var(--astryx-color-icon-primary, light-dark(#171717, #fafafa));
     }
 
-    .astryx-table__expander:hover {
+    .astryx-table__expander:hover:where(:not(:disabled, [aria-disabled='true'])) {
       background-image: linear-gradient(var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d)), var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d)));
     }
   }
