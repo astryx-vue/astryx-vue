@@ -107,7 +107,7 @@ const isInteractive = computed(() => props.onClick != null || safeHref.value != 
 /** 链接内容用的根组件：`as` 写了组件就用它，否则用 LinkProvider 给的默认值。 */
 const customLink = computed(() => (typeof props.as === 'string' ? linkComponent.value : props.as))
 const isLinkContent = computed(() => safeHref.value != null && customLink.value != null)
-usePressFeedback()
+usePressFeedback({ hasOverlay: false })
 const pressable = computed(() => isInteractive.value && !props.isDisabled)
 
 const resolvedTarget = computed(() => props.target)
@@ -292,7 +292,7 @@ const rootClick = computed(() => {
   return isInteractive.value ? handleContainerClick : undefined
 })
 
-const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', pressable.value && 'astryx-pressable', attrs.class])
+const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', attrs.class])
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !CONTROLLED_ATTRS.has(key)),

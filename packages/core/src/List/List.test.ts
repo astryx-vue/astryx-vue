@@ -471,4 +471,9 @@ describe('item link safety and press', () => {
     const disabled = mount(Item, { props: { label: 'Open', onClick: () => {}, isDisabled: true } })
     expect(disabled.attributes('data-astryx-pressable')).toBeUndefined()
   })
+
+  it('paints the press on the row itself instead of adding a second overlay', () => {
+    const wrapper = mount(Item, { props: { label: 'Open', onClick: () => {} } })
+    expect(wrapper.classes()).not.toContain('astryx-pressable')
+  })
 })
