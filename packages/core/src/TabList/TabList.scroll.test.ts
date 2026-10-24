@@ -38,6 +38,16 @@ function tabs() {
 }
 
 describe('tab list scroll', () => {
+  it('marks enabled tabs for the touch press model', () => {
+    const wrapper = mount(TabList, {
+      props: { value: 'a' },
+      slots: { default: () => [h(Tab, { value: 'a' }, () => 'A'), h(Tab, { value: 'b', disabled: true }, () => 'B')] },
+    })
+    const [enabled, disabled] = wrapper.findAll('.astryx-tab')
+    expect(enabled.attributes('data-astryx-pressable')).toBe('')
+    expect(disabled.attributes('data-astryx-pressable')).toBeUndefined()
+  })
+
   it('shows an end arrow and scrolls by 80 percent of the visible width', async () => {
     const wrapper = mount(TabList, {
       props: { value: 'a' },

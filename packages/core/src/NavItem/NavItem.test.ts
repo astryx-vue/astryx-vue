@@ -13,6 +13,13 @@ const RouterLink = defineComponent({
 })
 
 describe('nav-item', () => {
+  it('joins the touch press model unless disabled', () => {
+    const enabled = mount(NavItem, { props: { label: 'Home', href: '/' } })
+    expect(enabled.get('a').attributes('data-astryx-pressable')).toBe('')
+    const disabled = mount(NavItem, { props: { label: 'Home', isDisabled: true } })
+    expect(disabled.get('button').attributes('data-astryx-pressable')).toBeUndefined()
+  })
+
   it('renders a link and marks the current page', () => {
     const wrapper = mount(NavItem, {
       props: { href: '/home', isSelected: true, label: 'Home' },

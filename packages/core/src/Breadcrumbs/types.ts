@@ -60,7 +60,7 @@ export interface BreadcrumbContextValue {
   separator: ComputedRef<string>
   /** 没有人声明当前项时，最后一项的 id。有人声明时是 null。 */
   autoCurrentId: ComputedRef<string | null>
-  registerItem: (id: string, explicit: boolean | undefined) => void
+  registerItem: (id: string, explicit: boolean | undefined, getElement: () => HTMLElement | null) => void
   updateItem: (id: string, explicit: boolean | undefined) => void
   unregisterItem: (id: string) => void
 }

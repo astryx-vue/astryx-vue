@@ -61,8 +61,14 @@
     outline: none;
   }
 
-  .astryx-nav-menu-item:active:not(:disabled, .astryx-nav-menu-item--disabled) {
-    background: var(--astryx-color-overlay-pressed);
+  @media not all and (pointer: coarse) {
+    .astryx-nav-menu-item:active:not(:disabled, .astryx-nav-menu-item--disabled) {
+      background: var(--astryx-color-overlay-pressed);
+    }
+  }
+
+  .astryx-nav-menu-item[data-astryx-press]:not(:disabled, .astryx-nav-menu-item--disabled) {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-nav-menu-item--disabled,

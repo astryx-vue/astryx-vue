@@ -21,51 +21,109 @@
     padding: 0;
   }
 
+  /*
+   * 滚动容器在内边距盒处裁切，而焦点环和选中下划线都画在标签自己的盒子外面。
+   * 条用同样大小的内边距撑出去、再用负外边距收回来，什么都不会被裁，标签也不挪位。
+   * 焦点环那一份只在条里真的画着焦点环时才留，平时条和 TabList 一样大。
+   */
   .astryx-tab-list__strip--scroll {
-    --astryx-tab-strip-bleed: 0px;
+    --_tab-strip-bleed: 0px;
+    --_tab-strip-edge-inset: calc(var(--_tab-strip-bleed) + var(--astryx-spacing-8, 32px));
+    --_tab-strip-block-end-bleed: max(var(--_tab-strip-bleed), calc(-1 * var(--_tab-indicator-bottom, 0px)));
+    align-self: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
-    margin-inline: calc(-1 * var(--astryx-tab-strip-bleed));
-    padding-inline: var(--astryx-tab-strip-bleed);
     scroll-behavior: smooth;
-    scroll-padding-inline: 2rem;
+    scroll-padding-inline: var(--_tab-strip-edge-inset);
     scrollbar-width: none;
+    padding-block: var(--_tab-strip-bleed) var(--_tab-strip-block-end-bleed);
+    margin-block: calc(-1 * var(--_tab-strip-bleed)) calc(-1 * var(--_tab-strip-block-end-bleed));
+    padding-inline: var(--_tab-strip-bleed);
+    margin-inline: calc(-1 * var(--_tab-strip-bleed));
+    mask-image: none;
+    transition: mask-image var(--astryx-duration-medium, 240ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-tab-list__strip--scroll:focus-within {
-    --astryx-tab-strip-bleed: 4px;
+  .astryx-tab-list__strip--scroll:has(:focus-visible) {
+    --_tab-strip-bleed: 4px;
   }
 
   .astryx-tab-list__strip--scroll::-webkit-scrollbar {
     display: none;
   }
 
-  .astryx-tab-list__strip--fade-end {
-    mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent);
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-tab-list__strip--scroll {
+      scroll-behavior: auto;
+      transition-duration: 0ms;
+    }
   }
 
+  /* 渐隐在条自己的边上就到透明，不画到血边外面，也不压到箭头底下。 */
   .astryx-tab-list__strip--fade-start {
-    mask-image: linear-gradient(to left, #000 calc(100% - 2rem), transparent);
+    mask-image: linear-gradient(to right, transparent var(--_tab-strip-bleed), #000 var(--_tab-strip-edge-inset));
+  }
+
+  .astryx-tab-list__strip--fade-end {
+    mask-image: linear-gradient(to left, transparent var(--_tab-strip-bleed), #000 var(--_tab-strip-edge-inset));
+  }
+
+  [dir='rtl'] .astryx-tab-list__strip--fade-start {
+    mask-image: linear-gradient(to left, transparent var(--_tab-strip-bleed), #000 var(--_tab-strip-edge-inset));
+  }
+
+  [dir='rtl'] .astryx-tab-list__strip--fade-end {
+    mask-image: linear-gradient(to right, transparent var(--_tab-strip-bleed), #000 var(--_tab-strip-edge-inset));
   }
 
   .astryx-tab-list__strip--fade-both {
-    mask-image: linear-gradient(to right, transparent, #000 2rem, #000 calc(100% - 2rem), transparent);
+    mask-image: linear-gradient(
+      to right,
+      transparent var(--_tab-strip-bleed),
+      #000 var(--_tab-strip-edge-inset),
+      #000 calc(100% - var(--_tab-strip-edge-inset)),
+      transparent calc(100% - var(--_tab-strip-bleed))
+    );
   }
 
+  /* 箭头只给能悬停的指针用。键盘和读屏用方向键走，焦点项会自己滚进来。 */
   .astryx-tab-scroll-button {
     position: absolute;
     z-index: 1;
-    inset-block: 0;
-    display: inline-flex;
+    inset-block-start: 0;
+    display: none;
     align-items: center;
     justify-content: center;
-    width: 1.5rem;
+    width: var(--astryx-size-element-md, 32px);
+    height: var(--astryx-size-element-md, 32px);
     padding: 0;
     border: 0;
-    background: var(--astryx-color-background, #fff);
-    color: inherit;
+    border-radius: 9999px;
+    background-color: var(--astryx-color-background-popover, light-dark(#fff, #262626));
+    box-shadow: var(--astryx-shadow-low, 0 1px 2px #0000001f);
+    color: var(--astryx-color-text-secondary, #525252);
     cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .astryx-tab-scroll-button {
+      display: inline-flex;
+    }
+
+    .astryx-tab-scroll-button:hover {
+      color: var(--astryx-color-text-primary, #171717);
+    }
+  }
+
+  .astryx-tab-list--size-sm .astryx-tab-scroll-button {
+    width: var(--astryx-size-element-sm, 28px);
+    height: var(--astryx-size-element-sm, 28px);
+  }
+
+  .astryx-tab-list--size-lg .astryx-tab-scroll-button {
+    width: var(--astryx-size-element-lg, 36px);
+    height: var(--astryx-size-element-lg, 36px);
   }
 
   .astryx-tab-scroll-button--start { inset-inline-start: 0; }
@@ -85,6 +143,7 @@
   }
 
   .astryx-tab-list--has-divider {
+    --_tab-indicator-bottom: calc(-1 * var(--astryx-spacing-1, 4px));
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
     padding-bottom: var(--astryx-spacing-1, 4px);
   }
@@ -100,8 +159,8 @@
   }
 
   .astryx-tab-list--full-bleed .astryx-tab-list__strip {
-    padding-inline-start: max(var(--container-padding-inline-start, 0px) - var(--astryx-spacing-3, 12px), 0px);
-    padding-inline-end: max(var(--container-padding-inline-end, 0px) - var(--astryx-spacing-3, 12px), 0px);
+    padding-inline-start: calc(var(--_tab-strip-bleed, 0px) + max(var(--container-padding-inline-start, 0px) - var(--astryx-spacing-3, 12px), 0px));
+    padding-inline-end: calc(var(--_tab-strip-bleed, 0px) + max(var(--container-padding-inline-end, 0px) - var(--astryx-spacing-3, 12px), 0px));
   }
 
   .astryx-tab {
@@ -147,8 +206,15 @@
     background-color: color-mix(in srgb, currentColor 6%, transparent);
   }
 
-  .astryx-tab:active:not(:disabled, [aria-disabled='true']) {
-    background-color: var(--astryx-color-overlay-pressed, color-mix(in srgb, currentColor 12%, transparent));
+  /* 鼠标按下才用 :active。粗指针改看按压模型写的 data-astryx-press，滚动时不会误亮。 */
+  @media not all and (pointer: coarse) {
+    .astryx-tab:active:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--astryx-color-overlay-pressed, color-mix(in srgb, currentColor 12%, transparent));
+    }
+  }
+
+  .astryx-tab[data-astryx-press]:not(:disabled, [aria-disabled='true']) {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-tab--selected {
@@ -168,7 +234,7 @@
   }
 
   .astryx-tab-list--has-divider .astryx-tab--selected::after {
-    bottom: calc(-1 * var(--astryx-spacing-1, 4px));
+    bottom: var(--_tab-indicator-bottom);
   }
 
   .astryx-tab:disabled,

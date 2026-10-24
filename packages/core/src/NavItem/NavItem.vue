@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavItemEmits, NavItemProps, NavItemSlots } from './types.js'
 import { computed, useAttrs, useSlots } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { isExternalNavTarget, isNavigableHref, resolveNavRoot } from './link.js'
 import '../../styles/nav-item.css'
@@ -21,10 +22,13 @@ defineSlots<NavItemSlots>()
 const slots = useSlots()
 const attrs = useAttrs()
 const linkComponent = useLinkComponent()
+/** 触屏按压模型只标记，按压色由 nav-item.css 自己画。 */
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 function forwardedAttrs(): Record<string, unknown> {
-  return Object.fromEntries(
+  const forwarded = Object.fromEntries(
     Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style'),
   )
+  return props.isDisabled ? forwarded : { ...pressableProps, ...forwarded }
 }
 
 const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))

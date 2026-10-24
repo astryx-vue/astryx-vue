@@ -141,7 +141,7 @@ describe('breadcrumbs', () => {
     expect(wrapper.find('.astryx-breadcrumb-item__slash').exists()).toBe(true)
   })
 
-  it('skips an item that opts out and currents the previous omitted crumb', async () => {
+  it('leaves the trail without a current page when the last crumb opts out', async () => {
     const wrapper = mount(Breadcrumbs, {
       props: { separator: '>' },
       slots: {
@@ -154,10 +154,32 @@ describe('breadcrumbs', () => {
     await nextTick()
 
     const links = wrapper.findAll('a')
-    expect(links[0].attributes('aria-current')).toBe('page')
+    expect(links[0].attributes('aria-current')).toBeUndefined()
     expect(links[1].attributes('aria-current')).toBeUndefined()
     expect(wrapper.find('.astryx-breadcrumb-item__slash').exists()).toBe(false)
     expect(wrapper.find('.astryx-breadcrumb-item__separator').text()).toContain('>')
+  })
+
+  it('picks the crumb that is last on the page, not the one that mounted last', async () => {
+    const Host = defineComponent({
+      props: { hasRoot: Boolean },
+      setup(props) {
+        return () => h(Breadcrumbs, null, () => [
+          props.hasRoot ? h(BreadcrumbItem, { key: 'root', href: '/' }, () => 'Root') : null,
+          h(BreadcrumbItem, { key: 'a', href: '/a' }, () => 'A'),
+          h(BreadcrumbItem, { key: 'b', href: '/b' }, () => 'B'),
+        ])
+      },
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    await nextTick()
+    await wrapper.setProps({ hasRoot: true })
+    await nextTick()
+
+    const current = wrapper.findAll('[aria-current="page"]')
+    expect(current).toHaveLength(1)
+    expect(current[0].text()).toBe('B')
+    wrapper.unmount()
   })
 
   it('does not render a javascript href as a link', () => {

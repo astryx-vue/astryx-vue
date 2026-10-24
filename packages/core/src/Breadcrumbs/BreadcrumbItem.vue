@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
-import { computed, onScopeDispose, toRaw, useId, watch } from 'vue'
+import { computed, onMounted, onScopeDispose, toRaw, useId, useTemplateRef, watch } from 'vue'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
@@ -36,8 +36,10 @@ const hasMenu = computed(() => props.menu != null || slots.menu != null)
 const explicitCurrent = computed(() => props.isCurrent === true)
 const showsCurrent = computed(() => explicitCurrent.value || (props.isCurrent == null && context?.autoCurrentId.value === itemId))
 
+const itemRef = useTemplateRef<HTMLElement>('item')
+
 if (context != null) {
-  context.registerItem(itemId, props.isCurrent)
+  onMounted(() => context.registerItem(itemId, props.isCurrent, () => itemRef.value))
   watch(() => props.isCurrent, value => context.updateItem(itemId, value))
   onScopeDispose(() => context.unregisterItem(itemId))
 }
@@ -75,7 +77,7 @@ function handleClick(event: MouseEvent) {
 </script>
 
 <template>
-  <li :class="classes">
+  <li ref="item" :class="classes">
     <span class="astryx-breadcrumb-item__separator" aria-hidden="true">
       <span v-if="mirrorsSlash" class="astryx-breadcrumb-item__slash">/</span>
       <template v-else>{{ separator }}</template>

@@ -10,6 +10,7 @@ import {
 } from 'vue'
 
 import { useDevWarning } from '../composables/useDevWarning.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { isNavigableHref } from '../NavItem/link.js'
 import { useTabListContext } from './context.js'
@@ -31,6 +32,7 @@ const rootRef = ref<HTMLElement>()
 const isTabsPattern = computed(() => context.isTabsPattern.value)
 const isSelected = computed(() => context.value.value === props.value)
 const tabIndex = computed(() => (isSelected.value && !props.disabled ? 0 : -1))
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 const isLink = computed(() =>
   !isTabsPattern.value && isNavigableHref(props.href, props.disabled),
 )
@@ -125,6 +127,7 @@ watch(() => props.disabled, (disabled) => {
     :disabled="isLink ? undefined : disabled"
     :data-selected="isSelected ? 'selected' : undefined"
     :data-tab-value="value"
+    v-bind="disabled ? {} : pressableProps"
     @click="handleClick"
     @keydown="handleKeydown"
   >
