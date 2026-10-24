@@ -38,6 +38,12 @@ footer: false
         <td>是否在标签列表底部显示一条分隔线。</td>
       </tr>
       <tr>
+        <td><code>overflow</code></td>
+        <td><code>'auto' | 'scroll' | 'visible'</code></td>
+        <td><code>'auto'</code></td>
+        <td>标签比条宽时怎么处理。<code>auto</code> 和 <code>scroll</code> 都会横向滚动，挡住的一端淡出，并给出翻页箭头。<code>visible</code> 不滚动。选中项如果被挡住，会立刻滚回可见区域。</td>
+      </tr>
+      <tr>
         <td><code>role</code></td>
         <td><code>string</code></td>
         <td>-</td>

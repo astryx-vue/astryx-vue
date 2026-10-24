@@ -17,7 +17,7 @@ describe('blockquote', () => {
     expect(wrapper.find('cite').exists()).toBe(false)
   })
 
-  it('renders the cite prop in a footer and cite element', () => {
+  it('renders the cite prop in a cite element without a footer landmark', () => {
     const wrapper = mount(Blockquote, {
       props: {
         cite: 'Steve Jobs',
@@ -27,7 +27,7 @@ describe('blockquote', () => {
       },
     })
 
-    expect(wrapper.find('footer').exists()).toBe(true)
+    expect(wrapper.find('footer').exists()).toBe(false)
     expect(wrapper.find('cite').text()).toBe('Steve Jobs')
   })
 
@@ -47,14 +47,14 @@ describe('blockquote', () => {
     expect(wrapper.text()).not.toContain('Fallback attribution')
   })
 
-  it('renders an empty cite when it is explicitly provided', () => {
+  it('skips an empty cite so the quote does not grow an empty attribution', () => {
     const wrapper = mount(Blockquote, {
       props: {
         cite: '',
       },
     })
 
-    expect(wrapper.find('footer').exists()).toBe(true)
-    expect(wrapper.find('cite').exists()).toBe(true)
+    expect(wrapper.find('footer').exists()).toBe(false)
+    expect(wrapper.find('cite').exists()).toBe(false)
   })
 })

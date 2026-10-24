@@ -1,3 +1,4 @@
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldLabelProps, FieldLabelSlots, FieldStatusInput } from '../Field/types.js'
 
 export type SliderValue = number | [number, number]
@@ -5,7 +6,7 @@ export type SliderOrientation = 'horizontal' | 'vertical'
 export type SliderValueDisplay = 'tooltip' | 'text' | 'none'
 export interface SliderMark { value: number, label?: string }
 
-export interface SliderProps<T extends SliderValue = SliderValue> extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'> {
+export interface SliderProps<T extends SliderValue = SliderValue> extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'>, FieldPartStylingProps {
   modelValue: T
   id?: string
   min?: number

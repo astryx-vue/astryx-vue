@@ -13,7 +13,13 @@ const attrs = useAttrs()
 const slots = useSlots()
 const labelId = `astryx-divider-label-${useId()}`
 
-const hasLabel = computed(() => Boolean(props.label) || Boolean(slots.label))
+const hasLabel = computed(() => {
+  if (slots.label)
+    return true
+  if (typeof props.label === 'number')
+    return Number.isFinite(props.label)
+  return typeof props.label === 'string' && props.label.length > 0
+})
 const rootAttrs = computed(() => Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'aria-labelledby')))
 const labelledBy = computed(() => {
   const explicit = attrs['aria-labelledby'] as string | undefined

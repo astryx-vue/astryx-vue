@@ -32,6 +32,15 @@
     min-width: 0;
   }
 
+  /*
+   * 横排里 100% 会变成整行的 flex 基准，旁边的标题只剩很窄一截，文字折成两行。
+   * 没传 width 时固定 20rem，flex 不再伸长；显式 width 仍走变量。
+   */
+  .astryx-stack[data-direction='horizontal'] > .astryx-field.astryx-typeahead {
+    width: var(--astryx-field-width, 20rem);
+    flex-grow: 0;
+  }
+
   .astryx-typeahead-control {
     box-sizing: border-box;
     position: relative;
@@ -209,6 +218,30 @@
     text-align: start;
     cursor: pointer;
     outline: none;
+  }
+
+  .astryx-typeahead-listbox[role='grid'] .astryx-typeahead-option {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    padding: 0;
+  }
+
+  .astryx-typeahead-option-main,
+  .astryx-typeahead-option-action {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-typeahead-option-main {
+    padding: var(--astryx-spacing-1-5, 6px) var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-typeahead-option-action.is-active {
+    outline: var(--astryx-focus-outline-width, 2px) solid var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: -2px;
   }
 
   .astryx-typeahead-option.is-active,

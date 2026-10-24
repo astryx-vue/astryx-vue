@@ -2,6 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
+import Icon from '../Icon/Icon.vue'
 import Button from './Button.vue'
 
 function createDeferred(): {
@@ -107,6 +108,13 @@ describe('button', () => {
     expect(wrapper.attributes('value')).toBe('save')
     expect(wrapper.classes()).toContain('product-action')
     expect(wrapper.attributes('style')).toContain('margin-top: 4px')
+  })
+
+  it('reflects variant and size as data attributes, not bare value classes', () => {
+    const wrapper = mount(Button, { props: { label: 'Save', variant: 'primary', size: 'sm' } })
+    expect(wrapper.classes()).toEqual(['astryx-button'])
+    expect(wrapper.attributes('data-variant')).toBe('primary')
+    expect(wrapper.attributes('data-size')).toBe('sm')
   })
 
   it('formats numeric width as pixels and preserves CSS string widths', async () => {
@@ -435,5 +443,24 @@ describe('button', () => {
 
     await wrapper.setProps({ isDisabled: false })
     expect(wrapper.element.tagName).toBe('A')
+  })
+
+  it('marks the button for the touch press model and sizes an unsized icon', () => {
+    const wrapper = mount(Button, {
+      props: { label: 'Save' },
+      slots: { icon: () => h(Icon, { icon: 'search' }) },
+    })
+
+    expect(wrapper.attributes('data-astryx-pressable')).toBe('')
+    expect(wrapper.get('.astryx-icon').attributes('data-size')).toBe('sm')
+  })
+
+  it('refuses a javascript href instead of handing it to the browser', () => {
+    const wrapper = mount(Button, {
+      props: { href: 'javascript:alert(1)', label: 'Run' },
+    })
+
+    expect(wrapper.element.tagName).toBe('A')
+    expect(wrapper.attributes('href')).toBeUndefined()
   })
 })

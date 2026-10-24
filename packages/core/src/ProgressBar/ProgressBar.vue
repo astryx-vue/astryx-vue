@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<ProgressBarProps>(), {
   min: 0,
   max: 100,
   size: 'md',
-  variant: 'neutral',
+  variant: 'accent',
   isLabelHidden: false,
   isDisabled: false,
 })
@@ -21,9 +21,13 @@ const generatedId = `astryx-progress-bar-${useId()}`
 const rootId = computed(() => (attrs.id as string | undefined) ?? generatedId)
 const labelId = computed(() => `${rootId.value}-label`)
 const descriptionId = computed(() => props.description ? `${rootId.value}-description` : undefined)
-const min = computed(() => Number(props.min))
-const max = computed(() => Number(props.max))
-const value = computed(() => Number(props.value))
+function finite(value: number, fallback: number): number {
+  return Number.isFinite(value) ? value : fallback
+}
+
+const min = computed(() => finite(Number(props.min), 0))
+const max = computed(() => finite(Number(props.max), 0))
+const value = computed(() => finite(Number(props.value), 0))
 const clamped = computed(() => Math.max(min.value, Math.min(max.value, value.value)))
 const percentage = computed(() => {
   if (max.value === min.value)
@@ -81,7 +85,7 @@ const resolvedMarks = computed(() => {
     <div class="astryx-progress-bar-rail">
       <div
         class="astryx-progress-bar-track" role="progressbar" :aria-labelledby="labelledBy" :aria-describedby="describedBy"
-        :aria-valuemin="min" :aria-valuemax="max" :aria-valuenow="isIndeterminate ? undefined : clamped" :aria-valuetext="isIndeterminate ? undefined : displayValue"
+        :aria-valuemin="isIndeterminate ? undefined : min" :aria-valuemax="isIndeterminate ? undefined : max" :aria-valuenow="isIndeterminate ? undefined : clamped" :aria-valuetext="isIndeterminate ? undefined : displayValue"
       >
         <div class="astryx-progress-bar-fill" :style="isIndeterminate ? undefined : fillWidth" />
       </div>

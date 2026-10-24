@@ -34,10 +34,10 @@ defineExpose({ element })
       marks. A real element in the slot replaces them.
     -->
     <slot>
-      <svg class="astryx-checkbox-indicator-check" viewBox="0 0 10 10" focusable="false">
+      <svg class="astryx-checkbox-indicator-check" :data-size="size" viewBox="0 0 10 10" focusable="false">
         <path d="M8.5 2.5L4 7.5L1.5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      <span class="astryx-checkbox-indicator-dash" />
+      <span class="astryx-checkbox-indicator-dash" :data-size="size" />
     </slot>
   </span>
 </template>

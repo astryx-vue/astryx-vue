@@ -1,5 +1,6 @@
 /* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './fonts.css';
+@import './data.css';
 @import './y2k/alert-dialog.css';
 @import './y2k/avatar.css';
 @import './y2k/avatar-group.css';

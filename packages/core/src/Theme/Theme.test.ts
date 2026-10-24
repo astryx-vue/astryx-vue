@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { computed, defineComponent, h } from 'vue'
+import { computed, createSSRApp, defineComponent, h } from 'vue'
+import { renderToString } from 'vue/server-renderer'
 import { defineSyntaxTheme } from '../Code/syntaxTheme.js'
 import { useSyntaxTheme } from '../Code/useSyntaxTheme.js'
 import { defineTheme } from './defineTheme.js'
@@ -46,15 +47,18 @@ describe('theme', () => {
 
     expect(wrapper.attributes('data-astryx-theme')).toBe('forest')
     expect(wrapper.attributes('data-astryx-color-mode')).toBe('dark')
-    expect(wrapper.element.style.getPropertyValue('--astryx-color-accent')).toBe('light-dark(#15803D, #86EFAC)')
-    expect(wrapper.element.style.getPropertyValue('--astryx-color-text-primary')).toBe('light-dark(#052E16, #DCFCE7)')
-    expect(wrapper.element.style.getPropertyValue('--astryx-text-foreground')).toBe('light-dark(#052E16, #DCFCE7)')
-    expect(wrapper.element.style.getPropertyValue('--astryx-heading-foreground')).toBe('light-dark(#052E16, #DCFCE7)')
-    expect(wrapper.element.style.getPropertyValue('--astryx-button-primary-background')).toBe('light-dark(#15803D, #86EFAC)')
-    expect(wrapper.element.style.getPropertyValue('--astryx-button-ghost-foreground')).toBe('light-dark(#052E16, #DCFCE7)')
-    expect(wrapper.element.style.getPropertyValue('--astryx-card-background')).toBe('light-dark(#FFFFFF, #0F3D24)')
+    // Root tokens live in the theme's own sheet, on the scope root, not inline.
+    const sheet = wrapper.get('[data-astryx-theme-style]').text()
+    expect(wrapper.element.style.getPropertyValue('--astryx-color-accent')).toBe('')
+    expect(sheet).toContain('@scope ([data-astryx-theme="forest"]) to ([data-astryx-theme])')
+    expect(sheet).toContain(':scope.astryx-theme {\n  --astryx-color-accent: light-dark(#15803D, #86EFAC);')
+    expect(sheet).toContain('--astryx-color-text-primary: light-dark(#052E16, #DCFCE7);')
+    expect(sheet).toContain('--astryx-text-foreground: light-dark(#052E16, #DCFCE7);')
+    expect(sheet).toContain('--astryx-heading-foreground: light-dark(#052E16, #DCFCE7);')
+    expect(sheet).toContain('--astryx-button-primary-background: light-dark(#15803D, #86EFAC);')
+    expect(sheet).toContain('--astryx-button-ghost-foreground: light-dark(#052E16, #DCFCE7);')
+    expect(sheet).toContain('--astryx-card-background: light-dark(#FFFFFF, #0F3D24);')
     expect(wrapper.element.style.colorScheme).toBe('dark')
-    expect(wrapper.find('style').exists()).toBe(false)
     expect(document.documentElement.getAttribute('data-astryx-theme')).toBe('forest')
     expect(document.documentElement.getAttribute('data-astryx-color-mode')).toBe('dark')
 
@@ -73,7 +77,8 @@ describe('theme', () => {
 
     const nested = wrapper.get('[data-astryx-theme="forest"]')
     expect(document.documentElement.getAttribute('data-astryx-theme')).toBe('warm')
-    expect((nested.element as HTMLElement).style.getPropertyValue('--astryx-color-text-primary')).toBe('light-dark(#052E16, #DCFCE7)')
+    expect(wrapper.find('[data-astryx-theme="warm"] [data-astryx-theme-style]').exists()).toBe(true)
+    expect(nested.get('[data-astryx-theme-style]').text()).toContain('--astryx-color-text-primary: light-dark(#052E16, #DCFCE7);')
     wrapper.unmount()
   })
 
@@ -89,8 +94,8 @@ describe('theme', () => {
       slots: { default: 'Ruled' },
     })
     const style = wrapper.get('[data-astryx-theme-style]')
-    expect(style.text()).toContain('[data-astryx-theme="ruled"] .astryx-button')
-    expect(style.text()).toContain('font-weight: 600;')
+    expect(style.text()).toContain('@scope ([data-astryx-theme="ruled"]) to ([data-astryx-theme])')
+    expect(style.text()).toContain('.astryx-button {\n  font-weight: 600;')
     wrapper.unmount()
   })
 
@@ -128,6 +133,29 @@ describe('theme', () => {
     expect(wrapper.get('.mode').text()).toBe('dark')
     expect(wrapper.get('.accent').text()).toBe('#86EFAC')
     expect(wrapper.get('.syntax').text()).toBe('#eeeeee')
+    wrapper.unmount()
+  })
+
+  it('server-renders the theme sheet as raw text, so its selectors survive', async () => {
+    const theme = defineTheme({
+      name: 'ssr',
+      tokens: { '--color-accent': '#123456' },
+      components: { card: { 'variant:muted': { borderWidth: '2px' } } },
+    })
+    const html = await renderToString(createSSRApp({ render: () => h(Theme, { theme }, () => 'x') }))
+    // Root tokens ride along with the sheet, so the first paint is already themed.
+    expect(html).toContain(':scope.astryx-theme {')
+    expect(html).toContain('--astryx-color-accent: #123456;')
+    expect(html).toContain('@scope ([data-astryx-theme="ssr"]) to ([data-astryx-theme])')
+    expect(html).toContain('.astryx-card[data-variant="muted"]')
+    expect(html).not.toContain('&quot;')
+  })
+
+  it('keeps the body font on the theme wrapper, so inheriting components follow it', () => {
+    const theme = defineTheme({ name: 'fonted', typography: { body: { family: 'Geist', fallbacks: 'sans-serif' } } })
+    const wrapper = mount(Theme, { props: { theme }, slots: { default: 'x' } })
+    expect(wrapper.get('[data-astryx-theme-style]').text()).toContain('--astryx-font-family-body: Geist, sans-serif;')
+    expect(wrapper.classes()).toContain('astryx-theme')
     wrapper.unmount()
   })
 })

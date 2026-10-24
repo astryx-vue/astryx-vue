@@ -89,4 +89,12 @@
   .astryx-time-input-option:hover {
     background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
   }
+
+  @media (pointer: coarse) {
+    @supports (-webkit-touch-callout: none) {
+      .astryx-time-input-control {
+        font-size: max(1rem, var(--astryx-text-body-size, 14px));
+      }
+    }
+  }
 }

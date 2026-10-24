@@ -1,1 +1,364 @@
-@layer astryx.reset;
+/*
+ * @astryx-vue/core/reset.css
+ *
+ * 全局 reset，给页面一个干净、各浏览器一致的起点。
+ * 和 Tailwind Preflight、modern-normalize 是同一类东西。
+ *
+ * 引入后会改变全局标签的默认样式：
+ * - 所有元素 box-sizing: border-box，边框默认 0 宽的实线。
+ * - 去掉标题、段落、列表等的默认外边距和内边距，列表去掉圆点。
+ * - 图片、视频、svg 等替换元素变成块级，img 和 video 自适应容器宽度。
+ * - 表单控件继承父元素的字体和颜色，按钮去掉浏览器自带外观。
+ * - 带交互的元素显示手型指针，禁用的元素显示默认指针。
+ * - ::before、::after、::placeholder 和搜索框的原生清除按钮一并重置。
+ *
+ * 所有选择器都包在 :where() 里，特异性为 0（伪元素写在 :where() 外面，
+ * 因为伪元素放进 :where() 会被整条丢掉）。规则放在最低优先级的
+ * `astryx.reset` 层，其他任何层和没有放进层的样式都能直接覆盖它。
+ *
+ * 用法：
+ *
+ *   import '@astryx-vue/core/reset.css'
+ *   import '@astryx-vue/core/styles.css'
+ *   import '@astryx-vue/themes/neutral.css'
+ *
+ * 层级顺序在每份样式表的第一行声明，所以无论引入顺序怎么排都成立。
+ * 只想在局部使用时，不要引入这个文件，改为给那一块区域自己写样式。
+ */
+
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.reset {
+
+  /* ===========================================================================
+     盒模型
+     =========================================================================== */
+
+  /*
+   * 全局 border-box，padding 和 border 不再撑大元素尺寸。
+   */
+  :where(*), :where(*)::before, :where(*)::after {
+    box-sizing: border-box;
+  }
+
+  /*
+   * 边框重置为 0 宽实线，之后只写 border-width 就能画出边框，
+   * 不必再补 border-style。
+   */
+  :where(*), :where(*)::before, :where(*)::after {
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+  }
+
+  /* ===========================================================================
+     文档
+     =========================================================================== */
+
+  /*
+   * 统一行高，阻止 iOS 横竖屏切换时自动放大文字，设置合适的 tab 宽度。
+   *
+   * color-scheme: light dark 声明页面同时支持浅色和深色，
+   * 让 CSS 的 light-dark() 能正确取值。
+   */
+  :where(html) {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    color-scheme: light dark;
+  }
+
+  /*
+   * 去掉 body 默认外边距，开启字体平滑让 macOS / iOS 上的文字更锐利。
+   */
+  :where(body) {
+    margin: 0;
+    line-height: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===========================================================================
+     文字
+     =========================================================================== */
+
+  /*
+   * 标题继承字号和字重，由使用者自己决定样式，不依赖各浏览器不同的默认值。
+   */
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  /*
+   * 去掉块级文字元素的默认外边距。
+   */
+  :where(h1, h2, h3, h4, h5, h6, p, blockquote, figure, pre, dl, dd) {
+    margin: 0;
+  }
+
+  /*
+   * 链接继承颜色和下划线，不使用浏览器默认的蓝紫色。
+   */
+  :where(a) {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  /*
+   * 修正 Chrome 和 Safari 里的字重。
+   */
+  :where(b, strong) {
+    font-weight: bolder;
+  }
+
+  /*
+   * 等宽字体栈，并修正浏览器给 code 元素的奇怪 em 字号。
+   */
+  :where(code, kbd, samp, pre) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      'Liberation Mono', 'Courier New', monospace;
+    font-size: 1em;
+  }
+
+  /*
+   * 修正 small 的字号。
+   */
+  :where(small) {
+    font-size: 80%;
+  }
+
+  /*
+   * sub 和 sup 不撑开行高。
+   */
+  :where(sub, sup) {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+
+  :where(sub) {
+    bottom: -0.25em;
+  }
+
+  :where(sup) {
+    top: -0.5em;
+  }
+
+  /* ===========================================================================
+     列表
+     =========================================================================== */
+
+  /*
+   * 去掉列表的圆点、外边距和内边距。用来做导航或布局的列表
+   * 不该带正文排版样式，需要正文列表时自己写样式。
+   */
+  :where(ol, ul, menu) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ===========================================================================
+     媒体
+     =========================================================================== */
+
+  /*
+   * 替换元素变成块级，消除行内图片下方那条莫名其妙的空隙。
+   */
+  :where(img, svg, video, canvas, audio, iframe, embed, object) {
+    display: block;
+    vertical-align: middle;
+  }
+
+  /*
+   * 图片和视频不超出容器，默认自适应宽度。
+   */
+  :where(img, video) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /*
+   * AspectRatio 的 fit 子元素尺寸。组件样式 `aspect-ratio.css` 里也有同样几条，
+   * 没引入 reset 时靠那里生效。这里再写一遍，是为了让它们排在上面
+   * `height: auto` 的后面：两者同在 reset 层、特异性都是 0，后出现的赢，
+   * 所以不管 reset.css 和组件样式谁先加载，fit 的子元素都能填满容器。
+   */
+  :where([data-astryx-aspect-ratio-override='cover'], [data-astryx-aspect-ratio-override='contain']) > :where(*) {
+    width: 100%;
+    height: 100%;
+  }
+
+  :where([data-astryx-aspect-ratio-override='cover']) > :where(img, video) {
+    object-fit: cover;
+  }
+
+  :where([data-astryx-aspect-ratio-override='contain']) > :where(img, video) {
+    object-fit: contain;
+  }
+
+  /* ===========================================================================
+     表单
+     =========================================================================== */
+
+  /*
+   * 表单控件继承父元素的字体，不用浏览器自带字体。
+   */
+  :where(button, input, optgroup, select, textarea) {
+    font: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+  }
+
+  /*
+   * 去掉按钮的浏览器默认外观，按钮由使用者自己设计。
+   */
+  :where(button, [type='button'], [type='reset'], [type='submit']) {
+    -webkit-appearance: button;
+    appearance: button;
+    background-color: transparent;
+    background-image: none;
+  }
+
+  /*
+   * 带交互的元素显示手型指针。
+   */
+  :where(button, [role='button']) {
+    cursor: pointer;
+  }
+
+  /*
+   * 禁用的元素收回一切交互指针：不会响应的控件不该让指针以为它会响应。
+   * 用 default 而不用 not-allowed：被 pointer-events: none 封住的禁用控件
+   * 显示的是祖先的指针，到处统一用一种，比只能画在一半控件上的强指针更好。
+   * 同时覆盖 [aria-disabled]：需要让原因保持可发现的禁用控件
+   * （带提示的按钮、Selector 的触发器、侧边栏导航项）会保持可聚焦，
+   * 用的就是这个属性。
+   */
+  :where(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  /*
+   * textarea 只允许纵向拉伸，避免撑坏布局。
+   */
+  :where(textarea) {
+    resize: vertical;
+  }
+
+  /*
+   * 统一占位文字的不透明度（Firefox 默认会变淡），
+   * 颜色取 --astryx-color-text-secondary，没有这个变量时用中性主题的默认值。
+   */
+  :where(input, textarea)::placeholder {
+    opacity: 1;
+    color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
+  }
+
+  /*
+   * 去掉搜索框在 Chrome 和 Safari 里自带的内边距和清除按钮。
+   */
+  :where([type='search'])::-webkit-search-decoration,
+  :where([type='search'])::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  /*
+   * 去掉 fieldset 的默认样式。
+   */
+  :where(fieldset) {
+    margin: 0;
+    padding: 0;
+  }
+
+  :where(legend) {
+    padding: 0;
+  }
+
+  /* ===========================================================================
+     表格
+     =========================================================================== */
+
+  /*
+   * 合并表格边框，修正 text-indent 和边框颜色的继承。
+   */
+  :where(table) {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+
+  /* ===========================================================================
+     其他
+     =========================================================================== */
+
+  /*
+   * hr 简化成一条顶部边线。
+   */
+  :where(hr) {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+
+  /*
+   * 修正 summary 的显示方式。
+   */
+  :where(summary) {
+    display: list-item;
+  }
+
+  /*
+   * 重置 dialog 的内边距和轮廓。
+   */
+  :where(dialog) {
+    padding: 0;
+    outline: none;
+  }
+
+  /*
+   * 保证 hidden 的元素真的被隐藏。hidden="until-found" 保留浏览器自己的渲染
+   * （content-visibility: hidden），页内查找和文本片段链接仍然能搜到
+   * 里面的内容并把它展开。
+   */
+  :where([hidden]:not([hidden='until-found' i])) {
+    display: none;
+  }
+
+  /*
+   * 去掉 iOS 上点按时的高亮。
+   */
+  :where(html) {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ===========================================================================
+     颜色模式
+     =========================================================================== */
+
+  /*
+   * 把 data-theme 属性映射成 CSS 的 color-scheme。
+   *
+   * 在 <html> 上设置 data-theme，浏览器就知道原生界面（滚动条、表单控件、
+   * 日期选择器）用哪种颜色模式，light-dark() 也能正确取值。
+   * 服务端渲染时直接写在 <html> 上，可以避免主题闪烁：
+   *
+   *   <html lang="en" data-theme="dark">
+   *
+   * 取值："light" | "dark" | 不写（默认 light dark，跟随系统）
+   */
+  :where(html[data-theme="light"]) {
+    color-scheme: light;
+  }
+
+  :where(html[data-theme="dark"]) {
+    color-scheme: dark;
+  }
+
+  :where(html:not([data-theme])) {
+    color-scheme: light dark;
+  }
+}

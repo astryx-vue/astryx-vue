@@ -1,44 +1,85 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 /*
- * 按压反馈。`usePressFeedback` 给元素加 `data-astryx-pressable`，
- * 手指按实了再临时加 `data-astryx-pressed`。
+ * 触屏按压模型的样式。
  *
- * 按下时立刻亮（不给过渡），抬手后靠 200ms 的 opacity 过渡淡出。
- * 鼠标不看按压模型，仍然用 `:active`；手指走的是 `@media (pointer: coarse)` 之外不生效的那条。
+ * 鼠标和手指走两套：
+ * - 鼠标保留 `:active`；
+ * - 粗指针（`@media (pointer: coarse)`）下丢掉 `:active`，改看控制器写的
+ *   `data-astryx-press`：`on` 是按压成立、手指还在，`fading` 是抬手后的淡出。
+ *
+ * 两条触屏分支都通过同一个数画颜色：`--astryx-press-alpha`，按压强度，0 到 1。
+ * 它是注册过的自定义属性（`@property`，`<number>`），所以能做动画；
+ * 按压色 `--_press-paint` 是「按压 token 乘以这个强度」，作为背景图片画出来。
+ * 图片的切换不会被组件自己的颜色过渡拖慢，所以按下的第一帧就是满强度。
+ * `fading` 用关键帧把强度从 1 降到 0，时长和控制器里的 PRESS_FADE_MS 是同一个数（200ms）。
+ *
+ * 组件怎么接：在画按压的元素上带 `data-astryx-pressable`，
+ * 在自己的样式里用 `var(--_press-paint-image)` 或 `var(--_press-paint)` 画两条触屏分支，
+ * 鼠标的 `:active` 放进 `@media not all and (pointer: coarse)`。
+ * 本地组件不想自己写样式时，用 `usePressFeedback()` 返回的 `astryx-pressable` 类，
+ * 它在 `::after` 上画一层按压色。
  */
+
+@property --astryx-press-alpha {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes astryx-press-release {
+  from {
+    --astryx-press-alpha: 1;
+  }
+  to {
+    --astryx-press-alpha: 0;
+  }
+}
+
 @layer astryx.components {
   [data-astryx-pressable] {
-    position: relative;
-    --astryx-pressable-fade: 200ms;
+    --_press-paint: color-mix(
+      in srgb,
+      var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19)) calc(var(--astryx-press-alpha) * 100%),
+      transparent
+    );
+    --_press-paint-image: linear-gradient(var(--_press-paint), var(--_press-paint));
   }
 
-  [data-astryx-pressable]::after {
+  [data-astryx-pressable][data-astryx-press='on'],
+  [data-astryx-pressable][data-astryx-press='fading'] {
+    --astryx-press-alpha: 1;
+  }
+
+  /* 淡出的曲线是平缓的 ease-out，整段时长都在褪色，读起来像系统列表取消选中。 */
+  [data-astryx-pressable][data-astryx-press='fading'] {
+    animation-name: astryx-press-release;
+    animation-duration: 200ms;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    animation-fill-mode: both;
+  }
+
+  /* 默认的一层按压色，给不想自己写样式的本地组件用。 */
+  .astryx-pressable {
+    position: relative;
+  }
+
+  .astryx-pressable::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
-    opacity: 0;
     pointer-events: none;
-    transition: opacity var(--astryx-pressable-fade, 200ms) linear;
   }
 
-  [data-astryx-pressed]::after {
-    opacity: 1;
-    transition: none;
-  }
-
-  @media (pointer: fine) {
-    [data-astryx-pressable]:active::after {
-      opacity: 1;
-      transition: none;
+  @media not all and (pointer: coarse) {
+    .astryx-pressable:where(:not(:disabled, [aria-disabled='true'])):active::after {
+      background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    [data-astryx-pressable]::after {
-      transition: none;
-    }
+  .astryx-pressable:where(:not(:disabled, [aria-disabled='true']))[data-astryx-press]::after {
+    background-color: transparent;
+    background-image: var(--_press-paint-image);
   }
 }

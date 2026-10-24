@@ -100,6 +100,28 @@ import '@astryx-vue/themes/neutral.css'
   title="类型"
 />
 
+## 给外壳和本体加样式
+
+`TextInput` 有两个可以加样式的部件：
+
+- **外壳**：`Field` 那一层，包着标签、输入框和状态消息。用 `container-class` 和 `container-style`。
+- **本体**：画边框和背景、里面装着图标和清除按钮的那个盒子。用 `control-class` 和 `control-style`。
+
+两组属性各落各的位置，不会改道，也不会落到原生 `<input>` 上。
+
+```vue
+<TextInput
+  v-model="name"
+  label="姓名"
+  container-class="my-field"
+  :control-style="{ borderRadius: '12px' }"
+/>
+```
+
+直接写在 `<TextInput>` 上的 `class` 和 `style` 仍然落在本体上，和 `control-class` 一起生效。`id`、`data-*`、`aria-*` 和事件监听则落在原生 `<input>` 上。
+
+在 `InputGroup` 里，以及横向标签的 `FormLayout` 里，字段没有外壳，`container-*` 不生效，开发环境会给出警告。要给 `InputGroup` 加样式，请直接写在 `InputGroup` 上。
+
 ## 无障碍
 
 `label` 是必填项。屏幕阅读器靠它说明这个字段是做什么的；`placeholder` 只在输入框为空时可见，用户一开始输入就消失，不能用它代替标签。

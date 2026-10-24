@@ -71,12 +71,34 @@ export type IconName
     | 'image'
 
 /**
- * A built-in name, or any other string.
+ * A key owned by one component or library, written `<owner>:<role>`, such as
+ * `numberInput:stepperDown` or `richtext:bold`.
+ *
+ * A glyph that only one component draws gets one of these instead of a new
+ * shared {@link IconName}, so adding it never makes a complete
+ * {@link IconRegistry} grow a required entry. A theme points the key at an
+ * Iconify id through `defineTheme({ icons })`, the same way it maps a shared
+ * name. A component can also ship built-in artwork for its key by listing it in
+ * `ICON_GLYPHS`.
+ */
+export type NamespacedIconName = `${string}:${string}`
+
+/**
+ * A complete semantic icon map: an Iconify id for every shared name.
+ *
+ * `defaultSemanticIcons` is one. A theme's `icons` only lists the names it
+ * changes, so it is a partial map; a registry that claims to be complete must
+ * draw every shared name, including `upload`.
+ */
+export type IconRegistry = Readonly<Record<IconName, string>>
+
+/**
+ * A built-in name, a namespaced component key, or any other string.
  *
  * The `(string & {})` intersection keeps the built-in names available for
  * autocomplete while allowing keys contributed by a component or application.
  */
-export type ExtendedIconName = IconName | (string & {})
+export type ExtendedIconName = IconName | NamespacedIconName | (string & {})
 
 export interface IconProps {
   /**

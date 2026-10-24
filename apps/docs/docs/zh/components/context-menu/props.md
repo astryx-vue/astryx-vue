@@ -34,7 +34,7 @@ footer: false
       <tr>
         <td><code>label</code></td>
         <td><code>string</code></td>
-        <td><code>'Context menu'</code></td>
+        <td>随当前语言，英文 <code>Context menu</code>，中文「快捷菜单」</td>
         <td>菜单的无障碍名称，作为面板的 <code>aria-label</code> 在打开时被朗读。</td>
       </tr>
       <tr>

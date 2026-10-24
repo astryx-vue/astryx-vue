@@ -51,4 +51,8 @@ The title is exposed as a heading through `role="heading"` and `aria-level="2"`,
 
 When the dialog opens, the title carries `tabindex="-1"` and receives initial focus, so keyboard users hear the name right away instead of starting in the middle of the body.
 
-The close control is an `IconButton` whose accessible name defaults to `Close`. Override it with `closeButtonLabel` when the copy needs localizing.
+The close control is an `IconButton`. When `closeButtonLabel` is omitted, its accessible name follows the active language: Close in English, 关闭 in Chinese.
+
+The `title` and `subtitle` slots take inline content, such as emphasis or a link. An empty subtitle string with no slot renders nothing.
+
+Theme targets are `dialog-header`, `dialog-header-start-content`, `dialog-header-title-block`, `dialog-header-end-content`, and `dialog-header-close-icon`. They sit on the row, the leading slot, the title block, the trailing slot, and the close glyph. With a close button, the trailing slot pulls in on the block edges and the inline end, cancelling the button's own padding. `endContentEdgeCompensation` selects `inline`, `block`, or `all`.

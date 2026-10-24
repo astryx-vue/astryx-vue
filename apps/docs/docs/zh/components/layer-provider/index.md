@@ -22,7 +22,7 @@ import { LayerProvider } from '@astryx-vue/core/LayerProvider'
 
 `toast` 里有三样：`position` 是 toast 视口贴哪个角，`maxVisible` 是同时最多显示几条，还有一个只对 toast 生效的 `inset`，会逐边盖掉 provider 上的同一条边。
 
-嵌套的 `LayerProvider` 会被忽略，永远是外面那层说了算。
+嵌套的 `LayerProvider` 是个例外：它不会再开一套 toast 视口，但如果它自己声明了 `inset`，这份 inset 只收紧它子树里的锚定浮层，toast 视口仍然看最外层。不声明 `inset` 的内层 provider 什么也不做。
 
 ## 建议
 
@@ -31,7 +31,7 @@ import { LayerProvider } from '@astryx-vue/core/LayerProvider'
 | <Badge variant="success">Do</Badge> | 视口边上有常驻条子时，在 `LayerProvider` 的 `inset` 里声明一次，之后所有贴边浮层和 toast 都会绕开它。 |
 | <Badge variant="success">Do</Badge> | 需要全局共享 toast 或浮层配置时，在应用根部附近放一个 `LayerProvider`。 |
 | <Badge variant="success">Do</Badge> | 常见的浮层场景用更上层的 `Popover`、`HoverCard`、`Tooltip`，不用自己拼。 |
-| <Badge variant="error">Don't</Badge> | 不要嵌套 `LayerProvider`：内层会被忽略，只是白白多一层。 |
+| <Badge variant="error">Don't</Badge> | 不要嵌套 `LayerProvider`：内层不再开 toast 视口，只是白白多一层；确实要给某块子树单独声明常驻条时，才用内层的 `inset`。 |
 
 ## 示例
 

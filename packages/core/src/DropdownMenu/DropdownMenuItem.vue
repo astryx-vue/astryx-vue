@@ -2,6 +2,7 @@
 import type { StyleValue } from 'vue'
 import type { DropdownMenuItemEmits, DropdownMenuItemProps, DropdownMenuItemSlots } from './types.js'
 import { computed, toRaw, useAttrs, useSlots } from 'vue'
+import { isMenuPressActivation } from '../composables/internal/strayClick.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import Item from '../List/Item.vue'
@@ -65,8 +66,21 @@ function handleClick(event: MouseEvent): void {
   // `emit` reaches the `onClick` prop too, so a handler never runs twice.
   if (!isBrowserNavigation)
     emit('click', event)
+  followPressActivation(event)
   if (props.hasCloseOnSelect)
     menu?.closeMenu()
+}
+
+function followPressActivation(event: MouseEvent): void {
+  if (!isMenuPressActivation() || isModifiedClick(event) || linkRoot.value !== 'a')
+    return
+  const href = props.href
+  if (href == null || !(event.currentTarget instanceof HTMLAnchorElement))
+    return
+  if (props.target === '_blank')
+    window.open(href, '_blank', 'noopener,noreferrer')
+  else
+    window.location.assign(href)
 }
 
 function handleAuxClick(event: MouseEvent): void {
@@ -110,6 +124,7 @@ function handlePointerMove(event: PointerEvent): void {
     :data-density="density"
     :data-disabled="isDisabled || undefined"
     :data-interactive="true"
+    draggable="false"
     :data-menu-size="menuSize"
     :data-variant="variant"
     :href="linkHref"

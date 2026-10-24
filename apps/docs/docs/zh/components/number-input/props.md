@@ -15,15 +15,15 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>字段标签，同时作为无障碍名称。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>''</code></td><td>占位文本。</td></tr>
-      <tr><td><code>min</code></td><td><code>number | null</code></td><td>—</td><td>最小值。比它小的输入按这个值提交。</td></tr>
-      <tr><td><code>max</code></td><td><code>number | null</code></td><td>—</td><td>最大值。比它大的输入按这个值提交。</td></tr>
+      <tr><td><code>min</code></td><td><code>number | null</code></td><td>—</td><td>最小值。离开或按 Enter 时，比它小的输入收到这个值。输入过程中先标成无效。</td></tr>
+      <tr><td><code>max</code></td><td><code>number | null</code></td><td>—</td><td>最大值。离开或按 Enter 时，比它大的输入收到这个值。输入过程中先标成无效。</td></tr>
       <tr><td><code>step</code></td><td><code>number | null</code></td><td><code>1</code></td><td>每次增减的步长。</td></tr>
       <tr><td><code>hasNumberSteppers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在输入框末尾显示加、减按钮。这一步不会改变值时，对应按钮置灰。</td></tr>
       <tr><td><code>isWheelEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>输入框聚焦时，滚轮是否改变值。页面滚动应该优先的场景把它关掉。</td></tr>
       <tr><td><code>isIntegerOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只提交整数。写小数时文字留在框里，离开输入框后丢弃。键盘也切到数字键盘。</td></tr>
       <tr><td><code>formatValue</code></td><td><code>(value: number) =&gt; string</code></td><td>—</td><td>未聚焦时显示的文本，例如 <code>(v) =&gt; `${v} 件`</code>。聚焦后显示原始数字方便编辑，格式化后的文本通过 <code>aria-valuetext</code> 暴露给读屏。</td></tr>
       <tr><td><code>units</code></td><td><code>string | null</code></td><td>—</td><td>显示在输入框末尾的单位，例如 %。</td></tr>
-      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有值时显示清除按钮。清除后值为 <code>null</code>。</td></tr>
+      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有值时显示清除按钮。提示只说「清除」，读屏名称带字段名。清除后值为 <code>null</code>。把内容删空后离开，只有开了这个按钮才会提交 <code>null</code>，否则回到原值。</td></tr>
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。与 <code>isDisabled</code> 一起用时，悬停或键盘聚焦会显示提示；输入框通过 <code>aria-disabled</code> 保持可聚焦，不会被移出 Tab 顺序。</td></tr>
       <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>值照常显示、照常提交，但不能编辑。只读时方向键、滚轮、加减按钮全部关闭。和 <code>isDisabled</code> 同时设置时以禁用以准。</td></tr>
@@ -45,6 +45,10 @@ footer: false
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>等同于 <code>disabledMessage</code>。</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>等同于 <code>hasClear</code>。</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>等同于 <code>htmlName</code>。</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。没有外壳时不生效，开发环境会警告。在 InputGroup 和横向标签的 FormLayout 里也是这样。</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到数字框本体的 class。直接写在组件上的 class 也落在本体，不会警告。</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到数字框本体的行内样式。直接写在组件上的 style 也落在本体。</td></tr>
     </tbody>
   </table>
 </div>

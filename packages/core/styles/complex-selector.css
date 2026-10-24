@@ -33,8 +33,10 @@
   }
 
   @media (pointer: coarse) {
-    .astryx-complex-selector {
-      font-size: max(1rem, var(--astryx-text-label-size, 0.875rem));
+    @supports (-webkit-touch-callout: none) {
+      .astryx-complex-selector {
+        font-size: max(1rem, var(--astryx-text-label-size, 0.875rem));
+      }
     }
   }
 
@@ -62,12 +64,26 @@
     color: var(--astryx-color-text-secondary, #525252);
   }
 
-  .astryx-complex-selector[data-status='error'] {
+  .astryx-complex-selector[data-variant='input'][data-status='error'] {
     border-color: var(--astryx-input-error, #e33f4a);
   }
 
-  .astryx-complex-selector[data-status='warning'] {
+  .astryx-complex-selector[data-variant='input'][data-status='warning'] {
     border-color: var(--astryx-input-warning, #a67a00);
+  }
+
+  .astryx-complex-selector[data-variant='secondary'] {
+    border-width: 0;
+    border-color: transparent;
+    background-color: var(--astryx-button-secondary-background, #0000000f);
+    color: var(--astryx-button-secondary-foreground, #171717);
+    font-weight: var(--astryx-font-weight-medium, 500);
+  }
+
+  @media (hover: hover) {
+    .astryx-complex-selector[data-variant='secondary']:not(:disabled):hover {
+      background-image: linear-gradient(var(--astryx-button-hover-overlay, #0000000d), var(--astryx-button-hover-overlay, #0000000d));
+    }
   }
 
   .astryx-complex-selector:focus-visible {
@@ -77,7 +93,7 @@
 
   .astryx-complex-selector:disabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: default;
   }
 
   .astryx-complex-selector-start {

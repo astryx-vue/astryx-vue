@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import OverflowList from './OverflowList.vue'
 
@@ -33,5 +33,46 @@ describe('overflow-list', () => {
     })
     expect(wrapper.get('.astryx-overflow-list__row .astryx-overflow-list__chip').text()).toBe('Settings')
     expect(wrapper.find('[aria-label="2 more"]').exists()).toBe(true)
+  })
+
+  it('reports the collapsed set only after something is actually hidden', async () => {
+    const onOverflowChange = vi.fn()
+    const rows = [
+      { id: 'a', label: 'Alpha' },
+      { id: 'b', label: 'Beta' },
+      { id: 'c', label: 'Gamma' },
+    ]
+    const wrapper = mount(OverflowList, {
+      props: { items: rows, visibleCount: 3, onOverflowChange },
+    })
+    await nextTick()
+    expect(onOverflowChange).not.toHaveBeenCalled()
+
+    await wrapper.setProps({ visibleCount: 1 })
+    expect(onOverflowChange).toHaveBeenCalledTimes(1)
+    expect(onOverflowChange.mock.calls[0]?.[0]).toEqual([
+      { item: rows[1], index: 1 },
+      { item: rows[2], index: 2 },
+    ])
+
+    await wrapper.setProps({ visibleCount: 1 })
+    expect(onOverflowChange).toHaveBeenCalledTimes(1)
+
+    await wrapper.setProps({ visibleCount: 3 })
+    expect(onOverflowChange).toHaveBeenCalledTimes(2)
+    expect(onOverflowChange.mock.calls[1]?.[0]).toEqual([])
+  })
+
+  it('reports the leading items when collapsing from the start', () => {
+    const onOverflowChange = vi.fn()
+    const rows = [
+      { id: 'a', label: 'Alpha' },
+      { id: 'b', label: 'Beta' },
+    ]
+    mount(OverflowList, {
+      props: { collapseFrom: 'start', items: rows, visibleCount: 1, onOverflowChange },
+    })
+    expect(onOverflowChange).toHaveBeenCalledTimes(1)
+    expect(onOverflowChange.mock.calls[0]?.[0]).toEqual([{ item: rows[0], index: 0 }])
   })
 })

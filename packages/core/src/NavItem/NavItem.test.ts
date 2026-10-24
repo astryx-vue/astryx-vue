@@ -13,6 +13,13 @@ const RouterLink = defineComponent({
 })
 
 describe('nav-item', () => {
+  it('joins the touch press model unless disabled', () => {
+    const enabled = mount(NavItem, { props: { label: 'Home', href: '/' } })
+    expect(enabled.get('a').attributes('data-astryx-pressable')).toBe('')
+    const disabled = mount(NavItem, { props: { label: 'Home', isDisabled: true } })
+    expect(disabled.get('button').attributes('data-astryx-pressable')).toBeUndefined()
+  })
+
   it('renders a link and marks the current page', () => {
     const wrapper = mount(NavItem, {
       props: { href: '/home', isSelected: true, label: 'Home' },
@@ -46,6 +53,22 @@ describe('nav-item', () => {
     const link = wrapper.get('a')
     expect(link.attributes('href')).toBe('/inbox')
     expect(link.attributes('data-to')).toBe('/inbox')
+  })
+
+  it('does not render a javascript href as a link', () => {
+    const wrapper = mount(NavItem, {
+      props: { href: 'javascript:alert(1)', label: 'Bad' },
+    })
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(wrapper.get('button').text()).toBe('Bad')
+  })
+
+  it('keeps a caller aria-label when the item shows its text', () => {
+    const wrapper = mount(NavItem, {
+      attrs: { 'aria-label': 'Go home' },
+      props: { href: '/home', label: 'Home' },
+    })
+    expect(wrapper.get('a').attributes('aria-label')).toBe('Go home')
   })
 
   it('adds a safe rel when the link opens a new tab', () => {

@@ -19,7 +19,7 @@
     padding-inline: var(--astryx-spacing-1, 4px);
     border-bottom: 2px solid var(--astryx-kbd-border-color, var(--astryx-color-border-emphasized, #d4d4d4));
     border-radius: var(--astryx-radius-inner, 0.375rem);
-    color: var(--astryx-kbd-foreground, var(--astryx-color-text-secondary, #525252));
+    color: var(--astryx-kbd-foreground, var(--astryx-color-text-primary, #171717));
     background-color: var(--astryx-kbd-background, #e5e5e5);
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
     font-size: var(--astryx-text-supporting-size, 0.75rem);

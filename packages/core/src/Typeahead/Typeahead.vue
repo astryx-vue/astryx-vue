@@ -3,7 +3,9 @@ import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { TypeaheadEmits, TypeaheadProps, TypeaheadSlots } from './types.js'
 import { computed, provide, useAttrs, useId, useTemplateRef } from 'vue'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import BaseTypeahead from './BaseTypeahead.vue'
 import { typeaheadChromeKey } from './context.js'
 import '../../styles/typeahead.css'
@@ -31,6 +33,12 @@ const emit = defineEmits<TypeaheadEmits<T>>()
 defineSlots<TypeaheadSlots<T>>()
 
 const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'Typeahead',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-activedescendant', 'aria-autocomplete', 'aria-disabled', 'aria-required'],
+})
 provide(typeaheadChromeKey, true)
 const inputId = `astryx-typeahead-${useId()}`
 const base = useTemplateRef<{ focus: () => void, blur: () => void }>('base')
@@ -44,6 +52,8 @@ const disabledMessage = computed(() => {
 const showsClear = computed(() => props.hasClear && props.clearable)
 /** 两个名字任一为真就在聚焦时先展开。 */
 const showsEntriesOnFocus = computed(() => props.hasEntriesOnFocus || props.showOnFocus)
+/** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起标签。 */
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const emptySearchText = computed(() => props.emptySearchText ?? props.emptyText)
 
 const fieldStatus = computed<FieldStatusInput | undefined>(() => {
@@ -61,12 +71,13 @@ defineExpose({
 <template>
   <Field
     class="astryx-typeahead"
-    :class="[`size-${props.size}`]"
+    :class="[parts.containerClass.value, `size-${props.size}`]"
+    :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="inputId"
     :description="props.description"
     :label-tooltip="props.labelTooltip"
-    :is-label-hidden="props.labelHidden"
+    :is-label-hidden="hideLabel"
     :is-disabled="props.disabled"
     :is-required="props.required"
     :is-optional="props.optional"
@@ -76,7 +87,9 @@ defineExpose({
     <template #default="field">
       <BaseTypeahead
         ref="base"
-        v-bind="attrs"
+        v-bind="parts.forwardedAttrs()"
+        :control-class="parts.controlClass()"
+        :control-style="parts.controlStyle()"
         :model-value="props.modelValue"
         :search-source="props.searchSource"
         :input-id="field.inputId"
@@ -101,8 +114,10 @@ defineExpose({
         @change-query="emit('changeQuery', $event)"
         @open-change="emit('openChange', $event)"
       >
-        <template v-if="$slots.icon" #icon>
-          <slot name="icon" />
+        <template v-if="$slots.icon || props.startIcon" #icon>
+          <slot name="icon">
+            <component :is="props.startIcon" />
+          </slot>
         </template>
         <template v-if="$slots.item" #item="slotProps">
           <slot name="item" :item="slotProps.item" :is-active="slotProps.isActive" :is-selected="slotProps.isSelected" />

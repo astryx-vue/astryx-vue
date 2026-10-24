@@ -1,6 +1,7 @@
 import type { ComputedRef, ShallowRef } from 'vue'
 import type { SliderProps, SliderValue } from './types.js'
 import { computed, shallowRef, watch } from 'vue'
+import { getInteractionModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
 import { add, clamp, multiply, snap, THUMB_SIZE } from './sliderMath.js'
 
 interface SliderOptions {
@@ -17,10 +18,13 @@ interface SliderControl {
   gap: ComputedRef<number>
   bounds: (index: number) => [number, number]
   dragging: ShallowRef<number | null>
+  keyboardFocus: ShallowRef<number | null>
   pointerDown: (event: PointerEvent) => void
   pointerMove: (event: PointerEvent) => void
   pointerEnd: (event: PointerEvent) => void
   keydown: (index: number, event: KeyboardEvent) => void
+  thumbFocus: (index: number) => void
+  thumbBlur: () => void
 }
 
 export function useSlider(options: SliderOptions): SliderControl {
@@ -38,6 +42,9 @@ export function useSlider(options: SliderOptions): SliderControl {
     return [Math.min(low!, add(upper, -gap.value)), upper]
   })
   const dragging = shallowRef<number | null>(null)
+  const keyboardFocus = shallowRef<number | null>(null)
+  if (typeof document !== 'undefined')
+    trackInteractionModality()
   let pointerId: number | null = null
   let latest: SliderValue | undefined
   watch([() => p.isDisabled, () => p.orientation, () => Array.isArray(options.model())], () => {
@@ -53,10 +60,11 @@ export function useSlider(options: SliderOptions): SliderControl {
     return [index === 1 ? add(values.value[0]!, gap.value) : min.value, values.value.length === 2 && index === 0 ? add(values.value[1]!, -gap.value) : max.value]
   }
 
-  function update(index: number, raw: number): SliderValue {
+  function update(index: number, raw: number, shouldSnap = true): SliderValue {
     const next = [...values.value]
     const [lower, upper] = bounds(index)
-    next[index] = clamp(snap(raw, min.value, step.value), lower, upper)
+    const stepped = shouldSnap ? snap(raw, min.value, step.value) : raw
+    next[index] = clamp(stepped, lower, upper)
     const value: SliderValue = next.length === 2 ? [next[0]!, next[1]!] : next[0]!
     latest = value
     if (next.some((v, i) => v !== values.value[i]))
@@ -86,6 +94,7 @@ export function useSlider(options: SliderOptions): SliderControl {
     dragging.value = index
     pointerId = event.pointerId
     options.track.value.querySelectorAll<HTMLElement>('[role="slider"]')[index]?.focus({ preventScroll: true })
+    keyboardFocus.value = null
     update(index, raw)
     options.track.value.setPointerCapture?.(event.pointerId)
   }
@@ -108,8 +117,20 @@ export function useSlider(options: SliderOptions): SliderControl {
       options.end(value)
   }
 
+  function thumbFocus(index: number): void {
+    keyboardFocus.value = !p.isDisabled && getInteractionModality() === 'keyboard' ? index : null
+  }
+
+  function thumbBlur(): void {
+    keyboardFocus.value = null
+  }
+
   function keydown(index: number, event: KeyboardEvent): void {
-    if (p.isDisabled || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey)
+    if (p.isDisabled || event.defaultPrevented)
+      return
+    if (event.key !== 'Shift' && !event.altKey && !event.ctrlKey && !event.metaKey && getInteractionModality() === 'keyboard')
+      keyboardFocus.value = index
+    if (event.altKey || event.ctrlKey || event.metaKey)
       return
     const current = values.value[index]!
     const rtl = p.orientation !== 'vertical' && options.track.value && getComputedStyle(options.track.value).direction === 'rtl'
@@ -124,8 +145,9 @@ export function useSlider(options: SliderOptions): SliderControl {
     else
       return
     event.preventDefault()
-    options.end(update(index, value))
+    const toBound = event.key === 'Home' || event.key === 'End'
+    options.end(update(index, value, !toBound))
   }
 
-  return { min, max, gap, values, bounds, dragging, pointerDown, pointerMove, pointerEnd, keydown }
+  return { min, max, gap, values, bounds, dragging, keyboardFocus, pointerDown, pointerMove, pointerEnd, keydown, thumbFocus, thumbBlur }
 }

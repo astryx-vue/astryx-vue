@@ -17,7 +17,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 import { useLocale } from '@astryx-vue/core/locale'
 ```
 
-返回的 `locale` 是 computed 字符串，模板里会自动取值，`watch` 和 `computed` 也会跟着 provider 换语言而重算。标签在出口统一收过一次：`en` 和所有 `en-*` 都读作 `en`，`zh`、`zh-CN`、`zh-Hans` 都读作 `zh-CN`，其余标签保留规范写法。
+返回的 `locale` 是 computed 字符串，模板里会自动取值，`watch` 和 `computed` 也会跟着 provider 换语言而重算。标签在出口统一收过一次：`zh`、`zh-CN`、`zh-Hans` 都读作 `zh-CN`，其余标签保留地区、只规范大小写，例如 `en-gb` 读作 `en-GB`。
 
 ## 建议
 

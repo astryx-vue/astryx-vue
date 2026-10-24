@@ -1,4 +1,5 @@
 import type { ISODateRange, WeekStartsOn } from '../composables/useDateRange.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 
 export type DateRange = ISODateRange
@@ -8,7 +9,7 @@ export interface DateRangePreset {
   getRange: () => DateRange
 }
 
-export interface DateRangeInputProps {
+export interface DateRangeInputProps extends FieldPartStylingProps {
   label: string
   modelValue?: DateRange | null
   id?: string
@@ -40,6 +41,8 @@ export interface DateRangeInputProps {
   isRequired?: boolean
   isOptional?: boolean
   isLabelHidden?: boolean
+  /** 旧名。和 `isLabelHidden` 任一为真就藏起标签。 */
+  labelHidden?: boolean
   labelTooltip?: string
   status?: FieldStatusInput
   statusVariant?: FieldStatusVariant | 'tooltip'

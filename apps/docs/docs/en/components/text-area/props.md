@@ -16,7 +16,7 @@ footer: false
 <tr><td><code>rows</code></td><td><code>number</code></td><td>—</td><td>Native textarea rows.</td></tr>
 <tr><td><code>cols</code></td><td><code>number</code></td><td>—</td><td>Native textarea cols.</td></tr>
 <tr><td><code>minlength</code></td><td><code>number | string</code></td><td>—</td><td>Native textarea minlength.</td></tr>
-<tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>Native textarea maxlength. When set, a live character count is shown. It turns red when the value is longer than the limit.</td></tr>
+<tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>Visible-character limit. One emoji counts as one. Typing past it stays allowed; the count turns red, and screen readers hear the near and over zones. It is not written to the native maxlength attribute.</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>Native textarea wrap.</td></tr>
 <tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>Native textarea resize. Vertical dragging is enabled by default.</td></tr>
 <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>Native textarea autocomplete token, such as <code>off</code> or <code>email</code>. Forwarded unchanged; the controlled value is not affected.</td></tr>
@@ -40,7 +40,11 @@ footer: false
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>Show a loading indicator.</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td>false</td><td>Show a clear button.</td></tr>
 <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>Focus on mount.</td></tr>
-<tr><td><code>clearLabel</code></td><td><code>string</code></td><td>—</td><td>Accessible label for the clear button.</td></tr>
+<tr><td><code>clearLabel</code></td><td><code>string</code></td><td>—</td><td>Accessible name of the clear button. It includes the field label by default. The tooltip only says “Clear”.</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container.</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the text area box. A class written on the component lands here too, with no warning.</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the text area box. A style written on the component lands here too.</td></tr>
 <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>Accessible label for the loading indicator.</td></tr>
 <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Decorative icon before the label.</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Info tooltip beside the label.</td></tr>

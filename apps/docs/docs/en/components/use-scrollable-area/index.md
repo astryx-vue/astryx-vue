@@ -13,7 +13,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 Adds canonical axis-aware scroll behavior to structure owned by the caller. An axis is effective only when its computed overflow is scroll-capable and geometry exceeds the shared 1px tolerance. Both viewport and content boxes are observed.
 
-Bind `viewport` to the scrolling box as a function ref, and `content` to the box your content sits in. `viewportAttrs` carries `role`, `aria-label`, `tabindex`, and the `data-scroll-*` attributes written from the current measurement. `viewportStyle` carries `overflow` and `overscroll-behavior`. `label` is required. Options are read reactively, so a component's `props` object can be passed straight in and later changes are picked up.
+Bind `viewport` to the scrolling box as a function ref, and `content` to the box your content sits in. `viewportAttrs` carries `role`, `aria-label`, `tabindex`, and the `data-scroll-*` attributes written from the current measurement. `viewportStyle` carries `overflow` and `overscroll-behavior`. Name and role come from `label` and `role`, or from `keyboardAccess`, which also says where the keyboard enters. The measured state is registered as a scroll owner, so nested areas and focus delegation can tell which level scrolls. A hidden or zero-size viewport cannot be measured and keeps its last state. Options are read reactively, so a component's `props` object can be passed straight in and later changes are picked up.
 
 ```ts
 import { useScrollableArea } from '@astryx-vue/core'

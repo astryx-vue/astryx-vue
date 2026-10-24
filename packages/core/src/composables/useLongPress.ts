@@ -1,5 +1,5 @@
 import type { MaybeRefOrGetter } from 'vue'
-import { onBeforeUnmount, toValue } from 'vue'
+import { getCurrentScope, onScopeDispose, toValue } from 'vue'
 
 interface Point {
   x: number
@@ -53,8 +53,9 @@ function touchPoint(event: TouchEvent): Point | null {
  * surface. The press is cancelled when the finger travels past the tolerance,
  * lifts, a second finger lands, or the touch is cancelled.
  *
- * 两种绑法：自己接指针事件时用 `start` / `moveTo` / `cancel`；直接要触摸监听时
- * 把 `handlers` 摊到元素上。
+ * 两种绑法，同一个检测器：直接要触摸监听时把 `handlers` 摊到元素上；
+ * 自己已经在跑指针事件状态机时（`useMenuPress` 就是）调 `start` / `moveTo` / `cancel`。
+ * 按住时长、移动容差、计时器都在这里，所以长按在右键菜单和菜单触发器上是同一个意思。
  */
 export function useLongPress(options: LongPressOptions): LongPressHandlers {
   const delayMs = options.delayMs ?? DEFAULT_DELAY_MS
@@ -115,6 +116,12 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
   }
 
   function onTouchMove(event: TouchEvent): void {
+    if (origin == null)
+      return
+    if ((event.touches?.length ?? 0) > 1) {
+      cancel()
+      return
+    }
     const point = touchPoint(event)
     if (point != null)
       moveTo(point)
@@ -128,7 +135,8 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
     cancel()
   }
 
-  onBeforeUnmount(cancel)
+  if (getCurrentScope() != null)
+    onScopeDispose(cancel)
 
   return {
     cancel,

@@ -14,7 +14,7 @@ footer: false
       <tr><td><code>config</code></td><td><code>PowerSearchConfig</code></td><td>必需</td><td>有哪些字段、运算符，以及每种运算符要什么值。</td></tr>
       <tr><td><code>filters</code></td><td><code>PowerSearchFilter[]</code></td><td>-</td><td>当前条件。传入之后由外面保存，配合更新事件使用。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>搜索</td><td>输入框的无障碍名称。</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>true</code></td><td>视觉上藏起标签，读屏仍然读得到。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>true</code></td><td>视觉上藏起标签，读屏仍然读得到。不传就隐藏；传 <code>false</code> 会显示。旧名 <code>labelHidden</code> 同样可用。两个都传时听正名。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td>搜索……</td><td>还没有条件时的占位文字。</td></tr>
       <tr><td><code>autofocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>挂载后立刻聚焦。</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>有筛选条件时显示全部清除。旧名 <code>clearable</code> 同样可用。</td></tr>
@@ -34,6 +34,10 @@ footer: false
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>匹配数量。数字会按结果的单复数格式化。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>输入框和标签的尺寸。</td></tr>
       <tr><td><code>components</code></td><td><code>PowerSearchComponents</code></td><td>-</td><td>按值的类型替换标签或编辑器。</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string</code></td><td>-</td><td>加到字段外壳，也就是标签和状态说明那一层。不会进到画边框的外框，也不会进到原生 input。</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>字段外壳的行内样式。落点和 <code>containerClass</code> 相同。</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string</code></td><td>-</td><td>加到画边框的外框。写在组件上的 <code>class</code> 也落在这里，不会进到原生 input。</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>外框的行内样式。写在组件上的 <code>style</code> 也落在这里。</td></tr>
     </tbody>
   </table>
 </div>

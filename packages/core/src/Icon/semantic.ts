@@ -1,4 +1,4 @@
-import type { IconName } from './types.js'
+import type { IconName, IconRegistry } from './types.js'
 
 /**
  * Semantic name to Iconify id.
@@ -9,6 +9,9 @@ import type { IconName } from './types.js'
  *
  * The drawing is used only after that collection is registered. Until then
  * the built-in glyph stays, so a missing collection does not blank the icon.
+ *
+ * `upload` is its own name, not `arrowUp`: a theme can redraw the upload
+ * affordance without changing sort arrows or the send button.
  */
 export const defaultSemanticIcons = {
   close: 'lucide:x',
@@ -41,16 +44,16 @@ export const defaultSemanticIcons = {
   stop: 'lucide:square',
   microphone: 'lucide:mic',
   image: 'lucide:image',
-} as const satisfies Record<IconName, string>
+} as const satisfies IconRegistry
 
 export type SemanticIconMap = Readonly<Record<string, string>>
 
 /**
  * The Iconify id for a semantic name.
  *
- * Theme entries win, including keys the package does not ship. An unknown
- * name with no theme entry returns undefined, so a CSS class can still pass
- * through `icon`.
+ * Theme entries win, including keys the package does not ship, such as a
+ * namespaced `numberInput:stepperDown`. An unknown name with no theme entry
+ * returns undefined, so a CSS class can still pass through `icon`.
  */
 export function resolveSemanticIcon(name: string | undefined, icons?: SemanticIconMap): string | undefined {
   if (name == null || name === '')

@@ -1,6 +1,7 @@
 import type { Component, VNode, VNodeChild } from 'vue'
 import type { MarkdownMessages } from '../locale/messages/markdown.js'
 import type { MdNode } from './ast.js'
+import type { MarkdownExtensionNode, MarkdownExtensionRenderer } from './plugin-protocol/protocol.js'
 import type { MarkdownInlinePlugin, MarkdownPlugin, MarkdownPluginRenderContext } from './plugins.js'
 import type { MarkdownCitationStyle, MarkdownComponents, MarkdownHeadingLevel } from './types.js'
 import { Fragment, h } from 'vue'
@@ -13,9 +14,12 @@ import Heading from '../Heading/Heading.vue'
 import Link from '../Link/Link.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { plainText } from './ast.js'
+import { fadeClass, renderLink, renderText } from './renderInline.js'
+import { assignHeadingSlugs, collectDefinitions, measureNode, slotText } from './renderTree.js'
 import { slugify, uniqueSlug } from './slug.js'
-import { computeSegments } from './streaming.js'
-import { linkOpensInNewTab, sanitizeMarkdownImageUrl, sanitizeMarkdownLinkUrl } from './url.js'
+import { sanitizeMarkdownImageUrl, sanitizeMarkdownLinkUrl } from './url.js'
+
+export { assignHeadingSlugs, collectDefinitions, measureNode, slotText }
 
 export interface FadeCursor {
   active: boolean
@@ -44,162 +48,62 @@ export interface RenderContext {
   inlinePlugins?: readonly MarkdownInlinePlugin[]
   /** Checkbox graphic from the nearest theme. Falls back to the built-in box. */
   checkboxIndicator?: Component
-}
-
-export function measureNode(node: MdNode): number {
-  switch (node.type) {
-    case 'text':
-    case 'inlineCode':
-    case 'code':
-    case 'html':
-      return node.value?.length ?? 0
-    case 'image':
-    case 'imageReference':
-      return (node.alt ?? node.label ?? '').length
-    case 'break':
-      return 1
-    case 'footnoteReference':
-      return (node.label ?? node.identifier ?? '').length
-    case 'definition':
-    case 'thematicBreak':
-      return 0
-    default:
-      return (node.children ?? []).reduce((sum, child) => sum + measureNode(child), 0)
-  }
-}
-
-export function assignHeadingSlugs(nodes: MdNode[]): Map<MdNode, string> {
-  const counts = new Map<string, number>()
-  const slugs = new Map<MdNode, string>()
-  const visit = (list: MdNode[]): void => {
-    for (const node of list) {
-      if (node.type === 'heading')
-        slugs.set(node, uniqueSlug(slugify(plainText(node)), counts))
-      if (node.children != null)
-        visit(node.children)
-    }
-  }
-  visit(nodes)
-  return slugs
-}
-
-export function collectDefinitions(nodes: MdNode[]): Map<string, { url: string, title?: string | null }> {
-  const definitions = new Map<string, { url: string, title?: string | null }>()
-  const visit = (list: MdNode[]): void => {
-    for (const node of list) {
-      if (node.type === 'definition' && node.identifier != null && node.url != null)
-        definitions.set(node.identifier, { url: node.url, title: node.title })
-      if (node.children != null)
-        visit(node.children)
-    }
-  }
-  visit(nodes)
-  return definitions
+  /** Set when `markdownSourceLinesPlugin` is in the plugin list. */
+  sourceLines?: boolean
+  protocolRenderers?: ReadonlyMap<string, MarkdownExtensionRenderer<MarkdownExtensionNode>>
 }
 
 function headingLevel(depth: number, start: number): MarkdownHeadingLevel {
   return Math.min(6, Math.max(1, depth + start - 1)) as MarkdownHeadingLevel
 }
 
-function renderPlainText(value: string, key: string, fade: FadeCursor): VNodeChild {
-  const start = fade.offset
-  fade.offset += value.length
-  if (!fade.active)
-    return value
-  const segments = computeSegments(value, start, fade.boundaries, key)
-  if (segments == null)
-    return value
-  return h(Fragment, { key }, segments.map(segment => h('span', {
-    key: segment.key,
-    class: segment.fading ? 'astryx-markdown__fade' : undefined,
-  }, segment.text)))
+function sourceSpan(node: MdNode, ctx: RenderContext): { start: number, end: number } | null {
+  if (ctx.sourceLines !== true)
+    return null
+  const start = node.position?.start?.line
+  if (start == null)
+    return null
+  return { start, end: node.position?.end?.line ?? start }
 }
 
-function renderText(value: string, key: string, ctx: RenderContext): VNodeChild {
-  const sources = ctx.sources
-  if (sources == null)
-    return renderPlainText(value, key, ctx.fade)
-  const pattern = /\[([^\]\s]+)\]|【([^】\s]+)】/g
-  const pieces: Array<{ kind: 'text', value: string } | { kind: 'cite', id: string, raw: string }> = []
-  let cursor = 0
-  for (const match of value.matchAll(pattern)) {
-    const id = match[1] ?? match[2] ?? ''
-    const index = match.index ?? 0
-    if (sources[id] == null)
-      continue
-    if (index > cursor)
-      pieces.push({ kind: 'text', value: value.slice(cursor, index) })
-    pieces.push({ kind: 'cite', id, raw: match[0] })
-    cursor = index + match[0].length
+function sourceLineAttrs(node: MdNode, ctx: RenderContext): Record<string, string> {
+  const span = sourceSpan(node, ctx)
+  if (span == null)
+    return {}
+  return {
+    'data-source-line': String(span.start),
+    'data-source-line-end': String(span.end),
   }
-  if (pieces.length === 0)
-    return renderPlainText(value, key, ctx.fade)
-  if (cursor < value.length)
-    pieces.push({ kind: 'text', value: value.slice(cursor) })
-  return pieces.map((piece, index) => {
-    if (piece.kind === 'text')
-      return renderPlainText(piece.value, `${key}-${index}`, ctx.fade)
-    const start = ctx.fade.offset
-    ctx.fade.offset += piece.raw.length
-    return renderCitation(piece.id, `${key}-${index}`, start, ctx)
-  })
 }
 
-function renderCitation(id: string, key: string, start: number, ctx: RenderContext): VNode {
-  const source = ctx.sources?.[id]
-  let number = ctx.citationOrder.get(id)
-  if (number == null) {
-    number = ctx.citationOrder.size + 1
-    ctx.citationOrder.set(id, number)
+function sourceLineFields(node: MdNode, ctx: RenderContext): { sourceLines?: { start: number, end: number } } {
+  const span = sourceSpan(node, ctx)
+  return span == null ? {} : { sourceLines: span }
+}
+
+function renderProtocol(node: MdNode, ctx: RenderContext): VNodeChild | undefined {
+  if (node.plugin == null || node.name == null)
+    return undefined
+  const renderer = ctx.protocolRenderers?.get(`${node.plugin}\0${node.name}`)
+  if (renderer == null)
+    return undefined
+  const extension = node as MarkdownExtensionNode
+  try {
+    const rendered = renderer.render({ node: extension })
+    if (typeof rendered === 'string' || typeof rendered === 'number')
+      return rendered
+    if (rendered != null && typeof rendered === 'object')
+      return rendered as VNodeChild
   }
-  const title = source?.title?.trim() || id
-  const href = source?.url == null ? null : sanitizeMarkdownLinkUrl(source.url)
-  const icon = source?.icon == null ? null : sanitizeMarkdownImageUrl(source.icon)
-  const accessibleName = ctx.citationLabel(number, title)
-  const fading = fadeClass(start, ctx.fade)
-  if (ctx.citationStyle === 'number') {
-    const shared = {
-      'key': key,
-      'class': ['astryx-markdown__cite', fading],
-      'data-citation': String(number),
-      'data-citation-style': 'number',
-      'aria-label': accessibleName,
-      title,
-    }
-    const text = String(number)
-    if (href == null)
-      return h('span', shared, text)
-    return h('a', {
-      ...shared,
-      href,
-      rel: linkOpensInNewTab(href) ? 'noopener noreferrer' : undefined,
-      target: linkOpensInNewTab(href) ? '_blank' : undefined,
-    }, text)
+  catch {
+    // A renderer that throws still leaves the source text in the document.
   }
-  const label = h('span', { class: 'astryx-markdown__cite-label' }, title)
-  const iconNode = icon == null
-    ? null
-    : h('span', { class: 'astryx-markdown__cite-icon' }, [
-        h('img', { alt: '', src: icon }),
-      ])
-  const className = ['astryx-markdown__cite', fading, iconNode == null ? null : 'astryx-markdown__cite--icon']
-  const children = iconNode == null ? [label] : [iconNode, label]
-  const shared = {
-    key,
-    'class': className,
-    'data-citation': String(number),
-    'data-citation-style': 'label',
-    'aria-label': accessibleName,
-    title,
+  try {
+    return renderer.toText(extension)
   }
-  if (href == null)
-    return h('span', shared, children)
-  return h('a', {
-    ...shared,
-    href,
-    rel: linkOpensInNewTab(href) ? 'noopener noreferrer' : undefined,
-    target: linkOpensInNewTab(href) ? '_blank' : undefined,
-  }, children)
+  catch {
+    return node.source ?? node.value ?? ''
+  }
 }
 
 function extensionRenderer(node: MdNode, ctx: RenderContext): MarkdownPlugin['render'] | MarkdownInlinePlugin['render'] | null {
@@ -214,6 +118,9 @@ function extensionRenderer(node: MdNode, ctx: RenderContext): MarkdownPlugin['re
 }
 
 function renderExtension(node: MdNode, key: string, ctx: RenderContext): VNodeChild | null {
+  const protocol = renderProtocol(node, ctx)
+  if (protocol !== undefined)
+    return protocol
   const render = extensionRenderer(node, ctx)
   if (render != null) {
     const context: MarkdownPluginRenderContext = {
@@ -223,6 +130,8 @@ function renderExtension(node: MdNode, key: string, ctx: RenderContext): VNodeCh
     if (rendered != null)
       return rendered
   }
+  if (node.source != null && node.source !== '')
+    return renderText(node.source, key, ctx)
   if (node.value != null && node.value !== '')
     return renderText(node.value, key, ctx)
   if (node.children != null && node.children.length > 0)
@@ -230,37 +139,11 @@ function renderExtension(node: MdNode, key: string, ctx: RenderContext): VNodeCh
   return null
 }
 
-function fadeClass(start: number, fade: FadeCursor): string | undefined {
-  if (!fade.active || fade.boundaries.length === 0)
-    return undefined
-  const oldest = fade.boundaries[0]
-  return oldest != null && start >= oldest ? 'astryx-markdown__fade' : undefined
-}
-
 function renderChildren(nodes: MdNode[] | undefined, key: string, ctx: RenderContext): VNodeChild[] {
   return (nodes ?? []).flatMap((node, index) => {
     const rendered = renderNode(node, `${key}-${index}`, ctx)
     return rendered == null ? [] : [rendered]
   })
-}
-
-function renderLink(href: string, key: string, children: VNodeChild[], title: string | null | undefined, ctx: RenderContext): VNode {
-  const override = ctx.components?.link
-  if (override != null)
-    return h(override, { href, title: title ?? undefined, key }, () => children)
-
-  return h(Link, {
-    key,
-    href,
-    class: 'astryx-markdown__link',
-    hasUnderline: true,
-    target: linkOpensInNewTab(href) ? '_blank' : undefined,
-    title: title ?? undefined,
-    onClick: (event: MouseEvent) => {
-      if (ctx.onLinkClick?.(href, event) === false)
-        event.preventDefault()
-    },
-  }, () => children)
 }
 
 function renderInline(node: MdNode, key: string, ctx: RenderContext): VNodeChild | null {
@@ -385,6 +268,7 @@ function renderList(node: MdNode, key: string, ctx: RenderContext): VNode {
       key,
       ordered,
       start,
+      ...sourceLineFields(node, ctx),
     }, () => renderedItems)
   }
 
@@ -423,14 +307,14 @@ function renderItemBody(node: MdNode, key: string, ctx: RenderContext): VNodeChi
 function renderListItem(node: MdNode, key: string, taskList: boolean, marker: ListMarker, ctx: RenderContext): VNode {
   const body = renderItemBody(node, key, ctx)
   if (!taskList && !isTaskItem(node)) {
-    return h('li', { key, class: 'astryx-markdown__item' }, [
+    return h('li', { key, class: 'astryx-markdown__item', ...sourceLineAttrs(node, ctx) }, [
       renderMarker(marker),
       h('div', { class: 'astryx-markdown__item-body' }, body),
     ])
   }
 
   const checked = node.checked === true
-  return h('li', { key, class: 'astryx-markdown__task' }, [
+  return h('li', { key, class: 'astryx-markdown__task', ...sourceLineAttrs(node, ctx) }, [
     h('span', { class: 'astryx-markdown__task-check' }, [
       h(ctx.checkboxIndicator ?? CheckboxIndicator, { state: checked ? 'checked' : 'unchecked', size: 'sm' }),
       h(VisuallyHidden, () => checked ? ctx.messages.taskDone : ctx.messages.taskPending),
@@ -452,13 +336,14 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       }, '#')
       const override = ctx.components?.heading
       if (override != null)
-        return h(override, { key, level, id }, () => [...children, anchor])
+        return h(override, { key, level, id, ...sourceLineFields(node, ctx) }, () => [...children, anchor])
       return h(Heading, {
         key,
         level,
         id,
         class: 'astryx-markdown__heading astryx-markdown__prose',
         tabindex: -1,
+        ...sourceLineAttrs(node, ctx),
       }, () => [...children, anchor])
     }
     case 'paragraph': {
@@ -466,13 +351,14 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       const imageOnly = (node.children ?? []).length === 1 && node.children?.[0]?.type === 'image'
       const override = ctx.components?.paragraph
       if (override != null)
-        return h(override, { key }, () => children)
+        return h(override, { key, ...sourceLineFields(node, ctx) }, () => children)
       if (ctx.inline)
-        return h('span', { key, class: 'astryx-markdown__paragraph' }, children)
+        return h('span', { key, class: 'astryx-markdown__paragraph', ...sourceLineAttrs(node, ctx) }, children)
       return h('div', {
         key,
         role: 'paragraph',
         class: ['astryx-markdown__paragraph', 'astryx-markdown__prose', imageOnly ? 'astryx-markdown__paragraph--image' : null],
+        ...sourceLineAttrs(node, ctx),
       }, children)
     }
     case 'code': {
@@ -482,15 +368,20 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       const language = node.lang == null || node.lang === '' ? undefined : node.lang
       const override = ctx.components?.code
       if (override != null)
-        return h(override, { key, code: value, language }, () => value)
+        return h(override, { key, code: value, language, ...sourceLineFields(node, ctx) }, () => value)
       const fence = parseFenceLanguage(language)
-      return h('div', { key, class: ['astryx-markdown__code', fadeClass(start, ctx.fade)] }, [
+      return h('div', {
+        key,
+        class: ['astryx-markdown__code', fadeClass(start, ctx.fade)],
+        ...sourceLineAttrs(node, ctx),
+      }, [
         h(CodeBlock, {
           code: value,
           language: fence.language,
           isDiff: fence.isDiff,
           width: '100%',
           isCollapsible: true,
+          isWrapped: true,
         }),
       ])
     }
@@ -498,8 +389,12 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       const children = (node.children ?? []).map((child, index) => renderBlock(child, `${key}-${index}`, ctx)).filter(child => child != null)
       const override = ctx.components?.blockquote
       if (override != null)
-        return h(override, { key }, () => children)
-      return h(Blockquote, { key, class: 'astryx-markdown__blockquote astryx-markdown__prose' }, () => children)
+        return h(override, { key, ...sourceLineFields(node, ctx) }, () => children)
+      return h(Blockquote, {
+        key,
+        class: 'astryx-markdown__blockquote astryx-markdown__prose',
+        ...sourceLineAttrs(node, ctx),
+      }, () => children)
     }
     case 'list':
       return renderList(node, key, ctx)
@@ -527,16 +422,16 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       ].filter(child => child != null)
       const override = ctx.components?.table
       if (override != null)
-        return h(override, { key }, () => content)
-      return h('div', { key, class: 'astryx-markdown__table-wrap' }, [
+        return h(override, { key, ...sourceLineFields(node, ctx) }, () => content)
+      return h('div', { key, class: 'astryx-markdown__table-wrap', ...sourceLineAttrs(node, ctx) }, [
         h('table', { class: 'astryx-markdown__table' }, content),
       ])
     }
     case 'thematicBreak': {
       const override = ctx.components?.hr
       if (override != null)
-        return h(override, { key })
-      return h('hr', { key, class: 'astryx-markdown__hr' })
+        return h(override, { key, ...sourceLineFields(node, ctx) })
+      return h('hr', { key, class: 'astryx-markdown__hr', ...sourceLineAttrs(node, ctx) })
     }
     case 'footnoteDefinition': {
       const id = node.identifier ?? ''
@@ -586,14 +481,4 @@ export function renderMarkdownBlocks(
       cache.delete(node)
   }
   return vnodes
-}
-
-export function slotText(nodes: VNode[] | undefined): string {
-  if (nodes == null)
-    return ''
-  return nodes.map((node) => {
-    if (typeof node.children === 'string')
-      return node.children
-    return ''
-  }).join('')
 }

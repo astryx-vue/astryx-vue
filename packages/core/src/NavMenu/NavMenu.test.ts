@@ -13,6 +13,14 @@ function items() {
 }
 
 describe('nav-menu', () => {
+  it('does not render a javascript href as a link', () => {
+    const wrapper = mount(NavMenuItem, {
+      props: { href: 'javascript:alert(1)', label: 'Bad' },
+    })
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(wrapper.get('button').text()).toContain('Bad')
+  })
+
   it('moves with the arrow keys, matches a typed prefix, and closes on Escape', async () => {
     const wrapper = mount(NavMenu, {
       attachTo: document.body,
@@ -128,6 +136,38 @@ describe('nav-menu', () => {
     item?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
     await nextTick()
     expect(document.body.querySelector('[role="menu"]')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('pins a hover-opened menu on the first mouse press and closes on the next', async () => {
+    const Host = defineComponent({
+      components: { NavDisclosure, NavMenu, NavMenuItem },
+      template: `
+        <NavDisclosure hover :show-delay="0" :hide-delay="0" label="Account">
+          <template #trigger="{ isOpen }">
+            <button type="button">{{ isOpen ? 'Open' : 'Closed' }}</button>
+          </template>
+          <template #default>
+            <NavMenu label="Account">
+              <NavMenuItem label="Profile" />
+            </NavMenu>
+          </template>
+        </NavDisclosure>
+      `,
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    await wrapper.get('.astryx-nav-disclosure').trigger('pointerenter')
+    await new Promise(resolve => setTimeout(resolve, 20))
+    await nextTick()
+    expect(document.body.querySelector('.astryx-nav-disclosure__panel')).not.toBeNull()
+
+    await wrapper.get('button').trigger('click', { detail: 1 })
+    await nextTick()
+    expect(document.body.querySelector('.astryx-nav-disclosure__panel')).not.toBeNull()
+
+    await wrapper.get('button').trigger('click', { detail: 1 })
+    await nextTick()
+    expect(document.body.querySelector('.astryx-nav-disclosure__panel')).toBeNull()
     wrapper.unmount()
   })
 })

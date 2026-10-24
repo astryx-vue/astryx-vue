@@ -50,6 +50,8 @@
     justify-content: center;
     gap: var(--astryx-spacing-2, 8px);
     width: var(--astryx-button-width, auto);
+    min-width: 0;
+    max-width: 100%;
     padding-block: var(--astryx-spacing-2, 8px);
     padding-inline: var(--astryx-spacing-3, 12px);
     border: 0;
@@ -119,12 +121,24 @@
     }
   }
 
-  .astryx-button:not(:disabled):not([aria-disabled='true']):active {
-    background-image: linear-gradient(
-      var(--astryx-button-pressed-overlay, #0000001a),
-      var(--astryx-button-pressed-overlay, #0000001a)
-    );
+  /* 鼠标按下才用 :active。粗指针落手就匹配 :active，滚动时还可能亮着，改看按压模型。 */
+  @media not all and (pointer: coarse) {
+    .astryx-button:not(:disabled):not([aria-disabled='true']):active {
+      background-image: linear-gradient(
+        var(--astryx-button-pressed-overlay, #0000001a),
+        var(--astryx-button-pressed-overlay, #0000001a)
+      );
+      transform: scale(0.98);
+    }
+  }
+
+  /* 和悬停、:active 同一权重，写在后面，按压盖过悬停。底色留给变体，按压只换上层图片。 */
+  .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press='on'] {
     transform: scale(0.98);
+  }
+
+  .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press] {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-button:focus-visible {
@@ -140,7 +154,7 @@
   .astryx-button[aria-disabled='true'] {
     opacity: 0.5;
     background-image: none;
-    cursor: not-allowed;
+    cursor: default;
     transform: none;
   }
 
@@ -211,6 +225,8 @@
 
   .astryx-button[data-icon-only='true'] {
     aspect-ratio: var(--button-icon-only-aspect);
+    flex-shrink: 0;
+    max-width: none;
     padding: 0;
   }
 

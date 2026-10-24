@@ -1,4 +1,5 @@
-import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
 export interface CheckboxListContext {
   values: Ref<string[] | undefined>
@@ -10,4 +11,4 @@ export interface CheckboxListContext {
   size: ComputedRef<'sm' | 'md'>
 }
 
-export const checkboxListKey: InjectionKey<CheckboxListContext> = Symbol('astryx-checkbox-list')
+export const checkboxListKey = defineLayerScopedKey<CheckboxListContext | undefined>('astryx-checkbox-list', undefined)

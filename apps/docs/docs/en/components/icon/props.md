@@ -70,6 +70,18 @@ footer: false
 </tbody></table>
 </div>
 
+These are the **shared names**. Every component draws from the same set. The `IconRegistry` type describes a complete registry that draws every shared name, and `upload` is required like the rest. A theme that supplies a whole icon set must give `upload` its own upload drawing instead of reusing `arrowUp`. Redrawing `upload` leaves the `arrowUp` used by sortable tables and the send button alone.
+
+An icon that only one component draws does not become a shared name. It gets a namespaced key, `component:role`, typed as `NamespacedIconName`. There is one today:
+
+<div class="component-api-table" role="region" aria-label="Component-owned icons" tabindex="0">
+<table><thead><tr><th>Key</th><th>Used by</th></tr></thead><tbody>
+<tr><td><code>numberInput:stepperDown</code></td><td>NumberInput's step buttons. A small down chevron; the increment button flips it.</td></tr>
+</tbody></table>
+</div>
+
+A theme overrides it through the same `icons` map: `defineTheme({ icons: { 'numberInput:stepperDown': 'carbon:chevron-down' } })`. Without an override the built-in glyph is drawn. Adding a namespaced key never adds a required entry to `IconRegistry`.
+
 `useSemanticIcon(name)` comes from `@astryx-vue/core/Icon` and from the package root. An unknown string with no theme entry returns empty, so the caller can still treat it as a CSS class.
 
 ## Theme

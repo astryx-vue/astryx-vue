@@ -38,6 +38,11 @@ export interface UseTreeFocusOptions {
    * @default true
    */
   typeahead?: boolean
+  /**
+   * 敲字符时只拿 `aria-labelledby` 指到的文本，不拿整行的说明和按钮名。
+   * @default false
+   */
+  matchLabelledBy?: boolean
 }
 
 function isRtl(element: HTMLElement | null): boolean {
@@ -77,6 +82,18 @@ export function useTreeFocus(options: UseTreeFocusOptions): {
     if (options.getLevel != null)
       return options.getLevel(item)
     return Number(item.getAttribute('aria-level') ?? '1')
+  }
+
+  /** typeahead 用的名字。指明时只读标签，否则用整行文字。 */
+  function matchText(item: HTMLElement): string {
+    if (options.matchLabelledBy === true) {
+      const ids = item.getAttribute('aria-labelledby')?.split(/\s+/).filter(Boolean) ?? []
+      if (ids.length > 0) {
+        const doc = item.ownerDocument
+        return ids.map(id => doc.getElementById(id)?.textContent ?? '').join(' ').trim().toLowerCase()
+      }
+    }
+    return (item.textContent ?? '').trim().toLowerCase()
   }
 
   /** 树节点的 id：优先 `data-tree-id`，退回元素自己的 `id`。 */
@@ -142,7 +159,7 @@ export function useTreeFocus(options: UseTreeFocusOptions): {
       }, TYPEAHEAD_RESET_MS)
       const query = typeahead.buffer
       const ordered = [...list.slice(currentIndex + 1), ...list.slice(0, currentIndex + 1)]
-      const match = ordered.find(item => !disabled(item) && (item.textContent ?? '').trim().toLowerCase().startsWith(query))
+      const match = ordered.find(item => !disabled(item) && matchText(item).startsWith(query))
       if (match != null) {
         event.preventDefault()
         focusItem(match)

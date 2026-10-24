@@ -70,6 +70,18 @@ footer: false
 </tbody></table>
 </div>
 
+表里这些是**共享名字**，所有组件共用一套。`IconRegistry` 类型表示「每个共享名字都画了」的完整注册表，`upload` 也在必填之列。自己写一整套主题图标时，要给 `upload` 单独配一个上传图形，不能拿 `arrowUp` 顶替。换 `upload` 不会影响表格排序箭头或发送按钮用的 `arrowUp`。
+
+只有某一个组件自己用的图标，不进共享名字，而是用带命名空间的键，写成 `组件:用途`，类型是 `NamespacedIconName`。现在有一个：
+
+<div class="component-api-table" role="region" aria-label="组件自有图标" tabindex="0">
+<table><thead><tr><th>键</th><th>用在哪里</th></tr></thead><tbody>
+<tr><td><code>numberInput:stepperDown</code></td><td>NumberInput 的加减按钮。向下的小箭头，加号那一格把它翻过来用。</td></tr>
+</tbody></table>
+</div>
+
+主题用同一个 `icons` 覆盖它：`defineTheme({ icons: { 'numberInput:stepperDown': 'carbon:chevron-down' } })`。不覆盖时用内置字形。加新的命名空间键不会让 `IconRegistry` 多出必填项。
+
 `useSemanticIcon(name)` 从 `@astryx-vue/core/Icon` 引入，也从包根导出。未知字符串、主题也没有覆盖时，返回空，调用方可以继续把它当 CSS 类。
 
 ## 主题

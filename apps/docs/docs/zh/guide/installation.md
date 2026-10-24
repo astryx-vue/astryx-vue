@@ -29,9 +29,20 @@ yarn add @astryx-vue/core @astryx-vue/themes
 | `provideAstryxLocale`、`useAstryxMessages` | `@astryx-vue/core/locale`（包根也能拿到） |
 | 主题样式 | `@astryx-vue/themes/neutral.css`（Butter、Chocolate、Gothic、Matcha、Stone、Y2K 等主题也是同样路径，替换为对应文件名即可） |
 | 所有组件的全部结构样式 | `@astryx-vue/core/styles.css` |
-| CSS 层级声明 | `@astryx-vue/core/reset.css` |
+| 全局 reset | `@astryx-vue/core/reset.css` |
 
-请注意，`reset.css` 目前主要用于声明 `@layer astryx.reset;` 层级，并不是一份修改页面全局标签的激进重置表。各组件的结构样式与主题样式自身都会自动声明好层级的先后顺序。
+`reset.css` 是一份全局 reset，和 Tailwind Preflight 是同一类东西。引入以后，整个页面上普通 HTML 标签的默认样式会变：
+
+- 所有元素都是 `box-sizing: border-box`，边框默认是 0 宽的实线。
+- 标题、段落、列表等标签没有默认的外边距和内边距，列表没有圆点，标题继承父元素的字号和字重。
+- 图片、视频、`svg` 变成块级元素，`img` 和 `video` 会自适应容器宽度。
+- 表单控件继承字体和颜色，按钮去掉浏览器自带的外观。
+- 禁用的元素显示默认指针，不显示 `not-allowed`。
+- `::before`、`::after`、占位文字和搜索框的清除按钮也一并重置。
+
+所有规则都放在优先级最低的 `astryx.reset` 层里，选择器优先级为 0，所以别的层和你自己没放进层的样式都能直接覆盖它。这个文件还会自己声明层级顺序，引入的先后顺序不影响结果。
+
+这份 reset 是全局的。如果不想动你自己的页面，就不要引入 `reset.css`。组件不依赖它，因为每份结构样式都会给自己的元素写好样式。结构样式和主题样式也会自己声明好层级的先后顺序。
 
 虽然子路径和包根导出的是同一批组件，但在文档和日常开发中，我们强烈推荐使用子路径（例如 `@astryx-vue/core/Button`）。这样引用意图十分清晰，而且打包器只会按需打包该组件独有的结构样式。如果你从包根引入 `useClipboard` 这类通用函数，在部分未能精细摇树（Tree-shaking）的打包配置下，可能会把其余组件也一同打包进来。所以仅仅使用组件时，请优先写子路径。
 

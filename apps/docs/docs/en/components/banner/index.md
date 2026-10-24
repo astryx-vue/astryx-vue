@@ -104,9 +104,9 @@ The `status` prop sets the tone of a banner, and picking the wrong one makes rea
 - Use `success` for the result of a successful action.
 - Use `warning` for situations that call for caution.
 - Use `error` for problems that block progress.
-- Set `:collapsible="false"` for details that users must read, so those details stay visible and no click is needed to open them.
-- Mount urgent messages when the user action that triggers them happens.
+- Set `:collapsible="false"` for details that users must read, so those details stay visible and no click is needed to open them. Keep the default toggle when the detail is long enough to bury the banner's own message.
+- Announce an async outcome from the transition that produced it, with `useAnnounce`.
 
-The status also decides the role the banner exposes to screen readers: `warning` and `error` use `role="alert"`, while `info` and `success` use `role="status"`. Note that messages already present in the initial page render may not be announced by screen readers, so the more urgent a message is, the better it works when mounted in response to a user action.
+`status` controls color and icon only. It does not create a live region. Add `role="status"` only when the visible banner should stay a persistent semantic mirror, and reserve `role="alert"` for genuinely urgent content that should interrupt current speech. Content already on the page at first render is not guaranteed to be announced again.
 
 For a single field validation message, use [FieldStatus](/en/components/field-status).

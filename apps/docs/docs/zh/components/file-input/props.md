@@ -27,6 +27,12 @@ footer: false
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示加载指示，用于上传过程。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下方的说明。</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整个字段的宽度。数字按像素处理。</td></tr>
+<tr><td><code>changeAction</code></td><td><code>(files) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>选中和清除之后调用。失败时发出 <code>actionError</code>，等待期间显示加载指示。</td></tr>
+<tr><td><code>clearLabel</code></td><td><code>string</code></td><td>—</td><td>清除按钮的读屏名称，默认带字段名。提示只说「清除」。</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到文件框本体的 class。直接写在组件上的 class 也落在本体，不会警告。</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到文件框本体的行内样式。直接写在组件上的 style 也落在本体。</td></tr>
 </tbody></table>
 </div>
 
@@ -35,6 +41,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="FileInput 事件" tabindex="0">
 <table><thead><tr><th>名称</th><th>参数</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>update:modelValue</code></td><td><code>File | File[] | null</code></td><td>选择变化时触发。</td></tr>
-<tr><td><code>change</code></td><td><code>File | File[] | null</code></td><td>携带同一个值。</td></tr>
+<tr><td><code>change</code></td><td><code>File | File[] | null</code></td><td>携带同一个值。发生在 <code>changeAction</code> 之前。</td></tr>
+<tr><td><code>actionError</code></td><td><code>unknown, File | File[] | null</code></td><td><code>changeAction</code> 抛错时触发。</td></tr>
 </tbody></table>
 </div>

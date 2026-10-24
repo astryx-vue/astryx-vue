@@ -32,6 +32,6 @@ describe('useLocale', () => {
 
     await wrapper.setProps({ locale: 'en-GB' })
     await nextTick()
-    expect(probeLocale(wrapper)).toBe('en')
+    expect(probeLocale(wrapper)).toBe('en-GB')
   })
 })

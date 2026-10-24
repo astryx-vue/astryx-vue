@@ -17,7 +17,7 @@ export const tokenizerMessages: Record<AstryxLocale, TokenizerMessages> = {
   'en': {
     placeholder: 'Add…',
     empty: 'No results found',
-    loading: 'Loading results',
+    loading: 'Loading',
     error: 'Couldn\'t load results',
     clear: 'Clear all',
     results: 'Search results',

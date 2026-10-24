@@ -31,13 +31,7 @@
 
   .astryx-command-palette-search {
     flex-shrink: 0;
-    width: 1rem;
-    height: 1rem;
-    background-color: var(--astryx-color-text-secondary, #525252);
-    mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='M16 16l4 4'/%3E%3C/svg%3E");
-    mask-repeat: no-repeat;
-    mask-position: center;
-    mask-size: contain;
+    color: var(--astryx-color-text-secondary, #525252);
   }
 
   .astryx-command-palette-field {
@@ -59,8 +53,10 @@
   }
 
   @media (pointer: coarse) {
-    .astryx-command-palette-field {
-      font-size: max(1rem, var(--astryx-text-body-size, 0.875rem));
+    @supports (-webkit-touch-callout: none) {
+      .astryx-command-palette-field {
+        font-size: max(1rem, var(--astryx-text-body-size, 0.875rem));
+      }
     }
   }
 
@@ -128,10 +124,6 @@
     }
   }
 
-  .astryx-command-palette-item:active:not([data-disabled]) {
-    background: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
-  }
-
   .astryx-command-palette-item[data-highlighted='true'] {
     background: var(--astryx-color-overlay-hover, light-dark(#0536590c, #ffffff0c));
   }
@@ -140,9 +132,32 @@
     background: var(--astryx-color-accent-muted, light-dark(#0082fb33, #0082fb3f));
   }
 
+  .astryx-command-palette-item:active:not([data-disabled]),
+  .astryx-command-palette-item[data-astryx-press='on']:not([data-disabled]) {
+    background: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+  }
+
+  @media (pointer: coarse) {
+    .astryx-command-palette-item:active:not([data-disabled]) {
+      background: transparent;
+    }
+
+    .astryx-command-palette-item[data-highlighted='true']:active:not([data-disabled]) {
+      background: var(--astryx-color-overlay-hover, light-dark(#0536590c, #ffffff0c));
+    }
+
+    .astryx-command-palette-item[data-selected='true']:active:not([data-disabled]) {
+      background: var(--astryx-color-accent-muted, light-dark(#0082fb33, #0082fb3f));
+    }
+
+    .astryx-command-palette-item[data-astryx-press='on']:not([data-disabled]) {
+      background: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+    }
+  }
+
   .astryx-command-palette-item[data-disabled='true'] {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: default;
   }
 
   .astryx-command-palette-empty {

@@ -67,4 +67,34 @@ describe('useAnnounce', () => {
     await flushFrame()
     expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('第二次')
   })
+
+  it('清空时取消还没写进去的那一帧，旧文字不会在清空之后冒出来', async () => {
+    const announce = useAnnounce()
+    announce('还在加载')
+    announce('')
+    await flushFrame()
+    const polite = document.querySelector('[data-astryx-live-region="polite"]')
+    expect(polite?.textContent).toBe('')
+  })
+
+  it.each(['polite', 'assertive'] as const)('清空 %s 区域时，排队的多条写入全部取消', async (politeness) => {
+    const announce = useAnnounce()
+    announce('第一条', politeness)
+    announce('第二条', politeness)
+    announce('', politeness)
+    await flushFrame()
+    expect(document.querySelector(`[data-astryx-live-region="${politeness}"]`)?.textContent).toBe('')
+  })
+
+  it('拆掉区域时，排队的写入也取消', async () => {
+    const announce = useAnnounce()
+    announce('保存了')
+    announce('失败了', 'assertive')
+    const polite = document.querySelector('[data-astryx-live-region="polite"]')
+    const assertive = document.querySelector('[data-astryx-live-region="assertive"]')
+    resetLiveRegionsForTest()
+    await flushFrame()
+    expect(polite?.textContent).toBe('')
+    expect(assertive?.textContent).toBe('')
+  })
 })

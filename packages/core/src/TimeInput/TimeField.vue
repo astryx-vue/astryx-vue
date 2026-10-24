@@ -1,23 +1,30 @@
 <script setup lang="ts">
+import type { HTMLAttributes, StyleValue } from 'vue'
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { TimeInputSize } from './types.js'
-import { computed, nextTick, ref, shallowRef, useId, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import { useDismiss } from '../composables/useDismiss.js'
+import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { formatDisplayTime, formatISOTime, isTimeInRange, parseDisplayTime, resolveTimeSurface, shiftTime } from '../composables/useTimeValue.js'
 import FieldIcon from '../Field/FieldIcon.vue'
+import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
+import { isImeKeyEvent } from '../utils/ime.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import TouchTimeWheels from './TouchTimeWheels.vue'
 import '../../styles/bordered-control.css'
+import '../../styles/date-input.css'
 import '../../styles/time-input.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxTimeField', inheritAttrs: false })
 
@@ -49,6 +56,8 @@ const props = withDefaults(defineProps<{
   /** 为什么禁用。和 `isDisabled` 一起用时，字段仍可聚焦（带 `aria-disabled`），但不能改值。 */
   disabledMessage?: string
   status?: FieldStatusInput
+  controlClass?: HTMLAttributes['class']
+  controlStyle?: StyleValue
 }>(), {
   hourFormat: '12h',
   hasSeconds: false,
@@ -58,8 +67,11 @@ const props = withDefaults(defineProps<{
 })
 
 const model = defineModel<string | null>({ default: null })
+const attrs = useAttrs()
+const ariaRequired = useAriaRequired(props)
 const messages = useAstryxMessages()
-const coarse = useCoarsePointer()
+const sheetOpen = shallowRef(false)
+const coarse = useMediaQuery('(pointer: coarse)')
 const focused = shallowRef(false)
 const draft = shallowRef('')
 const container = useTemplateRef<HTMLDivElement>('container')
@@ -67,6 +79,7 @@ const optionsRef = useTemplateRef<HTMLDivElement>('options')
 useScrollbars(optionsRef)
 const generatedId = `astryx-time-field-${useId()}`
 const listboxId = `${props.inputId ?? generatedId}-options`
+const sheetId = `${props.inputId ?? generatedId}-sheet`
 const disabledMessageId = `${props.inputId ?? generatedId}-disabled`
 const busy = computed(() => props.isLoading === true)
 const locked = computed(() => props.isDisabled || props.isReadOnly || busy.value)
@@ -166,11 +179,27 @@ useDismiss({
   container: optionsRef,
   trigger: container,
   isEnabled: isOptionsOpen,
-  enableEscape: ref(false),
+  dismissOnEscape: 'ignore',
   onDismiss: () => closeOptions(),
 })
 
+function openSheet(): void {
+  if (!locked.value)
+    sheetOpen.value = true
+}
+
+function onSheetKeydown(event: KeyboardEvent): void {
+  if (isImeKeyEvent(event) || locked.value)
+    return
+  if (event.key === 'ArrowDown' || (event.altKey && event.key === 'ArrowDown')) {
+    event.preventDefault()
+    openSheet()
+  }
+}
+
 function onKeydown(event: KeyboardEvent): void {
+  if (isImeKeyEvent(event))
+    return
   if (event.key === 'Escape' && isOptionsOpen.value) {
     event.preventDefault()
     closeOptions()
@@ -281,6 +310,10 @@ function focusInput(): void {
 }
 
 function onControlClick(event: MouseEvent): void {
+  if (surface.value === 'sheet') {
+    openSheet()
+    return
+  }
   if (locked.value)
     return
   const target = event.target
@@ -299,7 +332,10 @@ function onInputClick(): void {
   <div
     ref="container"
     class="astryx-time-input astryx-bordered-control"
+    :class="controlClass"
+    :style="controlStyle"
     :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-loading="busy || undefined"
+    :data-presentation="surface === 'sheet' ? 'bottom-sheet' : surface === 'native' ? 'native' : 'text'"
     :data-options-open="isOptionsOpen || undefined"
     @pointerenter="disabledTooltip.onPointerEnter"
     @pointerleave="disabledTooltip.onPointerLeave"
@@ -308,24 +344,39 @@ function onInputClick(): void {
     <Icon class="astryx-time-input-icon" icon="clock" size="sm" />
     <input
       v-if="surface === 'native'"
+      v-bind="attrs"
       :id="inputId" class="astryx-time-input-control" type="time"
       :value="model ?? ''" :min="min" :max="max" :step="hasSeconds ? 1 : increment * 60"
       :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || busy || showsDisabledMessage"
       :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
       :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
-      :aria-describedby="resolvedDescribedBy()" :aria-required="isRequired || undefined"
+      :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"
       :aria-invalid="status?.type === 'error' || undefined"
       @input="onNativeInput"
     >
     <input
+      v-else-if="surface === 'sheet'"
+      v-bind="attrs"
+      :id="inputId" class="astryx-time-input-control" type="text" readonly inputmode="none" autocomplete="off"
+      role="combobox" aria-haspopup="dialog" :aria-expanded="sheetOpen" :aria-controls="sheetId"
+      :value="draft" :placeholder="shownPlaceholder"
+      :disabled="isDisabled && !showsDisabledMessage"
+      :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
+      :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
+      :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"
+      :aria-invalid="status?.type === 'error' || undefined"
+      @click="openSheet" @keydown="onSheetKeydown" @focus="onInputFocus"
+    >
+    <input
       v-else
+      v-bind="attrs"
       :id="inputId" class="astryx-time-input-control" type="text" inputmode="text" autocomplete="off"
       :value="draft" :placeholder="shownPlaceholder"
       :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || busy || showsDisabledMessage"
       :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
       :role="showsOptions ? 'combobox' : undefined"
       :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
-      :aria-describedby="resolvedDescribedBy()" :aria-required="isRequired || undefined"
+      :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"
       :aria-invalid="status?.type === 'error' || undefined"
       :aria-expanded="showsOptions ? isOptionsOpen : undefined"
       :aria-controls="showsOptions ? listboxId : undefined"
@@ -347,12 +398,27 @@ function onInputClick(): void {
     :id="`${disabledMessageId}-tooltip`" :anchor="container" :open="disabledTooltip.isOpen.value" :text="disabledMessage ?? ''"
     @pointer-enter="disabledTooltip.onTooltipPointerEnter" @pointer-leave="disabledTooltip.onTooltipPointerLeave"
   />
+  <BottomSheet v-if="surface === 'sheet'" v-model:is-open="sheetOpen" :label="label || messages.timeInput.placeholder" height="hug" :padding="0">
+    <div :id="sheetId" class="astryx-time-touch">
+      <TouchTimeWheels
+        :model-value="model"
+        :hour-format="hourFormat"
+        :has-seconds="hasSeconds"
+        :min="min"
+        :max="max"
+        @update:model-value="commit"
+      />
+      <button type="button" class="astryx-date-touch-save" @click="sheetOpen = false">
+        {{ messages.dateInput.savePicking }}
+      </button>
+    </div>
+  </BottomSheet>
   <Teleport to="body">
     <div
       v-show="isOptionsOpen"
       :id="listboxId"
       ref="options"
-      class="astryx-time-input-options"
+      class="astryx-time-input-options astryx-layer"
       role="listbox"
       :aria-label="resolvedOptionsLabel"
       :style="optionsStyle"

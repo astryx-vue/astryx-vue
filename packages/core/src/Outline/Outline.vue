@@ -2,6 +2,7 @@
 import type { OutlineEmits, OutlineProps } from './types.js'
 import { computed, nextTick, ref, toRef, watch } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useAstryxMessages } from '../locale/context.js'
 import { indentLevel } from './scrollGeometry.js'
 import { useOutlineIndicator } from './useIndicator.js'
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<OutlineProps>(), {
 
 const emit = defineEmits<OutlineEmits>()
 const messages = useAstryxMessages()
+const press = usePressFeedback()
 const root = ref<HTMLElement | null>(null)
 const regionLabel = computed(() => props.label ?? messages.value.outline.label)
 
@@ -105,6 +107,7 @@ function onItemKeyDown(id: string, event: KeyboardEvent): void {
     >
       <li v-for="item in items" :key="item.id" class="astryx-outline__item">
         <a
+          v-bind="press.pressableProps"
           class="astryx-outline__link"
           :href="`#${item.id}`"
           :data-level="indentLevel(item.level)"

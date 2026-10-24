@@ -101,7 +101,7 @@ export type {
   CalendarSlots,
 } from './Calendar/index.js'
 export { Card } from './Card/index.js'
-export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant } from './Card/index.js'
+export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant, CardVariantMap } from './Card/index.js'
 export { Carousel } from './Carousel/index.js'
 export type { CarouselGap, CarouselHandle, CarouselProps, CarouselSlots } from './Carousel/index.js'
 export { Center } from './Center/index.js'
@@ -463,10 +463,11 @@ export type {
 } from './DropdownMenu/index.js'
 export { EmptyState } from './EmptyState/index.js'
 export type { EmptyStateHeadingLevel, EmptyStateProps, EmptyStateSlots } from './EmptyState/index.js'
-export { Field, FieldLabel } from './Field/index.js'
+export { Field, FieldLabel, InputClearButton } from './Field/index.js'
 export type {
   FieldLabelProps,
   FieldLabelSlots,
+  FieldPartStylingProps,
   FieldProps,
   FieldSlotProps,
   FieldSlots,
@@ -538,14 +539,17 @@ export {
   useSemanticIcon,
 } from './Icon/index.js'
 export type {
+  ExtendedIconName,
   IconColor,
   IconGlyphName,
   IconifyCollection,
   IconifyIcon,
   IconName,
   IconProps,
+  IconRegistry,
   IconSize,
   IconSlots,
+  NamespacedIconName,
   SemanticIconMap,
 } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
@@ -682,15 +686,26 @@ export type {
 export {
   applyInlinePlugins,
   applyMarkdownPlugins,
+  createIncrementalState,
+  decodeMarkdownCharacterReferences,
   defineMarkdownPlugin,
   isMarkdownExtensionNode,
   Markdown,
+  parseInline,
+  parseInlineAst,
   parseMarkdown,
+  parseMarkdownAst,
+  parseMarkdownIncremental,
   slugify,
   uniqueSlug,
+  visitMarkdownNodes,
 } from './Markdown/index.js'
 export type {
+  BlockNode,
+  InlineNode,
   MarkdownAlign,
+  MarkdownAstPhrasingContent,
+  MarkdownAstRoot,
   MarkdownAutolink,
   MarkdownCitationStyle,
   MarkdownCodeProps,
@@ -711,6 +726,8 @@ export type {
   MarkdownSource,
   MarkdownTransformContext,
   ParseMarkdownOptions,
+  ParseOptions,
+  SourceRange,
 } from './Markdown/index.js'
 export { MetadataList, MetadataListItem } from './MetadataList/index.js'
 export type {
@@ -794,10 +811,21 @@ export type {
 } from './NavMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'
 export type { NumberInputEmits, NumberInputProps, NumberInputStatus } from './NumberInput/index.js'
-export { Outline } from './Outline/index.js'
-export type { OutlineDensity, OutlineEmits, OutlineItem, OutlineProps } from './Outline/index.js'
+export { Outline, parseOutlineFromMarkdown, useOutlineFromDOM, useOutlineFromMarkdown } from './Outline/index.js'
+export type {
+  OutlineDensity,
+  OutlineEmits,
+  OutlineItem,
+  OutlineProps,
+  ParseOutlineFromMarkdownOptions,
+} from './Outline/index.js'
 export { OverflowList } from './OverflowList/index.js'
-export type { OverflowListEmits, OverflowListItem, OverflowListProps } from './OverflowList/index.js'
+export type {
+  OverflowListCollapsedItem,
+  OverflowListEmits,
+  OverflowListItem,
+  OverflowListProps,
+} from './OverflowList/index.js'
 export { Overlay, OverlayScrim, useOverlay } from './Overlay/index.js'
 export type {
   OverlayAlign,
@@ -1137,7 +1165,9 @@ export type {
 } from './Table/index.js'
 export { Tab, TabList, TabMenu } from './TabList/index.js'
 export type {
+  TabListEdgeCompensation,
   TabListLayout,
+  TabListOverflow,
   TabListProps,
   TabListSize,
   TabListTab,
@@ -1186,6 +1216,8 @@ export type {
   TextInputType,
 } from './TextInput/index.js'
 export {
+  DATA_TOKEN_DEFAULTS,
+  DEFAULT_WIDTH_BREAKPOINTS,
   defineTheme,
   expandColorScale,
   expandMotionScale,
@@ -1198,16 +1230,24 @@ export {
   Theme,
   useMediaTheme,
   useTheme,
+  WIDTH_BREAKPOINT_NAMES,
 } from './Theme/index.js'
 export type {
   ColorScaleConfig,
   ComponentStyleMap,
+  DataTokenName,
   DefineThemeInput,
   MediaThemeMode,
   MediaThemeProps,
   MotionScaleConfig,
   RadiusScaleConfig,
   StyleOverrides,
+  ThemeAdaptationCondition,
+  ThemeAdaptationRule,
+  ThemeAdaptations,
+  ThemeAdaptationTypographyConfig,
+  ThemeAdaptationValue,
+  ThemeAdaptationWidthCondition,
   ThemeDefinition,
   ThemeMode,
   ThemeProps,
@@ -1219,6 +1259,8 @@ export type {
   TypographyRole,
   UseMediaThemeReturn,
   UseThemeReturn,
+  WidthBreakpointName,
+  WidthBreakpoints,
 } from './Theme/index.js'
 export { Thumbnail } from './Thumbnail/index.js'
 export type { ThumbnailEmits, ThumbnailProps, ThumbnailRemoveVisibility } from './Thumbnail/index.js'
@@ -1332,5 +1374,92 @@ export type {
   TypeaheadSlots,
   TypeaheadStatus,
 } from './Typeahead/index.js'
+export {
+  adjustTime,
+  chainEventHandlers,
+  characterCount,
+  clampTime,
+  compareTime,
+  createISOTimeString,
+  DATE_FORMAT_LONG,
+  DATE_FORMAT_MONTH_ONLY,
+  DATE_FORMAT_MONTH_YEAR,
+  DATE_FORMAT_SHORT,
+  DATE_FORMAT_SHORT_WITH_WEEKDAY,
+  DATE_FORMAT_SHORT_WITH_YEAR,
+  DATE_FORMAT_WEEKDAY_ONLY,
+  DATE_FORMAT_WITH_WEEKDAY,
+  dateToISO,
+  DEFAULT_INPUT_PRESENTATION,
+  effectiveInputPresentation,
+  effectivePickerPresentation,
+  firstCharacter,
+  formatDisplayTime12h,
+  formatDisplayTime24h,
+  formatSharedDate,
+  getDaysInMonth,
+  getInputARIA,
+  getItemGroup,
+  getTimeZoneParts,
+  groupItems,
+  isLocaleDayFirst,
+  isSafeDestination,
+  isSafeUrl,
+  joinAriaIDs,
+  normalizeDayOfWeek,
+  observeResize,
+  parseDateInput,
+  parseISO,
+  parseTimeInput,
+  pickerPresentationFromNativePicker,
+  plainDateAddDays,
+  plainDateAddMonths,
+  plainDateCreate,
+  plainDateDayOfWeek,
+  plainDateDiffDays,
+  plainDateFormat,
+  plainDateFromDate,
+  plainDateFromInstant,
+  plainDateFromISO,
+  plainDateGetWeekNumber,
+  plainDateIsAfter,
+  plainDateIsBefore,
+  plainDateIsEqual,
+  plainDateIsInRange,
+  plainDateMax,
+  plainDateMin,
+  plainDateSetEndOfWeekExclusive,
+  plainDateSetFirstOfMonth,
+  plainDateSetStartOfWeek,
+  plainDateToDate,
+  plainDateToday,
+  plainDateToInstant,
+  plainDateToISO,
+  plainDateWeekFieldName,
+  presentationFromNativePicker,
+  resolveInputPresentation,
+  resolvePickerPresentation,
+  sanitizeUrl,
+  SHARED_DATE_FORMAT_OPTIONS,
+  truncateCharacters,
+  unobserveResize,
+} from './utils/index.js'
+export type {
+  DayOfWeek,
+  DayOfWeekName,
+  GroupableItem,
+  GroupItemsOptions,
+  InputARIA,
+  InputARIAInputGroup,
+  InputPresentation,
+  InputPresentationSurface,
+  ISODateString,
+  ItemGroup,
+  LegacyNativePicker,
+  PickerPresentation,
+  PickerPresentationSurface,
+  PlainDate,
+  SharedDateFormat,
+} from './utils/index.js'
 export { VisuallyHidden } from './VisuallyHidden/index.js'
 export type { VisuallyHiddenElement, VisuallyHiddenProps } from './VisuallyHidden/index.js'

@@ -62,22 +62,37 @@ export function contrastRatio(foreground: RgbColor, background: RgbColor): numbe
   return (lighter + 0.05) / (darker + 0.05)
 }
 
-const ON_DARK: RgbColor = { r: 255, g: 255, b: 255, a: 1 }
-const ON_LIGHT: RgbColor = { r: 23, g: 23, b: 23, a: 1 }
+/** Paint `foreground` over an opaque `backdrop`. The result is opaque. */
+export function compositeOver(foreground: RgbColor, backdrop: RgbColor): RgbColor {
+  const a = foreground.a
+  return {
+    r: foreground.r * a + backdrop.r * (1 - a),
+    g: foreground.g * a + backdrop.g * (1 - a),
+    b: foreground.b * a + backdrop.b * (1 - a),
+    a: 1,
+  }
+}
+
+/** Ambient text counts as reading well on a surface at this contrast or more. */
+const AMBIENT_READS_AT = 3
 
 /**
  * Choose a media surface from the painted background.
  *
- * `off` means the ambient text already reads on that background at 3:1, so no
- * inverted context is needed. `null` means the background is too transparent
- * to judge.
+ * `off` means the ambient text already reads on that background at 3:1, so
+ * no inverted context is needed. Otherwise the side whose text color, the
+ * theme's `on-dark` or `on-light`, contrasts more wins. `null` means a color
+ * could not be read.
  */
-export function pickMediaMode(background: RgbColor, ambientText: RgbColor): 'dark' | 'light' | 'off' | null {
-  if (background.a < 0.2)
+export function pickMediaMode(
+  background: RgbColor,
+  ambient: RgbColor | null,
+  onDark: RgbColor | null,
+  onLight: RgbColor | null,
+): 'dark' | 'light' | 'off' | null {
+  if (onDark === null || onLight === null)
     return null
-  if (contrastRatio(ambientText, background) >= 3)
+  if (ambient !== null && contrastRatio(ambient, background) >= AMBIENT_READS_AT)
     return 'off'
-  const onDark = contrastRatio(ON_DARK, background)
-  const onLight = contrastRatio(ON_LIGHT, background)
-  return onDark >= onLight ? 'dark' : 'light'
+  return contrastRatio(onDark, background) >= contrastRatio(onLight, background) ? 'dark' : 'light'
 }

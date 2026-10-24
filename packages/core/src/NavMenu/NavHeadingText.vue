@@ -2,7 +2,7 @@
 import type { NavLinkComponent } from '../NavItem/types.js'
 import { computed } from 'vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { resolveNavRoot } from '../NavItem/link.js'
+import { isNavigableHref, resolveNavRoot } from '../NavItem/link.js'
 
 defineOptions({ name: 'AstryxNavHeadingText' })
 
@@ -28,15 +28,15 @@ const linkComponent = useLinkComponent()
 const customLink = computed(() => props.as ?? linkComponent.value)
 
 function root(href: string | undefined): string | object {
-  return props.independent && href ? resolveNavRoot(href, false, customLink.value) : 'span'
+  return props.independent && isNavigableHref(href) ? resolveNavRoot(href, false, customLink.value) : 'span'
 }
 
 function hrefOf(href: string | undefined): string | undefined {
-  return props.independent ? href : undefined
+  return props.independent && isNavigableHref(href) ? href : undefined
 }
 
 function toOf(href: string | undefined): string | undefined {
-  return props.independent && customLink.value != null ? href : undefined
+  return props.independent && isNavigableHref(href) && customLink.value != null ? href : undefined
 }
 
 function stopIfLink(event: MouseEvent, href: string | undefined): void {

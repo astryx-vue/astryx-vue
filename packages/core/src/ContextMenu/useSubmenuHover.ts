@@ -1,8 +1,7 @@
 import type { Ref } from 'vue'
-import type { MenuPoint } from './safeTriangle.js'
 import { onScopeDispose, unref } from 'vue'
+import { createHideTimer } from '../composables/internal/hoverIntent.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
-import { isPointInSafeTriangle } from './safeTriangle.js'
 
 /**
  * Hover intent for one submenu row.
@@ -74,16 +73,12 @@ export function useSubmenuHover(options: UseSubmenuHoverOptions): SubmenuHover {
   const hasHover = useMediaQuery('(hover: hover)')
 
   let showTimer: ReturnType<typeof setTimeout> | undefined
-  let hideTimer: ReturnType<typeof setTimeout> | undefined
-  let stopTriangle: (() => void) | null = null
   /** Hover opened this flyout, so leaving may close it. */
   let provenance: 'hover' | 'pinned' | null = null
   let hoverOpenedAt = 0
   /** When the flyout last closed. A pointer enter inside the suppress window is ignored. */
   let closedAt = 0
-  /** While true, a point inside `isInsideTriangle` is still heading for the flyout. */
-  let isTracking = false
-  let isInsideTriangle: (point: MenuPoint) => boolean = () => false
+  const hideTimer = createHideTimer(() => SUBMENU_HIDE_DELAY_MS, closeNow)
 
   function clearShowTimer(): void {
     if (showTimer != null)
@@ -91,23 +86,9 @@ export function useSubmenuHover(options: UseSubmenuHoverOptions): SubmenuHover {
     showTimer = undefined
   }
 
-  function clearHideTimer(): void {
-    if (hideTimer != null)
-      clearTimeout(hideTimer)
-    hideTimer = undefined
-  }
-
-  function clearTriangle(): void {
-    stopTriangle?.()
-    stopTriangle = null
-    isTracking = false
-    isInsideTriangle = () => false
-  }
-
   function cancelTimers(): void {
     clearShowTimer()
-    clearHideTimer()
-    clearTriangle()
+    hideTimer.clear()
   }
 
   function markClosed(): void {
@@ -143,54 +124,8 @@ export function useSubmenuHover(options: UseSubmenuHoverOptions): SubmenuHover {
   function scheduleHide(event?: { clientX: number, clientY: number }): void {
     if (provenance !== 'hover')
       return
-
-    clearHideTimer()
-    clearTriangle()
-
-    let lastPoint: MenuPoint | null = null
-    const arm = (): void => {
-      clearHideTimer()
-      hideTimer = setTimeout(() => {
-        // A pointer that stopped inside the triangle is still heading for the
-        // flyout. Pausing is not leaving; re-arm instead of closing under it.
-        if (isTracking && lastPoint != null && isInsideTriangle(lastPoint)) {
-          arm()
-          return
-        }
-        closeNow()
-      }, SUBMENU_HIDE_DELAY_MS)
-    }
-    arm()
-
-    const menu = unref(options.flyout)
-    const apex: MenuPoint | null = event != null ? { x: event.clientX, y: event.clientY } : null
-    if (menu == null || apex == null || !options.isOpen())
-      return
-
-    const rect = menu.getBoundingClientRect()
-    if (rect.width <= 0 || rect.height <= 0)
-      return
-
-    const doc = menu.ownerDocument
-    isInsideTriangle = point => isPointInSafeTriangle(point, apex, rect)
-    isTracking = true
-    lastPoint = apex
-
-    const onPointerMove = (move: PointerEvent): void => {
-      const point = { x: move.clientX, y: move.clientY }
-      lastPoint = point
-      if (isInsideTriangle(point)) {
-        arm()
-        return
-      }
-      // The first move outside lets the delay already running finish.
-      isTracking = false
-      clearTriangle()
-    }
-    doc.addEventListener('pointermove', onPointerMove, true)
-    stopTriangle = () => {
-      doc.removeEventListener('pointermove', onPointerMove, true)
-    }
+    const apex = event != null ? { x: event.clientX, y: event.clientY } : null
+    hideTimer.schedule(apex, unref(options.flyout), options.isOpen())
   }
 
   function onTriggerPointerEnter(event: PointerEvent): void {
@@ -200,8 +135,7 @@ export function useSubmenuHover(options: UseSubmenuHoverOptions): SubmenuHover {
     // Re-entering the open row abandons a pending close and does not re-arm
     // the click guard or turn a pinned flyout back into a hover one.
     if (options.isOpen()) {
-      clearHideTimer()
-      clearTriangle()
+      hideTimer.clear()
       return
     }
 
@@ -240,9 +174,7 @@ export function useSubmenuHover(options: UseSubmenuHoverOptions): SubmenuHover {
       return
     // Arriving on the flyout is the end of the trip the delay and the
     // triangle were protecting.
-    clearShowTimer()
-    clearHideTimer()
-    clearTriangle()
+    cancelTimers()
   }
 
   function onFlyoutPointerLeave(event: PointerEvent): void {

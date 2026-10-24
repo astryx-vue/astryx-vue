@@ -148,7 +148,12 @@ export function useLayer(options: UseLayerOptions): UseLayerReturn {
 
   const isMounted = computed(() => !toValue(options.lazyMount) || hasOpened.value)
 
-  function show(): void {
+  // 正在关闭的过程中又要打开（典型场景：关闭时把焦点还给触发器，触发器上的 Tooltip
+  // 立刻要显示）。等到这一次关闭走完再打开，否则会读到一半新一半旧的状态。
+  let isHiding = false
+  let pendingShow = false
+
+  function runShow(): void {
     if (isOpen.value)
       return
     hasOpened.value = true
@@ -156,11 +161,33 @@ export function useLayer(options: UseLayerOptions): UseLayerReturn {
     options.onShow?.()
   }
 
+  function show(): void {
+    if (isHiding) {
+      pendingShow = true
+      queueMicrotask(() => {
+        if (!pendingShow)
+          return
+        pendingShow = false
+        runShow()
+      })
+      return
+    }
+    runShow()
+  }
+
   function hide(): void {
+    // 这一次关闭把之前排队的打开一并作废。
+    pendingShow = false
     if (!isOpen.value)
       return
-    isOpen.value = false
-    options.onHide?.()
+    isHiding = true
+    try {
+      isOpen.value = false
+      options.onHide?.()
+    }
+    finally {
+      isHiding = false
+    }
   }
 
   useDismiss({

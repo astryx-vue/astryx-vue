@@ -22,7 +22,7 @@ footer: false
       <tr>
         <td><code>label</code></td>
         <td><code>string</code></td>
-        <td><code>'More options'</code></td>
+        <td>the active locale (<code>More options</code> in English)</td>
         <td>The trigger's accessible name, which is also the name of the menu itself and the text of its tooltip.</td>
       </tr>
       <tr>

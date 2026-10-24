@@ -38,6 +38,12 @@ footer: false
         <td>Whether to show a bottom divider.</td>
       </tr>
       <tr>
+        <td><code>overflow</code></td>
+        <td><code>'auto' | 'scroll' | 'visible'</code></td>
+        <td><code>'auto'</code></td>
+        <td>What happens when the tabs are wider than the strip. <code>auto</code> and <code>scroll</code> scroll sideways, fade the hidden edge, and offer page arrows. <code>visible</code> does not scroll. A selected tab that is out of view scrolls back into view immediately.</td>
+      </tr>
+      <tr>
         <td><code>role</code></td>
         <td><code>string</code></td>
         <td>-</td>

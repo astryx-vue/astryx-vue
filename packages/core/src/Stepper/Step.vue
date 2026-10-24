@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { StepProgress, StepProps, StepSlots } from './types.js'
-import { computed, inject, onUnmounted, watch } from 'vue'
+import { computed, onUnmounted, watch } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { stepperContextKey } from './context.js'
+import { useStepperContext } from './context.js'
 import { resolveStepGlyph } from './logic.js'
 import StepMarker from './StepMarker.vue'
 import '../../styles/stepper.css'
@@ -18,11 +19,12 @@ const props = withDefaults(defineProps<StepProps>(), {
 
 defineSlots<StepSlots>()
 
-const stepper = inject(stepperContextKey)
+const stepper = useStepperContext()
 const messages = useAstryxMessages()
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 
 const progress = computed<StepProgress>(() => {
-  const active = stepper?.activeStep.value ?? 0
+  const active = stepper.activeStep.value
   if (props.step === active)
     return 'in-progress'
   if (props.step < active)
@@ -30,19 +32,19 @@ const progress = computed<StepProgress>(() => {
   return 'not-started'
 })
 
-const density = computed(() => props.density ?? stepper?.density.value ?? 'balanced')
-const orientation = computed(() => stepper?.orientation.value ?? 'horizontal')
-const indicatorPosition = computed(() => stepper?.indicatorPosition.value ?? 'separated')
-const isClickable = computed(() => stepper?.isNonLinear.value === true && !props.isDisabled)
+const density = computed(() => props.density ?? stepper.density.value)
+const orientation = computed(() => stepper.orientation.value)
+const indicatorPosition = computed(() => stepper.indicatorPosition.value)
+const isClickable = computed(() => stepper.isNonLinear.value === true && !props.isDisabled)
 const numberLabel = computed(() => String(props.step + 1))
 const glyph = computed(() => resolveStepGlyph({
   progress: progress.value,
   indicator: props.indicator,
   status: props.status,
 }))
-const collapsed = computed(() => stepper?.collapsed.value === true)
-const leadFilled = computed(() => props.step <= (stepper?.activeStep.value ?? 0))
-const trailFilled = computed(() => props.step < (stepper?.activeStep.value ?? 0))
+const collapsed = computed(() => stepper.collapsed.value === true)
+const leadFilled = computed(() => props.step <= stepper.activeStep.value)
+const trailFilled = computed(() => props.step < stepper.activeStep.value)
 
 const accessibleName = computed(() => {
   const stepNumber = props.step + 1
@@ -54,8 +56,8 @@ const accessibleName = computed(() => {
         ? messages.value.stepper.status.completed
         : null
   if (status == null)
-    return messages.value.stepper.goToStep(stepNumber)
-  return messages.value.stepper.goToStepWithStatus(stepNumber, status)
+    return messages.value.stepper.goToStep(stepNumber, props.label)
+  return messages.value.stepper.goToStepWithStatus(stepNumber, props.label, status)
 })
 
 const hiddenStatus = computed(() => {
@@ -73,25 +75,22 @@ const hiddenStatus = computed(() => {
 function activate(): void {
   if (!isClickable.value)
     return
-  stepper?.select.value?.(props.step)
+  stepper.select.value?.(props.step)
 }
 
-if (stepper) {
-  const context = stepper
-  watch(
-    () => ({
-      step: props.step,
-      label: props.label,
-      description: props.description,
-      indicator: props.indicator,
-      status: props.status,
-      isDisabled: props.isDisabled,
-    }),
-    record => context.register(record),
-    { immediate: true },
-  )
-  onUnmounted(() => context.unregister(props.step))
-}
+watch(
+  () => ({
+    step: props.step,
+    label: props.label,
+    description: props.description,
+    indicator: props.indicator,
+    status: props.status,
+    isDisabled: props.isDisabled,
+  }),
+  record => stepper.register(record),
+  { immediate: true },
+)
+onUnmounted(() => stepper.unregister(props.step))
 </script>
 
 <template>
@@ -101,6 +100,7 @@ if (stepper) {
     :data-density="density"
     :data-indicator-position="indicatorPosition"
     :data-orientation="orientation"
+    :data-glyph="glyph"
     :data-progress="progress"
     :data-status="status"
   >
@@ -115,6 +115,7 @@ if (stepper) {
     </span>
     <component
       :is="isClickable ? 'button' : 'div'"
+      v-bind="isClickable ? pressableProps : undefined"
       class="astryx-step-control"
       :aria-label="isClickable ? accessibleName : undefined"
       :type="isClickable ? 'button' : undefined"
@@ -126,12 +127,12 @@ if (stepper) {
       <StepMarker v-else :glyph="glyph" :number-label="numberLabel" />
       <span class="astryx-step-copy">
         <span class="astryx-step-label-row">
-          <span class="astryx-step-label">{{ label }}</span>
+          <span class="astryx-step-label" :data-disabled="isDisabled || undefined" :data-progress="progress" :data-status="status">{{ label }}</span>
           <VisuallyHidden v-if="hiddenStatus">{{ hiddenStatus }}</VisuallyHidden>
           <span v-if="isOptional" class="astryx-step-optional">• {{ messages.stepper.optional }}</span>
           <slot name="end" />
         </span>
-        <span v-if="description" class="astryx-step-description">{{ description }}</span>
+        <span v-if="description" class="astryx-step-description" :data-progress="progress" :data-status="status">{{ description }}</span>
       </span>
     </component>
     <div v-if="$slots.default" class="astryx-step-content">

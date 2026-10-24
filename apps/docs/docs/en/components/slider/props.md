@@ -36,6 +36,10 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning or success status.</td></tr>
 <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Decorative label icon.</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Information tooltip beside the label.</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string</code></td><td>—</td><td>Class on the field shell. It has no effect inside a horizontal-labels form.</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style on the field shell.</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string</code></td><td>—</td><td>Class on the track container. It does not land on the thumb.</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style on the track container.</td></tr>
 </tbody></table>
 </div>
 

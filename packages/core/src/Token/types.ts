@@ -19,6 +19,8 @@ export interface TokenProps {
   /** 补充说明，读屏可读。 */
   description?: string
   /** 视觉上隐藏文字，仍然作为无障碍名称。 */
+  isLabelHidden?: boolean
+  /** `isLabelHidden` 的旧名。两者任一为真就隐藏。 */
   labelHidden?: boolean
 }
 

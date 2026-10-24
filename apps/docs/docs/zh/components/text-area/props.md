@@ -16,7 +16,7 @@ footer: false
 <tr><td><code>rows</code></td><td><code>number</code></td><td>—</td><td>原生 textarea 的 rows 属性。</td></tr>
 <tr><td><code>cols</code></td><td><code>number</code></td><td>—</td><td>原生 textarea 的 cols 属性。</td></tr>
 <tr><td><code>minlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 minlength 属性。</td></tr>
-<tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 maxlength。设置后会显示实时字数，超过上限时字数变红。</td></tr>
+<tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>可见字符上限，一个 emoji 算一个。可以继续输入，超出后字数变红，接近上限和超出时读屏会播报。不会写进原生 maxlength。</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>原生 textarea 的 wrap 属性。</td></tr>
 <tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>原生 resize 样式，控制可拖拽调整的方向。默认 vertical，只允许垂直拖动。</td></tr>
 <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原生 textarea 的 autocomplete，例如 <code>off</code>、<code>email</code>。原样透传，不影响受控值。</td></tr>
@@ -40,7 +40,11 @@ footer: false
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td>false</td><td>控制加载指示器的显示。</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td>false</td><td>在有内容且可编辑时显示清空按钮，点击后清空内容。</td></tr>
 <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>组件挂载后自动聚焦文本域。</td></tr>
-<tr><td><code>clearLabel</code></td><td><code>string</code></td><td>—</td><td>清空按钮的无障碍标签。</td></tr>
+<tr><td><code>clearLabel</code></td><td><code>string</code></td><td>—</td><td>清空按钮的读屏名称，默认带字段名。悬停或键盘聚焦时，提示只说「清除」。</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到文本域本体的 class。直接写在组件上的 class 也落在本体，不会警告。</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到文本域本体的行内样式。直接写在组件上的 style 也落在本体。</td></tr>
 <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>加载指示器的无障碍标签。</td></tr>
 <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在标签前的装饰图标。</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>在标签旁显示信息提示，悬停、键盘聚焦或点击都可以查看。</td></tr>

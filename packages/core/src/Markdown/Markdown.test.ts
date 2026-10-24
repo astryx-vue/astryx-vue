@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, markRaw, nextTick, ref } from 'vue'
 import { provideAstryxLocale } from '../locale/index.js'
 import Markdown from './Markdown.vue'
+import { markdownSourceLinesPlugin } from './plugin-protocol/sourceLines.js'
 
 const sample = [
   '# Setup',
@@ -410,5 +411,69 @@ describe('markdown', () => {
       expect(wrapper.find('h1').element).toBe(heading)
       expect(wrapper.text()).toContain('World keeps arriving')
     })
+  })
+
+  it('decodes character references in prose and leaves them literal in a fence', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: [
+          'Fish &amp; chips &copy; 2026',
+          '',
+          '```',
+          '&copy;',
+          '```',
+        ].join('\n'),
+      },
+    })
+    expect(wrapper.text()).toContain('Fish & chips © 2026')
+    expect(wrapper.get('.astryx-code-block').text()).toContain('&copy;')
+    expect(wrapper.find('[data-source-line]').exists()).toBe(false)
+  })
+
+  it('stamps source lines only when the source-lines plugin is passed', () => {
+    const content = [
+      '# Setup',
+      '',
+      'Paragraph with *em*.',
+      '',
+      '- item',
+      '',
+      '> Quote',
+      '',
+      '```ts',
+      'const ready = true',
+      '```',
+      '',
+      '| Name |',
+      '| --- |',
+      '| apples |',
+      '',
+      '---',
+    ].join('\n')
+    const wrapper = mount(Markdown, {
+      props: { content, plugins: [markdownSourceLinesPlugin] },
+    })
+    expect(wrapper.get('h1').attributes('data-source-line')).toBe('1')
+    expect(wrapper.get('h1').attributes('data-source-line-end')).toBe('1')
+    expect(wrapper.get('[role="paragraph"]').attributes('data-source-line')).toBe('3')
+    expect(wrapper.get('li').attributes('data-source-line')).toBeTruthy()
+    expect(wrapper.get('blockquote').attributes('data-source-line')).toBeTruthy()
+    expect(wrapper.get('.astryx-markdown__code').attributes('data-source-line')).toBeTruthy()
+    expect(wrapper.get('.astryx-markdown__table-wrap').attributes('data-source-line')).toBeTruthy()
+    expect(wrapper.get('hr').attributes('data-source-line')).toBeTruthy()
+    expect(wrapper.get('em').attributes('data-source-line')).toBeUndefined()
+    expect(wrapper.get('tr').attributes('data-source-line')).toBeUndefined()
+    expect(wrapper.get('td').attributes('data-source-line')).toBeUndefined()
+    expect(wrapper.get('th').attributes('data-source-line')).toBeUndefined()
+    expect(wrapper.get('ul').attributes('data-source-line')).toBeUndefined()
+  })
+
+  it('wraps a long fenced line', () => {
+    const wrapper = mount(Markdown, {
+      props: {
+        content: ['```', 'x'.repeat(90), '```'].join('\n'),
+      },
+    })
+    expect(wrapper.get('.astryx-code-block__code').attributes('data-wrapped')).toBe('true')
   })
 })

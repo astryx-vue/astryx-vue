@@ -39,6 +39,20 @@ const clearTimers: Record<AnnouncePoliteness, ReturnType<typeof setTimeout> | nu
 
 let regions: LiveRegions | null = null
 
+/** 每块区域还没写进去的那一帧。清空区域时要一并取消，不然旧文字会在清空之后又冒出来。 */
+const pendingFrames: Record<AnnouncePoliteness, Set<number>> = {
+  polite: new Set(),
+  assertive: new Set(),
+}
+
+function cancelPendingFrames(politeness: AnnouncePoliteness): void {
+  if (typeof cancelAnimationFrame === 'function') {
+    for (const frame of pendingFrames[politeness])
+      cancelAnimationFrame(frame)
+  }
+  pendingFrames[politeness].clear()
+}
+
 function cancelScheduledClear(politeness: AnnouncePoliteness): void {
   const timer = clearTimers[politeness]
   if (timer != null) {
@@ -93,14 +107,21 @@ function announceMessage(message: string, politeness: AnnouncePoliteness): void 
   const write = (): void => {
     target.textContent = message
   }
-  if (typeof requestAnimationFrame === 'function')
-    requestAnimationFrame(write)
-  else
+  if (typeof requestAnimationFrame === 'function') {
+    const frame = requestAnimationFrame(() => {
+      pendingFrames[politeness].delete(frame)
+      write()
+    })
+    pendingFrames[politeness].add(frame)
+  }
+  else {
     write()
+  }
   scheduleClear(politeness, target)
 }
 
 function clearRegion(politeness: AnnouncePoliteness): void {
+  cancelPendingFrames(politeness)
   cancelScheduledClear(politeness)
   if (regions == null)
     return
@@ -120,6 +141,8 @@ export function useAnnounce(): AnnounceFn {
 
 /** 测试用：拆掉单例区域，避免用例之间串味。不从包入口导出。 */
 export function resetLiveRegionsForTest(): void {
+  cancelPendingFrames('polite')
+  cancelPendingFrames('assertive')
   cancelScheduledClear('polite')
   cancelScheduledClear('assertive')
   if (regions != null) {

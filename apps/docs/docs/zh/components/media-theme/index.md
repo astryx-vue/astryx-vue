@@ -14,7 +14,7 @@ import { mediaThemeImageOverlay, mediaThemeLightScrim } from '../../../../compon
 
 `MediaTheme` 是反色表面上的提供者，用在图片叠字、遮罩、toast 和 tooltip 上。它设置 `data-astryx-media`，让文字、图标和按钮改用深底或浅底上的颜色。它自己不铺背景，背景写在父元素上。
 
-`mode` 必填：`dark`、`light`、`auto` 或 `off`。`auto` 测量父元素背景，选读得清的一边；周围文字对比已经达到 3:1 时选 `off`。`fallback` 是还没量到、或量不到时用的一边，默认 `dark`。`off` 仍渲染这个元素，只是去掉媒体属性，子节点不会被拆掉重建。
+`mode` 必填：`dark`、`light`、`auto` 或 `off`。`auto` 测量父元素实际画出来的颜色（半透明的几层会叠在一起算），再看主题自己的 `--color-on-dark` 和 `--color-on-light` 哪个在上面更清楚，就选哪一边；周围文字对比已经达到 3:1 时选 `off`。背景图片没法从 CSS 量出来。表面颜色变了会重新测量。`fallback` 是还没量到、或量不到时用的一边，默认 `dark`。`off` 仍渲染这个元素，只是去掉媒体属性，子节点不会被拆掉重建。
 
 `useMediaTheme()` 返回解析后的模式。两者都从 `@astryx-vue/core/Theme` 引入。
 

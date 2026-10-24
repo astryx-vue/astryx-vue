@@ -33,6 +33,48 @@ function focusControl(element: HTMLElement | undefined): boolean {
   return element.ownerDocument.activeElement === element
 }
 
+function radioGroupKey(element: HTMLElement): string | null {
+  if (!(element instanceof HTMLInputElement) || element.getAttribute('type') !== 'radio' || element.name === '')
+    return null
+  return `${element.form?.id ?? ''}\u0000${element.name}`
+}
+
+/**
+ * A named radio group is one Tab stop: the focused radio, else the checked
+ * one, else the first radio going forward or the last going backward.
+ */
+function collapseRadioGroups(elements: HTMLElement[], active: Element | null, isBackward: boolean): HTMLElement[] {
+  const groups = new Map<string, HTMLInputElement[]>()
+  for (const element of elements) {
+    const key = radioGroupKey(element)
+    if (key == null)
+      continue
+    const members = groups.get(key) ?? []
+    members.push(element as HTMLInputElement)
+    groups.set(key, members)
+  }
+
+  const placed = new Set<string>()
+  const result: HTMLElement[] = []
+  for (const element of elements) {
+    const key = radioGroupKey(element)
+    if (key == null) {
+      result.push(element)
+      continue
+    }
+    if (placed.has(key))
+      continue
+    placed.add(key)
+    const members = groups.get(key) ?? []
+    const stop = members.find(radio => radio === active)
+      ?? members.find(radio => radio.checked)
+      ?? (isBackward ? members[members.length - 1] : members[0])
+    if (stop != null)
+      result.push(stop)
+  }
+  return result
+}
+
 export interface UseMenuRegionsOptions {
   header: Ref<HTMLElement | null>
   footer: Ref<HTMLElement | null>
@@ -42,9 +84,12 @@ export interface UseMenuRegionsOptions {
 }
 
 export interface MenuRegions {
-  /** Handle Tab on the menu. Returns whether this level owned the key. */
-  onMenuTab: (event: KeyboardEvent) => boolean
-  /** Tab leaving a region closes the menu; Tab between regions stays. */
+  /**
+   * Tab and Shift+Tab cycle the header, the menu as one stop, and the footer.
+   * `isFromFlyout` is set when a submenu has just closed itself for this key.
+   */
+  moveDialogTab: (event: KeyboardEvent, isFromFlyout?: boolean) => void
+  /** Tab on a header or footer control stays inside the dialog. */
   onRegionKeydown: (event: KeyboardEvent) => void
   /** Move focus into the header or footer. Closes the menu when nothing is there. */
   focusRegion: (direction: 'previous' | 'next') => boolean
@@ -53,8 +98,9 @@ export interface MenuRegions {
 /**
  * Keyboard between a menu and the header and footer beside it.
  *
- * The menu is one Tab stop. Shift+Tab from a row skips that stop and lands on
- * the header, because the menu element would otherwise catch the key first.
+ * With either region the popover is a dialog: Tab cycles the header, the menu
+ * as one stop, and the footer, and wraps at both ends. A row counts as the
+ * menu's stop, so Shift+Tab from a row lands on the header.
  */
 export function useMenuRegions(options: UseMenuRegionsOptions): MenuRegions {
   function focusRegion(direction: 'previous' | 'next'): boolean {
@@ -68,44 +114,40 @@ export function useMenuRegions(options: UseMenuRegionsOptions): MenuRegions {
     return true
   }
 
-  function onMenuTab(event: KeyboardEvent): boolean {
-    if (event.key !== 'Tab' || !options.hasRegions.value)
-      return false
+  function moveDialogTab(event: KeyboardEvent, isFromFlyout = false): void {
+    const menu = options.menu.value
+    if (menu == null || !options.hasRegions.value)
+      return
 
-    const region = event.shiftKey ? options.header.value : options.footer.value
-    const tabbables = tabbablesIn(region)
-    if (tabbables.length === 0) {
-      options.closeMenu()
-      return true
+    event.preventDefault()
+    event.stopPropagation()
+    const active = menu.ownerDocument.activeElement
+    const cycle = collapseRadioGroups(
+      [...tabbablesIn(options.header.value), menu, ...tabbablesIn(options.footer.value)],
+      active,
+      event.shiftKey,
+    )
+    if (cycle.length <= 1) {
+      if (isFromFlyout)
+        menu.focus()
+      return
     }
 
-    // From a row, Shift+Tab would stop on the menu element itself.
-    if (event.shiftKey && event.target !== options.menu.value) {
-      event.preventDefault()
-      event.stopPropagation()
-      if (!focusControl(tabbables[tabbables.length - 1]))
-        options.closeMenu()
-    }
-    return true
+    const menuIndex = cycle.indexOf(menu)
+    const contained = active instanceof Node && menu.contains(active)
+    let index = contained ? menuIndex : cycle.findIndex(element => element === active || element.contains(active))
+    if (index < 0)
+      index = menuIndex
+    const step = event.shiftKey ? -1 : 1
+    const next = cycle[(index + step + cycle.length) % cycle.length]
+    if (!focusControl(next))
+      menu.focus()
   }
 
   function onRegionKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Tab')
-      return
-
-    const region = event.currentTarget
-    if (!(region instanceof HTMLElement))
-      return
-
-    const tabbables = tabbablesIn(region)
-    const isHeader = region === options.header.value
-    const exit = isHeader
-      ? (event.shiftKey ? tabbables[0] : undefined)
-      : (event.shiftKey ? undefined : tabbables[tabbables.length - 1])
-
-    if (exit != null && exit === region.ownerDocument.activeElement)
-      options.closeMenu()
+    if (event.key === 'Tab')
+      moveDialogTab(event)
   }
 
-  return { focusRegion, onMenuTab, onRegionKeydown }
+  return { focusRegion, moveDialogTab, onRegionKeydown }
 }

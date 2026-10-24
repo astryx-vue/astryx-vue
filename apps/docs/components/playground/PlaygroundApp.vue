@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import type { PlaygroundFrameMessage, PlaygroundHostMessage, PlaygroundLocale } from './protocol'
+import type { PlaygroundLocale } from './protocol'
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
 import { useData, withBase } from 'vitepress'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { ref } from 'vue'
+import PlaygroundDialog from './PlaygroundDialog.vue'
 import PlaygroundMonacoEditor from './PlaygroundMonacoEditor.vue'
+import PlaygroundTemplateMenu from './PlaygroundTemplateMenu.vue'
 import PlaygroundThemeEditor from './PlaygroundThemeEditor.vue'
-import { isFrameMessage, PLAYGROUND_CHANNEL } from './protocol'
-import { exportThemeCss, exportThemeJson, fontStylesheetHref, previewCss } from './theme'
+import { exportThemeCss, exportThemeJson } from './theme'
+import { usePaneResize } from './usePaneResize'
 import { usePlayground } from './usePlayground'
+import { usePreviewSync } from './usePreviewSync'
 
 const props = defineProps<{
   locale: PlaygroundLocale
@@ -15,9 +18,8 @@ const props = defineProps<{
 
 const { isDark } = useData()
 
-const dialog = ref<HTMLDialogElement | null>(null)
+const dialog = ref<InstanceType<typeof PlaygroundDialog> | null>(null)
 const iframe = ref<HTMLIFrameElement | null>(null)
-const templateRoot = ref<HTMLElement | null>(null)
 const editorPane = ref<HTMLElement | null>(null)
 const bodyEl = ref<HTMLElement | null>(null)
 const tab = ref<'code' | 'theme'>('code')
@@ -25,18 +27,8 @@ const pane = ref<'edit' | 'preview'>('edit')
 const fullscreen = ref(false)
 const device = ref<'desktop' | 'phone'>('desktop')
 const templateOpen = ref(false)
-const frameReady = ref(false)
-const sawPreview = ref(false)
-const errorText = ref('')
 const statusText = ref('')
 const monacoEditor = ref<InstanceType<typeof PlaygroundMonacoEditor> | null>(null)
-const editorSize = ref('440px')
-const dialogMode = ref<'confirm-template' | 'confirm-theme' | 'share' | 'export' | null>(null)
-const dialogResult = ref(false)
-let resolveDialog: ((value: boolean) => void) | null = null
-let pushTimer = 0
-let persistTimer = 0
-let codeChanged = false
 
 const {
   copy,
@@ -53,75 +45,24 @@ const {
   setColor,
   selectDensity,
   buildShareUrl,
-} = usePlayground(props.locale, ask)
+} = usePlayground(props.locale, kind => dialog.value?.ask(kind) ?? Promise.resolve(false))
+
+const { sawPreview, errorText, onFrameLoad } = usePreviewSync({
+  iframe,
+  locale: props.locale,
+  theme,
+  code,
+  mountId,
+  hydrated,
+  persist: buildShareUrl,
+})
+
+const { editorSize, onDividerDown, onDividerKey } = usePaneResize(editorPane, bodyEl)
 
 const frameSrc = withBase('/playground/frame')
 const homeHref = withBase('/')
 const logoHref = withBase('/icon-logo.svg')
 const localeHref = withBase(props.locale === 'zh' ? '/en/playground/' : '/playground/')
-const styleText = computed(() => previewCss(theme))
-const fontHref = computed(() => fontStylesheetHref(theme))
-watch(code, () => {
-  codeChanged = true
-  schedulePush(200)
-  schedulePersist()
-})
-
-watch([styleText, fontHref, () => theme.dark], () => {
-  schedulePush(codeChanged ? 200 : 40)
-  schedulePersist()
-})
-
-watch(mountId, () => {
-  codeChanged = true
-  schedulePush(0)
-})
-
-watch(hydrated, (ready) => {
-  if (ready)
-    push('render')
-})
-
-onMounted(() => {
-  document.addEventListener('pointerdown', onPointerDown)
-  document.addEventListener('keydown', onDocumentKey)
-  window.addEventListener('message', onFrameMessage)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('pointerdown', onPointerDown)
-  document.removeEventListener('keydown', onDocumentKey)
-  window.removeEventListener('message', onFrameMessage)
-  window.clearTimeout(pushTimer)
-  window.clearTimeout(persistTimer)
-})
-
-function ask(kind: 'template' | 'theme'): Promise<boolean> {
-  dialogMode.value = kind === 'template' ? 'confirm-template' : 'confirm-theme'
-  dialogResult.value = false
-  dialog.value?.showModal()
-  return new Promise((resolve) => {
-    resolveDialog = resolve
-  })
-}
-
-function confirmDialog(): void {
-  dialogResult.value = true
-  dialog.value?.close()
-}
-
-function onDialogClose(): void {
-  const resolve = resolveDialog
-  resolveDialog = null
-  dialogMode.value = null
-  resolve?.(dialogResult.value)
-  dialogResult.value = false
-}
-
-async function chooseTemplate(id: string): Promise<void> {
-  templateOpen.value = false
-  await loadTemplate(id)
-}
 
 async function copyShareUrl(): Promise<void> {
   try {
@@ -148,114 +89,6 @@ function downloadCss(): void {
 
 function downloadJson(): void {
   download('astryx-theme.json', exportThemeJson(theme), 'application/json')
-}
-
-function onFrameLoad(): void {
-  frameReady.value = true
-  push('render')
-}
-
-function onFrameMessage(event: MessageEvent): void {
-  if (event.origin !== window.location.origin || event.source !== iframe.value?.contentWindow)
-    return
-  if (!isFrameMessage(event.data))
-    return
-  const message: PlaygroundFrameMessage = event.data
-  if (message.type === 'ready') {
-    frameReady.value = true
-    push('render')
-    return
-  }
-  if (message.type === 'error') {
-    errorText.value = message.message ?? ''
-    sawPreview.value = true
-    return
-  }
-  errorText.value = ''
-  sawPreview.value = true
-}
-
-function schedulePush(delay: number): void {
-  if (!hydrated.value || !frameReady.value)
-    return
-  window.clearTimeout(pushTimer)
-  pushTimer = window.setTimeout(() => {
-    const type = codeChanged ? 'render' : 'theme'
-    codeChanged = false
-    push(type)
-  }, delay)
-}
-
-function schedulePersist(): void {
-  if (!hydrated.value)
-    return
-  window.clearTimeout(persistTimer)
-  persistTimer = window.setTimeout(() => {
-    void buildShareUrl()
-  }, 400)
-}
-
-function push(type: PlaygroundHostMessage['type']): void {
-  const target = iframe.value?.contentWindow
-  if (!target || !hydrated.value)
-    return
-  const message: PlaygroundHostMessage = {
-    channel: PLAYGROUND_CHANNEL,
-    type,
-    css: styleText.value,
-    colorMode: theme.dark ? 'dark' : 'light',
-    fontHref: fontHref.value,
-    locale: props.locale,
-    code: code.value,
-    mountId: mountId.value,
-  }
-  target.postMessage(message, window.location.origin)
-}
-
-function onPointerDown(event: PointerEvent): void {
-  if (!templateOpen.value)
-    return
-  const root = templateRoot.value
-  if (root && event.target instanceof Node && !root.contains(event.target))
-    templateOpen.value = false
-}
-
-function onDocumentKey(event: KeyboardEvent): void {
-  if (event.key === 'Escape')
-    templateOpen.value = false
-}
-
-function onDividerDown(event: PointerEvent): void {
-  if (event.button !== 0)
-    return
-  const target = event.currentTarget
-  if (!(target instanceof HTMLElement))
-    return
-  target.setPointerCapture(event.pointerId)
-  const startX = event.clientX
-  const startWidth = editorPane.value?.getBoundingClientRect().width ?? 0
-  const move = (ev: PointerEvent) => {
-    const bodyWidth = bodyEl.value?.getBoundingClientRect().width ?? 0
-    const next = Math.min(Math.max(startWidth + ev.clientX - startX, 280), Math.max(280, bodyWidth - 280))
-    editorSize.value = `${next}px`
-  }
-  const up = (ev: PointerEvent) => {
-    if (target.hasPointerCapture(ev.pointerId))
-      target.releasePointerCapture(ev.pointerId)
-    target.removeEventListener('pointermove', move)
-    target.removeEventListener('pointerup', up)
-  }
-  target.addEventListener('pointermove', move)
-  target.addEventListener('pointerup', up)
-}
-
-function onDividerKey(event: KeyboardEvent): void {
-  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')
-    return
-  event.preventDefault()
-  const current = editorPane.value?.getBoundingClientRect().width ?? 480
-  const delta = event.key === 'ArrowLeft' ? -24 : 24
-  editorSize.value = `${Math.max(280, current + delta)}px`
 }
 
 function onField(key: keyof ThemeState, value: ThemeState[keyof ThemeState]): void {
@@ -285,8 +118,7 @@ function togglePreviewDark(): void {
 async function openExportDialog(): Promise<void> {
   templateOpen.value = false
   await buildShareUrl()
-  dialogMode.value = 'export'
-  dialog.value?.showModal()
+  dialog.value?.openExport()
 }
 </script>
 
@@ -350,35 +182,13 @@ async function openExportDialog(): Promise<void> {
               <button type="button" class="playground__pill" :aria-pressed="tab === 'theme'" @click="tab = 'theme'">
                 {{ copy.theme }}
               </button>
-              <div ref="templateRoot" class="playground__menu-wrap">
-                <button
-                  type="button"
-                  class="playground__pill"
-                  :aria-expanded="templateOpen"
-                  aria-haspopup="menu"
-                  @click="templateOpen = !templateOpen"
-                >
-                  <span class="playground__button-text">{{ copy.templates }}</span>
-                  <span class="playground__icon" aria-hidden="true"><span class="i-carbon-chevron-down" /></span>
-                </button>
-                <div
-                  v-if="templateOpen"
-                  class="playground__menu"
-                  role="menu"
-                  :aria-label="copy.templates"
-                >
-                  <button
-                    v-for="item in templates"
-                    :key="item.id"
-                    type="button"
-                    role="menuitem"
-                    :aria-current="item.id === templateId ? 'true' : undefined"
-                    @click="chooseTemplate(item.id)"
-                  >
-                    {{ item.label }}
-                  </button>
-                </div>
-              </div>
+              <PlaygroundTemplateMenu
+                v-model:open="templateOpen"
+                :label="copy.templates"
+                :templates="templates"
+                :current-id="templateId"
+                @choose="loadTemplate"
+              />
             </div>
           </header>
           <div class="playground__left-body">
@@ -489,57 +299,13 @@ async function openExportDialog(): Promise<void> {
       {{ statusText }}
     </p>
 
-    <dialog ref="dialog" class="playground__dialog" @close="onDialogClose">
-      <template v-if="dialogMode === 'confirm-template' || dialogMode === 'confirm-theme'">
-        <h2>{{ dialogMode === 'confirm-template' ? copy.loadTemplateTitle : copy.resetThemeTitle }}</h2>
-        <p>{{ dialogMode === 'confirm-template' ? copy.loadTemplateBody : copy.resetThemeBody }}</p>
-        <div class="playground__dialog-actions">
-          <button type="button" @click="dialog?.close()">
-            {{ copy.cancel }}
-          </button>
-          <button type="button" @click="confirmDialog">
-            {{ copy.continue }}
-          </button>
-        </div>
-      </template>
-      <template v-else-if="dialogMode === 'share'">
-        <h2>{{ copy.shareTitle }}</h2>
-        <label class="playground__dialog-label" for="playground-share-url">
-          URL
-          <input id="playground-share-url" type="text" readonly :value="shareUrl">
-        </label>
-        <div class="playground__dialog-actions">
-          <button type="button" @click="copyShareUrl">
-            {{ copy.copyUrl }}
-          </button>
-          <button type="button" @click="dialog?.close()">
-            {{ copy.close }}
-          </button>
-        </div>
-      </template>
-      <template v-else-if="dialogMode === 'export'">
-        <h2>{{ copy.exportTitle }}</h2>
-        <label class="playground__dialog-label" for="playground-export-share-url">
-          {{ copy.shareTitle }}
-          <input id="playground-export-share-url" type="text" readonly :value="shareUrl">
-        </label>
-        <div class="playground__dialog-actions playground__dialog-actions--start">
-          <button type="button" @click="copyShareUrl">
-            {{ copy.copyUrl }}
-          </button>
-        </div>
-        <div class="playground__dialog-actions">
-          <button type="button" @click="downloadCss">
-            {{ copy.downloadCss }}
-          </button>
-          <button type="button" @click="downloadJson">
-            {{ copy.downloadJson }}
-          </button>
-          <button type="button" @click="dialog?.close()">
-            {{ copy.close }}
-          </button>
-        </div>
-      </template>
-    </dialog>
+    <PlaygroundDialog
+      ref="dialog"
+      :copy="copy"
+      :share-url="shareUrl"
+      @copy-url="copyShareUrl"
+      @download-css="downloadCss"
+      @download-json="downloadJson"
+    />
   </div>
 </template>

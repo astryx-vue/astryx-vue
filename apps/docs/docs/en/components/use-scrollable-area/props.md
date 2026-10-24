@@ -26,10 +26,16 @@ footer: false
         <td>Which logical axis may scroll.</td>
       </tr>
       <tr>
+        <td><code>options.keyboardAccess</code></td>
+        <td><code>ScrollKeyboardAccess</code></td>
+        <td><code>{ owner: 'viewport', label, role }</code></td>
+        <td>Where the keyboard enters a scrolling area. <code>{ owner: 'content' }</code>: the content has its own focusable cells, so the viewport stays out of the Tab order and unnamed. <code>{ owner: 'viewport', label, role? }</code>: the viewport becomes a Tab stop while it scrolls. <code>{ owner: 'contentOrViewport', label, role? }</code>: the same, but a Tab into it hands focus straight to a plain leading button or link inside; arrow-key scrolling stays with the browser.</td>
+      </tr>
+      <tr>
         <td><code>options.label</code></td>
         <td><code>string</code></td>
         <td>—</td>
-        <td>Accessible name for the viewport. Required.</td>
+        <td>Accessible name for the viewport. Used when <code>keyboardAccess</code> is not given.</td>
       </tr>
       <tr>
         <td><code>options.role</code></td>

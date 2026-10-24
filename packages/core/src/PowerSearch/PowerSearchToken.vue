@@ -3,6 +3,7 @@ import type { PowerSearchMessages } from '../locale/messages/power-search.js'
 import type { PowerSearchFilter, PowerSearchOperator } from './types.js'
 import { computed } from 'vue'
 import Token from '../Token/Token.vue'
+import { characterCount } from '../utils/characters.js'
 import { formatFilterValue } from './format.js'
 import { resolveOperatorLabel } from './operators.js'
 
@@ -29,7 +30,7 @@ const emit = defineEmits<{
 const operatorLabel = computed(() => resolveOperatorLabel(props.operator, props.messages))
 const tokenLabel = computed(() => `${props.fieldLabel}: ${operatorLabel.value}`)
 const valueText = computed(() => {
-  const room = Math.max(props.maxLength - props.fieldLabel.length - operatorLabel.value.length, 10)
+  const room = Math.max(props.maxLength - characterCount(props.fieldLabel) - characterCount(operatorLabel.value), 10)
   return formatFilterValue(props.operator.value, props.filter.value, room, props.messages, props.locale, props.timeZone)
 })
 </script>

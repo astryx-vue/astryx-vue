@@ -1,3 +1,5 @@
+import type { MarkdownAstDataValue } from './canonicalAst.js'
+
 export interface MdPoint {
   offset?: number | null
   line?: number
@@ -36,8 +38,15 @@ export interface MdNode {
   name?: string
   /** `block` extension nodes are rendered as their own block. */
   display?: 'inline' | 'block'
-  /** Extra fields a plugin wants the renderer to read. Keep values plain. */
-  data?: Readonly<Record<string, string | number | boolean | null>>
+  /** Matched source text on an extension node. */
+  source?: string
+  /** Citation id, set when a parser turns `[id]` into a citation node. */
+  sourceId?: string
+  /**
+   * Extra fields a plugin wants the renderer to read.
+   * Nested objects and arrays are allowed so document metadata can live here.
+   */
+  data?: MarkdownAstDataValue
 }
 
 export function isMarkdownExtensionNode(

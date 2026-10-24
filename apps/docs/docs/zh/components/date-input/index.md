@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation, dateInputField, dateInputNative } from '../../../../components/demos/date-input'
+import { dateInputClearable, dateInputRange, dateInputFormats, dateInputDescription, dateInputValidation, dateInputField, dateInputNative, dateInputSheet } from '../../../../components/demos/date-input'
 </script>
 
 ## 使用方法
@@ -31,7 +31,7 @@ const date = ref(null)
 
 绑定值是本地日期。写回字段时默认排成完整日期，例如 March 21, 2026。也可以改成短日期、带星期、系统日期，或自己排版。标签下面可以放说明。校验可以只改边框，也可以在字段下面写出原因。
 
-日历可以从弹出层或底部面板打开。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。
+日历可以从弹出层或底部面板打开。底部面板一次显示一个月，点一天就写入，保存才收起；点月份标题可以改月份和年份。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。
 
 
 <ComponentAnatomy />
@@ -94,4 +94,11 @@ const date = ref(null)
   description="直接使用系统日期控件，字段上仍按完整日期显示。"
   locale="zh"
   title="系统日期"
+/>
+
+<DemoExample
+  :demo="dateInputSheet"
+  description="不论鼠标还是触屏，都从底部面板选日期。点一天就写入，保存才收起。"
+  locale="zh"
+  title="底部面板"
 />

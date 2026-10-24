@@ -51,6 +51,14 @@ describe('avatar', () => {
     expect(fallback.text()).toBe('JD')
   })
 
+  it('builds initials from letters, digits and emoji, skipping punctuation', () => {
+    expect(mount(Avatar, { props: { name: 'Northwind Workbench (automation)' } }).find('.astryx-avatar__fallback--initials').text()).toBe('NA')
+    expect(mount(Avatar, { props: { name: '- Alice' } }).find('.astryx-avatar__fallback--initials').text()).toBe('A')
+    expect(mount(Avatar, { props: { name: 'A1 9' } }).find('.astryx-avatar__fallback--initials').text()).toBe('A9')
+    expect(mount(Avatar, { props: { name: '🎉 Party' } }).find('.astryx-avatar__fallback--initials').text()).toBe('🎉P')
+    expect(mount(Avatar, { props: { name: '()' } }).find('.astryx-avatar__fallback--icon').exists()).toBe(true)
+  })
+
   it('renders a single initial for a one-word name', () => {
     const wrapper = mount(Avatar, {
       props: {

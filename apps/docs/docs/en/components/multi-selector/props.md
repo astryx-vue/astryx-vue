@@ -14,6 +14,7 @@ footer: false
       <tr><td><code>modelValue</code></td><td><code>(string | number)[]</code></td><td><code>[]</code></td><td>Selected values.</td></tr>
       <tr><td><code>options</code></td><td><code>MultiSelectorOption[]</code></td><td>Required</td><td>Strings, option objects, dividers, or sections.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>Required</td><td>Field label.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>Placeholder when nothing is selected.</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a search field in the menu.</td></tr>
       <tr><td><code>selectAll</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a select-all row. Disabled options are skipped.</td></tr>
@@ -22,7 +23,8 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a clear button.</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button when values are selected. <code>clearable</code> is the older name; either one turns it on.</td></tr>
       <tr><td><code>checkboxPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'start'</code></td><td>Where the check mark sits.</td></tr>
-      <tr><td><code>variant</code></td><td><code>'input' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> has a border. <code>ghost</code> fits a toolbar.</td></tr>
+      <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> has a border. <code>secondary</code> matches a secondary button. <code>ghost</code> fits a toolbar. On the latter two, an attached status becomes detached.</td></tr>
+      <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>Shell and trigger box. A root class lands on the box. An option <code>action</code> latches a two-column grid and does not change the selection.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the field.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Why the field is disabled. With <code>disabled</code>, hovering or keyboard focus shows a tooltip and the trigger stays focusable through <code>aria-disabled</code>; it still cannot open the list. Do not wrap a disabled selector in a tooltip: it would swallow the hover. <code>disabledReason</code> is the older name.</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Reason for the disabled state. The control stays focusable. Same as <code>disabledMessage</code>.</td></tr>

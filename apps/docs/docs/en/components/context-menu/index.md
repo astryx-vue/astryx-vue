@@ -12,7 +12,7 @@ import { contextMenuBasic, contextMenuBottomSheet, contextMenuSelection } from '
 
 ## Usage
 
-`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.
+`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. When `label` is omitted, the menu's name follows the active locale (`Context menu` in English). It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.
 
 The pointer position is converted into the trigger's own coordinates and materialized as a zero-size anchor, so the panel is positioned relative to the trigger rather than the viewport. It follows the content when the page scrolls, flips above the pointer near the bottom edge, and never leaves the screen.
 

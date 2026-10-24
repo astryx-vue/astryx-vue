@@ -3,6 +3,7 @@ import type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } fr
 import { computed, useTemplateRef } from 'vue'
 import Card from '../Card/Card.vue'
 import { useClickableContainer } from '../composables/useClickableContainer.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/clickable-card.css'
 
@@ -46,8 +47,15 @@ function onSurfaceClick(event: MouseEvent): void {
   handlers.onClick(event)
 }
 
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
+
 function onKeyDown(event: KeyboardEvent): void {
-  if (props.isDisabled || event.key !== 'Enter')
+  if (props.isDisabled) {
+    if (event.key === ' ' || event.key === 'Enter')
+      event.preventDefault()
+    return
+  }
+  if (event.key !== 'Enter')
     return
   event.preventDefault()
   commit(!isSelected.value)
@@ -66,14 +74,15 @@ function onKeyDown(event: KeyboardEvent): void {
     :padding="padding"
     :variant="variant"
     :width="width"
+    v-bind="isDisabled ? undefined : pressableProps"
     @click="onSurfaceClick"
   >
     <VisuallyHidden
       ref="interactive"
       as="input"
+      :aria-disabled="isDisabled || undefined"
       :aria-label="label"
       :checked="isSelected"
-      :disabled="isDisabled"
       type="checkbox"
       @change="commit(($event.target as HTMLInputElement).checked)"
       @keydown="onKeyDown"

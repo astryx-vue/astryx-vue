@@ -1,15 +1,18 @@
-import type { IconName } from './types.js'
+import type { IconName, NamespacedIconName } from './types.js'
 
 /**
  * A name that resolves to built-in artwork: one of the semantic names the
  * components use, or a namespaced key such as `owner:key` that a component
  * owns.
  */
-export type IconGlyphName = IconName | `${string}:${string}`
+export type IconGlyphName = IconName | NamespacedIconName
 
 /**
  * The artwork kept for the components' own chrome. Applications bring their own
  * icons; this list only has to cover what astryx-vue draws itself.
+ *
+ * The shared names come first. Namespaced keys after them belong to one
+ * component each; a theme overrides them by key through `defineTheme({ icons })`.
  */
 export const ICON_GLYPHS = [
   'close',
@@ -42,6 +45,7 @@ export const ICON_GLYPHS = [
   'stop',
   'microphone',
   'image',
+  'numberInput:stepperDown',
 ] as const satisfies readonly IconGlyphName[]
 
 export function isIconGlyph(value: string): value is IconGlyphName {

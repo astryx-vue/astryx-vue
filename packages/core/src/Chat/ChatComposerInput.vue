@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { ChatComposerInputEmits, ChatComposerInputHandle, ChatComposerInputProps, ChatComposerToken } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { isImeKeyEvent } from '../composables/internal/ime.js'
 import { useAstryxMessages } from '../locale/index.js'
 import ChatPastedTextToken from './ChatPastedTextToken.vue'
 import ChatTokenContent from './ChatTokenContent.vue'
 import ChatTriggerMenu from './ChatTriggerMenu.vue'
 import { useChatComposerContext } from './context.js'
 import { hasEmitListener, wasPropPassed } from './events.js'
-import { isImeKeyEvent } from './ime.js'
 import { getSelectionRangeInside, insertTextAtCursor, placeCaretAtEnd, restoreSelectionRange } from './selection.js'
 import { composerHasChip, serializeComposer } from './serialize.js'
 import { isCustomToken } from './tokens.js'
@@ -150,8 +150,9 @@ const handle: ChatComposerInputHandle = {
 }
 self.value = handle
 
+const menuOpen = computed(() => menu.isMenuVisible.value)
 const activeDescendant = computed(() => {
-  if (!menu.state.isActive || menu.state.highlightedIndex < 0)
+  if (!menuOpen.value || menu.state.highlightedIndex < 0)
     return undefined
   return `${menu.listboxId}-option-${menu.state.highlightedIndex}`
 })
@@ -202,6 +203,7 @@ function onKeyDown(event: KeyboardEvent): void {
     tokens.clearPortals()
     editable.textContent = ''
     isEmpty.value = true
+    menu.reset()
     publish('')
     return
   }
@@ -272,6 +274,7 @@ watch(sourceValue, (next) => {
     if (focused)
       placeCaretAtEnd(editable)
     isEmpty.value = next.length === 0
+    menu.handleInput()
   }
   else {
     pendingEcho.value = undefined
@@ -317,9 +320,9 @@ defineExpose(handle)
       :aria-disabled="disabled ? 'true' : undefined"
       :role="menu.hasTriggers.value ? 'combobox' : 'textbox'"
       :aria-multiline="menu.hasTriggers.value ? undefined : 'true'"
-      :aria-expanded="menu.hasTriggers.value ? menu.state.isActive : undefined"
-      :aria-controls="menu.hasTriggers.value && menu.state.isActive ? menu.listboxId : undefined"
-      :aria-activedescendant="menu.hasTriggers.value && menu.state.isActive ? activeDescendant : undefined"
+      :aria-expanded="menu.hasTriggers.value ? menuOpen : undefined"
+      :aria-controls="menu.hasTriggers.value && menuOpen ? menu.listboxId : undefined"
+      :aria-activedescendant="menu.hasTriggers.value && menuOpen ? activeDescendant : undefined"
       :aria-haspopup="menu.hasTriggers.value ? 'listbox' : undefined"
       @input="onInput"
       @keydown="onKeyDown"
@@ -328,7 +331,7 @@ defineExpose(handle)
       @drop="onDrop"
     />
     <ChatTriggerMenu
-      :open="menu.state.isActive"
+      :open="menuOpen"
       :anchor="menu.anchor.value"
       :listbox-id="menu.listboxId"
       :label="menuLabel"

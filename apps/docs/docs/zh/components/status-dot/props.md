@@ -32,6 +32,12 @@ footer: false
         <td>是否显示脉冲动画，开启后状态点会呼吸闪烁，用于提示正在进行中的活动。</td>
       </tr>
       <tr>
+        <td><code>icon</code></td>
+        <td><code>Component</code></td>
+        <td>-</td>
+        <td>画在圆点里的图标。不传时圆点只靠颜色表达。插槽 <code>icon</code> 优先。图标对读屏隐藏，名字仍是 <code>label</code>。</td>
+      </tr>
+      <tr>
         <td><code>tooltip</code></td>
         <td><code>string</code></td>
         <td>-</td>

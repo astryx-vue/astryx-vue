@@ -8,6 +8,10 @@ export interface TimeInputMessages {
   outOfRange: string
   loading: string
   clear: (label?: string) => string
+  /** 输入的时间解析不了时，读屏播报的提示。 */
+  invalidTime: string
+  /** 打开系统时间选择器的时钟按钮的名字。 */
+  openPicker: (label: string) => string
 }
 
 export const timeInputMessages: Record<AstryxLocale, TimeInputMessages> = {
@@ -18,6 +22,8 @@ export const timeInputMessages: Record<AstryxLocale, TimeInputMessages> = {
     outOfRange: 'Time is outside the allowed range',
     loading: 'Loading',
     clear: label => clearLabel(label, 'Clear', 'Clear '),
+    invalidTime: 'Invalid time',
+    openPicker: label => `Open ${label}`,
   },
   'zh-CN': {
     placeholder: '选择时间',
@@ -26,5 +32,7 @@ export const timeInputMessages: Record<AstryxLocale, TimeInputMessages> = {
     outOfRange: '时间不在允许的范围内',
     loading: '加载中',
     clear: label => clearLabel(label, '清除', '清除'),
+    invalidTime: '时间无效',
+    openPicker: label => `打开${label}`,
   },
 }

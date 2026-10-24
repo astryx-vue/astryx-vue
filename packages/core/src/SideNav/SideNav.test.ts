@@ -22,7 +22,7 @@ describe('side-nav', () => {
     })
 
     const nav = wrapper.get('nav')
-    expect(nav.attributes('aria-label')).toBe('Sidebar')
+    expect(nav.attributes('aria-label')).toBe('Side navigation')
     expect(nav.attributes('data-collapsed')).toBeUndefined()
     expect(wrapper.get('.astryx-side-nav__heading-row').find('[aria-label="Collapse sidebar"]').exists()).toBe(true)
     expect(wrapper.find('.astryx-side-nav__bottom [aria-label="Collapse sidebar"]').exists()).toBe(false)
@@ -139,5 +139,46 @@ describe('side-nav', () => {
     await outside.setProps({ size: 'lg' })
     expect(outside.get('button').attributes('data-size')).toBe('lg')
     outside.unmount()
+  })
+
+  it('places row actions beside the link and drops them when the rail collapses', async () => {
+    const wrapper = mount(SideNav, {
+      props: { collapsible: true },
+      slots: {
+        default: () => h(SideNavItem, {
+          href: '/files',
+          iconClass: 'i-carbon-folder',
+          label: 'Files',
+        }, {
+          actions: () => h('button', { class: 'row-action', type: 'button' }, 'More'),
+        }),
+      },
+    })
+
+    const actions = wrapper.get('.astryx-side-nav-item__actions')
+    expect(actions.get('button').text()).toBe('More')
+    expect(wrapper.get('a').find('.row-action').exists()).toBe(false)
+
+    await wrapper.get('[aria-label="Collapse sidebar"]').trigger('click')
+    expect(wrapper.find('.astryx-side-nav-item__actions').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('lets a caller aria-label win over the visible label once the rail collapses', async () => {
+    const wrapper = mount(SideNav, {
+      props: { collapsible: true },
+      slots: {
+        default: () => h(SideNavItem, {
+          'aria-label': 'Go home',
+          'href': '/home',
+          'iconClass': 'i-carbon-home',
+          'label': 'Home',
+        }),
+      },
+    })
+
+    await wrapper.get('[aria-label="Collapse sidebar"]').trigger('click')
+    expect(wrapper.get('a').attributes('aria-label')).toBe('Go home')
+    wrapper.unmount()
   })
 })

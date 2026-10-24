@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { timeInputConstrained, timeInputFormats, timeInputIncrement, timeInputStates } from '../../../../components/demos/time-input'
+import { timeInputConstrained, timeInputFormats, timeInputIncrement, timeInputStates, timeInputSheet } from '../../../../components/demos/time-input'
 </script>
 
 ## 使用方法
@@ -27,7 +27,7 @@ const time = shallowRef<string | null>('14:30')
 </template>
 ```
 
-默认按 12 小时显示。方向键按 `increment` 分钟步进。细指针下是文本框。粗指针下，`adaptive-native` 和 `adaptive-bottom-sheet` 使用系统时间输入；需要秒，或步进不是 1 分钟时，仍保留文本框。占位符和清除文案跟随语言。
+默认按 12 小时显示。方向键按 `increment` 分钟步进。细指针下是文本框。`adaptive-native` 在粗指针上用系统时间控件；`adaptive-bottom-sheet` 在粗指针上用底部时分滚轮；`bottom-sheet` 不论指针都用滚轮。需要秒、步进不是 1 分钟，或设了预设间隔时，系统控件退回文本框，滚轮不受这个限制。占位符和清除文案跟随语言。
 
 
 <ComponentAnatomy />
@@ -46,3 +46,4 @@ const time = shallowRef<string | null>('14:30')
 <DemoExample :demo="timeInputFormats" description="24 小时制，以及保留秒的值。" locale="zh" title="格式" />
 <DemoExample :demo="timeInputIncrement" description="方向键每次移动 15 分钟。" locale="zh" title="步进" />
 <DemoExample :demo="timeInputStates" description="禁用、错误、警告和成功。" locale="zh" title="状态" />
+<DemoExample :demo="timeInputSheet" description="不论指针类型，都用底部的小时和分钟滚轮。" locale="zh" title="底部面板" />

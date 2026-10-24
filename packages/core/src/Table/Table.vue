@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="T extends Record<string, unknown>">
 import type { TableColumn, TablePlugin, TableProps, TableSlots } from './types.js'
-import { computed, useTemplateRef } from 'vue'
+import { computed } from 'vue'
 import { useAstryxMessages } from '../locale/context.js'
-import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import TableData from './TableData.vue'
+import TableScroll from './TableScroll.vue'
 import '../../styles/table.css'
 
 defineOptions({ name: 'AstryxTable', inheritAttrs: false })
@@ -30,8 +30,6 @@ const passedIdKey = computed(() => {
 const plugins = computed(() => Object.values(props.plugins ?? {}).filter((plugin): plugin is TablePlugin<T> => plugin != null))
 const dataMode = computed(() => props.data != null)
 const columns = computed(() => (props.columns ?? []) as TableColumn[])
-const scrollEl = useTemplateRef<HTMLElement>('scroll')
-useScrollbars(scrollEl)
 </script>
 
 <template>
@@ -57,7 +55,7 @@ useScrollbars(scrollEl)
       <slot name="empty" />
     </template>
   </TableData>
-  <div v-else ref="scroll" class="astryx-table-scroll" role="group" :aria-label="label ?? messages.table.label">
+  <TableScroll v-else :label="label ?? messages.table.label">
     <table
       class="astryx-table"
       :class="$attrs.class"
@@ -71,5 +69,5 @@ useScrollbars(scrollEl)
     >
       <slot />
     </table>
-  </div>
+  </TableScroll>
 </template>

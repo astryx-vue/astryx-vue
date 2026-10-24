@@ -3,6 +3,7 @@ import type { ClickableCardEmits, ClickableCardProps, ClickableCardSlots } from 
 import { computed, useTemplateRef } from 'vue'
 import Card from '../Card/Card.vue'
 import { useClickableContainer } from '../composables/useClickableContainer.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/clickable-card.css'
 
@@ -21,6 +22,8 @@ const cardRef = useTemplateRef<{ element: HTMLElement | null }>('card')
 const interactiveRef = useTemplateRef<{ element: HTMLElement | null }>('interactive')
 const containerRef = computed(() => cardRef.value?.element ?? null)
 const controlRef = computed(() => interactiveRef.value?.element ?? null)
+
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 
 const handlers = useClickableContainer({
   containerRef,
@@ -63,6 +66,7 @@ function onSurfaceMouseUp(event: MouseEvent): void {
     :padding="padding"
     :variant="variant"
     :width="width"
+    v-bind="isDisabled ? undefined : pressableProps"
     @click="onSurfaceClick"
     @mouseup="onSurfaceMouseUp"
   >

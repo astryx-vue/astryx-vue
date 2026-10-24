@@ -54,8 +54,15 @@
     background: var(--astryx-color-overlay-hover);
   }
 
-  .astryx-nav-item:active:not(:disabled, .astryx-nav-item--plain, .astryx-nav-item--selected) {
-    background: var(--astryx-color-overlay-pressed);
+  /* 鼠标按下才用 :active。粗指针改看按压模型写的 data-astryx-press，滚动时不会误亮。 */
+  @media not all and (pointer: coarse) {
+    .astryx-nav-item:active:not(:disabled, .astryx-nav-item--plain, .astryx-nav-item--selected) {
+      background: var(--astryx-color-overlay-pressed);
+    }
+  }
+
+  .astryx-nav-item[data-astryx-press]:not(:disabled, .astryx-nav-item--plain, .astryx-nav-item--selected) {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-nav-item--selected {

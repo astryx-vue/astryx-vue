@@ -50,7 +50,7 @@ export interface ClickableContainerHandlers {
   onMouseUp: (event: MouseEvent) => void
 }
 
-function hasInteractiveAncestor(element: Element, root: Element): boolean {
+export function hasInteractiveAncestor(element: Element, root: Element): boolean {
   let current: Element | null = element
   while (current != null && current !== root && current !== document.body) {
     if (current.matches(INTERACTIVE_SELECTORS) && !current.matches(NON_INTERACTIVE_SELECTORS))
@@ -60,7 +60,7 @@ function hasInteractiveAncestor(element: Element, root: Element): boolean {
   return false
 }
 
-function hasTextSelection(node: Element): boolean {
+export function hasTextSelection(node: Element): boolean {
   if (typeof document === 'undefined' || document.getSelection == null)
     return false
   const selection = document.getSelection()

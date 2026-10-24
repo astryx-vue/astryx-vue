@@ -7,16 +7,21 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { useLatchedOptionGrid } from '../selectors/useLatchedOptionGrid.js'
 import Token from '../Token/Token.vue'
 import TypeaheadMenu from '../Typeahead/TypeaheadMenu.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import '../../styles/typeahead.css'
 import '../../styles/tokenizer.css'
 import '../../styles/visually-hidden-utility.css'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxTokenizer', inheritAttrs: false })
 
@@ -44,7 +49,15 @@ const emit = defineEmits<TokenizerEmits<T>>()
 defineSlots<TokenizerSlots<T>>()
 
 const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'Tokenizer',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-activedescendant', 'aria-autocomplete', 'aria-disabled', 'aria-required'],
+})
 const messages = useAstryxMessages()
+/** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起标签。 */
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const inputId = `astryx-tokenizer-${useId()}`
 const listboxId = `${inputId}-listbox`
 const disabledId = `${inputId}-disabled`
@@ -252,8 +265,18 @@ function isInsideTokenizer(node: EventTarget | null): boolean {
   return Boolean(anchorRef.value?.contains(node) || listboxRef.value?.contains(node))
 }
 
+const optionGrid = useLatchedOptionGrid({
+  entries: () => menu.entries.value,
+  isOpen: () => menu.combobox.isOpen.value,
+  activeIndex: menu.combobox.activeIndex,
+  getListbox: () => listboxRef.value,
+  listboxId: () => listboxId,
+})
+
 function onInputKeyDown(event: KeyboardEvent): void {
-  if (event.defaultPrevented)
+  if (event.defaultPrevented || isImeKeyEvent(event))
+    return
+  if (optionGrid.actionGrid.onKeyDown(event))
     return
   const input = inputRef.value
   if (event.key === 'Backspace' && menu.query.value === '' && values.value.length > 0) {
@@ -325,12 +348,13 @@ defineExpose({
 <template>
   <Field
     class="astryx-tokenizer"
-    :class="[`size-${props.size}`, { 'is-floating': floating }]"
+    :class="[parts.containerClass.value, `size-${props.size}`, { 'is-floating': floating }]"
+    :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="inputId"
     :description="props.description"
     :label-tooltip="props.labelTooltip"
-    :is-label-hidden="props.labelHidden"
+    :is-label-hidden="hideLabel"
     :is-disabled="props.disabled"
     :is-required="props.required"
     :is-optional="props.optional"
@@ -342,7 +366,8 @@ defineExpose({
     <div
       ref="anchorRef"
       class="astryx-tokenizer-control"
-      :class="[`status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': props.disabled, 'is-floating': floating, 'has-tokens': values.length > 0 }]"
+      :class="[parts.controlClass(), `status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': props.disabled, 'is-floating': floating, 'has-tokens': values.length > 0 }]"
+      :style="parts.controlStyle()"
       @click="onFieldClick"
       @focusin="onFocusIn"
       @focusout="onFocusOut"
@@ -396,9 +421,10 @@ defineExpose({
         :readonly="focusableDisabled || atMax || undefined"
         :aria-disabled="focusableDisabled ? 'true' : undefined"
         :aria-expanded="menu.combobox.isOpen.value"
+        :aria-haspopup="optionGrid.popupKind.value"
         :aria-controls="listboxId"
         aria-autocomplete="list"
-        :aria-activedescendant="menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined"
+        :aria-activedescendant="optionGrid.gridMode.value ? optionGrid.actionGrid.activeDescendant.value : (menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined)"
         :aria-describedby="describedBy"
         :aria-required="props.required || undefined"
         @input="onInput"
@@ -434,16 +460,18 @@ defineExpose({
       v-show="menu.combobox.isOpen.value"
       :id="listboxId"
       ref="listboxRef"
-      class="astryx-typeahead-listbox"
-      role="listbox"
+      class="astryx-typeahead-listbox astryx-layer"
+      :role="optionGrid.gridMode.value ? 'grid' : 'listbox'"
       :aria-label="messages.tokenizer.results"
       :data-placement="anchored.position.value.placement"
       :style="anchored.style.value"
       tabindex="-1"
     >
       <TypeaheadMenu
-        :entries="menu.entries.value.map(entry => ({ id: entry.id, label: entry.label, description: entry.description, disabled: entry.disabled, group: entry.group, selected: values.some(item => item.id === entry.item.id) }))"
+        :entries="menu.entries.value.map(entry => ({ id: entry.id, label: entry.label, description: entry.description, disabled: entry.disabled, group: entry.group, action: entry.action, selected: values.some(item => item.id === entry.item.id) }))"
         :active-index="menu.combobox.activeIndex.value"
+        :grid="optionGrid.gridMode.value"
+        :action-index="optionGrid.actionGrid.column.value === 'action' ? menu.combobox.activeIndex.value : -1"
         :status="menu.status.value"
         :listbox-id="listboxId"
         :empty-text="emptyText"

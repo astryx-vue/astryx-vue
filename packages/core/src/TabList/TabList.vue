@@ -2,8 +2,10 @@
 import type { TabListProps, TabListTab } from './types.js'
 import { computed, provide, reactive, ref } from 'vue'
 
+import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import { tabListContextKey } from './context.js'
+import { useTabListScroll } from './useTabListScroll.js'
 import '../../styles/tab-list.css'
 
 const props = withDefaults(defineProps<TabListProps>(), {
@@ -11,6 +13,7 @@ const props = withDefaults(defineProps<TabListProps>(), {
   layout: 'hug',
   hasDivider: false,
   isFullBleed: false,
+  overflow: 'auto',
 })
 
 const emit = defineEmits<{
@@ -25,6 +28,17 @@ defineSlots<{
 const bleedsInline = computed(() =>
   props.edgeCompensation === 'inline' || (props.edgeCompensation == null && props.isFullBleed),
 )
+const scrolls = computed(() => props.overflow !== 'visible')
+const {
+  bind: bindStrip,
+  onFocusIn: onStripFocusIn,
+  overflowEnd,
+  overflowStart,
+  scrollByPage,
+} = useTabListScroll({
+  enabled: scrolls,
+  selectedValue: computed(() => props.value),
+})
 
 /** `role="tablist"` switches the strip from a nav landmark to the tabs pattern. */
 const isTabsPattern = computed(() => props.role === 'tablist')
@@ -124,9 +138,41 @@ provide(tabListContextKey, {
     ]"
     :role="role"
     :aria-label="defaultLabel"
+    @focusin="onStripFocusIn"
   >
-    <div class="astryx-tab-list__strip">
+    <div
+      :ref="bindStrip"
+      class="astryx-tab-list__strip"
+      :class="{
+        'astryx-tab-list__strip--scroll': scrolls,
+        'astryx-tab-list__strip--fade-both': scrolls && overflowStart && overflowEnd,
+        'astryx-tab-list__strip--fade-start': scrolls && overflowStart && !overflowEnd,
+        'astryx-tab-list__strip--fade-end': scrolls && overflowEnd && !overflowStart,
+      }"
+    >
       <slot />
     </div>
+    <button
+      v-if="scrolls && overflowStart"
+      type="button"
+      class="astryx-tab-scroll-button astryx-tab-scroll-button--start"
+      aria-hidden="true"
+      tabindex="-1"
+      @mousedown.prevent
+      @click="scrollByPage(-1)"
+    >
+      <Icon class="astryx-tab-scroll-button__icon" icon="chevronLeft" size="sm" />
+    </button>
+    <button
+      v-if="scrolls && overflowEnd"
+      type="button"
+      class="astryx-tab-scroll-button astryx-tab-scroll-button--end"
+      aria-hidden="true"
+      tabindex="-1"
+      @mousedown.prevent
+      @click="scrollByPage(1)"
+    >
+      <Icon class="astryx-tab-scroll-button__icon" icon="chevronRight" size="sm" />
+    </button>
   </component>
 </template>

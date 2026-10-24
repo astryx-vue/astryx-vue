@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { NavHeadingMenuItemEmits, NavHeadingMenuItemProps, NavHeadingMenuItemSlots } from './types.js'
 import { computed, inject, toRaw } from 'vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { isNavigableHref } from '../NavItem/link.js'
 import { navMenuCloseKey, navMenuKey } from './context.js'
 import '../../styles/nav-menu.css'
 
-defineOptions({ name: 'AstryxNavHeadingMenuItem' })
+defineOptions({ name: 'AstryxNavHeadingMenuItem', inheritAttrs: false })
 
 const props = withDefaults(defineProps<NavHeadingMenuItemProps>(), {
   isDisabled: false,
@@ -14,11 +16,11 @@ const props = withDefaults(defineProps<NavHeadingMenuItemProps>(), {
 const emit = defineEmits<NavHeadingMenuItemEmits>()
 defineSlots<NavHeadingMenuItemSlots>()
 
-const menu = inject(navMenuKey, null)
+const menu = readLayerScoped(navMenuKey)
 const closeMenu = inject(navMenuCloseKey, undefined)
 const linkComponent = useLinkComponent()
 const size = computed(() => menu?.size.value ?? 'md')
-const isLink = computed(() => props.href != null && props.href !== '' && !props.isDisabled)
+const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
 const root = computed(() => {
@@ -46,6 +48,7 @@ function onClick(event: MouseEvent): void {
 <template>
   <component
     :is="root"
+    v-bind="$attrs"
     class="astryx-nav-heading-menu-item astryx-nav-menu-item"
     :class="[`astryx-nav-menu-item--${size}`, { 'astryx-nav-menu-item--disabled': isDisabled }]"
     role="menuitem"

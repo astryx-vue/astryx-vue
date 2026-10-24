@@ -78,6 +78,21 @@ footer: false
   </table>
 </div>
 
+## SideNavItem Slots
+
+<div class="component-api-table" role="region" aria-label="SideNavItem Slots" tabindex="0">
+  <table>
+    <thead><tr><th>名称</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>default</code></td><td>下级项。</td></tr>
+      <tr><td><code>icon</code></td><td>项前面的图标。</td></tr>
+      <tr><td><code>selectedIcon</code></td><td>选中时替换默认图标。</td></tr>
+      <tr><td><code>end</code></td><td>主控件末尾的内容，仍在链接或按钮里面。</td></tr>
+      <tr><td><code>actions</code></td><td>和主控件并排的操作，例如图标按钮。不放进链接里面。侧栏收起后不渲染。</td></tr>
+    </tbody>
+  </table>
+</div>
+
 ## SideNavHeading Props
 
 <div class="component-api-table" role="region" aria-label="SideNavHeading Props" tabindex="0">

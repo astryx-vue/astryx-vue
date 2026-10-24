@@ -1,5 +1,6 @@
 import type { Component, VNodeChild } from 'vue'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 
 export interface EmptyOperatorValue {
   readonly type: 'empty'
@@ -275,10 +276,13 @@ export interface PowerSearchComponentOverride {
 
 export type PowerSearchComponents = Partial<Record<OperatorValue['type'], PowerSearchComponentOverride>>
 
-export interface PowerSearchProps {
+export interface PowerSearchProps extends FieldPartStylingProps {
   config: PowerSearchConfig
   filters?: readonly PowerSearchFilter[]
   label?: string
+  /** 视觉上隐藏标签。没传时隐藏。传 false 会把标签显示出来。 */
+  isLabelHidden?: boolean
+  /** `isLabelHidden` 的旧名。两个都传时听正名。 */
   labelHidden?: boolean
   placeholder?: string
   autofocus?: boolean

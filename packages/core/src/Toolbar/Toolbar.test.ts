@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { h, nextTick } from 'vue'
@@ -40,5 +42,35 @@ describe('toolbar', () => {
     const toolbar = wrapper.get('[role="toolbar"]')
     expect(toolbar.classes()).toContain('astryx-toolbar--muted')
     expect(toolbar.classes()).toContain('astryx-toolbar--divider-bottom')
+  })
+
+  it('does not clip the center slot', () => {
+    const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/toolbar.css'), 'utf8')
+    const rule = css.slice(css.indexOf('.astryx-toolbar__slot--center'), css.indexOf('.astryx-toolbar__slot--end'))
+    expect(rule).not.toMatch(/overflow\s*:/)
+    expect(rule).toContain('min-width: 0')
+  })
+
+  it('keeps arrow keys inside the toolbar that owns them', async () => {
+    const wrapper = mount(Toolbar, {
+      attachTo: document.body,
+      props: { label: 'Outer' },
+      slots: {
+        start: () => [
+          h('button', { type: 'button' }, 'Outer'),
+          h(Toolbar, { label: 'Inner' }, {
+            start: () => h('button', { type: 'button' }, 'Inner'),
+          }),
+        ],
+      },
+    })
+    await nextTick()
+    const outer = wrapper.get('[aria-label="Outer"]')
+    const buttons = wrapper.findAll('button')
+    buttons[0].element.focus()
+    await outer.trigger('keydown', { key: 'ArrowRight' })
+    expect(document.activeElement).toBe(buttons[0].element)
+    expect(document.activeElement?.textContent).toBe('Outer')
+    wrapper.unmount()
   })
 })

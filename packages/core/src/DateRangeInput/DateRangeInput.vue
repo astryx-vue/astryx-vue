@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './types.js'
-import { computed, shallowRef, useId, useTemplateRef } from 'vue'
+import { computed, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { applyRangeClick, formatDateRange, isRangeWithinSpan } from '../composables/useDateRange.js'
 import { addMonths, todayISODate } from '../composables/useMonthGrid.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
+import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
@@ -19,7 +22,7 @@ import RangeCalendar from './RangeCalendar.vue'
 import '../../styles/bordered-control.css'
 import '../../styles/date-range-input.css'
 
-defineOptions({ name: 'AstryxDateRangeInput' })
+defineOptions({ name: 'AstryxDateRangeInput', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Omit<DateRangeInputProps, 'modelValue'>>(), {
   modelValue: null,
@@ -33,6 +36,15 @@ const props = withDefaults(defineProps<Omit<DateRangeInputProps, 'modelValue'>>(
 
 const emit = defineEmits<DateRangeInputEmits>()
 const model = defineModel<DateRange | null>({ default: null })
+const attrs = useAttrs()
+const parts = useFieldPartStyling({
+  component: 'DateRangeInput',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled', 'aria-invalid', 'aria-expanded', 'aria-controls'],
+})
+const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
+const ariaRequired = useAriaRequired(props)
 const messages = useAstryxMessages()
 const locale = useAstryxLocale()
 const generatedId = `astryx-date-range-${useId()}`
@@ -101,17 +113,24 @@ function presetDisabled(preset: DateRangePreset): boolean {
   return !isRangeWithinSpan(preset.getRange(), props.minRangeSpan, props.maxRangeSpan)
 }
 
-function clear(): void {
+function clear(event: MouseEvent): void {
   pending.value = null
   commit(null)
   open.value = false
+  if (event.detail === 0)
+    containerRef.value?.querySelector<HTMLButtonElement>('.astryx-date-range-trigger')?.focus({ preventScroll: true })
+}
+
+function triggerAttrs(): Record<string, unknown> {
+  return parts.forwardedAttrs()
 }
 </script>
 
 <template>
   <Field
+    :class="parts.containerClass.value" :style="parts.containerStyle.value"
     :label="label" :input-id="inputId" :description="description" :width="width"
-    :is-label-hidden="isLabelHidden" :is-disabled="locked" :is-optional="isOptional" :is-required="isRequired"
+    :is-label-hidden="hideLabel" :is-disabled="locked" :is-optional="isOptional" :is-required="isRequired"
     :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
   >
     <template #default="field">
@@ -122,16 +141,17 @@ function clear(): void {
       >
         <div
           ref="containerRef"
-          class="astryx-date-range-input astryx-bordered-control" :data-size="size"
+          class="astryx-date-range-input astryx-bordered-control" :class="parts.controlClass()" :style="parts.controlStyle()" :data-size="size"
           :data-status="status?.type" :data-disabled="locked || undefined"
           @pointerenter="disabledTooltip.onPointerEnter"
           @pointerleave="disabledTooltip.onPointerLeave"
         >
           <button
+            v-bind="triggerAttrs()"
             :id="inputId" type="button" class="astryx-date-range-trigger" :disabled="locked && !showsDisabledMessage"
-            :aria-describedby="[field.describedBy, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
+            :aria-describedby="[attrs['aria-describedby'], field.describedBy, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
             :aria-invalid="status?.type === 'error' || undefined"
-            :aria-busy="busy || undefined" :aria-required="isRequired || undefined"
+            :aria-busy="busy || undefined" :aria-required="ariaRequired"
             :aria-disabled="showsDisabledMessage || undefined"
             @focus="disabledTooltip.onFocus" @blur="disabledTooltip.onBlur"
           >

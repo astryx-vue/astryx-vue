@@ -7,7 +7,9 @@ import { useDismiss } from '../composables/useDismiss.js'
 import { useLongPress } from '../composables/useLongPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
+import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
@@ -16,9 +18,7 @@ import { resetMenuPress, useMenuPress } from './useMenuPress.js'
 import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenu', inheritAttrs: false })
-
 const props = withDefaults(defineProps<ContextMenuProps>(), {
-  label: 'Context menu',
   isDisabled: false,
   presentation: 'popover',
   size: 'md',
@@ -26,8 +26,12 @@ const props = withDefaults(defineProps<ContextMenuProps>(), {
 })
 
 const emit = defineEmits<ContextMenuEmits>()
+
 defineSlots<ContextMenuSlots>()
+
 const attrs = useAttrs()
+const messages = useAstryxMessages()
+const menuName = computed(() => props.label ?? messages.value.contextMenu.label)
 
 /**
  * `class` and `style` describe the painted menu surface, the way upstream's
@@ -68,7 +72,7 @@ const cursorPoint = ref({ x: 0, y: 0 })
 
 let previouslyFocused: HTMLElement | null = null
 
-const { position, update: updatePosition } = usePositionedLayer({
+const { position, teleportTarget, update: updatePosition } = usePositionedLayer({
   anchor: cursorAnchor,
   layer: panel,
   isOpen,
@@ -220,7 +224,7 @@ provide(contextMenuContextKey, {
   closeMenu,
   drillIn,
   isOpen,
-  menuLabel: computed(() => props.label),
+  menuLabel: menuName,
   menuSize: computed(() => props.size),
 })
 
@@ -289,13 +293,13 @@ defineExpose({
     />
   </component>
 
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <Transition name="astryx-context-menu">
       <div
         v-show="isOpen && !isSheet"
         :id="menuId"
         ref="panel"
-        :aria-label="label"
+        :aria-label="menuName"
         class="astryx-context-menu"
         :class="attrs.class"
         :data-overflow="hasOverflow || undefined"
@@ -310,25 +314,27 @@ defineExpose({
         @keydown="nav.handleKeyDown"
         @pointerdown="menuPress.onPointerDown"
       >
-        <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
-          <ContextMenuItems
-            v-if="items != null"
-            :items="items"
-            @select="onSelect"
-          />
-          <slot v-else name="content" />
-        </div>
-        <div v-if="!isSheet" :ref="assignHost" class="astryx-dropdown-menu-tree" />
+        <LayerContentBoundary>
+          <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
+            <ContextMenuItems
+              v-if="items != null"
+              :items="items"
+              @select="onSelect"
+            />
+            <slot v-else name="content" />
+          </div>
+          <div v-if="!isSheet" :ref="assignHost" class="astryx-dropdown-menu-tree" />
+        </LayerContentBoundary>
       </div>
     </Transition>
   </Teleport>
   <BottomSheet
     v-if="isSheet"
     :is-open="isOpen"
-    :label="label"
+    :label="menuName"
     @update:is-open="onSheetOpen"
   >
-    <div class="astryx-context-menu-sheet" role="menu" :aria-label="label">
+    <div class="astryx-context-menu-sheet" role="menu" :aria-label="menuName">
       <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
         <ContextMenuItems
           v-if="items != null"

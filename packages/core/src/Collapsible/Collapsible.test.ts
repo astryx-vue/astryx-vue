@@ -176,6 +176,7 @@ describe('collapsible', () => {
     })
 
     const button = triggerOf(wrapper)
+    expect(button.attributes('data-astryx-pressable')).toBe('')
     expect(button.attributes('aria-disabled')).toBe('true')
     expect(button.attributes('tabindex')).toBe('-1')
     expect(button.attributes('disabled')).toBeUndefined()

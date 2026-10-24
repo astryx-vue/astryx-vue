@@ -1,0 +1,20 @@
+# A4 要顺带处理的遗留事项
+
+来自 A2 验收报告（`nodes/A2/verify-1.md` 末尾的「改进建议」）：
+
+1. 窄屏下内容框会漏掉贴边的内容。原因是 `CORNER_INSET = 32` 把边缘一整圈都忽略了，应该改成只忽略四个圆角。
+2. README 里写的上游选择器和代码里实际用的不一样，要改成一致。
+3. 组件名拼错时报错太晚：要等起服务、拿锁、开浏览器之后才报。应该先检查两边的页面是否存在，不存在就直接报错。
+4. 在 README 里提醒验收者：输出目录用 `--out /tmp/...` 指定，不要让产物落进工作区。
+
+来自 A3 第 2 轮回报（`nodes/A3/impl-2.md` 第 3 节）：
+
+5. 测试配置不要受外部 `NODE_ENV` 的影响。可以在 `vitest.config.ts` 里给 `vue()` 显式传 `template.compilerOptions.comments: true`，也可以由 `test` 脚本统一设置。这样就不用每个人都记得加 `env -u NODE_ENV`。
+
+来自 E4 验收（`nodes/E4/verify-1.md` 第 4 项）。这一条不归 A4，等 A4 合入以后，交给下一个改视觉工具的节点：
+
+6. 本机通过代理访问上游官网很慢，`page.goto` 偶尔会碰到 60 秒超时，导致整组对照图失败，验收者只能手动重跑。建议给上游页面的导航加 1 到 2 次重试，或者把超时时间做成可配置项。
+
+来自总控在 F0 合入时的观察（A4 已完成，下一个改 worktree.mjs 的节点顺手修）：
+
+7. `worktree.mjs merge` 和 `rebase` 在 rebase 之后没有重新安装依赖。如果 swarm-tree 期间新增了依赖（这次是 E3 加的 `dom-accessibility-api`），节点工作区的 node_modules 就会过期，typecheck 报「找不到模块」，合入被拦下。这是误报。修法：rebase 之后，只要 `pnpm-lock.yaml` 有变化，就先跑一次 `pnpm install --frozen-lockfile`，再跑检查。

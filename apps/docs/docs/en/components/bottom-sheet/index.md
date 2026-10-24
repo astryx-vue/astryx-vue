@@ -44,7 +44,7 @@ A downward drag closes the sheet, and a fast upward flick expands it to the tall
 
 `purpose` controls implicit dismissal, matching `Dialog`. The default `info` allows Escape, a scrim click, and a swipe. `form` allows Escape only, so a stray click on the scrim cannot throw away typed input. `required` blocks every implicit path and announces the sheet as an alert dialog for flows that must end through an explicit choice. When the page behind the sheet should stay usable, set `hasScrim` to `false`: the sheet then opens non-modally, the page keeps scrolling and responding to clicks, and a swipe still dismisses it. A non-modal sheet never takes focus away from the page, so Escape dismisses it while focus is inside the sheet.
 
-`padding` sets the content area's inset on the spacing scale. When omitted, the theme decides, falling back to the `--spacing-4` step (16px) on every logical edge; pass `0` for a content box flush with the panel. The content area is also a container: if its only child is a region that carries its own inset, that child escapes the padding instead of being inset twice.
+`padding` sets the content area's inset on the spacing scale. When omitted, the theme decides, falling back to the `--spacing-4` step (16px) on every logical edge; pass `0` for a content box flush with the panel. The content area publishes the inset it applies: a lone child region that carries its own inset escapes it, and bleed children such as a table or a divider line up with that edge instead of sitting inside it twice.
 
 
 <ComponentAnatomy />
