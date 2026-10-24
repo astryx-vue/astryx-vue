@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import BreadcrumbItem from './BreadcrumbItem.vue'
 import Breadcrumbs from './Breadcrumbs.vue'
 
@@ -121,6 +121,74 @@ describe('breadcrumbs', () => {
 
     expect(wrapper.find('.astryx-breadcrumb-item--variant-supporting').exists()).toBe(true)
     expect(wrapper.find('.astryx-breadcrumb-item__separator').text()).toBe('>')
+  })
+
+  it('marks the last omitted crumb as current and keeps it a link', async () => {
+    const wrapper = mount(Breadcrumbs, {
+      slots: {
+        default: () => [
+          h(BreadcrumbItem, { href: '/a' }, () => 'A'),
+          h(BreadcrumbItem, { href: '/b' }, () => 'B'),
+        ],
+      },
+    })
+    await nextTick()
+
+    const links = wrapper.findAll('a')
+    expect(links[0].attributes('aria-current')).toBeUndefined()
+    expect(links[1].attributes('href')).toBe('/b')
+    expect(links[1].attributes('aria-current')).toBe('page')
+    expect(wrapper.find('.astryx-breadcrumb-item__slash').exists()).toBe(true)
+  })
+
+  it('leaves the trail without a current page when the last crumb opts out', async () => {
+    const wrapper = mount(Breadcrumbs, {
+      props: { separator: '>' },
+      slots: {
+        default: () => [
+          h(BreadcrumbItem, { href: '/a' }, () => 'A'),
+          h(BreadcrumbItem, { href: '/b', isCurrent: false }, () => 'B'),
+        ],
+      },
+    })
+    await nextTick()
+
+    const links = wrapper.findAll('a')
+    expect(links[0].attributes('aria-current')).toBeUndefined()
+    expect(links[1].attributes('aria-current')).toBeUndefined()
+    expect(wrapper.find('.astryx-breadcrumb-item__slash').exists()).toBe(false)
+    expect(wrapper.find('.astryx-breadcrumb-item__separator').text()).toContain('>')
+  })
+
+  it('picks the crumb that is last on the page, not the one that mounted last', async () => {
+    const Host = defineComponent({
+      props: { hasRoot: Boolean },
+      setup(props) {
+        return () => h(Breadcrumbs, null, () => [
+          props.hasRoot ? h(BreadcrumbItem, { key: 'root', href: '/' }, () => 'Root') : null,
+          h(BreadcrumbItem, { key: 'a', href: '/a' }, () => 'A'),
+          h(BreadcrumbItem, { key: 'b', href: '/b' }, () => 'B'),
+        ])
+      },
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    await nextTick()
+    await wrapper.setProps({ hasRoot: true })
+    await nextTick()
+
+    const current = wrapper.findAll('[aria-current="page"]')
+    expect(current).toHaveLength(1)
+    expect(current[0].text()).toBe('B')
+    wrapper.unmount()
+  })
+
+  it('does not render a javascript href as a link', () => {
+    const wrapper = mount(BreadcrumbItem, {
+      props: { href: 'javascript:alert(1)' },
+      slots: { default: 'Bad' },
+    })
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(wrapper.get('button').text()).toBe('Bad')
   })
 
   it('renders a menu trigger and ignores href when menu is set', () => {

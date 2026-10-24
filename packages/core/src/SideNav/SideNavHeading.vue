@@ -2,7 +2,7 @@
 import type { SideNavHeadingProps, SideNavHeadingSlots } from './types.js'
 import { computed, useSlots } from 'vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { resolveNavRoot } from '../NavItem/link.js'
+import { resolveNavRoot, safeNavHref } from '../NavItem/link.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import NavHeadingSurface from '../NavMenu/NavHeadingSurface.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
@@ -21,7 +21,8 @@ const hasIcon = computed(() => slots.icon != null)
 const hasMenu = computed(() => slots.menu != null)
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
-const linkRoot = computed(() => resolveNavRoot(props.headingHref, false, customLink.value))
+const safeHeadingHref = computed(() => safeNavHref(props.headingHref))
+const linkRoot = computed(() => resolveNavRoot(safeHeadingHref.value, false, customLink.value))
 </script>
 
 <template>
@@ -49,10 +50,10 @@ const linkRoot = computed(() => resolveNavRoot(props.headingHref, false, customL
     </NavDisclosure>
     <component
       :is="linkRoot"
-      v-else-if="headingHref"
+      v-else-if="safeHeadingHref"
       class="astryx-side-nav-heading astryx-side-nav-heading--collapsed"
-      :href="headingHref"
-      :to="customLink != null ? headingHref : undefined"
+      :href="safeHeadingHref"
+      :to="customLink != null ? safeHeadingHref : undefined"
       :aria-label="heading"
     >
       <span class="astryx-side-nav-heading__icon">

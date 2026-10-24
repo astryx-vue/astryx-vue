@@ -10,7 +10,9 @@ import {
 } from 'vue'
 
 import { useDevWarning } from '../composables/useDevWarning.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { isNavigableHref } from '../NavItem/link.js'
 import { useTabListContext } from './context.js'
 import '../../styles/visually-hidden-utility.css'
 
@@ -30,8 +32,9 @@ const rootRef = ref<HTMLElement>()
 const isTabsPattern = computed(() => context.isTabsPattern.value)
 const isSelected = computed(() => context.value.value === props.value)
 const tabIndex = computed(() => (isSelected.value && !props.disabled ? 0 : -1))
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 const isLink = computed(() =>
-  !isTabsPattern.value && props.href != null && props.href !== '' && !props.disabled,
+  !isTabsPattern.value && isNavigableHref(props.href, props.disabled),
 )
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
@@ -65,26 +68,20 @@ function handleKeydown(event: KeyboardEvent) {
   if (props.disabled)
     return
 
-  switch (event.key) {
-    case 'ArrowRight':
-    case 'ArrowDown':
-      event.preventDefault()
-      context.moveFocus('next', props.value)
-      break
-    case 'ArrowLeft':
-    case 'ArrowUp':
-      event.preventDefault()
-      context.moveFocus('prev', props.value)
-      break
-    case 'Home':
-      event.preventDefault()
-      context.moveFocus('first', props.value)
-      break
-    case 'End':
-      event.preventDefault()
-      context.moveFocus('last', props.value)
-      break
-  }
+  const vertical = !isTabsPattern.value
+  let direction: 'next' | 'prev' | 'first' | 'last' | null = null
+  if (event.key === 'ArrowRight' || (vertical && event.key === 'ArrowDown'))
+    direction = 'next'
+  else if (event.key === 'ArrowLeft' || (vertical && event.key === 'ArrowUp'))
+    direction = 'prev'
+  else if (event.key === 'Home')
+    direction = 'first'
+  else if (event.key === 'End')
+    direction = 'last'
+  if (direction == null)
+    return
+  event.preventDefault()
+  context.moveFocus(direction, props.value)
 }
 
 onMounted(() => {
@@ -129,6 +126,8 @@ watch(() => props.disabled, (disabled) => {
     :tabindex="tabIndex"
     :disabled="isLink ? undefined : disabled"
     :data-selected="isSelected ? 'selected' : undefined"
+    :data-tab-value="value"
+    v-bind="disabled ? {} : pressableProps"
     @click="handleClick"
     @keydown="handleKeydown"
   >

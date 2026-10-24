@@ -1154,7 +1154,9 @@ export type {
 } from './Table/index.js'
 export { Tab, TabList, TabMenu } from './TabList/index.js'
 export type {
+  TabListEdgeCompensation,
   TabListLayout,
+  TabListOverflow,
   TabListProps,
   TabListSize,
   TabListTab,

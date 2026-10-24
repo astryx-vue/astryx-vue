@@ -58,4 +58,9 @@ export interface BreadcrumbItemProps {
 export interface BreadcrumbContextValue {
   variant: ComputedRef<BreadcrumbsVariant>
   separator: ComputedRef<string>
+  /** 没有人声明当前项时，最后一项的 id。有人声明时是 null。 */
+  autoCurrentId: ComputedRef<string | null>
+  registerItem: (id: string, explicit: boolean | undefined, getElement: () => HTMLElement | null) => void
+  updateItem: (id: string, explicit: boolean | undefined) => void
+  unregisterItem: (id: string) => void
 }

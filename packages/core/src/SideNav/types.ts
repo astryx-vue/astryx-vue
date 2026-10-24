@@ -153,6 +153,11 @@ export interface SideNavItemSlots {
   icon?: () => unknown
   selectedIcon?: () => unknown
   end?: () => unknown
+  /**
+   * 和主控件并列的行内操作，例如图标按钮或菜单。
+   * 不放进链接或按钮里面。侧栏收起后不渲染。
+   */
+  actions?: () => unknown
 }
 
 export type SideNavCollapseButtonSize = 'sm' | 'md' | 'lg'

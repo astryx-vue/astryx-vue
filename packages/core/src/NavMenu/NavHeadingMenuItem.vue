@@ -3,6 +3,7 @@ import type { NavHeadingMenuItemEmits, NavHeadingMenuItemProps, NavHeadingMenuIt
 import { computed, inject, toRaw } from 'vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { isNavigableHref } from '../NavItem/link.js'
 import { navMenuCloseKey, navMenuKey } from './context.js'
 import '../../styles/nav-menu.css'
 
@@ -19,7 +20,7 @@ const menu = readLayerScoped(navMenuKey)
 const closeMenu = inject(navMenuCloseKey, undefined)
 const linkComponent = useLinkComponent()
 const size = computed(() => menu?.size.value ?? 'md')
-const isLink = computed(() => props.href != null && props.href !== '' && !props.isDisabled)
+const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
 const root = computed(() => {
