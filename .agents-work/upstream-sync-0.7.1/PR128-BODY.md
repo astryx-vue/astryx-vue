@@ -33,7 +33,7 @@ mindmap
       ✅ B5 文案与图标 #129
       ✅ B6 公共 props #133
       ✅ B7 工具函数 #137
-    阶段 C 组件
+    阶段 C 组件 全部完成
       ✅ C1 基础输入 #136
       ✅ C2 勾选与开关 #140
       ✅ C3 选择器 #149
@@ -45,27 +45,30 @@ mindmap
       ✅ C9 Markdown 与代码 #138
       ✅ C9-exports Markdown 导出 #146
       ✅ C10 Chat #147
-      🔵 C11 表格
-      🔵 C12 列表与树
-      🔵 C13 导航
+      ✅ C11 表格 #162
+      ✅ C12 列表与树 #161
+      ✅ C13 导航 #163
       ✅ C14 布局与容器 #134
       ✅ C15 反馈与状态 #141
       ✅ C16 展示与动作 #135
     阶段 D 汇总
       🔵 D1 Neutral 底色
       🔵 D4a CLI 取舍需签字
-      ⬜ D2 至 D8 其余
+      🔵 D7 迁移指南
+      ⬜ D2 D3 D4b D5 D6 D8
     阶段 E 工程质量
       ✅ E1 E2 E3 E4
     阶段 F 新包
       ✅ F0 选型 ADR
       🔵 F1a richtext 纯逻辑
       🔵 F2a charts 纯逻辑
+      🔵 F3a lab 输入类
       🔵 F3b lab 展示类
       🔵 F3c lab 浮层与引导
       🔵 F3e lab 对话
       🔵 F3g lab 日程表
       🔵 F3h lab 代码类
+      🔵 F4 Nuxt 模块
       ⬜ F1b 与其余 F 节点
 ```
 
@@ -73,6 +76,9 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| C12 列表与树 | [#161](https://github.com/astryx-vue/astryx-vue/pull/161) | squash 合入（`30da3b1`）。第 3 轮通过 27/27。总控复核时改了列表行按压：原来两层按压色叠加，现在只画一层，粗指针走按压模型 |
+| C13 导航家族 | [#163](https://github.com/astryx-vue/astryx-vue/pull/163) | squash 合入（`10babf7`）。验收通过 24/24。总控复核补了三处：标签条滚动时焦点环和下划线不再被裁、箭头和渐隐对齐上游；Tab、NavItem、NavMenuItem 接入触屏按压；面包屑按页面顺序取当前页，补「横向滚动」示例 |
+| C11 Table | [#162](https://github.com/astryx-vue/astryx-vue/pull/162) | squash 合入（`ecc705b`）。验收通过 21/21。`TableData.vue` 拆到 423 行，移出行数白名单。CI 上一次红是 `swarm-worktree` 测试清理临时目录的偶发 ENOTEMPTY，重跑后变绿 |
 | C4 搜索与命令面板 | [#159](https://github.com/astryx-vue/astryx-vue/pull/159) | squash 合入 `swarm-tree`（`cb8c3e12`）。验收通过 23/23 |
 | C5 日期时间家族 | [#158](https://github.com/astryx-vue/astryx-vue/pull/158) | squash 合入 `swarm-tree`（`27e43c5e`）。验收通过 23/23；返工 1 轮，补了 touch 路径的 change 与 `isReadOnly` 锁 |
 | C8 BottomSheet | [#157](https://github.com/astryx-vue/astryx-vue/pull/157) | squash 合入 `swarm-tree`（`56fee620`）。验收通过 21/21。默认内边距交给内容区，拖动手势已拆开 |
@@ -96,9 +102,9 @@ mindmap
 
 没有正在实现或验收的节点。
 
-可以开工、等待派发：C11、C12、C13、D1、F2a、D4a、F1a、F3b、F3g、F3c、F3h、F3e。D4a 仍要等用户签字，签字前不要派。C8 合入后 F3a 仍要等 C11、C12，保持未开始。
+**阶段 C 全部完成。** 可以开工、等待派发（按下游数量排）：D1、F2a、D4a、D7、F1a、F3a、F3b、F3g、F3c、F3h、F3e、F4。D4a 仍要等用户签字，签字前不要派。
 
-**本 PR 的 CI：** 当前 tip 含 C4（`cb8c3e12`）。节点 PR 合入前仍须 Check + Test 绿。#156 已收掉子菜单 SSR、catalog 门禁与浮层 window 问题。
+**本 PR 的 CI：** 当前 tip 含 C12（`30da3b1`）。节点 PR 合入前仍须 Check + Test 绿。`tests/swarm-worktree.test.ts` 的临时目录清理偶尔报 ENOTEMPTY，和节点代码无关，重跑即可。
 
 ## 怎么验收这个总 PR
 
