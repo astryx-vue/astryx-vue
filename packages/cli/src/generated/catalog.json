@@ -45283,8 +45283,8 @@
               {
                 "name": "`isCurrent`",
                 "type": "`boolean`",
-                "default": "`false`",
-                "description": "Whether this is the current page. Renders as a `<span>` with `aria-current=\"page\"`. A current crumb can still open a menu."
+                "default": "—",
+                "description": "Whether this is the current page. `true` renders a `<span>` with `aria-current=\"page\"`; a current crumb can still open a menu. When omitted and no item is `true`, the last item on the page becomes current: it stays a link and gains `aria-current=\"page\"` and the current style. `false` opts the item out of that detection."
               },
               {
                 "name": "`menu`",
@@ -45343,8 +45343,8 @@
               {
                 "name": "`isCurrent`",
                 "type": "`boolean`",
-                "default": "`false`",
-                "description": "是否为当前页，渲染为 `<span>` 并添加 `aria-current=\"page\"`。当前页仍然可以打开菜单。"
+                "default": "—",
+                "description": "是否为当前页。写 `true` 时渲染为 `<span>` 并添加 `aria-current=\"page\"`，当前页仍然可以打开菜单。不写时，如果没有哪一项写了 `true`，页面上最后一项自动成为当前页：仍然保持链接，只加 `aria-current=\"page\"` 和当前页样式。写 `false` 表示这一项不参与自动判断。"
               },
               {
                 "name": "`menu`",
