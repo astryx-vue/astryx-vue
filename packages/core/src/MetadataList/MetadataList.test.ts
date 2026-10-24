@@ -74,4 +74,30 @@ describe('metadata list', () => {
     await wrapper.trigger('click')
     expect(onClick).toHaveBeenCalledOnce()
   })
+
+  it('lands item pass-through props on the dt beside the value', () => {
+    const wrapper = mount(MetadataListItem, {
+      props: { label: 'Name' },
+      attrs: { 'id': 'name', 'data-testid': 'field' },
+      slots: { default: 'Ada' },
+    })
+    const label = wrapper.get('dt')
+    expect(label.attributes('id')).toBe('name')
+    expect(label.attributes('data-testid')).toBe('field')
+    expect(wrapper.get('dd').attributes('id')).toBeUndefined()
+  })
+
+  it('lands item pass-through props on the stacked wrapper', () => {
+    const wrapper = mount(MetadataList, {
+      props: { label: { position: 'top' } },
+      slots: {
+        default: '<metadata-list-item id="name" data-testid="field" label="Name">Ada</metadata-list-item>',
+      },
+      global: { components: { MetadataListItem } },
+    })
+    const item = wrapper.get('.astryx-metadata-list__item')
+    expect(item.attributes('id')).toBe('name')
+    expect(item.attributes('data-testid')).toBe('field')
+    expect(item.get('dt').attributes('id')).toBeUndefined()
+  })
 })

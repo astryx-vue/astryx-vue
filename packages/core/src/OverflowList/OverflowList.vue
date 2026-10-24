@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OverflowListEmits, OverflowListItem, OverflowListProps, OverflowListSlots } from './types.js'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -63,6 +63,26 @@ const hiddenItems = computed(() =>
     ? props.items.slice(count.value)
     : props.items.slice(0, Math.max(0, props.items.length - count.value)),
 )
+const collapsed = computed(() => {
+  if (props.collapseFrom === 'end') {
+    return hiddenItems.value.map((item, offset) => ({
+      item,
+      index: count.value + offset,
+    }))
+  }
+  return hiddenItems.value.map((item, index) => ({ item, index }))
+})
+const collapsedKey = computed(() => collapsed.value
+  .map(entry => `${entry.index}:${entry.item.id ?? entry.item.label}`)
+  .join('|'))
+
+let announcedOverflow = false
+watch(collapsedKey, (key) => {
+  if (key === '' && !announcedOverflow)
+    return
+  announcedOverflow = true
+  emit('overflowChange', collapsed.value)
+}, { immediate: true })
 const multiRow = computed(() => props.maxRows != null && props.maxRows > 1)
 const listStyle = computed(() => {
   const style: Record<string, string> = {

@@ -20,6 +20,8 @@ import { outlineControlled, outlineDeepNesting, outlineDensity } from '../../../
 
 `hasScrollOnClick` 默认打开。带修饰键的点击，或目标 id 在页面上不存在时，不接管浏览器自己的行为。激活一项会用 `history.pushState` 写入 hash。
 
+`parseOutlineFromMarkdown` 从 Markdown 抽出目录，id 和 `Markdown` 写到标题上的锚点是同一套。围栏代码里的井号不算标题。引用或列表里的标题会占掉重复 id，但不出现在目录里。`useOutlineFromMarkdown` 在正文变化时重算。`useOutlineFromDOM` 读取容器里带 id 的 h1 到 h6。
+
 ```vue
 <script setup lang="ts">
 import { Outline } from '@astryx-vue/core/Outline'

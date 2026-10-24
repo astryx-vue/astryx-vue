@@ -20,6 +20,8 @@ Pass `activeId` and scroll-spy stays off. `v-model:active-id` keeps the highligh
 
 `hasScrollOnClick` is on by default. A click with a modifier key, or a click whose target id is missing, does not take over the browser’s own behavior. Activating an item writes the hash with `history.pushState`.
 
+`parseOutlineFromMarkdown` builds the outline from Markdown. The ids match the anchors `Markdown` renders on its headings. A hash inside a fence is not a heading. A heading inside a quote or a list consumes a duplicate id and stays out of the outline. `useOutlineFromMarkdown` recomputes when the source changes. `useOutlineFromDOM` reads h1–h6 that already have an id inside a container.
+
 ```vue
 <script setup lang="ts">
 import { Outline } from '@astryx-vue/core/Outline'
