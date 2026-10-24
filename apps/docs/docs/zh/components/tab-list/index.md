@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListStatus } from '../../../../components/demos/tab-list'
+import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListScroll, tabListStatus } from '../../../../components/demos/tab-list'
 </script>
 
 ## 使用方法
@@ -78,6 +78,13 @@ const value = ref('overview')
   description="标签文字前面放一个图标，用来区分页面。"
   locale="zh"
   title="带图标"
+/>
+
+<DemoExample
+  :demo="tabListScroll"
+  description="标签比条宽时横向滚动。被挡住的一端淡出，鼠标悬停时出现翻页箭头；选中项会滚回可见区域。"
+  locale="zh"
+  title="横向滚动"
 />
 
 <DemoExample

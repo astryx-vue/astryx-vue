@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListStatus } from '../../../../components/demos/tab-list'
+import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListScroll, tabListStatus } from '../../../../components/demos/tab-list'
 </script>
 
 ## Usage
@@ -78,6 +78,13 @@ const value = ref('overview')
   description="An icon before the label, so each tab is recognizable before the word is read."
   locale="en"
   title="With icons"
+/>
+
+<DemoExample
+  :demo="tabListScroll"
+  description="When the tabs are wider than the strip, it scrolls horizontally. The hidden edge fades, arrows appear for pointers that can hover, and the selected tab is scrolled into view."
+  locale="en"
+  title="Scrolling strip"
 />
 
 <DemoExample

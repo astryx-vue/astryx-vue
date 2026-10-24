@@ -50051,6 +50051,17 @@
         },
         {
           "title": {
+            "en": "Scrolling strip",
+            "zh": "横向滚动"
+          },
+          "description": {
+            "en": "When the tabs are wider than the strip, it scrolls horizontally. The hidden edge fades, arrows appear for pointers that can hover, and the selected tab is scrolled into view.",
+            "zh": "标签比条宽时横向滚动。被挡住的一端淡出，鼠标悬停时出现翻页箭头；选中项会滚回可见区域。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Tab, TabList } from '@astryx-vue/core/TabList'\nimport { ref } from 'vue'\n\nconst sections = [\n  'Overview',\n  'Activity',\n  'Members',\n  'Projects',\n  'Milestones',\n  'Releases',\n  'Integrations',\n  'Billing',\n  'Security',\n  'Audit log',\n  'Settings',\n]\nconst value = ref('Releases')\n</script>\n\n<template>\n  <div style=\"max-width: 360px; width: 100%\">\n    <TabList v-model:value=\"value\" has-divider>\n      <Tab v-for=\"section in sections\" :key=\"section\" :value=\"section\">\n        {{ section }}\n      </Tab>\n    </TabList>\n  </div>\n</template>"
+        },
+        {
+          "title": {
             "en": "With overflow menu",
             "zh": "溢出菜单"
           },
