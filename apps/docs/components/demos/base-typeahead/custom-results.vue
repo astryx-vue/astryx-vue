@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { createStaticSource } from '@astryx-vue/core'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { VStack } from '@astryx-vue/core/Stack'
 import { BaseTypeahead } from '@astryx-vue/core/Typeahead'
 import { ref } from 'vue'
-
-provideAstryxLocale('en')
 
 interface FrameworkItem {
   id: string

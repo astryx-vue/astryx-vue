@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@astryx-vue/core/Table'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { pixel, proportional, Table } from '@astryx-vue/core/Table'
-
-provideAstryxLocale('en')
 
 interface User extends Record<string, unknown> {
   id: string

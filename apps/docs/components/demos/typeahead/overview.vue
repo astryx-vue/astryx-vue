@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { createStaticSource } from '@astryx-vue/core'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { Typeahead } from '@astryx-vue/core/Typeahead'
-
-provideAstryxLocale('en')
 
 const source = createStaticSource([
   { id: 'apple', label: 'Apple' },

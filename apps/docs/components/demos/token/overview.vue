@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { Token } from '@astryx-vue/core/Token'
-
-provideAstryxLocale('en')
 </script>
 
 <template>

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { OutlineItem } from '@astryx-vue/core/Outline'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { Outline } from '@astryx-vue/core/Outline'
-
-provideAstryxLocale('en')
 
 const items: OutlineItem[] = [
   { id: 'showcase-overview', label: 'Overview', level: 2 },

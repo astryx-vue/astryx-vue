@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { provideAstryxLocale } from '@astryx-vue/core'
 import { Button } from '@astryx-vue/core/Button'
 import { Calendar } from '@astryx-vue/core/Calendar'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { ref } from 'vue'
-
-provideAstryxLocale('en')
 
 const value = ref<Date | null>(new Date(2026, 1, 12))
 const weekNumbers = ref(true)
