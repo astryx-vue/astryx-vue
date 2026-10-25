@@ -63,10 +63,15 @@ function resolve(value: string): string {
 /** Both stops of a token, with the var() chain followed and light-dark() split. */
 function stops(name: string): [string, string] {
   const value = resolve(declared.get(name) ?? '')
-  const match = /^light-dark\((.*),\s*([^,]*)\)$/.exec(value)
-  if (!match)
+  const open = 'light-dark('.length
+  if (!value.startsWith('light-dark(') || !value.endsWith(')'))
     return [value, value]
-  return [match[1] ?? '', match[2] ?? '']
+  const body = value.slice(open, -1)
+  // Split on the top-level comma; stops never nest light-dark().
+  const comma = body.indexOf(',')
+  if (comma < 0)
+    return [value, value]
+  return [body.slice(0, comma).trim(), body.slice(comma + 1).trim()]
 }
 
 function lightDark(light: string, dark: string): [string, string] {
