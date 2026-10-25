@@ -25,15 +25,24 @@ import '@astryx-vue/themes/neutral.css'
   `--astryx-font-family-body` 和 `--astryx-font-family-heading` 优先使用 Figtree，随后按系统习惯回退：
   `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`。
 - **等宽代码（Code）：**
-  `--astryx-font-family-code` 优先使用 JetBrains Mono，随后回退至：
-  `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`。
+  `--astryx-font-family-code` 和原版一样优先用系统等宽字体：
+  `ui-monospace, 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace`。
 
-## 与原版设计的两处微调说明
+想换成自己的字体，覆盖上面三个变量即可；也可以不引入内置的 `fonts.css`，改用 Google Fonts 加载 Figtree，例如在 `<head>` 里放 `<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">`。
 
-为了让现有组件在实际业务中表现更稳定、更符合直觉，我们在复刻原版 Neutral 时，审慎地保留了两处实用微调：
+## 和原版设计保持一致
 
-1. **直角定义 `--astryx-radius-none`：** 保持为严格的 `0`。原版 Neutral 将该变量设成了 `0.25rem`（4px），但系统中的方形头像（Avatar）和完全不带圆角的骨架屏（Skeleton）在语义上必须呈现纯粹的直角，因此我们坚持将 `none` 锚定为 `0`。
-2. **辅助文本色 `--astryx-color-text-secondary`（浅色模式）：** 浅色模式下的色值保持为 `#525252`。原版 Neutral 使用的是稍淡一些的 `#737373`。考虑到输入框占位符、选择器提示语以及辅助说明需要更好的对比度可读性，这里采用了对比度更扎实、文字更易认的数值。
+Neutral 的每一个颜色、圆角和阴影值都和上游 v0.7.1 的 `neutralTheme.ts` 一致：
+
+- **色板：** 灰阶、文字、图标、边框、背景、状态色和十种分类色都取自上游审定色板（`neutralPaletteRefs.generated.ts`）。
+- **直角定义 `--astryx-radius-none`：** 和上游一样是 `0px`，方形头像和骨架屏保持直角。
+- **辅助文本色 `--astryx-color-text-secondary`：** 浅色 `#474747`、深色 `#9e9e9e`，与上游一致。
+
+组件级配色不再各写一份十六进制值，而是引用语义变量（例如 `--astryx-badge-info-background` 指向上游审定的状态色）。改一个语义变量，用到它的组件会一起更新。
+
+## 手机上字号更大
+
+在触屏设备（粗指针）且视口窄于 `lg` 断点（1024px）时，正文字号基准从 14px 提升到 16px，字阶比例从 1.2 调整为 1.1736。这样正文够大好读，而 Display 1 仍保持桌面端的 42px。桌面端字号不受影响。
 
 ## 明暗深色模式
 
