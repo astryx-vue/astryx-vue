@@ -42,6 +42,7 @@ export function guideSidebar(english: boolean): Sidebar {
       text: english ? 'Project' : '项目',
       items: [
         item(english ? 'Changelog' : '更新日志', `${prefix}/guide/changelog`),
+        item(english ? 'Upgrade guide' : '升级指南', `${prefix}/guide/migration`),
         item(english ? 'Contributing' : '贡献指南', `${prefix}/guide/contributing`),
       ],
     },
