@@ -22,6 +22,11 @@ catalogs:
     unrun: 0.3.1
 
     vite: 8.3.3
+  charts:
+    '@types/d3-scale': 4.0.9
+    '@types/d3-shape': 3.1.8
+    d3-scale: 4.0.2
+    d3-shape: 3.2.0
   deploy:
     wrangler: 4.149.0
   docs:
