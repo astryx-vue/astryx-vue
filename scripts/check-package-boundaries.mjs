@@ -5,11 +5,13 @@ import { fileURLToPath } from 'node:url'
 import { listPublicPackages } from './list-public-packages.mjs'
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)))
-// 公开包名单从 list-public-packages.mjs 拿（没有 private: true 的包），
-// 新增公开包不用再改这个脚本。
-const publicPackageNames = new Set(
-  listPublicPackages(rootDir).map(dir => `@astryx-vue/${dir}`),
-)
+// 必须公开发布的包写死在这里，防止误加 private 后被发布流程悄悄跳过。
+// 其余没写 private 的包从 list-public-packages.mjs 自动加入，按公开包的规则检查依赖。
+const requiredPublicPackages = ['@astryx-vue/core', '@astryx-vue/themes', '@astryx-vue/cli']
+const publicPackageNames = new Set([
+  ...requiredPublicPackages,
+  ...listPublicPackages(rootDir).map(dir => `@astryx-vue/${dir}`),
+])
 const packageFiles = [join(rootDir, 'package.json')]
 
 for (const parent of ['apps', 'packages']) {
