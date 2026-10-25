@@ -255,7 +255,7 @@
    */
   :where(input, textarea)::placeholder {
     opacity: 1;
-    color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
   }
 
   /*
