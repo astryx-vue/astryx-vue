@@ -3,9 +3,9 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-dialog-background: light-dark(#ffffff, #262626);
-    --astryx-dialog-foreground: light-dark(#171717, #fafafa);
-    --astryx-dialog-overlay: light-dark(#00000080, #000000cc);
+    --astryx-dialog-background: var(--astryx-color-background-surface);
+    --astryx-dialog-foreground: var(--astryx-color-text-primary);
+    --astryx-dialog-overlay: var(--astryx-color-overlay);
     --astryx-dialog-shadow:
       0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
       0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),

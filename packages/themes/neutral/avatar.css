@@ -3,15 +3,15 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-avatar-fallback-background: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.1));
+    --astryx-avatar-fallback-background: var(--astryx-color-neutral);
     --astryx-avatar-fallback-foreground: light-dark(#474747, #9e9e9e);
-    --astryx-avatar-status-dot-border-color: light-dark(#fff, #171717);
+    --astryx-avatar-status-dot-border-color: var(--astryx-color-background-surface);
 
-    --astryx-avatar-status-dot-neutral-background: light-dark(#fff, #171717);
-    --astryx-avatar-status-dot-neutral-foreground: light-dark(#737373, #9e9e9e);
-    --astryx-avatar-status-dot-info-background: light-dark(#0074e2, #6d9cfe);
-    --astryx-avatar-status-dot-success-background: light-dark(#198100, #64af4c);
+    --astryx-avatar-status-dot-neutral-background: var(--astryx-color-background-surface);
+    --astryx-avatar-status-dot-neutral-foreground: var(--astryx-color-icon-secondary);
+    --astryx-avatar-status-dot-info-background: var(--astryx-theme-neutral-color-status-fill-accent);
+    --astryx-avatar-status-dot-success-background: var(--astryx-theme-neutral-color-status-fill-success);
     --astryx-avatar-status-dot-warning-background: #ffce2f;
-    --astryx-avatar-status-dot-error-background: light-dark(#e33f4a, #ff705d);
+    --astryx-avatar-status-dot-error-background: var(--astryx-theme-neutral-color-status-fill-error);
   }
 }

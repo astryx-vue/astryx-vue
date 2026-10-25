@@ -3,7 +3,7 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-toast-info-background: light-dark(#171717, #fafafa);
+    --astryx-toast-info-background: var(--astryx-color-background-inverted);
     --astryx-toast-info-foreground: light-dark(#fafafa, #171717);
     --astryx-toast-success-background: #0a7b3e;
     --astryx-toast-warning-background: #9a6700;

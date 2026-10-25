@@ -1,16 +1,63 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-banner-info-background: light-dark(#f5f5f5, #262626);
-    --astryx-banner-info-foreground: light-dark(#262626, #ebebeb);
-    --astryx-banner-error-background: light-dark(#facecb, #ff9e973d);
-    --astryx-banner-error-foreground: light-dark(#89001a, #ffc6c1);
-    --astryx-banner-warning-background: light-dark(#f8da9d, #deb4333d);
-    --astryx-banner-warning-foreground: light-dark(#584400, #fdcf4f);
-    --astryx-banner-success-background: light-dark(#c5e5c0, #84c9803d);
-    --astryx-banner-success-foreground: light-dark(#0c5700, #9fe59b);
-    --astryx-banner-content-background: light-dark(#fff, #171717);
-    --astryx-banner-border: light-dark(#e5e5e5, #404040);
+    /* Surfaces. Info gets its own muted blue; the other statuses reuse the
+       semantic muted backgrounds. */
+    --astryx-banner-info-background: var(--astryx-theme-neutral-color-status-muted-accent);
+    --astryx-banner-error-background: var(--astryx-color-error-muted);
+    --astryx-banner-warning-background: var(--astryx-color-warning-muted);
+    --astryx-banner-success-background: var(--astryx-color-success-muted);
+
+    --astryx-banner-info-foreground: var(--astryx-color-text-blue);
+    --astryx-banner-error-foreground: var(--astryx-color-text-red);
+    --astryx-banner-warning-foreground: var(--astryx-color-text-yellow);
+    --astryx-banner-success-foreground: var(--astryx-color-text-green);
+
+    --astryx-banner-content-background: var(--astryx-color-background-card);
+    --astryx-banner-border: var(--astryx-color-border);
+  }
+}
+
+/*
+ * The banner header paints its title, description, icon and trailing actions
+ * from the shared surface tokens, so a status recolors them by re-pointing
+ * those tokens on the banner itself — the same tinting the upstream theme does.
+ */
+@layer astryx.overrides {
+  :root .astryx-banner,
+  [data-astryx-theme='neutral'] .astryx-banner {
+    --astryx-color-neutral: var(--astryx-theme-neutral-color-on-tint-neutral);
+    --astryx-color-overlay-hover: var(--astryx-theme-neutral-color-on-tint-overlay-hover);
+    --astryx-color-overlay-pressed: var(--astryx-theme-neutral-color-on-tint-overlay-pressed);
+  }
+
+  :root .astryx-banner[data-status='info'],
+  [data-astryx-theme='neutral'] .astryx-banner[data-status='info'] {
+    --astryx-color-text-primary: var(--astryx-color-text-blue);
+    --astryx-color-text-secondary: var(--astryx-color-text-blue);
+    --astryx-color-accent: var(--astryx-color-text-blue);
+  }
+
+  :root .astryx-banner[data-status='success'],
+  [data-astryx-theme='neutral'] .astryx-banner[data-status='success'] {
+    --astryx-color-text-primary: var(--astryx-color-text-green);
+    --astryx-color-text-secondary: var(--astryx-color-text-green);
+    --astryx-color-success: var(--astryx-color-text-green);
+  }
+
+  :root .astryx-banner[data-status='warning'],
+  [data-astryx-theme='neutral'] .astryx-banner[data-status='warning'] {
+    --astryx-color-text-primary: var(--astryx-color-text-yellow);
+    --astryx-color-text-secondary: var(--astryx-color-text-yellow);
+    --astryx-color-warning: var(--astryx-color-text-yellow);
+  }
+
+  :root .astryx-banner[data-status='error'],
+  [data-astryx-theme='neutral'] .astryx-banner[data-status='error'] {
+    --astryx-color-text-primary: var(--astryx-color-text-red);
+    --astryx-color-text-secondary: var(--astryx-color-text-red);
+    --astryx-color-error: var(--astryx-color-text-red);
   }
 }

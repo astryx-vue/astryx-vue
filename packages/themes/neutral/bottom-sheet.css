@@ -3,12 +3,12 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-bottom-sheet-background: light-dark(#ffffff, #262626);
-    --astryx-bottom-sheet-foreground: light-dark(#171717, #fafafa);
-    --astryx-bottom-sheet-border: light-dark(#d4d4d4, #525252);
-    --astryx-bottom-sheet-scrim: light-dark(#00000080, #000000cc);
-    --astryx-bottom-sheet-handle-background: light-dark(#d4d4d4, #525252);
-    --astryx-bottom-sheet-focus: light-dark(#171717, #fafafa);
+    --astryx-bottom-sheet-background: var(--astryx-color-background-surface);
+    --astryx-bottom-sheet-foreground: var(--astryx-color-text-primary);
+    --astryx-bottom-sheet-border: var(--astryx-color-border-emphasized);
+    --astryx-bottom-sheet-scrim: var(--astryx-color-overlay);
+    --astryx-bottom-sheet-handle-background: var(--astryx-color-border-emphasized);
+    --astryx-bottom-sheet-focus: var(--astryx-color-text-primary);
     --astryx-bottom-sheet-shadow:
       0 -4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
       0 -12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),

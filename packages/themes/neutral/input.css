@@ -3,20 +3,20 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-input-background: light-dark(#fff, #262626);
-    --astryx-input-border: light-dark(#d4d4d4, #525252);
-    --astryx-input-focus: light-dark(#262626, #ebebeb);
+    --astryx-input-background: var(--astryx-color-background-surface);
+    --astryx-input-border: var(--astryx-color-border-emphasized);
+    --astryx-input-focus: var(--astryx-color-accent);
     --astryx-input-height-sm: 28px;
     --astryx-input-height-md: 32px;
     --astryx-input-height-lg: 36px;
-    --astryx-input-error: light-dark(#e33f4a, #ff705d);
-    --astryx-input-error-foreground: light-dark(#89001a, #ffc6c1);
-    --astryx-input-error-background: light-dark(#facecb, #ff9e973d);
-    --astryx-input-warning: light-dark(#a67a00, #fdcf4f);
-    --astryx-input-warning-foreground: light-dark(#584400, #fdcf4f);
-    --astryx-input-warning-background: light-dark(#f8da9d, #deb4333d);
-    --astryx-input-success: light-dark(#198100, #64af4c);
-    --astryx-input-success-foreground: light-dark(#0c5700, #9fe59b);
-    --astryx-input-success-background: light-dark(#c5e5c0, #84c9803d);
+    --astryx-input-error: var(--astryx-color-error);
+    --astryx-input-error-foreground: var(--astryx-color-text-red);
+    --astryx-input-error-background: var(--astryx-color-error-muted);
+    --astryx-input-warning: var(--astryx-color-warning);
+    --astryx-input-warning-foreground: var(--astryx-color-text-yellow);
+    --astryx-input-warning-background: var(--astryx-color-warning-muted);
+    --astryx-input-success: var(--astryx-color-success);
+    --astryx-input-success-foreground: var(--astryx-color-text-green);
+    --astryx-input-success-background: var(--astryx-color-success-muted);
   }
 }
