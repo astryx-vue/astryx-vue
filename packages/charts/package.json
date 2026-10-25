@@ -27,8 +27,6 @@
   "sideEffects": [
     "**/*.css"
   ],
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "source": "./src/index.ts",
@@ -37,6 +35,8 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "README.md",
     "dist"
@@ -46,12 +46,12 @@
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
+  "peerDependencies": {
+    "vue": "catalog:peer"
+  },
   "dependencies": {
     "d3-scale": "catalog:charts",
     "d3-shape": "catalog:charts"
-  },
-  "peerDependencies": {
-    "vue": "catalog:peer"
   },
   "devDependencies": {
     "@types/d3-scale": "catalog:charts",
