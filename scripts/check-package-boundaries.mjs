@@ -2,8 +2,14 @@ import { readdir, readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import { listPublicPackages } from './list-public-packages.mjs'
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)))
+// 公开包名单从 list-public-packages.mjs 拿（没有 private: true 的包），
+// 新增公开包不用再改这个脚本。
+const publicPackageNames = new Set(
+  listPublicPackages(rootDir).map(dir => `@astryx-vue/${dir}`),
+)
 const packageFiles = [join(rootDir, 'package.json')]
 
 for (const parent of ['apps', 'packages']) {
@@ -39,9 +45,7 @@ const errors = []
 for (const packageFile of packageFiles) {
   const packageJson = JSON.parse(await readFile(packageFile, 'utf8'))
   const relativeFile = packageFile.slice(rootDir.length + 1)
-  const isPublicPackage = packageJson.name === '@astryx-vue/core'
-    || packageJson.name === '@astryx-vue/themes'
-    || packageJson.name === '@astryx-vue/cli'
+  const isPublicPackage = publicPackageNames.has(packageJson.name)
 
   if (isPublicPackage && packageJson.private)
     errors.push(`${relativeFile}: public package cannot be private`)
