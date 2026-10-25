@@ -287,9 +287,9 @@ locale.value.startsWith('zh') // Chinese
 
 **What changed:** default accessible names that you never passed as props now follow the current language. This covers dropdown menus, context menus, the more-options button, the dialog close button, banner expand and collapse, and the switch loading label (upstream #6125 #7289).
 
-**Before:** screen readers always heard English: `Menu`, `Context menu`, `More options`, `Close`, `Expand details`, `Collapse details`, `Loading`.
+**Before:** screen readers always heard English: `Menu`, `Context menu`, `More options`, `Close`, `Expand`, `Collapse`, `Loading`.
 
-**Now:** a Chinese page gets 菜单, 快捷菜单, 更多选项, 关闭, 展开详情, 收起详情, 加载中. An English page still gets the English sentences.
+**Now:** a Chinese page gets 菜单, 快捷菜单, 更多选项, 关闭, 展开, 收起, 加载中. An English page still gets the English sentences.
 
 **What to do:** if a test or script depends on those exact English strings, pass them yourself: `label`, `closeButtonLabel`, `loadingLabel`, `expandLabel`, `collapseLabel`.
 

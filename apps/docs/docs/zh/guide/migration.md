@@ -287,9 +287,9 @@ locale.value.startsWith('zh') // 中文
 
 **变了什么**：下拉菜单、快捷菜单、更多选项、对话框关闭按钮、提示条展开/收起、开关加载中，这些没写在 props 里的默认无障碍名字，现在跟着当前语言走（上游 #6125 #7289）。
 
-**以前**：不管页面是什么语言，读屏读到的都是英文 `Menu`、`Context menu`、`More options`、`Close`、`Expand details`、`Collapse details`、`Loading`。
+**以前**：不管页面是什么语言，读屏读到的都是英文 `Menu`、`Context menu`、`More options`、`Close`、`Expand`、`Collapse`、`Loading`。
 
-**现在**：中文页面得到「菜单」「快捷菜单」「更多选项」「关闭」「展开详情」「收起详情」「加载中」。英文页面仍然是原来那几句。
+**现在**：中文页面得到「菜单」「快捷菜单」「更多选项」「关闭」「展开」「收起」「加载中」。英文页面仍然是原来那几句。
 
 **怎么改**：如果你的测试或脚本依赖那几句固定英文，就自己传进去：`label`、`closeButtonLabel`、`loadingLabel`、`expandLabel`、`collapseLabel`。
 
