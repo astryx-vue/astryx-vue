@@ -59,20 +59,20 @@
 
   .astryx-text--type-display-1 {
     font-size: var(--astryx-text-display-1-size, 3rem);
-    font-weight: var(--astryx-text-display-weight, 300);
-    line-height: 1.1;
+    font-weight: var(--astryx-text-display-weight, var(--astryx-text-display-1-weight, 300));
+    line-height: var(--astryx-text-display-1-leading, 1.1);
   }
 
   .astryx-text--type-display-2 {
     font-size: var(--astryx-text-display-2-size, 2.25rem);
-    font-weight: var(--astryx-text-display-weight, 300);
-    line-height: 1.15;
+    font-weight: var(--astryx-text-display-weight, var(--astryx-text-display-2-weight, 300));
+    line-height: var(--astryx-text-display-2-leading, 1.15);
   }
 
   .astryx-text--type-display-3 {
     font-size: var(--astryx-text-display-3-size, 1.75rem);
-    font-weight: var(--astryx-text-display-weight, 300);
-    line-height: 1.2;
+    font-weight: var(--astryx-text-display-weight, var(--astryx-text-display-3-weight, 300));
+    line-height: var(--astryx-text-display-3-leading, 1.2);
   }
 
   .astryx-text--color-primary {
