@@ -13,6 +13,9 @@
  * - The BottomSheet exit curve cubic-bezier(0.3, 0, 0.6, 0.6). Upstream
  *   hardcodes it on the component; easeDefaults only defines --ease-standard.
  *
+ * Touch-device type sizes live in neutral/mobile-type.css, so this file stays
+ * one declaration per token.
+ *
  * --astryx-font-weight-regular is a Vue alias of --font-weight-normal.
  * Components already reference that name.
  *
@@ -278,11 +281,11 @@ describe('neutral base.css semantic tokens', () => {
       expect(sectionId(property.name), property.name).not.toBeNull()
   })
 
-  it('keeps values that existing components already read', () => {
-    expect(declared.get('--astryx-color-text-primary')).toBe('light-dark(#171717, #fafafa)')
-    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#525252, #a3a3a3)')
+  it('keeps the reviewed palette values that components read', () => {
+    expect(declared.get('--astryx-color-text-primary')).toBe('light-dark(#000000, #ffffff)')
+    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#474747, #9e9e9e)')
     expect(declared.get('--astryx-color-border-emphasized')).toBe('light-dark(#d4d4d4, #525252)')
-    expect(declared.get('--astryx-radius-none')).toBe('0')
+    expect(declared.get('--astryx-radius-none')).toBe('0px')
     expect(declared.get('--astryx-radius-inner')).toBe('0.375rem')
     expect(declared.get('--astryx-radius-element')).toBe('0.625rem')
     expect(declared.get('--astryx-radius-container')).toBe('0.75rem')
@@ -290,7 +293,7 @@ describe('neutral base.css semantic tokens', () => {
     expect(declared.get('--astryx-spacing-0')).toBe('0rem')
     expect(declared.get('--astryx-spacing-2')).toBe('0.5rem')
     expect(declared.get('--astryx-font-family-body')).toBe('Figtree, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif')
-    expect(declared.get('--astryx-font-family-code')).toBe('\'JetBrains Mono\', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace')
+    expect(declared.get('--astryx-font-family-code')).toBe('ui-monospace, \'SF Mono\', Monaco, Consolas, \'Liberation Mono\', \'Courier New\', monospace')
     expect(declared.get('--astryx-font-weight-medium')).toBe('500')
     expect(declared.get('--astryx-font-weight-bold')).toBe('700')
     expect(declared.get('--astryx-font-weight-semibold')).toBe('600')

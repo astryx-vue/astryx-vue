@@ -250,42 +250,6 @@
     --astryx-text-display-3-leading: 1.3793;
   }
 
-  /*
-   * Touch + narrow. On a coarse pointer below the lg breakpoint the whole
-   * ladder is re-derived from a 16px base with a smaller ratio, so body text
-   * reaches 16px while display-1 keeps its desktop size (42px).
-   */
-  @media (width < 1024px) and (pointer: coarse) {
-    :root,
-    [data-astryx-theme='neutral'] {
-      --astryx-font-size-4xs: 0.4375rem;
-      --astryx-font-size-3xs: 0.5rem;
-      --astryx-font-size-2xs: 0.625rem;
-      --astryx-font-size-xs: 0.75rem;
-      --astryx-font-size-sm: 0.875rem;
-      --astryx-font-size-base: 1rem;
-      --astryx-font-size-lg: 1.1875rem;
-      --astryx-font-size-xl: 1.375rem;
-      --astryx-font-size-2xl: 1.625rem;
-      --astryx-font-size-3xl: 1.875rem;
-      --astryx-font-size-4xl: 2.25rem;
-
-      --astryx-text-heading-1-leading: 1.3846;
-      --astryx-text-heading-2-leading: 1.4545;
-      --astryx-text-heading-3-leading: 1.4737;
-      --astryx-text-heading-4-leading: 1.5;
-      --astryx-text-heading-5-leading: 1.4286;
-      --astryx-text-heading-6-leading: 1.6667;
-      --astryx-text-body-leading: 1.5;
-      --astryx-text-large-leading: 1.4737;
-      --astryx-text-label-leading: 1.5;
-      --astryx-text-code-leading: 1.5;
-      --astryx-text-supporting-leading: 1.4286;
-      --astryx-text-display-2-leading: 1.2222;
-      --astryx-text-display-3-leading: 1.4667;
-    }
-  }
-
   [data-astryx-color-mode='light'] {
     color-scheme: light;
   }
