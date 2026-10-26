@@ -42,6 +42,8 @@
   .astryx-button {
     --button-focus-offset: 3px;
     --button-icon-only-aspect: 1 / 1;
+    /* 次要按钮可以有自己的悬停叠层，其余变体跟着按钮层的值。 */
+    --_button-hover-overlay: var(--astryx-button-hover-overlay, #0000000d);
 
     box-sizing: border-box;
     position: relative;
@@ -52,8 +54,8 @@
     width: var(--astryx-button-width, auto);
     min-width: 0;
     max-width: 100%;
-    padding-block: var(--astryx-spacing-2, 8px);
-    padding-inline: var(--astryx-spacing-3, 12px);
+    padding-block: var(--astryx-button-padding-block, var(--astryx-spacing-2, 8px));
+    padding-inline: var(--astryx-button-padding-inline, var(--astryx-spacing-3, 12px));
     border: 0;
     border-radius: var(--astryx-button-radius, var(--astryx-radius-element, 0.625rem));
     outline: 0;
@@ -97,7 +99,13 @@
     background-color: var(--astryx-button-primary-background, #262626);
   }
 
+  /* 主题的次要按钮可以带描边、带自己的悬停叠层；次要样式的选择器类组件复用这三条。 */
   .astryx-button[data-variant='secondary'] {
+    border-width: var(--astryx-button-secondary-border-width, 0);
+    border-style: var(--astryx-button-secondary-border-style, solid);
+    border-color: var(--astryx-button-secondary-border-color, transparent);
+    --_button-hover-overlay: var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d));
+
     color: var(--astryx-button-secondary-foreground, #171717);
     background-color: var(--astryx-button-secondary-background, #0000000f);
   }
@@ -115,8 +123,8 @@
   @media (hover: hover) {
     .astryx-button:not(:disabled):not([aria-disabled='true']):hover {
       background-image: linear-gradient(
-        var(--astryx-button-hover-overlay, #0000000d),
-        var(--astryx-button-hover-overlay, #0000000d)
+        var(--_button-hover-overlay),
+        var(--_button-hover-overlay)
       );
     }
   }

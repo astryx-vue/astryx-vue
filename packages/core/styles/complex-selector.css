@@ -73,8 +73,9 @@
   }
 
   .astryx-complex-selector[data-variant='secondary'] {
-    border-width: 0;
-    border-color: transparent;
+    border-width: var(--astryx-button-secondary-border-width, 0);
+    border-style: var(--astryx-button-secondary-border-style, solid);
+    border-color: var(--astryx-button-secondary-border-color, transparent);
     background-color: var(--astryx-button-secondary-background, #0000000f);
     color: var(--astryx-button-secondary-foreground, #171717);
     font-weight: var(--astryx-font-weight-medium, 500);
@@ -82,7 +83,7 @@
 
   @media (hover: hover) {
     .astryx-complex-selector[data-variant='secondary']:not(:disabled):hover {
-      background-image: linear-gradient(var(--astryx-button-hover-overlay, #0000000d), var(--astryx-button-hover-overlay, #0000000d));
+      background-image: linear-gradient(var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d)), var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d)));
     }
   }
 

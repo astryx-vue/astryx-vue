@@ -13,7 +13,7 @@
      */
     min-width: 0;
     overflow: clip;
-    --_card-radius: var(--astryx-radius-container, 0.75rem);
+    --_card-radius: var(--astryx-card-radius, var(--astryx-radius-container, 0.75rem));
     --_card-elevation: 0 0 transparent;
     --_card-ring: 0 0 transparent;
     --_card-padding-inline-start: var(--astryx-card-padding-inline-start, var(--astryx-card-padding-inline, var(--astryx-card-padding, var(--astryx-spacing-4, 16px))));

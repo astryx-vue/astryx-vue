@@ -41,7 +41,7 @@
     width: 100%;
     min-width: 0;
     height: var(--astryx-input-height-md, 32px);
-    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-input-padding-block, var(--astryx-spacing-1, 4px)) var(--astryx-input-padding-inline, var(--astryx-spacing-2, 8px));
     border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: var(--astryx-input-background, #fff);
@@ -122,9 +122,9 @@
   }
 
   .astryx-selector-field[data-variant='secondary'] {
-    border-width: 0;
-    border-style: solid;
-    border-color: transparent;
+    border-width: var(--astryx-button-secondary-border-width, 0);
+    border-style: var(--astryx-button-secondary-border-style, solid);
+    border-color: var(--astryx-button-secondary-border-color, transparent);
     background-color: var(--astryx-button-secondary-background, #0000000f);
     box-shadow: none;
     color: var(--astryx-button-secondary-foreground, #171717);
@@ -133,14 +133,14 @@
 
   @media (hover: hover) {
     .astryx-selector-field[data-variant='secondary']:hover:not(.is-disabled):not(:focus-within) {
-      background-image: linear-gradient(var(--astryx-button-hover-overlay, #0000000d), var(--astryx-button-hover-overlay, #0000000d));
+      background-image: linear-gradient(var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d)), var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d)));
       box-shadow: none;
     }
   }
 
   .astryx-selector-field[data-variant='secondary']:focus-within,
   .astryx-selector-field[data-variant='secondary'].is-open {
-    border-color: transparent;
+    border-color: var(--astryx-button-secondary-border-color, transparent);
     box-shadow: none;
   }
 
