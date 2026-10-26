@@ -123,8 +123,6 @@ function scrollToId(id: string): void {
     window.history.pushState(null, '', `#${id}`)
   }
 }
-
-const noop = () => {}
 </script>
 
 <template>
@@ -234,8 +232,8 @@ const noop = () => {}
                 <TabList
                   class="tab-flush"
                   size="sm"
-                  :model-value="tabFor(i)"
-                  @update:model-value="setTab(i, $event)"
+                  :value="tabFor(i)"
+                  :on-change="(value: string) => setTab(i, value)"
                 >
                   <Tab value="description" label="Description" />
                   <Tab value="code" label="Code" />
