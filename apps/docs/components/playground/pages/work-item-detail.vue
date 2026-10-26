@@ -574,7 +574,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
   place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-element);
-  background: var(--color-background-muted);
+  border-radius: var(--astryx-radius-element);
+  background: var(--astryx-color-background-muted);
 }
 </style>

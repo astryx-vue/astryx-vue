@@ -523,13 +523,13 @@ function directionColor(metric: Metric) {
   place-items: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-element);
-  background: var(--color-background-muted);
+  border-radius: var(--astryx-radius-element);
+  background: var(--astryx-color-background-muted);
 }
 .spark { width: 100%; height: 48px; display: block; }
 .trend-chart { width: 100%; height: 280px; display: block; }
-.chart-grid { stroke: var(--color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
-.chart-tick { fill: var(--color-text-secondary, #4E606F); font-size: 12px; }
+.chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
+.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .breakdown-bar { display: flex; width: 100%; height: 12px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
