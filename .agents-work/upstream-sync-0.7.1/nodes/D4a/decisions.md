@@ -4,15 +4,25 @@
 
 1. 2026-10-24：CLI 规模选 B「中等」。
    - 已有命令补细节：`search` 排序与来源包、`docs --depth`、`build` 选起始模板、`component`/`composable`/`template`/`manifest` 对齐。
-   - 新增：`init`（完整初始化）、`upgrade`（和 D6 的 FR10 迁移合并）、`theme`（只做加、切，不做生成）、`doctor`（简单版）。
+   - 新增：`init`（完整初始化）、`upgrade`（D6 的 FR10 迁移暂缓，`upgrade` 先只输出升级指引）、`theme`（只输出指引，见第 6 条）、`doctor`（简单版）。
    - 不做：`gap-report`、`discover`、`integration`、`blog`。
-   - 待定：`swizzle`。
+   - 不做：`swizzle`（2026-10-26 用户确认）。定制靠 CSS 变量、`container*`/`control*` 和插槽。
 2. 文档仍然只有一份来源：文档站的 Markdown。CLI 的 catalog 从文档站生成，不在 CLI 里另写一套指南。
+
+3. 2026-10-26：`init` 不写「改用户文件」的工程代码。
+   - 只做两件事：维护 `AGENTS.md`（或同类 AI 说明文件）里我们那一段；输出一份给 AI 助手的接入指引（装哪些包、在入口引哪些 CSS、怎么包 Provider、怎么验证），由 AI 助手按用户仓库的实际结构去改。
+   - 指引里的安装命令要按探测到的包管理器写：看 `packageManager` 字段和锁文件（`pnpm-lock.yaml`、`yarn.lock`、`bun.lock(b)`、`package-lock.json`），都没有就列出 npm / pnpm / yarn / bun 四种写法。
+   - 理由：用户仓库结构五花八门（monorepo、Nuxt、自定义入口），「在某个文件加一行」的代码很难写对，AI 助手读得懂仓库，更适合做这一步。
+   - 推论：`upgrade`、`theme` 也优先走「输出指引」，再看哪些步骤值得自动化。
+
+4. 2026-10-26：D6（FR10 自动改代码脚本）暂缓。根上写的 `class`/`style` 保持原落点，升级不改也不会坏；迁移说明已经写进 D7 升级指南。
+5. 2026-10-26：D5 拆成 D5a（只改文档站里的模板：补前缀、修版式、补 4 个模板，现在就做）和 D5b（命令行生成模板的行为，等 D4b）。D8 跟在 D5a 后面。
+
+6. 2026-10-26：`theme` 只输出指引，不拆子命令（用户指出：都是输出文字，没必要分「加」「切」）。
+   - `astryx-vue theme`：列出全部主题，每个一行说明。
+   - `astryx-vue theme <名字>`：一次性输出这套主题的完整接入说明：入口里引哪个 CSS；根元素的 `data-astryx-theme` 写什么；已经有别的主题时怎么换、怎么并存（局部用另一套主题）；改完怎么验证。
+   - 命令本身不改用户文件。
 
 ## 待讨论
 
-- `swizzle`（把组件源码拷进项目里改）：做不做。
-- `init` 具体做到哪一步：装依赖、引样式、写 AI 说明文件，三件都做，还是只做后两件。
-- `upgrade` 和 D6 合并后的形态：真的去改用户的 `.vue` 文件，还是先输出一份核对清单。
-- `theme` 的「加」和「切」在 Vue 项目里分别指什么：改 `main.ts` 里引的 CSS，还是改 `data-astryx-theme`。
 - 原版 142 篇指南里，我们文档站还缺哪些主题，要补进文档站。
