@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { provideAstryxLocale } from '@astryx-vue/core'
 import { Calendar } from '@astryx-vue/core/Calendar'
 import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { ref } from 'vue'
-
-provideAstryxLocale('en')
 
 const value = ref<Date | null>(null)
 const focusDate = new Date(2026, 0, 1)

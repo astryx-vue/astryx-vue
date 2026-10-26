@@ -24,9 +24,10 @@ const props = defineProps<{
   theme: ThemeId
 }>()
 
-provideAstryxLocale('en')
+const { isDark, page } = useData()
 
-const { isDark } = useData()
+// 主题页不在组件文档壳里，模板自己按站点语言提供文案。
+provideAstryxLocale(computed(() => page.value.relativePath.startsWith('en/') ? 'en' : 'zh-CN'))
 const colorMode = computed(() => props.theme === 'gothic' || isDark.value ? 'dark' : 'light')
 const entry = computed(() => themeEntry(props.theme))
 

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { TreeListItemData } from '@astryx-vue/core/TreeList'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { TreeList } from '@astryx-vue/core/TreeList'
-
-provideAstryxLocale('en')
 
 function noop() {}
 
