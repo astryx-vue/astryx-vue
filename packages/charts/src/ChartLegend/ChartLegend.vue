@@ -40,7 +40,7 @@ const listProps = computed<Record<string, unknown>>(() => isVertical.value
     <HStack
       v-for="(item, index) in items"
       :key="`${item.label}-${index}`"
-      v-align="center"
+      align="center"
       :gap="2"
       role="listitem"
     >
