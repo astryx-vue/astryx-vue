@@ -7,7 +7,7 @@
  * after following the `var()` chain, so a token that points at another token is
  * compared by its final color.
  */
-import { readFileSync, readdirSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parseCustomProperties } from '../../apps/docs/components/theme-tokens/parseTokens'
@@ -22,10 +22,13 @@ type Stops = [string, string]
 function removeBlock(css: string, start: number): string {
   let depth = 0
   for (let index = css.indexOf('{', start); index < css.length; index += 1) {
-    if (css[index] === '{') depth += 1
+    if (css[index] === '{') {
+      depth += 1
+    }
     else if (css[index] === '}') {
       depth -= 1
-      if (depth === 0) return css.slice(0, start) + css.slice(index + 1)
+      if (depth === 0)
+        return css.slice(0, start) + css.slice(index + 1)
     }
   }
   return css
@@ -40,7 +43,8 @@ function rootDeclarations(theme: Theme): Map<string, string> {
   const dir = join(root, 'packages/themes', theme)
   const declared = new Map<string, string>()
   for (const file of readdirSync(dir).filter(name => name.endsWith('.css')).sort()) {
-    if (file === 'mobile-type.css') continue
+    if (file === 'mobile-type.css')
+      continue
     let css = readFileSync(join(dir, file), 'utf8')
     for (const marker of ['@layer astryx.overrides {', '@media']) {
       let index = css.indexOf(marker)
@@ -62,9 +66,11 @@ function resolve(theme: Theme, value: string): string {
   let current = value
   for (let round = 0; round < 10; round += 1) {
     const match = /var\(\s*(--astryx-[a-z0-9-]+)\s*\)/.exec(current)
-    if (!match) return current
+    if (!match)
+      return current
     const target = map.get(match[1] ?? '')
-    if (target === undefined) return current
+    if (target === undefined)
+      return current
     current = current.replace(match[0], target)
   }
   return current
@@ -74,13 +80,17 @@ function resolve(theme: Theme, value: string): string {
 function stops(theme: Theme, name: string): Stops {
   const value = resolve(theme, declared.get(theme)?.get(name) ?? '')
   const open = 'light-dark('.length
-  if (!value.startsWith('light-dark(') || !value.endsWith(')')) return [value, value]
+  if (!value.startsWith('light-dark(') || !value.endsWith(')'))
+    return [value, value]
   const body = value.slice(open, -1)
   let depth = 0
   for (let index = 0; index < body.length; index += 1) {
-    if (body[index] === '(') depth += 1
-    else if (body[index] === ')') depth -= 1
-    else if (body[index] === ',' && depth === 0) return [body.slice(0, index).trim(), body.slice(index + 1).trim()]
+    if (body[index] === '(')
+      depth += 1
+    else if (body[index] === ')')
+      depth -= 1
+    else if (body[index] === ',' && depth === 0)
+      return [body.slice(0, index).trim(), body.slice(index + 1).trim()]
   }
   return [value, value]
 }
