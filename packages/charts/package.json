@@ -1,0 +1,64 @@
+{
+  "name": "@astryx-vue/charts",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based). Published to npm only under the canary dist-tag.",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "homepage": "https://astryx-vue.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astryx-vue/astryx-vue.git",
+    "directory": "packages/charts"
+  },
+  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
+  "keywords": [
+    "vue",
+    "vue3",
+    "design-system",
+    "astryx",
+    "charts",
+    "data-visualization"
+  ],
+  "astryxVue": {
+    "canaryOnly": true
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "vue": "catalog:peer"
+  },
+  "dependencies": {
+    "d3-scale": "catalog:charts",
+    "d3-shape": "catalog:charts"
+  },
+  "devDependencies": {
+    "@types/d3-scale": "catalog:charts",
+    "@types/d3-shape": "catalog:charts",
+    "@types/node": "catalog:language",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:language",
+    "vue": "catalog:vue"
+  }
+}
