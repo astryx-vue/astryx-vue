@@ -36,6 +36,9 @@ const OUTLINE_OPTIONS = OUTLINE_ITEMS.map(item => ({
   label: item.label,
 }))
 
+/** 两行样式导入。拆成数组再 join，避免这行被目录生成器当成真的 import。 */
+const STYLE_IMPORT = ['import \'@astryxdesign/core/reset.css\';', 'import \'@astryxdesign/core/astryx.css\';'].join('\n')
+
 const activeId = ref<string | undefined>(OUTLINE_ITEMS[0]?.id)
 const isMobile = useMediaQuery('(max-width: 768px)')
 
@@ -175,8 +178,7 @@ function copyPrompt() {
               your app entry point.
             </Text>
             <CodeBlock
-              :code="`import '@astryxdesign/core/reset.css';
-import '@astryxdesign/core/astryx.css';`"
+              :code="STYLE_IMPORT"
               language="tsx"
               width="100%"
             />
