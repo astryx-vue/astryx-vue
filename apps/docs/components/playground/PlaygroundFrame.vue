@@ -85,7 +85,9 @@ async function render(code: string): Promise<void> {
     if (current !== generation)
       return
     writeStyle('playground-sfc', compiled.css)
-    mount(compiled.component)
+    // 挂载时抛错已经作为 error 发出去了，这里不能再补一条 ok 把它盖掉。
+    if (!mount(compiled.component))
+      return
     layoutPreview(current)
     post({ channel: PLAYGROUND_CHANNEL, type: 'ok' })
   }
@@ -96,18 +98,22 @@ async function render(code: string): Promise<void> {
   }
 }
 
-function mount(component: Component): void {
+/** 挂载预览组件，返回挂载过程中有没有报过错。 */
+function mount(component: Component): boolean {
   if (!mountEl.value)
-    return
+    return false
   clearPreview()
   const current = generation
+  let errored = false
   app = createApp(PreviewHost, { preview: component, locale })
   app.config.errorHandler = (error) => {
     if (current !== generation)
       return
+    errored = true
     post({ channel: PLAYGROUND_CHANNEL, type: 'error', message: errorText(error) })
   }
   app.mount(mountEl.value)
+  return !errored
 }
 
 function layoutPreview(renderedGeneration: number, attempt = 0): void {

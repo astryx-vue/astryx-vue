@@ -2,7 +2,7 @@
 import type { PlaygroundLocale } from './protocol'
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
 import { useData, withBase } from 'vitepress'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import PlaygroundDialog from './PlaygroundDialog.vue'
 import PlaygroundMonacoEditor from './PlaygroundMonacoEditor.vue'
 import PlaygroundTemplateMenu from './PlaygroundTemplateMenu.vue'
@@ -57,6 +57,18 @@ const { sawPreview, errorText, frameSrc, frameKey, onFrameLoad } = usePreviewSyn
   hydrated,
   startupFailedText: copy.startupFailed,
   persist: buildShareUrl,
+})
+
+const statusState = computed<'loading' | 'ready' | 'error'>(() => {
+  if (errorText.value)
+    return 'error'
+  return sawPreview.value ? 'ready' : 'loading'
+})
+
+const buildStatusText = computed(() => {
+  if (statusState.value === 'error')
+    return copy.buildFailed
+  return statusState.value === 'ready' ? copy.ready : copy.loading
 })
 
 const { editorSize, onDividerDown, onDividerKey } = usePaneResize(editorPane, bodyEl)
@@ -257,8 +269,8 @@ async function openExportDialog(): Promise<void> {
               </button>
             </div>
             <div class="playground__preview-toolbar-end">
-              <span class="playground__status" :data-ready="sawPreview ? 'true' : 'false'">
-                {{ sawPreview ? copy.ready : copy.loading }}
+              <span class="playground__status" :data-ready="sawPreview ? 'true' : 'false'" :data-state="statusState">
+                {{ buildStatusText }}
               </span>
               <button type="button" class="playground__export" @click="openExportDialog">
                 {{ copy.exportTheme }}
