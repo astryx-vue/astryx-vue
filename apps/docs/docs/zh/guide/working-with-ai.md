@@ -87,7 +87,7 @@ pnpm exec astryx-vue search "date picker"
 ```sh
 pnpm exec astryx-vue build "订单详情页，左边列表右边详情"
 pnpm exec astryx-vue template --list
-pnpm exec astryx-vue template order-detail ./src/pages
+pnpm exec astryx-vue template detail-page ./src/pages
 ```
 
 `build` 在本地按关键词打分，给出最接近的模板、两个备选，以及要用的组件，不联网也不调外部模型。`template <slug> <目录>` 会把模板写成 `<Name>.vue`，顺手把演示图片换成灰色占位图，并告诉你项目还缺哪些包。

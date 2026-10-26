@@ -87,7 +87,7 @@ Once the AI looks things up before it writes, invented props mostly stop happeni
 ```sh
 pnpm exec astryx-vue build "order detail page, list on the left, detail on the right"
 pnpm exec astryx-vue template --list
-pnpm exec astryx-vue template order-detail ./src/pages
+pnpm exec astryx-vue template detail-page ./src/pages
 ```
 
 `build` scores keywords locally and answers with the closest template, two alternatives, and the components to use. No network, no external model. `template <slug> <dir>` writes `<Name>.vue`, swaps the demo photos for a grey placeholder, and reports which packages the project is still missing.
