@@ -6,6 +6,10 @@
     --astryx-button-primary-foreground: var(--astryx-color-on-accent);
     --astryx-button-secondary-background: var(--astryx-color-neutral);
     --astryx-button-secondary-foreground: var(--astryx-color-text-primary);
+    --astryx-button-radius: var(--astryx-radius-full);
+    --astryx-button-secondary-border-width: 1px;
+    --astryx-button-secondary-border-style: solid;
+    --astryx-button-secondary-border-color: var(--astryx-color-border-emphasized);
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
     --astryx-button-destructive-background: var(--astryx-color-error-muted);
@@ -20,11 +24,5 @@
     --astryx-button-shadow-low: var(--astryx-shadow-low);
     --astryx-button-shadow-med: var(--astryx-shadow-med);
     --astryx-button-shadow-high: var(--astryx-shadow-high);
-  }
-}
-
-@layer astryx.components {
-  [data-astryx-theme='chocolate'] .astryx-button[data-variant='secondary'] {
-    border: 1px solid var(--astryx-color-border-emphasized);
   }
 }

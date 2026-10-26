@@ -1,7 +1,7 @@
 /**
  * Chocolate semantic tokens.
  *
- * Warm brown and cozy beige. Albert Sans for text, Fraunces for headings. Values follow @astryxdesign/theme-chocolate 0.7.0.
+ * Warm brown and cozy beige. Albert Sans for text, Fraunces for headings. Values follow @astryxdesign/theme-chocolate 0.7.1.
  * Names match Neutral, with an --astryx- prefix.
  * A token present in the upstream theme.css replaces the Neutral value.
  * Tokens the theme does not set keep the shared default from Neutral's base.
@@ -172,7 +172,7 @@
     --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
 
     --astryx-font-family-body: 'Albert Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --astryx-font-family-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --astryx-font-family-code: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
     --astryx-font-family-heading: Fraunces, Georgia, 'Times New Roman', Times, serif;
 
     --astryx-font-size-4xs: 0.375rem;

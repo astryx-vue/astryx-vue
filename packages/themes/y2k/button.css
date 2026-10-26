@@ -2,14 +2,29 @@
 
 @layer astryx.tokens {
   [data-astryx-theme='y2k'] {
+    --astryx-button-border-width: 1px;
+    --astryx-button-border-style: solid;
+    --astryx-button-border-color: var(--astryx-color-border);
+
     --astryx-button-primary-background: var(--astryx-color-text-primary);
     --astryx-button-primary-foreground: var(--astryx-color-background-body);
+    --astryx-button-primary-border-color: transparent;
+
     --astryx-button-secondary-background: var(--astryx-color-background-green);
     --astryx-button-secondary-foreground: var(--astryx-color-text-green);
+    --astryx-button-secondary-border-width: 1px;
+    --astryx-button-secondary-border-color: var(--astryx-color-text-green);
+    --astryx-button-secondary-hover-overlay: var(--astryx-color-border-green);
+
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
+    --astryx-button-ghost-border-color: transparent;
+
     --astryx-button-destructive-background: var(--astryx-color-background-red);
     --astryx-button-destructive-foreground: var(--astryx-color-text-red);
+    --astryx-button-destructive-border-width: 1px;
+    --astryx-button-destructive-border-color: var(--astryx-color-text-red);
+
     --astryx-button-hover-overlay: var(--astryx-color-overlay-hover);
     --astryx-button-pressed-overlay: var(--astryx-color-overlay-pressed);
     --astryx-button-focus: var(--astryx-color-accent);
@@ -20,11 +35,5 @@
     --astryx-button-shadow-low: var(--astryx-shadow-low);
     --astryx-button-shadow-med: var(--astryx-shadow-med);
     --astryx-button-shadow-high: var(--astryx-shadow-high);
-  }
-}
-
-@layer astryx.components {
-  [data-astryx-theme='y2k'] .astryx-button[data-variant='secondary'] {
-    border: 1px solid var(--astryx-color-text-green);
   }
 }

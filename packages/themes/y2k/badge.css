@@ -2,6 +2,11 @@
 
 @layer astryx.tokens {
   [data-astryx-theme='y2k'] {
+    --astryx-badge-radius: 9999px;
+    --astryx-badge-border-width: 1.5px;
+    --astryx-badge-border-style: solid;
+    --astryx-badge-border-color: color-mix(in srgb, currentcolor 30%, transparent);
+
     --astryx-badge-neutral-background: var(--astryx-color-background-gray);
     --astryx-badge-neutral-foreground: var(--astryx-color-text-gray);
     --astryx-badge-info-background: var(--astryx-color-background-blue);

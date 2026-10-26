@@ -6,7 +6,7 @@
     flex-direction: column;
     min-width: 0;
     font-family: inherit;
-    border-radius: var(--astryx-radius-container, 12px);
+    border-radius: var(--astryx-banner-radius, var(--astryx-radius-container, 12px));
   }
 
   .astryx-banner {

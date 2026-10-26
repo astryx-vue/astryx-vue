@@ -90,7 +90,7 @@
     box-sizing: border-box;
     flex: 1;
     min-width: 0;
-    padding: 0 var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-input-padding-block, 0) var(--astryx-input-padding-inline, var(--astryx-spacing-2, 8px));
     border: 0;
     outline: none;
     background: transparent;

@@ -1,0 +1,22 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * 选中的导航项不用底色，靠字重和主文字色区分；悬停和按压只叠上中性层。
+ */
+@layer astryx.overrides {
+  [data-astryx-theme='y2k'] .astryx-top-nav-item.astryx-nav-item--selected {
+    background: transparent;
+  }
+
+  @media (hover: hover) {
+    [data-astryx-theme='y2k'] .astryx-top-nav-item.astryx-nav-item--selected:hover {
+      background: var(--astryx-color-overlay-hover);
+    }
+  }
+
+  @media not all and (pointer: coarse) {
+    [data-astryx-theme='y2k'] .astryx-top-nav-item.astryx-nav-item--selected:active {
+      background: var(--astryx-color-overlay-pressed);
+    }
+  }
+}

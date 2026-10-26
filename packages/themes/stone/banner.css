@@ -13,3 +13,32 @@
     --astryx-banner-border: var(--astryx-color-border);
   }
 }
+
+/*
+ * 状态色底上，状态条把共享的文字和色相 token 重指到对应色相的深色值。
+ */
+@layer astryx.overrides {
+  [data-astryx-theme='stone'] .astryx-banner[data-status='info'] {
+    --astryx-color-text-primary: var(--astryx-color-text-blue);
+    --astryx-color-text-secondary: var(--astryx-color-text-blue);
+    --astryx-color-accent: var(--astryx-color-text-blue);
+  }
+
+  [data-astryx-theme='stone'] .astryx-banner[data-status='success'] {
+    --astryx-color-text-primary: var(--astryx-color-text-green);
+    --astryx-color-text-secondary: var(--astryx-color-text-green);
+    --astryx-color-success: var(--astryx-color-text-green);
+  }
+
+  [data-astryx-theme='stone'] .astryx-banner[data-status='warning'] {
+    --astryx-color-text-primary: var(--astryx-color-text-yellow);
+    --astryx-color-text-secondary: var(--astryx-color-text-yellow);
+    --astryx-color-warning: var(--astryx-color-text-yellow);
+  }
+
+  [data-astryx-theme='stone'] .astryx-banner[data-status='error'] {
+    --astryx-color-text-primary: var(--astryx-color-text-red);
+    --astryx-color-text-secondary: var(--astryx-color-text-red);
+    --astryx-color-error: var(--astryx-color-text-red);
+  }
+}

@@ -50,7 +50,7 @@
     width: 100%;
     min-width: 0;
     min-height: var(--astryx-input-height-md, 32px);
-    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-input-padding-block, var(--astryx-spacing-1, 4px)) var(--astryx-input-padding-inline, var(--astryx-spacing-2, 8px));
     border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: var(--astryx-input-background, #fff);
