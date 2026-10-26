@@ -38,7 +38,7 @@ defineProps<{
       <HStack
         v-for="(row, index) in rows"
         :key="`${row.key}-${index}`"
-        vAlign="center"
+        v-align="center"
         :gap="2"
       >
         <ChartSwatch
