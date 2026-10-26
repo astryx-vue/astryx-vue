@@ -247,7 +247,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
               />
               <HStack :gap="4" align="center" wrap="wrap">
                 <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
-                  <Icon icon="stop" size="xsm" :style="{ color: RAG_FILL[status] }" />
+                  <span class="legend-swatch" :style="{ backgroundColor: RAG_FILL[status] }" aria-hidden="true" />
                   <Text type="supporting" color="secondary">
                     {{ RAG_LABEL[status] }}
                   </Text>
@@ -357,6 +357,13 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
 </template>
 
 <style scoped>
+.legend-swatch {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
 .content-column {
   width: 100%;
   max-width: 1440px;

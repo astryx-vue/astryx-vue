@@ -3,6 +3,7 @@
  * The icon plugin only bundles names it can see in a real module.
  */
 export const templateIcons = [
+  'heroicons:arrow-path',
   'heroicons:at-symbol',
   'heroicons:chevron-right',
   'heroicons:clipboard-document',

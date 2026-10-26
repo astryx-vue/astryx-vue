@@ -18,7 +18,7 @@ import {
   Text,
   VStack,
 } from '@astryx-vue/core'
-import { h } from 'vue'
+import { computed, h, onBeforeUnmount, onMounted, ref } from 'vue'
 
 interface PageRow extends Record<string, unknown> {
   id: string
@@ -55,14 +55,29 @@ const ACTIVE_SERIES = [
 ]
 
 /** 图表画布：800×300，留出左侧刻度与底部时间轴的边距。 */
-const CHART = { w: 800, h: 300, padLeft: 36, padRight: 12, padTop: 10, padBottom: 26 }
-const CHART_INNER_W = CHART.w - CHART.padLeft - CHART.padRight
+const CHART = { h: 300, padLeft: 36, padRight: 12, padTop: 10, padBottom: 26 }
+
+/** 图表宽度跟着容器走，viewBox 和像素一比一，线和文字都不会被拉伸。 */
+const chartEl = ref<SVGSVGElement | null>(null)
+const chartWidth = ref(800)
+const chartInnerWidth = computed(() => chartWidth.value - CHART.padLeft - CHART.padRight)
+let chartObserver: ResizeObserver | null = null
+onMounted(() => {
+  if (!chartEl.value || typeof ResizeObserver === 'undefined')
+    return
+  chartObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      chartWidth.value = entry.contentRect.width
+  })
+  chartObserver.observe(chartEl.value)
+})
+onBeforeUnmount(() => chartObserver?.disconnect())
 const CHART_INNER_H = CHART.h - CHART.padTop - CHART.padBottom
 
 /** 把一个数组折成 polyline 的 points 字符串。 */
 function pointsFor(values: number[], min: number, max: number): string {
   return values.map((value, i) => {
-    const x = CHART.padLeft + (i / (values.length - 1)) * CHART_INNER_W
+    const x = CHART.padLeft + (i / (values.length - 1)) * chartInnerWidth.value
     const y = CHART.padTop + CHART_INNER_H - ((value - min) / (max - min)) * CHART_INNER_H
     return `${x.toFixed(1)},${y.toFixed(1)}`
   }).join(' ')
@@ -73,7 +88,7 @@ function tickY(value: number, min: number, max: number): number {
 }
 
 function tickX(index: number): number {
-  return CHART.padLeft + (index / (ACTIVE_ALL.length - 1)) * CHART_INNER_W
+  return CHART.padLeft + (index / (ACTIVE_ALL.length - 1)) * chartInnerWidth.value
 }
 
 const Y_AXIS = [0, 20, 40, 60, 80, 100, 120]
@@ -198,19 +213,19 @@ function sparklinePoints(values: number[]): string {
             </Heading>
             <Button label="Reload" variant="secondary">
               <template #icon>
-                <Icon icon="arrowUp" size="sm" />
+                <Icon icon="heroicons:arrow-path" size="sm" />
               </template>
             </Button>
           </HStack>
           <VStack :gap="3">
-            <svg class="active-users-chart" :viewBox="`0 0 ${CHART.w} ${CHART.h}`" role="img" aria-label="Active users">
+            <svg ref="chartEl" class="active-users-chart" :viewBox="`0 0 ${chartWidth} ${CHART.h}`" role="img" aria-label="Active users">
               <g>
                 <line
                   v-for="tick in Y_AXIS"
                   :key="`grid-${tick}`"
                   class="chart-grid"
                   :x1="CHART.padLeft"
-                  :x2="CHART.w - CHART.padRight"
+                  :x2="chartWidth - CHART.padRight"
                   :y1="tickY(tick, Y_MIN, Y_MAX)"
                   :y2="tickY(tick, Y_MIN, Y_MAX)"
                 />
@@ -228,7 +243,7 @@ function sparklinePoints(values: number[]): string {
                   class="chart-axis"
                   :x="tickX(index)"
                   :y="CHART.h - 8"
-                  text-anchor="middle"
+                  :text-anchor="index === 0 ? 'start' : index === X_TICKS[X_TICKS.length - 1] ? 'end' : 'middle'"
                 >{{ tickLabel(index) }}</text>
                 <polyline
                   v-for="series in ACTIVE_SERIES"
@@ -242,7 +257,7 @@ function sparklinePoints(values: number[]): string {
             </svg>
             <HStack :gap="6" align="center">
               <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
-                <Icon icon="stop" size="xsm" :style="{ color: series.color }" />
+                <span class="legend-swatch" :style="{ backgroundColor: series.color }" aria-hidden="true" />
                 <Text type="supporting" color="secondary">
                   {{ series.name }}
                 </Text>
@@ -305,7 +320,7 @@ function sparklinePoints(values: number[]): string {
               <HStack :gap="4" wrap="wrap">
                 <VStack v-for="segment in group.data" :key="segment.label" :gap="0">
                   <HStack :gap="2" align="center">
-                    <Icon icon="stop" size="xsm" :style="{ color: segment.color }" />
+                    <span class="legend-swatch" :style="{ backgroundColor: segment.color }" aria-hidden="true" />
                     <Text type="supporting">
                       {{ segment.label }}
                     </Text>
@@ -361,6 +376,13 @@ function sparklinePoints(values: number[]): string {
 </template>
 
 <style scoped>
+.legend-swatch {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
 .stacked-bar {
   display: flex;
   height: 24px;

@@ -407,13 +407,13 @@ function trendLines(trend: TrendSeries) {
                 </svg>
                 <HStack :gap="5" align="center">
                   <HStack :gap="2" align="center">
-                    <Icon icon="stop" size="xsm" :style="{ color: trend.color }" />
+                    <span class="legend-swatch" :style="{ backgroundColor: trend.color }" aria-hidden="true" />
                     <Text type="supporting" color="secondary">
                       Current
                     </Text>
                   </HStack>
                   <HStack :gap="2" align="center">
-                    <Icon icon="stop" size="xsm" :style="{ color: COLORS.prior }" />
+                    <span class="legend-swatch" :style="{ backgroundColor: COLORS.prior }" aria-hidden="true" />
                     <Text type="supporting" color="secondary">
                       Prior
                     </Text>
@@ -466,6 +466,13 @@ function trendLines(trend: TrendSeries) {
 </template>
 
 <style scoped>
+.legend-swatch {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
 .scorecard-grid {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }

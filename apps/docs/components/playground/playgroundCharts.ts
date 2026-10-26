@@ -1,8 +1,32 @@
-import type { PropType, VNode } from 'vue'
-import { defineComponent, h } from 'vue'
+import type { PropType, Ref, VNode } from 'vue'
+import { defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const GRID_STROKE = 'var(--color-border, rgba(5, 54, 89, 0.1))'
 const AXIS_TICK = 'var(--color-text-secondary, #4E606F)'
+
+/** 图表没量到宽度之前用的宽度，服务端渲染也用它。 */
+const FALLBACK_WIDTH = 800
+
+/**
+ * 量图表 svg 的实际宽度。viewBox 用这个宽度，坐标和像素一比一：
+ * 图表撑满容器，线和文字也不会被横向拉伸。
+ */
+function useChartWidth(): { el: Ref<SVGSVGElement | null>, width: Ref<number> } {
+  const el = ref<SVGSVGElement | null>(null)
+  const width = ref(FALLBACK_WIDTH)
+  let observer: ResizeObserver | null = null
+  onMounted(() => {
+    if (!el.value || typeof ResizeObserver === 'undefined')
+      return
+    observer = new ResizeObserver(([entry]) => {
+      if (entry && entry.contentRect.width > 0)
+        width.value = entry.contentRect.width
+    })
+    observer.observe(el.value)
+  })
+  onBeforeUnmount(() => observer?.disconnect())
+  return { el, width }
+}
 
 function num(v: unknown): number {
   return typeof v === 'number' && Number.isFinite(v) ? v : 0
@@ -85,9 +109,11 @@ export const PlaygroundLineChart = defineComponent({
     monotone: { type: Boolean, default: false },
   },
   setup(props) {
+    const chart = useChartWidth()
     return () => {
+      const chartW = chart.width.value
       const pad = { top: 12, right: 16, bottom: 24, left: 48 }
-      const innerW = 800 - pad.left - pad.right
+      const innerW = chartW - pad.left - pad.right
       const innerH = props.height - pad.top - pad.bottom
       const rows = props.data
       if (!rows.length)
@@ -184,8 +210,8 @@ export const PlaygroundLineChart = defineComponent({
       return h('svg', {
         width: '100%',
         height: props.height,
-        viewBox: `0 0 800 ${props.height}`,
-        preserveAspectRatio: 'none',
+        ref: chart.el,
+        viewBox: `0 0 ${chartW} ${props.height}`,
         role: 'img',
         'aria-label': 'Line chart',
       }, [
@@ -220,9 +246,11 @@ export const PlaygroundAreaChart = defineComponent({
     yTickFormat: { type: Function as PropType<(v: number) => string>, default: (v: number) => String(v) },
   },
   setup(props) {
+    const chart = useChartWidth()
     return () => {
+      const chartW = chart.width.value
       const pad = { top: 10, right: 10, bottom: 24, left: 50 }
-      const innerW = 800 - pad.left - pad.right
+      const innerW = chartW - pad.left - pad.right
       const innerH = props.height - pad.top - pad.bottom
       const rows = props.data
       const [yMin, yMax] = props.yDomain
@@ -240,8 +268,8 @@ export const PlaygroundAreaChart = defineComponent({
       return h('svg', {
         width: '100%',
         height: props.height,
-        viewBox: `0 0 800 ${props.height}`,
-        preserveAspectRatio: 'none',
+        ref: chart.el,
+        viewBox: `0 0 ${chartW} ${props.height}`,
         role: 'img',
         'aria-label': 'Area chart',
       }, [
@@ -291,18 +319,20 @@ export const PlaygroundHorizontalBarChart = defineComponent({
     height: { type: Number, default: 260 },
   },
   setup(props) {
+    const chart = useChartWidth()
     return () => {
+      const chartW = chart.width.value
       const pad = { top: 8, right: 24, bottom: 8, left: 118 }
       const rowH = 44
-      const innerW = 800 - pad.left - pad.right
+      const innerW = chartW - pad.left - pad.right
       const max = Math.max(...props.data.map(d => d.value), 1)
       const hTotal = Math.max(props.height, props.data.length * rowH + pad.top + pad.bottom)
 
       return h('svg', {
         width: '100%',
         height: hTotal,
-        viewBox: `0 0 800 ${hTotal}`,
-        preserveAspectRatio: 'xMidYMid meet',
+        ref: chart.el,
+        viewBox: `0 0 ${chartW} ${hTotal}`,
         role: 'img',
         'aria-label': 'Bar chart',
       }, props.data.flatMap((row, i) => {
@@ -342,10 +372,12 @@ export const PlaygroundGanttChart = defineComponent({
     ticks: { type: Array as PropType<number[]>, default: () => [] },
   },
   setup(props) {
+    const chart = useChartWidth()
     return () => {
+      const chartW = chart.width.value
       const pad = { top: 4, right: 16, bottom: 4, left: 156 }
       const rowH = 44
-      const innerW = 800 - pad.left - pad.right
+      const innerW = chartW - pad.left - pad.right
       const hTotal = Math.max(160, props.items.length * rowH + pad.top + pad.bottom)
       const scale = (d: number) => pad.left + (d / props.domainMax) * innerW
 
@@ -400,8 +432,8 @@ export const PlaygroundGanttChart = defineComponent({
       return h('svg', {
         width: '100%',
         height: hTotal,
-        viewBox: `0 0 800 ${hTotal}`,
-        preserveAspectRatio: 'xMidYMid meet',
+        ref: chart.el,
+        viewBox: `0 0 ${chartW} ${hTotal}`,
         role: 'img',
         'aria-label': 'Gantt chart',
       }, nodes)
