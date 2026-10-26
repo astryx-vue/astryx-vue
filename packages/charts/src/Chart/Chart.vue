@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChartProps, ChartSlots } from './types.js'
-import { HStack, useLocale, VStack, VisuallyHidden } from '@astryx-vue/core'
+import { Text, useLocale, VisuallyHidden } from '@astryx-vue/core'
 import { computed, provide } from 'vue'
 import ChartLegend from '../ChartLegend/ChartLegend.vue'
 import ChartTooltip from '../ChartTooltip/ChartTooltip.vue'
@@ -10,6 +10,7 @@ import { deriveLegendItems } from '../legend.js'
 import { useChartMessages } from '../messages.js'
 import { isUtilityMarkType } from '../types.js'
 import ChartMarks from './ChartMarks.js'
+import { MAX_TABLE_POINTS } from './types.js'
 import { useChartFrame, useChartIds } from './useChartFrame.js'
 
 import '../../styles/chart.css'
@@ -33,6 +34,13 @@ defineSlots<ChartSlots>()
 
 const { containerRef, svgRef, containerWidth, safeHeight, margin, innerWidth, innerHeight, resolved, seriesCtx, chart, handlePointerMove, handlePointerLeave } = useChartFrame(props)
 const { clipId, descId } = useChartIds()
+
+/**
+ * 模板里 `ref="svgRef"` 只写变量名的话，类型检查看不到这次读取，所以用函数式 ref 显式赋值。
+ */
+function setSvgRef(element: unknown): void {
+  svgRef.value = (element as SVGSVGElement | null) ?? null
+}
 
 provide(chartContextKey, chart)
 
@@ -128,7 +136,7 @@ defineExpose({ element: containerRef })
       />
       <div class="astryx-chart__plot">
         <svg
-          ref="svgRef"
+          :ref="setSvgRef"
           role="img"
           width="100%"
           :height="safeHeight"

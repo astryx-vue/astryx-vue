@@ -1,4 +1,4 @@
-import type { PropType } from 'vue'
+import type { PropType, VNodeArrayChildren } from 'vue'
 import type { ResolvedPoint, SeriesContext, SeriesDef } from '../types.js'
 import { defineComponent, h } from 'vue'
 
@@ -24,7 +24,9 @@ export default defineComponent({
         const points = series._uid ? props.resolved.get(series._uid) : undefined
         if (!points || !series.render)
           return null
-        return h('g', { key: series._uid }, series.render(points, props.seriesCtx))
+        const content = series.render(points, props.seriesCtx)
+        // `VNodeChild` 里有 `void`，`RawChildren` 收不下，包一层数组再断言成子节点数组。
+        return h('g', { key: series._uid }, [content] as VNodeArrayChildren)
       }),
     )
   },

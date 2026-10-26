@@ -1,0 +1,15 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 轴线和短刻度线都跟正文同色，1px。 */
+  .astryx-chart-axis__line,
+  .astryx-chart-axis__mark {
+    stroke: var(--astryx-color-text-primary, #171717);
+    stroke-width: 1;
+  }
+
+  .astryx-chart-axis__label {
+    fill: var(--astryx-color-text-secondary, #525252);
+    font-size: 12px;
+  }
+}

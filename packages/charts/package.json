@@ -64,6 +64,8 @@
     "@types/d3-shape": "catalog:charts",
     "@types/node": "catalog:language",
     "@vue/compiler-sfc": "catalog:vue",
+    "@vue/test-utils": "catalog:testing",
+    "dom-accessibility-api": "catalog:testing",
     "tsdown": "catalog:build",
     "typescript": "catalog:language",
     "unplugin-vue": "catalog:build",
