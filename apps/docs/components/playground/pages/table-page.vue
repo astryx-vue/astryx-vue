@@ -232,6 +232,7 @@ const FILTER_FIELDS = [
       { value: 'project', label: 'Project management' },
     ],
   },
+  { key: 'quantity', label: 'Quantity', type: 'number' as const, isIntegerOnly: true },
 ]
 
 const TAX_RATE = 0.0875
@@ -247,6 +248,19 @@ const INVOICE_DETAILS = [
 
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
 const decimal = new Intl.NumberFormat('en-US')
+
+/**
+ * Stack 的内边距写在 CSS 变量上，嵌套的 Stack 会继承同一个值，
+ * 所以给容器加内边距时用内联样式，避免子容器被动带上同样的留白。
+ */
+function spacing(step: number): string {
+  return `var(--astryx-spacing-${String(step).replace('.', '-')}, ${step * 4}px)`
+}
+
+/** 搜索框起始位置的放大镜，供 `TextInput` 的 `startIcon` 使用。 */
+function SearchIcon() {
+  return h(Icon, { icon: 'search', size: 'sm' })
+}
 
 function formatCents(cents: number): string {
   return currency.format(cents / 100)
@@ -297,6 +311,7 @@ const columns: TableColumn<InvoiceRow>[] = [
     width: pixel(80),
     align: 'end',
     sortable: { compare: (a, b) => a.quantity - b.quantity },
+    filter: 'quantity',
     renderCell: item => h(Text, { hasTabularNumbers: true }, () => decimal.format(item.quantity)),
   },
   {
@@ -342,8 +357,8 @@ const AMOUNT_COLUMN_WIDTH = 132
 <template>
   <Layout height="fill" :content-width="960">
     <LayoutContent :padding="0">
-      <VStack :padding="4" :gap="8">
-        <VStack :gap="6" :padding-block-end="4">
+      <VStack :gap="8" :style="{ padding: spacing(4) }">
+        <VStack :gap="6" :style="{ paddingBlockEnd: spacing(4) }">
           <HStack :gap="3" align="center" wrap="wrap">
             <StackItem size="fill">
               <Heading :level="1">
@@ -378,6 +393,7 @@ const AMOUNT_COLUMN_WIDTH = 132
               label="Search line items"
               is-label-hidden
               placeholder="Search…"
+              :start-icon="SearchIcon"
             />
           </VStack>
         </HStack>
@@ -393,16 +409,18 @@ const AMOUNT_COLUMN_WIDTH = 132
             </template>
           </EmptyState>
           <VStack v-else :gap="4">
-            <Table
-              :data="sortedData"
-              :columns="columns"
-              id-key="id"
-              density="balanced"
-              dividers="none"
-              has-hover
-              text-overflow="truncate"
-              :plugins="{ sort: sortPlugin, filter: filterPlugin }"
-            />
+            <div class="invoice-table">
+              <Table
+                :data="sortedData"
+                :columns="columns"
+                id-key="id"
+                density="balanced"
+                dividers="none"
+                has-hover
+                text-overflow="truncate"
+                :plugins="{ sort: sortPlugin, filter: filterPlugin }"
+              />
+            </div>
             <VStack :gap="3">
               <Divider />
               <HStack :gap="6" justify="end" align="center">
@@ -452,3 +470,21 @@ const AMOUNT_COLUMN_WIDTH = 132
     </LayoutContent>
   </Layout>
 </template>
+
+<style>
+/* 核心 Table 把列筛选按钮排在表头标题的下一行；原版是「标题、排序箭头、漏斗」并排一行。
+   这里把表头折回一行，漏斗紧跟排序箭头，跟着列的对齐方向走。 */
+.invoice-table .astryx-table__header {
+  flex-direction: row;
+  align-items: center;
+}
+
+.invoice-table .astryx-table__header-line {
+  flex: 0 1 auto;
+}
+
+.invoice-table th[data-align='end'] .astryx-table__header,
+.invoice-table th[data-align='center'] .astryx-table__header {
+  justify-content: flex-end;
+}
+</style>
