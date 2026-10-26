@@ -18,7 +18,6 @@ import {
   Text,
   VStack,
 } from '@astryx-vue/core'
-import { PlaygroundLineChart, PlaygroundResponsive, PlaygroundSparkline } from '@astryx-vue/playground-charts'
 import { h } from 'vue'
 
 interface PageRow extends Record<string, unknown> {
@@ -49,18 +48,37 @@ const ACTIVE_ALL = [116, 118, 117, 119, 116, 113, 109, 111, 110, 107, 104, 101, 
 const ACTIVE_DESKTOP = [79, 80, 79, 81, 79, 76, 72, 74, 72, 69, 66, 62, 57, 54, 50, 46, 41, 39, 37, 36, 34, 32, 30, 28, 26, 26, 27, 27, 27, 27, 27, 28, 29, 29, 30, 31, 33, 34, 35, 36, 38, 39, 40, 40, 41, 41, 41, 40, 40, 39, 39, 38, 37, 36, 35, 35, 34, 33, 33, 32, 31, 30, 29, 28, 27, 26, 26, 27, 28, 30, 33, 37, 43, 49, 55, 61, 66, 69, 72, 72, 74, 76, 78, 80, 81, 81, 83, 82, 83, 78, 74, 73, 76, 79, 81, 83]
 const ACTIVE_MOBILE = [37, 38, 38, 38, 37, 37, 37, 37, 38, 38, 38, 39, 43, 45, 47, 49, 52, 52, 52, 51, 51, 51, 50, 49, 49, 50, 49, 48, 46, 44, 42, 39, 36, 34, 31, 29, 26, 24, 22, 20, 18, 17, 17, 16, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 16, 17, 19, 21, 23, 26, 29, 32, 35, 37, 39, 40, 40, 39, 37, 36, 35, 34, 33, 33, 32, 32, 32, 33, 34, 34, 35, 36, 36, 37, 37, 37, 37, 37, 37, 37, 37, 37]
 
-const ACTIVE_USERS = ACTIVE_ALL.map((allUsers, i) => ({
-  hour: i,
-  allUsers,
-  desktop: ACTIVE_DESKTOP[i],
-  mobile: ACTIVE_MOBILE[i],
-}))
-
 const ACTIVE_SERIES = [
-  { key: 'allUsers', color: CHART_COLORS.allUsers, name: 'All Users' },
-  { key: 'desktop', color: CHART_COLORS.desktop, name: 'Desktop' },
-  { key: 'mobile', color: CHART_COLORS.mobile, name: 'Mobile' },
+  { key: 'allUsers', color: CHART_COLORS.allUsers, name: 'All Users', values: ACTIVE_ALL },
+  { key: 'desktop', color: CHART_COLORS.desktop, name: 'Desktop', values: ACTIVE_DESKTOP },
+  { key: 'mobile', color: CHART_COLORS.mobile, name: 'Mobile', values: ACTIVE_MOBILE },
 ]
+
+/** 图表画布：800×300，留出左侧刻度与底部时间轴的边距。 */
+const CHART = { w: 800, h: 300, padLeft: 36, padRight: 12, padTop: 10, padBottom: 26 }
+const CHART_INNER_W = CHART.w - CHART.padLeft - CHART.padRight
+const CHART_INNER_H = CHART.h - CHART.padTop - CHART.padBottom
+
+/** 把一个数组折成 polyline 的 points 字符串。 */
+function pointsFor(values: number[], min: number, max: number): string {
+  return values.map((value, i) => {
+    const x = CHART.padLeft + (i / (values.length - 1)) * CHART_INNER_W
+    const y = CHART.padTop + CHART_INNER_H - ((value - min) / (max - min)) * CHART_INNER_H
+    return `${x.toFixed(1)},${y.toFixed(1)}`
+  }).join(' ')
+}
+
+function tickY(value: number, min: number, max: number): number {
+  return CHART.padTop + CHART_INNER_H - ((value - min) / (max - min)) * CHART_INNER_H
+}
+
+function tickX(index: number): number {
+  return CHART.padLeft + (index / (ACTIVE_ALL.length - 1)) * CHART_INNER_W
+}
+
+const Y_AXIS = [0, 20, 40, 60, 80, 100, 120]
+const Y_MIN = 0
+const Y_MAX = 120
 
 /** 横轴只标 4 个时间点，分别是曲线上的 0 / 32 / 64 / 95。 */
 const X_TICKS = [0, 32, 64, 95]
@@ -155,6 +173,18 @@ const TOP_EVENTS_COLUMNS: TableColumn<EventRow>[] = [
 function tickLabel(value: number): string {
   return X_LABELS[value] ?? ''
 }
+
+/** 指标卡里的迷你折线，只看走势，不带坐标轴，画在 100×40 的盒子里。 */
+function sparklinePoints(values: number[]): string {
+  const min = Math.min(...values)
+  const max = Math.max(...values)
+  const range = max - min || 1
+  return values.map((value, i) => {
+    const x = (i / (values.length - 1)) * 100
+    const y = 2 + 36 - ((value - min) / range) * 36
+    return `${x.toFixed(1)},${y.toFixed(1)}`
+  }).join(' ')
+}
 </script>
 
 <template>
@@ -173,17 +203,43 @@ function tickLabel(value: number): string {
             </Button>
           </HStack>
           <VStack :gap="3">
-            <PlaygroundResponsive :height="300">
-              <PlaygroundLineChart
-                :data="ACTIVE_USERS"
-                x-key="hour"
-                :series="ACTIVE_SERIES"
-                :height="300"
-                :y-domain="[0, 120]"
-                :x-ticks="X_TICKS"
-                :x-tick-format="tickLabel"
-              />
-            </PlaygroundResponsive>
+            <svg class="active-users-chart" :viewBox="`0 0 ${CHART.w} ${CHART.h}`" role="img" aria-label="Active users">
+              <g>
+                <line
+                  v-for="tick in Y_AXIS"
+                  :key="`grid-${tick}`"
+                  class="chart-grid"
+                  :x1="CHART.padLeft"
+                  :x2="CHART.w - CHART.padRight"
+                  :y1="tickY(tick, Y_MIN, Y_MAX)"
+                  :y2="tickY(tick, Y_MIN, Y_MAX)"
+                />
+                <text
+                  v-for="tick in Y_AXIS"
+                  :key="`ylabel-${tick}`"
+                  class="chart-axis"
+                  :x="CHART.padLeft - 8"
+                  :y="tickY(tick, Y_MIN, Y_MAX) + 4"
+                  text-anchor="end"
+                >{{ tick }}</text>
+                <text
+                  v-for="index in X_TICKS"
+                  :key="`xlabel-${index}`"
+                  class="chart-axis"
+                  :x="tickX(index)"
+                  :y="CHART.h - 8"
+                  text-anchor="middle"
+                >{{ tickLabel(index) }}</text>
+                <polyline
+                  v-for="series in ACTIVE_SERIES"
+                  :key="series.key"
+                  fill="none"
+                  :stroke="series.color"
+                  stroke-width="2"
+                  :points="pointsFor(series.values, Y_MIN, Y_MAX)"
+                />
+              </g>
+            </svg>
             <HStack :gap="6" align="center">
               <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
                 <Icon icon="stop" size="xsm" :style="{ color: series.color }" />
@@ -216,7 +272,9 @@ function tickLabel(value: number): string {
                 <Text type="supporting" color="secondary">
                   Last 30 days vs. Previous
                 </Text>
-                <PlaygroundSparkline :data="SPARKLINES[start + i]" :color="CHART_COLORS.allUsers" />
+                <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                  <polyline fill="none" :stroke="CHART_COLORS.allUsers" stroke-width="1.5" :points="sparklinePoints(SPARKLINES[start + i])" />
+                </svg>
               </VStack>
             </Card>
           </Grid>
@@ -311,5 +369,23 @@ function tickLabel(value: number): string {
 }
 .stacked-bar__segment {
   flex-basis: 0;
+}
+.active-users-chart {
+  width: 100%;
+  height: 300px;
+  display: block;
+}
+.chart-grid {
+  stroke: var(--astryx-color-border);
+  stroke-width: 1;
+}
+.chart-axis {
+  fill: var(--astryx-color-text-secondary);
+  font-size: 12px;
+}
+.sparkline {
+  width: 100%;
+  height: 40px;
+  display: block;
 }
 </style>
