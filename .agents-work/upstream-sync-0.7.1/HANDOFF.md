@@ -49,7 +49,15 @@ D8 #174（演练场预览通道，`ab13a30`）、D5c 第一批 #175（`3881332`�
 
 **用户决定（2026-10-26）：大模板保持单文件，可以超过 500 行**（行数检查本来就不管 `pages/*.vue`）。**用户要求：发现问题后派 worker 修、总控验收；验收时再发现小问题就总控自己修，不要再派。**
 
-当前并行：D5c 第 2 轮（worker 在追平剩下 17 个模板，工作区 `astryx-vue-wt/D5c`，分支 `sync/d5c-templates-parity-2`）。模板对照截图脚本备份在 `/tmp/cmp-scripts/`，原版截图在 `/tmp/D5c-shots/up/`。
+D5c 第二批 #177（`0ac9ba3`）、第三批 #178（`9018804`）已合入，**D5c 已完成**：57 个模板全部和原版演练场截图对照过。总控验收时补修：table-comparison 改回一张表（分组折叠 + 固定首列），alert-rail 图表按容器宽度绘制，table-filter 默认按优先级排序。
+
+**D5c 里 worker 记下的 core 问题（还没修，等用户定要不要开节点）：**
+- Stack 的 `--astryx-stack-padding-*` / `--astryx-stack-gap` 是普通 CSS 变量，会被里面嵌套的 Stack 继承：外层 Stack 写了 `padding`，里层没写的 Stack 也会带上同样的内边距。总控已用最小页面复现（外层 24px，里层算出来也是 24px）。
+- Table 的列头筛选按钮排到表头下一行；缺 `transformBodyRow`（整行悬停卡片做不出来）。
+- `Selector` 选项的 `icon` 只吃 CSS 类名；`Step` 的默认插槽排在标签右侧一列。
+- `useTableTreeState` / `useTableSortableState` 的 config 只 `toValue` 一层。
+
+当前并行：没有正在实现的节点。
 
 **D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`，原版指南对照在 `nodes/D4a/guides-gap.md`。还没定的：`upgrade` 的形态（D6 暂缓后只输出升级指引）。
 
