@@ -251,7 +251,9 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                       <Heading :level="2" class="center-text">{{ p.name }}</Heading>
                       <Text type="supporting" color="secondary" class="card-description center-text">{{ p.description }}</Text>
                       <HStack :gap="2" :align="'center'" :justify="'center'" wrap="wrap" class="cart-row">
-                        <NumberInput v-model="quantity" label="Quantity" is-label-hidden :min="1" :max="99" size="sm" :width="72" />
+                        <span class="quantity-field">
+                          <NumberInput v-model="quantity" label="Quantity" is-label-hidden :min="1" :max="99" size="sm" />
+                        </span>
                         <Button label="Add to cart" variant="secondary" size="sm" href="#" class="cart-button" />
                       </HStack>
                     </VStack>
@@ -430,6 +432,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 .card-stack { height: 100%; }
 .card-description { flex: 1; }
 .cart-row { width: 100%; min-width: 0; }
+.quantity-field { display: block; flex: none; width: 72px; }
 .cart-button { flex: 1 1 auto; min-width: 0; }
 .card-surface { background: var(--astryx-color-background-body); color: var(--astryx-color-text-primary); min-width: 0; border-color: transparent; }
 .checkout-stack { min-width: 0; width: 100%; }
