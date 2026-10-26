@@ -4,8 +4,14 @@
   [data-astryx-theme='butter'] {
     --astryx-button-primary-background: var(--astryx-color-accent);
     --astryx-button-primary-foreground: var(--astryx-color-on-accent);
+    --astryx-button-padding-block: var(--astryx-spacing-3);
+    --astryx-button-padding-inline: var(--astryx-spacing-4);
     --astryx-button-secondary-background: transparent;
     --astryx-button-secondary-foreground: light-dark(#225BFF, #FDEE8C);
+    --astryx-button-secondary-border-width: 1.5px;
+    --astryx-button-secondary-border-style: solid;
+    --astryx-button-secondary-border-color: light-dark(#225BFF, #FDEE8C);
+    --astryx-button-secondary-hover-overlay: light-dark(#225BFF14, #FDEE8C14);
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: light-dark(#225BFF, #FDEE8C);
     --astryx-button-destructive-background: light-dark(#ffdad3, #f4b8ae);

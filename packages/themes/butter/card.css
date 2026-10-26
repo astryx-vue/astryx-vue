@@ -3,6 +3,7 @@
 @layer astryx.tokens {
   [data-astryx-theme='butter'] {
     --astryx-card-background: var(--astryx-color-background-card);
+    --astryx-card-padding: var(--astryx-spacing-4);
     --astryx-card-muted-background: var(--astryx-color-background-muted);
     --astryx-card-border: var(--astryx-color-border);
     --astryx-card-shadow-low: var(--astryx-shadow-low);
@@ -19,5 +20,85 @@
     --astryx-card-red-background: var(--astryx-color-background-red);
     --astryx-card-teal-background: var(--astryx-color-background-teal);
     --astryx-card-yellow-background: var(--astryx-color-background-yellow);
+  }
+}
+
+/*
+ * 分类色底上，卡片把共享的文字 token 重指到固定的深色，保证标签可读。
+ */
+@layer astryx.overrides {
+  [data-astryx-theme='butter'] .astryx-card[data-variant='info'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='success'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='warning'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='error'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='blue'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='cyan'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='gray'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='green'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='orange'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='pink'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='purple'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='red'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='teal'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='yellow'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='muted'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #605f52;
   }
 }

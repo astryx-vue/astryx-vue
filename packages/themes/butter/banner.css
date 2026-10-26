@@ -13,3 +13,32 @@
     --astryx-banner-border: var(--astryx-color-border);
   }
 }
+
+/*
+ * 醒目底色上，状态条把共享的文字和色相 token 重指到浅色或深色文字。
+ */
+@layer astryx.overrides {
+  [data-astryx-theme='butter'] .astryx-banner[data-status='info'] {
+    --astryx-color-text-primary: #ffffff;
+    --astryx-color-text-secondary: #ffffff;
+    --astryx-color-accent: #ffffff;
+  }
+
+  [data-astryx-theme='butter'] .astryx-banner[data-status='success'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #1d1c11;
+    --astryx-color-success: #1d1c11;
+  }
+
+  [data-astryx-theme='butter'] .astryx-banner[data-status='warning'] {
+    --astryx-color-text-primary: #1d1c11;
+    --astryx-color-text-secondary: #1d1c11;
+    --astryx-color-warning: #1d1c11;
+  }
+
+  [data-astryx-theme='butter'] .astryx-banner[data-status='error'] {
+    --astryx-color-text-primary: #ffffff;
+    --astryx-color-text-secondary: #ffffff;
+    --astryx-color-error: #ffffff;
+  }
+}
