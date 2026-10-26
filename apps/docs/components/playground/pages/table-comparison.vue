@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {
-  Badge,
   Button,
   Card,
   Heading,
@@ -17,29 +16,59 @@ import {
   Switch,
   Table,
   Text,
+  useTableGroupedRows,
+  useTableStickyColumns,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
+
+type Modality = 'text' | 'image' | 'audio' | 'video' | 'document'
+
+const MODALITY_ORDER: Modality[] = ['text', 'image', 'audio', 'video', 'document']
+
+/** 输入输出模态各占同一个格子位置，缺哪一项就用暗色图标占位。 */
+const MODALITY_ICON: Record<Modality, string> = {
+  text: 'i-carbon-text-font',
+  image: 'i-carbon-image',
+  audio: 'i-carbon-volume-up',
+  video: 'i-carbon-video',
+  document: 'i-carbon-document',
+}
+
+const MODALITY_LABEL: Record<Modality, string> = {
+  text: 'Text',
+  image: 'Image',
+  audio: 'Audio',
+  video: 'Video',
+  document: 'Document',
+}
 
 interface Model {
   id: string
   name: string
   provider: string
   context: number
+  maxOutput: number
+  cutoff: string
+  inputModalities: Modality[]
+  outputModalities: Modality[]
+  hasOpenWeights: boolean
   inputPrice: number
   outputPrice: number
+  cachedPrice: number
   speed: number
+  latency: number
   mmlu: number
   hasTools: boolean
 }
 
 const MODELS: Model[] = [
-  { id: 'atlas-4-flash', name: 'Atlas 4 Flash', provider: 'Northwind', context: 1_000_000, inputPrice: 0.1, outputPrice: 0.4, speed: 186, mmlu: 78.4, hasTools: true },
-  { id: 'meridian-2-5-flash', name: 'Meridian 2.5 Flash', provider: 'Calder Labs', context: 1_048_576, inputPrice: 0.075, outputPrice: 0.3, speed: 214, mmlu: 76.9, hasTools: true },
-  { id: 'kestrel-v4-turbo', name: 'Kestrel V4 Turbo', provider: 'Sable AI', context: 400_000, inputPrice: 0.3, outputPrice: 1.2, speed: 142, mmlu: 82.6, hasTools: true },
-  { id: 'orion-mini-3', name: 'Orion Mini 3', provider: 'Halcyon', context: 262_144, inputPrice: 0.05, outputPrice: 0.2, speed: 248, mmlu: 71.2, hasTools: true },
-  { id: 'orion-3-ultra', name: 'Orion 3 Ultra', provider: 'Halcyon', context: 524_288, inputPrice: 0.9, outputPrice: 2.7, speed: 96, mmlu: 85.1, hasTools: true },
+  { id: 'atlas-4-flash', name: 'Atlas 4 Flash', provider: 'Northwind', context: 1_000_000, maxOutput: 65_536, cutoff: 'Mar 2026', inputModalities: ['text', 'image'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.1, outputPrice: 0.4, cachedPrice: 0.025, speed: 186, latency: 0.28, mmlu: 78.4, hasTools: true },
+  { id: 'meridian-2-5-flash', name: 'Meridian 2.5 Flash', provider: 'Calder Labs', context: 1_048_576, maxOutput: 8_192, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'video'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.075, outputPrice: 0.3, cachedPrice: 0.019, speed: 214, latency: 0.24, mmlu: 76.9, hasTools: true },
+  { id: 'kestrel-v4-turbo', name: 'Kestrel V4 Turbo', provider: 'Sable AI', context: 400_000, maxOutput: 16_384, cutoff: 'Feb 2026', inputModalities: ['text', 'image', 'document'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.3, outputPrice: 1.2, cachedPrice: 0.075, speed: 142, latency: 0.33, mmlu: 82.6, hasTools: true },
+  { id: 'orion-mini-3', name: 'Orion Mini 3', provider: 'Halcyon', context: 262_144, maxOutput: 32_768, cutoff: 'Nov 2025', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: true, inputPrice: 0.05, outputPrice: 0.2, cachedPrice: 0.012, speed: 248, latency: 0.19, mmlu: 71.2, hasTools: true },
+  { id: 'orion-3-ultra', name: 'Orion 3 Ultra', provider: 'Halcyon', context: 524_288, maxOutput: 65_536, cutoff: 'Nov 2025', inputModalities: ['text', 'image', 'document'], outputModalities: ['text', 'image'], hasOpenWeights: true, inputPrice: 0.9, outputPrice: 2.7, cachedPrice: 0.22, speed: 96, latency: 0.48, mmlu: 85.1, hasTools: true },
 ]
 
 const DEFAULT_SLOTS = ['atlas-4-flash', 'meridian-2-5-flash', 'kestrel-v4-turbo']
@@ -60,15 +89,24 @@ interface SpecRow extends Record<string, unknown> {
   format?: (value: number) => string
   unit?: string
   isScore?: boolean
+  /** 模态行：格子位置固定，缺的项画成暗色。 */
+  modalities?: (model: Model) => Modality[]
 }
 
 const SPEC_ROWS: SpecRow[] = [
   { id: 'provider', group: 'Overview', label: 'Provider', get: m => m.provider },
   { id: 'context', group: 'Overview', label: 'Context window', unit: 'tokens', better: 'higher', get: m => m.context, format: v => compact.format(v) },
+  { id: 'max-output', group: 'Overview', label: 'Max output', unit: 'tokens', better: 'higher', get: m => m.maxOutput, format: v => compact.format(v) },
+  { id: 'cutoff', group: 'Overview', label: 'Knowledge cutoff', get: m => m.cutoff },
+  { id: 'input-modalities', group: 'Overview', label: 'Input modalities', get: () => '', modalities: m => m.inputModalities },
+  { id: 'output-modalities', group: 'Overview', label: 'Output modalities', get: () => '', modalities: m => m.outputModalities },
+  { id: 'open-weights', group: 'Overview', label: 'Open weights', get: m => m.hasOpenWeights },
   { id: 'input-price', group: 'Pricing', label: 'Input', unit: '/1M', better: 'lower', get: m => m.inputPrice, format: v => price.format(v) },
   { id: 'output-price', group: 'Pricing', label: 'Output', unit: '/1M', better: 'lower', get: m => m.outputPrice, format: v => price.format(v) },
+  { id: 'cached-price', group: 'Pricing', label: 'Cached input', unit: '/1M', better: 'lower', get: m => m.cachedPrice, format: v => price.format(v) },
   { id: 'blended', group: 'Pricing', label: 'Blended (3:1)', unit: '/1M', better: 'lower', get: m => (m.inputPrice * 3 + m.outputPrice) / 4, format: v => price.format(v) },
   { id: 'speed', group: 'Performance', label: 'Output speed', unit: 'tok/s', better: 'higher', get: m => m.speed, format: v => String(Math.round(v)) },
+  { id: 'latency', group: 'Performance', label: 'Time to first token', unit: 'sec', better: 'lower', get: m => m.latency, format: v => v.toFixed(2) },
   { id: 'mmlu', group: 'Benchmarks', label: 'MMLU-Pro', better: 'higher', get: m => m.mmlu, format: v => decimal.format(v), isScore: true },
   { id: 'tools', group: 'Benchmarks', label: 'Function calling', get: m => m.hasTools },
 ]
@@ -115,28 +153,61 @@ function addModel(): void {
     slots.value = [...slots.value, next.id]
 }
 
+const collapsedGroups = ref(new Set<string>())
+
+function toggleGroup(key: string): void {
+  const next = new Set(collapsedGroups.value)
+  if (next.has(key))
+    next.delete(key)
+  else
+    next.add(key)
+  collapsedGroups.value = next
+}
+
+const grouped = useTableGroupedRows<SpecRow>(() => ({
+  data: SPEC_ROWS,
+  groupBy: row => row.group,
+  groupOrder: GROUP_ORDER,
+  collapsedGroups: collapsedGroups.value,
+  onToggleGroup: toggleGroup,
+  getRowKey: row => row.id,
+  renderGroupHeader: groupKey => h(Heading, { level: 3 }, () => groupKey),
+}))
+
+const sticky = useTableStickyColumns<SpecRow>({ startKeys: ['spec'] })
+
 const columns = computed<TableColumn<SpecRow>[]>(() => [
   {
     key: 'spec',
-    header: 'Criteria',
+    header: 'Models',
     width: pixel(220),
     renderCell: row => h(Text, { type: 'label', color: 'secondary' }, () => row.label),
   },
   ...slots.value.map((modelId, index) => {
     const model = modelById.get(modelId)
-    const headerModel = modelById.get(modelId)
     return {
       key: `slot-${index}`,
       width: proportional(1, { minWidth: 236 }),
       align: 'end' as const,
-      header: headerModel?.name ?? `Model ${index + 1}`,
+      header: model?.name ?? `Model ${index + 1}`,
       renderCell: (row: SpecRow) => {
         if (!model)
           return h(Text, { type: 'supporting' }, () => '—')
+        if (row.modalities) {
+          const included = row.modalities(model)
+          return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end' }, () => MODALITY_ORDER.map(modality =>
+            h(Icon, {
+              icon: MODALITY_ICON[modality],
+              size: 'md',
+              color: included.includes(modality) ? 'primary' : 'disabled',
+              label: MODALITY_LABEL[modality],
+            }),
+          ))
+        }
         const value = row.get(model)
         if (typeof value === 'boolean') {
           return h(HStack, { hAlign: 'end', vAlign: 'center' }, () => h(Icon, {
-            icon: value ? 'i-heroicons-check-circle' : 'i-heroicons-x-circle',
+            icon: value ? 'i-carbon-checkmark-filled' : 'i-carbon-close-filled',
             size: 'md',
             color: value ? 'success' : 'error',
           }))
@@ -162,15 +233,6 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
   }),
 ])
 
-const rowsByGroup = computed(() => {
-  const map = new Map<GroupKey, SpecRow[]>()
-  for (const row of SPEC_ROWS) {
-    const list = map.get(row.group) ?? []
-    list.push(row)
-    map.set(row.group, list)
-  }
-  return map
-})
 </script>
 
 <template>
@@ -186,7 +248,7 @@ const rowsByGroup = computed(() => {
           <Switch v-model="highlightBest" label="Highlight best" size="sm" />
           <Button label="Add model" variant="secondary" :is-disabled="slots.length >= MODELS.length" @click="addModel">
             <template #icon>
-              <Icon icon="i-heroicons-plus" size="sm" />
+              <Icon icon="i-carbon-add" size="sm" />
             </template>
           </Button>
         </HStack>
@@ -194,58 +256,53 @@ const rowsByGroup = computed(() => {
     </template>
 
     <LayoutContent :padding="4">
-      <VStack :gap="6">
+      <VStack :gap="4">
         <HStack :gap="3" align="end" wrap="wrap">
           <VStack v-for="(slotId, index) in slots" :key="slotId" :width="280">
             <Selector
               :model-value="slotId"
               :label="`Model ${index + 1}`"
               size="lg"
+              :has-clear="slots.length > MIN_SLOTS"
               :options="MODELS.map(option => ({
                 value: option.id,
                 label: option.name,
                 description: option.provider,
                 disabled: option.id !== slotId && slots.includes(option.id),
               }))"
-              @update:model-value="(next: string | number | null) => next != null && selectSlot(index, String(next))"
+              @update:model-value="(next: string | number | null) => next == null ? removeSlot(index) : selectSlot(index, String(next))"
             />
           </VStack>
         </HStack>
-        <Card v-for="group in GROUP_ORDER" :key="group" :padding="5">
-          <VStack :gap="4">
-            <Heading :level="3">
-              {{ group }}
-            </Heading>
-            <Table
-              :data="rowsByGroup.get(group) ?? []"
-              :columns="columns"
-              id-key="id"
-              density="spacious"
-              dividers="grid"
-            />
-          </VStack>
-        </Card>
-        <HStack :gap="2" wrap="wrap">
-          <Badge v-for="(slotId, index) in slots" :key="slotId" variant="neutral" :label="`Column ${index + 1}`" />
-          <Button
-            v-for="(slotId, index) in slots"
-            :key="`remove-${slotId}`"
-            label="Remove column"
-            variant="ghost"
-            size="sm"
-            :is-disabled="slots.length <= MIN_SLOTS"
-            @click="removeSlot(index)"
+        <Card :padding="5" class="table-frame">
+          <Table
+            :data="grouped.data.value"
+            :columns="columns"
+            :id-key="grouped.idKey"
+            density="spacious"
+            dividers="grid"
+            :plugins="{ grouped: grouped.plugin, sticky }"
           />
-        </HStack>
+        </Card>
       </VStack>
     </LayoutContent>
   </Layout>
 </template>
 
 <style scoped>
+.table-frame {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 胜出的格子整格铺满底色：抵掉 spacious 密度下单元格自己的内边距。 */
 :deep(.best-cell) {
+  box-sizing: content-box;
   background: var(--astryx-color-background-blue);
+  margin-block: calc(-1 * var(--astryx-spacing-3));
   margin-inline: calc(-1 * var(--astryx-spacing-4));
+  padding-block: var(--astryx-spacing-3);
   padding-inline: var(--astryx-spacing-4);
 }
 </style>

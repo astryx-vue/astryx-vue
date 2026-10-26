@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { TableColumn } from '@astryx-vue/core'
 import {
   Button,
   Card,
   Center,
   Dialog,
+  Divider,
   EmptyState,
+  Grid,
   Heading,
   HStack,
   Icon,
@@ -14,10 +17,13 @@ import {
   LayoutPanel,
   List,
   ListItem,
-  SegmentedControl,
   Section,
+  SegmentedControl,
   SegmentedControlItem,
+  Selector,
   Spinner,
+  Tab,
+  TabList,
   Table,
   Text,
   TextArea,
@@ -26,7 +32,6 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
 type BlockType = 'hero' | 'text' | 'image' | 'button' | 'cards' | 'features' | 'cta'
@@ -40,8 +45,6 @@ interface Block {
   props: Record<string, unknown>
 }
 
-// 用类型别名而不是 interface：Table 的泛型约束是 Record<string, unknown>，
-// 只有对象字面量类型别名才会拿到隐式索引签名。
 type Transaction = {
   id: string
   name: string
@@ -52,13 +55,21 @@ type Transaction = {
 }
 
 const BLOCK_META: Record<BlockType, { label: string, icon: string }> = {
-  hero: { label: 'Hero', icon: 'i-heroicons-squares-2x2' },
-  text: { label: 'Text', icon: 'i-heroicons-document-text' },
-  image: { label: 'Image', icon: 'i-heroicons-photo' },
-  button: { label: 'Button', icon: 'i-heroicons-cursor-arrow-rays' },
-  cards: { label: 'Cards', icon: 'i-heroicons-view-columns' },
-  features: { label: 'Features', icon: 'i-heroicons-sparkles' },
-  cta: { label: 'CTA', icon: 'i-heroicons-megaphone' },
+  hero: { label: 'Hero', icon: 'i-carbon-grid' },
+  text: { label: 'Text', icon: 'i-carbon-document' },
+  image: { label: 'Image', icon: 'i-carbon-image' },
+  button: { label: 'Button', icon: 'i-carbon-cursor-1' },
+  cards: { label: 'Cards', icon: 'i-carbon-column' },
+  features: { label: 'Features', icon: 'i-carbon-star' },
+  cta: { label: 'CTA', icon: 'i-carbon-megaphone' },
+}
+
+const CATEGORY_ICONS: Record<string, string> = {
+  'Food & Drink': 'i-carbon-shopping-bag',
+  'Groceries': 'i-carbon-shopping-cart',
+  'Income': 'i-carbon-money',
+  'Transport': 'i-carbon-chat',
+  'Entertainment': 'i-carbon-play',
 }
 
 const VIEWPORT_MAX: Record<ViewportSize, number> = {
@@ -68,7 +79,7 @@ const VIEWPORT_MAX: Record<ViewportSize, number> = {
 }
 
 let nextId = 5
-function uid(): string {
+function uid() {
   return String(nextId++)
 }
 
@@ -95,7 +106,7 @@ const DEFAULT_BLOCKS: Block[] = [
     label: 'Syncing State',
     props: {
       heading: 'Syncing your accounts',
-      description: "We're pulling in your latest transactions.\nThis usually takes a few seconds.",
+      description: 'We\'re pulling in your latest transactions.\nThis usually takes a few seconds.',
       buttonLabel: 'Cancel',
     },
   },
@@ -105,15 +116,61 @@ const DEFAULT_BLOCKS: Block[] = [
     label: 'Trust Notice',
     props: {
       heading: 'Adding devices from people you trust',
-      description: "When you approve a request, you grant someone full access to your account. They'll be able to change reservations and send messages on your behalf.",
+      description: 'When you approve a request, you grant someone full access to your account. They\'ll be able to change reservations and send messages on your behalf.',
     },
   },
 ]
 
+/** 新增区块的初始属性，按类型给一份说得过去的默认值。 */
+function defaultProps(type: BlockType): Record<string, unknown> {
+  switch (type) {
+    case 'hero':
+      return { heading: 'New Hero', subheading: 'Subtitle goes here', buttonLabel: 'Click Me', alignment: 'center' }
+    case 'text':
+      return { content: 'Enter your text here.' }
+    case 'image':
+      return {}
+    case 'button':
+      return { label: 'Button', variant: 'primary', size: 'md' }
+    case 'cards':
+      return {
+        cards: [
+          { title: 'Pricing', description: 'Flexible plans for every team size.' },
+          { title: 'Support', description: 'Get help whenever you need it.' },
+        ],
+      }
+    case 'features':
+      return {
+        heading: 'Activity',
+        description: '',
+        items: [{ id: 't1', name: 'New Item', category: 'General', date: 'Today', amount: '$0.00' }],
+      }
+    case 'cta':
+      return { heading: 'Call to Action', description: 'Description text', primaryLabel: 'Primary', secondaryLabel: 'Secondary' }
+  }
+}
+
+const ALIGNMENTS = [
+  { label: 'Left', value: 'left' },
+  { label: 'Center', value: 'center' },
+  { label: 'Right', value: 'right' },
+]
+const VARIANTS = [
+  { label: 'Primary', value: 'primary' },
+  { label: 'Secondary', value: 'secondary' },
+  { label: 'Ghost', value: 'ghost' },
+]
+const SIZES = [
+  { label: 'Small', value: 'sm' },
+  { label: 'Medium', value: 'md' },
+  { label: 'Large', value: 'lg' },
+]
+
 const isMobile = useMediaQuery('(max-width: 768px)')
+
 const blocks = ref<Block[]>([...DEFAULT_BLOCKS])
-const selectedId = ref<string | null>(blocks.value[0]?.id ?? null)
-const pageTitle = ref('Account overview')
+const selectedId = ref<string | null>(null)
+const pageTitle = ref('Page Editor')
 const isEditingTitle = ref(false)
 const viewport = ref<ViewportSize>('desktop')
 const sidebarTab = ref<SidebarTab>('blocks')
@@ -131,8 +188,8 @@ const transactionColumns: TableColumn<Transaction>[] = [
   {
     key: 'name',
     header: 'Transaction',
-    renderCell: (item: Transaction) => h(HStack, { gap: 3, vAlign: 'center' }, () => [
-      h(Icon, { icon: 'i-heroicons-sparkles', size: 'sm' }),
+    renderCell: item => h(HStack, { gap: 3, align: 'center' }, () => [
+      h(Icon, { icon: CATEGORY_ICONS[item.category] ?? 'i-carbon-star' }),
       h(VStack, { gap: 0 }, () => [
         h(Text, { type: 'label', weight: 'semibold' }, () => item.name),
         h(Text, { type: 'supporting', color: 'secondary' }, () => item.category),
@@ -142,38 +199,75 @@ const transactionColumns: TableColumn<Transaction>[] = [
   {
     key: 'date',
     header: 'Date',
-    renderCell: (item: Transaction) => h(Text, { type: 'body', color: 'secondary' }, () => item.date),
+    renderCell: item => h(Text, { type: 'body', color: 'secondary' }, () => item.date),
   },
   {
     key: 'amount',
     header: 'Amount',
-    renderCell: (item: Transaction) => h(Text, { type: 'label', weight: 'semibold', hasTabularNumbers: true }, () => item.amount),
+    renderCell: item => h(Text, { type: 'label', weight: 'semibold', hasTabularNumbers: true }, () => item.amount),
+  },
+  {
+    key: 'actions',
+    header: '',
+    renderCell: () => h(Button, { label: 'More', variant: 'ghost', size: 'sm', isIconOnly: true }, () => h(Icon, { icon: 'i-carbon-overflow-menu-horizontal', size: 'sm' })),
   },
 ]
 
-function selectBlock(id: string): void {
+function selectBlock(id: string) {
   selectedId.value = id
 }
 
-function addBlock(type: BlockType): void {
-  const block: Block = {
-    id: uid(),
-    type,
-    label: BLOCK_META[type].label,
-    props: type === 'text' ? { content: 'Enter your text here.' } : {},
-  }
+function addBlock(rawType: string) {
+  const type = rawType as BlockType
+  const block: Block = { id: uid(), type, label: BLOCK_META[type].label, props: defaultProps(type) }
   blocks.value = [...blocks.value, block]
   selectedId.value = block.id
 }
 
-function updateBlockProp(key: string, value: unknown): void {
+function updateBlockProp(key: string, value: unknown) {
   if (!selectedBlock.value)
     return
-  blocks.value = blocks.value.map((b) => {
-    if (b.id !== selectedBlock.value!.id)
-      return b
-    return { ...b, props: { ...b.props, [key]: value } }
-  })
+  const target = selectedBlock.value.id
+  blocks.value = blocks.value.map(b => (b.id === target ? { ...b, props: { ...b.props, [key]: value } } : b))
+}
+
+/** 在图层里上下移动一格，越界的调用直接忽略。 */
+function moveBlock(id: string, delta: number) {
+  const index = blocks.value.findIndex(b => b.id === id)
+  const next = index + delta
+  if (index < 0 || next < 0 || next >= blocks.value.length)
+    return
+  const copy = [...blocks.value]
+  const [moved] = copy.splice(index, 1)
+  copy.splice(next, 0, moved)
+  blocks.value = copy
+}
+
+function setSidebarTab(value: string) {
+  sidebarTab.value = value as SidebarTab
+}
+
+/** 区块属性里的列表按渲染需要取出来，模板里就不用写类型断言。 */
+function itemsOf(block: Block) {
+  return (block.props.items as Transaction[]) ?? []
+}
+
+function cardsOf(block: Block) {
+  return (block.props.cards as { title: string, description: string }[]) ?? []
+}
+
+function buttonVariantOf(block: Block) {
+  return (block.props.variant as 'primary' | 'secondary' | 'ghost') ?? 'primary'
+}
+
+function buttonSizeOf(block: Block) {
+  return (block.props.size as 'sm' | 'md' | 'lg') ?? 'md'
+}
+
+function deleteBlock(id: string) {
+  blocks.value = blocks.value.filter(b => b.id !== id)
+  if (selectedId.value === id)
+    selectedId.value = blocks.value[0]?.id ?? null
 }
 </script>
 
@@ -189,7 +283,7 @@ function updateBlockProp(key: string, value: unknown): void {
             <HStack :gap="2" align="center">
               <Button label="Edit" variant="ghost" is-icon-only @click="isCustomizeOpen = true">
                 <template #icon>
-                  <Icon icon="i-heroicons-adjustments-horizontal" size="sm" />
+                  <Icon icon="i-carbon-settings-adjust" size="sm" />
                 </template>
               </Button>
               <Button label="Publish" variant="primary" />
@@ -221,17 +315,17 @@ function updateBlockProp(key: string, value: unknown): void {
                   <SegmentedControl v-model="viewport" label="Viewport size">
                     <SegmentedControlItem value="desktop" label="Desktop" is-label-hidden>
                       <template #icon>
-                        <Icon icon="i-heroicons-computer-desktop" size="sm" />
+                        <Icon icon="i-carbon-laptop" size="sm" />
                       </template>
                     </SegmentedControlItem>
                     <SegmentedControlItem value="tablet" label="Tablet" is-label-hidden>
                       <template #icon>
-                        <Icon icon="i-heroicons-device-tablet" size="sm" />
+                        <Icon icon="i-carbon-tablet" size="sm" />
                       </template>
                     </SegmentedControlItem>
                     <SegmentedControlItem value="phone" label="Phone" is-label-hidden>
                       <template #icon>
-                        <Icon icon="i-heroicons-device-phone-mobile" size="sm" />
+                        <Icon icon="i-carbon-mobile" size="sm" />
                       </template>
                     </SegmentedControlItem>
                   </SegmentedControl>
@@ -240,7 +334,7 @@ function updateBlockProp(key: string, value: unknown): void {
                   <HStack :gap="2">
                     <Button label="Preview" variant="ghost" is-icon-only>
                       <template #icon>
-                        <Icon icon="i-heroicons-eye" size="sm" />
+                        <Icon icon="i-carbon-view" size="sm" />
                       </template>
                     </Button>
                     <Button label="Publish" variant="primary" />
@@ -250,44 +344,155 @@ function updateBlockProp(key: string, value: unknown): void {
             </VStack>
           </Section>
 
+          <VStack :gap="0">
+            <TabList layout="fill" :value="sidebarTab" @update:value="setSidebarTab($event)">
+              <Tab value="blocks" label="Blocks" />
+              <Tab value="properties" label="Properties" />
+            </TabList>
+            <Divider />
+          </VStack>
+
           <Section variant="transparent" :padding="4">
-            <SegmentedControl v-model="sidebarTab" label="Sidebar" layout="fill" size="sm">
-              <SegmentedControlItem value="blocks" label="Blocks" />
-              <SegmentedControlItem value="properties" label="Properties" />
-            </SegmentedControl>
-            <template v-if="sidebarTab === 'blocks'">
-              <List>
-                <ListItem
-                  v-for="(meta, type) in BLOCK_META"
-                  :key="type"
-                  :label="meta.label"
-                  :on-click="() => addBlock(type as BlockType)"
-                >
-                  <template #startContent>
-                    <Icon :icon="meta.icon" size="sm" />
-                  </template>
-                </ListItem>
-              </List>
-            </template>
+            <VStack v-if="sidebarTab === 'blocks'" :gap="4">
+              <VStack :gap="1">
+                <Heading :level="4">
+                  Add Block
+                </Heading>
+                <List density="balanced">
+                  <ListItem
+                    v-for="(meta, type) in BLOCK_META"
+                    :key="type"
+                    :label="meta.label"
+                    @click="addBlock(String(type))"
+                  >
+                    <template #startContent>
+                      <Icon :icon="meta.icon" color="secondary" />
+                    </template>
+                  </ListItem>
+                </List>
+              </VStack>
+
+              <VStack :gap="1">
+                <Heading :level="4">
+                  Layers
+                </Heading>
+                <List density="balanced">
+                  <ListItem
+                    v-for="block in blocks"
+                    :key="block.id"
+                    :label="block.label"
+                    :is-selected="block.id === selectedId"
+                    @click="selectBlock(block.id)"
+                  >
+                    <template #startContent>
+                      <Icon :icon="BLOCK_META[block.type].icon" color="secondary" />
+                    </template>
+                    <template #endContent>
+                      <HStack :gap="1">
+                        <Button label="Move up" variant="ghost" size="sm" is-icon-only @click="moveBlock(block.id, -1)">
+                          <template #icon>
+                            <Icon icon="i-carbon-chevron-up" size="sm" />
+                          </template>
+                        </Button>
+                        <Button label="Move down" variant="ghost" size="sm" is-icon-only @click="moveBlock(block.id, 1)">
+                          <template #icon>
+                            <Icon icon="i-carbon-chevron-down" size="sm" />
+                          </template>
+                        </Button>
+                        <Button label="Delete" variant="ghost" size="sm" is-icon-only @click="deleteBlock(block.id)">
+                          <template #icon>
+                            <Icon icon="i-carbon-trash-can" size="sm" />
+                          </template>
+                        </Button>
+                      </HStack>
+                    </template>
+                  </ListItem>
+                </List>
+              </VStack>
+            </VStack>
+
             <template v-else-if="selectedBlock">
-              <VStack :gap="3" class="properties-form">
-                <TextInput
-                  v-if="selectedBlock.type === 'text'"
-                  :model-value="String(selectedBlock.props.heading ?? '')"
-                  label="Heading"
-                  @update:model-value="updateBlockProp('heading', $event)"
-                />
-                <TextArea
-                  v-if="selectedBlock.type === 'text'"
-                  :model-value="String(selectedBlock.props.description ?? '')"
-                  label="Description"
-                  @update:model-value="updateBlockProp('description', $event)"
-                />
-                <Text type="supporting" color="secondary">
-                  Edit properties for {{ selectedBlock.label }}
-                </Text>
+              <VStack :gap="4">
+                <template v-if="selectedBlock.type === 'hero'">
+                  <TextInput
+                    :model-value="String(selectedBlock.props.heading ?? '')"
+                    label="Heading"
+                    @update:model-value="updateBlockProp('heading', $event)"
+                  />
+                  <TextArea
+                    :model-value="String(selectedBlock.props.subheading ?? '')"
+                    label="Subheading"
+                    @update:model-value="updateBlockProp('subheading', $event)"
+                  />
+                  <TextInput
+                    :model-value="String(selectedBlock.props.buttonLabel ?? '')"
+                    label="Button Label"
+                    @update:model-value="updateBlockProp('buttonLabel', $event)"
+                  />
+                  <Selector
+                    :model-value="String(selectedBlock.props.alignment ?? 'center')"
+                    label="Alignment"
+                    :options="ALIGNMENTS"
+                    @update:model-value="updateBlockProp('alignment', $event)"
+                  />
+                </template>
+                <template v-else-if="selectedBlock.type === 'text'">
+                  <TextInput
+                    :model-value="String(selectedBlock.props.heading ?? '')"
+                    label="Heading"
+                    @update:model-value="updateBlockProp('heading', $event)"
+                  />
+                  <TextArea
+                    :model-value="String(selectedBlock.props.description ?? '')"
+                    label="Description"
+                    @update:model-value="updateBlockProp('description', $event)"
+                  />
+                  <TextInput
+                    :model-value="String(selectedBlock.props.buttonLabel ?? '')"
+                    label="Button Label"
+                    @update:model-value="updateBlockProp('buttonLabel', $event)"
+                  />
+                </template>
+                <template v-else-if="selectedBlock.type === 'button'">
+                  <TextInput
+                    :model-value="String(selectedBlock.props.label ?? '')"
+                    label="Label"
+                    @update:model-value="updateBlockProp('label', $event)"
+                  />
+                  <Selector
+                    :model-value="String(selectedBlock.props.variant ?? 'primary')"
+                    label="Variant"
+                    :options="VARIANTS"
+                    @update:model-value="updateBlockProp('variant', $event)"
+                  />
+                  <Selector
+                    :model-value="String(selectedBlock.props.size ?? 'md')"
+                    label="Size"
+                    :options="SIZES"
+                    @update:model-value="updateBlockProp('size', $event)"
+                  />
+                </template>
+                <template v-else-if="selectedBlock.type === 'features' || selectedBlock.type === 'cta'">
+                  <TextInput
+                    :model-value="String(selectedBlock.props.heading ?? '')"
+                    label="Heading"
+                    @update:model-value="updateBlockProp('heading', $event)"
+                  />
+                  <TextArea
+                    :model-value="String(selectedBlock.props.description ?? '')"
+                    label="Description"
+                    @update:model-value="updateBlockProp('description', $event)"
+                  />
+                </template>
+                <EmptyState v-else title="No configurable properties" is-compact />
               </VStack>
             </template>
+            <EmptyState
+              v-else
+              title="No block selected"
+              description="Select a block to edit its properties"
+              is-compact
+            />
           </Section>
         </VStack>
       </LayoutPanel>
@@ -299,57 +504,104 @@ function updateBlockProp(key: string, value: unknown): void {
           <Card
             v-for="block in blocks"
             :key="block.id"
-            :padding="4"
             class="clickable"
             :class="{ 'selected-card': block.id === selectedId }"
+            :padding="block.type === 'image' ? 0 : 6"
             @click="selectBlock(block.id)"
           >
-            <template v-if="block.type === 'features'">
-              <VStack :gap="3">
-                <Heading :level="3">
-                  {{ block.props.heading }}
-                </Heading>
-                <Text color="secondary">
-                  {{ block.props.description }}
-                </Text>
-                <Table
-                  :data="(block.props.items as Transaction[]) ?? []"
-                  :columns="transactionColumns"
-                  id-key="id"
-                  dividers="rows"
-                />
-              </VStack>
-            </template>
+            <VStack v-if="block.type === 'hero'" :gap="4">
+              <Heading :level="2">
+                {{ String(block.props.heading || 'Hero Heading') }}
+              </Heading>
+              <Text type="supporting" color="secondary">
+                {{ String(block.props.subheading || 'Subtitle text goes here') }}
+              </Text>
+              <Button v-if="block.props.buttonLabel" :label="String(block.props.buttonLabel)" />
+            </VStack>
+
             <template v-else-if="block.type === 'text'">
-              <VStack :gap="3" justify="center">
-                <Spinner />
-                <Heading :level="3">
-                  {{ block.props.heading }}
-                </Heading>
-                <Text color="secondary">
-                  {{ block.props.description }}
-                </Text>
-                <Button :label="String(block.props.buttonLabel ?? 'Cancel')" variant="secondary" />
-              </VStack>
+              <EmptyState
+                v-if="block.props.heading"
+                :title="String(block.props.heading)"
+                :description="String(block.props.description ?? '')"
+              >
+                <template #icon>
+                  <Spinner />
+                </template>
+                <template v-if="block.props.buttonLabel" #actions>
+                  <Button :label="String(block.props.buttonLabel)" variant="secondary" />
+                </template>
+              </EmptyState>
+              <Text v-else type="body">
+                {{ String(block.props.content || 'Text content goes here') }}
+              </Text>
             </template>
-            <template v-else-if="block.type === 'cta'">
-              <HStack :gap="4" align="start">
-                <Center class="icon-circle" :width="48" :height="48">
-                  <Icon icon="i-heroicons-lock-closed" size="sm" />
-                </Center>
-                <VStack :gap="2">
-                  <Heading :level="4">
+
+            <EmptyState
+              v-else-if="block.type === 'image'"
+              title="Image Block"
+              description="Drop an image or enter a URL"
+              is-compact
+            >
+              <template #icon>
+                <Icon icon="i-carbon-image" />
+              </template>
+            </EmptyState>
+
+            <Center v-else-if="block.type === 'button'" :padding="4">
+              <Button
+                :label="String(block.props.label ?? 'Button')"
+                :variant="buttonVariantOf(block)"
+                :size="buttonSizeOf(block)"
+              />
+            </Center>
+
+            <Grid v-else-if="block.type === 'cards'" :columns="2" :gap="4">
+              <Card v-for="card in cardsOf(block)" :key="card.title" :padding="4">
+                <VStack :gap="1">
+                  <Text type="label" weight="semibold">
+                    {{ card.title }}
+                  </Text>
+                  <Text type="supporting" color="secondary">
+                    {{ card.description }}
+                  </Text>
+                </VStack>
+              </Card>
+            </Grid>
+
+            <VStack v-else-if="block.type === 'features'" :gap="3">
+              <HStack :gap="3" align="center" justify="between">
+                <VStack :gap="1">
+                  <Heading :level="3">
                     {{ block.props.heading }}
                   </Heading>
-                  <Text color="secondary">
+                  <Text type="supporting" color="secondary">
                     {{ block.props.description }}
                   </Text>
                 </VStack>
+                <Button label="View All" variant="secondary" size="sm" />
               </HStack>
-            </template>
-            <Text v-else>
-              {{ block.label }}
-            </Text>
+              <Table
+                :data="itemsOf(block)"
+                :columns="transactionColumns"
+                id-key="id"
+                dividers="rows"
+              />
+            </VStack>
+
+            <HStack v-else-if="block.type === 'cta'" :gap="4" align="start">
+              <Center class="icon-circle" :width="48" :height="48">
+                <Icon icon="i-carbon-locked" size="sm" />
+              </Center>
+              <VStack :gap="2">
+                <Heading :level="4">
+                  {{ block.props.heading }}
+                </Heading>
+                <Text type="supporting" color="secondary">
+                  {{ block.props.description }}
+                </Text>
+              </VStack>
+            </HStack>
           </Card>
         </template>
         <EmptyState
@@ -358,7 +610,7 @@ function updateBlockProp(key: string, value: unknown): void {
           description="Add blocks from the sidebar to start building your page"
         >
           <template #icon>
-            <Icon icon="i-heroicons-plus-circle" />
+            <Icon icon="i-carbon-add-alt" />
           </template>
         </EmptyState>
       </VStack>
@@ -381,7 +633,7 @@ function updateBlockProp(key: string, value: unknown): void {
             </Heading>
             <Button label="Close" variant="ghost" is-icon-only @click="isCustomizeOpen = false">
               <template #icon>
-                <Icon icon="i-heroicons-x-mark" size="sm" />
+                <Icon icon="i-carbon-close" size="sm" />
               </template>
             </Button>
           </HStack>
@@ -424,9 +676,5 @@ function updateBlockProp(key: string, value: unknown): void {
 .icon-circle {
   border-radius: 50%;
   background-color: var(--astryx-color-background-muted);
-}
-
-.properties-form {
-  margin-top: var(--astryx-spacing-3);
 }
 </style>
