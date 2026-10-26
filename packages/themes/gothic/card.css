@@ -3,6 +3,7 @@
 @layer astryx.tokens {
   [data-astryx-theme='gothic'] {
     --astryx-card-background: var(--astryx-color-background-card);
+    --astryx-card-padding: var(--astryx-spacing-3);
     --astryx-card-muted-background: var(--astryx-color-background-muted);
     --astryx-card-border: var(--astryx-color-border);
     --astryx-card-shadow-low: var(--astryx-shadow-low);
@@ -19,5 +20,61 @@
     --astryx-card-red-background: var(--astryx-color-background-red);
     --astryx-card-teal-background: var(--astryx-color-background-teal);
     --astryx-card-yellow-background: var(--astryx-color-background-yellow);
+  }
+}
+
+/*
+ * Categorical tints are dusty pastels, so their text reads in the matching hue
+ * instead of the page's primary and secondary text colors.
+ */
+@layer astryx.overrides {
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='blue'] {
+    --astryx-color-text-primary: var(--astryx-color-text-blue);
+    --astryx-color-text-secondary: var(--astryx-color-text-blue);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='cyan'] {
+    --astryx-color-text-primary: var(--astryx-color-text-cyan);
+    --astryx-color-text-secondary: var(--astryx-color-text-cyan);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='gray'] {
+    --astryx-color-text-primary: var(--astryx-color-text-gray);
+    --astryx-color-text-secondary: var(--astryx-color-text-gray);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='green'] {
+    --astryx-color-text-primary: var(--astryx-color-text-green);
+    --astryx-color-text-secondary: var(--astryx-color-text-green);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='orange'] {
+    --astryx-color-text-primary: var(--astryx-color-text-orange);
+    --astryx-color-text-secondary: var(--astryx-color-text-orange);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='pink'] {
+    --astryx-color-text-primary: var(--astryx-color-text-pink);
+    --astryx-color-text-secondary: var(--astryx-color-text-pink);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='purple'] {
+    --astryx-color-text-primary: var(--astryx-color-text-purple);
+    --astryx-color-text-secondary: var(--astryx-color-text-purple);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='red'] {
+    --astryx-color-text-primary: var(--astryx-color-text-red);
+    --astryx-color-text-secondary: var(--astryx-color-text-red);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='teal'] {
+    --astryx-color-text-primary: var(--astryx-color-text-teal);
+    --astryx-color-text-secondary: var(--astryx-color-text-teal);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='yellow'] {
+    --astryx-color-text-primary: var(--astryx-color-text-yellow);
+    --astryx-color-text-secondary: var(--astryx-color-text-yellow);
   }
 }
