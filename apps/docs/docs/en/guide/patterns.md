@@ -77,9 +77,9 @@ In a master-detail view, selecting a row usually navigates away, and coming back
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { EmptyState } from '@astryx-vue/core/EmptyState'
 import { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'
+import { ref } from 'vue'
 
 const selected = ref<Order | null>(null)
 </script>

@@ -20,10 +20,10 @@ The outer frame of a whole page is `AppShell`. It owns the top bar, side navigat
 ```vue
 <script setup lang="ts">
 import { AppShell } from '@astryx-vue/core/AppShell'
-// Replace TopBar, Nav, and PageBody with your own components.
-import TopBar from './TopBar.vue'
 import Nav from './Nav.vue'
 import PageBody from './PageBody.vue'
+// Replace TopBar, Nav, and PageBody with your own components.
+import TopBar from './TopBar.vue'
 </script>
 
 <template>
@@ -59,8 +59,8 @@ A block inside a page — one card, one dialog, one tab panel — uses `Layout`.
 
 ```vue
 <script setup lang="ts">
-import { Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@astryx-vue/core/Layout'
 import { Button } from '@astryx-vue/core/Button'
+import { Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@astryx-vue/core/Layout'
 </script>
 
 <template>
@@ -103,10 +103,10 @@ Below the regions, `HStack`, `VStack`, and `Grid` do the arranging. They only pl
 
 ```vue
 <script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
 import { Grid } from '@astryx-vue/core/Grid'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
-import { Button } from '@astryx-vue/core/Button'
 // Replace OrderCard with your own component.
 import OrderCard from './OrderCard.vue'
 </script>

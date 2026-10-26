@@ -20,10 +20,10 @@ title: 页面布局
 ```vue
 <script setup lang="ts">
 import { AppShell } from '@astryx-vue/core/AppShell'
-// TopBar、Nav、PageBody 换成你自己的组件
-import TopBar from './TopBar.vue'
 import Nav from './Nav.vue'
 import PageBody from './PageBody.vue'
+// TopBar、Nav、PageBody 换成你自己的组件
+import TopBar from './TopBar.vue'
 </script>
 
 <template>
@@ -59,8 +59,8 @@ import PageBody from './PageBody.vue'
 
 ```vue
 <script setup lang="ts">
-import { Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@astryx-vue/core/Layout'
 import { Button } from '@astryx-vue/core/Button'
+import { Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@astryx-vue/core/Layout'
 </script>
 
 <template>
@@ -102,10 +102,10 @@ import { Button } from '@astryx-vue/core/Button'
 
 ```vue
 <script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
 import { Grid } from '@astryx-vue/core/Grid'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
-import { Button } from '@astryx-vue/core/Button'
 // OrderCard 换成你自己的组件
 import OrderCard from './OrderCard.vue'
 </script>

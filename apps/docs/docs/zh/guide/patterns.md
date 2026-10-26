@@ -98,9 +98,9 @@ const rows = [/* 很长的列表 */]
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { EmptyState } from '@astryx-vue/core/EmptyState'
 import { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'
+import { ref } from 'vue'
 
 const selected = ref<Order | null>(null)
 </script>
