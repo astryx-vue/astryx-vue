@@ -138,6 +138,8 @@ const milestones = computed(() => byPhase(MILESTONES, phase.value))
 const workstreams = computed(() => byPhase(WORKSTREAMS, phase.value))
 const risks = computed(() => byPhase(RISKS, phase.value))
 
+const RAG_ORDER: Rag[] = ['onTrack', 'atRisk', 'blocked']
+
 const ganttItems = computed(() => milestones.value.map(m => ({
   name: m.name,
   start: m.start,
@@ -236,13 +238,22 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
               description="Switch phases to see other milestones."
               is-compact
             />
-            <PlaygroundGanttChart
-              v-else
-              :items="ganttItems"
-              :domain-max="TIMELINE_DAYS"
-              :today="PROJECT_DAY"
-              :ticks="TIMELINE_TICKS"
-            />
+            <template v-else>
+              <PlaygroundGanttChart
+                :items="ganttItems"
+                :domain-max="TIMELINE_DAYS"
+                :today="PROJECT_DAY"
+                :ticks="TIMELINE_TICKS"
+              />
+              <HStack :gap="4" align="center" wrap="wrap">
+                <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
+                  <span class="legend-swatch" :style="{ backgroundColor: RAG_FILL[status] }" aria-hidden="true" />
+                  <Text type="supporting" color="secondary">
+                    {{ RAG_LABEL[status] }}
+                  </Text>
+                </HStack>
+              </HStack>
+            </template>
           </VStack>
         </Section>
         <Section :padding="6" :padding-block="10">
@@ -346,6 +357,13 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
 </template>
 
 <style scoped>
+.legend-swatch {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
 .content-column {
   width: 100%;
   max-width: 1440px;

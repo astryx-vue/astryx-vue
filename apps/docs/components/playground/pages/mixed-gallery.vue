@@ -42,7 +42,7 @@ const IMAGES: GalleryImage[] = [
   <Layout height="fill" :content-width="1400">
     <LayoutContent :padding="6">
       <VStack :gap="6" :style="containerStyle">
-        <VStack :gap="2" justify="center">
+        <VStack :gap="2" h-align="center">
           <Heading :level="1" justify="center">
             Make every day a little more delightful, one detail at a time.
           </Heading>
