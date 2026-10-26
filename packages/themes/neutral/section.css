@@ -3,6 +3,6 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-color-skeleton: light-dark(#ebebeb, #525252);
+    --astryx-section-padding: var(--astryx-spacing-3);
   }
 }

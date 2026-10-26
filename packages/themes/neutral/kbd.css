@@ -3,7 +3,7 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-kbd-background: light-dark(#e5e5e5, #ffffff1a);
+    --astryx-kbd-background: var(--astryx-color-neutral);
     --astryx-kbd-foreground: var(--astryx-color-text-secondary);
     --astryx-kbd-border-color: var(--astryx-color-border-emphasized);
   }

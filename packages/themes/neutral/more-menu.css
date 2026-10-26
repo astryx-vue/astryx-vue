@@ -3,15 +3,15 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-more-menu-background: light-dark(#ffffff, #1b1b1b);
-    --astryx-more-menu-foreground: light-dark(#171717, #fafafa);
-    --astryx-more-menu-description-foreground: light-dark(#525252, #a3a3a3);
-    --astryx-more-menu-heading-foreground: light-dark(#525252, #a3a3a3);
-    --astryx-more-menu-destructive-foreground: light-dark(#a50c25, #ffc6c1);
-    --astryx-more-menu-item-hover-background: light-dark(#0536590c, #ffffff0c);
-    --astryx-more-menu-item-pressed-background: light-dark(#05365919, #ffffff19);
-    --astryx-more-menu-scrim: light-dark(#00000080, #000000cc);
-    --astryx-more-menu-trigger-open-overlay: light-dark(#0000001a, #ffffff1a);
+    --astryx-more-menu-background: var(--astryx-color-background-popover);
+    --astryx-more-menu-foreground: var(--astryx-color-text-primary);
+    --astryx-more-menu-description-foreground: var(--astryx-color-text-secondary);
+    --astryx-more-menu-heading-foreground: var(--astryx-color-text-secondary);
+    --astryx-more-menu-destructive-foreground: var(--astryx-color-error);
+    --astryx-more-menu-item-hover-background: var(--astryx-color-overlay-hover);
+    --astryx-more-menu-item-pressed-background: var(--astryx-color-overlay-pressed);
+    --astryx-more-menu-scrim: var(--astryx-color-overlay);
+    --astryx-more-menu-trigger-open-overlay: var(--astryx-color-overlay-pressed);
     --astryx-more-menu-shadow:
       0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
       0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),

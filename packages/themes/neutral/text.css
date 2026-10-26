@@ -4,23 +4,13 @@
   :root,
   [data-astryx-theme='neutral'] {
     --astryx-text-foreground: var(--astryx-color-text-primary);
-    --astryx-text-body-size: 0.875rem;
-    --astryx-text-body-leading: 1.4286;
-    --astryx-text-large-size: 1rem;
-    --astryx-text-large-leading: 1.5;
-    --astryx-text-label-size: 0.875rem;
-    --astryx-text-label-leading: 1.25;
     --astryx-text-supporting-foreground: var(--astryx-color-text-secondary);
-    --astryx-text-supporting-size: 0.75rem;
-    --astryx-text-supporting-leading: 1.6667;
-    --astryx-text-display-1-size: 3rem;
-    --astryx-text-display-2-size: 2.25rem;
-    --astryx-text-display-3-size: 1.75rem;
-    --astryx-text-display-weight: 300;
-    --astryx-text-sm-size: 0.75rem;
-    --astryx-text-md-size: 0.875rem;
-    --astryx-text-lg-size: 1rem;
-    --astryx-text-xl-size: 1.25rem;
-    --astryx-color-text-accent: light-dark(#0074e2, #6d9cfe);
+    --astryx-text-display-weight: var(--astryx-font-weight-normal);
+
+    /* Sizes offered by the `size` prop on Text and Link. */
+    --astryx-text-sm-size: var(--astryx-font-size-sm);
+    --astryx-text-md-size: var(--astryx-font-size-base);
+    --astryx-text-lg-size: var(--astryx-font-size-lg);
+    --astryx-text-xl-size: var(--astryx-font-size-xl);
   }
 }

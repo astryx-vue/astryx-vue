@@ -4,21 +4,19 @@
   :root,
   [data-astryx-theme='neutral'] {
     --astryx-heading-foreground: var(--astryx-color-text-primary);
-    --astryx-heading-level-1-size: 2rem;
-    --astryx-heading-level-2-size: 1.75rem;
-    --astryx-heading-level-3-size: 1.5rem;
-    --astryx-heading-level-4-size: var(--astryx-font-size-base, 0.875rem);
-    --astryx-heading-level-5-size: 1.125rem;
-    --astryx-heading-level-6-size: 1rem;
-    --astryx-heading-display-1-size: 3rem;
-    --astryx-heading-display-2-size: 2.25rem;
-    --astryx-heading-display-3-size: 1.75rem;
-    --astryx-heading-display-weight: 300;
     --astryx-heading-leading: 1.25;
-    --astryx-text-large-size: 1rem;
-    --astryx-text-large-leading: 1.5;
-    --astryx-text-label-size: 0.875rem;
-    --astryx-text-label-leading: 1.25;
-    --astryx-text-supporting-foreground: var(--astryx-color-text-secondary);
+
+    /* The theme's type scale drives every heading size. */
+    --astryx-heading-level-1-size: var(--astryx-text-heading-1-size);
+    --astryx-heading-level-2-size: var(--astryx-text-heading-2-size);
+    --astryx-heading-level-3-size: var(--astryx-text-heading-3-size);
+    --astryx-heading-level-4-size: var(--astryx-text-heading-4-size);
+    --astryx-heading-level-5-size: var(--astryx-text-heading-5-size);
+    --astryx-heading-level-6-size: var(--astryx-text-heading-6-size);
+
+    --astryx-heading-display-1-size: var(--astryx-text-display-1-size);
+    --astryx-heading-display-2-size: var(--astryx-text-display-2-size);
+    --astryx-heading-display-3-size: var(--astryx-text-display-3-size);
+    --astryx-heading-display-weight: var(--astryx-text-display-1-weight);
   }
 }
