@@ -37,6 +37,7 @@
 @import './y2k/popover.css';
 @import './y2k/progress-bar.css';
 @import './y2k/radio.css';
+@import './y2k/section.css';
 @import './y2k/segmented-control.css';
 @import './y2k/side-nav.css';
 @import './y2k/skeleton.css';
@@ -50,3 +51,4 @@
 @import './y2k/toggle-button.css';
 @import './y2k/token.css';
 @import './y2k/tooltip.css';
+@import './y2k/top-nav.css';
