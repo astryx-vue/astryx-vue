@@ -27,6 +27,7 @@ export function guideSidebar(english: boolean): Sidebar {
         item(english ? 'Patterns' : '应用模式', `${prefix}/guide/patterns`),
         item(english ? 'Templates' : '模板', `${prefix}/guide/templates`),
         item(english ? 'Links and routers' : '链接与路由', `${prefix}/guide/links`),
+        item(english ? 'Page layout' : '页面布局', `${prefix}/guide/layout`),
         item(english ? 'Responsive layout' : '响应式布局', `${prefix}/guide/responsive`),
       ],
     },
