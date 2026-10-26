@@ -67,6 +67,43 @@ astryx-vue 不自带图标：`icon` 插槽里放什么由你决定，可以是�
 
 <ComponentAnatomy />
 
+## 插画与图标
+
+`icon` 插槽放在标题上方，居中。放图标还是放插画，看这块区域有多大。
+
+| 区域 | 放什么 | 尺寸 |
+| --- | --- | --- |
+| 卡片、侧栏、表格内部 | 一个线性图标 | 20 到 24px |
+| 整页空状态、首次进入 | 一张扁平插画 | 120 到 200px |
+| 引导页、欢迎屏 | 一张扁平插画 | 最多 240px |
+
+`icon` 插槽外面的容器已经标了 `aria-hidden="true"`，插画只是文字的补充。所以这里的图片 `alt` 写空字符串就好，不需要再写一遍标题说过的话。
+
+```vue
+<script setup lang="ts">
+import { EmptyState } from '@astryx-vue/core/EmptyState'
+</script>
+
+<template>
+  <EmptyState
+    title="还没有项目"
+    description="创建第一个项目，或者从模板开始。"
+  >
+    <template #icon>
+      <img src="/illustrations/empty-projects.svg" alt="" width="160" height="160">
+    </template>
+  </EmptyState>
+</template>
+```
+
+几条规范：
+
+- **一套插画用到底。** 同一个产品里不要混不同来源、不同线条粗细的插画。
+- **线条和配色跟着主题走。** 插画用 `currentColor`，或者只引 `var(--astryx-color-*)`，深色模式就不用另存一套文件。必须用位图时，准备浅色和深色两张，用 `light-dark()` 或媒体查询切换。
+- **尺寸按容器定。** 插画给固定的 `width` 和 `height`，避免加载时抖动。容器变窄时插画跟着缩小，不要让它把卡片撑破。
+- **插画只管情绪，标题负责说事。** 去掉插画也要能看懂这块为什么是空的。
+- **不要为了填空而放插画。** 一个列表底部没有内容，什么都不放才对；插画留给「这块本来应该有东西，现在没有」的地方。
+
 ## 最佳实践
 
 | 指引 | 实践 |

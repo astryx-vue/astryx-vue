@@ -67,6 +67,43 @@ The component carries `role="status"`, so when it appears after data finishes lo
 
 <ComponentAnatomy />
 
+## Illustration and icon guidance
+
+The `icon` slot sits centered above the title. Whether it holds an icon or an illustration depends on how much room the region has.
+
+| Region | What goes there | Size |
+| --- | --- | --- |
+| Inside a card, sidebar, or table | One line icon | 20 to 24px |
+| A full-page empty state, or a first visit | One flat illustration | 120 to 200px |
+| An onboarding or welcome screen | One flat illustration | Up to 240px |
+
+The wrapper around the `icon` slot is already marked `aria-hidden="true"`: the artwork only supports the words. So an image there takes an empty `alt`; it does not need to repeat the title.
+
+```vue
+<script setup lang="ts">
+import { EmptyState } from '@astryx-vue/core/EmptyState'
+</script>
+
+<template>
+  <EmptyState
+    title="No projects yet"
+    description="Create your first project, or start from a template."
+  >
+    <template #icon>
+      <img src="/illustrations/empty-projects.svg" alt="" width="160" height="160">
+    </template>
+  </EmptyState>
+</template>
+```
+
+A few rules.
+
+- **One illustration set throughout.** Do not mix sources or line weights in one product.
+- **Line work and colors follow the theme.** Draw with `currentColor`, or reference `var(--astryx-color-*)` only, and dark mode needs no second file. When a bitmap is unavoidable, ship a light and a dark version and switch them with `light-dark()` or a media query.
+- **Size against the container.** Give the illustration a fixed `width` and `height` so nothing jumps while it loads, and let it shrink with a narrowing container instead of bursting the card.
+- **The illustration sets the mood; the title does the talking.** Remove the artwork and the reader should still know why the area is empty.
+- **Do not add artwork just to fill space.** The bottom of a list with nothing after it needs nothing. An illustration belongs where something should have been there and isn't.
+
 ## Best practices
 
 | Guidance | Practices |
