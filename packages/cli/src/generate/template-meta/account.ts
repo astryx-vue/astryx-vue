@@ -2,6 +2,16 @@ import type { TemplateMeta } from './types.ts'
 
 /** Login and settings pages. */
 export const ACCOUNT_TEMPLATES: Record<string, TemplateMeta> = {
+  'login': {
+    description: {
+      en: 'A minimal centered sign-in form: email, password, and a submit button, and nothing else on the page.',
+      zh: '极简登录页：居中的邮箱、密码和登录按钮，页面上没有别的东西。',
+    },
+    keywords: {
+      en: ['login', 'sign in', 'signin', 'authentication', 'credentials', 'account access', 'minimal'],
+      zh: ['登录', '登陆', '认证', '密码', '账号', '极简登录'],
+    },
+  },
   'login-card': {
     description: {
       en: 'A sign-in card with email, password, SSO buttons, and a sign-up link.',

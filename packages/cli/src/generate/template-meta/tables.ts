@@ -2,6 +2,16 @@ import type { TemplateMeta } from './types.ts'
 
 /** Table pages. */
 export const TABLE_TEMPLATES: Record<string, TemplateMeta> = {
+  'table': {
+    description: {
+      en: 'A plain table of rows with a status badge, an updated date, and a per-row action.',
+      zh: '基础表格：状态徽章、更新时间和行操作。',
+    },
+    keywords: {
+      en: ['table', 'list', 'rows', 'records', 'grid', 'spreadsheet', 'roster'],
+      zh: ['表格', '列表', '行', '记录', '表格页'],
+    },
+  },
   'table-collapsible': {
     description: {
       en: 'A table whose row groups fold open and closed.',

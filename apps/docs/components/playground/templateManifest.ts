@@ -33,6 +33,7 @@ export const PLAYGROUND_TEMPLATE_SLUGS = [
   'mixed-gallery',
   'product-gallery',
   'side-gallery',
+  'login',
   'login-card',
   'login-split',
   'login-sso',
@@ -43,6 +44,8 @@ export const PLAYGROUND_TEMPLATE_SLUGS = [
   'shell-nav',
   'shell-side-nav',
   'shell-top-nav',
+  'messaging-shell',
+  'table',
   'table-collapsible',
   'table-comparison',
   'table-filter',
@@ -55,6 +58,7 @@ export const PLAYGROUND_TEMPLATE_SLUGS = [
   'ide',
   'kanban-board',
   'editor',
+  'incident-console',
 ] as const
 
 export type PlaygroundTemplateSlug = typeof PLAYGROUND_TEMPLATE_SLUGS[number]
@@ -317,6 +321,14 @@ export const PLAYGROUND_TEMPLATE_META: Record<PlaygroundTemplateSlug, Playground
     categoryZh: '画廊',
     nameZh: '侧边画廊',
   },
+  'login': {
+    slug: 'login',
+    categoryEn: 'Login - Basic',
+    groupEn: 'Login',
+    nameEn: 'Basic Login',
+    categoryZh: '登录',
+    nameZh: '基础登录',
+  },
   'login-card': {
     slug: 'login-card',
     categoryEn: 'Login - Card',
@@ -396,6 +408,22 @@ export const PLAYGROUND_TEMPLATE_META: Record<PlaygroundTemplateSlug, Playground
     nameEn: 'Top Nav',
     categoryZh: '框架',
     nameZh: '顶部导航',
+  },
+  'messaging-shell': {
+    slug: 'messaging-shell',
+    categoryEn: 'Shell - Messaging',
+    groupEn: 'Shell',
+    nameEn: 'Messaging Shell',
+    categoryZh: '框架',
+    nameZh: '消息框架',
+  },
+  'table': {
+    slug: 'table',
+    categoryEn: 'Table - Basic',
+    groupEn: 'Table',
+    nameEn: 'Simple Table',
+    categoryZh: '表格',
+    nameZh: '简单表格',
   },
   'table-collapsible': {
     slug: 'table-collapsible',
@@ -492,6 +520,14 @@ export const PLAYGROUND_TEMPLATE_META: Record<PlaygroundTemplateSlug, Playground
     nameEn: 'Page Editor',
     categoryZh: '工具',
     nameZh: '页面编辑器',
+  },
+  'incident-console': {
+    slug: 'incident-console',
+    categoryEn: 'Tools - Incident Console',
+    groupEn: 'Tools',
+    nameEn: 'Incident Console',
+    categoryZh: '工具',
+    nameZh: '事件控制台',
   },
 }
 

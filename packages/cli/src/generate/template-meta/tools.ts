@@ -52,4 +52,15 @@ export const TOOL_TEMPLATES: Record<string, TemplateMeta> = {
       zh: ['编辑器', '文档', '写作', '工具栏', '富文本', '撰写'],
     },
   },
+
+  'incident-console': {
+    description: {
+      en: 'An incident queue grouped by status, with a search bar, a status control, and a resizable detail inspector.',
+      zh: '事件控制台：按状态分组的队列、搜索栏、状态切换和可调整大小的详情面板。',
+    },
+    keywords: {
+      en: ['incident', 'alert', 'on-call', 'outage', 'ticket', 'triage console'],
+      zh: ['事件', '告警', '值班', '故障', '工单', '控制台'],
+    },
+  },
 }

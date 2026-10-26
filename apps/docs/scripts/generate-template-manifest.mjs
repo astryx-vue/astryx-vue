@@ -40,6 +40,7 @@ const ORDER = [
   'mixed-gallery',
   'product-gallery',
   'side-gallery',
+  'login',
   'login-card',
   'login-split',
   'login-sso',
@@ -50,6 +51,8 @@ const ORDER = [
   'shell-nav',
   'shell-side-nav',
   'shell-top-nav',
+  'messaging-shell',
+  'table',
   'table-collapsible',
   'table-comparison',
   'table-filter',
@@ -62,6 +65,7 @@ const ORDER = [
   'ide',
   'kanban-board',
   'editor',
+  'incident-console',
 ]
 
 const CATEGORY_ZH = {
@@ -109,6 +113,7 @@ const NAME_ZH = {
   'Mixed Gallery': '混合画廊',
   'Product Gallery': '商品画廊',
   'Side Gallery': '侧边画廊',
+  'Basic Login': '基础登录',
   'Login Card': '登录卡片',
   'Login Split': '分屏登录',
   'Login SSO': 'SSO 登录',
@@ -119,6 +124,8 @@ const NAME_ZH = {
   'Shell Nav': '顶栏 + 侧栏',
   'Side Nav': '侧边导航',
   'Top Nav': '顶部导航',
+  'Messaging Shell': '消息框架',
+  'Simple Table': '简单表格',
   'Collapsible Table': '可折叠表格',
   'Comparison Table': '对比表格',
   'Filterable Table': '可筛选表格',
@@ -131,6 +138,7 @@ const NAME_ZH = {
   'IDE': 'IDE',
   'Kanban Board': '看板',
   'Page Editor': '页面编辑器',
+  'Incident Console': '事件控制台',
 }
 
 const CATEGORY_RE = /category:\s*['"]([^'"]+)['"]/
