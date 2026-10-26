@@ -214,12 +214,12 @@ function weekLabel(t: number): string {
   <Layout height="fill" :content-width="1440">
     <template #header>
       <LayoutHeader :padding="6" has-divider>
-        <HStack :gap="3" v-align="center" h-align="between" wrap="wrap">
+        <HStack :gap="3" align="center" h-align="between" wrap="wrap">
           <VStack :gap="1">
             <Heading :level="1">
               Weekly Business Review
             </Heading>
-            <HStack :gap="2" v-align="center">
+            <HStack :gap="2" align="center">
               <Text type="body" color="secondary">
                 {{ subtitle }}
               </Text>
@@ -229,7 +229,7 @@ function weekLabel(t: number): string {
               <Timestamp value="2026-06-30T08:00:00Z" format="date" type="body" color="secondary" />
             </HStack>
           </VStack>
-          <HStack :gap="3">
+          <HStack :gap="3" align="center">
             <SegmentedControl v-model="period" label="Comparison period">
               <SegmentedControlItem label="WoW" value="WoW" />
               <SegmentedControlItem label="MoM" value="MoM" />
@@ -248,7 +248,7 @@ function weekLabel(t: number): string {
     <LayoutContent :padding="6" class="page-content">
       <VStack :gap="10">
         <VStack v-if="isNarrow" :gap="6">
-          <HStack :gap="3" v-align="center" h-align="between">
+          <HStack :gap="3" align="center" h-align="between">
             <Heading :level="2">
               What changed &amp; why
             </Heading>
@@ -281,7 +281,7 @@ function weekLabel(t: number): string {
         </VStack>
 
         <VStack :gap="6">
-          <HStack :gap="3" v-align="center" h-align="between">
+          <HStack :gap="3" align="center" h-align="between">
             <Heading :level="2">
               Scorecards
             </Heading>
@@ -295,11 +295,11 @@ function weekLabel(t: number): string {
                 <Text type="label" color="secondary">
                   {{ kpi.label }}
                 </Text>
-                <HStack :gap="4" v-align="center">
+                <HStack :gap="4" align="center">
                   <Heading :level="2">
                     {{ kpi.value }}
                   </Heading>
-                  <HStack :gap="2" v-align="center">
+                  <HStack :gap="2" align="center">
                     <Text type="body" color="secondary">
                       {{ deltaText(kpi.delta[period]) }}
                     </Text>
@@ -316,7 +316,7 @@ function weekLabel(t: number): string {
         </VStack>
 
         <VStack :gap="6">
-          <HStack :gap="3" v-align="center" h-align="between">
+          <HStack :gap="3" align="center" h-align="between">
             <Heading :level="2">
               Goal attainment
             </Heading>
@@ -329,7 +329,7 @@ function weekLabel(t: number): string {
               <template v-for="(okr, i) in OKRS" :key="okr.objective">
                 <Divider v-if="i > 0" />
                 <VStack :gap="2">
-                  <HStack h-align="between" v-align="center" :gap="3">
+                  <HStack h-align="between" align="center" :gap="3">
                     <StackItem size="fill">
                       <Heading :level="4">
                         {{ okr.objective }}
@@ -346,8 +346,8 @@ function weekLabel(t: number): string {
                     :label="okr.objective"
                     is-label-hidden
                   />
-                  <HStack h-align="between" v-align="center" :gap="4">
-                    <HStack :gap="2" v-align="center">
+                  <HStack h-align="between" align="center" :gap="4">
+                    <HStack :gap="2" align="center">
                       <Avatar size="sm" :name="ownerName(okr.owner)" />
                       <Text type="supporting" color="secondary">
                         {{ okr.owner }}
@@ -364,7 +364,7 @@ function weekLabel(t: number): string {
         </VStack>
 
         <VStack :gap="6">
-          <HStack :gap="3" v-align="center" h-align="between">
+          <HStack :gap="3" align="center" h-align="between">
             <Heading :level="2">
               Trends
             </Heading>
@@ -375,7 +375,7 @@ function weekLabel(t: number): string {
           <Grid :columns="{ minWidth: 330, repeat: 'fit' }" :gap="3">
             <Card v-for="trend in TRENDS" :key="trend.key" :padding="5">
               <VStack :gap="6">
-                <HStack h-align="between" v-align="center">
+                <HStack h-align="between" align="center">
                   <HStack :gap="2">
                     <Heading :level="3">
                       {{ trend.title }}
@@ -400,14 +400,14 @@ function weekLabel(t: number): string {
                     :y-unit="trend.unit"
                   />
                 </PlaygroundResponsive>
-                <HStack :gap="5" v-align="center">
-                  <HStack :gap="2" v-align="center">
+                <HStack :gap="5" align="center">
+                  <HStack :gap="2" align="center">
                     <Icon icon="stop" size="xsm" :style="{ color: trend.color }" />
                     <Text type="supporting" color="secondary">
                       Current
                     </Text>
                   </HStack>
-                  <HStack :gap="2" v-align="center">
+                  <HStack :gap="2" align="center">
                     <Icon icon="stop" size="xsm" :style="{ color: COLORS.prior }" />
                     <Text type="supporting" color="secondary">
                       Prior
@@ -424,7 +424,7 @@ function weekLabel(t: number): string {
     <template v-if="!isNarrow" #end>
       <LayoutPanel :width="400" :padding="6" has-divider role="complementary" label="What changed and why">
         <VStack :gap="6">
-          <HStack :gap="3" v-align="center" h-align="between">
+          <HStack :gap="3" align="center" h-align="between">
             <Heading :level="2">
               What changed &amp; why
             </Heading>
