@@ -2,7 +2,7 @@
 import type { PlaygroundLocale } from './protocol'
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
 import { useData, withBase } from 'vitepress'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import PlaygroundDialog from './PlaygroundDialog.vue'
 import PlaygroundMonacoEditor from './PlaygroundMonacoEditor.vue'
 import PlaygroundTemplateMenu from './PlaygroundTemplateMenu.vue'
@@ -47,19 +47,32 @@ const {
   buildShareUrl,
 } = usePlayground(props.locale, kind => dialog.value?.ask(kind) ?? Promise.resolve(false))
 
-const { sawPreview, errorText, onFrameLoad } = usePreviewSync({
+const { sawPreview, errorText, frameSrc, frameKey, onFrameLoad } = usePreviewSync({
   iframe,
+  framePath: withBase('/playground/frame'),
   locale: props.locale,
   theme,
   code,
   mountId,
   hydrated,
+  startupFailedText: copy.startupFailed,
   persist: buildShareUrl,
+})
+
+const statusState = computed<'loading' | 'ready' | 'error'>(() => {
+  if (errorText.value)
+    return 'error'
+  return sawPreview.value ? 'ready' : 'loading'
+})
+
+const buildStatusText = computed(() => {
+  if (statusState.value === 'error')
+    return copy.buildFailed
+  return statusState.value === 'ready' ? copy.ready : copy.loading
 })
 
 const { editorSize, onDividerDown, onDividerKey } = usePaneResize(editorPane, bodyEl)
 
-const frameSrc = withBase('/playground/frame')
 const homeHref = withBase('/')
 const logoHref = withBase('/icon-logo.svg')
 const localeHref = withBase(props.locale === 'zh' ? '/en/playground/' : '/playground/')
@@ -256,8 +269,8 @@ async function openExportDialog(): Promise<void> {
               </button>
             </div>
             <div class="playground__preview-toolbar-end">
-              <span class="playground__status" :data-ready="sawPreview ? 'true' : 'false'">
-                {{ sawPreview ? copy.ready : copy.loading }}
+              <span class="playground__status" :data-ready="sawPreview ? 'true' : 'false'" :data-state="statusState">
+                {{ buildStatusText }}
               </span>
               <button type="button" class="playground__export" @click="openExportDialog">
                 {{ copy.exportTheme }}
@@ -272,6 +285,7 @@ async function openExportDialog(): Promise<void> {
           <div class="playground__stage-wrap">
             <div class="playground__stage">
               <iframe
+                :key="frameKey"
                 ref="iframe"
                 class="playground__iframe"
                 :title="copy.preview"
