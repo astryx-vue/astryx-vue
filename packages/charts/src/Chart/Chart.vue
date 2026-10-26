@@ -85,7 +85,8 @@ const legendAlignment = computed(() => legendConfig.value?.alignment ?? 'start')
 
 const tooltipConfig = computed(() => props.tooltip === true ? {} : props.tooltip || {})
 
-const chartStyle = computed(() => ({ height: `${safeHeight.value}px` }))
+/** 量到宽度之前只用高度撑住占位；量到之后由标题、绘图区、图例自然撑开。 */
+const chartStyle = computed(() => containerWidth.value === 0 ? { height: `${safeHeight.value}px` } : undefined)
 
 defineExpose({ element: containerRef })
 </script>

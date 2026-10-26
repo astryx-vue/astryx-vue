@@ -56,12 +56,10 @@ export function useChartFrame(props: ChartProps): ChartFrame {
 
   onMounted(() => {
     const element = containerRef.value
-    ;(globalThis as any).__f2b = { element: !!element, hasRO: typeof ResizeObserver !== 'undefined' }
     if (!element || typeof ResizeObserver === 'undefined')
       return
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0]
-      ;((globalThis as any).__f2bLog ??= []).push({ content: entry?.contentRect.width, rect: (entries[0]?.target as HTMLElement)?.getBoundingClientRect().width, display: getComputedStyle(entries[0]?.target as HTMLElement).width, parent: (entries[0]?.target as HTMLElement)?.parentElement?.clientWidth })
       if (entry)
         measuredWidth.value = entry.contentRect.width
     })
