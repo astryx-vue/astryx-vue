@@ -52,16 +52,19 @@ mindmap
       ✅ C15 反馈与状态 #141
       ✅ C16 展示与动作 #135
     阶段 D 汇总
-      🔵 D1 Neutral 底色
-      🔵 D4a CLI 取舍需签字
-      🔵 D7 迁移指南
-      ⬜ D2 D3 D4b D5 D6 D8
+      ✅ D1 Neutral 底色 #165
+      ✅ D7 迁移指南 #167
+      🟡 D4a CLI 取舍 和用户边讨论边定
+      🔵 D2 其余 6 套主题
+      🔵 D3 Probe 主题调研
+      ⬜ D4b D5 D6 D8
     阶段 E 工程质量
       ✅ E1 E2 E3 E4
     阶段 F 新包
       ✅ F0 选型 ADR
       🔵 F1a richtext 纯逻辑
-      🔵 F2a charts 纯逻辑
+      ✅ F2a charts 纯逻辑 #166
+      🔵 F2b charts 组件
       🔵 F3a lab 输入类
       🔵 F3b lab 展示类
       🔵 F3c lab 浮层与引导
@@ -76,6 +79,9 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| D7 迁移指南与版本信息 | [#167](https://github.com/astryx-vue/astryx-vue/pull/167) | squash 合入（`5b6fc8d`）。中英文升级指南 13 条，去掉 38 处写死的英文 locale，`upstream` 字段更新到 0.7.1。总控复核修正了 3 处说法 |
+| F2a charts 纯逻辑 | [#166](https://github.com/astryx-vue/astryx-vue/pull/166) | squash 合入（`e9c7a3a`）。新建 `@astryx-vue/charts`（private，只发 canary），113 条测试，上游断言逐条一致 |
+| D1 Neutral 主题底色 | [#165](https://github.com/astryx-vue/astryx-vue/pull/165) | squash 合入（`7687b15`）。色值用脚本从上游解析后逐个比对（token 192/192）。总控补了 Heading、Text 按级别读主题的行高和字重；Banner 和原版同一处 Demo 的计算颜色一致 |
 | C12 列表与树 | [#161](https://github.com/astryx-vue/astryx-vue/pull/161) | squash 合入（`30da3b1`）。第 3 轮通过 27/27。总控复核时改了列表行按压：原来两层按压色叠加，现在只画一层，粗指针走按压模型 |
 | C13 导航家族 | [#163](https://github.com/astryx-vue/astryx-vue/pull/163) | squash 合入（`10babf7`）。验收通过 24/24。总控复核补了三处：标签条滚动时焦点环和下划线不再被裁、箭头和渐隐对齐上游；Tab、NavItem、NavMenuItem 接入触屏按压；面包屑按页面顺序取当前页，补「横向滚动」示例 |
 | C11 Table | [#162](https://github.com/astryx-vue/astryx-vue/pull/162) | squash 合入（`ecc705b`）。验收通过 21/21。`TableData.vue` 拆到 423 行，移出行数白名单。CI 上一次红是 `swarm-worktree` 测试清理临时目录的偶发 ENOTEMPTY，重跑后变绿 |
@@ -102,9 +108,9 @@ mindmap
 
 没有正在实现或验收的节点。
 
-**阶段 C 全部完成。** 可以开工、等待派发（按下游数量排）：D1、F2a、D4a、D7、F1a、F3a、F3b、F3g、F3c、F3h、F3e、F4。D4a 仍要等用户签字，签字前不要派。
+**阶段 C 全部完成；D1、F2a、D7 已合入。** D4a 正在和用户边讨论边定（规模选「中等」，记录在 `nodes/D4a/decisions.md`）。可以开工、等待派发：F2b、D2、F1a、F3a、F3b、F3g、F3c、F3h、F3e、F4、D3。
 
-**本 PR 的 CI：** 当前 tip 含 C12（`30da3b1`）。节点 PR 合入前仍须 Check + Test 绿。`tests/swarm-worktree.test.ts` 的临时目录清理偶尔报 ENOTEMPTY，和节点代码无关，重跑即可。
+**本 PR 的 CI：** 当前 tip 含 D7（`5b6fc8d`）。节点 PR 合入前仍须 Check + Test 绿。`tests/swarm-worktree.test.ts` 的临时目录清理偶尔报 ENOTEMPTY，和节点代码无关，重跑即可。
 
 ## 怎么验收这个总 PR
 
