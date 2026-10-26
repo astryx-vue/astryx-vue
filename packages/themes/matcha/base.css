@@ -1,7 +1,7 @@
 /**
  * Matcha semantic tokens.
  *
- * Earthy greens. DM Sans for text, Playwrite US Trad for headings. Values follow @astryxdesign/theme-matcha 0.7.0.
+ * Earthy greens. DM Sans for text, Playwrite US Trad for headings. Values follow @astryxdesign/theme-matcha 0.7.1.
  * Names match Neutral, with an --astryx- prefix.
  * A token present in the upstream theme.css replaces the Neutral value.
  * Tokens the theme does not set keep the shared default from Neutral's base.
