@@ -11,6 +11,7 @@ export const TABLE_TEMPLATES: Record<string, TemplateMeta> = {
       en: ['table', 'list', 'rows', 'records', 'grid', 'spreadsheet', 'roster'],
       zh: ['表格', '列表', '行', '记录', '表格页'],
     },
+    upstreamNotReady: true,
   },
   'table-collapsible': {
     description: {

@@ -63,6 +63,66 @@ export const PLAYGROUND_TEMPLATE_SLUGS = [
 
 export type PlaygroundTemplateSlug = typeof PLAYGROUND_TEMPLATE_SLUGS[number]
 
+/**
+ * 出现在演练场模板菜单和模板索引里的页面。原版标了未完成或不进总览的页面不在这里，
+ * 但仍能用 `?template=<slug>` 打开，命令行也照样能读源码。
+ */
+export const PLAYGROUND_LISTED_TEMPLATE_SLUGS: readonly PlaygroundTemplateSlug[] = [
+  'theme-showcase',
+  'ai-chat',
+  'ai-chat-landing',
+  'library',
+  'documentation',
+  'documentation-design',
+  'documentation-technical',
+  'detail-page',
+  'product-detail',
+  'work-item-detail',
+  'dashboard',
+  'dashboard-comparison',
+  'dashboard-scorecard',
+  'dashboard-cohort-funnel',
+  'dashboard-composition',
+  'dashboard-progress',
+  'dashboard-alert-rail',
+  'payment-form',
+  'checkout-wizard',
+  'contact-form',
+  'form-wizard-dialog',
+  'form-wizard',
+  'form-wizard-inline',
+  'form-two-column',
+  'form-wizard-vertical',
+  'centered-hero',
+  'classic-gallery',
+  'gallery-hero',
+  'mixed-gallery',
+  'product-gallery',
+  'side-gallery',
+  'login-card',
+  'login-split',
+  'login-sso',
+  'settings-dialog',
+  'settings',
+  'settings-sidebar',
+  'blank',
+  'shell-nav',
+  'shell-side-nav',
+  'shell-top-nav',
+  'table-collapsible',
+  'table-comparison',
+  'table-filter',
+  'table-grouped',
+  'table-inbox',
+  'table-page',
+  'table-tree',
+  'canvas-editor',
+  'file-explorer',
+  'ide',
+  'kanban-board',
+  'editor',
+]
+
 export interface PlaygroundTemplateMeta {
   slug: PlaygroundTemplateSlug
   categoryEn: string

@@ -62,5 +62,6 @@ export const TOOL_TEMPLATES: Record<string, TemplateMeta> = {
       en: ['incident', 'alert', 'on-call', 'outage', 'ticket', 'triage console'],
       zh: ['事件', '告警', '值班', '故障', '工单', '控制台'],
     },
+    upstreamNotReady: true,
   },
 }

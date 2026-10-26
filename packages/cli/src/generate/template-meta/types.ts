@@ -11,4 +11,10 @@ export interface TemplateMeta {
   keywords: { en: string[], zh: string[] }
   /** Used when the playground manifest has no category for the page. */
   category?: LocaleText
+  /**
+   * Upstream marks the page as unfinished (`isReady: false` in its
+   * `template.doc.mjs`). The page still ships for reading, but `build` ranks it
+   * below ready pages and `template` refuses to copy it.
+   */
+  upstreamNotReady?: true
 }

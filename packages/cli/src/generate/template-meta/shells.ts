@@ -52,5 +52,6 @@ export const SHELL_TEMPLATES: Record<string, TemplateMeta> = {
       en: ['team messaging', 'chat', 'channels', 'threads', 'inbox', 'direct message', 'conversation workspace'],
       zh: ['消息', '聊天', '频道', '会话', '私信', '团队沟通'],
     },
+    upstreamNotReady: true,
   },
 }

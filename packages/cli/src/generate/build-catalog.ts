@@ -188,8 +188,8 @@ export async function buildTemplates(repoRoot: string, summaries: readonly Playg
       category,
       kind: 'page',
       componentsUsed,
-      ...(foreignPackages.length > 0
-        ? { isReady: false, notReadyReason: notReadyReason(foreignPackages) }
+      ...(foreignPackages.length > 0 || meta.upstreamNotReady
+        ? { isReady: false, notReadyReason: notReadyReason(foreignPackages, meta.upstreamNotReady === true) }
         : { isReady: true }),
       source,
       docsUrl: {
@@ -257,9 +257,13 @@ function importedNames(clause: string, specifier: string): string[] {
   return subpath && /^[A-Z]/.test(subpath) ? [subpath] : []
 }
 
-function notReadyReason(packages: readonly string[]): LocaleText {
+function notReadyReason(packages: readonly string[], upstreamNotReady: boolean): LocaleText {
   const others = packages.filter(item => item !== '@astryx-vue/playground-charts')
   const parts = { en: [] as string[], zh: [] as string[] }
+  if (upstreamNotReady) {
+    parts.en.push('Upstream Astryx still marks this page as a work in progress.')
+    parts.zh.push('原版 Astryx 仍把这个页面标为未完成。')
+  }
   if (packages.includes('@astryx-vue/playground-charts')) {
     parts.en.push('It imports @astryx-vue/playground-charts, which exists only inside the docs playground and is not a published package.')
     parts.zh.push('它引用了 @astryx-vue/playground-charts，这个包只存在于本站演练场，没有发布到 npm。')
