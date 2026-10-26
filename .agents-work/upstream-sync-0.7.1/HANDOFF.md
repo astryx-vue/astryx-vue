@@ -45,7 +45,11 @@ D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek-fl
 - D5a：仓库里一直缺 50 张 `/template-assets/*` 演示图，画廊、商品类模板全是空白，从上游 docsite 补齐；上游标 `isReady: false` 或 `isHiddenFromOverview: true` 的模板，演练场菜单和模板索引不列出、`?template=` 仍能打开，命令行标未就绪（`template-meta` 里的 `upstreamNotReady`）。
 - D9：示例里的 `order-detail` 模板不存在，换成 `detail-page`。
 
-当前并行：D8（演练场同步，worker 实现中，工作区 `astryx-vue-wt/D8`）。
+D8 #174（演练场预览通道，`ab13a30`）、D5c 第一批 #175（`3881332`）已合入。D5c 是总控在 D5a 之后补的节点：代理恢复后把 57 个模板和原版逐个截图对照，发现插槽名写错（`#top-nav` 应为 `#topNav`）和约 20 个原版早期简化版。总控审第一批时修了演练场图表写死 800 宽 viewBox（缩在中间）和图例空心方框。
+
+**用户决定（2026-10-26）：大模板保持单文件，可以超过 500 行**（行数检查本来就不管 `pages/*.vue`）。**用户要求：发现问题后派 worker 修、总控验收；验收时再发现小问题就总控自己修，不要再派。**
+
+当前并行：D5c 第 2 轮（worker 在追平剩下 17 个模板，工作区 `astryx-vue-wt/D5c`，分支 `sync/d5c-templates-parity-2`）。模板对照截图脚本备份在 `/tmp/cmp-scripts/`，原版截图在 `/tmp/D5c-shots/up/`。
 
 **D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`，原版指南对照在 `nodes/D4a/guides-gap.md`。还没定的：`upgrade` 的形态（D6 暂缓后只输出升级指引）。
 
@@ -106,6 +110,8 @@ D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek-fl
 - 验收者通过了也要自己复核。A3、A4、B4 都是复核时才发现问题的，比如 B4「按子路径引入组件时 layer.css 不生效」。
 - 文档里的说法必须在浏览器里实测过（B1 卡了 3 轮就是因为这个）。
 - 所有测试和构建命令都要加 `env -u NODE_ENV`，因为 shell 默认是 production。vitest 要加 `--maxWorkers=2`。
+- **本机 `vitepress dev` 打开演练场会报 `__VP_HASH_MAP__ is not defined`，预览 iframe 不出来。** 验证演练场一律用 `docs:build` + `vitepress preview`。
+- **原版演练场截图要等「Building…」消失、预览 iframe 里有内容再截**，否则一半是空白。
 - **会话断开会让所有后台 worker 同时 `aborted`**，没提交的改动留在工作区。重派时先 `git status` 看清现状，把能用的部分先存成 WIP 提交，再在提示里写明从哪一步接着做。
 - **Clash 代理（7890）可能不在监听。** 这时直连 GitHub 反而能通；`git push` 报 HTTP2 framing 错误时加 `-c http.version=HTTP/1.1` 重试。原版站点 astryx.atmeta.com 只能走代理，代理断了就没法截原版图。
 - **多个节点都改 `catalog.json` 时，后合的那个要 rebase 后重新 `generate`**，否则 CI 的 `generate:check` 会红。eslint `--fix` 改了文档示例也要重新生成。
