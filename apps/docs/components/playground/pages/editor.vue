@@ -417,16 +417,16 @@ function updateBlockProp(key: string, value: unknown): void {
 }
 
 .selected-card {
-  outline: 2px solid var(--color-border-blue);
+  outline: 2px solid var(--astryx-color-border-blue);
   outline-offset: -2px;
 }
 
 .icon-circle {
   border-radius: 50%;
-  background-color: var(--color-background-muted);
+  background-color: var(--astryx-color-background-muted);
 }
 
 .properties-form {
-  margin-top: var(--spacing-3);
+  margin-top: var(--astryx-spacing-3);
 }
 </style>

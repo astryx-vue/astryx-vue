@@ -317,7 +317,7 @@ const trendingColumns: TableColumn<StockRow>[] = [
   { key: 'dailyPts', header: 'Daily Chg (pts)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPts >= 0 ? 'green' : 'red', label: (row.dailyPts >= 0 ? '+' : '') + row.dailyPts.toFixed(2) }) },
   { key: 'dailyPct', header: 'Daily Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPct >= 0 ? 'green' : 'red', label: (row.dailyPct >= 0 ? '+' : '') + row.dailyPct.toFixed(2) + '%' }) },
   { key: 'weekChg', header: '52W Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.weekChg >= 0 ? 'green' : 'red', label: (row.weekChg >= 0 ? '+' : '') + row.weekChg.toFixed(1) + '%' }) },
-  { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--color-data-categorical-green, #0B991F)' : 'var(--color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1 }) },
+  { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1 }) },
 ]
 
 const timeRange = ref('1 year')
@@ -372,7 +372,7 @@ const timeRange = ref('1 year')
                       :data="portfolioData"
                       x-key="month"
                       y-key="value"
-                      color="var(--color-data-categorical-green, #0B991F)"
+                      color="var(--astryx-color-data-categorical-green, #0B991F)"
                       :height="340"
                       :y-domain="[200000, 320000]"
                       :x-domain="[0, 12]"
@@ -432,7 +432,7 @@ const timeRange = ref('1 year')
                   <Heading :level="3">{{ m.name }}</Heading>
                   <Text type="supporting" color="secondary">{{ m.ticker }}</Text>
                 </VStack>
-                <PlaygroundSparkline :data="m.spark" :color="m.positive ? 'var(--color-data-categorical-green, #0B991F)' : 'var(--color-data-categorical-red, #F5394F)'" />
+                <PlaygroundSparkline :data="m.spark" :color="m.positive ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'" />
                 <HStack :gap="3" align="center">
                   <Text type="display-3" weight="bold">{{ m.price }}</Text>
                   <HStack :gap="1" align="center">

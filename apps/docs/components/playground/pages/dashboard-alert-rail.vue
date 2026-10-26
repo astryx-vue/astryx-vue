@@ -76,9 +76,9 @@ const SPARKLINES: Record<string, number[]> = {
 }
 
 const STATUS_STROKE: Record<HealthStatus, string> = {
-  healthy: 'var(--color-success, #0B991F)',
-  warning: 'var(--color-warning, #B25000)',
-  critical: 'var(--color-error, #D6002A)',
+  healthy: 'var(--astryx-color-success, #0B991F)',
+  warning: 'var(--astryx-color-warning, #B25000)',
+  critical: 'var(--astryx-color-error, #D6002A)',
 }
 
 const ALERTS = [
@@ -179,9 +179,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       :data="LATENCY_SERIES"
                       x-key="t"
                       :series="[
-                        { key: 'p50', color: 'var(--color-data-categorical-blue, #0171E3)', name: 'p50' },
-                        { key: 'p95', color: 'var(--color-data-categorical-orange, #EB6E00)', name: 'p95' },
-                        { key: 'p99', color: 'var(--color-data-categorical-purple, #6B1EFD)', name: 'p99' },
+                        { key: 'p50', color: 'var(--astryx-color-data-categorical-blue, #0171E3)', name: 'p50' },
+                        { key: 'p95', color: 'var(--astryx-color-data-categorical-orange, #EB6E00)', name: 'p95' },
+                        { key: 'p99', color: 'var(--astryx-color-data-categorical-purple, #6B1EFD)', name: 'p99' },
                       ]"
                       :height="280"
                       y-unit=" ms"
@@ -199,9 +199,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       :data="LATENCY_SERIES.map((_, i) => ({ t: i, useast: 9200 + i * 40, uswest: 6100 + i * 20, euwest: 3900 + i * 15 }))"
                       x-key="t"
                       :series="[
-                        { key: 'useast', color: 'var(--color-data-categorical-blue, #0171E3)', name: 'us-east-1' },
-                        { key: 'uswest', color: 'var(--color-data-categorical-teal, #08A3A3)', name: 'us-west-2' },
-                        { key: 'euwest', color: 'var(--color-data-categorical-orange, #EB6E00)', name: 'eu-west-1' },
+                        { key: 'useast', color: 'var(--astryx-color-data-categorical-blue, #0171E3)', name: 'us-east-1' },
+                        { key: 'uswest', color: 'var(--astryx-color-data-categorical-teal, #08A3A3)', name: 'us-west-2' },
+                        { key: 'euwest', color: 'var(--astryx-color-data-categorical-orange, #EB6E00)', name: 'eu-west-1' },
                       ]"
                       :height="280"
                     />
@@ -312,12 +312,12 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
 
 <style scoped>
 .rail-header {
-  background-color: var(--color-background-muted);
+  background-color: var(--astryx-color-background-muted);
 }
 .sticky-header {
   position: sticky;
   inset-block-start: 0;
   z-index: 1;
-  background-color: var(--color-background-surface);
+  background-color: var(--astryx-color-background-surface);
 }
 </style>

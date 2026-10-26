@@ -42,9 +42,9 @@ const PHASE_LABEL: Record<ReleasePhase, string> = { build: 'Build', beta: 'Beta'
 const RAG_LABEL: Record<Rag, string> = { onTrack: 'On track', atRisk: 'At risk', blocked: 'Blocked' }
 const RAG_BADGE: Record<Rag, 'green' | 'yellow' | 'red'> = { onTrack: 'green', atRisk: 'yellow', blocked: 'red' }
 const RAG_FILL: Record<Rag, string> = {
-  onTrack: 'var(--color-data-categorical-green, #0B991F)',
-  atRisk: 'var(--color-data-categorical-orange, #EB6E00)',
-  blocked: 'var(--color-data-categorical-red, #F5394F)',
+  onTrack: 'var(--astryx-color-data-categorical-green, #0B991F)',
+  atRisk: 'var(--astryx-color-data-categorical-orange, #EB6E00)',
+  blocked: 'var(--astryx-color-data-categorical-red, #F5394F)',
 }
 
 const TIMELINE_DAYS = 90
@@ -72,11 +72,11 @@ const MILESTONES: Milestone[] = [
 ]
 
 const TASK_STATUS = [
-  { key: 'closed', label: 'Closed', points: 190, color: 'var(--color-data-categorical-blue, #0171E3)' },
-  { key: 'inProgress', label: 'In progress', points: 58, color: 'var(--color-data-categorical-green, #0B991F)' },
-  { key: 'inReview', label: 'In review', points: 24, color: 'var(--color-data-categorical-orange, #EB6E00)' },
-  { key: 'blocked', label: 'Blocked', points: 22, color: 'var(--color-data-categorical-red, #F5394F)' },
-  { key: 'planned', label: 'Planned', points: 26, color: 'var(--color-data-neutral, #8494A3)' },
+  { key: 'closed', label: 'Closed', points: 190, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+  { key: 'inProgress', label: 'In progress', points: 58, color: 'var(--astryx-color-data-categorical-green, #0B991F)' },
+  { key: 'inReview', label: 'In review', points: 24, color: 'var(--astryx-color-data-categorical-orange, #EB6E00)' },
+  { key: 'blocked', label: 'Blocked', points: 22, color: 'var(--astryx-color-data-categorical-red, #F5394F)' },
+  { key: 'planned', label: 'Planned', points: 26, color: 'var(--astryx-color-data-neutral, #8494A3)' },
 ]
 
 interface Workstream extends Record<string, unknown> {
@@ -273,8 +273,8 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                       :data="BURNDOWN"
                       x-key="week"
                       :series="[
-                        { key: 'ideal', name: 'Ideal', color: 'var(--color-data-neutral, #8494A3)' },
-                        { key: 'actual', name: 'Actual', color: 'var(--color-data-categorical-blue, #0171E3)' },
+                        { key: 'ideal', name: 'Ideal', color: 'var(--astryx-color-data-neutral, #8494A3)' },
+                        { key: 'actual', name: 'Actual', color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
                       ]"
                       :height="208"
                       y-unit=" pts"
@@ -352,13 +352,13 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
   margin-inline: auto;
 }
 .content-bottom-pad {
-  padding-block-end: var(--spacing-10);
+  padding-block-end: var(--astryx-spacing-10);
 }
 .risk-row {
-  transition: background-color var(--duration-fast-min) var(--ease-standard);
+  transition: background-color var(--astryx-duration-fast-min) var(--astryx-ease-standard);
 }
 .risk-row:hover {
-  background-color: var(--color-overlay-hover);
+  background-color: var(--astryx-color-overlay-hover);
 }
 .risk-detail {
   max-width: 320px;

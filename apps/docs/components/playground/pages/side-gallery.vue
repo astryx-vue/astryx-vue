@@ -20,7 +20,7 @@ const imageStyle: CSSProperties = {
 }
 
 const imageClip: CSSProperties = {
-  borderRadius: 'var(--radius-element)',
+  borderRadius: 'var(--astryx-radius-element)',
 }
 
 const IMAGES = [

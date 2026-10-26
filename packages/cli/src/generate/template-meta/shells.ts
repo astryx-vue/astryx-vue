@@ -42,4 +42,16 @@ export const SHELL_TEMPLATES: Record<string, TemplateMeta> = {
       zh: ['框架', '顶部导航', '导航栏', '菜单', '布局'],
     },
   },
+
+  'messaging-shell': {
+    description: {
+      en: 'A four-column messaging frame: workspace rail, channel list, message stream, and a thread panel.',
+      zh: '消息框架：工作区导航、频道列表、消息流和会话线程四栏。',
+    },
+    keywords: {
+      en: ['team messaging', 'chat', 'channels', 'threads', 'inbox', 'direct message', 'conversation workspace'],
+      zh: ['消息', '聊天', '频道', '会话', '私信', '团队沟通'],
+    },
+    upstreamNotReady: true,
+  },
 }

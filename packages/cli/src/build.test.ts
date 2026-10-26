@@ -133,11 +133,11 @@ describe('build command', () => {
     expect(result.stdout).toContain('login-card')
     expect(result.stdout).toContain('OTHER TEMPLATES')
     expect(result.stdout).toContain('COMPONENTS')
-    expect(result.stdout).toContain('Next: astryx-vue template login-card ./src/pages')
+    expect(result.stdout).toContain('Next: astryx-vue template login ./src/pages')
     expect(result.stdout).toContain('→ astryx-vue component ')
     const json = await run(['build', 'login page', '--json'])
     const kit = assertResponse(json.stdout, 'build.kit').data as { template: { copyCommand: string } }
-    expect(kit.template.copyCommand).toBe('astryx-vue template login-card ./src/pages')
+    expect(kit.template.copyCommand).toBe('astryx-vue template login ./src/pages')
 
     const dense = await run(['build', 'login page', '--dense'])
     expect(dense.stdout.length).toBeLessThan(result.stdout.length)

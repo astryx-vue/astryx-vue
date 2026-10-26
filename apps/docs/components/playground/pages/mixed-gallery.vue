@@ -26,7 +26,7 @@ const imgStyle: CSSProperties = {
 }
 
 const clipStyle: CSSProperties = {
-  borderRadius: 'var(--radius-element)',
+  borderRadius: 'var(--astryx-radius-element)',
 }
 
 const IMAGES: GalleryImage[] = [
@@ -79,7 +79,7 @@ const IMAGES: GalleryImage[] = [
 <style>
 .mixed-gallery-grid {
   display: grid;
-  gap: var(--spacing-3);
+  gap: var(--astryx-spacing-3);
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .mixed-gallery-hero {

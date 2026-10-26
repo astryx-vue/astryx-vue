@@ -340,18 +340,18 @@ const fileTree = computed(() => buildFileTree((name) => {
 }
 
 .tab-list-padding {
-  padding-top: var(--spacing-2);
+  padding-top: var(--astryx-spacing-2);
 }
 
 .metadata-compact {
-  gap: var(--spacing-1) var(--spacing-3);
+  gap: var(--astryx-spacing-1) var(--astryx-spacing-3);
 }
 
 .history-timeline-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--color-border-emphasized);
+  background-color: var(--astryx-color-border-emphasized);
   margin-top: 6px;
   flex-shrink: 0;
 }

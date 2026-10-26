@@ -54,8 +54,12 @@ describe('template catalog', () => {
     const mention = catalog.templates.find(template => template.slug === 'documentation-technical')
     expect(mention?.source).toContain('@astryxdesign/core')
     expect(mention?.isReady).toBe(true)
-    expect(catalog.templates.filter(template => !template.isReady)).toHaveLength(5)
-    expect(catalog.templates.filter(template => !template.isReady).every(template => template.notReadyReason?.en.includes('playground-charts'))).toBe(true)
+    // 5 个引用了演练场图表包，3 个是原版自己标为未完成的页面。
+    const unready = catalog.templates.filter(template => !template.isReady)
+    expect(unready.filter(template => template.notReadyReason?.en.includes('playground-charts'))).toHaveLength(5)
+    expect(unready.filter(template => template.notReadyReason?.en.includes('work in progress')).map(template => template.slug).sort())
+      .toEqual(['incident-console', 'messaging-shell', 'table'])
+    expect(unready).toHaveLength(8)
   })
 })
 
@@ -66,7 +70,7 @@ describe('template --list', () => {
     expect(result.stdout).toContain('login-card')
     expect(result.stdout).toContain('A sign-in card')
     expect(result.stdout).toContain('(not ready)')
-    expect(result.stdout).toContain('5 template(s) are marked not ready')
+    expect(result.stdout).toContain('8 template(s) are marked not ready')
 
     const bare = await run(['template'])
     expect(bare.stdout).toContain('login-card')
@@ -83,10 +87,13 @@ describe('template --list', () => {
       locale: string
     }
     expect(data.locale).toBe('en')
-    expect(data.templates).toHaveLength(53)
+    expect(data.templates).toHaveLength(57)
     expect(data.templates[0]?.command).toBe(`astryx-vue template ${data.templates[0]?.slug}`)
     expect(data.templates[0]?.docsUrl).toContain('https://astryx-vue.pages.dev/en/playground/?template=')
     expect(data.templates.find(template => template.slug === 'dashboard-alert-rail')?.notReadyReason).toContain('playground-charts')
+    const incident = data.templates.find(template => template.slug === 'incident-console')
+    expect(incident?.isReady).toBe(false)
+    expect(incident?.notReadyReason).toContain('work in progress')
 
     const blocks = await run(['template', '--list', '--type', 'block', '--json'])
     expect(blocks.exitCode).toBe(0)
@@ -338,7 +345,8 @@ describe('template in search', () => {
   it('finds templates by slug and by prose', async () => {
     const byName = await run(['search', 'login', '--type', 'template', '--json'])
     const hits = assertResponse(byName.stdout, 'search').data as { results: { domain: string, name: string, command: string, score: number, reason: string }[] }
-    expect(hits.results[0]).toMatchObject({ domain: 'template', name: 'login-card', command: 'astryx-vue template login-card' })
+    expect(hits.results[0]).toMatchObject({ domain: 'template', name: 'login', command: 'astryx-vue template login' })
+    expect(hits.results.map(hit => hit.name)).toContain('login-card')
     expect(hits.results.every(hit => hit.domain === 'template')).toBe(true)
 
     const byProse = await run(['search', 'kanban', '--type', 'template'])

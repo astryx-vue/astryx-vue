@@ -144,7 +144,7 @@ function trendPath(values: number[]) {
               <VStack :gap="2">
                 <Text type="label">{{ trend.label }}</Text>
                 <svg class="trend" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
-                  <path :d="trendPath(trend.series)" fill="none" stroke="var(--color-data-categorical-blue)" stroke-width="2" />
+                  <path :d="trendPath(trend.series)" fill="none" stroke="var(--astryx-color-data-categorical-blue)" stroke-width="2" />
                 </svg>
               </VStack>
             </Card>
@@ -169,5 +169,5 @@ function trendPath(values: number[]) {
 <style scoped>
 .scorecard-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .trend { width: 100%; height: 60px; display: block; }
-.content-pad { padding-bottom: var(--spacing-10); }
+.content-pad { padding-bottom: var(--astryx-spacing-10); }
 </style>

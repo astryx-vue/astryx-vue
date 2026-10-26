@@ -155,12 +155,12 @@ const fullWidth: CSSProperties = {width: '100%'};
 // Form column flex-basis so the two checkout columns share width evenly.
 const formColBasis: CSSProperties = {flexBasis: 0};
 // Space the Order Summary content below its collapsible trigger title.
-const summaryContent: CSSProperties = {paddingBlockStart: 'var(--spacing-2)'};
+const summaryContent: CSSProperties = {paddingBlockStart: 'var(--astryx-spacing-2)'};
 // Order-summary column: sticky beside the form on desktop.
 const summarySticky: CSSProperties = {
   flexBasis: 0,
   position: 'sticky',
-  top: 'var(--spacing-4)',
+  top: 'var(--astryx-spacing-4)',
   alignSelf: 'flex-start',
 };
 // On mobile the summary moves above the form.

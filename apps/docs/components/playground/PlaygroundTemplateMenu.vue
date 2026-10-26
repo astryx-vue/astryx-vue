@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { PlaygroundTemplate } from './templates'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 /** 编辑栏顶部的「模板」下拉菜单。点菜单外面或按 Esc 关闭。 */
-defineProps<{
+const props = defineProps<{
   label: string
   templates: PlaygroundTemplate[]
   currentId: string
@@ -14,6 +14,7 @@ const emit = defineEmits<{
 }>()
 
 const open = defineModel<boolean>('open', { required: true })
+const listedTemplates = computed(() => props.templates.filter(item => item.isListed))
 const root = ref<HTMLElement | null>(null)
 
 onMounted(() => {
@@ -64,7 +65,7 @@ function choose(id: string): void {
       :aria-label="label"
     >
       <button
-        v-for="item in templates"
+        v-for="item in listedTemplates"
         :key="item.id"
         type="button"
         role="menuitem"
