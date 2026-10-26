@@ -10,7 +10,6 @@ import {
   IconButton,
   Layout,
   LayoutContent,
-  MultiSelector,
   pixel,
   proportional,
   Selector,
