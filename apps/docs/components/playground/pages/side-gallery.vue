@@ -40,7 +40,7 @@ const IMAGES = [
   <Layout height="fill" :content-width="1400">
     <LayoutContent :padding="6">
       <Grid :columns="{ minWidth: 360, repeat: 'fit' }" :gap="8" align="center">
-        <VStack :gap="6" v-align="center">
+        <VStack :gap="6" justify="center">
           <VStack :gap="3">
             <Text type="supporting" color="secondary" weight="semibold">
               COLORFUL
