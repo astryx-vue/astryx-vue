@@ -1,4 +1,5 @@
 import type { ResolvedPoint, SeriesDef } from '../types.js'
+import { h } from 'vue'
 import { xPixel } from '../utils.js'
 
 export interface ErrorBarOptions {
@@ -27,6 +28,9 @@ export interface ErrorBarOptions {
  */
 export function errorBar(options: ErrorBarOptions): SeriesDef {
   const { high, low } = options
+  const color = options.color ?? 'var(--astryx-color-text-primary)'
+  const strokeWidth = options.strokeWidth ?? 1.5
+  const capWidth = options.capWidth ?? 8
 
   return {
     type: 'errorBar',
@@ -52,6 +56,20 @@ export function errorBar(options: ErrorBarOptions): SeriesDef {
         })
       }
       return points
+    },
+
+    render(resolved) {
+      // 非有限的 capWidth 会漏进小横杠的 x 坐标里；当成非正数处理：留竖线，去掉小横杠。
+      const half = Number.isFinite(capWidth) ? Math.max(0, capWidth) / 2 : 0
+      return h('g', resolved.map((p) => {
+        if (!Number.isFinite(p.px) || !Number.isFinite(p.py) || !Number.isFinite(p.py0))
+          return null
+        return h('g', { key: p.dataIndex }, [
+          h('line', { 'x1': p.px, 'x2': p.px, 'y1': p.py, 'y2': p.py0, 'stroke': color, 'stroke-width': strokeWidth }),
+          h('line', { 'x1': p.px - half, 'x2': p.px + half, 'y1': p.py, 'y2': p.py, 'stroke': color, 'stroke-width': strokeWidth }),
+          h('line', { 'x1': p.px - half, 'x2': p.px + half, 'y1': p.py0, 'y2': p.py0, 'stroke': color, 'stroke-width': strokeWidth }),
+        ])
+      }))
     },
   }
 }

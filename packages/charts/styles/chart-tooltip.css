@@ -1,0 +1,24 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 竖线用正文色，1px。 */
+  .astryx-chart-tooltip__crosshair {
+    stroke: var(--astryx-color-text-primary, #171717);
+    stroke-width: 1;
+  }
+
+  /* 卡片浮在图表之上，跟着指针走，所以不接收指针事件。 */
+  .astryx-chart-tooltip {
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--astryx-chart-tooltip-z-index, 1000);
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    background-color: var(--astryx-color-background-popover, #fff);
+    border: 1px solid var(--astryx-color-border, #e5e5e5);
+    border-radius: var(--astryx-radius-container, 8px);
+    box-shadow: var(--astryx-shadow-med, 0 4px 16px rgb(0 0 0 / 12%));
+    white-space: nowrap;
+    pointer-events: none;
+  }
+}

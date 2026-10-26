@@ -1,8 +1,11 @@
-// 图表纯计算层。组件和标记渲染还没做，所以这里只导出已经能用的东西。
-
 // 颜色工具（core 没有公开这套工具，所以图表包自带一份）
 export { formatColor, formatHex, parseColor, parseHex, parseRgb, toGLFloats } from './color.js'
+
+// 图表包入口：纯计算层 + 组件。
+
 export type { RGBA } from './color.js'
+// 组件（Vue 单文件组件）
+export * from './components.js'
 
 // 刻度与数值格式化
 export { compactNumber, currency, formatList, monthYear, percent, shortDate } from './formatters.js'

@@ -1,0 +1,13 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 图例本身没有背景和边框；间距由 HStack / VStack 的 gap 给。 */
+  .astryx-chart-legend {
+    list-style: none;
+  }
+
+  /* 摆在图表两侧时贴着顶部，不然纵向列表会被拉高、项与项之间散开。 */
+  .astryx-chart-legend--vertical {
+    align-self: flex-start;
+  }
+}

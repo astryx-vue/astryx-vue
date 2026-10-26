@@ -1,0 +1,24 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 颜色由调用方从内联样式给（运行时的系列色），形状和尺寸固定在这里。 */
+  .astryx-chart-swatch {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* 柱状系列的色块：8×8 的圆角方块，两侧各留 1px。 */
+  .astryx-chart-swatch--square {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    margin-inline: 1px;
+  }
+
+  /* 其余系列：一小段横线。 */
+  .astryx-chart-swatch--line {
+    width: 10px;
+    height: 3px;
+    border-radius: 1.5px;
+  }
+}

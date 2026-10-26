@@ -1,4 +1,6 @@
 import type { ResolvedPoint, SeriesDef } from '../types.js'
+import { curveMonotoneX, area as d3Area } from 'd3-shape'
+import { h } from 'vue'
 import { DEFAULT_SERIES_COLOR } from '../types.js'
 import { xPixel } from '../utils.js'
 
@@ -16,6 +18,9 @@ export interface BandOptions {
  * 属于标注类标记，不进图例和提示框。
  */
 export function band(options: BandOptions): SeriesDef {
+  const color = options.color ?? DEFAULT_SERIES_COLOR
+  const opacity = options.opacity ?? 0.15
+
   return {
     type: 'band',
     key: `band-${options.upper}-${options.lower}`,
@@ -41,6 +46,21 @@ export function band(options: BandOptions): SeriesDef {
         })
       }
       return points
+    },
+
+    render(resolved) {
+      if (resolved.length === 0)
+        return null
+      const areaGen = d3Area<ResolvedPoint>()
+        .defined(d => Number.isFinite(d.px) && Number.isFinite(d.py) && Number.isFinite(d.py0))
+        .x(d => d.px)
+        .y0(d => d.py0)
+        .y1(d => d.py)
+        .curve(curveMonotoneX)
+      const pathD = areaGen(resolved) ?? ''
+      if (!pathD)
+        return null
+      return h('path', { 'd': pathD, 'fill': color, 'fill-opacity': opacity, 'stroke': 'none' })
     },
   }
 }
