@@ -25,6 +25,7 @@ import {
   VStack,
   useMediaQuery,
 } from '@astryx-vue/core'
+import { PlaygroundSparkline } from '@astryx-vue/playground-charts'
 
 type TimeWindow = '1h' | '1d' | '7d'
 type Environment = 'production' | 'staging' | 'development'
@@ -148,18 +149,6 @@ function chartPath(values: number[], max: number) {
   return values.map((v, i) => `${i === 0 ? 'M' : 'L'}${chartX(i).toFixed(1)},${chartY(v, max).toFixed(1)}`).join(' ')
 }
 
-/** 指标卡里的小折线，只表达形状，所以按 100×32 的盒子归一化。 */
-function sparkPath(values: number[]) {
-  const max = Math.max(...values)
-  const min = Math.min(...values)
-  const span = max - min || 1
-  return values.map((value, i) => {
-    const x = (i / (values.length - 1)) * 100
-    const y = 32 - ((value - min) / span) * 32
-    return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`
-  }).join(' ')
-}
-
 function rpmLabel(rpm: number) {
   return `${(rpm / 1000).toFixed(1)}k rpm`
 }
@@ -228,15 +217,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       </Text>
                     </HStack>
                   </HStack>
-                  <svg class="kpi-spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true">
-                    <path
-                      :d="sparkPath(SPARKLINES[kpi.key])"
-                      fill="none"
-                      :stroke="STATUS_STROKE[kpi.status]"
-                      stroke-width="1.25"
-                      vector-effect="non-scaling-stroke"
-                    />
-                  </svg>
+                  <PlaygroundSparkline :data="SPARKLINES[kpi.key]" :color="STATUS_STROKE[kpi.status]" />
                 </VStack>
               </Card>
             </Grid>
@@ -476,7 +457,6 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
 .rail-header {
   background-color: var(--astryx-color-background-muted);
 }
-.kpi-spark { width: 100%; height: 40px; display: block; }
 .rail-chart { width: 100%; height: 240px; display: block; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
 .chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 11px; }
