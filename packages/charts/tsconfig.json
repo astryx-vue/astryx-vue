@@ -1,7 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": ".",
+    "rootDir": "../..",
+    "customConditions": ["source"],
+    "paths": {
+      "@internationalized/date": [
+        "../core/node_modules/@internationalized/date/dist/types/src/index.d.ts"
+      ]
+    },
     "types": ["node"]
   },
   "include": [
