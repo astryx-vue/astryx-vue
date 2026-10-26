@@ -40,7 +40,9 @@ export function mountChart(
     slots,
     attrs,
   })
-  const container = wrapper.element as HTMLElement
+  const root = wrapper.element as HTMLElement
+  // 组件根是 Fragment（图表 + 视觉隐藏的数据表），真正的根元素要找出来。
+  const container = root.querySelector<HTMLElement>('.astryx-chart') ?? root
   const plot = container.querySelector<SVGGElement>('g[clip-path]')
   if (!plot)
     throw new Error('图表没有渲染出绘图组')

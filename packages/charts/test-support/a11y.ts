@@ -12,9 +12,19 @@ export function allElements(root: ParentNode = document.body): Element[] {
   return [...root.querySelectorAll('*')]
 }
 
+/**
+ * 元素的角色。`dom-accessibility-api` 把所有 `th` 都当成列头，
+ * 但表格行头（`th[scope="row"]`）在浏览器里是 `rowheader`，这里按真实浏览器的算法纠正一下。
+ */
+function roleOf(element: Element): string | null {
+  if (element.tagName === 'TH' && element.getAttribute('scope') === 'row')
+    return 'rowheader'
+  return getRole(element)
+}
+
 /** 找到所有角色匹配的元素。 */
 export function allByRole(role: string, root: ParentNode = document.body): Element[] {
-  return allElements(root).filter(element => getRole(element) === role)
+  return allElements(root).filter(element => roleOf(element) === role)
 }
 
 /** 找到第一个角色和可访问名都匹配的元素，找不到就抛错。 */

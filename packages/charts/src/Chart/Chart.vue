@@ -197,39 +197,39 @@ defineExpose({ element: containerRef })
         </svg>
       </div>
     </div>
+    <VisuallyHidden
+      v-if="showDataTable"
+      as="div"
+    >
+      <table>
+        <caption>{{ t('@astryx.chart.dataTableCaption', { label: accessibleLabel }) }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ xKey }}</th>
+            <th
+              v-for="key in tableKeys"
+              :key="key"
+              scope="col"
+            >
+              {{ key }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(row, index) in data"
+            :key="index"
+          >
+            <th scope="row">{{ tableCell(row[xKey]) }}</th>
+            <td
+              v-for="key in tableKeys"
+              :key="key"
+            >
+              {{ tableCell(row[key]) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </VisuallyHidden>
   </div>
-  <VisuallyHidden
-    v-if="showDataTable"
-    as="div"
-  >
-    <table>
-      <caption>{{ t('@astryx.chart.dataTableCaption', { label: accessibleLabel }) }}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{{ xKey }}</th>
-          <th
-            v-for="key in tableKeys"
-            :key="key"
-            scope="col"
-          >
-            {{ key }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(row, index) in data"
-          :key="index"
-        >
-          <th scope="row">{{ tableCell(row[xKey]) }}</th>
-          <td
-            v-for="key in tableKeys"
-            :key="key"
-          >
-            {{ tableCell(row[key]) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </VisuallyHidden>
 </template>
