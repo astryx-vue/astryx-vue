@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {
-  Badge,
   Button,
   Card,
   Heading,
@@ -17,6 +16,8 @@ import {
   Switch,
   Table,
   Text,
+  useTableGroupedRows,
+  useTableStickyColumns,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
@@ -152,21 +153,43 @@ function addModel(): void {
     slots.value = [...slots.value, next.id]
 }
 
+const collapsedGroups = ref(new Set<string>())
+
+function toggleGroup(key: string): void {
+  const next = new Set(collapsedGroups.value)
+  if (next.has(key))
+    next.delete(key)
+  else
+    next.add(key)
+  collapsedGroups.value = next
+}
+
+const grouped = useTableGroupedRows<SpecRow>(() => ({
+  data: SPEC_ROWS,
+  groupBy: row => row.group,
+  groupOrder: GROUP_ORDER,
+  collapsedGroups: collapsedGroups.value,
+  onToggleGroup: toggleGroup,
+  getRowKey: row => row.id,
+  renderGroupHeader: groupKey => h(Heading, { level: 3 }, () => groupKey),
+}))
+
+const sticky = useTableStickyColumns<SpecRow>({ startKeys: ['spec'] })
+
 const columns = computed<TableColumn<SpecRow>[]>(() => [
   {
     key: 'spec',
-    header: 'Criteria',
+    header: 'Models',
     width: pixel(220),
     renderCell: row => h(Text, { type: 'label', color: 'secondary' }, () => row.label),
   },
   ...slots.value.map((modelId, index) => {
     const model = modelById.get(modelId)
-    const headerModel = modelById.get(modelId)
     return {
       key: `slot-${index}`,
       width: proportional(1, { minWidth: 236 }),
       align: 'end' as const,
-      header: headerModel?.name ?? `Model ${index + 1}`,
+      header: model?.name ?? `Model ${index + 1}`,
       renderCell: (row: SpecRow) => {
         if (!model)
           return h(Text, { type: 'supporting' }, () => '—')
@@ -210,15 +233,6 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
   }),
 ])
 
-const rowsByGroup = computed(() => {
-  const map = new Map<GroupKey, SpecRow[]>()
-  for (const row of SPEC_ROWS) {
-    const list = map.get(row.group) ?? []
-    list.push(row)
-    map.set(row.group, list)
-  }
-  return map
-})
 </script>
 
 <template>
@@ -242,58 +256,53 @@ const rowsByGroup = computed(() => {
     </template>
 
     <LayoutContent :padding="4">
-      <VStack :gap="6">
+      <VStack :gap="4">
         <HStack :gap="3" align="end" wrap="wrap">
           <VStack v-for="(slotId, index) in slots" :key="slotId" :width="280">
             <Selector
               :model-value="slotId"
               :label="`Model ${index + 1}`"
               size="lg"
+              :has-clear="slots.length > MIN_SLOTS"
               :options="MODELS.map(option => ({
                 value: option.id,
                 label: option.name,
                 description: option.provider,
                 disabled: option.id !== slotId && slots.includes(option.id),
               }))"
-              @update:model-value="(next: string | number | null) => next != null && selectSlot(index, String(next))"
+              @update:model-value="(next: string | number | null) => next == null ? removeSlot(index) : selectSlot(index, String(next))"
             />
           </VStack>
         </HStack>
-        <Card v-for="group in GROUP_ORDER" :key="group" :padding="5">
-          <VStack :gap="4">
-            <Heading :level="3">
-              {{ group }}
-            </Heading>
-            <Table
-              :data="rowsByGroup.get(group) ?? []"
-              :columns="columns"
-              id-key="id"
-              density="spacious"
-              dividers="grid"
-            />
-          </VStack>
-        </Card>
-        <HStack :gap="2" wrap="wrap">
-          <Badge v-for="(slotId, index) in slots" :key="slotId" variant="neutral" :label="`Column ${index + 1}`" />
-          <Button
-            v-for="(slotId, index) in slots"
-            :key="`remove-${slotId}`"
-            label="Remove column"
-            variant="ghost"
-            size="sm"
-            :is-disabled="slots.length <= MIN_SLOTS"
-            @click="removeSlot(index)"
+        <Card :padding="5" class="table-frame">
+          <Table
+            :data="grouped.data.value"
+            :columns="columns"
+            :id-key="grouped.idKey"
+            density="spacious"
+            dividers="grid"
+            :plugins="{ grouped: grouped.plugin, sticky }"
           />
-        </HStack>
+        </Card>
       </VStack>
     </LayoutContent>
   </Layout>
 </template>
 
 <style scoped>
+.table-frame {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 胜出的格子整格铺满底色：抵掉 spacious 密度下单元格自己的内边距。 */
 :deep(.best-cell) {
+  box-sizing: content-box;
   background: var(--astryx-color-background-blue);
+  margin-block: calc(-1 * var(--astryx-spacing-3));
   margin-inline: calc(-1 * var(--astryx-spacing-4));
+  padding-block: var(--astryx-spacing-3);
   padding-inline: var(--astryx-spacing-4);
 }
 </style>

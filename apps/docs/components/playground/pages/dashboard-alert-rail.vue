@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import {
   Badge,
   Card,
@@ -102,7 +102,20 @@ const HOST_ROWS = [
 // ── 图表 ──────────────────────────────────────────────────────────────────────
 // 内联 SVG：锯齿状时间序列 + 坐标轴 + 图例，形状由固定种子的伪随机生成。
 
-const CHART = { width: 640, height: 240, left: 52, right: 8, top: 8, bottom: 26 }
+/** 两张图并排、一样宽；`width` 跟着第一张图的实际宽度走，viewBox 和像素一比一。 */
+const CHART = reactive({ width: 640, height: 240, left: 52, right: 8, top: 8, bottom: 26 })
+const chartEl = ref<SVGSVGElement | null>(null)
+let chartObserver: ResizeObserver | null = null
+onMounted(() => {
+  if (!chartEl.value || typeof ResizeObserver === 'undefined')
+    return
+  chartObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      CHART.width = entry.contentRect.width
+  })
+  chartObserver.observe(chartEl.value)
+})
+onBeforeUnmount(() => chartObserver?.disconnect())
 const POINTS = 96
 const X_LABELS = ['00:00', '04:50', '09:30', '14:20', '19:00', '23:50']
 
@@ -232,7 +245,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       Percentile latency across all services (ms)
                     </Text>
                   </VStack>
-                  <svg class="rail-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Response latency percentiles">
+                  <svg ref="chartEl" class="rail-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Response latency percentiles">
                     <line
                       v-for="tick in LATENCY_Y_TICKS"
                       :key="`ly-${tick}`"
