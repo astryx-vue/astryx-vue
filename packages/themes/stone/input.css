@@ -8,14 +8,15 @@
     --astryx-input-height-sm: 28px;
     --astryx-input-height-md: 32px;
     --astryx-input-height-lg: 36px;
-    --astryx-input-error: var(--astryx-color-error);
+    /* 状态描边和状态图标用柔和的 T60/T70，和上方状态提示底色同族。 */
+    --astryx-input-error: light-dark(#a58b86, #c0a5a1);
     --astryx-input-error-foreground: var(--astryx-color-text-red);
-    --astryx-input-error-background: var(--astryx-color-error-muted);
-    --astryx-input-warning: var(--astryx-color-warning);
+    --astryx-input-error-background: var(--astryx-color-background-red);
+    --astryx-input-warning: light-dark(#9f8f68, #bbaa81);
     --astryx-input-warning-foreground: var(--astryx-color-text-yellow);
-    --astryx-input-warning-background: var(--astryx-color-warning-muted);
-    --astryx-input-success: var(--astryx-color-success);
+    --astryx-input-warning-background: var(--astryx-color-background-yellow);
+    --astryx-input-success: light-dark(#7f977e, #99b298);
     --astryx-input-success-foreground: var(--astryx-color-text-green);
-    --astryx-input-success-background: var(--astryx-color-success-muted);
+    --astryx-input-success-background: var(--astryx-color-background-green);
   }
 }
