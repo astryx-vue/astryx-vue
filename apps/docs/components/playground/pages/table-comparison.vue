@@ -244,8 +244,8 @@ const rowsByGroup = computed(() => {
 
 <style scoped>
 :deep(.best-cell) {
-  background: var(--color-background-blue);
-  margin-inline: calc(-1 * var(--spacing-4));
-  padding-inline: var(--spacing-4);
+  background: var(--astryx-color-background-blue);
+  margin-inline: calc(-1 * var(--astryx-spacing-4));
+  padding-inline: var(--astryx-spacing-4);
 }
 </style>

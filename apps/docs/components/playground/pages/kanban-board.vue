@@ -537,7 +537,7 @@ onBeforeUnmount(() => {
   overflow-x: auto;
   overflow-y: hidden;
   height: 100%;
-  padding: var(--spacing-4);
+  padding: var(--astryx-spacing-4);
 }
 
 .column-shell {
@@ -554,7 +554,7 @@ onBeforeUnmount(() => {
 }
 
 .board-card:hover {
-  box-shadow: var(--shadow-med);
+  box-shadow: var(--astryx-shadow-med);
 }
 
 .floating-card {
@@ -563,22 +563,22 @@ onBeforeUnmount(() => {
   left: 0;
   pointer-events: none;
   cursor: grabbing;
-  box-shadow: var(--shadow-high);
+  box-shadow: var(--astryx-shadow-high);
   z-index: 1000;
 }
 
 .drag-ghost {
-  border-radius: var(--radius-container);
-  background-color: var(--color-background-muted);
+  border-radius: var(--astryx-radius-container);
+  background-color: var(--astryx-color-background-muted);
 }
 
 .toolbar-divider {
   height: auto;
-  margin-block: var(--spacing-1);
+  margin-block: var(--astryx-spacing-1);
   align-self: stretch;
 }
 
 .column-empty-state {
-  padding-block: var(--spacing-10);
+  padding-block: var(--astryx-spacing-10);
 }
 </style>

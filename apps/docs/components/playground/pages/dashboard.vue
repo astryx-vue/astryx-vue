@@ -30,17 +30,17 @@ const metrics = [
 ]
 
 const regionData = [
-  { label: 'NORAM', value: 38, color: 'var(--color-data-categorical-blue, #0171E3)' },
-  { label: 'EMEA', value: 28, color: 'var(--color-data-categorical-orange, #EB6E00)' },
-  { label: 'APAC', value: 22, color: 'var(--color-data-categorical-green, #0B991F)' },
-  { label: 'LATAM', value: 12, color: 'var(--color-data-categorical-purple, #6B1EFD)' },
+  { label: 'NORAM', value: 38, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+  { label: 'EMEA', value: 28, color: 'var(--astryx-color-data-categorical-orange, #EB6E00)' },
+  { label: 'APAC', value: 22, color: 'var(--astryx-color-data-categorical-green, #0B991F)' },
+  { label: 'LATAM', value: 12, color: 'var(--astryx-color-data-categorical-purple, #6B1EFD)' },
 ]
 
 const roleData = [
-  { label: 'Engineering', value: 34, color: 'var(--color-data-categorical-blue, #0171E3)' },
-  { label: 'Design', value: 18, color: 'var(--color-data-categorical-orange, #EB6E00)' },
-  { label: 'Product', value: 22, color: 'var(--color-data-categorical-green, #0B991F)' },
-  { label: 'Other', value: 26, color: 'var(--color-data-neutral, #8494A3)' },
+  { label: 'Engineering', value: 34, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+  { label: 'Design', value: 18, color: 'var(--astryx-color-data-categorical-orange, #EB6E00)' },
+  { label: 'Product', value: 22, color: 'var(--astryx-color-data-categorical-green, #0B991F)' },
+  { label: 'Other', value: 26, color: 'var(--astryx-color-data-neutral, #8494A3)' },
 ]
 
 interface PageRow extends Record<string, unknown> {
@@ -132,11 +132,11 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
           </HStack>
           <Card :padding="4">
             <svg class="line-chart" viewBox="0 0 600 280" preserveAspectRatio="none" aria-hidden="true">
-              <path :d="activeUsersPath" fill="none" stroke="var(--color-data-categorical-blue, #0171E3)" stroke-width="2" />
+              <path :d="activeUsersPath" fill="none" stroke="var(--astryx-color-data-categorical-blue, #0171E3)" stroke-width="2" />
             </svg>
             <HStack :gap="4" class="legend">
               <HStack :gap="2" :align="'center'">
-                <Icon icon="i-heroicons-stop-solid" size="xsm" style="color: var(--color-data-categorical-blue, #0171E3)" />
+                <Icon icon="i-heroicons-stop-solid" size="xsm" style="color: var(--astryx-color-data-categorical-blue, #0171E3)" />
                 <Text type="supporting" color="secondary">All users</Text>
               </HStack>
             </HStack>
@@ -161,7 +161,7 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
                 </HStack>
                 <Text type="supporting" color="secondary">Last 30 days vs. Previous</Text>
                 <svg class="sparkline" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true">
-                  <path :d="sparkPath(m.sparkline)" fill="none" stroke="var(--color-data-categorical-blue, #0171E3)" stroke-width="1.5" />
+                  <path :d="sparkPath(m.sparkline)" fill="none" stroke="var(--astryx-color-data-categorical-blue, #0171E3)" stroke-width="1.5" />
                 </svg>
               </VStack>
             </Card>
@@ -230,7 +230,7 @@ const activeUsersPath = computed(() => sparkPath(activeUsersSample, 600, 280))
 <style scoped>
 .line-chart { width: 100%; height: 300px; display: block; }
 .sparkline { width: 100%; height: 40px; display: block; }
-.legend { margin-top: var(--spacing-3); }
+.legend { margin-top: var(--astryx-spacing-3); }
 .stacked-bar { display: flex; width: 100%; height: 24px; overflow: hidden; border-radius: 4px; }
 .stacked-bar__segment { height: 100%; }
 </style>

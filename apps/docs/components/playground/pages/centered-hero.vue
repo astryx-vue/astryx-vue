@@ -23,7 +23,7 @@ const heroImage: CSSProperties = {
 const heroFrame: CSSProperties = {
   maxWidth: '1200px',
   marginInline: 'auto',
-  borderRadius: 'var(--radius-page)',
+  borderRadius: 'var(--astryx-radius-page)',
 }
 </script>
 

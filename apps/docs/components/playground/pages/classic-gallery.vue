@@ -25,14 +25,14 @@ interface GalleryImage {
 const outer: CSSProperties = {
   maxWidth: '1200px',
   width: '100%',
-  paddingInline: 'var(--spacing-6)',
-  paddingBlock: 'var(--spacing-8)',
+  paddingInline: 'var(--astryx-spacing-6)',
+  paddingBlock: 'var(--astryx-spacing-8)',
 }
 
 const imageWrapper: CSSProperties = {
   position: 'relative',
   aspectRatio: '3/2',
-  borderRadius: 'var(--radius-container)',
+  borderRadius: 'var(--astryx-radius-container)',
   overflow: 'clip',
 }
 

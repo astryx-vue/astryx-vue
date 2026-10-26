@@ -258,7 +258,7 @@ const filledStars = computed(() => Math.round(4.3))
 <style scoped>
 .sticky-info {
   position: sticky;
-  top: var(--spacing-8);
+  top: var(--astryx-spacing-8);
   align-self: start;
 }
 
@@ -266,7 +266,7 @@ const filledStars = computed(() => Math.round(4.3))
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--radius-container);
+  border-radius: var(--astryx-radius-container);
 }
 
 .thumb-image {
@@ -277,11 +277,11 @@ const filledStars = computed(() => Math.round(4.3))
 }
 
 .star {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
+  color: var(--astryx-color-text-secondary);
+  font-size: var(--astryx-font-size-sm);
 }
 
 .star--filled {
-  color: var(--color-text-primary);
+  color: var(--astryx-color-text-primary);
 }
 </style>

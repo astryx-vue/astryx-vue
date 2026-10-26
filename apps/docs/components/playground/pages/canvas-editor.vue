@@ -298,7 +298,7 @@ const canvasScale = computed(() => ({
 
 <style scoped>
 .editor-shell {
-  background: var(--color-background-body);
+  background: var(--astryx-color-background-body);
 }
 .canvas-stage {
   display: flex;
@@ -314,7 +314,7 @@ const canvasScale = computed(() => ({
 .artboard {
   position: relative;
   background: #fff;
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  box-shadow: inset 0 0 0 1px var(--astryx-color-border);
 }
 .layer {
   position: absolute;
@@ -323,8 +323,8 @@ const canvasScale = computed(() => ({
   border: 1px solid transparent;
 }
 .layer.selected {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 1px var(--color-accent);
+  border-color: var(--astryx-color-accent);
+  box-shadow: 0 0 0 1px var(--astryx-color-accent);
 }
 .text-layer {
   margin: 0;

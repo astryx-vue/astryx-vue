@@ -126,7 +126,7 @@ const COMPONENT_CATEGORIES = [
 
 <style scoped>
 .preview-card {
-  border-radius: var(--radius-element);
+  border-radius: var(--astryx-radius-element);
 }
 
 .card-grid {

@@ -26,7 +26,7 @@ const galleryImage: CSSProperties = {
 }
 
 const galleryImageClip: CSSProperties = {
-  borderRadius: 'var(--radius-container)',
+  borderRadius: 'var(--astryx-radius-container)',
 }
 </script>
 

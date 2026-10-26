@@ -30,16 +30,16 @@ import {
 
 const fillViewport: CSSProperties = { minHeight: '100dvh' }
 const iconBox: CSSProperties = {
-  borderRadius: 'var(--radius-container)',
-  backgroundColor: 'var(--color-background-surface)',
+  borderRadius: 'var(--astryx-radius-container)',
+  backgroundColor: 'var(--astryx-color-background-surface)',
   flexShrink: 0,
 }
-const rowPadding: CSSProperties = { paddingBlock: 'var(--spacing-4)' }
+const rowPadding: CSSProperties = { paddingBlock: 'var(--astryx-spacing-4)' }
 const sideNavPadding: CSSProperties = {
-  paddingBlock: 'var(--spacing-4)',
-  paddingInline: 'var(--spacing-3)',
+  paddingBlock: 'var(--astryx-spacing-4)',
+  paddingInline: 'var(--astryx-spacing-3)',
 }
-const sideNavHeading: CSSProperties = { marginInline: 'var(--spacing-4)' }
+const sideNavHeading: CSSProperties = { marginInline: 'var(--astryx-spacing-4)' }
 
 const NAV_ITEMS = [
   { label: 'Personal information', icon: 'i-heroicons-user' },

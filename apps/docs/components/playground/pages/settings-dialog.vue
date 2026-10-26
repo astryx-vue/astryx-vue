@@ -743,7 +743,7 @@ const SearchIcon = iconComponent('i-heroicons-magnifying-glass')
   flex-shrink: 0;
 }
 .settings-side-nav-section {
-  padding-block: var(--spacing-2);
+  padding-block: var(--astryx-spacing-2);
 }
 .settings-close-anchor {
   position: sticky;
@@ -753,8 +753,8 @@ const SearchIcon = iconComponent('i-heroicons-magnifying-glass')
 }
 .settings-close-backing {
   display: flex;
-  background-color: var(--color-background-surface);
-  border-radius: var(--radius-element);
+  background-color: var(--astryx-color-background-surface);
+  border-radius: var(--astryx-radius-element);
 }
 .settings-panel {
   container-type: inline-size;
@@ -764,26 +764,26 @@ const SearchIcon = iconComponent('i-heroicons-magnifying-glass')
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-4);
+  gap: var(--astryx-spacing-3);
+  padding: var(--astryx-spacing-4);
 }
 @container settings-panel (max-width: 480px) {
   .settings-row {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--spacing-2);
+    gap: var(--astryx-spacing-2);
   }
 }
 .theme-swatch {
   width: 100%;
   height: 100%;
-  background: var(--color-background-muted);
-  border-radius: var(--radius-element);
+  background: var(--astryx-color-background-muted);
+  border-radius: var(--astryx-radius-element);
 }
 .theme-swatch[data-theme='dark'] {
   background: #1a1a1a;
 }
 .theme-swatch[data-theme='system'] {
-  background: linear-gradient(90deg, var(--color-background-muted) 50%, #1a1a1a 50%);
+  background: linear-gradient(90deg, var(--astryx-color-background-muted) 50%, #1a1a1a 50%);
 }
 </style>

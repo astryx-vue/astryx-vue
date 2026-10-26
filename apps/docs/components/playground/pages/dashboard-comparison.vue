@@ -42,24 +42,24 @@ const OVERVIEW_METRICS: Metric[] = [
 ]
 
 const AGE_DATA = [
-  { label: '18–24', value: 26, color: 'var(--color-data-categorical-blue, #0171E3)' },
-  { label: '25–34', value: 34, color: 'var(--color-data-categorical-teal, #08A3A3)' },
-  { label: '35–44', value: 21, color: 'var(--color-data-categorical-green, #0B991F)' },
-  { label: '45–54', value: 12, color: 'var(--color-data-categorical-orange, #EB6E00)' },
-  { label: '55+', value: 7, color: 'var(--color-data-neutral, #8494A3)' },
+  { label: '18–24', value: 26, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+  { label: '25–34', value: 34, color: 'var(--astryx-color-data-categorical-teal, #08A3A3)' },
+  { label: '35–44', value: 21, color: 'var(--astryx-color-data-categorical-green, #0B991F)' },
+  { label: '45–54', value: 12, color: 'var(--astryx-color-data-categorical-orange, #EB6E00)' },
+  { label: '55+', value: 7, color: 'var(--astryx-color-data-neutral, #8494A3)' },
 ]
 
 const GENDER_DATA = [
-  { label: 'Women', value: 48, color: 'var(--color-data-categorical-purple, #6B1EFD)' },
-  { label: 'Men', value: 46, color: 'var(--color-data-categorical-blue, #0171E3)' },
-  { label: 'Non-binary', value: 4, color: 'var(--color-data-categorical-teal, #08A3A3)' },
-  { label: 'Prefer not to say', value: 2, color: 'var(--color-data-neutral, #8494A3)' },
+  { label: 'Women', value: 48, color: 'var(--astryx-color-data-categorical-purple, #6B1EFD)' },
+  { label: 'Men', value: 46, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+  { label: 'Non-binary', value: 4, color: 'var(--astryx-color-data-categorical-teal, #08A3A3)' },
+  { label: 'Prefer not to say', value: 2, color: 'var(--astryx-color-data-neutral, #8494A3)' },
 ]
 
 const DEVICE_DATA = [
-  { label: 'Mobile', value: 52, color: 'var(--color-data-categorical-blue, #0171E3)' },
-  { label: 'Desktop', value: 38, color: 'var(--color-data-categorical-orange, #EB6E00)' },
-  { label: 'Tablet', value: 10, color: 'var(--color-data-categorical-green, #0B991F)' },
+  { label: 'Mobile', value: 52, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+  { label: 'Desktop', value: 38, color: 'var(--astryx-color-data-categorical-orange, #EB6E00)' },
+  { label: 'Tablet', value: 10, color: 'var(--astryx-color-data-categorical-green, #0B991F)' },
 ]
 
 interface AcqRow extends Record<string, unknown> {
@@ -163,7 +163,7 @@ function deltaColor(delta: number, higherIsBetter: boolean) {
                   <Badge v-for="(delta, key) in metric.deltas" :key="key" :label="`${key}: ${delta > 0 ? '+' : ''}${delta}%`" :variant="deltaColor(delta, metric.higherIsBetter) === 'success' ? 'green' : 'red'" />
                 </HStack>
                 <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true">
-                  <path :d="sparkPath(metric.spark)" fill="none" stroke="var(--color-data-categorical-blue)" stroke-width="1.5" />
+                  <path :d="sparkPath(metric.spark)" fill="none" stroke="var(--astryx-color-data-categorical-blue)" stroke-width="1.5" />
                 </svg>
               </VStack>
             </Card>
@@ -181,7 +181,7 @@ function deltaColor(delta: number, higherIsBetter: boolean) {
           <Card :padding="6">
             <Text type="label">Daily active users by device type</Text>
             <svg class="trend-chart" viewBox="0 0 400 120" aria-hidden="true">
-              <path d="M0,80 L50,70 L100,75 L150,60 L200,55 L250,50 L300,45 L350,40 L400,35" fill="none" stroke="var(--color-data-categorical-blue)" stroke-width="2" />
+              <path d="M0,80 L50,70 L100,75 L150,60 L200,55 L250,50 L300,45 L350,40 L400,35" fill="none" stroke="var(--astryx-color-data-categorical-blue)" stroke-width="2" />
             </svg>
           </Card>
         </VStack>
@@ -219,7 +219,7 @@ function deltaColor(delta: number, higherIsBetter: boolean) {
 <style scoped>
 .metrics-grid { align-items: stretch; }
 .spark { width: 100%; height: 32px; display: block; }
-.trend-chart { width: 100%; height: 120px; margin-top: var(--spacing-4); }
+.trend-chart { width: 100%; height: 120px; margin-top: var(--astryx-spacing-4); }
 .breakdown-bar { display: flex; width: 100%; height: 12px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
 </style>
