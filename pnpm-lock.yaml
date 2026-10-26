@@ -492,6 +492,12 @@ importers:
       '@vue/compiler-sfc':
         specifier: catalog:vue
         version: 3.5.43
+      '@vue/test-utils':
+        specifier: catalog:testing
+        version: 2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(@typescript/typescript6@6.0.2))
+      dom-accessibility-api:
+        specifier: catalog:testing
+        version: 0.7.1
       tsdown:
         specifier: catalog:build
         version: 0.23.0(@arethetypeswrong/core@0.18.5)(@typescript/typescript6@6.0.2)(@volar/typescript@2.4.28(@typescript/typescript6@6.0.2))(@vue/language-core@3.3.12)(publint@0.3.25)(unrun@0.3.1(synckit@0.11.13))(vue-tsc@3.3.12(@typescript/typescript6@6.0.2))
