@@ -19,7 +19,26 @@ import {
   Text,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import type { Component } from 'vue'
+import { computed, defineComponent, h, ref } from 'vue'
+
+/** 线性图标用内联 SVG 画出，不依赖外部图标字体。 */
+function strokeIcon(path: string): Component {
+  return defineComponent({
+    render: () => h('svg', {
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: 'currentColor',
+      'stroke-width': 1.5,
+      'stroke-linecap': 'round',
+      'aria-hidden': 'true',
+      style: 'width:1em;height:1em',
+    }, [h('path', { d: path })]),
+  })
+}
+
+const MinusIcon = strokeIcon('M5 12h14')
+const PlusIcon = strokeIcon('M12 5v14M5 12h14')
 
 const IMAGES = [
   '/template-assets/light-product-1.png',
@@ -182,7 +201,7 @@ const filledStars = computed(() => Math.round(4.3))
                   :click-action="decrement"
                 >
                   <template #icon>
-                    <span class="i-carbon-subtract" aria-hidden="true" />
+                    <MinusIcon />
                   </template>
                 </Button>
                 <Center :width="100">
@@ -203,7 +222,7 @@ const filledStars = computed(() => Math.round(4.3))
                   :click-action="increment"
                 >
                   <template #icon>
-                    <span class="i-carbon-add" aria-hidden="true" />
+                    <PlusIcon />
                   </template>
                 </Button>
               </HStack>
