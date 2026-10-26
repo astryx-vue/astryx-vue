@@ -40,7 +40,11 @@ C11、C12、C13 是 Cursor 云代理自己做的计划、实现、验收，PR �
 
 当前并行：没有正在实现或验收的节点。
 
-可以开工、等待派发：D1、F2a、D4a、D7、F1a、F3a、F3b、F3g、F3c、F3h、F3e、F4。这是 `node scripts/swarm/status.mjs ready` 按下游数量排出的顺序。D4a 仍标着可开工，要等用户签字，签字前不要派。
+D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek/deepseek-flash 实现者并行写，总控亲自审阅、补修、合入，没有派验收子代理（用户要求：纯编码节点总控审完质量没问题就合，不用问用户）。
+
+**D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`。
+
+可以开工、等待派发：F2b、D2、F1a、F3a、F3b、F3g、F3c、F3h、F3e、F4、D3。这是 `status.mjs ready` 按下游数量排出的顺序。
 
 ## 后续
 
@@ -88,6 +92,8 @@ C11、C12、C13 是 Cursor 云代理自己做的计划、实现、验收，PR �
 - **C3 教训：左右对照必须是同一处 Demo，不能把无关区块拼在一起。** 2026-10-21 用户指出上一轮 C3 左边是「次要样式 / 选项操作」，右边却是原版 Guidance 的 Do/Don't 或 Validation States，两边不是同一位置。原版只截 Overview 里的 Demo，禁止截 Guidance / Practices。本地必须是能看到侧栏的 VitePress 文档站整页。没有对位 Demo 就写「无对位」，改发单侧整页。规则见 SWARM.md「发给用户的验收对照图」。
 - **合入前人工审阅发现 touch 路径事件漏发；行数白名单并行删行容易冲突，先合一边再解。**
 - **C12/C13 教训：触屏按压要用 `usePressFeedback({ hasOverlay: false })` 打标记，组件自己的样式里把 `:active` 放进 `@media not all and (pointer: coarse)`，再用 `[data-astryx-press]` 画 `var(--_press-paint-image)`。** 只加一条 `:active` 不算接入；组件已有 `:active` 底色时再用默认的 `astryx-pressable` 遮罩，会叠出两层。
+- **本机 git 的 SSH（22 端口）可能被断开**，报 `Connection closed by 198.18.0.115 port 22`。改用 HTTPS 走代理：`git -c credential.helper='!gh auth git-credential' fetch/push https://github.com/astryx-vue/astryx-vue.git <ref>`。
+- **D1 教训：主题 token 改对了，组件不一定读它。** 审主题节点要在浏览器里读组件的计算值，并和原版同一个 Demo 比；D1 就是这样发现 Heading、Text 没读各级的行高和字重。
 - **`tests/swarm-worktree.test.ts` 偶尔在 CI 上报 `ENOTEMPTY ... rmdir /tmp/swarm-worktree-*`。** 这是测试清理临时目录时的竞态，和节点代码无关，`gh run rerun <id> --failed` 即可。
 - 验收者通过了也要自己复核。A3、A4、B4 都是复核时才发现问题的，比如 B4「按子路径引入组件时 layer.css 不生效」。
 - 文档里的说法必须在浏览器里实测过（B1 卡了 3 轮就是因为这个）。
