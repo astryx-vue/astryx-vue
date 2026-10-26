@@ -53,18 +53,22 @@ mindmap
       ✅ C16 展示与动作 #135
     阶段 D 汇总
       ✅ D1 Neutral 底色 #165
+      ✅ D2 其余 6 套主题 #169
+      ✅ D3 Probe 不移植
+      ✅ D5a 页面模板修复与补齐 #171
       ✅ D7 迁移指南 #167
+      ✅ D9 指南补齐 #172
       🟡 D4a CLI 取舍 和用户边讨论边定
-      🔵 D2 其余 6 套主题
-      🔵 D3 Probe 主题调研
-      ⬜ D4b D5 D6 D8
+      🟡 D8 演练场同步
+      ➖ D6 暂缓
+      ⬜ D4b D5b
     阶段 E 工程质量
       ✅ E1 E2 E3 E4
     阶段 F 新包
       ✅ F0 选型 ADR
       🔵 F1a richtext 纯逻辑
       ✅ F2a charts 纯逻辑 #166
-      🔵 F2b charts 组件
+      ✅ F2b charts 组件 #170
       🔵 F3a lab 输入类
       🔵 F3b lab 展示类
       🔵 F3c lab 浮层与引导
@@ -72,6 +76,7 @@ mindmap
       🔵 F3g lab 日程表
       🔵 F3h lab 代码类
       🔵 F4 Nuxt 模块
+      🔵 F2c F2d F3d
       ⬜ F1b 与其余 F 节点
 ```
 
@@ -79,6 +84,10 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| D9 指南补齐 | [#172](https://github.com/astryx-vue/astryx-vue/pull/172) | squash 合入（`4c9b931`）。新增布局、设计原则、配合 AI、浏览器支持 4 页，另在 6 个已有页面各补一节，中英文各一份。总控修正了一个不存在的示例模板名 |
+| D5a 页面模板修复与补齐 | [#171](https://github.com/astryx-vue/astryx-vue/pull/171) | squash 合入（`7541956`）。补了 160 处变量前缀并加检查，settings-dialog 版式对齐，补 4 个模板。总控补齐了缺失的 50 张演示图片，并让上游未完成的模板不进菜单 |
+| F2b charts 组件 | [#170](https://github.com/astryx-vue/astryx-vue/pull/170) | squash 合入（`76c2838`）。Chart、Axis、Grid、Legend、Swatch、Tooltip 和 8 种 SVG 标记，上游用例除 WebGL 外全部移植。总控修了图表和图例重叠、图例对不齐，以及 CI 上的 typecheck |
+| D2 其余 6 套主题 | [#169](https://github.com/astryx-vue/astryx-vue/pull/169) | squash 合入（`0a8fefa`）。6 套主题 token 层 0 处差异，组件覆盖值 424 条全部一致；给 core 加的变量入口默认值都不变 |
 | D7 迁移指南与版本信息 | [#167](https://github.com/astryx-vue/astryx-vue/pull/167) | squash 合入（`5b6fc8d`）。中英文升级指南 13 条，去掉 38 处写死的英文 locale，`upstream` 字段更新到 0.7.1。总控复核修正了 3 处说法 |
 | F2a charts 纯逻辑 | [#166](https://github.com/astryx-vue/astryx-vue/pull/166) | squash 合入（`e9c7a3a`）。新建 `@astryx-vue/charts`（private，只发 canary），113 条测试，上游断言逐条一致 |
 | D1 Neutral 主题底色 | [#165](https://github.com/astryx-vue/astryx-vue/pull/165) | squash 合入（`7687b15`）。色值用脚本从上游解析后逐个比对（token 192/192）。总控补了 Heading、Text 按级别读主题的行高和字重；Banner 和原版同一处 Demo 的计算颜色一致 |
@@ -106,11 +115,11 @@ mindmap
 
 ## 当前并行
 
-没有正在实现或验收的节点。
+D8 演练场同步正在实现。
 
-**阶段 C 全部完成；D1、F2a、D7 已合入。** D4a 正在和用户边讨论边定（规模选「中等」，记录在 `nodes/D4a/decisions.md`）。可以开工、等待派发：F2b、D2、F1a、F3a、F3b、F3g、F3c、F3h、F3e、F4、D3。
+**阶段 C 全部完成；D1、D2、D3、D5a、D7、D9、F2a、F2b 已合入。** D4a 正在和用户边讨论边定，记录在 `nodes/D4a/decisions.md`。D6 暂缓。可以开工、等待派发：F1a、G1、F3a、F3b、F3g、F3c、F3d、F3h、F3e、F2c、F4、F2d。G1（发布 core + themes）要先问用户。
 
-**本 PR 的 CI：** 当前 tip 含 D7（`5b6fc8d`）。节点 PR 合入前仍须 Check + Test 绿。`tests/swarm-worktree.test.ts` 的临时目录清理偶尔报 ENOTEMPTY，和节点代码无关，重跑即可。
+**本 PR 的 CI：** 当前 tip 含 D9（`4c9b931`）。节点 PR 合入前仍须 Check + Test 绿。`tests/swarm-worktree.test.ts` 的临时目录清理偶尔报 ENOTEMPTY，和节点代码无关，重跑即可。
 
 ## 怎么验收这个总 PR
 

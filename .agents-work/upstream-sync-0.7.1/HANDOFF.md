@@ -38,13 +38,20 @@ C11、C12、C13 是 Cursor 云代理自己做的计划、实现、验收，PR �
 
 **#151 已合入（6f5b4f6）。** 左右对照必须对上同一处 Demo。规则已经写在下面「复核时要特别留意的坑」和 ROADMAP 的通用完成标准里。
 
-当前并行：没有正在实现或验收的节点。
+D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek-flash 实现者并行写，总控亲自审阅、补修、合入，没有派验收子代理（用户要求：纯编码节点总控审完质量没问题就合，不用问用户）。
 
-D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek/deepseek-flash 实现者并行写，总控亲自审阅、补修、合入，没有派验收子代理（用户要求：纯编码节点总控审完质量没问题就合，不用问用户）。
+第二波已合入：D2 #169（6 套主题，`0a8fefa`）、F2b #170（charts 组件，`76c2838`）、D5a #171（页面模板修复与补齐，`7541956`）、D9 #172（指南补齐，`4c9b931`）。D3 由总控直接结论：Probe 是上游私有测试夹具，不移植。总控审阅时补修的：
+- F2b：量到宽度后不再写死根高度（之前标题、图例和下一张图重叠）；`HStack` 的 `vAlign` 在模板里写成 `v-align` 会被当成指令，改用 `align`；charts 的 typecheck 改走 core 的 `source` 条件，CI 上不用先构建 core；补了 `useChartColors` 用例。
+- D5a：仓库里一直缺 50 张 `/template-assets/*` 演示图，画廊、商品类模板全是空白，从上游 docsite 补齐；上游标 `isReady: false` 或 `isHiddenFromOverview: true` 的模板，演练场菜单和模板索引不列出、`?template=` 仍能打开，命令行标未就绪（`template-meta` 里的 `upstreamNotReady`）。
+- D9：示例里的 `order-detail` 模板不存在，换成 `detail-page`。
 
-**D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`。
+当前并行：D8（演练场同步，worker 实现中，工作区 `astryx-vue-wt/D8`）。
 
-可以开工、等待派发：F2b、D2、F1a、F3a、F3b、F3g、F3c、F3h、F3e、F4、D3。这是 `status.mjs ready` 按下游数量排出的顺序。
+**D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`，原版指南对照在 `nodes/D4a/guides-gap.md`。还没定的：`upgrade` 的形态（D6 暂缓后只输出升级指引）。
+
+**D6 暂缓（用户 2026-10-26）。** D5 拆成 D5a（模板内容，已完成）和 D5b（命令行生成模板的行为，等 D4b）。
+
+可以开工、等待派发：F1a、G1、F3a、F3b、F3g、F3c、F3d、F3h、F3e、F2c、F4、F2d。**G1（发布 core + themes）要先问用户**，合进 dev/main 和发 npm 都要用户点头。
 
 ## 后续
 
@@ -56,6 +63,7 @@ D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek/de
 
 - **B2、B4、B6 的收尾由总控亲自做，没有再派子代理**，因为用户觉得派子代理太费时间。之后开新节点时，先问用户这次要不要用子代理。如果用户另外订阅了别的模型来做实现，总控就只负责审阅。
 - **验证操作要短小、可重复**，见 SWARM.md 的「验证操作要短小、可重复」。
+- **worker 卡住时总控要主动介入（用户 2026-10-26 强调）。** 输出文件还在更新但 30 分钟以上没有新提交，就 steer 它先提交、写现状，然后结束；总控接手查原因。不要干等。派活时就要求 worker 每 15 分钟或每做完一项提交一次，单个问题调试超过 20 分钟就停下记录。
 
 ## 合入一个节点的固定步骤
 
@@ -70,7 +78,7 @@ D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek/de
 
 ## 用户这次会话里拍板的决定，后面要照着执行
 
-- 实现者已经从 deepseek-flash 换成了 `sub2tok/claude-sonnet-5-5`，原因是前者返工次数太多，一直收不拢。以后要换模型，听用户的。
+- **实现者（worker）模型：`opencode-go/deepseek-v4.1-flash`**（用户 2026-10-26 指定）。纯编码节点由总控派 worker、亲自审阅后合入，不再派验收子代理，也不用问用户。以后要换模型，听用户的。
 - **B2**：按上游提供完整的全局 reset，这是破坏性改动，要写进 D7 迁移指南。
 - **B6 / FR10**：新增 `containerClass/containerStyle/controlClass/controlStyle`。组件根上直接写的 `class/style` **保持今天的落点，不丢弃，也不警告**（这一点和上游不同）。不做 `*Xstyle`。
 - **演练场模板的问题不单独开节点**，等 D5 一起修。问题已经写进 ROADMAP 的 D5 那一行：163 处变量缺 `--astryx-` 前缀、settings-dialog 的版式、`is-label-hidden` 属性名不统一（C1/C3 负责统一）。
@@ -98,6 +106,9 @@ D1 #165、F2a #166、D7 #167 已合入。这一波由总控派 3 个 deepseek/de
 - 验收者通过了也要自己复核。A3、A4、B4 都是复核时才发现问题的，比如 B4「按子路径引入组件时 layer.css 不生效」。
 - 文档里的说法必须在浏览器里实测过（B1 卡了 3 轮就是因为这个）。
 - 所有测试和构建命令都要加 `env -u NODE_ENV`，因为 shell 默认是 production。vitest 要加 `--maxWorkers=2`。
+- **会话断开会让所有后台 worker 同时 `aborted`**，没提交的改动留在工作区。重派时先 `git status` 看清现状，把能用的部分先存成 WIP 提交，再在提示里写明从哪一步接着做。
+- **Clash 代理（7890）可能不在监听。** 这时直连 GitHub 反而能通；`git push` 报 HTTP2 framing 错误时加 `-c http.version=HTTP/1.1` 重试。原版站点 astryx.atmeta.com 只能走代理，代理断了就没法截原版图。
+- **多个节点都改 `catalog.json` 时，后合的那个要 rebase 后重新 `generate`**，否则 CI 的 `generate:check` 会红。eslint `--fix` 改了文档示例也要重新生成。
 - 改 ROADMAP 表格时别把注释插到表头和分隔行中间；改完跑一次 `status.mjs check`。
 
 ## 汇报风格（用户明确说很喜欢，务必保持）
