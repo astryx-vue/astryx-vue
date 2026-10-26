@@ -39,6 +39,7 @@ export function guideSidebar(english: boolean): Sidebar {
         item(english ? 'Accessibility' : '无障碍', `${prefix}/guide/accessibility`),
         item(english ? 'Dark mode' : '深色模式', `${prefix}/guide/dark-mode`),
         item(english ? 'Internationalization' : '国际化', `${prefix}/guide/i18n`),
+        item(english ? 'Browser support' : '浏览器支持', `${prefix}/guide/browser-support`),
       ],
     },
     {
