@@ -106,11 +106,11 @@ defineTheme({
 | `statusdot` | `status-dot` |
 | `textarea` | `text-area` |
 
-旧名字不会报错，也不会生效，只是什么都匹配不到。完整说明见 [扩展主题](/themes/extending)。
+表里的旧名字本身写法合法，所以不会报错，但已经没有组件用它，写了不生效。完整说明见 [扩展主题](/themes/extending)。
 
 ### 组件不再输出 `primary`、`sm` 这类裸类名
 
-**变了什么**：Button 这类组件不再往元素上加 `.primary`、`.secondary`、`.ghost`、`.destructive`、`.sm`、`.md`、`.lg`。这些信息改用 `[data-variant]`、`[data-size]` 属性，另外还加了一批带前缀的修饰类（上游 #6121）。
+**变了什么**：Button 这类组件不再往元素上加 `.primary`、`.secondary`、`.ghost`、`.destructive`、`.sm`、`.md`、`.lg`。这些信息改用 `[data-variant]`、`[data-size]` 属性（上游 #6121）。
 
 **以前**：
 
@@ -128,7 +128,7 @@ defineTheme({
 }
 ```
 
-**怎么改**：搜自己的样式表里「组件类名 + 变体词」的组合，改成属性选择器。也可以写 `.astryx-button--variant-primary` 这种修饰类，效果一样。
+**怎么改**：搜自己的样式表里「组件类名 + 变体词」的组合，改成属性选择器（`[data-variant]`、`[data-size]`）。
 
 ## 组件 API
 
@@ -148,7 +148,7 @@ defineTheme({
 <TextInput v-model="name" label="名字" is-label-hidden />
 ```
 
-**怎么改**：把 `label-hidden` 换成 `is-label-hidden`。涉及的组件：Typeahead、Tokenizer、MultiSelector、Token、PowerSearch。
+**怎么改**：把 `label-hidden` 换成 `is-label-hidden`。涉及的组件：Typeahead、Tokenizer、MultiSelector、Token、PowerSearch、DateInput、DateRangeInput、DateTimeInput、TimeInput。
 
 PowerSearch 默认就是隐藏标签。它的规则有点特别：两个名字都传时听新名；只传旧名时听旧名；都没传就保持隐藏。其余组件是两个名字任一为真就隐藏。
 

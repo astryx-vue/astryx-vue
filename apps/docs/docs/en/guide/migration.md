@@ -106,11 +106,11 @@ defineTheme({
 | `statusdot` | `status-dot` |
 | `textarea` | `text-area` |
 
-An old name does not throw. It also does not match anything. Full detail in [Extend a theme](/en/themes/extending).
+The old names are still well-formed, so they do not throw, but no component uses them any more, so they have no effect. Full detail in [Extend a theme](/en/themes/extending).
 
 ### Components no longer emit bare `primary` or `sm` classes
 
-**What changed:** components such as Button no longer put `.primary`, `.secondary`, `.ghost`, `.destructive`, `.sm`, `.md` or `.lg` on their element. That information now lives in `[data-variant]` and `[data-size]`, plus prefixed modifier classes (upstream #6121).
+**What changed:** components such as Button no longer put `.primary`, `.secondary`, `.ghost`, `.destructive`, `.sm`, `.md` or `.lg` on their element. That information now lives in `[data-variant]` and `[data-size]` (upstream #6121).
 
 **Before:**
 
@@ -128,7 +128,7 @@ An old name does not throw. It also does not match anything. Full detail in [Ext
 }
 ```
 
-**What to do:** look for "component class plus variant word" in your stylesheets and switch to the attribute selector. The modifier class `.astryx-button--variant-primary` works the same way.
+**What to do:** look for "component class plus variant word" in your stylesheets and switch to the attribute selector (`[data-variant]`, `[data-size]`).
 
 ## Component APIs
 
@@ -148,7 +148,7 @@ An old name does not throw. It also does not match anything. Full detail in [Ext
 <TextInput v-model="name" label="Name" is-label-hidden />
 ```
 
-**What to do:** replace `label-hidden` with `is-label-hidden` on Typeahead, Tokenizer, MultiSelector, Token and PowerSearch.
+**What to do:** replace `label-hidden` with `is-label-hidden` on Typeahead, Tokenizer, MultiSelector, Token, PowerSearch, DateInput, DateRangeInput, DateTimeInput and TimeInput.
 
 PowerSearch hides its label by default, and its rule is slightly different: when both names are passed the new one wins, when only the old one is passed the old one wins, and when neither is passed the label stays hidden. Every other component hides the label when either name is true.
 
