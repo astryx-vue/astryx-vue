@@ -21,7 +21,6 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { PlaygroundLineChart, PlaygroundResponsive } from '@astryx-vue/playground-charts'
 import { computed, ref } from 'vue'
 
 type Period = 'WoW' | 'MoM' | 'QoQ'
@@ -128,7 +127,7 @@ const CALLOUT_ICON: Record<Callout['status'], string> = {
   info: 'info',
 }
 
-const CALLOUT_ICON_COLOR: Record<Callout['status'], string> = {
+const CALLOUT_ICON_COLOR: Record<Callout['status'], 'success' | 'warning' | 'accent'> = {
   success: 'success',
   warning: 'warning',
   info: 'accent',
@@ -193,20 +192,28 @@ function trendDelta(trend: TrendSeries): number {
   return Math.round(((latest.current - latest.prior) / latest.prior) * 100)
 }
 
-function trendDomain(trend: TrendSeries): [number, number] {
+/** 图表画在 320×200 的盒子里，只留底部的小边距。 */
+const CHART = { w: 320, h: 200, padLeft: 8, padRight: 8, padTop: 8, padBottom: 20 }
+
+/** 一张趋势卡里两条线的折点：当前期用卡片的主题色，上期用次要灰。 */
+function trendLines(trend: TrendSeries) {
   const values = trend.data.flatMap(row => [row.current, row.prior])
-  return [Math.min(...values), Math.max(...values)]
-}
-
-function trendSeries(trend: TrendSeries) {
+  const min = Math.min(...values)
+  const range = (Math.max(...values) - min) || 1
+  const innerW = CHART.w - CHART.padLeft - CHART.padRight
+  const innerH = CHART.h - CHART.padTop - CHART.padBottom
   return [
-    { key: 'current', color: trend.color, name: 'Current' },
-    { key: 'prior', color: COLORS.prior, name: 'Prior' },
+    { key: 'current', color: trend.color, points: pointsFor(trend.data.map(row => row.current)) },
+    { key: 'prior', color: COLORS.prior, points: pointsFor(trend.data.map(row => row.prior)) },
   ]
-}
 
-function weekLabel(t: number): string {
-  return WEEK_LABELS[t] ?? ''
+  function pointsFor(series: number[]): string {
+    return series.map((value, i) => {
+      const x = CHART.padLeft + (i / (series.length - 1)) * innerW
+      const y = CHART.padTop + innerH - ((value - min) / range) * innerH
+      return `${x.toFixed(1)},${y.toFixed(1)}`
+    }).join(' ')
+  }
 }
 </script>
 
@@ -388,18 +395,16 @@ function weekLabel(t: number): string {
                     {{ trendDelta(trend) >= 0 ? '+' : '' }}{{ trendDelta(trend) }}% vs prior
                   </Text>
                 </HStack>
-                <PlaygroundResponsive :height="200">
-                  <PlaygroundLineChart
-                    :data="trend.data"
-                    x-key="t"
-                    :series="trendSeries(trend)"
-                    :height="200"
-                    :y-domain="trendDomain(trend)"
-                    :x-ticks="[0, 3, 7, 11]"
-                    :x-tick-format="weekLabel"
-                    :y-unit="trend.unit"
+                <svg class="trend-chart" :viewBox="`0 0 ${CHART.w} ${CHART.h}`" role="img" :aria-label="trend.title">
+                  <polyline
+                    v-for="line in trendLines(trend)"
+                    :key="line.key"
+                    fill="none"
+                    :stroke="line.color"
+                    stroke-width="2"
+                    :points="line.points"
                   />
-                </PlaygroundResponsive>
+                </svg>
                 <HStack :gap="5" align="center">
                   <HStack :gap="2" align="center">
                     <Icon icon="stop" size="xsm" :style="{ color: trend.color }" />
@@ -466,5 +471,10 @@ function weekLabel(t: number): string {
 }
 .page-content {
   padding-bottom: var(--astryx-spacing-10);
+}
+.trend-chart {
+  width: 100%;
+  height: 200px;
+  display: block;
 }
 </style>
