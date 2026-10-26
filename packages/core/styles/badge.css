@@ -10,6 +10,9 @@
     height: var(--astryx-badge-height, var(--astryx-spacing-5, 20px));
     padding-block: var(--astryx-badge-padding-block, 0);
     padding-inline: var(--astryx-badge-padding-inline, var(--astryx-spacing-2, 8px));
+    border-width: var(--astryx-badge-border-width, 0);
+    border-style: var(--astryx-badge-border-style, solid);
+    border-color: var(--astryx-badge-border-color, transparent);
     border-radius: var(--astryx-badge-radius, var(--astryx-radius-full, 9999px));
     font-family: inherit;
     font-size: var(--astryx-text-supporting-size, 0.75rem);
