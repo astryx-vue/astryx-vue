@@ -33,6 +33,10 @@ import { computed, h, ref } from 'vue'
 type JobStatus = 'scheduled' | 'in_progress' | 'on_hold' | 'overdue' | 'completed'
 type Priority = 'urgent' | 'high' | 'normal'
 
+/** 优先级和状态按紧急程度排，不按字母排：升序时 Urgent、Overdue 在最前。 */
+const PRIORITY_RANK: Record<Priority, number> = { urgent: 0, high: 1, normal: 2 }
+const STATUS_RANK: Record<JobStatus, number> = { overdue: 0, on_hold: 1, in_progress: 2, scheduled: 3, completed: 4 }
+
 interface SeedJob {
   id: string
   summary: string
@@ -528,6 +532,7 @@ const selectedKeys = ref<ReadonlySet<string>>(new Set())
 const { sortedData, sortConfig } = useTableSortableState<ServiceJob>({
   data: () => visibleJobs.value,
   columns: () => columns,
+  defaultSort: [{ sortKey: 'priority', direction: 'ascending' }],
 })
 
 const { selectionConfig } = useTableSelectionState<ServiceJob>({
@@ -584,7 +589,7 @@ const columns: TableColumn<ServiceJob>[] = [
     key: 'status',
     header: 'Status',
     width: pixel(130),
-    sortable: { compare: (a, b) => STATUS_META[a.status].label.localeCompare(STATUS_META[b.status].label) },
+    sortable: { compare: (a, b) => STATUS_RANK[a.status] - STATUS_RANK[b.status] },
     renderCell: job => h(Badge, {
       label: STATUS_META[job.status].label,
       variant: STATUS_META[job.status].badge,
@@ -594,7 +599,7 @@ const columns: TableColumn<ServiceJob>[] = [
     key: 'priority',
     header: 'Priority',
     width: pixel(110),
-    sortable: { compare: (a, b) => a.priority.localeCompare(b.priority) },
+    sortable: { compare: (a, b) => PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority] },
     renderCell: job => h(HStack, { gap: 2, vAlign: 'center' }, () => [
       h(StatusDot, { variant: PRIORITY_META[job.priority].dot, label: PRIORITY_META[job.priority].label }),
       h(Text, () => PRIORITY_META[job.priority].label),
