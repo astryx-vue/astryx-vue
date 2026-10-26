@@ -50,3 +50,127 @@ import { chatPatternConversation, chatPatternLanding } from '../../../components
   locale="zh"
   title="会话模式"
 />
+
+## 固定页眉与页脚
+
+一块内容很长的区域，页眉一滚就看不见，提交按钮一滚就找不到，人就得来回滚。`Layout` 的 `height` 默认是 `fill`：它撑满容器，只有正文在中间滚动，页眉和页脚留在原地。
+
+```vue
+<script setup lang="ts">
+import { Button } from '@astryx-vue/core/Button'
+import { Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@astryx-vue/core/Layout'
+
+const rows = [/* 很长的列表 */]
+</script>
+
+<template>
+  <Layout :padding="4" default-has-dividers>
+    <template #header>
+      <LayoutHeader>订单</LayoutHeader>
+    </template>
+
+    <LayoutContent>
+      <OrderRow v-for="row in rows" :key="row.id" v-bind="row" />
+    </LayoutContent>
+
+    <template #footer>
+      <LayoutFooter>
+        <Button label="保存" />
+        <Button label="取消" variant="secondary" />
+      </LayoutFooter>
+    </template>
+  </Layout>
+</template>
+```
+
+几点：
+
+- `padding` 只写在 `Layout` 上，页眉、正文、页脚共用同一个左右内边距，文字对齐同一条竖线。
+- `defaultHasDividers` 一次给页眉和页脚都画线，不用两个区域各写一个 `hasDivider`。
+- 页眉里放的是标题加一个主操作，用 `LayoutHeader`。页眉里要放一排可交互的控件（筛选、排序、批量操作），改用 `Toolbar`，它按工具栏的无障碍规则处理方向键。
+- 页脚只放必须一直够得着的动作：保存、提交、下一步。次要动作留在正文里。
+
+验证方法：把正文滚到底。页眉和页脚没动，分隔线还是通到两边，页眉标题和正文第一行的左边缘仍然对齐。
+
+## 侧边详情面板
+
+主从结构里，选中一行就跳走一个页面，人回来还得重新找位置。更好的做法是右边开一块固定宽度的面板，列表留着不动。
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { EmptyState } from '@astryx-vue/core/EmptyState'
+import { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'
+
+const selected = ref<Order | null>(null)
+</script>
+
+<template>
+  <Layout>
+    <LayoutContent>
+      <OrderRow
+        v-for="row in rows"
+        :key="row.id"
+        v-bind="row"
+        @select="selected = row"
+      />
+    </LayoutContent>
+
+    <template #end>
+      <LayoutPanel :width="380" has-divider is-scrollable label="订单详情">
+        <OrderDetail v-if="selected" :order="selected" />
+        <EmptyState
+          v-else
+          is-compact
+          title="还没有选择订单"
+          description="在左边点一行，这里会显示它的详情。"
+        />
+      </LayoutPanel>
+    </template>
+  </Layout>
+</template>
+```
+
+- 面板宽度建议在 340 到 420 之间。`width` 写数字按像素。
+- `hasDivider` 画出朝内容的那条边，两边不要都画线。
+- `isScrollable` 让长详情自己滚，列表不受影响。
+- 没选中任何行时放一个 `EmptyState`。空着会让面板塌成一条缝，选中时页面又突然变宽。
+
+要让用户自己拖宽度，把 `useResizable` 拖到面板和 `ResizeHandle` 上：
+
+```vue
+<script setup lang="ts">
+import { useResizable } from '@astryx-vue/core'
+import { Layout, LayoutContent, LayoutPanel } from '@astryx-vue/core/Layout'
+import { ResizeHandle } from '@astryx-vue/core/Resizable'
+
+const detail = useResizable({
+  defaultSize: 380,
+  minSize: 320,
+  maxSize: 560,
+})
+</script>
+
+<template>
+  <Layout>
+    <LayoutContent>正文</LayoutContent>
+
+    <template #end>
+      <ResizeHandle
+        direction="horizontal"
+        is-reversed
+        has-divider
+        :resizable="detail.props"
+        label="调整详情面板宽度"
+      />
+      <LayoutPanel :width="detail.size" :has-divider="false" is-scrollable label="详情">
+        详情内容
+      </LayoutPanel>
+    </template>
+  </Layout>
+</template>
+```
+
+结束边的面板要把 `isReversed` 打开，往左拖才是变宽。分隔条本身要 `has-divider`，面板则关掉 `hasDivider`，一条边上只留一条线。
+
+窄屏时不要硬挤。宽度不够就让面板退场，改用 `Dialog` 或 `BottomSheet` 展示详情，具体做法见 [响应式布局](/guide/responsive)。
