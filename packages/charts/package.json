@@ -33,20 +33,25 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./charts.css": "./charts.css",
+    "./styles/*.css": "./styles/*.css",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "README.md",
-    "dist"
+    "charts.css",
+    "dist",
+    "styles"
   ],
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
   },
   "peerDependencies": {
+    "@astryx-vue/core": "workspace:^",
     "vue": "catalog:peer"
   },
   "dependencies": {
@@ -54,11 +59,15 @@
     "d3-shape": "catalog:charts"
   },
   "devDependencies": {
+    "@astryx-vue/core": "workspace:^",
     "@types/d3-scale": "catalog:charts",
     "@types/d3-shape": "catalog:charts",
     "@types/node": "catalog:language",
+    "@vue/compiler-sfc": "catalog:vue",
     "tsdown": "catalog:build",
     "typescript": "catalog:language",
-    "vue": "catalog:vue"
+    "unplugin-vue": "catalog:build",
+    "vue": "catalog:vue",
+    "vue-tsc": "catalog:vue"
   }
 }

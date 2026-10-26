@@ -1,12 +1,30 @@
 import type { ResolvedPoint, SeriesDef } from '../types.js'
+import type { CurveFactory } from 'd3-shape'
+import { curveLinear, curveMonotoneX, curveNatural, curveStep, line as d3Line } from 'd3-shape'
+import { h } from 'vue'
+import { seriesFill } from '../markColor.js'
 import { xPixel } from '../utils.js'
+
+const CURVES: Record<string, CurveFactory> = {
+  linear: curveLinear,
+  monotone: curveMonotoneX,
+  natural: curveNatural,
+  step: curveStep,
+}
+
+export type CurveType = 'linear' | 'monotone' | 'natural' | 'step'
 
 export interface LineOptions {
   color?: string
-  curve?: 'linear' | 'monotone' | 'natural' | 'step'
+  curve?: CurveType
   strokeWidth?: number
   dots?: boolean
   label?: string
+}
+
+/** 两个坐标都有限的点才画得出来。 */
+function isFinitePoint(p: ResolvedPoint): boolean {
+  return Number.isFinite(p.px) && Number.isFinite(p.py)
 }
 
 /**
@@ -17,8 +35,13 @@ export interface LineOptions {
  */
 export function line(dataKey: string, options: LineOptions = {}): SeriesDef {
   const color = options.color
+  const curve = options.curve ?? 'monotone'
+  const strokeWidth = typeof options.strokeWidth === 'number' && Number.isFinite(options.strokeWidth)
+    ? Math.max(0, options.strokeWidth)
+    : 2
+  const dots = options.dots ?? false
 
-  return {
+  const seriesDef: SeriesDef = {
     type: 'line',
     key: dataKey,
     dataKeys: [dataKey],
@@ -42,5 +65,38 @@ export function line(dataKey: string, options: LineOptions = {}): SeriesDef {
       }
       return points
     },
+
+    render(resolved) {
+      if (resolved.length === 0)
+        return null
+
+      const pathGen = d3Line<ResolvedPoint>()
+        .defined(isFinitePoint)
+        .x(d => d.px)
+        .y(d => d.py)
+        .curve(CURVES[curve] ?? curveMonotoneX)
+
+      const pathD = pathGen(resolved) ?? ''
+      const strokeColor = seriesFill(seriesDef, color)
+      return h('g', [
+        h('path', {
+          d: pathD,
+          fill: 'none',
+          stroke: strokeColor,
+          'stroke-width': strokeWidth,
+        }),
+        dots
+          ? resolved.filter(isFinitePoint).map(p => h('circle', {
+            key: p.dataIndex,
+            cx: p.px,
+            cy: p.py,
+            r: 3,
+            fill: strokeColor,
+          }))
+          : null,
+      ])
+    },
   }
+
+  return seriesDef
 }

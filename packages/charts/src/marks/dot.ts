@@ -1,4 +1,6 @@
 import type { ColorAccessor, ResolvedPoint, SeriesDef } from '../types.js'
+import { h } from 'vue'
+import { pointFill } from '../markColor.js'
 import { xPixel } from '../utils.js'
 
 export type { ColorAccessor }
@@ -22,9 +24,12 @@ export function dot(dataKey: string, options: DotOptions = {}): SeriesDef {
   const radius = typeof options.radius === 'number' && Number.isFinite(options.radius)
     ? Math.max(0, options.radius)
     : 4
+  const opacity = typeof options.opacity === 'number' && Number.isFinite(options.opacity)
+    ? Math.min(1, Math.max(0, options.opacity))
+    : 0.8
   const dodge = options.dodge ?? false
 
-  return {
+  const seriesDef: SeriesDef = {
     type: 'dot',
     key: dataKey,
     dataKeys: [dataKey],
@@ -74,5 +79,25 @@ export function dot(dataKey: string, options: DotOptions = {}): SeriesDef {
 
       return points
     },
+
+    render(resolved, ctx) {
+      const { data } = ctx
+      return h('g', resolved.map((p) => {
+        const d = data[p.dataIndex]
+        if (!d || !Number.isFinite(p.px) || !Number.isFinite(p.py))
+          return null
+        const fill = pointFill(seriesDef, color, d, p.dataIndex)
+        return h('circle', {
+          key: p.dataIndex,
+          cx: p.px,
+          cy: p.py,
+          r: radius,
+          fill,
+          opacity,
+        })
+      }))
+    },
   }
+
+  return seriesDef
 }
