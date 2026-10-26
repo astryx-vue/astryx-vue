@@ -1,5 +1,5 @@
 export { default as ChartTooltip } from './ChartTooltip.vue'
-export { computeCardPosition, CARD_GAP } from './position.js'
+export { CARD_GAP, computeCardPosition } from './position.js'
 export type { CardPositionInput } from './position.js'
 export type {
   ChartTooltipPlacement,

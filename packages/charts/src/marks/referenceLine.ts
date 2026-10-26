@@ -1,3 +1,4 @@
+import type { VNode } from 'vue'
 import type { ResolvedPoint, SeriesDef } from '../types.js'
 import { h } from 'vue'
 import { isBandScale } from '../utils.js'
@@ -44,27 +45,27 @@ function labelWidth(label: string | undefined): number {
  * 标签牌，按左上角定位。调用方先把左上角夹进绘图区，所以横线、竖线两个方向
  * 都能用同一套代码摆正。
  */
-function referenceLabel(x: number, topY: number, width: number, color: string, text: string) {
-  return h('g', { transform: `translate(${x},${topY})`, 'pointer-events': 'none' }, [
+function referenceLabel(x: number, topY: number, width: number, color: string, text: string): VNode {
+  return h('g', { 'transform': `translate(${x},${topY})`, 'pointer-events': 'none' }, [
     h('rect', {
-      x: 0,
-      y: 0,
+      'x': 0,
+      'y': 0,
       width,
-      height: BADGE_H,
-      rx: BADGE_RX,
-      fill: 'var(--astryx-color-background-popover)',
+      'height': BADGE_H,
+      'rx': BADGE_RX,
+      'fill': 'var(--astryx-color-background-popover)',
       'fill-opacity': 0.85,
-      stroke: color,
+      'stroke': color,
       'stroke-width': 0.5,
     }),
     h('text', {
-      x: width / 2,
-      y: BADGE_H / 2,
-      dy: '0.35em',
+      'x': width / 2,
+      'y': BADGE_H / 2,
+      'dy': '0.35em',
       'text-anchor': 'middle',
       'font-size': LABEL_FONT_SIZE,
       'font-weight': 500,
-      fill: color,
+      'fill': color,
     }, text),
   ])
 }
@@ -118,14 +119,14 @@ export function referenceLine(options: ReferenceLineOptions): SeriesDef {
           const bandHeight = Math.abs(py2 - py)
           return h('g', [
             h('rect', { x: 0, y: top, width, height: bandHeight, fill: color, opacity: bandOpacity }),
-            h('line', { x1: 0, x2: width, y1: py, y2: py, stroke: color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
-            h('line', { x1: 0, x2: width, y1: py2, y2: py2, stroke: color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
+            h('line', { 'x1': 0, 'x2': width, 'y1': py, 'y2': py, 'stroke': color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
+            h('line', { 'x1': 0, 'x2': width, 'y1': py2, 'y2': py2, 'stroke': color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
             label ? referenceLabel(bx, labelTopY, textW, color, label) : null,
           ])
         }
 
         return h('g', [
-          h('line', { x1: 0, x2: width, y1: py, y2: py, stroke: color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
+          h('line', { 'x1': 0, 'x2': width, 'y1': py, 'y2': py, 'stroke': color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
           label ? referenceLabel(bx, labelTopY, textW, color, label) : null,
         ])
       }
@@ -141,7 +142,7 @@ export function referenceLine(options: ReferenceLineOptions): SeriesDef {
         const labelTopY = clamp(desiredTopY, 0, height - BADGE_H)
         const bx = clamp(px - textW / 2, 2, bxMax)
         return h('g', [
-          h('line', { x1: px, x2: px, y1: 0, y2: height, stroke: color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
+          h('line', { 'x1': px, 'x2': px, 'y1': 0, 'y2': height, 'stroke': color, 'stroke-width': strokeWidth, 'stroke-dasharray': strokeDasharray }),
           label ? referenceLabel(bx, labelTopY, textW, color, label) : null,
         ])
       }

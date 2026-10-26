@@ -1,8 +1,8 @@
 import type { Component } from 'vue'
 import type { SeriesDef } from '../src/types.js'
 import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
 import { vi } from 'vitest'
+import { nextTick } from 'vue'
 import Chart from '../src/Chart/Chart.vue'
 
 export interface MountChartOptions {

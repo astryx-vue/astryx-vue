@@ -1,5 +1,4 @@
 import type { ComputedRef, Ref } from 'vue'
-import type { ChartProps } from './types.js'
 import type {
   ChartContext,
   ChartMargin,
@@ -9,11 +8,12 @@ import type {
   SeriesContext,
   SeriesDef,
 } from '../types.js'
+import type { ChartProps } from './types.js'
 import { computed, onMounted, onScopeDispose, ref, useId, watch } from 'vue'
-import { DEFAULT_MARGIN } from './types.js'
 import { computeLayout } from '../layout.js'
 import { isUtilityMarkType } from '../types.js'
 import { useChartColors } from '../useChartColors.js'
+import { DEFAULT_MARGIN } from './types.js'
 
 /** 图表根算出来的一切：尺寸、比例尺、点位、配色和指针事件。 */
 export interface ChartFrame {

@@ -1,5 +1,5 @@
-import type { SeriesDef } from '../types.js'
 import type { TooltipSeriesValue } from '../tooltip.js'
+import type { SeriesDef } from '../types.js'
 
 /** 提示框相对悬停点的位置。 */
 export type ChartTooltipPlacement = 'auto' | 'right' | 'left' | 'top'

@@ -1,11 +1,11 @@
-import type { ResolvedPoint, SeriesDef } from '../types.js'
 import type { CurveFactory } from 'd3-shape'
+import type { ResolvedPoint, SeriesDef } from '../types.js'
 import {
-  area as d3Area,
   curveLinear,
   curveMonotoneX,
   curveNatural,
   curveStep,
+  area as d3Area,
   line as d3Line,
 } from 'd3-shape'
 import { h } from 'vue'
@@ -102,26 +102,26 @@ export function area(dataKey: string, options: AreaOptions = {}): SeriesDef {
 
       // 渐变 id 带上系列的 `_uid`：两个系列画同一个 dataKey 时不会共用一个渐变，
       // 否则后画的会把先画的那份颜色抢走。
-      const gradientId = `area-grad-${(seriesDef._uid ?? dataKey).replace(/[^a-zA-Z0-9_-]/g, '-')}`
+      const gradientId = `area-grad-${(seriesDef._uid ?? dataKey).replace(/[^\w-]/g, '-')}`
       const fillColor = seriesFill(seriesDef, color)
 
       return h('g', [
         gradient
           ? h('defs', [
-            h('linearGradient', { id: gradientId, x1: 0, y1: 0, x2: 0, y2: 1 }, [
-              h('stop', { offset: '0%', 'stop-color': fillColor, 'stop-opacity': opacity }),
-              h('stop', { offset: '100%', 'stop-color': fillColor, 'stop-opacity': 0 }),
-            ]),
-          ])
+              h('linearGradient', { id: gradientId, x1: 0, y1: 0, x2: 0, y2: 1 }, [
+                h('stop', { 'offset': '0%', 'stop-color': fillColor, 'stop-opacity': opacity }),
+                h('stop', { 'offset': '100%', 'stop-color': fillColor, 'stop-opacity': 0 }),
+              ]),
+            ])
           : null,
         h('path', {
-          d: pathD,
-          fill: gradient ? `url(#${gradientId})` : fillColor,
+          'd': pathD,
+          'fill': gradient ? `url(#${gradientId})` : fillColor,
           'fill-opacity': gradient ? 1 : opacity,
-          stroke: 'none',
+          'stroke': 'none',
         }),
         stroke
-          ? h('path', { d: strokeD, fill: 'none', stroke: fillColor, 'stroke-width': 2 })
+          ? h('path', { 'd': strokeD, 'fill': 'none', 'stroke': fillColor, 'stroke-width': 2 })
           : null,
       ])
     },

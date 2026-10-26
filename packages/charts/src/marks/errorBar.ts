@@ -65,9 +65,9 @@ export function errorBar(options: ErrorBarOptions): SeriesDef {
         if (!Number.isFinite(p.px) || !Number.isFinite(p.py) || !Number.isFinite(p.py0))
           return null
         return h('g', { key: p.dataIndex }, [
-          h('line', { x1: p.px, x2: p.px, y1: p.py, y2: p.py0, stroke: color, 'stroke-width': strokeWidth }),
-          h('line', { x1: p.px - half, x2: p.px + half, y1: p.py, y2: p.py, stroke: color, 'stroke-width': strokeWidth }),
-          h('line', { x1: p.px - half, x2: p.px + half, y1: p.py0, y2: p.py0, stroke: color, 'stroke-width': strokeWidth }),
+          h('line', { 'x1': p.px, 'x2': p.px, 'y1': p.py, 'y2': p.py0, 'stroke': color, 'stroke-width': strokeWidth }),
+          h('line', { 'x1': p.px - half, 'x2': p.px + half, 'y1': p.py, 'y2': p.py, 'stroke': color, 'stroke-width': strokeWidth }),
+          h('line', { 'x1': p.px - half, 'x2': p.px + half, 'y1': p.py0, 'y2': p.py0, 'stroke': color, 'stroke-width': strokeWidth }),
         ])
       }))
     },

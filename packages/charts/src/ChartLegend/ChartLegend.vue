@@ -2,8 +2,8 @@
 import type { ChartLegendProps } from './types.js'
 import { HStack, Text, VStack } from '@astryx-vue/core'
 import { computed } from 'vue'
-import { swatchVariantForType } from '../ChartSwatch/swatch.js'
 import { ChartSwatch } from '../ChartSwatch/index.js'
+import { swatchVariantForType } from '../ChartSwatch/swatch.js'
 import { useChartMessages } from '../messages.js'
 
 import '../../styles/chart-legend.css'
@@ -40,8 +40,8 @@ const listProps = computed<Record<string, unknown>>(() => isVertical.value
     <HStack
       v-for="(item, index) in items"
       :key="`${item.label}-${index}`"
+      v-align="center"
       :gap="2"
-      vAlign="center"
       role="listitem"
     >
       <ChartSwatch

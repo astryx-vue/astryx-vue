@@ -1,14 +1,14 @@
 import type { Component } from 'vue'
+import { InternationalizationProvider } from '@astryx-vue/core'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { h, nextTick } from 'vue'
 import { attr, byRole, queryByRole } from '../../test-support/a11y.js'
 import { mountChart, stubResizeObserver } from '../../test-support/chart.js'
-import { InternationalizationProvider } from '@astryx-vue/core'
-import { h, nextTick } from 'vue'
-import Chart from './Chart.vue'
-import { MAX_TABLE_POINTS } from './types.js'
 import { bar } from '../marks/bar.js'
 import { line } from '../marks/line.js'
+import Chart from './Chart.vue'
+import { MAX_TABLE_POINTS } from './types.js'
 
 const data = [
   { month: 'Jan', revenue: 100, profit: 20 },
@@ -16,7 +16,7 @@ const data = [
   { month: 'Mar', revenue: 150, profit: 30 },
 ]
 
-describe('Chart accessible name', () => {
+describe('chart accessible name', () => {
   it('exposes the svg as a named image with a default label', () => {
     const { container } = mountChart({ data, xKey: 'month', series: [bar('revenue'), bar('profit')] })
     expect(byRole('img', 'Chart of revenue and profit by month', container)).not.toBeNull()
@@ -68,7 +68,7 @@ describe('Chart accessible name', () => {
   })
 })
 
-describe('Chart data table fallback', () => {
+describe('chart data table fallback', () => {
   it('renders a visually hidden table mirroring the data', () => {
     const { container } = mountChart({ data, xKey: 'month', series: [bar('revenue'), bar('profit')] })
 
@@ -96,7 +96,7 @@ describe('Chart data table fallback', () => {
   })
 })
 
-describe('Chart measurement gate', () => {
+describe('chart measurement gate', () => {
   it('renders only an empty height-reserving placeholder until the container reports a width', () => {
     vi.stubGlobal('ResizeObserver', undefined)
     const wrapper = mount(Chart as Component, {
@@ -127,13 +127,13 @@ describe('Chart measurement gate', () => {
   })
 })
 
-describe('Chart root contract', () => {
+describe('chart root contract', () => {
   it('forwards DOM props to the root container', async () => {
     const onClick = vi.fn()
     const { container } = mountChart(
       { data, xKey: 'month', series: [bar('revenue')] },
       {},
-      { class: 'consumer-chart', style: 'max-width: 480px', 'data-testid': 'chart-root', onClick },
+      { 'class': 'consumer-chart', 'style': 'max-width: 480px', 'data-testid': 'chart-root', onClick },
     )
     expect(container.classList.contains('consumer-chart')).toBe(true)
     expect(container.style.maxWidth).toBe('480px')
@@ -145,7 +145,7 @@ describe('Chart root contract', () => {
   })
 })
 
-describe('Chart render delegation', () => {
+describe('chart render delegation', () => {
   it('renders one clipped group per series', () => {
     const { plot } = mountChart({ data, xKey: 'month', series: [bar('revenue'), line('profit')] })
     const seriesGroups = [...plot.children].filter(element => element.tagName === 'g')
@@ -174,7 +174,7 @@ describe('Chart render delegation', () => {
   })
 })
 
-describe('Chart legend slot', () => {
+describe('chart legend slot', () => {
   it('derives legend items from series labels when legend is enabled', () => {
     const { container } = mountChart({
       data,
@@ -191,7 +191,7 @@ describe('Chart legend slot', () => {
   })
 })
 
-describe('Chart tooltip slot', () => {
+describe('chart tooltip slot', () => {
   it('mounts the grouped tooltip card only when tooltip is enabled', async () => {
     const off = mountChart({ data, xKey: 'month', series: [bar('revenue')] })
     expect(off.container.querySelector('[role="tooltip"]')).toBeNull()
@@ -204,4 +204,3 @@ describe('Chart tooltip slot', () => {
     on.wrapper.unmount()
   })
 })
-

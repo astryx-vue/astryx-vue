@@ -91,7 +91,7 @@ export function candlestick(options: CandlestickOptions): SeriesDef {
         const bodyHeight = Math.max(1, Math.abs(yScale(o) - yScale(c)))
         return h('g', { key: p.dataIndex }, [
           // 上下影线
-          h('line', { x1: p.px, x2: p.px, y1: yScale(hi), y2: yScale(lo), stroke: col, 'stroke-width': 1 }),
+          h('line', { 'x1': p.px, 'x2': p.px, 'y1': yScale(hi), 'y2': yScale(lo), 'stroke': col, 'stroke-width': 1 }),
           // 实体
           h('rect', { x: p.px - bodyWidth / 2, y: bodyTop, width: bodyWidth, height: bodyHeight, fill: col }),
         ])

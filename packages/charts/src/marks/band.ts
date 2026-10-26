@@ -1,5 +1,5 @@
 import type { ResolvedPoint, SeriesDef } from '../types.js'
-import { area as d3Area, curveMonotoneX } from 'd3-shape'
+import { curveMonotoneX, area as d3Area } from 'd3-shape'
 import { h } from 'vue'
 import { DEFAULT_SERIES_COLOR } from '../types.js'
 import { xPixel } from '../utils.js'
@@ -60,7 +60,7 @@ export function band(options: BandOptions): SeriesDef {
       const pathD = areaGen(resolved) ?? ''
       if (!pathD)
         return null
-      return h('path', { d: pathD, fill: color, 'fill-opacity': opacity, stroke: 'none' })
+      return h('path', { 'd': pathD, 'fill': color, 'fill-opacity': opacity, 'stroke': 'none' })
     },
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ChartGridProps } from './types.js'
 import type { ScaleLinear, ScaleTime } from 'd3-scale'
+import type { ChartGridProps } from './types.js'
 import { computed } from 'vue'
 import { useChart } from '../context.js'
 import { isBandScale } from '../utils.js'

@@ -1,6 +1,18 @@
 <script setup lang="ts">
+import type { VNodeChild } from 'vue'
 import type { ChartTooltipProps, ChartTooltipSlots } from './types.js'
-import { computed, ref, useSlots } from 'vue'
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  h,
+  onScopeDispose,
+  ref,
+  render,
+  useSlots,
+  watch,
+  watchPostEffect,
+} from 'vue'
 import { useChart } from '../context.js'
 import { shouldRenderHoverDot } from '../tooltip.js'
 import { isBandScale, xPixel } from '../utils.js'
@@ -20,21 +32,103 @@ const props = withDefaults(defineProps<ChartTooltipProps>(), {
 
 const slots = useSlots() as ChartTooltipSlots & Record<string, unknown>
 
+/** 调用方给了自定义内容插槽，就不再用内置样式。 */
+const hasCustomContent = computed(() => slots.content != null)
+
 const chart = useChart()
 
-const { cardRef, cardStyle, isVisible, portalTarget, hoveredIndex, xValue, seriesValues }
+const { cardRef, cardStyle, isVisible, portalTarget, hoveredIndex, xValue, hasDatum, seriesValues }
   = useTooltipCard({
     series: () => props.series,
     placement: () => props.placement,
-    hasCustomContent: () => slots.content != null,
+    hasCustomContent: () => hasCustomContent.value,
   })
 
-/** 卡片元素交给我们自己的 ref，位置和尺寸都从它身上量。 */
-const cardElement = ref<HTMLElement | null>(null)
-function setCardRef(element: unknown): void {
-  cardElement.value = (element as HTMLElement | null) ?? null
-  cardRef.value = cardElement.value
+/**
+ * 卡片是 HTML，不能跟着 `<svg>` 里的元素一起创建——那样元素会落到 SVG 命名空间里，
+ * 浏览器不认。所以卡片容器用 `document.createElement` 造出来，再挂到图表所在的 HTML 容器里，
+ * 内容用 `render()` 单独渲染一遍。
+ */
+const cardHost = ref<HTMLElement | null>(null)
+const currentInstance = getCurrentInstance()
+
+/**
+ * 内容的渲染外壳。它是一次独立渲染的根组件，负责把当前组件的 provide
+ * （语言、主题……）转给卡片内容，用户自己写的插槽内容也就能读同一套上下文。
+ */
+const CardBody = defineComponent({
+  name: 'AstryxChartTooltipBody',
+  setup(_, { slots: cardSlots }) {
+    return () => cardSlots.default?.() ?? null
+  },
+})
+
+function cardBody(): VNodeChild {
+  if (!hasDatum.value)
+    return null
+  if (hasCustomContent.value) {
+    return slots.content?.({
+      xValue: xValue.value,
+      rows: seriesValues.value,
+    }) as VNodeChild
+  }
+  return h(ChartTooltipContent, {
+    xValue: xValue.value,
+    rows: seriesValues.value,
+  })
 }
+
+function renderCard(): void {
+  const host = cardHost.value
+  if (!host)
+    return
+  const vnode = h(CardBody, null, { default: cardBody })
+  // 独立渲染没有组件父级，注入要从这里接上当前组件的 provide 链。
+  const provides = (currentInstance as unknown as { provides?: Record<string | symbol, unknown> } | null)?.provides
+  if (currentInstance) {
+    vnode.appContext = {
+      ...currentInstance.appContext,
+      provides: provides ?? currentInstance.appContext.provides,
+    }
+  }
+  render(vnode, host)
+}
+
+function removeCard(): void {
+  const host = cardHost.value
+  if (!host)
+    return
+  render(null, host)
+  host.remove()
+  cardHost.value = null
+  cardRef.value = null
+}
+
+watch(portalTarget, (target) => {
+  removeCard()
+  if (!target || typeof document === 'undefined')
+    return
+  const host = document.createElement('div')
+  host.className = 'astryx-chart-tooltip'
+  host.setAttribute('role', 'tooltip')
+  host.style.display = 'none'
+  target.appendChild(host)
+  cardHost.value = host
+  cardRef.value = host
+  renderCard()
+}, { immediate: true })
+
+onScopeDispose(removeCard)
+
+/** 位置和显隐直接写在卡片元素上，不再经过模板。 */
+watchPostEffect(() => {
+  const host = cardHost.value
+  if (!host)
+    return
+  for (const [name, value] of Object.entries(cardStyle.value))
+    host.style.setProperty(name, value)
+  host.style.display = isVisible.value ? '' : 'none'
+})
 
 /**
  * 悬停指示：图里有柱状系列时在分类轴上高亮整列，其余情况画一条竖线。
@@ -134,28 +228,4 @@ const hoverDots = computed(() => {
     :stroke-width="2"
     pointer-events="none"
   />
-  <!-- 服务端没有 HTML 容器可挂，只有 SVG 里的高亮和圆点。 -->
-  <Teleport
-    v-if="portalTarget"
-    :to="portalTarget"
-  >
-    <div
-      v-show="isVisible"
-      :ref="setCardRef"
-      class="astryx-chart-tooltip"
-      :style="cardStyle"
-      role="tooltip"
-    >
-      <slot
-        name="content"
-        :x-value="xValue"
-        :rows="seriesValues"
-      >
-        <ChartTooltipContent
-          :x-value="xValue"
-          :rows="seriesValues"
-        />
-      </slot>
-    </div>
-  </Teleport>
 </template>

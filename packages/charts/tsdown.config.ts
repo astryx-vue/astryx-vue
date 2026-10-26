@@ -28,8 +28,9 @@ export default defineConfig({
   clean: true,
   plugins: [Vue({ isProduction: true }), stripCssImportsFromDts()],
   deps: {
-    // d3、vue 和 core 由使用方安装，不打进包里。
-    neverBundle: ['vue', '@astryx-vue/core', /^d3-/],
+    // d3、vue 和 core 由使用方安装，不打进包里。样式文件也保持外部引用：
+    // 组件自己 `import` 它们，打包器交给使用方的 CSS 流程处理。
+    neverBundle: ['vue', '@astryx-vue/core', /^d3-/, /\.css$/],
   },
   dts: { vue: true },
 })

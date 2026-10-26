@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
-import type { ChartPointerEvent } from '../types.js'
 import type { TooltipSeriesValue } from '../tooltip.js'
+import type { ChartPointerEvent } from '../types.js'
 import type { ChartTooltipPlacement } from './types.js'
 import { useLayer } from '@astryx-vue/core'
 import { computed, nextTick, onScopeDispose, ref, watch, watchEffect } from 'vue'
@@ -24,6 +24,8 @@ export interface TooltipCard {
   hoveredIndex: Readonly<Ref<number | null>>
   /** 悬停的 x 原始值 */
   xValue: Readonly<Ref<unknown>>
+  /** 悬停的这一行在数据里存在（有内容可显示） */
+  hasDatum: Readonly<Ref<boolean>>
   /** 每个系列在悬停位置的一行数据 */
   seriesValues: Readonly<Ref<TooltipSeriesValue[]>>
 }
@@ -161,6 +163,7 @@ export function useTooltipCard(options: {
     portalTarget,
     hoveredIndex,
     xValue,
+    hasDatum: computed(() => datum.value != null),
     seriesValues,
   }
 }

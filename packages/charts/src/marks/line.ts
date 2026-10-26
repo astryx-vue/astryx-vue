@@ -1,5 +1,5 @@
-import type { ResolvedPoint, SeriesDef } from '../types.js'
 import type { CurveFactory } from 'd3-shape'
+import type { ResolvedPoint, SeriesDef } from '../types.js'
 import { curveLinear, curveMonotoneX, curveNatural, curveStep, line as d3Line } from 'd3-shape'
 import { h } from 'vue'
 import { seriesFill } from '../markColor.js'
@@ -80,19 +80,19 @@ export function line(dataKey: string, options: LineOptions = {}): SeriesDef {
       const strokeColor = seriesFill(seriesDef, color)
       return h('g', [
         h('path', {
-          d: pathD,
-          fill: 'none',
-          stroke: strokeColor,
+          'd': pathD,
+          'fill': 'none',
+          'stroke': strokeColor,
           'stroke-width': strokeWidth,
         }),
         dots
           ? resolved.filter(isFinitePoint).map(p => h('circle', {
-            key: p.dataIndex,
-            cx: p.px,
-            cy: p.py,
-            r: 3,
-            fill: strokeColor,
-          }))
+              key: p.dataIndex,
+              cx: p.px,
+              cy: p.py,
+              r: 3,
+              fill: strokeColor,
+            }))
           : null,
       ])
     },

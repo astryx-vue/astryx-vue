@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TooltipSeriesValue } from '../tooltip.js'
 import { HStack, Text, VStack } from '@astryx-vue/core'
-import { swatchVariantForType } from '../ChartSwatch/swatch.js'
 import { ChartSwatch } from '../ChartSwatch/index.js'
+import { swatchVariantForType } from '../ChartSwatch/swatch.js'
 
 /**
  * 提示框的默认内容：上面一行是悬停的 x 值，下面每个系列一行。
@@ -38,8 +38,8 @@ defineProps<{
       <HStack
         v-for="(row, index) in rows"
         :key="`${row.key}-${index}`"
+        v-align="center"
         :gap="2"
-        vAlign="center"
       >
         <ChartSwatch
           :color="row.color"

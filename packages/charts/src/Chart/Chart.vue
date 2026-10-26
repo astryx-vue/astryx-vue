@@ -205,7 +205,9 @@ defineExpose({ element: containerRef })
         <caption>{{ t('@astryx.chart.dataTableCaption', { label: accessibleLabel }) }}</caption>
         <thead>
           <tr>
-            <th scope="col">{{ xKey }}</th>
+            <th scope="col">
+              {{ xKey }}
+            </th>
             <th
               v-for="key in tableKeys"
               :key="key"
@@ -220,7 +222,9 @@ defineExpose({ element: containerRef })
             v-for="(row, index) in data"
             :key="index"
           >
-            <th scope="row">{{ tableCell(row[xKey]) }}</th>
+            <th scope="row">
+              {{ tableCell(row[xKey]) }}
+            </th>
             <td
               v-for="key in tableKeys"
               :key="key"

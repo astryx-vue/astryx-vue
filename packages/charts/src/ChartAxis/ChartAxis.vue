@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ChartAxisProps } from './types.js'
 import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3-scale'
+import type { ChartAxisProps } from './types.js'
 import { characterCount, truncateCharacters } from '@astryx-vue/core'
 import { computed } from 'vue'
 import { useChart } from '../context.js'
@@ -42,7 +42,7 @@ const scale = computed(() => (isHorizontal.value
 /** 开了 `showTicks` 就必须有轴线，不然短刻度线悬在空中。 */
 const renderAxisLine = computed(() => (props.showAxisLine
   ?? props.position === 'bottom')
-  || props.showTicks)
+|| props.showTicks)
 
 /**
  * 交给 d3 之前先收拾刻度数量：`.ticks(n)` 会按 n 分配数组，

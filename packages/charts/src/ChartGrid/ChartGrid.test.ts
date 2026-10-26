@@ -16,7 +16,11 @@ const DATA = [
   { month: 'Mar', sales: 2 },
 ]
 
-function renderGrid(grid: () => unknown, data = DATA, xKey = 'month') {
+function renderGrid(
+  grid: () => unknown,
+  data: Record<string, unknown>[] = DATA,
+  xKey = 'month',
+) {
   const mounted = mountChart({ series: [bar('sales')], data, xKey }, { grid })
   const lines = [...mounted.container.querySelectorAll('svg line')]
   return { ...mounted, lines }
