@@ -16,7 +16,6 @@ import {
   FormLayout,
   Heading,
   HStack,
-  Icon,
   Layout,
   LayoutContent,
   LayoutFooter,
@@ -317,9 +316,10 @@ function goTo(index: number) {
   step.value = index
 }
 
-function setCover(file: File | File[] | null) {
-  coverFile.value = file
-  if (file != null)
+function setCover(file: unknown) {
+  const next = (file ?? null) as File | File[] | null
+  coverFile.value = next
+  if (next != null)
     hasCover.value = true
 }
 </script>
@@ -668,8 +668,7 @@ function setCover(file: File | File[] | null) {
               v-model="accepted"
               label="Agreements"
               description="All three are required before a book can be submitted."
-              :status="currentErrors.agreements ? 'error' : undefined"
-              :status-message="currentErrors.agreements"
+              :status="currentErrors.agreements ? { type: 'error', message: currentErrors.agreements } : undefined"
             >
               <CheckboxListItem
                 v-for="a in AGREEMENTS"

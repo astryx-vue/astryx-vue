@@ -476,7 +476,7 @@ function visibilityLabel(value: string) {
         >
           <VStack :gap="2">
             <Text v-for="s in outstanding" :key="s.label" type="supporting">
-              <Text type="inherit" weight="bold">{{ s.label }}</Text>: {{ s.issues.join(' ') }}
+              <Text type="supporting" display="inline" weight="bold">{{ s.label }}</Text>: {{ s.issues.join(' ') }}
             </Text>
             <HStack :gap="2">
               <Button

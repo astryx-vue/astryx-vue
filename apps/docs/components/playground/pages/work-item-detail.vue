@@ -55,14 +55,26 @@ const ASSIGNEE_OPTIONS = [
   { value: 'sofia-alvarez', label: 'Sofia Alvarez' },
 ]
 
-const PRIORITY_OPTIONS = [
+interface PriorityOption {
+  value: string
+  label: string
+  badge: 'red' | 'orange' | 'yellow' | 'neutral'
+}
+
+const PRIORITY_OPTIONS: PriorityOption[] = [
   { value: 'high', label: 'High', badge: 'red' },
   { value: 'mid', label: 'Mid', badge: 'orange' },
   { value: 'low', label: 'Low', badge: 'yellow' },
   { value: 'none', label: 'None', badge: 'neutral' },
-] as const
+]
 
-const LABEL_OPTIONS = [
+interface LabelOption {
+  id: string
+  label: string
+  color: 'purple' | 'blue' | 'green'
+}
+
+const LABEL_OPTIONS: LabelOption[] = [
   { id: 'onboarding', label: 'Onboarding', color: 'purple' },
   { id: 'q1-goal', label: 'Q1 goal', color: 'blue' },
   { id: 'growth', label: 'Growth', color: 'green' },
@@ -70,7 +82,7 @@ const LABEL_OPTIONS = [
 
 const LABEL_SOURCE = createStaticSource(LABEL_OPTIONS)
 
-function optionFor(options: readonly { value: string }[], value: string) {
+function optionFor<T extends { value: string }>(options: readonly T[], value: string): T {
   return options.find(option => option.value === value) ?? options[0]
 }
 
@@ -88,20 +100,29 @@ const SUBTASKS = [
   { id: 5, title: 'Ship variant A to 10% of new accounts and measure activation', isDone: false, assignee: 'Marcus Chen', due: '2026-03-18' },
 ]
 
-const ATTACHMENTS = [
+type AttachmentKind = 'link' | 'image' | 'file'
+
+interface Attachment {
+  id: string
+  kind: AttachmentKind
+  title: string
+  subtitle: string
+}
+
+const ATTACHMENTS: Attachment[] = [
   { id: 'audit-notes', kind: 'link', title: 'Onboarding audit notes', subtitle: 'docs.example.com' },
   { id: 'funnel-dashboard', kind: 'link', title: 'Sign-up funnel dashboard', subtitle: 'analytics.example.com' },
   { id: 'welcome-screen', kind: 'image', title: 'welcome-screen-v3.png', subtitle: '1.4 MB · Added 2 days ago' },
   { id: 'transcripts', kind: 'file', title: 'Interview transcripts.pdf', subtitle: '820 KB · Added 3 days ago' },
 ]
 
-const ATTACHMENT_ICONS = {
+const ATTACHMENT_ICONS: Record<AttachmentKind, string> = {
   link: 'i-carbon-link',
   image: 'image',
   file: 'i-carbon-document',
-} as const
+}
 
-const ATTACHMENT_ACTIONS = [
+const ATTACHMENT_ACTIONS: { label: string, variant?: 'destructive' }[] = [
   { label: 'Edit' },
   { label: 'Delete', variant: 'destructive' },
 ]

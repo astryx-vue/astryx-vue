@@ -224,7 +224,7 @@ function applyPromo() {
   appliedPromo.value = PROMOS[code] ? code : null
 }
 
-const promoStatus = computed(() => {
+const promoStatus = computed<{ type: 'success' | 'warning', message: string } | undefined>(() => {
   if (appliedPromo.value)
     return { type: 'success', message: `${PROMOS[appliedPromo.value].label} applied.` }
   if (promoInput.value.trim() && promoWasChecked.value)
@@ -238,8 +238,8 @@ function blockedMessage(count: number) {
   return count === 1 ? 'One problem above needs fixing first.' : `${count} problems above need fixing first.`
 }
 
-function setQuantity(id: string, value: number) {
-  quantities.value = { ...quantities.value, [id]: value }
+function setQuantity(id: string, value: number | null) {
+  quantities.value = { ...quantities.value, [id]: value ?? 0 }
 }
 
 function isFreeDelivery(optionValue: string) {
@@ -445,8 +445,7 @@ function isFreeDelivery(optionValue: string) {
                   <RadioList
                     v-model="delivery"
                     label="Delivery method"
-                    :status="currentErrors.delivery ? 'error' : undefined"
-                    :status-message="currentErrors.delivery"
+                    :status="currentErrors.delivery ? { type: 'error', message: currentErrors.delivery } : undefined"
                   >
                     <RadioListItem
                       v-for="option in DELIVERY_OPTIONS"

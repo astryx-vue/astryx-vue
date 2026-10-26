@@ -340,25 +340,25 @@ function directionColor(metric: Metric) {
                 <Grid :columns="2" :gap="2">
                   <Text type="body" weight="bold">
                     {{ metric.deltas.dd > 0 ? '+' : '' }}{{ metric.deltas.dd.toFixed(1) }}%
-                    <Text type="inherit" weight="normal" color="secondary">
+                    <Text type="body" display="inline" weight="normal" color="secondary">
                       d/d
                     </Text>
                   </Text>
                   <Text type="body" weight="bold">
                     {{ metric.deltas.ww > 0 ? '+' : '' }}{{ metric.deltas.ww.toFixed(1) }}%
-                    <Text type="inherit" weight="normal" color="secondary">
+                    <Text type="body" display="inline" weight="normal" color="secondary">
                       w/w
                     </Text>
                   </Text>
                   <Text type="body" weight="bold">
                     {{ metric.deltas.mm > 0 ? '+' : '' }}{{ metric.deltas.mm.toFixed(1) }}%
-                    <Text type="inherit" weight="normal" color="secondary">
+                    <Text type="body" display="inline" weight="normal" color="secondary">
                       m/m
                     </Text>
                   </Text>
                   <Text type="body" weight="bold">
                     {{ metric.deltas.yy > 0 ? '+' : '' }}{{ metric.deltas.yy.toFixed(1) }}%
-                    <Text type="inherit" weight="normal" color="secondary">
+                    <Text type="body" display="inline" weight="normal" color="secondary">
                       y/y
                     </Text>
                   </Text>
