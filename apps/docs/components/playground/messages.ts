@@ -16,6 +16,7 @@ export interface PlaygroundCopy {
   preview: string
   loading: string
   ready: string
+  startupFailed: string
   deviceDesktop: string
   devicePhone: string
   resize: string
@@ -68,6 +69,7 @@ const zh: PlaygroundCopy = {
   preview: '预览',
   loading: '构建中…',
   ready: '构建完成',
+  startupFailed: '预览没能启动。点刷新预览再试一次。',
   deviceDesktop: '桌面预览',
   devicePhone: '手机预览',
   resize: '调整编辑器宽度',
@@ -131,6 +133,7 @@ const en: PlaygroundCopy = {
   preview: 'Preview',
   loading: 'Building…',
   ready: 'Build finished',
+  startupFailed: 'The preview did not start. Reload the preview to try again.',
   deviceDesktop: 'Desktop preview',
   devicePhone: 'Phone preview',
   resize: 'Resize editor',

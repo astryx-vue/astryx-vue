@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 import type { PlaygroundModules } from './compileSfc'
-import type { PlaygroundColorMode, PlaygroundHostMessage } from './protocol'
+import type { PlaygroundColorMode, PlaygroundFrameMessage, PlaygroundHostMessage } from './protocol'
 import * as core from '@astryx-vue/core'
 import * as Vue from 'vue'
 import { compilePlaygroundSfc } from './compileSfc'
 import * as playgroundCharts from './playgroundCharts'
+import { acceptHostMessage, readPreviewNonce } from './previewChannel'
 import { PreviewHost } from './previewHost'
 import { previewLayoutMode } from './previewLayout'
-import { isHostMessage, PLAYGROUND_CHANNEL } from './protocol'
+import { PLAYGROUND_CHANNEL } from './protocol'
 import { templateIcons } from './templateIcons'
 
 const { createApp, onBeforeUnmount, onMounted, ref } = Vue
 
 void templateIcons
+
+/** 父页面装这次 iframe 时写进 `#` 的标记，只回给带同一个标记的消息。 */
+const frameNonce = typeof window === 'undefined' ? null : readPreviewNonce(window.location.hash)
 
 const mountEl = ref<HTMLElement | null>(null)
 let app: ReturnType<typeof createApp> | null = null
@@ -47,11 +51,14 @@ onBeforeUnmount(() => {
 })
 
 function onMessage(event: MessageEvent): void {
-  if (event.origin !== window.location.origin || event.source !== window.parent)
+  const message = acceptHostMessage(event, {
+    peer: window.parent,
+    origin: window.location.origin,
+    nonce: frameNonce,
+  })
+  if (!message)
     return
-  if (!isHostMessage(event.data))
-    return
-  void accept(event.data)
+  void accept(message)
 }
 
 async function accept(message: PlaygroundHostMessage): Promise<void> {
@@ -164,7 +171,8 @@ function writeStyle(id: string, css: string): void {
 function post(message: { channel: typeof PLAYGROUND_CHANNEL, type: 'ready' | 'error' | 'ok', message?: string }): void {
   if (window.parent === window)
     return
-  window.parent.postMessage(message, window.location.origin)
+  const outgoing: PlaygroundFrameMessage = { ...message, nonce: frameNonce ?? '' }
+  window.parent.postMessage(outgoing, window.location.origin)
 }
 
 function runtimeModules(): PlaygroundModules {

@@ -47,19 +47,20 @@ const {
   buildShareUrl,
 } = usePlayground(props.locale, kind => dialog.value?.ask(kind) ?? Promise.resolve(false))
 
-const { sawPreview, errorText, onFrameLoad } = usePreviewSync({
+const { sawPreview, errorText, frameSrc, frameKey, onFrameLoad } = usePreviewSync({
   iframe,
+  framePath: withBase('/playground/frame'),
   locale: props.locale,
   theme,
   code,
   mountId,
   hydrated,
+  startupFailedText: copy.startupFailed,
   persist: buildShareUrl,
 })
 
 const { editorSize, onDividerDown, onDividerKey } = usePaneResize(editorPane, bodyEl)
 
-const frameSrc = withBase('/playground/frame')
 const homeHref = withBase('/')
 const logoHref = withBase('/icon-logo.svg')
 const localeHref = withBase(props.locale === 'zh' ? '/en/playground/' : '/playground/')
@@ -272,6 +273,7 @@ async function openExportDialog(): Promise<void> {
           <div class="playground__stage-wrap">
             <div class="playground__stage">
               <iframe
+                :key="frameKey"
                 ref="iframe"
                 class="playground__iframe"
                 :title="copy.preview"
