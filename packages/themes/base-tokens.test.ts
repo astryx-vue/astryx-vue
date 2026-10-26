@@ -404,7 +404,7 @@ describe('first-party themes', () => {
       expect(new Set(names), name).toEqual(neutralNames)
       expect(css).toContain(`[data-astryx-theme='${name}']`)
       expect(css).not.toContain(':root')
-      expect(css).toContain('\'JetBrains Mono\', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace')
+      expect(css).toContain('\'JetBrains Mono\', \'SF Mono\', Monaco, Consolas, monospace')
       for (const token of ['--astryx-duration-fast', '--astryx-ease-standard', '--astryx-font-weight-regular'])
         expect(new Set(names).has(token), `${name} ${token}`).toBe(true)
     }
