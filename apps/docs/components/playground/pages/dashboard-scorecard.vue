@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  Avatar,
   Button,
   Card,
   Divider,
@@ -12,36 +13,27 @@ import {
   LayoutHeader,
   LayoutPanel,
   ProgressBar,
-  Selector,
+  SegmentedControl,
+  SegmentedControlItem,
+  StackItem,
   Text,
+  Timestamp,
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { PlaygroundLineChart, PlaygroundResponsive } from '@astryx-vue/playground-charts'
 import { computed, ref } from 'vue'
 
-const isNarrow = useMediaQuery('(max-width: 1024px)')
-const period = ref('q1')
-
-const PERIOD_OPTIONS = [
-  { value: 'q1', label: 'Q1 2026' },
-  { value: 'q2', label: 'Q2 2026' },
-  { value: 'q3', label: 'Q3 2026' },
-]
+type Period = 'WoW' | 'MoM' | 'QoQ'
+type Rag = 'green' | 'amber' | 'red'
 
 interface Kpi {
   key: string
   label: string
   value: string
-  delta: { WoW: number, MoM: number, QoQ: number }
+  delta: Record<Period, number>
   higherIsBetter: boolean
 }
-
-const KPIS: Kpi[] = [
-  { key: 'revenue', label: 'Net revenue', value: '$4.82M', delta: { WoW: 2.4, MoM: 6.1, QoQ: 14.3 }, higherIsBetter: true },
-  { key: 'arr', label: 'ARR', value: '$58.1M', delta: { WoW: 1.1, MoM: 3.8, QoQ: 11.2 }, higherIsBetter: true },
-  { key: 'nps', label: 'NPS', value: '62', delta: { WoW: 0.5, MoM: 1.2, QoQ: 4.0 }, higherIsBetter: true },
-  { key: 'churn', label: 'Logo churn', value: '1.8%', delta: { WoW: -0.1, MoM: -0.3, QoQ: -0.6 }, higherIsBetter: false },
-]
 
 interface Okr {
   objective: string
@@ -51,86 +43,320 @@ interface Okr {
   unit: string
 }
 
+interface TrendSeries {
+  key: string
+  title: string
+  unit: string
+  color: string
+  data: { t: number, label: string, current: number, prior: number }[]
+}
+
+interface Callout {
+  status: 'success' | 'warning' | 'info'
+  title: string
+  detail: string
+}
+
+const COLORS = {
+  blue: 'var(--astryx-color-data-categorical-blue, #0171E3)',
+  green: 'var(--astryx-color-data-categorical-green, #0B991F)',
+  orange: 'var(--astryx-color-data-categorical-orange, #EB6E00)',
+  purple: 'var(--astryx-color-data-categorical-purple, #6B1EFD)',
+  prior: 'var(--astryx-color-text-secondary, #737373)',
+}
+
+const PERIOD_SUBTITLE: Record<Period, string> = {
+  WoW: 'Week of Jun 23 – Jun 29, 2026 vs. prior week',
+  MoM: 'June 2026 vs. May 2026',
+  QoQ: 'Q2 2026 vs. Q1 2026',
+}
+
+const KPIS: Kpi[] = [
+  { key: 'revenue', label: 'Net revenue', value: '$4.82M', delta: { WoW: 2.4, MoM: 6.1, QoQ: 14.3 }, higherIsBetter: true },
+  { key: 'arr', label: 'ARR', value: '$58.1M', delta: { WoW: 1.1, MoM: 3.8, QoQ: 11.2 }, higherIsBetter: true },
+  { key: 'nrr', label: 'Net revenue retention', value: '112%', delta: { WoW: 0.3, MoM: -0.8, QoQ: 2.1 }, higherIsBetter: true },
+  { key: 'churn', label: 'Gross churn', value: '1.9%', delta: { WoW: 0.4, MoM: 1.6, QoQ: -0.7 }, higherIsBetter: false },
+  { key: 'cac', label: 'CAC payback', value: '14.2 mo', delta: { WoW: -0.2, MoM: -3.4, QoQ: -8.1 }, higherIsBetter: false },
+  { key: 'nps', label: 'NPS', value: '48', delta: { WoW: 1.0, MoM: 4.0, QoQ: 6.0 }, higherIsBetter: true },
+]
+
 const OKRS: Okr[] = [
   { objective: 'Reach $60M ARR', owner: 'Dana Whitfield · CRO', actual: 58.1, target: 60, unit: 'M' },
   { objective: 'Expand into 3 new enterprise verticals', owner: 'Marcus Lin · VP Sales', actual: 2, target: 3, unit: '' },
-  { objective: 'Ship self-serve analytics to GA', owner: 'Priya Shah · VP Product', actual: 85, target: 100, unit: '%' },
+  { objective: 'Ship AI copilot GA', owner: 'Priya Raman · VP Product', actual: 82, target: 100, unit: '%' },
+  { objective: 'Improve gross margin to 78%', owner: 'Tom Okafor · CFO', actual: 75.4, target: 78, unit: '%' },
 ]
 
-const TRENDS = [
-  { key: 'revenue', label: 'Net revenue', series: [3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.5, 4.82] },
-  { key: 'users', label: 'Active accounts', series: [920, 940, 960, 980, 1000, 1020, 1050, 1080] },
-  { key: 'nps', label: 'NPS', series: [54, 55, 56, 57, 58, 59, 60, 62] },
-  { key: 'support', label: 'Tickets resolved <24h', series: [78, 80, 82, 84, 85, 86, 88, 90] },
+const WEEK_LABELS = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12']
+
+function makeTrend(base: number, growth: number, priorGap: number, wobble: number) {
+  return WEEK_LABELS.map((label, i) => {
+    const drift = base * (1 + (growth * i) / 11)
+    const current = Math.round(drift + Math.sin(i * 1.3) * base * wobble)
+    return { t: i, label, current, prior: Math.round(current * (1 - priorGap)) }
+  })
+}
+
+const TRENDS: TrendSeries[] = [
+  { key: 'revenue', title: 'Net revenue', unit: 'k', color: COLORS.blue, data: makeTrend(980, 0.24, 0.12, 0.03) },
+  { key: 'pipeline', title: 'Qualified pipeline', unit: 'k', color: COLORS.green, data: makeTrend(3200, 0.31, 0.18, 0.05) },
+  { key: 'activation', title: 'Activation rate', unit: '%', color: COLORS.purple, data: makeTrend(42, 0.28, 0.09, 0.04) },
+  { key: 'support', title: 'Support CSAT', unit: '%', color: COLORS.orange, data: makeTrend(88, 0.06, 0.03, 0.02) },
 ]
 
-const okrSummary = computed(() => `${OKRS.filter(o => o.actual >= o.target).length} of ${OKRS.length} on track`)
+const NARRATIVE: Record<Period, Callout[]> = {
+  WoW: [
+    { status: 'success', title: 'Net revenue up 2.4% week-over-week', detail: 'Driven by three enterprise renewals closing early in the East region; expansion ARR contributed 60% of the lift.' },
+    { status: 'warning', title: 'Gross churn ticked up 0.4 points', detail: 'Two mid-market logos churned on price; both flagged in QBRs last month. Save-play in motion for the remaining at-risk cohort.' },
+    { status: 'info', title: 'CAC payback holding at 14.2 months', detail: 'Paid acquisition efficiency steady; the shift toward partner-sourced pipeline is starting to show in blended CAC.' },
+  ],
+  MoM: [
+    { status: 'success', title: 'Revenue accelerating: +6.1% month-over-month', detail: 'Second consecutive month of accelerating growth. New-logo bookings and expansion both above plan; net-new pipeline covers 3.2x of next quarter target.' },
+    { status: 'warning', title: 'NRR dipped 0.8 points to 112%', detail: 'A seasonal downgrade cycle in the SMB segment pulled retention down slightly. Enterprise NRR remains above 120%.' },
+    { status: 'success', title: 'CAC payback improved 3.4 points', detail: 'Sales efficiency gains from the new SDR playbook are compounding; payback now inside the 15-month board target.' },
+  ],
+  QoQ: [
+    { status: 'success', title: 'Strong quarter: revenue +14.3%, ARR +11.2%', detail: 'Best quarter on record for net-new ARR. Two of three new verticals landed anchor customers; the AI copilot beta is converting at 2x the baseline trial rate.' },
+    { status: 'success', title: 'Churn down 0.7 points quarter-over-quarter', detail: 'Retention initiatives launched in Q1 are paying off; gross churn at a two-year low and NRR up 2.1 points.' },
+    { status: 'warning', title: 'Gross margin at 75.4%, short of the 78% goal', detail: 'Infrastructure cost from the AI copilot GA ramp is the primary drag. Finance projects margin recovery once usage-based pricing lands next quarter.' },
+  ],
+}
 
-function trendPath(values: number[]) {
-  const w = 200
-  const h = 60
-  const max = Math.max(...values)
-  const min = Math.min(...values)
-  const range = max - min || 1
-  return values.map((v, i) => {
-    const x = (i / (values.length - 1)) * w
-    const y = h - ((v - min) / range) * h
-    return `${i === 0 ? 'M' : 'L'}${x},${y}`
-  }).join(' ')
+const CALLOUT_ICON: Record<Callout['status'], string> = {
+  success: 'success',
+  warning: 'warning',
+  info: 'info',
+}
+
+const CALLOUT_ICON_COLOR: Record<Callout['status'], string> = {
+  success: 'success',
+  warning: 'warning',
+  info: 'accent',
+}
+
+const CALLOUT_LABEL: Record<Callout['status'], string> = {
+  success: 'Positive',
+  warning: 'Needs attention',
+  info: 'Context',
+}
+
+/** Delta 的方向和幅度决定图标与配色：方向有利且幅度大是绿，方向不利且幅度大是红。 */
+function ragFor(deltaPct: number, higherIsBetter: boolean): Rag {
+  const favorable = higherIsBetter ? deltaPct >= 0 : deltaPct <= 0
+  const magnitude = Math.abs(deltaPct)
+  if (favorable)
+    return magnitude >= 1 ? 'green' : 'amber'
+  return magnitude >= 3 ? 'red' : 'amber'
+}
+
+function okrRag(pct: number): Rag {
+  if (pct >= 90)
+    return 'green'
+  if (pct >= 70)
+    return 'amber'
+  return 'red'
+}
+
+const RAG_ICON = { green: 'success', amber: 'warning', red: 'error' } as const
+const RAG_PROGRESS = { green: 'success', amber: 'warning', red: 'error' } as const
+
+const period = ref<Period>('WoW')
+const isNarrow = useMediaQuery('(max-width: 1024px)')
+
+const subtitle = computed(() => PERIOD_SUBTITLE[period.value])
+const callouts = computed(() => NARRATIVE[period.value])
+const okrSummary = computed(() => {
+  const onTrack = OKRS.filter(okr => (okr.actual / okr.target) * 100 >= 90).length
+  return `${onTrack} of ${OKRS.length} on track`
+})
+
+function deltaText(delta: number): string {
+  return `${delta > 0 ? '+' : ''}${delta.toFixed(1)}%`
+}
+
+function deltaIcon(delta: number): string {
+  if (delta === 0)
+    return 'chevronRight'
+  return delta < 0 ? 'arrowDown' : 'arrowUp'
+}
+
+function okrPercent(okr: Okr): number {
+  return Math.round((okr.actual / okr.target) * 100)
+}
+
+function ownerName(owner: string): string {
+  return owner.split('·')[0].trim()
+}
+
+function trendDelta(trend: TrendSeries): number {
+  const latest = trend.data[trend.data.length - 1]
+  return Math.round(((latest.current - latest.prior) / latest.prior) * 100)
+}
+
+function trendDomain(trend: TrendSeries): [number, number] {
+  const values = trend.data.flatMap(row => [row.current, row.prior])
+  return [Math.min(...values), Math.max(...values)]
+}
+
+function trendSeries(trend: TrendSeries) {
+  return [
+    { key: 'current', color: trend.color, name: 'Current' },
+    { key: 'prior', color: COLORS.prior, name: 'Prior' },
+  ]
+}
+
+function weekLabel(t: number): string {
+  return WEEK_LABELS[t] ?? ''
 }
 </script>
 
 <template>
-  <Layout height="fill">
+  <Layout height="fill" :content-width="1440">
     <template #header>
-      <LayoutHeader has-divider :padding="6">
-        <HStack :justify="'between'" :align="'center'" wrap="wrap" :gap="4">
-          <Heading :level="2">Executive scorecard</Heading>
-          <HStack :gap="2" :align="'center'">
-            <Selector v-model="period" label="Period" is-label-hidden :options="PERIOD_OPTIONS" />
+      <LayoutHeader :padding="6" has-divider>
+        <HStack :gap="3" v-align="center" h-align="between" wrap="wrap">
+          <VStack :gap="1">
+            <Heading :level="1">
+              Weekly Business Review
+            </Heading>
+            <HStack :gap="2" v-align="center">
+              <Text type="body" color="secondary">
+                {{ subtitle }}
+              </Text>
+              <Text type="body" color="secondary">
+                · Generated
+              </Text>
+              <Timestamp value="2026-06-30T08:00:00Z" format="date" type="body" color="secondary" />
+            </HStack>
+          </VStack>
+          <HStack :gap="3">
+            <SegmentedControl v-model="period" label="Comparison period">
+              <SegmentedControlItem label="WoW" value="WoW" />
+              <SegmentedControlItem label="MoM" value="MoM" />
+              <SegmentedControlItem label="QoQ" value="QoQ" />
+            </SegmentedControl>
             <Button label="Export" variant="secondary">
-              <template #icon><Icon icon="i-heroicons-arrow-down-tray" size="sm" /></template>
+              <template #icon>
+                <Icon icon="upload" size="sm" />
+              </template>
             </Button>
           </HStack>
         </HStack>
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="6" class="content-pad">
+    <LayoutContent :padding="6" class="page-content">
       <VStack :gap="10">
         <VStack v-if="isNarrow" :gap="6">
-          <Heading :level="3">What changed &amp; why</Heading>
-          <Card :padding="4">
-            <Text type="body" color="secondary">
-              Revenue grew 6.1% MoM driven by enterprise expansion in healthcare and fintech. NPS improved after the onboarding redesign shipped in February.
+          <HStack :gap="3" v-align="center" h-align="between">
+            <Heading :level="2">
+              What changed &amp; why
+            </Heading>
+            <Text type="supporting" color="secondary">
+              AI summary
             </Text>
-          </Card>
+          </HStack>
+          <VStack :gap="2">
+            <Card v-for="callout in callouts" :key="callout.title" :padding="5">
+              <HStack :gap="3" align="start">
+                <Icon
+                  :icon="CALLOUT_ICON[callout.status]"
+                  :color="CALLOUT_ICON_COLOR[callout.status]"
+                  size="md"
+                  :label="CALLOUT_LABEL[callout.status]"
+                />
+                <StackItem size="fill">
+                  <VStack :gap="1">
+                    <Heading :level="4">
+                      {{ callout.title }}
+                    </Heading>
+                    <Text type="body" color="secondary">
+                      {{ callout.detail }}
+                    </Text>
+                  </VStack>
+                </StackItem>
+              </HStack>
+            </Card>
+          </VStack>
         </VStack>
 
         <VStack :gap="6">
-          <Heading :level="3">Scorecards</Heading>
+          <HStack :gap="3" v-align="center" h-align="between">
+            <Heading :level="2">
+              Scorecards
+            </Heading>
+            <Text type="supporting" color="secondary">
+              Performance metrics
+            </Text>
+          </HStack>
           <Grid :gap="2" class="scorecard-grid">
-            <Card v-for="kpi in KPIS" :key="kpi.key" :padding="4">
+            <Card v-for="kpi in KPIS" :key="kpi.key" :padding="5">
               <VStack :gap="1">
-                <Text type="supporting" color="secondary">{{ kpi.label }}</Text>
-                <Heading :level="2">{{ kpi.value }}</Heading>
-                <Text type="supporting">WoW {{ kpi.delta.WoW }}% · MoM {{ kpi.delta.MoM }}% · QoQ {{ kpi.delta.QoQ }}%</Text>
+                <Text type="label" color="secondary">
+                  {{ kpi.label }}
+                </Text>
+                <HStack :gap="4" v-align="center">
+                  <Heading :level="2">
+                    {{ kpi.value }}
+                  </Heading>
+                  <HStack :gap="2" v-align="center">
+                    <Text type="body" color="secondary">
+                      {{ deltaText(kpi.delta[period]) }}
+                    </Text>
+                    <Icon
+                      :icon="deltaIcon(kpi.delta[period])"
+                      size="xsm"
+                      :color="RAG_ICON[ragFor(kpi.delta[period], kpi.higherIsBetter)]"
+                    />
+                  </HStack>
+                </HStack>
               </VStack>
             </Card>
           </Grid>
         </VStack>
 
         <VStack :gap="6">
-          <Heading :level="3">Goal attainment</Heading>
-          <Text type="supporting" color="secondary">{{ okrSummary }}</Text>
+          <HStack :gap="3" v-align="center" h-align="between">
+            <Heading :level="2">
+              Goal attainment
+            </Heading>
+            <Text type="supporting" color="secondary">
+              {{ okrSummary }}
+            </Text>
+          </HStack>
           <Card :padding="6">
             <VStack :gap="6">
               <template v-for="(okr, i) in OKRS" :key="okr.objective">
                 <Divider v-if="i > 0" />
                 <VStack :gap="2">
-                  <Heading :level="4">{{ okr.objective }}</Heading>
-                  <Text type="supporting" color="secondary">{{ okr.owner }}</Text>
-                  <ProgressBar :value="okr.actual" :max="okr.target" :label="`${okr.actual}${okr.unit} / ${okr.target}${okr.unit}`" />
+                  <HStack h-align="between" v-align="center" :gap="3">
+                    <StackItem size="fill">
+                      <Heading :level="4">
+                        {{ okr.objective }}
+                      </Heading>
+                    </StackItem>
+                    <Text type="supporting" color="secondary">
+                      {{ okrPercent(okr) }}%
+                    </Text>
+                  </HStack>
+                  <ProgressBar
+                    :value="okr.actual"
+                    :max="okr.target"
+                    :variant="RAG_PROGRESS[okrRag(okrPercent(okr))]"
+                    :label="okr.objective"
+                    is-label-hidden
+                  />
+                  <HStack h-align="between" v-align="center" :gap="4">
+                    <HStack :gap="2" v-align="center">
+                      <Avatar size="sm" :name="ownerName(okr.owner)" />
+                      <Text type="supporting" color="secondary">
+                        {{ okr.owner }}
+                      </Text>
+                    </HStack>
+                    <Text type="supporting" color="secondary">
+                      {{ okr.actual }}{{ okr.unit }} / {{ okr.target }}{{ okr.unit }} target
+                    </Text>
+                  </HStack>
                 </VStack>
               </template>
             </VStack>
@@ -138,14 +364,56 @@ function trendPath(values: number[]) {
         </VStack>
 
         <VStack :gap="6">
-          <Heading :level="3">Trends</Heading>
+          <HStack :gap="3" v-align="center" h-align="between">
+            <Heading :level="2">
+              Trends
+            </Heading>
+            <Text type="supporting" color="secondary">
+              Current vs. prior period · trailing 12 weeks
+            </Text>
+          </HStack>
           <Grid :columns="{ minWidth: 330, repeat: 'fit' }" :gap="3">
-            <Card v-for="trend in TRENDS" :key="trend.key" :padding="4">
-              <VStack :gap="2">
-                <Text type="label">{{ trend.label }}</Text>
-                <svg class="trend" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
-                  <path :d="trendPath(trend.series)" fill="none" stroke="var(--astryx-color-data-categorical-blue)" stroke-width="2" />
-                </svg>
+            <Card v-for="trend in TRENDS" :key="trend.key" :padding="5">
+              <VStack :gap="6">
+                <HStack h-align="between" v-align="center">
+                  <HStack :gap="2">
+                    <Heading :level="3">
+                      {{ trend.title }}
+                    </Heading>
+                    <Heading :level="3" color="secondary">
+                      {{ trend.data[trend.data.length - 1].current }}{{ trend.unit }}
+                    </Heading>
+                  </HStack>
+                  <Text type="supporting" color="secondary">
+                    {{ trendDelta(trend) >= 0 ? '+' : '' }}{{ trendDelta(trend) }}% vs prior
+                  </Text>
+                </HStack>
+                <PlaygroundResponsive :height="200">
+                  <PlaygroundLineChart
+                    :data="trend.data"
+                    x-key="t"
+                    :series="trendSeries(trend)"
+                    :height="200"
+                    :y-domain="trendDomain(trend)"
+                    :x-ticks="[0, 3, 7, 11]"
+                    :x-tick-format="weekLabel"
+                    :y-unit="trend.unit"
+                  />
+                </PlaygroundResponsive>
+                <HStack :gap="5" v-align="center">
+                  <HStack :gap="2" v-align="center">
+                    <Icon icon="stop" size="xsm" :style="{ color: trend.color }" />
+                    <Text type="supporting" color="secondary">
+                      Current
+                    </Text>
+                  </HStack>
+                  <HStack :gap="2" v-align="center">
+                    <Icon icon="stop" size="xsm" :style="{ color: COLORS.prior }" />
+                    <Text type="supporting" color="secondary">
+                      Prior
+                    </Text>
+                  </HStack>
+                </HStack>
               </VStack>
             </Card>
           </Grid>
@@ -156,10 +424,36 @@ function trendPath(values: number[]) {
     <template v-if="!isNarrow" #end>
       <LayoutPanel :width="400" :padding="6" has-divider role="complementary" label="What changed and why">
         <VStack :gap="6">
-          <Heading :level="3">What changed &amp; why</Heading>
-          <Text type="body" color="secondary">
-            Revenue grew 6.1% MoM driven by enterprise expansion in healthcare and fintech. NPS improved after the onboarding redesign shipped in February. Logo churn ticked down as success outreach reduced early-stage cancellations.
-          </Text>
+          <HStack :gap="3" v-align="center" h-align="between">
+            <Heading :level="2">
+              What changed &amp; why
+            </Heading>
+            <Text type="supporting" color="secondary">
+              AI summary
+            </Text>
+          </HStack>
+          <VStack :gap="2">
+            <Card v-for="callout in callouts" :key="callout.title" :padding="5">
+              <HStack :gap="3" align="start">
+                <Icon
+                  :icon="CALLOUT_ICON[callout.status]"
+                  :color="CALLOUT_ICON_COLOR[callout.status]"
+                  size="md"
+                  :label="CALLOUT_LABEL[callout.status]"
+                />
+                <StackItem size="fill">
+                  <VStack :gap="1">
+                    <Heading :level="4">
+                      {{ callout.title }}
+                    </Heading>
+                    <Text type="body" color="secondary">
+                      {{ callout.detail }}
+                    </Text>
+                  </VStack>
+                </StackItem>
+              </HStack>
+            </Card>
+          </VStack>
         </VStack>
       </LayoutPanel>
     </template>
@@ -167,7 +461,10 @@ function trendPath(values: number[]) {
 </template>
 
 <style scoped>
-.scorecard-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-.trend { width: 100%; height: 60px; display: block; }
-.content-pad { padding-bottom: var(--astryx-spacing-10); }
+.scorecard-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.page-content {
+  padding-bottom: var(--astryx-spacing-10);
+}
 </style>
