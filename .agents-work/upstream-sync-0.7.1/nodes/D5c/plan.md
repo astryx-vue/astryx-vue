@@ -126,3 +126,19 @@ D5a 之后，总控把 57 个模板和原版演练场（`https://astryx.atmeta.c
 17. `canvas-editor`：顶部文件标签（Salzburg poster / Brand sheet / Untitled draft）；左侧 Layers / Library 标签、可折叠图层树；画布里是带图片的海报；右侧属性面板分 Layout / Layer / Styles / Transforms / Text 几组。
 
 做不完没关系，按顺序尽量往下做。每完成 3 个就更新回报。
+
+---
+
+## 第 3 轮（第二批 #177 已合入）
+
+剩 5 个模板。这几个都是原版的大页面，基本要照原版 `page.tsx` 整篇重写。顺序和差别清单：
+
+1. `table-page`：只差细节，行高和行数对齐原版（原版 Description 列有 Content 类的行，一屏能看到约 16 行）。
+2. `table-inbox`：改成原版的两栏：左侧会话列表（未读圆点、发件人、主题、预览、时间、附件图标），选中项高亮；右侧完整线程（主题、标签、多条消息、每条带头像、时间、展开收起，附件缩略图，底部 Reply / Reply all）。顶部 Inbox / Escalations / Waiting / Resolved 标签带计数，右上 Refresh、Compose。
+3. `table-tree`：改成原版的 GitHub 仓库页：顶部仓库名 + Public 徽章、Star / Watch / Fork 带计数；分支选择、Branches、Tags、Go to file、Add file、Code；文件表（名称、最后提交、时间）；右侧 About（描述、链接、标签、Readme / License / Code of conduct / Security policy / Activity、stars / watching / forks）、Releases（带 Latest 徽章）、Contributors（头像墙）；下方 README / Code of conduct / MIT license / Security 标签页。
+4. `table-filter`：改成原版：顶部一排筛选 chip（Job name、Upcoming、Scheduled +3、Customer、Technician、Priority、Quote）、结果计数、Clear all、View options；表格按客户分组，分组标题带计数，十几行，每行有状态徽章、优先级圆点、技术员头像、时间、金额。
+5. `canvas-editor`：改成原版：顶部文件标签（Salzburg poster / Brand sheet / Untitled draft）、保存时间、Export；左侧 Layers / Library 标签和可折叠图层树（Text / Images 两组）；画布里是带图片的海报；右侧属性面板分 Layout / Layer / Styles / Transforms / Text 几组。
+
+规则同第 2 轮（单文件可超 500 行、坑都在上面）。另外：
+- 原版用到图片的地方，从 `apps/docs/public/template-assets/` 找同名文件，没有就从上游 `apps/docsite/public/template-assets/` 取过来。
+- 这几个模板数据量大，数据照抄原版的数组即可，不用自己编。

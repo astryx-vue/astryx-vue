@@ -60,7 +60,7 @@ mindmap
       ✅ D9 指南补齐 #172
       🟡 D4a CLI 取舍 和用户边讨论边定
       ✅ D8 演练场同步 #174
-      🟡 D5c 模板追平原版 第一批 #175
+      ✅ D5c 模板追平原版 #175 #177 #178
       ➖ D6 暂缓
       ⬜ D4b D5b
     阶段 E 工程质量
@@ -85,6 +85,7 @@ mindmap
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| D5c 页面模板追平原版（第二、三批） | [#177](https://github.com/astryx-vue/astryx-vue/pull/177) [#178](https://github.com/astryx-vue/astryx-vue/pull/178) | squash 合入（`0ac9ba3`、`9018804`）。剩下 17 个模板照原版整篇追平，57 个模板全部和原版截图对照过 |
 | D5c 页面模板追平原版（第一批） | [#175](https://github.com/astryx-vue/astryx-vue/pull/175) | squash 合入（`3881332`）。修了 3 处插槽名写错（整块没渲染），dashboard、scorecard、组件文档页追平原版。总控补修演练场图表的宽度和图例色块 |
 | D8 演练场同步 | [#174](https://github.com/astryx-vue/astryx-vue/pull/174) | squash 合入（`ab13a30`）。预览通道按每次装载的随机标记校验消息来源；三种启动失败都有提示；57 个模板预览 0 报错 |
 | D9 指南补齐 | [#172](https://github.com/astryx-vue/astryx-vue/pull/172) | squash 合入（`4c9b931`）。新增布局、设计原则、配合 AI、浏览器支持 4 页，另在 6 个已有页面各补一节，中英文各一份。总控修正了一个不存在的示例模板名 |
@@ -118,11 +119,11 @@ mindmap
 
 ## 当前并行
 
-D5c 第 2 轮正在实现：剩下 17 个页面模板追平原版。
+没有正在实现的节点。
 
 **阶段 C 全部完成；D1、D2、D3、D5a、D7、D9、F2a、F2b 已合入。** D4a 正在和用户边讨论边定，记录在 `nodes/D4a/decisions.md`。D6 暂缓。可以开工、等待派发：F1a、G1、F3a、F3b、F3g、F3c、F3d、F3h、F3e、F2c、F4、F2d。G1（发布 core + themes）要先问用户。
 
-**本 PR 的 CI：** 当前 tip 含 D5c 第一批（`3881332`）。节点 PR 合入前仍须 Check + Test 绿。`tests/swarm-worktree.test.ts` 的临时目录清理偶尔报 ENOTEMPTY，和节点代码无关，重跑即可。
+**本 PR 的 CI：** 当前 tip 含 D5c 第三批（`9018804`）。节点 PR 合入前仍须 Check + Test 绿。`tests/swarm-worktree.test.ts` 的临时目录清理偶尔报 ENOTEMPTY，和节点代码无关，重跑即可。
 
 ## 怎么验收这个总 PR
 
