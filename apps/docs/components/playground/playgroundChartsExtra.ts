@@ -99,6 +99,7 @@ export const PlaygroundGanttChart = defineComponent({
     return () => {
       const chartW = chart.width.value
       if (props.isRechartsLayout) {
+        // 原版的 Today 标注画在绘图区上方、图表外，实际被裁掉，所以这里不画。
         const pad = { top: 4, right: 16, bottom: 34, left: 156 }
         const rowH = 44
         const hTotal = Math.max(160, props.items.length * rowH)
@@ -116,7 +117,6 @@ export const PlaygroundGanttChart = defineComponent({
         if (props.today != null) {
           const x = scale(props.today)
           nodes.push(h('line', { 'x1': x, 'y1': pad.top, 'x2': x, 'y2': pad.top + innerH, 'stroke': 'var(--astryx-color-data-neutral, #8494A3)', 'stroke-dasharray': '4 4' }))
-          nodes.push(h('text', { 'x': x, 'y': pad.top - 8, 'text-anchor': 'middle', 'fill': 'var(--astryx-color-data-neutral, #8494A3)', 'font-size': '11px' }, 'Today'))
         }
         props.items.forEach((item, i) => {
           const cy = pad.top + band * i + band / 2

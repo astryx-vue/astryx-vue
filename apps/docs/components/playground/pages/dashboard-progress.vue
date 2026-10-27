@@ -211,7 +211,11 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                 Target GA ·
               </Text>
               <Timestamp value="2026-06-30T00:00:00Z" format="date" type="body" color="secondary" />
-              <Badge :variant="RAG_BADGE[PROGRAM_STATUS]" :label="RAG_LABEL[PROGRAM_STATUS]" />
+              <Badge :variant="RAG_BADGE[PROGRAM_STATUS]" :label="RAG_LABEL[PROGRAM_STATUS]">
+                <template #icon>
+                  <Icon :name="PROGRAM_STATUS === 'onTrack' ? 'heroicons:check-circle' : 'heroicons:exclamation-triangle'" size="sm" />
+                </template>
+              </Badge>
             </HStack>
           </VStack>
           <HStack :gap="2">
@@ -313,7 +317,9 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                         { key: 'actual', name: 'Actual', color: ACTUAL_COLOR },
                       ]"
                       :height="208"
+                      :y-ticks="[0, 80, 160, 240, 320]"
                       y-unit=" pts"
+                      is-y-unit-stacked
                       :x-ticks="[0, 3, 6, 9, 12]"
                       :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
                       :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"

@@ -107,6 +107,8 @@ export const PlaygroundLineChart = defineComponent({
     pad: { type: Object as PropType<{ top: number, right: number, bottom: number, left: number }>, default: undefined },
     /** 刻度文字是否垂直居中在刻度线上（默认按基线 +4 对齐）。 */
     centerTicks: { type: Boolean, default: false },
+    /** y 轴单位另起一行（数字在上、单位在下），和原版 recharts 窄轴的折行一致。 */
+    isYUnitStacked: { type: Boolean, default: false },
   },
   setup(props) {
     const chart = useChartWidth()
@@ -168,14 +170,20 @@ export const PlaygroundLineChart = defineComponent({
             stroke: GRID_STROKE,
           }))
         }
+        const tickX = pad.left - 8
+        // 单位放不进轴宽时才折行：两位数及以上折，一位数不折。
+        const isStacked = props.isYUnitStacked && Math.abs(tick) >= 10
+        const tickY = props.centerTicks ? Math.max(y, 9) : y + 4
         return h('text', {
-          'x': pad.left - 8,
-          'y': props.centerTicks ? Math.max(y, 9) : y + 4,
+          'x': tickX,
+          'y': isStacked ? tickY - 2 : tickY,
           'dominant-baseline': props.centerTicks ? 'central' : undefined,
           'text-anchor': 'end',
           'fill': AXIS_TICK,
           'font-size': '12px',
-        }, `${tick}${props.yUnit}`)
+        }, isStacked
+          ? [h('tspan', { x: tickX }, `${tick}`), h('tspan', { x: tickX, dy: '12px' }, props.yUnit.trim())]
+          : `${tick}${props.yUnit}`)
       })
 
       const xTickNodes = (props.xTicks.length ? props.xTicks : [xMin, xMax]).map((tick) => {
@@ -193,7 +201,7 @@ export const PlaygroundLineChart = defineComponent({
           'x': x,
           'y': props.centerTicks ? pad.top + innerH + 13 : props.height - 6,
           'dominant-baseline': props.centerTicks ? 'central' : undefined,
-          'text-anchor': 'middle',
+          'text-anchor': tick === xMax && x + 14 > pad.left + innerW + pad.right ? 'end' : 'middle',
           'fill': AXIS_TICK,
           'font-size': '12px',
         }, props.xTickFormat(tick))
