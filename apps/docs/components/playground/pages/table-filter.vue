@@ -918,6 +918,46 @@ const { sortedData, sortConfig } = useTableSortableState<ServiceJob>({
   defaultSort: [{ sortKey: 'priority', direction: 'ascending' }],
 })
 
+const SORT_RANKS: Record<string, Record<string, number>> = {
+  priority: { urgent: 0, high: 1, normal: 2 },
+  status: { overdue: 0, on_hold: 1, in_progress: 2, scheduled: 3, completed: 4 },
+}
+
+/**
+ * 分组时组序优先于排序键（原版 comparator 先比组），保证一个组的行连续、
+ * 分页切点落在组边界；不分组时直接用排序组合的结果。
+ */
+const groupMajorData = computed(() => {
+  if (!isGrouped.value)
+    return sortedData.value
+  const order = GROUP_ORDERS[groupField.value]
+  const rank = new Map(order.map((key, index) => [key, index]))
+  return [...results.value].sort((a, b) => {
+    const byGroup = (rank.get(groupKeyOf(a, groupField.value)) ?? Number.MAX_SAFE_INTEGER)
+      - (rank.get(groupKeyOf(b, groupField.value)) ?? Number.MAX_SAFE_INTEGER)
+    if (byGroup !== 0)
+      return byGroup
+    for (const { sortKey, direction } of sortConfig.sort) {
+      const av = a[sortKey]
+      const bv = b[sortKey]
+      const ranks = SORT_RANKS[sortKey]
+      let cmp: number
+      if (ranks != null) {
+        cmp = (ranks[String(av)] ?? Number.MAX_SAFE_INTEGER) - (ranks[String(bv)] ?? Number.MAX_SAFE_INTEGER)
+      }
+      else if (typeof av === 'number' && typeof bv === 'number') {
+        cmp = av - bv
+      }
+      else {
+        cmp = String(av ?? '').localeCompare(String(bv ?? ''))
+      }
+      if (cmp !== 0)
+        return direction === 'ascending' ? cmp : -cmp
+    }
+    return 0
+  })
+})
+
 const selectedKeys = ref<ReadonlySet<string>>(new Set())
 
 const { selectionConfig } = useTableSelectionState<ServiceJob>({
@@ -1002,7 +1042,7 @@ let inFlight = false
 
 /** 分组时把分页切点补齐到当前组末尾，不把一个组截成两半。 */
 const visibleCount = computed(() => {
-  const items = sortedData.value
+  const items = groupMajorData.value
   if (loadedCount.value >= items.length)
     return items.length
   if (!isGrouped.value)
@@ -1014,9 +1054,9 @@ const visibleCount = computed(() => {
   return end
 })
 
-const pagedData = computed(() => sortedData.value.slice(0, visibleCount.value))
+const pagedData = computed(() => groupMajorData.value.slice(0, visibleCount.value))
 
-watch(sortedData, () => {
+watch(groupMajorData, () => {
   loadedCount.value = PAGE_SIZE
   isLoadingNext.value = false
 })
@@ -1038,10 +1078,10 @@ onBeforeUnmount(() => clearTimeout(nextTimer))
 const hasNext = computed(() => visibleCount.value < sortedData.value.length)
 
 const sentinelRef = ref<HTMLElement | null>(null)
-let sentinelObserver: IntersectionObserver | null = null
+let sentinelScrollRoot: HTMLElement | null = null
 
-/** 哨兵的滚动容器：页面滚就听 viewport，内容区内部滚就听那个容器。 */
-function scrollRootOf(el: HTMLElement | null): Element | Document | null {
+/** 哨兵的滚动容器：页面滚就是 document，内容区内部滚就是那个容器。 */
+function scrollRootOf(el: HTMLElement | null): HTMLElement | null {
   let node = el?.parentElement ?? null
   while (node != null) {
     const overflowY = getComputedStyle(node).overflowY
@@ -1052,21 +1092,40 @@ function scrollRootOf(el: HTMLElement | null): Element | Document | null {
   return null
 }
 
-function observeSentinel(el: HTMLElement | null): void {
-  sentinelObserver?.disconnect()
-  sentinelObserver = null
-  if (el == null)
+/** 哨兵距滚动容器底部不足 240px 就取下一批，和原版的 IntersectionObserver 同语义。 */
+function checkSentinel(): void {
+  const el = sentinelRef.value
+  if (el == null || !hasNext.value)
     return
-  sentinelObserver = new IntersectionObserver((entries) => {
-    if (entries.some(entry => entry.isIntersecting) && hasNext.value)
-      loadNext(PAGE_SIZE)
-  }, { root: scrollRootOf(el), rootMargin: '240px' })
-  sentinelObserver.observe(el)
+  const elRect = el.getBoundingClientRect()
+  const rootRect = sentinelScrollRoot == null
+    ? { top: 0, bottom: window.innerHeight }
+    : sentinelScrollRoot.getBoundingClientRect()
+  if (elRect.top - rootRect.bottom < 240)
+    loadNext(PAGE_SIZE)
 }
 
-onMounted(() => observeSentinel(sentinelRef.value))
+function bindSentinel(el: HTMLElement | null): void {
+  if (sentinelScrollRoot != null && sentinelScrollRoot !== document.scrollingElement) {
+    sentinelScrollRoot.removeEventListener('scroll', checkSentinel)
+    sentinelScrollRoot = null
+  }
+  window.removeEventListener('scroll', checkSentinel)
+  window.removeEventListener('resize', checkSentinel)
+  if (el == null)
+    return
+  sentinelScrollRoot = scrollRootOf(el)
+  const root = sentinelScrollRoot ?? document.scrollingElement
+  if (root != null && root !== document.scrollingElement)
+    root.addEventListener('scroll', checkSentinel, { passive: true })
+  window.addEventListener('scroll', checkSentinel, { passive: true })
+  window.addEventListener('resize', checkSentinel)
+  checkSentinel()
+}
 
-watch(sentinelRef, el => observeSentinel(el))
+onMounted(() => bindSentinel(sentinelRef.value))
+
+watch(sentinelRef, el => bindSentinel(el))
 
 const tableRows = computed(() => (isGrouped.value ? groupedRows.value : pagedData.value))
 const tableIdKey = computed(() => (isGrouped.value ? groupedIdKey : 'id'))
