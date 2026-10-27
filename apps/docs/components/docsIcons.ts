@@ -6,7 +6,9 @@
  * not load this module: it has tokens only, like upstream's `/built` theme, and
  * falls back to core's built-in filled artwork.
  *
- * The icon plugin only bundles names it can see written out in a module.
+ * The icon plugin only bundles names it can see written out in a module, so the
+ * list is spelled out here. `tests/docs-icons.test.ts` checks it against core's
+ * `defaultSemanticIcons`.
  */
 export const docsIcons = [
   'lucide:x',
