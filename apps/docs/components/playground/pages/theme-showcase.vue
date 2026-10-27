@@ -58,6 +58,8 @@ const FILTER_ITEMS = [
   { id: 'tags', label: 'Tags', icon: 'i-heroicons-tag', options: ['New', 'Popular', 'Limited', 'Leather', 'Drinkware', 'Home'] },
 ]
 
+const FILTER_BY_ID: Record<string, (typeof FILTER_ITEMS)[number]> = Object.fromEntries(FILTER_ITEMS.map(item => [item.id, item]))
+
 interface TagSpec { label: string, variant: ShowcaseBadgeVariant }
 
 interface InventoryRow extends Record<string, unknown> {
@@ -444,9 +446,9 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                         is-label-hidden
                         :placeholder="item.label"
                         size="sm"
-                        :start-icon="item.icon"
+                        :start-icon="FILTER_BY_ID[item.id ?? ''].icon"
                         :model-value="null"
-                        :options="item.options"
+                        :options="FILTER_BY_ID[item.id ?? ''].options"
                       />
                     </template>
                     <template #overflow>
