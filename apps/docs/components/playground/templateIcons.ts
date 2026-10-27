@@ -24,6 +24,7 @@ export const templateIcons = [
   'heroicons:cog-6-tooth',
   'heroicons:document',
   'heroicons:document-text',
+  'heroicons:ellipsis-horizontal',
   'heroicons:eye',
   'heroicons:folder',
   'heroicons:folder-arrow-down',
