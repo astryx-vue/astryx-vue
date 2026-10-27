@@ -30,6 +30,7 @@ import {
   Token,
   Toolbar,
   useMediaQuery,
+  useTableColumnResize,
   useTableSortable,
   useTableSortableState,
   useTableTreeState,
@@ -373,6 +374,22 @@ const isNarrowHeader = computed(() => headerWidth.value != null && headerWidth.v
 const isNarrowBody = computed(() => bodyWidth.value != null && bodyWidth.value <= NARROW_WIDTH)
 const isSearchOpen = ref(false)
 
+function setHeader(instance: unknown): void {
+  headerEl.value = (instance as { $el?: HTMLElement } | null)?.$el ?? null
+}
+
+const searchInput = ref<{ $el?: HTMLElement } | null>(null)
+
+/** 窄屏下搜索收成图标按钮；点开后把焦点给输入框。 */
+function openSearch(): void {
+  isSearchOpen.value = true
+  void nextTick(() => searchInput.value?.$el?.querySelector('input')?.focus())
+}
+
+function setBody(instance: unknown): void {
+  bodyEl.value = (instance as { $el?: HTMLElement } | null)?.$el ?? null
+}
+
 function watchWidth(target: typeof headerEl, width: typeof headerWidth): void {
   let observer: ResizeObserver | null = null
   watch(target, (element) => {
@@ -505,6 +522,16 @@ const { visibleData, plugin: treePlugin } = useTableTreeState<RepoEntry>(() => (
 }))
 
 const sortPlugin = useTableSortable<RepoEntry>(sortConfig)
+
+/** 列宽可以拖；拖完记下来，下次渲染沿用。 */
+const columnWidths = ref<Record<string, number>>({})
+const resizePlugin = useTableColumnResize<RepoEntry>(() => ({
+  columnWidths: columnWidths.value,
+  onColumnResizeEnd: (updates) => {
+    columnWidths.value = { ...columnWidths.value, ...updates }
+  },
+  columns,
+}))
 const matchCount = computed(() => (isSearching.value ? countMatches(ROLLED_UP, needle.value) : 0))
 const readme = computed(() => readmeFor(selectedFolderId.value))
 const hasRepoTabs = computed(() => selectedFolderId.value == null)
@@ -649,7 +676,7 @@ const READMES: Record<string, string> = {
 <template>
   <Layout height="auto" :content-width="1440">
     <template #header>
-      <Toolbar label="Repository" size="sm" :dividers="['bottom']">
+      <Toolbar :ref="setHeader" label="Repository" size="sm" :dividers="['bottom']">
         <template #start>
           <HStack :gap="2" align="center">
             <Heading :level="1" class="repo-visually-hidden">
@@ -669,19 +696,24 @@ const READMES: Record<string, string> = {
           </HStack>
         </template>
         <template #end>
-          <Button
-            v-for="stat in REPO_STATS"
-            :key="stat.label"
-            size="sm"
-            :label="STAT_ACTION[stat.label]"
-          >
-            <template #icon>
+          <template v-for="stat in REPO_STATS" :key="stat.label">
+            <IconButton
+              v-if="isNarrowHeader"
+              variant="secondary"
+              size="sm"
+              :label="`${STAT_ACTION[stat.label]}: ${stat.value}`"
+            >
               <Icon :name="stat.icon" size="sm" />
-            </template>
-            <template #end>
-              <Badge :label="stat.value" />
-            </template>
-          </Button>
+            </IconButton>
+            <Button v-else size="sm" :label="STAT_ACTION[stat.label]">
+              <template #icon>
+                <Icon :name="stat.icon" size="sm" />
+              </template>
+              <template #end>
+                <Badge :label="stat.value" />
+              </template>
+            </Button>
+          </template>
         </template>
       </Toolbar>
     </template>
@@ -697,7 +729,7 @@ const READMES: Record<string, string> = {
         </template>
       </EmptyState>
 
-      <VStack v-else :gap="6">
+      <VStack v-else :ref="setBody" :gap="6">
         <HStack :gap="2" align="center" wrap="wrap">
           <DropdownMenu has-chevron size="sm" :items="branchItems">
             <template #trigger="triggerProps">
@@ -709,24 +741,28 @@ const READMES: Record<string, string> = {
             </template>
           </DropdownMenu>
           <HStack :gap="1" align="center">
-            <Button
-              v-for="ref in REF_COUNTS"
-              :key="ref.label"
-              :label="ref.label"
-              variant="ghost"
-              size="sm"
-            >
-              <template #icon>
+            <template v-for="ref in REF_COUNTS" :key="ref.label">
+              <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
                 <Icon :name="ref.icon" size="sm" />
-              </template>
-            </Button>
+              </IconButton>
+              <Button v-else :label="ref.label" variant="ghost" size="sm">
+                <template #icon>
+                  <Icon :name="ref.icon" size="sm" />
+                </template>
+              </Button>
+            </template>
           </HStack>
           <StackItem size="fill">
             <HStack :gap="2" h-align="end" align="center">
               <Text v-if="isSearching && matchCount > 0" type="supporting" color="secondary">
                 {{ matchCount }} {{ matchCount === 1 ? 'result' : 'results' }}
               </Text>
+              <IconButton v-if="isNarrowBody && !isSearchOpen" variant="ghost" size="sm" label="Go to file" @click="openSearch">
+                <Icon name="heroicons:magnifying-glass" size="sm" />
+              </IconButton>
               <TextInput
+                v-else
+                ref="searchInput"
                 v-model="query"
                 label="Go to file"
                 is-label-hidden
@@ -753,7 +789,7 @@ const READMES: Record<string, string> = {
             dividers="none"
             is-striped
             text-overflow="truncate"
-            :plugins="{ tree: treePlugin, sort: sortPlugin }"
+            :plugins="{ tree: treePlugin, sort: sortPlugin, resize: resizePlugin }"
           />
         </Card>
 
