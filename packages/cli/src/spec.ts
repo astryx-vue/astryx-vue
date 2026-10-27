@@ -4,6 +4,12 @@ export const BINARY = 'astryx-vue'
 
 export const PACKAGE_NAME = '@astryx-vue/cli'
 
+/** The design system package: where every component a project starts with comes from. */
+export const CORE_PACKAGE = '@astryx-vue/core'
+
+/** The docs site: where every guide and theme page the CLI prints comes from. */
+export const DOCS_PACKAGE = '@astryx-vue/docs'
+
 /** Values `search --type` accepts. Each one names a search domain. */
 export const SEARCH_TYPES = ['component', 'composable', 'doc', 'template'] as const
 
@@ -140,16 +146,20 @@ export const COMMANDS: readonly CommandSpec[] = [
     arguments: [
       { name: 'topic', required: false, variadic: false, description: 'Topic id such as guide/dark-mode or themes/tokens, or a unique bare name such as dark-mode. Omit to list every topic.' },
     ],
-    options: [],
+    options: [
+      { name: 'depth', flag: '--depth', type: 'string', description: 'Print headings down to this level. 2 keeps `#` and `##` and drops deeper subsections with their body. Default: every level.' },
+    ],
     json: true,
     responseTypes: ['docs.list', 'docs.detail'],
     examples: [
       `${BINARY} docs`,
       `${BINARY} docs guide/dark-mode`,
       `${BINARY} docs themes/tokens --json`,
+      `${BINARY} docs guide/styling --depth 2`,
       `${BINARY} docs dark-mode --zh --dense`,
     ],
     exitCodes: USAGE_EXIT,
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: '--depth is not a positive whole number, or is passed without a topic.' }],
   },
   {
     name: 'search',

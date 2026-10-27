@@ -1,8 +1,33 @@
 {
   "generator": "packages/cli/scripts/generate-catalog.mjs",
-  "description": "Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, @astryx-vue/core exports, and the playground templates. Do not edit by hand.",
-  "packageName": "@astryx-vue/core",
-  "themesPackage": "@astryx-vue/themes",
+  "description": "Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, the workspace packages' exports, and the playground templates. Do not edit by hand.",
+  "packages": [
+    {
+      "name": "@astryx-vue/core",
+      "directory": "packages/core",
+      "canary": false
+    },
+    {
+      "name": "@astryx-vue/charts",
+      "directory": "packages/charts",
+      "canary": true
+    },
+    {
+      "name": "@astryx-vue/lab",
+      "directory": "packages/lab",
+      "canary": true
+    },
+    {
+      "name": "@astryx-vue/richtext",
+      "directory": "packages/richtext",
+      "canary": false
+    },
+    {
+      "name": "@astryx-vue/themes",
+      "directory": "packages/themes",
+      "canary": false
+    }
+  ],
   "conventions": {
     "en": [
       "Import each component from its own subpath. That entry loads the matching structural styles.",
@@ -21,6 +46,7 @@
     {
       "slug": "button",
       "name": "Button",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Button",
@@ -710,6 +736,7 @@
     {
       "slug": "button-group",
       "name": "ButtonGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Button Group",
@@ -1048,6 +1075,7 @@
     {
       "slug": "context-menu",
       "name": "ContextMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Context Menu",
@@ -1481,6 +1509,7 @@
     {
       "slug": "context-menu-item",
       "name": "ContextMenuItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Context Menu Item",
@@ -1714,6 +1743,7 @@
     {
       "slug": "dropdown-menu",
       "name": "DropdownMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu",
@@ -2841,6 +2871,7 @@
     {
       "slug": "dropdown-menu-item",
       "name": "DropdownMenuItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu Item",
@@ -3070,6 +3101,7 @@
     {
       "slug": "dropdown-menu-group",
       "name": "DropdownMenuGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu Group",
@@ -3169,6 +3201,7 @@
     {
       "slug": "dropdown-menu-divider",
       "name": "DropdownMenuDivider",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu Divider",
@@ -3236,6 +3269,7 @@
     {
       "slug": "dropdown-menu-submenu",
       "name": "DropdownMenuSubmenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu Submenu",
@@ -3429,6 +3463,7 @@
     {
       "slug": "icon-button",
       "name": "IconButton",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Icon Button",
@@ -3847,6 +3882,7 @@
     {
       "slug": "link",
       "name": "Link",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Link",
@@ -4285,6 +4321,7 @@
     {
       "slug": "more-menu",
       "name": "MoreMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "More Menu",
@@ -4911,6 +4948,7 @@
     {
       "slug": "segmented-control",
       "name": "SegmentedControl",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Segmented Control",
@@ -5459,6 +5497,7 @@
     {
       "slug": "segmented-control-item",
       "name": "SegmentedControlItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Segmented Control Item",
@@ -5598,6 +5637,7 @@
     {
       "slug": "toggle-button",
       "name": "ToggleButton",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Toggle Button",
@@ -6276,6 +6316,7 @@
     {
       "slug": "toolbar",
       "name": "Toolbar",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Toolbar",
@@ -6529,6 +6570,7 @@
     {
       "slug": "toggle-button-group",
       "name": "ToggleButtonGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Toggle Button Group",
@@ -6735,6 +6777,7 @@
     {
       "slug": "dropdown-menu-checkbox-item",
       "name": "DropdownMenuCheckboxItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu Checkbox Item",
@@ -6886,6 +6929,7 @@
     {
       "slug": "dropdown-menu-radio-group",
       "name": "DropdownMenuRadioGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu Radio Group",
@@ -7001,6 +7045,7 @@
     {
       "slug": "dropdown-menu-radio-item",
       "name": "DropdownMenuRadioItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dropdown Menu Radio Item",
@@ -7140,6 +7185,7 @@
     {
       "slug": "chat",
       "name": "Chat",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat",
@@ -8678,6 +8724,7 @@
     {
       "slug": "chat-layout",
       "name": "ChatLayout",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Layout",
@@ -8937,6 +8984,7 @@
     {
       "slug": "chat-layout-scroll-button",
       "name": "ChatLayoutScrollButton",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Layout Scroll Button",
@@ -9064,6 +9112,7 @@
     {
       "slug": "chat-message",
       "name": "ChatMessage",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Message",
@@ -9221,6 +9270,7 @@
     {
       "slug": "chat-tool-calls",
       "name": "ChatToolCalls",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Tool Calls",
@@ -9641,6 +9691,7 @@
     {
       "slug": "chat-message-list",
       "name": "ChatMessageList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Message List",
@@ -9823,6 +9874,7 @@
     {
       "slug": "chat-message-bubble",
       "name": "ChatMessageBubble",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Message Bubble",
@@ -10014,6 +10066,7 @@
     {
       "slug": "chat-system-message",
       "name": "ChatSystemMessage",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat System Message",
@@ -10194,6 +10247,7 @@
     {
       "slug": "chat-tokenized-text",
       "name": "ChatTokenizedText",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Tokenized Text",
@@ -10359,6 +10413,7 @@
     {
       "slug": "chat-message-metadata",
       "name": "ChatMessageMetadata",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Message Metadata",
@@ -10563,6 +10618,7 @@
     {
       "slug": "chat-composer",
       "name": "ChatComposer",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Composer",
@@ -11012,6 +11068,7 @@
     {
       "slug": "chat-send-button",
       "name": "ChatSendButton",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Send Button",
@@ -11257,6 +11314,7 @@
     {
       "slug": "chat-composer-input",
       "name": "ChatComposerInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Composer Input",
@@ -11684,6 +11742,7 @@
     {
       "slug": "chat-composer-drawer",
       "name": "ChatComposerDrawer",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Composer Drawer",
@@ -11948,6 +12007,7 @@
     {
       "slug": "chat-dictation-button",
       "name": "ChatDictationButton",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Dictation Button",
@@ -12138,6 +12198,7 @@
     {
       "slug": "chat-composer-token-element",
       "name": "ChatComposerTokenElement",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Chat Composer Token Element",
@@ -12252,6 +12313,7 @@
     {
       "slug": "card",
       "name": "Card",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Card",
@@ -12683,6 +12745,7 @@
     {
       "slug": "collapsible",
       "name": "Collapsible",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Collapsible",
@@ -13082,6 +13145,7 @@
     {
       "slug": "clickable-card",
       "name": "ClickableCard",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Clickable Card",
@@ -13344,6 +13408,7 @@
     {
       "slug": "selectable-card",
       "name": "SelectableCard",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Selectable Card",
@@ -13604,6 +13669,7 @@
     {
       "slug": "collapsible-group",
       "name": "CollapsibleGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Collapsible Group",
@@ -13799,6 +13865,7 @@
     {
       "slug": "carousel",
       "name": "Carousel",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Carousel",
@@ -14060,6 +14127,7 @@
     {
       "slug": "avatar",
       "name": "Avatar",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Avatar",
@@ -14519,6 +14587,7 @@
     {
       "slug": "avatar-status-dot",
       "name": "AvatarStatusDot",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Avatar Status Dot",
@@ -14661,6 +14730,7 @@
     {
       "slug": "avatar-group",
       "name": "AvatarGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Avatar Group",
@@ -14917,6 +14987,7 @@
     {
       "slug": "avatar-group-overflow",
       "name": "AvatarGroupOverflow",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Avatar Group Overflow",
@@ -15093,6 +15164,7 @@
     {
       "slug": "blockquote",
       "name": "Blockquote",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Blockquote",
@@ -15287,6 +15359,7 @@
     {
       "slug": "citation",
       "name": "Citation",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Citation",
@@ -15500,6 +15573,7 @@
     {
       "slug": "code",
       "name": "Code",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Code",
@@ -16001,6 +16075,7 @@
     {
       "slug": "empty-state",
       "name": "EmptyState",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Empty State",
@@ -16306,6 +16381,7 @@
     {
       "slug": "heading",
       "name": "Heading",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Heading",
@@ -16628,6 +16704,7 @@
     {
       "slug": "kbd",
       "name": "Kbd",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Kbd",
@@ -16845,6 +16922,7 @@
     {
       "slug": "markdown",
       "name": "Markdown",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Markdown",
@@ -17331,6 +17409,7 @@
     {
       "slug": "text",
       "name": "Text",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Text",
@@ -17735,6 +17814,7 @@
     {
       "slug": "thumbnail",
       "name": "Thumbnail",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Thumbnail",
@@ -18030,6 +18110,7 @@
     {
       "slug": "timestamp",
       "name": "Timestamp",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Timestamp",
@@ -18375,6 +18456,7 @@
     {
       "slug": "token",
       "name": "Token",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Token",
@@ -18707,6 +18789,7 @@
     {
       "slug": "code-block",
       "name": "CodeBlock",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Code Block",
@@ -19212,6 +19295,7 @@
     {
       "slug": "timer",
       "name": "Timer",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Timer",
@@ -19432,6 +19516,7 @@
     {
       "slug": "icon",
       "name": "Icon",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Icon",
@@ -19765,6 +19850,7 @@
     {
       "slug": "badge",
       "name": "Badge",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Badge",
@@ -20018,6 +20104,7 @@
     {
       "slug": "banner",
       "name": "Banner",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Banner",
@@ -20484,6 +20571,7 @@
     {
       "slug": "progress-bar",
       "name": "ProgressBar",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Progress Bar",
@@ -20859,6 +20947,7 @@
     {
       "slug": "skeleton",
       "name": "Skeleton",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Skeleton",
@@ -21080,6 +21169,7 @@
     {
       "slug": "spinner",
       "name": "Spinner",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Spinner",
@@ -21279,6 +21369,7 @@
     {
       "slug": "status-dot",
       "name": "StatusDot",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Status Dot",
@@ -21532,6 +21623,7 @@
     {
       "slug": "calendar",
       "name": "Calendar",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Calendar",
@@ -22050,6 +22142,7 @@
     {
       "slug": "checkbox-input",
       "name": "CheckboxInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Checkbox Input",
@@ -22595,6 +22688,7 @@
     {
       "slug": "checkbox-list",
       "name": "CheckboxList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Checkbox List",
@@ -23090,6 +23184,7 @@
     {
       "slug": "checkbox-list-item",
       "name": "CheckboxListItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Checkbox List Item",
@@ -23261,6 +23356,7 @@
     {
       "slug": "date-input",
       "name": "DateInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Date Input",
@@ -23947,6 +24043,7 @@
     {
       "slug": "date-range-input",
       "name": "DateRangeInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Date Range Input",
@@ -24451,6 +24548,7 @@
     {
       "slug": "date-time-input",
       "name": "DateTimeInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Date Time Input",
@@ -25023,6 +25121,7 @@
     {
       "slug": "field",
       "name": "Field",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Field",
@@ -25776,6 +25875,7 @@
     {
       "slug": "field-label",
       "name": "FieldLabel",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Field Label",
@@ -26043,6 +26143,7 @@
     {
       "slug": "field-status",
       "name": "FieldStatus",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Field Status",
@@ -26226,6 +26327,7 @@
     {
       "slug": "file-input",
       "name": "FileInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "File Input",
@@ -26737,6 +26839,7 @@
     {
       "slug": "input-group",
       "name": "InputGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Input Group",
@@ -27070,6 +27173,7 @@
     {
       "slug": "input-group-text",
       "name": "InputGroupText",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Input Group Text",
@@ -27169,6 +27273,7 @@
     {
       "slug": "multi-selector",
       "name": "MultiSelector",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Multi Selector",
@@ -27971,6 +28076,7 @@
     {
       "slug": "number-input",
       "name": "NumberInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Number Input",
@@ -28717,6 +28823,7 @@
     {
       "slug": "radio",
       "name": "Radio",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Radio",
@@ -28923,6 +29030,7 @@
     {
       "slug": "radio-group",
       "name": "RadioGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Radio Group",
@@ -29289,6 +29397,7 @@
     {
       "slug": "radio-list",
       "name": "RadioList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Radio List",
@@ -29731,6 +29840,7 @@
     {
       "slug": "radio-list-item",
       "name": "RadioListItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Radio List Item",
@@ -29882,6 +29992,7 @@
     {
       "slug": "selector",
       "name": "Selector",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Selector",
@@ -30636,6 +30747,7 @@
     {
       "slug": "selector-option",
       "name": "SelectorOption",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Selector Option",
@@ -30795,6 +30907,7 @@
     {
       "slug": "slider",
       "name": "Slider",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Slider",
@@ -31505,6 +31618,7 @@
     {
       "slug": "switch",
       "name": "Switch",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Switch",
@@ -32091,6 +32205,7 @@
     {
       "slug": "text-area",
       "name": "TextArea",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Text Area",
@@ -32879,6 +32994,7 @@
     {
       "slug": "text-input",
       "name": "TextInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Text Input",
@@ -33781,6 +33897,7 @@
     {
       "slug": "time-input",
       "name": "TimeInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Time Input",
@@ -34250,6 +34367,7 @@
     {
       "slug": "tokenizer",
       "name": "Tokenizer",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Tokenizer",
@@ -35019,6 +35137,7 @@
     {
       "slug": "typeahead",
       "name": "Typeahead",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Typeahead",
@@ -36235,6 +36354,7 @@
     {
       "slug": "base-typeahead",
       "name": "BaseTypeahead",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Base Typeahead",
@@ -36761,6 +36881,7 @@
     {
       "slug": "typeahead-item",
       "name": "TypeaheadItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Typeahead Item",
@@ -36900,6 +37021,7 @@
     {
       "slug": "complex-selector",
       "name": "ComplexSelector",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Complex Selector",
@@ -37390,6 +37512,7 @@
     {
       "slug": "power-search",
       "name": "PowerSearch",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Power Search",
@@ -37919,6 +38042,7 @@
     {
       "slug": "checkbox-indicator",
       "name": "CheckboxIndicator",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Checkbox Indicator",
@@ -38150,6 +38274,7 @@
     {
       "slug": "check-indicator",
       "name": "CheckIndicator",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Check Indicator",
@@ -38381,6 +38506,7 @@
     {
       "slug": "item",
       "name": "Item",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Item",
@@ -38808,6 +38934,7 @@
     {
       "slug": "radio-indicator",
       "name": "RadioIndicator",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Radio Indicator",
@@ -39017,6 +39144,7 @@
     {
       "slug": "center",
       "name": "Center",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Center",
@@ -39371,6 +39499,7 @@
     {
       "slug": "divider",
       "name": "Divider",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Divider",
@@ -39592,6 +39721,7 @@
     {
       "slug": "grid",
       "name": "Grid",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Grid",
@@ -40020,6 +40150,7 @@
     {
       "slug": "grid-span",
       "name": "GridSpan",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Grid Span",
@@ -40159,6 +40290,7 @@
     {
       "slug": "stack",
       "name": "Stack",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Stack",
@@ -40711,6 +40843,7 @@
     {
       "slug": "h-stack",
       "name": "HStack",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "H Stack",
@@ -41098,6 +41231,7 @@
     {
       "slug": "v-stack",
       "name": "VStack",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "V Stack",
@@ -41485,6 +41619,7 @@
     {
       "slug": "stack-item",
       "name": "StackItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Stack Item",
@@ -41692,6 +41827,7 @@
     {
       "slug": "app-shell",
       "name": "AppShell",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "App Shell",
@@ -42147,6 +42283,7 @@
     {
       "slug": "aspect-ratio",
       "name": "AspectRatio",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Aspect Ratio",
@@ -42398,6 +42535,7 @@
     {
       "slug": "form-layout",
       "name": "FormLayout",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Form Layout",
@@ -42626,6 +42764,7 @@
     {
       "slug": "layout",
       "name": "Layout",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Layout",
@@ -43222,6 +43361,7 @@
     {
       "slug": "layout-panel",
       "name": "LayoutPanel",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Layout Panel",
@@ -43421,6 +43561,7 @@
     {
       "slug": "layout-footer",
       "name": "LayoutFooter",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Layout Footer",
@@ -43596,6 +43737,7 @@
     {
       "slug": "layout-header",
       "name": "LayoutHeader",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Layout Header",
@@ -43783,6 +43925,7 @@
     {
       "slug": "layout-content",
       "name": "LayoutContent",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Layout Content",
@@ -43946,6 +44089,7 @@
     {
       "slug": "resize-handle",
       "name": "ResizeHandle",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Resize Handle",
@@ -44389,6 +44533,7 @@
     {
       "slug": "scrollable-area",
       "name": "ScrollableArea",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Scrollable Area",
@@ -44844,6 +44989,7 @@
     {
       "slug": "section",
       "name": "Section",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Section",
@@ -45182,6 +45328,7 @@
     {
       "slug": "breadcrumbs",
       "name": "Breadcrumbs",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Breadcrumbs",
@@ -45574,6 +45721,7 @@
     {
       "slug": "breadcrumb-item",
       "name": "BreadcrumbItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Breadcrumb Item",
@@ -45733,6 +45881,7 @@
     {
       "slug": "mobile-nav",
       "name": "MobileNav",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Mobile Nav",
@@ -46046,6 +46195,7 @@
     {
       "slug": "mobile-nav-toggle",
       "name": "MobileNavToggle",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Mobile Nav Toggle",
@@ -46239,6 +46389,7 @@
     {
       "slug": "nav-item",
       "name": "NavItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Nav Item",
@@ -46648,6 +46799,7 @@
     {
       "slug": "nav-icon",
       "name": "NavIcon",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Nav Icon",
@@ -46819,6 +46971,7 @@
     {
       "slug": "nav-heading-menu",
       "name": "NavHeadingMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Nav Heading Menu",
@@ -47164,6 +47317,7 @@
     {
       "slug": "nav-menu",
       "name": "NavMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Nav Menu",
@@ -47673,6 +47827,7 @@
     {
       "slug": "pagination",
       "name": "Pagination",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Pagination",
@@ -48232,6 +48387,7 @@
     {
       "slug": "side-nav",
       "name": "SideNav",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Side Nav",
@@ -48962,6 +49118,7 @@
     {
       "slug": "side-nav-item",
       "name": "SideNavItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Side Nav Item",
@@ -49193,6 +49350,7 @@
     {
       "slug": "side-nav-heading",
       "name": "SideNavHeading",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Side Nav Heading",
@@ -49380,6 +49538,7 @@
     {
       "slug": "side-nav-section",
       "name": "SideNavSection",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Side Nav Section",
@@ -49507,6 +49666,7 @@
     {
       "slug": "side-nav-collapse-button",
       "name": "SideNavCollapseButton",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Side Nav Collapse Button",
@@ -49662,6 +49822,7 @@
     {
       "slug": "tab-list",
       "name": "TabList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Tab List",
@@ -50161,6 +50322,7 @@
     {
       "slug": "tab",
       "name": "Tab",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Tab",
@@ -50336,6 +50498,7 @@
     {
       "slug": "top-nav",
       "name": "TopNav",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Top Nav",
@@ -51007,6 +51170,7 @@
     {
       "slug": "top-nav-heading",
       "name": "TopNavHeading",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Top Nav Heading",
@@ -51206,6 +51370,7 @@
     {
       "slug": "top-nav-item",
       "name": "TopNavItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Top Nav Item",
@@ -51417,6 +51582,7 @@
     {
       "slug": "top-nav-mega-menu",
       "name": "TopNavMegaMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Top Nav Mega Menu",
@@ -51552,6 +51718,7 @@
     {
       "slug": "top-nav-mega-menu-featured-card",
       "name": "TopNavMegaMenuFeaturedCard",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Top Nav Mega Menu Featured Card",
@@ -51739,6 +51906,7 @@
     {
       "slug": "top-nav-mega-menu-item",
       "name": "TopNavMegaMenuItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Top Nav Mega Menu Item",
@@ -51898,6 +52066,7 @@
     {
       "slug": "top-nav-menu",
       "name": "TopNavMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Top Nav Menu",
@@ -52127,6 +52296,7 @@
     {
       "slug": "stepper",
       "name": "Stepper",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Stepper",
@@ -52575,6 +52745,7 @@
     {
       "slug": "step",
       "name": "Step",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Step",
@@ -52784,6 +52955,7 @@
     {
       "slug": "tab-menu",
       "name": "TabMenu",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Tab Menu",
@@ -52939,6 +53111,7 @@
     {
       "slug": "outline",
       "name": "Outline",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Outline",
@@ -53245,6 +53418,7 @@
     {
       "slug": "alert-dialog",
       "name": "AlertDialog",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Alert Dialog",
@@ -53664,6 +53838,7 @@
     {
       "slug": "bottom-sheet",
       "name": "BottomSheet",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Bottom Sheet",
@@ -54213,6 +54388,7 @@
     {
       "slug": "bottom-sheet-switcher",
       "name": "BottomSheetSwitcher",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Bottom Sheet Switcher",
@@ -54420,6 +54596,7 @@
     {
       "slug": "dialog",
       "name": "Dialog",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dialog",
@@ -54892,6 +55069,7 @@
     {
       "slug": "dialog-header",
       "name": "DialogHeader",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Dialog Header",
@@ -55113,6 +55291,7 @@
     {
       "slug": "hover-card",
       "name": "HoverCard",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Hover Card",
@@ -55530,6 +55709,7 @@
     {
       "slug": "overlay",
       "name": "Overlay",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Overlay",
@@ -55960,6 +56140,7 @@
     {
       "slug": "popover",
       "name": "Popover",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Popover",
@@ -56383,6 +56564,7 @@
     {
       "slug": "toast",
       "name": "Toast",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Toast",
@@ -56804,6 +56986,7 @@
     {
       "slug": "tooltip",
       "name": "Tooltip",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Tooltip",
@@ -57149,6 +57332,7 @@
     {
       "slug": "command-palette",
       "name": "CommandPalette",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Command Palette",
@@ -57687,6 +57871,7 @@
     {
       "slug": "command-palette-item",
       "name": "CommandPaletteItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Command Palette Item",
@@ -57878,6 +58063,7 @@
     {
       "slug": "command-palette-list",
       "name": "CommandPaletteList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Command Palette List",
@@ -57981,6 +58167,7 @@
     {
       "slug": "command-palette-empty",
       "name": "CommandPaletteEmpty",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Command Palette Empty",
@@ -58068,6 +58255,7 @@
     {
       "slug": "command-palette-group",
       "name": "CommandPaletteGroup",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Command Palette Group",
@@ -58171,6 +58359,7 @@
     {
       "slug": "command-palette-input",
       "name": "CommandPaletteInput",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Command Palette Input",
@@ -58386,6 +58575,7 @@
     {
       "slug": "command-palette-footer",
       "name": "CommandPaletteFooter",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Command Palette Footer",
@@ -58491,6 +58681,7 @@
     {
       "slug": "lightbox",
       "name": "Lightbox",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Lightbox",
@@ -58807,6 +58998,7 @@
     {
       "slug": "list",
       "name": "List",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "List",
@@ -59420,6 +59612,7 @@
     {
       "slug": "list-item",
       "name": "ListItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "List Item",
@@ -59685,6 +59878,7 @@
     {
       "slug": "metadata-list",
       "name": "MetadataList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Metadata List",
@@ -59958,6 +60152,7 @@
     {
       "slug": "metadata-list-item",
       "name": "MetadataListItem",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Metadata List Item",
@@ -60061,6 +60256,7 @@
     {
       "slug": "overflow-list",
       "name": "OverflowList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Overflow List",
@@ -60413,6 +60609,7 @@
     {
       "slug": "table",
       "name": "Table",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table",
@@ -61368,6 +61565,7 @@
     {
       "slug": "table-body",
       "name": "TableBody",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table Body",
@@ -61463,6 +61661,7 @@
     {
       "slug": "table-cell",
       "name": "TableCell",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table Cell",
@@ -61598,6 +61797,7 @@
     {
       "slug": "table-footer",
       "name": "TableFooter",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table Footer",
@@ -61693,6 +61893,7 @@
     {
       "slug": "table-header",
       "name": "TableHeader",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table Header",
@@ -61788,6 +61989,7 @@
     {
       "slug": "table-header-cell",
       "name": "TableHeaderCell",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table Header Cell",
@@ -61911,6 +62113,7 @@
     {
       "slug": "table-row",
       "name": "TableRow",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table Row",
@@ -62002,6 +62205,7 @@
     {
       "slug": "table-selection-toolbar",
       "name": "TableSelectionToolbar",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Table Selection Toolbar",
@@ -62214,6 +62418,7 @@
     {
       "slug": "tree-list",
       "name": "TreeList",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Tree List",
@@ -62674,6 +62879,7 @@
     {
       "slug": "internationalization-provider",
       "name": "InternationalizationProvider",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Internationalization Provider",
@@ -62908,6 +63114,7 @@
     {
       "slug": "layer-provider",
       "name": "LayerProvider",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Layer Provider",
@@ -63210,6 +63417,7 @@
     {
       "slug": "link-provider",
       "name": "LinkProvider",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Link Provider",
@@ -63361,6 +63569,7 @@
     {
       "slug": "visually-hidden",
       "name": "VisuallyHidden",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Visually Hidden",
@@ -63556,6 +63765,7 @@
     {
       "slug": "media-theme",
       "name": "MediaTheme",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Media Theme",
@@ -63752,6 +63962,7 @@
     {
       "slug": "syntax-theme",
       "name": "SyntaxTheme",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Syntax Theme",
@@ -63936,6 +64147,7 @@
     {
       "slug": "theme",
       "name": "Theme",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Theme",
@@ -64159,6 +64371,7 @@
     {
       "slug": "scrollbars-provider",
       "name": "ScrollbarsProvider",
+      "package": "@astryx-vue/core",
       "kind": "component",
       "title": {
         "en": "Scrollbars Provider",
@@ -64615,6 +64828,7 @@
     {
       "slug": "use-announce",
       "name": "UseAnnounce",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useAnnounce",
@@ -64716,6 +64930,7 @@
     {
       "slug": "use-app-shell-mobile",
       "name": "UseAppShellMobile",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useAppShellMobile",
@@ -64922,6 +65137,7 @@
     {
       "slug": "use-clickable-container",
       "name": "UseClickableContainer",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useClickableContainer",
@@ -65123,6 +65339,7 @@
     {
       "slug": "use-clipboard",
       "name": "UseClipboard",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useClipboard",
@@ -65280,6 +65497,7 @@
     {
       "slug": "use-collapsible",
       "name": "UseCollapsible",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useCollapsible",
@@ -65508,6 +65726,7 @@
     {
       "slug": "use-collator",
       "name": "UseCollator",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useCollator",
@@ -65623,6 +65842,7 @@
     {
       "slug": "use-container-reveal",
       "name": "UseContainerReveal",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useContainerReveal",
@@ -65856,6 +66076,7 @@
     {
       "slug": "use-dev-warning",
       "name": "UseDevWarning",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useDevWarning",
@@ -65999,6 +66220,7 @@
     {
       "slug": "use-entry-animation",
       "name": "UseEntryAnimation",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useEntryAnimation",
@@ -66118,6 +66340,7 @@
     {
       "slug": "use-focus-trap",
       "name": "UseFocusTrap",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useFocusTrap",
@@ -66331,6 +66554,7 @@
     {
       "slug": "use-grid-focus",
       "name": "UseGridFocus",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useGridFocus",
@@ -66612,6 +66836,7 @@
     {
       "slug": "use-hotkeys",
       "name": "UseHotkeys",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useHotkeys",
@@ -66783,6 +67008,7 @@
     {
       "slug": "use-hover-card",
       "name": "UseHoverCard",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useHoverCard",
@@ -67168,6 +67394,7 @@
     {
       "slug": "use-image-mode",
       "name": "UseImageMode",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useImageMode",
@@ -67344,6 +67571,7 @@
     {
       "slug": "use-imperative-alert-dialog",
       "name": "UseImperativeAlertDialog",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useImperativeAlertDialog",
@@ -67571,6 +67799,7 @@
     {
       "slug": "use-imperative-dialog",
       "name": "UseImperativeDialog",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useImperativeDialog",
@@ -67829,6 +68058,7 @@
     {
       "slug": "use-indicator-focus-ring",
       "name": "UseIndicatorFocusRing",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useIndicatorFocusRing",
@@ -67960,6 +68190,7 @@
     {
       "slug": "use-input-container",
       "name": "UseInputContainer",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useInputContainer",
@@ -68125,6 +68356,7 @@
     {
       "slug": "use-input-status-icon",
       "name": "UseInputStatusIcon",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useInputStatusIcon",
@@ -68278,6 +68510,7 @@
     {
       "slug": "use-interactive-role",
       "name": "UseInteractiveRole",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useInteractiveRole",
@@ -68421,6 +68654,7 @@
     {
       "slug": "use-keyboard-hint",
       "name": "UseKeyboardHint",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useKeyboardHint",
@@ -68652,6 +68886,7 @@
     {
       "slug": "use-layer",
       "name": "UseLayer",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useLayer",
@@ -69046,6 +69281,7 @@
     {
       "slug": "use-list-focus",
       "name": "UseListFocus",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useListFocus",
@@ -69347,6 +69583,7 @@
     {
       "slug": "use-locale",
       "name": "UseLocale",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useLocale",
@@ -69440,6 +69677,7 @@
     {
       "slug": "use-long-press",
       "name": "UseLongPress",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useLongPress",
@@ -69649,6 +69887,7 @@
     {
       "slug": "use-media-query",
       "name": "UseMediaQuery",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useMediaQuery",
@@ -69780,6 +70019,7 @@
     {
       "slug": "use-menu-press",
       "name": "UseMenuPress",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useMenuPress",
@@ -70088,6 +70328,7 @@
     {
       "slug": "use-merged-refs",
       "name": "UseMergedRefs",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useMergedRefs",
@@ -70207,6 +70448,7 @@
     {
       "slug": "use-overflow",
       "name": "UseOverflow",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useOverflow",
@@ -70527,6 +70769,7 @@
     {
       "slug": "use-popover",
       "name": "UsePopover",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "usePopover",
@@ -70943,6 +71186,7 @@
     {
       "slug": "use-press-feedback",
       "name": "UsePressFeedback",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "usePressFeedback",
@@ -71066,6 +71310,7 @@
     {
       "slug": "use-resizable",
       "name": "UseResizable",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useResizable",
@@ -71431,6 +71676,7 @@
     {
       "slug": "use-scroll-lock",
       "name": "UseScrollLock",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useScrollLock",
@@ -71544,6 +71790,7 @@
     {
       "slug": "use-scroll-overflow",
       "name": "UseScrollOverflow",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useScrollOverflow",
@@ -71680,6 +71927,7 @@
     {
       "slug": "use-scrollable-area",
       "name": "UseScrollableArea",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useScrollableArea",
@@ -71930,6 +72178,7 @@
     {
       "slug": "use-streaming-text",
       "name": "UseStreamingText",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useStreamingText",
@@ -72105,6 +72354,7 @@
     {
       "slug": "use-table-column-resize",
       "name": "UseTableColumnResize",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableColumnResize",
@@ -72388,6 +72638,7 @@
     {
       "slug": "use-table-column-settings",
       "name": "UseTableColumnSettings",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableColumnSettings",
@@ -72711,6 +72962,7 @@
     {
       "slug": "use-table-filter-state",
       "name": "UseTableFilterState",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableFilterState",
@@ -72897,6 +73149,7 @@
     {
       "slug": "use-table-filtering",
       "name": "UseTableFiltering",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableFiltering",
@@ -73261,6 +73514,7 @@
     {
       "slug": "use-table-grouped-rows",
       "name": "UseTableGroupedRows",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableGroupedRows",
@@ -73524,6 +73778,7 @@
     {
       "slug": "use-table-pagination",
       "name": "UseTablePagination",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTablePagination",
@@ -73809,6 +74064,7 @@
     {
       "slug": "use-table-row-expansion",
       "name": "UseTableRowExpansion",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableRowExpansion",
@@ -74092,6 +74348,7 @@
     {
       "slug": "use-table-row-index",
       "name": "UseTableRowIndex",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableRowIndex",
@@ -74245,6 +74502,7 @@
     {
       "slug": "use-table-row-status",
       "name": "UseTableRowStatus",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableRowStatus",
@@ -74409,6 +74667,7 @@
     {
       "slug": "use-table-selection",
       "name": "UseTableSelection",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableSelection",
@@ -74717,6 +74976,7 @@
     {
       "slug": "use-table-selection-state",
       "name": "UseTableSelectionState",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableSelectionState",
@@ -74972,6 +75232,7 @@
     {
       "slug": "use-table-sortable",
       "name": "UseTableSortable",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableSortable",
@@ -75165,6 +75426,7 @@
     {
       "slug": "use-table-sticky-columns",
       "name": "UseTableStickyColumns",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableStickyColumns",
@@ -75312,6 +75574,7 @@
     {
       "slug": "use-table-tree-data",
       "name": "UseTableTreeData",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableTreeData",
@@ -75563,6 +75826,7 @@
     {
       "slug": "use-table-tree-state",
       "name": "UseTableTreeState",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTableTreeState",
@@ -75870,6 +76134,7 @@
     {
       "slug": "use-theme",
       "name": "UseTheme",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTheme",
@@ -76026,6 +76291,7 @@
     {
       "slug": "use-toast",
       "name": "UseToast",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useToast",
@@ -76277,6 +76543,7 @@
     {
       "slug": "use-tooltip",
       "name": "UseTooltip",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTooltip",
@@ -76619,6 +76886,7 @@
     {
       "slug": "use-translator",
       "name": "UseTranslator",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTranslator",
@@ -76698,6 +76966,7 @@
     {
       "slug": "use-tree-focus",
       "name": "UseTreeFocus",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTreeFocus",
@@ -76957,6 +77226,7 @@
     {
       "slug": "use-typeahead",
       "name": "UseTypeahead",
+      "package": "@astryx-vue/core",
       "kind": "composable",
       "title": {
         "en": "useTypeahead",
@@ -78782,6 +79052,7 @@
   "templates": [
     {
       "slug": "theme-showcase",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Theme Showcase",
         "zh": "主题展示"
@@ -78860,6 +79131,7 @@
     },
     {
       "slug": "ai-chat",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "AI Chat Conversation",
         "zh": "AI 对话"
@@ -78944,6 +79216,7 @@
     },
     {
       "slug": "ai-chat-landing",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "AI Chat Landing",
         "zh": "AI 对话落地页"
@@ -79009,6 +79282,7 @@
     },
     {
       "slug": "library",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Card Grid",
         "zh": "卡片网格"
@@ -79074,6 +79348,7 @@
     },
     {
       "slug": "documentation",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Documentation Catalog",
         "zh": "文档目录"
@@ -79129,6 +79404,7 @@
     },
     {
       "slug": "documentation-design",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Documentation Design",
         "zh": "文档设计"
@@ -79195,6 +79471,7 @@
     },
     {
       "slug": "documentation-technical",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Documentation Technical",
         "zh": "技术文档"
@@ -79258,6 +79535,7 @@
     },
     {
       "slug": "detail-page",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Order Detail",
         "zh": "订单详情"
@@ -79332,6 +79610,7 @@
     },
     {
       "slug": "product-detail",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Product Detail",
         "zh": "商品详情"
@@ -79396,6 +79675,7 @@
     },
     {
       "slug": "work-item-detail",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Work Item Detail",
         "zh": "工作项详情"
@@ -79476,6 +79756,7 @@
     },
     {
       "slug": "dashboard",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Analytics Dashboard",
         "zh": "分析仪表盘"
@@ -79542,6 +79823,7 @@
     },
     {
       "slug": "dashboard-comparison",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Data Dashboard",
         "zh": "数据仪表盘"
@@ -79607,6 +79889,7 @@
     },
     {
       "slug": "dashboard-scorecard",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Executive Summary Dashboard",
         "zh": "高管摘要仪表盘"
@@ -79674,6 +79957,7 @@
     },
     {
       "slug": "dashboard-cohort-funnel",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Funnel & Cohort Dashboard",
         "zh": "漏斗与群组仪表盘"
@@ -79744,6 +80028,7 @@
     },
     {
       "slug": "dashboard-composition",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Portfolio Dashboard",
         "zh": "项目组合仪表盘"
@@ -79814,6 +80099,7 @@
     },
     {
       "slug": "dashboard-progress",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Project Status Dashboard",
         "zh": "项目状态仪表盘"
@@ -79890,6 +80176,7 @@
     },
     {
       "slug": "dashboard-alert-rail",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Service Monitoring Dashboard",
         "zh": "服务监控仪表盘"
@@ -79966,6 +80253,7 @@
     },
     {
       "slug": "payment-form",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Checkout Form",
         "zh": "结账表单"
@@ -80037,6 +80325,7 @@
     },
     {
       "slug": "checkout-wizard",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Checkout Wizard",
         "zh": "结账向导"
@@ -80107,6 +80396,7 @@
     },
     {
       "slug": "contact-form",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Contact Form",
         "zh": "联系表单"
@@ -80169,6 +80459,7 @@
     },
     {
       "slug": "form-wizard-dialog",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Dialog Wizard",
         "zh": "对话框向导"
@@ -80247,6 +80538,7 @@
     },
     {
       "slug": "form-wizard",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Form Wizard",
         "zh": "表单向导"
@@ -80322,6 +80614,7 @@
     },
     {
       "slug": "form-wizard-inline",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Inline Wizard",
         "zh": "内联向导"
@@ -80391,6 +80684,7 @@
     },
     {
       "slug": "form-two-column",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Two-column Form",
         "zh": "双列表单"
@@ -80449,6 +80743,7 @@
     },
     {
       "slug": "form-wizard-vertical",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Vertical Wizard",
         "zh": "纵向向导"
@@ -80533,6 +80828,7 @@
     },
     {
       "slug": "centered-hero",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Centered Hero",
         "zh": "居中主视觉"
@@ -80588,6 +80884,7 @@
     },
     {
       "slug": "classic-gallery",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Classic Gallery",
         "zh": "经典画廊"
@@ -80641,6 +80938,7 @@
     },
     {
       "slug": "gallery-hero",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Gallery Hero",
         "zh": "画廊主视觉"
@@ -80692,6 +80990,7 @@
     },
     {
       "slug": "mixed-gallery",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Mixed Gallery",
         "zh": "混合画廊"
@@ -80741,6 +81040,7 @@
     },
     {
       "slug": "product-gallery",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Product Gallery",
         "zh": "商品画廊"
@@ -80794,6 +81094,7 @@
     },
     {
       "slug": "side-gallery",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Side Gallery",
         "zh": "侧边画廊"
@@ -80847,6 +81148,7 @@
     },
     {
       "slug": "login",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Basic Login",
         "zh": "基础登录"
@@ -80899,6 +81201,7 @@
     },
     {
       "slug": "login-card",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Login Card",
         "zh": "登录卡片"
@@ -80953,6 +81256,7 @@
     },
     {
       "slug": "login-split",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Login Split",
         "zh": "分屏登录"
@@ -81010,6 +81314,7 @@
     },
     {
       "slug": "login-sso",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Login SSO",
         "zh": "SSO 登录"
@@ -81065,6 +81370,7 @@
     },
     {
       "slug": "settings-dialog",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Settings Dialog",
         "zh": "设置对话框"
@@ -81136,6 +81442,7 @@
     },
     {
       "slug": "settings",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Settings Form",
         "zh": "设置表单"
@@ -81198,6 +81505,7 @@
     },
     {
       "slug": "settings-sidebar",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Settings Panels",
         "zh": "设置面板"
@@ -81262,6 +81570,7 @@
     },
     {
       "slug": "blank",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Blank",
         "zh": "空白页"
@@ -81306,6 +81615,7 @@
     },
     {
       "slug": "shell-nav",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Shell Nav",
         "zh": "顶栏 + 侧栏"
@@ -81370,6 +81680,7 @@
     },
     {
       "slug": "shell-side-nav",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Side Nav",
         "zh": "侧边导航"
@@ -81428,6 +81739,7 @@
     },
     {
       "slug": "shell-top-nav",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Top Nav",
         "zh": "顶部导航"
@@ -81486,6 +81798,7 @@
     },
     {
       "slug": "messaging-shell",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Messaging Shell",
         "zh": "消息框架"
@@ -81560,6 +81873,7 @@
     },
     {
       "slug": "table",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Simple Table",
         "zh": "简单表格"
@@ -81614,6 +81928,7 @@
     },
     {
       "slug": "table-collapsible",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Collapsible Table",
         "zh": "可折叠表格"
@@ -81679,6 +81994,7 @@
     },
     {
       "slug": "table-comparison",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Comparison Table",
         "zh": "对比表格"
@@ -81737,6 +82053,7 @@
     },
     {
       "slug": "table-filter",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Filterable Table",
         "zh": "可筛选表格"
@@ -81799,6 +82116,7 @@
     },
     {
       "slug": "table-grouped",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Grouped Table",
         "zh": "分组表格"
@@ -81867,6 +82185,7 @@
     },
     {
       "slug": "table-inbox",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Inbox Table",
         "zh": "收件箱表格"
@@ -81933,6 +82252,7 @@
     },
     {
       "slug": "table-page",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Searchable Table",
         "zh": "可搜索表格"
@@ -81996,6 +82316,7 @@
     },
     {
       "slug": "table-tree",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Tree Table",
         "zh": "树形表格"
@@ -82066,6 +82387,7 @@
     },
     {
       "slug": "canvas-editor",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Canvas Editor",
         "zh": "画布编辑器"
@@ -82134,6 +82456,7 @@
     },
     {
       "slug": "file-explorer",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "File Explorer",
         "zh": "文件浏览器"
@@ -82193,6 +82516,7 @@
     },
     {
       "slug": "ide",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "IDE",
         "zh": "IDE"
@@ -82257,6 +82581,7 @@
     },
     {
       "slug": "kanban-board",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Kanban Board",
         "zh": "看板"
@@ -82324,6 +82649,7 @@
     },
     {
       "slug": "editor",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Page Editor",
         "zh": "页面编辑器"
@@ -82396,6 +82722,7 @@
     },
     {
       "slug": "incident-console",
+      "package": "@astryx-vue/cli",
       "title": {
         "en": "Incident Console",
         "zh": "事件控制台"

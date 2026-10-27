@@ -83,11 +83,15 @@ describe('template --list', () => {
   it('returns a typed envelope and explains an empty block filter', async () => {
     const result = await run(['template', '--list', '--json'])
     const data = assertResponse(result.stdout, 'template.list').data as {
-      templates: { slug: string, isReady: boolean, command: string, docsUrl: string, notReadyReason?: string }[]
+      templates: { slug: string, isReady: boolean, command: string, docsUrl: string, package: string, componentsUsed: string[], notReadyReason?: string }[]
       locale: string
     }
     expect(data.locale).toBe('en')
     expect(data.templates).toHaveLength(57)
+    // Each entry says what it ships in and what it composes, so a reader can
+    // tell where the page comes from before copying it.
+    expect(data.templates.every(template => template.package === '@astryx-vue/cli')).toBe(true)
+    expect(data.templates.find(template => template.slug === 'login-card')?.componentsUsed).toContain('Button')
     expect(data.templates[0]?.command).toBe(`astryx-vue template ${data.templates[0]?.slug}`)
     expect(data.templates[0]?.docsUrl).toContain('https://astryx-vue.pages.dev/en/playground/?template=')
     expect(data.templates.find(template => template.slug === 'dashboard-alert-rail')?.notReadyReason).toContain('playground-charts')
