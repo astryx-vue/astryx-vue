@@ -57,9 +57,9 @@ describe('a block quote marker reads as core reads it', () => {
     expect(richBlocks('    > a')).toEqual(['paragraph:    > a'])
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节），
-  // 这一条它把四空格缩进的行读成 code 块，这里先只比富文本那一半。
-  it.todo('reads four spaces of indentation as no marker, as core does')
+  it('reads four spaces of indentation as no marker, as core does', () => {
+    expect(coreBlocks('    > a')).toEqual(['paragraph:    > a'])
+  })
 
   it('writes an edited quote back as one that reads as a quote', () => {
     const editor = createHeadlessEditor({

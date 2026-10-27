@@ -128,12 +128,10 @@ describe('angle-bracket link destinations (CommonMark 0.31 §6.3)', () => {
     ])
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节），
-  // 这一条它不在解析时拒绝 javascript:/data: 这类地址，富文本因此也建不出链接。
-  // 等 core 对齐后恢复断言：
-  //   expect(richLinks('[x](<javascript:alert(1)>)')).toEqual([]);
-  //   expect(richLinks('[x](<data: text/html,hi>)')).toEqual([]);
-  it.todo('still refuses an unsafe address in angle brackets')
+  it('still refuses an unsafe address in angle brackets', () => {
+    expect(richLinks('[x](<javascript:alert(1)>)')).toEqual([])
+    expect(richLinks('[x](<data: text/html,hi>)')).toEqual([])
+  })
 })
 
 describe('angle-bracket destination edges', () => {
@@ -248,14 +246,10 @@ describe('angle-bracket destination edges', () => {
     expect(richLinks(exported)).toEqual([{ url: 'a <b c>', title: null }])
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节），
-  // 它不在解析时拒绝 javascript:/data: 这类地址，富文本因此也建不出链接。
-  // 等 core 对齐后恢复断言，期望值不变：
-  //   it.each(['[x](<javascript:x \\<y>)', '[x](<data: text/html \\<b\\>>)', '[x](<JavaScript:a b>)'])(
-  //     'still refuses the unsafe address in %j',
-  //     markdown => expect(richLinks(markdown)).toEqual([]),
-  //   );
-  it.todo('still refuses the unsafe address in an angle destination, escaped or not')
+  it.each(['[x](<javascript:x \\<y>)', '[x](<data: text/html \\<b\\>>)', '[x](<JavaScript:a b>)'])(
+    'still refuses the unsafe address in %j',
+    markdown => expect(richLinks(markdown)).toEqual([]),
+  )
 })
 
 /** A link made in the editor to `url`, exported. */

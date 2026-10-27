@@ -49,7 +49,10 @@ describe('an indented table imports with its own columns, as core reads it', () 
     ])
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节），
-  // 这一条它把制表符缩进的表格读成 code 块，这里先只比富文本那一半。
-  it.todo('imports a tab-indented table as core reads it')
+  it('imports a tab-indented table as core reads it', () => {
+    expect(coreRows('\t| a | b |\n\t| - | - |\n\t| 1 | 2 |')).toEqual([
+      ['a', 'b'],
+      ['1', '2'],
+    ])
+  })
 })

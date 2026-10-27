@@ -88,11 +88,11 @@ describe('paragraph text that starts like a block marker after spaces stays text
     expect(richBlocks('      \\- a')).toEqual(['paragraph:      - a'])
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节），
-  // 这一条它把六空格缩进的行读成 code 块，这里先只比富文本那一半。
-  it.todo(
-    'writes a bullet deeper than a list continuation escaped, and both surfaces read it back as text',
-  )
+  it('writes a bullet deeper than a list continuation escaped, and both surfaces read it back as text', () => {
+    expect(exportParagraph(['      - a'])).toBe('      \\- a')
+    expect(richBlocks('      \\- a')).toEqual(['paragraph:      - a'])
+    expect(coreTypes('      \\- a')).toEqual(['paragraph'])
+  })
 
   it('escapes a spaced marker on the line after a line break', () => {
     const exported = exportParagraph(['intro', '   - a'])

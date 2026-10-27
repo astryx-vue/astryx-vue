@@ -71,9 +71,9 @@ describe('an indented ATX heading reads as core reads it', () => {
     expect(richBlocks('    # h')).toEqual(['paragraph:    # h'])
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节），
-  // 这一条它把四空格缩进的行读成 code 块，这里先只比富文本那一半。
-  it.todo('imports "    # h" as core reads it')
+  it('imports "    # h" as core reads it', () => {
+    expect(coreBlocks('    # h')).toEqual(['paragraph:    # h'])
+  })
 })
 
 describe('typing shortcuts keep the library heading trigger', () => {

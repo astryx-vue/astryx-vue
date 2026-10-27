@@ -3,7 +3,7 @@
 import type {
   MarkdownExtensionNode,
   MarkdownPluginEntry,
-  MarkdownTokenizerInput,
+  MarkdownSyntaxPluginDefinition,
 } from '@astryx-vue/core/Markdown/plugins'
 import { readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -34,7 +34,9 @@ import {
 } from './markdownSource.js'
 import { DEFAULT_TRANSFORMERS } from './markdownTable.js'
 
-const mentions = createMarkdownPlugin({
+type MentionNode = MarkdownExtensionNode<'mentions', 'mention', { readonly label: string }, 'inline'>
+
+const mentionDefinition: MarkdownSyntaxPluginDefinition<'mentions', MentionNode> = {
   name: 'mentions',
   apiVersion: 1,
   parseKey: 'v1',
@@ -43,7 +45,7 @@ const mentions = createMarkdownPlugin({
       {
         startsWith: ['@{'],
         maxSpan: 80,
-        tokenize({ source, offset, end }: MarkdownTokenizerInput) {
+        tokenize({ source, offset, end }) {
           const close = source.indexOf('}', offset + 2)
           if (close < 0 || close >= end) {
             return { status: 'no-match' }
@@ -66,12 +68,16 @@ const mentions = createMarkdownPlugin({
   renderers: {
     mention: {
       render: () => null,
-      toText: (node: { data: { label: string } }) => `@${node.data.label}`,
+      toText: node => `@${node.data.label}`,
     },
   },
-} as never)
+}
 
-const notes = createMarkdownPlugin({
+const mentions = createMarkdownPlugin<'mentions', MentionNode>(mentionDefinition)
+
+type NoteNode = MarkdownExtensionNode<'notes', 'note', { readonly body: string }, 'block'>
+
+const noteDefinition: MarkdownSyntaxPluginDefinition<'notes', NoteNode> = {
   name: 'notes',
   apiVersion: 1,
   parseKey: 'v1',
@@ -80,7 +86,7 @@ const notes = createMarkdownPlugin({
       {
         startsWith: [':::note'],
         maxSpan: 500,
-        tokenize({ source, offset, end }: MarkdownTokenizerInput) {
+        tokenize({ source, offset, end }) {
           const close = source.indexOf('\n:::', offset)
           if (close < 0 || close + 4 > end) {
             return { status: 'no-match' }
@@ -103,13 +109,17 @@ const notes = createMarkdownPlugin({
   renderers: {
     note: {
       render: () => null,
-      toText: (node: { data: { body: string } }) => node.data.body,
+      toText: node => node.data.body,
     },
   },
-} as never)
+}
+
+const notes = createMarkdownPlugin<'notes', NoteNode>(noteDefinition)
 
 // Plugin source that holds base Markdown: emphasis, a link, a list marker.
-const asides = createMarkdownPlugin({
+type AsideNode = MarkdownExtensionNode<'asides', 'aside', { readonly text: string }, 'inline'>
+
+const asideDefinition: MarkdownSyntaxPluginDefinition<'asides', AsideNode> = {
   name: 'asides',
   apiVersion: 1,
   parseKey: 'v1',
@@ -118,7 +128,7 @@ const asides = createMarkdownPlugin({
       {
         startsWith: ['{{'],
         maxSpan: 200,
-        tokenize({ source, offset, end }: MarkdownTokenizerInput) {
+        tokenize({ source, offset, end }) {
           const close = source.indexOf('}}', offset + 2)
           if (close < 0 || close + 2 > end) {
             return { status: 'no-match' }
@@ -141,10 +151,12 @@ const asides = createMarkdownPlugin({
   renderers: {
     aside: {
       render: () => null,
-      toText: (node: { data: { text: string } }) => node.data.text,
+      toText: node => node.data.text,
     },
   },
-} as never)
+}
+
+const asides = createMarkdownPlugin<'asides', AsideNode>(asideDefinition)
 
 const PLUGINS: ReadonlyArray<MarkdownPluginEntry> = [mentions, notes, asides]
 const EXTENSIONS = PLUGINS.map(createRichTextExtension)
@@ -316,43 +328,25 @@ describe('configuration conflicts (spec:AST-064 FR6)', () => {
     ).toThrow(/claim its nodes/)
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节）：
-  // 插件 tokenize 拿到的文本在基础语法（`**`、链接）前就被截断了，`{{...}}` 因此认不出来。
-  // 期望值不变，等 core 对齐后恢复：
-  //   expect(types.has('link')).toBe(false);
-  //   expect(types.has('list')).toBe(false);
-  //   expect([...types].some(type => type.startsWith('format:'))).toBe(false);
-  //   expect(richTextNodes(json)).toEqual([
-  //     {
-  //       plugin: 'asides',
-  //       name: 'aside',
-  //       display: 'inline',
-  //       data: {text: 'see **this**, [that](https://example.com), and - this'},
-  //       source: '{{see **this**, [that](https://example.com), and - this}}',
-  //     },
-  //   ]);
-  it.todo('opens a document whose plugin source holds base syntax with the default transformers')
-  /*
   it('opens a document whose plugin source holds base syntax with the default transformers', () => {
     const json = markdownToEditorStateJSON(CORPUS[10] ?? '', {
       extensions: EXTENSIONS,
-    });
-    const types = nodeTypes(json);
+    })
+    const types = nodeTypes(json)
     // The aside is one node; its emphasis, link, and list marker are not read.
-    expect(types.has('link')).toBe(false);
-    expect(types.has('list')).toBe(false);
-    expect([...types].some(type => type.startsWith('format:'))).toBe(false);
+    expect(types.has('link')).toBe(false)
+    expect(types.has('list')).toBe(false)
+    expect([...types].some(type => type.startsWith('format:'))).toBe(false)
     expect(richTextNodes(json)).toEqual([
       {
         plugin: 'asides',
         name: 'aside',
         display: 'inline',
-        data: {text: 'see **this**, [that](https://example.com), and - this'},
+        data: { text: 'see **this**, [that](https://example.com), and - this' },
         source: '{{see **this**, [that](https://example.com), and - this}}',
       },
-    ]);
-  });
-  */
+    ])
+  })
 })
 
 describe('recognition (spec:AST-064 FR5)', () => {
@@ -557,31 +551,19 @@ describe('placement among same-source decoys (spec:AST-064 FR5)', () => {
     expect(richTextLine(json)).toBe(coreLine(markdown))
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节）：
-  // 转义的 `\@{ada}` 在 core 里读成一个扩展节点，但节点记下的 source 少了那个反斜杠，
-  // 富文本导入时它留在原地成了文字。等 core 对齐后恢复：
-  //   expect(richTextLine(json)).toBe(coreLine('\\@{ada} then @{ada}.\n'));
-  it.todo('puts the node where core reads it in "\\@{ada} then @{ada}.\n"')
+  it('puts the node where core reads it in "\\@{ada} then @{ada}.\n"', () => {
+    const markdown = '\\@{ada} then @{ada}.\n'
+    const json = markdownToEditorStateJSON(markdown, { extensions: EXTENSIONS })
+    expect(richTextLine(json)).toBe(coreLine(markdown))
+  })
 })
 
 describe('nodes inside marks (spec:AST-064 FR5, FR10)', () => {
   const MARKED
     = '*emphasis @{inside} here* and **strong @{s}**, ~~struck @{d}~~, ***both @{b}***, [link @{l}](https://example.com).\n'
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节）：
-  // 它把链接文字里的 `@{l}` 也认成扩展节点，上游 core 把链接文字整体当文字读。
-  // 期望值不变，等 core 对齐后恢复：
-  //   expect(formatsOf(json)).toEqual([
-  //     ['@{inside}', 2],
-  //     ['@{s}', 1],
-  //     ['@{d}', 4],
-  //     ['@{b}', 3],
-  //   ]);
-  //   expect(richTextNodes(json)).toEqual(coreNodes(MARKED));
-  it.todo('keep the formats around them')
-  /*
   it('keep the formats around them', () => {
-    const json = markdownToEditorStateJSON(MARKED, {extensions: EXTENSIONS});
+    const json = markdownToEditorStateJSON(MARKED, { extensions: EXTENSIONS })
     // italic 2, bold 1, strikethrough 4, bold + italic 3. Core reads link
     // text as text, so the mention in the link stays text on both.
     expect(formatsOf(json)).toEqual([
@@ -589,10 +571,9 @@ describe('nodes inside marks (spec:AST-064 FR5, FR10)', () => {
       ['@{s}', 1],
       ['@{d}', 4],
       ['@{b}', 3],
-    ]);
-    expect(richTextNodes(json)).toEqual(coreNodes(MARKED));
-  });
-  */
+    ])
+    expect(richTextNodes(json)).toEqual(coreNodes(MARKED))
+  })
 
   it('stay inside their marks when text beside them is edited, and read back the same', () => {
     const exported = editAndExport(MARKED, ' and ', ' or ')

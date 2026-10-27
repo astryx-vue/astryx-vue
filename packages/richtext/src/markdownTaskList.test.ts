@@ -295,10 +295,6 @@ describe('task lists (spec:AST-061 FR5)', () => {
     // stays checked.
     const emptyChecked = '- [x] \n- [ ] b\n'
     expect(richTextTasks(emptyChecked)).toEqual([true, false])
-    // TODO(core): 我们的 core 把内容为空的 `- [x] ` 读成 checked 未定义，
-    // 富文本这边读成已勾选（上游两边都是已勾选）。等 core 对齐后恢复：
-    //   expect(richTextTasks(emptyChecked)).toEqual(coreTasks(emptyChecked));
+    expect(richTextTasks(emptyChecked)).toEqual(coreTasks(emptyChecked))
   })
-
-  it.todo('reads an empty checked task item as core Markdown reads it')
 })

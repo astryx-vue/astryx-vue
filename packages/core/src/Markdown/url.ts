@@ -19,6 +19,14 @@ function isBlockedNavigation(url: string): boolean {
 }
 
 /**
+ * The parser's own rule: an unsafe destination is read as text, never as a
+ * link. Rendering asks the same question, so a parsed link is always drawable.
+ */
+export function isSafeMarkdownParserUrl(url: string): boolean {
+  return !isBlockedNavigation(comparableUrl(normalizeUrl(url)))
+}
+
+/**
  * Navigation target with control characters removed.
  * `javascript:`, `vbscript:`, and HTML `data:` URLs are dropped.
  */
