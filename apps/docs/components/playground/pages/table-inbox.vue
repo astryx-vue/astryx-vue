@@ -28,7 +28,7 @@ import {
   useTableRowStatus,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn } from '@astryx-vue/core'
+import type { TableColumn, TablePlugin } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
 type Category = 'inbox' | 'escalations' | 'waiting' | 'resolved'
@@ -475,6 +475,32 @@ const rowStatus = useTableRowStatus<Conversation>({
   getStatus: item => (item.isUnread ? { color: 'accent', label: 'Unread' } : null),
 })
 
+/** 点到按钮、链接、勾选框这类控件时不算点中行本身。 */
+const INTERACTIVE_WITHIN_ROW = 'button, input, a, label, [role="checkbox"], [role="button"], [role="menuitem"]'
+
+function isRowItself(event: { target: EventTarget | null }): boolean {
+  return !(event.target as HTMLElement | null)?.closest(INTERACTIVE_WITHIN_ROW)
+}
+
+/** 整行可点、可聚焦；当前打开的那一行整行铺上强调色浅底，并标 aria-current。 */
+const inboxRows: TablePlugin<Conversation> = {
+  rowPatch(item) {
+    return {
+      attrs: { 'tabindex': '0', 'aria-current': item.id === openId.value ? 'true' : undefined },
+      class: 'inbox-row',
+      onClick: (event) => {
+        if (isRowItself(event))
+          openThread(item.id)
+      },
+    }
+  },
+  cellPatch({ row, kind }) {
+    if (kind !== 'body' || row == null || row.id !== openId.value)
+      return null
+    return { style: { backgroundColor: 'var(--astryx-color-accent-muted)' } }
+  },
+}
+
 const columns: TableColumn<Conversation>[] = [
   {
     key: 'conversation',
@@ -482,8 +508,6 @@ const columns: TableColumn<Conversation>[] = [
     width: proportional(1, { minWidth: 160 }),
     renderCell: item => h(VStack, {
       gap: 0.5,
-      style: { cursor: 'pointer' },
-      onClick: () => openThread(item.id),
     }, () => [
       h(Text, { maxLines: 1, weight: item.isUnread ? 'semibold' : 'normal' }, () => item.sender),
       h(Text, { maxLines: 1, color: 'secondary' }, () => item.subject),
@@ -498,8 +522,6 @@ const columns: TableColumn<Conversation>[] = [
       gap: 1,
       vAlign: 'center',
       hAlign: 'end',
-      style: { cursor: 'pointer' },
-      onClick: () => openThread(item.id),
     }, () => [
       item.attachments.length === 0
         ? null
@@ -579,7 +601,7 @@ const threadActions = [
         dividers="none"
         has-hover
         text-overflow="truncate"
-        :plugins="{ status: rowStatus }"
+        :plugins="{ status: rowStatus, rows: inboxRows }"
       />
     </LayoutContent>
 
