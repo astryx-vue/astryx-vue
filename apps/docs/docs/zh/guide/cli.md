@@ -65,7 +65,7 @@ npm run astryx-vue -- component Button
 
 项目里没有任何 agent 文件时，`init --features agents` 默认创建 `AGENTS.md`。不加 `--agent` 时会优先写项目里已有的配置文件，检测顺序为 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.hermes.md`、`HERMES.md`。`--agent claude` 写 `CLAUDE.md`，`hermes` 写 `.hermes.md`，`cursor` 和 `codex` 写 `AGENTS.md`，`all` 则写所有已存在的已知文件。通过 `--agent-docs-path <file>` 也可以指定输出到任意文件。
 
-命令行工具在维护这些文件时非常安全，它只会在以下固定的起止标记之间更新内容：
+命令行工具在维护这些文件时，只会在以下固定的起止标记之间更新内容：
 
 ```html
 <!-- Maintained by astryx-vue, do not edit manually -->
