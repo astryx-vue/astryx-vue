@@ -13,6 +13,7 @@ import FieldInfoTip from '../Field/FieldInfoTip.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
+import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextAreaAction } from './useTextAreaAction.js'
@@ -185,7 +186,9 @@ onMounted(() => {
           v-if="limit != null"
           class="astryx-text-area-count"
           :data-over="isOverLimit || undefined"
-        >{{ valueLength }} / {{ limit }}</span>
+        >
+          <Icon v-if="isOverLimit" icon="warning" size="sm" aria-hidden="true" />{{ valueLength }} / {{ limit }}
+        </span>
         <span v-if="$slots.end" class="astryx-text-area-end"><slot name="end" /></span>
         <InputClearButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" :label="resolvedClearLabel" @click="clear" />
         <ButtonSpinner v-if="busy" class="astryx-text-area-spinner" :label="loadingLabel" />

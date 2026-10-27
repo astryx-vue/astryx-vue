@@ -83,7 +83,8 @@ describe('fieldStatus', () => {
   it('includes a decorative status glyph in detached messages and forwards attrs', () => {
     const wrapper = mount(FieldStatus, { props: { type: 'warning', message: 'Visible publicly', variant: 'detached' }, attrs: { id: 'status', class: 'custom-status' } })
     expect(wrapper.get('#status').classes()).toContain('custom-status')
-    expect(wrapper.get('svg').attributes('aria-hidden')).toBe('true')
+    expect(wrapper.get('.astryx-field-icon').attributes('aria-hidden')).toBe('true')
+    expect(wrapper.get('.astryx-icon__glyph').classes()).toContain('astryx-icon--warning')
     expect(wrapper.vm.element?.id).toBe('status')
   })
 })

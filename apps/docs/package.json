@@ -21,6 +21,7 @@
   "devDependencies": {
     "@iconify-json/carbon": "catalog:docs",
     "@iconify-json/heroicons": "catalog:docs",
+    "@iconify-json/lucide": "catalog:docs",
     "@types/node": "catalog:language",
     "postcss": "catalog:docs",
     "typescript": "catalog:language",
