@@ -417,64 +417,66 @@ function directionColor(metric: Metric) {
               <Text type="label">
                 Daily active users by device type
               </Text>
-              <svg ref="chartEl" class="trend-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Daily active users by device type">
-                <defs>
-                  <linearGradient id="au-mobile" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" :stop-color="COLORS.blue" stop-opacity="0.3" />
-                    <stop offset="95%" :stop-color="COLORS.blue" stop-opacity="0.04" />
-                  </linearGradient>
-                  <linearGradient id="au-desktop" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" :stop-color="COLORS.teal" stop-opacity="0.3" />
-                    <stop offset="95%" :stop-color="COLORS.teal" stop-opacity="0.04" />
-                  </linearGradient>
-                </defs>
+              <VStack :gap="3">
+                <svg ref="chartEl" class="trend-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Daily active users by device type">
+                  <defs>
+                    <linearGradient id="au-mobile" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" :stop-color="COLORS.blue" stop-opacity="0.3" />
+                      <stop offset="95%" :stop-color="COLORS.blue" stop-opacity="0.04" />
+                    </linearGradient>
+                    <linearGradient id="au-desktop" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" :stop-color="COLORS.teal" stop-opacity="0.3" />
+                      <stop offset="95%" :stop-color="COLORS.teal" stop-opacity="0.04" />
+                    </linearGradient>
+                  </defs>
 
-                <line
-                  v-for="tick in Y_TICKS"
-                  :key="`grid-${tick}`"
-                  :x1="CHART.left"
-                  :x2="CHART.width - CHART.right"
-                  :y1="chartY(tick)"
-                  :y2="chartY(tick)"
-                  class="chart-grid"
-                />
-                <text
-                  v-for="tick in Y_TICKS"
-                  :key="`y-${tick}`"
-                  :x="CHART.left - 8"
-                  :y="Math.max(chartY(tick), 9)"
-                  text-anchor="end"
-                  dominant-baseline="central"
-                  class="chart-tick"
-                >
-                  {{ tick }}K
-                </text>
-                <text
-                  v-for="tick in X_TICKS"
-                  :key="`x-${tick}`"
-                  :x="Math.min(chartX(tick), CHART.width - CHART.right - 20)"
-                  :y="CHART.height - CHART.bottom + 13"
-                  text-anchor="middle"
-                  dominant-baseline="central"
-                  class="chart-tick"
-                >
-                  {{ ACTIVE_TREND[tick].label }}
-                </text>
+                  <line
+                    v-for="tick in Y_TICKS"
+                    :key="`grid-${tick}`"
+                    :x1="CHART.left"
+                    :x2="CHART.width - CHART.right"
+                    :y1="chartY(tick)"
+                    :y2="chartY(tick)"
+                    class="chart-grid"
+                  />
+                  <text
+                    v-for="tick in Y_TICKS"
+                    :key="`y-${tick}`"
+                    :x="CHART.left - 8"
+                    :y="Math.max(chartY(tick), 9)"
+                    text-anchor="end"
+                    dominant-baseline="central"
+                    class="chart-tick"
+                  >
+                    {{ tick }}K
+                  </text>
+                  <text
+                    v-for="tick in X_TICKS"
+                    :key="`x-${tick}`"
+                    :x="Math.min(chartX(tick), CHART.width - CHART.right - 20)"
+                    :y="CHART.height - CHART.bottom + 13"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                    class="chart-tick"
+                  >
+                    {{ ACTIVE_TREND[tick].label }}
+                  </text>
 
-                <path :d="areaPath(row => row.mobile)" fill="url(#au-mobile)" />
-                <path :d="linePath(row => row.mobile)" fill="none" :stroke="COLORS.blue" stroke-width="1.5" />
-                <path :d="areaPath(row => row.desktop)" fill="url(#au-desktop)" />
-                <path :d="linePath(row => row.desktop)" fill="none" :stroke="COLORS.teal" stroke-width="1.5" />
-                <path :d="linePath(row => row.tablet)" fill="none" :stroke="COLORS.orange" stroke-width="1.5" />
-              </svg>
-              <HStack :gap="5" align="center" wrap="wrap">
-                <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
-                  <span class="legend-dot" :style="{ background: series.color }" />
-                  <Text type="supporting" color="secondary">
-                    {{ series.label }}
-                  </Text>
+                  <path :d="areaPath(row => row.mobile)" fill="url(#au-mobile)" />
+                  <path :d="linePath(row => row.mobile)" fill="none" :stroke="COLORS.blue" stroke-width="1.5" />
+                  <path :d="areaPath(row => row.desktop)" fill="url(#au-desktop)" />
+                  <path :d="linePath(row => row.desktop)" fill="none" :stroke="COLORS.teal" stroke-width="1.5" />
+                  <path :d="linePath(row => row.tablet)" fill="none" :stroke="COLORS.orange" stroke-width="1.5" />
+                </svg>
+                <HStack :gap="5" align="center" wrap="wrap">
+                  <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
+                    <span class="legend-dot" :style="{ background: series.color }" />
+                    <Text type="supporting" color="secondary">
+                      {{ series.label }}
+                    </Text>
+                  </HStack>
                 </HStack>
-              </HStack>
+              </VStack>
             </VStack>
           </Card>
         </VStack>
@@ -562,7 +564,7 @@ function directionColor(metric: Metric) {
 .trend-chart { width: 100%; height: 280px; display: block; overflow: visible; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
 .chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
-.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.legend-dot { width: 12px; height: 12px; border-radius: 0; flex: none; }
 .breakdown-bar { display: flex; width: 100%; height: 12px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
 </style>
