@@ -5,10 +5,10 @@ title: Matcha 主题
 
 # Matcha（抹茶清新草木绿主题）
 
-Matcha 是一套自然、宁静、呼吸感十足的绿色系主题。它以低饱和度的草木绿与温和灰绿为基调，给人以放松、专注的心流感受，适合笔记软件、健康生活、个人知识库或自然系网站。
+Matcha 是一套自然宁静的绿色系主题。采用低饱和度的草木绿与温和灰绿为基调，适合笔记知识库、健康生活或个人主页等场景。
 
-- **字体配置：** 正文采用清晰明朗的 DM Sans 字体，标题采用带有轻盈手写韵味的 Playwrite US Trad。
-- **作用范围：** 仅对带有 `data-astryx-theme="matcha"` 的元素及其子树生效，不会污染全局 `:root`。
+- **字体配置**：正文使用 DM Sans 字体，标题采用手写风格的 Playwrite US Trad 字体。
+- **作用范围**：仅对声明了 `data-astryx-theme="matcha"` 的元素及其子树生效，不影响全局 `:root`。
 
 ## 引入与使用
 
@@ -18,7 +18,7 @@ Matcha 是一套自然、宁静、呼吸感十足的绿色系主题。它以低�
 import '@astryx-vue/themes/matcha.css'
 ```
 
-在需要使用该风格的容器标签上加上主题标记即可：
+在目标容器元素上声明主题属性即可：
 
 ```html
 <div data-astryx-theme="matcha">
