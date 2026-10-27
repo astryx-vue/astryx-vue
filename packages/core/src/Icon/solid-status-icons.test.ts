@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import process from 'node:process'
 import { describe, expect, it } from 'vitest'
 
-const css = readFileSync(new URL('../../styles/icon.css', import.meta.url), 'utf8')
+const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/icon.css'), 'utf8')
 
 function artwork(slug: string): string {
   const match = css.match(new RegExp(`\\.astryx-icon--${slug} \\{\\n\\s+--astryx-icon-artwork: ([^\\n]*)`))
