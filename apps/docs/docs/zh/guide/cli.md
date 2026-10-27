@@ -4,7 +4,7 @@ title: 命令行
 
 # 命令行
 
-`@astryx-vue/cli` 是一个轻量的命令行工具，用于在终端中检索 astryx-vue 的组件文档与演练场模板，便于开发者与 AI 工具查询使用。CLI 命令名称为 `astryx-vue`（注意：该命令专用于本项目，并非 Meta 原版的 `astryx` 命令，不包含 React 或 StyleX 相关功能）。
+`@astryx-vue/cli` 是一个轻巧的命令行工具，用来在终端里随时查 astryx-vue 的组件文档和演练场页面，方便开发者和 AI Agent 使用。二进制命令名是 `astryx-vue`（请注意：它专为本项目服务，并非 Meta 原版的 `astryx` 命令，也不提供 React 或 StyleX 的功能）。
 
 建议在项目中作为开发依赖安装：
 
@@ -12,16 +12,16 @@ title: 命令行
 pnpm add -D @astryx-vue/cli
 ```
 
-包内声明了 `bin` 字段，安装后即可在 `node_modules/.bin` 中直接调用：
+包里声明了 `bin`，装完命令就在 `node_modules/.bin` 里，直接就能用：
 
 ```sh
 pnpm exec astryx-vue component Button
 npx astryx-vue search dialog --json
 ```
 
-若未安装且需临时执行，可运行 `npx @astryx-vue/cli …`。注意必须包含完整的 package scope，npm 上无 scope 的 `astryx-vue` 并非本项目包。
+不安装、只想临时用时，运行 `npx @astryx-vue/cli …`。注意 scope 不能省略，因为 npm 上裸名 `astryx-vue` 并不是这个包。
 
-若运行环境未将 `node_modules/.bin` 自动加入 `PATH`，才需要在 `package.json` 里添加：
+脚本别名是可选项，只有当 agent 的环境没有把 `node_modules/.bin` 放进 `PATH` 时才需要在 `package.json` 里添加：
 
 ```json
 {
@@ -31,7 +31,7 @@ npx astryx-vue search dialog --json
 }
 ```
 
-配置后即可在终端执行：
+配置后即可在终端运行：
 
 ```sh
 npm run astryx-vue -- component Button
@@ -40,32 +40,32 @@ npm run astryx-vue -- component Button
 ## 核心命令
 
 - `astryx-vue component --list`：列出当前所有可用组件。
-- `astryx-vue component Button`：查看指定组件的基本用法、Props 属性列表、插槽、事件以及代码示例。
-- `astryx-vue composable --list`：列出所有组合式函数；`astryx-vue composable useClipboard` 打印其参数签名与返回值。Vue 3 规范统称为组合式函数（composable），命令与文档中统一不使用 hook 一词。若输入 `component useClipboard` 仍可正确查询，并会提示改用 `composable` 命令。
-- `astryx-vue docs`：列出指南与主题文档；通过 `astryx-vue docs guide/dark-mode` 或 `astryx-vue docs themes/tokens` 可在终端阅读全文。
-- `astryx-vue search dialog`：在组件、组合式函数、文档主题与页面模板中进行相关度检索。可通过 `--type` 参数限定为 `component`、`composable`、`doc` 或 `template`。
-- `astryx-vue manifest --json`：输出 CLI 自身的接口清单（包含命令、选项、响应结构、错误码及退出码），供外部脚本集成调用。
-- `astryx-vue init --features agents`：在项目根目录生成面向 AI 工具的规范指引文件。
+- `astryx-vue component Button`：快速查看指定组件的基本用法、Props 属性、插槽、事件以及代码示例。
+- `astryx-vue composable --list`：列出组合式函数，`astryx-vue composable useClipboard` 打印其参数和返回值。Vue 里这类函数叫组合式函数（composable），所以命令与文档中统一不使用 hook 这个词。若误输入 `component useClipboard` 仍然能查到，并会友好提示改用 `composable` 命令。
+- `astryx-vue docs`：列出指南与主题文档。`astryx-vue docs guide/dark-mode` 或 `astryx-vue docs themes/tokens` 可直接在终端阅读正文。
+- `astryx-vue search dialog`：在组件、组合式函数、文档主题和页面模板里按相关度搜索。`--type` 可以限定为 `component`、`composable`、`doc` 或 `template`。
+- `astryx-vue manifest --json`：输出 CLI 自身的接口定义清单（命令、选项、响应结构、错误码及退出码），方便被上层工具或脚本消费。
+- `astryx-vue init --features agents`：在项目根目录生成专供 AI Agent 使用的上下文指引文件。
 
 ## 页面模板与代码生成
 
-- `astryx-vue template --list`：列出 53 个演练场页面模板，按业务分类分组。当前所有模板均为完整页面；传入 `--type block` 会返回提示说明，不抛出异常。
-- `astryx-vue template login-card`：打印指定模板的说明信息、关联组件清单与完整源码。追加 `--skeleton` 仅打印布局骨架（保留组件标签及 `gap`、`padding`、`columns` 等布局属性，省略文本、事件绑定与原生 HTML 节点）。
-- `astryx-vue template login-card ./src/pages`：将模板代码生成并写入至 `src/pages/LoginCard.vue`。若目标文件已存在，需显式传入 `--overwrite`（或 `-f`）才会覆盖。生成时会自动将演示图片替换为内联 SVG 灰色占位图，不依赖外部静态资源。
-- `astryx-vue build "<想法>"`：根据自然语言描述匹配开发起点，在本地计算出最接近的页面模板、备选方案以及推荐搭配的组件与函数。匹配打分完全在本地离线计算，无需调用网络或大模型 API。
+- `astryx-vue template --list`：列出 53 个演练场页面模板，按分类分组。目前所有模板都是页面；`--type block` 会给出一句说明，不报错。
+- `astryx-vue template login-card`：打印一个模板的说明、用到的组件和完整源码。`--skeleton` 只打印布局骨架（组件标签加上 `gap`、`padding`、`columns` 这类布局属性，不含文字、事件处理和原生 HTML 包裹层）。
+- `astryx-vue template login-card ./src/pages`：将模板代码生成并写出到 `src/pages/LoginCard.vue`。如果文件已存在，需要加上 `--overwrite`（或 `-f`）才会覆盖，避免误冲掉已有代码。复制时会自动把演示图片替换为内联的灰色占位图，不依赖额外的静态图片资源。
+- `astryx-vue build "<想法>"`：把一句话需求变成开发起点，在本地匹配出最接近的页面模板、备选方案以及需要搭配使用的组件与函数。打分完全在本地完成，无网络开销也无需调用外部大模型。
 
 ## 常用参数
 
-- `--json`：以 JSON 格式输出类型化的结构化数据，适合自动化工具解析。模板相关类型包括 `template.list`、`template.show`、`template.skeleton`、`template.copy`；`build` 命令返回 `build.help` 与 `build.kit`。异常时信封内包含错误码（如 `ERR_UNKNOWN_TEMPLATE`、`ERR_FILE_EXISTS` 等）。
-- `--dense`：精简输出文本；当与 `--json` 同时传入时自动忽略，保证 JSON 结构完整。
-- `--zh`：当文档提供中文翻译时，优先输出简体中文内容。
-- `--cwd`：指定工作目录，`template` 与 `init` 仅向该目录下写入文件。
+- `--json`：以 JSON 格式输出带类型的结构化信封数据，适合被工具或脚本解析。模板相关的类型包括 `template.list`、`template.show`、`template.skeleton`、`template.copy`；`build` 返回 `build.help` 和 `build.kit`。出错时信封里带有错误码（如 `ERR_UNKNOWN_TEMPLATE`、`ERR_FILE_EXISTS` 等）。
+- `--dense`：精简输出文本，降低阅读噪音；与 `--json` 配合使用时会被自动忽略，保持 JSON 结构完整。
+- `--zh`：当文档具备中文翻译时，优先输出简体中文内容。
+- `--cwd`：指定项目目录，`template` 和 `init` 只往这个目录下写文件。
 
 ## 配合 AI Agent（生成上下文文件）
 
-若项目中未包含任何 agent 配置文件，`init --features agents` 默认创建 `AGENTS.md`。未显式传入 `--agent` 时会优先检测项目中的既有文件，检测顺序为 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.hermes.md`、`HERMES.md`。`--agent claude` 对应 `CLAUDE.md`，`hermes` 对应 `.hermes.md`，`cursor` 与 `codex` 对应 `AGENTS.md`，`all` 则更新所有已识别的配置文件。也可以通过 `--agent-docs-path <file>` 指定输出至任意文件。
+项目里没有任何 agent 文件时，`init --features agents` 默认创建 `AGENTS.md`。不加 `--agent` 时会优先写项目里已有的配置文件，检测顺序为 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.hermes.md`、`HERMES.md`。`--agent claude` 写 `CLAUDE.md`，`hermes` 写 `.hermes.md`，`cursor` 和 `codex` 写 `AGENTS.md`，`all` 则写所有已存在的已知文件。通过 `--agent-docs-path <file>` 也可以指定输出到任意文件。
 
-CLI 采用受管更新机制，仅在固定的起止标记之间更新内容：
+命令行工具在维护这些文件时非常安全，它只会在以下固定的起止标记之间更新内容：
 
 ```html
 <!-- Maintained by astryx-vue, do not edit manually -->
@@ -73,10 +73,10 @@ CLI 采用受管更新机制，仅在固定的起止标记之间更新内容：
 <!-- astryx-vue block end -->
 ```
 
-标记块内包含三步工作流：通过 `build` 检索页面，通过 `template` 导出，编写代码前通过 `component`、`composable` 或 `docs` 查询 API 规范。
+区块里写的是三步工作流：用 `build` 挑页面，用 `template` 复制，写代码前用 `component`、`composable` 或 `docs` 查询用法。
 
-再次执行该命令时，工具仅更新两个标记之间的内容，标记外部编写的自定义规范完整保留。若目标文件已存在但缺少上述标记，工具会将内容安全追加至文件末尾。
+每次运行命令，工具只会用最新的组件库信息替换这两个标记之间的内容，标记之外由你自己撰写的项目规则会完好无损地保留下来。如果文件已存在但尚未包含这些标记，工具会安全地将其追加到文件末尾。
 
-> **维护者说明**：CLI 输出的文本数据提取自文档站与演练场页面。当文档或模板更新后，需重新构建 CLI 内置的目录快照，详细流程见 `packages/cli` 的 README。
+> **维护者提醒**：CLI 打印的内容均提取自当前文档站和演练场页面。当文档或模板修改后，需要重新生成 CLI 包内置的目录快照，操作步骤记录在 `packages/cli` 的 README 中。
 >
-> 当前版本未包含主题生成、版本迁移或 MCP 服务命令。
+> 这一版暂未包含主题生成、版本升级迁移或 MCP 服务命令。
