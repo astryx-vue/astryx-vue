@@ -58,13 +58,13 @@ export const COMPONENT_VARS: Record<string, ComponentVarGroup> = {
   'button': { label: 'Button', vars: [radiusVar('--button-radius', 'element')] },
   'card': {
     label: 'Card',
-    vars: [radiusVar('--card-radius', 'container'), paddingVar('--card-padding', '4')],
+    vars: [radiusVar('--card-radius', 'container'), paddingVar('--card-padding', '3')],
   },
   'field': { label: 'Field / Input', vars: [radiusVar('--input-radius', 'element')] },
   'banner': { label: 'Banner', vars: [radiusVar('--banner-radius', 'container')] },
   'segmented-control': {
     label: 'Segmented Control',
-    vars: [radiusVar('--segmented-control-radius', 'element'), paddingVar('--segmented-control-padding', '0-5')],
+    vars: [radiusVar('--segmented-control-radius', 'element'), paddingVar('--segmented-control-padding', '1')],
   },
   'dialog': {
     label: 'Dialog',
@@ -74,7 +74,7 @@ export const COMPONENT_VARS: Record<string, ComponentVarGroup> = {
     label: 'Dropdown Menu',
     vars: [radiusVar('--dropdown-radius', 'element'), paddingVar('--dropdown-padding', '1', 'Inner padding')],
   },
-  'section': { label: 'Section', vars: [paddingVar('--section-padding', '4')] },
+  'section': { label: 'Section', vars: [paddingVar('--section-padding', '3')] },
   'popover': { label: 'Popover', vars: [radiusVar('--popover-radius', 'element')] },
   'hovercard': { label: 'Hover Card', vars: [radiusVar('--hovercard-radius', 'container')] },
   'chat-composer': {

@@ -8,8 +8,7 @@ import { HStack, StackItem, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { TextInput } from '@astryx-vue/core/TextInput'
 import { computed, ref } from 'vue'
-import { themeVariables } from './theme'
-import { NEUTRAL_TOKENS } from './themeDefaults'
+import { shownTokens } from './themeShownTokens'
 import { ALL_COMPONENT_NAMES, COMPONENT_VARS, resolveOptionLabel } from './themeTokensComponents'
 
 const props = defineProps<{
@@ -35,7 +34,7 @@ const groups = Object.values(COMPONENT_VARS)
 const componentOptions = ALL_COMPONENT_NAMES.map(name => ({ value: name, label: name }))
 
 /** 选项后面显示的实际值：基础面板调过的刻度也要算进去。 */
-const resolved = computed(() => ({ ...NEUTRAL_TOKENS, ...themeVariables(props.theme) }))
+const resolved = computed(() => shownTokens(props.theme))
 
 function currentValue(name: string): string {
   return props.theme.componentTokens[name] ?? ''

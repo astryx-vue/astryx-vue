@@ -4,8 +4,7 @@ import type { TokenGroupKey } from './themeTokensRaw'
 import { Text } from '@astryx-vue/core/Text'
 import { TextInput } from '@astryx-vue/core/TextInput'
 import { computed } from 'vue'
-import { themeVariables } from './theme'
-import { NEUTRAL_TOKENS } from './themeDefaults'
+import { shownToken } from './themeShownTokens'
 import { parseLightDark, rewriteColor, shownColor } from './themeTokenColor'
 import { editorKind, spacingToPx, tokenLabel, typePreviewStyle } from './themeTokensRaw'
 
@@ -22,8 +21,8 @@ const emit = defineEmits<{
 
 const kind = computed(() => editorKind(props.group))
 const mode = computed(() => props.theme.dark ? 'dark' : 'light')
-/** 基础面板调出来的值也要显示，所以先看整套变量，没有再退回 Neutral 默认值。 */
-const value = computed(() => themeVariables(props.theme)[props.name] ?? NEUTRAL_TOKENS[props.name] ?? '')
+/** 基础面板调出来的值也要显示；没动过的显示 Neutral 的原始写法。 */
+const value = computed(() => shownToken(props.theme, props.name))
 const color = computed(() => shownColor(value.value, mode.value))
 const readout = computed(() => kind.value === 'color' ? color.value.readout : value.value)
 const barWidth = computed(() => `${Math.min(spacingToPx(value.value) || 0, 48)}px`)

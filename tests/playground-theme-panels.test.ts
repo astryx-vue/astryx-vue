@@ -16,6 +16,7 @@ import {
   themeVariables,
 } from '../apps/docs/components/playground/theme'
 import { NEUTRAL_TOKENS } from '../apps/docs/components/playground/themeDefaults'
+import { shownToken } from '../apps/docs/components/playground/themeShownTokens'
 import { parseColor, rewriteColor, shownColor } from '../apps/docs/components/playground/themeTokenColor'
 import { COMPONENT_VAR_TO_OVERRIDE, COMPONENT_VARS, resolveOptionLabel } from '../apps/docs/components/playground/themeTokensComponents'
 import { groupSections, spacingToPx, tokenLabel } from '../apps/docs/components/playground/themeTokensRaw'
@@ -106,6 +107,18 @@ describe('playground raw tokens', () => {
     expect(shownColor(value, 'dark').readout).toBe('#445566  100%')
     expect(parseColor('rgba(0, 0, 0, 0.5)')).toEqual({ hex: '#000000', alpha: 0.5 })
     expect(parseColor('oklch(0 0 0)')).toBeNull()
+  })
+})
+
+describe('shown token values', () => {
+  it('keeps the Neutral wording until a scale or token changes it', () => {
+    const theme = createNeutralTheme()
+    expect(shownToken(theme, '--astryx-radius-element')).toBe('0.625rem')
+    expect(shownToken(theme, '--astryx-color-text-accent')).toMatch(/^light-dark\(#/)
+    theme.radius = 6
+    expect(shownToken(theme, '--astryx-radius-element')).toBe('6px')
+    setToken(theme, '--astryx-radius-element', '1px')
+    expect(shownToken(theme, '--astryx-radius-element')).toBe('1px')
   })
 })
 

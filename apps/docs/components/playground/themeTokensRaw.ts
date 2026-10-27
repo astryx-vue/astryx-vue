@@ -7,10 +7,10 @@ export const TOKEN_GROUPS: Array<{ key: TokenGroupKey, label: string, icon: stri
   { key: 'colors', label: 'Colors', icon: 'i-carbon-color-palette' },
   { key: 'spacing', label: 'Spacing', icon: 'i-carbon-grid' },
   { key: 'radius', label: 'Radius', icon: 'i-carbon-copy' },
-  { key: 'typography', label: 'Typography', icon: 'i-carbon-text-font' },
-  { key: 'size', label: 'Size', icon: 'i-carbon-fit-to-screen' },
-  { key: 'shadow', label: 'Elevation', icon: 'i-carbon-shadow' },
-  { key: 'duration', label: 'Duration', icon: 'i-carbon-timer' },
+  { key: 'typography', label: 'Typography', icon: 'i-carbon-language' },
+  { key: 'size', label: 'Size', icon: 'i-carbon-maximize' },
+  { key: 'shadow', label: 'Elevation', icon: 'i-carbon-layers' },
+  { key: 'duration', label: 'Duration', icon: 'i-carbon-time' },
   { key: 'easing', label: 'Easing', icon: 'i-carbon-lightning' },
 ]
 
