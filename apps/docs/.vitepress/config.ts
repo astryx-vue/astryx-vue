@@ -9,6 +9,20 @@ import { llmsAlternateLinks, writeLlmsArtifacts } from './llms.ts'
 import { renderForSearch } from './searchRender.ts'
 import { guideSidebar, themeSidebar } from './sidebar.ts'
 
+/**
+ * The icon plugin scans every module for icon names. core's `semantic.ts` lists
+ * the lucide drawings for each semantic name, so scanning it would register them
+ * on every page, including the playground preview frame. That frame has no icon
+ * table, as in upstream, so it must see core's built-in artwork. The docs pages
+ * register the table themselves through `components/docsIcons.ts`.
+ */
+function docsIconPlugin(): ReturnType<typeof astryxIcons> {
+  const plugin = astryxIcons()
+  const scan = plugin.transform
+  plugin.transform = (code, id) => id.includes('/Icon/semantic.') ? undefined : scan(code, id)
+  return plugin
+}
+
 function navigation(english: boolean): DefaultTheme.NavItem[] {
   const prefix = english ? '/en' : ''
   return [
@@ -65,7 +79,7 @@ export default defineConfig({
   vite: {
     publicDir: fileURLToPath(new URL('../public', import.meta.url)),
     resolve: { conditions: ['source', 'module', 'browser', 'development|production'] },
-    plugins: [astryxIcons(), demoSourcePlugin(), UnoCSS(unoConfig)],
+    plugins: [docsIconPlugin(), demoSourcePlugin(), UnoCSS(unoConfig)],
     server: {
       fs: {
         allow: [fileURLToPath(new URL('../../..', import.meta.url))],

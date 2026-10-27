@@ -17,7 +17,7 @@ import '../../styles/playground.css'
 
 export default {
   extends: DefaultTheme,
-  async enhanceApp({ app, router }) {
+  async enhanceApp({ app }) {
     app.component('component-docs', ComponentDocsPage)
     app.component('ComponentAccessibility', ComponentAccessibility)
     app.component('ComponentAnatomy', ComponentAnatomy)
@@ -30,7 +30,8 @@ export default {
     app.component('PlaygroundApp', defineAsyncComponent(() => import('../../components/playground/PlaygroundApp.vue')))
     app.component('PlaygroundFrame', defineAsyncComponent(() => import('../../components/playground/PlaygroundFrame.vue')))
     // The preview frame keeps core's built-in artwork, as upstream's playground does.
-    if (!/\/playground\/frame(?:\.html)?\/?$/.test(router.route.path))
+    // `route.path` is not set yet while the app is being enhanced, so read the address.
+    if (typeof window !== 'undefined' && !/\/playground\/frame(?:\.html)?\/?$/.test(window.location.pathname))
       await import('../../components/docsIcons')
   },
 } satisfies Theme
