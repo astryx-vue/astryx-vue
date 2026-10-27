@@ -58,3 +58,16 @@ lab 包的骨架 F3b 已经搭好（#205）。往里加组件的方法看 `nodes
   - 哪些测试搬了、哪些没搬，以及原因。
   - 拆分后每个文件的行数。
   - 文案接入情况。
+
+---
+
+# 第 2 轮（UI，交给 Sonnet 代理）
+
+总控验收第 1 轮时动手改了一部分，已经提交成 WIP（工作区最新一个提交），**接着这个提交往下做，不要回退**：
+- core `ComplexSelector` 新增 `contentClass`、`contentStyle` 两个属性，原版对应的是 `contentXstyle`。弹层的内边距从 Popover 外壳挪到了内容容器上（`.astryx-complex-selector-content` 默认 12px）。这些改动配了一条测试，在 `ComplexSelector.parts.test.ts` 末尾。
+- `TransferListSelector` 通过 `contentStyle` 把内容宽度设成 `min(41rem, …)`、内边距设成 0，并删掉了负外边距那种绕法。
+
+**还没对上的地方**：浏览器实测发现，内容容器已经是 656px 宽，可 Popover 外壳还是被默认的 320px 上限卡住，所以两栏仍然上下叠着。原版的 ComplexSelector 会把 `width` 同时传给 Popover（原版 `ComplexSelector.tsx` 第 822 行附近），Popover 拿到显式宽度后，就只受视口上限约束（原版 `Popover.tsx` 的 `customWidth`）。照这个做法改，改完要满足：
+1. TransferListSelector 弹层宽 41rem，Selected 和 Available 两栏左右并排，列表贴到弹层边上（不留内边距）。
+2. 其他用到 ComplexSelector 的地方（core 文档页的 Demo、演练场模板），弹层外观都不变。浅色、深色各截一张图核对。
+3. 第 1 轮回报第 6 节里其余几条「拿不准」，逐条写结论。
