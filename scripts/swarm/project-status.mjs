@@ -17,8 +17,18 @@ const STATUS_FIELD = 'Status'
 const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
 const mapFile = join(root, '.agents-work/upstream-sync-0.7.1/nodes/issues.json')
 
-function gh(args) {
-  return execFileSync('gh', args, { encoding: 'utf8', timeout: 90_000 })
+/** gh 偶尔因网络抖动报「unknown owner type」之类的错，重试几次。 */
+function gh(args, attempts = 4) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return execFileSync('gh', args, { encoding: 'utf8', timeout: 90_000, stdio: ['ignore', 'pipe', 'pipe'] })
+    }
+    catch (error) {
+      if (attempt >= attempts)
+        throw error
+      execFileSync('sleep', [String(attempt * 3)])
+    }
+  }
 }
 
 function readMap() {
