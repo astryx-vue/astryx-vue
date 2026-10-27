@@ -35,9 +35,7 @@ The same parser the core `Markdown` component uses does the reading, so the two 
 
 ## Also exported
 
-- `DEFAULT_NODES` — the Lexical node classes the editor registers.
-- `DEFAULT_TRANSFORMERS` — the Markdown transformers for the same syntax.
-- `sanitizeUrl` and `validateUrl` — the allowlist check for link hrefs.
+`sanitizeUrl` and `validateUrl` — the allowlist check that decides which hrefs a link may carry.
 
 ## License
 
