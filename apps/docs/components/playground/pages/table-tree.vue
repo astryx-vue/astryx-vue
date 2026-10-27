@@ -760,11 +760,7 @@ const READMES: Record<string, string> = {
               <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
                 <Icon :name="ref.icon" size="sm" />
               </IconButton>
-              <Button v-else :label="ref.label" variant="ghost" size="sm">
-                <template #icon>
-                  <Icon :name="ref.icon" size="sm" />
-                </template>
-              </Button>
+              <Button v-else :label="ref.label" variant="ghost" size="sm" />
             </template>
           </HStack>
           <StackItem size="fill">
@@ -824,6 +820,7 @@ const READMES: Record<string, string> = {
               v-if="activeTab === 'readme'"
               :heading-level-start="2"
               content-align="center"
+              :content-width="680"
               :content="readme"
             />
             <Text v-else color="secondary">
