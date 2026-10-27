@@ -20,7 +20,7 @@ import {
   useTableStickyColumns,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn } from '@astryx-vue/core'
+import type { TableColumn, TablePlugin } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
 type Modality = 'text' | 'image' | 'audio' | 'video' | 'document'
@@ -29,11 +29,19 @@ const MODALITY_ORDER: Modality[] = ['text', 'image', 'audio', 'video', 'document
 
 /** 输入输出模态各占同一个格子位置，缺哪一项就用暗色图标占位。 */
 const MODALITY_ICON: Record<Modality, string> = {
-  text: 'i-carbon-text-font',
-  image: 'i-carbon-image',
-  audio: 'i-carbon-volume-up',
-  video: 'i-carbon-video',
-  document: 'i-carbon-document',
+  text: 'i-carbon-letter-tt',
+  image: 'i-heroicons-photo',
+  audio: 'i-heroicons-speaker-wave',
+  video: 'i-heroicons-video-camera',
+  document: 'i-heroicons-document-text',
+}
+
+/** 选择器里每个提供商的图标。 */
+const PROVIDER_ICON: Record<string, string> = {
+  'Northwind': 'i-heroicons-cpu-chip',
+  'Calder Labs': 'i-heroicons-sparkles',
+  'Halcyon': 'i-heroicons-bolt',
+  'Sable AI': 'i-heroicons-cube',
 }
 
 const MODALITY_LABEL: Record<Modality, string> = {
@@ -176,6 +184,36 @@ const grouped = useTableGroupedRows<SpecRow>(() => ({
 
 const sticky = useTableStickyColumns<SpecRow>({ startKeys: ['spec'] })
 
+/** 模型列的表头是一个选择器。core 的表头只收字符串，所以用 headerPatch 在表头前面放控件。 */
+const modelHeaderPlugin: TablePlugin<SpecRow> = {
+  headerPatch(column) {
+    const match = /^slot-(\d+)$/.exec(column.key)
+    if (!match)
+      return null
+    const index = Number(match[1])
+    const modelId = slots.value[index]
+    if (modelId == null)
+      return null
+    return {
+      before: () => h('div', { class: 'model-header' }, h(Selector, {
+        'modelValue': modelId,
+        'label': `Model ${index + 1}`,
+        'isLabelHidden': true,
+        'size': 'lg',
+        'hasClear': slots.value.length > MIN_SLOTS,
+        'options': MODELS.map(option => ({
+          value: option.id,
+          label: option.name,
+          description: option.provider,
+          icon: PROVIDER_ICON[option.provider],
+          disabled: option.id !== modelId && slots.value.includes(option.id),
+        })),
+        'onUpdate:modelValue': (next: string | number | null) => next == null ? removeSlot(index) : selectSlot(index, String(next)),
+      })),
+    }
+  },
+}
+
 const columns = computed<TableColumn<SpecRow>[]>(() => [
   {
     key: 'spec',
@@ -189,7 +227,8 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
       key: `slot-${index}`,
       width: proportional(1, { minWidth: 236 }),
       align: 'end' as const,
-      header: model?.name ?? `Model ${index + 1}`,
+      header: `Model ${index + 1}`,
+      headerHidden: true,
       renderCell: (row: SpecRow) => {
         if (!model)
           return h(Text, { type: 'supporting' }, () => '—')
@@ -248,7 +287,7 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
           <Switch v-model="highlightBest" label="Highlight best" size="sm" />
           <Button label="Add model" variant="secondary" :is-disabled="slots.length >= MODELS.length" @click="addModel">
             <template #icon>
-              <Icon icon="i-carbon-add" size="sm" />
+              <Icon icon="i-heroicons-plus" size="sm" />
             </template>
           </Button>
         </HStack>
@@ -257,23 +296,6 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
 
     <LayoutContent :padding="4">
       <VStack :gap="4">
-        <HStack :gap="3" align="end" wrap="wrap">
-          <VStack v-for="(slotId, index) in slots" :key="slotId" :width="280">
-            <Selector
-              :model-value="slotId"
-              :label="`Model ${index + 1}`"
-              size="lg"
-              :has-clear="slots.length > MIN_SLOTS"
-              :options="MODELS.map(option => ({
-                value: option.id,
-                label: option.name,
-                description: option.provider,
-                disabled: option.id !== slotId && slots.includes(option.id),
-              }))"
-              @update:model-value="(next: string | number | null) => next == null ? removeSlot(index) : selectSlot(index, String(next))"
-            />
-          </VStack>
-        </HStack>
         <Card :padding="5" class="table-frame">
           <Table
             :data="grouped.data.value"
@@ -281,7 +303,7 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
             :id-key="grouped.idKey"
             density="spacious"
             dividers="grid"
-            :plugins="{ grouped: grouped.plugin, sticky }"
+            :plugins="{ grouped: grouped.plugin, sticky, header: modelHeaderPlugin }"
           />
         </Card>
       </VStack>
@@ -290,6 +312,10 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
 </template>
 
 <style scoped>
+.model-header {
+  width: 100%;
+}
+
 .table-frame {
   width: 100%;
   max-width: 100%;
