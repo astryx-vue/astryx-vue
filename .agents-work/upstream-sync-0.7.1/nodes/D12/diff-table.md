@@ -19,3 +19,5 @@
 ## 补充：外壳修复后复核
 
 演练场预览卡片（外壳）和原版有差异，修在 `apps/docs/styles/playground.css`，对 57 个模板都生效，细节见 `diff-table-page.md` 的「外壳」部分。修完后本模板重新对照，仍一致。
+
+| 深色对照（第 3 批） | 同浅色布局 | `/tmp/D12-shots/table-dark.png` 整页左右对照，未发现新增差异 | 一致 |

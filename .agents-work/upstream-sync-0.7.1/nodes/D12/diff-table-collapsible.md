@@ -20,3 +20,5 @@
 | 展开面板内边距 | 16px 20px 16px 48px，面板高 165 | 4px 8px，面板高 141 | 不修：core。`.astryx-table__panel` 的 16/20/48 已在浏览器里核对命中的规则：`.astryx-table[data-density=compact] :is(th,td)`（特异性 0,3,1）盖过 `.astryx-table__panel`（0,1,0）和 `.astryx-table[data-density=compact] .astryx-table__panel`（0,3,0），所以面板的 16/20/48 一条都没生效，只剩 4/8 |
 | 窄屏紧凑列 | 内容宽度小于 720 时只留名称+金额两列 | 没有 | 不修：1440 宽下不触发，且需要 ResizeObserver 量内容宽；先不做 |
 | 深色模式 | 同浅色 | 同 | 对照图已出，结构一致，色值差异同上 |
+
+| 深色对照（第 3 批） | 同浅色布局 | `/tmp/D12-shots/table-collapsible-dark.png` 整页左右对照，未发现新增差异 | 一致 |

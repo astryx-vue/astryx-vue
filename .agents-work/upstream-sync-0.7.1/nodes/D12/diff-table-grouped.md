@@ -24,3 +24,5 @@
 | 详情面板 | LayoutPanel，右侧，可拖宽 | 相同 | 一致 |
 | Create issue 对话框 | Title、Status、Priority、Project 四个字段，Cancel/Create | 只有 Title | 已修：补三个字段；标题改成 Create Issue |
 | 深色模式 | 同浅色 | 同 | 已对照，无新增差异 |
+
+| 深色对照（第 3 批） | 同浅色布局 | `/tmp/D12-shots/table-grouped-dark.png` 整页左右对照，未发现新增差异 | 一致 |

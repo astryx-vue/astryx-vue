@@ -20,3 +20,5 @@
 | 筛选后提示条 | warning Banner，右侧 Clear all filters | 相同 | 一致 |
 | 空状态 | EmptyState 加 Clear filters | 相同 | 一致 |
 | 深色模式 | 同上 | 同上，卡片底色已对 | 一致 |
+
+| 深色对照（第 3 批） | 同浅色布局 | `/tmp/D12-shots/table-page-dark.png` 整页左右对照，未发现新增差异 | 一致 |
