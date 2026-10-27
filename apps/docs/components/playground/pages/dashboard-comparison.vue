@@ -301,7 +301,7 @@ function directionColor(metric: Metric) {
 <template>
   <Layout height="fill" :content-width="1440">
     <template #header>
-      <LayoutHeader has-divider :padding="6">
+      <LayoutHeader has-divider>
         <HStack :gap="3" align="center" justify="between" wrap="wrap">
           <VStack :gap="0">
             <Heading :level="1">
