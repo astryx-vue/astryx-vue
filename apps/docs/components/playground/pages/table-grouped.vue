@@ -100,8 +100,8 @@ const STATUS_LABEL: Record<TaskStatus, string> = {
   done: 'Done',
 }
 
-const STATUS_DOT: Record<TaskStatus, 'info' | 'warning' | 'neutral' | 'success'> = {
-  in_progress: 'info',
+const STATUS_DOT: Record<TaskStatus, 'accent' | 'warning' | 'neutral' | 'success'> = {
+  in_progress: 'accent',
   todo: 'warning',
   backlog: 'neutral',
   done: 'success',
@@ -477,6 +477,26 @@ const rowMenuItems = [
 </template>
 
 <style scoped>
+/* 没有筛选条件时，PowerSearch 的空 token 容器仍占满剩余宽度，把输入框挤到中间。
+   容器空的时候让它不占位，占位文字就回到最左边。 */
+:deep(.astryx-power-search-tokens:empty) {
+  flex: 0 0 auto;
+}
+
+/* 控件高度 32，和原版一致。 */
+:deep(.astryx-power-search-control) {
+  min-height: 32px;
+}
+
+:deep(.astryx-power-search-input) {
+  height: 22px;
+}
+
+/* StatusDot 没有 accent 变体，这里按原版的强调色补上。 */
+:deep(.astryx-status-dot[data-variant='accent']) {
+  background-color: var(--astryx-color-accent);
+}
+
 .group-header-cell {
   cursor: pointer;
   background: var(--astryx-color-background-muted);
