@@ -224,12 +224,17 @@ export const PlaygroundAreaChart = defineComponent({
     hasGrid: { type: Boolean, default: true },
     /** 画一条虚线基准，例如统计窗口的起点。 */
     referenceValue: { type: Number, default: undefined },
+    /** 渐变填充的起止透明度。 */
+    fillOpacity: { type: Array as unknown as PropType<[number, number]>, default: () => [0.3, 0.05] },
+    /** 左右留白。没有 Y 轴时用它给曲线和刻度文字留边。 */
+    padInline: { type: Number, default: undefined },
   },
   setup(props) {
     const chart = useChartWidth()
     return () => {
       const chartW = chart.width.value
-      const pad = { top: 10, right: 10, bottom: 24, left: props.hasYAxis ? 50 : 10 }
+      const inline = props.padInline ?? (props.hasYAxis ? 10 : 10)
+      const pad = { top: 10, right: inline, bottom: 24, left: props.hasYAxis ? 50 : inline }
       const innerW = chartW - pad.left - pad.right
       const innerH = props.height - pad.top - pad.bottom
       const rows = props.data
@@ -255,8 +260,8 @@ export const PlaygroundAreaChart = defineComponent({
       }, [
         h('defs', {}, [
           h('linearGradient', { id: gradId, x1: '0', y1: '0', x2: '0', y2: '1' }, [
-            h('stop', { offset: '5%', 'stop-color': props.color, 'stop-opacity': '0.3' }),
-            h('stop', { offset: '95%', 'stop-color': props.color, 'stop-opacity': '0.05' }),
+            h('stop', { offset: '0%', 'stop-color': props.color, 'stop-opacity': String(props.fillOpacity[0]) }),
+            h('stop', { offset: '100%', 'stop-color': props.color, 'stop-opacity': String(props.fillOpacity[1]) }),
           ]),
         ]),
         ...(props.hasGrid
@@ -288,7 +293,7 @@ export const PlaygroundAreaChart = defineComponent({
         ...(props.xTicks.length ? props.xTicks : [xMin, xMax]).map(tick => h('text', {
           x: xScale(tick),
           y: props.height - 6,
-          'text-anchor': 'middle',
+          'text-anchor': props.padInline != null && tick === xMin ? 'start' : props.padInline != null && tick === xMax ? 'end' : 'middle',
           fill: AXIS_TICK,
           'font-size': '12px',
         }, props.xTickFormat(tick))),

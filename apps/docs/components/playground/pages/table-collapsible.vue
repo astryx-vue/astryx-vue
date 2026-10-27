@@ -214,6 +214,8 @@ const DetailChart = defineComponent({
         hasYAxis: false,
         hasGrid: false,
         referenceValue: values[0],
+        fillOpacity: [0.2, 0],
+        padInline: 16,
       })
     }
   },
