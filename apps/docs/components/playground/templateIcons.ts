@@ -14,6 +14,8 @@ export const templateIcons = [
   'heroicons:arrows-up-down',
   'heroicons:at-symbol',
   'heroicons:bars-3',
+  'heroicons:bell-alert',
+  'heroicons:server-stack',
   'heroicons:book-open',
   'heroicons:bookmark',
   'heroicons:chart-bar',

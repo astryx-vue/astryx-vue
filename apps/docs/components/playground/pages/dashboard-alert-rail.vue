@@ -208,10 +208,11 @@ function formatRpm(rpm: number): string {
 const UPTIME_DAYS = 90
 type UptimeStatus = 'operational' | 'degraded' | 'down'
 
+/** 可用性条的三种颜色：用状态点那套填充色（图例和条一致），不用文字前景色，那套在站点里偏深。 */
 const UPTIME_COLOR: Record<UptimeStatus, string> = {
-  operational: 'var(--astryx-color-success, #0D8626)',
-  degraded: 'var(--astryx-color-warning, #E9AF08)',
-  down: 'var(--astryx-color-error, #E3193B)',
+  operational: 'var(--astryx-status-dot-success-background, #198100)',
+  degraded: 'var(--astryx-status-dot-warning-background, #ffce2f)',
+  down: 'var(--astryx-status-dot-error-background, #c9303a)',
 }
 const UPTIME_LABEL: Record<UptimeStatus, string> = {
   operational: 'Operational',
@@ -288,12 +289,16 @@ const breakdownContext = computed(() => `${ENV_OPTIONS.find(e => e.value === env
 const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').length)
 
 /** 右栏的两个区块：Active alerts 和 Service breakdown。宽屏进 Layout 的 end 槽，窄屏放到主区底部。 */
+/** 渲染函数里造出来的节点拿不到 scoped 样式的属性，所以区块头的底色和吸顶都用内联样式。 */
+const RAIL_HEADER_STYLE = { backgroundColor: 'var(--astryx-color-background-muted)' }
+const RAIL_STICKY_STYLE = { position: 'sticky', insetBlockStart: 0, zIndex: 1, backgroundColor: 'var(--astryx-color-background-surface)' } as const
+
 const AlertsFeed = defineComponent({
   props: { sticky: { type: Boolean, default: false } },
   setup(props) {
     return () => h(VStack, { gap: 0 }, () => [
-      h(VStack, { gap: 0, class: props.sticky ? 'sticky-header' : undefined }, () => [
-        h(VStack, { gap: 1, padding: 4, class: 'rail-header' }, () => [
+      h(VStack, { gap: 0, style: props.sticky ? RAIL_STICKY_STYLE : undefined }, () => [
+        h(VStack, { gap: 1, padding: 4, style: RAIL_HEADER_STYLE }, () => [
           h(HStack, { gap: 2, vAlign: 'center' }, () => [
             h(Icon, { name: 'heroicons:bell-alert', size: 'sm', color: firingCount.value > 0 ? 'error' : 'secondary' }),
             h(StackItem, { size: 'fill' }, () => h(Heading, { level: 3 }, () => 'Active alerts')),
@@ -320,8 +325,8 @@ const ServiceBreakdown = defineComponent({
   props: { sticky: { type: Boolean, default: false } },
   setup(props) {
     return () => h(VStack, { gap: 0 }, () => [
-      h(VStack, { gap: 0, class: props.sticky ? 'sticky-header' : undefined }, () => [
-        h(VStack, { gap: 1, padding: 4, class: 'rail-header' }, () => [
+      h(VStack, { gap: 0, style: props.sticky ? RAIL_STICKY_STYLE : undefined }, () => [
+        h(VStack, { gap: 1, padding: 4, style: RAIL_HEADER_STYLE }, () => [
           h(HStack, { gap: 2, vAlign: 'center' }, () => [
             h(Icon, { name: 'heroicons:server-stack', size: 'sm', color: 'secondary' }),
             h(StackItem, { size: 'fill' }, () => h(Heading, { level: 3 }, () => 'Service breakdown')),
