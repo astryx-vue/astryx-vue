@@ -113,6 +113,8 @@ const ACTIVITY = [
 
 const ActivityIcons: Record<string, string> = { '1': 'heroicons:shopping-bag', '2': 'heroicons:banknotes', '3': 'heroicons:shopping-bag', '4': 'heroicons:shopping-bag', '5': 'heroicons:shopping-bag' }
 const SearchIcon = () => h(Icon, { name: 'heroicons:magnifying-glass', size: 'sm' })
+const CreditCardIcon = () => h(Icon, { name: 'heroicons:credit-card', size: 'sm' })
+
 const { isMobile } = useAppShellMobile()
 const gridColumns = computed(() => (isMobile ? 1 : { minWidth: 200, repeat: 'fit' as const }))
 const productColumns = computed(() => (isMobile ? 1 : { minWidth: 200, max: 3 }))
@@ -307,25 +309,25 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                     <Grid :columns="isMobile ? 1 : { minWidth: 80, max: 3 }" :gap="2">
                       <SelectableCard :is-selected="paymentCard" label="Pay with card" :padding="3" @change="selectPayment('card')">
                         <VStack :gap="1" :justify="'center'" class="payment-card-content">
-                          <span class="i-carbon-purchase" aria-hidden="true" />
+                          <Icon name="heroicons:credit-card" size="md" />
                           <Text type="supporting" weight="bold">Card</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentApple" label="Pay with Apple Pay" :padding="3" @change="selectPayment('apple')">
                         <VStack :gap="1" :justify="'center'" class="payment-card-content">
-                          <span class="i-carbon-mobile" aria-hidden="true" />
+                          <Icon name="heroicons:device-phone-mobile" size="md" />
                           <Text type="supporting" weight="bold">Apple Pay</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentGoogle" label="Pay with Google Pay" :padding="3" @change="selectPayment('google')">
                         <VStack :gap="1" :justify="'center'" class="payment-card-content">
-                          <span class="i-carbon-wallet" aria-hidden="true" />
+                          <Icon name="heroicons:wallet" size="md" />
                           <Text type="supporting" weight="bold">Google Pay</Text>
                         </VStack>
                       </SelectableCard>
                     </Grid>
                   </VStack>
-                  <TextInput v-model="cardNumber" label="Card number" placeholder="1234 1234 1234 1234" size="lg" />
+                  <TextInput v-model="cardNumber" label="Card number" placeholder="1234 1234 1234 1234" size="lg" :start-icon="isMobile ? undefined : CreditCardIcon" />
                   <Grid :columns="isMobile ? 1 : { minWidth: 90, max: 2 }" :gap="2">
                     <TextInput v-model="expiry" label="Expiry" placeholder="MM / YY" size="lg" />
                     <TextInput v-model="cvc" label="CVC" placeholder="123" size="lg" />
@@ -455,7 +457,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
               <Divider variant="subtle" />
               <HStack :gap="3" :align="'center'" :justify="'between'" class="inventory-filter-row">
                 <HStack :gap="2" :align="'center'" class="inventory-filter-left">
-                  <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" class="search-input" />
+                  <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
                   <OverflowList :items="FILTER_ITEMS" :gap="2">
                     <template #item="{ item }">
                       <Selector
@@ -543,7 +545,6 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 .inventory-header { padding-block: var(--astryx-spacing-6); padding-inline: var(--astryx-spacing-6); }
 .inventory-filter-row { padding-block: var(--astryx-spacing-4); padding-inline: var(--astryx-spacing-6); width: 100%; overflow-x: auto; }
 .inventory-filter-left { flex: 1; min-width: 0; }
-.search-input { flex: 1; min-width: 0; max-width: 240px; }
 .activity-icon { width: 32px; height: 32px; border-radius: var(--astryx-radius-full); background: var(--astryx-color-background-muted); color: var(--astryx-color-text-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .inventory-banner-wrap { padding-inline: var(--astryx-spacing-6); padding-bottom: var(--astryx-spacing-4); }
 .inventory-table-wrap { padding-inline: var(--astryx-spacing-6); padding-block-end: var(--astryx-spacing-2); }
