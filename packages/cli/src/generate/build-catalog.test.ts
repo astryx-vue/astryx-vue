@@ -1,7 +1,7 @@
 import type { ExampleRecord } from '../catalog-types.ts'
 import { describe, expect, it } from 'vitest'
 import { pairExamples } from './build-catalog.ts'
-import { analyzeTemplateImports } from './build-templates.ts'
+import { analyzeTemplateImports, unexpectedDependencies } from './build-templates.ts'
 
 function example(title: string, code: string, description = ''): ExampleRecord {
   return { title, description, code }
@@ -66,5 +66,10 @@ describe('template imports', () => {
 
   it('names a component imported by its own subpath', () => {
     expect(analyzeTemplateImports('import { Card } from \'@astryx-vue/core/Card\'', installable).componentsUsed).toEqual(['Card'])
+  })
+
+  it('flags a ready page that would need a third package', () => {
+    expect(unexpectedDependencies(['@astryx-vue/core', 'vue'])).toEqual([])
+    expect(unexpectedDependencies(['@astryx-vue/core', '@astryx-vue/lab', 'vue'])).toEqual(['@astryx-vue/lab'])
   })
 })

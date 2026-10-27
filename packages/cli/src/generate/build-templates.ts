@@ -15,6 +15,14 @@ const TEMPLATE_PACKAGE = PACKAGE_NAME
  */
 export const TEMPLATE_RUNTIME_PACKAGES: readonly string[] = ['@astryx-vue/core', 'vue']
 
+/**
+ * The packages a ready page must not need: anything outside the runtime pair,
+ * which would turn copying a page into an install step of its own.
+ */
+export function unexpectedDependencies(dependencies: readonly string[]): string[] {
+  return dependencies.filter(name => !TEMPLATE_RUNTIME_PACKAGES.includes(name))
+}
+
 /** What the playground manifest knows about a page: its slug, its two titles, and its category. */
 export interface PlaygroundTemplateSummary {
   slug: string
@@ -43,7 +51,7 @@ export async function buildTemplates(repoRoot: string, summaries: readonly Playg
     const source = await readFile(join(repoRoot, 'apps/docs/components/playground/pages', `${summary.slug}.vue`), 'utf8')
     const { componentsUsed, foreignPackages, packages } = analyzeTemplateImports(source, installable)
     const ready = foreignPackages.length === 0 && meta.upstreamNotReady !== true
-    const extraPackages = ready ? packages.filter(name => !TEMPLATE_RUNTIME_PACKAGES.includes(name)) : []
+    const extraPackages = ready ? unexpectedDependencies(packages) : []
     if (extraPackages.length > 0) {
       throw new Error(
         `template ${summary.slug} imports ${extraPackages.join(', ')}. A ready template must run on ${TEMPLATE_RUNTIME_PACKAGES.join(' and ')} alone; mark this page not ready in template-meta.ts, or drop the import.`,
