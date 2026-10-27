@@ -55,6 +55,7 @@ mindmap
       🟡 D11 文档润色
       🟡 D12 演练场模板逐个走查
       🟡 D13 主题编辑器补面板
+      🔵 D14 core Markdown 解析器对齐原版
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -62,8 +63,8 @@ mindmap
       ✅ E4 自动对比页面外观
     阶段 F 全新扩展包
       ✅ F0 新包技术选型决策
-      🟡 F1a 富文本核心逻辑
-      ⬜ F1b 富文本编辑器组件
+      ✅ F1a 富文本核心逻辑
+      🔵 F1b 富文本编辑器组件
       ⬜ F1c 富文本使用文档
       ✅ F2a 图表纯计算逻辑
       ✅ F2b 图表展示组件
@@ -252,6 +253,7 @@ flowchart TB
   G1 --> D11["D11 文档润色"]
   D5c --> D12["D12 演练场模板逐个走查"]
   D8 --> D13["D13 主题编辑器补面板"]
+  C9 --> D14["D14 core Markdown 解析器对齐原版"]
   CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
@@ -365,14 +367,15 @@ flowchart TB
 | D11 | 文档润色 | G1 | 🟡 实现中 | 2 | D11-writer | | | |
 | D12 | 演练场模板逐个走查 | D5c | 🟡 实现中 | 1 | D12-ui | | | |
 | D13 | 主题编辑器补面板 | D8 | 🟡 实现中 | 1 | D13-ui | | | |
+| D14 | core Markdown 解析器对齐原版 | C9 | 🔵 可开工 | 0 | | | | |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
 | E3 | 可访问性自动检查 | A2 | ✅ 已完成 | 1 | E3-impl | E3-verify | 通过 20/20 | 09c400b |
 | E4 | CI 接入视觉对照 | A2 | ✅ 已完成 | 1 | E4-impl | E4-verify | 通过 22/22 | a5fcfe5 |
 | F0 | 新包选型决策 | A1 | ✅ 已完成 | 2 | F0-impl-r2 | F0-verify-r2 | 第 2 轮通过 17/17 | e48b073 |
-| F1a | richtext 纯逻辑 | F0 C9 | 🟡 实现中 | 1 | F1a-impl | | | |
-| F1b | richtext 编辑器 | F1a C1 C2 C3 C7 C14 C16 | ⬜ 未开始 | 0 | | | | |
+| F1a | richtext 纯逻辑 | F0 C9 | ✅ 已完成 | 1 | F1a-impl | | 新建 richtext 包，Markdown 往返 420 测试；12 todo 等 D14 修 core 解析器 | #208 |
+| F1b | richtext 编辑器 | F1a C1 C2 C3 C7 C14 C16 | 🔵 可开工 | 0 | | | | |
 | F1c | richtext 文档 | F1b | ⬜ 未开始 | 0 | | | | |
 | F2a | charts 纯逻辑 | F0 B1 | ✅ 已完成 | 1 | F2a-impl | | 总控复核通过，113 条测试，上游断言逐条一致 | #166 |
 | F2b | charts 组件 | F2a B7 C7 C14 C16 | ✅ 已完成 | 1 | F2b-impl | | Chart/Axis/Grid/Legend/Swatch/Tooltip 与 8 种 SVG 标记；上游用例除 WebGL 外全部移植 | #170 |
@@ -485,6 +488,7 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D11 文档润色 | 用文档写作子代理（document-writer）把文档站中英文的指南、主题、组件说明页通读润色：说法直白、一句一个意思、术语前后一致，不改代码示例和 API 事实。按目录分批，每批一个 PR。 | G1 | 每批 `docs:build` 通过、catalog 重生；改动只涉及行文，代码块和 props 表不变（有脚本核对）；抽查页面读起来顺。 |
 | D12 演练场模板逐个走查 | 用户验收时发现模板和原版仍有大量细节差异（缺工具栏、间距、图标不显示、图表不撑满）。用 ui-implementor 按原版 `page.tsx` 逐个模板、逐个区块对照修复，浅色深色都要对。分 3 批：D12 看板与表格类，后续批次另开节点。见 `nodes/D12/plan.md`。 | D5c | 每个模板和原版同视口、同主题的整页对照图逐区块一致；差异清单逐条关闭。 |
 | D13 主题编辑器补面板 | 演练场「主题」里 Components、Advanced 两个 tab 点开是空白。移植原版 `ComponentTokensPanel`、`RawTokensPanel`。见 `nodes/D13/plan.md`。 | D8 | 两个面板和原版对照一致，改动能实时作用到预览和导出。 |
+| D14 core Markdown 解析器对齐原版 | F1a 发现我们 core 的 Markdown 解析器和原版有 6 处不一致（缩进代码块、不拒绝不安全地址、插件取词窗口、扩展节点 source 丢反斜杠、`createMarkdownPlugin` 无泛型、链接文字里认插件语法），见 `nodes/F1a/impl-1.md` 第 6.1 节和 issue #209。第 2 条有安全影响，F1b 依赖它。 | C9 | 6 处都和原版一致；richtext 的 12 条 `it.todo` 恢复成正式断言并通过；core 现有测试不回退。 |
 
 ---
 
