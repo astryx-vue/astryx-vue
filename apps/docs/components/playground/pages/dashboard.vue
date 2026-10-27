@@ -377,9 +377,11 @@ function sparklinePoints(values: number[]): string {
                 <Heading :level="4">
                   Top pages
                 </Heading>
-                <Link href="#">
-                  All pages
-                </Link>
+                <Text type="body">
+                  <Link href="#">
+                    All pages
+                  </Link>
+                </Text>
               </HStack>
               <Table :data="TOP_PAGES" :columns="TOP_PAGES_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
             </VStack>
@@ -390,9 +392,11 @@ function sparklinePoints(values: number[]): string {
                 <Heading :level="4">
                   Top events
                 </Heading>
-                <Link href="#">
-                  All events
-                </Link>
+                <Text type="body">
+                  <Link href="#">
+                    All events
+                  </Link>
+                </Text>
               </HStack>
               <Table :data="TOP_EVENTS" :columns="TOP_EVENTS_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
             </VStack>
