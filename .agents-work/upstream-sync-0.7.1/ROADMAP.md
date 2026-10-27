@@ -51,6 +51,7 @@ mindmap
       ✅ D7 升级指南与版本说明
       ✅ D8 在线演练场同步更新
       ✅ D9 指南补齐
+      ✅ D10 core 遗留问题修复
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -77,7 +78,7 @@ mindmap
       ➖ F5 vega 包
       ➖ F6 build 构建插件
     阶段 G 发布与持续维护
-      🔵 G1 发布核心组件与主题包
+      🟡 G1 发布核心组件与主题包
       ⬜ G2 发布命令行工具
       ⬜ G3 发布全新扩展包
       ⬜ G4 每周自动追踪上游更新
@@ -244,7 +245,8 @@ flowchart TB
   CALL --> D9["D9 指南补齐"]
   D5a --> D8["D8 演练场同步"]
   E2["E2 拆文档站大文件"]:::ext --> D8
-  CALL & D2 & D7 --> G1["G1 发布 core 与 themes"]
+  D5c --> D10["D10 core 遗留问题修复"]
+  CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
   G1 --> G4
@@ -353,6 +355,7 @@ flowchart TB
 | D6 | FR10 迁移 codemod | D4b C1 C2 C3 C5 | ➖ 不做 | 0 | | | 用户 2026-10-26 决定暂缓：根上的 class 保持原落点，升级不改也不坏；迁移说明已在 D7 升级指南 | |
 | D7 | 迁移指南与版本信息 | C全部 | ✅ 已完成 | 1 | D7-impl | | 总控复核通过，修正 3 处说法 | #167 |
 | D9 | 指南补齐 | C全部 | ✅ 已完成 | 1 | D9-impl | | 补 4 个新指南页与 6 处小节，中英文各一份 | #172 |
+| D10 | core 遗留问题修复 | D5c | ✅ 已完成 | 1 | D10-impl | | Stack 间距不再继承；Table 列头筛选同行、行级 ref 与事件；Selector 图标组件化；竖向 Step 内容；两个 Table 组合式函数 config 支持 ref | #180 |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
@@ -377,7 +380,7 @@ flowchart TB
 | F4 | Nuxt 模块 | A3 C全部 | 🔵 可开工 | 0 | | | | |
 | F5 | vega | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 5 节 | |
 | F6 | build | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 6 节 | |
-| G1 | 发布 core + themes | C全部 D2 D7 | 🔵 可开工 | 0 | | | | |
+| G1 | 发布 core + themes | C全部 D2 D7 D10 | 🟡 实现中 | 1 | 总控 | | | |
 | G2 | 发布 CLI | G1 D4b D5b | ⬜ 未开始 | 0 | | | | |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
 | G4 | 持续同步机制 | A1 G1 | ⬜ 未开始 | 0 | | | | |
@@ -469,6 +472,7 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D7 迁移指南与版本信息 | 编写中英文版本升级迁移指南，逐条写清每个破坏性改动（改动前、改动后、怎么改）；更新文档站版本信息；重新生成供 AI 查阅的 llms.txt 文档。 **（用户已确认）** 清理 36 个文档示例里写死的 `provideAstryxLocale('en')`，让示例跟随文档站当前的语言。Tab、TabMenu 必须放在 TabList 里，Step 必须放在 Stepper 里；放在外面（包括浮层边界把 context 重置掉的时候）会抛错，以前是静默退化。迁移：包进 TabList / Stepper，或在浮层内容里再放一层本地的 TabList / Stepper。`useDismiss` 的 `enableEscape` 改为 `dismissOnEscape`，取值 close、block、ignore。 | C全部 | 文档描述清晰无遗漏；版本号更新正确；llms.txt 文件内容最新。 |
 | D8 演练场同步 | 把 D5a 中做好的全新页面模板同步放入在线演练场供体验。 | D5 E2 | 演练场能在线无报错加载所有新模板。 |
 | D9 指南补齐 | 按 `nodes/D4a/guides-gap.md` 的 B、C 两类，把原版命令行内置指南里我们文档站缺的 11 篇补进文档站（中英文）：新页 principles、working-with-ai、browser-support、layout；patterns 加「固定页眉页脚」「侧边详情面板」；typography 加「该做与不该做」；i18n 加「从右往左与伪语言测试」；styling 加「和 Tailwind / UnoCSS 一起用」；EmptyState 加插画规范。内容改写成 Vue 的说法，每条都要在代码里能找到依据。 | C全部 | 中英文页面齐全，侧栏能进，`docs:build` 通过，catalog 重生。 |
+| D10 core 遗留问题修复 | D5c 追平模板时 worker 发现的 core 问题，用户要求全部修完再发版（见 `nodes/D10/plan.md`）：Stack 内边距和间距被嵌套 Stack 继承；Table 列头筛选按钮掉到下一行、缺行级扩展点（整行悬停卡片做不出来）；Selector 选项 `icon` 只吃 CSS 类名；竖向 Step 的内容排在标签右边；`useTableTreeState` / `useTableSortableState` 的 config 只解开一层 ref。 | D5c | 每条都有复现测试、修复和浏览器验证；受影响的模板和文档 Demo 回归通过。 |
 
 ---
 
@@ -513,7 +517,7 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 
 | 节点 | 要做什么 | 依赖谁 | 怎么算做完 |
 | --- | --- | --- | --- |
-| G1 发布 core + themes | 使用 changeset 记录版本变更，将 `package.json` 的 `upstream` 字段更新为 `v0.7.1`，更新主说明 README。 | C全部 D2 D7 | 核心包与主题包构建成功并完成发版。 |
+| G1 发布 core + themes | 使用 changeset 记录版本变更，将 `package.json` 的 `upstream` 字段更新为 `v0.7.1`，更新主说明 README。 | C全部 D2 D7 D10 | 核心包与主题包构建成功并完成发版。 |
 | G2 发布 CLI | 发布最新版本的命令行工具。 | G1 D4b D5b | 命令行工具发布成功且可全局安装运行。 |
 | G3 首发新包 | 首次公开发布 richtext、charts、lab 以及 nuxt 模块等新扩展包。 | G1 F1c F2c F3f F4 | 所有新包成功推送到 npm 仓库。 |
 | G4 持续同步机制 | 建立定时自动化任务，每周自动运行一次差异台账脚本，将上游仓库后续的新提交自动分类并创建跟踪 issue。 | A1 G1 | 定时任务测试通过，能自动检测新提交并建好 issue。 |
