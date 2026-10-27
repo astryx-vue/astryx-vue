@@ -20,7 +20,7 @@ import {
   Text,
   VStack,
 } from '@astryx-vue/core'
-import { computed, h, ref } from 'vue'
+import { computed, h, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
 
@@ -98,8 +98,21 @@ const ACTIVE_SERIES = [
   { key: 'tablet', label: 'Tablet', color: COLORS.orange, hasFill: false },
 ] as const
 
-const CHART = { width: 720, height: 260, left: 44, right: 8, top: 8, bottom: 26 }
-const CHART_Y_MAX = 1000
+/** 和原版一样高 280；`width` 跟着 svg 的实际宽度走，viewBox 和像素一比一，图表撑满卡片。 */
+const CHART = reactive({ width: 720, height: 280, left: 52, right: 12, top: 5, bottom: 26 })
+const chartEl = ref<SVGSVGElement | null>(null)
+let chartObserver: ResizeObserver | null = null
+onMounted(() => {
+  if (!chartEl.value || typeof ResizeObserver === 'undefined')
+    return
+  chartObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      CHART.width = entry.contentRect.width
+  })
+  chartObserver.observe(chartEl.value)
+})
+onBeforeUnmount(() => chartObserver?.disconnect())
+const CHART_Y_MAX = 1200
 
 function chartX(i: number) {
   return CHART.left + (i / (TREND_DAYS - 1)) * (CHART.width - CHART.left - CHART.right)
@@ -120,8 +133,9 @@ function areaPath(pick: (row: typeof ACTIVE_TREND[number]) => number) {
   return `${linePath(pick)} L${chartX(last).toFixed(1)},${baseline} L${chartX(0).toFixed(1)},${baseline} Z`
 }
 
-const Y_TICKS = [0, 250, 500, 750, 1000]
-const X_TICKS = [0, 30, 60, 89]
+const Y_TICKS = [0, 300, 600, 900, 1200]
+/** 和原版一样，4 个刻度平均分布在 90 天里。 */
+const X_TICKS = [0, 1, 2, 3].map(i => Math.round((i * (TREND_DAYS - 1)) / 3))
 
 const AGE_DATA = [
   { label: '18–24', value: 26, color: COLORS.blue },
@@ -387,7 +401,7 @@ function directionColor(metric: Metric) {
               <Text type="label">
                 Daily active users by device type
               </Text>
-              <svg class="trend-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Daily active users by device type">
+              <svg ref="chartEl" class="trend-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Daily active users by device type">
                 <defs>
                   <linearGradient id="au-mobile" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" :stop-color="COLORS.blue" stop-opacity="0.3" />
@@ -527,10 +541,10 @@ function directionColor(metric: Metric) {
   background: var(--astryx-color-background-muted);
 }
 .spark { width: 100%; height: 48px; display: block; }
-.trend-chart { width: 100%; height: 280px; display: block; }
+.trend-chart { width: 100%; height: 280px; display: block; overflow: visible; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
 .chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
-.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 .breakdown-bar { display: flex; width: 100%; height: 12px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
 </style>

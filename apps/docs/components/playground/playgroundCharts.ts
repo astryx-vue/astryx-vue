@@ -1,36 +1,8 @@
-import type { PropType, Ref, VNode } from 'vue'
-import { defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'
+import type { PropType, VNode } from 'vue'
+import { defineComponent, h } from 'vue'
+import { AXIS_TICK, GRID_STROKE, monotonePath, niceTicks, num, useChartWidth } from './playgroundChartKit'
 
-const GRID_STROKE = 'var(--color-border, rgba(5, 54, 89, 0.1))'
-const AXIS_TICK = 'var(--color-text-secondary, #4E606F)'
-
-/** 图表没量到宽度之前用的宽度，服务端渲染也用它。 */
-const FALLBACK_WIDTH = 800
-
-/**
- * 量图表 svg 的实际宽度。viewBox 用这个宽度，坐标和像素一比一：
- * 图表撑满容器，线和文字也不会被横向拉伸。
- */
-function useChartWidth(): { el: Ref<SVGSVGElement | null>, width: Ref<number> } {
-  const el = ref<SVGSVGElement | null>(null)
-  const width = ref(FALLBACK_WIDTH)
-  let observer: ResizeObserver | null = null
-  onMounted(() => {
-    if (!el.value || typeof ResizeObserver === 'undefined')
-      return
-    observer = new ResizeObserver(([entry]) => {
-      if (entry && entry.contentRect.width > 0)
-        width.value = entry.contentRect.width
-    })
-    observer.observe(el.value)
-  })
-  onBeforeUnmount(() => observer?.disconnect())
-  return { el, width }
-}
-
-function num(v: unknown): number {
-  return typeof v === 'number' && Number.isFinite(v) ? v : 0
-}
+export { monotonePath, niceTicks } from './playgroundChartKit'
 
 export const PlaygroundResponsive = defineComponent({
   name: 'PlaygroundResponsive',
@@ -134,6 +106,11 @@ export const PlaygroundLineChart = defineComponent({
           yMax += 1
         }
       }
+      const yTicks = props.yTicks.length ? props.yTicks : niceTicks(yMin, yMax)
+      if (!props.yDomain) {
+        yMin = yTicks[0]
+        yMax = yTicks[yTicks.length - 1]
+      }
 
       const xVals = rows.map(r => num(r[props.xKey]))
       const xMin = Math.min(...xVals)
@@ -143,7 +120,7 @@ export const PlaygroundLineChart = defineComponent({
       const yScale = (y: number) => pad.top + innerH - ((y - yMin!) / (yMax! - yMin! || 1)) * innerH
 
       const gridLines: VNode[] = []
-      const yTickNodes = (props.yTicks.length ? props.yTicks : [yMin!, yMax!]).map((tick) => {
+      const yTickNodes = yTicks.map((tick) => {
         const y = yScale(tick)
         if (props.showVerticalGrid) {
           gridLines.push(h('line', {
@@ -193,18 +170,16 @@ export const PlaygroundLineChart = defineComponent({
       })
 
       const lineNodes = props.series.map((s) => {
-        const pts = rows.map((row) => {
-          const x = xScale(num(row[props.xKey]))
-          const y = yScale(num(row[s.key]))
-          return `${x},${y}`
-        }).join(' ')
-        return h('polyline', {
-          fill: 'none',
-          stroke: s.color,
-          'stroke-width': s.key === 'actual' ? 2 : 1.5,
+        const pts = rows.map(row => ({ x: xScale(num(row[props.xKey])), y: yScale(num(row[s.key])) }))
+        const style = {
+          'fill': 'none',
+          'stroke': s.color,
+          'stroke-width': s.key === 'actual' ? 2 : s.key === 'ideal' ? 1 : 1.5,
           'stroke-dasharray': s.key === 'ideal' ? '4 4' : undefined,
-          points: pts,
-        })
+        }
+        return props.monotone
+          ? h('path', { ...style, d: monotonePath(pts) })
+          : h('polyline', { ...style, points: pts.map(p => `${p.x},${p.y}`).join(' ') })
       })
 
       return h('svg', {
@@ -400,14 +375,14 @@ export const PlaygroundGanttChart = defineComponent({
           y1: pad.top,
           x2: x,
           y2: hTotal - pad.bottom,
-          stroke: 'var(--color-data-neutral, #8494A3)',
+          stroke: 'var(--astryx-color-data-neutral, #8494A3)',
           'stroke-dasharray': '4 4',
         }))
         nodes.push(h('text', {
           x,
           y: pad.top + 12,
           'text-anchor': 'middle',
-          fill: 'var(--color-data-neutral, #8494A3)',
+          fill: 'var(--astryx-color-data-neutral, #8494A3)',
           'font-size': '11px',
         }, 'Today'))
       }
