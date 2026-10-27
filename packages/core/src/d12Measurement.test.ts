@@ -5,6 +5,7 @@ import process from 'node:process'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import OverflowList from './OverflowList/OverflowList.vue'
+import { SELECT_COLUMN_WIDTH } from './Table/plugins/stickyColumns.js'
 import { useTableSelection, useTableSelectionState } from './Table/plugins/selection.js'
 import Table from './Table/Table.vue'
 
@@ -52,7 +53,7 @@ describe('D12 alignment: measurement behavior', () => {
       { id: '2', name: 'Alice' },
     ]
     const tableColumns = [
-      // 两列都无 width：每列 floor 60，共 120；选择列 48 也要算进去。
+      // 两列都无 width：每列 floor 60，共 120；选择列（原版 SELECTION_COLUMN_WIDTH）也要算进去。
       { key: 'name', header: 'Name' },
       { key: 'role', header: 'Role' },
     ]
@@ -75,6 +76,6 @@ describe('D12 alignment: measurement behavior', () => {
       template: '<Table :data="people" :columns="tableColumns" :plugins="{ selection }" id-key="id" />',
     }))
     await nextTick()
-    expect(wrapper.get('table').attributes('style')).toContain('min-width: 168px')
+    expect(wrapper.get('table').attributes('style')).toContain(`min-width: ${120 + SELECT_COLUMN_WIDTH}px`)
   })
 })

@@ -22,7 +22,8 @@
     border-spacing: 0;
     color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     font-family: inherit;
-    font-size: var(--astryx-text-body-size, 1rem);
+    /* 原版表格元素不设字号：分组头等自定义内容继承环境字号（16px），
+       数据格的字号由 td 自己带（见下），所以两边分开。 */
   }
 
   .astryx-table :is(th, td) {
@@ -76,6 +77,10 @@
 
   .astryx-table[data-density='spacious'] :is(th, td):last-child {
     padding-inline-end: max(var(--container-padding-inline-end, var(--astryx-spacing-4, 16px)), var(--astryx-spacing-2, 8px));
+  }
+
+  .astryx-table td {
+    font-size: var(--astryx-text-body-size, 0.875rem);
   }
 
   .astryx-table th {
@@ -292,10 +297,11 @@
     text-align: center;
   }
 
+  /* 和原版 useTableSelection 的 SELECTION_COLUMN_WIDTH 一致。 */
   .astryx-table__select {
-    width: 48px;
-    min-width: 48px;
-    max-width: 48px;
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
   }
 
   .astryx-table__filter {
