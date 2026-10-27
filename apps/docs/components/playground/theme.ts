@@ -18,6 +18,8 @@ export {
   parseColorReadout,
   setThemeColor,
 } from './themeColor'
+export { exportThemeCss, exportThemeJson, fontStylesheetHref, previewCss, themeVariables } from './themeExport'
+export { COLOR_FIELDS, DENSITY_PRESETS, PLAYGROUND_FONTS, TYPE_SCALES } from './themeOptions'
 export {
   addCustomOverride,
   buildComponentStyles,
@@ -28,8 +30,6 @@ export {
   setToken,
   updateCustomOverride,
 } from './themeOverrides'
-export { exportThemeCss, exportThemeJson, fontStylesheetHref, previewCss, themeVariables } from './themeExport'
-export { COLOR_FIELDS, DENSITY_PRESETS, PLAYGROUND_FONTS, TYPE_SCALES } from './themeOptions'
 export {
   describeDuration,
   describeElementSize,

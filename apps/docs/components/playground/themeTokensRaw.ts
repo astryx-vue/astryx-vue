@@ -86,7 +86,7 @@ export function tokenLabel(name: string): string {
 
 /** 间距值换成 px：`0.5rem` 按 16px 根字号算成 8，`12px` 原样。其他写法给 NaN。 */
 export function spacingToPx(value: string | undefined): number {
-  const match = /^(\d*\.?\d+)(px|rem)$/.exec((value ?? '').trim())
+  const match = /^(\d+(?:\.\d+)?|\.\d+)(px|rem)$/.exec((value ?? '').trim())
   if (!match?.[1])
     return Number.NaN
   const length = Number.parseFloat(match[1])

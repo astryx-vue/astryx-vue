@@ -7,7 +7,7 @@ import PlaygroundDialog from './PlaygroundDialog.vue'
 import PlaygroundMonacoEditor from './PlaygroundMonacoEditor.vue'
 import PlaygroundTemplateMenu from './PlaygroundTemplateMenu.vue'
 import PlaygroundThemeEditor from './PlaygroundThemeEditor.vue'
-import { exportThemeCss, exportThemeJson } from './theme'
+import { addCustomOverride, clearScaleTokens, clearToken, COLOR_FIELDS, exportThemeCss, exportThemeJson, removeCustomOverride, setComponentToken, setToken, updateCustomOverride } from './theme'
 import { usePaneResize } from './usePaneResize'
 import { usePlayground } from './usePlayground'
 import { usePreviewSync } from './usePreviewSync'
@@ -105,14 +105,20 @@ function downloadJson(): void {
 }
 
 function onField(key: keyof ThemeState, value: ThemeState[keyof ThemeState]): void {
+  clearScaleTokens(theme, key)
   Object.assign(theme, { [key]: value })
 }
 
 function onColor(key: ThemeColorKey, value: string): void {
+  const field = COLOR_FIELDS.find(item => item.key === key)
+  if (field)
+    clearToken(theme, field.variable)
   setColor(key, value)
 }
 
 function onDensity(id: DensityPreset['id']): void {
+  for (const key of ['typeSize', 'radius', 'spacing', 'elementSize', 'duration'])
+    clearScaleTokens(theme, key)
   selectDensity(id)
 }
 
@@ -222,6 +228,11 @@ async function openExportDialog(): Promise<void> {
               @field="onField"
               @color="onColor"
               @density="onDensity"
+              @token="(name, value) => setToken(theme, name, value)"
+              @component-token="(name, value) => setComponentToken(theme, name, value)"
+              @add-override="addCustomOverride(theme, $event)"
+              @remove-override="removeCustomOverride(theme, $event)"
+              @update-override="(id, value) => updateCustomOverride(theme, id, value)"
               @reset-theme="resetTheme"
             />
           </div>

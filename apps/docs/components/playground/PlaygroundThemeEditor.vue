@@ -2,6 +2,8 @@
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
 import type { ScaleKey } from './themeEditorModel'
 import { computed, ref } from 'vue'
+import PlaygroundThemeComponents from './PlaygroundThemeComponents.vue'
+import PlaygroundThemeRawTokens from './PlaygroundThemeRawTokens.vue'
 import PlaygroundThemeScale from './PlaygroundThemeScale.vue'
 import {
   applyColorPicker,
@@ -23,6 +25,11 @@ const emit = defineEmits<{
   field: [key: keyof ThemeState, value: ThemeState[keyof ThemeState]]
   color: [key: ThemeColorKey, value: string]
   density: [id: DensityPreset['id']]
+  token: [name: string, value: string]
+  componentToken: [name: string, value: string]
+  addOverride: [entry: { component: string, property: string, value: string }]
+  removeOverride: [id: string]
+  updateOverride: [id: string, value: string]
 }>()
 
 /** 改了这些字段，就不再算是某个密度预设。 */
@@ -238,6 +245,20 @@ function onCustomFont(key: 'customHeadingFont' | 'customBodyFont', event: Event)
           @change="onScale(spec.key, $event)"
         />
       </section>
+    </div>
+
+    <div v-if="panel === 'components'" class="theme-editor__body" role="tabpanel">
+      <PlaygroundThemeComponents
+        :theme="theme"
+        @token="(name, value) => emit('componentToken', name, value)"
+        @add-override="emit('addOverride', $event)"
+        @remove-override="emit('removeOverride', $event)"
+        @update-override="(id, value) => emit('updateOverride', id, value)"
+      />
+    </div>
+
+    <div v-if="panel === 'advanced'" class="theme-editor__body" role="tabpanel">
+      <PlaygroundThemeRawTokens :theme="theme" @token="(name, value) => emit('token', name, value)" />
     </div>
   </div>
 </template>
