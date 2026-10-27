@@ -78,10 +78,10 @@ mindmap
       ➖ F5 vega 包
       ➖ F6 build 构建插件
     阶段 G 发布与持续维护
-      🟡 G1 发布核心组件与主题包
+      ✅ G1 发布核心组件与主题包
       ⬜ G2 发布命令行工具
       ⬜ G3 发布全新扩展包
-      ⬜ G4 每周自动追踪上游更新
+      🔵 G4 每周自动追踪上游更新
 ```
 
 ### 状态图例
@@ -380,10 +380,10 @@ flowchart TB
 | F4 | Nuxt 模块 | A3 C全部 | 🔵 可开工 | 0 | | | | |
 | F5 | vega | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 5 节 | |
 | F6 | build | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 6 节 | |
-| G1 | 发布 core + themes | C全部 D2 D7 D10 | 🟡 实现中 | 1 | 总控 | | | |
+| G1 | 发布 core + themes | C全部 D2 D7 D10 | ✅ 已完成 | 1 | 总控 | | core 与 themes 0.4.0 已发 npm（latest），GitHub Release 与 GitHub Packages 同步 | #182 #183 #184 |
 | G2 | 发布 CLI | G1 D4b D5b | ⬜ 未开始 | 0 | | | | |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
-| G4 | 持续同步机制 | A1 G1 | ⬜ 未开始 | 0 | | | | |
+| G4 | 持续同步机制 | A1 G1 | 🔵 可开工 | 0 | | | | |
 
 C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 10/10），修的是 Markdown 子路径 `parser`、`plugins`、`plugin-renderer` 的 dist 导出。
 

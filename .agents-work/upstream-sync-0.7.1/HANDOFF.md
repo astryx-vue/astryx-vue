@@ -57,13 +57,15 @@ D5c 第二批 #177（`0ac9ba3`）、第三批 #178（`9018804`）已合入，**D
 - `Selector` 选项的 `icon` 只吃 CSS 类名；`Step` 的默认插槽排在标签右侧一列。
 - `useTableTreeState` / `useTableSortableState` 的 config 只 `toValue` 一层。
 
-**#128 已于 2026-10-26 合入 `dev`（merge commit `c2ee4ef`，用户决定）。** 后续任务由新的跟踪 PR 接续（`swarm-tree` → `dev`），正文在 `PR-NEXT-BODY.md`，mermaid 只画剩余任务。`PR128-BODY.md` 保留为合入时的快照，不再更新。
+**#128 已于 2026-10-26 合入 `dev`（merge commit `c2ee4ef`，用户决定）。** 后续任务由跟踪 PR **#181** 接续（`swarm-tree` → `dev`，draft），正文在 `PR-NEXT-BODY.md`，mermaid 只画剩余任务。`PR128-BODY.md` 保留为合入时的快照，不再更新。
 
 D10 #180（`8354a2b`）已合入：Stack 间距不再继承、Table 列头筛选同行与行级 ref / 事件、Selector 图标组件化、竖向 Step、两个 Table 组合式函数的 config 支持 ref。总控补修了列头漏斗的排版（Qty 被截断）。
 
-**G1 用户决定（2026-10-26）：** 版本 0.4.0（minor）；charts 这次不发；我开 PR，每一次合并前都先问用户（swarm-tree→dev、dev→main、Version Packages 各一次）。changeset 在 `.changeset/sync-astryx-0-7-1.md`。
+**G1 已完成（2026-10-27）：** `@astryx-vue/core`、`@astryx-vue/themes` 0.4.0 已发 npm（latest）。流程：#182 changeset 进 dev → #183 dev→main → #184 Version Packages。GitHub Release、GitHub Packages、main→dev 回同步都成功。
 
-当前并行：G1（总控在做）。
+**用户规定（2026-10-27）：常规发版三步总控直接走完，不用逐步问**（dev→main、Version Packages 合并、发 npm）。版本号、发哪些包这类决定仍先问用户。
+
+当前并行：没有正在实现的节点。可开工：D4a 讨论（剩 `upgrade` 形态）、G4、F 阶段（F1a、F2c、F2d、F3a–F3h、F4）。
 
 **D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`，原版指南对照在 `nodes/D4a/guides-gap.md`。还没定的：`upgrade` 的形态（D6 暂缓后只输出升级指引）。
 

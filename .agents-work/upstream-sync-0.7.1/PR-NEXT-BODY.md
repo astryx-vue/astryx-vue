@@ -4,7 +4,6 @@
 
 这个 PR（`swarm-tree` → `dev`）接着做剩下的任务：
 
-- 发版：G1。
 - 命令行：D4a、D4b、D5b、G2。
 - 新包：F 阶段和 G3。
 - 持续同步：G4。
@@ -23,10 +22,9 @@
 mindmap
   root((剩余任务))
     发版
-      🟡 G1 发布 core 与 themes 0.4.0
       ⬜ G2 发布 CLI
       ⬜ G3 首发新包
-      ⬜ G4 持续同步机制
+      🔵 G4 持续同步机制
     命令行
       🟡 D4a 能力对照与取舍
       ⬜ D4b 选定能力实现
@@ -53,16 +51,15 @@ mindmap
 
 依赖关系：
 
-- G1 发版之后才能做 G2、G3、G4。
 - G2 还要等 D4b 和 D5b；D4b 要等 D4a 和用户定下取舍。
 - G3 要等 F1c、F2c、F3f、F4 都完成。
 
 ## 当前在做
 
-- **G1 发布 core + themes 0.4.0。** 用户已定：版本号 0.4.0；charts 这次不发；每次合并前先问用户。本分支已经写好 changeset，下一步是走 `dev` → `main` 发版。
 - **D4a 命令行取舍。** 还剩 `upgrade` 命令的形态没定，在和用户边讨论边定，记录在 `nodes/D4a/decisions.md`。
 
 ## 已合入本 PR 的节点
 
 | 节点 | PR | 说明 |
 | --- | --- | --- |
+| G1 发布 core + themes 0.4.0 | [#182](https://github.com/astryx-vue/astryx-vue/pull/182) [#183](https://github.com/astryx-vue/astryx-vue/pull/183) [#184](https://github.com/astryx-vue/astryx-vue/pull/184) | `@astryx-vue/core`、`@astryx-vue/themes` 0.4.0 已发布到 npm（latest），对齐 Astryx v0.7.1。GitHub Release、GitHub Packages 和 main→dev 回同步都已完成 |
