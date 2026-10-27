@@ -8,7 +8,7 @@ import { DEFAULT_PLAYGROUND_CODE } from './defaultCode'
 import { playgroundCopy } from './messages'
 import { decodeShare, encodeShare, shareHash } from './share'
 import { playgroundTemplates } from './templates'
-import { applyDensity, applyTheme, createNeutralTheme, setThemeColor, themesEqual } from './theme'
+import { applyDensity, applyTheme, cloneTheme, createNeutralTheme, setThemeColor, themesEqual } from './theme'
 
 export interface PlaygroundController {
   copy: PlaygroundCopy
@@ -117,23 +117,7 @@ export function usePlayground(
       v: 1,
       templateId: templateId.value,
       code: code.value,
-      theme: {
-        colors: {
-          light: { ...theme.colors.light },
-          dark: { ...theme.colors.dark },
-        },
-        dark: theme.dark,
-        headingFont: theme.headingFont,
-        bodyFont: theme.bodyFont,
-        customHeadingFont: theme.customHeadingFont,
-        customBodyFont: theme.customBodyFont,
-        typeScale: theme.typeScale,
-        typeSize: theme.typeSize,
-        radius: theme.radius,
-        spacing: theme.spacing,
-        elementSize: theme.elementSize,
-        duration: theme.duration,
-      },
+      theme: cloneTheme(theme),
     })
     const url = new URL(window.location.href)
     url.hash = shareHash(encoded)

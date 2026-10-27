@@ -23,6 +23,13 @@ export default defineConfig({
     }),
   ],
   safelist: [
+    'i-carbon-grid',
+    'i-carbon-copy',
+    'i-carbon-language',
+    'i-carbon-maximize',
+    'i-carbon-layers',
+    'i-carbon-time',
+    'i-carbon-lightning',
     'i-carbon-add',
     'i-carbon-analytics',
     'i-carbon-arrow-up',
