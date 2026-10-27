@@ -58,6 +58,7 @@ mindmap
       ✅ D14 core Markdown 解析器对齐原版
       ✅ D15 core 状态图标改实心
       ✅ D16 Table 行高对齐原版
+      🟡 D17 演练场图表撑满与刻度
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -258,6 +259,7 @@ flowchart TB
   C9 --> D14["D14 core Markdown 解析器对齐原版"]
   C16 --> D15["D15 core 状态图标改实心"]
   C11 --> D16["D16 Table 行高对齐原版"]
+  D5c --> D17["D17 演练场图表撑满与刻度"]
   CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
@@ -374,6 +376,7 @@ flowchart TB
 | D14 | core Markdown 解析器对齐原版 | C9 | ✅ 已完成 | 1 | D14-impl | | 6 处对齐原版（含解析时拒绝不安全地址）；richtext 12 条 todo 恢复 | #217 |
 | D15 | core 状态图标改实心 | C16 | ✅ 已完成 | 2 | D15-impl | | 状态图标走 Icon：文档站 lucide 描边、演练场实心兜底，与原版两处一致 | #214 |
 | D16 | Table 行高对齐原版 | C11 | ✅ 已完成 | 1 | 总控 | | Table 不再写死行高，单元格 21px、行 37.5px，和原版一致 | #216 |
+| D17 | 演练场图表撑满与刻度 | D5c | 🟡 实现中 | 1 | 总控 | | | |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
@@ -497,6 +500,7 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D14 core Markdown 解析器对齐原版 | F1a 发现我们 core 的 Markdown 解析器和原版有 6 处不一致（缩进代码块、不拒绝不安全地址、插件取词窗口、扩展节点 source 丢反斜杠、`createMarkdownPlugin` 无泛型、链接文字里认插件语法），见 `nodes/F1a/impl-1.md` 第 6.1 节和 issue #209。第 2 条有安全影响，F1b 依赖它。 | C9 | 6 处都和原版一致；richtext 的 12 条 `it.todo` 恢复成正式断言并通过；core 现有测试不回退。 |
 | D15 core 状态图标改实心 | D12 验收时发现：原版 `defaultIcons.tsx` 里 success、error、warning、info 等 6 个状态图标用实心（`solidSvgProps`，heroicons solid 风格），我们 `styles/icon.css` 里是 lucide 空心描边。Banner、Toast、Field 状态等处都受影响。逐个照原版路径改成实心。 | C16 | 6 个图标路径和原版一致；Banner、Toast、FieldStatus 文档页浅色深色对照一致。 |
 | D16 Table 行高对齐原版 | D12 走查发现表格每行比原版矮。原版 Table 不设行高，继承 `html { line-height: 1.5 }`（21px）；我们写死了 `--astryx-text-body-leading`（20px）。去掉这一行即可。 | C11 | 原版和我们的演练场 table-page、文档站 Table 页的单元格行高和行高度一致。 |
+| D17 演练场图表撑满与刻度 | 用户多次报图表和原版不一致：写死 viewBox 宽度导致不撑满、`PlaygroundLineChart` 只画两档 y 刻度、图例缺色块。从共用图表组件根上修，并在 `check-template-tokens.mjs` 加图表写法检查。 | D5c | 所有图表模板和原版同视口对照一致；写死宽度的图表 svg 会被检查拦下。 |
 
 ---
 
