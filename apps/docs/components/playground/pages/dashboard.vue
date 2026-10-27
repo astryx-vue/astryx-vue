@@ -189,14 +189,41 @@ function tickLabel(value: number): string {
   return X_LABELS[value] ?? ''
 }
 
-/** 指标卡里的迷你折线，只看走势，不带坐标轴，画在 100×40 的盒子里。 */
-function sparklinePoints(values: number[]): string {
-  const min = Math.min(...values)
+/**
+ * 指标卡里的迷你折线：不带坐标轴，纵轴从 0 起，上界取到下一个整刻度（和原版的图表默认一样），
+ * 上下各留 5px、左右各留 5px。宽度跟着卡片走，viewBox 和像素一比一。
+ */
+const SPARK = { h: 40, pad: 5 }
+const sparkWidth = ref(398)
+let sparkObserver: ResizeObserver | null = null
+
+/** 第一张迷你图量宽，四张同宽，共用这个宽度。 */
+function bindSpark(element: unknown): void {
+  sparkObserver?.disconnect()
+  sparkObserver = null
+  if (!(element instanceof SVGSVGElement) || typeof ResizeObserver === 'undefined')
+    return
+  sparkObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      sparkWidth.value = entry.contentRect.width
+  })
+  sparkObserver.observe(element)
+}
+onBeforeUnmount(() => sparkObserver?.disconnect())
+
+function sparkTop(values: number[]): number {
   const max = Math.max(...values)
-  const range = max - min || 1
+  const step = max > 50 ? 20 : max > 20 ? 10 : 5
+  return Math.ceil(max / step) * step
+}
+
+function sparklinePoints(values: number[]): string {
+  const top = sparkTop(values)
+  const inner = SPARK.h - SPARK.pad * 2
+  const width = sparkWidth.value - SPARK.pad * 2
   return values.map((value, i) => {
-    const x = (i / (values.length - 1)) * 100
-    const y = 2 + 36 - ((value - min) / range) * 36
+    const x = SPARK.pad + (i / (values.length - 1)) * width
+    const y = SPARK.pad + inner - (value / top) * inner
     return `${x.toFixed(1)},${y.toFixed(1)}`
   }).join(' ')
 }
@@ -287,7 +314,7 @@ function sparklinePoints(values: number[]): string {
                 <Text type="supporting" color="secondary">
                   Last 30 days vs. Previous
                 </Text>
-                <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <svg :ref="i === 0 && start === 0 ? bindSpark : undefined" class="sparkline" :viewBox="`0 0 ${sparkWidth} ${SPARK.h}`" aria-hidden="true">
                   <polyline fill="none" :stroke="CHART_COLORS.allUsers" stroke-width="1.5" :points="sparklinePoints(SPARKLINES[start + i])" />
                 </svg>
               </VStack>
