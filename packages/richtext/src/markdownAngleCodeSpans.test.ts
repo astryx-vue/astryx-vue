@@ -69,6 +69,7 @@ describe('backticks inside an angle-bracket destination with a parenthesis', () 
     expect(richUrls(exportLinkTo(url))).toEqual([url])
   })
 
+  // 照原版跑满 4,000 轮，CI 上要 6 到 8 秒，超过 vitest 默认的 5 秒上限。
   it('read back across 4,000 addresses made in the editor', () => {
     let state = 7050
     const random = () => {
@@ -91,5 +92,5 @@ describe('backticks inside an angle-bracket destination with a parenthesis', () 
       }
     }
     expect(lost).toEqual([])
-  })
+  }, 30_000)
 })

@@ -308,6 +308,7 @@ describe('angle-bracket destinations holding parentheses and backslashes', () =>
     },
   )
 
+  // 照原版跑满 4,000 轮，CI 上要 6 到 8 秒，超过 vitest 默认的 5 秒上限。
   it('reads back every link made in the editor across 4,000 addresses', () => {
     let state = 4000
     const random = () => {
@@ -331,5 +332,5 @@ describe('angle-bracket destinations holding parentheses and backslashes', () =>
       }
     }
     expect(lost).toEqual([])
-  })
+  }, 30_000)
 })

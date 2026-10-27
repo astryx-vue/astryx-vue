@@ -35,7 +35,7 @@ describe('listPublicPackages', () => {
   })
 
   it('covers every package this repo publishes', () => {
-    expect(listPublicPackages()).toEqual(['cli', 'core', 'themes'])
+    expect(listPublicPackages()).toEqual(['cli', 'core', 'richtext', 'themes'])
   })
 })
 
