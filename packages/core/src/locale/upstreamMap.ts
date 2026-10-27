@@ -3,6 +3,7 @@ import { chatUpstreamMap } from './upstream/chat.js'
 import { dataUpstreamMap } from './upstream/data.js'
 import { datesUpstreamMap } from './upstream/dates.js'
 import { formsUpstreamMap } from './upstream/forms.js'
+import { labUpstreamMap } from './upstream/lab.js'
 import { navigationUpstreamMap } from './upstream/navigation.js'
 import { overlaysUpstreamMap } from './upstream/overlays.js'
 import { searchUpstreamMap } from './upstream/search.js'
@@ -17,6 +18,7 @@ const parts: readonly UpstreamMapPart[] = [
   dataUpstreamMap,
   searchUpstreamMap,
   chatUpstreamMap,
+  labUpstreamMap,
 ]
 
 function mergeParts(list: readonly UpstreamMapPart[]): UpstreamMapPart {

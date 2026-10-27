@@ -72,3 +72,13 @@ export type {
   XIFPersonality,
   XIFSlot,
 } from './SVGIcon/index.js'
+
+export { TransferList } from './TransferList/index.js'
+export type {
+  PanelGroup,
+  PanelRow,
+  TransferListEmits,
+  TransferListOption,
+  TransferListProps,
+  TransferListSlots,
+} from './TransferList/index.js'
