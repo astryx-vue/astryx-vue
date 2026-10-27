@@ -1,6 +1,7 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { onMounted, onScopeDispose, toValue } from 'vue'
-import { isApplePlatform } from '../Kbd/platform.js'
+import { isImeKeyEvent } from './internal/ime.js'
+import { isApplePlatform } from './internal/platform.js'
 
 /**
  * 一条全局快捷键。
@@ -41,10 +42,6 @@ function isTypingTarget(target: EventTarget | null): boolean {
     return true
   const tag = target.tagName
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT'
-}
-
-function isImeKeyEvent(event: KeyboardEvent): boolean {
-  return event.isComposing === true || event.key === 'Process' || event.keyCode === 229
 }
 
 function matchesCombo(keys: string, event: KeyboardEvent, isApple: boolean): boolean {

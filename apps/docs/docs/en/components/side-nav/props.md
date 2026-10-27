@@ -78,6 +78,21 @@ footer: false
   </table>
 </div>
 
+## SideNavItem slots
+
+<div class="component-api-table" role="region" aria-label="SideNavItem slots" tabindex="0">
+  <table>
+    <thead><tr><th>Name</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>default</code></td><td>Child items.</td></tr>
+      <tr><td><code>icon</code></td><td>Icon before the label.</td></tr>
+      <tr><td><code>selectedIcon</code></td><td>Icon shown while the item is selected.</td></tr>
+      <tr><td><code>end</code></td><td>Content at the end of the primary control, still inside the link or button.</td></tr>
+      <tr><td><code>actions</code></td><td>Controls beside the primary control, such as an icon button. They stay outside the link and are omitted while the rail is collapsed.</td></tr>
+    </tbody>
+  </table>
+</div>
+
 ## SideNavHeading Props
 
 <div class="component-api-table" role="region" aria-label="SideNavHeading Props" tabindex="0">

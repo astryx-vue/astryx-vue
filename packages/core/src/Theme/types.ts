@@ -1,6 +1,7 @@
 import type { SyntaxThemeDefinition } from '../Code/syntaxTheme.js'
 import type { SemanticIconMap } from '../Icon/semantic.js'
 import type { IndicatorRegistry } from '../Indicator/types.js'
+import type { NormalizedThemeAdaptations, ResolvedThemeAdaptationRule, ThemeAdaptations, ThemeGenerativeAxes } from './adaptationTypes.js'
 import type { ColorScaleConfig } from './expandColorScale.js'
 import type { MotionScaleConfig } from './expandMotionScale.js'
 import type { RadiusScaleConfig } from './expandRadiusScale.js'
@@ -20,9 +21,11 @@ export type ThemeTokenValue = string | readonly [string, string]
 /** CSS custom properties for a theme. Keys may omit the `--astryx-` prefix. */
 export type ThemeTokens = Record<string, ThemeTokenValue>
 
-/** Token overrides for one inverted surface. */
+/** Overrides for one inverted surface. Same shape as the theme's own. */
 export interface ThemeSurfaceInput {
   tokens?: ThemeTokens
+  /** Component styles for content on this surface. */
+  components?: ComponentStyleMap
 }
 
 /**
@@ -36,9 +39,11 @@ export type StyleOverrides = Record<string, string | Record<string, string>>
 /**
  * Per-component style overrides.
  *
- * `base` matches the component root. `variant:secondary` matches that variant.
+ * Keys are theme targets named `<component-kebab>-<part>`, such as `button`,
+ * `card-header`, or `radio-indicator`. Under each target, `base` matches the
+ * target itself, `variant:secondary` matches `[data-variant="secondary"]`, a
+ * bare state such as `checked` matches `[data-checked="checked"]`, and
  * `variant:destructive+size:sm` matches both at once.
- * Component names are the public names, such as `button` or `radio-indicator`.
  */
 export type ComponentStyleMap = Record<string, Record<string, StyleOverrides>>
 
@@ -73,6 +78,15 @@ export interface DefineThemeInput {
   /** Semantic token overrides. These win over generated values, token by token. */
   tokens?: ThemeTokens
   /**
+   * Values only this theme family uses, keyed by their exact custom-property
+   * name, such as `--brand-ink`. No prefix is added or required.
+   *
+   * A shared token name (`--color-accent`) is refused here, so the two maps
+   * never hold the same name. A theme that extends this one inherits these
+   * and may replace their values. A reference cycle between them is an error.
+   */
+  localTokens?: Record<string, ThemeTokenValue>
+  /**
    * Accent palette. Neutrals, surfaces, text, icons, and borders come from the
    * seed. Explicit `tokens` still win.
    */
@@ -92,10 +106,29 @@ export interface DefineThemeInput {
   extends?: ThemeDefinition
   /** Syntax colors for code in this subtree, unless a SyntaxTheme is closer. */
   syntax?: SyntaxThemeDefinition
-  /** Extra tokens for content on a dark surface. */
+  /** Extra tokens and component styles for content on a dark surface. */
   onDark?: ThemeSurfaceInput
-  /** Extra tokens for content on a light surface. */
+  /** Extra tokens and component styles for content on a light surface. */
   onLight?: ThemeSurfaceInput
+  /**
+   * Values that apply only in some environments: a width range, a coarse
+   * pointer, a contrast or reduced-motion preference.
+   *
+   * Width points are named `sm`, `md`, `lg`, `xl`, `2xl` and default to 640,
+   * 768, 1024, 1280, 1536 CSS px. Fields inside one `when` must all match.
+   * Rules apply in order after the root theme; a later match wins.
+   *
+   * @example
+   * ```ts
+   * adaptations: {
+   *   rules: [{
+   *     when: { pointer: 'coarse', width: { below: 'lg' } },
+   *     value: { typography: { scale: { base: 16, ratio: 1.1736 } } },
+   *   }],
+   * }
+   * ```
+   */
+  adaptations?: ThemeAdaptations
   /**
    * Semantic icon name to Iconify id.
    *
@@ -114,12 +147,18 @@ export interface DefineThemeInput {
 
 export interface ThemeDefinition {
   name: string
-  /** Token values already written as CSS. */
+  /** Token values already written as CSS, with the `--astryx-` prefix. */
   tokens: Readonly<Record<string, string>>
+  /** Theme-local values by exact name. Absent when the theme family declares none. */
+  localTokens?: Readonly<Record<string, string>>
   /** Extra tokens applied by MediaTheme when the surface is dark. */
   onDark: Readonly<Record<string, string>>
   /** Extra tokens applied by MediaTheme when the surface is light. */
   onLight: Readonly<Record<string, string>>
+  /** Component styles on a dark MediaTheme surface. */
+  onDarkComponents?: ComponentStyleMap
+  /** Component styles on a light MediaTheme surface. */
+  onLightComponents?: ComponentStyleMap
   syntax?: SyntaxThemeDefinition
   /** Semantic icon overrides. Absent when this theme does not set any. */
   icons?: SemanticIconMap
@@ -131,10 +170,19 @@ export interface ThemeDefinition {
    */
   components?: ComponentStyleMap
   /**
-   * Compiled component rules, scoped to `[data-astryx-theme="<name>"]`
-   * and placed in the `astryx.overrides` layer.
+   * Compiled rules, scoped to `[data-astryx-theme="<name>"]` and placed in
+   * the `astryx.overrides` layer: the body font, component styles,
+   * adaptations, then media-surface styles, in that cascade order.
    */
   css?: string
+  /** Validated adaptations, kept so a child theme can re-resolve them. */
+  adaptations?: NormalizedThemeAdaptations
+  /** Adaptation rules lowered to concrete writes. */
+  adaptationRules?: readonly ResolvedThemeAdaptationRule[]
+  /** The generator configs adaptation rules complete themselves from. */
+  axes?: ThemeGenerativeAxes
+  /** Which theme in the lineage declared each local token. */
+  localTokenOwners?: Readonly<Record<string, string>>
   readonly __astryxTheme: true
 }
 

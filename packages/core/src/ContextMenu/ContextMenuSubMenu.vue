@@ -6,9 +6,11 @@ import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useSubmenuMode } from '../DropdownMenu/useSubmenuMode.js'
 import Icon from '../Icon/Icon.vue'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
+import { isImeKeyEvent } from '../utils/ime.js'
 import { submenuAncestorOpenKey, useContextMenu, useContextMenuSize } from './context.js'
 import ContextMenuItem from './ContextMenuItem.vue'
 import ContextMenuItems from './ContextMenuItems.vue'
@@ -17,7 +19,6 @@ import { useSubmenuHover } from './useSubmenuHover.js'
 import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenuSubMenu', inheritAttrs: false })
-
 const props = withDefaults(defineProps<ContextMenuSubMenuProps>(), {
   isDisabled: false,
   hasSpinner: false,
@@ -25,7 +26,9 @@ const props = withDefaults(defineProps<ContextMenuSubMenuProps>(), {
 })
 
 const emit = defineEmits<ContextMenuSubMenuEmits>()
+
 defineSlots<ContextMenuSubMenuSlots>()
+
 const attrs = useAttrs()
 
 const menu = useContextMenu()
@@ -62,7 +65,7 @@ const showsFlyout = computed(() => isOpen.value && (menu?.isOpen.value ?? true) 
 // them on screen. Descendants read this level's visibility and close with it.
 provide(submenuAncestorOpenKey, showsFlyout)
 
-const { position } = usePositionedLayer({
+const { position, teleportTarget } = usePositionedLayer({
   anchor: row,
   layer: flyout,
   isOpen: showsFlyout,
@@ -100,7 +103,7 @@ useDismiss({
   container: flyout,
   trigger: row,
   isEnabled: showsFlyout,
-  enableEscape: computed(() => true),
+  dismissOnEscape: 'close',
   onDismiss: () => close(true),
 })
 
@@ -168,7 +171,7 @@ function close(focusRow: boolean): void {
 }
 
 function onRowKeyDown(event: KeyboardEvent): void {
-  if (props.isDisabled || event.isComposing)
+  if (props.isDisabled || isImeKeyEvent(event))
     return
   if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowRight') {
     event.preventDefault()
@@ -212,7 +215,7 @@ function onRowPointerMove(event: PointerEvent): void {
 }
 
 function onFlyoutKeyDown(event: KeyboardEvent): void {
-  if (event.isComposing)
+  if (isImeKeyEvent(event))
     return
   if (event.key === 'ArrowLeft') {
     event.preventDefault()
@@ -308,17 +311,19 @@ watch(ancestorOpen, (visible) => {
       tabindex="-1"
       @keydown="onFlyoutKeyDown"
     >
-      <ContextMenuItem :has-close-on-select="false" :label="backLabel" @click="close(true)">
-        <template #icon>
-          <Icon color="secondary" icon="chevronLeft" size="sm" />
-        </template>
-      </ContextMenuItem>
-      <slot>
-        <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
-      </slot>
+      <LayerContentBoundary>
+        <ContextMenuItem :has-close-on-select="false" :label="backLabel" @click="close(true)">
+          <template #icon>
+            <Icon color="secondary" icon="chevronLeft" size="sm" />
+          </template>
+        </ContextMenuItem>
+        <slot>
+          <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
+        </slot>
+      </LayerContentBoundary>
     </div>
   </Teleport>
-  <Teleport v-else to="body">
+  <Teleport v-else :to="teleportTarget">
     <Transition name="astryx-context-menu-flyout">
       <div
         v-show="showsFlyout"
@@ -337,9 +342,11 @@ watch(ancestorOpen, (visible) => {
         @pointerenter="hover.onFlyoutPointerEnter"
         @pointerleave="hover.onFlyoutPointerLeave"
       >
-        <slot>
-          <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
-        </slot>
+        <LayerContentBoundary>
+          <slot>
+            <ContextMenuItems :items="items ?? []" @select="onNestedSelect" />
+          </slot>
+        </LayerContentBoundary>
       </div>
     </Transition>
   </Teleport>

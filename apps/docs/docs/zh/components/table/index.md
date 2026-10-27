@@ -41,17 +41,19 @@ import {
 常用的高级功能可以通过配套的函数插件（`plugins`）按需开启：
 
 - `useTableSortable`：让用户点击表头在升序、降序和恢复默认之间切换。开启 `isMultiSortEnabled` 后，按住 Shift 键再点表头可以同时按多个列排序。搭配 `useTableSortableState` 保存排序规则并返回排好序的数据。
-- `useTableSelection`：在每行最左侧添加复选框，点击可以选中或高亮当前行。搭配 `useTableSelectionState` 保存选中的行 ID。
+- `useTableSelection`：在每行最左侧添加复选框，点击可以选中或高亮当前行。搭配 `useTableSelectionState` 保存选中的行 ID。选中之后把返回的 `selectionState` 交给 `TableSelectionToolbar`，就可以对选中项做批量操作；一个都没选中时这条不出现。周围已经用行底色表示别的含义时，把 `hasRowHighlight` 设为 `false`，选中行不再铺底色，读屏仍能读到已选中。
 - `useTablePagination`：在表格底部添加分页器。在传给表格前，用 `paginateData` 把总数据切出当前页的内容。
 - `useTableColumnSettings`：让用户自己勾选显示或隐藏哪些列，带有 `isAlwaysVisible` 的列会固定保留。
 - `useTableColumnResize`：允许用户拖动表头边缘自由调整列宽，最小宽度为 60px。
 - `useTableFiltering`：为指定列开启文字模糊搜索或选项精确匹配。搭配 `applyTableFilters` 过滤出符合条件的行。
 - `useTableGroupedRows`：把已经排好序的数据按某个分类整理成分组折叠行。
 - `useTableTreeState` 与 `useTableTreeData`：支持像文件夹树一样展开或折叠带有层级关系的子行。
-- `useTableRowExpansion`：允许点击行首箭头在某一行下方展开一整块详情面板。
+- `useTableRowExpansion`：允许点击行首箭头在某一行下方展开一整块详情面板。打开 `hasRowClickExpansion` 后点整行也能展开；点到按钮、链接、可编辑文字或已经选中的文字时不会切换。详情和第一列对齐，不把面板算进斑马纹。
 - `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。
 - `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。
 - `useTableRowIndex`：自动为真正的数据行生成连续的序号。
+
+没写宽度的列至少留 60px。写在表格上的 `style.minWidth` 如果比各列下限的总和还小，表格会抬到这个下限，避免列被压到读不清；写得更大时保留你给的值。表格放得下时，滚轮继续交给外面的页面；横向溢出之后才拦住回弹。
 
 表格的显示风格也很灵活：`density` 可以调节行高间距（紧凑 `compact`、适中 `balanced` 或宽松 `spacious`）；`dividers` 控制网格线的样式（仅行线 `rows`、仅列线 `columns`、全网格 `grid` 或无边框 `none`）；`isStriped` 开启隔行换色的斑马纹，`hasHover` 开启鼠标悬停高亮。当 `data` 为空时，表格会自动显示贴心的缺省提示，也可以通过 `empty` 插槽换成自己的图文。
 

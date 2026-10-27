@@ -144,7 +144,7 @@ function slideLabel(position: number, total: number): string {
     <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- tabindex 把滚动区放进 Tab 序列；左右方向键只滚动这一行。 -->
     <div
       ref="scroller"
-      class="astryx-carousel__scroller"
+      class="astryx-carousel__scroller astryx-carousel-scroller"
       :data-gap="gap"
       :data-padding="padding"
       :data-snap="hasSnap || undefined"

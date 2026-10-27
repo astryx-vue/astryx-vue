@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import {
   Badge,
   Card,
@@ -25,7 +25,7 @@ import {
   VStack,
   useMediaQuery,
 } from '@astryx-vue/core'
-import { PlaygroundLineChart, PlaygroundResponsive, PlaygroundSparkline } from '@astryx-vue/playground-charts'
+import { PlaygroundSparkline } from '@astryx-vue/playground-charts'
 
 type TimeWindow = '1h' | '1d' | '7d'
 type Environment = 'production' | 'staging' | 'development'
@@ -76,29 +76,95 @@ const SPARKLINES: Record<string, number[]> = {
 }
 
 const STATUS_STROKE: Record<HealthStatus, string> = {
-  healthy: 'var(--color-success, #0B991F)',
-  warning: 'var(--color-warning, #B25000)',
-  critical: 'var(--color-error, #D6002A)',
+  healthy: 'var(--astryx-color-success, #0B991F)',
+  warning: 'var(--astryx-color-warning, #B25000)',
+  critical: 'var(--astryx-color-error, #D6002A)',
 }
 
 const ALERTS = [
   { id: 'AL-8842', severity: 'critical' as HealthStatus, title: 'search-indexer 5xx rate above 5%', service: 'search-indexer · us-east-1', at: '2026-06-30T21:14:00Z', state: 'firing' },
   { id: 'AL-8841', severity: 'warning' as HealthStatus, title: 'checkout-api p99 latency above 500ms', service: 'checkout-api · us-east-1', at: '2026-06-30T21:02:00Z', state: 'firing' },
+  { id: 'AL-8839', severity: 'warning' as HealthStatus, title: 'notifications queue depth climbing', service: 'notifications · ap-southeast-1', at: '2026-06-30T20:58:00Z', state: 'firing' },
   { id: 'AL-8840', severity: 'warning' as HealthStatus, title: 'edge-cdn cache hit ratio degraded', service: 'edge-cdn · eu-west-1', at: '2026-06-30T20:41:00Z', state: 'acknowledged' },
+  { id: 'AL-8838', severity: 'critical' as HealthStatus, title: 'auth error rate spike in dev cluster', service: 'auth · us-west-2', at: '2026-06-30T20:27:00Z', state: 'acknowledged' },
+  { id: 'AL-8837', severity: 'warning' as HealthStatus, title: 'payments settlement job heartbeat missed', service: 'payments · us-east-1', at: '2026-06-30T20:12:00Z', state: 'resolved' },
 ]
 
 const HOST_ROWS = [
   { id: '1', service: 'checkout-api', environment: 'production' as Environment, region: 'us-east-1', instances: 24, rpm: 9240, errorRate: 2.1, p99: 512, status: 'warning' as HealthStatus },
-  { id: '4', service: 'search-indexer', environment: 'production', region: 'us-east-1', instances: 16, rpm: 4120, errorRate: 5.8, p99: 1180, status: 'critical' },
-  { id: '6', service: 'payments', environment: 'production', region: 'us-east-1', instances: 20, rpm: 5310, errorRate: 0.2, p99: 188, status: 'healthy' },
+  { id: '2', service: 'search-indexer', environment: 'production', region: 'us-east-1', instances: 16, rpm: 4120, errorRate: 5.8, p99: 1180, status: 'critical' },
+  { id: '3', service: 'edge-cdn', environment: 'production', region: 'eu-west-1', instances: 30, rpm: 14800, errorRate: 1.6, p99: 402, status: 'warning' },
+  { id: '4', service: 'search-indexer', environment: 'production', region: 'ap-southeast-1', instances: 8, rpm: 2000, errorRate: 0.9, p99: 342, status: 'healthy' },
+  { id: '5', service: 'notifications', environment: 'production', region: 'ap-southeast-1', instances: 6, rpm: 1200, errorRate: 0.5, p99: 268, status: 'healthy' },
+  { id: '6', service: 'checkout-api', environment: 'production', region: 'eu-west-1', instances: 12, rpm: 4000, errorRate: 0.4, p99: 236, status: 'healthy' },
 ]
 
-const LATENCY_SERIES = Array.from({ length: 48 }, (_, i) => ({
-  t: i,
-  p50: 46 + Math.sin(i / 4) * 8,
-  p95: 158 + Math.sin(i / 3) * 30,
-  p99: 312 + Math.sin(i / 2.5) * 70,
-}))
+// ── 图表 ──────────────────────────────────────────────────────────────────────
+// 内联 SVG：锯齿状时间序列 + 坐标轴 + 图例，形状由固定种子的伪随机生成。
+
+/** 两张图并排、一样宽；`width` 跟着第一张图的实际宽度走，viewBox 和像素一比一。 */
+const CHART = reactive({ width: 640, height: 240, left: 52, right: 8, top: 8, bottom: 26 })
+const chartEl = ref<SVGSVGElement | null>(null)
+let chartObserver: ResizeObserver | null = null
+onMounted(() => {
+  if (!chartEl.value || typeof ResizeObserver === 'undefined')
+    return
+  chartObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      CHART.width = entry.contentRect.width
+  })
+  chartObserver.observe(chartEl.value)
+})
+onBeforeUnmount(() => chartObserver?.disconnect())
+const POINTS = 96
+const X_LABELS = ['00:00', '04:50', '09:30', '14:20', '19:00', '23:50']
+
+function noise(i: number, seed: number) {
+  const x = Math.sin(i * 127.1 + seed * 311.7) * 43758.5453
+  return x - Math.floor(x)
+}
+
+/** 基线 + 慢波 + 抖动，偶尔来一根尖峰，读起来像真实遥测。 */
+function telemetry(base: number, swing: number, jitter: number, seed: number) {
+  return Array.from({ length: POINTS }, (_, i) => {
+    const wave = Math.sin((i / POINTS) * Math.PI * 4 + seed) * swing
+    const wobble = (noise(i, seed) - 0.5) * jitter
+    const spike = noise(i, seed + 41) > 0.86 ? jitter * 2.4 : 0
+    return Math.max(0, base + wave + wobble + spike)
+  })
+}
+
+const latencySeries = [
+  { key: 'p50', label: 'p50', color: 'var(--astryx-color-data-categorical-blue, #0171E3)', values: telemetry(46, 10, 14, 3) },
+  { key: 'p95', label: 'p95', color: 'var(--astryx-color-data-categorical-orange, #EB6E00)', values: telemetry(152, 40, 34, 7) },
+  { key: 'p99', label: 'p99', color: 'var(--astryx-color-data-categorical-purple, #6B1EFD)', values: telemetry(330, 110, 90, 11) },
+]
+
+const volumeSeries = [
+  { key: 'useast', label: 'us-east-1', color: 'var(--astryx-color-data-categorical-blue, #0171E3)', values: telemetry(9400, 2600, 900, 5) },
+  { key: 'uswest', label: 'us-west-2', color: 'var(--astryx-color-data-categorical-teal, #08A3A3)', values: telemetry(6400, 1500, 650, 9) },
+  { key: 'euwest', label: 'eu-west-1', color: 'var(--astryx-color-data-categorical-orange, #EB6E00)', values: telemetry(4100, 900, 500, 13) },
+]
+
+const LATENCY_Y_TICKS = [0, 200, 400, 600, 800]
+const VOLUME_Y_TICKS = [0, 3500, 7000, 10500, 14000]
+
+function chartX(i: number) {
+  return CHART.left + (i / (POINTS - 1)) * (CHART.width - CHART.left - CHART.right)
+}
+
+function chartY(value: number, max: number) {
+  const inner = CHART.height - CHART.top - CHART.bottom
+  return CHART.top + (1 - value / max) * inner
+}
+
+function chartPath(values: number[], max: number) {
+  return values.map((v, i) => `${i === 0 ? 'M' : 'L'}${chartX(i).toFixed(1)},${chartY(v, max).toFixed(1)}`).join(' ')
+}
+
+function rpmLabel(rpm: number) {
+  return `${(rpm / 1000).toFixed(1)}k rpm`
+}
 
 const timeWindow = ref<TimeWindow>('1d')
 const environment = ref<Environment>('production')
@@ -171,41 +237,122 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
             <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="3">
               <Card :padding="6">
                 <VStack :gap="4">
-                  <Heading :level="3">
-                    Response latency
-                  </Heading>
-                  <PlaygroundResponsive :height="280">
-                    <PlaygroundLineChart
-                      :data="LATENCY_SERIES"
-                      x-key="t"
-                      :series="[
-                        { key: 'p50', color: 'var(--color-data-categorical-blue, #0171E3)', name: 'p50' },
-                        { key: 'p95', color: 'var(--color-data-categorical-orange, #EB6E00)', name: 'p95' },
-                        { key: 'p99', color: 'var(--color-data-categorical-purple, #6B1EFD)', name: 'p99' },
-                      ]"
-                      :height="280"
-                      y-unit=" ms"
+                  <VStack :gap="1">
+                    <Heading :level="3">
+                      Response latency
+                    </Heading>
+                    <Text type="supporting" color="secondary">
+                      Percentile latency across all services (ms)
+                    </Text>
+                  </VStack>
+                  <svg ref="chartEl" class="rail-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Response latency percentiles">
+                    <line
+                      v-for="tick in LATENCY_Y_TICKS"
+                      :key="`ly-${tick}`"
+                      :x1="CHART.left"
+                      :x2="CHART.width - CHART.right"
+                      :y1="chartY(tick, 800)"
+                      :y2="chartY(tick, 800)"
+                      class="chart-grid"
                     />
-                  </PlaygroundResponsive>
+                    <text
+                      v-for="tick in LATENCY_Y_TICKS"
+                      :key="`lyt-${tick}`"
+                      :x="CHART.left - 8"
+                      :y="chartY(tick, 800) + 4"
+                      text-anchor="end"
+                      class="chart-tick"
+                    >
+                      {{ tick }} ms
+                    </text>
+                    <text
+                      v-for="(label, i) in X_LABELS"
+                      :key="`lx-${label}`"
+                      :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
+                      :y="CHART.height - 8"
+                      :text-anchor="i === X_LABELS.length - 1 ? 'end' : i === 0 ? 'start' : 'middle'"
+                      class="chart-tick"
+                    >
+                      {{ label }}
+                    </text>
+                    <path
+                      v-for="series in latencySeries"
+                      :key="series.key"
+                      :d="chartPath(series.values, 800)"
+                      fill="none"
+                      :stroke="series.color"
+                      stroke-width="1.5"
+                      vector-effect="non-scaling-stroke"
+                    />
+                  </svg>
+                  <HStack :gap="5" align="center" wrap="wrap">
+                    <HStack v-for="series in latencySeries" :key="series.key" :gap="2" align="center">
+                      <span class="legend-dot" :style="{ background: series.color }" />
+                      <Text type="supporting" color="secondary">
+                        {{ series.label }}
+                      </Text>
+                    </HStack>
+                  </HStack>
                 </VStack>
               </Card>
               <Card :padding="6">
                 <VStack :gap="4">
-                  <Heading :level="3">
-                    Request volume by region
-                  </Heading>
-                  <PlaygroundResponsive :height="280">
-                    <PlaygroundLineChart
-                      :data="LATENCY_SERIES.map((_, i) => ({ t: i, useast: 9200 + i * 40, uswest: 6100 + i * 20, euwest: 3900 + i * 15 }))"
-                      x-key="t"
-                      :series="[
-                        { key: 'useast', color: 'var(--color-data-categorical-blue, #0171E3)', name: 'us-east-1' },
-                        { key: 'uswest', color: 'var(--color-data-categorical-teal, #08A3A3)', name: 'us-west-2' },
-                        { key: 'euwest', color: 'var(--color-data-categorical-orange, #EB6E00)', name: 'eu-west-1' },
-                      ]"
-                      :height="280"
+                  <VStack :gap="1">
+                    <Heading :level="3">
+                      Request volume by region
+                    </Heading>
+                    <Text type="supporting" color="secondary">
+                      Requests per minute (rpm)
+                    </Text>
+                  </VStack>
+                  <svg class="rail-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Request volume by region">
+                    <line
+                      v-for="tick in VOLUME_Y_TICKS"
+                      :key="`vy-${tick}`"
+                      :x1="CHART.left"
+                      :x2="CHART.width - CHART.right"
+                      :y1="chartY(tick, 14000)"
+                      :y2="chartY(tick, 14000)"
+                      class="chart-grid"
                     />
-                  </PlaygroundResponsive>
+                    <text
+                      v-for="tick in VOLUME_Y_TICKS"
+                      :key="`vyt-${tick}`"
+                      :x="CHART.left - 8"
+                      :y="chartY(tick, 14000) + 4"
+                      text-anchor="end"
+                      class="chart-tick"
+                    >
+                      {{ tick }}
+                    </text>
+                    <text
+                      v-for="(label, i) in X_LABELS"
+                      :key="`vx-${label}`"
+                      :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
+                      :y="CHART.height - 8"
+                      :text-anchor="i === X_LABELS.length - 1 ? 'end' : i === 0 ? 'start' : 'middle'"
+                      class="chart-tick"
+                    >
+                      {{ label }}
+                    </text>
+                    <path
+                      v-for="series in volumeSeries"
+                      :key="series.key"
+                      :d="chartPath(series.values, 14000)"
+                      fill="none"
+                      :stroke="series.color"
+                      stroke-width="1.5"
+                      vector-effect="non-scaling-stroke"
+                    />
+                  </svg>
+                  <HStack :gap="5" align="center" wrap="wrap">
+                    <HStack v-for="series in volumeSeries" :key="series.key" :gap="2" align="center">
+                      <span class="legend-dot" :style="{ background: series.color }" />
+                      <Text type="supporting" color="secondary">
+                        {{ series.label }}
+                      </Text>
+                    </HStack>
+                  </HStack>
                 </VStack>
               </Card>
             </Grid>
@@ -272,7 +419,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
               <Badge :label="`${firingCount} firing`" :variant="firingCount > 0 ? 'error' : 'neutral'" />
             </HStack>
             <Text type="supporting" color="secondary">
-              {{ ALERTS.length }} in the last 24h
+              {{ ALERTS.length }} in the last 24h · newest first
             </Text>
           </VStack>
           <Divider />
@@ -296,11 +443,20 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
             </Text>
           </VStack>
           <List density="compact" has-dividers>
-            <ListItem v-for="row in rows" :key="row.id" :label="row.service" :description="`${row.region} · ${row.instances} hosts`">
+            <ListItem
+              v-for="row in rows"
+              :key="row.id"
+              :label="row.service"
+              :description="`${row.region} · ${row.instances} hosts · ${rpmLabel(row.rpm)}`"
+            >
+              <template #startContent>
+                <StatusDot :variant="row.status === 'healthy' ? 'success' : row.status === 'warning' ? 'warning' : 'error'" :label="row.status" />
+              </template>
               <template #endContent>
-                <Text type="body" weight="semibold">
-                  {{ row.p99 }} ms
-                </Text>
+                <HStack :gap="1" align="center">
+                  <Badge variant="neutral" :label="`p99 ${row.p99} ms`" />
+                  <Badge :variant="row.errorRate >= 2 ? 'error' : row.errorRate >= 1 ? 'warning' : 'success'" :label="`${row.errorRate.toFixed(1)}% err`" />
+                </HStack>
               </template>
             </ListItem>
           </List>
@@ -312,12 +468,16 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
 
 <style scoped>
 .rail-header {
-  background-color: var(--color-background-muted);
+  background-color: var(--astryx-color-background-muted);
 }
+.rail-chart { width: 100%; height: 240px; display: block; }
+.chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
+.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 11px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 .sticky-header {
   position: sticky;
   inset-block-start: 0;
   z-index: 1;
-  background-color: var(--color-background-surface);
+  background-color: var(--astryx-color-background-surface);
 }
 </style>

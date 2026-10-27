@@ -1,4 +1,5 @@
-import type { ComputedRef, InjectionKey } from 'vue'
+import type { ComputedRef } from 'vue'
+import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
 export interface InputGroupContext {
   size: ComputedRef<'sm' | 'md' | 'lg'>
@@ -9,4 +10,8 @@ export interface InputGroupContext {
   describedBy: ComputedRef<string | undefined>
 }
 
-export const INPUT_GROUP_KEY: InjectionKey<InputGroupContext> = Symbol('InputGroup')
+export const INPUT_GROUP_KEY = defineLayerScopedKey<InputGroupContext | null>('InputGroup', null)
+
+export function useInputGroupContext(): InputGroupContext | null {
+  return readLayerScoped(INPUT_GROUP_KEY)
+}

@@ -74,8 +74,8 @@ footer: false
       <tr>
         <td><code>isCurrent</code></td>
         <td><code>boolean</code></td>
-        <td><code>false</code></td>
-        <td>是否为当前页，渲染为 <code>&lt;span&gt;</code> 并添加 <code>aria-current="page"</code>。当前页仍然可以打开菜单。</td>
+        <td>—</td>
+        <td>是否为当前页。写 <code>true</code> 时渲染为 <code>&lt;span&gt;</code> 并添加 <code>aria-current="page"</code>，当前页仍然可以打开菜单。不写时，如果没有哪一项写了 <code>true</code>，页面上最后一项自动成为当前页：仍然保持链接，只加 <code>aria-current="page"</code> 和当前页样式。写 <code>false</code> 表示这一项不参与自动判断。</td>
       </tr>
       <tr>
         <td><code>menu</code></td>

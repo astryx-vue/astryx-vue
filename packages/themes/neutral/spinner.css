@@ -13,10 +13,10 @@
     --astryx-spinner-stroke-width-xl: 4px;
     --astryx-spinner-arc-fraction: 0.375;
     --astryx-spinner-group-gap: 8px;
-    --astryx-spinner-label-color: light-dark(#171717, #fafafa);
-    --astryx-spinner-color-accent: light-dark(#262626, #ebebeb);
-    --astryx-spinner-color-subtle: light-dark(#525252, #a3a3a3);
-    --astryx-spinner-color-track: light-dark(#ccd3db, #5a5e66);
+    --astryx-spinner-label-color: var(--astryx-color-text-primary);
+    --astryx-spinner-color-accent: var(--astryx-color-accent);
+    --astryx-spinner-color-subtle: var(--astryx-color-text-secondary);
+    --astryx-spinner-color-track: var(--astryx-color-track);
     --astryx-spinner-color-on-dark: #fff;
   }
 }

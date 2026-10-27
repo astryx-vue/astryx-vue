@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import type { CalendarRangeValue } from '@astryx-vue/core/Calendar'
-import { provideAstryxLocale } from '@astryx-vue/core'
 import { Calendar } from '@astryx-vue/core/Calendar'
 import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { ref } from 'vue'
-
-provideAstryxLocale('en')
 
 const range = ref<CalendarRangeValue>({
   start: new Date(2026, 0, 10),

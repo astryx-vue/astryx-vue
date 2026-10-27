@@ -1,15 +1,23 @@
+import type { StandaloneShortWeekdayNames } from './weekdays.js'
+import { standaloneShortWeekdayNamesByLocale } from './weekdays.js'
+
 const weekdayStart = new Date(2023, 0, 1)
+const englishWeekdays = standaloneShortWeekdayNamesByLocale.en!
 
-/** CLDR stand-alone short names. Intl `short` is Sun/Mon, which is not the calendar header. */
-const standaloneShortWeekdays = {
-  'en': ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-  'zh-CN': ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
-} as const
-
-export function standaloneShortWeekdayNames(locale: string): readonly string[] {
-  if (locale === 'en' || locale === 'zh-CN')
-    return standaloneShortWeekdays[locale]
-  return weekdayNames(locale, 'short')
+/**
+ * 日历表头用的短星期名，从周日开始。
+ * 先找完整标签，再找基础语言（`fr-FR` 找 `fr`），都没有时回到英文，和原版一致。
+ */
+export function standaloneShortWeekdayNames(locale: string): StandaloneShortWeekdayNames {
+  try {
+    const parsed = new Intl.Locale(locale)
+    return standaloneShortWeekdayNamesByLocale[parsed.baseName]
+      ?? standaloneShortWeekdayNamesByLocale[parsed.language]
+      ?? englishWeekdays
+  }
+  catch {
+    return englishWeekdays
+  }
 }
 
 export function formatCalendarMonth(year: number, month: number, locale: string): string {

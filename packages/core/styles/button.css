@@ -42,6 +42,11 @@
   .astryx-button {
     --button-focus-offset: 3px;
     --button-icon-only-aspect: 1 / 1;
+    /* 悬停叠层和描边都先落到这两组内部变量，变体块只改内部变量。 */
+    --_button-hover-overlay: var(--astryx-button-hover-overlay, #0000000d);
+    --_button-border-width: var(--astryx-button-border-width, 0);
+    --_button-border-style: var(--astryx-button-border-style, solid);
+    --_button-border-color: var(--astryx-button-border-color, transparent);
 
     box-sizing: border-box;
     position: relative;
@@ -50,9 +55,13 @@
     justify-content: center;
     gap: var(--astryx-spacing-2, 8px);
     width: var(--astryx-button-width, auto);
-    padding-block: var(--astryx-spacing-2, 8px);
-    padding-inline: var(--astryx-spacing-3, 12px);
-    border: 0;
+    min-width: 0;
+    max-width: 100%;
+    padding-block: var(--astryx-button-padding-block, var(--astryx-spacing-2, 8px));
+    padding-inline: var(--astryx-button-padding-inline, var(--astryx-spacing-3, 12px));
+    border-width: var(--_button-border-width);
+    border-style: var(--_button-border-style);
+    border-color: var(--_button-border-color);
     border-radius: var(--astryx-button-radius, var(--astryx-radius-element, 0.625rem));
     outline: 0;
     color: inherit;
@@ -91,21 +100,40 @@
   }
 
   .astryx-button[data-variant='primary'] {
+    --_button-border-width: var(--astryx-button-primary-border-width, var(--astryx-button-border-width, 0));
+    --_button-border-style: var(--astryx-button-primary-border-style, var(--astryx-button-border-style, solid));
+    --_button-border-color: var(--astryx-button-primary-border-color, var(--astryx-button-border-color, transparent));
+
     color: var(--astryx-button-primary-foreground, #fff);
     background-color: var(--astryx-button-primary-background, #262626);
   }
 
+  /* 主题的次要按钮可以带描边、带自己的悬停叠层；次要样式的选择器类组件复用这几条。 */
   .astryx-button[data-variant='secondary'] {
+    --_button-border-width: var(--astryx-button-secondary-border-width, var(--astryx-button-border-width, 0));
+    --_button-border-style: var(--astryx-button-secondary-border-style, var(--astryx-button-border-style, solid));
+    --_button-border-color: var(--astryx-button-secondary-border-color, var(--astryx-button-border-color, transparent));
+    --_button-hover-overlay: var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d));
+
     color: var(--astryx-button-secondary-foreground, #171717);
     background-color: var(--astryx-button-secondary-background, #0000000f);
   }
 
   .astryx-button[data-variant='ghost'] {
+    --_button-border-width: var(--astryx-button-ghost-border-width, var(--astryx-button-border-width, 0));
+    --_button-border-style: var(--astryx-button-ghost-border-style, var(--astryx-button-border-style, solid));
+    --_button-border-color: var(--astryx-button-ghost-border-color, var(--astryx-button-border-color, transparent));
+    --_button-hover-overlay: var(--astryx-button-ghost-hover-overlay, var(--astryx-button-hover-overlay, #0000000d));
+
     color: var(--astryx-button-ghost-foreground, #171717);
     background-color: var(--astryx-button-ghost-background, transparent);
   }
 
   .astryx-button[data-variant='destructive'] {
+    --_button-border-width: var(--astryx-button-destructive-border-width, var(--astryx-button-border-width, 0));
+    --_button-border-style: var(--astryx-button-destructive-border-style, var(--astryx-button-border-style, solid));
+    --_button-border-color: var(--astryx-button-destructive-border-color, var(--astryx-button-border-color, transparent));
+
     color: var(--astryx-button-destructive-foreground, #a50c25);
     background-color: var(--astryx-button-destructive-background, #facecb);
   }
@@ -113,18 +141,30 @@
   @media (hover: hover) {
     .astryx-button:not(:disabled):not([aria-disabled='true']):hover {
       background-image: linear-gradient(
-        var(--astryx-button-hover-overlay, #0000000d),
-        var(--astryx-button-hover-overlay, #0000000d)
+        var(--_button-hover-overlay),
+        var(--_button-hover-overlay)
       );
     }
   }
 
-  .astryx-button:not(:disabled):not([aria-disabled='true']):active {
-    background-image: linear-gradient(
-      var(--astryx-button-pressed-overlay, #0000001a),
-      var(--astryx-button-pressed-overlay, #0000001a)
-    );
+  /* 鼠标按下才用 :active。粗指针落手就匹配 :active，滚动时还可能亮着，改看按压模型。 */
+  @media not all and (pointer: coarse) {
+    .astryx-button:not(:disabled):not([aria-disabled='true']):active {
+      background-image: linear-gradient(
+        var(--astryx-button-pressed-overlay, #0000001a),
+        var(--astryx-button-pressed-overlay, #0000001a)
+      );
+      transform: scale(0.98);
+    }
+  }
+
+  /* 和悬停、:active 同一权重，写在后面，按压盖过悬停。底色留给变体，按压只换上层图片。 */
+  .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press='on'] {
     transform: scale(0.98);
+  }
+
+  .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press] {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-button:focus-visible {
@@ -140,7 +180,7 @@
   .astryx-button[aria-disabled='true'] {
     opacity: 0.5;
     background-image: none;
-    cursor: not-allowed;
+    cursor: default;
     transform: none;
   }
 
@@ -211,6 +251,8 @@
 
   .astryx-button[data-icon-only='true'] {
     aspect-ratio: var(--button-icon-only-aspect);
+    flex-shrink: 0;
+    max-width: none;
     padding: 0;
   }
 

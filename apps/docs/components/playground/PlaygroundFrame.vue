@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 import type { PlaygroundModules } from './compileSfc'
-import type { PlaygroundColorMode, PlaygroundHostMessage } from './protocol'
+import type { PlaygroundColorMode, PlaygroundFrameMessage, PlaygroundHostMessage } from './protocol'
 import * as core from '@astryx-vue/core'
 import * as Vue from 'vue'
 import { compilePlaygroundSfc } from './compileSfc'
 import * as playgroundCharts from './playgroundCharts'
+import { acceptHostMessage, readPreviewNonce } from './previewChannel'
 import { PreviewHost } from './previewHost'
 import { previewLayoutMode } from './previewLayout'
-import { isHostMessage, PLAYGROUND_CHANNEL } from './protocol'
+import { PLAYGROUND_CHANNEL } from './protocol'
 import { templateIcons } from './templateIcons'
 
 const { createApp, onBeforeUnmount, onMounted, ref } = Vue
 
 void templateIcons
+
+/** 父页面装这次 iframe 时写进 `#` 的标记，只回给带同一个标记的消息。 */
+const frameNonce = typeof window === 'undefined' ? null : readPreviewNonce(window.location.hash)
 
 const mountEl = ref<HTMLElement | null>(null)
 let app: ReturnType<typeof createApp> | null = null
@@ -47,11 +51,14 @@ onBeforeUnmount(() => {
 })
 
 function onMessage(event: MessageEvent): void {
-  if (event.origin !== window.location.origin || event.source !== window.parent)
+  const message = acceptHostMessage(event, {
+    peer: window.parent,
+    origin: window.location.origin,
+    nonce: frameNonce,
+  })
+  if (!message)
     return
-  if (!isHostMessage(event.data))
-    return
-  void accept(event.data)
+  void accept(message)
 }
 
 async function accept(message: PlaygroundHostMessage): Promise<void> {
@@ -78,7 +85,9 @@ async function render(code: string): Promise<void> {
     if (current !== generation)
       return
     writeStyle('playground-sfc', compiled.css)
-    mount(compiled.component)
+    // 挂载时抛错已经作为 error 发出去了，这里不能再补一条 ok 把它盖掉。
+    if (!mount(compiled.component))
+      return
     layoutPreview(current)
     post({ channel: PLAYGROUND_CHANNEL, type: 'ok' })
   }
@@ -89,18 +98,22 @@ async function render(code: string): Promise<void> {
   }
 }
 
-function mount(component: Component): void {
+/** 挂载预览组件，返回挂载过程中有没有报过错。 */
+function mount(component: Component): boolean {
   if (!mountEl.value)
-    return
+    return false
   clearPreview()
   const current = generation
+  let errored = false
   app = createApp(PreviewHost, { preview: component, locale })
   app.config.errorHandler = (error) => {
     if (current !== generation)
       return
+    errored = true
     post({ channel: PLAYGROUND_CHANNEL, type: 'error', message: errorText(error) })
   }
   app.mount(mountEl.value)
+  return !errored
 }
 
 function layoutPreview(renderedGeneration: number, attempt = 0): void {
@@ -164,7 +177,8 @@ function writeStyle(id: string, css: string): void {
 function post(message: { channel: typeof PLAYGROUND_CHANNEL, type: 'ready' | 'error' | 'ok', message?: string }): void {
   if (window.parent === window)
     return
-  window.parent.postMessage(message, window.location.origin)
+  const outgoing: PlaygroundFrameMessage = { ...message, nonce: frameNonce ?? '' }
+  window.parent.postMessage(outgoing, window.location.origin)
 }
 
 function runtimeModules(): PlaygroundModules {

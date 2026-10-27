@@ -42,6 +42,119 @@ describe('chat composer', () => {
     expect(wrapper.emitted('submit')).toHaveLength(1)
   })
 
+  it('keeps send disabled for an empty or whitespace draft, including attachments', async () => {
+    const wrapper = mount(ChatComposer, {
+      slots: { drawer: '<div class="drawer-slot">notes.md</div>' },
+    })
+    const button = wrapper.get('button.astryx-chat-send')
+    expect(button.attributes('disabled')).toBe('')
+    expect(button.attributes('aria-disabled')).toBeUndefined()
+
+    await button.trigger('click')
+    expect(wrapper.emitted('submit')).toBeUndefined()
+
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    typeInto(editable.element, ' \n\t ')
+    await nextTick()
+    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBe('')
+
+    typeInto(editable.element, 'hello')
+    await nextTick()
+    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBeUndefined()
+    await wrapper.get('button.astryx-chat-send').trigger('click')
+    expect(wrapper.emitted('submit')).toEqual([['hello']])
+  })
+
+  it('inserts the highlighted mention on Enter, not the first source item', async () => {
+    const wrapper = mount(ChatComposerInput, {
+      attachTo: document.body,
+      props: {
+        triggers: [{
+          character: '@',
+          hasMultiWordQuery: true,
+          menuLabel: 'People',
+          searchSource: createStaticSource([
+            { id: 'ada', label: 'Ada Lovelace' },
+            { id: 'maria', label: 'María José García' },
+            { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },
+            { id: 'grace', label: 'Grace Hopper', auxiliaryData: { group: 'Reviewers' } },
+          ]),
+          onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}` }),
+        }],
+      },
+    })
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    const field = asHtml(editable.element)
+    field.focus()
+    field.textContent = '@'
+    const textNode = field.firstChild
+    const selection = window.getSelection()
+    const range = document.createRange()
+    if (textNode)
+      range.setStart(textNode, textNode.textContent?.length ?? 0)
+    else
+      range.selectNodeContents(field)
+    range.collapse(true)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+    field.dispatchEvent(new InputEvent('input', { bubbles: true }))
+    await nextTick()
+
+    await editable.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+    const activeId = editable.attributes('aria-activedescendant')
+    expect(activeId).toBeTruthy()
+    const option = document.getElementById(activeId ?? '')
+    expect(option?.textContent).toContain('Grace Hopper')
+    expect(option?.getAttribute('aria-selected')).toBe('true')
+
+    await editable.trigger('keydown', { key: 'Enter' })
+    await nextTick()
+    expect(field.querySelector('[data-astryx-token-value]')?.getAttribute('data-astryx-token-value')).toBe('@grace')
+    wrapper.unmount()
+  })
+
+  it('inserts Grace when @a highlights her before any arrow key', async () => {
+    const wrapper = mount(ChatComposerInput, {
+      attachTo: document.body,
+      props: {
+        triggers: [{
+          character: '@',
+          hasMultiWordQuery: true,
+          searchSource: createStaticSource([
+            { id: 'ada', label: 'Ada Lovelace' },
+            { id: 'maria', label: 'María José García' },
+            { id: 'lin', label: 'Lin', auxiliaryData: { group: 'Reviewers' } },
+            { id: 'grace', label: 'Grace Hopper', auxiliaryData: { group: 'Reviewers' } },
+          ]),
+          onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}` }),
+        }],
+      },
+    })
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    const field = asHtml(editable.element)
+    field.focus()
+    field.textContent = '@a'
+    const textNode = field.firstChild
+    const selection = window.getSelection()
+    const range = document.createRange()
+    if (textNode)
+      range.setStart(textNode, textNode.textContent?.length ?? 0)
+    range.collapse(true)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+    field.dispatchEvent(new InputEvent('input', { bubbles: true }))
+    await nextTick()
+
+    const activeId = editable.attributes('aria-activedescendant')
+    const option = document.getElementById(activeId ?? '')
+    expect(option?.textContent).toContain('Grace Hopper')
+    await editable.trigger('keydown', { key: 'Enter' })
+    await nextTick()
+    expect(field.querySelector('[data-astryx-token-value]')?.getAttribute('data-astryx-token-value')).toBe('@grace')
+    wrapper.unmount()
+  })
+
   it('keeps Shift+Enter and an IME commit from sending', async () => {
     const wrapper = mount(ChatComposer)
     const editable = wrapper.get('.astryx-chat-composer-input__editable')
@@ -237,6 +350,68 @@ describe('chat composer', () => {
     expect(text.text()).toContain('@Ada')
     expect(text.text()).not.toContain('@ada')
     expect(text.text()).toContain('empty token')
+    wrapper.unmount()
+  })
+
+  it('keeps a multi-word mention open and hides it when nothing matches', async () => {
+    const wrapper = mount(ChatComposerInput, {
+      attachTo: document.body,
+      props: {
+        triggers: [
+          {
+            character: '@',
+            hasMultiWordQuery: true,
+            searchSource: createStaticSource([
+              { id: 'ada', label: 'Ada Lovelace' },
+              { id: 'maria', label: 'María José García' },
+            ]),
+            onSelect: item => ({ value: `@${item.id}`, label: `@${item.label}` }),
+          },
+          {
+            character: '/',
+            searchSource: createStaticSource([{ id: 'summarize', label: 'summarize' }]),
+            onSelect: item => `/${item.label} `,
+          },
+        ],
+      },
+    })
+    const editable = wrapper.get('.astryx-chat-composer-input__editable')
+    const field = asHtml(editable.element)
+
+    function write(text: string): void {
+      field.focus()
+      const existing = field.firstChild
+      if (existing?.nodeType === Node.TEXT_NODE && field.childNodes.length === 1 && text !== '')
+        (existing as Text).data = text
+      else
+        field.textContent = text
+      const textNode = field.firstChild
+      const selection = window.getSelection()
+      const range = document.createRange()
+      if (textNode && textNode.nodeType === Node.TEXT_NODE)
+        range.setStart(textNode, textNode.textContent?.length ?? 0)
+      else
+        range.selectNodeContents(field)
+      range.collapse(true)
+      selection?.removeAllRanges()
+      selection?.addRange(range)
+      field.dispatchEvent(new InputEvent('input', { bubbles: true }))
+    }
+
+    write('@Ada Lov')
+    await nextTick()
+    expect(editable.attributes('aria-expanded')).toBe('true')
+    expect(document.body.textContent).toContain('Ada Lovelace')
+    expect(document.body.textContent).not.toContain('María José García')
+
+    write('@Ada Lov nobody')
+    await nextTick()
+    expect(editable.attributes('aria-expanded')).toBe('false')
+    expect(field.textContent).toBe('@Ada Lov nobody')
+
+    write('/sum ')
+    await nextTick()
+    expect(editable.attributes('aria-expanded')).toBe('false')
     wrapper.unmount()
   })
 

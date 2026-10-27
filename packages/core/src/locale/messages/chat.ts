@@ -1,4 +1,5 @@
 import type { AstryxLocale } from '../types.js'
+import { englishPlural, formatCount } from './shared.js'
 
 export interface ChatMessages {
   log: string
@@ -18,10 +19,21 @@ export interface ChatMessages {
   toolGroup: (count: number) => string
   toolPending: string
   toolRunning: string
+  /** 工具调用成功完成时，读屏念的状态。 */
+  toolComplete: string
+  /** 工具调用失败且没有错误详情时，读屏念的状态。 */
+  toolFailed: string
   thinking: string
   typingOne: (name: string) => string
   typingTwo: (first: string, second: string) => string
   typingMany: (name: string, others: number) => string
+  /**
+   * 两人及以上在输入时的状态。`names` 已经用 `Intl.ListFormat` 按当前语言连好，
+   * 文案里不要再自己加「和」。
+   */
+  typingNames: (names: string) => string
+  /** 三人及以上时，第一个名字后面那段「另外 N 人」，再交给 `Intl.ListFormat` 连起来。 */
+  typingOthers: (count: number) => string
   unreadBelow: (label: string) => string
   unreadLabel: string
   placeholder: string
@@ -59,10 +71,14 @@ export const chatMessages: Record<AstryxLocale, ChatMessages> = {
     toolGroup: count => `${count} tool calls`,
     toolPending: 'Pending',
     toolRunning: 'Running',
+    toolComplete: 'Complete',
+    toolFailed: 'Failed',
     thinking: 'Thinking',
     typingOne: name => `${name} is typing…`,
     typingTwo: (first, second) => `${first} and ${second} are typing…`,
     typingMany: (name, others) => `${name} and ${others} others are typing…`,
+    typingNames: names => `${names} are typing…`,
+    typingOthers: count => `${formatCount(count, 'en')} ${englishPlural(count, 'other', 'others')}`,
     unreadBelow: label => `${label} messages below`,
     unreadLabel: 'New',
     placeholder: 'Type a message…',
@@ -98,10 +114,14 @@ export const chatMessages: Record<AstryxLocale, ChatMessages> = {
     toolGroup: count => `${count} 个工具调用`,
     toolPending: '等待中',
     toolRunning: '进行中',
+    toolComplete: '已完成',
+    toolFailed: '失败',
     thinking: '思考中',
     typingOne: name => `${name} 正在输入…`,
     typingTwo: (first, second) => `${first} 和 ${second} 正在输入…`,
     typingMany: (name, others) => `${name} 和其他 ${others} 人正在输入…`,
+    typingNames: names => `${names}正在输入…`,
+    typingOthers: count => `另外 ${formatCount(count, 'zh-CN')} 人`,
     unreadBelow: label => `${label}以下是未读消息`,
     unreadLabel: '新消息',
     placeholder: '输入消息……',

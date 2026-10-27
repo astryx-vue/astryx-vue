@@ -3,12 +3,15 @@ import type { SwitchProps } from './types.js'
 import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { createSSRApp, h, nextTick } from 'vue'
+import { createSSRApp, defineComponent, h, nextTick } from 'vue'
+import { resetLiveRegionsForTest } from '../composables/testing/resetLiveRegions.js'
+import { provideAstryxLocale } from '../locale/index.js'
 import Switch from './Switch.vue'
 
 enableAutoUnmount(afterEach)
 afterEach(() => {
   vi.useRealTimers()
+  resetLiveRegionsForTest()
   document.body.innerHTML = ''
 })
 
@@ -81,6 +84,26 @@ describe('switch', () => {
     await wrapper.get('input').trigger('blur')
     expect(onFocus).toHaveBeenCalledTimes(1)
     expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
+  it('给标签加上开关自己的主题目标，忙碌时用当前语言播报', async () => {
+    const wrapper = renderSwitch()
+    expect(wrapper.get('label').classes()).toEqual(expect.arrayContaining(['astryx-field-label', 'astryx-switch-label']))
+    expect(wrapper.find('[role="status"]').exists()).toBe(false)
+    await wrapper.setProps({ isLoading: true })
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('Loading')
+    wrapper.unmount()
+
+    const Host = defineComponent({
+      setup: () => {
+        provideAstryxLocale('zh-CN')
+        return () => h(Switch, { label: '通知', modelValue: false, isLoading: true })
+      },
+    })
+    mount(Host, { attachTo: document.body })
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('加载中')
   })
 
   it('renders server-side with linked IDs', async () => {

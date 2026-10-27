@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ThumbnailEmits, ThumbnailProps } from './types.js'
 import { computed, getCurrentInstance, ref, watch } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/context.js'
@@ -21,6 +22,7 @@ const emit = defineEmits<ThumbnailEmits>()
 const messages = useAstryxMessages()
 const failedSrc = ref<string>()
 const instance = getCurrentInstance()
+const press = usePressFeedback({ hasOverlay: false })
 
 watch(() => props.src, () => {
   failedSrc.value = undefined
@@ -74,6 +76,7 @@ function onRemove(event: MouseEvent) {
         <button
           v-if="hasListener('onClick') && !isDisabled && !isLoading"
           type="button"
+          v-bind="press.pressableProps"
           class="astryx-thumbnail__open"
           :aria-label="messages.thumbnail.open(accessibleName)"
           @click="onOpen"

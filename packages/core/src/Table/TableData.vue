@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { CSSProperties, VNodeChild } from 'vue'
-import type { ColumnResizeSnapshot } from './plugins/columnResize.js'
+import type { CSSProperties, VNodeChild, VNodeRef } from 'vue'
 import type {
   TableCellPatch,
   TableColumn,
@@ -9,19 +8,22 @@ import type {
   TableRowMenuItem,
   TableRowPatch,
 } from './types.js'
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, useAttrs } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/context.js'
-import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { resolveColumnWidths } from './columnUtils.js'
-import { columnResizeDirectionSign, columnResizeStep, resizeColumnWidths } from './plugins/columnResize.js'
+import { resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
 import { selectColumn } from './plugins/stickyColumns.js'
+import { mergeRowPatches } from './rowPatch.js'
 import { CellContent, HeaderAddon, PluginFooter, RenderFn } from './TableDataRenderers.js'
 import TableFilterControl from './TableFilterControl.vue'
 import TableGroupHeader from './TableGroupHeader.vue'
 import TableRowMenu from './TableRowMenu.vue'
+import TableScroll from './TableScroll.vue'
+import { useTableColumnResizeSession } from './useTableColumnResizeSession.js'
+
+defineOptions({ inheritAttrs: false })
 
 const props = defineProps<{
   rows: readonly Record<string, unknown>[]
@@ -37,15 +39,15 @@ const props = defineProps<{
   verticalAlign: string
   rowIndexStart?: number
   rowCount?: number
-  minWidth?: number
 }>()
 
 defineSlots<{ empty?: () => VNodeChild }>()
 
+const attrs = useAttrs()
 const messages = useAstryxMessages()
 const scrollRoot = ref<HTMLElement | null>(null)
-useScrollbars(scrollRoot)
 const menu = ref<{ x: number, y: number, items: readonly TableRowMenuItem[] } | null>(null)
+const scrollStyle = computed(() => splitStyleMinWidth(attrs.style).style)
 
 const resolvedColumns = computed(() => props.plugins.reduce(
   (columns, plugin) => plugin.transformColumns?.(columns) ?? columns,
@@ -74,6 +76,14 @@ function resizeContribution(column: TableColumn): TableColumnResizeContribution 
 const resizeContributions = computed(() => new Map(
   resolvedColumns.value.map(column => [column.key, resizeContribution(column)]),
 ))
+const { startResize, onResizeKeydown, resizeLabel, resizeMax } = useTableColumnResizeSession({
+  plugins: () => props.plugins,
+  contributions: () => resizeContributions.value,
+  resizeColumnLabel: header => messages.value.table.resizeColumn(header),
+})
+const tableStyle = computed(() => ({
+  minWidth: resolveTableMinWidth(splitStyleMinWidth(attrs.style).minWidth, widths.value.tableMinWidth),
+}))
 const layoutColumns = computed(() => selection.value
   ? [selectColumn(), ...resolvedColumns.value]
   : resolvedColumns.value)
@@ -90,12 +100,15 @@ function bindScroll(element: HTMLElement | null): void {
     plugin.bindScrollRoot?.(element)
 }
 
-watch(scrollRoot, (element, previous) => {
-  if (previous)
+function onViewport(element: HTMLElement | null): void {
+  if (scrollRoot.value === element)
+    return
+  if (scrollRoot.value != null)
     bindScroll(null)
-  if (element)
+  scrollRoot.value = element
+  if (element != null)
     bindScroll(element)
-})
+}
 
 onBeforeUnmount(() => {
   bindScroll(null)
@@ -128,6 +141,21 @@ function filterFor(column: TableColumn) {
       return filter
   }
   return null
+}
+
+const filterContributions = computed(() => new Map(
+  resolvedColumns.value.map(column => [column.key, filterFor(column)]),
+))
+
+/**
+ * 取某一列落在指定位置的筛选控件。
+ * `popover` 是一个漏斗按钮，跟标题、排序图标同一行；`inline` 系列是输入框，垫在标题下面。
+ */
+function filterAt(column: TableColumn, place: 'line' | 'below') {
+  const filter = filterContributions.value.get(column.key) ?? null
+  if (filter == null)
+    return null
+  return (filter.variant === 'popover' ? 'line' : 'below') === place ? filter : null
 }
 
 function rowKey(row: Record<string, unknown>, index: number) {
@@ -166,54 +194,27 @@ function bodyStyle(column: TableColumn, row: Record<string, unknown>): CSSProper
   return style
 }
 
-function mergeRow(row: Record<string, unknown>, index: number): TableRowPatch {
-  const classes: string[] = []
-  const clicks: Array<(event: MouseEvent) => void> = []
-  const menus: TableRowMenuItem[] = []
-  const merged: TableRowPatch = {}
-  for (const plugin of props.plugins) {
-    const patch = plugin.rowPatch?.(row, index, columnCount.value)
-    if (patch == null)
-      continue
-    if (patch.group && merged.group == null)
-      merged.group = patch.group
-    if (patch.panel && merged.panel == null)
-      merged.panel = patch.panel
-    if (patch.suppressSelection)
-      merged.suppressSelection = true
-    if (patch.skipRowIndex)
-      merged.skipRowIndex = true
-    if (patch.class)
-      classes.push(patch.class)
-    if (patch.attrs)
-      merged.attrs = { ...merged.attrs, ...patch.attrs }
-    if (patch.onClick)
-      clicks.push(patch.onClick)
-    if (patch.menu)
-      menus.push(...patch.menu)
+/** Vue 的 ref 回调拿到的是更宽的 `Element`，收窄成 `<tr>` 再交给插件。 */
+function rowRefBinding(patch: TableRowPatch): VNodeRef | undefined {
+  const callback = patch.ref
+  if (callback == null)
+    return undefined
+  return (element) => {
+    callback(element as HTMLTableRowElement | null)
   }
-  merged.class = classes.join(' ') || undefined
-  merged.menu = menus
-  if (clicks.length > 0) {
-    merged.onClick = (event) => {
-      for (const click of clicks)
-        click(event)
-    }
-  }
-  return merged
 }
 
 const entries = computed(() => {
   let ordinal = 0
   const start = props.rowIndexStart ?? 1
   return props.rows.map((row, index) => {
-    const patch = mergeRow(row, index)
+    const patch = mergeRowPatches(props.plugins, row, index, columnCount.value)
     let rowIndex: number | undefined
     if (trackRows.value && !patch.skipRowIndex) {
       rowIndex = start + ordinal
       ordinal += 1
     }
-    return { key: rowKey(row, index), row, index, patch, rowIndex }
+    return { key: rowKey(row, index), row, index, patch, ref: rowRefBinding(patch), rowIndex }
   })
 })
 
@@ -222,191 +223,6 @@ function openMenu(event: MouseEvent, items: readonly TableRowMenuItem[] | undefi
     return
   event.preventDefault()
   menu.value = { x: event.clientX, y: event.clientY, items }
-}
-
-interface ResizeState {
-  snapshots: ColumnResizeSnapshot[]
-  resizeIndex: number
-  neighborIndex: number | null
-  tableWidth: number
-  /** 横向位移的符号。RTL 下拖右边等于变小。 */
-  direction: 1 | -1
-  elements: Map<string, HTMLElement>
-}
-
-/** 收集这一行表头的宽度快照，用来算拖动后的宽度。 */
-function buildResizeState(cell: HTMLElement, column: TableColumn): ResizeState | null {
-  const row = cell.parentElement
-  if (row == null)
-    return null
-  const table = cell.closest('table')
-  const dragged = resizeContributions.value.get(column.key)
-  const snapshots: ColumnResizeSnapshot[] = []
-  const elements = new Map<string, HTMLElement>()
-  for (const child of Array.from(row.children)) {
-    if (!(child instanceof HTMLElement))
-      continue
-    const key = child.dataset.column
-    if (key == null)
-      continue
-    const contribution = resizeContributions.value.get(key)
-    if (contribution == null)
-      continue
-    const measured = child.getBoundingClientRect().width
-    snapshots.push({
-      key,
-      initialWidth: contribution.currentWidth ?? (measured > 0 ? measured : 0),
-      minWidth: contribution.minWidth,
-      maxWidth: contribution.maxWidth,
-    })
-    elements.set(key, child)
-  }
-  const resizeIndex = snapshots.findIndex(item => item.key === column.key)
-  if (resizeIndex < 0)
-    return null
-  return {
-    snapshots,
-    resizeIndex,
-    neighborIndex: dragged?.neighborKey == null
-      ? null
-      : snapshots.findIndex(item => item.key === dragged.neighborKey),
-    tableWidth: table?.getBoundingClientRect().width ?? 0,
-    direction: columnResizeDirectionSign(getComputedStyle(cell).direction),
-    elements,
-  }
-}
-
-function applyResize(widths: number[], state: ResizeState): void {
-  state.snapshots.forEach((snapshot, index) => {
-    const element = state.elements.get(snapshot.key)
-    const width = widths[index]
-    if (element == null || width == null)
-      return
-    const pixels = `${width}px`
-    element.style.width = pixels
-    element.style.minWidth = pixels
-    element.style.maxWidth = pixels
-  })
-}
-
-function resetResizeStyles(state: ResizeState): void {
-  for (const element of state.elements.values()) {
-    element.style.width = ''
-    element.style.minWidth = ''
-    element.style.maxWidth = ''
-  }
-}
-
-/** 算一次拖动结果：先把预览写到表头，再把变了的列交给插件。 */
-function commitResize(state: ResizeState, delta: number): void {
-  const widths = resizeColumnWidths(state, delta)
-  applyResize(widths, state)
-  const last = state.snapshots.length - 1
-  const updates: Record<string, number> = {}
-  state.snapshots.forEach((snapshot, index) => {
-    // 最后一列的宽度是算出来的（表格剩余空间），不归用户管。
-    const width = widths[index]
-    if (index !== last && width != null)
-      updates[snapshot.key] = width
-  })
-  if (Object.keys(updates).length === 0)
-    return
-  for (const plugin of props.plugins)
-    plugin.onColumnResizeEnd?.(updates)
-}
-
-function resizeLabel(column: TableColumn): string {
-  const header = typeof column.header === 'string' && column.header.length > 0 ? column.header : column.key
-  return messages.value.table.resizeColumn(header)
-}
-
-function resizeMax(contribution: TableColumnResizeContribution | null | undefined): number | undefined {
-  const max = contribution?.maxWidth
-  return max == null || !Number.isFinite(max) ? undefined : max
-}
-
-function startResize(event: PointerEvent, column: TableColumn) {
-  const target = event.currentTarget
-  if (!(target instanceof HTMLElement) || event.button !== 0)
-    return
-  const cell = target.closest('th')
-  const state = cell == null ? null : buildResizeState(cell, column)
-  if (state == null || cell == null)
-    return
-  event.preventDefault()
-  const pointerId = event.pointerId
-  const startX = event.clientX
-  const table = cell.closest('table')
-  const previousUserSelect = table?.style.userSelect ?? ''
-  if (table != null)
-    table.style.userSelect = 'none'
-  target.setAttribute('data-resizing', 'true')
-  target.setPointerCapture(pointerId)
-
-  const listeners = new AbortController()
-  const move = (moveEvent: PointerEvent) => {
-    if (moveEvent.pointerId !== pointerId)
-      return
-    applyResize(resizeColumnWidths(state, (moveEvent.clientX - startX) * state.direction), state)
-  }
-  const finish = () => {
-    listeners.abort()
-    target.removeAttribute('data-resizing')
-    if (target.hasPointerCapture(pointerId))
-      target.releasePointerCapture(pointerId)
-    if (table != null)
-      table.style.userSelect = previousUserSelect
-  }
-  const stop = (upEvent: PointerEvent) => {
-    if (upEvent.pointerId !== pointerId)
-      return
-    finish()
-    commitResize(state, (upEvent.clientX - startX) * state.direction)
-  }
-  const cancel = (cancelEvent: PointerEvent) => {
-    if (cancelEvent.pointerId !== pointerId)
-      return
-    finish()
-    resetResizeStyles(state)
-  }
-  const options = { signal: listeners.signal }
-  target.addEventListener('pointermove', move, options)
-  target.addEventListener('pointerup', stop, options)
-  target.addEventListener('pointercancel', cancel, options)
-}
-
-function onResizeKeydown(event: KeyboardEvent, column: TableColumn) {
-  const handle = event.currentTarget
-  if (!(handle instanceof HTMLElement))
-    return
-  const cell = handle.closest('th')
-  const state = cell == null ? null : buildResizeState(cell, column)
-  if (state == null)
-    return
-  const self = state.snapshots[state.resizeIndex]
-  if (self == null)
-    return
-  const step = columnResizeStep(event.shiftKey)
-  let delta: number | null = null
-  switch (event.key) {
-    case 'ArrowRight':
-      delta = step * state.direction
-      break
-    case 'ArrowLeft':
-      delta = -step * state.direction
-      break
-    case 'Home':
-      delta = self.minWidth - self.initialWidth
-      break
-    case 'End':
-      if (Number.isFinite(self.maxWidth))
-        delta = self.maxWidth - self.initialWidth
-      break
-  }
-  if (delta == null)
-    return
-  event.preventDefault()
-  commitResize(state, delta)
 }
 
 function selectCellPatch(kind: 'header' | 'body', row: Record<string, unknown> | null) {
@@ -423,7 +239,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
 </script>
 
 <template>
-  <div ref="scrollRoot" class="astryx-table-scroll" role="group" :aria-label="label">
+  <TableScroll :class="attrs.class" :style="scrollStyle" :label="label" @viewport="onViewport">
     <PluginFooter v-for="(plugin, index) in plugins.filter(item => item.above)" :key="`above-${index}`" :plugin="plugin" place="above" />
     <table
       class="astryx-table"
@@ -435,7 +251,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
       :data-valign="verticalAlign"
       :data-row-highlight="selection?.hasRowHighlight === false ? 'off' : undefined"
       :aria-rowcount="ariaRowCount"
-      :style="minWidth ? { minWidth: `${Math.max(minWidth, widths.tableMinWidth)}px` } : { minWidth: `${widths.tableMinWidth}px` }"
+      :style="tableStyle"
     >
       <thead>
         <tr>
@@ -490,8 +306,15 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   {{ column.header ?? column.key }}
                 </VisuallyHidden>
                 <span v-else>{{ column.header ?? column.key }}</span>
+                <TableFilterControl
+                  v-if="filterAt(column, 'line')"
+                  :filter="filterAt(column, 'line')!"
+                />
               </div>
-              <TableFilterControl v-if="filterFor(column)" :filter="filterFor(column)!" />
+              <TableFilterControl
+                v-if="filterAt(column, 'below')"
+                :filter="filterAt(column, 'below')!"
+              />
             </div>
             <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role="separator" 是 WAI-ARIA 的分隔条：自己可聚焦，方向键也归它处理。 -->
             <span
@@ -520,12 +343,17 @@ function isEnabled(row: Record<string, unknown>): boolean {
         </tr>
         <template v-for="entry in entries" :key="entry.key">
           <tr
+            :ref="entry.ref"
             :aria-selected="!entry.patch.group && isSelected(entry.row) ? 'true' : undefined"
             :aria-rowindex="entry.rowIndex"
             :class="entry.patch.class"
             v-bind="entry.patch.attrs"
+            @blur="entry.patch.listeners?.onBlur?.($event)"
             @click="entry.patch.onClick?.($event)"
             @contextmenu="openMenu($event, entry.patch.menu)"
+            @focus="entry.patch.listeners?.onFocus?.($event)"
+            @mouseenter="entry.patch.listeners?.onMouseenter?.($event)"
+            @mouseleave="entry.patch.listeners?.onMouseleave?.($event)"
           >
             <template v-if="entry.patch.group">
               <td class="astryx-table__group" :colspan="columnCount">
@@ -585,14 +413,12 @@ function isEnabled(row: Record<string, unknown>): boolean {
       </tbody>
     </table>
     <PluginFooter v-for="(plugin, index) in plugins.filter(item => item.below)" :key="`below-${index}`" :plugin="plugin" place="below" />
-    <Teleport to="body">
-      <TableRowMenu
-        v-if="menu"
-        :x="menu.x"
-        :y="menu.y"
-        :items="menu.items"
-        @close="menu = null"
-      />
-    </Teleport>
-  </div>
+    <TableRowMenu
+      v-if="menu"
+      :x="menu.x"
+      :y="menu.y"
+      :items="menu.items"
+      @close="menu = null"
+    />
+  </TableScroll>
 </template>

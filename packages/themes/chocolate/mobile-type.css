@@ -1,0 +1,55 @@
+/**
+ * Chocolate type scale on touch devices.
+ *
+ * On a coarse pointer below the lg breakpoint the whole ladder is re-derived
+ * from a 16px base with a smaller ratio, so body text reaches 16px while the
+ * display sizes keep their desktop look. Sizes are re-derived here instead of
+ * swapping the base size, because every size token is an absolute rem value.
+ */
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  @media (width < 1024px) and (pointer: coarse) {
+    [data-astryx-theme='chocolate'] {
+      --astryx-font-size-4xs: 0.4375rem;
+      --astryx-font-size-3xs: 0.5rem;
+      --astryx-font-size-2xs: 0.625rem;
+      --astryx-font-size-xs: 0.75rem;
+      --astryx-font-size-sm: 0.875rem;
+      --astryx-font-size-base: 1rem;
+      --astryx-font-size-lg: 1.1875rem;
+      --astryx-font-size-xl: 1.375rem;
+      --astryx-font-size-2xl: 1.625rem;
+      --astryx-font-size-3xl: 1.875rem;
+      --astryx-font-size-4xl: 2.25rem;
+
+      --astryx-text-heading-1-size: var(--astryx-font-size-2xl);
+      --astryx-text-heading-1-leading: 1.3846;
+      --astryx-text-heading-2-size: var(--astryx-font-size-xl);
+      --astryx-text-heading-2-leading: 1.4545;
+      --astryx-text-heading-3-size: var(--astryx-font-size-lg);
+      --astryx-text-heading-3-leading: 1.4737;
+      --astryx-text-heading-4-size: var(--astryx-font-size-base);
+      --astryx-text-heading-4-leading: 1.5;
+      --astryx-text-heading-5-size: var(--astryx-font-size-sm);
+      --astryx-text-heading-5-leading: 1.4286;
+      --astryx-text-heading-6-size: var(--astryx-font-size-xs);
+      --astryx-text-heading-6-leading: 1.6667;
+      --astryx-text-body-size: var(--astryx-font-size-base);
+      --astryx-text-body-leading: 1.5;
+      --astryx-text-large-size: var(--astryx-font-size-lg);
+      --astryx-text-large-leading: 1.4737;
+      --astryx-text-label-size: var(--astryx-font-size-base);
+      --astryx-text-label-leading: 1.5;
+      --astryx-text-code-size: var(--astryx-font-size-base);
+      --astryx-text-code-leading: 1.5;
+      --astryx-text-supporting-size: var(--astryx-font-size-sm);
+      --astryx-text-supporting-leading: 1.4286;
+      --astryx-text-display-1-size: var(--astryx-font-size-5xl);
+      --astryx-text-display-2-size: var(--astryx-font-size-4xl);
+      --astryx-text-display-2-leading: 1.2222;
+      --astryx-text-display-3-size: var(--astryx-font-size-3xl);
+      --astryx-text-display-3-leading: 1.4667;
+    }
+  }
+}

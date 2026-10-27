@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { AvatarGroupOverflowEmits, AvatarGroupOverflowProps, AvatarGroupOverflowSlots } from './types.js'
-import { computed, getCurrentInstance, inject } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 
 import { resolveSize } from '../Avatar/utils.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { AvatarGroupContext } from './context.js'
 import '../../styles/avatar-group.css'
@@ -15,8 +17,9 @@ defineSlots<AvatarGroupOverflowSlots>()
 
 const instance = getCurrentInstance()
 const messages = useAstryxMessages()
+const press = usePressFeedback()
 
-const avatarGroup = inject(AvatarGroupContext, undefined)
+const avatarGroup = readLayerScoped(AvatarGroupContext)
 const OVERFLOW_BORDER = 2
 const size = computed(() => avatarGroup?.size.value ?? 'md')
 const shape = computed(() => avatarGroup?.shape.value ?? 'circle')
@@ -50,17 +53,21 @@ const OVERFLOW_FONT_RATIO = 0.35
 const rootStyle = computed(() => ({
   'minWidth': `${numericSize.value + OVERFLOW_BORDER * 2}px`,
   'height': `${numericSize.value + OVERFLOW_BORDER * 2}px`,
-  'marginInlineStart': `${-(avatarGroup?.overlap.value ?? 0)}px`,
   '--astryx-avatar-group-overflow-computed-font-size': `max(var(--astryx-text-supporting-size, 0.75rem), ${Math.round(numericSize.value * OVERFLOW_FONT_RATIO * 100) / 100}px)`,
 }))
+const pressBindings = computed(() => isInteractive.value ? press.pressableProps : {})
 </script>
 
 <template>
   <component
     :is="isInteractive ? 'button' : 'span'"
+    v-bind="pressBindings"
     class="astryx-avatar-group-overflow"
     :class="[`astryx-avatar-group-overflow--${shape}`, { 'astryx-avatar-group-overflow--interactive': isInteractive }]"
     :style="rootStyle"
+    :data-size="size"
+    :data-shape="shape"
+    :data-avatar-item="isInteractive ? '' : undefined"
     :type="isInteractive ? 'button' : undefined"
     :aria-label="accessibleName"
     :role="isInteractive ? undefined : 'img'"

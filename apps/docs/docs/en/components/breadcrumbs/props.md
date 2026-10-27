@@ -74,8 +74,8 @@ footer: false
       <tr>
         <td><code>isCurrent</code></td>
         <td><code>boolean</code></td>
-        <td><code>false</code></td>
-        <td>Whether this is the current page. Renders as a <code>&lt;span&gt;</code> with <code>aria-current="page"</code>. A current crumb can still open a menu.</td>
+        <td>—</td>
+        <td>Whether this is the current page. <code>true</code> renders a <code>&lt;span&gt;</code> with <code>aria-current="page"</code>; a current crumb can still open a menu. When omitted and no item is <code>true</code>, the last item on the page becomes current: it stays a link and gains <code>aria-current="page"</code> and the current style. <code>false</code> opts the item out of that detection.</td>
       </tr>
       <tr>
         <td><code>menu</code></td>

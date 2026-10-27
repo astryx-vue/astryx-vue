@@ -20,7 +20,7 @@ footer: false
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Reason for disabling. The control stays focusable when this is provided.</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Prevent changes. The value is still submitted.</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show loading state and block repeated toggles.</td></tr>
-<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>'Loading'</code></td><td>Accessible text for the loading state.</td></tr>
+<tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Current locale</td><td>Text announced while the switch is busy. Defaults to the active locale: Loading in English, 加载中 in Chinese.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show required indicator and enable native required validation.</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show optional indicator. Takes precedence over isRequired.</td></tr>
 <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td><code>'Optional'</code></td><td>Text for the optional indicator.</td></tr>

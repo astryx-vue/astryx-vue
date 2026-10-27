@@ -26,7 +26,7 @@ const galleryImage: CSSProperties = {
 }
 
 const galleryImageClip: CSSProperties = {
-  borderRadius: 'var(--radius-container)',
+  borderRadius: 'var(--astryx-radius-container)',
 }
 </script>
 
@@ -34,8 +34,8 @@ const galleryImageClip: CSSProperties = {
   <Layout>
     <LayoutContent :padding="6">
       <VStack :gap="10">
-        <VStack :gap="6" justify="center">
-          <VStack :gap="3" justify="center">
+        <VStack :gap="6" h-align="center">
+          <VStack :gap="3" h-align="center">
             <Heading :level="1" type="display-2" justify="center" text-wrap="balance">
               Little joys, everywhere you go
             </Heading>
@@ -46,7 +46,7 @@ const galleryImageClip: CSSProperties = {
           <HStack :gap="3">
             <Button label="Get started" variant="primary">
               <template #end>
-                <Icon icon="i-heroicons-arrow-right" size="sm" color="inherit" />
+                <Icon icon="chevronRight" size="sm" color="inherit" />
               </template>
             </Button>
             <Button label="Learn more" variant="secondary" />

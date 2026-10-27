@@ -3,7 +3,7 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-overlay-scrim-background: light-dark(#00000080, #000000cc);
+    --astryx-overlay-scrim-background: var(--astryx-color-overlay);
     --astryx-overlay-scrim-light-background: color-mix(in srgb, #fff 60%, transparent);
   }
 }

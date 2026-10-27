@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
-import { computed, inject, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { provideIconSize } from '../Icon/context.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
+import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import ButtonSpinner from './ButtonSpinner.vue'
@@ -33,12 +37,15 @@ defineSlots<ButtonSlots>()
 
 const attrs = useAttrs()
 const slots = useSlots()
-const group = inject(buttonGroupContextKey, null)
+const group = readLayerScoped(buttonGroupContextKey)
 const linkComponent = useLinkComponent()
 const renderedRoot = useTemplateRef<ComponentPublicInstance | HTMLElement>('root')
 const tooltipId = `astryx-button-tooltip-${useId()}`
 
+const press = usePressFeedback({ hasOverlay: false })
 const effectiveSize = computed(() => props.size ?? group?.size.value ?? 'md')
+/** 小、中按钮里的图标是 16px，大按钮是 20px。插槽里没写尺寸的图标跟着走。 */
+provideIconSize(computed(() => effectiveSize.value === 'lg' ? 'md' : 'sm'))
 const isGroupDisabled = computed(() => group?.isDisabled.value ?? false)
 const isLocallyDisabled = computed(() => props.isDisabled || isGroupDisabled.value)
 const isInterruptible = computed(() => props.isInterruptible)
@@ -59,11 +66,17 @@ const isDisabledState = computed(() =>
 )
 const hasTooltip = computed(() => (props.tooltip?.trim().length ?? 0) > 0)
 const useAriaDisabled = computed(() => hasTooltip.value && isDisabledState.value)
+const safeHref = computed(() => props.href != null && isSafeUrl(props.href) ? props.href : undefined)
 const renderAsLink = computed(() => props.href != null && !isDisabledState.value)
-const rootComponent = computed<ButtonLinkElement | 'button'>(() =>
-  renderAsLink.value ? toRaw(props.as ?? linkComponent.value ?? 'a') : 'button',
-)
-const isCustomLink = computed(() => renderAsLink.value && rootComponent.value !== 'a')
+const rootComponent = computed<ButtonLinkElement | 'button'>(() => {
+  if (!renderAsLink.value)
+    return 'button'
+  // 危险协议不交给自定义路由，退回一个不带地址的锚点。
+  if (safeHref.value == null)
+    return 'a'
+  return toRaw(props.as ?? linkComponent.value ?? 'a')
+})
+const isCustomLink = computed(() => renderAsLink.value && safeHref.value != null && rootComponent.value !== 'a')
 const nativeDisabled = computed(() =>
   !renderAsLink.value && !useAriaDisabled.value && isDisabledState.value,
 )
@@ -82,12 +95,7 @@ const element = computed<ButtonRootElement | null>(() => {
 
 const buttonTooltip = useButtonTooltip(hasTooltip)
 
-const rootClass = computed(() => [
-  'astryx-button',
-  props.variant,
-  effectiveSize.value,
-  attrs.class,
-])
+const rootClass = computed(() => ['astryx-button', attrs.class])
 
 interface ButtonInlineStyle extends CSSProperties {
   '--astryx-button-width'?: string
@@ -135,9 +143,12 @@ const controlledAttrs = new Set([
 ])
 
 function getForwardedAttrs(): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key)),
-  )
+  return {
+    ...Object.fromEntries(
+      Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key)),
+    ),
+    ...press.pressableProps,
+  }
 }
 
 function handleRootClick(event: MouseEvent): Promise<void> | void {
@@ -179,12 +190,12 @@ defineExpose({
     :data-variant="variant"
     :disabled="nativeDisabled || undefined"
     :form="renderAsLink ? undefined : form"
-    :href="renderAsLink ? href : undefined"
+    :href="renderAsLink ? safeHref : undefined"
     :name="renderAsLink ? undefined : name"
     :rel="renderAsLink ? rel : undefined"
     :style="rootStyle"
     :target="renderAsLink ? target : undefined"
-    :to="isCustomLink ? href : undefined"
+    :to="isCustomLink ? safeHref : undefined"
     :type="renderAsLink ? undefined : type"
     :value="renderAsLink ? undefined : value"
     @blur="buttonTooltip.onBlur"

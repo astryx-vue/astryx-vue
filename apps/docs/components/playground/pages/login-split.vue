@@ -25,7 +25,7 @@ const COLUMN_MIN_WIDTH = 240
 
 const pageStyle: CSSProperties = {
   minHeight: '100%',
-  backgroundColor: 'var(--color-background-body)',
+  backgroundColor: 'var(--astryx-color-background-body)',
 }
 
 const cardWrap: CSSProperties = {
@@ -190,7 +190,7 @@ function onPasswordChange(value: string) {
 .login-split-grid {
   container-type: inline-size;
   container-name: login-split;
-  padding: var(--spacing-8);
+  padding: var(--astryx-spacing-8);
 }
 .login-split-image {
   width: 100%;
@@ -198,7 +198,7 @@ function onPasswordChange(value: string) {
 }
 @container login-split (max-width: 511px) {
   .login-split-grid {
-    padding: var(--spacing-4);
+    padding: var(--astryx-spacing-4);
   }
   .login-split-image {
     order: -1;

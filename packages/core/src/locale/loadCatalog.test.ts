@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
-import { formatIcu } from './icu.js'
+import { formatIcu, icuArgumentKinds } from './icu.js'
 import { provideAstryxLocale, useAstryxLocale, useAstryxMessages, useCollator } from './index.js'
 import { loadAstryxCatalog } from './loadCatalog.js'
 import { astryxMessages } from './messages.js'
@@ -24,6 +24,16 @@ describe('icu', () => {
     expect(formatIcu('It\'\'s {name}', { name: 'A' }, 'en')).toBe('It\'s A')
     expect(formatIcu('{boundary, select, first {first} last {last} other {}}', { boundary: 'last' }, 'en')).toBe('last')
     expect(formatIcu('{count, plural, offset:1 other {# more}}', { count: 3 }, 'en')).toBe('2 more')
+  })
+
+  it('keeps a lone apostrophe as text and only quotes before syntax characters', () => {
+    expect(formatIcu('Kies \'n datum vir {label}', { label: 'X' }, 'af-ZA')).toBe('Kies \'n datum vir X')
+    expect(formatIcu('Actions for {name}\'s comment', { name: 'Ana' }, 'en')).toBe('Actions for Ana\'s comment')
+    expect(formatIcu('\'{literal}\' {value}', { value: 'v' }, 'en')).toBe('{literal} v')
+    expect(icuArgumentKinds('{count, number} {count, plural, one {# x} other {# xs}} {name}')).toEqual({
+      count: ['number', 'plural'],
+      name: ['argument'],
+    })
   })
 
   it('uses Arabic plural categories', () => {

@@ -198,7 +198,7 @@ describe('calendar', () => {
     const wrapper = mount(Host)
     expect(wrapper.get('.astryx-calendar-month-year').text()).toBe('2024年3月')
     expect(wrapper.get('.astryx-calendar').attributes('aria-label')).toBe('日历')
-    expect(wrapper.get('.astryx-calendar-nav-button').attributes('aria-label')).toBe('上一月')
+    expect(wrapper.get('.astryx-calendar-nav-button').attributes('aria-label')).toBe('上个月')
   })
 
   it('shows the focused month and disables weekends inside min and max', () => {

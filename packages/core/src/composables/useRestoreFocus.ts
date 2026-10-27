@@ -1,5 +1,7 @@
 import type { Ref } from 'vue'
 import { onScopeDispose, watch } from 'vue'
+import { focusForLastInput } from './internal/focusReturn.js'
+import { trackInteractionModality } from './internal/interactionModality.js'
 
 export interface UseRestoreFocusOptions {
   /** 是否启用焦点恢复 */
@@ -18,6 +20,8 @@ export interface RestoreFocus {
 /**
  * 在浮层组件打开时保存当前焦点元素，关闭时恢复焦点。
  * 用于对话框、抽屉、弹出菜单等浮层组件。
+ *
+ * 恢复时焦点环跟着上一次的输入走：键盘关掉的照常画环，鼠标或手指关掉的不画。
  */
 export function useRestoreFocus(options: UseRestoreFocusOptions): RestoreFocus {
   const { isEnabled, shouldRestore } = options
@@ -26,6 +30,7 @@ export function useRestoreFocus(options: UseRestoreFocusOptions): RestoreFocus {
   function save(): void {
     if (!isEnabled.value || typeof document === 'undefined')
       return
+    trackInteractionModality()
     const active = document.activeElement
     if (active instanceof HTMLElement) {
       savedElement = active
@@ -37,7 +42,7 @@ export function useRestoreFocus(options: UseRestoreFocusOptions): RestoreFocus {
       return
     // 只在元素仍在文档中且可聚焦时恢复焦点
     if (savedElement.isConnected && !savedElement.hasAttribute('disabled')) {
-      savedElement.focus()
+      focusForLastInput(savedElement)
     }
     savedElement = null
   }

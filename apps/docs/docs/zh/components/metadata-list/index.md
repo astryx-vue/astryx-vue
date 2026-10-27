@@ -14,7 +14,7 @@ import { metadataListBasic, metadataListCollapsible, metadataListHorizontal, met
 
 `MetadataList` 排列一组标签和值。`MetadataListItem` 是其中一对。单列时标签在值旁边。多列或数字列数时，标签叠在值上面，轨道按列数重复。`columns="multi"` 使用 `repeat(auto-fill, minmax(280px, 1fr))`。
 
-`orientation="horizontal"` 把每一对排成可换行的一行，并忽略 `columns`、`label` 和 `maxNumOfItems`。`maxNumOfItems` 把多出来的项收进「显示更多」。`label.width` 只在标签位于值旁边时生效。
+`orientation="horizontal"` 把每一对排成可换行的一行，并忽略 `columns`、`label` 和 `maxNumOfItems`。`maxNumOfItems` 把多出来的项收进「显示更多」。`label.width` 只在标签位于值旁边时生效。长标签和长值会在单词内部断开，避免把窄容器撑开。写在 `MetadataListItem` 上的其余属性，并排时落在 `dt` 上，标签叠在值上面时落在包住这一对的那一层上。
 
 ```vue
 <script setup lang="ts">

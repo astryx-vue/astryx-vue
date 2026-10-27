@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { TooltipProps } from './types.js'
 import { computed, getCurrentInstance, nextTick, onMounted, onUpdated, ref, useAttrs, watch } from 'vue'
+import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useTooltip } from './useTooltip.js'
 import '../../styles/tooltip.css'
 
@@ -22,6 +24,7 @@ const props = withDefaults(defineProps<TooltipProps>(), {
   anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
+
 const attrs = useAttrs()
 const instance = getCurrentInstance()
 
@@ -52,6 +55,8 @@ const {
 const setContentRef = useMergedRefs<HTMLElement>([contentRef])
 
 const wrapperRef = ref<HTMLElement | null>(null)
+// Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。
+const teleportTarget = useResolvedLayerTeleport(computed(() => props.anchor ?? wrapperRef.value))
 // 触发器是插槽内容，这里只负责从包裹元素里把它找出来，再交给 hook 挂事件。
 const isTextTrigger = ref(false)
 const showIndication = computed(() => props.hasHoverIndication === true || (props.hasHoverIndication === 'auto' && isTextTrigger.value))
@@ -107,7 +112,7 @@ onUpdated(syncTrigger)
     <slot />
   </span>
   <slot v-else />
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <!-- eslint-disable-next-line vue-a11y/mouse-events-have-key-events, vue-a11y/no-static-element-interactions -- 气泡上的鼠标事件仅用于指针移入气泡时保持显示；键盘焦点由触发元素的 focusin / focusout 处理。 -->
     <div
       v-show="isOpen"
@@ -117,9 +122,11 @@ onUpdated(syncTrigger)
       :style="bubbleStyle"
       v-bind="contentProps"
     >
-      <slot name="content">
-        {{ content }}
-      </slot>
+      <LayerContentBoundary>
+        <slot name="content">
+          {{ content }}
+        </slot>
+      </LayerContentBoundary>
     </div>
   </Teleport>
 </template>

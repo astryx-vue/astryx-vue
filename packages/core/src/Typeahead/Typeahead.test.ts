@@ -92,7 +92,7 @@ describe('typeahead', () => {
     const input = wrapper.get('input[role="combobox"]')
     await input.setValue('a')
     await flush()
-    expect(document.body.textContent).toContain('Loading results')
+    expect(document.body.textContent).toContain('Loading')
 
     rejectSearch?.(new Error('offline'))
     await flush()
@@ -309,6 +309,20 @@ describe('base typeahead', () => {
     expect(requestedMenuWidth(420)).toBe('min(420px, calc(100vw - 16px))')
     expect(requestedMenuWidth(undefined)).toBeUndefined()
     wrapper.unmount()
+  })
+
+  it('hides the label when isLabelHidden is set, and the old name still works', () => {
+    const hidden = mountTypeahead({ isLabelHidden: true })
+    expect(hidden.get('.astryx-field-label-group').attributes('data-hidden')).toBe('true')
+    hidden.unmount()
+
+    const aliased = mountTypeahead({ labelHidden: true })
+    expect(aliased.get('.astryx-field-label-group').attributes('data-hidden')).toBe('true')
+    aliased.unmount()
+
+    const visible = mountTypeahead()
+    expect(visible.get('.astryx-field-label-group').attributes('data-hidden')).toBeUndefined()
+    visible.unmount()
   })
 
   it('groups options by item.auxiliaryData.group', async () => {

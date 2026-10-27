@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { createStaticSource } from '@astryx-vue/core'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { BaseTypeahead } from '@astryx-vue/core/Typeahead'
 import { ref } from 'vue'
-
-provideAstryxLocale('en')
 
 const frame = ref<HTMLElement | null>(null)
 const value = ref<{ id: string, label: string } | null>(null)

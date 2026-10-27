@@ -2,7 +2,6 @@
 
 @layer astryx.components {
   .astryx-table-scroll {
-    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
     margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
@@ -167,6 +166,10 @@
     cursor: pointer;
   }
 
+  .astryx-table__sort:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
   .astryx-table__sort[data-align='center'] {
     justify-content: center;
   }
@@ -207,14 +210,36 @@
     min-width: 0;
   }
 
+  /*
+   * 有筛选按钮时，排序按钮只占自己的宽度，标题、排序箭头、漏斗紧挨着排，
+   * 整行再按列的对齐方向放。没有筛选按钮时排序按钮照旧铺满整格，点哪都能排序。
+   */
   .astryx-table__header-line > .astryx-table__sort {
     flex: 1;
     min-width: 0;
   }
 
+  .astryx-table__header-line:has(> .astryx-table__filter) > .astryx-table__sort {
+    flex: 0 1 auto;
+    width: auto;
+  }
+
+  /* 列对齐也要管到这一行：没有排序按钮的列，靠 justify-content 把标题和筛选按钮推到位。 */
+  .astryx-table thead th[data-align='center'] .astryx-table__header-line {
+    justify-content: center;
+  }
+
+  .astryx-table thead th[data-align='end'] .astryx-table__header-line {
+    justify-content: flex-end;
+  }
+
   .astryx-table :where(thead th) {
     /* 拖动把手贴在表头的行末，需要一个定位上下文。固定列的 inline 样式会盖过它。 */
     position: relative;
+  }
+
+  .astryx-table thead tr {
+    --resize-hint: transparent;
   }
 
   .astryx-table__resize {
@@ -226,6 +251,11 @@
     cursor: col-resize;
     touch-action: none;
     border-radius: var(--astryx-radius-inner, 0.375rem);
+    --indicator-color: var(--resize-hint, transparent);
+  }
+
+  .astryx-table__resize:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
   }
 
   .astryx-table__resize::after {
@@ -235,18 +265,22 @@
     inset-inline-end: 2px;
     width: 2px;
     height: 100%;
-    background-color: transparent;
+    background-color: var(--indicator-color);
   }
 
   @media (hover: hover) {
-    .astryx-table__resize:hover::after {
-      background-color: var(--astryx-color-border-strong, light-dark(#a3a3a3, #525252));
+    .astryx-table thead tr:hover {
+      --resize-hint: var(--astryx-color-border-strong, light-dark(#a3a3a3, #525252));
+    }
+
+    .astryx-table__resize:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      --indicator-color: var(--astryx-color-accent, light-dark(#0064e0, #4d9bff));
     }
   }
 
-  .astryx-table__resize[data-resizing='true']::after,
-  .astryx-table__resize:focus-visible::after {
-    background-color: var(--astryx-color-accent, light-dark(#0064e0, #4d9bff));
+  .astryx-table__resize[data-resizing='true'],
+  .astryx-table__resize:focus-visible {
+    --indicator-color: var(--astryx-color-accent, light-dark(#0064e0, #4d9bff));
   }
 
   .astryx-table__resize:focus-visible {
@@ -267,6 +301,41 @@
 
   .astryx-table__filter {
     min-width: 0;
+  }
+
+  /* 漏斗按钮和标题同一行：不参与压缩，也不挤掉标题。 */
+  .astryx-table__filter[data-variant='popover'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+  }
+
+  /* 漏斗按钮只有图标那么大，窄列里也能和标题、排序箭头排在一行。 */
+  .astryx-table__filter-trigger {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .astryx-table__filter-trigger:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: 2px;
+  }
+
+  /* 粗指针设备上点击区至少 44px。 */
+  @media (pointer: coarse) {
+    .astryx-table__filter-trigger {
+      min-width: 44px;
+      min-height: 44px;
+    }
   }
 
   /* 行内紧凑档：控件离表头更近，占的高度更小。 */
@@ -333,6 +402,10 @@
     cursor: pointer;
   }
 
+  .astryx-table__clickable:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
   .astryx-table tr[data-group-header] {
     cursor: pointer;
     user-select: none;
@@ -385,6 +458,11 @@
     cursor: pointer;
   }
 
+  .astryx-table__group-chevron:is(:disabled, [aria-disabled='true']),
+  .astryx-table__expander:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
   .astryx-table__group-chevron {
     color: var(--astryx-color-icon-secondary, light-dark(#737373, #a3a3a3));
   }
@@ -397,12 +475,12 @@
   }
 
   @media (hover: hover) {
-    .astryx-table__group-chevron:hover,
-    .astryx-table__expander:hover {
+    .astryx-table__group-chevron:hover:where(:not(:disabled, [aria-disabled='true'])),
+    .astryx-table__expander:hover:where(:not(:disabled, [aria-disabled='true'])) {
       color: var(--astryx-color-icon-primary, light-dark(#171717, #fafafa));
     }
 
-    .astryx-table__expander:hover {
+    .astryx-table__expander:hover:where(:not(:disabled, [aria-disabled='true'])) {
       background-image: linear-gradient(var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d)), var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d)));
     }
   }

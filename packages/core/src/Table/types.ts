@@ -126,10 +126,29 @@ export interface TablePanelPatch {
   render: () => VNodeChild
 }
 
+/**
+ * 直接挂在 `<tr>` 上的事件，用来把整行当成一个悬停或聚焦的靶子（例如整行弹详情卡片）。
+ * 多个插件给同一个事件时都会调用。
+ */
+export interface TableRowListeners {
+  /** 指针进入这一行。 */
+  onMouseenter?: (event: MouseEvent) => void
+  /** 指针离开这一行。 */
+  onMouseleave?: (event: MouseEvent) => void
+  /** 行内元素获得焦点。焦点事件冒泡，所以绑在行上也能收到。 */
+  onFocus?: (event: FocusEvent) => void
+  /** 行内元素失去焦点。 */
+  onBlur?: (event: FocusEvent) => void
+}
+
 export interface TableRowPatch {
   attrs?: Record<string, string | undefined>
   class?: string
   onClick?: (event: MouseEvent) => void
+  /** 行元素挂上、卸下时回调（卸下时传入 `null`），用来把 `<tr>` 本身交给 `useHoverCard` 这类工具。 */
+  ref?: (element: HTMLTableRowElement | null) => void
+  /** 挂在 `<tr>` 上的事件。 */
+  listeners?: TableRowListeners
   suppressSelection?: boolean
   skipRowIndex?: boolean
   group?: TableGroupPatch

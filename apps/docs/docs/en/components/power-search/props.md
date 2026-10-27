@@ -14,7 +14,7 @@ footer: false
       <tr><td><code>config</code></td><td><code>PowerSearchConfig</code></td><td>required</td><td>Fields, operators, and the value each operator expects.</td></tr>
       <tr><td><code>filters</code></td><td><code>PowerSearchFilter[]</code></td><td>-</td><td>Current filters. When passed, the parent owns them and listens for updates.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>Search</td><td>Accessible name of the input.</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Hides the label visually and keeps it available to assistive tech.</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Hides the label visually and keeps it available to assistive tech. Omitted means hidden; <code>false</code> shows it. <code>labelHidden</code> is the older name. When both are set, this one wins.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td>Search…</td><td>Placeholder while there are no filters.</td></tr>
       <tr><td><code>autofocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Focus the input after mount.</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows clear all once a filter exists. The older <code>clearable</code> name works too.</td></tr>
@@ -34,6 +34,10 @@ footer: false
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>Match count. A number is formatted with the result plural. A string is shown as given.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>Size of the input and the tokens.</td></tr>
       <tr><td><code>components</code></td><td><code>PowerSearchComponents</code></td><td>-</td><td>Replace the token or the editor for one value type.</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string</code></td><td>-</td><td>Added to the field shell, the layer that holds the label and the status message. It does not land on the bordered box or the native input.</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>Inline style for the field shell. Same landing as <code>containerClass</code>.</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string</code></td><td>-</td><td>Added to the bordered box. A <code>class</code> on the component lands there too, not on the native input.</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>-</td><td>Inline style for the bordered box. A <code>style</code> on the component lands there too.</td></tr>
     </tbody>
   </table>
 </div>

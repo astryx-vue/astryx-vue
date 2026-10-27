@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { selectorClearable, selectorDescriptions, selectorGhost, selectorSections, selectorSheet, selectorStates, selectorStatus } from '../../../../components/demos/selector'
+import { selectorActions, selectorClearable, selectorDescriptions, selectorGhost, selectorSecondary, selectorSections, selectorSheet, selectorStates, selectorStatus } from '../../../../components/demos/selector'
 </script>
 
 ## Usage
@@ -78,6 +78,20 @@ Built-in strings such as the placeholder and the empty state are English. Call `
   description="A borderless selector sits with ghost buttons in a toolbar."
   locale="en"
   title="Ghost toolbar"
+/>
+
+<DemoExample
+  :demo="selectorSecondary"
+  description="The secondary trigger rests like a secondary button: no border, and a neutral fill."
+  locale="en"
+  title="Secondary"
+/>
+
+<DemoExample
+  :demo="selectorActions"
+  description="An option can carry an action. Activating it does not change the selection. Once any option has an action, the menu becomes two columns."
+  locale="en"
+  title="Option actions"
 />
 
 <DemoExample

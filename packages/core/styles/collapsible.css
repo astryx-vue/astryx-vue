@@ -35,11 +35,18 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .astryx-collapsible-trigger:not([aria-disabled='true']):active {
-    background-image: linear-gradient(
-      var(--astryx-collapsible-pressed-overlay, #0000001a),
-      var(--astryx-collapsible-pressed-overlay, #0000001a)
-    );
+  @media not all and (pointer: coarse) {
+    .astryx-collapsible-trigger:not([aria-disabled='true']):active {
+      background-image: linear-gradient(
+        var(--astryx-collapsible-pressed-overlay, #0000001a),
+        var(--astryx-collapsible-pressed-overlay, #0000001a)
+      );
+    }
+  }
+
+  .astryx-collapsible-trigger[data-astryx-press='on'],
+  .astryx-collapsible-trigger[data-astryx-press='fading'] {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-collapsible-trigger:focus-visible {

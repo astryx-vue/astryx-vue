@@ -34,17 +34,19 @@ import {
 Behavior is added with plugins, composed in the `plugins` object:
 
 - `useTableSortable` cycles a header through ascending, descending, and unsorted. Shift-click adds a column when `isMultiSortEnabled` is set. `useTableSortableState` holds the sort and returns the sorted rows.
-- `useTableSelection` adds a checkbox column and highlights selected rows. `useTableSelectionState` holds the selected ids.
+- `useTableSelection` adds a checkbox column and highlights selected rows. `useTableSelectionState` holds the selected ids. Pass its `selectionState` to `TableSelectionToolbar` to run bulk actions on the selection; the bar stays hidden until something is selected. Set `hasRowHighlight` to `false` when the row background already means something else. Checked rows stay `aria-selected`.
 - `useTablePagination` renders a pager under the table. Slice the rows with `paginateData` before passing `data`.
 - `useTableColumnSettings` shows only the active column keys, and keeps `isAlwaysVisible` columns on.
 - `useTableColumnResize` lets a header edge be dragged. The smallest width is 60px.
 - `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly. This filtering stays separate from Power Search.
 - `useTableGroupedRows` turns the rows you already filtered, sorted, and sliced into sections. Pass its data, plugin, and row identity back to the table together. A collapsed section keeps its header. Replace the collapsed set instead of mutating it.
 - `useTableTreeState` decides which nodes are open. `useTableTreeData` draws the indent and the buttons. Child rows reuse the parent columns. The header button expands or collapses every branch, and a cycle is skipped.
-- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. Use the tree plugins when the children should reuse the columns.
+- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. `hasRowClickExpansion` also toggles from a click on the row, and leaves buttons, links, editable text, and an existing text selection alone. The panel lines up with the first column and is not counted as a striped row. Use the tree plugins when the children should reuse the columns.
 - `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.
 - `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.
 - `useTableRowIndex` numbers real rows. Group headers do not take a number.
+
+A column with no width stays at least 60px wide. A `style.minWidth` smaller than the sum of those floors is raised so the columns stay readable; a larger value is kept. A table that fits does not trap the scroll chain. Horizontal overscroll is contained only while the table actually overflows.
 
 `density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.
 

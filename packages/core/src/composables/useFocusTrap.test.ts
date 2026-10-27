@@ -217,4 +217,65 @@ describe('useFocusTrap', () => {
     trigger.remove()
     empty.remove()
   })
+
+  it('tab 只在焦点位于陷阱里面时才被拦下', async () => {
+    const outside = document.createElement('input')
+    document.body.append(outside)
+    mountComposable(() => useFocusTrap({ container: ref(container), isEnabled: ref(true) }))
+    await nextTick()
+    outside.focus()
+    const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+    outside.dispatchEvent(tab)
+    expect(tab.defaultPrevented).toBe(false)
+
+    button2.focus()
+    const wrap = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+    button2.dispatchEvent(wrap)
+    expect(wrap.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(button1)
+    outside.remove()
+  })
+
+  it('程序把焦点放在容器自己身上时，Tab 进入循环，Shift+Tab 到最后一个', async () => {
+    container.tabIndex = -1
+    mountComposable(() => useFocusTrap({ container: ref(container), isEnabled: ref(true), initialFocus: () => container }))
+    await nextTick()
+    expect(document.activeElement).toBe(container)
+    container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }))
+    expect(document.activeElement).toBe(button1)
+    container.focus()
+    container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true }))
+    expect(document.activeElement).toBe(button2)
+  })
+
+  it('输入法拼字时的 Escape、已经被处理过的 Escape 都不关', async () => {
+    const onEscape = vi.fn()
+    mountComposable(() => useFocusTrap({ container: ref(container), isEnabled: ref(true), onEscape }))
+    await nextTick()
+    button1.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', isComposing: true, bubbles: true }))
+    button1.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 229, bubbles: true }))
+    const handled = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    handled.preventDefault()
+    button1.dispatchEvent(handled)
+    expect(onEscape).not.toHaveBeenCalled()
+    button1.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    expect(onEscape).toHaveBeenCalledOnce()
+  })
+
+  it('用指针关掉时，焦点回到触发器但不画焦点环', async () => {
+    const trigger = document.createElement('button')
+    document.body.append(trigger)
+    trigger.focus()
+    const focus = vi.spyOn(trigger, 'focus')
+    const isEnabled = ref(false)
+    mountComposable(() => useFocusTrap({ container: ref(container), isEnabled }))
+    isEnabled.value = true
+    await nextTick()
+    document.dispatchEvent(new PointerEvent('pointerdown'))
+    isEnabled.value = false
+    await nextTick()
+    expect(document.activeElement).toBe(trigger)
+    expect(focus).toHaveBeenLastCalledWith({ focusVisible: false })
+    trigger.remove()
+  })
 })

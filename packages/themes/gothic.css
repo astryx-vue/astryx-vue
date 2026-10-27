@@ -1,5 +1,6 @@
 /* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './fonts.css';
+@import './data.css';
 @import './gothic/alert-dialog.css';
 @import './gothic/avatar.css';
 @import './gothic/avatar-group.css';
@@ -36,6 +37,7 @@
 @import './gothic/popover.css';
 @import './gothic/progress-bar.css';
 @import './gothic/radio.css';
+@import './gothic/section.css';
 @import './gothic/segmented-control.css';
 @import './gothic/side-nav.css';
 @import './gothic/skeleton.css';

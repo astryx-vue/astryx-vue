@@ -17,7 +17,7 @@ Reads the authoritative Astryx locale. Use it to thread the provider locale into
 import { useLocale } from '@astryx-vue/core/locale'
 ```
 
-The returned `locale` is a computed string, so the template unwraps it and any `watch` or `computed` follows the provider when it switches language. Tags are normalized on the way out: `en` and everything under `en-*` read as `en`, `zh`, `zh-CN`, and `zh-Hans` read as `zh-CN`, and other tags keep their canonical spelling.
+The returned `locale` is a computed string, so the template unwraps it and any `watch` or `computed` follows the provider when it switches language. Tags are normalized on the way out: `zh`, `zh-CN`, and `zh-Hans` read as `zh-CN`, and every other tag keeps its region with canonical casing, so `en-gb` reads as `en-GB`.
 
 ## Best practices
 

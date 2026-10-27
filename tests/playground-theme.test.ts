@@ -31,7 +31,7 @@ describe('playground theme', () => {
 
   it('reproduces the Neutral spacing, size, and motion scales at the defaults', () => {
     const variables = themeVariables(createNeutralTheme())
-    expect(variables['--astryx-spacing-0']).toBe('0')
+    expect(variables['--astryx-spacing-0']).toBe(properties.get('--astryx-spacing-0'))
     expect(variables['--astryx-spacing-1']).toBe(properties.get('--astryx-spacing-1'))
     expect(variables['--astryx-spacing-0-5']).toBe(properties.get('--astryx-spacing-0-5'))
     expect(variables['--astryx-size-element-sm']).toBe('28px')
@@ -67,7 +67,7 @@ describe('playground theme', () => {
     expect(theme.typeScale).toBe('major-second')
     expect(theme.typeSize).toBe(12)
     expect(theme.radius).toBe(2)
-    expect(themeVariables(theme)['--astryx-spacing-1']).toBe('2px')
+    expect(themeVariables(theme)['--astryx-spacing-1']).toBe('0.125rem')
     expect(themesEqual(theme, createNeutralTheme())).toBe(false)
   })
 

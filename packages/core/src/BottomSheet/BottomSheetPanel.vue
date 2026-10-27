@@ -2,9 +2,13 @@
 import type { VNode } from 'vue'
 import type { BottomSheetHeight, BottomSheetMotion, BottomSheetPadding, BottomSheetSnapPoint, BottomSheetState } from './types.js'
 import { computed, onMounted, onUpdated, useTemplateRef, watch } from 'vue'
+import { attachScrollKeyboardDelegation } from '../composables/internal/scrollKeyboardDelegation.js'
+import { provideLayerDepth } from '../layer/layerDepth.js'
+import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { waitForTransition } from './sheetTransition.js'
 import { resolveSnapPoints } from './snapOffsets.js'
-import { useSheetGestures, waitForTransition } from './useSheetGestures.js'
+import { useSheetGestures } from './useSheetGestures.js'
 
 defineOptions({ name: 'AstryxBottomSheetPanel' })
 
@@ -32,6 +36,11 @@ const emit = defineEmits<{
 
 defineSlots<{ default?: () => VNode[] }>()
 
+// 面板内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
+// 嵌套深度加一，里面再开的浮层会排在面板上面。
+resetLayerScopedContext()
+provideLayerDepth()
+
 const HEIGHT_BUDGETS: Record<BottomSheetHeight, string> = {
   hug: '92dvh',
   capped: '62dvh',
@@ -40,6 +49,7 @@ const HEIGHT_BUDGETS: Record<BottomSheetHeight, string> = {
 
 const panel = useTemplateRef<HTMLElement>('panel')
 const body = useTemplateRef<HTMLElement>('body')
+const content = useTemplateRef<HTMLElement>('content')
 useScrollbars(body)
 const isInteractive = computed(() => props.state === 'open')
 
@@ -69,12 +79,6 @@ const gestures = useSheetGestures({
   onScrimOpacity: opacity => emit('scrimOpacity', opacity),
   onSnap: visibleHeight => emit('snap', visibleHeight),
   onDismiss: () => emit('dismiss'),
-})
-
-const contentStyle = computed(() => {
-  if (props.padding == null)
-    return undefined
-  return { '--_sheet-padding': `var(--astryx-spacing-${String(props.padding).replace('.', '-')})` }
 })
 
 const panelStyle = computed<Record<string, string | undefined>>(() => {
@@ -125,6 +129,12 @@ onUpdated(() => {
   gestures.updateOverflow()
 })
 
+watch([body, content], ([viewport, box], _previous, onCleanup) => {
+  if (viewport == null || box == null)
+    return
+  onCleanup(attachScrollKeyboardDelegation(viewport, box))
+})
+
 defineExpose({
   element: computed(() => panel.value ?? null),
   focus: (options?: FocusOptions) => panel.value?.focus(options),
@@ -135,7 +145,7 @@ defineExpose({
 <template>
   <div
     ref="panel"
-    class="astryx-bottom-sheet"
+    class="astryx-bottom-sheet astryx-layer"
     :data-state="state"
     :data-height="heightKind"
     :data-dragging="gestures.isDragging.value || undefined"
@@ -160,7 +170,7 @@ defineExpose({
       :style="bodyStyle"
       @pointerdown="gestures.onBodyPointerDown"
     >
-      <div class="astryx-bottom-sheet__content" :style="contentStyle">
+      <div ref="content" class="astryx-bottom-sheet__content" :data-padding="padding">
         <slot />
       </div>
     </div>

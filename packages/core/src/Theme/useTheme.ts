@@ -4,7 +4,8 @@ import { computed, inject } from 'vue'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { readColorMode, resolveLightDark } from './colorMode.js'
 import { themeContextKey } from './context.js'
-import { normalizeTokenName } from './defineTheme.js'
+import { DATA_TOKEN_DEFAULTS } from './dataTokens.js'
+import { normalizeTokenName } from './tokenName.js'
 
 export interface UseThemeReturn {
   /** Name of the nearest theme, or `neutral` when no theme is present. */
@@ -17,6 +18,11 @@ export interface UseThemeReturn {
   tokens: ComputedRef<Record<string, string>>
 }
 
+/** Prefixed data-color defaults, for reads outside a stylesheet. */
+const DATA_DEFAULTS: Readonly<Record<string, string>> = Object.fromEntries(
+  Object.entries(DATA_TOKEN_DEFAULTS).map(([name, value]) => [normalizeTokenName(name), value]),
+)
+
 function readDocumentToken(name: string, mode: ResolvedColorMode): string {
   if (typeof document === 'undefined')
     return ''
@@ -27,6 +33,14 @@ function readDocumentToken(name: string, mode: ResolvedColorMode): string {
 /**
  * Read the nearest theme. Outside a `Theme`, the name is `neutral` and tokens
  * are read from the document's custom properties.
+ *
+ * Values are the theme's root values. An adaptation rule that changes a token
+ * on narrow or touch screens applies through CSS only, so `token()` and
+ * `tokens` stay the same across environments.
+ *
+ * The returned object and `token` are created once per component. `name`,
+ * `mode`, and `tokens` update only when the theme or the effective mode
+ * changes, so watching them does not trigger on unrelated renders.
  */
 export function useTheme(): UseThemeReturn {
   const context = inject(themeContextKey, null)
@@ -39,19 +53,27 @@ export function useTheme(): UseThemeReturn {
     return readColorMode(prefersDark.value)
   })
 
-  const name = computed(() => context?.value.theme.name ?? 'neutral')
+  const theme = computed(() => context?.value.theme)
+  const name = computed(() => theme.value?.name ?? 'neutral')
 
   const tokens = computed(() => {
-    const source = context?.value.theme.tokens ?? {}
     const resolved: Record<string, string> = {}
-    for (const [key, value] of Object.entries(source))
+    const source = theme.value
+    for (const [key, value] of Object.entries({ ...source?.tokens, ...source?.localTokens }))
       resolved[key] = resolveLightDark(value, mode.value)
     return resolved
   })
 
   function token(tokenName: string): string {
-    const key = normalizeTokenName(tokenName)
-    return tokens.value[key] ?? readDocumentToken(key, mode.value)
+    const trimmed = tokenName.trim()
+    const local = tokens.value[trimmed]
+    if (local !== undefined)
+      return local
+    const key = normalizeTokenName(trimmed)
+    const fallback = DATA_DEFAULTS[key]
+    return tokens.value[key]
+      || readDocumentToken(key, mode.value)
+      || (fallback ? resolveLightDark(fallback, mode.value) : '')
   }
 
   return { name, mode, token, tokens }

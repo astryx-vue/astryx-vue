@@ -28,7 +28,9 @@
     box-shadow: none;
   }
 
-  .astryx-button-group > .astryx-button:active {
+  /* 组里的按钮不单独缩放，权重要比按钮自己的 :active / 按压更高。 */
+  .astryx-button-group > .astryx-button:not(:disabled):not([aria-disabled='true']):active,
+  .astryx-button-group > .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press='on'] {
     transform: none;
   }
 

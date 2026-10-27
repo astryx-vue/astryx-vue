@@ -23,8 +23,8 @@
     --astryx-switch-thumb-travel-lg: 22px;
     --astryx-switch-track-radius: 999px;
     --astryx-switch-thumb-radius: 999px;
-    --astryx-switch-track-off: light-dark(#e2e2e2, #303030);
-    --astryx-switch-track-on: light-dark(#1b1b1b, #f1f1f1);
-    --astryx-switch-thumb: light-dark(#ffffff, #262626);
+    --astryx-switch-track-off: var(--astryx-color-border-emphasized);
+    --astryx-switch-track-on: var(--astryx-color-accent);
+    --astryx-switch-thumb: var(--astryx-color-background-surface);
   }
 }

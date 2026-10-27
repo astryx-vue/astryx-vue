@@ -88,9 +88,17 @@
     }
   }
 
-  .astryx-thumbnail__open:active::after,
-  .astryx-thumbnail__frame[data-interactive='true']:active::after {
-    background-color: var(--astryx-color-overlay-pressed, light-dark(#0000001a, #ffffff1a));
+  @media not all and (pointer: coarse) {
+    .astryx-thumbnail__open:active::after,
+    .astryx-thumbnail__frame[data-interactive='true']:active::after {
+      background-color: var(--astryx-color-overlay-pressed, light-dark(#0000001a, #ffffff1a));
+    }
+  }
+
+  .astryx-thumbnail__open[data-astryx-press]::after {
+    background-color: transparent;
+    background-image: var(--_press-paint-image);
+    transition-duration: 0s;
   }
 
   .astryx-thumbnail__loading {

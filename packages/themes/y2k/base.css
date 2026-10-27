@@ -115,80 +115,7 @@
     --astryx-color-icon-yellow: light-dark(#614400, #3f2600);
     --astryx-color-text-yellow: light-dark(#614400, #3f2600);
 
-    /*
-     * Chart colors. Categorical series use one stop in both schemes.
-     * Sequential ramps run from 5 (darkest) to 1 (lightest).
-     * Gray, and the neutral reference color, change with the scheme.
-     * Values match the upstream data color tokens.
-     */
-    --astryx-color-data-categorical-blue: light-dark(#0171E3, #0171E3);
-    --astryx-color-data-categorical-orange: light-dark(#EB6E00, #EB6E00);
-    --astryx-color-data-categorical-purple: light-dark(#6B1EFD, #6B1EFD);
-    --astryx-color-data-categorical-green: light-dark(#0B991F, #0B991F);
-    --astryx-color-data-categorical-pink: light-dark(#F351C0, #F351C0);
-    --astryx-color-data-categorical-cyan: light-dark(#0171A4, #0171A4);
-    --astryx-color-data-categorical-red: light-dark(#F5394F, #F5394F);
-    --astryx-color-data-categorical-teal: light-dark(#08A3A3, #08A3A3);
-    --astryx-color-data-categorical-brown: light-dark(#965E03, #965E03);
-    --astryx-color-data-categorical-indigo: light-dark(#6F8AFF, #6F8AFF);
-
-    --astryx-color-data-neutral: light-dark(#8494A3, #8C939B);
-
-    --astryx-color-data-blue-5: light-dark(#02165E, #02165E);
-    --astryx-color-data-blue-4: light-dark(#004CBC, #004CBC);
-    --astryx-color-data-blue-3: light-dark(#2694FE, #2694FE);
-    --astryx-color-data-blue-2: light-dark(#78BEFF, #78BEFF);
-    --astryx-color-data-blue-1: light-dark(#DBECFF, #DBECFF);
-
-    --astryx-color-data-shamrock-5: light-dark(#0B603D, #0B603D);
-    --astryx-color-data-shamrock-4: light-dark(#138546, #138546);
-    --astryx-color-data-shamrock-3: light-dark(#24BB5E, #24BB5E);
-    --astryx-color-data-shamrock-2: light-dark(#8EF7AA, #8EF7AA);
-    --astryx-color-data-shamrock-1: light-dark(#D6FEE4, #D6FEE4);
-
-    --astryx-color-data-orange-5: light-dark(#A13F04, #A13F04);
-    --astryx-color-data-orange-4: light-dark(#D66100, #D66100);
-    --astryx-color-data-orange-3: light-dark(#FD9537, #FD9537);
-    --astryx-color-data-orange-2: light-dark(#FDB876, #FDB876);
-    --astryx-color-data-orange-1: light-dark(#FFE6CF, #FFE6CF);
-
-    --astryx-color-data-pink-5: light-dark(#8E1073, #8E1073);
-    --astryx-color-data-pink-4: light-dark(#D123A1, #D123A1);
-    --astryx-color-data-pink-3: light-dark(#F989D3, #F989D3);
-    --astryx-color-data-pink-2: light-dark(#FEADE3, #FEADE3);
-    --astryx-color-data-pink-1: light-dark(#FCE3F4, #FCE3F4);
-
-    --astryx-color-data-purple-5: light-dark(#3E0697, #3E0697);
-    --astryx-color-data-purple-4: light-dark(#6B1EFD, #6B1EFD);
-    --astryx-color-data-purple-3: light-dark(#9081FF, #9081FF);
-    --astryx-color-data-purple-2: light-dark(#B3B0FE, #B3B0FE);
-    --astryx-color-data-purple-1: light-dark(#E8E8FB, #E8E8FB);
-
-    --astryx-color-data-red-5: light-dark(#9D0519, #9D0519);
-    --astryx-color-data-red-4: light-dark(#D31130, #D31130);
-    --astryx-color-data-red-3: light-dark(#FB7D87, #FB7D87);
-    --astryx-color-data-red-2: light-dark(#FFB2B8, #FFB2B8);
-    --astryx-color-data-red-1: light-dark(#FEE4E6, #FEE4E6);
-
-    --astryx-color-data-teal-5: light-dark(#08767D, #08767D);
-    --astryx-color-data-teal-4: light-dark(#0C9293, #0C9293);
-    --astryx-color-data-teal-3: light-dark(#0DB7AF, #0DB7AF);
-    --astryx-color-data-teal-2: light-dark(#6CE6D8, #6CE6D8);
-    --astryx-color-data-teal-1: light-dark(#D7FCF8, #D7FCF8);
-
-    --astryx-color-data-yellow-5: light-dark(#8A5001, #8A5001);
-    --astryx-color-data-yellow-4: light-dark(#D69804, #D69804);
-    --astryx-color-data-yellow-3: light-dark(#FBCE03, #FBCE03);
-    --astryx-color-data-yellow-2: light-dark(#FCEC85, #FCEC85);
-    --astryx-color-data-yellow-1: light-dark(#FDF6BA, #FDF6BA);
-
-    --astryx-color-data-gray-5: light-dark(#25363F, #333338);
-    --astryx-color-data-gray-4: light-dark(#5D6C7B, #666A72);
-    --astryx-color-data-gray-3: light-dark(#AFB9C4, #B2B8BE);
-    --astryx-color-data-gray-2: light-dark(#CCD3DB, #D0D3D6);
-    --astryx-color-data-gray-1: light-dark(#F1F4F7, #F2F4F6);
-
-    --astryx-spacing-0: 0;
+    --astryx-spacing-0: 0rem;
     --astryx-spacing-0-5: 0.1875rem;
     --astryx-spacing-1: 0.375rem;
     --astryx-spacing-1-5: 0.5625rem;
@@ -199,10 +126,10 @@
     --astryx-spacing-6: 2.25rem;
     --astryx-spacing-7: 2.625rem;
     --astryx-spacing-8: 3rem;
-    --astryx-spacing-9: 36px;
-    --astryx-spacing-10: 40px;
-    --astryx-spacing-11: 44px;
-    --astryx-spacing-12: 48px;
+    --astryx-spacing-9: 2.25rem;
+    --astryx-spacing-10: 2.5rem;
+    --astryx-spacing-11: 2.75rem;
+    --astryx-spacing-12: 3rem;
 
     --astryx-size-element-sm: 32px;
     --astryx-size-element-md: 40px;
@@ -245,7 +172,7 @@
     --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
 
     --astryx-font-family-body: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --astryx-font-family-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --astryx-font-family-code: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
     --astryx-font-family-heading: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
     --astryx-font-size-4xs: 0.3125rem;

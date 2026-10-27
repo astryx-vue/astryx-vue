@@ -33,6 +33,72 @@ export const PLAYGROUND_TEMPLATE_SLUGS = [
   'mixed-gallery',
   'product-gallery',
   'side-gallery',
+  'login',
+  'login-card',
+  'login-split',
+  'login-sso',
+  'settings-dialog',
+  'settings',
+  'settings-sidebar',
+  'blank',
+  'shell-nav',
+  'shell-side-nav',
+  'shell-top-nav',
+  'messaging-shell',
+  'table',
+  'table-collapsible',
+  'table-comparison',
+  'table-filter',
+  'table-grouped',
+  'table-inbox',
+  'table-page',
+  'table-tree',
+  'canvas-editor',
+  'file-explorer',
+  'ide',
+  'kanban-board',
+  'editor',
+  'incident-console',
+] as const
+
+export type PlaygroundTemplateSlug = typeof PLAYGROUND_TEMPLATE_SLUGS[number]
+
+/**
+ * 出现在演练场模板菜单和模板索引里的页面。原版标了未完成或不进总览的页面不在这里，
+ * 但仍能用 `?template=<slug>` 打开，命令行也照样能读源码。
+ */
+export const PLAYGROUND_LISTED_TEMPLATE_SLUGS: readonly PlaygroundTemplateSlug[] = [
+  'theme-showcase',
+  'ai-chat',
+  'ai-chat-landing',
+  'library',
+  'documentation',
+  'documentation-design',
+  'documentation-technical',
+  'detail-page',
+  'product-detail',
+  'work-item-detail',
+  'dashboard',
+  'dashboard-comparison',
+  'dashboard-scorecard',
+  'dashboard-cohort-funnel',
+  'dashboard-composition',
+  'dashboard-progress',
+  'dashboard-alert-rail',
+  'payment-form',
+  'checkout-wizard',
+  'contact-form',
+  'form-wizard-dialog',
+  'form-wizard',
+  'form-wizard-inline',
+  'form-two-column',
+  'form-wizard-vertical',
+  'centered-hero',
+  'classic-gallery',
+  'gallery-hero',
+  'mixed-gallery',
+  'product-gallery',
+  'side-gallery',
   'login-card',
   'login-split',
   'login-sso',
@@ -55,9 +121,7 @@ export const PLAYGROUND_TEMPLATE_SLUGS = [
   'ide',
   'kanban-board',
   'editor',
-] as const
-
-export type PlaygroundTemplateSlug = typeof PLAYGROUND_TEMPLATE_SLUGS[number]
+]
 
 export interface PlaygroundTemplateMeta {
   slug: PlaygroundTemplateSlug
@@ -317,6 +381,14 @@ export const PLAYGROUND_TEMPLATE_META: Record<PlaygroundTemplateSlug, Playground
     categoryZh: '画廊',
     nameZh: '侧边画廊',
   },
+  'login': {
+    slug: 'login',
+    categoryEn: 'Login - Basic',
+    groupEn: 'Login',
+    nameEn: 'Basic Login',
+    categoryZh: '登录',
+    nameZh: '基础登录',
+  },
   'login-card': {
     slug: 'login-card',
     categoryEn: 'Login - Card',
@@ -396,6 +468,22 @@ export const PLAYGROUND_TEMPLATE_META: Record<PlaygroundTemplateSlug, Playground
     nameEn: 'Top Nav',
     categoryZh: '框架',
     nameZh: '顶部导航',
+  },
+  'messaging-shell': {
+    slug: 'messaging-shell',
+    categoryEn: 'Shell - Messaging',
+    groupEn: 'Shell',
+    nameEn: 'Messaging Shell',
+    categoryZh: '框架',
+    nameZh: '消息框架',
+  },
+  'table': {
+    slug: 'table',
+    categoryEn: 'Table - Basic',
+    groupEn: 'Table',
+    nameEn: 'Simple Table',
+    categoryZh: '表格',
+    nameZh: '简单表格',
   },
   'table-collapsible': {
     slug: 'table-collapsible',
@@ -492,6 +580,14 @@ export const PLAYGROUND_TEMPLATE_META: Record<PlaygroundTemplateSlug, Playground
     nameEn: 'Page Editor',
     categoryZh: '工具',
     nameZh: '页面编辑器',
+  },
+  'incident-console': {
+    slug: 'incident-console',
+    categoryEn: 'Tools - Incident Console',
+    groupEn: 'Tools',
+    nameEn: 'Incident Console',
+    categoryZh: '工具',
+    nameZh: '事件控制台',
   },
 }
 

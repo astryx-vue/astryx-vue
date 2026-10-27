@@ -419,7 +419,7 @@ function onRowActivate(task: TaskRow): void {
   border: none;
   cursor: pointer;
   text-align: start;
-  background: var(--color-background-muted);
-  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--astryx-color-background-muted);
+  padding: var(--astryx-spacing-3) var(--astryx-spacing-4);
 }
 </style>

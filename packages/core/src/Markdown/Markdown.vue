@@ -1,15 +1,24 @@
 <script lang="ts">
 import type { PropType, StyleValue, VNode } from 'vue'
 import type { MdNode } from './ast.js'
+import type { MarkdownPluginEntry } from './plugin-protocol/protocol.js'
+import type { MarkdownPlugin } from './plugins.js'
 import type { MarkdownProps } from './types.js'
 import { computed, defineComponent, h, ref } from 'vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { createIncrementalMarkdownState, parseMarkdown, parseMarkdownIncremental } from './parse.js'
+import { collectProtocolRenderers, isMarkdownPluginEntry, isMarkdownSourceLinesPlugin } from './plugin-protocol/protocol.js'
+import { applyProtocolTransforms } from './plugin-protocol/run.js'
+import { applyMarkdownSyntax } from './plugin-protocol/syntax.js'
 import { applyInlinePlugins, applyMarkdownPlugins } from './plugins.js'
 import { assignHeadingSlugs, collectDefinitions, renderMarkdownBlocks, slotText } from './render.js'
 import { computeBoundaries, parseCssDuration } from './streaming.js'
 import '../../styles/markdown.css'
+
+function isVueMarkdownPlugin(plugin: MarkdownPlugin | MarkdownPluginEntry): plugin is MarkdownPlugin {
+  return !isMarkdownPluginEntry(plugin)
+}
 
 function fadeSpanCount(): number {
   const fallback = 165
@@ -83,8 +92,17 @@ export default defineComponent({
         boundaries = computeBoundaries(boundaries, previousLength, fadeSpanCount())
       }
 
+      const allPlugins = props.plugins ?? []
+      const protocolPlugins = allPlugins.filter(isMarkdownPluginEntry)
+      const vuePlugins = allPlugins.filter(isVueMarkdownPlugin)
+      let rootNode: MdNode = { type: 'root', children: parsed.blocks }
+      if (protocolPlugins.length > 0) {
+        const isFinal = !props.isStreaming
+        rootNode = applyMarkdownSyntax(rootNode, shown, protocolPlugins, isFinal)
+        rootNode = applyProtocolTransforms(rootNode, protocolPlugins, shown, isFinal)
+      }
       const prepared = applyInlinePlugins(
-        applyMarkdownPlugins({ type: 'root', children: parsed.blocks }, props.plugins),
+        applyMarkdownPlugins(rootNode, vuePlugins),
         props.inlinePlugins,
       )
       const blocks = prepared.children ?? []
@@ -107,8 +125,10 @@ export default defineComponent({
         citationOrder: new Map(),
         citationStyle: props.citationStyle ?? 'label',
         citationLabel: messages.value.citation.label,
-        plugins: props.plugins,
+        plugins: vuePlugins,
         inlinePlugins: props.inlinePlugins,
+        sourceLines: protocolPlugins.some(isMarkdownSourceLinesPlugin),
+        protocolRenderers: collectProtocolRenderers(protocolPlugins),
         checkboxIndicator: checkboxIndicator.value,
       }
       const children = renderMarkdownBlocks(blocks, inline ? 0 : parsed.settledCount, ctx, cache)

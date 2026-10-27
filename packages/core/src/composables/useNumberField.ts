@@ -70,7 +70,7 @@ interface SteppedValueOptions {
 /**
  * 按步长网格走一格：以 min 为起点对齐，先取整再夹到范围内。
  */
-function steppedValue(options: SteppedValueOptions): number | null {
+export function computeSteppedValue(options: SteppedValueOptions): number | null {
   const { currentValue, direction, min, max, step, integerOnly } = options
   const stride = effectiveStep(step, integerOnly)
   const stepBase = min != null && (!integerOnly || Number.isInteger(min)) ? min : 0
@@ -120,7 +120,7 @@ export function useNumberField(options: UseNumberFieldOptions): NumberField {
   const locked = (): boolean => readDisabled() || readReadOnly()
 
   function nextValue(direction: NumberStepDirection): number | null {
-    return steppedValue({
+    return computeSteppedValue({
       currentValue: value.value,
       direction,
       min: readMin(),

@@ -1,6 +1,7 @@
 import type { DatePresentation } from '../composables/useDatePresentation.js'
 import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { NativePicker } from '../composables/useTimeValue.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
 
 /**
@@ -34,7 +35,7 @@ export type DateInputNativePicker = NativePicker
 export type DateInputStatusType = 'default' | FieldStatusType
 export type DateInputStatus = DateInputStatusType | FieldStatusInput
 
-export interface DateInputProps {
+export interface DateInputProps extends FieldPartStylingProps {
   /** 输入框 id。不传时组件自己生成。 */
   id?: string
   /** 额外的无障碍描述，接在字段说明后面。 */
@@ -59,6 +60,8 @@ export interface DateInputProps {
   description?: string
   /** 只把标签留给读屏，不显示出来。 */
   isLabelHidden?: boolean
+  /** 旧名。和 `isLabelHidden` 任一为真就藏起标签。 */
+  labelHidden?: boolean
   /** 在标签旁标成可选。 */
   isOptional?: boolean
   /** 把字段标成必填。 */

@@ -175,8 +175,10 @@
     position: fixed;
     z-index: var(--astryx-popover-z-index, 1000);
     box-sizing: border-box;
-    min-width: min(400px, calc(100vw - 16px));
-    max-width: min(720px, calc(100vw - 16px));
+    min-width: min(400px, var(--astryx-layer-max-inline-size, calc(100vw - 32px)));
+    max-width: min(720px, var(--astryx-layer-max-inline-size, calc(100vw - 32px)));
+    container-type: inline-size;
+    container-name: power-search-editor;
     padding: var(--astryx-spacing-3, 12px);
     border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
     border-radius: var(--astryx-radius-element, 0.625rem);
@@ -275,7 +277,7 @@
     padding: 0;
   }
 
-  @media (max-width: 399px) {
+  @container power-search-editor (max-width: 399px) {
     .astryx-power-search-editor-row > * {
       flex-basis: 100%;
     }

@@ -1,2 +1,6 @@
 export { default as Outline } from './Outline.vue'
+export { parseOutlineFromMarkdown } from './parseOutlineFromMarkdown.js'
+export type { ParseOutlineFromMarkdownOptions } from './parseOutlineFromMarkdown.js'
 export type { OutlineDensity, OutlineEmits, OutlineItem, OutlineProps } from './types.js'
+export { useOutlineFromDOM } from './useOutlineFromDOM.js'
+export { useOutlineFromMarkdown } from './useOutlineFromMarkdown.js'

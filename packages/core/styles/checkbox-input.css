@@ -57,6 +57,16 @@
 
   @keyframes astryx-checkbox-spin { to { transform: rotate(360deg); } }
 
+  @media not all and (pointer: coarse) {
+    .astryx-checkbox-input:not([data-blocked='true']) .astryx-checkbox-row:active .astryx-checkbox-indicator {
+      background-image: linear-gradient(var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19)), var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19)));
+    }
+  }
+
+  .astryx-checkbox-row[data-astryx-press] .astryx-checkbox-indicator {
+    background-image: var(--_press-paint-image);
+  }
+
   @media (pointer: coarse) {
     .astryx-checkbox-native {
       inset: 50% auto auto 50%;

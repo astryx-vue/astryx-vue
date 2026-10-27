@@ -32,6 +32,12 @@ footer: false
         <td>Whether the dot pulses to indicate an active state.</td>
       </tr>
       <tr>
+        <td><code>icon</code></td>
+        <td><code>Component</code></td>
+        <td>-</td>
+        <td>Icon drawn inside the dot. Omit it to keep a color-only signal. The <code>icon</code> slot wins. The icon is hidden from assistive tech; the name stays <code>label</code>.</td>
+      </tr>
+      <tr>
         <td><code>tooltip</code></td>
         <td><code>string</code></td>
         <td>-</td>

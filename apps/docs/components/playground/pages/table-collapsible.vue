@@ -257,14 +257,14 @@ const chartSeries = computed(() => {
 
 const chartColor = computed(() => {
   if (!chartAccountId.value)
-    return 'var(--color-data-categorical-green, #0B991F)'
+    return 'var(--astryx-color-data-categorical-green, #0B991F)'
   const points = chartSeries.value
   if (points.length < 2)
-    return 'var(--color-data-categorical-green, #0B991F)'
+    return 'var(--astryx-color-data-categorical-green, #0B991F)'
   const delta = points[points.length - 1] - points[0]
   const liability = chartAccountId.value.startsWith('card-')
   const good = liability ? delta <= 0 : delta >= 0
-  return good ? 'var(--color-data-categorical-green, #0B991F)' : 'var(--color-data-categorical-red, #F5394F)'
+  return good ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'
 })
 
 function toggleAll(): void {
@@ -425,10 +425,10 @@ function toggleAll(): void {
 
 <style scoped>
 .wash {
-  background: var(--color-background-body);
+  background: var(--astryx-color-background-body);
 }
 .group-trigger {
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-2);
+  padding: var(--astryx-spacing-2) var(--astryx-spacing-2);
 }
 </style>

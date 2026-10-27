@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { HoverCardEmits, HoverCardProps, HoverCardSlots } from './types.js'
 import { computed, onMounted, onUpdated, ref } from 'vue'
+import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
+import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useHoverCard } from './useHoverCard.js'
 import '../../styles/hover-card.css'
 
 defineOptions({ name: 'AstryxHoverCard', inheritAttrs: false })
-
 const props = withDefaults(defineProps<HoverCardProps>(), {
   content: '',
   placement: 'above',
@@ -55,6 +56,8 @@ const {
 const setContentRef = useMergedRefs<HTMLElement>([surfaceRef])
 
 const wrapperRef = ref<HTMLElement | null>(null)
+// Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。
+const teleportTarget = useResolvedLayerTeleport(wrapperRef)
 // 触发器是插槽内容，这里只负责从包裹元素里把它找出来，再交给 hook 挂事件。
 const isTextTrigger = ref(false)
 const showIndication = computed(() => props.hasHoverIndication === true || (props.hasHoverIndication === 'auto' && isTextTrigger.value))
@@ -97,7 +100,7 @@ defineExpose({ element, show, hide })
   >
     <slot />
   </span>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <Transition name="astryx-hover-card">
       <!-- eslint-disable-next-line vue-a11y/mouse-events-have-key-events, vue-a11y/no-static-element-interactions -- The card's pointer handlers only keep it open while the pointer is inside it; opening and closing by keyboard are handled on the trigger and by Escape. -->
       <div
@@ -109,9 +112,11 @@ defineExpose({ element, show, hide })
         v-bind="contentProps"
       >
         <div class="astryx-hover-card__content">
-          <slot name="content">
-            {{ content }}
-          </slot>
+          <LayerContentBoundary>
+            <slot name="content">
+              {{ content }}
+            </slot>
+          </LayerContentBoundary>
         </div>
       </div>
     </Transition>

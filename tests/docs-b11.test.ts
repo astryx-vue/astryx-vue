@@ -6,7 +6,7 @@ import accessibilityZh from '../apps/docs/components/demo-infra/reference/access
 import anatomyEn from '../apps/docs/components/demo-infra/reference/anatomy.en.json'
 import anatomyZh from '../apps/docs/components/demo-infra/reference/anatomy.zh.json'
 import { ACCESSIBILITY_REQUIREMENTS } from '../apps/docs/components/demo-infra/reference/loadReference'
-import { PLAYGROUND_TEMPLATE_META, PLAYGROUND_TEMPLATE_SLUGS } from '../apps/docs/components/playground/templateManifest'
+import { PLAYGROUND_LISTED_TEMPLATE_SLUGS, PLAYGROUND_TEMPLATE_META, PLAYGROUND_TEMPLATE_SLUGS } from '../apps/docs/components/playground/templateManifest'
 
 vi.mock('../apps/docs/components/demo-infra/componentCatalog', () => ({
   COMPONENT_SLUGS: ['button', 'link'],
@@ -99,8 +99,10 @@ describe('blank playground template', () => {
       nameEn: 'Blank',
       nameZh: '空白页',
     })
-    expect(PLAYGROUND_TEMPLATE_SLUGS).not.toContain('incident-console')
-    expect(PLAYGROUND_TEMPLATE_SLUGS).not.toContain('messaging-shell')
+    // 原版标为未完成的页面能用链接打开，但不出现在菜单和模板索引里。
+    expect(PLAYGROUND_TEMPLATE_SLUGS).toContain('incident-console')
+    expect(PLAYGROUND_LISTED_TEMPLATE_SLUGS).not.toContain('incident-console')
+    expect(PLAYGROUND_LISTED_TEMPLATE_SLUGS).not.toContain('messaging-shell')
   })
 })
 

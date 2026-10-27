@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import FileInput from './FileInput.vue'
 
@@ -57,7 +57,7 @@ describe('file input', () => {
     transfer.items.add(file('notes.txt', 'text/plain'))
     Object.defineProperty(input.element, 'files', { value: transfer.files })
     await input.trigger('change')
-    expect(wrapper.text()).toContain('notes.txt is not an accepted file type')
+    expect(wrapper.text()).toContain('"notes.txt" is not an accepted file type')
   })
 
   it('shows the labelTooltip from the field label', () => {
@@ -88,5 +88,50 @@ describe('file input', () => {
     expect(tooltip?.textContent).toBe('Uploads are locked until your profile is verified')
     expect(tooltip?.style.display).not.toBe('none')
     wrapper.unmount()
+  })
+
+  it('runs changeAction on selection and clear, and emits actionError when it fails', async () => {
+    const order: string[] = []
+    const changeAction = vi.fn(async (value: File | File[] | null) => {
+      order.push(value == null ? 'clear' : 'select')
+    })
+    const wrapper = mount(FileInput, {
+      props: {
+        'label': 'Resume',
+        'modelValue': null,
+        changeAction,
+        'onUpdate:modelValue': value => wrapper.setProps({ modelValue: value as File | null }),
+      },
+    })
+    const input = wrapper.get('input[type="file"]')
+    const transfer = new DataTransfer()
+    transfer.items.add(file('resume.pdf', 'application/pdf'))
+    Object.defineProperty(input.element, 'files', { value: transfer.files })
+    await input.trigger('change')
+    await nextTick()
+    expect(changeAction).toHaveBeenCalledWith(expect.objectContaining({ name: 'resume.pdf' }))
+    expect(wrapper.emitted('change')).toHaveLength(1)
+    expect(order).toEqual(['select'])
+
+    await wrapper.setProps({ modelValue: file('resume.pdf', 'application/pdf') })
+    await wrapper.get('button[class*="clear"]').trigger('click')
+    await nextTick()
+    expect(changeAction).toHaveBeenLastCalledWith(null)
+    expect(order).toEqual(['select', 'clear'])
+
+    const failing = vi.fn(async () => {
+      throw new Error('upload failed')
+    })
+    const broken = mount(FileInput, {
+      props: { label: 'Resume', modelValue: null, changeAction: failing },
+    })
+    const brokenInput = broken.get('input[type="file"]')
+    const again = new DataTransfer()
+    again.items.add(file('other.pdf', 'application/pdf'))
+    Object.defineProperty(brokenInput.element, 'files', { value: again.files })
+    await brokenInput.trigger('change')
+    await nextTick()
+    await Promise.resolve()
+    expect(broken.emitted('actionError')?.[0]?.[0]).toMatchObject({ message: 'upload failed' })
   })
 })

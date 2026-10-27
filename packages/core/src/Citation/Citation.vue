@@ -2,6 +2,7 @@
 import type { CitationProps } from './types.js'
 import { computed, useTemplateRef } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { isSafeUrl } from '../Link/safeUrl.js'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/citation.css'
 
@@ -15,7 +16,10 @@ const messages = useAstryxMessages()
 const root = useTemplateRef<HTMLElement>('root')
 
 const title = computed(() => props.source.title?.trim() || String(props.number))
-const href = computed(() => props.source.url)
+const href = computed(() => {
+  const url = props.source.url
+  return url != null && url !== '' && isSafeUrl(url) ? url : undefined
+})
 const accessibleName = computed(() => messages.value.citation.label(props.number, title.value))
 
 const imageSrc = computed(() => {
@@ -72,6 +76,7 @@ defineExpose({ element: root })
     v-bind="$attrs"
     class="astryx-citation"
     :data-variant="variant"
+    role="group"
     :aria-label="accessibleName"
     :title="title"
   >

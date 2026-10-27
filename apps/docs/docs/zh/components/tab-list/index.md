@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListStatus } from '../../../../components/demos/tab-list'
+import { tabListActions, tabListBadges, tabListFill, tabListIcons, tabListOverflow, tabListScroll, tabListStatus } from '../../../../components/demos/tab-list'
 </script>
 
 ## 使用方法
@@ -44,7 +44,7 @@ const value = ref('overview')
 
 | 指引 | 实践 |
 | --- | --- |
-| <Badge variant="success">推荐</Badge> | 组件自带 `role="tablist"`、`role="tab"` 与 `aria-selected` 语义，配合方向键导航，无需额外补齐无障碍属性。 |
+| <Badge variant="success">推荐</Badge> | 不传 `role` 时，标签条是导航地标，当前项用 `aria-current="true"`。写成 `role="tablist"` 才进入标签页模式，带 `role="tab"` 和 `aria-selected`。标签比条宽时默认横向滚动。 |
 | <Badge variant="success">推荐</Badge> | 为每个 `Tab` 提供唯一的 `value`：它是选中状态的标识，也是键盘导航定位标签的依据。 |
 | <Badge variant="success">推荐</Badge> | 需要暂时不可用的标签时设置 `disabled`，键盘导航会自动跳过，用户也不会误点。 |
 | <Badge variant="error">避免</Badge> | 避免在单个 TabList 中放入过多标签：标签过多会增加查找成本，超出容器时应考虑滚动或重新组织内容。 |
@@ -78,6 +78,13 @@ const value = ref('overview')
   description="标签文字前面放一个图标，用来区分页面。"
   locale="zh"
   title="带图标"
+/>
+
+<DemoExample
+  :demo="tabListScroll"
+  description="标签比条宽时横向滚动。被挡住的一端淡出，鼠标悬停时出现翻页箭头；选中项会滚回可见区域。"
+  locale="zh"
+  title="横向滚动"
 />
 
 <DemoExample

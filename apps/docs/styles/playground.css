@@ -431,6 +431,10 @@ html.dark:has(.playground-route) body {
   background: #22c55e;
 }
 
+.playground__status[data-state='error']::before {
+  background: #ef4444;
+}
+
 .playground__export {
   display: inline-flex;
   gap: 8px;

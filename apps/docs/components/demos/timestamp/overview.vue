@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { Timestamp } from '@astryx-vue/core/Timestamp'
-
-provideAstryxLocale('en')
 </script>
 
 <template>

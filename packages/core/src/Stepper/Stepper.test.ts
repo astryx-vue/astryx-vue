@@ -141,6 +141,63 @@ describe('stepper', () => {
   })
 })
 
+describe('stepper connector gap', () => {
+  it('declares the public gap on the horizontal frame and inherits it on the list', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 0, indicatorPosition: 'on-track' },
+      slots: {
+        default: '<span />',
+      },
+    })
+    expect(wrapper.classes()).toContain('astryx-stepper-frame')
+    expect(wrapper.get('.astryx-stepper').element).toBeTruthy()
+  })
+
+  it('marks a clickable step as pressable and leaves a gapless track when the indicator is none', () => {
+    const wrapper = mount(Stepper, {
+      props: {
+        activeStep: 0,
+        indicatorPosition: 'on-track',
+        onStepClick: () => {},
+      },
+      slots: {
+        default: `
+          <Step :step="0" label="One" indicator="none" />
+          <Step :step="1" label="Two" />
+        `,
+      },
+      global: { components: { Step } },
+    })
+    const steps = wrapper.findAll('.astryx-step')
+    expect(steps[0].attributes('data-glyph')).toBe('none')
+    expect(steps[1].attributes('data-glyph')).not.toBe('none')
+    expect(steps[1].get('button').attributes('data-astryx-pressable')).toBe('')
+  })
+})
+
+describe('vertical stepper content', () => {
+  it('stacks the content slot under the label, in the same column', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 0, orientation: 'vertical' },
+      slots: {
+        default: `
+          <Step :step="0" label="Cart">
+            <p class="step-body">Line items</p>
+          </Step>
+        `,
+      },
+      global: { components: { Step } },
+    })
+
+    const step = wrapper.get('.astryx-step')
+    const body = step.get('.astryx-step-body')
+    // 控件和内容都在同一列里，内容跟在标签后面，而不是被挤到右侧第三列。
+    expect(body.element.children[0].classList.contains('astryx-step-control')).toBe(true)
+    expect(body.element.children[1].classList.contains('astryx-step-content')).toBe(true)
+    expect(body.find('.astryx-step-content .step-body').exists()).toBe(true)
+  })
+})
+
 describe('stepper logic', () => {
   it('collapses only when the row is narrower than count times minimumStepWidth', () => {
     expect(shouldCollapseStepper(640, 5, undefined, 'horizontal')).toBe(false)

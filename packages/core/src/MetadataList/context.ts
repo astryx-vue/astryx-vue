@@ -1,9 +1,8 @@
-import type { InjectionKey } from 'vue'
 import type { MetadataListContextValue } from './types.js'
-import { inject } from 'vue'
+import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
-export const metadataListKey: InjectionKey<MetadataListContextValue> = Symbol('astryx-metadata-list')
+export const metadataListKey = defineLayerScopedKey<MetadataListContextValue | null>('astryx-metadata-list', null)
 
 export function useMetadataListContext(): MetadataListContextValue | null {
-  return inject(metadataListKey, null)
+  return readLayerScoped(metadataListKey)
 }

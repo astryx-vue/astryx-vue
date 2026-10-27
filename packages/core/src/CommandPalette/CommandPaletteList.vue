@@ -12,19 +12,27 @@ const props = defineProps<CommandPaletteListProps>()
 const palette = inject(commandPaletteKey, null)
 const messages = useAstryxMessages()
 const label = computed(() => props.label ?? messages.value.commandPalette.listLabel)
-/** 没有可选项时它只是个空容器，不再当作 listbox 暴露给读屏。 */
+/** 没有可选项时它只是个空容器，不再当作 listbox 暴露给读屏。单独使用时始终是 listbox。 */
 const hasOptions = computed(() => palette == null || palette.items.value.length > 0)
+const bindings = computed(() => {
+  const result: Record<string, string> = {}
+  if (palette != null)
+    result.id = palette.listId
+  if (hasOptions.value) {
+    result.role = 'listbox'
+    result['aria-label'] = label.value
+  }
+  return result
+})
 const listEl = useTemplateRef<HTMLElement>('list')
 useScrollbars(listEl)
 </script>
 
 <template>
   <div
-    :id="palette?.listId"
     ref="list"
+    v-bind="bindings"
     class="astryx-command-palette-list"
-    :role="hasOptions ? 'listbox' : undefined"
-    :aria-label="hasOptions ? label : undefined"
   >
     <slot />
   </div>

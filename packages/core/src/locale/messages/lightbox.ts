@@ -1,4 +1,5 @@
 import type { AstryxLocale } from '../types.js'
+import { formatCount } from './shared.js'
 
 export interface LightboxMessages {
   close: string
@@ -21,8 +22,8 @@ export const lightboxMessages: Record<AstryxLocale, LightboxMessages> = {
     zoom: 'Zoom',
     zoomedIn: 'Zoomed in, use arrow keys to pan',
     zoomedOut: 'Zoomed out',
-    imagePosition: (index, total) => `Image ${index} of ${total}`,
-    mediaPosition: (alt, index, total) => `${alt}, ${index} of ${total}`,
+    imagePosition: (index, total) => `Image ${formatCount(index, 'en')} of ${formatCount(total, 'en')}`,
+    mediaPosition: (alt, index, total) => `${alt}, ${formatCount(index, 'en')} of ${formatCount(total, 'en')}`,
   },
   'zh-CN': {
     close: '关闭',
@@ -32,7 +33,7 @@ export const lightboxMessages: Record<AstryxLocale, LightboxMessages> = {
     zoom: '缩放',
     zoomedIn: '已放大，使用箭头键平移',
     zoomedOut: '已缩小',
-    imagePosition: (index, total) => `第 ${index} 张图片，共 ${total} 张`,
-    mediaPosition: (alt, index, total) => `${alt}，第 ${index} 项，共 ${total} 项`,
+    imagePosition: (index, total) => `第 ${formatCount(index, 'zh-CN')} 张图片，共 ${formatCount(total, 'zh-CN')} 张`,
+    mediaPosition: (alt, index, total) => `${alt}，第 ${formatCount(index, 'zh-CN')} 项，共 ${formatCount(total, 'zh-CN')} 项`,
   },
 }

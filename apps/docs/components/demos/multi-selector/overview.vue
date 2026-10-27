@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { MultiSelector } from '@astryx-vue/core/MultiSelector'
-
-provideAstryxLocale('en')
 
 const options = ['Name', 'Email', 'Role', 'Status', 'Created']
 const selected = ['Role', 'Created']

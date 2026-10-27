@@ -1,6 +1,7 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { defineComponent, nextTick, ref } from 'vue'
+import { resetDismissStackForTests } from '../layer/dismissStack.js'
 import BottomSheet from './BottomSheet.vue'
 import BottomSheetSwitcher from './BottomSheetSwitcher.vue'
 
@@ -37,6 +38,7 @@ beforeAll(ensureDialogModalApi)
 
 afterEach(() => {
   document.body.innerHTML = ''
+  resetDismissStackForTests()
 })
 
 describe('bottomSheetSwitcher', () => {
@@ -104,6 +106,27 @@ describe('bottomSheetSwitcher', () => {
     await nextTick()
     expect(closing.vm.activeSheet).toBeNull()
     closing.unmount()
+  })
+
+  it('passes an explicit padding step through to the shared sheet content', async () => {
+    const Host = defineComponent({
+      components: { BottomSheet, BottomSheetSwitcher },
+      setup() {
+        const activeSheet = ref<string | null>('details')
+        return { activeSheet }
+      },
+      template: `
+        <BottomSheetSwitcher v-model:active-sheet="activeSheet" label="Checkout">
+          <BottomSheet sheet-id="details" label="Details" :padding="2">
+            <p>Details</p>
+          </BottomSheet>
+        </BottomSheetSwitcher>
+      `,
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    expect(document.querySelector('.astryx-bottom-sheet__content')?.getAttribute('data-padding')).toBe('2')
+    expect(document.querySelector('.astryx-bottom-sheet')?.classList.contains('astryx-layer')).toBe(true)
+    wrapper.unmount()
   })
 
   it('passes extra attributes through to the dialog', () => {

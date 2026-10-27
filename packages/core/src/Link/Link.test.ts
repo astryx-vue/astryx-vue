@@ -177,4 +177,15 @@ describe('link', () => {
     expect(wrapper.get('a').attributes('download')).toBeUndefined()
     expect(wrapper.get('a').attributes('href')).toBeUndefined()
   })
+
+  it('marks an enabled link as pressable and drops a script destination', () => {
+    const enabled = mount(Link, { props: { href: '/docs' }, slots: { default: 'Docs' } })
+    expect(enabled.get('a').attributes('data-astryx-pressable')).toBe('')
+    expect(enabled.get('a').classes()).toContain('astryx-pressable')
+
+    const blocked = mount(Link, { props: { href: 'javascript:alert(1)' }, slots: { default: 'Bad' } })
+    expect(blocked.element.tagName).toBe('A')
+    expect(blocked.attributes('href')).toBeUndefined()
+    expect(blocked.attributes('data-astryx-pressable')).toBe('')
+  })
 })

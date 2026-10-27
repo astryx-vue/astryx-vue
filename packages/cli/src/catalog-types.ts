@@ -104,7 +104,7 @@ export type TemplateKind = 'page' | 'block'
 export interface TemplateRecord {
   slug: string
   title: LocaleText
-  /** One sentence, written by hand in `generate/template-meta.ts`. */
+  /** One sentence, written by hand under `generate/template-meta/`. */
   description: LocaleText
   /** Words a person would type when asking `build` for this page. */
   keywords: { en: string[], zh: string[] }

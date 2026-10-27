@@ -66,7 +66,17 @@ const marked = ref({ paragraph: markRaw(MyParagraph) })
 
 With `sources`, `[id]` and `【id】` render as citation chips. `citationStyle` defaults to `label`, which shows the source title. `number` shows a compact badge, and the same id keeps the same number.
 
+A heading gets a focusable anchor whose `href` is the heading id, with an `aria-label`. Nested list markers cycle by depth: disc, circle, and square for bullets, and decimal, lower-alpha, and lower-roman for numbers.
+
+Character references in prose are decoded, so `&amp;` shows as `&` and `&copy;` shows as ©. A fenced `&copy;` stays as written.
+
+Fenced code wraps long lines. The code element carries `data-wrapped="true"`.
+
 A fence info string of `diff` or `diff-ts` turns the diff layer on for the built-in code block. A custom `components.code` still receives the info string as written.
+
+Import `markdownSourceLinesPlugin` from `@astryx-vue/core/Markdown/plugins` and pass it in `plugins`. Headings, paragraphs, list items, quotes, the code wrapper, the table wrapper, and rules then get `data-source-line` and `data-source-line-end`. Without that plugin, those attributes are absent.
+
+`@astryx-vue/core/Markdown/parser` exports `parseMarkdownAst`, `parseInlineAst`, `decodeMarkdownCharacterReferences`, plus the legacy block list `parseMarkdown` and inline `parseInline`. The `parseMarkdown` used by the component still returns the syntax-tree root, not that block list. `math: true` does not emit math nodes.
 
 `isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the fade is skipped.
 

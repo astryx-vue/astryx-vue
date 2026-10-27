@@ -1,5 +1,19 @@
 import type { ComputedRef, Ref } from 'vue'
+import type { SheetPointerSession } from './sheetPointerSession.js'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import {
+  blockScrollEdges,
+  dismissTravelFor,
+  DRAG_PROMOTION_SLOP,
+  dragOffsetFrom,
+  FLICK_MIN_DISTANCE,
+  FLICK_VELOCITY,
+  hapticTick,
+  naturalEndGapFor,
+  OVERSCROLL_PADDING,
+  velocityFor,
+} from './sheetDragMath.js'
+import { createSheetPointerSession } from './sheetPointerSession.js'
 import {
   computeDetentOffsets,
   peekOffsetFor,
@@ -7,132 +21,6 @@ import {
   scrimOpacityForOffset,
   visibleHeightForOffset,
 } from './snapOffsets.js'
-
-/** Border-box portion of the panel reserved below the viewport for the drag lift. */
-export const OVERSCROLL_PADDING = 48
-
-/** A throw this fast, over at least `FLICK_MIN_DISTANCE`, dismisses or expands outright. */
-const FLICK_VELOCITY = 1.2
-const FLICK_MIN_DISTANCE = 48
-/** Below the shortest stop, dragging past it by this share of its height dismisses. */
-const DISMISS_OVERSHOOT_RATIO = 0.4
-/** Within this many px of a stop the live drag eases toward it. */
-const MAGNET_RANGE = 40
-/** Rubber-band factor and ceiling for dragging above the fully open position. */
-const OVERSCROLL_RESISTANCE = 0.35
-const OVERSCROLL_MAX = 48
-/** How far a finger on the body must pull before it becomes a sheet drag. */
-const DRAG_PROMOTION_SLOP = 8
-const VELOCITY_WINDOW_MS = 100
-const BACKSTOP_BUFFER_MS = 50
-
-function parseTransitionTime(value: string): number | null {
-  const normalized = value.trim()
-  if (!/^-?(?:\d+|\d*\.\d+)(?:ms|s)$/.test(normalized))
-    return null
-  const time = Number.parseFloat(normalized)
-  return normalized.endsWith('ms') ? time : time * 1000
-}
-
-/** Longest transition duration + delay that applies to `property`, in ms. */
-function transitionMsFor(element: HTMLElement, property: string): number {
-  const style = getComputedStyle(element)
-  const properties = (style.transitionProperty || '').split(',').map(value => value.trim())
-  const durations = (style.transitionDuration || '').split(',').map(parseTransitionTime)
-  const delays = (style.transitionDelay || '').split(',').map(value => parseTransitionTime(value) ?? 0)
-  return properties.reduce((longest, name, index) => {
-    if (name !== property && name !== 'all')
-      return longest
-    const duration = durations[index % durations.length]
-    if (duration == null)
-      return longest
-    return Math.max(longest, duration + (delays[index % delays.length] ?? 0))
-  }, 0)
-}
-
-/**
- * Calls `complete` when `element` finishes transitioning `property`: on the
- * matching `transitionend`/`transitioncancel`, or on a timer backstop so a
- * missed event can never strand the caller. Without a resolved duration — the
- * case in a stylesheet-free test environment — it completes immediately.
- */
-export function waitForTransition(element: HTMLElement | null, property: 'transform' | 'opacity', complete: () => void): () => void {
-  if (element == null) {
-    complete()
-    return () => {}
-  }
-
-  let done = false
-  let timer: ReturnType<typeof setTimeout> | null = null
-  let onTransitionEnd: (event: TransitionEvent) => void = () => {}
-  const finish = (): void => {
-    if (done)
-      return
-    done = true
-    if (timer != null)
-      clearTimeout(timer)
-    element.removeEventListener('transitionend', onTransitionEnd)
-    element.removeEventListener('transitioncancel', onTransitionEnd)
-    complete()
-  }
-  onTransitionEnd = (event: TransitionEvent): void => {
-    if (event.target === element && event.propertyName === property)
-      finish()
-  }
-
-  const duration = transitionMsFor(element, property)
-  if (duration <= 0) {
-    finish()
-    return () => {}
-  }
-
-  element.addEventListener('transitionend', onTransitionEnd)
-  element.addEventListener('transitioncancel', onTransitionEnd)
-  timer = setTimeout(finish, duration + BACKSTOP_BUFFER_MS)
-  return () => {
-    if (timer != null)
-      clearTimeout(timer)
-    element.removeEventListener('transitionend', onTransitionEnd)
-    element.removeEventListener('transitioncancel', onTransitionEnd)
-  }
-}
-
-function magnetize(value: number, targets: readonly number[]): number {
-  if (targets.length === 0)
-    return value
-  let nearest = targets[0]
-  for (const target of targets) {
-    if (Math.abs(target - value) < Math.abs(nearest - value))
-      nearest = target
-  }
-  const distance = Math.abs(value - nearest)
-  if (distance >= MAGNET_RANGE)
-    return value
-  const t = distance / MAGNET_RANGE
-  return value + (nearest - value) * (1 - t * t)
-}
-
-function renderedBlockEndPadding(element: HTMLElement): number {
-  const value = Number.parseFloat(getComputedStyle(element).paddingBlockEnd)
-  return Number.isFinite(value) ? value : 0
-}
-
-/** How much further the body could scroll on its own, ignoring the inset this hook adds. */
-function naturalEndGapFor(body: HTMLElement | null): number {
-  if (!body)
-    return 0
-  const inset = renderedBlockEndPadding(body)
-  const maxScrollTop = Math.max(0, body.scrollHeight - body.clientHeight - inset)
-  return maxScrollTop - body.scrollTop
-}
-
-function hapticTick(): void {
-  if (typeof navigator === 'undefined' || typeof navigator.vibrate !== 'function')
-    return
-  if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
-    return
-  navigator.vibrate(8)
-}
 
 interface SheetDetents {
   height: number
@@ -202,8 +90,10 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
 
   let dragState: DragState | null = null
   let pendingBody: { pointerId: number, startY: number, atTop: boolean, atBottom: boolean } | null = null
+  let touchArming: { identifier: number, startY: number, atTop: boolean, atBottom: boolean } | null = null
   let reconcileToken = 0
   let observer: ResizeObserver | null = null
+  let session!: SheetPointerSession
 
   const activeOffset = computed(() => (isDragging.value ? dragOffset.value : settledOffset.value))
 
@@ -230,12 +120,6 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     return { height, offsets, peekOffset: peekOffsetFor(offsets, visible) }
   }
 
-  function dismissOffsetFor(detents: SheetDetents): number {
-    const maxOffset = detents.offsets[detents.offsets.length - 1] ?? 0
-    const shortestHeight = visibleHeightForOffset(detents.height, maxOffset, OVERSCROLL_PADDING)
-    return maxOffset + shortestHeight * DISMISS_OVERSHOOT_RATIO
-  }
-
   async function reconcileLayout(targetLayoutOffset: number): Promise<void> {
     const token = ++reconcileToken
     isReconciling.value = true
@@ -252,7 +136,7 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
 
   function settleAt(target: number, fromOffset: number, detents: SheetDetents): void {
     const targetLayoutOffset = target === detents.peekOffset ? 0 : target
-    const dismissOffset = dismissOffsetFor(detents)
+    const dismissOffset = dismissTravelFor(detents.height, detents.offsets)
     settledOffset.value = target
     scrollPreservationInset.value = Math.max(0, fromOffset - targetLayoutOffset - naturalEndGapFor(body.value))
     scrimOpacity.value = scrimOpacityForOffset(target, detents.offsets, dismissOffset, detents.peekOffset)
@@ -277,13 +161,6 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     settleAt(detents.offsets[detents.offsets.length - 1] ?? 0, fromOffset, detents)
   }
 
-  function velocityFor(state: DragState): number {
-    const withinWindow = state.samples.filter(sample => state.lastT - sample.t <= VELOCITY_WINDOW_MS)
-    const first = withinWindow[0] ?? { y: state.startY, t: state.startT }
-    const elapsed = state.lastT - first.t
-    return elapsed > 0 ? (state.lastY - first.y) / elapsed : 0
-  }
-
   function updateDrag(clientY: number, timeStamp: number): void {
     const state = dragState
     if (!state)
@@ -294,13 +171,10 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     state.samples.push({ y: clientY, t: timeStamp })
     state.travel = Math.max(state.travel, Math.abs(delta))
     state.dir = delta === 0 ? 0 : Math.sign(delta)
-
-    let offset = state.baseOffset + delta
-    if (offset < 0)
-      offset = -Math.min(-offset * OVERSCROLL_RESISTANCE, OVERSCROLL_MAX)
-    state.rawOffset = offset
-    dragOffset.value = magnetize(offset, state.offsets)
-    scrimOpacity.value = scrimOpacityForOffset(offset, state.offsets, dismissOffsetFor(state), state.peekOffset)
+    const next = dragOffsetFrom(state.baseOffset, delta, state.offsets)
+    state.rawOffset = next.raw
+    dragOffset.value = next.shown
+    scrimOpacity.value = scrimOpacityForOffset(next.raw, state.offsets, dismissTravelFor(state.height, state.offsets), state.peekOffset)
     onScrimOpacity(scrimOpacity.value)
   }
 
@@ -327,12 +201,12 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
   function endDrag(): void {
     const state = dragState
     dragState = null
-    detachPointerListeners()
+    session.detach()
     if (!state)
       return
     isDragging.value = false
 
-    const velocity = velocityFor(state)
+    const velocity = velocityFor(state.samples, state.lastY, state.lastT, state.startY, state.startT)
     const isFlick = Math.abs(velocity) > FLICK_VELOCITY && state.travel > FLICK_MIN_DISTANCE
     if (state.dir > 0 && isFlick) {
       dismissOrSettleShortest(state.baseOffset, state)
@@ -342,7 +216,7 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
       settleAt(0, state.baseOffset, state)
       return
     }
-    if (state.rawOffset > dismissOffsetFor(state)) {
+    if (state.rawOffset > dismissTravelFor(state.height, state.offsets)) {
       dismissOrSettleShortest(state.baseOffset, state)
       return
     }
@@ -352,8 +226,9 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
   function cancelDrag(): void {
     const state = dragState
     pendingBody = null
+    touchArming = null
     dragState = null
-    detachPointerListeners()
+    session.detach()
     if (!state)
       return
     isDragging.value = false
@@ -362,15 +237,23 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     scrimOpacity.value = scrimOpacityForOffset(
       state.baseOffset,
       state.offsets,
-      dismissOffsetFor(state),
+      dismissTravelFor(state.height, state.offsets),
       state.peekOffset,
     )
     onScrimOpacity(scrimOpacity.value)
   }
 
+  /** A second finger is a pinch. The browser keeps the zoom; the sheet lets go. */
+  function yieldToPinch(pointerId: number): boolean {
+    if (dragState == null || dragState.pointerId === pointerId)
+      return false
+    cancelDrag()
+    return true
+  }
+
   function onPointerMove(event: PointerEvent): void {
     if (dragState != null) {
-      if (dragState.pointerId !== event.pointerId)
+      if (yieldToPinch(event.pointerId))
         return
       if (event.cancelable)
         event.preventDefault()
@@ -387,7 +270,7 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     const pullingUp = delta < 0 && pending.atBottom && activeOffset.value > 0
     if (!pullingDown && !pullingUp) {
       pendingBody = null
-      detachPointerListeners()
+      session.detach()
       return
     }
     pendingBody = null
@@ -402,7 +285,7 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
       return
     pendingBody = null
     if (dragState == null) {
-      detachPointerListeners()
+      session.detach()
       return
     }
     endDrag()
@@ -414,28 +297,20 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     cancelDrag()
   }
 
-  function attachPointerListeners(): void {
-    window.addEventListener('pointermove', onPointerMove)
-    window.addEventListener('pointerup', onPointerUp)
-    window.addEventListener('pointercancel', onPointerCancel)
-  }
-
-  function detachPointerListeners(): void {
-    window.removeEventListener('pointermove', onPointerMove)
-    window.removeEventListener('pointerup', onPointerUp)
-    window.removeEventListener('pointercancel', onPointerCancel)
-  }
-
   function onHandlePointerDown(event: PointerEvent): void {
     if (event.button != null && event.button !== 0)
       return
-    attachPointerListeners()
+    if (yieldToPinch(event.pointerId))
+      return
+    session.attach()
     beginDrag(event.pointerId, event.clientY, event.timeStamp)
     if (event.cancelable)
       event.preventDefault()
   }
 
   function onBodyPointerDown(event: PointerEvent): void {
+    if (yieldToPinch(event.pointerId))
+      return
     if (event.pointerType === 'touch')
       return
     if (event.button != null && event.button !== 0)
@@ -443,33 +318,43 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     const element = body.value
     if (!element)
       return
+    const edges = blockScrollEdges(element, event.target)
     pendingBody = {
       pointerId: event.pointerId,
       startY: event.clientY,
-      atTop: element.scrollTop <= 0,
-      atBottom: element.scrollTop + element.clientHeight >= element.scrollHeight - 1,
+      atTop: edges.atTop,
+      atBottom: edges.atBottom,
     }
-    attachPointerListeners()
+    session.attach()
   }
 
-  let touchArming: { identifier: number, startY: number, atTop: boolean, atBottom: boolean } | null = null
-
   function onTouchStart(event: TouchEvent): void {
+    if (event.touches.length > 1) {
+      touchArming = null
+      cancelDrag()
+      return
+    }
     const touch = event.changedTouches[0]
     const element = body.value
     if (!touch || !element) {
       touchArming = null
       return
     }
+    const edges = blockScrollEdges(element, event.target)
     touchArming = {
       identifier: touch.identifier,
       startY: touch.clientY,
-      atTop: element.scrollTop <= 0,
-      atBottom: element.scrollTop + element.clientHeight >= element.scrollHeight - 1,
+      atTop: edges.atTop,
+      atBottom: edges.atBottom,
     }
   }
 
   function onTouchMove(event: TouchEvent): void {
+    if (event.touches.length > 1) {
+      touchArming = null
+      cancelDrag()
+      return
+    }
     const element = body.value
     if (dragState != null) {
       const touch = Array.from(event.changedTouches).find(item => item.identifier === dragState?.pointerId)
@@ -524,6 +409,16 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
       sheetHeight.value = height
   }
 
+  session = createSheetPointerSession({
+    onPointerMove,
+    onPointerUp,
+    onPointerCancel,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+    onWindowBlur: () => cancelDrag(),
+  })
+
   watch(panel, (element) => {
     observer?.disconnect()
     observer = null
@@ -537,19 +432,8 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     recordSheetHeight()
   }, { immediate: true })
 
-  watch(body, (element, previous) => {
-    if (previous) {
-      previous.removeEventListener('touchstart', onTouchStart)
-      previous.removeEventListener('touchmove', onTouchMove)
-      previous.removeEventListener('touchend', onTouchEnd)
-      previous.removeEventListener('touchcancel', onTouchEnd)
-    }
-    if (!element)
-      return
-    element.addEventListener('touchstart', onTouchStart, { passive: true })
-    element.addEventListener('touchmove', onTouchMove, { passive: false })
-    element.addEventListener('touchend', onTouchEnd)
-    element.addEventListener('touchcancel', onTouchEnd)
+  watch(body, (element) => {
+    session.setBody(element)
     updateOverflow()
   }, { immediate: true })
 
@@ -576,16 +460,10 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
       cancelDrag()
   })
 
-  const onWindowBlur = (): void => cancelDrag()
-  if (typeof window !== 'undefined')
-    window.addEventListener('blur', onWindowBlur)
-
   onBeforeUnmount(() => {
-    detachPointerListeners()
+    session.destroy()
     observer?.disconnect()
     observer = null
-    if (typeof window !== 'undefined')
-      window.removeEventListener('blur', onWindowBlur)
   })
 
   const panelTransform = computed(() => {

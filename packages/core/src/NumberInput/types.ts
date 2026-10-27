@@ -1,10 +1,11 @@
 import type { Component, VNode } from 'vue'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
 
 /** 带说明的校验状态。仍接受单独的状态字符串。 */
 export type NumberInputStatus = FieldStatusInput | 'default' | FieldStatusType
 
-export interface NumberInputProps {
+export interface NumberInputProps extends FieldPartStylingProps {
   /** 当前值 */
   modelValue?: number | null
   /** 输入框的 id。不传时自动生成。 */

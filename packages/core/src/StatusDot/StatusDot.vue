@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StatusDotProps } from './types.js'
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, toRaw, useSlots } from 'vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
 
 import '../../styles/status-dot.css'
@@ -24,6 +24,9 @@ const Passthrough = defineComponent({
   },
 })
 
+const slots = useSlots()
+const icon = computed(() => props.icon ? toRaw(props.icon) : undefined)
+const showsIcon = computed(() => Boolean(slots.icon) || icon.value != null)
 const wrapper = computed(() => (props.tooltip ? Tooltip : Passthrough))
 const wrapperProps = computed(() => (props.tooltip ? { content: props.tooltip } : {}))
 </script>
@@ -41,11 +44,13 @@ const wrapperProps = computed(() => (props.tooltip ? { content: props.tooltip } 
       :aria-label="label"
     >
       <span
-        v-if="$slots.icon"
+        v-if="showsIcon"
         class="astryx-status-dot__icon"
         aria-hidden="true"
       >
-        <slot name="icon" />
+        <slot name="icon">
+          <component :is="icon" v-if="icon" />
+        </slot>
       </span>
     </span>
   </component>

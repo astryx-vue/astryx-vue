@@ -159,3 +159,85 @@ describe('useLayer', () => {
     expect(layer.anchorRef.value).toBe(anchor)
   })
 })
+
+describe('show 和 hide 撞在一起', () => {
+  /** 关闭时立刻再请求打开，模拟「关闭把焦点还给触发器，触发器上的浮层立刻要显示」。 */
+  function setupReentrant() {
+    let layer: UseLayerReturn | undefined
+    const onShow = vi.fn()
+    let showFromHide = true
+    mount(defineComponent({
+      setup() {
+        layer = useLayer({
+          mode: 'fixed',
+          onShow,
+          onHide: () => {
+            if (showFromHide)
+              layer?.show()
+          },
+        })
+        return () => h('div')
+      },
+    }))
+    return {
+      layer: layer!,
+      onShow,
+      stopReentering: () => {
+        showFromHide = false
+      },
+    }
+  }
+
+  it('关闭过程中来的 show 等关闭走完再打开', async () => {
+    const { layer, onShow } = setupReentrant()
+
+    layer.show()
+    await nextTick()
+    expect(layer.isOpen.value).toBe(true)
+    onShow.mockClear()
+
+    layer.hide()
+    // 关闭已经生效，重新打开排在后面。
+    expect(layer.isOpen.value).toBe(false)
+
+    await Promise.resolve()
+    await nextTick()
+    expect(layer.isOpen.value).toBe(true)
+    expect(onShow).toHaveBeenCalledOnce()
+  })
+
+  it('排队中的打开会被随后的 hide 取消', async () => {
+    const { layer, onShow, stopReentering } = setupReentrant()
+
+    layer.show()
+    await nextTick()
+    stopReentering()
+    onShow.mockClear()
+
+    layer.hide()
+    await Promise.resolve()
+    await nextTick()
+
+    expect(layer.isOpen.value).toBe(false)
+    expect(onShow).not.toHaveBeenCalled()
+  })
+
+  it('返回的东西引用稳定', async () => {
+    const { layer } = setupLayer({ mode: 'fixed' })
+    const before = {
+      show: layer.show,
+      hide: layer.hide,
+      contentStyle: layer.contentStyle,
+      resolvedPlacement: layer.resolvedPlacement,
+    }
+
+    layer.show()
+    await nextTick()
+    layer.hide()
+
+    expect(layer.show).toBe(before.show)
+    expect(layer.hide).toBe(before.hide)
+    expect(layer.contentStyle).toBe(before.contentStyle)
+    expect(layer.resolvedPlacement).toBe(before.resolvedPlacement)
+  })
+})

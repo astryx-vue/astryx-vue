@@ -3,6 +3,7 @@
 @layer astryx.tokens {
   [data-astryx-theme='stone'] {
     --astryx-card-background: var(--astryx-color-background-card);
+    --astryx-card-padding: var(--astryx-spacing-3);
     --astryx-card-muted-background: var(--astryx-color-background-muted);
     --astryx-card-border: var(--astryx-color-border);
     --astryx-card-shadow-low: var(--astryx-shadow-low);

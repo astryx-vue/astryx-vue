@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import {
   Badge,
   Button,
@@ -30,16 +30,18 @@ import {
 
 const fillViewport: CSSProperties = { minHeight: '100dvh' }
 const iconBox: CSSProperties = {
-  borderRadius: 'var(--radius-container)',
-  backgroundColor: 'var(--color-background-surface)',
+  borderRadius: 'var(--astryx-radius-container)',
+  backgroundColor: 'var(--astryx-color-background-surface)',
   flexShrink: 0,
 }
-const rowPadding: CSSProperties = { paddingBlock: 'var(--spacing-4)' }
+const rowPadding: CSSProperties = { paddingBlock: 'var(--astryx-spacing-4)' }
 const sideNavPadding: CSSProperties = {
-  paddingBlock: 'var(--spacing-4)',
-  paddingInline: 'var(--spacing-3)',
+  paddingBlock: 'var(--astryx-spacing-4)',
+  paddingInline: 'var(--astryx-spacing-3)',
 }
-const sideNavHeading: CSSProperties = { marginInline: 'var(--spacing-4)' }
+const sideNavHeading: CSSProperties = { marginInline: 'var(--astryx-spacing-4)' }
+
+// ── 数据 ──────────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
   { label: 'Personal information', icon: 'i-heroicons-user' },
@@ -59,34 +61,18 @@ const SECTION_TITLES: Record<string, string> = {
   'Languages & currency': 'Languages & currency',
 }
 
-interface InfoRow {
-  label: string
-  value: string
-  action: string
-}
-
-const LOGIN_ROWS: InfoRow[] = [
+const LOGIN_ROWS = [
   { label: 'Password', value: 'Not created', action: 'Create' },
 ]
 
-const SOCIAL_ROWS: InfoRow[] = [
+const SOCIAL_ROWS = [
   { label: 'Google', value: 'Connected', action: 'Disconnect' },
 ]
 
 const DEVICE_ROWS = [
-  {
-    label: 'OS X 10.15.7 · Chrome',
-    badge: 'CURRENT SESSION',
-    location: 'McKinney, Texas · March 30, 2026 at 19:31',
-    action: undefined as string | undefined,
-  },
-  { label: 'Session', location: 'August 9, 2023 at 04:19', action: 'Log out', badge: undefined },
-  {
-    label: 'OS X 10.15.7 · unknown',
-    location: 'Sunnyvale, California · April 14, 2023 at 17:47',
-    action: 'Log out',
-    badge: undefined,
-  },
+  { label: 'OS X 10.15.7 · Chrome', badge: 'CURRENT SESSION', location: 'McKinney, Texas · March 30, 2026 at 19:31', action: undefined as string | undefined },
+  { label: 'Session', badge: undefined as string | undefined, location: 'August 9, 2023 at 04:19', action: 'Log out' },
+  { label: 'OS X 10.15.7 · unknown', badge: undefined as string | undefined, location: 'Sunnyvale, California · April 14, 2023 at 17:47', action: 'Log out' },
 ]
 
 const LANGUAGES = [
@@ -115,23 +101,79 @@ const TIMEZONES = [
   { label: '(GMT+01:00) London', value: 'GMT+1' },
 ]
 
+/** 每行一个字段；`isReadOnly` 的那一行只显示，不给编辑入口。 */
+interface PersonalField {
+  key: string
+  label: string
+  isReadOnly?: boolean
+}
+
+const PERSONAL_FIELDS: PersonalField[] = [
+  { key: 'legalName', label: 'Legal name' },
+  { key: 'preferredName', label: 'Preferred first name' },
+  { key: 'email', label: 'Email address' },
+  { key: 'phone', label: 'Phone number' },
+  { key: 'identity', label: 'Identity verification', isReadOnly: true },
+  { key: 'address', label: 'Residential address' },
+  { key: 'mailingAddress', label: 'Mailing address' },
+  { key: 'emergencyContact', label: 'Emergency contact' },
+] as const
+
+/** 值留空的字段显示占位文案，和原版一致。 */
+const PERSONAL_PLACEHOLDERS: Record<string, string> = {
+  preferredName: 'Not provided',
+  address: 'Not provided',
+  mailingAddress: 'Not provided',
+}
+
+const HELP_CARDS = [
+  {
+    icon: 'i-heroicons-lock-closed',
+    title: "Why isn't my info shown here?",
+    body: "We're hiding some account details to protect your identity.",
+  },
+  {
+    icon: 'i-heroicons-pencil-square',
+    title: 'Which details can be edited?',
+    body: "Contact info and personal details can be edited. If this info was used to verify your identity, you'll need to get verified again the next time you book—or to continue hosting.",
+  },
+  {
+    icon: 'i-heroicons-share',
+    title: 'What info is shared with others?',
+    body: 'We only release contact information after a reservation is confirmed.',
+  },
+]
+
+// ── 状态 ──────────────────────────────────────────────────────────────────────
+
 const isNarrow = useMediaQuery('(max-width: 768px)')
+
 const mobileView = ref<'nav' | 'detail'>('nav')
 const activeNav = ref('Personal information')
 const activeTab = ref('login')
+
+const expandedRow = ref<string | null>(null)
+const language = ref('en-CA')
+const currency = ref('CAD')
+const timezone = ref('ET')
+
+const personal = reactive<Record<string, string>>({
+  legalName: 'Alex Johnson',
+  preferredName: '',
+  email: 'a***n@example.com',
+  phone: '+1 ***-***-0123',
+  address: '',
+  mailingAddress: '',
+  emergencyContact: 'Provided',
+})
+
 const readReceipts = ref(true)
+const searchEngines = ref(true)
 const showCity = ref(true)
 const showTripType = ref(true)
 const showStayLength = ref(true)
 const showServices = ref(true)
 const aiFeatures = ref(true)
-const expandedRow = ref<string | null>(null)
-const language = ref('en-CA')
-const currency = ref('CAD')
-const timezone = ref('ET')
-const legalName = ref('Alex Johnson')
-const preferredName = ref('')
-const email = ref('a***n@example.com')
 
 function selectNav(label: string) {
   activeNav.value = label
@@ -140,6 +182,11 @@ function selectNav(label: string) {
 
 function labelForOption(options: { label: string, value: string }[], value: string) {
   return options.find(o => o.value === value)?.label ?? value
+}
+
+function personalValue(key: string) {
+  const value = personal[key]
+  return value || PERSONAL_PLACEHOLDERS[key] || value
 }
 </script>
 
@@ -171,7 +218,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
         </List>
         <Divider />
         <List density="spacious">
-          <ListItem label="Professional hosting tools" @click="() => {}">
+          <ListItem label="Professional hosting tools">
             <template #startContent>
               <Icon icon="i-heroicons-wrench-screwdriver" />
             </template>
@@ -180,6 +227,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
       </VStack>
     </LayoutContent>
   </Layout>
+
   <Layout
     v-else
     height="fill"
@@ -207,7 +255,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
           </List>
           <Divider />
           <List density="spacious">
-            <ListItem label="Professional hosting tools" @click="() => {}">
+            <ListItem label="Professional hosting tools">
               <template #startContent>
                 <Icon icon="i-heroicons-wrench-screwdriver" />
               </template>
@@ -216,6 +264,7 @@ function labelForOption(options: { label: string, value: string }[], value: stri
         </VStack>
       </LayoutPanel>
     </template>
+
     <LayoutContent :padding="4">
       <VStack :gap="0">
         <Toolbar
@@ -241,299 +290,328 @@ function labelForOption(options: { label: string, value: string }[], value: stri
           </template>
         </Toolbar>
 
-        <template v-if="activeNav === 'Login & security'">
-          <VStack :gap="6">
-            <Heading v-if="!isNarrow" :level="2">
-              Login & security
-            </Heading>
-            <TabList role="tablist" v-model:value="activeTab" has-divider>
-              <Tab value="login" label="Login" />
-              <Tab value="shared" label="Shared access" />
-            </TabList>
-            <template v-if="activeTab === 'login'">
-              <VStack :gap="8">
-                <VStack :gap="0">
-                  <Heading :level="3">
-                    Login
-                  </Heading>
-                  <Divider />
-                  <template v-for="row in LOGIN_ROWS" :key="row.label">
-                    <HStack justify="between" align="start" :style="rowPadding">
-                      <VStack :gap="0">
-                        <Text type="body" weight="semibold" display="block">
-                          {{ row.label }}
-                        </Text>
-                        <Text type="supporting" color="secondary" display="block">
-                          {{ row.value }}
-                        </Text>
-                      </VStack>
-                      <Link v-if="row.action" href="#">
-                        {{ row.action }}
-                      </Link>
-                    </HStack>
-                    <Divider />
-                  </template>
-                </VStack>
-                <VStack :gap="0">
-                  <Heading :level="3">
-                    Social accounts
-                  </Heading>
-                  <Divider />
-                  <template v-for="row in SOCIAL_ROWS" :key="row.label">
-                    <HStack justify="between" align="start" :style="rowPadding">
-                      <VStack :gap="0">
-                        <Text type="body" weight="semibold" display="block">
-                          {{ row.label }}
-                        </Text>
-                        <Text type="supporting" color="secondary" display="block">
-                          {{ row.value }}
-                        </Text>
-                      </VStack>
-                      <Link href="#">
-                        {{ row.action }}
-                      </Link>
-                    </HStack>
-                    <Divider />
-                  </template>
-                </VStack>
-                <VStack :gap="0">
-                  <Heading :level="3">
-                    Device history
-                  </Heading>
-                  <Divider />
-                  <HStack
-                    v-for="(device, i) in DEVICE_ROWS"
-                    :key="i"
-                    :gap="3"
-                    align="start"
-                    :style="rowPadding"
-                  >
-                    <Icon icon="i-heroicons-computer-desktop" />
-                    <StackItem size="fill">
-                      <VStack :gap="0">
-                        <HStack :gap="2" align="center">
-                          <Text type="body" weight="semibold">
-                            {{ device.label }}
-                          </Text>
-                          <Badge v-if="device.badge" :label="device.badge" />
-                        </HStack>
-                        <Text type="supporting" color="secondary" display="block">
-                          {{ device.location }}
-                        </Text>
-                      </VStack>
-                    </StackItem>
-                    <Link v-if="device.action" href="#">
-                      {{ device.action }}
-                    </Link>
-                  </HStack>
-                  <Divider />
-                </VStack>
-              </VStack>
-            </template>
-            <template v-else>
-              <VStack :gap="8">
-                <VStack :gap="2">
-                  <Heading :level="3">
-                    Shared access
-                  </Heading>
-                  <Divider />
-                  <Text type="body" color="secondary">
-                    Review each request carefully before approving access. We'll email your employee or co-worker a 4-digit code that lets them log into your account with their trusted device.
-                  </Text>
-                </VStack>
-                <Card variant="muted">
-                  <HStack :gap="4" align="start">
-                    <Center :width="48" :height="48" :style="iconBox">
-                      <Icon icon="i-heroicons-lock-closed" />
-                    </Center>
-                    <VStack :gap="1">
-                      <Text type="body" weight="bold">
-                        Adding devices from people you trust
-                      </Text>
-                      <Text type="body" color="secondary">
-                        When you approve a request, you grant someone full access to your account. They'll be able to change reservations and send messages on your behalf.
-                      </Text>
-                    </VStack>
-                  </HStack>
-                </Card>
-              </VStack>
-            </template>
-          </VStack>
-        </template>
+        <VStack v-if="activeNav === 'Login & security'" :gap="6">
+          <Heading v-if="!isNarrow" :level="2">
+            Login & security
+          </Heading>
+          <TabList :value="activeTab" has-divider @update:value="activeTab = $event">
+            <Tab value="login" label="Login" />
+            <Tab value="shared" label="Shared access" />
+          </TabList>
 
-        <template v-else-if="activeNav === 'Languages & currency'">
-          <VStack :gap="6">
-            <Heading v-if="!isNarrow" :level="2">
-              Languages & currency
-            </Heading>
+          <VStack v-if="activeTab === 'login'" :gap="8">
             <VStack :gap="0">
-              <template v-for="key in ['language', 'currency', 'timezone']" :key="key">
-                <VStack v-if="expandedRow === key" :gap="4" :style="rowPadding">
-                  <Text type="body" weight="semibold" display="block">
-                    {{ key === 'language' ? 'Preferred language' : key === 'currency' ? 'Preferred currency' : 'Time zone' }}
-                  </Text>
-                  <Selector
-                    v-if="key === 'language'"
-                    v-model="language"
-                    label="Language"
-                    is-label-hidden
-                    size="lg"
-                    :options="LANGUAGES"
-                  />
-                  <Selector
-                    v-else-if="key === 'currency'"
-                    v-model="currency"
-                    label="Currency"
-                    is-label-hidden
-                    size="lg"
-                    :options="CURRENCIES"
-                  />
-                  <Selector
-                    v-else
-                    v-model="timezone"
-                    label="Time zone"
-                    is-label-hidden
-                    size="lg"
-                    :options="TIMEZONES"
-                  />
-                  <HStack :gap="2">
-                    <Button label="Save" variant="primary" @click="expandedRow = null" />
-                    <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
-                  </HStack>
-                </VStack>
-                <HStack v-else justify="between" align="start" :style="rowPadding">
+              <Heading :level="3">
+                Login
+              </Heading>
+              <Divider />
+              <template v-for="row in LOGIN_ROWS" :key="row.label">
+                <HStack justify="between" align="start" :style="rowPadding">
                   <VStack :gap="0">
                     <Text type="body" weight="semibold" display="block">
-                      {{ key === 'language' ? 'Preferred language' : key === 'currency' ? 'Preferred currency' : 'Time zone' }}
+                      {{ row.label }}
                     </Text>
                     <Text type="supporting" color="secondary" display="block">
-                      {{ key === 'language' ? labelForOption(LANGUAGES, language) : key === 'currency' ? labelForOption(CURRENCIES, currency) : labelForOption(TIMEZONES, timezone) }}
+                      {{ row.value }}
                     </Text>
                   </VStack>
-                  <Link href="#" @click.prevent="expandedRow = key">
-                    Edit
+                  <Link v-if="row.action" href="#">
+                    {{ row.action }}
                   </Link>
                 </HStack>
                 <Divider />
               </template>
             </VStack>
-          </VStack>
-        </template>
 
-        <template v-else-if="activeNav === 'Personal information'">
-          <VStack :gap="6">
-            <Heading v-if="!isNarrow" :level="2">
-              Personal info
-            </Heading>
             <VStack :gap="0">
-              <VStack v-if="expandedRow === 'legalName'" :gap="4" :style="rowPadding">
-                <Text type="body" weight="semibold" display="block">
-                  Legal name
-                </Text>
-                <TextInput v-model="legalName" label="Legal name" is-label-hidden />
-                <HStack :gap="2">
-                  <Button label="Save" variant="primary" @click="expandedRow = null" />
-                  <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
+              <Heading :level="3">
+                Social accounts
+              </Heading>
+              <Divider />
+              <template v-for="row in SOCIAL_ROWS" :key="row.label">
+                <HStack justify="between" align="start" :style="rowPadding">
+                  <VStack :gap="0">
+                    <Text type="body" weight="semibold" display="block">
+                      {{ row.label }}
+                    </Text>
+                    <Text type="supporting" color="secondary" display="block">
+                      {{ row.value }}
+                    </Text>
+                  </VStack>
+                  <Link href="#">
+                    {{ row.action }}
+                  </Link>
                 </HStack>
-              </VStack>
-              <HStack v-else justify="between" align="start" :style="rowPadding">
-                <VStack :gap="0">
-                  <Text type="body" weight="semibold" display="block">
-                    Legal name
-                  </Text>
-                  <Text type="supporting" color="secondary" display="block">
-                    {{ legalName }}
-                  </Text>
-                </VStack>
-                <Link href="#" @click.prevent="expandedRow = 'legalName'">
-                  Edit
+                <Divider />
+              </template>
+            </VStack>
+
+            <VStack :gap="0">
+              <Heading :level="3">
+                Device history
+              </Heading>
+              <Divider />
+              <HStack
+                v-for="(device, i) in DEVICE_ROWS"
+                :key="i"
+                :gap="3"
+                align="start"
+                :style="rowPadding"
+              >
+                <Icon icon="i-heroicons-computer-desktop" />
+                <StackItem size="fill">
+                  <VStack :gap="0">
+                    <HStack :gap="2" align="center">
+                      <Text type="body" weight="semibold">
+                        {{ device.label }}
+                      </Text>
+                      <Badge v-if="device.badge" :label="device.badge" />
+                    </HStack>
+                    <Text type="supporting" color="secondary" display="block">
+                      {{ device.location }}
+                    </Text>
+                  </VStack>
+                </StackItem>
+                <Link v-if="device.action" href="#">
+                  {{ device.action }}
                 </Link>
               </HStack>
               <Divider />
-              <VStack v-if="expandedRow === 'preferredName'" :gap="4" :style="rowPadding">
-                <Text type="body" weight="semibold" display="block">
-                  Preferred first name
-                </Text>
-                <TextInput v-model="preferredName" label="Preferred first name" is-label-hidden />
-                <HStack :gap="2">
-                  <Button label="Save" variant="primary" @click="expandedRow = null" />
-                  <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
-                </HStack>
-              </VStack>
-              <HStack v-else justify="between" align="start" :style="rowPadding">
-                <VStack :gap="0">
-                  <Text type="body" weight="semibold" display="block">
-                    Preferred first name
-                  </Text>
-                  <Text type="supporting" color="secondary" display="block">
-                    {{ preferredName || 'Not provided' }}
-                  </Text>
-                </VStack>
-                <Link href="#" @click.prevent="expandedRow = 'preferredName'">
-                  Edit
-                </Link>
-              </HStack>
+            </VStack>
+
+            <VStack :gap="0">
+              <Heading :level="3">
+                Account
+              </Heading>
               <Divider />
-              <VStack v-if="expandedRow === 'email'" :gap="4" :style="rowPadding">
-                <Text type="body" weight="semibold" display="block">
-                  Email address
-                </Text>
-                <TextInput v-model="email" label="Email address" is-label-hidden />
-                <HStack :gap="2">
-                  <Button label="Save" variant="primary" @click="expandedRow = null" />
-                  <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
-                </HStack>
-              </VStack>
-              <HStack v-else justify="between" align="start" :style="rowPadding">
+              <HStack justify="between" align="start" :style="rowPadding">
                 <VStack :gap="0">
                   <Text type="body" weight="semibold" display="block">
-                    Email address
+                    Deactivate your account
                   </Text>
                   <Text type="supporting" color="secondary" display="block">
-                    {{ email }}
+                    This action cannot be undone
                   </Text>
                 </VStack>
-                <Link href="#" @click.prevent="expandedRow = 'email'">
-                  Edit
+                <Link href="#">
+                  Deactivate
                 </Link>
               </HStack>
               <Divider />
             </VStack>
           </VStack>
-        </template>
 
-        <template v-else-if="activeNav === 'Privacy'">
-          <VStack :gap="6">
-            <Heading v-if="!isNarrow" :level="2">
-              Privacy
-            </Heading>
-            <VStack :gap="8">
-              <VStack :gap="0">
-                <Heading :level="3">
-                  Messages
-                </Heading>
-                <VStack :style="rowPadding">
-                  <Switch
-                    v-model="readReceipts"
-                    label="Show people when I've read their messages."
-                    label-position="start"
-                    label-spacing="spread"
-                  />
-                </VStack>
-                <HStack justify="between" align="center" :style="rowPadding">
-                  <Text type="body" weight="semibold">
-                    Blocked people
+          <VStack v-else :gap="8">
+            <VStack :gap="2">
+              <Heading :level="3">
+                Shared access
+              </Heading>
+              <Divider />
+              <Text type="body" color="secondary">
+                Review each request carefully before approving access. We'll email your employee or co-worker a 4-digit code that lets them log into your account with their trusted device.
+              </Text>
+            </VStack>
+            <Card variant="muted">
+              <HStack :gap="4" align="start">
+                <Center :width="48" :height="48" :style="iconBox">
+                  <Icon icon="i-heroicons-lock-closed" />
+                </Center>
+                <VStack :gap="1">
+                  <Text type="body" weight="bold">
+                    Adding devices from people you trust
                   </Text>
-                  <Link href="#">
-                    View
-                  </Link>
+                  <Text type="body" color="secondary">
+                    When you approve a request, you grant someone full access to your account. They'll be able to change reservations and send messages on your behalf.
+                  </Text>
+                </VStack>
+              </HStack>
+            </Card>
+          </VStack>
+        </VStack>
+
+        <VStack v-else-if="activeNav === 'Languages & currency'" :gap="6">
+          <Heading v-if="!isNarrow" :level="2">
+            Languages & currency
+          </Heading>
+          <VStack :gap="0">
+            <template v-for="row in [
+              { key: 'language', label: 'Preferred language', options: LANGUAGES, current: language },
+              { key: 'currency', label: 'Preferred currency', options: CURRENCIES, current: currency },
+              { key: 'timezone', label: 'Time zone', options: TIMEZONES, current: timezone },
+            ]" :key="row.key">
+              <VStack v-if="expandedRow === row.key" :gap="4" :style="rowPadding">
+                <Text type="body" weight="semibold" display="block">
+                  {{ row.label }}
+                </Text>
+                <Selector
+                  v-if="row.key === 'language'"
+                  v-model="language"
+                  :label="row.label"
+                  is-label-hidden
+                  size="lg"
+                  :options="row.options"
+                />
+                <Selector
+                  v-else-if="row.key === 'currency'"
+                  v-model="currency"
+                  :label="row.label"
+                  is-label-hidden
+                  size="lg"
+                  :options="row.options"
+                />
+                <Selector
+                  v-else
+                  v-model="timezone"
+                  :label="row.label"
+                  is-label-hidden
+                  size="lg"
+                  :options="row.options"
+                />
+                <HStack :gap="2">
+                  <Button label="Save" variant="primary" @click="expandedRow = null" />
+                  <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
                 </HStack>
-                <Divider />
               </VStack>
+              <HStack v-else justify="between" align="start" :style="rowPadding">
+                <VStack :gap="0">
+                  <Text type="body" weight="semibold" display="block">
+                    {{ row.label }}
+                  </Text>
+                  <Text type="supporting" color="secondary" display="block">
+                    {{ labelForOption(row.options, row.current) }}
+                  </Text>
+                </VStack>
+                <Link href="#" @click.prevent="expandedRow = row.key">
+                  Edit
+                </Link>
+              </HStack>
+              <Divider />
+            </template>
+          </VStack>
+        </VStack>
+
+        <VStack v-else-if="activeNav === 'Personal information'" :gap="6">
+          <Heading v-if="!isNarrow" :level="2">
+            Personal info
+          </Heading>
+          <VStack :gap="0">
+            <template v-for="field in PERSONAL_FIELDS" :key="field.key">
+              <VStack
+                v-if="!field.isReadOnly && expandedRow === field.key"
+                :gap="4"
+                :style="rowPadding"
+              >
+                <Text type="body" weight="semibold" display="block">
+                  {{ field.label }}
+                </Text>
+                <TextInput
+                  v-model="personal[field.key]"
+                  :label="field.label"
+                  is-label-hidden
+                />
+                <HStack :gap="2">
+                  <Button label="Save" variant="primary" @click="expandedRow = null" />
+                  <Button label="Cancel" variant="ghost" @click="expandedRow = null" />
+                </HStack>
+              </VStack>
+              <HStack v-else justify="between" align="start" :style="rowPadding">
+                <VStack :gap="0">
+                  <Text type="body" weight="semibold" display="block">
+                    {{ field.label }}
+                  </Text>
+                  <Text type="supporting" color="secondary" display="block">
+                    {{ field.isReadOnly ? 'Verified' : personalValue(field.key) }}
+                  </Text>
+                </VStack>
+                <Link
+                  v-if="!field.isReadOnly"
+                  href="#"
+                  @click.prevent="expandedRow = field.key"
+                >
+                  Edit
+                </Link>
+              </HStack>
+              <Divider />
+            </template>
+          </VStack>
+
+          <Card :padding="4">
+            <VStack :gap="4">
+              <template v-for="(card, i) in HELP_CARDS" :key="card.title">
+                <Divider v-if="i > 0" />
+                <HStack :gap="3" align="start">
+                  <Center :width="48" :height="48" :style="iconBox">
+                    <Icon :icon="card.icon" />
+                  </Center>
+                  <VStack :gap="0">
+                    <Text type="body" weight="semibold" display="block">
+                      {{ card.title }}
+                    </Text>
+                    <Text type="supporting" color="secondary" display="block">
+                      {{ card.body }}
+                    </Text>
+                  </VStack>
+                </HStack>
+              </template>
+            </VStack>
+          </Card>
+        </VStack>
+
+        <VStack v-else-if="activeNav === 'Privacy'" :gap="6">
+          <Heading v-if="!isNarrow" :level="2">
+            Privacy
+          </Heading>
+          <VStack :gap="8">
+            <VStack :gap="0">
+              <Heading :level="3">
+                Messages
+              </Heading>
+              <VStack :style="rowPadding">
+                <Switch
+                  v-model="readReceipts"
+                  label="Show people when I've read their messages."
+                  label-position="start"
+                  label-spacing="spread"
+                />
+              </VStack>
+              <HStack justify="between" align="center" :style="rowPadding">
+                <Text type="body" weight="semibold">
+                  Blocked people
+                </Text>
+                <Link href="#">
+                  View
+                </Link>
+              </HStack>
+              <Divider />
+            </VStack>
+
+            <VStack :gap="0">
+              <Heading :level="3">
+                Listings
+              </Heading>
+              <VStack :style="rowPadding">
+                <Switch
+                  v-model="searchEngines"
+                  label="Include my listing(s) in search engines"
+                  description="Turning this on means search engines, like Google, will display your listing page(s) in search results."
+                  label-position="start"
+                  label-spacing="spread"
+                />
+              </VStack>
+              <Divider />
+            </VStack>
+
+            <VStack :gap="4">
+              <Heading :level="3">
+                Reviews
+              </Heading>
+              <Text type="supporting" color="secondary">
+                Choose what's shared when you write a review.
+                <Link href="#" type="supporting">
+                  Learn more
+                </Link>
+              </Text>
               <VStack :gap="4">
-                <Heading :level="3">
-                  Reviews
-                </Heading>
                 <Switch
                   v-model="showCity"
                   label="Show my home city and country"
@@ -562,23 +640,62 @@ function labelForOption(options: { label: string, value: string }[], value: stri
                   label-position="start"
                   label-spacing="spread"
                 />
-                <Divider />
               </VStack>
-              <VStack :gap="4">
-                <Heading :level="3">
-                  Data privacy
-                </Heading>
-                <Switch
-                  v-model="aiFeatures"
-                  label="Help improve AI-powered features"
-                  description="When this is on, we use your data to develop and improve AI models."
-                  label-position="start"
-                  label-spacing="spread"
-                />
-              </VStack>
+              <Divider />
+            </VStack>
+
+            <VStack :gap="4">
+              <Heading :level="3">
+                Data privacy
+              </Heading>
+              <Card>
+                <HStack justify="between" align="center">
+                  <Text type="body">
+                    Request my personal data
+                  </Text>
+                  <Link href="#">
+                    Request
+                  </Link>
+                </HStack>
+              </Card>
+              <Switch
+                v-model="aiFeatures"
+                label="Help improve AI-powered features"
+                description="When this is on, we use your data to develop and improve AI models."
+                label-position="start"
+                label-spacing="spread"
+              />
+              <Card>
+                <HStack justify="between" align="center">
+                  <Text type="body">
+                    Delete my account
+                  </Text>
+                  <Link href="#">
+                    Delete
+                  </Link>
+                </HStack>
+              </Card>
+              <Card variant="muted">
+                <HStack :gap="4" align="start">
+                  <Center :width="48" :height="48" :style="iconBox">
+                    <Icon icon="i-heroicons-shield-check" />
+                  </Center>
+                  <VStack :gap="1">
+                    <Text type="body" weight="bold">
+                      Committed to privacy
+                    </Text>
+                    <Text type="supporting" color="secondary">
+                      We're committed to keeping your data protected. See details in our
+                      <Link href="#" type="supporting">
+                        Privacy Policy
+                      </Link>.
+                    </Text>
+                  </VStack>
+                </HStack>
+              </Card>
             </VStack>
           </VStack>
-        </template>
+        </VStack>
       </VStack>
     </LayoutContent>
   </Layout>

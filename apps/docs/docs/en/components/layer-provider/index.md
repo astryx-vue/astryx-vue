@@ -20,7 +20,7 @@ import { LayerProvider } from '@astryx-vue/core/LayerProvider'
 
 `toast` takes `position` (the toast viewport corner), `maxVisible` (how many toasts are on screen at once), and its own `inset`, which overrides the provider inset per edge for toasts only.
 
-Nested `LayerProvider` instances are ignored: the outer one stays in charge.
+Nested `LayerProvider` instances never open a second toast viewport: the outer one stays in charge of toasts. One that declares its own `inset`, though, narrows that inset for the anchored layers in its subtree.
 
 ## Best practices
 
@@ -29,7 +29,7 @@ Nested `LayerProvider` instances are ignored: the outer one stays in charge.
 | <Badge variant="success">Do</Badge> | Declare a persistent bar floating over the viewport once, as `inset` on `LayerProvider`; every anchored layer and toast then stays clear of it. |
 | <Badge variant="success">Do</Badge> | Use `LayerProvider` once near the app root when you need shared toast/layer configuration. |
 | <Badge variant="success">Do</Badge> | Build on higher-level components like `Popover`, `HoverCard`, and `Tooltip` for common overlay patterns. |
-| <Badge variant="error">Don't</Badge> | Add nested `LayerProvider` instances: nested providers are ignored and add unnecessary tree depth. |
+| <Badge variant="error">Don't</Badge> | Add nested `LayerProvider` instances for anything but a subtree that declares its own `inset`: they add depth without a second toast viewport. |
 
 ## Examples
 

@@ -6,6 +6,8 @@ title: Changelog
 
 The two packages publish together. This page repeats what `CHANGELOG.md` already records. It is not a roadmap.
 
+When you upgrade from an older version, read the [upgrade guide](/en/guide/migration) first. It lists every breaking change next to the old and the new way to write it.
+
 ## 0.1.0
 
 First release. `@astryx-vue/core` provides the Vue 3 components, and `@astryx-vue/themes` provides the Neutral theme.

@@ -5,11 +5,13 @@
     --astryx-progress-bar-track-height: 8px;
     --astryx-progress-bar-track-height-sm: 4px;
     --astryx-progress-bar-track-height-lg: 12px;
-    --astryx-progress-bar-track-background: var(--astryx-color-background-muted);
+    --astryx-progress-bar-track-background: var(--astryx-color-skeleton);
     --astryx-progress-bar-fill-background: var(--astryx-color-accent);
-    --astryx-progress-bar-success-fill: var(--astryx-color-success);
-    --astryx-progress-bar-warning-fill: var(--astryx-color-warning);
-    --astryx-progress-bar-error-fill: var(--astryx-color-error);
+    /* 填充在浅色下取各自色阶的 T90，深色下取 T70，和状态底同族。 */
+    --astryx-progress-bar-accent-fill: light-dark(#d7e4f5, #a0acbc);
+    --astryx-progress-bar-success-fill: light-dark(#d0e9ce, #9ab298);
+    --astryx-progress-bar-warning-fill: light-dark(#f4e1b7, #bbaa82);
+    --astryx-progress-bar-error-fill: light-dark(#f9dcd7, #c0a5a0);
     --astryx-progress-bar-info-fill: var(--astryx-color-background-blue);
   }
 }

@@ -92,6 +92,28 @@ import '@astryx-vue/themes/neutral.css'
   title="Types"
 />
 
+## Styling the container and the control
+
+`TextInput` has two parts you can style:
+
+- **Container**: the `Field` box around the label, the control box, and the status message. Use `container-class` and `container-style`.
+- **Control**: the box that paints the border and background and holds the icons and the clear button. Use `control-class` and `control-style`.
+
+Each set stays on its own part. Neither set reaches the native `<input>`.
+
+```vue
+<TextInput
+  v-model="name"
+  label="Name"
+  container-class="my-field"
+  :control-style="{ borderRadius: '12px' }"
+/>
+```
+
+A `class` or `style` written directly on `<TextInput>` still lands on the control box and applies together with `control-class`. `id`, `data-*`, `aria-*`, and event listeners land on the native `<input>`.
+
+Inside an `InputGroup`, and inside a `horizontal-labels` `FormLayout`, no container renders, so `container-*` has no effect and warns in development. To style an `InputGroup`, put the class on the `InputGroup` itself.
+
 ## Accessibility
 
 A `label` is required. Screen readers rely on it to describe what the field is for, and a `placeholder` is only visible while the field is empty, so it cannot stand in for a label.

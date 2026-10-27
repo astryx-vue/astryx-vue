@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { TableRowMenuItem } from './types.js'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import Icon from '../Icon/Icon.vue'
+import '../../styles/layer.css'
 
 defineOptions({ name: 'AstryxTableRowMenu' })
 
@@ -12,6 +14,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ close: [] }>()
+
+// 浮层挂进最近的挂载点（Dialog 内部），没有就是 body。
+const teleportTarget = useLayerTeleportTarget()
 const root = ref<HTMLElement | null>(null)
 const active = ref(0)
 
@@ -72,27 +77,29 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    ref="root"
-    class="astryx-table-menu"
-    role="menu"
-    tabindex="-1"
-    :style="{ top: `${y}px`, left: `${x}px` }"
-    @keydown="onKeydown"
-  >
-    <button
-      v-for="(item, index) in items"
-      :key="item.id"
-      type="button"
-      role="menuitem"
-      class="astryx-table-menu__item"
-      :tabindex="index === active ? 0 : -1"
-      @click="choose(item)"
-      @focusin="active = index"
-      @mouseenter="active = index"
+  <Teleport :to="teleportTarget">
+    <div
+      ref="root"
+      class="astryx-table-menu astryx-layer"
+      role="menu"
+      tabindex="-1"
+      :style="{ top: `${y}px`, left: `${x}px` }"
+      @keydown="onKeydown"
     >
-      <Icon v-if="item.icon" :icon="item.icon" size="xsm" />
-      <span>{{ item.label }}</span>
-    </button>
-  </div>
+      <button
+        v-for="(item, index) in items"
+        :key="item.id"
+        type="button"
+        role="menuitem"
+        class="astryx-table-menu__item"
+        :tabindex="index === active ? 0 : -1"
+        @click="choose(item)"
+        @focusin="active = index"
+        @mouseenter="active = index"
+      >
+        <Icon v-if="item.icon" :icon="item.icon" size="xsm" />
+        <span>{{ item.label }}</span>
+      </button>
+    </div>
+  </Teleport>
 </template>

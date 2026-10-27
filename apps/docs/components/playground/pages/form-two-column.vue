@@ -51,7 +51,7 @@ const illustrationImg: CSSProperties = {
   width: '100%',
   height: '100%',
   objectFit: 'cover',
-  borderRadius: 'var(--radius-container)',
+  borderRadius: 'var(--astryx-radius-container)',
   overflow: 'hidden',
 }
 

@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref } from 'vue'
 import type { ItemSwipeAction, ItemSwipeBehavior, ItemSwipeSide } from './types.js'
-import { onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, ref, watch } from 'vue'
 
 const AXIS_LOCK_PX = 10
 const REST_FRACTION = 0.5
@@ -180,6 +180,23 @@ export function useItemSwipe(options: {
     springTo(0, 'idle')
   }
 
+  function onDocumentPointerDown(event: PointerEvent): void {
+    const root = options.root.value
+    const target = event.target
+    if (root == null || (target instanceof Node && root.contains(target)))
+      return
+    springTo(0, 'idle')
+  }
+
+  watch(phase, (next) => {
+    if (typeof document === 'undefined')
+      return
+    if (next === 'resting')
+      document.addEventListener('pointerdown', onDocumentPointerDown, true)
+    else
+      document.removeEventListener('pointerdown', onDocumentPointerDown, true)
+  })
+
   function onPointerDown(event: PointerEvent): void {
     if (!options.enabled.value || event.pointerType !== 'touch' || phase.value === 'held')
       return
@@ -230,6 +247,8 @@ export function useItemSwipe(options: {
   onBeforeUnmount(() => {
     stopTracking()
     clearSettle()
+    if (typeof document !== 'undefined')
+      document.removeEventListener('pointerdown', onDocumentPointerDown, true)
   })
 
   return { phase, onPointerDown, onClickCapture, onKeyDown, activate }

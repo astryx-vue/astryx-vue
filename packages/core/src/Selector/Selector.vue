@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
-import type { SelectorEmits, SelectorEntry, SelectorOption, SelectorProps, SelectorSection, SelectorSlots } from './types.js'
-import { computed, inject, nextTick, onMounted, ref, useId, useSlots, useTemplateRef, watch } from 'vue'
+import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
+import { computed, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
@@ -10,18 +10,25 @@ import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useFieldControlState } from '../composables/useFieldControlState.js'
 import Field from '../Field/Field.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
 import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
-import { INPUT_GROUP_KEY } from '../InputGroup/context.js'
+import { useInputGroupContext } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
+import { bindListboxEscape, dismissSelectorEscape, focusSelectorTrigger, onSelectorListboxEscape } from './selectorEscape.js'
+import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } from './selectorOptions.js'
+import SelectorPanel from './SelectorPanel.vue'
+import { useSelectorPopup } from './useSelectorPopup.js'
 import '../../styles/button.css'
+import '../../styles/layer.css'
 import '../../styles/selector.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -48,10 +55,19 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 const emit = defineEmits<SelectorEmits>()
 defineSlots<SelectorSlots>()
 const slots = useSlots()
+const attrs = useAttrs()
 const SelectionMark = useIndicator('check')
+const parts = useFieldPartStyling({
+  component: 'Selector',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-activedescendant', 'aria-autocomplete', 'aria-disabled', 'aria-required', 'aria-busy', 'aria-readonly'],
+})
+const triggerVariant = computed(() => normalizeTriggerVariant(props.variant))
 
-const selectorId = `astryx-selector-${useId()}`
-const listboxId = `${selectorId}-listbox`
+const generatedId = `astryx-selector-${useId()}`
+const selectorId = computed(() => typeof attrs.id === 'string' && attrs.id !== '' ? attrs.id : generatedId)
+const listboxId = computed(() => `${selectorId.value}-listbox`)
 const messages = useAstryxMessages()
 const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
 const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.selector.search)
@@ -60,7 +76,7 @@ const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.sel
 const valueClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clearField(props.label))
 const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selector.empty)
 const resolvedEmptySearchText = computed(() => props.emptySearchText ?? messages.value.selector.emptySearch)
-const inputGroup = inject(INPUT_GROUP_KEY, null)
+const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)
 const control = useFieldControlState({
   disabled: () => props.disabled || (inputGroup?.disabled.value ?? false),
@@ -68,9 +84,9 @@ const control = useFieldControlState({
   loading: () => props.isLoading,
 })
 const announce = useAnnounce()
-const readOnlyId = `${selectorId}-readonly`
-const disabledMessageId = `${selectorId}-disabled-message`
-const disabledTooltipId = `${selectorId}-disabled-tooltip`
+const readOnlyId = computed(() => `${selectorId.value}-readonly`)
+const disabledMessageId = computed(() => `${selectorId.value}-disabled-message`)
+const disabledTooltipId = computed(() => `${selectorId.value}-disabled-tooltip`)
 /** 旧名 disabledReason 和新名 disabledMessage 等价。 */
 const resolvedDisabledMessage = computed(() => props.disabledMessage?.trim() || props.disabledReason?.trim())
 const showsDisabledMessage = computed(() => control.isDisabled.value && !!resolvedDisabledMessage.value)
@@ -78,7 +94,7 @@ const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 const hasClear = computed(() => props.hasClear || props.clearable)
 const fieldRef = useTemplateRef<HTMLElement>('fieldRef')
 const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
-const searchInputRef = useTemplateRef<HTMLInputElement>('searchInputRef')
+const panelRef = useTemplateRef<{ focusSearch: () => void }>('panelRef')
 const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
 useScrollbars(listboxRef)
 const isSheet = computed(() => props.presentation === 'bottom-sheet')
@@ -87,23 +103,8 @@ const sheetLabel = computed(() => props.label || resolvedPlaceholder.value)
 const isEnabled = control.canActivate
 const isSearchable = computed(() => props.searchable && control.canActivate.value)
 
-function isSection(entry: SelectorEntry): entry is SelectorSection {
-  return typeof entry === 'object' && entry !== null && 'type' in entry && entry.type === 'section'
-}
-
-function asOption(entry: SelectorOption | string): SelectorOption {
-  if (typeof entry === 'string')
-    return { value: entry, label: entry }
-  return entry
-}
-
-const normalizedEntries = computed(() => props.options.map((entry) => {
-  if (isSection(entry))
-    return { ...entry, options: entry.options.map(asOption) }
-  return asOption(entry)
-}))
-
-const flatOptions = computed(() => normalizedEntries.value.flatMap(entry => isSection(entry) ? entry.options : [entry]))
+const normalizedEntries = computed(() => normalizeSelectorEntries(props.options))
+const flatOptions = computed(() => flattenSelectorOptions(normalizedEntries.value))
 
 const comboboxOptions = computed(() =>
   flatOptions.value.map(opt => ({
@@ -132,7 +133,7 @@ const combobox = useCombobox({
   onOpenChange: (isOpen) => {
     if (isOpen && props.searchable) {
       nextTick(() => {
-        searchInputRef.value?.focus()
+        panelRef.value?.focusSearch()
       })
     }
   },
@@ -146,9 +147,8 @@ const sheetOpen = computed({
   },
 })
 const popoverOpen = computed(() => combobox.isOpen.value && !isSheet.value)
-const listboxTarget = computed(() => isSheet.value && sheetSlot.value ? sheetSlot.value : 'body')
 
-const { position } = usePositionedLayer({
+const { position, teleportTarget } = usePositionedLayer({
   anchor: fieldRef,
   layer: listboxRef,
   isOpen: popoverOpen,
@@ -157,14 +157,26 @@ const { position } = usePositionedLayer({
   gap: 4,
 })
 
+function focusTrigger(): void {
+  focusSelectorTrigger(fieldRef.value)
+}
+
+bindListboxEscape(listboxRef, (event) => {
+  onSelectorListboxEscape(event, {
+    isOpen: combobox.isOpen.value,
+    layer: listboxRef.value,
+    close: () => combobox.close(),
+    focusTrigger,
+  })
+})
+
 useDismiss({
   container: listboxRef,
   trigger: fieldRef,
   isEnabled: popoverOpen,
-  enableEscape: ref(true),
-  onDismiss: () => {
-    combobox.close()
-  },
+  dismissOnEscape: 'close',
+  onEscape: () => dismissSelectorEscape(listboxRef.value, () => combobox.close(), focusTrigger),
+  onDismiss: () => combobox.close(),
 })
 
 const selectedOption = computed(() => {
@@ -201,32 +213,7 @@ const statusGlyph = computed(() => {
   return type
 })
 
-interface DisplayRow {
-  kind: 'section' | 'option'
-  title?: string
-  option?: SelectorOption
-  index?: number
-}
-
-const displayRows = computed<DisplayRow[]>(() => {
-  const indexByValue = new Map(combobox.filteredOptions.value.map((option, index) => [option.value, index]))
-  const rows: DisplayRow[] = []
-  for (const entry of normalizedEntries.value) {
-    if (isSection(entry)) {
-      const children = entry.options.filter(option => indexByValue.has(option.value))
-      if (children.length === 0)
-        continue
-      rows.push({ kind: 'section', title: entry.title })
-      for (const option of children)
-        rows.push({ kind: 'option', option, index: indexByValue.get(option.value) })
-      continue
-    }
-    if (!indexByValue.has(entry.value))
-      continue
-    rows.push({ kind: 'option', option: entry, index: indexByValue.get(entry.value) })
-  }
-  return rows
-})
+const displayRows = computed(() => buildSelectorRows(normalizedEntries.value, combobox.filteredOptions.value))
 
 const displayText = computed(() => {
   return selectedOption.value?.label ?? resolvedPlaceholder.value
@@ -240,8 +227,8 @@ const showEmpty = computed(() => isEmpty.value && !control.isLoading.value)
 const describedBy = computed(() => {
   return [
     inGroup.value ? inputGroup?.describedBy.value : undefined,
-    control.isReadOnly.value ? readOnlyId : undefined,
-    showsDisabledMessage.value ? disabledMessageId : undefined,
+    control.isReadOnly.value ? readOnlyId.value : undefined,
+    showsDisabledMessage.value ? disabledMessageId.value : undefined,
   ].filter(Boolean).join(' ') || undefined
 })
 const announcement = computed(() => searchResultMessage({
@@ -271,17 +258,24 @@ function onTriggerFocus(event: FocusEvent): void {
   disabledTooltip.onFocus(event)
 }
 
-function onTriggerKeyDown(event: KeyboardEvent): void {
-  combobox.onKeyDown(event)
-  // 内置键盘模型处理并取消的按键不再透出。
-  if (!event.defaultPrevented)
-    emit('keydown', event)
-}
-
-/** 搜索框里的按键只走键盘模型，不当作触发器的事件透出。 */
-function onSearchKeyDown(event: KeyboardEvent): void {
-  combobox.onKeyDown(event)
-}
+const popup = useSelectorPopup({
+  flatOptions,
+  filteredValues: computed(() => combobox.filteredOptions.value),
+  listboxId,
+  listboxRef,
+  isOpen: combobox.isOpen,
+  activeIndex: combobox.activeIndex,
+  onListKeyDown: (event) => {
+    const wasOpen = combobox.isOpen.value
+    combobox.onKeyDown(event)
+    if (event.key === 'Escape' && wasOpen)
+      focusTrigger()
+  },
+  isReadOnly: () => control.isReadOnly.value,
+  isSheet: () => isSheet.value,
+  emitKeydown: event => emit('keydown', event),
+})
+const { gridMode, actionGrid, popupKind } = popup
 
 function onOptionClick(option: SelectorOption): void {
   if (!option.disabled) {
@@ -297,21 +291,9 @@ function onClear(event: Event): void {
   combobox.close()
 }
 
-function clearSearch(event: Event): void {
-  event.stopPropagation()
-  combobox.setSearchQuery('')
-  emit('search', '')
-  searchInputRef.value?.focus()
-}
-
-function onSearchInput(event: Event): void {
-  const target = event.target as HTMLInputElement
-  combobox.setSearchQuery(target.value)
-  emit('search', target.value)
-}
-
-function getOptionId(index: number): string {
-  return `${listboxId}-option-${index}`
+function onPanelQuery(value: string): void {
+  combobox.setSearchQuery(value)
+  emit('search', value)
 }
 
 const anchorWidth = ref(0)
@@ -334,30 +316,13 @@ watch(combobox.isOpen, (open) => {
 }, { flush: 'pre' })
 
 onMounted(syncAnchorWidth)
-
-// 只滚动列表自身，避免把页面滚到尚未定位的浮层上。
-watch(() => combobox.activeIndex.value, (index) => {
-  if (index >= 0 && combobox.isOpen.value) {
-    nextTick(() => {
-      const listbox = listboxRef.value
-      const optionEl = listbox?.querySelector<HTMLElement>(`#${getOptionId(index)}`)
-      if (!listbox || !optionEl)
-        return
-      const listboxRect = listbox.getBoundingClientRect()
-      const optionRect = optionEl.getBoundingClientRect()
-      if (optionRect.top < listboxRect.top)
-        listbox.scrollTop -= listboxRect.top - optionRect.top
-      else if (optionRect.bottom > listboxRect.bottom)
-        listbox.scrollTop += optionRect.bottom - listboxRect.bottom
-    })
-  }
-})
 </script>
 
 <template>
   <Field
     class="astryx-selector"
-    :class="[`size-${props.size}`, `status-${statusType}`, `variant-${props.variant}`]"
+    :class="[parts.containerClass.value, `size-${props.size}`, `status-${statusType}`, `variant-${triggerVariant}`]"
+    :style="parts.containerStyle.value"
     :label="fieldLabel"
     :input-id="selectorId"
     :is-label-hidden="inGroup || hideLabel"
@@ -372,24 +337,27 @@ watch(() => combobox.activeIndex.value, (index) => {
     <div
       ref="fieldRef"
       class="astryx-selector-field"
-      :class="{
+      :class="[parts.controlClass(), {
         'is-open': combobox.isOpen.value,
         'is-disabled': control.isDisabled.value,
         'is-readonly': control.isReadOnly.value,
         'is-loading': control.isLoading.value,
-        'is-ghost': props.variant === 'ghost',
-      }"
+        'is-ghost': triggerVariant === 'ghost',
+      }]"
+      :style="parts.controlStyle()"
+      :data-variant="triggerVariant"
       @pointerenter="disabledTooltip.onPointerEnter"
       @pointerleave="disabledTooltip.onPointerLeave"
     >
       <button
+        v-bind="parts.forwardedAttrs()"
         :id="selectorId"
         type="button"
         class="astryx-selector-trigger"
         :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': control.isDisabled.value }"
         :disabled="control.isDisabled.value && !showsDisabledMessage"
         :role="control.isReadOnly.value || !props.searchable ? 'combobox' : undefined"
-        :aria-haspopup="control.isReadOnly.value ? undefined : 'listbox'"
+        :aria-haspopup="popupKind"
         :aria-expanded="control.isReadOnly.value ? false : combobox.isOpen.value"
         :aria-controls="control.isReadOnly.value ? undefined : listboxId"
         :aria-readonly="control.isReadOnly.value || undefined"
@@ -399,16 +367,16 @@ watch(() => combobox.activeIndex.value, (index) => {
         :aria-label="props.label"
         :aria-describedby="describedBy"
         :aria-autocomplete="props.searchable ? undefined : 'none'"
-        :aria-activedescendant="!props.searchable && !control.isReadOnly.value && combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
+        :aria-activedescendant="!props.searchable && !control.isReadOnly.value ? actionGrid.activeDescendant.value : undefined"
         @click="onTriggerClick"
         @focus="onTriggerFocus"
         @blur="disabledTooltip.onBlur"
-        @keydown="onTriggerKeyDown"
+        @keydown="popup.onTriggerKeyDown"
       >
         <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
-            <span v-if="selectedOption?.icon" class="astryx-selector-value-icon" :class="selectedOption.icon" aria-hidden="true" />
+            <Icon v-if="selectedOption?.icon" class="astryx-selector-value-icon" :icon="selectedOption.icon" size="sm" />
             <span class="astryx-selector-value-label">{{ displayText }}</span>
           </template>
         </span>
@@ -458,110 +426,49 @@ watch(() => combobox.activeIndex.value, (index) => {
         </div>
       </div>
     </BottomSheet>
-    <Teleport :to="listboxTarget">
+    <Teleport :to="(isSheet && sheetSlot) ? sheetSlot : teleportTarget">
       <div
         v-show="combobox.isOpen.value"
         :id="listboxId"
         ref="listboxRef"
-        role="listbox"
-        class="astryx-selector-listbox"
+        :role="gridMode ? 'grid' : 'listbox'"
+        class="astryx-selector-listbox astryx-layer"
         :class="{ 'is-sheet': isSheet }"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
         tabindex="-1"
       >
-        <div v-if="props.searchable" class="astryx-selector-search">
-          <Icon class="astryx-selector-search-icon" icon="search" size="sm" />
-          <input
-            :id="`${selectorId}-search`"
-            ref="searchInputRef"
-            type="text"
-            class="astryx-selector-search-input"
-            role="combobox"
-            autocomplete="off"
-            :aria-label="resolvedSearchPlaceholder"
-            :aria-expanded="combobox.isOpen.value"
-            :aria-controls="listboxId"
-            aria-autocomplete="list"
-            :aria-activedescendant="combobox.activeIndex.value >= 0 ? getOptionId(combobox.activeIndex.value) : undefined"
-            :placeholder="resolvedSearchPlaceholder"
-            :value="combobox.searchQuery.value"
-            @input="onSearchInput"
-            @keydown="onSearchKeyDown"
-          >
-          <button
-            v-if="combobox.searchQuery.value"
-            type="button"
-            class="astryx-selector-search-clear"
-            :aria-label="resolvedClearLabel"
-            @click="clearSearch"
-          >
-            <Icon icon="close" size="sm" />
-          </button>
-        </div>
-
-        <div v-if="!control.isLoading.value && !isEmpty" class="astryx-selector-options">
-          <template v-for="(row, rowIndex) in displayRows" :key="row.kind === 'section' ? `section-${rowIndex}` : row.option?.value">
-            <div v-if="row.kind === 'section'" class="astryx-selector-section" role="presentation">
-              {{ row.title }}
-            </div>
-            <div
-              v-else-if="row.option && row.index != null"
-              :id="getOptionId(row.index)"
-              role="option"
-              tabindex="0"
-              class="astryx-selector-option"
-              :class="{
-                'is-active': row.index === combobox.activeIndex.value,
-                'is-selected': row.option.value === props.modelValue,
-                'is-disabled': row.option.disabled,
-              }"
-              :aria-selected="row.option.value === props.modelValue"
-              :aria-disabled="row.option.disabled"
-              @click="onOptionClick(row.option)"
-              @keydown.enter="onOptionClick(row.option)"
-              @keydown.space.prevent="onOptionClick(row.option)"
-            >
-              <span v-if="props.indicatorPosition === 'start'" class="astryx-selector-option-mark">
-                <component
-                  :is="SelectionMark"
-                  class="astryx-selector-check"
-                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
-                  size="sm"
-                  :is-disabled="row.option.disabled"
-                />
-              </span>
-              <span class="astryx-selector-option-body">
-                <slot v-if="slots.option" name="option" :option="row.option" :is-active="row.index === combobox.activeIndex.value" :is-selected="row.option.value === props.modelValue" />
-                <template v-else>
-                  <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
-                  <span class="astryx-selector-option-copy">
-                    <span class="astryx-selector-option-label">{{ row.option.label }}</span>
-                    <span v-if="row.option.description" class="astryx-selector-option-description">
-                      {{ row.option.description }}
-                    </span>
-                  </span>
-                </template>
-              </span>
-              <span v-if="props.indicatorPosition === 'end'" class="astryx-selector-option-mark">
-                <component
-                  :is="SelectionMark"
-                  class="astryx-selector-check"
-                  :state="row.option.value === props.modelValue ? 'checked' : 'unchecked'"
-                  size="sm"
-                  :is-disabled="row.option.disabled"
-                />
-              </span>
-            </div>
+        <SelectorPanel
+          ref="panelRef"
+          :searchable="props.searchable"
+          :query="combobox.searchQuery.value"
+          :placeholder="resolvedSearchPlaceholder"
+          :clear-label="resolvedClearLabel"
+          :rows="displayRows"
+          :active-index="combobox.activeIndex.value"
+          :model-value="props.modelValue"
+          :indicator-position="props.indicatorPosition"
+          :grid="gridMode"
+          :action-index="actionGrid.column.value === 'action' ? combobox.activeIndex.value : -1"
+          :loading="control.isLoading.value"
+          :show-empty="showEmpty"
+          :searching="isSearching"
+          :empty-text="isSearching ? resolvedEmptySearchText : resolvedEmptyText"
+          :listbox-id="listboxId"
+          :is-open="combobox.isOpen.value"
+          :active-descendant="actionGrid.activeDescendant.value"
+          :mark="SelectionMark"
+          @query="onPanelQuery"
+          @keydown="popup.onSearchKeyDown"
+          @select="onOptionClick"
+        >
+          <template v-if="slots.option" #option="slotProps">
+            <slot name="option" v-bind="slotProps" />
           </template>
-        </div>
-
-        <div v-else-if="showEmpty" class="astryx-selector-empty" role="presentation">
-          <slot v-if="!isSearching && slots.empty" name="empty" />
-          <template v-else>
-            {{ isSearching ? resolvedEmptySearchText : resolvedEmptyText }}
+          <template v-if="slots.empty" #empty>
+            <slot name="empty" />
           </template>
-        </div>
+        </SelectorPanel>
       </div>
     </Teleport>
 

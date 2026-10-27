@@ -12,11 +12,11 @@ import { powerSearchDisabled, powerSearchNested, powerSearchOverflow, powerSearc
 
 ## Usage
 
-Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field and a content search become a filter immediately. Each filter sits in the input as a token that can be opened again.
+Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field, an empty operator, and a content search become a filter immediately: the editor closes and focus returns to the search field. Clicking an existing empty-operator token does not open the built-in editor. It commits one edit. A consumer editor registered as `components.empty.editor`, or the editor slot, still opens.
 
 Backspace on an empty input removes the last token. The arrow keys move between tokens, Enter opens the focused one, and Backspace or Delete removes it. A read-only token cannot be edited or removed. Escape cancels the editor and returns focus.
 
-The editor follows the width of the search field, from about 400 to 720. When the viewport cannot hold the minimum, the floor gives way. The editor hugs the side that opened it only after the maximum has squeezed it. The position is taken once, while it is open.
+The editor follows the width of the search field, from about 400 to 720, and stays inside the layer gutter (16 on each side of the viewport). When the viewport cannot hold the minimum, the floor gives way to that gutter. The editor hugs the side that opened it only after the maximum has squeezed it. The position is taken once, while it is open. When the editor itself is narrower than 400, the fields stack. That follows the editor’s width, not the window’s.
 
 `createPowerSearchConfig` builds the operators from field definitions and returns `applyFilters`. That function filters rows on its own. It does not go through a table’s column filters. Time, relative dates, entities, and custom values keep every row unless the caller interprets them. A nested filter requires every child by default. An operator named or, or one whose name contains any, requires only one child.
 

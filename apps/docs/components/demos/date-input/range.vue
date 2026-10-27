@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { provideAstryxLocale } from '@astryx-vue/core'
 import { DateInput } from '@astryx-vue/core/DateInput'
 import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { ref } from 'vue'
-
-provideAstryxLocale('en')
 
 const today = new Date()
 const year = today.getFullYear()

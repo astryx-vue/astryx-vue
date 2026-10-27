@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { dateTimeInputValidation } from '../../../../components/demos/date-time-input'
+import { dateTimeInputSheet, dateTimeInputValidation } from '../../../../components/demos/date-time-input'
 </script>
 
 ## Usage
@@ -27,7 +27,7 @@ const meeting = shallowRef<string | null>(null)
 </template>
 ```
 
-The date uses the date field. The time uses the same field as the time input. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. Clear removes both parts. The date half can show two months and can start the week on a chosen day. While a change is saving, neither field can be edited.
+The date uses the date field. The time uses the same field as the time input. The two fields stay side by side and shrink with the row. They wrap only when the row is narrower than 16rem. `bottom-sheet` puts the date and the time in one bottom sheet, with tabs to move between them. Clear removes both parts. The date half can show two months and can start the week on a chosen day. While a change is saving, neither field can be edited.
 
 
 <ComponentAnatomy />
@@ -42,3 +42,4 @@ The date uses the date field. The time uses the same field as the time input. Th
 ## Examples
 
 <DemoExample :demo="dateTimeInputValidation" description="Error, warning, and success on a filled date and time." locale="en" title="Validation" />
+<DemoExample :demo="dateTimeInputSheet" description="One bottom sheet switches between the date and the time." locale="en" title="Bottom sheet" />

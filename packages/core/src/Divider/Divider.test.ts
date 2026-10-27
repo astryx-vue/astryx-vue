@@ -32,6 +32,21 @@ describe('divider', () => {
     expect(separator.attributes('aria-labelledby')).toBe(label.attributes('id'))
   })
 
+  it('keeps a numeric zero visible and named', () => {
+    const wrapper = mount(Divider, {
+      attachTo: document.body,
+      props: { label: 0 },
+    })
+    const label = wrapper.get('.astryx-divider__label')
+    expect(label.text()).toBe('0')
+    expect(wrapper.get('[role="separator"]').attributes('aria-labelledby')).toBe(label.attributes('id'))
+  })
+
+  it('skips an empty string label', () => {
+    const wrapper = mount(Divider, { props: { label: '' } })
+    expect(wrapper.find('.astryx-divider__label').exists()).toBe(false)
+  })
+
   it('uses an explicit aria-label instead of the visible label', () => {
     const wrapper = mount(Divider, {
       attachTo: document.body,

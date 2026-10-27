@@ -36,6 +36,10 @@ footer: false
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>字段的错误、警告或成功状态。</td></tr>
 <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>标签前的装饰图标。</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息提示。</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string</code></td><td>—</td><td>加到字段外壳上的 class。横向标签的表单里没有外壳，这时不生效。</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳上的行内样式。</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string</code></td><td>—</td><td>加到轨道容器上的 class，不会落到滑块拇指上。</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到轨道容器上的行内样式。</td></tr>
 </tbody></table>
 </div>
 

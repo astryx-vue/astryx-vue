@@ -1,4 +1,5 @@
 import type { AstryxLocale } from '../types.js'
+import { formatCount } from './shared.js'
 
 export interface TableMessages {
   label: string
@@ -12,9 +13,16 @@ export interface TableMessages {
   sortAscending: string
   sortDescending: string
   clearSort: string
+  /** 排序方向词，会填进 `sortedBy` 那句话里。 */
   sortedAscending: string
   sortedDescending: string
   sortBy: (label: string) => string
+  /** 已排序列的表头按钮名。 */
+  sortedBy: (label: string, direction: string) => string
+  /** 多列排序时，已排序列的表头按钮名，带上它排第几。 */
+  sortedByWithPriority: (label: string, direction: string, rank: number, total: number) => string
+  /** 列筛选控件的名字、占位文字和无障碍名。 */
+  filterByColumn: (header: string) => string
   bulkActionsLabel: string
   clearAll: string
   selectedCount: (count: number) => string
@@ -30,6 +38,12 @@ export interface TableMessages {
   collapseAllRows: string
   rowExpansion: string
   rowStatus: string
+  /** 树形数据里，行展开箭头的名字。 */
+  treeExpandRow: string
+  treeCollapseRow: string
+  /** 树形数据表头那个「全部展开 / 全部收起」开关的名字。 */
+  treeExpandAllRows: string
+  treeCollapseAllRows: string
 }
 
 export const tableMessages: Record<AstryxLocale, TableMessages> = {
@@ -45,12 +59,15 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     sortAscending: 'Sort ascending',
     sortDescending: 'Sort descending',
     clearSort: 'Clear sort',
-    sortedAscending: 'Ascending',
-    sortedDescending: 'Descending',
+    sortedAscending: 'ascending',
+    sortedDescending: 'descending',
     sortBy: label => `Sort by ${label}`,
+    sortedBy: (label, direction) => `Sort by ${label}, sorted ${direction}`,
+    sortedByWithPriority: (label, direction, rank, total) => `Sort by ${label}, sorted ${direction}, priority ${formatCount(rank, 'en')} of ${formatCount(total, 'en')}`,
+    filterByColumn: header => `Filter ${header}`,
     bulkActionsLabel: 'Bulk actions',
     clearAll: 'Unselect All',
-    selectedCount: count => `${count} selected`,
+    selectedCount: count => `${formatCount(count, 'en')} selected`,
     paginationLabel: 'Table pagination',
     paginationLabelAbove: label => `${label} (top)`,
     paginationLabelBelow: label => `${label} (bottom)`,
@@ -63,6 +80,10 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     collapseAllRows: 'Collapse all rows',
     rowExpansion: 'Row expansion',
     rowStatus: 'Row status',
+    treeExpandRow: 'Expand row',
+    treeCollapseRow: 'Collapse row',
+    treeExpandAllRows: 'Expand all rows',
+    treeCollapseAllRows: 'Collapse all rows',
   },
   'zh-CN': {
     label: '表格',
@@ -78,10 +99,13 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     clearSort: '清除排序',
     sortedAscending: '升序',
     sortedDescending: '降序',
-    sortBy: label => `按 ${label} 排序`,
+    sortBy: label => `按${label}排序`,
+    sortedBy: (label, direction) => `按${label}排序，当前为${direction}`,
+    sortedByWithPriority: (label, direction, rank, total) => `按${label}排序，当前为${direction}，优先级 ${formatCount(rank, 'zh-CN')}/${formatCount(total, 'zh-CN')}`,
+    filterByColumn: header => `筛选${header}`,
     bulkActionsLabel: '批量操作',
     clearAll: '取消全选',
-    selectedCount: count => `已选择 ${count} 项`,
+    selectedCount: count => `已选择 ${formatCount(count, 'zh-CN')} 项`,
     paginationLabel: '表格分页',
     paginationLabelAbove: label => `${label}（顶部）`,
     paginationLabelBelow: label => `${label}（底部）`,
@@ -94,5 +118,9 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     collapseAllRows: '折叠所有行',
     rowExpansion: '行展开',
     rowStatus: '行状态',
+    treeExpandRow: '展开行',
+    treeCollapseRow: '折叠行',
+    treeExpandAllRows: '展开所有行',
+    treeCollapseAllRows: '折叠所有行',
   },
 }

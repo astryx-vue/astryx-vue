@@ -1,0 +1,29 @@
+/**
+ * Neutral theme-local tokens.
+ *
+ * These names are private to the Neutral theme (not portable semantic tokens),
+ * and components reference them instead of hard-coding the same status color
+ * in several places. Values come from the reviewed palette.
+ */
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-theme-neutral-color-status-fill-accent: light-dark(#0074e2, #6d9cfe);
+    --astryx-theme-neutral-color-status-fill-success: light-dark(#198100, #64af4c);
+    --astryx-theme-neutral-color-status-fill-warning: #ffce2f;
+    --astryx-theme-neutral-color-status-fill-error: light-dark(#c9303a, #ff705d);
+
+    --astryx-theme-neutral-color-status-muted-accent: light-dark(#b9d7ff, #88bcff3d);
+
+    /* Tints used on top of an already-tinted surface (Banner). */
+    --astryx-theme-neutral-color-on-tint-neutral: light-dark(#fafafa4d, #0a0a0a4d);
+    --astryx-theme-neutral-color-on-tint-overlay-hover: light-dark(#fafafa1a, #0a0a0a1a);
+    --astryx-theme-neutral-color-on-tint-overlay-pressed: light-dark(#fafafa33, #0a0a0a33);
+
+    /* Red overlay used by the destructive Button instead of the neutral one. */
+    --astryx-theme-neutral-color-destructive-overlay-hover: light-dark(#ff7f770d, #ee736c0d);
+    --astryx-theme-neutral-color-destructive-overlay-pressed: light-dark(#ff7f771a, #ee736c1a);
+  }
+}

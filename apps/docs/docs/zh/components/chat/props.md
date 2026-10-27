@@ -499,7 +499,7 @@ footer: false
         <td><code>triggers</code></td>
         <td><code>ChatComposerTrigger[]</code></td>
         <td>-</td>
-        <td>在词首输入触发字符时打开建议列表。有触发器时编辑器是 combobox。</td>
+        <td>在词首输入触发字符时打开建议列表。触发器上的 <code>hasMultiWordQuery</code> 让查询穿过空格和标点，直到换行、超过 64 个字符，或同一个触发字符再次出现。不设时，空格或制表符结束查询。多词查询没有匹配、也没写 <code>emptySearchText</code> 时，列表先藏起来。有触发器时编辑器是 combobox。</td>
       </tr>
       <tr>
         <td><code>debounceMs</code></td>

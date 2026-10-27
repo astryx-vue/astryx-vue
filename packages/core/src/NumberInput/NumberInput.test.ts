@@ -126,7 +126,7 @@ describe('numberInput', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
-  it('updates value on input', async () => {
+  it('commits a typed number on blur, not on each keystroke', async () => {
     const wrapper = mount(NumberInput, {
       props: {
         modelValue: 5,
@@ -136,11 +136,13 @@ describe('numberInput', () => {
     const input = inputElement(wrapper)
     input.value = '10'
     await input.dispatchEvent(new Event('input'))
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
 
+    await textInput(wrapper).trigger('blur')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([10])
   })
 
-  it('keeps the typed text while editing', async () => {
+  it('keeps the typed text while editing and commits it on blur', async () => {
     const wrapper = mount(NumberInput, {
       props: {
         modelValue: 5,
@@ -151,11 +153,14 @@ describe('numberInput', () => {
     input.value = '007'
     await input.dispatchEvent(new Event('input'))
 
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([7])
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     expect(input.value).toBe('007')
+
+    await textInput(wrapper).trigger('blur')
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([7])
   })
 
-  it('handles decimal input', async () => {
+  it('commits a decimal on blur', async () => {
     const wrapper = mount(NumberInput, {
       props: {
         modelValue: 5,
@@ -165,52 +170,61 @@ describe('numberInput', () => {
     const input = inputElement(wrapper)
     input.value = '7.5'
     await input.dispatchEvent(new Event('input'))
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
 
+    await textInput(wrapper).trigger('blur')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([7.5])
   })
 
-  it('clears value with empty input', async () => {
-    const wrapper = mount(NumberInput, {
+  it('reverts an empty draft unless the field can be cleared', async () => {
+    const kept = mount(NumberInput, {
       props: {
         modelValue: 5,
       },
     })
+    inputElement(kept).value = ''
+    await inputElement(kept).dispatchEvent(new Event('input'))
+    await textInput(kept).trigger('blur')
+    expect(kept.emitted('update:modelValue')).toBeUndefined()
 
-    const input = inputElement(wrapper)
-    input.value = ''
-    await input.dispatchEvent(new Event('input'))
-
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
+    const cleared = mount(NumberInput, {
+      props: {
+        modelValue: 5,
+        hasClear: true,
+      },
+    })
+    inputElement(cleared).value = ''
+    await inputElement(cleared).dispatchEvent(new Event('input'))
+    expect(cleared.emitted('update:modelValue')).toBeUndefined()
+    await textInput(cleared).trigger('blur')
+    expect(cleared.emitted('update:modelValue')?.[0]).toEqual([null])
   })
 
-  it('respects min constraint', async () => {
-    const wrapper = mount(NumberInput, {
+  it('clamps to min and max on blur, and marks the draft invalid while typing', async () => {
+    const below = mount(NumberInput, {
       props: {
         modelValue: 5,
         min: 0,
       },
     })
+    inputElement(below).value = '-10'
+    await inputElement(below).dispatchEvent(new Event('input'))
+    expect(below.emitted('update:modelValue')).toBeUndefined()
+    expect(textInput(below).attributes('aria-invalid')).toBe('true')
+    expect(below.get('[role="alert"]').text()).toBe('Invalid number')
+    await textInput(below).trigger('blur')
+    expect(below.emitted('update:modelValue')?.[0]).toEqual([0])
 
-    const input = inputElement(wrapper)
-    input.value = '-10'
-    await input.dispatchEvent(new Event('input'))
-
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([0])
-  })
-
-  it('respects max constraint', async () => {
-    const wrapper = mount(NumberInput, {
+    const above = mount(NumberInput, {
       props: {
         modelValue: 5,
         max: 10,
       },
     })
-
-    const input = inputElement(wrapper)
-    input.value = '20'
-    await input.dispatchEvent(new Event('input'))
-
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([10])
+    inputElement(above).value = '20'
+    await inputElement(above).dispatchEvent(new Event('input'))
+    await textInput(above).trigger('blur')
+    expect(above.emitted('update:modelValue')?.[0]).toEqual([10])
   })
 
   it('uses custom step', async () => {
@@ -482,7 +496,9 @@ describe('numberInput', () => {
       const input = inputElement(wrapper)
       input.value = '7'
       await input.dispatchEvent(new Event('input'))
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
 
+      await textInput(wrapper).trigger('blur')
       expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([7])
     })
   })
@@ -710,6 +726,41 @@ describe('numberInput', () => {
       expect(wrapper.emitted('update:modelValue')).toBeUndefined()
       wrapper.unmount()
     })
+  })
+
+  it('reads a grouped paste on blur and steps from the draft', async () => {
+    const wrapper = mount(NumberInput, {
+      props: { modelValue: 5, hasNumberSteppers: true },
+    })
+    const input = inputElement(wrapper)
+    input.value = '1,234'
+    await input.dispatchEvent(new Event('input'))
+    await wrapper.get('.increment').trigger('click')
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([1235])
+
+    const pasted = mount(NumberInput, { props: { modelValue: 5 } })
+    inputElement(pasted).value = '1,234'
+    await inputElement(pasted).dispatchEvent(new Event('input'))
+    expect(pasted.emitted('update:modelValue')).toBeUndefined()
+    await textInput(pasted).trigger('blur')
+    expect(pasted.emitted('update:modelValue')?.[0]).toEqual([1234])
+  })
+
+  it('rejects an unreadable draft and says the number is invalid', async () => {
+    const wrapper = mount(NumberInput, { props: { modelValue: 5 } })
+    inputElement(wrapper).value = '12abc'
+    await inputElement(wrapper).dispatchEvent(new Event('input'))
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(textInput(wrapper).attributes('aria-invalid')).toBe('true')
+    expect(wrapper.get('[role="alert"]').text()).toBe('Invalid number')
+
+    await textInput(wrapper).trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(inputElement(wrapper).value).toBe('12abc')
+
+    await textInput(wrapper).trigger('blur')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(inputElement(wrapper).value).toBe('5')
   })
 
   it('works with v-model', async () => {

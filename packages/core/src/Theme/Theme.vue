@@ -4,7 +4,6 @@ import type { ThemeProps } from './types.js'
 import { computed, inject, provide, useAttrs, useTemplateRef } from 'vue'
 import { syntaxThemeKey } from '../Code/syntaxContext.js'
 import { themeContextKey, themeNestingKey } from './context.js'
-import { themeStyle } from './themeStyle.js'
 import { ThemeStyle } from './themeStyleTag.js'
 import { useThemeRootSync } from './useThemeRootSync.js'
 import '../../styles/theme.css'
@@ -41,7 +40,6 @@ const colorScheme = computed(() => {
 
 const rootStyle = computed<CSSProperties>(() => ({
   colorScheme: colorScheme.value,
-  ...themeStyle(props.theme),
 }))
 
 defineExpose({ element: root })

@@ -153,8 +153,15 @@
     }
   }
 
-  .astryx-item[data-interactive='true']:not([data-disabled='true']):not([data-selected='true']):active {
-    background-color: var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19));
+  /* 鼠标按下才用 :active。粗指针改看按压模型写的 data-astryx-press，滚动时不会误亮。 */
+  @media not all and (pointer: coarse) {
+    .astryx-item[data-interactive='true']:not([data-disabled='true']):not([data-selected='true']):active {
+      background-color: var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19));
+    }
+  }
+
+  .astryx-item[data-astryx-press]:not([data-disabled='true']):not([data-selected='true']) {
+    background-image: var(--_press-paint-image);
   }
 
   .astryx-item:has(:focus-visible) {

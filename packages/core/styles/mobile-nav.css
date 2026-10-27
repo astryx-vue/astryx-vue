@@ -13,7 +13,9 @@
     padding: 0;
     border: 0;
     background: transparent;
-    overflow: hidden;
+    overflow: clip;
+    overscroll-behavior: contain;
+    touch-action: pinch-zoom;
   }
 
   .astryx-mobile-nav:not([open]) { display: none; }
@@ -70,6 +72,7 @@
     min-height: 0;
     padding: var(--astryx-spacing-2, 8px);
     overflow: auto;
+    touch-action: pan-y pinch-zoom;
   }
 
   .astryx-mobile-nav__close,

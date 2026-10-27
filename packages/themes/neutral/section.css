@@ -1,0 +1,8 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  :root,
+  [data-astryx-theme='neutral'] {
+    --astryx-section-padding: var(--astryx-spacing-3);
+  }
+}

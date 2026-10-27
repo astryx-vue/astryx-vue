@@ -433,4 +433,47 @@ describe('item swipe actions', () => {
     wrapper.unmount()
     vi.useRealTimers()
   })
+
+  it('closes a resting row when the pointer goes down outside it', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(Item, {
+      attachTo: document.body,
+      props: {
+        label: 'Invoice 1042',
+        swipeActions: { trailing: [{ label: 'Archive', onActivate: vi.fn() }] },
+      },
+    })
+    const row = wrapper.get('.astryx-item')
+    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 4, clientX: 200, clientY: 20 })
+    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 4, clientX: 120, clientY: 20, bubbles: true }))
+    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 4, clientX: 120, clientY: 20, bubbles: true }))
+    await vi.advanceTimersByTimeAsync(200)
+    expect(row.attributes('data-swipe')).toBe('resting')
+
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 0, clientY: 0 }))
+    await vi.advanceTimersByTimeAsync(200)
+    expect(row.attributes('data-swipe')).toBe('idle')
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+})
+
+describe('item link safety and press', () => {
+  it('does not render a link for a blocked destination', () => {
+    const wrapper = mount(Item, { props: { label: 'Bad', href: 'javascript:alert(1)' } })
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(wrapper.attributes('data-astryx-pressable')).toBeUndefined()
+  })
+
+  it('marks an interactive row as pressable and leaves a disabled row unmarked', () => {
+    const active = mount(Item, { props: { label: 'Open', onClick: () => {} } })
+    expect(active.attributes('data-astryx-pressable')).toBe('')
+    const disabled = mount(Item, { props: { label: 'Open', onClick: () => {}, isDisabled: true } })
+    expect(disabled.attributes('data-astryx-pressable')).toBeUndefined()
+  })
+
+  it('paints the press on the row itself instead of adding a second overlay', () => {
+    const wrapper = mount(Item, { props: { label: 'Open', onClick: () => {} } })
+    expect(wrapper.classes()).not.toContain('astryx-pressable')
+  })
 })

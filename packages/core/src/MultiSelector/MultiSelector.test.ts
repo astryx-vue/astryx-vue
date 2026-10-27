@@ -167,9 +167,10 @@ describe('multi selector', () => {
     expect(document.querySelector('.astryx-multi-selector-empty')).toBeNull()
     wrapper.unmount()
 
-    mountSelector({ hasCreate: true })
+    const missingSearch = mountSelector({ hasCreate: true })
     expect(warn).toHaveBeenCalled()
     warn.mockRestore()
+    missingSearch.unmount()
   })
 
   it('replaces the chevron with a warning icon when the status is a tooltip', () => {
@@ -309,6 +310,60 @@ describe('multi selector', () => {
     await flush()
     expect(chip.attributes('aria-expanded')).toBe('true')
     expect(document.querySelector('.astryx-multi-selector-listbox')).not.toBeNull()
+    wrapper.unmount()
+  })
+
+  it('搜索框里按 Escape 后焦点回到触发器', async () => {
+    const wrapper = mountSelector({ searchable: true })
+    const trigger = wrapper.get('button.astryx-multi-selector-trigger')
+    await trigger.trigger('click')
+    await flush()
+    const search = document.querySelector<HTMLInputElement>('.astryx-multi-selector-search-input')
+    expect(search).not.toBeNull()
+    search?.focus()
+    search?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await flush()
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(trigger.element)
+    wrapper.unmount()
+  })
+
+  it('选项上按 Escape 后焦点回到触发器', async () => {
+    const wrapper = mountSelector()
+    const trigger = wrapper.get('button.astryx-multi-selector-trigger')
+    await trigger.trigger('click')
+    await flush()
+    const listbox = document.getElementById(trigger.attributes('aria-controls') ?? '')
+    const option = listbox?.querySelector<HTMLElement>('[role="option"]')
+    expect(option).not.toBeNull()
+    option?.focus()
+    option?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await flush()
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(trigger.element)
+    wrapper.unmount()
+  })
+
+  it('选项操作按钮上按 Escape 后焦点回到触发器', async () => {
+    const wrapper = mount(MultiSelector, {
+      attachTo: document.body,
+      props: {
+        label: 'Access',
+        options: [
+          { value: 'read', label: 'Read', action: h('button', { type: 'button' }, 'Edit') },
+        ],
+      },
+    })
+    const trigger = wrapper.get('button.astryx-multi-selector-trigger')
+    await trigger.trigger('click')
+    await flush()
+    const edit = document.querySelector('.astryx-multi-selector-listbox button')
+    expect(edit).toBeInstanceOf(HTMLButtonElement)
+    ;(edit as HTMLButtonElement).focus()
+    edit?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await flush()
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(trigger.element)
     wrapper.unmount()
   })
 })

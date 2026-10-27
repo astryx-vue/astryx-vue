@@ -69,7 +69,7 @@
     outline-offset: var(--astryx-focus-outline-offset);
   }
 
-  .astryx-overflow-list__chip:disabled { cursor: not-allowed; opacity: 0.5; }
+  .astryx-overflow-list__chip:disabled { cursor: default; opacity: 0.5; }
 
   .astryx-overflow-list__glyph {
     display: inline-block;

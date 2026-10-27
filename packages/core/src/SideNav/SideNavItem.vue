@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SideNavItemCollapsible, SideNavItemEmits, SideNavItemProps, SideNavItemSlots } from './types.js'
-import { computed, getCurrentInstance, provide, ref, useId, useSlots } from 'vue'
+import { computed, getCurrentInstance, provide, ref, useAttrs, useId, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import NavItem from '../NavItem/NavItem.vue'
@@ -9,7 +9,7 @@ import Tooltip from '../Tooltip/Tooltip.vue'
 import { sideNavCollapseKey, useSideNavCollapse } from './context.js'
 import '../../styles/side-nav.css'
 
-defineOptions({ name: 'AstryxSideNavItem' })
+defineOptions({ name: 'AstryxSideNavItem', inheritAttrs: false })
 
 const props = withDefaults(defineProps<SideNavItemProps>(), {
   collapsible: undefined,
@@ -21,6 +21,13 @@ const props = withDefaults(defineProps<SideNavItemProps>(), {
 const emit = defineEmits<SideNavItemEmits>()
 defineSlots<SideNavItemSlots>()
 const slots = useSlots()
+const attrs = useAttrs()
+const accessibleLabel = computed(() => {
+  const given = attrs['aria-label']
+  if (typeof given === 'string' && given.trim() !== '')
+    return given
+  return props.label
+})
 const collapse = useSideNavCollapse()
 const messages = useAstryxMessages()
 const instance = getCurrentInstance()
@@ -93,8 +100,10 @@ const toggleLabel = computed(() =>
   <template v-if="sidebarCollapsed">
     <Tooltip v-if="hasIcon && !hasChildren" :content="label" placement="end">
       <NavItem
+        v-bind="attrs"
         block
         is-icon-only
+        :aria-label="accessibleLabel"
         :as="as"
         :href="href"
         :icon-class="iconClass"
@@ -133,7 +142,7 @@ const toggleLabel = computed(() =>
           :aria-expanded="isOpen ? 'true' : 'false'"
           :aria-controls="panelId"
           aria-haspopup="menu"
-          :aria-label="label"
+          :aria-label="accessibleLabel"
         >
           <span class="astryx-nav-item__icon" aria-hidden="true">
             <span v-if="iconClass" class="astryx-nav-item__glyph" :class="isSelected && selectedIconClass ? selectedIconClass : iconClass" />
@@ -152,11 +161,57 @@ const toggleLabel = computed(() =>
     </NavDisclosure>
   </template>
   <div v-else class="astryx-side-nav-item">
-    <div v-if="splitToggle" class="astryx-nav-item astryx-nav-item--block" :class="[`astryx-nav-item--${size}`, { 'astryx-nav-item--selected': isSelected }]">
+    <div class="astryx-side-nav-item__main">
+      <div v-if="splitToggle" class="astryx-nav-item astryx-nav-item--block" :class="[`astryx-nav-item--${size}`, { 'astryx-nav-item--selected': isSelected }]">
+        <NavItem
+          v-bind="attrs"
+          plain
+          class="astryx-side-nav-item__split"
+          :as="as"
+          :href="href"
+          :icon-class="iconClass"
+          :is-disabled="isDisabled"
+          :is-selected="isSelected"
+          :label="label"
+          :rel="rel"
+          :selected-icon-class="selectedIconClass"
+          :size="size"
+          :target="target"
+          @click="onActivate"
+        >
+          <template v-if="$slots.icon" #icon>
+            <slot name="icon" />
+          </template>
+          <template v-if="$slots.selectedIcon" #selectedIcon>
+            <slot name="selectedIcon" />
+          </template>
+          <template v-if="$slots.end" #end>
+            <slot name="end" />
+          </template>
+        </NavItem>
+        <button
+          type="button"
+          class="astryx-side-nav-item__toggle"
+          :aria-expanded="nestedCollapsed ? 'false' : 'true'"
+          :aria-controls="childrenId"
+          :aria-label="toggleLabel"
+          @click.stop="toggleNested"
+        >
+          <Icon
+            icon="chevronDown"
+            size="sm"
+            class="astryx-side-nav-item__chevron"
+            :class="{ 'astryx-side-nav-item__chevron--open': !nestedCollapsed }"
+          />
+        </button>
+      </div>
       <NavItem
-        plain
-        class="astryx-side-nav-item__split"
+        v-else
+        v-bind="attrs"
+        block
         :as="as"
+        :controls="canNest ? childrenId : undefined"
+        :expanded="canNest ? !nestedCollapsed : undefined"
         :href="href"
         :icon-class="iconClass"
         :is-disabled="isDisabled"
@@ -174,60 +229,21 @@ const toggleLabel = computed(() =>
         <template v-if="$slots.selectedIcon" #selectedIcon>
           <slot name="selectedIcon" />
         </template>
-        <template v-if="$slots.end" #end>
+        <template v-if="$slots.end || canNest" #end>
           <slot name="end" />
+          <Icon
+            v-if="canNest"
+            icon="chevronDown"
+            size="sm"
+            class="astryx-side-nav-item__chevron"
+            :class="{ 'astryx-side-nav-item__chevron--open': !nestedCollapsed }"
+          />
         </template>
       </NavItem>
-      <button
-        type="button"
-        class="astryx-side-nav-item__toggle"
-        :aria-expanded="nestedCollapsed ? 'false' : 'true'"
-        :aria-controls="childrenId"
-        :aria-label="toggleLabel"
-        @click.stop="toggleNested"
-      >
-        <Icon
-          icon="chevronDown"
-          size="sm"
-          class="astryx-side-nav-item__chevron"
-          :class="{ 'astryx-side-nav-item__chevron--open': !nestedCollapsed }"
-        />
-      </button>
+      <div v-if="$slots.actions" class="astryx-side-nav-item__actions">
+        <slot name="actions" />
+      </div>
     </div>
-    <NavItem
-      v-else
-      block
-      :as="as"
-      :controls="canNest ? childrenId : undefined"
-      :expanded="canNest ? !nestedCollapsed : undefined"
-      :href="href"
-      :icon-class="iconClass"
-      :is-disabled="isDisabled"
-      :is-selected="isSelected"
-      :label="label"
-      :rel="rel"
-      :selected-icon-class="selectedIconClass"
-      :size="size"
-      :target="target"
-      @click="onActivate"
-    >
-      <template v-if="$slots.icon" #icon>
-        <slot name="icon" />
-      </template>
-      <template v-if="$slots.selectedIcon" #selectedIcon>
-        <slot name="selectedIcon" />
-      </template>
-      <template v-if="$slots.end || canNest" #end>
-        <slot name="end" />
-        <Icon
-          v-if="canNest"
-          icon="chevronDown"
-          size="sm"
-          class="astryx-side-nav-item__chevron"
-          :class="{ 'astryx-side-nav-item__chevron--open': !nestedCollapsed }"
-        />
-      </template>
-    </NavItem>
     <div
       v-if="hasChildren"
       :id="childrenId"

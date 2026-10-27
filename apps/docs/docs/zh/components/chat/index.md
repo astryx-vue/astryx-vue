@@ -90,7 +90,7 @@ function onSubmit(value: string) {
 
 <DemoExample
   :demo="chatComposerShell"
-  description="带附件抽屉、顶栏按钮和语音按钮的输入区。点抽屉把手可以收起附件。点麦克风会在支持语音的浏览器里开始听写。"
+  description="带附件抽屉、顶栏按钮和语音按钮的输入区。没有字时发送按钮是浅色并且不能点，写上字才变成可点的实心按钮。只有附件、没有字，仍然不能发送。点抽屉把手可以收起附件。点麦克风会在支持语音的浏览器里开始听写。"
   locale="zh"
   title="ChatComposer — 外壳"
 />
@@ -104,7 +104,7 @@ function onSubmit(value: string) {
 
 <DemoExample
   :demo="chatComposerMentions"
-  description="在词首输入 @，会列出可以插入的人。选中后草稿里留下这个人的标记，发送出去的是标记的值。"
+  description="词首输入 @ 可以连续打多个词，比如 Ada Lov，列表会跟着缩到 Ada Lovelace。方向键把高亮移到某一行，回车插入的是这一行，不是列表里的第一条。没有匹配的句子会把列表藏起来，已经打的字还在。词首输入 / 是单词命令，打一个空格列表就关上。选中的人变成标记，命令按原文插入。"
   locale="zh"
   title="ChatComposerInput — 提及"
 />

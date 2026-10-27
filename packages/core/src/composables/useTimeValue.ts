@@ -108,6 +108,7 @@ export function isTimeInRange(value: string, min?: string, max?: string): boolea
 
 export type TimePresentation = 'text-input' | 'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native'
 export type NativePicker = 'touch' | 'always' | 'never'
+export type TimeSurface = 'text' | 'native' | 'sheet'
 
 export function resolveTimeSurface(options: {
   presentation?: TimePresentation
@@ -117,7 +118,7 @@ export function resolveTimeSurface(options: {
   increment: number
   /** 额外的“系统控件表达不了”的信号，例如预设时间列表。 */
   needsTypedField?: boolean
-}): 'text' | 'native' {
+}): TimeSurface {
   const presentation = options.presentation ?? (
     options.nativePicker === 'always'
       ? 'native'
@@ -126,8 +127,12 @@ export function resolveTimeSurface(options: {
         : 'adaptive-native'
   )
   const needsTypedField = options.hasSeconds || options.increment !== 1 || options.needsTypedField === true
-  if (presentation === 'text-input' || presentation === 'popover' || presentation === 'bottom-sheet')
+  if (presentation === 'text-input' || presentation === 'popover')
     return 'text'
+  if (presentation === 'bottom-sheet')
+    return 'sheet'
+  if (presentation === 'adaptive-bottom-sheet')
+    return options.coarse ? 'sheet' : 'text'
   if (needsTypedField)
     return 'text'
   if (presentation === 'native')

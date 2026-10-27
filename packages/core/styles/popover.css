@@ -60,7 +60,8 @@
     z-index: var(--astryx-popover-z-index, 1000);
     display: flex;
     flex-direction: column;
-    max-inline-size: calc(100vw - 16px);
+    /* 视口上限：两边空隙都要减，由 LayerProvider 写在根元素上。 */
+    max-inline-size: var(--astryx-layer-max-inline-size, calc(100vw - 32px));
     border-radius: var(--astryx-radius-container, 0.75rem);
     background: var(--astryx-popover-background, #fff);
     color: var(--astryx-popover-foreground, #171717);

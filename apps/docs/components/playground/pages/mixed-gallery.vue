@@ -26,7 +26,7 @@ const imgStyle: CSSProperties = {
 }
 
 const clipStyle: CSSProperties = {
-  borderRadius: 'var(--radius-element)',
+  borderRadius: 'var(--astryx-radius-element)',
 }
 
 const IMAGES: GalleryImage[] = [
@@ -42,7 +42,7 @@ const IMAGES: GalleryImage[] = [
   <Layout height="fill" :content-width="1400">
     <LayoutContent :padding="6">
       <VStack :gap="6" :style="containerStyle">
-        <VStack :gap="2" justify="center">
+        <VStack :gap="2" h-align="center">
           <Heading :level="1" justify="center">
             Make every day a little more delightful, one detail at a time.
           </Heading>
@@ -79,7 +79,7 @@ const IMAGES: GalleryImage[] = [
 <style>
 .mixed-gallery-grid {
   display: grid;
-  gap: var(--spacing-3);
+  gap: var(--astryx-spacing-3);
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .mixed-gallery-hero {

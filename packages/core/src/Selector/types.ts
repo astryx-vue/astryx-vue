@@ -1,12 +1,24 @@
+import type { Component, VNodeChild } from 'vue'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput } from '../Field/types.js'
+import type { ExtendedIconName } from '../Icon/types.js'
+import type { OptionActionNode } from '../selectors/optionAction.js'
+
+/** 选项前面的图标：语义图标名（同 `<Icon icon>`）、CSS 图标类，或任意组件 / 渲染函数。 */
+export type SelectorOptionIcon = ExtendedIconName | Component | (() => VNodeChild)
 
 export interface SelectorOption {
   value: string | number
   label: string
   disabled?: boolean
   description?: string
-  /** CSS icon class or a component, drawn before the label. */
-  icon?: string
+  /** 标签前面的图标。语义图标名、CSS 图标类、组件或渲染函数都行。 */
+  icon?: SelectorOptionIcon
+  /**
+   * 这一项旁边的操作。调用方自己画，点它不会改选择。
+   * 只要有一项带了操作，弹出层就变成两列网格。
+   */
+  action?: OptionActionNode | null
 }
 
 /** 字符串会当成 value 和 label 相同的选项，演练场模板一直这样传。 */
@@ -26,12 +38,13 @@ export type SelectorStatus = 'default' | 'success' | 'warning' | 'error'
 /** 字符串状态，或演练场里那种 `{ type, message }`。 */
 export type SelectorStatusInput = SelectorStatus | FieldStatusInput
 export type SelectorPresentation = 'popover' | 'bottom-sheet'
-export type SelectorVariant = 'default' | 'ghost'
+/** `default` 和 `input` 都是带边框的表单框。`secondary` 对齐次要按钮。 */
+export type SelectorVariant = 'input' | 'secondary' | 'ghost' | 'default'
 export type SelectorStatusVariant = 'attached' | 'detached' | 'tooltip'
 /** 选中标记画在选项行的哪一侧。没有选中时标记不占位。 */
 export type SelectorIndicatorPosition = 'start' | 'end'
 
-export interface SelectorProps {
+export interface SelectorProps extends FieldPartStylingProps {
   /** 选中的值 */
   modelValue?: string | number | null
   /** 选项列表，可以按 section 分组 */
@@ -59,7 +72,7 @@ export interface SelectorProps {
   /** 尺寸 */
   size?: SelectorSize
   /**
-   * default 是带边框的输入框，ghost 去掉边框，适合放进工具栏。
+   * `input`（旧名 `default`）是带边框的输入框。`secondary` 对齐次要按钮。`ghost` 去掉边框，适合放进工具栏。
    * @default 'default'
    */
   variant?: SelectorVariant

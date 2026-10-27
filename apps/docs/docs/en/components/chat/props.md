@@ -499,7 +499,7 @@ Slots are drawer, headerActions, headerContext, input, footerActions, sendAction
         <td><code>triggers</code></td>
         <td><code>ChatComposerTrigger[]</code></td>
         <td>-</td>
-        <td>A trigger character at a word boundary opens suggestions. The editor becomes a combobox.</td>
+        <td>A trigger character at a word boundary opens suggestions. <code>hasMultiWordQuery</code> on a trigger keeps the query through spaces and punctuation until a line break, 64 characters, or the same trigger character again. Without it, a space or tab ends the query. An unmatched multi-word query hides the list when <code>emptySearchText</code> is omitted. The editor becomes a combobox.</td>
       </tr>
       <tr>
         <td><code>debounceMs</code></td>

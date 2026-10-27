@@ -24,7 +24,7 @@ function renderText(wrapper: ReturnType<typeof mount>): string | null {
 describe('useTranslator', () => {
   it('没有 provider 时用包内自带的英文文案', () => {
     const wrapper = mount(Probe, { props: { messageKey: '@astryx.pagination.next' } })
-    expect(renderText(wrapper)).toBe('Next')
+    expect(renderText(wrapper)).toBe('Go to next page')
   })
 
   it('跟着 provider 的语言走', () => {
@@ -32,7 +32,7 @@ describe('useTranslator', () => {
       props: { locale: 'zh-CN' },
       slots: { default: () => h(Probe, { messageKey: '@astryx.pagination.next' }) },
     })
-    expect(renderText(wrapper)).toBe('下一页')
+    expect(renderText(wrapper)).toBe('转到下一页')
   })
 
   it('按参数顺序填占位符', () => {
@@ -94,9 +94,42 @@ describe('useTranslator', () => {
       props: { locale: 'en' },
       slots: { default: () => h(Probe, { messageKey: '@astryx.pagination.next' }) },
     })
-    expect(renderText(wrapper)).toBe('Next')
+    expect(renderText(wrapper)).toBe('Go to next page')
 
     await wrapper.setProps({ locale: 'zh-CN' })
-    expect(renderText(wrapper)).toBe('下一页')
+    expect(renderText(wrapper)).toBe('转到下一页')
+  })
+
+  it('目录里缺的键回到英文', () => {
+    const wrapper = mount(InternationalizationProvider, {
+      props: { locale: 'fr-FR', messages: { 'fr-FR': { '@astryx.pagination.previous': 'Page précédente' } } },
+      slots: { default: () => h(Probe, { messageKey: '@astryx.pagination.next' }) },
+    })
+    expect(renderText(wrapper)).toBe('Go to next page')
+  })
+
+  it('数字按 provider 的语言加千分位', () => {
+    const wrapper = mount(InternationalizationProvider, {
+      props: { locale: 'de-DE', messages: { 'de-DE': { '@astryx.pagination.pageAnnounce': 'Seite {current, number}' } } },
+      slots: { default: () => h(Probe, { messageKey: '@astryx.pagination.pageAnnounce', values: { current: 1234 } }) },
+    })
+    expect(renderText(wrapper)).toBe('Seite 1.234')
+  })
+
+  it('在事件回调里调用，也按 provider 当前的语言取', async () => {
+    let captured: ReturnType<typeof useTranslator>['t'] | undefined
+    const Capture = defineComponent({
+      setup() {
+        captured = useTranslator().t
+        return () => null
+      },
+    })
+    const wrapper = mount(InternationalizationProvider, {
+      props: { locale: 'en' },
+      slots: { default: () => h(Capture) },
+    })
+    expect(captured?.('@astryx.dialog.close')).toBe('Close')
+    await wrapper.setProps({ locale: 'zh-CN' })
+    expect(captured?.('@astryx.dialog.close')).toBe('关闭')
   })
 })

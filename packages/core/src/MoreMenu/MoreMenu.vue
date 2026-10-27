@@ -3,6 +3,7 @@ import type { MoreMenuEmits, MoreMenuInitialFocus, MoreMenuProps, MoreMenuResolv
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, useId, useTemplateRef, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import { moreMenuContextKey } from './context.js'
 import MoreMenuPanel from './MoreMenuPanel.vue'
 import MoreMenuSheet from './MoreMenuSheet.vue'
@@ -14,7 +15,6 @@ const props = withDefaults(defineProps<Omit<MoreMenuProps, 'isMenuOpen'>>(), {
   alignment: 'start',
   isDisabled: false,
   isInline: false,
-  label: 'More options',
   placement: 'below',
   presentation: 'popover',
   size: 'md',
@@ -25,6 +25,8 @@ const emit = defineEmits<MoreMenuEmits>()
 defineSlots<MoreMenuSlots>()
 
 const openModel = defineModel<boolean | undefined>('isMenuOpen', { default: undefined })
+const messages = useAstryxMessages()
+const menuLabel = computed(() => props.label ?? messages.value.moreMenu.label)
 
 const ADAPTIVE_QUERY = '(max-width: 768px) and (pointer: coarse)'
 const SURFACE_SELECTOR = '[data-astryx-more-menu-surface]'
@@ -284,9 +286,9 @@ defineExpose({
       :aria-expanded="isOpen"
       :aria-haspopup="isSheet ? 'dialog' : 'menu'"
       :is-disabled="isDisabled"
-      :label="label"
+      :label="menuLabel"
       :size="size"
-      :tooltip="isOpen ? undefined : label"
+      :tooltip="isOpen ? undefined : menuLabel"
       :variant="variant"
       @click="onTriggerClick"
       @keydown="onTriggerKeydown"
@@ -306,7 +308,7 @@ defineExpose({
       :is-inline="isInline"
       :is-open="isOpen"
       :items="items"
-      :label="label"
+      :label="menuLabel"
       :placement="placement"
       @close="closeMenu()"
     />
@@ -317,7 +319,7 @@ defineExpose({
       :initial-focus="pendingFocus"
       :is-open="isOpen"
       :items="items"
-      :label="label"
+      :label="menuLabel"
       @close="closeMenu()"
     />
   </span>

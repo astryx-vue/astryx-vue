@@ -4,6 +4,7 @@ import type { NavLinkComponent } from '../NavItem/types.js'
 export type TabListSize = 'sm' | 'md' | 'lg'
 export type TabListLayout = 'hug' | 'fill'
 export type TabListEdgeCompensation = 'inline'
+export type TabListOverflow = 'auto' | 'scroll' | 'visible'
 
 export interface TabListProps {
   /**
@@ -38,6 +39,14 @@ export interface TabListProps {
    * when this is omitted.
    */
   edgeCompensation?: TabListEdgeCompensation
+  /**
+   * What happens when the tabs are wider than the strip.
+   * `auto` and `scroll` scroll horizontally, fade the hidden edge, and offer
+   * arrow buttons. `visible` leaves the tabs at their own width.
+   * The selected tab is scrolled back into view.
+   * @default 'auto'
+   */
+  overflow?: TabListOverflow
   /**
    * ARIA role for the strip.
    *

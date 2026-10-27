@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './types.js'
-import { computed, inject, useId, useTemplateRef } from 'vue'
+import { computed, useId, useTemplateRef } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Icon from '../Icon/Icon.vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { collapsibleGroupPresentationKey } from './context.js'
 import { useCollapsible } from './useCollapsible.js'
 import '../../styles/collapsible.css'
@@ -25,11 +27,12 @@ const collapsible = useCollapsible({
   },
 })
 const isOpen = collapsible.isOpen
-const presentation = inject(collapsibleGroupPresentationKey, null)
+const presentation = readLayerScoped(collapsibleGroupPresentationKey)
 const density = computed(() => presentation?.density.value ?? null)
 const hasDividers = computed(() => presentation?.hasDividers.value ?? false)
 const chevronPosition = computed(() => props.chevronPosition ?? presentation?.chevronPosition.value ?? 'end')
 const isChevronAtStart = computed(() => chevronPosition.value === 'start')
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 const contentId = `astryx-collapsible-${useId()}`
 const root = useTemplateRef<HTMLDivElement>('root')
 const element = computed(() => root.value ?? null)
@@ -61,6 +64,7 @@ function toggle(): void {
       :aria-controls="contentId"
       :aria-disabled="isDisabled || undefined"
       :tabindex="isDisabled ? -1 : undefined"
+      v-bind="pressableProps"
       @click="toggle"
     >
       <Icon

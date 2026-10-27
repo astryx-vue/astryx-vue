@@ -114,6 +114,12 @@ describe('useLongPress', () => {
     result.handlers.onTouchStart(touchEvent([{ x: 0, y: 0 }, { x: 50, y: 50 }]))
     vi.advanceTimersByTime(100)
     expect(onLongPress).not.toHaveBeenCalled()
+
+    // 按到一半第二根手指落下，也取消。
+    result.handlers.onTouchStart(touchEvent([{ x: 0, y: 0 }]))
+    result.handlers.onTouchMove(touchEvent([{ x: 0, y: 0 }, { x: 50, y: 50 }]))
+    vi.advanceTimersByTime(100)
+    expect(onLongPress).not.toHaveBeenCalled()
   })
 
   it('旧路径仍然导出同一个函数', async () => {

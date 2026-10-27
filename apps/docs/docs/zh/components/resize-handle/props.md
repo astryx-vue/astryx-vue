@@ -101,7 +101,7 @@ footer: false
         <td><code>defaultSize</code></td>
         <td><code>number | string | ResizablePercentSize</code></td>
         <td><code>250</code></td>
-        <td>初始尺寸。数字是像素。只有已经落在吸附点 8px 以内时，初值才会被吸住。</td>
+        <td>初始尺寸。数字是像素。有吸附点时，初值会落到最近的点上。</td>
       </tr>
       <tr>
         <td><code>minSize</code></td>
@@ -131,7 +131,7 @@ footer: false
         <td><code>snaps</code></td>
         <td><code>number[]</code></td>
         <td>-</td>
-        <td>指针进入 8px 以内时吸住的像素值。</td>
+        <td>尺寸只会停在这些像素点上。离两个点一样远时，留在更靠前的那个。</td>
       </tr>
       <tr>
         <td><code>shrinkOrder</code></td>
@@ -193,7 +193,7 @@ footer: false
 
 <code>percent(value, { min })</code> 或 <code>percent(value, { max })</code> 用来写百分比尺寸。<code>min</code> 和 <code>max</code> 的形状是 <code>{ type: 'pixel', value }</code>。
 
-方向键移动 10px，按住 Shift 移动 50px。Home、End、Enter 分别跳到最小值、最大值和展开时的尺寸。
+方向键移动 10px，按住 Shift 移动 50px。有吸附点时改为跳到相邻吸附点，Shift 跳两个。Home、End、Enter 分别跳到最小值、配置过的最大值和折叠前的尺寸。没写最大值时 End 不动。
 
 ## 原生属性
 

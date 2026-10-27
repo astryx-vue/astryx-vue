@@ -4,13 +4,20 @@
   .astryx-avatar-group {
     display: inline-flex;
     align-items: center;
-    padding-inline-start: var(--astryx-avatar-group-overlap, 0px);
+    /* 每张头像都有负的重叠边距，包括被提示层包住的第一张。这里把起始边距补回来。 */
+    padding-inline-start: calc(-1 * var(--astryx-avatar-group-overlap, 0px));
+  }
+
+  .astryx-avatar-group:empty {
+    padding-inline-start: 0;
   }
 
   /* 组内头像的描边画在 size 之外：外框 = size + 2 × 描边宽度。 */
   .astryx-avatar--group-item {
     box-sizing: content-box;
+    margin-inline-start: var(--astryx-avatar-group-overlap, 0px);
     border-style: solid;
+    border-width: 2px;
     border-color: var(--astryx-avatar-group-border-color, #fff);
   }
 
@@ -30,6 +37,7 @@
     font-size: var(--astryx-avatar-group-overflow-font-size, var(--astryx-avatar-group-overflow-computed-font-size, 0.75rem));
     font-weight: var(--astryx-font-weight-medium, 500);
     line-height: 1;
+    margin-inline-start: var(--astryx-avatar-group-overlap, 0px);
     white-space: nowrap;
     user-select: none;
   }

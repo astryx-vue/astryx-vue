@@ -1,5 +1,7 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
+import { defineComponent, h } from 'vue'
+import { provideAstryxLocale } from '../locale/index.js'
 import Spinner from './Spinner.vue'
 
 enableAutoUnmount(afterEach)
@@ -22,10 +24,22 @@ describe('spinner', () => {
   it('draws a track circle and an arc circle inside a hidden svg', () => {
     const wrapper = mount(Spinner, { attachTo: document.body })
     const svg = wrapper.get('svg')
+    const arc = svg.get('.astryx-spinner__arc')
 
     expect(svg.attributes('aria-hidden')).toBe('true')
     expect(svg.find('.astryx-spinner__track').exists()).toBe(true)
-    expect(svg.find('.astryx-spinner__arc').exists()).toBe(true)
+    expect(arc.attributes('stroke-dasharray')).toMatch(/^\d/)
+    expect(wrapper.classes()).not.toContain('astryx-spinner-group')
+  })
+
+  it('uses the localized loading name when nothing else names the spinner', () => {
+    const Host = defineComponent({
+      setup() {
+        provideAstryxLocale('zh-CN')
+        return () => h(Spinner)
+      },
+    })
+    expect(mount(Host).get('[role="status"]').attributes('aria-label')).toBe('加载中')
   })
 
   it('uses the string label as the accessible name through aria-labelledby', () => {

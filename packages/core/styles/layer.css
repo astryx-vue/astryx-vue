@@ -1,0 +1,72 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 浮层根元素的公共重置。上游规范 AST-038 和 AST-059。
+   *
+   * 浮层被 Teleport 到页面别处（通常是 body，Dialog 打开时是 Dialog 里面），
+   * 但 CSS 继承跟的是 DOM 树，不跟视觉位置。所以浮层会继承触发器所在位置的
+   * 排版：在一个加粗的大标题里打开 Tooltip，Tooltip 的字也是粗的、大的、居中的。
+   * 这里把文字排版重新声明成正文的基准，浮层里的内容不再跟着外面走。
+   *
+   * 选择器用 `:where()` 包起来，优先级是 0：组件自己的字号、颜色、行高照旧生效，
+   * 这条只负责切断「外面传进来」的那部分。
+   *
+   * `.astryx-layer` 是给自定义浮层根元素用的名字，组件自己的浮层类名也列进来了，
+   * 这样已经存在的浮层不用改模板就能拿到同样的重置。
+   */
+  :where(
+    .astryx-layer,
+    .astryx-popover,
+    .astryx-tooltip,
+    .astryx-hover-card,
+    .astryx-dropdown-menu-popover,
+    .astryx-dropdown-menu,
+    .astryx-context-menu,
+    .astryx-tab-menu-dropdown,
+    .astryx-selector-listbox
+  ) {
+    font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-text-body-weight, 400);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+    font-style: normal;
+    text-align: start;
+    text-align-last: auto;
+    text-indent: 0;
+    text-transform: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-shadow: none;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: manual;
+
+    /*
+     * 容器内边距系统停在这里（上游 #5231、#7287）。
+     *
+     * 带内边距的容器（Card、Layout、Section、Table）通过继承的自定义属性告诉
+     * 后代自己有多大的内边距，后代有的直接读它，有的用负外边距把它抵消掉。
+     * 浮层已经离开了那个盒子，屏幕上根本没有这份内边距，可继承值还在：
+     * 于是浮层里的 Divider 会为了抵消 24px 而向两边各伸出 24px。
+     *
+     * 两族变量处理方式相反：
+     * - `--container-padding-*` 是后代要减掉的量，浮层根自己没有内边距要避开，所以归零。
+     * - `--layout-padding-*` 是后代要加上的量，交还给每个读者自己的默认值。
+     */
+    --container-padding-inline-start: 0px;
+    --container-padding-inline-end: 0px;
+    --container-padding-block-start: 0px;
+    --container-padding-block-end: 0px;
+    --layout-padding-outer-x: initial;
+    --layout-padding-outer-y: initial;
+    --layout-padding-own-outer-x: initial;
+    --layout-padding-own-outer-y: initial;
+    --layout-padding-inner-x: initial;
+    --layout-padding-inner-y: initial;
+    --_section-padding-propagated: initial;
+    /* 步骤条的连接线空隙只属于外面那条轨道。浮层里的步骤条回到自己的 0。 */
+    --astryx-step-connector-gap: initial;
+  }
+}

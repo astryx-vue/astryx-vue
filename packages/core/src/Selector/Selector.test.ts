@@ -1,7 +1,7 @@
 import type { SelectorOption } from './types.js'
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 import Selector from './Selector.vue'
 
 function flushPromises() {
@@ -463,16 +463,31 @@ describe('selector', () => {
     expect(tooltip.find('.astryx-selector-icon').exists()).toBe(false)
   })
 
-  it('shows the selected option icon in the closed trigger', () => {
-    const wrapper = mount(Selector, {
-      props: {
-        modelValue: 'private',
-        label: 'Visibility',
-        options: [{ value: 'private', label: 'Private', icon: 'lock-icon' }],
-      },
-    })
-    expect(wrapper.get('.astryx-selector-value-icon').classes()).toContain('lock-icon')
-    expect(wrapper.get('.astryx-selector-value').text()).toBe('Private')
+  it('draws a CSS class, a semantic name, or a component as the selected option icon', () => {
+    function iconFor(icon: SelectorOption['icon']) {
+      return mount(Selector, {
+        props: {
+          modelValue: 'private',
+          label: 'Visibility',
+          options: [{ value: 'private', label: 'Private', icon }],
+        },
+      })
+    }
+
+    const cssClass = iconFor('lock-icon')
+    expect(cssClass.get('.astryx-selector-value-icon').classes()).toContain('astryx-icon')
+    expect(cssClass.get('.astryx-selector-value-icon .astryx-icon__external').classes()).toContain('lock-icon')
+    expect(cssClass.get('.astryx-selector-value').text()).toBe('Private')
+
+    const semantic = iconFor('search')
+    expect(semantic.find('.astryx-selector-value-icon .astryx-icon__external').exists()).toBe(false)
+    expect(semantic.find('.astryx-selector-value-icon .astryx-icon__glyph, .astryx-selector-value-icon .astryx-icon__svg').exists()).toBe(true)
+
+    const component = iconFor({ render: () => h('span', { class: 'component-icon' }) })
+    expect(component.find('.astryx-selector-value-icon .component-icon').exists()).toBe(true)
+
+    const renderFn = iconFor(() => h('span', { class: 'render-icon' }))
+    expect(renderFn.find('.astryx-selector-value-icon .render-icon').exists()).toBe(true)
   })
 
   it('puts an option icon beside the label and the check at the end', async () => {
@@ -492,6 +507,23 @@ describe('selector', () => {
     expect(body?.firstElementChild?.classList.contains('astryx-selector-option-icon')).toBe(true)
     expect(body?.querySelector('.astryx-selector-option-copy .astryx-selector-option-description')?.textContent).toContain('Members only')
     expect(option?.lastElementChild?.classList.contains('astryx-selector-option-mark')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('renders a component option icon in the open panel', async () => {
+    const wrapper = mount(Selector, {
+      props: {
+        options: [{ value: 'private', label: 'Private', icon: () => h('span', { class: 'row-icon' }) }],
+        modelValue: 'private',
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-selector-trigger').trigger('click')
+    await flushPromises()
+    const controls = wrapper.get('.astryx-selector-trigger').attributes('aria-controls') ?? ''
+    const listboxes = document.querySelectorAll(`[id="${controls}"]`)
+    const option = listboxes[listboxes.length - 1]?.querySelector('.astryx-selector-option')
+    expect(option?.querySelector('.astryx-selector-option-icon .row-icon')).not.toBeNull()
     wrapper.unmount()
   })
 

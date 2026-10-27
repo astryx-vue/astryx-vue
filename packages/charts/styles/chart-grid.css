@@ -1,0 +1,9 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 网格线要比数据淡，用弱化的边框色，1px。 */
+  .astryx-chart-grid__line {
+    stroke: var(--astryx-color-border-emphasized, #d4d4d4);
+    stroke-width: 1;
+  }
+}

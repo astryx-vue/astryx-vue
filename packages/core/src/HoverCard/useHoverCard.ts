@@ -4,6 +4,8 @@ import type { HoverCardAlignment, HoverCardFocusTrigger, HoverCardPlacement, Hov
 import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
 import { useLayer } from '../composables/useLayer.js'
 import { isFocusable } from '../layer/focus.js'
+import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
+import { isActionTrigger, mergeIds, supportsAriaExpanded } from './hoverCardTrigger.js'
 
 export interface UseHoverCardOptions {
   /**
@@ -90,101 +92,6 @@ export interface UseHoverCardReturn {
 
 const GAP = 4
 const TOUCH_POINTER_TYPES = new Set(['touch', 'pen'])
-
-const EXPANDABLE_ROLES = new Set([
-  'application',
-  'button',
-  'checkbox',
-  'columnheader',
-  'combobox',
-  'gridcell',
-  'link',
-  'listbox',
-  'menuitem',
-  'menuitemcheckbox',
-  'menuitemradio',
-  'row',
-  'rowheader',
-  'switch',
-  'tab',
-  'treeitem',
-])
-
-const BUTTON_INPUT_TYPES = new Set(['button', 'submit', 'reset', 'image'])
-
-const ACTION_ROLES = new Set([
-  'button',
-  'checkbox',
-  'combobox',
-  'link',
-  'menuitem',
-  'menuitemcheckbox',
-  'menuitemradio',
-  'option',
-  'radio',
-  'searchbox',
-  'slider',
-  'spinbutton',
-  'switch',
-  'tab',
-  'textbox',
-])
-
-// aria-expanded 只在一部分 role 上合法，所以没有 role 的触发器只靠 aria-haspopup / aria-controls
-// 宣告弹层。写在不合法的地方就是 aria-allowed-attr 缺陷，少写只是少一条能被推断出来的信息。
-function supportsAriaExpanded(element: HTMLElement): boolean {
-  const explicit = element.getAttribute('role')?.trim().split(/\s+/)[0]
-  if (explicit)
-    return EXPANDABLE_ROLES.has(explicit)
-
-  switch (element.tagName) {
-    case 'BUTTON':
-    case 'SUMMARY':
-      return true
-    case 'A':
-    case 'AREA':
-      return element.hasAttribute('href')
-    case 'INPUT':
-      return BUTTON_INPUT_TYPES.has((element as HTMLInputElement).type?.toLowerCase())
-    case 'SELECT':
-      return true
-    default:
-      return false
-  }
-}
-
-function isEditable(element: HTMLElement): boolean {
-  if (element.isContentEditable === true)
-    return true
-  const attribute = element.getAttribute('contenteditable')
-  return attribute != null && attribute !== 'false'
-}
-
-function isActionTrigger(element: HTMLElement): boolean {
-  const role = element.getAttribute('role')
-  if (role != null && role !== '')
-    return ACTION_ROLES.has(role)
-
-  switch (element.tagName) {
-    case 'BUTTON':
-    case 'INPUT':
-    case 'LABEL':
-    case 'SELECT':
-    case 'SUMMARY':
-    case 'TEXTAREA':
-      return true
-    case 'A':
-    case 'AREA':
-      return element.hasAttribute('href')
-    default:
-      return isEditable(element)
-  }
-}
-
-function mergeIds(...ids: (string | null | undefined)[]): string | undefined {
-  const kept = ids.filter(Boolean)
-  return kept.length > 0 ? kept.join(' ') : undefined
-}
 
 /**
  * 对应原版 Astryx 的 `hooks/useHoverCard`：悬停触发的浮层卡片。
@@ -362,15 +269,11 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     scheduleHide()
   }
 
-  function onDocumentKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Escape' || !isOpen.value)
-      return
+  function dismissFromEscape(): void {
     clearTimers()
     isHoveringContent = false
-    if (isControlled.value) {
-      options.onHide?.()
-      return
-    }
+    if (isControlled.value)
+      return options.onHide?.()
     const hadFocus = layer.contentRef.value?.contains(document.activeElement) ?? false
     layer.hide()
     if (hadFocus && triggerRef.value) {
@@ -379,7 +282,16 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     }
   }
 
+  const hoverDismiss = useHoverLayerDismiss({
+    isPresent: () => isOpen.value,
+    getContainer: () => layer.contentRef.value,
+    onDismiss: dismissFromEscape,
+  })
+
   function onDocumentPointerDown(event: PointerEvent): void {
+    // 上面还有别的浮层时，这一下属于那一层，不要把卡片一起关掉。
+    if (!hoverDismiss.isTop())
+      return
     if (!TOUCH_POINTER_TYPES.has(event.pointerType) || !isOpen.value || isControlled.value)
       return
     const target = event.target as Node
@@ -505,13 +417,10 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     applyTriggerAttributes()
     if (typeof document === 'undefined')
       return
-    if (visible) {
-      document.addEventListener('keydown', onDocumentKeydown)
+    if (visible)
       document.addEventListener('pointerdown', onDocumentPointerDown, true)
-      return
-    }
-    document.removeEventListener('keydown', onDocumentKeydown)
-    document.removeEventListener('pointerdown', onDocumentPointerDown, true)
+    else
+      document.removeEventListener('pointerdown', onDocumentPointerDown, true)
   }, { immediate: true })
 
   watch(() => toValue(options.isOpen), (open) => {
@@ -548,7 +457,6 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
       return
     document.removeEventListener('pointerdown', onModalityPointerDown, true)
     document.removeEventListener('keydown', onModalityKeyDown, true)
-    document.removeEventListener('keydown', onDocumentKeydown)
     document.removeEventListener('pointerdown', onDocumentPointerDown, true)
   })
 

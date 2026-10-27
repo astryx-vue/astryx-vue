@@ -141,7 +141,10 @@ describe('avatarGroup', () => {
       global: { components: { AvatarGroupOverflow } },
     })
 
-    const style = wrapper.get('.astryx-avatar-group-overflow').attributes('style') ?? ''
+    const overflow = wrapper.get('.astryx-avatar-group-overflow')
+    expect(overflow.attributes('data-size')).toBe('lg')
+    expect(overflow.attributes('data-shape')).toBe('circle')
+    const style = overflow.attributes('style') ?? ''
     expect(style).toContain('min-width: 52px')
     expect(style).toContain('height: 52px')
     expect(style).not.toMatch(/(?:^|;\s)width:/)
