@@ -1,4 +1,24 @@
-import type { InitGuide } from './commands/init.ts'
+import type { InitGuide, InitPackage } from './commands/init.ts'
+
+/** The two packages a new project starts with, so they are not repeated as extras. */
+const STARTER_PACKAGES: readonly string[] = ['@astryx-vue/core', '@astryx-vue/themes']
+
+/** What a package line says on top of its version, e.g. `(not on npm yet)`. */
+function packageNote(pkg: InitPackage, zh: boolean): string {
+  if (!pkg.published)
+    return zh ? '（还没发布）' : ' (not on npm yet)'
+  return pkg.canary ? (zh ? '（canary，API 可能会变）' : ' (canary, the API may change)') : ''
+}
+
+/** Why a package has no install command, in one line the reader can act on. */
+function unpublishedReason(pkg: InitPackage, zh: boolean): string {
+  if (pkg.canary) {
+    return zh
+      ? '以后只发 canary，装的时候要写 `@canary`'
+      : 'when it ships it will be canary only, so it takes the `@canary` tag'
+  }
+  return zh ? '还没有发布计划上 npm 的版本' : 'no version is on npm, and none is scheduled'
+}
 
 /** `init` prints: what to install, what to import, and what the managed block did. */
 
@@ -17,8 +37,7 @@ export function formatInitGuide(guide: InitGuide, files: readonly { path: string
   if (!dense) {
     lines.push(zh ? '这个 catalog 覆盖的包：' : 'Packages this catalog covers:', '')
     for (const pkg of guide.packages) {
-      const note = pkg.canary ? (zh ? '（canary，API 可能会变）' : ' (canary, the API may change)') : ''
-      lines.push(`  ${pkg.name} ${pkg.version}${note}`)
+      lines.push(`  ${pkg.name} ${pkg.version}${packageNote(pkg, zh)}`)
       lines.push(`    ${pkg.description}`)
     }
     lines.push('')
@@ -36,11 +55,22 @@ export function formatInitGuide(guide: InitGuide, files: readonly { path: string
   }
 
   if (!dense) {
-    const extras = guide.packages.filter(pkg => !['@astryx-vue/core', '@astryx-vue/themes'].includes(pkg.name))
-    if (extras.length > 0) {
+    const extras = guide.packages.filter(pkg => !STARTER_PACKAGES.includes(pkg.name))
+    const installable = extras.filter(pkg => pkg.install.length > 0)
+    if (installable.length > 0) {
       lines.push(zh ? '按需安装（canary 的要带 @canary）：' : 'Install on demand (canary packages take the tag):', '')
-      for (const pkg of extras)
+      for (const pkg of installable)
         lines.push(...pkg.install.map(command => `  ${command}`))
+      lines.push('')
+    }
+    // Naming a package without an install command is the only honest thing to do
+    // for one npm cannot serve: the reader learns it exists, and is not sent to a
+    // failing command.
+    const unpublished = extras.filter(pkg => pkg.install.length === 0)
+    if (unpublished.length > 0) {
+      lines.push(zh ? '还没发布到 npm，现在装不到（只列名字）：' : 'Not on npm yet, so there is nothing to install:', '')
+      for (const pkg of unpublished)
+        lines.push(`  ${pkg.name} — ${unpublishedReason(pkg, zh)}`)
       lines.push('')
     }
   }

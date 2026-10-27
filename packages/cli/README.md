@@ -170,7 +170,7 @@ Exit codes are `0` for success, `1` when the command ran but failed, and `2` for
 
 ## Agent block
 
-`init` prints the setup guide — which packages to install (canary ones with `@canary`), the theme import, the locale snippet, and what to verify — and writes this managed block:
+`init` prints the setup guide — which packages to install (canary ones with `@canary`, once they are on npm), the theme import, the locale snippet, and what to verify — and writes this managed block:
 
 ```html
 <!-- Maintained by astryx-vue, do not edit manually -->
@@ -180,7 +180,7 @@ Exit codes are `0` for success, `1` when the command ran but failed, and `2` for
 
 If the file is missing, the command creates it. If the markers are already there, every run replaces only the block with freshly generated text. Other text stays. If the file exists without the markers, the block is appended. A second run still rewrites the block; it does not skip because the markers are already present. When the generated text matches, the bytes stay the same.
 
-The block names every package the catalog covers, with a canary note and the `@canary` specifier where that applies. Then it teaches the three-step workflow (`build` to pick a page, `template` to copy it, `component`/`composable`/`docs` before writing code), lists the lookup commands, and says how to run the binary. It does not paste the component catalog.
+The block names every package the catalog covers. A package npm does not serve yet (a `private` one) is still named, but with a note and no install command, so nobody is sent to a 404; a published canary package would get the `@canary` specifier. Then it teaches the three-step workflow (`build` to pick a page, `template` to copy it, `component`/`composable`/`docs` before writing code), lists the lookup commands, and says how to run the binary. It does not paste the component catalog.
 
 The install command in the guide follows the project: the `packageManager` field first, then `pnpm-lock.yaml`, `yarn.lock`, `bun.lock(b)`, or `package-lock.json`. With neither, all four forms are listed. `--features` is optional now; passing `agents` is the same as leaving it out, and any other feature is `ERR_UNKNOWN_FEATURE`.
 
@@ -218,7 +218,7 @@ pnpm --filter @astryx-vue/cli generate
 
 `pnpm check` runs `generate:check`. That fails when `catalog.json` is stale, when a PascalCase export of any package is not imported by a documented component, and when a playground page has no metadata in `template-meta.ts`. `./icons`, `./locale`, CSS, and the package root are not component exports.
 
-`catalog.packages` lists every package the catalog covers (`core`, `themes`, `richtext`, `charts`, `lab`) with its directory and whether it publishes only under the `canary` tag. A component's `package` is the one that exports it by subpath, else the one that has a source entry for it.
+`catalog.packages` lists every package the catalog covers (`core`, `themes`, `richtext`, `charts`, `lab`) with its directory, whether it publishes only under the `canary` tag, and whether it is `published`. `published` is false for a `private` package: npm has no version of it, so no output prints an install command for it. A component's `package` is the one that exports it by subpath, else the one that has a source entry for it.
 
 `swizzle`, `discover`, `gap-report`, `integration`, and `blog` are not part of this package, and there is no MCP server. `theme`, `upgrade`, and `doctor` print guidance and reports; none of them edits a project file.
 

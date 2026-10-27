@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "private": true,
-  "description": "Astryx lab components for Vue 3 — experimental components that may change. Published to npm only under the canary dist-tag.",
+  "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://astryx-vue.pages.dev",
