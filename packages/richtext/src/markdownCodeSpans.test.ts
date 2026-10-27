@@ -156,25 +156,16 @@ function richLinks(markdown: string): Array<{ url: string, runs: string[] }> {
 }
 
 describe('code spans in link text', () => {
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节），
-  // 它不在解析时拒绝 javascript: 地址，富文本因此建出了链接。等 core 对齐后恢复断言：
-  //   expect(richLinks(markdown)).toEqual([]);
-  //   expect(richText(markdown).every(run => run.endsWith('|'))).toBe(true);
-  //   expect(plain(richText(markdown))).toBe(plain(core(markdown)));
-  //   expect(plain(core(markdown))).toBe('See [`x`](javascript:y) now');
-  it.todo('shows a refused link holding code whole, as core shows it')
-  /*
   it('shows a refused link holding code whole, as core shows it', () => {
-    const markdown = 'See [`x`](javascript:y) now';
-    expect(richLinks(markdown)).toEqual([]);
+    const markdown = 'See [`x`](javascript:y) now'
+    expect(richLinks(markdown)).toEqual([])
     // Plain text with no marks on either surface, however it is split.
     const plain = (runs: string[]): string =>
-      runs.map(run => run.replace(/\|$/, '')).join('');
-    expect(richText(markdown).every(run => run.endsWith('|'))).toBe(true);
-    expect(plain(richText(markdown))).toBe(plain(core(markdown)));
-    expect(plain(core(markdown))).toBe('See [`x`](javascript:y) now');
-  });
-  */
+      runs.map(run => run.replace(/\|$/, '')).join('')
+    expect(richText(markdown).every(run => run.endsWith('|'))).toBe(true)
+    expect(plain(richText(markdown))).toBe(plain(core(markdown)))
+    expect(plain(core(markdown))).toBe('See [`x`](javascript:y) now')
+  })
 
   it('still links a safe destination, with its code as code', () => {
     expect(richLinks('See [`x`](https://example.com) now')).toEqual([

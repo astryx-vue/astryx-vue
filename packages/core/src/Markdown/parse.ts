@@ -3,6 +3,7 @@ import { fromMarkdown } from 'mdast-util-from-markdown'
 import { gfmFromMarkdown } from 'mdast-util-gfm'
 import { gfm } from 'micromark-extension-gfm'
 import { findSettledEnd } from './blocks.js'
+import { refuseUnsafeDestinations } from './refusedLinks.js'
 import { trimStreamingTail } from './trim.js'
 
 const markdownExtensions = [
@@ -89,10 +90,11 @@ export function parseMarkdown(source: string, options?: ParseMarkdownOptions): M
     mdastExtensions,
   }) as unknown as MdNode
 
+  const safe = refuseUnsafeDestinations(root, source)
   if (options?.autolink === 'gfm')
-    return root
+    return safe
 
-  return stripAutolinkLiterals(root, source)
+  return stripAutolinkLiterals(safe, source)
 }
 
 export interface IncrementalMarkdownState {
