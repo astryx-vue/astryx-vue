@@ -4,15 +4,15 @@ title: 扩展与自定义主题
 
 # 扩展与自定义主题
 
-`@astryx-vue/themes` 开箱自带了 7 套主题：Neutral（中性默认）、Butter（黄油暖金）、Chocolate（巧克力暖棕）、Gothic（哥特深邃）、Matcha（抹茶淡绿）、Stone（石石板岩）与 Y2K（复古千禧）。
+`@astryx-vue/themes` 开箱自带了 7 套预设主题：Neutral（中性默认）、Butter（黄油暖金）、Chocolate（巧克力暖棕）、Gothic（哥特深邃）、Matcha（抹茶淡绿）、Stone（石板岩）与 Y2K（复古千禧）。
 
-每一套主题本质上都是一个已经写好的 CSS 文件（例如 `butter.css`）。包内不包含复杂的运行时主题注册或状态管理逻辑，因此运行性能极高、对打包工具完全透明。
+每一套主题均为预编译的标准 CSS 文件（例如 `butter.css`）。包内不包含复杂的运行时状态管理逻辑，加载性能高且对打包工具透明。
 
-## 场景一：只修改个别变量（最常用的做法）
+## 场景一：覆盖个别变量（常用推荐）
 
-如果你只想微调某个颜色或把所有圆角稍微改大一点，只需要在你的项目样式里覆盖对应的 CSS 变量即可。
+若仅需微调特定颜色或将全局圆角尺寸调大，直接在项目样式中覆盖对应的 CSS 变量即可。
 
-**推荐做法：** 将覆盖代码写在 `@layer astryx.overrides` 里面，这样既能稳定覆盖默认主题，又绝对不会破坏组件原有的布局骨架：
+**推荐做法**：将自定义样式写在 `@layer astryx.overrides` 级联层内，既可覆盖默认主题变量，又不会破坏组件的基础结构样式：
 
 ```css
 /* 确保这段样式在引入 @astryx-vue/themes/neutral.css 之后加载 */
@@ -59,27 +59,27 @@ const brand = defineTheme({
 
 ### 覆盖主题的变量
 
-`Theme` 会把变量写进外层元素里面的一个 `<style>` 里。这条规则的选择器是 `:scope.astryx-theme`，权重相当于两个 class，而且这个 `<style>` 在文档里排在你的样式表后面。所以，如果你的覆盖写在 `@layer astryx.overrides` 里，只用一个或两个 class 去选外层元素，是压不过它的。可以这样选：
+`Theme` 会将生成的变量注入至外层容器的内联 `<style>` 标签中。该规则的选择器为 `:scope.astryx-theme`，特异度相当于两个 class，且该 `<style>` 位于文档后方。若业务覆盖写在 `@layer astryx.overrides` 内且仅使用单一 class 选择器，可能因层叠特异度不足而无法生效。可选以下处理方式：
 
-- 把覆盖写在没放进任何 `@layer` 的普通样式里。不分层的样式总是赢过分层里的，所以一定能赢。这是最省事的办法。
-- 如果一定要写在 `@layer astryx.overrides` 里，可以在外层元素上叠至少 3 个 class（`.wrapper.wrapper.wrapper`）；也可以在 `Theme` 外面自己再包一个带 id 的元素，用 `#brand .wrapper` 这样的写法去选。`Theme` 不会把 `id` 写到它的外层元素上，所以单写 `#id` 是选不中的。
+- 将覆盖规则写在未放置进 `@layer` 的普通样式中。未分层样式优先级天然高于分层样式，可直接覆盖。
+- 若必须写在 `@layer astryx.overrides` 中，可在外层容器增加特异度（如 `.wrapper.wrapper.wrapper`），或在 `Theme` 外层包裹带 id 的元素并使用 `#brand .wrapper` 进行选择。`Theme` 不会把 `id` 写到它的外层元素上，所以单写 `#id` 是选不中的。
 
-适配出来的变量也一样，不管条件有没有成立。直接写在外层元素 `style` 属性里的值同样会赢。
+通过内嵌 `style` 属性直接声明的内联样式同样具有最高特异度。
 
 主题名要唯一。两个 `name` 相同的 `Theme` 共用一份样式。如果它们的值不一样，后渲染的那个会对两边都生效。不同的主题请起不同的名字。
 
-## 场景三：只让某个组件与众不同
+## 场景三：针对单个组件定制样式
 
-### 用 `components` 给组件的某个部位换样式
+### 使用 `components` 定制组件部位样式
 
-`components` 里的每个键叫「换肤挂点」（theme target），写法是 `组件名-部位`，全部小写、用短横线连起来，例如 `button`、`card-header`、`radio-indicator`、`progress-bar-fill`。每个挂点就是元素上一个固定的 `astryx-*` 类名。
+`components` 对象的每个键代表换肤挂点（theme target），命名规范为 `组件名-部位`，统一为小写短横线连字符格式，例如 `button`、`card-header`、`radio-indicator`、`progress-bar-fill`。各挂点对应元素上的固定 `astryx-*` 类名。
 
-挂点下面的键用来挑选状态：
+挂点配置的键用于匹配状态条件：
 
-- `base`：这个部位本身。
+- `base`：组件部位的基础默认样式。
 - `variant:primary`：`variant` 等于 `primary` 的时候，对应元素上的 `[data-variant="primary"]`。
-- `checked` 这种单个词：对应 `[data-checked="checked"]`。
-- 用 `+` 把两个条件连起来，两个都满足才生效。
+- `checked` 等状态词：匹配元素上的 `[data-checked="checked"]` 属性。
+- 使用 `+` 可组合多个状态条件，需同时满足时方可生效。
 
 ```ts
 const brand = defineTheme({
@@ -91,14 +91,14 @@ const brand = defineTheme({
 })
 ```
 
-几点细节：
+细节说明：
 
-- `:hover` 只对能点的控件生效，禁用的按钮不会因为鼠标悬停而变色。
-- `card`、`dialog`、`bottom-sheet`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。`chat` 的 `borderRadius` 和 `padding` 会写到输入区的圆角和内边距上，`progress-bar-mark` 的 `width` 和 `height` 会写到那根刻度线上。
+- `:hover` 伪类仅对可交互控件生效，禁用状态下的按钮不会在悬浮时触发样式改变。
+- 在 `card`、`dialog`、`bottom-sheet`、`dropdown-menu`、`context-menu`、`segmented-control` 等组件中，修改 `borderRadius` 或 `padding` 会联动更新内部关联部位（如卡片标题栏圆角）。`chat` 的 `borderRadius` 与 `padding` 会作用于输入区域，`progress-bar-mark` 的 `width` 与 `height` 会同步至刻度指示线。
 
-### 旧写法已经不再支持
+### 弃用的旧版挂点命名
 
-上游在 0.7.0 删掉了一批旧名字，我们也跟着删了。驼峰写法（比如 `buttonIcon`）或者大写开头（比如 `Card`）会直接报错；连在一起的旧名（比如 `progressbar`）不会报错，但什么都匹配不到。请改成右边的新名字：
+上游自 0.7.0 版本起移除了旧版组件键名，本项目已同步对齐。驼峰式命名（如 `buttonIcon`）或大写开头（如 `Card`）会在编译阶段直接报错；无连字符的拼接旧名（如 `progressbar`）虽不报错但已无法匹配任何样式规则。请对照下表更新为新命名：
 
 | 已删除 | 请改用 |
 | --- | --- |
@@ -114,9 +114,9 @@ const brand = defineTheme({
 | `statusdot` | `status-dot` |
 | `textarea` | `text-area` |
 
-组件也不再输出 `.primary`、`.sm` 这种光秃秃的类名。你自己的 CSS 里如果写了 `.astryx-button.primary`，请改成 `.astryx-button[data-variant="primary"]`。
+组件不再生成 `.primary`、`.sm` 等裸样式类名。若已有业务 CSS 中使用了 `.astryx-button.primary`，需修改为属性选择器语法 `.astryx-button[data-variant="primary"]`。
 
-### 直接覆盖组件变量
+### 直接覆盖组件专用变量
 
 如果你只想覆盖单个组件的颜色，也可以直接改它的专属变量。例如 `packages/themes/neutral/button.css` 里，按钮背景对应的是 `--astryx-button-primary-background`：
 

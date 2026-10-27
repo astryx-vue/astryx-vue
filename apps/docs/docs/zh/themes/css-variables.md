@@ -4,48 +4,48 @@ title: CSS 变量与样式分层
 
 # CSS 变量与样式分层
 
-astryx-vue 的所有主题和组件样式，完全基于现代 CSS 标准规范构建（采用 CSS 变量与 `@layer` 级联层）。这意味着你的项目不需要安装 UnoCSS、Tailwind CSS，也不需要安装 StyleX 编译器，就能原生获得清晰可控的样式优先级。
+astryx-vue 的主题与组件样式基于标准 CSS 规范构建（采用 CSS 变量与 `@layer` 级联层）。无需额外安装 UnoCSS、Tailwind CSS 或 StyleX 编译器，即可获得明确的样式特异性分层。
 
-## 样式的五个层级（@layer）
+## 五个样式级联层（@layer）
 
-为了防止自定义样式和组件内置样式“打架”，我们在 `packages/themes/neutral/base.css` 开头预先规定了五个样式的加载顺序：
+为了保障自定义业务样式与组件内置样式层级清晰，在 `packages/themes/neutral/base.css` 顶部预先声明了五个级联层的顺序：
 
 ```css
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 ```
 
-从左到右，优先级依次由低到高递增：
+从左至右，层级优先级依次递增：
 
-1. **`astryx.reset`（重置层）：** 最底层的基准样式。
-2. **`astryx.tokens`（设计令牌层）：** 定义通用的颜色、字号、圆角和间距等 CSS 变量。
-3. **`astryx.base`（全局基础层）：** 网页的基础排版和通用样式规则。
-4. **`astryx.components`（组件结构层）：** `@astryx-vue/core` 中所有组件的基础结构、布局与默认外观。
-5. **`astryx.overrides`（用户覆盖层）：** 留给你在项目中写业务自定义样式的地方。排在最右侧，保证你写的样式能够稳稳压过前面所有默认样式。
+1. **`astryx.reset`（样式重置层）**：最底层的原生元素规范化样式。
+2. **`astryx.tokens`（设计令牌层）**：定义通用的颜色、字号、圆角和间距等 CSS 变量。
+3. **`astryx.base`（全局基础层）**：基础排版与全局基础规则。
+4. **`astryx.components`（组件结构层）**：`@astryx-vue/core` 中所有组件的骨架、布局与默认样式。
+5. **`astryx.overrides`（用户覆盖层）**：业务自定义样式放置区域。排在最右侧，优先级高于前序内置层。
 
-**规则很直观：** 排在更靠后层级的样式，会自动覆盖排在前面的层级；而在 `@layer` 之外手写的未分层普通 CSS，优先级比所有分层样式都高。
+**优先级规则**：声明在后方级联层中的规则自动覆盖前方级联层；而在任何 `@layer` 外部编写的未分层普通 CSS，优先级天然高于所有分层样式。
 
 ## 变量命名与双模配色
 
-所有通用设计变量的命名直接对应 Astryx 原始规范，并统一带上 `--astryx-` 前缀。
+所有通用设计变量的命名直接对齐 Astryx 规范，并统一包含 `--astryx-` 前缀。
 
-例如，文本主色的变量名就是 `--astryx-color-text-primary`。它的值定义如下：
+例如文本主色变量名为 `--astryx-color-text-primary`，其定义方式如下：
 
 ```css
 --astryx-color-text-primary: light-dark(#171717, #fafafa);
 ```
 
-`light-dark()` 函数会根据当前元素的 `color-scheme` 属性自动在浅色（第一个值）和深色（第二个值）之间切换。Neutral 主题在 `:root` 和 `[data-astryx-theme='neutral']` 上声明了 `color-scheme: light dark`，因此默认能够自动跟随操作系统或文档站的明暗开关变化。如果需要强制某一侧，请参阅 [深色模式配置指南](/guide/dark-mode)。
+`light-dark()` 函数依据当前元素的 `color-scheme` 属性自动在浅色（第一个参数）和深色（第二个参数）之间计算结果。Neutral 主题在 `:root` 和 `[data-astryx-theme='neutral']` 声明了 `color-scheme: light dark`，因此默认能够自动跟随操作系统或容器的明暗模式切换。强制指定模式的配置见 [深色模式配置指南](/guide/dark-mode)。
 
-## 组件专用变量 vs 全局语义变量
+## 组件专用变量与全局语义变量
 
-除了全局的 `--astryx-color-*` 这类语义变量，部分组件还拥有自己的细分变量（例如按钮的背景色 `--astryx-button-primary-background`）：
+除全局 `--astryx-color-*` 这类语义变量外，部分组件拥有各自细分的组件级变量（例如按钮背景色 `--astryx-button-primary-background`）：
 
-- **平时换外观：** 强烈建议优先修改全局语义变量（如改变文字主色、基础圆角），这样整个系统的所有组件都能整齐划一地改变。
-- **个别组件特殊定制：** 只有当你只想让某个组件“特立独行”时，才去针对性地覆盖它自己的专用变量。
+- **常规样式调整**：优先修改全局语义变量（如文字前景色、基础圆角），实现全站组件样式的统一更新。
+- **特定组件定制**：仅在针对特定组件进行独立视觉调整时，再针对性覆盖组件级专用变量。
 
-## 滚动条变量
+## 滚动条样式变量
 
-套了 [`ScrollbarsProvider`](/components/scrollbars-provider) 后，滚动条的外观由下面这几个变量控制。它们都有默认值，并且跟着主题 token 走，改不改都行。
+包裹 [`ScrollbarsProvider`](/components/scrollbars-provider) 后，滚动条外观由以下变量控制。这些变量具备基于主题令牌的默认值：
 
 | 变量 | 默认值 | 作用 |
 | --- | --- | --- |
@@ -55,25 +55,25 @@ astryx-vue 的所有主题和组件样式，完全基于现代 CSS 标准规范�
 | `--astryx-scrollbar-track` | `transparent` | 轨道背景 |
 | `--astryx-scrollbar-radius` | `9999px` | 轨道和滑块圆角 |
 
-这些变量可以写在任何祖先元素上，只影响它里面的滚动条。完整说明和示例见 [组件页](/components/scrollbars-provider)。
+上述变量支持在任意父级元素上配置，作用域限制在其子树内部。完整说明与示例见 [组件页](/components/scrollbars-provider)。
 
-## 如何引入样式
+## 样式引入方式
 
 ### 方式一：按需引入（推荐）
 
-当你从组件子路径（例如 `@astryx-vue/core/Button`）引入单个组件时，该组件所需的骨架样式会自动打包并加载进来。你只需要在应用根入口引入一次主题样式文件即可：
+通过组件子路径（例如 `@astryx-vue/core/Button`）导入单个组件时，打包工具会自动按需引入该组件所需的结构样式。在应用根入口引入一次主题样式文件即可：
 
 ```ts
 import '@astryx-vue/themes/neutral.css'
 ```
 
-### 方式二：一次性引入全部组件结构样式
+### 方式二：全量引入结构样式
 
-如果你希望一次性把所有组件的结构样式都准备好，可以显式引入全局包样式：
+若需一次性准备好所有组件的结构样式，可在入口处引入全量样式文件：
 
 ```ts
 import '@astryx-vue/core/styles.css'
 import '@astryx-vue/themes/neutral.css'
 ```
 
-更多细节请查阅 [主题与样式使用指南](/guide/styling)。
+更多配置细节请参阅 [主题与样式使用指南](/guide/styling)。
