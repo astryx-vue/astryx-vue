@@ -848,9 +848,11 @@ function SearchIcon() {
                         <Text type="supporting" color="secondary">
                           •
                         </Text>
-                        <Link type="supporting" @click="clearAll">
-                          Clear all
-                        </Link>
+                        <Text type="supporting">
+                          <Link color="primary" @click="clearAll">
+                            Clear all
+                          </Link>
+                        </Text>
                       </template>
                     </HStack>
                   </StackItem>
