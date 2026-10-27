@@ -141,3 +141,34 @@
   - 规范文档：packages/lab/src/MobileTokenizer/MobileTokenizer.doc.mjs
   - 测试：packages/lab/src/MobileTokenizer/MobileTokenizer.test.tsx
   - 链接：https://github.com/facebook/astryx/commit/4fc416b0380600919682321d8c497ad884516079
+
+## 结论（第 1 轮）
+
+采纳 12 条，不适用 14 条。逐条结论：
+
+- `936b1f73a` 已采纳：MobileTokenizer / TransferList 的无障碍名落在真控件上（面板 `role="group"` + 触发器 `aria-label`）。
+- `5777977fe` 已采纳：TransferListSelector 的触发器/弹层语义不变，`data-testid` 仍落在触发器按钮上。
+- `b507cdef4` 已采纳：MobileTokenizer 给 BottomSheet 显式传 `padding: 0`，自己排内容。
+- `f3a218198` 不适用：spacing token 跟根字号，归 themes / B1。
+- `bc3423808` 已采纳：ListInput 的 `aria-disabled` / `aria-busy` 分开，删除按钮走 `aria-disabled` 保留提示。
+- `95f5b3525` 已采纳：TransferList 两栏是 `role="group"` + 语义列表，不是 listbox。
+- `1fdecb1ae` 已采纳：选项行主题目标 `astryx-transfer-list-item` + `data-side` / `data-state`。
+- `ea0483449` 不适用：appearance 嵌套 token，归 F1b。
+- `e983e37f1` 已采纳：MobileTokenizer 单面板流程整条搬了。
+- `1e823c153` 已采纳：ListInput 16 条键接进 upstreamMap。
+- `9c489238b` 已采纳：组容器没有 `aria-required`，有对应用例。
+- `d990fb58d` 已采纳：禁用元素没有悬停态（三个组件的 CSS 都是 `:hover:where(:not(:disabled,[aria-disabled='true']))`）。
+- `e891c0dc8` 已采纳：禁用光标统一 `default`；core 部分归 B2/B3。
+- `8a9d85fdf` 已采纳：同上，最终形态是 `cursor: default`。
+- `e3259c946` 已采纳：TransferList 26 + 3 条键本地化；busy 只用 `aria-busy`，不禁用字段区。
+- `6040af6c8` 已采纳：焦点转移、读屏播报、reorder-disabled 作为屏障。
+- `046f6ea2b` 不适用：文档分类改名，归 F3f。
+- `1232b85af` 不适用：去掉裸 prop/state 类，归 B1。
+- `94bdc8e8b` 已采纳（改写）：React 渲染期重置草稿改成 Vue 同步 watcher，行为用例覆盖；Profiler 帧数断言标 todo。
+- `48088c611` 不适用：SideNav/BottomSheet 文档措辞，归 C8/C13。
+- `e60974e88` 不适用：ListInput 主题目标文档，归 F3f。
+- `e678380ed` 不适用：设计约定文档，不动代码。
+- `6e6b9b476` 不适用：局部层叠契约，归 B1。
+- `13fdb14a5` 已采纳：MobileTokenizer 触屏流程打磨（等宽底栏、批量清空确认）。
+- `0fcce6513` 已采纳：自定义条目（`hasCreate` 的 `Create "…"` 行 + 尾部 Add）。
+- `4fc416b03` 已采纳：单面板 MobileTokenizer 流程。
