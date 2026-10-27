@@ -17,7 +17,7 @@ import '../../styles/playground.css'
 
 export default {
   extends: DefaultTheme,
-  enhanceApp({ app }) {
+  async enhanceApp({ app, router }) {
     app.component('component-docs', ComponentDocsPage)
     app.component('ComponentAccessibility', ComponentAccessibility)
     app.component('ComponentAnatomy', ComponentAnatomy)
@@ -29,5 +29,8 @@ export default {
     app.component('ThemeStage', ThemeStage)
     app.component('PlaygroundApp', defineAsyncComponent(() => import('../../components/playground/PlaygroundApp.vue')))
     app.component('PlaygroundFrame', defineAsyncComponent(() => import('../../components/playground/PlaygroundFrame.vue')))
+    // The preview frame keeps core's built-in artwork, as upstream's playground does.
+    if (!/\/playground\/frame(?:\.html)?\/?$/.test(router.route.path))
+      await import('../../components/docsIcons')
   },
 } satisfies Theme

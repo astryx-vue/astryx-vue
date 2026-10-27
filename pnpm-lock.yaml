@@ -203,6 +203,9 @@ catalogs:
     '@iconify-json/heroicons':
       specifier: 1.2.3
       version: 1.2.3
+    '@iconify-json/lucide':
+      specifier: 1.2.147
+      version: 1.2.147
     '@monaco-editor/loader':
       specifier: 1.7.0
       version: 1.7.0
@@ -480,6 +483,9 @@ importers:
       '@iconify-json/heroicons':
         specifier: catalog:docs
         version: 1.2.3
+      '@iconify-json/lucide':
+        specifier: catalog:docs
+        version: 1.2.147
       '@types/node':
         specifier: catalog:language
         version: 26.6.4
@@ -1228,6 +1234,9 @@ packages:
 
   '@iconify-json/heroicons@1.2.3':
     resolution: {integrity: sha512-n+vmCEgTesRsOpp5AB5ILB6srsgsYK+bieoQBNlafvoEhjVXLq8nIGN4B0v/s4DUfa0dOrjwE/cKJgIKdJXOEg==}
+
+  '@iconify-json/lucide@1.2.147':
+    resolution: {integrity: sha512-7Qqa/joSBeUxihWsQJx5nKcqMWtV3YrH90Jldxcx4J9ciTLavRUlpexQwRTcx9dcb7CJpISfjZTj42zD/30sqA==}
 
   '@iconify-json/simple-icons@1.2.99':
     resolution: {integrity: sha512-kouZhqvUoNdxEe+lZksbJJZMCZv4b4Ob62O1GW3fcpz/I0mVPzM+9/Qf/DUuv5ns8l6c46D8M/ubhJjjbLp9HQ==}
@@ -5150,6 +5159,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/heroicons@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/lucide@1.2.147':
     dependencies:
       '@iconify/types': 2.0.0
 
