@@ -77,7 +77,8 @@ describe('loadAstryxCatalog', () => {
     expect(new Set([...mappedKeys, ...unmappedKeys])).toEqual(new Set(keys))
     expect(mappedKeys.length + unmappedKeys.length).toBe(keys.length)
     expect(unmappedKeys).toContain('@astryx.richTextEditor.toolbar.bold')
-    expect(unmappedKeys).toContain('@astryx.transferList.addAll')
+    // 用还没接入的命名空间举例：lab 输入类的键已经在 upstreamMap 里了。
+    expect(unmappedKeys).toContain('@astryx.diffViewer.label')
     expect(unmappedKeys).not.toContain('@astryx.pagination.previous')
     for (const entry of loaded.unmapped)
       expect(entry.message).toBe(catalog[entry.key]!.defaultMessage)

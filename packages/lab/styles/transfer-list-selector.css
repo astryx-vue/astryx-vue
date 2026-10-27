@@ -2,16 +2,16 @@
 
 @layer astryx.components {
   /*
-   * 弹层自带一圈内边距，但两栏列表要贴到弹层边上：用负外边距把那圈吃回来，
-   * 相当于原版把内容层的内边距和溢出都设成 0。
+   * 弹层面板：两栏区域自己滚，底部操作一直留在弹层底部。
+   * 弹层的宽度由 core 的 ComplexSelector 决定（跟触发器同宽），
+   * 这里只在这个宽度里把高度和滚动管好。
    */
   .astryx-transfer-list-selector__surface {
     display: flex;
     flex-direction: column;
     min-width: 0;
     min-height: 0;
-    max-height: calc(100vh - 32px);
-    margin: calc(-1 * var(--astryx-spacing-3, 12px));
+    max-height: calc(100vh - 24px);
     overflow: hidden;
     border-radius: inherit;
   }
