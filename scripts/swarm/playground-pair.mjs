@@ -22,7 +22,7 @@ async function shoot(browser, url) {
   for (let attempt = 0; attempt < 40; attempt++) {
     const lengths = await Promise.all(page.frames()
       .filter(frame => frame !== page.mainFrame())
-      .map(frame => frame.evaluate(() => (document.body?.innerText ?? '').trim().length).catch(() => 0)))
+      .map(frame => frame.evaluate(() => (document.body?.textContent ?? '').trim().length).catch(() => 0)))
     if (Math.max(0, ...lengths) > 50)
       break
     await page.waitForTimeout(1000)
