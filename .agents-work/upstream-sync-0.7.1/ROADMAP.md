@@ -87,7 +87,7 @@ mindmap
       ➖ F6 build 构建插件
     阶段 G 发布与持续维护
       ✅ G1 发布核心组件与主题包
-      🟡 G2 发布命令行工具
+      ✅ G2 发布命令行工具
       ⬜ G3 发布全新扩展包
       🔵 G4 每周自动追踪上游更新
 ```
@@ -405,7 +405,7 @@ flowchart TB
 | F5 | vega | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 5 节 | |
 | F6 | build | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 6 节 | |
 | G1 | 发布 core + themes | C全部 D2 D7 D10 | ✅ 已完成 | 1 | 总控 | | core 与 themes 0.4.0 已发 npm（latest），GitHub Release 与 GitHub Packages 同步 | #182 #183 #184 |
-| G2 | 发布 CLI | G1 D4b D5b | 🟡 实现中 | 0 | deepseek(G2) | | cli 0.4.0 发版准备：changeset、不推荐未发布的包、打包实跑 | |
+| G2 | 发布 CLI | G1 D4b D5b | ✅ 已完成 | 0 | deepseek(G2) | | cli 0.4.0 已发布；未发布的包不再给安装命令 | #230 #231 #232 #234 |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
 | G4 | 持续同步机制 | A1 G1 | 🔵 可开工 | 0 | | | | |
 
