@@ -138,7 +138,7 @@ function cancelStaged(close: () => void): void {
     :is-required="isRequired" :is-disabled="isDisabled" :is-loading="isLoading"
     :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
     :size="size" :width="resolvedWidth" :placement="placement"
-    :content-style="contentStyle"
+    :popup-width="resolvedWidth" :content-style="contentStyle"
     @update:model-value="emit('update:modelValue', $event)"
     @change="emit('change', $event)"
     @change-action="emit('changeAction', $event)"

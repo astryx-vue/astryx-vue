@@ -212,6 +212,7 @@ defineExpose(handle)
     :label="label"
     :padding="0"
     :placement="placement"
+    :width="popupWidth"
     role="dialog"
     @open-change="setOpen"
   >
@@ -257,6 +258,7 @@ defineExpose(handle)
       :label="label"
       :padding="0"
       :placement="placement"
+      :width="popupWidth"
       role="dialog"
       @open-change="setOpen"
     >
