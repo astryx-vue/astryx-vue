@@ -243,12 +243,30 @@ export function formatTemplateList(templates: readonly TemplateRecord[], locale:
     blocks.push([title, ...lines].join('\n'))
   }
   const notReady = templates.filter(template => !template.isReady).length
+  const runtime = locale === 'zh'
+    ? '可复制的模板只用 vue 和 @astryx-vue/core，不用再装别的包。'
+    : 'Every ready template runs on vue and @astryx-vue/core alone, so there is nothing else to install.'
   const footer = notReady > 0
     ? (locale === 'zh'
-        ? `\n有 ${notReady} 个模板标了（不可用）：它们引用了用户项目装不上的包，能读不能复制。用 \`${BINARY} template <slug>\` 看原因。\n`
-        : `\n${notReady} template(s) are marked not ready: they import a package a project cannot install, so they can be read but not copied. \`${BINARY} template <slug>\` says why.\n`)
+        ? `有 ${notReady} 个模板标了（不可用）：它们引用了用户项目装不上的包，能读不能复制。用 \`${BINARY} template <slug>\` 看原因。`
+        : `${notReady} template(s) are marked not ready: they import a package a project cannot install, so they can be read but not copied. \`${BINARY} template <slug>\` says why.`)
     : ''
-  return `${blocks.join('\n\n')}\n${footer}`
+  return `${blocks.join('\n\n')}\n\n${[runtime, footer].filter(Boolean).join('\n')}\n`
+}
+
+/**
+ * The packages a page needs, `vue` first so a reader meets their own framework
+ * before the design system. A ready page adds nothing else, which is the point
+ * worth saying out loud: copy it and run, no install step.
+ */
+function dependencyLine(template: TemplateRecord, locale: 'en' | 'zh'): string {
+  const names = [
+    ...(template.dependencies.includes('vue') ? ['vue'] : []),
+    ...template.dependencies.filter(name => name !== 'vue'),
+  ]
+  const zh = locale === 'zh'
+  const alone = template.isReady ? (zh ? '（不用再装别的包）' : ' (nothing else to install)') : ''
+  return zh ? `依赖：${names.join('、')}${alone}` : `Dependencies: ${names.join(', ')}${alone}`
 }
 
 export function formatTemplateDetail(template: TemplateRecord, locale: 'en' | 'zh', dense: boolean, source: string): string {
@@ -257,7 +275,7 @@ export function formatTemplateDetail(template: TemplateRecord, locale: 'en' | 'z
     ? (locale === 'zh' ? '状态：可复制' : 'Status: ready to copy')
     : (locale === 'zh' ? `状态：不可复制 — ${text(template.notReadyReason ?? { en: '', zh: '' }, locale)}` : `Status: not copyable — ${text(template.notReadyReason ?? { en: '', zh: '' }, locale)}`)
   const head = dense
-    ? [title, template.slug, status, template.componentsUsed.join(', '), text(template.docsUrl, locale)]
+    ? [title, template.slug, status, dependencyLine(template, locale), template.componentsUsed.join(', '), text(template.docsUrl, locale)]
     : [
         `# ${title}`,
         '',
@@ -267,6 +285,7 @@ export function formatTemplateDetail(template: TemplateRecord, locale: 'en' | 'z
         '',
         `Docs: ${text(template.docsUrl, locale)}`,
         status,
+        dependencyLine(template, locale),
         '',
         `Components: ${template.componentsUsed.join(', ')}`,
       ]
@@ -282,6 +301,7 @@ export function formatTemplateSkeleton(template: TemplateRecord, locale: 'en' | 
     text(template.description, locale),
     '',
     `${locale === 'zh' ? '组件' : 'Components'}: ${template.componentsUsed.join(', ')}`,
+    dependencyLine(template, locale),
     '',
     skeleton,
   ]

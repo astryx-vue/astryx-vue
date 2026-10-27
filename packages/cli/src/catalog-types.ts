@@ -119,6 +119,11 @@ export interface TemplateRecord {
   kind: TemplateKind
   /** Component names imported from `@astryx-vue/core`, in source order. */
   componentsUsed: string[]
+  /**
+   * npm packages the source imports, sorted. A ready template names only `vue`
+   * and `@astryx-vue/core`, which is everything a page needs to run.
+   */
+  dependencies: string[]
   /** False when the page imports something a project without the playground cannot install. */
   isReady: boolean
   notReadyReason?: LocaleText

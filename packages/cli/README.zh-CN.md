@@ -109,7 +109,7 @@ slug 和显示名都能用，`theme butter` 和 `theme Butter` 是同一个请�
 
 `template --list` 列出全部 57 个演练场页面。目前 `--type` 只有 `page` 一种；`--type block` 会给一句说明，不报错。
 
-每个模板都有一句手写说明和中英两套关键词，放在 `src/generate/template-meta/`，每类模板一个文件。组件清单从页面里 `@astryx-vue/core` 的 import 自动提取，不会和源码脱节。
+每个模板都有一句手写说明和中英两套关键词，放在 `src/generate/template-meta/`，每类模板一个文件。组件清单从页面里 `@astryx-vue/core` 的 import 自动提取，不会和源码脱节。每条记录还带 `dependencies`：这个页面 import 了哪些 npm 包。可复制的模板只会有 `vue` 和 `@astryx-vue/core`，可复制模板若多引一个包，生成 catalog 时直接报错。所以 `template --list`、`template <slug>` 和它们的 `--json` 都能直接说清落地要装什么。
 
 有些页面引用了用户项目装不上的包：5 个用 `@astryx-vue/playground-charts`（只存在于文档站演练场的路径别名）。这些标为 `isReady: false` 并写明原因。判断标准是页面真正执行的导入：只要非相对导入都是 `vue` 或 `@astryx-vue/core` 就算可复制；页面里展示的示例代码文本（例如 `@astryxdesign/core`）属于页面内容，不算导入。`--list` 和 `template <slug>` 照样能看，复制会被拒绝，报 `ERR_TEMPLATE_NOT_READY`。
 
@@ -135,7 +135,7 @@ slug 和显示名都能用，`theme butter` 和 `theme Butter` 是同一个请�
 
 ## JSON 信封
 
-成功响应是 `{ apiVersion: 1, type, data }`。`template`、`build`、`docs` 的响应带 `package`，说明记录来自哪个包（模板是 `@astryx-vue/cli`，文档页是 `@astryx-vue/docs`）。`component.detail` 和 `composable.detail` 带所属的包；`component.list` 和 `composable.list` 的每一条各自带 `package`，因为一个列表可能横跨多个包。
+成功响应是 `{ apiVersion: 1, type, data }`。`template`、`build`、`docs` 的响应带 `package`，说明记录来自哪个包（模板是 `@astryx-vue/cli`，文档页是 `@astryx-vue/docs`）。`template.list`、`template.show`、`template.skeleton` 的每条模板记录在 `components` 旁边带 `dependencies`。`component.detail` 和 `composable.detail` 带所属的包；`component.list` 和 `composable.list` 的每一条各自带 `package`，因为一个列表可能横跨多个包。
 
 | 类型 | 命令 |
 | --- | --- |

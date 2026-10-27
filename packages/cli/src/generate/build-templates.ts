@@ -8,6 +8,13 @@ import { TEMPLATE_META } from './template-meta.ts'
 /** The CLI ships the playground pages, so it owns every template record. */
 const TEMPLATE_PACKAGE = PACKAGE_NAME
 
+/**
+ * What a page may import and still run in a project as it is: the framework and
+ * the design system. Anything else means the reader has to install a second
+ * package, so the page is either not ready or not a template.
+ */
+export const TEMPLATE_RUNTIME_PACKAGES: readonly string[] = ['@astryx-vue/core', 'vue']
+
 /** What the playground manifest knows about a page: its slug, its two titles, and its category. */
 export interface PlaygroundTemplateSummary {
   slug: string
@@ -34,7 +41,14 @@ export async function buildTemplates(repoRoot: string, summaries: readonly Playg
   for (const summary of summaries) {
     const meta = TEMPLATE_META[summary.slug]!
     const source = await readFile(join(repoRoot, 'apps/docs/components/playground/pages', `${summary.slug}.vue`), 'utf8')
-    const { componentsUsed, foreignPackages } = analyzeTemplateImports(source, installable)
+    const { componentsUsed, foreignPackages, packages } = analyzeTemplateImports(source, installable)
+    const ready = foreignPackages.length === 0 && meta.upstreamNotReady !== true
+    const extraPackages = ready ? packages.filter(name => !TEMPLATE_RUNTIME_PACKAGES.includes(name)) : []
+    if (extraPackages.length > 0) {
+      throw new Error(
+        `template ${summary.slug} imports ${extraPackages.join(', ')}. A ready template must run on ${TEMPLATE_RUNTIME_PACKAGES.join(' and ')} alone; mark this page not ready in template-meta.ts, or drop the import.`,
+      )
+    }
     const category = summary.category.en || summary.category.zh ? summary.category : (meta.category ?? { en: 'Other', zh: '其他' })
     records.push({
       slug: summary.slug,
@@ -45,9 +59,10 @@ export async function buildTemplates(repoRoot: string, summaries: readonly Playg
       category,
       kind: 'page',
       componentsUsed,
-      ...(foreignPackages.length > 0 || meta.upstreamNotReady
-        ? { isReady: false, notReadyReason: notReadyReason(foreignPackages, meta.upstreamNotReady === true) }
-        : { isReady: true }),
+      dependencies: packages,
+      ...(ready
+        ? { isReady: true }
+        : { isReady: false, notReadyReason: notReadyReason(foreignPackages, meta.upstreamNotReady === true) }),
       source,
       docsUrl: {
         en: `${DOCS_ORIGIN}/en/playground/?template=${summary.slug}`,
@@ -61,18 +76,21 @@ export async function buildTemplates(repoRoot: string, summaries: readonly Playg
 /**
  * Reads a template's imports. Components are the names it pulls from any package
  * a project can install; anything else outside `vue` and relative files is a
- * package the reader's project may not have.
+ * package the reader's project may not have. `packages` is every package the
+ * source imports, so a caller can say what the page needs installed.
  */
-export function analyzeTemplateImports(source: string, installable: ReadonlySet<string>): { componentsUsed: string[], foreignPackages: string[] } {
+export function analyzeTemplateImports(source: string, installable: ReadonlySet<string>): { componentsUsed: string[], foreignPackages: string[], packages: string[] } {
   const componentsUsed: string[] = []
   const foreign = new Set<string>()
+  const packages = new Set<string>()
   for (const match of source.matchAll(/(?:^|\n)import (type )?([\s\S]*?) from (['"])([^'"]+)\3/g)) {
     const typeOnly = match[1] !== undefined
     const clause = match[2] ?? ''
     const specifier = match[4] ?? ''
-    if (specifier.startsWith('.'))
+    const root = importRoot(specifier)
+    if (root === null)
       continue
-    const root = packageRoot(specifier)
+    packages.add(root)
     if (!installable.has(root)) {
       foreign.add(root)
       continue
@@ -83,14 +101,25 @@ export function analyzeTemplateImports(source: string, installable: ReadonlySet<
       componentsUsed.push(...importedNames(clause, specifier))
   }
   for (const match of source.matchAll(/(?:^|\n)import (['"])([^'"]+)\1/g)) {
-    const specifier = match[2] ?? ''
-    if (specifier.startsWith('.'))
+    const root = importRoot(match[2] ?? '')
+    if (root === null)
       continue
-    const root = packageRoot(specifier)
+    packages.add(root)
     if (!installable.has(root))
       foreign.add(root)
   }
-  return { componentsUsed: [...new Set(componentsUsed)], foreignPackages: [...foreign].sort() }
+  return {
+    componentsUsed: [...new Set(componentsUsed)],
+    foreignPackages: [...foreign].sort(),
+    packages: [...packages].sort(),
+  }
+}
+
+/** The package an import specifier names, or null for relative files and built-ins. */
+function importRoot(specifier: string): string | null {
+  if (specifier.startsWith('.') || specifier.startsWith('node:'))
+    return null
+  return packageRoot(specifier)
 }
 
 /** `@scope/name/sub/path` becomes `@scope/name`; `name/sub` becomes `name`. */

@@ -52,8 +52,8 @@ npm run astryx-vue -- component Button
 
 ## 页面模板与代码生成
 
-- `astryx-vue template --list`：列出 53 个演练场页面模板，按分类分组。目前所有模板都是页面；`--type block` 会给出一句说明，不报错。
-- `astryx-vue template login-card`：打印一个模板的说明、用到的组件和完整源码。`--skeleton` 只打印布局骨架（组件标签加上 `gap`、`padding`、`columns` 这类布局属性，不含文字、事件处理和原生 HTML 包裹层）。
+- `astryx-vue template --list`：列出 57 个演练场页面模板，按分类分组。目前所有模板都是页面；`--type block` 会给出一句说明，不报错。每行还会说明这个页面要什么：可复制的模板只依赖 `vue` 和 `@astryx-vue/core`，落地后不用再装别的包。
+- `astryx-vue template login-card`：打印一个模板的说明、用到的组件、要装的包和完整源码。`--skeleton` 只打印布局骨架（组件标签加上 `gap`、`padding`、`columns` 这类布局属性，不含文字、事件处理和原生 HTML 包裹层）。
 - `astryx-vue template login-card ./src/pages`：将模板代码生成并写出到 `src/pages/LoginCard.vue`。如果文件已存在，需要加上 `--overwrite`（或 `-f`）才会覆盖，避免误冲掉已有代码。复制时会自动把演示图片替换为内联的灰色占位图，不依赖额外的静态图片资源。
 - `astryx-vue build "<想法>"`：把一句话需求变成开发起点，在本地匹配出最接近的页面模板、备选方案以及需要搭配使用的组件与函数。打分完全在本地完成，无网络开销也无需调用外部大模型。
 

@@ -60,6 +60,7 @@ describe('template imports', () => {
     expect(analyzeTemplateImports(source, installable)).toEqual({
       componentsUsed: ['Button', 'InfoTip'],
       foreignPackages: ['@astryx-vue/playground-charts'],
+      packages: ['@astryx-vue/core', '@astryx-vue/lab', '@astryx-vue/playground-charts', 'vue'],
     })
   })
 
