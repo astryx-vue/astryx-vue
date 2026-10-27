@@ -140,3 +140,55 @@ node /Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync-0.7.1/
 1. `tone.mjs` 的完整输出。
 2. 5 段改动对比，每段按「原文 → 第 2 轮」的格式列出。
 3. 第 1 轮列出的疑似事实错误清单，原样保留。
+
+---
+
+# 第 3 轮（总控 2026-10-27）
+
+## 第 2 轮的情况
+
+第 2 轮的 worker 跑到一半被上游接口断掉了：改动全都暂存着，一次都没提交。总控已经把这些暂存改动提交成 WIP。
+
+结果是**矫枉过正**：36 个文件里有 35 个被整个换回了原文，只剩 `why.md` 还有改动。所以现在书面词确实少了（tone 4 → 1），可原文里的宣传腔也都原样留着。
+
+## 第 3 轮只做一件事
+
+把原文里的宣传腔改成平实的说法。具体要改的位置，总控已经列在 `nodes/D11/targets-r3.txt` 里，一共 39 处，格式是「文件:行号」。每一处都是一句带了宣传词的话，比如：
+
+- 「非常聪明」「完美对齐」「优雅降级」「丝滑切换」「无缝配合」「轻松圈定」「更棒的是」「一键换皮」「超轻量」
+- 「贴心地」「放心」「省心」「绝不」「悄悄」「粗暴地」「吵闹地」「视障朋友」「强烈推荐」「十分清晰」「开箱即用」
+
+怎么改：
+
+- 删掉修饰词，只留事实。例子：
+  - 「这个插件非常聪明：它会读取……」→「这个插件会读取……」
+  - 「放入的 `Icon` 会自动完美对齐」→「放进去的 `Icon` 会自动对齐」
+  - 「绝不会破损空白」→「不会显示成空白」
+- 事实本身不能变。
+- 不在清单上的句子**一个字都不要动**。
+- 一句话里塞了好几件事、读起来费劲的，可以顺手拆成两句，但只限清单上那几行。
+- `migration.md`、`changelog.md` 不碰。
+
+## 门槛
+
+每改完一个文件，都要跑一遍这两个脚本，两个都必须通过：
+
+```sh
+node /Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync-0.7.1/nodes/D11/guard.mjs swarm-tree
+node /Users/shenqingchuan/workspace/astryx-vue/.agents-work/upstream-sync-0.7.1/nodes/D11/tone.mjs swarm-tree
+```
+
+## 提交
+
+- 每改完 3 到 5 个文件就提交一次，提交信息用中文。
+- **改完一个文件就暂存一个，不要攒着一起暂存。**
+- 全部改完后：
+  1. 运行 `env -u NODE_ENV pnpm --filter @astryx-vue/cli generate`，重新生成 catalog，然后提交。
+  2. 运行 `env -u NODE_ENV pnpm docs:build`，确认通过。
+
+## 回报
+
+写到 `impl-3.md`，内容包括：
+
+- 39 处改动，每一处都写成「原句 → 新句」。
+- `tone.mjs` 的完整输出。
