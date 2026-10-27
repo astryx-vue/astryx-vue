@@ -12,6 +12,7 @@ import { manifestCommand } from './commands/manifest.ts'
 import { searchCommand } from './commands/search.ts'
 import { templateCommand } from './commands/template.ts'
 import { themeCommand } from './commands/theme.ts'
+import { upgradeCommand } from './commands/upgrade.ts'
 import { errorEnvelope } from './envelope.ts'
 import { CliError } from './error.ts'
 import { commandByName, COMMANDS } from './spec.ts'
@@ -30,6 +31,7 @@ const HANDLERS: Record<string, (args: CommandArgs) => string | Promise<string>> 
   search: searchCommand,
   template: templateCommand,
   theme: themeCommand,
+  upgrade: upgradeCommand,
 }
 
 export async function runCli(argv: readonly string[], io: CliIO = {}): Promise<CliResult> {

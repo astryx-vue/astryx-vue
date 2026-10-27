@@ -262,6 +262,21 @@ export const COMMANDS: readonly CommandSpec[] = [
     errors: [{ code: 'ERR_UNKNOWN_THEME', when: 'No theme has that slug or display name. Close names come back as suggestions.' }],
   },
   {
+    name: 'upgrade',
+    summary: 'Compare the installed core version with this CLI\'s, and print what upgrading takes.',
+    arguments: [],
+    options: [],
+    json: true,
+    responseTypes: ['upgrade.report'],
+    examples: [
+      `${BINARY} upgrade`,
+      `${BINARY} upgrade --json`,
+      `${BINARY} upgrade --zh`,
+    ],
+    exitCodes: USAGE_EXIT,
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: 'upgrade was given a positional argument.' }],
+  },
+  {
     name: 'init',
     summary: 'Write or refresh the managed agent-context block.',
     arguments: [],
@@ -289,7 +304,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
 ]
 
-export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'init', 'help', 'version'] as const
+export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'init', 'help', 'version'] as const
 
 export function commandByName(name: string): CommandSpec | undefined {
   return COMMANDS.find(command => command.name === name)

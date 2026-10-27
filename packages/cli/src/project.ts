@@ -150,12 +150,11 @@ export async function readSourceFiles(cwd: string, options: { limit?: number } =
   return files
 }
 
-/** Lines of a file that contain `needle`, one-based, for a report a reader can act on. */
-export function findLines(file: SourceFile, needle: string): { path: string, line: number, text: string }[] {
+/** Lines of a file that match, one-based, for a report a reader can act on. */
+export function findLines(file: SourceFile, matches: (line: string) => boolean): { path: string, line: number, text: string }[] {
   const hits: { path: string, line: number, text: string }[] = []
-  const lines = file.text.split('\n')
-  for (const [index, text] of lines.entries()) {
-    if (text.includes(needle))
+  for (const [index, text] of file.text.split('\n').entries()) {
+    if (matches(text))
       hits.push({ path: file.path, line: index + 1, text: text.trim() })
   }
   return hits
