@@ -73,7 +73,7 @@ mindmap
       ✅ F2b 图表展示组件
       🔵 F2c 图表使用文档
       🔵 F2d 图表 WebGL 标记
-      🟡 F3a 实验包：输入类组件
+      ✅ F3a 实验包：输入类组件
       ✅ F3b 实验包：展示类组件
       🔵 F3g 实验包：日程表
       🔵 F3c 实验包：浮层与引导
@@ -390,7 +390,7 @@ flowchart TB
 | F2b | charts 组件 | F2a B7 C7 C14 C16 | ✅ 已完成 | 1 | F2b-impl | | Chart/Axis/Grid/Legend/Swatch/Tooltip 与 8 种 SVG 标记；上游用例除 WebGL 外全部移植 | #170 |
 | F2c | charts 文档 | F2b | 🔵 可开工 | 0 | | | | |
 | F2d | charts WebGL 标记 | F2b | 🔵 可开工 | 0 | | | 延后：等上游这部分成熟 | |
-| F3a | lab 输入类 | F0 C3 C8 C11 C12 C14 C15 C16 | 🟡 实现中 | 1 | F3a-impl | | | |
+| F3a | lab 输入类 | F0 C3 C8 C11 C12 C14 C15 C16 | ✅ 已完成 | 1 | F3a-impl | | ListInput/TransferList/MobileTokenizer；ComplexSelector 加 contentClass/contentStyle/popupWidth | #223 |
 | F3b | lab 展示类 | F0 C7 C16 | ✅ 已完成 | 1 | F3b-impl | | 新建 lab 包（canary），Stat/CircularProgress/InfoTip/SVGIcon/LogStream，85 测试 | #205 |
 | F3g | lab 日程表 | F0 B7 C6 C7 C14 C15 C16 | 🔵 可开工 | 0 | | | | |
 | F3c | lab 浮层与引导 | F0 C7 C14 C16 | 🔵 可开工 | 0 | | | | |
