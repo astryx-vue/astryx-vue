@@ -4,15 +4,15 @@ title: 升级指南
 
 # 升级指南
 
-这一版对齐 Astryx v0.7.1，上一版对齐 0.4.1。
+本版本对齐 Astryx v0.7.1，上一版本对齐 0.4.1。
 
-下面每一条都是升级时会碰到的变化。每条写四件事：变了什么、以前怎么写、现在怎么写、怎么改。
+下文梳理升级涉及的核心变更。按四项内容说明：变更内容、旧版写法、新版写法及迁移建议。
 
-多数项目只需要做三件事：
+多数业务项目主要涉及以下三项修改：
 
-1. 把 `labelHidden` 换成 `isLabelHidden`。
-2. 把 `useDismiss` 的 `enableEscape` 换成 `dismissOnEscape`。
-3. 把自定义主题里的旧挂点名换成新名字。
+1. 将 `labelHidden` 属性统一替换为 `isLabelHidden`。
+2. 将 `useDismiss` 的配置项 `enableEscape` 替换为 `dismissOnEscape`。
+3. 将自定义主题配置中的旧组件键名替换为标准连字符格式。
 
 ## 样式与主题
 
