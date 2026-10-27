@@ -55,7 +55,7 @@ const ACTIVE_SERIES = [
 ]
 
 /** 图表画布：800×300，留出左侧刻度与底部时间轴的边距。 */
-const CHART = { h: 300, padLeft: 36, padRight: 12, padTop: 10, padBottom: 26 }
+const CHART = { h: 300, padLeft: 30, padRight: 10, padTop: 5, padBottom: 35 }
 
 /** 图表宽度跟着容器走，viewBox 和像素一比一，线和文字都不会被拉伸。 */
 const chartEl = ref<SVGSVGElement | null>(null)
@@ -95,8 +95,8 @@ const Y_AXIS = [0, 20, 40, 60, 80, 100, 120]
 const Y_MIN = 0
 const Y_MAX = 120
 
-/** 横轴只标 4 个时间点，分别是曲线上的 0 / 32 / 64 / 95。 */
-const X_TICKS = [0, 32, 64, 95]
+/** 横轴标 3 个时间点（曲线上的 32 / 64 / 95），起点不标，和原版一样。 */
+const X_TICKS = [32, 64, 95]
 const X_LABELS: Record<number, string> = {
   0: 'Apr 1 14:00',
   32: 'Apr 1 22:00',
@@ -261,16 +261,17 @@ function sparklinePoints(values: number[]): string {
                   :key="`ylabel-${tick}`"
                   class="chart-axis"
                   :x="CHART.padLeft - 8"
-                  :y="tickY(tick, Y_MIN, Y_MAX) + 4"
+                  :y="Math.max(tickY(tick, Y_MIN, Y_MAX), 9)"
                   text-anchor="end"
+                  dominant-baseline="central"
                 >{{ tick }}</text>
                 <text
                   v-for="index in X_TICKS"
                   :key="`xlabel-${index}`"
                   class="chart-axis"
-                  :x="tickX(index)"
-                  :y="CHART.h - 8"
-                  :text-anchor="index === 0 ? 'start' : index === X_TICKS[X_TICKS.length - 1] ? 'end' : 'middle'"
+                  :x="Math.min(tickX(index), chartWidth - CHART.padRight - 23)"
+                  :y="CHART.h - CHART.padBottom + 8"
+                  text-anchor="middle"
                 >{{ tickLabel(index) }}</text>
                 <polyline
                   v-for="series in ACTIVE_SERIES"
