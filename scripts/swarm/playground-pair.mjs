@@ -14,8 +14,10 @@ if (!slug || !out) {
 const VIEWPORT = { width: 1440, height: 900 }
 const PROXY = { server: 'http://127.0.0.1:7890', bypass: '127.0.0.1,localhost' }
 
-async function shoot(browser, url) {
+async function shoot(browser, url, local = false) {
   const context = await browser.newContext({ viewport: VIEWPORT, colorScheme: scheme })
+  if (local)
+    await context.addInitScript(mode => localStorage.setItem('vitepress-theme-appearance', mode), scheme)
   const page = await context.newPage()
   await page.goto(url, { waitUntil: 'load', timeout: 60_000 })
   await page.getByText(/^Building/).waitFor({ state: 'detached', timeout: 60_000 }).catch(() => {})
@@ -48,7 +50,7 @@ async function shoot(browser, url) {
 
 const browser = await chromium.launch({ proxy: PROXY })
 const upstream = await shoot(browser, `https://astryx.atmeta.com/playground?template=${slug}`)
-const ours = await shoot(browser, `http://127.0.0.1:${port}/playground/?template=${slug}`)
+const ours = await shoot(browser, `http://127.0.0.1:${port}/playground/?template=${slug}`, true)
 
 const page = await browser.newPage({ viewport: { width: 2900, height: 960 } })
 await page.setContent(`<body style="margin:0;background:#888;font:14px sans-serif">
