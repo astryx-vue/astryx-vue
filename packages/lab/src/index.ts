@@ -73,7 +73,7 @@ export type {
   XIFSlot,
 } from './SVGIcon/index.js'
 
-export { TransferList } from './TransferList/index.js'
+export { TransferList, TransferListSelector } from './TransferList/index.js'
 export type {
   PanelGroup,
   PanelRow,
