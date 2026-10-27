@@ -1,6 +1,7 @@
 import type { ExampleRecord } from '../catalog-types.ts'
 import { describe, expect, it } from 'vitest'
-import { analyzeTemplateImports, pairExamples } from './build-catalog.ts'
+import { pairExamples } from './build-catalog.ts'
+import { analyzeTemplateImports } from './build-templates.ts'
 
 function example(title: string, code: string, description = ''): ExampleRecord {
   return { title, description, code }
