@@ -12,10 +12,12 @@
  *   marker is escaped on export by markdownSource.ts.
  */
 
-import {HEADING, type ElementTransformer} from '@lexical/markdown';
+import type { ElementTransformer } from '@lexical/markdown'
+import { HEADING } from '@lexical/markdown'
 
 /** Lexical's own heading marker, which the typing shortcut keeps using. */
-const SHORTCUT_MARKER = /^(#{1,6})\s/;
+// eslint-disable-next-line regexp/no-unused-capturing-group -- 捕获组 1 是标题级别，由 Lexical 的 HEADING.replace 读。
+const SHORTCUT_MARKER = /^(#{1,6})\s/
 
 /**
  * An ATX heading marker: up to three spaces of indentation, then one to six
@@ -30,4 +32,4 @@ export const HEADING_MARKERS: ElementTransformer = {
     isImport || SHORTCUT_MARKER.test(match[0])
       ? HEADING.replace(parentNode, children, match, isImport)
       : false,
-};
+}

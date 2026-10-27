@@ -1,14 +1,16 @@
-import { $isElementNode, $isTextNode, type ElementNode, type LexicalNode } from 'lexical'
+import type { ElementNode, LexicalNode } from 'lexical'
+import type { ProtectedMarkdown, StandIn } from './markdownStandIns.js'
+import { decodeMarkdownCharacterReferences } from '@astryx-vue/core/Markdown/parser'
 import { $isCodeNode } from '@lexical/code'
 import { $isLinkNode } from '@lexical/link'
-import { decodeMarkdownCharacterReferences } from '@astryx-vue/core/Markdown/parser'
-import { absentCharacters, type ProtectedMarkdown, type StandIn } from './markdownStandIns.js'
+import { $isElementNode, $isTextNode } from 'lexical'
 import { codeRanges } from './markdownCodeRanges.js'
+import { absentCharacters } from './markdownStandIns.js'
 
 // 字符实体的处理：把每个字符实体换成占位，导入完成后按 core Markdown 的解码器换成文字。
 // 解码器由 core 提供，两边对同一个实体得到同一个结果。
 
-const REFERENCE_LIKE = /&(?:#[xX][0-9a-fA-F]+|#[0-9]+|[A-Za-z][A-Za-z0-9]*);/y;
+const REFERENCE_LIKE = /&(?:#x[0-9a-f]+|#\d+|[A-Z][A-Z0-9]*);/iy
 
 /**
  * Returns `markdown` with every character reference outside code replaced by
@@ -18,84 +20,87 @@ const REFERENCE_LIKE = /&(?:#[xX][0-9a-fA-F]+|#[0-9]+|[A-Za-z][A-Za-z0-9]*);/y;
 export function protectCharacterReferences(
   markdown: string,
 ): ProtectedMarkdown {
-  const standIns = new Map<string, StandIn>();
+  const standIns = new Map<string, StandIn>()
   if (!markdown.includes('&')) {
-    return {markdown, standIns};
+    return { markdown, standIns }
   }
-  const available = absentCharacters(markdown);
-  const byReference = new Map<string, string>();
-  let ampersand: string | null = null;
+  const available = absentCharacters(markdown)
+  const byReference = new Map<string, string>()
+  let ampersand: string | null = null
   const standInFor = (reference: string | null): string | null => {
-    const existing = reference == null ? ampersand : byReference.get(reference);
+    const existing = reference == null ? ampersand : byReference.get(reference)
     if (existing != null) {
-      return existing;
+      return existing
     }
-    const next = available.next();
+    const next = available.next()
     if (next.done === true) {
       // Every private-use character is in the text or already used: leave
       // the rest as written.
-      return null;
+      return null
     }
     if (reference == null) {
-      ampersand = next.value;
-      standIns.set(next.value, {kind: 'ampersand'});
-    } else {
-      byReference.set(reference, next.value);
-      standIns.set(next.value, {kind: 'reference', source: reference});
+      ampersand = next.value
+      standIns.set(next.value, { kind: 'ampersand' })
     }
-    return next.value;
-  };
-  const code = codeRanges(markdown);
-  let output = '';
-  let copied = 0;
-  let codeIndex = 0;
-  let index = markdown.indexOf('&');
+    else {
+      byReference.set(reference, next.value)
+      standIns.set(next.value, { kind: 'reference', source: reference })
+    }
+    return next.value
+  }
+  const code = codeRanges(markdown)
+  let output = ''
+  let copied = 0
+  let codeIndex = 0
+  let index = markdown.indexOf('&')
   while (index !== -1) {
     while (code[codeIndex] != null && code[codeIndex][1] <= index) {
-      codeIndex++;
+      codeIndex++
     }
-    const range = code[codeIndex];
+    const range = code[codeIndex]
     if (range != null && range[0] <= index) {
-      index = markdown.indexOf('&', range[1]);
-      continue;
+      index = markdown.indexOf('&', range[1])
+      continue
     }
-    REFERENCE_LIKE.lastIndex = index;
-    const match = REFERENCE_LIKE.exec(markdown);
+    REFERENCE_LIKE.lastIndex = index
+    const match = REFERENCE_LIKE.exec(markdown)
     if (match == null) {
-      index = markdown.indexOf('&', index + 1);
-      continue;
+      index = markdown.indexOf('&', index + 1)
+      continue
     }
-    let backslashes = 0;
+    let backslashes = 0
     while (markdown[index - 1 - backslashes] === '\\') {
-      backslashes++;
+      backslashes++
     }
-    const reference = match[0];
-    const end = index + reference.length;
+    const reference = match[0]
+    const end = index + reference.length
     if (backslashes % 2 === 1) {
       // An escaped `&`: the reference stays literal, without its backslash.
-      const standIn = standInFor(null);
+      const standIn = standInFor(null)
       if (standIn != null) {
-        output += markdown.slice(copied, index - 1) + standIn;
-        copied = index + 1;
-      }
-    } else if (decodeMarkdownCharacterReferences(reference) !== reference) {
-      const standIn = standInFor(reference);
-      if (standIn != null) {
-        output += markdown.slice(copied, index) + standIn;
-        copied = end;
-      }
-    } else if (reference.startsWith('&#')) {
-      // Not a reference (too many digits): literal, but kept from Lexical's
-      // own numeric decoding.
-      const standIn = standInFor(null);
-      if (standIn != null) {
-        output += markdown.slice(copied, index) + standIn;
-        copied = index + 1;
+        output += markdown.slice(copied, index - 1) + standIn
+        copied = index + 1
       }
     }
-    index = markdown.indexOf('&', end);
+    else if (decodeMarkdownCharacterReferences(reference) !== reference) {
+      const standIn = standInFor(reference)
+      if (standIn != null) {
+        output += markdown.slice(copied, index) + standIn
+        copied = end
+      }
+    }
+    else if (reference.startsWith('&#')) {
+      // Not a reference (too many digits): literal, but kept from Lexical's
+      // own numeric decoding.
+      const standIn = standInFor(null)
+      if (standIn != null) {
+        output += markdown.slice(copied, index) + standIn
+        copied = index + 1
+      }
+    }
+    index = markdown.indexOf('&', end)
   }
-  return {markdown: output + markdown.slice(copied), standIns};
+  return { markdown: output + markdown.slice(copied), standIns }
 }
 
 /** `text` with each stand-in replaced as `replace` says. */
@@ -104,48 +109,49 @@ function restored(
   standIns: ReadonlyMap<string, StandIn>,
   replace: (standIn: StandIn) => string,
 ): string {
-  let output = '';
-  let changed = false;
+  let output = ''
+  let changed = false
   for (const character of text) {
-    const standIn = standIns.get(character);
+    const standIn = standIns.get(character)
     if (standIn == null) {
-      output += character;
-    } else {
-      output += replace(standIn);
-      changed = true;
+      output += character
+    }
+    else {
+      output += replace(standIn)
+      changed = true
     }
   }
-  return changed ? output : text;
+  return changed ? output : text
 }
 
-const decoded = (standIn: StandIn): string => {
+function decoded(standIn: StandIn): string {
   switch (standIn.kind) {
     case 'literal':
-      return standIn.text;
+      return standIn.text
     case 'ampersand':
-      return '&';
+      return '&'
     case 'backslash':
-      return '\\';
+      return '\\'
     case 'escape':
-      return standIn.character;
+      return standIn.character
     case 'reference':
-      return decodeMarkdownCharacterReferences(standIn.source);
+      return decodeMarkdownCharacterReferences(standIn.source)
   }
-};
-const asWritten = (standIn: StandIn): string => {
+}
+function asWritten(standIn: StandIn): string {
   switch (standIn.kind) {
     case 'literal':
-      return standIn.text;
+      return standIn.text
     case 'ampersand':
-      return '&';
+      return '&'
     case 'backslash':
-      return '\\';
+      return '\\'
     case 'escape':
-      return `\\${standIn.character}`;
+      return `\\${standIn.character}`
     case 'reference':
-      return standIn.source;
+      return standIn.source
   }
-};
+}
 
 /**
  * Replaces the stand-ins under `node` with the characters their references
@@ -158,46 +164,46 @@ export function $restoreCharacterReferences(
   standIns: ReadonlyMap<string, StandIn>,
 ): void {
   if (standIns.size === 0) {
-    return;
+    return
   }
-  const visit = (current: LexicalNode, inCode: boolean) => {
+  const visit = (current: LexicalNode, inCode: boolean): void => {
     if ($isTextNode(current)) {
-      const text = current.getTextContent();
+      const text = current.getTextContent()
       const next = restored(
         text,
         standIns,
         inCode || current.hasFormat('code') ? asWritten : decoded,
-      );
+      )
       if (next !== text) {
-        current.setTextContent(next);
+        current.setTextContent(next)
       }
-      return;
+      return
     }
     if ($isLinkNode(current)) {
-      const url = restored(current.getURL(), standIns, decoded);
+      const url = restored(current.getURL(), standIns, decoded)
       if (url !== current.getURL()) {
-        current.setURL(url);
+        current.setURL(url)
       }
-      const title = current.getTitle();
+      const title = current.getTitle()
       if (title != null) {
-        const nextTitle = restored(title, standIns, decoded);
+        const nextTitle = restored(title, standIns, decoded)
         if (nextTitle !== title) {
-          current.setTitle(nextTitle);
+          current.setTitle(nextTitle)
         }
       }
     }
     if ($isElementNode(current)) {
-      const isCode = inCode || $isCodeNode(current);
+      const isCode = inCode || $isCodeNode(current)
       for (const child of current.getChildren()) {
-        visit(child, isCode);
+        visit(child, isCode)
       }
     }
-  };
-  visit(node, false);
+  }
+  visit(node, false)
 }
 
-export { absentCharacters } from './markdownStandIns.js'
-export type { ProtectedMarkdown } from './markdownStandIns.js'
+export { $restoreCodeSpans, protectCodeSpans } from './markdownCodeSpans.js'
+export type { ProtectedCodeSpans } from './markdownCodeSpans.js'
 export { protectBackslashEscapes } from './markdownEscapes.js'
 export {
   $unwrapRefusedLinks,
@@ -205,5 +211,5 @@ export {
   protectLinkDestinationParentheses,
   protectRefusedLinks,
 } from './markdownRefusedLinks.js'
-export { $restoreCodeSpans, protectCodeSpans } from './markdownCodeSpans.js'
-export type { ProtectedCodeSpans } from './markdownCodeSpans.js'
+export { absentCharacters } from './markdownStandIns.js'
+export type { ProtectedMarkdown } from './markdownStandIns.js'

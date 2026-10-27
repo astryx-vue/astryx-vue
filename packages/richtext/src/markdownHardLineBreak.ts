@@ -17,31 +17,33 @@
  *   a break typed in one keeps Lexical's plain line ending.
  */
 
-import type {TextMatchTransformer} from '@lexical/markdown';
-import {$isHeadingNode} from '@lexical/rich-text';
-import {$findMatchingParent} from '@lexical/utils';
-import {$isLineBreakNode, LineBreakNode} from 'lexical';
+import type { TextMatchTransformer } from '@lexical/markdown'
+import { $isHeadingNode } from '@lexical/rich-text'
+import { $findMatchingParent } from '@lexical/utils'
+import { $isLineBreakNode, LineBreakNode } from 'lexical'
 
 /** Whether Lexical's Markdown import marked this line break as a hard one. */
 export function isMarkedHardLineBreak(node: LineBreakNode): boolean {
-  const serialized = node.exportJSON() as {$?: {mdHardLineBreak?: unknown}};
+  const serialized = node.exportJSON() as { $?: { mdHardLineBreak?: unknown } }
   return (
-    typeof serialized.$?.mdHardLineBreak === 'string' &&
-    serialized.$.mdHardLineBreak !== ''
-  );
+    typeof serialized.$?.mdHardLineBreak === 'string'
+    && serialized.$.mdHardLineBreak !== ''
+  )
 }
 
 export const HARD_LINE_BREAK: TextMatchTransformer = {
   dependencies: [LineBreakNode],
   export: node =>
-    $isLineBreakNode(node) &&
-    !isMarkedHardLineBreak(node) &&
+    $isLineBreakNode(node)
+    && !isMarkedHardLineBreak(node)
     // A heading is one line in Markdown; a break inside one has no hard-break
     // form, so it keeps Lexical's plain line ending.
-    $findMatchingParent(node, $isHeadingNode) == null
+    && $findMatchingParent(node, $isHeadingNode) == null
       ? '\\\n'
       : null,
   // Export only: Lexical's own import recognizes hard breaks.
+  // 这条转换器只负责导出，导入交给 Lexical 自己的：正则永不匹配。
+  // eslint-disable-next-line regexp/no-empty-lookarounds-assertion
   regExp: /(?!)/,
   type: 'text-match',
-};
+}

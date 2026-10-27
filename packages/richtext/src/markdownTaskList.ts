@@ -23,6 +23,8 @@
  *   registers registerTaskListEditing in the editor.
  */
 
+import type { ElementTransformer } from '@lexical/markdown'
+import type { LexicalEditor } from 'lexical'
 import {
   $createListItemNode,
   $createListNode,
@@ -30,9 +32,8 @@ import {
   $isListNode,
   ListItemNode,
   ListNode,
-} from '@lexical/list';
-import type {ElementTransformer} from '@lexical/markdown';
-import {$findMatchingParent, mergeRegister} from '@lexical/utils';
+} from '@lexical/list'
+import { $findMatchingParent, mergeRegister } from '@lexical/utils'
 import {
   $getSelection,
   $getState,
@@ -42,21 +43,21 @@ import {
   createState,
   INSERT_PARAGRAPH_COMMAND,
   KEY_ENTER_COMMAND,
-  type LexicalEditor,
-} from 'lexical';
 
-export type TaskState = 'checked' | 'unchecked';
+} from 'lexical'
+
+export type TaskState = 'checked' | 'unchecked'
 
 // Whether an item is a task. A copy keeps it, so the item Enter makes after
 // a task is a task too.
 const taskKind = createState('astryxTask', {
   parse: (value: unknown): boolean => value === true,
-});
+})
 
 // Whether a task is checked.
 const taskChecked = createState('astryxTaskChecked', {
   parse: (value: unknown): boolean => value === true,
-});
+})
 
 /**
  * Whether `item` is a task and whether it is checked; null for a plain item.
@@ -64,13 +65,13 @@ const taskChecked = createState('astryxTaskChecked', {
  */
 export function $getTaskState(item: ListItemNode): TaskState | null {
   if ($getState(item, taskKind)) {
-    return $getState(item, taskChecked) ? 'checked' : 'unchecked';
+    return $getState(item, taskChecked) ? 'checked' : 'unchecked'
   }
-  const list = item.getParent();
+  const list = item.getParent()
   if ($isListNode(list) && list.getListType() === 'check') {
-    return item.getChecked() === true ? 'checked' : 'unchecked';
+    return item.getChecked() === true ? 'checked' : 'unchecked'
   }
-  return null;
+  return null
 }
 
 /** Makes `item` a task in the given state, or a plain item for null. */
@@ -78,22 +79,22 @@ export function $setTaskState(
   item: ListItemNode,
   state: TaskState | null,
 ): void {
-  const list = item.getParent();
+  const list = item.getParent()
   if ($isListNode(list) && list.getListType() === 'check') {
-    item.setChecked(state === 'checked');
-    return;
+    item.setChecked(state === 'checked')
+    return
   }
-  $setState(item, taskKind, state != null);
-  $setState(item, taskChecked, state === 'checked');
+  $setState(item, taskKind, state != null)
+  $setState(item, taskChecked, state === 'checked')
 }
 
-const TASK_ITEM = /^(\s*)([-*+])\s\[([ xX])\]\s/;
+const TASK_ITEM = /^(\s*)([-*+])\s\[([ x])\]\s/i
 
 /** Nesting depth from leading whitespace, counted as Lexical's lists do. */
 function indentOf(whitespace: string): number {
-  const tabs = whitespace.match(/\t/g)?.length ?? 0;
-  const spaces = whitespace.match(/ /g)?.length ?? 0;
-  return tabs + Math.floor(spaces / 4);
+  const tabs = whitespace.match(/\t/g)?.length ?? 0
+  const spaces = whitespace.match(/ /g)?.length ?? 0
+  return tabs + Math.floor(spaces / 4)
 }
 
 export const TASK_LIST: ElementTransformer = {
@@ -102,51 +103,54 @@ export const TASK_LIST: ElementTransformer = {
   export: () => null,
   regExp: TASK_ITEM,
   replace: (parentNode, children, match, isImport) => {
-    const item = $createListItemNode();
-    $setState(item, taskKind, true);
-    $setState(item, taskChecked, match[3] !== ' ');
+    const item = $createListItemNode()
+    $setState(item, taskKind, true)
+    $setState(item, taskChecked, match[3] !== ' ')
     // A task item joins the bullet list beside it, as a plain item does.
-    const previous = parentNode.getPreviousSibling();
-    const next = parentNode.getNextSibling();
+    const previous = parentNode.getPreviousSibling()
+    const next = parentNode.getNextSibling()
     if ($isListNode(next) && next.getListType() === 'bullet') {
-      const first = next.getFirstChild();
+      const first = next.getFirstChild()
       if (first == null) {
-        next.append(item);
-      } else {
-        first.insertBefore(item);
+        next.append(item)
       }
-      parentNode.remove();
-    } else if ($isListNode(previous) && previous.getListType() === 'bullet') {
-      previous.append(item);
-      parentNode.remove();
-    } else {
-      const list = $createListNode('bullet');
-      list.append(item);
-      parentNode.replace(list);
+      else {
+        first.insertBefore(item)
+      }
+      parentNode.remove()
     }
-    item.append(...children);
+    else if ($isListNode(previous) && previous.getListType() === 'bullet') {
+      previous.append(item)
+      parentNode.remove()
+    }
+    else {
+      const list = $createListNode('bullet')
+      list.append(item)
+      parentNode.replace(list)
+    }
+    item.append(...children)
     if (!isImport) {
-      item.select(0, 0);
+      item.select(0, 0)
     }
-    const indent = indentOf(match[1]);
+    const indent = indentOf(match[1])
     if (indent > 0) {
-      item.setIndent(indent);
+      item.setIndent(indent)
     }
   },
   type: 'element',
-};
+}
 
 /** The task item holding the selection's anchor, if any. */
 function $selectedTaskItem(): ListItemNode | null {
-  const selection = $getSelection();
+  const selection = $getSelection()
   if (!$isRangeSelection(selection)) {
-    return null;
+    return null
   }
   return $findMatchingParent(
     selection.anchor.getNode(),
     (node): node is ListItemNode =>
       $isListItemNode(node) && $getTaskState(node) != null,
-  );
+  )
 }
 
 /**
@@ -166,57 +170,58 @@ export function registerTaskListEditing(editor: LexicalEditor): () => void {
     editor.registerCommand(
       INSERT_PARAGRAPH_COMMAND,
       () => {
-        const selection = $getSelection();
-        const item = $selectedTaskItem();
+        const selection = $getSelection()
+        const item = $selectedTaskItem()
         if (
-          item == null ||
-          !$isRangeSelection(selection) ||
-          item.getTextContent().trim() === ''
+          item == null
+          || !$isRangeSelection(selection)
+          || item.getTextContent().trim() === ''
         ) {
-          return false;
+          return false
         }
-        const state = $getTaskState(item);
-        const isAtStart =
-          selection.isCollapsed() &&
-          selection.anchor.offset === 0 &&
-          (selection.anchor.getNode().is(item) ||
-            selection.anchor.getNode().is(item.getFirstDescendant()));
-        const created = selection.insertParagraph();
+        const state = $getTaskState(item)
+        const isAtStart
+          = selection.isCollapsed()
+            && selection.anchor.offset === 0
+            && (selection.anchor.getNode().is(item)
+              || selection.anchor.getNode().is(item.getFirstDescendant()))
+        const created = selection.insertParagraph()
         if (!$isListItemNode(created) || $getTaskState(created) == null) {
-          return true;
+          return true
         }
         if (isAtStart) {
           // The text moved to the new item: it keeps its state, and the item
           // left empty before it is the new, unchecked one.
-          $setTaskState(created, state);
-          $setTaskState(item, 'unchecked');
-        } else {
-          $setTaskState(created, 'unchecked');
+          $setTaskState(created, state)
+          $setTaskState(item, 'unchecked')
         }
-        return true;
+        else {
+          $setTaskState(created, 'unchecked')
+        }
+        return true
       },
       COMMAND_PRIORITY_LOW,
     ),
     editor.registerCommand(
       KEY_ENTER_COMMAND,
-      event => {
-        const isModified =
-          event != null &&
-          (event.metaKey || event.ctrlKey) &&
-          !event.shiftKey &&
-          !event.altKey;
-        const item = isModified ? $selectedTaskItem() : null;
+      (event) => {
+        const isModified
+          = event != null
+            && (event.metaKey || event.ctrlKey)
+            && !event.shiftKey
+            && !event.altKey
+        const item = isModified ? $selectedTaskItem() : null
         if (item == null) {
-          return false;
+          return false
         }
-        event?.preventDefault();
+        event?.preventDefault()
         $setTaskState(
           item,
           $getTaskState(item) === 'checked' ? 'unchecked' : 'checked',
-        );
-        return true;
+        )
+        return true
       },
       COMMAND_PRIORITY_LOW,
     ),
-  );
+  )
 }

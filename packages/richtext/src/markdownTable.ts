@@ -15,19 +15,21 @@
  * so the same source is a table on both surfaces. Keep the two in step.
  */
 
+import type { MultilineElementTransformer, Transformer } from '@lexical/markdown'
+import type { ElementFormatType } from 'lexical'
 import {
   $convertFromMarkdownString,
   CODE,
   HEADING,
-  TEXT_FORMAT_TRANSFORMERS,
-  TEXT_MATCH_TRANSFORMERS,
   LINK,
+
   ORDERED_LIST,
   QUOTE,
+  TEXT_FORMAT_TRANSFORMERS,
+  TEXT_MATCH_TRANSFORMERS,
+
   TRANSFORMERS,
-  type MultilineElementTransformer,
-  type Transformer,
-} from '@lexical/markdown';
+} from '@lexical/markdown'
 import {
   $createTableCellNode,
   $createTableNode,
@@ -39,18 +41,17 @@ import {
   TableCellNode,
   TableNode,
   TableRowNode,
-} from '@lexical/table';
-import type {ElementFormatType} from 'lexical';
-import {HARD_LINE_BREAK} from './markdownHardLineBreak.js';
-import {THEMATIC_BREAK} from './markdownThematicBreak.js';
-import {HEADING_MARKERS} from './markdownHeading.js';
-import {QUOTE_MARKERS} from './markdownQuote.js';
-import {LIST_EXPORT} from './markdownListExport.js';
-import {TASK_LIST} from './markdownTaskList.js';
-import {ORDERED_LIST_KEEPING_START} from './markdownOrderedList.js';
-import {LINK_KEEPING_DESTINATIONS} from './markdownLink.js';
-import {BACKTICK_CODE, TILDE_CODE} from './markdownCodeFence.js';
-import {$convertToMarkdownKeepingTimeLinear} from './markdownSpaceRuns.js';
+} from '@lexical/table'
+import { BACKTICK_CODE, TILDE_CODE } from './markdownCodeFence.js'
+import { HARD_LINE_BREAK } from './markdownHardLineBreak.js'
+import { HEADING_MARKERS } from './markdownHeading.js'
+import { LINK_KEEPING_DESTINATIONS } from './markdownLink.js'
+import { LIST_EXPORT } from './markdownListExport.js'
+import { ORDERED_LIST_KEEPING_START } from './markdownOrderedList.js'
+import { QUOTE_MARKERS } from './markdownQuote.js'
+import { $convertToMarkdownKeepingTimeLinear } from './markdownSpaceRuns.js'
+import { TASK_LIST } from './markdownTaskList.js'
+import { THEMATIC_BREAK } from './markdownThematicBreak.js'
 
 /**
  * Cells hold inline Markdown only, so they are imported and exported with the
@@ -61,9 +62,9 @@ const CELL_TRANSFORMERS: Array<Transformer> = [
   ...TEXT_MATCH_TRANSFORMERS.map(transformer =>
     transformer === LINK ? LINK_KEEPING_DESTINATIONS : transformer,
   ),
-];
+]
 
-type ColumnAlignment = 'left' | 'center' | 'right' | null;
+type ColumnAlignment = 'left' | 'center' | 'right' | null
 
 /**
  * Splits a row into trimmed cell sources: the row's indentation, one leading
@@ -72,61 +73,63 @@ type ColumnAlignment = 'left' | 'center' | 'right' | null;
  * inline import.
  */
 function splitTableRow(line: string): Array<string> {
-  let start = 0;
-  let end = line.length;
+  let start = 0
+  let end = line.length
   while (start < end && (line[start] === ' ' || line[start] === '\t')) {
-    start++;
+    start++
   }
   if (line[start] === '|') {
-    start++;
+    start++
     while (start < end && line[start] === ' ') {
-      start++;
+      start++
     }
   }
   while (end > start && line[end - 1] === ' ') {
-    end--;
+    end--
   }
   if (end > start && line[end - 1] === '|') {
-    end--;
+    end--
   }
-  const content = line.slice(start, end);
-  const cells: Array<string> = [];
-  let current = '';
+  const content = line.slice(start, end)
+  const cells: Array<string> = []
+  let current = ''
   for (let index = 0; index < content.length; index++) {
-    const character = content[index];
+    const character = content[index]
     if (character === '\\' && content[index + 1] === '|') {
-      current += '\\|';
-      index++;
-    } else if (character === '|') {
-      cells.push(current.trim());
-      current = '';
-    } else {
-      current += character;
+      current += '\\|'
+      index++
+    }
+    else if (character === '|') {
+      cells.push(current.trim())
+      current = ''
+    }
+    else {
+      current += character
     }
   }
-  cells.push(current.trim());
-  return cells;
+  cells.push(current.trim())
+  return cells
 }
 
 /** A delimiter row: every non-empty cell is dashes with optional colons. */
 function isDelimiterRow(line: string | undefined): boolean {
   if (line == null || !line.includes('|')) {
-    return false;
+    return false
   }
   const cells = line
     .split('|')
     .map(cell => cell.trim())
-    .filter(cell => cell.length > 0);
-  return cells.length > 0 && cells.every(cell => /^:?-+:?$/.test(cell));
+    .filter(cell => cell.length > 0)
+  return cells.length > 0 && cells.every(cell => /^:?-+:?$/.test(cell))
 }
 
 function columnAlignment(delimiterCell: string): ColumnAlignment {
-  const left = delimiterCell.startsWith(':');
-  const right = delimiterCell.endsWith(':');
+  const left = delimiterCell.startsWith(':')
+  const right = delimiterCell.endsWith(':')
   if (left && right) {
-    return 'center';
+    return 'center'
   }
-  return right ? 'right' : left ? 'left' : null;
+  return right ? 'right' : left ? 'left' : null
 }
 
 /**
@@ -137,20 +140,20 @@ function columnAlignment(delimiterCell: string): ColumnAlignment {
 const ALIGNMENT_FORMAT: Record<
   NonNullable<ColumnAlignment>,
   ElementFormatType
-> = {left: 'start', center: 'center', right: 'end'};
+> = { left: 'start', center: 'center', right: 'end' }
 
 function delimiterFor(format: ElementFormatType): string {
   switch (format) {
     case 'left':
     case 'start':
-      return ':---';
+      return ':---'
     case 'center':
-      return ':---:';
+      return ':---:'
     case 'right':
     case 'end':
-      return '---:';
+      return '---:'
     default:
-      return '---';
+      return '---'
   }
 }
 
@@ -161,17 +164,17 @@ function $createCell(
 ): TableCellNode {
   const cell = $createTableCellNode(
     isHeader ? TableCellHeaderStates.ROW : TableCellHeaderStates.NO_STATUS,
-  );
+  )
   // The pipe was only escaped to keep it out of the row split.
   $convertFromMarkdownString(
     source.replace(/\\\|/g, '|'),
     CELL_TRANSFORMERS,
     cell,
-  );
+  )
   if (alignment != null) {
-    cell.setFormat(ALIGNMENT_FORMAT[alignment]);
+    cell.setFormat(ALIGNMENT_FORMAT[alignment])
   }
-  return cell;
+  return cell
 }
 
 function cellMarkdown(cell: TableCellNode): string {
@@ -179,7 +182,7 @@ function cellMarkdown(cell: TableCellNode): string {
   // spaces, and literal pipes are escaped to stay inside the cell.
   return oneLine($convertToMarkdownKeepingTimeLinear(CELL_TRANSFORMERS, cell))
     .replace(/\|/g, '\\|')
-    .trim();
+    .trim()
 }
 
 /**
@@ -190,19 +193,19 @@ function cellMarkdown(cell: TableCellNode): string {
  */
 function oneLine(markdown: string): string {
   if (!markdown.includes('\n')) {
-    return markdown;
+    return markdown
   }
-  const lines = markdown.split('\n');
-  let joined = lines[0].trimEnd();
+  const lines = markdown.split('\n')
+  let joined = lines[0].trimEnd()
   for (let index = 1; index < lines.length; index++) {
-    const isLast = index === lines.length - 1;
-    const line = isLast ? lines[index].trimStart() : lines[index].trim();
+    const isLast = index === lines.length - 1
+    const line = isLast ? lines[index].trimStart() : lines[index].trim()
     // A blank line is part of the run of spaces around it.
     if (line !== '' || isLast) {
-      joined += ` ${line}`;
+      joined += ` ${line}`
     }
   }
-  return joined;
+  return joined
 }
 
 /**
@@ -215,45 +218,45 @@ export const TABLE: MultilineElementTransformer = {
   dependencies: [TableNode, TableRowNode, TableCellNode],
   export(node) {
     if (!$isTableNode(node)) {
-      return null;
+      return null
     }
-    const rows = node.getChildren().filter($isTableRowNode);
-    const lines: Array<string> = [];
+    const rows = node.getChildren().filter($isTableRowNode)
+    const lines: Array<string> = []
     rows.forEach((row, rowIndex) => {
-      const cells = row.getChildren().filter($isTableCellNode);
-      lines.push(`| ${cells.map(cellMarkdown).join(' | ')} |`);
+      const cells = row.getChildren().filter($isTableCellNode)
+      lines.push(`| ${cells.map(cellMarkdown).join(' | ')} |`)
       if (rowIndex === 0) {
         lines.push(
           `| ${cells.map(cell => delimiterFor(cell.getFormatType())).join(' | ')} |`,
-        );
+        )
       }
-    });
-    return lines.join('\n');
+    })
+    return lines.join('\n')
   },
   regExpStart: /\|/,
-  handleImportAfterStartMatch({lines, rootNode, startLineIndex}) {
+  handleImportAfterStartMatch({ lines, rootNode, startLineIndex }) {
     if (!isDelimiterRow(lines[startLineIndex + 1])) {
-      return null;
+      return null
     }
     const alignments = splitTableRow(lines[startLineIndex + 1]).map(
       columnAlignment,
-    );
+    )
     const rowSources: Array<Array<string>> = [
       splitTableRow(lines[startLineIndex]),
-    ];
-    let lastLineIndex = startLineIndex + 1;
+    ]
+    let lastLineIndex = startLineIndex + 1
     while (
-      lastLineIndex + 1 < lines.length &&
-      lines[lastLineIndex + 1].includes('|') &&
-      lines[lastLineIndex + 1].trim() !== ''
+      lastLineIndex + 1 < lines.length
+      && lines[lastLineIndex + 1].includes('|')
+      && lines[lastLineIndex + 1].trim() !== ''
     ) {
-      lastLineIndex++;
-      rowSources.push(splitTableRow(lines[lastLineIndex]));
+      lastLineIndex++
+      rowSources.push(splitTableRow(lines[lastLineIndex]))
     }
-    const columnCount = Math.max(...rowSources.map(cells => cells.length));
-    const table = $createTableNode();
+    const columnCount = Math.max(...rowSources.map(cells => cells.length))
+    const table = $createTableNode()
     rowSources.forEach((cells, rowIndex) => {
-      const row = $createTableRowNode();
+      const row = $createTableRowNode()
       for (let column = 0; column < columnCount; column++) {
         row.append(
           $createCell(
@@ -261,19 +264,19 @@ export const TABLE: MultilineElementTransformer = {
             rowIndex === 0,
             alignments[column] ?? null,
           ),
-        );
+        )
       }
-      table.append(row);
-    });
-    rootNode.append(table);
-    return [true, lastLineIndex];
+      table.append(row)
+    })
+    rootNode.append(table)
+    return [true, lastLineIndex]
   },
   replace() {
     // Every table imports through handleImportAfterStartMatch.
-    return false;
+    return false
   },
   type: 'multiline-element',
-};
+}
 
 /**
  * The editor's default Markdown transformers: thematic breaks, list export
@@ -306,4 +309,4 @@ export const DEFAULT_TRANSFORMERS: ReadonlyArray<Transformer> = [
   ),
   HARD_LINE_BREAK,
   TABLE,
-];
+]

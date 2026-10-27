@@ -1,15 +1,16 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
 
-import {describe, expect, it} from 'vitest';
-import {parseMarkdownAst} from '@astryx-vue/core/Markdown/parser';
-import {markdownToEditorStateJSON} from './markdownSerializers.js';
+import { parseMarkdownAst } from '@astryx-vue/core/Markdown/parser'
+import { describe, expect, it } from 'vitest'
+import { markdownToEditorStateJSON } from './markdownSerializers.js'
 
-type Json = {type: string; text?: string; value?: string; children?: Json[]};
+interface Json { type: string, text?: string, value?: string, children?: Json[] }
 
-const textOf = (node: Json): string =>
-  node.type === 'linebreak'
+function textOf(node: Json): string {
+  return node.type === 'linebreak'
     ? '\n'
-    : (node.text ?? (node.children ?? []).map(textOf).join(''));
+    : (node.text ?? (node.children ?? []).map(textOf).join(''))
+}
 
 describe('a fence left open at the end imports its code, as core reads it', () => {
   it.each([
@@ -20,16 +21,16 @@ describe('a fence left open at the end imports its code, as core reads it', () =
   ])('imports %j with code %j', (markdown, value) => {
     const root = (
       JSON.parse(markdownToEditorStateJSON(markdown)) as {
-        root: {children: Json[]};
+        root: { children: Json[] }
       }
-    ).root.children;
+    ).root.children
     expect(
       root.filter(node => node.type === 'code').map(node => textOf(node)),
-    ).toEqual([value]);
+    ).toEqual([value])
     expect(
       (parseMarkdownAst(markdown).children as unknown as Json[])
         .filter(node => node.type === 'code')
         .map(node => node.value),
-    ).toEqual([value]);
-  });
-});
+    ).toEqual([value])
+  })
+})

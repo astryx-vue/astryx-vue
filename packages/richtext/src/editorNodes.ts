@@ -11,14 +11,14 @@
  * SYNC: When the default node set changes, both consumers pick it up here.
  */
 
-import {ListNode, ListItemNode} from '@lexical/list';
-import {HeadingNode, QuoteNode} from '@lexical/rich-text';
-import {LinkNode, AutoLinkNode} from '@lexical/link';
-import {CodeNode, CodeHighlightNode} from '@lexical/code';
-import {TableNode, TableRowNode, TableCellNode} from '@lexical/table';
-import {HorizontalRuleNode} from '@lexical/extension';
-import type {Klass, LexicalNode} from 'lexical';
-import {RichTextExtensionNode} from './markdownExtensionNode.js';
+import type { Klass, LexicalNode } from 'lexical'
+import { CodeHighlightNode, CodeNode } from '@lexical/code'
+import { HorizontalRuleNode } from '@lexical/extension'
+import { AutoLinkNode, LinkNode } from '@lexical/link'
+import { ListItemNode, ListNode } from '@lexical/list'
+import { HeadingNode, QuoteNode } from '@lexical/rich-text'
+import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
+import { RichTextExtensionNode } from './markdownExtensionNode.js'
 
 /**
  * The default OSS node set registered with the editor: headings, quotes,
@@ -41,4 +41,4 @@ export const DEFAULT_NODES: ReadonlyArray<Klass<LexicalNode>> = [
   // Markdown plugin nodes (spec:AST-064): registered everywhere so stored
   // state that holds them always loads.
   RichTextExtensionNode,
-];
+]

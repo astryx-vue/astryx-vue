@@ -22,19 +22,20 @@
  *   A one-line backtick block (```` ```code``` ````) stays Lexical's.
  */
 
-import {$createCodeNode, $isCodeNode} from '@lexical/code';
+import type { ElementTransformer, MultilineElementTransformer } from '@lexical/markdown'
+import type { ElementNode } from 'lexical'
+import { $createCodeNode, $isCodeNode } from '@lexical/code'
 import {
   CODE,
-  type ElementTransformer,
-  type MultilineElementTransformer,
-} from '@lexical/markdown';
+
+} from '@lexical/markdown'
 import {
   $createTextNode,
   $getState,
   $setState,
   createState,
-  type ElementNode,
-} from 'lexical';
+
+} from 'lexical'
 
 /**
  * The tilde fence a code block was opened with; null for a backtick block.
@@ -43,7 +44,7 @@ import {
 const tildeFence = createState('astryxTildeFence', {
   parse: (value: unknown): string | null =>
     typeof value === 'string' && /^~{3,}$/.test(value) ? value : null,
-});
+})
 
 /**
  * The backtick fence a code block was opened with, when longer than three:
@@ -53,24 +54,24 @@ const tildeFence = createState('astryxTildeFence', {
 const backtickFence = createState('astryxBacktickFence', {
   parse: (value: unknown): string | null =>
     typeof value === 'string' && /^`{4,}$/.test(value) ? value : null,
-});
+})
 
 /** The info string a code block's opening fence carried, as written. */
 const fenceInfo = createState('astryxFenceInfo', {
   parse: (value: unknown): string | null =>
     typeof value === 'string' && value !== '' ? value : null,
-});
+})
 
 /** The language core Markdown reads from an info string, or null. */
 function languageOf(info: string): string | null {
-  return /^\S+/.exec(info.trimStart())?.[0] ?? null;
+  return /^\S+/.exec(info.trimStart())?.[0] ?? null
 }
 
 /** An opening fence line: its indentation, its fence, and the info string. */
 interface Opening {
-  readonly indentation: number;
-  readonly fence: string;
-  readonly info: string;
+  readonly indentation: number
+  readonly fence: string
+  readonly info: string
 }
 
 /**
@@ -78,15 +79,18 @@ interface Opening {
  * fence (CommonMark 0.31 §4.5), as core Markdown reads it.
  */
 function readOpening(line: string): Opening | null {
-  const match = /^( {0,3})(`{3,}|~{3,})(.*)$/.exec(line);
+  // 一行里只有「缩进 + 围栏 + info」，`.*` 前面是可选的定长缩进和连续的同一种围栏符，
+  // 输入是单行、行内长度有上限；这条规则照 CommonMark 的围栏写法。
+  // eslint-disable-next-line regexp/no-super-linear-backtracking
+  const match = /^( {0,3})(`{3,}|~{3,})(.*)$/.exec(line)
   if (match == null) {
-    return null;
+    return null
   }
-  const [, indentation, fence, info] = match;
+  const [, indentation, fence, info] = match
   // A backtick fence's info string holds no backtick.
   return fence.startsWith('`') && info.includes('`')
     ? null
-    : {indentation: indentation.length, fence, info};
+    : { indentation: indentation.length, fence, info }
 }
 
 /** The longest run of three or more of `character` in `text`, or 0. */
@@ -96,7 +100,7 @@ function longestFenceRun(text: string, character: '`' | '~'): number {
     ...(text.match(character === '`' ? /`{3,}/g : /~{3,}/g) ?? []).map(
       run => run.length,
     ),
-  );
+  )
 }
 
 /**
@@ -109,26 +113,26 @@ function $importFencedCode(
   startLineIndex: number,
   opening: Opening,
 ): number {
-  const {indentation, fence, info} = opening;
+  const { indentation, fence, info } = opening
   const closing = new RegExp(
     `^ {0,3}${fence[0] === '`' ? '`' : '~'}{${fence.length},}[ \\t]*$`,
-  );
+  )
   // Each code line loses as much indentation as the opening fence has.
-  const fenceIndentation = new RegExp(`^ {0,${indentation}}`);
-  let end = startLineIndex + 1;
+  const fenceIndentation = new RegExp(`^ {0,${indentation}}`)
+  let end = startLineIndex + 1
   while (end < lines.length && !closing.test(lines[end])) {
-    end++;
+    end++
   }
   // A fence left open runs to the end of the document, whose final line
   // ending starts no line of code (CommonMark 0.31 §4.5), as core reads it.
-  const codeEnd =
-    end === lines.length && end > startLineIndex + 1 && lines[end - 1] === ''
+  const codeEnd
+    = end === lines.length && end > startLineIndex + 1 && lines[end - 1] === ''
       ? end - 1
-      : end;
+      : end
   // The code is the lines between the fences, exactly: Lexical's own
   // transformer trims a space from the first line and drops blank first and
   // last lines, adjustments meant for its own reading of the opening line.
-  const block = $createCodeNode(languageOf(info) ?? undefined);
+  const block = $createCodeNode(languageOf(info) ?? undefined)
   block.append(
     $createTextNode(
       lines
@@ -136,54 +140,55 @@ function $importFencedCode(
         .map(line => line.replace(fenceIndentation, ''))
         .join('\n'),
     ),
-  );
-  rootNode.append(block);
+  )
+  rootNode.append(block)
   if (fence.startsWith('~')) {
-    $setState(block, tildeFence, fence);
-  } else if (fence.length > 3) {
-    $setState(block, backtickFence, fence);
+    $setState(block, tildeFence, fence)
   }
-  $setState(block, fenceInfo, info.trimEnd());
-  return Math.min(end, lines.length - 1);
+  else if (fence.length > 3) {
+    $setState(block, backtickFence, fence)
+  }
+  $setState(block, fenceInfo, info.trimEnd())
+  return Math.min(end, lines.length - 1)
 }
 
 /** Writes a code block that keeps its fence or info string; null otherwise. */
-const exportFencedCode: ElementTransformer['export'] = node => {
+const exportFencedCode: ElementTransformer['export'] = (node) => {
   if (!$isCodeNode(node)) {
-    return null;
+    return null
   }
-  const tilde = $getState(node, tildeFence);
-  const backticks = $getState(node, backtickFence);
-  const info = $getState(node, fenceInfo);
+  const tilde = $getState(node, tildeFence)
+  const backticks = $getState(node, backtickFence)
+  const info = $getState(node, fenceInfo)
   if (tilde == null && backticks == null && info == null) {
-    return null;
+    return null
   }
-  const text = node.getTextContent();
-  const language = node.getLanguage() ?? '';
-  let written = info ?? '';
+  const text = node.getTextContent()
+  const language = node.getLanguage() ?? ''
+  let written = info ?? ''
   if ((languageOf(written) ?? '') !== language) {
     // The language changed: it leads, before the rest of the info string.
-    const previous = languageOf(written);
-    const rest =
-      previous == null ? '' : written.trimStart().slice(previous.length).trim();
-    written = rest === '' ? language : `${language} ${rest}`;
+    const previous = languageOf(written)
+    const rest
+      = previous == null ? '' : written.trimStart().slice(previous.length).trim()
+    written = rest === '' ? language : `${language} ${rest}`
   }
   // A fence outlasts any run of its character in the code.
-  const fence =
-    tilde != null
+  const fence
+    = tilde != null
       ? '~'.repeat(Math.max(tilde.length, longestFenceRun(text, '~') + 1))
       : '`'.repeat(
           Math.max((backticks ?? '```').length, longestFenceRun(text, '`') + 1),
-        );
-  return `${fence}${written}${text === '' ? '' : `\n${text}`}\n${fence}`;
-};
+        )
+  return `${fence}${written}${text === '' ? '' : `\n${text}`}\n${fence}`
+}
 
 export const BACKTICK_CODE: MultilineElementTransformer = {
   ...CODE,
-  handleImportAfterStartMatch: args => {
-    const opening = readOpening(args.lines[args.startLineIndex]);
+  handleImportAfterStartMatch: (args) => {
+    const opening = readOpening(args.lines[args.startLineIndex])
     if (opening == null) {
-      return CODE.handleImportAfterStartMatch?.(args) ?? null;
+      return CODE.handleImportAfterStartMatch?.(args) ?? null
     }
     return [
       true,
@@ -193,24 +198,25 @@ export const BACKTICK_CODE: MultilineElementTransformer = {
         args.startLineIndex,
         opening,
       ),
-    ];
+    ]
   },
   export: (node, exportChildren) =>
-    exportFencedCode(node, exportChildren) ??
-    CODE.export?.(node, exportChildren) ??
-    null,
-};
+    exportFencedCode(node, exportChildren)
+    ?? CODE.export?.(node, exportChildren)
+    ?? null,
+}
 
 export const TILDE_CODE: MultilineElementTransformer = {
   ...CODE,
+  // eslint-disable-next-line regexp/no-super-linear-backtracking -- 单行、定长缩进，见 readOpening。
   regExpStart: /^( {0,3}~{3,})(.*)$/,
-  regExpEnd: {optional: true, regExp: /^ {0,3}~{3,}[ \t]*$/},
-  handleImportAfterStartMatch: ({lines, rootNode, startLineIndex}) => {
-    const opening = readOpening(lines[startLineIndex]);
+  regExpEnd: { optional: true, regExp: /^ {0,3}~{3,}[ \t]*$/ },
+  handleImportAfterStartMatch: ({ lines, rootNode, startLineIndex }) => {
+    const opening = readOpening(lines[startLineIndex])
     return opening == null
       ? null
-      : [true, $importFencedCode(rootNode, lines, startLineIndex, opening)];
+      : [true, $importFencedCode(rootNode, lines, startLineIndex, opening)]
   },
   export: (node, exportChildren) =>
     exportFencedCode(node, exportChildren) ?? null,
-};
+}

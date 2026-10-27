@@ -3,25 +3,27 @@
 // markdownSourceCanonical.ts，分块看 markdownSourceChunks.ts。
 
 import type { Transformer } from '@lexical/markdown'
-import { $getRoot, $getState, type LexicalNode } from 'lexical'
-import { THEMATIC_BREAK_LINE, SETEXT_DASHES } from './markdownSourceChunks.js'
+import type { LexicalNode } from 'lexical'
+import { $getRoot, $getState } from 'lexical'
 import { $canonicalMarkdown, $regeneratedMarkdown } from './markdownSourceCanonical.js'
-import { ENDS_WITH_BLANK_LINE, documentState, groupState } from './markdownSourceRecords.js'
+import { SETEXT_DASHES, THEMATIC_BREAK_LINE } from './markdownSourceChunks.js'
+import { documentState, ENDS_WITH_BLANK_LINE, groupState } from './markdownSourceRecords.js'
 import { withLineEnding } from './markdownSourceText.js'
+
 interface ExportPiece {
-  readonly text: string;
+  readonly text: string
   /** Recorded bytes after the piece, when they belong to this document. */
-  readonly trailing: string | null;
+  readonly trailing: string | null
   /** Whether the piece is the group's recorded source, unchanged. */
-  readonly isAsWritten: boolean;
+  readonly isAsWritten: boolean
   /** The piece's group, and the group that followed it in the source. */
-  readonly group: string | null;
-  readonly next: string | null;
+  readonly group: string | null
+  readonly next: string | null
 }
 
 /** Whether `text` is one thematic break line, as written. */
 function isRuleLine(text: string): boolean {
-  return !text.includes('\n') && THEMATIC_BREAK_LINE.test(text);
+  return !text.includes('\n') && THEMATIC_BREAK_LINE.test(text)
 }
 
 /**
@@ -43,21 +45,21 @@ function isRuleLine(text: string): boolean {
 function keepsRecordedTrailing(piece: ExportPiece, next: ExportPiece): boolean {
   // The last block's recorded trailing is empty: it separates nothing.
   if (piece.trailing == null || !piece.trailing.includes('\n')) {
-    return false;
+    return false
   }
   if (ENDS_WITH_BLANK_LINE.test(piece.trailing)) {
-    return true;
+    return true
   }
   if (piece.isAsWritten && isRuleLine(piece.text)) {
-    return true;
+    return true
   }
   if (piece.next == null || piece.next !== next.group || !next.isAsWritten) {
-    return false;
+    return false
   }
   return (
-    piece.isAsWritten ||
-    (isRuleLine(next.text) && !SETEXT_DASHES.test(next.text))
-  );
+    piece.isAsWritten
+    || (isRuleLine(next.text) && !SETEXT_DASHES.test(next.text))
+  )
 }
 
 /**
@@ -68,38 +70,38 @@ function keepsRecordedTrailing(piece: ExportPiece, next: ExportPiece): boolean {
 export function $exportMarkdownKeepingSource(
   transformers: ReadonlyArray<Transformer>,
 ): string {
-  const transformerList = transformers as Array<Transformer>;
-  const root = $getRoot();
-  const document = $getState(root, documentState);
-  const lineEnding = document?.lineEnding ?? '\n';
-  const children = root.getChildren();
-  const pieces: Array<ExportPiece> = [];
-  let index = 0;
+  const transformerList = transformers as Array<Transformer>
+  const root = $getRoot()
+  const document = $getState(root, documentState)
+  const lineEnding = document?.lineEnding ?? '\n'
+  const children = root.getChildren()
+  const pieces: Array<ExportPiece> = []
+  let index = 0
   while (index < children.length) {
-    const first = children[index];
-    const record = $getState(first, groupState);
-    const group: Array<LexicalNode> = [first];
-    index++;
+    const first = children[index]
+    const record = $getState(first, groupState)
+    const group: Array<LexicalNode> = [first]
+    index++
     if (record?.content != null) {
       while (
-        index < children.length &&
-        $getState(children[index], groupState)?.group === record.group &&
-        $getState(children[index], groupState)?.content == null
+        index < children.length
+        && $getState(children[index], groupState)?.group === record.group
+        && $getState(children[index], groupState)?.content == null
       ) {
-        group.push(children[index]);
-        index++;
+        group.push(children[index])
+        index++
       }
     }
-    const canonical = $canonicalMarkdown(group, transformerList);
+    const canonical = $canonicalMarkdown(group, transformerList)
     // A group imported into another document keeps its content but takes this
     // document's line ending and separators.
-    const isOwn =
-      document != null &&
-      record?.group.startsWith(`${document.importId}:`) === true;
+    const isOwn
+      = document != null
+        && record?.group.startsWith(`${document.importId}:`) === true
     if (
-      record?.content != null &&
-      group.length === record.size &&
-      canonical.hash === record.canonicalHash
+      record?.content != null
+      && group.length === record.size
+      && canonical.hash === record.canonicalHash
     ) {
       pieces.push({
         text: isOwn
@@ -109,14 +111,14 @@ export function $exportMarkdownKeepingSource(
         isAsWritten: isOwn,
         group: record.group,
         next: record.next ?? null,
-      });
-      continue;
+      })
+      continue
     }
     const regenerated = $regeneratedMarkdown(
       group,
       canonical.markdown,
       transformerList,
-    );
+    )
     pieces.push({
       text: withLineEnding(
         regenerated,
@@ -126,26 +128,26 @@ export function $exportMarkdownKeepingSource(
       isAsWritten: false,
       group: record?.group ?? null,
       next: isOwn ? (record?.next ?? null) : null,
-    });
+    })
   }
-  const separator = lineEnding + lineEnding;
-  let output =
-    (document?.byteOrderMark === true ? '\uFEFF' : '') +
-    (document?.leading ?? '');
+  const separator = lineEnding + lineEnding
+  let output
+    = (document?.byteOrderMark === true ? '\uFEFF' : '')
+      + (document?.leading ?? '')
   pieces.forEach((piece, position) => {
-    output += piece.text;
+    output += piece.text
     if (position < pieces.length - 1) {
       output += keepsRecordedTrailing(piece, pieces[position + 1])
         ? (piece.trailing ?? '')
-        : separator;
+        : separator
     }
-  });
-  return output + (document?.trailing ?? '');
+  })
+  return output + (document?.trailing ?? '')
 }
 
+export { absentToken } from './markdownSourceCanonical.js'
 export type { MarkdownChunk } from './markdownSourceChunks.js'
 export { splitMarkdownChunks } from './markdownSourceChunks.js'
-export { absentToken } from './markdownSourceCanonical.js'
 export {
   $joinSoftLineBreaks,
   $nestFollowingLists,

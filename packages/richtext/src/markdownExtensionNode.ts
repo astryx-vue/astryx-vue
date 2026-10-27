@@ -17,50 +17,40 @@
  *   register how an editor draws plugin nodes.
  */
 
+import type { MarkdownPluginData } from '@astryx-vue/core/Markdown/plugins'
+import type { DOMConversion, DOMConversionMap, DOMConversionOutput, DOMExportOutput, EditorConfig, LexicalEditor, LexicalNode, NodeKey, NodeSelection, RangeSelection, SerializedLexicalNode, Spread, TextFormatType, TextNode } from 'lexical'
 import {
   $isNodeSelection,
   $isTextNode,
   DecoratorNode,
+
   TEXT_TYPE_TO_FORMAT,
-  type DOMConversionMap,
-  type DOMConversionOutput,
-  type DOMExportOutput,
-  type EditorConfig,
-  type LexicalEditor,
-  type LexicalNode,
-  type NodeKey,
-  type NodeSelection,
-  type RangeSelection,
-  type TextNode,
-  type SerializedLexicalNode,
-  type Spread,
-  type TextFormatType,
-} from 'lexical';
-import type {MarkdownPluginData} from '@astryx-vue/core/Markdown/plugins';
+
+} from 'lexical'
 
 /** What one plugin node is: the parsed node's identity, data, and source. */
 export interface RichTextExtensionNodeFacts {
-  readonly plugin: string;
-  readonly apiVersion: number;
-  readonly name: string;
-  readonly display: 'inline' | 'block';
-  readonly data: MarkdownPluginData;
-  readonly source: string;
+  readonly plugin: string
+  readonly apiVersion: number
+  readonly name: string
+  readonly display: 'inline' | 'block'
+  readonly data: MarkdownPluginData
+  readonly source: string
 }
 
 export type SerializedRichTextExtensionNode = Spread<
   RichTextExtensionNodeFacts & {
     /** The text formats the node sits inside, as a text node's format bits. */
-    readonly format: number;
+    readonly format: number
   },
   SerializedLexicalNode
->;
+>
 
 /** Reads stored facts defensively: a missing field becomes an empty value. */
 export function factsFrom(
   value: Record<string, unknown>,
 ): RichTextExtensionNodeFacts {
-  const {plugin, apiVersion, name, display, data, source} = value;
+  const { plugin, apiVersion, name, display, data, source } = value
   return {
     plugin: typeof plugin === 'string' ? plugin : '',
     apiVersion: typeof apiVersion === 'number' ? apiVersion : 0,
@@ -68,7 +58,7 @@ export function factsFrom(
     display: display === 'block' ? 'block' : 'inline',
     data: (data ?? null) as MarkdownPluginData,
     source: typeof source === 'string' ? source : '',
-  };
+  }
 }
 
 /**
@@ -81,21 +71,21 @@ export type RichTextExtensionNodeDecorator = (
   facts: RichTextExtensionNodeFacts,
   format: number,
   nodeKey: NodeKey,
-) => unknown;
+) => unknown
 
-const decorators = new WeakMap<LexicalEditor, RichTextExtensionNodeDecorator>();
+const decorators = new WeakMap<LexicalEditor, RichTextExtensionNodeDecorator>()
 
 /** Sets how `editor` draws plugin nodes; returns a function that unsets it. */
 export function setRichTextExtensionNodeDecorator(
   editor: LexicalEditor,
   decorator: RichTextExtensionNodeDecorator,
 ): () => void {
-  decorators.set(editor, decorator);
+  decorators.set(editor, decorator)
   return () => {
     if (decorators.get(editor) === decorator) {
-      decorators.delete(editor);
+      decorators.delete(editor)
     }
-  };
+  }
 }
 
 /**
@@ -104,161 +94,165 @@ export function setRichTextExtensionNodeDecorator(
  * and pasting it into any RichText editor brings back the same node with the
  * same source and marks.
  */
-const FACTS_ATTRIBUTE = 'data-markdown-extension';
+const FACTS_ATTRIBUTE = 'data-markdown-extension'
 
 function factsAttribute(node: RichTextExtensionNode): string {
-  return JSON.stringify({...node.__facts, format: node.__format});
+  return JSON.stringify({ ...node.__facts, format: node.__format })
 }
 
 function convertExtensionElement(element: HTMLElement): DOMConversionOutput {
-  let node: RichTextExtensionNode | null = null;
+  let node: RichTextExtensionNode | null = null
   try {
     const parsed: unknown = JSON.parse(
       element.getAttribute(FACTS_ATTRIBUTE) ?? '',
-    );
+    )
     if (parsed != null && typeof parsed === 'object') {
-      const value = parsed as Record<string, unknown>;
+      const value = parsed as Record<string, unknown>
       node = $createRichTextExtensionNode(
         factsFrom(value),
         typeof value.format === 'number' ? value.format : 0,
-      );
+      )
     }
-  } catch {
-    node = null;
+  }
+  catch {
+    node = null
   }
   return {
     node,
     // The element's content is the node's rendering, not more document.
     forChild: () => null,
-  };
+  }
 }
 
-const importExtensionElement = (element: HTMLElement) =>
-  element.hasAttribute(FACTS_ATTRIBUTE)
-    ? {conversion: convertExtensionElement, priority: 4 as const}
-    : null;
+function importExtensionElement(
+  element: HTMLElement,
+): DOMConversion<HTMLElement> | null {
+  return element.hasAttribute(FACTS_ATTRIBUTE)
+    ? { conversion: convertExtensionElement, priority: 4 as const }
+    : null
+}
 
 export class RichTextExtensionNode extends DecoratorNode<unknown> {
-  __facts: RichTextExtensionNodeFacts;
+  __facts: RichTextExtensionNodeFacts
   /**
    * The text formats the node sits inside, as a text node's format bits. Only
    * inline nodes carry any.
    */
-  __format: number;
+  __format: number
 
   static getType(): string {
-    return 'astryx-markdown-extension';
+    return 'astryx-markdown-extension'
   }
 
   static clone(node: RichTextExtensionNode): RichTextExtensionNode {
-    return new RichTextExtensionNode(node.__facts, node.__format, node.__key);
+    return new RichTextExtensionNode(node.__facts, node.__format, node.__key)
   }
 
   static importJSON(
     serialized: SerializedLexicalNode & Record<string, unknown>,
   ): RichTextExtensionNode {
     // Stored state is read defensively, so a damaged node still loads.
-    const {format} = serialized;
+    const { format } = serialized
     return $createRichTextExtensionNode(
       factsFrom(serialized),
       typeof format === 'number' ? format : 0,
-    ).updateFromJSON(serialized);
+    ).updateFromJSON(serialized)
   }
 
   static importDOM(): DOMConversionMap {
-    return {span: importExtensionElement, div: importExtensionElement};
+    return { span: importExtensionElement, div: importExtensionElement }
   }
 
   constructor(facts: RichTextExtensionNodeFacts, format = 0, key?: NodeKey) {
-    super(key);
-    this.__facts = facts;
-    this.__format = facts.display === 'inline' ? format : 0;
+    super(key)
+    this.__facts = facts
+    this.__format = facts.display === 'inline' ? format : 0
   }
 
   exportJSON(): SerializedRichTextExtensionNode {
-    const latest = this.getLatest();
+    const latest = this.getLatest()
     return {
       ...super.exportJSON(),
       ...latest.__facts,
       format: latest.__format,
-    };
+    }
   }
 
   /** The node's identity, data, and source. */
   getFacts(): RichTextExtensionNodeFacts {
-    return this.getLatest().__facts;
+    return this.getLatest().__facts
   }
 
   /** The exact Markdown the node was read from. */
   getSource(): string {
-    return this.getLatest().__facts.source;
+    return this.getLatest().__facts.source
   }
 
   /** The text formats the node sits inside, as a text node's format bits. */
   getFormat(): number {
-    return this.getLatest().__format;
+    return this.getLatest().__format
   }
 
   hasFormat(type: TextFormatType): boolean {
-    return (this.getFormat() & TEXT_TYPE_TO_FORMAT[type]) !== 0;
+    return (this.getFormat() & TEXT_TYPE_TO_FORMAT[type]) !== 0
   }
 
   /** Puts the node inside, or takes it out of, one text format. */
   setFormatFlag(type: TextFormatType, isOn: boolean): this {
-    const writable = this.getWritable();
-    const flag = TEXT_TYPE_TO_FORMAT[type];
+    const writable = this.getWritable()
+    const flag = TEXT_TYPE_TO_FORMAT[type]
     writable.__format = isOn
       ? writable.__format | flag
-      : writable.__format & ~flag;
-    return writable;
+      : writable.__format & ~flag
+    return writable
   }
 
   createDOM(config: EditorConfig): HTMLElement {
     const element = document.createElement(
       this.__facts.display === 'inline' ? 'span' : 'div',
-    );
-    element.setAttribute(FACTS_ATTRIBUTE, factsAttribute(this));
+    )
+    element.setAttribute(FACTS_ATTRIBUTE, factsAttribute(this))
     if (this.__facts.display === 'block') {
       // A block node is spaced and measured as Markdown spaces its block.
-      const className: unknown = config.theme.markdownExtensionBlock;
+      const className: unknown = config.theme.markdownExtensionBlock
       if (typeof className === 'string' && className !== '') {
-        element.className = className;
+        element.className = className
       }
     }
-    return element;
+    return element
   }
 
   exportDOM(): DOMExportOutput {
     const element = document.createElement(
       this.__facts.display === 'inline' ? 'span' : 'div',
-    );
-    element.setAttribute(FACTS_ATTRIBUTE, factsAttribute(this));
-    element.textContent = this.__facts.source;
-    return {element};
+    )
+    element.setAttribute(FACTS_ATTRIBUTE, factsAttribute(this))
+    element.textContent = this.__facts.source
+    return { element }
   }
 
   updateDOM(prevNode: RichTextExtensionNode, dom: HTMLElement): false {
     // A mark toggled on the node changes what its element carries.
     if (prevNode.__format !== this.__format) {
-      dom.setAttribute(FACTS_ATTRIBUTE, factsAttribute(this));
+      dom.setAttribute(FACTS_ATTRIBUTE, factsAttribute(this))
     }
-    return false;
+    return false
   }
 
   isInline(): boolean {
-    return this.__facts.display === 'inline';
+    return this.__facts.display === 'inline'
   }
 
   /** The node's text is its source, so plain-text copies and search see it. */
   getTextContent(): string {
-    return this.getLatest().__facts.source;
+    return this.getLatest().__facts.source
   }
 
   decorate(editor: LexicalEditor): unknown {
     return (
-      decorators.get(editor)?.(this.__facts, this.__format, this.__key) ??
-      this.__facts.source
-    );
+      decorators.get(editor)?.(this.__facts, this.__format, this.__key)
+      ?? this.__facts.source
+    )
   }
 }
 
@@ -266,13 +260,13 @@ export function $createRichTextExtensionNode(
   facts: RichTextExtensionNodeFacts,
   format = 0,
 ): RichTextExtensionNode {
-  return new RichTextExtensionNode(facts, format);
+  return new RichTextExtensionNode(facts, format)
 }
 
 export function $isRichTextExtensionNode(
   node: LexicalNode | null | undefined,
 ): node is RichTextExtensionNode {
-  return node instanceof RichTextExtensionNode;
+  return node instanceof RichTextExtensionNode
 }
 
 /**
@@ -281,27 +275,27 @@ export function $isRichTextExtensionNode(
  * Null when the range selects no text, only nodes.
  */
 export function $firstSelectedText(selection: RangeSelection): TextNode | null {
-  const texts = selection.getNodes().filter($isTextNode);
-  const isBackward = selection.isBackward();
-  const start = isBackward ? selection.focus : selection.anchor;
-  const end = isBackward ? selection.anchor : selection.focus;
-  let first: TextNode | undefined = texts[0];
-  let startOffset = start.type === 'element' ? 0 : start.offset;
+  const texts = selection.getNodes().filter($isTextNode)
+  const isBackward = selection.isBackward()
+  const start = isBackward ? selection.focus : selection.anchor
+  const end = isBackward ? selection.anchor : selection.focus
+  let first: TextNode | undefined = texts[0]
+  let startOffset = start.type === 'element' ? 0 : start.offset
   if (
-    first != null &&
-    start.type === 'text' &&
-    startOffset === first.getTextContentSize()
+    first != null
+    && start.type === 'text'
+    && startOffset === first.getTextContentSize()
   ) {
-    first = texts[1];
-    startOffset = 0;
+    first = texts[1]
+    startOffset = 0
   }
-  const last = texts[texts.length - 1];
+  const last = texts[texts.length - 1]
   if (first == null || last == null) {
-    return null;
+    return null
   }
-  const endOffset =
-    end.type === 'text' ? end.offset : last.getTextContentSize();
-  return first.is(last) && startOffset === endOffset ? null : first;
+  const endOffset
+    = end.type === 'text' ? end.offset : last.getTextContentSize()
+  return first.is(last) && startOffset === endOffset ? null : first
 }
 
 /**
@@ -314,19 +308,19 @@ export function $selectedExtensionNodesOnly(
   selection: RangeSelection | NodeSelection,
 ): RichTextExtensionNode[] | null {
   if ($isNodeSelection(selection)) {
-    const selected = selection.getNodes();
-    return selected.length > 0 &&
-      selected.every(node => $isRichTextExtensionNode(node) && node.isInline())
+    const selected = selection.getNodes()
+    return selected.length > 0
+      && selected.every(node => $isRichTextExtensionNode(node) && node.isInline())
       ? (selected as RichTextExtensionNode[])
-      : null;
+      : null
   }
   const nodes = selection
     .getNodes()
     .filter(
       (node): node is RichTextExtensionNode =>
         $isRichTextExtensionNode(node) && node.isInline(),
-    );
+    )
   return nodes.length > 0 && $firstSelectedText(selection) == null
     ? nodes
-    : null;
+    : null
 }

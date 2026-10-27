@@ -16,15 +16,15 @@
  *   structure when it is read again (spec:AST-062 FR3).
  */
 
+import type { ElementTransformer } from '@lexical/markdown'
+import type { ElementNode } from 'lexical'
 import {
   $isListItemNode,
   $isListNode,
   ListItemNode,
   ListNode,
-} from '@lexical/list';
-import type {ElementTransformer} from '@lexical/markdown';
-import type {ElementNode} from 'lexical';
-import {$getTaskState} from './markdownTaskList.js';
+} from '@lexical/list'
+import { $getTaskState } from './markdownTaskList.js'
 
 /** The bullet Lexical recorded for a list on import (`-`, `*`, or `+`). */
 function bulletOf(list: ListNode): string {
@@ -32,10 +32,10 @@ function bulletOf(list: ListNode): string {
   // the node, see markdownSource.ts); Lexical validates the fields of the
   // node it serializes, so read the recorded state from the node itself.
   const serialized = list.getLatest().exportJSON() as {
-    $?: {mdListMarker?: unknown};
-  };
-  const marker = serialized.$?.mdListMarker;
-  return marker === '*' || marker === '+' ? marker : '-';
+    $?: { mdListMarker?: unknown }
+  }
+  const marker = serialized.$?.mdListMarker
+  return marker === '*' || marker === '+' ? marker : '-'
 }
 
 function exportList(
@@ -43,35 +43,35 @@ function exportList(
   exportChildren: (node: ElementNode) => string,
   indent: string,
 ): string {
-  const lines: Array<string> = [];
-  const type = list.getListType();
-  let index = 0;
+  const lines: Array<string> = []
+  const type = list.getListType()
+  let index = 0
   // Where a nested list goes: the content column of the item before it.
-  let childIndent = `${indent}  `;
+  let childIndent = `${indent}  `
   for (const item of list.getChildren()) {
     if (!$isListItemNode(item)) {
-      continue;
+      continue
     }
-    const first = item.getFirstChild();
+    const first = item.getFirstChild()
     if (item.getChildrenSize() === 1 && $isListNode(first)) {
-      lines.push(exportList(first, exportChildren, childIndent));
-      continue;
+      lines.push(exportList(first, exportChildren, childIndent))
+      continue
     }
-    const marker =
-      type === 'number' ? `${list.getStart() + index}. ` : `${bulletOf(list)} `;
+    const marker
+      = type === 'number' ? `${list.getStart() + index}. ` : `${bulletOf(list)} `
     // A task item, in any bulleted list, writes its box.
-    const task = type === 'number' ? null : $getTaskState(item);
-    const checkbox = task == null ? '' : `[${task === 'checked' ? 'x' : ' '}] `;
-    let text = exportChildren(item);
+    const task = type === 'number' ? null : $getTaskState(item)
+    const checkbox = task == null ? '' : `[${task === 'checked' ? 'x' : ' '}] `
+    let text = exportChildren(item)
     if (type !== 'number') {
       // As Lexical does: keep `1. ` at the start of a bullet item literal.
-      text = text.replace(/^(\s{0,3}\d+)(\.\s)/, '$1\\$2');
+      text = text.replace(/^(\s{0,3}\d+)(\.\s)/, '$1\\$2')
     }
-    lines.push(indent + marker + checkbox + text);
-    childIndent = indent + ' '.repeat(marker.length);
-    index++;
+    lines.push(indent + marker + checkbox + text)
+    childIndent = indent + ' '.repeat(marker.length)
+    index++
   }
-  return lines.join('\n');
+  return lines.join('\n')
 }
 
 export const LIST_EXPORT: ElementTransformer = {
@@ -79,7 +79,9 @@ export const LIST_EXPORT: ElementTransformer = {
   export: (node, exportChildren) =>
     $isListNode(node) ? exportList(node, exportChildren, '') : null,
   // Export only: Lexical's list transformers import.
+  // 这条转换器只负责导出，导入交给 Lexical 自己的：正则永不匹配。
+  // eslint-disable-next-line regexp/no-empty-lookarounds-assertion
   regExp: /(?!)/,
   replace: () => false,
   type: 'element',
-};
+}

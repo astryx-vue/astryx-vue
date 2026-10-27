@@ -16,45 +16,47 @@
  *   nested list continues its sequence, as Lexical's does.
  */
 
-import {$isListItemNode, $isListNode, type ListNode} from '@lexical/list';
-import {ORDERED_LIST, type ElementTransformer} from '@lexical/markdown';
+import type { ListNode } from '@lexical/list'
+import type { ElementTransformer } from '@lexical/markdown'
+import { $isListItemNode, $isListNode } from '@lexical/list'
+import { ORDERED_LIST } from '@lexical/markdown'
 
 /**
  * The list `item` was indented into: the last item under `list`, followed
  * down through the wrapper items Lexical nests lists in.
  */
 function nestedListOfLastItem(list: ListNode): ListNode {
-  let current = list;
+  let current = list
   for (;;) {
-    const last = current.getLastChild();
-    const nested = $isListItemNode(last) ? last.getFirstChild() : null;
+    const last = current.getLastChild()
+    const nested = $isListItemNode(last) ? last.getFirstChild() : null
     if (
-      !$isListItemNode(last) ||
-      last.getChildrenSize() !== 1 ||
-      !$isListNode(nested)
+      !$isListItemNode(last)
+      || last.getChildrenSize() !== 1
+      || !$isListNode(nested)
     ) {
-      return current;
+      return current
     }
-    current = nested;
+    current = nested
   }
 }
 
 export const ORDERED_LIST_KEEPING_START: ElementTransformer = {
   ...ORDERED_LIST,
   replace: (parentNode, children, match, isImport) => {
-    const previous = parentNode.getPreviousSibling();
-    const result = ORDERED_LIST.replace(parentNode, children, match, isImport);
+    const previous = parentNode.getPreviousSibling()
+    const result = ORDERED_LIST.replace(parentNode, children, match, isImport)
     if ($isListNode(previous) && previous.getListType() === 'number') {
-      const nested = nestedListOfLastItem(previous);
+      const nested = nestedListOfLastItem(previous)
       // The new item opened this nested list: start it at its own number.
       if (
-        nested !== previous &&
-        nested.getListType() === 'number' &&
-        nested.getChildrenSize() === 1
+        nested !== previous
+        && nested.getListType() === 'number'
+        && nested.getChildrenSize() === 1
       ) {
-        nested.setStart(Number(match[2]));
+        nested.setStart(Number(match[2]))
       }
     }
-    return result;
+    return result
   },
-};
+}

@@ -20,23 +20,25 @@
  *   cells (markdownTable.ts).
  */
 
-import {$isAutoLinkNode, $isLinkNode} from '@lexical/link';
-import {LINK, type TextMatchTransformer} from '@lexical/markdown';
+import type { TextMatchTransformer } from '@lexical/markdown'
+import { $isAutoLinkNode, $isLinkNode } from '@lexical/link'
+import { LINK } from '@lexical/markdown'
 
 /** Whether every `)` in `url` closes an earlier `(` and every `(` closes. */
 function isBalanced(url: string): boolean {
-  let depth = 0;
+  let depth = 0
   for (const character of url) {
     if (character === '(') {
-      depth++;
-    } else if (character === ')') {
-      depth--;
+      depth++
+    }
+    else if (character === ')') {
+      depth--
       if (depth < 0) {
-        return false;
+        return false
       }
     }
   }
-  return depth === 0;
+  return depth === 0
 }
 
 /**
@@ -45,9 +47,9 @@ function isBalanced(url: string): boolean {
  */
 function escapeCharacterReferences(value: string): string {
   return value.replace(
-    /&(?=#\d+;|#[Xx][\dA-Fa-f]+;|[A-Za-z][\dA-Za-z]*;)/g,
+    /&(?=#\d+;|#X[\dA-F]+;|[A-Z][\dA-Z]*;)/gi,
     '&#38;',
-  );
+  )
 }
 
 /** `url` as a Markdown destination that reads back as `url`. */
@@ -55,12 +57,12 @@ export function markdownDestination(url: string): string {
   if (/\s/.test(url) || url.startsWith('<')) {
     // Only an angle-bracket destination may hold a space or open with `<`
     // (CommonMark §6.3).
-    return `<${url.replace(/[\\<>]/g, '\\$&')}>`;
+    return `<${url.replace(/[\\<>]/g, '\\$&')}>`
   }
   // A backslash before punctuation would read back as an escape, so every
   // backslash is written escaped; so is every parenthesis that does not
   // balance.
-  return url.replace(isBalanced(url) ? /\\/g : /[\\()]/g, '\\$&');
+  return url.replace(isBalanced(url) ? /\\/g : /[\\()]/g, '\\$&')
 }
 
 export const LINK_KEEPING_DESTINATIONS: TextMatchTransformer = {
@@ -69,18 +71,18 @@ export const LINK_KEEPING_DESTINATIONS: TextMatchTransformer = {
   ...LINK,
   export: (node, exportChildren, exportFormat) => {
     if (!$isLinkNode(node) || $isAutoLinkNode(node)) {
-      return null;
+      return null
     }
-    const url = node.getURL();
-    const destination = markdownDestination(url);
+    const url = node.getURL()
+    const destination = markdownDestination(url)
     if (destination === url) {
-      return LINK.export?.(node, exportChildren, exportFormat) ?? null;
+      return LINK.export?.(node, exportChildren, exportFormat) ?? null
     }
-    const text = exportChildren(node);
-    const written = escapeCharacterReferences(destination);
-    const title = node.getTitle();
+    const text = exportChildren(node)
+    const written = escapeCharacterReferences(destination)
+    const title = node.getTitle()
     return title == null || title === ''
       ? `[${text}](${written})`
-      : `[${text}](${written} "${escapeCharacterReferences(title).replace(/([\\"])/g, '\\$1')}")`;
+      : `[${text}](${written} "${escapeCharacterReferences(title).replace(/([\\"])/g, '\\$1')}")`
   },
-};
+}

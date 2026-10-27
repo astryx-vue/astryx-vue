@@ -1,36 +1,42 @@
 import type { ElementNode } from 'lexical'
-import { $findMatchingParent } from '@lexical/utils'
-import { $isTableCellNode } from '@lexical/table'
+import type { StandIn } from './markdownStandIns.js'
 import { parseInlineAst } from '@astryx-vue/core/Markdown/parser'
-import { absentCharacters, type StandIn } from './markdownStandIns.js'
+import { $isTableCellNode } from '@lexical/table'
+import { $findMatchingParent } from '@lexical/utils'
 import { codeRangesByKind } from './markdownCodeRanges.js'
 import { angleDestinationEnd, pairedDelimiters } from './markdownRefusedLinks.js'
+import { absentCharacters } from './markdownStandIns.js'
 
 /** The code spans a stand-in pass replaced: each stand-in's code. */
 export interface ProtectedCodeSpans {
-  readonly markdown: string;
-  readonly spans: ReadonlyMap<string, string>;
+  readonly markdown: string
+  readonly spans: ReadonlyMap<string, string>
   /** Stand-ins for backticks in link destinations and titles. */
-  readonly standIns: ReadonlyMap<string, StandIn>;
+  readonly standIns: ReadonlyMap<string, StandIn>
 }
 
 /** Whether `text` holds a `|` with no backslash before it. */
 function hasUnescapedPipe(text: string): boolean {
   for (let index = text.indexOf('|'); index !== -1;) {
-    let backslashes = 0;
+    let backslashes = 0
     while (text[index - 1 - backslashes] === '\\') {
-      backslashes++;
+      backslashes++
     }
     if (backslashes % 2 === 0) {
-      return true;
+      return true
     }
-    index = text.indexOf('|', index + 1);
+    index = text.indexOf('|', index + 1)
   }
-  return false;
+  return false
 }
 
-/** A GFM table's delimiter row: cells of hyphens with optional colons. */
-const TABLE_DELIMITER_ROW = /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/;
+/**
+ * A GFM table's delimiter row: cells of hyphens with optional colons. The
+ * group is the repeated cell pattern, which the rule needs to repeat; only
+ * whether the row matches matters, not what it captured.
+ */
+// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/no-unused-capturing-group -- 单行、空格与竖线的定长串，见上。
+const TABLE_DELIMITER_ROW = /^\s*(?:\|\s*)?:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/
 
 /**
  * The ranges of `markdown` a code span must not start in: inline link
@@ -42,11 +48,11 @@ function linkTargetRanges(
   markdown: string,
   code: ReadonlyArray<readonly [number, number]>,
 ): Array<readonly [number, number]> {
-  const ranges: Array<readonly [number, number]> = [];
+  const ranges: Array<readonly [number, number]> = []
   if (!markdown.includes('](')) {
-    return ranges;
+    return ranges
   }
-  const pair = pairedDelimiters(markdown, code);
+  const pair = pairedDelimiters(markdown, code)
   for (
     let index = markdown.indexOf('](');
     index !== -1;
@@ -54,41 +60,41 @@ function linkTargetRanges(
   ) {
     // An angle-bracket destination ends where core ends it: a parenthesis
     // inside the brackets pairs with nothing.
-    const angleClose = angleDestinationEnd(markdown, index + 1);
-    const close = typeof angleClose === 'number' ? angleClose : pair[index + 1];
+    const angleClose = angleDestinationEnd(markdown, index + 1)
+    const close = typeof angleClose === 'number' ? angleClose : pair[index + 1]
     if (pair[index] !== -1 && close !== -1) {
-      ranges.push([index + 1, close + 1]);
+      ranges.push([index + 1, close + 1])
     }
   }
-  return ranges;
+  return ranges
 }
 
 /** The ranges of `markdown` that are GFM table rows, header row included. */
 function tableRowRanges(markdown: string): Array<readonly [number, number]> {
-  const ranges: Array<readonly [number, number]> = [];
-  const lines = markdown.split('\n');
-  const starts: number[] = [];
-  let offset = 0;
+  const ranges: Array<readonly [number, number]> = []
+  const lines = markdown.split('\n')
+  const starts: number[] = []
+  let offset = 0
   for (const line of lines) {
-    starts.push(offset);
-    offset += line.length + 1;
+    starts.push(offset)
+    offset += line.length + 1
   }
   for (let index = 1; index < lines.length; index++) {
-    const line = lines[index];
+    const line = lines[index]
     if (
-      line.includes('|') &&
-      TABLE_DELIMITER_ROW.test(line) &&
-      lines[index - 1].includes('|')
+      line.includes('|')
+      && TABLE_DELIMITER_ROW.test(line)
+      && lines[index - 1].includes('|')
     ) {
-      let end = index + 1;
+      let end = index + 1
       while (end < lines.length && lines[end].trim() !== '') {
-        end++;
+        end++
       }
-      ranges.push([starts[index - 1], starts[end - 1] + lines[end - 1].length]);
-      index = end;
+      ranges.push([starts[index - 1], starts[end - 1] + lines[end - 1].length])
+      index = end
     }
   }
-  return ranges;
+  return ranges
 }
 
 /**
@@ -105,46 +111,46 @@ function tableRowRanges(markdown: string): Array<readonly [number, number]> {
  * `|` is left alone, so the row still splits its cells there, as GFM does.
  */
 export function protectCodeSpans(markdown: string): ProtectedCodeSpans {
-  const spans = new Map<string, string>();
-  const standIns = new Map<string, StandIn>();
+  const spans = new Map<string, string>()
+  const standIns = new Map<string, StandIn>()
   if (!markdown.includes('`')) {
-    return {markdown, spans, standIns};
+    return { markdown, spans, standIns }
   }
-  const code = codeRangesByKind(markdown);
-  const targets = linkTargetRanges(markdown, [...code.fenced, ...code.spans]);
-  const rows = tableRowRanges(markdown);
+  const code = codeRangesByKind(markdown)
+  const targets = linkTargetRanges(markdown, [...code.fenced, ...code.spans])
+  const rows = tableRowRanges(markdown)
   // Whether a position lies in one of ranges sorted by start, for positions
   // asked in order: one pass over the ranges in all.
   const cursor = (ranges: ReadonlyArray<readonly [number, number]>) => {
-    let next = 0;
-    let coveredTo = -1;
+    let next = 0
+    let coveredTo = -1
     return (position: number): boolean => {
       while (next < ranges.length && ranges[next][0] <= position) {
-        coveredTo = Math.max(coveredTo, ranges[next][1]);
-        next++;
+        coveredTo = Math.max(coveredTo, ranges[next][1])
+        next++
       }
-      return position < coveredTo;
-    };
-  };
-  const inTarget = cursor(targets);
-  const inRow = cursor(rows);
+      return position < coveredTo
+    }
+  }
+  const inTarget = cursor(targets)
+  const inRow = cursor(rows)
   // Replacements in source order: code spans, and backticks in targets.
   const replacements: Array<{
-    readonly start: number;
-    readonly end: number;
-    readonly code: string | null;
-  }> = [];
+    readonly start: number
+    readonly end: number
+    readonly code: string | null
+  }> = []
   for (const [start, end] of code.spans) {
-    const source = markdown.slice(start, end);
-    const isInRow = inRow(start);
+    const source = markdown.slice(start, end)
+    const isInRow = inRow(start)
     if (inTarget(start) || (isInRow && hasUnescapedPipe(source))) {
-      continue;
+      continue
     }
-    const [only, ...rest] = parseInlineAst(source);
+    const [only, ...rest] = parseInlineAst(source)
     if (rest.length > 0 || only?.type !== 'inlineCode') {
-      continue;
+      continue
     }
-    replacements.push({start, end, code: only.value});
+    replacements.push({ start, end, code: only.value })
   }
   for (const [from, to] of targets) {
     for (
@@ -152,30 +158,31 @@ export function protectCodeSpans(markdown: string): ProtectedCodeSpans {
       index !== -1 && index < to;
       index = markdown.indexOf('`', index + 1)
     ) {
-      replacements.push({start: index, end: index + 1, code: null});
+      replacements.push({ start: index, end: index + 1, code: null })
     }
   }
-  replacements.sort((a, b) => a.start - b.start);
-  const available = absentCharacters(markdown);
-  let output = '';
-  let copied = 0;
-  for (const {start, end, code: content} of replacements) {
+  replacements.sort((a, b) => a.start - b.start)
+  const available = absentCharacters(markdown)
+  let output = ''
+  let copied = 0
+  for (const { start, end, code: content } of replacements) {
     if (start < copied) {
-      continue;
+      continue
     }
-    const next = available.next();
+    const next = available.next()
     if (next.done === true) {
-      break;
+      break
     }
     if (content == null) {
-      standIns.set(next.value, {kind: 'literal', text: '`'});
-    } else {
-      spans.set(next.value, content);
+      standIns.set(next.value, { kind: 'literal', text: '`' })
     }
-    output += markdown.slice(copied, start) + next.value;
-    copied = end;
+    else {
+      spans.set(next.value, content)
+    }
+    output += markdown.slice(copied, start) + next.value
+    copied = end
   }
-  return {markdown: output + markdown.slice(copied), spans, standIns};
+  return { markdown: output + markdown.slice(copied), spans, standIns }
 }
 
 /**
@@ -188,33 +195,33 @@ export function $restoreCodeSpans(
   spans: ReadonlyMap<string, string>,
 ): void {
   if (spans.size === 0) {
-    return;
+    return
   }
   for (const text of node.getAllTextNodes()) {
-    const content = text.getTextContent();
-    const offsets: number[] = [];
-    let offset = 0;
+    const content = text.getTextContent()
+    const offsets: number[] = []
+    let offset = 0
     for (const character of content) {
       if (spans.has(character)) {
-        offsets.push(offset, offset + character.length);
+        offsets.push(offset, offset + character.length)
       }
-      offset += character.length;
+      offset += character.length
     }
     if (offsets.length === 0) {
-      continue;
+      continue
     }
     const pieces = text.splitText(
       ...offsets.filter(point => point > 0 && point < content.length),
-    );
+    )
     for (const piece of pieces) {
-      const code = spans.get(piece.getTextContent());
+      const code = spans.get(piece.getTextContent())
       if (code == null) {
-        continue;
+        continue
       }
-      const inCell = $findMatchingParent(piece, $isTableCellNode) != null;
-      piece.setTextContent(inCell ? code.replace(/\\\|/g, '|') : code);
+      const inCell = $findMatchingParent(piece, $isTableCellNode) != null
+      piece.setTextContent(inCell ? code.replace(/\\\|/g, '|') : code)
       if (!piece.hasFormat('code')) {
-        piece.toggleFormat('code');
+        piece.toggleFormat('code')
       }
     }
   }

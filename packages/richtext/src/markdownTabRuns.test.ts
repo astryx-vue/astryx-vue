@@ -1,37 +1,37 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
 
-import {describe, expect, it} from 'vitest';
-import {createHeadlessEditor} from '@lexical/headless';
-import {$getRoot, $isTextNode} from 'lexical';
-import {DEFAULT_NODES} from './editorNodes.js';
-import {DEFAULT_TRANSFORMERS} from './markdownTable.js';
+import { createHeadlessEditor } from '@lexical/headless'
+import { $getRoot, $isTextNode } from 'lexical'
+import { describe, expect, it } from 'vitest'
+import { DEFAULT_NODES } from './editorNodes.js'
 import {
   $exportMarkdownKeepingSource,
   importMarkdownKeepingSource,
-} from './markdownSource.js';
+} from './markdownSource.js'
+import { DEFAULT_TRANSFORMERS } from './markdownTable.js'
 
 /** Imports `markdown`, appends `x` to its last text, and exports it. */
 function editAndExport(markdown: string): string {
   const editor = createHeadlessEditor({
     nodes: [...DEFAULT_NODES],
     onError(error) {
-      throw error;
+      throw error
     },
-  });
-  importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS]);
+  })
+  importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS])
   editor.update(
     () => {
-      const last = $getRoot().getLastDescendant();
+      const last = $getRoot().getLastDescendant()
       if (!$isTextNode(last)) {
-        throw new Error('No text to edit');
+        throw new Error('No text to edit')
       }
-      last.setTextContent(`${last.getTextContent()}x`);
+      last.setTextContent(`${last.getTextContent()}x`)
     },
-    {discrete: true},
-  );
+    { discrete: true },
+  )
   return editor
     .getEditorState()
-    .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]));
+    .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]))
 }
 
 /**
@@ -40,23 +40,23 @@ function editAndExport(markdown: string): string {
  * but not the time the editor spends computing.
  */
 function leastCpuTime(run: () => void): number {
-  run();
-  let least = Number.POSITIVE_INFINITY;
+  run()
+  let least = Number.POSITIVE_INFINITY
   for (let round = 0; round < 3; round++) {
-    const started = process.cpuUsage();
-    run();
-    const used = process.cpuUsage(started);
-    least = Math.min(least, (used.user + used.system) / 1000);
+    const started = process.cpuUsage()
+    run()
+    const used = process.cpuUsage(started)
+    least = Math.min(least, (used.user + used.system) / 1000)
   }
-  return least;
+  return least
 }
 
-const TABS = '\t'.repeat(8_000);
+const TABS = '\t'.repeat(8_000)
 
 describe('a run of tabs, one editor node per tab', () => {
   it('keeps every tab through an edit', () => {
-    expect(editAndExport(`a${TABS}b\n`)).toBe(`a${TABS}bx\n`);
-  });
+    expect(editAndExport(`a${TABS}b\n`)).toBe(`a${TABS}bx\n`)
+  })
 
   it.each([
     ['plain text', `a${TABS}b\n`],
@@ -69,7 +69,7 @@ describe('a run of tabs, one editor node per tab', () => {
     (_, markdown) => {
       // Alone each takes about 0.1 s; reading a node's children once per child
       // took over a minute.
-      expect(leastCpuTime(() => editAndExport(markdown))).toBeLessThan(1000);
+      expect(leastCpuTime(() => editAndExport(markdown))).toBeLessThan(1000)
     },
-  );
-});
+  )
+})

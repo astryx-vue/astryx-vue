@@ -29,25 +29,25 @@
  * `about:blank` by {@link sanitizeUrl}, so a malicious paste can't produce a
  * clickable code-execution link.
  */
-const SAFE_PROTOCOLS = new Set(['http:', 'https:', 'mailto:', 'tel:']);
+const SAFE_PROTOCOLS = new Set(['http:', 'https:', 'mailto:', 'tel:'])
 
 /** Matches a scheme prefix like `https:` / `mailto:` at the start of a string. */
-const HAS_SCHEME = /^[a-z][a-z0-9+.-]*:/i;
+const HAS_SCHEME = /^[a-z][a-z0-9+.-]*:/i
 
 /**
  * Matches a bare URL for AutoLink. Adapted from the Lexical playground.
  * Intentionally permissive on path/query so real-world URLs linkify.
  */
-export const URL_MATCHER =
-  /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/;
+export const URL_MATCHER
+  = /((https?:\/\/(www\.)?)|(www\.))[-\w@:%.+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-\w()@:%+.~#?&/=]*)/
 
 /** Matches a bare email address for AutoLink (rendered as a `mailto:` link). */
-export const EMAIL_MATCHER =
-  /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+export const EMAIL_MATCHER
+  = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-z\-0-9]+\.)+[a-z]{2,}))/i
 
 /** Prepend a default `https://` scheme to a bare host so it parses as absolute. */
 function withDefaultScheme(url: string): string {
-  return HAS_SCHEME.test(url) ? url : `https://${url}`;
+  return HAS_SCHEME.test(url) ? url : `https://${url}`
 }
 
 /**
@@ -57,18 +57,19 @@ function withDefaultScheme(url: string): string {
  * a link's href.
  */
 export function sanitizeUrl(url: string): string {
-  const trimmed = url.trim();
+  const trimmed = url.trim()
   if (trimmed === '') {
-    return 'about:blank';
+    return 'about:blank'
   }
   try {
-    const parsed = new URL(withDefaultScheme(trimmed));
+    const parsed = new URL(withDefaultScheme(trimmed))
     if (!SAFE_PROTOCOLS.has(parsed.protocol.toLowerCase())) {
-      return 'about:blank';
+      return 'about:blank'
     }
-    return parsed.href;
-  } catch {
-    return 'about:blank';
+    return parsed.href
+  }
+  catch {
+    return 'about:blank'
   }
 }
 
@@ -79,14 +80,15 @@ export function sanitizeUrl(url: string): string {
  * {@link sanitizeUrl} so the two never disagree.
  */
 export function validateUrl(url: string): boolean {
-  const trimmed = url.trim();
+  const trimmed = url.trim()
   if (trimmed === '') {
-    return false;
+    return false
   }
   try {
-    const parsed = new URL(withDefaultScheme(trimmed));
-    return SAFE_PROTOCOLS.has(parsed.protocol.toLowerCase());
-  } catch {
-    return false;
+    const parsed = new URL(withDefaultScheme(trimmed))
+    return SAFE_PROTOCOLS.has(parsed.protocol.toLowerCase())
+  }
+  catch {
+    return false
   }
 }

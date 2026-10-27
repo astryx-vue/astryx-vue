@@ -3,12 +3,12 @@
 // 所以在 Node、Worker 或者服务端渲染里都能用。
 
 export {
-  markdownToEditorStateJSON,
-  editorStateJSONToMarkdown,
-} from './markdownSerializers.js'
-export type { MarkdownSerializerOptions } from './markdownSerializers.js'
-export {
   createRichTextExtension,
   RichTextExtensionError,
 } from './markdownExtensions.js'
 export type { RichTextMarkdownExtension } from './markdownExtensions.js'
+export {
+  editorStateJSONToMarkdown,
+  markdownToEditorStateJSON,
+} from './markdownSerializers.js'
+export type { MarkdownSerializerOptions } from './markdownSerializers.js'

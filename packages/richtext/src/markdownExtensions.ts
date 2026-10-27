@@ -24,30 +24,29 @@
  * RichTextExtensionNode holding the node's source and data.
  */
 
-import type {Transformer} from '@lexical/markdown';
+import type { MarkdownExtensionNode, MarkdownPluginEntry } from '@astryx-vue/core/Markdown/plugins'
+import type { Transformer } from '@lexical/markdown'
+import type { ElementNode, LexicalNode, ParagraphNode } from 'lexical'
+import { parseMarkdownAst } from '@astryx-vue/core/Markdown/parser'
+import {
+  getMarkdownPluginCapabilities,
+
+} from '@astryx-vue/core/Markdown/plugins'
 import {
   $createParagraphNode,
   $createTextNode,
   $isLineBreakNode,
   $isParagraphNode,
+
   TextNode,
-  type ElementNode,
-  type LexicalNode,
-  type ParagraphNode,
-} from 'lexical';
-import {
-  getMarkdownPluginCapabilities,
-  type MarkdownExtensionNode,
-  type MarkdownPluginEntry,
-} from '@astryx-vue/core/Markdown/plugins';
-import {parseMarkdownAst} from '@astryx-vue/core/Markdown/parser';
+} from 'lexical'
 import {
   $createRichTextExtensionNode,
   $isRichTextExtensionNode,
   RichTextExtensionNode,
-} from './markdownExtensionNode.js';
+} from './markdownExtensionNode.js'
 
-const extensionPlugin = Symbol('RichTextMarkdownExtension.plugin');
+const extensionPlugin = Symbol('RichTextMarkdownExtension.plugin')
 
 /**
  * One Markdown plugin adopted by RichText. Opaque: create it with
@@ -56,29 +55,29 @@ const extensionPlugin = Symbol('RichTextMarkdownExtension.plugin');
  */
 export interface RichTextMarkdownExtension {
   /** The adopted plugin's name. */
-  readonly name: string;
-  readonly [extensionPlugin]: MarkdownPluginEntry;
+  readonly name: string
+  readonly [extensionPlugin]: MarkdownPluginEntry
 }
 
 /** Why RichText refused a plugin or a configuration (spec:AST-064 FR4, FR6). */
 export class RichTextExtensionError extends Error {
   /** The plugin RichText refused, or that a configuration claims twice. */
-  readonly plugin: string;
+  readonly plugin: string
   /** What RichText cannot honor: `transform`, or what was claimed twice. */
-  readonly capability: string;
+  readonly capability: string
   /** The transformer or second extension that claims the same thing. */
-  readonly claimant: string | null;
+  readonly claimant: string | null
 
   constructor(plugin: string, capability: string, claimant: string | null) {
     super(
       claimant == null
         ? `RichText cannot adopt Markdown plugin "${plugin}": RichText does not run its ${capability}.`
         : `RichText cannot use Markdown plugin "${plugin}" with ${claimant}: both claim its ${capability}.`,
-    );
-    this.name = 'RichTextExtensionError';
-    this.plugin = plugin;
-    this.capability = capability;
-    this.claimant = claimant;
+    )
+    this.name = 'RichTextExtensionError'
+    this.plugin = plugin
+    this.capability = capability
+    this.claimant = claimant
   }
 }
 
@@ -98,11 +97,11 @@ export class RichTextExtensionError extends Error {
 export function createRichTextExtension(
   plugin: MarkdownPluginEntry,
 ): RichTextMarkdownExtension {
-  const capabilities = getMarkdownPluginCapabilities(plugin);
+  const capabilities = getMarkdownPluginCapabilities(plugin)
   if (capabilities.transform) {
-    throw new RichTextExtensionError(plugin.name, 'transform', null);
+    throw new RichTextExtensionError(plugin.name, 'transform', null)
   }
-  return Object.freeze({name: plugin.name, [extensionPlugin]: plugin});
+  return Object.freeze({ name: plugin.name, [extensionPlugin]: plugin })
 }
 
 /**
@@ -114,33 +113,33 @@ export function pluginsOf(
   extensions: ReadonlyArray<RichTextMarkdownExtension>,
   transformers: ReadonlyArray<Transformer>,
 ): ReadonlyArray<MarkdownPluginEntry> {
-  const seen = new Set<string>();
+  const seen = new Set<string>()
   for (const extension of extensions) {
     if (seen.has(extension.name)) {
       throw new RichTextExtensionError(
         extension.name,
         'syntax',
         `a second extension for "${extension.name}"`,
-      );
+      )
     }
-    seen.add(extension.name);
+    seen.add(extension.name)
   }
-  const [first] = extensions;
+  const [first] = extensions
   if (first != null) {
     transformers.forEach((transformer, index) => {
       if (
-        'dependencies' in transformer &&
-        transformer.dependencies.includes(RichTextExtensionNode)
+        'dependencies' in transformer
+        && transformer.dependencies.includes(RichTextExtensionNode)
       ) {
         throw new RichTextExtensionError(
           first.name,
           'nodes',
           `transformer ${index} (${transformer.type})`,
-        );
+        )
       }
-    });
+    })
   }
-  return extensions.map(extension => extension[extensionPlugin]);
+  return extensions.map(extension => extension[extensionPlugin])
 }
 
 // ---------------------------------------------------------------------------
@@ -149,31 +148,31 @@ export function pluginsOf(
 
 /** A plugin node core recognized, and the stand-in that holds its place. */
 export interface ShieldedNode {
-  readonly node: MarkdownExtensionNode;
-  readonly apiVersion: number;
+  readonly node: MarkdownExtensionNode
+  readonly apiVersion: number
 }
 
 export interface ShieldedMarkdown {
   /** The Markdown with a stand-in in place of each recognized node. */
-  readonly markdown: string;
+  readonly markdown: string
   /** What each stand-in holds the place of. */
-  readonly standIns: ReadonlyMap<string, ShieldedNode>;
+  readonly standIns: ReadonlyMap<string, ShieldedNode>
 }
 
 const PRIVATE_USE_RANGES: ReadonlyArray<readonly [number, number]> = [
-  [0xe000, 0xf8ff],
-  [0xf0000, 0xffffd],
-  [0x100000, 0x10fffd],
-];
+  [0xE000, 0xF8FF],
+  [0xF0000, 0xFFFFD],
+  [0x100000, 0x10FFFD],
+]
 
 /** Private-use characters that do not occur in `text`, in order. */
 export function* absentCharacters(text: string): Generator<string> {
-  const present = new Set(text);
+  const present = new Set(text)
   for (const [first, last] of PRIVATE_USE_RANGES) {
     for (let codePoint = first; codePoint <= last; codePoint++) {
-      const character = String.fromCodePoint(codePoint);
+      const character = String.fromCodePoint(codePoint)
       if (!present.has(character)) {
-        yield character;
+        yield character
       }
     }
   }
@@ -188,41 +187,41 @@ function recognizedNodes(
   markdown: string,
   plugins: ReadonlyArray<MarkdownPluginEntry>,
 ): {
-  readonly adoptable: Array<MarkdownExtensionNode>;
-  readonly total: number;
+  readonly adoptable: Array<MarkdownExtensionNode>
+  readonly total: number
 } {
-  const adoptable: Array<MarkdownExtensionNode> = [];
-  let total = 0;
-  const visit = (node: unknown, isTopLevel: boolean) => {
+  const adoptable: Array<MarkdownExtensionNode> = []
+  let total = 0
+  const visit = (node: unknown, isTopLevel: boolean): void => {
     if (node == null || typeof node !== 'object') {
-      return;
+      return
     }
     const candidate = node as {
-      readonly type?: unknown;
-      readonly children?: unknown;
-    };
+      readonly type?: unknown
+      readonly children?: unknown
+    }
     if (candidate.type === 'extension') {
-      total++;
-      const extension = node as MarkdownExtensionNode;
+      total++
+      const extension = node as MarkdownExtensionNode
       if (
-        typeof extension.source === 'string' &&
-        (extension.display === 'inline' || isTopLevel)
+        typeof extension.source === 'string'
+        && (extension.display === 'inline' || isTopLevel)
       ) {
-        adoptable.push(extension);
+        adoptable.push(extension)
       }
-      return;
+      return
     }
     if (Array.isArray(candidate.children)) {
       for (const child of candidate.children) {
-        visit(child, false);
+        visit(child, false)
       }
     }
-  };
-  const root = parseMarkdownAst(markdown, {plugins: [...plugins]});
-  for (const block of root.children) {
-    visit(block, true);
   }
-  return {adoptable, total};
+  const root = parseMarkdownAst(markdown, { plugins: [...plugins] })
+  for (const block of root.children) {
+    visit(block, true)
+  }
+  return { adoptable, total }
 }
 
 /**
@@ -236,77 +235,77 @@ export function shieldExtensionSources(
   markdown: string,
   plugins: ReadonlyArray<MarkdownPluginEntry>,
 ): ShieldedMarkdown {
-  const standIns = new Map<string, ShieldedNode>();
+  const standIns = new Map<string, ShieldedNode>()
   if (plugins.length === 0) {
-    return {markdown, standIns};
+    return { markdown, standIns }
   }
-  const {adoptable, total} = recognizedNodes(markdown, plugins);
+  const { adoptable, total } = recognizedNodes(markdown, plugins)
   if (adoptable.length === 0) {
-    return {markdown, standIns};
+    return { markdown, standIns }
   }
   const versions = new Map(
     plugins.map(plugin => [plugin.name, plugin.apiVersion]),
-  );
-  const tokens = absentCharacters(markdown);
+  )
+  const tokens = absentCharacters(markdown)
   // How many recognized nodes with each source are still to be placed.
-  const remaining = new Map<string, number>();
+  const remaining = new Map<string, number>()
   for (const node of adoptable) {
-    const source = node.source ?? '';
-    remaining.set(source, (remaining.get(source) ?? 0) + 1);
+    const source = node.source ?? ''
+    remaining.set(source, (remaining.get(source) ?? 0) + 1)
   }
-  let text = markdown;
-  let shielded = 0;
-  let searchFrom = 0;
+  let text = markdown
+  let shielded = 0
+  let searchFrom = 0
   for (const node of adoptable) {
-    const source = node.source ?? '';
-    const token = tokens.next().value;
+    const source = node.source ?? ''
+    const token = tokens.next().value
     if (token == null || source === '') {
-      break;
+      break
     }
-    const first = text.indexOf(source, searchFrom);
+    const first = text.indexOf(source, searchFrom)
     // When every remaining occurrence of the source is a node core
     // recognized, the first occurrence is this node: no need to ask core.
-    const isEveryOccurrence =
-      occurrences(text, source, searchFrom) === (remaining.get(source) ?? 0);
-    remaining.set(source, (remaining.get(source) ?? 1) - 1);
+    const isEveryOccurrence
+      = occurrences(text, source, searchFrom) === (remaining.get(source) ?? 0)
+    remaining.set(source, (remaining.get(source) ?? 1) - 1)
     for (let at = first; at !== -1; at = text.indexOf(source, at + 1)) {
-      const candidate =
-        text.slice(0, at) + token + text.slice(at + source.length);
+      const candidate
+        = text.slice(0, at) + token + text.slice(at + source.length)
       // The right occurrence is the one whose replacement removes exactly
       // this node from core's parse and leaves every other node in place.
       if (
-        isEveryOccurrence ||
-        recognizedNodes(candidate, plugins).total === total - shielded - 1
+        isEveryOccurrence
+        || recognizedNodes(candidate, plugins).total === total - shielded - 1
       ) {
-        text = candidate;
-        shielded++;
-        searchFrom = at + token.length;
+        text = candidate
+        shielded++
+        searchFrom = at + token.length
         standIns.set(token, {
           node,
           apiVersion: versions.get(node.plugin) ?? 1,
-        });
-        break;
+        })
+        break
       }
     }
   }
-  return {markdown: text, standIns};
+  return { markdown: text, standIns }
 }
 
 /** How many times `source` occurs in `text` from `from`, overlaps included. */
 function occurrences(text: string, source: string, from: number): number {
-  let count = 0;
+  let count = 0
   for (
     let at = text.indexOf(source, from);
     at !== -1;
     at = text.indexOf(source, at + 1)
   ) {
-    count++;
+    count++
   }
-  return count;
+  return count
 }
 
 function $nodeFor(
-  {node, apiVersion}: ShieldedNode,
+  { node, apiVersion }: ShieldedNode,
   format = 0,
 ): RichTextExtensionNode {
   return $createRichTextExtensionNode(
@@ -319,7 +318,7 @@ function $nodeFor(
       source: node.source ?? '',
     },
     format,
-  );
+  )
 }
 
 /**
@@ -332,10 +331,10 @@ export function $restoreExtensionSources(
   standIns: ReadonlyMap<string, ShieldedNode>,
 ): void {
   if (standIns.size === 0) {
-    return;
+    return
   }
   for (const textNode of holder.getAllTextNodes()) {
-    $restoreInText(textNode, holder, standIns);
+    $restoreInText(textNode, holder, standIns)
   }
 }
 
@@ -344,46 +343,47 @@ function $restoreInText(
   holder: ElementNode,
   standIns: ReadonlyMap<string, ShieldedNode>,
 ): void {
-  const text = textNode.getTextContent();
-  const offsets = new Set<number>();
-  let offset = 0;
+  const text = textNode.getTextContent()
+  const offsets = new Set<number>()
+  let offset = 0
   for (const character of text) {
     if (standIns.has(character)) {
-      offsets.add(offset);
-      offsets.add(offset + character.length);
+      offsets.add(offset)
+      offsets.add(offset + character.length)
     }
-    offset += character.length;
+    offset += character.length
   }
-  offsets.delete(0);
-  offsets.delete(text.length);
+  offsets.delete(0)
+  offsets.delete(text.length)
   if (offsets.size === 0 && !standIns.has(text)) {
-    return;
+    return
   }
-  const pieces =
-    offsets.size === 0
+  const pieces
+    = offsets.size === 0
       ? [textNode]
-      : textNode.splitText(...[...offsets].sort((a, b) => a - b));
+      : textNode.splitText(...[...offsets].sort((a, b) => a - b))
   for (const piece of pieces) {
-    const shielded = standIns.get(piece.getTextContent());
+    const shielded = standIns.get(piece.getTextContent())
     if (shielded == null) {
-      continue;
+      continue
     }
     if (shielded.node.display === 'inline') {
       // The node keeps the text formats its stand-in had: a node inside
       // emphasis, strong, or strikethrough stays inside it.
-      piece.replace($nodeFor(shielded, piece.getFormat()));
-      continue;
+      piece.replace($nodeFor(shielded, piece.getFormat()))
+      continue
     }
-    const paragraph = piece.getParent();
+    const paragraph = piece.getParent()
     if (
-      $isParagraphNode(paragraph) &&
-      paragraph.getParent()?.is(holder) === true
+      $isParagraphNode(paragraph)
+      && paragraph.getParent()?.is(holder) === true
     ) {
-      $placeBlockNode(paragraph, piece, $nodeFor(shielded));
-    } else {
+      $placeBlockNode(paragraph, piece, $nodeFor(shielded))
+    }
+    else {
       // A block stand-in that did not land in a top-level paragraph keeps
       // the node's source as text.
-      piece.replace($createTextNode(shielded.node.source ?? ''));
+      piece.replace($createTextNode(shielded.node.source ?? ''))
     }
   }
 }
@@ -400,25 +400,25 @@ function $placeBlockNode(
   standIn: TextNode,
   block: RichTextExtensionNode,
 ): void {
-  const after = standIn.getNextSiblings();
-  const before = standIn.getPreviousSiblings();
+  const after = standIn.getNextSiblings()
+  const before = standIn.getPreviousSiblings()
   // The line breaks around the stand-in end and start the neighbouring lines.
   if ($isLineBreakNode(before[before.length - 1])) {
-    before[before.length - 1]?.remove();
+    before[before.length - 1]?.remove()
   }
   if ($isLineBreakNode(after[0])) {
-    after[0]?.remove();
-    after.shift();
+    after[0]?.remove()
+    after.shift()
   }
-  standIn.remove();
+  standIn.remove()
   if (after.length > 0) {
-    const rest = $createParagraphNode();
-    rest.append(...after);
-    paragraph.insertAfter(rest);
+    const rest = $createParagraphNode()
+    rest.append(...after)
+    paragraph.insertAfter(rest)
   }
-  paragraph.insertAfter(block);
+  paragraph.insertAfter(block)
   if (paragraph.getChildrenSize() === 0) {
-    paragraph.remove();
+    paragraph.remove()
   }
 }
 
@@ -426,7 +426,8 @@ function $placeBlockNode(
 // Export
 // ---------------------------------------------------------------------------
 
-const NEVER = /(?!)/;
+// eslint-disable-next-line regexp/no-empty-lookarounds-assertion -- 永不匹配，表示只导出不导入。
+const NEVER = /(?!)/
 
 /**
  * Exports every plugin node as its exact source (spec:AST-064 FR10). Always
@@ -455,7 +456,7 @@ export const EXTENSION_EXPORT_TRANSFORMERS: ReadonlyArray<Transformer> = [
     replace: () => {},
     type: 'text-match',
   },
-];
+]
 
 /**
  * A text view of an inline plugin node for Lexical's exporter: it reads as
@@ -467,18 +468,18 @@ export function extensionTextView(
   node: RichTextExtensionNode,
   placeholder: string,
 ): TextNode {
-  const view = Object.create(TextNode.prototype) as TextNode;
+  const view = Object.create(TextNode.prototype) as TextNode
   // Reads of the view's format go to the node itself through its key.
-  Object.assign(view, {__key: node.getKey()});
-  view.getTextContent = () => placeholder;
-  view.getParent = <T extends ElementNode>() => node.getParent<T>();
-  return view;
+  Object.assign(view, { __key: node.getKey() })
+  view.getTextContent = () => placeholder
+  view.getParent = <T extends ElementNode>() => node.getParent<T>()
+  return view
 }
 
 const withExport = new WeakMap<
   ReadonlyArray<Transformer>,
   Array<Transformer>
->();
+>()
 
 /**
  * `transformers` with the plugin node export first, the same array for the
@@ -487,10 +488,10 @@ const withExport = new WeakMap<
 export function withExtensionExport(
   transformers: ReadonlyArray<Transformer>,
 ): Array<Transformer> {
-  let combined = withExport.get(transformers);
+  let combined = withExport.get(transformers)
   if (combined == null) {
-    combined = [...EXTENSION_EXPORT_TRANSFORMERS, ...transformers];
-    withExport.set(transformers, combined);
+    combined = [...EXTENSION_EXPORT_TRANSFORMERS, ...transformers]
+    withExport.set(transformers, combined)
   }
-  return combined;
+  return combined
 }

@@ -21,16 +21,17 @@
  * runs Lexical without a DOM, so these work in Node / SSR contexts.
  */
 
-import {createHeadlessEditor} from '@lexical/headless';
-import {type Transformer} from '@lexical/markdown';
-import {DEFAULT_NODES} from './editorNodes.js';
+import type { Transformer } from '@lexical/markdown'
+import type { Klass, LexicalEditor, LexicalNode } from 'lexical'
+import type { RichTextMarkdownExtension } from './markdownExtensions.js'
+import { createHeadlessEditor } from '@lexical/headless'
+import { DEFAULT_NODES } from './editorNodes.js'
+import { pluginsOf } from './markdownExtensions.js'
 import {
   $exportMarkdownKeepingSource,
   importMarkdownKeepingSource,
-} from './markdownSource.js';
-import {DEFAULT_TRANSFORMERS} from './markdownTable.js';
-import {pluginsOf, type RichTextMarkdownExtension} from './markdownExtensions.js';
-import type {Klass, LexicalNode} from 'lexical';
+} from './markdownSource.js'
+import { DEFAULT_TRANSFORMERS } from './markdownTable.js'
 
 /** Options shared by the Markdown serializer helpers. */
 export interface MarkdownSerializerOptions {
@@ -40,29 +41,31 @@ export interface MarkdownSerializerOptions {
    * array you give `RichTextEditor`'s `transformers` prop so content
    * round-trips consistently.
    */
-  transformers?: ReadonlyArray<Transformer>;
+  transformers?: ReadonlyArray<Transformer>
   /**
    * Extra Lexical nodes to register beyond the default OSS set, mirroring the
    * editor's `nodes` prop. Required for custom node types to serialize.
    */
-  nodes?: ReadonlyArray<Klass<LexicalNode>>;
+  nodes?: ReadonlyArray<Klass<LexicalNode>>
   /**
    * Markdown plugins to recognize, each adopted with `createRichTextExtension`
    * (spec:AST-064). Their syntax becomes extension nodes holding its exact
    * source; without them, plugin syntax stays text. Pass the same extensions
    * the surfaces that show the document use.
    */
-  extensions?: ReadonlyArray<RichTextMarkdownExtension>;
+  extensions?: ReadonlyArray<RichTextMarkdownExtension>
 }
 
-function createSerializerEditor(nodes?: ReadonlyArray<Klass<LexicalNode>>) {
+function createSerializerEditor(
+  nodes?: ReadonlyArray<Klass<LexicalNode>>,
+): LexicalEditor {
   return createHeadlessEditor({
     namespace: 'astryx-editor-serializer',
     nodes: nodes ? [...DEFAULT_NODES, ...nodes] : [...DEFAULT_NODES],
     onError(error: Error) {
-      throw error;
+      throw error
     },
-  });
+  })
 }
 
 /**
@@ -80,11 +83,11 @@ export function markdownToEditorStateJSON(
   markdown: string,
   options: MarkdownSerializerOptions = {},
 ): string {
-  const {transformers = DEFAULT_TRANSFORMERS, nodes, extensions = []} = options;
-  const plugins = pluginsOf(extensions, transformers);
-  const editor = createSerializerEditor(nodes);
-  importMarkdownKeepingSource(editor, markdown, [...transformers], plugins);
-  return JSON.stringify(editor.getEditorState().toJSON());
+  const { transformers = DEFAULT_TRANSFORMERS, nodes, extensions = [] } = options
+  const plugins = pluginsOf(extensions, transformers)
+  const editor = createSerializerEditor(nodes)
+  importMarkdownKeepingSource(editor, markdown, [...transformers], plugins)
+  return JSON.stringify(editor.getEditorState().toJSON())
 }
 
 /**
@@ -101,8 +104,8 @@ export function editorStateJSONToMarkdown(
   editorStateJSON: string,
   options: MarkdownSerializerOptions = {},
 ): string {
-  const {transformers = DEFAULT_TRANSFORMERS, nodes} = options;
-  const editor = createSerializerEditor(nodes);
-  const state = editor.parseEditorState(editorStateJSON);
-  return state.read(() => $exportMarkdownKeepingSource([...transformers]));
+  const { transformers = DEFAULT_TRANSFORMERS, nodes } = options
+  const editor = createSerializerEditor(nodes)
+  const state = editor.parseEditorState(editorStateJSON)
+  return state.read(() => $exportMarkdownKeepingSource([...transformers]))
 }

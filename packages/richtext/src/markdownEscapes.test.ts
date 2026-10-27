@@ -1,62 +1,62 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
 
-import {describe, expect, it} from 'vitest';
-import {createHeadlessEditor} from '@lexical/headless';
-import {$createLinkNode} from '@lexical/link';
+import { parseMarkdownAst } from '@astryx-vue/core/Markdown/parser'
+import { createHeadlessEditor } from '@lexical/headless'
+import { $createLinkNode } from '@lexical/link'
 import {
   $createParagraphNode,
   $createTextNode,
   $getRoot,
   $isTextNode,
-} from 'lexical';
-import {parseMarkdownAst} from '@astryx-vue/core/Markdown/parser';
-import {DEFAULT_NODES} from './editorNodes.js';
-import {DEFAULT_TRANSFORMERS} from './markdownTable.js';
-import {
-  $exportMarkdownKeepingSource,
-  importMarkdownKeepingSource,
-} from './markdownSource.js';
+} from 'lexical'
+import { describe, expect, it } from 'vitest'
+import { DEFAULT_NODES } from './editorNodes.js'
 import {
   editorStateJSONToMarkdown,
   markdownToEditorStateJSON,
-} from './markdownSerializers.js';
+} from './markdownSerializers.js'
+import {
+  $exportMarkdownKeepingSource,
+  importMarkdownKeepingSource,
+} from './markdownSource.js'
+import { DEFAULT_TRANSFORMERS } from './markdownTable.js'
 
-type Json = Record<string, unknown>;
+type Json = Record<string, unknown>
 
 /** Inline content as one line: text, `code`, and <url|text> for links. */
 function coreLine(markdown: string): Array<string> {
   const flat = (node: Json): string => {
     switch (node.type) {
       case 'text':
-        return node.value as string;
+        return node.value as string
       case 'inlineCode':
-        return `\`${node.value as string}\``;
+        return `\`${node.value as string}\``
       case 'link':
-        return `<${node.url as string}|${((node.children as Array<Json>) ?? []).map(flat).join('')}>`;
+        return `<${node.url as string}|${((node.children as Array<Json>) ?? []).map(flat).join('')}>`
       default:
-        return ((node.children as Array<Json>) ?? []).map(flat).join('');
+        return ((node.children as Array<Json>) ?? []).map(flat).join('')
     }
-  };
+  }
   return (parseMarkdownAst(markdown).children as unknown as Array<Json>).map(
     flat,
-  );
+  )
 }
 
 function richTextLine(markdown: string): Array<string> {
   const flat = (node: Json): string => {
     if (node.type === 'text') {
-      const text = node.text as string;
+      const text = node.text as string
       // Format bit 16 is inline code.
-      return ((node.format as number) & 16) !== 0 ? `\`${text}\`` : text;
+      return ((node.format as number) & 16) !== 0 ? `\`${text}\`` : text
     }
     if (node.type === 'link' || node.type === 'autolink') {
-      return `<${node.url as string}|${((node.children as Array<Json>) ?? []).map(flat).join('')}>`;
+      return `<${node.url as string}|${((node.children as Array<Json>) ?? []).map(flat).join('')}>`
     }
-    return ((node.children as Array<Json>) ?? []).map(flat).join('');
-  };
-  const root = (JSON.parse(markdownToEditorStateJSON(markdown)) as {root: Json})
-    .root;
-  return (root.children as Array<Json>).map(flat);
+    return ((node.children as Array<Json>) ?? []).map(flat).join('')
+  }
+  const root = (JSON.parse(markdownToEditorStateJSON(markdown)) as { root: Json })
+    .root
+  return (root.children as Array<Json>).map(flat)
 }
 
 const ESCAPED = [
@@ -73,29 +73,29 @@ const ESCAPED = [
   '\\\\[x](https://example.com)\n',
   // Code keeps its backslashes.
   '`\\[x\\]` and \\[y\\]\n',
-];
+]
 
 describe('backslash escapes (spec:AST-061 FR7)', () => {
-  it.each(ESCAPED)('read as core reads them in %j', markdown => {
-    expect(richTextLine(markdown)).toEqual(coreLine(markdown));
-  });
+  it.each(ESCAPED)('read as core reads them in %j', (markdown) => {
+    expect(richTextLine(markdown)).toEqual(coreLine(markdown))
+  })
 
-  it.each(ESCAPED)('round-trip %j byte for byte', markdown => {
+  it.each(ESCAPED)('round-trip %j byte for byte', (markdown) => {
     expect(editorStateJSONToMarkdown(markdownToEditorStateJSON(markdown))).toBe(
       markdown,
-    );
-  });
+    )
+  })
 
   it('keep code fences as written', () => {
-    const markdown = '```\n\\[x\\](y) \\*\n```\n';
-    expect(richTextLine(markdown)).toEqual(['\\[x\\](y) \\*']);
-  });
+    const markdown = '```\n\\[x\\](y) \\*\n```\n'
+    expect(richTextLine(markdown)).toEqual(['\\[x\\](y) \\*'])
+  })
 
   it('keep a table cell pipe escaped', () => {
-    const json = markdownToEditorStateJSON('| a \\| b | c |\n| --- | --- |\n');
-    expect(JSON.stringify(JSON.parse(json))).toContain('"text":"a | b"');
-  });
-});
+    const json = markdownToEditorStateJSON('| a \\| b | c |\n| --- | --- |\n')
+    expect(JSON.stringify(JSON.parse(json))).toContain('"text":"a | b"')
+  })
+})
 
 describe('an edited block with escaped syntax (spec:AST-062 FR3)', () => {
   it.each([
@@ -108,39 +108,39 @@ describe('an edited block with escaped syntax (spec:AST-062 FR3)', () => {
       const editor = createHeadlessEditor({
         nodes: [...DEFAULT_NODES],
         onError(error) {
-          throw error;
+          throw error
         },
-      });
-      importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS]);
+      })
+      importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS])
       editor.update(
         () => {
           const target = $getRoot()
             .getAllTextNodes()
-            .find(node => node.getTextContent().includes(find));
+            .find(node => node.getTextContent().includes(find))
           if (!$isTextNode(target)) {
-            throw new Error(`No text holds ${find}`);
+            throw new Error(`No text holds ${find}`)
           }
-          target.setTextContent(target.getTextContent().replace(find, replace));
+          target.setTextContent(target.getTextContent().replace(find, replace))
         },
-        {discrete: true},
-      );
+        { discrete: true },
+      )
       const exported = editor
         .getEditorState()
-        .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]));
+        .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]))
       if (expected != null) {
-        expect(exported).toBe(expected);
+        expect(exported).toBe(expected)
       }
       // No link appears, and the text is the edited text.
       expect(richTextLine(exported)).toEqual(
         richTextLine(markdown).map(line => line.replace(find, replace)),
-      );
+      )
     },
-  );
-});
+  )
+})
 
 /** Each link's destination and text, in order. */
 function linksOf(markdown: string): Array<[string, string]> {
-  const found: Array<[string, string]> = [];
+  const found: Array<[string, string]> = []
   const visit = (node: Json) => {
     if (node.type === 'link') {
       found.push([
@@ -148,12 +148,12 @@ function linksOf(markdown: string): Array<[string, string]> {
         ((node.children as Array<Json>) ?? [])
           .map(child => child.text as string)
           .join(''),
-      ]);
+      ])
     }
-    ((node.children as Array<Json>) ?? []).forEach(visit);
-  };
-  visit((JSON.parse(markdownToEditorStateJSON(markdown)) as {root: Json}).root);
-  return found;
+    ((node.children as Array<Json>) ?? []).forEach(visit)
+  }
+  visit((JSON.parse(markdownToEditorStateJSON(markdown)) as { root: Json }).root)
+  return found
 }
 
 /** Imports `markdown`, appends `!` to its last text, and exports it. */
@@ -161,23 +161,23 @@ function editedExport(markdown: string): string {
   const editor = createHeadlessEditor({
     nodes: [...DEFAULT_NODES],
     onError(error) {
-      throw error;
+      throw error
     },
-  });
-  importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS]);
+  })
+  importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS])
   editor.update(
     () => {
-      const last = $getRoot().getAllTextNodes().at(-1);
+      const last = $getRoot().getAllTextNodes().at(-1)
       if (!$isTextNode(last)) {
-        throw new Error('No text');
+        throw new Error('No text')
       }
-      last.setTextContent(`${last.getTextContent()}!`);
+      last.setTextContent(`${last.getTextContent()}!`)
     },
-    {discrete: true},
-  );
+    { discrete: true },
+  )
   return editor
     .getEditorState()
-    .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]));
+    .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]))
 }
 
 describe('parentheses in link destinations (spec:AST-062 FR3)', () => {
@@ -190,28 +190,28 @@ describe('parentheses in link destinations (spec:AST-062 FR3)', () => {
   ] as const)(
     'reads %j as one link, round-trips it, and keeps it through an edit',
     (markdown, url) => {
-      expect(linksOf(markdown)).toEqual([[url, 'x']]);
+      expect(linksOf(markdown)).toEqual([[url, 'x']])
       expect(
         editorStateJSONToMarkdown(markdownToEditorStateJSON(markdown)),
-      ).toBe(markdown);
-      const edited = editedExport(markdown);
-      expect(linksOf(edited)).toEqual([[url, 'x']]);
-      expect(edited).toContain('text!');
+      ).toBe(markdown)
+      const edited = editedExport(markdown)
+      expect(linksOf(edited)).toEqual([[url, 'x']])
+      expect(edited).toContain('text!')
     },
-  );
+  )
 
   it('reads balanced parentheses in a destination as core does', () => {
-    const markdown = '[x](https://e.com/foo(bar)) text\n';
-    expect(richTextLine(markdown)).toEqual(coreLine(markdown));
-  });
+    const markdown = '[x](https://e.com/foo(bar)) text\n'
+    expect(richTextLine(markdown)).toEqual(coreLine(markdown))
+  })
 
   it('writes a link made in the editor so it reads back as the same link', () => {
     const editor = createHeadlessEditor({
       nodes: [...DEFAULT_NODES],
       onError(error) {
-        throw error;
+        throw error
       },
-    });
+    })
     for (const url of [
       'https://e.com/a(b',
       'https://e.com/a)b',
@@ -219,16 +219,16 @@ describe('parentheses in link destinations (spec:AST-062 FR3)', () => {
     ]) {
       editor.update(
         () => {
-          const link = $createLinkNode(url);
-          link.append($createTextNode('x'));
-          $getRoot().clear().append($createParagraphNode().append(link));
+          const link = $createLinkNode(url)
+          link.append($createTextNode('x'))
+          $getRoot().clear().append($createParagraphNode().append(link))
         },
-        {discrete: true},
-      );
+        { discrete: true },
+      )
       const exported = editor
         .getEditorState()
-        .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]));
-      expect(linksOf(exported)).toEqual([[url, 'x']]);
+        .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]))
+      expect(linksOf(exported)).toEqual([[url, 'x']])
     }
-  });
-});
+  })
+})

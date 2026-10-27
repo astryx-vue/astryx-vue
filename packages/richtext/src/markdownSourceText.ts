@@ -2,22 +2,22 @@
 
 /** Lines without the carriage return before each line feed. */
 export function withoutCarriageReturns(text: string): string {
-  return text.replace(/\r(?=\n|$)/g, '');
+  return text.replace(/\r(?=\n|$)/g, '')
 }
 
 /** The first line ending in `text`, or `fallback` when it has none. */
 export function lineEndingOf(text: string, fallback: string): string {
-  const index = text.indexOf('\n');
+  const index = text.indexOf('\n')
   if (index === -1) {
-    return fallback;
+    return fallback
   }
-  return index > 0 && text[index - 1] === '\r' ? '\r\n' : '\n';
+  return index > 0 && text[index - 1] === '\r' ? '\r\n' : '\n'
 }
 
 /** Rewrites every line ending in `text` as `lineEnding`. */
 export function withLineEnding(text: string, lineEnding: string): string {
-  const lf = text.replace(/\r\n/g, '\n');
-  return lineEnding === '\n' ? lf : lf.replace(/\n/g, lineEnding);
+  const lf = text.replace(/\r\n/g, '\n')
+  return lineEnding === '\n' ? lf : lf.replace(/\n/g, lineEnding)
 }
 
 /**
@@ -26,12 +26,12 @@ export function withLineEnding(text: string, lineEnding: string): string {
  * storing the canonical Markdown itself.
  */
 export function hashOf(text: string): string {
-  let first = 0x811c9dc5;
-  let second = 0x01000193 ^ text.length;
+  let first = 0x811C9DC5
+  let second = 0x01000193 ^ text.length
   for (let index = 0; index < text.length; index++) {
-    const code = text.charCodeAt(index);
-    first = Math.imul(first ^ code, 0x01000193) >>> 0;
-    second = Math.imul(second ^ code, 0x5bd1e995) >>> 0;
+    const code = text.charCodeAt(index)
+    first = Math.imul(first ^ code, 0x01000193) >>> 0
+    second = Math.imul(second ^ code, 0x5BD1E995) >>> 0
   }
-  return first.toString(36) + second.toString(36).padStart(7, '0');
+  return first.toString(36) + second.toString(36).padStart(7, '0')
 }

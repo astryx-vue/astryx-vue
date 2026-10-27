@@ -1,40 +1,40 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
 
-import {describe, expect, it} from 'vitest';
-import {createHeadlessEditor} from '@lexical/headless';
-import {$convertToMarkdownString} from '@lexical/markdown';
-import {$getRoot, $isTextNode} from 'lexical';
-import {$convertToMarkdownKeepingTimeLinear} from './markdownSpaceRuns.js';
-import {markdownToEditorStateJSON} from './markdownSerializers.js';
-import {DEFAULT_NODES} from './editorNodes.js';
-import {DEFAULT_TRANSFORMERS} from './markdownTable.js';
+import { createHeadlessEditor } from '@lexical/headless'
+import { $convertToMarkdownString } from '@lexical/markdown'
+import { $getRoot, $isTextNode } from 'lexical'
+import { describe, expect, it } from 'vitest'
+import { DEFAULT_NODES } from './editorNodes.js'
+import { markdownToEditorStateJSON } from './markdownSerializers.js'
 import {
   $exportMarkdownKeepingSource,
   importMarkdownKeepingSource,
-} from './markdownSource.js';
+} from './markdownSource.js'
+import { $convertToMarkdownKeepingTimeLinear } from './markdownSpaceRuns.js'
+import { DEFAULT_TRANSFORMERS } from './markdownTable.js'
 
 /** Imports `markdown`, appends `x` to its last text, and exports it. */
 function editAndExport(markdown: string): string {
   const editor = createHeadlessEditor({
     nodes: [...DEFAULT_NODES],
     onError(error) {
-      throw error;
+      throw error
     },
-  });
-  importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS]);
+  })
+  importMarkdownKeepingSource(editor, markdown, [...DEFAULT_TRANSFORMERS])
   editor.update(
     () => {
-      const last = $getRoot().getLastDescendant();
+      const last = $getRoot().getLastDescendant()
       if (!$isTextNode(last)) {
-        throw new Error('No text to edit');
+        throw new Error('No text to edit')
       }
-      last.setTextContent(`${last.getTextContent()}x`);
+      last.setTextContent(`${last.getTextContent()}x`)
     },
-    {discrete: true},
-  );
+    { discrete: true },
+  )
   return editor
     .getEditorState()
-    .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]));
+    .read(() => $exportMarkdownKeepingSource([...DEFAULT_TRANSFORMERS]))
 }
 
 /**
@@ -43,20 +43,20 @@ function editAndExport(markdown: string): string {
  * the time the editor spends computing.
  */
 function cpuTime(run: () => void): number {
-  const started = process.cpuUsage();
-  run();
-  const used = process.cpuUsage(started);
-  return (used.user + used.system) / 1000;
+  const started = process.cpuUsage()
+  run()
+  const used = process.cpuUsage(started)
+  return (used.user + used.system) / 1000
 }
 
 /** The least CPU time of five runs of `run` after a warm-up, in milliseconds. */
 function leastCpuTime(run: () => void): number {
-  run();
-  let least = Number.POSITIVE_INFINITY;
+  run()
+  let least = Number.POSITIVE_INFINITY
   for (let round = 0; round < 5; round++) {
-    least = Math.min(least, cpuTime(run));
+    least = Math.min(least, cpuTime(run))
   }
-  return least;
+  return least
 }
 
 /**
@@ -68,22 +68,22 @@ function leastCpuTimes(
   first: () => void,
   second: () => void,
 ): [number, number] {
-  let leastFirst = Number.POSITIVE_INFINITY;
-  let leastSecond = Number.POSITIVE_INFINITY;
+  let leastFirst = Number.POSITIVE_INFINITY
+  let leastSecond = Number.POSITIVE_INFINITY
   for (let round = 0; round < 10; round++) {
-    const firstTime = cpuTime(first);
-    const secondTime = cpuTime(second);
+    const firstTime = cpuTime(first)
+    const secondTime = cpuTime(second)
     if (round >= 3) {
-      leastFirst = Math.min(leastFirst, firstTime);
-      leastSecond = Math.min(leastSecond, secondTime);
+      leastFirst = Math.min(leastFirst, firstTime)
+      leastSecond = Math.min(leastSecond, secondTime)
     }
   }
-  return [leastFirst, leastSecond];
+  return [leastFirst, leastSecond]
 }
 
-const RUN = ' '.repeat(40_000);
+const RUN = ' '.repeat(40_000)
 /** A run long enough to take the stand-in path. */
-const LONG = ' '.repeat(70);
+const LONG = ' '.repeat(70)
 
 describe('runs of spaces inside text', () => {
   it.each([
@@ -94,15 +94,15 @@ describe('runs of spaces inside text', () => {
     ['bold text', '**a     b** c\n', '**a     b** cx\n'],
     ['link text', '[a     b](u) c\n', '[a     b](u) cx\n'],
     ['tabs and spaces', 'a\t\t b\n', 'a\t\t bx\n'],
-    ['no-break spaces', 'a\u00a0\u00a0b\n', 'a\u00a0\u00a0bx\n'],
+    ['no-break spaces', 'a\u00A0\u00A0b\n', 'a\u00A0\u00A0bx\n'],
     [
       'a table cell',
       '| h |\n| - |\n| a     b |\n',
       '| h |\n| --- |\n| a     bx |\n',
     ],
   ])('keeps each space through an edit of %s', (_, markdown, expected) => {
-    expect(editAndExport(markdown)).toBe(expected);
-  });
+    expect(editAndExport(markdown)).toBe(expected)
+  })
 
   it.each([
     ['plain text', `a${RUN}b\nc\n`],
@@ -112,30 +112,30 @@ describe('runs of spaces inside text', () => {
   ])(
     'imports, edits, and exports %s with a 40 KB run within 100 ms',
     (_, markdown) => {
-      expect(leastCpuTime(() => editAndExport(markdown))).toBeLessThan(100);
+      expect(leastCpuTime(() => editAndExport(markdown))).toBeLessThan(100)
     },
-  );
-});
+  )
+})
 
 /** Every link's address and title, in order. */
 function links(markdown: string): Array<[string, string | null]> {
-  const found: Array<[string, string | null]> = [];
+  const found: Array<[string, string | null]> = []
   const visit = (node: {
-    type: string;
-    url?: string;
-    title?: string | null;
-    children?: unknown[];
+    type: string
+    url?: string
+    title?: string | null
+    children?: unknown[]
   }) => {
     if (node.type === 'link') {
-      found.push([node.url ?? '', node.title ?? null]);
+      found.push([node.url ?? '', node.title ?? null])
     }
-    (node.children as Array<typeof node> | undefined)?.forEach(visit);
-  };
+    (node.children as Array<typeof node> | undefined)?.forEach(visit)
+  }
   visit(
-    (JSON.parse(markdownToEditorStateJSON(markdown)) as {root: {type: string}})
+    (JSON.parse(markdownToEditorStateJSON(markdown)) as { root: { type: string } })
       .root,
-  );
-  return found;
+  )
+  return found
 }
 
 describe('stand-ins never touch what the export writes besides text', () => {
@@ -147,58 +147,58 @@ describe('stand-ins never touch what the export writes besides text', () => {
       `| h |\n| - |\n| a${LONG}b [x](https://e.com/\uE000) |\n`,
     ],
   ])('keeps a private-use character in %s through an edit', (_, markdown) => {
-    const before = links(markdown);
-    expect(before.length).toBe(1);
-    expect(links(editAndExport(markdown))).toEqual(before);
-  });
+    const before = links(markdown)
+    expect(before.length).toBe(1)
+    expect(links(editAndExport(markdown))).toEqual(before)
+  })
 
   it('keeps every address and title exact when they hold private-use characters', () => {
-    let state = 7085;
+    let state = 7085
     const random = () => {
-      state = (state * 1103515245 + 12345) % 2147483648;
-      return state / 2147483648;
-    };
-    const privateUse = () =>
-      String.fromCodePoint(0xe000 + Math.floor(random() * 6));
-    for (let round = 0; round < 60; round++) {
-      const url = `https://e.com/${privateUse()}${privateUse()}`;
-      const title = `t${privateUse()}`;
-      const markdown = `a${' '.repeat(64 + Math.floor(random() * 8))}b [x](${url} "${title}") c${LONG}d\n`;
-      const before = links(markdown);
-      expect(before).toEqual([[url, title]]);
-      expect(links(editAndExport(markdown)), markdown).toEqual(before);
+      state = (state * 1103515245 + 12345) % 2147483648
+      return state / 2147483648
     }
-  });
-});
+    const privateUse = () =>
+      String.fromCodePoint(0xE000 + Math.floor(random() * 6))
+    for (let round = 0; round < 60; round++) {
+      const url = `https://e.com/${privateUse()}${privateUse()}`
+      const title = `t${privateUse()}`
+      const markdown = `a${' '.repeat(64 + Math.floor(random() * 8))}b [x](${url} "${title}") c${LONG}d\n`
+      const before = links(markdown)
+      expect(before).toEqual([[url, title]])
+      expect(links(editAndExport(markdown)), markdown).toEqual(before)
+    }
+  })
+})
 
 describe('ordinary text exports as directly as before', () => {
   it('exports 3,000 paragraphs with double spaces at the direct export time', () => {
     const editor = createHeadlessEditor({
       nodes: [...DEFAULT_NODES],
       onError(error) {
-        throw error;
+        throw error
       },
-    });
+    })
     importMarkdownKeepingSource(
       editor,
       Array.from(
-        {length: 3000},
+        { length: 3000 },
         (_, index) => `Word  ${index}  more  words.`,
       ).join('\n\n'),
       [...DEFAULT_TRANSFORMERS],
-    );
+    )
     editor.getEditorState().read(() => {
-      const root = $getRoot();
-      const transformers = [...DEFAULT_TRANSFORMERS];
+      const root = $getRoot()
+      const transformers = [...DEFAULT_TRANSFORMERS]
       const [direct, linear] = leastCpuTimes(
         () => $convertToMarkdownString(transformers, root),
         () => $convertToMarkdownKeepingTimeLinear(transformers, root),
-      );
+      )
       // Ordinary text costs about 1.2 to 1.3 times the direct export on this
       // path; running every text through the stand-in path costs about five
       // times. Twice the direct time, plus timer noise, tells the two apart
       // on a loaded machine.
-      expect(linear).toBeLessThan(direct * 2 + 5);
-    });
-  });
-});
+      expect(linear).toBeLessThan(direct * 2 + 5)
+    })
+  })
+})

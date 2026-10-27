@@ -4,34 +4,34 @@
  * What a stand-in replaced: a reference as written, an escaped `&`, or a
  * backslash-escaped character.
  */
-export type StandIn =
-  | {readonly kind: 'reference'; readonly source: string}
-  | {readonly kind: 'ampersand'}
-  | {readonly kind: 'escape'; readonly character: string}
-  | {readonly kind: 'backslash'}
-  | {readonly kind: 'literal'; readonly text: string};
+export type StandIn
+  = | { readonly kind: 'reference', readonly source: string }
+    | { readonly kind: 'ampersand' }
+    | { readonly kind: 'escape', readonly character: string }
+    | { readonly kind: 'backslash' }
+    | { readonly kind: 'literal', readonly text: string }
 
 export interface ProtectedMarkdown {
   /** The source with stand-ins in place of references. */
-  readonly markdown: string;
+  readonly markdown: string
   /** What each stand-in replaced. */
-  readonly standIns: ReadonlyMap<string, StandIn>;
+  readonly standIns: ReadonlyMap<string, StandIn>
 }
 
 const PRIVATE_USE_RANGES: ReadonlyArray<readonly [number, number]> = [
-  [0xe000, 0xf8ff],
-  [0xf0000, 0xffffd],
-  [0x100000, 0x10fffd],
-];
+  [0xE000, 0xF8FF],
+  [0xF0000, 0xFFFFD],
+  [0x100000, 0x10FFFD],
+]
 
 /** Private-use characters that do not occur in `text`, in order. */
 export function* absentCharacters(text: string): Generator<string> {
-  const present = new Set(text);
+  const present = new Set(text)
   for (const [first, last] of PRIVATE_USE_RANGES) {
     for (let codePoint = first; codePoint <= last; codePoint++) {
-      const character = String.fromCodePoint(codePoint);
+      const character = String.fromCodePoint(codePoint)
       if (!present.has(character)) {
-        yield character;
+        yield character
       }
     }
   }

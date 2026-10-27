@@ -11,25 +11,25 @@
  *   CommonMark. Matches core Markdown's thematic breaks (spec:AST-061 FR5).
  */
 
+import type { ElementTransformer } from '@lexical/markdown'
 import {
   $createHorizontalRuleNode,
   $isHorizontalRuleNode,
   HorizontalRuleNode,
-} from '@lexical/extension';
-import type {ElementTransformer} from '@lexical/markdown';
-import {$isParagraphNode, $isTextNode} from 'lexical';
+} from '@lexical/extension'
+import { $isParagraphNode, $isTextNode } from 'lexical'
 
 /**
  * Three or more `-`, `*`, or `_` of one kind, optionally spaced, indented at
  * most three spaces (CommonMark 0.31, thematic breaks).
  */
-const THEMATIC_BREAK_LINE = /^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$/;
+const THEMATIC_BREAK_LINE = /^ {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$/
 
 /**
  * A setext heading underline made of dashes: no spaces between them, so
  * `- - -` under a paragraph is still a thematic break (CommonMark 0.31).
  */
-const SETEXT_UNDERLINE = /^ {0,3}-+[ \t]*$/;
+const SETEXT_UNDERLINE = /^ {0,3}-+[ \t]*$/
 
 export const THEMATIC_BREAK: ElementTransformer = {
   dependencies: [HorizontalRuleNode],
@@ -40,27 +40,28 @@ export const THEMATIC_BREAK: ElementTransformer = {
     // (setext) rather than breaking. Lexical has already cut the matched text
     // out of the line; put it back and leave the line to the paragraph, which
     // keeps it as literal text.
-    const previous = parentNode.getPreviousSibling();
+    const previous = parentNode.getPreviousSibling()
     if (
-      isImport &&
-      SETEXT_UNDERLINE.test(match[0]) &&
-      $isParagraphNode(previous) &&
-      previous.getTextContentSize() > 0
+      isImport
+      && SETEXT_UNDERLINE.test(match[0])
+      && $isParagraphNode(previous)
+      && previous.getTextContentSize() > 0
     ) {
-      const [line] = children;
+      const [line] = children
       if ($isTextNode(line)) {
         // The pattern is anchored to the whole line, so its match is the line.
-        line.setTextContent(match[0]);
+        line.setTextContent(match[0])
       }
-      return false;
+      return false
     }
-    const rule = $createHorizontalRuleNode();
+    const rule = $createHorizontalRuleNode()
     if (isImport || parentNode.getNextSibling() != null) {
-      parentNode.replace(rule);
-    } else {
-      parentNode.insertBefore(rule);
+      parentNode.replace(rule)
     }
-    rule.selectNext();
+    else {
+      parentNode.insertBefore(rule)
+    }
+    rule.selectNext()
   },
   type: 'element',
-};
+}

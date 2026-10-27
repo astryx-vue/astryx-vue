@@ -12,10 +12,11 @@
  *   like a marker is escaped on export by markdownSource.ts.
  */
 
-import {QUOTE, type ElementTransformer} from '@lexical/markdown';
+import type { ElementTransformer } from '@lexical/markdown'
+import { QUOTE } from '@lexical/markdown'
 
 /** Lexical's own quote marker, which the typing shortcut keeps using. */
-const SHORTCUT_MARKER = /^>\s/;
+const SHORTCUT_MARKER = /^>\s/
 
 /**
  * A block quote marker: up to three spaces of indentation, then `>` and the
@@ -32,4 +33,4 @@ export const QUOTE_MARKERS: ElementTransformer = {
     isImport || SHORTCUT_MARKER.test(match[0])
       ? QUOTE.replace(parentNode, children, match, isImport)
       : false,
-};
+}
