@@ -1,0 +1,39 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 圆形的「i」按钮，对齐周围的文字基线。 */
+  .astryx-info-tip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    padding: var(--astryx-spacing-0-5, 2px);
+    margin: 0;
+    border-style: none;
+    background-color: transparent;
+    border-radius: var(--astryx-radius-full, 9999px);
+    cursor: pointer;
+    color: var(--astryx-color-icon-secondary, light-dark(#6a6a6a, #9e9e9e));
+    transition-property: color;
+    transition-duration: var(--astryx-duration-fast, 125ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /* 指针设备上悬停时换成更清楚的主图标色。 */
+  @media (hover: hover) {
+    .astryx-info-tip:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      color: var(--astryx-color-icon-primary, light-dark(#000000, #ffffff));
+    }
+  }
+
+  /* 禁用时指针样式和普通文字一致，不做「不可点」的暗示。 */
+  .astryx-info-tip:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  /* 键盘聚焦时的焦点环。 */
+  .astryx-info-tip:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+}
