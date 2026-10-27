@@ -1,10 +1,13 @@
 import type { MdNode } from './ast.js'
+import type { MarkdownExtensionNode, MarkdownSyntaxPluginDefinition } from './plugin-protocol/protocol.js'
 import { describe, expect, it } from 'vitest'
 import { createMarkdownPlugin } from './plugin-protocol/protocol.js'
 import { parseMarkdownAst } from './publicParser.js'
 
+type MentionNode = MarkdownExtensionNode<'mentions', 'mention', { readonly label: string }, 'inline'>
+
 /** `@name` mentions, and `{{…}}` asides that hold whatever plain source. */
-const mentions = createMarkdownPlugin({
+const mentionDefinition: MarkdownSyntaxPluginDefinition<'mentions', MentionNode> = {
   name: 'mentions',
   apiVersion: 1,
   parseKey: 'v1',
@@ -30,8 +33,10 @@ const mentions = createMarkdownPlugin({
       },
     }],
   },
-  renderers: { mention: { render: () => null, toText: () => '' } },
-})
+  renderers: { mention: { render: () => null, toText: node => `@${node.data.label}` } },
+}
+
+const mentions = createMarkdownPlugin<'mentions', MentionNode>(mentionDefinition)
 
 const asides = createMarkdownPlugin({
   name: 'asides',
