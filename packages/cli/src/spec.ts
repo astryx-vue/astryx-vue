@@ -159,6 +159,7 @@ export const COMMANDS: readonly CommandSpec[] = [
       `${BINARY} docs dark-mode --zh --dense`,
     ],
     exitCodes: USAGE_EXIT,
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: '--depth is not a positive whole number, or is passed without a topic.' }],
   },
   {
     name: 'search',
