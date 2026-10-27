@@ -147,7 +147,8 @@ function selectPayment(which: 'card' | 'apple' | 'google') {
 const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
   {
     key: 'select',
-    header: '',
+    header: 'Select',
+    headerHidden: true,
     width: pixel(64),
     renderCell: row => h(CheckboxInput, {
       label: 'Select ' + row.name,
@@ -196,7 +197,8 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
   },
   {
     key: 'actions',
-    header: '',
+    header: 'Actions',
+    headerHidden: true,
     width: pixel(64),
     align: 'end',
     renderCell: () => h(MoreMenu, {
@@ -453,9 +455,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
               <Divider variant="subtle" />
               <HStack :gap="3" :align="'center'" :justify="'between'" class="inventory-filter-row">
                 <HStack :gap="2" :align="'center'" class="inventory-filter-left">
-                  <div class="search-input">
-                    <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
-                  </div>
+                  <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" class="search-input" />
                   <OverflowList :items="FILTER_ITEMS" :gap="2">
                     <template #item="{ item }">
                       <Selector
