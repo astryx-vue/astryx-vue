@@ -103,7 +103,7 @@ const HOST_ROWS = [
 // 内联 SVG：锯齿状时间序列 + 坐标轴 + 图例，形状由固定种子的伪随机生成。
 
 /** 两张图并排、一样宽；`width` 跟着第一张图的实际宽度走，viewBox 和像素一比一。 */
-const CHART = reactive({ width: 640, height: 240, left: 52, right: 8, top: 8, bottom: 26 })
+const CHART = reactive({ width: 640, height: 280, left: 56, right: 16, top: 12, bottom: 34 })
 const chartEl = ref<SVGSVGElement | null>(null)
 let chartObserver: ResizeObserver | null = null
 onMounted(() => {
@@ -259,8 +259,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="tick in LATENCY_Y_TICKS"
                       :key="`lyt-${tick}`"
                       :x="CHART.left - 8"
-                      :y="chartY(tick, 800) + 4"
+                      :y="chartY(tick, 800)"
                       text-anchor="end"
+                      dominant-baseline="central"
                       class="chart-tick"
                     >
                       {{ tick }} ms
@@ -269,8 +270,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="(label, i) in X_LABELS"
                       :key="`lx-${label}`"
                       :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
-                      :y="CHART.height - 8"
-                      :text-anchor="i === X_LABELS.length - 1 ? 'end' : i === 0 ? 'start' : 'middle'"
+                      :y="CHART.height - CHART.bottom + 13"
+                      dominant-baseline="central"
+                      text-anchor="middle"
                       class="chart-tick"
                     >
                       {{ label }}
@@ -319,8 +321,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="tick in VOLUME_Y_TICKS"
                       :key="`vyt-${tick}`"
                       :x="CHART.left - 8"
-                      :y="chartY(tick, 14000) + 4"
+                      :y="chartY(tick, 14000)"
                       text-anchor="end"
+                      dominant-baseline="central"
                       class="chart-tick"
                     >
                       {{ tick }}
@@ -329,8 +332,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="(label, i) in X_LABELS"
                       :key="`vx-${label}`"
                       :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
-                      :y="CHART.height - 8"
-                      :text-anchor="i === X_LABELS.length - 1 ? 'end' : i === 0 ? 'start' : 'middle'"
+                      :y="CHART.height - CHART.bottom + 13"
+                      dominant-baseline="central"
+                      text-anchor="middle"
                       class="chart-tick"
                     >
                       {{ label }}
@@ -470,9 +474,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
 .rail-header {
   background-color: var(--astryx-color-background-muted);
 }
-.rail-chart { width: 100%; height: 240px; display: block; }
+.rail-chart { width: 100%; height: 280px; display: block; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
-.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 11px; }
+.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
 .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 .sticky-header {
   position: sticky;
