@@ -64,6 +64,15 @@ const cancelLabel = computed(() => props.cancelLabel ?? t('@astryx.transferListS
 const triggerLabel = computed(() => props.triggerLabel ?? t('@astryx.transferListSelector.triggerLabel', { count: props.modelValue.length }))
 
 const resolvedWidth = computed(() => typeof props.width === 'number' ? `${props.width}px` : (props.width ?? DEFAULT_SELECTOR_WIDTH))
+/** 弹层内容和字段同宽、去掉内边距，两栏贴到弹层边上；高度留出视口空隙，自己不滚。 */
+const contentStyle = computed(() => ({
+  width: resolvedWidth.value,
+  maxWidth: resolvedWidth.value,
+  maxHeight: 'calc(100vh - 32px)',
+  padding: '0',
+  overflow: 'hidden',
+  borderRadius: 'inherit',
+}))
 
 /** 分段提交时先放在这里，按 Apply 才真正提交。 */
 const draftValue = ref<readonly T[]>([...props.modelValue]) as Ref<readonly T[]>
@@ -129,6 +138,7 @@ function cancelStaged(close: () => void): void {
     :is-required="isRequired" :is-disabled="isDisabled" :is-loading="isLoading"
     :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
     :size="size" :width="resolvedWidth" :placement="placement"
+    :content-style="contentStyle"
     @update:model-value="emit('update:modelValue', $event)"
     @change="emit('change', $event)"
     @change-action="emit('changeAction', $event)"

@@ -1,19 +1,13 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.components {
-  /*
-   * 弹层面板：两栏区域自己滚，底部操作一直留在弹层底部。
-   * 弹层的宽度由 core 的 ComplexSelector 决定（跟触发器同宽），
-   * 这里只在这个宽度里把高度和滚动管好。
-   */
+  /* 弹层面板：两栏区域自己滚，底部操作一直留在弹层底部。宽度和去内边距由组件传给 ComplexSelector 的 contentStyle 决定。 */
   .astryx-transfer-list-selector__surface {
     display: flex;
     flex-direction: column;
     min-width: 0;
     min-height: 0;
-    max-height: calc(100vh - 24px);
-    overflow: hidden;
-    border-radius: inherit;
+    max-height: inherit;
   }
 
   /* 两栏区域自己滚，底部按钮一直留在弹层里。 */

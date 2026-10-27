@@ -119,8 +119,10 @@
   }
 
   .astryx-complex-selector-content {
+    box-sizing: border-box;
     max-height: min(480px, calc(100vh - 32px));
     overflow: auto;
+    padding: var(--astryx-spacing-3, 12px);
   }
 
   @media (prefers-reduced-motion: reduce) {

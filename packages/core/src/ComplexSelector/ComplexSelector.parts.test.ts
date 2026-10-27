@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import ComplexSelector from './ComplexSelector.vue'
 
 describe('complex selector 样式分层', () => {
@@ -53,5 +53,26 @@ describe('complex selector 样式分层', () => {
     })
     mount(Host)
     expect(warn.mock.calls.some(call => String(call[0]).includes('custom trigger'))).toBe(true)
+  })
+})
+
+describe('complex selector 弹层内容', () => {
+  it('内边距在内容容器上，contentClass / contentStyle 落在同一个容器', async () => {
+    const wrapper = mount(ComplexSelector, {
+      props: { label: 'Fields', modelValue: [], triggerLabel: 'Pick', contentClass: 'wide', contentStyle: { padding: '0px', width: '40rem' } },
+      slots: { default: () => 'body' },
+      attachTo: document.body,
+    })
+    await wrapper.get('button.astryx-complex-selector').trigger('click')
+    await nextTick()
+    // 前面的用例留下的浮层还在 body 里，按这个用例自己的 class 找。
+    const content = document.querySelector<HTMLElement>('.astryx-complex-selector-content.wide')
+    expect(content).not.toBeNull()
+    expect(content!.classList.contains('wide')).toBe(true)
+    expect(content!.style.padding).toBe('0px')
+    expect(content!.style.width).toBe('40rem')
+    const surface = content!.closest<HTMLElement>('.astryx-popover')
+    expect(surface?.style.getPropertyValue('--_popover-padding')).toBe('var(--astryx-spacing-0)')
+    wrapper.unmount()
   })
 })
