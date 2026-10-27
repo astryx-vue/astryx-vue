@@ -16,6 +16,7 @@ import {
   Switch,
   Table,
   Text,
+  Tooltip,
   useTableGroupedRows,
   useTableStickyColumns,
   VStack,
@@ -195,7 +196,7 @@ const modelHeaderPlugin: TablePlugin<SpecRow> = {
     if (modelId == null)
       return null
     return {
-      before: () => h('div', { class: 'model-header' }, h(Selector, {
+      before: () => h('div', { class: 'model-header', style: { flex: '1 1 100%', minWidth: 0 } }, h(Selector, {
         'modelValue': modelId,
         'label': `Model ${index + 1}`,
         'isLabelHidden': true,
@@ -234,14 +235,14 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
           return h(Text, { type: 'supporting' }, () => '—')
         if (row.modalities) {
           const included = row.modalities(model)
-          return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end' }, () => MODALITY_ORDER.map(modality =>
-            h(Icon, {
+          const explanation = MODALITY_ORDER.map(modality => `${MODALITY_LABEL[modality]}: ${included.includes(modality) ? 'supported' : 'not supported'}`).join('; ')
+          return h(Tooltip, { content: explanation, hasHoverIndication: false, touchTrigger: 'tap' }, () => h(HStack, { gap: 3, vAlign: 'center', hAlign: 'end', height: 24, tabindex: 0, role: 'group', ariaLabel: 'Model modalities' }, () => MODALITY_ORDER.map(modality =>
+            h(HStack, { width: 20, height: 20, hAlign: 'center', vAlign: 'center' }, () => h(Icon, {
               icon: MODALITY_ICON[modality],
               size: 'md',
               color: included.includes(modality) ? 'primary' : 'disabled',
-              label: MODALITY_LABEL[modality],
-            }),
-          ))
+            })),
+          )))
         }
         const value = row.get(model)
         if (typeof value === 'boolean') {
@@ -312,10 +313,6 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
 </template>
 
 <style scoped>
-.model-header {
-  width: 100%;
-}
-
 .table-frame {
   width: 100%;
   max-width: 100%;
