@@ -35,7 +35,8 @@ describe('listPublicPackages', () => {
   })
 
   it('covers every package this repo publishes', () => {
-    expect(listPublicPackages()).toEqual(['cli', 'core', 'richtext', 'themes'])
+    // richtext 还没有编辑器组件，暂时标了 private，等 G3 首发时再进这份清单。
+    expect(listPublicPackages()).toEqual(['cli', 'core', 'themes'])
   })
 })
 
