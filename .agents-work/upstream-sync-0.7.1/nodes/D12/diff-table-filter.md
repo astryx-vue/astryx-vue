@@ -14,8 +14,8 @@
 | 右侧工具簇 | View options、Create saved view、Saved views（有实心态） | 三个按钮在，Saved views 没有按下后的实心图标，弹层只是菜单 | 进行中 |
 | 筛选 chip 尺寸 | 全部高 28，内边距 8px 12px | Customer/Technician 高 30，Priority 32，Quote 38，内边距 4px 8px | 已修（模板里用 `:deep` 统一成 28 高、12px 横向内边距）。core 问题待写进回报：sm 尺寸下 MultiSelector 实高 30、Selector 32、ComplexSelector 38，原版都是 28 |
 | 筛选行折叠位置 | 1440 宽下放得下 Upcoming 和 Status，其余收进「+4」 | 只放得下 Upcoming，收进「+5」，因为 chip 偏宽 | 不修：core。OverflowList 测量指示器宽度时用内置「还有 N 项」文案（89px），不读 `#overflow` 插槽里的实际按钮（「+N」43px），所以多留 46px、少放一个子句。原版是 Upcoming + Status + 「+4」，我们是 Upcoming + 「+5」。模板里没有无损绕过，交总控开 core 节点 |
-| 表头 | 高 38，Job 列宽 360 | 高 37，Job 列宽 240（列宽配置 proportional(2) 与原版一致，差在可用宽度） | 进行中 |
-| 分组行 | 16px 半粗体 + 灰括号数字，行高 41 | 14px，行高 37 | 进行中（core 的分组头样式，待确认） |
+| 表头 | 高 38，Job 列宽 360 | 高 37（同上 core 行高差），Job 列宽 291 | 不修：行高差归 core（见分组行）；列宽差来自 Layout 内容宽 1280 对 1328，原因是原版预览区更宽，属外壳内的滚动条宽度差，待在深色走查时复核 |
+| 分组行 | 16px 半粗体 + 灰括号数字，行高 41 | 14px，行高 37 | 不修：core。原版 `<table>` 字号 16px，分组头 td 不设字号，继承 16px；普通 td 单独设 14px/行高 21。我们的 core 把 `.astryx-table` 设成 14px / 行高 1.4286，分组头 14px，所有行高少约 1px（分组行 37 对 41，数据行 36–57 对 37–57 的累计差）。模板里不能绕：原版注释明确说不能用 `renderGroupHeader`，否则丢首列固定。交总控开 core 节点 |
 | 数据行 | 单元格顶部对齐，行高 57，Job 文字不截断（wrap） | 已改成 wrap + 顶部对齐，行高约 57 | 已修（待复核） |
 | 紧急优先级圆点 | 脉冲动画 | 加了 isPulsing | 已修 |
 | 首列固定 | 首列粘左 | 加了 sticky 插件 | 已修 |
