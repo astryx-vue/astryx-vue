@@ -421,11 +421,21 @@ const category = ref<Category>('inbox')
 /** `undefined` 表示用户还没选过，按列表首条兜底；`null` 表示用户主动关掉了阅读栏。 */
 const chosenId = ref<string | null | undefined>(undefined)
 
+/** 面板默认占内容区的 2/3，百分比相对内容区算，不写死像素。 */
+const surfaceEl = ref<HTMLElement | null>(null)
+const PANE_MIN_WIDTH = 440
+
 const pane = useResizable({
-  defaultSize: 963,
-  minSize: 420,
-  maxSize: 1100,
+  containerRef: surfaceEl,
+  defaultSize: '66.67%',
+  minSize: PANE_MIN_WIDTH,
+  maxSize: '100%',
 })
+
+/** Layout 是组件，ref 拿到的是实例；这里取它的根元素当宽度基准。 */
+function setSurface(instance: unknown): void {
+  surfaceEl.value = (instance as { $el?: HTMLElement } | null)?.$el ?? null
+}
 
 const visible = computed(() => CONVERSATIONS.filter(item => inCategory(item, category.value)))
 
@@ -513,7 +523,7 @@ const threadActions = [
 </script>
 
 <template>
-  <Layout height="fill">
+  <Layout :ref="setSurface" height="fill">
     <template #header>
       <LayoutHeader :padding="0">
         <VStack :gap="0">
