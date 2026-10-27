@@ -297,17 +297,18 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
   {
     name: 'init',
-    summary: 'Write or refresh the managed agent-context block.',
+    summary: 'Print the setup guide for an AI assistant, and refresh the managed agent-context block.',
     arguments: [],
     options: [
-      { name: 'features', flag: '--features', type: 'string', description: 'Comma-separated features. MVP accepts agents.' },
+      { name: 'features', flag: '--features', type: 'string', description: 'Comma-separated features. agents writes the managed block; leaving the flag out is the same as passing it. Any other feature is an error.' },
       { name: 'agent', flag: '--agent', type: 'string', description: 'Which file to write. cursor and codex use AGENTS.md, claude uses CLAUDE.md, hermes uses .hermes.md (or an existing HERMES.md), all writes every agent file the project already has. Without it, an existing agent file is reused.', choices: ['cursor', 'claude', 'codex', 'hermes', 'all'] },
       { name: 'agent-docs-path', flag: '--agent-docs-path', type: 'string', description: 'Write the managed block to this file instead. Relative paths resolve against the project directory.' },
     ],
     json: true,
     responseTypes: ['init.run'],
     examples: [
-      `${BINARY} init --features agents`,
+      `${BINARY} init`,
+      `${BINARY} init --json`,
       `${BINARY} init --features agents --agent claude`,
       `${BINARY} init --features agents --agent hermes`,
       `${BINARY} init --features agents --agent all`,
