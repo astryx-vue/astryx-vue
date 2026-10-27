@@ -90,6 +90,18 @@ describe('tree rows', () => {
     expect(open.meta.get('child')?.level).toBe(1)
   })
 
+  it('reads data and expandedIds even when they arrive as refs inside the config', () => {
+    const data = ref([{ id: 'root', name: 'Root', children: [{ id: 'child', name: 'Child' }] }])
+    const expandedIds = ref<ReadonlySet<string>>(new Set(['root']))
+    const tree = useTableTreeState({ data, expandedIds, idKey: 'id' })
+    expect(tree.visibleData.value.map(row => row.name)).toEqual(['Root', 'Child'])
+    expect(tree.isAllExpanded.value).toBe(true)
+
+    // 数据换了，同一份 config 也要跟着走。
+    data.value = [{ id: 'other', name: 'Other', children: [{ id: 'kid', name: 'Kid' }] }]
+    expect(tree.visibleData.value.map(row => row.name)).toEqual(['Other'])
+  })
+
   it('exposes the level on the row and expands every branch from the header', async () => {
     const nodes = [{
       id: 'root',

@@ -1,3 +1,4 @@
+import type { TableSortState } from './types.js'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
@@ -184,6 +185,16 @@ describe('table', () => {
     expect(german.findAll('tbody tr').map(row => row.text())).toEqual(['ä', 'z'])
     swedish.unmount()
     german.unmount()
+  })
+
+  it('sorts data and defaultSort that arrive as refs inside the config', () => {
+    const data = ref(people)
+    const defaultSort = ref<TableSortState>([{ sortKey: 'age', direction: 'ascending' }])
+    const { sortedData } = useTableSortableState<Person>({ data, defaultSort })
+
+    expect(sortedData.value.map(person => person.name)).toEqual(['Bob', 'Alice', 'Charlie'])
+    data.value = [...people, { id: '4', name: 'Dan', age: 18 }]
+    expect(sortedData.value.map(person => person.name)).toEqual(['Dan', 'Bob', 'Alice', 'Charlie'])
   })
 
   it('sorts from the header and cycles back to unsorted', async () => {
