@@ -20,6 +20,7 @@ import {
   Icon,
   Item,
   Link,
+  OverflowList,
   MoreMenu,
   NumberInput,
   pixel,
@@ -50,6 +51,12 @@ interface ProductSpec {
   badge: string
   badgeVariant: ShowcaseBadgeVariant
 }
+
+const FILTER_ITEMS = [
+  { id: 'categories', label: 'Categories', icon: 'i-heroicons-folder', options: ['Wearables', 'Audio', 'Bags', 'Drinkware', 'Home'] },
+  { id: 'locations', label: 'Locations', icon: 'i-heroicons-map-pin', options: ['Aisle 1', 'Aisle 2', 'Aisle 3', 'Aisle 4', 'Aisle 5', 'Aisle 6'] },
+  { id: 'tags', label: 'Tags', icon: 'i-heroicons-tag', options: ['New', 'Popular', 'Limited', 'Leather', 'Drinkware', 'Home'] },
+]
 
 interface TagSpec { label: string, variant: ShowcaseBadgeVariant }
 
@@ -361,8 +368,44 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                   </ChatMessage>
                   <ChatMessage sender="assistant">
                     <VStack :gap="3">
-                      <Text type="body">Your order #1043 shipped this morning and is on track to arrive by end of day tomorrow.</Text>
-                      <Text type="body">Let me know if you’d like to reschedule delivery or start a return.</Text>
+                      <Text type="body">
+                        Your order #1043 — the Minimalist Watch and Linen Throw — shipped this morning from the Aisle 3 warehouse and is currently in transit with UPS. It’s on track to arrive at your address by end of day tomorrow.
+                      </Text>
+                      <Text type="body">
+                        Let me know if you’d like to reschedule the delivery, redirect it to a pickup point, or start a return once it arrives.
+                      </Text>
+                    </VStack>
+                  </ChatMessage>
+                  <ChatMessage sender="user">
+                    <ChatMessageBubble variant="filled">Can you show me the full details?</ChatMessageBubble>
+                  </ChatMessage>
+                  <ChatMessage sender="assistant">
+                    <VStack :gap="3">
+                      <Text type="body">Here’s everything I have on order #1043:</Text>
+                      <Card :padding="3">
+                        <VStack :gap="1">
+                          <Item label="Items" description="Minimalist Watch · Linen Throw">
+                            <template #endContent>
+                              <Text type="body" weight="bold">$248</Text>
+                            </template>
+                          </Item>
+                          <Item label="Shipping" description="UPS Ground">
+                            <template #endContent>
+                              <Text type="body" weight="bold">$12</Text>
+                            </template>
+                          </Item>
+                          <Item label="Estimated arrival" description="Tomorrow by 8pm">
+                            <template #endContent>
+                              <Badge variant="green" label="On time" />
+                            </template>
+                          </Item>
+                          <Item label="Tracking" description="UPS 1Z 999 AA1 0123 4567 84">
+                            <template #endContent>
+                              <Link href="#">Track →</Link>
+                            </template>
+                          </Item>
+                        </VStack>
+                      </Card>
                     </VStack>
                   </ChatMessage>
                 </ChatMessageList>
@@ -394,9 +437,24 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                   <div class="search-input">
                     <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
                   </div>
-                  <Button label="Filters" variant="ghost" size="sm">
-                    <template #icon><Icon name="heroicons:tag" size="sm" /></template>
-                  </Button>
+                  <OverflowList :items="FILTER_ITEMS" :gap="2">
+                    <template #item="{ item }">
+                      <Selector
+                        :label="item.label"
+                        is-label-hidden
+                        :placeholder="item.label"
+                        size="sm"
+                        :start-icon="item.icon"
+                        :model-value="null"
+                        :options="item.options"
+                      />
+                    </template>
+                    <template #overflow>
+                      <Button label="Filters" variant="ghost" size="sm">
+                        <template #icon><Icon name="heroicons:tag" size="sm" /></template>
+                      </Button>
+                    </template>
+                  </OverflowList>
                 </HStack>
                 <HStack :gap="1" :align="'center'">
                   <Button variant="ghost" size="sm" is-icon-only label="List view" tooltip="List view">
