@@ -15,3 +15,7 @@
 | 深色模式 | 同上 | 同上 | 一致 |
 
 工具修正：`scripts/swarm/playground-pair.mjs` 给我们这边预置 `vitepress-theme-appearance`，否则站点默认 dark，"浅色"图会是深色。
+
+## 补充：外壳修复后复核
+
+演练场预览卡片（外壳）和原版有差异，修在 `apps/docs/styles/playground.css`，对 57 个模板都生效，细节见 `diff-table-page.md` 的「外壳」部分。修完后本模板重新对照，仍一致。

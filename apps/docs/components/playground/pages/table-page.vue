@@ -308,10 +308,12 @@ const DescriptionCell = defineComponent({
         }, [
           h('div', { class: 'astryx-hover-card__content' }, [
             h(VStack, { gap: 3, width: 280 }, () => [
-              h(Heading, { level: 3 }, () => props.item.description),
+              h(Heading, { level: 3, accessibilityLevel: 2 }, () => props.item.description),
               h(MetadataList, { label: { position: 'start' } }, () => [
                 h(MetadataListItem, { label: 'Category' }, () => CATEGORY_LABEL[props.item.category]),
                 h(MetadataListItem, { label: 'Billing' }, () => BASIS_LABEL[props.item.basis]),
+                h(MetadataListItem, { label: 'Calculation' }, () => `${decimal.format(props.item.quantity)} \u00D7 ${formatCents(props.item.unitPriceCents)}`),
+                h(MetadataListItem, { label: 'Amount' }, () => formatCents(props.item.amountCents)),
                 h(MetadataListItem, { label: 'Share of invoice' }, () => `${share.value.toFixed(1)}%`),
               ]),
               h(Button, { label: 'Dispute this line', variant: 'secondary', width: '100%' }),
@@ -322,6 +324,17 @@ const DescriptionCell = defineComponent({
     ]
   },
 })
+
+/** 首尾两列的单元格内边距归零，让表格文字和上面的 MetadataList 落在同一条内容线上。 */
+const flushEdgesPlugin: TablePlugin<InvoiceRow> = {
+  cellPatch({ column, columns }) {
+    if (column.key === columns[0]?.key)
+      return { style: { paddingInlineStart: 0 } }
+    if (column.key === columns[columns.length - 1]?.key)
+      return { style: { paddingInlineEnd: 0 } }
+    return null
+  },
+}
 
 /** 行级插件：登记每一行的元素，并把详情卡片所在的行标记成可聚焦。 */
 const rowPlugin: TablePlugin<InvoiceRow> = {
@@ -489,7 +502,7 @@ const AMOUNT_COLUMN_WIDTH = 132
                 dividers="none"
                 has-hover
                 text-overflow="truncate"
-                :plugins="{ sort: sortPlugin, filter: filterPlugin, rows: rowPlugin }"
+                :plugins="{ sort: sortPlugin, filter: filterPlugin, rows: rowPlugin, flush: flushEdgesPlugin }"
               />
             </div>
             <VStack :gap="3">

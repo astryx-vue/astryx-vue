@@ -14,6 +14,8 @@
   --pg-solid-bg: #171717;
   --pg-solid-fg: #fff;
   --pg-handle: rgb(23 23 23 / 18%);
+  --pg-stage-bg: #fff;
+  --pg-stage-line: rgb(5 54 89 / 9.8%);
   --pg-rail: 56px;
 
   display: flex;
@@ -41,6 +43,8 @@ html.dark .Layout.playground-route {
   --pg-solid-bg: #fafafa;
   --pg-solid-fg: #171717;
   --pg-handle: rgb(255 255 255 / 28%);
+  --pg-stage-bg: #1f1f22;
+  --pg-stage-line: rgb(242 244 246 / 9.8%);
 
   color-scheme: dark;
 }
@@ -157,7 +161,7 @@ html.dark:has(.playground-route) body {
 .playground__surface {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: var(--editor-size, 440px) 10px minmax(0, 1fr);
+  grid-template-columns: var(--editor-size, 432px) 10px minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
@@ -439,8 +443,8 @@ html.dark:has(.playground-route) body {
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  min-height: 32px;
-  padding: 8px 12px;
+  height: 32px;
+  padding: 0 12px;
   border: 0;
   border-radius: 9999px;
   color: var(--pg-solid-fg);
@@ -484,9 +488,9 @@ html.dark:has(.playground-route) body {
   width: 100%;
   min-height: 0;
   overflow: hidden;
+  border: 1px solid var(--pg-stage-line);
   border-radius: 16px;
-  background: var(--pg-elevated);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+  background: var(--pg-stage-bg);
 }
 
 .playground__preview[data-device='phone'] .playground__stage {
