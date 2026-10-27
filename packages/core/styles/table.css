@@ -79,7 +79,9 @@
     padding-inline-end: max(var(--container-padding-inline-end, var(--astryx-spacing-4, 16px)), var(--astryx-spacing-2, 8px));
   }
 
-  .astryx-table td {
+  /* 原版 TableCell 给普通数据格带正文字号；分组头、展开面板、空态这些
+     插件渲染的格子不设字号，继承环境字号。 */
+  .astryx-table td:not(.astryx-table__group, .astryx-table__panel, .astryx-table__empty) {
     font-size: var(--astryx-text-body-size, 0.875rem);
   }
 

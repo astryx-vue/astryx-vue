@@ -59,9 +59,12 @@ describe('modifier rules keep winning over base rules (D12 alignment)', () => {
     const table = source.indexOf('.astryx-table {')
     const block = source.slice(table, source.indexOf('}', table))
     expect(block).not.toContain('font-size')
-    const td = source.indexOf('.astryx-table td {')
+    const td = source.indexOf('.astryx-table td:not(')
     expect(td).toBeGreaterThan(-1)
-    expect(source.slice(td, source.indexOf('}', td))).toContain('font-size: var(--astryx-text-body-size, 0.875rem)')
+    const tdBlock = source.slice(td, source.indexOf('}', td))
+    expect(tdBlock).toContain('font-size: var(--astryx-text-body-size, 0.875rem)')
+    expect(tdBlock).toContain('.astryx-table__group')
+    expect(tdBlock).toContain('.astryx-table__panel')
   })
 
   it('Tab font size follows the label token at every size', () => {
