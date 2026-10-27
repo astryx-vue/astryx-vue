@@ -6,7 +6,7 @@ title: 深色模式
 
 Neutral 主题不需要单独引入一份额外的深色 CSS 样式表。所有颜色变量在底层均直接采用现代 CSS 标准的 `light-dark(浅色值, 深色值)` 语法，浏览器会根据元素当前所处的 `color-scheme` 状态，自动决定显示浅色还是深色。
 
-当你引入 `@astryx-vue/themes/neutral.css` 之后，`:root` 根节点以及 `[data-astryx-theme='neutral']` 元素上的 `color-scheme` 默认被声明为 `light dark`。这意味着组件开箱即用就能自适应用户的操作系统外观偏好，也能顺畅继承祖先节点已经设定的明暗模式。
+当你引入 `@astryx-vue/themes/neutral.css` 之后，`:root` 根节点以及 `[data-astryx-theme='neutral']` 元素上的 `color-scheme` 默认被声明为 `light dark`。这意味着组件默认就能自适应操作系统的外观偏好，也能继承祖先节点已经设定的明暗模式。
 
 ## 手动强制指定浅色或深色
 
@@ -32,6 +32,6 @@ Neutral 主题不需要单独引入一份额外的深色 CSS 样式表。所有�
 
 ## 局部区域独立切换明暗
 
-有时你可能希望全局是浅色背景，但某一处代码编辑器或卡片单独以深色展示。你可以使用 `Theme` 组件，通过 `mode="dark"` 或 `mode="light"` 属性轻松圈定局部子树的明暗模式，具体用法请参阅 [Theme 组件](/components/theme)。
+有时你可能希望全局是浅色背景，但某一处代码编辑器或卡片单独以深色展示。你可以使用 `Theme` 组件，通过 `mode="dark"` 或 `mode="light"` 属性设置局部子树的明暗模式，具体用法请参阅 [Theme 组件](/components/theme)。
 
 > **定制提示**：不要为深色模式重新取一套独立的变量名（比如不要额外造出 `--color-bg-dark`）。当你想修改某个颜色的具体色值时，依然直接覆盖原来的变量名，并在 `light-dark()` 函数中同时声明好浅色与深色的取值即可。更详尽的说明可参阅 [扩展主题](/themes/extending)。

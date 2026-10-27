@@ -83,7 +83,7 @@ UnoCSS 默认把工具类输出成不分层的普通规则。未分层的规则�
 
 这两种都能用，注意三点。
 
-**类名不会打架。** `<style module>` 和 `*.module.css` 的类名会被改写，可以放心起名。
+**类名不会冲突。** `<style module>` 和 `*.module.css` 的类名会被改写，可以直接起名。
 
 **要盖组件内部的元素，得穿进去。** scoped 样式用 `:deep()`，CSS Modules 用 `:global`：
 

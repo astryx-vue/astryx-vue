@@ -40,7 +40,7 @@ import '@astryx-vue/core/styles.css'
 
 ## 给 AI Agent 使用
 
-每一页文档都贴心地提供了一份纯文本，AI Agent 不需要额外安装工具就能直接读取：
+每一页文档都提供了一份纯文本，AI Agent 不需要额外安装工具就能直接读取：
 
 - [/llms.txt](https://astryx-vue.pages.dev/llms.txt) 是英文目录，每页一行说明；中文版是 [/llms-zh.txt](https://astryx-vue.pages.dev/llms-zh.txt)。
 - [/llms-full.txt](https://astryx-vue.pages.dev/llms-full.txt) 把全部英文文档合成一个完整文件；中文版是 [/llms-full-zh.txt](https://astryx-vue.pages.dev/llms-full-zh.txt)。

@@ -4,7 +4,7 @@ title: 组合式函数
 
 # 组合式函数
 
-组件库将许多强大的交互逻辑和无障碍底层能力，封装成了易于复用的 Vue 3 组合式函数（Composables）。通用函数可以直接从包根统一引入：
+组件库将许多交互逻辑和无障碍底层能力，封装成了易于复用的 Vue 3 组合式函数（Composables）。通用函数可以直接从包根统一引入：
 
 ```ts
 import { useClipboard, useControllableState } from '@astryx-vue/core'
@@ -38,7 +38,7 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `useChatNewMessages` | 当读者未贴合在对话流底部时，在页面上浮动提示有未读的新消息产生。 |
 | `useKeyboardHint` | 当用户第一次通过键盘方向键切入一组控件时，在当前焦点项旁边短暂弹出操作提示气泡。 |
 | `useImageMode` | 自动采样图片亮度，智能推断上层该使用深色还是浅色的前景文字；若采样失败则采用安全回退值。 |
-| `useContainerReveal` | 仅在鼠标悬停或键盘聚焦到容器时，才优雅露出操作按钮，返回对应的样式类名。 |
+| `useContainerReveal` | 仅在鼠标悬停或键盘聚焦到容器时，才显示操作按钮，返回对应的样式类名。 |
 | `useMenuPress` | 在菜单项按下后，吸收吞掉浏览器可能冗余触发的随后那次点击事件，防止误触。 |
 
 > **别名提示**：`useClipboard` 拥有一个兼容旧版的名字 `useCopyToClipboard`，从包根或 `@astryx-vue/core/Code` 均可引入，底层完全等价。
