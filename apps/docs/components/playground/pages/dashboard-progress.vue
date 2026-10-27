@@ -234,9 +234,14 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
       <LayoutContent :padding="0" class="content-bottom-pad">
         <Section :padding="6" :dividers="['bottom']">
           <VStack :gap="6" class="content-column">
-            <Heading :level="2">
-              Milestone timeline
-            </Heading>
+            <HStack :gap="3" h-align="between" align="center">
+              <Heading :level="2">
+                Milestone timeline
+              </Heading>
+              <Text type="supporting" color="secondary">
+                Project days 0–{{ TIMELINE_DAYS }} · dashed line marks today
+              </Text>
+            </HStack>
             <EmptyState
               v-if="milestones.length === 0"
               title="No milestones in this phase"
@@ -249,6 +254,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                 :domain-max="TIMELINE_DAYS"
                 :today="PROJECT_DAY"
                 :ticks="TIMELINE_TICKS"
+                is-recharts-layout
               />
               <HStack :gap="4" align="center" wrap="wrap">
                 <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
@@ -275,7 +281,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                     </Text>
                   </VStack>
                   <HStack :gap="8" align="center" wrap="wrap">
-                    <PlaygroundDonutChart :segments="donutSegments" />
+                    <PlaygroundDonutChart :segments="donutSegments" :gap-angle="2.3" />
                     <VStack :gap="2">
                       <HStack v-for="s in TASK_STATUS" :key="s.key" :gap="2" align="center">
                         <span class="legend-swatch" :style="{ backgroundColor: s.color }" aria-hidden="true" />
@@ -310,6 +316,8 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                       y-unit=" pts"
                       :x-ticks="[0, 3, 6, 9, 12]"
                       :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
+                      :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"
+                      center-ticks
                       monotone
                     />
                   </PlaygroundResponsive>
@@ -368,9 +376,14 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
             </Grid>
             <Card :padding="6">
               <VStack :gap="4">
-                <Heading :level="3">
-                  Workstreams
-                </Heading>
+                <HStack :gap="3" h-align="between" align="center" wrap="wrap">
+                  <Heading :level="3" :accessibility-level="2">
+                    Workstreams
+                  </Heading>
+                  <Text type="body" color="secondary">
+                    {{ workstreams.length }} of {{ WORKSTREAMS.length }}
+                  </Text>
+                </HStack>
                 <Table
                   v-if="workstreams.length"
                   :data="workstreams"

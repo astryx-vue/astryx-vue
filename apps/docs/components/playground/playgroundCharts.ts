@@ -438,11 +438,53 @@ export const PlaygroundGanttChart = defineComponent({
     domainMax: { type: Number, required: true },
     today: { type: Number, default: undefined },
     ticks: { type: Array as PropType<number[]>, default: () => [] },
+    /** 按原版的 recharts 布局：行高 = 绘图区高 / 行数，柱高 = 行高的 40%，Today 标注画在图顶外侧，长名字折成两行。 */
+    isRechartsLayout: { type: Boolean, default: false },
   },
   setup(props) {
     const chart = useChartWidth()
     return () => {
       const chartW = chart.width.value
+      if (props.isRechartsLayout) {
+        const pad = { top: 4, right: 16, bottom: 34, left: 156 }
+        const rowH = 44
+        const hTotal = Math.max(160, props.items.length * rowH)
+        const innerW = chartW - pad.left - pad.right
+        const innerH = hTotal - pad.top - pad.bottom
+        const band = innerH / props.items.length
+        const barH = Math.round(band * 0.4)
+        const scale = (d: number) => pad.left + (d / props.domainMax) * innerW
+        const nodes: VNode[] = []
+        for (const tick of props.ticks) {
+          const x = scale(tick)
+          nodes.push(h('line', { x1: x, y1: pad.top, x2: x, y2: pad.top + innerH, stroke: GRID_STROKE }))
+          nodes.push(h('text', { 'x': x, 'y': pad.top + innerH + 13, 'text-anchor': 'middle', 'dominant-baseline': 'central', 'fill': AXIS_TICK, 'font-size': '12px' }, `D${tick}`))
+        }
+        if (props.today != null) {
+          const x = scale(props.today)
+          nodes.push(h('line', { x1: x, y1: pad.top, x2: x, y2: pad.top + innerH, stroke: 'var(--astryx-color-data-neutral, #8494A3)', 'stroke-dasharray': '4 4' }))
+          nodes.push(h('text', { 'x': x, 'y': pad.top - 8, 'text-anchor': 'middle', 'fill': 'var(--astryx-color-data-neutral, #8494A3)', 'font-size': '11px' }, 'Today'))
+        }
+        props.items.forEach((item, i) => {
+          const cy = pad.top + band * i + band / 2
+          const words = item.name.split(' ')
+          const lines = item.name.length > 18 && words.length > 1
+            ? [words.slice(0, Math.ceil(words.length / 2)).join(' '), words.slice(Math.ceil(words.length / 2)).join(' ')]
+            : [item.name]
+          nodes.push(h('text', { 'x': pad.left - 8, 'y': cy - (lines.length - 1) * 5, 'text-anchor': 'end', 'fill': AXIS_TICK, 'font-size': '12px' },
+            lines.map((line, k) => h('tspan', { x: pad.left - 8, dy: k === 0 ? '0.35em' : '1em' }, line))))
+          nodes.push(h('rect', { x: scale(item.start), y: cy - barH / 2, width: Math.max(2, scale(item.end) - scale(item.start)), height: barH, rx: 4, fill: item.color }))
+        })
+        return h('svg', {
+          'width': '100%',
+          'height': hTotal,
+          'ref': chart.el,
+          'viewBox': `0 0 ${chartW} ${hTotal}`,
+          'role': 'img',
+          'aria-label': 'Gantt chart',
+          'style': { overflow: 'visible' },
+        }, nodes)
+      }
       const pad = { top: 4, right: 16, bottom: 4, left: 156 }
       const rowH = 44
       const innerW = chartW - pad.left - pad.right
@@ -519,6 +561,8 @@ export const PlaygroundDonutChart = defineComponent({
     size: { type: Number, default: 208 },
     innerRadius: { type: Number, default: 70 },
     outerRadius: { type: Number, default: 104 },
+    /** 相邻两段之间的间隙角（度）；默认不留间隙。 */
+    gapAngle: { type: Number, default: 0 },
   },
   setup(props) {
     return () => {
@@ -528,7 +572,9 @@ export const PlaygroundDonutChart = defineComponent({
       let angle = -Math.PI / 2
       const paths: VNode[] = []
       for (const seg of props.segments) {
-        const sweep = (seg.value / total) * Math.PI * 2
+        const gap = (props.gapAngle * Math.PI) / 180
+        const sweep = Math.max(0.0001, (seg.value / total) * Math.PI * 2 - gap)
+        angle += gap / 2
         const x1 = cx + props.outerRadius * Math.cos(angle)
         const y1 = cy + props.outerRadius * Math.sin(angle)
         angle += sweep
@@ -539,6 +585,7 @@ export const PlaygroundDonutChart = defineComponent({
         const xi2 = cx + props.innerRadius * Math.cos(angle)
         const yi2 = cy + props.innerRadius * Math.sin(angle)
         const large = sweep > Math.PI ? 1 : 0
+        angle += gap / 2
         const d = `M ${x1} ${y1} A ${props.outerRadius} ${props.outerRadius} 0 ${large} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${props.innerRadius} ${props.innerRadius} 0 ${large} 0 ${xi1} ${yi1} Z`
         paths.push(h('path', { d, fill: seg.color }))
       }
