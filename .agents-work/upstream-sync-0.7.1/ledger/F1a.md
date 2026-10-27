@@ -12,332 +12,402 @@
 
 ### feat
 
-- [ ] `ea5705c0f` feat(docsite): surface canary-only components (#5583)
+- [x] `ea5705c0f` feat(docsite): surface canary-only components (#5583)
   - 文件：packages/richtext/astryx.integration.mjs
   - 还涉及：D5、F1c、F2a、F2c、F3d、F3e、F3f、F5
   - 链接：https://github.com/facebook/astryx/commit/ea5705c0f9566bb7d4f61f28e47073a4895d66b8
-- [ ] `1eee9557e` feat(richtext): import, edit, and export GFM tables (#6983)
+  - 结论：不适用：上游规格文档 / docsite 集成清单，本项目不搬；文档归 F1c。
+- [x] `1eee9557e` feat(richtext): import, edit, and export GFM tables (#6983)
   - 文件：packages/richtext/src/editorNodes.ts、packages/richtext/src/editorTheme.ts、packages/richtext/src/markdownSerializers.ts、packages/richtext/src/markdownTable.ts
   - 还涉及：F1b、F1c
   - 链接：https://github.com/facebook/astryx/commit/1eee9557e335b4a019718926e39876984a2a4e33
-- [ ] `7a6a63785` feat(richtext): keep authored Markdown through import and export (#6989)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `7a6a63785` feat(richtext): keep authored Markdown through import and export (#6989)
   - 文件：packages/richtext/src/markdownSerializers.ts、packages/richtext/src/markdownSource.ts
   - 还涉及：F1b、F1c
   - 链接：https://github.com/facebook/astryx/commit/7a6a63785d5edbcc6b0e93951d3f418110ed4d78
-- [ ] `c24598577` feat(richtext): import, draw, and export thematic breaks as horizontal rules (#6999)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `c24598577` feat(richtext): import, draw, and export thematic breaks as horizontal rules (#6999)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorNodes.ts、packages/richtext/src/editorTheme.ts、packages/richtext/src/markdownTable.ts、packages/richtext/src/markdownThematicBreak.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b、F1c
   - 链接：https://github.com/facebook/astryx/commit/c24598577a05042b0fb5512e455fc84fa96f42cc
-- [ ] `d11d49ef8` feat(richtext): draw fenced code in core CodeBlock's frame, with its language header and copy button (#7004)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `d11d49ef8` feat(richtext): draw fenced code in core CodeBlock's frame, with its language header and copy button (#7004)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/d11d49ef8f95749b09bd8150206df63b79fd6226
-- [ ] `cb30e207e` feat(Markdown): export the character reference decoder, and decode references in RichText with it (#7013)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `cb30e207e` feat(Markdown): export the character reference decoder, and decode references in RichText with it (#7013)
   - 文件：packages/richtext/src/markdownCharacterReferences.test.ts、packages/richtext/src/markdownCharacterReferences.ts、packages/richtext/src/markdownSource.ts
   - 测试：packages/richtext/src/markdownCharacterReferences.test.ts
   - 还涉及：C9、F1b
   - 链接：https://github.com/facebook/astryx/commit/cb30e207e0b5ed579282a58b9f159fa7eab9e45b
-- [ ] `258ff0236` feat(richtext): import GFM task lists exactly as Markdown does, with a checkbox each item owns (#7007)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `258ff0236` feat(richtext): import GFM task lists exactly as Markdown does, with a checkbox each item owns (#7007)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts、packages/richtext/src/markdownListExport.ts、packages/richtext/src/markdownTable.ts、packages/richtext/src/markdownTaskList.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/258ff023681e183c0d03fee538b93631a880295e
-- [ ] `310177296` feat(Markdown): give each list depth its own marker, as AST-061 DEC-6 defines (#7027)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `310177296` feat(Markdown): give each list depth its own marker, as AST-061 DEC-6 defines (#7027)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：C9、C12
   - 链接：https://github.com/facebook/astryx/commit/310177296d63c83c7382abcde23d9fb4afc5f20b
-- [ ] `822d4527f` feat(richtext): color fenced code with core CodeBlock's tokenizer and syntax color tokens (#7031)
+  - 结论：交给 F1b：浏览器交互用例要挂载编辑器，这一版还没有界面。
+- [x] `822d4527f` feat(richtext): color fenced code with core CodeBlock's tokenizer and syntax color tokens (#7031)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/822d4527fc5b68de3658b6515e21fc74dab686fe
-- [ ] `1f63a932c` feat(richtext): adopt Markdown plugins in import and export, with a server-safe markdown entry (#7039)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `1f63a932c` feat(richtext): adopt Markdown plugins in import and export, with a server-safe markdown entry (#7039)
   - 文件：packages/richtext/src/__tests__/MarkdownPluginsImportExport.a11y.chromium.spec.ts、packages/richtext/src/editorNodes.ts、packages/richtext/src/index.ts、packages/richtext/src/markdown.ts、packages/richtext/src/markdownExtensionNode.ts、packages/richtext/src/markdownExtensions.test.ts、packages/richtext/src/markdownExtensions.ts、packages/richtext/src/markdownSerializers.ts 等 9 个
   - 测试：packages/richtext/src/__tests__/MarkdownPluginsImportExport.a11y.chromium.spec.ts、packages/richtext/src/markdownExtensions.test.ts
   - 还涉及：F1c
   - 链接：https://github.com/facebook/astryx/commit/1f63a932c12fdaf3f0248e45e62b13cd1ecc1202
-- [ ] `3c6f7df5f` feat(richtext): draw Markdown plugin nodes in the editor and the view as core Markdown does (#7041)
+  - 结论：已采纳：`markdownExtensions.ts`、`markdownExtensionNode.ts`、`markdown.ts` 子路径入口、`editorNodes.ts` 全部搬了；挂载组件的插件浏览器用例交给 F1b。
+- [x] `3c6f7df5f` feat(richtext): draw Markdown plugin nodes in the editor and the view as core Markdown does (#7041)
   - 文件：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts、packages/richtext/src/markdownExtensionNode.ts、packages/richtext/src/markdownExtensions.test.ts
   - 测试：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/markdownExtensions.test.ts
   - 还涉及：F1b、F1c
   - 链接：https://github.com/facebook/astryx/commit/3c6f7df5f2835018c617d651a65703a15d454cdf
-- [ ] `3235ec99a` feat(core): Markdown fenced code wraps long lines, as RichText does (#7564)
+  - 结论：已采纳：节点与导出逻辑搬了（`markdownExtensionNode.ts`、`markdownExtensions.test.ts` 不挂载组件的部分）；在编辑器和只读视图里怎么画交给 F1b。
+- [x] `3235ec99a` feat(core): Markdown fenced code wraps long lines, as RichText does (#7564)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/3235ec99a877267c4120b1a3f334a5ad1782c0d6
-- [ ] `22743455a` feat(richtext): release @astryxdesign/richtext as a stable package (#7224)
+  - 结论：不适用：改的是 core `Markdown` 里代码块的换行样式，归 C9 与 F1b。
+- [x] `22743455a` feat(richtext): release @astryxdesign/richtext as a stable package (#7224)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/__tests__/MarkdownPluginsImportExport.a11y.chromium.spec.ts、packages/richtext/src/__tests__/Playground.a11y.chromium.spec.ts、packages/richtext/src/__tests__/RichTextEditorToolbar.a11y.chromium.spec.ts、packages/richtext/src/__tests__/RichTextView.a11y.chromium.spec.ts、packages/richtext/src/linkUtils.ts、packages/richtext/src/markdownSerializers.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/__tests__/MarkdownPluginsImportExport.a11y.chromium.spec.ts、packages/richtext/src/__tests__/Playground.a11y.chromium.spec.ts、packages/richtext/src/__tests__/RichTextEditorToolbar.a11y.chromium.spec.ts、packages/richtext/src/__tests__/RichTextView.a11y.chromium.spec.ts
   - 还涉及：C1、C9、F1b、F1c、F3f
   - 链接：https://github.com/facebook/astryx/commit/22743455aa9a4047affcaba9f300184ed657cbc3
+  - 结论：已采纳：包按公开正式包建（不设 `private`），并加入 `.changeset/config.json` 的 fixed 组；浏览器用例交给 F1b。
 
 ### fix
 
-- [ ] `bc18d617d` fix(richtext): declare the rich-text-editor theme target's visual props (#6976)
+- [x] `bc18d617d` fix(richtext): declare the rich-text-editor theme target's visual props (#6976)
   - 文件：packages/richtext/src/doc-mjs.d.ts
   - 还涉及：F1b、F1c
   - 链接：https://github.com/facebook/astryx/commit/bc18d617dbc646ab564655fcb2602a7b5a0b9186
-- [ ] `b599105a4` fix(richtext): size a table's scroll wrapper from its container (#6994)
+  - 结论：不适用：改的是上游 docsite 的 `.doc.mjs` 类型声明，本项目不用 docsite 那套。
+- [x] `b599105a4` fix(richtext): size a table's scroll wrapper from its container (#6994)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/b599105a48fd7a6ba2b068f81c10486b64f3d0ce
-- [ ] `b45853314` fix(richtext): render documents with Markdown's typography, block spacing, and measure (#6997)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `b45853314` fix(richtext): render documents with Markdown's typography, block spacing, and measure (#6997)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/b45853314f8430d10deb4b7da5977b5d4dc1677a
-- [ ] `8701623a1` fix(richtext): continue a block across soft line breaks, as Markdown reads it (#7000)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `8701623a1` fix(richtext): continue a block across soft line breaks, as Markdown reads it (#7000)
   - 文件：packages/richtext/src/markdownHardLineBreak.ts、packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownTable.ts
   - 还涉及：F1b、F1c
   - 链接：https://github.com/facebook/astryx/commit/8701623a13efee294db55a5e044f4be1ee457689
-- [ ] `01972bcea` fix(richtext): space list rows like Markdown's lists (#7003)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `01972bcea` fix(richtext): space list rows like Markdown's lists (#7003)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/01972bcea5c48de907c13b3b031726278063fb48
-- [ ] `643fe130e` fix(richtext): nest list items the way CommonMark does (#7002)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `643fe130e` fix(richtext): nest list items the way CommonMark does (#7002)
   - 文件：packages/richtext/src/markdownListExport.ts、packages/richtext/src/markdownListIndentation.test.ts、packages/richtext/src/markdownListIndentation.ts、packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/markdownListIndentation.test.ts
   - 还涉及：F1b、F1c
   - 链接：https://github.com/facebook/astryx/commit/643fe130e7cc302ad045c44208c1d4e549366369
-- [ ] `dae1f00de` fix(richtext): give every block the surface's direction instead of guessing it per block (#7001)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `dae1f00de` fix(richtext): give every block the surface's direction instead of guessing it per block (#7001)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/dae1f00de284cdd42f7985807432b4bd7ea3cbbf
-- [ ] `ca7702584` fix(richtext): give table columns core Markdown's readable width floors (#7005)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `ca7702584` fix(richtext): give table columns core Markdown's readable width floors (#7005)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/ca77025847badbe9c4c3ac3b1488d58c9a0bb721
-- [ ] `efac39f55` fix(richtext): keep a thematic break written under a block as written when the block changes (#7017)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `efac39f55` fix(richtext): keep a thematic break written under a block as written when the block changes (#7017)
   - 文件：packages/richtext/src/markdownSource.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/efac39f55f6a6835f2e9fc0fc07f6cc49dc48b8a
-- [ ] `8aa0e945e` fix(richtext): give each list depth its own marker, so the second bulleted level draws circles (#7024)
+  - 结论：已采纳：`markdownSource.ts` 的分割线保留逻辑照搬，`markdownSource.test.ts` 里对应用例已跑通。
+- [x] `8aa0e945e` fix(richtext): give each list depth its own marker, so the second bulleted level draws circles (#7024)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/8aa0e945e94f81dbd773768e94e78dc7cf99ec4c
-- [ ] `b8e30f368` fix(richtext): render struck-through text inside a <del>, so it is a deletion and keeps its other marks (#7019)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `b8e30f368` fix(richtext): render struck-through text inside a <del>, so it is a deletion and keeps its other marks (#7019)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/strikethroughDeletion.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/b8e30f368272a70ec3cc4ab3a0d7c112f04c43e2
-- [ ] `671eb9437` fix(richtext): render bold italic text inside an <em>, so it is emphasis as well as strong (#7034)
+  - 结论：不适用：改的是编辑器画出来的 DOM（`<del>`），归 F1b。
+- [x] `671eb9437` fix(richtext): render bold italic text inside an <em>, so it is emphasis as well as strong (#7034)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/strikethroughDeletion.ts、packages/richtext/src/textSemantics.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/671eb9437499d3687647a57ab5a7603d18ae1f55
-- [ ] `4b7cb3aea` fix(richtext): start a nested numbered list at the number its first item was written with (#7043)
+  - 结论：不适用：改的是编辑器画出来的 DOM（`<em>`），归 F1b。
+- [x] `4b7cb3aea` fix(richtext): start a nested numbered list at the number its first item was written with (#7043)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/markdownOrderedList.test.ts、packages/richtext/src/markdownOrderedList.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts、packages/richtext/src/markdownOrderedList.test.ts
   - 链接：https://github.com/facebook/astryx/commit/4b7cb3aeac4ac13d96f2ca97027b48aac1282864
-- [ ] `0353bb2bb` fix(Markdown): show each task item's checkbox in a list that mixes task and plain items (#7045)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `0353bb2bb` fix(Markdown): show each task item's checkbox in a list that mixes task and plain items (#7045)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 还涉及：C9、C12
   - 链接：https://github.com/facebook/astryx/commit/0353bb2bbb270fe1fad15bd2cb6de8cecde3060c
-- [ ] `a97259bce` fix(richtext): toggle a format on plugin nodes selected alone (#7047)
+  - 结论：不适用：改的是勾选框画法，归 C9、C12 与 F1b。
+- [x] `a97259bce` fix(richtext): toggle a format on plugin nodes selected alone (#7047)
   - 文件：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/markdownExtensions.test.ts、packages/richtext/src/markdownSource.ts
   - 测试：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/markdownExtensions.test.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/a97259bce83f0b5d80c90e62030dcb61e1b17bea
-- [ ] `f6c5c7c90` fix(richtext): read backslash escapes as core Markdown does, and keep backslashes in code (#7048)
+  - 结论：已采纳：`markdownSource.ts` 里插件节点单独加格式的导出逻辑搬了；工具栏显示交给 F1b。
+- [x] `f6c5c7c90` fix(richtext): read backslash escapes as core Markdown does, and keep backslashes in code (#7048)
   - 文件：packages/richtext/src/markdownCharacterReferences.ts、packages/richtext/src/markdownEscapes.test.ts、packages/richtext/src/markdownLink.ts、packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/markdownEscapes.test.ts
   - 链接：https://github.com/facebook/astryx/commit/f6c5c7c90641120779a8778abf57679cff015e4c
-- [ ] `0d7197d7e` fix(richtext): import a link core refuses as its source text, never a link (#7065)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `0d7197d7e` fix(richtext): import a link core refuses as its source text, never a link (#7065)
   - 文件：packages/richtext/src/markdownCharacterReferences.ts、packages/richtext/src/markdownSource.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/0d7197d7e9a1228b716a0f1a2baa2ad5f23b238b
-- [ ] `6260001bf` fix(richtext): read tilde code fences, and every fence's info string as core does (#7061)
+  - 结论：已采纳：`protectRefusedLinks` / `$unwrapRefusedLinks` 照搬。效果受 core 限制：我们 core 的 `parseInlineAst` 还不在解析时拒绝不安全地址，相关 5 条测试标了 todo，见回报第 6 节。
+- [x] `6260001bf` fix(richtext): read tilde code fences, and every fence's info string as core does (#7061)
   - 文件：packages/richtext/src/markdownCodeFence.test.ts、packages/richtext/src/markdownCodeFence.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/markdownCodeFence.test.ts
   - 链接：https://github.com/facebook/astryx/commit/6260001bfec3d3d20d23b8944d00f092668ec20a
-- [ ] `52e4193ac` fix(richtext): show a plugin node's format in the toolbar when it is selected alone (#7063)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `52e4193ac` fix(richtext): show a plugin node's format in the toolbar when it is selected alone (#7063)
   - 文件：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/markdownExtensionNode.ts、packages/richtext/src/markdownExtensionSelection.test.ts
   - 测试：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/markdownExtensionSelection.test.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/52e4193ac107ff13bc93955602d4d5f8c40e2f01
-- [ ] `090588faa` fix(richtext): select a Markdown plugin node whole with a click (#7067)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `090588faa` fix(richtext): select a Markdown plugin node whole with a click (#7067)
   - 文件：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts、packages/richtext/src/markdownExtensionNode.ts、packages/richtext/src/markdownExtensionSelection.test.ts
   - 测试：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts、packages/richtext/src/markdownExtensionSelection.test.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/090588faa24c6089e4e22491081df4fd65995ea2
-- [ ] `51a2247c3` fix(richtext): keep every line of fenced code as written (#7069)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `51a2247c3` fix(richtext): keep every line of fenced code as written (#7069)
   - 文件：packages/richtext/src/markdownCodeFence.test.ts、packages/richtext/src/markdownCodeFence.ts
   - 测试：packages/richtext/src/markdownCodeFence.test.ts
   - 链接：https://github.com/facebook/astryx/commit/51a2247c32338c92f6136fcfa65ebfe78129c8f1
-- [ ] `a9c080d73` fix(richtext): read angle-bracket link destinations as core does, and write spaces in them (#7070)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `a9c080d73` fix(richtext): read angle-bracket link destinations as core does, and write spaces in them (#7070)
   - 文件：packages/richtext/src/markdownAngleDestinations.test.ts、packages/richtext/src/markdownLink.ts
   - 测试：packages/richtext/src/markdownAngleDestinations.test.ts
   - 链接：https://github.com/facebook/astryx/commit/a9c080d738c29082ffaa1dcd9d75f5c3ad97f8a1
-- [ ] `28b879f42` fix(richtext): read code spans before the marks around them (#7066)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `28b879f42` fix(richtext): read code spans before the marks around them (#7066)
   - 文件：packages/richtext/src/markdownCharacterReferences.ts、packages/richtext/src/markdownCodeSpans.test.ts、packages/richtext/src/markdownSource.ts
   - 测试：packages/richtext/src/markdownCodeSpans.test.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/28b879f42627a9218bbcd18921b675a056640211
-- [ ] `937c3894f` fix(Markdown, richtext): read a code fence's language after spaces, on both surfaces (#7072)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `937c3894f` fix(Markdown, richtext): read a code fence's language after spaces, on both surfaces (#7072)
   - 文件：packages/richtext/src/markdownCodeFence.test.ts、packages/richtext/src/markdownCodeFence.ts
   - 测试：packages/richtext/src/markdownCodeFence.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/937c3894f80b64ef68e1a325e5448cc4ec8269d3
-- [ ] `0d75803c0` fix(richtext): read angle-bracket destination edges as core does, and write brackets with spaces (#7073)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `0d75803c0` fix(richtext): read angle-bracket destination edges as core does, and write brackets with spaces (#7073)
   - 文件：packages/richtext/src/markdownAngleDestinations.test.ts、packages/richtext/src/markdownCharacterReferences.ts、packages/richtext/src/markdownLink.ts
   - 测试：packages/richtext/src/markdownAngleDestinations.test.ts
   - 链接：https://github.com/facebook/astryx/commit/0d75803c047a75682594eba2a0fd51e5da61a9ae
-- [ ] `74a62ce8e` fix(richtext): export text with long runs of spaces in linear time (#7085)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `74a62ce8e` fix(richtext): export text with long runs of spaces in linear time (#7085)
   - 文件：packages/richtext/src/markdownCharacterReferences.ts、packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownSpaceRuns.test.ts、packages/richtext/src/markdownSpaceRuns.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/markdownSpaceRuns.test.ts
   - 链接：https://github.com/facebook/astryx/commit/74a62ce8ee355ef3e8c2240d779aaa50968d9f5e
-- [ ] `2e5bc96f8` fix(Markdown): keep content indented into a list item in the item after a blank line (#7092)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `2e5bc96f8` fix(Markdown): keep content indented into a list item in the item after a blank line (#7092)
   - 文件：packages/richtext/src/markdownListContinuation.test.ts
   - 测试：packages/richtext/src/markdownListContinuation.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/2e5bc96f8ddde8c5b07d2f91215e1c28019e90f3
-- [ ] `92779d3fb` fix(richtext): export a run of tabs in linear time (#7093)
+  - 结论：已采纳：`markdownListContinuation.test.ts` 已搬并通过。
+- [x] `92779d3fb` fix(richtext): export a run of tabs in linear time (#7093)
   - 文件：packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownTabRuns.test.ts
   - 测试：packages/richtext/src/markdownTabRuns.test.ts
   - 链接：https://github.com/facebook/astryx/commit/92779d3fbd0f12e659203c7d719d5bb00935060c
-- [ ] `5e67ff8bd` fix(Markdown, richtext): a destination opening with < must be a whole angle-bracket destination (#7086)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `5e67ff8bd` fix(Markdown, richtext): a destination opening with < must be a whole angle-bracket destination (#7086)
   - 文件：packages/richtext/src/markdownAngleDestinations.test.ts、packages/richtext/src/markdownCharacterReferences.ts、packages/richtext/src/markdownLink.ts
   - 测试：packages/richtext/src/markdownAngleDestinations.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/5e67ff8bd7924d1a129315c6dafee1dea33901b2
-- [ ] `34d32e652` fix(Markdown): end a list at a thematic break (#7087)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `34d32e652` fix(Markdown): end a list at a thematic break (#7087)
   - 文件：packages/richtext/src/markdownListThematicBreak.test.ts
   - 测试：packages/richtext/src/markdownListThematicBreak.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/34d32e6528b513ea56c7bfc9f054928bb79d09a4
-- [ ] `9ad52e7a8` fix(richtext): render a thematic break inside a list item as a break, keeping every item (#7088)
+  - 结论：已采纳：`markdownListThematicBreak.test.ts` 已搬并通过。
+- [x] `9ad52e7a8` fix(richtext): render a thematic break inside a list item as a break, keeping every item (#7088)
   - 文件：packages/richtext/src/markdownListIndentation.ts、packages/richtext/src/markdownListThematicBreakInside.test.ts、packages/richtext/src/markdownSource.ts
   - 测试：packages/richtext/src/markdownListThematicBreakInside.test.ts
   - 链接：https://github.com/facebook/astryx/commit/9ad52e7a8b4ff1e3dccadb3226eec028133f2567
-- [ ] `84fdbd16f` fix(richtext): write a link address's backslashes escaped, so they read back (#7098)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `84fdbd16f` fix(richtext): write a link address's backslashes escaped, so they read back (#7098)
   - 文件：packages/richtext/src/markdownAngleDestinations.test.ts、packages/richtext/src/markdownLink.ts
   - 测试：packages/richtext/src/markdownAngleDestinations.test.ts
   - 链接：https://github.com/facebook/astryx/commit/84fdbd16fe3b9ea9843c93f5e8b8fc1f7c17616f
-- [ ] `197cb5e59` fix(richtext): keep backticks in an angle-bracket destination out of code spans (#7099)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `197cb5e59` fix(richtext): keep backticks in an angle-bracket destination out of code spans (#7099)
   - 文件：packages/richtext/src/markdownAngleCodeSpans.test.ts、packages/richtext/src/markdownCharacterReferences.ts
   - 测试：packages/richtext/src/markdownAngleCodeSpans.test.ts
   - 链接：https://github.com/facebook/astryx/commit/197cb5e5948f6732e610445f460a792979a33545
-- [ ] `c2a49ec01` fix(Markdown, richtext): read a block quote marker as CommonMark does (#7101)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `c2a49ec01` fix(Markdown, richtext): read a block quote marker as CommonMark does (#7101)
   - 文件：packages/richtext/src/markdownQuote.ts、packages/richtext/src/markdownQuoteMarkers.test.ts、packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/markdownQuoteMarkers.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/c2a49ec01d14ec225df3e52efc22d99e10f62e01
-- [ ] `43b449565` fix(Markdown, richtext): read an ATX heading indented up to three spaces as a heading (#7103)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `43b449565` fix(Markdown, richtext): read an ATX heading indented up to three spaces as a heading (#7103)
   - 文件：packages/richtext/src/markdownHeading.ts、packages/richtext/src/markdownHeadingMarkers.test.ts、packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/markdownHeadingMarkers.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/43b449565dc0fa4d8bb0a6aaeec779e663ac777a
-- [ ] `2e9a71a16` fix(richtext): run the core lint rules and theming guards over packages/richtext (#7083)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `2e9a71a16` fix(richtext): run the core lint rules and theming guards over packages/richtext (#7083)
   - 文件：packages/richtext/src/editorTheme.ts
   - 还涉及：B1、F1b
   - 链接：https://github.com/facebook/astryx/commit/2e9a71a16b61367c383dcc5852002b24e2c03315
-- [ ] `3a16495ea` fix(Markdown, richtext): read a code fence indented up to three spaces as CommonMark does (#7111)
+  - 结论：不适用：上游给 `editorTheme.ts` 跑 lint 规则，我们这一版还没有主题类名表，归 F1b。
+- [x] `3a16495ea` fix(Markdown, richtext): read a code fence indented up to three spaces as CommonMark does (#7111)
   - 文件：packages/richtext/src/markdownCodeFence.ts、packages/richtext/src/markdownIndentedFences.test.ts
   - 测试：packages/richtext/src/markdownIndentedFences.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/3a16495ea014b84dd596fbbea408e13fa54156f0
-- [ ] `63db442c5` fix(richtext): escape a block marker after any leading spaces on export, so text stays text (#7118)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `63db442c5` fix(richtext): escape a block marker after any leading spaces on export, so text stays text (#7118)
   - 文件：packages/richtext/src/markdownSource.ts、packages/richtext/src/markdownSpacedBlockStarts.test.ts
   - 测试：packages/richtext/src/markdownSpacedBlockStarts.test.ts
   - 链接：https://github.com/facebook/astryx/commit/63db442c5a373b684e117d2c70d266428753314b
-- [ ] `51bf85cd6` fix(Markdown, richtext): read an indented table with its own columns (#7120)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `51bf85cd6` fix(Markdown, richtext): read an indented table with its own columns (#7120)
   - 文件：packages/richtext/src/markdownIndentedTables.test.ts、packages/richtext/src/markdownTable.ts
   - 测试：packages/richtext/src/markdownIndentedTables.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/51bf85cd6c8b7988ce7d5c3d5c548bd0a9168623
-- [ ] `9430d2257` fix(Markdown, richtext): end a code block left open at the end on its last line of code (#7126)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `9430d2257` fix(Markdown, richtext): end a code block left open at the end on its last line of code (#7126)
   - 文件：packages/richtext/src/markdownCodeFence.ts、packages/richtext/src/markdownOpenFence.test.ts
   - 测试：packages/richtext/src/markdownOpenFence.test.ts
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/9430d22578c08b6f76ca9630d466b30b72c2b8a0
-- [ ] `a073f05e7` fix(richtext): RichTextView draws every block in the theme's body type (#7220)
+  - 结论：已采纳：对应文件按上游行为搬了。
+- [x] `a073f05e7` fix(richtext): RichTextView draws every block in the theme's body type (#7220)
   - 文件：packages/richtext/src/__tests__/RichTextView.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/RichTextView.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/a073f05e7374faa4bd97d96b32bdcf4d646f2cd1
-- [ ] `aea7a8dc6` fix(richtext): keep the block-format selector readable when the toolbar runs out of room (#7217)
+  - 结论：交给 F1b：浏览器交互用例要挂载编辑器，这一版还没有界面。
+- [x] `aea7a8dc6` fix(richtext): keep the block-format selector readable when the toolbar runs out of room (#7217)
   - 文件：packages/richtext/src/__tests__/RichTextEditorToolbar.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/RichTextEditorToolbar.a11y.chromium.spec.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/aea7a8dc61c727eb4659bc26475c3fe2145bada8
-- [ ] `4a174093f` fix(richtext): declare the editor's ref prop, and clear two stale headers and two dead style entries (#7422)
+  - 结论：交给 F1b：浏览器交互用例要挂载编辑器，这一版还没有界面。
+- [x] `4a174093f` fix(richtext): declare the editor's ref prop, and clear two stale headers and two dead style entries (#7422)
   - 文件：packages/richtext/src/linkUtils.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/4a174093fd1045cf5e2b4602a45ab48ae6c9d5ab
-- [ ] `c187a4a9f` fix(richtext): ring the cells in a table selection (#7569)
+  - 结论：已采纳：`linkUtils.ts` 照搬（去掉指向上游 `.doc.mjs` 的文件头同步说明）。
+- [x] `c187a4a9f` fix(richtext): ring the cells in a table selection (#7569)
   - 文件：packages/richtext/src/__tests__/TableCellSelection.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts
   - 测试：packages/richtext/src/__tests__/TableCellSelection.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/c187a4a9f1cb656698b6e35ca48430ae77b190b1
-- [ ] `366aafa70` fix(richtext): point the table-selection spec at the renamed story (#7575)
+  - 结论：交给 F1b：改的是编辑器画出来的样子（主题类名表、DOM 结构），这一版还没有界面。
+- [x] `366aafa70` fix(richtext): point the table-selection spec at the renamed story (#7575)
   - 文件：packages/richtext/src/__tests__/TableCellSelection.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/TableCellSelection.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/366aafa70d6be3f60c4c20cf83ba614ba4c2e45e
+  - 结论：交给 F1b：浏览器交互用例要挂载编辑器，这一版还没有界面。
 
 ### perf
 
-- [ ] `604e0fd6f` perf(richtext): stand in only long runs of spaces, so ordinary text exports directly (#7095)
+- [x] `604e0fd6f` perf(richtext): stand in only long runs of spaces, so ordinary text exports directly (#7095)
   - 文件：packages/richtext/src/markdownSpaceRuns.test.ts、packages/richtext/src/markdownSpaceRuns.ts
   - 测试：packages/richtext/src/markdownSpaceRuns.test.ts
   - 链接：https://github.com/facebook/astryx/commit/604e0fd6fad84e3f9fdb1190c99507d78d028883
+  - 结论：已采纳：对应文件按上游行为搬了。
 
 ### refactor
 
-- [ ] `50ce8947f` refactor(richtext): keep editor theme classes, autolink patterns and the Transformer re-export internal (#7560)
+- [x] `50ce8947f` refactor(richtext): keep editor theme classes, autolink patterns and the Transformer re-export internal (#7560)
   - 文件：packages/richtext/src/index.ts、packages/richtext/src/publicSurface.test.ts
   - 测试：packages/richtext/src/publicSurface.test.ts
   - 还涉及：F1b
   - 链接：https://github.com/facebook/astryx/commit/50ce8947f01891c32b9e83d08de8c4a691c45e21
+  - 结论：已采纳：入口只导出 `markdownToEditorStateJSON`、`editorStateJSONToMarkdown`、`createRichTextExtension`、`RichTextExtensionError`、`sanitizeUrl`、`validateUrl`，主题类名和自动链接正则没有导出。`publicSurface.test.ts` 归 F1b。
 
 ### test
 
-- [ ] `d6fa1d660` test(richtext): keep a table cell's link through an edit of the table (#7052)
+- [x] `d6fa1d660` test(richtext): keep a table cell's link through an edit of the table (#7052)
   - 文件：packages/richtext/src/markdownTableLinks.test.ts
   - 测试：packages/richtext/src/markdownTableLinks.test.ts
   - 链接：https://github.com/facebook/astryx/commit/d6fa1d66038a000dea4c851cec8a2beb6064f723
-- [ ] `74065ba97` test: keep two timing budgets steady under CI load (#7128)
+  - 结论：已采纳：对应测试或构建配置照搬。
+- [x] `74065ba97` test: keep two timing budgets steady under CI load (#7128)
   - 文件：packages/richtext/src/markdownSpaceRuns.test.ts
   - 测试：packages/richtext/src/markdownSpaceRuns.test.ts
   - 还涉及：C11
   - 链接：https://github.com/facebook/astryx/commit/74065ba970b49111bb128160802ca5d5ad644c69
-- [ ] `c937062e3` test(richtext): settle each key before the next in the plugin-node keyboard test (#7133)
+  - 结论：已采纳：`markdownSpaceRuns.test.ts` 已搬，时间预算按上游的宽松口径保留。
+- [x] `c937062e3` test(richtext): settle each key before the next in the plugin-node keyboard test (#7133)
   - 文件：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/MarkdownPlugins.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/c937062e3831f8f97296597ae19a04c87acef62f
-- [ ] `ac2a0634f` test(richtext): one playground story carrying every editor feature (#7442)
+  - 结论：交给 F1b：浏览器交互用例要挂载编辑器，这一版还没有界面。
+- [x] `ac2a0634f` test(richtext): one playground story carrying every editor feature (#7442)
   - 文件：packages/richtext/src/__tests__/Playground.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/Playground.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/ac2a0634fe3d51f10e6846046c541ea344b55e77
+  - 结论：交给 F1b：浏览器交互用例要挂载编辑器，这一版还没有界面。
 
 ### docs
 
-- [ ] `cc101b9b3` docs(spec): lossless Markdown round trip in RichText (AST-062) (#6984)
+- [x] `cc101b9b3` docs(spec): lossless Markdown round trip in RichText (AST-062) (#6984)
   - 文件：docs/specs/AST-062-richtext-lossless-markdown/spec.md
   - 链接：https://github.com/facebook/astryx/commit/cc101b9b389e72e6d2f039fb07d21b2ed7c140c4
-- [ ] `1d8fca659` docs(spec): AST-064 Markdown plugins in RichText (#7032)
+  - 结论：不适用：上游规格文档 / docsite 集成清单，本项目不搬；文档归 F1c。
+- [x] `1d8fca659` docs(spec): AST-064 Markdown plugins in RichText (#7032)
   - 文件：docs/specs/AST-064-richtext-markdown-plugins/spec.md
   - 还涉及：C9
   - 链接：https://github.com/facebook/astryx/commit/1d8fca6592c22dfa59f9b2c1156046296d780f37
-- [ ] `cc06b1804` docs(spec): AST-064 FR11 stores a plugin's name and protocol version, not its parseKey (#7037)
+  - 结论：不适用：上游规格文档 / docsite 集成清单，本项目不搬；文档归 F1c。
+- [x] `cc06b1804` docs(spec): AST-064 FR11 stores a plugin's name and protocol version, not its parseKey (#7037)
   - 文件：docs/specs/AST-064-richtext-markdown-plugins/spec.md
   - 链接：https://github.com/facebook/astryx/commit/cc06b18041d9bebdba5086b5003358201f8999ff
-- [ ] `2366a5833` docs(richtext): the README shows Core's, the theme's and richtext's prebuilt stylesheets (#7582)
+  - 结论：不适用：上游规格文档 / docsite 集成清单，本项目不搬；文档归 F1c。
+- [x] `2366a5833` docs(richtext): the README shows Core's, the theme's and richtext's prebuilt stylesheets (#7582)
   - 文件：packages/richtext/astryx.integration.mjs
   - 还涉及：F1c
   - 链接：https://github.com/facebook/astryx/commit/2366a5833f6af35967515c01435b2c19fe203a7a
+  - 结论：不适用：上游规格文档 / docsite 集成清单，本项目不搬；文档归 F1c。
 
 ### 其它
 
-- [ ] `50c209b0e` chore(storybook): add a Markdown vs RichText parity sandbox (#6974)
+- [x] `50c209b0e` chore(storybook): add a Markdown vs RichText parity sandbox (#6974)
   - 文件：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 测试：packages/richtext/src/__tests__/MarkdownParitySandbox.a11y.chromium.spec.ts
   - 链接：https://github.com/facebook/astryx/commit/50c209b0e98f542b5de308f22ae0e005ee8a1b58
-- [ ] `4a14542b0` build(richtext): move Lexical peers and dev dependencies to the 0.52 minor (#7563)
+  - 结论：交给 F1b：浏览器交互用例要挂载编辑器，这一版还没有界面。
+- [x] `4a14542b0` build(richtext): move Lexical peers and dev dependencies to the 0.52 minor (#7563)
   - 文件：packages/richtext/src/__tests__/MarkdownPluginsImportExport.a11y.chromium.spec.ts、packages/richtext/src/editorTheme.ts、packages/richtext/src/markdownAngleDestinations.test.ts、packages/richtext/src/markdownLink.ts、packages/richtext/src/markdownListExport.ts
   - 测试：packages/richtext/src/__tests__/MarkdownPluginsImportExport.a11y.chromium.spec.ts、packages/richtext/src/markdownAngleDestinations.test.ts
   - 链接：https://github.com/facebook/astryx/commit/4a14542b042ce2febf6df0eeb43465ae4dfef186
+  - 结论：已采纳：Lexical 全套按 0.52 锁在 `richtext` catalog 里，peer 与 dev 都写 0.52.0。

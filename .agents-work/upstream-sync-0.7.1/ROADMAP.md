@@ -53,6 +53,8 @@ mindmap
       ✅ D9 指南补齐
       ✅ D10 core 遗留问题修复
       🟡 D11 文档润色
+      🔵 D12 演练场模板逐个走查
+      🔵 D13 主题编辑器补面板
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -248,6 +250,8 @@ flowchart TB
   E2["E2 拆文档站大文件"]:::ext --> D8
   D5c --> D10["D10 core 遗留问题修复"]
   G1 --> D11["D11 文档润色"]
+  D5c --> D12["D12 演练场模板逐个走查"]
+  D8 --> D13["D13 主题编辑器补面板"]
   CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
@@ -359,6 +363,8 @@ flowchart TB
 | D9 | 指南补齐 | C全部 | ✅ 已完成 | 1 | D9-impl | | 补 4 个新指南页与 6 处小节，中英文各一份 | #172 |
 | D10 | core 遗留问题修复 | D5c | ✅ 已完成 | 1 | D10-impl | | Stack 间距不再继承；Table 列头筛选同行、行级 ref 与事件；Selector 图标组件化；竖向 Step 内容；两个 Table 组合式函数 config 支持 ref | #180 |
 | D11 | 文档润色 | G1 | 🟡 实现中 | 1 | D11-impl | | | |
+| D12 | 演练场模板逐个走查 | D5c | 🔵 可开工 | 0 | | | | |
+| D13 | 主题编辑器补面板 | D8 | 🔵 可开工 | 0 | | | | |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
@@ -477,6 +483,8 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D9 指南补齐 | 按 `nodes/D4a/guides-gap.md` 的 B、C 两类，把原版命令行内置指南里我们文档站缺的 11 篇补进文档站（中英文）：新页 principles、working-with-ai、browser-support、layout；patterns 加「固定页眉页脚」「侧边详情面板」；typography 加「该做与不该做」；i18n 加「从右往左与伪语言测试」；styling 加「和 Tailwind / UnoCSS 一起用」；EmptyState 加插画规范。内容改写成 Vue 的说法，每条都要在代码里能找到依据。 | C全部 | 中英文页面齐全，侧栏能进，`docs:build` 通过，catalog 重生。 |
 | D10 core 遗留问题修复 | D5c 追平模板时 worker 发现的 core 问题，用户要求全部修完再发版（见 `nodes/D10/plan.md`）：Stack 内边距和间距被嵌套 Stack 继承；Table 列头筛选按钮掉到下一行、缺行级扩展点（整行悬停卡片做不出来）；Selector 选项 `icon` 只吃 CSS 类名；竖向 Step 的内容排在标签右边；`useTableTreeState` / `useTableSortableState` 的 config 只解开一层 ref。 | D5c | 每条都有复现测试、修复和浏览器验证；受影响的模板和文档 Demo 回归通过。 |
 | D11 文档润色 | 用文档写作子代理（document-writer）把文档站中英文的指南、主题、组件说明页通读润色：说法直白、一句一个意思、术语前后一致，不改代码示例和 API 事实。按目录分批，每批一个 PR。 | G1 | 每批 `docs:build` 通过、catalog 重生；改动只涉及行文，代码块和 props 表不变（有脚本核对）；抽查页面读起来顺。 |
+| D12 演练场模板逐个走查 | 用户验收时发现模板和原版仍有大量细节差异（缺工具栏、间距、图标不显示、图表不撑满）。用 ui-implementor 按原版 `page.tsx` 逐个模板、逐个区块对照修复，浅色深色都要对。分 3 批：D12 看板与表格类，后续批次另开节点。见 `nodes/D12/plan.md`。 | D5c | 每个模板和原版同视口、同主题的整页对照图逐区块一致；差异清单逐条关闭。 |
+| D13 主题编辑器补面板 | 演练场「主题」里 Components、Advanced 两个 tab 点开是空白。移植原版 `ComponentTokensPanel`、`RawTokensPanel`。见 `nodes/D13/plan.md`。 | D8 | 两个面板和原版对照一致，改动能实时作用到预览和导出。 |
 
 ---
 
