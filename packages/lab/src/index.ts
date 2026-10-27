@@ -8,5 +8,8 @@ export type {
   CircularProgressVariantMap,
 } from './CircularProgress/index.js'
 
+export { InfoTip } from './InfoTip/index.js'
+export type { InfoTipProps, InfoTipSize } from './InfoTip/index.js'
+
 export { Stat } from './Stat/index.js'
 export type { StatDelta, StatDeltaDirection, StatDeltaSentiment, StatProps, StatSize } from './Stat/index.js'
