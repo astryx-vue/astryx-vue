@@ -1654,7 +1654,8 @@ function SearchIcon() {
                     </StackItem>
                   </HStack>
                 </StackItem>
-                <HStack v-else :gap="2" align="center" wrap="nowrap" :min-height="32" class="tf-filter-row">
+                <StackItem v-else size="fill" class="tf-primary">
+                <HStack :gap="2" align="center" wrap="nowrap" :min-height="32" class="tf-filter-row">
                     <StackItem class="tf-search">
                       <TextInput
                         v-model="query"
@@ -1830,6 +1831,7 @@ function SearchIcon() {
                       </HStack>
                     </StackItem>
                   </HStack>
+                </StackItem>
 
                 <HStack :gap="3" align="center" class="tf-end">
                   <ToggleButton
