@@ -2380,24 +2380,6 @@ function SearchIcon() {
   background-color: var(--astryx-color-overlay-pressed);
 }
 
-/* 筛选行里的选择器统一 28px 高、12px 横向内边距，和同一行的 Upcoming 按钮齐平。 */
-.tf-filter-row :deep(.astryx-multi-selector-control),
-.tf-filter-row :deep(.astryx-selector-field) {
-  box-sizing: border-box;
-  height: 28px;
-  min-height: 28px;
-  padding-block: 3px;
-  padding-inline: 12px;
-}
-
-.tf-filter-row :deep(.astryx-complex-selector) {
-  box-sizing: border-box;
-  height: 28px;
-  min-height: 28px;
-  padding-block: 3px;
-  padding-inline: 12px;
-}
-
 /* 批量操作条：弱化底、上下 6px 内边距。 */
 .tf-bulk {
   border-radius: var(--astryx-radius-element);

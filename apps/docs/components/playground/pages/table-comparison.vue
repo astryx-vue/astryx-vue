@@ -21,7 +21,7 @@ import {
   useTableStickyColumns,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn, TablePlugin } from '@astryx-vue/core'
+import type { TableColumn } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
 type Modality = 'text' | 'image' | 'audio' | 'video' | 'document'
@@ -219,34 +219,23 @@ const grouped = useTableGroupedRows<SpecRow>(() => ({
 
 const sticky = useTableStickyColumns<SpecRow>({ startKeys: ['spec'] })
 
-/** 模型列的表头是一个选择器。core 的表头只收字符串，所以用 headerPatch 在表头前面放控件。 */
-const modelHeaderPlugin: TablePlugin<SpecRow> = {
-  headerPatch(column) {
-    const match = /^slot-(\d+)$/.exec(column.key)
-    if (!match)
-      return null
-    const index = Number(match[1])
-    const modelId = slots.value[index]
-    if (modelId == null)
-      return null
-    return {
-      before: () => h('div', { class: 'model-header', style: { flex: '1 1 100%', minWidth: 0 } }, h(Selector, {
-        'modelValue': modelId,
-        'label': `Model ${index + 1}`,
-        'isLabelHidden': true,
-        'size': 'lg',
-        'hasClear': slots.value.length > MIN_SLOTS,
-        'options': MODELS.map(option => ({
-          value: option.id,
-          label: option.name,
-          description: option.provider,
-          icon: PROVIDER_ICON[option.provider],
-          disabled: option.id !== modelId && slots.value.includes(option.id),
-        })),
-        'onUpdate:modelValue': (next: string | number | null) => next == null ? removeSlot(index) : selectSlot(index, String(next)),
-      })),
-    }
-  },
+/** 模型列的表头就是一个选择器；已被其它列选中的模型不可再选，保留至少 MIN_SLOTS 列时才显示清除。 */
+function renderModelHeader(index: number, modelId: string) {
+  return h('div', { class: 'model-header', style: { flex: '1 1 100%', minWidth: 0 } }, h(Selector, {
+    'modelValue': modelId,
+    'label': `Model ${index + 1}`,
+    'isLabelHidden': true,
+    'size': 'lg',
+    'hasClear': slots.value.length > MIN_SLOTS,
+    'options': MODELS.map(option => ({
+      value: option.id,
+      label: option.name,
+      description: option.provider,
+      icon: PROVIDER_ICON[option.provider],
+      disabled: option.id !== modelId && slots.value.includes(option.id),
+    })),
+    'onUpdate:modelValue': (next: string | number | null) => next == null ? removeSlot(index) : selectSlot(index, String(next)),
+  }))
 }
 
 const columns = computed<TableColumn<SpecRow>[]>(() => [
@@ -262,8 +251,7 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
       key: `slot-${index}`,
       width: proportional(1, { minWidth: 236 }),
       align: 'end' as const,
-      header: `Model ${index + 1}`,
-      headerHidden: true,
+      header: () => renderModelHeader(index, modelId),
       renderCell: (row: SpecRow) => {
         if (!model)
           return h(Text, { type: 'supporting' }, () => '—')
@@ -339,7 +327,7 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
             :id-key="grouped.idKey"
             density="spacious"
             dividers="grid"
-            :plugins="{ grouped: grouped.plugin, sticky, header: modelHeaderPlugin }"
+            :plugins="{ grouped: grouped.plugin, sticky }"
           />
         </Card>
       </VStack>

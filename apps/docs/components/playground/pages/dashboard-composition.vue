@@ -349,7 +349,7 @@ const timeRange = ref('1 year')
               <Card v-for="m in metrics.slice(group * 2, group * 2 + 2)" :key="m.label">
                 <VStack :gap="1">
                   <HStack :gap="3" align="center">
-                    <Text type="display-3" weight="bold" class="display-bold">{{ m.value }}</Text>
+                    <Text type="display-3" weight="bold">{{ m.value }}</Text>
                     <HStack :gap="1" align="center">
                       <Icon :icon="!m.change.startsWith('-') ? 'arrowUp' : 'arrowDown'" size="xsm" :color="!m.change.startsWith('-') ? 'success' : 'error'" />
                       <Text type="body" color="secondary">{{ m.change }}</Text>
@@ -367,7 +367,7 @@ const timeRange = ref('1 year')
                 <VStack :gap="4">
                   <HStack justify="between" align="center">
                     <Heading :level="3">Portfolio Value</Heading>
-                    <Text type="body"><Link href="#">View details</Link></Text>
+                    <Link href="#">View details</Link>
                   </HStack>
                   <PlaygroundResponsive :height="340">
                     <PlaygroundAreaChart
@@ -394,7 +394,7 @@ const timeRange = ref('1 year')
                 <VStack :gap="4">
                   <HStack justify="between" align="center">
                     <Heading :level="3">Top Assets</Heading>
-                    <Text type="body"><Link href="#">View all</Link></Text>
+                    <Link href="#">View all</Link>
                   </HStack>
                   <List density="spacious">
                     <ListItem
@@ -444,7 +444,7 @@ const timeRange = ref('1 year')
                 </VStack>
                 <PlaygroundSparkline :data="m.spark" :color="m.positive ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'" is-measured :pad-top="2" :pad-bottom="2" />
                 <HStack :gap="3" align="center">
-                  <Text type="display-3" weight="bold" class="display-bold">{{ m.price }}</Text>
+                  <Text type="display-3" weight="bold">{{ m.price }}</Text>
                   <HStack :gap="1" align="center">
                     <Icon :icon="m.positive ? 'arrowUp' : 'arrowDown'" size="xsm" :color="m.positive ? 'success' : 'error'" />
                     <Text type="body" color="secondary">{{ m.change }}</Text>
@@ -465,10 +465,3 @@ const timeRange = ref('1 year')
     </template>
   </Layout>
 </template>
-
-<style scoped>
-/* core 里 display 字号的字重规则盖过了 weight=bold，原版这里是加粗的。 */
-:deep(.display-bold) {
-  font-weight: var(--astryx-font-weight-bold, 700);
-}
-</style>
