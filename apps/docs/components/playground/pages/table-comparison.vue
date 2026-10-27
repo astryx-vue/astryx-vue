@@ -22,7 +22,8 @@ import {
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
-import { computed, h, ref } from 'vue'
+import { computed, defineComponent, h, ref } from 'vue'
+import type { VNodeChild } from 'vue'
 
 type Modality = 'text' | 'image' | 'audio' | 'video' | 'document'
 
@@ -56,6 +57,7 @@ function outlineCircle(paths: string[]) {
     'width': '1em',
     'height': '1em',
     'aria-hidden': 'true',
+    'style': { fill: 'none' },
   }, [h('circle', { cx: 12, cy: 12, r: 10 }), ...paths.map(d => h('path', { d }))])
 }
 const CircleCheckIcon = outlineCircle(['m9 12 2 2 4-4'])
@@ -101,15 +103,23 @@ interface Model {
   speed: number
   latency: number
   mmlu: number
+  humanEval: number
+  math: number
+  rateLimit: number
+  hasStreaming: boolean
   hasTools: boolean
+  hasFineTuning: boolean
 }
 
 const MODELS: Model[] = [
-  { id: 'atlas-4-flash', name: 'Atlas 4 Flash', provider: 'Northwind', context: 1_000_000, maxOutput: 65_536, cutoff: 'Mar 2026', inputModalities: ['text', 'image'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.1, outputPrice: 0.4, cachedPrice: 0.025, speed: 186, latency: 0.28, mmlu: 78.4, hasTools: true },
-  { id: 'meridian-2-5-flash', name: 'Meridian 2.5 Flash', provider: 'Calder Labs', context: 1_048_576, maxOutput: 8_192, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'video'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.075, outputPrice: 0.3, cachedPrice: 0.019, speed: 214, latency: 0.24, mmlu: 76.9, hasTools: true },
-  { id: 'kestrel-v4-turbo', name: 'Kestrel V4 Turbo', provider: 'Sable AI', context: 400_000, maxOutput: 16_384, cutoff: 'Feb 2026', inputModalities: ['text', 'image', 'document'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.3, outputPrice: 1.2, cachedPrice: 0.075, speed: 142, latency: 0.33, mmlu: 82.6, hasTools: true },
-  { id: 'orion-mini-3', name: 'Orion Mini 3', provider: 'Halcyon', context: 262_144, maxOutput: 32_768, cutoff: 'Nov 2025', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: true, inputPrice: 0.05, outputPrice: 0.2, cachedPrice: 0.012, speed: 248, latency: 0.19, mmlu: 71.2, hasTools: true },
-  { id: 'orion-3-ultra', name: 'Orion 3 Ultra', provider: 'Halcyon', context: 524_288, maxOutput: 65_536, cutoff: 'Nov 2025', inputModalities: ['text', 'image', 'document'], outputModalities: ['text', 'image'], hasOpenWeights: true, inputPrice: 0.9, outputPrice: 2.7, cachedPrice: 0.22, speed: 96, latency: 0.48, mmlu: 85.1, hasTools: true },
+  { id: 'atlas-4-flash', name: 'Atlas 4 Flash', provider: 'Northwind', context: 1_000_000, maxOutput: 65_536, cutoff: 'Mar 2026', inputModalities: ['text', 'image'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.1, outputPrice: 0.4, cachedPrice: 0.025, speed: 186, latency: 0.28, mmlu: 78.4, humanEval: 84.1, math: 71.2, rateLimit: 4_000, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'atlas-4-pro', name: 'Atlas 4 Pro', provider: 'Northwind', context: 2_000_000, maxOutput: 131_072, cutoff: 'Mar 2026', inputModalities: ['text', 'image', 'audio', 'document'], outputModalities: ['text', 'audio'], hasOpenWeights: false, inputPrice: 1.25, outputPrice: 5.0, cachedPrice: 0.31, speed: 74, latency: 0.62, mmlu: 88.7, humanEval: 93.4, math: 89.1, rateLimit: 1_000, hasStreaming: true, hasTools: true, hasFineTuning: false, },
+  { id: 'meridian-2-5-flash', name: 'Meridian 2.5 Flash', provider: 'Calder Labs', context: 1_048_576, maxOutput: 8_192, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'video'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.075, outputPrice: 0.3, cachedPrice: 0.019, speed: 214, latency: 0.24, mmlu: 76.9, humanEval: 81.7, math: 68.4, rateLimit: 2_000, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'meridian-2-5-pro', name: 'Meridian 2.5 Pro', provider: 'Calder Labs', context: 2_097_152, maxOutput: 65_536, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'audio', 'video', 'document'], outputModalities: ['text', 'image', 'audio'], hasOpenWeights: false, inputPrice: 1.25, outputPrice: 10.0, cachedPrice: 0.31, speed: 62, latency: 0.71, mmlu: 89.3, humanEval: 92.8, math: 91.6, rateLimit: 360, hasStreaming: true, hasTools: true, hasFineTuning: false, },
+  { id: 'orion-mini-3', name: 'Orion Mini 3', provider: 'Halcyon', context: 262_144, maxOutput: 32_768, cutoff: 'Nov 2025', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: true, inputPrice: 0.05, outputPrice: 0.2, cachedPrice: 0.012, speed: 248, latency: 0.19, mmlu: 71.2, humanEval: 74.6, math: 58.9, rateLimit: 8_000, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'orion-3-ultra', name: 'Orion 3 Ultra', provider: 'Halcyon', context: 524_288, maxOutput: 65_536, cutoff: 'Nov 2025', inputModalities: ['text', 'image', 'document'], outputModalities: ['text', 'image'], hasOpenWeights: true, inputPrice: 0.9, outputPrice: 2.7, cachedPrice: 0.22, speed: 96, latency: 0.48, mmlu: 85.1, humanEval: 89.2, math: 82.3, rateLimit: 1_200, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'kestrel-v4-turbo', name: 'Kestrel V4 Turbo', provider: 'Sable AI', context: 400_000, maxOutput: 16_384, cutoff: 'Feb 2026', inputModalities: ['text', 'image', 'document'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.3, outputPrice: 1.2, cachedPrice: 0.075, speed: 142, latency: 0.33, mmlu: 82.6, humanEval: 87.3, math: 77.8, rateLimit: 3_000, hasStreaming: true, hasTools: true, hasFineTuning: false, },
+  { id: 'kestrel-v4-lite', name: 'Kestrel V4 Lite', provider: 'Sable AI', context: 128_000, maxOutput: 8_192, cutoff: 'Feb 2026', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.04, outputPrice: 0.16, cachedPrice: 0.01, speed: 265, latency: 0.17, mmlu: 68.4, humanEval: 70.1, math: 54.2, rateLimit: 10_000, hasStreaming: true, hasTools: false, hasFineTuning: false, },
 ]
 
 const DEFAULT_SLOTS = ['atlas-4-flash', 'meridian-2-5-flash', 'kestrel-v4-turbo']
@@ -117,9 +127,10 @@ const MIN_SLOTS = 2
 
 const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 })
 const price = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 3 })
+const whole = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
 const decimal = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 })
 
-type GroupKey = 'Overview' | 'Pricing' | 'Performance' | 'Benchmarks'
+type GroupKey = 'Overview' | 'Pricing' | 'Performance' | 'Availability' | 'Benchmarks' | 'Limits'
 
 interface SpecRow extends Record<string, unknown> {
   id: string
@@ -130,9 +141,82 @@ interface SpecRow extends Record<string, unknown> {
   format?: (value: number) => string
   unit?: string
   isScore?: boolean
+  /** 整格自绘（跳过排名）。 */
+  renderValue?: (model: Model) => VNodeChild
   /** 模态行：格子位置固定，缺的项画成暗色。 */
   modalities?: (model: Model) => Modality[]
 }
+
+// ===== 30 天可用性条 =====
+
+const UPTIME_DAYS = 30
+const UPTIME_END = new Date('2026-09-07T00:00:00Z')
+const dayFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+const uptimeFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+/** 用模型 id 做种子的 xorshift：每个模型有自己固定的故障历史。 */
+function dailyUptime(seed: number, days: number): number[] {
+  let state = seed || 1
+  const next = () => {
+    state ^= state << 13
+    state ^= state >>> 17
+    state ^= state << 5
+    return Math.abs(state % 1000) / 1000
+  }
+  const rough = next()
+  const outageOdds = 0.01 + rough * 0.05
+  const degradedOdds = outageOdds + 0.03 + rough * 0.09
+  const out: number[] = []
+  for (let i = 0; i < days; i++) {
+    const roll = next()
+    if (roll < outageOdds)
+      out.push(96.5 + next() * 2.4)
+    else if (roll < degradedOdds)
+      out.push(99.0 + next() * 0.9)
+    else
+      out.push(99.95 + next() * 0.05)
+  }
+  return out
+}
+
+function hashId(id: string): number {
+  let hash = 0
+  for (let i = 0; i < id.length; i++)
+    hash = (hash << 5) - hash + id.charCodeAt(i)
+  return hash
+}
+
+function uptimeStatus(value: number): { color: string, status: string } {
+  if (value >= 99.95)
+    return { color: 'var(--astryx-color-success)', status: 'Operational' }
+  if (value >= 99)
+    return { color: 'var(--astryx-color-warning)', status: 'Degraded' }
+  return { color: 'var(--astryx-color-error)', status: 'Outage' }
+}
+
+/** 一行文字（平均值，悬停时换成当天读数）加一条 30 根的日柱。 */
+const UptimeStrip = defineComponent({
+  props: { modelId: { type: String, required: true } },
+  setup(props) {
+    const hovered = ref<number | null>(null)
+    const days = computed(() => dailyUptime(hashId(props.modelId), UPTIME_DAYS).map((uptime, i) => {
+      const date = new Date(UPTIME_END)
+      date.setUTCDate(date.getUTCDate() - (UPTIME_DAYS - 1 - i))
+      return { uptime, date: dayFormat.format(date), ...uptimeStatus(uptime) }
+    }))
+    const average = computed(() => days.value.reduce((total, day) => total + day.uptime, 0) / days.value.length)
+    return () => {
+      const day = hovered.value == null ? undefined : days.value[hovered.value]
+      return h(VStack, { gap: 1, hAlign: 'end', width: '100%' }, () => [
+        h(HStack, { height: 24, vAlign: 'center' }, () => h(Text, { type: 'body', color: 'primary' }, () =>
+          day == null ? `${uptimeFormat.format(average.value)}% average` : `${day.date} · ${uptimeFormat.format(day.uptime)}% · ${day.status}`)),
+        h('div', { style: { display: 'flex', width: '100%', height: '28px' }, role: 'img', ariaLabel: `Last ${UPTIME_DAYS} days uptime`, onMouseleave: () => { hovered.value = null } },
+          days.value.map((d, i) => h('div', { key: i, style: { flex: '1 1 0', minWidth: 0, padding: '0 1px', display: 'flex' }, onMouseenter: () => { hovered.value = i } },
+            h('div', { style: { flex: 1, borderRadius: '2px', background: d.color } })))),
+      ])
+    }
+  },
+})
 
 const SPEC_ROWS: SpecRow[] = [
   { id: 'provider', group: 'Overview', label: 'Provider', get: m => m.provider },
@@ -147,12 +231,18 @@ const SPEC_ROWS: SpecRow[] = [
   { id: 'cached-price', group: 'Pricing', label: 'Cached input', unit: '/1M', better: 'lower', get: m => m.cachedPrice, format: v => price.format(v) },
   { id: 'blended', group: 'Pricing', label: 'Blended (3:1)', unit: '/1M', better: 'lower', get: m => (m.inputPrice * 3 + m.outputPrice) / 4, format: v => price.format(v) },
   { id: 'speed', group: 'Performance', label: 'Output speed', unit: 'tok/s', better: 'higher', get: m => m.speed, format: v => String(Math.round(v)) },
-  { id: 'latency', group: 'Performance', label: 'Time to first token', unit: 'sec', better: 'lower', get: m => m.latency, format: v => v.toFixed(2) },
+  { id: 'latency', group: 'Performance', label: 'Time to first token', unit: 'sec', better: 'lower', get: m => m.latency, format: v => decimal.format(v) },
   { id: 'mmlu', group: 'Benchmarks', label: 'MMLU-Pro', better: 'higher', get: m => m.mmlu, format: v => decimal.format(v), isScore: true },
-  { id: 'tools', group: 'Benchmarks', label: 'Function calling', get: m => m.hasTools },
+  { id: 'human-eval', group: 'Benchmarks', label: 'HumanEval', better: 'higher', get: m => m.humanEval, format: v => decimal.format(v), isScore: true },
+  { id: 'math', group: 'Benchmarks', label: 'MATH', better: 'higher', get: m => m.math, format: v => decimal.format(v), isScore: true },
+  { id: 'rate-limit', group: 'Limits', label: 'Rate limit', unit: '/min', better: 'higher', get: m => m.rateLimit, format: v => whole.format(v) },
+  { id: 'streaming', group: 'Limits', label: 'Streaming', get: m => m.hasStreaming },
+  { id: 'tools', group: 'Limits', label: 'Function calling', get: m => m.hasTools },
+  { id: 'fine-tuning', group: 'Limits', label: 'Fine-tuning', get: m => m.hasFineTuning },
+  { id: 'usage', group: 'Availability', label: 'Uptime (30d)', get: m => m.name, renderValue: m => h(UptimeStrip, { modelId: m.id }) },
 ]
 
-const GROUP_ORDER: GroupKey[] = ['Overview', 'Pricing', 'Performance', 'Benchmarks']
+const GROUP_ORDER: GroupKey[] = ['Overview', 'Pricing', 'Performance', 'Availability', 'Benchmarks', 'Limits']
 
 const slots = ref<string[]>([...DEFAULT_SLOTS])
 const highlightBest = ref(true)
@@ -219,14 +309,27 @@ const grouped = useTableGroupedRows<SpecRow>(() => ({
 
 const sticky = useTableStickyColumns<SpecRow>({ startKeys: ['spec'] })
 
+/** 正被悬停或聚焦的模型列；清除（即移除该列）只在这时出现。 */
+const activeHeader = ref<number | null>(null)
+
 /** 模型列的表头就是一个选择器；已被其它列选中的模型不可再选，保留至少 MIN_SLOTS 列时才显示清除。 */
 function renderModelHeader(index: number, modelId: string) {
-  return h('div', { class: 'model-header', style: { flex: '1 1 100%', minWidth: 0 } }, h(Selector, {
+  const setActive = (value: boolean) => {
+    activeHeader.value = value ? index : (activeHeader.value === index ? null : activeHeader.value)
+  }
+  return h('div', {
+    class: 'model-header',
+    style: { flex: '1 1 100%', minWidth: 0 },
+    onMouseenter: () => setActive(true),
+    onMouseleave: () => setActive(false),
+    onFocusin: () => setActive(true),
+    onFocusout: () => setActive(false),
+  }, h(Selector, {
     'modelValue': modelId,
     'label': `Model ${index + 1}`,
     'isLabelHidden': true,
     'size': 'lg',
-    'hasClear': slots.value.length > MIN_SLOTS,
+    'hasClear': activeHeader.value === index && slots.value.length > MIN_SLOTS,
     'options': MODELS.map(option => ({
       value: option.id,
       label: option.name,
@@ -255,6 +358,8 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
       renderCell: (row: SpecRow) => {
         if (!model)
           return h(Text, { type: 'supporting' }, () => '—')
+        if (row.renderValue)
+          return row.renderValue(model)
         if (row.modalities) {
           const included = row.modalities(model)
           const explanation = MODALITY_ORDER.map(modality => `${MODALITY_LABEL[modality]}: ${included.includes(modality) ? 'supported' : 'not supported'}`).join('; ')
@@ -282,8 +387,8 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
         const isBest = highlightBest.value && best != null && value === best
         if (row.isScore) {
           return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end', height: 24 }, () => [
-            h(HStack, { width: 56, vAlign: 'center' }, () => h(ProgressBar, { label: 'Score', isLabelHidden: true, value, variant: 'accent' })),
-            h(Text, { hasTabularNumbers: true, weight: isBest ? 'semibold' : 'normal' }, () => row.format?.(value) ?? String(value)),
+            h(HStack, { width: 56, vAlign: 'center' }, () => h(ProgressBar, { label: `Score ${decimal.format(value)} out of 100`, isLabelHidden: true, value, variant: 'accent', width: '100%' })),
+            h(Text, { type: 'large', hasTabularNumbers: true, weight: isBest ? 'semibold' : 'normal' }, () => row.format?.(value) ?? String(value)),
           ])
         }
         const formatted = row.format?.(value) ?? String(value)
