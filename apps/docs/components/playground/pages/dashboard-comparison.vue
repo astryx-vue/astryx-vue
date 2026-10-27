@@ -498,7 +498,7 @@ function directionColor(metric: Metric) {
             </Text>
           </HStack>
           <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
-            <Card v-for="breakdown in BREAKDOWNS" :key="breakdown.title" :padding="4">
+            <Card v-for="breakdown in BREAKDOWNS" :key="breakdown.title" :padding="3">
               <VStack :gap="4">
                 <Heading :level="4" :accessibility-level="3">
                   {{ breakdown.title }}
@@ -565,6 +565,6 @@ function directionColor(metric: Metric) {
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
 .chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
 .legend-dot { width: 12px; height: 12px; border-radius: 0; flex: none; }
-.breakdown-bar { display: flex; width: 100%; height: 12px; border-radius: 4px; overflow: hidden; }
+.breakdown-bar { display: flex; width: 100%; height: 24px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
 </style>
