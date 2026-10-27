@@ -5,6 +5,16 @@ import HStack from './HStack.vue'
 import Stack from './Stack.vue'
 import VStack from './VStack.vue'
 
+const SPACING_VARIABLES = [
+  '--astryx-stack-gap',
+  '--astryx-stack-padding-block',
+  '--astryx-stack-padding-block-end',
+  '--astryx-stack-padding-block-start',
+  '--astryx-stack-padding-inline',
+  '--astryx-stack-padding-inline-end',
+  '--astryx-stack-padding-inline-start',
+]
+
 describe('stack', () => {
   it('lets axis padding override all-sides padding, including with zero', () => {
     const wrapper = mount(Stack, {
@@ -35,6 +45,29 @@ describe('stack', () => {
     expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-block-end')).toBe('var(--astryx-spacing-0, 0px)')
     expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-inline-start')).toBe('var(--astryx-spacing-3, 12px)')
     expect(wrapper.element.style.getPropertyValue('--astryx-stack-padding-inline-end')).toBe('var(--astryx-spacing-1-5, 6px)')
+  })
+
+  it('resets every spacing variable so a nested stack does not inherit the outer one', () => {
+    const wrapper = mount({
+      components: { Stack },
+      template: `
+        <Stack class="outer" :padding="6" :gap="4">
+          <Stack class="inner"><span>content</span></Stack>
+        </Stack>
+      `,
+    })
+
+    const outer = wrapper.find('.outer').element as HTMLElement
+    const inner = wrapper.find('.inner').element as HTMLElement
+
+    expect(outer.style.getPropertyValue('--astryx-stack-padding-block')).toBe('var(--astryx-spacing-6, 24px)')
+    expect(outer.style.getPropertyValue('--astryx-stack-gap')).toBe('var(--astryx-spacing-4, 16px)')
+
+    for (const name of SPACING_VARIABLES) {
+      expect(inner.style.getPropertyValue(name), name).not.toBe('')
+    }
+    expect(inner.style.getPropertyValue('--astryx-stack-padding-block')).toBe('initial')
+    expect(inner.style.getPropertyValue('--astryx-stack-gap')).toBe('initial')
   })
 
   it('formats numeric sizes as pixels and preserves string sizes', () => {
