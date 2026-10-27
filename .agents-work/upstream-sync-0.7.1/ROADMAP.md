@@ -43,7 +43,7 @@ mindmap
       ✅ D2 其余六套主题适配
       ✅ D3 Probe 主题调研
       ✅ D4a 命令行能力对照与取舍
-      🔵 D4b 命令行选定能力实现
+      🟡 D4b 命令行选定能力实现
       ✅ D5a 页面模板修复与补齐
       ⬜ D5b 页面模板接入命令行
       ✅ D5c 页面模板内容追平原版
@@ -72,7 +72,7 @@ mindmap
       ✅ F2b 图表展示组件
       🔵 F2c 图表使用文档
       🔵 F2d 图表 WebGL 标记
-      🔵 F3a 实验包：输入类组件
+      🟡 F3a 实验包：输入类组件
       ✅ F3b 实验包：展示类组件
       🔵 F3g 实验包：日程表
       🔵 F3c 实验包：浮层与引导
@@ -360,7 +360,7 @@ flowchart TB
 | D2 | 其余 6 套主题适配 | D1 C全部 | ✅ 已完成 | 1 | D2-impl | | 6 套主题 token 与组件覆盖值全部对齐上游；core 新增变量入口默认值不变 | #169 |
 | D3 | Probe 主题调研 | D1 | ✅ 已完成 | 0 | | | 调研结论：probe 是上游测试夹具，不移植 | nodes/D3/conclusion.md |
 | D4a | CLI 能力对照与取舍 | A1 | ✅ 已完成 | 1 | 总控+用户讨论 | | CLI 中等规模；init/theme/upgrade 只输出指引；doctor 只报告；D4b 范围定稿 | |
-| D4b | CLI 选定能力实现 | D4a A4 E1 | 🔵 可开工 | 0 | | | | |
+| D4b | CLI 选定能力实现 | D4a A4 E1 | 🟡 实现中 | 1 | D4b-impl | | | |
 | D5a | 页面模板修复与补齐 | C全部 | ✅ 已完成 | 1 | D5a-impl | | 补 160 处变量前缀并加检查；settings-dialog 版式；补 4 个模板与 50 张演示图片；原版未完成模板只能链接打开 | #171 |
 | D5c | 页面模板内容追平原版 | D5a | ✅ 已完成 | 3 | D5c-impl | | 57 个模板逐个和原版截图对照；修 3 处插槽名，29 个模板追平原版；演练场图表按容器宽度绘制 | #175 #177 #178 |
 | D5b | 页面模板接入 CLI | D5a D4b | ⬜ 未开始 | 0 | | | | |
@@ -387,7 +387,7 @@ flowchart TB
 | F2b | charts 组件 | F2a B7 C7 C14 C16 | ✅ 已完成 | 1 | F2b-impl | | Chart/Axis/Grid/Legend/Swatch/Tooltip 与 8 种 SVG 标记；上游用例除 WebGL 外全部移植 | #170 |
 | F2c | charts 文档 | F2b | 🔵 可开工 | 0 | | | | |
 | F2d | charts WebGL 标记 | F2b | 🔵 可开工 | 0 | | | 延后：等上游这部分成熟 | |
-| F3a | lab 输入类 | F0 C3 C8 C11 C12 C14 C15 C16 | 🔵 可开工 | 0 | | | | |
+| F3a | lab 输入类 | F0 C3 C8 C11 C12 C14 C15 C16 | 🟡 实现中 | 1 | F3a-impl | | | |
 | F3b | lab 展示类 | F0 C7 C16 | ✅ 已完成 | 1 | F3b-impl | | 新建 lab 包（canary），Stat/CircularProgress/InfoTip/SVGIcon/LogStream，85 测试 | #205 |
 | F3g | lab 日程表 | F0 B7 C6 C7 C14 C15 C16 | 🔵 可开工 | 0 | | | | |
 | F3c | lab 浮层与引导 | F0 C7 C14 C16 | 🔵 可开工 | 0 | | | | |
