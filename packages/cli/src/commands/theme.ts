@@ -4,7 +4,7 @@ import { catalog } from '../catalog.ts'
 import { printJson } from '../cli/context.ts'
 import { successEnvelope } from '../envelope.ts'
 import { CliError } from '../error.ts'
-import { formatThemeDetail, formatThemeList } from '../format.ts'
+import { formatThemeDetail, formatThemeList } from '../format-theme.ts'
 import { suggestByNames } from '../query.ts'
 import { BINARY } from '../spec.ts'
 
