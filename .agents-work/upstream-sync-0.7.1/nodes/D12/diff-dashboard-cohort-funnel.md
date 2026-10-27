@@ -28,3 +28,5 @@
 | Weekly retention cohorts 表 | 表头高 38；行高 38；热力格 Token 宽 46 | 表头 38；行高 39；Token 宽 38 | 不修：core。行高差 1px 同其它表；Token sm 的横向内边距 4px（原版 8px），同 table-collapsible 里记的 |
 | Retention 图例 | 5 枚 Token：< 32% … ≥ 70% | 相同；x 位置差约 4px（Token 内边距） | 一致（Token 差异同上） |
 | 深色模式 | 同浅色 | 未重截 | 结构与浅色同 |
+
+页面总高现状：原版 1779，我们 1783。差 4px 来自热力表 8 行每行 1px 的 core 行高差（表格总高差 8px）被前面已对齐的部分抵掉后剩下的零头。
