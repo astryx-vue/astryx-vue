@@ -4,6 +4,12 @@ export const BINARY = 'astryx-vue'
 
 export const PACKAGE_NAME = '@astryx-vue/cli'
 
+/** The design system package: where every component a project starts with comes from. */
+export const CORE_PACKAGE = '@astryx-vue/core'
+
+/** The docs site: where every guide and theme page the CLI prints comes from. */
+export const DOCS_PACKAGE = '@astryx-vue/docs'
+
 /** Values `search --type` accepts. Each one names a search domain. */
 export const SEARCH_TYPES = ['component', 'composable', 'doc', 'template'] as const
 

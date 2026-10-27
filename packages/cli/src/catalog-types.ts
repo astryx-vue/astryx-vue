@@ -66,6 +66,8 @@ export interface ComponentRecord {
   slug: string
   /** PascalCase identifier used by `component <Name>`. */
   name: string
+  /** The npm package that owns this component, e.g. `@astryx-vue/core` or `@astryx-vue/lab`. */
+  package: string
   /** `composable` entries are the functions the docs list under Utility. They have no demo. */
   kind: ComponentKind
   title: LocaleText
@@ -103,6 +105,11 @@ export type TemplateKind = 'page' | 'block'
 
 export interface TemplateRecord {
   slug: string
+  /**
+   * The package a reader gets this page from. The CLI carries the playground
+   * pages, so copying one needs nothing but the CLI.
+   */
+  package: string
   title: LocaleText
   /** One sentence, written by hand under `generate/template-meta/`. */
   description: LocaleText
@@ -120,11 +127,20 @@ export interface TemplateRecord {
   docsUrl: LocaleText
 }
 
+/** One package the catalog covers, so a result can say where a record comes from. */
+export interface CatalogPackage {
+  name: string
+  /** Repo-relative directory, e.g. `packages/core`. */
+  directory: string
+  /** True when the package is published only under the `canary` dist-tag. */
+  canary: boolean
+}
+
 export interface Catalog {
   generator: string
   description: string
-  packageName: '@astryx-vue/core'
-  themesPackage: '@astryx-vue/themes'
+  /** Every package the catalog covers, in reading order: core first, then the rest. */
+  packages: CatalogPackage[]
   conventions: { en: string[], zh: string[] }
   components: ComponentRecord[]
   topics: TopicRecord[]

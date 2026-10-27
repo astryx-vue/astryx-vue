@@ -3,7 +3,7 @@ import type { Suggestion } from './error.ts'
 import type { SearchType } from './spec.ts'
 import { catalog, componentNames, examplesFor, text } from './catalog.ts'
 import { CliError } from './error.ts'
-import { BINARY } from './spec.ts'
+import { BINARY, DOCS_PACKAGE } from './spec.ts'
 
 export interface SearchHit {
   /** Composables are their own domain, separate from components. */
@@ -41,8 +41,6 @@ const TOPIC_LOOKUP: Lookup<TopicRecord> = {
   label: topic => topic.id,
   partial: false,
 }
-
-const COMPONENT_PACKAGE = catalog.packageName
 
 /** Components and composables share one generated list, split by `kind`. */
 export function listComponents(): ComponentRecord[] {
@@ -125,8 +123,20 @@ export function searchCatalog(query: string, locale: 'en' | 'zh', options: { lim
         hits.push(scored)
     }
   }
-  hits.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
+  hits.sort(compareHits)
   return { matchCount: hits.length, results: hits.slice(0, options.limit) }
+}
+
+/**
+ * Ties on score are broken by domain, then by name, so an equal-scoring hit never
+ * changes place between runs: components first, then composables, docs, templates.
+ */
+const DOMAIN_ORDER: Record<SearchType, number> = { component: 0, composable: 1, doc: 2, template: 3 }
+
+function compareHits(a: SearchHit, b: SearchHit): number {
+  return b.score - a.score
+    || DOMAIN_ORDER[a.domain] - DOMAIN_ORDER[b.domain]
+    || a.name.localeCompare(b.name)
 }
 
 /** The name people type: `Button` for a component, `useClipboard` for a composable. */
@@ -223,7 +233,7 @@ function scoreComponent(query: string, record: ComponentRecord, locale: 'en' | '
   return {
     domain: record.kind,
     name,
-    package: COMPONENT_PACKAGE,
+    package: record.package,
     score: scored.score,
     reason: scored.reason,
     description: text(record.summary, locale),
@@ -246,7 +256,7 @@ function scoreTopic(query: string, topic: TopicRecord, locale: 'en' | 'zh'): Sea
   return {
     domain: 'doc',
     name: topic.id,
-    package: '@astryx-vue/docs',
+    package: DOCS_PACKAGE,
     score: scored.score,
     reason: scored.reason,
     description: text(topic.summary, locale),
@@ -268,7 +278,7 @@ function scoreTemplate(query: string, template: TemplateRecord, locale: 'en' | '
   return {
     domain: 'template',
     name: template.slug,
-    package: '@astryx-vue/cli',
+    package: template.package,
     score: scored.score,
     reason: scored.reason,
     description: text(template.description, locale),

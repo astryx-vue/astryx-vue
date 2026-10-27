@@ -21,9 +21,10 @@ describe('json envelopes', () => {
     expect(result.stderr).toBe('')
     const envelope = assertResponse(result.stdout, 'component.list')
     expect(envelope.apiVersion).toBe(1)
-    expect(envelope.package).toBe('@astryx-vue/core')
-    const data = envelope.data as { components: Record<string, { name: string, import: string | null }[]> }
-    expect(data.components.Action?.some(item => item.name === 'Button' && item.import === '@astryx-vue/core/Button')).toBe(true)
+    // A list can span packages, so the owner package sits on each entry.
+    expect(envelope.package).toBeUndefined()
+    const data = envelope.data as { components: Record<string, { name: string, package: string, import: string | null }[]> }
+    expect(data.components.Action?.some(item => item.name === 'Button' && item.package === '@astryx-vue/core' && item.import === '@astryx-vue/core/Button')).toBe(true)
     const names = Object.values(data.components).flat().map(item => item.name)
     expect(names).not.toContain('useClipboard')
     expect(names.some(name => name.startsWith('use'))).toBe(false)
@@ -512,6 +513,16 @@ describe('catalog source', () => {
     expect(chat?.slots.en.flatMap(group => group.rows).some(row => row.name === '`composer`')).toBe(true)
     expect(catalog.conventions.en.some(paragraph => paragraph.includes('own subpath'))).toBe(true)
     expect(catalog.topics.some(topic => topic.id === 'guide/installation')).toBe(true)
+  })
+
+  it('marks which package each record comes from', async () => {
+    const names = catalog.packages.map(pkg => pkg.name)
+    expect(names).toEqual(expect.arrayContaining(['@astryx-vue/core', '@astryx-vue/themes', '@astryx-vue/richtext', '@astryx-vue/charts', '@astryx-vue/lab']))
+    expect(catalog.components.every(component => names.includes(component.package))).toBe(true)
+    expect(catalog.components.find(component => component.slug === 'button')?.package).toBe('@astryx-vue/core')
+    // The CLI carries the playground pages, so copying a template needs nothing else.
+    expect(catalog.templates.every(template => template.package === '@astryx-vue/cli')).toBe(true)
+    expect(catalog.packages.find(pkg => pkg.name === '@astryx-vue/charts')?.canary).toBe(true)
   })
 
   it('marks composables and stores topic bodies without frontmatter', async () => {

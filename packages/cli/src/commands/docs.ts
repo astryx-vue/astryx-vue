@@ -5,8 +5,7 @@ import { printJson } from '../cli/context.ts'
 import { successEnvelope } from '../envelope.ts'
 import { formatTopicDetail, formatTopicList } from '../format.ts'
 import { listTopics, resolveTopic } from '../query.ts'
-
-const DOCS_PACKAGE = '@astryx-vue/docs'
+import { DOCS_PACKAGE } from '../spec.ts'
 
 /** `astryx-vue docs [<topic>]`: the guide and theme pages of the docs site. */
 export function docsCommand(args: CommandArgs): string {

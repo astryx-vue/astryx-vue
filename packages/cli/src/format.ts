@@ -5,11 +5,13 @@ import type { CopyReceipt } from './templates.ts'
 import { examplesFor, text } from './catalog.ts'
 import { firstSentence } from './generate/markdown.ts'
 import { displayName } from './query.ts'
-import { BINARY } from './spec.ts'
+import { BINARY, CORE_PACKAGE } from './spec.ts'
 
 interface Listing {
   name: string
   description: string
+  /** Left out of the line unless it is not core, so the long lists stay readable. */
+  package?: string
 }
 
 const KIND_LABELS: Record<'en' | 'zh', Record<TopicRecord['kind'], string>> = {
@@ -22,7 +24,7 @@ export function formatComponentList(components: readonly ComponentRecord[], loca
   for (const component of components) {
     const title = text(component.groupTitle, locale)
     const list = groups.get(title) ?? []
-    list.push({ name: label(component, locale), description: text(component.summary, locale) })
+    list.push({ name: label(component, locale), description: text(component.summary, locale), package: component.package })
     groups.set(title, list)
   }
   return formatGroupedList(groups, dense)
@@ -33,7 +35,7 @@ export function formatComposableList(composables: readonly ComponentRecord[], lo
   for (const composable of composables) {
     const title = text(composable.groupTitle, locale)
     const list = groups.get(title) ?? []
-    list.push({ name: displayName(composable), description: text(composable.summary, locale) })
+    list.push({ name: displayName(composable), description: text(composable.summary, locale), package: composable.package })
     groups.set(title, list)
   }
   return formatGroupedList(groups, dense)
@@ -149,11 +151,15 @@ function formatGroupedList(groups: Map<string, Listing[]>, dense: boolean): stri
   const blocks: string[] = []
   for (const [title, list] of groups) {
     const lines = list.map(item => dense
-      ? `  ${item.name}`
-      : `  ${item.name}  ${firstSentence(item.description)}`)
+      ? `  ${item.name}${packageNote(item)}`
+      : `  ${item.name}${packageNote(item)}  ${firstSentence(item.description)}`)
     blocks.push([title, ...lines].join('\n'))
   }
   return `${blocks.join('\n\n')}\n`
+}
+
+function packageNote(item: Listing): string {
+  return item.package && item.package !== CORE_PACKAGE ? `  (${item.package})` : ''
 }
 
 function label(component: ComponentRecord, locale: 'en' | 'zh'): string {

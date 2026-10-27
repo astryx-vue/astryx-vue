@@ -2,7 +2,9 @@ import type { AccessibilityItem, AnatomyPart, Catalog, CatalogEntryInput, Compon
 import type { PageExample } from './markdown.ts'
 import { readdir, readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
+import { CORE_PACKAGE, PACKAGE_NAME } from '../spec.ts'
 import { cleanMarkdown, extractPage, extractTopic, paragraphContaining, pascalCase } from './markdown.ts'
+import { discoverPackages, importPathFor, installablePackageNames, ownerOf, packageOfSpecifier } from './packages.ts'
 import { TEMPLATE_META } from './template-meta.ts'
 
 function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<typeof extractPage>): ReturnType<typeof extractPage> {
@@ -23,6 +25,9 @@ function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<t
 /** PascalCase subpath exports. Lowercase entries such as `./icons` and `./locale` are not components. */
 const COMPONENT_EXPORT = /^\.\/[A-Z][A-Za-z0-9]*$/
 
+/** The CLI ships the playground pages, so it owns every template record. */
+const TEMPLATE_PACKAGE = PACKAGE_NAME
+
 /**
  * Composables are the `use*` functions documented under Utility. They have no visual demo,
  * so their page has nothing to render and their meta.ts omits `demo`.
@@ -35,11 +40,11 @@ export function componentKind(slug: string, group: string): ComponentKind {
   return 'composable'
 }
 
-export function componentExportsMissingDocs(exportKeys: readonly string[], importPaths: readonly (string | null)[]): string[] {
+export function componentExportsMissingDocs(exportKeys: readonly string[], importPaths: readonly (string | null)[], packageName = CORE_PACKAGE): string[] {
   const referenced = new Set(importPaths.filter((path): path is string => Boolean(path)))
   return exportKeys
     .filter(key => COMPONENT_EXPORT.test(key))
-    .filter(key => !referenced.has(`@astryx-vue/core${key.slice(1)}`))
+    .filter(key => !referenced.has(`${packageName}${key.slice(1)}`))
     .sort((a, b) => a < b ? -1 : a > b ? 1 : 0)
 }
 
@@ -60,8 +65,6 @@ interface AccessibilitySource {
 }
 
 export async function buildCatalog(repoRoot: string, entries: readonly CatalogEntryInput[], groupTitles: { en: Record<string, string>, zh: Record<string, string> }, templates: readonly PlaygroundTemplateSummary[]): Promise<Catalog> {
-  const corePackage = JSON.parse(await readFile(join(repoRoot, 'packages/core/package.json'), 'utf8')) as { exports?: Record<string, unknown> }
-  const exportKeys = new Set(Object.keys(corePackage.exports ?? {}))
   const anatomy = {
     en: await readJson<Record<string, AnatomyPart[]>>(join(repoRoot, 'apps/docs/components/demo-infra/reference/anatomy.en.json')),
     zh: await readJson<Record<string, ReferencePart[]>>(join(repoRoot, 'apps/docs/components/demo-infra/reference/anatomy.zh.json')),
@@ -73,6 +76,7 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
 
   const missing: string[] = []
   const components: ComponentRecord[] = []
+  const packages = await discoverPackages(repoRoot)
   const demoSourceCache = new Map<string, Promise<Map<string, string>>>()
   for (const entry of entries) {
     const name = pascalCase(entry.slug)
@@ -97,11 +101,15 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
       : extracted.zh.importPath
         ? extracted.zh
         : null
-    const exportName = imported?.exportName ?? (exportKeys.has(`./${name}`) ? name : null)
-    const importPath = imported?.importPath ?? (exportName ? `@astryx-vue/core/${exportName}` : null)
+    const owner = imported?.importPath
+      ? packageOfSpecifier(imported.importPath, packages)
+      : ownerOf(name, packages)
+    const importPath = imported?.importPath ?? (owner ? importPathFor(name, owner) : null)
+    const exportName = imported?.exportName ?? (owner?.componentExports.includes(`./${name}`) ? name : null)
     components.push({
       slug: entry.slug,
       name,
+      package: owner?.name ?? CORE_PACKAGE,
       kind: componentKind(entry.slug, entry.group),
       title: { en: entry.en, zh: entry.zh },
       group: entry.group,
@@ -130,22 +138,25 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
   if (missing.length > 0)
     throw new Error(`component pages did not yield a usage summary:\n${missing.join('\n')}`)
 
-  const undocumented = componentExportsMissingDocs([...exportKeys], components.map(component => component.importPath))
+  const undocumented = packages.flatMap(pkg => componentExportsMissingDocs(
+    pkg.componentExports,
+    components.filter(component => component.package === pkg.name).map(component => component.importPath),
+    pkg.name,
+  ).map(key => `${pkg.name}${key.slice(1)}`))
   if (undocumented.length > 0) {
     throw new Error(
-      `core export is missing docs metadata. Add demos/<slug>/meta.ts and a docs page that imports it, then run pnpm --filter @astryx-vue/cli generate:\n${undocumented.join('\n')}`,
+      `a package export is missing docs metadata. Add demos/<slug>/meta.ts and a docs page that imports it, then run pnpm --filter @astryx-vue/cli generate:\n${undocumented.join('\n')}`,
     )
   }
 
   return {
     generator: 'packages/cli/scripts/generate-catalog.mjs',
-    description: 'Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, @astryx-vue/core exports, and the playground templates. Do not edit by hand.',
-    packageName: '@astryx-vue/core',
-    themesPackage: '@astryx-vue/themes',
+    description: 'Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, the workspace packages\' exports, and the playground templates. Do not edit by hand.',
+    packages: packages.map(pkg => ({ name: pkg.name, directory: pkg.directory, canary: pkg.canary })),
     conventions: await readConventions(repoRoot),
     components,
     topics: await readTopics(repoRoot),
-    templates: await buildTemplates(repoRoot, templates),
+    templates: await buildTemplates(repoRoot, templates, installablePackageNames(packages)),
   }
 }
 
@@ -156,16 +167,13 @@ export interface PlaygroundTemplateSummary {
   category: LocaleText
 }
 
-/** Packages a project can install. Everything else makes a template unready. */
-const INSTALLABLE_PACKAGES = new Set(['vue', '@astryx-vue/core'])
-
 /**
  * Builds the `templates` catalog from the playground pages plus the hand-written
  * metadata. Throws when a page has no metadata or metadata names a page that no
  * longer exists, so adding or deleting a playground page without touching
  * `template-meta.ts` fails the build instead of shipping a half-described template.
  */
-export async function buildTemplates(repoRoot: string, summaries: readonly PlaygroundTemplateSummary[]): Promise<TemplateRecord[]> {
+export async function buildTemplates(repoRoot: string, summaries: readonly PlaygroundTemplateSummary[], installable: ReadonlySet<string>): Promise<TemplateRecord[]> {
   const known = new Set(summaries.map(summary => summary.slug))
   const missing = summaries.map(summary => summary.slug).filter(slug => !TEMPLATE_META[slug])
   if (missing.length > 0)
@@ -178,10 +186,11 @@ export async function buildTemplates(repoRoot: string, summaries: readonly Playg
   for (const summary of summaries) {
     const meta = TEMPLATE_META[summary.slug]!
     const source = await readFile(join(repoRoot, 'apps/docs/components/playground/pages', `${summary.slug}.vue`), 'utf8')
-    const { componentsUsed, foreignPackages } = analyzeTemplateImports(source)
+    const { componentsUsed, foreignPackages } = analyzeTemplateImports(source, installable)
     const category = summary.category.en || summary.category.zh ? summary.category : (meta.category ?? { en: 'Other', zh: '其他' })
     records.push({
       slug: summary.slug,
+      package: TEMPLATE_PACKAGE,
       title: summary.title,
       description: meta.description,
       keywords: meta.keywords,
@@ -202,11 +211,11 @@ export async function buildTemplates(repoRoot: string, summaries: readonly Playg
 }
 
 /**
- * Reads a template's imports. Components are the names it pulls from
- * `@astryx-vue/core`; anything else outside `vue` and relative files is a package
- * the reader's project may not have.
+ * Reads a template's imports. Components are the names it pulls from any package
+ * a project can install; anything else outside `vue` and relative files is a
+ * package the reader's project may not have.
  */
-export function analyzeTemplateImports(source: string): { componentsUsed: string[], foreignPackages: string[] } {
+export function analyzeTemplateImports(source: string, installable: ReadonlySet<string>): { componentsUsed: string[], foreignPackages: string[] } {
   const componentsUsed: string[] = []
   const foreign = new Set<string>()
   for (const match of source.matchAll(/(?:^|\n)import (type )?([\s\S]*?) from (['"])([^'"]+)\3/g)) {
@@ -216,23 +225,21 @@ export function analyzeTemplateImports(source: string): { componentsUsed: string
     if (specifier.startsWith('.'))
       continue
     const root = packageRoot(specifier)
-    if (root === '@astryx-vue/core') {
-      // Types and lowercase helpers (`pixel`, `proportional`) are not components,
-      // so only PascalCase names are listed as what the page uses.
-      if (!typeOnly)
-        componentsUsed.push(...importedNames(clause, specifier))
+    if (!installable.has(root)) {
+      foreign.add(root)
       continue
     }
-    if (INSTALLABLE_PACKAGES.has(root))
-      continue
-    foreign.add(root)
+    // Types and lowercase helpers (`pixel`, `proportional`) are not components,
+    // so only PascalCase names are listed as what the page uses.
+    if (!typeOnly && root !== 'vue')
+      componentsUsed.push(...importedNames(clause, specifier))
   }
   for (const match of source.matchAll(/(?:^|\n)import (['"])([^'"]+)\1/g)) {
     const specifier = match[2] ?? ''
     if (specifier.startsWith('.'))
       continue
     const root = packageRoot(specifier)
-    if (!INSTALLABLE_PACKAGES.has(root))
+    if (!installable.has(root))
       foreign.add(root)
   }
   return { componentsUsed: [...new Set(componentsUsed)], foreignPackages: [...foreign].sort() }
@@ -253,8 +260,8 @@ function importedNames(clause: string, specifier: string): string[] {
     .filter(name => /^[A-Z]/.test(name))
   if (fromBraces.length > 0)
     return fromBraces
-  const subpath = specifier.slice('@astryx-vue/core'.length).replace(/^\//, '')
-  return subpath && /^[A-Z]/.test(subpath) ? [subpath] : []
+  const subpath = specifier.slice(specifier.lastIndexOf('/') + 1)
+  return /^[A-Z]/.test(subpath) ? [subpath] : []
 }
 
 function notReadyReason(packages: readonly string[], upstreamNotReady: boolean): LocaleText {
@@ -269,8 +276,8 @@ function notReadyReason(packages: readonly string[], upstreamNotReady: boolean):
     parts.zh.push('它引用了 @astryx-vue/playground-charts，这个包只存在于本站演练场，没有发布到 npm。')
   }
   if (others.length > 0) {
-    parts.en.push(`It imports ${others.join(', ')}, which this package does not document.`)
-    parts.zh.push(`它引用了 ${others.join(', ')}，本工具没有为这些包提供文档。`)
+    parts.en.push(`It imports ${others.join(', ')}, which is not one of the astryx-vue packages, so the docs do not cover it.`)
+    parts.zh.push(`它引用了 ${others.join(', ')}，这不是 astryx-vue 发布的包，文档没有覆盖。`)
   }
   return { en: parts.en.join(' '), zh: parts.zh.join(' ') }
 }

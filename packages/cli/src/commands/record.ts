@@ -1,6 +1,6 @@
 import type { ComponentRecord } from '../catalog-types.ts'
 import type { CommandArgs } from '../cli/context.ts'
-import { catalog, examplesFor, text } from '../catalog.ts'
+import { examplesFor, text } from '../catalog.ts'
 import { printJson } from '../cli/context.ts'
 import { successEnvelope } from '../envelope.ts'
 import { CliError } from '../error.ts'
@@ -25,7 +25,7 @@ export function recordCommand(args: CommandArgs, kind: RecordKind): string {
       throw new CliError(`Do not pass a ${kind} name together with --list.`, 'ERR_INVALID_ARGUMENT', 2)
     const records = kind === 'component' ? listComponents() : listComposables()
     if (args.json)
-      return printJson(successEnvelope(`${kind}.list`, { locale: args.locale, detail: 'compact', [COLLECTION[kind]]: groupForList(records, args.locale) }, catalog.packageName))
+      return printJson(successEnvelope(`${kind}.list`, { locale: args.locale, detail: 'compact', [COLLECTION[kind]]: groupForList(records, args.locale) }))
     return kind === 'component'
       ? formatComponentList(records, args.locale, args.dense)
       : formatComposableList(records, args.locale, args.dense)
@@ -36,7 +36,7 @@ export function recordCommand(args: CommandArgs, kind: RecordKind): string {
   const hint = record.kind === 'composable' && kind === 'component' ? composableHint(record, args.locale) : ''
   if (args.json) {
     const data = recordDetail(record, args.locale)
-    return printJson(successEnvelope(`${kind}.detail`, hint ? { ...data, hint } : data, catalog.packageName))
+    return printJson(successEnvelope(`${kind}.detail`, hint ? { ...data, hint } : data, record.package))
   }
   const detail = kind === 'component'
     ? formatComponentDetail(record, args.locale, args.dense)
@@ -51,8 +51,18 @@ function composableHint(record: ComponentRecord, locale: 'en' | 'zh'): string {
     : `This is a composable. Run \`${command}\`.`
 }
 
-function groupForList(records: readonly ComponentRecord[], locale: 'en' | 'zh'): Record<string, { name: string, slug: string, title: string, description: string, import: string | null }[]> {
-  const grouped: Record<string, { name: string, slug: string, title: string, description: string, import: string | null }[]> = {}
+interface ListEntry {
+  name: string
+  slug: string
+  title: string
+  description: string
+  /** The package that owns the record, so a reader knows what to install. */
+  package: string
+  import: string | null
+}
+
+function groupForList(records: readonly ComponentRecord[], locale: 'en' | 'zh'): Record<string, ListEntry[]> {
+  const grouped: Record<string, ListEntry[]> = {}
   for (const record of records) {
     const group = text(record.groupTitle, locale)
     grouped[group] ??= []
@@ -61,6 +71,7 @@ function groupForList(records: readonly ComponentRecord[], locale: 'en' | 'zh'):
       slug: record.slug,
       title: text(record.title, locale),
       description: text(record.summary, locale),
+      package: record.package,
       import: record.importPath,
     })
   }
@@ -75,6 +86,7 @@ function recordDetail(record: ComponentRecord, locale: 'en' | 'zh'): Record<stri
     title: text(record.title, locale),
     group: record.group,
     groupTitle: text(record.groupTitle, locale),
+    package: record.package,
     import: record.importPath,
     exportName: record.exportName,
     summary: text(record.summary, locale),
