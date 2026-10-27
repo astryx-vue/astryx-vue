@@ -199,32 +199,6 @@ export function formatSearch(query: string, matchCount: number, results: readonl
   return `${[heading, '', ...lines].join('\n')}\n`
 }
 
-export function formatRootHelp(): string {
-  return [
-    `${BINARY} — agent-friendly CLI for astryx-vue`,
-    '',
-    'This is @astryx-vue/cli. It is not Meta\'s astryx binary.',
-    '',
-    'Commands:',
-    `  ${BINARY} component --list`,
-    `  ${BINARY} component <Name>`,
-    `  ${BINARY} composable --list`,
-    `  ${BINARY} composable <Name>`,
-    `  ${BINARY} docs [topic]`,
-    `  ${BINARY} search <query> [--type template]`,
-    `  ${BINARY} template --list`,
-    `  ${BINARY} template <slug> [path]`,
-    `  ${BINARY} build "<idea>"`,
-    `  ${BINARY} manifest --json`,
-    `  ${BINARY} init --features agents`,
-    '',
-    'Global flags: --json  --dense  --zh  --cwd <dir>  --help  --version',
-    '',
-    `Run \`${BINARY} manifest --json\` for commands, options, response types, and exit codes.`,
-    '',
-  ].join('\n')
-}
-
 function importStatement(component: ComponentRecord): string {
   const imported = component.exportName ?? component.name
   return `import { ${imported} } from '${component.importPath}'`
