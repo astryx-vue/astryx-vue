@@ -102,7 +102,7 @@ export function compareVersions(a: string, b: string): number {
 const SKIPPED_DIRECTORIES = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.nuxt', '.output', '.next', '.turbo', 'vendor'])
 
 /** Files the CLI reads when it looks for a stylesheet import or an old API name. */
-const SOURCE_EXTENSIONS = ['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '.vue', '.css', '.scss', '.sass', '.pcss']
+const SOURCE_EXTENSIONS = ['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs', '.vue', '.css', '.scss', '.sass', '.pcss', '.html']
 
 export interface SourceFile {
   /** Path relative to the project root, with `/` separators. */

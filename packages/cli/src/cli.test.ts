@@ -113,7 +113,7 @@ describe('json envelopes', () => {
     }
     expect(data.name).toBe('astryx-vue')
     expect(data.package).toBe('@astryx-vue/cli')
-    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'init'])
+    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'doctor', 'init'])
     expect(data.commands.every(command => command.json)).toBe(true)
     expect(data.commands.find(command => command.name === 'component')?.responseTypes).toEqual(['component.list', 'component.detail'])
     expect(data.commands.find(command => command.name === 'composable')?.responseTypes).toEqual(['composable.list', 'composable.detail'])
@@ -137,7 +137,7 @@ describe('json envelopes', () => {
   it('embeds the manifest in a bare --json call', async () => {
     const result = await run(['--json'])
     const data = assertResponse(result.stdout, 'help').data as { manifest: { commands: unknown[] } }
-    expect(data.manifest.commands).toHaveLength(10)
+    expect(data.manifest.commands).toHaveLength(11)
   })
 
   it('lists composables apart from components', async () => {

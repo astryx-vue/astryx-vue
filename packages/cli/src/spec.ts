@@ -277,6 +277,25 @@ export const COMMANDS: readonly CommandSpec[] = [
     errors: [{ code: 'ERR_INVALID_ARGUMENT', when: 'upgrade was given a positional argument.' }],
   },
   {
+    name: 'doctor',
+    summary: 'Check the project\'s versions, theme stylesheet, and theme attribute. Changes nothing.',
+    arguments: [],
+    options: [],
+    json: true,
+    responseTypes: ['doctor.report'],
+    examples: [
+      `${BINARY} doctor`,
+      `${BINARY} doctor --json`,
+      `${BINARY} doctor --zh`,
+    ],
+    exitCodes: [
+      { code: 0, when: 'Every check passed, or only warned.' },
+      { code: 1, when: 'At least one check failed: a package is missing or no theme stylesheet is imported.' },
+      { code: 2, when: 'Invalid usage: unknown option or a positional argument.' },
+    ],
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: 'doctor was given a positional argument.' }],
+  },
+  {
     name: 'init',
     summary: 'Write or refresh the managed agent-context block.',
     arguments: [],
@@ -304,7 +323,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
 ]
 
-export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'init', 'help', 'version'] as const
+export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'doctor', 'init', 'help', 'version'] as const
 
 export function commandByName(name: string): CommandSpec | undefined {
   return COMMANDS.find(command => command.name === name)
