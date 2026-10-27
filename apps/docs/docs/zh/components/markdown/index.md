@@ -76,7 +76,7 @@ const marked = ref({ paragraph: markRaw(MyParagraph) })
 
 `markdownSourceLinesPlugin` 从 `@astryx-vue/core/Markdown/plugins` 引入，放进 `plugins` 后，标题、段落、列表项、引用、代码块外层、表格外层和分隔线会带上 `data-source-line` 与 `data-source-line-end`。不传这个插件时没有这些属性。
 
-`@astryx-vue/core/Markdown/parser` 提供 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及旧的块列表 `parseMarkdown` 和行内 `parseInline`。组件自己用的 `parseMarkdown` 仍返回语法树根，不返回那份块列表。`math: true` 不会产生数学节点。
+`@astryx-vue/core/Markdown/parser` 提供 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及旧的块列表 `parseMarkdown` 和行内 `parseInline`。组件自己用的 `parseMarkdown` 仍返回语法树根，不返回那份块列表。`math: true` 不会产生数学节点。`parseInlineAst` 和 `parseInline` 只读行内内容：`# h` 仍是文字，围栏读成一个行内代码。
 
 `isStreaming` 打开流式模式。内容只在末尾追加时，已经闭合的块保持原来的节点，只重新解析最后一个还没写完的块。新出现的文字用 `--astryx-duration-fast-max` 淡入。系统开启「减少动态效果」时不播放淡入。
 
