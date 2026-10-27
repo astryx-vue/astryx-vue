@@ -47,6 +47,7 @@ interface TrendSeries {
   title: string
   unit: string
   color: string
+  kind: 'area' | 'line'
   data: { t: number, label: string, current: number, prior: number }[]
 }
 
@@ -97,10 +98,10 @@ function makeTrend(base: number, growth: number, priorGap: number, wobble: numbe
 }
 
 const TRENDS: TrendSeries[] = [
-  { key: 'revenue', title: 'Net revenue', unit: 'k', color: COLORS.blue, data: makeTrend(980, 0.24, 0.12, 0.03) },
-  { key: 'pipeline', title: 'Qualified pipeline', unit: 'k', color: COLORS.green, data: makeTrend(3200, 0.31, 0.18, 0.05) },
-  { key: 'activation', title: 'Activation rate', unit: '%', color: COLORS.purple, data: makeTrend(42, 0.28, 0.09, 0.04) },
-  { key: 'support', title: 'Support CSAT', unit: '%', color: COLORS.orange, data: makeTrend(88, 0.06, 0.03, 0.02) },
+  { key: 'revenue', title: 'Net revenue', unit: 'k', color: COLORS.blue, kind: 'area', data: makeTrend(980, 0.24, 0.12, 0.03) },
+  { key: 'pipeline', title: 'Qualified pipeline', unit: 'k', color: COLORS.green, kind: 'area', data: makeTrend(3200, 0.31, 0.18, 0.05) },
+  { key: 'activation', title: 'Activation rate', unit: '%', color: COLORS.purple, kind: 'line', data: makeTrend(42, 0.28, 0.09, 0.04) },
+  { key: 'support', title: 'Support CSAT', unit: '%', color: COLORS.orange, kind: 'line', data: makeTrend(88, 0.06, 0.03, 0.02) },
 ]
 
 const NARRATIVE: Record<Period, Callout[]> = {
@@ -212,18 +213,16 @@ function bindChart(el: unknown, index: number) {
 }
 onBeforeUnmount(() => chartObserver?.disconnect())
 
-/** 0 起步的 y 轴刻度：步长取 1 / 2 / 2.5 / 5 × 10^n，一共约 4 格。 */
+/**
+ * 0 起步、一共 5 个刻度的 y 轴，步长和 recharts 默认的取整规则一致：
+ * 原始步长按数量级取 0.05（个位数时取 0.1）的整数倍再向上取整。
+ */
 function niceTicks(max: number): number[] {
   const raw = max / 4
-  const pow = 10 ** Math.floor(Math.log10(raw))
-  const step = ([1, 2, 2.5, 5, 10].find(m => m * pow >= raw) ?? 10) * pow
-  const ticks: number[] = []
-  for (let v = 0; v < max + step; v += step) {
-    ticks.push(Math.round(v * 100) / 100)
-    if (v >= max)
-      break
-  }
-  return ticks
+  const digits = Math.floor(Math.log10(raw)) + 1
+  const unit = 10 ** digits * (digits === 1 ? 0.1 : 0.05)
+  const step = Math.ceil(raw / unit) * unit
+  return [0, 1, 2, 3, 4].map(i => Math.round(i * step * 100) / 100)
 }
 
 /** 单调三次样条（等价于 recharts 的 monotone 曲线），返回 SVG 路径。 */
@@ -309,7 +308,7 @@ function trendGeometry(trend: TrendSeries) {
             </SegmentedControl>
             <Button label="Export" variant="secondary">
               <template #icon>
-                <Icon icon="upload" size="sm" />
+                <Icon name="heroicons:arrow-down-tray" size="sm" />
               </template>
             </Button>
           </HStack>
@@ -453,7 +452,7 @@ function trendGeometry(trend: TrendSeries) {
                       {{ trend.title }}
                     </Heading>
                     <Heading :level="3" color="secondary">
-                      {{ trend.data[trend.data.length - 1].current }}{{ trend.unit }}
+                      {{ trend.data[trend.data.length - 1].current.toLocaleString('en-US') }}{{ trend.unit }}
                     </Heading>
                   </HStack>
                   <Text type="supporting" color="secondary">
@@ -475,7 +474,7 @@ function trendGeometry(trend: TrendSeries) {
                   </defs>
                   <g v-for="tick in trendGeometry(trend).yTicks" :key="tick.value">
                     <line :x1="CHART.padLeft" :x2="chartWidth - CHART.padRight" :y1="tick.y" :y2="tick.y" class="chart-grid" />
-                    <text :x="CHART.padLeft - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle" class="chart-tick">{{ tick.value.toLocaleString() }}</text>
+                    <text :x="CHART.padLeft - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle" class="chart-tick">{{ tick.value }}</text>
                   </g>
                   <text
                     v-for="tick in trendGeometry(trend).xTicks"
@@ -485,7 +484,7 @@ function trendGeometry(trend: TrendSeries) {
                     :text-anchor="tick.label === 'W1' ? 'start' : tick.label === 'W12' ? 'end' : 'middle'"
                     class="chart-tick"
                   >{{ tick.label }}</text>
-                  <path :d="trendGeometry(trend).area" :fill="`url(#grad-${trend.key})`" />
+                  <path v-if="trend.kind === 'area'" :d="trendGeometry(trend).area" :fill="`url(#grad-${trend.key})`" />
                   <path :d="trendGeometry(trend).prior" fill="none" :stroke="COLORS.prior" stroke-width="1" stroke-dasharray="4 4" />
                   <path :d="trendGeometry(trend).current" fill="none" :stroke="trend.color" stroke-width="2" />
                 </svg>

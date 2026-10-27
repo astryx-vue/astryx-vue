@@ -84,7 +84,7 @@ for (const file of templateFiles) {
 
 // `<Icon icon="前缀:名字">` 会被当成 CSS 类名渲染，Iconify 图标要走 `name`。
 const iconHits = []
-const ICON_PROP = /<Icon\b[^>]*?\s:?icon=(["'])\s*(?:'|\\")?[a-z0-9-]+:[a-z0-9-]+/g
+const ICON_PROP = /<Icon\b[^>]*?\s:?icon=["']\s*'?[a-z0-9-]+:[a-z0-9-]+/g
 for (const file of templateFiles) {
   const text = readFileSync(join(repoRoot, file), 'utf8')
   for (const match of text.matchAll(ICON_PROP)) {
@@ -96,14 +96,15 @@ for (const file of templateFiles) {
 if (iconHits.length > 0) {
   console.error('<Icon> 的 icon 属性不认 Iconify 名字（前缀:名字），请改用 name 属性：')
   console.error(iconHits.join('\n'))
-  process.exit(1)
 }
 
 if (hits.length > 0) {
   console.error('模板里的设计变量必须带 --astryx- 前缀：')
   console.error(hits.join('\n'))
   console.error('少一个前缀浏览器不会报错，但内边距、间距、圆角、颜色会整体失效。')
-  process.exit(1)
 }
 
-process.stdout.write(`\u001B[32m✓ ${templateFiles.length} 个模板的设计变量都带 ${TOKEN_PREFIX} 前缀\u001B[0m\n`)
+if (hits.length > 0 || iconHits.length > 0)
+  process.exit(1)
+
+process.stdout.write(`\u001B[32m✓ ${templateFiles.length} 个模板的设计变量都带 ${TOKEN_PREFIX} 前缀，<Icon> 都没把 Iconify 名字写进 icon\u001B[0m\n`)
