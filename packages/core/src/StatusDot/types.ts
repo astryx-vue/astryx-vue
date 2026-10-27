@@ -1,6 +1,6 @@
 import type { Component } from 'vue'
 
-export type StatusDotVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error'
+export type StatusDotVariant = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'error'
 
 export interface StatusDotProps {
   /**

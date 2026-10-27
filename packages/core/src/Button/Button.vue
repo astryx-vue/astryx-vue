@@ -8,6 +8,7 @@ import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import Icon from '../Icon/Icon.vue'
 import ButtonSpinner from './ButtonSpinner.vue'
 import ButtonTooltip from './ButtonTooltip.vue'
 import { buttonGroupContextKey } from './context.js'
@@ -219,11 +220,14 @@ defineExpose({
       :aria-hidden="isLoadingState || undefined"
     >
       <span
-        v-if="$slots.icon"
+        v-if="$slots.icon || icon"
         class="astryx-button__icon"
         aria-hidden="true"
       >
-        <slot name="icon" />
+        <slot name="icon">
+          <Icon v-if="typeof icon === 'string'" :icon="icon" />
+          <component :is="icon" v-else-if="icon" />
+        </slot>
       </span>
 
       <span v-if="!isIconOnly" class="astryx-button__label">
