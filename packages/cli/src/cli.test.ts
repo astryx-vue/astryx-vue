@@ -126,6 +126,14 @@ describe('json envelopes', () => {
     expect(data.globalOptions.map(option => option.flag)).toEqual(expect.arrayContaining(['--json', '--dense', '--zh']))
   })
 
+  it('names every package a result can come from', async () => {
+    const data = assertResponse((await run(['manifest', '--json'])).stdout, 'manifest').data as {
+      packages: { name: string, directory: string, canary: boolean }[]
+    }
+    expect(data.packages.map(pkg => pkg.name)).toEqual(expect.arrayContaining(['@astryx-vue/core', '@astryx-vue/lab']))
+    expect(data.packages.find(pkg => pkg.name === '@astryx-vue/lab')).toMatchObject({ directory: 'packages/lab', canary: true })
+  })
+
   it('embeds the manifest in a bare --json call', async () => {
     const result = await run(['--json'])
     const data = assertResponse(result.stdout, 'help').data as { manifest: { commands: unknown[] } }

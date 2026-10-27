@@ -100,6 +100,8 @@ function templateBrief(template: TemplateRecord, locale: 'en' | 'zh'): Record<st
     description: text(template.description, locale),
     category: text(template.category, locale),
     kind: template.kind,
+    package: template.package,
+    componentsUsed: template.componentsUsed,
     isReady: template.isReady,
     ...(template.notReadyReason ? { notReadyReason: text(template.notReadyReason, locale) } : {}),
     command: `${BINARY} template ${template.slug}`,
