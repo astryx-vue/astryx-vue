@@ -258,13 +258,19 @@ export const PlaygroundAreaChart = defineComponent({
     fillOpacity: { type: Array as unknown as PropType<[number, number]>, default: () => [0.3, 0.05] },
     /** 左右留白。没有 Y 轴时用它给曲线和刻度文字留边。 */
     padInline: { type: Number, default: undefined },
+    /** Y 轴刻度；不传就是下界、中点、上界三档。 */
+    yTicks: { type: Array as PropType<number[]>, default: () => [] },
+    /** 绘图区四边留白；传了就覆盖默认。 */
+    pad: { type: Object as PropType<{ top: number, right: number, bottom: number, left: number }>, default: undefined },
+    /** 刻度文字是否垂直居中在刻度线上。 */
+    centerTicks: { type: Boolean, default: false },
   },
   setup(props) {
     const chart = useChartWidth()
     return () => {
       const chartW = chart.width.value
       const inline = props.padInline ?? (props.hasYAxis ? 10 : 10)
-      const pad = { top: 10, right: inline, bottom: 24, left: props.hasYAxis ? 50 : inline }
+      const pad = props.pad ?? { top: 10, right: inline, bottom: 24, left: props.hasYAxis ? 50 : inline }
       const innerW = chartW - pad.left - pad.right
       const innerH = props.height - pad.top - pad.bottom
       const rows = props.data
@@ -278,7 +284,7 @@ export const PlaygroundAreaChart = defineComponent({
       const areaPts = `${pad.left},${baseY} ${linePts} ${xScale(num(rows[rows.length - 1]?.[props.xKey]))},${baseY}`
 
       const gradId = `pg-area-${props.color.replace(/\W/g, '')}`
-      const yTicks = [yMin, (yMin + yMax) / 2, yMax]
+      const yTicks = props.yTicks.length ? props.yTicks : [yMin, (yMin + yMax) / 2, yMax]
 
       return h('svg', {
         width: '100%',
@@ -322,15 +328,17 @@ export const PlaygroundAreaChart = defineComponent({
         }),
         ...(props.xTicks.length ? props.xTicks : [xMin, xMax]).map(tick => h('text', {
           x: xScale(tick),
-          y: props.height - 6,
+          y: props.centerTicks ? pad.top + innerH + 13 : props.height - 6,
+          'dominant-baseline': props.centerTicks ? 'central' : undefined,
           'text-anchor': props.padInline != null && tick === xMin ? 'start' : props.padInline != null && tick === xMax ? 'end' : 'middle',
           fill: AXIS_TICK,
           'font-size': '12px',
         }, props.xTickFormat(tick))),
         ...(props.hasYAxis
           ? yTicks.map(tick => h('text', {
-              x: pad.left - 8,
-              y: yScale(tick) + 4,
+              'x': pad.left - 8,
+              'y': props.centerTicks ? Math.max(yScale(tick), 9) : yScale(tick) + 4,
+              'dominant-baseline': props.centerTicks ? 'central' : undefined,
               'text-anchor': 'end',
               fill: AXIS_TICK,
               'font-size': '12px',
