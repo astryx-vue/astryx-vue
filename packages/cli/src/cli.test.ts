@@ -76,6 +76,32 @@ describe('json envelopes', () => {
     expect(data.results[0]?.score).toBeGreaterThan(data.results[1]?.score ?? 0)
   })
 
+  it('names the package each result comes from, and how many matched', async () => {
+    const result = await run(['search', 'button', '--limit', '5'])
+    expect(result.stdout).toContain('Results for "button" (5 of ')
+    expect(result.stdout).toContain('[component] Button  @astryx-vue/core')
+
+    const docs = await run(['search', 'dark', '--type', 'doc', '--limit', '3'])
+    expect(docs.stdout).toContain('[doc] guide/dark-mode  @astryx-vue/docs')
+
+    const templates = await run(['search', 'login', '--type', 'template', '--limit', '3'])
+    expect(templates.stdout).toContain('@astryx-vue/cli')
+  })
+
+  it('breaks score ties by domain, so the order never moves between runs', async () => {
+    const domainOrder: Record<string, number> = { component: 0, composable: 1, doc: 2, template: 3 }
+    const result = await run(['search', 'layout', '--json', '--limit', '20'])
+    const results = (assertResponse(result.stdout, 'search').data as { results: { domain: string, name: string, score: number }[] }).results
+    expect(results.length).toBeGreaterThan(1)
+    for (let index = 1; index < results.length; index++) {
+      const previous = results[index - 1]!
+      const current = results[index]!
+      expect(previous.score).toBeGreaterThanOrEqual(current.score)
+      if (previous.score === current.score)
+        expect(domainOrder[previous.domain]).toBeLessThanOrEqual(domainOrder[current.domain]!)
+    }
+  })
+
   it('returns a capability manifest', async () => {
     const result = await run(['manifest', '--json'])
     const data = assertResponse(result.stdout, 'manifest').data as {

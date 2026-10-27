@@ -186,15 +186,17 @@ export function formatSearch(query: string, matchCount: number, results: readonl
   if (results.length === 0)
     return locale === 'zh' ? `没有匹配「${query}」的结果。\n` : `No matches for "${query}".\n`
   const lines = results.map((hit) => {
+    // The package says what to install, so every result carries it.
+    const head = `[${hit.domain}] ${hit.name}  ${hit.package}`
     const follow = `→ ${hit.command}`
     if (dense)
-      return `[${hit.domain}] ${hit.name}  ${follow}`
-    return [`[${hit.domain}] ${hit.name}`, `  ${firstSentence(hit.description)}`, `  ${follow}`].join('\n')
+      return `${head}  ${follow}`
+    return [head, `  ${firstSentence(hit.description)}`, `  ${follow}`].join('\n')
   })
-  const extra = matchCount > results.length
-    ? (locale === 'zh' ? `\n还有 ${matchCount - results.length} 条，用 --limit 查看。\n` : `\n${matchCount - results.length} more. Raise --limit to see them.\n`)
-    : '\n'
-  return `${lines.join('\n\n')}${extra}`
+  const heading = matchCount > results.length
+    ? (locale === 'zh' ? `「${query}」的结果（${results.length}/${matchCount}）` : `Results for "${query}" (${results.length} of ${matchCount})`)
+    : (locale === 'zh' ? `「${query}」的结果（${results.length}）` : `Results for "${query}" (${results.length})`)
+  return `${[heading, '', ...lines].join('\n')}\n`
 }
 
 export function formatRootHelp(): string {
