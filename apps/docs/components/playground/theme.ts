@@ -5,6 +5,7 @@
  * - themeState：默认主题、替换、比较、预设、清洗
  * - themeColor：颜色读写与换算
  * - themeScale：字号、间距、控件高度、圆角、时长阶梯
+ * - themeOverrides：Advanced 和 Components 面板写进主题的 token、组件变量、自定义覆盖
  * - themeExport：CSS 变量表、预览样式、导出 CSS 和 JSON
  */
 export {
@@ -17,6 +18,16 @@ export {
   parseColorReadout,
   setThemeColor,
 } from './themeColor'
+export {
+  addCustomOverride,
+  buildComponentStyles,
+  clearScaleTokens,
+  clearToken,
+  removeCustomOverride,
+  setComponentToken,
+  setToken,
+  updateCustomOverride,
+} from './themeOverrides'
 export { exportThemeCss, exportThemeJson, fontStylesheetHref, previewCss, themeVariables } from './themeExport'
 export { COLOR_FIELDS, DENSITY_PRESETS, PLAYGROUND_FONTS, TYPE_SCALES } from './themeOptions'
 export {
@@ -27,9 +38,10 @@ export {
   describeType,
   typeScaleRatio,
 } from './themeScale'
-export { applyDensity, applyTheme, createNeutralTheme, matchingDensity, sanitizeTheme, themesEqual } from './themeState'
+export { applyDensity, applyTheme, cloneTheme, createNeutralTheme, matchingDensity, sanitizeTheme, themesEqual } from './themeState'
 export type {
   ColorField,
+  CustomOverride,
   DensityPreset,
   PlaygroundFont,
   ThemeColorKey,
