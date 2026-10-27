@@ -171,8 +171,8 @@ export const PlaygroundLineChart = defineComponent({
           }))
         }
         const tickX = pad.left - 8
-        // 单位放不进轴宽时才折行：两位数及以上折，一位数不折。
-        const isStacked = props.isYUnitStacked && Math.abs(tick) >= 10
+        // 单位放不进轴宽时才折行：单位放不下（刻度 ≥ 80 时）才折。
+        const isStacked = props.isYUnitStacked && Math.abs(tick) >= 80
         const tickY = props.centerTicks ? Math.max(y, 9) : y + 4
         return h('text', {
           'x': tickX,
