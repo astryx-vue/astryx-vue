@@ -105,9 +105,10 @@ describe('init guide', () => {
       const result = await run(['init'], cwd)
       const unpublished = catalog.packages.filter(pkg => !pkg.published).map(pkg => pkg.name)
       expect(unpublished.length).toBeGreaterThan(0)
-      for (const command of installLines(result.stdout))
+      for (const command of installLines(result.stdout)) {
         for (const name of unpublished)
           expect(command).not.toContain(name)
+      }
 
       // The block still names them, so an assistant knows they exist, but each
       // line has to say there is nothing to install.

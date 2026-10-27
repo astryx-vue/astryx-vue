@@ -12,10 +12,11 @@ function packageNote(pkg: InitPackage, zh: boolean): string {
 
 /** Why a package has no install command, in one line the reader can act on. */
 function unpublishedReason(pkg: InitPackage, zh: boolean): string {
-  if (pkg.canary)
+  if (pkg.canary) {
     return zh
       ? '以后只发 canary，装的时候要写 `@canary`'
       : 'when it ships it will be canary only, so it takes the `@canary` tag'
+  }
   return zh ? '还没有发布计划上 npm 的版本' : 'no version is on npm, and none is scheduled'
 }
 
