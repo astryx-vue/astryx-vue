@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CSSProperties, VNodeChild } from 'vue'
+import type { CSSProperties, VNodeChild, VNodeRef } from 'vue'
 import type {
   TableCellPatch,
   TableColumn,
@@ -15,6 +15,7 @@ import { useAstryxMessages } from '../locale/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
 import { selectColumn } from './plugins/stickyColumns.js'
+import { mergeRowPatches } from './rowPatch.js'
 import { CellContent, HeaderAddon, PluginFooter, RenderFn } from './TableDataRenderers.js'
 import TableFilterControl from './TableFilterControl.vue'
 import TableGroupHeader from './TableGroupHeader.vue'
@@ -193,54 +194,27 @@ function bodyStyle(column: TableColumn, row: Record<string, unknown>): CSSProper
   return style
 }
 
-function mergeRow(row: Record<string, unknown>, index: number): TableRowPatch {
-  const classes: string[] = []
-  const clicks: Array<(event: MouseEvent) => void> = []
-  const menus: TableRowMenuItem[] = []
-  const merged: TableRowPatch = {}
-  for (const plugin of props.plugins) {
-    const patch = plugin.rowPatch?.(row, index, columnCount.value)
-    if (patch == null)
-      continue
-    if (patch.group && merged.group == null)
-      merged.group = patch.group
-    if (patch.panel && merged.panel == null)
-      merged.panel = patch.panel
-    if (patch.suppressSelection)
-      merged.suppressSelection = true
-    if (patch.skipRowIndex)
-      merged.skipRowIndex = true
-    if (patch.class)
-      classes.push(patch.class)
-    if (patch.attrs)
-      merged.attrs = { ...merged.attrs, ...patch.attrs }
-    if (patch.onClick)
-      clicks.push(patch.onClick)
-    if (patch.menu)
-      menus.push(...patch.menu)
+/** Vue 的 ref 回调拿到的是更宽的 `Element`，收窄成 `<tr>` 再交给插件。 */
+function rowRefBinding(patch: TableRowPatch): VNodeRef | undefined {
+  const callback = patch.ref
+  if (callback == null)
+    return undefined
+  return (element) => {
+    callback(element as HTMLTableRowElement | null)
   }
-  merged.class = classes.join(' ') || undefined
-  merged.menu = menus
-  if (clicks.length > 0) {
-    merged.onClick = (event) => {
-      for (const click of clicks)
-        click(event)
-    }
-  }
-  return merged
 }
 
 const entries = computed(() => {
   let ordinal = 0
   const start = props.rowIndexStart ?? 1
   return props.rows.map((row, index) => {
-    const patch = mergeRow(row, index)
+    const patch = mergeRowPatches(props.plugins, row, index, columnCount.value)
     let rowIndex: number | undefined
     if (trackRows.value && !patch.skipRowIndex) {
       rowIndex = start + ordinal
       ordinal += 1
     }
-    return { key: rowKey(row, index), row, index, patch, rowIndex }
+    return { key: rowKey(row, index), row, index, patch, ref: rowRefBinding(patch), rowIndex }
   })
 })
 
@@ -369,12 +343,17 @@ function isEnabled(row: Record<string, unknown>): boolean {
         </tr>
         <template v-for="entry in entries" :key="entry.key">
           <tr
+            :ref="entry.ref"
             :aria-selected="!entry.patch.group && isSelected(entry.row) ? 'true' : undefined"
             :aria-rowindex="entry.rowIndex"
             :class="entry.patch.class"
             v-bind="entry.patch.attrs"
+            @blur="entry.patch.listeners?.onBlur?.($event)"
             @click="entry.patch.onClick?.($event)"
             @contextmenu="openMenu($event, entry.patch.menu)"
+            @focus="entry.patch.listeners?.onFocus?.($event)"
+            @mouseenter="entry.patch.listeners?.onMouseenter?.($event)"
+            @mouseleave="entry.patch.listeners?.onMouseleave?.($event)"
           >
             <template v-if="entry.patch.group">
               <td class="astryx-table__group" :colspan="columnCount">

@@ -107,8 +107,52 @@ describe('table', () => {
     const headers = wrapper.findAll('thead th .astryx-table__header')
     expect(headers).toHaveLength(2)
     for (const header of headers) {
-      expect(header.get('.astryx-table__header-line .astryx-table__filter').exists()).toBe(true)
+      expect(header.find('.astryx-table__header-line .astryx-table__filter').exists()).toBe(true)
     }
+  })
+
+  it('hands the row element and row events to plugins, merging every plugin', async () => {
+    const mounted: HTMLTableRowElement[] = []
+    const unmounted: Array<HTMLTableRowElement | null> = []
+    const seen: string[] = []
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        data: people,
+        idKey: 'id',
+        plugins: {
+          first: {
+            rowPatch: () => ({
+              listeners: {
+                onBlur: () => seen.push('first:blur'),
+                onMouseenter: () => seen.push('first:enter'),
+              },
+              ref: (element) => {
+                if (element)
+                  mounted.push(element)
+                else
+                  unmounted.push(null)
+              },
+            }),
+          },
+          second: {
+            rowPatch: () => ({ listeners: { onMouseenter: () => seen.push('second:enter') } }),
+          },
+        },
+      },
+    })
+
+    expect(mounted).toHaveLength(3)
+    expect(mounted[0]!.tagName).toBe('TR')
+    expect(mounted[0]!.querySelector('td')).not.toBeNull()
+
+    const firstRow = wrapper.findAll('tbody tr')[0]!
+    await firstRow.trigger('mouseenter')
+    expect(seen).toEqual(['first:enter', 'second:enter'])
+    expect(firstRow.element).toBe(mounted[0])
+
+    wrapper.unmount()
+    expect(unmounted).toHaveLength(3)
   })
 
   it('re-sorts strings when the provider locale changes', async () => {

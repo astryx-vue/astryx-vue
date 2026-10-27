@@ -21,13 +21,15 @@ import {
   Text,
   TextInput,
   useTableFiltering,
+  useHoverCard,
   useTableFilterState,
   useTableSortable,
   useTableSortableState,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn } from '@astryx-vue/core'
-import { computed, h, ref } from 'vue'
+import type { Component, PropType } from 'vue'
+import type { TableColumn, TablePlugin } from '@astryx-vue/core'
+import { computed, defineComponent, h, ref, shallowReactive, Teleport, watchEffect } from 'vue'
 
 type LineCategory = 'design' | 'development' | 'content' | 'project'
 type BillingBasis = 'hourly' | 'fixed'
@@ -249,14 +251,6 @@ const INVOICE_DETAILS = [
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
 const decimal = new Intl.NumberFormat('en-US')
 
-/**
- * Stack 的内边距写在 CSS 变量上，嵌套的 Stack 会继承同一个值，
- * 所以给容器加内边距时用内联样式，避免子容器被动带上同样的留白。
- */
-function spacing(step: number): string {
-  return `var(--astryx-spacing-${String(step).replace('.', '-')}, ${step * 4}px)`
-}
-
 /** 搜索框起始位置的放大镜，供 `TextInput` 的 `startIcon` 使用。 */
 function SearchIcon() {
   return h(Icon, { icon: 'search', size: 'sm' })
@@ -264,6 +258,83 @@ function SearchIcon() {
 
 function formatCents(cents: number): string {
   return currency.format(cents / 100)
+}
+
+const ROWS_TOTAL_CENTS = LINE_ITEMS.reduce((sum, item) => sum + item.quantity * item.unitPriceCents, 0)
+
+const BASIS_LABEL: Record<BillingBasis, string> = {
+  hourly: 'Hourly',
+  fixed: 'Fixed fee',
+}
+
+/**
+ * 行元素登记处。表格的行级扩展点 `rowPatch.ref` 在 `<tr>` 挂上、卸下时写这里，
+ * 单元格按 id 取到自己那一行，再把 `useHoverCard` 挂到整行上。
+ */
+const rowElements = shallowReactive(new Map<string, HTMLTableRowElement>())
+
+/**
+ * 整行悬停详情。卡片挂在整行而不是单元格上，指针从行移到卡片上时不会被关掉，
+ * 所以卡片里的 Dispute 按钮点得到。
+ */
+const DescriptionCell = defineComponent({
+  props: { item: { type: Object as PropType<InvoiceRow>, required: true } },
+  setup(props) {
+    const card = useHoverCard({
+      placement: 'below',
+      alignment: 'start',
+      label: `${props.item.description} details`,
+      // 行挂上 hook 的那一刻还不是可聚焦元素，交给 auto 判断会连焦点事件都绑不上。
+      focusTrigger: 'always',
+    })
+
+    watchEffect(() => {
+      const row = rowElements.get(props.item.id) ?? null
+      card.triggerRef.value = row
+      if (row)
+        row.tabIndex = 0
+    })
+
+    const share = computed(() => (props.item.amountCents / ROWS_TOTAL_CENTS) * 100)
+
+    return () => [
+      h(Text, { maxLines: 1 }, () => props.item.description),
+      h(Teleport, { to: 'body' }, [
+        h('div', {
+          ...card.contentProps.value,
+          'ref': card.contentRef,
+          'class': 'astryx-hover-card',
+          'style': { ...card.contentStyle.value, display: card.isOpen.value ? undefined : 'none' },
+        }, [
+          h('div', { class: 'astryx-hover-card__content' }, [
+            h(VStack, { gap: 3, width: 280 }, () => [
+              h(Heading, { level: 3 }, () => props.item.description),
+              h(MetadataList, { label: { position: 'start' } }, () => [
+                h(MetadataListItem, { label: 'Category' }, () => CATEGORY_LABEL[props.item.category]),
+                h(MetadataListItem, { label: 'Billing' }, () => BASIS_LABEL[props.item.basis]),
+                h(MetadataListItem, { label: 'Share of invoice' }, () => `${share.value.toFixed(1)}%`),
+              ]),
+              h(Button, { label: 'Dispute this line', variant: 'secondary', width: '100%' }),
+            ]),
+          ]),
+        ]),
+      ]),
+    ]
+  },
+})
+
+/** 行级插件：登记每一行的元素，并把详情卡片所在的行标记成可聚焦。 */
+const rowPlugin: TablePlugin<InvoiceRow> = {
+  rowPatch(item) {
+    return {
+      ref: (element) => {
+        if (element)
+          rowElements.set(item.id, element)
+        else
+          rowElements.delete(item.id)
+      },
+    }
+  },
 }
 
 const query = ref('')
@@ -295,7 +366,7 @@ const columns: TableColumn<InvoiceRow>[] = [
     width: proportional(3),
     sortable: { compare: (a, b) => a.description.localeCompare(b.description) },
     filter: 'description',
-    renderCell: item => h(Text, { maxLines: 1 }, () => item.description),
+    renderCell: item => h(DescriptionCell as Component, { item }),
   },
   {
     key: 'category',
@@ -357,8 +428,8 @@ const AMOUNT_COLUMN_WIDTH = 132
 <template>
   <Layout height="fill" :content-width="960">
     <LayoutContent :padding="0">
-      <VStack :gap="8" :style="{ padding: spacing(4) }">
-        <VStack :gap="6" :style="{ paddingBlockEnd: spacing(4) }">
+      <VStack :gap="8" :padding="4">
+        <VStack :gap="6" :padding-block-end="4">
           <HStack :gap="3" align="center" wrap="wrap">
             <StackItem size="fill">
               <Heading :level="1">
@@ -418,7 +489,7 @@ const AMOUNT_COLUMN_WIDTH = 132
                 dividers="none"
                 has-hover
                 text-overflow="truncate"
-                :plugins="{ sort: sortPlugin, filter: filterPlugin }"
+                :plugins="{ sort: sortPlugin, filter: filterPlugin, rows: rowPlugin }"
               />
             </div>
             <VStack :gap="3">
@@ -470,21 +541,3 @@ const AMOUNT_COLUMN_WIDTH = 132
     </LayoutContent>
   </Layout>
 </template>
-
-<style>
-/* 核心 Table 把列筛选按钮排在表头标题的下一行；原版是「标题、排序箭头、漏斗」并排一行。
-   这里把表头折回一行，漏斗紧跟排序箭头，跟着列的对齐方向走。 */
-.invoice-table .astryx-table__header {
-  flex-direction: row;
-  align-items: center;
-}
-
-.invoice-table .astryx-table__header-line {
-  flex: 0 1 auto;
-}
-
-.invoice-table th[data-align='end'] .astryx-table__header,
-.invoice-table th[data-align='center'] .astryx-table__header {
-  justify-content: flex-end;
-}
-</style>

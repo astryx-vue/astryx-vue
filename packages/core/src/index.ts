@@ -1130,6 +1130,7 @@ export type {
   TablePanelPatch,
   TablePlugin,
   TableProps,
+  TableRowListeners,
   TableRowMenuItem,
   TableRowPatch,
   TableRowProps,
