@@ -28,8 +28,14 @@ export const PlaygroundSparkline = defineComponent({
     color: { type: String, required: true },
     height: { type: Number, default: 40 },
     strokeWidth: { type: Number, default: 1.5 },
+    /** 开启后 viewBox 量真实宽度、坐标和像素一比一，线不会被横向拉伸；纵轴贴着数据的最小最大值。 */
+    isMeasured: { type: Boolean, default: false },
+    /** 量宽模式下的上下留白。 */
+    padTop: { type: Number, default: 4 },
+    padBottom: { type: Number, default: 2 },
   },
   setup(props) {
+    const chart = useChartWidth()
     return () => {
       const values = props.data
       if (!values.length)
@@ -37,6 +43,24 @@ export const PlaygroundSparkline = defineComponent({
       const min = Math.min(...values)
       const max = Math.max(...values)
       const range = max - min || 1
+      if (props.isMeasured) {
+        const w = chart.width.value
+        const inner = props.height - props.padTop - props.padBottom
+        const points = values.map((v, i) => {
+          const x = values.length === 1 ? w / 2 : (i / (values.length - 1)) * w
+          const y = props.padTop + inner - ((v - min) / range) * inner
+          return `${x.toFixed(2)},${y.toFixed(2)}`
+        }).join(' ')
+        return h('svg', {
+          'width': '100%',
+          'height': props.height,
+          'viewBox': `0 0 ${w} ${props.height}`,
+          'ref': chart.el,
+          'aria-hidden': 'true',
+        }, [
+          h('polyline', { 'fill': 'none', 'stroke': props.color, 'stroke-width': props.strokeWidth, points }),
+        ])
+      }
       const w = 100
       const hPx = props.height - 4
       const points = values.map((v, i) => {
