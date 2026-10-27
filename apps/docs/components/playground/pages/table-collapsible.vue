@@ -27,7 +27,6 @@ import {
 import type { TableColumn } from '@astryx-vue/core'
 import { PlaygroundAreaChart } from '@astryx-vue/playground-charts'
 import { computed, defineComponent, h, ref } from 'vue'
-import type { PropType } from 'vue'
 
 type RangeId = '1W' | '1M' | '3M' | 'YTD' | '1Y'
 

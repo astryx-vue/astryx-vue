@@ -185,10 +185,6 @@ function chartPath(values: number[], max: number) {
   return values.map((v, i) => `${i === 0 ? 'M' : 'L'}${chartX(i).toFixed(1)},${chartY(v, max).toFixed(1)}`).join(' ')
 }
 
-function rpmLabel(rpm: number) {
-  return `${(rpm / 1000).toFixed(1)}k rpm`
-}
-
 const SEVERITY_RANK: Record<HealthStatus, number> = { critical: 0, warning: 1, healthy: 2 }
 const STATUS_LABEL: Record<HealthStatus, string> = { healthy: 'Healthy', warning: 'Degraded', critical: 'Down' }
 const STATUS_DOT: Record<HealthStatus, 'success' | 'warning' | 'error'> = { healthy: 'success', warning: 'warning', critical: 'error' }

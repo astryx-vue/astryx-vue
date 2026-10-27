@@ -4,6 +4,7 @@
  */
 export const templateIcons = [
   'carbon:branch',
+  'carbon:microphone',
   'carbon:fork',
   'heroicons:adjustments-horizontal',
   'heroicons:adjustments-horizontal-solid',

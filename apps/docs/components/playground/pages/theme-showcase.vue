@@ -8,6 +8,7 @@ import {
   Card,
   Center,
   CheckboxInput,
+  ChatComposer,
   ChatMessage,
   ChatMessageBubble,
   ChatMessageList,
@@ -41,7 +42,7 @@ import {
 } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
-/* ChatComposer is not exported from @astryx-vue/core — composer uses TextInput. */
+/* ChatComposer 从 @astryx-vue/core 引入。 */
 
 type ShowcaseBadgeVariant = 'blue' | 'cyan' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'teal' | 'yellow'
 
@@ -418,7 +419,23 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 </HStack>
               </div>
               <div class="chat-composer">
-                <TextInput v-model="chatDraft" label="Message" is-label-hidden placeholder="Ask Studio AI…" />
+                <!-- 原版用 ChatComposer：左下附件、右下麦克风，发送按钮是组件自带的。 -->
+                <ChatComposer v-model="chatDraft" placeholder="Ask Studio AI…">
+                  <template #footerActions>
+                    <Button variant="ghost" size="md" is-icon-only label="Attach" tooltip="Attach">
+                      <template #icon>
+                        <Icon name="heroicons:plus" />
+                      </template>
+                    </Button>
+                  </template>
+                  <template #sendActions>
+                    <Button variant="ghost" size="md" is-icon-only label="Voice input" tooltip="Voice input">
+                      <template #icon>
+                        <Icon name="carbon:microphone" />
+                      </template>
+                    </Button>
+                  </template>
+                </ChatComposer>
               </div>
             </Card>
           </div>
