@@ -10,6 +10,7 @@
 | 分组头图标 | 24×24 灰底圆角方块里放 16px 图标 | 裸图标 | 已修：加 `.category-tile` |
 | 分组头文字与摘要 | 标题 + 数量徽标，右侧「Available $…」 | 相同 | 一致 |
 | 每行展开箭头 | 每行左侧有箭头，点开显示该行历史曲线 | 没有；曲线放在页面底部一张卡片里，只显示 bank-1 | 已修：接 `useTableRowExpansion`，删掉底部卡片 |
+| 曲线逐项核对（浏览器里量过原版 recharts 的 svg） | 撑满容器：svg 宽 = 面板内容宽（808）；y 轴：不画（`YAxis hide`）；x 轴：5 个标签 Jan 1 / Mar 10 / May 17 / Jul 24 / Sep 30；线型：`type=linear` 折线，不是平滑曲线；线宽 1.5；实线；一条 `3 3` 虚线基准；渐变填充 0.2→0；无图例、无副标题 | svg 撑满面板内容宽（860，比原版宽 52，因面板内边距丢失，见下面「展开面板内边距」）；y 轴不画；x 轴同 5 个标签、位置 40/229/436/645/830（原版 64/247/448/651/834，随宽度比例变）；polyline 折线；线宽 1.5；实线；一条 `3 3` 虚线；渐变 0.2→0；无图例、无副标题 | 一致（宽度差来自 core 的面板内边距） |
 | 展开后的曲线 | 面积图：渐变 0.2→0、虚线基准（窗口起点）、无 Y 轴、无网格；X 轴 5 个日期标签；涨绿跌红（信用卡反过来） | 无 | 已修：复用 `PlaygroundAreaChart`，新增 `hasYAxis`/`hasGrid`/`referenceValue`/`fillOpacity`/`padInline` 几个可选项（默认值不变，不影响 dashboard-composition） |
 | 排序 | 所有列可排序，Change 列按当前时间范围的涨跌幅排 | 只有部分列；Change 不能排；Processor、Investment 表完全不能排 | 已修 |
 | Credit cards 列 | Card / Utilization / Balance / **Limit** / Change | 缺 Limit | 已修 |
