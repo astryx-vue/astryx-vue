@@ -210,9 +210,18 @@
     min-width: 0;
   }
 
+  /*
+   * 有筛选按钮时，排序按钮只占自己的宽度，标题、排序箭头、漏斗紧挨着排，
+   * 整行再按列的对齐方向放。没有筛选按钮时排序按钮照旧铺满整格，点哪都能排序。
+   */
   .astryx-table__header-line > .astryx-table__sort {
     flex: 1;
     min-width: 0;
+  }
+
+  .astryx-table__header-line:has(> .astryx-table__filter) > .astryx-table__sort {
+    flex: 0 1 auto;
+    width: auto;
   }
 
   /* 列对齐也要管到这一行：没有排序按钮的列，靠 justify-content 把标题和筛选按钮推到位。 */
@@ -299,6 +308,34 @@
     display: flex;
     flex: none;
     align-items: center;
+  }
+
+  /* 漏斗按钮只有图标那么大，窄列里也能和标题、排序箭头排在一行。 */
+  .astryx-table__filter-trigger {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .astryx-table__filter-trigger:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: 2px;
+  }
+
+  /* 粗指针设备上点击区至少 44px。 */
+  @media (pointer: coarse) {
+    .astryx-table__filter-trigger {
+      min-width: 44px;
+      min-height: 44px;
+    }
   }
 
   /* 行内紧凑档：控件离表头更近，占的高度更小。 */
