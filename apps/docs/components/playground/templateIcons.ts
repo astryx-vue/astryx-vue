@@ -57,6 +57,7 @@ export const templateIcons = [
   'heroicons:trash',
   'heroicons:user-plus',
   'heroicons:users',
+  'heroicons:cursor-arrow-rays',
   'heroicons:view-columns',
   'heroicons:x-mark',
   'heroicons:banknotes',

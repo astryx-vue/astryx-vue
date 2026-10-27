@@ -331,7 +331,7 @@ function directionColor(metric: Metric) {
           <HStack :gap="3" align="center" justify="between">
             <HStack :gap="3" align="center">
               <span class="section-tile">
-                <Icon icon="i-carbon-user" size="sm" color="secondary" />
+                <Icon name="heroicons:users" size="sm" color="secondary" />
               </span>
               <Heading :level="2">
                 Key metrics
@@ -402,7 +402,7 @@ function directionColor(metric: Metric) {
           <HStack :gap="3" align="center" justify="between">
             <HStack :gap="3" align="center">
               <span class="section-tile">
-                <Icon icon="i-carbon-cursor-1" size="sm" color="secondary" />
+                <Icon name="heroicons:cursor-arrow-rays" size="sm" color="secondary" />
               </span>
               <Heading :level="2">
                 Devices
@@ -487,7 +487,7 @@ function directionColor(metric: Metric) {
           <HStack :gap="3" align="center" justify="between">
             <HStack :gap="3" align="center">
               <span class="section-tile">
-                <Icon icon="i-carbon-user-multiple" size="sm" color="secondary" />
+                <Icon name="heroicons:users" size="sm" color="secondary" />
               </span>
               <Heading :level="2">
                 Audience demographics
