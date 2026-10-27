@@ -4,13 +4,13 @@ title: 组合式函数
 
 # 组合式函数
 
-组件库将许多强大的交互逻辑和无障碍底层能力，封装成了易于复用的 Vue 3 组合式函数（Composables）。通用函数可以直接从包根统一引入：
+组件库将常用的交互逻辑与无障碍底层能力封装为 Vue 3 组合式函数（Composable）。通用函数支持直接从包根统一导入：
 
 ```ts
 import { useClipboard, useControllableState } from '@astryx-vue/core'
 ```
 
-> **注意**：包内没有 `@astryx-vue/core/composables` 这种子路径。所有在 `packages/core/src/composables/index.ts` 中导出的通用函数如下表所示，具体参数签名以 TypeScript 类型定义为准：
+> **注意**：包内未设置 `@astryx-vue/core/composables` 子路径。在 `packages/core/src/composables/index.ts` 中导出的通用函数如下表所示，具体参数签名以 TypeScript 类型定义为准：
 
 | 函数名称 | 主要用途 |
 | --- | --- |
@@ -43,9 +43,9 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 
 > **别名提示**：`useClipboard` 拥有一个兼容旧版的名字 `useCopyToClipboard`，从包根或 `@astryx-vue/core/Code` 均可引入，底层完全等价。
 
-## 随特定组件绑定的组合式函数
+## 组件关联的组合式函数
 
-部分与特定组件深度绑定的函数，既可以从该组件的专用子路径引入，也可以直接从包根引入：
+部分与特定组件深度绑定的函数，既可从对应组件的子路径导入，也可从包根导入：
 
 | 函数名称 | 对应组件入口 |
 | --- | --- |
