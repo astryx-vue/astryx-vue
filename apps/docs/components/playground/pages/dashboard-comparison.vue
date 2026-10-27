@@ -99,7 +99,7 @@ const ACTIVE_SERIES = [
 ] as const
 
 /** 和原版一样高 280；`width` 跟着 svg 的实际宽度走，viewBox 和像素一比一，图表撑满卡片。 */
-const CHART = reactive({ width: 720, height: 280, left: 52, right: 12, top: 5, bottom: 26 })
+const CHART = reactive({ width: 720, height: 280, left: 40, right: 12, top: 5, bottom: 35 })
 const chartEl = ref<SVGSVGElement | null>(null)
 let chartObserver: ResizeObserver | null = null
 onMounted(() => {
@@ -257,15 +257,32 @@ const BREAKDOWNS = [
   { title: 'Device', data: DEVICE_DATA },
 ]
 
+/** 迷你折线：高 48，上留 4；纵轴从 0 起、上界取整到下一个整百（和原版的图表默认一致）；宽度量真实像素。 */
+const SPARK = { h: 48, top: 4 }
+const sparkWidth = ref(392)
+let sparkObserver: ResizeObserver | null = null
+
+function bindSpark(element: unknown): void {
+  sparkObserver?.disconnect()
+  sparkObserver = null
+  if (!(element instanceof SVGSVGElement) || typeof ResizeObserver === 'undefined')
+    return
+  sparkObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      sparkWidth.value = entry.contentRect.width
+  })
+  sparkObserver.observe(element)
+}
+onBeforeUnmount(() => sparkObserver?.disconnect())
+
 function sparkPath(data: number[]) {
-  const max = Math.max(...data)
-  const min = Math.min(...data)
-  const span = max - min || 1
+  const top = Math.ceil(Math.max(...data) / 100) * 100
+  const inner = SPARK.h - SPARK.top
   return data.map((value, i) => {
-    const x = (i / (data.length - 1)) * 100
-    const y = 32 - ((value - min) / span) * 32
-    return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`
-  }).join(' ')
+    const x = (i / (data.length - 1)) * sparkWidth.value
+    const y = SPARK.top + inner * (1 - value / top)
+    return `${i === 0 ? 'M' : 'L'}${x.toFixed(3)},${y.toFixed(3)}`
+  }).join('')
 }
 
 function deltaColor(metric: Metric) {
@@ -325,7 +342,7 @@ function directionColor(metric: Metric) {
             </Text>
           </HStack>
           <Grid :columns="{ minWidth: 240, repeat: 'fit' }" :gap="3" class="metrics-grid">
-            <Card v-for="metric in OVERVIEW_METRICS" :key="metric.key" :padding="4">
+            <Card v-for="(metric, index) in OVERVIEW_METRICS" :key="metric.key" :padding="4">
               <VStack :gap="4">
                 <VStack :gap="1">
                   <Text type="label" color="secondary">
@@ -342,13 +359,12 @@ function directionColor(metric: Metric) {
                     />
                   </HStack>
                 </VStack>
-                <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true">
+                <svg :ref="index === 0 ? bindSpark : undefined" class="spark" :viewBox="`0 0 ${sparkWidth} ${SPARK.h}`" aria-hidden="true">
                   <path
                     :d="sparkPath(metric.spark)"
                     fill="none"
                     :stroke="deltaColor(metric)"
                     stroke-width="1.25"
-                    vector-effect="non-scaling-stroke"
                   />
                 </svg>
                 <Grid :columns="2" :gap="2">
@@ -426,8 +442,9 @@ function directionColor(metric: Metric) {
                   v-for="tick in Y_TICKS"
                   :key="`y-${tick}`"
                   :x="CHART.left - 8"
-                  :y="chartY(tick) + 4"
+                  :y="Math.max(chartY(tick), 9)"
                   text-anchor="end"
+                  dominant-baseline="central"
                   class="chart-tick"
                 >
                   {{ tick }}K
@@ -435,19 +452,20 @@ function directionColor(metric: Metric) {
                 <text
                   v-for="tick in X_TICKS"
                   :key="`x-${tick}`"
-                  :x="chartX(tick)"
-                  :y="CHART.height - 6"
+                  :x="Math.min(chartX(tick), CHART.width - CHART.right - 20)"
+                  :y="CHART.height - CHART.bottom + 13"
                   text-anchor="middle"
+                  dominant-baseline="central"
                   class="chart-tick"
                 >
                   {{ ACTIVE_TREND[tick].label }}
                 </text>
 
                 <path :d="areaPath(row => row.mobile)" fill="url(#au-mobile)" />
-                <path :d="areaPath(row => row.desktop)" fill="url(#au-desktop)" />
-                <path :d="linePath(row => row.tablet)" fill="none" :stroke="COLORS.orange" stroke-width="1.5" />
                 <path :d="linePath(row => row.mobile)" fill="none" :stroke="COLORS.blue" stroke-width="1.5" />
+                <path :d="areaPath(row => row.desktop)" fill="url(#au-desktop)" />
                 <path :d="linePath(row => row.desktop)" fill="none" :stroke="COLORS.teal" stroke-width="1.5" />
+                <path :d="linePath(row => row.tablet)" fill="none" :stroke="COLORS.orange" stroke-width="1.5" />
               </svg>
               <HStack :gap="5" align="center" wrap="wrap">
                 <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
