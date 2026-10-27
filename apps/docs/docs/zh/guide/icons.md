@@ -4,7 +4,7 @@ title: 图标
 
 # 图标
 
-在 astryx-vue 中，你可以直接使用 `Icon` 组件配合标准的 Iconify 图标名称来展示图标，再也不需要为每一个小图形单独繁琐地 `import` 不同的组件文件。
+在 astryx-vue 中，可以使用 `Icon` 组件配合标准 Iconify 图标标识渲染图标，无需为每个图标单独 `import` 组件文件。
 
 ```vue
 <script setup lang="ts">
@@ -16,11 +16,11 @@ import { Icon } from '@astryx-vue/core/Icon'
 </template>
 ```
 
-这里的 `carbon:settings` 表示 Carbon 图标集合中的 settings 图标。在图标集合注册后，你也可以写成中划线形式 `carbon-settings`；若集合本身的 ID 带中划线（如 `material-symbols`），则必须保留冒号，例如 `material-symbols:home`。
+这里的 `carbon:settings` 表示 Carbon 图标集合中的 settings 图标。在图标集合注册后，也可以写为中划线形式 `carbon-settings`；若集合本身的 ID 包含中划线（如 `material-symbols`），则必须保留冒号分隔符，例如 `material-symbols:home`。
 
 ## 按需打包：只打包用到的图标
 
-为了不给你的项目塞入冗余体积，`@astryx-vue/core` 核心包自身不内置任何体积庞大的全量图标库。你只需安装自己喜欢的图标包，并配置一个超轻量的 Vite 插件：
+为避免引入冗余体积，`@astryx-vue/core` 核心包本身不内置全量图标库。只需安装所需的图标数据集，并配置 Vite 插件：
 
 ```bash
 pnpm add -D @iconify-json/carbon
@@ -38,17 +38,17 @@ export default defineConfig({
 })
 ```
 
-这个插件非常聪明：它会读取离它最近的 `package.json` 中的 `@iconify-json/*` 依赖，静态扫描你的 Vue 模板中写到的静态图标名，并为用到的每个图标按需生成模块。最终打包进浏览器的，只有你实际用到的这几个 SVG 图标，而不是整套几万个图标的庞大文件。如果你的 Vite 根目录没有 `package.json`（比如 VitePress 文档站常设在子目录），插件会自动向上查找。
+该插件会读取当前或上层目录 `package.json` 中的 `@iconify-json/*` 依赖，静态扫描 Vue 模板中声明的静态图标名称，并按需生成对应图标的虚拟模块。最终打包产物中仅包含实际引用的 SVG 图标数据。若 Vite 根目录未放置 `package.json`（例如 VitePress 文档位于子目录），插件会自动向上递归查找。
 
-如果你还想用另一套图标（比如 Lucide），只需要再装一个包：`pnpm add -D @iconify-json/lucide`，然后在模板里直接写 `name="lucide:settings"` 即可。这完全基于标准构建，**不需要**引入 UnoCSS。
+若需使用其它图标库（如 Lucide），安装对应包后即可直接引用：`pnpm add -D @iconify-json/lucide`，模板中直接书写 `name="lucide:settings"`。该流程基于标准构建管道，无需引入 UnoCSS。
 
-如果你只想让插件扫描指定的某几套图标集，可以传入过滤参数：`collections: ['carbon']`。
+若需限制插件的扫描范围，可通过参数指定：`collections: ['carbon']`。
 
 ## 动态生成的图标名称
 
-如果某个图标的名字是在 JavaScript 运行时动态拼接出来的（例如从后端接口返回，或者由变量组装而成），Vite 插件在静态构建阶段就无法提前发现它。
+若图标名称由 JavaScript 在运行时动态拼接生成（例如接口返回或变量计算），静态构建工具无法在编译期进行静态提取。
 
-针对这种动态场景，你可以在应用初始化入口处，提前将整套图标集合注册进来（注意：这会把整套集合的数据打包进构建产物）：
+针对动态场景，可在应用初始化阶段提前注册整个图标集合（注意：此操作会将整套图标集合打包进产物）：
 
 ```ts
 import { addCollection } from '@astryx-vue/core/Icon'
@@ -58,13 +58,13 @@ import carbon from '@iconify-json/carbon/icons.json'
 addCollection(carbon)
 ```
 
-如果你只想注册单独某一个动态图标的数据，可以使用 `addIcon('carbon:settings', data)` 单独注册这一枚。
+若仅需注册单个动态图标，可使用 `addIcon('carbon:settings', data)` 单独注册该图标数据。
 
 ## 插槽搭配与尺寸
 
-默认情况下，不传 `size` 属性时，图标会自适应当前文本的行内大小（`1em`），颜色也会自动继承当前文本的颜色（`currentColor`）。
+默认情况下，未传递 `size` 属性时，图标字号继承当前文本字号（`1em`），颜色继承当前文本颜色（`currentColor`）。
 
-很多组件已经为图标预留了专用的插槽。例如 `Button` 的 `icon`（前缀）与 `end`（后缀）插槽、`IconButton` 纯图标按钮，以及各类输入框的前后插槽，这些位置都提前定好了大小盒子，放入的 `Icon` 会自动完美对齐：
+多个组件为图标预留了专用插槽。例如 `Button` 的 `icon`（前缀）与 `end`（后缀）插槽、`IconButton` 纯图标按钮，以及表单输入组件的前后置插槽。这些插槽已内置规范的尺寸约束，放入的 `Icon` 会自动居中对齐：
 
 ```vue
 <Button label="设置">
@@ -78,19 +78,19 @@ addCollection(carbon)
 </IconButton>
 ```
 
-> **无障碍提醒**：纯装饰性的图标对读屏软件是默认隐藏的。只有当这个图标本身承担传达含义的职责（且旁边没有文字）时，才需要显式设置 `label` 属性。
+> **无障碍提醒**：纯装饰性图标对屏幕阅读器默认隐藏。仅当图标独立承担信息传达职责（且周围无伴随文本）时，才需要显式设置 `label` 属性。
 
 ## 兼容 CSS 类名图标
 
-如果你的项目原本习惯使用 CSS 类名（例如 Tailwind、UnoCSS 的纯 CSS 图标），组件库的 `icon` 属性、导航与菜单上的 `iconClass` 属性依然完全兼容传入 CSS 类名。只要你的构建工具能够生成对应的类名样式，图形就能正常显示。不过，在全新项目中，我们最推荐使用上面提到的静态 `name` 方案。
+若项目习惯使用基于 CSS 类名的图标方案（如 Tailwind 或 UnoCSS 的纯 CSS 图标），组件库的 `icon` 属性、导航与菜单上的 `iconClass` 属性依然完全兼容传入 CSS 类名。只要构建工具能生成对应的类名样式即可正常渲染。全新项目推荐优先使用上述静态 `name` 属性方案。
 
-## 语义化图标（跟随主题自由切换）
+## 语义化图标（跟随主题配置切换）
 
-组件库内部有许多需要图标的场景（例如下拉箭头的展开折叠、搜索框的放大镜、对话框的关闭十字叉等）。我们并没有死板地把它们写死为某一种特定形状，而是使用「语义名」（例如 search、close、check）来进行逻辑描述。
+组件库内部包含多处内置图标（例如下拉箭头的展开折叠、搜索框放大镜、对话框关闭按钮等）。这些图标使用语义名称（例如 search、close、check）进行抽象描述。
 
-默认情况下，这些语义名会自动对准 Lucide 图标集对应的图形；如果你的项目没有注册 Lucide，组件会优雅降级绘制精简的内置基础矢量图形，绝不会破损空白。
+默认情况下，这些语义名称映射至 Lucide 图标集；若项目中未注册 Lucide，组件会自动降级渲染内置的简易基础矢量图形。
 
-更棒的是，你可以把整套语义图标绑定在主题配置中，实现全局一键换皮。通过 `defineTheme({ icons })`，你可以将语义名映射到任意你喜欢的 Iconify 图标集：
+此外，语义图标支持在主题中统一定义。通过 `defineTheme({ icons })`，可以将内置语义名映射到指定的 Iconify 图标集：
 
 ```vue
 <script setup lang="ts">
@@ -115,4 +115,4 @@ const carbonTheme = defineTheme({
 </template>
 ```
 
-如果你想在代码里读取当前生效的语义图标 ID，可以使用从 `@astryx-vue/core/Icon` 导出的 `useSemanticIcon` 组合式函数。完整的语义名称列表与默认对应关系，可查阅图标组件的 API 属性页。
+如需在代码中读取当前生效的语义图标标识，可使用 `@astryx-vue/core/Icon` 导出的 `useSemanticIcon` 组合式函数。完整的语义名称列表与默认对应关系见图标组件的 API 文档。
