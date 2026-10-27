@@ -16,6 +16,6 @@
 | 进度条颜色 | neutral 变体，填充灰（rgb 145,145,145） | 填充近黑（27,27,27） | 不修：core。ProgressBar 的 `neutral` 变体颜色和原版不同 |
 | 涨跌徽标 | Token sm：宽 55、内边距 8px | 宽 47、内边距 4px | 不修：core。`.astryx-token.size-sm` 的横向内边距是 4px，原版是 8px |
 | 数据行高 | 51（compact 单元格内有 1px 边框包裹层） | 49 | 不修：core。原版 compact 单元格外层多一层 DIV，内边距 4/8 加 1px 边 |
-| 展开面板内边距 | 16px 20px 16px 48px，面板高 165 | 4px 8px，面板高 141 | 不修：core。`.astryx-table__panel` 的 16/20/48 被更具体的 `.astryx-table[data-density] :is(th, td)` 压掉了（特异性问题，选择器写错） |
+| 展开面板内边距 | 16px 20px 16px 48px，面板高 165 | 4px 8px，面板高 141 | 不修：core。`.astryx-table__panel` 的 16/20/48 已在浏览器里核对命中的规则：`.astryx-table[data-density=compact] :is(th,td)`（特异性 0,3,1）盖过 `.astryx-table__panel`（0,1,0）和 `.astryx-table[data-density=compact] .astryx-table__panel`（0,3,0），所以面板的 16/20/48 一条都没生效，只剩 4/8 |
 | 窄屏紧凑列 | 内容宽度小于 720 时只留名称+金额两列 | 没有 | 不修：1440 宽下不触发，且需要 ResizeObserver 量内容宽；先不做 |
 | 深色模式 | 同浅色 | 同 | 对照图已出，结构一致，色值差异同上 |
