@@ -98,13 +98,57 @@ if (iconHits.length > 0) {
   console.error(iconHits.join('\n'))
 }
 
+// 图表 svg 的 viewBox 宽度写死、又用默认的 preserveAspectRatio（meet）时，卡片一变宽，
+// 整张图就按比例缩小、居中，左右留白，撑不满容器。图表要么用量出来的宽度做 viewBox
+// （引用 ref 量的宽度：`chartWidth`、`CHART.width` 等由 ResizeObserver 更新的值），
+// 要么是迷你图，写 preserveAspectRatio="none" 横向拉伸。图标这类小 svg（宽高 ≤ 48）不算。
+const chartHits = []
+
+/** 在 ResizeObserver 回调里被赋值的变量名，比如 `chartWidth`、`CHART.width`。 */
+function measuredWidths(text) {
+  const names = []
+  if (!text.includes('new ResizeObserver'))
+    return names
+  for (const assign of text.matchAll(/([\w.]+)\s*=\s*entry\.contentRect\.width/g))
+    names.push(assign[1].replace(/\.value$/, ''))
+  return names
+}
+
+const SVG_TAG = /<svg\b[^>]*>/g
+for (const file of templateFiles) {
+  const text = readFileSync(join(repoRoot, file), 'utf8')
+  const measured = measuredWidths(text).length > 0
+  for (const match of text.matchAll(SVG_TAG)) {
+    const tag = match[0]
+    const viewBox = /\s(:?)viewBox="([^"]*)"/.exec(tag)
+    if (!viewBox || /preserveAspectRatio="none"/.test(tag))
+      continue
+    const isStatic = viewBox[1] === ''
+    if (isStatic) {
+      const [, , width, height] = viewBox[2].trim().split(/\s+/).map(Number)
+      if (width <= 48 && height <= 48)
+        continue
+    }
+    if (!isStatic && measured && measuredWidths(text).some(name => viewBox[2].includes(name)))
+      continue
+    const line = text.slice(0, match.index).split('\n').length
+    chartHits.push(`  ${file}:${line}  ${tag.replace(/\s+/g, ' ').slice(0, 90)}`)
+  }
+}
+
+if (chartHits.length > 0) {
+  console.error('图表 svg 的 viewBox 宽度没跟着容器走，卡片一宽就缩在中间、左右留白：')
+  console.error(chartHits.join('\n'))
+  console.error('改法：给 svg 加 ref，用 ResizeObserver 量出宽度做 viewBox（见 dashboard.vue）；迷你图写 preserveAspectRatio="none"。')
+}
+
 if (hits.length > 0) {
   console.error('模板里的设计变量必须带 --astryx- 前缀：')
   console.error(hits.join('\n'))
   console.error('少一个前缀浏览器不会报错，但内边距、间距、圆角、颜色会整体失效。')
 }
 
-if (hits.length > 0 || iconHits.length > 0)
+if (hits.length > 0 || iconHits.length > 0 || chartHits.length > 0)
   process.exit(1)
 
-process.stdout.write(`\u001B[32m✓ ${templateFiles.length} 个模板的设计变量都带 ${TOKEN_PREFIX} 前缀，<Icon> 都没把 Iconify 名字写进 icon\u001B[0m\n`)
+process.stdout.write(`\u001B[32m✓ ${templateFiles.length} 个模板的设计变量都带 ${TOKEN_PREFIX} 前缀，<Icon> 都没把 Iconify 名字写进 icon，图表都跟着容器宽度走\u001B[0m\n`)
