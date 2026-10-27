@@ -43,6 +43,24 @@ const TextTypeIcon = () => h('svg', {
   'aria-hidden': 'true',
 }, [h('path', { d: 'M12 4v16' }), h('path', { d: 'M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2' }), h('path', { d: 'M9 20h6' })])
 
+/** 布尔格的「支持 / 不支持」，和原版一样是描边圆形图标（lucide circle-check / circle-x）。 */
+function outlineCircle(paths: string[]) {
+  return () => h('svg', {
+    'xmlns': 'http://www.w3.org/2000/svg',
+    'viewBox': '0 0 24 24',
+    'fill': 'none',
+    'stroke': 'currentColor',
+    'stroke-width': 2,
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round',
+    'width': '1em',
+    'height': '1em',
+    'aria-hidden': 'true',
+  }, [h('circle', { cx: 12, cy: 12, r: 10 }), ...paths.map(d => h('path', { d }))])
+}
+const CircleCheckIcon = outlineCircle(['m9 12 2 2 4-4'])
+const CircleXIcon = outlineCircle(['m15 9-6 6', 'm9 9 6 6'])
+
 const MODALITY_ICON: Record<Modality, string | typeof TextTypeIcon> = {
   text: TextTypeIcon,
   image: 'i-heroicons-photo',
@@ -263,7 +281,8 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
         const value = row.get(model)
         if (typeof value === 'boolean') {
           return h(HStack, { gap: 1, hAlign: 'end', vAlign: 'center', height: 24 }, () => h(Icon, {
-            icon: value ? 'i-carbon-checkmark-filled' : 'i-carbon-close-filled',
+            icon: value ? CircleCheckIcon : CircleXIcon,
+            label: value ? 'Supported' : 'Not supported',
             size: 'md',
             color: value ? 'success' : 'error',
           }))

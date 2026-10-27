@@ -14,7 +14,7 @@
 | 单元格内容高度 | 每格统一 24 高，行高 49 | 无统一高度，模态行 45 | 已修：所有单元格内容固定 24 高，行高 49 |
 | 数值/单位字重 | 数值 normal，胜出 semibold；单位 normal，胜出用 primary 色 | 单位无字重/色设置 | 已修 |
 | 胜出格底色 | 蓝色整格铺满 | 相同 | 一致 |
-| 布尔格图标 | 实心？—— 原版是 lucide 的描边圆叉（circle-x），颜色 rgb(192,38,44) | carbon 实心叉，颜色 rgb(118,0,12) | 待复核：描边还是实心没有在浏览器里核对；颜色确认不同（原版 192,38,44，我们 118,0,12），来自 core 的 error 图标前景 token。图形归 D15 |
+| 布尔格图标 | lucide 描边圆形：circle-x / circle-check，stroke 2，error 色 rgb(192,38,44) | carbon 实心叉，色 rgb(118,0,12) | 已修图形：浏览器里核对过原版是 `<circle r=10>` + 两条线的描边图标，模板里用同样的 SVG 复刻，带 aria-label。颜色差（192,38,44 对 118,0,12）仍在，来自 core 的 error 图标前景 token，不在模板层 |
 | 分组头文案 | h3，对外 h2（accessibilityLevel） | h3 | 已修：加 accessibilityLevel 2，标题块 sticky 靠左 |
 | 分组头高度与内边距 | td 内边距 8px 12px 8px 0，行高 41 | 12px 20px，行高 49 | 不修：core。原版分组头 td 固定 `padding-block: spacing-2; padding-inline-end: spacing-3`，不随密度变；core 的分组头 td 没有这两条，spacious 密度下被通用规则撑大 |
 | 分组头 chevron | 在最左，距表格边 4px | 同 | 一致 |
