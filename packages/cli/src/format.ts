@@ -60,10 +60,10 @@ export function formatComponentDetail(component: ComponentRecord, locale: 'en' |
   return formatDetail(component, locale, dense)
 }
 
-export function formatTopicDetail(topic: TopicRecord, locale: 'en' | 'zh', dense: boolean): string {
+export function formatTopicDetail(topic: TopicRecord, locale: 'en' | 'zh', dense: boolean, depthLimited?: string): string {
   const title = text(topic.title, locale)
   const docsUrl = text(topic.docsUrl, locale)
-  const body = text(topic.body, locale).replace(/^# .*\n+/, '')
+  const body = (depthLimited ?? text(topic.body, locale)).replace(/^# .*\n+/, '')
   if (dense)
     return `${title}  ${topic.id}\n${docsUrl}\n${denseBody(body)}\n`
   return `${[`# ${title}`, '', `Topic: ${topic.id}`, `Docs: ${docsUrl}`, '', body].join('\n').trim()}\n`
