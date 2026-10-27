@@ -3,7 +3,7 @@
 import type {
   MarkdownExtensionNode,
   MarkdownPluginEntry,
-  MarkdownTokenizerInput,
+  MarkdownSyntaxPluginDefinition,
 } from '@astryx-vue/core/Markdown/plugins'
 import { readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -34,7 +34,9 @@ import {
 } from './markdownSource.js'
 import { DEFAULT_TRANSFORMERS } from './markdownTable.js'
 
-const mentions = createMarkdownPlugin({
+type MentionNode = MarkdownExtensionNode<'mentions', 'mention', { readonly label: string }, 'inline'>
+
+const mentionDefinition: MarkdownSyntaxPluginDefinition<'mentions', MentionNode> = {
   name: 'mentions',
   apiVersion: 1,
   parseKey: 'v1',
@@ -43,7 +45,7 @@ const mentions = createMarkdownPlugin({
       {
         startsWith: ['@{'],
         maxSpan: 80,
-        tokenize({ source, offset, end }: MarkdownTokenizerInput) {
+        tokenize({ source, offset, end }) {
           const close = source.indexOf('}', offset + 2)
           if (close < 0 || close >= end) {
             return { status: 'no-match' }
@@ -66,12 +68,16 @@ const mentions = createMarkdownPlugin({
   renderers: {
     mention: {
       render: () => null,
-      toText: (node: { data: { label: string } }) => `@${node.data.label}`,
+      toText: node => `@${node.data.label}`,
     },
   },
-} as never)
+}
 
-const notes = createMarkdownPlugin({
+const mentions = createMarkdownPlugin<'mentions', MentionNode>(mentionDefinition)
+
+type NoteNode = MarkdownExtensionNode<'notes', 'note', { readonly body: string }, 'block'>
+
+const noteDefinition: MarkdownSyntaxPluginDefinition<'notes', NoteNode> = {
   name: 'notes',
   apiVersion: 1,
   parseKey: 'v1',
@@ -80,7 +86,7 @@ const notes = createMarkdownPlugin({
       {
         startsWith: [':::note'],
         maxSpan: 500,
-        tokenize({ source, offset, end }: MarkdownTokenizerInput) {
+        tokenize({ source, offset, end }) {
           const close = source.indexOf('\n:::', offset)
           if (close < 0 || close + 4 > end) {
             return { status: 'no-match' }
@@ -103,13 +109,17 @@ const notes = createMarkdownPlugin({
   renderers: {
     note: {
       render: () => null,
-      toText: (node: { data: { body: string } }) => node.data.body,
+      toText: node => node.data.body,
     },
   },
-} as never)
+}
+
+const notes = createMarkdownPlugin<'notes', NoteNode>(noteDefinition)
 
 // Plugin source that holds base Markdown: emphasis, a link, a list marker.
-const asides = createMarkdownPlugin({
+type AsideNode = MarkdownExtensionNode<'asides', 'aside', { readonly text: string }, 'inline'>
+
+const asideDefinition: MarkdownSyntaxPluginDefinition<'asides', AsideNode> = {
   name: 'asides',
   apiVersion: 1,
   parseKey: 'v1',
@@ -118,7 +128,7 @@ const asides = createMarkdownPlugin({
       {
         startsWith: ['{{'],
         maxSpan: 200,
-        tokenize({ source, offset, end }: MarkdownTokenizerInput) {
+        tokenize({ source, offset, end }) {
           const close = source.indexOf('}}', offset + 2)
           if (close < 0 || close + 2 > end) {
             return { status: 'no-match' }
@@ -141,10 +151,12 @@ const asides = createMarkdownPlugin({
   renderers: {
     aside: {
       render: () => null,
-      toText: (node: { data: { text: string } }) => node.data.text,
+      toText: node => node.data.text,
     },
   },
-} as never)
+}
+
+const asides = createMarkdownPlugin<'asides', AsideNode>(asideDefinition)
 
 const PLUGINS: ReadonlyArray<MarkdownPluginEntry> = [mentions, notes, asides]
 const EXTENSIONS = PLUGINS.map(createRichTextExtension)
