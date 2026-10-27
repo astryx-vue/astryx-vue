@@ -20,7 +20,7 @@ import { Icon } from '@astryx-vue/core/Icon'
 
 ## 按需打包：只打包用到的图标
 
-为了不给你的项目塞入冗余体积，`@astryx-vue/core` 核心包自身不内置任何体积庞大的全量图标库。你只需安装自己喜欢的图标包，并配置一个超轻量的 Vite 插件：
+为了不给你的项目增加体积，`@astryx-vue/core` 核心包自身不内置全量图标库。你只需安装自己喜欢的图标包，并配置一个 Vite 插件：
 
 ```bash
 pnpm add -D @iconify-json/carbon
@@ -38,7 +38,7 @@ export default defineConfig({
 })
 ```
 
-这个插件非常聪明：它会读取离它最近的 `package.json` 中的 `@iconify-json/*` 依赖，静态扫描你的 Vue 模板中写到的静态图标名，并为用到的每个图标按需生成模块。最终打包进浏览器的，只有你实际用到的这几个 SVG 图标，而不是整套几万个图标的庞大文件。如果你的 Vite 根目录没有 `package.json`（比如 VitePress 文档站常设在子目录），插件会自动向上查找。
+这个插件会读取离它最近的 `package.json` 中的 `@iconify-json/*` 依赖，静态扫描你的 Vue 模板中写到的静态图标名，并为用到的每个图标按需生成模块。最终打包进浏览器的，只有你实际用到的这几个 SVG 图标，而不是整套几万个图标的庞大文件。如果你的 Vite 根目录没有 `package.json`（比如 VitePress 文档站常设在子目录），插件会自动向上查找。
 
 如果你还想用另一套图标（比如 Lucide），只需要再装一个包：`pnpm add -D @iconify-json/lucide`，然后在模板里直接写 `name="lucide:settings"` 即可。这完全基于标准构建，**不需要**引入 UnoCSS。
 
@@ -64,7 +64,7 @@ addCollection(carbon)
 
 默认情况下，不传 `size` 属性时，图标会自适应当前文本的行内大小（`1em`），颜色也会自动继承当前文本的颜色（`currentColor`）。
 
-很多组件已经为图标预留了专用的插槽。例如 `Button` 的 `icon`（前缀）与 `end`（后缀）插槽、`IconButton` 纯图标按钮，以及各类输入框的前后插槽，这些位置都提前定好了大小盒子，放入的 `Icon` 会自动完美对齐：
+很多组件已经为图标预留了专用的插槽。例如 `Button` 的 `icon`（前缀）与 `end`（后缀）插槽、`IconButton` 纯图标按钮，以及各类输入框的前后插槽，这些位置都提前定好了大小盒子，放进去的 `Icon` 会自动对齐：
 
 ```vue
 <Button label="设置">
@@ -88,9 +88,9 @@ addCollection(carbon)
 
 组件库内部有许多需要图标的场景（例如下拉箭头的展开折叠、搜索框的放大镜、对话框的关闭十字叉等）。我们并没有死板地把它们写死为某一种特定形状，而是使用「语义名」（例如 search、close、check）来进行逻辑描述。
 
-默认情况下，这些语义名会自动对准 Lucide 图标集对应的图形；如果你的项目没有注册 Lucide，组件会优雅降级绘制精简的内置基础矢量图形，绝不会破损空白。
+默认情况下，这些语义名会自动对准 Lucide 图标集对应的图形；如果你的项目没有注册 Lucide，组件会降级绘制精简的内置基础矢量图形，不会显示成空白。
 
-更棒的是，你可以把整套语义图标绑定在主题配置中，实现全局一键换皮。通过 `defineTheme({ icons })`，你可以将语义名映射到任意你喜欢的 Iconify 图标集：
+你也可以把整套语义图标绑定在主题配置中。通过 `defineTheme({ icons })`，你可以将语义名映射到任意你喜欢的 Iconify 图标集：
 
 ```vue
 <script setup lang="ts">
