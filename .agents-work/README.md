@@ -3,6 +3,16 @@
 > 状态：组件已经全部落地，三个包都已发布到 npm。
 > 更新日期：2026-10-18
 
+## 追上游的工作区
+
+每追一个上游版本，就单独开一个目录，名字是 `upstream-sync-<上游版本号>/`。目录里放这次的规程（`SWARM.md`）、任务树（`ROADMAP.md`）、各节点的计划和报告（`nodes/`）、上游提交台账（`ledger/`）和交接文档（`HANDOFF.md`）。追完一个版本，它的目录就不再改动，留作记录。下次追新版本时，新建一个目录，`SWARM.md` 和 `templates/` 可以从上一次的目录复制过来。
+
+| 目录 | 状态 |
+| --- | --- |
+| `upstream-sync-0.7.1/` | 进行中。新会话接手总控时，先读里面的 `HANDOFF.md` |
+
+`scripts/swarm/` 里的工具默认读写当前在追的那个目录，路径写在 `status.mjs`、`upstream-ledger.mjs` 和 `visual-compare`、`a11y-scan` 的 `args.mjs` 里。换版本时，要把这些默认路径和 `.gitignore` 里的对应条目一起改掉。
+
 ## 写作方式
 
 - 尽量用中文和大白话。
@@ -21,6 +31,10 @@
 - `@astryx-vue/core` 等公开组件包，以及新建空白 Vue 项目安装它们之后，都不能出现 React 依赖。
 - 样式先用 CSS 变量和 CSS 分层，不把 UnoCSS 或 StyleX 作为使用组件的前提。
 - Vue 版本使用 Vue 自己习惯的 props、事件、插槽、`v-model` 和组合式函数，不照抄 React 写法。
+
+- 图标用我们自己的方案，不照搬上游的 React 图标注册表：`Icon` 按 Iconify 名字画图标，`astryxIcons()` Vite 插件从 `@iconify-json/*` 按需打包，组件内部只用语义名（默认是 Lucide，没注册时退回内置图形），主题用 `defineTheme({ icons })` 覆盖。详细说明在 `apps/docs/docs/zh/guide/icons.md`。
+
+- 组件库和主题里一处 `!important` 都不用。优先级靠 `@layer` 顺序和选择器解决，让使用者能在自己的样式表里覆盖。`pnpm check` 里的 `check-no-important.mjs` 会拦截。
 
 ## 对齐原版
 

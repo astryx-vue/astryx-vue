@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { createStaticSource } from '@astryx-vue/core'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { Typeahead, TypeaheadItem } from '@astryx-vue/core/Typeahead'
-
-provideAstryxLocale('en')
 
 interface PersonItem {
   id: string

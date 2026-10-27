@@ -1,0 +1,8 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.tokens {
+  [data-astryx-theme='matcha'] {
+    /* 这一版的间距阶梯是 rem，区块内边距跟着阶梯走。 */
+    --astryx-section-padding: var(--astryx-spacing-3);
+  }
+}

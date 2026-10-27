@@ -1,0 +1,101 @@
+import type { UpstreamMapPart } from './types.js'
+
+/** 输入框、勾选、选择器家族。 */
+export const formsUpstreamMap: UpstreamMapPart = {
+  '@astryx.button.loading': [
+    { path: 'button.loading' },
+    { path: 'checkboxList.loading' },
+    { path: 'selector.loading' },
+    { path: 'multiSelector.loading' },
+    { path: 'dateInput.loading' },
+  ],
+  '@astryx.spinner.loading': [{ path: 'spinner.loading' }],
+  '@astryx.switch.loading': [{ path: 'switch.loading' }],
+  '@astryx.checkboxList.item.checkbox': [{ path: 'checkboxList.checkbox' }],
+
+  '@astryx.field.optional': [{ path: 'field.optional' }],
+  '@astryx.field.required': [{ path: 'field.required' }],
+  '@astryx.inputClearButton.tooltip': [
+    { path: 'input.tooltip' },
+    { path: 'fileInput.clear' },
+    { path: 'selector.clear' },
+    { path: 'multiSelector.clear' },
+  ],
+  '@astryx.input.statusButton.error': [{ path: 'input.statusError' }],
+  '@astryx.input.statusButton.warning': [{ path: 'input.statusWarning' }],
+  '@astryx.input.statusButton.success': [{ path: 'input.statusSuccess' }],
+  '@astryx.input.readOnly': [
+    { path: 'selector.readOnly' },
+    { path: 'multiSelector.readOnly' },
+  ],
+  '@astryx.textInput.clearLabel': [{ path: 'textInput.clear', args: ['label'] }],
+  '@astryx.textArea.charactersRemaining': [{ path: 'textArea.charactersRemaining', args: ['count'] }],
+  '@astryx.textArea.charactersOverLimit': [{ path: 'textArea.charactersOverLimit', args: ['count'] }],
+
+  '@astryx.numberInput.incrementLabel': [{ path: 'numberInput.increment', args: ['label'] }],
+  '@astryx.numberInput.decrementLabel': [{ path: 'numberInput.decrement', args: ['label'] }],
+  '@astryx.numberInput.clearLabel': [{ path: 'numberInput.clear', args: ['label'] }],
+  '@astryx.numberInput.invalidNumber': [{ path: 'numberInput.invalidNumber' }],
+
+  '@astryx.fileInput.placeholder': [{ path: 'fileInput.placeholder' }],
+  '@astryx.fileInput.placeholderMultiple': [{ path: 'fileInput.placeholderMultiple' }],
+  '@astryx.fileInput.required': [{ path: 'fileInput.required' }],
+  '@astryx.fileInput.clearLabel': [{ path: 'fileInput.clearField', args: ['label'] }],
+  '@astryx.fileInput.dropHint': [{ path: 'fileInput.dropHint' }],
+  '@astryx.fileInput.triggerWithFiles': [{ path: 'fileInput.triggerWithFiles', args: ['label', 'fileNames'] }],
+  '@astryx.fileInput.fileSelected': [{ path: 'fileInput.fileSelected', args: ['fileName'] }],
+  '@astryx.fileInput.filesSelected': [{ path: 'fileInput.filesSelected', args: ['count'] }],
+  '@astryx.fileInput.errorInvalidType': [{ path: 'fileInput.errorType', args: ['fileName'] }],
+  '@astryx.fileInput.errorMaxSize': [{ path: 'fileInput.errorSize', args: ['fileName', 'maxSize'] }],
+  '@astryx.fileInput.errorMaxFiles': [{ path: 'fileInput.errorCount', args: ['maxFiles'] }],
+
+  '@astryx.selector.placeholder': [{ path: 'selector.placeholder' }],
+  '@astryx.selector.searchPlaceholder': [{ path: 'selector.search' }],
+  '@astryx.selector.searchOptions': [{ path: 'selector.searchOptions' }],
+  '@astryx.selector.clearLabel': [{ path: 'selector.clearField', args: ['label'] }],
+  '@astryx.selector.empty': [{ path: 'selector.empty' }],
+  '@astryx.selector.emptySearchResults': [{ path: 'selector.emptySearch' }],
+  '@astryx.selector.resultCount': [{ path: 'selector.resultCount', args: ['count'] }],
+
+  '@astryx.multiSelector.selectPlaceholder': [{ path: 'multiSelector.placeholder' }],
+  '@astryx.multiSelector.searchPlaceholder': [{ path: 'multiSelector.search' }],
+  '@astryx.multiSelector.searchOptions': [{ path: 'multiSelector.searchOptions' }],
+  '@astryx.multiSelector.clearAll': [{ path: 'multiSelector.clearAll', args: ['label'] }],
+  '@astryx.multiSelector.empty': [{ path: 'multiSelector.empty' }],
+  '@astryx.multiSelector.emptySearchResults': [{ path: 'multiSelector.emptySearch' }],
+  '@astryx.multiSelector.selectAll': [{ path: 'multiSelector.selectAll' }],
+  '@astryx.multiSelector.selectAllPartiallySelected': [{ path: 'multiSelector.selectAllPartial', args: ['label'] }],
+  '@astryx.multiSelector.resultCount': [{ path: 'multiSelector.resultCount', args: ['count'] }],
+  '@astryx.multiSelector.createOption': [
+    { path: 'multiSelector.create', args: ['query'] },
+    { path: 'tokenizer.create', args: ['query'] },
+  ],
+  '@astryx.multiSelector.optionCreated': [{ path: 'multiSelector.created', args: ['label'] }],
+  '@astryx.multiSelector.selectionCleared': [{ path: 'multiSelector.selectionCleared' }],
+  '@astryx.multiSelector.allSelected': [{ path: 'multiSelector.allSelected' }],
+  '@astryx.multiSelector.selectionCount': [{ path: 'multiSelector.selectionCount', args: ['count', 'total'] }],
+
+  '@astryx.typeahead.searchPlaceholder': [{ path: 'typeahead.placeholder' }],
+  '@astryx.typeahead.emptySearchResults': [
+    { path: 'typeahead.empty' },
+    { path: 'tokenizer.empty' },
+  ],
+  '@astryx.typeahead.loading': [
+    { path: 'typeahead.loading' },
+    { path: 'tokenizer.loading' },
+  ],
+  '@astryx.typeahead.clearSelection': [{ path: 'typeahead.clear' }],
+  '@astryx.typeahead.resultCount': [{ path: 'typeahead.resultCount', args: ['count'] }],
+  '@astryx.typeahead.searchResults': [
+    { path: 'typeahead.results' },
+    { path: 'tokenizer.results' },
+    { path: 'powerSearch.results' },
+  ],
+  '@astryx.token.remove': [{ path: 'token.remove', args: ['label'] }],
+  '@astryx.tokenizer.clearAll': [
+    { path: 'tokenizer.clear' },
+    { path: 'powerSearch.clear' },
+  ],
+  '@astryx.tokenizer.tokenAdded': [{ path: 'tokenizer.added', args: ['label'] }],
+  '@astryx.tokenizer.tokenRemoved': [{ path: 'tokenizer.removed', args: ['label'] }],
+}

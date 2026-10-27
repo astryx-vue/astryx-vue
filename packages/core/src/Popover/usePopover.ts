@@ -152,7 +152,7 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     container: layer.contentRef,
     trigger: triggerRef,
     isEnabled: computed(() => isOpen.value && (toValue(options.hasLightDismiss) ?? true)),
-    enableEscape: computed(() => toValue(options.hasEscapeDismiss) ?? true),
+    dismissOnEscape: computed(() => (toValue(options.hasEscapeDismiss) ?? true) ? 'close' : 'block'),
     onDismiss: () => layer.hide(),
   })
 

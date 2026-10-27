@@ -349,6 +349,11 @@
       "types": "./dist/TreeList/index.d.ts",
       "import": "./dist/TreeList/index.js"
     },
+    "./utils": {
+      "source": "./src/utils/index.ts",
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js"
+    },
     "./VisuallyHidden": {
       "source": "./src/VisuallyHidden/index.ts",
       "types": "./dist/VisuallyHidden/index.d.ts",
@@ -469,6 +474,21 @@
       "types": "./dist/Markdown/index.d.ts",
       "import": "./dist/Markdown/index.js"
     },
+    "./Markdown/parser": {
+      "source": "./src/Markdown/parser/index.ts",
+      "types": "./dist/Markdown/parser/index.d.ts",
+      "import": "./dist/Markdown/parser/index.js"
+    },
+    "./Markdown/plugins": {
+      "source": "./src/Markdown/plugin-protocol/index.ts",
+      "types": "./dist/Markdown/plugin-protocol/index.d.ts",
+      "import": "./dist/Markdown/plugin-protocol/index.js"
+    },
+    "./Markdown/plugin-renderer": {
+      "source": "./src/Markdown/plugin-renderer/index.ts",
+      "types": "./dist/Markdown/plugin-renderer/index.d.ts",
+      "import": "./dist/Markdown/plugin-renderer/index.js"
+    },
     "./Chat": {
       "source": "./src/Chat/index.ts",
       "types": "./dist/Chat/index.d.ts",
@@ -587,7 +607,7 @@
     "styles.css"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && node ./scripts/smoke-markdown-subpaths.mjs",
     "dev": "tsdown --watch",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json"
   },
@@ -857,6 +877,10 @@
         "types": "./dist/TreeList/index.d.ts",
         "import": "./dist/TreeList/index.js"
       },
+      "./utils": {
+        "types": "./dist/utils/index.d.ts",
+        "import": "./dist/utils/index.js"
+      },
       "./VisuallyHidden": {
         "types": "./dist/VisuallyHidden/index.d.ts",
         "import": "./dist/VisuallyHidden/index.js"
@@ -952,6 +976,18 @@
       "./Markdown": {
         "types": "./dist/Markdown/index.d.ts",
         "import": "./dist/Markdown/index.js"
+      },
+      "./Markdown/parser": {
+        "types": "./dist/Markdown/parser/index.d.ts",
+        "import": "./dist/Markdown/parser/index.js"
+      },
+      "./Markdown/plugins": {
+        "types": "./dist/Markdown/plugin-protocol/index.d.ts",
+        "import": "./dist/Markdown/plugin-protocol/index.js"
+      },
+      "./Markdown/plugin-renderer": {
+        "types": "./dist/Markdown/plugin-renderer/index.d.ts",
+        "import": "./dist/Markdown/plugin-renderer/index.js"
       },
       "./Chat": {
         "types": "./dist/Chat/index.d.ts",

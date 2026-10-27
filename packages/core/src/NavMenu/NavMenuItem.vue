@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { NavMenuItemEmits, NavMenuItemProps, NavMenuItemSlots } from './types.js'
 import { computed, inject } from 'vue'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { resolveNavRoot } from '../NavItem/link.js'
+import { isNavigableHref, resolveNavRoot } from '../NavItem/link.js'
 import { navMenuCloseKey, navMenuKey } from './context.js'
 import '../../styles/nav-menu.css'
 
@@ -17,11 +19,12 @@ const props = withDefaults(defineProps<NavMenuItemProps>(), {
 const emit = defineEmits<NavMenuItemEmits>()
 defineSlots<NavMenuItemSlots>()
 
-const menu = inject(navMenuKey, null)
+const menu = readLayerScoped(navMenuKey)
 const closeMenu = inject(navMenuCloseKey, undefined)
 const linkComponent = useLinkComponent()
 const size = computed(() => menu?.size.value ?? 'md')
-const isLink = computed(() => props.href != null && props.href !== '' && !props.isDisabled)
+const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))
+const { pressableProps } = usePressFeedback({ hasOverlay: false })
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
 const root = computed(() => resolveNavRoot(props.href, props.isDisabled, customLink.value))
@@ -54,6 +57,7 @@ function onClick(event: MouseEvent): void {
     :disabled="isLink ? undefined : isDisabled"
     :aria-disabled="isDisabled || undefined"
     :tabindex="isMenuItem && !isDisabled ? -1 : undefined"
+    v-bind="isDisabled ? {} : pressableProps"
     @click="onClick"
   >
     <span v-if="iconClass || $slots.icon" class="astryx-nav-menu-item__icon" aria-hidden="true">

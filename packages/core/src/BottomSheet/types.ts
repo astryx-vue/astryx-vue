@@ -83,8 +83,9 @@ export interface BottomSheetProps {
   /**
    * Inner padding of the content box using the spacing scale. When omitted, the
    * theme decides, falling back to the `--spacing-4` step (16px) on every
-   * logical edge. Pass `0` for a flush content box. The content box is a
-   * container, so a lone `Section` child escapes the inset.
+   * logical edge. Pass `0` for a flush content box. The content box publishes
+   * that inset: a lone `Section` escapes it, and bleed children such as
+   * `Table` and `Divider` line up with it.
    * @default undefined
    */
   padding?: BottomSheetPadding

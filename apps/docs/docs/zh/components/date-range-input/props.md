@@ -19,7 +19,12 @@ footer: false
 <tr><td><code>minRangeSpan</code></td><td><code>number</code></td><td><code>1</code></td><td>最短天数，包含两端。</td></tr>
 <tr><td><code>maxRangeSpan</code></td><td><code>number</code></td><td>—</td><td>最长天数，包含两端。</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>周日，zh-CN 为周一</td><td>日历的第一列。</td></tr>
-<tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>显示清除按钮。</td></tr>
+<tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>显示清除按钮。键盘激活清除时，焦点回到触发按钮，并避免页面滚动。</td></tr>
+<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。演练场里写 <code>is-label-hidden</code>。</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。落点规则同 containerClass。</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到带边框本体的 class。直接写在组件上的 class 也落在本体，不会落到触发按钮上。</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到带边框本体的行内样式。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>选择日期区间</code></td><td>空值文案，跟随语言。</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。</td></tr>
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息的位置。</td></tr>

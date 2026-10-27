@@ -36,6 +36,7 @@ describe('lightbox', () => {
     const wrapper = mount(Host)
     const dialog = wrapper.get('dialog')
     expect(dialog.attributes('aria-label')).toBe(photo.alt)
+    expect(dialog.classes()).toContain('astryx-layer')
     expect(wrapper.get('img').attributes('alt')).toBe(photo.alt)
     expect(wrapper.get('.astryx-lightbox__caption').text()).toBe(photo.caption)
     expect(wrapper.get('.astryx-lightbox__counter').text()).toBe('1 / 2')

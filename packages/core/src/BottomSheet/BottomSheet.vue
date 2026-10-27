@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import type { DismissEscape } from '../layer/dismissStack.js'
 import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheetSlots, BottomSheetState } from './types.js'
 import { computed, inject, onBeforeUnmount, onMounted, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
+import { isImeKeyEvent } from '../composables/internal/ime.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
 import { bottomSheetSwitcherKey } from './switcher.js'
+import { useSheetLayerDismiss } from './useSheetLayerDismiss.js'
 import '../../styles/bottom-sheet.css'
 
 defineOptions({ name: 'AstryxBottomSheet', inheritAttrs: false })
@@ -140,8 +144,28 @@ function closeSheet(): void {
   isPresented.value = false
   const target = toValue(props.finalFocusRef)
   if (target?.isConnected)
-    target.focus()
+    focusForLastInput(target)
 }
+
+const layerActive = computed(() => !hosted.value && !props.isInline && (isOpen.value || isPresented.value))
+const layerEscape = computed<DismissEscape>(() => {
+  if (!isOpen.value || props.purpose === 'required')
+    return 'block'
+  if (!props.hasScrim)
+    return 'ignore'
+  return 'close'
+})
+const layer = useSheetLayerDismiss({
+  isActive: layerActive,
+  escape: layerEscape,
+  getContainer: () => dialog.value ?? null,
+  isPresent: () => dialog.value?.open ?? false,
+  onDismiss: () => {
+    if (!isOpen.value || props.purpose === 'required')
+      return
+    requestClose()
+  },
+})
 
 function requestClose(): void {
   if (hosted.value && props.sheetId != null) {
@@ -161,16 +185,18 @@ function dismissOnEscape(): void {
 }
 
 function onKeydown(event: KeyboardEvent): void {
-  if (event.key !== 'Escape')
+  if (event.key !== 'Escape' || !layer.isTop())
     return
   event.preventDefault()
-  if (event.isComposing || event.keyCode === 229)
+  if (isImeKeyEvent(event))
     return
   dismissOnEscape()
 }
 
 function onCancel(event: Event): void {
   event.preventDefault()
+  if (!layer.isTop())
+    return
   dismissOnEscape()
 }
 

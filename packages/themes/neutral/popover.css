@@ -3,8 +3,8 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-popover-background: light-dark(#ffffff, #1b1b1b);
-    --astryx-popover-foreground: light-dark(#171717, #fafafa);
+    --astryx-popover-background: var(--astryx-color-background-popover);
+    --astryx-popover-foreground: var(--astryx-color-text-primary);
     --astryx-popover-shadow:
       0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
       0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),

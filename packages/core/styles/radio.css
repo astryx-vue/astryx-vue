@@ -50,6 +50,22 @@
     height: 8px;
   }
 
+  @media not all and (pointer: coarse) {
+    .astryx-radio:not([data-disabled='true']):active .astryx-radio-indicator {
+      background-image: linear-gradient(var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19)), var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19)));
+    }
+  }
+
+  .astryx-radio[data-astryx-press] .astryx-radio-indicator {
+    background-image: var(--_press-paint-image);
+  }
+
+  @media (pointer: coarse) {
+    .astryx-radio {
+      min-height: 24px;
+    }
+  }
+
   .astryx-radio-native:focus-visible + .astryx-radio-indicator {
     outline: 2px solid var(--astryx-focus-outline-color, var(--astryx-input-focus, #262626));
     outline-offset: 2px;

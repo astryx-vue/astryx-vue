@@ -3,8 +3,8 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-avatar-group-border-color: light-dark(#fff, #171717);
-    --astryx-avatar-group-overflow-background: light-dark(#e5e5e5, #525252);
-    --astryx-avatar-group-overflow-foreground: light-dark(#525252, #e5e5e5);
+    --astryx-avatar-group-border-color: var(--astryx-color-background-surface);
+    --astryx-avatar-group-overflow-background: var(--astryx-color-background-gray);
+    --astryx-avatar-group-overflow-foreground: var(--astryx-color-text-gray);
   }
 }

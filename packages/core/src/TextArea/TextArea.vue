@@ -5,12 +5,15 @@ import { computed, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useT
 import ButtonSpinner from '../Button/ButtonSpinner.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { countCharacters } from '../composables/countCharacters.js'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import { useInputContainer } from '../composables/useInputContainer.js'
 import Field from '../Field/Field.vue'
-import FieldIcon from '../Field/FieldIcon.vue'
 import FieldInfoTip from '../Field/FieldInfoTip.vue'
+import { useFieldPartStyling } from '../Field/fieldParts.js'
+import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
-import IconButton from '../IconButton/IconButton.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextAreaAction } from './useTextAreaAction.js'
 import '../../styles/text-area.css'
@@ -26,6 +29,17 @@ const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
 const emit = defineEmits<TextAreaEmits>()
 defineSlots<TextAreaSlots>()
 const ariaRequired = useAriaRequired(props)
+const messages = useAstryxMessages()
+const announce = useAnnounce()
+const COUNTER_WARNING_THRESHOLD = 0.8
+type CounterZone = 'under' | 'near' | 'over'
+const counterZone = shallowRef<CounterZone | null>(null)
+const limit = computed(() => {
+  if (props.maxlength == null || props.maxlength === '')
+    return null
+  const parsed = Number(props.maxlength)
+  return Number.isFinite(parsed) ? parsed : null
+})
 const model = defineModel<string>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLTextAreaElement>('input')
@@ -45,6 +59,22 @@ const action = useTextAreaAction({
   emitError: (error, value, event) => emit('actionError', error, value, event),
 })
 const busy = computed(() => props.isLoading || action.isPending.value)
+const valueLength = computed(() => (limit.value == null ? 0 : countCharacters(action.value.value)))
+const isOverLimit = computed(() => limit.value != null && valueLength.value > limit.value)
+
+function announceCounter(length: number): void {
+  const max = limit.value
+  if (max == null)
+    return
+  const zone: CounterZone = length > max ? 'over' : length >= max * COUNTER_WARNING_THRESHOLD ? 'near' : 'under'
+  if (zone === counterZone.value)
+    return
+  counterZone.value = zone
+  if (zone === 'over')
+    announce(messages.value.textArea.charactersOverLimit(length - max), 'assertive')
+  else if (zone === 'near')
+    announce(messages.value.textArea.charactersRemaining(max - length))
+}
 const element = computed(() => input.value ?? null)
 
 function focus(options?: FocusOptions): void {
@@ -58,9 +88,14 @@ function select(): void {
 }
 defineExpose({ element, focus, blur, select })
 
-const controlledAttrs = new Set(['class', 'style', 'id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'spellcheck', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'])
+const parts = useFieldPartStyling({
+  component: 'TextArea',
+  props,
+  attrs,
+  reservedAttrs: ['id', 'value', 'rows', 'cols', 'disabled', 'readonly', 'autofocus', 'minlength', 'maxlength', 'wrap', 'spellcheck', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-busy', 'aria-disabled'],
+})
 function inputAttrs(): TextareaHTMLAttributes {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as TextareaHTMLAttributes
+  return parts.forwardedAttrs() as TextareaHTMLAttributes
 }
 function describedBy(fieldIds?: string): string | undefined {
   return [attrs['aria-describedby'], fieldIds, showsDisabledMessage.value ? disabledDescriptionId : undefined].filter(Boolean).join(' ') || undefined
@@ -77,6 +112,8 @@ function acceptInput(event: Event): void {
   if (isComposing.value || (event instanceof InputEvent && event.isComposing))
     return
   const value = input.value?.value ?? ''
+  if (limit.value != null)
+    announceCounter(countCharacters(value))
   if (value !== action.value.value)
     action.commit(value, event)
 }
@@ -99,6 +136,7 @@ async function clear(event: MouseEvent): Promise<void> {
   await nextTick()
   focus({ preventScroll: true })
 }
+const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.textInput.clear(props.label))
 const inputContainer = useInputContainer({
   containerRef: container,
   inputRef: input,
@@ -116,13 +154,14 @@ onMounted(() => {
     :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
     :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
     :status="status" :status-variant="statusVariant"
+    :class="parts.containerClass.value" :style="parts.containerStyle.value"
   >
     <template v-if="$slots.labelIcon" #labelIcon>
       <slot name="labelIcon" />
     </template>
     <template #default="field">
       <div
-        ref="container" class="astryx-text-area" :class="attrs.class" :style="attrs.style"
+        ref="container" class="astryx-text-area" :class="parts.controlClass()" :style="parts.controlStyle()"
         :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
         @click="inputContainer.onClick" @mouseup="inputContainer.onMouseUp"
         @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"
@@ -132,25 +171,23 @@ onMounted(() => {
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-text-area-control"
           :value="action.value.value" :placeholder="placeholder" :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)"
           :style="{ '--astryx-text-area-resize': resize }"
-          :rows="rows" :cols="cols" :minlength="minlength" :maxlength="maxlength" :wrap="wrap"
+          :rows="rows" :cols="cols" :minlength="minlength" :wrap="wrap"
           :autocomplete="(autoComplete ?? inputAttrs().autocomplete) as TextareaHTMLAttributes['autocomplete']"
           :spellcheck="hasSpellCheck"
           :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || showsDisabledMessage"
           :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
-          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
+          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' || isOverLimit ? true : inputAttrs()['aria-invalid']"
           :aria-labelledby="labelledBy(field.labelId)" :aria-describedby="describedBy(field.describedBy)" :data-autofocus="hasAutoFocus || undefined"
           @input="acceptInput" @compositionstart="isComposing = true" @compositionend="compositionEnd" @keydown="keydown"
           @focus="disabledTooltip.onTooltipPointerEnter" @blur="disabledTooltip.onBlur"
         />
         <span
-          v-if="maxlength != null"
+          v-if="limit != null"
           class="astryx-text-area-count"
-          :data-over="action.value.value.length > Number(maxlength) || undefined"
-        >{{ action.value.value.length }} / {{ maxlength }}</span>
+          :data-over="isOverLimit || undefined"
+        >{{ valueLength }} / {{ limit }}</span>
         <span v-if="$slots.end" class="astryx-text-area-end"><slot name="end" /></span>
-        <IconButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" variant="ghost" size="sm" :label="clearLabel ?? `Clear ${label}`" @click="clear">
-          <FieldIcon type="clear" />
-        </IconButton>
+        <InputClearButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" :label="resolvedClearLabel" @click="clear" />
         <ButtonSpinner v-if="busy" class="astryx-text-area-spinner" :label="loadingLabel" />
         <FieldInfoTip v-if="status?.message && statusVariant === 'tooltip'" :text="status.message" :type="status.type" />
       </div>

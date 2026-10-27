@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { SegmentedControlItemProps, SegmentedControlItemSlots, SegmentedControlSize } from './types.js'
-import { computed, inject, useAttrs, useTemplateRef } from 'vue'
+import { computed, useAttrs, useTemplateRef } from 'vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { segmentedControlContextKey } from './context.js'
 
 defineOptions({ name: 'AstryxSegmentedControlItem', inheritAttrs: false })
@@ -14,7 +16,8 @@ const props = withDefaults(defineProps<SegmentedControlItemProps>(), {
 defineSlots<SegmentedControlItemSlots>()
 
 const attrs = useAttrs()
-const context = inject(segmentedControlContextKey, null)
+const press = usePressFeedback({ hasOverlay: false })
+const context = readLayerScoped(segmentedControlContextKey)
 const root = useTemplateRef<HTMLButtonElement>('root')
 const element = computed(() => root.value ?? null)
 
@@ -68,7 +71,7 @@ const rootClass = computed(() => ['astryx-segmented-control-item', attrs.class])
 <template>
   <button
     ref="root"
-    v-bind="forwardedAttrs"
+    v-bind="{ ...forwardedAttrs, ...(isDisabled ? {} : press.pressableProps) }"
     :aria-checked="isSelected"
     :aria-disabled="isDisabled || undefined"
     :aria-label="isLabelHidden ? label : undefined"

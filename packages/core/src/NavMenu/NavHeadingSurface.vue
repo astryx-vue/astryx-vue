@@ -5,7 +5,7 @@ import { computed, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
-import { resolveNavRoot } from '../NavItem/link.js'
+import { resolveNavRoot, safeNavHref } from '../NavItem/link.js'
 import NavDisclosure from './NavDisclosure.vue'
 import { resolveNavHeadingMode } from './navHeadingMode.js'
 import NavHeadingText from './NavHeadingText.vue'
@@ -38,37 +38,40 @@ const linkComponent = useLinkComponent()
 const customLink = computed(() => props.as ?? linkComponent.value)
 const block = computed(() => props.kind === 'top' ? 'astryx-top-nav-heading' : 'astryx-side-nav-heading')
 const hasMenu = computed(() => slots.menu != null)
+const safeHeadingHref = computed(() => safeNavHref(props.headingHref))
+const safeSuperheadingHref = computed(() => safeNavHref(props.superheadingHref))
+const safeSubheadingHref = computed(() => safeNavHref(props.subheadingHref))
 const mode = computed(() => resolveNavHeadingMode({
   hasHeading: Boolean(props.heading),
   hasMenu: hasMenu.value,
-  headingHref: props.headingHref,
-  superheadingHref: props.superheadingHref,
-  subheadingHref: props.subheadingHref,
+  headingHref: safeHeadingHref.value,
+  superheadingHref: safeSuperheadingHref.value,
+  subheadingHref: safeSubheadingHref.value,
 }))
-const headingRoot = computed(() => resolveNavRoot(props.headingHref, false, customLink.value))
+const headingRoot = computed(() => resolveNavRoot(safeHeadingHref.value, false, customLink.value))
 const logoName = computed(() => props.logoLabel || props.heading)
-const logoIsLink = computed(() => Boolean(props.headingHref) && mode.value !== 'whole-link' && mode.value !== 'logo')
+const logoIsLink = computed(() => Boolean(safeHeadingHref.value) && mode.value !== 'whole-link' && mode.value !== 'logo')
 
 const textProps = computed(() => ({
   as: customLink.value,
   block: block.value,
   heading: props.heading,
-  headingHref: props.headingHref,
+  headingHref: safeHeadingHref.value,
   subheading: props.subheading,
-  subheadingHref: props.subheadingHref,
+  subheadingHref: safeSubheadingHref.value,
   superheading: props.superheading,
-  superheadingHref: props.superheadingHref,
+  superheadingHref: safeSuperheadingHref.value,
 }))
 </script>
 
 <template>
   <component
-    :is="headingHref ? headingRoot : 'div'"
+    :is="safeHeadingHref ? headingRoot : 'div'"
     v-if="mode === 'logo'"
-    :class="[block, { [`${block}--link`]: headingHref }]"
-    :href="headingHref"
-    :to="customLink != null ? headingHref : undefined"
-    :aria-label="headingHref ? logoName : undefined"
+    :class="[block, { [`${block}--link`]: safeHeadingHref }]"
+    :href="safeHeadingHref"
+    :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
+    :aria-label="safeHeadingHref ? logoName : undefined"
   >
     <span v-if="$slots.icon" :class="`${block}__icon`">
       <slot name="icon" />
@@ -79,8 +82,8 @@ const textProps = computed(() => ({
     :is="headingRoot"
     v-else-if="mode === 'whole-link'"
     :class="[block, `${block}--link`]"
-    :href="headingHref"
-    :to="customLink != null ? headingHref : undefined"
+    :href="safeHeadingHref"
+    :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
   >
     <span v-if="$slots.icon" :class="`${block}__icon`">
       <slot name="icon" />
@@ -103,8 +106,8 @@ const textProps = computed(() => ({
           :is="headingRoot"
           v-if="logoIsLink && $slots.icon"
           :class="`${block}__icon`"
-          :href="headingHref"
-          :to="customLink != null ? headingHref : undefined"
+          :href="safeHeadingHref"
+          :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
           :aria-label="logoName"
           @click.stop
         >
@@ -156,8 +159,8 @@ const textProps = computed(() => ({
       :is="headingRoot"
       v-if="logoIsLink && $slots.icon"
       :class="`${block}__icon`"
-      :href="headingHref"
-      :to="customLink != null ? headingHref : undefined"
+      :href="safeHeadingHref"
+      :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
       :aria-label="logoName"
     >
       <slot name="icon" />

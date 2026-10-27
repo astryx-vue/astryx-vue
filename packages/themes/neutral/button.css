@@ -9,12 +9,12 @@
     --astryx-button-secondary-foreground: var(--astryx-color-text-primary);
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
-    --astryx-button-destructive-background: light-dark(#facecb, #ff9e973d);
-    --astryx-button-destructive-foreground: light-dark(#a50c25, #ffc6c1);
-    --astryx-button-hover-overlay: light-dark(#0000000d, #ffffff0d);
-    --astryx-button-pressed-overlay: light-dark(#0000001a, #ffffff1a);
+    --astryx-button-destructive-background: var(--astryx-color-error-muted);
+    --astryx-button-destructive-foreground: var(--astryx-color-error);
+    --astryx-button-hover-overlay: var(--astryx-color-overlay-hover);
+    --astryx-button-pressed-overlay: var(--astryx-color-overlay-pressed);
     --astryx-button-focus: var(--astryx-color-accent);
-    --astryx-button-separator: light-dark(#00000014, #ffffff1a);
+    --astryx-button-separator: var(--astryx-color-border);
     --astryx-button-solid-separator: light-dark(#ffffff, #171717);
     --astryx-button-tooltip-background: light-dark(#171717, #262626);
     --astryx-button-tooltip-foreground: light-dark(#ffffff, #fafafa);
@@ -30,5 +30,15 @@
       0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
       0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),
       inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%));
+  }
+}
+
+/* A destructive button tints its hover and pressed states with red instead of
+   the neutral overlay, so the interaction reads as dangerous. */
+@layer astryx.overrides {
+  :root .astryx-button[data-variant='destructive'],
+  [data-astryx-theme='neutral'] .astryx-button[data-variant='destructive'] {
+    --astryx-button-hover-overlay: var(--astryx-theme-neutral-color-destructive-overlay-hover);
+    --astryx-button-pressed-overlay: var(--astryx-theme-neutral-color-destructive-overlay-pressed);
   }
 }

@@ -14,6 +14,11 @@ on:
       - pnpm-workspace.yaml
       - .github/workflows/docs.yml
   pull_request:
+    # 只有合向 main 或 dev 的 PR 才部署预览。蜂群节点分支合向 swarm-tree 的
+    # 小 PR 不部署，只由 swarm-tree → dev 的那个总 PR 部署，省下构建额度。
+    branches:
+      - main
+      - dev
     # 不写 types 时默认就是 opened / synchronize / reopened。
     # synchronize 表示「PR 分支又推了新 commit」，这正是每次提交都部署的来源。
     # 想进一步省额度：改成 [opened, reopened, synchronize, labeled]，

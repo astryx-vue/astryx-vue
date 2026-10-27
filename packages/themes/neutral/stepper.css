@@ -1,0 +1,16 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * Step indicators paint from the shared status colors. A step's status picks
+ * which one it reads, so re-pointing all four on the indicator itself gives
+ * each status the approved status fill.
+ */
+@layer astryx.overrides {
+  :root .astryx-step-indicator,
+  [data-astryx-theme='neutral'] .astryx-step-indicator {
+    --astryx-color-accent: var(--astryx-theme-neutral-color-status-fill-accent);
+    --astryx-color-success: var(--astryx-theme-neutral-color-status-fill-success);
+    --astryx-color-warning: var(--astryx-theme-neutral-color-status-fill-warning);
+    --astryx-color-error: var(--astryx-theme-neutral-color-status-fill-error);
+  }
+}

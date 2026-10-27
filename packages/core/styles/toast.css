@@ -12,13 +12,40 @@
     box-sizing: border-box;
     width: auto;
     margin: 0;
+    /* 先把浏览器给 popover 的默认外边距式 inset 清掉，再由下面的定位类定边。 */
+    inset: auto;
     inset-inline: 0;
+    /* popover="manual" 让视口进顶层，浏览器同时会给一份弹窗默认样式，这里清掉。 */
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
     padding: var(--astryx-spacing-4, 16px);
     pointer-events: none;
+    /* 行和卡片的过渡都读这一份，搬视口时的等待时间和它对得上。 */
+    --astryx-toast-motion-duration: var(--astryx-duration-fast-max, 165ms);
   }
 
   .astryx-toast-viewport > * {
     pointer-events: auto;
+  }
+
+  /* 视口搬进/搬出模态对话框时，节点等于重新插入文档，浏览器会把 `@starting-style`
+     里的进场动画重放一遍：toast 会在原来的位置上下一跳。搬的这一帧先关掉过渡。 */
+  .astryx-toast-viewport--rehosting,
+  .astryx-toast-viewport--rehosting * {
+    transition-property: none;
+  }
+
+  /* 搬的这一下不要让「刚进来」的起始值生效：起始值一恢复就成了动画的起点，
+     toast 会从 8px 下方滑上来，看上去就是位置跳了一下。 */
+  .astryx-toast-viewport--rehosting .astryx-toast-viewport__row {
+    grid-template-rows: 1fr;
+  }
+
+  .astryx-toast-viewport--rehosting .astryx-toast:not(.astryx-toast--exiting) {
+    opacity: 1;
+    transform: none;
   }
 
   .astryx-toast-viewport--placement-top-start,
@@ -59,7 +86,7 @@
     min-width: 0;
     padding-block-end: var(--astryx-spacing-2, 8px);
     transition-property: grid-template-rows, padding;
-    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-duration: var(--astryx-toast-motion-duration, 165ms);
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
 
     @starting-style {
@@ -119,9 +146,11 @@
     box-shadow: 0 4px 24px rgb(0 0 0 / 16%);
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
+    opacity: var(--_toast-swipe-opacity, 1);
     transition-property: opacity, transform;
-    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-duration: var(--astryx-toast-motion-duration, 165ms);
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transform: translateY(var(--_toast-swipe-y, 0px)) scale(var(--_toast-swipe-scale, 1));
 
     @starting-style {
       opacity: 0;
@@ -131,7 +160,7 @@
 
   .astryx-toast--exiting {
     opacity: 0;
-    transform: translateY(var(--astryx-toast-slide-y, var(--astryx-spacing-2, 8px)));
+    transform: translateY(var(--_toast-swipe-exit-y, var(--astryx-toast-slide-y, var(--astryx-spacing-2, 8px)))) scale(var(--_toast-swipe-scale, 1));
   }
 
   .astryx-toast--type-success {
@@ -147,6 +176,11 @@
   .astryx-toast--type-error {
     background-color: var(--astryx-toast-error-background, #c52626);
     color: var(--astryx-toast-type-foreground, #fff);
+  }
+
+  /* 量到卡片底色后再选深浅，自己不占一层盒子，里面的按钮仍按卡片排成一行。 */
+  .astryx-toast__surface {
+    display: contents;
   }
 
   .astryx-toast__body {

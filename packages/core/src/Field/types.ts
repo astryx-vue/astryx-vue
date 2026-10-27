@@ -26,6 +26,11 @@ export interface FieldLabelProps {
   labelTooltip?: string
   optionalLabel?: string
   requiredLabel?: string
+  /**
+   * 额外的主题目标 class，加在字段标签上，和 `astryx-field-label` 同时存在。
+   * 复选框用 `astryx-checkbox-label`，开关用 `astryx-switch-label`。
+   */
+  targetClass?: string
 }
 
 export interface FieldProps extends FieldLabelProps {

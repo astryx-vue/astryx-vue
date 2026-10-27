@@ -18,7 +18,7 @@ footer: false
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。删除按钮不再响应。</td></tr>
       <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>有值时渲染成链接。和删除按钮同时存在时，链接和按钮是兄弟节点。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>补充说明，读屏可读。</td></tr>
-      <tr><td><code>labelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏文字，仍然作为无障碍名称。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏文字，仍然作为无障碍名称。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
     </tbody>
   </table>
 </div>

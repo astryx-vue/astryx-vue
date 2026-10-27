@@ -1,7 +1,8 @@
 import type { MoreMenuOption } from './types.js'
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { h, nextTick } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
+import { provideAstryxLocale } from '../locale/index.js'
 import MoreMenu from './MoreMenu.vue'
 
 enableAutoUnmount(afterEach)
@@ -51,6 +52,19 @@ describe('moreMenu', () => {
     expect(trigger().getAttribute('aria-controls')).toMatch(/^astryx-more-menu-/)
     expect(trigger().querySelector('.astryx-icon')).toBeTruthy()
     expect(menu()).toBeNull()
+  })
+
+  it('names an unlabelled trigger from the active locale', () => {
+    const Host = defineComponent({
+      components: { MoreMenu },
+      setup() {
+        provideAstryxLocale('zh-CN')
+        return { items: ITEMS }
+      },
+      template: '<MoreMenu :items="items" />',
+    })
+    mount(Host, { attachTo: document.body })
+    expect(document.querySelector('.astryx-more-menu button')?.getAttribute('aria-label')).toBe('更多选项')
   })
 
   it('uses the label prop for the trigger name and the menu name', async () => {

@@ -8,7 +8,9 @@ import { astryxMessages } from './messages.js'
 describe('locale', () => {
   it('defaults to English and keeps tags that have their own catalog', () => {
     expect(normalizeLocale(undefined)).toBe('en')
-    expect(normalizeLocale('en-US')).toBe('en')
+    expect(normalizeLocale('en')).toBe('en')
+    expect(normalizeLocale('en-us')).toBe('en-US')
+    expect(normalizeLocale('en-GB')).toBe('en-GB')
     expect(normalizeLocale('zh')).toBe('zh-CN')
     expect(normalizeLocale('zh-CN')).toBe('zh-CN')
     expect(normalizeLocale('zh-Hans')).toBe('zh-CN')
@@ -24,6 +26,31 @@ describe('locale', () => {
     expect(standaloneShortWeekdayNames('en')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
     expect(standaloneShortWeekdayNames('zh-CN')[0]).toBe('周日')
     expect(weekdayNames('zh-CN', 'narrow')[0]).toBe('日')
+  })
+
+  it('reads CLDR stand-alone weekday headers for every vendored locale, then the base language, then English', () => {
+    expect(standaloneShortWeekdayNames('fr-FR')).toEqual(['di', 'lu', 'ma', 'me', 'je', 've', 'sa'])
+    expect(standaloneShortWeekdayNames('ja-JP')[1]).toBe('月')
+    expect(standaloneShortWeekdayNames('zh-TW')).toEqual(['日', '一', '二', '三', '四', '五', '六'])
+    expect(standaloneShortWeekdayNames('pt-PT')[6]).toBe('sáb.')
+    expect(standaloneShortWeekdayNames('en-GB')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+    expect(standaloneShortWeekdayNames('xx')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+  })
+
+  it('keeps a regional English tag and still reads the English copy', () => {
+    const Probe = defineComponent({
+      setup() {
+        const messages = useAstryxMessages()
+        return () => h('span', messages.value.selector.placeholder)
+      },
+    })
+    const Parent = defineComponent({
+      setup() {
+        provideAstryxLocale('en-GB')
+        return () => h(Probe)
+      },
+    })
+    expect(mount(Parent).text()).toBe('Select…')
   })
 
   it('reads messages from the provided locale', () => {

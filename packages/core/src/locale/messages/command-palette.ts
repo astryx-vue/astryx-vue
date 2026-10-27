@@ -1,4 +1,5 @@
 import type { AstryxLocale } from '../types.js'
+import { englishPlural, formatCount } from './shared.js'
 
 export interface CommandPaletteMessages {
   label: string
@@ -25,7 +26,7 @@ export const commandPaletteMessages: Record<AstryxLocale, CommandPaletteMessages
     inputLabel: 'Search commands',
     loading: 'Loading',
     noResultsFor: query => `No results for ${query}`,
-    resultCount: count => `${count} ${count === 1 ? 'result' : 'results'}`,
+    resultCount: count => `${formatCount(count, 'en')} ${englishPlural(count, 'result', 'results')}`,
     navigate: 'Navigate',
     select: 'Select',
     close: 'Close',
@@ -39,7 +40,7 @@ export const commandPaletteMessages: Record<AstryxLocale, CommandPaletteMessages
     inputLabel: '搜索命令',
     loading: '正在加载',
     noResultsFor: query => `没有与 ${query} 匹配的结果`,
-    resultCount: count => `${count} 个结果`,
+    resultCount: count => `${formatCount(count, 'zh-CN')} 个结果`,
     navigate: '移动',
     select: '选择',
     close: '关闭',

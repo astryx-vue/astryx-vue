@@ -2,6 +2,9 @@
 import type { DialogPadding, DialogProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useFocusTrap, useRestoreFocus, useScrollLock } from '../composables/index.js'
+import { addModalOutlet, removeModalOutlet } from '../layer/modalOutlet.js'
+import { provideLayerMountTarget } from '../layer/mount.js'
+import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
 import '../../styles/dialog.css'
@@ -19,6 +22,9 @@ const props = withDefaults(defineProps<DialogProps>(), {
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 const attrs = useAttrs()
 
+// 对话框内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
+resetLayerScopedContext()
+
 const titleId = `astryx-dialog-title-${useId()}`
 const hasTitle = ref(false)
 const isInlineRef = computed(() => props.isInline)
@@ -31,6 +37,9 @@ provide(DIALOG_CONTEXT_KEY, {
 })
 
 const dialogRef = useTemplateRef<HTMLDialogElement>('dialogRef')
+// 浮层挂载点：Dialog 打开时浮层挂进来，否则会压在模态遮罩下面看不见。
+const layerHostRef = ref<HTMLElement | null>(null)
+provideLayerMountTarget(layerHostRef)
 let triggerElement: HTMLElement | null = null
 const isScrollLocked = ref(false)
 useScrollLock(isScrollLocked)
@@ -119,6 +128,26 @@ const isDialogOpen = computed(() => {
 
 const shouldRestoreFocus = computed(() => isDialogOpen.value)
 
+// 打开期间同时充当全局 toast 的挂载点。
+let modalOutlet: HTMLDialogElement | null = null
+
+function attachModalOutlet(dialog: HTMLDialogElement): void {
+  if (modalOutlet === dialog)
+    return
+  detachModalOutlet()
+  modalOutlet = dialog
+  dialog.addEventListener('close', detachModalOutlet)
+  addModalOutlet(dialog)
+}
+
+function detachModalOutlet(): void {
+  if (modalOutlet == null)
+    return
+  modalOutlet.removeEventListener('close', detachModalOutlet)
+  removeModalOutlet(modalOutlet)
+  modalOutlet = null
+}
+
 // 使用共享的焦点管理
 useFocusTrap({
   container: dialogRef,
@@ -147,6 +176,7 @@ function openDialog(): void {
   triggerElement = document.activeElement as HTMLElement | null
   applyEntryDirection(dialog)
   dialog.showModal()
+  attachModalOutlet(dialog)
   lockScroll()
 }
 
@@ -156,6 +186,7 @@ function closeDialog(): void {
   const dialog = dialogRef.value
   if (dialog?.open)
     dialog.close()
+  detachModalOutlet()
   unlockScroll()
 }
 
@@ -184,6 +215,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  detachModalOutlet()
   unlockScroll()
 })
 </script>
@@ -193,7 +225,7 @@ onBeforeUnmount(() => {
     <div
       v-if="isOpen"
       v-bind="rootAttrs()"
-      class="astryx-dialog astryx-dialog--inline"
+      class="astryx-dialog astryx-dialog--inline astryx-layer"
       :class="{ 'astryx-dialog--fullscreen': isFullscreen }"
       :data-variant="variant"
       :data-padded="padding == null ? undefined : ''"
@@ -210,7 +242,7 @@ onBeforeUnmount(() => {
     v-else
     ref="dialogRef"
     v-bind="rootAttrs()"
-    class="astryx-dialog"
+    class="astryx-dialog astryx-layer"
     :class="{ 'astryx-dialog--fullscreen': isFullscreen }"
     :data-variant="variant"
     :data-padded="padding == null ? undefined : ''"
@@ -224,5 +256,6 @@ onBeforeUnmount(() => {
     <div class="astryx-dialog__inner" :style="innerStyle">
       <slot />
     </div>
+    <div ref="layerHostRef" class="astryx-dialog__layer-host" />
   </dialog>
 </template>

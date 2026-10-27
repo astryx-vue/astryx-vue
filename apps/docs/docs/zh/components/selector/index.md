@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { selectorClearable, selectorDescriptions, selectorGhost, selectorSections, selectorSheet, selectorStates, selectorStatus } from '../../../../components/demos/selector'
+import { selectorActions, selectorClearable, selectorDescriptions, selectorGhost, selectorSecondary, selectorSections, selectorSheet, selectorStates, selectorStatus } from '../../../../components/demos/selector'
 </script>
 
 ## 使用方法
@@ -78,6 +78,20 @@ const options = [
   description="无边框的选择器和幽灵按钮一起放在工具栏里。"
   locale="zh"
   title="幽灵工具栏"
+/>
+
+<DemoExample
+  :demo="selectorSecondary"
+  description="次要样式和次要按钮同一套静止外观：没有边框，铺一层中性底。"
+  locale="zh"
+  title="次要样式"
+/>
+
+<DemoExample
+  :demo="selectorActions"
+  description="选项可以带一个操作。点操作不会改当前选择。只要有一项带了操作，列表就变成两列。"
+  locale="zh"
+  title="选项操作"
 />
 
 <DemoExample

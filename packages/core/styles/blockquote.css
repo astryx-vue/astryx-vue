@@ -7,6 +7,7 @@
     padding-inline-start: var(--astryx-spacing-4, 16px);
     border-inline-start: var(--astryx-spacing-0-5, 2px) solid var(--astryx-color-border-emphasized);
     color: var(--astryx-color-text-secondary);
+    overflow-wrap: break-word;
   }
 
   .astryx-blockquote__cite {

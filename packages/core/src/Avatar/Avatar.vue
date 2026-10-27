@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { AvatarProps } from './types.js'
-import { computed, inject, provide, ref, toRaw, useAttrs } from 'vue'
+import { computed, provide, ref, toRaw, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
+import { useDevWarning } from '../composables/useDevWarning.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
+import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/context.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { AvatarSizeContext, AvatarStatusLabelContext } from './context.js'
-import { composeAccessibleName, resolveSize } from './utils.js'
+import { composeAccessibleName, getInitials, resolveSize } from './utils.js'
 import '../../styles/avatar.css'
 
 defineOptions({ inheritAttrs: false })
@@ -38,7 +41,7 @@ const DEFAULT_ICON_RATIO = 0.6
 const erroredSrc = ref<string | undefined>(undefined)
 const erroredFallbackSrc = ref<string | undefined>(undefined)
 
-const avatarGroup = inject(AvatarGroupContext, undefined)
+const avatarGroup = readLayerScoped(AvatarGroupContext)
 const resolvedSize = computed(() => avatarGroup?.size.value ?? props.size)
 const resolvedShape = computed(() => avatarGroup?.shape.value ?? props.shape)
 
@@ -50,16 +53,6 @@ provide(AvatarSizeContext, numericSize)
 /** 状态插槽里的圆点把读屏名字写在这里，下面会拼进头像自己的名字。 */
 const statusLabel = ref<string | undefined>(undefined)
 provide(AvatarStatusLabelContext, statusLabel)
-
-const groupStyle = computed<CSSProperties>(() => {
-  if (!avatarGroup) {
-    return {}
-  }
-  return {
-    marginInlineStart: `${-avatarGroup.overlap.value}px`,
-    borderWidth: '2px',
-  }
-})
 
 const rootStyle = computed<CSSProperties>(() => ({
   width: `${numericSize.value}px`,
@@ -79,23 +72,7 @@ const meaningfulAlt = computed(() => {
   return typeof props.alt === 'string' && props.alt.trim() !== '' ? props.alt.trim() : undefined
 })
 
-const initials = computed(() => {
-  if (!meaningfulName.value) {
-    return ''
-  }
-  const words = meaningfulName.value.split(/\s+/)
-  const first = words.at(0)
-  const last = words.length > 1 ? words.at(-1) : undefined
-  const initial = (word: string | undefined) => {
-    if (!word) {
-      return ''
-    }
-    const match = word.match(/[\p{L}\p{N}]/u)
-    return match ? match[0].toUpperCase() : ''
-  }
-  const result = `${initial(first)}${initial(last)}`
-  return result
-})
+const initials = computed(() => meaningfulName.value ? getInitials(meaningfulName.value) : '')
 
 const showInitials = computed(() => !showImage.value && !showFallbackImage.value && initials.value !== '')
 const showIcon = computed(() => !showImage.value && !showFallbackImage.value && initials.value === '')
@@ -107,17 +84,34 @@ const accessibleName = computed(() => {
   return composeAccessibleName(meaningfulAlt.value || meaningfulName.value, status, messages.value.nav.avatarNameWithStatus)
 })
 
+const safeHref = computed(() => {
+  const href = props.href
+  return href != null && href !== '' && isSafeUrl(href) ? href : undefined
+})
 const isLink = computed(() => props.href != null && props.href !== '')
 const isButton = computed(() => !isLink.value && attrs.onClick != null)
 const isInteractive = computed(() => isLink.value || isButton.value)
-/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
+/** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。危险协议不用它。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
-const isCustomLink = computed(() => isLink.value && customLink.value != null)
+const isCustomLink = computed(() => safeHref.value != null && customLink.value != null)
 const rootTag = computed(() => {
   if (isLink.value)
-    return customLink.value == null ? 'a' : toRaw(customLink.value)
+    return isCustomLink.value ? toRaw(customLink.value) : 'a'
   return isButton.value ? 'button' : 'span'
 })
+
+const consumerHasName = computed(() => {
+  const label = attrs['aria-label']
+  const labelledBy = attrs['aria-labelledby']
+  return (typeof label === 'string' && label.trim() !== '')
+    || (typeof labelledBy === 'string' && labelledBy.trim() !== '')
+})
+
+useDevWarning(
+  'Avatar',
+  'an interactive avatar (with `href` or `onClick`) needs a meaningful accessible name. Pass `alt` or `name`.',
+  () => isInteractive.value && meaningfulAlt.value == null && meaningfulName.value == null && !consumerHasName.value,
+)
 
 const linkRel = computed(() => {
   const parts = new Set((props.rel ?? '').split(/\s+/).filter(Boolean))
@@ -156,11 +150,11 @@ const rootBindings = computed(() => {
     ...attrs,
   }
   if (isLink.value) {
-    bindings.href = props.href
+    bindings.href = safeHref.value
     bindings.target = props.target
     bindings.rel = linkRel.value
     if (isCustomLink.value)
-      bindings.to = props.href
+      bindings.to = safeHref.value
   }
   if (isButton.value)
     bindings.type = attrs.type ?? 'button'
@@ -189,7 +183,10 @@ function handleFallbackError() {
       :is="rootTag"
       class="astryx-avatar"
       :class="[`astryx-avatar--${resolvedShape}`, { 'astryx-avatar--group-item': avatarGroup, 'astryx-avatar--interactive': isInteractive }]"
-      :style="[rootStyle, groupStyle]"
+      :style="rootStyle"
+      :data-size="resolvedSize"
+      :data-shape="resolvedShape"
+      :data-avatar-item="isInteractive ? '' : undefined"
       v-bind="rootBindings"
     >
       <span class="astryx-avatar__content">
@@ -243,7 +240,10 @@ function handleFallbackError() {
     v-else
     class="astryx-avatar"
     :class="[`astryx-avatar--${resolvedShape}`, { 'astryx-avatar--group-item': avatarGroup, 'astryx-avatar--interactive': isInteractive }]"
-    :style="[rootStyle, groupStyle]"
+    :style="rootStyle"
+    :data-size="resolvedSize"
+    :data-shape="resolvedShape"
+    :data-avatar-item="isInteractive ? '' : undefined"
     v-bind="rootBindings"
   >
     <span class="astryx-avatar__content">

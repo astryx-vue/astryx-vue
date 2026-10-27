@@ -7,7 +7,7 @@
     --astryx-list-item-pressed-background: var(--astryx-color-overlay-pressed);
     --astryx-list-item-selected-background: light-dark(#0082fb33, #0082fb3f);
     --astryx-list-item-focus: light-dark(#0064e0, #2694fe);
-    --astryx-list-divider-color: light-dark(#05365919, #f2f4f619);
-    --astryx-list-marker-foreground: light-dark(#171717, #fafafa);
+    --astryx-list-divider-color: var(--astryx-color-border);
+    --astryx-list-marker-foreground: var(--astryx-color-text-primary);
   }
 }

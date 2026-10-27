@@ -1,6 +1,7 @@
-import type { Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import type { LayerAlignment, LayerPlacement, LayerPosition } from './position.js'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, onScopeDispose, ref, watch } from 'vue'
+import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { computeLayerPosition } from './position.js'
 
@@ -20,6 +21,11 @@ export interface PositionedLayerOptions {
  */
 export interface PositionedLayer {
   position: Ref<LayerPosition>
+  /**
+   * 这一层该挂到哪里的 `Teleport` 目标。Dialog 打开时是它内部的挂载点，
+   * 没有就是 `'body'`。
+   */
+  teleportTarget: ComputedRef<string | HTMLElement>
   update: () => void
   detach: () => void
 }
@@ -29,8 +35,13 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   const position = ref<LayerPosition>({ top: 0, left: 0, placement: placement.value })
   // 视口边距由最近一个 LayerProvider 决定，没有 provider 时是基础空隙加设备安全区。
   const gutter = useLayerGutter()
+  // 浮层实际挂到哪里：Dialog 打开时挂进对话框里面，否则挂到 body。
+  const teleportTarget = useLayerTeleportTarget()
 
   function update(): void {
+    // 卸载后若还有一次轮询赶在定时器清掉之前进来，测试环境可能已经拆掉 window。
+    if (typeof window === 'undefined')
+      return
     const anchorEl = anchor.value
     const layerEl = layer.value
     if (!anchorEl || !layerEl || !isOpen.value)
@@ -74,8 +85,10 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   }
 
   function detach(): void {
-    window.removeEventListener('scroll', update, true)
-    window.removeEventListener('resize', update)
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('scroll', update, true)
+      window.removeEventListener('resize', update)
+    }
     clearInterval(pollId)
     pollId = undefined
   }
@@ -93,5 +106,8 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   watch([placement, alignment], update)
   watch(gutter, update)
 
-  return { position, update, detach }
+  // 只在 isOpen 变成 false 时拆监听的话，调用方不调 detach、组件直接卸载，轮询还会继续。
+  onScopeDispose(detach)
+
+  return { position, teleportTarget, update, detach }
 }

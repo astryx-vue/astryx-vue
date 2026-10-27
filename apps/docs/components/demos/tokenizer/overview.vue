@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { createStaticSource } from '@astryx-vue/core'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { Tokenizer } from '@astryx-vue/core/Tokenizer'
-
-provideAstryxLocale('en')
 
 const source = createStaticSource([
   { id: 'alice', label: 'Alice Johnson' },

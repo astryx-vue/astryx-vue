@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { HTMLAttributes, StyleValue } from 'vue'
 import type { DateInputProps } from './types.js'
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { toCalendarDate } from '../Calendar/calendarDate.js'
@@ -8,6 +9,7 @@ import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
+import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
@@ -15,10 +17,18 @@ import { formatInstant } from '../Timestamp/formatInstant.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/date-input.css'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<Pick<DateInputProps, 'id' | 'modelValue' | 'label' | 'description' | 'placeholder' | 'min' | 'max' | 'isDateDisabled' | 'dateConstraints'
   | 'name' | 'isLabelHidden' | 'isOptional' | 'isRequired' | 'labelTooltip' | 'disabled' | 'disabledReason' | 'disabledMessage'
   | 'isLoading' | 'changeAction' | 'hasClear' | 'clearable' | 'clearLabel' | 'size' | 'status' | 'statusVariant' | 'format'
-  | 'describedBy' | 'width'> & { inputId: string }>(), {
+  | 'describedBy' | 'width'> & {
+    inputId: string
+    containerClass?: HTMLAttributes['class']
+    containerStyle?: StyleValue
+    controlClass?: HTMLAttributes['class']
+    controlStyle?: StyleValue
+  }>(), {
   modelValue: null,
   disabled: false,
   clearable: false,
@@ -33,6 +43,8 @@ const emit = defineEmits<{
   'change': [value: Date | null]
 }>()
 
+const attrs = useAttrs()
+const ariaRequired = useAriaRequired(props)
 const messages = useAstryxMessages()
 const locale = useAstryxLocale()
 const inputRef = useTemplateRef<HTMLInputElement>('input')
@@ -196,6 +208,8 @@ watch(nativeValue, (value) => {
 
 <template>
   <Field
+    :class="containerClass"
+    :style="containerStyle"
     :label="label || messages.dateInput.dialogLabel"
     :input-id="inputId"
     :description="description"
@@ -212,7 +226,8 @@ watch(nativeValue, (value) => {
       <div
         ref="containerRef"
         class="astryx-date-input"
-        :class="[statusType ? `status-${statusType}` : undefined, `size-${size}`]"
+        :class="[statusType ? `status-${statusType}` : undefined, `size-${size}`, controlClass]"
+        :style="controlStyle"
         :data-status="statusType"
         data-presentation="native"
         @pointerenter="disabledTooltip.onPointerEnter"
@@ -236,6 +251,7 @@ watch(nativeValue, (value) => {
           </button>
           <span class="astryx-date-input-native">
             <input
+              v-bind="attrs"
               :id="inputId"
               ref="input"
               class="astryx-date-input-field"
@@ -249,7 +265,7 @@ watch(nativeValue, (value) => {
               :aria-describedby="[describedBy, field.describedBy].filter(Boolean).join(' ') || undefined"
               :aria-disabled="showsDisabledMessage || undefined"
               :aria-invalid="statusType === 'error' || rejected ? 'true' : undefined"
-              :aria-required="isRequired || undefined"
+              :aria-required="ariaRequired"
               :aria-busy="busy || undefined"
               autocomplete="off"
               @focus="onInputFocus"

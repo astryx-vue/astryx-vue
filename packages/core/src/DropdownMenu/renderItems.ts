@@ -106,9 +106,9 @@ export const DropdownMenuItems = defineComponent({
   name: 'AstryxDropdownMenuItems',
   inheritAttrs: false,
   props: {
-    items: { type: Array as () => DropdownMenuOption[], required: true },
+    items: { type: Array as () => readonly DropdownMenuOption[], required: true },
   },
   setup(props) {
-    return () => (props.items as DropdownMenuOption[]).map((option, index) => renderOption(option, index))
+    return () => props.items.map((option, index) => renderOption(option, index))
   },
 })

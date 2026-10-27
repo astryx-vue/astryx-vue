@@ -30,10 +30,11 @@
     --astryx-code-syntax-property: light-dark(#4e6357, #94b2a0);
     --astryx-code-syntax-punctuation: light-dark(#5e5e5e, #ababb0);
 
-    --astryx-code-syntax-added: color-mix(in srgb, var(--astryx-color-success-muted) 25%, transparent);
-    --astryx-code-syntax-removed: color-mix(in srgb, var(--astryx-color-error-muted) 25%, transparent);
+    /* 差异行是带透明度的淡绿、淡红；标记色在深色底上用浅色调，浅色底上用深色调。 */
+    --astryx-code-syntax-added: light-dark(#d0e9ce40, #b4cdb233);
+    --astryx-code-syntax-removed: light-dark(#f9dcd740, #dcc0bc33);
     --astryx-code-syntax-diff-header: var(--astryx-color-background-muted);
-    --astryx-code-syntax-added-marker: var(--astryx-color-text-green);
-    --astryx-code-syntax-removed-marker: var(--astryx-color-text-red);
+    --astryx-code-syntax-added-marker: light-dark(#374c36, #d0e9ce);
+    --astryx-code-syntax-removed-marker: light-dark(#58413e, #f9dcd7);
   }
 }

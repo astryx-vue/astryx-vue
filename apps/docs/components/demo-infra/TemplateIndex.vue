@@ -2,8 +2,8 @@
 import type { DocsLocale } from './docs-i18n'
 import { computed } from 'vue'
 import {
+  PLAYGROUND_LISTED_TEMPLATE_SLUGS,
   PLAYGROUND_TEMPLATE_META,
-  PLAYGROUND_TEMPLATE_SLUGS,
 } from '../playground/templateManifest'
 import { localePath } from './docs-i18n'
 
@@ -12,7 +12,7 @@ const props = defineProps<{ locale: DocsLocale }>()
 const groups = computed(() => {
   const order: string[] = []
   const byGroup = new Map<string, Array<{ slug: string, name: string, href: string }>>()
-  for (const slug of PLAYGROUND_TEMPLATE_SLUGS) {
+  for (const slug of PLAYGROUND_LISTED_TEMPLATE_SLUGS) {
     const meta = PLAYGROUND_TEMPLATE_META[slug]
     const group = props.locale === 'en' ? (meta.groupEn || 'Start') : (meta.categoryZh || '开始')
     const name = props.locale === 'en' ? meta.nameEn : meta.nameZh

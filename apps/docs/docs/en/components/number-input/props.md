@@ -15,15 +15,15 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Field label, also used as the accessible name.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Helper text under the label.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>''</code></td><td>Placeholder text.</td></tr>
-      <tr><td><code>min</code></td><td><code>number | null</code></td><td>—</td><td>Minimum value. A smaller entry commits at this value.</td></tr>
-      <tr><td><code>max</code></td><td><code>number | null</code></td><td>—</td><td>Maximum value. A larger entry commits at this value.</td></tr>
+      <tr><td><code>min</code></td><td><code>number | null</code></td><td>—</td><td>Minimum value. On blur or Enter, a smaller entry commits at this value. While typing, it is marked invalid.</td></tr>
+      <tr><td><code>max</code></td><td><code>number | null</code></td><td>—</td><td>Maximum value. On blur or Enter, a larger entry commits at this value. While typing, it is marked invalid.</td></tr>
       <tr><td><code>step</code></td><td><code>number | null</code></td><td><code>1</code></td><td>Amount added or removed on each step.</td></tr>
       <tr><td><code>hasNumberSteppers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows increment and decrement buttons at the end of the input. A button is disabled when its step would not change the value.</td></tr>
       <tr><td><code>isWheelEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether scrolling the wheel over the focused input steps the value. Turn it off where page scrolling should always win.</td></tr>
       <tr><td><code>isIntegerOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Only whole numbers commit. Decimal entries stay in the field while editing and are dropped when the field loses focus. The keyboard also switches to the numeric keypad.</td></tr>
       <tr><td><code>formatValue</code></td><td><code>(value: number) =&gt; string</code></td><td>—</td><td>Formats the value shown while the field is not focused, for example <code>(v) =&gt; `${v} items`</code>. Focus shows the raw number so it stays editable, and the formatted text is exposed through <code>aria-valuetext</code>.</td></tr>
       <tr><td><code>units</code></td><td><code>string | null</code></td><td>—</td><td>Unit shown at the end of the input, such as %.</td></tr>
-      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button when the field has a value. Clearing sets the value to <code>null</code>.</td></tr>
+      <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button when the field has a value. The tooltip only says “Clear”; the accessible name includes the field label. Clearing sets the value to <code>null</code>. An emptied draft commits <code>null</code> on blur only when this is on; otherwise it reverts.</td></tr>
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the field.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why the field is disabled. With <code>isDisabled</code>, the reason shows in a tooltip on hover and keyboard focus, and the input stays focusable through <code>aria-disabled</code> instead of being removed from the tab order.</td></tr>
       <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows the value at full opacity and still submits it, but blocks edits. Arrow keys, the wheel, and the stepper buttons are all off while read-only. <code>isDisabled</code> wins when both are set.</td></tr>
@@ -45,6 +45,10 @@ footer: false
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Same as <code>disabledMessage</code>.</td></tr>
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Same as <code>hasClear</code>.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Same as <code>htmlName</code>.</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, when no Field box renders, including inside InputGroup and a horizontal-labels FormLayout.</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container.</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the number field box. A class written on the component lands here too, with no warning.</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the number field box. A style written on the component lands here too.</td></tr>
     </tbody>
   </table>
 </div>

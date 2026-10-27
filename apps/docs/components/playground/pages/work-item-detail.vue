@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import {
   Avatar,
   AvatarGroup,
@@ -6,6 +7,8 @@ import {
   Button,
   Card,
   CheckboxListItem,
+  ClickableCard,
+  createStaticSource,
   Dialog,
   DialogHeader,
   Divider,
@@ -24,184 +27,575 @@ import {
   MetadataListItem,
   MoreMenu,
   ProgressBar,
+  Section,
   Selector,
+  StackItem,
   StatusDot,
   Text,
   TextArea,
   Timestamp,
   Token,
+  Tokenizer,
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { ref } from 'vue'
 
-const isNarrow = useMediaQuery('(max-width: 1024px)')
-const showPanel = ref(true)
-const panelDialogOpen = ref(false)
-const status = ref('in-progress')
-const priority = ref('high')
-const comment = ref('')
+// ── 可编辑字段 ────────────────────────────────────────────────────────────────
 
 const STATUS_OPTIONS = [
-  { value: 'todo', label: 'To do' },
-  { value: 'in-progress', label: 'In progress' },
-  { value: 'in-review', label: 'In review' },
+  { value: 'todo', label: 'To Do' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'in_review', label: 'In Review' },
   { value: 'done', label: 'Done' },
 ]
 
-const PRIORITY_OPTIONS = [
-  { value: 'low', label: 'Low' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'high', label: 'High' },
+const ASSIGNEE_OPTIONS = [
+  { value: 'priya-shah', label: 'Priya Shah' },
+  { value: 'marcus-chen', label: 'Marcus Chen' },
+  { value: 'sofia-alvarez', label: 'Sofia Alvarez' },
 ]
 
-const CHECKLIST = [
-  { id: '1', label: 'Audit token refresh middleware', done: true },
-  { id: '2', label: 'Add integration tests', done: false },
-  { id: '3', label: 'Update runbook', done: false },
+interface PriorityOption {
+  value: string
+  label: string
+  badge: 'red' | 'orange' | 'yellow' | 'neutral'
+}
+
+const PRIORITY_OPTIONS: PriorityOption[] = [
+  { value: 'high', label: 'High', badge: 'red' },
+  { value: 'mid', label: 'Mid', badge: 'orange' },
+  { value: 'low', label: 'Low', badge: 'yellow' },
+  { value: 'none', label: 'None', badge: 'neutral' },
 ]
 
-const COMMENTS = [
-  { id: '1', author: 'Alex Johnson', body: 'Middleware patch is ready for review — catches TokenExpiredError before 401.', time: '2026-04-28T14:22:00' },
-  { id: '2', author: 'Sam Rivera', body: 'Please add metrics for refresh success/failure rates.', time: '2026-04-28T15:05:00' },
+interface LabelOption {
+  id: string
+  label: string
+  color: 'purple' | 'blue' | 'green'
+}
+
+const LABEL_OPTIONS: LabelOption[] = [
+  { id: 'onboarding', label: 'Onboarding', color: 'purple' },
+  { id: 'q1-goal', label: 'Q1 goal', color: 'blue' },
+  { id: 'growth', label: 'Growth', color: 'green' },
 ]
 
-function togglePanel() {
+const LABEL_SOURCE = createStaticSource(LABEL_OPTIONS)
+
+function optionFor<T extends { value: string }>(options: readonly T[], value: string): T {
+  return options.find(option => option.value === value) ?? options[0]
+}
+
+function priorityFor(value: string) {
+  return PRIORITY_OPTIONS.find(option => option.value === value) ?? PRIORITY_OPTIONS[0]
+}
+
+// ── 工作项数据 ────────────────────────────────────────────────────────────────
+
+const SUBTASKS = [
+  { id: 1, title: 'Audit current onboarding flow and note friction points', isDone: true, assignee: 'Priya Shah', due: '2026-03-04' },
+  { id: 2, title: 'Interview five recent sign-ups about their first-run experience', isDone: true, assignee: 'Marcus Chen', due: '2026-03-06' },
+  { id: 3, title: 'Draft revised welcome sequence with three variants', isDone: false, assignee: 'Priya Shah', due: '2026-03-11' },
+  { id: 4, title: 'Review copy with content design and legal', isDone: false, assignee: 'Sofia Alvarez', due: '2026-03-13' },
+  { id: 5, title: 'Ship variant A to 10% of new accounts and measure activation', isDone: false, assignee: 'Marcus Chen', due: '2026-03-18' },
+]
+
+type AttachmentKind = 'link' | 'image' | 'file'
+
+interface Attachment {
+  id: string
+  kind: AttachmentKind
+  title: string
+  subtitle: string
+}
+
+const ATTACHMENTS: Attachment[] = [
+  { id: 'audit-notes', kind: 'link', title: 'Onboarding audit notes', subtitle: 'docs.example.com' },
+  { id: 'funnel-dashboard', kind: 'link', title: 'Sign-up funnel dashboard', subtitle: 'analytics.example.com' },
+  { id: 'welcome-screen', kind: 'image', title: 'welcome-screen-v3.png', subtitle: '1.4 MB · Added 2 days ago' },
+  { id: 'transcripts', kind: 'file', title: 'Interview transcripts.pdf', subtitle: '820 KB · Added 3 days ago' },
+]
+
+const ATTACHMENT_ICONS: Record<AttachmentKind, string> = {
+  link: 'i-carbon-link',
+  image: 'image',
+  file: 'i-carbon-document',
+}
+
+const ATTACHMENT_ACTIONS: { label: string, variant?: 'destructive' }[] = [
+  { label: 'Edit' },
+  { label: 'Delete', variant: 'destructive' },
+]
+
+const WATCHERS = [
+  'Priya Shah',
+  'Marcus Chen',
+  'Sofia Alvarez',
+  'Jordan Blake',
+  'Lin Wei',
+  'Aisha Okafor',
+]
+
+const LINKED_ITEMS = [
+  { id: 'PLT-238', title: 'Track activation rate by acquisition channel' },
+  { id: 'PLT-241', title: 'Welcome email A/B test — copy variants' },
+]
+
+const ACTIVITY = [
+  { id: 1, kind: 'event', author: 'Sofia Alvarez', time: '2026-03-02T14:12:00Z', body: 'created this task' },
+  { id: 2, kind: 'comment', author: 'Priya Shah', time: '2026-03-03T09:41:00Z', body: 'Finished the audit — three biggest friction points are the account form length, the empty first-run dashboard, and the tour tooltip cluster on step two. Full notes in the linked doc.' },
+  { id: 3, kind: 'event', author: 'Marcus Chen', time: '2026-03-03T15:20:00Z', body: 'changed status from To Do to In Progress' },
+  { id: 4, kind: 'comment', author: 'Marcus Chen', time: '2026-03-04T10:05:00Z', body: 'Interviews wrapped. A consistent theme: people expect a personalized starting workspace and get an empty one. Suggest we scope a template step into variant A.' },
+  { id: 5, kind: 'event', author: 'Sofia Alvarez', time: '2026-03-04T16:48:00Z', body: 'assigned this task to Priya Shah' },
+]
+
+/** Section 靠负边距抵消容器的内边距，所以这一层才是主栏真正的留白。 */
+const SECTION_PADDING = 6
+
+const isNarrow = useMediaQuery('(max-width: 1024px)')
+
+const status = ref('in_progress')
+const assignee = ref('priya-shah')
+const priority = ref('high')
+const labels = ref([...LABEL_OPTIONS])
+const subtasks = ref(SUBTASKS.map(task => ({ ...task })))
+const comment = ref('')
+
+// 宽屏用右侧栏，窄屏用对话框；两者各有自己的开关，因为默认值不一样。
+const isRailOpen = ref(true)
+const isDialogOpen = ref(false)
+const isDetailsOpen = computed(() => (isNarrow.value ? isDialogOpen.value : isRailOpen.value))
+
+const doneCount = computed(() => subtasks.value.filter(task => task.isDone).length)
+const donePercent = computed(() =>
+  subtasks.value.length ? (doneCount.value / subtasks.value.length) * 100 : 0,
+)
+
+function toggleDetails() {
   if (isNarrow.value)
-    panelDialogOpen.value = !panelDialogOpen.value
+    isDialogOpen.value = !isDialogOpen.value
   else
-    showPanel.value = !showPanel.value
+    isRailOpen.value = !isRailOpen.value
+}
+
+function setSubtaskDone(id: number, isDone: boolean) {
+  subtasks.value = subtasks.value.map(task => (task.id === id ? { ...task, isDone } : task))
 }
 </script>
 
 <template>
-  <Layout height="fill" :content-width="960">
+  <Layout height="fill" :content-width="1260">
     <template #header>
-      <LayoutHeader has-divider :padding="4">
-        <VStack :gap="3">
-          <HStack :gap="2" :align="'center'" wrap="wrap">
-            <Link href="#" color="secondary">
-              <HStack :gap="1" :align="'center'">
-                <Icon icon="i-heroicons-arrow-left" size="sm" />
-                Back to board
+      <LayoutHeader :padding="6" has-divider>
+        <VStack :gap="4">
+          <HStack :gap="4" align="start" justify="between">
+            <VStack :gap="2">
+              <HStack :gap="4" align="center" wrap="wrap">
+                <Link href="#" type="supporting" color="secondary">
+                  <HStack as="span" :gap="1" align="center">
+                    <Icon icon="chevronLeft" size="sm" />
+                    All Tasks
+                  </HStack>
+                </Link>
+                <Divider orientation="vertical" :style="{ height: '12px' }" />
+                <Text type="supporting" color="secondary">
+                  PLT-247
+                </Text>
+                <Divider orientation="vertical" :style="{ height: '12px' }" />
+                <Text type="supporting" color="secondary">
+                  Platform / Onboarding
+                </Text>
               </HStack>
-            </Link>
-            <Badge variant="blue" label="AUTH-142" />
-            <StatusDot label="In progress" variant="warning" />
-            <Text type="supporting" color="secondary">Updated <Timestamp :value="'2026-04-29T09:00:00'" format="relative" /></Text>
-          </HStack>
-          <Heading :level="1">Fix silent JWT refresh in API gateway</Heading>
-          <HStack :gap="2" :align="'center'" wrap="wrap">
-            <Selector v-model="status" label="Status" :options="STATUS_OPTIONS" size="sm" />
-            <Selector v-model="priority" label="Priority" :options="PRIORITY_OPTIONS" size="sm" />
-            <AvatarGroup>
-              <Avatar name="Alex Johnson" size="sm" />
-              <Avatar name="Sam Rivera" size="sm" />
-              <Avatar name="Jordan Lee" size="sm" />
-            </AvatarGroup>
-            <MoreMenu label="Actions" :items="[{ label: 'Copy link' }, { label: 'Archive' }, { type: 'divider' }, { label: 'Delete' }]" />
-            <IconButton label="Toggle panel" @click="togglePanel">
-              <Icon icon="i-heroicons-view-columns" size="sm" />
+              <Heading :level="1" :max-lines="2">
+                Refresh onboarding flow for workspaces
+              </Heading>
+            </VStack>
+            <IconButton
+              v-if="isNarrow"
+              label="Show details"
+              variant="secondary"
+              @click="toggleDetails"
+            >
+              <Icon icon="info" size="sm" />
             </IconButton>
+            <HStack v-else :gap="1">
+              <IconButton label="Watch" variant="secondary">
+                <Icon icon="i-carbon-view" size="sm" />
+              </IconButton>
+              <IconButton label="Share" variant="secondary">
+                <Icon icon="i-carbon-share" size="sm" />
+              </IconButton>
+              <IconButton label="Notify" variant="secondary">
+                <Icon icon="i-carbon-notification" size="sm" />
+              </IconButton>
+              <Button
+                :label="isDetailsOpen ? 'Hide details' : 'Show details'"
+                variant="secondary"
+                @click="toggleDetails"
+              >
+                <template #icon>
+                  <Icon icon="viewColumns" size="sm" />
+                </template>
+              </Button>
+            </HStack>
+          </HStack>
+          <HStack :gap="1" align="center" wrap="wrap">
+            <Selector
+              v-model="status"
+              label="Status"
+              is-label-hidden
+              :options="STATUS_OPTIONS"
+            />
+            <Selector
+              v-model="priority"
+              label="Priority"
+              is-label-hidden
+              :options="PRIORITY_OPTIONS.map(p => ({ value: p.value, label: p.label }))"
+            />
+            <Selector
+              v-model="assignee"
+              label="Assignee"
+              is-label-hidden
+              searchable
+              search-placeholder="Search assignees..."
+              :options="ASSIGNEE_OPTIONS"
+            />
+            <Tokenizer
+              v-model="labels"
+              label="Labels"
+              is-label-hidden
+              :search-source="LABEL_SOURCE"
+              :debounce-ms="0"
+              :container-style="{ '--astryx-field-width': '320px' }"
+            >
+              <template #token="{ item }">
+                <Token :label="item.label" :color="item.color" size="sm" />
+              </template>
+            </Tokenizer>
           </HStack>
         </VStack>
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="4">
+    <LayoutContent :padding="6" role="main">
       <VStack :gap="6">
-        <Card :padding="4">
-          <VStack :gap="3">
-            <Heading :level="2">Description</Heading>
-            <Text type="body" color="secondary">
-              When access tokens expire mid-session, middleware returns 401 before refresh logic runs. Implement silent refresh and add coverage for the expiry path.
-            </Text>
-            <HStack :gap="1" wrap="wrap">
-              <Token label="backend" />
-              <Token label="security" />
-              <Token label="P1" variant="orange" />
-            </HStack>
+        <Section :padding="SECTION_PADDING">
+          <VStack :gap="4">
+            <Heading :level="2">
+              Description
+            </Heading>
+            <VStack :gap="2">
+              <Text type="body">
+                Reduce the drop-off between account creation and first meaningful action in a new workspace. Recent cohorts activate at 42 percent by day seven, and interview evidence points to an empty starting state and a long welcome sequence as the two largest contributors.
+              </Text>
+              <Text type="body">
+                Ship a revised flow that shortens the sequence, seeds every new workspace with a sample project, and measures activation as the percentage of workspaces that reach three completed actions in the first three days.
+              </Text>
+            </VStack>
+            <VStack :gap="2">
+              <Heading :level="4" :accessibility-level="3">
+                Success criteria
+              </Heading>
+              <List list-style="disc" density="compact">
+                <ListItem label="Day-seven activation rises from 42 to 55 percent for new workspaces in the variant." />
+                <ListItem label="Median time to first completed action drops below eight minutes." />
+                <ListItem label="No regression in day-thirty retention." />
+              </List>
+            </VStack>
           </VStack>
-        </Card>
+        </Section>
 
-        <Card :padding="4">
-          <VStack :gap="3">
-            <Heading :level="2">Checklist</Heading>
-            <ProgressBar :value="1" :max="3" label="1 of 3 complete" />
+        <Divider />
+
+        <Section :padding="SECTION_PADDING">
+          <VStack :gap="4">
+            <HStack :gap="2" align="center" justify="between" wrap="wrap">
+              <Heading :level="2">
+                Subtasks
+              </Heading>
+              <Button label="Add subtask" />
+            </HStack>
+            <HStack :gap="3" align="center">
+              <Text type="supporting" color="secondary">
+                {{ doneCount }} of {{ subtasks.length }} complete
+              </Text>
+              <StackItem size="fill">
+                <ProgressBar
+                  label="Subtask progress"
+                  is-label-hidden
+                  :value="donePercent"
+                  variant="success"
+                />
+              </StackItem>
+            </HStack>
             <List>
               <CheckboxListItem
-                v-for="item in CHECKLIST"
-                :key="item.id"
-                :label="item.label"
-                :model-value="item.done"
-              />
+                v-for="task in subtasks"
+                :key="task.id"
+                :label="task.title"
+                :is-checked="task.isDone"
+                @check="setSubtaskDone(task.id, $event)"
+              >
+                <template #end>
+                  <HStack :gap="2" align="center">
+                    <Timestamp
+                      :value="task.due"
+                      format="date"
+                      type="supporting"
+                      color="secondary"
+                    />
+                    <Avatar :name="task.assignee" size="sm" />
+                  </HStack>
+                </template>
+              </CheckboxListItem>
             </List>
           </VStack>
-        </Card>
+        </Section>
 
-        <Card :padding="4">
+        <Divider />
+
+        <Section :padding="SECTION_PADDING">
           <VStack :gap="4">
-            <Heading :level="2">Comments</Heading>
-            <VStack :gap="3">
-              <Card v-for="c in COMMENTS" :key="c.id" variant="muted" :padding="3">
-                <HStack :gap="2" :align="'center'">
-                  <Avatar :name="c.author" size="sm" />
-                  <Text type="body" weight="bold">{{ c.author }}</Text>
-                  <Timestamp :value="c.time" format="date_time" />
-                </HStack>
-                <Text type="body">{{ c.body }}</Text>
-              </Card>
-            </VStack>
-            <TextArea v-model="comment" label="Add comment" placeholder="Leave a comment…" />
-            <HStack :justify="'end'">
-              <Button label="Post comment" variant="primary" />
+            <HStack :gap="2" align="center" justify="between" wrap="wrap">
+              <Heading :level="2">
+                Attachments
+              </Heading>
+              <Button label="Add attachment" />
             </HStack>
+            <VStack :gap="1">
+              <ClickableCard
+                v-for="attachment in ATTACHMENTS"
+                :key="attachment.id"
+                :label="`Open ${attachment.title}`"
+                href="#"
+                :padding="3"
+              >
+                <HStack :gap="4" align="center">
+                  <span
+                    class="attachment-tile"
+                    aria-hidden="true"
+                  >
+                    <Icon :icon="ATTACHMENT_ICONS[attachment.kind]" size="lg" color="secondary" />
+                  </span>
+                  <StackItem size="fill">
+                    <VStack :gap="0">
+                      <Text type="body" weight="semibold">
+                        {{ attachment.title }}
+                      </Text>
+                      <Text type="supporting" color="secondary">
+                        {{ attachment.subtitle }}
+                      </Text>
+                    </VStack>
+                  </StackItem>
+                  <MoreMenu
+                    presentation="adaptive"
+                    :label="`Actions for ${attachment.title}`"
+                    :items="ATTACHMENT_ACTIONS"
+                  />
+                </HStack>
+              </ClickableCard>
+            </VStack>
           </VStack>
-        </Card>
+        </Section>
+
+        <Divider />
+
+        <Section :padding="SECTION_PADDING">
+          <VStack :gap="10">
+            <HStack :gap="2" align="center" justify="between" wrap="wrap">
+              <Heading :level="2">
+                Comments and activity
+              </Heading>
+              <Button label="Add comment" />
+            </HStack>
+            <VStack :gap="6">
+              <HStack v-for="entry in ACTIVITY" :key="entry.id" :gap="3" align="start">
+                <Avatar :name="entry.author" size="sm" />
+                <StackItem size="fill">
+                  <VStack :gap="1">
+                    <HStack :gap="2" align="center">
+                      <Text type="body" weight="semibold">
+                        {{ entry.author }}
+                      </Text>
+                      <Text v-if="entry.kind !== 'comment'" type="supporting" color="secondary">
+                        {{ entry.body }}
+                      </Text>
+                      <StackItem size="fill" />
+                      <Timestamp
+                        :value="entry.time"
+                        format="relative"
+                        type="supporting"
+                        color="secondary"
+                      />
+                    </HStack>
+                    <template v-if="entry.kind === 'comment'">
+                      <Card variant="muted" :padding="3">
+                        <Text type="body">{{ entry.body }}</Text>
+                      </Card>
+                      <Link href="#" color="secondary">
+                        Reply
+                      </Link>
+                    </template>
+                  </VStack>
+                </StackItem>
+              </HStack>
+            </VStack>
+            <VStack :gap="2" h-align="stretch">
+              <TextArea
+                v-model="comment"
+                width="100%"
+                label="Add a comment"
+                is-label-hidden
+                placeholder="Write a comment…"
+                :rows="5"
+              />
+              <HStack :gap="2" justify="end">
+                <Button label="Cancel" variant="ghost" />
+                <Button
+                  label="Comment"
+                  variant="primary"
+                  :is-disabled="comment.trim().length === 0"
+                />
+              </HStack>
+            </VStack>
+          </VStack>
+        </Section>
       </VStack>
     </LayoutContent>
 
-    <template v-if="!isNarrow && showPanel" #end>
-      <LayoutPanel :width="320" :padding="4" has-divider label="Details">
-        <VStack :gap="4">
-          <Heading :level="3">Details</Heading>
-          <MetadataList>
-            <MetadataListItem label="Sprint">
-              Q2 Infra
-            </MetadataListItem>
-            <MetadataListItem label="Estimate">
-              3 days
-            </MetadataListItem>
-            <MetadataListItem label="Reporter">
-              Jordan Lee
-            </MetadataListItem>
-          </MetadataList>
-          <Divider />
-          <Heading :level="4">Linked items</Heading>
-          <List density="compact">
-            <ListItem label="AUTH-98" description="Refresh token rotation" href="#" />
-            <ListItem label="AUTH-120" description="Session audit logging" href="#" />
-          </List>
+    <template v-if="!isNarrow && isRailOpen" #end>
+      <LayoutPanel :width="340" :padding="6" role="complementary" has-divider>
+        <VStack :gap="10">
+          <VStack :gap="4">
+            <Heading :level="3">
+              Details
+            </Heading>
+            <MetadataList>
+              <MetadataListItem label="Status">
+                <HStack :gap="2" align="center">
+                  <StatusDot
+                    :variant="status === 'done' ? 'success' : status === 'in_review' ? 'warning' : status === 'in_progress' ? 'info' : 'neutral'"
+                    :label="optionFor(STATUS_OPTIONS, status).label"
+                  />
+                  <Text type="body">{{ optionFor(STATUS_OPTIONS, status).label }}</Text>
+                </HStack>
+              </MetadataListItem>
+              <MetadataListItem label="Priority">
+                <Badge :variant="priorityFor(priority).badge" :label="priorityFor(priority).label" />
+              </MetadataListItem>
+              <MetadataListItem label="Assignee">
+                <HStack :gap="2" align="center">
+                  <Avatar :name="optionFor(ASSIGNEE_OPTIONS, assignee).label" size="xsm" />
+                  <Text type="body">{{ optionFor(ASSIGNEE_OPTIONS, assignee).label }}</Text>
+                </HStack>
+              </MetadataListItem>
+              <MetadataListItem label="Reporter">
+                <HStack :gap="2" align="center">
+                  <Avatar name="Sofia Alvarez" size="xsm" />
+                  <Text type="body">Sofia Alvarez</Text>
+                </HStack>
+              </MetadataListItem>
+              <MetadataListItem label="Start date">
+                <Timestamp value="2026-03-02" format="date" type="body" color="primary" />
+              </MetadataListItem>
+              <MetadataListItem label="Due date">
+                <Timestamp value="2026-03-18" format="date" type="body" color="primary" />
+              </MetadataListItem>
+              <MetadataListItem label="Sprint">
+                <Text type="body">Sprint 24 · Mar 2 – Mar 15</Text>
+              </MetadataListItem>
+              <MetadataListItem label="Parent">
+                <Link href="#">
+                  PLT-192 · Activation initiative
+                </Link>
+              </MetadataListItem>
+              <MetadataListItem label="Labels">
+                <HStack :gap="1" wrap="wrap">
+                  <Token
+                    v-for="label in labels"
+                    :key="label.id"
+                    :color="label.color"
+                    :label="label.label"
+                    size="sm"
+                  />
+                </HStack>
+              </MetadataListItem>
+              <MetadataListItem label="Team">
+                <Text type="body">Platform · Growth pod</Text>
+              </MetadataListItem>
+            </MetadataList>
+          </VStack>
+
+          <VStack :gap="4">
+            <Heading :level="3">
+              Watchers
+            </Heading>
+            <AvatarGroup size="md">
+              <Avatar v-for="name in WATCHERS" :key="name" :name="name" />
+            </AvatarGroup>
+          </VStack>
+
+          <VStack :gap="4">
+            <Heading :level="3">
+              Linked items
+            </Heading>
+            <VStack :gap="1">
+              <ClickableCard
+                v-for="item in LINKED_ITEMS"
+                :key="item.id"
+                :label="`Open ${item.id}: ${item.title}`"
+                href="#"
+                :padding="3"
+              >
+                <VStack :gap="0">
+                  <Text type="supporting" color="secondary">
+                    {{ item.id }}
+                  </Text>
+                  <Text type="body" weight="semibold">
+                    {{ item.title }}
+                  </Text>
+                </VStack>
+              </ClickableCard>
+            </VStack>
+          </VStack>
         </VStack>
       </LayoutPanel>
     </template>
   </Layout>
 
-  <Dialog variant="fullscreen" :is-open="isNarrow && panelDialogOpen" @open-change="panelDialogOpen = $event">
+  <Dialog
+    variant="fullscreen"
+    :is-open="isNarrow && isDialogOpen"
+    @update:is-open="isDialogOpen = $event"
+  >
     <Layout>
       <template #header>
-        <DialogHeader title="Work item details" @open-change="panelDialogOpen = $event" />
+        <DialogHeader title="Task details" @update:is-open="isDialogOpen = $event" />
       </template>
       <LayoutContent :padding="4">
         <MetadataList>
-          <MetadataListItem label="Sprint">
-            Q2 Infra
+          <MetadataListItem label="Status">
+            {{ optionFor(STATUS_OPTIONS, status).label }}
           </MetadataListItem>
-          <MetadataListItem label="Estimate">
-            3 days
+          <MetadataListItem label="Priority">
+            {{ priorityFor(priority).label }}
+          </MetadataListItem>
+          <MetadataListItem label="Assignee">
+            {{ optionFor(ASSIGNEE_OPTIONS, assignee).label }}
           </MetadataListItem>
         </MetadataList>
       </LayoutContent>
     </Layout>
   </Dialog>
 </template>
+
+<style scoped>
+.attachment-tile {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--astryx-radius-element);
+  background: var(--astryx-color-background-muted);
+}
+</style>

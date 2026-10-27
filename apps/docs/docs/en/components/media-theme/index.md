@@ -14,7 +14,7 @@ import { mediaThemeImageOverlay, mediaThemeLightScrim } from '../../../../compon
 
 `MediaTheme` is the provider for content on an inverted surface: an image overlay, a scrim, a toast, or a tooltip. It sets `data-astryx-media` so text, icons, and buttons use the on-dark or on-light colors. It does not paint a background. Put the surface color on the parent.
 
-`mode` is required: `dark`, `light`, `auto`, or `off`. `auto` measures the parent background and picks the side that reads, or `off` when the surrounding text already clears 3:1. `fallback` is the side used before that measurement, and when the surface cannot be measured. The default is `dark`. `off` keeps the element and drops the media attribute, so children are not remounted.
+`mode` is required: `dark`, `light`, `auto`, or `off`. `auto` measures the color the parent actually paints, translucent layers included, and picks the side whose text color, the theme's `--color-on-dark` or `--color-on-light`, reads better on it. It picks `off` when the surrounding text already clears 3:1. A background image cannot be measured from CSS. The measurement runs again when the surface changes. `fallback` is the side used before that measurement, and when the surface cannot be measured. The default is `dark`. `off` keeps the element and drops the media attribute, so children are not remounted.
 
 `useMediaTheme()` returns that resolved mode. Import both from `@astryx-vue/core/Theme`.
 

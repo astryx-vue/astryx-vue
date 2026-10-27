@@ -2,6 +2,11 @@
 
 @layer astryx.tokens {
   [data-astryx-theme='butter'] {
+    /* 徽章比核心默认高一档：30px 高、行内留一个间距步。 */
+    --astryx-badge-height: 30px;
+    --astryx-badge-padding-block: 0;
+    --astryx-badge-padding-inline: var(--astryx-spacing-3);
+
     --astryx-badge-neutral-background: #ffee7b;
     --astryx-badge-neutral-foreground: #225BFF;
     --astryx-badge-info-background: #4883fd;

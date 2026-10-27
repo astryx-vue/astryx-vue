@@ -14,18 +14,18 @@ Design token（设计令牌）就是把这些通用的设计决定统一抽出�
 
 ## 在 astryx-vue 中是如何实现的？
 
-astryx-vue 的 token 严格对齐原版 Astryx（原版在 `tokens.stylex.ts` 中维护）。但在前端输出层面，我们并没有把它们做成 StyleX 对象，而是全部编译成了现代标准的 **CSS 自定义属性（CSS 变量）**。
+astryx-vue 的 token 严格对齐原版 Astryx（原版在 `tokens.stylex.ts` 和 `dataTokens.stylex.ts` 中维护），名字和取值都一样。但在前端输出层面，我们并没有把它们做成 StyleX 对象，而是全部编译成了现代标准的 **CSS 自定义属性（CSS 变量）**。
 
 这样设计的好处很明显：**不用引入任何专门的 CSS-in-JS 编译器，只要写原生 CSS，在哪都能直接读到和修改。**
 
-1. **统一的前缀规范：** 每一条语义化 token 都有统一的 `--astryx-` 前缀，避免和你项目已有的其他全局变量起冲突。
+1. **统一的前缀规范：** 每一条语义化 token 都有统一的 `--astryx-` 前缀，避免和你项目已有的其他全局变量起冲突。这是我们和原版唯一有意不同的地方：原版的 `--spacing-4`，在这里叫 `--astryx-spacing-4`。前缀会一直保留，因为已经有用户的自定义主题在用这些名字。`defineTheme()` 两种写法都认。
 2. **原生双模配色：** 颜色相关的 token 采用标准 CSS 的 `light-dark()` 函数书写，一条变量就同时包含了浅色和深色两套色值，不需要分开发布两份样式表，切换模式时也不需要刷掉整套样式。
 3. **层级覆盖规则：** 
    - 如果 Neutral 主题覆盖了某个变量，优先使用 Neutral 的值。
    - 如果 Neutral 没覆盖，则回退使用原版的默认规范值。
    - 如果在自定义样式中想要微调，只需通过 CSS 层级（`@layer astryx.overrides`）重新给变量赋值即可。
 
-数值以 `packages/themes/neutral/base.css` 的声明为准。文档中的色板与尺寸参考也是直接由该文件解析生成的。
+数值以 `packages/themes/neutral/base.css` 的声明为准，图表配色以 `packages/themes/data.css` 为准。文档中的色板与尺寸参考也是直接由这两个文件解析生成的。
 
 ## Token 分类总览
 
@@ -50,7 +50,7 @@ astryx-vue 的 token 严格对齐原版 Astryx（原版在 `tokens.stylex.ts` �
   color: var(--astryx-color-text-primary);
   /* 边框圆角直接引用元素通用圆角 */
   border-radius: var(--astryx-radius-element);
-  /* 内边距直接引用 4 档（16px）标尺 */
+  /* 内边距直接引用第 4 档标尺（1rem，默认 16px，跟随根字号） */
   padding: var(--astryx-spacing-4);
 }
 ```

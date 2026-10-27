@@ -30,7 +30,7 @@ const statusLabel = computed(() => {
 })
 
 const spokenStatus = computed(() => {
-  if (locale.value === 'en')
+  if (locale.value.split('-')[0] === 'en')
     return statusLabel.value.toLowerCase()
   return statusLabel.value
 })

@@ -1,0 +1,87 @@
+import type { UpstreamMapPart } from './types.js'
+
+/** 导航、布局、分页与菜单。 */
+export const navigationUpstreamMap: UpstreamMapPart = {
+  '@astryx.pagination.label': [{ path: 'pagination.nav' }],
+  // 我们的上一页 / 下一页按钮还带一段看得见的短文字，原版没有对应的键。
+  // 加载别的语言目录时，短文字也用原版的这句译文，不留英文。
+  '@astryx.pagination.previous': [
+    { path: 'pagination.previousPage' },
+    { path: 'pagination.previous' },
+  ],
+  '@astryx.pagination.next': [
+    { path: 'pagination.nextPage' },
+    { path: 'pagination.next' },
+  ],
+  '@astryx.pagination.previousBy': [
+    { path: 'pagination.previousPages', args: ['step'] },
+    { path: 'pagination.previousBy', args: ['step'] },
+  ],
+  '@astryx.pagination.nextBy': [
+    { path: 'pagination.nextPages', args: ['step'] },
+    { path: 'pagination.nextBy', args: ['step'] },
+  ],
+  '@astryx.pagination.first': [{ path: 'pagination.first' }],
+  '@astryx.pagination.last': [{ path: 'pagination.last' }],
+  '@astryx.pagination.pageAnnounce': [{ path: 'pagination.page', args: ['current'] }],
+  '@astryx.pagination.goToPage': [{ path: 'pagination.goToPageNumber', args: ['page'] }],
+  '@astryx.pagination.goToPageInput': [{ path: 'pagination.goToPage' }],
+  '@astryx.pagination.pageLabel': [{ path: 'pagination.pageLabel' }],
+  '@astryx.pagination.ofTotalPages': [{ path: 'pagination.ofTotal', args: ['total'] }],
+  '@astryx.pagination.pageIndicators': [{ path: 'pagination.pageIndicators' }],
+  '@astryx.pagination.itemsPerPage': [
+    { path: 'pagination.itemsPerPage' },
+    { path: 'pagination.perPage' },
+  ],
+  '@astryx.pagination.count': [{ path: 'pagination.total', args: ['total', 'from', 'to'] }],
+  '@astryx.pagination.pageOfTotal': [{ path: 'pagination.pageOf', args: ['current', 'total'] }],
+
+  '@astryx.appShell.skipToContent': [{ path: 'layout.skipToContent' }],
+  '@astryx.appShell.mobileNavigation': [{ path: 'layout.mobileNavigation' }],
+  '@astryx.resizable.handle.label': [{ path: 'layout.resizeHandle' }],
+  '@astryx.resizable.collapsed': [{ path: 'layout.collapsed' }],
+
+  '@astryx.sideNav.label': [{ path: 'nav.sideNav' }],
+  '@astryx.sideNav.resizeSidebar': [{ path: 'nav.resizeSidebar' }],
+  '@astryx.sideNav.heading.openMenu': [{ path: 'nav.openMenu' }],
+  '@astryx.sideNav.heading.dialogLabel': [{ path: 'nav.headingDialog' }],
+  '@astryx.topNav.heading.dialogLabel': [{ path: 'nav.topNavHeadingDialog' }],
+  '@astryx.topNav.landmarkLabel': [{ path: 'nav.topNav' }],
+  '@astryx.topNav.heading.openMenu': [{ path: 'nav.topNavOpenMenu' }],
+  '@astryx.mobileNav.navigation': [{ path: 'nav.mobileNav' }],
+  '@astryx.mobileNav.toggle.open': [{ path: 'nav.openNavigation' }],
+  '@astryx.mobileNav.closeNavigation': [{ path: 'nav.close' }],
+  '@astryx.sideNavCollapseButton.collapseSidebar': [{ path: 'nav.collapseSidebar' }],
+  '@astryx.sideNavCollapseButton.expandSidebar': [{ path: 'nav.expandSidebar' }],
+  '@astryx.sideNavItem.expand': [{ path: 'nav.expandItem', args: ['label'] }],
+  '@astryx.sideNavItem.collapse': [{ path: 'nav.collapseItem', args: ['label'] }],
+  '@astryx.sideNavItem.submenuLabel': [{ path: 'nav.submenu', args: ['label'] }],
+  '@astryx.link.newTab': [{ path: 'nav.opensInNewTab' }],
+  '@astryx.avatarGroup.overflow': [{ path: 'nav.avatarOverflow', args: ['count'] }],
+  '@astryx.avatar.nameWithStatus': [{ path: 'nav.avatarNameWithStatus', args: ['name', 'status'] }],
+  '@astryx.avatarGroup.label': [{ path: 'avatarGroup.label' }],
+  '@astryx.avatarGroup.keyboardHint': [{ path: 'avatarGroup.keyboardHint' }],
+  '@astryx.breadcrumbs.label': [{ path: 'breadcrumbs.label' }],
+  '@astryx.tabList.label': [{ path: 'tabList.label' }],
+  '@astryx.outline.label': [{ path: 'outline.label' }],
+  '@astryx.treeList.toggleChildren': [{ path: 'treeList.toggleChildren' }],
+  '@astryx.metadataList.showMore': [{ path: 'metadataList.showMore' }],
+  '@astryx.metadataList.showLess': [{ path: 'metadataList.showLess' }],
+
+  '@astryx.dropdownMenu.label': [{ path: 'dropdownMenu.label' }],
+  '@astryx.dropdownMenu.back': [{ path: 'dropdownMenu.back' }],
+  '@astryx.dropdownMenu.backTo': [{ path: 'dropdownMenu.backTo', args: ['parent'] }],
+  '@astryx.contextMenu.label': [{ path: 'contextMenu.label' }],
+  '@astryx.moreMenu.label': [{ path: 'moreMenu.label' }],
+  '@astryx.keyboardHint.toNavigate': [{ path: 'keyboardHint.navigate' }],
+
+  '@astryx.stepper.label': [{ path: 'stepper.progress' }],
+  '@astryx.stepper.previousStep': [{ path: 'stepper.previous' }],
+  '@astryx.stepper.nextStep': [{ path: 'stepper.next' }],
+  '@astryx.step.optional': [{ path: 'stepper.optional' }],
+  '@astryx.step.goToStep': [{ path: 'stepper.goToStep', args: ['stepNumber', 'label'] }],
+  '@astryx.step.goToStepWithStatus': [{ path: 'stepper.goToStepWithStatus', args: ['stepNumber', 'label', 'status'] }],
+  '@astryx.step.status.completed': [{ path: 'stepper.status.completed' }],
+  '@astryx.step.status.warning': [{ path: 'stepper.status.warning' }],
+  '@astryx.step.status.error': [{ path: 'stepper.status.error' }],
+}

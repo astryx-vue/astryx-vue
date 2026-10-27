@@ -50,7 +50,7 @@ const ocean = defineTheme({
 
 Type sizes come from `typography.scale` `base` and `ratio`, rounded from `base × ratio` at each step. Radii come from `radius` `base` and `multiplier`. `none` and `full` stay fixed. Durations come from `motion` `fast`, `medium`, `slow`, and `ratio`. The min step multiplies the base by the ratio, and the max step divides by it. Both round to 5 milliseconds.
 
-`components` overrides styles by component name. `base` hits the root. `variant:secondary` hits that variant. `Theme` puts the compiled rules in the `astryx.overrides` layer, scoped to `data-astryx-theme`. The semantic icon table is still `icons`: a name points at an Iconify id.
+`components` overrides styles by theme target, written `<component-kebab>-<part>`, such as `button` or `card-header`. `base` hits the target itself. `variant:secondary` hits `[data-variant="secondary"]`. `Theme` puts the compiled rules in the `astryx.overrides` layer, scoped to its `data-astryx-theme` subtree and stopping at a nested theme. `localTokens`, `adaptations`, removed target names, and `extends` are covered in [Extending a theme](/en/themes/extending). The semantic icon table is still `icons`: a name points at an Iconify id.
 
 ```ts
 const brand = defineTheme({

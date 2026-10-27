@@ -2,11 +2,8 @@
 import { Card } from '@astryx-vue/core/Card'
 import { Carousel } from '@astryx-vue/core/Carousel'
 import { Heading } from '@astryx-vue/core/Heading'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
-
-provideAstryxLocale('en')
 
 const items = [
   { title: 'Design', body: 'Create wireframes and prototypes.' },

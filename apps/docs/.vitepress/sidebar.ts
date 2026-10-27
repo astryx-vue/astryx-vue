@@ -13,9 +13,11 @@ export function guideSidebar(english: boolean): Sidebar {
       text: english ? 'Start' : '开始',
       items: [
         item(english ? 'Introduction' : '介绍', `${prefix}/guide/why`),
+        item(english ? 'Principles' : '设计原则', `${prefix}/guide/principles`),
         item(english ? 'Quick start' : '快速开始', `${prefix}/guide/getting-started`),
         item(english ? 'Installation' : '安装', `${prefix}/guide/installation`),
         item(english ? 'CLI' : '命令行', `${prefix}/guide/cli`),
+        item(english ? 'Working with AI' : '配合 AI 写代码', `${prefix}/guide/working-with-ai`),
       ],
     },
     {
@@ -27,6 +29,7 @@ export function guideSidebar(english: boolean): Sidebar {
         item(english ? 'Patterns' : '应用模式', `${prefix}/guide/patterns`),
         item(english ? 'Templates' : '模板', `${prefix}/guide/templates`),
         item(english ? 'Links and routers' : '链接与路由', `${prefix}/guide/links`),
+        item(english ? 'Page layout' : '页面布局', `${prefix}/guide/layout`),
         item(english ? 'Responsive layout' : '响应式布局', `${prefix}/guide/responsive`),
       ],
     },
@@ -36,12 +39,14 @@ export function guideSidebar(english: boolean): Sidebar {
         item(english ? 'Accessibility' : '无障碍', `${prefix}/guide/accessibility`),
         item(english ? 'Dark mode' : '深色模式', `${prefix}/guide/dark-mode`),
         item(english ? 'Internationalization' : '国际化', `${prefix}/guide/i18n`),
+        item(english ? 'Browser support' : '浏览器支持', `${prefix}/guide/browser-support`),
       ],
     },
     {
       text: english ? 'Project' : '项目',
       items: [
         item(english ? 'Changelog' : '更新日志', `${prefix}/guide/changelog`),
+        item(english ? 'Upgrade guide' : '升级指南', `${prefix}/guide/migration`),
         item(english ? 'Contributing' : '贡献指南', `${prefix}/guide/contributing`),
       ],
     },

@@ -22,7 +22,7 @@ footer: false
       <tr>
         <td><code>label</code></td>
         <td><code>string</code></td>
-        <td><code>'More options'</code></td>
+        <td>随当前语言，英文 <code>More options</code>，中文「更多选项」</td>
         <td>触发按钮的无障碍名称，同时也是菜单本身的名字和悬停时的提示文字。</td>
       </tr>
       <tr>

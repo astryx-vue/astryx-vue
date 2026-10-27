@@ -1,20 +1,16 @@
 /**
  * Neutral semantic tokens.
  *
- * Names follow upstream theme/tokens.stylex.ts, with an --astryx- prefix.
- * When packages/themes/neutral overrides a token, that value is used.
- * Otherwise the value is the default from tokens.stylex.ts.
+ * Names follow the upstream token sheet (packages/core/src/theme/tokens.stylex.ts),
+ * with an --astryx- prefix. When the Neutral theme overrides a token, the value
+ * below is the override; otherwise it is the core default.
  * Both stops are written with light-dark().
  *
- * Durations are the neutral motion scale:
- * { fast: 125, medium: 300, slow: 700, ratio: 0.75 }, rounded to 5ms.
+ * Every color traces back to the reviewed palette in upstream
+ * packages/themes/neutral/src/neutralPaletteRefs.generated.ts.
  *
- * Two values stay as this package already shipped them, so existing
- * components do not change appearance:
- * - radius-none stays 0. Upstream neutral uses 0.25rem, which would round
- *   square avatars and skeletons that treat this token as a square corner.
- * - color-text-secondary's light stop stays #525252. Upstream neutral uses
- *   #737373. Inputs, selectors, and supporting text already use this value.
+ * Durations follow neutral's motion scale:
+ * { fast: 125, medium: 300, slow: 700, ratio: 0.75 }, rounded to 5ms.
  */
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
@@ -23,190 +19,121 @@
   [data-astryx-theme='neutral'] {
     color-scheme: light dark;
 
-    --astryx-color-accent: light-dark(#262626, #ebebeb);
-    --astryx-color-accent-muted: light-dark(#f1f1f1, #262626);
-    --astryx-color-on-accent: light-dark(#ffffff, #171717);
-    --astryx-color-neutral: light-dark(#0000000f, #ffffff1a);
     --astryx-color-background-surface: light-dark(#ffffff, #262626);
     --astryx-color-background-body: light-dark(#f1f1f1, #1b1b1b);
+    --astryx-color-background-card: light-dark(#ffffff, #1b1b1b);
+    --astryx-color-background-popover: light-dark(#ffffff, #1b1b1b);
+    --astryx-color-background-muted: light-dark(#f1f1f1, #1b1b1b);
+
+    --astryx-color-accent: light-dark(#1b1b1b, #f1f1f1);
+    --astryx-color-accent-muted: light-dark(#f1f1f1, #262626);
+    --astryx-color-neutral: light-dark(#0000000f, #ffffff1a);
+
+    /* Overlays: modal scrims and the hover/pressed tints layered on surfaces. */
     --astryx-color-overlay: light-dark(#00000080, #000000cc);
     --astryx-color-overlay-hover: light-dark(#0000000d, #ffffff0d);
     --astryx-color-overlay-pressed: light-dark(#0000001a, #ffffff1a);
-    --astryx-color-background-muted: light-dark(#f1f1f1, #1b1b1b);
 
-    --astryx-color-text-primary: light-dark(#171717, #fafafa);
-    --astryx-color-text-secondary: light-dark(#525252, #a3a3a3);
-    --astryx-color-text-disabled: light-dark(#a3a3a3, #525252);
-    --astryx-color-text-accent: light-dark(#262626, #ebebeb);
-    --astryx-color-on-dark: light-dark(#ffffff, #ffffff);
-    --astryx-color-on-light: light-dark(#171717, #171717);
+    --astryx-color-text-primary: light-dark(#000000, #ffffff);
+    --astryx-color-text-secondary: light-dark(#474747, #9e9e9e);
+    --astryx-color-text-disabled: light-dark(#919191, #525252);
+    --astryx-color-text-accent: light-dark(#1b1b1b, #f1f1f1);
+    --astryx-color-on-dark: #ffffff;
+    --astryx-color-on-light: #111111;
+    --astryx-color-on-accent: light-dark(#ffffff, #111111);
+    --astryx-color-on-success: light-dark(#ffffff, #111111);
+    --astryx-color-on-error: light-dark(#ffffff, #111111);
+    --astryx-color-on-warning: #111111;
 
-    --astryx-color-icon-accent: light-dark(#262626, #ebebeb);
-    --astryx-color-icon-primary: light-dark(#171717, #fafafa);
-    --astryx-color-icon-secondary: light-dark(#737373, #a3a3a3);
-    --astryx-color-icon-disabled: light-dark(#a3a3a3, #525252);
+    --astryx-color-icon-accent: light-dark(#1b1b1b, #f1f1f1);
+    --astryx-color-icon-primary: light-dark(#000000, #ffffff);
+    --astryx-color-icon-secondary: light-dark(#6a6a6a, #9e9e9e);
+    --astryx-color-icon-disabled: light-dark(#919191, #525252);
 
-    --astryx-color-background-card: light-dark(#ffffff, #1b1b1b);
-    --astryx-color-background-popover: light-dark(#ffffff, #1b1b1b);
-    --astryx-color-background-inverted: light-dark(#0a1317, #ffffff);
-    --astryx-color-background-error-inverted: light-dark(#aa071e, #e3193b);
+    --astryx-color-success: light-dark(#00490b, #a4d6a3);
+    --astryx-color-error: light-dark(#76000c, #ffc4be);
+    --astryx-color-warning: light-dark(#4b3900, #f8d36a);
+    --astryx-color-success-muted: light-dark(#bce0bb, #90ca903d);
+    --astryx-color-error-muted: light-dark(#ffc4be, #ff98903d);
+    --astryx-color-warning-muted: light-dark(#fae19e, #e2b6233d);
 
-    --astryx-color-success: light-dark(#007004, #9fe59b);
-    --astryx-color-success-muted: light-dark(#c5e5c0, #84c9803d);
-    --astryx-color-on-success: light-dark(#ffffff, #171717);
-    --astryx-color-error: light-dark(#a50c25, #ffc6c1);
-    --astryx-color-error-muted: light-dark(#facecb, #ff9e973d);
-    --astryx-color-on-error: light-dark(#ffffff, #171717);
-    --astryx-color-warning: light-dark(#745b00, #fdcf4f);
-    --astryx-color-warning-muted: light-dark(#f8da9d, #deb4333d);
-    --astryx-color-on-warning: light-dark(#171717, #171717);
-
-    --astryx-color-border: light-dark(#ebebeb, #ffffff1a);
+    --astryx-color-border: light-dark(#00000014, #ffffff1a);
     --astryx-color-border-emphasized: light-dark(#d4d4d4, #525252);
 
-    --astryx-color-skeleton: light-dark(#ebebeb, #525252);
-    --astryx-color-track: light-dark(#ccd3db, #5a5e66);
+    --astryx-color-skeleton: light-dark(#f1f1f1, #525252);
     --astryx-color-shadow: light-dark(#0000001a, #0000004d);
     --astryx-color-tint-hover: light-dark(black, white);
 
-    --astryx-color-background-blue: light-dark(#c4ddfb, #9eb7ff3d);
-    --astryx-color-border-blue: light-dark(#b1c9e7, #6d9cfe);
-    --astryx-color-icon-blue: light-dark(#00458c, #9eb7ff);
-    --astryx-color-text-blue: light-dark(#00458c, #c7d3ff);
+    --astryx-color-background-red: light-dark(#ffc4be, #5b2b28);
+    --astryx-color-border-red: light-dark(#ffaea7, #fa6762);
+    --astryx-color-icon-red: light-dark(#76000c, #ff9890);
+    --astryx-color-text-red: light-dark(#76000c, #ffaea7);
 
-    --astryx-color-background-cyan: light-dark(#a3e0ef, #83c2d43d);
-    --astryx-color-border-cyan: light-dark(#91d3e3, #67a7b8);
-    --astryx-color-icon-cyan: light-dark(#00505f, #83c2d4);
-    --astryx-color-text-cyan: light-dark(#00505f, #9edef0);
+    --astryx-color-background-orange: light-dark(#ffc7a1, #503424);
+    --astryx-color-border-orange: light-dark(#ffc7a1, #df843f);
+    --astryx-color-icon-orange: light-dark(#622700, #ff9e55);
+    --astryx-color-text-orange: light-dark(#622700, #ffb37e);
 
-    --astryx-color-background-gray: light-dark(#e5e5e5, var(--astryx-color-neutral));
+    --astryx-color-background-yellow: light-dark(#fae19e, #453a1c);
+    --astryx-color-border-yellow: light-dark(#e3c36c, #c29900);
+    --astryx-color-icon-yellow: light-dark(#4b3900, #e2b623);
+    --astryx-color-text-yellow: light-dark(#4b3900, #eec448);
+
+    --astryx-color-background-green: light-dark(#bce0bb, #2b422b);
+    --astryx-color-border-green: light-dark(#aad4a9, #6ab26b);
+    --astryx-color-icon-green: light-dark(#00490b, #90ca90);
+    --astryx-color-text-green: light-dark(#00490b, #90ca90);
+
+    --astryx-color-background-teal: light-dark(#a9e2d6, #28413c);
+    --astryx-color-border-teal: light-dark(#90d7c8, #4fb1a0);
+    --astryx-color-icon-teal: light-dark(#00463d, #81c9bb);
+    --astryx-color-text-teal: light-dark(#00463d, #90d7c8);
+
+    --astryx-color-background-cyan: light-dark(#9ae2f4, #274046);
+    --astryx-color-border-cyan: light-dark(#85d5e9, #49adc4);
+    --astryx-color-icon-cyan: light-dark(#004351, #71c7dd);
+    --astryx-color-text-cyan: light-dark(#004351, #85d5e9);
+
+    --astryx-color-background-blue: light-dark(#b9d7ff, #253c5a);
+    --astryx-color-border-blue: light-dark(#a1caff, #5aa0f8);
+    --astryx-color-icon-blue: light-dark(#003978, #88bcff);
+    --astryx-color-text-blue: light-dark(#003978, #a1caff);
+
+    --astryx-color-background-purple: light-dark(#f7d5ff, #4a2f51);
+    --astryx-color-border-purple: light-dark(#f3bfff, #d885eb);
+    --astryx-color-icon-purple: light-dark(#5c0e6c, #e496f6);
+    --astryx-color-text-purple: light-dark(#5c0e6c, #eaacf8);
+
+    --astryx-color-background-pink: light-dark(#ffc0d7, #572b3d);
+    --astryx-color-border-pink: light-dark(#ffc0d7, #fc78b1);
+    --astryx-color-icon-pink: light-dark(#70003f, #fd92bd);
+    --astryx-color-text-pink: light-dark(#70003f, #ffa9ca);
+
+    --astryx-color-background-gray: light-dark(#e2e2e2, #303030);
     --astryx-color-border-gray: light-dark(#d4d4d4, #262626);
-    --astryx-color-icon-gray: light-dark(#525252, #a3a3a3);
-    --astryx-color-text-gray: light-dark(#262626, #e5e5e5);
+    --astryx-color-icon-gray: light-dark(#474747, #9e9e9e);
+    --astryx-color-text-gray: light-dark(#1b1b1b, #d4d4d4);
 
-    --astryx-color-background-green: light-dark(#c5e5c0, #84c9803d);
-    --astryx-color-border-green: light-dark(#b2d1ac, #69ad67);
-    --astryx-color-icon-green: light-dark(#0c5700, #84c980);
-    --astryx-color-text-green: light-dark(#0c5700, #9fe59b);
+    /* Core defaults the Neutral theme leaves alone. */
+    --astryx-color-background-inverted: light-dark(#0a1317, #ffffff);
+    --astryx-color-background-error-inverted: light-dark(#aa071e, #e3193b);
+    --astryx-color-track: light-dark(#ccd3db, #5a5e66);
 
-    --astryx-color-background-orange: light-dark(#fad0b5, #ffa2583d);
-    --astryx-color-border-orange: light-dark(#e6bda2, #e2883e);
-    --astryx-color-icon-orange: light-dark(#6e3500, #ffa258);
-    --astryx-color-text-orange: light-dark(#6e3500, #ffc9a2);
-
-    --astryx-color-background-pink: light-dark(#fccadc, #ff99c33d);
-    --astryx-color-border-pink: light-dark(#e7b7c8, #f273aa);
-    --astryx-color-icon-pink: light-dark(#83004b, #ff99c3);
-    --astryx-color-text-pink: light-dark(#83004b, #ffc3da);
-
-    --astryx-color-background-purple: light-dark(#eccef3, #f297ff3d);
-    --astryx-color-border-purple: light-dark(#d8bbdf, #dd74f0);
-    --astryx-color-icon-purple: light-dark(#700084, #f297ff);
-    --astryx-color-text-purple: light-dark(#700084, #fac1ff);
-
-    --astryx-color-background-red: light-dark(#facecb, #ff9e973d);
-    --astryx-color-border-red: light-dark(#e6bab8, #ff6f6c);
-    --astryx-color-icon-red: light-dark(#89001a, #ff9e97);
-    --astryx-color-text-red: light-dark(#89001a, #ffc6c1);
-
-    --astryx-color-background-teal: light-dark(#a5e3d6, #7ec6b83d);
-    --astryx-color-border-teal: light-dark(#94d6c8, #63ab9d);
-    --astryx-color-icon-teal: light-dark(#005348, #7ec6b8);
-    --astryx-color-text-teal: light-dark(#005348, #99e2d3);
-
-    --astryx-color-background-yellow: light-dark(#f8da9d, #deb4333d);
-    --astryx-color-border-yellow: light-dark(#e4c279, #c0990e);
-    --astryx-color-icon-yellow: light-dark(#584400, #deb433);
-    --astryx-color-text-yellow: light-dark(#584400, #fdcf4f);
-
-    /*
-     * Chart colors. Categorical series use one stop in both schemes.
-     * Sequential ramps run from 5 (darkest) to 1 (lightest).
-     * Gray, and the neutral reference color, change with the scheme.
-     * Values match the upstream data color tokens.
-     */
-    --astryx-color-data-categorical-blue: light-dark(#0171E3, #0171E3);
-    --astryx-color-data-categorical-orange: light-dark(#EB6E00, #EB6E00);
-    --astryx-color-data-categorical-purple: light-dark(#6B1EFD, #6B1EFD);
-    --astryx-color-data-categorical-green: light-dark(#0B991F, #0B991F);
-    --astryx-color-data-categorical-pink: light-dark(#F351C0, #F351C0);
-    --astryx-color-data-categorical-cyan: light-dark(#0171A4, #0171A4);
-    --astryx-color-data-categorical-red: light-dark(#F5394F, #F5394F);
-    --astryx-color-data-categorical-teal: light-dark(#08A3A3, #08A3A3);
-    --astryx-color-data-categorical-brown: light-dark(#965E03, #965E03);
-    --astryx-color-data-categorical-indigo: light-dark(#6F8AFF, #6F8AFF);
-
-    --astryx-color-data-neutral: light-dark(#8494A3, #8C939B);
-
-    --astryx-color-data-blue-5: light-dark(#02165E, #02165E);
-    --astryx-color-data-blue-4: light-dark(#004CBC, #004CBC);
-    --astryx-color-data-blue-3: light-dark(#2694FE, #2694FE);
-    --astryx-color-data-blue-2: light-dark(#78BEFF, #78BEFF);
-    --astryx-color-data-blue-1: light-dark(#DBECFF, #DBECFF);
-
-    --astryx-color-data-shamrock-5: light-dark(#0B603D, #0B603D);
-    --astryx-color-data-shamrock-4: light-dark(#138546, #138546);
-    --astryx-color-data-shamrock-3: light-dark(#24BB5E, #24BB5E);
-    --astryx-color-data-shamrock-2: light-dark(#8EF7AA, #8EF7AA);
-    --astryx-color-data-shamrock-1: light-dark(#D6FEE4, #D6FEE4);
-
-    --astryx-color-data-orange-5: light-dark(#A13F04, #A13F04);
-    --astryx-color-data-orange-4: light-dark(#D66100, #D66100);
-    --astryx-color-data-orange-3: light-dark(#FD9537, #FD9537);
-    --astryx-color-data-orange-2: light-dark(#FDB876, #FDB876);
-    --astryx-color-data-orange-1: light-dark(#FFE6CF, #FFE6CF);
-
-    --astryx-color-data-pink-5: light-dark(#8E1073, #8E1073);
-    --astryx-color-data-pink-4: light-dark(#D123A1, #D123A1);
-    --astryx-color-data-pink-3: light-dark(#F989D3, #F989D3);
-    --astryx-color-data-pink-2: light-dark(#FEADE3, #FEADE3);
-    --astryx-color-data-pink-1: light-dark(#FCE3F4, #FCE3F4);
-
-    --astryx-color-data-purple-5: light-dark(#3E0697, #3E0697);
-    --astryx-color-data-purple-4: light-dark(#6B1EFD, #6B1EFD);
-    --astryx-color-data-purple-3: light-dark(#9081FF, #9081FF);
-    --astryx-color-data-purple-2: light-dark(#B3B0FE, #B3B0FE);
-    --astryx-color-data-purple-1: light-dark(#E8E8FB, #E8E8FB);
-
-    --astryx-color-data-red-5: light-dark(#9D0519, #9D0519);
-    --astryx-color-data-red-4: light-dark(#D31130, #D31130);
-    --astryx-color-data-red-3: light-dark(#FB7D87, #FB7D87);
-    --astryx-color-data-red-2: light-dark(#FFB2B8, #FFB2B8);
-    --astryx-color-data-red-1: light-dark(#FEE4E6, #FEE4E6);
-
-    --astryx-color-data-teal-5: light-dark(#08767D, #08767D);
-    --astryx-color-data-teal-4: light-dark(#0C9293, #0C9293);
-    --astryx-color-data-teal-3: light-dark(#0DB7AF, #0DB7AF);
-    --astryx-color-data-teal-2: light-dark(#6CE6D8, #6CE6D8);
-    --astryx-color-data-teal-1: light-dark(#D7FCF8, #D7FCF8);
-
-    --astryx-color-data-yellow-5: light-dark(#8A5001, #8A5001);
-    --astryx-color-data-yellow-4: light-dark(#D69804, #D69804);
-    --astryx-color-data-yellow-3: light-dark(#FBCE03, #FBCE03);
-    --astryx-color-data-yellow-2: light-dark(#FCEC85, #FCEC85);
-    --astryx-color-data-yellow-1: light-dark(#FDF6BA, #FDF6BA);
-
-    --astryx-color-data-gray-5: light-dark(#25363F, #333338);
-    --astryx-color-data-gray-4: light-dark(#5D6C7B, #666A72);
-    --astryx-color-data-gray-3: light-dark(#AFB9C4, #B2B8BE);
-    --astryx-color-data-gray-2: light-dark(#CCD3DB, #D0D3D6);
-    --astryx-color-data-gray-1: light-dark(#F1F4F7, #F2F4F6);
-
-    --astryx-spacing-0: 0;
-    --astryx-spacing-0-5: 2px;
-    --astryx-spacing-1: 4px;
-    --astryx-spacing-1-5: 6px;
-    --astryx-spacing-2: 8px;
-    --astryx-spacing-3: 12px;
-    --astryx-spacing-4: 16px;
-    --astryx-spacing-5: 20px;
-    --astryx-spacing-6: 24px;
-    --astryx-spacing-7: 28px;
-    --astryx-spacing-8: 32px;
-    --astryx-spacing-9: 36px;
-    --astryx-spacing-10: 40px;
-    --astryx-spacing-11: 44px;
-    --astryx-spacing-12: 48px;
+    --astryx-spacing-0: 0rem;
+    --astryx-spacing-0-5: 0.125rem;
+    --astryx-spacing-1: 0.25rem;
+    --astryx-spacing-1-5: 0.375rem;
+    --astryx-spacing-2: 0.5rem;
+    --astryx-spacing-3: 0.75rem;
+    --astryx-spacing-4: 1rem;
+    --astryx-spacing-5: 1.25rem;
+    --astryx-spacing-6: 1.5rem;
+    --astryx-spacing-7: 1.75rem;
+    --astryx-spacing-8: 2rem;
+    --astryx-spacing-9: 2.25rem;
+    --astryx-spacing-10: 2.5rem;
+    --astryx-spacing-11: 2.75rem;
+    --astryx-spacing-12: 3rem;
 
     --astryx-size-element-sm: 28px;
     --astryx-size-element-md: 32px;
@@ -219,7 +146,8 @@
     --astryx-focus-outline-color: var(--astryx-color-accent);
     --astryx-focus-outline-offset: 3px;
 
-    --astryx-radius-none: 0;
+    /* Radius — slightly larger than the core default, as upstream ships it. */
+    --astryx-radius-none: 0px;
     --astryx-radius-inner: 0.375rem;
     --astryx-radius-element: 0.625rem;
     --astryx-radius-container: 0.75rem;
@@ -227,14 +155,19 @@
     --astryx-radius-chat: 28px;
     --astryx-radius-full: 9999px;
 
+    /*
+     * Shadows. Light mode is two subtle drops. Dark mode deepens the drops and
+     * adds an all-around 1px inset ("bezel") so surfaces read as lit from above
+     * against a dark canvas. The inset resolves to transparent in light mode.
+     */
     --astryx-shadow-low: 0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)), 0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
     --astryx-shadow-med: 0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 35%)), 0 4px 12px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 12%));
     --astryx-shadow-high: 0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)), 0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%));
     --astryx-shadow-inset-hover: inset 0px 0px 0px 2px #0074e24d;
     --astryx-shadow-inset-selected: inset 0px 0px 0px 2px #0074e280;
-    --astryx-shadow-inset-success: inset 0px 0px 0px 2px #1981004d;
-    --astryx-shadow-inset-warning: inset 0px 0px 0px 2px #ffce2f4d;
-    --astryx-shadow-inset-error: inset 0px 0px 0px 2px #e33f4a4d;
+    --astryx-shadow-inset-success: inset 0px 0px 0px 2px #2f7d334d;
+    --astryx-shadow-inset-warning: inset 0px 0px 0px 2px #f8d36a4d;
+    --astryx-shadow-inset-error: inset 0px 0px 0px 2px #de47454d;
 
     --astryx-duration-fast-min: 95ms;
     --astryx-duration-fast: 125ms;
@@ -249,8 +182,8 @@
     --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
 
     --astryx-font-family-body: Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --astryx-font-family-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --astryx-font-family-heading: Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --astryx-font-family-code: ui-monospace, 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
     --astryx-font-size-4xs: 0.375rem;
     --astryx-font-size-3xs: 0.4375rem;
@@ -278,10 +211,10 @@
     --astryx-text-heading-2-weight: var(--astryx-font-weight-semibold);
     --astryx-text-heading-2-leading: 1.4;
     --astryx-text-heading-3-size: var(--astryx-font-size-lg);
-    --astryx-text-heading-3-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-3-weight: var(--astryx-font-weight-bold);
     --astryx-text-heading-3-leading: 1.4118;
     --astryx-text-heading-4-size: var(--astryx-font-size-base);
-    --astryx-text-heading-4-weight: var(--astryx-font-weight-semibold);
+    --astryx-text-heading-4-weight: var(--astryx-font-weight-bold);
     --astryx-text-heading-4-leading: 1.4286;
     --astryx-text-heading-5-size: var(--astryx-font-size-sm);
     --astryx-text-heading-5-weight: var(--astryx-font-weight-semibold);
@@ -314,7 +247,7 @@
     --astryx-text-display-2-leading: 1.2571;
     --astryx-text-display-3-size: var(--astryx-font-size-3xl);
     --astryx-text-display-3-weight: var(--astryx-font-weight-normal);
-    --astryx-text-display-3-leading: 1.2414;
+    --astryx-text-display-3-leading: 1.3793;
   }
 
   [data-astryx-color-mode='light'] {

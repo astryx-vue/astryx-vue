@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { isImeKeyEvent } from '../utils/ime.js'
 
 /**
  * Roles a menu row can carry. The selectable roles sit alongside the plain
@@ -243,7 +244,7 @@ export function useMenuNav(options: MenuNavOptions): MenuNav {
   function handleKeyDown(event: KeyboardEvent): void {
     // An IME's own keys are the IME's; a composition's Escape must not close
     // the menu and its letters must not run typeahead.
-    if (event.defaultPrevented || event.isComposing || event.ctrlKey || event.metaKey || event.altKey)
+    if (event.defaultPrevented || isImeKeyEvent(event) || event.ctrlKey || event.metaKey || event.altKey)
       return
     if (!ownsEvent(event))
       return

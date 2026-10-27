@@ -19,8 +19,10 @@
     "release": "pnpm build:packages && changeset publish",
     "release:dry-run": "pnpm build:packages && pnpm --filter @astryx-vue/core --filter @astryx-vue/themes --filter @astryx-vue/cli publish --dry-run --no-git-checks",
     "version-packages": "changeset version && pnpm install --lockfile-only",
-    "check:packages": "node ./scripts/check-package-boundaries.mjs && node ./scripts/check-path-case.mjs && node ./scripts/sync-exports.mjs --check && pnpm --filter @astryx-vue/cli generate:check",
+    "check:packages": "node ./scripts/check-package-boundaries.mjs && node ./scripts/check-path-case.mjs && node ./scripts/sync-exports.mjs --check && pnpm --filter @astryx-vue/cli generate:check && node ./scripts/check-line-limit.mjs && node ./scripts/check-no-important.mjs && node ./scripts/check-template-tokens.mjs && pnpm check:i18n-catalog",
+    "check:i18n-catalog": "node ./scripts/check-i18n-catalog.mjs",
     "check:templates": "node ./scripts/check-templates.mjs",
+    "check:template-tokens": "node ./scripts/check-template-tokens.mjs",
     "sync": "node ./scripts/sync-exports.mjs",
     "dev": "pnpm build:packages && pnpm --filter @astryx-vue/docs dev",
     "docs:build": "pnpm --filter @astryx-vue/docs build",
@@ -29,25 +31,33 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json && pnpm --filter './packages/*' --filter './apps/*' --recursive --if-present run typecheck",
-    "docs:preview": "pnpm --filter @astryx-vue/docs preview"
+    "docs:preview": "pnpm --filter @astryx-vue/docs preview",
+    "visual": "node scripts/swarm/visual-compare.mjs",
+    "a11y": "node scripts/swarm/a11y-scan.mjs"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:linting",
     "@arethetypeswrong/cli": "catalog:release",
     "@astryx-vue/cli": "workspace:*",
+    "@axe-core/playwright": "catalog:visual",
     "@changesets/changelog-github": "catalog:release",
     "@changesets/cli": "catalog:release",
     "@types/node": "catalog:language",
+    "@types/pngjs": "catalog:visual",
     "@typescript/native": "catalog:language",
     "@vitejs/plugin-vue": "catalog:build",
     "@vue/compiler-dom": "catalog:vue",
     "@vue/compiler-sfc": "catalog:vue",
     "@vue/server-renderer": "catalog:vue",
     "@vue/test-utils": "catalog:testing",
+    "dom-accessibility-api": "catalog:testing",
     "eslint": "catalog:linting",
     "eslint-plugin-vuejs-accessibility": "catalog:linting",
     "globals": "catalog:linting",
     "happy-dom": "catalog:testing",
+    "pixelmatch": "catalog:visual",
+    "playwright": "catalog:visual",
+    "pngjs": "catalog:visual",
     "publint": "catalog:release",
     "typescript": "catalog:language",
     "vite": "catalog:build",
@@ -57,7 +67,7 @@
   },
   "upstream": {
     "repository": "https://github.com/facebook/astryx",
-    "version": "0.4.1",
-    "commit": "96f9917fe013a7062a403c58e54dfd47f482d89f"
+    "version": "0.7.1",
+    "commit": "44f7244dd518ca07f8cc9f238fad8c0495b2f44e"
   }
 }

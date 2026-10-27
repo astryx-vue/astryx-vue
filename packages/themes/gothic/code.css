@@ -30,10 +30,11 @@
     --astryx-code-syntax-property: #7cc5b3;
     --astryx-code-syntax-punctuation: #7a8290;
 
-    --astryx-code-syntax-added: color-mix(in srgb, var(--astryx-color-success-muted) 25%, transparent);
-    --astryx-code-syntax-removed: color-mix(in srgb, var(--astryx-color-error-muted) 25%, transparent);
+    /* 深色底上的差异行用不透明深绿、深红，压住亮度，保住各语法的对比度。 */
+    --astryx-code-syntax-added: #081408;
+    --astryx-code-syntax-removed: #1e0a0a;
     --astryx-code-syntax-diff-header: var(--astryx-color-background-muted);
-    --astryx-code-syntax-added-marker: var(--astryx-color-text-green);
-    --astryx-code-syntax-removed-marker: var(--astryx-color-text-red);
+    --astryx-code-syntax-added-marker: #a3c987;
+    --astryx-code-syntax-removed-marker: #d97580;
   }
 }

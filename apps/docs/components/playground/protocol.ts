@@ -6,6 +6,8 @@ export type PlaygroundColorMode = 'light' | 'dark'
 export interface PlaygroundHostMessage {
   channel: typeof PLAYGROUND_CHANNEL
   type: 'render' | 'theme'
+  /** 本次 iframe 装载的标记，见 previewChannel.ts。 */
+  nonce: string
   css: string
   colorMode: PlaygroundColorMode
   fontHref: string | null
@@ -17,6 +19,8 @@ export interface PlaygroundHostMessage {
 export interface PlaygroundFrameMessage {
   channel: typeof PLAYGROUND_CHANNEL
   type: 'ready' | 'error' | 'ok'
+  /** 本次 iframe 装载的标记，见 previewChannel.ts。 */
+  nonce: string
   message?: string
 }
 

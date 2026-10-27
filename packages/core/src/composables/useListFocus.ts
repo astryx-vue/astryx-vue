@@ -1,5 +1,5 @@
-import type { Ref } from 'vue'
-import { ref, watch } from 'vue'
+import type { MaybeRefOrGetter, Ref } from 'vue'
+import { ref, toValue, watch } from 'vue'
 
 /**
  * 一维列表的方向。
@@ -31,7 +31,7 @@ export interface UseListFocusOptions {
    * 导航方向。
    * @default 'vertical'
    */
-  orientation?: ListFocusOrientation
+  orientation?: MaybeRefOrGetter<ListFocusOrientation>
   /**
    * Home / End 是否跳到第一项 / 最后一项。
    * @default true
@@ -144,7 +144,6 @@ export function useListFocus(options: UseListFocusOptions = {}): ListFocus {
     boundarySelector,
     wrap = true,
     onEscape,
-    orientation = 'vertical',
     hasHomeEnd = true,
     hasPaging = false,
     hasRovingTabIndex = false,
@@ -342,6 +341,7 @@ export function useListFocus(options: UseListFocusOptions = {}): ListFocus {
       return
     }
 
+    const orientation = toValue(options.orientation ?? 'vertical')
     const horizontal = orientation === 'horizontal' || orientation === 'both'
     const vertical = orientation === 'vertical' || orientation === 'both'
     const nextKeys: string[] = []

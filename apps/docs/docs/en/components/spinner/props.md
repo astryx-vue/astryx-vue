@@ -17,7 +17,7 @@ footer: false
 
 ## Slots
 
-- `label`: rich content below the spinner. Replaces the `label` prop text. The default accessible name is `Loading`.
+- `label`: rich content below the spinner. Replaces the `label` prop text. With no visible text and no `aria-label`, the accessible name follows the locale: Loading in English, 加载中 in Simplified Chinese.
 
 ## Theme
 

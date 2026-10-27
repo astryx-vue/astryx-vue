@@ -27,15 +27,15 @@ footer: false
       </tr>
       <tr>
         <td><code>options.isEnabled</code></td>
-        <td><code>() =&gt; boolean</code></td>
-        <td>—</td>
-        <td>这套按压模型当前是否生效，每次按下时读。传菜单的打开状态即可。必填。</td>
+        <td><code>MaybeRefOrGetter&lt;boolean&gt;</code></td>
+        <td><code>true</code></td>
+        <td>这套按压模型当前是否生效，每次按下时读。传菜单的打开状态即可。</td>
       </tr>
       <tr>
         <td><code>options.onDismiss</code></td>
         <td><code>() =&gt; void</code></td>
         <td>—</td>
-        <td>鼠标在菜单外松开、且什么都没执行时调用：关闭菜单。手指在菜单外松开则让菜单继续开着，那种情况不会调用它。必填。</td>
+        <td>鼠标在菜单外松开、且什么都没执行时调用：关闭菜单。手指在菜单外松开则让菜单继续开着，那种情况不会调用它。</td>
       </tr>
       <tr>
         <td><code>options.itemSelector</code></td>
@@ -51,7 +51,7 @@ footer: false
       </tr>
       <tr>
         <td><code>options.onTriggerPress</code></td>
-        <td><code>(pointerType: 'mouse' | 'pen' | 'touch') =&gt; boolean</code></td>
+        <td><code>(pointerType: MenuPressPointerType) =&gt; boolean</code></td>
         <td>—</td>
         <td>鼠标按下了触发器，或者手指在触发器上按满了 <code>longPressDelayMs</code>：在按住的指针下面打开菜单，并返回是否打开了。这一次按压其实是关掉已开的菜单时返回 false。</td>
       </tr>
@@ -66,6 +66,18 @@ footer: false
         <td><code>(row: HTMLElement, release: PointerEvent) =&gt; void</code></td>
         <td>—</td>
         <td>执行松开时指针下面的那一行。不传就替它派发一次 click，带上松开时的按钮和修饰键。</td>
+      </tr>
+      <tr>
+        <td><code>options.getScroller</code></td>
+        <td><code>() =&gt; HTMLElement | null</code></td>
+        <td>溢出的菜单根</td>
+        <td>按住时指针停在上下边缘 24 像素内要自动滚动的元素。返回 null 表示不滚。</td>
+      </tr>
+      <tr>
+        <td><code>options.hitTest</code></td>
+        <td><code>(x: number, y: number) =&gt; Element | null</code></td>
+        <td><code>document.elementFromPoint</code></td>
+        <td>按视口坐标找元素。手指的事件一直发给它落下的元素，所以靠坐标判断现在在哪一行。测试里用来替换。</td>
       </tr>
       <tr>
         <td><code>options.longPressDelayMs</code></td>
@@ -87,17 +99,17 @@ footer: false
     <tbody>
       <tr>
         <td><code>menuProps</code></td>
-        <td><code>{ onPointerDown, 'data-astryx-menu-press': '' }</code></td>
+        <td><code>{ onPointerdown, 'data-astryx-menu-press': '' }</code></td>
         <td>摊到菜单根上（<code>v-bind="press.menuProps"</code>）。接下从根内开始的按压，并在根上标记「这里用了这套按压模型」。</td>
       </tr>
       <tr>
         <td><code>onPointerDown</code></td>
         <td><code>(event: PointerEvent) =&gt; void</code></td>
-        <td>和 <code>menuProps.onPointerDown</code> 是同一个函数，单独拿出来。不好摊对象时直接绑到菜单根的 <code>pointerdown</code> 上。</td>
+        <td>和 <code>menuProps.onPointerdown</code> 是同一个函数，单独拿出来。不好摊对象时直接绑到菜单根的 <code>pointerdown</code> 上。</td>
       </tr>
       <tr>
         <td><code>triggerProps</code></td>
-        <td><code>{ onPointerDown, onContextMenu }</code></td>
+        <td><code>{ onPointerdown, onContextmenu }</code></td>
         <td>摊到触发器上：主键一按下就打开菜单；手指按满延时之后，手指还按着的时候打开。右键不碰，它自己的 <code>contextmenu</code> 照旧能用。<code>contextmenu</code> 那个只挡掉手指长按时浏览器自带的菜单，鼠标右键仍然交给应用。</td>
       </tr>
       <tr>
@@ -114,4 +126,9 @@ footer: false
   </table>
 </div>
 
-模块还导出 `resetMenuPress()`，用来清掉已经布好的「吞掉多余 click」。表面在 hook 自己的拆卸之外被移除时调用它，测试里也用得上。
+模块还导出：
+
+- `resetMenuPress()`：清掉已经布好的「吞掉多余 click」。表面在 hook 自己的拆卸之外被移除时调用它，测试里也用得上。
+- `isMenuPressActivation()`：按压模型派发的那次行激活正在同步进行时为 true。把激活转交给里面链接的行用它分清这是模型的 click 还是浏览器多出来的那个。
+- `MENU_PRESS_MARKER`：菜单根上的标记属性名。
+- `menuPressStep`、`MENU_PRESS_SETTLE_MS` 和相关类型：不碰 DOM 的纯状态机。打开菜单的那次按压，只有指针进过菜单、或者按满 300 毫秒，松开时才执行下面那一行；否则菜单留着、什么都不执行。

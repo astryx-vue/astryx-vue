@@ -20,6 +20,10 @@ footer: false
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用整组。</td></tr>
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>整组被禁用的原因。和 <code>isDisabled</code> 一起用时，悬停或键盘聚焦会显示这段提示，每个选项仍可聚焦（带 <code>aria-disabled</code>），但选不中。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标记为必填。</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string</code></td><td>—</td><td>加到字段外壳上的 class。横向标签的表单里没有外壳，这时不生效。</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳上的行内样式。</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string</code></td><td>—</td><td>加到单选组（<code>role="radiogroup"</code>）上的 class。</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到单选组上的行内样式。</td></tr>
 </tbody></table>
 </div>
 
@@ -28,8 +32,8 @@ footer: false
 <div class="component-api-table" role="region" aria-label="RadioListItem 属性" tabindex="0">
 <table><thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>value</code></td><td><code>string | number</code></td><td>—</td><td>必填。选中后提交的值。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。行标题。</td></tr>
-<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标题下的说明。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。行标题。需要链接等富内容时用 <code>label</code> 插槽，点链接不会选中这一行。</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标题下的说明。富内容用 <code>description</code> 插槽。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一行。</td></tr>
 </tbody></table>
 </div>

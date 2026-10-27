@@ -1,4 +1,6 @@
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, nextTick, ref } from 'vue'
@@ -7,6 +9,7 @@ import { createStaticSource } from '../composables/useAsyncSource.js'
 import CommandPalette from './CommandPalette.vue'
 import CommandPaletteInput from './CommandPaletteInput.vue'
 import CommandPaletteItem from './CommandPaletteItem.vue'
+import CommandPaletteList from './CommandPaletteList.vue'
 import { moveHighlight } from './keyboard.js'
 
 const items: SearchableItem[] = [
@@ -165,6 +168,76 @@ describe('command palette item and input overrides', () => {
       slots: { endContent: '<kbd class="hint">/</kbd>' },
     })
     expect(wrapper.find('.astryx-command-palette-end .hint').exists()).toBe(true)
+  })
+})
+
+describe('command palette keyboard and standalone parts', () => {
+  it('leaves the highlight where it is for Home and End, and jumps with PageDown', async () => {
+    const wrapper = mount(Harness, { attachTo: document.body })
+    await nextTick()
+    const input = wrapper.get('[role="combobox"]')
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    const highlighted = input.attributes('aria-activedescendant')
+    expect(highlighted).toContain('-item-0')
+    await input.trigger('keydown', { key: 'Home' })
+    await input.trigger('keydown', { key: 'End' })
+    expect(input.attributes('aria-activedescendant')).toBe(highlighted)
+    await input.trigger('keydown', { key: 'PageDown' })
+    expect(input.attributes('aria-activedescendant')).toContain('-item-2')
+    wrapper.unmount()
+    resetLiveRegionsForTest()
+  })
+
+  it('does not scroll when the pointer moves the highlight, and does scroll for the arrow keys', async () => {
+    const seen: Element[] = []
+    const original = HTMLElement.prototype.scrollIntoView
+    HTMLElement.prototype.scrollIntoView = function scrollIntoView(this: HTMLElement) {
+      seen.push(this)
+    }
+    try {
+      const wrapper = mount(Harness, { attachTo: document.body })
+      await nextTick()
+      const items = wrapper.findAll('[role="option"]')
+      await items[1]!.trigger('mouseenter')
+      await new Promise(resolve => requestAnimationFrame(resolve))
+      expect(seen).toEqual([])
+      expect(items[1]!.attributes('data-highlighted')).toBe('true')
+      await wrapper.get('[role="combobox"]').trigger('keydown', { key: 'ArrowDown' })
+      await new Promise(resolve => requestAnimationFrame(resolve))
+      expect(seen.length).toBeGreaterThan(0)
+      wrapper.unmount()
+      resetLiveRegionsForTest()
+    }
+    finally {
+      HTMLElement.prototype.scrollIntoView = original
+    }
+  })
+
+  it('uses the default cursor on a disabled item', () => {
+    const wrapper = mount(CommandPaletteItem, {
+      props: { isDisabled: true, value: 'a' },
+      slots: { default: () => 'Item A' },
+    })
+    expect(wrapper.attributes('data-disabled')).toBe('true')
+    expect(wrapper.classes()).toContain('astryx-command-palette-item')
+    const css = readFileSync(resolve('packages/core/styles/command-palette.css'), 'utf8')
+    expect(css).toMatch(/\[data-disabled='true'\]\s*\{[^}]*cursor:\s*default/)
+    expect(css).not.toContain('not-allowed')
+  })
+
+  it('names a standalone input from its label and keeps a standalone list id', () => {
+    const input = mount(CommandPaletteInput, { props: { hasAutoFocus: false } })
+    const field = input.get('input')
+    expect(field.attributes('role')).toBe('searchbox')
+    expect(field.attributes('aria-label')).toBe('Search commands')
+    expect(field.attributes('placeholder')).not.toBe('Search commands')
+
+    const list = mount(CommandPaletteList, {
+      attrs: { id: 'caller-list' },
+      slots: { default: () => 'row' },
+    })
+    expect(list.attributes('id')).toBe('caller-list')
+    expect(list.attributes('role')).toBe('listbox')
   })
 })
 

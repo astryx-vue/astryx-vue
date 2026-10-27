@@ -13,7 +13,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 Locks `body` scroll while `isLocked` is true, so the page behind a modal or a dialog stays where it is. `isLocked` is a ref: pass the same flag that opens the overlay, and the hook follows it.
 
-The lock is reference counted. The page is released only when the outermost lock goes away, so closing a sheet that sits inside a dialog does not unlock the page under it. The inline `overflow` that `body` had before is put back when the last lock is released, and a scope that goes away releases its own lock.
+The lock is reference counted. The page is released only when the outermost lock goes away, so closing a sheet that sits inside a dialog does not unlock the page under it. The inline `overflow` that `body` had before is put back when the last lock is released. Where the scrollbar takes space (Windows and Linux desktops, or macOS set to always show scroll bars), its gutter is held open while locked (`scrollbar-gutter: stable`, with padding as the fallback), so neither the page nor its fixed-position chrome jumps sideways, and a scope that goes away releases its own lock.
 
 ```ts
 import { useScrollLock } from '@astryx-vue/core'

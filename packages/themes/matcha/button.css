@@ -6,6 +6,7 @@
     --astryx-button-primary-foreground: var(--astryx-color-on-accent);
     --astryx-button-secondary-background: var(--astryx-color-neutral);
     --astryx-button-secondary-foreground: var(--astryx-color-text-primary);
+    --astryx-button-radius: var(--astryx-radius-full);
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
     --astryx-button-destructive-background: var(--astryx-color-error-muted);

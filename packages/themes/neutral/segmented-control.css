@@ -3,17 +3,40 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-segmented-control-background: light-dark(#f5f5f5, #171717);
-    --astryx-segmented-control-focus: light-dark(#262626, #ebebeb);
-    --astryx-segmented-control-item-foreground: light-dark(#525252, #a3a3a3);
-    --astryx-segmented-control-item-hover-background: light-dark(#0000000d, #ffffff0d);
-    --astryx-segmented-control-item-pressed-background: light-dark(#0000001a, #ffffff1a);
-    --astryx-segmented-control-item-selected-foreground: light-dark(#171717, #fafafa);
-    --astryx-segmented-control-item-selected-background: light-dark(#ffffff, #262626);
-    --astryx-segmented-control-item-selected-shadow:
-      0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)),
-      0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)),
-      inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%));
-    --astryx-segmented-control-item-disabled-foreground: light-dark(#919191, #525252);
+    --astryx-segmented-control-background: var(--astryx-color-neutral);
+    --astryx-segmented-control-focus: var(--astryx-color-accent);
+
+    /* A roomier inset around the track. The selected item stays flat against
+       the tinted track. */
+    --astryx-segmented-control-padding: var(--astryx-spacing-1);
+
+    --astryx-segmented-control-item-foreground: var(--astryx-color-text-secondary);
+    --astryx-segmented-control-item-hover-background: var(--astryx-color-overlay-hover);
+    --astryx-segmented-control-item-pressed-background: var(--astryx-color-overlay-pressed);
+    --astryx-segmented-control-item-selected-foreground: var(--astryx-color-text-primary);
+    --astryx-segmented-control-item-selected-background: var(--astryx-color-background-surface);
+    --astryx-segmented-control-item-selected-shadow: none;
+    --astryx-segmented-control-item-disabled-foreground: var(--astryx-color-text-disabled);
+  }
+}
+
+/*
+ * Keeping the outside height means the items lose the extra inset from both
+ * sides, so the padding change above does not make the control taller.
+ */
+@layer astryx.overrides {
+  :root .astryx-segmented-control-item[data-size='sm'],
+  [data-astryx-theme='neutral'] .astryx-segmented-control-item[data-size='sm'] {
+    height: calc(var(--astryx-size-element-sm) - 8px);
+  }
+
+  :root .astryx-segmented-control-item[data-size='md'],
+  [data-astryx-theme='neutral'] .astryx-segmented-control-item[data-size='md'] {
+    height: calc(var(--astryx-size-element-md) - 8px);
+  }
+
+  :root .astryx-segmented-control-item[data-size='lg'],
+  [data-astryx-theme='neutral'] .astryx-segmented-control-item[data-size='lg'] {
+    height: calc(var(--astryx-size-element-lg) - 8px);
   }
 }

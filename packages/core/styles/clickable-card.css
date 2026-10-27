@@ -18,8 +18,15 @@
     transition: background-color var(--astryx-duration-fast, 130ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-clickable-card:active::after {
-    background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+  @media not all and (pointer: coarse) {
+    .astryx-clickable-card:active::after {
+      background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+    }
+  }
+
+  .astryx-clickable-card[data-astryx-press]::after {
+    background-color: transparent;
+    background-image: var(--_press-paint-image);
   }
 
   @media (hover: hover) {
@@ -38,7 +45,7 @@
   }
 
   .astryx-clickable-card[data-disabled='true'] {
-    cursor: not-allowed;
+    cursor: default;
     opacity: 0.5;
   }
 

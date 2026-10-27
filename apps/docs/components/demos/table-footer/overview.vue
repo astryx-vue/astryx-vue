@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import {
   Table,
   TableBody,
@@ -9,8 +8,6 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@astryx-vue/core/Table'
-
-provideAstryxLocale('en')
 
 interface Line {
   item: string

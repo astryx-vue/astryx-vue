@@ -28,11 +28,11 @@ export interface UseTableTreeDataConfig<T extends Record<string, unknown>> {
 }
 
 export interface UseTableTreeStateConfig<T extends Record<string, unknown>> {
-  data: readonly T[]
+  data: MaybeRefOrGetter<readonly T[]>
   idKey: (keyof T & string) | ((item: T) => string | number)
   childrenKey?: string
-  defaultExpandedIds?: Iterable<string>
-  expandedIds?: ReadonlySet<string>
+  defaultExpandedIds?: MaybeRefOrGetter<Iterable<string>>
+  expandedIds?: MaybeRefOrGetter<ReadonlySet<string>>
   onExpandedIdsChange?: (ids: ReadonlySet<string>) => void
   isItemExpandable?: (item: T) => boolean
   sortSiblings?: (siblings: T[]) => T[]
@@ -46,6 +46,14 @@ interface FlatTree<T> {
   rows: T[]
   meta: Map<string, TableTreeRowMeta>
   expandableIds: string[]
+}
+
+/**
+ * config 本身和里面的字段都可能是 ref 或 getter，两层都要解开。
+ * 只解数据类字段：`idKey` 这类回调字段是函数，`toValue` 会把它当 getter 调用掉。
+ */
+function fieldValue<T>(value: MaybeRefOrGetter<T> | undefined): T | undefined {
+  return value === undefined ? undefined : toValue(value)
 }
 
 function itemId<T extends Record<string, unknown>>(item: T, idKey: UseTableTreeStateConfig<T>['idKey']): string {
@@ -77,7 +85,7 @@ export function flattenTree<T extends Record<string, unknown>>(config: UseTableT
       expandablePath.delete(id)
     }
   }
-  walkAll(config.data)
+  walkAll(fieldValue(config.data) ?? [])
 
   const path = new Set<string>()
   const walk = (items: readonly T[], level: number): void => {
@@ -97,7 +105,7 @@ export function flattenTree<T extends Record<string, unknown>>(config: UseTableT
       }
     }
   }
-  walk(config.data, 0)
+  walk(fieldValue(config.data) ?? [], 0)
   return { rows, meta, expandableIds }
 }
 
@@ -217,8 +225,8 @@ export function useTableTreeState<T extends Record<string, unknown>>(
   collapseAll: () => void
 } {
   const initial = toValue(config)
-  const internal = ref<ReadonlySet<string>>(new Set(initial.defaultExpandedIds ?? []))
-  const expandedIds = computed(() => toValue(config).expandedIds ?? internal.value)
+  const internal = ref<ReadonlySet<string>>(new Set(fieldValue(initial.defaultExpandedIds) ?? []))
+  const expandedIds = computed(() => fieldValue(toValue(config).expandedIds) ?? internal.value)
   const flat = computed(() => flattenTree(toValue(config), expandedIds.value))
   const isAllExpanded = computed(() => expansionState(flat.value.expandableIds, expandedIds.value))
 

@@ -16,7 +16,12 @@ footer: false
 <tr><td><code>increment</code></td><td><code>number</code></td><td><code>1</code></td><td>Minutes added or removed by the arrow keys.</td></tr>
 <tr><td><code>min</code></td><td><code>string</code></td><td>—</td><td>Earliest ISO time.</td></tr>
 <tr><td><code>max</code></td><td><code>string</code></td><td>—</td><td>Latest ISO time.</td></tr>
-<tr><td><code>presentation</code></td><td><code>'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'</code></td><td><code>'adaptive-native'</code></td><td>Typed field, or the platform time input on a coarse pointer. Seconds and a non-1 increment stay typed.</td></tr>
+<tr><td><code>presentation</code></td><td><code>'text-input' | 'native' | 'adaptive-native' | 'adaptive-bottom-sheet' | 'popover' | 'bottom-sheet'</code></td><td><code>'adaptive-native'</code></td><td>Typed field, platform time control, or hour and minute wheels. Omitted means typed text on a fine pointer and the platform control on a coarse pointer. adaptive-bottom-sheet uses wheels only on a coarse pointer; bottom-sheet always uses wheels. Seconds, a step other than 1, or a preset interval send the platform control back to typed text. The wheels are unaffected. An explicit value wins over nativePicker.</td></tr>
+<tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the bordered control box. A class written on the component lands here too, not on the inner input.</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the bordered control box.</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button.</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Field height.</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>

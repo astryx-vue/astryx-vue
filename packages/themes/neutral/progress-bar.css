@@ -6,11 +6,11 @@
     --astryx-progress-bar-track-height: 8px;
     --astryx-progress-bar-track-height-sm: 4px;
     --astryx-progress-bar-track-height-lg: 12px;
-    --astryx-progress-bar-track-background: light-dark(#e5e5e5, rgb(255 255 255 / 10%));
-    --astryx-progress-bar-fill-background: light-dark(#171717, #fff);
-    --astryx-progress-bar-success-fill: light-dark(#198100, #64af4c);
-    --astryx-progress-bar-warning-fill: light-dark(#ffce2f, #ffce2f);
-    --astryx-progress-bar-error-fill: light-dark(#e33f4a, #ff705d);
-    --astryx-progress-bar-info-fill: light-dark(#0074e2, #6d9cfe);
+    --astryx-progress-bar-track-background: var(--astryx-color-border-emphasized);
+    --astryx-progress-bar-fill-background: var(--astryx-color-accent);
+    --astryx-progress-bar-success-fill: var(--astryx-theme-neutral-color-status-fill-success);
+    --astryx-progress-bar-warning-fill: var(--astryx-theme-neutral-color-status-fill-warning);
+    --astryx-progress-bar-error-fill: var(--astryx-theme-neutral-color-status-fill-error);
+    --astryx-progress-bar-info-fill: var(--astryx-theme-neutral-color-status-fill-accent);
   }
 }

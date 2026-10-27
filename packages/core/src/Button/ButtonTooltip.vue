@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { nextTick, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
+import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
+import '../../styles/layer.css'
 
 defineOptions({
   name: 'ButtonTooltip',
@@ -17,6 +19,9 @@ const emit = defineEmits<{
   pointerEnter: []
   pointerLeave: []
 }>()
+
+// Dialog 里挂进对话框；按钮在段落或链接里时挂到安全的父级；其余挂到 body。
+const teleportTarget = useResolvedLayerTeleport(computed(() => props.anchor))
 
 const isMounted = shallowRef(false)
 const tooltip = useTemplateRef<HTMLElement>('tooltip')
@@ -102,13 +107,13 @@ onBeforeUnmount(stopListening)
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <div
       v-if="isMounted"
       v-show="open"
       :id="id"
       ref="tooltip"
-      class="astryx-button-tooltip"
+      class="astryx-button-tooltip astryx-layer"
       role="tooltip"
       :style="tooltipStyle"
       @pointerenter="emit('pointerEnter')"

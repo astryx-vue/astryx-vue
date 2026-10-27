@@ -31,11 +31,11 @@ type Segment = 'all' | 'web' | 'ios' | 'android'
 type FunnelWindow = '7d' | '30d' | '90d'
 
 const COLORS = {
-  blue: 'var(--color-data-categorical-blue, #0171E3)',
-  green: 'var(--color-data-categorical-green, #0B991F)',
-  orange: 'var(--color-data-categorical-orange, #EB6E00)',
-  purple: 'var(--color-data-categorical-purple, #6B1EFD)',
-  teal: 'var(--color-data-categorical-teal, #08A3A3)',
+  blue: 'var(--astryx-color-data-categorical-blue, #0171E3)',
+  green: 'var(--astryx-color-data-categorical-green, #0B991F)',
+  orange: 'var(--astryx-color-data-categorical-orange, #EB6E00)',
+  purple: 'var(--astryx-color-data-categorical-purple, #6B1EFD)',
+  teal: 'var(--astryx-color-data-categorical-teal, #08A3A3)',
 }
 
 const FUNNEL_COLORS = [COLORS.blue, COLORS.teal, COLORS.green, COLORS.orange, COLORS.purple]
@@ -418,9 +418,9 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
 .step {
   border-inline-start-width: 1px;
   border-inline-start-style: solid;
-  border-inline-start-color: var(--color-border, rgba(5, 54, 89, 0.1));
-  margin-inline-start: calc(var(--spacing-3, 12px) / -2);
-  padding-inline-start: calc(var(--spacing-3, 12px) / 2);
+  border-inline-start-color: var(--astryx-color-border, rgba(5, 54, 89, 0.1));
+  margin-inline-start: calc(var(--astryx-spacing-3, 12px) / -2);
+  padding-inline-start: calc(var(--astryx-spacing-3, 12px) / 2);
 }
 .legend-dot {
   width: 8px;

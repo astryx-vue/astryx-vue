@@ -25,6 +25,7 @@
     .astryx-form-layout[data-direction='horizontal-labels'] {
       display: flex;
       flex-direction: column;
+      align-items: stretch;
       gap: var(--astryx-spacing-4, 16px);
     }
   }

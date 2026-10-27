@@ -50,7 +50,7 @@ const ocean = defineTheme({
 
 字号用 `typography.scale` 的 `base` 和 `ratio`，按 `base × ratio` 的步长取整。圆角用 `radius` 的 `base` 和 `multiplier`，`none` 和 `full` 不动。时长用 `motion` 的 `fast`、`medium`、`slow` 和 `ratio`。最小档是基准乘以 ratio，最大档是基准除以 ratio，再取整到 5 毫秒。
 
-`components` 按组件名覆盖样式。`base` 作用在组件根上，`variant:secondary` 作用在这个变体上。`Theme` 把编译结果放进 `astryx.overrides` 层，选择器挂在 `data-astryx-theme` 上。语义图标表仍然是 `icons`，按名字换成 Iconify id。
+`components` 按换肤挂点覆盖样式，挂点写成 `组件名-部位`，比如 `button`、`card-header`。`base` 作用在挂点本身，`variant:secondary` 作用在 `[data-variant="secondary"]` 上。`Theme` 把编译结果放进 `astryx.overrides` 层，只作用在自己的 `data-astryx-theme` 子树里，遇到嵌套的主题就停下。`localTokens`、`adaptations`、已删除的旧挂点名和 `extends` 的细节，见 [扩展与自定义主题](/themes/extending)。语义图标表仍然是 `icons`，按名字换成 Iconify id。
 
 ```ts
 const brand = defineTheme({

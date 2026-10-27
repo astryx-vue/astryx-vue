@@ -1,6 +1,7 @@
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { CollapsibleGroupContextValue } from './context.js'
-import { computed, getCurrentInstance, inject, shallowRef, toValue } from 'vue'
+import { computed, getCurrentInstance, shallowRef, toValue } from 'vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { collapsibleGroupKey } from './context.js'
 
 /**
@@ -77,7 +78,7 @@ export function useCollapsible(options: UseCollapsibleOptions = {}): UseCollapsi
   // 只有在组件 setup 里才读注入值，避免在普通函数里调用 inject() 报警告。
   const group = options.group !== undefined
     ? options.group
-    : (getCurrentInstance() ? inject(collapsibleGroupKey, null) : null)
+    : (getCurrentInstance() ? readLayerScoped(collapsibleGroupKey) : null)
 
   const initialIsOpen = toValue(config.value?.defaultIsOpen) ?? true
   const localIsOpen = shallowRef(initialIsOpen)

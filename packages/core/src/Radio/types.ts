@@ -1,5 +1,7 @@
-import type { ComputedRef, InjectionKey, Ref, VNode } from 'vue'
+import type { ComputedRef, Ref, VNode } from 'vue'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldLabelProps, FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
+import { defineLayerScopedKey } from '../layer/scopedProvide.js'
 
 export type RadioValue = string | number
 export type RadioSize = 'sm' | 'md'
@@ -15,7 +17,7 @@ export interface RadioOption {
   isDisabled?: boolean
 }
 
-export interface RadioGroupProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'> {
+export interface RadioGroupProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'>, FieldPartStylingProps {
   modelValue: RadioValue
   id?: string
   name?: string
@@ -63,6 +65,10 @@ export interface RadioEmits {
 
 export interface RadioSlots {
   labelIcon?: () => VNode[]
+  /** 富文本标题。里面的链接可以单独点，不会选中这一项。 */
+  label?: () => VNode[]
+  /** 富文本说明。 */
+  description?: () => VNode[]
   end?: () => VNode[]
 }
 
@@ -80,4 +86,4 @@ export interface RadioContext {
   size?: ComputedRef<RadioSize | undefined>
 }
 
-export const radioContextKey: InjectionKey<RadioContext> = Symbol('astryx-radio-context')
+export const radioContextKey = defineLayerScopedKey<RadioContext | undefined>('astryx-radio-context', undefined)

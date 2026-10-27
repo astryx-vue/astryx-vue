@@ -84,7 +84,7 @@ function conversationMenuOpen(open: boolean) {
 
 <template>
   <AppShell :content-padding="0">
-    <template #side-nav>
+    <template #sideNav>
       <SideNav collapsible>
         <template #header>
           <SideNavHeading heading="AI Assistant" heading-href="#">

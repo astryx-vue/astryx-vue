@@ -1,5 +1,6 @@
 /* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './fonts.css';
+@import './data.css';
 @import './chocolate/alert-dialog.css';
 @import './chocolate/avatar.css';
 @import './chocolate/avatar-group.css';
@@ -30,12 +31,14 @@
 @import './chocolate/link.css';
 @import './chocolate/list.css';
 @import './chocolate/mobile-nav.css';
+@import './chocolate/mobile-type.css';
 @import './chocolate/more-menu.css';
 @import './chocolate/nav-menu.css';
 @import './chocolate/overlay.css';
 @import './chocolate/popover.css';
 @import './chocolate/progress-bar.css';
 @import './chocolate/radio.css';
+@import './chocolate/section.css';
 @import './chocolate/segmented-control.css';
 @import './chocolate/side-nav.css';
 @import './chocolate/skeleton.css';

@@ -13,12 +13,15 @@
  * - The BottomSheet exit curve cubic-bezier(0.3, 0, 0.6, 0.6). Upstream
  *   hardcodes it on the component; easeDefaults only defines --ease-standard.
  *
+ * Touch-device type sizes live in neutral/mobile-type.css, so this file stays
+ * one declaration per token.
+ *
  * --astryx-font-weight-regular is a Vue alias of --font-weight-normal.
  * Components already reference that name.
  *
  * Chart colors come from upstream theme/dataTokens.stylex.ts, not
- * tokens.stylex.ts. Every theme declares the same stops. The other themes
- * do not recolor them.
+ * tokens.stylex.ts. They live once in packages/themes/data.css, which every
+ * theme entry imports; spacing-tokens.test.ts checks them.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
@@ -221,14 +224,6 @@ const upstreamTokens = [
   '--text-display-3-leading',
 ]
 
-const dataColorNames = [
-  ...['blue', 'orange', 'purple', 'green', 'pink', 'cyan', 'red', 'teal', 'brown', 'indigo'].map(name => `--color-data-categorical-${name}`),
-  '--color-data-neutral',
-  ...['blue', 'shamrock', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow', 'gray'].flatMap(hue =>
-    [5, 4, 3, 2, 1].map(step => `--color-data-${hue}-${step}`),
-  ),
-]
-
 const motionKeyframes = [
   'astryx-fade-in',
   'astryx-fade-out',
@@ -270,17 +265,12 @@ describe('neutral base.css semantic tokens', () => {
     expect(duplicates).toEqual([])
   })
 
-  it('maps every upstream token, the chart data colors, and the regular weight alias', () => {
+  it('maps every upstream token and the regular weight alias', () => {
     const expected = new Set([
       ...upstreamTokens.map(vueName),
-      ...dataColorNames.map(vueName),
       '--astryx-font-weight-regular',
     ])
     expect(new Set(declared.keys())).toEqual(expected)
-    expect(dataColorNames).toHaveLength(56)
-    expect(declared.get('--astryx-color-data-categorical-blue')).toBe('light-dark(#0171E3, #0171E3)')
-    expect(declared.get('--astryx-color-data-neutral')).toBe('light-dark(#8494A3, #8C939B)')
-    expect(declared.get('--astryx-color-data-gray-5')).toBe('light-dark(#25363F, #333338)')
     expect(upstreamTokens.filter(token => token.startsWith('--color-'))).toHaveLength(79)
     expect(upstreamTokens.filter(token => token.startsWith('--duration-'))).toHaveLength(9)
     expect(upstreamTokens.filter(token => token.startsWith('--shadow-'))).toHaveLength(8)
@@ -291,19 +281,19 @@ describe('neutral base.css semantic tokens', () => {
       expect(sectionId(property.name), property.name).not.toBeNull()
   })
 
-  it('keeps values that existing components already read', () => {
-    expect(declared.get('--astryx-color-text-primary')).toBe('light-dark(#171717, #fafafa)')
-    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#525252, #a3a3a3)')
+  it('keeps the reviewed palette values that components read', () => {
+    expect(declared.get('--astryx-color-text-primary')).toBe('light-dark(#000000, #ffffff)')
+    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#474747, #9e9e9e)')
     expect(declared.get('--astryx-color-border-emphasized')).toBe('light-dark(#d4d4d4, #525252)')
-    expect(declared.get('--astryx-radius-none')).toBe('0')
+    expect(declared.get('--astryx-radius-none')).toBe('0px')
     expect(declared.get('--astryx-radius-inner')).toBe('0.375rem')
     expect(declared.get('--astryx-radius-element')).toBe('0.625rem')
     expect(declared.get('--astryx-radius-container')).toBe('0.75rem')
     expect(declared.get('--astryx-radius-full')).toBe('9999px')
-    expect(declared.get('--astryx-spacing-0')).toBe('0')
-    expect(declared.get('--astryx-spacing-2')).toBe('8px')
+    expect(declared.get('--astryx-spacing-0')).toBe('0rem')
+    expect(declared.get('--astryx-spacing-2')).toBe('0.5rem')
     expect(declared.get('--astryx-font-family-body')).toBe('Figtree, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif')
-    expect(declared.get('--astryx-font-family-code')).toBe('\'JetBrains Mono\', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace')
+    expect(declared.get('--astryx-font-family-code')).toBe('ui-monospace, \'SF Mono\', Monaco, Consolas, \'Liberation Mono\', \'Courier New\', monospace')
     expect(declared.get('--astryx-font-weight-medium')).toBe('500')
     expect(declared.get('--astryx-font-weight-bold')).toBe('700')
     expect(declared.get('--astryx-font-weight-semibold')).toBe('600')
@@ -414,7 +404,7 @@ describe('first-party themes', () => {
       expect(new Set(names), name).toEqual(neutralNames)
       expect(css).toContain(`[data-astryx-theme='${name}']`)
       expect(css).not.toContain(':root')
-      expect(css).toContain('\'JetBrains Mono\', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace')
+      expect(css).toContain('\'JetBrains Mono\', \'SF Mono\', Monaco, Consolas, monospace')
       for (const token of ['--astryx-duration-fast', '--astryx-ease-standard', '--astryx-font-weight-regular'])
         expect(new Set(names).has(token), `${name} ${token}`).toBe(true)
     }

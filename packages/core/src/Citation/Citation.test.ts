@@ -32,7 +32,7 @@ describe('citation', () => {
 
     expect(wrapper.find('a').exists()).toBe(false)
     const chip = wrapper.get('span.astryx-citation')
-    expect(chip.attributes('role')).toBeUndefined()
+    expect(chip.attributes('role')).toBe('group')
     expect(chip.attributes('data-variant')).toBe('number')
     expect(chip.text()).toBe('3')
     expect(chip.attributes('aria-label')).toBe('Citation 3: Notes')
@@ -59,6 +59,19 @@ describe('citation', () => {
     }))
 
     expect(wrapper.get('.astryx-citation').attributes('aria-label')).toBe('引用 4：4')
+    expect(wrapper.get('.astryx-citation').attributes('role')).toBe('group')
     expect(wrapper.text()).toContain('4')
+  })
+
+  it('does not turn a script url into a link', () => {
+    const wrapper = mount(Citation, {
+      props: {
+        number: 1,
+        source: { title: 'Bad', url: 'javascript:alert(1)' },
+      },
+    })
+
+    expect(wrapper.find('a').exists()).toBe(false)
+    expect(wrapper.get('span.astryx-citation').attributes('role')).toBe('group')
   })
 })

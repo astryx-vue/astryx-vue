@@ -8,6 +8,8 @@ import {
   DropdownMenu,
   Heading,
   HStack,
+  Icon,
+  IconButton,
   Layout,
   LayoutContent,
   LayoutPanel,
@@ -34,6 +36,9 @@ const OUTLINE_OPTIONS = OUTLINE_ITEMS.map(item => ({
   label: item.label,
 }))
 
+/** 两行样式导入。拆成数组再 join，避免这行被目录生成器当成真的 import。 */
+const STYLE_IMPORT = ['import \'@astryxdesign/core/reset.css\';', 'import \'@astryxdesign/core/astryx.css\';'].join('\n')
+
 const activeId = ref<string | undefined>(OUTLINE_ITEMS[0]?.id)
 const isMobile = useMediaQuery('(max-width: 768px)')
 
@@ -54,7 +59,6 @@ function copyPrompt() {
 </script>
 
 <template>
-  <!-- Icon component is not exported from @astryx-vue/core; carbon glyphs used inline -->
   <Layout height="auto" :content-width="960">
     <template v-if="!isMobile" #end>
       <LayoutPanel
@@ -92,7 +96,7 @@ function copyPrompt() {
             <HStack :gap="2" :align="'center'">
               <StackItem size="fill">
                 <HStack :gap="2" :align="'center'">
-                  <span class="i-carbon-magic-wand" aria-hidden="true" />
+                  <Icon name="heroicons:sparkles" size="sm" color="secondary" />
                   <Text type="body" weight="semibold">
                     AI Assistance
                   </Text>
@@ -105,16 +109,10 @@ function copyPrompt() {
                 @click="copyPrompt"
               >
                 <template #icon>
-                  <span class="i-carbon-copy" aria-hidden="true" />
+                  <Icon name="heroicons:clipboard-document" />
                 </template>
               </Button>
               <DropdownMenu
-                :button="{
-                  label: 'More options',
-                  variant: 'ghost',
-                  size: 'sm',
-                  isIconOnly: true,
-                }"
                 :items="[
                   { label: 'Open in v0', onClick: () => {} },
                   { label: 'Open in Claude', onClick: () => {} },
@@ -122,8 +120,15 @@ function copyPrompt() {
                   { label: 'Open in Cursor', onClick: () => {} },
                 ]"
               >
-                <template #button-icon>
-                  <span class="i-carbon-chevron-down" aria-hidden="true" />
+                <template #trigger="triggerProps">
+                  <IconButton
+                    v-bind="triggerProps"
+                    label="More options"
+                    variant="ghost"
+                    size="sm"
+                  >
+                    <Icon icon="chevronDown" />
+                  </IconButton>
                 </template>
               </DropdownMenu>
             </HStack>
@@ -173,7 +178,7 @@ function copyPrompt() {
               your app entry point.
             </Text>
             <CodeBlock
-              code="import '@astryxdesign/core/reset.css';\nimport '@astryxdesign/core/astryx.css';"
+              :code="STYLE_IMPORT"
               language="tsx"
               width="100%"
             />

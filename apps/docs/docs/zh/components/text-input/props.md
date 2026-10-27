@@ -38,8 +38,12 @@ footer: false
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>组件挂载后自动聚焦原生 input。</td></tr>
       <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>原生 input 的 name 属性，优先于通过原生属性传入的 name。字段禁用时会被移除。</td></tr>
       <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原样透传给原生 input 的 autocomplete 属性。</td></tr>
-      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>清除按钮的无障碍名称，用于本地化。</td></tr>
+      <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>清除按钮的读屏名称，默认带字段名。悬停或键盘聚焦时，提示只说「清除」。</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>加载指示器的无障碍名称，用于本地化。</td></tr>
+      <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳（Field 那一层，包着标签、输入框和状态消息）的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
+      <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。落点规则同 containerClass。</td></tr>
+      <tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到输入框本体（画边框和背景、装着图标和清除按钮的盒子）的 class。不会落到原生 input 上。</td></tr>
+      <tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到输入框本体的行内样式。</td></tr>
     </tbody>
   </table>
 </div>
@@ -128,7 +132,7 @@ type TextInputChangeEvent = CustomEvent<{
 ## 原生属性
 
 - `maxlength`、`minlength`、`pattern`、`required`、`form`、`aria-*`、`data-*` 和原生事件监听器传入原生 `input`。
-- `class` 和 `style` 作用于输入框外层。`width` 作用于整个 `Field`。
+- `class` 和 `style` 作用于输入框本体，和 `controlClass`、`controlStyle` 一起生效；给外壳加样式用 `containerClass`、`containerStyle`。`width` 作用于整个 `Field`。
 - `value`、`type`、`disabled`、`readonly`、`autofocus` 与核心 ARIA 状态由组件管理，请使用对应的组件属性。
 - `aria-describedby` 和 `aria-labelledby` 会与组件内部的关联 ID 合并。
 

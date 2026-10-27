@@ -1,5 +1,6 @@
 import type { Component, Ref, VNode } from 'vue'
 import type { ButtonSize } from '../Button/types.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 import type { ExtendedIconName } from '../Icon/types.js'
 import type { PopoverAlignment, PopoverPlacement } from '../Popover/types.js'
@@ -11,7 +12,7 @@ export interface ComplexSelectorState {
   contentId: string
 }
 
-export type ComplexSelectorVariant = 'input' | 'ghost'
+export type ComplexSelectorVariant = 'input' | 'secondary' | 'ghost'
 
 export interface ComplexSelectorHandle {
   /** Open the popup. */
@@ -53,7 +54,7 @@ export interface ComplexSelectorSlotProps<Value> {
   state: ComplexSelectorState
 }
 
-export interface ComplexSelectorProps<Value = unknown> {
+export interface ComplexSelectorProps<Value = unknown> extends FieldPartStylingProps {
   /** Field label. It also names the popup. */
   label: string
   /** Current value. Bind with `v-model`. */
@@ -94,7 +95,7 @@ export interface ComplexSelectorProps<Value = unknown> {
    */
   startIcon?: ExtendedIconName | Component
   /**
-   * `input` is the bordered field. `ghost` matches a toolbar button.
+   * `input` is the bordered field. `secondary` matches a secondary button. `ghost` matches a toolbar button.
    * @default 'input'
    */
   variant?: ComplexSelectorVariant

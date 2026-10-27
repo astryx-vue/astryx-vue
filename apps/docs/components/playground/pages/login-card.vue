@@ -16,7 +16,7 @@ import {
 
 const pageStyle: CSSProperties = {
   minHeight: '100%',
-  backgroundColor: 'var(--color-background-body)',
+  backgroundColor: 'var(--astryx-color-background-body)',
 }
 
 const contentStyle: CSSProperties = {

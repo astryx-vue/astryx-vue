@@ -251,7 +251,9 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                       <Heading :level="2" class="center-text">{{ p.name }}</Heading>
                       <Text type="supporting" color="secondary" class="card-description center-text">{{ p.description }}</Text>
                       <HStack :gap="2" :align="'center'" :justify="'center'" wrap="wrap" class="cart-row">
-                        <NumberInput v-model="quantity" label="Quantity" is-label-hidden :min="1" :max="99" size="sm" :width="72" />
+                        <span class="quantity-field">
+                          <NumberInput v-model="quantity" label="Quantity" is-label-hidden :min="1" :max="99" size="sm" />
+                        </span>
                         <Button label="Add to cart" variant="secondary" size="sm" href="#" class="cart-button" />
                       </HStack>
                     </VStack>
@@ -421,8 +423,8 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 </template>
 
 <style scoped>
-.page-root { min-height: 100%; background: var(--color-background-body); }
-.showcase-surface { padding: var(--spacing-6); background: var(--color-background-surface); }
+.page-root { min-height: 100%; background: var(--astryx-color-background-body); }
+.showcase-surface { padding: var(--astryx-spacing-6); background: var(--astryx-color-background-surface); }
 .content { max-width: 960px; margin-inline: auto; min-width: 0; }
 .content-fluid { max-width: 880px; }
 .hero-text { text-align: center; max-width: 560px; }
@@ -430,27 +432,28 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 .card-stack { height: 100%; }
 .card-description { flex: 1; }
 .cart-row { width: 100%; min-width: 0; }
+.quantity-field { display: block; flex: none; width: 72px; }
 .cart-button { flex: 1 1 auto; min-width: 0; }
-.card-surface { background: var(--color-background-body); color: var(--color-text-primary); min-width: 0; border-color: transparent; }
+.card-surface { background: var(--astryx-color-background-body); color: var(--astryx-color-text-primary); min-width: 0; border-color: transparent; }
 .checkout-stack { min-width: 0; width: 100%; }
 .payment-card-content { min-width: 0; width: 100%; text-align: center; word-break: break-word; }
-.inventory-card { background: var(--color-background-surface); overflow: hidden; }
-.inventory-header { padding-block: var(--spacing-6); padding-inline: var(--spacing-6); }
-.inventory-banner-wrap { padding-inline: var(--spacing-6); padding-bottom: var(--spacing-4); }
-.inventory-table-wrap { padding-inline: var(--spacing-6); padding-block-end: var(--spacing-2); }
-.chat-card { background: var(--color-background-surface); min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
-.chat-header { padding: var(--spacing-4); }
+.inventory-card { background: var(--astryx-color-background-surface); overflow: hidden; }
+.inventory-header { padding-block: var(--astryx-spacing-6); padding-inline: var(--astryx-spacing-6); }
+.inventory-banner-wrap { padding-inline: var(--astryx-spacing-6); padding-bottom: var(--astryx-spacing-4); }
+.inventory-table-wrap { padding-inline: var(--astryx-spacing-6); padding-block-end: var(--astryx-spacing-2); }
+.chat-card { background: var(--astryx-color-background-surface); min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+.chat-header { padding: var(--astryx-spacing-4); }
 .chat-body { flex: 1; min-height: 0; overflow: hidden; }
-.chat-suggestions { padding-inline: var(--spacing-4); padding-bottom: var(--spacing-2); }
-.chat-composer { padding-inline: var(--spacing-4); padding-bottom: var(--spacing-4); }
-.activity-card { background: var(--color-background-surface); min-width: 0; height: 100%; }
+.chat-suggestions { padding-inline: var(--astryx-spacing-4); padding-bottom: var(--astryx-spacing-2); }
+.chat-composer { padding-inline: var(--astryx-spacing-4); padding-bottom: var(--astryx-spacing-4); }
+.activity-card { background: var(--astryx-color-background-surface); min-width: 0; height: 100%; }
 .activity-card-stack { height: 100%; }
-.activity-list-fade { flex: 1; min-height: 0; overflow: hidden; mask-image: linear-gradient(to bottom, black calc(100% - 48px), transparent); margin-inline: calc(var(--spacing-2) * -1); }
+.activity-list-fade { flex: 1; min-height: 0; overflow: hidden; mask-image: linear-gradient(to bottom, black calc(100% - 48px), transparent); margin-inline: calc(var(--astryx-spacing-2) * -1); }
 .checkout-column { flex: 1 1 300px; min-width: 0; display: grid; }
 .chat-column { flex: 2 1 520px; min-width: 0; display: grid; }
 .product-image { width: 100%; height: 100%; object-fit: cover; }
-.card-body { padding: var(--spacing-4); flex: 1; display: flex; flex-direction: column; }
-.kpi-value { font-size: 24px; font-weight: 700; line-height: 1.1; color: var(--color-text-primary); font-family: var(--font-family-heading); }
-:deep(.thumbnail) { width: 40px; height: 40px; border-radius: var(--radius-element); object-fit: cover; display: block; flex-shrink: 0; }
-:deep(.thumbnail-fallback) { width: 40px; height: 40px; border-radius: var(--radius-element); background: var(--color-background-muted); color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center; font-size: var(--font-size-sm); font-weight: 600; flex-shrink: 0; }
+.card-body { padding: var(--astryx-spacing-4); flex: 1; display: flex; flex-direction: column; }
+.kpi-value { font-size: 24px; font-weight: 700; line-height: 1.1; color: var(--astryx-color-text-primary); font-family: var(--astryx-font-family-heading); }
+:deep(.thumbnail) { width: 40px; height: 40px; border-radius: var(--astryx-radius-element); object-fit: cover; display: block; flex-shrink: 0; }
+:deep(.thumbnail-fallback) { width: 40px; height: 40px; border-radius: var(--astryx-radius-element); background: var(--astryx-color-background-muted); color: var(--astryx-color-text-secondary); display: flex; align-items: center; justify-content: center; font-size: var(--astryx-font-size-sm); font-weight: 600; flex-shrink: 0; }
 </style>

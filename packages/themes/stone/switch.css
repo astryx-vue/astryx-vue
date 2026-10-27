@@ -22,7 +22,7 @@
     --astryx-switch-thumb-travel-lg: 22px;
     --astryx-switch-track-radius: 999px;
     --astryx-switch-thumb-radius: 999px;
-    --astryx-switch-track-off: var(--astryx-color-background-muted);
+    --astryx-switch-track-off: var(--astryx-color-skeleton);
     --astryx-switch-track-on: var(--astryx-color-accent);
     --astryx-switch-thumb: var(--astryx-color-background-surface);
   }

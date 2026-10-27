@@ -174,8 +174,24 @@ describe('layerProvider', () => {
     })
 
     const attributes = probeAttributes(wrapper)
-    expect(attributes.gutter.blockStart).toBe(24)
     expect(attributes.position).toBe('none')
+  })
+
+  it('lets a nested provider narrow the anchored layer inset, but keeps the root toast', () => {
+    const wrapper = mount(LayerProvider, {
+      props: { inset: { blockStart: 8 }, toast: { position: 'top-end' } },
+      slots: {
+        default: () => h('div', [
+          h(LayerProvider, { inset: { blockStart: 100 } }, { default: () => h(Probe) }),
+        ]),
+      },
+    })
+
+    const attributes = probeAttributes(wrapper)
+    // 子树里的锚定浮层按内层声明的常驻条算，blockStart 是 16 + 100。
+    expect(attributes.gutter.blockStart).toBe(116)
+    // toast 视口只有一份，仍然看根那层。
+    expect(attributes.position).toBe('top-end')
   })
 
   it('renders nothing around the subtree', () => {

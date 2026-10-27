@@ -14,6 +14,8 @@ import { toastAction, toastDedup, toastDismiss, toastStacking, toastTypes } from
 
 Place `ToastViewport` once near the root of your app, then call `useToast` from any component.
 
+On a touch screen, a swipe toward the toast's edge dismisses it: down when it sits at the bottom, up when it sits at the top. A horizontal drag is left to the page. A swipe that starts on a button or link does not dismiss. A mouse drag does not dismiss either.
+
 ```vue
 <script setup lang="ts">
 import { ToastViewport, useToast } from '@astryx-vue/core/Toast'

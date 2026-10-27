@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { ToastContentScope, ToastDismissReason, ToastOptions, ToastSlots } from './types.js'
+import type { ToastGestureDirection } from './useToastGesture.js'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useAstryxMessages } from '../locale/context.js'
+import MediaTheme from '../Theme/MediaTheme.vue'
+import { useTheme } from '../Theme/useTheme.js'
 import { resolveAutoHide, resolveAutoHideDuration } from './options.js'
+import { useToastGesture } from './useToastGesture.js'
 
 import '../../styles/toast.css'
 
@@ -11,9 +16,14 @@ const props = withDefaults(defineProps<Omit<ToastOptions, 'onDismiss' | 'onHide'
    * mounted so it can play its exit transition.
    */
   isExiting?: boolean
+  /**
+   * 朝哪边滑出。1 向下，-1 向上。视口按提示贴在屏幕上沿还是下沿传入。
+   */
+  swipeDirection?: ToastGestureDirection
 }>(), {
   type: 'info',
   isExiting: false,
+  swipeDirection: 1,
   // `undefined` keeps an absent boolean prop absent instead of casting it to
   // false, so the resolved default can still follow the toast type.
   isAutoHide: undefined,
@@ -39,6 +49,10 @@ const startTime = ref<number | null>(null)
 const isAlert = computed(() => props.type === 'error')
 const role = computed(() => isAlert.value ? 'alert' : 'status')
 const ariaLive = computed(() => isAlert.value ? 'assertive' : 'polite')
+const messages = useAstryxMessages()
+const theme = useTheme()
+const mediaFallback = computed(() => isAlert.value || theme.mode.value === 'light' ? 'dark' : 'light')
+const dismissLabel = computed(() => messages.value.toast.dismiss)
 
 const classes = computed(() => [
   'astryx-toast',
@@ -64,6 +78,16 @@ function dismiss(reason: ToastDismissReason): void {
   emit('dismiss', reason)
   emit('close')
 }
+
+const gesture = useToastGesture({
+  direction: () => props.swipeDirection,
+  enabled: () => !props.isExiting,
+  canPauseTimer: () => autoHide.value,
+  isTimerPaused: () => isPaused.value,
+  pauseTimer,
+  resumeTimer,
+  dismiss: () => dismiss('manual'),
+})
 
 function startTimer() {
   if (!autoHide.value || isPaused.value)
@@ -143,6 +167,7 @@ onUnmounted(() => {
 <template>
   <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- toast pauses auto-dismiss on hover/focus -->
   <div
+    :ref="gesture.setRoot"
     :class="classes"
     :role="role"
     :aria-live="ariaLive"
@@ -151,25 +176,32 @@ onUnmounted(() => {
     @mouseleave="resumeTimer"
     @focusin="pauseTimer"
     @focusout="resumeTimer"
+    @pointerdown="gesture.onPointerDown"
+    @pointermove="gesture.onPointerMove"
+    @pointerup="gesture.onPointerUp"
+    @pointercancel="gesture.onPointerCancel"
+    @lostpointercapture="gesture.onPointerCancel"
   >
-    <slot v-if="$slots.content" name="content" v-bind="contentScope" />
-    <template v-else>
-      <span class="astryx-toast__body">
-        <slot>{{ body }}</slot>
-      </span>
-      <span v-if="endContent || $slots.end" class="astryx-toast__end">
-        <slot name="end">
-          <component :is="endContent" v-if="endContent" />
-        </slot>
-      </span>
-      <button
-        type="button"
-        class="astryx-toast__close"
-        aria-label="Close"
-        @click="handleClose"
-      >
-        ×
-      </button>
-    </template>
+    <MediaTheme mode="auto" :fallback="mediaFallback" class="astryx-toast__surface">
+      <slot v-if="$slots.content" name="content" v-bind="contentScope" />
+      <template v-else>
+        <span class="astryx-toast__body">
+          <slot>{{ body }}</slot>
+        </span>
+        <span v-if="endContent || $slots.end" class="astryx-toast__end">
+          <slot name="end">
+            <component :is="endContent" v-if="endContent" />
+          </slot>
+        </span>
+        <button
+          type="button"
+          class="astryx-toast__close"
+          :aria-label="dismissLabel"
+          @click="handleClose"
+        >
+          ×
+        </button>
+      </template>
+    </MediaTheme>
   </div>
 </template>

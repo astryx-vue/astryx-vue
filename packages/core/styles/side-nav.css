@@ -322,6 +322,25 @@
 
   .astryx-side-nav-item { width: 100%; }
 
+  .astryx-side-nav-item__main {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    min-width: 0;
+  }
+
+  .astryx-side-nav-item__main > .astryx-nav-item,
+  .astryx-side-nav-item__main > .astryx-side-nav-item {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .astryx-side-nav-item__actions {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+  }
+
   .astryx-side-nav-item__split {
     min-width: 0;
   }

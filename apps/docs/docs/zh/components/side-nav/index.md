@@ -13,7 +13,7 @@ import SideNavCollapseFigure from '../../../../components/demos/side-nav/collaps
 
 ## 使用方法
 
-`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，`SideNavCollapseButton` 在侧栏顶部靠右。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。
+`SideNav` 是页面一侧的导航地标。里面按 `SideNavSection`、`SideNavHeading`、`SideNavItem` 组织。`collapsible` 打开后，栏可以收成只剩图标的窄条，`SideNavCollapseButton` 在侧栏顶部靠右。收起后，没有图标的项不会渲染；有下级的项改成从侧面弹出的菜单。`SideNavItem` 的 `actions` 插槽和主控件并排，不放进链接里面，侧栏收起后不再渲染。
 
 用 `v-model:is-collapsed` 受控。`collapsible` 也可以传对象，关掉内置按钮，或给一个快捷键，例如 `mod+\\`。`resizable` 打开后，结束边上可以拖宽度，默认从 260px 起，范围是 180px 到 480px。收起后把手会藏起来。拖到 160px 以下、并且侧栏可以收起时，栏会收成图标条。
 

@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
 import { Link } from '@astryx-vue/core/Link'
-import { provideAstryxLocale } from '@astryx-vue/core/locale'
 import { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'
-
-provideAstryxLocale('en')
 </script>
 
 <template>

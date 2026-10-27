@@ -2,6 +2,7 @@
 
 @layer astryx.tokens {
   [data-astryx-theme='gothic'] {
+    --astryx-badge-radius: var(--astryx-radius-element);
     --astryx-badge-neutral-background: var(--astryx-color-background-gray);
     --astryx-badge-neutral-foreground: var(--astryx-color-text-gray);
     --astryx-badge-info-background: var(--astryx-color-background-blue);

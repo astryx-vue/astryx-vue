@@ -27,6 +27,12 @@ footer: false
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a spinner, for an upload in progress.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Help text under the label.</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Width of the whole field. Numbers are pixels.</td></tr>
+<tr><td><code>changeAction</code></td><td><code>(files) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Called after a selection and after a clear. A rejection emits <code>actionError</code>. A spinner shows while it is pending.</td></tr>
+<tr><td><code>clearLabel</code></td><td><code>string</code></td><td>—</td><td>Accessible name of the clear button. It includes the field label by default. The tooltip only says “Clear”.</td></tr>
+<tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
+<tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container.</td></tr>
+<tr><td><code>controlClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the file field box. A class written on the component lands here too, with no warning.</td></tr>
+<tr><td><code>controlStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the file field box. A style written on the component lands here too.</td></tr>
 </tbody></table>
 </div>
 
@@ -35,6 +41,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="FileInput events" tabindex="0">
 <table><thead><tr><th>Name</th><th>Payload</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>update:modelValue</code></td><td><code>File | File[] | null</code></td><td>Emitted when the selection changes.</td></tr>
-<tr><td><code>change</code></td><td><code>File | File[] | null</code></td><td>Emitted with the same value.</td></tr>
+<tr><td><code>change</code></td><td><code>File | File[] | null</code></td><td>Emitted with the same value, before <code>changeAction</code>.</td></tr>
+<tr><td><code>actionError</code></td><td><code>unknown, File | File[] | null</code></td><td>Emitted when <code>changeAction</code> rejects.</td></tr>
 </tbody></table>
 </div>

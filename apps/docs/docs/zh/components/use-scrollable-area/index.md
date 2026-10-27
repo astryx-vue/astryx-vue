@@ -13,7 +13,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 给调用方自己搭的结构加上一套标准的、跟着书写方向走的滚动行为。一个轴要真的能用，得同时满足两件事：这一轴算出来的 `overflow` 是能滚的，并且内容和盒子差得超过共用的 1px 容差。视口和内容盒两块都在观察范围里。
 
-把 `viewport` 当函数 ref 绑到滚动的那块上，把 `content` 绑到装内容的盒子上。`viewportAttrs` 里是 `role`、`aria-label`、`tabindex`，还有按当前测量结果写出的 `data-scroll-*`；`viewportStyle` 里是 `overflow` 和 `overscroll-behavior`。`label` 是必填的。选项是按响应式读取的，所以组件的 `props` 也可以直接传进来，后面变了也会跟着更新。
+把 `viewport` 当函数 ref 绑到滚动的那块上，把 `content` 绑到装内容的盒子上。`viewportAttrs` 里是 `role`、`aria-label`、`tabindex`，还有按当前测量结果写出的 `data-scroll-*`；`viewportStyle` 里是 `overflow` 和 `overscroll-behavior`。名字和角色用 `label`、`role` 给，或者用 `keyboardAccess` 说清键盘从哪里进来。量出来的状态会登记成「滚动归属」，嵌套的滚动区域和焦点委托靠它分清哪一层在滚。视口藏起来、尺寸为 0 时量不出来，保留上一次的结果。选项是按响应式读取的，所以组件的 `props` 也可以直接传进来，后面变了也会跟着更新。
 
 ```ts
 import { useScrollableArea } from '@astryx-vue/core'

@@ -74,7 +74,7 @@ A composable takes `useClipboard` or `use-clipboard`. `component useClipboard` s
 
 `template --list` prints all 53 playground pages. `--type page` is the only kind today; `--type block` answers with a note instead of an error.
 
-Every template carries a hand-written one-sentence description and a keyword list in English and Chinese, in `src/generate/template-meta.ts`. The component list is extracted from the page's `@astryx-vue/core` imports, so it cannot drift from the source.
+Every template carries a hand-written one-sentence description and a keyword list in English and Chinese, in `src/generate/template-meta/` (one file per template category). The component list is extracted from the page's `@astryx-vue/core` imports, so it cannot drift from the source.
 
 Some pages import a package a project cannot install: five use `@astryx-vue/playground-charts`, a path alias that only exists inside the docs playground. Those are marked `isReady: false` with the reason. A page is ready when every non-relative import it really performs is `vue` or `@astryx-vue/core`; text inside a code sample the page displays, such as `@astryxdesign/core`, is page content and does not count. `--list` and `template <slug>` still show them; copying is refused with `ERR_TEMPLATE_NOT_READY`.
 
@@ -164,7 +164,7 @@ The CLI does not keep a second copy of the component docs. `packages/cli/scripts
 - `apps/docs/components/playground/pages/*.vue` for the template sources, and `templateManifest.ts` for their titles and categories
 - `packages/core/package.json` exports when a page does not show an import
 
-The template descriptions and keywords are hand-written in `packages/cli/src/generate/template-meta.ts`. They are source data, not a generated file.
+The template descriptions and keywords are hand-written in `packages/cli/src/generate/template-meta/`, one file per template category, and merged by `template-meta.ts`. They are source data, not a generated file.
 
 Example titles and descriptions are kept once per language, but the example code is stored once for both: both pages point at the same `.vue` file. The generator stops with an error naming the component and the example number if the two pages ever show different code, so one language cannot silently borrow the other's snippet. `examplesFor()` in `packages/cli/src/catalog.ts` is the only place that picks a language back out.
 

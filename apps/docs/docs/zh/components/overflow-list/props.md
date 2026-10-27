@@ -31,6 +31,7 @@ footer: false
     <thead><tr><th>名称</th><th>说明</th></tr></thead>
     <tbody>
       <tr><td><code>select</code></td><td>选中一项时触发，参数是该项和点击事件。</td></tr>
+      <tr><td><code>overflowChange</code></td><td>被收起的那一组变了才触发，参数是 <code>{ item, index }[]</code>。<code>index</code> 是该项在 <code>items</code> 里的下标。一开始就放得下时不触发。重新放得下时再触发一次空数组。</td></tr>
     </tbody>
   </table>
 </div>

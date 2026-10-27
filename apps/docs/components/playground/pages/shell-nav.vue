@@ -169,7 +169,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
 
 <template>
   <AppShell :content-padding="0">
-    <template #top-nav>
+    <template #topNav>
       <TopNav label="Astryx Studio menu bar">
         <template #start>
           <DropdownMenu
@@ -219,7 +219,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
         </template>
       </TopNav>
     </template>
-    <template #side-nav>
+    <template #sideNav>
       <SideNav>
         <TreeList :items="FILE_TREE" density="compact" />
       </SideNav>

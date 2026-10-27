@@ -31,6 +31,22 @@ const Harness = defineComponent({
 })
 
 describe('complex selector', () => {
+  it('popup 里的按钮按 Escape 后焦点回到触发器', async () => {
+    const wrapper = mount(Harness, { attachTo: document.body })
+    const trigger = wrapper.get('button.astryx-complex-selector')
+    await trigger.trigger('click')
+    await nextTick()
+    const inner = document.querySelector<HTMLButtonElement>('[data-testid="pear"]')
+    expect(inner).not.toBeNull()
+    inner?.focus()
+    inner?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await nextTick()
+    await nextTick()
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(trigger.element)
+    wrapper.unmount()
+  })
+
   it('opens with arrow down and commits from the slot', async () => {
     const wrapper = mount(Harness, { attachTo: document.body })
     const trigger = wrapper.get('button.astryx-complex-selector')

@@ -217,7 +217,7 @@
     justify-content: center;
     height: var(--astryx-spacing-6, 24px);
     background-image: linear-gradient(to bottom, var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff)) 60%, transparent);
-    touch-action: none;
+    touch-action: pinch-zoom;
     cursor: grab;
   }
 
@@ -239,7 +239,7 @@
     overflow: auto;
     overscroll-behavior: contain;
     background: var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff));
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
     outline-offset: -2px;
   }
 
@@ -253,16 +253,84 @@
   }
 
   /*
-   * The content box is a container: it carries the padding and preserves the
-   * body's block formatting and its percentage-height basis. The inset is the
-   * `padding` prop, then the theme's bottom-sheet padding, then `--spacing-4`.
+   * The content box is a container. It keeps the body's block formatting and
+   * its percentage-height basis, and it publishes the inset it applies.
+   * Omitted `padding` reads the theme's bottom-sheet padding, then spacing 4.
+   * An explicit step replaces that chain on every edge. Bleed children read
+   * the same variables they sit inside.
    */
   .astryx-bottom-sheet__content {
     box-sizing: border-box;
     display: flow-root;
     height: 100%;
     min-height: min-content;
-    padding: var(--_sheet-padding, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
+    --_sheet-pad-inline-start: var(--astryx-bottom-sheet-padding-inline-start, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem))));
+    --_sheet-pad-inline-end: var(--astryx-bottom-sheet-padding-inline-end, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem))));
+    --_sheet-pad-block-start: var(--astryx-bottom-sheet-padding-block-start, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
+    --_sheet-pad-block-end: var(--astryx-bottom-sheet-padding-block-end, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
+    --container-padding-inline-start: var(--_sheet-pad-inline-start);
+    --container-padding-inline-end: var(--_sheet-pad-inline-end);
+    --container-padding-block-start: var(--_sheet-pad-block-start);
+    --container-padding-block-end: var(--_sheet-pad-block-end);
+    padding-inline: var(--container-padding-inline-start) var(--container-padding-inline-end);
+    padding-block: var(--container-padding-block-start) var(--container-padding-block-end);
+    --layout-padding-own-outer-x: initial;
+    --layout-padding-own-outer-y: initial;
+    --layout-padding-outer-x: var(--_sheet-pad-inline-start);
+    --layout-padding-outer-y: var(--_sheet-pad-block-start);
+    --layout-padding-inner-x: var(--_sheet-pad-inline-start);
+    --layout-padding-inner-y: var(--_sheet-pad-block-start);
+  }
+
+  .astryx-bottom-sheet__content[data-padding] {
+    --_sheet-pad-inline-start: var(--_sheet-padding-step);
+    --_sheet-pad-inline-end: var(--_sheet-padding-step);
+    --_sheet-pad-block-start: var(--_sheet-padding-step);
+    --_sheet-pad-block-end: var(--_sheet-padding-step);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='0'] {
+    --_sheet-padding-step: var(--astryx-spacing-0, 0px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='0.5'] {
+    --_sheet-padding-step: var(--astryx-spacing-0-5, 2px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='1'] {
+    --_sheet-padding-step: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='1.5'] {
+    --_sheet-padding-step: var(--astryx-spacing-1-5, 6px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='2'] {
+    --_sheet-padding-step: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='3'] {
+    --_sheet-padding-step: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='4'] {
+    --_sheet-padding-step: var(--astryx-spacing-4, 16px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='5'] {
+    --_sheet-padding-step: var(--astryx-spacing-5, 20px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='6'] {
+    --_sheet-padding-step: var(--astryx-spacing-6, 24px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='8'] {
+    --_sheet-padding-step: var(--astryx-spacing-8, 32px);
+  }
+
+  .astryx-bottom-sheet__content[data-padding='10'] {
+    --_sheet-padding-step: var(--astryx-spacing-10, 40px);
   }
 
   /*

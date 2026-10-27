@@ -1,5 +1,6 @@
 /* 这个文件由 `pnpm sync` 生成，不要手改。 */
 @import './fonts.css';
+@import './data.css';
 @import './matcha/alert-dialog.css';
 @import './matcha/avatar.css';
 @import './matcha/avatar-group.css';
@@ -36,6 +37,7 @@
 @import './matcha/popover.css';
 @import './matcha/progress-bar.css';
 @import './matcha/radio.css';
+@import './matcha/section.css';
 @import './matcha/segmented-control.css';
 @import './matcha/side-nav.css';
 @import './matcha/skeleton.css';

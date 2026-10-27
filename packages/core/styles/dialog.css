@@ -85,6 +85,13 @@
     padding-inline-end: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-right, 0px));
   }
 
+  /*
+   * 浮层挂载点。它自己不占地方，里面的浮层都是 fixed 定位，不参与对话框的排版。
+   */
+  .astryx-dialog__layer-host {
+    display: contents;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .astryx-dialog[open] {
       animation: none;

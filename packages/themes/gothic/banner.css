@@ -1,6 +1,8 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
 @layer astryx.tokens {
   [data-astryx-theme='gothic'] {
+    --astryx-banner-radius: var(--astryx-radius-element);
     --astryx-banner-info-background: var(--astryx-color-background-blue);
     --astryx-banner-info-foreground: var(--astryx-color-text-blue);
     --astryx-banner-error-background: var(--astryx-color-error-muted);
@@ -11,5 +13,35 @@
     --astryx-banner-success-foreground: var(--astryx-color-text-green);
     --astryx-banner-content-background: var(--astryx-color-background-surface);
     --astryx-banner-border: var(--astryx-color-border);
+  }
+}
+
+/*
+ * The status tints are too light for the default text colors, so each status
+ * re-points the shared text and hue tokens on the banner itself.
+ */
+@layer astryx.overrides {
+  [data-astryx-theme='gothic'] .astryx-banner[data-status='info'] {
+    --astryx-color-text-primary: var(--astryx-color-text-blue);
+    --astryx-color-text-secondary: var(--astryx-color-text-blue);
+    --astryx-color-accent: var(--astryx-color-text-blue);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-banner[data-status='success'] {
+    --astryx-color-text-primary: var(--astryx-color-text-green);
+    --astryx-color-text-secondary: var(--astryx-color-text-green);
+    --astryx-color-success: var(--astryx-color-text-green);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-banner[data-status='warning'] {
+    --astryx-color-text-primary: var(--astryx-color-text-yellow);
+    --astryx-color-text-secondary: var(--astryx-color-text-yellow);
+    --astryx-color-warning: var(--astryx-color-text-yellow);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-banner[data-status='error'] {
+    --astryx-color-text-primary: var(--astryx-color-text-red);
+    --astryx-color-text-secondary: var(--astryx-color-text-red);
+    --astryx-color-error: var(--astryx-color-text-red);
   }
 }

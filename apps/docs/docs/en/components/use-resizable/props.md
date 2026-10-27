@@ -59,7 +59,7 @@ footer: false
         <td><code>snaps</code></td>
         <td><code>number[]</code></td>
         <td><code>[]</code></td>
-        <td>Pixel values to snap to during drag. The size holds when the pointer comes within 8px of a listed value.</td>
+        <td>The size stops only on these pixel points. An equal distance stays on the earlier point.</td>
       </tr>
       <tr>
         <td><code>autoSaveId</code></td>

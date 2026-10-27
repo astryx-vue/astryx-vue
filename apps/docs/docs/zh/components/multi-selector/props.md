@@ -14,6 +14,7 @@ footer: false
       <tr><td><code>modelValue</code></td><td><code>(string | number)[]</code></td><td><code>[]</code></td><td>已选值。</td></tr>
       <tr><td><code>options</code></td><td><code>MultiSelectorOption[]</code></td><td>必需</td><td>字符串、选项对象、分隔线或分组。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段标签。</td></tr>
+      <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Select…</code> / <code>请选择</code></td><td>没有选中项时的占位符。</td></tr>
       <tr><td><code>searchable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在列表里显示搜索框。</td></tr>
       <tr><td><code>selectAll</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示全选行。跳过禁用项。</td></tr>
@@ -22,7 +23,8 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否可清除。</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有选中项时显示清除按钮。和旧名 <code>clearable</code> 等价，两者任一为真即生效。</td></tr>
       <tr><td><code>checkboxPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'start'</code></td><td>勾选标记的位置。</td></tr>
-      <tr><td><code>variant</code></td><td><code>'input' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> 带边框，<code>ghost</code> 适合工具栏。</td></tr>
+      <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> 带边框。<code>secondary</code> 对齐次要按钮。<code>ghost</code> 适合工具栏。后两种上的 attached 状态会收成独立说明。</td></tr>
+      <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>分别加到字段外壳和触发器本体。根上的 class 落在本体。选项上的 <code>action</code> 和单选一样：点它不改选择，面板变成两列网格。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。和 <code>disabled</code> 一起用时，鼠标悬停或键盘聚焦会弹出提示，触发器靠 <code>aria-disabled</code> 保持可聚焦，但仍然打不开列表。不用再在外面套 Tooltip：禁用的控件收不到悬停事件。旧名 <code>disabledReason</code> 等价。</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>禁用原因。有值时控件仍可聚焦。和 <code>disabledMessage</code> 等价。</td></tr>

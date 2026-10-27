@@ -1,0 +1,105 @@
+{
+  "source": "facebook/astryx v0.7.1 packages/core/src/theme/expandColorScale.ts",
+  "inputs": {
+    "pair": {
+      "accent": [
+        "#0064E0",
+        "#B7410E"
+      ]
+    },
+    "warm": {
+      "accent": "#0064E0",
+      "neutralStyle": "warm",
+      "contrast": "high"
+    },
+    "none": {
+      "neutralStyle": "neutral"
+    }
+  },
+  "outputs": {
+    "pair": {
+      "--color-accent": "light-dark(#0058D2, #FFB495)",
+      "--color-accent-muted": "light-dark(color-mix(in srgb, var(--color-accent) 20%, transparent), color-mix(in srgb, var(--color-accent) 25%, transparent))",
+      "--color-on-accent": "light-dark(#FFFFFF, #6F0000)",
+      "--color-neutral": "light-dark(#1B1B221A, #ECE0DB33)",
+      "--color-background-surface": "light-dark(#FCFCFF, #221A17)",
+      "--color-background-body": "light-dark(#F0F0FA, #190F09)",
+      "--color-overlay": "light-dark(#1B1B2266, #221A1799)",
+      "--color-overlay-hover": "light-dark(#1B1B220D, #FFFFFF0D)",
+      "--color-overlay-pressed": "light-dark(#1B1B221A, #FFFFFF1A)",
+      "--color-background-muted": "light-dark(#1B1B220D, #221A1780)",
+      "--color-text-primary": "light-dark(#1B1B22, #ECE0DB)",
+      "--color-text-secondary": "light-dark(#454652, #BAA7A1)",
+      "--color-text-disabled": "light-dark(#8F909E, #6B5B55)",
+      "--color-text-accent": "var(--color-accent)",
+      "--color-icon-accent": "var(--color-accent)",
+      "--color-icon-primary": "light-dark(#1B1B22, #ECE0DB)",
+      "--color-icon-secondary": "light-dark(#454652, #BAA7A1)",
+      "--color-icon-disabled": "light-dark(#8F909E, #6B5B55)",
+      "--color-background-card": "light-dark(#FCFCFF, #221A17)",
+      "--color-background-popover": "light-dark(#FCFCFF, #372E2B)",
+      "--color-background-inverted": "light-dark(#1B1B22, #FFFBF9)",
+      "--color-border": "light-dark(#1B1B221A, #FAEEEA1A)",
+      "--color-border-emphasized": "light-dark(#8F909E, #75655E)",
+      "--color-skeleton": "light-dark(#A9AAB9, #52443E)",
+      "--color-track": "light-dark(#A9AAB9, #52443E)",
+      "--color-shadow": "light-dark(#0000001A, #0000004D)",
+      "--color-tint-hover": "light-dark(black, white)"
+    },
+    "warm": {
+      "--color-accent": "light-dark(#0058D2, #BBC2FF)",
+      "--color-accent-muted": "light-dark(color-mix(in srgb, var(--color-accent) 20%, transparent), color-mix(in srgb, var(--color-accent) 25%, transparent))",
+      "--color-on-accent": "light-dark(#FFFFFF, #002D80)",
+      "--color-neutral": "light-dark(#1A1B241A, #E1E1EF33)",
+      "--color-background-surface": "light-dark(#FCFCFF, #1A1B24)",
+      "--color-background-body": "light-dark(#EFF0FD, #10101A)",
+      "--color-overlay": "light-dark(#1A1B2466, #1A1B2499)",
+      "--color-overlay-hover": "light-dark(#1A1B240D, #FFFFFF0D)",
+      "--color-overlay-pressed": "light-dark(#1A1B241A, #FFFFFF1A)",
+      "--color-background-muted": "light-dark(#1A1B240D, #1A1B2480)",
+      "--color-text-primary": "light-dark(#000000, #FCFCFF)",
+      "--color-text-secondary": "light-dark(#2E2F3E, #C4C5D8)",
+      "--color-text-disabled": "light-dark(#8E8FA1, #5C5D6E)",
+      "--color-text-accent": "var(--color-accent)",
+      "--color-icon-accent": "var(--color-accent)",
+      "--color-icon-primary": "light-dark(#000000, #FCFCFF)",
+      "--color-icon-secondary": "light-dark(#2E2F3E, #C4C5D8)",
+      "--color-icon-disabled": "light-dark(#8E8FA1, #5C5D6E)",
+      "--color-background-card": "light-dark(#FCFCFF, #1A1B24)",
+      "--color-background-popover": "light-dark(#FCFCFF, #2F303A)",
+      "--color-background-inverted": "light-dark(#1A1B24, #FCFCFF)",
+      "--color-border": "light-dark(#1A1B2433, #EFF0FD33)",
+      "--color-border-emphasized": "light-dark(#757687, #757687)",
+      "--color-skeleton": "light-dark(#A9AABC, #444655)",
+      "--color-track": "light-dark(#A9AABC, #444655)",
+      "--color-shadow": "light-dark(#0000001A, #0000004D)",
+      "--color-tint-hover": "light-dark(black, white)"
+    },
+    "none": {
+      "--color-neutral": "light-dark(#1B1B1F1A, #E2E2E833)",
+      "--color-background-surface": "light-dark(#FCFCFF, #1B1B1F)",
+      "--color-background-body": "light-dark(#F0F0F6, #101015)",
+      "--color-overlay": "light-dark(#1B1B1F66, #1B1B1F99)",
+      "--color-overlay-hover": "light-dark(#1B1B1F0D, #FFFFFF0D)",
+      "--color-overlay-pressed": "light-dark(#1B1B1F1A, #FFFFFF1A)",
+      "--color-background-muted": "light-dark(#1B1B1F0D, #1B1B1F80)",
+      "--color-text-primary": "light-dark(#1B1B1F, #E2E2E8)",
+      "--color-text-secondary": "light-dark(#46464F, #AAAAB5)",
+      "--color-text-disabled": "light-dark(#8F909A, #5D5E67)",
+      "--color-text-accent": "var(--color-accent)",
+      "--color-icon-accent": "var(--color-accent)",
+      "--color-icon-primary": "light-dark(#1B1B1F, #E2E2E8)",
+      "--color-icon-secondary": "light-dark(#46464F, #AAAAB5)",
+      "--color-icon-disabled": "light-dark(#8F909A, #5D5E67)",
+      "--color-background-card": "light-dark(#FCFCFF, #1B1B1F)",
+      "--color-background-popover": "light-dark(#FCFCFF, #303034)",
+      "--color-background-inverted": "light-dark(#1B1B1F, #FCFCFF)",
+      "--color-border": "light-dark(#1B1B1F1A, #F0F0F61A)",
+      "--color-border-emphasized": "light-dark(#92929D, #676771)",
+      "--color-skeleton": "light-dark(#AAAAB5, #46464F)",
+      "--color-track": "light-dark(#AAAAB5, #46464F)",
+      "--color-shadow": "light-dark(#0000001A, #0000004D)",
+      "--color-tint-hover": "light-dark(black, white)"
+    }
+  }
+}

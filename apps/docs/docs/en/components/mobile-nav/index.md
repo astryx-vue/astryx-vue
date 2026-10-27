@@ -12,7 +12,7 @@ import { mobileNavDrawer, mobileNavEnd, mobileNavUntitled } from '../../../../co
 
 ## Usage
 
-`MobileNav` is a dialog drawer that slides in from one side of the screen, not a bottom sheet. Bind `MobileNavToggle` to the same `v-model:is-open`. While open, focus stays in the drawer. Escape or a press on the scrim closes it and returns focus to where it was.
+`MobileNav` is a dialog drawer that slides in from one side of the screen, not a bottom sheet. Bind `MobileNavToggle` to the same `v-model:is-open`. While open, focus stays in the drawer. Escape or a press on the scrim closes it and returns focus to where it was. If another layer opens inside the drawer, Escape closes that top layer first. Pinch-zoom stays with the browser, and the body can still scroll vertically.
 
 `side` is `start`, `end`, or `auto`. `auto` picks the side from where focus was when the drawer opened. The top nav creates this pair for you when its media query matches.
 
