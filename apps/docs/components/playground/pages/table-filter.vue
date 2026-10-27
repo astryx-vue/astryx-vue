@@ -552,7 +552,6 @@ const { data: groupedData, plugin: groupedPlugin } = useTableGroupedRows<Service
   collapsedGroups: collapsedGroups.value,
   onToggleGroup: toggleGroup,
   getRowKey: job => job.id,
-  renderGroupHeader: (groupKey, count) => h(Text, { weight: 'semibold' }, () => `${groupKey} (${count})`),
 }))
 
 const sortPlugin = useTableSortable<ServiceJob>(sortConfig)
