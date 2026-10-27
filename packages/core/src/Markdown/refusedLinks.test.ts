@@ -51,7 +51,7 @@ describe('unsafe destinations are read as text, not as links', () => {
   it('refuses on the inline entry as well', () => {
     const nodes = parseInlineAst('a [x](javascript:y) b')
     expect(nodes.map(node => node.type)).toEqual(['text'])
-    expect(nodes.map(node => node.value).join('')).toBe('a [x](javascript:y) b')
+    expect(nodes.map(node => (node.type === 'text' ? node.value : '')).join('')).toBe('a [x](javascript:y) b')
   })
 
   it('still links a safe destination, whatever its scheme', () => {

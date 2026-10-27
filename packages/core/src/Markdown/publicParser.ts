@@ -4,7 +4,7 @@ import type { BlockNode, InlineNode } from './legacyNodes.js'
 import type { MarkdownPluginEntry } from './plugin-protocol/protocol.js'
 import { decodeMarkdownCharacterReferences } from './characterReferences.js'
 import { projectBlocks, projectInline } from './legacyNodes.js'
-import { parseMarkdown as parseMarkdownTree } from './parse.js'
+import { parseInlineContent, parseMarkdown as parseMarkdownTree } from './parse.js'
 import { applyProtocolTransforms } from './plugin-protocol/run.js'
 import { applyCitations, applyMarkdownSyntax } from './plugin-protocol/syntax.js'
 
@@ -64,13 +64,18 @@ export function parseMarkdownAst(source: string, options?: ParseOptions): Markdo
   return parseTree(source, options) as MarkdownAstRoot
 }
 
-/** Phrasing children of a one-paragraph document. Anything else is empty. */
+/** Phrasing children of `source`, read as inline content only. */
 export function parseInlineAst(source: string, options?: ParseOptions): MarkdownAstPhrasingContent[] {
-  const root = parseTree(source, options)
-  const only = root.children?.length === 1 ? root.children[0] : undefined
-  if (only?.type === 'paragraph')
-    return (only.children ?? []) as MarkdownAstPhrasingContent[]
-  return []
+  const nodes = parseInlineContent(source, { autolink: options?.autolink })
+  let root: MdNode = { type: 'root', children: [{ type: 'paragraph', children: nodes }] }
+  const plugins = options?.plugins
+  if (plugins != null && plugins.length > 0) {
+    const isFinal = options?.isFinal !== false
+    root = applyMarkdownSyntax(root, source, plugins, isFinal)
+    root = applyProtocolTransforms(root, plugins, source, isFinal)
+  }
+  const paragraph = root.children?.[0]
+  return (paragraph?.children ?? []) as MarkdownAstPhrasingContent[]
 }
 
 /** Legacy block list. `sourceRanges` adds offsets on the top-level blocks. */

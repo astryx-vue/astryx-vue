@@ -1,14 +1,17 @@
-import type { MdNode } from './ast.js'
+import type { MdNode, MdPoint } from './ast.js'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { gfmFromMarkdown } from 'mdast-util-gfm'
 import { gfm } from 'micromark-extension-gfm'
 import { findSettledEnd } from './blocks.js'
+import { createIndentationMask, freeCharacters, markDeepIndentedBlocks, restoreIndentation } from './indentation.js'
 import { refuseUnsafeDestinations } from './refusedLinks.js'
+import { markEmptyTaskItems } from './taskList.js'
 import { trimStreamingTail } from './trim.js'
 
 const markdownExtensions = [
   gfm(),
-  { disable: { null: ['htmlFlow', 'htmlText'] } },
+  // No indented code blocks: a line indented four columns is paragraph text.
+  { disable: { null: ['htmlFlow', 'htmlText', 'codeIndented'] } },
 ]
 
 const mdastExtensions = [gfmFromMarkdown()]
@@ -84,17 +87,91 @@ function mergeAdjacentText(children: MdNode[]): MdNode[] {
   return merged
 }
 
-export function parseMarkdown(source: string, options?: ParseMarkdownOptions): MdNode {
-  const root = fromMarkdown(source, {
+function parseTree(text: string): MdNode {
+  return fromMarkdown(text, {
     extensions: markdownExtensions,
     mdastExtensions,
   }) as unknown as MdNode
+}
 
-  const safe = refuseUnsafeDestinations(root, source)
-  if (options?.autolink === 'gfm')
-    return safe
+/**
+ * A block marker four columns deep is paragraph text upstream, so those blocks
+ * are read again with their indentation swapped out. Swapping uncovers the
+ * next such block, hence the rounds; each round only ever adds lines.
+ */
+function parseBlocks(source: string): { root: MdNode, mask: ReturnType<typeof createIndentationMask> } {
+  const mask = createIndentationMask(source)
+  let root = parseTree(source)
+  if (mask != null) {
+    for (let round = 0; round < 5; round++) {
+      if (!markDeepIndentedBlocks(root.children ?? [], mask))
+        break
+      root = parseTree(mask.text)
+    }
+  }
+  return { root, mask }
+}
 
-  return stripAutolinkLiterals(safe, source)
+export function parseMarkdown(source: string, options?: ParseMarkdownOptions): MdNode {
+  const { root, mask } = parseBlocks(source)
+  const safe = refuseUnsafeDestinations(markEmptyTaskItems(root), source)
+  const tree = options?.autolink === 'gfm' ? safe : stripAutolinkLiterals(safe, source)
+  return mask == null ? tree : restoreIndentation(tree, mask)
+}
+
+/** Puts a node's offsets back in the text the markers were added to. */
+function unprefix(node: MdNode, marker: string): MdNode {
+  const children = node.children?.map(child => unprefix(child, marker))
+  const value = node.value?.split(marker).join('')
+  const position = node.position?.start == null
+    ? node.position
+    : {
+        start: shiftPoint(node.position.start),
+        end: node.position.end == null ? node.position.end : shiftPoint(node.position.end),
+      }
+  return {
+    ...node,
+    ...(value == null || value === node.value ? {} : { value }),
+    ...(children == null ? {} : { children }),
+    ...(position === node.position ? {} : { position }),
+  }
+}
+
+function shiftPoint(point: MdPoint): MdPoint {
+  const line = point.line ?? 1
+  const column = point.column ?? 1
+  return {
+    line,
+    column: column - 1,
+    offset: point.offset == null ? point.offset : point.offset - line,
+  }
+}
+
+/**
+ * Inline content of `source`, with no block syntax read at all: `# h` is text
+ * and a fence is a code span. Every line is prefixed with a private-use
+ * character first, so no line can start a block, and the prefix is stripped
+ * from the text afterwards.
+ */
+export function parseInlineContent(source: string, options?: ParseMarkdownOptions): MdNode[] {
+  if (source === '')
+    return []
+  const marker = freeCharacters(source, 1)[0]
+  if (marker == null)
+    return [{ type: 'text', value: source }]
+
+  const prefixed = `${marker}${source.split('\n').join(`\n${marker}`)}`
+  const root = parseTree(prefixed)
+  const paragraph = root.children?.length === 1 ? root.children[0] : undefined
+  if (paragraph?.type !== 'paragraph')
+    return [{ type: 'text', value: source }]
+
+  const safe = refuseUnsafeDestinations(paragraph, prefixed)
+  const inline = options?.autolink === 'gfm' ? safe : stripAutolinkLiterals(safe, prefixed)
+  const nodes = (inline.children ?? [])
+    .map(child => unprefix(child, marker))
+    .filter(child => child.type !== 'text' || (child.value ?? '') !== '')
+  return nodes.length === 0 ? [{ type: 'text', value: source }] : nodes
 }
 
 export interface IncrementalMarkdownState {

@@ -34,10 +34,8 @@ describe('an indented code fence reads as core reads it', () => {
     expect(coreCode(markdown)).toEqual(expected)
   })
 
-  // TODO(core): 我们 core 的 Markdown 解析器和上游 v0.7.1 不一致（见 F1a 回报第 6 节）。
-  // 上游 core 把四空格缩进的围栏连同缩进读成一行文字（行内代码），
-  // 我们 core 读成 code 块，富文本这一边因此也建出了代码块。等 core 对齐后恢复断言：
-  //   expect(richCode('    ```\n    x\n    ```')).toEqual([]);
-  //   expect(coreCode('    ```\n    x\n    ```')).toEqual([]);
-  it.todo('reads a fence indented four spaces as no fence, as core does')
+  it('reads a fence indented four spaces as no fence, as core does', () => {
+    expect(richCode('    ```\n    x\n    ```')).toEqual([])
+    expect(coreCode('    ```\n    x\n    ```')).toEqual([])
+  })
 })
