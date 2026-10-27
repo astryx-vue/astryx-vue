@@ -1,0 +1,68 @@
+{
+  "name": "@astryx-vue/lab",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Astryx lab components for Vue 3 — experimental components that may change. Published to npm only under the canary dist-tag.",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "homepage": "https://astryx-vue.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astryx-vue/astryx-vue.git",
+    "directory": "packages/lab"
+  },
+  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
+  "keywords": [
+    "vue",
+    "vue3",
+    "design-system",
+    "astryx",
+    "lab",
+    "experimental"
+  ],
+  "astryxVue": {
+    "canaryOnly": true
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./lab.css": "./lab.css",
+    "./styles/*.css": "./styles/*.css",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist",
+    "lab.css",
+    "styles"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@astryx-vue/core": "workspace:^",
+    "vue": "catalog:peer"
+  },
+  "devDependencies": {
+    "@astryx-vue/core": "workspace:^",
+    "@types/node": "catalog:language",
+    "@vue/compiler-sfc": "catalog:vue",
+    "@vue/test-utils": "catalog:testing",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:language",
+    "unplugin-vue": "catalog:build",
+    "vue": "catalog:vue",
+    "vue-tsc": "catalog:vue"
+  }
+}

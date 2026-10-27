@@ -1,0 +1,101 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 纵向堆叠：标题、数值行、说明、趋势插槽。 */
+  .astryx-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--astryx-spacing-1, 4px);
+    min-width: 0;
+  }
+
+  .astryx-stat__label {
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+  }
+
+  /* 数值和涨跌幅按基线对齐，字号不同也不会错位。 */
+  .astryx-stat__value-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+  }
+
+  /* 等宽数字：数字变化时宽度不跳。 */
+  .astryx-stat__value {
+    font-family: var(--astryx-font-family-heading, inherit);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    line-height: var(--astryx-text-heading-2-leading, 1.4);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-variant-numeric: tabular-nums;
+  }
+
+  .astryx-stat[data-size='sm'] .astryx-stat__value {
+    font-size: var(--astryx-font-size-xl, 1.25rem);
+  }
+
+  .astryx-stat[data-size='md'] .astryx-stat__value {
+    font-size: var(--astryx-font-size-2xl, 1.5rem);
+  }
+
+  .astryx-stat[data-size='lg'] .astryx-stat__value {
+    font-size: var(--astryx-font-size-3xl, 1.8125rem);
+  }
+
+  .astryx-stat__delta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .astryx-stat__delta-glyph {
+    flex-shrink: 0;
+  }
+
+  .astryx-stat__delta[data-sentiment='positive'] {
+    color: var(--astryx-color-success, light-dark(#00490b, #a4d6a3));
+  }
+
+  .astryx-stat__delta[data-sentiment='negative'] {
+    color: var(--astryx-color-error, light-dark(#76000c, #ffc4be));
+  }
+
+  .astryx-stat__delta[data-sentiment='neutral'] {
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+  }
+
+  .astryx-stat__description {
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+  }
+
+  /* 趋势插槽铺满父容器宽度，图能跟着 Stat 的宽度走。 */
+  .astryx-stat__media {
+    margin-block-start: var(--astryx-spacing-1, 4px);
+    align-self: stretch;
+    min-width: 0;
+  }
+
+  /* 只给读屏软件念的方向说明。 */
+  .astryx-stat__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
