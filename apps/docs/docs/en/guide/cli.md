@@ -81,7 +81,7 @@ The template `--json` types are `template.list`, `template.show`, `template.skel
 
 ## Agent file
 
-`init` prints the setup guide — which packages to install (a canary package takes `@canary`), the theme import, the locale snippet, and what to verify — and writes the managed block below. It creates `AGENTS.md` when no agent file exists. Without `--agent`, an agent file the project already has is reused, in the order `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.hermes.md`, `HERMES.md`. `--agent claude` writes `CLAUDE.md`, `hermes` writes `.hermes.md` (or `HERMES.md` when the project already has one), `cursor` and `codex` write `AGENTS.md`, and `all` writes every known file that exists. `--agent-docs-path <file>` writes exactly that file.
+`init` prints the setup guide — which packages to install (a canary package takes `@canary`, once it is on npm), the theme import, the locale snippet, and what to verify — and writes the managed block below. It creates `AGENTS.md` when no agent file exists. Without `--agent`, an agent file the project already has is reused, in the order `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.hermes.md`, `HERMES.md`. `--agent claude` writes `CLAUDE.md`, `hermes` writes `.hermes.md` (or `HERMES.md` when the project already has one), `cursor` and `codex` write `AGENTS.md`, and `all` writes every known file that exists. `--agent-docs-path <file>` writes exactly that file.
 
 The command owns only the block between these markers:
 
@@ -93,7 +93,7 @@ The command owns only the block between these markers:
 
 Every run replaces that block with freshly generated text. Text outside the markers stays. If the file exists and the markers are missing, the block is appended.
 
-The block names every package the CLI documents, marks the canary ones, then describes a three-step workflow: run `build` to pick a page, run `template` to copy it, then run `component`, `composable`, or `docs` before writing code. It also says how to invoke the binary.
+The block names every package the CLI documents, marks the canary ones, and says plainly when a package is not on npm yet — those get no install command, so nobody is sent to a missing package. Then it describes a three-step workflow: run `build` to pick a page, run `template` to copy it, then run `component`, `composable`, or `docs` before writing code. It also says how to invoke the binary.
 
 The install command follows the project's package manager: the `packageManager` field first, then a lockfile. When neither says which manager it is, all four forms are printed.
 

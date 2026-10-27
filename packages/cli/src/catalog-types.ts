@@ -143,6 +143,11 @@ export interface CatalogPackage {
   description: string
   /** True when the package is published only under the `canary` dist-tag. */
   canary: boolean
+  /**
+   * True when npm can serve this package today. A `private` package has no
+   * published version, so nothing may print an install command for it.
+   */
+  published: boolean
 }
 
 /** One theme, as its own docs page describes it. */
