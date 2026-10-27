@@ -23,7 +23,6 @@
     color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     font-family: inherit;
     font-size: var(--astryx-text-body-size, 1rem);
-    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   .astryx-table :is(th, td) {
