@@ -17,7 +17,7 @@ beforeEach(() => {
     if (selector === ':focus-visible')
       return this === document.activeElement
     return originalMatches.call(this, selector)
-  }
+  } as typeof HTMLElement.prototype.matches
 })
 
 afterEach(() => {

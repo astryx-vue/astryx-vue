@@ -191,7 +191,7 @@ describe('circularProgress', () => {
   describe('indeterminate mode', () => {
     it('renders indeterminate when isIndeterminate is true', () => {
       const bar = renderProgress({ isIndeterminate: true }).get('[role="progressbar"]')
-      expect(bar.exists()).toBe(true)
+      expect(bar.element.tagName).toBe('svg')
       expect(bar.attributes('aria-valuenow')).toBeUndefined()
       expect(bar.attributes('aria-valuemin')).toBeUndefined()
       expect(bar.attributes('aria-valuemax')).toBeUndefined()
