@@ -215,6 +215,15 @@
     min-width: 0;
   }
 
+  /* 列对齐也要管到这一行：没有排序按钮的列，靠 justify-content 把标题和筛选按钮推到位。 */
+  .astryx-table thead th[data-align='center'] .astryx-table__header-line {
+    justify-content: center;
+  }
+
+  .astryx-table thead th[data-align='end'] .astryx-table__header-line {
+    justify-content: flex-end;
+  }
+
   .astryx-table :where(thead th) {
     /* 拖动把手贴在表头的行末，需要一个定位上下文。固定列的 inline 样式会盖过它。 */
     position: relative;
@@ -283,6 +292,13 @@
 
   .astryx-table__filter {
     min-width: 0;
+  }
+
+  /* 漏斗按钮和标题同一行：不参与压缩，也不挤掉标题。 */
+  .astryx-table__filter[data-variant='popover'] {
+    display: flex;
+    flex: none;
+    align-items: center;
   }
 
   /* 行内紧凑档：控件离表头更近，占的高度更小。 */

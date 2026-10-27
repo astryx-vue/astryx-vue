@@ -142,6 +142,21 @@ function filterFor(column: TableColumn) {
   return null
 }
 
+const filterContributions = computed(() => new Map(
+  resolvedColumns.value.map(column => [column.key, filterFor(column)]),
+))
+
+/**
+ * 取某一列落在指定位置的筛选控件。
+ * `popover` 是一个漏斗按钮，跟标题、排序图标同一行；`inline` 系列是输入框，垫在标题下面。
+ */
+function filterAt(column: TableColumn, place: 'line' | 'below') {
+  const filter = filterContributions.value.get(column.key) ?? null
+  if (filter == null)
+    return null
+  return (filter.variant === 'popover' ? 'line' : 'below') === place ? filter : null
+}
+
 function rowKey(row: Record<string, unknown>, index: number) {
   if (typeof props.idKey === 'function')
     return props.idKey(row)
@@ -317,8 +332,15 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   {{ column.header ?? column.key }}
                 </VisuallyHidden>
                 <span v-else>{{ column.header ?? column.key }}</span>
+                <TableFilterControl
+                  v-if="filterAt(column, 'line')"
+                  :filter="filterAt(column, 'line')!"
+                />
               </div>
-              <TableFilterControl v-if="filterFor(column)" :filter="filterFor(column)!" />
+              <TableFilterControl
+                v-if="filterAt(column, 'below')"
+                :filter="filterAt(column, 'below')!"
+              />
             </div>
             <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role="separator" 是 WAI-ARIA 的分隔条：自己可聚焦，方向键也归它处理。 -->
             <span

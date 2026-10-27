@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { provideAstryxLocale } from '../locale/index.js'
 import { capitalize, paginateData, pixel, proportional, resolveColumnWidths, resolveTableMinWidth } from './columnUtils.js'
-import { applyTableFilters, useTableFilterState } from './plugins/filtering.js'
+import { applyTableFilters, useTableFiltering, useTableFilterState } from './plugins/filtering.js'
 import { useTableSelection, useTableSelectionState } from './plugins/selection.js'
 import { useTableSortable, useTableSortableState } from './plugins/sortable.js'
 import Table from './Table.vue'
@@ -79,6 +79,36 @@ describe('table', () => {
     const empty = mount(Table, { props: { data: [], columns } })
     expect(empty.get('tbody td').text()).toBe('No data')
     expect(empty.get('tbody td').attributes('colspan')).toBe('2')
+  })
+
+  it('keeps the popover filter button on the same line as the header label', () => {
+    const filtered = [
+      { key: 'name', header: 'Name', filter: 'name' },
+      { key: 'age', header: 'Age', filter: 'age' },
+    ]
+    const wrapper = mount(Table, {
+      props: {
+        columns: filtered,
+        data: people,
+        idKey: 'id',
+        plugins: {
+          filtering: useTableFiltering({
+            filters: {},
+            fields: [
+              { key: 'name', label: 'Name', type: 'string' },
+              { key: 'age', label: 'Age', type: 'number' },
+            ],
+            onFilterChange: () => {},
+          }),
+        },
+      },
+    })
+
+    const headers = wrapper.findAll('thead th .astryx-table__header')
+    expect(headers).toHaveLength(2)
+    for (const header of headers) {
+      expect(header.get('.astryx-table__header-line .astryx-table__filter').exists()).toBe(true)
+    }
   })
 
   it('re-sorts strings when the provider locale changes', async () => {
