@@ -1444,12 +1444,14 @@ function SearchIcon() {
                   @click="activeJobId = related.id"
                 >
                   <StackItem size="fill">
-                    <Text type="body">
-                      {{ related.summary }}
-                    </Text>
-                    <Text type="supporting" color="secondary">
-                      {{ formatDate(related.scheduledAt, true) }} · {{ related.technician }}
-                    </Text>
+                    <VStack :gap="0">
+                      <Text type="body">
+                        {{ related.summary }}
+                      </Text>
+                      <Text type="supporting" color="secondary">
+                        {{ formatDate(related.scheduledAt, true) }} · {{ related.technician }}
+                      </Text>
+                    </VStack>
                   </StackItem>
                   <Badge
                     :variant="STATUS_META[related.status].badge"
@@ -1522,7 +1524,7 @@ function SearchIcon() {
                     :config="searchConfig"
                     :filters="filters"
                     placeholder='Try "quote > 1000" or "status is Overdue"'
-                    :result-count="results.length"
+                    :result-count="`${results.length} ${results.length === 1 ? 'result' : 'results'}`"
                     @update:filters="filters = $event"
                   />
                 </StackItem>
@@ -1579,7 +1581,8 @@ function SearchIcon() {
                       </HStack>
                     </StackItem>
                   </HStack>
-                  <HStack v-else :gap="2" align="center" wrap="nowrap" :min-height="32" class="tf-filter-row">
+                </StackItem>
+                <HStack v-else :gap="2" align="center" wrap="nowrap" :min-height="32" class="tf-filter-row">
                     <StackItem class="tf-search">
                       <TextInput
                         v-model="query"
@@ -1755,7 +1758,6 @@ function SearchIcon() {
                       </HStack>
                     </StackItem>
                   </HStack>
-                </StackItem>
 
                 <HStack :gap="3" align="center" class="tf-end">
                   <ToggleButton
