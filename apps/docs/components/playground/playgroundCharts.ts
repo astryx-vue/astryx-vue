@@ -219,12 +219,17 @@ export const PlaygroundAreaChart = defineComponent({
     xTicks: { type: Array as PropType<number[]>, default: () => [] },
     xTickFormat: { type: Function as PropType<(v: number) => string>, default: (v: number) => String(v) },
     yTickFormat: { type: Function as PropType<(v: number) => string>, default: (v: number) => String(v) },
+    /** 是否画 Y 轴刻度和横向网格。关掉后左边距收窄，曲线撑满宽度。 */
+    hasYAxis: { type: Boolean, default: true },
+    hasGrid: { type: Boolean, default: true },
+    /** 画一条虚线基准，例如统计窗口的起点。 */
+    referenceValue: { type: Number, default: undefined },
   },
   setup(props) {
     const chart = useChartWidth()
     return () => {
       const chartW = chart.width.value
-      const pad = { top: 10, right: 10, bottom: 24, left: 50 }
+      const pad = { top: 10, right: 10, bottom: 24, left: props.hasYAxis ? 50 : 10 }
       const innerW = chartW - pad.left - pad.right
       const innerH = props.height - pad.top - pad.bottom
       const rows = props.data
@@ -254,14 +259,26 @@ export const PlaygroundAreaChart = defineComponent({
             h('stop', { offset: '95%', 'stop-color': props.color, 'stop-opacity': '0.05' }),
           ]),
         ]),
-        ...yTicks.map((tick) => h('line', {
-          x1: pad.left,
-          y1: yScale(tick),
-          x2: pad.left + innerW,
-          y2: yScale(tick),
-          stroke: GRID_STROKE,
-        })),
+        ...(props.hasGrid
+          ? yTicks.map((tick) => h('line', {
+              x1: pad.left,
+              y1: yScale(tick),
+              x2: pad.left + innerW,
+              y2: yScale(tick),
+              stroke: GRID_STROKE,
+            }))
+          : []),
         h('polygon', { points: areaPts, fill: `url(#${gradId})` }),
+        ...(props.referenceValue != null
+          ? [h('line', {
+              x1: pad.left,
+              y1: yScale(props.referenceValue),
+              x2: pad.left + innerW,
+              y2: yScale(props.referenceValue),
+              stroke: GRID_STROKE,
+              'stroke-dasharray': '3 3',
+            })]
+          : []),
         h('polyline', {
           fill: 'none',
           stroke: props.color,
@@ -275,13 +292,15 @@ export const PlaygroundAreaChart = defineComponent({
           fill: AXIS_TICK,
           'font-size': '12px',
         }, props.xTickFormat(tick))),
-        ...yTicks.map(tick => h('text', {
-          x: pad.left - 8,
-          y: yScale(tick) + 4,
-          'text-anchor': 'end',
-          fill: AXIS_TICK,
-          'font-size': '12px',
-        }, props.yTickFormat(tick))),
+        ...(props.hasYAxis
+          ? yTicks.map(tick => h('text', {
+              x: pad.left - 8,
+              y: yScale(tick) + 4,
+              'text-anchor': 'end',
+              fill: AXIS_TICK,
+              'font-size': '12px',
+            }, props.yTickFormat(tick)))
+          : []),
       ])
     }
   },
