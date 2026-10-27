@@ -98,7 +98,7 @@ watch(expanded, (value) => {
       <span class="astryx-banner-icon" :data-status="visualStatus" aria-hidden="true">
         <slot name="icon">
           <component :is="icon" v-if="icon" />
-          <FieldIcon v-else-if="visualStatus" :type="visualStatus" />
+          <FieldIcon v-else-if="visualStatus" :type="visualStatus" size="md" :color="visualStatus === 'info' ? 'accent' : visualStatus" />
         </slot>
       </span>
       <div class="astryx-banner-message" :data-has-actions="hasEnd || undefined">
