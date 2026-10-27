@@ -53,6 +53,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue composable <Name>` | 一个组合式函数的参数、返回值、用法和示例 |
 | `astryx-vue docs` | 全部指南和主题 |
 | `astryx-vue docs <topic>` | 一篇正文，例如 `docs guide/dark-mode` 或 `docs themes/tokens` |
+| `astryx-vue docs <topic> --depth <n>` | 同一篇正文，只留到第 n 层标题 |
 | `astryx-vue search <query>` | 排好序的组件、组合式函数、文档主题和模板 |
 | `astryx-vue manifest --json` | 命令、选项、响应类型、错误码和退出码 |
 | `astryx-vue init --features agents` | 创建或刷新 agent 文件里的受管理区块 |
@@ -66,13 +67,13 @@ npm run astryx-vue -- component Button
 | `--zh` | 文档有中文版时用简体中文。 |
 | `--cwd <dir>` | 项目目录，默认当前工作目录；`template` 和 `init` 只往这里面写。 |
 
-组合式函数可写 `useClipboard` 或 `use-clipboard`。`component useClipboard` 也能查到，并多印一行指向 `composable` 命令。`component --list` 只列组件。`search --type` 接受 `component`、`composable`、`doc`、`template`；组合式函数命中的结果是 `domain: "composable"`，`command` 指向 `composable <Name>`。命中名字的结果排在只命中正文的结果前面。
+组合式函数可写 `useClipboard` 或 `use-clipboard`。`component useClipboard` 也能查到，并多印一行指向 `composable` 命令。`component --list` 只列组件。`search --type` 接受 `component`、`composable`、`doc`、`template`；组合式函数命中的结果是 `domain: "composable"`，`command` 指向 `composable <Name>`。命中名字的结果排在只命中正文的结果前面。每条结果都标出来自哪个包；分数相同时按领域（组件、组合式函数、文档、模板）再按名字排序，跑两次顺序不会变。
 
-`docs` 接受主题 id、把 `theme/` 换成 `themes/` 的写法，或能唯一匹配某个主题的裸名，例如 `dark-mode`。`--json` 返回 `docs.list` 或 `docs.detail`，`docs.detail` 里有整页 `body`。
+`docs` 接受主题 id、把 `theme/` 换成 `themes/` 的写法，或能唯一匹配某个主题的裸名，例如 `dark-mode`。`--json` 返回 `docs.list` 或 `docs.detail`，`docs.detail` 里有整页 `body`。`--depth 2` 只留 `#` 和 `##`，更深的标题连同它下面的正文一起省掉，长页面因此读得下去；JSON 里的 `headings` 只列还在正文里的标题，`depth` 说明调用方要的是第几层。
 
 ## 模板
 
-`template --list` 列出全部 53 个演练场页面。目前 `--type` 只有 `page` 一种；`--type block` 会给一句说明，不报错。
+`template --list` 列出全部 57 个演练场页面。目前 `--type` 只有 `page` 一种；`--type block` 会给一句说明，不报错。
 
 每个模板都有一句手写说明和中英两套关键词，放在 `src/generate/template-meta/`，每类模板一个文件。组件清单从页面里 `@astryx-vue/core` 的 import 自动提取，不会和源码脱节。
 
@@ -100,7 +101,7 @@ npm run astryx-vue -- component Button
 
 ## JSON 信封
 
-成功响应是 `{ apiVersion: 1, type, data }`。`template` 和 `build` 的响应还带 `package: "@astryx-vue/cli"`。
+成功响应是 `{ apiVersion: 1, type, data }`。`template`、`build`、`docs` 的响应带 `package`，说明记录来自哪个包（模板是 `@astryx-vue/cli`，文档页是 `@astryx-vue/docs`）。`component.detail` 和 `composable.detail` 带所属的包；`component.list` 和 `composable.list` 的每一条各自带 `package`，因为一个列表可能横跨多个包。
 
 | 类型 | 命令 |
 | --- | --- |
@@ -162,7 +163,7 @@ CLI 不另存一份组件文档。`packages/cli/scripts/generate-catalog.mjs` �
 - `apps/docs/components/demo-infra/reference/*.json`：anatomy 和无障碍信息
 - `apps/docs/docs/{en,zh}/guide` 和 `themes`：搜索主题和正文
 - `apps/docs/components/playground/pages/*.vue`：模板源码；`templateManifest.ts`：模板标题和分类
-- 页面里没写 import 时，用 `packages/core/package.json` 的 exports 推断
+- 每个 `packages/*/package.json`：判断组件属于哪个包；页面里没写 import 时用它的 exports 推断
 
 模板的说明和关键词是手写的，在 `packages/cli/src/generate/template-meta/`，每类模板一个文件，由 `template-meta.ts` 合并，属于源数据，不是生成物。
 
@@ -174,7 +175,9 @@ CLI 不另存一份组件文档。`packages/cli/scripts/generate-catalog.mjs` �
 pnpm --filter @astryx-vue/cli generate
 ```
 
-`pnpm check` 会跑 `generate:check`。它会在这几种情况下失败：`catalog.json` 过期、某个 PascalCase 的 `@astryx-vue/core` 导出没有任何组件文档引用、或者某个演练场页面在 `template-meta.ts` 里没有元数据。`./icons`、`./locale`、CSS 和包根不算组件导出。
+`pnpm check` 会跑 `generate:check`。它会在这几种情况下失败：`catalog.json` 过期、某个包里有 PascalCase 导出没有任何组件文档引用、或者某个演练场页面在 `template-meta.ts` 里没有元数据。`./icons`、`./locale`、CSS 和包根不算组件导出。
+
+`catalog.packages` 列出 catalog 覆盖的每个包（`core`、`themes`、`richtext`、`charts`、`lab`），带目录和「是否只发 canary」的标记。组件的 `package` 取「有它这个子路径导出的包」，没有就取「`src/` 里有它这个目录的包」。
 
 主题、升级、doctor、swizzle 和 MCP 命令不在这个包里。
 
