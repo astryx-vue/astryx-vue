@@ -121,12 +121,14 @@ function headerText(column: TableColumn): string {
 }
 
 /** 列头内容：字符串直接显示，函数按函数式组件渲染。 */
-const HeaderContent = (props: { column: TableColumn }) =>
-  typeof props.column.header === 'function'
+function HeaderContent(props: { column: TableColumn }) {
+  return typeof props.column.header === 'function'
     ? props.column.header()
     : h('span', null, headerText(props.column))
+}
 
-function styleFor(column: TableColumn): CSSProperties {  const base = { ...(widths.value.columns.get(column.key)?.style ?? {}) }
+function styleFor(column: TableColumn): CSSProperties {
+  const base = { ...(widths.value.columns.get(column.key)?.style ?? {}) }
   const override = props.plugins.map(plugin => plugin.widthFor?.(column)).find(value => value != null)
     ?? resizeContributions.value.get(column.key)?.currentWidth
   if (override != null) {

@@ -1,14 +1,14 @@
-import { mount } from '@vue/test-utils'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
 import Button from './Button/Button.vue'
 import StatusDot from './StatusDot/StatusDot.vue'
 
-describe('D12 alignment: newly wired component abilities', () => {
-  describe('Button icon prop', () => {
+describe('d12 alignment: newly wired component abilities', () => {
+  describe('button icon prop', () => {
     it('renders a semantic icon name through Icon', () => {
       const wrapper = mount(Button, { props: { label: 'Save', icon: 'search' } })
       expect(wrapper.get('.astryx-button__icon').find('.astryx-icon').exists()).toBe(true)
@@ -35,7 +35,7 @@ describe('D12 alignment: newly wired component abilities', () => {
     })
   })
 
-  describe('StatusDot accent variant', () => {
+  describe('statusDot accent variant', () => {
     it('marks the dot as accent', () => {
       const wrapper = mount(StatusDot, { props: { label: 'Busy', variant: 'accent' } })
       expect(wrapper.get('.astryx-status-dot').attributes('data-variant')).toBe('accent')
@@ -43,7 +43,7 @@ describe('D12 alignment: newly wired component abilities', () => {
 
     it('ships the accent variant styles', () => {
       const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/status-dot.css'), 'utf8')
-      expect(css).toContain(".astryx-status-dot[data-variant='accent']")
+      expect(css).toContain('.astryx-status-dot[data-variant=\'accent\']')
       expect(css).toContain('--astryx-color-accent')
     })
   })

@@ -1,16 +1,16 @@
-import { mount } from '@vue/test-utils'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import OverflowList from './OverflowList/OverflowList.vue'
-import { SELECT_COLUMN_WIDTH } from './Table/plugins/stickyColumns.js'
 import { useTableSelection, useTableSelectionState } from './Table/plugins/selection.js'
+import { SELECT_COLUMN_WIDTH } from './Table/plugins/stickyColumns.js'
 import Table from './Table/Table.vue'
 
-describe('D12 alignment: measurement behavior', () => {
-  it('OverflowList measures the real overflow slot content, not a built-in label', () => {
+describe('d12 alignment: measurement behavior', () => {
+  it('overflowList measures the real overflow slot content, not a built-in label', () => {
     const wrapper = mount(OverflowList, {
       props: {
         items: [
@@ -33,7 +33,7 @@ describe('D12 alignment: measurement behavior', () => {
     expect(wrapper.find('.astryx-overflow-list__row .custom-overflow').exists()).toBe(false)
   })
 
-  it('PowerSearch tokens never grow and the input is content-sized', () => {
+  it('powerSearch tokens never grow and the input is content-sized', () => {
     const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/power-search.css'), 'utf8')
     const tokens = css.indexOf('.astryx-power-search-tokens {')
     const block = css.slice(tokens, css.indexOf('}', tokens))
@@ -43,7 +43,7 @@ describe('D12 alignment: measurement behavior', () => {
     expect(inputBlock).toContain('height: auto')
   })
 
-  it('Table counts the selection column in the table min width', async () => {
+  it('table counts the selection column in the table min width', async () => {
     interface Person extends Record<string, unknown> {
       id: string
       name: string
