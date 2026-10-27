@@ -23,7 +23,7 @@ export function limitBodyDepth(body: string, depth: number, headings: readonly s
         kept.push(line)
       continue
     }
-    const heading = fence ? null : /^(#{1,6})\s+(.*)$/.exec(line)
+    const heading = fence ? null : /^(#{1,6})[ \t](.*)$/.exec(line)
     if (heading) {
       const level = heading[1]!.length
       dropping = level > depth
