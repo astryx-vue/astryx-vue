@@ -13,6 +13,10 @@
     background-color: var(--astryx-status-dot-neutral-background, #a3a3a3);
   }
 
+  .astryx-status-dot[data-variant='accent'] {
+    background-color: var(--astryx-status-dot-accent-background, var(--astryx-color-accent, #1b1b1b));
+  }
+
   .astryx-status-dot[data-variant='info'] {
     background-color: var(--astryx-status-dot-info-background, #0074e2);
   }
@@ -41,6 +45,10 @@
   .astryx-status-dot__icon > * {
     width: 75%;
     height: 75%;
+  }
+
+  .astryx-status-dot[data-variant='accent'] .astryx-status-dot__icon {
+    color: var(--astryx-status-dot-accent-icon-foreground, var(--astryx-color-on-accent, #fff));
   }
 
   .astryx-status-dot[data-variant='warning'] .astryx-status-dot__icon {

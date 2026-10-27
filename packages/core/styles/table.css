@@ -22,7 +22,8 @@
     border-spacing: 0;
     color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     font-family: inherit;
-    font-size: var(--astryx-text-body-size, 1rem);
+    /* 原版表格元素不设字号：分组头等自定义内容继承环境字号（16px），
+       数据格的字号由 td 自己带（见下），所以两边分开。 */
   }
 
   .astryx-table :is(th, td) {
@@ -76,6 +77,12 @@
 
   .astryx-table[data-density='spacious'] :is(th, td):last-child {
     padding-inline-end: max(var(--container-padding-inline-end, var(--astryx-spacing-4, 16px)), var(--astryx-spacing-2, 8px));
+  }
+
+  /* 原版 TableCell 给普通数据格带正文字号；分组头、展开面板、空态这些
+     插件渲染的格子不设字号，继承环境字号。 */
+  .astryx-table td:not(.astryx-table__group, .astryx-table__panel, .astryx-table__empty) {
+    font-size: var(--astryx-text-body-size, 0.875rem);
   }
 
   .astryx-table th {
@@ -292,10 +299,11 @@
     text-align: center;
   }
 
+  /* 和原版 useTableSelection 的 SELECTION_COLUMN_WIDTH 一致。 */
   .astryx-table__select {
-    width: 48px;
-    min-width: 48px;
-    max-width: 48px;
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
   }
 
   .astryx-table__filter {
@@ -554,30 +562,32 @@
     background: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
   }
 
-  .astryx-table__panel {
+  /* td 标签把特异性抬到和密度单元格规则（0,2,1）一样，又排在它后面，
+     所以面板的 16/20 内边距不会被密度规则的 padding 盖掉。 */
+  .astryx-table td.astryx-table__panel {
     max-width: none;
     padding-inline-end: var(--astryx-spacing-5, 20px);
     padding-block: var(--astryx-spacing-4, 16px);
   }
 
-  .astryx-table[data-density='compact'] .astryx-table__panel {
+  .astryx-table[data-density='compact'] td.astryx-table__panel {
     padding-inline-start: calc(40px + var(--astryx-spacing-2, 8px));
   }
 
-  .astryx-table[data-density='balanced'] .astryx-table__panel {
+  .astryx-table[data-density='balanced'] td.astryx-table__panel {
     padding-inline-start: calc(40px + var(--astryx-spacing-3, 12px));
   }
 
-  .astryx-table[data-density='spacious'] .astryx-table__panel {
+  .astryx-table[data-density='spacious'] td.astryx-table__panel {
     padding-inline-start: calc(40px + var(--astryx-spacing-4, 16px));
   }
 
-  .astryx-table[data-dividers='rows'] .astryx-table__panel,
-  .astryx-table[data-dividers='grid'] .astryx-table__panel {
+  .astryx-table[data-dividers='rows'] td.astryx-table__panel,
+  .astryx-table[data-dividers='grid'] td.astryx-table__panel {
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
   }
 
-  .astryx-table tbody tr:last-child > .astryx-table__panel {
+  .astryx-table tbody tr:last-child > td.astryx-table__panel {
     border-bottom-width: 0;
   }
 

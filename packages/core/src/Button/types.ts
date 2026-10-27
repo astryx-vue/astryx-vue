@@ -1,4 +1,5 @@
-import type { Component } from 'vue'
+import type { Component, VNodeChild } from 'vue'
+import type { ExtendedIconName } from '../Icon/types.js'
 
 export interface ButtonVariantMap {
   destructive: true
@@ -28,6 +29,12 @@ export interface ButtonProps {
   href?: string
   /** Disables interaction. @default false */
   isDisabled?: boolean
+  /**
+   * Icon drawn before the label. A semantic icon name (like `search`), a CSS
+   * icon class, a component, or a render function. The `#icon` slot wins when
+   * both are set.
+   */
+  icon?: ExtendedIconName | Component | (() => VNodeChild)
   /** Renders only the icon slot and uses label as the accessible name. @default false */
   isIconOnly?: boolean
   /** Keeps the control interactive while clickAction is pending. @default false */
