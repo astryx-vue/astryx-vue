@@ -349,6 +349,23 @@ const ABOUT_LINKS = [
   { label: 'Activity', icon: 'heroicons:chart-bar' },
 ]
 
+/** 文件夹图标：和原版（lucide Folder）一样是实心的，文件图标是描边。 */
+function lucideGlyph(paths: string[], isFilled: boolean) {
+  return () => h('svg', {
+    'xmlns': 'http://www.w3.org/2000/svg',
+    'viewBox': '0 0 24 24',
+    'fill': isFilled ? 'currentColor' : 'none',
+    'stroke': 'currentColor',
+    'stroke-width': 2,
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round',
+    'width': '1em',
+    'height': '1em',
+    'aria-hidden': 'true',
+  }, paths.map(d => h('path', { d })))
+}
+const FolderGlyph = lucideGlyph(['M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'], true)
+
 const STAT_ACTION: Record<string, string> = {
   stars: 'Star',
   watching: 'Watch',
@@ -559,11 +576,9 @@ const columns: TableColumn<RepoEntry>[] = [
     width: proportional(2, { minWidth: 240 }),
     sortable: true,
     renderCell: entry => h(HStack, { gap: 2, vAlign: 'center' }, () => [
-      h(Icon, {
-        name: entry.kind === 'folder' ? 'heroicons:folder' : 'heroicons:document',
-        size: 'sm',
-        color: entry.kind === 'folder' ? 'accent' : 'secondary',
-      }),
+      entry.kind === 'folder'
+        ? h(Icon, { icon: FolderGlyph, size: 'sm', color: 'accent' })
+        : h(Icon, { name: 'heroicons:document', size: 'sm', color: 'secondary' }),
       entry.kind === 'folder'
         ? h(Link, {
           href: '#',
