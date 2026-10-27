@@ -57,7 +57,13 @@ D5c 第二批 #177（`0ac9ba3`）、第三批 #178（`9018804`）已合入，**D
 - `Selector` 选项的 `icon` 只吃 CSS 类名；`Step` 的默认插槽排在标签右侧一列。
 - `useTableTreeState` / `useTableSortableState` 的 config 只 `toValue` 一层。
 
-当前并行：没有正在实现的节点。
+**#128 已于 2026-10-26 合入 `dev`（merge commit `c2ee4ef`，用户决定）。** 后续任务由新的跟踪 PR 接续（`swarm-tree` → `dev`），正文在 `PR-NEXT-BODY.md`，mermaid 只画剩余任务。`PR128-BODY.md` 保留为合入时的快照，不再更新。
+
+D10 #180（`8354a2b`）已合入：Stack 间距不再继承、Table 列头筛选同行与行级 ref / 事件、Selector 图标组件化、竖向 Step、两个 Table 组合式函数的 config 支持 ref。总控补修了列头漏斗的排版（Qty 被截断）。
+
+**G1 用户决定（2026-10-26）：** 版本 0.4.0（minor）；charts 这次不发；我开 PR，每一次合并前都先问用户（swarm-tree→dev、dev→main、Version Packages 各一次）。changeset 在 `.changeset/sync-astryx-0-7-1.md`。
+
+当前并行：G1（总控在做）。
 
 **D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`，原版指南对照在 `nodes/D4a/guides-gap.md`。还没定的：`upgrade` 的形态（D6 暂缓后只输出升级指引）。
 
@@ -69,7 +75,7 @@ D5c 第二批 #177（`0ac9ba3`）、第三批 #178（`9018804`）已合入，**D
 
 **#128 的 CI：** Markdown 三个子路径的 dist 已由 #146 修好。#142 修过当时的 CLI catalog。#156 已合入，收掉了子菜单服务端渲染里的 `HTMLElement is not defined`、当时过期的 catalog，以及浮层 `window is not defined`。不要再把这三处当成还没人认领的红。C4 #159、C5 #158 已经在 `swarm-tree` 上。进度文档的 PR 不要改组件或打包配置。
 
-#128 的描述不要用云代理自己的 PR 正文通道去改标记块以外的内容，否则会叠成重复的两份。整篇新正文在 `.agents-work/upstream-sync-0.7.1/PR128-BODY.md`。请总控用 `cursor-github update_pull_request` 整篇覆盖。
+跟踪 PR 的描述整篇覆盖，正文在 `.agents-work/upstream-sync-0.7.1/PR-NEXT-BODY.md`，用 `gh api -X PATCH repos/astryx-vue/astryx-vue/pulls/<N> --input <json>` 写，包在 `<!-- CURSOR_AGENT_PR_BODY_BEGIN/END -->` 里。不要在标记块外再贴一份。
 
 ## 用户最新的工作方式要求
 
