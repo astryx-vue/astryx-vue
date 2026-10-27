@@ -183,13 +183,13 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
   {
     name: 'template',
-    summary: 'List playground page templates, print one, or copy one into the project.',
+    summary: 'List the playground page templates, print one, or copy one into the project. A ready page runs on vue and @astryx-vue/core alone.',
     arguments: [
       { name: 'name', required: false, variadic: false, description: 'Template slug, such as login-card. Omit with --list, or to list every template.' },
       { name: 'path', required: false, variadic: false, description: 'File or directory to write into. A directory receives <Name>.vue.' },
     ],
     options: [
-      { name: 'list', flag: '--list', type: 'boolean', description: 'List every template with its category and status.' },
+      { name: 'list', flag: '--list', type: 'boolean', description: 'List every template with its category, the packages it needs, and whether it can be copied.' },
       { name: 'skeleton', flag: '--skeleton', type: 'boolean', description: 'Print the layout skeleton only: component tags and layout attributes, no text or handlers.' },
       { name: 'type', flag: '--type', type: 'string', description: 'Restrict to page or block templates. Every template is a page today.', choices: ['page', 'block'] },
       { name: 'overwrite', flag: '--overwrite', type: 'boolean', aliases: ['-f'], description: 'Replace the target file when it already exists.' },

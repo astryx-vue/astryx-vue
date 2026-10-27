@@ -109,7 +109,7 @@ Exit code is `0` when every check passed or only warned, and `1` when one failed
 
 `template --list` prints all 57 playground pages. `--type page` is the only kind today; `--type block` answers with a note instead of an error.
 
-Every template carries a hand-written one-sentence description and a keyword list in English and Chinese, in `src/generate/template-meta/` (one file per template category). The component list is extracted from the page's `@astryx-vue/core` imports, so it cannot drift from the source.
+Every template carries a hand-written one-sentence description and a keyword list in English and Chinese, in `src/generate/template-meta/` (one file per template category). The component list is extracted from the page's `@astryx-vue/core` imports, so it cannot drift from the source. Each record also carries `dependencies`, the npm packages the page imports; a ready page names only `vue` and `@astryx-vue/core`, and the catalog generator fails when a ready page pulls in anything else. That is why `template --list`, `template <slug>`, and their `--json` forms can say exactly what a copied page needs.
 
 Some pages import a package a project cannot install: five use `@astryx-vue/playground-charts`, a path alias that only exists inside the docs playground. Those are marked `isReady: false` with the reason. A page is ready when every non-relative import it really performs is `vue` or `@astryx-vue/core`; text inside a code sample the page displays, such as `@astryxdesign/core`, is page content and does not count. `--list` and `template <slug>` still show them; copying is refused with `ERR_TEMPLATE_NOT_READY`.
 
@@ -135,7 +135,7 @@ Copying rewrites the playground's `/template-assets/…` photo paths to an inlin
 
 ## JSON envelopes
 
-Success responses are `{ apiVersion: 1, type, data }`. `template`, `build`, and `docs` responses carry `package` for where the records come from (`@astryx-vue/cli` for templates, `@astryx-vue/docs` for pages). `component.detail` and `composable.detail` carry the owning package, and every entry of `component.list` and `composable.list` carries its own, because one list can span packages.
+Success responses are `{ apiVersion: 1, type, data }`. `template`, `build`, and `docs` responses carry `package` for where the records come from (`@astryx-vue/cli` for templates, `@astryx-vue/docs` for pages). Every template entry of `template.list`, `template.show`, and `template.skeleton` carries its own `dependencies` array next to `components`. `component.detail` and `composable.detail` carry the owning package, and every entry of `component.list` and `composable.list` carries its own, because one list can span packages.
 
 | Type | Command |
 | --- | --- |

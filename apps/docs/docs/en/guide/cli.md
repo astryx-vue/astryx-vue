@@ -47,9 +47,9 @@ npm run astryx-vue -- component Button
 
 ## Templates
 
-`astryx-vue template --list` lists the 53 playground pages, grouped by category. Every template is a page today; `--type block` answers with a note rather than an error.
+`astryx-vue template --list` lists the 57 playground pages, grouped by category. Every template is a page today; `--type block` answers with a note rather than an error. Each line says what the page needs: a ready template names only `vue` and `@astryx-vue/core`, so copying one leaves no install step.
 
-`astryx-vue template login-card` prints one template's description, the components it uses, and its source. `--skeleton` prints only the layout skeleton: component tags with layout attributes such as `gap`, `padding`, and `columns`, without text, handlers, or native HTML wrappers.
+`astryx-vue template login-card` prints one template's description, the components it uses, the packages it needs, and its source. `--skeleton` prints only the layout skeleton: component tags with layout attributes such as `gap`, `padding`, and `columns`, without text, handlers, or native HTML wrappers.
 
 `astryx-vue template login-card ./src/pages` writes `src/pages/LoginCard.vue`. A path that ends in a file name is the file itself. An existing file is only replaced with `--overwrite` (or `-f`), and a path outside the project is refused. Copying rewrites the playground's demo photo paths to an inline grey placeholder and reports how many it replaced; it does not copy assets and does not install anything, it only names the packages the project is missing.
 
