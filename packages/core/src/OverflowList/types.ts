@@ -35,7 +35,7 @@ export interface OverflowListProps {
 
 export interface OverflowListSlots {
   item?: (props: { item: OverflowListItem, index: number }) => unknown
-  overflow?: (props: { items: OverflowListItem[] }) => unknown
+  overflow?: (props: { items: readonly OverflowListItem[] }) => unknown
 }
 
 /** 被收进溢出区的一项，以及它在 `items` 里的原下标。 */

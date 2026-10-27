@@ -3,7 +3,6 @@ import type { OverflowListEmits, OverflowListItem, OverflowListProps, OverflowLi
 import { computed, watch } from 'vue'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/index.js'
 import { resolveNavRoot } from '../NavItem/link.js'
 import OverflowMore from './OverflowMore.vue'
 import '../../styles/overflow-list.css'
@@ -20,7 +19,6 @@ const props = withDefaults(defineProps<OverflowListProps>(), {
 const emit = defineEmits<OverflowListEmits>()
 defineSlots<OverflowListSlots>()
 
-const messages = useAstryxMessages()
 const linkComponent = useLinkComponent()
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
@@ -117,7 +115,11 @@ function onSelect(item: OverflowListItem, event: MouseEvent): void {
         </slot>
       </div>
       <div data-overflow-indicator>
-        <span class="astryx-overflow-list__more">{{ messages.nav.moreItems(items.length) }}</span>
+        <!-- 和原版一致，测量用户真实的 overflow 内容（按最多项数渲染，保证留出最大宽度），
+             不再用内置文案估算。 -->
+        <slot name="overflow" :items="items">
+          <OverflowMore :as="as" :items="items" @select="onSelect" />
+        </slot>
       </div>
     </div>
 

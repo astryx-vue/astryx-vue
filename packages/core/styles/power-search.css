@@ -94,9 +94,10 @@
     cursor: pointer;
   }
 
+  /* 空着不占位：剩余宽度全给输入框（原版 Tokenizer 里输入框 flex 1 1 40px）。 */
   .astryx-power-search-tokens {
     display: flex;
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--astryx-spacing-1, 4px);
@@ -138,10 +139,11 @@
     white-space: nowrap;
   }
 
+  /* 高度交给内容（原版输入框不定高），字段的 min-height 和 padding 说了算。 */
   .astryx-power-search-input {
     flex: 1 1 8rem;
     min-width: 4rem;
-    height: var(--astryx-input-height-sm, 28px);
+    height: auto;
     margin: 0;
     padding: 0 var(--astryx-spacing-1, 4px);
     border: 0;
