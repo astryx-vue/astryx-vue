@@ -20,6 +20,11 @@ async function project(files: Record<string, string> = {}): Promise<string> {
   return dir
 }
 
+/** Every line that tells the reader to install a package, whichever manager it names. */
+function installLines(output: string): string[] {
+  return output.split('\n').filter(line => /^\s*(?:pnpm|npm|yarn|bun) (?:add|install|i) /.test(line))
+}
+
 interface InitData {
   features: string[]
   files: { path: string, action: string }[]
@@ -27,7 +32,7 @@ interface InitData {
     packageManager: string | null
     packageManagerSource: string | null
     lockfile: string | null
-    packages: { name: string, version: string, canary: boolean, specifier: string, install: string[] }[]
+    packages: { name: string, version: string, canary: boolean, published: boolean, specifier: string | null, install: string[] }[]
     steps: { id: string, title: string, text?: string, code?: string, commands?: string[] }[]
   }
 }
@@ -76,17 +81,42 @@ describe('init guide', () => {
     }
   })
 
-  it('names every package, and installs a canary package with the tag', async () => {
+  it('names every package, and only prints an install command for one npm serves', async () => {
     const cwd = await project({ 'package.json': '{"name":"demo"}', 'pnpm-lock.yaml': '' })
     try {
       const data = assertResponse((await run(['init', '--json'], cwd)).stdout, 'init.run').data as InitData
       expect(data.guide.packages.map(pkg => pkg.name)).toEqual(catalog.packages.map(pkg => pkg.name))
-      const charts = data.guide.packages.find(pkg => pkg.name === '@astryx-vue/charts')
-      expect(charts).toMatchObject({ canary: true, specifier: '@astryx-vue/charts@canary', install: ['pnpm add @astryx-vue/charts@canary'] })
-      const richtext = data.guide.packages.find(pkg => pkg.name === '@astryx-vue/richtext')
-      expect(richtext).toMatchObject({ canary: false, specifier: '@astryx-vue/richtext' })
-      // A released package is introduced as-is; a canary one says so.
-      expect(richtext?.install).toEqual(['pnpm add @astryx-vue/richtext'])
+      const core = data.guide.packages.find(pkg => pkg.name === '@astryx-vue/core')
+      expect(core).toMatchObject({ canary: false, published: true, specifier: '@astryx-vue/core', install: ['pnpm add @astryx-vue/core'] })
+      // A private package has no published version, so there is no command to run.
+      for (const name of ['@astryx-vue/richtext', '@astryx-vue/charts', '@astryx-vue/lab']) {
+        const pkg = data.guide.packages.find(candidate => candidate.name === name)
+        expect(pkg).toMatchObject({ published: false, specifier: null, install: [] })
+      }
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('never prints an install command for a package npm cannot serve', async () => {
+    const cwd = await project({ 'package.json': '{"name":"demo","packageManager":"pnpm@9.0.0"}' })
+    try {
+      const result = await run(['init'], cwd)
+      const unpublished = catalog.packages.filter(pkg => !pkg.published).map(pkg => pkg.name)
+      expect(unpublished.length).toBeGreaterThan(0)
+      for (const command of installLines(result.stdout))
+        for (const name of unpublished)
+          expect(command).not.toContain(name)
+
+      // The block still names them, so an assistant knows they exist, but each
+      // line has to say there is nothing to install.
+      const block = await readFile(join(cwd, 'AGENTS.md'), 'utf8')
+      for (const line of block.split('\n').filter(candidate => candidate.startsWith('- `'))) {
+        const named = unpublished.find(name => line.startsWith(`- \`${name}\``))
+        if (named)
+          expect(line).toContain('not on npm yet')
+      }
     }
     finally {
       await rm(cwd, { recursive: true, force: true })
@@ -120,13 +150,13 @@ describe('init guide', () => {
       expect(result.stdout).toContain('npm install @astryx-vue/core @astryx-vue/themes')
       expect(result.stdout).toContain('import \'@astryx-vue/themes/neutral.css\'')
       expect(result.stdout).toContain('Created AGENTS.md')
-      expect(result.stdout).toContain('@astryx-vue/charts@canary')
+      expect(result.stdout).toContain('Not on npm yet, so there is nothing to install:')
+      expect(result.stdout).toContain('@astryx-vue/richtext — ')
 
       const block = await readFile(join(cwd, 'AGENTS.md'), 'utf8')
       expect(block).toContain('## Packages')
       expect(block).toContain('`@astryx-vue/richtext`')
-      expect(block).toContain('canary only')
-      expect(block).toContain('`@astryx-vue/lab@canary`')
+      expect(block).toContain('not on npm yet')
 
       const dense = await run(['init', '--dense'], cwd)
       expect(dense.stdout.length).toBeLessThan(result.stdout.length)
@@ -145,7 +175,7 @@ describe('init guide', () => {
       expect(result.stdout).toContain('已创建 AGENTS.md')
       const block = await readFile(join(cwd, 'AGENTS.md'), 'utf8')
       expect(block).toContain('## 包')
-      expect(block).toContain('canary 预览')
+      expect(block).toContain('还没发布到 npm')
     }
     finally {
       await rm(cwd, { recursive: true, force: true })

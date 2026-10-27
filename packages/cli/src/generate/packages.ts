@@ -18,6 +18,11 @@ export interface WorkspacePackage {
   componentSources: string[]
   /** True when the package is published only under the `canary` dist-tag. */
   canary: boolean
+  /**
+   * True when npm can serve this package today. A `private` package cannot be
+   * published at all, so an install command for it is a 404.
+   */
+  published: boolean
 }
 
 /** The CLI ships the tool, not components, so no docs page can belong to it. */
@@ -49,6 +54,7 @@ export async function discoverPackages(repoRoot: string): Promise<WorkspacePacka
       componentExports: manifest.exports.filter(key => COMPONENT_EXPORT.test(key)),
       componentSources: await readComponentSources(join(packagesDir, directory, 'src')),
       canary: manifest.canaryOnly,
+      published: !manifest.private,
     })
   }
   // Core defines the design system, so it heads every list a reader scans.
@@ -81,7 +87,7 @@ export function importPathFor(componentName: string, pkg: WorkspacePackage): str
  * anything else asks for a package the reader does not have.
  */
 export function installablePackageNames(packages: readonly WorkspacePackage[]): Set<string> {
-  return new Set(['vue', ...packages.map(pkg => pkg.name)])
+  return new Set(['vue', ...packages.filter(pkg => pkg.published).map(pkg => pkg.name)])
 }
 
 interface Manifest {
@@ -90,6 +96,7 @@ interface Manifest {
   description: string
   exports: string[]
   canaryOnly: boolean
+  private: boolean
 }
 
 async function readManifest(path: string): Promise<Manifest | null> {
@@ -100,7 +107,7 @@ async function readManifest(path: string): Promise<Manifest | null> {
   catch {
     return null
   }
-  const parsed = JSON.parse(raw) as { name?: string, version?: string, description?: string, exports?: Record<string, unknown>, astryxVue?: { canaryOnly?: boolean } }
+  const parsed = JSON.parse(raw) as { name?: string, version?: string, description?: string, exports?: Record<string, unknown>, private?: boolean, astryxVue?: { canaryOnly?: boolean } }
   if (!parsed.name)
     return null
   return {
@@ -109,6 +116,7 @@ async function readManifest(path: string): Promise<Manifest | null> {
     description: parsed.description ?? '',
     exports: Object.keys(parsed.exports ?? {}),
     canaryOnly: parsed.astryxVue?.canaryOnly === true,
+    private: parsed.private === true,
   }
 }
 

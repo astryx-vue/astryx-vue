@@ -23,8 +23,10 @@ export interface InitPackage {
   version: string
   description: string
   canary: boolean
-  /** The specifier to install: a canary package takes the tag. */
-  specifier: string
+  /** False for a `private` package: npm has no version of it, so it has no install command. */
+  published: boolean
+  /** The specifier to install, or null when there is nothing to install yet. */
+  specifier: string | null
   install: string[]
 }
 
@@ -141,14 +143,17 @@ async function writeAgentBlock(args: CommandArgs, agent: AgentName | null): Prom
 function initGuide(manager: PackageManager | null, source: InitGuide['packageManagerSource'], lockfile: string | null, locale: 'en' | 'zh'): InitGuide {
   const zh = locale === 'zh'
   const packages = catalog.packages.map((pkg: CatalogPackage): InitPackage => {
-    const specifier = pkg.canary ? `${pkg.name}@canary` : pkg.name
+    // A private package has no published version: printing `pnpm add` for it
+    // would hand the reader a command that fails.
+    const specifier = !pkg.published ? null : pkg.canary ? `${pkg.name}@canary` : pkg.name
     return {
       name: pkg.name,
       version: pkg.version,
       description: pkg.description,
       canary: pkg.canary,
+      published: pkg.published,
       specifier,
-      install: installCommands(manager, [specifier]),
+      install: specifier === null ? [] : installCommands(manager, [specifier]),
     }
   })
   const core = catalog.packages.find(pkg => pkg.name === '@astryx-vue/core')
