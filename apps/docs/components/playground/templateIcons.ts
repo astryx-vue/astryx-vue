@@ -45,4 +45,8 @@ export const templateIcons = [
   'heroicons:trash',
   'heroicons:users',
   'heroicons:x-mark',
+  'heroicons:banknotes',
+  'heroicons:list-bullet',
+  'heroicons:shopping-bag',
+  'heroicons:squares-2x2',
 ] as const

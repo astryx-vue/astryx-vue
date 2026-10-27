@@ -213,7 +213,7 @@ function sparklinePoints(values: number[]): string {
             </Heading>
             <Button label="Reload" variant="secondary">
               <template #icon>
-                <Icon icon="heroicons:arrow-path" size="sm" />
+                <Icon name="heroicons:arrow-path" size="sm" />
               </template>
             </Button>
           </HStack>

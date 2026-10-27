@@ -286,7 +286,7 @@ function directionColor(metric: Metric) {
             <Selector v-model="device" label="Device" is-label-hidden :options="DEVICE_OPTIONS" />
             <Button label="Export" variant="secondary">
               <template #icon>
-                <Icon icon="upload" size="sm" />
+                <Icon name="heroicons:arrow-down-tray" size="sm" />
               </template>
             </Button>
           </HStack>
