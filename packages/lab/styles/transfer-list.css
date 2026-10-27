@@ -1,0 +1,234 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 两栏之间靠容器查询决定是并排还是上下堆叠：宽的时候左右分栏，
+   * 窄的时候改成上下两段，分隔线也跟着从竖的变横的。
+   */
+  .astryx-transfer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  .astryx-transfer-list__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-transfer-list__controls {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+    padding: var(--astryx-spacing-3, 12px);
+  }
+
+  /* core 的 TextInput 外壳会缩到内容宽，这里让它撑满这一行。 */
+  .astryx-transfer-list__search {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .astryx-transfer-list-collection {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0;
+    min-width: 0;
+  }
+
+  .astryx-transfer-list-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    /* 焦点环画在面板自己的边上，所以往里收，不能超出组件边界。 */
+    outline-offset: 0;
+  }
+
+  .astryx-transfer-list-panel:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  /* 可选栏和已选栏之间那条分隔线。窄屏时改成上边线。 */
+  .astryx-transfer-list-panel[data-side='available'] {
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #00000014);
+  }
+
+  .astryx-transfer-list-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--astryx-spacing-2, 8px);
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #00000014);
+  }
+
+  /*
+   * 表头的批量操作看起来像文字链接，但点击区域仍然要够 24px，
+   * 所以只把上下内边距压平、给一个最小高度，文字位置不变。
+   */
+  .astryx-transfer-list-header-action {
+    height: auto;
+    min-block-size: var(--astryx-size-element-sm, 28px);
+    padding-block: 0;
+    padding-inline: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--astryx-color-text-accent, light-dark(#0a66ff, #7cb8ff));
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-text-body-weight, 400);
+    line-height: var(--astryx-text-body-leading, 1.4);
+    cursor: pointer;
+  }
+
+  .astryx-transfer-list-header-action:hover:where(:not(:disabled, [aria-disabled='true'])) {
+    text-decoration: underline;
+  }
+
+  /* 禁用时指针样式和普通文字一致，不做「不可点」的暗示。 */
+  .astryx-transfer-list-header-action:is(:disabled, [aria-disabled='true']) {
+    color: var(--astryx-color-text-secondary, light-dark(#6a6a6a, #9e9e9e));
+    cursor: default;
+  }
+
+  .astryx-transfer-list-header-action:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  /* 面板主体：给一个高度区间，条目多了自己滚，不让整页跟着变长。 */
+  .astryx-transfer-list-panel__body {
+    min-block-size: var(--astryx-transfer-list-panel-min-block-size, 12rem);
+    max-block-size: var(--astryx-transfer-list-panel-max-block-size, 20rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 0;
+  }
+
+  .astryx-transfer-list-panel__group-heading {
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-transfer-list-panel__group-heading:first-child {
+    margin-block-start: 0;
+  }
+
+  .astryx-transfer-list-item {
+    min-width: 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-transfer-list-panel__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--astryx-transfer-list-panel-min-block-size, 12rem);
+    padding: var(--astryx-spacing-4, 16px);
+    text-align: center;
+  }
+
+  /* 键盘拿起中的行铺一层强调色，表示它正在被移动。 */
+  .astryx-transfer-list-item[data-state='reordering'] {
+    background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
+  }
+
+  /* 拖动中的源行半透明，说明它是被拿起来那一行。 */
+  .astryx-transfer-list-item[data-transfer-list-reorder-source] {
+    opacity: 0.5;
+    user-select: none;
+  }
+
+  /* 落点指示线画在行的上边或下边。 */
+  .astryx-transfer-list-item[data-transfer-list-drop-target] {
+    position: relative;
+  }
+
+  .astryx-transfer-list-item[data-transfer-list-drop-target]::before,
+  .astryx-transfer-list-item[data-transfer-list-drop-target]::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    height: var(--astryx-spacing-0-5, 2px);
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: var(--astryx-color-accent, light-dark(#0a0a0a, #fafafa));
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .astryx-transfer-list-item[data-transfer-list-drop-target='before']::before {
+    inset-block-start: calc(-1 * var(--astryx-spacing-0-5, 2px));
+  }
+
+  .astryx-transfer-list-item[data-transfer-list-drop-target='after']::after {
+    inset-block-end: calc(-1 * var(--astryx-spacing-0-5, 2px));
+  }
+
+  /*
+   * 手柄给出抓取手势，并且吃掉触摸滚动，否则手机上竖着拖会变成滚动页面。
+   * 禁用时回到普通指针。
+   */
+  .astryx-transfer-list-reorder-handle {
+    margin-inline-start: calc(-1 * var(--astryx-spacing-1-5, 6px));
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .astryx-transfer-list-reorder-handle[aria-pressed='true'] {
+    cursor: grabbing;
+  }
+
+  .astryx-transfer-list-reorder-handle:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  /* 跟着指针走的克隆体。位置的 top/left/width 由组件内联给出。 */
+  .astryx-transfer-list-drag-preview {
+    position: fixed;
+    z-index: 2147483000;
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+    will-change: transform;
+    margin: 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+    list-style: none;
+  }
+
+  /* 窄的时候改成上下两栏，分隔线也从竖的换成横的。 */
+  @container (max-width: 40rem) {
+    .astryx-transfer-list-collection {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .astryx-transfer-list-panel[data-side='available'] {
+      border-inline-start: 0;
+      border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #00000014);
+    }
+
+    .astryx-transfer-list-panel__header {
+      background-color: var(--astryx-color-background-body, #fff);
+    }
+
+    .astryx-transfer-list-panel__body {
+      min-block-size: 0;
+      max-block-size: none;
+      overflow-y: visible;
+      overscroll-behavior: auto;
+      scrollbar-gutter: auto;
+    }
+
+    .astryx-transfer-list-panel__empty {
+      min-block-size: 0;
+    }
+  }
+}

@@ -24,6 +24,7 @@ import type { InputMessages } from './messages/input.js'
 import type { KeyboardHintMessages } from './messages/keyboard-hint.js'
 import type { LayoutMessages } from './messages/layout.js'
 import type { LightboxMessages } from './messages/lightbox.js'
+import type { ListInputMessages } from './messages/list-input.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MetadataListMessages } from './messages/metadata-list.js'
 import type { MoreMenuMessages } from './messages/more-menu.js'
@@ -48,6 +49,8 @@ import type { TimestampMessages } from './messages/timestamp.js'
 import type { ToastMessages } from './messages/toast.js'
 import type { TokenMessages } from './messages/token.js'
 import type { TokenizerMessages } from './messages/tokenizer.js'
+import type { TransferListSelectorMessages } from './messages/transfer-list-selector.js'
+import type { TransferListMessages } from './messages/transfer-list.js'
 import type { TreeListMessages } from './messages/tree-list.js'
 import type { TypeaheadMessages } from './messages/typeahead.js'
 import type { AstryxLocale } from './types.js'
@@ -75,6 +78,7 @@ import { inputMessages } from './messages/input.js'
 import { keyboardHintMessages } from './messages/keyboard-hint.js'
 import { layoutMessages } from './messages/layout.js'
 import { lightboxMessages } from './messages/lightbox.js'
+import { listInputMessages } from './messages/list-input.js'
 import { markdownMessages } from './messages/markdown.js'
 import { metadataListMessages } from './messages/metadata-list.js'
 import { moreMenuMessages } from './messages/more-menu.js'
@@ -99,6 +103,8 @@ import { timestampMessages } from './messages/timestamp.js'
 import { toastMessages } from './messages/toast.js'
 import { tokenMessages } from './messages/token.js'
 import { tokenizerMessages } from './messages/tokenizer.js'
+import { transferListSelectorMessages } from './messages/transfer-list-selector.js'
+import { transferListMessages } from './messages/transfer-list.js'
 import { treeListMessages } from './messages/tree-list.js'
 import { typeaheadMessages } from './messages/typeahead.js'
 
@@ -127,6 +133,7 @@ export interface AstryxMessages {
   keyboardHint: KeyboardHintMessages
   layout: LayoutMessages
   lightbox: LightboxMessages
+  listInput: ListInputMessages
   markdown: MarkdownMessages
   metadataList: MetadataListMessages
   moreMenu: MoreMenuMessages
@@ -151,6 +158,8 @@ export interface AstryxMessages {
   toast: ToastMessages
   token: TokenMessages
   tokenizer: TokenizerMessages
+  transferListSelector: TransferListSelectorMessages
+  transferList: TransferListMessages
   treeList: TreeListMessages
   typeahead: TypeaheadMessages
 }
@@ -181,6 +190,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     keyboardHint: keyboardHintMessages.en,
     layout: layoutMessages.en,
     lightbox: lightboxMessages.en,
+    listInput: listInputMessages.en,
     markdown: markdownMessages.en,
     metadataList: metadataListMessages.en,
     moreMenu: moreMenuMessages.en,
@@ -205,6 +215,8 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     toast: toastMessages.en,
     token: tokenMessages.en,
     tokenizer: tokenizerMessages.en,
+    transferListSelector: transferListSelectorMessages.en,
+    transferList: transferListMessages.en,
     treeList: treeListMessages.en,
     typeahead: typeaheadMessages.en,
   },
@@ -233,6 +245,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     keyboardHint: keyboardHintMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],
     lightbox: lightboxMessages['zh-CN'],
+    listInput: listInputMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     metadataList: metadataListMessages['zh-CN'],
     moreMenu: moreMenuMessages['zh-CN'],
@@ -257,6 +270,8 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     toast: toastMessages['zh-CN'],
     token: tokenMessages['zh-CN'],
     tokenizer: tokenizerMessages['zh-CN'],
+    transferListSelector: transferListSelectorMessages['zh-CN'],
+    transferList: transferListMessages['zh-CN'],
     treeList: treeListMessages['zh-CN'],
     typeahead: typeaheadMessages['zh-CN'],
   },

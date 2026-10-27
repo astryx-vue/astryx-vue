@@ -279,11 +279,13 @@ export function checkLocaleContracts(enCatalog, catalogs, icu) {
  * en.json 的每个键要么写进了映射表，要么属于一个写明理由的「暂不接入」命名空间。
  * 重新拉取 locales 后多出来的键会在这里被拦下，不会悄悄漏掉。
  */
-export function checkCoverage(enCatalog, map, unported) {
+export function checkCoverage(enCatalog, map, unported, unportedKeys = {}) {
   const problems = []
   const skipped = new Map()
   for (const key of Object.keys(enCatalog)) {
     if (Object.hasOwn(map, key))
+      continue
+    if (Object.hasOwn(unportedKeys, key))
       continue
     const namespace = key.split('.')[1] ?? ''
     if (Object.hasOwn(unported, namespace)) {

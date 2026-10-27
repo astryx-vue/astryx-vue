@@ -1,0 +1,206 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 记录列表。容器查询决定是「一行排所有列」（宽）还是「每列一行堆叠」（窄），
+   * 和原版一样在 640px 处切换。
+   */
+  .astryx-list-input {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    width: 100%;
+    overflow-anchor: none;
+    container-type: inline-size;
+    container-name: list-input;
+  }
+
+  .astryx-list-input__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-2, 8px);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .astryx-list-input__empty-item {
+    width: 100%;
+  }
+
+  /* 空状态在空白区里居中，用四周边距撑出竖向空间。 */
+  .astryx-list-input__empty-item .astryx-empty-state {
+    align-items: center;
+    justify-content: center;
+    padding-block: var(--astryx-spacing-6, 24px);
+    text-align: center;
+  }
+
+  .astryx-list-input__item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    position: relative;
+  }
+
+  /*
+   * 一行：先是所有字段，然后是删除按钮，最后是拖动手柄。
+   * 控件列宽固定成一格控件的大小，字段列吃掉剩下的空间。
+   */
+  .astryx-list-input__row {
+    display: grid;
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    column-gap: var(--astryx-spacing-1, 4px);
+    row-gap: 0;
+    min-width: 0;
+  }
+
+  .astryx-list-input__fields {
+    display: grid;
+    align-items: end;
+    gap: var(--astryx-spacing-1, 4px);
+    min-width: 0;
+  }
+
+  .astryx-list-input__cell {
+    min-width: 0;
+  }
+
+  /* 列名只在第一条上显示；窄屏时每条都显示，按下标由标记切换。 */
+  .astryx-list-input__column-label {
+    display: block;
+    margin-block-end: var(--astryx-spacing-0-5, 2px);
+    color: var(--astryx-color-text-primary, light-dark(#0a0a0a, #fafafa));
+    font-size: var(--astryx-text-label-size, 0.8125rem);
+    line-height: var(--astryx-text-label-leading, 1.3);
+    font-weight: var(--astryx-font-weight-medium, 500);
+  }
+
+  .astryx-list-input__column-label[data-list-input-repeated] {
+    display: none;
+  }
+
+  .astryx-list-input__cell-content {
+    min-width: 0;
+  }
+
+  .astryx-list-input__control-cell {
+    display: flex;
+    align-items: center;
+    align-self: end;
+    justify-content: center;
+    min-height: var(--astryx-size-element-md, 32px);
+  }
+
+  /* 记录本身的状态消息占满整行，跟在字段和控件下面。 */
+  .astryx-list-input__item-status {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-block-start: var(--astryx-spacing-1, 4px);
+    min-width: 0;
+  }
+
+  /* 添加按钮和字段列对齐，宽度撑满。 */
+  .astryx-list-input__action-row {
+    display: grid;
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    column-gap: var(--astryx-spacing-1, 4px);
+    margin-block-start: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-list-input__action-content {
+    min-width: 0;
+  }
+
+  /* 拖动中的源行半透明，说明它是被拿起来那一行。 */
+  .astryx-list-input__row--dragging {
+    opacity: 0.5;
+    user-select: none;
+  }
+
+  /* 落点指示线画在整行的上边或下边。 */
+  .astryx-list-input__item[data-list-input-drop-target] {
+    position: relative;
+  }
+
+  .astryx-list-input__item[data-list-input-drop-target]::before,
+  .astryx-list-input__item[data-list-input-drop-target]::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    height: var(--astryx-spacing-0-5, 2px);
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: var(--astryx-color-accent, light-dark(#0a0a0a, #fafafa));
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .astryx-list-input__item[data-list-input-drop-target='before']::before {
+    inset-block-start: calc(-1 * var(--astryx-spacing-0-5, 2px));
+  }
+
+  .astryx-list-input__item[data-list-input-drop-target='after']::after {
+    inset-block-end: calc(-1 * var(--astryx-spacing-0-5, 2px));
+  }
+
+  /* 手柄给出抓取手势，并且吃掉触摸滚动，否则手机上竖着拖会变成滚动页面。 */
+  .astryx-list-input__reorder-handle {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .astryx-list-input__reorder-handle[aria-pressed='true'] {
+    background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
+    cursor: grabbing;
+  }
+
+  .astryx-list-input__reorder-handle:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  /* 跟着指针走的克隆体。top / left / width 由组件内联给出。 */
+  .astryx-list-input__drag-preview {
+    position: fixed;
+    z-index: 2147483000;
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+    will-change: transform;
+    margin: 0;
+    container-type: inline-size;
+    container-name: list-input;
+    width: 100%;
+  }
+
+  /* 窄的时候每列占一行，行与行之间松一点。 */
+  @container list-input (max-width: 640px) {
+    .astryx-list-input__list {
+      gap: var(--astryx-spacing-8, 32px);
+    }
+
+    .astryx-list-input__row {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      row-gap: var(--astryx-spacing-2, 8px);
+    }
+
+    .astryx-list-input__fields {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--astryx-spacing-2, 8px);
+    }
+
+    .astryx-list-input__column-label {
+      margin-block-end: var(--astryx-spacing-1, 4px);
+    }
+
+    .astryx-list-input__column-label[data-list-input-repeated] {
+      display: block;
+    }
+
+    .astryx-list-input__item-status {
+      grid-row: auto;
+      margin-block-start: 0;
+    }
+  }
+}

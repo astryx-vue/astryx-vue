@@ -5,11 +5,14 @@ export const UNPORTED_NAMESPACES = {
   richTextEditor: 'F1b 富文本编辑器（packages/richtext）',
   chart: 'F2b 图表组件（packages/charts）',
   chartLegend: 'F2b 图表组件（packages/charts）',
-  listInput: 'F3a lab 输入类',
-  transferList: 'F3a lab 输入类',
-  transferListSelector: 'F3a lab 输入类',
   diffViewer: 'F3h lab 代码类',
   emojiPicker: 'F3e lab 对话',
   comments: '原版 lab Comments，ROADMAP 里还没有对应节点',
   commentComposer: '原版 lab Comments，ROADMAP 里还没有对应节点',
+}
+
+// 单个键没法接进 upstreamMap 的理由。检查器要求内置文案原样吐出每个占位符的值，
+// 而 `select` 型的占位符只会渲染命中的那一支，两条检查互相冲突。
+export const UNPORTED_KEYS = {
+  '@astryx.listInput.announceAlreadyAtBoundary': '占位符是 select（first/last/other），检查器要求的输出和 select 的渲染结果互相矛盾',
 }

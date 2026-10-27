@@ -23,7 +23,7 @@ import {
   checkMapTargets,
   checkSourceRefs,
 } from './i18n-catalog/checks.mjs'
-import { UNPORTED_NAMESPACES } from './i18n-catalog/coverage.mjs'
+import { UNPORTED_KEYS, UNPORTED_NAMESPACES } from './i18n-catalog/coverage.mjs'
 import './i18n-catalog/ts-hooks.mjs'
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)))
@@ -73,7 +73,7 @@ async function main() {
   const enCatalog = readJson(join(localesDir, 'en.json'))
   const catalogs = readCatalogs()
   const contracts = checkLocaleContracts(enCatalog, catalogs, icu)
-  const coverage = checkCoverage(enCatalog, map, UNPORTED_NAMESPACES)
+  const coverage = checkCoverage(enCatalog, map, UNPORTED_NAMESPACES, UNPORTED_KEYS)
   const refs = checkSourceRefs(readSources(join(coreDir, 'src')), map)
 
   const sections = [
