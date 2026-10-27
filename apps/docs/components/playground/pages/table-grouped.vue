@@ -100,8 +100,8 @@ const STATUS_LABEL: Record<TaskStatus, string> = {
   done: 'Done',
 }
 
-const STATUS_DOT: Record<TaskStatus, 'accent' | 'warning' | 'neutral' | 'success'> = {
-  in_progress: 'accent',
+const STATUS_DOT: Record<TaskStatus, 'info' | 'warning' | 'neutral' | 'success'> = {
+  in_progress: 'info',
   todo: 'warning',
   backlog: 'neutral',
   done: 'success',
@@ -458,10 +458,10 @@ const rowMenuItems = [
       </template>
       <LayoutContent :padding="4">
         <VStack :gap="4">
-          <TextInput label="Title" placeholder="Issue title" />
+          <TextInput model-value="" label="Title" placeholder="Issue title" />
           <Selector label="Status" model-value="todo" :options="[{ value: 'in_progress', label: 'In Progress' }, { value: 'todo', label: 'Todo' }, { value: 'backlog', label: 'Backlog' }]" />
           <Selector label="Priority" model-value="none" :options="[{ value: 'urgent', label: 'Urgent' }, { value: 'high', label: 'High' }, { value: 'medium', label: 'Medium' }, { value: 'low', label: 'Low' }, { value: 'none', label: 'No priority' }]" />
-          <TextInput label="Project" placeholder="Project name" />
+          <TextInput model-value="" label="Project" placeholder="Project name" />
         </VStack>
       </LayoutContent>
       <template #footer>
@@ -493,7 +493,7 @@ const rowMenuItems = [
 }
 
 /* StatusDot 没有 accent 变体，这里按原版的强调色补上。 */
-:deep(.astryx-status-dot[data-variant='accent']) {
+:deep(.astryx-status-dot[data-variant='info']) {
   background-color: var(--astryx-color-accent);
 }
 
