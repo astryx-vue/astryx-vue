@@ -23,6 +23,18 @@
    - `astryx-vue theme <名字>`：一次性输出这套主题的完整接入说明：入口里引哪个 CSS；根元素的 `data-astryx-theme` 写什么；已经有别的主题时怎么换、怎么并存（局部用另一套主题）；改完怎么验证。
    - 命令本身不改用户文件。
 
+7. 2026-10-27：`upgrade` 只输出升级指引（用户确认）。
+   - `astryx-vue upgrade`：读用户项目里 `@astryx-vue/core` 的版本，和最新版比，输出从当前版本升上去要做的事：每条破坏性改动写「变了什么、以前怎么写、现在怎么写、怎么改」，内容取自文档站升级指南（catalog 里那一份，不另写）。
+   - 附上用户项目里可能命中的地方：用 grep 规则找 `labelHidden`、`enableEscape`、旧主题挂点名这类关键词，列出文件和行号，让 AI 助手或用户自己改。只读不写。
+   - 已经是最新版时，说一句「不用升级」并给出 changelog 链接。
+
+## D4b 范围（D4a 定稿）
+
+- 已有命令补细节：`search` 排序与来源包、`docs --depth`、`build` 选起始模板、`component`/`composable`/`template`/`manifest` 对齐；`cli.ts` 拆到 500 行内；删掉已在上游删除的 `layout` 命令组（如果有）。
+- 新增 `init`（第 3 条）、`theme`（第 6 条）、`upgrade`（第 7 条）、`doctor`（简单版：检查依赖版本对得上、样式表引了没有、主题设了没有，只报告不修改）。
+- catalog 支持多个包、每条结果标明来源包（ADR 0001 第 7.3 节），给 F1c、F2c、F3f 用。
+- 不做：`swizzle`、`gap-report`、`discover`、`integration`、`blog`。
+
 ## 待讨论
 
 - 原版 142 篇指南里，我们文档站还缺哪些主题，要补进文档站。
