@@ -1040,20 +1040,33 @@ const hasNext = computed(() => visibleCount.value < sortedData.value.length)
 const sentinelRef = ref<HTMLElement | null>(null)
 let sentinelObserver: IntersectionObserver | null = null
 
-onMounted(() => {
+/** 哨兵的滚动容器：页面滚就听 viewport，内容区内部滚就听那个容器。 */
+function scrollRootOf(el: HTMLElement | null): Element | Document | null {
+  let node = el?.parentElement ?? null
+  while (node != null) {
+    const overflowY = getComputedStyle(node).overflowY
+    if ((overflowY === 'auto' || overflowY === 'scroll') && node.scrollHeight > node.clientHeight)
+      return node
+    node = node.parentElement
+  }
+  return null
+}
+
+function observeSentinel(el: HTMLElement | null): void {
+  sentinelObserver?.disconnect()
+  sentinelObserver = null
+  if (el == null)
+    return
   sentinelObserver = new IntersectionObserver((entries) => {
     if (entries.some(entry => entry.isIntersecting) && hasNext.value)
       loadNext(PAGE_SIZE)
-  }, { rootMargin: '240px' })
-  if (sentinelRef.value)
-    sentinelObserver.observe(sentinelRef.value)
-})
+  }, { root: scrollRootOf(el), rootMargin: '240px' })
+  sentinelObserver.observe(el)
+}
 
-watch(sentinelRef, (el) => {
-  sentinelObserver?.disconnect()
-  if (el)
-    sentinelObserver?.observe(el)
-})
+onMounted(() => observeSentinel(sentinelRef.value))
+
+watch(sentinelRef, el => observeSentinel(el))
 
 const tableRows = computed(() => (isGrouped.value ? groupedRows.value : pagedData.value))
 const tableIdKey = computed(() => (isGrouped.value ? groupedIdKey : 'id'))
