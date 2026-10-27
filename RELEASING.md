@@ -12,7 +12,7 @@
 
 1. `pnpm install --frozen-lockfile`
 2. `pnpm check`。这里面包含 publint 和 `@arethetypeswrong/cli`
-3. 工作目录里还有 changeset 时，打开或更新标题为 `Version Packages` 的 PR
+3. 工作目录里还有 changeset 时，打开或更新标题为 `Version Packages` 的 PR。这个 PR 由 `pnpm version-packages` 生成：`changeset version` 改版本号，`pnpm install --lockfile-only` 更新 lockfile，最后重新生成 CLI 的 `catalog.json`。catalog 里记着每个包的版本号，不重新生成就会和 `package.json` 对不上，`generate:check` 会把发版卡住
 4. 没有未消费的 changeset 时，`pnpm release` 会先构建包，再执行 `changeset publish`。pnpm 11 自己实现了 publish，会把 `catalog:` 和 `workspace:` 改成具体版本
 5. 已经在 npm 上的版本会跳过，不会再次上传
 6. 为每个包打 git tag，并创建 GitHub Release。随后把对应的 npm 版本页链接补进 Release 说明
