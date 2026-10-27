@@ -180,7 +180,9 @@ const grouped = useTableGroupedRows<SpecRow>(() => ({
   collapsedGroups: collapsedGroups.value,
   onToggleGroup: toggleGroup,
   getRowKey: row => row.id,
-  renderGroupHeader: groupKey => h(Heading, { level: 3 }, () => groupKey),
+  renderGroupHeader: groupKey => h(HStack, { gap: 2, vAlign: 'center', style: { position: 'sticky', insetInlineStart: 'var(--astryx-spacing-6)', width: 'fit-content' } }, () =>
+    h(Heading, { level: 3, accessibilityLevel: 2 }, () => groupKey),
+  ),
 }))
 
 const sticky = useTableStickyColumns<SpecRow>({ startKeys: ['spec'] })
@@ -220,7 +222,7 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
     key: 'spec',
     header: 'Models',
     width: pixel(220),
-    renderCell: row => h(Text, { type: 'label', color: 'secondary' }, () => row.label),
+    renderCell: row => h(HStack, { vAlign: 'center', height: 24 }, () => h(Text, { type: 'label', color: 'secondary' }, () => row.label)),
   },
   ...slots.value.map((modelId, index) => {
     const model = modelById.get(modelId)
@@ -246,27 +248,27 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
         }
         const value = row.get(model)
         if (typeof value === 'boolean') {
-          return h(HStack, { hAlign: 'end', vAlign: 'center' }, () => h(Icon, {
+          return h(HStack, { gap: 1, hAlign: 'end', vAlign: 'center', height: 24 }, () => h(Icon, {
             icon: value ? 'i-carbon-checkmark-filled' : 'i-carbon-close-filled',
             size: 'md',
             color: value ? 'success' : 'error',
           }))
         }
         if (typeof value === 'string') {
-          return h(Text, { type: 'large' }, () => value)
+          return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end', height: 24 }, () => h(Text, { type: 'large', weight: 'normal' }, () => value))
         }
         const best = bestByRow.value.get(row.id)
         const isBest = highlightBest.value && best != null && value === best
         if (row.isScore) {
-          return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end' }, () => [
+          return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end', height: 24 }, () => [
             h(HStack, { width: 56, vAlign: 'center' }, () => h(ProgressBar, { label: 'Score', isLabelHidden: true, value, variant: 'accent' })),
             h(Text, { hasTabularNumbers: true, weight: isBest ? 'semibold' : 'normal' }, () => row.format?.(value) ?? String(value)),
           ])
         }
         const formatted = row.format?.(value) ?? String(value)
-        return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end', class: isBest ? 'best-cell' : undefined }, () => [
+        return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end', height: 24, class: isBest ? 'best-cell' : undefined }, () => [
           h(Text, { type: 'large', hasTabularNumbers: true, weight: isBest ? 'semibold' : 'normal' }, () => formatted),
-          row.unit ? h(Text, { type: 'large', color: 'secondary' }, () => row.unit) : null,
+          row.unit ? h(Text, { type: 'large', weight: 'normal', color: isBest ? 'primary' : 'secondary' }, () => row.unit) : null,
         ])
       },
     }
