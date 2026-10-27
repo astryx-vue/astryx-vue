@@ -10,7 +10,8 @@
   "fixed": [
     [
       "@astryx-vue/core",
-      "@astryx-vue/themes"
+      "@astryx-vue/themes",
+      "@astryx-vue/richtext"
     ]
   ],
   "linked": [],

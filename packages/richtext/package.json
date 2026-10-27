@@ -1,0 +1,124 @@
+{
+  "name": "@astryx-vue/richtext",
+  "type": "module",
+  "version": "0.4.0",
+  "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "homepage": "https://astryx-vue.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astryx-vue/astryx-vue.git",
+    "directory": "packages/richtext"
+  },
+  "bugs": "https://github.com/astryx-vue/astryx-vue/issues",
+  "keywords": [
+    "vue",
+    "vue3",
+    "design-system",
+    "astryx",
+    "richtext",
+    "rich-text",
+    "editor",
+    "lexical",
+    "markdown"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./markdown": {
+      "source": "./src/markdown.ts",
+      "types": "./dist/markdown.d.ts",
+      "import": "./dist/markdown.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@astryx-vue/core": "workspace:^",
+    "@lexical/code": "catalog:richtext",
+    "@lexical/extension": "catalog:richtext",
+    "@lexical/headless": "catalog:richtext",
+    "@lexical/html": "catalog:richtext",
+    "@lexical/link": "catalog:richtext",
+    "@lexical/list": "catalog:richtext",
+    "@lexical/markdown": "catalog:richtext",
+    "@lexical/rich-text": "catalog:richtext",
+    "@lexical/table": "catalog:richtext",
+    "@lexical/utils": "catalog:richtext",
+    "lexical": "catalog:richtext",
+    "vue": "catalog:peer"
+  },
+  "peerDependenciesMeta": {
+    "@lexical/code": {
+      "optional": true
+    },
+    "@lexical/extension": {
+      "optional": true
+    },
+    "@lexical/headless": {
+      "optional": true
+    },
+    "@lexical/html": {
+      "optional": true
+    },
+    "@lexical/link": {
+      "optional": true
+    },
+    "@lexical/list": {
+      "optional": true
+    },
+    "@lexical/markdown": {
+      "optional": true
+    },
+    "@lexical/rich-text": {
+      "optional": true
+    },
+    "@lexical/table": {
+      "optional": true
+    },
+    "@lexical/utils": {
+      "optional": true
+    },
+    "lexical": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@astryx-vue/core": "workspace:^",
+    "@lexical/code": "catalog:richtext",
+    "@lexical/extension": "catalog:richtext",
+    "@lexical/headless": "catalog:richtext",
+    "@lexical/html": "catalog:richtext",
+    "@lexical/link": "catalog:richtext",
+    "@lexical/list": "catalog:richtext",
+    "@lexical/markdown": "catalog:richtext",
+    "@lexical/rich-text": "catalog:richtext",
+    "@lexical/table": "catalog:richtext",
+    "@lexical/utils": "catalog:richtext",
+    "@types/node": "catalog:language",
+    "@vue/compiler-sfc": "catalog:vue",
+    "lexical": "catalog:richtext",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:language",
+    "unplugin-vue": "catalog:build",
+    "vue": "catalog:vue",
+    "vue-tsc": "catalog:vue"
+  }
+}
