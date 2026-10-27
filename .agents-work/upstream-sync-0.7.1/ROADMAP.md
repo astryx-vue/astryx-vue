@@ -59,6 +59,7 @@ mindmap
       ✅ D15 core 状态图标改实心
       ✅ D16 Table 行高对齐原版
       ✅ D17 演练场图表撑满与刻度
+      🟡 D18 core 组件对齐原版
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -86,7 +87,7 @@ mindmap
       ➖ F6 build 构建插件
     阶段 G 发布与持续维护
       ✅ G1 发布核心组件与主题包
-      🔵 G2 发布命令行工具
+      🟡 G2 发布命令行工具
       ⬜ G3 发布全新扩展包
       🔵 G4 每周自动追踪上游更新
 ```
@@ -260,6 +261,7 @@ flowchart TB
   C16 --> D15["D15 core 状态图标改实心"]
   C11 --> D16["D16 Table 行高对齐原版"]
   D5c --> D17["D17 演练场图表撑满与刻度"]
+  D12 --> D18["D18 core 组件对齐原版"]
   CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
@@ -371,12 +373,13 @@ flowchart TB
 | D9 | 指南补齐 | C全部 | ✅ 已完成 | 1 | D9-impl | | 补 4 个新指南页与 6 处小节，中英文各一份 | #172 |
 | D10 | core 遗留问题修复 | D5c | ✅ 已完成 | 1 | D10-impl | | Stack 间距不再继承；Table 列头筛选同行、行级 ref 与事件；Selector 图标组件化；竖向 Step 内容；两个 Table 组合式函数 config 支持 ref | #180 |
 | D11 | 文档润色 | G1 | ✅ 已完成 | 3 | D11-writer | | 第 1 批：中文指南和主题页 39 处宣传腔改平实；组件页和英文页留后续批次 | #213 |
-| D12 | 演练场模板逐个走查 | D5c | 🟡 实现中 | 2 | D12-ui | | | |
+| D12 | 演练场模板逐个走查 | D5c | 🟡 实现中 | 2 | D12-ui | | 第 2 批 16 个模板已走查，进行中：补深色对照、table-filter 功能块、之后剩 41 个模板分批 | |
 | D13 | 主题编辑器补面板 | D8 | ✅ 已完成 | 1 | D13-ui | | Components、Advanced 两个面板补齐，实时预览、导出、分享恢复；新增 14 测试 | #212 |
 | D14 | core Markdown 解析器对齐原版 | C9 | ✅ 已完成 | 1 | D14-impl | | 6 处对齐原版（含解析时拒绝不安全地址）；richtext 12 条 todo 恢复 | #217 |
 | D15 | core 状态图标改实心 | C16 | ✅ 已完成 | 2 | D15-impl | | 状态图标走 Icon：文档站 lucide 描边、演练场实心兜底，与原版两处一致 | #214 |
 | D16 | Table 行高对齐原版 | C11 | ✅ 已完成 | 1 | 总控 | | Table 不再写死行高，单元格 21px、行 37.5px，和原版一致 | #216 |
 | D17 | 演练场图表撑满与刻度 | D5c | ✅ 已完成 | 1 | 总控 | | 图表撑满、y 轴 5 档、图例色块、副标题；图表写法检查 | #220 |
+| D18 | core 组件对齐原版（D12 发现的 19 个问题） | D12 | 🟡 实现中 | 0 | Sonnet(D18) | | OverflowList 指示器宽度、Link size/weight、Text 粗体、小尺寸选择器高度、Table 行高/列宽/展开面板内边距、token 内边距、StatusDot accent 等，D12 走查时发现，改 core 根因 | |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
@@ -402,7 +405,7 @@ flowchart TB
 | F5 | vega | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 5 节 | |
 | F6 | build | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 6 节 | |
 | G1 | 发布 core + themes | C全部 D2 D7 D10 | ✅ 已完成 | 1 | 总控 | | core 与 themes 0.4.0 已发 npm（latest），GitHub Release 与 GitHub Packages 同步 | #182 #183 #184 |
-| G2 | 发布 CLI | G1 D4b D5b | 🔵 可开工 | 0 | | | | |
+| G2 | 发布 CLI | G1 D4b D5b | 🟡 实现中 | 0 | deepseek(G2) | | cli 0.4.0 发版准备：changeset、不推荐未发布的包、打包实跑 | |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
 | G4 | 持续同步机制 | A1 G1 | 🔵 可开工 | 0 | | | | |
 
@@ -501,6 +504,7 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D15 core 状态图标改实心 | D12 验收时发现：原版 `defaultIcons.tsx` 里 success、error、warning、info 等 6 个状态图标用实心（`solidSvgProps`，heroicons solid 风格），我们 `styles/icon.css` 里是 lucide 空心描边。Banner、Toast、Field 状态等处都受影响。逐个照原版路径改成实心。 | C16 | 6 个图标路径和原版一致；Banner、Toast、FieldStatus 文档页浅色深色对照一致。 |
 | D16 Table 行高对齐原版 | D12 走查发现表格每行比原版矮。原版 Table 不设行高，继承 `html { line-height: 1.5 }`（21px）；我们写死了 `--astryx-text-body-leading`（20px）。去掉这一行即可。 | C11 | 原版和我们的演练场 table-page、文档站 Table 页的单元格行高和行高度一致。 |
 | D17 演练场图表撑满与刻度 | 用户多次报图表和原版不一致：写死 viewBox 宽度导致不撑满、`PlaygroundLineChart` 只画两档 y 刻度、图例缺色块。从共用图表组件根上修，并在 `check-template-tokens.mjs` 加图表写法检查。 | D5c | 所有图表模板和原版同视口对照一致；写死宽度的图表 svg 会被检查拦下。 |
+| D18 core 组件对齐原版（D12 发现的 19 个问题） | OverflowList 指示器宽度、Link size/weight、Text 粗体、小尺寸选择器高度、Table 行高/列宽/展开面板内边距、token 内边距、StatusDot accent 等，D12 走查时发现，改 core 根因。 | D12 | 清单 19 条逐条核实，确认的修好并有测试，演练场模板去掉相应绕过后和原版一致。 |
 
 ---
 
