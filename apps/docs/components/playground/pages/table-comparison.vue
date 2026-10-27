@@ -29,8 +29,22 @@ type Modality = 'text' | 'image' | 'audio' | 'video' | 'document'
 const MODALITY_ORDER: Modality[] = ['text', 'image', 'audio', 'video', 'document']
 
 /** 输入输出模态各占同一个格子位置，缺哪一项就用暗色图标占位。 */
-const MODALITY_ICON: Record<Modality, string> = {
-  text: 'i-carbon-letter-tt',
+/** 文字模态的图标，画成和原版（lucide Type）一样的大写 T 带衬线。 */
+const TextTypeIcon = () => h('svg', {
+  'xmlns': 'http://www.w3.org/2000/svg',
+  'viewBox': '0 0 24 24',
+  'fill': 'none',
+  'stroke': 'currentColor',
+  'stroke-width': 1.5,
+  'stroke-linecap': 'round',
+  'stroke-linejoin': 'round',
+  'width': '1em',
+  'height': '1em',
+  'aria-hidden': 'true',
+}, [h('path', { d: 'M12 4v16' }), h('path', { d: 'M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2' }), h('path', { d: 'M9 20h6' })])
+
+const MODALITY_ICON: Record<Modality, string | typeof TextTypeIcon> = {
+  text: TextTypeIcon,
   image: 'i-heroicons-photo',
   audio: 'i-heroicons-speaker-wave',
   video: 'i-heroicons-video-camera',
