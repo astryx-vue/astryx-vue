@@ -12,6 +12,7 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Layout,
   LayoutContent,
   LayoutPanel,
@@ -28,13 +29,14 @@ import {
   TextInput,
   Token,
   Toolbar,
+  useMediaQuery,
   useTableSortable,
   useTableSortableState,
   useTableTreeState,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
-import { computed, h, ref } from 'vue'
+import { computed, defineComponent, h, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 
 type EntryKind = 'folder' | 'typescript' | 'json' | 'yaml' | 'markdown' | 'text'
 
@@ -358,6 +360,36 @@ const REPO_STATS = [
   { label: 'forks', value: '1.3k', icon: 'carbon:fork' },
 ]
 
+/** 侧栏在视口 ≥1024 时占右边 296px，窄了就挪到 README 下面。 */
+const isSidebarInline = useMediaQuery('(min-width: 1024px)')
+
+/** 表头和正文各自量宽，≤720 时按钮收成图标、搜索框收成图标按钮。 */
+const NARROW_WIDTH = 720
+const headerEl = ref<HTMLElement | null>(null)
+const bodyEl = ref<HTMLElement | null>(null)
+const headerWidth = ref<number | null>(null)
+const bodyWidth = ref<number | null>(null)
+const isNarrowHeader = computed(() => headerWidth.value != null && headerWidth.value <= NARROW_WIDTH)
+const isNarrowBody = computed(() => bodyWidth.value != null && bodyWidth.value <= NARROW_WIDTH)
+const isSearchOpen = ref(false)
+
+function watchWidth(target: typeof headerEl, width: typeof headerWidth): void {
+  let observer: ResizeObserver | null = null
+  watch(target, (element) => {
+    observer?.disconnect()
+    observer = null
+    if (!element || typeof ResizeObserver === 'undefined')
+      return
+    observer = new ResizeObserver(([entry]) => {
+      width.value = entry?.contentRect.width ?? null
+    })
+    observer.observe(element)
+  }, { immediate: true, flush: 'post' })
+  onBeforeUnmount(() => observer?.disconnect())
+}
+watchWidth(headerEl, headerWidth)
+watchWidth(bodyEl, bodyWidth)
+
 const REF_COUNTS = [
   { label: '171 Branches', icon: 'carbon:branch' },
   { label: '56 Tags', icon: 'heroicons:tag' },
@@ -377,6 +409,44 @@ const CONTRIBUTORS = [
   'Kit Nakamura',
   'Lena Voss',
 ]
+
+/** 右侧 About 栏的内容。宽屏放在 Layout 的 end 槽，窄屏挪到 README 下面，所以抽成一个组件复用。 */
+const AboutPanel = defineComponent({
+  setup() {
+    const row = (icon: string, color: 'secondary' | undefined, text: string, key: string) =>
+      h(HStack, { key, gap: 2, vAlign: 'center' }, () => [
+        h(Icon, { name: icon, size: 'sm', color }),
+        h(Link, { href: '#' }, () => text),
+      ])
+    return () => h(VStack, { gap: 6 }, () => [
+      h(VStack, { gap: 3 }, () => [
+        h(Heading, { level: 3 }, () => 'About'),
+        h(Text, { color: 'secondary' }, () => REPO_DESCRIPTION),
+        h(Link, { href: '#', isExternalLink: true }, () => 'canvas-editor.dev'),
+        h(HStack, { gap: 1, wrap: 'wrap' }, () => TOPICS.map(topic => h(Token, { key: topic, size: 'sm', label: topic, onClick: () => {} }))),
+        h(VStack, { gap: 2 }, () => ABOUT_LINKS.map(link => row(link.icon, 'secondary', link.label, link.label))),
+        h(VStack, { gap: 2 }, () => REPO_STATS.map(stat => row(stat.icon, 'secondary', `${stat.value} ${stat.label}`, stat.label))),
+      ]),
+      h(Divider),
+      h(VStack, { gap: 3 }, () => [
+        h(Heading, { level: 3 }, () => 'Releases'),
+        h(HStack, { gap: 2, vAlign: 'center' }, () => [
+          h(Icon, { name: 'heroicons:tag', size: 'sm', color: 'success' }),
+          h(Text, { weight: 'bold' }, () => 'v2.4.0'),
+          h(Badge, { label: 'Latest', variant: 'success' }),
+        ]),
+        h(Text, { type: 'supporting', color: 'secondary' }, () => `${commitAge(daysAgo(11))} · 36 releases`),
+      ]),
+      h(Divider),
+      h(VStack, { gap: 3 }, () => [
+        h(Heading, { level: 3 }, () => 'Contributors'),
+        h(HStack, { gap: 1, wrap: 'wrap' }, () => CONTRIBUTORS.map(name => h(Avatar, { key: name, name, size: 32 }))),
+        h(Link, { href: '#' }, () => '+ 61 contributors'),
+      ]),
+    ])
+  },
+})
+
 
 const TAB_PLACEHOLDER = {
   conduct: 'The Contributor Covenant, version 2.1, applies to this project.',
@@ -710,81 +780,17 @@ const READMES: Record<string, string> = {
             </Text>
           </Section>
         </Card>
+
+        <template v-if="!isSidebarInline">
+          <Divider />
+          <AboutPanel />
+        </template>
       </VStack>
     </LayoutContent>
 
-    <template #end>
+    <template v-if="isSidebarInline" #end>
       <LayoutPanel :width="296" :padding="4" :is-scrollable="false" role="complementary" label="About this repository">
-        <VStack :gap="6">
-          <VStack :gap="3">
-            <Heading :level="3">
-              About
-            </Heading>
-            <Text color="secondary">
-              {{ REPO_DESCRIPTION }}
-            </Text>
-            <Link href="#" is-external-link>
-              canvas-editor.dev
-            </Link>
-            <HStack :gap="1" wrap="wrap">
-              <Token
-                v-for="topic in TOPICS"
-                :key="topic"
-                size="sm"
-                :label="topic"
-                @click="() => {}"
-              />
-            </HStack>
-            <VStack :gap="2">
-              <HStack v-for="link in ABOUT_LINKS" :key="link.label" :gap="2" align="center">
-                <Icon :name="link.icon" size="sm" color="secondary" />
-                <Link href="#">
-                  {{ link.label }}
-                </Link>
-              </HStack>
-            </VStack>
-            <VStack :gap="2">
-              <HStack v-for="stat in REPO_STATS" :key="stat.label" :gap="2" align="center">
-                <Icon :name="stat.icon" size="sm" color="secondary" />
-                <Link href="#">
-                  {{ stat.value }} {{ stat.label }}
-                </Link>
-              </HStack>
-            </VStack>
-          </VStack>
-
-          <Divider />
-
-          <VStack :gap="3">
-            <Heading :level="3">
-              Releases
-            </Heading>
-            <HStack :gap="2" align="center">
-              <Icon name="heroicons:tag" size="sm" color="success" />
-              <Text weight="bold">
-                v2.4.0
-              </Text>
-              <Badge label="Latest" variant="success" />
-            </HStack>
-            <Text type="supporting" color="secondary">
-              {{ commitAge(daysAgo(11)) }} · 36 releases
-            </Text>
-          </VStack>
-
-          <Divider />
-
-          <VStack :gap="3">
-            <Heading :level="3">
-              Contributors
-            </Heading>
-            <HStack :gap="1" wrap="wrap">
-              <Avatar v-for="name in CONTRIBUTORS" :key="name" :name="name" :size="32" />
-            </HStack>
-            <Link href="#">
-              + 61 contributors
-            </Link>
-          </VStack>
-        </VStack>
+        <AboutPanel />
       </LayoutPanel>
     </template>
   </Layout>
