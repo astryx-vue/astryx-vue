@@ -477,11 +477,11 @@ function trendGeometry(trend: TrendSeries) {
                     <text :x="CHART.padLeft - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle" class="chart-tick">{{ tick.value }}</text>
                   </g>
                   <text
-                    v-for="tick in trendGeometry(trend).xTicks"
+                    v-for="(tick, tickIndex) in trendGeometry(trend).xTicks"
                     :key="tick.label"
                     :x="tick.x"
                     :y="CHART.h - 8"
-                    text-anchor="middle"
+                    :text-anchor="tickIndex === trendGeometry(trend).xTicks.length - 1 ? 'end' : 'middle'"
                     class="chart-tick"
                   >{{ tick.label }}</text>
                   <path v-if="trend.kind === 'area'" :d="trendGeometry(trend).area" :fill="`url(#grad-${trend.key})`" />

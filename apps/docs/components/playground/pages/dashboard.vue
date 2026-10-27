@@ -164,16 +164,16 @@ const TOP_PAGES_MAX = Math.max(...TOP_PAGES.map(row => row.views))
 const TOP_EVENTS_MAX = Math.max(...TOP_EVENTS.map(row => row.count))
 
 /** 数值列里画一条进度条，条下再写原始数字。 */
-function barCell(value: number, max: number, label: string) {
+function barCell(value: number, max: number, label: string, suffix = '') {
   return h(VStack, { gap: 1 }, () => [
     h(ProgressBar, { value, max, label, isLabelHidden: true }),
-    h(Text, { type: 'supporting' }, () => value.toLocaleString()),
+    h(Text, { type: 'supporting' }, () => `${value.toLocaleString()}${suffix}`),
   ])
 }
 
 const TOP_PAGES_COLUMNS: TableColumn<PageRow>[] = [
   { key: 'page', header: 'Page', width: pixel(160) },
-  { key: 'views', header: 'Views', width: proportional(1), renderCell: (row: PageRow) => barCell(row.views, TOP_PAGES_MAX, `${row.page} views`) },
+  { key: 'views', header: 'Views', width: proportional(1), renderCell: (row: PageRow) => barCell(row.views, TOP_PAGES_MAX, `${row.page} views`, ' views') },
   { key: 'newUsers', header: 'New Users', width: pixel(120) },
   { key: 'avgTime', header: 'Avg. Time', width: pixel(120) },
 ]
@@ -419,7 +419,7 @@ function sparklinePoints(values: number[]): string {
   display: flex;
   height: 24px;
   overflow: clip;
-  border-radius: var(--astryx-radius-element);
+  border-radius: 4px;
 }
 .stacked-bar__segment {
   flex-basis: 0;
