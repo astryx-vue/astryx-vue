@@ -317,7 +317,7 @@ const trendingColumns: TableColumn<StockRow>[] = [
   { key: 'dailyPts', header: 'Daily Chg (pts)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPts >= 0 ? 'green' : 'red', label: (row.dailyPts >= 0 ? '+' : '') + row.dailyPts.toFixed(2) }) },
   { key: 'dailyPct', header: 'Daily Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPct >= 0 ? 'green' : 'red', label: (row.dailyPct >= 0 ? '+' : '') + row.dailyPct.toFixed(2) + '%' }) },
   { key: 'weekChg', header: '52W Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.weekChg >= 0 ? 'green' : 'red', label: (row.weekChg >= 0 ? '+' : '') + row.weekChg.toFixed(1) + '%' }) },
-  { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1 }) },
+  { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1, isMeasured: true, padTop: 2, padBottom: 2 }) },
 ]
 
 const timeRange = ref('1 year')
