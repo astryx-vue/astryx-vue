@@ -17,6 +17,7 @@ import {
   GridSpan,
   Heading,
   HStack,
+  Icon,
   Item,
   Link,
   MoreMenu,
@@ -100,6 +101,8 @@ const ACTIVITY = [
   { id: '5', label: 'Order #1037', detail: 'Placed · 8:42 am', amount: 95 },
 ]
 
+const ActivityIcons: Record<string, string> = { '1': 'heroicons:shopping-bag', '2': 'heroicons:banknotes', '3': 'heroicons:shopping-bag', '4': 'heroicons:shopping-bag', '5': 'heroicons:shopping-bag' }
+const SearchIcon = () => h(Icon, { name: 'heroicons:magnifying-glass', size: 'sm' })
 const { isMobile } = useAppShellMobile()
 const gridColumns = computed(() => (isMobile ? 1 : { minWidth: 200, repeat: 'fit' as const }))
 const productColumns = computed(() => (isMobile ? 1 : { minWidth: 200, max: 3 }))
@@ -113,6 +116,7 @@ const country = ref('us')
 const saveInfo = ref(true)
 const quantity = ref(1)
 const chatDraft = ref('')
+const search = ref('')
 const paymentCard = ref(true)
 const paymentApple = ref(false)
 const paymentGoogle = ref(false)
@@ -385,6 +389,24 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 </Button>
               </HStack>
               <Divider variant="subtle" />
+              <HStack :gap="3" :align="'center'" :justify="'between'" class="inventory-filter-row">
+                <HStack :gap="2" :align="'center'" class="inventory-filter-left">
+                  <div class="search-input">
+                    <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
+                  </div>
+                  <Button label="Filters" variant="ghost" size="sm">
+                    <template #icon><Icon name="heroicons:tag" size="sm" /></template>
+                  </Button>
+                </HStack>
+                <HStack :gap="1" :align="'center'">
+                  <Button variant="ghost" size="sm" is-icon-only label="List view" tooltip="List view">
+                    <template #icon><Icon name="heroicons:list-bullet" size="md" /></template>
+                  </Button>
+                  <Button variant="ghost" size="sm" is-icon-only label="Grid view" tooltip="Grid view">
+                    <template #icon><Icon name="heroicons:squares-2x2" size="md" /></template>
+                  </Button>
+                </HStack>
+              </HStack>
               <div v-if="lowStockCount > 0" class="inventory-banner-wrap">
                 <Banner status="warning" :title="`${lowStockCount} items are running low`" />
               </div>
@@ -408,7 +430,10 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 </HStack>
                 <VStack :gap="1" class="activity-list-fade">
                   <Item v-for="item in ACTIVITY" :key="item.id" :label="item.label" :description="item.detail" href="#">
-                    <template #end>
+                    <template #startContent>
+                      <div class="activity-icon" aria-hidden="true"><Icon :name="ActivityIcons[item.id]" size="sm" /></div>
+                    </template>
+                    <template #endContent>
                       <Text type="body" weight="bold" :color="item.amount < 0 ? 'secondary' : 'primary'">{{ formatAmount(item.amount) }}</Text>
                     </template>
                   </Item>
@@ -439,6 +464,10 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 .payment-card-content { min-width: 0; width: 100%; text-align: center; word-break: break-word; }
 .inventory-card { background: var(--astryx-color-background-surface); overflow: hidden; }
 .inventory-header { padding-block: var(--astryx-spacing-6); padding-inline: var(--astryx-spacing-6); }
+.inventory-filter-row { padding-block: var(--astryx-spacing-4); padding-inline: var(--astryx-spacing-6); width: 100%; overflow-x: auto; }
+.inventory-filter-left { flex: 1; min-width: 0; }
+.search-input { flex: 1; min-width: 0; max-width: 240px; }
+.activity-icon { width: 32px; height: 32px; border-radius: var(--astryx-radius-full); background: var(--astryx-color-background-muted); color: var(--astryx-color-text-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .inventory-banner-wrap { padding-inline: var(--astryx-spacing-6); padding-bottom: var(--astryx-spacing-4); }
 .inventory-table-wrap { padding-inline: var(--astryx-spacing-6); padding-block-end: var(--astryx-spacing-2); }
 .chat-card { background: var(--astryx-color-background-surface); min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
