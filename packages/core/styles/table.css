@@ -554,30 +554,32 @@
     background: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
   }
 
-  .astryx-table__panel {
+  /* td 标签把特异性抬到和密度单元格规则（0,2,1）一样，又排在它后面，
+     所以面板的 16/20 内边距不会被密度规则的 padding 盖掉。 */
+  .astryx-table td.astryx-table__panel {
     max-width: none;
     padding-inline-end: var(--astryx-spacing-5, 20px);
     padding-block: var(--astryx-spacing-4, 16px);
   }
 
-  .astryx-table[data-density='compact'] .astryx-table__panel {
+  .astryx-table[data-density='compact'] td.astryx-table__panel {
     padding-inline-start: calc(40px + var(--astryx-spacing-2, 8px));
   }
 
-  .astryx-table[data-density='balanced'] .astryx-table__panel {
+  .astryx-table[data-density='balanced'] td.astryx-table__panel {
     padding-inline-start: calc(40px + var(--astryx-spacing-3, 12px));
   }
 
-  .astryx-table[data-density='spacious'] .astryx-table__panel {
+  .astryx-table[data-density='spacious'] td.astryx-table__panel {
     padding-inline-start: calc(40px + var(--astryx-spacing-4, 16px));
   }
 
-  .astryx-table[data-dividers='rows'] .astryx-table__panel,
-  .astryx-table[data-dividers='grid'] .astryx-table__panel {
+  .astryx-table[data-dividers='rows'] td.astryx-table__panel,
+  .astryx-table[data-dividers='grid'] td.astryx-table__panel {
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
   }
 
-  .astryx-table tbody tr:last-child > .astryx-table__panel {
+  .astryx-table tbody tr:last-child > td.astryx-table__panel {
     border-bottom-width: 0;
   }
 

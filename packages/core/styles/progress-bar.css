@@ -133,6 +133,11 @@
     background: var(--astryx-progress-bar-info-fill, var(--astryx-input-info, #6d9cfe));
   }
 
+  /* 原版 neutral 填充是 disabled 灰，不是前景近黑。 */
+  .astryx-progress-bar[data-variant='neutral'] .astryx-progress-bar-fill {
+    background: var(--astryx-progress-bar-neutral-fill, var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252)));
+  }
+
   /* A disabled bar dims everything it draws: the fill drops the variant color
      for the disabled foreground, and the label, value and marks step down to
      the muted ramp. */

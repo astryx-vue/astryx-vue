@@ -23,9 +23,9 @@
     transition: background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
+  /* 原版 sm 不换内边距，和 md/lg 一样留 8px。 */
   .astryx-token.size-sm {
     height: calc(var(--astryx-input-height-sm, 28px) - 8px);
-    padding-inline: var(--astryx-spacing-1, 4px);
   }
 
   .astryx-token.size-lg {
