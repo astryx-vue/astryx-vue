@@ -48,7 +48,6 @@ interface StackStyle extends CSSProperties {
   '--astryx-stack-padding-inline-end'?: string
   '--astryx-stack-padding-inline-start'?: string
 }
-
 function formatSize(value: StackSizeValue | undefined): string | undefined {
   if (value == null)
     return undefined
@@ -86,6 +85,12 @@ function spacingValue(step: SpacingStep | undefined): string | undefined {
   return step == null ? undefined : spacingVariables[step]
 }
 
+/**
+ * 没写的间距变量也要占住，值写成 `initial`（等于「未设置」）。
+ * CSS 变量默认继承，空着不写会让里层 Stack 拿到外层 Stack 的内边距和间距。
+ */
+const UNSET_SPACING = 'initial'
+
 const rootStyle = computed<StyleValue>(() => {
   const stackStyle: StackStyle = {
     height: formatSize(props.height),
@@ -94,13 +99,13 @@ const rootStyle = computed<StyleValue>(() => {
     width: formatSize(props.width),
   }
 
-  stackStyle['--astryx-stack-gap'] = spacingValue(props.gap)
-  stackStyle['--astryx-stack-padding-block'] = spacingValue(props.paddingBlock ?? props.padding)
-  stackStyle['--astryx-stack-padding-block-start'] = spacingValue(props.paddingBlockStart)
-  stackStyle['--astryx-stack-padding-block-end'] = spacingValue(props.paddingBlockEnd)
-  stackStyle['--astryx-stack-padding-inline'] = spacingValue(props.paddingInline ?? props.padding)
-  stackStyle['--astryx-stack-padding-inline-start'] = spacingValue(props.paddingInlineStart)
-  stackStyle['--astryx-stack-padding-inline-end'] = spacingValue(props.paddingInlineEnd)
+  stackStyle['--astryx-stack-gap'] = spacingValue(props.gap) ?? UNSET_SPACING
+  stackStyle['--astryx-stack-padding-block'] = spacingValue(props.paddingBlock ?? props.padding) ?? UNSET_SPACING
+  stackStyle['--astryx-stack-padding-block-start'] = spacingValue(props.paddingBlockStart) ?? UNSET_SPACING
+  stackStyle['--astryx-stack-padding-block-end'] = spacingValue(props.paddingBlockEnd) ?? UNSET_SPACING
+  stackStyle['--astryx-stack-padding-inline'] = spacingValue(props.paddingInline ?? props.padding) ?? UNSET_SPACING
+  stackStyle['--astryx-stack-padding-inline-start'] = spacingValue(props.paddingInlineStart) ?? UNSET_SPACING
+  stackStyle['--astryx-stack-padding-inline-end'] = spacingValue(props.paddingInlineEnd) ?? UNSET_SPACING
 
   return [attrs.style as StyleValue, stackStyle]
 })

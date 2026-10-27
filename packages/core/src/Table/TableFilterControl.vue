@@ -4,7 +4,6 @@ import { computed, ref, watch } from 'vue'
 import Button from '../Button/Button.vue'
 import DateInput from '../DateInput/DateInput.vue'
 import Icon from '../Icon/Icon.vue'
-import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import MultiSelector from '../MultiSelector/MultiSelector.vue'
 import NumberInput from '../NumberInput/NumberInput.vue'
@@ -19,6 +18,11 @@ const props = defineProps<{
 const messages = useAstryxMessages()
 const draft = ref<TableFilterValue | null>(props.filter.value)
 const isCompact = computed(() => props.filter.variant === 'inline-compact')
+/** 有生效的筛选值时漏斗用强调色，一眼看出这一列被筛过。 */
+const hasValue = computed(() => {
+  const value = props.filter.value
+  return value != null && value !== '' && !(Array.isArray(value) && value.length === 0)
+})
 
 watch(() => props.filter.value, (value) => {
   draft.value = value
@@ -140,9 +144,14 @@ function onMultiSelect(value: (string | number)[]) {
       />
     </template>
     <Popover v-else :label="filter.field.label" :has-close-button="false" :width="240">
-      <IconButton variant="ghost" size="sm" :label="filter.field.label">
-        <Icon icon="funnel" size="sm" />
-      </IconButton>
+      <button
+        type="button"
+        class="astryx-table__filter-trigger"
+        :aria-label="filter.field.label"
+        :data-active="hasValue || undefined"
+      >
+        <Icon icon="funnel" size="xsm" :color="hasValue ? 'accent' : 'secondary'" />
+      </button>
       <template #content>
         <div class="astryx-table__filter-popover">
           <TextInput

@@ -1,3 +1,4 @@
+import type { TableSortState } from './types.js'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
@@ -5,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { provideAstryxLocale } from '../locale/index.js'
 import { capitalize, paginateData, pixel, proportional, resolveColumnWidths, resolveTableMinWidth } from './columnUtils.js'
-import { applyTableFilters, useTableFilterState } from './plugins/filtering.js'
+import { applyTableFilters, useTableFiltering, useTableFilterState } from './plugins/filtering.js'
 import { useTableSelection, useTableSelectionState } from './plugins/selection.js'
 import { useTableSortable, useTableSortableState } from './plugins/sortable.js'
 import Table from './Table.vue'
@@ -81,6 +82,80 @@ describe('table', () => {
     expect(empty.get('tbody td').attributes('colspan')).toBe('2')
   })
 
+  it('keeps the popover filter button on the same line as the header label', () => {
+    const filtered = [
+      { key: 'name', header: 'Name', filter: 'name' },
+      { key: 'age', header: 'Age', filter: 'age' },
+    ]
+    const wrapper = mount(Table, {
+      props: {
+        columns: filtered,
+        data: people,
+        idKey: 'id',
+        plugins: {
+          filtering: useTableFiltering({
+            filters: {},
+            fields: [
+              { key: 'name', label: 'Name', type: 'string' },
+              { key: 'age', label: 'Age', type: 'number' },
+            ],
+            onFilterChange: () => {},
+          }),
+        },
+      },
+    })
+
+    const headers = wrapper.findAll('thead th .astryx-table__header')
+    expect(headers).toHaveLength(2)
+    for (const header of headers) {
+      expect(header.find('.astryx-table__header-line .astryx-table__filter').exists()).toBe(true)
+    }
+  })
+
+  it('hands the row element and row events to plugins, merging every plugin', async () => {
+    const mounted: HTMLTableRowElement[] = []
+    const unmounted: Array<HTMLTableRowElement | null> = []
+    const seen: string[] = []
+    const wrapper = mount(Table, {
+      props: {
+        columns,
+        data: people,
+        idKey: 'id',
+        plugins: {
+          first: {
+            rowPatch: () => ({
+              listeners: {
+                onBlur: () => seen.push('first:blur'),
+                onMouseenter: () => seen.push('first:enter'),
+              },
+              ref: (element) => {
+                if (element)
+                  mounted.push(element)
+                else
+                  unmounted.push(null)
+              },
+            }),
+          },
+          second: {
+            rowPatch: () => ({ listeners: { onMouseenter: () => seen.push('second:enter') } }),
+          },
+        },
+      },
+    })
+
+    expect(mounted).toHaveLength(3)
+    expect(mounted[0]!.tagName).toBe('TR')
+    expect(mounted[0]!.querySelector('td')).not.toBeNull()
+
+    const firstRow = wrapper.findAll('tbody tr')[0]!
+    await firstRow.trigger('mouseenter')
+    expect(seen).toEqual(['first:enter', 'second:enter'])
+    expect(firstRow.element).toBe(mounted[0])
+
+    wrapper.unmount()
+    expect(unmounted).toHaveLength(3)
+  })
+
   it('re-sorts strings when the provider locale changes', async () => {
     const rows = [
       { id: '1', name: 'z' },
@@ -110,6 +185,16 @@ describe('table', () => {
     expect(german.findAll('tbody tr').map(row => row.text())).toEqual(['ä', 'z'])
     swedish.unmount()
     german.unmount()
+  })
+
+  it('sorts data and defaultSort that arrive as refs inside the config', () => {
+    const data = ref(people)
+    const defaultSort = ref<TableSortState>([{ sortKey: 'age', direction: 'ascending' }])
+    const { sortedData } = useTableSortableState<Person>({ data, defaultSort })
+
+    expect(sortedData.value.map(person => person.name)).toEqual(['Bob', 'Alice', 'Charlie'])
+    data.value = [...people, { id: '4', name: 'Dan', age: 18 }]
+    expect(sortedData.value.map(person => person.name)).toEqual(['Dan', 'Bob', 'Alice', 'Charlie'])
   })
 
   it('sorts from the header and cycles back to unsorted', async () => {

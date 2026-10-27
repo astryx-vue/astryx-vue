@@ -491,16 +491,3 @@ function errorCountLabel() {
     </LayoutContent>
   </Layout>
 </template>
-
-<style>
-/* Step 的默认插槽被排在标签右侧的第三列；竖向流程里它应该落在标签下面同一列。 */
-.ci-wizard .astryx-step[data-orientation='vertical'] {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: start;
-}
-
-.ci-wizard .astryx-step[data-orientation='vertical'] > .astryx-step-content {
-  grid-column: 2;
-}
-</style>

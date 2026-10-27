@@ -1,14 +1,19 @@
+import type { Component, VNodeChild } from 'vue'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput } from '../Field/types.js'
+import type { ExtendedIconName } from '../Icon/types.js'
 import type { OptionActionNode } from '../selectors/optionAction.js'
+
+/** 选项前面的图标：语义图标名（同 `<Icon icon>`）、CSS 图标类，或任意组件 / 渲染函数。 */
+export type SelectorOptionIcon = ExtendedIconName | Component | (() => VNodeChild)
 
 export interface SelectorOption {
   value: string | number
   label: string
   disabled?: boolean
   description?: string
-  /** CSS icon class or a component, drawn before the label. */
-  icon?: string
+  /** 标签前面的图标。语义图标名、CSS 图标类、组件或渲染函数都行。 */
+  icon?: SelectorOptionIcon
   /**
    * 这一项旁边的操作。调用方自己画，点它不会改选择。
    * 只要有一项带了操作，弹出层就变成两列网格。

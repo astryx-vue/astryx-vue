@@ -151,7 +151,7 @@ watch(() => [props.activeIndex, props.isOpen] as const, ([index, open]) => {
           <span class="astryx-selector-option-body">
             <slot v-if="$slots.option" name="option" :option="row.option" :is-active="active(row.index)" :is-selected="selected(row.option)" />
             <template v-else>
-              <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
+              <Icon v-if="row.option.icon" class="astryx-selector-option-icon" :icon="row.option.icon" size="sm" />
               <span class="astryx-selector-option-copy">
                 <span class="astryx-selector-option-label">{{ row.option.label }}</span>
                 <span v-if="row.option.description" class="astryx-selector-option-description">{{ row.option.description }}</span>
@@ -188,7 +188,7 @@ watch(() => [props.activeIndex, props.isOpen] as const, ([index, open]) => {
             <span class="astryx-selector-option-body">
               <slot v-if="$slots.option" name="option" :option="row.option" :is-active="active(row.index)" :is-selected="selected(row.option)" />
               <template v-else>
-                <span v-if="row.option.icon" class="astryx-selector-option-icon" :class="row.option.icon" aria-hidden="true" />
+                <Icon v-if="row.option.icon" class="astryx-selector-option-icon" :icon="row.option.icon" size="sm" />
                 <span class="astryx-selector-option-copy">
                   <span class="astryx-selector-option-label">{{ row.option.label }}</span>
                   <span v-if="row.option.description" class="astryx-selector-option-description">{{ row.option.description }}</span>
