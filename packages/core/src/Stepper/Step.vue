@@ -113,30 +113,32 @@ onUnmounted(() => stepper.unregister(props.step))
       <span class="astryx-step-connector astryx-step-connector-lead" :data-filled="leadFilled || undefined" />
       <span class="astryx-step-connector astryx-step-connector-trail" :data-filled="trailFilled || undefined" />
     </span>
-    <component
-      :is="isClickable ? 'button' : 'div'"
-      v-bind="isClickable ? pressableProps : undefined"
-      class="astryx-step-control"
-      :aria-label="isClickable ? accessibleName : undefined"
-      :type="isClickable ? 'button' : undefined"
-      @click="activate"
-    >
-      <span v-if="$slots.icon" class="astryx-step-indicator" :data-glyph="glyph" aria-hidden="true">
-        <slot name="icon" />
-      </span>
-      <StepMarker v-else :glyph="glyph" :number-label="numberLabel" />
-      <span class="astryx-step-copy">
-        <span class="astryx-step-label-row">
-          <span class="astryx-step-label" :data-disabled="isDisabled || undefined" :data-progress="progress" :data-status="status">{{ label }}</span>
-          <VisuallyHidden v-if="hiddenStatus">{{ hiddenStatus }}</VisuallyHidden>
-          <span v-if="isOptional" class="astryx-step-optional">• {{ messages.stepper.optional }}</span>
-          <slot name="end" />
+    <div class="astryx-step-body">
+      <component
+        :is="isClickable ? 'button' : 'div'"
+        v-bind="isClickable ? pressableProps : undefined"
+        class="astryx-step-control"
+        :aria-label="isClickable ? accessibleName : undefined"
+        :type="isClickable ? 'button' : undefined"
+        @click="activate"
+      >
+        <span v-if="$slots.icon" class="astryx-step-indicator" :data-glyph="glyph" aria-hidden="true">
+          <slot name="icon" />
         </span>
-        <span v-if="description" class="astryx-step-description" :data-progress="progress" :data-status="status">{{ description }}</span>
-      </span>
-    </component>
-    <div v-if="$slots.default" class="astryx-step-content">
-      <slot />
+        <StepMarker v-else :glyph="glyph" :number-label="numberLabel" />
+        <span class="astryx-step-copy">
+          <span class="astryx-step-label-row">
+            <span class="astryx-step-label" :data-disabled="isDisabled || undefined" :data-progress="progress" :data-status="status">{{ label }}</span>
+            <VisuallyHidden v-if="hiddenStatus">{{ hiddenStatus }}</VisuallyHidden>
+            <span v-if="isOptional" class="astryx-step-optional">• {{ messages.stepper.optional }}</span>
+            <slot name="end" />
+          </span>
+          <span v-if="description" class="astryx-step-description" :data-progress="progress" :data-status="status">{{ description }}</span>
+        </span>
+      </component>
+      <div v-if="$slots.default" class="astryx-step-content">
+        <slot />
+      </div>
     </div>
   </li>
 </template>

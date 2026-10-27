@@ -65,6 +65,14 @@
     gap: var(--astryx-spacing-2, 8px);
   }
 
+  /* 控件和内容合成一列：竖向流程里内容落在标签下面，而不是被排到标签右边。 */
+  .astryx-step-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+  }
+
   .astryx-step[data-density='compact'] { --_step-space: var(--astryx-spacing-1, 4px); }
   .astryx-step[data-density='balanced'] { --_step-space: var(--astryx-spacing-2, 8px); }
   .astryx-step[data-density='spacious'] { --_step-space: var(--astryx-spacing-3, 12px); }
@@ -294,6 +302,11 @@
 
   .astryx-step-content {
     padding-block-start: var(--astryx-spacing-2, 8px);
+  }
+
+  /* 竖向的内容跟标签左对齐：缩进 = 控件内边距 + 指示点宽度和间距。 */
+  .astryx-step[data-orientation='vertical'] .astryx-step-content {
+    padding-inline: calc(var(--_step-space) + var(--astryx-spacing-4, 16px) + var(--astryx-spacing-2, 8px)) var(--_step-space);
   }
 
   .astryx-step[data-orientation='horizontal'][data-indicator-position='separated'] .astryx-step-control {
