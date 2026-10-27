@@ -103,12 +103,16 @@ export const PlaygroundLineChart = defineComponent({
     yDomain: { type: Array as unknown as PropType<[number, number]>, default: undefined },
     showVerticalGrid: { type: Boolean, default: false },
     monotone: { type: Boolean, default: false },
+    /** 绘图区四边留白；不传用默认。按原版的坐标轴宽度传可以逐像素对齐。 */
+    pad: { type: Object as PropType<{ top: number, right: number, bottom: number, left: number }>, default: undefined },
+    /** 刻度文字是否垂直居中在刻度线上（默认按基线 +4 对齐）。 */
+    centerTicks: { type: Boolean, default: false },
   },
   setup(props) {
     const chart = useChartWidth()
     return () => {
       const chartW = chart.width.value
-      const pad = { top: 12, right: 16, bottom: 24, left: 48 }
+      const pad = props.pad ?? { top: 12, right: 16, bottom: 24, left: 48 }
       const innerW = chartW - pad.left - pad.right
       const innerH = props.height - pad.top - pad.bottom
       const rows = props.data
@@ -165,10 +169,11 @@ export const PlaygroundLineChart = defineComponent({
           }))
         }
         return h('text', {
-          x: pad.left - 8,
-          y: y + 4,
+          'x': pad.left - 8,
+          'y': props.centerTicks ? y : y + 4,
+          'dominant-baseline': props.centerTicks ? 'central' : undefined,
           'text-anchor': 'end',
-          fill: AXIS_TICK,
+          'fill': AXIS_TICK,
           'font-size': '12px',
         }, `${tick}${props.yUnit}`)
       })
@@ -185,10 +190,11 @@ export const PlaygroundLineChart = defineComponent({
           }))
         }
         return h('text', {
-          x,
-          y: props.height - 6,
+          'x': x,
+          'y': props.centerTicks ? pad.top + innerH + 13 : props.height - 6,
+          'dominant-baseline': props.centerTicks ? 'central' : undefined,
           'text-anchor': 'middle',
-          fill: AXIS_TICK,
+          'fill': AXIS_TICK,
           'font-size': '12px',
         }, props.xTickFormat(tick))
       })
@@ -340,15 +346,46 @@ export const PlaygroundHorizontalBarChart = defineComponent({
   props: {
     data: { type: Array as PropType<Array<{ label: string, value: number, color: string }>>, required: true },
     height: { type: Number, default: 260 },
+    /** 开启后：行高 = 绘图区高 / 行数，柱高 26、圆角 4，底部画 5 档数值刻度和纵向网格，和 recharts 的横向柱图一样。 */
+    hasAxis: { type: Boolean, default: false },
   },
   setup(props) {
     const chart = useChartWidth()
     return () => {
       const chartW = chart.width.value
+      const max = Math.max(...props.data.map(d => d.value), 1)
+
+      if (props.hasAxis) {
+        const pad = { top: 0, right: 24, bottom: 30, left: 118 }
+        const innerW = chartW - pad.left - pad.right
+        const innerH = props.height - pad.top - pad.bottom
+        const rowH = innerH / props.data.length
+        const ticks = niceTicks(0, max, 5)
+        const top = ticks[ticks.length - 1]
+        const x = (v: number) => pad.left + (v / top) * innerW
+        return h('svg', {
+          width: '100%',
+          height: props.height,
+          ref: chart.el,
+          viewBox: `0 0 ${chartW} ${props.height}`,
+          role: 'img',
+          'aria-label': 'Bar chart',
+        }, [
+          ...ticks.map(tick => h('line', { x1: x(tick), y1: pad.top, x2: x(tick), y2: pad.top + innerH, stroke: GRID_STROKE })),
+          ...ticks.map(tick => h('text', { 'x': x(tick), 'y': pad.top + innerH + 13, 'text-anchor': 'middle', 'dominant-baseline': 'central', 'fill': AXIS_TICK, 'font-size': '12px' }, String(tick))),
+          ...props.data.flatMap((row, i) => {
+            const cy = pad.top + rowH * i + rowH / 2
+            return [
+              h('text', { 'x': pad.left - 8, 'y': cy, 'text-anchor': 'end', 'dominant-baseline': 'central', 'fill': AXIS_TICK, 'font-size': '12px' }, row.label),
+              h('rect', { x: pad.left, y: cy - 13, width: Math.max(0, x(row.value) - pad.left), height: 26, rx: 4, fill: row.color }),
+            ]
+          }),
+        ])
+      }
+
       const pad = { top: 8, right: 24, bottom: 8, left: 118 }
       const rowH = 44
       const innerW = chartW - pad.left - pad.right
-      const max = Math.max(...props.data.map(d => d.value), 1)
       const hTotal = Math.max(props.height, props.data.length * rowH + pad.top + pad.bottom)
 
       return h('svg', {

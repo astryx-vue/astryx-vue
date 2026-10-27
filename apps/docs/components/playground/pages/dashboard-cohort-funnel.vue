@@ -316,7 +316,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                   </Text>
                 </VStack>
                 <PlaygroundResponsive :height="260">
-                  <PlaygroundHorizontalBarChart :data="funnelChartData" :height="260" />
+                  <PlaygroundHorizontalBarChart :data="funnelChartData" :height="260" has-axis />
                 </PlaygroundResponsive>
                 <Divider />
                 <Grid :columns="{ minWidth: 200, repeat: 'fit' }" :gap="3" class="step-grid">
@@ -362,6 +362,8 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                     y-unit="%"
                     :x-ticks="TREND_TICKS"
                     :x-tick-format="formatTrendTick"
+                    :pad="{ top: 5, right: 12, bottom: 30, left: 40 }"
+                    center-ticks
                   />
                 </PlaygroundResponsive>
                 <HStack :gap="5" align="center" wrap="wrap">
