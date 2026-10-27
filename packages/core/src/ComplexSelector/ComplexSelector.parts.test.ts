@@ -75,4 +75,27 @@ describe('complex selector 弹层内容', () => {
     expect(surface?.style.getPropertyValue('--_popover-padding')).toBe('var(--astryx-spacing-0)')
     wrapper.unmount()
   })
+
+  it('popupWidth 传给 Popover 外壳；不传时仍按触发器宽度', async () => {
+    const wrapper = mount(ComplexSelector, {
+      props: { label: 'Wide', modelValue: [], triggerLabel: 'Pick', popupWidth: '41rem', contentClass: 'wide-popup' },
+      slots: { default: () => 'body' },
+      attachTo: document.body,
+    })
+    await wrapper.get('button.astryx-complex-selector').trigger('click')
+    await nextTick()
+    const surface = document.querySelector('.astryx-complex-selector-content.wide-popup')!.closest<HTMLElement>('.astryx-popover')!
+    expect(surface.style.width).toBe('41rem')
+    wrapper.unmount()
+    const plain = mount(ComplexSelector, {
+      props: { label: 'Plain', modelValue: [], triggerLabel: 'Pick', contentClass: 'plain-popup' },
+      slots: { default: () => 'body' },
+      attachTo: document.body,
+    })
+    await plain.get('button.astryx-complex-selector').trigger('click')
+    await nextTick()
+    const plainSurface = document.querySelector('.astryx-complex-selector-content.plain-popup')!.closest<HTMLElement>('.astryx-popover')!
+    expect(plainSurface.style.width).toBe('')
+    plain.unmount()
+  })
 })
