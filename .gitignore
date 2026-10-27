@@ -14,3 +14,4 @@ coverage/
 .agents-work/upstream-sync-0.7.1/a11y/
 # CI 视觉对照的输出目录（.github/workflows/visual-compare.yml）
 visual-out/
+.tmp-d12/

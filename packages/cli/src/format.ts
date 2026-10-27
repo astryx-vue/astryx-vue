@@ -5,11 +5,13 @@ import type { CopyReceipt } from './templates.ts'
 import { examplesFor, text } from './catalog.ts'
 import { firstSentence } from './generate/markdown.ts'
 import { displayName } from './query.ts'
-import { BINARY } from './spec.ts'
+import { BINARY, CORE_PACKAGE } from './spec.ts'
 
 interface Listing {
   name: string
   description: string
+  /** Left out of the line unless it is not core, so the long lists stay readable. */
+  package?: string
 }
 
 const KIND_LABELS: Record<'en' | 'zh', Record<TopicRecord['kind'], string>> = {
@@ -22,7 +24,7 @@ export function formatComponentList(components: readonly ComponentRecord[], loca
   for (const component of components) {
     const title = text(component.groupTitle, locale)
     const list = groups.get(title) ?? []
-    list.push({ name: label(component, locale), description: text(component.summary, locale) })
+    list.push({ name: label(component, locale), description: text(component.summary, locale), package: component.package })
     groups.set(title, list)
   }
   return formatGroupedList(groups, dense)
@@ -33,7 +35,7 @@ export function formatComposableList(composables: readonly ComponentRecord[], lo
   for (const composable of composables) {
     const title = text(composable.groupTitle, locale)
     const list = groups.get(title) ?? []
-    list.push({ name: displayName(composable), description: text(composable.summary, locale) })
+    list.push({ name: displayName(composable), description: text(composable.summary, locale), package: composable.package })
     groups.set(title, list)
   }
   return formatGroupedList(groups, dense)
@@ -58,10 +60,10 @@ export function formatComponentDetail(component: ComponentRecord, locale: 'en' |
   return formatDetail(component, locale, dense)
 }
 
-export function formatTopicDetail(topic: TopicRecord, locale: 'en' | 'zh', dense: boolean): string {
+export function formatTopicDetail(topic: TopicRecord, locale: 'en' | 'zh', dense: boolean, depthLimited?: string): string {
   const title = text(topic.title, locale)
   const docsUrl = text(topic.docsUrl, locale)
-  const body = text(topic.body, locale).replace(/^# .*\n+/, '')
+  const body = (depthLimited ?? text(topic.body, locale)).replace(/^# .*\n+/, '')
   if (dense)
     return `${title}  ${topic.id}\n${docsUrl}\n${denseBody(body)}\n`
   return `${[`# ${title}`, '', `Topic: ${topic.id}`, `Docs: ${docsUrl}`, '', body].join('\n').trim()}\n`
@@ -149,11 +151,15 @@ function formatGroupedList(groups: Map<string, Listing[]>, dense: boolean): stri
   const blocks: string[] = []
   for (const [title, list] of groups) {
     const lines = list.map(item => dense
-      ? `  ${item.name}`
-      : `  ${item.name}  ${firstSentence(item.description)}`)
+      ? `  ${item.name}${packageNote(item)}`
+      : `  ${item.name}${packageNote(item)}  ${firstSentence(item.description)}`)
     blocks.push([title, ...lines].join('\n'))
   }
   return `${blocks.join('\n\n')}\n`
+}
+
+function packageNote(item: Listing): string {
+  return item.package && item.package !== CORE_PACKAGE ? `  (${item.package})` : ''
 }
 
 function label(component: ComponentRecord, locale: 'en' | 'zh'): string {
@@ -180,41 +186,17 @@ export function formatSearch(query: string, matchCount: number, results: readonl
   if (results.length === 0)
     return locale === 'zh' ? `没有匹配「${query}」的结果。\n` : `No matches for "${query}".\n`
   const lines = results.map((hit) => {
+    // The package says what to install, so every result carries it.
+    const head = `[${hit.domain}] ${hit.name}  ${hit.package}`
     const follow = `→ ${hit.command}`
     if (dense)
-      return `[${hit.domain}] ${hit.name}  ${follow}`
-    return [`[${hit.domain}] ${hit.name}`, `  ${firstSentence(hit.description)}`, `  ${follow}`].join('\n')
+      return `${head}  ${follow}`
+    return [head, `  ${firstSentence(hit.description)}`, `  ${follow}`].join('\n')
   })
-  const extra = matchCount > results.length
-    ? (locale === 'zh' ? `\n还有 ${matchCount - results.length} 条，用 --limit 查看。\n` : `\n${matchCount - results.length} more. Raise --limit to see them.\n`)
-    : '\n'
-  return `${lines.join('\n\n')}${extra}`
-}
-
-export function formatRootHelp(): string {
-  return [
-    `${BINARY} — agent-friendly CLI for astryx-vue`,
-    '',
-    'This is @astryx-vue/cli. It is not Meta\'s astryx binary.',
-    '',
-    'Commands:',
-    `  ${BINARY} component --list`,
-    `  ${BINARY} component <Name>`,
-    `  ${BINARY} composable --list`,
-    `  ${BINARY} composable <Name>`,
-    `  ${BINARY} docs [topic]`,
-    `  ${BINARY} search <query> [--type template]`,
-    `  ${BINARY} template --list`,
-    `  ${BINARY} template <slug> [path]`,
-    `  ${BINARY} build "<idea>"`,
-    `  ${BINARY} manifest --json`,
-    `  ${BINARY} init --features agents`,
-    '',
-    'Global flags: --json  --dense  --zh  --cwd <dir>  --help  --version',
-    '',
-    `Run \`${BINARY} manifest --json\` for commands, options, response types, and exit codes.`,
-    '',
-  ].join('\n')
+  const heading = matchCount > results.length
+    ? (locale === 'zh' ? `「${query}」的结果（${results.length}/${matchCount}）` : `Results for "${query}" (${results.length} of ${matchCount})`)
+    : (locale === 'zh' ? `「${query}」的结果（${results.length}）` : `Results for "${query}" (${results.length})`)
+  return `${[heading, '', ...lines].join('\n')}\n`
 }
 
 function importStatement(component: ComponentRecord): string {
@@ -261,12 +243,30 @@ export function formatTemplateList(templates: readonly TemplateRecord[], locale:
     blocks.push([title, ...lines].join('\n'))
   }
   const notReady = templates.filter(template => !template.isReady).length
+  const runtime = locale === 'zh'
+    ? '可复制的模板只用 vue 和 @astryx-vue/core，不用再装别的包。'
+    : 'Every ready template runs on vue and @astryx-vue/core alone, so there is nothing else to install.'
   const footer = notReady > 0
     ? (locale === 'zh'
-        ? `\n有 ${notReady} 个模板标了（不可用）：它们引用了用户项目装不上的包，能读不能复制。用 \`${BINARY} template <slug>\` 看原因。\n`
-        : `\n${notReady} template(s) are marked not ready: they import a package a project cannot install, so they can be read but not copied. \`${BINARY} template <slug>\` says why.\n`)
+        ? `有 ${notReady} 个模板标了（不可用）：它们引用了用户项目装不上的包，能读不能复制。用 \`${BINARY} template <slug>\` 看原因。`
+        : `${notReady} template(s) are marked not ready: they import a package a project cannot install, so they can be read but not copied. \`${BINARY} template <slug>\` says why.`)
     : ''
-  return `${blocks.join('\n\n')}\n${footer}`
+  return `${blocks.join('\n\n')}\n\n${[runtime, footer].filter(Boolean).join('\n')}\n`
+}
+
+/**
+ * The packages a page needs, `vue` first so a reader meets their own framework
+ * before the design system. A ready page adds nothing else, which is the point
+ * worth saying out loud: copy it and run, no install step.
+ */
+function dependencyLine(template: TemplateRecord, locale: 'en' | 'zh'): string {
+  const names = [
+    ...(template.dependencies.includes('vue') ? ['vue'] : []),
+    ...template.dependencies.filter(name => name !== 'vue'),
+  ]
+  const zh = locale === 'zh'
+  const alone = template.isReady ? (zh ? '（不用再装别的包）' : ' (nothing else to install)') : ''
+  return zh ? `依赖：${names.join('、')}${alone}` : `Dependencies: ${names.join(', ')}${alone}`
 }
 
 export function formatTemplateDetail(template: TemplateRecord, locale: 'en' | 'zh', dense: boolean, source: string): string {
@@ -275,7 +275,7 @@ export function formatTemplateDetail(template: TemplateRecord, locale: 'en' | 'z
     ? (locale === 'zh' ? '状态：可复制' : 'Status: ready to copy')
     : (locale === 'zh' ? `状态：不可复制 — ${text(template.notReadyReason ?? { en: '', zh: '' }, locale)}` : `Status: not copyable — ${text(template.notReadyReason ?? { en: '', zh: '' }, locale)}`)
   const head = dense
-    ? [title, template.slug, status, template.componentsUsed.join(', '), text(template.docsUrl, locale)]
+    ? [title, template.slug, status, dependencyLine(template, locale), template.componentsUsed.join(', '), text(template.docsUrl, locale)]
     : [
         `# ${title}`,
         '',
@@ -285,6 +285,7 @@ export function formatTemplateDetail(template: TemplateRecord, locale: 'en' | 'z
         '',
         `Docs: ${text(template.docsUrl, locale)}`,
         status,
+        dependencyLine(template, locale),
         '',
         `Components: ${template.componentsUsed.join(', ')}`,
       ]
@@ -300,6 +301,7 @@ export function formatTemplateSkeleton(template: TemplateRecord, locale: 'en' | 
     text(template.description, locale),
     '',
     `${locale === 'zh' ? '组件' : 'Components'}: ${template.componentsUsed.join(', ')}`,
+    dependencyLine(template, locale),
     '',
     skeleton,
   ]

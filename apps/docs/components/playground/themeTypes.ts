@@ -12,6 +12,14 @@ export interface ThemeColors {
 
 export type ThemeColorKey = keyof ThemeColors
 
+/** Components 面板里用户自己加的一条覆盖：某个组件的某个 CSS 属性。 */
+export interface CustomOverride {
+  id: string
+  component: string
+  property: string
+  value: string
+}
+
 export interface ThemeState {
   colors: {
     light: ThemeColors
@@ -28,6 +36,11 @@ export interface ThemeState {
   spacing: number
   elementSize: number
   duration: number
+  /** Advanced 面板直接改的 token，键是带 `--astryx-` 前缀的变量名，值原样写进 CSS。 */
+  tokens: Record<string, string>
+  /** Components 面板改的组件变量（如 `--card-radius`），值是选项或自填的 CSS 值。 */
+  componentTokens: Record<string, string>
+  customOverrides: CustomOverride[]
 }
 
 export interface PlaygroundFont {

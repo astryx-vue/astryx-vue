@@ -1,4 +1,6 @@
+import type { CatalogPackage } from './catalog-types.ts'
 import type { CommandSpec, OptionSpec } from './spec.ts'
+import { catalog } from './catalog.ts'
 import { API_VERSION, BINARY, COMMANDS, GLOBAL_OPTIONS, JSON_SUPPORTED, PACKAGE_NAME } from './spec.ts'
 
 export interface ManifestOption {
@@ -33,6 +35,8 @@ export interface ManifestData {
   commands: ManifestCommand[]
   jsonSupported: string[]
   responseTypes: Record<string, string[]>
+  /** Every package a result can come from, so an agent knows what it can install. */
+  packages: CatalogPackage[]
 }
 
 export function buildManifest(version: string): ManifestData {
@@ -47,6 +51,7 @@ export function buildManifest(version: string): ManifestData {
     commands,
     jsonSupported: [...JSON_SUPPORTED],
     responseTypes: Object.fromEntries(commands.map(command => [command.name, command.responseTypes])),
+    packages: catalog.packages.map(pkg => ({ ...pkg })),
   }
 }
 

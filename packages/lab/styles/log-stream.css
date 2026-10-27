@@ -1,0 +1,271 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 终端变体故意始终是深色（终端是品牌面，和真终端一样），所以它用固定的
+   * 近黑灰色，而不是会跟着明暗切换的 light-dark() 主题变量。
+   */
+
+  .astryx-log-stream {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    border-width: var(--astryx-border-width, 1px);
+    border-style: solid;
+    border-color: var(--astryx-color-border, light-dark(#00000014, #ffffff1a));
+    background-color: var(--astryx-color-background-surface, light-dark(#ffffff, #262626));
+    overflow: hidden;
+    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+    font-size: var(--astryx-font-size-sm, 0.75rem);
+  }
+
+  .astryx-log-stream[data-variant='terminal'] {
+    border-color: #26262a;
+    background-color: #0a0a0a;
+  }
+
+  .astryx-log-stream__scroller {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    overscroll-behavior: contain;
+  }
+
+  /* 一行：时间 / 级别 / 来源 / 消息四列，列数按有没有来源、时间变。 */
+  .astryx-log-stream__row {
+    display: grid;
+    align-items: baseline;
+    column-gap: var(--astryx-spacing-3, 12px);
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    line-height: 1.7;
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    border-bottom-width: var(--astryx-border-width, 1px);
+    border-bottom-style: solid;
+    border-bottom-color: var(--astryx-color-border, light-dark(#00000014, #ffffff1a));
+    /* 屏幕外的行跳过布局和绘制；intrinsic size 保证滚动条长度稳定。
+       这里没有虚拟化，几千行以上的日志由使用方自己窗口化。 */
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto 28px;
+    /* 追加到尾部的新行淡入；只动透明度，减少动效时立刻出现。 */
+    opacity: 1;
+    transition-property: opacity;
+    transition-duration: var(--astryx-duration-fast-min, 95ms);
+    transition-timing-function: ease-out;
+  }
+
+  .astryx-log-stream__row[data-cols='full'] {
+    grid-template-columns: 96px 52px 128px minmax(0, 1fr);
+  }
+
+  .astryx-log-stream__row[data-cols='no-source'] {
+    grid-template-columns: 96px 52px minmax(0, 1fr);
+  }
+
+  .astryx-log-stream__row[data-cols='no-timestamp'] {
+    grid-template-columns: 52px 128px minmax(0, 1fr);
+  }
+
+  .astryx-log-stream__row[data-cols='message-only'] {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  @starting-style {
+    .astryx-log-stream__row {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-log-stream__row {
+      transition-duration: 0.01ms;
+    }
+  }
+
+  .astryx-log-stream__row:last-child {
+    border-bottom-width: 0;
+  }
+
+  /* 终端变体：去掉行分隔线，行距压到 1px，贴合真终端的密度。 */
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row {
+    color: #b9b9c0;
+    border-bottom-width: 0;
+    padding-block: 1px;
+  }
+
+  /* 带详情的行本身是个按钮：整行可点，键盘也能开关。 */
+  .astryx-log-stream__row--button {
+    width: 100%;
+    text-align: left;
+    border-top-width: 0;
+    border-inline-width: 0;
+    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+    font-size: var(--astryx-font-size-sm, 0.75rem);
+    cursor: pointer;
+    background-color: transparent;
+  }
+
+  @media (hover: hover) {
+    .astryx-log-stream__row--button:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      background-color: var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d));
+    }
+
+    .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row--button:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      background-color: #141417;
+    }
+  }
+
+  .astryx-log-stream__row--button:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  /* error / warn 整行淡染一层，颜色由主题变量混出来，不另开一套色板。 */
+  .astryx-log-stream:not([data-variant='terminal']) .astryx-log-stream__row[data-level='error'] {
+    background-color: color-mix(in srgb, var(--astryx-color-error, light-dark(#76000c, #ffc4be)) 6%, transparent);
+  }
+
+  .astryx-log-stream:not([data-variant='terminal']) .astryx-log-stream__row[data-level='warn'] {
+    background-color: color-mix(in srgb, var(--astryx-color-warning, light-dark(#4b3900, #f8d36a)) 5%, transparent);
+  }
+
+  .astryx-log-stream__time {
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__time {
+    color: #8b8b94;
+  }
+
+  .astryx-log-stream__level {
+    font-size: var(--astryx-font-size-xs, 0.625rem);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+  }
+
+  .astryx-log-stream__row[data-level='debug'] .astryx-log-stream__level {
+    color: var(--astryx-color-text-disabled, light-dark(#919191, #525252));
+  }
+
+  /*
+   * 主题的黄和红是为填充块调的，当小字用达不到 4.5:1。
+   * light-dark() 在浅色下把黄压深、在深色下把红提亮，都从主题变量算出来。
+   */
+  .astryx-log-stream__row[data-level='warn'] .astryx-log-stream__level {
+    color: light-dark(color-mix(in srgb, var(--astryx-color-warning, #4b3900) 58%, black), var(--astryx-color-warning, #f8d36a));
+  }
+
+  .astryx-log-stream__row[data-level='error'] .astryx-log-stream__level {
+    color: light-dark(var(--astryx-color-error, #76000c), color-mix(in srgb, var(--astryx-color-error, #ffc4be) 82%, white));
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row[data-level='info'] .astryx-log-stream__level {
+    color: #b9b9c0;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row[data-level='debug'] .astryx-log-stream__level {
+    color: #8b8b94;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row[data-level='warn'] .astryx-log-stream__level {
+    color: #f2c00b;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row[data-level='error'] .astryx-log-stream__level {
+    color: #ff6166;
+  }
+
+  .astryx-log-stream__source {
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__source {
+    color: #8b8b94;
+  }
+
+  .astryx-log-stream__message {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__message {
+    color: #b9b9c0;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row[data-level='error'] .astryx-log-stream__message {
+    color: #ff6166;
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__row[data-level='warn'] .astryx-log-stream__message {
+    color: #f2c00b;
+  }
+
+  /* 展开的详情面板：比行底色深一层，和上下行之间留分隔线。 */
+  .astryx-log-stream__detail {
+    padding-block: var(--astryx-spacing-3, 12px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    background-color: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
+    border-bottom-width: var(--astryx-border-width, 1px);
+    border-bottom-style: solid;
+    border-bottom-color: var(--astryx-color-border, light-dark(#00000014, #ffffff1a));
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__detail {
+    background-color: #0e0e10;
+    border-bottom-color: #26262a;
+    color: #b9b9c0;
+  }
+
+  /* 「跳到最新」固定在滚动区右下角。 */
+  .astryx-log-stream__jump {
+    position: absolute;
+    bottom: var(--astryx-spacing-3, 12px);
+    inset-inline-end: var(--astryx-spacing-3, 12px);
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    border-radius: var(--astryx-radius-full, 9999px);
+    border-width: var(--astryx-border-width, 1px);
+    border-style: solid;
+    border-color: var(--astryx-color-border-emphasized, light-dark(#d4d4d4, #525252));
+    background-color: var(--astryx-color-background-surface, light-dark(#ffffff, #262626));
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+    font-size: var(--astryx-font-size-sm, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    cursor: pointer;
+    box-shadow: var(--astryx-shadow-med, 0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 35%)));
+  }
+
+  @media (hover: hover) {
+    .astryx-log-stream__jump:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      background-color: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
+    }
+
+    .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__jump:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      background-color: #1d1d21;
+    }
+  }
+
+  .astryx-log-stream__jump:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  .astryx-log-stream__jump:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  .astryx-log-stream[data-variant='terminal'] .astryx-log-stream__jump {
+    border-color: #26262a;
+    background-color: #141417;
+    color: #e8e8ea;
+  }
+}

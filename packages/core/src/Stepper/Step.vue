@@ -125,7 +125,7 @@ onUnmounted(() => stepper.unregister(props.step))
         <span v-if="$slots.icon" class="astryx-step-indicator" :data-glyph="glyph" aria-hidden="true">
           <slot name="icon" />
         </span>
-        <StepMarker v-else :glyph="glyph" :number-label="numberLabel" />
+        <StepMarker v-else :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled" />
         <span class="astryx-step-copy">
           <span class="astryx-step-label-row">
             <span class="astryx-step-label" :data-disabled="isDisabled || undefined" :data-progress="progress" :data-status="status">{{ label }}</span>

@@ -34,7 +34,7 @@ import '@astryx-vue/themes/neutral.css'
 ```
 
 **提示：**
-- 只有默认的 Neutral 会改动全局的 `:root`。其他预设主题（Butter、Chocolate、Gothic、Matcha、Stone、Y2K）都严格通过属性选择器 `[data-astryx-theme='...']` 生效，绝不会悄悄污染外部其他区域的样式。
+- 只有默认的 Neutral 会改动全局的 `:root`。其他预设主题（Butter、Chocolate、Gothic、Matcha、Stone、Y2K）都通过属性选择器 `[data-astryx-theme='...']` 生效，不会影响外部其他区域的样式。
 - 所有主题都会自带并加载西文字体 Figtree 与等宽代码字体 JetBrains Mono。像 Butter、Chocolate、Gothic、Matcha、Stone、Y2K 还会额外按需下载它们特有的特色标题字体。
 
 ## 主题画廊

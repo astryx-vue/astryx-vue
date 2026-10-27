@@ -53,9 +53,14 @@ npm run astryx-vue -- component Button
 | `astryx-vue composable <Name>` | Parameters, return values, usage, and examples for one composable |
 | `astryx-vue docs` | Every guide and theme topic |
 | `astryx-vue docs <topic>` | One topic's page text, such as `docs guide/dark-mode` or `docs themes/tokens` |
+| `astryx-vue docs <topic> --depth <n>` | The same page, cut off below heading level `n` |
 | `astryx-vue search <query>` | Ranked components, composables, docs topics, and templates |
 | `astryx-vue manifest --json` | Commands, options, response types, error codes, and exit codes |
-| `astryx-vue init --features agents` | Creates or refreshes the managed block in an agent file |
+| `astryx-vue theme` | Every built-in theme, one line each |
+| `astryx-vue theme <name>` | How to load one theme: stylesheet, `data-astryx-theme`, switching and scoping, verification |
+| `astryx-vue upgrade` | What upgrading the project's `@astryx-vue/core` takes, and where old names still appear |
+| `astryx-vue doctor` | Checks versions, the theme stylesheet, and the theme attribute. Reports only |
+| `astryx-vue init` | The setup guide for an AI assistant, plus the managed block in an agent file |
 
 Global flags:
 
@@ -64,17 +69,47 @@ Global flags:
 | `--json` | Typed envelope `{ apiVersion, type, data }` on stdout. Errors use `{ apiVersion, error, code, suggestions? }` and a non-zero exit code. |
 | `--dense` | Shorter text. Ignored with `--json`, which stays the full envelope. |
 | `--zh` | Simplified Chinese where the docs have a translation. |
-| `--cwd <dir>` | Project directory. Defaults to the working directory; `template` and `init` write inside it. |
+| `--cwd <dir>` | Project directory. Defaults to the working directory; `template` and `init` write inside it, and `upgrade`/`doctor` read it. |
 
-A composable takes `useClipboard` or `use-clipboard`. `component useClipboard` still prints it, and adds a line that points at the `composable` command. `component --list` lists components only. `search --type` accepts `component`, `composable`, `doc`, or `template`; composable hits carry `domain: "composable"` and a `command` that points at `composable <Name>`. A query that hits a name outranks one that only hits page text.
+A composable takes `useClipboard` or `use-clipboard`. `component useClipboard` still prints it, and adds a line that points at the `composable` command. `component --list` lists components only. `search --type` accepts `component`, `composable`, `doc`, or `template`; composable hits carry `domain: "composable"` and a `command` that points at `composable <Name>`. A query that hits a name outranks one that only hits page text. Each result names the package it comes from, ranked by score and then, when scores tie, by domain (component, composable, doc, template) and name, so the order never moves between runs.
 
-`docs` takes a topic id, the same id with `themes/` instead of `theme/`, or a bare name that matches one topic, such as `dark-mode`. `--json` returns `docs.list` or `docs.detail`, and `docs.detail` includes the page `body`.
+`docs` takes a topic id, the same id with `themes/` instead of `theme/`, or a bare name that matches one topic, such as `dark-mode`. `--json` returns `docs.list` or `docs.detail`, and `docs.detail` includes the page `body`. `--depth 2` keeps `#` and `##` and drops every deeper heading with the body under it, which is how a long page stays readable; `headings` in the JSON lists only the headings that survived, and `depth` says what was asked for.
+
+## Themes
+
+`theme` lists the seven shipped themes with their own one-sentence summaries. `theme <name>` prints the four steps that load one: the stylesheet import, the `data-astryx-theme` attribute, how switching or running two side by side works, and how to verify. The steps come from the theme's own docs page and the themes index page; the command writes nothing.
+
+A theme slug or its display name both resolve, so `theme butter` and `theme Butter` are the same request. `--json` returns `theme.list` or `theme.detail`, and `theme.detail` carries the whole docs page as `body` for an agent that wants the long version.
+
+## Upgrading
+
+`upgrade` reads the `@astryx-vue/core` version from the project's `package.json` and compares it with the version this CLI was generated from. It never asks the network.
+
+- Older: it prints every section of the upgrade guide — what changed, how it was written before, how it is written now, what to do — then looks through the project's own sources for the old names the guide replaces, and lists file and line. A theme target name only counts as an object key (`progressbar: {`), because the same word is also an HTML tag; a property or option name counts as a word, in camelCase or kebab-case.
+- Current: it says nothing needs doing and prints the changelog link.
+- Not installed, or a range it cannot read as a version: it says that, and either names the install command for the project's package manager or prints every form.
+
+Both lists come from `apps/docs/docs/{en,zh}/guide/migration.md`: the sections are the page's `###` sections, and the old names are the names its section titles and its `Removed | Use instead` table state.
+
+## Doctor
+
+`doctor` reports five checks and changes nothing:
+
+| Check | Fails or warns when |
+| --- | --- |
+| `core-version` | `@astryx-vue/core` is missing (fail), its range cannot be read as a version, or it is older or newer than this CLI's catalog (warn) |
+| `themes-installed` | `@astryx-vue/themes` is not a dependency (fail) |
+| `vue-version` | `vue` is missing (fail) or below 3.5.0 (warn) |
+| `theme-stylesheet` | No `@astryx-vue/themes/*.css` import is found (fail), or the file name is not one of the built-in themes (warn) |
+| `theme-attribute` | No `data-astryx-theme` is found (warn; Neutral works without it) |
+
+Exit code is `0` when every check passed or only warned, and `1` when one failed; the text still prints, and `--json` returns `doctor.report`. Sources are read from the project directory, skipping `node_modules`, build output, and hidden directories.
 
 ## Templates
 
-`template --list` prints all 53 playground pages. `--type page` is the only kind today; `--type block` answers with a note instead of an error.
+`template --list` prints all 57 playground pages. `--type page` is the only kind today; `--type block` answers with a note instead of an error.
 
-Every template carries a hand-written one-sentence description and a keyword list in English and Chinese, in `src/generate/template-meta/` (one file per template category). The component list is extracted from the page's `@astryx-vue/core` imports, so it cannot drift from the source.
+Every template carries a hand-written one-sentence description and a keyword list in English and Chinese, in `src/generate/template-meta/` (one file per template category). The component list is extracted from the page's `@astryx-vue/core` imports, so it cannot drift from the source. Each record also carries `dependencies`, the npm packages the page imports; a ready page names only `vue` and `@astryx-vue/core`, and the catalog generator fails when a ready page pulls in anything else. That is why `template --list`, `template <slug>`, and their `--json` forms can say exactly what a copied page needs.
 
 Some pages import a package a project cannot install: five use `@astryx-vue/playground-charts`, a path alias that only exists inside the docs playground. Those are marked `isReady: false` with the reason. A page is ready when every non-relative import it really performs is `vue` or `@astryx-vue/core`; text inside a code sample the page displays, such as `@astryxdesign/core`, is page content and does not count. `--list` and `template <slug>` still show them; copying is refused with `ERR_TEMPLATE_NOT_READY`.
 
@@ -100,7 +135,7 @@ Copying rewrites the playground's `/template-assets/…` photo paths to an inlin
 
 ## JSON envelopes
 
-Success responses are `{ apiVersion: 1, type, data }`. Template and build responses also carry `package: "@astryx-vue/cli"`.
+Success responses are `{ apiVersion: 1, type, data }`. `template`, `build`, and `docs` responses carry `package` for where the records come from (`@astryx-vue/cli` for templates, `@astryx-vue/docs` for pages). Every template entry of `template.list`, `template.show`, and `template.skeleton` carries its own `dependencies` array next to `components`. `component.detail` and `composable.detail` carry the owning package, and every entry of `component.list` and `composable.list` carries its own, because one list can span packages.
 
 | Type | Command |
 | --- | --- |
@@ -111,6 +146,9 @@ Success responses are `{ apiVersion: 1, type, data }`. Template and build respon
 | `docs.list`, `docs.detail` | `docs` |
 | `search` | `search` |
 | `manifest` | `manifest` |
+| `theme.list`, `theme.detail` | `theme` |
+| `upgrade.report` | `upgrade` |
+| `doctor.report` | `doctor` |
 | `init.run` | `init` |
 | `help`, `version` | `--help`, `--version`, or no arguments with `--json` |
 
@@ -126,12 +164,13 @@ Exit codes are `0` for success, `1` when the command ran but failed, and `2` for
 | `ERR_UNKNOWN_COMPONENT`, `ERR_UNKNOWN_COMPOSABLE`, `ERR_UNKNOWN_TOPIC` | No record matches the name. |
 | `ERR_UNKNOWN_AGENT` | `--agent` is not `cursor`, `claude`, `codex`, `hermes`, or `all`. |
 | `ERR_UNKNOWN_FEATURE` | `--features` names something other than `agents`. |
+| `ERR_UNKNOWN_THEME` | No theme has that slug or display name. |
 
 `manifest --json` carries the same list per command, so an agent can read the codes without this table.
 
 ## Agent block
 
-`init --features agents` writes this managed block:
+`init` prints the setup guide — which packages to install (canary ones with `@canary`), the theme import, the locale snippet, and what to verify — and writes this managed block:
 
 ```html
 <!-- Maintained by astryx-vue, do not edit manually -->
@@ -141,7 +180,9 @@ Exit codes are `0` for success, `1` when the command ran but failed, and `2` for
 
 If the file is missing, the command creates it. If the markers are already there, every run replaces only the block with freshly generated text. Other text stays. If the file exists without the markers, the block is appended. A second run still rewrites the block; it does not skip because the markers are already present. When the generated text matches, the bytes stay the same.
 
-The block teaches the three-step workflow (`build` to pick a page, `template` to copy it, `component`/`composable`/`docs` before writing code), lists the lookup commands, and says how to run the binary. It does not paste the component catalog.
+The block names every package the catalog covers, with a canary note and the `@canary` specifier where that applies. Then it teaches the three-step workflow (`build` to pick a page, `template` to copy it, `component`/`composable`/`docs` before writing code), lists the lookup commands, and says how to run the binary. It does not paste the component catalog.
+
+The install command in the guide follows the project: the `packageManager` field first, then `pnpm-lock.yaml`, `yarn.lock`, `bun.lock(b)`, or `package-lock.json`. With neither, all four forms are listed. `--features` is optional now; passing `agents` is the same as leaving it out, and any other feature is `ERR_UNKNOWN_FEATURE`.
 
 Where it writes:
 
@@ -160,9 +201,10 @@ The CLI does not keep a second copy of the component docs. `packages/cli/scripts
 - `apps/docs/docs/{en,zh}/components/<slug>/` for usage, props, slots, events, and example titles
 - `apps/docs/components/demos/<slug>/*.vue` for the example source those pages point at
 - `apps/docs/components/demo-infra/reference/*.json` for anatomy and accessibility
-- `apps/docs/docs/{en,zh}/guide` and `themes` for search topics and topic bodies
+- `apps/docs/docs/{en,zh}/guide` and `themes` for search topics, topic bodies, and the theme records (`theme`), plus the install commands and snippets `init` prints
+- `apps/docs/docs/{en,zh}/guide/migration.md` for the upgrade guide's sections and the old names `upgrade` searches for
 - `apps/docs/components/playground/pages/*.vue` for the template sources, and `templateManifest.ts` for their titles and categories
-- `packages/core/package.json` exports when a page does not show an import
+- every `packages/*/package.json` for which package owns a component, and its exports when a page does not show an import
 
 The template descriptions and keywords are hand-written in `packages/cli/src/generate/template-meta/`, one file per template category, and merged by `template-meta.ts`. They are source data, not a generated file.
 
@@ -174,9 +216,11 @@ The result is committed at `packages/cli/src/generated/catalog.json`. `pnpm --fi
 pnpm --filter @astryx-vue/cli generate
 ```
 
-`pnpm check` runs `generate:check`. That fails when `catalog.json` is stale, when a PascalCase `@astryx-vue/core` export is not imported by any documented component, and when a playground page has no metadata in `template-meta.ts`. `./icons`, `./locale`, CSS, and the package root are not component exports.
+`pnpm check` runs `generate:check`. That fails when `catalog.json` is stale, when a PascalCase export of any package is not imported by a documented component, and when a playground page has no metadata in `template-meta.ts`. `./icons`, `./locale`, CSS, and the package root are not component exports.
 
-Theme, upgrade, doctor, swizzle, and MCP commands are not part of this package.
+`catalog.packages` lists every package the catalog covers (`core`, `themes`, `richtext`, `charts`, `lab`) with its directory and whether it publishes only under the `canary` tag. A component's `package` is the one that exports it by subpath, else the one that has a source entry for it.
+
+`swizzle`, `discover`, `gap-report`, `integration`, and `blog` are not part of this package, and there is no MCP server. `theme`, `upgrade`, and `doctor` print guidance and reports; none of them edits a project file.
 
 ## Related packages
 

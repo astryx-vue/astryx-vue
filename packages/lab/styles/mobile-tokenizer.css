@@ -1,0 +1,146 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 触发器：一个能容纳多个标签的方框，最小 44px 保证手指点得到。 */
+  .astryx-mobile-tokenizer__trigger {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    width: 100%;
+    min-height: 44px;
+    padding-block: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-2, 8px);
+    border: 1px solid var(--astryx-color-border, #00000014);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background-color: transparent;
+    color: var(--astryx-color-text-primary, light-dark(#0a0a0a, #fafafa));
+    text-align: start;
+    cursor: pointer;
+  }
+
+  /* 禁用时指针样式和普通文字一致，不做「不可点」的暗示。 */
+  .astryx-mobile-tokenizer__trigger:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  /* 键盘聚焦时的焦点环。 */
+  .astryx-mobile-tokenizer__trigger:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  .astryx-mobile-tokenizer__trigger-placeholder {
+    color: var(--astryx-color-text-secondary, light-dark(#6a6a6a, #9e9e9e));
+  }
+
+  /*
+   * 面板内容自己撑满高度并自己管滚动，所以底栏能贴着底部。
+   * 顶部留出抓手的位置，左右和底部留一点边。
+   */
+  .astryx-mobile-tokenizer__sheet-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+    padding-block-start: var(--astryx-spacing-8, 32px);
+    padding-block-end: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-mobile-tokenizer__filter-row {
+    display: flex;
+    align-items: flex-end;
+    padding-block-end: var(--astryx-spacing-2, 8px);
+  }
+
+  /* core 的 TextInput 会让字段框收缩到内容宽，这里必须撑满整行。 */
+  .astryx-mobile-tokenizer__filter-input {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    min-width: 0;
+    height: var(--astryx-size-element-lg, 36px);
+    min-height: var(--astryx-size-element-lg, 36px);
+  }
+
+  .astryx-mobile-tokenizer__list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  /* 一行既是一个复选框，也是整块可点的区域。 */
+  .astryx-mobile-tokenizer__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    min-height: 44px;
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-1, 4px);
+    border-width: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background-color: transparent;
+    color: var(--astryx-color-text-primary, light-dark(#0a0a0a, #fafafa));
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .astryx-mobile-tokenizer__row:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  @media (hover: hover) {
+    .astryx-mobile-tokenizer__row:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      background-color: var(--astryx-color-overlay-hover, light-dark(#0000000a, #ffffff12));
+    }
+  }
+
+  .astryx-mobile-tokenizer__row:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  .astryx-mobile-tokenizer__row-label {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .astryx-mobile-tokenizer__create-row {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    min-height: 44px;
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-mobile-tokenizer__create-label {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  /* 底栏两个按钮等宽，贴着面板底部。 */
+  .astryx-mobile-tokenizer__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    padding-block-start: var(--astryx-spacing-3, 12px);
+    margin-top: auto;
+  }
+
+  .astryx-mobile-tokenizer__footer-action {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  /* 没有条目时空白区撑满，让提示居中。 */
+  .astryx-mobile-tokenizer__empty {
+    flex-grow: 1;
+  }
+}

@@ -76,7 +76,7 @@ A fence info string of `diff` or `diff-ts` turns the diff layer on for the built
 
 Import `markdownSourceLinesPlugin` from `@astryx-vue/core/Markdown/plugins` and pass it in `plugins`. Headings, paragraphs, list items, quotes, the code wrapper, the table wrapper, and rules then get `data-source-line` and `data-source-line-end`. Without that plugin, those attributes are absent.
 
-`@astryx-vue/core/Markdown/parser` exports `parseMarkdownAst`, `parseInlineAst`, `decodeMarkdownCharacterReferences`, plus the legacy block list `parseMarkdown` and inline `parseInline`. The `parseMarkdown` used by the component still returns the syntax-tree root, not that block list. `math: true` does not emit math nodes.
+`@astryx-vue/core/Markdown/parser` exports `parseMarkdownAst`, `parseInlineAst`, `decodeMarkdownCharacterReferences`, plus the legacy block list `parseMarkdown` and inline `parseInline`. The `parseMarkdown` used by the component still returns the syntax-tree root, not that block list. `math: true` does not emit math nodes. `parseInlineAst` and `parseInline` read inline content only: `# h` stays text, and a fence reads as one code span.
 
 `isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the fade is skipped.
 

@@ -1,4 +1,4 @@
-import type { Component, Ref, VNode } from 'vue'
+import type { Component, HTMLAttributes, Ref, StyleValue, VNode } from 'vue'
 import type { ButtonSize } from '../Button/types.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
@@ -79,6 +79,12 @@ export interface ComplexSelectorProps<Value = unknown> extends FieldPartStylingP
   /** @default 'attached' */
   statusVariant?: FieldStatusVariant | 'tooltip'
   labelTooltip?: string
+  /** Explicit popup width (number = px). Unset keeps the popup matching the trigger; it is always capped to the viewport. */
+  popupWidth?: number | string
+  /** Class for the popup content container, which carries the popup padding and scroll. */
+  contentClass?: HTMLAttributes['class']
+  /** Inline style for the popup content container, e.g. `{ padding: 0 }` to let content reach the popup edges. */
+  contentStyle?: StyleValue
   /** @default 'md' */
   size?: ButtonSize
   width?: number | string

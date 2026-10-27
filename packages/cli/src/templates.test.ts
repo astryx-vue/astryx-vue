@@ -35,6 +35,21 @@ describe('template catalog', () => {
     }
   })
 
+  it('says which packages each template needs to run', () => {
+    for (const template of catalog.templates) {
+      expect(template.dependencies.length).toBeGreaterThan(0)
+      expect(template.dependencies).toEqual([...template.dependencies].sort())
+    }
+    // 可复制的模板落地只用 vue 和 @astryx-vue/core，用户不用再装别的包。
+    const ready = catalog.templates.filter(template => template.isReady)
+    expect(new Set(ready.flatMap(template => template.dependencies))).toEqual(new Set(['@astryx-vue/core', 'vue']))
+    const charts = catalog.templates.find(template => template.slug === 'dashboard-alert-rail')
+    expect(charts?.dependencies).toContain('@astryx-vue/playground-charts')
+    // 页面里当示例打印的包名不是 import，不该算进依赖。
+    const mention = catalog.templates.find(template => template.slug === 'documentation-technical')
+    expect(mention?.dependencies).toEqual(['@astryx-vue/core', 'vue'])
+  })
+
   it('extracts the components from the core imports and flags what a project cannot install', () => {
     const login = catalog.templates.find(template => template.slug === 'login-card')
     expect(login?.isReady).toBe(true)
@@ -71,6 +86,8 @@ describe('template --list', () => {
     expect(result.stdout).toContain('A sign-in card')
     expect(result.stdout).toContain('(not ready)')
     expect(result.stdout).toContain('8 template(s) are marked not ready')
+    // 可复制的模板只要两个包，这件事得在列表里就说清楚。
+    expect(result.stdout).toContain('vue and @astryx-vue/core')
 
     const bare = await run(['template'])
     expect(bare.stdout).toContain('login-card')
@@ -78,16 +95,23 @@ describe('template --list', () => {
     const chinese = await run(['template', '--list', '--zh'])
     expect(chinese.stdout).toContain('登录卡片')
     expect(chinese.stdout).toContain('（不可用）')
+    expect(chinese.stdout).toContain('vue 和 @astryx-vue/core')
   })
 
   it('returns a typed envelope and explains an empty block filter', async () => {
     const result = await run(['template', '--list', '--json'])
     const data = assertResponse(result.stdout, 'template.list').data as {
-      templates: { slug: string, isReady: boolean, command: string, docsUrl: string, notReadyReason?: string }[]
+      templates: { slug: string, isReady: boolean, command: string, docsUrl: string, package: string, componentsUsed: string[], dependencies: string[], notReadyReason?: string }[]
       locale: string
     }
     expect(data.locale).toBe('en')
     expect(data.templates).toHaveLength(57)
+    // 每条都带上它要装的包，机器读得懂，不用去翻源码里的 import。
+    expect(data.templates.find(template => template.slug === 'login-card')?.dependencies).toEqual(['@astryx-vue/core', 'vue'])
+    // Each entry says what it ships in and what it composes, so a reader can
+    // tell where the page comes from before copying it.
+    expect(data.templates.every(template => template.package === '@astryx-vue/cli')).toBe(true)
+    expect(data.templates.find(template => template.slug === 'login-card')?.componentsUsed).toContain('Button')
     expect(data.templates[0]?.command).toBe(`astryx-vue template ${data.templates[0]?.slug}`)
     expect(data.templates[0]?.docsUrl).toContain('https://astryx-vue.pages.dev/en/playground/?template=')
     expect(data.templates.find(template => template.slug === 'dashboard-alert-rail')?.notReadyReason).toContain('playground-charts')
@@ -132,23 +156,28 @@ describe('template show', () => {
     expect(result.stdout).toContain('# Login Card')
     expect(result.stdout).toContain('A sign-in card')
     expect(result.stdout).toContain('Components: Button, Card')
+    expect(result.stdout).toContain('Dependencies: vue, @astryx-vue/core')
+    expect(result.stdout).toContain('nothing else to install')
     expect(result.stdout).toContain('## Source')
     expect(result.stdout).toContain('<script setup')
 
     const dense = await run(['template', 'login-card', '--dense'])
     expect(dense.stdout.length).toBeLessThan(result.stdout.length)
+    expect(dense.stdout).toContain('Dependencies: vue, @astryx-vue/core')
 
     const chinese = await run(['template', 'login-card', '--zh'])
     expect(chinese.stdout).toContain('# 登录卡片')
+    expect(chinese.stdout).toContain('依赖：vue、@astryx-vue/core')
   })
 
   it('swaps the docs-site demo photos for a placeholder', async () => {
     const result = await run(['template', 'library', '--json'])
-    const data = assertResponse(result.stdout, 'template.show').data as { source: string, demoMediaReplaced: number, components: string[], locale: string }
+    const data = assertResponse(result.stdout, 'template.show').data as { source: string, demoMediaReplaced: number, components: string[], dependencies: string[], locale: string }
     expect(data.demoMediaReplaced).toBe(30)
     expect(data.source).not.toContain('/template-assets/')
     expect(data.source).toContain(MEDIA_PLACEHOLDER)
     expect(data.components).toContain('Card')
+    expect(data.dependencies).toEqual(['@astryx-vue/core', 'vue'])
     expect(data.locale).toBe('en')
   })
 
@@ -157,6 +186,7 @@ describe('template show', () => {
     expect(result.exitCode).toBe(0)
     expect(result.stdout).toContain('Status: not copyable')
     expect(result.stdout).toContain('@astryx-vue/playground-charts')
+    expect(result.stdout).toContain('Dependencies: vue, @astryx-vue/core, @astryx-vue/playground-charts')
 
     const ready = await run(['template', 'documentation-technical'])
     expect(ready.stdout).toContain('Status: ready to copy')
@@ -183,8 +213,9 @@ describe('template show', () => {
 describe('template --skeleton', () => {
   it('keeps layout tags and layout attributes and drops text and handlers', async () => {
     const result = await run(['template', 'login-card', '--skeleton', '--json'])
-    const data = assertResponse(result.stdout, 'template.skeleton').data as { skeleton: string, components: string[], template: string }
+    const data = assertResponse(result.stdout, 'template.skeleton').data as { skeleton: string, components: string[], dependencies: string[], template: string }
     expect(data.template).toBe('login-card')
+    expect(data.dependencies).toEqual(['@astryx-vue/core', 'vue'])
     expect(data.skeleton).toContain('<Center axis="both" :padding="6">')
     expect(data.skeleton).toContain('<Card :padding="8" width="100%">')
     expect(data.skeleton).toContain('</VStack>')

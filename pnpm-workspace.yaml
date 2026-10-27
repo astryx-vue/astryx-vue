@@ -32,6 +32,7 @@ catalogs:
   docs:
     '@iconify-json/carbon': 1.2.28
     '@iconify-json/heroicons': 1.2.3
+    '@iconify-json/lucide': 1.2.147
     '@monaco-editor/loader': 1.7.0
     monaco-editor: 0.55.1
     postcss: 8.5.29
@@ -57,6 +58,18 @@ catalogs:
     '@changesets/changelog-github': 1.0.1
     '@changesets/cli': 3.0.3
     publint: 0.3.25
+  richtext:
+    '@lexical/code': 0.52.0
+    '@lexical/extension': 0.52.0
+    '@lexical/headless': 0.52.0
+    '@lexical/html': 0.52.0
+    '@lexical/link': 0.52.0
+    '@lexical/list': 0.52.0
+    '@lexical/markdown': 0.52.0
+    '@lexical/rich-text': 0.52.0
+    '@lexical/table': 0.52.0
+    '@lexical/utils': 0.52.0
+    lexical: 0.52.0
   runtime:
     '@fontsource/figtree': 5.3.0
     '@fontsource/jetbrains-mono': 5.3.0

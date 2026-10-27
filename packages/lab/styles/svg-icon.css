@@ -1,0 +1,204 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 尺寸、颜色和每一层的取值都从这里进：变体（data-variation）改层的内部变量，
+   * 尺寸（data-size）改边长和描边宽度，颜色（data-color）改 color。
+   * 使用方可以直接覆盖 --astryx-icon-* 这几个变量，不用碰选择器。
+   */
+
+  .astryx-svg-icon {
+    /* 层的默认值就是 linear 变体的取值，见下面的 data-variation 覆盖。 */
+    --_icon-primary-fill: none;
+    --_icon-primary-stroke: currentcolor;
+    --_icon-primary-opacity: 1;
+    --_icon-primary-stroke-role-fill: none;
+    --_icon-primary-stroke-role-stroke: currentcolor;
+    --_icon-primary-stroke-role-opacity: 1;
+    --_icon-primary-stroke-role-width: 1.5;
+    --_icon-secondary-fill: none;
+    --_icon-secondary-stroke: currentcolor;
+    --_icon-secondary-opacity: 1;
+    --_icon-secondary-stroke-role-fill: none;
+    --_icon-secondary-stroke-role-stroke: currentcolor;
+    --_icon-secondary-stroke-role-opacity: 1;
+    --_icon-secondary-stroke-role-width: 1.5;
+
+    display: inline-flex;
+    flex-shrink: 0;
+    width: var(--astryx-icon-size, 24px);
+    height: var(--astryx-icon-size, 24px);
+    padding-inline-start: var(--astryx-icon-inline-offset, 0px);
+    padding-block-start: var(--astryx-icon-block-offset, 0px);
+  }
+
+  /* 颜色角色，和 core 的 Icon 语义一致。 */
+  .astryx-svg-icon[data-color='primary'] {
+    color: var(--astryx-color-icon-primary, light-dark(#000000, #ffffff));
+  }
+
+  .astryx-svg-icon[data-color='secondary'] {
+    color: var(--astryx-color-icon-secondary, light-dark(#6a6a6a, #9e9e9e));
+  }
+
+  .astryx-svg-icon[data-color='disabled'] {
+    color: var(--astryx-color-icon-disabled, light-dark(#919191, #525252));
+  }
+
+  .astryx-svg-icon[data-color='accent'] {
+    color: var(--astryx-color-accent, light-dark(#1b1b1b, #f1f1f1));
+  }
+
+  .astryx-svg-icon[data-color='positive'] {
+    color: var(--astryx-color-success, light-dark(#00490b, #a4d6a3));
+  }
+
+  .astryx-svg-icon[data-color='negative'] {
+    color: var(--astryx-color-error, light-dark(#76000c, #ffc4be));
+  }
+
+  .astryx-svg-icon[data-color='warning'] {
+    color: var(--astryx-color-warning, light-dark(#4b3900, #f8d36a));
+  }
+
+  .astryx-svg-icon[data-color='inherit'] {
+    color: inherit;
+  }
+
+  /* 光学补偿：越小描边越粗，看上去粗细才一致。 */
+  .astryx-svg-icon[data-size='xsm'] {
+    --astryx-icon-size: 12px;
+    --astryx-icon-stroke-width: 2;
+  }
+
+  .astryx-svg-icon[data-size='sm'] {
+    --astryx-icon-size: 16px;
+    --astryx-icon-stroke-width: 1.75;
+  }
+
+  .astryx-svg-icon[data-size='md'] {
+    --astryx-icon-size: 20px;
+    --astryx-icon-stroke-width: 1.5;
+  }
+
+  .astryx-svg-icon[data-size='lg'] {
+    --astryx-icon-size: 24px;
+    --astryx-icon-stroke-width: 1.5;
+  }
+
+  /* linear：填充角色其实只描边，描边角色不透明。 */
+  .astryx-svg-icon[data-variation='linear'] {
+    --_icon-primary-fill: none;
+    --_icon-primary-stroke: currentcolor;
+    --_icon-primary-opacity: 1;
+    --_icon-primary-stroke-role-fill: none;
+    --_icon-primary-stroke-role-stroke: currentcolor;
+    --_icon-primary-stroke-role-opacity: 1;
+    --_icon-secondary-fill: none;
+    --_icon-secondary-stroke: currentcolor;
+    --_icon-secondary-opacity: 1;
+    --_icon-secondary-stroke-role-fill: none;
+    --_icon-secondary-stroke-role-stroke: currentcolor;
+    --_icon-secondary-stroke-role-opacity: 1;
+  }
+
+  /* bold：填充角色变实心（重叠靠遮罩挖），描边角色加粗。 */
+  .astryx-svg-icon[data-variation='bold'] {
+    --_icon-primary-fill: currentcolor;
+    --_icon-primary-stroke: none;
+    --_icon-primary-opacity: 1;
+    --_icon-primary-stroke-role-fill: none;
+    --_icon-primary-stroke-role-stroke: currentcolor;
+    --_icon-primary-stroke-role-opacity: 1;
+    --_icon-primary-stroke-role-width: 2;
+    --_icon-secondary-fill: currentcolor;
+    --_icon-secondary-stroke: none;
+    --_icon-secondary-opacity: 1;
+    --_icon-secondary-stroke-role-fill: none;
+    --_icon-secondary-stroke-role-stroke: currentcolor;
+    --_icon-secondary-stroke-role-opacity: 1;
+    --_icon-secondary-stroke-role-width: 2.5;
+  }
+
+  /* twotone：次层和描边角色淡下去，留出主次的层次。 */
+  .astryx-svg-icon[data-variation='twotone'] {
+    --_icon-primary-fill: none;
+    --_icon-primary-stroke: currentcolor;
+    --_icon-primary-opacity: 1;
+    --_icon-primary-stroke-role-fill: none;
+    --_icon-primary-stroke-role-stroke: currentcolor;
+    --_icon-primary-stroke-role-opacity: 0.4;
+    --_icon-secondary-fill: none;
+    --_icon-secondary-stroke: currentcolor;
+    --_icon-secondary-opacity: 0.4;
+    --_icon-secondary-stroke-role-fill: none;
+    --_icon-secondary-stroke-role-stroke: currentcolor;
+    --_icon-secondary-stroke-role-opacity: 0.4;
+  }
+
+  /* bulk：主层实心，次层和描边角色淡下去。 */
+  .astryx-svg-icon[data-variation='bulk'] {
+    --_icon-primary-fill: currentcolor;
+    --_icon-primary-stroke: none;
+    --_icon-primary-opacity: 1;
+    --_icon-primary-stroke-role-fill: none;
+    --_icon-primary-stroke-role-stroke: currentcolor;
+    --_icon-primary-stroke-role-opacity: 0.4;
+    --_icon-secondary-fill: currentcolor;
+    --_icon-secondary-stroke: none;
+    --_icon-secondary-opacity: 0.4;
+    --_icon-secondary-stroke-role-fill: none;
+    --_icon-secondary-stroke-role-stroke: currentcolor;
+    --_icon-secondary-stroke-role-opacity: 0.4;
+  }
+
+  /* broken：次层整层不画。 */
+  .astryx-svg-icon[data-variation='broken'] {
+    --_icon-primary-fill: none;
+    --_icon-primary-stroke: currentcolor;
+    --_icon-primary-opacity: 1;
+    --_icon-primary-stroke-role-fill: none;
+    --_icon-primary-stroke-role-stroke: currentcolor;
+    --_icon-primary-stroke-role-opacity: 1;
+    --_icon-secondary-fill: none;
+    --_icon-secondary-stroke: currentcolor;
+    --_icon-secondary-opacity: 0;
+    --_icon-secondary-stroke-role-fill: none;
+    --_icon-secondary-stroke-role-stroke: currentcolor;
+    --_icon-secondary-stroke-role-opacity: 0;
+  }
+
+  /* 四个图层组：主层/次层各分出填充角色和描边角色。 */
+  .astryx-svg-icon__layer {
+    stroke-linecap: var(--astryx-icon-stroke-linecap, round);
+    stroke-linejoin: var(--astryx-icon-stroke-linejoin, round);
+  }
+
+  .astryx-svg-icon__layer--primary-fill {
+    fill: var(--_icon-primary-fill);
+    stroke: var(--_icon-primary-stroke);
+    opacity: var(--_icon-primary-opacity);
+    stroke-width: var(--astryx-icon-stroke-width, 1.5);
+  }
+
+  .astryx-svg-icon__layer--primary-stroke {
+    fill: var(--_icon-primary-stroke-role-fill);
+    stroke: var(--_icon-primary-stroke-role-stroke);
+    opacity: var(--_icon-primary-stroke-role-opacity);
+    stroke-width: var(--_icon-primary-stroke-role-width);
+  }
+
+  .astryx-svg-icon__layer--secondary-fill {
+    fill: var(--_icon-secondary-fill);
+    stroke: var(--_icon-secondary-stroke);
+    opacity: var(--_icon-secondary-opacity);
+    stroke-width: var(--astryx-icon-stroke-width, 1.5);
+  }
+
+  .astryx-svg-icon__layer--secondary-stroke {
+    fill: var(--_icon-secondary-stroke-role-fill);
+    stroke: var(--_icon-secondary-stroke-role-stroke);
+    opacity: var(--_icon-secondary-stroke-role-opacity);
+    stroke-width: var(--_icon-secondary-stroke-role-width);
+  }
+}

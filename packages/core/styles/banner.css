@@ -85,7 +85,8 @@
     color: var(--astryx-banner-icon-color);
   }
 
-  .astryx-banner-icon > * {
+  /* The status Icon keeps its own md size (20px), as upstream does. */
+  .astryx-banner-icon > :not(.astryx-icon) {
     width: 16px;
     height: 16px;
   }

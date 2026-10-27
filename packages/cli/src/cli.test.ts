@@ -21,9 +21,10 @@ describe('json envelopes', () => {
     expect(result.stderr).toBe('')
     const envelope = assertResponse(result.stdout, 'component.list')
     expect(envelope.apiVersion).toBe(1)
-    expect(envelope.package).toBe('@astryx-vue/core')
-    const data = envelope.data as { components: Record<string, { name: string, import: string | null }[]> }
-    expect(data.components.Action?.some(item => item.name === 'Button' && item.import === '@astryx-vue/core/Button')).toBe(true)
+    // A list can span packages, so the owner package sits on each entry.
+    expect(envelope.package).toBeUndefined()
+    const data = envelope.data as { components: Record<string, { name: string, package: string, import: string | null }[]> }
+    expect(data.components.Action?.some(item => item.name === 'Button' && item.package === '@astryx-vue/core' && item.import === '@astryx-vue/core/Button')).toBe(true)
     const names = Object.values(data.components).flat().map(item => item.name)
     expect(names).not.toContain('useClipboard')
     expect(names.some(name => name.startsWith('use'))).toBe(false)
@@ -75,6 +76,32 @@ describe('json envelopes', () => {
     expect(data.results[0]?.score).toBeGreaterThan(data.results[1]?.score ?? 0)
   })
 
+  it('names the package each result comes from, and how many matched', async () => {
+    const result = await run(['search', 'button', '--limit', '5'])
+    expect(result.stdout).toContain('Results for "button" (5 of ')
+    expect(result.stdout).toContain('[component] Button  @astryx-vue/core')
+
+    const docs = await run(['search', 'dark', '--type', 'doc', '--limit', '3'])
+    expect(docs.stdout).toContain('[doc] guide/dark-mode  @astryx-vue/docs')
+
+    const templates = await run(['search', 'login', '--type', 'template', '--limit', '3'])
+    expect(templates.stdout).toContain('@astryx-vue/cli')
+  })
+
+  it('breaks score ties by domain, so the order never moves between runs', async () => {
+    const domainOrder: Record<string, number> = { component: 0, composable: 1, doc: 2, template: 3 }
+    const result = await run(['search', 'layout', '--json', '--limit', '20'])
+    const results = (assertResponse(result.stdout, 'search').data as { results: { domain: string, name: string, score: number }[] }).results
+    expect(results.length).toBeGreaterThan(1)
+    for (let index = 1; index < results.length; index++) {
+      const previous = results[index - 1]!
+      const current = results[index]!
+      expect(previous.score).toBeGreaterThanOrEqual(current.score)
+      if (previous.score === current.score)
+        expect(domainOrder[previous.domain]).toBeLessThanOrEqual(domainOrder[current.domain]!)
+    }
+  })
+
   it('returns a capability manifest', async () => {
     const result = await run(['manifest', '--json'])
     const data = assertResponse(result.stdout, 'manifest').data as {
@@ -86,7 +113,7 @@ describe('json envelopes', () => {
     }
     expect(data.name).toBe('astryx-vue')
     expect(data.package).toBe('@astryx-vue/cli')
-    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'init'])
+    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'doctor', 'init'])
     expect(data.commands.every(command => command.json)).toBe(true)
     expect(data.commands.find(command => command.name === 'component')?.responseTypes).toEqual(['component.list', 'component.detail'])
     expect(data.commands.find(command => command.name === 'composable')?.responseTypes).toEqual(['composable.list', 'composable.detail'])
@@ -99,10 +126,18 @@ describe('json envelopes', () => {
     expect(data.globalOptions.map(option => option.flag)).toEqual(expect.arrayContaining(['--json', '--dense', '--zh']))
   })
 
+  it('names every package a result can come from', async () => {
+    const data = assertResponse((await run(['manifest', '--json'])).stdout, 'manifest').data as {
+      packages: { name: string, directory: string, canary: boolean }[]
+    }
+    expect(data.packages.map(pkg => pkg.name)).toEqual(expect.arrayContaining(['@astryx-vue/core', '@astryx-vue/lab']))
+    expect(data.packages.find(pkg => pkg.name === '@astryx-vue/lab')).toMatchObject({ directory: 'packages/lab', canary: true })
+  })
+
   it('embeds the manifest in a bare --json call', async () => {
     const result = await run(['--json'])
     const data = assertResponse(result.stdout, 'help').data as { manifest: { commands: unknown[] } }
-    expect(data.manifest.commands).toHaveLength(8)
+    expect(data.manifest.commands).toHaveLength(11)
   })
 
   it('lists composables apart from components', async () => {
@@ -227,7 +262,7 @@ describe('json envelopes', () => {
   })
 
   it('rejects unknown commands and bad flags', async () => {
-    const command = await run(['theme', '--json'])
+    const command = await run(['swizzle', '--json'])
     expect(command.exitCode).toBe(2)
     expect(parseResponse(command.stdout)).toMatchObject({ code: 'ERR_UNKNOWN_COMMAND' })
 
@@ -512,6 +547,16 @@ describe('catalog source', () => {
     expect(chat?.slots.en.flatMap(group => group.rows).some(row => row.name === '`composer`')).toBe(true)
     expect(catalog.conventions.en.some(paragraph => paragraph.includes('own subpath'))).toBe(true)
     expect(catalog.topics.some(topic => topic.id === 'guide/installation')).toBe(true)
+  })
+
+  it('marks which package each record comes from', async () => {
+    const names = catalog.packages.map(pkg => pkg.name)
+    expect(names).toEqual(expect.arrayContaining(['@astryx-vue/core', '@astryx-vue/themes', '@astryx-vue/richtext', '@astryx-vue/charts', '@astryx-vue/lab']))
+    expect(catalog.components.every(component => names.includes(component.package))).toBe(true)
+    expect(catalog.components.find(component => component.slug === 'button')?.package).toBe('@astryx-vue/core')
+    // The CLI carries the playground pages, so copying a template needs nothing else.
+    expect(catalog.templates.every(template => template.package === '@astryx-vue/cli')).toBe(true)
+    expect(catalog.packages.find(pkg => pkg.name === '@astryx-vue/charts')?.canary).toBe(true)
   })
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
