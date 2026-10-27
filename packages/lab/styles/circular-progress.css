@@ -1,0 +1,174 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 根：环形和标签叠成一列。标签显示在环上方时才有间距。 */
+  .astryx-circular-progress {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .astryx-circular-progress--labelled {
+    flex-direction: column;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-circular-progress__label {
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+  }
+
+  .astryx-circular-progress__label--disabled {
+    color: var(--astryx-color-text-disabled, light-dark(#919191, #525252));
+  }
+
+  /* 只给读屏软件念的标签。 */
+  .astryx-circular-progress__visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .astryx-circular-progress__ring {
+    position: relative;
+    display: inline-flex;
+  }
+
+  /* 起点转到 12 点方向，圆弧从左上方开始长。 */
+  .astryx-circular-progress__svg {
+    display: block;
+    transform: rotate(-90deg);
+  }
+
+  .astryx-circular-progress__svg--indeterminate {
+    animation: astryx-circular-progress-rotate 2s linear infinite;
+  }
+
+  .astryx-circular-progress__track {
+    fill: none;
+    stroke: var(--astryx-color-track, light-dark(#ccd3db, #5a5e66));
+  }
+
+  .astryx-circular-progress__track[data-variant='accent'] {
+    stroke: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
+  }
+
+  .astryx-circular-progress__track[data-variant='success'] {
+    stroke: var(--astryx-color-success-muted, light-dark(#bce0bb, #90ca903d));
+  }
+
+  .astryx-circular-progress__track[data-variant='warning'] {
+    stroke: var(--astryx-color-warning-muted, light-dark(#fae19e, #e2b6233d));
+  }
+
+  .astryx-circular-progress__track[data-variant='error'] {
+    stroke: var(--astryx-color-error-muted, light-dark(#ffc4be, #ff98903d));
+  }
+
+  .astryx-circular-progress__track[data-variant='neutral'] {
+    stroke: var(--astryx-color-track, light-dark(#ccd3db, #5a5e66));
+  }
+
+  .astryx-circular-progress__fill {
+    fill: none;
+    stroke-linecap: round;
+    transition-property: stroke-dashoffset;
+    transition-duration: var(--astryx-duration-medium, 300ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-circular-progress__fill[data-variant='accent'] {
+    stroke: var(--astryx-color-accent, light-dark(#1b1b1b, #f1f1f1));
+  }
+
+  .astryx-circular-progress__fill[data-variant='success'] {
+    stroke: var(--astryx-color-success, light-dark(#00490b, #a4d6a3));
+  }
+
+  .astryx-circular-progress__fill[data-variant='warning'] {
+    stroke: var(--astryx-color-warning, light-dark(#4b3900, #f8d36a));
+  }
+
+  .astryx-circular-progress__fill[data-variant='error'] {
+    stroke: var(--astryx-color-error, light-dark(#76000c, #ffc4be));
+  }
+
+  .astryx-circular-progress__fill[data-variant='neutral'],
+  .astryx-circular-progress__fill[data-variant='disabled'] {
+    stroke: var(--astryx-color-text-disabled, light-dark(#919191, #525252));
+  }
+
+  /* 不确定状态：一段固定的短弧一边转一边伸缩。 */
+  .astryx-circular-progress__fill--indeterminate {
+    animation: astryx-circular-progress-dash 1.5s ease-in-out infinite;
+  }
+
+  /* 环中心的内容压在圆弧上，不吃指针事件。 */
+  .astryx-circular-progress__center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .astryx-circular-progress__value {
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    font-weight: var(--astryx-font-weight-normal, 400);
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+  }
+
+  .astryx-circular-progress__value--disabled {
+    color: var(--astryx-color-text-disabled, light-dark(#919191, #525252));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-circular-progress__svg--indeterminate {
+      animation-duration: 4s;
+    }
+
+    .astryx-circular-progress__fill--indeterminate {
+      animation-duration: 3s;
+    }
+  }
+
+  @keyframes astryx-circular-progress-rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* 缺口 300% 超过任何环的周长；把「2% + 300%」整体挪 302% 正好接上首尾。 */
+  @keyframes astryx-circular-progress-dash {
+    0% {
+      stroke-dasharray: 2%, 300%;
+      stroke-dashoffset: 0%;
+    }
+
+    50% {
+      stroke-dasharray: 175%, 300%;
+      stroke-dashoffset: -68%;
+    }
+
+    100% {
+      stroke-dasharray: 2%, 300%;
+      stroke-dashoffset: -302%;
+    }
+  }
+}

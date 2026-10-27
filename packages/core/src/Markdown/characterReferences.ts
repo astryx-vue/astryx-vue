@@ -67,3 +67,36 @@ export function decodeMarkdownCharacterReferences(text: string): string {
   }
   return index === 0 ? text : output + text.slice(index)
 }
+
+/** Every ASCII punctuation character, the set a backslash can escape. */
+const ASCII_PUNCTUATION = new Set('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')
+
+/**
+ * Plain text with its backslash escapes and character references read:
+ * `\\*` is `*`, `&copy;` is `©`. Text that holds neither is returned as is.
+ */
+export function decodeLiteralText(text: string): string {
+  if (!text.includes('\\') && !text.includes('&'))
+    return text
+  let output = ''
+  let index = 0
+  while (index < text.length) {
+    const character = text[index] as string
+    if (character === '\\' && index + 1 < text.length && ASCII_PUNCTUATION.has(text[index + 1] as string)) {
+      output += text[index + 1]
+      index += 2
+      continue
+    }
+    if (character === '&') {
+      const reference = matchCharacterReference(text, index)
+      if (reference != null) {
+        output += reference.value
+        index = reference.end
+        continue
+      }
+    }
+    output += character
+    index++
+  }
+  return output
+}

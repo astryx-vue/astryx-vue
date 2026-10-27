@@ -247,6 +247,21 @@ export function getMarkdownPluginCapabilities(
   })
 }
 
+export function createMarkdownPlugin<
+  const Name extends string,
+  const Node extends MarkdownExtensionNode<Name>,
+>(
+  definition: MarkdownSyntaxPluginDefinition<Name, Node>,
+): MarkdownPluginEntry<Node>
+export function createMarkdownPlugin<const Name extends string>(
+  definition: MarkdownTransformPluginDefinition<Name, never>,
+): MarkdownPluginEntry<never>
+export function createMarkdownPlugin<
+  const Name extends string,
+  const Node extends MarkdownExtensionNode<Name>,
+>(
+  definition: MarkdownTransformPluginDefinition<Name, Node>,
+): MarkdownPluginEntry<Node>
 export function createMarkdownPlugin(
   definition: MarkdownPluginDefinition<string, MarkdownExtensionNode> | MarkdownTransformPluginDefinition<string, never>,
 ): MarkdownPluginEntry {

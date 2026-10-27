@@ -6,6 +6,7 @@ import type { PlaygroundColorMode } from './protocol'
 import type { ThemeState } from './themeTypes'
 import { contrastingInk } from './themeColor'
 import { COLOR_FIELDS, FIGTREE_STACK, PLAYGROUND_FONTS } from './themeOptions'
+import { buildComponentStyles, componentCss } from './themeOverrides'
 import { scaleVariables } from './themeScale'
 import { createNeutralTheme, themesEqual } from './themeState'
 
@@ -57,6 +58,8 @@ export function themeVariables(theme: ThemeState): Record<string, string> {
   for (const [name, value] of COMPONENT_ALIASES)
     variables[name] = value
 
+  Object.assign(variables, theme.tokens)
+
   return variables
 }
 
@@ -75,12 +78,14 @@ export function fontStylesheetHref(theme: ThemeState): string | null {
 
 export function previewCss(theme: ThemeState): string {
   const mode: PlaygroundColorMode = theme.dark ? 'dark' : 'light'
-  return `html[data-playground-frame]{color-scheme:${mode} !important;${declarationBlock(theme)}}`
+  return `html[data-playground-frame]{color-scheme:${mode} !important;${declarationBlock(theme)}}\n${componentCss(theme)}`
 }
 
 export function exportThemeCss(theme: ThemeState): string {
   const lines = Object.entries(themeVariables(theme)).map(([name, value]) => `    ${name}: ${value};`)
-  return `/* Playground theme. Load this after @astryx-vue/themes/neutral.css. */\n@layer astryx.overrides {\n  :root {\n${lines.join('\n')}\n  }\n}\n`
+  const components = componentCss(theme)
+  const tail = components ? `\n/* Component overrides. */\n${components}` : ''
+  return `/* Playground theme. Load this after @astryx-vue/themes/neutral.css. */\n@layer astryx.overrides {\n  :root {\n${lines.join('\n')}\n  }\n}\n${tail}`
 }
 
 export function exportThemeJson(theme: ThemeState): string {
@@ -88,6 +93,7 @@ export function exportThemeJson(theme: ThemeState): string {
     name: themesEqual(theme, createNeutralTheme()) ? 'neutral' : 'custom',
     colorMode: theme.dark ? 'dark' : 'light',
     variables: themeVariables(theme),
+    components: buildComponentStyles(theme),
   }, null, 2)}\n`
 }
 

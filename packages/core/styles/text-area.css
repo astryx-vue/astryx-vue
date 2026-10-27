@@ -27,6 +27,12 @@
     color: var(--astryx-color-text-secondary, #525252);
   }
 
+  .astryx-text-area-count {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
   .astryx-text-area-count[data-over='true'] {
     color: var(--astryx-input-error, #e33f4a);
   }

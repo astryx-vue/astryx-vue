@@ -9,7 +9,7 @@ export function cleanMarkdown(markdown: string): string {
     return text
       .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
       .replace(/<!--[\s\S]*?-->/g, '')
-      .replace(/<(?:DemoExample|ComponentAnatomy|ComponentAccessibility|ComponentsOverview)\b[\s\S]*?\/>/g, '')
+      .replace(/<(?:DemoExample|ComponentAnatomy|ComponentAccessibility|ComponentsOverview|ThemeStage|ThemeGallery)\b[\s\S]*?\/>/g, '')
   }))
 }
 

@@ -42,16 +42,23 @@ mindmap
       ✅ D1 Neutral 主题底色
       ✅ D2 其余六套主题适配
       ✅ D3 Probe 主题调研
-      🟡 D4a 命令行能力对照与取舍
-      ⬜ D4b 命令行选定能力实现
+      ✅ D4a 命令行能力对照与取舍
+      ✅ D4b 命令行选定能力实现
       ✅ D5a 页面模板修复与补齐
-      ⬜ D5b 页面模板接入命令行
+      ✅ D5b 页面模板接入命令行
       ✅ D5c 页面模板内容追平原版
       ➖ D6 样式分层自动迁移脚本
       ✅ D7 升级指南与版本说明
       ✅ D8 在线演练场同步更新
       ✅ D9 指南补齐
       ✅ D10 core 遗留问题修复
+      ✅ D11 文档润色
+      🟡 D12 演练场模板逐个走查
+      ✅ D13 主题编辑器补面板
+      ✅ D14 core Markdown 解析器对齐原版
+      ✅ D15 core 状态图标改实心
+      ✅ D16 Table 行高对齐原版
+      ✅ D17 演练场图表撑满与刻度
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -59,15 +66,15 @@ mindmap
       ✅ E4 自动对比页面外观
     阶段 F 全新扩展包
       ✅ F0 新包技术选型决策
-      🔵 F1a 富文本核心逻辑
-      ⬜ F1b 富文本编辑器组件
+      ✅ F1a 富文本核心逻辑
+      🔵 F1b 富文本编辑器组件
       ⬜ F1c 富文本使用文档
       ✅ F2a 图表纯计算逻辑
       ✅ F2b 图表展示组件
       🔵 F2c 图表使用文档
       🔵 F2d 图表 WebGL 标记
-      🔵 F3a 实验包：输入类组件
-      🔵 F3b 实验包：展示类组件
+      ✅ F3a 实验包：输入类组件
+      ✅ F3b 实验包：展示类组件
       🔵 F3g 实验包：日程表
       🔵 F3c 实验包：浮层与引导
       🔵 F3d 实验包：图表类
@@ -78,10 +85,10 @@ mindmap
       ➖ F5 vega 包
       ➖ F6 build 构建插件
     阶段 G 发布与持续维护
-      🟡 G1 发布核心组件与主题包
-      ⬜ G2 发布命令行工具
+      ✅ G1 发布核心组件与主题包
+      🔵 G2 发布命令行工具
       ⬜ G3 发布全新扩展包
-      ⬜ G4 每周自动追踪上游更新
+      🔵 G4 每周自动追踪上游更新
 ```
 
 ### 状态图例
@@ -246,6 +253,13 @@ flowchart TB
   D5a --> D8["D8 演练场同步"]
   E2["E2 拆文档站大文件"]:::ext --> D8
   D5c --> D10["D10 core 遗留问题修复"]
+  G1 --> D11["D11 文档润色"]
+  D5c --> D12["D12 演练场模板逐个走查"]
+  D8 --> D13["D13 主题编辑器补面板"]
+  C9 --> D14["D14 core Markdown 解析器对齐原版"]
+  C16 --> D15["D15 core 状态图标改实心"]
+  C11 --> D16["D16 Table 行高对齐原版"]
+  D5c --> D17["D17 演练场图表撑满与刻度"]
   CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
@@ -347,30 +361,37 @@ flowchart TB
 | D1 | Neutral 主题底色 | B1 | ✅ 已完成 | 1 | D1-impl | | 总控复核通过，补了 Heading/Text 读行高字重 | #165 |
 | D2 | 其余 6 套主题适配 | D1 C全部 | ✅ 已完成 | 1 | D2-impl | | 6 套主题 token 与组件覆盖值全部对齐上游；core 新增变量入口默认值不变 | #169 |
 | D3 | Probe 主题调研 | D1 | ✅ 已完成 | 0 | | | 调研结论：probe 是上游测试夹具，不移植 | nodes/D3/conclusion.md |
-| D4a | CLI 能力对照与取舍 | A1 | 🟡 实现中 | 1 | 总控+用户讨论 | | | |
-| D4b | CLI 选定能力实现 | D4a A4 E1 | ⬜ 未开始 | 0 | | | | |
+| D4a | CLI 能力对照与取舍 | A1 | ✅ 已完成 | 1 | 总控+用户讨论 | | CLI 中等规模；init/theme/upgrade 只输出指引；doctor 只报告；D4b 范围定稿 | |
+| D4b | CLI 选定能力实现 | D4a A4 E1 | ✅ 已完成 | 1 | D4b-impl | | 拆 cli.ts、多包 catalog；新增 init/theme/upgrade/doctor，只读有测试 | #221 #222 |
 | D5a | 页面模板修复与补齐 | C全部 | ✅ 已完成 | 1 | D5a-impl | | 补 160 处变量前缀并加检查；settings-dialog 版式；补 4 个模板与 50 张演示图片；原版未完成模板只能链接打开 | #171 |
 | D5c | 页面模板内容追平原版 | D5a | ✅ 已完成 | 3 | D5c-impl | | 57 个模板逐个和原版截图对照；修 3 处插槽名，29 个模板追平原版；演练场图表按容器宽度绘制 | #175 #177 #178 |
-| D5b | 页面模板接入 CLI | D5a D4b | ⬜ 未开始 | 0 | | | | |
+| D5b | 页面模板接入 CLI | D5a D4b | ✅ 已完成 | 0 | | | 模板记录带 dependencies，生成时锁定只依赖 vue+core | #224 |
 | D6 | FR10 迁移 codemod | D4b C1 C2 C3 C5 | ➖ 不做 | 0 | | | 用户 2026-10-26 决定暂缓：根上的 class 保持原落点，升级不改也不坏；迁移说明已在 D7 升级指南 | |
 | D7 | 迁移指南与版本信息 | C全部 | ✅ 已完成 | 1 | D7-impl | | 总控复核通过，修正 3 处说法 | #167 |
 | D9 | 指南补齐 | C全部 | ✅ 已完成 | 1 | D9-impl | | 补 4 个新指南页与 6 处小节，中英文各一份 | #172 |
 | D10 | core 遗留问题修复 | D5c | ✅ 已完成 | 1 | D10-impl | | Stack 间距不再继承；Table 列头筛选同行、行级 ref 与事件；Selector 图标组件化；竖向 Step 内容；两个 Table 组合式函数 config 支持 ref | #180 |
+| D11 | 文档润色 | G1 | ✅ 已完成 | 3 | D11-writer | | 第 1 批：中文指南和主题页 39 处宣传腔改平实；组件页和英文页留后续批次 | #213 |
+| D12 | 演练场模板逐个走查 | D5c | 🟡 实现中 | 2 | D12-ui | | | |
+| D13 | 主题编辑器补面板 | D8 | ✅ 已完成 | 1 | D13-ui | | Components、Advanced 两个面板补齐，实时预览、导出、分享恢复；新增 14 测试 | #212 |
+| D14 | core Markdown 解析器对齐原版 | C9 | ✅ 已完成 | 1 | D14-impl | | 6 处对齐原版（含解析时拒绝不安全地址）；richtext 12 条 todo 恢复 | #217 |
+| D15 | core 状态图标改实心 | C16 | ✅ 已完成 | 2 | D15-impl | | 状态图标走 Icon：文档站 lucide 描边、演练场实心兜底，与原版两处一致 | #214 |
+| D16 | Table 行高对齐原版 | C11 | ✅ 已完成 | 1 | 总控 | | Table 不再写死行高，单元格 21px、行 37.5px，和原版一致 | #216 |
+| D17 | 演练场图表撑满与刻度 | D5c | ✅ 已完成 | 1 | 总控 | | 图表撑满、y 轴 5 档、图例色块、副标题；图表写法检查 | #220 |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
 | E3 | 可访问性自动检查 | A2 | ✅ 已完成 | 1 | E3-impl | E3-verify | 通过 20/20 | 09c400b |
 | E4 | CI 接入视觉对照 | A2 | ✅ 已完成 | 1 | E4-impl | E4-verify | 通过 22/22 | a5fcfe5 |
 | F0 | 新包选型决策 | A1 | ✅ 已完成 | 2 | F0-impl-r2 | F0-verify-r2 | 第 2 轮通过 17/17 | e48b073 |
-| F1a | richtext 纯逻辑 | F0 C9 | 🔵 可开工 | 0 | | | | |
-| F1b | richtext 编辑器 | F1a C1 C2 C3 C7 C14 C16 | ⬜ 未开始 | 0 | | | | |
+| F1a | richtext 纯逻辑 | F0 C9 | ✅ 已完成 | 1 | F1a-impl | | 新建 richtext 包，Markdown 往返 420 测试；12 todo 等 D14 修 core 解析器 | #208 |
+| F1b | richtext 编辑器 | F1a C1 C2 C3 C7 C14 C16 | 🔵 可开工 | 0 | | | | |
 | F1c | richtext 文档 | F1b | ⬜ 未开始 | 0 | | | | |
 | F2a | charts 纯逻辑 | F0 B1 | ✅ 已完成 | 1 | F2a-impl | | 总控复核通过，113 条测试，上游断言逐条一致 | #166 |
 | F2b | charts 组件 | F2a B7 C7 C14 C16 | ✅ 已完成 | 1 | F2b-impl | | Chart/Axis/Grid/Legend/Swatch/Tooltip 与 8 种 SVG 标记；上游用例除 WebGL 外全部移植 | #170 |
 | F2c | charts 文档 | F2b | 🔵 可开工 | 0 | | | | |
 | F2d | charts WebGL 标记 | F2b | 🔵 可开工 | 0 | | | 延后：等上游这部分成熟 | |
-| F3a | lab 输入类 | F0 C3 C8 C11 C12 C14 C15 C16 | 🔵 可开工 | 0 | | | | |
-| F3b | lab 展示类 | F0 C7 C16 | 🔵 可开工 | 0 | | | | |
+| F3a | lab 输入类 | F0 C3 C8 C11 C12 C14 C15 C16 | ✅ 已完成 | 1 | F3a-impl | | ListInput/TransferList/MobileTokenizer；ComplexSelector 加 contentClass/contentStyle/popupWidth | #223 |
+| F3b | lab 展示类 | F0 C7 C16 | ✅ 已完成 | 1 | F3b-impl | | 新建 lab 包（canary），Stat/CircularProgress/InfoTip/SVGIcon/LogStream，85 测试 | #205 |
 | F3g | lab 日程表 | F0 B7 C6 C7 C14 C15 C16 | 🔵 可开工 | 0 | | | | |
 | F3c | lab 浮层与引导 | F0 C7 C14 C16 | 🔵 可开工 | 0 | | | | |
 | F3d | lab 图表类 | F2b C16 | 🔵 可开工 | 0 | | | | |
@@ -380,10 +401,10 @@ flowchart TB
 | F4 | Nuxt 模块 | A3 C全部 | 🔵 可开工 | 0 | | | | |
 | F5 | vega | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 5 节 | |
 | F6 | build | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 6 节 | |
-| G1 | 发布 core + themes | C全部 D2 D7 D10 | 🟡 实现中 | 1 | 总控 | | | |
-| G2 | 发布 CLI | G1 D4b D5b | ⬜ 未开始 | 0 | | | | |
+| G1 | 发布 core + themes | C全部 D2 D7 D10 | ✅ 已完成 | 1 | 总控 | | core 与 themes 0.4.0 已发 npm（latest），GitHub Release 与 GitHub Packages 同步 | #182 #183 #184 |
+| G2 | 发布 CLI | G1 D4b D5b | 🔵 可开工 | 0 | | | | |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
-| G4 | 持续同步机制 | A1 G1 | ⬜ 未开始 | 0 | | | | |
+| G4 | 持续同步机制 | A1 G1 | 🔵 可开工 | 0 | | | | |
 
 C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 10/10），修的是 Markdown 子路径 `parser`、`plugins`、`plugin-renderer` 的 dist 导出。
 
@@ -473,6 +494,13 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D8 演练场同步 | 把 D5a 中做好的全新页面模板同步放入在线演练场供体验。 | D5 E2 | 演练场能在线无报错加载所有新模板。 |
 | D9 指南补齐 | 按 `nodes/D4a/guides-gap.md` 的 B、C 两类，把原版命令行内置指南里我们文档站缺的 11 篇补进文档站（中英文）：新页 principles、working-with-ai、browser-support、layout；patterns 加「固定页眉页脚」「侧边详情面板」；typography 加「该做与不该做」；i18n 加「从右往左与伪语言测试」；styling 加「和 Tailwind / UnoCSS 一起用」；EmptyState 加插画规范。内容改写成 Vue 的说法，每条都要在代码里能找到依据。 | C全部 | 中英文页面齐全，侧栏能进，`docs:build` 通过，catalog 重生。 |
 | D10 core 遗留问题修复 | D5c 追平模板时 worker 发现的 core 问题，用户要求全部修完再发版（见 `nodes/D10/plan.md`）：Stack 内边距和间距被嵌套 Stack 继承；Table 列头筛选按钮掉到下一行、缺行级扩展点（整行悬停卡片做不出来）；Selector 选项 `icon` 只吃 CSS 类名；竖向 Step 的内容排在标签右边；`useTableTreeState` / `useTableSortableState` 的 config 只解开一层 ref。 | D5c | 每条都有复现测试、修复和浏览器验证；受影响的模板和文档 Demo 回归通过。 |
+| D11 文档润色 | 用文档写作子代理（document-writer）把文档站中英文的指南、主题、组件说明页通读润色：说法直白、一句一个意思、术语前后一致，不改代码示例和 API 事实。按目录分批，每批一个 PR。 | G1 | 每批 `docs:build` 通过、catalog 重生；改动只涉及行文，代码块和 props 表不变（有脚本核对）；抽查页面读起来顺。 |
+| D12 演练场模板逐个走查 | 用户验收时发现模板和原版仍有大量细节差异（缺工具栏、间距、图标不显示、图表不撑满）。用 ui-implementor 按原版 `page.tsx` 逐个模板、逐个区块对照修复，浅色深色都要对。分 3 批：D12 看板与表格类，后续批次另开节点。见 `nodes/D12/plan.md`。 | D5c | 每个模板和原版同视口、同主题的整页对照图逐区块一致；差异清单逐条关闭。 |
+| D13 主题编辑器补面板 | 演练场「主题」里 Components、Advanced 两个 tab 点开是空白。移植原版 `ComponentTokensPanel`、`RawTokensPanel`。见 `nodes/D13/plan.md`。 | D8 | 两个面板和原版对照一致，改动能实时作用到预览和导出。 |
+| D14 core Markdown 解析器对齐原版 | F1a 发现我们 core 的 Markdown 解析器和原版有 6 处不一致（缩进代码块、不拒绝不安全地址、插件取词窗口、扩展节点 source 丢反斜杠、`createMarkdownPlugin` 无泛型、链接文字里认插件语法），见 `nodes/F1a/impl-1.md` 第 6.1 节和 issue #209。第 2 条有安全影响，F1b 依赖它。 | C9 | 6 处都和原版一致；richtext 的 12 条 `it.todo` 恢复成正式断言并通过；core 现有测试不回退。 |
+| D15 core 状态图标改实心 | D12 验收时发现：原版 `defaultIcons.tsx` 里 success、error、warning、info 等 6 个状态图标用实心（`solidSvgProps`，heroicons solid 风格），我们 `styles/icon.css` 里是 lucide 空心描边。Banner、Toast、Field 状态等处都受影响。逐个照原版路径改成实心。 | C16 | 6 个图标路径和原版一致；Banner、Toast、FieldStatus 文档页浅色深色对照一致。 |
+| D16 Table 行高对齐原版 | D12 走查发现表格每行比原版矮。原版 Table 不设行高，继承 `html { line-height: 1.5 }`（21px）；我们写死了 `--astryx-text-body-leading`（20px）。去掉这一行即可。 | C11 | 原版和我们的演练场 table-page、文档站 Table 页的单元格行高和行高度一致。 |
+| D17 演练场图表撑满与刻度 | 用户多次报图表和原版不一致：写死 viewBox 宽度导致不撑满、`PlaygroundLineChart` 只画两档 y 刻度、图例缺色块。从共用图表组件根上修，并在 `check-template-tokens.mjs` 加图表写法检查。 | D5c | 所有图表模板和原版同视口对照一致；写死宽度的图表 svg 会被检查拦下。 |
 
 ---
 
@@ -520,4 +548,4 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | G1 发布 core + themes | 使用 changeset 记录版本变更，将 `package.json` 的 `upstream` 字段更新为 `v0.7.1`，更新主说明 README。 | C全部 D2 D7 D10 | 核心包与主题包构建成功并完成发版。 |
 | G2 发布 CLI | 发布最新版本的命令行工具。 | G1 D4b D5b | 命令行工具发布成功且可全局安装运行。 |
 | G3 首发新包 | 首次公开发布 richtext、charts、lab 以及 nuxt 模块等新扩展包。 | G1 F1c F2c F3f F4 | 所有新包成功推送到 npm 仓库。 |
-| G4 持续同步机制 | 建立定时自动化任务，每周自动运行一次差异台账脚本，将上游仓库后续的新提交自动分类并创建跟踪 issue。 | A1 G1 | 定时任务测试通过，能自动检测新提交并建好 issue。 |
+| G4 持续同步机制 | 每周定时检查上游新 tag，用台账脚本把新提交按组件族归类，每个组件族开一个 issue（勾选清单）放进 GitHub Project「astryx-vue 路线图」；归类规则改成按组件族长期可用；`packages/native` 标不适用；`package.json` 记 `syncedTo`。详见 `nodes/G4/plan.md`。 | A1 G1 | dry-run 对 v0.7.1..v0.7.4 无未命中文件；原台账 `--check` 不变；工作流可手动触发；同名 issue 不重复开。 |

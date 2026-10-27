@@ -4,6 +4,12 @@ export const BINARY = 'astryx-vue'
 
 export const PACKAGE_NAME = '@astryx-vue/cli'
 
+/** The design system package: where every component a project starts with comes from. */
+export const CORE_PACKAGE = '@astryx-vue/core'
+
+/** The docs site: where every guide and theme page the CLI prints comes from. */
+export const DOCS_PACKAGE = '@astryx-vue/docs'
+
 /** Values `search --type` accepts. Each one names a search domain. */
 export const SEARCH_TYPES = ['component', 'composable', 'doc', 'template'] as const
 
@@ -140,16 +146,20 @@ export const COMMANDS: readonly CommandSpec[] = [
     arguments: [
       { name: 'topic', required: false, variadic: false, description: 'Topic id such as guide/dark-mode or themes/tokens, or a unique bare name such as dark-mode. Omit to list every topic.' },
     ],
-    options: [],
+    options: [
+      { name: 'depth', flag: '--depth', type: 'string', description: 'Print headings down to this level. 2 keeps `#` and `##` and drops deeper subsections with their body. Default: every level.' },
+    ],
     json: true,
     responseTypes: ['docs.list', 'docs.detail'],
     examples: [
       `${BINARY} docs`,
       `${BINARY} docs guide/dark-mode`,
       `${BINARY} docs themes/tokens --json`,
+      `${BINARY} docs guide/styling --depth 2`,
       `${BINARY} docs dark-mode --zh --dense`,
     ],
     exitCodes: USAGE_EXIT,
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: '--depth is not a positive whole number, or is passed without a topic.' }],
   },
   {
     name: 'search',
@@ -173,13 +183,13 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
   {
     name: 'template',
-    summary: 'List playground page templates, print one, or copy one into the project.',
+    summary: 'List the playground page templates, print one, or copy one into the project. A ready page runs on vue and @astryx-vue/core alone.',
     arguments: [
       { name: 'name', required: false, variadic: false, description: 'Template slug, such as login-card. Omit with --list, or to list every template.' },
       { name: 'path', required: false, variadic: false, description: 'File or directory to write into. A directory receives <Name>.vue.' },
     ],
     options: [
-      { name: 'list', flag: '--list', type: 'boolean', description: 'List every template with its category and status.' },
+      { name: 'list', flag: '--list', type: 'boolean', description: 'List every template with its category, the packages it needs, and whether it can be copied.' },
       { name: 'skeleton', flag: '--skeleton', type: 'boolean', description: 'Print the layout skeleton only: component tags and layout attributes, no text or handlers.' },
       { name: 'type', flag: '--type', type: 'string', description: 'Restrict to page or block templates. Every template is a page today.', choices: ['page', 'block'] },
       { name: 'overwrite', flag: '--overwrite', type: 'boolean', aliases: ['-f'], description: 'Replace the target file when it already exists.' },
@@ -234,18 +244,71 @@ export const COMMANDS: readonly CommandSpec[] = [
     exitCodes: USAGE_EXIT,
   },
   {
+    name: 'theme',
+    summary: 'List the built-in themes, or print how to load one.',
+    arguments: [
+      { name: 'name', required: false, variadic: false, description: 'Theme slug or display name, such as butter or Neutral. Omit to list every theme.' },
+    ],
+    options: [],
+    json: true,
+    responseTypes: ['theme.list', 'theme.detail'],
+    examples: [
+      `${BINARY} theme`,
+      `${BINARY} theme butter`,
+      `${BINARY} theme neutral --json`,
+      `${BINARY} theme butter --zh`,
+    ],
+    exitCodes: USAGE_EXIT,
+    errors: [{ code: 'ERR_UNKNOWN_THEME', when: 'No theme has that slug or display name. Close names come back as suggestions.' }],
+  },
+  {
+    name: 'upgrade',
+    summary: 'Compare the installed core version with this CLI\'s, and print what upgrading takes.',
+    arguments: [],
+    options: [],
+    json: true,
+    responseTypes: ['upgrade.report'],
+    examples: [
+      `${BINARY} upgrade`,
+      `${BINARY} upgrade --json`,
+      `${BINARY} upgrade --zh`,
+    ],
+    exitCodes: USAGE_EXIT,
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: 'upgrade was given a positional argument.' }],
+  },
+  {
+    name: 'doctor',
+    summary: 'Check the project\'s versions, theme stylesheet, and theme attribute. Changes nothing.',
+    arguments: [],
+    options: [],
+    json: true,
+    responseTypes: ['doctor.report'],
+    examples: [
+      `${BINARY} doctor`,
+      `${BINARY} doctor --json`,
+      `${BINARY} doctor --zh`,
+    ],
+    exitCodes: [
+      { code: 0, when: 'Every check passed, or only warned.' },
+      { code: 1, when: 'At least one check failed: a package is missing or no theme stylesheet is imported.' },
+      { code: 2, when: 'Invalid usage: unknown option or a positional argument.' },
+    ],
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: 'doctor was given a positional argument.' }],
+  },
+  {
     name: 'init',
-    summary: 'Write or refresh the managed agent-context block.',
+    summary: 'Print the setup guide for an AI assistant, and refresh the managed agent-context block.',
     arguments: [],
     options: [
-      { name: 'features', flag: '--features', type: 'string', description: 'Comma-separated features. MVP accepts agents.' },
+      { name: 'features', flag: '--features', type: 'string', description: 'Comma-separated features. agents writes the managed block; leaving the flag out is the same as passing it. Any other feature is an error.' },
       { name: 'agent', flag: '--agent', type: 'string', description: 'Which file to write. cursor and codex use AGENTS.md, claude uses CLAUDE.md, hermes uses .hermes.md (or an existing HERMES.md), all writes every agent file the project already has. Without it, an existing agent file is reused.', choices: ['cursor', 'claude', 'codex', 'hermes', 'all'] },
       { name: 'agent-docs-path', flag: '--agent-docs-path', type: 'string', description: 'Write the managed block to this file instead. Relative paths resolve against the project directory.' },
     ],
     json: true,
     responseTypes: ['init.run'],
     examples: [
-      `${BINARY} init --features agents`,
+      `${BINARY} init`,
+      `${BINARY} init --json`,
       `${BINARY} init --features agents --agent claude`,
       `${BINARY} init --features agents --agent hermes`,
       `${BINARY} init --features agents --agent all`,
@@ -261,7 +324,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
 ]
 
-export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'init', 'help', 'version'] as const
+export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'doctor', 'init', 'help', 'version'] as const
 
 export function commandByName(name: string): CommandSpec | undefined {
   return COMMANDS.find(command => command.name === name)

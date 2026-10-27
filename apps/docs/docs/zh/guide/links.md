@@ -6,9 +6,9 @@ title: 链接与路由
 
 在单页应用（SPA）中，页面跳转通常分为两种情况：
 1. **外部网站跳转**：由浏览器原生打开一个外部网址，这时使用普通的 HTML `href`。
-2. **应用内部导航**：希望走 Vue Router 的路由拦截，实现无刷新的丝滑切换，这时需要把组件底层的渲染根节点替换为 `RouterLink`。
+2. **应用内部导航**：希望走 Vue Router 的路由拦截，实现页面无刷新切换，这时需要把组件底层的渲染根节点替换为 `RouterLink`。
 
-## 使用 `as` 属性无缝配合 Vue Router
+## 使用 `as` 属性配合 Vue Router
 
 astryx-vue 中所有支持导航跳转的组件，都统一提供了一个简洁的 `as` 属性。它既可以接收一个 Vue 组件（例如 `RouterLink`），也可以接收一个 HTML 标签名（例如 `'a'`）：
 
@@ -23,10 +23,10 @@ import { RouterLink } from 'vue-router'
 </template>
 ```
 
-底层逻辑非常贴心：
+底层逻辑如下：
 - 只有当该组件传入了有效的目标地址 `href`、并且当前项**没有被禁用**时，底层的根元素才会真正被替换为 `as` 所指定的组件；
-- 如果按钮处于禁用或加载状态，它会自动维持安全的普通 `<button>`，防止意外触发跳转；
-- 当把 `as` 指定为自定义组件（如 `RouterLink`）时，组件库会自动把目标地址同时赋给 `href` 和 `to` 属性，因此 `RouterLink` 能完美读取到 `to` 并正常工作。
+- 如果按钮处于禁用或加载状态，它会自动维持普通 `<button>`，防止触发跳转；
+- 当把 `as` 指定为自定义组件（如 `RouterLink`）时，组件库会自动把目标地址同时赋给 `href` 和 `to` 属性，因此 `RouterLink` 能读取到 `to` 并正常工作。
 
 同样支持 `as` 属性的组件包括：`SideNavItem`、`TopNavItem`、`TopNavHeading`、`NavMenuItem` 和 `SideNavHeading` 等。顶部导航的巨型下拉菜单项以及推荐卡片也同样支持。对于溢出折叠列表 `OverflowList`，直接把 `as` 配置在列表顶层，就能自动作用于内部那些带 `href` 且可点击的可见项。
 

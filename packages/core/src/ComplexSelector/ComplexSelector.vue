@@ -210,8 +210,9 @@ defineExpose(handle)
     :is-enabled="!isDisabled"
     :is-open="isOpen"
     :label="label"
-    :padding="3"
+    :padding="0"
     :placement="placement"
+    :width="popupWidth"
     role="dialog"
     @open-change="setOpen"
   >
@@ -219,7 +220,7 @@ defineExpose(handle)
       <component :is="triggerView" />
     </slot>
     <template #content>
-      <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content">
+      <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content" :class="contentClass" :style="contentStyle">
         <slot
           :close="close"
           :commit="commit"
@@ -255,8 +256,9 @@ defineExpose(handle)
       :is-enabled="!isDisabled"
       :is-open="isOpen"
       :label="label"
-      :padding="3"
+      :padding="0"
       :placement="placement"
+      :width="popupWidth"
       role="dialog"
       @open-change="setOpen"
     >
@@ -298,7 +300,7 @@ defineExpose(handle)
         />
       </button>
       <template #content>
-        <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content">
+        <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content" :class="contentClass" :style="contentStyle">
           <slot
             :close="close"
             :commit="commit"

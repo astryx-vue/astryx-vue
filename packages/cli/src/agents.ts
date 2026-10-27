@@ -1,4 +1,4 @@
-import type { Catalog } from './catalog-types.ts'
+import type { Catalog, CatalogPackage } from './catalog-types.ts'
 import { BINARY } from './spec.ts'
 
 export const MANAGED_BLOCK_START = '<!-- Maintained by astryx-vue, do not edit manually -->'
@@ -52,7 +52,7 @@ export function resolveAgentTargets(agent: AgentName | null, existing: readonly 
 
 export function renderAgentBlock(catalog: Catalog, locale: 'en' | 'zh', dense: boolean): string {
   const conventions = dense ? [] : catalog.conventions[locale]
-  return locale === 'zh' ? renderChinese(conventions) : renderEnglish(conventions)
+  return locale === 'zh' ? renderChinese(catalog, conventions) : renderEnglish(catalog, conventions)
 }
 
 export function applyManagedBlock(existing: string | null, inner: string): { content: string, action: BlockAction } {
@@ -79,11 +79,30 @@ function ensureTrailingNewline(value: string): string {
   return value.endsWith('\n') ? value : `${value}\n`
 }
 
-function renderEnglish(conventions: string[]): string {
+/**
+ * One line per package, with the install specifier. A package published only
+ * under the canary tag says so and takes `@canary`, because installing it
+ * without the tag gets a placeholder version.
+ */
+function packageLines(packages: readonly CatalogPackage[], locale: 'en' | 'zh'): string[] {
+  return packages.map((pkg) => {
+    const canary = pkg.canary
+      ? (locale === 'zh' ? '，canary 预览，API 可能会变，安装要写 `@canary`' : ', canary only: the API may change, install with `@canary`')
+      : ''
+    const label = pkg.canary ? `\`${pkg.name}@canary\`` : `\`${pkg.name}\``
+    return `- ${label} ${pkg.version} — ${pkg.description}${canary}`
+  })
+}
+
+function renderEnglish(catalog: Catalog, conventions: string[]): string {
   const lines = [
     '# astryx-vue',
     '',
-    'This project uses astryx-vue, an unofficial Vue 3 community port of the Astryx design system. Components come from `@astryx-vue/core`. Themes come from `@astryx-vue/themes`. Do not use Meta\'s React packages, StyleX, or the bare `astryx` command.',
+    'This project uses astryx-vue, an unofficial Vue 3 community port of the Astryx design system. Do not use Meta\'s React packages, StyleX, or the bare `astryx` command.',
+    '',
+    '## Packages',
+    '',
+    ...packageLines(catalog.packages, 'en'),
     '',
     '## Workflow',
     '',
@@ -115,11 +134,15 @@ function renderEnglish(conventions: string[]): string {
   return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim()
 }
 
-function renderChinese(conventions: string[]): string {
+function renderChinese(catalog: Catalog, conventions: string[]): string {
   const lines = [
     '# astryx-vue',
     '',
-    '这个项目使用 astryx-vue，它是 Astryx 设计系统的非官方 Vue 3 社区实现。组件在 `@astryx-vue/core`，主题在 `@astryx-vue/themes`。不要使用 Meta 的 React 包、StyleX，也不要调用裸命令 `astryx`。',
+    '这个项目使用 astryx-vue，它是 Astryx 设计系统的非官方 Vue 3 社区实现。不要使用 Meta 的 React 包、StyleX，也不要调用裸命令 `astryx`。',
+    '',
+    '## 包',
+    '',
+    ...packageLines(catalog.packages, 'zh'),
     '',
     '## 工作流',
     '',

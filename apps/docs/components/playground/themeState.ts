@@ -7,6 +7,7 @@ import baseCss from '../../../../packages/themes/neutral/base.css?raw'
 import { parseCustomProperties, splitLightDark } from '../theme-tokens/parseTokens'
 import { normalizeHex } from './themeColor'
 import { COLOR_FIELDS, COLOR_VARIABLES, DENSITY_PRESETS, PLAYGROUND_FONTS, TYPE_SCALES } from './themeOptions'
+import { sanitizeComponentTokens, sanitizeCustomOverrides, sanitizeTokens } from './themeOverrides'
 import { clamp } from './themeScale'
 
 const NEUTRAL_COLORS = readNeutralColors()
@@ -28,6 +29,20 @@ export function createNeutralTheme(): ThemeState {
     spacing: 4,
     elementSize: 32,
     duration: 1,
+    tokens: {},
+    componentTokens: {},
+    customOverrides: [],
+  }
+}
+
+/** 深拷贝一份主题，分享链接和重置都用它，避免响应式对象被共用。 */
+export function cloneTheme(theme: ThemeState): ThemeState {
+  return {
+    ...theme,
+    colors: { light: { ...theme.colors.light }, dark: { ...theme.colors.dark } },
+    tokens: { ...theme.tokens },
+    componentTokens: { ...theme.componentTokens },
+    customOverrides: theme.customOverrides.map(item => ({ ...item })),
   }
 }
 
@@ -45,6 +60,9 @@ export function applyTheme(target: ThemeState, next: ThemeState): void {
   target.spacing = next.spacing
   target.elementSize = next.elementSize
   target.duration = next.duration
+  target.tokens = { ...next.tokens }
+  target.componentTokens = { ...next.componentTokens }
+  target.customOverrides = next.customOverrides.map(item => ({ ...item }))
 }
 
 export function themesEqual(left: ThemeState, right: ThemeState): boolean {
@@ -97,6 +115,9 @@ export function sanitizeTheme(value: unknown): ThemeState | null {
   next.spacing = readNumber(value.spacing, next.spacing, 2, 8)
   next.elementSize = readNumber(value.elementSize, next.elementSize, 24, 48)
   next.duration = readNumber(value.duration, next.duration, 0.5, 2)
+  next.tokens = sanitizeTokens(value.tokens)
+  next.componentTokens = sanitizeComponentTokens(value.componentTokens)
+  next.customOverrides = sanitizeCustomOverrides(value.customOverrides)
   return next
 }
 
@@ -119,22 +140,8 @@ function readNeutralColors(): { light: ThemeColors, dark: ThemeColors } {
  * owns it separately from the token values, same as upstream `mode`.
  */
 function themeSnapshot(theme: ThemeState): Omit<ThemeState, 'dark'> {
-  return {
-    colors: {
-      light: { ...theme.colors.light },
-      dark: { ...theme.colors.dark },
-    },
-    headingFont: theme.headingFont,
-    bodyFont: theme.bodyFont,
-    customHeadingFont: theme.customHeadingFont,
-    customBodyFont: theme.customBodyFont,
-    typeScale: theme.typeScale,
-    typeSize: theme.typeSize,
-    radius: theme.radius,
-    spacing: theme.spacing,
-    elementSize: theme.elementSize,
-    duration: theme.duration,
-  }
+  const { dark: _dark, ...palette } = cloneTheme(theme)
+  return palette
 }
 
 function mergeColors(target: ThemeColors, value: unknown): void {

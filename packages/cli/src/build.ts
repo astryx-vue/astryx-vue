@@ -98,11 +98,16 @@ export interface TemplateMatch {
   title: string
   description: string
   category: string
+  /** The package the page ships in, so a reader knows what to install. */
+  package: string
   /** False when the page imports a package a project cannot install. */
   isReady: boolean
   notReadyReason?: string
   /** The words this idea and this template share, most valuable first. */
   matchedTerms: string[]
+  /** How many of the idea's usable words this template matched, and how many there were. */
+  matchedTermCount: number
+  termCount: number
   /** Reads the template without writing anything. */
   command: string
   /** The next step: copy it into the project, then edit it. */
@@ -118,9 +123,21 @@ export interface KitComponent {
   reason: 'search' | 'template'
 }
 
+/**
+ * Why the kit starts where it does. `direct` reads the idea as naming the page
+ * outright, `closest` as the nearest page, and `fallback` as no page at all.
+ */
+export type BuildBasis = 'direct' | 'closest' | 'fallback'
+
 export interface BuildKit {
   idea: string
   locale: 'en' | 'zh'
+  /** How many templates cleared the score floor, before the kit keeps the top three. */
+  matchCount: number
+  /** False when no template matched, which the kit still answers with a note. */
+  hasResults: boolean
+  directMatch: boolean
+  basis: BuildBasis
   template: TemplateMatch | null
   otherTemplates: TemplateMatch[]
   components: KitComponent[]
@@ -261,18 +278,21 @@ export function rankTemplates(idea: string): TemplateMatch[] {
       // The family's own name is its default page; a variant needs its own edge.
       || hyphenCount(a.doc.template.slug) - hyphenCount(b.doc.template.slug)
       || a.doc.template.slug.localeCompare(b.doc.template.slug))
-    .map(entry => toMatch(entry.doc.template, entry.matched))
+    .map(entry => toMatch(entry.doc.template, entry.matched, usable.length))
 }
 
-function toMatch(template: TemplateRecord, matchedTerms: string[]): TemplateMatch {
+function toMatch(template: TemplateRecord, matchedTerms: string[], termCount: number): TemplateMatch {
   return {
     slug: template.slug,
     title: text(template.title, 'en'),
     description: text(template.description, 'en'),
     category: text(template.category, 'en'),
+    package: template.package,
     isReady: template.isReady,
     ...(template.notReadyReason ? { notReadyReason: template.notReadyReason.en } : {}),
     matchedTerms,
+    matchedTermCount: matchedTerms.length,
+    termCount,
     command: `${BINARY} template ${template.slug}`,
     copyCommand: copyCommand(template.slug),
   }
@@ -342,7 +362,24 @@ export function buildKit(idea: string, locale: 'en' | 'zh'): BuildKit {
       : `The closest template is not copyable: ${template.notReadyReason ?? ''} Read it for structure, do not copy it.`)
   }
 
-  return { idea: trimmed, locale, template, otherTemplates, components, composables, notes }
+  // An idea whose every usable word reached the top page names that page; a
+  // partial match is only the closest one.
+  const basis: BuildBasis = template === null
+    ? 'fallback'
+    : template.matchedTermCount >= template.termCount ? 'direct' : 'closest'
+  return {
+    idea: trimmed,
+    locale,
+    matchCount: ranked.length,
+    hasResults: ranked.length > 0,
+    directMatch: basis === 'direct',
+    basis,
+    template,
+    otherTemplates,
+    components,
+    composables,
+    notes,
+  }
 }
 
 function templateRecord(slug: string): TemplateRecord | undefined {

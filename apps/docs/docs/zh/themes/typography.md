@@ -4,7 +4,7 @@ title: 排版与字体
 
 # 排版与字体
 
-文字是界面传递信息最核心的媒介。好的排版能让内容层次分明，读起来眼睛轻松不累。astryx-vue 的排版系统在字体、字重和字号层级上都设定了清晰易用的规范。
+文字是界面传递信息的重要媒介。好的排版能让内容层次分明，读起来更轻松。astryx-vue 的排版系统在字体、字重和字号层级上都设定了规范。
 
 ## 预置字体与字体栈（Font Family）
 
@@ -24,7 +24,7 @@ title: 排版与字体
 - `--astryx-font-weight-semibold`：`600`（模块小标、加粗按钮）
 - `--astryx-font-weight-bold`：`700`（主标题）
 
-同时提供了 `--astryx-font-weight-regular` 别名（等同于 400），无缝兼容已有组件。
+同时提供了 `--astryx-font-weight-regular` 别名（等同于 400），兼容已有组件。
 
 ## 文本与标题尺寸阶梯（Type Scale）
 

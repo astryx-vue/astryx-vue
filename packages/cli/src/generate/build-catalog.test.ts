@@ -1,6 +1,7 @@
 import type { ExampleRecord } from '../catalog-types.ts'
 import { describe, expect, it } from 'vitest'
 import { pairExamples } from './build-catalog.ts'
+import { analyzeTemplateImports, unexpectedDependencies } from './build-templates.ts'
 
 function example(title: string, code: string, description = ''): ExampleRecord {
   return { title, description, code }
@@ -41,5 +42,34 @@ describe('example pairing', () => {
   it('accepts examples without a demo', () => {
     const paired = pairExamples('table', [example('', '')], [example('', '')])
     expect(paired).toEqual([{ title: { en: '', zh: '' }, description: { en: '', zh: '' }, code: '' }])
+  })
+})
+
+describe('template imports', () => {
+  const installable = new Set(['vue', '@astryx-vue/core', '@astryx-vue/lab'])
+
+  it('lists components from every installable package and flags the rest', () => {
+    const source = [
+      'import { Button } from \'@astryx-vue/core/Button\'',
+      'import type { ContextMenuOption } from \'@astryx-vue/core/ContextMenu\'',
+      'import { InfoTip } from \'@astryx-vue/lab\'',
+      'import { ref } from \'vue\'',
+      'import { Chart } from \'@astryx-vue/playground-charts\'',
+      'import \'./local.css\'',
+    ].join('\n')
+    expect(analyzeTemplateImports(source, installable)).toEqual({
+      componentsUsed: ['Button', 'InfoTip'],
+      foreignPackages: ['@astryx-vue/playground-charts'],
+      packages: ['@astryx-vue/core', '@astryx-vue/lab', '@astryx-vue/playground-charts', 'vue'],
+    })
+  })
+
+  it('names a component imported by its own subpath', () => {
+    expect(analyzeTemplateImports('import { Card } from \'@astryx-vue/core/Card\'', installable).componentsUsed).toEqual(['Card'])
+  })
+
+  it('flags a ready page that would need a third package', () => {
+    expect(unexpectedDependencies(['@astryx-vue/core', 'vue'])).toEqual([])
+    expect(unexpectedDependencies(['@astryx-vue/core', '@astryx-vue/lab', 'vue'])).toEqual(['@astryx-vue/lab'])
   })
 })

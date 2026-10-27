@@ -31,7 +31,8 @@ export interface PageExtract {
   exportName: string | null
 }
 
-const IMPORT_PATTERN = /import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['"](@astryx-vue\/core(?:\/[^'"]+)?)['"]/g
+/** An import from any astryx-vue package: `@astryx-vue/core/Button`, `@astryx-vue/lab`. */
+const IMPORT_PATTERN = /import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+['"](@astryx-vue\/[a-z-]+(?:\/[^'"]+)?)['"]/g
 
 export function pascalCase(slug: string): string {
   return slug.split('-').filter(Boolean).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('')

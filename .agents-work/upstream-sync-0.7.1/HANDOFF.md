@@ -57,13 +57,23 @@ D5c 第二批 #177（`0ac9ba3`）、第三批 #178（`9018804`）已合入，**D
 - `Selector` 选项的 `icon` 只吃 CSS 类名；`Step` 的默认插槽排在标签右侧一列。
 - `useTableTreeState` / `useTableSortableState` 的 config 只 `toValue` 一层。
 
-**#128 已于 2026-10-26 合入 `dev`（merge commit `c2ee4ef`，用户决定）。** 后续任务由新的跟踪 PR 接续（`swarm-tree` → `dev`），正文在 `PR-NEXT-BODY.md`，mermaid 只画剩余任务。`PR128-BODY.md` 保留为合入时的快照，不再更新。
+**#128 已于 2026-10-26 合入 `dev`（merge commit `c2ee4ef`，用户决定）。** 后续任务由跟踪 PR **#218** 接续（`swarm-tree` → `dev`，draft）。#181 在合入 #182 时被 GitHub 一并标成 MERGED（头提交相同），之后不再触发预览部署，已由 #218 接替，正文在 `PR-NEXT-BODY.md`，mermaid 只画剩余任务。`PR128-BODY.md` 保留为合入时的快照，不再更新。
 
 D10 #180（`8354a2b`）已合入：Stack 间距不再继承、Table 列头筛选同行与行级 ref / 事件、Selector 图标组件化、竖向 Step、两个 Table 组合式函数的 config 支持 ref。总控补修了列头漏斗的排版（Qty 被截断）。
 
-**G1 用户决定（2026-10-26）：** 版本 0.4.0（minor）；charts 这次不发；我开 PR，每一次合并前都先问用户（swarm-tree→dev、dev→main、Version Packages 各一次）。changeset 在 `.changeset/sync-astryx-0-7-1.md`。
+**G1 已完成（2026-10-27）：** `@astryx-vue/core`、`@astryx-vue/themes` 0.4.0 已发 npm（latest）。流程：#182 changeset 进 dev → #183 dev→main → #184 Version Packages。GitHub Release、GitHub Packages、main→dev 回同步都成功。
 
-当前并行：G1（总控在做）。
+**用户规定（2026-10-27）：常规发版三步总控直接走完，不用逐步问**（dev→main、Version Packages 合并、发 npm）。版本号、发哪些包这类决定仍先问用户。
+
+**看板迁到 GitHub Project（用户 2026-10-27）：** [astryx-vue 路线图](https://github.com/orgs/astryx-vue/projects/1) 是唯一看板。剩余 20 个节点各有一个 issue（#185–#204，对照表在 `nodes/issues.json`），字段有 Status（Todo / In Progress / In Review / Blocked / Done）、Area、Node、Upstream。节点开工时把卡片挪到 In Progress，PR 正文写 `Closes #N`。`ROADMAP.md` 和 `status.mjs` 继续用来算依赖，但进度以 Project 为准。
+
+**D4a 定稿（2026-10-27）：** `upgrade` 只输出升级指引（见 `nodes/D4a/decisions.md` 第 7 条和「D4b 范围」）。
+
+**G4 方案（用户 2026-10-27）：** 一个组件族一个 issue；`packages/native` 标不适用；计划在 `nodes/G4/plan.md`。上游已到 v0.7.4（+312 提交，0 个破坏性）。
+
+**怎么看部署（2026-10-27）：** Cloudflare Pages 只对 `main`、`dev` 的推送，以及「合向 `main`/`dev` 的 PR」部署。节点小 PR 合向 `swarm-tree`，不部署。`swarm-tree` 的预览靠跟踪 PR（`swarm-tree` → `dev`）：它每次被推送都会重新部署，固定地址是 **https://swarm-tree.astryx-vue.pages.dev**，每次部署的独立地址写在 PR 评论里。**跟踪 PR 不能是 MERGED 或 CLOSED**，否则预览会停。每次发版合进 dev 以后，都要检查跟踪 PR 还开着。
+
+当前并行（3/3）：F1a（slot 1）、F3b（slot 2，搭 lab 包骨架）、D11（slot 3，document-writer，第 1 批中文指南与主题）。下一批按顺序派：G4、D4b、F3a/F3c/F3h。
 
 **D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`，原版指南对照在 `nodes/D4a/guides-gap.md`。还没定的：`upgrade` 的形态（D6 暂缓后只输出升级指引）。
 

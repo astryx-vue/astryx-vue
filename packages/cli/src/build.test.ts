@@ -13,7 +13,11 @@ async function kitFor(idea: string, locale: 'en' | 'zh' = 'en') {
   return assertResponse(result.stdout, 'build.kit').data as {
     idea: string
     locale: string
-    template: { slug: string, title: string, description: string, isReady: boolean, command: string, copyCommand: string, matchedTerms: string[] } | null
+    matchCount: number
+    hasResults: boolean
+    directMatch: boolean
+    basis: 'direct' | 'closest' | 'fallback'
+    template: { slug: string, title: string, description: string, package: string, isReady: boolean, command: string, copyCommand: string, matchedTerms: string[], matchedTermCount: number, termCount: number } | null
     otherTemplates: { slug: string }[]
     components: { name: string, command: string, reason: string, description: string }[]
     composables: { name: string, command: string }[]
@@ -22,6 +26,21 @@ async function kitFor(idea: string, locale: 'en' | 'zh' = 'en') {
 }
 
 describe('build ranking', () => {
+  it('says how confident the pick is and where the page ships from', async () => {
+    const direct = await kitFor('kanban board')
+    expect(direct.template).toMatchObject({ slug: 'kanban-board', package: '@astryx-vue/cli' })
+    expect(direct).toMatchObject({ hasResults: true, directMatch: true, basis: 'direct' })
+    expect(direct.matchCount).toBeGreaterThanOrEqual(1)
+
+    // One of the idea's words is not on the page the kit picks.
+    const closest = await kitFor('login page with SSO')
+    expect(closest.template?.matchedTermCount ?? 0).toBeLessThanOrEqual(closest.template?.termCount ?? 0)
+    expect(closest.basis === 'direct' || closest.basis === 'closest').toBe(true)
+
+    const nothing = await kitFor('zzzz qqqq')
+    expect(nothing).toMatchObject({ hasResults: false, directMatch: false, basis: 'fallback', template: null, matchCount: 0 })
+  })
+
   it('sends a Chinese login idea to the login pages', async () => {
     const kit = await kitFor('登录页', 'zh')
     expect(kit.template?.slug.startsWith('login')).toBe(true)

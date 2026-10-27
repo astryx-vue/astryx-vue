@@ -72,11 +72,11 @@ const MILESTONES: Milestone[] = [
 ]
 
 const TASK_STATUS = [
-  { key: 'closed', label: 'Closed', points: 190, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
-  { key: 'inProgress', label: 'In progress', points: 58, color: 'var(--astryx-color-data-categorical-green, #0B991F)' },
-  { key: 'inReview', label: 'In review', points: 24, color: 'var(--astryx-color-data-categorical-orange, #EB6E00)' },
-  { key: 'blocked', label: 'Blocked', points: 22, color: 'var(--astryx-color-data-categorical-red, #F5394F)' },
-  { key: 'planned', label: 'Planned', points: 26, color: 'var(--astryx-color-data-neutral, #8494A3)' },
+  { key: 'closed', tasks: 86, label: 'Closed', points: 190, color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+  { key: 'inProgress', tasks: 24, label: 'In progress', points: 58, color: 'var(--astryx-color-data-categorical-green, #0B991F)' },
+  { key: 'inReview', tasks: 12, label: 'In review', points: 24, color: 'var(--astryx-color-data-categorical-orange, #EB6E00)' },
+  { key: 'blocked', tasks: 5, label: 'Blocked', points: 22, color: 'var(--astryx-color-data-categorical-red, #F5394F)' },
+  { key: 'planned', tasks: 21, label: 'Planned', points: 26, color: 'var(--astryx-color-data-neutral, #8494A3)' },
 ]
 
 interface Workstream extends Record<string, unknown> {
@@ -146,6 +146,11 @@ const ganttItems = computed(() => milestones.value.map(m => ({
   end: m.end,
   color: RAG_FILL[m.status],
 })))
+
+const TASK_POINTS_TOTAL = TASK_STATUS.reduce((sum, s) => sum + s.points, 0)
+const TASK_COUNT_TOTAL = TASK_STATUS.reduce((sum, s) => sum + s.tasks, 0)
+const ACTUAL_COLOR = 'var(--astryx-color-data-categorical-blue, #0171E3)'
+const IDEAL_COLOR = 'var(--astryx-color-data-neutral, #8494A3)'
 
 const donutSegments = computed(() => TASK_STATUS.map(s => ({ value: s.points, color: s.color })))
 
@@ -261,45 +266,74 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
             <Grid :gap="4" :columns="{ minWidth: 320, max: 3 }">
               <Card :padding="6">
                 <VStack :gap="5">
-                  <Heading :level="3">
-                    Overall progress
-                  </Heading>
+                  <VStack>
+                    <Heading :level="3" :accessibility-level="2">
+                      Overall progress
+                    </Heading>
+                    <Text type="supporting" color="secondary">
+                      {{ TASK_COUNT_TOTAL }} tasks · {{ TASK_POINTS_TOTAL }} story points
+                    </Text>
+                  </VStack>
                   <HStack :gap="8" align="center" wrap="wrap">
                     <PlaygroundDonutChart :segments="donutSegments" />
                     <VStack :gap="2">
-                      <Text v-for="s in TASK_STATUS" :key="s.key" type="supporting" color="secondary">
-                        {{ s.label }}
-                      </Text>
+                      <HStack v-for="s in TASK_STATUS" :key="s.key" :gap="2" align="center">
+                        <span class="legend-swatch" :style="{ backgroundColor: s.color }" aria-hidden="true" />
+                        <Text type="supporting" color="secondary">
+                          {{ s.label }}
+                        </Text>
+                      </HStack>
                     </VStack>
                   </HStack>
                 </VStack>
               </Card>
               <Card :padding="6">
                 <VStack :gap="5">
-                  <Heading :level="3">
-                    Scope burndown
-                  </Heading>
+                  <VStack>
+                    <Heading :level="3" :accessibility-level="2">
+                      Scope burndown
+                    </Heading>
+                    <Text type="supporting" color="secondary">
+                      Remaining story points · {{ BURNDOWN.length }} weeks
+                    </Text>
+                  </VStack>
+                  <VStack :gap="3">
                   <PlaygroundResponsive :height="208">
                     <PlaygroundLineChart
                       :data="BURNDOWN"
                       x-key="week"
                       :series="[
-                        { key: 'ideal', name: 'Ideal', color: 'var(--astryx-color-data-neutral, #8494A3)' },
-                        { key: 'actual', name: 'Actual', color: 'var(--astryx-color-data-categorical-blue, #0171E3)' },
+                        { key: 'ideal', name: 'Ideal', color: IDEAL_COLOR },
+                        { key: 'actual', name: 'Actual', color: ACTUAL_COLOR },
                       ]"
                       :height="208"
                       y-unit=" pts"
                       :x-ticks="[0, 3, 6, 9, 12]"
                       :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
+                      monotone
                     />
                   </PlaygroundResponsive>
+                  <HStack :gap="4" align="center" wrap="wrap">
+                    <HStack v-for="item in [{ label: 'Actual remaining', color: ACTUAL_COLOR }, { label: 'Ideal burndown', color: IDEAL_COLOR }]" :key="item.label" :gap="2" align="center">
+                      <span class="legend-swatch" :style="{ backgroundColor: item.color }" aria-hidden="true" />
+                      <Text type="supporting" color="secondary">
+                        {{ item.label }}
+                      </Text>
+                    </HStack>
+                  </HStack>
+                  </VStack>
                 </VStack>
               </Card>
               <Card :padding="6">
                 <VStack :gap="4">
-                  <Heading :level="3">
-                    Blockers & risks
-                  </Heading>
+                  <VStack>
+                    <Heading :level="3" :accessibility-level="2">
+                      Blockers & risks
+                    </Heading>
+                    <Text type="supporting" color="secondary">
+                      Hover or focus a row for detail
+                    </Text>
+                  </VStack>
                   <List v-if="risks.length" has-dividers>
                     <HoverCard v-for="risk in risks" :key="risk.id" placement="below" alignment="start" focus-trigger="always">
                       <ListItem

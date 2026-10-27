@@ -468,6 +468,27 @@ describe('markdown', () => {
     expect(wrapper.get('ul').attributes('data-source-line')).toBeUndefined()
   })
 
+  it('draws an unsafe destination as the text that was written', () => {
+    const wrapper = mount(Markdown, {
+      props: { content: 'See [`x`](javascript:alert(1)) now.' },
+    })
+    expect(wrapper.find('a.astryx-link').exists()).toBe(false)
+    expect(wrapper.find('code').exists()).toBe(false)
+    expect(wrapper.text()).toBe('See [`x`](javascript:alert(1)) now.')
+  })
+
+  it('draws no block for a line indented four columns', () => {
+    const wrapper = mount(Markdown, {
+      props: { content: '    # not a heading\n\n    ```\n    x\n    ```' },
+    })
+    expect(wrapper.find('h1').exists()).toBe(false)
+    expect(wrapper.find('.astryx-code-block').exists()).toBe(false)
+    expect(wrapper.text()).toContain('# not a heading')
+    // The indented fence is one code span, indentation and all.
+    const code = wrapper.find('code').element.textContent
+    expect(code).toBe('\n    x\n    ')
+  })
+
   it('wraps a long fenced line', () => {
     const wrapper = mount(Markdown, {
       props: {
