@@ -376,7 +376,7 @@ onMounted(syncAnchorWidth)
         <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
-            <span v-if="selectedOption?.icon" class="astryx-selector-value-icon" :class="selectedOption.icon" aria-hidden="true" />
+            <Icon v-if="selectedOption?.icon" class="astryx-selector-value-icon" :icon="selectedOption.icon" size="sm" />
             <span class="astryx-selector-value-label">{{ displayText }}</span>
           </template>
         </span>
