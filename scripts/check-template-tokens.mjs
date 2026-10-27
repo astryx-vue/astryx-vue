@@ -82,6 +82,23 @@ for (const file of templateFiles) {
   })
 }
 
+// `<Icon icon="前缀:名字">` 会被当成 CSS 类名渲染，Iconify 图标要走 `name`。
+const iconHits = []
+const ICON_PROP = /<Icon\b[^>]*?\s:?icon=(["'])\s*(?:'|\\")?[a-z0-9-]+:[a-z0-9-]+/g
+for (const file of templateFiles) {
+  const text = readFileSync(join(repoRoot, file), 'utf8')
+  for (const match of text.matchAll(ICON_PROP)) {
+    const line = text.slice(0, match.index).split('\n').length
+    iconHits.push(`  ${file}:${line}  ${match[0].replace(/\s+/g, ' ').slice(0, 80)}`)
+  }
+}
+
+if (iconHits.length > 0) {
+  console.error('<Icon> 的 icon 属性不认 Iconify 名字（前缀:名字），请改用 name 属性：')
+  console.error(iconHits.join('\n'))
+  process.exit(1)
+}
+
 if (hits.length > 0) {
   console.error('模板里的设计变量必须带 --astryx- 前缀：')
   console.error(hits.join('\n'))
