@@ -134,6 +134,8 @@ export interface CatalogPackage {
   directory: string
   /** The version this catalog was generated from: what `upgrade` compares against. */
   version: string
+  /** The package's own one-line description, as it publishes it. */
+  description: string
   /** True when the package is published only under the `canary` dist-tag. */
   canary: boolean
 }

@@ -6,30 +6,35 @@
       "name": "@astryx-vue/core",
       "directory": "packages/core",
       "version": "0.4.0",
+      "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false
     },
     {
       "name": "@astryx-vue/charts",
       "directory": "packages/charts",
       "version": "0.0.0",
+      "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based). Published to npm only under the canary dist-tag.",
       "canary": true
     },
     {
       "name": "@astryx-vue/lab",
       "directory": "packages/lab",
       "version": "0.0.0",
+      "description": "Astryx lab components for Vue 3 — experimental components that may change. Published to npm only under the canary dist-tag.",
       "canary": true
     },
     {
       "name": "@astryx-vue/richtext",
       "directory": "packages/richtext",
       "version": "0.4.0",
+      "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
       "canary": false
     },
     {
       "name": "@astryx-vue/themes",
       "directory": "packages/themes",
       "version": "0.4.0",
+      "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false
     }
   ],
