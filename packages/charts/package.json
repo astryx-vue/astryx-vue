@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "private": true,
-  "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based). Published to npm only under the canary dist-tag.",
+  "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based). Ships only under the canary dist-tag.",
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://astryx-vue.pages.dev",

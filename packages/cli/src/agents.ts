@@ -82,16 +82,26 @@ function ensureTrailingNewline(value: string): string {
 /**
  * One line per package, with the install specifier. A package published only
  * under the canary tag says so and takes `@canary`, because installing it
- * without the tag gets a placeholder version.
+ * without the tag gets a placeholder version. A package no registry serves yet
+ * is named without any install instruction, so a reader is never sent to a
+ * command that fails.
  */
 function packageLines(packages: readonly CatalogPackage[], locale: 'en' | 'zh'): string[] {
   return packages.map((pkg) => {
-    const canary = pkg.canary
-      ? (locale === 'zh' ? '，canary 预览，API 可能会变，安装要写 `@canary`' : ', canary only: the API may change, install with `@canary`')
-      : ''
-    const label = pkg.canary ? `\`${pkg.name}@canary\`` : `\`${pkg.name}\``
-    return `- ${label} ${pkg.version} — ${pkg.description}${canary}`
+    const label = pkg.published && pkg.canary ? `\`${pkg.name}@canary\`` : `\`${pkg.name}\``
+    return `- ${label} ${pkg.version} — ${pkg.description}${packageNote(pkg, locale)}`
   })
+}
+
+/** What a line adds after the description: canary, or not on npm at all. */
+function packageNote(pkg: CatalogPackage, locale: 'en' | 'zh'): string {
+  const zh = locale === 'zh'
+  if (!pkg.published) {
+    return pkg.canary
+      ? (zh ? '（还没发布到 npm，装不到；以后只发 canary，装的时候要写 `@canary`）' : ' (not on npm yet, so there is nothing to install; when it ships it will be canary only and takes `@canary`)')
+      : (zh ? '（还没发布到 npm，装不到，不要写进依赖）' : ' (not on npm yet, so there is nothing to install and it does not belong in the dependencies)')
+  }
+  return pkg.canary ? (zh ? '（canary 预览，API 可能会变，安装要写 `@canary`）' : ' (canary only: the API may change, install with `@canary`)') : ''
 }
 
 function renderEnglish(catalog: Catalog, conventions: string[]): string {

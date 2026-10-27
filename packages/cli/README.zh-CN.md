@@ -169,7 +169,7 @@ slug 和显示名都能用，`theme butter` 和 `theme Butter` 是同一个请�
 
 ## agent 区块
 
-`init` 先打印接入说明（装哪些包、canary 的带 `@canary`、主题样式引哪一行、语言怎么提供、改完怎么验证），再写入这个受管理区块：
+`init` 先打印接入说明（装哪些包、canary 的带 `@canary`（前提是已经发到 npm）、主题样式引哪一行、语言怎么提供、改完怎么验证），再写入这个受管理区块：
 
 ```html
 <!-- Maintained by astryx-vue, do not edit manually -->
@@ -179,7 +179,7 @@ slug 和显示名都能用，`theme butter` 和 `theme Butter` 是同一个请�
 
 文件不存在就创建。已经有标记时，每次只替换区块内容，其余文字保持不动。文件存在但没有标记时，把区块追加到末尾。第二次运行仍然重写区块，不会因为标记已存在就跳过；生成内容一致时字节不变。
 
-区块开头列一遍 catalog 覆盖的包，能发 canary 的标出来并写 `@canary`。然后写三步工作流（用 `build` 挑页面，用 `template` 复制，写代码前用 `component`/`composable`/`docs` 查），加上查询命令清单和怎么运行这个命令。它不会把组件目录贴进来。
+区块开头列一遍 catalog 覆盖的包。npm 上还没有的包（仓库里标了 `private`）照样列名字，但会写明「还没发布到 npm」并且不给安装命令，免得有人照着敲一个 404；已经发布的 canary 包才会写成 `@canary`。然后写三步工作流（用 `build` 挑页面，用 `template` 复制，写代码前用 `component`/`composable`/`docs` 查），加上查询命令清单和怎么运行这个命令。它不会把组件目录贴进来。
 
 接入说明里的安装命令跟着项目走：先看 `packageManager` 字段，再看 `pnpm-lock.yaml`、`yarn.lock`、`bun.lock(b)`、`package-lock.json`。两样都没有就把四种写法都列出来。`--features` 现在是可选的，写 `agents` 和不写一样，写别的仍然是 `ERR_UNKNOWN_FEATURE`。
 
@@ -217,7 +217,7 @@ pnpm --filter @astryx-vue/cli generate
 
 `pnpm check` 会跑 `generate:check`。它会在这几种情况下失败：`catalog.json` 过期、某个包里有 PascalCase 导出没有任何组件文档引用、或者某个演练场页面在 `template-meta.ts` 里没有元数据。`./icons`、`./locale`、CSS 和包根不算组件导出。
 
-`catalog.packages` 列出 catalog 覆盖的每个包（`core`、`themes`、`richtext`、`charts`、`lab`），带目录和「是否只发 canary」的标记。组件的 `package` 取「有它这个子路径导出的包」，没有就取「`src/` 里有它这个目录的包」。
+`catalog.packages` 列出 catalog 覆盖的每个包（`core`、`themes`、`richtext`、`charts`、`lab`），带目录、「是否只发 canary」的标记，以及 `published`。`private` 的包 `published` 是 false：npm 上没有它的版本，所以任何输出都不会给它写安装命令。组件的 `package` 取「有它这个子路径导出的包」，没有就取「`src/` 里有它这个目录的包」。
 
 `swizzle`、`discover`、`gap-report`、`integration`、`blog` 不在这个包里，也没有 MCP 服务。`theme`、`upgrade`、`doctor` 只输出指引和报告，都不改项目文件。
 

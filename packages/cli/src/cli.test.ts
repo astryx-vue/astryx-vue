@@ -140,6 +140,13 @@ describe('json envelopes', () => {
     expect(data.manifest.commands).toHaveLength(11)
   })
 
+  it('names every command in the text help, not just the old ones', async () => {
+    const result = await run(['--help'])
+    expect(result.exitCode).toBe(0)
+    for (const name of ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'init', 'theme', 'upgrade', 'doctor'])
+      expect(result.stdout).toContain(`astryx-vue ${name}`)
+  })
+
   it('lists composables apart from components', async () => {
     const result = await run(['composable', '--list', '--json'])
     expect(result.exitCode).toBe(0)

@@ -152,7 +152,7 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
   return {
     generator: 'packages/cli/scripts/generate-catalog.mjs',
     description: 'Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, the workspace packages\' exports, and the playground templates. Do not edit by hand.',
-    packages: packages.map(pkg => ({ name: pkg.name, directory: pkg.directory, version: pkg.version, description: pkg.description, canary: pkg.canary })),
+    packages: packages.map(pkg => ({ name: pkg.name, directory: pkg.directory, version: pkg.version, description: pkg.description, canary: pkg.canary, published: pkg.published })),
     conventions: await readConventions(repoRoot),
     components,
     topics: await readTopics(repoRoot),

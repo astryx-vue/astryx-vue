@@ -76,7 +76,7 @@ npm run astryx-vue -- component Button
 <!-- astryx-vue block end -->
 ```
 
-区块开头列出这个 CLI 覆盖的每个包，能发 canary 的标出来并写 `@canary`；随后是三步工作流：用 `build` 挑页面，用 `template` 复制，写代码前用 `component`、`composable` 或 `docs` 查询用法。
+区块开头列出这个 CLI 覆盖的每个包，能发 canary 的标出来；npm 上还没有的包会直说「还没发布到 npm」，并且不给安装命令，免得有人照着敲一个装不到的包名。随后是三步工作流：用 `build` 挑页面，用 `template` 复制，写代码前用 `component`、`composable` 或 `docs` 查询用法。
 
 `init` 打印的安装命令跟着项目走：先看 `packageManager` 字段，再看锁文件；两样都没有时把四种写法都列出来。
 
