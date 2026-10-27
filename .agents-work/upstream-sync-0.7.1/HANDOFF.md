@@ -65,7 +65,13 @@ D10 #180（`8354a2b`）已合入：Stack 间距不再继承、Table 列头筛选
 
 **用户规定（2026-10-27）：常规发版三步总控直接走完，不用逐步问**（dev→main、Version Packages 合并、发 npm）。版本号、发哪些包这类决定仍先问用户。
 
-当前并行：没有正在实现的节点。可开工：D4a 讨论（剩 `upgrade` 形态）、G4、F 阶段（F1a、F2c、F2d、F3a–F3h、F4）。
+**看板迁到 GitHub Project（用户 2026-10-27）：** [astryx-vue 路线图](https://github.com/orgs/astryx-vue/projects/1) 是唯一看板。剩余 20 个节点各有一个 issue（#185–#204，对照表在 `nodes/issues.json`），字段有 Status（Todo / In Progress / In Review / Blocked / Done）、Area、Node、Upstream。节点开工时把卡片挪到 In Progress，PR 正文写 `Closes #N`。`ROADMAP.md` 和 `status.mjs` 继续用来算依赖，但进度以 Project 为准。
+
+**D4a 定稿（2026-10-27）：** `upgrade` 只输出升级指引（见 `nodes/D4a/decisions.md` 第 7 条和「D4b 范围」）。
+
+**G4 方案（用户 2026-10-27）：** 一个组件族一个 issue；`packages/native` 标不适用；计划在 `nodes/G4/plan.md`。上游已到 v0.7.4（+312 提交，0 个破坏性）。
+
+当前并行（3/3）：F1a（slot 1）、F3b（slot 2，搭 lab 包骨架）、D11（slot 3，document-writer，第 1 批中文指南与主题）。下一批按顺序派：G4、D4b、F3a/F3c/F3h。
 
 **D4a 要和用户边讨论边执行**，不要派子代理闷头做。已定的取舍记在 `nodes/D4a/decisions.md`，原版指南对照在 `nodes/D4a/guides-gap.md`。还没定的：`upgrade` 的形态（D6 暂缓后只输出升级指引）。
 

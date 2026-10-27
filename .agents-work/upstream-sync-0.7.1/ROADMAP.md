@@ -524,4 +524,4 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | G1 发布 core + themes | 使用 changeset 记录版本变更，将 `package.json` 的 `upstream` 字段更新为 `v0.7.1`，更新主说明 README。 | C全部 D2 D7 D10 | 核心包与主题包构建成功并完成发版。 |
 | G2 发布 CLI | 发布最新版本的命令行工具。 | G1 D4b D5b | 命令行工具发布成功且可全局安装运行。 |
 | G3 首发新包 | 首次公开发布 richtext、charts、lab 以及 nuxt 模块等新扩展包。 | G1 F1c F2c F3f F4 | 所有新包成功推送到 npm 仓库。 |
-| G4 持续同步机制 | 建立定时自动化任务，每周自动运行一次差异台账脚本，将上游仓库后续的新提交自动分类并创建跟踪 issue。 | A1 G1 | 定时任务测试通过，能自动检测新提交并建好 issue。 |
+| G4 持续同步机制 | 每周定时检查上游新 tag，用台账脚本把新提交按组件族归类，每个组件族开一个 issue（勾选清单）放进 GitHub Project「astryx-vue 路线图」；归类规则改成按组件族长期可用；`packages/native` 标不适用；`package.json` 记 `syncedTo`。详见 `nodes/G4/plan.md`。 | A1 G1 | dry-run 对 v0.7.1..v0.7.4 无未命中文件；原台账 `--check` 不变；工作流可手动触发；同名 issue 不重复开。 |
