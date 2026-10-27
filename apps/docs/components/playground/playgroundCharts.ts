@@ -170,7 +170,7 @@ export const PlaygroundLineChart = defineComponent({
         }
         return h('text', {
           'x': pad.left - 8,
-          'y': props.centerTicks ? y : y + 4,
+          'y': props.centerTicks ? Math.max(y, 9) : y + 4,
           'dominant-baseline': props.centerTicks ? 'central' : undefined,
           'text-anchor': 'end',
           'fill': AXIS_TICK,

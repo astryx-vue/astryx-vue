@@ -353,27 +353,29 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                     Stage conversion rates · trailing {{ TREND.length }} weeks
                   </Text>
                 </VStack>
-                <PlaygroundResponsive :height="260">
-                  <PlaygroundLineChart
-                    :data="TREND"
-                    x-key="t"
-                    :series="TREND_SERIES"
-                    :height="260"
-                    y-unit="%"
-                    :x-ticks="TREND_TICKS"
-                    :x-tick-format="formatTrendTick"
-                    :pad="{ top: 5, right: 12, bottom: 30, left: 40 }"
-                    center-ticks
-                  />
-                </PlaygroundResponsive>
-                <HStack :gap="5" align="center" wrap="wrap">
-                  <HStack v-for="series in TREND_SERIES" :key="series.key" :gap="2" align="center">
-                    <span class="legend-dot" :style="{ background: series.color }" />
-                    <Text type="supporting" color="secondary">
-                      {{ series.name }}
-                    </Text>
+                <VStack :gap="3">
+                  <PlaygroundResponsive :height="260">
+                    <PlaygroundLineChart
+                      :data="TREND"
+                      x-key="t"
+                      :series="TREND_SERIES"
+                      :height="260"
+                      y-unit="%"
+                      :x-ticks="TREND_TICKS"
+                      :x-tick-format="formatTrendTick"
+                      :pad="{ top: 5, right: 12, bottom: 35, left: 40 }"
+                      center-ticks
+                    />
+                  </PlaygroundResponsive>
+                  <HStack :gap="5" align="center" wrap="wrap">
+                    <HStack v-for="series in TREND_SERIES" :key="series.key" :gap="2" align="center">
+                      <span class="legend-dot" :style="{ background: series.color }" />
+                      <Text type="supporting" color="secondary">
+                        {{ series.name }}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
+                </VStack>
               </VStack>
             </Card>
           </VStack>
@@ -425,9 +427,9 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
   padding-inline-start: calc(var(--astryx-spacing-3, 12px) / 2);
 }
 .legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+  width: 12px;
+  height: 12px;
+  border-radius: 0;
   flex-shrink: 0;
 }
 </style>
