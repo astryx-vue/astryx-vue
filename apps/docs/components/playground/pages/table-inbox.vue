@@ -666,6 +666,7 @@ const threadActions = [
                 />
               </HStack>
 
+              <VStack :gap="2">
               <CollapsibleGroup
                 :key="openConversation.id"
                 type="multiple"
@@ -728,6 +729,7 @@ const threadActions = [
                   </HStack>
                 </Collapsible>
               </CollapsibleGroup>
+              </VStack>
 
               <HStack :gap="THREAD_HEADER_GAP">
                 <VStack :width="AVATAR_SIZE" />
