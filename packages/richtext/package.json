@@ -120,5 +120,19 @@
     "unplugin-vue": "catalog:build",
     "vue": "catalog:vue",
     "vue-tsc": "catalog:vue"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./markdown": {
+        "types": "./dist/markdown.d.ts",
+        "import": "./dist/markdown.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }
