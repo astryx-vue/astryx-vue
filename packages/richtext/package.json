@@ -2,6 +2,7 @@
   "name": "@astryx-vue/richtext",
   "type": "module",
   "version": "0.4.0",
+  "private": true,
   "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
