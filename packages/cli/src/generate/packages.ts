@@ -10,6 +10,7 @@ export interface WorkspacePackage {
   name: string
   /** Repo-relative directory, e.g. `packages/core`. */
   directory: string
+  version: string
   /** PascalCase subpath exports, such as `./Button`. A package without them exports its components from its root. */
   componentExports: string[]
   /** Component names that have their own directory or `.vue` file under `src/`. */
@@ -42,6 +43,7 @@ export async function discoverPackages(repoRoot: string): Promise<WorkspacePacka
     packages.push({
       name: manifest.name,
       directory: `packages/${directory}`,
+      version: manifest.version,
       componentExports: manifest.exports.filter(key => COMPONENT_EXPORT.test(key)),
       componentSources: await readComponentSources(join(packagesDir, directory, 'src')),
       canary: manifest.canaryOnly,
@@ -82,6 +84,7 @@ export function installablePackageNames(packages: readonly WorkspacePackage[]): 
 
 interface Manifest {
   name: string
+  version: string
   exports: string[]
   canaryOnly: boolean
 }
@@ -94,11 +97,12 @@ async function readManifest(path: string): Promise<Manifest | null> {
   catch {
     return null
   }
-  const parsed = JSON.parse(raw) as { name?: string, exports?: Record<string, unknown>, astryxVue?: { canaryOnly?: boolean } }
+  const parsed = JSON.parse(raw) as { name?: string, version?: string, exports?: Record<string, unknown>, astryxVue?: { canaryOnly?: boolean } }
   if (!parsed.name)
     return null
   return {
     name: parsed.name,
+    version: parsed.version ?? '0.0.0',
     exports: Object.keys(parsed.exports ?? {}),
     canaryOnly: parsed.astryxVue?.canaryOnly === true,
   }
