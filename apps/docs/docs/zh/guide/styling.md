@@ -102,6 +102,6 @@ UnoCSS 默认将生成的工具类输出为不分层的普通规则。由于未�
 
 ## 关于样式依赖说明
 
-组件库样式不依赖 UnoCSS。文档站中使用 UnoCSS 仅用于向示例中的 `i-carbon-*` 类提供图标支持，该方案属于文档自身的图标渲染实现，并非组件库运行依赖。详情见 [图标](/guide/icons)。
+组件库样式不要求 UnoCSS。文档站中使用 UnoCSS 仅用于向示例中的 `i-carbon-*` 类提供图标支持，该方案属于文档自身的图标渲染实现，并非组件库运行依赖。详情见 [图标](/guide/icons)。
 
 深入了解变量命名规则、`light-dark()` 机制与主题支持范围，请参阅 [CSS 变量](/themes/css-variables) 和 [Neutral 主题](/themes/neutral)。
