@@ -21,7 +21,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 
 type Period = 'WoW' | 'MoM' | 'QoQ'
 type Rag = 'green' | 'amber' | 'red'
@@ -192,27 +192,92 @@ function trendDelta(trend: TrendSeries): number {
   return Math.round(((latest.current - latest.prior) / latest.prior) * 100)
 }
 
-/** 图表画在 320×200 的盒子里，只留底部的小边距。 */
-const CHART = { w: 320, h: 200, padLeft: 8, padRight: 8, padTop: 8, padBottom: 20 }
+/** 图表画布高度 200，左侧留给 y 轴刻度，底部留给 x 轴标签。 */
+const CHART = { h: 200, padLeft: 40, padRight: 8, padTop: 5, padBottom: 30 }
+const CHART_INNER_H = CHART.h - CHART.padTop - CHART.padBottom
+const X_TICKS = [0, 3, 7, 11]
 
-/** 一张趋势卡里两条线的折点：当前期用卡片的主题色，上期用次要灰。 */
-function trendLines(trend: TrendSeries) {
-  const values = trend.data.flatMap(row => [row.current, row.prior])
-  const min = Math.min(...values)
-  const range = (Math.max(...values) - min) || 1
-  const innerW = CHART.w - CHART.padLeft - CHART.padRight
-  const innerH = CHART.h - CHART.padTop - CHART.padBottom
-  return [
-    { key: 'current', color: trend.color, points: pointsFor(trend.data.map(row => row.current)) },
-    { key: 'prior', color: COLORS.prior, points: pointsFor(trend.data.map(row => row.prior)) },
-  ]
+/** 四张卡片宽度相同，只量第一张；viewBox 和像素一比一，图撑满卡片也不会被拉伸。 */
+const chartWidth = ref(360)
+const chartInnerW = computed(() => chartWidth.value - CHART.padLeft - CHART.padRight)
+let chartObserver: ResizeObserver | null = null
+function bindChart(el: unknown, index: number) {
+  if (index !== 0 || !(el instanceof SVGSVGElement) || chartObserver || typeof ResizeObserver === 'undefined')
+    return
+  chartObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      chartWidth.value = entry.contentRect.width
+  })
+  chartObserver.observe(el)
+}
+onBeforeUnmount(() => chartObserver?.disconnect())
 
-  function pointsFor(series: number[]): string {
-    return series.map((value, i) => {
-      const x = CHART.padLeft + (i / (series.length - 1)) * innerW
-      const y = CHART.padTop + innerH - ((value - min) / range) * innerH
-      return `${x.toFixed(1)},${y.toFixed(1)}`
-    }).join(' ')
+/** 0 起步的 y 轴刻度：步长取 1 / 2 / 2.5 / 5 × 10^n，一共约 4 格。 */
+function niceTicks(max: number): number[] {
+  const raw = max / 4
+  const pow = 10 ** Math.floor(Math.log10(raw))
+  const step = ([1, 2, 2.5, 5, 10].find(m => m * pow >= raw) ?? 10) * pow
+  const ticks: number[] = []
+  for (let v = 0; v < max + step; v += step) {
+    ticks.push(Math.round(v * 100) / 100)
+    if (v >= max)
+      break
+  }
+  return ticks
+}
+
+/** 单调三次样条（等价于 recharts 的 monotone 曲线），返回 SVG 路径。 */
+function monotonePath(pts: { x: number, y: number }[]): string {
+  const n = pts.length
+  const dx: number[] = []
+  const slope: number[] = []
+  for (let i = 0; i < n - 1; i++) {
+    dx.push(pts[i + 1].x - pts[i].x)
+    slope.push((pts[i + 1].y - pts[i].y) / dx[i])
+  }
+  const m: number[] = [slope[0]]
+  for (let i = 1; i < n - 1; i++)
+    m.push(slope[i - 1] * slope[i] <= 0 ? 0 : (slope[i - 1] + slope[i]) / 2)
+  m.push(slope[n - 2])
+  for (let i = 0; i < n - 1; i++) {
+    if (slope[i] === 0) {
+      m[i] = 0
+      m[i + 1] = 0
+      continue
+    }
+    const a = m[i] / slope[i]
+    const b = m[i + 1] / slope[i]
+    const h = Math.hypot(a, b)
+    if (h > 3) {
+      m[i] = (3 * a / h) * slope[i]
+      m[i + 1] = (3 * b / h) * slope[i]
+    }
+  }
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`
+  for (let i = 0; i < n - 1; i++) {
+    const w = dx[i] / 3
+    d += `C${(pts[i].x + w).toFixed(1)},${(pts[i].y + m[i] * w).toFixed(1)},${(pts[i + 1].x - w).toFixed(1)},${(pts[i + 1].y - m[i + 1] * w).toFixed(1)},${pts[i + 1].x.toFixed(1)},${pts[i + 1].y.toFixed(1)}`
+  }
+  return d
+}
+
+/** 一张趋势卡的几何：网格刻度、x 轴标签、当前期曲线（含面积）和上期虚线。 */
+function trendGeometry(trend: TrendSeries) {
+  const max = Math.max(...trend.data.flatMap(row => [row.current, row.prior]))
+  const ticks = niceTicks(max)
+  const top = ticks[ticks.length - 1]
+  const x = (i: number) => CHART.padLeft + (i / 11) * chartInnerW.value
+  const y = (v: number) => CHART.padTop + CHART_INNER_H - (v / top) * CHART_INNER_H
+  const curve = (key: 'current' | 'prior') => monotonePath(trend.data.map((row, i) => ({ x: x(i), y: y(row[key]) })))
+  const current = curve('current')
+  const baseline = CHART.padTop + CHART_INNER_H
+  return {
+    yTicks: ticks.map(value => ({ value, y: y(value) })),
+    xTicks: X_TICKS.map(i => ({ label: WEEK_LABELS[i], x: x(i) })),
+    current,
+    prior: curve('prior'),
+    area: `${current}L${x(11).toFixed(1)},${baseline}L${x(0).toFixed(1)},${baseline}Z`,
+    baseline,
   }
 }
 </script>
@@ -380,7 +445,7 @@ function trendLines(trend: TrendSeries) {
             </Text>
           </HStack>
           <Grid :columns="{ minWidth: 330, repeat: 'fit' }" :gap="3">
-            <Card v-for="trend in TRENDS" :key="trend.key" :padding="5">
+            <Card v-for="(trend, index) in TRENDS" :key="trend.key" :padding="5">
               <VStack :gap="6">
                 <HStack h-align="between" align="center">
                   <HStack :gap="2">
@@ -395,15 +460,34 @@ function trendLines(trend: TrendSeries) {
                     {{ trendDelta(trend) >= 0 ? '+' : '' }}{{ trendDelta(trend) }}% vs prior
                   </Text>
                 </HStack>
-                <svg class="trend-chart" :viewBox="`0 0 ${CHART.w} ${CHART.h}`" role="img" :aria-label="trend.title">
-                  <polyline
-                    v-for="line in trendLines(trend)"
-                    :key="line.key"
-                    fill="none"
-                    :stroke="line.color"
-                    stroke-width="2"
-                    :points="line.points"
-                  />
+                <svg
+                  :ref="(el: unknown) => bindChart(el, index)"
+                  class="trend-chart"
+                  :viewBox="`0 0 ${chartWidth} ${CHART.h}`"
+                  role="img"
+                  :aria-label="trend.title"
+                >
+                  <defs>
+                    <linearGradient :id="`grad-${trend.key}`" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" :stop-color="trend.color" stop-opacity="0.3" />
+                      <stop offset="95%" :stop-color="trend.color" stop-opacity="0.04" />
+                    </linearGradient>
+                  </defs>
+                  <g v-for="tick in trendGeometry(trend).yTicks" :key="tick.value">
+                    <line :x1="CHART.padLeft" :x2="chartWidth - CHART.padRight" :y1="tick.y" :y2="tick.y" class="chart-grid" />
+                    <text :x="CHART.padLeft - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle" class="chart-tick">{{ tick.value.toLocaleString() }}</text>
+                  </g>
+                  <text
+                    v-for="tick in trendGeometry(trend).xTicks"
+                    :key="tick.label"
+                    :x="tick.x"
+                    :y="CHART.h - 8"
+                    :text-anchor="tick.label === 'W1' ? 'start' : tick.label === 'W12' ? 'end' : 'middle'"
+                    class="chart-tick"
+                  >{{ tick.label }}</text>
+                  <path :d="trendGeometry(trend).area" :fill="`url(#grad-${trend.key})`" />
+                  <path :d="trendGeometry(trend).prior" fill="none" :stroke="COLORS.prior" stroke-width="1" stroke-dasharray="4 4" />
+                  <path :d="trendGeometry(trend).current" fill="none" :stroke="trend.color" stroke-width="2" />
                 </svg>
                 <HStack :gap="5" align="center">
                   <HStack :gap="2" align="center">
@@ -483,5 +567,13 @@ function trendLines(trend: TrendSeries) {
   width: 100%;
   height: 200px;
   display: block;
+}
+.chart-grid {
+  stroke: var(--astryx-color-border, rgba(5, 54, 89, 0.1));
+  stroke-width: 1;
+}
+.chart-tick {
+  fill: var(--astryx-color-text-secondary, #4E606F);
+  font-size: 12px;
 }
 </style>
