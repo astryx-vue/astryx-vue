@@ -38,6 +38,15 @@ export function commandArgs(parsed: ParsedArgs, cwd: string, localeOf: (zh: bool
   }
 }
 
+/** A command's answer, with the exit code when it is not 0. */
+export interface CommandOutput {
+  stdout: string
+  exitCode: number
+}
+
+/** Most commands return text; `doctor` also returns exit code 1 when a check failed. */
+export type CommandResult = string | CommandOutput
+
 /** Every command answers with text: the JSON envelope is text too. */
 export function printJson(value: AnyEnvelope): string {
   return `${JSON.stringify(value)}\n`

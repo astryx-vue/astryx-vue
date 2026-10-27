@@ -63,6 +63,16 @@ The ranking is local and deterministic: keyword matching over each template's sl
 
 `astryx-vue build` with no idea prints the workflow: pick a page, copy it, then look up each component before writing code.
 
+## Themes
+
+`astryx-vue theme` lists the built-in themes. `astryx-vue theme butter` prints the four steps that load one: the stylesheet import, the `data-astryx-theme` attribute, how to switch themes or run two side by side, and how to check the result. The steps are this site's own theme pages, so the command and the docs cannot disagree. It writes nothing.
+
+## Upgrading and checking a project
+
+`astryx-vue upgrade` reads the `@astryx-vue/core` version in the project's `package.json`, compares it with the version the CLI documents, and prints the sections of the [upgrade guide](/en/guide/migration) — what changed, how it was written before, how it is written now, what to do. It then looks through the project's own sources for the old names that guide replaces and lists file and line. Nothing is changed, and nothing is fetched from the network.
+
+`astryx-vue doctor` reports five checks and edits nothing: whether core is installed and how its version compares, whether themes is installed, whether `vue` satisfies 3.5.0, whether a theme stylesheet is imported, and whether `data-astryx-theme` is set. Exit code is 0 when everything passed or only warned, and 1 when a check failed.
+
 ## Flags
 
 `--json` prints a typed envelope on stdout. `--dense` shortens the text people read; together with `--json` it is ignored, and the envelope stays complete. `--zh` uses Simplified Chinese where this site has a translation. `--cwd` is the project directory `template` and `init` write inside.
@@ -71,7 +81,7 @@ The template `--json` types are `template.list`, `template.show`, `template.skel
 
 ## Agent file
 
-`init --features agents` creates `AGENTS.md` when no agent file exists. Without `--agent`, an agent file the project already has is reused, in the order `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.hermes.md`, `HERMES.md`. `--agent claude` writes `CLAUDE.md`, `hermes` writes `.hermes.md` (or `HERMES.md` when the project already has one), `cursor` and `codex` write `AGENTS.md`, and `all` writes every known file that exists. `--agent-docs-path <file>` writes exactly that file.
+`init` prints the setup guide — which packages to install (a canary package takes `@canary`), the theme import, the locale snippet, and what to verify — and writes the managed block below. It creates `AGENTS.md` when no agent file exists. Without `--agent`, an agent file the project already has is reused, in the order `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.hermes.md`, `HERMES.md`. `--agent claude` writes `CLAUDE.md`, `hermes` writes `.hermes.md` (or `HERMES.md` when the project already has one), `cursor` and `codex` write `AGENTS.md`, and `all` writes every known file that exists. `--agent-docs-path <file>` writes exactly that file.
 
 The command owns only the block between these markers:
 
@@ -83,8 +93,10 @@ The command owns only the block between these markers:
 
 Every run replaces that block with freshly generated text. Text outside the markers stays. If the file exists and the markers are missing, the block is appended.
 
-The block describes a three-step workflow: run `build` to pick a page, run `template` to copy it, then run `component`, `composable`, or `docs` before writing code. It also says how to invoke the binary.
+The block names every package the CLI documents, marks the canary ones, then describes a three-step workflow: run `build` to pick a page, run `template` to copy it, then run `component`, `composable`, or `docs` before writing code. It also says how to invoke the binary.
+
+The install command follows the project's package manager: the `packageManager` field first, then a lockfile. When neither says which manager it is, all four forms are printed.
 
 The sentences the CLI prints come from this docs site and from the playground pages. After a docs or template change, regenerate the catalog in the CLI package. The maintainer steps are in the `packages/cli` README.
 
-This version does not include theme, upgrade, doctor, or MCP commands.
+This version does not include `swizzle`, `discover`, `gap-report`, `integration`, or `blog`, and there is no MCP server.

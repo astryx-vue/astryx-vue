@@ -113,7 +113,7 @@ describe('json envelopes', () => {
     }
     expect(data.name).toBe('astryx-vue')
     expect(data.package).toBe('@astryx-vue/cli')
-    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'init'])
+    expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'doctor', 'init'])
     expect(data.commands.every(command => command.json)).toBe(true)
     expect(data.commands.find(command => command.name === 'component')?.responseTypes).toEqual(['component.list', 'component.detail'])
     expect(data.commands.find(command => command.name === 'composable')?.responseTypes).toEqual(['composable.list', 'composable.detail'])
@@ -137,7 +137,7 @@ describe('json envelopes', () => {
   it('embeds the manifest in a bare --json call', async () => {
     const result = await run(['--json'])
     const data = assertResponse(result.stdout, 'help').data as { manifest: { commands: unknown[] } }
-    expect(data.manifest.commands).toHaveLength(8)
+    expect(data.manifest.commands).toHaveLength(11)
   })
 
   it('lists composables apart from components', async () => {
@@ -262,7 +262,7 @@ describe('json envelopes', () => {
   })
 
   it('rejects unknown commands and bad flags', async () => {
-    const command = await run(['theme', '--json'])
+    const command = await run(['swizzle', '--json'])
     expect(command.exitCode).toBe(2)
     expect(parseResponse(command.stdout)).toMatchObject({ code: 'ERR_UNKNOWN_COMMAND' })
 

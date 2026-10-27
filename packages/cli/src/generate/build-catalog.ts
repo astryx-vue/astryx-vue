@@ -7,8 +7,10 @@ import { CORE_PACKAGE } from '../spec.ts'
 import { buildTemplates } from './build-templates.ts'
 import { cleanMarkdown, extractPage, extractTopic, paragraphContaining, pascalCase } from './markdown.ts'
 import { discoverPackages, importPathFor, installablePackageNames, ownerOf, packageOfSpecifier } from './packages.ts'
-
+import { buildSetup } from './setup.ts'
 import { DOCS_ORIGIN } from './site.ts'
+import { buildThemes, readThemeScope } from './themes.ts'
+import { buildUpgrade } from './upgrades.ts'
 
 function mergeExtract(index: ReturnType<typeof extractPage>, props: ReturnType<typeof extractPage>): ReturnType<typeof extractPage> {
   return {
@@ -150,11 +152,15 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
   return {
     generator: 'packages/cli/scripts/generate-catalog.mjs',
     description: 'Generated from apps/docs pages, demos/*/meta.ts, demo Vue sources, reference JSON, the workspace packages\' exports, and the playground templates. Do not edit by hand.',
-    packages: packages.map(pkg => ({ name: pkg.name, directory: pkg.directory, canary: pkg.canary })),
+    packages: packages.map(pkg => ({ name: pkg.name, directory: pkg.directory, version: pkg.version, description: pkg.description, canary: pkg.canary })),
     conventions: await readConventions(repoRoot),
     components,
     topics: await readTopics(repoRoot),
     templates: await buildTemplates(repoRoot, templates, installablePackageNames(packages)),
+    themes: await buildThemes(repoRoot),
+    themeScope: await readThemeScope(repoRoot),
+    setup: await buildSetup(repoRoot),
+    upgrade: await buildUpgrade(repoRoot),
   }
 }
 

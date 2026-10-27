@@ -56,7 +56,11 @@ npm run astryx-vue -- component Button
 | `astryx-vue docs <topic> --depth <n>` | 同一篇正文，只留到第 n 层标题 |
 | `astryx-vue search <query>` | 排好序的组件、组合式函数、文档主题和模板 |
 | `astryx-vue manifest --json` | 命令、选项、响应类型、错误码和退出码 |
-| `astryx-vue init --features agents` | 创建或刷新 agent 文件里的受管理区块 |
+| `astryx-vue theme` | 全部内置主题，一行一个 |
+| `astryx-vue theme <名字>` | 一套主题的接入四步：样式、`data-astryx-theme`、切换与局部使用、验证 |
+| `astryx-vue upgrade` | 把项目里的 `@astryx-vue/core` 升上来要做什么，以及旧名字还出现在哪 |
+| `astryx-vue doctor` | 检查版本、主题样式有没有引、主题有没有设。只报告 |
+| `astryx-vue init` | 给 AI 助手的接入说明，外加 agent 文件里的受管理区块 |
 
 全局选项：
 
@@ -65,11 +69,41 @@ npm run astryx-vue -- component Button
 | `--json` | 在 stdout 输出类型化信封 `{ apiVersion, type, data }`。出错时是 `{ apiVersion, error, code, suggestions? }`，退出码非 0。 |
 | `--dense` | 缩短给人看的文本。和 `--json` 一起时忽略，信封始终完整。 |
 | `--zh` | 文档有中文版时用简体中文。 |
-| `--cwd <dir>` | 项目目录，默认当前工作目录；`template` 和 `init` 只往这里面写。 |
+| `--cwd <dir>` | 项目目录，默认当前工作目录；`template` 和 `init` 只往这里面写，`upgrade` 和 `doctor` 只在这里读。 |
 
 组合式函数可写 `useClipboard` 或 `use-clipboard`。`component useClipboard` 也能查到，并多印一行指向 `composable` 命令。`component --list` 只列组件。`search --type` 接受 `component`、`composable`、`doc`、`template`；组合式函数命中的结果是 `domain: "composable"`，`command` 指向 `composable <Name>`。命中名字的结果排在只命中正文的结果前面。每条结果都标出来自哪个包；分数相同时按领域（组件、组合式函数、文档、模板）再按名字排序，跑两次顺序不会变。
 
 `docs` 接受主题 id、把 `theme/` 换成 `themes/` 的写法，或能唯一匹配某个主题的裸名，例如 `dark-mode`。`--json` 返回 `docs.list` 或 `docs.detail`，`docs.detail` 里有整页 `body`。`--depth 2` 只留 `#` 和 `##`，更深的标题连同它下面的正文一起省掉，长页面因此读得下去；JSON 里的 `headings` 只列还在正文里的标题，`depth` 说明调用方要的是第几层。
+
+## 主题
+
+`theme` 列出内置的 7 套主题，每套带文档页自己的那句说明。`theme <名字>` 输出接入四步：引哪个样式表、`data-astryx-theme` 写什么、怎么换主题或同时用两套、改完怎么验证。这些文字来自主题自己的文档页和主题索引页，命令不写任何文件。
+
+slug 和显示名都能用，`theme butter` 和 `theme Butter` 是同一个请求。`--json` 返回 `theme.list` 或 `theme.detail`，`theme.detail` 里带整页 `body`，供想要长文的助手读。
+
+## 升级
+
+`upgrade` 读项目 `package.json` 里 `@astryx-vue/core` 的版本，和这个 CLI 生成时对应的版本比，不联网。
+
+- 比 CLI 旧：打印升级指南的每一节（变了什么、以前怎么写、现在怎么写、怎么改），再在项目自己的源码里找出指南里被替换掉的旧名字，列出文件和行号。主题挂点名只认对象键（`progressbar: {`），因为同一个词也是 HTML 标签；属性和选项名按单词认，camelCase 和 kebab-case 都算。
+- 已经一样：说明不用升级，并给出更新日志链接。
+- 没装，或版本写法读不出来：说明情况，并按项目包管理器给出安装命令（读不出包管理器就列全部写法）。
+
+这两份内容都来自 `apps/docs/docs/{en,zh}/guide/migration.md`：小节就是页面的 `###` 小节，旧名字来自小节标题和页面里 `Removed | Use instead` 表格。
+
+## 体检
+
+`doctor` 报告五项检查，不改任何文件：
+
+| 检查 | 什么时候失败或提醒 |
+| --- | --- |
+| `core-version` | 没装 `@astryx-vue/core`（失败）；版本写法读不出来，或比 CLI 的 catalog 旧/新（提醒） |
+| `themes-installed` | 没有依赖 `@astryx-vue/themes`（失败） |
+| `vue-version` | 没装 `vue`（失败）或低于 3.5.0（提醒） |
+| `theme-stylesheet` | 没找到任何 `@astryx-vue/themes/*.css` 引入（失败），或文件名不是内置主题（提醒） |
+| `theme-attribute` | 没找到 `data-astryx-theme`（提醒；Neutral 不写也能用） |
+
+全部通过或只有提醒时退出码是 `0`，有失败时是 `1`，文本照样打印；`--json` 返回 `doctor.report`。只读项目目录里的源码，跳过 `node_modules`、构建产物和隐藏目录。
 
 ## 模板
 
@@ -112,6 +146,9 @@ npm run astryx-vue -- component Button
 | `docs.list`、`docs.detail` | `docs` |
 | `search` | `search` |
 | `manifest` | `manifest` |
+| `theme.list`、`theme.detail` | `theme` |
+| `upgrade.report` | `upgrade` |
+| `doctor.report` | `doctor` |
 | `init.run` | `init` |
 | `help`、`version` | `--help`、`--version`，或带 `--json` 不带参数 |
 
@@ -132,7 +169,7 @@ npm run astryx-vue -- component Button
 
 ## agent 区块
 
-`init --features agents` 写入这个受管理区块：
+`init` 先打印接入说明（装哪些包、canary 的带 `@canary`、主题样式引哪一行、语言怎么提供、改完怎么验证），再写入这个受管理区块：
 
 ```html
 <!-- Maintained by astryx-vue, do not edit manually -->
@@ -142,7 +179,9 @@ npm run astryx-vue -- component Button
 
 文件不存在就创建。已经有标记时，每次只替换区块内容，其余文字保持不动。文件存在但没有标记时，把区块追加到末尾。第二次运行仍然重写区块，不会因为标记已存在就跳过；生成内容一致时字节不变。
 
-区块里写的是三步工作流（用 `build` 挑页面，用 `template` 复制，写代码前用 `component`/`composable`/`docs` 查），加上查询命令清单和怎么运行这个命令。它不会把组件目录贴进来。
+区块开头列一遍 catalog 覆盖的包，能发 canary 的标出来并写 `@canary`。然后写三步工作流（用 `build` 挑页面，用 `template` 复制，写代码前用 `component`/`composable`/`docs` 查），加上查询命令清单和怎么运行这个命令。它不会把组件目录贴进来。
+
+接入说明里的安装命令跟着项目走：先看 `packageManager` 字段，再看 `pnpm-lock.yaml`、`yarn.lock`、`bun.lock(b)`、`package-lock.json`。两样都没有就把四种写法都列出来。`--features` 现在是可选的，写 `agents` 和不写一样，写别的仍然是 `ERR_UNKNOWN_FEATURE`。
 
 写到哪里：
 
@@ -161,9 +200,10 @@ CLI 不另存一份组件文档。`packages/cli/scripts/generate-catalog.mjs` �
 - `apps/docs/docs/{en,zh}/components/<slug>/`：用法、props、插槽、事件和示例标题
 - `apps/docs/components/demos/<slug>/*.vue`：那些页面指向的示例源码
 - `apps/docs/components/demo-infra/reference/*.json`：anatomy 和无障碍信息
-- `apps/docs/docs/{en,zh}/guide` 和 `themes`：搜索主题和正文
+- `apps/docs/docs/{en,zh}/guide` 和 `themes`：搜索主题和正文，以及 `theme` 用的主题记录、`init` 用的安装命令和代码片段
+- `apps/docs/docs/{en,zh}/guide/migration.md`：`upgrade` 打印的升级小节，和它去源码里找的旧名字
 - `apps/docs/components/playground/pages/*.vue`：模板源码；`templateManifest.ts`：模板标题和分类
-- 每个 `packages/*/package.json`：判断组件属于哪个包；页面里没写 import 时用它的 exports 推断
+- 每个 `packages/*/package.json`：判断组件属于哪个包、版本和说明（`upgrade`/`doctor`/`init` 用）；页面里没写 import 时用它的 exports 推断
 
 模板的说明和关键词是手写的，在 `packages/cli/src/generate/template-meta/`，每类模板一个文件，由 `template-meta.ts` 合并，属于源数据，不是生成物。
 
@@ -179,7 +219,7 @@ pnpm --filter @astryx-vue/cli generate
 
 `catalog.packages` 列出 catalog 覆盖的每个包（`core`、`themes`、`richtext`、`charts`、`lab`），带目录和「是否只发 canary」的标记。组件的 `package` 取「有它这个子路径导出的包」，没有就取「`src/` 里有它这个目录的包」。
 
-主题、升级、doctor、swizzle 和 MCP 命令不在这个包里。
+`swizzle`、`discover`、`gap-report`、`integration`、`blog` 不在这个包里，也没有 MCP 服务。`theme`、`upgrade`、`doctor` 只输出指引和报告，都不改项目文件。
 
 ## 相关包
 
