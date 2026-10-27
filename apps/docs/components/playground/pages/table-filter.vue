@@ -3,6 +3,8 @@ import {
   Avatar,
   Badge,
   Button,
+  ComplexSelector,
+  Divider,
   DropdownMenu,
   Heading,
   HStack,
@@ -10,9 +12,16 @@ import {
   IconButton,
   Layout,
   LayoutContent,
+  LayoutHeader,
+  Link,
+  MultiSelector,
+  OverflowList,
   pixel,
+  Popover,
   proportional,
+  Section,
   Selector,
+  Slider,
   StackItem,
   StatusDot,
   Table,
@@ -25,6 +34,7 @@ import {
   useTableSelectionState,
   useTableSortable,
   useTableSortableState,
+  useTableStickyColumns,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
@@ -440,45 +450,39 @@ const formatMoney = (amount: number): string => `$${amount.toLocaleString('en-US
 const query = ref('')
 const isUpcoming = ref(false)
 const statusFilter = ref<string[]>(['scheduled', 'in_progress', 'on_hold', 'overdue'])
-const customerFilter = ref<string | null>(null)
-const technicianFilter = ref<string | null>(null)
+const customerFilter = ref<string[]>([])
+const technicianFilter = ref<string[]>([])
 const priorityFilter = ref<string | null>(null)
-const quoteFilter = ref<string | null>(null)
 const collapsedGroups = ref<ReadonlySet<string>>(new Set())
 
-const QUOTE_BANDS = [
-  { value: 'under-500', label: 'Under $500' },
-  { value: '500-1500', label: '$500 – $1,500' },
-  { value: '1500-3000', label: '$1,500 – $3,000' },
-  { value: 'over-3000', label: 'Over $3,000' },
-]
+const QUOTE_MIN = 0
+const QUOTE_MAX = Math.ceil(Math.max(...allJobs.map(j => j.quoted)) / 500) * 500
+const QUOTE_STEP = 100
+/** 拖动中的区间；松手后才写进 `quoteRange`，和原版一致。 */
+const quoteDraft = ref<[number, number]>([QUOTE_MIN, QUOTE_MAX])
+const quoteRange = ref<[number, number]>([QUOTE_MIN, QUOTE_MAX])
+const hasQuoteFilter = computed(() => quoteRange.value[0] > QUOTE_MIN || quoteRange.value[1] < QUOTE_MAX)
 
-function inQuoteBand(job: ServiceJob, band: string | null): boolean {
-  if (band == null)
-    return true
-  if (band === 'under-500')
-    return job.quoted < 500
-  if (band === '500-1500')
-    return job.quoted >= 500 && job.quoted < 1500
-  if (band === '1500-3000')
-    return job.quoted >= 1500 && job.quoted < 3000
-  return job.quoted >= 3000
+function commitQuote(next: [number, number]): void {
+  quoteDraft.value = next
+  quoteRange.value = next
 }
 
 const visibleJobs = computed(() => {
   const term = query.value.trim().toLowerCase()
+  const [low, high] = quoteRange.value
   return allJobs.filter((job) => {
     if (isUpcoming.value && job.scheduledOn.getTime() < NOW_MS)
       return false
     if (statusFilter.value.length > 0 && !statusFilter.value.includes(job.status))
       return false
-    if (customerFilter.value != null && job.customer !== customerFilter.value)
+    if (customerFilter.value.length > 0 && !customerFilter.value.includes(job.customer))
       return false
-    if (technicianFilter.value != null && job.technician !== technicianFilter.value)
+    if (technicianFilter.value.length > 0 && !technicianFilter.value.includes(job.technician))
       return false
     if (priorityFilter.value != null && job.priority !== priorityFilter.value)
       return false
-    if (!inQuoteBand(job, quoteFilter.value))
+    if (job.quoted < low || job.quoted > high)
       return false
     if (term !== '' && !job.summary.toLowerCase().includes(term) && !job.id.toLowerCase().includes(term))
       return false
@@ -486,34 +490,40 @@ const visibleJobs = computed(() => {
   })
 })
 
-const activeChipCount = computed(() =>
-  (isUpcoming.value ? 1 : 0)
-  + (statusFilter.value.length > 0 ? 1 : 0)
-  + (customerFilter.value != null ? 1 : 0)
-  + (technicianFilter.value != null ? 1 : 0)
-  + (priorityFilter.value != null ? 1 : 0)
-  + (quoteFilter.value != null ? 1 : 0),
+/** 有任何筛选就显示「Clear all」。 */
+const hasFilters = computed(() =>
+  query.value !== ''
+  || isUpcoming.value
+  || statusFilter.value.length > 0
+  || customerFilter.value.length > 0
+  || technicianFilter.value.length > 0
+  || priorityFilter.value != null
+  || hasQuoteFilter.value,
 )
 
-/** 只有「Scheduled」那枚 chip 带数量与浮层，其余筛选各有自己的控件。 */
-const scheduledChipLabel = computed(() => {
-  const statuses = statusFilter.value
-  if (statuses.length === 0)
-    return 'Any status'
-  const labels = statuses.map(status => STATUS_META[status as JobStatus].label)
-  if (labels.length <= 1)
-    return labels[0] ?? 'Any status'
-  return `${labels[0]}, +${labels.length - 1}`
+/** 多选的收起文字：第一项加「+N」，和原版一样。 */
+function multiLabel(items: { label: string }[]): string {
+  return items.length > 1 ? `${items[0].label}, +${items.length - 1}` : items[0].label
+}
+
+/** 区间收起后的整句，没动过就是占位的「Quote」。 */
+const quoteLabel = computed(() => {
+  if (!hasQuoteFilter.value)
+    return undefined
+  const [low, high] = quoteRange.value
+  if (low > QUOTE_MIN && high < QUOTE_MAX)
+    return `Quote ${formatMoney(low)} – ${formatMoney(high)}`
+  return low > QUOTE_MIN ? `Quote over ${formatMoney(low)}` : `Quote under ${formatMoney(high)}`
 })
 
 function clearAll(): void {
   query.value = ''
   isUpcoming.value = false
   statusFilter.value = []
-  customerFilter.value = null
-  technicianFilter.value = null
+  customerFilter.value = []
+  technicianFilter.value = []
   priorityFilter.value = null
-  quoteFilter.value = null
+  commitQuote([QUOTE_MIN, QUOTE_MAX])
 }
 
 function toggleGroup(key: string): void {
@@ -529,6 +539,75 @@ function toggleGroup(key: string): void {
 
 const selectedKeys = ref<ReadonlySet<string>>(new Set())
 
+const columns: TableColumn<ServiceJob>[] = [
+  {
+    key: 'summary',
+    header: 'Job',
+    width: proportional(2, { minWidth: 240 }),
+    sortable: { compare: (a, b) => a.summary.localeCompare(b.summary) },
+    renderCell: job => h(VStack, { gap: 0 }, () => [
+      h(Text, { type: 'body' }, () => job.summary),
+      h(Text, { type: 'supporting', color: 'secondary' }, () => job.id),
+    ]),
+  },
+  {
+    key: 'customer',
+    header: 'Customer',
+    width: proportional(1, { minWidth: 180 }),
+    sortable: { compare: (a, b) => a.customer.localeCompare(b.customer) },
+    renderCell: job => h(Text, { type: 'body' }, () => job.customer),
+  },
+  {
+    key: 'technician',
+    header: 'Technician',
+    width: pixel(200),
+    sortable: { compare: (a, b) => a.technician.localeCompare(b.technician) },
+    renderCell: job => h(HStack, { gap: 2, vAlign: 'center' }, () => [
+      h(Avatar, { name: job.technician, size: 'sm' }),
+      h(Text, { type: 'body' }, () => job.technician),
+    ]),
+  },
+  {
+    key: 'status',
+    header: 'Status',
+    width: pixel(150),
+    sortable: { compare: (a, b) => STATUS_RANK[a.status] - STATUS_RANK[b.status] },
+    renderCell: job => h(Badge, {
+      label: STATUS_META[job.status].label,
+      variant: STATUS_META[job.status].badge,
+    }),
+  },
+  {
+    key: 'priority',
+    header: 'Priority',
+    width: pixel(120),
+    sortable: { compare: (a, b) => PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority] },
+    renderCell: job => h(HStack, { gap: 2, vAlign: 'center' }, () => [
+      h(StatusDot, {
+        variant: PRIORITY_META[job.priority].dot,
+        label: PRIORITY_META[job.priority].label,
+        isPulsing: job.priority === 'urgent',
+      }),
+      h(Text, { type: 'body' }, () => PRIORITY_META[job.priority].label),
+    ]),
+  },
+  {
+    key: 'scheduledAt',
+    header: 'Scheduled',
+    width: pixel(160),
+    sortable: { compare: (a, b) => a.scheduledAt.localeCompare(b.scheduledAt) },
+    renderCell: job => h(Text, { type: 'body' }, () => formatScheduled(job.scheduledAt)),
+  },
+  {
+    key: 'quoted',
+    header: 'Quote',
+    width: pixel(110),
+    align: 'end',
+    sortable: { compare: (a, b) => a.quoted - b.quoted },
+    renderCell: job => h(Text, { type: 'body' }, () => formatMoney(job.quoted)),
+  },
+]
+
 const { sortedData, sortConfig } = useTableSortableState<ServiceJob>({
   data: () => visibleJobs.value,
   columns: () => columns,
@@ -543,7 +622,11 @@ const { selectionConfig } = useTableSelectionState<ServiceJob>({
     selectedKeys.value = keys
   },
 })
-const selectionPlugin = useTableSelection<ServiceJob>(selectionConfig)
+const selectionPlugin = useTableSelection<ServiceJob>({
+  ...selectionConfig,
+  getRowLabel: job => `${job.id} ${job.summary}`,
+  hasRowHighlight: false,
+})
 
 const { data: groupedData, plugin: groupedPlugin } = useTableGroupedRows<ServiceJob>(() => ({
   data: sortedData.value,
@@ -554,72 +637,15 @@ const { data: groupedData, plugin: groupedPlugin } = useTableGroupedRows<Service
   getRowKey: job => job.id,
 }))
 
-const sortPlugin = useTableSortable<ServiceJob>(sortConfig)
+const sortPlugin = useTableSortable<ServiceJob>(() => ({
+  sort: sortConfig.sort,
+  onSortChange: sortConfig.onSortChange,
+  allowUnsortedState: true,
+  isMultiSortEnabled: true,
+}))
 
-const columns: TableColumn<ServiceJob>[] = [
-  {
-    key: 'job',
-    header: 'Job',
-    width: proportional(3, { minWidth: 240 }),
-    sortable: { sortKey: 'summary', compare: (a, b) => a.summary.localeCompare(b.summary) },
-    renderCell: job => h(VStack, { gap: 0.5 }, () => [
-      h(Text, { maxLines: 1 }, () => job.summary),
-      h(Text, { type: 'supporting', color: 'secondary' }, () => job.id),
-    ]),
-  },
-  {
-    key: 'customer',
-    header: 'Customer',
-    width: proportional(2, { minWidth: 180 }),
-    sortable: { compare: (a, b) => a.customer.localeCompare(b.customer) },
-    renderCell: job => h(Text, { maxLines: 1 }, () => job.customer),
-  },
-  {
-    key: 'technician',
-    header: 'Technician',
-    width: proportional(2, { minWidth: 170 }),
-    sortable: { compare: (a, b) => a.technician.localeCompare(b.technician) },
-    renderCell: job => h(HStack, { gap: 2, vAlign: 'center' }, () => [
-      h(Avatar, { name: job.technician, size: 'sm' }),
-      h(Text, { maxLines: 1 }, () => job.technician),
-    ]),
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    width: pixel(130),
-    sortable: { compare: (a, b) => STATUS_RANK[a.status] - STATUS_RANK[b.status] },
-    renderCell: job => h(Badge, {
-      label: STATUS_META[job.status].label,
-      variant: STATUS_META[job.status].badge,
-    }),
-  },
-  {
-    key: 'priority',
-    header: 'Priority',
-    width: pixel(110),
-    sortable: { compare: (a, b) => PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority] },
-    renderCell: job => h(HStack, { gap: 2, vAlign: 'center' }, () => [
-      h(StatusDot, { variant: PRIORITY_META[job.priority].dot, label: PRIORITY_META[job.priority].label }),
-      h(Text, () => PRIORITY_META[job.priority].label),
-    ]),
-  },
-  {
-    key: 'scheduled',
-    header: 'Scheduled',
-    width: pixel(170),
-    sortable: { sortKey: 'scheduledAt', compare: (a, b) => a.scheduledAt.localeCompare(b.scheduledAt) },
-    renderCell: job => h(Text, { color: 'secondary' }, () => formatScheduled(job.scheduledAt)),
-  },
-  {
-    key: 'quoted',
-    header: 'Quote',
-    width: pixel(90),
-    align: 'end',
-    sortable: { compare: (a, b) => a.quoted - b.quoted },
-    renderCell: job => h(Text, { hasTabularNumbers: true }, () => formatMoney(job.quoted)),
-  },
-]
+/** 首列钉在左边，横向滚动时 Job 一直在。 */
+const stickyPlugin = useTableStickyColumns<ServiceJob>({ startKeys: ['summary'] })
 
 const CUSTOMER_OPTIONS = CUSTOMERS.map(name => ({ value: name, label: name }))
 const TECHNICIAN_OPTIONS = TECHNICIANS.map(name => ({ value: name, label: name }))
@@ -632,147 +658,308 @@ const STATUS_OPTIONS = (['scheduled', 'in_progress', 'on_hold', 'overdue', 'comp
   label: STATUS_META[value].label,
 }))
 
-const statusItems = STATUS_OPTIONS.map(option => ({
-  label: option.label,
-  onClick: () => {
-    const next = statusFilter.value.includes(option.value)
-      ? statusFilter.value.filter(value => value !== option.value)
-      : [...statusFilter.value, option.value]
-    statusFilter.value = next
-  },
-}))
-
 const viewOptionItems = [
   { label: 'Columns', onClick: () => {} },
   { label: 'Density', onClick: () => {} },
+  { label: 'Sticky Columns', onClick: () => {} },
   { label: 'Grouping', onClick: () => {} },
 ]
+
+/** 筛选行里的每个子句：OverflowList 按下标收起放不下的，面板和行读同一份数组。 */
+const filterClauses = ['upcoming', 'status', 'customer', 'technician', 'priority', 'quote'].map(key => ({ id: key, label: key }))
 
 /** 搜索框起始位置的放大镜，供 `TextInput` 的 `startIcon` 使用。 */
 function SearchIcon() {
   return h(Icon, { icon: 'search', size: 'sm' })
 }
-
-/** Stack 的内边距会通过 CSS 变量传给嵌套 Stack，所以容器留白用内联样式。 */
-function spacing(step: number): string {
-  return `var(--astryx-spacing-${String(step).replace('.', '-')}, ${step * 4}px)`
-}
 </script>
 
 <template>
-  <Layout height="fill">
-    <LayoutContent :padding="0" is-scrollable>
-      <VStack :gap="0">
-        <HStack :gap="3" align="center" :style="{ padding: spacing(4) }">
-          <StackItem size="fill">
-            <Heading :level="1">
-              Service jobs
-            </Heading>
-          </StackItem>
-          <Button label="New job" variant="primary" size="sm">
-            <template #icon>
-              <Icon name="heroicons:plus" size="sm" />
-            </template>
-          </Button>
-        </HStack>
+  <Layout height="fill" class="tf-shell">
+    <template #header>
+      <LayoutHeader has-divider label="Job filters and table actions">
+        <Section variant="transparent" :padding="4" class="tf-toolbar">
+          <VStack :gap="4">
+            <HStack :gap="3" align="center">
+              <StackItem size="fill">
+                <Heading :level="1">
+                  Service jobs
+                </Heading>
+              </StackItem>
+              <Button label="New job" variant="primary" />
+            </HStack>
 
-        <HStack
-          :gap="2"
-          align="center"
-          wrap="wrap"
-          :style="{ paddingInline: spacing(4), paddingBlockEnd: spacing(3) }"
-        >
-          <VStack :width="200">
-            <TextInput
-              v-model="query"
-              label="Job name"
-              is-label-hidden
-              placeholder="Job name"
-              has-clear
-              :start-icon="SearchIcon"
-            />
+            <HStack :gap="3" align="center" wrap="wrap">
+              <StackItem size="fill" class="tf-primary">
+                <HStack :gap="2" align="center" wrap="nowrap" :min-height="32" class="tf-filter-row">
+                  <StackItem class="tf-search">
+                    <TextInput
+                      v-model="query"
+                      label="Search jobs"
+                      is-label-hidden
+                      placeholder="Job name"
+                      size="sm"
+                      width="100%"
+                      :start-icon="SearchIcon"
+                    />
+                  </StackItem>
+                  <StackItem class="tf-overflow-slot">
+                    <OverflowList :items="filterClauses" behavior="observeParent" :gap="2" :min-visible-items="1">
+                      <template #item="{ item }">
+                        <ToggleButton
+                          v-if="item.id === 'upcoming'"
+                          v-model:is-pressed="isUpcoming"
+                          label="Upcoming"
+                          size="sm"
+                          class="tf-chrome"
+                          :class="isUpcoming ? 'tf-value' : 'tf-empty tf-surface'"
+                        />
+                        <MultiSelector
+                          v-else-if="item.id === 'status'"
+                          v-model="statusFilter"
+                          label="Status filter"
+                          is-label-hidden
+                          placeholder="Status"
+                          size="sm"
+                          has-clear
+                          trigger-display="labels"
+                          :format-value="multiLabel"
+                          :options="STATUS_OPTIONS"
+                          :control-class="statusFilter.length > 0 ? 'tf-fill' : undefined"
+                        />
+                        <MultiSelector
+                          v-else-if="item.id === 'customer'"
+                          v-model="customerFilter"
+                          label="Customer filter"
+                          is-label-hidden
+                          placeholder="Customer"
+                          size="sm"
+                          has-clear
+                          trigger-display="labels"
+                          :format-value="multiLabel"
+                          :options="CUSTOMER_OPTIONS"
+                          :control-class="customerFilter.length > 0 ? 'tf-fill' : undefined"
+                        />
+                        <MultiSelector
+                          v-else-if="item.id === 'technician'"
+                          v-model="technicianFilter"
+                          label="Technician filter"
+                          is-label-hidden
+                          placeholder="Technician"
+                          size="sm"
+                          has-clear
+                          trigger-display="labels"
+                          :format-value="multiLabel"
+                          :options="TECHNICIAN_OPTIONS"
+                          :control-class="technicianFilter.length > 0 ? 'tf-fill' : undefined"
+                        />
+                        <Selector
+                          v-else-if="item.id === 'priority'"
+                          v-model="priorityFilter"
+                          label="Priority filter"
+                          is-label-hidden
+                          placeholder="Priority"
+                          size="sm"
+                          has-clear
+                          :options="PRIORITY_OPTIONS"
+                          :control-class="priorityFilter != null ? 'tf-fill' : undefined"
+                        >
+                          <template #selected="{ option }">
+                            {{ option ? `Priority is ${option.label}` : 'Priority' }}
+                          </template>
+                        </Selector>
+                        <ComplexSelector
+                          v-else
+                          :model-value="quoteDraft"
+                          label="Quote filter"
+                          is-label-hidden
+                          placeholder="Quote"
+                          :trigger-label="quoteLabel"
+                          size="sm"
+                          :control-class="hasQuoteFilter ? 'tf-fill' : undefined"
+                          @change="commitQuote"
+                        >
+                          <template #default="{ commit, close }">
+                            <VStack :gap="4" :width="268">
+                              <VStack :gap="0">
+                                <Text type="label">
+                                  Quote range
+                                </Text>
+                                <Text type="large" has-tabular-numbers>
+                                  {{ formatMoney(quoteDraft[0]) }} – {{ formatMoney(quoteDraft[1]) }}
+                                </Text>
+                              </VStack>
+                              <VStack :gap="1">
+                                <Slider
+                                  v-model="quoteDraft"
+                                  label="Quote range"
+                                  is-label-hidden
+                                  :min="QUOTE_MIN"
+                                  :max="QUOTE_MAX"
+                                  :step="QUOTE_STEP"
+                                  value-display="none"
+                                  :format-value="formatMoney"
+                                  :min-steps-between-thumbs="1"
+                                  width="100%"
+                                  @change-end="commit"
+                                />
+                                <HStack h-align="between" align="center">
+                                  <Text type="supporting" color="secondary">
+                                    {{ formatMoney(QUOTE_MIN) }}
+                                  </Text>
+                                  <Text type="supporting" color="secondary">
+                                    {{ formatMoney(QUOTE_MAX) }}
+                                  </Text>
+                                </HStack>
+                              </VStack>
+                              <Divider />
+                              <HStack :gap="2" h-align="between" align="center">
+                                <Button
+                                  label="Clear"
+                                  variant="ghost"
+                                  size="sm"
+                                  :is-disabled="!hasQuoteFilter"
+                                  @click="commit([QUOTE_MIN, QUOTE_MAX])"
+                                />
+                                <Button label="Done" variant="secondary" size="sm" @click="close" />
+                              </HStack>
+                            </VStack>
+                          </template>
+                        </ComplexSelector>
+                      </template>
+                      <template #overflow="{ items }">
+                        <Button
+                          :label="`+${items.length}`"
+                          :tooltip="`${items.length} more ${items.length === 1 ? 'filter' : 'filters'}`"
+                          variant="ghost"
+                          size="sm"
+                          class="tf-chrome tf-surface"
+                        />
+                      </template>
+                    </OverflowList>
+                    <HStack :gap="2" align="center" class="tf-meta">
+                      <IconButton label="Advanced search" tooltip="Advanced search" variant="ghost" size="sm">
+                        <Icon name="heroicons:adjustments-horizontal" size="sm" />
+                      </IconButton>
+                      <Text type="supporting" color="secondary">
+                        {{ visibleJobs.length }} {{ visibleJobs.length === 1 ? 'result' : 'results' }}
+                      </Text>
+                      <template v-if="hasFilters">
+                        <Text type="supporting" color="secondary">
+                          •
+                        </Text>
+                        <Link type="supporting" @click="clearAll">
+                          Clear all
+                        </Link>
+                      </template>
+                    </HStack>
+                  </StackItem>
+                </HStack>
+              </StackItem>
+
+              <HStack :gap="3" align="center" class="tf-end">
+                <DropdownMenu has-chevron size="sm" :items="viewOptionItems" :button="{ label: 'View options', size: 'sm', variant: 'ghost' }" />
+                <IconButton label="Create saved view" tooltip="Create saved view" variant="ghost" size="sm">
+                  <Icon name="heroicons:bookmark" size="sm" />
+                </IconButton>
+                <IconButton label="Saved views" tooltip="Saved views" variant="ghost" size="sm">
+                  <Icon name="heroicons:bookmark" size="sm" />
+                </IconButton>
+              </HStack>
+            </HStack>
           </VStack>
-          <ToggleButton
-            v-model:is-pressed="isUpcoming"
-            label="Upcoming"
-            size="sm"
-            variant="secondary"
-          />
-          <HStack :gap="1" align="center">
-            <Token
-              size="md"
-              :label="scheduledChipLabel"
-              removable
-              @remove="statusFilter = []"
-            />
-            <DropdownMenu has-chevron size="sm" :items="statusItems" :button="{ label: 'Status', size: 'sm', variant: 'ghost' }" />
-          </HStack>
-          <Selector
-            v-model="customerFilter"
-            label="Customer"
-            is-label-hidden
-            size="sm"
-            placeholder="Customer"
-            :options="CUSTOMER_OPTIONS"
-          />
-          <Selector
-            v-model="technicianFilter"
-            label="Technician"
-            is-label-hidden
-            size="sm"
-            placeholder="Technician"
-            :options="TECHNICIAN_OPTIONS"
-          />
-          <Selector
-            v-model="priorityFilter"
-            label="Priority"
-            is-label-hidden
-            size="sm"
-            placeholder="Priority"
-            :options="PRIORITY_OPTIONS"
-          />
-          <Selector
-            v-model="quoteFilter"
-            label="Quote"
-            is-label-hidden
-            size="sm"
-            placeholder="Quote"
-            :options="QUOTE_BANDS"
-          />
-          <IconButton label="More filters" variant="ghost" size="sm">
-            <Icon icon="funnel" size="sm" />
-          </IconButton>
-          <Text type="supporting" color="secondary">
-            {{ visibleJobs.length }} results
-          </Text>
-          <Button
-            v-if="activeChipCount > 0"
-            label="Clear all"
-            variant="ghost"
-            size="sm"
-            @click="clearAll"
-          />
-          <StackItem size="fill" />
-          <DropdownMenu has-chevron size="sm" :items="viewOptionItems" :button="{ label: 'View options', size: 'sm', variant: 'ghost' }" />
-          <IconButton label="Save this view" variant="ghost" size="sm">
-            <Icon name="heroicons:bookmark" size="sm" />
-          </IconButton>
-          <IconButton label="View settings" variant="ghost" size="sm">
-            <Icon name="heroicons:adjustments-horizontal" size="sm" />
-          </IconButton>
-        </HStack>
+        </Section>
+      </LayoutHeader>
+    </template>
 
-        <Table
-          :data="groupedData"
-          :columns="columns"
-          id-key="id"
-          density="balanced"
-          dividers="rows"
-          has-hover
-          text-overflow="truncate"
-          :plugins="{ selection: selectionPlugin, sort: sortPlugin, grouped: groupedPlugin }"
-        />
-      </VStack>
+    <LayoutContent :padding="4" label="Service jobs">
+      <Table
+        :data="groupedData"
+        :columns="columns"
+        id-key="id"
+        density="balanced"
+        dividers="rows"
+        has-hover
+        text-overflow="wrap"
+        vertical-align="top"
+        :row-count="visibleJobs.length"
+        :plugins="{ selection: selectionPlugin, sortable: sortPlugin, sticky: stickyPlugin, grouped: groupedPlugin }"
+      />
     </LayoutContent>
   </Layout>
 </template>
+
+<style scoped>
+.tf-shell {
+  background: var(--astryx-color-background-surface);
+}
+
+.tf-toolbar {
+  container: toolbar / inline-size;
+}
+
+.tf-primary {
+  flex-basis: 0;
+}
+
+@container toolbar (max-width: 860px) {
+  .tf-primary {
+    flex-basis: 100%;
+  }
+}
+
+.tf-end {
+  margin-inline-start: auto;
+}
+
+.tf-filter-row {
+  row-gap: 6px;
+}
+
+.tf-search {
+  flex-shrink: 1;
+  width: 120px;
+  min-width: 120px;
+  transition: width var(--astryx-duration-fast) var(--astryx-ease-standard);
+}
+
+.tf-search:focus-within {
+  width: 240px;
+}
+
+.tf-overflow-slot {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 100;
+  align-items: center;
+  min-width: 228px;
+  padding-inline-end: 184px;
+}
+
+.tf-meta {
+  flex-shrink: 0;
+  margin-inline: 8px -184px;
+}
+
+.tf-chrome {
+  border: var(--astryx-border-width) solid var(--astryx-color-border-emphasized);
+  border-radius: var(--astryx-radius-element);
+}
+
+.tf-surface {
+  background-color: var(--astryx-color-background-surface);
+}
+
+.tf-value {
+  font-weight: var(--astryx-font-weight-normal);
+}
+
+.tf-empty {
+  font-weight: var(--astryx-font-weight-normal);
+  color: var(--astryx-color-text-secondary);
+}
+
+.tf-fill {
+  background-color: var(--astryx-color-overlay-pressed);
+}
+</style>
