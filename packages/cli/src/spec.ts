@@ -244,6 +244,24 @@ export const COMMANDS: readonly CommandSpec[] = [
     exitCodes: USAGE_EXIT,
   },
   {
+    name: 'theme',
+    summary: 'List the built-in themes, or print how to load one.',
+    arguments: [
+      { name: 'name', required: false, variadic: false, description: 'Theme slug or display name, such as butter or Neutral. Omit to list every theme.' },
+    ],
+    options: [],
+    json: true,
+    responseTypes: ['theme.list', 'theme.detail'],
+    examples: [
+      `${BINARY} theme`,
+      `${BINARY} theme butter`,
+      `${BINARY} theme neutral --json`,
+      `${BINARY} theme butter --zh`,
+    ],
+    exitCodes: USAGE_EXIT,
+    errors: [{ code: 'ERR_UNKNOWN_THEME', when: 'No theme has that slug or display name. Close names come back as suggestions.' }],
+  },
+  {
     name: 'init',
     summary: 'Write or refresh the managed agent-context block.',
     arguments: [],
@@ -271,7 +289,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
 ]
 
-export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'init', 'help', 'version'] as const
+export const JSON_SUPPORTED = ['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'init', 'help', 'version'] as const
 
 export function commandByName(name: string): CommandSpec | undefined {
   return COMMANDS.find(command => command.name === name)

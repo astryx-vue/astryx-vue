@@ -78496,8 +78496,8 @@
         "zh": []
       },
       "body": {
-        "en": "# Themes\n\nA theme sets the color, type, radius, shadow, and motion the components use. Structural styles stay in `@astryx-vue/core`.\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\nPut `data-astryx-theme=\"neutral\"` on the element that should take the theme. On `html`, that is the whole app. On a smaller element, only that subtree. Neutral also writes the same variables on `:root`, so importing `neutral.css` is enough for a single-theme app. The other themes do not touch `:root`.\n\nFigtree and JetBrains Mono load with every theme. Butter, Chocolate, Gothic, Matcha, Stone, and Y2K also load their own text faces.\n\n<ThemeGallery />\n\n[Neutral](/en/themes/neutral), [Butter](/en/themes/butter), [Chocolate](/en/themes/chocolate), [Gothic](/en/themes/gothic), [Matcha](/en/themes/matcha), [Stone](/en/themes/stone), and [Y2K](/en/themes/y2k) each have an import snippet. Token names are shared; see [CSS variables](/en/themes/css-variables). How [design tokens](/en/themes/tokens) map onto those variables, and the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages, sit next to that. To change one value, read [Extending a theme](/en/themes/extending). To apply a theme object to one subtree, use the [Theme](/en/components/theme), [Media Theme](/en/components/media-theme), and [Syntax Theme](/en/components/syntax-theme) components.",
-        "zh": "# 主题概览\n\n如果把组件看作房子的骨架，那主题就是给房子做硬装和软装：它决定了按钮是什么颜色、文字用什么字体、卡片四角有多圆润、阴影有多深，以及点一下时动画动得多快。组件本身的骨架和排版结构已经内置在 `@astryx-vue/core` 里，样式和配色则全部由主题包 `@astryx-vue/themes` 提供。\n\n## 最简单的起步方式\n\n在整个应用的主入口（如 `main.ts`）引入默认的 Neutral 主题样式文件：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n因为 Neutral 会自动把一套基础变量写入根节点 `:root`，所以只要引入了 `neutral.css`，你的整个网页就默认拥有了标准的黑白灰配色与字体，甚至不需要在标签上手动加任何属性。\n\n## 切换或局部使用其他主题\n\n如果你想让整个网站或者某个局部区块换上别的主题（例如温暖柔和的 Butter、清新自然的 Matcha），只需给对应的 HTML 标签加上 `data-astryx-theme` 属性：\n\n```html\n<!-- 整个网页换主题：直接加在 html 或 body 标签上 -->\n<html data-astryx-theme=\"butter\">\n  ...\n</html>\n\n<!-- 局部区块换主题：只让这个卡片使用巧克力主题 -->\n<div data-astryx-theme=\"chocolate\">\n  <Button label=\"特色操作\" />\n</div>\n```\n\n**提示：**\n- 只有默认的 Neutral 会改动全局的 `:root`。其他预设主题（Butter、Chocolate、Gothic、Matcha、Stone、Y2K）都通过属性选择器 `[data-astryx-theme='...']` 生效，不会影响外部其他区域的样式。\n- 所有主题都会自带并加载西文字体 Figtree 与等宽代码字体 JetBrains Mono。像 Butter、Chocolate、Gothic、Matcha、Stone、Y2K 还会额外按需下载它们特有的特色标题字体。\n\n## 主题画廊\n\n你可以点击下方画廊直观感受每套主题的视觉风格：\n\n<ThemeGallery />\n\n## 深入了解更多\n\n- **查看各套主题详细信息：** [Neutral](/themes/neutral)、[Butter](/themes/butter)、[Chocolate](/themes/chocolate)、[Gothic](/themes/gothic)、[Matcha](/themes/matcha)、[Stone](/themes/stone)、[Y2K](/themes/y2k)。\n- **底层原理与变量规范：** 想知道所有可用的样式变量名，看 [CSS 变量](/themes/css-variables)；想了解变量与原始设计规范的映射关系，看 [Design token](/themes/tokens)。\n- **各维度配置详解：** 查看 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画刻度](/themes/motion) 以及 [间距、圆角与阴影](/themes/scale)。\n- **自定义微调：** 如果只想改某几个数值或品牌色，可以参考 [扩展主题](/themes/extending)；若需要在 Vue 模板里动态给局部子组件树套用计算后的主题对象，推荐使用 [Theme 主题容器](/components/theme)、[MediaTheme 媒体主题](/components/media-theme) 和 [SyntaxTheme 语法高亮主题](/components/syntax-theme)。"
+        "en": "# Themes\n\nA theme sets the color, type, radius, shadow, and motion the components use. Structural styles stay in `@astryx-vue/core`.\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\nPut `data-astryx-theme=\"neutral\"` on the element that should take the theme. On `html`, that is the whole app. On a smaller element, only that subtree. Neutral also writes the same variables on `:root`, so importing `neutral.css` is enough for a single-theme app. The other themes do not touch `:root`.\n\nFigtree and JetBrains Mono load with every theme. Butter, Chocolate, Gothic, Matcha, Stone, and Y2K also load their own text faces.\n\n[Neutral](/en/themes/neutral), [Butter](/en/themes/butter), [Chocolate](/en/themes/chocolate), [Gothic](/en/themes/gothic), [Matcha](/en/themes/matcha), [Stone](/en/themes/stone), and [Y2K](/en/themes/y2k) each have an import snippet. Token names are shared; see [CSS variables](/en/themes/css-variables). How [design tokens](/en/themes/tokens) map onto those variables, and the [color](/en/themes/color), [typography](/en/themes/typography), and [motion](/en/themes/motion) pages, sit next to that. To change one value, read [Extending a theme](/en/themes/extending). To apply a theme object to one subtree, use the [Theme](/en/components/theme), [Media Theme](/en/components/media-theme), and [Syntax Theme](/en/components/syntax-theme) components.",
+        "zh": "# 主题概览\n\n如果把组件看作房子的骨架，那主题就是给房子做硬装和软装：它决定了按钮是什么颜色、文字用什么字体、卡片四角有多圆润、阴影有多深，以及点一下时动画动得多快。组件本身的骨架和排版结构已经内置在 `@astryx-vue/core` 里，样式和配色则全部由主题包 `@astryx-vue/themes` 提供。\n\n## 最简单的起步方式\n\n在整个应用的主入口（如 `main.ts`）引入默认的 Neutral 主题样式文件：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n因为 Neutral 会自动把一套基础变量写入根节点 `:root`，所以只要引入了 `neutral.css`，你的整个网页就默认拥有了标准的黑白灰配色与字体，甚至不需要在标签上手动加任何属性。\n\n## 切换或局部使用其他主题\n\n如果你想让整个网站或者某个局部区块换上别的主题（例如温暖柔和的 Butter、清新自然的 Matcha），只需给对应的 HTML 标签加上 `data-astryx-theme` 属性：\n\n```html\n<!-- 整个网页换主题：直接加在 html 或 body 标签上 -->\n<html data-astryx-theme=\"butter\">\n  ...\n</html>\n\n<!-- 局部区块换主题：只让这个卡片使用巧克力主题 -->\n<div data-astryx-theme=\"chocolate\">\n  <Button label=\"特色操作\" />\n</div>\n```\n\n**提示：**\n- 只有默认的 Neutral 会改动全局的 `:root`。其他预设主题（Butter、Chocolate、Gothic、Matcha、Stone、Y2K）都通过属性选择器 `[data-astryx-theme='...']` 生效，不会影响外部其他区域的样式。\n- 所有主题都会自带并加载西文字体 Figtree 与等宽代码字体 JetBrains Mono。像 Butter、Chocolate、Gothic、Matcha、Stone、Y2K 还会额外按需下载它们特有的特色标题字体。\n\n## 主题画廊\n\n你可以点击下方画廊直观感受每套主题的视觉风格：\n\n## 深入了解更多\n\n- **查看各套主题详细信息：** [Neutral](/themes/neutral)、[Butter](/themes/butter)、[Chocolate](/themes/chocolate)、[Gothic](/themes/gothic)、[Matcha](/themes/matcha)、[Stone](/themes/stone)、[Y2K](/themes/y2k)。\n- **底层原理与变量规范：** 想知道所有可用的样式变量名，看 [CSS 变量](/themes/css-variables)；想了解变量与原始设计规范的映射关系，看 [Design token](/themes/tokens)。\n- **各维度配置详解：** 查看 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画刻度](/themes/motion) 以及 [间距、圆角与阴影](/themes/scale)。\n- **自定义微调：** 如果只想改某几个数值或品牌色，可以参考 [扩展主题](/themes/extending)；若需要在 Vue 模板里动态给局部子组件树套用计算后的主题对象，推荐使用 [Theme 主题容器](/components/theme)、[MediaTheme 媒体主题](/components/media-theme) 和 [SyntaxTheme 语法高亮主题](/components/syntax-theme)。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes",
@@ -78527,8 +78527,8 @@
         "zh": []
       },
       "body": {
-        "en": "# Butter\n\nGolden surfaces, blue accents. Outfit for text, Sarina for display sizes.\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n```html\n<div data-astryx-theme=\"butter\">\n```\n\n<ThemeStage theme=\"butter\" />",
-        "zh": "# Butter（黄油暖金主题）\n\nButter 是一套暖金调性的主题。它采用暖金色作为背景表面，搭配蓝色作为视觉点缀，适合生活方式类、创意展示或温暖调性的产品界面。\n\n- **字体配置：** 正文采用 Outfit 字体，展示型大字号采用复古手写风格的 Sarina。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"butter\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Butter 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"butter\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Butter 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"butter\" />"
+        "en": "# Butter\n\nGolden surfaces, blue accents. Outfit for text, Sarina for display sizes.\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n```html\n<div data-astryx-theme=\"butter\">\n```",
+        "zh": "# Butter（黄油暖金主题）\n\nButter 是一套暖金调性的主题。它采用暖金色作为背景表面，搭配蓝色作为视觉点缀，适合生活方式类、创意展示或温暖调性的产品界面。\n\n- **字体配置：** 正文采用 Outfit 字体，展示型大字号采用复古手写风格的 Sarina。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"butter\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Butter 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"butter\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Butter 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/butter",
@@ -78558,8 +78558,8 @@
         "zh": []
       },
       "body": {
-        "en": "# Chocolate\n\nWarm brown and beige. Albert Sans for text, Fraunces for headings.\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n```html\n<div data-astryx-theme=\"chocolate\">\n```\n\n<ThemeStage theme=\"chocolate\" />",
-        "zh": "# Chocolate（巧克力暖棕主题）\n\nChocolate 是一套沉稳、典雅的暖色系主题。它以醇厚的暖棕色与温润的米色为主基调，散发出精致的人文质感，适合阅读类产品、品质博客或咖啡生活等调性鲜明的页面。\n\n- **字体配置：** 正文采用 Albert Sans 字体，标题采用复古雅致的衬线字体 Fraunces。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"chocolate\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Chocolate 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"chocolate\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Chocolate 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"chocolate\" />"
+        "en": "# Chocolate\n\nWarm brown and beige. Albert Sans for text, Fraunces for headings.\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n```html\n<div data-astryx-theme=\"chocolate\">\n```",
+        "zh": "# Chocolate（巧克力暖棕主题）\n\nChocolate 是一套沉稳、典雅的暖色系主题。它以醇厚的暖棕色与温润的米色为主基调，散发出精致的人文质感，适合阅读类产品、品质博客或咖啡生活等调性鲜明的页面。\n\n- **字体配置：** 正文采用 Albert Sans 字体，标题采用复古雅致的衬线字体 Fraunces。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"chocolate\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Chocolate 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"chocolate\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Chocolate 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/chocolate",
@@ -78752,8 +78752,8 @@
         "zh": []
       },
       "body": {
-        "en": "# Gothic\n\nDark only. Deep blue-gray surfaces stay dark when the rest of the page is light. Fustat for text, Manufacturing Consent for display sizes.\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n```html\n<div data-astryx-theme=\"gothic\">\n```\n\n<ThemeStage theme=\"gothic\" />",
-        "zh": "# Gothic（哥特冷峻深色主题）\n\nGothic 是一套专为沉浸式夜间体验打造的纯深色主题。它采用深邃的冷感蓝灰色作为表面底色。即使你的外部宿主页面当前处于浅色白天模式，应用了 Gothic 的容器依然会坚定地保持冷峻的深色暗夜质感。\n\n- **字体配置：** 正文采用 Fustat 字体，展示型大字号采用极具视觉冲击力的 Manufacturing Consent。\n- **纯深色特性：** 不受外部浅色模式影响，始终保持暗色调。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"gothic\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Gothic 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"gothic\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Gothic 纯深色风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"gothic\" />"
+        "en": "# Gothic\n\nDark only. Deep blue-gray surfaces stay dark when the rest of the page is light. Fustat for text, Manufacturing Consent for display sizes.\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n```html\n<div data-astryx-theme=\"gothic\">\n```",
+        "zh": "# Gothic（哥特冷峻深色主题）\n\nGothic 是一套专为沉浸式夜间体验打造的纯深色主题。它采用深邃的冷感蓝灰色作为表面底色。即使你的外部宿主页面当前处于浅色白天模式，应用了 Gothic 的容器依然会坚定地保持冷峻的深色暗夜质感。\n\n- **字体配置：** 正文采用 Fustat 字体，展示型大字号采用极具视觉冲击力的 Manufacturing Consent。\n- **纯深色特性：** 不受外部浅色模式影响，始终保持暗色调。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"gothic\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Gothic 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"gothic\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Gothic 纯深色风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/gothic",
@@ -78783,8 +78783,8 @@
         "zh": []
       },
       "body": {
-        "en": "# Matcha\n\nEarthy greens. DM Sans for text, Playwrite US Trad for headings.\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n```html\n<div data-astryx-theme=\"matcha\">\n```\n\n<ThemeStage theme=\"matcha\" />",
-        "zh": "# Matcha（抹茶清新草木绿主题）\n\nMatcha 是一套自然、宁静、呼吸感十足的绿色系主题。它以低饱和度的草木绿与温和灰绿为基调，给人以放松、专注的心流感受，适合笔记软件、健康生活、个人知识库或自然系网站。\n\n- **字体配置：** 正文采用清晰明朗的 DM Sans 字体，标题采用带有轻盈手写韵味的 Playwrite US Trad。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"matcha\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Matcha 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"matcha\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Matcha 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"matcha\" />"
+        "en": "# Matcha\n\nEarthy greens. DM Sans for text, Playwrite US Trad for headings.\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n```html\n<div data-astryx-theme=\"matcha\">\n```",
+        "zh": "# Matcha（抹茶清新草木绿主题）\n\nMatcha 是一套自然、宁静、呼吸感十足的绿色系主题。它以低饱和度的草木绿与温和灰绿为基调，给人以放松、专注的心流感受，适合笔记软件、健康生活、个人知识库或自然系网站。\n\n- **字体配置：** 正文采用清晰明朗的 DM Sans 字体，标题采用带有轻盈手写韵味的 Playwrite US Trad。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"matcha\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Matcha 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"matcha\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Matcha 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/matcha",
@@ -78933,8 +78933,8 @@
         "zh": []
       },
       "body": {
-        "en": "# Stone\n\nWarm stone and slate. Figtree for text, Montserrat for headings.\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n```html\n<div data-astryx-theme=\"stone\">\n```\n\n<ThemeStage theme=\"stone\" />",
-        "zh": "# Stone（原石极简板岩主题）\n\nStone 是一套克制、坚韧、极富现代建筑质感的主题。它融合了温暖的天然石材色与冷静的板岩灰，质朴而高级，适合设计工作室官网、高品质文档站、技术博客或极简作品集。\n\n- **字体配置：** 正文沿用优秀的现代无衬线字体 Figtree，标题采用几何感强烈的经典字体 Montserrat。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"stone\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Stone 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"stone\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Stone 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"stone\" />"
+        "en": "# Stone\n\nWarm stone and slate. Figtree for text, Montserrat for headings.\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n```html\n<div data-astryx-theme=\"stone\">\n```",
+        "zh": "# Stone（原石极简板岩主题）\n\nStone 是一套克制、坚韧、极富现代建筑质感的主题。它融合了温暖的天然石材色与冷静的板岩灰，质朴而高级，适合设计工作室官网、高品质文档站、技术博客或极简作品集。\n\n- **字体配置：** 正文沿用优秀的现代无衬线字体 Figtree，标题采用几何感强烈的经典字体 Montserrat。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"stone\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Stone 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"stone\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Stone 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/stone",
@@ -79045,8 +79045,8 @@
         "zh": []
       },
       "body": {
-        "en": "# Y2K\n\nPeriwinkle, cream, and sharp corners. Poppins for text, Crimson Text for display sizes.\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n```html\n<div data-astryx-theme=\"y2k\">\n```\n\n<ThemeStage theme=\"y2k\" />",
-        "zh": "# Y2K（千禧复古极简主题）\n\nY2K 是一套致敬 2000 年代早期互联网先锋美学的主题。它采用清爽的长春花蓝与温暖的奶油色碰撞，并将所有组件的圆角全部收紧为坚决的纯直角（90 度硬朗直角边缘），视觉风格棱角分明、个性鲜明。\n\n- **硬朗直角特性：** 按钮、卡片、输入框全部收成直边直角，呈现干脆利落的机械复古感。\n- **字体配置：** 正文采用极具亲和力的几何无衬线字体 Poppins，展示型大字号搭配古典衬线字体 Crimson Text。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"y2k\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Y2K 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"y2k\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Y2K 硬朗直角风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"y2k\" />"
+        "en": "# Y2K\n\nPeriwinkle, cream, and sharp corners. Poppins for text, Crimson Text for display sizes.\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n```html\n<div data-astryx-theme=\"y2k\">\n```",
+        "zh": "# Y2K（千禧复古极简主题）\n\nY2K 是一套致敬 2000 年代早期互联网先锋美学的主题。它采用清爽的长春花蓝与温暖的奶油色碰撞，并将所有组件的圆角全部收紧为坚决的纯直角（90 度硬朗直角边缘），视觉风格棱角分明、个性鲜明。\n\n- **硬朗直角特性：** 按钮、卡片、输入框全部收成直边直角，呈现干脆利落的机械复古感。\n- **字体配置：** 正文采用极具亲和力的几何无衬线字体 Poppins，展示型大字号搭配古典衬线字体 Crimson Text。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"y2k\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Y2K 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"y2k\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Y2K 硬朗直角风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/y2k",
@@ -82811,8 +82811,8 @@
       "cssImport": "@astryx-vue/themes/butter.css",
       "attributeValue": "butter",
       "body": {
-        "en": "# Butter\n\nGolden surfaces, blue accents. Outfit for text, Sarina for display sizes.\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n```html\n<div data-astryx-theme=\"butter\">\n```\n\n<ThemeStage theme=\"butter\" />",
-        "zh": "# Butter（黄油暖金主题）\n\nButter 是一套暖金调性的主题。它采用暖金色作为背景表面，搭配蓝色作为视觉点缀，适合生活方式类、创意展示或温暖调性的产品界面。\n\n- **字体配置：** 正文采用 Outfit 字体，展示型大字号采用复古手写风格的 Sarina。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"butter\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Butter 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"butter\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Butter 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"butter\" />"
+        "en": "# Butter\n\nGolden surfaces, blue accents. Outfit for text, Sarina for display sizes.\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n```html\n<div data-astryx-theme=\"butter\">\n```",
+        "zh": "# Butter（黄油暖金主题）\n\nButter 是一套暖金调性的主题。它采用暖金色作为背景表面，搭配蓝色作为视觉点缀，适合生活方式类、创意展示或温暖调性的产品界面。\n\n- **字体配置：** 正文采用 Outfit 字体，展示型大字号采用复古手写风格的 Sarina。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"butter\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Butter 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/butter.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"butter\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Butter 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/butter",
@@ -82832,8 +82832,8 @@
       "cssImport": "@astryx-vue/themes/chocolate.css",
       "attributeValue": "chocolate",
       "body": {
-        "en": "# Chocolate\n\nWarm brown and beige. Albert Sans for text, Fraunces for headings.\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n```html\n<div data-astryx-theme=\"chocolate\">\n```\n\n<ThemeStage theme=\"chocolate\" />",
-        "zh": "# Chocolate（巧克力暖棕主题）\n\nChocolate 是一套沉稳、典雅的暖色系主题。它以醇厚的暖棕色与温润的米色为主基调，散发出精致的人文质感，适合阅读类产品、品质博客或咖啡生活等调性鲜明的页面。\n\n- **字体配置：** 正文采用 Albert Sans 字体，标题采用复古雅致的衬线字体 Fraunces。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"chocolate\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Chocolate 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"chocolate\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Chocolate 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"chocolate\" />"
+        "en": "# Chocolate\n\nWarm brown and beige. Albert Sans for text, Fraunces for headings.\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n```html\n<div data-astryx-theme=\"chocolate\">\n```",
+        "zh": "# Chocolate（巧克力暖棕主题）\n\nChocolate 是一套沉稳、典雅的暖色系主题。它以醇厚的暖棕色与温润的米色为主基调，散发出精致的人文质感，适合阅读类产品、品质博客或咖啡生活等调性鲜明的页面。\n\n- **字体配置：** 正文采用 Albert Sans 字体，标题采用复古雅致的衬线字体 Fraunces。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"chocolate\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Chocolate 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/chocolate.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"chocolate\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Chocolate 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/chocolate",
@@ -82853,8 +82853,8 @@
       "cssImport": "@astryx-vue/themes/gothic.css",
       "attributeValue": "gothic",
       "body": {
-        "en": "# Gothic\n\nDark only. Deep blue-gray surfaces stay dark when the rest of the page is light. Fustat for text, Manufacturing Consent for display sizes.\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n```html\n<div data-astryx-theme=\"gothic\">\n```\n\n<ThemeStage theme=\"gothic\" />",
-        "zh": "# Gothic（哥特冷峻深色主题）\n\nGothic 是一套专为沉浸式夜间体验打造的纯深色主题。它采用深邃的冷感蓝灰色作为表面底色。即使你的外部宿主页面当前处于浅色白天模式，应用了 Gothic 的容器依然会坚定地保持冷峻的深色暗夜质感。\n\n- **字体配置：** 正文采用 Fustat 字体，展示型大字号采用极具视觉冲击力的 Manufacturing Consent。\n- **纯深色特性：** 不受外部浅色模式影响，始终保持暗色调。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"gothic\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Gothic 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"gothic\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Gothic 纯深色风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"gothic\" />"
+        "en": "# Gothic\n\nDark only. Deep blue-gray surfaces stay dark when the rest of the page is light. Fustat for text, Manufacturing Consent for display sizes.\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n```html\n<div data-astryx-theme=\"gothic\">\n```",
+        "zh": "# Gothic（哥特冷峻深色主题）\n\nGothic 是一套专为沉浸式夜间体验打造的纯深色主题。它采用深邃的冷感蓝灰色作为表面底色。即使你的外部宿主页面当前处于浅色白天模式，应用了 Gothic 的容器依然会坚定地保持冷峻的深色暗夜质感。\n\n- **字体配置：** 正文采用 Fustat 字体，展示型大字号采用极具视觉冲击力的 Manufacturing Consent。\n- **纯深色特性：** 不受外部浅色模式影响，始终保持暗色调。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"gothic\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Gothic 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/gothic.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"gothic\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Gothic 纯深色风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/gothic",
@@ -82874,8 +82874,8 @@
       "cssImport": "@astryx-vue/themes/matcha.css",
       "attributeValue": "matcha",
       "body": {
-        "en": "# Matcha\n\nEarthy greens. DM Sans for text, Playwrite US Trad for headings.\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n```html\n<div data-astryx-theme=\"matcha\">\n```\n\n<ThemeStage theme=\"matcha\" />",
-        "zh": "# Matcha（抹茶清新草木绿主题）\n\nMatcha 是一套自然、宁静、呼吸感十足的绿色系主题。它以低饱和度的草木绿与温和灰绿为基调，给人以放松、专注的心流感受，适合笔记软件、健康生活、个人知识库或自然系网站。\n\n- **字体配置：** 正文采用清晰明朗的 DM Sans 字体，标题采用带有轻盈手写韵味的 Playwrite US Trad。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"matcha\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Matcha 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"matcha\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Matcha 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"matcha\" />"
+        "en": "# Matcha\n\nEarthy greens. DM Sans for text, Playwrite US Trad for headings.\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n```html\n<div data-astryx-theme=\"matcha\">\n```",
+        "zh": "# Matcha（抹茶清新草木绿主题）\n\nMatcha 是一套自然、宁静、呼吸感十足的绿色系主题。它以低饱和度的草木绿与温和灰绿为基调，给人以放松、专注的心流感受，适合笔记软件、健康生活、个人知识库或自然系网站。\n\n- **字体配置：** 正文采用清晰明朗的 DM Sans 字体，标题采用带有轻盈手写韵味的 Playwrite US Trad。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"matcha\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Matcha 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/matcha.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"matcha\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Matcha 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/matcha",
@@ -82916,8 +82916,8 @@
       "cssImport": "@astryx-vue/themes/stone.css",
       "attributeValue": "stone",
       "body": {
-        "en": "# Stone\n\nWarm stone and slate. Figtree for text, Montserrat for headings.\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n```html\n<div data-astryx-theme=\"stone\">\n```\n\n<ThemeStage theme=\"stone\" />",
-        "zh": "# Stone（原石极简板岩主题）\n\nStone 是一套克制、坚韧、极富现代建筑质感的主题。它融合了温暖的天然石材色与冷静的板岩灰，质朴而高级，适合设计工作室官网、高品质文档站、技术博客或极简作品集。\n\n- **字体配置：** 正文沿用优秀的现代无衬线字体 Figtree，标题采用几何感强烈的经典字体 Montserrat。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"stone\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Stone 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"stone\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Stone 风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"stone\" />"
+        "en": "# Stone\n\nWarm stone and slate. Figtree for text, Montserrat for headings.\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n```html\n<div data-astryx-theme=\"stone\">\n```",
+        "zh": "# Stone（原石极简板岩主题）\n\nStone 是一套克制、坚韧、极富现代建筑质感的主题。它融合了温暖的天然石材色与冷静的板岩灰，质朴而高级，适合设计工作室官网、高品质文档站、技术博客或极简作品集。\n\n- **字体配置：** 正文沿用优秀的现代无衬线字体 Figtree，标题采用几何感强烈的经典字体 Montserrat。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"stone\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Stone 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/stone.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"stone\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Stone 风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/stone",
@@ -82937,8 +82937,8 @@
       "cssImport": "@astryx-vue/themes/y2k.css",
       "attributeValue": "y2k",
       "body": {
-        "en": "# Y2K\n\nPeriwinkle, cream, and sharp corners. Poppins for text, Crimson Text for display sizes.\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n```html\n<div data-astryx-theme=\"y2k\">\n```\n\n<ThemeStage theme=\"y2k\" />",
-        "zh": "# Y2K（千禧复古极简主题）\n\nY2K 是一套致敬 2000 年代早期互联网先锋美学的主题。它采用清爽的长春花蓝与温暖的奶油色碰撞，并将所有组件的圆角全部收紧为坚决的纯直角（90 度硬朗直角边缘），视觉风格棱角分明、个性鲜明。\n\n- **硬朗直角特性：** 按钮、卡片、输入框全部收成直边直角，呈现干脆利落的机械复古感。\n- **字体配置：** 正文采用极具亲和力的几何无衬线字体 Poppins，展示型大字号搭配古典衬线字体 Crimson Text。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"y2k\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Y2K 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"y2k\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Y2K 硬朗直角风格 -->\n</div>\n```\n\n## 视觉预览\n\n<ThemeStage theme=\"y2k\" />"
+        "en": "# Y2K\n\nPeriwinkle, cream, and sharp corners. Poppins for text, Crimson Text for display sizes.\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n```html\n<div data-astryx-theme=\"y2k\">\n```",
+        "zh": "# Y2K（千禧复古极简主题）\n\nY2K 是一套致敬 2000 年代早期互联网先锋美学的主题。它采用清爽的长春花蓝与温暖的奶油色碰撞，并将所有组件的圆角全部收紧为坚决的纯直角（90 度硬朗直角边缘），视觉风格棱角分明、个性鲜明。\n\n- **硬朗直角特性：** 按钮、卡片、输入框全部收成直边直角，呈现干脆利落的机械复古感。\n- **字体配置：** 正文采用极具亲和力的几何无衬线字体 Poppins，展示型大字号搭配古典衬线字体 Crimson Text。\n- **作用范围：** 仅对带有 `data-astryx-theme=\"y2k\"` 的元素及其子树生效，不会污染全局 `:root`。\n\n## 引入与使用\n\n在项目中引入 Y2K 主题样式表：\n\n```ts\nimport '@astryx-vue/themes/y2k.css'\n```\n\n在需要使用该风格的容器标签上加上主题标记即可：\n\n```html\n<div data-astryx-theme=\"y2k\">\n  <!-- 此容器内的所有 astryx-vue 组件都将自动呈现 Y2K 硬朗直角风格 -->\n</div>\n```\n\n## 视觉预览"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/themes/y2k",
