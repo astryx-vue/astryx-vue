@@ -56,6 +56,7 @@ mindmap
       🟡 D12 演练场模板逐个走查
       🟡 D13 主题编辑器补面板
       🔵 D14 core Markdown 解析器对齐原版
+      🔵 D15 core 状态图标改实心
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -254,6 +255,7 @@ flowchart TB
   D5c --> D12["D12 演练场模板逐个走查"]
   D8 --> D13["D13 主题编辑器补面板"]
   C9 --> D14["D14 core Markdown 解析器对齐原版"]
+  C16 --> D15["D15 core 状态图标改实心"]
   CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
@@ -368,6 +370,7 @@ flowchart TB
 | D12 | 演练场模板逐个走查 | D5c | 🟡 实现中 | 1 | D12-ui | | | |
 | D13 | 主题编辑器补面板 | D8 | 🟡 实现中 | 1 | D13-ui | | | |
 | D14 | core Markdown 解析器对齐原版 | C9 | 🔵 可开工 | 0 | | | | |
+| D15 | core 状态图标改实心 | C16 | 🔵 可开工 | 0 | | | | |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
@@ -489,6 +492,7 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D12 演练场模板逐个走查 | 用户验收时发现模板和原版仍有大量细节差异（缺工具栏、间距、图标不显示、图表不撑满）。用 ui-implementor 按原版 `page.tsx` 逐个模板、逐个区块对照修复，浅色深色都要对。分 3 批：D12 看板与表格类，后续批次另开节点。见 `nodes/D12/plan.md`。 | D5c | 每个模板和原版同视口、同主题的整页对照图逐区块一致；差异清单逐条关闭。 |
 | D13 主题编辑器补面板 | 演练场「主题」里 Components、Advanced 两个 tab 点开是空白。移植原版 `ComponentTokensPanel`、`RawTokensPanel`。见 `nodes/D13/plan.md`。 | D8 | 两个面板和原版对照一致，改动能实时作用到预览和导出。 |
 | D14 core Markdown 解析器对齐原版 | F1a 发现我们 core 的 Markdown 解析器和原版有 6 处不一致（缩进代码块、不拒绝不安全地址、插件取词窗口、扩展节点 source 丢反斜杠、`createMarkdownPlugin` 无泛型、链接文字里认插件语法），见 `nodes/F1a/impl-1.md` 第 6.1 节和 issue #209。第 2 条有安全影响，F1b 依赖它。 | C9 | 6 处都和原版一致；richtext 的 12 条 `it.todo` 恢复成正式断言并通过；core 现有测试不回退。 |
+| D15 core 状态图标改实心 | D12 验收时发现：原版 `defaultIcons.tsx` 里 success、error、warning、info 等 6 个状态图标用实心（`solidSvgProps`，heroicons solid 风格），我们 `styles/icon.css` 里是 lucide 空心描边。Banner、Toast、Field 状态等处都受影响。逐个照原版路径改成实心。 | C16 | 6 个图标路径和原版一致；Banner、Toast、FieldStatus 文档页浅色深色对照一致。 |
 
 ---
 

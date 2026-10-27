@@ -74,3 +74,48 @@
 - 每个模板修了几条、还剩几条，剩下的为什么不修。
 - 发现的 core 问题。
 - 对照图路径。
+
+---
+
+# 第 2 批（总控 2026-10-27）
+
+## 第 1 批的情况
+
+用户点名的 3 个问题已经修好，合在 #210。总控验收时又补了几处：scorecard 的图表分成面积图和折线图、y 轴刻度取整、数值加千分位，两处 Export 按钮的图标换掉。
+
+**但计划里的 16 个模板没有逐个走查。** `diff-<slug>.md` 一份都没写，对照图也只截了我们这一边。第 2 批就是把这件事做完。
+
+## 第 2 批要做的
+
+16 个模板：`theme-showcase`、`dashboard`、`dashboard-scorecard`、`dashboard-alert-rail`、`dashboard-cohort-funnel`、`dashboard-comparison`、`dashboard-composition`、`dashboard-progress`、`table`、`table-page`、`table-filter`、`table-grouped`、`table-collapsible`、`table-comparison`、`table-inbox`、`table-tree`。
+
+**每个模板都要交出两样东西，缺一样就不算完成：**
+
+1. `nodes/D12/diff-<slug>.md`：逐个区块列出差异。每条写清楚是哪个区块、原版是什么样、我们是什么样，后面标「已修」，或者写「不修：理由」。没有差异的区块也要列出来，写「一致」。
+2. 浅色、深色各一张左右对照图，存到 `/tmp/D12-shots/<slug>-<light|dark>.png`。用现成脚本截：
+
+   ```sh
+   node scripts/swarm/browser-lock.mjs run --purpose D12 --max-run 240 -- \
+     node scripts/swarm/playground-pair.mjs <slug> <light|dark> 5174 /tmp/D12-shots/<slug>-<light|dark>.png ["滚到这段文字"]
+   ```
+
+   页面要往下滚才能看到的区块，再加一张滚动到那个位置的对照图。
+
+## 本地站点怎么起（第 1 批起错了）
+
+```sh
+env -u NODE_ENV pnpm docs:build
+env -u NODE_ENV pnpm --filter @astryx-vue/docs preview --port 5174
+```
+
+不要直接用 `vitepress preview apps/docs/docs`。站点根目录是 `apps/docs`，用错目录会全部 404，截出来是一片黑。
+
+## 已知的 core 问题，不用在模板里修
+
+状态图标（success、error、warning、info 等）在原版是实心的，我们的是空心的。这个由 D15 在 core 里统一修，在 diff 里标「不修：D15」就行。
+
+## 顺序
+
+按「table 系列 → dashboard 系列 → theme-showcase 收尾」的顺序做：先做 `table`、`table-page`、`table-filter`、`table-grouped`、`table-collapsible`、`table-comparison`、`table-inbox`、`table-tree`，再做其余 dashboard，最后补 theme-showcase。theme-showcase 还剩两处：Filters 要改成 OverflowList 加三个 Selector，聊天区要补后两轮消息。
+
+**每做完一个模板就提交一次。** 提交里要同时带上这个模板的 diff 文件。
