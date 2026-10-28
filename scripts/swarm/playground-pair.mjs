@@ -19,7 +19,16 @@ async function shoot(browser, url, local = false) {
   if (local)
     await context.addInitScript(mode => localStorage.setItem('vitepress-theme-appearance', mode), scheme)
   const page = await context.newPage()
-  await page.goto(url, { waitUntil: 'load', timeout: 60_000 })
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await page.goto(url, { waitUntil: 'load', timeout: 45_000 })
+      break
+    }
+    catch (error) {
+      if (attempt >= 2)
+        throw error
+    }
+  }
   await page.getByText(/^Building/).waitFor({ state: 'detached', timeout: 60_000 }).catch(() => {})
   for (let attempt = 0; attempt < 70; attempt++) {
     const lengths = await Promise.all(page.frames()

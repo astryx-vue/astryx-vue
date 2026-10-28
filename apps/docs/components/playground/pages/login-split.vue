@@ -84,7 +84,7 @@ function onPasswordChange(value: string) {
                   </Text>
                 </HStack>
                 <StackItem size="fill">
-                  <Center axis="vertical" height="100%">
+                  <Center axis="vertical" height="100%" :padding="0">
                     <EmptyState
                       v-if="isSuccess"
                       title="You're signed in"
@@ -141,12 +141,12 @@ function onPasswordChange(value: string) {
                       <Grid :columns="2" :gap="3" justify="stretch">
                         <Button label="Apple" variant="secondary" size="lg">
                           <template #icon>
-                            <img :src="APPLE_LOGO_URL" alt="" width="16" height="16">
+                            <img :src="APPLE_LOGO_URL" alt="" width="16" height="16" style="width: 16px; height: 16px">
                           </template>
                         </Button>
                         <Button label="Google" variant="secondary" size="lg">
                           <template #icon>
-                            <img :src="GOOGLE_LOGO_URL" alt="" width="16" height="16">
+                            <img :src="GOOGLE_LOGO_URL" alt="" width="16" height="16" style="width: 16px; height: 16px">
                           </template>
                         </Button>
                       </Grid>

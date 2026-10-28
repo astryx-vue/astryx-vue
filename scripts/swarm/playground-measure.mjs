@@ -48,11 +48,32 @@ function collect() {
 }
 
 async function grab(browser, url, local) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await grabOnce(browser, url, local)
+    }
+    catch (error) {
+      if (attempt >= 2)
+        throw error
+    }
+  }
+}
+
+async function grabOnce(browser, url, local) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: scheme })
   if (local)
     await context.addInitScript(m => localStorage.setItem('vitepress-theme-appearance', m), scheme)
   const page = await context.newPage()
-  await page.goto(url, { waitUntil: 'load', timeout: 60_000 })
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await page.goto(url, { waitUntil: 'load', timeout: 45_000 })
+      break
+    }
+    catch (error) {
+      if (attempt >= 2)
+        throw error
+    }
+  }
   await page.getByText(/^Building/).waitFor({ state: 'detached', timeout: 60_000 }).catch(() => {})
   let target
   for (let i = 0; i < 70 && !target; i++) {
@@ -62,7 +83,12 @@ async function grab(browser, url, local) {
     }
     if (!target) await page.waitForTimeout(1000)
   }
+  await target.evaluate(() => Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r })))).catch(() => {})
+  if (!target)
+    throw new Error('预览没出内容')
   await page.waitForTimeout(2500)
+  if (await target.evaluate(() => /couldn.t load/.test(document.body.innerText)))
+    throw new Error('预览报错页')
   const data = await target.evaluate(collect)
   await context.close()
   return data
