@@ -81,6 +81,7 @@ const searchValue = ref<SearchableItem | null>(null)
             placeholder="Search settings..."
             :search-source="settingsSearchSource"
             has-entries-on-focus
+            :width="184"
             :start-icon="MagnifyingGlassIcon"
           />
         </HStack>

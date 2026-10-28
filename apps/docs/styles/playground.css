@@ -950,6 +950,14 @@ html[data-playground-frame] body {
  * the component layer. The preview frame hands font and weight back to the components so
  * buttons render at their declared weight (500), as in the upstream playground.
  */
+/*
+ * 待 core 修复后去掉：neutral 主题把选中列表项底色定成蓝色半透明，原版是 accent-muted（浅灰 / 深灰）。
+ * 预览框里按原版的值画。
+ */
+html[data-playground-frame] {
+  --astryx-list-item-selected-background: var(--astryx-color-accent-muted);
+}
+
 html[data-playground-frame] :is(button, input, textarea, select) {
   font-family: revert-layer;
   font-weight: revert-layer;
