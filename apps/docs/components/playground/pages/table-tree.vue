@@ -608,6 +608,9 @@ const columns: TableColumn<RepoEntry>[] = [
   },
 ]
 
+/** 分支菜单触发按钮的图标（Iconify 名字要走 `name`，所以包成渲染函数）。 */
+const BranchIcon = () => h(Icon, { name: 'carbon:branch', size: 'sm' })
+
 const branchItems = [
   { label: 'main', onClick: () => {} },
   { label: 'next', onClick: () => {} },
@@ -747,15 +750,7 @@ const READMES: Record<string, string> = {
 
       <VStack v-else :ref="setBody" :gap="6">
         <HStack :gap="2" align="center" wrap="wrap">
-          <DropdownMenu has-chevron size="sm" :items="branchItems">
-            <template #trigger="triggerProps">
-              <Button v-bind="triggerProps" label="main" variant="secondary" size="sm">
-                <template #icon>
-                  <Icon name="carbon:branch" size="sm" />
-                </template>
-              </Button>
-            </template>
-          </DropdownMenu>
+          <DropdownMenu has-chevron size="sm" :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
           <HStack :gap="1" align="center">
             <template v-for="ref in REF_COUNTS" :key="ref.label">
               <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
