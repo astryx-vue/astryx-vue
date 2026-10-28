@@ -475,6 +475,15 @@ const rowStatus = useTableRowStatus<Conversation>({
   getStatus: item => (item.isUnread ? { color: 'accent', label: 'Unread' } : null),
 })
 
+/**
+ * 状态点列：16px 缩进 + 8px 圆点 + 密度在每格后留的 12px，共 36px。
+ * 原版用同样的 `transformColumns` 把插件自带的 28px 改成 36px（列 key 是插件内部的 `__rowStatus`）。
+ */
+const STATUS_GUTTER_WIDTH = 36
+const alignStatusGutter: TablePlugin<Conversation> = {
+  transformColumns: cols => cols.map(col => col.key === '__rowStatus' ? { ...col, width: pixel(STATUS_GUTTER_WIDTH) } : col),
+}
+
 /** 点到按钮、链接、勾选框这类控件时不算点中行本身。 */
 const INTERACTIVE_WITHIN_ROW = 'button, input, a, label, [role="checkbox"], [role="button"], [role="menuitem"]'
 
@@ -601,7 +610,7 @@ const threadActions = [
         dividers="none"
         has-hover
         text-overflow="truncate"
-        :plugins="{ status: rowStatus, rows: inboxRows }"
+        :plugins="{ status: rowStatus, gutter: alignStatusGutter, rows: inboxRows }"
       />
     </LayoutContent>
 

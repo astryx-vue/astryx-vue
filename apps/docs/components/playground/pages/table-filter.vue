@@ -1157,6 +1157,9 @@ const siteHistory = computed(() => {
 /** 点到行内控件不算点中行本身。 */
 const INTERACTIVE_WITHIN_ROW = 'button, input, a, label, [role="checkbox"], [role="button"], [role="menuitem"]'
 
+/** core 内部的选择列 key。 */
+const SELECTION_COLUMN_WIDTH = 48
+
 const rowActivationPlugin: TablePlugin<ServiceJob> = {
   rowPatch(item) {
     if (isTableGroupHeader(item))
@@ -1171,7 +1174,10 @@ const rowActivationPlugin: TablePlugin<ServiceJob> = {
       },
     }
   },
-  cellPatch({ row, kind }) {
+  cellPatch({ column, row, kind }) {
+    // 选择列默认 36px，勾选框离表格边 6px；原版模板把它加宽到 48px，让勾选框落在 16px 的内容边距上。
+    if (column.key === '__select')
+      return { style: { width: `${SELECTION_COLUMN_WIDTH}px`, minWidth: `${SELECTION_COLUMN_WIDTH}px`, maxWidth: `${SELECTION_COLUMN_WIDTH}px` } }
     if (kind !== 'body' || row == null || isTableGroupHeader(row) || row.id !== activeJobId.value)
       return null
     return { style: { backgroundColor: 'var(--astryx-color-accent-muted)' } }
