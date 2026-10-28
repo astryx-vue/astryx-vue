@@ -92,7 +92,7 @@
 | 模板 | 条目 | 处理 |
 | --- | --- | --- |
 | table-filter | 选择列宽 36 对 48 | 原版模板自己用 `transformColumns` 把选择列从 36 加宽到 48。我们模板用 `cellPatch` 行内宽度补上 |
-| table-filter / table-tree / table-collapsible / table-inbox / table-page / theme-showcase | 列宽按内容算，不按声明比例分 | 原版 Table 默认 `table-layout: fixed`，我们 core 是 `auto`。table-tree、table-filter、theme-showcase 在模板里补 `fixed`；table-collapsible、table-inbox、table-page 补了没有变化（列宽都是像素列，实测相同），所以没动 |
+| table-filter / table-tree / table-collapsible / table-inbox / table-page / theme-showcase / dashboard-cohort-funnel | 列宽按内容算，不按声明比例分 | 原版 Table 数据模式默认 `table-layout: fixed`，我们 core 是 `auto`。七个模板都在模板里补了 `fixed`（`:deep(.astryx-table)`）。实测 table-tree 的 Name 列 309→286，table-filter 的 Job 317→352，theme-showcase 的 Item 146→158；其余几个列宽本来就是像素列，补上后保持一致 |
 | table-inbox | 状态列 28 对 36 | 原版模板自己把插件的 28 改成 36，模板里加同样的 `transformColumns`；Received 列 110 改回原版 120 |
 | table-tree | 表头 30 对 32.5 | 原版传 `hasExpandAllControl: true`，我们漏了；补上后表头 32.5、表体 449 与原版一致 |
 | table-tree | 分支按钮宽 78 对 102 | 改用 DropdownMenu 的 `button` 属性带 chevron，和原版一样 |
@@ -109,7 +109,7 @@
 | table-page | 行高 37 对 36 | 37.5 对 37.5，逐行一致 |
 | table-inbox | 表头 38 对 37 | 37.5 对 37.5 |
 | table-inbox | 标签 token | 53.7 / 48.4 / 68.5 一致 |
-| dashboard-cohort-funnel | 热力格 token 宽 | 内边距两边都是 8px，宽 46 对 45.9 |
+| dashboard-cohort-funnel | 热力格 token 宽 | 内边距两边都是 8px，宽 46 对 45.9（行高 0.5px 见下） |
 | table | 全页 | 唯一差别是按钮 0.3px 的字体渲染 |
 
 ### 仍然不一致，都在 core，写入 core 问题清单（见第三节）
@@ -121,7 +121,6 @@
 | 项 | 说明 |
 | --- | --- |
 | 日期显示（`Jun 30, 2026`、`3 months ago`） | 站点语言。原版站点是英文；我们站点中文时 Timestamp 随站点。用英文界面时实测一致 |
-| 0.3 ~ 0.5px 的行高 | 同一浏览器里原版自己的行高也是 38 / 37.5 交替，是字体度量的小数舍入；我们 38.5 / 38 |
 | dashboard-alert-rail 数据形状 | 原版数据生成器 `buildWindow` / `burstAt` 是确定性的 60 多行函数，我们用了别的噪声函数。属于「数据不同」，不影响布局。**这一条没在原版页面上证明是随机差异**——它是可复现的确定性函数，只是还没照抄。保留为未做，下一批照抄生成器 |
 
 ### 功能块（未做，不是「差异小」）
@@ -141,6 +140,7 @@ table-inbox 悬停行操作（4 个按钮）、写信 / 回复窗口、窄屏单
 9. **TabList 容器高**：原版 tablist 高 33、底内边距 5；我们 32 / 4。
 10. **Markdown 标题块外边距**：原版 `margin: 0 73px 12px`（h3）/ `24px 73px 12px`（h4）；我们 `16px 73px 8px`。影响 table-tree README 整体高度（2259 对 2221）。
 11. **Markdown 表格没有外框和网格线**：原版是 Table 组件，1px 外框 `rgba(255,255,255,.1)` + 单元格网格线；我们只有行线。
+13. **Token 的 `vertical-align: middle`**（`packages/core/styles/token.css:22`）：原版没有。表格里放 Token 的行因此多 0.5px（dashboard-cohort-funnel 数据行 38.5 对 38）。已实测：把 `.astryx-token` 的 `vertical-align` 改 `baseline` 后行高立刻变 38。
 12. **ProgressBar 在 flex 行里宽度 0**（上一轮已报）、**TextInput 原生 input 默认宽度**（上一轮已报）。
 
 ## 四、深色对照图（滚动分段）

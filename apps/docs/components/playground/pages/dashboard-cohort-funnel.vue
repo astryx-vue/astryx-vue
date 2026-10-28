@@ -393,7 +393,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
             </VStack>
             <Card :padding="6">
               <VStack :gap="8">
-                <Table :data="cohortRows" :columns="cohortColumns" id-key="id" density="balanced" dividers="rows" />
+                <div class="fixed-table"><Table :data="cohortRows" :columns="cohortColumns" id-key="id" density="balanced" dividers="rows" /></div>
                 <HStack :gap="4" align="center" wrap="wrap">
                   <Text type="supporting" color="secondary">
                     Retention:
@@ -416,6 +416,11 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
 </template>
 
 <style scoped>
+/* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
+.fixed-table :deep(.astryx-table) {
+  table-layout: fixed;
+}
+
 .step-grid {
   overflow-x: clip;
 }

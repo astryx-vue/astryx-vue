@@ -374,7 +374,7 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3" :gap="2">
-              <Table :data="bankTable.sortedData.value" :columns="bankColumns" id-key="id" density="compact" dividers="rows" :plugins="bankTable.plugins" />
+              <div class="fixed-table"><Table :data="bankTable.sortedData.value" :columns="bankColumns" id-key="id" density="compact" dividers="rows" :plugins="bankTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
@@ -401,7 +401,7 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <Table :data="cardTable.sortedData.value" :columns="creditColumns" id-key="id" density="compact" dividers="rows" :plugins="cardTable.plugins" />
+              <div class="fixed-table"><Table :data="cardTable.sortedData.value" :columns="creditColumns" id-key="id" density="compact" dividers="rows" :plugins="cardTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
@@ -428,7 +428,7 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <Table :data="procTable.sortedData.value" :columns="processorColumns" id-key="id" density="compact" dividers="rows" :plugins="procTable.plugins" />
+              <div class="fixed-table"><Table :data="procTable.sortedData.value" :columns="processorColumns" id-key="id" density="compact" dividers="rows" :plugins="procTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
@@ -455,7 +455,7 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <Table :data="invTable.sortedData.value" :columns="investmentColumns" id-key="id" density="compact" dividers="rows" :plugins="invTable.plugins" />
+              <div class="fixed-table"><Table :data="invTable.sortedData.value" :columns="investmentColumns" id-key="id" density="compact" dividers="rows" :plugins="invTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
@@ -466,6 +466,11 @@ function toggleAll(): void {
 </template>
 
 <style scoped>
+/* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
+.fixed-table :deep(.astryx-table) {
+  table-layout: fixed;
+}
+
 .wash {
   background: var(--astryx-color-background-body);
 }

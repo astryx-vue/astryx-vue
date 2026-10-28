@@ -554,3 +554,10 @@ const AMOUNT_COLUMN_WIDTH = 132
     </LayoutContent>
   </Layout>
 </template>
+
+<style scoped>
+/* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
+.invoice-table :deep(.astryx-table) {
+  table-layout: fixed;
+}
+</style>
