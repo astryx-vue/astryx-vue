@@ -12,7 +12,7 @@
 | 聊天输入框 | ChatComposer：「Ask Studio AI…」+ 左下附件（Plus）+ 右下麦克风 + 组件自带发送按钮 | 同（第 3 批换成 core 的 ChatComposer，footerActions/sendActions 按原版接） | 已修 |
 | Inventory 筛选行 | 搜索框 + 三个 Selector（Categories / Locations / Tags，带图标）放进 OverflowList，放不下折成「Filters」按钮；右侧列表 / 网格切换 | 已按 OverflowList + 三个 Selector 写；但我们这一栏的宽度让三个 Selector 都放下了，没有折成「Filters」按钮 | 部分：结构已对。原版在这个宽度下三个 Selector 被折进「Filters」，我们没折，原因是 core 的 OverflowList 测量指示器宽度（同 table-filter 里记的 core 问题）。 |
 | Inventory 提示条 | 「2 items are running low」黄色提示条 | 同 | 一致 |
-| Inventory 表 | 行：勾选 + 缩略图 + 名称 + 库存 + 位置 + 标签 + 菜单 | 同；名称列更窄，名称折成 3 行（「Minimalist / Watch」折成「Minimalis / t Watch」） | 未修：Name 列宽度差，同 table-filter 里记的 core 选择列宽没算进表格最小宽 |
+| Inventory 表 | 行：勾选 + 缩略图 + 名称 + 库存 + 位置 + 标签 + 菜单；表宽 591，Item 列 158，各行高 145/125/105/125/125/105 | 同（实测逐行、逐列一致） | 已修：原版 Table 默认 `table-layout: fixed`，模板里补上 |
 | Revenue / Activity 卡 | 18K / +12% + Activity 列表（图标 + 订单 + 金额） | 同 | 一致（第 1 批已修） |
 | 页面总高 | 2640 | 2668 | 差 28px，主要来自上面表行折行；未逐块核对 |
 | 深色模式 | — | — | 已对照（`/tmp/D12-shots/theme-showcase-dark.png`）：商品卡图、徽标、聊天区配色一致，无新增差异 |

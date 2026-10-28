@@ -13,9 +13,9 @@
 | 结果数 + Clear all | 「55 results • Clear all」，Clear all 是 supporting 小字的 Link | 同 | 已修 |
 | 右侧工具簇 | View options（Popover 弹层）、Create saved view、Saved views（按下后实心图标） | 同；Saved views 打开时编辑类控件退下、只留开关，和原版一致 | 已修 |
 | 筛选 chip 尺寸 | 全部高 28，内边距 8px 12px | Customer/Technician 高 30，Priority 32，Quote 38，内边距 4px 8px | 已修（模板里用 `:deep` 统一成 28 高、12px 横向内边距）。core 问题待写进回报：sm 尺寸下 MultiSelector 实高 30、Selector 32、ComplexSelector 38，原版都是 28 |
-| 筛选行折叠位置 | 1440 宽下放得下 Upcoming 和 Status，其余收进「+4」 | 只放得下 Upcoming，收进「+5」，因为 chip 偏宽 | 不修：core。OverflowList 测量指示器宽度时用内置「还有 N 项」文案（89px），不读 `#overflow` 插槽里的实际按钮（「+N」43px），所以多留 46px、少放一个子句。原版是 Upcoming + Status + 「+4」，我们是 Upcoming + 「+5」。模板里没有无损绕过，交总控开 core 节点 |
-| 表头 | 高 38；表格总宽 1328，Job 360 / Customer 180 | 高 37；表格总宽 1280，Job 291 / Customer 201 | 不修：core。①行高差同分组行。②`resolveColumnWidths` 的 `tableMinWidth` 只算 `pixelTotal + maxProportionalSpace`，不含选择列的 48px，所以表格比原版窄 48，比例列分到的空间少，Job 窄 69、Customer 宽 21。已用原版同一组 proportional(2,240)/(1,180) 配置验证：原版基准宽 540（=180×3），Job 360 Customer 180 |
-| 分组行 | 16px 半粗体 + 灰括号数字，行高 41 | 14px，行高 37 | 不修：core。原版 `<table>` 字号 16px，分组头 td 不设字号，继承 16px；普通 td 单独设 14px/行高 21。我们的 core 把 `.astryx-table` 设成 14px / 行高 1.4286，分组头 14px，所有行高少约 1px（分组行 37 对 41，数据行 36–57 对 37–57 的累计差）。模板里不能绕：原版注释明确说不能用 `renderGroupHeader`，否则丢首列固定。交总控开 core 节点 |
+| 筛选行折叠位置 | 1440 宽下放得下 Upcoming 和 Status，其余收进「+4」 | 实测同：Upcoming、Scheduled +3、+4 | 一致（D18 #1 已修） |
+| 表头 | 高 38；表格总宽 1328，选择列 48，Job 360 / Customer 180 | 表头高 38；选择列 48；总宽 1316（差 12），Job 352 / Customer 176 | 部分修：选择列 48 是原版模板自己改的（`transformColumns` 把 36 改 48），我们在模板里用 `cellPatch` 的行内宽度补上；`table-layout: fixed` 是原版 Table 的默认，我们 core 是 auto，模板里 `:deep(.astryx-table)` 补上，列宽按声明比例分。**总宽仍差 12px**：core 的 `tableMinWidth` 按 36 算选择列，模板把它放宽到 48 后 `min-width` 没跟着变，写进 core 问题清单第 3 条 |
+| 分组行 | 16px 半粗体 + 灰括号数字，行高 41 | 实测分组行 41 | 一致（D18 #5 已修） |
 | 数据行 | 单元格顶部对齐，行高 57，Job 文字不截断（wrap） | 已改成 wrap + 顶部对齐，行高约 57 | 已修（待复核） |
 | 紧急优先级圆点 | 脉冲动画 | 加了 isPulsing | 已修 |
 | 首列固定 | 首列粘左 | 加了 sticky 插件 | 已修 |

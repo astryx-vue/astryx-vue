@@ -14,7 +14,7 @@
 | 表头 | Description、Category、Qty、Rate、Amount，带排序和筛选图标 | 相同 | 一致 |
 | 首尾列内边距 | 原版 useFlushEdges：首列左、末列右内边距为 0，文字与 MetadataList 同一条线 | 缺，首尾列各缩进 8px | 已修：新增 `flushEdgesPlugin`（用 `cellPatch`） |
 | 表格行内容、数据 19 行 | 描述、类别、数量、单价、金额 | 相同 | 一致 |
-| 表格行高 | 行 37px（单元格行高 21px） | 36px（单元格行高 20px） | 不修：core 的 Table 单元格行高和原版差 1px，属 core 问题，交总控 |
+| 表格行高 | 行 37.5（单元格行高 21px） | 实测 37.5 对 37.5，所有行逐个一致 | 一致（D16/D18 已修） |
 | 行悬停卡片 | 5 项：Category、Billing、Calculation、Amount、Share of invoice | 3 项，缺 Calculation、Amount；标题没带 accessibilityLevel | 已修：补两项，标题 `accessibilityLevel: 2` |
 | 合计区 | 三条分隔线，Subtotal、Tax (8.75%)、Total due | 相同 | 一致 |
 | 筛选后提示条 | warning Banner，右侧 Clear all filters | 相同 | 一致 |
