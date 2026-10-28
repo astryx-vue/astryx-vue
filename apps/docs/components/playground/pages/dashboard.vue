@@ -55,7 +55,7 @@ const ACTIVE_SERIES = [
 ]
 
 /** 图表画布：800×300，留出左侧刻度与底部时间轴的边距。 */
-const CHART = { h: 300, padLeft: 36, padRight: 12, padTop: 10, padBottom: 26 }
+const CHART = { h: 300, padLeft: 30, padRight: 10, padTop: 5, padBottom: 35 }
 
 /** 图表宽度跟着容器走，viewBox 和像素一比一，线和文字都不会被拉伸。 */
 const chartEl = ref<SVGSVGElement | null>(null)
@@ -95,8 +95,8 @@ const Y_AXIS = [0, 20, 40, 60, 80, 100, 120]
 const Y_MIN = 0
 const Y_MAX = 120
 
-/** 横轴只标 4 个时间点，分别是曲线上的 0 / 32 / 64 / 95。 */
-const X_TICKS = [0, 32, 64, 95]
+/** 横轴标 3 个时间点（曲线上的 32 / 64 / 95），起点不标，和原版一样。 */
+const X_TICKS = [32, 64, 95]
 const X_LABELS: Record<number, string> = {
   0: 'Apr 1 14:00',
   32: 'Apr 1 22:00',
@@ -164,16 +164,16 @@ const TOP_PAGES_MAX = Math.max(...TOP_PAGES.map(row => row.views))
 const TOP_EVENTS_MAX = Math.max(...TOP_EVENTS.map(row => row.count))
 
 /** 数值列里画一条进度条，条下再写原始数字。 */
-function barCell(value: number, max: number, label: string) {
+function barCell(value: number, max: number, label: string, suffix = '') {
   return h(VStack, { gap: 1 }, () => [
     h(ProgressBar, { value, max, label, isLabelHidden: true }),
-    h(Text, { type: 'supporting' }, () => value.toLocaleString()),
+    h(Text, { type: 'supporting' }, () => `${value.toLocaleString()}${suffix}`),
   ])
 }
 
 const TOP_PAGES_COLUMNS: TableColumn<PageRow>[] = [
   { key: 'page', header: 'Page', width: pixel(160) },
-  { key: 'views', header: 'Views', width: proportional(1), renderCell: (row: PageRow) => barCell(row.views, TOP_PAGES_MAX, `${row.page} views`) },
+  { key: 'views', header: 'Views', width: proportional(1), renderCell: (row: PageRow) => barCell(row.views, TOP_PAGES_MAX, `${row.page} views`, ' views') },
   { key: 'newUsers', header: 'New Users', width: pixel(120) },
   { key: 'avgTime', header: 'Avg. Time', width: pixel(120) },
 ]
@@ -189,14 +189,41 @@ function tickLabel(value: number): string {
   return X_LABELS[value] ?? ''
 }
 
-/** 指标卡里的迷你折线，只看走势，不带坐标轴，画在 100×40 的盒子里。 */
-function sparklinePoints(values: number[]): string {
-  const min = Math.min(...values)
+/**
+ * 指标卡里的迷你折线：不带坐标轴，纵轴从 0 起，上界取到下一个整刻度（和原版的图表默认一样），
+ * 上下各留 5px、左右各留 5px。宽度跟着卡片走，viewBox 和像素一比一。
+ */
+const SPARK = { h: 40, pad: 5 }
+const sparkWidth = ref(398)
+let sparkObserver: ResizeObserver | null = null
+
+/** 第一张迷你图量宽，四张同宽，共用这个宽度。 */
+function bindSpark(element: unknown): void {
+  sparkObserver?.disconnect()
+  sparkObserver = null
+  if (!(element instanceof SVGSVGElement) || typeof ResizeObserver === 'undefined')
+    return
+  sparkObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      sparkWidth.value = entry.contentRect.width
+  })
+  sparkObserver.observe(element)
+}
+onBeforeUnmount(() => sparkObserver?.disconnect())
+
+function sparkTop(values: number[]): number {
   const max = Math.max(...values)
-  const range = max - min || 1
+  const step = max > 50 ? 20 : max > 20 ? 10 : 5
+  return Math.ceil(max / step) * step
+}
+
+function sparklinePoints(values: number[]): string {
+  const top = sparkTop(values)
+  const inner = SPARK.h - SPARK.pad * 2
+  const width = sparkWidth.value - SPARK.pad * 2
   return values.map((value, i) => {
-    const x = (i / (values.length - 1)) * 100
-    const y = 2 + 36 - ((value - min) / range) * 36
+    const x = SPARK.pad + (i / (values.length - 1)) * width
+    const y = SPARK.pad + inner - (value / top) * inner
     return `${x.toFixed(1)},${y.toFixed(1)}`
   }).join(' ')
 }
@@ -234,16 +261,17 @@ function sparklinePoints(values: number[]): string {
                   :key="`ylabel-${tick}`"
                   class="chart-axis"
                   :x="CHART.padLeft - 8"
-                  :y="tickY(tick, Y_MIN, Y_MAX) + 4"
+                  :y="Math.max(tickY(tick, Y_MIN, Y_MAX), 9)"
                   text-anchor="end"
+                  dominant-baseline="central"
                 >{{ tick }}</text>
                 <text
                   v-for="index in X_TICKS"
                   :key="`xlabel-${index}`"
                   class="chart-axis"
-                  :x="tickX(index)"
-                  :y="CHART.h - 8"
-                  :text-anchor="index === 0 ? 'start' : index === X_TICKS[X_TICKS.length - 1] ? 'end' : 'middle'"
+                  :x="Math.min(tickX(index), chartWidth - CHART.padRight - 23)"
+                  :y="CHART.h - CHART.padBottom + 8"
+                  text-anchor="middle"
                 >{{ tickLabel(index) }}</text>
                 <polyline
                   v-for="series in ACTIVE_SERIES"
@@ -287,7 +315,7 @@ function sparklinePoints(values: number[]): string {
                 <Text type="supporting" color="secondary">
                   Last 30 days vs. Previous
                 </Text>
-                <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <svg :ref="i === 0 && start === 0 ? bindSpark : undefined" class="sparkline" :viewBox="`0 0 ${sparkWidth} ${SPARK.h}`" aria-hidden="true">
                   <polyline fill="none" :stroke="CHART_COLORS.allUsers" stroke-width="1.5" :points="sparklinePoints(SPARKLINES[start + i])" />
                 </svg>
               </VStack>
@@ -349,9 +377,11 @@ function sparklinePoints(values: number[]): string {
                 <Heading :level="4">
                   Top pages
                 </Heading>
-                <Link href="#">
-                  All pages
-                </Link>
+                <Text type="body">
+                  <Link href="#">
+                    All pages
+                  </Link>
+                </Text>
               </HStack>
               <Table :data="TOP_PAGES" :columns="TOP_PAGES_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
             </VStack>
@@ -362,9 +392,11 @@ function sparklinePoints(values: number[]): string {
                 <Heading :level="4">
                   Top events
                 </Heading>
-                <Link href="#">
-                  All events
-                </Link>
+                <Text type="body">
+                  <Link href="#">
+                    All events
+                  </Link>
+                </Text>
               </HStack>
               <Table :data="TOP_EVENTS" :columns="TOP_EVENTS_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
             </VStack>
@@ -387,7 +419,7 @@ function sparklinePoints(values: number[]): string {
   display: flex;
   height: 24px;
   overflow: clip;
-  border-radius: var(--astryx-radius-element);
+  border-radius: 4px;
 }
 .stacked-bar__segment {
   flex-basis: 0;

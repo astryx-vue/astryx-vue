@@ -317,7 +317,7 @@ const trendingColumns: TableColumn<StockRow>[] = [
   { key: 'dailyPts', header: 'Daily Chg (pts)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPts >= 0 ? 'green' : 'red', label: (row.dailyPts >= 0 ? '+' : '') + row.dailyPts.toFixed(2) }) },
   { key: 'dailyPct', header: 'Daily Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPct >= 0 ? 'green' : 'red', label: (row.dailyPct >= 0 ? '+' : '') + row.dailyPct.toFixed(2) + '%' }) },
   { key: 'weekChg', header: '52W Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.weekChg >= 0 ? 'green' : 'red', label: (row.weekChg >= 0 ? '+' : '') + row.weekChg.toFixed(1) + '%' }) },
-  { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1 }) },
+  { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1, isMeasured: true, padTop: 2, padBottom: 2 }) },
 ]
 
 const timeRange = ref('1 year')
@@ -345,18 +345,20 @@ const timeRange = ref('1 year')
           </HStack>
 
           <Grid :columns="{ minWidth: 280, repeat: 'fit' }" :gap="4">
-            <Card v-for="m in metrics" :key="m.label">
-              <VStack :gap="1">
-                <HStack :gap="3" align="center">
-                  <Text type="display-3" weight="bold">{{ m.value }}</Text>
-                  <HStack :gap="1" align="center">
-                    <Icon :icon="!m.change.startsWith('-') ? 'arrowUp' : 'arrowDown'" size="xsm" :color="!m.change.startsWith('-') ? 'success' : 'error'" />
-                    <Text type="body" color="secondary">{{ m.change }}</Text>
+            <Grid v-for="group in [0, 1]" :key="group" :columns="{ minWidth: 280, repeat: 'fit' }" :gap="4">
+              <Card v-for="m in metrics.slice(group * 2, group * 2 + 2)" :key="m.label">
+                <VStack :gap="1">
+                  <HStack :gap="3" align="center">
+                    <Text type="display-3" weight="bold">{{ m.value }}</Text>
+                    <HStack :gap="1" align="center">
+                      <Icon :icon="!m.change.startsWith('-') ? 'arrowUp' : 'arrowDown'" size="xsm" :color="!m.change.startsWith('-') ? 'success' : 'error'" />
+                      <Text type="body" color="secondary">{{ m.change }}</Text>
+                    </HStack>
                   </HStack>
-                </HStack>
-                <Text type="body" color="secondary">{{ m.label }}</Text>
-              </VStack>
-            </Card>
+                  <Text type="body" color="secondary">{{ m.label }}</Text>
+                </VStack>
+              </Card>
+            </Grid>
           </Grid>
 
           <Grid :columns="{ minWidth: 280, max: 4 }" :gap="4">
@@ -375,6 +377,9 @@ const timeRange = ref('1 year')
                       color="var(--astryx-color-data-categorical-green, #0B991F)"
                       :height="340"
                       :y-domain="[200000, 320000]"
+                      :y-ticks="[200000, 240000, 280000, 320000]"
+                      :pad="{ top: 10, right: 10, bottom: 35, left: 50 }"
+                      center-ticks
                       :x-domain="[0, 12]"
                       :x-ticks="xAxisTicks"
                       :x-tick-format="(v: number) => xAxisLabels[v] ?? ''"
@@ -399,6 +404,11 @@ const timeRange = ref('1 year')
                       :description="asset.name"
                       href="#"
                     >
+                      <template #label>
+                        <Text weight="bold">
+                          {{ asset.ticker }}
+                        </Text>
+                      </template>
                       <template #startContent>
                         <Avatar :name="asset.ticker" size="md" />
                       </template>
@@ -432,7 +442,7 @@ const timeRange = ref('1 year')
                   <Heading :level="3">{{ m.name }}</Heading>
                   <Text type="supporting" color="secondary">{{ m.ticker }}</Text>
                 </VStack>
-                <PlaygroundSparkline :data="m.spark" :color="m.positive ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'" />
+                <PlaygroundSparkline :data="m.spark" :color="m.positive ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'" is-measured :pad-top="2" :pad-bottom="2" />
                 <HStack :gap="3" align="center">
                   <Text type="display-3" weight="bold">{{ m.price }}</Text>
                   <HStack :gap="1" align="center">

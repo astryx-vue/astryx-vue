@@ -8,6 +8,7 @@ import {
   Card,
   Center,
   CheckboxInput,
+  ChatComposer,
   ChatMessage,
   ChatMessageBubble,
   ChatMessageList,
@@ -20,6 +21,7 @@ import {
   Icon,
   Item,
   Link,
+  OverflowList,
   MoreMenu,
   NumberInput,
   pixel,
@@ -40,7 +42,7 @@ import {
 } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
-/* ChatComposer is not exported from @astryx-vue/core — composer uses TextInput. */
+/* ChatComposer 从 @astryx-vue/core 引入。 */
 
 type ShowcaseBadgeVariant = 'blue' | 'cyan' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'teal' | 'yellow'
 
@@ -50,6 +52,14 @@ interface ProductSpec {
   badge: string
   badgeVariant: ShowcaseBadgeVariant
 }
+
+const FILTER_ITEMS = [
+  { id: 'categories', label: 'Categories', icon: 'i-heroicons-folder', options: ['Wearables', 'Audio', 'Bags', 'Drinkware', 'Home'] },
+  { id: 'locations', label: 'Locations', icon: 'i-heroicons-map-pin', options: ['Aisle 1', 'Aisle 2', 'Aisle 3', 'Aisle 4', 'Aisle 5', 'Aisle 6'] },
+  { id: 'tags', label: 'Tags', icon: 'i-heroicons-tag', options: ['New', 'Popular', 'Limited', 'Leather', 'Drinkware', 'Home'] },
+]
+
+const FILTER_BY_ID: Record<string, (typeof FILTER_ITEMS)[number]> = Object.fromEntries(FILTER_ITEMS.map(item => [item.id, item]))
 
 interface TagSpec { label: string, variant: ShowcaseBadgeVariant }
 
@@ -103,6 +113,8 @@ const ACTIVITY = [
 
 const ActivityIcons: Record<string, string> = { '1': 'heroicons:shopping-bag', '2': 'heroicons:banknotes', '3': 'heroicons:shopping-bag', '4': 'heroicons:shopping-bag', '5': 'heroicons:shopping-bag' }
 const SearchIcon = () => h(Icon, { name: 'heroicons:magnifying-glass', size: 'sm' })
+const CreditCardIcon = () => h(Icon, { name: 'heroicons:credit-card', size: 'sm' })
+
 const { isMobile } = useAppShellMobile()
 const gridColumns = computed(() => (isMobile ? 1 : { minWidth: 200, repeat: 'fit' as const }))
 const productColumns = computed(() => (isMobile ? 1 : { minWidth: 200, max: 3 }))
@@ -137,7 +149,8 @@ function selectPayment(which: 'card' | 'apple' | 'google') {
 const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
   {
     key: 'select',
-    header: '',
+    header: 'Select',
+    headerHidden: true,
     width: pixel(64),
     renderCell: row => h(CheckboxInput, {
       label: 'Select ' + row.name,
@@ -186,7 +199,8 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
   },
   {
     key: 'actions',
-    header: '',
+    header: 'Actions',
+    headerHidden: true,
     width: pixel(64),
     align: 'end',
     renderCell: () => h(MoreMenu, {
@@ -295,25 +309,25 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                     <Grid :columns="isMobile ? 1 : { minWidth: 80, max: 3 }" :gap="2">
                       <SelectableCard :is-selected="paymentCard" label="Pay with card" :padding="3" @change="selectPayment('card')">
                         <VStack :gap="1" :justify="'center'" class="payment-card-content">
-                          <span class="i-carbon-purchase" aria-hidden="true" />
+                          <Icon name="heroicons:credit-card" size="md" />
                           <Text type="supporting" weight="bold">Card</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentApple" label="Pay with Apple Pay" :padding="3" @change="selectPayment('apple')">
                         <VStack :gap="1" :justify="'center'" class="payment-card-content">
-                          <span class="i-carbon-mobile" aria-hidden="true" />
+                          <Icon name="heroicons:device-phone-mobile" size="md" />
                           <Text type="supporting" weight="bold">Apple Pay</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentGoogle" label="Pay with Google Pay" :padding="3" @change="selectPayment('google')">
                         <VStack :gap="1" :justify="'center'" class="payment-card-content">
-                          <span class="i-carbon-wallet" aria-hidden="true" />
+                          <Icon name="heroicons:wallet" size="md" />
                           <Text type="supporting" weight="bold">Google Pay</Text>
                         </VStack>
                       </SelectableCard>
                     </Grid>
                   </VStack>
-                  <TextInput v-model="cardNumber" label="Card number" placeholder="1234 1234 1234 1234" size="lg" />
+                  <TextInput v-model="cardNumber" label="Card number" placeholder="1234 1234 1234 1234" size="lg" :start-icon="isMobile ? undefined : CreditCardIcon" />
                   <Grid :columns="isMobile ? 1 : { minWidth: 90, max: 2 }" :gap="2">
                     <TextInput v-model="expiry" label="Expiry" placeholder="MM / YY" size="lg" />
                     <TextInput v-model="cvc" label="CVC" placeholder="123" size="lg" />
@@ -361,8 +375,44 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                   </ChatMessage>
                   <ChatMessage sender="assistant">
                     <VStack :gap="3">
-                      <Text type="body">Your order #1043 shipped this morning and is on track to arrive by end of day tomorrow.</Text>
-                      <Text type="body">Let me know if you’d like to reschedule delivery or start a return.</Text>
+                      <Text type="body">
+                        Your order #1043 — the Minimalist Watch and Linen Throw — shipped this morning from the Aisle 3 warehouse and is currently in transit with UPS. It’s on track to arrive at your address by end of day tomorrow.
+                      </Text>
+                      <Text type="body">
+                        Let me know if you’d like to reschedule the delivery, redirect it to a pickup point, or start a return once it arrives.
+                      </Text>
+                    </VStack>
+                  </ChatMessage>
+                  <ChatMessage sender="user">
+                    <ChatMessageBubble variant="filled">Can you show me the full details?</ChatMessageBubble>
+                  </ChatMessage>
+                  <ChatMessage sender="assistant">
+                    <VStack :gap="3">
+                      <Text type="body">Here’s everything I have on order #1043:</Text>
+                      <Card :padding="3">
+                        <VStack :gap="1">
+                          <Item label="Items" description="Minimalist Watch · Linen Throw">
+                            <template #endContent>
+                              <Text type="body" weight="bold">$248</Text>
+                            </template>
+                          </Item>
+                          <Item label="Shipping" description="UPS Ground">
+                            <template #endContent>
+                              <Text type="body" weight="bold">$12</Text>
+                            </template>
+                          </Item>
+                          <Item label="Estimated arrival" description="Tomorrow by 8pm">
+                            <template #endContent>
+                              <Badge variant="green" label="On time" />
+                            </template>
+                          </Item>
+                          <Item label="Tracking" description="UPS 1Z 999 AA1 0123 4567 84">
+                            <template #endContent>
+                              <Link href="#">Track →</Link>
+                            </template>
+                          </Item>
+                        </VStack>
+                      </Card>
                     </VStack>
                   </ChatMessage>
                 </ChatMessageList>
@@ -373,7 +423,23 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 </HStack>
               </div>
               <div class="chat-composer">
-                <TextInput v-model="chatDraft" label="Message" is-label-hidden placeholder="Ask Studio AI…" />
+                <!-- 原版用 ChatComposer：左下附件、右下麦克风，发送按钮是组件自带的。 -->
+                <ChatComposer v-model="chatDraft" placeholder="Ask Studio AI…">
+                  <template #footerActions>
+                    <Button variant="ghost" size="md" is-icon-only label="Attach" tooltip="Attach">
+                      <template #icon>
+                        <Icon name="heroicons:plus" />
+                      </template>
+                    </Button>
+                  </template>
+                  <template #sendActions>
+                    <Button variant="ghost" size="md" is-icon-only label="Voice input" tooltip="Voice input">
+                      <template #icon>
+                        <Icon name="carbon:microphone" />
+                      </template>
+                    </Button>
+                  </template>
+                </ChatComposer>
               </div>
             </Card>
           </div>
@@ -391,12 +457,25 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
               <Divider variant="subtle" />
               <HStack :gap="3" :align="'center'" :justify="'between'" class="inventory-filter-row">
                 <HStack :gap="2" :align="'center'" class="inventory-filter-left">
-                  <div class="search-input">
-                    <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
-                  </div>
-                  <Button label="Filters" variant="ghost" size="sm">
-                    <template #icon><Icon name="heroicons:tag" size="sm" /></template>
-                  </Button>
+                  <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
+                  <OverflowList :items="FILTER_ITEMS" :gap="2">
+                    <template #item="{ item }">
+                      <Selector
+                        :label="item.label"
+                        is-label-hidden
+                        :placeholder="item.label"
+                        size="sm"
+                        :start-icon="FILTER_BY_ID[item.id ?? ''].icon"
+                        :model-value="null"
+                        :options="FILTER_BY_ID[item.id ?? ''].options"
+                      />
+                    </template>
+                    <template #overflow>
+                      <Button label="Filters" variant="ghost" size="sm">
+                        <template #icon><Icon name="heroicons:tag" size="sm" /></template>
+                      </Button>
+                    </template>
+                  </OverflowList>
                 </HStack>
                 <HStack :gap="1" :align="'center'">
                   <Button variant="ghost" size="sm" is-icon-only label="List view" tooltip="List view">
@@ -466,9 +545,10 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 .inventory-header { padding-block: var(--astryx-spacing-6); padding-inline: var(--astryx-spacing-6); }
 .inventory-filter-row { padding-block: var(--astryx-spacing-4); padding-inline: var(--astryx-spacing-6); width: 100%; overflow-x: auto; }
 .inventory-filter-left { flex: 1; min-width: 0; }
-.search-input { flex: 1; min-width: 0; max-width: 240px; }
 .activity-icon { width: 32px; height: 32px; border-radius: var(--astryx-radius-full); background: var(--astryx-color-background-muted); color: var(--astryx-color-text-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .inventory-banner-wrap { padding-inline: var(--astryx-spacing-6); padding-bottom: var(--astryx-spacing-4); }
+/* 原版 Table 默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算。 */
+.inventory-table-wrap :deep(.astryx-table) { table-layout: fixed; }
 .inventory-table-wrap { padding-inline: var(--astryx-spacing-6); padding-block-end: var(--astryx-spacing-2); }
 .chat-card { background: var(--astryx-color-background-surface); min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
 .chat-header { padding: var(--astryx-spacing-4); }

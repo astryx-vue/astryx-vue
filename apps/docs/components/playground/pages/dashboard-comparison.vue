@@ -99,7 +99,7 @@ const ACTIVE_SERIES = [
 ] as const
 
 /** 和原版一样高 280；`width` 跟着 svg 的实际宽度走，viewBox 和像素一比一，图表撑满卡片。 */
-const CHART = reactive({ width: 720, height: 280, left: 52, right: 12, top: 5, bottom: 26 })
+const CHART = reactive({ width: 720, height: 280, left: 40, right: 12, top: 5, bottom: 35 })
 const chartEl = ref<SVGSVGElement | null>(null)
 let chartObserver: ResizeObserver | null = null
 onMounted(() => {
@@ -257,15 +257,32 @@ const BREAKDOWNS = [
   { title: 'Device', data: DEVICE_DATA },
 ]
 
+/** 迷你折线：高 48，上留 4；纵轴从 0 起、上界取整到下一个整百（和原版的图表默认一致）；宽度量真实像素。 */
+const SPARK = { h: 48, top: 4 }
+const sparkWidth = ref(392)
+let sparkObserver: ResizeObserver | null = null
+
+function bindSpark(element: unknown): void {
+  sparkObserver?.disconnect()
+  sparkObserver = null
+  if (!(element instanceof SVGSVGElement) || typeof ResizeObserver === 'undefined')
+    return
+  sparkObserver = new ResizeObserver(([entry]) => {
+    if (entry && entry.contentRect.width > 0)
+      sparkWidth.value = entry.contentRect.width
+  })
+  sparkObserver.observe(element)
+}
+onBeforeUnmount(() => sparkObserver?.disconnect())
+
 function sparkPath(data: number[]) {
-  const max = Math.max(...data)
-  const min = Math.min(...data)
-  const span = max - min || 1
+  const top = Math.ceil(Math.max(...data) / 100) * 100
+  const inner = SPARK.h - SPARK.top
   return data.map((value, i) => {
-    const x = (i / (data.length - 1)) * 100
-    const y = 32 - ((value - min) / span) * 32
-    return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`
-  }).join(' ')
+    const x = (i / (data.length - 1)) * sparkWidth.value
+    const y = SPARK.top + inner * (1 - value / top)
+    return `${i === 0 ? 'M' : 'L'}${x.toFixed(3)},${y.toFixed(3)}`
+  }).join('')
 }
 
 function deltaColor(metric: Metric) {
@@ -284,7 +301,7 @@ function directionColor(metric: Metric) {
 <template>
   <Layout height="fill" :content-width="1440">
     <template #header>
-      <LayoutHeader has-divider :padding="6">
+      <LayoutHeader has-divider>
         <HStack :gap="3" align="center" justify="between" wrap="wrap">
           <VStack :gap="0">
             <Heading :level="1">
@@ -314,7 +331,7 @@ function directionColor(metric: Metric) {
           <HStack :gap="3" align="center" justify="between">
             <HStack :gap="3" align="center">
               <span class="section-tile">
-                <Icon icon="i-carbon-user" size="sm" color="secondary" />
+                <Icon name="heroicons:users" size="sm" color="secondary" />
               </span>
               <Heading :level="2">
                 Key metrics
@@ -325,7 +342,7 @@ function directionColor(metric: Metric) {
             </Text>
           </HStack>
           <Grid :columns="{ minWidth: 240, repeat: 'fit' }" :gap="3" class="metrics-grid">
-            <Card v-for="metric in OVERVIEW_METRICS" :key="metric.key" :padding="4">
+            <Card v-for="(metric, index) in OVERVIEW_METRICS" :key="metric.key" :padding="4">
               <VStack :gap="4">
                 <VStack :gap="1">
                   <Text type="label" color="secondary">
@@ -342,13 +359,12 @@ function directionColor(metric: Metric) {
                     />
                   </HStack>
                 </VStack>
-                <svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true">
+                <svg :ref="index === 0 ? bindSpark : undefined" class="spark" :viewBox="`0 0 ${sparkWidth} ${SPARK.h}`" aria-hidden="true">
                   <path
                     :d="sparkPath(metric.spark)"
                     fill="none"
                     :stroke="deltaColor(metric)"
                     stroke-width="1.25"
-                    vector-effect="non-scaling-stroke"
                   />
                 </svg>
                 <Grid :columns="2" :gap="2">
@@ -386,7 +402,7 @@ function directionColor(metric: Metric) {
           <HStack :gap="3" align="center" justify="between">
             <HStack :gap="3" align="center">
               <span class="section-tile">
-                <Icon icon="i-carbon-cursor-1" size="sm" color="secondary" />
+                <Icon name="heroicons:cursor-arrow-rays" size="sm" color="secondary" />
               </span>
               <Heading :level="2">
                 Devices
@@ -401,62 +417,66 @@ function directionColor(metric: Metric) {
               <Text type="label">
                 Daily active users by device type
               </Text>
-              <svg ref="chartEl" class="trend-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Daily active users by device type">
-                <defs>
-                  <linearGradient id="au-mobile" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" :stop-color="COLORS.blue" stop-opacity="0.3" />
-                    <stop offset="95%" :stop-color="COLORS.blue" stop-opacity="0.04" />
-                  </linearGradient>
-                  <linearGradient id="au-desktop" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" :stop-color="COLORS.teal" stop-opacity="0.3" />
-                    <stop offset="95%" :stop-color="COLORS.teal" stop-opacity="0.04" />
-                  </linearGradient>
-                </defs>
+              <VStack :gap="3">
+                <svg ref="chartEl" class="trend-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Daily active users by device type">
+                  <defs>
+                    <linearGradient id="au-mobile" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" :stop-color="COLORS.blue" stop-opacity="0.3" />
+                      <stop offset="95%" :stop-color="COLORS.blue" stop-opacity="0.04" />
+                    </linearGradient>
+                    <linearGradient id="au-desktop" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" :stop-color="COLORS.teal" stop-opacity="0.3" />
+                      <stop offset="95%" :stop-color="COLORS.teal" stop-opacity="0.04" />
+                    </linearGradient>
+                  </defs>
 
-                <line
-                  v-for="tick in Y_TICKS"
-                  :key="`grid-${tick}`"
-                  :x1="CHART.left"
-                  :x2="CHART.width - CHART.right"
-                  :y1="chartY(tick)"
-                  :y2="chartY(tick)"
-                  class="chart-grid"
-                />
-                <text
-                  v-for="tick in Y_TICKS"
-                  :key="`y-${tick}`"
-                  :x="CHART.left - 8"
-                  :y="chartY(tick) + 4"
-                  text-anchor="end"
-                  class="chart-tick"
-                >
-                  {{ tick }}K
-                </text>
-                <text
-                  v-for="tick in X_TICKS"
-                  :key="`x-${tick}`"
-                  :x="chartX(tick)"
-                  :y="CHART.height - 6"
-                  text-anchor="middle"
-                  class="chart-tick"
-                >
-                  {{ ACTIVE_TREND[tick].label }}
-                </text>
+                  <line
+                    v-for="tick in Y_TICKS"
+                    :key="`grid-${tick}`"
+                    :x1="CHART.left"
+                    :x2="CHART.width - CHART.right"
+                    :y1="chartY(tick)"
+                    :y2="chartY(tick)"
+                    class="chart-grid"
+                  />
+                  <text
+                    v-for="tick in Y_TICKS"
+                    :key="`y-${tick}`"
+                    :x="CHART.left - 8"
+                    :y="Math.max(chartY(tick), 9)"
+                    text-anchor="end"
+                    dominant-baseline="central"
+                    class="chart-tick"
+                  >
+                    {{ tick }}K
+                  </text>
+                  <text
+                    v-for="tick in X_TICKS"
+                    :key="`x-${tick}`"
+                    :x="Math.min(chartX(tick), CHART.width - CHART.right - 20)"
+                    :y="CHART.height - CHART.bottom + 13"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                    class="chart-tick"
+                  >
+                    {{ ACTIVE_TREND[tick].label }}
+                  </text>
 
-                <path :d="areaPath(row => row.mobile)" fill="url(#au-mobile)" />
-                <path :d="areaPath(row => row.desktop)" fill="url(#au-desktop)" />
-                <path :d="linePath(row => row.tablet)" fill="none" :stroke="COLORS.orange" stroke-width="1.5" />
-                <path :d="linePath(row => row.mobile)" fill="none" :stroke="COLORS.blue" stroke-width="1.5" />
-                <path :d="linePath(row => row.desktop)" fill="none" :stroke="COLORS.teal" stroke-width="1.5" />
-              </svg>
-              <HStack :gap="5" align="center" wrap="wrap">
-                <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
-                  <span class="legend-dot" :style="{ background: series.color }" />
-                  <Text type="supporting" color="secondary">
-                    {{ series.label }}
-                  </Text>
+                  <path :d="areaPath(row => row.mobile)" fill="url(#au-mobile)" />
+                  <path :d="linePath(row => row.mobile)" fill="none" :stroke="COLORS.blue" stroke-width="1.5" />
+                  <path :d="areaPath(row => row.desktop)" fill="url(#au-desktop)" />
+                  <path :d="linePath(row => row.desktop)" fill="none" :stroke="COLORS.teal" stroke-width="1.5" />
+                  <path :d="linePath(row => row.tablet)" fill="none" :stroke="COLORS.orange" stroke-width="1.5" />
+                </svg>
+                <HStack :gap="5" align="center" wrap="wrap">
+                  <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
+                    <span class="legend-dot" :style="{ background: series.color }" />
+                    <Text type="supporting" color="secondary">
+                      {{ series.label }}
+                    </Text>
+                  </HStack>
                 </HStack>
-              </HStack>
+              </VStack>
             </VStack>
           </Card>
         </VStack>
@@ -467,7 +487,7 @@ function directionColor(metric: Metric) {
           <HStack :gap="3" align="center" justify="between">
             <HStack :gap="3" align="center">
               <span class="section-tile">
-                <Icon icon="i-carbon-user-multiple" size="sm" color="secondary" />
+                <Icon name="heroicons:users" size="sm" color="secondary" />
               </span>
               <Heading :level="2">
                 Audience demographics
@@ -478,7 +498,7 @@ function directionColor(metric: Metric) {
             </Text>
           </HStack>
           <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
-            <Card v-for="breakdown in BREAKDOWNS" :key="breakdown.title" :padding="4">
+            <Card v-for="breakdown in BREAKDOWNS" :key="breakdown.title" :padding="3">
               <VStack :gap="4">
                 <Heading :level="4" :accessibility-level="3">
                   {{ breakdown.title }}
@@ -544,7 +564,7 @@ function directionColor(metric: Metric) {
 .trend-chart { width: 100%; height: 280px; display: block; overflow: visible; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
 .chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
-.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
-.breakdown-bar { display: flex; width: 100%; height: 12px; border-radius: 4px; overflow: hidden; }
+.legend-dot { width: 12px; height: 12px; border-radius: 0; flex: none; }
+.breakdown-bar { display: flex; width: 100%; height: 24px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
 </style>

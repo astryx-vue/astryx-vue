@@ -477,11 +477,11 @@ function trendGeometry(trend: TrendSeries) {
                     <text :x="CHART.padLeft - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle" class="chart-tick">{{ tick.value }}</text>
                   </g>
                   <text
-                    v-for="tick in trendGeometry(trend).xTicks"
+                    v-for="(tick, tickIndex) in trendGeometry(trend).xTicks"
                     :key="tick.label"
                     :x="tick.x"
                     :y="CHART.h - 8"
-                    :text-anchor="tick.label === 'W1' ? 'start' : tick.label === 'W12' ? 'end' : 'middle'"
+                    :text-anchor="tickIndex === trendGeometry(trend).xTicks.length - 1 ? 'end' : 'middle'"
                     class="chart-tick"
                   >{{ tick.label }}</text>
                   <path v-if="trend.kind === 'area'" :d="trendGeometry(trend).area" :fill="`url(#grad-${trend.key})`" />
@@ -556,8 +556,21 @@ function trendGeometry(trend: TrendSeries) {
   border-radius: 2px;
 }
 
+/* 指标卡按视口宽度分三档：1 列、2 列（768–1199）、3 列（≥1200），档位互不重叠。 */
 .scorecard-grid {
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .scorecard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .scorecard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 .page-content {
   padding-bottom: var(--astryx-spacing-10);

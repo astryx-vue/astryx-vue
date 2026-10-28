@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, h, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import {
   Badge,
   Card,
   Divider,
+  EmptyState,
   Grid,
   Heading,
   HStack,
@@ -18,6 +19,7 @@ import {
   SegmentedControl,
   SegmentedControlItem,
   Selector,
+  StackItem,
   StatusDot,
   Text,
   Timestamp,
@@ -69,41 +71,62 @@ const KPI_BY_ENV: Record<Environment, Array<{ key: string, label: string, value:
 }
 
 const SPARKLINES: Record<string, number[]> = {
-  health: [97.6, 97.7, 98, 96.5, 97.3, 97, 96.8, 97.2, 95, 96.3, 96.8, 97.1, 96.7, 97.3, 96.1, 96.9, 97.2, 96.5, 97.4, 98.6],
-  error: [0.62, 0.98, 1.02, 2.41, 1.57, 0.96, 1.43, 1.36, 1.33, 1.48, 1.41, 1.36, 1.35, 1.19, 1.27, 1.2, 1.26, 1.09, 1.84, 1.75],
-  latency: [322, 371, 313, 617, 377, 399, 421, 365, 797, 477, 380, 569, 389, 417, 376, 871, 411, 437, 512, 503],
-  availability: [99.891, 99.956, 99.882, 99.696, 99.913, 99.948, 99.921, 99.94, 99.551, 99.891, 99.926, 99.912, 99.739, 99.912, 99.426, 99.928, 99.856, 99.98, 99.98, 99.98],
+  health: [97.6, 97.6, 97.7, 97.6, 98, 97.4, 96.5, 97.3, 97.3, 97, 97, 97.6, 96.8, 97.2, 91.7, 92.2, 95, 96.3, 96.5, 96.4, 96.8, 95.9, 96.7, 96.7, 96.4, 97.1, 97, 97, 96.1, 96.7, 96, 95.7, 96.9, 97.3, 96.1, 95.8, 96.9, 96.2, 96.6, 96.7, 97.2, 92.7, 96.5, 97.2, 96.5, 95.8, 96, 97.4, 96.8, 96.9, 96.4, 96.9, 97.3, 96.2, 97.3, 96.2, 97, 97.3, 89.5, 90.1, 91.8, 95.1, 96.4, 97.7, 97.2, 97.8, 97, 97.5, 97.1, 98, 96.8, 96.8, 97.7, 97.7, 96.8, 97.2, 93.2, 95.3, 97.2, 97.7, 97.3, 98.2, 97.6, 97.3, 97, 97.4, 96.5, 98, 96.9, 97.1, 96.5, 96.4, 97.6, 87.4, 90, 94.1, 97.1, 97.1, 97.5, 97.6, 96.9, 96.9, 96.8, 96.5, 95.8, 96.7, 96.7, 97.2, 91.7, 91.5, 92.3, 95.3, 96.9, 97.4, 96.8, 97.9, 97.5, 98.3, 97.9, 98.6],
+  error: [0.62, 0.64, 0.98, 0.82, 0.86, 0.83, 1.02, 1.29, 1.24, 2.41, 1.57, 0.96, 0.91, 1.43, 1.36, 1.16, 1.33, 0.95, 1.18, 1.3, 1.48, 1.05, 1.41, 1.06, 1.03, 1.36, 1, 3.71, 2.85, 1.7, 1.41, 1.29, 1.35, 1.35, 1.19, 1.27, 1.2, 0.91, 0.95, 1.06, 1.26, 1.28, 1.19, 1.09, 2.21, 1.52, 0.83, 0.94, 1.17, 0.81, 1.11, 1.24, 1.18, 0.76, 1.09, 1.08, 1.22, 1.02, 1, 5.18, 4.39, 3.74, 2.23, 1, 1.3, 1.53, 1.42, 1.16, 1.18, 1.52, 1.45, 1.34, 3.13, 2.1, 1.66, 1.74, 1.69, 1.33, 1.43, 1.73, 1.73, 1.51, 1.63, 1.55, 1.56, 1.74, 2, 1.46, 5.44, 4.33, 2.3, 1.99, 1.77, 1.82, 1.98, 1.86, 1.88, 1.51, 1.42, 1.82, 1.71, 3.88, 2.22, 1.72, 1.65, 1.64, 1.42, 1.69, 1.39, 1.81, 1.66, 1.3, 1.32, 1.75, 6.22, 5.03, 2.35, 1.39, 1.25, 1.84],
+  latency: [322, 371, 287, 357, 313, 353, 320, 617, 421, 363, 377, 399, 350, 401, 421, 420, 430, 365, 401, 797, 635, 477, 365, 412, 380, 421, 380, 411, 393, 401, 436, 378, 376, 569, 389, 419, 417, 342, 347, 376, 385, 347, 393, 328, 328, 367, 304, 871, 812, 707, 411, 317, 316, 367, 331, 320, 354, 349, 326, 309, 323, 631, 396, 306, 295, 293, 355, 334, 324, 372, 1012, 850, 489, 355, 324, 346, 353, 406, 365, 362, 377, 348, 437, 423, 664, 437, 397, 413, 402, 427, 404, 438, 491, 479, 447, 500, 440, 903, 776, 555, 476, 506, 439, 461, 502, 496, 485, 474, 470, 503, 1198, 1080, 930, 609, 456, 507, 426, 451, 427, 512],
+  availability: [99.891, 99.956, 99.885, 99.964, 99.882, 99.92, 99.696, 99.897, 99.913, 99.948, 99.918, 99.942, 99.921, 99.928, 99.94, 99.902, 99.551, 99.853, 99.853, 99.891, 99.887, 99.926, 99.912, 99.911, 99.739, 99.873, 99.877, 99.85, 99.844, 99.895, 99.854, 99.851, 99.912, 99.426, 99.593, 99.821, 99.851, 99.928, 99.767, 99.852, 99.854, 99.866, 99.87, 99.929, 99.856, 99.925, 99.672, 99.882, 99.926, 99.865, 99.944, 99.941, 99.807, 99.91, 99.892, 99.922, 99.937, 99.338, 99.491, 99.743, 99.925, 99.871, 99.95, 99.909, 99.949, 99.687, 99.844, 99.911, 99.93, 99.882, 99.894, 99.536, 99.833, 99.867, 99.927, 99.88, 99.883, 99.926, 99.895, 99.653, 99.827, 99.906, 99.941, 99.893, 99.863, 99.916, 99.781, 99.885, 99.846, 99.896, 99.876, 99.485, 99.534, 99.738, 99.832, 99.241, 99.321, 99.422, 99.698, 99.828, 99.824, 99.837, 99.828, 99.61, 99.761, 99.878, 99.843, 99.845, 99.529, 99.75, 99.838, 99.83, 99.423, 99.728, 99.817, 99.827, 99.811, 99.871, 99.925, 99.98],
 }
 
+/** 迷你折线只取最近一段，随时间窗口变：1h 取 60 点，1d 取 90 点，7d 取 120 点。 */
+const SPARK_LEN: Record<TimeWindow, number> = { '1h': 60, '1d': 90, '7d': 120 }
+
+/** 迷你折线的颜色用原版的「文字前景」那一档（浅色深绿 / 深色浅绿），站点里没有对应变量，所以直接写 light-dark。 */
 const STATUS_STROKE: Record<HealthStatus, string> = {
-  healthy: 'var(--astryx-color-success, #0B991F)',
-  warning: 'var(--astryx-color-warning, #B25000)',
-  critical: 'var(--astryx-color-error, #D6002A)',
+  healthy: 'light-dark(#09441F, #A5F690)',
+  warning: 'light-dark(#753F07, #FBCE03)',
+  critical: 'light-dark(#7B0210, #FFB2B8)',
 }
+
+type AlertState = 'firing' | 'acknowledged' | 'resolved'
 
 const ALERTS = [
-  { id: 'AL-8842', severity: 'critical' as HealthStatus, title: 'search-indexer 5xx rate above 5%', service: 'search-indexer · us-east-1', at: '2026-06-30T21:14:00Z', state: 'firing' },
-  { id: 'AL-8841', severity: 'warning' as HealthStatus, title: 'checkout-api p99 latency above 500ms', service: 'checkout-api · us-east-1', at: '2026-06-30T21:02:00Z', state: 'firing' },
-  { id: 'AL-8839', severity: 'warning' as HealthStatus, title: 'notifications queue depth climbing', service: 'notifications · ap-southeast-1', at: '2026-06-30T20:58:00Z', state: 'firing' },
-  { id: 'AL-8840', severity: 'warning' as HealthStatus, title: 'edge-cdn cache hit ratio degraded', service: 'edge-cdn · eu-west-1', at: '2026-06-30T20:41:00Z', state: 'acknowledged' },
-  { id: 'AL-8838', severity: 'critical' as HealthStatus, title: 'auth error rate spike in dev cluster', service: 'auth · us-west-2', at: '2026-06-30T20:27:00Z', state: 'acknowledged' },
-  { id: 'AL-8837', severity: 'warning' as HealthStatus, title: 'payments settlement job heartbeat missed', service: 'payments · us-east-1', at: '2026-06-30T20:12:00Z', state: 'resolved' },
+  { id: 'AL-8842', severity: 'critical' as HealthStatus, title: 'search-indexer 5xx rate above 5%', service: 'search-indexer · us-east-1', at: '2026-06-30T21:14:00Z', state: 'firing' as AlertState },
+  { id: 'AL-8841', severity: 'warning' as HealthStatus, title: 'checkout-api p99 latency above 500ms', service: 'checkout-api · us-east-1', at: '2026-06-30T21:02:00Z', state: 'firing' as AlertState },
+  { id: 'AL-8840', severity: 'warning' as HealthStatus, title: 'edge-cdn cache hit ratio degraded', service: 'edge-cdn · eu-west-1', at: '2026-06-30T20:41:00Z', state: 'acknowledged' as AlertState },
+  { id: 'AL-8839', severity: 'critical' as HealthStatus, title: 'auth error rate spike in dev cluster', service: 'auth · us-west-2', at: '2026-06-30T20:18:00Z', state: 'acknowledged' as AlertState },
+  { id: 'AL-8838', severity: 'warning' as HealthStatus, title: 'notifications queue depth climbing', service: 'notifications · ap-southeast-1', at: '2026-06-30T19:55:00Z', state: 'firing' as AlertState },
+  { id: 'AL-8837', severity: 'warning' as HealthStatus, title: 'payments settlement job heartbeat missed', service: 'payments · us-east-1', at: '2026-06-30T18:30:00Z', state: 'resolved' as AlertState },
 ]
+
+const ALERT_ORDER: AlertState[] = ['firing', 'acknowledged', 'resolved']
+const ALERT_STATE_TOKEN: Record<AlertState, { label: string, color: 'red' | 'yellow' | 'green' }> = {
+  firing: { label: 'Firing', color: 'red' },
+  acknowledged: { label: 'Ack', color: 'yellow' },
+  resolved: { label: 'Resolved', color: 'green' },
+}
 
 const HOST_ROWS = [
   { id: '1', service: 'checkout-api', environment: 'production' as Environment, region: 'us-east-1', instances: 24, rpm: 9240, errorRate: 2.1, p99: 512, status: 'warning' as HealthStatus },
-  { id: '2', service: 'search-indexer', environment: 'production', region: 'us-east-1', instances: 16, rpm: 4120, errorRate: 5.8, p99: 1180, status: 'critical' },
-  { id: '3', service: 'edge-cdn', environment: 'production', region: 'eu-west-1', instances: 30, rpm: 14800, errorRate: 1.6, p99: 402, status: 'warning' },
-  { id: '4', service: 'search-indexer', environment: 'production', region: 'ap-southeast-1', instances: 8, rpm: 2000, errorRate: 0.9, p99: 342, status: 'healthy' },
-  { id: '5', service: 'notifications', environment: 'production', region: 'ap-southeast-1', instances: 6, rpm: 1200, errorRate: 0.5, p99: 268, status: 'healthy' },
-  { id: '6', service: 'checkout-api', environment: 'production', region: 'eu-west-1', instances: 12, rpm: 4000, errorRate: 0.4, p99: 236, status: 'healthy' },
+  { id: '2', service: 'checkout-api', environment: 'production' as Environment, region: 'us-west-2', instances: 18, rpm: 6110, errorRate: 0.3, p99: 214, status: 'healthy' as HealthStatus },
+  { id: '3', service: 'checkout-api', environment: 'production' as Environment, region: 'eu-west-1', instances: 12, rpm: 3980, errorRate: 0.4, p99: 236, status: 'healthy' as HealthStatus },
+  { id: '4', service: 'search-indexer', environment: 'production' as Environment, region: 'us-east-1', instances: 16, rpm: 4120, errorRate: 5.8, p99: 1180, status: 'critical' as HealthStatus },
+  { id: '5', service: 'search-indexer', environment: 'production' as Environment, region: 'ap-southeast-1', instances: 8, rpm: 2040, errorRate: 0.9, p99: 342, status: 'healthy' as HealthStatus },
+  { id: '6', service: 'payments', environment: 'production' as Environment, region: 'us-east-1', instances: 20, rpm: 5310, errorRate: 0.2, p99: 188, status: 'healthy' as HealthStatus },
+  { id: '7', service: 'payments', environment: 'production' as Environment, region: 'eu-west-1', instances: 10, rpm: 2760, errorRate: 0.2, p99: 205, status: 'healthy' as HealthStatus },
+  { id: '8', service: 'edge-cdn', environment: 'production' as Environment, region: 'eu-west-1', instances: 30, rpm: 14820, errorRate: 1.6, p99: 402, status: 'warning' as HealthStatus },
+  { id: '9', service: 'auth', environment: 'production' as Environment, region: 'us-west-2', instances: 14, rpm: 4530, errorRate: 0.1, p99: 96, status: 'healthy' as HealthStatus },
+  { id: '10', service: 'notifications', environment: 'production' as Environment, region: 'ap-southeast-1', instances: 6, rpm: 1210, errorRate: 0.5, p99: 268, status: 'healthy' as HealthStatus },
+  { id: '11', service: 'checkout-api', environment: 'staging' as Environment, region: 'us-east-1', instances: 3, rpm: 420, errorRate: 0.4, p99: 198, status: 'healthy' as HealthStatus },
+  { id: '12', service: 'search-indexer', environment: 'staging' as Environment, region: 'us-east-1', instances: 2, rpm: 180, errorRate: 1.1, p99: 356, status: 'warning' as HealthStatus },
+  { id: '13', service: 'checkout-api', environment: 'development' as Environment, region: 'us-west-2', instances: 1, rpm: 44, errorRate: 3.2, p99: 274, status: 'warning' as HealthStatus },
+  { id: '14', service: 'auth', environment: 'development' as Environment, region: 'us-west-2', instances: 1, rpm: 38, errorRate: 6.4, p99: 512, status: 'critical' as HealthStatus },
 ]
 
 // ── 图表 ──────────────────────────────────────────────────────────────────────
 // 内联 SVG：锯齿状时间序列 + 坐标轴 + 图例，形状由固定种子的伪随机生成。
 
 /** 两张图并排、一样宽；`width` 跟着第一张图的实际宽度走，viewBox 和像素一比一。 */
-const CHART = reactive({ width: 640, height: 240, left: 52, right: 8, top: 8, bottom: 26 })
+const CHART = reactive({ width: 640, height: 280, left: 56, right: 16, top: 12, bottom: 34 })
 const chartEl = ref<SVGSVGElement | null>(null)
 let chartObserver: ResizeObserver | null = null
 onMounted(() => {
@@ -162,8 +185,80 @@ function chartPath(values: number[], max: number) {
   return values.map((v, i) => `${i === 0 ? 'M' : 'L'}${chartX(i).toFixed(1)},${chartY(v, max).toFixed(1)}`).join(' ')
 }
 
-function rpmLabel(rpm: number) {
-  return `${(rpm / 1000).toFixed(1)}k rpm`
+const SEVERITY_RANK: Record<HealthStatus, number> = { critical: 0, warning: 1, healthy: 2 }
+const STATUS_LABEL: Record<HealthStatus, string> = { healthy: 'Healthy', warning: 'Degraded', critical: 'Down' }
+const STATUS_DOT: Record<HealthStatus, 'success' | 'warning' | 'error'> = { healthy: 'success', warning: 'warning', critical: 'error' }
+
+const alertGroups = ALERT_ORDER
+  .map(state => ({ state, items: ALERTS.filter(alert => alert.state === state) }))
+  .filter(group => group.items.length > 0)
+
+function errorColor(rate: number): 'red' | 'yellow' | 'green' {
+  if (rate >= 5)
+    return 'red'
+  return rate >= 1.5 ? 'yellow' : 'green'
+}
+
+function formatRpm(rpm: number): string {
+  return rpm >= 1000 ? `${(rpm / 1000).toFixed(1)}k rpm` : `${rpm} rpm`
+}
+
+// ============= 90 天可用性 =============
+
+const UPTIME_DAYS = 90
+type UptimeStatus = 'operational' | 'degraded' | 'down'
+
+/** 可用性条的三种颜色：用状态点那套填充色（图例和条一致），不用文字前景色，那套在站点里偏深。 */
+const UPTIME_COLOR: Record<UptimeStatus, string> = {
+  operational: 'var(--astryx-status-dot-success-background, #198100)',
+  degraded: 'var(--astryx-status-dot-warning-background, #ffce2f)',
+  down: 'var(--astryx-status-dot-error-background, #c9303a)',
+}
+const UPTIME_LABEL: Record<UptimeStatus, string> = {
+  operational: 'Operational',
+  degraded: 'Partial degradation',
+  down: 'Downtime',
+}
+const UPTIME_ORDER: UptimeStatus[] = ['operational', 'degraded', 'down']
+const DAY_UPTIME: Record<UptimeStatus, number> = { operational: 100, degraded: 98.4, down: 82 }
+const UPTIME_ENV_RISK: Record<Environment, number> = { production: 1, staging: 1.6, development: 3 }
+const UPTIME_STATUS_RISK: Record<HealthStatus, number> = { healthy: 1, warning: 3.5, critical: 7 }
+const UPTIME_TODAY: Record<HealthStatus, UptimeStatus> = { healthy: 'operational', warning: 'degraded', critical: 'down' }
+
+interface ServiceUptime {
+  service: string
+  status: HealthStatus
+  days: UptimeStatus[]
+  uptime: number
+}
+
+/** 每个服务一串 90 天的状态：风险按环境和当前状态放大，种子固定所以每次渲染都一样。 */
+function buildUptime(service: string, environment: Environment, status: HealthStatus): ServiceUptime {
+  let seed = 7
+  for (let i = 0; i < service.length; i++)
+    seed = (seed * 31 + service.charCodeAt(i)) % 9973
+  const risk = UPTIME_ENV_RISK[environment] * UPTIME_STATUS_RISK[status]
+  const downCount = Math.round(UPTIME_DAYS * Math.min(0.09, 0.005 * risk) * (0.6 + 0.8 * noise(seed, 3.7)))
+  const degradedCount = Math.round(UPTIME_DAYS * Math.min(0.32, 0.02 * risk) * (0.6 + 0.8 * noise(seed, 5.9)))
+  const ranked = [...Array.from({ length: UPTIME_DAYS }).keys()].sort((a, b) => noise(b, seed) - noise(a, seed))
+  const days: UptimeStatus[] = Array.from({ length: UPTIME_DAYS }, () => 'operational')
+  for (let k = 0; k < downCount; k++)
+    days[ranked[k]] = 'down'
+  for (let k = downCount; k < downCount + degradedCount; k++)
+    days[ranked[k]] = 'degraded'
+  days[UPTIME_DAYS - 1] = UPTIME_TODAY[status]
+  const cleanDay = DAY_UPTIME.operational - 0.02 - noise(seed, 11.3) * 0.06
+  let served = 0
+  for (let i = 0; i < UPTIME_DAYS; i++)
+    served += days[i] === 'operational' ? cleanDay - noise(i, seed + 1) * 0.02 : DAY_UPTIME[days[i]]
+  return { service, status, days, uptime: served / UPTIME_DAYS }
+}
+
+function dayLabel(i: number): string {
+  const ago = UPTIME_DAYS - 1 - i
+  if (ago === 0)
+    return 'Today'
+  return ago === 1 ? 'Yesterday' : `${ago} days ago`
 }
 
 const timeWindow = ref<TimeWindow>('1d')
@@ -173,8 +268,90 @@ const isNarrow = useMediaQuery('(max-width: 1024px)')
 
 const kpis = computed(() => KPI_BY_ENV[environment.value])
 const rows = computed(() => HOST_ROWS.filter(r => r.environment === environment.value && (region.value === 'all' || r.region === region.value)))
+/** 同一服务取最差状态，按名字排序。 */
+const uptimeEntries = computed(() => {
+  const worst = new Map<string, HealthStatus>()
+  for (const row of rows.value) {
+    const previous = worst.get(row.service)
+    if (previous === undefined || SEVERITY_RANK[row.status] < SEVERITY_RANK[previous])
+      worst.set(row.service, row.status)
+  }
+  return [...worst.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([service, status]) => buildUptime(service, environment.value, status))
+})
+
+const sortedRows = computed(() => [...rows.value].sort((a, b) =>
+  SEVERITY_RANK[a.status] - SEVERITY_RANK[b.status] || b.errorRate - a.errorRate,
+))
+
 const breakdownContext = computed(() => `${ENV_OPTIONS.find(e => e.value === environment.value)?.label} · ${REGION_OPTIONS.find(r => r.value === region.value)?.label}`)
 const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').length)
+
+/** 右栏的两个区块：Active alerts 和 Service breakdown。宽屏进 Layout 的 end 槽，窄屏放到主区底部。 */
+/** 渲染函数里造出来的节点拿不到 scoped 样式的属性，所以区块头的底色和吸顶都用内联样式。 */
+const RAIL_HEADER_STYLE = { backgroundColor: 'var(--astryx-color-background-muted)' }
+const RAIL_STICKY_STYLE = { position: 'sticky', insetBlockStart: 0, zIndex: 1, backgroundColor: 'var(--astryx-color-background-surface)' } as const
+
+const AlertsFeed = defineComponent({
+  props: { sticky: { type: Boolean, default: false } },
+  setup(props) {
+    return () => h(VStack, { gap: 0 }, () => [
+      h(VStack, { gap: 0, style: props.sticky ? RAIL_STICKY_STYLE : undefined }, () => [
+        h(VStack, { gap: 1, padding: 4, style: RAIL_HEADER_STYLE }, () => [
+          h(HStack, { gap: 2, vAlign: 'center' }, () => [
+            h(Icon, { name: 'heroicons:bell-alert', size: 'sm', color: firingCount.value > 0 ? 'error' : 'secondary' }),
+            h(StackItem, { size: 'fill' }, () => h(Heading, { level: 3 }, () => 'Active alerts')),
+            h(Badge, { label: `${firingCount.value} firing`, variant: firingCount.value > 0 ? 'error' : 'neutral' }),
+          ]),
+          h(Text, { type: 'supporting', color: 'secondary' }, () => `${ALERTS.length} in the last 24h · newest first`),
+        ]),
+        h(Divider),
+      ]),
+      ...alertGroups.map(group => h(List, { key: group.state, density: 'compact', hasDividers: true }, () => group.items.map(alert =>
+        h(ListItem, { key: alert.id, label: alert.title, description: alert.service }, {
+          startContent: () => h(StatusDot, { variant: STATUS_DOT[alert.severity], label: alert.severity, isPulsing: alert.state === 'firing' && alert.severity === 'critical' }),
+          endContent: () => h(VStack, { gap: 1, hAlign: 'end' }, () => [
+            h(Token, { size: 'sm', color: ALERT_STATE_TOKEN[alert.state].color, label: ALERT_STATE_TOKEN[alert.state].label }),
+            h(Timestamp, { value: alert.at, format: 'relative', color: 'secondary' }),
+          ]),
+        }),
+      ))),
+    ])
+  },
+})
+
+const ServiceBreakdown = defineComponent({
+  props: { sticky: { type: Boolean, default: false } },
+  setup(props) {
+    return () => h(VStack, { gap: 0 }, () => [
+      h(VStack, { gap: 0, style: props.sticky ? RAIL_STICKY_STYLE : undefined }, () => [
+        h(VStack, { gap: 1, padding: 4, style: RAIL_HEADER_STYLE }, () => [
+          h(HStack, { gap: 2, vAlign: 'center' }, () => [
+            h(Icon, { name: 'heroicons:server-stack', size: 'sm', color: 'secondary' }),
+            h(StackItem, { size: 'fill' }, () => h(Heading, { level: 3 }, () => 'Service breakdown')),
+            h(Badge, { label: String(rows.value.length), variant: 'neutral' }),
+          ]),
+          h(Text, { type: 'supporting', color: 'secondary' }, () => breakdownContext.value),
+        ]),
+        h(Divider),
+      ]),
+      h(List, { density: 'compact', hasDividers: true }, () => sortedRows.value.map(row =>
+        h(ListItem, { key: row.id, label: row.service, description: `${row.region} · ${row.instances} hosts · ${formatRpm(row.rpm)}` }, {
+          startContent: () => h(StatusDot, { variant: STATUS_DOT[row.status], label: STATUS_LABEL[row.status], isPulsing: row.status === 'critical' }),
+          endContent: () => h(VStack, { gap: 1, hAlign: 'end' }, () => [
+            h(HStack, { gap: 1, vAlign: 'center' }, () => [
+              h(Text, { type: 'supporting', color: 'secondary' }, () => 'p99'),
+              h(Text, { type: 'body', weight: 'semibold' }, () => `${row.p99} ms`),
+            ]),
+            h(Token, { size: 'sm', color: errorColor(row.errorRate), label: `${row.errorRate.toFixed(1)}% err` }),
+          ]),
+        }),
+      )),
+    ])
+  },
+})
+
 </script>
 
 <template>
@@ -230,7 +407,7 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       </Text>
                     </HStack>
                   </HStack>
-                  <PlaygroundSparkline :data="SPARKLINES[kpi.key]" :color="STATUS_STROKE[kpi.status]" />
+                  <PlaygroundSparkline :data="SPARKLINES[kpi.key].slice(-SPARK_LEN[timeWindow])" :color="STATUS_STROKE[kpi.status]" :stroke-width="1.25" is-measured />
                 </VStack>
               </Card>
             </Grid>
@@ -259,8 +436,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="tick in LATENCY_Y_TICKS"
                       :key="`lyt-${tick}`"
                       :x="CHART.left - 8"
-                      :y="chartY(tick, 800) + 4"
+                      :y="chartY(tick, 800)"
                       text-anchor="end"
+                      dominant-baseline="central"
                       class="chart-tick"
                     >
                       {{ tick }} ms
@@ -269,8 +447,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="(label, i) in X_LABELS"
                       :key="`lx-${label}`"
                       :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
-                      :y="CHART.height - 8"
-                      :text-anchor="i === X_LABELS.length - 1 ? 'end' : i === 0 ? 'start' : 'middle'"
+                      :y="CHART.height - CHART.bottom + 13"
+                      dominant-baseline="central"
+                      text-anchor="middle"
                       class="chart-tick"
                     >
                       {{ label }}
@@ -319,8 +498,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="tick in VOLUME_Y_TICKS"
                       :key="`vyt-${tick}`"
                       :x="CHART.left - 8"
-                      :y="chartY(tick, 14000) + 4"
+                      :y="chartY(tick, 14000)"
                       text-anchor="end"
+                      dominant-baseline="central"
                       class="chart-tick"
                     >
                       {{ tick }}
@@ -329,8 +509,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
                       v-for="(label, i) in X_LABELS"
                       :key="`vx-${label}`"
                       :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
-                      :y="CHART.height - 8"
-                      :text-anchor="i === X_LABELS.length - 1 ? 'end' : i === 0 ? 'start' : 'middle'"
+                      :y="CHART.height - CHART.bottom + 13"
+                      dominant-baseline="central"
+                      text-anchor="middle"
                       class="chart-tick"
                     >
                       {{ label }}
@@ -358,50 +539,66 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
             </Grid>
           </VStack>
           <Divider />
-          <VStack v-if="isNarrow" :gap="4">
-            <Card :padding="0">
-              <VStack :gap="0">
-                <VStack :gap="1" :padding="4" class="rail-header">
-                  <HStack :gap="2" align="center">
-                    <Icon icon="i-heroicons-bell-alert" size="sm" color="error" />
-                    <Heading :level="3">
-                      Active alerts
-                    </Heading>
-                    <Badge :label="`${firingCount} firing`" variant="error" />
-                  </HStack>
-                </VStack>
-                <List density="compact" has-dividers>
-                  <ListItem
-                    v-for="alert in ALERTS"
-                    :key="alert.id"
-                    :label="alert.title"
-                    :description="alert.service"
-                  >
-                    <template #startContent>
-                      <StatusDot :variant="alert.severity === 'healthy' ? 'success' : alert.severity === 'warning' ? 'warning' : 'error'" :label="alert.severity" />
-                    </template>
-                    <template #endContent>
-                      <Timestamp :value="alert.at" format="relative" color="secondary" />
-                    </template>
-                  </ListItem>
-                </List>
+          <VStack :gap="6">
+            <HStack :gap="3" align="center" h-align="between" wrap="wrap">
+              <VStack>
+                <Heading :level="2">
+                  All services
+                </Heading>
+                <Text type="supporting" color="secondary">
+                  Daily uptime over the last {{ UPTIME_DAYS }} days · {{ breakdownContext }}
+                </Text>
+              </VStack>
+              <HStack :gap="4" align="center" wrap="wrap">
+                <HStack v-for="state in UPTIME_ORDER" :key="state" :gap="2" align="center">
+                  <span class="legend-dot" :style="{ background: UPTIME_COLOR[state] }" />
+                  <Text type="supporting" color="secondary">
+                    {{ UPTIME_LABEL[state] }}
+                  </Text>
+                </HStack>
+              </HStack>
+            </HStack>
+            <Card :padding="6">
+              <EmptyState
+                v-if="uptimeEntries.length === 0"
+                title="No services in this view"
+                description="Nothing reports in the selected environment and region. Try widening the region filter."
+              />
+              <VStack v-else :gap="6">
+                <template v-for="(entry, index) in uptimeEntries" :key="entry.service">
+                  <Divider v-if="index > 0" />
+                  <VStack :gap="2">
+                    <HStack :gap="3" align="center" h-align="between">
+                      <HStack :gap="2" align="center">
+                        <StatusDot :variant="STATUS_DOT[entry.status]" :label="STATUS_LABEL[entry.status]" :is-pulsing="entry.status === 'critical'" />
+                        <Heading :level="4">
+                          {{ entry.service }}
+                        </Heading>
+                      </HStack>
+                      <Text type="supporting" color="secondary">
+                        {{ entry.uptime.toFixed(2) }}% uptime
+                      </Text>
+                    </HStack>
+                    <div class="uptime-strip" role="img" :aria-label="`${UPTIME_DAYS}-day uptime for ${entry.service}`">
+                      <div
+                        v-for="(day, i) in entry.days"
+                        :key="i"
+                        class="uptime-bar"
+                        :style="{ background: UPTIME_COLOR[day] }"
+                        :title="`${dayLabel(i)} — ${UPTIME_LABEL[day]}`"
+                      />
+                    </div>
+                  </VStack>
+                </template>
               </VStack>
             </Card>
+          </VStack>
+          <VStack v-if="isNarrow" :gap="4">
             <Card :padding="0">
-              <List density="compact" has-dividers>
-                <ListItem
-                  v-for="row in rows"
-                  :key="row.id"
-                  :label="row.service"
-                  :description="`${row.region} · ${row.instances} hosts · ${row.rpm} rpm`"
-                >
-                  <template #endContent>
-                    <Text type="body" weight="semibold">
-                      {{ row.p99 }} ms
-                    </Text>
-                  </template>
-                </ListItem>
-              </List>
+              <AlertsFeed />
+            </Card>
+            <Card :padding="0">
+              <ServiceBreakdown />
             </Card>
           </VStack>
         </VStack>
@@ -410,56 +607,9 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
     <template v-if="!isNarrow" #end>
       <LayoutPanel :width="400" :padding="0" has-divider role="complementary" label="Alerts and service breakdown" is-scrollable>
         <VStack :gap="0">
-          <VStack :gap="1" :padding="4" class="rail-header sticky-header">
-            <HStack :gap="2" align="center">
-              <Icon icon="i-heroicons-bell-alert" size="sm" :color="firingCount > 0 ? 'error' : 'secondary'" />
-              <Heading :level="3">
-                Active alerts
-              </Heading>
-              <Badge :label="`${firingCount} firing`" :variant="firingCount > 0 ? 'error' : 'neutral'" />
-            </HStack>
-            <Text type="supporting" color="secondary">
-              {{ ALERTS.length }} in the last 24h · newest first
-            </Text>
-          </VStack>
+          <AlertsFeed sticky />
           <Divider />
-          <List density="compact" has-dividers>
-            <ListItem v-for="alert in ALERTS" :key="alert.id" :label="alert.title" :description="alert.service">
-              <template #startContent>
-                <StatusDot :variant="alert.severity === 'critical' ? 'error' : 'warning'" :label="alert.severity" :is-pulsing="alert.state === 'firing' && alert.severity === 'critical'" />
-              </template>
-              <template #endContent>
-                <Token size="sm" :color="alert.state === 'firing' ? 'red' : 'yellow'" :label="alert.state === 'firing' ? 'Firing' : 'Ack'" />
-              </template>
-            </ListItem>
-          </List>
-          <Divider />
-          <VStack :gap="1" :padding="4" class="rail-header sticky-header">
-            <Heading :level="3">
-              Service breakdown
-            </Heading>
-            <Text type="supporting" color="secondary">
-              {{ breakdownContext }}
-            </Text>
-          </VStack>
-          <List density="compact" has-dividers>
-            <ListItem
-              v-for="row in rows"
-              :key="row.id"
-              :label="row.service"
-              :description="`${row.region} · ${row.instances} hosts · ${rpmLabel(row.rpm)}`"
-            >
-              <template #startContent>
-                <StatusDot :variant="row.status === 'healthy' ? 'success' : row.status === 'warning' ? 'warning' : 'error'" :label="row.status" />
-              </template>
-              <template #endContent>
-                <HStack :gap="1" align="center">
-                  <Badge variant="neutral" :label="`p99 ${row.p99} ms`" />
-                  <Badge :variant="row.errorRate >= 2 ? 'error' : row.errorRate >= 1 ? 'warning' : 'success'" :label="`${row.errorRate.toFixed(1)}% err`" />
-                </HStack>
-              </template>
-            </ListItem>
-          </List>
+          <ServiceBreakdown sticky />
         </VStack>
       </LayoutPanel>
     </template>
@@ -470,9 +620,21 @@ const firingCount = computed(() => ALERTS.filter(a => a.state === 'firing').leng
 .rail-header {
   background-color: var(--astryx-color-background-muted);
 }
-.rail-chart { width: 100%; height: 240px; display: block; }
+.rail-chart { width: 100%; height: 280px; display: block; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
-.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 11px; }
+.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
+.uptime-strip {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.uptime-bar {
+  flex: 1 1 0;
+  min-width: 3px;
+  height: 30px;
+}
 .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 .sticky-header {
   position: sticky;
