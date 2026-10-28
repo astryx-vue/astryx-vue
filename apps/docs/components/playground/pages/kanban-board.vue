@@ -193,10 +193,10 @@ let teardownDrag: (() => void) | null = null
 
 const itemsByColumn = computed(() => {
   const map: Record<ColumnId, WorkItem[]> = {
-    'todo': [],
+    todo: [],
     'in-progress': [],
     'in-review': [],
-    'done': [],
+    done: [],
   }
   for (const item of items.value)
     map[item.column].push(item)

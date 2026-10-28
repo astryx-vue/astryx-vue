@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ISOTimeString } from '@astryx-vue/core'
+import { computed, ref, useId } from 'vue'
 import {
   Banner,
   Button,
@@ -36,7 +37,6 @@ import {
   useToast,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref, useId } from 'vue'
 
 const STEPS = ['Report', 'Schedule', 'Delivery']
 
@@ -190,7 +190,7 @@ function goNext() {
     >
       <Layout height="fill" :padding="4" default-has-dividers>
         <template #header>
-          <DialogHeader title="Schedule a report" :has-divider="false" @update:open="handleOpenChange" />
+          <DialogHeader title="Schedule a report" @update:open="handleOpenChange" :has-divider="false" />
           <LayoutHeader :has-divider="false">
             <Stepper
               :active-step="step"

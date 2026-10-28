@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TableColumn, TablePlugin } from '@astryx-vue/core'
-import type { Component, PropType } from 'vue'
 import {
   applyTableFilters,
   Banner,
@@ -22,13 +20,15 @@ import {
   Table,
   Text,
   TextInput,
-  useHoverCard,
   useTableFiltering,
+  useHoverCard,
   useTableFilterState,
   useTableSortable,
   useTableSortableState,
   VStack,
 } from '@astryx-vue/core'
+import type { Component, PropType } from 'vue'
+import type { TableColumn, TablePlugin } from '@astryx-vue/core'
 import { computed, defineComponent, h, ref, shallowReactive, Teleport, watchEffect } from 'vue'
 
 type LineCategory = 'design' | 'development' | 'content' | 'project'
@@ -200,7 +200,9 @@ const LINE_ITEMS: LineItem[] = [
     quantity: 2,
     unitPriceCents: 120_000,
   },
-]
+];
+
+
 
 const ROWS: InvoiceRow[] = LINE_ITEMS.map(item => ({
   ...item,
@@ -300,9 +302,9 @@ const DescriptionCell = defineComponent({
       h(Teleport, { to: 'body' }, [
         h('div', {
           ...card.contentProps.value,
-          ref: card.contentRef,
-          class: 'astryx-hover-card',
-          style: { ...card.contentStyle.value, display: card.isOpen.value ? undefined : 'none' },
+          'ref': card.contentRef,
+          'class': 'astryx-hover-card',
+          'style': { ...card.contentStyle.value, display: card.isOpen.value ? undefined : 'none' },
         }, [
           h('div', { class: 'astryx-hover-card__content' }, [
             h(VStack, { gap: 3, width: 280 }, () => [

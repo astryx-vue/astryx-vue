@@ -69,15 +69,15 @@ export const PlaygroundSparkline = defineComponent({
         return `${x},${y}`
       }).join(' ')
       return h('svg', {
-        'width': '100%',
-        'height': props.height,
-        'viewBox': `0 0 ${w} ${props.height}`,
-        'preserveAspectRatio': 'none',
+        width: '100%',
+        height: props.height,
+        viewBox: `0 0 ${w} ${props.height}`,
+        preserveAspectRatio: 'none',
         'aria-hidden': 'true',
       }, [
         h('polyline', {
-          'fill': 'none',
-          'stroke': props.color,
+          fill: 'none',
+          stroke: props.color,
           'stroke-width': props.strokeWidth,
           points,
         }),
@@ -222,11 +222,11 @@ export const PlaygroundLineChart = defineComponent({
       })
 
       return h('svg', {
-        'width': '100%',
-        'height': props.height,
-        'ref': chart.el,
-        'viewBox': `0 0 ${chartW} ${props.height}`,
-        'role': 'img',
+        width: '100%',
+        height: props.height,
+        ref: chart.el,
+        viewBox: `0 0 ${chartW} ${props.height}`,
+        role: 'img',
         'aria-label': 'Line chart',
       }, [
         ...gridLines,
@@ -296,21 +296,21 @@ export const PlaygroundAreaChart = defineComponent({
       const yTicks = props.yTicks.length ? props.yTicks : [yMin, (yMin + yMax) / 2, yMax]
 
       return h('svg', {
-        'width': '100%',
-        'height': props.height,
-        'ref': chart.el,
-        'viewBox': `0 0 ${chartW} ${props.height}`,
-        'role': 'img',
+        width: '100%',
+        height: props.height,
+        ref: chart.el,
+        viewBox: `0 0 ${chartW} ${props.height}`,
+        role: 'img',
         'aria-label': 'Area chart',
       }, [
         h('defs', {}, [
           h('linearGradient', { id: gradId, x1: '0', y1: '0', x2: '0', y2: '1' }, [
-            h('stop', { 'offset': '0%', 'stop-color': props.color, 'stop-opacity': String(props.fillOpacity[0]) }),
-            h('stop', { 'offset': '100%', 'stop-color': props.color, 'stop-opacity': String(props.fillOpacity[1]) }),
+            h('stop', { offset: '0%', 'stop-color': props.color, 'stop-opacity': String(props.fillOpacity[0]) }),
+            h('stop', { offset: '100%', 'stop-color': props.color, 'stop-opacity': String(props.fillOpacity[1]) }),
           ]),
         ]),
         ...(props.hasGrid
-          ? yTicks.map(tick => h('line', {
+          ? yTicks.map((tick) => h('line', {
               x1: pad.left,
               y1: yScale(tick),
               x2: pad.left + innerW,
@@ -321,26 +321,26 @@ export const PlaygroundAreaChart = defineComponent({
         h('polygon', { points: areaPts, fill: `url(#${gradId})` }),
         ...(props.referenceValue != null
           ? [h('line', {
-              'x1': pad.left,
-              'y1': yScale(props.referenceValue),
-              'x2': pad.left + innerW,
-              'y2': yScale(props.referenceValue),
-              'stroke': GRID_STROKE,
+              x1: pad.left,
+              y1: yScale(props.referenceValue),
+              x2: pad.left + innerW,
+              y2: yScale(props.referenceValue),
+              stroke: GRID_STROKE,
               'stroke-dasharray': '3 3',
             })]
           : []),
         h('polyline', {
-          'fill': 'none',
-          'stroke': props.color,
+          fill: 'none',
+          stroke: props.color,
           'stroke-width': 1.5,
-          'points': linePts,
+          points: linePts,
         }),
         ...(props.xTicks.length ? props.xTicks : [xMin, xMax]).map(tick => h('text', {
-          'x': xScale(tick),
-          'y': props.centerTicks ? pad.top + innerH + 13 : props.height - 6,
+          x: xScale(tick),
+          y: props.centerTicks ? pad.top + innerH + 13 : props.height - 6,
           'dominant-baseline': props.centerTicks ? 'central' : undefined,
           'text-anchor': props.padInline != null && tick === xMin ? 'start' : props.padInline != null && tick === xMax ? 'end' : 'middle',
-          'fill': AXIS_TICK,
+          fill: AXIS_TICK,
           'font-size': '12px',
         }, props.xTickFormat(tick))),
         ...(props.hasYAxis
@@ -349,7 +349,7 @@ export const PlaygroundAreaChart = defineComponent({
               'y': props.centerTicks ? Math.max(yScale(tick), 9) : yScale(tick) + 4,
               'dominant-baseline': props.centerTicks ? 'central' : undefined,
               'text-anchor': 'end',
-              'fill': AXIS_TICK,
+              fill: AXIS_TICK,
               'font-size': '12px',
             }, props.yTickFormat(tick)))
           : []),

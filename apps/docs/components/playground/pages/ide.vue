@@ -223,9 +223,8 @@ const fileTree = computed(() => buildFileTree((name) => {
                   :height="bottomPanel.size"
                   class="terminal-panel"
                 >
-                  <TabList
+                  <TabList role="tablist"
                     v-model:value="activeTermTab"
-                    role="tablist"
                     size="sm"
                     :has-divider="false"
                     class="tab-list-padding"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { PowerSearchFilter, TableColumn, TablePlugin } from '@astryx-vue/core'
 import {
   Avatar,
   Badge,
@@ -26,8 +25,8 @@ import {
   pixel,
   Popover,
   PowerSearch,
-  ProgressBar,
   proportional,
+  ProgressBar,
   RadioList,
   RadioListItem,
   ResizeHandle,
@@ -40,8 +39,8 @@ import {
   Table,
   Text,
   TextInput,
-  ToggleButton,
   Token,
+  ToggleButton,
   usePowerSearchConfig,
   useResizable,
   useTableGroupedRows,
@@ -52,6 +51,7 @@ import {
   useTableStickyColumns,
   VStack,
 } from '@astryx-vue/core'
+import type { PowerSearchFilter, TableColumn, TablePlugin } from '@astryx-vue/core'
 import { computed, h, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 type JobStatus = 'scheduled' | 'in_progress' | 'on_hold' | 'overdue' | 'completed'
@@ -442,7 +442,8 @@ const allJobs: ServiceJob[] = Array.from({ length: 5 }, (_, cycle) =>
       scheduledOn,
       quoted: cycle === 0 ? job.quoted : job.quoted + ((index * 17) % 9) * 10,
     }
-  })).flat()
+  }),
+).flat()
 
 const TECHNICIANS = Array.from(new Set(allJobs.map(j => j.technician))).sort()
 const CUSTOMERS = Array.from(new Set(allJobs.map(j => j.customer))).sort()
@@ -1603,7 +1604,7 @@ function SearchIcon() {
                   <PowerSearch
                     :config="searchConfig"
                     :filters="filters"
-                    placeholder="Try &quot;quote > 1000&quot; or &quot;status is Overdue&quot;"
+                    placeholder='Try "quote > 1000" or "status is Overdue"'
                     :result-count="`${results.length} ${results.length === 1 ? 'result' : 'results'}`"
                     @update:filters="filters = $event"
                   />
@@ -1663,7 +1664,7 @@ function SearchIcon() {
                   </HStack>
                 </StackItem>
                 <StackItem v-else size="fill" class="tf-primary">
-                  <HStack :gap="2" align="center" wrap="nowrap" :min-height="32" class="tf-filter-row">
+                <HStack :gap="2" align="center" wrap="nowrap" :min-height="32" class="tf-filter-row">
                     <StackItem class="tf-search">
                       <TextInput
                         v-model="query"

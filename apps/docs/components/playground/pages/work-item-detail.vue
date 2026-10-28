@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import {
   Avatar,
   AvatarGroup,
@@ -38,7 +39,6 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
 
 // ── 可编辑字段 ────────────────────────────────────────────────────────────────
 
@@ -191,7 +191,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
           <HStack :gap="4" align="start" justify="between">
             <VStack :gap="2">
               <HStack :gap="4" align="center" wrap="wrap">
-                <Link href="#" size="sm" color="secondary">
+                <Link href="#" type="supporting" color="secondary">
                   <HStack as="span" :gap="1" align="center">
                     <Icon icon="chevronLeft" size="sm" />
                     All Tasks
@@ -430,9 +430,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
                     </HStack>
                     <template v-if="entry.kind === 'comment'">
                       <Card variant="muted" :padding="3">
-                        <Text type="body">
-                          {{ entry.body }}
-                        </Text>
+                        <Text type="body">{{ entry.body }}</Text>
                       </Card>
                       <Link href="#" color="secondary">
                         Reply
@@ -479,9 +477,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
                     :variant="status === 'done' ? 'success' : status === 'in_review' ? 'warning' : status === 'in_progress' ? 'info' : 'neutral'"
                     :label="optionFor(STATUS_OPTIONS, status).label"
                   />
-                  <Text type="body">
-                    {{ optionFor(STATUS_OPTIONS, status).label }}
-                  </Text>
+                  <Text type="body">{{ optionFor(STATUS_OPTIONS, status).label }}</Text>
                 </HStack>
               </MetadataListItem>
               <MetadataListItem label="Priority">
@@ -490,17 +486,13 @@ function setSubtaskDone(id: number, isDone: boolean) {
               <MetadataListItem label="Assignee">
                 <HStack :gap="2" align="center">
                   <Avatar :name="optionFor(ASSIGNEE_OPTIONS, assignee).label" size="xsm" />
-                  <Text type="body">
-                    {{ optionFor(ASSIGNEE_OPTIONS, assignee).label }}
-                  </Text>
+                  <Text type="body">{{ optionFor(ASSIGNEE_OPTIONS, assignee).label }}</Text>
                 </HStack>
               </MetadataListItem>
               <MetadataListItem label="Reporter">
                 <HStack :gap="2" align="center">
                   <Avatar name="Sofia Alvarez" size="xsm" />
-                  <Text type="body">
-                    Sofia Alvarez
-                  </Text>
+                  <Text type="body">Sofia Alvarez</Text>
                 </HStack>
               </MetadataListItem>
               <MetadataListItem label="Start date">
@@ -510,9 +502,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
                 <Timestamp value="2026-03-18" format="date" type="body" color="primary" />
               </MetadataListItem>
               <MetadataListItem label="Sprint">
-                <Text type="body">
-                  Sprint 24 · Mar 2 – Mar 15
-                </Text>
+                <Text type="body">Sprint 24 · Mar 2 – Mar 15</Text>
               </MetadataListItem>
               <MetadataListItem label="Parent">
                 <Link href="#">
@@ -531,9 +521,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
                 </HStack>
               </MetadataListItem>
               <MetadataListItem label="Team">
-                <Text type="body">
-                  Platform · Growth pod
-                </Text>
+                <Text type="body">Platform · Growth pod</Text>
               </MetadataListItem>
             </MetadataList>
           </VStack>

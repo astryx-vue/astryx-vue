@@ -197,7 +197,7 @@ const visibleDms = computed(() => DIRECT_MESSAGES.filter(dm => USERS[dm.userId].
 const showThreadPanel = computed(() => isThreadOpen.value && !isThreadHidden.value)
 /** 搜索图标以组件形式给 `start-icon`，图标插件按类名渲染。 */
 const SearchIcon = defineComponent({
-  render: () => h('span', { 'class': 'i-heroicons-magnifying-glass', 'aria-hidden': 'true' }),
+  render: () => h('span', { class: 'i-heroicons-magnifying-glass', 'aria-hidden': 'true' }),
 })
 
 function selectChannel(channelId: string) {
@@ -227,7 +227,7 @@ function selectChannel(channelId: string) {
             <div class="messaging-rail-spacer" />
             <IconButton label="Settings" tooltip="Settings" variant="ghost">
               <template #icon>
-                <Icon icon="i-heroicons-cog-6-tooth" size="sm" color="inherit" />
+                <Icon :icon="'i-heroicons-cog-6-tooth'" size="sm" color="inherit" />
               </template>
             </IconButton>
             <Avatar name="Riley Quinn" size="md">
@@ -248,7 +248,7 @@ function selectChannel(channelId: string) {
               </StackItem>
               <IconButton label="New message" tooltip="New message" variant="ghost" size="sm">
                 <template #icon>
-                  <Icon icon="i-heroicons-pencil-square" size="sm" color="inherit" />
+                  <Icon :icon="'i-heroicons-pencil-square'" size="sm" color="inherit" />
                 </template>
               </IconButton>
             </HStack>
@@ -277,7 +277,7 @@ function selectChannel(channelId: string) {
                   @click="selectChannel(channel.id)"
                 >
                   <template #startContent>
-                    <Icon icon="i-heroicons-hashtag" size="sm" color="secondary" />
+                    <Icon :icon="'i-heroicons-hashtag'" size="sm" color="secondary" />
                   </template>
                   <template v-if="channel.unread > 0" #endContent>
                     <Badge :label="String(channel.unread)" variant="neutral" />
@@ -332,7 +332,7 @@ function selectChannel(channelId: string) {
               </StackItem>
               <IconButton label="Close thread" tooltip="Close thread" variant="ghost" size="sm" @click="isThreadOpen = false">
                 <template #icon>
-                  <Icon icon="i-heroicons-x-mark" size="sm" color="inherit" />
+                  <Icon :icon="'i-heroicons-x-mark'" size="sm" color="inherit" />
                 </template>
               </IconButton>
             </HStack>
@@ -384,7 +384,7 @@ function selectChannel(channelId: string) {
       <LayoutContent :padding="0">
         <VStack class="messaging-stream" :gap="0">
           <HStack :gap="3" class="messaging-stream-header">
-            <Icon icon="i-heroicons-hashtag" size="sm" color="secondary" />
+            <Icon :icon="'i-heroicons-hashtag'" size="sm" color="secondary" />
             <Heading :level="5">
               {{ selectedChannel.name }}
             </Heading>
@@ -396,7 +396,7 @@ function selectChannel(channelId: string) {
             <StatusDot variant="success" label="12 online" />
             <IconButton label="Members" tooltip="Members" variant="ghost" size="sm">
               <template #icon>
-                <Icon icon="i-heroicons-user-group" size="sm" color="inherit" />
+                <Icon :icon="'i-heroicons-user-group'" size="sm" color="inherit" />
               </template>
             </IconButton>
           </HStack>

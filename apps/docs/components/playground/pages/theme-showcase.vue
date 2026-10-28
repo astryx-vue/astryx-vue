@@ -7,12 +7,12 @@ import {
   Button,
   Card,
   Center,
+  CheckboxInput,
   ChatComposer,
   ChatMessage,
   ChatMessageBubble,
   ChatMessageList,
   ChatSystemMessage,
-  CheckboxInput,
   Divider,
   Grid,
   GridSpan,
@@ -21,9 +21,9 @@ import {
   Icon,
   Item,
   Link,
+  OverflowList,
   MoreMenu,
   NumberInput,
-  OverflowList,
   pixel,
   proportional,
   RadioList,
@@ -111,7 +111,7 @@ const ACTIVITY = [
   { id: '5', label: 'Order #1037', detail: 'Placed · 8:42 am', amount: 95 },
 ]
 
-const ActivityIcons: Record<string, string> = { 1: 'heroicons:shopping-bag', 2: 'heroicons:banknotes', 3: 'heroicons:shopping-bag', 4: 'heroicons:shopping-bag', 5: 'heroicons:shopping-bag' }
+const ActivityIcons: Record<string, string> = { '1': 'heroicons:shopping-bag', '2': 'heroicons:banknotes', '3': 'heroicons:shopping-bag', '4': 'heroicons:shopping-bag', '5': 'heroicons:shopping-bag' }
 const SearchIcon = () => h(Icon, { name: 'heroicons:magnifying-glass', size: 'sm' })
 const CreditCardIcon = () => h(Icon, { name: 'heroicons:credit-card', size: 'sm' })
 
@@ -153,9 +153,9 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
     headerHidden: true,
     width: pixel(64),
     renderCell: row => h(CheckboxInput, {
-      'label': `Select ${row.name}`,
-      'isLabelHidden': true,
-      'modelValue': row.selected,
+      label: 'Select ' + row.name,
+      isLabelHidden: true,
+      modelValue: row.selected,
       'onUpdate:modelValue': (v: boolean | 'indeterminate') => { row.selected = v === true },
     }),
   },
@@ -166,7 +166,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
     renderCell: (row) => {
       const thumb = row.imageKey && images[row.imageKey]
         ? h('img', { src: images[row.imageKey!], alt: '', class: 'thumbnail' })
-        : h('div', { 'class': 'thumbnail-fallback', 'aria-hidden': 'true' }, row.thumbnailFallback)
+        : h('div', { class: 'thumbnail-fallback', 'aria-hidden': 'true' }, row.thumbnailFallback)
       return h(HStack, { gap: 3, vAlign: 'center' }, () => [
         thumb,
         h(VStack, { gap: 0, style: { minWidth: 0 } }, () => [
@@ -194,7 +194,8 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
     width: proportional(2, { minWidth: 80 }),
     align: 'end',
     renderCell: row => h(HStack, { gap: 1, wrap: 'wrap', hAlign: 'end' }, () =>
-      row.tags.map(tag => h(Badge, { key: tag.label, label: tag.label, variant: tag.variant }))),
+      row.tags.map(tag => h(Badge, { key: tag.label, label: tag.label, variant: tag.variant })),
+    ),
   },
   {
     key: 'actions',
@@ -226,22 +227,16 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
             <TopNavItem label="Help" href="#" />
           </template>
           <template #end>
-            <HStack :gap="2" align="center">
+            <HStack :gap="2" :align="'center'">
               <HStack :gap="0.5">
                 <Button label="Search" tooltip="Search" variant="ghost" is-icon-only href="#">
-                  <template #icon>
-                    <span class="i-carbon-search" aria-hidden="true" />
-                  </template>
+                  <template #icon><span class="i-carbon-search" aria-hidden="true" /></template>
                 </Button>
                 <Button label="Account" tooltip="Account" variant="ghost" is-icon-only href="#">
-                  <template #icon>
-                    <span class="i-carbon-user" aria-hidden="true" />
-                  </template>
+                  <template #icon><span class="i-carbon-user" aria-hidden="true" /></template>
                 </Button>
                 <Button label="Cart" tooltip="Cart" variant="ghost" is-icon-only href="#">
-                  <template #icon>
-                    <span class="i-carbon-shopping-bag" aria-hidden="true" />
-                  </template>
+                  <template #icon><span class="i-carbon-shopping-bag" aria-hidden="true" /></template>
                 </Button>
               </HStack>
               <Button label="Sign in" variant="primary" href="#" />
@@ -252,7 +247,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
         <Section :padding="6" variant="transparent">
           <VStack :gap="10" class="content content-fluid">
             <Center>
-              <VStack :gap="4" h-align="center" class="hero-text">
+              <VStack :gap="4" :hAlign="'center'" class="hero-text">
                 <Text type="display-2" color="accent">
                   Little joys,<br>everywhere you go
                 </Text>
@@ -269,15 +264,11 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                     <img class="product-image" :src="images[PRODUCT_IMAGE_KEYS[i]]" :alt="p.name">
                   </AspectRatio>
                   <div class="card-body">
-                    <VStack :gap="2" h-align="center" class="card-stack">
+                    <VStack :gap="2" :hAlign="'center'" class="card-stack">
                       <HStack><Badge :label="p.badge" :variant="p.badgeVariant" /></HStack>
-                      <Heading :level="2" class="center-text">
-                        {{ p.name }}
-                      </Heading>
-                      <Text type="supporting" color="secondary" class="card-description center-text">
-                        {{ p.description }}
-                      </Text>
-                      <HStack :gap="2" align="center" justify="center" wrap="wrap" class="cart-row">
+                      <Heading :level="2" class="center-text">{{ p.name }}</Heading>
+                      <Text type="supporting" color="secondary" class="card-description center-text">{{ p.description }}</Text>
+                      <HStack :gap="2" :align="'center'" :justify="'center'" wrap="wrap" class="cart-row">
                         <span class="quantity-field">
                           <NumberInput v-model="quantity" label="Quantity" is-label-hidden :min="1" :max="99" size="sm" />
                         </span>
@@ -299,61 +290,39 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
           <div class="checkout-column">
             <Card :padding="isMobile ? 4 : 5" class="card-surface">
               <VStack :gap="4" class="checkout-stack">
-                <Heading :level="2">
-                  Checkout
-                </Heading>
+                <Heading :level="2">Checkout</Heading>
                 <VStack :gap="3" class="checkout-stack">
                   <TextInput v-model="email" label="Email" placeholder="you@studio.com" size="lg" />
                   <RadioList v-model="shippingMethod" label="Shipping method" description="Delivery time may vary based on location and availability.">
                     <RadioListItem value="economy" label="Economy Shipping" description="Delivered in 5–7 business days">
-                      <template #end>
-                        <Text type="body" weight="bold">
-                          $12.00
-                        </Text>
-                      </template>
+                      <template #end><Text type="body" weight="bold">$12.00</Text></template>
                     </RadioListItem>
                     <RadioListItem value="standard" label="Standard Shipping" description="Delivered in 3–5 business days">
-                      <template #end>
-                        <Text type="body" weight="bold">
-                          $16.00
-                        </Text>
-                      </template>
+                      <template #end><Text type="body" weight="bold">$16.00</Text></template>
                     </RadioListItem>
                     <RadioListItem value="express" label="Express Shipping" description="Delivered in 1–2 business days">
-                      <template #end>
-                        <Text type="body" weight="bold">
-                          $24.00
-                        </Text>
-                      </template>
+                      <template #end><Text type="body" weight="bold">$24.00</Text></template>
                     </RadioListItem>
                   </RadioList>
                   <VStack :gap="2" class="checkout-stack">
-                    <Text type="supporting" weight="bold">
-                      Payment method
-                    </Text>
+                    <Text type="supporting" weight="bold">Payment method</Text>
                     <Grid :columns="isMobile ? 1 : { minWidth: 80, max: 3 }" :gap="2">
                       <SelectableCard :is-selected="paymentCard" label="Pay with card" :padding="3" @change="selectPayment('card')">
-                        <VStack :gap="1" h-align="center" class="payment-card-content">
+                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
                           <Icon name="heroicons:credit-card" size="md" />
-                          <Text type="supporting" weight="bold">
-                            Card
-                          </Text>
+                          <Text type="supporting" weight="bold">Card</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentApple" label="Pay with Apple Pay" :padding="3" @change="selectPayment('apple')">
-                        <VStack :gap="1" h-align="center" class="payment-card-content">
+                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
                           <Icon name="heroicons:device-phone-mobile" size="md" />
-                          <Text type="supporting" weight="bold">
-                            Apple Pay
-                          </Text>
+                          <Text type="supporting" weight="bold">Apple Pay</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentGoogle" label="Pay with Google Pay" :padding="3" @change="selectPayment('google')">
-                        <VStack :gap="1" h-align="center" class="payment-card-content">
+                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
                           <Icon name="heroicons:wallet" size="md" />
-                          <Text type="supporting" weight="bold">
-                            Google Pay
-                          </Text>
+                          <Text type="supporting" weight="bold">Google Pay</Text>
                         </VStack>
                       </SelectableCard>
                     </Grid>
@@ -379,29 +348,21 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 </VStack>
                 <CheckboxInput v-model="saveInfo" label="Securely save my information for 1-click checkout" description="Pay faster on Studio and everywhere Link is accepted." />
                 <Button variant="primary" size="lg" label="Pay now">
-                  <template #icon>
-                    <span class="i-carbon-locked" aria-hidden="true" />
-                  </template>
+                  <template #icon><span class="i-carbon-locked" aria-hidden="true" /></template>
                 </Button>
               </VStack>
             </Card>
           </div>
           <div class="chat-column">
             <Card :padding="0" class="chat-card">
-              <HStack justify="between" align="center" :gap="3" class="chat-header">
-                <Heading :level="2">
-                  Studio AI
-                </Heading>
-                <HStack :gap="1" align="center">
+              <HStack :justify="'between'" :align="'center'" :gap="3" class="chat-header">
+                <Heading :level="2">Studio AI</Heading>
+                <HStack :gap="1" :align="'center'">
                   <Button variant="ghost" size="sm" is-icon-only label="Export conversation" tooltip="Export conversation">
-                    <template #icon>
-                      <span class="i-carbon-download" aria-hidden="true" />
-                    </template>
+                    <template #icon><span class="i-carbon-download" aria-hidden="true" /></template>
                   </Button>
                   <Button variant="ghost" size="sm" is-icon-only label="Close chat" tooltip="Close chat">
-                    <template #icon>
-                      <span class="i-carbon-close" aria-hidden="true" />
-                    </template>
+                    <template #icon><span class="i-carbon-close" aria-hidden="true" /></template>
                   </Button>
                 </HStack>
               </HStack>
@@ -410,9 +371,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 <ChatMessageList>
                   <ChatSystemMessage>Today</ChatSystemMessage>
                   <ChatMessage sender="user">
-                    <ChatMessageBubble variant="filled">
-                      Where’s my order?
-                    </ChatMessageBubble>
+                    <ChatMessageBubble variant="filled">Where’s my order?</ChatMessageBubble>
                   </ChatMessage>
                   <ChatMessage sender="assistant">
                     <VStack :gap="3">
@@ -425,29 +384,21 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                     </VStack>
                   </ChatMessage>
                   <ChatMessage sender="user">
-                    <ChatMessageBubble variant="filled">
-                      Can you show me the full details?
-                    </ChatMessageBubble>
+                    <ChatMessageBubble variant="filled">Can you show me the full details?</ChatMessageBubble>
                   </ChatMessage>
                   <ChatMessage sender="assistant">
                     <VStack :gap="3">
-                      <Text type="body">
-                        Here’s everything I have on order #1043:
-                      </Text>
+                      <Text type="body">Here’s everything I have on order #1043:</Text>
                       <Card :padding="3">
                         <VStack :gap="1">
                           <Item label="Items" description="Minimalist Watch · Linen Throw">
                             <template #endContent>
-                              <Text type="body" weight="bold">
-                                $248
-                              </Text>
+                              <Text type="body" weight="bold">$248</Text>
                             </template>
                           </Item>
                           <Item label="Shipping" description="UPS Ground">
                             <template #endContent>
-                              <Text type="body" weight="bold">
-                                $12
-                              </Text>
+                              <Text type="body" weight="bold">$12</Text>
                             </template>
                           </Item>
                           <Item label="Estimated arrival" description="Tomorrow by 8pm">
@@ -457,9 +408,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                           </Item>
                           <Item label="Tracking" description="UPS 1Z 999 AA1 0123 4567 84">
                             <template #endContent>
-                              <Link href="#">
-                                Track →
-                              </Link>
+                              <Link href="#">Track →</Link>
                             </template>
                           </Item>
                         </VStack>
@@ -469,7 +418,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 </ChatMessageList>
               </div>
               <div class="chat-suggestions">
-                <HStack :gap="1" justify="center" wrap="wrap">
+                <HStack :gap="1" :justify="'center'" wrap="wrap">
                   <Button v-for="question in SUGGESTED_QUESTIONS" :key="question" variant="secondary" size="sm" :label="question" />
                 </HStack>
               </div>
@@ -499,19 +448,15 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
         <Grid :columns="gridColumns" :gap="4">
           <GridSpan :columns="isMobile ? 1 : 3">
             <Card :padding="0" class="inventory-card">
-              <HStack justify="between" align="center" class="inventory-header">
-                <Heading :level="2">
-                  Inventory
-                </Heading>
+              <HStack :justify="'between'" :align="'center'" class="inventory-header">
+                <Heading :level="2">Inventory</Heading>
                 <Button label="Add item" variant="primary" size="sm">
-                  <template #icon>
-                    <span class="i-carbon-add" aria-hidden="true" />
-                  </template>
+                  <template #icon><span class="i-carbon-add" aria-hidden="true" /></template>
                 </Button>
               </HStack>
               <Divider variant="subtle" />
-              <HStack :gap="3" align="center" justify="between" class="inventory-filter-row">
-                <HStack :gap="2" align="center" class="inventory-filter-left">
+              <HStack :gap="3" :align="'center'" :justify="'between'" class="inventory-filter-row">
+                <HStack :gap="2" :align="'center'" class="inventory-filter-left">
                   <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
                   <OverflowList :items="FILTER_ITEMS" :gap="2">
                     <template #item="{ item }">
@@ -527,23 +472,17 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                     </template>
                     <template #overflow>
                       <Button label="Filters" variant="ghost" size="sm">
-                        <template #icon>
-                          <Icon name="heroicons:tag" size="sm" />
-                        </template>
+                        <template #icon><Icon name="heroicons:tag" size="sm" /></template>
                       </Button>
                     </template>
                   </OverflowList>
                 </HStack>
-                <HStack :gap="1" align="center">
+                <HStack :gap="1" :align="'center'">
                   <Button variant="ghost" size="sm" is-icon-only label="List view" tooltip="List view">
-                    <template #icon>
-                      <Icon name="heroicons:list-bullet" size="md" />
-                    </template>
+                    <template #icon><Icon name="heroicons:list-bullet" size="md" /></template>
                   </Button>
                   <Button variant="ghost" size="sm" is-icon-only label="Grid view" tooltip="Grid view">
-                    <template #icon>
-                      <Icon name="heroicons:squares-2x2" size="md" />
-                    </template>
+                    <template #icon><Icon name="heroicons:squares-2x2" size="md" /></template>
                   </Button>
                 </HStack>
               </HStack>
@@ -558,41 +497,23 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
           <GridSpan :columns="1">
             <Card :padding="5" class="activity-card">
               <VStack :gap="4" class="activity-card-stack">
-                <Heading :level="2">
-                  Revenue
-                </Heading>
+                <Heading :level="2">Revenue</Heading>
                 <Grid :columns="isMobile ? 1 : 2" :gap="3">
-                  <VStack :gap="0">
-                    <span class="kpi-value">18K</span><Text type="supporting" color="secondary">
-                      Monthly revenue
-                    </Text>
-                  </VStack>
-                  <VStack :gap="0">
-                    <span class="kpi-value">+12%</span><Text type="supporting" color="secondary">
-                      Order growth
-                    </Text>
-                  </VStack>
+                  <VStack :gap="0"><span class="kpi-value">18K</span><Text type="supporting" color="secondary">Monthly revenue</Text></VStack>
+                  <VStack :gap="0"><span class="kpi-value">+12%</span><Text type="supporting" color="secondary">Order growth</Text></VStack>
                 </Grid>
                 <Divider variant="subtle" />
-                <HStack justify="between" align="center">
-                  <Heading :level="3">
-                    Activity
-                  </Heading>
-                  <Link href="#">
-                    See all
-                  </Link>
+                <HStack :justify="'between'" :align="'center'">
+                  <Heading :level="3">Activity</Heading>
+                  <Link href="#">See all</Link>
                 </HStack>
                 <VStack :gap="1" class="activity-list-fade">
                   <Item v-for="item in ACTIVITY" :key="item.id" :label="item.label" :description="item.detail" href="#">
                     <template #startContent>
-                      <div class="activity-icon" aria-hidden="true">
-                        <Icon :name="ActivityIcons[item.id]" size="sm" />
-                      </div>
+                      <div class="activity-icon" aria-hidden="true"><Icon :name="ActivityIcons[item.id]" size="sm" /></div>
                     </template>
                     <template #endContent>
-                      <Text type="body" weight="bold" :color="item.amount < 0 ? 'secondary' : 'primary'">
-                        {{ formatAmount(item.amount) }}
-                      </Text>
+                      <Text type="body" weight="bold" :color="item.amount < 0 ? 'secondary' : 'primary'">{{ formatAmount(item.amount) }}</Text>
                     </template>
                   </Item>
                 </VStack>

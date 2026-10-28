@@ -49,7 +49,7 @@ const COMPONENT_CATEGORIES = [
   {
     label: 'Navigation',
     items: [
-      { key: 'breadcrumbs', name: 'Breadcrumbs', desc: 'Breadcrumbs show the user\'s current location within a navigation hierarchy. They provide quick links back to parent pages.' },
+      { key: 'breadcrumbs', name: 'Breadcrumbs', desc: "Breadcrumbs show the user's current location within a navigation hierarchy. They provide quick links back to parent pages." },
       { key: 'sidenav', name: 'SideNav', desc: 'SideNav renders a vertical navigation panel with links, sections, and collapsible groups. It is used as the primary nav in dashboard layouts.' },
       { key: 'tablist', name: 'TabList', desc: 'TabList switches between content views using a horizontal row of tabs. Only one tab is active at a time, and content changes without a page reload.' },
       { key: 'topnav', name: 'TopNav', desc: 'TopNav provides an app-level navigation bar across the top of the page. It holds branding, primary links, search, and user actions.' },
@@ -73,7 +73,7 @@ const COMPONENT_CATEGORIES = [
     <LayoutContent :padding="8">
       <VStack :gap="10">
         <Card variant="gray" :padding="10">
-          <HStack :gap="8" align="center">
+          <HStack :gap="8" :align="'center'">
             <StackItem size="fill">
               <VStack :gap="4">
                 <Text type="display-1">

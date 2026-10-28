@@ -425,9 +425,9 @@ function goBack(): void {
           variant="transparent"
           class="scrollable detail-column"
         >
-          <VStack :gap="4" h-align="center">
+          <VStack :gap="4" hAlign="center">
             <Avatar :name="selectedFile.name" :size="96" />
-            <VStack :gap="1" h-align="center">
+            <VStack :gap="1" hAlign="center">
               <Text type="label">
                 {{ selectedFile.name }}
               </Text>

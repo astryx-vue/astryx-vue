@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import {
   Badge,
   Banner,
@@ -33,7 +34,6 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
 
 const STEPS = [
   { label: 'Workspace' },
@@ -101,7 +101,7 @@ const ADDONS = [
 ]
 
 const TAKEN_SLUGS = ['admin', 'app', 'api', 'northwind', 'support']
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]{2,}$/
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 
 function money(n: number) {
@@ -476,9 +476,7 @@ function visibilityLabel(value: string) {
         >
           <VStack :gap="2">
             <Text v-for="s in outstanding" :key="s.label" type="supporting">
-              <Text type="supporting" display="inline" weight="bold">
-                {{ s.label }}
-              </Text>: {{ s.issues.join(' ') }}
+              <Text type="supporting" display="inline" weight="bold">{{ s.label }}</Text>: {{ s.issues.join(' ') }}
             </Text>
             <HStack :gap="2">
               <Button

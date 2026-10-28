@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
+import { computed, defineComponent, h, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import {
   Badge,
   Card,
@@ -23,11 +24,10 @@ import {
   Text,
   Timestamp,
   Token,
-  useMediaQuery,
   VStack,
+  useMediaQuery,
 } from '@astryx-vue/core'
 import { PlaygroundSparkline } from '@astryx-vue/playground-charts'
-import { computed, defineComponent, h, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 
 type TimeWindow = '1h' | '1d' | '7d'
 type Environment = 'production' | 'staging' | 'development'
@@ -241,7 +241,7 @@ function buildUptime(service: string, environment: Environment, status: HealthSt
   const downCount = Math.round(UPTIME_DAYS * Math.min(0.09, 0.005 * risk) * (0.6 + 0.8 * noise(seed, 3.7)))
   const degradedCount = Math.round(UPTIME_DAYS * Math.min(0.32, 0.02 * risk) * (0.6 + 0.8 * noise(seed, 5.9)))
   const ranked = [...Array.from({ length: UPTIME_DAYS }).keys()].sort((a, b) => noise(b, seed) - noise(a, seed))
-  const days: UptimeStatus[] = Array.from({ length: UPTIME_DAYS }).fill('operational')
+  const days: UptimeStatus[] = Array.from({ length: UPTIME_DAYS }, () => 'operational')
   for (let k = 0; k < downCount; k++)
     days[ranked[k]] = 'down'
   for (let k = downCount; k < downCount + degradedCount; k++)
@@ -351,6 +351,7 @@ const ServiceBreakdown = defineComponent({
     ])
   },
 })
+
 </script>
 
 <template>

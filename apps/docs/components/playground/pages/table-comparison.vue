@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TableColumn } from '@astryx-vue/core'
-import type { VNodeChild } from 'vue'
 import {
   Button,
   Card,
@@ -24,7 +22,9 @@ import {
   VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
+import type { TableColumn } from '@astryx-vue/core'
 import { computed, defineComponent, h, ref } from 'vue'
+import type { VNodeChild } from 'vue'
 
 type Modality = 'text' | 'image' | 'audio' | 'video' | 'document'
 
@@ -123,14 +123,14 @@ interface Model {
 }
 
 const MODELS: Model[] = [
-  { id: 'atlas-4-flash', name: 'Atlas 4 Flash', provider: 'Northwind', context: 1_000_000, maxOutput: 65_536, cutoff: 'Mar 2026', inputModalities: ['text', 'image'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.1, outputPrice: 0.4, cachedPrice: 0.025, speed: 186, latency: 0.28, mmlu: 78.4, humanEval: 84.1, math: 71.2, rateLimit: 4_000, hasStreaming: true, hasTools: true, hasFineTuning: true },
-  { id: 'atlas-4-pro', name: 'Atlas 4 Pro', provider: 'Northwind', context: 2_000_000, maxOutput: 131_072, cutoff: 'Mar 2026', inputModalities: ['text', 'image', 'audio', 'document'], outputModalities: ['text', 'audio'], hasOpenWeights: false, inputPrice: 1.25, outputPrice: 5.0, cachedPrice: 0.31, speed: 74, latency: 0.62, mmlu: 88.7, humanEval: 93.4, math: 89.1, rateLimit: 1_000, hasStreaming: true, hasTools: true, hasFineTuning: false },
-  { id: 'meridian-2-5-flash', name: 'Meridian 2.5 Flash', provider: 'Calder Labs', context: 1_048_576, maxOutput: 8_192, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'video'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.075, outputPrice: 0.3, cachedPrice: 0.019, speed: 214, latency: 0.24, mmlu: 76.9, humanEval: 81.7, math: 68.4, rateLimit: 2_000, hasStreaming: true, hasTools: true, hasFineTuning: true },
-  { id: 'meridian-2-5-pro', name: 'Meridian 2.5 Pro', provider: 'Calder Labs', context: 2_097_152, maxOutput: 65_536, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'audio', 'video', 'document'], outputModalities: ['text', 'image', 'audio'], hasOpenWeights: false, inputPrice: 1.25, outputPrice: 10.0, cachedPrice: 0.31, speed: 62, latency: 0.71, mmlu: 89.3, humanEval: 92.8, math: 91.6, rateLimit: 360, hasStreaming: true, hasTools: true, hasFineTuning: false },
-  { id: 'orion-mini-3', name: 'Orion Mini 3', provider: 'Halcyon', context: 262_144, maxOutput: 32_768, cutoff: 'Nov 2025', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: true, inputPrice: 0.05, outputPrice: 0.2, cachedPrice: 0.012, speed: 248, latency: 0.19, mmlu: 71.2, humanEval: 74.6, math: 58.9, rateLimit: 8_000, hasStreaming: true, hasTools: true, hasFineTuning: true },
-  { id: 'orion-3-ultra', name: 'Orion 3 Ultra', provider: 'Halcyon', context: 524_288, maxOutput: 65_536, cutoff: 'Nov 2025', inputModalities: ['text', 'image', 'document'], outputModalities: ['text', 'image'], hasOpenWeights: true, inputPrice: 0.9, outputPrice: 2.7, cachedPrice: 0.22, speed: 96, latency: 0.48, mmlu: 85.1, humanEval: 89.2, math: 82.3, rateLimit: 1_200, hasStreaming: true, hasTools: true, hasFineTuning: true },
-  { id: 'kestrel-v4-turbo', name: 'Kestrel V4 Turbo', provider: 'Sable AI', context: 400_000, maxOutput: 16_384, cutoff: 'Feb 2026', inputModalities: ['text', 'image', 'document'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.3, outputPrice: 1.2, cachedPrice: 0.075, speed: 142, latency: 0.33, mmlu: 82.6, humanEval: 87.3, math: 77.8, rateLimit: 3_000, hasStreaming: true, hasTools: true, hasFineTuning: false },
-  { id: 'kestrel-v4-lite', name: 'Kestrel V4 Lite', provider: 'Sable AI', context: 128_000, maxOutput: 8_192, cutoff: 'Feb 2026', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.04, outputPrice: 0.16, cachedPrice: 0.01, speed: 265, latency: 0.17, mmlu: 68.4, humanEval: 70.1, math: 54.2, rateLimit: 10_000, hasStreaming: true, hasTools: false, hasFineTuning: false },
+  { id: 'atlas-4-flash', name: 'Atlas 4 Flash', provider: 'Northwind', context: 1_000_000, maxOutput: 65_536, cutoff: 'Mar 2026', inputModalities: ['text', 'image'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.1, outputPrice: 0.4, cachedPrice: 0.025, speed: 186, latency: 0.28, mmlu: 78.4, humanEval: 84.1, math: 71.2, rateLimit: 4_000, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'atlas-4-pro', name: 'Atlas 4 Pro', provider: 'Northwind', context: 2_000_000, maxOutput: 131_072, cutoff: 'Mar 2026', inputModalities: ['text', 'image', 'audio', 'document'], outputModalities: ['text', 'audio'], hasOpenWeights: false, inputPrice: 1.25, outputPrice: 5.0, cachedPrice: 0.31, speed: 74, latency: 0.62, mmlu: 88.7, humanEval: 93.4, math: 89.1, rateLimit: 1_000, hasStreaming: true, hasTools: true, hasFineTuning: false, },
+  { id: 'meridian-2-5-flash', name: 'Meridian 2.5 Flash', provider: 'Calder Labs', context: 1_048_576, maxOutput: 8_192, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'video'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.075, outputPrice: 0.3, cachedPrice: 0.019, speed: 214, latency: 0.24, mmlu: 76.9, humanEval: 81.7, math: 68.4, rateLimit: 2_000, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'meridian-2-5-pro', name: 'Meridian 2.5 Pro', provider: 'Calder Labs', context: 2_097_152, maxOutput: 65_536, cutoff: 'Jan 2026', inputModalities: ['text', 'image', 'audio', 'video', 'document'], outputModalities: ['text', 'image', 'audio'], hasOpenWeights: false, inputPrice: 1.25, outputPrice: 10.0, cachedPrice: 0.31, speed: 62, latency: 0.71, mmlu: 89.3, humanEval: 92.8, math: 91.6, rateLimit: 360, hasStreaming: true, hasTools: true, hasFineTuning: false, },
+  { id: 'orion-mini-3', name: 'Orion Mini 3', provider: 'Halcyon', context: 262_144, maxOutput: 32_768, cutoff: 'Nov 2025', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: true, inputPrice: 0.05, outputPrice: 0.2, cachedPrice: 0.012, speed: 248, latency: 0.19, mmlu: 71.2, humanEval: 74.6, math: 58.9, rateLimit: 8_000, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'orion-3-ultra', name: 'Orion 3 Ultra', provider: 'Halcyon', context: 524_288, maxOutput: 65_536, cutoff: 'Nov 2025', inputModalities: ['text', 'image', 'document'], outputModalities: ['text', 'image'], hasOpenWeights: true, inputPrice: 0.9, outputPrice: 2.7, cachedPrice: 0.22, speed: 96, latency: 0.48, mmlu: 85.1, humanEval: 89.2, math: 82.3, rateLimit: 1_200, hasStreaming: true, hasTools: true, hasFineTuning: true, },
+  { id: 'kestrel-v4-turbo', name: 'Kestrel V4 Turbo', provider: 'Sable AI', context: 400_000, maxOutput: 16_384, cutoff: 'Feb 2026', inputModalities: ['text', 'image', 'document'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.3, outputPrice: 1.2, cachedPrice: 0.075, speed: 142, latency: 0.33, mmlu: 82.6, humanEval: 87.3, math: 77.8, rateLimit: 3_000, hasStreaming: true, hasTools: true, hasFineTuning: false, },
+  { id: 'kestrel-v4-lite', name: 'Kestrel V4 Lite', provider: 'Sable AI', context: 128_000, maxOutput: 8_192, cutoff: 'Feb 2026', inputModalities: ['text'], outputModalities: ['text'], hasOpenWeights: false, inputPrice: 0.04, outputPrice: 0.16, cachedPrice: 0.01, speed: 265, latency: 0.17, mmlu: 68.4, humanEval: 70.1, math: 54.2, rateLimit: 10_000, hasStreaming: true, hasTools: false, hasFineTuning: false, },
 ]
 
 const DEFAULT_SLOTS = ['atlas-4-flash', 'meridian-2-5-flash', 'kestrel-v4-turbo']
@@ -229,7 +229,9 @@ const UptimeStrip = defineComponent({
         h(VisuallyHidden, null, () => spoken.value),
         h(HStack, { height: 24, vAlign: 'center' }, () => h(Text, { type: 'body', color: 'primary' }, () =>
           day == null ? `${uptimeFormat.format(average.value)}% average` : `${day.date} · ${uptimeFormat.format(day.uptime)}% · ${day.status}`)),
-        h('div', { style: { display: 'flex', width: '100%', height: '28px' }, role: 'img', ariaLabel: `Last ${UPTIME_DAYS} days uptime`, onMouseleave: () => { hovered.value = null } }, days.value.map((d, i) => h('div', { key: i, style: { flex: '1 1 0', minWidth: 0, padding: '0 1px', display: 'flex' }, onMouseenter: () => { hovered.value = i } }, h('div', { style: { flex: 1, borderRadius: '2px', background: d.color } })))),
+        h('div', { style: { display: 'flex', width: '100%', height: '28px' }, role: 'img', ariaLabel: `Last ${UPTIME_DAYS} days uptime`, onMouseleave: () => { hovered.value = null } },
+          days.value.map((d, i) => h('div', { key: i, style: { flex: '1 1 0', minWidth: 0, padding: '0 1px', display: 'flex' }, onMouseenter: () => { hovered.value = i } },
+            h('div', { style: { flex: 1, borderRadius: '2px', background: d.color } })))),
       ])
     }
   },
@@ -320,7 +322,8 @@ const grouped = useTableGroupedRows<SpecRow>(() => ({
   onToggleGroup: toggleGroup,
   getRowKey: row => row.id,
   renderGroupHeader: groupKey => h(HStack, { gap: 2, vAlign: 'center', style: { position: 'sticky', insetInlineStart: 'var(--astryx-spacing-6)', width: 'fit-content' } }, () =>
-    h(Heading, { level: 3, accessibilityLevel: 2 }, () => groupKey)),
+    h(Heading, { level: 3, accessibilityLevel: 2 }, () => groupKey),
+  ),
 }))
 
 const sticky = useTableStickyColumns<SpecRow>({ startKeys: ['spec'] })
@@ -416,6 +419,7 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
     }
   }),
 ])
+
 </script>
 
 <template>

@@ -19,9 +19,9 @@ import {
   Layout,
   LayoutContent,
   Text,
+  Token,
   ToggleButton,
   ToggleButtonGroup,
-  Token,
   useChatDictation,
   VStack,
 } from '@astryx-vue/core'

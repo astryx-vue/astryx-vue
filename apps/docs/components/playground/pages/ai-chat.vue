@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ChatComposerInputHandle, ChatComposerToken, ChatComposerTrigger, ChatToolCallItem } from '@astryx-vue/core'
 import type { ComponentPublicInstance } from 'vue'
+import type { ChatComposerInputHandle, ChatComposerToken, ChatComposerTrigger, ChatToolCallItem } from '@astryx-vue/core'
 import {
   Avatar,
   Card,

@@ -23,8 +23,8 @@ import {
   Selector,
   Spinner,
   Tab,
-  Table,
   TabList,
+  Table,
   Text,
   TextArea,
   TextInput,
@@ -45,7 +45,7 @@ interface Block {
   props: Record<string, unknown>
 }
 
-interface Transaction {
+type Transaction = {
   id: string
   name: string
   category: string

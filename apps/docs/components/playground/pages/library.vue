@@ -65,7 +65,7 @@ const ITEMS: LibraryItem[] = [
 ]
 
 const SearchIcon = defineComponent({
-  render: () => h('span', { 'class': 'i-carbon-search', 'aria-hidden': 'true' }),
+  render: () => h('span', { class: 'i-carbon-search', 'aria-hidden': 'true' }),
 })
 
 const activeTab = ref('All')
@@ -132,7 +132,7 @@ const displaySections = computed(() =>
             :start-icon="SearchIcon"
             size="lg"
           />
-          <HStack align="center" :gap="4">
+          <HStack :align="'center'" :gap="4">
             <StackItem size="fill">
               <ToggleButtonGroup
                 v-model="activeTab"

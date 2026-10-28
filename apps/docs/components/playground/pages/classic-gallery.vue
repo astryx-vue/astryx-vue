@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
+import { computed, ref } from 'vue'
 import {
   Center,
   Grid,
@@ -12,7 +13,6 @@ import {
   Text,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
 
 type Category = 'all' | 'lifestyle' | 'scene' | 'home'
 
