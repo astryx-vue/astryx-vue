@@ -417,15 +417,35 @@ const errors = computed(() => submitted.value ? {
                           </HStack>
                           <Divider />
                         </VStack>
-                        <Text type="large" weight="bold">Order Total</Text>
-                        <HStack justify="between"><Text color="secondary">Subtotal</Text><Text>{{ fmt(SUBTOTAL) }}</Text></HStack>
-                        <HStack justify="between"><Text color="secondary">Shipping</Text><Text>{{ fmt(shippingCost) }}</Text></HStack>
-                        <HStack justify="between"><Text color="secondary">Tax</Text><Text>{{ fmt(TAX) }}</Text></HStack>
-                        <Divider />
-                        <HStack justify="between"><Text type="large" weight="bold">Total</Text><Text type="large" weight="bold">{{ fmt(orderTotal) }}</Text></HStack>
-                        <Banner status="info" title="Free shipping on orders over $300">
-                          <template #icon><Icon icon="i-heroicons-truck" size="sm" /></template>
-                        </Banner>
+                        <VStack :gap="3">
+                          <Text type="large" weight="bold">
+                            Order Total
+                          </Text>
+                          <VStack :gap="2">
+                            <HStack justify="between" align="center">
+                              <Text type="body" color="secondary">Subtotal</Text>
+                              <Text type="body">{{ fmt(SUBTOTAL) }}</Text>
+                            </HStack>
+                            <HStack justify="between" align="center">
+                              <Text type="body" color="secondary">Shipping</Text>
+                              <Text type="body">{{ fmt(shippingCost) }}</Text>
+                            </HStack>
+                            <HStack justify="between" align="center">
+                              <Text type="body" color="secondary">Tax</Text>
+                              <Text type="body">{{ fmt(TAX) }}</Text>
+                            </HStack>
+                          </VStack>
+                          <Divider />
+                          <HStack justify="between" align="center">
+                            <Text type="large" weight="bold">Total</Text>
+                            <Text type="large" weight="bold">{{ fmt(orderTotal) }}</Text>
+                          </HStack>
+                          <Banner status="info" title="Free shipping on orders over $300">
+                            <template #icon>
+                              <Icon icon="i-heroicons-truck" size="sm" />
+                            </template>
+                          </Banner>
+                        </VStack>
                       </VStack>
                     </Collapsible>
                   </Card>
@@ -443,6 +463,7 @@ const errors = computed(() => submitted.value ? {
 .quantity-field {
   display: block;
   flex: none;
-  width: 96px;
+  /* 待 core 修复后去掉：原生 input 默认宽度比原版窄 52px（core 问题清单），数量框整体补宽到原版的 112。 */
+  width: 112px;
 }
 </style>
