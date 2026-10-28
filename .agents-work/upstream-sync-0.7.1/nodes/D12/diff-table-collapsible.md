@@ -16,7 +16,7 @@
 | Credit cards 列 | Card / Utilization / Balance / **Limit** / Change | 缺 Limit | 已修 |
 | 进度条颜色 | neutral 变体，填充灰 | 实测深色下两边都是 rgb(82,82,82) | 一致（D18 #15 已修） |
 | 涨跌徽标 | Token sm：宽 54.7、内边距 8px | 实测宽 54.7、内边距 8px，13 个徽标逐个比对一致 | 一致（D18 #8 已修） |
-| 数据行高 | 51（td 内边距 1px，里面一层 div 内边距 4px 8px） | 49（td 内边距 4px 8px） | 不修：**core**，已写进 core 问题清单第 5 条。原版 `TableCell` 在 `td` 上叠了 1px 的单元格内边距，行里每格多出 2px；这个 1px 在原版源码里找不到对应的 StyleX 规则（逐个类名摘掉后 td 内边距仍是 1px），只在运行时存在，我们无法在模板里不破坏其它表而复刻 |
+| 数据行高 | 51：td 内边距 1px，里面一层 div（内边距 4px 8px，高 48）包着内容 | 49：td 内边距 4px 8px | **未解决，成因没定位到**：原版源码里 `TableCell` 只有 `td` 一层 compact 内边距 4px 8px，原版运行时却多了一层内边距 4px 8px 的 div 和 td 的 1px 内边距。我读了 `TableCell.tsx` / `BaseTable.tsx` / `useTableRowExpansion.tsx` / `tableContextMenu.tsx`，没有对应代码；原版站点有 8 张跨域样式表读不到规则，逐个类名摘掉后 td 仍是 1px。我不确定这是 core 还是原版站点自己的包装。**不当作 core 问题上报，也不记「不修」**，列为待查 |
 | 展开面板内边距 | 16px 20px 16px 48px，面板高 164.5 | 16px 8px 16px 48px，面板高 164.5（实测） | 部分修（D18 #7）：高度、左、上、下已一致；右内边距 8 对 20 仍差，原因同上一行（密度规则 `[data-density='compact'] :is(th, td):last-child` 特异性 0,3,1 压过 `td.astryx-table__panel`），写进 core 问题清单第 6 条 |
 | 窄屏紧凑列 | 内容宽度小于 720 时只留名称+金额两列 | 没有 | 未做（功能块）：1440 宽下不触发，需要 ResizeObserver 量内容宽并重组两张列配置。不是「差异小」：是在首屏之外、用户不会遇到的响应式分支，已在第 4 轮记入后续批次 |
 | 深色模式 | 同浅色 | 同 | 对照图已出，结构一致，色值差异同上 |

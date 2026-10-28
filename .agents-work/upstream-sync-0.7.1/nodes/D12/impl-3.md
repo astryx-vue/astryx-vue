@@ -133,7 +133,7 @@ table-inbox 悬停行操作（4 个按钮）、写信 / 回复窗口、窄屏单
 2. **Table 默认 `table-layout: fixed`**：原版是 fixed，我们是 auto，列宽按内容算。模板里用 `:deep(.astryx-table)` 补了三处，应该在 core 修。
 3. **`tableMinWidth` 不跟 widthFor / cellPatch 改过的选择列宽**：模板把选择列放宽到 48 后，表格总宽仍按 36 算，table-filter 总宽 1316 对 1328（Job 352 / Customer 176 对 360 / 180）。
 4. **Icon 在 `<span>` 里 fill 继承 currentColor**：描边图标被填成实心（上一轮已报，仍成立）。
-5. **compact 密度数据格比原版少 2px**：原版 td 内边距 1px + 内层 div 4px 8px，行高 51；我们 td 4px 8px，行高 49。实测 table-collapsible 三十多行都差 2px，整页高度 1139 对 1165。
+5. **（待查，不确定是 core）compact 密度数据格比原版少 2px**：原版 td 内边距 1px + 内层 div 4px 8px，行高 51；我们 td 4px 8px，行高 49。实测 table-collapsible 十几行都差 2px，整页高度 1139 对 1165。我读了原版 `TableCell` / `BaseTable` / `useTableRowExpansion` 源码，没有找到这层 div 和 1px 的来源，原版站点的样式表跨域读不到。需要有人在原版仓库里跑一遍确认
 6. **展开面板右内边距**：`.astryx-table[data-density] :is(th,td):last-child`（0,3,1）盖过 `td.astryx-table__panel` 的 `padding-inline-end: 20px`，实测 8px 对 20px。
 7. **Toolbar 缺 Section 外壳的横向内边距**：原版 Toolbar 本体 561×32 嵌在 585×48 的 Section 里（内边距 8px 12px），我们 Toolbar 本体 585×48 内边距 8px 0；按钮因此右移 12px（table-inbox 阅读栏）。
 8. **`parseSize` 不支持「百分比 − 像素」**：table-inbox 阅读栏宽度上限 `surfaceWidth − 300`。1440 下不影响。
