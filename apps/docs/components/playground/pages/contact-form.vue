@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { computed, defineComponent, h, ref } from 'vue'
 import {
   Banner,
   Button,
@@ -22,6 +21,7 @@ import {
   Token,
   VStack,
 } from '@astryx-vue/core'
+import { computed, defineComponent, h, ref } from 'vue'
 
 const CAMPAIGN_GOALS = [
   'Brand Awareness',
@@ -54,7 +54,7 @@ const BUDGET_OPTIONS = [
 
 function iconComponent(className: string): Component {
   return defineComponent({
-    render: () => h('span', { class: className, 'aria-hidden': 'true', style: 'width:1.25em;height:1.25em' }),
+    render: () => h('span', { 'class': className, 'aria-hidden': 'true', 'style': 'width:1.25em;height:1.25em' }),
   })
 }
 
@@ -109,10 +109,10 @@ function toggleGoal(goal: string) {
 
 <template>
   <Center axis="horizontal">
-    <VStack hAlign="center" width="100%">
+    <VStack h-align="center" width="100%">
       <Section :max-width="800" :padding="6" :padding-block="10" variant="section">
         <VStack :gap="6">
-          <VStack :gap="2" hAlign="center">
+          <VStack :gap="2" h-align="center">
             <Text type="display-1" weight="bold">
               Let's work together
             </Text>

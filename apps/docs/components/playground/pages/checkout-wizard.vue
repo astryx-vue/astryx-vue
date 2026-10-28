@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import type { ComponentPublicInstance } from 'vue'
 import {
   Badge,
   Banner,
   Button,
   Card,
-  Collapsible,
   CheckboxInput,
+  Collapsible,
   Divider,
   FieldStatus,
   FormLayout,
@@ -18,8 +19,8 @@ import {
   RadioList,
   RadioListItem,
   Selector,
-  StackItem,
   Stack,
+  StackItem,
   Step,
   Stepper,
   Text,
@@ -28,7 +29,6 @@ import {
   Thumbnail,
   VStack,
 } from '@astryx-vue/core'
-import type { ComponentPublicInstance } from 'vue'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ const PROMOS: Record<string, { label: string, rate: number }> = {
 
 const TAX_RATE = 0.08
 const FREE_SHIPPING_THRESHOLD = 300
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]{2,}$/
 
 const POSTAL_CODE_RULES: Record<string, { label: string, placeholder: string, pattern: RegExp, error: string }> = {
   us: { label: 'ZIP code', placeholder: '10001', pattern: /^\d{5}(?:-\d{4})?$/, error: 'Enter a 5-digit ZIP code, with an optional 4-digit suffix.' },
@@ -287,7 +287,7 @@ function isFreeDelivery(optionValue: string) {
           </HStack>
         </HStack>
 
-        <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" v-align="start">
+        <Stack v-align="start" :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6">
           <StackItem size="fill">
             <VStack :gap="6">
               <Banner
@@ -578,83 +578,83 @@ function isFreeDelivery(optionValue: string) {
                 :is="isNarrow ? Collapsible : VStack"
                 v-bind="isNarrow ? { trigger: `Order summary · ${money(total)}`, defaultIsOpen: false } : { gap: 4 }"
               >
-              <HStack v-if="!isNarrow" :gap="2" align="center" justify="between" class="summary-title">
-                <Text type="label">
-                  Order summary
-                </Text>
-                <Badge variant="neutral" :label="`${itemCount} ${itemCount === 1 ? 'item' : 'items'}`" />
-              </HStack>
-              <VStack :gap="4" :padding-block-start="isNarrow ? 3 : undefined">
-                <VStack :gap="3">
-                  <HStack v-for="item in items" :key="item.id" :gap="3" align="start">
-                    <Thumbnail :src="item.src" :alt="item.name" />
-                    <StackItem size="fill">
-                      <VStack :gap="0.5">
-                        <HStack :gap="2" align="start" justify="between">
-                          <Text type="body" weight="medium">
-                            {{ item.name }}
+                <HStack v-if="!isNarrow" :gap="2" align="center" justify="between" class="summary-title">
+                  <Text type="label">
+                    Order summary
+                  </Text>
+                  <Badge variant="neutral" :label="`${itemCount} ${itemCount === 1 ? 'item' : 'items'}`" />
+                </HStack>
+                <VStack :gap="4" :padding-block-start="isNarrow ? 3 : undefined">
+                  <VStack :gap="3">
+                    <HStack v-for="item in items" :key="item.id" :gap="3" align="start">
+                      <Thumbnail :src="item.src" :alt="item.name" />
+                      <StackItem size="fill">
+                        <VStack :gap="0.5">
+                          <HStack :gap="2" align="start" justify="between">
+                            <Text type="body" weight="medium">
+                              {{ item.name }}
+                            </Text>
+                            <Text type="body" weight="bold">
+                              {{ money(item.price * item.qty) }}
+                            </Text>
+                          </HStack>
+                          <Text type="supporting" color="secondary">
+                            {{ item.variant }} · Qty {{ item.qty }}
                           </Text>
-                          <Text type="body" weight="bold">
-                            {{ money(item.price * item.qty) }}
-                          </Text>
-                        </HStack>
-                        <Text type="supporting" color="secondary">
-                          {{ item.variant }} · Qty {{ item.qty }}
-                        </Text>
-                      </VStack>
-                    </StackItem>
-                  </HStack>
-                </VStack>
-                <Divider />
-                <VStack :gap="2">
-                  <HStack justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      Subtotal
-                    </Text>
-                    <Text type="body">
-                      {{ money(subtotal) }}
-                    </Text>
-                  </HStack>
-                  <HStack v-if="promo" justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      {{ promo.label }}
-                    </Text>
-                    <Text type="body">
-                      −{{ money(discount) }}
-                    </Text>
-                  </HStack>
-                  <HStack justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      {{ deliveryOption.label }} delivery
-                    </Text>
-                    <Text type="body">
-                      {{ shipping === 0 ? 'Free' : money(shipping) }}
-                    </Text>
-                  </HStack>
-                  <HStack justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      Estimated tax
-                    </Text>
-                    <Text type="body">
-                      {{ money(tax) }}
-                    </Text>
-                  </HStack>
+                        </VStack>
+                      </StackItem>
+                    </HStack>
+                  </VStack>
                   <Divider />
-                  <HStack justify="between" align="center">
-                    <Text type="large" weight="bold">
-                      Total
-                    </Text>
-                    <Text type="large" weight="bold">
-                      {{ money(total) }}
-                    </Text>
-                  </HStack>
+                  <VStack :gap="2">
+                    <HStack justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        Subtotal
+                      </Text>
+                      <Text type="body">
+                        {{ money(subtotal) }}
+                      </Text>
+                    </HStack>
+                    <HStack v-if="promo" justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        {{ promo.label }}
+                      </Text>
+                      <Text type="body">
+                        −{{ money(discount) }}
+                      </Text>
+                    </HStack>
+                    <HStack justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        {{ deliveryOption.label }} delivery
+                      </Text>
+                      <Text type="body">
+                        {{ shipping === 0 ? 'Free' : money(shipping) }}
+                      </Text>
+                    </HStack>
+                    <HStack justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        Estimated tax
+                      </Text>
+                      <Text type="body">
+                        {{ money(tax) }}
+                      </Text>
+                    </HStack>
+                    <Divider />
+                    <HStack justify="between" align="center">
+                      <Text type="large" weight="bold">
+                        Total
+                      </Text>
+                      <Text type="large" weight="bold">
+                        {{ money(total) }}
+                      </Text>
+                    </HStack>
+                  </VStack>
+                  <Banner
+                    v-if="subtotal - discount < FREE_SHIPPING_THRESHOLD"
+                    status="info"
+                    :title="`${money(FREE_SHIPPING_THRESHOLD - (subtotal - discount))} away from free standard shipping`"
+                  />
                 </VStack>
-                <Banner
-                  v-if="subtotal - discount < FREE_SHIPPING_THRESHOLD"
-                  status="info"
-                  :title="`${money(FREE_SHIPPING_THRESHOLD - (subtotal - discount))} away from free standard shipping`"
-                />
-              </VStack>
               </component>
             </Card>
           </StackItem>

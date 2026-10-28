@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref } from 'vue'
 import {
   Button,
   Card,
@@ -17,6 +16,7 @@ import {
   TextInput,
   VStack,
 } from '@astryx-vue/core'
+import { ref } from 'vue'
 
 const COVER_IMAGE_URL = '/template-assets/light-working-vertical-1.png'
 const APPLE_LOGO_URL = '/template-assets/AppleLogo.png'
@@ -94,7 +94,7 @@ function onPasswordChange(value: string) {
                         <Icon icon="i-heroicons-check-circle" size="lg" />
                       </template>
                     </EmptyState>
-                    <VStack v-else :gap="4" hAlign="stretch" width="100%">
+                    <VStack v-else :gap="4" h-align="stretch" width="100%">
                       <VStack :gap="1">
                         <Text type="display-1" as="h2">
                           Welcome back
@@ -123,7 +123,7 @@ function onPasswordChange(value: string) {
                             :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                             @update:model-value="onPasswordChange"
                           />
-                          <VStack v-if="loginFailed" hAlign="end">
+                          <VStack v-if="loginFailed" h-align="end">
                             <Link href="#" size="sm" color="secondary">
                               Forgot your password?
                             </Link>
@@ -169,7 +169,7 @@ function onPasswordChange(value: string) {
           </Grid>
         </Card>
       </div>
-      <VStack hAlign="center">
+      <VStack h-align="center">
         <Text type="supporting" color="secondary">
           By clicking continue, you agree to our
           <Link href="#" size="sm">

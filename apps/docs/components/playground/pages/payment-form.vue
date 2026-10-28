@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { computed, ref } from 'vue'
 import {
   Badge,
   Banner,
@@ -30,6 +29,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { computed, ref } from 'vue'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -46,8 +46,8 @@ const MONTHS = [
   '10',
   '11',
   '12',
-];
-const YEARS = Array.from({length: 12}, (_, i) => String(2025 + i));
+]
+const YEARS = Array.from({ length: 12 }, (_, i) => String(2025 + i))
 
 const US_STATES = [
   'Alabama',
@@ -100,21 +100,21 @@ const US_STATES = [
   'West Virginia',
   'Wisconsin',
   'Wyoming',
-];
+]
 
 // Product photos from the local template-assets set (committed to the
 // docsite; the CLI swaps these for an inline placeholder on scaffold).
-const ITEM_IMAGES: Record<string, {src: string}> = {
-  '1': {
+const ITEM_IMAGES: Record<string, { src: string }> = {
+  1: {
     src: '/template-assets/light-product-1.png',
   },
-  '2': {
+  2: {
     src: '/template-assets/light-product-4.png',
   },
-  '3': {
+  3: {
     src: '/template-assets/light-product-5.png',
   },
-};
+}
 
 const ORDER_ITEMS = [
   {
@@ -141,13 +141,13 @@ const ORDER_ITEMS = [
     qty: 1,
     limited: true,
   },
-];
+]
 
-const SUBTOTAL = 230;
+const SUBTOTAL = 230
 // SHIPPING is now computed from deliveryMethod state
-const TAX = 18.4;
+const TAX = 18.4
 // TOTAL is computed dynamically based on delivery selection
-const fmt = (n: number) => `$${n.toFixed(2)}`;
+const fmt = (n: number) => `$${n.toFixed(2)}`
 
 const CARD_LOGOS = [
   { src: 'https://raw.githubusercontent.com/aaronfagan/svg-credit-card-payment-icons/main/flat/visa.svg', alt: 'Visa' },
@@ -161,22 +161,22 @@ const POLICIES = ['Refund policy', 'Privacy policy', 'Terms of service', 'Cancel
 // Plain inline styles using Astryx design-token CSS variables (declared at
 // :root by `@astryxdesign/core/astryx.css`). No StyleX compiler required.
 
-const fullWidth: CSSProperties = {width: '100%'};
+const fullWidth: CSSProperties = { width: '100%' }
 // Form column flex-basis so the two checkout columns share width evenly.
-const formColBasis: CSSProperties = {flexBasis: 0};
+const formColBasis: CSSProperties = { flexBasis: 0 }
 // Space the Order Summary content below its collapsible trigger title.
-const summaryContent: CSSProperties = {paddingBlockStart: 'var(--astryx-spacing-2)'};
+const summaryContent: CSSProperties = { paddingBlockStart: 'var(--astryx-spacing-2)' }
 // Order-summary column: sticky beside the form on desktop.
 const summarySticky: CSSProperties = {
   flexBasis: 0,
   position: 'sticky',
   top: 'var(--astryx-spacing-4)',
   alignSelf: 'flex-start',
-};
+}
 // On mobile the summary moves above the form.
-const summaryMobileOrder: CSSProperties = {order: -1};
+const summaryMobileOrder: CSSProperties = { order: -1 }
 // 快捷支付按钮里的品牌图形按字高缩放。
-const brandLogo: CSSProperties = {height: 'var(--astryx-spacing-5)', width: 'auto'};
+const brandLogo: CSSProperties = { height: 'var(--astryx-spacing-5)', width: 'auto' }
 // 卡组织图标是带描边的圆角小牌子。
 const cardLogo: CSSProperties = {
   height: 'var(--astryx-spacing-7)',
@@ -186,7 +186,7 @@ const cardLogo: CSSProperties = {
   borderStyle: 'solid',
   borderColor: 'var(--astryx-color-border)',
   backgroundColor: 'var(--astryx-color-background-surface)',
-};
+}
 const isMobile = useMediaQuery('(max-width: 767px)')
 const firstName = ref('')
 const lastName = ref('')
@@ -215,31 +215,33 @@ const addGiftMessage = ref(false)
 const giftTo = ref('')
 const giftFrom = ref('')
 const giftMessage = ref('')
-const quantities = ref<Record<string, number>>({ '1': 1, '2': 1, '3': 1 })
+const quantities = ref<Record<string, number>>({ 1: 1, 2: 1, 3: 1 })
 const submitted = ref(false)
 
 const shippingCost = computed(() => deliveryMethod.value === 'expedited' ? 9.95 : 4.95)
 const orderTotal = computed(() => SUBTOTAL + shippingCost.value + TAX)
 
-const errors = computed(() => submitted.value ? {
-  firstName: !firstName.value.trim() ? 'Required' : undefined,
-  lastName: !lastName.value.trim() ? 'Required' : undefined,
-  address: !address.value.trim() ? 'Required' : undefined,
-  city: !city.value.trim() ? 'Required' : undefined,
-  zip: !zip.value.trim() ? 'Required' : undefined,
-  state: !state.value ? 'Required' : undefined,
-  email: !email.value.trim() ? 'Required' : undefined,
-  phone: !phone.value.trim() ? 'Required' : undefined,
-  expiry: !expiry.value ? 'Required' : undefined,
-  expYear: !expYear.value ? 'Required' : undefined,
-  cvc: !cvc.value.trim() ? 'Required' : undefined,
-  cardNumber: paymentMethod.value === 'card' && !cardNumber.value.trim() ? 'Required' : undefined,
-  cardName: paymentMethod.value === 'card' && !cardName.value.trim() ? 'Required' : undefined,
-  billingAddress: !billingMatchesShipping.value && !billingAddress.value.trim() ? 'Required' : undefined,
-  billingCity: !billingMatchesShipping.value && !billingCity.value.trim() ? 'Required' : undefined,
-  billingZip: !billingMatchesShipping.value && !billingZip.value.trim() ? 'Required' : undefined,
-  billingState: !billingMatchesShipping.value && !billingState.value ? 'Required' : undefined,
-} : {})
+const errors = computed(() => submitted.value
+  ? {
+      firstName: !firstName.value.trim() ? 'Required' : undefined,
+      lastName: !lastName.value.trim() ? 'Required' : undefined,
+      address: !address.value.trim() ? 'Required' : undefined,
+      city: !city.value.trim() ? 'Required' : undefined,
+      zip: !zip.value.trim() ? 'Required' : undefined,
+      state: !state.value ? 'Required' : undefined,
+      email: !email.value.trim() ? 'Required' : undefined,
+      phone: !phone.value.trim() ? 'Required' : undefined,
+      expiry: !expiry.value ? 'Required' : undefined,
+      expYear: !expYear.value ? 'Required' : undefined,
+      cvc: !cvc.value.trim() ? 'Required' : undefined,
+      cardNumber: paymentMethod.value === 'card' && !cardNumber.value.trim() ? 'Required' : undefined,
+      cardName: paymentMethod.value === 'card' && !cardName.value.trim() ? 'Required' : undefined,
+      billingAddress: !billingMatchesShipping.value && !billingAddress.value.trim() ? 'Required' : undefined,
+      billingCity: !billingMatchesShipping.value && !billingCity.value.trim() ? 'Required' : undefined,
+      billingZip: !billingMatchesShipping.value && !billingZip.value.trim() ? 'Required' : undefined,
+      billingState: !billingMatchesShipping.value && !billingState.value ? 'Required' : undefined,
+    }
+  : {})
 </script>
 
 <template>
@@ -251,8 +253,12 @@ const errors = computed(() => submitted.value ? {
             <VStack :gap="5">
               <VStack :gap="6">
                 <VStack :gap="2">
-                  <Text type="display-1" as="h1">Payment Request</Text>
-                  <Text type="body" color="secondary">Review your order and complete your purchase. All transactions are secured with 256-bit SSL encryption.</Text>
+                  <Text type="display-1" as="h1">
+                    Payment Request
+                  </Text>
+                  <Text type="body" color="secondary">
+                    Review your order and complete your purchase. All transactions are secured with 256-bit SSL encryption.
+                  </Text>
                 </VStack>
                 <Divider />
               </VStack>
@@ -261,18 +267,26 @@ const errors = computed(() => submitted.value ? {
                   <VStack :gap="8">
                     <VStack :gap="1">
                       <HStack :gap="2" justify="between" align="center">
-                        <Text type="large" weight="bold">Sign in to check out</Text>
+                        <Text type="large" weight="bold">
+                          Sign in to check out
+                        </Text>
                         <Button label="Sign In" variant="secondary" size="sm" />
                       </HStack>
-                      <Text type="supporting" color="secondary">Sign in to track your order and save your information for faster checkout.</Text>
+                      <Text type="supporting" color="secondary">
+                        Sign in to track your order and save your information for faster checkout.
+                      </Text>
                     </VStack>
                     <VStack :gap="3">
-                      <Text type="large" weight="bold">Contact Information</Text>
+                      <Text type="large" weight="bold">
+                        Contact Information
+                      </Text>
                       <TextInput v-model="email" size="lg" label="Email" placeholder="you@example.com" :status="errors.email ? { type: 'error', message: errors.email } : undefined" />
                       <CheckboxInput v-model="emailOffers" label="Email me with news and offers" />
                     </VStack>
                     <VStack :gap="3">
-                      <Text type="large" weight="bold">Shipping Information</Text>
+                      <Text type="large" weight="bold">
+                        Shipping Information
+                      </Text>
                       <Grid :columns="2" :gap="3">
                         <TextInput v-model="firstName" size="lg" label="First Name" placeholder="John" :status="errors.firstName ? { type: 'error', message: errors.firstName } : undefined" />
                         <TextInput v-model="lastName" size="lg" label="Last Name" placeholder="Doe" :status="errors.lastName ? { type: 'error', message: errors.lastName } : undefined" />
@@ -288,22 +302,38 @@ const errors = computed(() => submitted.value ? {
                     </VStack>
                     <VStack :gap="3">
                       <VStack :gap="1">
-                        <Text type="large" weight="bold">Delivery</Text>
-                        <Text type="supporting" color="secondary">Please allow 1–3 business days processing time before your order ships.</Text>
+                        <Text type="large" weight="bold">
+                          Delivery
+                        </Text>
+                        <Text type="supporting" color="secondary">
+                          Please allow 1–3 business days processing time before your order ships.
+                        </Text>
                       </VStack>
                       <RadioList v-model="deliveryMethod" label="Delivery method">
                         <RadioListItem value="standard" label="Standard (3–7 business days)">
-                          <template #end><Text type="body" weight="medium">$4.95</Text></template>
+                          <template #end>
+                            <Text type="body" weight="medium">
+                              $4.95
+                            </Text>
+                          </template>
                         </RadioListItem>
                         <RadioListItem value="expedited" label="Expedited (1–2 business days)">
-                          <template #end><Text type="body" weight="medium">$9.95</Text></template>
+                          <template #end>
+                            <Text type="body" weight="medium">
+                              $9.95
+                            </Text>
+                          </template>
                         </RadioListItem>
                       </RadioList>
                     </VStack>
                     <VStack :gap="3">
                       <VStack :gap="1">
-                        <Text type="large" weight="bold">Payment Method</Text>
-                        <Text type="supporting" color="secondary">All transactions are secure and encrypted.</Text>
+                        <Text type="large" weight="bold">
+                          Payment Method
+                        </Text>
+                        <Text type="supporting" color="secondary">
+                          All transactions are secure and encrypted.
+                        </Text>
                       </VStack>
                       <Grid :columns="2" :gap="3">
                         <Button label="PayPal" variant="primary" size="lg" :style="{ backgroundColor: '#FFC439', borderColor: '#FFC439' }">
@@ -317,7 +347,9 @@ const errors = computed(() => submitted.value ? {
                         <StackItem size="fill">
                           <Divider />
                         </StackItem>
-                        <Text type="supporting" color="secondary">OR</Text>
+                        <Text type="supporting" color="secondary">
+                          OR
+                        </Text>
                         <StackItem size="fill">
                           <Divider />
                         </StackItem>
@@ -343,7 +375,9 @@ const errors = computed(() => submitted.value ? {
                       </VStack>
                     </VStack>
                     <VStack :gap="3">
-                      <Text type="large" weight="bold">Promo Code</Text>
+                      <Text type="large" weight="bold">
+                        Promo Code
+                      </Text>
                       <HStack :gap="2" align="center">
                         <StackItem size="fill">
                           <TextInput v-model="promo" size="lg" label="Promo code" is-label-hidden placeholder="Enter promo code" :style="fullWidth" />
@@ -352,7 +386,9 @@ const errors = computed(() => submitted.value ? {
                       </HStack>
                     </VStack>
                     <VStack :gap="3">
-                      <Text type="large" weight="bold">Gift Options</Text>
+                      <Text type="large" weight="bold">
+                        Gift Options
+                      </Text>
                       <CheckboxInput v-model="addGiftMessage" label="Add a gift message" />
                       <VStack v-if="addGiftMessage" :gap="3">
                         <Grid :columns="2" :gap="3">
@@ -366,15 +402,21 @@ const errors = computed(() => submitted.value ? {
                       <HStack :gap="5" justify="center" wrap="wrap">
                         <HStack :gap="1" align="center">
                           <Icon icon="i-carbon-security" size="sm" color="secondary" />
-                          <Text type="supporting" color="secondary">Secure Payment</Text>
+                          <Text type="supporting" color="secondary">
+                            Secure Payment
+                          </Text>
                         </HStack>
                         <HStack :gap="1" align="center">
                           <Icon icon="i-carbon-locked" size="sm" color="secondary" />
-                          <Text type="supporting" color="secondary">SSL Encrypted</Text>
+                          <Text type="supporting" color="secondary">
+                            SSL Encrypted
+                          </Text>
                         </HStack>
                         <HStack :gap="1" align="center">
                           <Icon icon="i-carbon-checkmark-filled" size="sm" color="secondary" />
-                          <Text type="supporting" color="secondary">Free Returns</Text>
+                          <Text type="supporting" color="secondary">
+                            Free Returns
+                          </Text>
                         </HStack>
                       </HStack>
                       <VStack :gap="2">
@@ -383,7 +425,9 @@ const errors = computed(() => submitted.value ? {
                       </VStack>
                       <Divider />
                       <HStack :gap="4" align="center" wrap="wrap">
-                        <Link v-for="policy in POLICIES" :key="policy" href="#" size="sm">{{ policy }}</Link>
+                        <Link v-for="policy in POLICIES" :key="policy" href="#" size="sm">
+                          {{ policy }}
+                        </Link>
                       </HStack>
                     </VStack>
                   </VStack>
@@ -399,18 +443,28 @@ const errors = computed(() => submitted.value ? {
                               <VStack :gap="1">
                                 <HStack :gap="2" justify="between" align="start">
                                   <HStack :gap="2" align="center">
-                                    <Text type="body" weight="medium">{{ item.name }}</Text>
+                                    <Text type="body" weight="medium">
+                                      {{ item.name }}
+                                    </Text>
                                     <Badge v-if="item.limited" variant="green" label="LIMITED EDITION" />
                                   </HStack>
-                                  <Text type="body" weight="bold">{{ fmt(item.price) }}</Text>
+                                  <Text type="body" weight="bold">
+                                    {{ fmt(item.price) }}
+                                  </Text>
                                 </HStack>
-                                <Text type="supporting" color="secondary">{{ item.variant }}</Text>
+                                <Text type="supporting" color="secondary">
+                                  {{ item.variant }}
+                                </Text>
                                 <HStack :gap="2" align="center">
                                   <span class="quantity-field">
                                     <NumberInput v-model="quantities[item.id]" label="Qty" is-label-hidden :min="1" :max="10" is-integer-only />
                                   </span>
-                                  <Link size="sm" href="#" @click.prevent="quantities[item.id] = 0">Remove</Link>
-                                  <Link size="sm" href="#">Save</Link>
+                                  <Link size="sm" href="#" @click.prevent="quantities[item.id] = 0">
+                                    Remove
+                                  </Link>
+                                  <Link size="sm" href="#">
+                                    Save
+                                  </Link>
                                 </HStack>
                               </VStack>
                             </StackItem>
@@ -423,22 +477,38 @@ const errors = computed(() => submitted.value ? {
                           </Text>
                           <VStack :gap="2">
                             <HStack justify="between" align="center">
-                              <Text type="body" color="secondary">Subtotal</Text>
-                              <Text type="body">{{ fmt(SUBTOTAL) }}</Text>
+                              <Text type="body" color="secondary">
+                                Subtotal
+                              </Text>
+                              <Text type="body">
+                                {{ fmt(SUBTOTAL) }}
+                              </Text>
                             </HStack>
                             <HStack justify="between" align="center">
-                              <Text type="body" color="secondary">Shipping</Text>
-                              <Text type="body">{{ fmt(shippingCost) }}</Text>
+                              <Text type="body" color="secondary">
+                                Shipping
+                              </Text>
+                              <Text type="body">
+                                {{ fmt(shippingCost) }}
+                              </Text>
                             </HStack>
                             <HStack justify="between" align="center">
-                              <Text type="body" color="secondary">Tax</Text>
-                              <Text type="body">{{ fmt(TAX) }}</Text>
+                              <Text type="body" color="secondary">
+                                Tax
+                              </Text>
+                              <Text type="body">
+                                {{ fmt(TAX) }}
+                              </Text>
                             </HStack>
                           </VStack>
                           <Divider />
                           <HStack justify="between" align="center">
-                            <Text type="large" weight="bold">Total</Text>
-                            <Text type="large" weight="bold">{{ fmt(orderTotal) }}</Text>
+                            <Text type="large" weight="bold">
+                              Total
+                            </Text>
+                            <Text type="large" weight="bold">
+                              {{ fmt(orderTotal) }}
+                            </Text>
                           </HStack>
                           <Banner status="info" title="Free shipping on orders over $300">
                             <template #icon>

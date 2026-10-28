@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { reactive, ref } from 'vue'
 import {
   Badge,
   Button,
@@ -27,6 +26,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { reactive, ref } from 'vue'
 
 const fillViewport: CSSProperties = { minHeight: '100dvh' }
 const iconBox: CSSProperties = {
@@ -57,7 +57,7 @@ const NAV_ITEMS = [
 const SECTION_TITLES: Record<string, string> = {
   'Personal information': 'Personal info',
   'Login & security': 'Login & security',
-  Privacy: 'Privacy',
+  'Privacy': 'Privacy',
   'Languages & currency': 'Languages & currency',
 }
 
@@ -129,13 +129,13 @@ const PERSONAL_PLACEHOLDERS: Record<string, string> = {
 const HELP_CARDS = [
   {
     icon: 'i-heroicons-lock-closed',
-    title: "Why isn't my info shown here?",
-    body: "We're hiding some account details to protect your identity.",
+    title: 'Why isn\'t my info shown here?',
+    body: 'We\'re hiding some account details to protect your identity.',
   },
   {
     icon: 'i-heroicons-pencil-square',
     title: 'Which details can be edited?',
-    body: "Contact info and personal details can be edited. If this info was used to verify your identity, you'll need to get verified again the next time you book—or to continue hosting.",
+    body: 'Contact info and personal details can be edited. If this info was used to verify your identity, you\'ll need to get verified again the next time you book—or to continue hosting.',
   },
   {
     icon: 'i-heroicons-share',
@@ -315,7 +315,7 @@ function personalValue(key: string) {
                       {{ row.value }}
                     </Text>
                   </VStack>
-                  <Link size="md" v-if="row.action" href="#">
+                  <Link v-if="row.action" size="md" href="#">
                     {{ row.action }}
                   </Link>
                 </HStack>
@@ -372,7 +372,7 @@ function personalValue(key: string) {
                     </Text>
                   </VStack>
                 </StackItem>
-                <Link size="md" v-if="device.action" href="#">
+                <Link v-if="device.action" size="md" href="#">
                   {{ device.action }}
                 </Link>
               </HStack>
@@ -434,11 +434,13 @@ function personalValue(key: string) {
             Languages & currency
           </Heading>
           <VStack :gap="0">
-            <template v-for="row in [
-              { key: 'language', label: 'Preferred language', options: LANGUAGES, current: language },
-              { key: 'currency', label: 'Preferred currency', options: CURRENCIES, current: currency },
-              { key: 'timezone', label: 'Time zone', options: TIMEZONES, current: timezone },
-            ]" :key="row.key">
+            <template
+              v-for="row in [
+                { key: 'language', label: 'Preferred language', options: LANGUAGES, current: language },
+                { key: 'currency', label: 'Preferred currency', options: CURRENCIES, current: currency },
+                { key: 'timezone', label: 'Time zone', options: TIMEZONES, current: timezone },
+              ]" :key="row.key"
+            >
               <VStack v-if="expandedRow === row.key" :gap="4" :style="rowPadding">
                 <Text type="body" weight="semibold" display="block">
                   {{ row.label }}
@@ -523,8 +525,9 @@ function personalValue(key: string) {
                     {{ field.isReadOnly ? 'Verified' : personalValue(field.key) }}
                   </Text>
                 </VStack>
-                <Link size="md"
+                <Link
                   v-if="!field.isReadOnly"
+                  size="md"
                   href="#"
                   @click.prevent="expandedRow = field.key"
                 >

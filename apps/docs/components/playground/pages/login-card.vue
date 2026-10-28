@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref } from 'vue'
 import {
   Button,
   Card,
@@ -13,6 +12,7 @@ import {
   TextInput,
   VStack,
 } from '@astryx-vue/core'
+import { ref } from 'vue'
 
 const pageStyle: CSSProperties = {
   backgroundColor: 'var(--astryx-color-background-body)',
@@ -44,16 +44,16 @@ function onPasswordChange(value: string) {
 
 <template>
   <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
-    <VStack :gap="4" hAlign="center" width="100%" :max-width="400">
-      <VStack :gap="2" hAlign="center">
+    <VStack :gap="4" h-align="center" width="100%" :max-width="400">
+      <VStack :gap="2" h-align="center">
         <Icon icon="i-heroicons-cube" size="lg" />
         <Text type="body" weight="bold" size="lg">
           Product Inc.
         </Text>
       </VStack>
       <Card :padding="8" width="100%">
-        <VStack :gap="4" hAlign="stretch">
-          <VStack :gap="1" hAlign="center">
+        <VStack :gap="4" h-align="stretch">
+          <VStack :gap="1" h-align="center">
             <Heading :level="2">
               Welcome back
             </Heading>
@@ -81,7 +81,7 @@ function onPasswordChange(value: string) {
                 :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                 @update:model-value="onPasswordChange"
               />
-              <VStack v-if="loginFailed" hAlign="end">
+              <VStack v-if="loginFailed" h-align="end">
                 <Link href="#" size="sm" color="secondary">
                   Forgot password?
                 </Link>
@@ -96,7 +96,7 @@ function onPasswordChange(value: string) {
             @click="handleLogin"
           />
           <Divider label="Or continue with" />
-          <VStack :gap="3" hAlign="stretch">
+          <VStack :gap="3" h-align="stretch">
             <Button label="Login with Apple" variant="secondary" size="lg">
               <template #icon>
                 <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="width: 16px; height: 16px" aria-hidden="true">
@@ -115,7 +115,7 @@ function onPasswordChange(value: string) {
               </template>
             </Button>
           </VStack>
-          <VStack hAlign="center">
+          <VStack h-align="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
               <Link href="#" size="sm">
@@ -125,7 +125,7 @@ function onPasswordChange(value: string) {
           </VStack>
         </VStack>
       </Card>
-      <VStack hAlign="center" width="100%">
+      <VStack h-align="center" width="100%">
         <Text type="supporting" color="secondary" justify="center">
           By clicking continue, you agree to our
           <Link href="#" size="sm">

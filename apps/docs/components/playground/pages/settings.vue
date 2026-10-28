@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 import type { SearchableItem } from '@astryx-vue/core'
-import { defineComponent, h, ref } from 'vue'
+import type { Component } from 'vue'
 import {
   Button,
   CheckboxInput,
@@ -25,6 +24,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { defineComponent, h, ref } from 'vue'
 
 const NAV_ITEMS = ['Profile', 'Account', 'Members', 'Billing', 'Invoices', 'API']
 
@@ -43,7 +43,7 @@ const settingsSearchSource = createStaticSource(SETTINGS_ITEMS)
 
 function iconComponent(className: string): Component {
   return defineComponent({
-    render: () => h('span', { class: className, 'aria-hidden': 'true', style: 'width:1em;height:1em' }),
+    render: () => h('span', { 'class': className, 'aria-hidden': 'true', 'style': 'width:1em;height:1em' }),
   })
 }
 
@@ -102,7 +102,7 @@ const searchValue = ref<SearchableItem | null>(null)
     </template>
     <LayoutContent :padding="4">
       <VStack :gap="4">
-        <VStack v-if="isNarrow" hAlign="center">
+        <VStack v-if="isNarrow" h-align="center">
           <TabList v-model:value="activeNav">
             <Tab v-for="item in NAV_ITEMS" :key="item" :value="item" :label="item" />
           </TabList>

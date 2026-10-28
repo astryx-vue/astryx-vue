@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { computed, defineComponent, h, ref, watch } from 'vue'
 import {
   AspectRatio,
   Button,
@@ -32,6 +31,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { computed, defineComponent, h, ref, watch } from 'vue'
 
 /** Below this the dialog swaps its rail for a strip of tabs. */
 const NARROW_VIEWPORT = '(max-width: 640px)'
@@ -39,19 +39,19 @@ const NARROW_VIEWPORT = '(max-width: 640px)'
 /** Floor for every control that sits in a row's right column. */
 const CONTROL_WIDTH = 192
 
-const noop = () => {}
+function noop() {}
 
-type PanelId =
-  | 'profile'
-  | 'security'
-  | 'billing'
-  | 'appearance'
-  | 'notifications'
-  | 'shortcuts'
-  | 'language'
-  | 'privacy'
-  | 'integrations'
-  | 'developer'
+type PanelId
+  = | 'profile'
+    | 'security'
+    | 'billing'
+    | 'appearance'
+    | 'notifications'
+    | 'shortcuts'
+    | 'language'
+    | 'privacy'
+    | 'integrations'
+    | 'developer'
 
 interface PanelConfig {
   id: PanelId
@@ -352,7 +352,7 @@ const shortcutEnabled = ref<Record<string, boolean>>({
 
 function iconComponent(className: string): Component {
   return defineComponent({
-    render: () => h('span', { class: className, 'aria-hidden': 'true', style: 'width:1em;height:1em' }),
+    render: () => h('span', { 'class': className, 'aria-hidden': 'true', 'style': 'width:1em;height:1em' }),
   })
 }
 
@@ -378,7 +378,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
             <SideNav aria-label="Settings sections" class="settings-side-nav">
               <template #header>
                 <HStack :gap="2" align="center" :padding-inline="2" :min-height="32" width="100%">
-                  <Heading :level="4" :id="titleId">
+                  <Heading :id="titleId" :level="4">
                     Settings
                   </Heading>
                 </HStack>
@@ -450,7 +450,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
             <VStack v-if="isNarrow" :gap="2" class="settings-narrow-header">
               <HStack :gap="2" align="center">
                 <StackItem size="fill">
-                  <Text type="label" :id="titleId">
+                  <Text :id="titleId" type="label">
                     Settings
                   </Text>
                 </StackItem>
