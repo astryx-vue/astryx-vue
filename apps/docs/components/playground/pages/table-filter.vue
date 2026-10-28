@@ -1176,8 +1176,11 @@ const rowActivationPlugin: TablePlugin<ServiceJob> = {
   },
   cellPatch({ column, row, kind }) {
     // 选择列默认 36px，勾选框离表格边 6px；原版模板把它加宽到 48px，让勾选框落在 16px 的内容边距上。
-    if (column.key === '__select')
-      return { style: { width: `${SELECTION_COLUMN_WIDTH}px`, minWidth: `${SELECTION_COLUMN_WIDTH}px`, maxWidth: `${SELECTION_COLUMN_WIDTH}px` } }
+    // core 里选择列的 36px 写在 CSS 类上，行内样式才压得过。
+    if (column.key === '__select') {
+      const width = `${SELECTION_COLUMN_WIDTH}px`
+      return { style: { width, minWidth: width, maxWidth: width } }
+    }
     if (kind !== 'body' || row == null || isTableGroupHeader(row) || row.id !== activeJobId.value)
       return null
     return { style: { backgroundColor: 'var(--astryx-color-accent-muted)' } }

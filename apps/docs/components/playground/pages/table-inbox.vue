@@ -525,7 +525,7 @@ const columns: TableColumn<Conversation>[] = [
   {
     key: 'receivedAt',
     header: 'Received',
-    width: pixel(110),
+    width: pixel(120),
     align: 'end',
     renderCell: item => h(HStack, {
       gap: 1,
