@@ -368,6 +368,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
       :width="1120"
       max-height="min(800px, calc(100dvh - 2rem))"
       :padding="0"
+      class="settings-dialog-frame"
       :aria-labelledby="titleId"
       @open-change="noop"
     >
@@ -376,7 +377,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
           <template v-if="!isNarrow" #start>
             <SideNav aria-label="Settings sections" class="settings-side-nav">
               <template #header>
-                <HStack :gap="2" align="center" :padding-inline="2" :min-height="32">
+                <HStack :gap="2" align="center" :padding-inline="2" :min-height="32" width="100%">
                   <Heading :level="4" :id="titleId">
                     Settings
                   </Heading>
@@ -1717,13 +1718,28 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
 </template>
 
 <style>
+/* 待 core 修复后去掉：原版 Dialog 的最大宽度是 min(100%, 100dvw - 2 × 16px)，两侧各留 16px。 */
+.settings-dialog-frame {
+  max-width: min(100%, calc(100dvw - 2rem));
+}
 .settings-dialog-shell {
   height: min(800px, calc(100dvh - 2rem));
 }
 .settings-side-nav {
   flex-shrink: 0;
 }
+/* 待 core 修复后去掉：SideNav 的内容区在分组之间多了 4px 间距、底部内边距 4px（原版无间距、底部 8px）。 */
+.settings-side-nav .astryx-side-nav__body {
+  gap: 0;
+  padding-block-end: var(--astryx-spacing-2);
+}
+/* 待 core 修复后去掉：小号 Selector 的内边距原版是 3px 12px，我们是 4px 8px。 */
+.settings-row-control .astryx-selector.size-sm .astryx-selector-field {
+  padding: 3px 12px;
+}
 .settings-side-nav-section {
+  /* 待 core 修复后去掉 gap：SideNavSection 在标题和条目之间多了 2px 间距，原版没有。 */
+  gap: 0;
   padding-block: var(--astryx-spacing-2);
 }
 .settings-close-anchor {

@@ -315,7 +315,7 @@ function personalValue(key: string) {
                       {{ row.value }}
                     </Text>
                   </VStack>
-                  <Link v-if="row.action" href="#">
+                  <Link size="md" v-if="row.action" href="#">
                     {{ row.action }}
                   </Link>
                 </HStack>
@@ -338,7 +338,7 @@ function personalValue(key: string) {
                       {{ row.value }}
                     </Text>
                   </VStack>
-                  <Link href="#">
+                  <Link size="md" href="#">
                     {{ row.action }}
                   </Link>
                 </HStack>
@@ -372,7 +372,7 @@ function personalValue(key: string) {
                     </Text>
                   </VStack>
                 </StackItem>
-                <Link v-if="device.action" href="#">
+                <Link size="md" v-if="device.action" href="#">
                   {{ device.action }}
                 </Link>
               </HStack>
@@ -393,7 +393,7 @@ function personalValue(key: string) {
                     This action cannot be undone
                   </Text>
                 </VStack>
-                <Link href="#">
+                <Link size="md" href="#">
                   Deactivate
                 </Link>
               </HStack>
@@ -481,7 +481,7 @@ function personalValue(key: string) {
                     {{ labelForOption(row.options, row.current) }}
                   </Text>
                 </VStack>
-                <Link href="#" @click.prevent="expandedRow = row.key">
+                <Link size="md" href="#" @click.prevent="expandedRow = row.key">
                   Edit
                 </Link>
               </HStack>
@@ -523,7 +523,7 @@ function personalValue(key: string) {
                     {{ field.isReadOnly ? 'Verified' : personalValue(field.key) }}
                   </Text>
                 </VStack>
-                <Link
+                <Link size="md"
                   v-if="!field.isReadOnly"
                   href="#"
                   @click.prevent="expandedRow = field.key"
@@ -578,7 +578,7 @@ function personalValue(key: string) {
                 <Text type="body" weight="semibold">
                   Blocked people
                 </Text>
-                <Link href="#">
+                <Link size="md" href="#">
                   View
                 </Link>
               </HStack>
@@ -653,7 +653,7 @@ function personalValue(key: string) {
                   <Text type="body">
                     Request my personal data
                   </Text>
-                  <Link href="#">
+                  <Link size="md" href="#">
                     Request
                   </Link>
                 </HStack>
@@ -670,7 +670,7 @@ function personalValue(key: string) {
                   <Text type="body">
                     Delete my account
                   </Text>
-                  <Link href="#">
+                  <Link size="md" href="#">
                     Delete
                   </Link>
                 </HStack>

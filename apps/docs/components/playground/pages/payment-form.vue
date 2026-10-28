@@ -409,8 +409,8 @@ const errors = computed(() => submitted.value ? {
                                   <span class="quantity-field">
                                     <NumberInput v-model="quantities[item.id]" label="Qty" is-label-hidden :min="1" :max="10" is-integer-only />
                                   </span>
-                                  <Link href="#" @click.prevent="quantities[item.id] = 0">Remove</Link>
-                                  <Link href="#">Save</Link>
+                                  <Link size="md" href="#" @click.prevent="quantities[item.id] = 0">Remove</Link>
+                                  <Link size="md" href="#">Save</Link>
                                 </HStack>
                               </VStack>
                             </StackItem>
