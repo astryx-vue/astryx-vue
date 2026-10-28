@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { reactive, ref } from 'vue'
 import {
   Badge,
   Button,
@@ -27,6 +26,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { reactive, ref } from 'vue'
 
 const fillViewport: CSSProperties = { minHeight: '100dvh' }
 const iconBox: CSSProperties = {
@@ -44,20 +44,20 @@ const sideNavHeading: CSSProperties = { marginInline: 'var(--astryx-spacing-4)' 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { label: 'Personal information', icon: 'i-heroicons-user' },
-  { label: 'Login & security', icon: 'i-heroicons-lock-closed' },
-  { label: 'Privacy', icon: 'i-heroicons-shield-check' },
-  { label: 'Notifications', icon: 'i-heroicons-bell' },
-  { label: 'Taxes', icon: 'i-heroicons-document-text' },
-  { label: 'Payments', icon: 'i-heroicons-credit-card' },
-  { label: 'Languages & currency', icon: 'i-heroicons-globe-alt' },
-  { label: 'Travel for work', icon: 'i-heroicons-briefcase' },
+  { label: 'Personal information', icon: 'heroicons:user' },
+  { label: 'Login & security', icon: 'heroicons:lock-closed' },
+  { label: 'Privacy', icon: 'heroicons:shield-check' },
+  { label: 'Notifications', icon: 'heroicons:bell' },
+  { label: 'Taxes', icon: 'heroicons:document-text' },
+  { label: 'Payments', icon: 'heroicons:credit-card' },
+  { label: 'Languages & currency', icon: 'heroicons:globe-alt' },
+  { label: 'Travel for work', icon: 'heroicons:briefcase' },
 ]
 
 const SECTION_TITLES: Record<string, string> = {
   'Personal information': 'Personal info',
   'Login & security': 'Login & security',
-  Privacy: 'Privacy',
+  'Privacy': 'Privacy',
   'Languages & currency': 'Languages & currency',
 }
 
@@ -128,17 +128,17 @@ const PERSONAL_PLACEHOLDERS: Record<string, string> = {
 
 const HELP_CARDS = [
   {
-    icon: 'i-heroicons-lock-closed',
-    title: "Why isn't my info shown here?",
-    body: "We're hiding some account details to protect your identity.",
+    icon: 'heroicons:lock-closed',
+    title: 'Why isn\'t my info shown here?',
+    body: 'We\'re hiding some account details to protect your identity.',
   },
   {
-    icon: 'i-heroicons-pencil-square',
+    icon: 'heroicons:pencil-square',
     title: 'Which details can be edited?',
-    body: "Contact info and personal details can be edited. If this info was used to verify your identity, you'll need to get verified again the next time you book—or to continue hosting.",
+    body: 'Contact info and personal details can be edited. If this info was used to verify your identity, you\'ll need to get verified again the next time you book—or to continue hosting.',
   },
   {
-    icon: 'i-heroicons-share',
+    icon: 'heroicons:share',
     title: 'What info is shared with others?',
     body: 'We only release contact information after a reservation is confirmed.',
   },
@@ -209,10 +209,10 @@ function personalValue(key: string) {
             @click="selectNav(item.label)"
           >
             <template #startContent>
-              <Icon :icon="item.icon" />
+              <Icon size="md" :name="item.icon" />
             </template>
             <template #endContent>
-              <Icon icon="i-heroicons-chevron-right" size="sm" color="secondary" />
+              <Icon name="heroicons:chevron-right" size="sm" color="secondary" />
             </template>
           </ListItem>
         </List>
@@ -220,7 +220,7 @@ function personalValue(key: string) {
         <List density="spacious">
           <ListItem label="Professional hosting tools">
             <template #startContent>
-              <Icon icon="i-heroicons-wrench-screwdriver" />
+              <Icon size="md" name="heroicons:wrench-screwdriver" />
             </template>
           </ListItem>
         </List>
@@ -249,7 +249,7 @@ function personalValue(key: string) {
               @click="selectNav(item.label)"
             >
               <template #startContent>
-                <Icon :icon="item.icon" />
+                <Icon size="md" :name="item.icon" />
               </template>
             </ListItem>
           </List>
@@ -257,7 +257,7 @@ function personalValue(key: string) {
           <List density="spacious">
             <ListItem label="Professional hosting tools">
               <template #startContent>
-                <Icon icon="i-heroicons-wrench-screwdriver" />
+                <Icon size="md" name="heroicons:wrench-screwdriver" />
               </template>
             </ListItem>
           </List>
@@ -281,7 +281,7 @@ function personalValue(key: string) {
               @click="mobileView = 'nav'"
             >
               <template #icon>
-                <Icon icon="i-heroicons-arrow-left" size="sm" />
+                <Icon name="heroicons:arrow-left" size="sm" />
               </template>
             </Button>
             <Heading :level="2">
@@ -315,7 +315,7 @@ function personalValue(key: string) {
                       {{ row.value }}
                     </Text>
                   </VStack>
-                  <Link v-if="row.action" href="#">
+                  <Link v-if="row.action" size="md" href="#">
                     {{ row.action }}
                   </Link>
                 </HStack>
@@ -338,7 +338,7 @@ function personalValue(key: string) {
                       {{ row.value }}
                     </Text>
                   </VStack>
-                  <Link href="#">
+                  <Link size="md" href="#">
                     {{ row.action }}
                   </Link>
                 </HStack>
@@ -358,7 +358,7 @@ function personalValue(key: string) {
                 align="start"
                 :style="rowPadding"
               >
-                <Icon icon="i-heroicons-computer-desktop" />
+                <Icon size="md" name="heroicons:computer-desktop" />
                 <StackItem size="fill">
                   <VStack :gap="0">
                     <HStack :gap="2" align="center">
@@ -372,7 +372,7 @@ function personalValue(key: string) {
                     </Text>
                   </VStack>
                 </StackItem>
-                <Link v-if="device.action" href="#">
+                <Link v-if="device.action" size="md" href="#">
                   {{ device.action }}
                 </Link>
               </HStack>
@@ -393,7 +393,7 @@ function personalValue(key: string) {
                     This action cannot be undone
                   </Text>
                 </VStack>
-                <Link href="#">
+                <Link size="md" href="#">
                   Deactivate
                 </Link>
               </HStack>
@@ -414,7 +414,7 @@ function personalValue(key: string) {
             <Card variant="muted">
               <HStack :gap="4" align="start">
                 <Center :width="48" :height="48" :style="iconBox">
-                  <Icon icon="i-heroicons-lock-closed" />
+                  <Icon size="md" name="heroicons:lock-closed" />
                 </Center>
                 <VStack :gap="1">
                   <Text type="body" weight="bold">
@@ -434,11 +434,13 @@ function personalValue(key: string) {
             Languages & currency
           </Heading>
           <VStack :gap="0">
-            <template v-for="row in [
-              { key: 'language', label: 'Preferred language', options: LANGUAGES, current: language },
-              { key: 'currency', label: 'Preferred currency', options: CURRENCIES, current: currency },
-              { key: 'timezone', label: 'Time zone', options: TIMEZONES, current: timezone },
-            ]" :key="row.key">
+            <template
+              v-for="row in [
+                { key: 'language', label: 'Preferred language', options: LANGUAGES, current: language },
+                { key: 'currency', label: 'Preferred currency', options: CURRENCIES, current: currency },
+                { key: 'timezone', label: 'Time zone', options: TIMEZONES, current: timezone },
+              ]" :key="row.key"
+            >
               <VStack v-if="expandedRow === row.key" :gap="4" :style="rowPadding">
                 <Text type="body" weight="semibold" display="block">
                   {{ row.label }}
@@ -481,7 +483,7 @@ function personalValue(key: string) {
                     {{ labelForOption(row.options, row.current) }}
                   </Text>
                 </VStack>
-                <Link href="#" @click.prevent="expandedRow = row.key">
+                <Link size="md" href="#" @click.prevent="expandedRow = row.key">
                   Edit
                 </Link>
               </HStack>
@@ -525,6 +527,7 @@ function personalValue(key: string) {
                 </VStack>
                 <Link
                   v-if="!field.isReadOnly"
+                  size="md"
                   href="#"
                   @click.prevent="expandedRow = field.key"
                 >
@@ -541,7 +544,7 @@ function personalValue(key: string) {
                 <Divider v-if="i > 0" />
                 <HStack :gap="3" align="start">
                   <Center :width="48" :height="48" :style="iconBox">
-                    <Icon :icon="card.icon" />
+                    <Icon size="md" :name="card.icon" />
                   </Center>
                   <VStack :gap="0">
                     <Text type="body" weight="semibold" display="block">
@@ -578,7 +581,7 @@ function personalValue(key: string) {
                 <Text type="body" weight="semibold">
                   Blocked people
                 </Text>
-                <Link href="#">
+                <Link size="md" href="#">
                   View
                 </Link>
               </HStack>
@@ -607,7 +610,7 @@ function personalValue(key: string) {
               </Heading>
               <Text type="supporting" color="secondary">
                 Choose what's shared when you write a review.
-                <Link href="#" type="supporting">
+                <Link href="#" size="sm">
                   Learn more
                 </Link>
               </Text>
@@ -653,7 +656,7 @@ function personalValue(key: string) {
                   <Text type="body">
                     Request my personal data
                   </Text>
-                  <Link href="#">
+                  <Link size="md" href="#">
                     Request
                   </Link>
                 </HStack>
@@ -670,7 +673,7 @@ function personalValue(key: string) {
                   <Text type="body">
                     Delete my account
                   </Text>
-                  <Link href="#">
+                  <Link size="md" href="#">
                     Delete
                   </Link>
                 </HStack>
@@ -678,7 +681,7 @@ function personalValue(key: string) {
               <Card variant="muted">
                 <HStack :gap="4" align="start">
                   <Center :width="48" :height="48" :style="iconBox">
-                    <Icon icon="i-heroicons-shield-check" />
+                    <Icon size="md" name="heroicons:shield-check" />
                   </Center>
                   <VStack :gap="1">
                     <Text type="body" weight="bold">
@@ -686,7 +689,7 @@ function personalValue(key: string) {
                     </Text>
                     <Text type="supporting" color="secondary">
                       We're committed to keeping your data protected. See details in our
-                      <Link href="#" type="supporting">
+                      <Link href="#" size="sm">
                         Privacy Policy
                       </Link>.
                     </Text>

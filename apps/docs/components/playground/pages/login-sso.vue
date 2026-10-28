@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { computed, ref } from 'vue'
 import {
   Avatar,
   Button,
@@ -15,11 +14,11 @@ import {
   TextInput,
   VStack,
 } from '@astryx-vue/core'
+import { computed, ref } from 'vue'
 
 const BG_URL = '/template-assets/building.png'
 
 const pageStyle: CSSProperties = {
-  minHeight: '100%',
   backgroundImage: `url(${BG_URL})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
@@ -27,7 +26,7 @@ const pageStyle: CSSProperties = {
 
 type Step = 'email' | 'sso-confirm' | 'password-fallback'
 
-type SSOProvider = {
+interface SSOProvider {
   name: string
   abbr: string
 }
@@ -46,7 +45,7 @@ function getProvider(email: string) {
 }
 
 function isValidEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  return /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]+$/.test(email)
 }
 
 const step = ref<Step>('email')
@@ -98,11 +97,11 @@ function onPasswordChange(value: string) {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" :style="pageStyle">
+  <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
     <Card :padding="8" width="100%" :max-width="400">
-      <VStack :gap="4" hAlign="stretch">
+      <VStack :gap="4" h-align="stretch">
         <template v-if="step === 'email'">
-          <VStack :gap="1" justify="center">
+          <VStack :gap="1" h-align="center">
             <Text type="display-1" as="h2">
               Welcome back
             </Text>
@@ -129,7 +128,7 @@ function onPasswordChange(value: string) {
               size="lg"
             />
           </VStack>
-          <Link href="#" size="sm" color="secondary" type="supporting">
+          <Link href="#" size="sm" color="secondary">
             Having trouble signing in?
           </Link>
           <Button
@@ -147,10 +146,10 @@ function onPasswordChange(value: string) {
             :is-disabled="!emailValid"
             @click="handleContinue"
           />
-          <VStack justify="center">
+          <VStack h-align="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
-              <Link href="#" type="supporting">
+              <Link href="#" size="sm">
                 Request access
               </Link>
             </Text>
@@ -158,7 +157,7 @@ function onPasswordChange(value: string) {
         </template>
 
         <template v-else-if="step === 'sso-confirm' && provider">
-          <VStack :gap="2" justify="center">
+          <VStack :gap="2" h-align="center">
             <Avatar :name="provider.name" :size="48" />
             <Text type="display-3" as="h2">
               Sign in with {{ provider.name }}
@@ -170,7 +169,7 @@ function onPasswordChange(value: string) {
           <Card :padding="0">
             <Section variant="muted" :padding="4">
               <HStack :gap="2" align="center">
-                <Icon icon="i-heroicons-shield-check" color="secondary" />
+                <Icon size="md" name="heroicons:shield-check" color="secondary" />
                 <VStack :gap="0">
                   <Text type="label">
                     {{ provider.name }}
@@ -200,7 +199,7 @@ function onPasswordChange(value: string) {
         </template>
 
         <template v-else-if="step === 'password-fallback'">
-          <VStack :gap="1" justify="center">
+          <VStack :gap="1" h-align="center">
             <Text type="display-1" as="h2">
               Welcome back
             </Text>
@@ -218,8 +217,8 @@ function onPasswordChange(value: string) {
                 :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                 @update:model-value="onPasswordChange"
               />
-              <VStack v-if="loginFailed" justify="end">
-                <Link href="#" size="sm" color="secondary" type="supporting">
+              <VStack v-if="loginFailed" h-align="end">
+                <Link href="#" size="sm" color="secondary">
                   Forgot password?
                 </Link>
               </VStack>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
-import { computed, defineComponent, h, ref } from 'vue'
 import {
   Banner,
   Button,
@@ -22,6 +20,7 @@ import {
   Token,
   VStack,
 } from '@astryx-vue/core'
+import { computed, ref } from 'vue'
 
 const CAMPAIGN_GOALS = [
   'Brand Awareness',
@@ -52,25 +51,19 @@ const BUDGET_OPTIONS = [
   '$100K+/mo',
 ]
 
-function iconComponent(className: string): Component {
-  return defineComponent({
-    render: () => h('span', { class: className, 'aria-hidden': 'true', style: 'width:1.25em;height:1.25em' }),
-  })
-}
-
 const WHY_US = [
   {
-    icon: iconComponent('i-heroicons-rocket-launch'),
+    icon: 'heroicons:rocket-launch',
     title: 'We move fast for you',
     description: 'We cut through the noise and get straight to the work.',
   },
   {
-    icon: iconComponent('i-heroicons-adjustments-horizontal'),
+    icon: 'heroicons:adjustments-horizontal',
     title: 'We build around you',
     description: 'We tailor everything to what you\'re trying to achieve.',
   },
   {
-    icon: iconComponent('i-heroicons-hand-raised'),
+    icon: 'heroicons:hand-raised',
     title: 'We show up for you',
     description: 'A dedicated team that knows your brand and wants to win.',
   },
@@ -109,10 +102,10 @@ function toggleGoal(goal: string) {
 
 <template>
   <Center axis="horizontal">
-    <VStack justify="center" width="100%">
+    <VStack h-align="center" width="100%">
       <Section :max-width="800" :padding="6" :padding-block="10" variant="section">
         <VStack :gap="6">
-          <VStack :gap="2" justify="center">
+          <VStack :gap="2" h-align="center">
             <Text type="display-1" weight="bold">
               Let's work together
             </Text>
@@ -125,7 +118,7 @@ function toggleGoal(goal: string) {
             <Grid :columns="{ minWidth: 200 }" :gap="4">
               <Card v-for="item in WHY_US" :key="item.title">
                 <VStack :gap="3">
-                  <Icon :icon="item.icon" size="lg" color="accent" />
+                  <Icon :name="item.icon" size="lg" color="accent" />
                   <VStack :gap="1">
                     <Text type="body" weight="bold">
                       {{ item.title }}
@@ -217,6 +210,8 @@ function toggleGoal(goal: string) {
               v-model="message"
               label="Anything else?"
               placeholder="Tell us whatever else is on your mind..."
+              :rows="3"
+              control-class="contact-form-textarea"
             />
 
             <CheckboxInput v-model="isDecider" label="I'm a budget decision-maker" />
@@ -227,7 +222,7 @@ function toggleGoal(goal: string) {
             <HStack :gap="1" justify="center">
               <Text type="supporting" color="secondary">
                 By submitting you agree to our
-                <Link href="#" type="supporting">
+                <Link href="#" size="sm">
                   Privacy Policy
                 </Link>.
               </Text>
@@ -238,3 +233,14 @@ function toggleGoal(goal: string) {
     </VStack>
   </Center>
 </template>
+
+<style>
+/* 待 core 修复后去掉：TextArea 外框自带 8px 内边距和 80px 最小高度，原版是文本区自己 4px 8px、高度由 rows 决定。 */
+.contact-form-textarea {
+  min-height: auto;
+  padding: 0;
+}
+.contact-form-textarea .astryx-text-area-control {
+  padding: 4px 8px;
+}
+</style>

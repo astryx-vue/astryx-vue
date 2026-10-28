@@ -413,7 +413,7 @@ const timeRange = ref('1 year')
                         <Avatar :name="asset.ticker" size="md" />
                       </template>
                       <template #endContent>
-                        <VStack :gap="0" justify="end">
+                        <VStack :gap="0" hAlign="end">
                           <Text type="body">{{ asset.value }}</Text>
                           <Badge :label="asset.change" :variant="asset.change.startsWith('-') ? 'red' : 'green'" />
                         </VStack>

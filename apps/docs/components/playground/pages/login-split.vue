@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref } from 'vue'
 import {
   Button,
   Card,
@@ -17,6 +16,7 @@ import {
   TextInput,
   VStack,
 } from '@astryx-vue/core'
+import { ref } from 'vue'
 
 const COVER_IMAGE_URL = '/template-assets/light-working-vertical-1.png'
 const APPLE_LOGO_URL = '/template-assets/AppleLogo.png'
@@ -24,7 +24,6 @@ const GOOGLE_LOGO_URL = '/template-assets/GoogleLogo.png'
 const COLUMN_MIN_WIDTH = 240
 
 const pageStyle: CSSProperties = {
-  minHeight: '100%',
   backgroundColor: 'var(--astryx-color-background-body)',
 }
 
@@ -66,7 +65,7 @@ function onPasswordChange(value: string) {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" :style="pageStyle">
+  <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
     <VStack :gap="4" width="100%">
       <div :style="cardWrap">
         <Card :padding="0" width="100%">
@@ -79,23 +78,23 @@ function onPasswordChange(value: string) {
             <Section variant="transparent" :padding="0" height="100%">
               <VStack :gap="4" height="100%">
                 <HStack :gap="2" align="center">
-                  <Icon icon="i-heroicons-squares-2x2" />
+                  <Icon size="md" name="heroicons:squares-2x2" />
                   <Text type="body" weight="bold">
                     Product Inc.
                   </Text>
                 </HStack>
                 <StackItem size="fill">
-                  <Center axis="vertical" height="100%">
+                  <Center axis="vertical" height="100%" :padding="0">
                     <EmptyState
                       v-if="isSuccess"
                       title="You're signed in"
                       description="Redirecting to your dashboard…"
                     >
                       <template #icon>
-                        <Icon icon="i-heroicons-check-circle" size="lg" />
+                        <Icon name="heroicons:check-circle" size="lg" />
                       </template>
                     </EmptyState>
-                    <VStack v-else :gap="4" hAlign="stretch" width="100%">
+                    <VStack v-else :gap="4" h-align="stretch" width="100%">
                       <VStack :gap="1">
                         <Text type="display-1" as="h2">
                           Welcome back
@@ -124,8 +123,8 @@ function onPasswordChange(value: string) {
                             :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                             @update:model-value="onPasswordChange"
                           />
-                          <VStack v-if="loginFailed" justify="end">
-                            <Link href="#" size="sm" color="secondary" type="supporting">
+                          <VStack v-if="loginFailed" h-align="end">
+                            <Link href="#" size="sm" color="secondary">
                               Forgot your password?
                             </Link>
                           </VStack>
@@ -142,12 +141,12 @@ function onPasswordChange(value: string) {
                       <Grid :columns="2" :gap="3" justify="stretch">
                         <Button label="Apple" variant="secondary" size="lg">
                           <template #icon>
-                            <img :src="APPLE_LOGO_URL" alt="" width="16" height="16">
+                            <img :src="APPLE_LOGO_URL" alt="" width="16" height="16" style="width: 16px; height: 16px">
                           </template>
                         </Button>
                         <Button label="Google" variant="secondary" size="lg">
                           <template #icon>
-                            <img :src="GOOGLE_LOGO_URL" alt="" width="16" height="16">
+                            <img :src="GOOGLE_LOGO_URL" alt="" width="16" height="16" style="width: 16px; height: 16px">
                           </template>
                         </Button>
                       </Grid>
@@ -156,7 +155,7 @@ function onPasswordChange(value: string) {
                 </StackItem>
                 <Text v-if="!isSuccess" type="supporting" color="secondary">
                   Don't have an account?
-                  <Link href="#" type="supporting">
+                  <Link href="#" size="sm">
                     Sign up
                   </Link>
                 </Text>
@@ -170,14 +169,14 @@ function onPasswordChange(value: string) {
           </Grid>
         </Card>
       </div>
-      <VStack justify="center">
+      <VStack h-align="center">
         <Text type="supporting" color="secondary">
           By clicking continue, you agree to our
-          <Link href="#" type="supporting">
+          <Link href="#" size="sm">
             Terms of Service
           </Link>
           and
-          <Link href="#" type="supporting">
+          <Link href="#" size="sm">
             Privacy Policy
           </Link>.
         </Text>

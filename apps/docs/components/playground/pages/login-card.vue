@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref } from 'vue'
 import {
   Button,
   Card,
@@ -13,15 +12,10 @@ import {
   TextInput,
   VStack,
 } from '@astryx-vue/core'
+import { ref } from 'vue'
 
 const pageStyle: CSSProperties = {
-  minHeight: '100%',
   backgroundColor: 'var(--astryx-color-background-body)',
-}
-
-const contentStyle: CSSProperties = {
-  width: '100%',
-  maxWidth: '400px',
 }
 
 const email = ref('')
@@ -49,17 +43,17 @@ function onPasswordChange(value: string) {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" :style="pageStyle">
-    <VStack :gap="4" justify="center" :style="contentStyle">
-      <VStack :gap="2" justify="center">
-        <Icon icon="i-heroicons-cube" size="lg" />
+  <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
+    <VStack :gap="4" h-align="center" width="100%" :max-width="400">
+      <VStack :gap="2" h-align="center">
+        <Icon name="heroicons:cube" size="lg" />
         <Text type="body" weight="bold" size="lg">
           Product Inc.
         </Text>
       </VStack>
       <Card :padding="8" width="100%">
-        <VStack :gap="4" hAlign="stretch">
-          <VStack :gap="1" justify="center">
+        <VStack :gap="4" h-align="stretch">
+          <VStack :gap="1" h-align="center">
             <Heading :level="2">
               Welcome back
             </Heading>
@@ -87,8 +81,8 @@ function onPasswordChange(value: string) {
                 :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                 @update:model-value="onPasswordChange"
               />
-              <VStack v-if="loginFailed" justify="end">
-                <Link href="#" size="sm" color="secondary" type="supporting">
+              <VStack v-if="loginFailed" h-align="end">
+                <Link href="#" size="sm" color="secondary">
                   Forgot password?
                 </Link>
               </VStack>
@@ -102,17 +96,17 @@ function onPasswordChange(value: string) {
             @click="handleLogin"
           />
           <Divider label="Or continue with" />
-          <VStack :gap="3" hAlign="stretch">
+          <VStack :gap="3" h-align="stretch">
             <Button label="Login with Apple" variant="secondary" size="lg">
               <template #icon>
-                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="width: 16px; height: 16px" aria-hidden="true">
                   <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
                 </svg>
               </template>
             </Button>
             <Button label="Login with Google" variant="secondary" size="lg">
               <template #icon>
-                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" style="width: 16px; height: 16px" aria-hidden="true">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -121,24 +115,24 @@ function onPasswordChange(value: string) {
               </template>
             </Button>
           </VStack>
-          <VStack justify="center">
+          <VStack h-align="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
-              <Link href="#" type="supporting">
+              <Link href="#" size="sm">
                 Sign up
               </Link>
             </Text>
           </VStack>
         </VStack>
       </Card>
-      <VStack justify="center" width="100%">
+      <VStack h-align="center" width="100%">
         <Text type="supporting" color="secondary" justify="center">
           By clicking continue, you agree to our
-          <Link href="#" type="supporting">
+          <Link href="#" size="sm">
             Terms of Service
           </Link>
           and
-          <Link href="#" type="supporting">
+          <Link href="#" size="sm">
             Privacy Policy
           </Link>.
         </Text>

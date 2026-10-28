@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 import type { SearchableItem } from '@astryx-vue/core'
-import { defineComponent, h, ref } from 'vue'
 import {
   Button,
   CheckboxInput,
@@ -10,6 +8,7 @@ import {
   Grid,
   Heading,
   HStack,
+  Icon,
   Layout,
   LayoutContent,
   LayoutHeader,
@@ -25,6 +24,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { defineComponent, h, ref } from 'vue'
 
 const NAV_ITEMS = ['Profile', 'Account', 'Members', 'Billing', 'Invoices', 'API']
 
@@ -41,13 +41,9 @@ const SETTINGS_ITEMS: SearchableItem[] = [
 
 const settingsSearchSource = createStaticSource(SETTINGS_ITEMS)
 
-function iconComponent(className: string): Component {
-  return defineComponent({
-    render: () => h('span', { class: className, 'aria-hidden': 'true', style: 'width:1em;height:1em' }),
-  })
-}
-
-const MagnifyingGlassIcon = iconComponent('i-heroicons-magnifying-glass')
+const MagnifyingGlassIcon = defineComponent({
+  render: () => h(Icon, { name: 'heroicons:magnifying-glass' }),
+})
 
 const isNarrow = useMediaQuery('(max-width: 768px)')
 const activeNav = ref('Profile')
@@ -81,6 +77,7 @@ const searchValue = ref<SearchableItem | null>(null)
             placeholder="Search settings..."
             :search-source="settingsSearchSource"
             has-entries-on-focus
+            :width="184"
             :start-icon="MagnifyingGlassIcon"
           />
         </HStack>
@@ -101,7 +98,7 @@ const searchValue = ref<SearchableItem | null>(null)
     </template>
     <LayoutContent :padding="4">
       <VStack :gap="4">
-        <VStack v-if="isNarrow" justify="center">
+        <VStack v-if="isNarrow" h-align="center">
           <TabList v-model:value="activeNav">
             <Tab v-for="item in NAV_ITEMS" :key="item" :value="item" :label="item" />
           </TabList>
