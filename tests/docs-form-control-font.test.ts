@@ -37,8 +37,8 @@ describe('docs shell does not pin form-control font weight', () => {
   it('has no unlayered rule that pins a font-weight value on button or input', () => {
     const offenders = topLevelRules(css)
       .filter(rule => !rule.selector.startsWith('@'))
-      .filter(rule => /(^|[\s,>+~(])(button|input|select|textarea)\b/.test(rule.selector))
-      .filter(rule => /(^|[;\s])font-weight\s*:\s*(?!\s|revert-layer)/.test(rule.body))
+      .filter(rule => /(?:^|[\s,>+~(])(?:button|input|select|textarea)\b/.test(rule.selector))
+      .filter(rule => /(?:^|[;\s])font-weight\s*:\s*(?!\s|revert-layer)/.test(rule.body))
       .map(rule => rule.selector)
     expect(offenders).toEqual([])
   })
