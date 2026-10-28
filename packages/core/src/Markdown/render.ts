@@ -341,8 +341,9 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
         key,
         level,
         id,
-        class: 'astryx-markdown__heading astryx-markdown__prose',
-        tabindex: -1,
+        'class': 'astryx-markdown__heading astryx-markdown__prose',
+        'data-depth': node.depth ?? 1,
+        'tabindex': -1,
         ...sourceLineAttrs(node, ctx),
       }, () => [...children, anchor])
     }

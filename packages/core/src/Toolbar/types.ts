@@ -2,7 +2,7 @@ import type { SpacingStep } from '../Stack/types.js'
 
 export type ToolbarSize = 'sm' | 'md' | 'lg'
 export type ToolbarOrientation = 'horizontal' | 'vertical'
-export type ToolbarVariant = 'transparent' | 'muted'
+export type ToolbarVariant = 'section' | 'transparent' | 'muted'
 export type ToolbarDivider = 'top' | 'bottom' | 'start' | 'end'
 
 export interface ToolbarProps {
@@ -14,7 +14,7 @@ export interface ToolbarProps {
   gap?: SpacingStep
   /** 方向键沿哪一根轴移动焦点。 @default 'horizontal' */
   orientation?: ToolbarOrientation
-  /** 底色。muted 用来标出批量操作条。 @default 'transparent' */
+  /** 底色，和 Section 的 variant 一致。muted 用来标出批量操作条。 @default 'transparent' */
   variant?: ToolbarVariant
   /** 在指定边上画分隔线。 */
   dividers?: ToolbarDivider[]
