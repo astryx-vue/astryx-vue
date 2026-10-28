@@ -19,7 +19,6 @@
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     text-decoration: none;
     white-space: nowrap;
-    vertical-align: middle;
     transition: background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 

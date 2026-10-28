@@ -34,14 +34,18 @@
     margin-inline: auto;
   }
 
-  .astryx-markdown :is(h1, h2, h3, h4, h5, h6).astryx-heading.astryx-markdown__heading {
-    margin-block: var(--astryx-spacing-4, 16px) var(--astryx-spacing-2, 8px);
+  /* 标题间距看源文档里的标题深度（data-depth），不看渲染出来的 h 级别：
+     `headingLevelStart` 把 `#` 渲染成 h2 时，它仍然是"深度 1"，取大间距。
+     深度 1–3 是大标题（上 24 / 下 12），4–6 是小标题（上 16 / 下 8）。 */
+  .astryx-markdown .astryx-heading.astryx-markdown__heading {
+    margin-block: var(--_md-heading-top, var(--astryx-spacing-4, 16px)) var(--_md-heading-bottom, var(--astryx-spacing-2, 8px));
     color: var(--astryx-color-text-primary, #171717);
     font-family: var(--astryx-font-family-heading, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
   }
 
-  .astryx-markdown :is(h1, h2).astryx-heading.astryx-markdown__heading {
-    margin-block: var(--astryx-spacing-6, 24px) var(--astryx-spacing-3, 12px);
+  .astryx-markdown__heading:is([data-depth='1'], [data-depth='2'], [data-depth='3']) {
+    --_md-heading-top: var(--astryx-spacing-6, 24px);
+    --_md-heading-bottom: var(--astryx-spacing-3, 12px);
   }
 
   .astryx-markdown h1.astryx-heading.astryx-markdown__heading {
@@ -113,12 +117,14 @@
     border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
   }
 
-  .astryx-markdown[data-density='compact'] :is(h1, h2).astryx-heading.astryx-markdown__heading {
-    margin-block: var(--astryx-spacing-4, 16px) var(--astryx-spacing-2, 8px);
+  .astryx-markdown[data-density='compact'] .astryx-markdown__heading {
+    --_md-heading-top: var(--astryx-spacing-3, 12px);
+    --_md-heading-bottom: var(--astryx-spacing-1, 4px);
   }
 
-  .astryx-markdown[data-density='compact'] :is(h3, h4, h5, h6).astryx-heading.astryx-markdown__heading {
-    margin-block: var(--astryx-spacing-3, 12px) var(--astryx-spacing-1, 4px);
+  .astryx-markdown[data-density='compact'] .astryx-markdown__heading:is([data-depth='1'], [data-depth='2'], [data-depth='3']) {
+    --_md-heading-top: var(--astryx-spacing-4, 16px);
+    --_md-heading-bottom: var(--astryx-spacing-2, 8px);
   }
 
   .astryx-markdown[data-density='compact'] :is(.astryx-markdown__paragraph, .astryx-markdown__list) {
@@ -142,6 +148,15 @@
   }
 
   .astryx-markdown > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* 标题自己的间距规则特异性更高，首尾去边距要跟上。 */
+  .astryx-markdown > .astryx-heading.astryx-markdown__heading:first-child {
+    margin-block-start: 0;
+  }
+
+  .astryx-markdown > .astryx-heading.astryx-markdown__heading:last-child {
     margin-block-end: 0;
   }
 
