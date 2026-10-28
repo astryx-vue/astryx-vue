@@ -1,6 +1,9 @@
 import type { PropType, VNode } from 'vue'
 import { defineComponent, h } from 'vue'
-import { AXIS_TICK, GRID_STROKE, niceTicks, useChartWidth } from './playgroundChartKit'
+import { AXIS_TICK, GRID_STROKE, niceTicks, useChartWidth, wrapToWidth } from './playgroundChartKit'
+
+/** 甘特图 y 轴的宽度，原版 recharts 的 `YAxis width={148}`。 */
+const Y_AXIS_WIDTH = 148
 
 export const PlaygroundHorizontalBarChart = defineComponent({
   name: 'PlaygroundHorizontalBarChart',
@@ -120,11 +123,8 @@ export const PlaygroundGanttChart = defineComponent({
         }
         props.items.forEach((item, i) => {
           const cy = pad.top + band * i + band / 2
-          const words = item.name.split(' ')
-          const lines = item.name.length > 18 && words.length > 1
-            ? [words.slice(0, Math.ceil(words.length / 2)).join(' '), words.slice(Math.ceil(words.length / 2)).join(' ')]
-            : [item.name]
-          nodes.push(h('text', { 'x': pad.left - 8, 'y': cy - (lines.length - 1) * 5, 'text-anchor': 'end', 'fill': AXIS_TICK, 'font-size': '12px' }, lines.map((line, k) => h('tspan', { x: pad.left - 8, dy: k === 0 ? '0.35em' : '1em' }, line))))
+          const lines = wrapToWidth(item.name, Y_AXIS_WIDTH, '12px')
+          nodes.push(h('text', { 'x': pad.left - 8, 'y': cy, 'text-anchor': 'end', 'fill': AXIS_TICK, 'font-size': '12px' }, lines.map((line, k) => h('tspan', { x: pad.left - 8, dy: lines.length === 1 ? '0.355em' : k === 0 ? `${-0.145 - 0}em` : '1em' }, line))))
           nodes.push(h('rect', { x: scale(item.start), y: cy - barH / 2, width: Math.max(2, scale(item.end) - scale(item.start)), height: barH, rx: 4, fill: item.color }))
         })
         return h('svg', {

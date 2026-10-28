@@ -83,3 +83,38 @@ export function monotonePath(pts: Array<{ x: number, y: number }>): string {
 export function num(v: unknown): number {
   return typeof v === 'number' && Number.isFinite(v) ? v : 0
 }
+
+let measureContext: CanvasRenderingContext2D | null | undefined
+
+/** 量一段文字的宽度；没有 canvas（服务端渲染）时按平均字宽估。 */
+function measureText(text: string, fontSize: string): number {
+  if (measureContext === undefined) {
+    measureContext = typeof document === 'undefined' ? null : document.createElement('canvas').getContext('2d')
+  }
+  if (!measureContext)
+    return text.length * 6.2
+  measureContext.font = `${fontSize} ${getComputedStyle(document.body).fontFamily}`
+  return measureContext.measureText(text).width
+}
+
+/**
+ * 和 recharts 的 Text 一样按词折行：下一个词放进当前行会超过 maxWidth 就换行。
+ * 单行放得下时不折。
+ */
+export function wrapToWidth(text: string, maxWidth: number, fontSize: string): string[] {
+  const lines: string[] = []
+  let current = ''
+  for (const word of text.split(' ')) {
+    const next = current ? `${current} ${word}` : word
+    if (current && measureText(next, fontSize) > maxWidth) {
+      lines.push(current)
+      current = word
+    }
+    else {
+      current = next
+    }
+  }
+  if (current)
+    lines.push(current)
+  return lines
+}

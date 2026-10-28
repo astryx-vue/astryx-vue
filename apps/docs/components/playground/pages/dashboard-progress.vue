@@ -253,21 +253,23 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
               is-compact
             />
             <template v-else>
-              <PlaygroundGanttChart
-                :items="ganttItems"
-                :domain-max="TIMELINE_DAYS"
-                :today="PROJECT_DAY"
-                :ticks="TIMELINE_TICKS"
-                is-recharts-layout
-              />
-              <HStack :gap="4" align="center" wrap="wrap">
-                <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
-                  <span class="legend-swatch" :style="{ backgroundColor: RAG_FILL[status] }" aria-hidden="true" />
-                  <Text type="supporting" color="secondary">
-                    {{ RAG_LABEL[status] }}
-                  </Text>
+              <VStack :gap="3">
+                <PlaygroundGanttChart
+                  :items="ganttItems"
+                  :domain-max="TIMELINE_DAYS"
+                  :today="PROJECT_DAY"
+                  :ticks="TIMELINE_TICKS"
+                  is-recharts-layout
+                />
+                <HStack :gap="4" align="center" wrap="wrap">
+                  <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
+                    <span class="legend-swatch" :style="{ backgroundColor: RAG_FILL[status] }" aria-hidden="true" />
+                    <Text type="supporting" color="secondary">
+                      {{ RAG_LABEL[status] }}
+                    </Text>
+                  </HStack>
                 </HStack>
-              </HStack>
+              </VStack>
             </template>
           </VStack>
         </Section>

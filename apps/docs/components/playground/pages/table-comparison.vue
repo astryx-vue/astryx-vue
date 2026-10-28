@@ -19,6 +19,7 @@ import {
   Tooltip,
   useTableGroupedRows,
   useTableStickyColumns,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
@@ -29,46 +30,56 @@ type Modality = 'text' | 'image' | 'audio' | 'video' | 'document'
 
 const MODALITY_ORDER: Modality[] = ['text', 'image', 'audio', 'video', 'document']
 
-/** 输入输出模态各占同一个格子位置，缺哪一项就用暗色图标占位。 */
-/** 文字模态的图标，画成和原版（lucide Type）一样的大写 T 带衬线。 */
-const TextTypeIcon = () => h('svg', {
-  'xmlns': 'http://www.w3.org/2000/svg',
-  'viewBox': '0 0 24 24',
-  'fill': 'none',
-  'stroke': 'currentColor',
-  'stroke-width': 1.5,
-  'stroke-linecap': 'round',
-  'stroke-linejoin': 'round',
-  'width': '1em',
-  'height': '1em',
-  'aria-hidden': 'true',
-}, [h('path', { d: 'M12 4v16' }), h('path', { d: 'M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2' }), h('path', { d: 'M9 20h6' })])
-
-/** 布尔格的「支持 / 不支持」，和原版一样是描边圆形图标（lucide circle-check / circle-x）。 */
-function outlineCircle(paths: string[]) {
+/** 原版用 lucide 描边图标；这里按 lucide 的路径自绘成组件，颜色走 currentColor。 */
+function lucideIcon(nodes: Array<[string, Record<string, string | number>]>, strokeWidth = 2) {
   return () => h('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',
     'viewBox': '0 0 24 24',
     'fill': 'none',
     'stroke': 'currentColor',
-    'stroke-width': 2,
+    'stroke-width': strokeWidth,
     'stroke-linecap': 'round',
     'stroke-linejoin': 'round',
     'width': '1em',
     'height': '1em',
     'aria-hidden': 'true',
     'style': { fill: 'none' },
-  }, [h('circle', { cx: 12, cy: 12, r: 10 }), ...paths.map(d => h('path', { d }))])
+  }, nodes.map(([tag, attrs]) => h(tag, attrs)))
+}
+
+const TextTypeIcon = lucideIcon([
+  ['path', { d: 'M12 4v16' }],
+  ['path', { d: 'M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2' }],
+  ['path', { d: 'M9 20h6' }],
+], 1.5)
+const ImageIcon = lucideIcon([
+  ['rect', { width: 18, height: 18, x: 3, y: 3, rx: 2, ry: 2 }],
+  ['circle', { cx: 9, cy: 9, r: 2 }],
+  ['path', { d: 'm21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21' }],
+])
+const AudioLinesIcon = lucideIcon([['path', { d: 'M2 10v3m4-7v11m4-14v18m4-13v7m4-10v13m4-8v3' }]])
+const VideoIcon = lucideIcon([
+  ['path', { d: 'm16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5' }],
+  ['rect', { width: 14, height: 12, x: 2, y: 6, rx: 2 }],
+])
+const FileTextIcon = lucideIcon([
+  ['path', { d: 'M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z' }],
+  ['path', { d: 'M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8' }],
+])
+
+/** 布尔格的「支持 / 不支持」，和原版一样是描边圆形图标（lucide circle-check / circle-x）。 */
+function outlineCircle(paths: string[]) {
+  return lucideIcon([['circle', { cx: 12, cy: 12, r: 10 }], ...paths.map((d): [string, Record<string, string>] => ['path', { d }])])
 }
 const CircleCheckIcon = outlineCircle(['m9 12 2 2 4-4'])
 const CircleXIcon = outlineCircle(['m15 9-6 6', 'm9 9 6 6'])
 
-const MODALITY_ICON: Record<Modality, string | typeof TextTypeIcon> = {
+const MODALITY_ICON = {
   text: TextTypeIcon,
-  image: 'i-heroicons-photo',
-  audio: 'i-heroicons-speaker-wave',
-  video: 'i-heroicons-video-camera',
-  document: 'i-heroicons-document-text',
+  image: ImageIcon,
+  audio: AudioLinesIcon,
+  video: VideoIcon,
+  document: FileTextIcon,
 }
 
 /** 选择器里每个提供商的图标。 */
@@ -205,9 +216,17 @@ const UptimeStrip = defineComponent({
       return { uptime, date: dayFormat.format(date), ...uptimeStatus(uptime) }
     }))
     const average = computed(() => days.value.reduce((total, day) => total + day.uptime, 0) / days.value.length)
+    /** 颜色是日柱唯一的编码，读屏用户拿到的是同一份统计。 */
+    const spoken = computed(() => {
+      const tally: Record<string, number> = {}
+      for (const day of days.value)
+        tally[day.status] = (tally[day.status] ?? 0) + 1
+      return `Last ${UPTIME_DAYS} days: ${['Operational', 'Degraded', 'Outage'].filter(status => tally[status] > 0).map(status => `${tally[status]} ${status.toLowerCase()}`).join(', ')}.`
+    })
     return () => {
       const day = hovered.value == null ? undefined : days.value[hovered.value]
       return h(VStack, { gap: 1, hAlign: 'end', width: '100%' }, () => [
+        h(VisuallyHidden, null, () => spoken.value),
         h(HStack, { height: 24, vAlign: 'center' }, () => h(Text, { type: 'body', color: 'primary' }, () =>
           day == null ? `${uptimeFormat.format(average.value)}% average` : `${day.date} · ${uptimeFormat.format(day.uptime)}% · ${day.status}`)),
         h('div', { style: { display: 'flex', width: '100%', height: '28px' }, role: 'img', ariaLabel: `Last ${UPTIME_DAYS} days uptime`, onMouseleave: () => { hovered.value = null } },
@@ -441,6 +460,13 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
 </template>
 
 <style scoped>
+/* 原版分组头单元格的内边距固定为 spacing-2 / spacing-3，不随密度变（起始侧为 0）；
+   spacious 密度下 core 的密度规则会把它撑成 12 / 16 / 20，这里按原版压回。 */
+.table-frame :deep(.astryx-table td.astryx-table__group:first-child) {
+  padding-block: var(--astryx-spacing-2);
+  padding-inline: 0 var(--astryx-spacing-3);
+}
+
 .table-frame {
   width: 100%;
   max-width: 100%;

@@ -1,6 +1,6 @@
 import type { PropType, VNode } from 'vue'
 import { defineComponent, h } from 'vue'
-import { AXIS_TICK, GRID_STROKE, monotonePath, niceTicks, num, useChartWidth } from './playgroundChartKit'
+import { AXIS_TICK, GRID_STROKE, monotonePath, niceTicks, num, useChartWidth, wrapToWidth } from './playgroundChartKit'
 
 export { monotonePath, niceTicks } from './playgroundChartKit'
 
@@ -171,18 +171,19 @@ export const PlaygroundLineChart = defineComponent({
           }))
         }
         const tickX = pad.left - 8
-        // 单位放不进轴宽时才折行：单位放不下（刻度 ≥ 80 时）才折。
-        const isStacked = props.isYUnitStacked && Math.abs(tick) >= 80
+        // 和 recharts 窄轴一样：刻度加单位放不进轴宽（左内边距减去刻度间隙 4px）就按词折行。
+        const unitLines = props.isYUnitStacked ? wrapToWidth(`${tick}${props.yUnit}`, pad.left - 4, '12px') : []
+        const isStacked = unitLines.length > 1
         const tickY = props.centerTicks ? Math.max(y, 9) : y + 4
         return h('text', {
           'x': tickX,
-          'y': isStacked ? tickY - 2 : tickY,
+          'y': tickY,
           'dominant-baseline': props.centerTicks ? 'central' : undefined,
           'text-anchor': 'end',
           'fill': AXIS_TICK,
           'font-size': '12px',
         }, isStacked
-          ? [h('tspan', { x: tickX }, `${tick}`), h('tspan', { x: tickX, dy: '12px' }, props.yUnit.trim())]
+          ? unitLines.map((line, k) => h('tspan', { x: tickX, dy: k === 0 ? '-0.145em' : '1em' }, line))
           : `${tick}${props.yUnit}`)
       })
 
