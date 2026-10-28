@@ -61,3 +61,17 @@
 ## 六、自测
 
 `pnpm check:templates` 通过（49 个）；`check-template-tokens` 通过（57 个）；`eslint . --max-warnings 0` 通过；`pnpm check:packages` 通过；vitest `packages/cli tests` 两种 NODE_ENV 均 39 文件 583 条通过。
+
+## 七、返工收尾（总控 2026-10：对比到此为止）
+
+已做：
+- rebase 到最新 swarm-tree（含 #239 playground-diff、#240 D19、#241 字重根因）。
+- 删掉重复的 `scripts/swarm/playground-measure.mjs`，只用 `playground-diff.mjs`。measure 里 playground-diff 没有的功能：无（逐元素对比、重试、等图片加载，playground-diff 都有）。
+- 删掉 `playground.css` 里按钮字重还原的补丁（根因已在源头修）。
+- 图标：模板里 `i-heroicons-*` / `i-carbon-*` CSS 遮罩图标改走 `<Icon name="heroicons:…">`（svg，和原版一致，也能被 playground-diff 配对），新用到的图标已加进 `templateIcons.ts`；IconButton 的图标改放默认插槽（原来写成 `#icon` 插槽，关闭按钮图标根本没渲染）。
+- 去掉被 D19 修好的绕过：字重补丁；settings-dialog 的小号 Selector 局部补丁改成预览框一处（仍是 core 问题）。
+
+没做：
+- 没有把 10 个模板逐个跑到偏差 ≤ 3：只跑过一部分，中途数据（浅色）：login 0、login-card 3、login-split 3、login-sso 3、settings 1、settings-sidebar 0、settings-dialog 6、payment-form 5（含 4 个"缺失"，是隐藏标签在原版落在 (-1,-1)，我们落在文档位置，属 core 的 Field 隐藏标签定位）、checkout-wizard 21（缺 14：原版步骤条/摘要触发行的图标是 svg，我们的 Step、Collapsible 在 core 里用 CSS 遮罩图标，属 core）；contact-form 原版页面编译等待超过 90 秒，脚本超时，没量到。没有做"改前改后"表格。
+- 交互态没逐项对照：settings-sidebar 的展开编辑行与保存、settings-dialog 的搜索结果与 6 个面板切换、contact-form 的校验提示、payment-form 的表单校验与国家切换、checkout-wizard 的后三步与完成页、login 系列的错误提示与加载态。
+- 第三节 core 问题清单没有和 D19 的 9 条逐条划掉；Field 隐藏标签定位（原版 top/left 为 0）、Step/Collapsible 图标改 svg、NumberInput 输入框默认宽度是本轮新量到的。
