@@ -23,7 +23,7 @@ function collect() {
       return
     const r = el.getBoundingClientRect()
     const own = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent.trim()).join(' ').trim()
-    const isCtl = /^(INPUT|TEXTAREA|SELECT|BUTTON|SVG|IMG|HR)$/i.test(el.tagName) || el.getAttribute('role') === 'separator'
+    const isCtl = /^(?:INPUT|TEXTAREA|SELECT|BUTTON|SVG|IMG|HR)$/i.test(el.tagName) || el.getAttribute('role') === 'separator'
     if ((own || isCtl) && r.width > 0 && r.height > 0 && !seen.has(el)) {
       seen.add(el)
       const label = own || el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.tagName.toLowerCase()
@@ -38,7 +38,7 @@ function collect() {
         c: cs.color,
         bg: cs.backgroundColor,
         br: cs.borderRadius,
-        bd: cs.borderTopWidth === '0px' ? '0' : cs.borderTopWidth + ' ' + cs.borderTopColor,
+        bd: cs.borderTopWidth === '0px' ? '0' : `${cs.borderTopWidth} ${cs.borderTopColor}`,
       })
     }
     for (const child of el.children) walk(child)
@@ -79,15 +79,22 @@ async function grabOnce(browser, url, local) {
   for (let i = 0; i < 70 && !target; i++) {
     for (const f of page.frames().filter(f => f !== page.mainFrame())) {
       const n = await f.evaluate(() => document.querySelectorAll('button, input, h1, h2, h3, a, p').length).catch(() => 0)
-      if (n > 1) target = f
+      if (n > 1)
+        target = f
     }
-    if (!target) await page.waitForTimeout(1000)
+    if (!target)
+      await page.waitForTimeout(1000)
   }
-  await target.evaluate(() => Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r })))).catch(() => {})
+  await target.evaluate(() => Promise.all([...document.images].map(i => i.complete
+    ? 0
+    : new Promise((resolve) => {
+        i.onload = resolve
+        i.onerror = resolve
+      })))).catch(() => {})
   if (!target)
     throw new Error('预览没出内容')
   await page.waitForTimeout(2500)
-  if (await target.evaluate(() => /couldn.t load/.test(document.body.innerText)))
+  if (await target.evaluate(() => /couldn.t load/.test(document.body.textContent)))
     throw new Error('预览报错页')
   const data = await target.evaluate(collect)
   await context.close()
@@ -98,17 +105,22 @@ const browser = await chromium.launch({ proxy: PROXY })
 const up = await grab(browser, `https://astryx.atmeta.com/playground?template=${slug}`, false)
 const ours = await grab(browser, `http://127.0.0.1:${port}/playground/?template=${slug}`, true)
 await browser.close()
-if (out) fs.writeFileSync(out, JSON.stringify({ up, ours }, null, 1))
+if (out)
+  fs.writeFileSync(out, JSON.stringify({ up, ours }, null, 1))
 
 console.log(`页面高 原版 ${up.docH} / 我们 ${ours.docH}；元素 ${up.rows.length} / ${ours.rows.length}`)
 const pool = [...ours.rows]
 const fields = ['x', 'y', 'w', 'h', 'fs', 'fw', 'c', 'bg', 'br', 'bd']
 for (const u of up.rows) {
   const i = pool.findIndex(o => o.k === u.k)
-  if (i < 0) { console.log(`缺失  ${u.k}  @${u.x},${u.y} ${u.w}x${u.h}`); continue }
+  if (i < 0) {
+    console.log(`缺失  ${u.k}  @${u.x},${u.y} ${u.w}x${u.h}`)
+    continue
+  }
   const o = pool.splice(i, 1)[0]
   const diffs = fields.filter(f => typeof u[f] === 'number' ? Math.abs(u[f] - o[f]) > 1 : u[f] !== o[f])
     .map(f => `${f}:${u[f]}→${o[f]}`)
-  if (diffs.length) console.log(`差异  ${u.k}  ${diffs.join('  ')}`)
+  if (diffs.length)
+    console.log(`差异  ${u.k}  ${diffs.join('  ')}`)
 }
 for (const o of pool) console.log(`多出  ${o.k}  @${o.x},${o.y} ${o.w}x${o.h}`)
