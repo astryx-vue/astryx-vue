@@ -2312,6 +2312,11 @@ function SearchIcon() {
 </template>
 
 <style scoped>
+/* 原版 Table 默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算。 */
+.tf-shell :deep(.astryx-table) {
+  table-layout: fixed;
+}
+
 .tf-shell {
   background: var(--astryx-color-background-surface);
 }

@@ -792,7 +792,7 @@ const READMES: Record<string, string> = {
           </StackItem>
         </HStack>
 
-        <Card :padding="0">
+        <Card :padding="0" class="tt-fixed-layout">
           <Table
             :data="visibleData"
             :columns="columns"
@@ -844,6 +844,13 @@ const READMES: Record<string, string> = {
     </template>
   </Layout>
 </template>
+
+<style scoped>
+/* 原版 Table 默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算。 */
+.tt-fixed-layout :deep(.astryx-table) {
+  table-layout: fixed;
+}
+</style>
 
 <style>
 .repo-visually-hidden {
