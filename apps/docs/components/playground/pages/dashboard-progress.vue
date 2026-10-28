@@ -350,7 +350,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                       Hover or focus a row for detail
                     </Text>
                   </VStack>
-                  <List v-if="risks.length" has-dividers>
+                  <List v-if="risks.length" has-dividers class="risk-list">
                     <HoverCard v-for="risk in risks" :key="risk.id" placement="below" alignment="start" focus-trigger="always">
                       <ListItem
                         :label="risk.title"
@@ -426,6 +426,11 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
 }
 .content-bottom-pad {
   padding-block-end: var(--astryx-spacing-10);
+}
+/* HoverCard 的包裹 span 夹在 ul 和 li 之间，List 的 `> .astryx-list-item` 分隔线选择器够不着，
+   这里在包裹 span 上按「除最后一个」补上同样的分隔线。 */
+.risk-list :deep(.astryx-hover-card__trigger:not(:last-of-type) > .astryx-list-item) {
+  border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-list-divider-color, light-dark(#05365919, #f2f4f619));
 }
 .risk-row {
   transition: background-color var(--astryx-duration-fast-min) var(--astryx-ease-standard);

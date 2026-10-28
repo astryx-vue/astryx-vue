@@ -178,7 +178,7 @@ export const PlaygroundLineChart = defineComponent({
         return h('text', {
           'x': tickX,
           'y': tickY,
-          'dominant-baseline': props.centerTicks ? 'central' : undefined,
+          'dominant-baseline': props.centerTicks && !isStacked ? 'central' : undefined,
           'text-anchor': 'end',
           'fill': AXIS_TICK,
           'font-size': '12px',
@@ -201,7 +201,7 @@ export const PlaygroundLineChart = defineComponent({
         return h('text', {
           'x': x,
           'y': props.centerTicks ? pad.top + innerH + 13 : props.height - 6,
-          'dominant-baseline': props.centerTicks ? 'central' : undefined,
+          'dominant-baseline': props.centerTicks && !isStacked ? 'central' : undefined,
           'text-anchor': tick === xMax && x + 14 > pad.left + innerW + pad.right ? 'end' : 'middle',
           'fill': AXIS_TICK,
           'font-size': '12px',
@@ -338,7 +338,7 @@ export const PlaygroundAreaChart = defineComponent({
         ...(props.xTicks.length ? props.xTicks : [xMin, xMax]).map(tick => h('text', {
           x: xScale(tick),
           y: props.centerTicks ? pad.top + innerH + 13 : props.height - 6,
-          'dominant-baseline': props.centerTicks ? 'central' : undefined,
+          'dominant-baseline': props.centerTicks && !isStacked ? 'central' : undefined,
           'text-anchor': props.padInline != null && tick === xMin ? 'start' : props.padInline != null && tick === xMax ? 'end' : 'middle',
           fill: AXIS_TICK,
           'font-size': '12px',
@@ -347,7 +347,7 @@ export const PlaygroundAreaChart = defineComponent({
           ? yTicks.map(tick => h('text', {
               'x': pad.left - 8,
               'y': props.centerTicks ? Math.max(yScale(tick), 9) : yScale(tick) + 4,
-              'dominant-baseline': props.centerTicks ? 'central' : undefined,
+              'dominant-baseline': props.centerTicks && !isStacked ? 'central' : undefined,
               'text-anchor': 'end',
               fill: AXIS_TICK,
               'font-size': '12px',
