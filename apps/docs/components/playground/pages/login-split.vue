@@ -124,7 +124,7 @@ function onPasswordChange(value: string) {
                             @update:model-value="onPasswordChange"
                           />
                           <VStack v-if="loginFailed" hAlign="end">
-                            <Link href="#" size="sm" color="secondary" type="supporting">
+                            <Link href="#" size="sm" color="secondary">
                               Forgot your password?
                             </Link>
                           </VStack>
@@ -155,7 +155,7 @@ function onPasswordChange(value: string) {
                 </StackItem>
                 <Text v-if="!isSuccess" type="supporting" color="secondary">
                   Don't have an account?
-                  <Link href="#" type="supporting">
+                  <Link href="#" size="sm">
                     Sign up
                   </Link>
                 </Text>
@@ -172,11 +172,11 @@ function onPasswordChange(value: string) {
       <VStack hAlign="center">
         <Text type="supporting" color="secondary">
           By clicking continue, you agree to our
-          <Link href="#" type="supporting">
+          <Link href="#" size="sm">
             Terms of Service
           </Link>
           and
-          <Link href="#" type="supporting">
+          <Link href="#" size="sm">
             Privacy Policy
           </Link>.
         </Text>

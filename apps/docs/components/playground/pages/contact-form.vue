@@ -229,7 +229,7 @@ function toggleGoal(goal: string) {
             <HStack :gap="1" justify="center">
               <Text type="supporting" color="secondary">
                 By submitting you agree to our
-                <Link href="#" type="supporting">
+                <Link href="#" size="sm">
                   Privacy Policy
                 </Link>.
               </Text>

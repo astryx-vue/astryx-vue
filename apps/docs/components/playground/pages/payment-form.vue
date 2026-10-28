@@ -383,7 +383,7 @@ const errors = computed(() => submitted.value ? {
                       </VStack>
                       <Divider />
                       <HStack :gap="4" align="center" wrap="wrap">
-                        <Link v-for="policy in POLICIES" :key="policy" href="#" type="supporting">{{ policy }}</Link>
+                        <Link v-for="policy in POLICIES" :key="policy" href="#" size="sm">{{ policy }}</Link>
                       </HStack>
                     </VStack>
                   </VStack>
@@ -409,8 +409,8 @@ const errors = computed(() => submitted.value ? {
                                   <span class="quantity-field">
                                     <NumberInput v-model="quantities[item.id]" label="Qty" is-label-hidden :min="1" :max="10" is-integer-only />
                                   </span>
-                                  <Link size="md" href="#" @click.prevent="quantities[item.id] = 0">Remove</Link>
-                                  <Link size="md" href="#">Save</Link>
+                                  <Link size="sm" href="#" @click.prevent="quantities[item.id] = 0">Remove</Link>
+                                  <Link size="sm" href="#">Save</Link>
                                 </HStack>
                               </VStack>
                             </StackItem>

@@ -673,11 +673,6 @@ function isFreeDelivery(optionValue: string) {
   align-self: flex-start;
   width: 360px;
 }
-/* 待 core 修复后去掉：Collapsible 触发行原版高 17（行高 25.5 的文字溢出），我们撑成 24。 */
-.summary-column :deep(.astryx-collapsible-trigger) {
-  height: 17px;
-  line-height: 25.5px;
-}
 .summary-column--narrow {
   position: static;
   order: -1;

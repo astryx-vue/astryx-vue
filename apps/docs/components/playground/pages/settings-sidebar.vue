@@ -607,7 +607,7 @@ function personalValue(key: string) {
               </Heading>
               <Text type="supporting" color="secondary">
                 Choose what's shared when you write a review.
-                <Link href="#" type="supporting">
+                <Link href="#" size="sm">
                   Learn more
                 </Link>
               </Text>
@@ -686,7 +686,7 @@ function personalValue(key: string) {
                     </Text>
                     <Text type="supporting" color="secondary">
                       We're committed to keeping your data protected. See details in our
-                      <Link href="#" type="supporting">
+                      <Link href="#" size="sm">
                         Privacy Policy
                       </Link>.
                     </Text>

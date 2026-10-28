@@ -191,7 +191,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
           <HStack :gap="4" align="start" justify="between">
             <VStack :gap="2">
               <HStack :gap="4" align="center" wrap="wrap">
-                <Link href="#" type="supporting" color="secondary">
+                <Link href="#" size="sm" color="secondary">
                   <HStack as="span" :gap="1" align="center">
                     <Icon icon="chevronLeft" size="sm" />
                     All Tasks

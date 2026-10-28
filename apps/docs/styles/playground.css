@@ -958,6 +958,28 @@ html[data-playground-frame] {
   --astryx-list-item-selected-background: var(--astryx-color-accent-muted);
 }
 
+/*
+ * 待 core 修复后去掉：Layout 的内容区是滚动容器却不是定位参照，里面绝对定位的隐藏控件
+ * （单选、开关的原生 input、读屏提示）找不到最近的定位祖先，会落到预览根上撑高整个文档
+ * （payment-form 页面高 1509 对 806）。原版内容区是定位参照。
+ */
+html[data-playground-frame] .astryx-layout-content {
+  position: relative;
+}
+
+/*
+ * 待 core 修复后去掉：Link 没有 `type` 属性（原版 `type="supporting"` 同时给 12px 字号和 20px 行高），
+ * 模板里用 `size="sm"` 取字号，行高在这里补成 supporting 的行高。
+ */
+html[data-playground-frame] .astryx-link--size-sm {
+  line-height: var(--astryx-text-supporting-leading, 1.6667);
+}
+
+/* 待 core 修复后去掉：Collapsible 触发行原版高 17（行高 25.5 的文字溢出出去），我们撑成 24。 */
+html[data-playground-frame] .astryx-collapsible-trigger {
+  height: 17px;
+}
+
 html[data-playground-frame] :is(button, input, textarea, select) {
   font-family: revert-layer;
   font-weight: revert-layer;

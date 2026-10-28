@@ -128,7 +128,7 @@ function onPasswordChange(value: string) {
               size="lg"
             />
           </VStack>
-          <Link href="#" size="sm" color="secondary" type="supporting">
+          <Link href="#" size="sm" color="secondary">
             Having trouble signing in?
           </Link>
           <Button
@@ -149,7 +149,7 @@ function onPasswordChange(value: string) {
           <VStack hAlign="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
-              <Link href="#" type="supporting">
+              <Link href="#" size="sm">
                 Request access
               </Link>
             </Text>
@@ -218,7 +218,7 @@ function onPasswordChange(value: string) {
                 @update:model-value="onPasswordChange"
               />
               <VStack v-if="loginFailed" hAlign="end">
-                <Link href="#" size="sm" color="secondary" type="supporting">
+                <Link href="#" size="sm" color="secondary">
                   Forgot password?
                 </Link>
               </VStack>
