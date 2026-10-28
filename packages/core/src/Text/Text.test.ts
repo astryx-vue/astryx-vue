@@ -31,6 +31,23 @@ describe('text', () => {
     expect(wrapper.classes()).toContain('astryx-text--type-display-1')
   })
 
+  it('defaults supporting text to the secondary color and other types to primary', () => {
+    const supporting = mount(Text, { props: { type: 'supporting' }, slots: { default: 'Hint' } })
+    const body = mount(Text, { slots: { default: 'Body' } })
+    const label = mount(Text, { props: { type: 'label' }, slots: { default: 'Label' } })
+
+    expect(supporting.classes()).toContain('astryx-text--color-secondary')
+    expect(body.classes()).toContain('astryx-text--color-primary')
+    expect(label.classes()).toContain('astryx-text--color-primary')
+  })
+
+  it('keeps an explicit color on supporting text', () => {
+    const wrapper = mount(Text, { props: { type: 'supporting', color: 'primary' }, slots: { default: 'Hint' } })
+
+    expect(wrapper.classes()).toContain('astryx-text--color-primary')
+    expect(wrapper.classes()).not.toContain('astryx-text--color-secondary')
+  })
+
   it('applies type and size classes', () => {
     const wrapper = mount(Text, {
       props: { type: 'supporting', size: 'sm' },

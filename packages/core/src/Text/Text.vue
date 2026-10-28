@@ -11,7 +11,7 @@ defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<TextProps>(), {
   type: 'body',
-  color: 'primary',
+  color: undefined,
   display: 'inline',
   as: 'span',
   justify: 'start',
@@ -20,6 +20,8 @@ const props = withDefaults(defineProps<TextProps>(), {
   hasCapsize: false,
 })
 
+/** 没写 color 时按 type 取默认色：supporting 是 secondary，其余 primary，inherit 保持 inherit。 */
+const color = computed(() => props.color ?? (props.type === 'supporting' ? 'secondary' : 'primary'))
 const weight = computed(() => props.weight === 'normal' ? 'regular' : props.weight)
 const isBlock = computed(() => props.display === 'block' || props.maxLines > 0 || props.hasCapsize)
 const wordBreak = computed(() => props.wordBreak ?? (props.maxLines === 1 ? 'break-all' : props.maxLines > 1 ? 'break-word' : undefined))
@@ -31,7 +33,7 @@ const classes = computed(() => [
   'astryx-text',
   `astryx-text--type-${props.type}`,
   props.size && `astryx-text--size-${props.size}`,
-  `astryx-text--color-${props.color}`,
+  `astryx-text--color-${color.value}`,
   weight.value && `astryx-text--weight-${weight.value}`,
   props.textWrap && `astryx-text--wrap-${props.textWrap}`,
   wordBreak.value && `astryx-text--word-${wordBreak.value}`,

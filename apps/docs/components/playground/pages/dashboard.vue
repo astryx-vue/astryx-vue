@@ -285,7 +285,7 @@ function sparklinePoints(values: number[]): string {
             </svg>
             <HStack :gap="6" align="center">
               <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
-                <span class="legend-swatch" :style="{ backgroundColor: series.color }" aria-hidden="true" />
+                <Icon name="stop" size="xsm" color="inherit" :style="{ color: series.color }" />
                 <Text type="supporting" color="secondary">
                   {{ series.name }}
                 </Text>
@@ -348,7 +348,7 @@ function sparklinePoints(values: number[]): string {
               <HStack :gap="4" wrap="wrap">
                 <VStack v-for="segment in group.data" :key="segment.label" :gap="0">
                   <HStack :gap="2" align="center">
-                    <span class="legend-swatch" :style="{ backgroundColor: segment.color }" aria-hidden="true" />
+                    <Icon name="stop" size="xsm" color="inherit" :style="{ color: segment.color }" />
                     <Text type="supporting">
                       {{ segment.label }}
                     </Text>
@@ -408,13 +408,6 @@ function sparklinePoints(values: number[]): string {
 </template>
 
 <style scoped>
-.legend-swatch {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-}
-
 .stacked-bar {
   display: flex;
   height: 24px;
