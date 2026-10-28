@@ -217,6 +217,8 @@ function toggleGoal(goal: string) {
               v-model="message"
               label="Anything else?"
               placeholder="Tell us whatever else is on your mind..."
+              :rows="3"
+              control-class="contact-form-textarea"
             />
 
             <CheckboxInput v-model="isDecider" label="I'm a budget decision-maker" />
@@ -238,3 +240,14 @@ function toggleGoal(goal: string) {
     </VStack>
   </Center>
 </template>
+
+<style>
+/* 待 core 修复后去掉：TextArea 外框自带 8px 内边距和 80px 最小高度，原版是文本区自己 4px 8px、高度由 rows 决定。 */
+.contact-form-textarea {
+  min-height: auto;
+  padding: 0;
+}
+.contact-form-textarea .astryx-text-area-control {
+  padding: 4px 8px;
+}
+</style>
