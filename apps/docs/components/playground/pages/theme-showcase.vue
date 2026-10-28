@@ -547,6 +547,8 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 .inventory-filter-left { flex: 1; min-width: 0; }
 .activity-icon { width: 32px; height: 32px; border-radius: var(--astryx-radius-full); background: var(--astryx-color-background-muted); color: var(--astryx-color-text-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .inventory-banner-wrap { padding-inline: var(--astryx-spacing-6); padding-bottom: var(--astryx-spacing-4); }
+/* 原版 Table 默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算。 */
+.inventory-table-wrap :deep(.astryx-table) { table-layout: fixed; }
 .inventory-table-wrap { padding-inline: var(--astryx-spacing-6); padding-block-end: var(--astryx-spacing-2); }
 .chat-card { background: var(--astryx-color-background-surface); min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
 .chat-header { padding: var(--astryx-spacing-4); }
