@@ -171,8 +171,8 @@ export const PlaygroundLineChart = defineComponent({
           }))
         }
         const tickX = pad.left - 8
-        // 和 recharts 窄轴一样：刻度加单位放不进轴宽（左内边距减去刻度间隙 4px）就按词折行。
-        const unitLines = props.isYUnitStacked ? wrapToWidth(`${tick}${props.yUnit}`, pad.left - 4, '12px') : []
+        // 和 recharts 窄轴一样：刻度加单位放不进轴宽就按词折行；轴宽 = 左留白 pad.left 减去图表左边距 4px。
+        const unitLines = props.isYUnitStacked ? wrapToWidth(`${tick}${props.yUnit}`, pad.left - 4) : []
         const isStacked = unitLines.length > 1
         const tickY = props.centerTicks ? Math.max(y, 9) : y + 4
         return h('text', {

@@ -86,35 +86,41 @@ export function num(v: unknown): number {
 
 let measureContext: CanvasRenderingContext2D | null | undefined
 
+/**
+ * recharts 的 Text 用一个脱离文档的 span 量词宽，样式里写的是未定义的
+ * `var(--font-size-sm)`，字号失效后落回 span 继承的 16px。折行位置由这个 16px 的
+ * 宽度决定（画出来的字仍是 12px），所以这里同样按 16px 量。
+ */
+const WRAP_MEASURE_FONT_SIZE = '16px'
+
 /** 量一段文字的宽度；没有 canvas（服务端渲染）时按平均字宽估。 */
-function measureText(text: string, fontSize: string): number {
+function measureText(text: string): number {
   if (measureContext === undefined) {
     measureContext = typeof document === 'undefined' ? null : document.createElement('canvas').getContext('2d')
   }
   if (!measureContext)
-    return text.length * 6.2
-  measureContext.font = `${fontSize} ${getComputedStyle(document.body).fontFamily}`
+    return text.length * 8.3
+  measureContext.font = `${WRAP_MEASURE_FONT_SIZE} ${getComputedStyle(document.body).fontFamily}`
   return measureContext.measureText(text).width
 }
 
 /**
- * 和 recharts 的 Text 一样按词折行：下一个词放进当前行会超过 maxWidth 就换行。
- * 单行放得下时不折。
+ * 照搬 recharts `Text` 的折行：按空格切词，当前行宽 + 下一个词宽 + 一个空格宽
+ * 不小于 maxWidth 就另起一行（宽度是量出来的，不是字符数）。
  */
-export function wrapToWidth(text: string, maxWidth: number, fontSize: string): string[] {
-  const lines: string[] = []
-  let current = ''
-  for (const word of text.split(' ')) {
-    const next = current ? `${current} ${word}` : word
-    if (current && measureText(next, fontSize) > maxWidth) {
-      lines.push(current)
-      current = word
+export function wrapToWidth(text: string, maxWidth: number): string[] {
+  const spaceWidth = measureText('\u00A0')
+  const lines: Array<{ words: string[], width: number }> = []
+  for (const word of text.split(/[ \f\n\r\t\v\u2028\u2029]+/)) {
+    const width = measureText(word)
+    const current = lines[lines.length - 1]
+    if (current && current.width + width + spaceWidth < maxWidth) {
+      current.words.push(word)
+      current.width += width + spaceWidth
     }
     else {
-      current = next
+      lines.push({ words: [word], width })
     }
   }
-  if (current)
-    lines.push(current)
-  return lines
+  return lines.map(line => line.words.join(' '))
 }

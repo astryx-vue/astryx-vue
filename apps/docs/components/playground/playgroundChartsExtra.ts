@@ -123,8 +123,8 @@ export const PlaygroundGanttChart = defineComponent({
         }
         props.items.forEach((item, i) => {
           const cy = pad.top + band * i + band / 2
-          const lines = wrapToWidth(item.name, Y_AXIS_WIDTH, '12px')
-          nodes.push(h('text', { 'x': pad.left - 8, 'y': cy, 'text-anchor': 'end', 'fill': AXIS_TICK, 'font-size': '12px' }, lines.map((line, k) => h('tspan', { x: pad.left - 8, dy: lines.length === 1 ? '0.355em' : k === 0 ? `${-0.145 - 0}em` : '1em' }, line))))
+          const lines = wrapToWidth(item.name, Y_AXIS_WIDTH)
+          nodes.push(h('text', { 'x': pad.left - 8, 'y': cy, 'text-anchor': 'end', 'fill': AXIS_TICK, 'font-size': '12px' }, lines.map((line, k) => h('tspan', { x: pad.left - 8, dy: k === 0 ? `${0.355 - (lines.length - 1) / 2}em` : '1em' }, line))))
           nodes.push(h('rect', { x: scale(item.start), y: cy - barH / 2, width: Math.max(2, scale(item.end) - scale(item.start)), height: barH, rx: 4, fill: item.color }))
         })
         return h('svg', {

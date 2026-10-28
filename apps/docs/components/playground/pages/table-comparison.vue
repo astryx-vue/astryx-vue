@@ -460,8 +460,8 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
 </template>
 
 <style scoped>
-/* 原版分组头单元格的内边距固定为 spacing-2 / spacing-3，不随密度变（起始侧为 0）；
-   spacious 密度下 core 的密度规则会把它撑成 12 / 16 / 20，这里按原版压回。 */
+/* 原版分组头单元格的内边距固定为 spacing-2 / spacing-3（起始侧 0），不随密度变；
+   core 的 `.astryx-table[data-density='spacious'] :is(th, td)` 会把它撑成 12 / 16，行高 49 而不是 41。 */
 .table-frame :deep(.astryx-table td.astryx-table__group:first-child) {
   padding-block: var(--astryx-spacing-2);
   padding-inline: 0 var(--astryx-spacing-3);
