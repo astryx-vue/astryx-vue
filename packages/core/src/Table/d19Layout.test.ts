@@ -4,10 +4,10 @@ import process from 'node:process'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
-import Table from './Table.vue'
 import { useTableRowExpansion } from './plugins/rowExpansion.js'
 import { useTableSelection, useTableSelectionState } from './plugins/selection.js'
 import { SELECT_COLUMN_KEY, SELECT_COLUMN_WIDTH } from './plugins/stickyColumns.js'
+import Table from './Table.vue'
 
 interface Person extends Record<string, unknown> {
   id: string
