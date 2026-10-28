@@ -529,6 +529,7 @@ function applySiblingSort(siblings: RepoEntry[]): RepoEntry[] {
 const { visibleData, plugin: treePlugin } = useTableTreeState<RepoEntry>(() => ({
   data: data.value,
   idKey: 'id',
+  hasExpandAllControl: true,
   childrenKey: 'children',
   expandedIds: expandedIds.value,
   onExpandedIdsChange: (ids) => {
