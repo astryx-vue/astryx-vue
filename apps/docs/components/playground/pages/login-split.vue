@@ -78,7 +78,7 @@ function onPasswordChange(value: string) {
             <Section variant="transparent" :padding="0" height="100%">
               <VStack :gap="4" height="100%">
                 <HStack :gap="2" align="center">
-                  <Icon name="heroicons:squares-2x2" />
+                  <Icon size="md" name="heroicons:squares-2x2" />
                   <Text type="body" weight="bold">
                     Product Inc.
                   </Text>

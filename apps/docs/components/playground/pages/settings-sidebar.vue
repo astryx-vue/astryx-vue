@@ -209,7 +209,7 @@ function personalValue(key: string) {
             @click="selectNav(item.label)"
           >
             <template #startContent>
-              <Icon :name="item.icon" />
+              <Icon size="md" :name="item.icon" />
             </template>
             <template #endContent>
               <Icon name="heroicons:chevron-right" size="sm" color="secondary" />
@@ -220,7 +220,7 @@ function personalValue(key: string) {
         <List density="spacious">
           <ListItem label="Professional hosting tools">
             <template #startContent>
-              <Icon name="heroicons:wrench-screwdriver" />
+              <Icon size="md" name="heroicons:wrench-screwdriver" />
             </template>
           </ListItem>
         </List>
@@ -249,7 +249,7 @@ function personalValue(key: string) {
               @click="selectNav(item.label)"
             >
               <template #startContent>
-                <Icon :name="item.icon" />
+                <Icon size="md" :name="item.icon" />
               </template>
             </ListItem>
           </List>
@@ -257,7 +257,7 @@ function personalValue(key: string) {
           <List density="spacious">
             <ListItem label="Professional hosting tools">
               <template #startContent>
-                <Icon name="heroicons:wrench-screwdriver" />
+                <Icon size="md" name="heroicons:wrench-screwdriver" />
               </template>
             </ListItem>
           </List>
@@ -358,7 +358,7 @@ function personalValue(key: string) {
                 align="start"
                 :style="rowPadding"
               >
-                <Icon name="heroicons:computer-desktop" />
+                <Icon size="md" name="heroicons:computer-desktop" />
                 <StackItem size="fill">
                   <VStack :gap="0">
                     <HStack :gap="2" align="center">
@@ -414,7 +414,7 @@ function personalValue(key: string) {
             <Card variant="muted">
               <HStack :gap="4" align="start">
                 <Center :width="48" :height="48" :style="iconBox">
-                  <Icon name="heroicons:lock-closed" />
+                  <Icon size="md" name="heroicons:lock-closed" />
                 </Center>
                 <VStack :gap="1">
                   <Text type="body" weight="bold">
@@ -544,7 +544,7 @@ function personalValue(key: string) {
                 <Divider v-if="i > 0" />
                 <HStack :gap="3" align="start">
                   <Center :width="48" :height="48" :style="iconBox">
-                    <Icon :name="card.icon" />
+                    <Icon size="md" :name="card.icon" />
                   </Center>
                   <VStack :gap="0">
                     <Text type="body" weight="semibold" display="block">
@@ -681,7 +681,7 @@ function personalValue(key: string) {
               <Card variant="muted">
                 <HStack :gap="4" align="start">
                   <Center :width="48" :height="48" :style="iconBox">
-                    <Icon name="heroicons:shield-check" />
+                    <Icon size="md" name="heroicons:shield-check" />
                   </Center>
                   <VStack :gap="1">
                     <Text type="body" weight="bold">

@@ -450,9 +450,7 @@ const SearchIcon = defineComponent({
                   </Text>
                 </StackItem>
                 <IconButton label="Close" variant="ghost" size="sm" @click="noop">
-                  <template #icon>
-                    <Icon icon="close" size="sm" />
-                  </template>
+                  <Icon name="heroicons:x-mark" size="sm" />
                 </IconButton>
               </HStack>
               <TextInput
@@ -534,9 +532,7 @@ const SearchIcon = defineComponent({
             <HStack v-else width="100%" justify="end" class="settings-close-anchor">
               <HStack class="settings-close-backing">
                 <IconButton label="Close" variant="ghost" size="sm" @click="noop">
-                  <template #icon>
-                    <Icon icon="close" size="sm" />
-                  </template>
+                  <Icon name="heroicons:x-mark" size="sm" />
                 </IconButton>
               </HStack>
             </HStack>
