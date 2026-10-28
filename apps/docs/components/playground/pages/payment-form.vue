@@ -533,7 +533,7 @@ const errors = computed(() => submitted.value
 .quantity-field {
   display: block;
   flex: none;
-  /* 待 core 修复后去掉：原生 input 默认宽度比原版窄 52px（core 问题清单），数量框整体补宽到原版的 112。 */
-  width: 112px;
+  /* 待 core 修复后去掉：NumberInput 原生 input 默认宽度比原版窄 52px，数量框整体补宽到原版的 164。 */
+  width: 164px;
 }
 </style>

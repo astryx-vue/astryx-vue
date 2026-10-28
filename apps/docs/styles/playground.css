@@ -1173,3 +1173,18 @@ html[data-playground-frame] #playground-mount[data-preview-layout='center'] .pla
 .theme-token-row__input--radius {
   width: 80px;
 }
+
+/*
+ * 待 core 修复后去掉：隐藏标签（isLabelHidden）是 1px 的绝对定位盒，原版写了 `top: 0; left: 0`
+ * 把它钉在最近定位祖先的角上；我们没写 inset，它停在自己的文档位置上，
+ * 页面最下面的隐藏标签会把整个文档撑高、让滚动条多出一截。
+ */
+html[data-playground-frame] .astryx-field-label-group[data-hidden='true'] {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+/* 待 core / themes 修复后去掉：Selector 输入框内边距原版是 3px 12px，我们是 4px 8px，文字左移 4px。 */
+html[data-playground-frame] .astryx-selector-field {
+  padding: 3px 12px;
+}

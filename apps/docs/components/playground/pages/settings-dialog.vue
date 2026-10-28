@@ -1724,10 +1724,6 @@ const SearchIcon = defineComponent({
   gap: 0;
   padding-block-end: var(--astryx-spacing-2);
 }
-/* 待 core 修复后去掉：小号 Selector 的内边距原版是 3px 12px，我们是 4px 8px。 */
-.settings-row-control .astryx-selector.size-sm .astryx-selector-field {
-  padding: 3px 12px;
-}
 /* 待 core 修复后去掉：Switch 的行是 inline-flex，外层多出行高基线空隙（28 对 24），开关被顶高 2px。 */
 .settings-row-control .astryx-switch-row {
   display: flex;
