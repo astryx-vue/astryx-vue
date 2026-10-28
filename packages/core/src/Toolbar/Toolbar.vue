@@ -2,6 +2,7 @@
 import type { ToolbarProps, ToolbarSlots } from './types.js'
 import { computed } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
+import Section from '../Section/Section.vue'
 import '../../styles/toolbar.css'
 
 defineOptions({ name: 'AstryxToolbar' })
@@ -26,40 +27,47 @@ const { listRef, handleKeyDown, handleFocus } = useListFocus({
   wrap: true,
 })
 void listRef.value
+
+/** 带底部分隔线时，选中标签的指示条要穿过工具栏的块向内边距落到分隔线上。 */
+const toolbarStyle = computed(() => ({
+  '--astryx-toolbar-gap': `var(--astryx-spacing-${gapToken.value})`,
+  '--_tab-indicator-bottom': props.dividers?.includes('bottom')
+    ? 'calc(-1 * (var(--astryx-spacing-2, 8px) + 1px))'
+    : undefined,
+}))
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role="toolbar" 的焦点在内部控件上循环，容器只接收冒泡的方向键。 -->
-  <div
-    ref="listRef"
-    class="astryx-toolbar"
-    :class="[
-      `astryx-toolbar--${size}`,
-      `astryx-toolbar--${orientation}`,
-      {
-        'astryx-toolbar--centered': $slots.center,
-        'astryx-toolbar--muted': variant === 'muted',
-        'astryx-toolbar--divider-top': dividers?.includes('top'),
-        'astryx-toolbar--divider-bottom': dividers?.includes('bottom'),
-        'astryx-toolbar--divider-start': dividers?.includes('start'),
-        'astryx-toolbar--divider-end': dividers?.includes('end'),
-      },
-    ]"
-    role="toolbar"
-    :aria-label="label"
-    :aria-orientation="orientation"
-    :style="{ '--astryx-toolbar-gap': `var(--astryx-spacing-${gapToken})` }"
-    @focusin="handleFocus"
-    @keydown="handleKeyDown"
-  >
-    <div v-if="$slots.start" class="astryx-toolbar__slot astryx-toolbar__slot--start">
-      <slot name="start" />
+  <!--
+    和原版一样，工具栏外面套一层 Section：横向内边距来自主题的 section 内边距，
+    并抵消父容器（Card、Section）的内边距；底色和分隔线也由 Section 画。
+  -->
+  <Section :variant="variant" :padding-block="2" :dividers="dividers">
+    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role="toolbar" 的焦点在内部控件上循环，容器只接收冒泡的方向键。 -->
+    <div
+      ref="listRef"
+      class="astryx-toolbar"
+      :class="[
+        `astryx-toolbar--${size}`,
+        `astryx-toolbar--${orientation}`,
+        { 'astryx-toolbar--centered': $slots.center },
+      ]"
+      role="toolbar"
+      :aria-label="label"
+      :aria-orientation="orientation"
+      :style="toolbarStyle"
+      @focusin="handleFocus"
+      @keydown="handleKeyDown"
+    >
+      <div v-if="$slots.start" class="astryx-toolbar__slot astryx-toolbar__slot--start">
+        <slot name="start" />
+      </div>
+      <div v-if="$slots.center" class="astryx-toolbar__slot astryx-toolbar__slot--center">
+        <slot name="center" />
+      </div>
+      <div v-if="$slots.end" class="astryx-toolbar__slot astryx-toolbar__slot--end">
+        <slot name="end" />
+      </div>
     </div>
-    <div v-if="$slots.center" class="astryx-toolbar__slot astryx-toolbar__slot--center">
-      <slot name="center" />
-    </div>
-    <div v-if="$slots.end" class="astryx-toolbar__slot astryx-toolbar__slot--end">
-      <slot name="end" />
-    </div>
-  </div>
+  </Section>
 </template>

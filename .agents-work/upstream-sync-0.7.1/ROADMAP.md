@@ -53,13 +53,15 @@ mindmap
       ✅ D9 指南补齐
       ✅ D10 core 遗留问题修复
       ✅ D11 文档润色
-      🟡 D12 演练场模板逐个走查
+      ✅ D12 演练场模板逐个走查
       ✅ D13 主题编辑器补面板
       ✅ D14 core Markdown 解析器对齐原版
       ✅ D15 core 状态图标改实心
       ✅ D16 Table 行高对齐原版
       ✅ D17 演练场图表撑满与刻度
-      🟡 D18 core 组件对齐原版
+      ✅ D18 core 组件对齐原版
+      ✅ D19 core 组件对齐原版（第 2 批）
+      ✅ D20 演练场剩余 41 个模板走查
     阶段 E 工程质量
       ✅ E1 拆分脚本与命令行大文件
       ✅ E2 拆分文档站大文件
@@ -87,7 +89,7 @@ mindmap
       ➖ F6 build 构建插件
     阶段 G 发布与持续维护
       ✅ G1 发布核心组件与主题包
-      🟡 G2 发布命令行工具
+      ✅ G2 发布命令行工具
       ⬜ G3 发布全新扩展包
       🔵 G4 每周自动追踪上游更新
 ```
@@ -262,6 +264,8 @@ flowchart TB
   C11 --> D16["D16 Table 行高对齐原版"]
   D5c --> D17["D17 演练场图表撑满与刻度"]
   D5c --> D18["D18 core 组件对齐原版"]
+  D18 --> D19["D19 core 组件对齐原版（第 2 批）"]
+  D12 --> D20["D20 演练场剩余 41 个模板走查"]
   CALL & D2 & D7 & D10 --> G1["G1 发布 core 与 themes"]
   G1 & D4b & D5b --> G2["G2 发布 CLI"]
   A1 --> G4["G4 持续同步"]
@@ -373,13 +377,15 @@ flowchart TB
 | D9 | 指南补齐 | C全部 | ✅ 已完成 | 1 | D9-impl | | 补 4 个新指南页与 6 处小节，中英文各一份 | #172 |
 | D10 | core 遗留问题修复 | D5c | ✅ 已完成 | 1 | D10-impl | | Stack 间距不再继承；Table 列头筛选同行、行级 ref 与事件；Selector 图标组件化；竖向 Step 内容；两个 Table 组合式函数 config 支持 ref | #180 |
 | D11 | 文档润色 | G1 | ✅ 已完成 | 3 | D11-writer | | 第 1 批：中文指南和主题页 39 处宣传腔改平实；组件页和英文页留后续批次 | #213 |
-| D12 | 演练场模板逐个走查 | D5c | 🟡 实现中 | 2 | D12-ui | | 第 2 批 16 个模板已走查，进行中：补深色对照、table-filter 功能块、之后剩 41 个模板分批 | |
+| D12 | 演练场模板逐个走查 | D5c | ✅ 已完成 | 2 | D12-ui | | 第 1、2 批共 19 个模板（第 1 批 3 个问题 + 第 2 批 16 个模板）走查完成，剩余拆到 D20；发现的 core 问题拆到 D19 | #210 #236 |
 | D13 | 主题编辑器补面板 | D8 | ✅ 已完成 | 1 | D13-ui | | Components、Advanced 两个面板补齐，实时预览、导出、分享恢复；新增 14 测试 | #212 |
 | D14 | core Markdown 解析器对齐原版 | C9 | ✅ 已完成 | 1 | D14-impl | | 6 处对齐原版（含解析时拒绝不安全地址）；richtext 12 条 todo 恢复 | #217 |
 | D15 | core 状态图标改实心 | C16 | ✅ 已完成 | 2 | D15-impl | | 状态图标走 Icon：文档站 lucide 描边、演练场实心兜底，与原版两处一致 | #214 |
 | D16 | Table 行高对齐原版 | C11 | ✅ 已完成 | 1 | 总控 | | Table 不再写死行高，单元格 21px、行 37.5px，和原版一致 | #216 |
 | D17 | 演练场图表撑满与刻度 | D5c | ✅ 已完成 | 1 | 总控 | | 图表撑满、y 轴 5 档、图例色块、副标题；图表写法检查 | #220 |
-| D18 | core 组件对齐原版（D12 发现的 19 个问题） | D5c | 🟡 实现中 | 0 | Sonnet(D18) | | OverflowList 指示器宽度、Link size/weight、Text 粗体、小尺寸选择器高度、Table 行高/列宽/展开面板内边距、token 内边距、StatusDot accent 等，D12 走查时发现，改 core 根因 | |
+| D18 | core 组件对齐原版（D12 发现的 19 个问题） | D5c | ✅ 已完成 | 0 | Sonnet(D18) | | 修好 13 条，5 条核实非问题，1 条待决定（Markdown contentWidth 默认值） | #233 |
+| D19 | core 组件对齐原版（D12 第 2 批发现的问题） | D18 | ✅ 已完成 | 0 | | | 修好 9 条，2 条核实非问题，1 条属 v0.7.4（留给 G4），1 条保留（可展开行 +2px，与原版一致） | #240 |
+| D20 | 演练场模板走查：剩余 41 个模板 | D12 | ✅ 已完成 | 0 | | | 演练场对比收口：第 1 批 10 个模板（login 系列、settings 系列、表单类）已走查，其余 31 个不再逐个走查；之后发现不对齐再单独修 | #242 |
 | D8 | 演练场同步 | D5a E2 | ✅ 已完成 | 1 | D8-impl | | 预览通道按 nonce 校验来源；三种启动失败都有提示；57 个模板预览 0 报错 | #174 |
 | E1 | 拆分脚本与 CLI 生成器大文件 | A3 | ✅ 已完成 | 1 | E1-impl | E1-verify | 通过 16/16 | e41828a |
 | E2 | 拆分文档站大文件 | A3 | ✅ 已完成 | 1 | E2-impl | E2-verify | 通过 22/22 | 46a0e25 |
@@ -405,7 +411,7 @@ flowchart TB
 | F5 | vega | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 5 节 | |
 | F6 | build | F0 | ➖ 不做 | 0 | | | 见 ADR 0001 第 6 节 | |
 | G1 | 发布 core + themes | C全部 D2 D7 D10 | ✅ 已完成 | 1 | 总控 | | core 与 themes 0.4.0 已发 npm（latest），GitHub Release 与 GitHub Packages 同步 | #182 #183 #184 |
-| G2 | 发布 CLI | G1 D4b D5b | 🟡 实现中 | 0 | deepseek(G2) | | cli 0.4.0 发版准备：changeset、不推荐未发布的包、打包实跑 | |
+| G2 | 发布 CLI | G1 D4b D5b | ✅ 已完成 | 0 | deepseek(G2) | | cli 0.4.0 已发布；未发布的包不再给安装命令 | #230 #231 #232 #234 |
 | G3 | 首发新包 | G1 F1c F2c F3f F4 | ⬜ 未开始 | 0 | | | | |
 | G4 | 持续同步机制 | A1 G1 | 🔵 可开工 | 0 | | | | |
 
@@ -498,13 +504,15 @@ C9-exports 不是总表节点，不要加进行。它已完成（#146，通过 1
 | D9 指南补齐 | 按 `nodes/D4a/guides-gap.md` 的 B、C 两类，把原版命令行内置指南里我们文档站缺的 11 篇补进文档站（中英文）：新页 principles、working-with-ai、browser-support、layout；patterns 加「固定页眉页脚」「侧边详情面板」；typography 加「该做与不该做」；i18n 加「从右往左与伪语言测试」；styling 加「和 Tailwind / UnoCSS 一起用」；EmptyState 加插画规范。内容改写成 Vue 的说法，每条都要在代码里能找到依据。 | C全部 | 中英文页面齐全，侧栏能进，`docs:build` 通过，catalog 重生。 |
 | D10 core 遗留问题修复 | D5c 追平模板时 worker 发现的 core 问题，用户要求全部修完再发版（见 `nodes/D10/plan.md`）：Stack 内边距和间距被嵌套 Stack 继承；Table 列头筛选按钮掉到下一行、缺行级扩展点（整行悬停卡片做不出来）；Selector 选项 `icon` 只吃 CSS 类名；竖向 Step 的内容排在标签右边；`useTableTreeState` / `useTableSortableState` 的 config 只解开一层 ref。 | D5c | 每条都有复现测试、修复和浏览器验证；受影响的模板和文档 Demo 回归通过。 |
 | D11 文档润色 | 用文档写作子代理（document-writer）把文档站中英文的指南、主题、组件说明页通读润色：说法直白、一句一个意思、术语前后一致，不改代码示例和 API 事实。按目录分批，每批一个 PR。 | G1 | 每批 `docs:build` 通过、catalog 重生；改动只涉及行文，代码块和 props 表不变（有脚本核对）；抽查页面读起来顺。 |
-| D12 演练场模板逐个走查 | 用户验收时发现模板和原版仍有大量细节差异（缺工具栏、间距、图标不显示、图表不撑满）。用 ui-implementor 按原版 `page.tsx` 逐个模板、逐个区块对照修复，浅色深色都要对。分 3 批：D12 看板与表格类，后续批次另开节点。见 `nodes/D12/plan.md`。 | D5c | 每个模板和原版同视口、同主题的整页对照图逐区块一致；差异清单逐条关闭。 |
+| D12 演练场模板逐个走查 | 用户验收时发现模板和原版仍有大量细节差异（缺工具栏、间距、图标不显示、图表不撑满）。用 ui-implementor 按原版 `page.tsx` 逐个模板、逐个区块对照修复，浅色深色都要对。本节点做看板与表格类共 19 个模板（第 1 批 3 个问题 + 第 2 批 16 个模板），剩余 41 个模板拆到 D20，走查中发现的 core 问题拆到 D19。见 `nodes/D12/plan.md`。 | D5c | 每个模板和原版同视口、同主题的整页对照图逐区块一致；差异清单逐条关闭。 |
 | D13 主题编辑器补面板 | 演练场「主题」里 Components、Advanced 两个 tab 点开是空白。移植原版 `ComponentTokensPanel`、`RawTokensPanel`。见 `nodes/D13/plan.md`。 | D8 | 两个面板和原版对照一致，改动能实时作用到预览和导出。 |
 | D14 core Markdown 解析器对齐原版 | F1a 发现我们 core 的 Markdown 解析器和原版有 6 处不一致（缩进代码块、不拒绝不安全地址、插件取词窗口、扩展节点 source 丢反斜杠、`createMarkdownPlugin` 无泛型、链接文字里认插件语法），见 `nodes/F1a/impl-1.md` 第 6.1 节和 issue #209。第 2 条有安全影响，F1b 依赖它。 | C9 | 6 处都和原版一致；richtext 的 12 条 `it.todo` 恢复成正式断言并通过；core 现有测试不回退。 |
 | D15 core 状态图标改实心 | D12 验收时发现：原版 `defaultIcons.tsx` 里 success、error、warning、info 等 6 个状态图标用实心（`solidSvgProps`，heroicons solid 风格），我们 `styles/icon.css` 里是 lucide 空心描边。Banner、Toast、Field 状态等处都受影响。逐个照原版路径改成实心。 | C16 | 6 个图标路径和原版一致；Banner、Toast、FieldStatus 文档页浅色深色对照一致。 |
 | D16 Table 行高对齐原版 | D12 走查发现表格每行比原版矮。原版 Table 不设行高，继承 `html { line-height: 1.5 }`（21px）；我们写死了 `--astryx-text-body-leading`（20px）。去掉这一行即可。 | C11 | 原版和我们的演练场 table-page、文档站 Table 页的单元格行高和行高度一致。 |
 | D17 演练场图表撑满与刻度 | 用户多次报图表和原版不一致：写死 viewBox 宽度导致不撑满、`PlaygroundLineChart` 只画两档 y 刻度、图例缺色块。从共用图表组件根上修，并在 `check-template-tokens.mjs` 加图表写法检查。 | D5c | 所有图表模板和原版同视口对照一致；写死宽度的图表 svg 会被检查拦下。 |
 | D18 core 组件对齐原版（D12 发现的 19 个问题） | OverflowList 指示器宽度、Link size/weight、Text 粗体、小尺寸选择器高度、Table 行高/列宽/展开面板内边距、token 内边距、StatusDot accent 等，D12 走查时发现，改 core 根因。 | D5c | 清单 19 条逐条核实，确认的修好并有测试，演练场模板去掉相应绕过后和原版一致。 |
+| D19 core 组件对齐原版（D12 第 2 批发现的问题） | D12 第 2 批走查时记下的 13 条 core 差异（清单在 `nodes/D12/impl-3.md` 第三节）：Table 分组头不该随密度变、默认 `table-layout: fixed`、`tableMinWidth` 不计选择列宽、Icon 描边被填实、compact 密度数据格差 2px（待查）、展开面板内边距、Toolbar 横向内边距、TabList 高、Markdown 标题外边距与表格外框、Token `vertical-align`、ProgressBar 在 flex 行里宽度 0、TextInput 默认宽度等，逐条改 core 根因。 | D18 | 清单逐条在原版页面核实，确认的修好并有测试；D12 模板里对应的绕过去掉后和原版一致。 |
+| D20 演练场模板走查：剩余 41 个模板 | D12 已走查 16 个。剩 41 个：ai-chat、ai-chat-landing、blank、canvas-editor、centered-hero、checkout-wizard、classic-gallery、contact-form、detail-page、documentation、documentation-design、documentation-technical、editor、file-explorer、form-two-column、form-wizard、form-wizard-dialog、form-wizard-inline、form-wizard-vertical、gallery-hero、ide、incident-console、kanban-board、library、login、login-card、login-split、login-sso、messaging-shell、mixed-gallery、payment-form、product-detail、product-gallery、settings、settings-dialog、settings-sidebar、shell-nav、shell-side-nav、shell-top-nav、side-gallery、work-item-detail。建议分 4 批，每批约 10 个。收敛规则见 nodes/D20/convergence.md。 | D12 | 每个模板浅色、深色都和原版逐区块对照一致，diff 清单里「不修」只允许写原版自身差异或已列入 core 问题清单。 |
 
 ---
 

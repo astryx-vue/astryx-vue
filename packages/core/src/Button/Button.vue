@@ -4,6 +4,7 @@ import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, Bu
 import { computed, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
+import Icon from '../Icon/Icon.vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
@@ -219,11 +220,14 @@ defineExpose({
       :aria-hidden="isLoadingState || undefined"
     >
       <span
-        v-if="$slots.icon"
+        v-if="$slots.icon || icon"
         class="astryx-button__icon"
         aria-hidden="true"
       >
-        <slot name="icon" />
+        <slot name="icon">
+          <Icon v-if="typeof icon === 'string'" :icon="icon" />
+          <component :is="icon" v-else-if="icon" />
+        </slot>
       </span>
 
       <span v-if="!isIconOnly" class="astryx-button__label">

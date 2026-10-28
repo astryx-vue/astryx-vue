@@ -32,7 +32,7 @@ function signIn() {
   <Center axis="both" :padding="6" class="login-page">
     <VStack :gap="4" h-align="center" class="login-column">
       <VStack :gap="2" h-align="center">
-        <Icon icon="i-heroicons-cube" size="lg" />
+        <Icon name="heroicons:cube" size="lg" />
         <Text type="body" weight="bold" size="lg">
           Product Inc.
         </Text>

@@ -13,22 +13,6 @@
     display: block;
   }
 
-  .astryx-text--weight-regular {
-    font-weight: var(--astryx-font-weight-regular, 400);
-  }
-
-  .astryx-text--weight-medium {
-    font-weight: var(--astryx-font-weight-medium, 500);
-  }
-
-  .astryx-text--weight-semibold {
-    font-weight: var(--astryx-font-weight-semibold, 600);
-  }
-
-  .astryx-text--weight-bold {
-    font-weight: var(--astryx-font-weight-bold, 700);
-  }
-
   .astryx-text--type-body {
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
@@ -73,6 +57,24 @@
     font-size: var(--astryx-text-display-3-size, 1.75rem);
     font-weight: var(--astryx-text-display-weight, var(--astryx-text-display-3-weight, 300));
     line-height: var(--astryx-text-display-3-leading, 1.2);
+  }
+
+  /* 显式 weight 排在 type 规则之后：调用方写了 weight 就赢过 display-* 的默认 300。 */
+
+  .astryx-text--weight-regular {
+    font-weight: var(--astryx-font-weight-regular, 400);
+  }
+
+  .astryx-text--weight-medium {
+    font-weight: var(--astryx-font-weight-medium, 500);
+  }
+
+  .astryx-text--weight-semibold {
+    font-weight: var(--astryx-font-weight-semibold, 600);
+  }
+
+  .astryx-text--weight-bold {
+    font-weight: var(--astryx-font-weight-bold, 700);
   }
 
   .astryx-text--color-primary {

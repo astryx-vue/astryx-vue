@@ -102,11 +102,11 @@ html {
   background: var(--astryx-bg);
 }
 
-body,
-button,
-input,
-textarea,
-select {
+/*
+ * Only `body` sets the font. Form controls inherit it through the reset layer,
+ * so component layers stay in charge of their own weight.
+ */
+body {
   font-family: var(--vp-font-family-base);
   font-weight: 400;
 }
@@ -1783,17 +1783,6 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 /* `.vp-doc img` adds a 1rem margin that shifts the thumbnail out of its frame. */
 .vp-doc .astryx-thumbnail img {
   all: revert-layer;
-}
-
-/*
- * The docs base sets `font-weight: 400` on every button, which outranks the
- * component layer. Revert just that pair so header labels, tree actions, and
- * metadata toggles keep the weight the component declares.
- */
-.vp-doc :is(.astryx-table, .astryx-tree-list, .astryx-metadata-list, .astryx-thumbnail) :is(button, input),
-.astryx-tab {
-  font-family: revert-layer;
-  font-weight: revert-layer;
 }
 
 /* Docs: override unlayered VitePress .vp-doc styles for component examples */

@@ -322,7 +322,7 @@ describe('table', () => {
     expect(css).not.toContain('not-allowed')
     expect(css).toContain('.astryx-table__expander:is(:disabled, [aria-disabled=\'true\'])')
     expect(css).toContain('.astryx-table thead tr:hover')
-    expect(css).toContain('padding-inline-start: calc(40px + var(--astryx-spacing-3, 12px))')
+    expect(css).toContain('padding-inline-start: calc(40px + var(--_cell-inline')
   })
 
   it('filters rows with the self-contained filter helper', () => {

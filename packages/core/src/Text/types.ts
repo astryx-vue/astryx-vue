@@ -20,8 +20,7 @@ export interface TextProps {
    */
   size?: TextSize
   /**
-   * Text color.
-   * @default 'primary'
+   * Text color. Defaults to `secondary` for `type="supporting"`, `primary` otherwise.
    */
   color?: TextColor
   /**

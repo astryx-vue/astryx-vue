@@ -22,7 +22,13 @@
     border-spacing: 0;
     color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     font-family: inherit;
-    font-size: var(--astryx-text-body-size, 1rem);
+    /* 原版表格元素不设字号：分组头等自定义内容继承环境字号（16px），
+       数据格的字号由 td 自己带（见下），所以两边分开。 */
+  }
+
+  /* 数据模式（传 data 和 columns）按声明的列宽比例严格分配；手写行列的模式按内容定宽。 */
+  .astryx-table[data-layout='fixed'] {
+    table-layout: fixed;
   }
 
   .astryx-table :is(th, td) {
@@ -39,43 +45,47 @@
     vertical-align: bottom;
   }
 
-  .astryx-table[data-density='compact'] :is(th, td) {
-    padding-block: var(--astryx-spacing-1, 4px);
-    padding-inline: var(--astryx-spacing-2, 8px);
+  /* 密度只决定两个变量。内边距由下面一条规则读变量，并且只管表格自己的格子：
+     分组头、展开面板是插件渲染的整行格，内边距归它们自己的规则（__group、__panel）。
+     用 :where 排除它们，不抬特异性，插件格子也就不必和密度规则比特异性。 */
+  .astryx-table[data-density='compact'] {
+    --_cell-block: var(--astryx-spacing-1, 4px);
+    --_cell-inline: var(--astryx-spacing-2, 8px);
   }
 
-  .astryx-table[data-density='balanced'] :is(th, td) {
-    padding-block: var(--astryx-spacing-2, 8px);
-    padding-inline: var(--astryx-spacing-3, 12px);
+  .astryx-table[data-density='balanced'] {
+    --_cell-block: var(--astryx-spacing-2, 8px);
+    --_cell-inline: var(--astryx-spacing-3, 12px);
   }
 
-  .astryx-table[data-density='spacious'] :is(th, td) {
-    padding-block: var(--astryx-spacing-3, 12px);
-    padding-inline: var(--astryx-spacing-4, 16px);
+  .astryx-table[data-density='spacious'] {
+    --_cell-block: var(--astryx-spacing-3, 12px);
+    --_cell-inline: var(--astryx-spacing-4, 16px);
   }
 
-  .astryx-table[data-density='compact'] :is(th, td):first-child {
-    padding-inline-start: max(var(--container-padding-inline-start, var(--astryx-spacing-2, 8px)), var(--astryx-spacing-2, 8px));
+  .astryx-table :is(th, td):where(:not(.astryx-table__group, .astryx-table__panel)) {
+    padding-block: var(--_cell-block, var(--astryx-spacing-2, 8px));
+    padding-inline: var(--_cell-inline, var(--astryx-spacing-3, 12px));
   }
 
-  .astryx-table[data-density='compact'] :is(th, td):last-child {
-    padding-inline-end: max(var(--container-padding-inline-end, var(--astryx-spacing-2, 8px)), var(--astryx-spacing-2, 8px));
+  /* 原版里带右键菜单的格子（可展开行的每一格）把内边距挪给了菜单触发层，
+     `<td>` 自己只剩浏览器默认的 1px，所以这些格子上下各比普通格多 1px。 */
+  .astryx-table td[data-row-menu] {
+    padding-block: calc(var(--_cell-block, var(--astryx-spacing-2, 8px)) + 1px);
   }
 
-  .astryx-table[data-density='balanced'] :is(th, td):first-child {
-    padding-inline-start: max(var(--container-padding-inline-start, var(--astryx-spacing-3, 12px)), var(--astryx-spacing-2, 8px));
+  .astryx-table :is(th, td):where(:not(.astryx-table__group, .astryx-table__panel)):first-child {
+    padding-inline-start: max(var(--container-padding-inline-start, var(--_cell-inline, var(--astryx-spacing-3, 12px))), var(--astryx-spacing-2, 8px));
   }
 
-  .astryx-table[data-density='balanced'] :is(th, td):last-child {
-    padding-inline-end: max(var(--container-padding-inline-end, var(--astryx-spacing-3, 12px)), var(--astryx-spacing-2, 8px));
+  .astryx-table :is(th, td):where(:not(.astryx-table__group, .astryx-table__panel)):last-child {
+    padding-inline-end: max(var(--container-padding-inline-end, var(--_cell-inline, var(--astryx-spacing-3, 12px))), var(--astryx-spacing-2, 8px));
   }
 
-  .astryx-table[data-density='spacious'] :is(th, td):first-child {
-    padding-inline-start: max(var(--container-padding-inline-start, var(--astryx-spacing-4, 16px)), var(--astryx-spacing-2, 8px));
-  }
-
-  .astryx-table[data-density='spacious'] :is(th, td):last-child {
-    padding-inline-end: max(var(--container-padding-inline-end, var(--astryx-spacing-4, 16px)), var(--astryx-spacing-2, 8px));
+  /* 原版 TableCell 给普通数据格带正文字号；分组头、展开面板、空态这些
+     插件渲染的格子不设字号，继承环境字号。 */
+  .astryx-table td:not(.astryx-table__group, .astryx-table__panel, .astryx-table__empty) {
+    font-size: var(--astryx-text-body-size, 0.875rem);
   }
 
   .astryx-table th {
@@ -292,12 +302,6 @@
     text-align: center;
   }
 
-  .astryx-table__select {
-    width: 48px;
-    min-width: 48px;
-    max-width: 48px;
-  }
-
   .astryx-table__filter {
     min-width: 0;
   }
@@ -381,11 +385,6 @@
    * 选择工具栏复用 Toolbar 的骨架：产品操作排在逻辑起点，计数文字和清空命令排在末端。
    */
 
-  /* Toolbar 只有透明和弱化底，表面色这一档在这里补上。 */
-  .astryx-table-selection-toolbar--section {
-    background: var(--astryx-color-background-surface, #fff);
-  }
-
   .astryx-table-selection-toolbar__label {
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
@@ -412,10 +411,13 @@
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
   }
 
+  /* 原版分组头固定 8px 12px 8px 0（块向 8、结束侧 12、起始侧 0），不随密度变。 */
   .astryx-table td.astryx-table__group {
     max-width: none;
     overflow: visible;
+    padding-block: var(--astryx-spacing-2, 8px);
     padding-inline-start: 0;
+    padding-inline-end: var(--astryx-spacing-3, 12px);
     background: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
   }
 
@@ -529,20 +531,12 @@
     width: 40px;
     min-width: 40px;
     max-width: 40px;
-    padding-inline-start: 0;
     padding-inline-end: 0;
   }
 
-  .astryx-table[data-density='compact'] .astryx-table__expander--column {
-    margin-inline-start: calc((40px - min(var(--astryx-spacing-6, 24px), 40px)) / 2 - var(--astryx-spacing-2, 8px));
-  }
-
-  .astryx-table[data-density='balanced'] .astryx-table__expander--column {
-    margin-inline-start: calc((40px - min(var(--astryx-spacing-6, 24px), 40px)) / 2 - var(--astryx-spacing-3, 12px));
-  }
-
-  .astryx-table[data-density='spacious'] .astryx-table__expander--column {
-    margin-inline-start: calc((40px - min(var(--astryx-spacing-6, 24px), 40px)) / 2 - var(--astryx-spacing-4, 16px));
+  /* 展开列的起始侧内边距就是密度的横向内边距，按钮往回缩这一段，居中在 40px 的列里。 */
+  .astryx-table .astryx-table__expander--column {
+    margin-inline-start: calc((40px - min(var(--astryx-spacing-6, 24px), 40px)) / 2 - var(--_cell-inline, var(--astryx-spacing-3, 12px)));
   }
 
   .astryx-table[data-dividers='rows'] tbody tr[data-expanded] > td,
@@ -554,30 +548,23 @@
     background: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
   }
 
-  .astryx-table__panel {
+  /* 面板的块向 16、结束侧 20 固定不变；起始侧让出 40px 的展开列再加密度的横向内边距。 */
+  .astryx-table td.astryx-table__panel {
     max-width: none;
     padding-inline-end: var(--astryx-spacing-5, 20px);
     padding-block: var(--astryx-spacing-4, 16px);
   }
 
-  .astryx-table[data-density='compact'] .astryx-table__panel {
-    padding-inline-start: calc(40px + var(--astryx-spacing-2, 8px));
+  .astryx-table td.astryx-table__panel {
+    padding-inline-start: calc(40px + var(--_cell-inline, var(--astryx-spacing-3, 12px)));
   }
 
-  .astryx-table[data-density='balanced'] .astryx-table__panel {
-    padding-inline-start: calc(40px + var(--astryx-spacing-3, 12px));
-  }
-
-  .astryx-table[data-density='spacious'] .astryx-table__panel {
-    padding-inline-start: calc(40px + var(--astryx-spacing-4, 16px));
-  }
-
-  .astryx-table[data-dividers='rows'] .astryx-table__panel,
-  .astryx-table[data-dividers='grid'] .astryx-table__panel {
+  .astryx-table[data-dividers='rows'] td.astryx-table__panel,
+  .astryx-table[data-dividers='grid'] td.astryx-table__panel {
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
   }
 
-  .astryx-table tbody tr:last-child > .astryx-table__panel {
+  .astryx-table tbody tr:last-child > td.astryx-table__panel {
     border-bottom-width: 0;
   }
 

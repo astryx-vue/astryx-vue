@@ -9,21 +9,9 @@
     gap: var(--astryx-toolbar-gap, var(--astryx-spacing-2, 8px));
     width: 100%;
     min-width: 0;
-    padding-block: var(--astryx-spacing-2, 8px);
+    /* 原版三个尺寸的最小高度都是小号控件高；更高的尺寸由里面的按钮撑开。 */
+    min-height: var(--astryx-input-height-sm, 28px);
   }
-
-  .astryx-toolbar--muted {
-    background: var(--astryx-color-background-muted);
-  }
-
-  .astryx-toolbar--divider-top { border-top: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
-  .astryx-toolbar--divider-bottom { border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
-  .astryx-toolbar--divider-start { border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
-  .astryx-toolbar--divider-end { border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border); }
-
-  .astryx-toolbar--sm { min-height: 28px; }
-  .astryx-toolbar--md { min-height: 32px; }
-  .astryx-toolbar--lg { min-height: 36px; }
 
   .astryx-toolbar--centered {
     display: grid;
@@ -56,6 +44,22 @@
   .astryx-toolbar__slot--start .astryx-stack {
     max-width: 100%;
     min-width: 0;
+  }
+
+  /*
+   * 首尾的幽灵按钮自带透明内边距。工具栏把这一侧的槽往外拉回
+   * 「容器内边距 − 工具栏块向内边距」，按钮的字形才落在内容边上。
+   */
+  .astryx-toolbar__slot {
+    --_edge-comp-inset: calc(var(--container-padding-inline-start, var(--astryx-spacing-4, 16px)) - var(--astryx-spacing-2, 8px));
+  }
+
+  .astryx-toolbar__slot:has(> [data-astryx-edge-comp]:first-child) {
+    margin-inline-start: calc(-1 * var(--_edge-comp-inset));
+  }
+
+  .astryx-toolbar__slot:has(> [data-astryx-edge-comp]:last-child) {
+    margin-inline-end: calc(-1 * var(--_edge-comp-inset));
   }
 
   .astryx-toolbar__slot--center {

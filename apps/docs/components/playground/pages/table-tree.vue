@@ -12,6 +12,7 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Layout,
   LayoutContent,
   LayoutPanel,
@@ -28,13 +29,15 @@ import {
   TextInput,
   Token,
   Toolbar,
+  useMediaQuery,
+  useTableColumnResize,
   useTableSortable,
   useTableSortableState,
   useTableTreeState,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
-import { computed, h, ref } from 'vue'
+import { computed, defineComponent, h, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 
 type EntryKind = 'folder' | 'typescript' | 'json' | 'yaml' | 'markdown' | 'text'
 
@@ -346,6 +349,23 @@ const ABOUT_LINKS = [
   { label: 'Activity', icon: 'heroicons:chart-bar' },
 ]
 
+/** 文件夹图标：和原版（lucide Folder）一样是实心的，文件图标是描边。 */
+function lucideGlyph(paths: string[], isFilled: boolean) {
+  return () => h('svg', {
+    'xmlns': 'http://www.w3.org/2000/svg',
+    'viewBox': '0 0 24 24',
+    'fill': isFilled ? 'currentColor' : 'none',
+    'stroke': 'currentColor',
+    'stroke-width': 2,
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round',
+    'width': '1em',
+    'height': '1em',
+    'aria-hidden': 'true',
+  }, paths.map(d => h('path', { d })))
+}
+const FolderGlyph = lucideGlyph(['M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'], true)
+
 const STAT_ACTION: Record<string, string> = {
   stars: 'Star',
   watching: 'Watch',
@@ -357,6 +377,52 @@ const REPO_STATS = [
   { label: 'watching', value: '97', icon: 'heroicons:eye' },
   { label: 'forks', value: '1.3k', icon: 'carbon:fork' },
 ]
+
+/** 侧栏在视口 ≥1024 时占右边 296px，窄了就挪到 README 下面。 */
+const isSidebarInline = useMediaQuery('(min-width: 1024px)')
+
+/** 表头和正文各自量宽，≤720 时按钮收成图标、搜索框收成图标按钮。 */
+const NARROW_WIDTH = 720
+const headerEl = ref<HTMLElement | null>(null)
+const bodyEl = ref<HTMLElement | null>(null)
+const headerWidth = ref<number | null>(null)
+const bodyWidth = ref<number | null>(null)
+const isNarrowHeader = computed(() => headerWidth.value != null && headerWidth.value <= NARROW_WIDTH)
+const isNarrowBody = computed(() => bodyWidth.value != null && bodyWidth.value <= NARROW_WIDTH)
+const isSearchOpen = ref(false)
+
+function setHeader(instance: unknown): void {
+  headerEl.value = (instance as { $el?: HTMLElement } | null)?.$el ?? null
+}
+
+const searchInput = ref<{ $el?: HTMLElement } | null>(null)
+
+/** 窄屏下搜索收成图标按钮；点开后把焦点给输入框。 */
+function openSearch(): void {
+  isSearchOpen.value = true
+  void nextTick(() => searchInput.value?.$el?.querySelector('input')?.focus())
+}
+
+function setBody(instance: unknown): void {
+  bodyEl.value = (instance as { $el?: HTMLElement } | null)?.$el ?? null
+}
+
+function watchWidth(target: typeof headerEl, width: typeof headerWidth): void {
+  let observer: ResizeObserver | null = null
+  watch(target, (element) => {
+    observer?.disconnect()
+    observer = null
+    if (!element || typeof ResizeObserver === 'undefined')
+      return
+    observer = new ResizeObserver(([entry]) => {
+      width.value = entry?.contentRect.width ?? null
+    })
+    observer.observe(element)
+  }, { immediate: true, flush: 'post' })
+  onBeforeUnmount(() => observer?.disconnect())
+}
+watchWidth(headerEl, headerWidth)
+watchWidth(bodyEl, bodyWidth)
 
 const REF_COUNTS = [
   { label: '171 Branches', icon: 'carbon:branch' },
@@ -377,6 +443,44 @@ const CONTRIBUTORS = [
   'Kit Nakamura',
   'Lena Voss',
 ]
+
+/** 右侧 About 栏的内容。宽屏放在 Layout 的 end 槽，窄屏挪到 README 下面，所以抽成一个组件复用。 */
+const AboutPanel = defineComponent({
+  setup() {
+    const row = (icon: string, color: 'secondary' | undefined, text: string, key: string) =>
+      h(HStack, { key, gap: 2, vAlign: 'center' }, () => [
+        h(Icon, { name: icon, size: 'sm', color }),
+        h(Link, { href: '#' }, () => text),
+      ])
+    return () => h(VStack, { gap: 6 }, () => [
+      h(VStack, { gap: 3 }, () => [
+        h(Heading, { level: 3 }, () => 'About'),
+        h(Text, { color: 'secondary' }, () => REPO_DESCRIPTION),
+        h(Link, { href: '#', isExternalLink: true }, () => 'canvas-editor.dev'),
+        h(HStack, { gap: 1, wrap: 'wrap' }, () => TOPICS.map(topic => h(Token, { key: topic, size: 'sm', label: topic, onClick: () => {} }))),
+        h(VStack, { gap: 2 }, () => ABOUT_LINKS.map(link => row(link.icon, 'secondary', link.label, link.label))),
+        h(VStack, { gap: 2 }, () => REPO_STATS.map(stat => row(stat.icon, 'secondary', `${stat.value} ${stat.label}`, stat.label))),
+      ]),
+      h(Divider),
+      h(VStack, { gap: 3 }, () => [
+        h(Heading, { level: 3 }, () => 'Releases'),
+        h(HStack, { gap: 2, vAlign: 'center' }, () => [
+          h(Icon, { name: 'heroicons:tag', size: 'sm', color: 'success' }),
+          h(Text, { weight: 'bold' }, () => 'v2.4.0'),
+          h(Badge, { label: 'Latest', variant: 'success' }),
+        ]),
+        h(Text, { type: 'supporting', color: 'secondary' }, () => `${commitAge(daysAgo(11))} · 36 releases`),
+      ]),
+      h(Divider),
+      h(VStack, { gap: 3 }, () => [
+        h(Heading, { level: 3 }, () => 'Contributors'),
+        h(HStack, { gap: 1, wrap: 'wrap' }, () => CONTRIBUTORS.map(name => h(Avatar, { key: name, name, size: 32 }))),
+        h(Link, { href: '#' }, () => '+ 61 contributors'),
+      ]),
+    ])
+  },
+})
+
 
 const TAB_PLACEHOLDER = {
   conduct: 'The Contributor Covenant, version 2.1, applies to this project.',
@@ -425,6 +529,7 @@ function applySiblingSort(siblings: RepoEntry[]): RepoEntry[] {
 const { visibleData, plugin: treePlugin } = useTableTreeState<RepoEntry>(() => ({
   data: data.value,
   idKey: 'id',
+  hasExpandAllControl: true,
   childrenKey: 'children',
   expandedIds: expandedIds.value,
   onExpandedIdsChange: (ids) => {
@@ -435,6 +540,16 @@ const { visibleData, plugin: treePlugin } = useTableTreeState<RepoEntry>(() => (
 }))
 
 const sortPlugin = useTableSortable<RepoEntry>(sortConfig)
+
+/** 列宽可以拖；拖完记下来，下次渲染沿用。 */
+const columnWidths = ref<Record<string, number>>({})
+const resizePlugin = useTableColumnResize<RepoEntry>(() => ({
+  columnWidths: columnWidths.value,
+  onColumnResizeEnd: (updates) => {
+    columnWidths.value = { ...columnWidths.value, ...updates }
+  },
+  columns,
+}))
 const matchCount = computed(() => (isSearching.value ? countMatches(ROLLED_UP, needle.value) : 0))
 const readme = computed(() => readmeFor(selectedFolderId.value))
 const hasRepoTabs = computed(() => selectedFolderId.value == null)
@@ -462,11 +577,9 @@ const columns: TableColumn<RepoEntry>[] = [
     width: proportional(2, { minWidth: 240 }),
     sortable: true,
     renderCell: entry => h(HStack, { gap: 2, vAlign: 'center' }, () => [
-      h(Icon, {
-        name: entry.kind === 'folder' ? 'heroicons:folder' : 'heroicons:document',
-        size: 'sm',
-        color: entry.kind === 'folder' ? 'accent' : 'secondary',
-      }),
+      entry.kind === 'folder'
+        ? h(Icon, { icon: FolderGlyph, size: 'sm', color: 'accent' })
+        : h(Icon, { name: 'heroicons:document', size: 'sm', color: 'secondary' }),
       entry.kind === 'folder'
         ? h(Link, {
           href: '#',
@@ -494,6 +607,9 @@ const columns: TableColumn<RepoEntry>[] = [
     renderCell: entry => h(Text, { color: 'secondary' }, () => commitAge(entry.committedAt)),
   },
 ]
+
+/** 分支菜单触发按钮的图标（Iconify 名字要走 `name`，所以包成渲染函数）。 */
+const BranchIcon = () => h(Icon, { name: 'carbon:branch', size: 'sm' })
 
 const branchItems = [
   { label: 'main', onClick: () => {} },
@@ -579,7 +695,7 @@ const READMES: Record<string, string> = {
 <template>
   <Layout height="auto" :content-width="1440">
     <template #header>
-      <Toolbar label="Repository" size="sm" :dividers="['bottom']">
+      <Toolbar :ref="setHeader" label="Repository" size="sm" :dividers="['bottom']">
         <template #start>
           <HStack :gap="2" align="center">
             <Heading :level="1" class="repo-visually-hidden">
@@ -599,19 +715,24 @@ const READMES: Record<string, string> = {
           </HStack>
         </template>
         <template #end>
-          <Button
-            v-for="stat in REPO_STATS"
-            :key="stat.label"
-            size="sm"
-            :label="STAT_ACTION[stat.label]"
-          >
-            <template #icon>
+          <template v-for="stat in REPO_STATS" :key="stat.label">
+            <IconButton
+              v-if="isNarrowHeader"
+              variant="secondary"
+              size="sm"
+              :label="`${STAT_ACTION[stat.label]}: ${stat.value}`"
+            >
               <Icon :name="stat.icon" size="sm" />
-            </template>
-            <template #end>
-              <Badge :label="stat.value" />
-            </template>
-          </Button>
+            </IconButton>
+            <Button v-else size="sm" :label="STAT_ACTION[stat.label]">
+              <template #icon>
+                <Icon :name="stat.icon" size="sm" />
+              </template>
+              <template #end>
+                <Badge :label="stat.value" />
+              </template>
+            </Button>
+          </template>
         </template>
       </Toolbar>
     </template>
@@ -627,36 +748,28 @@ const READMES: Record<string, string> = {
         </template>
       </EmptyState>
 
-      <VStack v-else :gap="6">
+      <VStack v-else :ref="setBody" :gap="6">
         <HStack :gap="2" align="center" wrap="wrap">
-          <DropdownMenu has-chevron size="sm" :items="branchItems">
-            <template #trigger="triggerProps">
-              <Button v-bind="triggerProps" label="main" variant="secondary" size="sm">
-                <template #icon>
-                  <Icon name="carbon:branch" size="sm" />
-                </template>
-              </Button>
-            </template>
-          </DropdownMenu>
+          <DropdownMenu has-chevron size="sm" :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
           <HStack :gap="1" align="center">
-            <Button
-              v-for="ref in REF_COUNTS"
-              :key="ref.label"
-              :label="ref.label"
-              variant="ghost"
-              size="sm"
-            >
-              <template #icon>
+            <template v-for="ref in REF_COUNTS" :key="ref.label">
+              <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
                 <Icon :name="ref.icon" size="sm" />
-              </template>
-            </Button>
+              </IconButton>
+              <Button v-else :label="ref.label" variant="ghost" size="sm" />
+            </template>
           </HStack>
           <StackItem size="fill">
             <HStack :gap="2" h-align="end" align="center">
               <Text v-if="isSearching && matchCount > 0" type="supporting" color="secondary">
                 {{ matchCount }} {{ matchCount === 1 ? 'result' : 'results' }}
               </Text>
+              <IconButton v-if="isNarrowBody && !isSearchOpen" variant="ghost" size="sm" label="Go to file" @click="openSearch">
+                <Icon name="heroicons:magnifying-glass" size="sm" />
+              </IconButton>
               <TextInput
+                v-else
+                ref="searchInput"
                 v-model="query"
                 label="Go to file"
                 is-label-hidden
@@ -674,7 +787,7 @@ const READMES: Record<string, string> = {
           </StackItem>
         </HStack>
 
-        <Card :padding="0">
+        <Card :padding="0" class="tt-fixed-layout">
           <Table
             :data="visibleData"
             :columns="columns"
@@ -683,7 +796,7 @@ const READMES: Record<string, string> = {
             dividers="none"
             is-striped
             text-overflow="truncate"
-            :plugins="{ tree: treePlugin, sort: sortPlugin }"
+            :plugins="{ tree: treePlugin, sort: sortPlugin, resize: resizePlugin }"
           />
         </Card>
 
@@ -703,6 +816,7 @@ const READMES: Record<string, string> = {
               v-if="activeTab === 'readme'"
               :heading-level-start="2"
               content-align="center"
+              :content-width="680"
               :content="readme"
             />
             <Text v-else color="secondary">
@@ -710,85 +824,28 @@ const READMES: Record<string, string> = {
             </Text>
           </Section>
         </Card>
+
+        <template v-if="!isSidebarInline">
+          <Divider />
+          <AboutPanel />
+        </template>
       </VStack>
     </LayoutContent>
 
-    <template #end>
+    <template v-if="isSidebarInline" #end>
       <LayoutPanel :width="296" :padding="4" :is-scrollable="false" role="complementary" label="About this repository">
-        <VStack :gap="6">
-          <VStack :gap="3">
-            <Heading :level="3">
-              About
-            </Heading>
-            <Text color="secondary">
-              {{ REPO_DESCRIPTION }}
-            </Text>
-            <Link href="#" is-external-link>
-              canvas-editor.dev
-            </Link>
-            <HStack :gap="1" wrap="wrap">
-              <Token
-                v-for="topic in TOPICS"
-                :key="topic"
-                size="sm"
-                :label="topic"
-                @click="() => {}"
-              />
-            </HStack>
-            <VStack :gap="2">
-              <HStack v-for="link in ABOUT_LINKS" :key="link.label" :gap="2" align="center">
-                <Icon :name="link.icon" size="sm" color="secondary" />
-                <Link href="#">
-                  {{ link.label }}
-                </Link>
-              </HStack>
-            </VStack>
-            <VStack :gap="2">
-              <HStack v-for="stat in REPO_STATS" :key="stat.label" :gap="2" align="center">
-                <Icon :name="stat.icon" size="sm" color="secondary" />
-                <Link href="#">
-                  {{ stat.value }} {{ stat.label }}
-                </Link>
-              </HStack>
-            </VStack>
-          </VStack>
-
-          <Divider />
-
-          <VStack :gap="3">
-            <Heading :level="3">
-              Releases
-            </Heading>
-            <HStack :gap="2" align="center">
-              <Icon name="heroicons:tag" size="sm" color="success" />
-              <Text weight="bold">
-                v2.4.0
-              </Text>
-              <Badge label="Latest" variant="success" />
-            </HStack>
-            <Text type="supporting" color="secondary">
-              {{ commitAge(daysAgo(11)) }} · 36 releases
-            </Text>
-          </VStack>
-
-          <Divider />
-
-          <VStack :gap="3">
-            <Heading :level="3">
-              Contributors
-            </Heading>
-            <HStack :gap="1" wrap="wrap">
-              <Avatar v-for="name in CONTRIBUTORS" :key="name" :name="name" :size="32" />
-            </HStack>
-            <Link href="#">
-              + 61 contributors
-            </Link>
-          </VStack>
-        </VStack>
+        <AboutPanel />
       </LayoutPanel>
     </template>
   </Layout>
 </template>
+
+<style scoped>
+/* 原版 Table 默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算。 */
+.tt-fixed-layout :deep(.astryx-table) {
+  table-layout: fixed;
+}
+</style>
 
 <style>
 .repo-visually-hidden {

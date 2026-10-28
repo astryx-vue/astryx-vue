@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { ToolbarVariant } from '../Toolbar/types.js'
 import type { TableSelectionToolbarProps, TableSelectionToolbarSlots } from './types.js'
 import { computed } from 'vue'
 import Button from '../Button/Button.vue'
@@ -27,8 +26,6 @@ const isVisible = computed(() => props.selection == null || props.selection.hasS
 const resolvedLabel = computed(() => props.label ?? messages.value.table.bulkActionsLabel)
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.table.clearAll)
 const resolvedCountLabel = computed(() => messages.value.table.selectedCount(effectiveCount.value))
-/** Toolbar 只有透明和弱化底，表面色这一档由本组件的类补上。 */
-const toolbarVariant = computed<ToolbarVariant>(() => (props.variant === 'muted' ? 'muted' : 'transparent'))
 
 function clearSelection(): void {
   props.selection?.clearSelection()
@@ -40,10 +37,9 @@ function clearSelection(): void {
   <Toolbar
     v-if="isVisible"
     class="astryx-table-selection-toolbar"
-    :class="{ 'astryx-table-selection-toolbar--section': variant === 'section' }"
     :label="resolvedLabel"
     :size="size"
-    :variant="toolbarVariant"
+    :variant="variant"
   >
     <template v-if="$slots.start || $slots.default" #start>
       <slot name="start">

@@ -15,3 +15,4 @@ coverage/
 # CI 视觉对照的输出目录（.github/workflows/visual-compare.yml）
 visual-out/
 .tmp-d12/
+.tmp-d20/

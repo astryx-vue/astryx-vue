@@ -8,12 +8,12 @@ import type {
   TableRowMenuItem,
   TableRowPatch,
 } from './types.js'
-import { computed, onBeforeUnmount, ref, useAttrs } from 'vue'
+import { computed, h, onBeforeUnmount, ref, useAttrs } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
+import { pixel, resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
 import { selectColumn } from './plugins/stickyColumns.js'
 import { mergeRowPatches } from './rowPatch.js'
 import { CellContent, HeaderAddon, PluginFooter, RenderFn } from './TableDataRenderers.js'
@@ -54,8 +54,22 @@ const resolvedColumns = computed(() => props.plugins.reduce(
   [...props.columns],
 ))
 
-const widths = computed(() => resolveColumnWidths(resolvedColumns.value))
 const selection = computed(() => props.plugins.find(plugin => plugin.selection)?.selection)
+
+/**
+ * 选择列的宽度可以被插件的 `widthFor` 改（原版靠 `transformColumns` 改选择列宽）。
+ * 它和别的列一起进 `resolveColumnWidths`，所以表头、数据格和表格最小宽度读到同一个值。
+ */
+const selectionColumn = computed(() => {
+  const base = selectColumn()
+  const override = props.plugins.map(plugin => plugin.widthFor?.(base)).find(value => value != null)
+  return override == null ? base : { ...base, width: pixel(override) }
+})
+const layoutColumns = computed(() => selection.value
+  ? [selectionColumn.value, ...resolvedColumns.value]
+  : resolvedColumns.value)
+// 原版把选择列（fixed pixel 宽）也算进 tableMinWidth，比例列分到的下限才不被它挤占。
+const widths = computed(() => resolveColumnWidths(layoutColumns.value))
 const canResize = computed(() => props.plugins.some(plugin => plugin.onColumnResizeEnd))
 
 /**
@@ -84,9 +98,6 @@ const { startResize, onResizeKeydown, resizeLabel, resizeMax } = useTableColumnR
 const tableStyle = computed(() => ({
   minWidth: resolveTableMinWidth(splitStyleMinWidth(attrs.style).minWidth, widths.value.tableMinWidth),
 }))
-const layoutColumns = computed(() => selection.value
-  ? [selectColumn(), ...resolvedColumns.value]
-  : resolvedColumns.value)
 const columnCount = computed(() => layoutColumns.value.length)
 const trackRows = computed(() => props.rowCount != null || props.rowIndexStart != null)
 const ariaRowCount = computed(() => {
@@ -113,6 +124,18 @@ function onViewport(element: HTMLElement | null): void {
 onBeforeUnmount(() => {
   bindScroll(null)
 })
+
+/** 列头的纯文本形态：函数式列头没有纯文本，可访问名称回退到 key。 */
+function headerText(column: TableColumn): string {
+  return typeof column.header === 'string' && column.header !== '' ? column.header : column.key
+}
+
+/** 列头内容：字符串直接显示，函数按函数式组件渲染。 */
+function HeaderContent(props: { column: TableColumn }) {
+  return typeof props.column.header === 'function'
+    ? props.column.header()
+    : h('span', null, headerText(props.column))
+}
 
 function styleFor(column: TableColumn): CSSProperties {
   const base = { ...(widths.value.columns.get(column.key)?.style ?? {}) }
@@ -225,8 +248,11 @@ function openMenu(event: MouseEvent, items: readonly TableRowMenuItem[] | undefi
   menu.value = { x: event.clientX, y: event.clientY, items }
 }
 
+/** 选择列的格子：宽度来自布局里的选择列，再叠加插件的补丁。 */
 function selectCellPatch(kind: 'header' | 'body', row: Record<string, unknown> | null) {
-  return mergeCell(selectColumn(), row, kind)
+  const patch = mergeCell(selectionColumn.value, row, kind)
+  const width = widths.value.columns.get(selectionColumn.value.key)?.style.width
+  return { ...patch, style: { width, minWidth: width, maxWidth: width, ...patch.style } }
 }
 
 function isSelected(row: Record<string, unknown>): boolean {
@@ -243,6 +269,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
     <PluginFooter v-for="(plugin, index) in plugins.filter(item => item.above)" :key="`above-${index}`" :plugin="plugin" place="above" />
     <table
       class="astryx-table"
+      data-layout="fixed"
       :data-density="density"
       :data-dividers="dividers"
       :data-striped="isStriped || undefined"
@@ -294,18 +321,18 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   @click="sortFor(column)?.onClick($event)"
                 >
                   <VisuallyHidden v-if="column.headerHidden">
-                    {{ column.header ?? column.key }}
+                    {{ headerText(column) }}
                   </VisuallyHidden>
-                  <span v-else>{{ column.header ?? column.key }}</span>
+                  <HeaderContent v-else :column="column" />
                   <span class="astryx-table__sort-icon" :data-active="sortFor(column)?.direction != null || undefined">
                     <Icon :icon="sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp'" size="sm" />
                   </span>
                   <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank">{{ sortFor(column)?.rank }}</span>
                 </button>
                 <VisuallyHidden v-else-if="column.headerHidden">
-                  {{ column.header ?? column.key }}
+                  {{ headerText(column) }}
                 </VisuallyHidden>
-                <span v-else>{{ column.header ?? column.key }}</span>
+                <HeaderContent v-else :column="column" />
                 <TableFilterControl
                   v-if="filterAt(column, 'line')"
                   :filter="filterAt(column, 'line')!"

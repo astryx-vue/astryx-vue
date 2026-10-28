@@ -4,7 +4,8 @@ import { onScopeDispose, toValue } from 'vue'
 import { pixel, resolveColumnFloorWidths } from '../columnUtils.js'
 
 export const SELECT_COLUMN_KEY = '__select'
-export const SELECT_COLUMN_WIDTH = 48
+/** 原版 useTableSelection 的选择列宽是 36px。 */
+export const SELECT_COLUMN_WIDTH = 36
 
 export interface UseTableStickyColumnsConfig {
   startKeys?: readonly string[]
