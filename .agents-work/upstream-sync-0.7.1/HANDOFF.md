@@ -87,6 +87,31 @@ D10 #180（`8354a2b`）已合入：Stack 间距不再继承、Table 列头筛选
 
 跟踪 PR 的描述整篇覆盖，正文在 `.agents-work/upstream-sync-0.7.1/PR-NEXT-BODY.md`，用 `gh api -X PATCH repos/astryx-vue/astryx-vue/pulls/<N> --input <json>` 写，包在 `<!-- CURSOR_AGENT_PR_BODY_BEGIN/END -->` 里。不要在标记块外再贴一份。
 
+## 演练场模板和原版自动对比（`playground-diff`）
+
+「这个模板和原版像不像」现在有数字了。脚本 `scripts/swarm/playground-diff.mjs` 在同一个模板的
+原版和本地预览里采集有文字的元素和图标，配对后比位置、尺寸、字号、字重、颜色、背景色。
+
+```sh
+# 1. 构建并起 preview（演练场不能用 vitepress dev）
+env -u NODE_ENV pnpm docs:build
+env -u NODE_ENV pnpm --filter @astryx-vue/docs preview --port 5181
+
+# 2. 必须包在 browser-lock 里，一次一个模板一种颜色
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+node scripts/swarm/browser-lock.mjs run --purpose "演练场对比 table" --max-run 300 -- \
+  node scripts/swarm/playground-diff.mjs table light 5181 --json /tmp/diff-table-light.json
+```
+
+- 标准：**偏差 ≤ 3 且没有正文缺失**。退出码 0 通过，1 不通过，2 用法错。
+- 报告三段：总数、按影响排序的偏差列表（「文字 / 哪个属性 / 原版值 / 我们的值」）、
+  纵向每 100px 的偏差分布。`--json` 里每条带 DOM 里的 `node` 描述，方便回页面里找。
+- 时间戳这类两边本来就不同的文字会标「疑似动态文本」，列在缺失/多余里但不计入偏差数。
+- 单次 25–50 秒（原版要先编译约 13 秒）。原版偶尔卡在加载上，脚本会自己再试一次。
+
+第一次实测（table、dashboard、login 各浅色深色）的记录在 `nodes/G4/playground-diff-trial.md`，
+里面还有当时查出来的三个真实差异和写脚本时踩过的坑。
+
 ## 用户最新的工作方式要求
 
 - **B2、B4、B6 的收尾由总控亲自做，没有再派子代理**，因为用户觉得派子代理太费时间。之后开新节点时，先问用户这次要不要用子代理。如果用户另外订阅了别的模型来做实现，总控就只负责审阅。
