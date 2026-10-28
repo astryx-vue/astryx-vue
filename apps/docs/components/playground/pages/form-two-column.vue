@@ -46,7 +46,6 @@ const CONTACT_COLUMNS = [
   { label: 'Press & partnerships', email: 'press@company.com' },
 ]
 
-const pageStyle: CSSProperties = { minHeight: '100%' }
 const illustrationImg: CSSProperties = {
   width: '100%',
   height: '100%',
@@ -83,7 +82,7 @@ function toggleReason(reason: string) {
 </script>
 
 <template>
-  <Center :style="pageStyle">
+  <Center min-height="100%">
     <Section :max-width="1100" width="100%" :padding="10" variant="transparent">
       <VStack :gap="10">
         <Grid :columns="{ minWidth: 320 }" align="center" :gap="10">
@@ -185,7 +184,7 @@ function toggleReason(reason: string) {
         <VStack :gap="6">
           <Divider />
           <Grid :columns="{ minWidth: 200 }" :gap="6">
-            <VStack v-for="col in CONTACT_COLUMNS" :key="col.label" :gap="1" justify="center">
+            <VStack v-for="col in CONTACT_COLUMNS" :key="col.label" :gap="1" hAlign="center">
               <Text type="supporting" color="secondary">
                 {{ col.label }}
               </Text>

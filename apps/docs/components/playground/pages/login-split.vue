@@ -24,7 +24,6 @@ const GOOGLE_LOGO_URL = '/template-assets/GoogleLogo.png'
 const COLUMN_MIN_WIDTH = 240
 
 const pageStyle: CSSProperties = {
-  minHeight: '100%',
   backgroundColor: 'var(--astryx-color-background-body)',
 }
 
@@ -66,7 +65,7 @@ function onPasswordChange(value: string) {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" :style="pageStyle">
+  <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
     <VStack :gap="4" width="100%">
       <div :style="cardWrap">
         <Card :padding="0" width="100%">
@@ -124,7 +123,7 @@ function onPasswordChange(value: string) {
                             :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                             @update:model-value="onPasswordChange"
                           />
-                          <VStack v-if="loginFailed" justify="end">
+                          <VStack v-if="loginFailed" hAlign="end">
                             <Link href="#" size="sm" color="secondary" type="supporting">
                               Forgot your password?
                             </Link>
@@ -170,7 +169,7 @@ function onPasswordChange(value: string) {
           </Grid>
         </Card>
       </div>
-      <VStack justify="center">
+      <VStack hAlign="center">
         <Text type="supporting" color="secondary">
           By clicking continue, you agree to our
           <Link href="#" type="supporting">

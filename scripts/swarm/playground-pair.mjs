@@ -21,11 +21,11 @@ async function shoot(browser, url, local = false) {
   const page = await context.newPage()
   await page.goto(url, { waitUntil: 'load', timeout: 60_000 })
   await page.getByText(/^Building/).waitFor({ state: 'detached', timeout: 60_000 }).catch(() => {})
-  for (let attempt = 0; attempt < 40; attempt++) {
+  for (let attempt = 0; attempt < 70; attempt++) {
     const lengths = await Promise.all(page.frames()
       .filter(frame => frame !== page.mainFrame())
-      .map(frame => frame.evaluate(() => (document.body?.textContent ?? '').trim().length).catch(() => 0)))
-    if (Math.max(0, ...lengths) > 50)
+      .map(frame => frame.evaluate(() => document.querySelectorAll('button, input, h1, h2, h3, a, p').length).catch(() => 0)))
+    if (Math.max(0, ...lengths) > 1)
       break
     await page.waitForTimeout(1000)
   }

@@ -101,7 +101,7 @@ const searchValue = ref<SearchableItem | null>(null)
     </template>
     <LayoutContent :padding="4">
       <VStack :gap="4">
-        <VStack v-if="isNarrow" justify="center">
+        <VStack v-if="isNarrow" hAlign="center">
           <TabList v-model:value="activeNav">
             <Tab v-for="item in NAV_ITEMS" :key="item" :value="item" :label="item" />
           </TabList>

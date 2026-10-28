@@ -945,6 +945,16 @@ html[data-playground-frame] body {
   font-family: var(--astryx-font-family-body);
 }
 
+/*
+ * The docs base pins `font-weight: 400` and the docs font on every control, which outranks
+ * the component layer. The preview frame hands font and weight back to the components so
+ * buttons render at their declared weight (500), as in the upstream playground.
+ */
+html[data-playground-frame] :is(button, input, textarea, select) {
+  font-family: revert-layer;
+  font-weight: revert-layer;
+}
+
 html[data-playground-frame] #app,
 html[data-playground-frame] #app > *,
 html[data-playground-frame] #app > * > * {

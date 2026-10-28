@@ -247,7 +247,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
         <Section :padding="6" variant="transparent">
           <VStack :gap="10" class="content content-fluid">
             <Center>
-              <VStack :gap="4" :justify="'center'" class="hero-text">
+              <VStack :gap="4" :hAlign="'center'" class="hero-text">
                 <Text type="display-2" color="accent">
                   Little joys,<br>everywhere you go
                 </Text>
@@ -264,7 +264,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                     <img class="product-image" :src="images[PRODUCT_IMAGE_KEYS[i]]" :alt="p.name">
                   </AspectRatio>
                   <div class="card-body">
-                    <VStack :gap="2" :justify="'center'" class="card-stack">
+                    <VStack :gap="2" :hAlign="'center'" class="card-stack">
                       <HStack><Badge :label="p.badge" :variant="p.badgeVariant" /></HStack>
                       <Heading :level="2" class="center-text">{{ p.name }}</Heading>
                       <Text type="supporting" color="secondary" class="card-description center-text">{{ p.description }}</Text>
@@ -308,19 +308,19 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                     <Text type="supporting" weight="bold">Payment method</Text>
                     <Grid :columns="isMobile ? 1 : { minWidth: 80, max: 3 }" :gap="2">
                       <SelectableCard :is-selected="paymentCard" label="Pay with card" :padding="3" @change="selectPayment('card')">
-                        <VStack :gap="1" :justify="'center'" class="payment-card-content">
+                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
                           <Icon name="heroicons:credit-card" size="md" />
                           <Text type="supporting" weight="bold">Card</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentApple" label="Pay with Apple Pay" :padding="3" @change="selectPayment('apple')">
-                        <VStack :gap="1" :justify="'center'" class="payment-card-content">
+                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
                           <Icon name="heroicons:device-phone-mobile" size="md" />
                           <Text type="supporting" weight="bold">Apple Pay</Text>
                         </VStack>
                       </SelectableCard>
                       <SelectableCard :is-selected="paymentGoogle" label="Pay with Google Pay" :padding="3" @change="selectPayment('google')">
-                        <VStack :gap="1" :justify="'center'" class="payment-card-content">
+                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
                           <Icon name="heroicons:wallet" size="md" />
                           <Text type="supporting" weight="bold">Google Pay</Text>
                         </VStack>

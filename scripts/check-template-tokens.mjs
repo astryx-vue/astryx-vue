@@ -98,6 +98,22 @@ if (iconHits.length > 0) {
   console.error(iconHits.join('\n'))
 }
 
+// VStack 的 `justify` 是竖直主轴对齐，不是水平居中。原版 `<VStack hAlign="center">` 的意思是
+// 子元素水平居中，移植时写成 `justify="center"` 会让内容贴在左边。水平方向一律写 `hAlign`。
+const justifyHits = []
+for (const file of templateFiles) {
+  const text = readFileSync(join(repoRoot, file), 'utf8')
+  for (const match of text.matchAll(/<VStack\b[^>]*?\s:?justify=/g)) {
+    const line = text.slice(0, match.index).split('\n').length
+    justifyHits.push(`  ${file}:${line}`)
+  }
+}
+
+if (justifyHits.length > 0) {
+  console.error('<VStack> 不要用 justify（竖直主轴对齐）；子元素水平居中/靠右写 hAlign，竖直方向写 vAlign：')
+  console.error(justifyHits.join('\n'))
+}
+
 // 图表 svg 的 viewBox 宽度写死、又用默认的 preserveAspectRatio（meet）时，卡片一变宽，
 // 整张图就按比例缩小、居中，左右留白，撑不满容器。图表要么用量出来的宽度做 viewBox
 // （引用 ref 量的宽度：`chartWidth`、`CHART.width` 等由 ResizeObserver 更新的值），
@@ -148,7 +164,7 @@ if (hits.length > 0) {
   console.error('少一个前缀浏览器不会报错，但内边距、间距、圆角、颜色会整体失效。')
 }
 
-if (hits.length > 0 || iconHits.length > 0 || chartHits.length > 0)
+if (hits.length > 0 || iconHits.length > 0 || chartHits.length > 0 || justifyHits.length > 0)
   process.exit(1)
 
-process.stdout.write(`\u001B[32m✓ ${templateFiles.length} 个模板的设计变量都带 ${TOKEN_PREFIX} 前缀，<Icon> 都没把 Iconify 名字写进 icon，图表都跟着容器宽度走\u001B[0m\n`)
+process.stdout.write(`\u001B[32m✓ ${templateFiles.length} 个模板的设计变量都带 ${TOKEN_PREFIX} 前缀，<Icon> 都没把 Iconify 名字写进 icon，图表都跟着容器宽度走，VStack 没用 justify\u001B[0m\n`)

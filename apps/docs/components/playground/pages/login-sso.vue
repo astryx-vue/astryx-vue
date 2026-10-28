@@ -19,7 +19,6 @@ import {
 const BG_URL = '/template-assets/building.png'
 
 const pageStyle: CSSProperties = {
-  minHeight: '100%',
   backgroundImage: `url(${BG_URL})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
@@ -98,11 +97,11 @@ function onPasswordChange(value: string) {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" :style="pageStyle">
+  <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
     <Card :padding="8" width="100%" :max-width="400">
       <VStack :gap="4" hAlign="stretch">
         <template v-if="step === 'email'">
-          <VStack :gap="1" justify="center">
+          <VStack :gap="1" hAlign="center">
             <Text type="display-1" as="h2">
               Welcome back
             </Text>
@@ -147,7 +146,7 @@ function onPasswordChange(value: string) {
             :is-disabled="!emailValid"
             @click="handleContinue"
           />
-          <VStack justify="center">
+          <VStack hAlign="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
               <Link href="#" type="supporting">
@@ -158,7 +157,7 @@ function onPasswordChange(value: string) {
         </template>
 
         <template v-else-if="step === 'sso-confirm' && provider">
-          <VStack :gap="2" justify="center">
+          <VStack :gap="2" hAlign="center">
             <Avatar :name="provider.name" :size="48" />
             <Text type="display-3" as="h2">
               Sign in with {{ provider.name }}
@@ -200,7 +199,7 @@ function onPasswordChange(value: string) {
         </template>
 
         <template v-else-if="step === 'password-fallback'">
-          <VStack :gap="1" justify="center">
+          <VStack :gap="1" hAlign="center">
             <Text type="display-1" as="h2">
               Welcome back
             </Text>
@@ -218,7 +217,7 @@ function onPasswordChange(value: string) {
                 :status="loginFailed ? { type: 'error', message: 'Incorrect password. Try again.' } : undefined"
                 @update:model-value="onPasswordChange"
               />
-              <VStack v-if="loginFailed" justify="end">
+              <VStack v-if="loginFailed" hAlign="end">
                 <Link href="#" size="sm" color="secondary" type="supporting">
                   Forgot password?
                 </Link>
