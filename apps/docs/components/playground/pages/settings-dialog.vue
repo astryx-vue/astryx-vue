@@ -1737,6 +1737,10 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
 .settings-row-control .astryx-selector.size-sm .astryx-selector-field {
   padding: 3px 12px;
 }
+/* 待 core 修复后去掉：Switch 的行是 inline-flex，外层多出行高基线空隙（28 对 24），开关被顶高 2px。 */
+.settings-row-control .astryx-switch-row {
+  display: flex;
+}
 .settings-side-nav-section {
   /* 待 core 修复后去掉 gap：SideNavSection 在标题和条目之间多了 2px 间距，原版没有。 */
   gap: 0;
