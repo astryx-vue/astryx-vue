@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { TableColumn } from '@astryx-vue/core'
-import { computed, h, ref } from 'vue'
 import {
   Avatar,
   Badge,
@@ -9,8 +8,8 @@ import {
   EmptyState,
   Grid,
   Heading,
-  HStack,
   HoverCard,
+  HStack,
   Icon,
   Layout,
   LayoutContent,
@@ -18,6 +17,7 @@ import {
   List,
   ListItem,
   ProgressBar,
+  proportional,
   Section,
   SegmentedControl,
   SegmentedControlItem,
@@ -25,7 +25,6 @@ import {
   Text,
   Timestamp,
   VStack,
-  proportional,
 } from '@astryx-vue/core'
 import {
   PlaygroundDonutChart,
@@ -33,6 +32,7 @@ import {
   PlaygroundLineChart,
   PlaygroundResponsive,
 } from '@astryx-vue/playground-charts'
+import { computed, h, ref } from 'vue'
 
 type Rag = 'onTrack' | 'atRisk' | 'blocked'
 type Phase = 'all' | 'build' | 'beta' | 'ga'
@@ -310,33 +310,33 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                     </Text>
                   </VStack>
                   <VStack :gap="3">
-                  <PlaygroundResponsive :height="208">
-                    <PlaygroundLineChart
-                      :data="BURNDOWN"
-                      x-key="week"
-                      :series="[
-                        { key: 'ideal', name: 'Ideal', color: IDEAL_COLOR },
-                        { key: 'actual', name: 'Actual', color: ACTUAL_COLOR },
-                      ]"
-                      :height="208"
-                      :y-ticks="[0, 80, 160, 240, 320]"
-                      y-unit=" pts"
-                      is-y-unit-stacked
-                      :x-ticks="[0, 3, 6, 9, 12]"
-                      :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
-                      :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"
-                      center-ticks
-                      monotone
-                    />
-                  </PlaygroundResponsive>
-                  <HStack :gap="4" align="center" wrap="wrap">
-                    <HStack v-for="item in [{ label: 'Actual remaining', color: ACTUAL_COLOR }, { label: 'Ideal burndown', color: IDEAL_COLOR }]" :key="item.label" :gap="2" align="center">
-                      <span class="legend-swatch" :style="{ backgroundColor: item.color }" aria-hidden="true" />
-                      <Text type="supporting" color="secondary">
-                        {{ item.label }}
-                      </Text>
+                    <PlaygroundResponsive :height="208">
+                      <PlaygroundLineChart
+                        :data="BURNDOWN"
+                        x-key="week"
+                        :series="[
+                          { key: 'ideal', name: 'Ideal', color: IDEAL_COLOR },
+                          { key: 'actual', name: 'Actual', color: ACTUAL_COLOR },
+                        ]"
+                        :height="208"
+                        :y-ticks="[0, 80, 160, 240, 320]"
+                        y-unit=" pts"
+                        is-y-unit-stacked
+                        :x-ticks="[0, 3, 6, 9, 12]"
+                        :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
+                        :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"
+                        center-ticks
+                        monotone
+                      />
+                    </PlaygroundResponsive>
+                    <HStack :gap="4" align="center" wrap="wrap">
+                      <HStack v-for="item in [{ label: 'Actual remaining', color: ACTUAL_COLOR }, { label: 'Ideal burndown', color: IDEAL_COLOR }]" :key="item.label" :gap="2" align="center">
+                        <span class="legend-swatch" :style="{ backgroundColor: item.color }" aria-hidden="true" />
+                        <Text type="supporting" color="secondary">
+                          {{ item.label }}
+                        </Text>
+                      </HStack>
                     </HStack>
-                  </HStack>
                   </VStack>
                 </VStack>
               </Card>

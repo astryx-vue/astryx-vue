@@ -93,9 +93,9 @@ function copyPrompt() {
 
         <Card>
           <VStack :gap="3">
-            <HStack :gap="2" :align="'center'">
+            <HStack :gap="2" align="center">
               <StackItem size="fill">
-                <HStack :gap="2" :align="'center'">
+                <HStack :gap="2" align="center">
                   <Icon name="heroicons:sparkles" size="sm" color="secondary" />
                   <Text type="body" weight="semibold">
                     AI Assistance

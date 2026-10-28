@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TableColumn } from '@astryx-vue/core'
 import {
   Badge,
   Button,
@@ -24,7 +25,6 @@ import {
   useTableSortableState,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn } from '@astryx-vue/core'
 import { PlaygroundAreaChart } from '@astryx-vue/playground-charts'
 import { computed, defineComponent, h, ref } from 'vue'
 
@@ -66,7 +66,7 @@ interface InvestmentAccount extends AccountRecord {
 }
 
 const RANGE_IDS: RangeId[] = ['1W', '1M', '3M', 'YTD', '1Y']
-const RANGE_DAYS: Record<RangeId, number> = { '1W': 7, '1M': 30, '3M': 90, YTD: 273, '1Y': 365 }
+const RANGE_DAYS: Record<RangeId, number> = { '1W': 7, '1M': 30, '3M': 90, 'YTD': 273, '1Y': 365 }
 const SERIES_DAYS = RANGE_DAYS['1Y']
 
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
@@ -374,7 +374,9 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3" :gap="2">
-              <div class="fixed-table"><Table :data="bankTable.sortedData.value" :columns="bankColumns" id-key="id" density="compact" dividers="rows" :plugins="bankTable.plugins" /></div>
+              <div class="fixed-table">
+                <Table :data="bankTable.sortedData.value" :columns="bankColumns" id-key="id" density="compact" dividers="rows" :plugins="bankTable.plugins" />
+              </div>
             </VStack>
           </Collapsible>
         </Card>
@@ -401,7 +403,9 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <div class="fixed-table"><Table :data="cardTable.sortedData.value" :columns="creditColumns" id-key="id" density="compact" dividers="rows" :plugins="cardTable.plugins" /></div>
+              <div class="fixed-table">
+                <Table :data="cardTable.sortedData.value" :columns="creditColumns" id-key="id" density="compact" dividers="rows" :plugins="cardTable.plugins" />
+              </div>
             </VStack>
           </Collapsible>
         </Card>
@@ -428,7 +432,9 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <div class="fixed-table"><Table :data="procTable.sortedData.value" :columns="processorColumns" id-key="id" density="compact" dividers="rows" :plugins="procTable.plugins" /></div>
+              <div class="fixed-table">
+                <Table :data="procTable.sortedData.value" :columns="processorColumns" id-key="id" density="compact" dividers="rows" :plugins="procTable.plugins" />
+              </div>
             </VStack>
           </Collapsible>
         </Card>
@@ -455,11 +461,12 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <div class="fixed-table"><Table :data="invTable.sortedData.value" :columns="investmentColumns" id-key="id" density="compact" dividers="rows" :plugins="invTable.plugins" /></div>
+              <div class="fixed-table">
+                <Table :data="invTable.sortedData.value" :columns="investmentColumns" id-key="id" density="compact" dividers="rows" :plugins="invTable.plugins" />
+              </div>
             </VStack>
           </Collapsible>
         </Card>
-
       </VStack>
     </LayoutContent>
   </Layout>

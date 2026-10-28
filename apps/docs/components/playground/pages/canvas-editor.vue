@@ -24,8 +24,8 @@ import {
   Text,
   TextArea,
   TextInput,
-  VStack,
   useResizable,
+  VStack,
 } from '@astryx-vue/core'
 import { computed, ref } from 'vue'
 
@@ -221,7 +221,6 @@ function textStyle(layer: Layer): Record<string, string> {
     textTransform: 'uppercase',
   }
 }
-
 </script>
 
 <template>
@@ -425,7 +424,7 @@ function textStyle(layer: Layer): Record<string, string> {
                   <NumberInput
                     :model-value="selected.x"
                     label="X"
-                   
+
                     size="sm"
                     @update:model-value="(value: number | null) => updateNumber('x', value)"
                   />
@@ -434,7 +433,7 @@ function textStyle(layer: Layer): Record<string, string> {
                   <NumberInput
                     :model-value="selected.y"
                     label="Y"
-                   
+
                     size="sm"
                     @update:model-value="(value: number | null) => updateNumber('y', value)"
                   />
@@ -448,7 +447,7 @@ function textStyle(layer: Layer): Record<string, string> {
                   <NumberInput
                     :model-value="selected.width"
                     label="Width"
-                   
+
                     size="sm"
                     @update:model-value="(value: number | null) => updateNumber('width', value)"
                   />
@@ -457,7 +456,7 @@ function textStyle(layer: Layer): Record<string, string> {
                   <NumberInput
                     :model-value="selected.height"
                     label="Height"
-                   
+
                     size="sm"
                     @update:model-value="(value: number | null) => updateNumber('height', value)"
                   />
@@ -495,7 +494,7 @@ function textStyle(layer: Layer): Record<string, string> {
                   Border
                 </Text>
                 <VStack :width="88">
-                  <TextInput :model-value="''" label="Border" is-label-hidden placeholder="Add…" size="sm" />
+                  <TextInput model-value="" label="Border" is-label-hidden placeholder="Add…" size="sm" />
                 </VStack>
                 <IconButton label="Border presets" variant="ghost" size="sm">
                   <Icon name="heroicons:square-2-stack" size="sm" />
@@ -509,7 +508,7 @@ function textStyle(layer: Layer): Record<string, string> {
                   Shadow
                 </Text>
                 <VStack :width="88">
-                  <TextInput :model-value="''" label="Shadow" is-label-hidden placeholder="Add…" size="sm" />
+                  <TextInput model-value="" label="Shadow" is-label-hidden placeholder="Add…" size="sm" />
                 </VStack>
                 <IconButton label="Shadow presets" variant="ghost" size="sm">
                   <Icon name="heroicons:square-2-stack" size="sm" />

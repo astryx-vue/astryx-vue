@@ -28,12 +28,12 @@ interface Product {
 }
 
 const PRODUCTS: Product[] = [
-  { id: 1, name: 'Going places', description: "Sometimes all it takes is one small thing to turn your whole day around. That's what good design is for.", price: 75.0, image: '/template-assets/illustrative-horizontal-1.png' },
-  { id: 2, name: 'Meeting people', description: "Sometimes all it takes is one small thing to turn your whole day around. That's what good design is for.", price: 80.0, image: '/template-assets/illustrative-vertical-1.png' },
-  { id: 3, name: 'Seeing things', description: "Sometimes all it takes is one small thing to turn your whole day around. That's what good design is for.", price: 75.0, image: '/template-assets/illustrative-horizontal-3.png' },
-  { id: 4, name: 'Sharing ideas', description: "Sometimes all it takes is one small thing to turn your whole day around. That's what good design is for.", price: 75.0, image: '/template-assets/illustrative-horizontal-4.png' },
-  { id: 5, name: 'Making memories', description: "Sometimes all it takes is one small thing to turn your whole day around. That's what good design is for.", price: 60.0, image: '/template-assets/illustrative-horizontal-5.png' },
-  { id: 6, name: 'Being free', description: "Sometimes all it takes is one small thing to turn your whole day around. That's what good design is for.", price: 80.0, image: '/template-assets/illustrative-horizontal-2.png' },
+  { id: 1, name: 'Going places', description: 'Sometimes all it takes is one small thing to turn your whole day around. That\'s what good design is for.', price: 75.0, image: '/template-assets/illustrative-horizontal-1.png' },
+  { id: 2, name: 'Meeting people', description: 'Sometimes all it takes is one small thing to turn your whole day around. That\'s what good design is for.', price: 80.0, image: '/template-assets/illustrative-vertical-1.png' },
+  { id: 3, name: 'Seeing things', description: 'Sometimes all it takes is one small thing to turn your whole day around. That\'s what good design is for.', price: 75.0, image: '/template-assets/illustrative-horizontal-3.png' },
+  { id: 4, name: 'Sharing ideas', description: 'Sometimes all it takes is one small thing to turn your whole day around. That\'s what good design is for.', price: 75.0, image: '/template-assets/illustrative-horizontal-4.png' },
+  { id: 5, name: 'Making memories', description: 'Sometimes all it takes is one small thing to turn your whole day around. That\'s what good design is for.', price: 60.0, image: '/template-assets/illustrative-horizontal-5.png' },
+  { id: 6, name: 'Being free', description: 'Sometimes all it takes is one small thing to turn your whole day around. That\'s what good design is for.', price: 80.0, image: '/template-assets/illustrative-horizontal-2.png' },
 ]
 
 function fmt(n: number) {
@@ -49,7 +49,7 @@ function fmt(n: number) {
           <Heading :level="1">
             Make every day a little more delightful, one small detail at a time.
           </Heading>
-          <VStack :gap="3" hAlign="start">
+          <VStack :gap="3" h-align="start">
             <Text type="body">
               We believe the smallest details are the ones that matter most. A little color, a thoughtful touch, a moment that catches your eye and makes you pause; that's what turns an ordinary day into something worth remembering.
             </Text>

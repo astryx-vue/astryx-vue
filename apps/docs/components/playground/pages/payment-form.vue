@@ -401,19 +401,19 @@ const errors = computed(() => submitted.value
                     <VStack :gap="4">
                       <HStack :gap="5" justify="center" wrap="wrap">
                         <HStack :gap="1" align="center">
-                          <Icon icon="i-carbon-security" size="sm" color="secondary" />
+                          <Icon name="heroicons:shield-check" size="sm" color="secondary" />
                           <Text type="supporting" color="secondary">
                             Secure Payment
                           </Text>
                         </HStack>
                         <HStack :gap="1" align="center">
-                          <Icon icon="i-carbon-locked" size="sm" color="secondary" />
+                          <Icon name="heroicons:lock-closed" size="sm" color="secondary" />
                           <Text type="supporting" color="secondary">
                             SSL Encrypted
                           </Text>
                         </HStack>
                         <HStack :gap="1" align="center">
-                          <Icon icon="i-carbon-checkmark-filled" size="sm" color="secondary" />
+                          <Icon name="heroicons:check-circle" size="sm" color="secondary" />
                           <Text type="supporting" color="secondary">
                             Free Returns
                           </Text>
@@ -512,7 +512,7 @@ const errors = computed(() => submitted.value
                           </HStack>
                           <Banner status="info" title="Free shipping on orders over $300">
                             <template #icon>
-                              <Icon icon="i-heroicons-truck" size="sm" />
+                              <Icon name="heroicons:truck" size="sm" />
                             </template>
                           </Banner>
                         </VStack>

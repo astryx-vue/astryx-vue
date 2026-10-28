@@ -946,11 +946,6 @@ html[data-playground-frame] body {
 }
 
 /*
- * The docs base pins `font-weight: 400` and the docs font on every control, which outranks
- * the component layer. The preview frame hands font and weight back to the components so
- * buttons render at their declared weight (500), as in the upstream playground.
- */
-/*
  * 待 core 修复后去掉：neutral 主题把选中列表项底色定成蓝色半透明，原版是 accent-muted（浅灰 / 深灰）。
  * 预览框里按原版的值画。
  */
@@ -978,11 +973,6 @@ html[data-playground-frame] .astryx-link--size-sm {
 /* 待 core 修复后去掉：Collapsible 触发行原版高 17（行高 25.5 的文字溢出出去），我们撑成 24。 */
 html[data-playground-frame] .astryx-collapsible-trigger {
   height: 17px;
-}
-
-html[data-playground-frame] :is(button, input, textarea, select) {
-  font-family: revert-layer;
-  font-weight: revert-layer;
 }
 
 html[data-playground-frame] #app,

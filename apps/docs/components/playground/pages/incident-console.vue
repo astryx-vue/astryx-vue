@@ -251,7 +251,7 @@ function nextAction(status: Status): string {
           </SegmentedControl>
           <Button label="Declare incident" size="sm">
             <template #icon>
-              <Icon :icon="'i-heroicons-plus'" size="sm" />
+              <Icon icon="i-heroicons-plus" size="sm" />
             </template>
           </Button>
         </HStack>
@@ -278,7 +278,7 @@ function nextAction(status: Status): string {
             description="Adjust the status filter or clear search filters."
           >
             <template #icon>
-              <Icon :icon="'i-heroicons-bell-alert'" size="lg" />
+              <Icon icon="i-heroicons-bell-alert" size="lg" />
             </template>
           </EmptyState>
           <template v-for="group in groups" :key="group.status">
@@ -410,7 +410,7 @@ function nextAction(status: Status): string {
           is-compact
         >
           <template #icon>
-            <Icon :icon="'i-heroicons-bell-alert'" size="lg" />
+            <Icon icon="i-heroicons-bell-alert" size="lg" />
           </template>
         </EmptyState>
       </LayoutPanel>

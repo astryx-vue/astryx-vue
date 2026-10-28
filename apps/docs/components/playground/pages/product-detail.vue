@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
 import {
   AspectRatio,
   Badge,
@@ -19,20 +20,19 @@ import {
   Text,
   VStack,
 } from '@astryx-vue/core'
-import type { Component } from 'vue'
 import { computed, defineComponent, h, ref } from 'vue'
 
 /** 线性图标用内联 SVG 画出，不依赖外部图标字体。 */
 function strokeIcon(path: string): Component {
   return defineComponent({
     render: () => h('svg', {
-      viewBox: '0 0 24 24',
-      fill: 'none',
-      stroke: 'currentColor',
+      'viewBox': '0 0 24 24',
+      'fill': 'none',
+      'stroke': 'currentColor',
       'stroke-width': 1.5,
       'stroke-linecap': 'round',
       'aria-hidden': 'true',
-      style: 'width:1em;height:1em',
+      'style': 'width:1em;height:1em',
     }, [h('path', { d: path })]),
   })
 }
@@ -128,7 +128,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Heading :level="1" type="display-2">
                 {{ PRODUCT.name }}
               </Heading>
-              <HStack :gap="1" :align="'center'">
+              <HStack :gap="1" align="center">
                 <span
                   v-for="n in filledStars"
                   :key="`full-${n}`"
@@ -145,7 +145,7 @@ const filledStars = computed(() => Math.round(4.3))
                   4.3 (128)
                 </Text>
               </HStack>
-              <HStack :gap="2" :align="'center'">
+              <HStack :gap="2" align="center">
                 <Text type="large" weight="bold">
                   {{ fmt(PRODUCT.price) }}
                 </Text>
@@ -162,7 +162,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Glaze
               </Text>
-              <VStack hAlign="start">
+              <VStack h-align="start">
                 <SegmentedControl v-model="color" label="Glaze">
                   <SegmentedControlItem
                     v-for="c in COLORS"
@@ -177,7 +177,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Finish
               </Text>
-              <VStack hAlign="start">
+              <VStack h-align="start">
                 <SegmentedControl v-model="finish" label="Finish">
                   <SegmentedControlItem
                     v-for="f in FINISHES"
@@ -192,7 +192,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Quantity
               </Text>
-              <HStack :gap="1" :align="'center'">
+              <HStack :gap="1" align="center">
                 <Button
                   label="Decrease quantity"
                   variant="ghost"

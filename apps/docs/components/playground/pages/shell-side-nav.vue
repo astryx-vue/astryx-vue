@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { StatusDotVariant } from '@astryx-vue/core'
-import { ref } from 'vue'
 import {
   AppShell,
   Card,
@@ -19,14 +18,15 @@ import {
   StatusDot,
   VStack,
 } from '@astryx-vue/core'
+import { ref } from 'vue'
 
-type Conversation = {
+interface Conversation {
   label: string
   status: StatusDotVariant
   statusLabel: string
 }
 
-type Workspace = {
+interface Workspace {
   name: string
   icon: string
   chats: Conversation[]
@@ -154,13 +154,13 @@ function conversationMenuOpen(open: boolean) {
                       v-if="isHovered || isMenuOpen"
                       size="sm"
                       label="Conversation options"
-                      @open-change="conversationMenuOpen"
                       :items="[
                         { label: 'Pin', onClick: () => {} },
                         { label: 'Rename', onClick: () => {} },
                         { label: 'Archive', onClick: () => {} },
                         { label: 'Delete', onClick: () => {} },
                       ]"
+                      @open-change="conversationMenuOpen"
                     />
                     <StatusDot v-else :variant="chat.status" :label="chat.statusLabel" />
                   </template>

@@ -44,14 +44,14 @@ const sideNavHeading: CSSProperties = { marginInline: 'var(--astryx-spacing-4)' 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { label: 'Personal information', icon: 'i-heroicons-user' },
-  { label: 'Login & security', icon: 'i-heroicons-lock-closed' },
-  { label: 'Privacy', icon: 'i-heroicons-shield-check' },
-  { label: 'Notifications', icon: 'i-heroicons-bell' },
-  { label: 'Taxes', icon: 'i-heroicons-document-text' },
-  { label: 'Payments', icon: 'i-heroicons-credit-card' },
-  { label: 'Languages & currency', icon: 'i-heroicons-globe-alt' },
-  { label: 'Travel for work', icon: 'i-heroicons-briefcase' },
+  { label: 'Personal information', icon: 'heroicons:user' },
+  { label: 'Login & security', icon: 'heroicons:lock-closed' },
+  { label: 'Privacy', icon: 'heroicons:shield-check' },
+  { label: 'Notifications', icon: 'heroicons:bell' },
+  { label: 'Taxes', icon: 'heroicons:document-text' },
+  { label: 'Payments', icon: 'heroicons:credit-card' },
+  { label: 'Languages & currency', icon: 'heroicons:globe-alt' },
+  { label: 'Travel for work', icon: 'heroicons:briefcase' },
 ]
 
 const SECTION_TITLES: Record<string, string> = {
@@ -128,17 +128,17 @@ const PERSONAL_PLACEHOLDERS: Record<string, string> = {
 
 const HELP_CARDS = [
   {
-    icon: 'i-heroicons-lock-closed',
+    icon: 'heroicons:lock-closed',
     title: 'Why isn\'t my info shown here?',
     body: 'We\'re hiding some account details to protect your identity.',
   },
   {
-    icon: 'i-heroicons-pencil-square',
+    icon: 'heroicons:pencil-square',
     title: 'Which details can be edited?',
     body: 'Contact info and personal details can be edited. If this info was used to verify your identity, you\'ll need to get verified again the next time you book—or to continue hosting.',
   },
   {
-    icon: 'i-heroicons-share',
+    icon: 'heroicons:share',
     title: 'What info is shared with others?',
     body: 'We only release contact information after a reservation is confirmed.',
   },
@@ -209,10 +209,10 @@ function personalValue(key: string) {
             @click="selectNav(item.label)"
           >
             <template #startContent>
-              <Icon :icon="item.icon" />
+              <Icon :name="item.icon" />
             </template>
             <template #endContent>
-              <Icon icon="i-heroicons-chevron-right" size="sm" color="secondary" />
+              <Icon name="heroicons:chevron-right" size="sm" color="secondary" />
             </template>
           </ListItem>
         </List>
@@ -220,7 +220,7 @@ function personalValue(key: string) {
         <List density="spacious">
           <ListItem label="Professional hosting tools">
             <template #startContent>
-              <Icon icon="i-heroicons-wrench-screwdriver" />
+              <Icon name="heroicons:wrench-screwdriver" />
             </template>
           </ListItem>
         </List>
@@ -249,7 +249,7 @@ function personalValue(key: string) {
               @click="selectNav(item.label)"
             >
               <template #startContent>
-                <Icon :icon="item.icon" />
+                <Icon :name="item.icon" />
               </template>
             </ListItem>
           </List>
@@ -257,7 +257,7 @@ function personalValue(key: string) {
           <List density="spacious">
             <ListItem label="Professional hosting tools">
               <template #startContent>
-                <Icon icon="i-heroicons-wrench-screwdriver" />
+                <Icon name="heroicons:wrench-screwdriver" />
               </template>
             </ListItem>
           </List>
@@ -281,7 +281,7 @@ function personalValue(key: string) {
               @click="mobileView = 'nav'"
             >
               <template #icon>
-                <Icon icon="i-heroicons-arrow-left" size="sm" />
+                <Icon name="heroicons:arrow-left" size="sm" />
               </template>
             </Button>
             <Heading :level="2">
@@ -358,7 +358,7 @@ function personalValue(key: string) {
                 align="start"
                 :style="rowPadding"
               >
-                <Icon icon="i-heroicons-computer-desktop" />
+                <Icon name="heroicons:computer-desktop" />
                 <StackItem size="fill">
                   <VStack :gap="0">
                     <HStack :gap="2" align="center">
@@ -414,7 +414,7 @@ function personalValue(key: string) {
             <Card variant="muted">
               <HStack :gap="4" align="start">
                 <Center :width="48" :height="48" :style="iconBox">
-                  <Icon icon="i-heroicons-lock-closed" />
+                  <Icon name="heroicons:lock-closed" />
                 </Center>
                 <VStack :gap="1">
                   <Text type="body" weight="bold">
@@ -544,7 +544,7 @@ function personalValue(key: string) {
                 <Divider v-if="i > 0" />
                 <HStack :gap="3" align="start">
                   <Center :width="48" :height="48" :style="iconBox">
-                    <Icon :icon="card.icon" />
+                    <Icon :name="card.icon" />
                   </Center>
                   <VStack :gap="0">
                     <Text type="body" weight="semibold" display="block">
@@ -681,7 +681,7 @@ function personalValue(key: string) {
               <Card variant="muted">
                 <HStack :gap="4" align="start">
                   <Center :width="48" :height="48" :style="iconBox">
-                    <Icon icon="i-heroicons-shield-check" />
+                    <Icon name="heroicons:shield-check" />
                   </Center>
                   <VStack :gap="1">
                     <Text type="body" weight="bold">

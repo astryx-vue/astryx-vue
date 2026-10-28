@@ -78,7 +78,7 @@ function onPasswordChange(value: string) {
             <Section variant="transparent" :padding="0" height="100%">
               <VStack :gap="4" height="100%">
                 <HStack :gap="2" align="center">
-                  <Icon icon="i-heroicons-squares-2x2" />
+                  <Icon name="heroicons:squares-2x2" />
                   <Text type="body" weight="bold">
                     Product Inc.
                   </Text>
@@ -91,7 +91,7 @@ function onPasswordChange(value: string) {
                       description="Redirecting to your dashboard…"
                     >
                       <template #icon>
-                        <Icon icon="i-heroicons-check-circle" size="lg" />
+                        <Icon name="heroicons:check-circle" size="lg" />
                       </template>
                     </EmptyState>
                     <VStack v-else :gap="4" h-align="stretch" width="100%">

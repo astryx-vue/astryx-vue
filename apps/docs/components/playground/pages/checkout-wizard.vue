@@ -34,10 +34,10 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 // ── 数据 ──────────────────────────────────────────────────────────────────────
 
 const STEPS = [
-  { label: 'Cart', icon: 'i-carbon-shopping-cart' },
-  { label: 'Shipping', icon: 'i-carbon-location' },
-  { label: 'Delivery', icon: 'i-carbon-delivery-truck' },
-  { label: 'Payment', icon: 'i-carbon-purchase' },
+  { label: 'Cart', icon: 'heroicons:shopping-cart' },
+  { label: 'Shipping', icon: 'heroicons:map-pin' },
+  { label: 'Delivery', icon: 'heroicons:truck' },
+  { label: 'Payment', icon: 'heroicons:credit-card' },
 ]
 
 const CART_ITEMS = [
@@ -280,14 +280,14 @@ function isFreeDelivery(optionValue: string) {
             </Heading>
           </StackItem>
           <HStack :gap="1.5" align="center">
-            <Icon icon="i-carbon-locked" size="sm" color="secondary" />
+            <Icon name="heroicons:lock-closed" size="sm" color="secondary" />
             <Text type="supporting" color="secondary">
               Secure checkout
             </Text>
           </HStack>
         </HStack>
 
-        <Stack vAlign="start" :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6">
+        <Stack v-align="start" :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6">
           <StackItem size="fill">
             <VStack :gap="6">
               <Banner
@@ -321,7 +321,8 @@ function isFreeDelivery(optionValue: string) {
                   :status="Object.keys(shownErrors(i)).length ? 'error' : undefined"
                 >
                   <template #icon>
-                    <Icon :icon="Object.keys(shownErrors(i)).length ? 'error' : icon" size="sm" />
+                    <Icon v-if="Object.keys(shownErrors(i)).length" icon="error" size="sm" />
+                    <Icon v-else :name="icon" size="sm" />
                   </template>
                 </Step>
               </Stepper>

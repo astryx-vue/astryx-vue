@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 import {
   Banner,
   Button,
@@ -21,7 +20,7 @@ import {
   Token,
   VStack,
 } from '@astryx-vue/core'
-import { computed, defineComponent, h, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const CAMPAIGN_GOALS = [
   'Brand Awareness',
@@ -52,25 +51,19 @@ const BUDGET_OPTIONS = [
   '$100K+/mo',
 ]
 
-function iconComponent(className: string): Component {
-  return defineComponent({
-    render: () => h('span', { 'class': className, 'aria-hidden': 'true', 'style': 'width:1.25em;height:1.25em' }),
-  })
-}
-
 const WHY_US = [
   {
-    icon: iconComponent('i-heroicons-rocket-launch'),
+    icon: 'heroicons:rocket-launch',
     title: 'We move fast for you',
     description: 'We cut through the noise and get straight to the work.',
   },
   {
-    icon: iconComponent('i-heroicons-adjustments-horizontal'),
+    icon: 'heroicons:adjustments-horizontal',
     title: 'We build around you',
     description: 'We tailor everything to what you\'re trying to achieve.',
   },
   {
-    icon: iconComponent('i-heroicons-hand-raised'),
+    icon: 'heroicons:hand-raised',
     title: 'We show up for you',
     description: 'A dedicated team that knows your brand and wants to win.',
   },
@@ -125,7 +118,7 @@ function toggleGoal(goal: string) {
             <Grid :columns="{ minWidth: 200 }" :gap="4">
               <Card v-for="item in WHY_US" :key="item.title">
                 <VStack :gap="3">
-                  <Icon :icon="item.icon" size="lg" color="accent" />
+                  <Icon :name="item.icon" size="lg" color="accent" />
                   <VStack :gap="1">
                     <Text type="body" weight="bold">
                       {{ item.title }}

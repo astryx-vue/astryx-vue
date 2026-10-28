@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { SearchableItem } from '@astryx-vue/core'
-import type { Component } from 'vue'
 import {
   Button,
   CheckboxInput,
@@ -9,6 +8,7 @@ import {
   Grid,
   Heading,
   HStack,
+  Icon,
   Layout,
   LayoutContent,
   LayoutHeader,
@@ -41,13 +41,9 @@ const SETTINGS_ITEMS: SearchableItem[] = [
 
 const settingsSearchSource = createStaticSource(SETTINGS_ITEMS)
 
-function iconComponent(className: string): Component {
-  return defineComponent({
-    render: () => h('span', { 'class': className, 'aria-hidden': 'true', 'style': 'width:1em;height:1em' }),
-  })
-}
-
-const MagnifyingGlassIcon = iconComponent('i-heroicons-magnifying-glass')
+const MagnifyingGlassIcon = defineComponent({
+  render: () => h(Icon, { name: 'heroicons:magnifying-glass' }),
+})
 
 const isNarrow = useMediaQuery('(max-width: 768px)')
 const activeNav = ref('Profile')

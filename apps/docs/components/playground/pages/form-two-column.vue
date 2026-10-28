@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { computed, ref } from 'vue'
 import {
   AspectRatio,
   Button,
@@ -18,6 +17,7 @@ import {
   Token,
   VStack,
 } from '@astryx-vue/core'
+import { computed, ref } from 'vue'
 
 const ILLUSTRATION_URL = '/template-assets/light-working-vertical-2.png'
 
@@ -174,7 +174,7 @@ function toggleReason(reason: string) {
                 placeholder="Project details*"
                 :status="errors.details ? { type: 'error', message: errors.details } : undefined"
               />
-              <VStack hAlign="stretch">
+              <VStack h-align="stretch">
                 <Button label="Let's connect" variant="primary" @click="handleSubmit" />
               </VStack>
             </VStack>
@@ -184,7 +184,7 @@ function toggleReason(reason: string) {
         <VStack :gap="6">
           <Divider />
           <Grid :columns="{ minWidth: 200 }" :gap="6">
-            <VStack v-for="col in CONTACT_COLUMNS" :key="col.label" :gap="1" hAlign="center">
+            <VStack v-for="col in CONTACT_COLUMNS" :key="col.label" :gap="1" h-align="center">
               <Text type="supporting" color="secondary">
                 {{ col.label }}
               </Text>

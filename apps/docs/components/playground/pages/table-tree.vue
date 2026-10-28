@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TableColumn } from '@astryx-vue/core'
 import {
   Avatar,
   Badge,
@@ -23,8 +24,8 @@ import {
   Section,
   StackItem,
   Tab,
-  TabList,
   Table,
+  TabList,
   Text,
   TextInput,
   Token,
@@ -36,7 +37,6 @@ import {
   useTableTreeState,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn } from '@astryx-vue/core'
 import { computed, defineComponent, h, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 
 type EntryKind = 'folder' | 'typescript' | 'json' | 'yaml' | 'markdown' | 'text'
@@ -243,7 +243,7 @@ const REPO_TREE: RepoEntry[] = [
     'build: turn on verbatimModuleSyntax (#393)',
     daysAgo(35),
   ),
-];
+]
 
 /**
  * Give every folder the newest commit beneath it — message and date together,
@@ -481,7 +481,6 @@ const AboutPanel = defineComponent({
   },
 })
 
-
 const TAB_PLACEHOLDER = {
   conduct: 'The Contributor Covenant, version 2.1, applies to this project.',
   license: 'MIT. Do what you like, keep the notice, expect no warranty.',
@@ -582,12 +581,12 @@ const columns: TableColumn<RepoEntry>[] = [
         : h(Icon, { name: 'heroicons:document', size: 'sm', color: 'secondary' }),
       entry.kind === 'folder'
         ? h(Link, {
-          href: '#',
-          onClick: (event: Event) => {
-            event.preventDefault()
-            selectFolder(entry.id)
-          },
-        }, () => entry.name)
+            href: '#',
+            onClick: (event: Event) => {
+              event.preventDefault()
+              selectFolder(entry.id)
+            },
+          }, () => entry.name)
         : h(Link, { href: '#' }, () => entry.name),
     ]),
   },
@@ -659,7 +658,7 @@ Read [the contributing guide](#) first. In short:
 - Conventional commits — the changelog is generated from them.
 
 > Issues tagged \`good first issue\` are a reasonable place to start.
-`;
+`
 
 const DOCS_README = `## Documentation
 
@@ -675,7 +674,7 @@ How the canvas is put together, and how to work on it.
 The \`architecture/\` folder covers the parts that are hard to infer from the
 source: how the dirty-rect redraw path decides what to repaint, and who owns
 the undo stack.
-`;
+`
 
 /*
  * Which folders have a README to show. Keyed by folder id, with the empty
@@ -688,8 +687,8 @@ the undo stack.
  */
 const READMES: Record<string, string> = {
   '': README,
-  docs: DOCS_README,
-};
+  'docs': DOCS_README,
+}
 </script>
 
 <template>

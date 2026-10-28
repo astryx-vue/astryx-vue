@@ -46,7 +46,7 @@ function onPasswordChange(value: string) {
   <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
     <VStack :gap="4" h-align="center" width="100%" :max-width="400">
       <VStack :gap="2" h-align="center">
-        <Icon icon="i-heroicons-cube" size="lg" />
+        <Icon name="heroicons:cube" size="lg" />
         <Text type="body" weight="bold" size="lg">
           Product Inc.
         </Text>

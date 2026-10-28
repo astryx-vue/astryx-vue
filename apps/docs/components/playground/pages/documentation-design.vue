@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OutlineItem, TableColumn } from '@astryx-vue/core'
+import type { Component } from 'vue'
 import {
   Badge,
   Button,
@@ -20,26 +21,25 @@ import {
   Selector,
   StackItem,
   Tab,
-  TabList,
   Table,
+  TabList,
   Text,
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import type { Component } from 'vue'
 import { defineComponent, h, ref } from 'vue'
 
 /** 线性图标用内联 SVG 画出，不依赖外部图标字体。 */
 function strokeIcon(path: string): Component {
   return defineComponent({
     render: () => h('svg', {
-      viewBox: '0 0 24 24',
-      fill: 'none',
-      stroke: 'currentColor',
+      'viewBox': '0 0 24 24',
+      'fill': 'none',
+      'stroke': 'currentColor',
       'stroke-width': 1.5,
       'stroke-linecap': 'round',
       'aria-hidden': 'true',
-      style: 'width:1em;height:1em',
+      'style': 'width:1em;height:1em',
     }, [h('path', { d: path })]),
   })
 }

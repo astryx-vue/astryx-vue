@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TableColumn, TablePlugin } from '@astryx-vue/core'
 import {
   Avatar,
   Badge,
@@ -18,8 +19,8 @@ import {
   ResizeHandle,
   StackItem,
   Tab,
-  TabList,
   Table,
+  TabList,
   Text,
   Thumbnail,
   Token,
@@ -28,7 +29,6 @@ import {
   useTableRowStatus,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn, TablePlugin } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
 type Category = 'inbox' | 'escalations' | 'waiting' | 'resolved'
@@ -375,7 +375,7 @@ const CONVERSATIONS: Conversation[] = [
     ],
     attachments: [],
   },
-];
+]
 
 const CATEGORIES: { value: Category, label: string }[] = [
   { value: 'inbox', label: 'Inbox' },
@@ -676,68 +676,68 @@ const threadActions = [
               </HStack>
 
               <VStack :gap="2">
-              <CollapsibleGroup
-                :key="openConversation.id"
-                type="multiple"
-                density="spacious"
-                :default-value="[openConversation.id]"
-              >
-                <Collapsible
-                  v-for="message in threadMessages(openConversation)"
-                  :key="message.id"
-                  :value="message.id"
+                <CollapsibleGroup
+                  :key="openConversation.id"
+                  type="multiple"
+                  density="spacious"
+                  :default-value="[openConversation.id]"
                 >
-                  <template #trigger>
-                    <HStack
-                      :gap="THREAD_HEADER_GAP"
-                      align="center"
-                      :style="{ paddingInlineEnd: spacing(2) }"
-                    >
-                      <Avatar :name="message.sender" :tooltip="false" />
+                  <Collapsible
+                    v-for="message in threadMessages(openConversation)"
+                    :key="message.id"
+                    :value="message.id"
+                  >
+                    <template #trigger>
+                      <HStack
+                        :gap="THREAD_HEADER_GAP"
+                        align="center"
+                        :style="{ paddingInlineEnd: spacing(2) }"
+                      >
+                        <Avatar :name="message.sender" :tooltip="false" />
+                        <StackItem size="fill">
+                          <VStack :gap="0.5">
+                            <Text :max-lines="1" weight="semibold">
+                              {{ message.sender }}
+                            </Text>
+                            <Text :max-lines="1" type="supporting" color="secondary">
+                              {{ message.senderEmail }}
+                            </Text>
+                          </VStack>
+                        </StackItem>
+                        <Text type="supporting" color="secondary">
+                          {{ message.receivedFull }}
+                        </Text>
+                      </HStack>
+                    </template>
+                    <HStack :gap="THREAD_HEADER_GAP">
+                      <VStack :width="AVATAR_SIZE" />
                       <StackItem size="fill">
-                        <VStack :gap="0.5">
-                          <Text :max-lines="1" weight="semibold">
-                            {{ message.sender }}
+                        <VStack :gap="3" :max-width="MESSAGE_MEASURE">
+                          <Text v-for="paragraph in message.body" :key="paragraph">
+                            {{ paragraph }}
                           </Text>
-                          <Text :max-lines="1" type="supporting" color="secondary">
-                            {{ message.senderEmail }}
-                          </Text>
+                          <VStack v-if="message.attachments && message.attachments.length > 0" :gap="2">
+                            <HStack :gap="1" align="center">
+                              <Icon name="heroicons:paper-clip" size="sm" color="gray" />
+                              <Text type="supporting" color="secondary">
+                                {{ message.attachments.length }} attachment{{ message.attachments.length === 1 ? '' : 's' }}
+                              </Text>
+                            </HStack>
+                            <HStack :gap="2" wrap="wrap">
+                              <Thumbnail
+                                v-for="attachment in message.attachments"
+                                :key="attachment.id"
+                                :src="attachment.src"
+                                :alt="`Preview of ${attachment.name}`"
+                                :label="attachment.name"
+                              />
+                            </HStack>
+                          </VStack>
                         </VStack>
                       </StackItem>
-                      <Text type="supporting" color="secondary">
-                        {{ message.receivedFull }}
-                      </Text>
                     </HStack>
-                  </template>
-                  <HStack :gap="THREAD_HEADER_GAP">
-                    <VStack :width="AVATAR_SIZE" />
-                    <StackItem size="fill">
-                      <VStack :gap="3" :max-width="MESSAGE_MEASURE">
-                        <Text v-for="paragraph in message.body" :key="paragraph">
-                          {{ paragraph }}
-                        </Text>
-                        <VStack v-if="message.attachments && message.attachments.length > 0" :gap="2">
-                          <HStack :gap="1" align="center">
-                            <Icon name="heroicons:paper-clip" size="sm" color="gray" />
-                            <Text type="supporting" color="secondary">
-                              {{ message.attachments.length }} attachment{{ message.attachments.length === 1 ? '' : 's' }}
-                            </Text>
-                          </HStack>
-                          <HStack :gap="2" wrap="wrap">
-                            <Thumbnail
-                              v-for="attachment in message.attachments"
-                              :key="attachment.id"
-                              :src="attachment.src"
-                              :alt="`Preview of ${attachment.name}`"
-                              :label="attachment.name"
-                            />
-                          </HStack>
-                        </VStack>
-                      </VStack>
-                    </StackItem>
-                  </HStack>
-                </Collapsible>
-              </CollapsibleGroup>
+                  </Collapsible>
+                </CollapsibleGroup>
               </VStack>
 
               <HStack :gap="THREAD_HEADER_GAP">

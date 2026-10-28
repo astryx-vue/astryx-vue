@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { TableColumn } from '@astryx-vue/core'
-import { h, ref } from 'vue'
 import {
   Avatar,
   Badge,
@@ -18,12 +17,13 @@ import {
   Link,
   List,
   ListItem,
+  proportional,
   Table,
   Text,
   VStack,
-  proportional,
 } from '@astryx-vue/core'
 import { PlaygroundAreaChart, PlaygroundResponsive, PlaygroundSparkline } from '@astryx-vue/playground-charts'
+import { h, ref } from 'vue'
 
 interface StockRow extends Record<string, unknown> {
   id: string
@@ -42,29 +42,29 @@ function genSpark(
   volatility: number,
   N: number = 96,
 ): number[] {
-  let s = seed >>> 0;
+  let s = seed >>> 0
   const rand = () => {
-    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
-    return s / 0x100000000;
-  };
-  const points: number[] = [];
-  let drift = 0;
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0
+    return s / 0x100000000
+  }
+  const points: number[] = []
+  let drift = 0
   for (let i = 0; i < N; i++) {
-    const t = i / (N - 1);
-    const trend = start + (end - start) * t;
+    const t = i / (N - 1)
+    const trend = start + (end - start) * t
     // Multiple overlaid waves at different frequencies for session-like rhythm
     // plus high-frequency chop.
-    const wave =
-      Math.sin(t * Math.PI * 2.3 + seed * 0.13) * volatility * 1.4 +
-      Math.sin(t * Math.PI * 5.7 + seed * 0.41) * volatility * 0.9 +
-      Math.sin(t * Math.PI * 13.1 + seed * 0.07) * volatility * 0.5;
+    const wave
+      = Math.sin(t * Math.PI * 2.3 + seed * 0.13) * volatility * 1.4
+        + Math.sin(t * Math.PI * 5.7 + seed * 0.41) * volatility * 0.9
+        + Math.sin(t * Math.PI * 13.1 + seed * 0.07) * volatility * 0.5
     // Loosely-correlated random walk so adjacent ticks jitter rather than glide.
-    drift = drift * 0.55 + (rand() - 0.5) * volatility * 2.2;
+    drift = drift * 0.55 + (rand() - 0.5) * volatility * 2.2
     // Occasional sharper spike to mimic news-driven moves.
-    const spike = rand() < 0.04 ? (rand() - 0.5) * volatility * 4 : 0;
-    points.push(trend + wave + drift + spike);
+    const spike = rand() < 0.04 ? (rand() - 0.5) * volatility * 4 : 0
+    points.push(trend + wave + drift + spike)
   }
-  return points;
+  return points
 }
 
 const portfolioData = (() => {
@@ -99,44 +99,44 @@ const portfolioData = (() => {
     [378, 290000],
     [392, 292000],
     [406, 294200],
-  ];
-  const totalDays = anchors[anchors.length - 1][0];
-  const monthPerDay = 12 / totalDays;
-  const out: Array<{month: number; label: string; value: number}> = [];
-  let ai = 0;
+  ]
+  const totalDays = anchors[anchors.length - 1][0]
+  const monthPerDay = 12 / totalDays
+  const out: Array<{ month: number, label: string, value: number }> = []
+  let ai = 0
   for (let day = 0; day <= totalDays; day++) {
     while (ai < anchors.length - 2 && day >= anchors[ai + 1][0]) {
-      ai++;
+      ai++
     }
-    const [d0, v0] = anchors[ai];
-    const [d1, v1] = anchors[ai + 1];
-    const t = (day - d0) / (d1 - d0);
-    const base = v0 + (v1 - v0) * t;
-    const seed = Math.sin(day * 12.9898 + 78.233) * 43758.5453;
-    const noise = (seed - Math.floor(seed) - 0.5) * 3600;
+    const [d0, v0] = anchors[ai]
+    const [d1, v1] = anchors[ai + 1]
+    const t = (day - d0) / (d1 - d0)
+    const base = v0 + (v1 - v0) * t
+    const seed = Math.sin(day * 12.9898 + 78.233) * 43758.5453
+    const noise = (seed - Math.floor(seed) - 0.5) * 3600
     out.push({
       month: day * monthPerDay,
       label: `Day ${day + 1}`,
       value: Math.round(base + noise),
-    });
+    })
   }
-  return out;
-})();
+  return out
+})()
 
 const xAxisTicks = [0, 3, 6, 9, 12]
 const xAxisLabels: Record<number, string> = { 0: 'Oct', 3: 'Jan', 6: 'Apr', 9: 'Jul', 12: 'Oct' }
 
 const metrics = [
-  {value: '$294,200', change: '+14.8%', label: 'Total value'},
-  {value: '14.8%', change: '+2.1%', label: 'Annual return'},
-  {value: '2.8%', change: '$2,060/qtr', label: 'Dividend yield'},
-  {value: '23', change: '+4 YTD', label: 'Total asset holdings'},
-];
+  { value: '$294,200', change: '+14.8%', label: 'Total value' },
+  { value: '14.8%', change: '+2.1%', label: 'Annual return' },
+  { value: '2.8%', change: '$2,060/qtr', label: 'Dividend yield' },
+  { value: '23', change: '+4 YTD', label: 'Total asset holdings' },
+]
 
 const topAssets = [
-  {ticker: 'AAPL', name: 'Apple Inc.', value: '$87,200', change: '+18.4%'},
-  {ticker: 'MSFT', name: 'Microsoft Corp.', value: '$72,500', change: '+14.7%'},
-  {ticker: 'NVDA', name: 'NVIDIA Corp.', value: '$63,800', change: '+31.2%'},
+  { ticker: 'AAPL', name: 'Apple Inc.', value: '$87,200', change: '+18.4%' },
+  { ticker: 'MSFT', name: 'Microsoft Corp.', value: '$72,500', change: '+14.7%' },
+  { ticker: 'NVDA', name: 'NVIDIA Corp.', value: '$63,800', change: '+31.2%' },
   {
     ticker: 'VTI',
     name: 'Vanguard Total Stock',
@@ -149,7 +149,7 @@ const topAssets = [
     value: '$45,600',
     change: '+4.2%',
   },
-];
+]
 
 const marketIndices = [
   {
@@ -216,7 +216,7 @@ const marketIndices = [
     positive: false,
     spark: genSpark(8945, 90, 76, 4.2),
   },
-];
+]
 
 const trendingStocks: StockRow[] = [
   {
@@ -309,14 +309,14 @@ const trendingStocks: StockRow[] = [
     weekChg: 42.1,
     spark: genSpark(21556, 42, 58, 2.6, 48),
   },
-];
+]
 
 const trendingColumns: TableColumn<StockRow>[] = [
   { key: 'ticker', header: 'Ticker', width: proportional(1), renderCell: row => h(Text, { type: 'body', weight: 'bold' }, () => row.ticker) },
   { key: 'price', header: 'Price', width: proportional(1) },
   { key: 'dailyPts', header: 'Daily Chg (pts)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPts >= 0 ? 'green' : 'red', label: (row.dailyPts >= 0 ? '+' : '') + row.dailyPts.toFixed(2) }) },
-  { key: 'dailyPct', header: 'Daily Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPct >= 0 ? 'green' : 'red', label: (row.dailyPct >= 0 ? '+' : '') + row.dailyPct.toFixed(2) + '%' }) },
-  { key: 'weekChg', header: '52W Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.weekChg >= 0 ? 'green' : 'red', label: (row.weekChg >= 0 ? '+' : '') + row.weekChg.toFixed(1) + '%' }) },
+  { key: 'dailyPct', header: 'Daily Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.dailyPct >= 0 ? 'green' : 'red', label: `${(row.dailyPct >= 0 ? '+' : '') + row.dailyPct.toFixed(2)}%` }) },
+  { key: 'weekChg', header: '52W Chg (%)', width: proportional(1), renderCell: row => h(Badge, { variant: row.weekChg >= 0 ? 'green' : 'red', label: `${(row.weekChg >= 0 ? '+' : '') + row.weekChg.toFixed(1)}%` }) },
   { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1, isMeasured: true, padTop: 2, padBottom: 2 }) },
 ]
 
@@ -329,7 +329,9 @@ const timeRange = ref('1 year')
       <LayoutContent :padding="6">
         <VStack :gap="6">
           <HStack justify="between" align="center">
-            <Heading :level="1">My Portfolio</Heading>
+            <Heading :level="1">
+              My Portfolio
+            </Heading>
             <DropdownMenu
               :button="{ label: timeRange, variant: 'secondary', size: 'lg' }"
               has-chevron
@@ -349,13 +351,19 @@ const timeRange = ref('1 year')
               <Card v-for="m in metrics.slice(group * 2, group * 2 + 2)" :key="m.label">
                 <VStack :gap="1">
                   <HStack :gap="3" align="center">
-                    <Text type="display-3" weight="bold">{{ m.value }}</Text>
+                    <Text type="display-3" weight="bold">
+                      {{ m.value }}
+                    </Text>
                     <HStack :gap="1" align="center">
                       <Icon :icon="!m.change.startsWith('-') ? 'arrowUp' : 'arrowDown'" size="xsm" :color="!m.change.startsWith('-') ? 'success' : 'error'" />
-                      <Text type="body" color="secondary">{{ m.change }}</Text>
+                      <Text type="body" color="secondary">
+                        {{ m.change }}
+                      </Text>
                     </HStack>
                   </HStack>
-                  <Text type="body" color="secondary">{{ m.label }}</Text>
+                  <Text type="body" color="secondary">
+                    {{ m.label }}
+                  </Text>
                 </VStack>
               </Card>
             </Grid>
@@ -366,8 +374,12 @@ const timeRange = ref('1 year')
               <Card>
                 <VStack :gap="4">
                   <HStack justify="between" align="center">
-                    <Heading :level="3">Portfolio Value</Heading>
-                    <Link href="#">View details</Link>
+                    <Heading :level="3">
+                      Portfolio Value
+                    </Heading>
+                    <Link href="#">
+                      View details
+                    </Link>
                   </HStack>
                   <PlaygroundResponsive :height="340">
                     <PlaygroundAreaChart
@@ -393,8 +405,12 @@ const timeRange = ref('1 year')
               <Card>
                 <VStack :gap="4">
                   <HStack justify="between" align="center">
-                    <Heading :level="3">Top Assets</Heading>
-                    <Link href="#">View all</Link>
+                    <Heading :level="3">
+                      Top Assets
+                    </Heading>
+                    <Link href="#">
+                      View all
+                    </Link>
                   </HStack>
                   <List density="spacious">
                     <ListItem
@@ -413,8 +429,10 @@ const timeRange = ref('1 year')
                         <Avatar :name="asset.ticker" size="md" />
                       </template>
                       <template #endContent>
-                        <VStack :gap="0" hAlign="end">
-                          <Text type="body">{{ asset.value }}</Text>
+                        <VStack :gap="0" h-align="end">
+                          <Text type="body">
+                            {{ asset.value }}
+                          </Text>
                           <Badge :label="asset.change" :variant="asset.change.startsWith('-') ? 'red' : 'green'" />
                         </VStack>
                       </template>
@@ -429,8 +447,12 @@ const timeRange = ref('1 year')
 
           <HStack justify="between" align="start">
             <VStack :gap="1">
-              <Heading :level="1">Market Today</Heading>
-              <Text type="body" color="secondary">Past 24 hours</Text>
+              <Heading :level="1">
+                Market Today
+              </Heading>
+              <Text type="body" color="secondary">
+                Past 24 hours
+              </Text>
             </VStack>
             <Button label="View more" variant="secondary" size="lg" />
           </HStack>
@@ -439,15 +461,23 @@ const timeRange = ref('1 year')
             <Card v-for="m in marketIndices" :key="m.ticker">
               <VStack :gap="4">
                 <VStack :gap="0">
-                  <Heading :level="3">{{ m.name }}</Heading>
-                  <Text type="supporting" color="secondary">{{ m.ticker }}</Text>
+                  <Heading :level="3">
+                    {{ m.name }}
+                  </Heading>
+                  <Text type="supporting" color="secondary">
+                    {{ m.ticker }}
+                  </Text>
                 </VStack>
                 <PlaygroundSparkline :data="m.spark" :color="m.positive ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'" is-measured :pad-top="2" :pad-bottom="2" />
                 <HStack :gap="3" align="center">
-                  <Text type="display-3" weight="bold">{{ m.price }}</Text>
+                  <Text type="display-3" weight="bold">
+                    {{ m.price }}
+                  </Text>
                   <HStack :gap="1" align="center">
                     <Icon :icon="m.positive ? 'arrowUp' : 'arrowDown'" size="xsm" :color="m.positive ? 'success' : 'error'" />
-                    <Text type="body" color="secondary">{{ m.change }}</Text>
+                    <Text type="body" color="secondary">
+                      {{ m.change }}
+                    </Text>
                   </HStack>
                 </HStack>
               </VStack>
@@ -456,7 +486,9 @@ const timeRange = ref('1 year')
 
           <Card>
             <VStack :gap="4">
-              <Heading :level="3">Trending Stocks</Heading>
+              <Heading :level="3">
+                Trending Stocks
+              </Heading>
               <Table :data="trendingStocks" :columns="trendingColumns" id-key="id" has-hover dividers="rows" />
             </VStack>
           </Card>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { PowerSearchFilter, TableColumn } from '@astryx-vue/core'
 import {
   Avatar,
   Badge,
@@ -19,28 +20,27 @@ import {
   LayoutPanel,
   MetadataList,
   MetadataListItem,
-  PowerSearch,
   pixel,
   Popover,
+  PowerSearch,
   proportional,
   RadioList,
   RadioListItem,
-  resolveColumnWidths,
   ResizeHandle,
+  resolveColumnWidths,
   Selector,
-  StatusDot,
   StackItem,
+  StatusDot,
   Table,
   TableBody,
   TableCell,
   TableRow,
   Text,
   TextInput,
-  useResizable,
   usePowerSearchConfig,
+  useResizable,
   VStack,
 } from '@astryx-vue/core'
-import type { PowerSearchFilter, TableColumn } from '@astryx-vue/core'
 import { computed, ref, watch } from 'vue'
 
 type TaskStatus = 'in_progress' | 'todo' | 'backlog' | 'done'
@@ -236,7 +236,6 @@ const rowMenuItems = [
   { type: 'divider' as const },
   { label: 'Delete issue', icon: 'i-heroicons-trash' },
 ]
-
 </script>
 
 <template>

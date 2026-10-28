@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 import type { TreeListItemData } from '@astryx-vue/core'
-import { defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'
+import type { Component } from 'vue'
 import {
   AppShell,
   Button,
@@ -25,14 +24,15 @@ import {
   TreeList,
   VStack,
 } from '@astryx-vue/core'
+import { defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const searchQuery = ref('')
 
-const noop = () => {}
+function noop() {}
 
 function iconComponent(className: string): Component {
   return defineComponent({
-    render: () => h('span', { class: className, 'aria-hidden': 'true', style: 'width:1em;height:1em' }),
+    render: () => h('span', { 'class': className, 'aria-hidden': 'true', 'style': 'width:1em;height:1em' }),
   })
 }
 
@@ -134,7 +134,20 @@ const MENUS: { label: string, groups: MenuEntry[][] }[] = [
 ]
 
 const CODE_LINES = [
-  '38%', '62%', '54%', '0%', '46%', '70%', '58%', '34%', '0%', '50%', '66%', '42%', '60%', '28%',
+  '38%',
+  '62%',
+  '54%',
+  '0%',
+  '46%',
+  '70%',
+  '58%',
+  '34%',
+  '0%',
+  '50%',
+  '66%',
+  '42%',
+  '60%',
+  '28%',
 ]
 
 const EDITOR_TABS = ['AppShell.tsx', 'TopNav.tsx', 'theme.ts']

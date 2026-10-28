@@ -181,7 +181,7 @@ function togglePanel() {
 
           <HStack align="center">
             <StackItem size="fill">
-              <TabList role="tablist" v-model:value="activeTab" size="lg" is-full-bleed>
+              <TabList v-model:value="activeTab" role="tablist" size="lg" is-full-bleed>
                 <Tab value="details">
                   Details
                 </Tab>

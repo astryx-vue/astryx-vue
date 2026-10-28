@@ -169,7 +169,7 @@ function onPasswordChange(value: string) {
           <Card :padding="0">
             <Section variant="muted" :padding="4">
               <HStack :gap="2" align="center">
-                <Icon icon="i-heroicons-shield-check" color="secondary" />
+                <Icon name="heroicons:shield-check" color="secondary" />
                 <VStack :gap="0">
                   <Text type="label">
                     {{ provider.name }}
