@@ -4,6 +4,7 @@ import {
   Banner,
   Button,
   Card,
+  Collapsible,
   CheckboxInput,
   Divider,
   FieldStatus,
@@ -18,16 +19,17 @@ import {
   RadioListItem,
   Selector,
   StackItem,
+  Stack,
   Step,
   Stepper,
   Text,
   TextArea,
   TextInput,
   Thumbnail,
-  useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
 
@@ -79,7 +81,27 @@ function money(n: number) {
 
 // ── 状态 ──────────────────────────────────────────────────────────────────────
 
-const isNarrow = useMediaQuery('(max-width: 900px)')
+const NARROW_HOST_WIDTH = 900
+const hostRef = ref<ComponentPublicInstance | null>(null)
+const isNarrow = ref(false)
+let hostObserver: ResizeObserver | undefined
+
+// 窄版按预览容器的宽度判断，而不是浏览器窗口宽度：嵌在窄预览里的页面窗口再宽也要走窄版。
+watch(hostRef, (instance) => {
+  hostObserver?.disconnect()
+  const host = instance?.$el as HTMLElement | undefined
+  if (!host)
+    return
+  if (host.clientWidth > 0)
+    isNarrow.value = host.clientWidth <= NARROW_HOST_WIDTH
+  hostObserver = new ResizeObserver((entries) => {
+    const width = entries[0]?.contentRect.width ?? host.clientWidth
+    if (width > 0)
+      isNarrow.value = width <= NARROW_HOST_WIDTH
+  })
+  hostObserver.observe(host)
+})
+onBeforeUnmount(() => hostObserver?.disconnect())
 
 const step = ref(0)
 const attempted = ref<ReadonlySet<number>>(new Set())
@@ -250,7 +272,7 @@ function isFreeDelivery(optionValue: string) {
 <template>
   <Layout height="fill" :padding="6" :content-width="1000">
     <LayoutContent>
-      <VStack :gap="6">
+      <VStack ref="hostRef" :gap="6">
         <HStack :gap="3" align="center">
           <StackItem size="fill">
             <Heading :level="1">
@@ -265,7 +287,7 @@ function isFreeDelivery(optionValue: string) {
           </HStack>
         </HStack>
 
-        <HStack :gap="6" align="start" wrap="wrap">
+        <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" v-align="start">
           <StackItem size="fill">
             <VStack :gap="6">
               <Banner
@@ -550,15 +572,19 @@ function isFreeDelivery(optionValue: string) {
             </VStack>
           </StackItem>
 
-          <StackItem v-if="!isNarrow" :style="{ width: '360px', flexShrink: 0, alignSelf: 'flex-start' }">
+          <StackItem :class="isNarrow ? 'summary-column summary-column--narrow' : 'summary-column'">
             <Card :padding="5">
-              <VStack :gap="4">
-                <HStack :gap="2" align="center" justify="between">
-                  <Text type="label">
-                    Order summary
-                  </Text>
-                  <Badge variant="neutral" :label="`${itemCount} ${itemCount === 1 ? 'item' : 'items'}`" />
-                </HStack>
+              <component
+                :is="isNarrow ? Collapsible : VStack"
+                v-bind="isNarrow ? { trigger: `Order summary · ${money(total)}`, defaultIsOpen: false } : { gap: 4 }"
+              >
+              <HStack v-if="!isNarrow" :gap="2" align="center" justify="between" class="summary-title">
+                <Text type="label">
+                  Order summary
+                </Text>
+                <Badge variant="neutral" :label="`${itemCount} ${itemCount === 1 ? 'item' : 'items'}`" />
+              </HStack>
+              <VStack :gap="4" :padding-block-start="isNarrow ? 3 : undefined">
                 <VStack :gap="3">
                   <HStack v-for="item in items" :key="item.id" :gap="3" align="start">
                     <Thumbnail :src="item.src" :alt="item.name" />
@@ -629,15 +655,30 @@ function isFreeDelivery(optionValue: string) {
                   :title="`${money(FREE_SHIPPING_THRESHOLD - (subtotal - discount))} away from free standard shipping`"
                 />
               </VStack>
+              </component>
             </Card>
           </StackItem>
-        </HStack>
+        </Stack>
       </VStack>
     </LayoutContent>
   </Layout>
 </template>
 
 <style scoped>
+/* 摘要列固定 360 宽，表单滚过时贴在页面内边距处；窄版时排到表单前面、占满一行。 */
+.summary-column {
+  position: sticky;
+  top: var(--astryx-spacing-6);
+  flex-shrink: 0;
+  align-self: flex-start;
+  width: 360px;
+}
+.summary-column--narrow {
+  position: static;
+  order: -1;
+  align-self: stretch;
+  width: auto;
+}
 .quantity-field {
   display: block;
   flex: none;
