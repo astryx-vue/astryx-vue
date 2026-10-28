@@ -13,7 +13,7 @@ import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
+import { pixel, resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
 import { selectColumn } from './plugins/stickyColumns.js'
 import { mergeRowPatches } from './rowPatch.js'
 import { CellContent, HeaderAddon, PluginFooter, RenderFn } from './TableDataRenderers.js'
@@ -55,8 +55,18 @@ const resolvedColumns = computed(() => props.plugins.reduce(
 ))
 
 const selection = computed(() => props.plugins.find(plugin => plugin.selection)?.selection)
+
+/**
+ * 选择列的宽度可以被插件的 `widthFor` 改（原版靠 `transformColumns` 改选择列宽）。
+ * 它和别的列一起进 `resolveColumnWidths`，所以表头、数据格和表格最小宽度读到同一个值。
+ */
+const selectionColumn = computed(() => {
+  const base = selectColumn()
+  const override = props.plugins.map(plugin => plugin.widthFor?.(base)).find(value => value != null)
+  return override == null ? base : { ...base, width: pixel(override) }
+})
 const layoutColumns = computed(() => selection.value
-  ? [selectColumn(), ...resolvedColumns.value]
+  ? [selectionColumn.value, ...resolvedColumns.value]
   : resolvedColumns.value)
 // 原版把选择列（fixed pixel 宽）也算进 tableMinWidth，比例列分到的下限才不被它挤占。
 const widths = computed(() => resolveColumnWidths(layoutColumns.value))
@@ -238,8 +248,11 @@ function openMenu(event: MouseEvent, items: readonly TableRowMenuItem[] | undefi
   menu.value = { x: event.clientX, y: event.clientY, items }
 }
 
+/** 选择列的格子：宽度来自布局里的选择列，再叠加插件的补丁。 */
 function selectCellPatch(kind: 'header' | 'body', row: Record<string, unknown> | null) {
-  return mergeCell(selectColumn(), row, kind)
+  const patch = mergeCell(selectionColumn.value, row, kind)
+  const width = widths.value.columns.get(selectionColumn.value.key)?.style.width
+  return { ...patch, style: { width, minWidth: width, maxWidth: width, ...patch.style } }
 }
 
 function isSelected(row: Record<string, unknown>): boolean {
@@ -256,6 +269,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
     <PluginFooter v-for="(plugin, index) in plugins.filter(item => item.above)" :key="`above-${index}`" :plugin="plugin" place="above" />
     <table
       class="astryx-table"
+      data-layout="fixed"
       :data-density="density"
       :data-dividers="dividers"
       :data-striped="isStriped || undefined"
