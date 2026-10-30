@@ -1,3 +1,4 @@
 /* 富文本包的全部样式。按需引入时也可以只引 styles/ 下的单份文件。 */
 @import './styles/richtext-document.css';
 @import './styles/richtext-editor.css';
+@import './styles/richtext-toolbar.css';

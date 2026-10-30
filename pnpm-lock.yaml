@@ -288,6 +288,9 @@ catalogs:
     '@lexical/rich-text':
       specifier: 0.52.0
       version: 0.52.0
+    '@lexical/selection':
+      specifier: 0.52.0
+      version: 0.52.0
     '@lexical/table':
       specifier: 0.52.0
       version: 0.52.0
@@ -672,6 +675,9 @@ importers:
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
       '@lexical/rich-text':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/selection':
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
       '@lexical/table':

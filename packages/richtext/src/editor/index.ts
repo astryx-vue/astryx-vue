@@ -1,7 +1,11 @@
 export { editorKey, useLexicalEditor } from './context.js'
 export { createRichTextEditor } from './createEditor.js'
 export type { CreateRichTextEditorOptions } from './createEditor.js'
+export { RICHTEXT_ICON_KEYS } from './icons.js'
+export type { RichTextIconName } from './icons.js'
 export { default as RichTextEditor } from './RichTextEditor.vue'
+export { default as RichTextEditorToolbar } from './RichTextEditorToolbar.vue'
+export type { RichTextEditorToolbarProps, RichTextEditorToolbarSlots, RichTextToolbarSize } from './toolbarTypes.js'
 export type {
   RichTextEditorEmits,
   RichTextEditorExposed,

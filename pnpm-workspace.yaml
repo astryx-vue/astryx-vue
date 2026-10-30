@@ -68,6 +68,7 @@ catalogs:
     '@lexical/list': 0.52.0
     '@lexical/markdown': 0.52.0
     '@lexical/rich-text': 0.52.0
+    '@lexical/selection': 0.52.0
     '@lexical/table': 0.52.0
     '@lexical/utils': 0.52.0
     lexical: 0.52.0
