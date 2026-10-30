@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { extractPage, firstSentence, paragraphContaining } from './markdown.ts'
+import { extractPage, extractTopic, firstSentence, paragraphContaining } from './markdown.ts'
 
 const PAGE = `---
 title: Button
@@ -213,5 +213,27 @@ import { buttonFloating as floating } from '../../../../components/demos/button'
     const paragraph = paragraphContaining('# Guide\n\nImport each component from its own subpath. That entry loads the matching structural styles.\n', 'own subpath')
     expect(paragraph).toContain('own subpath')
     expect(firstSentence(paragraph)).toBe('Import each component from its own subpath.')
+  })
+})
+
+describe('guide page summary', () => {
+  it('skips a VitePress warning container and uses the first real paragraph', () => {
+    const topic = extractTopic([
+      '---',
+      'title: Charts',
+      '---',
+      '',
+      '# Charts',
+      '',
+      '::: warning Experimental package',
+      'Published under the canary tag only.',
+      ':::',
+      '',
+      '## What this is',
+      '',
+      'Charts draws SVG with Vue templates.',
+    ].join('\n'))
+    expect(topic.summary).not.toContain(':::')
+    expect(topic.summary).not.toContain('canary')
   })
 })
