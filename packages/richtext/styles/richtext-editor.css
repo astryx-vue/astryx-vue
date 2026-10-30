@@ -1,0 +1,116 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * 编辑器的外框。边框、悬停、聚焦、状态色和 core 的 TextArea 用同一套变量，
+ * 所以放在表单里和其他输入框长得一样。
+ */
+@layer astryx.components {
+  .astryx-richtext-editor {
+    /* 自己是一个新的容器边界，里面的工具栏不会继承外层 Section 的内边距。 */
+    --astryx-container-padding-inline-start: 0px;
+    --astryx-container-padding-inline-end: 0px;
+    --astryx-container-padding-block-start: 0px;
+    --astryx-container-padding-block-end: 0px;
+
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+    border: 1px solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    color: var(--astryx-color-text-primary, #171717);
+    background: var(--astryx-input-background, #fff);
+    transition: border-color 130ms cubic-bezier(0.24, 1, 0.4, 1);
+  }
+
+  .astryx-richtext-editor[data-status='error'] { --astryx-input-status-color: var(--astryx-input-error, #e33f4a); }
+  .astryx-richtext-editor[data-status='warning'] { --astryx-input-status-color: var(--astryx-input-warning, #c27803); }
+  .astryx-richtext-editor[data-status='success'] { --astryx-input-status-color: var(--astryx-input-success, #1a8f4c); }
+
+  @media (hover: hover) {
+    .astryx-richtext-editor:not([data-disabled='true']):hover:not(:focus-within) {
+      box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4)) 30%, transparent);
+    }
+  }
+
+  .astryx-richtext-editor:focus-within {
+    border-color: var(--astryx-input-status-color, var(--astryx-input-border-focus, #0b5cd5));
+    box-shadow: inset 0 0 0 1px var(--astryx-input-status-color, var(--astryx-input-border-focus, #0b5cd5));
+  }
+
+  /* 只有禁用才变淡：只读的编辑器内容保持原样不透明，仍能用键盘走到。 */
+  .astryx-richtext-editor[data-disabled='true'] {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .astryx-richtext-editor__body {
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-richtext-editor[data-size='lg'] .astryx-richtext-editor__body {
+    padding-block: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-richtext-editor[data-with-toolbar] .astryx-richtext-editor__body {
+    border-block-start: 1px solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-richtext-editor__root {
+    position: relative;
+    width: 100%;
+    font-family: var(--astryx-font-family-body, inherit);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  /* iOS Safari 在聚焦的输入控件字号低于 16px 时会放大页面。只在触屏的 iOS 上抬到 16px。 */
+  @media (pointer: coarse) {
+    @supports (-webkit-touch-callout: none) {
+      .astryx-richtext-editor__root {
+        font-size: max(1rem, var(--astryx-text-body-size, 0.875rem));
+      }
+    }
+  }
+
+  .astryx-richtext-editor__content {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--astryx-richtext-min-height, 4.5rem);
+    padding: 0;
+    border: 0;
+    outline: none;
+    color: var(--astryx-color-text-primary, #171717);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  .astryx-richtext-editor__placeholder {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    pointer-events: none;
+    user-select: none;
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-richtext-editor__counter {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-start: var(--astryx-spacing-1, 4px);
+    font-family: var(--astryx-font-family-body, inherit);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-richtext-editor__counter[data-over='true'] {
+    color: var(--astryx-color-error, #e33f4a);
+  }
+}

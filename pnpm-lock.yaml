@@ -270,6 +270,9 @@ catalogs:
     '@lexical/headless':
       specifier: 0.52.0
       version: 0.52.0
+    '@lexical/history':
+      specifier: 0.52.0
+      version: 0.52.0
     '@lexical/html':
       specifier: 0.52.0
       version: 0.52.0
@@ -651,6 +654,9 @@ importers:
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
       '@lexical/headless':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/history':
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
       '@lexical/html':
@@ -1490,6 +1496,14 @@ packages:
 
   '@lexical/headless@0.52.0':
     resolution: {integrity: sha512-/AvKTFBHUzGWqRuWEMGOOizlGTBrnGuu0O3g+IKj+var657uazbheDknhSq3lQGxDosOeesTM52II0kV65mEEQ==}
+    peerDependencies:
+      typescript: '>=5.2'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@lexical/history@0.52.0':
+    resolution: {integrity: sha512-UJWmTcru+4KWkk8YtBSQ4dNLYuOJVCyCMFGsaCp/jVJEobwdY//jCTj9idOfE4b3H39kAixe9yQG/FNNOj4ujg==}
     peerDependencies:
       typescript: '>=5.2'
     peerDependenciesMeta:
@@ -5385,6 +5399,14 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+
+  '@lexical/history@0.52.0(@typescript/typescript6@6.0.2)':
+    dependencies:
+      '@lexical/extension': 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/utils': 0.52.0(@typescript/typescript6@6.0.2)
+      lexical: 0.52.0(@typescript/typescript6@6.0.2)
+    optionalDependencies:
+      typescript: '@typescript/typescript6@6.0.2'
 
   '@lexical/html@0.52.0(@typescript/typescript6@6.0.2)':
     dependencies:

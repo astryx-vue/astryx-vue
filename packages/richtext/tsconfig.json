@@ -3,12 +3,14 @@
   "compilerOptions": {
     "rootDir": "../..",
     "paths": {
+      "@astryx-vue/core": ["../core/src/index.ts"],
       "@astryx-vue/core/Markdown/parser": ["../core/src/Markdown/parser/index.ts"],
       "@astryx-vue/core/Markdown/plugins": ["../core/src/Markdown/plugin-protocol/index.ts"]
     },
     "types": ["node"]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.vue"
   ]
 }

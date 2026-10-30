@@ -62,6 +62,7 @@ catalogs:
     '@lexical/code': 0.52.0
     '@lexical/extension': 0.52.0
     '@lexical/headless': 0.52.0
+    '@lexical/history': 0.52.0
     '@lexical/html': 0.52.0
     '@lexical/link': 0.52.0
     '@lexical/list': 0.52.0

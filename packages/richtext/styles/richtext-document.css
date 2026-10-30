@@ -1,0 +1,216 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * 文档内容的样式：段落、标题、引用、列表、链接、行内文字、分割线、代码块、表格。
+ * 间距和字号跟 core 的 Markdown 一致，所以同一段内容在编辑器里和在 Markdown 里排出来一样。
+ * 编辑器和只读视图共用这份样式。
+ */
+@layer astryx.components {
+  .astryx-richtext__paragraph,
+  .astryx-richtext__heading,
+  .astryx-richtext__quote,
+  .astryx-richtext__list,
+  .astryx-richtext__code {
+    /* Lexical 给每个顶层块都标 dir="auto"，会按首个强字符决定方向；这里改成跟随外层。 */
+    direction: inherit;
+  }
+
+  .astryx-richtext__paragraph {
+    max-width: var(--astryx-richtext-measure, 680px);
+    margin-block: var(--astryx-spacing-3, 12px);
+    font-weight: inherit;
+    color: inherit;
+  }
+
+  .astryx-richtext__paragraph:first-child,
+  .astryx-richtext__paragraph:has(+ [data-lexical-decorator-boundary]:last-child) {
+    margin-block-start: 0;
+  }
+
+  [data-lexical-decorator-boundary]:first-child + .astryx-richtext__paragraph {
+    margin-block-start: 0;
+  }
+
+  .astryx-richtext__paragraph:last-child {
+    margin-block-end: 0;
+  }
+
+  .astryx-richtext__heading {
+    max-width: var(--astryx-richtext-measure, 680px);
+    font-family: var(--astryx-font-family-heading, inherit);
+    margin-block: var(--_rt-heading-top, var(--astryx-spacing-4, 16px)) var(--_rt-heading-bottom, var(--astryx-spacing-2, 8px));
+  }
+
+  .astryx-richtext__h1,
+  .astryx-richtext__h2,
+  .astryx-richtext__h3 {
+    --_rt-heading-top: var(--astryx-spacing-6, 24px);
+    --_rt-heading-bottom: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-richtext__heading:first-child {
+    margin-block-start: 0;
+  }
+
+  .astryx-richtext__heading:last-child {
+    margin-block-end: 0;
+  }
+
+  .astryx-richtext__h1 { font-size: var(--astryx-text-heading-1-size, 1.5rem); font-weight: var(--astryx-text-heading-1-weight, 600); line-height: var(--astryx-text-heading-1-leading, 1.3333); }
+  .astryx-richtext__h2 { font-size: var(--astryx-text-heading-2-size, 1.25rem); font-weight: var(--astryx-text-heading-2-weight, 600); line-height: var(--astryx-text-heading-2-leading, 1.4); }
+  .astryx-richtext__h3 { font-size: var(--astryx-text-heading-3-size, 1.0625rem); font-weight: var(--astryx-text-heading-3-weight, 600); line-height: var(--astryx-text-heading-3-leading, 1.4118); }
+  .astryx-richtext__h4 { font-size: var(--astryx-text-heading-4-size, 0.875rem); font-weight: var(--astryx-text-heading-4-weight, 600); line-height: var(--astryx-text-heading-4-leading, 1.4286); }
+  .astryx-richtext__h5 { font-size: var(--astryx-text-heading-5-size, 0.75rem); font-weight: var(--astryx-text-heading-5-weight, 600); line-height: var(--astryx-text-heading-5-leading, 1.6667); }
+  .astryx-richtext__h6 { font-size: var(--astryx-text-heading-6-size, 0.625rem); font-weight: var(--astryx-text-heading-6-weight, 600); line-height: var(--astryx-text-heading-6-leading, 1.6); }
+
+  .astryx-richtext__quote {
+    max-width: var(--astryx-richtext-measure, 680px);
+    margin-block: var(--astryx-spacing-4, 16px);
+    margin-inline: 0;
+    padding-inline-start: var(--astryx-spacing-4, 16px);
+    border-inline-start: 2px solid var(--astryx-color-border-emphasized, #d4d4d4);
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-richtext__quote:first-child { margin-block-start: 0; }
+  .astryx-richtext__quote:last-child { margin-block-end: 0; }
+
+  .astryx-richtext__list {
+    max-width: var(--astryx-richtext-measure, 680px);
+    margin-block: var(--astryx-spacing-3, 12px);
+    padding-inline-start: var(--astryx-spacing-6, 24px);
+    list-style-position: outside;
+  }
+
+  .astryx-richtext__list:first-child { margin-block-start: 0; }
+  .astryx-richtext__list:last-child { margin-block-end: 0; }
+
+  /* 嵌套深度决定标记：n 层嵌套按 n % 3 取圆点、空心圆、方块，或数字、小写字母、小写罗马数字。 */
+  .astryx-richtext__ul-0 { list-style-type: disc; }
+  .astryx-richtext__ul-1 { list-style-type: circle; }
+  .astryx-richtext__ul-2 { list-style-type: square; }
+  .astryx-richtext__ol-0 { list-style-type: decimal; }
+  .astryx-richtext__ol-1 { list-style-type: lower-alpha; }
+  .astryx-richtext__ol-2 { list-style-type: lower-roman; }
+
+  /* 列表项的间距跟 core Markdown 的紧凑列表一致：上下各 4px 内边距，行间 2px。
+     Lexical 把嵌套列表放进父项后面单独的一项里，这一项没有标记、不加上内边距。 */
+  .astryx-richtext__list-item {
+    margin-block: 0 var(--astryx-spacing-0-5, 2px);
+    padding-block: var(--astryx-spacing-1, 4px);
+    list-style-type: inherit;
+  }
+
+  .astryx-richtext__list-item:last-child { margin-block-end: 0; }
+
+  .astryx-richtext__list-item:has(> ul, > ol) {
+    margin-block-start: var(--astryx-spacing-2, 8px);
+    padding-block-start: 0;
+    list-style-type: none;
+  }
+
+  .astryx-richtext__link {
+    color: var(--astryx-color-text-accent, #0b5cd5);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .astryx-richtext__bold { font-weight: var(--astryx-font-weight-semibold, 600); }
+  .astryx-richtext__italic { font-style: italic; }
+  .astryx-richtext__underline { text-decoration: underline; }
+  .astryx-richtext__strikethrough { text-decoration: line-through; }
+
+  .astryx-richtext__inline-code {
+    padding-inline: var(--astryx-spacing-1, 4px);
+    border-radius: var(--astryx-radius-inner, 0.375rem);
+    background-color: var(--astryx-color-background-muted, #f5f5f5);
+    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+  }
+
+  .astryx-richtext__hr {
+    margin-block: var(--astryx-spacing-6, 24px);
+    border: 0;
+    border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-richtext__hr:first-child { margin-block-start: 0; }
+  .astryx-richtext__hr:last-child { margin-block-end: 0; }
+
+  /* 选中的分割线或 Markdown 插件节点显示焦点环，用户看得出按退格会删掉什么。 */
+  .astryx-richtext__selected {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, #0b5cd5);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  /* 围栏代码块，外框跟 core 的 CodeBlock 一致。长行折行而不是滚动：编辑区里的滚动区
+     拿不到键盘焦点，键盘用户就没法滚动它。 */
+  .astryx-richtext__code {
+    display: block;
+    box-sizing: border-box;
+    width: fit-content;
+    min-width: min(var(--astryx-richtext-measure, 680px), 100%);
+    max-width: 100%;
+    margin-block: var(--astryx-spacing-4, 16px);
+    padding: var(--astryx-spacing-3, 12px) var(--astryx-spacing-4, 16px);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background-color: var(--astryx-color-syntax-background, #f7f7f7);
+    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+    font-size: var(--astryx-text-code-size, 0.8125rem);
+    line-height: var(--astryx-text-code-leading, 1.5);
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .astryx-richtext__code:first-child { margin-block-start: 0; }
+  .astryx-richtext__code:last-child { margin-block-end: 0; }
+
+  /* 标出了语言的代码块，顶部给标题栏留位置（标题栏在后面的步骤里加）。 */
+  .astryx-richtext__code[data-language]:not([data-language='plaintext']) {
+    padding-block-start: calc(var(--astryx-spacing-2, 8px) + var(--astryx-size-element-sm, 24px) + var(--astryx-spacing-3, 12px));
+  }
+
+  /* GFM 表格：表头半粗、次要颜色；每行下面一条分隔线，最后一行除外；表格太宽就在自己的容器里横向滚动。 */
+  .astryx-richtext__table-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 100%;
+    margin-block: var(--astryx-spacing-4, 16px);
+    overflow-x: auto;
+  }
+
+  .astryx-richtext__table-wrap:first-child { margin-block-start: 0; }
+  .astryx-richtext__table-wrap:last-child { margin-block-end: 0; }
+
+  .astryx-richtext__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .astryx-richtext__table-row {
+    border-block-end: 1px solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-richtext__table-row:last-child { border-block-end-color: transparent; }
+
+  .astryx-richtext__table-cell {
+    box-sizing: content-box;
+    padding: var(--astryx-spacing-2, 8px);
+    text-align: start;
+    vertical-align: middle;
+    overflow-wrap: break-word;
+  }
+
+  .astryx-richtext__table-cell-header {
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  /* 选中的单元格画一圈外框，而不是铺底色：底色在文字后面，会拉低文字对比度。
+     outline 不占位置，文档排版不会因此移动；负偏移把环收在自己的格子里。 */
+  .astryx-richtext__table-cell-selected {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, #0b5cd5);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+}
