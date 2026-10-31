@@ -5,6 +5,7 @@
     "paths": {
       "@astryx-vue/core": ["../core/src/index.ts"],
       "@astryx-vue/core/Markdown/parser": ["../core/src/Markdown/parser/index.ts"],
+      "@astryx-vue/core/Markdown/plugin-renderer": ["../core/src/Markdown/plugin-renderer/index.ts"],
       "@astryx-vue/core/Markdown/plugins": ["../core/src/Markdown/plugin-protocol/index.ts"]
     },
     "types": ["node"]

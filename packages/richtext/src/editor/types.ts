@@ -1,5 +1,6 @@
 import type { Transformer } from '@lexical/markdown'
 import type { AnyLexicalExtensionArgument, EditorState, Klass, LexicalEditor, LexicalNode } from 'lexical'
+import type { RichTextMarkdownExtension } from '../markdownExtensions.js'
 
 export type RichTextEditorStatusType = 'warning' | 'error' | 'success'
 export type RichTextEditorSize = 'sm' | 'md' | 'lg'
@@ -78,6 +79,12 @@ export interface RichTextEditorProps {
    * 或者在默认插槽里放一个调用 `useLexicalEditor()` 的组件。
    */
   extensions?: ReadonlyArray<AnyLexicalExtensionArgument>
+  /**
+   * 这个编辑器要画哪些 Markdown 插件的节点，每个都用 `createRichTextExtension` 采用。
+   * 插件节点画出来和 core 的 `Markdown` 一样；没在这里给出插件的节点显示它的原文。
+   * 传内容转换时用的那些扩展。要在客户端模块里创建：它们带着插件的函数，不是能序列化的 props。
+   */
+  markdownExtensions?: ReadonlyArray<RichTextMarkdownExtension>
   /**
    * 是否开启 Markdown 快捷输入（输入 `# ` 变标题、`- ` 变列表）。
    * @default true

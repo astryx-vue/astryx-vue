@@ -11,7 +11,7 @@ import { editorKey } from './context.js'
 import { createRichTextEditor } from './createEditor.js'
 import { DecoratorTeleports } from './DecoratorTeleports.js'
 import { useRichTextMessages } from './messages.js'
-import { CodeBlockHeaderPlugin, CodeSyntaxPlugin, TaskCheckboxPlugin } from './plugins/index.js'
+import { CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
 import '../../styles/richtext-document.css'
 import '../../styles/richtext-editor.css'
 
@@ -280,6 +280,7 @@ const restAttrs = computed(() => {
             <TaskCheckboxPlugin :is-read-only="!editable" />
             <CodeBlockHeaderPlugin />
             <CodeSyntaxPlugin />
+            <MarkdownExtensionsPlugin v-if="markdownExtensions && markdownExtensions.length > 0" :extensions="markdownExtensions" :transformers="transformers" />
           </div>
         </div>
         <DecoratorTeleports v-if="editor" :editor="editor" />
