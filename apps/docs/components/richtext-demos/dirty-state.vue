@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { EditorState } from 'lexical'
 import { RichTextEditor, RichTextEditorToolbar } from '@astryx-vue/richtext'
 import { ref } from 'vue'
 
@@ -7,7 +6,7 @@ const editor = ref<{ getMarkdown: () => string, clear: () => void }>()
 const markdown = ref('')
 const count = ref(0)
 
-function onChange(_state: EditorState): void {
+function onChange(): void {
   count.value += 1
   markdown.value = editor.value?.getMarkdown() ?? ''
 }
