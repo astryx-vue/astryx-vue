@@ -44,12 +44,19 @@ export async function loadDemoSources(demosDir: string): Promise<Map<string, str
 }
 
 /**
- * 不属于某个组件的演示（比如扩展包的文档）直接放在 `dir/index.ts` 里，
- * 不进组件目录，但页面里照样用 `<DemoExample :demo="…" />`。
+ * 不属于某个组件的演示（比如扩展包的文档）放在 `components/` 下名字以 `-demos` 结尾的目录里，
+ * 每个目录一个 `index.ts`，不进组件目录，但页面里照样用 `<DemoExample :demo="…" />`。
+ * 这里把它们全部找出来，新增一个扩展包的演示目录不用再改这个脚本。
  */
-export async function loadStandaloneDemoSources(dir: string): Promise<Map<string, string>> {
+export async function loadStandaloneDemoSources(componentsDir: string): Promise<Map<string, string>> {
   const map = new Map<string, string>()
-  addDemoExports(map, await readFile(join(dir, 'index.ts'), 'utf8').catch(() => null), dir)
+  const entries = await readdir(componentsDir, { withFileTypes: true }).catch(() => [])
+  for (const entry of entries) {
+    if (!entry.isDirectory() || !entry.name.endsWith('-demos'))
+      continue
+    const dir = join(componentsDir, entry.name)
+    addDemoExports(map, await readFile(join(dir, 'index.ts'), 'utf8').catch(() => null), dir)
+  }
   return map
 }
 
