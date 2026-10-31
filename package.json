@@ -17,7 +17,7 @@
     "changeset": "changeset",
     "lint:pkg": "node ./scripts/lint-published.mjs",
     "release": "pnpm build:packages && changeset publish",
-    "release:dry-run": "pnpm build:packages && pnpm --filter @astryx-vue/core --filter @astryx-vue/themes --filter @astryx-vue/cli publish --dry-run --no-git-checks",
+    "release:dry-run": "pnpm build:packages && pnpm --filter @astryx-vue/core --filter @astryx-vue/themes --filter @astryx-vue/cli --filter @astryx-vue/richtext publish --dry-run --no-git-checks",
     "version-packages": "changeset version && pnpm install --lockfile-only && pnpm --filter @astryx-vue/cli generate",
     "check:packages": "node ./scripts/check-package-boundaries.mjs && node ./scripts/check-path-case.mjs && node ./scripts/sync-exports.mjs --check && pnpm --filter @astryx-vue/cli generate:check && node ./scripts/check-line-limit.mjs && node ./scripts/check-no-important.mjs && node ./scripts/check-template-tokens.mjs && pnpm check:i18n-catalog",
     "check:i18n-catalog": "node ./scripts/check-i18n-catalog.mjs",

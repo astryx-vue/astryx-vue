@@ -2,7 +2,6 @@
   "name": "@astryx-vue/richtext",
   "type": "module",
   "version": "0.4.0",
-  "private": true,
   "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -38,7 +37,10 @@
       "types": "./dist/markdown.d.ts",
       "import": "./dist/markdown.js"
     },
-    "./richtext.css": "./richtext.css",
+    "./richtext.css": {
+      "types": "./css.d.ts",
+      "default": "./richtext.css"
+    },
     "./styles/*.css": "./styles/*.css",
     "./package.json": "./package.json"
   },
@@ -46,6 +48,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "README.md",
+    "css.d.ts",
     "dist",
     "richtext.css",
     "styles"
@@ -148,7 +151,10 @@
         "import": "./dist/markdown.js"
       },
       "./package.json": "./package.json",
-      "./richtext.css": "./richtext.css",
+      "./richtext.css": {
+        "types": "./css.d.ts",
+        "default": "./richtext.css"
+      },
       "./styles/*.css": "./styles/*.css"
     }
   }

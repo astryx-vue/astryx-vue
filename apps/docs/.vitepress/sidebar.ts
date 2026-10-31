@@ -43,8 +43,9 @@ export function guideSidebar(english: boolean): Sidebar {
       ],
     },
     {
-      text: english ? 'Extra packages (canary)' : '扩展包（canary）',
+      text: english ? 'Extra packages' : '扩展包',
       items: [
+        item(english ? 'Rich text' : '富文本', `${prefix}/guide/richtext`),
         item(english ? 'Charts' : '图表', `${prefix}/guide/charts`),
       ],
     },

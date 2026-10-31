@@ -70,7 +70,7 @@ export async function generateLlmsArtifacts(options: LlmsBuildOptions): Promise<
   const [pages, componentDemoSources, standaloneDemoSources, catalog, tokens] = await Promise.all([
     listMarkdown(options.docsDir).then(files => files.map(describePage)),
     loadDemoSources(demosDir),
-    loadStandaloneDemoSources(join(appDir, 'components/charts-demos')),
+    loadStandaloneDemoSources(join(appDir, 'components')),
     loadCatalog(demosDir),
     readFile(join(appDir, '../../packages/themes/neutral/base.css'), 'utf8').then(parseCustomProperties),
   ])
