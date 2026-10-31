@@ -1,4 +1,5 @@
 import type { EditorThemeClasses } from 'lexical'
+import { CODE_SYNTAX_CLASS } from './plugins/codeHighlightRules.js'
 
 /**
  * 把 Lexical 的主题槽位对应到普通 CSS 类名。样式在 `richtext.css` 里，用 core 的设计变量，
@@ -34,7 +35,8 @@ export function sharedEditorTheme(): EditorThemeClasses {
       strikethrough: 'astryx-richtext__strikethrough',
       code: 'astryx-richtext__inline-code',
     },
-    code: 'astryx-richtext__code astryx-richtext-code',
+    // 带上 CODE_SYNTAX_CLASS，代码块的语法色规则才找得到它。
+    code: `astryx-richtext__code ${CODE_SYNTAX_CLASS}`,
     hr: 'astryx-richtext__hr',
     hrSelected: 'astryx-richtext__selected',
     markdownExtensionSelected: 'astryx-richtext__selected',
