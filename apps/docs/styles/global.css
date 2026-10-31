@@ -1848,6 +1848,25 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   all: revert-layer;
 }
 
+/*
+ * 富文本里的内容块（段落、标题、引用、表格、行内代码、代码块）同理：VitePress 的 `.vp-doc` 给它们
+ * 写了没放进任何层的样式（段落 16px 外边距、单元格 8px 16px 内边距、行内代码底色），盖过组件层里的规则，
+ * 单元格会被撑成两倍高。把这些声明退回组件层。
+ */
+.vp-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(p, h1, h2, h3, h4, h5, h6, blockquote, table, thead, tbody, tr, th, td, hr, code) {
+  all: revert-layer;
+}
+
+/*
+ * 列表不能用 `all: revert-layer`：退回去会把组件自己的标记样式一起丢掉。
+ * `.vp-doc ul` 把左内边距写成 1.25rem（20px），盖过组件层里的 24px，任务项往左缩 24px 就溢出列表 4px。
+ * 这里只把这一个声明写回去，边距和标记样式不动。
+ */
+.vp-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(ul, ol).astryx-richtext__list {
+  padding-inline-start: var(--astryx-spacing-6, 24px);
+  margin-block: var(--astryx-spacing-3, 12px);
+}
+
 .nav-item-preview,
 .nav-menu-preview,
 .mobile-nav-preview {

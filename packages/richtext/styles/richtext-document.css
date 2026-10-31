@@ -152,9 +152,9 @@
     max-width: 100%;
     margin-block: var(--astryx-spacing-4, 16px);
     padding: var(--astryx-spacing-3, 12px) var(--astryx-spacing-4, 16px);
-    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+    border: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #00000014);
     border-radius: var(--astryx-radius-element, 0.625rem);
-    background-color: var(--astryx-color-syntax-background, #f7f7f7);
+    background-color: var(--astryx-code-block-background, #ffffff);
     font-family: var(--astryx-font-family-code, ui-monospace, monospace);
     font-size: var(--astryx-text-code-size, 0.8125rem);
     line-height: var(--astryx-text-code-leading, 1.5);
@@ -166,9 +166,10 @@
   .astryx-richtext__code:first-child { margin-block-start: 0; }
   .astryx-richtext__code:last-child { margin-block-end: 0; }
 
-  /* 标出了语言的代码块，顶部给标题栏留位置（标题栏在后面的步骤里加）。 */
+  /* 标出了语言的代码块，顶部给标题栏留位置：标题栏上下各 8px 加一个小号控件，再加正文的 12px。
+     不写进 padding 简写里，是为了让「标题栏占多高」这一件事只在这里出现一次。 */
   .astryx-richtext__code[data-language]:not([data-language='plaintext']) {
-    padding-block-start: calc(var(--astryx-spacing-2, 8px) + var(--astryx-size-element-sm, 24px) + var(--astryx-spacing-3, 12px));
+    padding-block-start: calc(var(--astryx-spacing-2, 8px) + var(--astryx-size-element-sm, 24px) + var(--astryx-spacing-2, 8px) + var(--astryx-spacing-3, 12px));
   }
 
   /* GFM 表格：表头半粗、次要颜色；每行下面一条分隔线，最后一行除外；表格太宽就在自己的容器里横向滚动。 */
@@ -200,6 +201,12 @@
     text-align: start;
     vertical-align: middle;
     overflow-wrap: break-word;
+  }
+
+  /* 格子里的段落不留上下外边距：外边距是段落和段落之间的间距，格子里只有这一段，留着会把格子撑成两倍高。 */
+  .astryx-richtext__table-cell > .astryx-richtext__paragraph {
+    margin-block: 0;
+    max-width: none;
   }
 
   .astryx-richtext__table-cell-header {
