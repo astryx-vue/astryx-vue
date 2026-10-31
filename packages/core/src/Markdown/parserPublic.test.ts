@@ -1,4 +1,5 @@
 import type { BlockNode, InlineNode, MarkdownAstPhrasingContent, MarkdownAstRoot } from './parser/index.js'
+import type { MarkdownExtensionNode } from './plugin-protocol/index.js'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, expectTypeOf, it } from 'vitest'
@@ -190,5 +191,37 @@ describe('@astryx-vue/core/Markdown/parser', () => {
     const root = parseMarkdownAst('Hi @ada', { plugins: [mention] })
     const found = findNode(root, node => node.type === 'extension')
     expect(found).toMatchObject({ type: 'extension', plugin: 'mention', name: 'user', source: '@ada' })
+  })
+})
+
+describe('parseInlineAst offsets', () => {
+  it('starts a node that begins the source at offset 0, never below', () => {
+    const [node] = parseInlineAst('hello **world**')
+    expect(node?.position?.start?.offset).toBe(0)
+    expect(node?.position?.start?.column).toBe(0)
+  })
+
+  it('reads plugin syntax at the very start of the source and after other text', () => {
+    const mention = createMarkdownPlugin<'mentions', MarkdownExtensionNode<'mentions', 'mention', { readonly label: string }, 'inline'>>({
+      name: 'mentions',
+      apiVersion: 1,
+      parseKey: 'v1',
+      syntax: {
+        inline: [{
+          startsWith: ['@{'],
+          maxSpan: 80,
+          tokenize({ source, offset, end }) {
+            const close = source.indexOf('}', offset + 2)
+            if (close < 0 || close >= end)
+              return { status: 'no-match' }
+            return { status: 'match', end: close + 1, node: { type: 'extension', plugin: 'mentions', name: 'mention', display: 'inline', data: { label: source.slice(offset + 2, close) } } }
+          },
+        }],
+      },
+      renderers: { mention: { render: () => null, toText: node => `@${node.data.label}` } },
+    })
+    expect(parseInlineAst('@{ada}', { plugins: [mention] }).map(node => node.type)).toEqual(['extension'])
+    expect(parseInlineAst('hi @{ada} there', { plugins: [mention] }).map(node => node.type)).toEqual(['text', 'extension', 'text'])
+    expect(parseInlineAst('a\n@{ada}', { plugins: [mention] }).map(node => node.type)).toContain('extension')
   })
 })

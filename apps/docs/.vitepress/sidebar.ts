@@ -43,6 +43,13 @@ export function guideSidebar(english: boolean): Sidebar {
       ],
     },
     {
+      text: english ? 'Extra packages' : '扩展包',
+      items: [
+        item(english ? 'Rich text' : '富文本', `${prefix}/guide/richtext`),
+        item(english ? 'Charts' : '图表', `${prefix}/guide/charts`),
+      ],
+    },
+    {
       text: english ? 'Project' : '项目',
       items: [
         item(english ? 'Changelog' : '更新日志', `${prefix}/guide/changelog`),

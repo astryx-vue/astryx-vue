@@ -67,7 +67,9 @@ export function parseMarkdownAst(source: string, options?: ParseOptions): Markdo
 /** Phrasing children of `source`, read as inline content only. */
 export function parseInlineAst(source: string, options?: ParseOptions): MarkdownAstPhrasingContent[] {
   const nodes = parseInlineContent(source, { autolink: options?.autolink })
-  let root: MdNode = { type: 'root', children: [{ type: 'paragraph', children: nodes }] }
+  // 插件语法是在原文上按偏移找的，要往一个块里找，这个块就得带着覆盖整段原文的位置；没有位置的块会被整个跳过。
+  const whole = { start: { line: 1, column: 0, offset: 0 }, end: { line: 1 + (source.match(/\n/g)?.length ?? 0), column: 0, offset: source.length } }
+  let root: MdNode = { type: 'root', position: whole, children: [{ type: 'paragraph', position: whole, children: nodes }] }
   const plugins = options?.plugins
   if (plugins != null && plugins.length > 0) {
     const isFinal = options?.isFinal !== false

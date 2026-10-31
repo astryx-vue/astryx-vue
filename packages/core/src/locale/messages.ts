@@ -35,6 +35,7 @@ import type { OutlineMessages } from './messages/outline.js'
 import type { PaginationMessages } from './messages/pagination.js'
 import type { PopoverMessages } from './messages/popover.js'
 import type { PowerSearchMessages } from './messages/power-search.js'
+import type { RichTextEditorMessages } from './messages/rich-text-editor.js'
 import type { SelectorMessages } from './messages/selector.js'
 import type { SpinnerMessages } from './messages/spinner.js'
 import type { StepperMessages } from './messages/stepper.js'
@@ -89,6 +90,7 @@ import { outlineMessages } from './messages/outline.js'
 import { paginationMessages } from './messages/pagination.js'
 import { popoverMessages } from './messages/popover.js'
 import { powerSearchMessages } from './messages/power-search.js'
+import { richTextEditorMessages } from './messages/rich-text-editor.js'
 import { selectorMessages } from './messages/selector.js'
 import { spinnerMessages } from './messages/spinner.js'
 import { stepperMessages } from './messages/stepper.js'
@@ -144,6 +146,7 @@ export interface AstryxMessages {
   pagination: PaginationMessages
   popover: PopoverMessages
   powerSearch: PowerSearchMessages
+  richTextEditor: RichTextEditorMessages
   selector: SelectorMessages
   spinner: SpinnerMessages
   stepper: StepperMessages
@@ -201,6 +204,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     pagination: paginationMessages.en,
     popover: popoverMessages.en,
     powerSearch: powerSearchMessages.en,
+    richTextEditor: richTextEditorMessages.en,
     selector: selectorMessages.en,
     spinner: spinnerMessages.en,
     stepper: stepperMessages.en,
@@ -256,6 +260,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     pagination: paginationMessages['zh-CN'],
     popover: popoverMessages['zh-CN'],
     powerSearch: powerSearchMessages['zh-CN'],
+    richTextEditor: richTextEditorMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
     spinner: spinnerMessages['zh-CN'],
     stepper: stepperMessages['zh-CN'],

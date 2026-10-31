@@ -1,12 +1,357 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "customConditions": [
-      "source"
-    ],
     "paths": {
+      "@astryx-vue/charts": [
+        "../../packages/charts/src/index.ts"
+      ],
+      "@astryx-vue/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@astryx-vue/core/AlertDialog": [
+        "../../packages/core/src/AlertDialog/index.ts"
+      ],
+      "@astryx-vue/core/AppShell": [
+        "../../packages/core/src/AppShell/index.ts"
+      ],
+      "@astryx-vue/core/AspectRatio": [
+        "../../packages/core/src/AspectRatio/index.ts"
+      ],
+      "@astryx-vue/core/Avatar": [
+        "../../packages/core/src/Avatar/index.ts"
+      ],
+      "@astryx-vue/core/AvatarGroup": [
+        "../../packages/core/src/AvatarGroup/index.ts"
+      ],
+      "@astryx-vue/core/Badge": [
+        "../../packages/core/src/Badge/index.ts"
+      ],
+      "@astryx-vue/core/Banner": [
+        "../../packages/core/src/Banner/index.ts"
+      ],
+      "@astryx-vue/core/Blockquote": [
+        "../../packages/core/src/Blockquote/index.ts"
+      ],
+      "@astryx-vue/core/BottomSheet": [
+        "../../packages/core/src/BottomSheet/index.ts"
+      ],
+      "@astryx-vue/core/Breadcrumbs": [
+        "../../packages/core/src/Breadcrumbs/index.ts"
+      ],
+      "@astryx-vue/core/Button": [
+        "../../packages/core/src/Button/index.ts"
+      ],
+      "@astryx-vue/core/ButtonGroup": [
+        "../../packages/core/src/ButtonGroup/index.ts"
+      ],
+      "@astryx-vue/core/Calendar": [
+        "../../packages/core/src/Calendar/index.ts"
+      ],
+      "@astryx-vue/core/Card": [
+        "../../packages/core/src/Card/index.ts"
+      ],
+      "@astryx-vue/core/Carousel": [
+        "../../packages/core/src/Carousel/index.ts"
+      ],
+      "@astryx-vue/core/Center": [
+        "../../packages/core/src/Center/index.ts"
+      ],
+      "@astryx-vue/core/Chat": [
+        "../../packages/core/src/Chat/index.ts"
+      ],
+      "@astryx-vue/core/CheckboxIndicator": [
+        "../../packages/core/src/CheckboxIndicator/index.ts"
+      ],
+      "@astryx-vue/core/CheckboxInput": [
+        "../../packages/core/src/CheckboxInput/index.ts"
+      ],
+      "@astryx-vue/core/CheckboxList": [
+        "../../packages/core/src/CheckboxList/index.ts"
+      ],
+      "@astryx-vue/core/Citation": [
+        "../../packages/core/src/Citation/index.ts"
+      ],
+      "@astryx-vue/core/ClickableCard": [
+        "../../packages/core/src/ClickableCard/index.ts"
+      ],
+      "@astryx-vue/core/Code": [
+        "../../packages/core/src/Code/index.ts"
+      ],
+      "@astryx-vue/core/Collapsible": [
+        "../../packages/core/src/Collapsible/index.ts"
+      ],
+      "@astryx-vue/core/CommandPalette": [
+        "../../packages/core/src/CommandPalette/index.ts"
+      ],
+      "@astryx-vue/core/ComplexSelector": [
+        "../../packages/core/src/ComplexSelector/index.ts"
+      ],
+      "@astryx-vue/core/ContextMenu": [
+        "../../packages/core/src/ContextMenu/index.ts"
+      ],
+      "@astryx-vue/core/DateInput": [
+        "../../packages/core/src/DateInput/index.ts"
+      ],
+      "@astryx-vue/core/DateRangeInput": [
+        "../../packages/core/src/DateRangeInput/index.ts"
+      ],
+      "@astryx-vue/core/DateTimeInput": [
+        "../../packages/core/src/DateTimeInput/index.ts"
+      ],
+      "@astryx-vue/core/Dialog": [
+        "../../packages/core/src/Dialog/index.ts"
+      ],
+      "@astryx-vue/core/Divider": [
+        "../../packages/core/src/Divider/index.ts"
+      ],
+      "@astryx-vue/core/DropdownMenu": [
+        "../../packages/core/src/DropdownMenu/index.ts"
+      ],
+      "@astryx-vue/core/EmptyState": [
+        "../../packages/core/src/EmptyState/index.ts"
+      ],
+      "@astryx-vue/core/Field": [
+        "../../packages/core/src/Field/index.ts"
+      ],
+      "@astryx-vue/core/FieldStatus": [
+        "../../packages/core/src/FieldStatus/index.ts"
+      ],
+      "@astryx-vue/core/FileInput": [
+        "../../packages/core/src/FileInput/index.ts"
+      ],
+      "@astryx-vue/core/FormLayout": [
+        "../../packages/core/src/FormLayout/index.ts"
+      ],
+      "@astryx-vue/core/Grid": [
+        "../../packages/core/src/Grid/index.ts"
+      ],
+      "@astryx-vue/core/Heading": [
+        "../../packages/core/src/Heading/index.ts"
+      ],
+      "@astryx-vue/core/HoverCard": [
+        "../../packages/core/src/HoverCard/index.ts"
+      ],
+      "@astryx-vue/core/Icon": [
+        "../../packages/core/src/Icon/index.ts"
+      ],
+      "@astryx-vue/core/IconButton": [
+        "../../packages/core/src/IconButton/index.ts"
+      ],
+      "@astryx-vue/core/icons": [
+        "../../packages/core/src/Icon/plugin.ts"
+      ],
+      "@astryx-vue/core/Indicator": [
+        "../../packages/core/src/Indicator/index.ts"
+      ],
+      "@astryx-vue/core/InputGroup": [
+        "../../packages/core/src/InputGroup/index.ts"
+      ],
+      "@astryx-vue/core/InternationalizationProvider": [
+        "../../packages/core/src/InternationalizationProvider/index.ts"
+      ],
+      "@astryx-vue/core/Kbd": [
+        "../../packages/core/src/Kbd/index.ts"
+      ],
+      "@astryx-vue/core/LayerProvider": [
+        "../../packages/core/src/LayerProvider/index.ts"
+      ],
+      "@astryx-vue/core/Layout": [
+        "../../packages/core/src/Layout/index.ts"
+      ],
+      "@astryx-vue/core/Lightbox": [
+        "../../packages/core/src/Lightbox/index.ts"
+      ],
+      "@astryx-vue/core/Link": [
+        "../../packages/core/src/Link/index.ts"
+      ],
+      "@astryx-vue/core/LinkProvider": [
+        "../../packages/core/src/LinkProvider/index.ts"
+      ],
+      "@astryx-vue/core/List": [
+        "../../packages/core/src/List/index.ts"
+      ],
+      "@astryx-vue/core/locale": [
+        "../../packages/core/src/locale/index.ts"
+      ],
+      "@astryx-vue/core/Markdown": [
+        "../../packages/core/src/Markdown/index.ts"
+      ],
+      "@astryx-vue/core/Markdown/parser": [
+        "../../packages/core/src/Markdown/parser/index.ts"
+      ],
+      "@astryx-vue/core/Markdown/plugin-renderer": [
+        "../../packages/core/src/Markdown/plugin-renderer/index.ts"
+      ],
+      "@astryx-vue/core/Markdown/plugins": [
+        "../../packages/core/src/Markdown/plugin-protocol/index.ts"
+      ],
+      "@astryx-vue/core/MetadataList": [
+        "../../packages/core/src/MetadataList/index.ts"
+      ],
+      "@astryx-vue/core/MobileNav": [
+        "../../packages/core/src/MobileNav/index.ts"
+      ],
+      "@astryx-vue/core/MoreMenu": [
+        "../../packages/core/src/MoreMenu/index.ts"
+      ],
+      "@astryx-vue/core/MultiSelector": [
+        "../../packages/core/src/MultiSelector/index.ts"
+      ],
+      "@astryx-vue/core/NavItem": [
+        "../../packages/core/src/NavItem/index.ts"
+      ],
+      "@astryx-vue/core/NavMenu": [
+        "../../packages/core/src/NavMenu/index.ts"
+      ],
+      "@astryx-vue/core/NumberInput": [
+        "../../packages/core/src/NumberInput/index.ts"
+      ],
+      "@astryx-vue/core/Outline": [
+        "../../packages/core/src/Outline/index.ts"
+      ],
+      "@astryx-vue/core/OverflowList": [
+        "../../packages/core/src/OverflowList/index.ts"
+      ],
+      "@astryx-vue/core/Overlay": [
+        "../../packages/core/src/Overlay/index.ts"
+      ],
+      "@astryx-vue/core/Pagination": [
+        "../../packages/core/src/Pagination/index.ts"
+      ],
+      "@astryx-vue/core/Popover": [
+        "../../packages/core/src/Popover/index.ts"
+      ],
+      "@astryx-vue/core/PowerSearch": [
+        "../../packages/core/src/PowerSearch/index.ts"
+      ],
+      "@astryx-vue/core/ProgressBar": [
+        "../../packages/core/src/ProgressBar/index.ts"
+      ],
+      "@astryx-vue/core/Radio": [
+        "../../packages/core/src/Radio/index.ts"
+      ],
+      "@astryx-vue/core/RadioList": [
+        "../../packages/core/src/RadioList/index.ts"
+      ],
+      "@astryx-vue/core/Resizable": [
+        "../../packages/core/src/Resizable/index.ts"
+      ],
+      "@astryx-vue/core/ScrollableArea": [
+        "../../packages/core/src/ScrollableArea/index.ts"
+      ],
+      "@astryx-vue/core/Scrollbars": [
+        "../../packages/core/src/Scrollbars/index.ts"
+      ],
+      "@astryx-vue/core/Section": [
+        "../../packages/core/src/Section/index.ts"
+      ],
+      "@astryx-vue/core/SegmentedControl": [
+        "../../packages/core/src/SegmentedControl/index.ts"
+      ],
+      "@astryx-vue/core/SelectableCard": [
+        "../../packages/core/src/SelectableCard/index.ts"
+      ],
+      "@astryx-vue/core/Selector": [
+        "../../packages/core/src/Selector/index.ts"
+      ],
+      "@astryx-vue/core/SideNav": [
+        "../../packages/core/src/SideNav/index.ts"
+      ],
+      "@astryx-vue/core/Skeleton": [
+        "../../packages/core/src/Skeleton/index.ts"
+      ],
+      "@astryx-vue/core/Slider": [
+        "../../packages/core/src/Slider/index.ts"
+      ],
+      "@astryx-vue/core/Spinner": [
+        "../../packages/core/src/Spinner/index.ts"
+      ],
+      "@astryx-vue/core/Stack": [
+        "../../packages/core/src/Stack/index.ts"
+      ],
+      "@astryx-vue/core/StatusDot": [
+        "../../packages/core/src/StatusDot/index.ts"
+      ],
+      "@astryx-vue/core/Stepper": [
+        "../../packages/core/src/Stepper/index.ts"
+      ],
+      "@astryx-vue/core/Switch": [
+        "../../packages/core/src/Switch/index.ts"
+      ],
+      "@astryx-vue/core/Table": [
+        "../../packages/core/src/Table/index.ts"
+      ],
+      "@astryx-vue/core/TabList": [
+        "../../packages/core/src/TabList/index.ts"
+      ],
+      "@astryx-vue/core/Text": [
+        "../../packages/core/src/Text/index.ts"
+      ],
+      "@astryx-vue/core/TextArea": [
+        "../../packages/core/src/TextArea/index.ts"
+      ],
+      "@astryx-vue/core/TextInput": [
+        "../../packages/core/src/TextInput/index.ts"
+      ],
+      "@astryx-vue/core/Theme": [
+        "../../packages/core/src/Theme/index.ts"
+      ],
+      "@astryx-vue/core/Thumbnail": [
+        "../../packages/core/src/Thumbnail/index.ts"
+      ],
+      "@astryx-vue/core/TimeInput": [
+        "../../packages/core/src/TimeInput/index.ts"
+      ],
+      "@astryx-vue/core/Timer": [
+        "../../packages/core/src/Timer/index.ts"
+      ],
+      "@astryx-vue/core/Timestamp": [
+        "../../packages/core/src/Timestamp/index.ts"
+      ],
+      "@astryx-vue/core/Toast": [
+        "../../packages/core/src/Toast/index.ts"
+      ],
+      "@astryx-vue/core/ToggleButton": [
+        "../../packages/core/src/ToggleButton/index.ts"
+      ],
+      "@astryx-vue/core/Token": [
+        "../../packages/core/src/Token/index.ts"
+      ],
+      "@astryx-vue/core/Tokenizer": [
+        "../../packages/core/src/Tokenizer/index.ts"
+      ],
+      "@astryx-vue/core/Toolbar": [
+        "../../packages/core/src/Toolbar/index.ts"
+      ],
+      "@astryx-vue/core/Tooltip": [
+        "../../packages/core/src/Tooltip/index.ts"
+      ],
+      "@astryx-vue/core/TopNav": [
+        "../../packages/core/src/TopNav/index.ts"
+      ],
+      "@astryx-vue/core/TreeList": [
+        "../../packages/core/src/TreeList/index.ts"
+      ],
+      "@astryx-vue/core/Typeahead": [
+        "../../packages/core/src/Typeahead/index.ts"
+      ],
+      "@astryx-vue/core/utils": [
+        "../../packages/core/src/utils/index.ts"
+      ],
+      "@astryx-vue/core/VisuallyHidden": [
+        "../../packages/core/src/VisuallyHidden/index.ts"
+      ],
+      "@astryx-vue/lab": [
+        "../../packages/lab/src/index.ts"
+      ],
       "@astryx-vue/playground-charts": [
         "./components/playground/playgroundCharts.ts"
+      ],
+      "@astryx-vue/richtext": [
+        "../../packages/richtext/src/index.ts"
+      ],
+      "@astryx-vue/richtext/markdown": [
+        "../../packages/richtext/src/markdown.ts"
       ],
       "@internationalized/date": [
         "../../packages/core/node_modules/@internationalized/date/dist/types/src/index.d.ts"

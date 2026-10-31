@@ -38,17 +38,37 @@ const DEMO_EXPORT = /export\s+const\s+(\w+)\s*=\s*defineDemo\(\s*(\w+)\s*,\s*(\w
 export async function loadDemoSources(demosDir: string): Promise<Map<string, string>> {
   const map = new Map<string, string>()
   for (const folder of await listFolders(demosDir)) {
-    const index = await readFile(join(demosDir, folder, 'index.ts'), 'utf8').catch(() => null)
-    if (index === null)
-      continue
-    const imports = new Map(Array.from(index.matchAll(DEMO_IMPORT), match => [match[1], match[2]]))
-    for (const match of index.matchAll(DEMO_EXPORT)) {
-      const file = imports.get(match[3])
-      if (file !== undefined)
-        map.set(match[1], join(demosDir, folder, `${file}.vue`))
-    }
+    addDemoExports(map, await readFile(join(demosDir, folder, 'index.ts'), 'utf8').catch(() => null), join(demosDir, folder))
   }
   return map
+}
+
+/**
+ * 不属于某个组件的演示（比如扩展包的文档）放在 `components/` 下名字以 `-demos` 结尾的目录里，
+ * 每个目录一个 `index.ts`，不进组件目录，但页面里照样用 `<DemoExample :demo="…" />`。
+ * 这里把它们全部找出来，新增一个扩展包的演示目录不用再改这个脚本。
+ */
+export async function loadStandaloneDemoSources(componentsDir: string): Promise<Map<string, string>> {
+  const map = new Map<string, string>()
+  const entries = await readdir(componentsDir, { withFileTypes: true }).catch(() => [])
+  for (const entry of entries) {
+    if (!entry.isDirectory() || !entry.name.endsWith('-demos'))
+      continue
+    const dir = join(componentsDir, entry.name)
+    addDemoExports(map, await readFile(join(dir, 'index.ts'), 'utf8').catch(() => null), dir)
+  }
+  return map
+}
+
+function addDemoExports(map: Map<string, string>, index: string | null, folder: string): void {
+  if (index === null)
+    return
+  const imports = new Map(Array.from(index.matchAll(DEMO_IMPORT), match => [match[1], match[2]]))
+  for (const match of index.matchAll(DEMO_EXPORT)) {
+    const file = imports.get(match[3])
+    if (file !== undefined)
+      map.set(match[1], join(folder, `${file}.vue`))
+  }
 }
 
 export async function loadDemoContents(sources: Map<string, string>): Promise<Map<string, string>> {
