@@ -6,6 +6,7 @@ export type { RichTextIconName } from './icons.js'
 export { CodeBlockHeaderPlugin, CodeSyntaxPlugin, DEFAULT_LINK_MATCHERS, NEW_TAB_LINK_ATTRIBUTES, RichTextEditorAutoLinkPlugin, TaskCheckboxPlugin } from './plugins/index.js'
 export { default as RichTextEditor } from './RichTextEditor.vue'
 export { default as RichTextEditorToolbar } from './RichTextEditorToolbar.vue'
+export { default as RichTextView } from './RichTextView.vue'
 export type { RichTextEditorToolbarProps, RichTextEditorToolbarSlots, RichTextToolbarSize } from './toolbarTypes.js'
 export type {
   RichTextEditorEmits,
@@ -16,3 +17,4 @@ export type {
   RichTextEditorStatus,
   RichTextEditorStatusType,
 } from './types.js'
+export type { RichTextViewProps, RichTextViewSlots } from './viewTypes.js'

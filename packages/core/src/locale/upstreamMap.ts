@@ -6,6 +6,7 @@ import { formsUpstreamMap } from './upstream/forms.js'
 import { labUpstreamMap } from './upstream/lab.js'
 import { navigationUpstreamMap } from './upstream/navigation.js'
 import { overlaysUpstreamMap } from './upstream/overlays.js'
+import { richtextUpstreamMap } from './upstream/richtext.js'
 import { searchUpstreamMap } from './upstream/search.js'
 
 export type { UpstreamMapPart, UpstreamTarget } from './upstream/types.js'
@@ -19,6 +20,7 @@ const parts: readonly UpstreamMapPart[] = [
   searchUpstreamMap,
   chatUpstreamMap,
   labUpstreamMap,
+  richtextUpstreamMap,
 ]
 
 function mergeParts(list: readonly UpstreamMapPart[]): UpstreamMapPart {

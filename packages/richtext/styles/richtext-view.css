@@ -1,0 +1,23 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 只读视图的根：叠在内容上的代码块标题栏和任务勾选框要相对它定位。
+   * 文字用文档的正文样式，和 core Markdown、编辑器一致；不设的话，主题没给字号的块
+   * （列表项、引用、表格单元格）会用宿主页面的字体。
+   */
+  .astryx-richtext-view {
+    position: relative;
+    width: 100%;
+    color: var(--astryx-color-text-primary, #171717);
+    font-family: var(--astryx-font-family-body, inherit);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-richtext-view__content {
+    outline: none;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+}

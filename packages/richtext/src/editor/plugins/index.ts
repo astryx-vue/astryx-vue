@@ -2,6 +2,8 @@ export { DEFAULT_LINK_MATCHERS, NEW_TAB_LINK_ATTRIBUTES, registerRichTextAutoLin
 export type { AutoLinkOptions } from './autoLink.js'
 export { CodeBlockHeaderPlugin, displayLanguageOf } from './CodeBlockHeaderPlugin.js'
 export { CodeSyntaxPlugin, renderedTokens } from './CodeSyntaxPlugin.js'
+export { deriveExtensionNode, MarkdownExtensionsPlugin, registerMarkdownExtensions } from './MarkdownExtensionsPlugin.js'
 export { RichTextEditorAutoLinkPlugin } from './RichTextEditorAutoLinkPlugin.js'
 export { registerTableColumnFloor, tableColumnFloors } from './tableColumnFloor.js'
+export { registerTableScrollRegion } from './tableScrollRegion.js'
 export { TASK_ATTRIBUTE, TaskCheckboxPlugin } from './TaskCheckboxPlugin.js'

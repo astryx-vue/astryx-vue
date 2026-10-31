@@ -40,7 +40,9 @@ export interface CreateRichTextEditorOptions {
  * 行为和上游一致：标题、引用、列表、链接、代码、表格节点；撤销重做；Tab 缩进；
  * 勾选列表；分割线；Markdown 快捷输入；按过 Escape 之后 Tab 把焦点交还浏览器。
  */
-export function createRichTextEditor(options: CreateRichTextEditorOptions = {}): LexicalEditor & { dispose: () => void } {
+export type RichTextEditorInstance = LexicalEditor & { dispose: () => void }
+
+export function createRichTextEditor(options: CreateRichTextEditorOptions = {}): RichTextEditorInstance {
   const {
     namespace = 'astryx-editor',
     initialState,

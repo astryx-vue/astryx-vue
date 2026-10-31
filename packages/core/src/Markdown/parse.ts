@@ -142,8 +142,9 @@ function shiftPoint(point: MdPoint): MdPoint {
   const column = point.column ?? 1
   return {
     line,
-    column: column - 1,
-    offset: point.offset == null ? point.offset : point.offset - line,
+    // 一个节点从行首开始时，它的起点落在前缀字符自己身上；去掉前缀后这个位置就是行首，不能是负数。
+    column: Math.max(0, column - 1),
+    offset: point.offset == null ? point.offset : Math.max(0, point.offset - line),
   }
 }
 
