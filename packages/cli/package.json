@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/cli",
   "type": "module",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Agent-friendly CLI for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
