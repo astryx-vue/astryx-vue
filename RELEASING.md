@@ -64,6 +64,21 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
 
 `repository.url` 必须指向 `github.com/astryx-vue/astryx-vue`，大小写一致。`repository.directory` 分别是 `packages/core`、`packages/themes` 和 `packages/cli`。包的 `homepage` 仍是文档站 <https://astryx-vue.pages.dev>，`bugs` 指向这个仓库的 issues。
 
+## 给一个新包做首发
+
+新增一个公开包后，它的第一个版本要有人用自己的 npm 账号发一次。原因是 Trusted Publisher 挂在已经存在的包上，一个 npm 上还没有的包没法提前配。流水线遇到这种包会报 `E404 Not Found - PUT`，同一批里已经在 npm 上的包照常发布，不受影响。
+
+1. 合并 `Version Packages` PR。Release workflow 会发布其他包，并对新包报 404。这是预期的。
+2. 在仓库根目录运行（账号开了 2FA 就带上一次性密码）：
+
+   ```sh
+   scripts/publish-first-release.sh <包目录名> --otp=<一次性密码>
+   ```
+
+   脚本会检查这个版本不在 npm 上、登录、构建，再发布。
+3. 到 npmjs.com 这个包的设置里添加 Trusted Publisher（见上面「一次性准备」第 6 步）。
+4. 重新运行 `main` 上的 Release workflow（或者下一次合并触发它）。`Backfill tags and GitHub Releases` 会发现 npm 上有这个版本但远端没有 tag，补上 tag 和 GitHub Release。
+
 ## provenance
 
 provenance 会在 npm 包页上标出这个版本是在哪次 GitHub Actions 里构建并签名的，并链到对应 commit 和 workflow。
