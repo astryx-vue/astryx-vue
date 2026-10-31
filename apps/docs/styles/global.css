@@ -1,5 +1,6 @@
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
+@import '@astryx-vue/charts/charts.css';
 @import './previews/alert-dialog.css';
 @import './previews/app-shell.css';
 @import './previews/aspect-ratio.css';
@@ -2538,4 +2539,10 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .component-anatomy h2,
 .component-a11y h2 {
   margin-top: 36px;
+}
+
+/* 图表示例：图表自己量容器宽度，所以示例容器要占满一行。 */
+.vp-doc .astryx-demo.charts-demo {
+  display: block;
+  width: 100%;
 }

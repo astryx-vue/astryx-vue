@@ -38,17 +38,30 @@ const DEMO_EXPORT = /export\s+const\s+(\w+)\s*=\s*defineDemo\(\s*(\w+)\s*,\s*(\w
 export async function loadDemoSources(demosDir: string): Promise<Map<string, string>> {
   const map = new Map<string, string>()
   for (const folder of await listFolders(demosDir)) {
-    const index = await readFile(join(demosDir, folder, 'index.ts'), 'utf8').catch(() => null)
-    if (index === null)
-      continue
-    const imports = new Map(Array.from(index.matchAll(DEMO_IMPORT), match => [match[1], match[2]]))
-    for (const match of index.matchAll(DEMO_EXPORT)) {
-      const file = imports.get(match[3])
-      if (file !== undefined)
-        map.set(match[1], join(demosDir, folder, `${file}.vue`))
-    }
+    addDemoExports(map, await readFile(join(demosDir, folder, 'index.ts'), 'utf8').catch(() => null), join(demosDir, folder))
   }
   return map
+}
+
+/**
+ * 不属于某个组件的演示（比如扩展包的文档）直接放在 `dir/index.ts` 里，
+ * 不进组件目录，但页面里照样用 `<DemoExample :demo="…" />`。
+ */
+export async function loadStandaloneDemoSources(dir: string): Promise<Map<string, string>> {
+  const map = new Map<string, string>()
+  addDemoExports(map, await readFile(join(dir, 'index.ts'), 'utf8').catch(() => null), dir)
+  return map
+}
+
+function addDemoExports(map: Map<string, string>, index: string | null, folder: string): void {
+  if (index === null)
+    return
+  const imports = new Map(Array.from(index.matchAll(DEMO_IMPORT), match => [match[1], match[2]]))
+  for (const match of index.matchAll(DEMO_EXPORT)) {
+    const file = imports.get(match[3])
+    if (file !== undefined)
+      map.set(match[1], join(folder, `${file}.vue`))
+  }
 }
 
 export async function loadDemoContents(sources: Map<string, string>): Promise<Map<string, string>> {

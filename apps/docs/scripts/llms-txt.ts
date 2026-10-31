@@ -23,7 +23,7 @@ import { parseCustomProperties } from '../components/theme-tokens/parseTokens.ts
 import { describePage } from './llms-txt/paths.ts'
 import { renderFullText, renderIndex } from './llms-txt/render-index.ts'
 import { renderPage } from './llms-txt/render-page.ts'
-import { listMarkdown, loadCatalog, loadDemoContents, loadDemoSources, resolveHtmlPath } from './llms-txt/sources.ts'
+import { listMarkdown, loadCatalog, loadDemoContents, loadDemoSources, loadStandaloneDemoSources, resolveHtmlPath } from './llms-txt/sources.ts'
 
 export type { ExpandContext } from './llms-txt/expand.ts'
 export { createExpander } from './llms-txt/expand.ts'
@@ -67,13 +67,14 @@ async function writeArtifact(outDir: string, name: string, content: string): Pro
 export async function generateLlmsArtifacts(options: LlmsBuildOptions): Promise<LlmsArtifacts> {
   const appDir = options.appDir ?? fileURLToPath(new URL('..', import.meta.url))
   const demosDir = join(appDir, 'components/demos')
-  const [pages, demoSources, catalog, tokens] = await Promise.all([
+  const [pages, componentDemoSources, standaloneDemoSources, catalog, tokens] = await Promise.all([
     listMarkdown(options.docsDir).then(files => files.map(describePage)),
     loadDemoSources(demosDir),
+    loadStandaloneDemoSources(join(appDir, 'components/charts-demos')),
     loadCatalog(demosDir),
     readFile(join(appDir, '../../packages/themes/neutral/base.css'), 'utf8').then(parseCustomProperties),
   ])
-  const demos = await loadDemoContents(demoSources)
+  const demos = await loadDemoContents(new Map([...componentDemoSources, ...standaloneDemoSources]))
   const unresolvedDemos = new Set<string>()
 
   const missing: string[] = []
