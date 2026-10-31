@@ -214,3 +214,49 @@
     outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
   }
 }
+
+@layer astryx.components {
+  /* 任务项：不画列表标记，给勾选框留位置。项的文字从列表边缘往里 28px 开始：
+     core 小号勾选框 20px 加 8px 的间隔，和 core Markdown 的任务列表一致。 */
+  .astryx-richtext__list-item[data-richtext-task] {
+    margin-inline-start: calc(-1 * var(--astryx-spacing-6, 24px));
+    padding-inline-start: calc(20px + var(--astryx-spacing-2, 8px));
+    list-style-type: none;
+  }
+
+  /* 代码块标题栏：和 core CodeBlock 的紧凑标题栏一致，上下各 8px，两侧 16px。 */
+  .astryx-richtext-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: var(--astryx-spacing-2, 8px) var(--astryx-spacing-4, 16px);
+  }
+
+  /* 没写语言：只有复制按钮，贴在右上角，离角 8px；容器不挡住下面代码的点击。 */
+  .astryx-richtext-code-header--corner {
+    justify-content: flex-end;
+    padding: var(--astryx-spacing-2, 8px);
+    pointer-events: none;
+  }
+
+  .astryx-richtext-code-header--corner .astryx-richtext-code-header__copy {
+    pointer-events: auto;
+  }
+
+  .astryx-richtext-code-header__title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: var(--astryx-text-supporting-leading, 1.5);
+    color: var(--astryx-code-syntax-comment, #6a6a6a);
+  }
+
+  .astryx-richtext-code-header__copy {
+    color: var(--astryx-code-syntax-comment, #6a6a6a);
+  }
+}

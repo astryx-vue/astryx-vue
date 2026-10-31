@@ -6,9 +6,11 @@ import { LinkExtension } from '@lexical/link'
 import { CheckListExtension } from '@lexical/list'
 import { registerMarkdownShortcuts } from '@lexical/markdown'
 import { RichTextExtension } from '@lexical/rich-text'
+import { TableExtension } from '@lexical/table'
 import { configExtension, mergeRegister } from 'lexical'
 import { DEFAULT_NODES } from '../editorNodes.js'
 import { DEFAULT_TRANSFORMERS } from '../markdownTable.js'
+import { registerTableColumnFloor } from './plugins/tableColumnFloor.js'
 import { registerTabFocusEscape } from './tabEscape.js'
 import { TextSemanticsExtension } from './textSemantics.js'
 import { sharedEditorTheme } from './theme.js'
@@ -63,6 +65,9 @@ export function createRichTextEditor(options: CreateRichTextEditorOptions = {}):
       CheckListExtension,
       configExtension(TabIndentationExtension, { disabled: false, maxIndent: null }),
       HorizontalRuleExtension,
+      // GFM 表格没有合并单元格和单元格底色；Tab 留给缩进（按 Escape 再按 Tab 离开编辑器），方向键在格子间移动；
+      // 太宽的表格在自己的容器里横向滚动。
+      configExtension(TableExtension, { hasCellMerge: false, hasCellBackgroundColor: false, hasTabHandler: false, hasHorizontalScroll: true }),
       TextSemanticsExtension,
       ...extensions,
     ],
@@ -70,6 +75,7 @@ export function createRichTextEditor(options: CreateRichTextEditorOptions = {}):
     $initialEditorState: initialState ?? undefined,
     register: editor => mergeRegister(
       registerTabFocusEscape(editor),
+      registerTableColumnFloor(editor),
       hasMarkdownShortcuts ? registerMarkdownShortcuts(editor, [...transformers]) : () => {},
     ),
     onError(error: Error) {

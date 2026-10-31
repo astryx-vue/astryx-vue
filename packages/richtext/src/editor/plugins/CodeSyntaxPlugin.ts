@@ -1,0 +1,113 @@
+import type { SyntaxToken } from '@astryx-vue/core'
+import type { NodeKey } from 'lexical'
+import { tokenize } from '@astryx-vue/core'
+import { $isCodeNode, CodeNode } from '@lexical/code'
+import { $getNodeByKey } from 'lexical'
+import { defineComponent, onBeforeUnmount } from 'vue'
+import { useLexicalEditor } from '../context.js'
+import { ensureSyntaxRules, supportsHighlights } from './codeHighlightRules.js'
+import { applyFlatHighlightRanges } from './flatHighlight.js'
+
+type TokenLine = SyntaxToken[]
+
+/**
+ * 给「画出来的文字」排好的 token。
+ *
+ * 代码块里的换行有两种画法：文字里保留 `\n`，或者每个换行是一个没有文字的元素。
+ * 前者按行给 token，后者要把所有行的偏移接成一整行。画出来的文字对不上代码时
+ * （正在更新的瞬间）返回 null，这样不会把颜色涂在错的位置上。
+ */
+export function renderedTokens(code: string, language: string, rendered: string): TokenLine[] | null {
+  const lines = tokenize(code, language)
+  if (rendered === code)
+    return lines
+  if (rendered !== code.replaceAll('\n', ''))
+    return null
+  const flat: TokenLine = []
+  let offset = 0
+  code.split('\n').forEach((line, index) => {
+    for (const token of lines[index] ?? [])
+      flat.push({ type: token.type, start: offset + token.start, end: offset + token.end })
+    offset += line.length
+  })
+  return [flat]
+}
+
+interface Colored {
+  element: HTMLElement
+  code: string
+  language: string
+  cleanup: () => void
+}
+
+/**
+ * 给编辑器里的代码块上色。用浏览器的 CSS Custom Highlight API 画颜色，不动文字本身，
+ * 所以不会影响光标和选区；代码或语言变了才重新算。不支持这个 API 的浏览器显示纯色代码。
+ */
+export const CodeSyntaxPlugin = defineComponent({
+  name: 'AstryxRichTextCodeSyntaxPlugin',
+  setup() {
+    const editor = useLexicalEditor()
+    if (!supportsHighlights())
+      return () => null
+    ensureSyntaxRules()
+
+    const blocks = new Set<NodeKey>()
+    const colored = new Map<NodeKey, Colored>()
+
+    function uncolor(key: NodeKey): void {
+      colored.get(key)?.cleanup()
+      colored.delete(key)
+    }
+
+    function color(key: NodeKey): void {
+      const block = editor.getEditorState().read(() => {
+        const node = $getNodeByKey(key)
+        return $isCodeNode(node) ? { code: node.getTextContent(), language: node.getLanguage() ?? '' } : null
+      })
+      const element = editor.getElementByKey(key)
+      if (block === null || element === null) {
+        uncolor(key)
+        return
+      }
+      const previous = colored.get(key)
+      if (previous !== undefined && previous.element === element && previous.code === block.code && previous.language === block.language)
+        return
+      previous?.cleanup()
+      const tokens = renderedTokens(block.code, block.language, element.textContent ?? '')
+      if (tokens === null) {
+        // 还没画好，下一次更新再试。
+        colored.delete(key)
+        return
+      }
+      colored.set(key, { element, ...block, cleanup: applyFlatHighlightRanges(element, tokens) })
+    }
+
+    const stopMutations = editor.registerMutationListener(CodeNode, (mutations) => {
+      for (const [key, mutation] of mutations) {
+        if (mutation === 'destroyed') {
+          blocks.delete(key)
+          uncolor(key)
+        }
+        else {
+          blocks.add(key)
+          color(key)
+        }
+      }
+    }, { skipInitialization: false })
+    // 在代码块里打字改的是文字节点，不一定算代码块自己变了：每次更新后都查一遍，没变的在上面的比较处就返回。
+    const stopUpdates = editor.registerUpdateListener(() => {
+      for (const key of blocks)
+        color(key)
+    })
+
+    onBeforeUnmount(() => {
+      stopMutations()
+      stopUpdates()
+      for (const key of [...colored.keys()])
+        uncolor(key)
+      blocks.clear()
+    })
+    return () => null
+  },
+})

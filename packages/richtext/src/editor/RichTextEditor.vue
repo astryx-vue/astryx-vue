@@ -11,6 +11,7 @@ import { editorKey } from './context.js'
 import { createRichTextEditor } from './createEditor.js'
 import { DecoratorTeleports } from './DecoratorTeleports.js'
 import { useRichTextMessages } from './messages.js'
+import { CodeBlockHeaderPlugin, CodeSyntaxPlugin, TaskCheckboxPlugin } from './plugins/index.js'
 import '../../styles/richtext-document.css'
 import '../../styles/richtext-editor.css'
 
@@ -272,6 +273,13 @@ const restAttrs = computed(() => {
             <div v-if="placeholder && isEmpty" :id="placeholderId" class="astryx-richtext-editor__placeholder" aria-hidden="true">
               {{ placeholder }}
             </div>
+            <!--
+              这几个叠在编辑区上面：位置是相对「编辑区的父元素」量出来的，
+              所以要和编辑区同级放在这个定位元素里，不能放到外面去。
+            -->
+            <TaskCheckboxPlugin :is-read-only="!editable" />
+            <CodeBlockHeaderPlugin />
+            <CodeSyntaxPlugin />
           </div>
         </div>
         <DecoratorTeleports v-if="editor" :editor="editor" />
