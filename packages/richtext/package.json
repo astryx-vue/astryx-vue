@@ -66,6 +66,7 @@
     "@lexical/list": "catalog:richtext",
     "@lexical/markdown": "catalog:richtext",
     "@lexical/rich-text": "catalog:richtext",
+    "@lexical/selection": "catalog:richtext",
     "@lexical/table": "catalog:richtext",
     "@lexical/utils": "catalog:richtext",
     "lexical": "catalog:richtext",
@@ -99,6 +100,9 @@
     "@lexical/rich-text": {
       "optional": true
     },
+    "@lexical/selection": {
+      "optional": true
+    },
     "@lexical/table": {
       "optional": true
     },
@@ -120,6 +124,7 @@
     "@lexical/list": "catalog:richtext",
     "@lexical/markdown": "catalog:richtext",
     "@lexical/rich-text": "catalog:richtext",
+    "@lexical/selection": "catalog:richtext",
     "@lexical/table": "catalog:richtext",
     "@lexical/utils": "catalog:richtext",
     "@types/node": "catalog:language",

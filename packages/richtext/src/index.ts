@@ -1,7 +1,7 @@
 // 包入口：编辑器、Markdown 导入导出、Markdown 插件扩展、链接校验。
-// 工具栏、只读视图和各插件由后续版本补齐。
+// 只读视图和各插件由后续版本补齐。
 
-export { createRichTextEditor, editorKey, RichTextEditor, useLexicalEditor } from './editor/index.js'
+export { createRichTextEditor, editorKey, RICHTEXT_ICON_KEYS, RichTextEditor, RichTextEditorToolbar, useLexicalEditor } from './editor/index.js'
 export type {
   CreateRichTextEditorOptions,
   RichTextEditorEmits,
@@ -11,6 +11,10 @@ export type {
   RichTextEditorSlots,
   RichTextEditorStatus,
   RichTextEditorStatusType,
+  RichTextEditorToolbarProps,
+  RichTextEditorToolbarSlots,
+  RichTextIconName,
+  RichTextToolbarSize,
 } from './editor/index.js'
 export { sanitizeUrl, validateUrl } from './linkUtils.js'
 export {
