@@ -2,7 +2,6 @@
   "name": "@astryx-vue/richtext",
   "type": "module",
   "version": "0.4.0",
-  "private": true,
   "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -38,13 +37,21 @@
       "types": "./dist/markdown.d.ts",
       "import": "./dist/markdown.js"
     },
+    "./richtext.css": {
+      "types": "./css.d.ts",
+      "default": "./richtext.css"
+    },
+    "./styles/*.css": "./styles/*.css",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "README.md",
-    "dist"
+    "css.d.ts",
+    "dist",
+    "richtext.css",
+    "styles"
   ],
   "scripts": {
     "build": "tsdown",
@@ -56,11 +63,13 @@
     "@lexical/code": "catalog:richtext",
     "@lexical/extension": "catalog:richtext",
     "@lexical/headless": "catalog:richtext",
+    "@lexical/history": "catalog:richtext",
     "@lexical/html": "catalog:richtext",
     "@lexical/link": "catalog:richtext",
     "@lexical/list": "catalog:richtext",
     "@lexical/markdown": "catalog:richtext",
     "@lexical/rich-text": "catalog:richtext",
+    "@lexical/selection": "catalog:richtext",
     "@lexical/table": "catalog:richtext",
     "@lexical/utils": "catalog:richtext",
     "lexical": "catalog:richtext",
@@ -74,6 +83,9 @@
       "optional": true
     },
     "@lexical/headless": {
+      "optional": true
+    },
+    "@lexical/history": {
       "optional": true
     },
     "@lexical/html": {
@@ -91,6 +103,9 @@
     "@lexical/rich-text": {
       "optional": true
     },
+    "@lexical/selection": {
+      "optional": true
+    },
     "@lexical/table": {
       "optional": true
     },
@@ -106,11 +121,13 @@
     "@lexical/code": "catalog:richtext",
     "@lexical/extension": "catalog:richtext",
     "@lexical/headless": "catalog:richtext",
+    "@lexical/history": "catalog:richtext",
     "@lexical/html": "catalog:richtext",
     "@lexical/link": "catalog:richtext",
     "@lexical/list": "catalog:richtext",
     "@lexical/markdown": "catalog:richtext",
     "@lexical/rich-text": "catalog:richtext",
+    "@lexical/selection": "catalog:richtext",
     "@lexical/table": "catalog:richtext",
     "@lexical/utils": "catalog:richtext",
     "@types/node": "catalog:language",
@@ -133,7 +150,12 @@
         "types": "./dist/markdown.d.ts",
         "import": "./dist/markdown.js"
       },
-      "./package.json": "./package.json"
+      "./package.json": "./package.json",
+      "./richtext.css": {
+        "types": "./css.d.ts",
+        "default": "./richtext.css"
+      },
+      "./styles/*.css": "./styles/*.css"
     }
   }
 }

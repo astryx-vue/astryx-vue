@@ -1,0 +1,54 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * core 的 Toolbar 上下各有 8px 内边距。这条工具栏背景透明，往上下各缩进 4px，
+   * 控件和下面的编辑区之间就只剩 4px 的间隙。
+   */
+  .astryx-richtext-toolbar {
+    --astryx-section-padding-inline-start: var(--astryx-spacing-1, 4px);
+    --astryx-section-padding-inline-end: var(--astryx-spacing-1, 4px);
+    margin-block: calc(-1 * var(--astryx-spacing-1, 4px));
+  }
+
+  /* 放不下时这一行自己横向滚动，控件各自保持宽度，不被挤扁。 */
+  .astryx-richtext-toolbar__actions {
+    flex: 1 1 0%;
+    width: 0;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+
+  /* 块格式下拉的字段可以收缩，会把标签挤成一条缝；放进一个不许收缩的槽里。 */
+  .astryx-richtext-toolbar__fixed {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  /* 竖分隔线默认高度是 100%，要父元素有确定高度；这里让它拉伸到整行高度。 */
+  .astryx-richtext-toolbar__divider {
+    align-self: stretch;
+    height: auto;
+  }
+
+  .astryx-richtext-toolbar__glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 撤销、重做指向时间的前后，从右往左排版时要镜像。 */
+  [dir='rtl'] .astryx-richtext-toolbar__glyph[data-directional] {
+    transform: scaleX(-1);
+  }
+
+  .astryx-richtext-toolbar__text-glyph {
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-bold, 700);
+    font-variant-numeric: tabular-nums;
+  }
+}

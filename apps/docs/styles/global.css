@@ -1,5 +1,7 @@
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
+@import '@astryx-vue/richtext/richtext.css';
+@import '@astryx-vue/charts/charts.css';
 @import './previews/alert-dialog.css';
 @import './previews/app-shell.css';
 @import './previews/aspect-ratio.css';
@@ -2538,4 +2540,36 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .component-anatomy h2,
 .component-a11y h2 {
   margin-top: 36px;
+}
+
+/* 图表示例：图表自己量容器宽度，所以示例容器要占满一行。 */
+.vp-doc .astryx-demo.charts-demo {
+  display: block;
+  width: 100%;
+}
+
+/* 富文本示例：编辑器和只读视图都撑满一行，方便看排版。 */
+.vp-doc .astryx-demo.richtext-demo {
+  display: block;
+  width: 100%;
+}
+
+.richtext-demo-hint {
+  margin-block: var(--astryx-spacing-2, 8px);
+  font-size: var(--astryx-text-supporting-size, 0.75rem);
+  color: var(--astryx-color-text-secondary, #525252);
+}
+
+.richtext-demo-button {
+  margin-inline-start: var(--astryx-spacing-1, 4px);
+  text-decoration: underline;
+}
+
+.richtext-demo-output {
+  margin: 0;
+  padding: var(--astryx-spacing-2, 8px);
+  border-radius: var(--astryx-radius-element, 0.625rem);
+  background: var(--astryx-color-background-muted, #f5f5f5);
+  font-size: var(--astryx-text-code-size, 0.8125rem);
+  white-space: pre-wrap;
 }

@@ -35,8 +35,8 @@ describe('listPublicPackages', () => {
   })
 
   it('covers every package this repo publishes', () => {
-    // richtext 还没有编辑器组件，暂时标了 private，等 G3 首发时再进这份清单。
-    expect(listPublicPackages()).toEqual(['cli', 'core', 'themes'])
+    // charts 和 lab 还是 private（只发 canary，发布流水线还没有 canary 通道），所以不在这份清单里。
+    expect(listPublicPackages()).toEqual(['cli', 'core', 'richtext', 'themes'])
   })
 })
 
