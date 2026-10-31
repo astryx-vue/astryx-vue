@@ -55,15 +55,16 @@
     line-height: 1;
   }
 
-  .astryx-link--size-sm { font-size: var(--astryx-text-sm-size, 0.75rem); }
-  .astryx-link--size-md { font-size: var(--astryx-text-md-size, 0.875rem); }
-  .astryx-link--size-lg { font-size: var(--astryx-text-lg-size, 1rem); }
-  .astryx-link--size-xl { font-size: var(--astryx-text-xl-size, 1.25rem); }
+  /* 修饰类与基础规则同特异性，排在后面所以生效：基础里的 `font: inherit` 不会盖掉它们。 */
+  .astryx-link.astryx-link--size-sm { font-size: var(--astryx-text-sm-size, 0.75rem); }
+  .astryx-link.astryx-link--size-md { font-size: var(--astryx-text-md-size, 0.875rem); }
+  .astryx-link.astryx-link--size-lg { font-size: var(--astryx-text-lg-size, 1rem); }
+  .astryx-link.astryx-link--size-xl { font-size: var(--astryx-text-xl-size, 1.25rem); }
 
-  .astryx-link--weight-regular { font-weight: var(--astryx-font-weight-regular, 400); }
-  .astryx-link--weight-medium { font-weight: var(--astryx-font-weight-medium, 500); }
-  .astryx-link--weight-semibold { font-weight: var(--astryx-font-weight-semibold, 600); }
-  .astryx-link--weight-bold { font-weight: var(--astryx-font-weight-bold, 700); }
+  .astryx-link.astryx-link--weight-regular { font-weight: var(--astryx-font-weight-regular, 400); }
+  .astryx-link.astryx-link--weight-medium { font-weight: var(--astryx-font-weight-medium, 500); }
+  .astryx-link.astryx-link--weight-semibold { font-weight: var(--astryx-font-weight-semibold, 600); }
+  .astryx-link.astryx-link--weight-bold { font-weight: var(--astryx-font-weight-bold, 700); }
 
   .astryx-link__label {
     min-width: 0;

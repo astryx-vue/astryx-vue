@@ -2,7 +2,6 @@
 // 这些组件还没移植进 core，接入由对应节点负责，见 docs/adr/0001-new-packages.md。
 // 节点接入时把命名空间从这里删掉，再把键写进 packages/core/src/locale/upstream/。
 export const UNPORTED_NAMESPACES = {
-  richTextEditor: 'F1b 富文本编辑器（packages/richtext）',
   chart: 'F2b 图表组件（packages/charts）',
   chartLegend: 'F2b 图表组件（packages/charts）',
   diffViewer: 'F3h lab 代码类',

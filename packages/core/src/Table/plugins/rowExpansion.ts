@@ -73,9 +73,14 @@ export function useTableRowExpansion<T extends Record<string, unknown>>(
       }
     },
     cellPatch({ column, row, kind }) {
-      if (kind !== 'body' || row == null || column.key !== EXPANSION_COLUMN_KEY)
-        return column.key === EXPANSION_COLUMN_KEY ? { class: 'astryx-table__expansion' } : null
-      return { class: 'astryx-table__expansion' }
+      const isExpansionColumn = column.key === EXPANSION_COLUMN_KEY
+      const hasMenu = kind === 'body' && row != null && (toValue(config).getIsItemExpandable?.(row) ?? true)
+      if (!isExpansionColumn && !hasMenu)
+        return null
+      return {
+        class: isExpansionColumn ? 'astryx-table__expansion' : undefined,
+        attrs: hasMenu ? { 'data-row-menu': '' } : undefined,
+      }
     },
   }
 }

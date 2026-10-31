@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
-import { computed, defineComponent, h, ref, watch } from 'vue'
 import {
   AspectRatio,
   Button,
@@ -32,6 +30,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
+import { computed, defineComponent, h, ref, watch } from 'vue'
 
 /** Below this the dialog swaps its rail for a strip of tabs. */
 const NARROW_VIEWPORT = '(max-width: 640px)'
@@ -39,19 +38,19 @@ const NARROW_VIEWPORT = '(max-width: 640px)'
 /** Floor for every control that sits in a row's right column. */
 const CONTROL_WIDTH = 192
 
-const noop = () => {}
+function noop() {}
 
-type PanelId =
-  | 'profile'
-  | 'security'
-  | 'billing'
-  | 'appearance'
-  | 'notifications'
-  | 'shortcuts'
-  | 'language'
-  | 'privacy'
-  | 'integrations'
-  | 'developer'
+type PanelId
+  = | 'profile'
+    | 'security'
+    | 'billing'
+    | 'appearance'
+    | 'notifications'
+    | 'shortcuts'
+    | 'language'
+    | 'privacy'
+    | 'integrations'
+    | 'developer'
 
 interface PanelConfig {
   id: PanelId
@@ -62,53 +61,53 @@ interface PanelConfig {
 
 /** Heroicons outline, one set, so every row icon carries the same stroke weight. */
 const ICONS = {
-  user: 'i-heroicons-user',
-  userCircle: 'i-heroicons-user-circle',
-  briefcase: 'i-heroicons-briefcase',
-  tag: 'i-heroicons-tag',
-  clock: 'i-heroicons-clock',
-  signal: 'i-heroicons-signal',
-  key: 'i-heroicons-key',
-  lockClosed: 'i-heroicons-lock-closed',
-  shieldCheck: 'i-heroicons-shield-check',
-  fingerPrint: 'i-heroicons-finger-print',
-  computerDesktop: 'i-heroicons-computer-desktop',
-  devicePhone: 'i-heroicons-device-phone-mobile',
-  cube: 'i-heroicons-cube',
-  users: 'i-heroicons-users',
-  envelope: 'i-heroicons-envelope',
-  receiptPercent: 'i-heroicons-receipt-percent',
-  creditCard: 'i-heroicons-credit-card',
-  paintBrush: 'i-heroicons-paint-brush',
-  swatch: 'i-heroicons-swatch',
-  documentText: 'i-heroicons-document-text',
-  bars3: 'i-heroicons-bars-3',
-  handRaised: 'i-heroicons-hand-raised',
-  atSymbol: 'i-heroicons-at-symbol',
-  chatBubble: 'i-heroicons-chat-bubble-left-right',
-  speakerWave: 'i-heroicons-speaker-wave',
-  commandLine: 'i-heroicons-command-line',
-  language: 'i-heroicons-language',
-  mapPin: 'i-heroicons-map-pin',
-  globeAlt: 'i-heroicons-globe-alt',
-  calendarDays: 'i-heroicons-calendar-days',
-  magnifyingGlass: 'i-heroicons-magnifying-glass',
-  eye: 'i-heroicons-eye',
-  sparkles: 'i-heroicons-sparkles',
-  arrowDownTray: 'i-heroicons-arrow-down-tray',
-  trash: 'i-heroicons-trash',
-  folder: 'i-heroicons-folder',
-  codeBracket: 'i-heroicons-code-bracket',
-  link: 'i-heroicons-link',
-  beaker: 'i-heroicons-beaker',
-  documentMagnifyingGlass: 'i-heroicons-document-magnifying-glass',
-  pencilSquare: 'i-heroicons-pencil-square',
-  arrowDownOnSquare: 'i-heroicons-arrow-down-on-square',
-  cog: 'i-heroicons-cog-6-tooth',
-  puzzlePiece: 'i-heroicons-puzzle-piece',
-  bell: 'i-heroicons-bell',
-  sun: 'i-heroicons-sun',
-  moon: 'i-heroicons-moon',
+  user: 'heroicons:user',
+  userCircle: 'heroicons:user-circle',
+  briefcase: 'heroicons:briefcase',
+  tag: 'heroicons:tag',
+  clock: 'heroicons:clock',
+  signal: 'heroicons:signal',
+  key: 'heroicons:key',
+  lockClosed: 'heroicons:lock-closed',
+  shieldCheck: 'heroicons:shield-check',
+  fingerPrint: 'heroicons:finger-print',
+  computerDesktop: 'heroicons:computer-desktop',
+  devicePhone: 'heroicons:device-phone-mobile',
+  cube: 'heroicons:cube',
+  users: 'heroicons:users',
+  envelope: 'heroicons:envelope',
+  receiptPercent: 'heroicons:receipt-percent',
+  creditCard: 'heroicons:credit-card',
+  paintBrush: 'heroicons:paint-brush',
+  swatch: 'heroicons:swatch',
+  documentText: 'heroicons:document-text',
+  bars3: 'heroicons:bars-3',
+  handRaised: 'heroicons:hand-raised',
+  atSymbol: 'heroicons:at-symbol',
+  chatBubble: 'heroicons:chat-bubble-left-right',
+  speakerWave: 'heroicons:speaker-wave',
+  commandLine: 'heroicons:command-line',
+  language: 'heroicons:language',
+  mapPin: 'heroicons:map-pin',
+  globeAlt: 'heroicons:globe-alt',
+  calendarDays: 'heroicons:calendar-days',
+  magnifyingGlass: 'heroicons:magnifying-glass',
+  eye: 'heroicons:eye',
+  sparkles: 'heroicons:sparkles',
+  arrowDownTray: 'heroicons:arrow-down-tray',
+  trash: 'heroicons:trash',
+  folder: 'heroicons:folder',
+  codeBracket: 'heroicons:code-bracket',
+  link: 'heroicons:link',
+  beaker: 'heroicons:beaker',
+  documentMagnifyingGlass: 'heroicons:document-magnifying-glass',
+  pencilSquare: 'heroicons:pencil-square',
+  arrowDownOnSquare: 'heroicons:arrow-down-on-square',
+  cog: 'heroicons:cog-6-tooth',
+  puzzlePiece: 'heroicons:puzzle-piece',
+  bell: 'heroicons:bell',
+  sun: 'heroicons:sun',
+  moon: 'heroicons:moon',
 } as const
 
 const PANEL_GROUPS: { label: string, panels: PanelConfig[] }[] = [
@@ -350,13 +349,9 @@ const shortcutEnabled = ref<Record<string, boolean>>({
   settings: true,
 })
 
-function iconComponent(className: string): Component {
-  return defineComponent({
-    render: () => h('span', { class: className, 'aria-hidden': 'true', style: 'width:1em;height:1em' }),
-  })
-}
-
-const SearchIcon = iconComponent(ICONS.magnifyingGlass)
+const SearchIcon = defineComponent({
+  render: () => h(Icon, { name: ICONS.magnifyingGlass }),
+})
 </script>
 
 <template>
@@ -368,6 +363,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
       :width="1120"
       max-height="min(800px, calc(100dvh - 2rem))"
       :padding="0"
+      class="settings-dialog-frame"
       :aria-labelledby="titleId"
       @open-change="noop"
     >
@@ -376,8 +372,8 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
           <template v-if="!isNarrow" #start>
             <SideNav aria-label="Settings sections" class="settings-side-nav">
               <template #header>
-                <HStack :gap="2" align="center" :padding-inline="2" :min-height="32">
-                  <Heading :level="4" :id="titleId">
+                <HStack :gap="2" align="center" :padding-inline="2" :min-height="32" width="100%">
+                  <Heading :id="titleId" :level="4">
                     Settings
                   </Heading>
                 </HStack>
@@ -417,7 +413,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     @click="selectPanel(result.panel)"
                   >
                     <template #startContent>
-                      <Icon :icon="result.icon" size="sm" color="secondary" />
+                      <Icon :name="result.icon" size="sm" color="secondary" />
                     </template>
                   </ListItem>
                 </VStack>
@@ -437,7 +433,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     @click="selectPanel(panel.id)"
                   >
                     <template #icon>
-                      <Icon :icon="panel.icon" size="sm" color="primary" />
+                      <Icon :name="panel.icon" size="sm" color="primary" />
                     </template>
                   </SideNavItem>
                 </SideNavSection>
@@ -449,14 +445,12 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
             <VStack v-if="isNarrow" :gap="2" class="settings-narrow-header">
               <HStack :gap="2" align="center">
                 <StackItem size="fill">
-                  <Text type="label" :id="titleId">
+                  <Text :id="titleId" type="label">
                     Settings
                   </Text>
                 </StackItem>
                 <IconButton label="Close" variant="ghost" size="sm" @click="noop">
-                  <template #icon>
-                    <Icon icon="close" size="sm" />
-                  </template>
+                  <Icon name="heroicons:x-mark" size="sm" />
                 </IconButton>
               </HStack>
               <TextInput
@@ -507,7 +501,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                   @click="selectPanel(result.panel)"
                 >
                   <template #startContent>
-                    <Icon :icon="result.icon" size="sm" color="secondary" />
+                    <Icon :name="result.icon" size="sm" color="secondary" />
                   </template>
                 </ListItem>
               </VStack>
@@ -528,7 +522,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                   @click="selectPanel(panel.id)"
                 >
                   <template #icon>
-                    <Icon :icon="panel.icon" size="sm" />
+                    <Icon :name="panel.icon" size="sm" />
                   </template>
                 </Button>
               </HStack>
@@ -538,9 +532,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
             <HStack v-else width="100%" justify="end" class="settings-close-anchor">
               <HStack class="settings-close-backing">
                 <IconButton label="Close" variant="ghost" size="sm" @click="noop">
-                  <template #icon>
-                    <Icon icon="close" size="sm" />
-                  </template>
+                  <Icon name="heroicons:x-mark" size="sm" />
                 </IconButton>
               </HStack>
             </HStack>
@@ -569,7 +561,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.user" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.user" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Display name
@@ -593,7 +585,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.briefcase" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.briefcase" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Job title
@@ -617,7 +609,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.tag" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.tag" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Pronouns
@@ -648,7 +640,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.clock" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.clock" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Show my local time
@@ -670,7 +662,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.signal" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.signal" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Presence
@@ -703,7 +695,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.key" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.key" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Password
@@ -720,7 +712,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.shieldCheck" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.shieldCheck" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <HStack :gap="1.5" align="center">
                               <Text type="label">
@@ -745,7 +737,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.fingerPrint" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.fingerPrint" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Passkeys
@@ -771,7 +763,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.computerDesktop" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.computerDesktop" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <HStack :gap="1.5" align="center">
                               <Text type="label">
@@ -788,7 +780,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.devicePhone" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.devicePhone" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               iPhone 15 · Safari
@@ -805,7 +797,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.computerDesktop" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.computerDesktop" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Windows · Edge
@@ -833,7 +825,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.cube" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.cube" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <HStack :gap="1.5" align="center">
                               <Text type="label">
@@ -853,7 +845,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.users" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.users" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Seats
@@ -879,7 +871,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.envelope" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.envelope" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Billing email
@@ -904,7 +896,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.receiptPercent" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.receiptPercent" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Email invoices
@@ -926,7 +918,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.creditCard" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.creditCard" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Payment method
@@ -951,7 +943,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.paintBrush" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.paintBrush" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Color theme
@@ -976,7 +968,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                                   <div class="theme-swatch" :data-theme="choice.value" />
                                 </AspectRatio>
                                 <HStack :gap="1" align="center" justify="center">
-                                  <Icon :icon="choice.icon" size="sm" color="secondary" />
+                                  <Icon :name="choice.icon" size="sm" color="secondary" />
                                   <Text type="supporting" :weight="settings.theme === choice.value ? 'semibold' : undefined">
                                     {{ choice.label }}
                                   </Text>
@@ -989,7 +981,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.swatch" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.swatch" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Accent color
@@ -1023,7 +1015,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.documentText" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.documentText" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Interface font
@@ -1067,7 +1059,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.bars3" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.bars3" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Interface density
@@ -1091,7 +1083,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.handRaised" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.handRaised" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Reduce motion
@@ -1124,7 +1116,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.atSymbol" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.atSymbol" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Mentions
@@ -1146,7 +1138,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.chatBubble" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.chatBubble" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Comments
@@ -1168,7 +1160,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.envelope" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.envelope" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Weekly digest
@@ -1199,7 +1191,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.computerDesktop" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.computerDesktop" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Desktop notifications
@@ -1221,7 +1213,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.speakerWave" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.speakerWave" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Play a sound
@@ -1240,7 +1232,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.clock" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.clock" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Quiet hours
@@ -1277,7 +1269,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider v-if="index > 0" variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="shortcut.icon" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="shortcut.icon" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               {{ shortcut.label }}
@@ -1312,7 +1304,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                   <div role="list">
                     <div class="settings-row" role="listitem">
                       <div class="settings-row-main">
-                        <span class="settings-row-icon"><Icon :icon="ICONS.language" size="sm" color="secondary" /></span>
+                        <span class="settings-row-icon"><Icon :name="ICONS.language" size="sm" color="secondary" /></span>
                         <div class="settings-row-text">
                           <Text type="label">
                             Language
@@ -1337,7 +1329,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <Divider variant="subtle" role="presentation" />
                     <div class="settings-row" role="listitem">
                       <div class="settings-row-main">
-                        <span class="settings-row-icon"><Icon :icon="ICONS.mapPin" size="sm" color="secondary" /></span>
+                        <span class="settings-row-icon"><Icon :name="ICONS.mapPin" size="sm" color="secondary" /></span>
                         <div class="settings-row-text">
                           <Text type="label">
                             Region format
@@ -1362,7 +1354,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <Divider variant="subtle" role="presentation" />
                     <div class="settings-row" role="listitem">
                       <div class="settings-row-main">
-                        <span class="settings-row-icon"><Icon :icon="ICONS.globeAlt" size="sm" color="secondary" /></span>
+                        <span class="settings-row-icon"><Icon :name="ICONS.globeAlt" size="sm" color="secondary" /></span>
                         <div class="settings-row-text">
                           <Text type="label">
                             Time zone
@@ -1387,7 +1379,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <Divider variant="subtle" role="presentation" />
                     <div class="settings-row" role="listitem">
                       <div class="settings-row-main">
-                        <span class="settings-row-icon"><Icon :icon="ICONS.calendarDays" size="sm" color="secondary" /></span>
+                        <span class="settings-row-icon"><Icon :name="ICONS.calendarDays" size="sm" color="secondary" /></span>
                         <div class="settings-row-text">
                           <Text type="label">
                             Start the week on
@@ -1418,7 +1410,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.magnifyingGlass" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.magnifyingGlass" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Discoverable by email
@@ -1440,7 +1432,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.eye" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.eye" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Read receipts
@@ -1462,7 +1454,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.signal" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.signal" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Activity status
@@ -1493,7 +1485,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.sparkles" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.sparkles" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Personalized suggestions
@@ -1515,7 +1507,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.arrowDownTray" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.arrowDownTray" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Export my data
@@ -1542,7 +1534,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                   <div role="list">
                     <div class="settings-row" role="listitem">
                       <div class="settings-row-main">
-                        <span class="settings-row-icon"><Icon :icon="ICONS.calendarDays" size="sm" color="secondary" /></span>
+                        <span class="settings-row-icon"><Icon :name="ICONS.calendarDays" size="sm" color="secondary" /></span>
                         <div class="settings-row-text">
                           <Text type="label">
                             Calendar
@@ -1559,7 +1551,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <Divider variant="subtle" role="presentation" />
                     <div class="settings-row" role="listitem">
                       <div class="settings-row-main">
-                        <span class="settings-row-icon"><Icon :icon="ICONS.folder" size="sm" color="secondary" /></span>
+                        <span class="settings-row-icon"><Icon :name="ICONS.folder" size="sm" color="secondary" /></span>
                         <div class="settings-row-text">
                           <Text type="label">
                             File storage
@@ -1576,7 +1568,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <Divider variant="subtle" role="presentation" />
                     <div class="settings-row" role="listitem">
                       <div class="settings-row-main">
-                        <span class="settings-row-icon"><Icon :icon="ICONS.chatBubble" size="sm" color="secondary" /></span>
+                        <span class="settings-row-icon"><Icon :name="ICONS.chatBubble" size="sm" color="secondary" /></span>
                         <div class="settings-row-text">
                           <Text type="label">
                             Chat
@@ -1603,7 +1595,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.codeBracket" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.codeBracket" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               API access
@@ -1625,7 +1617,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.link" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.link" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Webhook URL
@@ -1660,7 +1652,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                     <div role="list">
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.beaker" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.beaker" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <HStack :gap="1.5" align="center">
                               <Text type="label">
@@ -1685,7 +1677,7 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
                       <Divider variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :icon="ICONS.documentMagnifyingGlass" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :name="ICONS.documentMagnifyingGlass" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
                               Verbose logging
@@ -1717,13 +1709,28 @@ const SearchIcon = iconComponent(ICONS.magnifyingGlass)
 </template>
 
 <style>
+/* 待 core 修复后去掉：原版 Dialog 的最大宽度是 min(100%, 100dvw - 2 × 16px)，两侧各留 16px。 */
+.settings-dialog-frame {
+  max-width: min(100%, calc(100dvw - 2rem));
+}
 .settings-dialog-shell {
   height: min(800px, calc(100dvh - 2rem));
 }
 .settings-side-nav {
   flex-shrink: 0;
 }
+/* 待 core 修复后去掉：SideNav 的内容区在分组之间多了 4px 间距、底部内边距 4px（原版无间距、底部 8px）。 */
+.settings-side-nav .astryx-side-nav__body {
+  gap: 0;
+  padding-block-end: var(--astryx-spacing-2);
+}
+/* 待 core 修复后去掉：Switch 的行是 inline-flex，外层多出行高基线空隙（28 对 24），开关被顶高 2px。 */
+.settings-row-control .astryx-switch-row {
+  display: flex;
+}
 .settings-side-nav-section {
+  /* 待 core 修复后去掉 gap：SideNavSection 在标题和条目之间多了 2px 间距，原版没有。 */
+  gap: 0;
   padding-block: var(--astryx-spacing-2);
 }
 .settings-close-anchor {

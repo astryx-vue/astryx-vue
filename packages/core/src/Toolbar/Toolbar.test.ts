@@ -39,9 +39,27 @@ describe('toolbar', () => {
       props: { dividers: ['bottom'], label: 'Bulk actions', variant: 'muted' },
       slots: { start: () => h('button', { type: 'button' }, 'Delete') },
     })
-    const toolbar = wrapper.get('[role="toolbar"]')
-    expect(toolbar.classes()).toContain('astryx-toolbar--muted')
-    expect(toolbar.classes()).toContain('astryx-toolbar--divider-bottom')
+    const inner = wrapper.get('.astryx-section__inner')
+    expect(inner.attributes('data-variant')).toBe('muted')
+    expect(inner.attributes('data-divider-bottom')).toBeDefined()
+  })
+
+  it('wraps the toolbar in a Section that carries the block padding, as the original does', () => {
+    const wrapper = mount(Toolbar, {
+      props: { label: 'Actions' },
+      slots: { start: () => h('button', { type: 'button' }, 'Go') },
+    })
+    const inner = wrapper.get('.astryx-section__inner')
+    expect(inner.attributes('style')).toContain('--_section-block-start: var(--astryx-spacing-2')
+    expect(inner.attributes('style')).toContain('--_section-block-end: var(--astryx-spacing-2')
+    expect(inner.find('[role="toolbar"]').exists()).toBe(true)
+  })
+
+  it('pulls a slot back by the edge inset when its edge child is a flat button', () => {
+    const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/toolbar.css'), 'utf8')
+    expect(css).toContain('.astryx-toolbar__slot:has(> [data-astryx-edge-comp]:first-child)')
+    expect(css).toContain('.astryx-toolbar__slot:has(> [data-astryx-edge-comp]:last-child)')
+    expect(css).toContain('--_edge-comp-inset: calc(var(--container-padding-inline-start, var(--astryx-spacing-4, 16px)) - var(--astryx-spacing-2, 8px))')
   })
 
   it('does not clip the center slot', () => {

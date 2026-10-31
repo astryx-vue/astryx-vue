@@ -162,7 +162,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Glaze
               </Text>
-              <VStack justify="start">
+              <VStack hAlign="start">
                 <SegmentedControl v-model="color" label="Glaze">
                   <SegmentedControlItem
                     v-for="c in COLORS"
@@ -177,7 +177,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Finish
               </Text>
-              <VStack justify="start">
+              <VStack hAlign="start">
                 <SegmentedControl v-model="finish" label="Finish">
                   <SegmentedControlItem
                     v-for="f in FINISHES"

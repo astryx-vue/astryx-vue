@@ -108,15 +108,15 @@ describe('table selection toolbar', () => {
 
   it('passes size and variant down to the toolbar surface', () => {
     const muted = mount(TableSelectionToolbar, { props: { count: 1 } })
-    expect(muted.get('.astryx-toolbar').classes()).toEqual(expect.arrayContaining(['astryx-table-selection-toolbar', 'astryx-toolbar--sm', 'astryx-toolbar--muted']))
+    expect(muted.get('.astryx-toolbar').classes()).toContain('astryx-toolbar--sm')
+    expect(muted.get('.astryx-section__inner').attributes('data-variant')).toBe('muted')
 
     const plain = mount(TableSelectionToolbar, { props: { count: 1, size: 'lg', variant: 'transparent' } })
-    expect(plain.get('.astryx-toolbar').classes()).toEqual(expect.arrayContaining(['astryx-toolbar--lg']))
-    expect(plain.get('.astryx-toolbar').classes()).not.toContain('astryx-toolbar--muted')
+    expect(plain.get('.astryx-toolbar').classes()).toContain('astryx-toolbar--lg')
+    expect(plain.get('.astryx-section__inner').attributes('data-variant')).toBe('transparent')
 
     const section = mount(TableSelectionToolbar, { props: { count: 1, variant: 'section' } })
-    expect(section.get('.astryx-toolbar').classes()).toContain('astryx-table-selection-toolbar--section')
-    expect(section.get('.astryx-toolbar').classes()).not.toContain('astryx-toolbar--muted')
+    expect(section.get('.astryx-section__inner').attributes('data-variant')).toBe('section')
   })
 })
 

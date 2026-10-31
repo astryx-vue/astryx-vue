@@ -19,13 +19,14 @@ import {
   Table,
   Text,
   Token,
+  useTableRowExpansion,
   useTableSortable,
   useTableSortableState,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
-import { PlaygroundSparkline } from '@astryx-vue/playground-charts'
-import { computed, h, ref } from 'vue'
+import { PlaygroundAreaChart } from '@astryx-vue/playground-charts'
+import { computed, defineComponent, h, ref } from 'vue'
 
 type RangeId = '1W' | '1M' | '3M' | 'YTD' | '1Y'
 
@@ -139,12 +140,23 @@ const HISTORY: Record<string, number[]> = {
 }
 
 const range = ref<RangeId>('YTD')
-const chartAccountId = ref<string | null>('bank-1')
 
 const bankOpen = ref(true)
 const cardsOpen = ref(true)
 const processorsOpen = ref(true)
 const investmentsOpen = ref(true)
+const expandedRows = ref<ReadonlySet<string>>(new Set())
+
+function toggleRow(key: string): void {
+  const next = new Set(expandedRows.value)
+  if (next.has(key))
+    next.delete(key)
+  else
+    next.add(key)
+  expandedRows.value = next
+}
+
+const ALL_ROW_IDS = [...BANK_ACCOUNTS, ...CREDIT_CARDS, ...PROCESSORS, ...INVESTMENTS].map(record => record.id)
 
 function changePercent(id: string): number {
   const points = HISTORY[id].slice(-RANGE_DAYS[range.value])
@@ -153,6 +165,60 @@ function changePercent(id: string): number {
     return 0
   return ((points[points.length - 1] - start) / Math.abs(start)) * 100
 }
+
+function windowOf(id: string): number[] {
+  return HISTORY[id].slice(-RANGE_DAYS[range.value])
+}
+
+const TODAY = Date.UTC(2025, 8, 30)
+const dayFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+
+function dayLabel(daysAgo: number): string {
+  const date = new Date(TODAY)
+  date.setUTCDate(date.getUTCDate() - daysAgo)
+  return dayFormat.format(date)
+}
+
+function axisTicks(count: number): number[] {
+  const stops = Math.min(5, count)
+  if (stops < 2)
+    return [0]
+  return Array.from({ length: stops }, (_, stop) => Math.round((stop * (count - 1)) / (stops - 1)))
+}
+
+/** 展开行里的历史曲线：涨用绿、跌用红（负债反过来），虚线是窗口起点。 */
+const DetailChart = defineComponent({
+  props: {
+    id: { type: String, required: true },
+    isLiability: { type: Boolean, default: false },
+  },
+  setup(props) {
+    return () => {
+      const points = windowOf(props.id)
+      const delta = points[points.length - 1] - points[0]
+      const isGood = props.isLiability ? delta <= 0 : delta >= 0
+      const color = isGood ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'
+      const data = points.map((value, day) => ({ day, value: value / 100 }))
+      const values = data.map(item => item.value)
+      return h(PlaygroundAreaChart, {
+        data,
+        xKey: 'day',
+        yKey: 'value',
+        color,
+        height: 132,
+        yDomain: [Math.min(...values), Math.max(...values)],
+        xDomain: [0, data.length - 1],
+        xTicks: axisTicks(data.length),
+        xTickFormat: (day: number) => dayLabel(points.length - 1 - day),
+        hasYAxis: false,
+        hasGrid: false,
+        referenceValue: values[0],
+        fillOpacity: [0.2, 0],
+        padInline: 16,
+      })
+    }
+  },
+})
 
 function changeCell(id: string, isLiability = false) {
   const pct = changePercent(id)
@@ -173,107 +239,91 @@ const totals = computed(() => {
   return { banks, cards, pending, investments, net: banks + pending + investments - cards }
 })
 
+function money2(cents: number) {
+  return h(Text, { hasTabularNumbers: true }, () => money(cents))
+}
+
+function nameCell(title: string, subtitle: string) {
+  return h(VStack, { gap: 0 }, () => [
+    h(Text, {}, () => title),
+    h(Text, { type: 'supporting' }, () => subtitle),
+  ])
+}
+
+/** 涨跌幅排序走窗口内的百分比，随时间范围变。 */
+const byChange = (a: { id: string }, b: { id: string }): number => changePercent(a.id) - changePercent(b.id)
+
 const bankColumns: TableColumn<BankAccount>[] = [
-  {
-    key: 'name',
-    header: 'Account',
-    width: proportional(2),
-    sortable: { compare: (a, b) => a.name.localeCompare(b.name) },
-    renderCell: account => h(VStack, { gap: 0 }, () => [
-      h(Text, {}, () => account.name),
-      h(Text, { type: 'supporting' }, () => `${account.institution} · ${account.mask}`),
-    ]),
-  },
+  { key: 'name', header: 'Account', width: proportional(2), sortable: { compare: (a, b) => a.name.localeCompare(b.name) }, renderCell: a => nameCell(a.name, `${a.institution} · ${a.mask}`) },
   { key: 'kind', header: 'Type', width: pixel(150), sortable: { compare: (a, b) => a.kind.localeCompare(b.kind) }, renderCell: a => h(Text, {}, () => a.kind) },
-  { key: 'available', header: 'Available', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.availableCents - b.availableCents }, renderCell: a => h(Text, { hasTabularNumbers: true }, () => money(a.availableCents)) },
-  { key: 'change', header: 'Change', width: pixel(110), align: 'end', renderCell: a => changeCell(a.id) },
+  { key: 'available', header: 'Available', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.availableCents - b.availableCents }, renderCell: a => money2(a.availableCents) },
+  { key: 'change', header: 'Change', width: pixel(110), align: 'end', sortable: { compare: byChange }, renderCell: a => changeCell(a.id) },
 ]
 
 const creditColumns: TableColumn<CreditCardAccount>[] = [
-  {
-    key: 'name',
-    header: 'Card',
-    width: proportional(2),
-    sortable: { compare: (a, b) => a.name.localeCompare(b.name) },
-    renderCell: card => h(VStack, { gap: 0 }, () => [
-      h(Text, {}, () => card.name),
-      h(Text, { type: 'supporting' }, () => `${card.issuer} · ${card.mask}`),
-    ]),
-  },
+  { key: 'name', header: 'Card', width: proportional(2), sortable: { compare: (a, b) => a.name.localeCompare(b.name) }, renderCell: c => nameCell(c.name, `${c.issuer} · ${c.mask}`) },
   {
     key: 'utilization',
     header: 'Utilization',
     width: pixel(150),
+    sortable: { compare: (a, b) => a.balanceCents / a.limitCents - b.balanceCents / b.limitCents },
     renderCell: (card) => {
       const percent = Math.round((card.balanceCents / card.limitCents) * 100)
       return h(HStack, { gap: 2, vAlign: 'center' }, () => [
-        h(StackItem, { size: 'fill' }, () => h(ProgressBar, { label: 'Utilization', isLabelHidden: true, value: percent, variant: 'neutral' })),
+        h(StackItem, { size: 'fill' }, () => h(ProgressBar, { label: `${card.name} utilization`, isLabelHidden: true, value: percent, variant: 'neutral' })),
         h(Text, { hasTabularNumbers: true }, () => `${percent}%`),
       ])
     },
   },
-  { key: 'balance', header: 'Balance', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.balanceCents - b.balanceCents }, renderCell: c => h(Text, { hasTabularNumbers: true }, () => money(c.balanceCents)) },
-  { key: 'change', header: 'Change', width: pixel(110), align: 'end', renderCell: c => changeCell(c.id, true) },
+  { key: 'balance', header: 'Balance', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.balanceCents - b.balanceCents }, renderCell: c => money2(c.balanceCents) },
+  { key: 'limit', header: 'Limit', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.limitCents - b.limitCents }, renderCell: c => money2(c.limitCents) },
+  { key: 'change', header: 'Change', width: pixel(110), align: 'end', sortable: { compare: byChange }, renderCell: c => changeCell(c.id, true) },
 ]
 
 const processorColumns: TableColumn<ProcessorAccount>[] = [
-  {
-    key: 'name',
-    header: 'Processor',
-    width: proportional(2),
-    renderCell: p => h(VStack, { gap: 0 }, () => [h(Text, {}, () => p.name), h(Text, { type: 'supporting' }, () => p.merchantId)]),
-  },
-  { key: 'pending', header: 'Pending payout', width: pixel(150), align: 'end', renderCell: p => h(Text, { hasTabularNumbers: true }, () => money(p.pendingPayoutCents)) },
-  { key: 'fees', header: 'Fees (MTD)', width: pixel(150), align: 'end', renderCell: p => h(Text, { hasTabularNumbers: true }, () => money(p.feesMtdCents)) },
-  { key: 'change', header: 'Change', width: pixel(110), align: 'end', renderCell: p => changeCell(p.id) },
+  { key: 'name', header: 'Processor', width: proportional(2), sortable: { compare: (a, b) => a.name.localeCompare(b.name) }, renderCell: p => nameCell(p.name, p.merchantId) },
+  { key: 'pendingPayout', header: 'Pending payout', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.pendingPayoutCents - b.pendingPayoutCents }, renderCell: p => money2(p.pendingPayoutCents) },
+  { key: 'feesMtd', header: 'Fees (MTD)', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.feesMtdCents - b.feesMtdCents }, renderCell: p => money2(p.feesMtdCents) },
+  { key: 'change', header: 'Change', width: pixel(110), align: 'end', sortable: { compare: byChange }, renderCell: p => changeCell(p.id) },
 ]
 
 const investmentColumns: TableColumn<InvestmentAccount>[] = [
-  {
-    key: 'name',
-    header: 'Account',
-    width: proportional(2),
-    renderCell: a => h(VStack, { gap: 0 }, () => [h(Text, {}, () => a.name), h(Text, { type: 'supporting' }, () => a.custodian)]),
-  },
-  { key: 'market', header: 'Market value', width: pixel(150), align: 'end', renderCell: a => h(Text, { hasTabularNumbers: true }, () => money(a.marketValueCents)) },
-  { key: 'cost', header: 'Cost basis', width: pixel(150), align: 'end', renderCell: a => h(Text, { hasTabularNumbers: true }, () => money(a.costBasisCents)) },
-  { key: 'change', header: 'Change', width: pixel(110), align: 'end', renderCell: a => changeCell(a.id) },
+  { key: 'name', header: 'Account', width: proportional(2), sortable: { compare: (a, b) => a.name.localeCompare(b.name) }, renderCell: a => nameCell(a.name, a.custodian) },
+  { key: 'marketValue', header: 'Market value', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.marketValueCents - b.marketValueCents }, renderCell: a => money2(a.marketValueCents) },
+  { key: 'costBasis', header: 'Cost basis', width: pixel(150), align: 'end', sortable: { compare: (a, b) => a.costBasisCents - b.costBasisCents }, renderCell: a => money2(a.costBasisCents) },
+  { key: 'change', header: 'Change', width: pixel(110), align: 'end', sortable: { compare: byChange }, renderCell: a => changeCell(a.id) },
 ]
 
-const { sortedData: bankData, sortConfig: bankSortConfig } = useTableSortableState({ data: BANK_ACCOUNTS, columns: bankColumns })
-const bankPlugin = useTableSortable<BankAccount>(bankSortConfig)
-const { sortedData: cardData, sortConfig: cardSortConfig } = useTableSortableState({ data: CREDIT_CARDS, columns: creditColumns })
-const cardPlugin = useTableSortable<CreditCardAccount>(cardSortConfig)
-const { sortedData: procData, sortConfig: procSortConfig } = useTableSortableState({ data: PROCESSORS, columns: processorColumns })
-const procPlugin = useTableSortable<ProcessorAccount>(procSortConfig)
-const { sortedData: invData, sortConfig: invSortConfig } = useTableSortableState({ data: INVESTMENTS, columns: investmentColumns })
-const invPlugin = useTableSortable<InvestmentAccount>(invSortConfig)
+/** 每组一张表：排序加展开，展开后画这一行的历史曲线。 */
+function useGroupTable<T extends AccountRecord>(data: T[], columns: TableColumn<T>[], isLiability = false) {
+  const { sortedData, sortConfig } = useTableSortableState<T>({ data, columns })
+  const sort = useTableSortable<T>(sortConfig)
+  const expansion = useTableRowExpansion<T>(() => ({
+    expandedKeys: expandedRows.value,
+    onToggle: toggleRow,
+    getRowKey: item => item.id,
+    renderExpanded: item => h(DetailChart, { id: item.id, isLiability }),
+  }))
+  return { sortedData, plugins: { sort, expansion } }
+}
 
-const chartSeries = computed(() => {
-  if (!chartAccountId.value)
-    return []
-  return HISTORY[chartAccountId.value]?.slice(-RANGE_DAYS[range.value]) ?? []
-})
+const bankTable = useGroupTable(BANK_ACCOUNTS, bankColumns)
+const cardTable = useGroupTable(CREDIT_CARDS, creditColumns, true)
+const procTable = useGroupTable(PROCESSORS, processorColumns)
+const invTable = useGroupTable(INVESTMENTS, investmentColumns)
 
-const chartColor = computed(() => {
-  if (!chartAccountId.value)
-    return 'var(--astryx-color-data-categorical-green, #0B991F)'
-  const points = chartSeries.value
-  if (points.length < 2)
-    return 'var(--astryx-color-data-categorical-green, #0B991F)'
-  const delta = points[points.length - 1] - points[0]
-  const liability = chartAccountId.value.startsWith('card-')
-  const good = liability ? delta <= 0 : delta >= 0
-  return good ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)'
-})
+const isEverythingOpen = computed(() =>
+  bankOpen.value && cardsOpen.value && processorsOpen.value && investmentsOpen.value
+  && expandedRows.value.size === ALL_ROW_IDS.length,
+)
 
 function toggleAll(): void {
-  const allOpen = bankOpen.value && cardsOpen.value && processorsOpen.value && investmentsOpen.value
-  const next = !allOpen
+  const next = !isEverythingOpen.value
   bankOpen.value = next
   cardsOpen.value = next
   processorsOpen.value = next
   investmentsOpen.value = next
+  expandedRows.value = next ? new Set(ALL_ROW_IDS) : new Set()
 }
 </script>
 
@@ -292,7 +342,7 @@ function toggleAll(): void {
               </Text>
             </VStack>
           </StackItem>
-          <Button label="Expand / collapse all" variant="ghost" @click="toggleAll" />
+          <Button :label="isEverythingOpen ? 'Collapse all' : 'Expand all'" variant="ghost" @click="toggleAll" />
           <SegmentedControl v-model="range" label="Time range">
             <SegmentedControlItem v-for="id in RANGE_IDS" :key="id" :value="id" :label="id" />
           </SegmentedControl>
@@ -307,7 +357,7 @@ function toggleAll(): void {
             <template #trigger>
               <HStack :gap="2" align="center" justify="between" class="group-trigger">
                 <HStack :gap="2" align="center">
-                  <Icon icon="i-heroicons-building-library" size="sm" />
+                  <span class="category-tile"><Icon icon="i-heroicons-building-library" size="sm" /></span>
                   <Text weight="semibold">
                     Bank accounts
                   </Text>
@@ -324,7 +374,7 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3" :gap="2">
-              <Table :data="bankData" :columns="bankColumns" id-key="id" density="compact" dividers="rows" :plugins="{ sort: bankPlugin }" has-hover />
+              <div class="fixed-table"><Table :data="bankTable.sortedData.value" :columns="bankColumns" id-key="id" density="compact" dividers="rows" :plugins="bankTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
@@ -334,7 +384,7 @@ function toggleAll(): void {
             <template #trigger>
               <HStack :gap="2" align="center" justify="between" class="group-trigger">
                 <HStack :gap="2" align="center">
-                  <Icon icon="i-heroicons-credit-card" size="sm" />
+                  <span class="category-tile"><Icon icon="i-heroicons-credit-card" size="sm" /></span>
                   <Text weight="semibold">
                     Credit cards
                   </Text>
@@ -351,7 +401,7 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <Table :data="cardData" :columns="creditColumns" id-key="id" density="compact" dividers="rows" :plugins="{ sort: cardPlugin }" has-hover />
+              <div class="fixed-table"><Table :data="cardTable.sortedData.value" :columns="creditColumns" id-key="id" density="compact" dividers="rows" :plugins="cardTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
@@ -361,7 +411,7 @@ function toggleAll(): void {
             <template #trigger>
               <HStack :gap="2" align="center" justify="between" class="group-trigger">
                 <HStack :gap="2" align="center">
-                  <Icon icon="i-heroicons-arrows-right-left" size="sm" />
+                  <span class="category-tile"><Icon icon="i-heroicons-arrows-right-left" size="sm" /></span>
                   <Text weight="semibold">
                     Payment processors
                   </Text>
@@ -378,7 +428,7 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <Table :data="procData" :columns="processorColumns" id-key="id" density="compact" dividers="rows" :plugins="{ sort: procPlugin }" />
+              <div class="fixed-table"><Table :data="procTable.sortedData.value" :columns="processorColumns" id-key="id" density="compact" dividers="rows" :plugins="procTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
@@ -388,7 +438,7 @@ function toggleAll(): void {
             <template #trigger>
               <HStack :gap="2" align="center" justify="between" class="group-trigger">
                 <HStack :gap="2" align="center">
-                  <Icon icon="i-heroicons-presentation-chart-line" size="sm" />
+                  <span class="category-tile"><Icon icon="i-heroicons-presentation-chart-line" size="sm" /></span>
                   <Text weight="semibold">
                     Investment accounts
                   </Text>
@@ -405,27 +455,33 @@ function toggleAll(): void {
               </HStack>
             </template>
             <VStack :padding-block-start="3">
-              <Table :data="invData" :columns="investmentColumns" id-key="id" density="compact" dividers="rows" :plugins="{ sort: invPlugin }" />
+              <div class="fixed-table"><Table :data="invTable.sortedData.value" :columns="investmentColumns" id-key="id" density="compact" dividers="rows" :plugins="invTable.plugins" /></div>
             </VStack>
           </Collapsible>
         </Card>
 
-        <Card v-if="chartAccountId && chartSeries.length" :padding="4">
-          <VStack :gap="2">
-            <Text type="label">
-              Balance trend ({{ range }})
-            </Text>
-            <PlaygroundSparkline :data="chartSeries" :color="chartColor" :height="100" />
-          </VStack>
-        </Card>
       </VStack>
     </LayoutContent>
   </Layout>
 </template>
 
 <style scoped>
+/* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
+.fixed-table :deep(.astryx-table) {
+  table-layout: fixed;
+}
+
 .wash {
   background: var(--astryx-color-background-body);
+}
+.category-tile {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--astryx-radius-inner);
+  background: var(--astryx-color-background-muted);
 }
 .group-trigger {
   width: 100%;

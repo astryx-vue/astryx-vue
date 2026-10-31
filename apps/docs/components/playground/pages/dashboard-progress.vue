@@ -211,7 +211,11 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                 Target GA ·
               </Text>
               <Timestamp value="2026-06-30T00:00:00Z" format="date" type="body" color="secondary" />
-              <Badge :variant="RAG_BADGE[PROGRAM_STATUS]" :label="RAG_LABEL[PROGRAM_STATUS]" />
+              <Badge :variant="RAG_BADGE[PROGRAM_STATUS]" :label="RAG_LABEL[PROGRAM_STATUS]">
+                <template #icon>
+                  <Icon :name="PROGRAM_STATUS === 'onTrack' ? 'heroicons:check-circle' : 'heroicons:exclamation-triangle'" size="sm" />
+                </template>
+              </Badge>
             </HStack>
           </VStack>
           <HStack :gap="2">
@@ -234,9 +238,14 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
       <LayoutContent :padding="0" class="content-bottom-pad">
         <Section :padding="6" :dividers="['bottom']">
           <VStack :gap="6" class="content-column">
-            <Heading :level="2">
-              Milestone timeline
-            </Heading>
+            <HStack :gap="3" h-align="between" align="center">
+              <Heading :level="2">
+                Milestone timeline
+              </Heading>
+              <Text type="supporting" color="secondary">
+                Project days 0–{{ TIMELINE_DAYS }} · dashed line marks today
+              </Text>
+            </HStack>
             <EmptyState
               v-if="milestones.length === 0"
               title="No milestones in this phase"
@@ -244,20 +253,23 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
               is-compact
             />
             <template v-else>
-              <PlaygroundGanttChart
-                :items="ganttItems"
-                :domain-max="TIMELINE_DAYS"
-                :today="PROJECT_DAY"
-                :ticks="TIMELINE_TICKS"
-              />
-              <HStack :gap="4" align="center" wrap="wrap">
-                <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
-                  <span class="legend-swatch" :style="{ backgroundColor: RAG_FILL[status] }" aria-hidden="true" />
-                  <Text type="supporting" color="secondary">
-                    {{ RAG_LABEL[status] }}
-                  </Text>
+              <VStack :gap="3">
+                <PlaygroundGanttChart
+                  :items="ganttItems"
+                  :domain-max="TIMELINE_DAYS"
+                  :today="PROJECT_DAY"
+                  :ticks="TIMELINE_TICKS"
+                  is-recharts-layout
+                />
+                <HStack :gap="4" align="center" wrap="wrap">
+                  <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
+                    <span class="legend-swatch" :style="{ backgroundColor: RAG_FILL[status] }" aria-hidden="true" />
+                    <Text type="supporting" color="secondary">
+                      {{ RAG_LABEL[status] }}
+                    </Text>
+                  </HStack>
                 </HStack>
-              </HStack>
+              </VStack>
             </template>
           </VStack>
         </Section>
@@ -275,7 +287,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                     </Text>
                   </VStack>
                   <HStack :gap="8" align="center" wrap="wrap">
-                    <PlaygroundDonutChart :segments="donutSegments" />
+                    <PlaygroundDonutChart :segments="donutSegments" :gap-angle="2.3" />
                     <VStack :gap="2">
                       <HStack v-for="s in TASK_STATUS" :key="s.key" :gap="2" align="center">
                         <span class="legend-swatch" :style="{ backgroundColor: s.color }" aria-hidden="true" />
@@ -307,9 +319,13 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                         { key: 'actual', name: 'Actual', color: ACTUAL_COLOR },
                       ]"
                       :height="208"
+                      :y-ticks="[0, 80, 160, 240, 320]"
                       y-unit=" pts"
+                      is-y-unit-stacked
                       :x-ticks="[0, 3, 6, 9, 12]"
                       :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
+                      :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"
+                      center-ticks
                       monotone
                     />
                   </PlaygroundResponsive>
@@ -334,7 +350,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                       Hover or focus a row for detail
                     </Text>
                   </VStack>
-                  <List v-if="risks.length" has-dividers>
+                  <List v-if="risks.length" has-dividers class="risk-list">
                     <HoverCard v-for="risk in risks" :key="risk.id" placement="below" alignment="start" focus-trigger="always">
                       <ListItem
                         :label="risk.title"
@@ -368,9 +384,14 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
             </Grid>
             <Card :padding="6">
               <VStack :gap="4">
-                <Heading :level="3">
-                  Workstreams
-                </Heading>
+                <HStack :gap="3" h-align="between" align="center" wrap="wrap">
+                  <Heading :level="3" :accessibility-level="2">
+                    Workstreams
+                  </Heading>
+                  <Text type="body" color="secondary">
+                    {{ workstreams.length }} of {{ WORKSTREAMS.length }}
+                  </Text>
+                </HStack>
                 <Table
                   v-if="workstreams.length"
                   :data="workstreams"
@@ -405,6 +426,11 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
 }
 .content-bottom-pad {
   padding-block-end: var(--astryx-spacing-10);
+}
+/* HoverCard 的包裹 span 夹在 ul 和 li 之间，List 的 `> .astryx-list-item` 分隔线选择器够不着，
+   这里在包裹 span 上按「除最后一个」补上同样的分隔线。 */
+.risk-list :deep(.astryx-hover-card__trigger:not(:last-of-type) > .astryx-list-item) {
+  border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-list-divider-color, light-dark(#05365919, #f2f4f619));
 }
 .risk-row {
   transition: background-color var(--astryx-duration-fast-min) var(--astryx-ease-standard);

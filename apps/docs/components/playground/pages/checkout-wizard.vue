@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import type { ComponentPublicInstance } from 'vue'
 import {
   Badge,
   Banner,
   Button,
   Card,
   CheckboxInput,
+  Collapsible,
   Divider,
   FieldStatus,
   FormLayout,
@@ -17,6 +19,7 @@ import {
   RadioList,
   RadioListItem,
   Selector,
+  Stack,
   StackItem,
   Step,
   Stepper,
@@ -24,18 +27,17 @@ import {
   TextArea,
   TextInput,
   Thumbnail,
-  useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
 
 const STEPS = [
-  { label: 'Cart', icon: 'i-carbon-shopping-cart' },
-  { label: 'Shipping', icon: 'i-carbon-location' },
-  { label: 'Delivery', icon: 'i-carbon-delivery-truck' },
-  { label: 'Payment', icon: 'i-carbon-purchase' },
+  { label: 'Cart', icon: 'heroicons:shopping-cart' },
+  { label: 'Shipping', icon: 'heroicons:map-pin' },
+  { label: 'Delivery', icon: 'heroicons:truck' },
+  { label: 'Payment', icon: 'heroicons:credit-card' },
 ]
 
 const CART_ITEMS = [
@@ -65,7 +67,7 @@ const PROMOS: Record<string, { label: string, rate: number }> = {
 
 const TAX_RATE = 0.08
 const FREE_SHIPPING_THRESHOLD = 300
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]{2,}$/
 
 const POSTAL_CODE_RULES: Record<string, { label: string, placeholder: string, pattern: RegExp, error: string }> = {
   us: { label: 'ZIP code', placeholder: '10001', pattern: /^\d{5}(?:-\d{4})?$/, error: 'Enter a 5-digit ZIP code, with an optional 4-digit suffix.' },
@@ -79,7 +81,27 @@ function money(n: number) {
 
 // ── 状态 ──────────────────────────────────────────────────────────────────────
 
-const isNarrow = useMediaQuery('(max-width: 900px)')
+const NARROW_HOST_WIDTH = 900
+const hostRef = ref<ComponentPublicInstance | null>(null)
+const isNarrow = ref(false)
+let hostObserver: ResizeObserver | undefined
+
+// 窄版按预览容器的宽度判断，而不是浏览器窗口宽度：嵌在窄预览里的页面窗口再宽也要走窄版。
+watch(hostRef, (instance) => {
+  hostObserver?.disconnect()
+  const host = instance?.$el as HTMLElement | undefined
+  if (!host)
+    return
+  if (host.clientWidth > 0)
+    isNarrow.value = host.clientWidth <= NARROW_HOST_WIDTH
+  hostObserver = new ResizeObserver((entries) => {
+    const width = entries[0]?.contentRect.width ?? host.clientWidth
+    if (width > 0)
+      isNarrow.value = width <= NARROW_HOST_WIDTH
+  })
+  hostObserver.observe(host)
+})
+onBeforeUnmount(() => hostObserver?.disconnect())
 
 const step = ref(0)
 const attempted = ref<ReadonlySet<number>>(new Set())
@@ -250,7 +272,7 @@ function isFreeDelivery(optionValue: string) {
 <template>
   <Layout height="fill" :padding="6" :content-width="1000">
     <LayoutContent>
-      <VStack :gap="6">
+      <VStack ref="hostRef" :gap="6">
         <HStack :gap="3" align="center">
           <StackItem size="fill">
             <Heading :level="1">
@@ -258,14 +280,14 @@ function isFreeDelivery(optionValue: string) {
             </Heading>
           </StackItem>
           <HStack :gap="1.5" align="center">
-            <Icon icon="i-carbon-locked" size="sm" color="secondary" />
+            <Icon name="heroicons:lock-closed" size="sm" color="secondary" />
             <Text type="supporting" color="secondary">
               Secure checkout
             </Text>
           </HStack>
         </HStack>
 
-        <HStack :gap="6" align="start" wrap="wrap">
+        <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" align="start">
           <StackItem size="fill">
             <VStack :gap="6">
               <Banner
@@ -299,7 +321,8 @@ function isFreeDelivery(optionValue: string) {
                   :status="Object.keys(shownErrors(i)).length ? 'error' : undefined"
                 >
                   <template #icon>
-                    <Icon :icon="Object.keys(shownErrors(i)).length ? 'error' : icon" size="sm" />
+                    <Icon v-if="Object.keys(shownErrors(i)).length" icon="error" size="sm" />
+                    <Icon v-else :name="icon" size="sm" />
                   </template>
                 </Step>
               </Stepper>
@@ -550,94 +573,113 @@ function isFreeDelivery(optionValue: string) {
             </VStack>
           </StackItem>
 
-          <StackItem v-if="!isNarrow" :style="{ width: '360px', flexShrink: 0, alignSelf: 'flex-start' }">
+          <StackItem :class="isNarrow ? 'summary-column summary-column--narrow' : 'summary-column'">
             <Card :padding="5">
-              <VStack :gap="4">
-                <HStack :gap="2" align="center" justify="between">
+              <component
+                :is="isNarrow ? Collapsible : VStack"
+                v-bind="isNarrow ? { trigger: `Order summary · ${money(total)}`, defaultIsOpen: false } : { gap: 4 }"
+              >
+                <HStack v-if="!isNarrow" :gap="2" align="center" justify="between" class="summary-title">
                   <Text type="label">
                     Order summary
                   </Text>
                   <Badge variant="neutral" :label="`${itemCount} ${itemCount === 1 ? 'item' : 'items'}`" />
                 </HStack>
-                <VStack :gap="3">
-                  <HStack v-for="item in items" :key="item.id" :gap="3" align="start">
-                    <Thumbnail :src="item.src" :alt="item.name" />
-                    <StackItem size="fill">
-                      <VStack :gap="0.5">
-                        <HStack :gap="2" align="start" justify="between">
-                          <Text type="body" weight="medium">
-                            {{ item.name }}
+                <VStack :gap="4" :padding-block-start="isNarrow ? 3 : undefined">
+                  <VStack :gap="3">
+                    <HStack v-for="item in items" :key="item.id" :gap="3" align="start">
+                      <Thumbnail :src="item.src" :alt="item.name" />
+                      <StackItem size="fill">
+                        <VStack :gap="0.5">
+                          <HStack :gap="2" align="start" justify="between">
+                            <Text type="body" weight="medium">
+                              {{ item.name }}
+                            </Text>
+                            <Text type="body" weight="bold">
+                              {{ money(item.price * item.qty) }}
+                            </Text>
+                          </HStack>
+                          <Text type="supporting" color="secondary">
+                            {{ item.variant }} · Qty {{ item.qty }}
                           </Text>
-                          <Text type="body" weight="bold">
-                            {{ money(item.price * item.qty) }}
-                          </Text>
-                        </HStack>
-                        <Text type="supporting" color="secondary">
-                          {{ item.variant }} · Qty {{ item.qty }}
-                        </Text>
-                      </VStack>
-                    </StackItem>
-                  </HStack>
-                </VStack>
-                <Divider />
-                <VStack :gap="2">
-                  <HStack justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      Subtotal
-                    </Text>
-                    <Text type="body">
-                      {{ money(subtotal) }}
-                    </Text>
-                  </HStack>
-                  <HStack v-if="promo" justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      {{ promo.label }}
-                    </Text>
-                    <Text type="body">
-                      −{{ money(discount) }}
-                    </Text>
-                  </HStack>
-                  <HStack justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      {{ deliveryOption.label }} delivery
-                    </Text>
-                    <Text type="body">
-                      {{ shipping === 0 ? 'Free' : money(shipping) }}
-                    </Text>
-                  </HStack>
-                  <HStack justify="between" align="center">
-                    <Text type="body" color="secondary">
-                      Estimated tax
-                    </Text>
-                    <Text type="body">
-                      {{ money(tax) }}
-                    </Text>
-                  </HStack>
+                        </VStack>
+                      </StackItem>
+                    </HStack>
+                  </VStack>
                   <Divider />
-                  <HStack justify="between" align="center">
-                    <Text type="large" weight="bold">
-                      Total
-                    </Text>
-                    <Text type="large" weight="bold">
-                      {{ money(total) }}
-                    </Text>
-                  </HStack>
+                  <VStack :gap="2">
+                    <HStack justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        Subtotal
+                      </Text>
+                      <Text type="body">
+                        {{ money(subtotal) }}
+                      </Text>
+                    </HStack>
+                    <HStack v-if="promo" justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        {{ promo.label }}
+                      </Text>
+                      <Text type="body">
+                        −{{ money(discount) }}
+                      </Text>
+                    </HStack>
+                    <HStack justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        {{ deliveryOption.label }} delivery
+                      </Text>
+                      <Text type="body">
+                        {{ shipping === 0 ? 'Free' : money(shipping) }}
+                      </Text>
+                    </HStack>
+                    <HStack justify="between" align="center">
+                      <Text type="body" color="secondary">
+                        Estimated tax
+                      </Text>
+                      <Text type="body">
+                        {{ money(tax) }}
+                      </Text>
+                    </HStack>
+                    <Divider />
+                    <HStack justify="between" align="center">
+                      <Text type="large" weight="bold">
+                        Total
+                      </Text>
+                      <Text type="large" weight="bold">
+                        {{ money(total) }}
+                      </Text>
+                    </HStack>
+                  </VStack>
+                  <Banner
+                    v-if="subtotal - discount < FREE_SHIPPING_THRESHOLD"
+                    status="info"
+                    :title="`${money(FREE_SHIPPING_THRESHOLD - (subtotal - discount))} away from free standard shipping`"
+                  />
                 </VStack>
-                <Banner
-                  v-if="subtotal - discount < FREE_SHIPPING_THRESHOLD"
-                  status="info"
-                  :title="`${money(FREE_SHIPPING_THRESHOLD - (subtotal - discount))} away from free standard shipping`"
-                />
-              </VStack>
+              </component>
             </Card>
           </StackItem>
-        </HStack>
+        </Stack>
       </VStack>
     </LayoutContent>
   </Layout>
 </template>
 
 <style scoped>
+/* 摘要列固定 360 宽，表单滚过时贴在页面内边距处；窄版时排到表单前面、占满一行。 */
+.summary-column {
+  position: sticky;
+  top: var(--astryx-spacing-6);
+  flex-shrink: 0;
+  align-self: flex-start;
+  width: 360px;
+}
+.summary-column--narrow {
+  position: static;
+  order: -1;
+  align-self: stretch;
+  width: auto;
+}
 .quantity-field {
   display: block;
   flex: none;

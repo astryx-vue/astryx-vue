@@ -14,6 +14,8 @@
   --pg-solid-bg: #171717;
   --pg-solid-fg: #fff;
   --pg-handle: rgb(23 23 23 / 18%);
+  --pg-stage-bg: #fff;
+  --pg-stage-line: rgb(5 54 89 / 9.8%);
   --pg-rail: 56px;
 
   display: flex;
@@ -41,6 +43,8 @@ html.dark .Layout.playground-route {
   --pg-solid-bg: #fafafa;
   --pg-solid-fg: #171717;
   --pg-handle: rgb(255 255 255 / 28%);
+  --pg-stage-bg: #1f1f22;
+  --pg-stage-line: rgb(242 244 246 / 9.8%);
 
   color-scheme: dark;
 }
@@ -157,7 +161,7 @@ html.dark:has(.playground-route) body {
 .playground__surface {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: var(--editor-size, 440px) 10px minmax(0, 1fr);
+  grid-template-columns: var(--editor-size, 432px) 10px minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
@@ -439,8 +443,8 @@ html.dark:has(.playground-route) body {
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  min-height: 32px;
-  padding: 8px 12px;
+  height: 32px;
+  padding: 0 12px;
   border: 0;
   border-radius: 9999px;
   color: var(--pg-solid-fg);
@@ -484,9 +488,9 @@ html.dark:has(.playground-route) body {
   width: 100%;
   min-height: 0;
   overflow: hidden;
+  border: 1px solid var(--pg-stage-line);
   border-radius: 16px;
-  background: var(--pg-elevated);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+  background: var(--pg-stage-bg);
 }
 
 .playground__preview[data-device='phone'] .playground__stage {
@@ -941,6 +945,36 @@ html[data-playground-frame] body {
   font-family: var(--astryx-font-family-body);
 }
 
+/*
+ * 待 core 修复后去掉：neutral 主题把选中列表项底色定成蓝色半透明，原版是 accent-muted（浅灰 / 深灰）。
+ * 预览框里按原版的值画。
+ */
+html[data-playground-frame] {
+  --astryx-list-item-selected-background: var(--astryx-color-accent-muted);
+}
+
+/*
+ * 待 core 修复后去掉：Layout 的内容区是滚动容器却不是定位参照，里面绝对定位的隐藏控件
+ * （单选、开关的原生 input、读屏提示）找不到最近的定位祖先，会落到预览根上撑高整个文档
+ * （payment-form 页面高 1509 对 806）。原版内容区是定位参照。
+ */
+html[data-playground-frame] .astryx-layout-content {
+  position: relative;
+}
+
+/*
+ * 待 core 修复后去掉：Link 没有 `type` 属性（原版 `type="supporting"` 同时给 12px 字号和 20px 行高），
+ * 模板里用 `size="sm"` 取字号，行高在这里补成 supporting 的行高。
+ */
+html[data-playground-frame] .astryx-link--size-sm {
+  line-height: var(--astryx-text-supporting-leading, 1.6667);
+}
+
+/* 待 core 修复后去掉：Collapsible 触发行原版高 17（行高 25.5 的文字溢出出去），我们撑成 24。 */
+html[data-playground-frame] .astryx-collapsible-trigger {
+  height: 17px;
+}
+
 html[data-playground-frame] #app,
 html[data-playground-frame] #app > *,
 html[data-playground-frame] #app > * > * {
@@ -1138,4 +1172,19 @@ html[data-playground-frame] #playground-mount[data-preview-layout='center'] .pla
 .theme-token-row__input--spacing,
 .theme-token-row__input--radius {
   width: 80px;
+}
+
+/*
+ * 待 core 修复后去掉：隐藏标签（isLabelHidden）是 1px 的绝对定位盒，原版写了 `top: 0; left: 0`
+ * 把它钉在最近定位祖先的角上；我们没写 inset，它停在自己的文档位置上，
+ * 页面最下面的隐藏标签会把整个文档撑高、让滚动条多出一截。
+ */
+html[data-playground-frame] .astryx-field-label-group[data-hidden='true'] {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+/* 待 core / themes 修复后去掉：Selector 输入框内边距原版是 3px 12px，我们是 4px 8px，文字左移 4px。 */
+html[data-playground-frame] .astryx-selector-field {
+  padding: 3px 12px;
 }

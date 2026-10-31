@@ -270,6 +270,9 @@ catalogs:
     '@lexical/headless':
       specifier: 0.52.0
       version: 0.52.0
+    '@lexical/history':
+      specifier: 0.52.0
+      version: 0.52.0
     '@lexical/html':
       specifier: 0.52.0
       version: 0.52.0
@@ -283,6 +286,9 @@ catalogs:
       specifier: 0.52.0
       version: 0.52.0
     '@lexical/rich-text':
+      specifier: 0.52.0
+      version: 0.52.0
+    '@lexical/selection':
       specifier: 0.52.0
       version: 0.52.0
     '@lexical/table':
@@ -455,18 +461,63 @@ importers:
 
   apps/docs:
     dependencies:
+      '@astryx-vue/charts':
+        specifier: workspace:^
+        version: link:../../packages/charts
       '@astryx-vue/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@astryx-vue/richtext':
+        specifier: workspace:^
+        version: link:../../packages/richtext
       '@astryx-vue/themes':
         specifier: workspace:^
         version: link:../../packages/themes
+      '@lexical/code':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/extension':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/headless':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/history':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/html':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/link':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/list':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/markdown':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/rich-text':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/selection':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/table':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/utils':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
       '@monaco-editor/loader':
         specifier: catalog:docs
         version: 1.7.0
       '@vue/compiler-sfc':
         specifier: catalog:vue
         version: 3.5.43
+      lexical:
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
       monaco-editor:
         specifier: catalog:docs
         version: 0.55.1
@@ -653,6 +704,9 @@ importers:
       '@lexical/headless':
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/history':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
       '@lexical/html':
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
@@ -666,6 +720,9 @@ importers:
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
       '@lexical/rich-text':
+        specifier: catalog:richtext
+        version: 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/selection':
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
       '@lexical/table':
@@ -1490,6 +1547,14 @@ packages:
 
   '@lexical/headless@0.52.0':
     resolution: {integrity: sha512-/AvKTFBHUzGWqRuWEMGOOizlGTBrnGuu0O3g+IKj+var657uazbheDknhSq3lQGxDosOeesTM52II0kV65mEEQ==}
+    peerDependencies:
+      typescript: '>=5.2'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@lexical/history@0.52.0':
+    resolution: {integrity: sha512-UJWmTcru+4KWkk8YtBSQ4dNLYuOJVCyCMFGsaCp/jVJEobwdY//jCTj9idOfE4b3H39kAixe9yQG/FNNOj4ujg==}
     peerDependencies:
       typescript: '>=5.2'
     peerDependenciesMeta:
@@ -5385,6 +5450,14 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+
+  '@lexical/history@0.52.0(@typescript/typescript6@6.0.2)':
+    dependencies:
+      '@lexical/extension': 0.52.0(@typescript/typescript6@6.0.2)
+      '@lexical/utils': 0.52.0(@typescript/typescript6@6.0.2)
+      lexical: 0.52.0(@typescript/typescript6@6.0.2)
+    optionalDependencies:
+      typescript: '@typescript/typescript6@6.0.2'
 
   '@lexical/html@0.52.0(@typescript/typescript6@6.0.2)':
     dependencies:

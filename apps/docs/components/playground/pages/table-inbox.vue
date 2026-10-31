@@ -28,7 +28,7 @@ import {
   useTableRowStatus,
   VStack,
 } from '@astryx-vue/core'
-import type { TableColumn } from '@astryx-vue/core'
+import type { TableColumn, TablePlugin } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
 
 type Category = 'inbox' | 'escalations' | 'waiting' | 'resolved'
@@ -421,11 +421,21 @@ const category = ref<Category>('inbox')
 /** `undefined` 表示用户还没选过，按列表首条兜底；`null` 表示用户主动关掉了阅读栏。 */
 const chosenId = ref<string | null | undefined>(undefined)
 
+/** 面板默认占内容区的 2/3，百分比相对内容区算，不写死像素。 */
+const surfaceEl = ref<HTMLElement | null>(null)
+const PANE_MIN_WIDTH = 440
+
 const pane = useResizable({
-  defaultSize: 963,
-  minSize: 420,
-  maxSize: 1100,
+  containerRef: surfaceEl,
+  defaultSize: '66.67%',
+  minSize: PANE_MIN_WIDTH,
+  maxSize: '100%',
 })
+
+/** Layout 是组件，ref 拿到的是实例；这里取它的根元素当宽度基准。 */
+function setSurface(instance: unknown): void {
+  surfaceEl.value = (instance as { $el?: HTMLElement } | null)?.$el ?? null
+}
 
 const visible = computed(() => CONVERSATIONS.filter(item => inCategory(item, category.value)))
 
@@ -465,6 +475,41 @@ const rowStatus = useTableRowStatus<Conversation>({
   getStatus: item => (item.isUnread ? { color: 'accent', label: 'Unread' } : null),
 })
 
+/**
+ * 状态点列：16px 缩进 + 8px 圆点 + 密度在每格后留的 12px，共 36px。
+ * 原版用同样的 `transformColumns` 把插件自带的 28px 改成 36px（列 key 是插件内部的 `__rowStatus`）。
+ */
+const STATUS_GUTTER_WIDTH = 36
+const alignStatusGutter: TablePlugin<Conversation> = {
+  transformColumns: cols => cols.map(col => col.key === '__rowStatus' ? { ...col, width: pixel(STATUS_GUTTER_WIDTH) } : col),
+}
+
+/** 点到按钮、链接、勾选框这类控件时不算点中行本身。 */
+const INTERACTIVE_WITHIN_ROW = 'button, input, a, label, [role="checkbox"], [role="button"], [role="menuitem"]'
+
+function isRowItself(event: { target: EventTarget | null }): boolean {
+  return !(event.target as HTMLElement | null)?.closest(INTERACTIVE_WITHIN_ROW)
+}
+
+/** 整行可点、可聚焦；当前打开的那一行整行铺上强调色浅底，并标 aria-current。 */
+const inboxRows: TablePlugin<Conversation> = {
+  rowPatch(item) {
+    return {
+      attrs: { 'tabindex': '0', 'aria-current': item.id === openId.value ? 'true' : undefined },
+      class: 'inbox-row',
+      onClick: (event) => {
+        if (isRowItself(event))
+          openThread(item.id)
+      },
+    }
+  },
+  cellPatch({ row, kind }) {
+    if (kind !== 'body' || row == null || row.id !== openId.value)
+      return null
+    return { style: { backgroundColor: 'var(--astryx-color-accent-muted)' } }
+  },
+}
+
 const columns: TableColumn<Conversation>[] = [
   {
     key: 'conversation',
@@ -472,8 +517,6 @@ const columns: TableColumn<Conversation>[] = [
     width: proportional(1, { minWidth: 160 }),
     renderCell: item => h(VStack, {
       gap: 0.5,
-      style: { cursor: 'pointer' },
-      onClick: () => openThread(item.id),
     }, () => [
       h(Text, { maxLines: 1, weight: item.isUnread ? 'semibold' : 'normal' }, () => item.sender),
       h(Text, { maxLines: 1, color: 'secondary' }, () => item.subject),
@@ -482,14 +525,12 @@ const columns: TableColumn<Conversation>[] = [
   {
     key: 'receivedAt',
     header: 'Received',
-    width: pixel(110),
+    width: pixel(120),
     align: 'end',
     renderCell: item => h(HStack, {
       gap: 1,
       vAlign: 'center',
       hAlign: 'end',
-      style: { cursor: 'pointer' },
-      onClick: () => openThread(item.id),
     }, () => [
       item.attachments.length === 0
         ? null
@@ -513,7 +554,7 @@ const threadActions = [
 </script>
 
 <template>
-  <Layout height="fill">
+  <Layout :ref="setSurface" height="fill">
     <template #header>
       <LayoutHeader :padding="0">
         <VStack :gap="0">
@@ -560,7 +601,7 @@ const threadActions = [
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="4" is-scrollable>
+    <LayoutContent :padding="4" is-scrollable class="inbox-list">
       <Table
         :data="visible"
         :columns="columns"
@@ -569,7 +610,7 @@ const threadActions = [
         dividers="none"
         has-hover
         text-overflow="truncate"
-        :plugins="{ status: rowStatus }"
+        :plugins="{ status: rowStatus, gutter: alignStatusGutter, rows: inboxRows }"
       />
     </LayoutContent>
 
@@ -634,6 +675,7 @@ const threadActions = [
                 />
               </HStack>
 
+              <VStack :gap="2">
               <CollapsibleGroup
                 :key="openConversation.id"
                 type="multiple"
@@ -696,6 +738,7 @@ const threadActions = [
                   </HStack>
                 </Collapsible>
               </CollapsibleGroup>
+              </VStack>
 
               <HStack :gap="THREAD_HEADER_GAP">
                 <VStack :width="AVATAR_SIZE" />
@@ -719,3 +762,10 @@ const threadActions = [
     </template>
   </Layout>
 </template>
+
+<style scoped>
+/* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
+.inbox-list :deep(.astryx-table) {
+  table-layout: fixed;
+}
+</style>

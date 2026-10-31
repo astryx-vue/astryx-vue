@@ -44,7 +44,7 @@ function sortKeyOf<T extends Record<string, unknown>>(column: TableColumn<T>): s
 }
 
 function headerLabel<T extends Record<string, unknown>>(column: TableColumn<T>): string {
-  return column.header ?? column.key
+  return typeof column.header === 'string' && column.header !== '' ? column.header : column.key
 }
 
 function nextDirection(current: TableSortDirection | null, allowUnsorted: boolean): TableSortDirection | null {

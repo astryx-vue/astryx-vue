@@ -30,9 +30,15 @@ export interface TableSortEntry<TSortKey extends string = string> {
 
 export type TableSortState<TSortKey extends string = string> = TableSortEntry<TSortKey>[]
 
+export type TableColumnHeader = string | (() => VNodeChild)
+
 export interface TableColumn<T extends Record<string, unknown> = Record<string, unknown>> {
   key: string
-  header?: string
+  /**
+   * 列头内容。字符串直接显示；函数返回的 VNode 用函数式组件渲染（对应原版收
+   * ReactNode）。可访问名称等需要纯文本的地方，函数形式回退到 `key`。
+   */
+  header?: TableColumnHeader
   width?: ColumnWidth
   align?: TableColumnAlign
   verticalAlign?: TableVerticalAlign

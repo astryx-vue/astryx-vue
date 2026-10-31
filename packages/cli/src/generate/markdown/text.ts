@@ -9,6 +9,8 @@ export function cleanMarkdown(markdown: string): string {
     return text
       .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
       .replace(/<!--[\s\S]*?-->/g, '')
+      // VitePress 的提示容器（`::: warning` 到 `:::`）是页面提示，不是正文，不进摘要。
+      .replace(/^:::[ \t]*\w[^\n]*\n[\s\S]*?\n:::[ \t]*$/gm, '')
       .replace(/<(?:DemoExample|ComponentAnatomy|ComponentAccessibility|ComponentsOverview|ThemeStage|ThemeGallery)\b[\s\S]*?\/>/g, '')
   }))
 }
