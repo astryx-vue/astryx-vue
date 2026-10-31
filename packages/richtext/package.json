@@ -38,13 +38,17 @@
       "types": "./dist/markdown.d.ts",
       "import": "./dist/markdown.js"
     },
+    "./richtext.css": "./richtext.css",
+    "./styles/*.css": "./styles/*.css",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "README.md",
-    "dist"
+    "dist",
+    "richtext.css",
+    "styles"
   ],
   "scripts": {
     "build": "tsdown",
@@ -56,6 +60,7 @@
     "@lexical/code": "catalog:richtext",
     "@lexical/extension": "catalog:richtext",
     "@lexical/headless": "catalog:richtext",
+    "@lexical/history": "catalog:richtext",
     "@lexical/html": "catalog:richtext",
     "@lexical/link": "catalog:richtext",
     "@lexical/list": "catalog:richtext",
@@ -74,6 +79,9 @@
       "optional": true
     },
     "@lexical/headless": {
+      "optional": true
+    },
+    "@lexical/history": {
       "optional": true
     },
     "@lexical/html": {
@@ -106,6 +114,7 @@
     "@lexical/code": "catalog:richtext",
     "@lexical/extension": "catalog:richtext",
     "@lexical/headless": "catalog:richtext",
+    "@lexical/history": "catalog:richtext",
     "@lexical/html": "catalog:richtext",
     "@lexical/link": "catalog:richtext",
     "@lexical/list": "catalog:richtext",
@@ -133,7 +142,9 @@
         "types": "./dist/markdown.d.ts",
         "import": "./dist/markdown.js"
       },
-      "./package.json": "./package.json"
+      "./package.json": "./package.json",
+      "./richtext.css": "./richtext.css",
+      "./styles/*.css": "./styles/*.css"
     }
   }
 }
