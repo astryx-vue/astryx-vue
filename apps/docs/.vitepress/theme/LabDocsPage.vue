@@ -8,5 +8,7 @@ provideAstryxLocale(computed(() => page.value.relativePath.startsWith('en/') ? '
 </script>
 
 <template>
-  <Content />
+  <div class="vp-doc">
+    <Content />
+  </div>
 </template>
