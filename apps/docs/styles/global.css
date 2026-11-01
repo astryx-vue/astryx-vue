@@ -605,6 +605,7 @@ html.dark .component-card__frame {
 
 .component-detail__stage {
   display: grid;
+  box-sizing: border-box;
   /* 和总览卡片一样：列宽必须受容器约束，否则宽内容会顶出画布。 */
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
@@ -612,8 +613,7 @@ html.dark .component-card__frame {
   min-height: 513px;
   /* 原版 tab 条到画布隔 16px。 */
   margin-top: 16px;
-  /* 原版画布自身没有内边距，靠居中规则摆放组件。 */
-  padding: 0;
+  padding: 32px;
   overflow: hidden;
   isolation: isolate;
   border-radius: 16px;
@@ -662,6 +662,12 @@ html.dark .component-detail__stage {
 
 .component-detail__body > h2:first-child {
   margin-top: 36px;
+}
+
+.component-detail--props .component-detail__body h2:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .component-detail__body .header-anchor {
@@ -1226,37 +1232,71 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .component-api-table {
   margin: 18px 0;
   overflow-x: auto;
-  border: 1px solid var(--astryx-line);
-  border-radius: 12px;
+}
+
+.component-api-table table,
+:is(.vp-doc > table, .vp-doc > div table) {
+  display: block;
+  width: 100%;
+  margin: 18px 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: var(--astryx-color-text-primary, var(--astryx-text));
+  font-family: inherit;
 }
 
 .component-api-table table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+  display: table;
+  margin: 0;
+  overflow: visible;
 }
 
-.component-api-table th,
-.component-api-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--astryx-line);
-  text-align: left;
-  vertical-align: top;
-}
-
-.component-api-table th {
-  color: var(--astryx-text);
-  background: var(--vp-c-bg-soft);
-  font-weight: 400;
+.component-api-table code,
+:is(.vp-doc > table, .vp-doc > div table) code {
   white-space: nowrap;
 }
 
-.component-api-table td {
-  color: var(--astryx-text-muted);
+.component-api-table :is(th, td),
+:is(.vp-doc > table, .vp-doc > div table) :is(th, td) {
+  box-sizing: border-box;
+  padding-block: var(--astryx-spacing-2, 8px);
+  padding-inline: var(--astryx-spacing-3, 12px);
+  border: 0;
+  background: transparent;
+  text-align: start;
+  vertical-align: middle;
 }
 
-.component-api-table tbody tr:last-child td {
-  border-bottom: 0;
+.component-api-table th,
+:is(.vp-doc > table, .vp-doc > div table) th {
+  border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
+  color: var(--astryx-color-text-secondary, var(--astryx-text-muted));
+  font-size: var(--astryx-text-label-size, 1rem);
+  font-weight: var(--astryx-font-weight-semibold, 600);
+  white-space: nowrap;
+}
+
+.component-api-table td,
+:is(.vp-doc > table, .vp-doc > div table) td {
+  color: var(--astryx-color-text-primary, var(--astryx-text));
+  font-size: var(--astryx-text-body-size, 0.875rem);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.component-api-table tbody tr:not(:last-child) > td,
+:is(.vp-doc > table, .vp-doc > div table) tbody tr:not(:last-child) > td {
+  border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
+}
+
+.component-api-table tbody tr,
+:is(.vp-doc > table, .vp-doc > div table) tbody tr,
+:is(.vp-doc > table, .vp-doc > div table) tbody tr:nth-child(2n) {
+  border: 0;
+  background: transparent;
 }
 
 @media (width <= 1100px) {
@@ -1793,6 +1833,10 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   text-decoration: none;
 }
 
+.vp-doc a.astryx-link::after {
+  content: none;
+}
+
 .vp-doc a.astryx-link--color-primary {
   color: var(--astryx-link-primary-foreground, var(--astryx-color-text-primary, #171717));
 }
@@ -1846,6 +1890,25 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .vp-doc .astryx-code-block code,
 .vp-doc .astryx-code {
   all: revert-layer;
+}
+
+/*
+ * 富文本里的内容块（段落、标题、引用、表格、行内代码、代码块）同理：VitePress 的 `.vp-doc` 给它们
+ * 写了没放进任何层的样式（段落 16px 外边距、单元格 8px 16px 内边距、行内代码底色），盖过组件层里的规则，
+ * 单元格会被撑成两倍高。把这些声明退回组件层。
+ */
+.vp-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(p, h1, h2, h3, h4, h5, h6, blockquote, table, thead, tbody, tr, th, td, hr, code) {
+  all: revert-layer;
+}
+
+/*
+ * 列表不能用 `all: revert-layer`：退回去会把组件自己的标记样式一起丢掉。
+ * `.vp-doc ul` 把左内边距写成 1.25rem（20px），盖过组件层里的 24px，任务项往左缩 24px 就溢出列表 4px。
+ * 这里只把这一个声明写回去，边距和标记样式不动。
+ */
+.vp-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(ul, ol).astryx-richtext__list {
+  padding-inline-start: var(--astryx-spacing-6, 24px);
+  margin-block: var(--astryx-spacing-3, 12px);
 }
 
 .nav-item-preview,
@@ -2543,33 +2606,13 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /* 图表示例：图表自己量容器宽度，所以示例容器要占满一行。 */
-.vp-doc .astryx-demo.charts-demo {
+.astryx-demo.charts-demo {
   display: block;
   width: 100%;
 }
 
 /* 富文本示例：编辑器和只读视图都撑满一行，方便看排版。 */
-.vp-doc .astryx-demo.richtext-demo {
+.astryx-demo.richtext-demo {
   display: block;
   width: 100%;
-}
-
-.richtext-demo-hint {
-  margin-block: var(--astryx-spacing-2, 8px);
-  font-size: var(--astryx-text-supporting-size, 0.75rem);
-  color: var(--astryx-color-text-secondary, #525252);
-}
-
-.richtext-demo-button {
-  margin-inline-start: var(--astryx-spacing-1, 4px);
-  text-decoration: underline;
-}
-
-.richtext-demo-output {
-  margin: 0;
-  padding: var(--astryx-spacing-2, 8px);
-  border-radius: var(--astryx-radius-element, 0.625rem);
-  background: var(--astryx-color-background-muted, #f5f5f5);
-  font-size: var(--astryx-text-code-size, 0.8125rem);
-  white-space: pre-wrap;
 }

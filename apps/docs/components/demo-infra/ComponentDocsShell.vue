@@ -51,6 +51,14 @@ const exportName = computed(() => {
   const pascal = parts.join('')
   return props.route.slug.startsWith('use-') ? pascal.charAt(0).toLowerCase() + pascal.slice(1) : pascal
 })
+const packageName = computed(() => {
+  if (props.route.kind === 'detail' && props.route.slug === 'rich-text-editor')
+    return '@astryxdesign/richtext'
+  if (props.route.kind === 'detail' && props.route.slug === 'chart')
+    return '@astryxdesign/charts'
+  return UPSTREAM_PACKAGE
+})
+const packageVersion = computed(() => props.route.kind === 'detail' && props.route.slug === 'chart' ? '0.1.9' : UPSTREAM_VERSION)
 const sidebarOpen = ref(false)
 const isNarrow = ref(false)
 const menuButton = ref<HTMLButtonElement | null>(null)
@@ -132,7 +140,7 @@ watch(() => routePath.path, () => {
 </script>
 
 <template>
-  <main class="component-overview" :class="[{ 'component-detail': route.kind === 'detail', 'is-sidebar-open': sidebarOpen }]">
+  <main class="component-overview" :class="[{ 'component-detail': route.kind === 'detail', 'component-detail--props': route.kind === 'detail' && route.tab === 'props', 'is-sidebar-open': sidebarOpen }]">
     <div class="component-overview__toolbar" :inert="sidebarOpen ? true : undefined">
       <button
         ref="menuButton"
@@ -215,7 +223,7 @@ watch(() => routePath.path, () => {
         <header class="component-detail__header">
           <h1>{{ route.name }}</h1>
           <p v-if="exportName" class="component-detail__version">
-            {{ UPSTREAM_PACKAGE }} v{{ UPSTREAM_VERSION }} · {{ exportName }}
+            {{ text.alignmentTarget }}：{{ packageName }} v{{ packageVersion }} · {{ exportName }}
           </p>
         </header>
         <nav class="component-detail__tabs" :aria-label="`${route.name} ${text.documentation}`">
@@ -224,7 +232,7 @@ watch(() => routePath.path, () => {
           <a v-if="showAccessibility" :href="path(`/components/${route.slug}/accessibility`)" :aria-current="route.tab === 'accessibility' ? 'page' : undefined">{{ text.accessibility }}</a>
         </nav>
         <div v-if="route.tab === 'overview' && stageDemo" class="component-detail__stage">
-          <StageFit>
+          <StageFit :min-scale="route.slug === 'rich-text-editor' ? 1 : 0.5">
             <VueDemoHost
               :class-name="stageDemo.className"
               :component="stageDemo.component"

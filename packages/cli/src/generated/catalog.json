@@ -14,9 +14,9 @@
       "name": "@astryx-vue/charts",
       "directory": "packages/charts",
       "version": "0.0.0",
-      "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based). Ships only under the canary dist-tag.",
-      "canary": true,
-      "published": false
+      "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
+      "canary": false,
+      "published": true
     },
     {
       "name": "@astryx-vue/lab",
@@ -19863,6 +19863,1514 @@
       }
     },
     {
+      "slug": "chart",
+      "name": "Chart",
+      "package": "@astryx-vue/charts",
+      "kind": "component",
+      "title": {
+        "en": "Chart",
+        "zh": "图表"
+      },
+      "group": "Data Visualization",
+      "groupTitle": {
+        "en": "Data Visualization",
+        "zh": "数据可视化"
+      },
+      "importPath": "@astryx-vue/charts",
+      "exportName": "Chart",
+      "summary": {
+        "en": "Line chart with revenue and cost series, grid lines, axes, a bottom legend, and hover tooltips.",
+        "zh": "包含收入与成本两条折线，带有网格、坐标轴、底部图例以及鼠标悬停提示框。"
+      },
+      "usage": {
+        "en": "",
+        "zh": ""
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Line (`line`)",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "Auto from theme palette"
+              },
+              {
+                "name": "`curve`",
+                "description": "`curve`",
+                "type": "`'linear' \\",
+                "default": "'monotone' \\"
+              },
+              {
+                "name": "`strokeWidth`",
+                "description": "`strokeWidth`",
+                "type": "`number`",
+                "default": "`2`"
+              },
+              {
+                "name": "`dots`",
+                "description": "`dots`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "Bar (`bar`)",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`ColorAccessor`",
+                "default": "Auto from theme palette"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`1`"
+              },
+              {
+                "name": "`radius`",
+                "description": "`radius`",
+                "type": "`number`",
+                "default": "`4`"
+              },
+              {
+                "name": "`stack`",
+                "description": "`stack`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`group`",
+                "description": "`group`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "Area (`area`)",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "Auto from theme palette"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`0.3`"
+              },
+              {
+                "name": "`curve`",
+                "description": "`curve`",
+                "type": "`'linear' \\",
+                "default": "'monotone' \\"
+              },
+              {
+                "name": "`stack`",
+                "description": "`stack`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`gradient`",
+                "description": "`gradient`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`stroke`",
+                "description": "`stroke`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "Dot (`dot`)",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`ColorAccessor`",
+                "default": "Auto from theme palette"
+              },
+              {
+                "name": "`radius`",
+                "description": "`radius`",
+                "type": "`number`",
+                "default": "`4`"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`0.8`"
+              },
+              {
+                "name": "`dodge`",
+                "description": "`dodge`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "Band (`band`)",
+            "rows": [
+              {
+                "name": "`upper`",
+                "description": "`upper`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`lower`",
+                "description": "`lower`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "`'var(--color-accent)'`"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`0.15`"
+              }
+            ]
+          },
+          {
+            "heading": "Reference line (`referenceLine`)",
+            "rows": [
+              {
+                "name": "`y`",
+                "description": "`y`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`y2`",
+                "description": "`y2`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`x`",
+                "description": "`x`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-border-emphasized)'`"
+              },
+              {
+                "name": "`strokeWidth`",
+                "description": "`strokeWidth`",
+                "type": "`number`",
+                "default": "`1`"
+              },
+              {
+                "name": "`strokeDasharray`",
+                "description": "`strokeDasharray`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`labelPosition`",
+                "description": "`labelPosition`",
+                "type": "`'start' \\",
+                "default": "'end'`"
+              },
+              {
+                "name": "`bandOpacity`",
+                "description": "`bandOpacity`",
+                "type": "`number`",
+                "default": "`0.1`"
+              }
+            ]
+          },
+          {
+            "heading": "Error bar (`errorBar`)",
+            "rows": [
+              {
+                "name": "`high`",
+                "description": "`high`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`low`",
+                "description": "`low`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-text-primary)'`"
+              },
+              {
+                "name": "`strokeWidth`",
+                "description": "`strokeWidth`",
+                "type": "`number`",
+                "default": "`1.5`"
+              },
+              {
+                "name": "`capWidth`",
+                "description": "`capWidth`",
+                "type": "`number`",
+                "default": "`8`"
+              }
+            ]
+          },
+          {
+            "heading": "Candlestick (`candlestick`)",
+            "rows": [
+              {
+                "name": "`open`",
+                "description": "`open`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`high`",
+                "description": "`high`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`low`",
+                "description": "`low`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`close`",
+                "description": "`close`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`upColor`",
+                "description": "`upColor`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-success)'`"
+              },
+              {
+                "name": "`downColor`",
+                "description": "`downColor`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-error)'`"
+              }
+            ]
+          },
+          {
+            "heading": "Axes (`ChartAxis`)",
+            "rows": [
+              {
+                "name": "`position`",
+                "description": "`position`",
+                "type": "`'top' \\",
+                "default": "'right' \\"
+              },
+              {
+                "name": "`tickCount`",
+                "description": "`tickCount`",
+                "type": "`number`",
+                "default": "`5`"
+              },
+              {
+                "name": "`maxTicks`",
+                "description": "`maxTicks`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`tickFormat`",
+                "description": "`tickFormat`",
+                "type": "`(value: unknown) => string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`truncate`",
+                "description": "`truncate`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`animated`",
+                "description": "`animated`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`showAxisLine`",
+                "description": "`showAxisLine`",
+                "type": "`boolean`",
+                "default": "`true` on bottom axis only"
+              },
+              {
+                "name": "`showTicks`",
+                "description": "`showTicks`",
+                "type": "`boolean`",
+                "default": "`false`"
+              }
+            ]
+          },
+          {
+            "heading": "Grid (`ChartGrid`)",
+            "rows": [
+              {
+                "name": "`horizontal`",
+                "description": "`horizontal`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`vertical`",
+                "description": "`vertical`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`tickCount`",
+                "description": "`tickCount`",
+                "type": "`number`",
+                "default": "`5`"
+              }
+            ]
+          },
+          {
+            "heading": "Legend (`ChartLegend`)",
+            "rows": [
+              {
+                "name": "`items`",
+                "description": "`items`",
+                "type": "`LegendItem[]`",
+                "default": "`[]`"
+              },
+              {
+                "name": "`position`",
+                "description": "`position`",
+                "type": "`'top' \\",
+                "default": "'bottom' \\"
+              },
+              {
+                "name": "`alignment`",
+                "description": "`alignment`",
+                "type": "`'start' \\",
+                "default": "'center' \\"
+              }
+            ]
+          },
+          {
+            "heading": "Tooltip (`ChartTooltip`)",
+            "rows": [
+              {
+                "name": "`series`",
+                "description": "`series`",
+                "type": "`readonly SeriesDef[]`",
+                "default": "Injected by Chart"
+              },
+              {
+                "name": "`hoverIndicator`",
+                "description": "`hoverIndicator`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`showHoverDots`",
+                "description": "`showHoverDots`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`placement`",
+                "description": "`placement`",
+                "type": "`'auto' \\",
+                "default": "'right' \\"
+              }
+            ]
+          },
+          {
+            "heading": "Swatch (`ChartSwatch`)",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`variant`",
+                "description": "`variant`",
+                "type": "`'square' \\",
+                "default": "'line'`"
+              }
+            ]
+          },
+          {
+            "heading": "Props",
+            "rows": [
+              {
+                "name": "`data`",
+                "type": "`Record[]`",
+                "default": "**Required**",
+                "description": "Rows of data to render. Each row contains an x-axis field and one or more series fields."
+              },
+              {
+                "name": "`xKey`",
+                "type": "`string`",
+                "default": "**Required**",
+                "description": "Field name used as the x value across all series."
+              },
+              {
+                "name": "`series`",
+                "type": "`SeriesDef[]`",
+                "default": "**Required**",
+                "description": "Array of series definitions, rendered in order on a shared coordinate system."
+              },
+              {
+                "name": "`height`",
+                "type": "`number`",
+                "default": "`300`",
+                "description": "Chart height in CSS pixels. Non-finite values and negative numbers are treated as 0."
+              },
+              {
+                "name": "`width`",
+                "type": "`number`",
+                "default": "`0`",
+                "description": "Chart width in CSS pixels. Ignored after the browser first measures the container. Used during server-side rendering when no DOM container exists."
+              },
+              {
+                "name": "`margin`",
+                "type": "`Partial`",
+                "default": "`{ top: 24, right: 24, bottom: 32, left: 48 }`",
+                "description": "Partial margin overrides for the plotting area. Omitted sides use defaults."
+              },
+              {
+                "name": "`yBaseline`",
+                "type": "`'auto' \\",
+                "default": "'zero' \\",
+                "description": "'data'`"
+              },
+              {
+                "name": "`yDomain`",
+                "type": "`[number, number]`",
+                "default": "`undefined`",
+                "description": "Explicit y-axis range `[min, max]`. When set, this range is used directly without baseline adjustments or edge padding."
+              },
+              {
+                "name": "`xDomain`",
+                "type": "`[number, number]`",
+                "default": "`undefined`",
+                "description": "Explicit range `[min, max]` for numeric x-axes. Stays active even when `data` is empty, keeping streaming windows stable. Ignored on categorical band axes."
+              },
+              {
+                "name": "`legend`",
+                "type": "`boolean \\",
+                "default": "ChartLegendConfig`",
+                "description": "`false`"
+              },
+              {
+                "name": "`tooltip`",
+                "type": "`boolean \\",
+                "default": "ChartTooltipConfig`",
+                "description": "`false`"
+              },
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "`undefined`",
+                "description": "Chart title, used as the SVG accessible name."
+              },
+              {
+                "name": "`subtitle`",
+                "type": "`string`",
+                "default": "`undefined`",
+                "description": "Supporting text below the title, used as the SVG accessible description."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "折线（line）",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "自动取色"
+              },
+              {
+                "name": "`curve`",
+                "description": "`curve`",
+                "type": "`'linear' \\",
+                "default": "'monotone' \\"
+              },
+              {
+                "name": "`strokeWidth`",
+                "description": "`strokeWidth`",
+                "type": "`number`",
+                "default": "`2`"
+              },
+              {
+                "name": "`dots`",
+                "description": "`dots`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "柱状（bar）",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`ColorAccessor`",
+                "default": "自动取色"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`1`"
+              },
+              {
+                "name": "`radius`",
+                "description": "`radius`",
+                "type": "`number`",
+                "default": "`4`"
+              },
+              {
+                "name": "`stack`",
+                "description": "`stack`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`group`",
+                "description": "`group`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "面积（area）",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "自动取色"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`0.3`"
+              },
+              {
+                "name": "`curve`",
+                "description": "`curve`",
+                "type": "`'linear' \\",
+                "default": "'monotone' \\"
+              },
+              {
+                "name": "`stack`",
+                "description": "`stack`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`gradient`",
+                "description": "`gradient`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`stroke`",
+                "description": "`stroke`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "散点（dot）",
+            "rows": [
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`ColorAccessor`",
+                "default": "自动取色"
+              },
+              {
+                "name": "`radius`",
+                "description": "`radius`",
+                "type": "`number`",
+                "default": "`4`"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`0.8`"
+              },
+              {
+                "name": "`dodge`",
+                "description": "`dodge`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`dataKey`"
+              }
+            ]
+          },
+          {
+            "heading": "区间带（band）",
+            "rows": [
+              {
+                "name": "`upper`",
+                "description": "`upper`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`lower`",
+                "description": "`lower`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "`'var(--color-accent)'`"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`0.15`"
+              }
+            ]
+          },
+          {
+            "heading": "参考线（referenceLine）",
+            "rows": [
+              {
+                "name": "`y`",
+                "description": "`y`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`y2`",
+                "description": "`y2`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`x`",
+                "description": "`x`",
+                "type": "`number`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-border-emphasized)'`"
+              },
+              {
+                "name": "`strokeWidth`",
+                "description": "`strokeWidth`",
+                "type": "`number`",
+                "default": "`1`"
+              },
+              {
+                "name": "`strokeDasharray`",
+                "description": "`strokeDasharray`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`labelPosition`",
+                "description": "`labelPosition`",
+                "type": "`'start' \\",
+                "default": "'end'`"
+              },
+              {
+                "name": "`bandOpacity`",
+                "description": "`bandOpacity`",
+                "type": "`number`",
+                "default": "`0.1`"
+              }
+            ]
+          },
+          {
+            "heading": "误差条（errorBar）",
+            "rows": [
+              {
+                "name": "`high`",
+                "description": "`high`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`low`",
+                "description": "`low`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-text-primary)'`"
+              },
+              {
+                "name": "`strokeWidth`",
+                "description": "`strokeWidth`",
+                "type": "`number`",
+                "default": "`1.5`"
+              },
+              {
+                "name": "`capWidth`",
+                "description": "`capWidth`",
+                "type": "`number`",
+                "default": "`8`"
+              }
+            ]
+          },
+          {
+            "heading": "蜡烛图（candlestick）",
+            "rows": [
+              {
+                "name": "`open`",
+                "description": "`open`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`high`",
+                "description": "`high`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`low`",
+                "description": "`low`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`close`",
+                "description": "`close`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`upColor`",
+                "description": "`upColor`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-success)'`"
+              },
+              {
+                "name": "`downColor`",
+                "description": "`downColor`",
+                "type": "`string`",
+                "default": "`'var(--astryx-color-error)'`"
+              }
+            ]
+          },
+          {
+            "heading": "坐标轴（ChartAxis）",
+            "rows": [
+              {
+                "name": "`position`",
+                "type": "`'top' \\",
+                "default": "'right' \\",
+                "description": "'bottom' \\"
+              },
+              {
+                "name": "`tickCount`",
+                "type": "`number`",
+                "default": "`5`",
+                "description": "期望显示的刻度数量（该值为参考值，d3 会计算出最工整的步长）。"
+              },
+              {
+                "name": "`maxTicks`",
+                "type": "`number`",
+                "default": "`undefined`",
+                "description": "允许显示的最大刻度文字数量，超出时会等间隔跳过。"
+              },
+              {
+                "name": "`tickFormat`",
+                "type": "`(value: unknown) => string`",
+                "default": "`undefined`",
+                "description": "自定义刻度文字的格式化函数。"
+              },
+              {
+                "name": "`truncate`",
+                "type": "`number`",
+                "default": "`undefined`",
+                "description": "刻度文字最大字符数，超出截断并追加省略号。"
+              },
+              {
+                "name": "`animated`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "刻度位置发生变化时是否开启平滑过渡动画。"
+              },
+              {
+                "name": "`showAxisLine`",
+                "type": "`boolean`",
+                "default": "仅底轴为 `true`",
+                "description": "是否绘制轴线。如果设置了 `showTicks`，无论哪条轴都会强制画出轴线。"
+              },
+              {
+                "name": "`showTicks`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "是否在每个刻度位置画一小段垂直的短刻度须线。"
+              }
+            ]
+          },
+          {
+            "heading": "网格（ChartGrid）",
+            "rows": [
+              {
+                "name": "`horizontal`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否绘制水平网格线。"
+              },
+              {
+                "name": "`vertical`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "是否绘制垂直网格线。"
+              },
+              {
+                "name": "`tickCount`",
+                "type": "`number`",
+                "default": "`5`",
+                "description": "大约绘制几条网格线。与 `` 的 `tickCount` 保持一致可使网格与刻度完全对齐。"
+              }
+            ]
+          },
+          {
+            "heading": "图例（ChartLegend）",
+            "rows": [
+              {
+                "name": "`items`",
+                "type": "`LegendItem[]`",
+                "default": "`[]`",
+                "description": "显式指定的图例项数组。不传则自动从系列推导。"
+              },
+              {
+                "name": "`position`",
+                "type": "`'top' \\",
+                "default": "'bottom' \\",
+                "description": "'start' \\"
+              },
+              {
+                "name": "`alignment`",
+                "type": "`'start' \\",
+                "default": "'center' \\",
+                "description": "'end'`"
+              }
+            ]
+          },
+          {
+            "heading": "提示框（ChartTooltip）",
+            "rows": [
+              {
+                "name": "`series`",
+                "type": "`readonly SeriesDef[]`",
+                "default": "由 Chart 注入",
+                "description": "系列定义。独立使用该组件时需要传入同一份 `series` 数组。"
+              },
+              {
+                "name": "`hoverIndicator`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "悬停时是否绘制辅助指示。柱状图高亮整列，折线、面积和散点绘制垂直指示线。"
+              },
+              {
+                "name": "`showHoverDots`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否在悬停的数据点上显示高亮小圆点（柱状图自动跳过）。"
+              },
+              {
+                "name": "`placement`",
+                "type": "`'auto' \\",
+                "default": "'right' \\",
+                "description": "'left' \\"
+              }
+            ]
+          },
+          {
+            "heading": "颜色色块（ChartSwatch）",
+            "rows": [
+              {
+                "name": "`color`",
+                "type": "`string`",
+                "default": "**必填**",
+                "description": "填充颜色值。"
+              },
+              {
+                "name": "`variant`",
+                "type": "`'square' \\",
+                "default": "'line'`",
+                "description": "`'square'`"
+              }
+            ]
+          },
+          {
+            "heading": "属性",
+            "rows": [
+              {
+                "name": "`data`",
+                "type": "`Record[]`",
+                "default": "**必填**",
+                "description": "要画的数据行。每行既有 x 对应的列，也有一到多个系列的数据列。"
+              },
+              {
+                "name": "`xKey`",
+                "type": "`string`",
+                "default": "**必填**",
+                "description": "每行里当 x 用的字段名，所有系列共用。"
+              },
+              {
+                "name": "`series`",
+                "type": "`SeriesDef[]`",
+                "default": "**必填**",
+                "description": "标记定义数组，按顺序画在同一套坐标系上。"
+              },
+              {
+                "name": "`height`",
+                "type": "`number`",
+                "default": "`300`",
+                "description": "图表高度（单位是 CSS 像素）。非有限值和负数都会当成 0 处理。"
+              },
+              {
+                "name": "`width`",
+                "type": "`number`",
+                "default": "`0`",
+                "description": "图表宽度（单位是 CSS 像素）。浏览器里第一次量到容器宽度后就不再使用；服务端渲染时没有容器可量，全靠它出图。"
+              },
+              {
+                "name": "`margin`",
+                "type": "`Partial`",
+                "default": "`{ top: 24, right: 24, bottom: 32, left: 48 }`",
+                "description": "绘图区内边距的部分覆盖值，没传的边使用默认留白。"
+              },
+              {
+                "name": "`yBaseline`",
+                "type": "`'auto' \\",
+                "default": "'zero' \\",
+                "description": "'data'`"
+              },
+              {
+                "name": "`yDomain`",
+                "type": "`[number, number]`",
+                "default": "`undefined`",
+                "description": "显式指定的 y 轴范围 `[min, max]`。一旦指定就以此为准，不额外加基线、也不留上下余量。"
+              },
+              {
+                "name": "`xDomain`",
+                "type": "`[number, number]`",
+                "default": "`undefined`",
+                "description": "数值 x 轴的显式范围 `[min, max]`。即使 `data` 为空也会照常生效（保证流式更新窗口稳定）。在离散类目的 band 轴上会被忽略。"
+              },
+              {
+                "name": "`legend`",
+                "type": "`boolean \\",
+                "default": "ChartLegendConfig`",
+                "description": "`false`"
+              },
+              {
+                "name": "`tooltip`",
+                "type": "`boolean \\",
+                "default": "ChartTooltipConfig`",
+                "description": "`false`"
+              },
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "`undefined`",
+                "description": "图表标题，同时作为 SVG 的无障碍名称（Accessible Name）。"
+              },
+              {
+                "name": "`subtitle`",
+                "type": "`string`",
+                "default": "`undefined`",
+                "description": "标题下方的补充说明文字，同时作为 SVG 的无障碍描述。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [
+          {
+            "heading": "Slots",
+            "rows": [
+              {
+                "name": "`grid`",
+                "description": "None"
+              },
+              {
+                "name": "`axes`",
+                "description": "None"
+              },
+              {
+                "name": "`interactions`",
+                "description": "None"
+              },
+              {
+                "name": "`tooltip`",
+                "description": "`{ xValue: unknown, rows: unknown[] }`"
+              },
+              {
+                "name": "`default`",
+                "description": "None"
+              }
+            ]
+          }
+        ],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "插槽",
+            "rows": [
+              {
+                "name": "`grid`",
+                "payload": "无",
+                "description": "画在系列后方的背景网格，通常放置 ``。"
+              },
+              {
+                "name": "`axes`",
+                "payload": "无",
+                "description": "画在系列后方的坐标轴，通常放置若干个 ``。"
+              },
+              {
+                "name": "`interactions`",
+                "payload": "无",
+                "description": "画在指针捕获层上方的自定义交互图层。"
+              },
+              {
+                "name": "`tooltip`",
+                "payload": "`{ xValue: unknown, rows: unknown[] }`",
+                "description": "提示框的自定义内容插槽。`xValue` 是当前悬停的 x 坐标值，`rows` 是当前行对应各个系列的数据明细。"
+              },
+              {
+                "name": "`default`",
+                "payload": "无",
+                "description": "额外扩展内容，画在内置提示框图层之后。"
+              }
+            ]
+          }
+        ]
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Overview",
+            "text": "`@astryx-vue/charts` uses d3 to calculate scales and geometry, then renders SVG with Vue. Each chart contains a `<Chart>` canvas and one or more series, such as lines, bars, or areas."
+          },
+          {
+            "heading": "Install",
+            "text": "```bash\npnpm add @astryx-vue/charts\n```\n\n`@astryx-vue/charts` depends on `@astryx-vue/core` and `vue`. Make sure both are installed in your project.\n\nThe library includes base styles. Import the full stylesheet in your entry file:\n\n```ts\nimport '@astryx-vue/charts/charts.css'\n```\n\nTo load styles on demand, import individual files from `@astryx-vue/charts/styles/`, such as `chart.css`, `chart-axis.css`, `chart-grid.css`, `chart-legend.css`, `chart-tooltip.css`, or `chart-swatch.css`."
+          },
+          {
+            "heading": "Your first chart",
+            "text": "A minimal chart requires three props on `<Chart>`:\n- `data`: An array of objects where each item represents one row of data.\n- `xKey`: The field name in each row to use for the horizontal x-axis.\n- `series`: An array of series definitions created with functions such as `line()` or `bar()`.\n\nHere is the shortest working line chart:\n\n```vue\n<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, line } from '@astryx-vue/charts'\n\n// 1. Prepare data\nconst data = [\n  { month: 'Jan', revenue: 100, cost: 60 },\n  { month: 'Feb', revenue: 150, cost: 80 },\n  { month: 'Mar', revenue: 120, cost: 70 },\n]\n\n// 2. Define series: two lines reading revenue and cost\nconst series = [\n  line('revenue', { label: 'Revenue' }),\n  line('cost', { label: 'Cost' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"data\" x-key=\"month\" :series=\"series\" :height=\"260\" legend tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>\n```\n\nHere is the live result:"
+          },
+          {
+            "heading": "Series",
+            "text": "A series defines a visual representation of data on the chart. A series object holds internal state during layout and rendering. Because of this, provide each series object to one `<Chart>` only. Create fresh series definitions for each chart instance.\n\nWhen data has missing values (`null`, `undefined`) or non-finite numbers (`NaN`, `Infinity`), line marks break cleanly and leave an empty gap. They never drop to zero or draw false connections across gaps.\n\nWhen `yDomain` is omitted, `yBaseline` controls how the y-axis range is calculated:\n- `'auto'` (default): Marks with a zero baseline (bars, areas) include 0 in the scale. Continuous point marks (lines, dots) keep small padding on both ends so points do not clip at the edges.\n- `'zero'`': Expands the scale symmetrically around 0. Useful for values that swing positive and negative, such as profit and loss.\n- `'data'`: Clamps tightly to the minimum and maximum data values without forcing 0 or adding edge padding."
+          },
+          {
+            "heading": "Line (`line`)",
+            "text": "A line series shows continuous trends over time or across categories.\n\n```ts\ndeclare function line(dataKey: string, options?: LineOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Bar (`bar`)",
+            "text": "A bar series compares magnitudes across categories or time steps. Bars with the same `group` split the category bandwidth and sit side by side. Bars with the same `stack` stack on top of each other.\n\n```ts\ndeclare function bar(dataKey: string, options?: BarOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Area (`area`)",
+            "text": "An area series fills the region below a line. It is useful for showing total volume and changing proportions over time. Giving multiple area series the same `stack` name stacks them in order.\n\n```ts\ndeclare function area(dataKey: string, options?: AreaOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Dot (`dot`)",
+            "text": "A dot series shows the distribution of discrete data points.\n\n```ts\ndeclare function dot(dataKey: string, options?: DotOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Band (`band`)",
+            "text": "A band series fills a translucent area between an upper and a lower boundary field. It is often used to show forecast confidence intervals. Band marks are annotations, so they do not appear in legends or tooltips.\n\n```ts\ndeclare function band(options: BandOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Reference line (`referenceLine`)",
+            "text": "A reference line marks a specific horizontal or vertical threshold on the chart, or fills a shaded region between two horizontal values. Reference lines are annotations, so they do not appear in legends or tooltips.\n\n```ts\ndeclare function referenceLine(options: ReferenceLineOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Error bar (`errorBar`)",
+            "text": "An error bar (whisker) displays value uncertainty. It is usually paired with `bar()` or `dot()`. Boundary fields use absolute values, allowing asymmetric error intervals. If a row lacks an upper or lower bound, the chart skips that point instead of drawing misleading lines to zero. Error bars are annotations, so they do not appear in legends or tooltips.\n\n```ts\ndeclare function errorBar(options: ErrorBarOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Candlestick (`candlestick`)",
+            "text": "A candlestick series displays open, high, low, and close prices over time, commonly used in financial charts.\n\n```ts\ndeclare function candlestick(options: CandlestickOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "Axes, grid, legend, tooltip",
+            "text": "Supporting chart elements are provided as individual components. You can combine and configure them independently. Setting `legend` or `tooltip` to `true` on `<Chart>` enables their defaults. Pass an object to customize position and layout."
+          },
+          {
+            "heading": "Axes (`ChartAxis`)",
+            "text": "Axes render along chart edges to display ticks and label text."
+          },
+          {
+            "heading": "Grid (`ChartGrid`)",
+            "text": "Grid lines render behind series elements to help align values visually."
+          },
+          {
+            "heading": "Legend (`ChartLegend`)",
+            "text": "A legend lists series names alongside their representative colors. Setting `legend` on `<Chart>` shows the legend (off by default), or use the `<ChartLegend>` component directly."
+          },
+          {
+            "heading": "Tooltip (`ChartTooltip`)",
+            "text": "A tooltip displays details for the data row under the pointer."
+          },
+          {
+            "heading": "Swatch (`ChartSwatch`)",
+            "text": "A swatch renders a small color marker representing a series, useful inside legends or custom tooltips."
+          },
+          {
+            "heading": "Custom tooltip content",
+            "text": "When the default tooltip layout is not enough, customize the card content through the `#tooltip` slot on `<Chart>`. The slot exposes the active `xValue` and row details in `rows`:\n\n```vue\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" tooltip>\n    <template #tooltip=\"{ xValue, rows }\">\n      <div class=\"my-custom-tooltip\">\n        <strong>{{ xValue }}</strong>\n        <div v-for=\"row in asRows(rows)\" :key=\"row.key\">\n          <ChartSwatch :color=\"row.color\" variant=\"line\" />\n          {{ row.label }}: {{ money(row.value) }}\n        </div>\n      </div>\n    </template>\n  </Chart>\n</template>\n```"
+          },
+          {
+            "heading": "Colors",
+            "text": "When a series does not set an explicit color, the chart assigns one automatically in order from the active theme palette.\n\nAll chart colors use CSS variables underneath. When switching themes or toggling dark mode, chart colors update automatically without re-rendering the SVG tree.\n\nTo inspect or use the current chart palette programmatically, call `useChartColors()`. It returns a shared object across the package:\n\n- `categorical(n: number)`: Returns an array of `n` categorical colors. If `n` exceeds palette size, colors cycle.\n- `sequential`: Sequential color scale helper supporting nine hues (`blue`, `shamrock`, `orange`, `pink`, `purple`, `red`, `teal`, `yellow`, `gray`). Passing a count `n` returns a gradient color array.\n- `diverging`: Two-pole diverging palette helper. Provides `positiveNegative`, `coldHot`, and `custom` (custom hues on each pole).\n- `semantic`: Semantic status colors, containing `positive`, `negative`, `warning`, and `neutral`.\n- `structural`: Structural colors for chart framing, containing `axis`, `grid`, `tick`, and `label`.\n- `alpha(color: string, opacity: number)`: Generates a color with an alpha channel for a given opacity. CSS variables use `color-mix()` automatically."
+          },
+          {
+            "heading": "Formatting functions",
+            "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale)`: Formats dates as a short month and day. For example, \"Jan 5\".\n- `monthYear(value, locale)`: Formats dates as month and year. For example, \"Jan 2024\".\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
+          },
+          {
+            "heading": "Accessibility",
+            "text": "Charts include built-in accessibility features so screen reader users can understand chart content:\n\n- The root element has a `role=\"img\"` attribute.\n- The chart's accessible name prioritizes the `title` prop. When `title` is omitted, the component builds a semantic description from primary series and the x-axis field (such as \"Monthly Revenue and Cost trend\"). If only annotations are present, it falls back to \"Chart\".\n- The `subtitle` prop maps to the chart's accessible description.\n- When total data points (data rows × data columns) do not exceed 100 (`MAX_TABLE_POINTS`), the chart generates a visually hidden data table using `VisuallyHidden`. Screen readers can read exact values row by row. Above 100 points, the table is omitted to prevent excessive speech noise."
+          },
+          {
+            "heading": "Server-side rendering",
+            "text": "During server-side rendering (SSR), no browser DOM exists, so the component cannot measure parent container width in pixels.\n\nWhen rendering on the server, pass an explicit `width` prop on `<Chart>`. This allows the server to compute scales and render complete SVG paths and rectangles into HTML. After client-side hydration, once the browser measures the real container width, the chart takes over and responds to container resize events."
+          },
+          {
+            "heading": "Not supported yet",
+            "text": "To stay lightweight and focused, the package currently leaves out:\n- Four WebGL-based series marks for very large datasets (such as `dotGL`) are not yet included.\n- The Nuxt module does not yet include auto-import switches for `@astryx-vue/charts`. Import components manually when using Nuxt."
+          },
+          {
+            "heading": "`<Chart>` props and slots",
+            "text": "`<Chart>` is the root container. It measures container dimensions, builds coordinate scales, calculates geometry positions, and renders the SVG tree."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "概述",
+            "text": "`@astryx-vue/charts` 使用 d3 计算比例尺和图形路径，再由 Vue 渲染 SVG。每个图表由一个 `<Chart>` 画布和一个或多个系列组成；系列可以是折线、柱状、面积或其他数据标记。"
+          },
+          {
+            "heading": "安装",
+            "text": "```bash\npnpm add @astryx-vue/charts\n```\n\n`@astryx-vue/charts` 依赖同级的 `@astryx-vue/core` 和 `vue`，请确保项目中已经安装了它们。\n\n图表内置了基础样式。你可以在入口文件引入完整样式文件：\n\n```ts\nimport '@astryx-vue/charts/charts.css'\n```\n\n如果你想按需加载样式，也可以只引入 `@astryx-vue/charts/styles/` 目录下的某一个样式文件（例如 `chart.css`、`chart-axis.css`、`chart-grid.css`、`chart-legend.css`、`chart-tooltip.css` 或 `chart-swatch.css`）。"
+          },
+          {
+            "heading": "第一张图",
+            "text": "画一张图最少需要给 `<Chart>` 传三个必填属性：\n- `data`：要展示的数据数组，每一项是一行对象。\n- `xKey`：指定每行对象中哪个字段当作横坐标（x 轴）。\n- `series`：标记系列数组，用 `line()`、`bar()` 等函数生成。\n\n下面是一段最短的可运行折线图代码：\n\n```vue\n<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, line } from '@astryx-vue/charts'\n\n// 1. 准备数据\nconst data = [\n  { month: '1月', revenue: 100, cost: 60 },\n  { month: '2月', revenue: 150, cost: 80 },\n  { month: '3月', revenue: 120, cost: 70 },\n]\n\n// 2. 定义系列：画两条线，一条读 revenue，一条读 cost\nconst series = [\n  line('revenue', { label: '收入' }),\n  line('cost', { label: '成本' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"data\" x-key=\"month\" :series=\"series\" :height=\"260\" legend tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>\n```\n\n实际运行效果如下："
+          },
+          {
+            "heading": "系列",
+            "text": "系列代表图表上展示的具体数据图形。同一个系列对象在布局和渲染时会被写入内部状态，所以同一个系列对象只能提供给一个 `<Chart>` 使用，每张图都要重新创建一份。\n\n如果数据中存在缺失值（`null`、`undefined`）或非有限数字（`NaN`、`Infinity`），折线会自然断开形成空洞，不会强行掉到 0 基线上画出一条错误虚假的连线。\n\n在不设置显式 `yDomain` 时，y 轴的范围由 `yBaseline` 决定：\n- `'auto'`（默认）：带零基线的标记（柱状图、面积图）会把 0 算进坐标范围；只有离散连续点的图表（折线图、散点图等）会在上下两侧保留一点余量，防止数据点贴在画布边缘。\n- `'zero'`：以 0 为中心对称展开坐标轴，适合展示正负波动数据（比如盈利与亏损）。\n- `'data'`：紧贴实际数据的最大值与最小值，不强制包含 0，也不留任何边缘余量。"
+          },
+          {
+            "heading": "折线（line）",
+            "text": "折线用于展示数据随时间或类目的连续变化趋势。\n\n```ts\ndeclare function line(dataKey: string, options?: LineOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "柱状（bar）",
+            "text": "柱状图用于对比不同分类或时间点下的数值大小。相同 `group` 的柱子会把带宽平分并排展示；相同 `stack` 的柱子会一层层堆叠起来展示。\n\n```ts\ndeclare function bar(dataKey: string, options?: BarOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "面积（area）",
+            "text": "面积图在折线下方填充颜色，非常适合表现总量以及各部分占比的变化。如果给多个面积系列指定相同的 `stack` 名字，它们会逐层叠起来。\n\n```ts\ndeclare function area(dataKey: string, options?: AreaOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "散点（dot）",
+            "text": "散点图用于展示离散数据点的分布情况。\n\n```ts\ndeclare function dot(dataKey: string, options?: DotOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "区间带（band）",
+            "text": "区间带用于在上下两个边界字段之间涂满一层半透明的带状区域，通常用来展示预测区间的波动范围。它属于辅助标注标记，不会出现在图例和悬停提示框中。\n\n```ts\ndeclare function band(options: BandOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "参考线（referenceLine）",
+            "text": "参考线可以在图表指定的数值位置画一条横线、竖线，或者在两条横线之间涂上一段浅色参考带，常用于标记阈值或目标值。它属于辅助标注标记，不进入图例和提示框。\n\n```ts\ndeclare function referenceLine(options: ReferenceLineOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "误差条（errorBar）",
+            "text": "误差条（须线）用于展示数值的不确定性范围。它通常配合 `bar()` 或 `dot()` 一起使用。需要注意的是，误差条传入的上下界字段是绝对数值，因此即使上下误差不对称也可以正确绘制。如果某一行缺失了上界或下界，则会直接跳过该点，绝不绘制误导人的零刻度须线。它属于辅助标注标记，不进入图例和提示框。\n\n```ts\ndeclare function errorBar(options: ErrorBarOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "蜡烛图（candlestick）",
+            "text": "蜡烛图（K 线图）用于金融等场景，展示一段时间内的开盘、最高、最低和收盘价。\n\n```ts\ndeclare function candlestick(options: CandlestickOptions): SeriesDef\n```"
+          },
+          {
+            "heading": "坐标轴、网格、图例、提示框",
+            "text": "图表的辅助元素均以独立组件的形式提供，你可以自由组合和调整。在 `<Chart>` 上直接给 `legend` 或 `tooltip` 传 `true` 即可启用默认样式，也可以传配置对象调整位置。"
+          },
+          {
+            "heading": "坐标轴（ChartAxis）",
+            "text": "坐标轴绘制在图表四周，负责标注刻度与文字。"
+          },
+          {
+            "heading": "网格（ChartGrid）",
+            "text": "网格线绘制在数据图形底层，帮助读者对齐数值。"
+          },
+          {
+            "heading": "图例（ChartLegend）",
+            "text": "图例列出各个系列的名称与代表色。在 `<Chart>` 上写 `legend` 就会显示（默认不显示），也可以单独使用 `<ChartLegend>` 组件。"
+          },
+          {
+            "heading": "提示框（ChartTooltip）",
+            "text": "鼠标悬停在图表上时，提示框会展示当前位置对应的数据明细。"
+          },
+          {
+            "heading": "颜色色块（ChartSwatch）",
+            "text": "用于在图例或自定义提示框中绘制一小块系列代表色标。"
+          },
+          {
+            "heading": "自定义提示框内容",
+            "text": "如果内置提示框的样式无法满足要求，可以通过 `<Chart>` 的 `#tooltip` 插槽自定义浮层内容。插槽向外暴露当前悬停的横坐标值 `xValue` 和各系列的数据明细 `rows`：\n\n```vue\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" tooltip>\n    <template #tooltip=\"{ xValue, rows }\">\n      <div class=\"my-custom-tooltip\">\n        <strong>{{ xValue }}</strong>\n        <div v-for=\"row in asRows(rows)\" :key=\"row.key\">\n          <ChartSwatch :color=\"row.color\" variant=\"line\" />\n          {{ row.label }}：{{ money(row.value) }}\n        </div>\n      </div>\n    </template>\n  </Chart>\n</template>\n```"
+          },
+          {
+            "heading": "颜色",
+            "text": "如果创建系列时没有显式指定颜色，图表会根据主题里的分类色板，按顺序自动给每个系列分配颜色。\n\n所有的图表颜色底层都是基于 CSS 变量实现的。这意味着当页面切换主题风格，或者从浅色模式切换到深色模式时，图表上的颜色会自动跟随环境刷新，不需要重新渲染整张图表。\n\n如果你需要手动获取当前图表体系的配色方案，可以调用 `useChartColors()` 组合式函数。它返回的对象在整个包中全局共享且保持不变，其包含的成员如下：\n\n- `categorical(n: number)`：获取包含指定数量的分类色数组。数量超出槽位时会自动循环。\n- `sequential`：顺序色阶对象，支持 9 种色相（`blue`、`shamrock`、`orange`、`pink`、`purple`、`red`、`teal`、`yellow`、`gray`）。传入数量 `n` 即可返回渐变过渡色数组。\n- `diverging`：双极发散配色。提供 `positiveNegative`（正负分明）、`coldHot`（冷暖分明）以及 `custom`（自定义两侧色相）方法。\n- `semantic`：语义单色值对象，包含 `positive`、`negative`、`warning` 和 `neutral` 四种标准状态色。\n- `structural`：图表骨架的结构色，包含 `axis`（坐标轴线）、`grid`（网格线）、`tick`（刻度短线）和 `label`（文本标签）四种颜色。\n- `alpha(color: string, opacity: number)`：按指定透明度生成带透明通道的颜色值（若为 CSS 变量则自动采用 `color-mix()` 处理）。"
+          },
+          {
+            "heading": "格式化函数",
+            "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。\n- `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
+          },
+          {
+            "heading": "无障碍",
+            "text": "图表在可访问性方面做了完善的无障碍设计，让视障人士通过读屏软件也能了解图表内容：\n\n- 整个图表根元素具有 `role=\"img\"` 角色属性。\n- 图表的无障碍名称优先使用传入的 `title` 属性；如果没有提供 `title`，系统会根据包含的主要系列与 x 轴字段自动拼接出清晰的语义名称（如「月度 收入和成本 走势」）；如果全是辅助标注线，则默认退化为「图表」。\n- 传入的 `subtitle` 会自动关联为图表的无障碍长描述。\n- 当数据点总数（数据行数 × 数据列数）不超过 100 个（即常量 `MAX_TABLE_POINTS`）时，图表会自动生成一份在视觉上完全隐藏的数据表格（通过 `VisuallyHidden` 隐藏在屏幕外）。读屏软件能够直接逐行朗读表格中的精准数据；如果数据量超过 100 点，则不会生成表格以避免造成大量无效的语音噪音。"
+          },
+          {
+            "heading": "服务端渲染",
+            "text": "在服务端渲染（SSR）环境中运行时，由于不存在真实的浏览器 DOM，组件无法自动测量父级容器的实际像素宽度。\n\n因此，在服务端渲染时，必须在 `<Chart>` 上显式传入 `width` 属性指定宽度像素值，服务端才能正确完成比例尺计算并完整输出包含路径和矩形的 SVG 标签。在浏览器端水合后，图表一旦首次测量到真实的容器宽度，便会自动接管并按真实容器尺寸响应式排版。"
+          },
+          {
+            "heading": "现在不支持的",
+            "text": "为了保持包的轻量和聚焦，目前以下能力暂未包含在当前包中：\n- 4 个基于 WebGL 的超大数据集标记（例如 `dotGL` 等标记）尚未收录于此包中。\n- Nuxt 模块中尚未提供针对 `@astryx-vue/charts` 的自动引入配置开关，在 Nuxt 项目中使用时需手动通过 npm 依赖导入。"
+          },
+          {
+            "heading": "`<Chart>` 的属性与插槽",
+            "text": "`<Chart>` 是整张图表的根容器。它负责测量尺寸、建立坐标系、计算点位并把图形画在 SVG 里。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "Line chart",
+            "zh": "折线图"
+          },
+          "description": {
+            "en": "Line chart with revenue and cost series, grid lines, axes, a bottom legend, and hover tooltips.",
+            "zh": "包含收入与成本两条折线，带有网格、坐标轴、底部图例以及鼠标悬停提示框。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, line } from '@astryx-vue/charts'\nimport { monthly } from './data'\n\nconst series = [\n  line('revenue', { label: '收入' }),\n  line('cost', { label: '成本' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" :height=\"260\" title=\"每月收入与成本\" legend tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Bar chart",
+            "zh": "柱状图"
+          },
+          "description": {
+            "en": "Bar chart example: revenue and cost share a group to display side by side for each month.",
+            "zh": "柱状图示例：收入和成本共用同一个 group 分组，在每个月份下并排显示。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { bar, Chart, ChartAxis, ChartGrid } from '@astryx-vue/charts'\nimport { monthly } from './data'\n\n// 没写 group 或 stack 的柱子会各占一列；这里两个系列同属一个 group，并排显示。\nconst series = [\n  bar('revenue', { group: 'money', label: '收入', radius: 4 }),\n  bar('cost', { group: 'money', label: '成本', radius: 4 }),\n]\n</script>\n\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" :height=\"260\" title=\"每月收入与成本\" legend tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Stacked area chart",
+            "zh": "堆叠面积图"
+          },
+          "description": {
+            "en": "Stacked area chart: cost and profit share a stack identifier to show overall totals.",
+            "zh": "堆叠面积图：成本与利润共用相同的 stack 标识，堆叠呈现整体总额。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { area, Chart, ChartAxis, ChartGrid } from '@astryx-vue/charts'\nimport { monthly } from './data'\n\n// stack 名字相同的面积会一层叠一层往上长。\nconst series = [\n  area('cost', { stack: 'total', label: '成本' }),\n  area('profit', { stack: 'total', label: '利润' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" :height=\"260\" title=\"成本加利润等于收入\" legend tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Dot chart",
+            "zh": "散点图"
+          },
+          "description": {
+            "en": "Dot chart example: distribution of test scores across sample sizes and control groups.",
+            "zh": "散点图示例：展示不同样本量下的得分与对照组数据点分布。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, dot } from '@astryx-vue/charts'\nimport { samples } from './data'\n\nconst series = [\n  dot('score', { label: '得分', radius: 5 }),\n  dot('other', { label: '对照组', radius: 5 }),\n]\n</script>\n\n<template>\n  <!-- 数值 x 轴默认紧贴数据，最左和最右的点会被切掉一半；用 x-domain 留出边距。 -->\n  <Chart :data=\"samples\" x-key=\"size\" :x-domain=\"[0, 70]\" :series=\"series\" :height=\"260\" title=\"样本量与得分\" legend tooltip>\n    <template #grid>\n      <ChartGrid vertical />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Band and reference line",
+            "zh": "区间带与参考线"
+          },
+          "description": {
+            "en": "Band and reference line: shaded forecast interval in the background, actual line in the middle, and a dashed target threshold on top.",
+            "zh": "区间带与参考线：底层绘制预测波动的带状面积，中间绘制实际折线，上方横穿一条虚线目标参考线。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { band, Chart, ChartAxis, ChartGrid, line, referenceLine } from '@astryx-vue/charts'\nimport { forecast } from './data'\n\n// 区间带画在最前面，折线和参考线叠在它上面。\nconst series = [\n  band({ upper: 'high', lower: 'low' }),\n  line('actual', { label: '实际值', dots: true }),\n  referenceLine({ y: 60, label: '目标 60', strokeDasharray: '4 4' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"forecast\" x-key=\"week\" :series=\"series\" :height=\"260\" title=\"预测区间与目标线\" tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Error bars",
+            "zh": "误差条"
+          },
+          "description": {
+            "en": "Error bars: paired with a bar chart to display group averages alongside 95% confidence intervals.",
+            "zh": "误差条：配合柱状图使用，直观展示各实验组均值及对应的 95% 置信区间。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { bar, Chart, ChartAxis, ChartGrid, errorBar } from '@astryx-vue/charts'\nimport { experiments } from './data'\n\n// errorBar 读的是上下界的绝对值，所以不对称的区间也能画。\nconst series = [\n  bar('mean', { label: '均值', radius: 4 }),\n  errorBar({ high: 'upper95', low: 'lower95' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"experiments\" x-key=\"group\" :series=\"series\" :height=\"260\" title=\"各组均值与 95% 区间\" tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Candlestick",
+            "zh": "蜡烛图"
+          },
+          "description": {
+            "en": "Candlestick chart: displays daily price movements for a stock or commodity over a week.",
+            "zh": "蜡烛图（K 线图）：展示一周内股票或商品的价格走势。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { candlestick, Chart, ChartAxis, ChartGrid } from '@astryx-vue/charts'\nimport { prices } from './data'\n\nconst series = [candlestick({ open: 'open', high: 'high', low: 'low', close: 'close' })]\n</script>\n\n<template>\n  <Chart :data=\"prices\" x-key=\"day\" :series=\"series\" :height=\"260\" y-baseline=\"data\" title=\"一周价格走势\">\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Custom tooltip",
+            "zh": "自定义提示框"
+          },
+          "description": {
+            "en": "Custom tooltip: uses the #tooltip slot to read active data and render a custom layout.",
+            "zh": "自定义悬停提示框：通过 #tooltip 插槽读取当前数据并按自定义格式排版渲染。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { TooltipSeriesValue } from '@astryx-vue/charts'\nimport { Chart, ChartAxis, ChartGrid, ChartSwatch, currency, line } from '@astryx-vue/charts'\nimport { monthly } from './data'\n\nconst money = currency('¥')\n\nconst series = [\n  line('revenue', { label: '收入' }),\n  line('profit', { label: '利润' }),\n]\n\n// 插槽给出的 rows 是 unknown[]，实际每一项就是 TooltipSeriesValue。\nfunction asRows(rows: unknown[]): TooltipSeriesValue[] {\n  return rows as TooltipSeriesValue[]\n}\n</script>\n\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" :height=\"260\" title=\"收入与利润\" tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" :tick-format=\"money\" />\n    </template>\n    <template #tooltip=\"{ xValue, rows }\">\n      <div style=\"display: grid; gap: 4px; padding: 8px 12px; font-size: 13px\">\n        <strong>{{ xValue }}</strong>\n        <div v-for=\"row in asRows(rows)\" :key=\"row.key\">\n          <ChartSwatch :color=\"row.color\" variant=\"line\" />\n          {{ row.label }}：{{ money(row.value) }}\n        </div>\n      </div>\n    </template>\n  </Chart>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/chart",
+        "zh": "https://astryx-vue.pages.dev/components/chart"
+      }
+    },
+    {
       "slug": "badge",
       "name": "Badge",
       "package": "@astryx-vue/core",
@@ -38052,6 +39560,604 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/power-search",
         "zh": "https://astryx-vue.pages.dev/components/power-search"
+      }
+    },
+    {
+      "slug": "rich-text-editor",
+      "name": "RichTextEditor",
+      "package": "@astryx-vue/richtext",
+      "kind": "component",
+      "title": {
+        "en": "Rich Text Editor",
+        "zh": "富文本编辑器"
+      },
+      "group": "Form Controls",
+      "groupTitle": {
+        "en": "Form Controls",
+        "zh": "表单控件"
+      },
+      "importPath": "@astryx-vue/richtext",
+      "exportName": "RichTextEditor",
+      "summary": {
+        "en": "Add a formatting toolbar through the #toolbar slot.",
+        "zh": "使用 #toolbar 插槽添加格式工具栏。"
+      },
+      "usage": {
+        "en": "",
+        "zh": ""
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "`<RichTextEditor>` props",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "Required"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "description": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`description`",
+                "description": "`description`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`isOptional`",
+                "description": "`isOptional`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`isRequired`",
+                "description": "`isRequired`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`defaultValue`",
+                "description": "`defaultValue`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`placeholder`",
+                "description": "`placeholder`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`isReadOnly`",
+                "description": "`isReadOnly`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`isDisabled`",
+                "description": "`isDisabled`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`status`",
+                "description": "`status`",
+                "type": "`RichTextEditorStatus`",
+                "default": "-"
+              },
+              {
+                "name": "`statusVariant`",
+                "description": "`statusVariant`",
+                "type": "`'attached' \\",
+                "default": "'detached' \\"
+              },
+              {
+                "name": "`width`",
+                "description": "`width`",
+                "type": "`number \\",
+                "default": "string`"
+              },
+              {
+                "name": "`minHeight`",
+                "description": "`minHeight`",
+                "type": "`number \\",
+                "default": "string`"
+              },
+              {
+                "name": "`labelTooltip`",
+                "description": "`labelTooltip`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`size`",
+                "description": "`size`",
+                "type": "`'sm' \\",
+                "default": "'md' \\"
+              },
+              {
+                "name": "`nodes`",
+                "description": "`nodes`",
+                "type": "`ReadonlyArray>`",
+                "default": "-"
+              },
+              {
+                "name": "`extensions`",
+                "description": "`extensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`markdownExtensions`",
+                "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`hasMarkdownShortcuts`",
+                "description": "`hasMarkdownShortcuts`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`transformers`",
+                "description": "`transformers`",
+                "type": "`ReadonlyArray`",
+                "default": "Default transformers"
+              },
+              {
+                "name": "`hasAutoFocus`",
+                "description": "`hasAutoFocus`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`tabEscapeHint`",
+                "description": "`tabEscapeHint`",
+                "type": "`string`",
+                "default": "Localized text"
+              },
+              {
+                "name": "`maxLength`",
+                "description": "`maxLength`",
+                "type": "`number`",
+                "default": "-"
+              },
+              {
+                "name": "`namespace`",
+                "description": "`namespace`",
+                "type": "`string`",
+                "default": "`'astryx-editor'`"
+              }
+            ]
+          },
+          {
+            "heading": "`<RichTextEditorToolbar>` props and slots",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "Localized text"
+              },
+              {
+                "name": "`headingLevels`",
+                "description": "`headingLevels`",
+                "type": "`ReadonlyArray<'h1' \\",
+                "default": "'h2' \\"
+              },
+              {
+                "name": "`size`",
+                "description": "`size`",
+                "type": "`'sm' \\",
+                "default": "'md' \\"
+              },
+              {
+                "name": "`hasLink`",
+                "description": "`hasLink`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`promptForUrl`",
+                "description": "`promptForUrl`",
+                "type": "`(selectedText: string) => string \\",
+                "default": "null \\"
+              },
+              {
+                "name": "`hasNewTabLinks`",
+                "description": "`hasNewTabLinks`",
+                "type": "`boolean`",
+                "default": "`true`"
+              }
+            ]
+          },
+          {
+            "heading": "`<RichTextView>` props, events and slots",
+            "rows": [
+              {
+                "name": "`value`",
+                "description": "`value`",
+                "type": "`string`",
+                "default": "Required"
+              },
+              {
+                "name": "`nodes`",
+                "description": "`nodes`",
+                "type": "`ReadonlyArray>`",
+                "default": "-"
+              },
+              {
+                "name": "`markdownExtensions`",
+                "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`namespace`",
+                "description": "`namespace`",
+                "type": "`string`",
+                "default": "`'astryx-view'`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "`<RichTextEditor>` 属性",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "必填"
+              },
+              {
+                "name": "`isLabelHidden`",
+                "description": "`isLabelHidden`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`description`",
+                "description": "`description`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`isOptional`",
+                "description": "`isOptional`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`isRequired`",
+                "description": "`isRequired`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`defaultValue`",
+                "description": "`defaultValue`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`placeholder`",
+                "description": "`placeholder`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`isReadOnly`",
+                "description": "`isReadOnly`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`isDisabled`",
+                "description": "`isDisabled`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`status`",
+                "description": "`status`",
+                "type": "`RichTextEditorStatus`",
+                "default": "-"
+              },
+              {
+                "name": "`statusVariant`",
+                "description": "`statusVariant`",
+                "type": "`'attached' \\",
+                "default": "'detached' \\"
+              },
+              {
+                "name": "`width`",
+                "description": "`width`",
+                "type": "`number \\",
+                "default": "string`"
+              },
+              {
+                "name": "`minHeight`",
+                "description": "`minHeight`",
+                "type": "`number \\",
+                "default": "string`"
+              },
+              {
+                "name": "`labelTooltip`",
+                "description": "`labelTooltip`",
+                "type": "`string`",
+                "default": "-"
+              },
+              {
+                "name": "`size`",
+                "description": "`size`",
+                "type": "`'sm' \\",
+                "default": "'md' \\"
+              },
+              {
+                "name": "`nodes`",
+                "description": "`nodes`",
+                "type": "`ReadonlyArray>`",
+                "default": "-"
+              },
+              {
+                "name": "`extensions`",
+                "description": "`extensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`markdownExtensions`",
+                "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`hasMarkdownShortcuts`",
+                "description": "`hasMarkdownShortcuts`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`transformers`",
+                "description": "`transformers`",
+                "type": "`ReadonlyArray`",
+                "default": "默认转换器"
+              },
+              {
+                "name": "`hasAutoFocus`",
+                "description": "`hasAutoFocus`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`tabEscapeHint`",
+                "description": "`tabEscapeHint`",
+                "type": "`string`",
+                "default": "本地化文案"
+              },
+              {
+                "name": "`maxLength`",
+                "description": "`maxLength`",
+                "type": "`number`",
+                "default": "-"
+              },
+              {
+                "name": "`namespace`",
+                "description": "`namespace`",
+                "type": "`string`",
+                "default": "`'astryx-editor'`"
+              }
+            ]
+          },
+          {
+            "heading": "`<RichTextEditorToolbar>` 属性与插槽",
+            "rows": [
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "本地化文案"
+              },
+              {
+                "name": "`headingLevels`",
+                "description": "`headingLevels`",
+                "type": "`ReadonlyArray<'h1' \\",
+                "default": "'h2' \\"
+              },
+              {
+                "name": "`size`",
+                "description": "`size`",
+                "type": "`'sm' \\",
+                "default": "'md' \\"
+              },
+              {
+                "name": "`hasLink`",
+                "description": "`hasLink`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`promptForUrl`",
+                "description": "`promptForUrl`",
+                "type": "`(selectedText: string) => string \\",
+                "default": "null \\"
+              },
+              {
+                "name": "`hasNewTabLinks`",
+                "description": "`hasNewTabLinks`",
+                "type": "`boolean`",
+                "default": "`true`"
+              }
+            ]
+          },
+          {
+            "heading": "`<RichTextView>` 属性、事件与插槽",
+            "rows": [
+              {
+                "name": "`value`",
+                "description": "`value`",
+                "type": "`string`",
+                "default": "必填"
+              },
+              {
+                "name": "`nodes`",
+                "description": "`nodes`",
+                "type": "`ReadonlyArray>`",
+                "default": "-"
+              },
+              {
+                "name": "`markdownExtensions`",
+                "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`namespace`",
+                "description": "`namespace`",
+                "type": "`string`",
+                "default": "`'astryx-view'`"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Install",
+            "text": "```bash\npnpm add @astryx-vue/richtext\n```\n\n`RichTextEditor` is built on Lexical. Install `lexical` and the `@lexical/*` packages required by the features you use, all pinned to `0.52.0`."
+          },
+          {
+            "heading": "Create an editor",
+            "text": "Import the stylesheet once in your application entry, then render `RichTextEditor`. The required `label` prop provides the editor's accessible name.\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor } from '@astryx-vue/richtext'\nimport '@astryx-vue/richtext/richtext.css'\n</script>\n\n<template>\n  <RichTextEditor label=\"Publish content\" placeholder=\"Write something...\" />\n</template>\n```\n\nAdd `RichTextEditorToolbar` through the `#toolbar` slot to provide undo, block formats, inline styles, and link actions. The toolbar scrolls horizontally when space is limited."
+          },
+          {
+            "heading": "Save and display content",
+            "text": "The editor and read-only view use the same Lexical state JSON:\n\n1. Listen to the editor's `@change` event and save `editorState.toJSON()` to your backend.\n2. To edit the content again, pass the saved JSON string to `defaultValue`. This prop is read only when the editor mounts.\n3. For read-only display, pass the same string to `RichTextView` through `value` instead of rendering a read-only editor.\n\nWhen you register custom nodes through `nodes`, register the same set on both the editor and the read-only view so content round-trips without data loss."
+          },
+          {
+            "heading": "Keyboard commands",
+            "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open or close the link dialog: Open or close the link dialog\n- Leave the editor: Leave the editor"
+          },
+          {
+            "heading": "Automatic links and server-side conversion",
+            "text": "Place `RichTextEditorAutoLinkPlugin` in the editor's default slot to turn typed URLs and email addresses into links. Use `matchers` to add custom matching rules.\n\nTo convert Markdown on the server, import `markdownToEditorStateJSON` and `editorStateJSONToMarkdown` from `@astryx-vue/richtext/markdown`. Neither function requires a browser DOM.\n\nSee the [props documentation](/en/components/rich-text-editor/props) for all properties, events, and slots."
+          },
+          {
+            "heading": "`<RichTextEditor>` props",
+            "text": "- **Events**: `@change=\"(editorState, editor) => void\"` fires when content changes, used for saving state.\n- **Slots**: `#toolbar` top toolbar slot; `#default` internal plugin slot (such as placing `<RichTextEditorAutoLinkPlugin>`).\n- **Template ref methods**: `focus()` focuses; `clear()` clears; `getEditorState()` gets state; `getMarkdown()` exports Markdown; `getHTML()` exports HTML; `getEditor()` gets underlying Lexical instance."
+          },
+          {
+            "heading": "`<RichTextEditorToolbar>` props and slots",
+            "text": "- **Slots**: `#end` custom slot at the end, rendered to the right of default buttons."
+          },
+          {
+            "heading": "`<RichTextView>` props, events and slots",
+            "text": "- **Events**: `@parseError=\"(error: Error) => void\"` fires when parsing content fails.\n- **Slots**: `#errorFallback` fallback content when parsing fails; `#default` internal extension slot."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "安装",
+            "text": "```bash\npnpm add @astryx-vue/richtext\n```\n\n`RichTextEditor` 基于 Lexical。你还需要根据所用功能自行安装 `lexical` 和相应的 `@lexical/*` 子包，版本统一为 `0.52.0`。"
+          },
+          {
+            "heading": "创建编辑器",
+            "text": "在应用入口引入一次样式，然后渲染 `RichTextEditor`。`label` 是必填属性，用于标识编辑器的无障碍名称。\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor } from '@astryx-vue/richtext'\nimport '@astryx-vue/richtext/richtext.css'\n</script>\n\n<template>\n  <RichTextEditor label=\"发布内容\" placeholder=\"请输入正文...\" />\n</template>\n```\n\n通过 `#toolbar` 插槽加入 `RichTextEditorToolbar`，即可获得撤销、块格式、行内样式和链接操作。工具栏空间不足时会横向滚动。"
+          },
+          {
+            "heading": "保存并展示内容",
+            "text": "编辑器和只读视图使用同一份 Lexical 状态 JSON：\n\n1. 监听编辑器的 `@change`，将 `editorState.toJSON()` 保存到后端。\n2. 再次编辑时，把保存的 JSON 字符串传给 `defaultValue`。该属性只在挂载时读取。\n3. 只读展示时，把同一个字符串传给 `RichTextView` 的 `value`，不要再渲染一个只读编辑器。\n\n如果通过 `nodes` 注册自定义节点，编辑器和只读视图必须注册同一组节点，否则内容无法完整往返。"
+          },
+          {
+            "heading": "键盘操作",
+            "text": "光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。\n\n- 在代码块中换行: 在代码块中换行\n- 在表格单元格之间移动: 在表格单元格之间移动\n- 在代码块或表格末尾创建并进入下方段落: 在代码块或表格末尾创建并进入下方段落\n- 打开或关闭链接对话框: 打开或关闭链接对话框\n- 离开整个编辑器: 离开整个编辑器"
+          },
+          {
+            "heading": "自动链接与服务端转换",
+            "text": "将 `RichTextEditorAutoLinkPlugin` 放入编辑器默认插槽，可以把输入的网址和邮箱自动转换为链接；通过 `matchers` 可以扩展匹配规则。\n\n需要在服务端读写 Markdown 时，从 `@astryx-vue/richtext/markdown` 导入 `markdownToEditorStateJSON` 和 `editorStateJSONToMarkdown`。这两个函数不依赖浏览器 DOM。\n\n完整的属性、事件和插槽见[属性文档](/components/rich-text-editor/props)。"
+          },
+          {
+            "heading": "`<RichTextEditor>` 属性",
+            "text": "- **事件**：`@change=\"(editorState, editor) => void\"` 在内容改变时触发，用于保存状态。\n- **插槽**：`#toolbar` 顶部工具栏插槽；`#default` 内部插件插槽（如放置 `<RichTextEditorAutoLinkPlugin>`）。\n- **模板引用方法**：`focus()` 聚焦；`clear()` 清空；`getEditorState()` 获取状态；`getMarkdown()` 导出 Markdown；`getHTML()` 导出 HTML；`getEditor()` 获取底层 Lexical 实例。"
+          },
+          {
+            "heading": "`<RichTextEditorToolbar>` 属性与插槽",
+            "text": "- **插槽**：`#end` 尾部自定义插槽，渲染在默认按钮右侧。"
+          },
+          {
+            "heading": "`<RichTextView>` 属性、事件与插槽",
+            "text": "- **事件**：`@parseError=\"(error: Error) => void\"` 在内容解析失败时触发。\n- **插槽**：`#errorFallback` 解析失败时的降级显示内容；`#default` 内部扩展插槽。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "Editor with a toolbar",
+            "zh": "带工具栏的编辑器"
+          },
+          "description": {
+            "en": "Add a formatting toolbar through the #toolbar slot.",
+            "zh": "使用 #toolbar 插槽添加格式工具栏。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { RichTextEditor, RichTextEditorToolbar } from '@astryx-vue/richtext'\nimport { seed } from './shared'\n</script>\n\n<template>\n  <RichTextEditor label=\"Release notes\" :default-value=\"seed\" :min-height=\"200\">\n    <template #toolbar>\n      <RichTextEditorToolbar />\n    </template>\n  </RichTextEditor>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Display saved content",
+            "zh": "只读展示已保存的内容"
+          },
+          "description": {
+            "en": "Render saved Lexical state JSON with RichTextView.",
+            "zh": "将保存的 Lexical 状态 JSON 交给 RichTextView 进行只读渲染。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { RichTextView } from '@astryx-vue/richtext'\nimport { seed } from './shared'\n</script>\n\n<template>\n  <RichTextView :value=\"seed\" />\n</template>"
+        },
+        {
+          "title": {
+            "en": "Recognize URLs and email addresses",
+            "zh": "自动识别网址和邮箱"
+          },
+          "description": {
+            "en": "Enable the automatic link plugin in the default slot.",
+            "zh": "在默认插槽中启用自动链接插件。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { RichTextEditor, RichTextEditorAutoLinkPlugin, RichTextEditorToolbar } from '@astryx-vue/richtext'\n</script>\n\n<template>\n  <RichTextEditor label=\"Notes\" placeholder=\"输入网址或邮箱，会自动变成链接\" :min-height=\"120\">\n    <template #toolbar>\n      <RichTextEditorToolbar />\n    </template>\n    <RichTextEditorAutoLinkPlugin />\n  </RichTextEditor>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/rich-text-editor",
+        "zh": "https://astryx-vue.pages.dev/components/rich-text-editor"
       }
     },
     {
@@ -77583,217 +79689,6 @@
       }
     },
     {
-      "id": "guide/charts",
-      "kind": "guide",
-      "title": {
-        "en": "Charts",
-        "zh": "图表"
-      },
-      "summary": {
-        "en": "`@astryx-vue/charts` is a lightweight chart component library for Vue. It splits the work in two: d3 handles pure math calculations, such as computing scales and curve paths. Vue templates then take those computed positions and render clean SVG vector elements.",
-        "zh": "`@astryx-vue/charts` 是一个轻量的图表组件库。它把工作分成两半：底层的 d3 只负责纯数学计算（比如算比例尺、算曲线的路径），算好位置后，再由 Vue 模板把内容画成一个个干净的 SVG 矢量图形。"
-      },
-      "headings": {
-        "en": [
-          "What this is",
-          "Install",
-          "Your first chart",
-          "`<Chart>` props and slots",
-          "Props",
-          "Slots",
-          "Series",
-          "Line (`line`)",
-          "Bar (`bar`)",
-          "Area (`area`)",
-          "Dot (`dot`)",
-          "Band (`band`)",
-          "Reference line (`referenceLine`)",
-          "Error bar (`errorBar`)",
-          "Candlestick (`candlestick`)",
-          "Axes, grid, legend, tooltip",
-          "Axes (`ChartAxis`)",
-          "Grid (`ChartGrid`)",
-          "Legend (`ChartLegend`)",
-          "Tooltip (`ChartTooltip`)",
-          "Swatch (`ChartSwatch`)",
-          "Custom tooltip content",
-          "Colors",
-          "Formatting functions",
-          "Accessibility",
-          "Server-side rendering",
-          "Not supported yet"
-        ],
-        "zh": [
-          "这是什么",
-          "安装",
-          "第一张图",
-          "`<Chart>` 的属性与插槽",
-          "属性",
-          "插槽",
-          "系列",
-          "折线（line）",
-          "柱状（bar）",
-          "面积（area）",
-          "散点（dot）",
-          "区间带（band）",
-          "参考线（referenceLine）",
-          "误差条（errorBar）",
-          "蜡烛图（candlestick）",
-          "坐标轴、网格、图例、提示框",
-          "坐标轴（ChartAxis）",
-          "网格（ChartGrid）",
-          "图例（ChartLegend）",
-          "提示框（ChartTooltip）",
-          "颜色色块（ChartSwatch）",
-          "自定义提示框内容",
-          "颜色",
-          "格式化函数",
-          "无障碍",
-          "服务端渲染",
-          "现在不支持的"
-        ]
-      },
-      "keywords": {
-        "en": [
-          "data",
-          "xKey",
-          "series",
-          "height",
-          "width",
-          "margin",
-          "yBaseline",
-          "yDomain",
-          "xDomain",
-          "legend",
-          "tooltip",
-          "title",
-          "subtitle",
-          "grid",
-          "axes",
-          "interactions",
-          "default",
-          "Option",
-          "color",
-          "curve",
-          "strokeWidth",
-          "dots",
-          "label",
-          "opacity",
-          "radius",
-          "stack",
-          "group",
-          "gradient",
-          "stroke",
-          "dodge",
-          "upper",
-          "lower",
-          "y",
-          "y2",
-          "x",
-          "strokeDasharray",
-          "labelPosition",
-          "bandOpacity",
-          "high",
-          "low",
-          "capWidth",
-          "open",
-          "close",
-          "upColor",
-          "downColor",
-          "Prop",
-          "position",
-          "tickCount",
-          "maxTicks",
-          "tickFormat",
-          "truncate",
-          "animated",
-          "showAxisLine",
-          "showTicks",
-          "horizontal",
-          "vertical",
-          "items",
-          "alignment",
-          "hoverIndicator",
-          "showHoverDots",
-          "placement",
-          "variant"
-        ],
-        "zh": [
-          "名称",
-          "data",
-          "xKey",
-          "series",
-          "height",
-          "width",
-          "margin",
-          "yBaseline",
-          "yDomain",
-          "xDomain",
-          "legend",
-          "tooltip",
-          "title",
-          "subtitle",
-          "grid",
-          "axes",
-          "interactions",
-          "default",
-          "选项",
-          "color",
-          "curve",
-          "strokeWidth",
-          "dots",
-          "label",
-          "opacity",
-          "radius",
-          "stack",
-          "group",
-          "gradient",
-          "stroke",
-          "dodge",
-          "upper",
-          "lower",
-          "y",
-          "y2",
-          "x",
-          "strokeDasharray",
-          "labelPosition",
-          "bandOpacity",
-          "high",
-          "low",
-          "capWidth",
-          "open",
-          "close",
-          "upColor",
-          "downColor",
-          "属性",
-          "position",
-          "tickCount",
-          "maxTicks",
-          "tickFormat",
-          "truncate",
-          "animated",
-          "showAxisLine",
-          "showTicks",
-          "horizontal",
-          "vertical",
-          "items",
-          "alignment",
-          "hoverIndicator",
-          "showHoverDots",
-          "placement",
-          "variant"
-        ]
-      },
-      "body": {
-        "en": "# Charts\n\n## What this is\n\n`@astryx-vue/charts` is a lightweight chart component library for Vue. It splits the work in two: d3 handles pure math calculations, such as computing scales and curve paths. Vue templates then take those computed positions and render clean SVG vector elements.\n\nBuilding a chart takes two main pieces: an outer `<Chart>` canvas and one or more series. A series is a visual mark on the chart, such as a line, a set of bars, or an area fill. You create a series with a helper function like `line('revenue')`. That tells the chart to read the `revenue` field from each row of data.\n\n## Install\n\nThis package is published under the `canary` tag only. Include the tag when installing:\n\n```bash\npnpm add @astryx-vue/charts@canary\n```\n\n`@astryx-vue/charts` depends on `@astryx-vue/core` and `vue`. Make sure both are installed in your project.\n\nThe library includes base styles. Import the full stylesheet in your entry file:\n\n```ts\nimport '@astryx-vue/charts/charts.css'\n```\n\nTo load styles on demand, import individual files from `@astryx-vue/charts/styles/`, such as `chart.css`, `chart-axis.css`, `chart-grid.css`, `chart-legend.css`, `chart-tooltip.css`, or `chart-swatch.css`.\n\n## Your first chart\n\nA minimal chart requires three props on `<Chart>`:\n- `data`: An array of objects where each item represents one row of data.\n- `xKey`: The field name in each row to use for the horizontal x-axis.\n- `series`: An array of series definitions created with functions such as `line()` or `bar()`.\n\nHere is the shortest working line chart:\n\n```vue\n<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, line } from '@astryx-vue/charts'\n\n// 1. Prepare data\nconst data = [\n  { month: 'Jan', revenue: 100, cost: 60 },\n  { month: 'Feb', revenue: 150, cost: 80 },\n  { month: 'Mar', revenue: 120, cost: 70 },\n]\n\n// 2. Define series: two lines reading revenue and cost\nconst series = [\n  line('revenue', { label: 'Revenue' }),\n  line('cost', { label: 'Cost' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"data\" x-key=\"month\" :series=\"series\" :height=\"260\" legend tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>\n```\n\nHere is the live result:\n\n## `<Chart>` props and slots\n\n`<Chart>` is the root container. It measures container dimensions, builds coordinate scales, calculates geometry positions, and renders the SVG tree.\n\n### Props\n\n| Name | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `data` | `Record<string, unknown>[]` | **Required** | Rows of data to render. Each row contains an x-axis field and one or more series fields. |\n| `xKey` | `string` | **Required** | Field name used as the x value across all series. |\n| `series` | `SeriesDef[]` | **Required** | Array of series definitions, rendered in order on a shared coordinate system. |\n| `height` | `number` | `300` | Chart height in CSS pixels. Non-finite values and negative numbers are treated as 0. |\n| `width` | `number` | `0` | Chart width in CSS pixels. Ignored after the browser first measures the container. Used during server-side rendering when no DOM container exists. |\n| `margin` | `Partial<ChartMargin>` | `{ top: 24, right: 24, bottom: 32, left: 48 }` | Partial margin overrides for the plotting area. Omitted sides use defaults. |\n| `yBaseline` | `'auto' \\| 'zero' \\| 'data'` | `'auto'` | How to determine the y-axis domain when `yDomain` is not set. |\n| `yDomain` | `[number, number]` | `undefined` | Explicit y-axis range `[min, max]`. When set, this range is used directly without baseline adjustments or edge padding. |\n| `xDomain` | `[number, number]` | `undefined` | Explicit range `[min, max]` for numeric x-axes. Stays active even when `data` is empty, keeping streaming windows stable. Ignored on categorical band axes. |\n| `legend` | `boolean \\| ChartLegendConfig` | `false` | Whether to show the legend derived from series, or a configuration object to adjust position and alignment. |\n| `tooltip` | `boolean \\| ChartTooltipConfig` | `false` | Whether to show grouped hover tooltips. |\n| `title` | `string` | `undefined` | Chart title, used as the SVG accessible name. |\n| `subtitle` | `string` | `undefined` | Supporting text below the title, used as the SVG accessible description. |\n\n### Slots\n\n| Name | Bindings | Description |\n| :--- | :--- | :--- |\n| `grid` | None | Background grid rendered behind series, usually containing `<ChartGrid />`. |\n| `axes` | None | Axes rendered behind series, usually containing one or more `<ChartAxis />` components. |\n| `interactions` | None | Custom interaction layer rendered above the pointer capture surface. |\n| `tooltip` | `{ xValue: unknown, rows: unknown[] }` | Custom tooltip slot. `xValue` is the active x value under the pointer. `rows` is the list of series data items for that row. |\n| `default` | None | Extra content rendered after the built-in tooltip layer. |\n\n## Series\n\nA series defines a visual representation of data on the chart. A series object holds internal state during layout and rendering. Because of this, provide each series object to one `<Chart>` only. Create fresh series definitions for each chart instance.\n\nWhen data has missing values (`null`, `undefined`) or non-finite numbers (`NaN`, `Infinity`), line marks break cleanly and leave an empty gap. They never drop to zero or draw false connections across gaps.\n\nWhen `yDomain` is omitted, `yBaseline` controls how the y-axis range is calculated:\n- `'auto'` (default): Marks with a zero baseline (bars, areas) include 0 in the scale. Continuous point marks (lines, dots) keep small padding on both ends so points do not clip at the edges.\n- `'zero'`': Expands the scale symmetrically around 0. Useful for values that swing positive and negative, such as profit and loss.\n- `'data'`: Clamps tightly to the minimum and maximum data values without forcing 0 or adding edge padding.\n\n### Line (`line`)\n\nA line series shows continuous trends over time or across categories.\n\n```ts\ndeclare function line(dataKey: string, options?: LineOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `color` | `string` | Auto from theme palette | Line color. |\n| `curve` | `'linear' \\| 'monotone' \\| 'natural' \\| 'step'` | `'monotone'` | Curve interpolation method. Options are linear, monotone cubic spline, natural spline, and step. |\n| `strokeWidth` | `number` | `2` | Line stroke width in pixels. |\n| `dots` | `boolean` | `false` | Whether to render solid circular dots at each data point. |\n| `label` | `string` | `dataKey` | Human-readable name shown in legends and tooltips. |\n\n### Bar (`bar`)\n\nA bar series compares magnitudes across categories or time steps. Bars with the same `group` split the category bandwidth and sit side by side. Bars with the same `stack` stack on top of each other.\n\n```ts\ndeclare function bar(dataKey: string, options?: BarOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `color` | `ColorAccessor` | Auto from theme palette | Bar fill color. Accepts a color string or a function `(datum, index) => string`. |\n| `opacity` | `number` | `1` | Bar opacity, between 0 and 1. |\n| `radius` | `number` | `4` | Corner radius on the bar top in pixels. In stacked bars, only the top segment receives rounded corners. |\n| `stack` | `string` | `undefined` | Stack group name. Series sharing a `stack` accumulate upward from the baseline. |\n| `group` | `string` | `undefined` | Side-by-side group name. Series sharing a `group` sit next to each other within each category. |\n| `label` | `string` | `dataKey` | Human-readable name shown in legends and tooltips. |\n\n### Area (`area`)\n\nAn area series fills the region below a line. It is useful for showing total volume and changing proportions over time. Giving multiple area series the same `stack` name stacks them in order.\n\n```ts\ndeclare function area(dataKey: string, options?: AreaOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `color` | `string` | Auto from theme palette | Area fill color. |\n| `opacity` | `number` | `0.3` | Area fill opacity. |\n| `curve` | `'linear' \\| 'monotone' \\| 'natural' \\| 'step'` | `'monotone'` | Curve interpolation algorithm. |\n| `stack` | `string` | `undefined` | Stack group name. Areas sharing a `stack` stack sequentially. |\n| `gradient` | `boolean` | `false` | Whether to apply a vertical gradient fill. |\n| `stroke` | `boolean` | `true` | Whether to draw a stroke line along the top edge of the area. |\n| `label` | `string` | `dataKey` | Human-readable name shown in legends and tooltips. |\n\n### Dot (`dot`)\n\nA dot series shows the distribution of discrete data points.\n\n```ts\ndeclare function dot(dataKey: string, options?: DotOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `color` | `ColorAccessor` | Auto from theme palette | Dot color. Accepts a color string or a per-point accessor function. |\n| `radius` | `number` | `4` | Dot radius in pixels. |\n| `opacity` | `number` | `0.8` | Dot opacity. |\n| `dodge` | `boolean` | `false` | When multiple points share the same x value, offsets them horizontally to reduce overlap. |\n| `label` | `string` | `dataKey` | Human-readable name shown in legends and tooltips. |\n\n### Band (`band`)\n\nA band series fills a translucent area between an upper and a lower boundary field. It is often used to show forecast confidence intervals. Band marks are annotations, so they do not appear in legends or tooltips.\n\n```ts\ndeclare function band(options: BandOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `upper` | `string` | **Required** | Field name for the upper boundary value. |\n| `lower` | `string` | **Required** | Field name for the lower boundary value. |\n| `color` | `string` | `'var(--color-accent)'` | Fill color for the band area. |\n| `opacity` | `number` | `0.15` | Fill opacity for the band area. |\n\n### Reference line (`referenceLine`)\n\nA reference line marks a specific horizontal or vertical threshold on the chart, or fills a shaded region between two horizontal values. Reference lines are annotations, so they do not appear in legends or tooltips.\n\n```ts\ndeclare function referenceLine(options: ReferenceLineOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `y` | `number` | `undefined` | Draws a horizontal line at this y-axis value. |\n| `y2` | `number` | `undefined` | Second y-axis value. Providing both `y` and `y2` shades a reference band between them. |\n| `x` | `number` | `undefined` | Draws a vertical line at this x-axis value. |\n| `color` | `string` | `'var(--astryx-color-border-emphasized)'` | Line or band fill color. |\n| `strokeWidth` | `number` | `1` | Stroke width in pixels. |\n| `strokeDasharray` | `string` | `undefined` | Dash pattern string, such as `'4 4'`. |\n| `label` | `string` | `undefined` | Text label displayed alongside the line. |\n| `labelPosition` | `'start' \\| 'end'` | `'end'` | Label placement along the line: start/end corresponds to left/right for horizontal lines, and bottom/top for vertical lines. |\n| `bandOpacity` | `number` | `0.1` | Fill opacity for the reference band (active only when `y2` is set). |\n\n### Error bar (`errorBar`)\n\nAn error bar (whisker) displays value uncertainty. It is usually paired with `bar()` or `dot()`. Boundary fields use absolute values, allowing asymmetric error intervals. If a row lacks an upper or lower bound, the chart skips that point instead of drawing misleading lines to zero. Error bars are annotations, so they do not appear in legends or tooltips.\n\n```ts\ndeclare function errorBar(options: ErrorBarOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `high` | `string` | **Required** | Field name for the upper bound (absolute value). |\n| `low` | `string` | **Required** | Field name for the lower bound (absolute value). |\n| `color` | `string` | `'var(--astryx-color-text-primary)'` | Stroke color. |\n| `strokeWidth` | `number` | `1.5` | Stroke width in pixels. |\n| `capWidth` | `number` | `8` | Width in pixels of the horizontal end caps. |\n\n### Candlestick (`candlestick`)\n\nA candlestick series displays open, high, low, and close prices over time, commonly used in financial charts.\n\n```ts\ndeclare function candlestick(options: CandlestickOptions): SeriesDef\n```\n\n| Option | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `open` | `string` | **Required** | Field name for the open price. |\n| `high` | `string` | **Required** | Field name for the high price. |\n| `low` | `string` | **Required** | Field name for the low price. |\n| `close` | `string` | **Required** | Field name for the close price. |\n| `upColor` | `string` | `'var(--astryx-color-success)'` | Color for up candles, where close is greater than or equal to open. |\n| `downColor` | `string` | `'var(--astryx-color-error)'` | Color for down candles, where close is lower than open. |\n\n## Axes, grid, legend, tooltip\n\nSupporting chart elements are provided as individual components. You can combine and configure them independently. Setting `legend` or `tooltip` to `true` on `<Chart>` enables their defaults. Pass an object to customize position and layout.\n\n### Axes (`ChartAxis`)\n\nAxes render along chart edges to display ticks and label text.\n\n| Prop | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `position` | `'top' \\| 'right' \\| 'bottom' \\| 'left'` | **Required** | Edge to place the axis on. |\n| `tickCount` | `number` | `5` | Desired number of ticks. d3 uses this as a hint to find clean intervals. |\n| `maxTicks` | `number` | `undefined` | Maximum number of tick labels to render. Excess ticks are skipped at uniform intervals. |\n| `tickFormat` | `(value: unknown) => string` | `undefined` | Custom tick label formatting function. |\n| `truncate` | `number` | `undefined` | Maximum characters for tick labels before truncating with an ellipsis. |\n| `animated` | `boolean` | `true` | Whether to smoothly animate tick transitions when positions change. |\n| `showAxisLine` | `boolean` | `true` on bottom axis only | Whether to render the axis baseline. If `showTicks` is true, the baseline is always drawn regardless of position. |\n| `showTicks` | `boolean` | `false` | Whether to draw short perpendicular tick lines at each step. |\n\n### Grid (`ChartGrid`)\n\nGrid lines render behind series elements to help align values visually.\n\n| Prop | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `horizontal` | `boolean` | `true` | Whether to draw horizontal grid lines. |\n| `vertical` | `boolean` | `false` | Whether to draw vertical grid lines. |\n| `tickCount` | `number` | `5` | Approximate number of grid lines. Matching this with `<ChartAxis>` aligns grid lines with axis ticks. |\n\n### Legend (`ChartLegend`)\n\nA legend lists series names alongside their representative colors. Setting `legend` on `<Chart>` shows the legend (off by default), or use the `<ChartLegend>` component directly.\n\n| Prop | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `items` | `LegendItem[]` | `[]` | Explicit array of legend items. Inferred automatically from series when omitted. |\n| `position` | `'top' \\| 'bottom' \\| 'start' \\| 'end'` | `'bottom'` | Docking side relative to the chart canvas. `start` and `end` follow reading direction. |\n| `alignment` | `'start' \\| 'center' \\| 'end'` | `'start'` | Alignment of items along the docked edge. |\n\n### Tooltip (`ChartTooltip`)\n\nA tooltip displays details for the data row under the pointer.\n\n| Prop | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `series` | `readonly SeriesDef[]` | Injected by Chart | Series definitions. When using `<ChartTooltip>` directly, pass the same `series` array. |\n| `hoverIndicator` | `boolean` | `true` | Whether to draw hover indicators. Bars highlight the active column, while lines, areas, and dots draw a vertical rule. |\n| `showHoverDots` | `boolean` | `true` | Whether to highlight active data points with dots (skipped automatically on bars). |\n| `placement` | `'auto' \\| 'right' \\| 'left' \\| 'top'` | `'auto'` | Card placement relative to the active point. `auto` defaults to the right and flips left when room runs out. |\n\n### Swatch (`ChartSwatch`)\n\nA swatch renders a small color marker representing a series, useful inside legends or custom tooltips.\n\n| Prop | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `color` | `string` | **Required** | Fill color value. |\n| `variant` | `'square' \\| 'line'` | `'square'` | Swatch shape. `square` renders a small square (for bars); `line` renders a short horizontal line (for lines and areas). |\n\n### Custom tooltip content\n\nWhen the default tooltip layout is not enough, customize the card content through the `#tooltip` slot on `<Chart>`. The slot exposes the active `xValue` and row details in `rows`:\n\n```vue\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" tooltip>\n    <template #tooltip=\"{ xValue, rows }\">\n      <div class=\"my-custom-tooltip\">\n        <strong>{{ xValue }}</strong>\n        <div v-for=\"row in asRows(rows)\" :key=\"row.key\">\n          <ChartSwatch :color=\"row.color\" variant=\"line\" />\n          {{ row.label }}: {{ money(row.value) }}\n        </div>\n      </div>\n    </template>\n  </Chart>\n</template>\n```\n\n## Colors\n\nWhen a series does not set an explicit color, the chart assigns one automatically in order from the active theme palette.\n\nAll chart colors use CSS variables underneath. When switching themes or toggling dark mode, chart colors update automatically without re-rendering the SVG tree.\n\nTo inspect or use the current chart palette programmatically, call `useChartColors()`. It returns a shared object across the package:\n\n- `categorical(n: number)`: Returns an array of `n` categorical colors. If `n` exceeds palette size, colors cycle.\n- `sequential`: Sequential color scale helper supporting nine hues (`blue`, `shamrock`, `orange`, `pink`, `purple`, `red`, `teal`, `yellow`, `gray`). Passing a count `n` returns a gradient color array.\n- `diverging`: Two-pole diverging palette helper. Provides `positiveNegative`, `coldHot`, and `custom` (custom hues on each pole).\n- `semantic`: Semantic status colors, containing `positive`, `negative`, `warning`, and `neutral`.\n- `structural`: Structural colors for chart framing, containing `axis`, `grid`, `tick`, and `label`.\n- `alpha(color: string, opacity: number)`: Generates a color with an alpha channel for a given opacity. CSS variables use `color-mix()` automatically.\n\n## Formatting functions\n\nThe library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale)`: Formats dates as a short month and day. For example, \"Jan 5\".\n- `monthYear(value, locale)`: Formats dates as month and year. For example, \"Jan 2024\".\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\".\n\n## Accessibility\n\nCharts include built-in accessibility features so screen reader users can understand chart content:\n\n- The root element has a `role=\"img\"` attribute.\n- The chart's accessible name prioritizes the `title` prop. When `title` is omitted, the component builds a semantic description from primary series and the x-axis field (such as \"Monthly Revenue and Cost trend\"). If only annotations are present, it falls back to \"Chart\".\n- The `subtitle` prop maps to the chart's accessible description.\n- When total data points (data rows × data columns) do not exceed 100 (`MAX_TABLE_POINTS`), the chart generates a visually hidden data table using `VisuallyHidden`. Screen readers can read exact values row by row. Above 100 points, the table is omitted to prevent excessive speech noise.\n\n## Server-side rendering\n\nDuring server-side rendering (SSR), no browser DOM exists, so the component cannot measure parent container width in pixels.\n\nWhen rendering on the server, pass an explicit `width` prop on `<Chart>`. This allows the server to compute scales and render complete SVG paths and rectangles into HTML. After client-side hydration, once the browser measures the real container width, the chart takes over and responds to container resize events.\n\n## Not supported yet\n\nTo stay lightweight and focused, the package currently leaves out:\n- Four WebGL-based series marks for very large datasets (such as `dotGL`) are not yet included.\n- The Nuxt module does not yet include auto-import switches for `@astryx-vue/charts`. Import components manually when using Nuxt.",
-        "zh": "# 图表\n\n## 这是什么\n\n`@astryx-vue/charts` 是一个轻量的图表组件库。它把工作分成两半：底层的 d3 只负责纯数学计算（比如算比例尺、算曲线的路径），算好位置后，再由 Vue 模板把内容画成一个个干净的 SVG 矢量图形。\n\n画一张图非常直观：外层写一个 `<Chart>` 画布，里面传入数据和一个或多个「系列」。所谓系列，就是图上的一条折线、一组柱子或一片阴影。我们用普通的 JavaScript 函数来创建系列，比如写 `line('revenue')`，图表就知道要读取每行数据里的 `revenue` 字段来画折线。\n\n## 安装\n\n这个包只发布在 `canary` 标签下，安装时需要带上标签：\n\n```bash\npnpm add @astryx-vue/charts@canary\n```\n\n`@astryx-vue/charts` 依赖同级的 `@astryx-vue/core` 和 `vue`，请确保项目中已经安装了它们。\n\n图表内置了基础样式。你可以在入口文件引入完整样式文件：\n\n```ts\nimport '@astryx-vue/charts/charts.css'\n```\n\n如果你想按需加载样式，也可以只引入 `@astryx-vue/charts/styles/` 目录下的某一个样式文件（例如 `chart.css`、`chart-axis.css`、`chart-grid.css`、`chart-legend.css`、`chart-tooltip.css` 或 `chart-swatch.css`）。\n\n## 第一张图\n\n画一张图最少需要给 `<Chart>` 传三个必填属性：\n- `data`：要展示的数据数组，每一项是一行对象。\n- `xKey`：指定每行对象中哪个字段当作横坐标（x 轴）。\n- `series`：标记系列数组，用 `line()`、`bar()` 等函数生成。\n\n下面是一段最短的可运行折线图代码：\n\n```vue\n<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, line } from '@astryx-vue/charts'\n\n// 1. 准备数据\nconst data = [\n  { month: '1月', revenue: 100, cost: 60 },\n  { month: '2月', revenue: 150, cost: 80 },\n  { month: '3月', revenue: 120, cost: 70 },\n]\n\n// 2. 定义系列：画两条线，一条读 revenue，一条读 cost\nconst series = [\n  line('revenue', { label: '收入' }),\n  line('cost', { label: '成本' }),\n]\n</script>\n\n<template>\n  <Chart :data=\"data\" x-key=\"month\" :series=\"series\" :height=\"260\" legend tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" />\n    </template>\n  </Chart>\n</template>\n```\n\n实际运行效果如下：\n\n## `<Chart>` 的属性与插槽\n\n`<Chart>` 是整张图表的根容器。它负责测量尺寸、建立坐标系、计算点位并把图形画在 SVG 里。\n\n### 属性\n\n| 名称 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `data` | `Record<string, unknown>[]` | **必填** | 要画的数据行。每行既有 x 对应的列，也有一到多个系列的数据列。 |\n| `xKey` | `string` | **必填** | 每行里当 x 用的字段名，所有系列共用。 |\n| `series` | `SeriesDef[]` | **必填** | 标记定义数组，按顺序画在同一套坐标系上。 |\n| `height` | `number` | `300` | 图表高度（单位是 CSS 像素）。非有限值和负数都会当成 0 处理。 |\n| `width` | `number` | `0` | 图表宽度（单位是 CSS 像素）。浏览器里第一次量到容器宽度后就不再使用；服务端渲染时没有容器可量，全靠它出图。 |\n| `margin` | `Partial<ChartMargin>` | `{ top: 24, right: 24, bottom: 32, left: 48 }` | 绘图区内边距的部分覆盖值，没传的边使用默认留白。 |\n| `yBaseline` | `'auto' \\| 'zero' \\| 'data'` | `'auto'` | 没写 `yDomain` 时 y 轴范围怎么定。 |\n| `yDomain` | `[number, number]` | `undefined` | 显式指定的 y 轴范围 `[min, max]`。一旦指定就以此为准，不额外加基线、也不留上下余量。 |\n| `xDomain` | `[number, number]` | `undefined` | 数值 x 轴的显式范围 `[min, max]`。即使 `data` 为空也会照常生效（保证流式更新窗口稳定）。在离散类目的 band 轴上会被忽略。 |\n| `legend` | `boolean \\| ChartLegendConfig` | `false` | 是否显示从系列推导出的图例，或者传配置对象调整位置与对齐。 |\n| `tooltip` | `boolean \\| ChartTooltipConfig` | `false` | 是否显示分组的悬停提示框。 |\n| `title` | `string` | `undefined` | 图表标题，同时作为 SVG 的无障碍名称（Accessible Name）。 |\n| `subtitle` | `string` | `undefined` | 标题下方的补充说明文字，同时作为 SVG 的无障碍描述。 |\n\n### 插槽\n\n| 名称 | 参数 | 说明 |\n| :--- | :--- | :--- |\n| `grid` | 无 | 画在系列后方的背景网格，通常放置 `<ChartGrid />`。 |\n| `axes` | 无 | 画在系列后方的坐标轴，通常放置若干个 `<ChartAxis />`。 |\n| `interactions` | 无 | 画在指针捕获层上方的自定义交互图层。 |\n| `tooltip` | `{ xValue: unknown, rows: unknown[] }` | 提示框的自定义内容插槽。`xValue` 是当前悬停的 x 坐标值，`rows` 是当前行对应各个系列的数据明细。 |\n| `default` | 无 | 额外扩展内容，画在内置提示框图层之后。 |\n\n## 系列\n\n系列代表图表上展示的具体数据图形。同一个系列对象在布局和渲染时会被写入内部状态，所以同一个系列对象只能提供给一个 `<Chart>` 使用，每张图都要重新创建一份。\n\n如果数据中存在缺失值（`null`、`undefined`）或非有限数字（`NaN`、`Infinity`），折线会自然断开形成空洞，不会强行掉到 0 基线上画出一条错误虚假的连线。\n\n在不设置显式 `yDomain` 时，y 轴的范围由 `yBaseline` 决定：\n- `'auto'`（默认）：带零基线的标记（柱状图、面积图）会把 0 算进坐标范围；只有离散连续点的图表（折线图、散点图等）会在上下两侧保留一点余量，防止数据点贴在画布边缘。\n- `'zero'`：以 0 为中心对称展开坐标轴，适合展示正负波动数据（比如盈利与亏损）。\n- `'data'`：紧贴实际数据的最大值与最小值，不强制包含 0，也不留任何边缘余量。\n\n### 折线（line）\n\n折线用于展示数据随时间或类目的连续变化趋势。\n\n```ts\ndeclare function line(dataKey: string, options?: LineOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `color` | `string` | 自动取色 | 折线颜色。 |\n| `curve` | `'linear' \\| 'monotone' \\| 'natural' \\| 'step'` | `'monotone'` | 曲线插值方式。分别代表折线、单调三次样条、自然样条和阶梯线。 |\n| `strokeWidth` | `number` | `2` | 线条粗细（像素）。 |\n| `dots` | `boolean` | `false` | 是否在每个数据点上画出实体小圆点。 |\n| `label` | `string` | `dataKey` | 图例和提示框中展示的可读名称。 |\n\n### 柱状（bar）\n\n柱状图用于对比不同分类或时间点下的数值大小。相同 `group` 的柱子会把带宽平分并排展示；相同 `stack` 的柱子会一层层堆叠起来展示。\n\n```ts\ndeclare function bar(dataKey: string, options?: BarOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `color` | `ColorAccessor` | 自动取色 | 柱子填充色，可以是固定颜色字符串，也可以是基于数据项计算颜色的函数 `(datum, index) => string`。 |\n| `opacity` | `number` | `1` | 柱子透明度，取值范围在 0 到 1 之间。 |\n| `radius` | `number` | `4` | 柱子顶部的圆角半径（像素）。堆叠时只有最上面一层有圆角。 |\n| `stack` | `string` | `undefined` | 堆叠分组名称。相同 `stack` 的系列会自底向上累加堆叠。 |\n| `group` | `string` | `undefined` | 并排分组名称。相同 `group` 的系列会在每个类目下并排排列。 |\n| `label` | `string` | `dataKey` | 图例和提示框中展示的可读名称。 |\n\n### 面积（area）\n\n面积图在折线下方填充颜色，非常适合表现总量以及各部分占比的变化。如果给多个面积系列指定相同的 `stack` 名字，它们会逐层叠起来。\n\n```ts\ndeclare function area(dataKey: string, options?: AreaOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `color` | `string` | 自动取色 | 面积填充色。 |\n| `opacity` | `number` | `0.3` | 面积填充透明度。 |\n| `curve` | `'linear' \\| 'monotone' \\| 'natural' \\| 'step'` | `'monotone'` | 曲线插值算法。 |\n| `stack` | `string` | `undefined` | 堆叠分组名称。相同 `stack` 的面积会依次堆叠。 |\n| `gradient` | `boolean` | `false` | 是否使用垂直渐变填充。 |\n| `stroke` | `boolean` | `true` | 是否在面积顶部画出边缘描边。 |\n| `label` | `string` | `dataKey` | 图例和提示框中展示的可读名称。 |\n\n### 散点（dot）\n\n散点图用于展示离散数据点的分布情况。\n\n```ts\ndeclare function dot(dataKey: string, options?: DotOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `color` | `ColorAccessor` | 自动取色 | 圆点颜色，支持传函数按点取色。 |\n| `radius` | `number` | `4` | 圆点半径（像素）。 |\n| `opacity` | `number` | `0.8` | 圆点透明度。 |\n| `dodge` | `boolean` | `false` | 当多个点落在同一个 x 坐标时，是否在水平方向上稍微错开位置，避免重叠遮挡。 |\n| `label` | `string` | `dataKey` | 图例和提示框中展示的可读名称。 |\n\n### 区间带（band）\n\n区间带用于在上下两个边界字段之间涂满一层半透明的带状区域，通常用来展示预测区间的波动范围。它属于辅助标注标记，不会出现在图例和悬停提示框中。\n\n```ts\ndeclare function band(options: BandOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `upper` | `string` | **必填** | 上界数据列的字段名。 |\n| `lower` | `string` | **必填** | 下界数据列的字段名。 |\n| `color` | `string` | `'var(--color-accent)'` | 区域填充颜色。 |\n| `opacity` | `number` | `0.15` | 区域透明度。 |\n\n### 参考线（referenceLine）\n\n参考线可以在图表指定的数值位置画一条横线、竖线，或者在两条横线之间涂上一段浅色参考带，常用于标记阈值或目标值。它属于辅助标注标记，不进入图例和提示框。\n\n```ts\ndeclare function referenceLine(options: ReferenceLineOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `y` | `number` | `undefined` | 在指定的 y 轴数值位置画一条水平横线。 |\n| `y2` | `number` | `undefined` | 第二个 y 轴数值。如果同时传入 `y` 和 `y2`，会在两者之间涂上一片参考带。 |\n| `x` | `number` | `undefined` | 在指定的 x 轴数值位置画一条垂直竖线。 |\n| `color` | `string` | `'var(--astryx-color-border-emphasized)'` | 线条或参考带的颜色。 |\n| `strokeWidth` | `number` | `1` | 描边粗细（像素）。 |\n| `strokeDasharray` | `string` | `undefined` | 虚线样式，如 `'4 4'`。 |\n| `label` | `string` | `undefined` | 显示在线条旁边的文字标签内容。 |\n| `labelPosition` | `'start' \\| 'end'` | `'end'` | 标签对齐位置。横线对应左/右端，竖线对应底/顶端。 |\n| `bandOpacity` | `number` | `0.1` | 参考带的填充透明度（仅在同时设置了 `y2` 时生效）。 |\n\n### 误差条（errorBar）\n\n误差条（须线）用于展示数值的不确定性范围。它通常配合 `bar()` 或 `dot()` 一起使用。需要注意的是，误差条传入的上下界字段是绝对数值，因此即使上下误差不对称也可以正确绘制。如果某一行缺失了上界或下界，则会直接跳过该点，绝不绘制误导人的零刻度须线。它属于辅助标注标记，不进入图例和提示框。\n\n```ts\ndeclare function errorBar(options: ErrorBarOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `high` | `string` | **必填** | 上界数据列的字段名（绝对值）。 |\n| `low` | `string` | **必填** | 下界数据列的字段名（绝对值）。 |\n| `color` | `string` | `'var(--astryx-color-text-primary)'` | 描边线条颜色。 |\n| `strokeWidth` | `number` | `1.5` | 线条粗细（像素）。 |\n| `capWidth` | `number` | `8` | 须线两端小横杠的宽度（像素）。 |\n\n### 蜡烛图（candlestick）\n\n蜡烛图（K 线图）用于金融等场景，展示一段时间内的开盘、最高、最低和收盘价。\n\n```ts\ndeclare function candlestick(options: CandlestickOptions): SeriesDef\n```\n\n| 选项 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `open` | `string` | **必填** | 开盘价字段名。 |\n| `high` | `string` | **必填** | 最高价字段名。 |\n| `low` | `string` | **必填** | 最低价字段名。 |\n| `close` | `string` | **必填** | 收盘价字段名。 |\n| `upColor` | `string` | `'var(--astryx-color-success)'` | 阳线（收盘价高于或等于开盘价）的颜色。 |\n| `downColor` | `string` | `'var(--astryx-color-error)'` | 阴线（收盘价低于开盘价）的颜色。 |\n\n## 坐标轴、网格、图例、提示框\n\n图表的辅助元素均以独立组件的形式提供，你可以自由组合和调整。在 `<Chart>` 上直接给 `legend` 或 `tooltip` 传 `true` 即可启用默认样式，也可以传配置对象调整位置。\n\n### 坐标轴（ChartAxis）\n\n坐标轴绘制在图表四周，负责标注刻度与文字。\n\n| 属性 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `position` | `'top' \\| 'right' \\| 'bottom' \\| 'left'` | **必填** | 绘制在哪一条边上。 |\n| `tickCount` | `number` | `5` | 期望显示的刻度数量（该值为参考值，d3 会计算出最工整的步长）。 |\n| `maxTicks` | `number` | `undefined` | 允许显示的最大刻度文字数量，超出时会等间隔跳过。 |\n| `tickFormat` | `(value: unknown) => string` | `undefined` | 自定义刻度文字的格式化函数。 |\n| `truncate` | `number` | `undefined` | 刻度文字最大字符数，超出截断并追加省略号。 |\n| `animated` | `boolean` | `true` | 刻度位置发生变化时是否开启平滑过渡动画。 |\n| `showAxisLine` | `boolean` | 仅底轴为 `true` | 是否绘制轴线。如果设置了 `showTicks`，无论哪条轴都会强制画出轴线。 |\n| `showTicks` | `boolean` | `false` | 是否在每个刻度位置画一小段垂直的短刻度须线。 |\n\n### 网格（ChartGrid）\n\n网格线绘制在数据图形底层，帮助读者对齐数值。\n\n| 属性 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `horizontal` | `boolean` | `true` | 是否绘制水平网格线。 |\n| `vertical` | `boolean` | `false` | 是否绘制垂直网格线。 |\n| `tickCount` | `number` | `5` | 大约绘制几条网格线。与 `<ChartAxis>` 的 `tickCount` 保持一致可使网格与刻度完全对齐。 |\n\n### 图例（ChartLegend）\n\n图例列出各个系列的名称与代表色。在 `<Chart>` 上写 `legend` 就会显示（默认不显示），也可以单独使用 `<ChartLegend>` 组件。\n\n| 属性 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `items` | `LegendItem[]` | `[]` | 显式指定的图例项数组。不传则自动从系列推导。 |\n| `position` | `'top' \\| 'bottom' \\| 'start' \\| 'end'` | `'bottom'` | 图例相对图表画布的停靠方位。`start` 和 `end` 会跟随阅读方向。 |\n| `alignment` | `'start' \\| 'center' \\| 'end'` | `'start'` | 图例项在所在边上的对齐方式。 |\n\n### 提示框（ChartTooltip）\n\n鼠标悬停在图表上时，提示框会展示当前位置对应的数据明细。\n\n| 属性 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `series` | `readonly SeriesDef[]` | 由 Chart 注入 | 系列定义。独立使用该组件时需要传入同一份 `series` 数组。 |\n| `hoverIndicator` | `boolean` | `true` | 悬停时是否绘制辅助指示。柱状图高亮整列，折线、面积和散点绘制垂直指示线。 |\n| `showHoverDots` | `boolean` | `true` | 是否在悬停的数据点上显示高亮小圆点（柱状图自动跳过）。 |\n| `placement` | `'auto' \\| 'right' \\| 'left' \\| 'top'` | `'auto'` | 浮层卡片相对悬停点的位置。`auto` 会优先靠右，放不下时自动翻转到左侧。 |\n\n### 颜色色块（ChartSwatch）\n\n用于在图例或自定义提示框中绘制一小块系列代表色标。\n\n| 属性 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `color` | `string` | **必填** | 填充颜色值。 |\n| `variant` | `'square' \\| 'line'` | `'square'` | 色块形态。`square` 渲染为小方块（适合柱状），`line` 渲染为一小段短线（适合折线和面积）。 |\n\n### 自定义提示框内容\n\n如果内置提示框的样式无法满足要求，可以通过 `<Chart>` 的 `#tooltip` 插槽自定义浮层内容。插槽向外暴露当前悬停的横坐标值 `xValue` 和各系列的数据明细 `rows`：\n\n```vue\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" tooltip>\n    <template #tooltip=\"{ xValue, rows }\">\n      <div class=\"my-custom-tooltip\">\n        <strong>{{ xValue }}</strong>\n        <div v-for=\"row in asRows(rows)\" :key=\"row.key\">\n          <ChartSwatch :color=\"row.color\" variant=\"line\" />\n          {{ row.label }}：{{ money(row.value) }}\n        </div>\n      </div>\n    </template>\n  </Chart>\n</template>\n```\n\n## 颜色\n\n如果创建系列时没有显式指定颜色，图表会根据主题里的分类色板，按顺序自动给每个系列分配颜色。\n\n所有的图表颜色底层都是基于 CSS 变量实现的。这意味着当页面切换主题风格，或者从浅色模式切换到深色模式时，图表上的颜色会自动跟随环境刷新，不需要重新渲染整张图表。\n\n如果你需要手动获取当前图表体系的配色方案，可以调用 `useChartColors()` 组合式函数。它返回的对象在整个包中全局共享且保持不变，其包含的成员如下：\n\n- `categorical(n: number)`：获取包含指定数量的分类色数组。数量超出槽位时会自动循环。\n- `sequential`：顺序色阶对象，支持 9 种色相（`blue`、`shamrock`、`orange`、`pink`、`purple`、`red`、`teal`、`yellow`、`gray`）。传入数量 `n` 即可返回渐变过渡色数组。\n- `diverging`：双极发散配色。提供 `positiveNegative`（正负分明）、`coldHot`（冷暖分明）以及 `custom`（自定义两侧色相）方法。\n- `semantic`：语义单色值对象，包含 `positive`、`negative`、`warning` 和 `neutral` 四种标准状态色。\n- `structural`：图表骨架的结构色，包含 `axis`（坐标轴线）、`grid`（网格线）、`tick`（刻度短线）和 `label`（文本标签）四种颜色。\n- `alpha(color: string, opacity: number)`：按指定透明度生成带透明通道的颜色值（若为 CSS 变量则自动采用 `color-mix()` 处理）。\n\n## 格式化函数\n\n图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。\n- `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。\n\n## 无障碍\n\n图表在可访问性方面做了完善的无障碍设计，让视障人士通过读屏软件也能了解图表内容：\n\n- 整个图表根元素具有 `role=\"img\"` 角色属性。\n- 图表的无障碍名称优先使用传入的 `title` 属性；如果没有提供 `title`，系统会根据包含的主要系列与 x 轴字段自动拼接出清晰的语义名称（如「月度 收入和成本 走势」）；如果全是辅助标注线，则默认退化为「图表」。\n- 传入的 `subtitle` 会自动关联为图表的无障碍长描述。\n- 当数据点总数（数据行数 × 数据列数）不超过 100 个（即常量 `MAX_TABLE_POINTS`）时，图表会自动生成一份在视觉上完全隐藏的数据表格（通过 `VisuallyHidden` 隐藏在屏幕外）。读屏软件能够直接逐行朗读表格中的精准数据；如果数据量超过 100 点，则不会生成表格以避免造成大量无效的语音噪音。\n\n## 服务端渲染\n\n在服务端渲染（SSR）环境中运行时，由于不存在真实的浏览器 DOM，组件无法自动测量父级容器的实际像素宽度。\n\n因此，在服务端渲染时，必须在 `<Chart>` 上显式传入 `width` 属性指定宽度像素值，服务端才能正确完成比例尺计算并完整输出包含路径和矩形的 SVG 标签。在浏览器端水合后，图表一旦首次测量到真实的容器宽度，便会自动接管并按真实容器尺寸响应式排版。\n\n## 现在不支持的\n\n为了保持包的轻量和聚焦，目前以下能力暂未包含在当前包中：\n- 4 个基于 WebGL 的超大数据集标记（例如 `dotGL` 等标记）尚未收录于此包中。\n- Nuxt 模块中尚未提供针对 `@astryx-vue/charts` 的自动引入配置开关，在 Nuxt 项目中使用时需手动通过 npm 依赖导入。"
-      },
-      "docsUrl": {
-        "en": "https://astryx-vue.pages.dev/en/guide/charts",
-        "zh": "https://astryx-vue.pages.dev/guide/charts"
-      }
-    },
-    {
       "id": "guide/cli",
       "kind": "guide",
       "title": {
@@ -78524,145 +80419,6 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/responsive",
         "zh": "https://astryx-vue.pages.dev/guide/responsive"
-      }
-    },
-    {
-      "id": "guide/richtext",
-      "kind": "guide",
-      "title": {
-        "en": "Rich text",
-        "zh": "富文本"
-      },
-      "summary": {
-        "en": "`@astryx-vue/richtext` is a rich text editor package for Vue 3. It builds on the Lexical framework so users can type headings, bold text, lists, code blocks, and tables right in the browser with immediate visual feedback.",
-        "zh": "`@astryx-vue/richtext` 是一个给 Vue 3 用的富文本编辑器组件包。底层基于 Lexical 框架，让用户在网页里直接输入标题、加粗文字、列表、代码块和表格，所见即所得。"
-      },
-      "headings": {
-        "en": [
-          "What this is",
-          "Install",
-          "Your first content",
-          "`<RichTextEditor>` props",
-          "Props",
-          "Slots",
-          "Events",
-          "Methods on the template ref",
-          "Read-only and disabled",
-          "Toolbar",
-          "Actions and keyboard shortcuts",
-          "`<RichTextEditorToolbar>` props and slots",
-          "Custom icons",
-          "Plugins",
-          "Default plugins",
-          "Auto-link plugin: `RichTextEditorAutoLinkPlugin`",
-          "Markdown in and out",
-          "Pure conversion functions",
-          "Source preservation on round trips",
-          "Markdown plugin nodes",
-          "Read-only view: RichTextView",
-          "Design role and accessibility",
-          "Keyboard",
-          "Accessibility",
-          "Not supported yet"
-        ],
-        "zh": [
-          "这是什么",
-          "安装",
-          "第一段内容",
-          "`<RichTextEditor>` 的属性",
-          "属性",
-          "插槽",
-          "事件",
-          "模板引用暴露的方法",
-          "只读与禁用",
-          "工具栏",
-          "工具栏功能与快捷键",
-          "`<RichTextEditorToolbar>` 的属性与插槽",
-          "自定义图标",
-          "插件",
-          "默认已开启的功能插件",
-          "自动链接插件：`RichTextEditorAutoLinkPlugin`",
-          "Markdown 进出",
-          "纯函数转换",
-          "原样往返设计",
-          "Markdown 插件节点",
-          "只读视图 RichTextView",
-          "设计定位与无障碍考虑",
-          "键盘操作",
-          "无障碍",
-          "现在不支持的"
-        ]
-      },
-      "keywords": {
-        "en": [
-          "label",
-          "isLabelHidden",
-          "description",
-          "isOptional",
-          "isRequired",
-          "defaultValue",
-          "placeholder",
-          "isReadOnly",
-          "isDisabled",
-          "status",
-          "statusVariant",
-          "width",
-          "minHeight",
-          "labelTooltip",
-          "size",
-          "nodes",
-          "extensions",
-          "markdownExtensions",
-          "hasMarkdownShortcuts",
-          "transformers",
-          "hasAutoFocus",
-          "tabEscapeHint",
-          "maxLength",
-          "namespace",
-          "headingLevels",
-          "hasLink",
-          "hasNewTabLinks",
-          "promptForUrl"
-        ],
-        "zh": [
-          "属性名",
-          "label",
-          "isLabelHidden",
-          "description",
-          "isOptional",
-          "isRequired",
-          "defaultValue",
-          "placeholder",
-          "isReadOnly",
-          "isDisabled",
-          "status",
-          "statusVariant",
-          "width",
-          "minHeight",
-          "labelTooltip",
-          "size",
-          "nodes",
-          "extensions",
-          "markdownExtensions",
-          "hasMarkdownShortcuts",
-          "transformers",
-          "hasAutoFocus",
-          "tabEscapeHint",
-          "maxLength",
-          "namespace",
-          "headingLevels",
-          "hasLink",
-          "hasNewTabLinks",
-          "promptForUrl"
-        ]
-      },
-      "body": {
-        "en": "# Rich text\n\n## What this is\n\n`@astryx-vue/richtext` is a rich text editor package for Vue 3. It builds on the Lexical framework so users can type headings, bold text, lists, code blocks, and tables right in the browser with immediate visual feedback.\n\nIt does three main things:\n1. Provides a ready-to-use `<RichTextEditor>` input area and an optional `<RichTextEditorToolbar>`.\n2. Turns `# ` or `- ` into headings and lists as you type (Markdown shortcuts), and exports the document back to Markdown without touching unchanged blocks.\n3. Provides `<RichTextView>`, a lightweight read-only component that renders saved content without the overhead of an editor.\n\n## Install\n\nThe editor depends on `@astryx-vue/core`, `vue`, and Meta's `lexical` packages. Run this command in your project terminal (keep all `lexical` and `@lexical/*` packages pinned to `0.52.0`):\n\n```bash\npnpm add @astryx-vue/richtext \\\n  lexical@0.52.0 \\\n  @lexical/code@0.52.0 \\\n  @lexical/extension@0.52.0 \\\n  @lexical/headless@0.52.0 \\\n  @lexical/history@0.52.0 \\\n  @lexical/html@0.52.0 \\\n  @lexical/link@0.52.0 \\\n  @lexical/list@0.52.0 \\\n  @lexical/markdown@0.52.0 \\\n  @lexical/rich-text@0.52.0 \\\n  @lexical/selection@0.52.0 \\\n  @lexical/table@0.52.0 \\\n  @lexical/utils@0.52.0\n```\n\nImport the base styles in your application entry file (such as `main.ts`):\n\n```ts\nimport '@astryx-vue/richtext/richtext.css'\n```\n\n## Your first content\n\n`<RichTextEditor>` requires only the `label` prop to get started. Screen readers use this label to announce the field, so it is required for accessibility.\n\nHere is the shortest working example:\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor } from '@astryx-vue/richtext'\n</script>\n\n<template>\n  <RichTextEditor label=\"Release notes\" placeholder=\"Type something here...\" />\n</template>\n```\n\nHere is the rendered result:\n\n## `<RichTextEditor>` props\n\nThis section covers all props, slots, events, and template ref methods supported by `<RichTextEditor>`.\n\n### Props\n\n| Name | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `label` | `string` | Required | Accessible label text for the editor. Screen readers require it. |\n| `isLabelHidden` | `boolean` | `false` | Visually hides the label while keeping it accessible to screen readers. |\n| `description` | `string` | - | Helper text displayed between the label and the editing area. |\n| `isOptional` | `boolean` | `false` | Marks the field as optional. Mutually exclusive with `isRequired`. |\n| `isRequired` | `boolean` | `false` | Marks the field as required. Mutually exclusive with `isOptional`. |\n| `defaultValue` | `string` | - | Initial content string produced by `JSON.stringify(editorState.toJSON())`. The editor is uncontrolled and reads this value only once upon mount. |\n| `placeholder` | `string` | - | Dim helper text displayed when the editing area is completely empty. |\n| `isReadOnly` | `boolean` | `false` | Read-only state. Text remains sharp and stays in the Tab order so users can select, copy, and read content without modifying it. |\n| `isDisabled` | `boolean` | `false` | Disabled state. Muted colors, non-editable, and removed from the keyboard Tab order. Takes precedence if both `isReadOnly` and `isDisabled` are true. |\n| `status` | `RichTextEditorStatus` | - | Validation status object `{ type: 'warning' \\| 'error' \\| 'success', message?: string }`. Sets the border color and renders an alert message below. |\n| `statusVariant` | `'attached' \\| 'detached' \\| 'tooltip'` | `'attached'` | Placement of the status alert message. |\n| `width` | `number \\| string` | - | Total width of the form field. Numbers are treated as pixels (px); strings are passed as CSS lengths. |\n| `minHeight` | `number \\| string` | `'4.5rem'` | Minimum height of the editable surface. Numbers are treated as pixels; strings are passed as CSS lengths. |\n| `labelTooltip` | `string` | - | Tooltip text shown when hovering the info icon next to the label. |\n| `size` | `'sm' \\| 'md' \\| 'lg'` | `'md'` | Size variant. Controls the inner padding of the editing box. |\n| `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | Extra Lexical node classes to register beyond the defaults (headings, quote, lists, link, code block, table). |\n| `extensions` | `ReadonlyArray<AnyLexicalExtensionArgument>` | - | Extra Lexical extension arguments. |\n| `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | Markdown extension plugins created by `createRichTextExtension`. |\n| `hasMarkdownShortcuts` | `boolean` | `true` | Enables Markdown shortcuts such as typing `# ` for headings or `- ` for bullet lists. |\n| `transformers` | `ReadonlyArray<Transformer>` | Default transformers | Custom Markdown transformer rules. Defaults to standard transformers plus GFM tables. |\n| `hasAutoFocus` | `boolean` | `false` | Moves focus into the editing surface as soon as the component mounts. |\n| `tabEscapeHint` | `string` | Default copy | Instruction announced to screen readers on how to exit the editor. Because Tab indents text inside the editor, exiting requires pressing Escape then Tab. Pass an empty string to silence this hint. |\n| `maxLength` | `number` | - | Plain-text character limit. Displays a counter in the bottom-right corner. Text is not truncated when exceeding the limit, but the counter turns red. |\n| `namespace` | `string` | `'astryx-editor'` | Namespace for the underlying Lexical instance. Distinguishes multiple editors on the same page. |\n\n### Slots\n\n- `#toolbar`: Full-width slot positioned directly above the editing surface. Typically holds `<RichTextEditorToolbar />`.\n- `#default`: Slot inside the editing surface. Used for headless plugin components (such as an auto-link plugin or custom tools that call `useLexicalEditor()`).\n\n### Events\n\n- `@change`: Fires when the user edits the document. Receives two arguments:\n  - `editorState: EditorState`: Current state object. Call `editorState.toJSON()` to serialize it for storage.\n  - `editor: LexicalEditor`: Underlying Lexical editor instance.\n\n### Methods on the template ref\n\nBind a `ref` to `<RichTextEditor>` to call these instance methods:\n\n```ts\nconst editorRef = ref<RichTextEditorExposed>()\n\n// Focus the editing surface\neditorRef.value?.focus()\n\n// Clear all content and reset to a single empty paragraph\neditorRef.value?.clear()\n\n// Read the current EditorState object\nconst state = editorRef.value?.getEditorState()\n\n// Export current content as a Markdown string (preserves untouched blocks)\nconst markdown = editorRef.value?.getMarkdown()\n\n// Export current content as an HTML string (requires a browser DOM environment)\nconst html = editorRef.value?.getHTML()\n\n// Access the underlying LexicalEditor instance for advanced customization\nconst rawEditor = editorRef.value?.getEditor()\n```\n\nThis example shows how to listen to `@change` and call `clear()` and `getMarkdown()`:\n\n## Read-only and disabled\n\nThe editor provides two non-editable states: `isReadOnly` and `isDisabled`. They serve distinct interactive and accessibility needs:\n\n1. **Read-only (`isReadOnly`)**:\n   - Text color remains at full contrast.\n   - Remains in the keyboard Tab order. Screen readers announce the field as read-only.\n   - Users can select and copy text.\n2. **Disabled (`isDisabled`)**:\n   - The entire input and its text appear dimmed.\n   - Completely removed from the Tab order; Tab skips past it.\n   - Screen readers announce the field as disabled.\n   - If both `isReadOnly` and `isDisabled` are passed to the same component, **disabled wins**.\n\n```vue\n<!-- Read-only: easy to inspect and copy, stays focusable and accessible -->\n<RichTextEditor label=\"Release notes\" :default-value=\"savedContent\" is-read-only />\n\n<!-- Disabled: dimmed and removed from the Tab order -->\n<RichTextEditor label=\"Release notes\" :default-value=\"savedContent\" is-disabled />\n```\n\nNotice the distinction between a read-only form field and a display view:\n- **`<RichTextEditor is-read-only>`**: Built for **forms**. It keeps its field label, helper description, and border frame. Semantically it remains a form control.\n- **`<RichTextView>`**: Built for **article bodies** (such as blog posts or detail views). It strips all form semantics, borders, and labels, rendering pure document content.\n\nHere is how the `status` prop and `maxLength` look in practice:\n\n## Toolbar\n\n`<RichTextEditorToolbar>` is the companion format bar for the editor. Place it in the `#toolbar` slot of `<RichTextEditor>` to dock it flush to the top of the editing area.\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor, RichTextEditorToolbar } from '@astryx-vue/richtext'\n</script>\n\n<template>\n  <RichTextEditor label=\"Weekly report\">\n    <template #toolbar>\n      <RichTextEditorToolbar />\n    </template>\n  </RichTextEditor>\n</template>\n```\n\n### Actions and keyboard shortcuts\n\nThe toolbar includes common typographic controls:\n- **History**: Undo and Redo.\n- **Block formats**: Paragraph, Heading 1 (H1), Heading 2 (H2), Heading 3 (H3), Quote, Bullet List, and Numbered List.\n- **Inline styles**: Bold, Italic, Underline, Strikethrough, and Inline Code.\n- **Insert and edit links**: Click the link icon on the toolbar, or select text and press <kbd>Cmd</kbd> + <kbd>K</kbd> (<kbd>Ctrl</kbd> + <kbd>K</kbd> on Windows) to open the built-in popover.\n  - Type a destination URL in the popover and press Enter to save. The text selection stays intact while the popover is open.\n  - Every URL is sanitized through the built-in `sanitizeUrl` function. Only `http:`, `https:`, `mailto:`, and `tel:` protocols are allowed; scripts like `javascript:` are blocked.\n\n### `<RichTextEditorToolbar>` props and slots\n\n| Name | Type | Default | Description |\n| :--- | :--- | :--- | :--- |\n| `label` | `string` | Localized string | Accessible name for the entire toolbar (defaults to \"Text formatting\"). |\n| `headingLevels` | `ReadonlyArray<'h1' \\| 'h2' \\| 'h3'>` | `['h1', 'h2', 'h3']` | Which heading levels to display in the block format dropdown, in the given order. |\n| `size` | `'sm' \\| 'md' \\| 'lg'` | `'sm'` | Size variant. Scales all buttons and dropdown menus inside the toolbar. |\n| `hasLink` | `boolean` | `true` | Shows the link button and enables the <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> shortcut. |\n| `hasNewTabLinks` | `boolean` | `true` | Opens inserted links in a new tab by default (attaches `target=\"_blank\"` and `rel=\"noopener noreferrer\"`). |\n| `promptForUrl` | `(selectedText: string) => string \\| null \\| undefined` | - | Custom URL prompt callback. Use this to provide your own dialog instead of the built-in popover. |\n\nSlots:\n- `#end`: Custom slot rendered after all default buttons, separated by a vertical divider. Useful for project-specific buttons such as @mentions, AI helpers, or an emoji picker.\n\n### Custom icons\n\nThe toolbar ships with built-in SVG icons. To use icons from your own icon library (such as Lucide or Carbon), override them through the global theme helper `defineTheme`. Every icon key uses the `richtext:` prefix:\n\n```ts\nimport { defineTheme } from '@astryx-vue/core'\n\ndefineTheme({\n  icons: {\n    'richtext:bold': 'lucide:bold',\n    'richtext:italic': 'lucide:italic',\n    'richtext:link': 'lucide:link',\n    // See the list below for all replaceable keys\n  },\n})\n```\n\n`RICHTEXT_ICON_KEYS` exports all replaceable icon keys:\n- `bold` -> `'richtext:bold'`\n- `italic` -> `'richtext:italic'`\n- `underline` -> `'richtext:underline'`\n- `strikethrough` -> `'richtext:strikethrough'`\n- `code` -> `'richtext:code'`\n- `link` -> `'richtext:link'`\n- `paragraph` -> `'richtext:paragraph'`\n- `h1`, `h2`, `h3` -> `'richtext:h1'`, `'richtext:h2'`, `'richtext:h3'`\n- `quote` -> `'richtext:quote'`\n- `bullet` -> `'richtext:bullet'`\n- `number` -> `'richtext:number'`\n- `undo` -> `'richtext:undo'`\n- `redo` -> `'richtext:redo'`\n\n## Plugins\n\nPlugins extend the editor with new behaviors, such as task checkboxes, code syntax highlighting, or turning typed URLs into links automatically.\n\n### Default plugins\n\nWhen you mount `<RichTextEditor>`, it includes these capabilities out of the box with no extra configuration:\n- **Task checkboxes**: Supports `- [ ]` and `- [x]` checklist syntax. Checkboxes can be toggled by clicking them and lock automatically when the editor is read-only.\n- **Code block header and copy button (CodeBlockHeaderPlugin)**: Displays the language name (such as `TypeScript` or `Python`) above code blocks, along with a one-click copy button.\n- **Code syntax highlighting (CodeSyntaxPlugin)**: Colors keywords, strings, numbers, and comments inside code blocks using the same theme variables as `CodeBlock`.\n- **Table width sizing and scrolling (Table Plugins)**: Enforces minimum column widths and adds accessible horizontal scrolling when tables overflow their container.\n\n### Auto-link plugin: `RichTextEditorAutoLinkPlugin`\n\nTurning typed or pasted URLs into clickable links is a frequent requirement. To keep the core package light, this feature is a headless Vue component plugin. Place it directly inside the default slot of `<RichTextEditor>`:\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor, RichTextEditorAutoLinkPlugin, RichTextEditorToolbar } from '@astryx-vue/richtext'\n</script>\n\n<template>\n  <RichTextEditor label=\"Notes\" placeholder=\"Try pasting a link here...\">\n    <template #toolbar>\n      <RichTextEditorToolbar />\n    </template>\n    <!-- Add the auto-link plugin -->\n    <RichTextEditorAutoLinkPlugin />\n  </RichTextEditor>\n</template>\n```\n\nThe plugin provides two default matchers (`DEFAULT_LINK_MATCHERS`): one for web URLs and one for email addresses. URLs without a protocol prefix receive `https://`, emails receive `mailto:`, and all generated links attach `target=\"_blank\"` and `rel=\"noopener noreferrer\"` to open safely in a new tab.\n\nTo recognize custom patterns (such as turning `#123` into an issue tracker link), pass custom rules to the `matchers` prop:\n\n```vue\n<RichTextEditorAutoLinkPlugin :matchers=\"myCustomMatchers\" @change=\"(url, prevUrl) => onLinkChange(url, prevUrl)\" />\n```\n\nThe plugin emits a `change` event whenever a link is added, modified, or removed, passing the new URL (`null` on removal) and the previous URL. Build `myCustomMatchers` with `createLinkMatcherWithRegExp` from `@lexical/link`.\n\n## Markdown in and out\n\nMost workflows edit rich text in the browser but store plain Markdown on the server. `@astryx-vue/richtext` provides a lossless round-trip conversion pipeline.\n\n### Pure conversion functions\n\nImport two conversion functions from `@astryx-vue/richtext/markdown`. This entry point has no browser DOM dependency and runs safely in server-side environments such as Node.js or Cloudflare Workers:\n\n```ts\nimport { editorStateJSONToMarkdown, markdownToEditorStateJSON } from '@astryx-vue/richtext/markdown'\n\n// 1. On the server or during initialization: convert Markdown text to JSON for defaultValue\nconst defaultValue = markdownToEditorStateJSON('# Welcome\\n\\nThis is **Markdown** text.')\n\n// 2. When saving or submitting: restore the JSON string back to Markdown text\nconst markdown = editorStateJSONToMarkdown(savedJson)\n```\n\n### Source preservation on round trips\n\nStandard rich text converters often scramble formatting during a Markdown -> editor -> Markdown cycle, dropping indentations or turning every `*` into a `-`.\n\nAstryx Rich Text uses a source-preservation mechanism: imported Markdown blocks keep their original punctuation, spacing, and indents intact on export as long as the user did not edit that block. Only modified or newly added blocks are reformatted with standard syntax.\n\n## Markdown plugin nodes\n\nProjects sometimes need custom Markdown syntax, such as `@username` mentions or custom alert callout blocks.\n\nUse `createRichTextExtension` to register a custom Markdown plugin:\n\n```ts\nimport { createRichTextExtension } from '@astryx-vue/richtext'\nimport { mentionPlugin } from './myMentionPlugin'\n\n// Wrap into an extension recognized by the editor\nconst mentionsExtension = createRichTextExtension(mentionPlugin)\n```\n\nPass the extension to `<RichTextEditor>` or `<RichTextView>` via the `markdownExtensions` prop:\n\n```vue\n<RichTextEditor\n  label=\"Discussion\"\n  :markdown-extensions=\"[mentionsExtension]\"\n/>\n```\n\nYou can also pass it to the conversion functions:\n\n```ts\nconst json = markdownToEditorStateJSON(markdownText, {\n  extensions: [mentionsExtension],\n})\n```\n\n## Read-only view: RichTextView\n\nWhen you need to display an article, a blog post, or a release announcement without any editing capabilities, use the `<RichTextView>` component.\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextView } from '@astryx-vue/richtext'\n\n// The value is the JSON string saved earlier from editorState.toJSON()\nconst content = '{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Display content\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}'\n</script>\n\n<template>\n  <RichTextView :value=\"content\" />\n</template>\n```\n\n### Design role and accessibility\n\n- **Document content, not a form control**: Even when set to non-editable, Lexical defaults to `role=\"textbox\"` on its root element. Tagging a multi-page article as a text input causes screen readers to misidentify it and triggers accessibility audit warnings. `<RichTextView>` strips all form input semantics upon mount and renders as a clean document container.\n- **In-place updates**: When the parent updates the `value` prop, `<RichTextView>` re-parses the content in place without tearing down and recreating the DOM tree.\n- **Resilient error handling**: If saved JSON cannot be parsed due to a version migration or corrupted data, the component will not crash the entire page. It emits a `@parseError` event and supports a fallback display through the `#errorFallback` slot:\n\n```vue\n<RichTextView :value=\"maybeCorruptedContent\" @parse-error=\"onParseError\">\n  <template #errorFallback>\n    <div class=\"error-box\">Unable to display document content.</div>\n  </template>\n</RichTextView>\n```\n\n## Keyboard\n\nThe editor is optimized for full keyboard workflows:\n\n- **Tab indentation and escape**:\n  - Pressing <kbd>Tab</kbd> in a paragraph or list item increases its indentation level; pressing <kbd>Shift</kbd> + <kbd>Tab</kbd> decreases it.\n  - Because <kbd>Tab</kbd> is used for typography, keyboard-only and screen reader users need a reliable way to exit the editor. Following accessibility standards, **press <kbd>Escape</kbd> once, then press <kbd>Tab</kbd>** to move focus to the next interactive element on the page.\n  - The editor announces this escape sequence to screen readers by default. You can change this copy with the `tabEscapeHint` prop, or silence it by passing `tabEscapeHint=\"\"`.\n- **Navigating tables**:\n  - While editing inside a table cell, pressing arrow keys (<kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>←</kbd>, <kbd>→</kbd>) moves the cursor smoothly between adjacent cells.\n- **Keyboard shortcuts**:\n  - <kbd>Cmd</kbd> + <kbd>K</kbd> (macOS) or <kbd>Ctrl</kbd> + <kbd>K</kbd> (Windows): Opens the link editing popover.\n  - <kbd>Cmd/Ctrl</kbd> + <kbd>B</kbd>: Bold.\n  - <kbd>Cmd/Ctrl</kbd> + <kbd>I</kbd>: Italic.\n  - <kbd>Cmd/Ctrl</kbd> + <kbd>Z</kbd>: Undo; <kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd>: Redo.\n  - Underline has no default shortcut; use the toolbar button.\n\n## Accessibility\n\nAstryx Rich Text includes extensive accessibility (a11y) considerations:\n\n1. **Explicit label association**: The required `label` prop creates an accessible name for the editor. Even when `isLabelHidden` is true, the label is preserved for screen readers via `aria-label`.\n2. **Read-only vs. disabled semantics**: `isReadOnly` applies `aria-readonly=\"true\"` and keeps `tabindex=\"0\"`, announcing the field as read-only text; `isDisabled` applies `aria-disabled=\"true\"` and removes the field from the Tab sequence entirely.\n3. **Character count feedback**: When `maxLength` is set, an off-screen `aria-live=\"polite\"` region alerts screen reader users when character count nears the threshold (over 80%) or exceeds it. Error states set `aria-invalid=\"true\"` automatically.\n4. **Preserved focus and selection**: Opening toolbar dialogs (such as the link popover) preserves the active text selection in the editor. Focus returns smoothly to the text area when the popover closes.\n\n## Not supported yet\n\nTo keep the Vue implementation clean and maintainable, this package intentionally differs from the upstream React implementation in two areas:\n\n1. **No `xstyle` styling system**: The upstream React package uses an internal `xstyle` object system, which is omitted in the Vue port. Use standard Vue `class` and `style` attributes to customize appearance.\n2. **Plugins use Vue component slots**: Upstream passes plugins as an array of React nodes; in `@astryx-vue/richtext`, plugins are headless, logic-only Vue components (such as `<RichTextEditorAutoLinkPlugin />`) placed directly in the default slot of `<RichTextEditor>`.",
-        "zh": "# 富文本\n\n## 这是什么\n\n`@astryx-vue/richtext` 是一个给 Vue 3 用的富文本编辑器组件包。底层基于 Lexical 框架，让用户在网页里直接输入标题、加粗文字、列表、代码块和表格，所见即所得。\n\n它主要帮你做三件事：\n1. 提供开箱即用的富文本编辑框 `<RichTextEditor>` 与顶部格式工具栏 `<RichTextEditorToolbar>`。\n2. 支持输入 `# ` 或 `- ` 自动生成标题与列表（Markdown 快捷输入），并能原样把内容导出成 Markdown。\n3. 提供纯展示的只读视图 `<RichTextView>`，用轻量的方式把存下来的文档内容画出来。\n\n## 安装\n\n富文本编辑器依赖同级的 `@astryx-vue/core`、`vue` 以及 Meta 的 `lexical` 系列包。请在项目终端里执行安装命令（注意：所有 `@lexical/*` 和 `lexical` 的版本必须保持在 `0.52.0`）：\n\n```bash\npnpm add @astryx-vue/richtext \\\n  lexical@0.52.0 \\\n  @lexical/code@0.52.0 \\\n  @lexical/extension@0.52.0 \\\n  @lexical/headless@0.52.0 \\\n  @lexical/history@0.52.0 \\\n  @lexical/html@0.52.0 \\\n  @lexical/link@0.52.0 \\\n  @lexical/list@0.52.0 \\\n  @lexical/markdown@0.52.0 \\\n  @lexical/rich-text@0.52.0 \\\n  @lexical/selection@0.52.0 \\\n  @lexical/table@0.52.0 \\\n  @lexical/utils@0.52.0\n```\n\n接着在你的应用入口文件（如 `main.ts`）里引入编辑器的基础样式：\n\n```ts\nimport '@astryx-vue/richtext/richtext.css'\n```\n\n## 第一段内容\n\n使用 `<RichTextEditor>` 最少只要传一个 `label` 属性。`label` 是给读屏软件识别这个输入框用途的名字，为了无障碍体验，它是必填项。\n\n这是一段最短的可运行代码：\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor } from '@astryx-vue/richtext'\n</script>\n\n<template>\n  <RichTextEditor label=\"发布说明\" placeholder=\"请在这里输入内容...\" />\n</template>\n```\n\n实际运行效果如下：\n\n## `<RichTextEditor>` 的属性\n\n本节列出 `<RichTextEditor>` 支持的所有属性、插槽、事件以及模板引用暴露的方法。\n\n### 属性\n\n| 属性名 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `label` | `string` | 必填 | 编辑器的标签文字。无障碍读屏软件需要用到它，因此必须填写。 |\n| `isLabelHidden` | `boolean` | `false` | 是否只对读屏软件朗读标签，视觉上把标签隐藏起来。 |\n| `description` | `string` | - | 摆在标签和编辑区之间的详细说明文字。 |\n| `isOptional` | `boolean` | `false` | 是否标记为选填。和 `isRequired` 互斥。 |\n| `isRequired` | `boolean` | `false` | 是否标记为必填。和 `isOptional` 互斥。 |\n| `defaultValue` | `string` | - | 初始内容字符串（由 `JSON.stringify(editorState.toJSON())` 得到）。编辑器是非受控的，只在创建挂载时读取一次。 |\n| `placeholder` | `string` | - | 编辑区完全为空时显示的提示灰字。 |\n| `isReadOnly` | `boolean` | `false` | 是否只读。文字保持原有清晰度，键盘 Tab 键依然能跳进来，方便复制或读屏，但不能改动文字。 |\n| `isDisabled` | `boolean` | `false` | 是否禁用。不可编辑、颜色变淡，且会从键盘 Tab 顺序中移除。若与 `isReadOnly` 同时为 true，以禁用为准。 |\n| `status` | `RichTextEditorStatus` | - | 校验状态对象 `{ type: 'warning' \\| 'error' \\| 'success', message?: string }`。决定边框颜色并在下方显示提示信息。 |\n| `statusVariant` | `'attached' \\| 'detached' \\| 'tooltip'` | `'attached'` | 状态提示信息的摆放位置。 |\n| `width` | `number \\| string` | - | 整个表单字段的宽度。传入数字当像素（px），传入字符串原样作为 CSS 长度。 |\n| `minHeight` | `number \\| string` | `'4.5rem'` | 编辑区域的最小高度。传入数字当像素，传入字符串作为 CSS 长度。 |\n| `labelTooltip` | `string` | - | 标签右侧信息小图标悬浮时出现的提示文本。 |\n| `size` | `'sm' \\| 'md' \\| 'lg'` | `'md'` | 编辑器尺寸，影响编辑框的内部留白（内边距）。 |\n| `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | 在默认节点（标题、引用、列表、链接、代码块、表格）之外额外注册的 Lexical 节点类型。 |\n| `extensions` | `ReadonlyArray<AnyLexicalExtensionArgument>` | - | 额外的 Lexical 扩展插件数组。 |\n| `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | 要识别的 Markdown 插件扩展数组，由 `createRichTextExtension` 生成。 |\n| `hasMarkdownShortcuts` | `boolean` | `true` | 是否开启 Markdown 快捷输入（例如行首打 `# ` 变大标题，打 `- ` 变无序列表）。 |\n| `transformers` | `ReadonlyArray<Transformer>` | 默认转换器 | 自定义 Markdown 转换规则。如果不传，默认使用标准转换器加 GFM 表格。 |\n| `hasAutoFocus` | `boolean` | `false` | 组件挂载完成后是否自动把输入光标聚焦到编辑区。 |\n| `tabEscapeHint` | `string` | 默认文案 | 给读屏软件朗读的退出编辑提示。因为 Tab 键在编辑器里用来缩进文字，离开编辑器需要先按 Escape 再按 Tab。传空字符串表示不输出这段提示。 |\n| `maxLength` | `number` | - | 纯文字字数上限。设置后会在右下角显示计数；超出后不会截断文字，但计数器会变红提醒。 |\n| `namespace` | `string` | `'astryx-editor'` | 底层 Lexical 实例的命名空间，同一页面有多个编辑器时用来互相区分。 |\n\n### 插槽\n\n- `#toolbar`：放在编辑区正上方、顶到两边的工具栏插槽。通常在这里放 `<RichTextEditorToolbar />`。\n- `#default`：编辑区内部的插槽。可以放无界面的扩展组件（例如调用 `useLexicalEditor()` 的自动链接插件或自定义功能组件）。\n\n### 事件\n\n- `@change`：当用户修改了编辑内容时触发。提供两个参数：\n  - `editorState: EditorState`：最新的编辑器状态对象，可以用 `editorState.toJSON()` 转成 JSON 存进数据库。\n  - `editor: LexicalEditor`：底层的 Lexical 编辑器实例。\n\n### 模板引用暴露的方法\n\n给 `<RichTextEditor>` 绑定 `ref` 后，可以调用以下实例方法：\n\n```ts\nconst editorRef = ref<RichTextEditorExposed>()\n\n// 聚焦到编辑区\neditorRef.value?.focus()\n\n// 清空所有内容，恢复成一个空段落\neditorRef.value?.clear()\n\n// 读取当前的编辑器状态对象\nconst state = editorRef.value?.getEditorState()\n\n// 把当前内容导出为 Markdown 字符串（原本未修改的块保持原样）\nconst markdown = editorRef.value?.getMarkdown()\n\n// 把当前内容导出为 HTML 字符串（依赖浏览器 DOM 环境）\nconst html = editorRef.value?.getHTML()\n\n// 获取底层的 LexicalEditor 实例，供深度定制使用\nconst rawEditor = editorRef.value?.getEditor()\n```\n\n下面的例子展示了监听 `@change` 事件以及调用 `clear()` 和 `getMarkdown()` 的用法：\n\n## 只读与禁用\n\n编辑器提供了 `isReadOnly`（只读）和 `isDisabled`（禁用）两种不可编辑状态。它们在交互和无障碍上有明确的分工：\n\n1. **只读（`isReadOnly`）**：\n   - 内容文字颜色不淡化，保持清晰可读。\n   - 依然保留在键盘 Tab 键的切焦顺序中，视障用户通过键盘切过来时，读屏软件会明确朗读它是「只读」文本。\n   - 用户可以选中里面的文字进行复制。\n2. **禁用（`isDisabled`）**：\n   - 整个输入框与文字都会变淡变灰。\n   - 彻底从键盘 Tab 键顺序中移出，按 Tab 键会直接跳过它。\n   - 读屏软件会明确朗读它是「禁用」。\n   - 如果同一个组件上同时写了 `isReadOnly` 和 `isDisabled`，**以禁用为准**。\n\n```vue\n<!-- 只读模式：方便查看和复制，且支持键盘聚焦与读屏 -->\n<RichTextEditor label=\"发布说明\" :default-value=\"savedContent\" is-read-only />\n\n<!-- 禁用模式：灰显且不在键盘切换顺序中 -->\n<RichTextEditor label=\"发布说明\" :default-value=\"savedContent\" is-disabled />\n```\n\n注意区分带标签的只读字段与纯展示视图：\n- **`<RichTextEditor is-read-only>`**：适用于**表单场景**。它带有字段标签（Label）、辅助说明与边框外框，语义上依然是一个表单输入框（只读控件）。\n- **`<RichTextView>`**：适用于**正文展示场景**（比如文章详情页、博客正文）。它没有外层表单框，剥离了所有表单语义，只是纯粹渲染文档内容。\n\n校验状态属性 `status` 与字数上限 `maxLength` 的展示效果如下：\n\n## 工具栏\n\n`<RichTextEditorToolbar>` 是配合编辑器使用的格式控制栏。把它放在 `<RichTextEditor>` 的 `#toolbar` 插槽里，就会贴合固定在编辑区顶部。\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor, RichTextEditorToolbar } from '@astryx-vue/richtext'\n</script>\n\n<template>\n  <RichTextEditor label=\"工作周报\">\n    <template #toolbar>\n      <RichTextEditorToolbar />\n    </template>\n  </RichTextEditor>\n</template>\n```\n\n### 工具栏功能与快捷键\n\n工具栏内置了常用的排版能力：\n- **历史记录**：撤销（Undo）与重做（Redo）。\n- **块级格式**：段落正文、一级标题（H1）、二级标题（H2）、三级标题（H3）、引用块（Quote）、无序圆点列表（Bullet List）、有序数字列表（Numbered List）。\n- **行内样式**：加粗（Bold）、斜体（Italic）、下划线（Underline）、删除线（Strikethrough）、行内代码（Code）。\n- **插入与编辑链接**：点击工具栏的链接图标，或者在选中文本后按下快捷键 <kbd>Cmd</kbd> + <kbd>K</kbd>（Windows 上为 <kbd>Ctrl</kbd> + <kbd>K</kbd>），会弹出内置的链接浮层。\n  - 在弹出的浮层里输入地址并回车即可插入链接。浮层打开时选区依然保留，不会导致光标跑丢。\n  - 所有输入的链接地址都会经过内置的 `sanitizeUrl` 校验清洗，系统只放行 `http:`、`https:`、`mailto:` 和 `tel:` 开头的安全协议，阻断 `javascript:` 等恶意脚本。\n\n### `<RichTextEditorToolbar>` 的属性与插槽\n\n| 属性名 | 类型 | 默认值 | 说明 |\n| :--- | :--- | :--- | :--- |\n| `label` | `string` | 本地化文案 | 工具栏整体的无障碍名称（默认为「文字格式」）。 |\n| `headingLevels` | `ReadonlyArray<'h1' \\| 'h2' \\| 'h3'>` | `['h1', 'h2', 'h3']` | 在「块格式」下拉菜单里显示哪几级标题，按数组顺序排列。 |\n| `size` | `'sm' \\| 'md' \\| 'lg'` | `'sm'` | 工具栏尺寸，同步缩放里面所有按钮和下拉选择框。 |\n| `hasLink` | `boolean` | `true` | 是否显示链接按钮，以及是否开启 <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> 快捷键。 |\n| `hasNewTabLinks` | `boolean` | `true` | 插入的链接是否默认在新标签页打开（新标签页会自带 `target=\"_blank\"` 与 `rel=\"noopener noreferrer\"`）。 |\n| `promptForUrl` | `(selectedText: string) => string \\| null \\| undefined` | - | 自定义输入网址的回调。如果不想使用内置链接弹窗，可以传入此函数自行弹窗获取网址。 |\n\n插槽：\n- `#end`：尾部自定义插槽。内容会渲染在所有默认按钮右侧（中间以一条竖分割线隔开），方便放入你自己的业务按钮，例如 @提及人、AI 帮写或表情选择器。\n\n### 自定义图标\n\n工具栏内置了一套简洁的 SVG 图标。如果你想换成项目自己的图标库（例如 Lucide 或 Carbon），可以通过全局主题配置 `defineTheme` 替换，每个图标键都带有 `richtext:` 前缀：\n\n```ts\nimport { defineTheme } from '@astryx-vue/core'\n\ndefineTheme({\n  icons: {\n    'richtext:bold': 'lucide:bold',\n    'richtext:italic': 'lucide:italic',\n    'richtext:link': 'lucide:link',\n    // 支持替换的键见下表\n  },\n})\n```\n\n`RICHTEXT_ICON_KEYS` 导出了所有支持替换的图标键：\n- `bold`（加粗） -> `'richtext:bold'`\n- `italic`（斜体） -> `'richtext:italic'`\n- `underline`（下划线） -> `'richtext:underline'`\n- `strikethrough`（删除线） -> `'richtext:strikethrough'`\n- `code`（行内代码） -> `'richtext:code'`\n- `link`（超链接） -> `'richtext:link'`\n- `paragraph`（正文段落） -> `'richtext:paragraph'`\n- `h1`、`h2`、`h3`（标题） -> `'richtext:h1'`、`'richtext:h2'`、`'richtext:h3'`\n- `quote`（引用） -> `'richtext:quote'`\n- `bullet`（无序列表） -> `'richtext:bullet'`\n- `number`（有序列表） -> `'richtext:number'`\n- `undo`（撤销） -> `'richtext:undo'`\n- `redo`（重做） -> `'richtext:redo'`\n\n## 插件\n\n插件能为编辑器扩展新玩法，例如检测任务勾选、代码块高亮或者网址自动变超链接。\n\n### 默认已开启的功能插件\n\n当你使用 `<RichTextEditor>` 时，编辑器内部已经默认集成了以下几项能力，不需要你额外配置：\n- **任务勾选框（Task Checkbox）**：支持 `- [ ]` 和 `- [x]` 任务清单语法，生成的勾选框可以直接点击勾选或取消，在只读模式下会自动锁定不可点。\n- **代码块标题栏与复制按钮（CodeBlockHeaderPlugin）**：遇到代码块时，顶部会展示语言名称（如 `TypeScript`、`Python`）并附带一键复制代码的按钮。\n- **代码语法高亮（CodeSyntaxPlugin）**：对代码块里的关键字、字符串、数字等按语法上色，颜色和 `CodeBlock` 用同一套语法色变量。\n- **表格列宽自适应与横向滚动（Table Plugins）**：表格列设定了最小宽度保护，并在超宽时提供无障碍横向滚动支持。\n\n### 自动链接插件：`RichTextEditorAutoLinkPlugin`\n\n输入或粘贴一段网址时，自动把它转成可点击的超链接是一项常见需求。为了保证轻量，这项能力做成了无界面的 Vue 组件插件。使用时直接放在 `<RichTextEditor>` 的默认插槽里：\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextEditor, RichTextEditorAutoLinkPlugin, RichTextEditorToolbar } from '@astryx-vue/richtext'\n</script>\n\n<template>\n  <RichTextEditor label=\"便签\" placeholder=\"粘贴网址试试看...\">\n    <template #toolbar>\n      <RichTextEditorToolbar />\n    </template>\n    <!-- 放入自动链接插件 -->\n    <RichTextEditorAutoLinkPlugin />\n  </RichTextEditor>\n</template>\n```\n\n插件默认自带了网址和电子邮箱两个匹配器（`DEFAULT_LINK_MATCHERS`）。识别出的网址如果没写协议会自动补齐 `https://`，邮箱会自动加上 `mailto:`，并且生成的链接都会加上 `target=\"_blank\"` 和 `rel=\"noopener noreferrer\"` 以便安全地在新窗口打开。\n\n如果你想识别自定义语法（例如把 `#123` 自动变成工单链接），可以通过 `matchers` 属性传入自定义的匹配规则：\n\n```vue\n<RichTextEditorAutoLinkPlugin :matchers=\"myCustomMatchers\" @change=\"(url, prevUrl) => onLinkChange(url, prevUrl)\" />\n```\n\n自动加上、改掉或去掉链接时，插件会发出 `change` 事件，参数是新网址（去掉时是 `null`）和原来的网址。`myCustomMatchers` 用 `@lexical/link` 的 `createLinkMatcherWithRegExp` 来建。\n\n## Markdown 进出\n\n大部分时候，我们在前端编辑富文本，后端想存的却是通用的 Markdown 纯文本。`@astryx-vue/richtext` 提供了「无损往返」的转换机制。\n\n### 纯函数转换\n\n你可以从 `@astryx-vue/richtext/markdown` 导出两个转换函数。这个入口不依赖浏览器 DOM，在 Node.js、Cloudflare Workers 等服务端渲染（SSR）环境里都可以安全调用：\n\n```ts\nimport { editorStateJSONToMarkdown, markdownToEditorStateJSON } from '@astryx-vue/richtext/markdown'\n\n// 1. 服务端或初始化时：把 Markdown 字符串转成给 defaultValue 用的 JSON 字符串\nconst defaultValue = markdownToEditorStateJSON('# 欢迎\\n\\n这是一段 **Markdown** 文本。')\n\n// 2. 保存或提交时：把编辑器导出的 JSON 字符串还原回 Markdown 文本\nconst markdown = editorStateJSONToMarkdown(savedJson)\n```\n\n### 原样往返设计\n\n传统的富文本转换器在「Markdown -> 编辑器 -> 重新导出 Markdown」这个过程中，经常会打乱排版，比如把使用者的缩进弄丢、把 `*` 号全改成 `-` 号。\n\nAstryx 富文本采用了一套源码保留机制：对于导入进来的 Markdown 文本，只要用户在编辑时没有改动这个段落，导出时就会**原封不动保持用户最初写下的每一个标点和空格**；只有被改动过或全新写出的段落，才会使用规范的语法格式化输出。\n\n## Markdown 插件节点\n\n有些时候，项目里会有一些定制的 Markdown 语法，比如用 `@用户名` 提及同事、用特定指令插入告警框等。\n\n你可以使用 `createRichTextExtension` 函数把自定义的 Markdown 语法插件接入进来：\n\n```ts\nimport { createRichTextExtension } from '@astryx-vue/richtext'\nimport { mentionPlugin } from './myMentionPlugin'\n\n// 包装成编辑器能识别的扩展\nconst mentionsExtension = createRichTextExtension(mentionPlugin)\n```\n\n然后在 `<RichTextEditor>` 或 `<RichTextView>` 上通过 `markdownExtensions` 属性传给它们：\n\n```vue\n<RichTextEditor\n  label=\"讨论区\"\n  :markdown-extensions=\"[mentionsExtension]\"\n/>\n```\n\n在转换函数中也可以传入：\n\n```ts\nconst json = markdownToEditorStateJSON(markdownText, {\n  extensions: [mentionsExtension],\n})\n```\n\n## 只读视图 RichTextView\n\n当你只需要在页面上展示文章、博客或发版公告，而不需要任何输入编辑功能时，应该使用 `<RichTextView>` 组件。\n\n```vue\n<script setup lang=\"ts\">\nimport { RichTextView } from '@astryx-vue/richtext'\n\n// 这里的 value 是先前通过 editorState.toJSON() 存下的 JSON 字符串\nconst content = '{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"这是展示内容\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}'\n</script>\n\n<template>\n  <RichTextView :value=\"content\" />\n</template>\n```\n\n### 设计定位与无障碍考虑\n\n- **是文档内容，不是表单控件**：底层 Lexical 即使在不可编辑状态下，默认也会给根节点套上 `role=\"textbox\"`。但如果展示一整篇几千字的文章却被标记为「文本输入框」，视障用户的读屏软件就无法正确按文章阅读，无障碍检测工具也会报错。`<RichTextView>` 会在挂载时主动去除所有表单输入框语义，把它还原为一个纯粹的文档容器。\n- **就地热更新**：当父组件更新了 `value` 属性时，内部会就地切换解析状态，不会频繁销毁和重新挂载整个 DOM 结构。\n- **错误容灾机制**：从后端读出的历史 JSON 如果因为版本升级或格式损坏导致无法解析，组件不会让整个页面崩溃白屏。它会触发 `@parseError` 事件，并且可以通过 `#errorFallback` 插槽展示友好的降级提示界面：\n\n```vue\n<RichTextView :value=\"maybeCorruptedContent\" @parse-error=\"onParseError\">\n  <template #errorFallback>\n    <div class=\"error-box\">抱歉，文档内容加载失败。</div>\n  </template>\n</RichTextView>\n```\n\n## 键盘操作\n\n编辑器针对键盘使用者进行了深度优化：\n\n- **Tab 缩进与退出**：\n  - 在正文段落或列表里按下 <kbd>Tab</kbd> 键，会增加当前行的文字缩进；按下 <kbd>Shift</kbd> + <kbd>Tab</kbd> 会减少缩进。\n  - 由于 <kbd>Tab</kbd> 键被用来做文本排版，视障或全键盘用户需要能够把焦点移出编辑器。编辑器遵循无障碍规范：**先按一次 <kbd>Escape</kbd> 键，再按 <kbd>Tab</kbd> 键**，焦点就会跳出编辑器，移动到网页的下一个可交互元素上。\n  - 编辑器默认会向读屏软件朗读这段退出指引。如果你想自定义朗读文本，可以修改 `tabEscapeHint` 属性；传空字符串 `tabEscapeHint=\"\"` 则可以关闭该朗读。\n- **表格中的键盘移动**：\n  - 在表格单元格中输入时，按下方向键（<kbd>↑</kbd>、<kbd>↓</kbd>、<kbd>←</kbd>、<kbd>→</kbd>）可以在相邻单元格之间平滑穿梭移动。\n- **快捷键**：\n  - <kbd>Cmd</kbd> + <kbd>K</kbd>（macOS）或 <kbd>Ctrl</kbd> + <kbd>K</kbd>（Windows）：快速打开超链接设置弹窗。\n  - <kbd>Cmd/Ctrl</kbd> + <kbd>B</kbd>：粗体。\n  - <kbd>Cmd/Ctrl</kbd> + <kbd>I</kbd>：斜体。\n  - <kbd>Cmd/Ctrl</kbd> + <kbd>Z</kbd>：撤销；<kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd>：重做。\n  - 下划线没有键盘快捷键，用工具栏上的按钮。\n\n## 无障碍\n\nAstryx 富文本编辑器在无障碍体验（a11y）上做了大量细节处理：\n\n1. **清晰的 Label 关联**：通过必填的 `label` 属性，外层自动建立无障碍名称映射。即便设置了 `isLabelHidden`，该名称依然会通过 `aria-label` 忠实传达给读屏软件。\n2. **区分只读与禁用**：`isReadOnly` 会挂载 `aria-readonly=\"true\"` 并保持 `tabindex=\"0\"`，读屏朗读为只读文本；`isDisabled` 会挂载 `aria-disabled=\"true\"` 并彻底移除 Tab 聚焦顺序。\n3. **字数与表单状态联动**：当配置了 `maxLength` 时，实时的纯文本字数会在接近上限（超过 80%）及超额时，通过 `aria-live=\"polite\"` 的隐藏广播区向读屏用户报读剩余或超出的字数；错误状态时会自动设置 `aria-invalid=\"true\"`。\n4. **焦点与选区保护**：工具栏中的弹窗（如添加链接）在开启时，不会销毁编辑区原有的文本选区；关闭弹窗后焦点能够平滑归还。\n\n## 现在不支持的\n\n为了保持 Vue 实现的纯粹性与稳定性，本包与上游 React 原版实现存在以下差异：\n\n1. **不支持 `xstyle` 样式方案**：上游 React 版本依赖内部的 `xstyle` 样式对象机制，在 Vue 移植版中不予支持。请统一使用标准的 Vue `class` 和 `style` 属性来定义外观。\n2. **插件机制为 Vue 组件插槽**：上游的 `plugins` 是作为 React 节点数组传递的；而在 `@astryx-vue/richtext` 中，扩展插件是纯逻辑的无界面 Vue 组件（例如 `<RichTextEditorAutoLinkPlugin />`），直接写在 `<RichTextEditor>` 的默认插槽内部即可。"
-      },
-      "docsUrl": {
-        "en": "https://astryx-vue.pages.dev/en/guide/richtext",
-        "zh": "https://astryx-vue.pages.dev/guide/richtext"
       }
     },
     {

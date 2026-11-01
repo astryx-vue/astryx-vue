@@ -1,4 +1,4 @@
-import { defineDemo } from '../demo-infra/defineDemo'
+import { defineDemo } from '../../demo-infra/defineDemo'
 import bandDemo from './band-reference.vue'
 import bandSource from './band-reference.vue?raw&highlighted'
 import barDemo from './bar.vue'

@@ -1,5 +1,8 @@
 ---
+layout: component-docs
 title: 图表
+outline: false
+footer: false
 ---
 
 <script setup lang="ts">
@@ -12,27 +15,17 @@ import {
   chartsErrorBar,
   chartsLine,
   chartsStackedArea,
-} from '../../../components/charts-demos'
+} from '../../../../components/demos/chart'
 </script>
 
-# 图表
+## 概述
 
-::: warning 实验性包提示
-`@astryx-vue/charts` 只会发布 `canary` 标签，不会发布稳定版本。它的 API 随时可能会调整。目前该包尚未正式发布到 npm，等待后续发布后，才能按照下方的安装命令拉取使用。
-:::
-
-## 这是什么
-
-`@astryx-vue/charts` 是一个轻量的图表组件库。它把工作分成两半：底层的 d3 只负责纯数学计算（比如算比例尺、算曲线的路径），算好位置后，再由 Vue 模板把内容画成一个个干净的 SVG 矢量图形。
-
-画一张图非常直观：外层写一个 `<Chart>` 画布，里面传入数据和一个或多个「系列」。所谓系列，就是图上的一条折线、一组柱子或一片阴影。我们用普通的 JavaScript 函数来创建系列，比如写 `line('revenue')`，图表就知道要读取每行数据里的 `revenue` 字段来画折线。
+`@astryx-vue/charts` 使用 d3 计算比例尺和图形路径，再由 Vue 渲染 SVG。每个图表由一个 `<Chart>` 画布和一个或多个系列组成；系列可以是折线、柱状、面积或其他数据标记。
 
 ## 安装
 
-这个包只发布在 `canary` 标签下，安装时需要带上标签：
-
 ```bash
-pnpm add @astryx-vue/charts@canary
+pnpm add @astryx-vue/charts
 ```
 
 `@astryx-vue/charts` 依赖同级的 `@astryx-vue/core` 和 `vue`，请确保项目中已经安装了它们。
@@ -93,38 +86,6 @@ const series = [
   locale="zh"
   title="折线图"
 />
-
-## `<Chart>` 的属性与插槽
-
-`<Chart>` 是整张图表的根容器。它负责测量尺寸、建立坐标系、计算点位并把图形画在 SVG 里。
-
-### 属性
-
-| 名称 | 类型 | 默认值 | 说明 |
-| :--- | :--- | :--- | :--- |
-| `data` | `Record<string, unknown>[]` | **必填** | 要画的数据行。每行既有 x 对应的列，也有一到多个系列的数据列。 |
-| `xKey` | `string` | **必填** | 每行里当 x 用的字段名，所有系列共用。 |
-| `series` | `SeriesDef[]` | **必填** | 标记定义数组，按顺序画在同一套坐标系上。 |
-| `height` | `number` | `300` | 图表高度（单位是 CSS 像素）。非有限值和负数都会当成 0 处理。 |
-| `width` | `number` | `0` | 图表宽度（单位是 CSS 像素）。浏览器里第一次量到容器宽度后就不再使用；服务端渲染时没有容器可量，全靠它出图。 |
-| `margin` | `Partial<ChartMargin>` | `{ top: 24, right: 24, bottom: 32, left: 48 }` | 绘图区内边距的部分覆盖值，没传的边使用默认留白。 |
-| `yBaseline` | `'auto' \| 'zero' \| 'data'` | `'auto'` | 没写 `yDomain` 时 y 轴范围怎么定。 |
-| `yDomain` | `[number, number]` | `undefined` | 显式指定的 y 轴范围 `[min, max]`。一旦指定就以此为准，不额外加基线、也不留上下余量。 |
-| `xDomain` | `[number, number]` | `undefined` | 数值 x 轴的显式范围 `[min, max]`。即使 `data` 为空也会照常生效（保证流式更新窗口稳定）。在离散类目的 band 轴上会被忽略。 |
-| `legend` | `boolean \| ChartLegendConfig` | `false` | 是否显示从系列推导出的图例，或者传配置对象调整位置与对齐。 |
-| `tooltip` | `boolean \| ChartTooltipConfig` | `false` | 是否显示分组的悬停提示框。 |
-| `title` | `string` | `undefined` | 图表标题，同时作为 SVG 的无障碍名称（Accessible Name）。 |
-| `subtitle` | `string` | `undefined` | 标题下方的补充说明文字，同时作为 SVG 的无障碍描述。 |
-
-### 插槽
-
-| 名称 | 参数 | 说明 |
-| :--- | :--- | :--- |
-| `grid` | 无 | 画在系列后方的背景网格，通常放置 `<ChartGrid />`。 |
-| `axes` | 无 | 画在系列后方的坐标轴，通常放置若干个 `<ChartAxis />`。 |
-| `interactions` | 无 | 画在指针捕获层上方的自定义交互图层。 |
-| `tooltip` | `{ xValue: unknown, rows: unknown[] }` | 提示框的自定义内容插槽。`xValue` 是当前悬停的 x 坐标值，`rows` 是当前行对应各个系列的数据明细。 |
-| `default` | 无 | 额外扩展内容，画在内置提示框图层之后。 |
 
 ## 系列
 

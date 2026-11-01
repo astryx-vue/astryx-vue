@@ -27,8 +27,8 @@
   }
 
   .astryx-richtext-editor[data-status='error'] { --astryx-input-status-color: var(--astryx-input-error, #e33f4a); }
-  .astryx-richtext-editor[data-status='warning'] { --astryx-input-status-color: var(--astryx-input-warning, #c27803); }
-  .astryx-richtext-editor[data-status='success'] { --astryx-input-status-color: var(--astryx-input-success, #1a8f4c); }
+  .astryx-richtext-editor[data-status='warning'] { --astryx-input-status-color: var(--astryx-input-warning, #a67a00); }
+  .astryx-richtext-editor[data-status='success'] { --astryx-input-status-color: var(--astryx-input-success, #198100); }
 
   @media (hover: hover) {
     .astryx-richtext-editor:not([data-disabled='true']):hover:not(:focus-within) {
@@ -36,9 +36,10 @@
     }
   }
 
+  /* 聚焦样式和 core 的输入框（TextArea、BorderedControl）用同一套变量，换主题时一起变。 */
   .astryx-richtext-editor:focus-within {
-    border-color: var(--astryx-input-status-color, var(--astryx-input-border-focus, #0b5cd5));
-    box-shadow: inset 0 0 0 1px var(--astryx-input-status-color, var(--astryx-input-border-focus, #0b5cd5));
+    border-color: var(--astryx-input-status-color, var(--astryx-input-focus, #262626));
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
   }
 
   /* 只有禁用才变淡：只读的编辑器内容保持原样不透明，仍能用键盘走到。 */

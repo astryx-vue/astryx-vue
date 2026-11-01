@@ -233,7 +233,9 @@ html.dark .home-chat-code .shiki span {
 
 @media (width >= 960px) {
   .home-chat {
-    height: 37.5rem;
+    height: 100%;
+    min-height: 0;
+    max-height: 37.5rem;
   }
 }
 

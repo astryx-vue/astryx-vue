@@ -132,7 +132,7 @@ const blockOptions = computed<SelectorOption[]>(() => [
 <template>
   <Toolbar :label="label" :size="size" class="astryx-richtext-toolbar">
     <template #start>
-      <HStack :gap="1" role="group" :aria-label="t('toolbar.actions')" class="astryx-richtext-toolbar__actions">
+      <HStack :gap="1" align="center" role="group" :aria-label="t('toolbar.actions')" class="astryx-richtext-toolbar__actions">
         <IconButton
           :label="t('toolbar.undo')" variant="ghost" :tooltip="t('toolbar.undo')"
           :is-disabled="!state.isEditable.value || !state.canUndo.value"

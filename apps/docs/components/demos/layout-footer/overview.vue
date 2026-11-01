@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
-import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from '@astryx-vue/core/Layout'
+import { Layout, LayoutContent, LayoutFooter, LayoutPanel } from '@astryx-vue/core/Layout'
 import { HStack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
   <Layout>
-    <template #header>
-      <LayoutHeader has-divider>
-        <Card variant="muted" />
-      </LayoutHeader>
-    </template>
     <template #start>
       <LayoutPanel :width="140">
         <Card variant="muted" />

@@ -35,8 +35,7 @@ describe('listPublicPackages', () => {
   })
 
   it('covers every package this repo publishes', () => {
-    // charts 和 lab 还是 private（只发 canary，发布流水线还没有 canary 通道），所以不在这份清单里。
-    expect(listPublicPackages()).toEqual(['cli', 'core', 'richtext', 'themes'])
+    expect(listPublicPackages()).toEqual(['charts', 'cli', 'core', 'richtext', 'themes'])
   })
 })
 

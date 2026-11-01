@@ -2,8 +2,7 @@
   "name": "@astryx-vue/charts",
   "type": "module",
   "version": "0.0.0",
-  "private": true,
-  "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based). Ships only under the canary dist-tag.",
+  "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
   "author": "ShenQingchuan",
   "license": "MIT",
   "homepage": "https://astryx-vue.pages.dev",
@@ -21,8 +20,20 @@
     "charts",
     "data-visualization"
   ],
-  "astryxVue": {
-    "canaryOnly": true
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./charts.css": {
+        "types": "./css.d.ts",
+        "default": "./charts.css"
+      },
+      "./styles/*.css": "./styles/*.css",
+      "./package.json": "./package.json"
+    }
   },
   "sideEffects": [
     "**/*.css"
@@ -33,7 +44,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./charts.css": "./charts.css",
+    "./charts.css": {
+      "types": "./css.d.ts",
+      "default": "./charts.css"
+    },
     "./styles/*.css": "./styles/*.css",
     "./package.json": "./package.json"
   },
@@ -42,6 +56,7 @@
   "files": [
     "README.md",
     "charts.css",
+    "css.d.ts",
     "dist",
     "styles"
   ],
