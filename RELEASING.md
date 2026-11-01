@@ -81,7 +81,7 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
 
 ### Lab 只发 canary
 
-`@astryx-vue/lab` 的 `publishConfig.tag` 固定为 `canary`，首发脚本和 `scripts/release.mjs` 也会显式传 `--tag canary`。Changesets 仍负责版本号、changelog、git tag 和 GitHub Release，但 npm 上传不会写入 `latest`。安装时必须明确使用 `@astryx-vue/lab@canary`。Lab 的 changeset 要单独开一个 Version Packages PR；发布脚本会拒绝把 Lab 和稳定包混在同一批，因为 Changesets 的一次发布只能使用一个 dist-tag。
+`@astryx-vue/lab` 的 `publishConfig.tag` 固定为 `canary`，首发脚本和 `scripts/release.mjs` 也会显式传 `--tag canary`。Changesets 仍负责版本号、changelog、git tag 和 GitHub Release，但 npm 上传不会写入 `latest`。安装时必须明确使用 `@astryx-vue/lab@canary`。Lab 的 changeset 要单独开一个 Version Packages PR。Changesets 的一次发布只能使用一个 dist-tag，所以不能把 Lab 和稳定包打进同一个 tag。Lab 这个版本还没出现在 npm 上时，`scripts/release.mjs` 会在这一轮把它标成 private，只发布稳定包，Lab 留到单独的 canary 发布。
 
 第一次上传仍需按上面的新包流程由仓库所有者本机完成。合并 `Version Packages` PR 后运行 `scripts/publish-first-release.sh lab`，脚本会读取包里的 canary 配置；随后配置 Trusted Publisher 并重跑 Release workflow 补齐其余产物。
 
