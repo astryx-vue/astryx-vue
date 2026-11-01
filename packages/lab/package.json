@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/lab",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
   "author": "ShenQingchuan",
   "license": "MIT",
