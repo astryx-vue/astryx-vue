@@ -339,7 +339,7 @@ const errors = computed(() => submitted.value
                         <Button label="PayPal" variant="primary" size="lg" :style="{ backgroundColor: '#FFC439', borderColor: '#FFC439' }">
                           <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="PayPal" :style="brandLogo">
                         </Button>
-                        <Button label="Google Pay" variant="primary" size="lg" :style="{ backgroundColor: '#000', borderColor: '#000' }">
+                        <Button label="Google Pay" variant="primary" size="lg" :style="{ backgroundColor: 'white', borderColor: 'white' }">
                           <img src="https://pay.google.com/about/static_kcs/images/logos/google-pay-logo.svg" alt="Google Pay" :style="brandLogo">
                         </Button>
                       </Grid>
