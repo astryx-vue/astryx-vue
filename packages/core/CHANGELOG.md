@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.5.2
+
+### Patch Changes
+
+- [#272](https://github.com/astryx-vue/astryx-vue/pull/272) [`748f379`](https://github.com/astryx-vue/astryx-vue/commit/748f37980c93fbc5d2f90a07d8a488e34a4fcecd) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修正和上游不一致的几处展示：信息横幅的图标跟随横幅文字颜色，日历网格按弹层宽度流动，步骤序号使用中性强调色。进度条只在向前走一步时从起点线性长满。
+
 ## 0.5.1
 
 No changes in this release.
