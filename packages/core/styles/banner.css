@@ -85,6 +85,16 @@
     color: var(--astryx-banner-icon-color);
   }
 
+  /*
+   * Status glyphs set their own color from the icon tokens. On an info banner
+   * that token stays the neutral accent, so the glyph stays white while the
+   * title is the status blue. Paint the glyph with the banner icon color,
+   * which the theme already retargets to the status text color.
+   */
+  .astryx-banner-icon .astryx-icon[data-color] {
+    color: var(--astryx-banner-icon-color);
+  }
+
   /* The status Icon keeps its own md size (20px), as upstream does. */
   .astryx-banner-icon > :not(.astryx-icon) {
     width: 16px;

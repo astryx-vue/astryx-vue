@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, ref } from 'vue'
-import { resolveStepGlyph, shouldCollapseStepper } from './logic.js'
+import { connectorFillTiming, resolveStepGlyph, shouldCollapseStepper, STEP_FILL_SPAN_TIME } from './logic.js'
 import Step from './Step.vue'
 import Stepper from './Stepper.vue'
 
@@ -198,6 +198,41 @@ describe('vertical stepper content', () => {
   })
 })
 
+describe('stepper fill motion', () => {
+  function barDuration(wrapper: ReturnType<typeof mount>, index: number) {
+    return (wrapper.findAll('.astryx-step-bar')[index].element as HTMLElement).style.getPropertyValue('--_step-fill-duration')
+  }
+
+  it('grows only the bar crossed by a single forward step', async () => {
+    const active = ref(1)
+    const wrapper = mount(defineComponent({
+      components: { Step, Stepper },
+      setup() {
+        return { active }
+      },
+      template: `
+        <Stepper :active-step="active" orientation="vertical" :on-step-click="(index) => { active = index }">
+          <Step :step="0" label="Author profile" indicator="number" />
+          <Step :step="1" label="Book details" indicator="number" />
+          <Step :step="2" label="Distribution" indicator="number" />
+        </Stepper>
+      `,
+    }))
+
+    expect(barDuration(wrapper, 2)).toBe('0s')
+
+    active.value = 2
+    await wrapper.vm.$nextTick()
+    expect(barDuration(wrapper, 2)).toBe(STEP_FILL_SPAN_TIME)
+    expect(barDuration(wrapper, 1)).toBe('0s')
+    expect((wrapper.findAll('.astryx-step-bar')[2].element as HTMLElement).style.getPropertyValue('--_step-fill-delay')).toBe('0s')
+
+    active.value = 0
+    await wrapper.vm.$nextTick()
+    expect(barDuration(wrapper, 2)).toBe('0s')
+  })
+})
+
 describe('stepper logic', () => {
   it('collapses only when the row is narrower than count times minimumStepWidth', () => {
     expect(shouldCollapseStepper(640, 5, undefined, 'horizontal')).toBe(false)
@@ -208,5 +243,19 @@ describe('stepper logic', () => {
     expect(resolveStepGlyph({ progress: 'completed', indicator: 'auto' })).toBe('check')
     expect(resolveStepGlyph({ progress: 'in-progress', indicator: 'auto' })).toBe('ring')
     expect(resolveStepGlyph({ progress: 'not-started', indicator: 'auto' })).toBe('number')
+  })
+
+  it('animates a connector only when the active step advances by one', () => {
+    expect(connectorFillTiming(2, 1, 1, 0, 1)).toEqual({
+      duration: STEP_FILL_SPAN_TIME,
+      delay: '0s',
+    })
+    expect(connectorFillTiming(2, 1, 1, 0.7, 0.3)).toEqual({
+      duration: `calc(${STEP_FILL_SPAN_TIME} * 0.3)`,
+      delay: `calc(${STEP_FILL_SPAN_TIME} * 0.7)`,
+    })
+    expect(connectorFillTiming(2, 0, 1, 0, 1)).toEqual({ duration: '0s', delay: '0s' })
+    expect(connectorFillTiming(1, 2, 1, 0, 1)).toEqual({ duration: '0s', delay: '0s' })
+    expect(connectorFillTiming(1, 1, 0, 0, 1)).toEqual({ duration: '0s', delay: '0s' })
   })
 })

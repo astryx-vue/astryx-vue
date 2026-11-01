@@ -13,6 +13,8 @@ export interface StepRegistration {
 
 export interface StepperContextValue {
   activeStep: ComputedRef<number>
+  /** 切换到当前步骤之前所在的步骤。进度条用它判断这次是不是只前进了一步。 */
+  previousActiveStep: ComputedRef<number>
   orientation: ComputedRef<StepperOrientation>
   density: ComputedRef<StepperDensity>
   indicatorPosition: ComputedRef<StepperIndicatorPosition>
