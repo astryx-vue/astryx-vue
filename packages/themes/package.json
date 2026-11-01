@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/themes",
   "type": "module",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
