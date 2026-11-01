@@ -185,6 +185,7 @@ function goNext() {
       is-open
       is-inline
       :width="620"
+      class="form-wizard-dialog"
       purpose="form"
       @update:open="handleOpenChange"
     >
@@ -209,7 +210,7 @@ function goNext() {
           </LayoutHeader>
         </template>
         <template #default>
-          <LayoutContent>
+          <LayoutContent :padding="4">
             <VStack :gap="5">
               <FormLayout v-if="step === 0" default-optionality="optional">
                 <TextInput
@@ -358,3 +359,17 @@ function goNext() {
     </Dialog>
   </Center>
 </template>
+
+<style>
+.form-wizard-dialog :deep(.astryx-dialog__inner) {
+  height: auto;
+  max-height: 75vh;
+}
+
+.form-wizard-dialog :deep(.astryx-layout),
+.form-wizard-dialog :deep(.astryx-layout__inner) {
+  height: auto;
+  min-height: 0;
+  max-height: calc(75vh - 32px);
+}
+</style>

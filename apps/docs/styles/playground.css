@@ -1002,7 +1002,7 @@ html[data-playground-frame] .playground-preview__content {
   height: 100%;
 }
 
-html[data-playground-frame] .playground-preview__content:has(> .astryx-layout[data-height='auto']) {
+html[data-playground-frame] .playground-preview__content:has(> .astryx-layout[data-height='auto'], > .astryx-center[data-axis='horizontal']) {
   height: auto;
   min-height: 100%;
   background: var(--astryx-color-background-surface, var(--astryx-color-background-body));
