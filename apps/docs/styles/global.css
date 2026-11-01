@@ -631,6 +631,12 @@ html.dark .component-detail__stage {
   min-width: 0;
 }
 
+.component-detail__stage .overview-frame {
+  box-sizing: border-box;
+  width: min(100%, 40rem);
+  max-width: 100%;
+}
+
 @media (max-width: 768px) {
   .component-detail__stage {
     min-height: 320px;
