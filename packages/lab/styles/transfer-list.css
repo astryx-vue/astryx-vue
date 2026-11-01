@@ -137,8 +137,12 @@
     text-align: center;
   }
 
-  /* 键盘拿起中的行铺一层强调色，表示它正在被移动。 */
-  .astryx-transfer-list-item[data-state='reordering'] {
+  /*
+   * 键盘拿起才铺强调色。指针拖不铺：源行只降透明度，
+   * 否则半透明灰底会跟预览叠在一起，看起来像一条粗落点。
+   * 属性名走 data-transfer-list-，克隆预览时会被剥掉。
+   */
+  .astryx-transfer-list-item[data-transfer-list-keyboard-reorder] {
     background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
   }
 
@@ -148,13 +152,17 @@
     user-select: none;
   }
 
-  /* 落点指示线画在行的上边或下边。 */
-  .astryx-transfer-list-item[data-transfer-list-drop-target] {
+  /*
+   * 落点是目标行上沿或下沿的一条 2px 强调色细线，只画正在对准的那一边。
+   * 宽度停在这一行，不跨到另一栏。
+   */
+  .astryx-transfer-list-item[data-transfer-list-drop-target='before'],
+  .astryx-transfer-list-item[data-transfer-list-drop-target='after'] {
     position: relative;
   }
 
-  .astryx-transfer-list-item[data-transfer-list-drop-target]::before,
-  .astryx-transfer-list-item[data-transfer-list-drop-target]::after {
+  .astryx-transfer-list-item[data-transfer-list-drop-target='before']::before,
+  .astryx-transfer-list-item[data-transfer-list-drop-target='after']::after {
     content: '';
     position: absolute;
     inset-inline: 0;

@@ -394,7 +394,10 @@ describe('transferList', () => {
       const preview = previewBox()
       expect(source.element).toBe(rows[1])
       // 源行和克隆体都是半透明；具体取值来自 styles/transfer-list.css。
+      // 指针拖不铺键盘那层灰底，克隆体上的 data-transfer-list-* 也会被剥掉。
       expect(source.attributes('data-transfer-list-reorder-source')).toBe('true')
+      expect(source.attributes('data-transfer-list-keyboard-reorder')).toBeUndefined()
+      expect(preview?.querySelector('[data-transfer-list-keyboard-reorder]')).toBeNull()
       expect(preview).not.toBeNull()
       expect(preview!.getAttribute('aria-hidden')).toBe('true')
       expect(preview!.textContent).toContain('Owner')
@@ -513,6 +516,8 @@ describe('transferList', () => {
 
       // 按钮上的 Enter / Space 会变成一次 click：点一下拿起，再点一下放下。
       await clickElement(el)
+      expect(wrapper.get('[data-transfer-list-row="owner"]').attributes('data-transfer-list-keyboard-reorder')).toBe('true')
+      expect(wrapper.find('[data-transfer-list-reorder-source]').exists()).toBe(false)
       await pressKey(el, 'ArrowUp')
 
       expect(spy).toHaveBeenCalledTimes(1)

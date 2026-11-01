@@ -99,6 +99,7 @@ function rowState(option: TransferListOption<T>): 'disabled' | 'reordering' | 'e
             class="astryx-transfer-list-item"
             :data-transfer-list-row="side === 'selected' ? row.option.value : undefined"
             :data-transfer-list-reorder-source="draggingValue === row.option.value || undefined"
+            :data-transfer-list-keyboard-reorder="grabbedValue === row.option.value || undefined"
             :data-transfer-list-drop-target="dropPositionOf(row.option)"
             :data-transfer-list-index="side === 'selected' ? String(row.index) : undefined"
             :data-side="side" :data-state="rowState(row.option)"
