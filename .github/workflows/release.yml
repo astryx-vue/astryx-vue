@@ -51,16 +51,12 @@ jobs:
       - name: Dry-run pack
         run: pnpm release:dry-run
 
-  # 本机从生产模式的进程（比如 Pi 的 web 服务）里起 shell 时，子进程会继承
-  # NODE_ENV=production。它会影响测试的两处：
-  # - 运行时：Vue 不发 devtools component:emit，wrapper.emitted() 全空；
-  # - 模板编译：vue 选中生产版编译器，删掉模板注释，根节点前带注释的组件不再是 Fragment，
-  #   只在开发模式下才会暴露的测试问题就被藏起来了。
-  # vitest.config.ts 先把 NODE_ENV 钉成 test，再让 vite.config.ts 加载 Vue 插件，两处都固定在开发模式。
-  # tests/test-env.test.ts 检查这两点，但只有外部真带着 NODE_ENV=production 时它才有意义，
-  # 所以这个 job 不能省：有人删掉那行或把插件改回静态 import，这里会立刻变红。
+  # 本机从生产模式的进程里起 shell 时，子进程会继承 NODE_ENV=production。
+  # vitest.config.ts 会先把它改成 test，再加载 Vue 插件，测试才和 CI 一致。
+  # tests/test-env.test.ts 专门检查这件事，而且只有外部真的带了 NODE_ENV=production 才有意义。
+  # 整套测试已经在上面的 pnpm check 里跑过，这里只跑这一个文件。
   test-under-production-env:
-    name: Test under production shell
+    name: Test env under production shell
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -81,8 +77,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: NODE_ENV=production pnpm test
+      - name: Run the env guard
+        run: NODE_ENV=production pnpm exec vitest run tests/test-env.test.ts
 
   release:
     name: Version or publish
