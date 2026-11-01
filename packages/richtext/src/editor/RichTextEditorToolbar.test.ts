@@ -45,6 +45,7 @@ describe('richTextEditorToolbar structure', () => {
     await nextTick()
     expect(wrapper.get('[role="toolbar"]').attributes('aria-label')).toBe('Text formatting')
     expect(wrapper.get('[role="group"]').attributes('aria-label')).toBe('Formatting actions')
+    expect(wrapper.get('.astryx-richtext-toolbar__actions').attributes('data-cross-align')).toBe('center')
   })
 
   it('takes a custom label', async () => {

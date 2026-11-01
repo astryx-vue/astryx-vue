@@ -1,4 +1,4 @@
-import { defineDemo } from '../demo-infra/defineDemo'
+import { defineDemo } from '../../demo-infra/defineDemo'
 import autoLinkDemo from './autolink.vue'
 import autoLinkSource from './autolink.vue?raw&highlighted'
 import viewDemo from './view.vue'

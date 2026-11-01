@@ -113,6 +113,14 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 .page-home .home-stage :where(a, button, input, textarea, select, summary):focus-visible {
   outline-color: var(--astryx-focus-outline-color);
 }
+
+@media (width >= 960px) {
+  html:has(.home-stage),
+  html:has(.home-stage) body {
+    height: 100%;
+    overflow: hidden;
+  }
+}
 </style>
 
 <style scoped>
@@ -259,19 +267,51 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 }
 
 @media (width >= 960px) {
+  .home-stage {
+    height: calc(100svh - var(--vp-nav-height));
+    overflow: hidden;
+  }
+
   .home-press {
     grid-template-areas:
       "mark mark"
       "copy chat";
     grid-template-columns: minmax(0, 0.95fr) minmax(20rem, 1.05fr);
-    gap: 2rem 3.5rem;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vh, 1.75rem) 3.5rem;
     align-items: start;
-    padding-top: clamp(4rem, 6.5vw, 6rem);
-    padding-bottom: 4rem;
+    height: 100%;
+    min-height: 0;
+    padding-block: clamp(1.5rem, 3vh, 2.5rem);
+  }
+
+  .home-mark {
+    margin-bottom: 0;
   }
 
   .home-mark__logo {
-    width: min(44vw, 29rem);
+    width: min(32vw, 22rem);
+  }
+
+  .home-copy {
+    align-self: center;
+  }
+
+  .home-chat-column {
+    height: 100%;
+    min-height: 0;
+  }
+}
+
+@media (width >= 960px) and (height <= 800px) {
+  .home-copy h1 {
+    font-size: clamp(2rem, 6vh, 3.25rem);
+  }
+
+  .home-features {
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
   }
 }
 

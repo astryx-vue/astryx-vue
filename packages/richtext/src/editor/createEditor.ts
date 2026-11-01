@@ -10,6 +10,7 @@ import { TableExtension } from '@lexical/table'
 import { configExtension, mergeRegister } from 'lexical'
 import { DEFAULT_NODES } from '../editorNodes.js'
 import { DEFAULT_TRANSFORMERS } from '../markdownTable.js'
+import { registerBlockExit } from './blockExit.js'
 import { registerTableColumnFloor } from './plugins/tableColumnFloor.js'
 import { registerTabFocusEscape } from './tabEscape.js'
 import { TextSemanticsExtension } from './textSemantics.js'
@@ -38,7 +39,8 @@ export interface CreateRichTextEditorOptions {
  * 建一个富文本编辑器。只用 Lexical 的「扩展」机制，不碰 Vue，服务端和测试里都能直接建。
  *
  * 行为和上游一致：标题、引用、列表、链接、代码、表格节点；撤销重做；Tab 缩进；
- * 勾选列表；分割线；Markdown 快捷输入；按过 Escape 之后 Tab 把焦点交还浏览器。
+ * 勾选列表；分割线；Markdown 快捷输入；代码块和表格之间及末尾可以用下方向键补出段落；
+ * 按过 Escape 之后 Tab 把焦点交还浏览器。
  */
 export type RichTextEditorInstance = LexicalEditor & { dispose: () => void }
 
@@ -76,6 +78,7 @@ export function createRichTextEditor(options: CreateRichTextEditorOptions = {}):
     // `undefined` 保留 Lexical 默认的初始化（空文档放一个空段落）；`null` 是真的空根，不是我们要的。
     $initialEditorState: initialState ?? undefined,
     register: editor => mergeRegister(
+      registerBlockExit(editor),
       registerTabFocusEscape(editor),
       registerTableColumnFloor(editor),
       hasMarkdownShortcuts ? registerMarkdownShortcuts(editor, [...transformers]) : () => {},

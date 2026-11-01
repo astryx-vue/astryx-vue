@@ -91,11 +91,11 @@ describe('init guide', () => {
       // richtext is published, so it has an install command.
       const richtext = data.guide.packages.find(pkg => pkg.name === '@astryx-vue/richtext')
       expect(richtext).toMatchObject({ canary: false, published: true, specifier: '@astryx-vue/richtext', install: ['pnpm add @astryx-vue/richtext'] })
+      const charts = data.guide.packages.find(pkg => pkg.name === '@astryx-vue/charts')
+      expect(charts).toMatchObject({ canary: false, published: true, specifier: '@astryx-vue/charts', install: ['pnpm add @astryx-vue/charts'] })
       // A private package has no published version, so there is no command to run.
-      for (const name of ['@astryx-vue/charts', '@astryx-vue/lab']) {
-        const pkg = data.guide.packages.find(candidate => candidate.name === name)
-        expect(pkg).toMatchObject({ published: false, specifier: null, install: [] })
-      }
+      const lab = data.guide.packages.find(pkg => pkg.name === '@astryx-vue/lab')
+      expect(lab).toMatchObject({ published: false, specifier: null, install: [] })
     }
     finally {
       await rm(cwd, { recursive: true, force: true })
@@ -154,11 +154,12 @@ describe('init guide', () => {
       expect(result.stdout).toContain('npm install @astryx-vue/core @astryx-vue/themes')
       expect(result.stdout).toContain('import \'@astryx-vue/themes/neutral.css\'')
       expect(result.stdout).toContain('Created AGENTS.md')
-      // richtext is on npm, so it is offered as an install command, not listed as missing.
       expect(result.stdout).toContain('npm install @astryx-vue/richtext')
+      expect(result.stdout).toContain('npm install @astryx-vue/charts')
       expect(result.stdout).toContain('Not on npm yet, so there is nothing to install:')
-      expect(result.stdout).toContain('@astryx-vue/charts — ')
+      expect(result.stdout).toContain('@astryx-vue/lab — ')
       expect(result.stdout).not.toContain('@astryx-vue/richtext — ')
+      expect(result.stdout).not.toContain('@astryx-vue/charts — ')
 
       const block = await readFile(join(cwd, 'AGENTS.md'), 'utf8')
       expect(block).toContain('## Packages')

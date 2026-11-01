@@ -1,5 +1,8 @@
 ---
-title: Charts
+layout: component-docs
+title: Chart
+outline: false
+footer: false
 ---
 
 <script setup lang="ts">
@@ -12,27 +15,17 @@ import {
   chartsErrorBar,
   chartsLine,
   chartsStackedArea,
-} from '../../../components/charts-demos'
+} from '../../../../components/demos/chart'
 </script>
 
-# Charts
+## Overview
 
-::: warning Experimental package
-`@astryx-vue/charts` is published under the `canary` tag only. It has no stable release. Its API may change at any time. The package is not yet published to npm. Once published, you can install it using the command below.
-:::
-
-## What this is
-
-`@astryx-vue/charts` is a lightweight chart component library for Vue. It splits the work in two: d3 handles pure math calculations, such as computing scales and curve paths. Vue templates then take those computed positions and render clean SVG vector elements.
-
-Building a chart takes two main pieces: an outer `<Chart>` canvas and one or more series. A series is a visual mark on the chart, such as a line, a set of bars, or an area fill. You create a series with a helper function like `line('revenue')`. That tells the chart to read the `revenue` field from each row of data.
+`@astryx-vue/charts` uses d3 to calculate scales and geometry, then renders SVG with Vue. Each chart contains a `<Chart>` canvas and one or more series, such as lines, bars, or areas.
 
 ## Install
 
-This package is published under the `canary` tag only. Include the tag when installing:
-
 ```bash
-pnpm add @astryx-vue/charts@canary
+pnpm add @astryx-vue/charts
 ```
 
 `@astryx-vue/charts` depends on `@astryx-vue/core` and `vue`. Make sure both are installed in your project.
@@ -93,38 +86,6 @@ Here is the live result:
   locale="en"
   title="Line chart"
 />
-
-## `<Chart>` props and slots
-
-`<Chart>` is the root container. It measures container dimensions, builds coordinate scales, calculates geometry positions, and renders the SVG tree.
-
-### Props
-
-| Name | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `data` | `Record<string, unknown>[]` | **Required** | Rows of data to render. Each row contains an x-axis field and one or more series fields. |
-| `xKey` | `string` | **Required** | Field name used as the x value across all series. |
-| `series` | `SeriesDef[]` | **Required** | Array of series definitions, rendered in order on a shared coordinate system. |
-| `height` | `number` | `300` | Chart height in CSS pixels. Non-finite values and negative numbers are treated as 0. |
-| `width` | `number` | `0` | Chart width in CSS pixels. Ignored after the browser first measures the container. Used during server-side rendering when no DOM container exists. |
-| `margin` | `Partial<ChartMargin>` | `{ top: 24, right: 24, bottom: 32, left: 48 }` | Partial margin overrides for the plotting area. Omitted sides use defaults. |
-| `yBaseline` | `'auto' \| 'zero' \| 'data'` | `'auto'` | How to determine the y-axis domain when `yDomain` is not set. |
-| `yDomain` | `[number, number]` | `undefined` | Explicit y-axis range `[min, max]`. When set, this range is used directly without baseline adjustments or edge padding. |
-| `xDomain` | `[number, number]` | `undefined` | Explicit range `[min, max]` for numeric x-axes. Stays active even when `data` is empty, keeping streaming windows stable. Ignored on categorical band axes. |
-| `legend` | `boolean \| ChartLegendConfig` | `false` | Whether to show the legend derived from series, or a configuration object to adjust position and alignment. |
-| `tooltip` | `boolean \| ChartTooltipConfig` | `false` | Whether to show grouped hover tooltips. |
-| `title` | `string` | `undefined` | Chart title, used as the SVG accessible name. |
-| `subtitle` | `string` | `undefined` | Supporting text below the title, used as the SVG accessible description. |
-
-### Slots
-
-| Name | Bindings | Description |
-| :--- | :--- | :--- |
-| `grid` | None | Background grid rendered behind series, usually containing `<ChartGrid />`. |
-| `axes` | None | Axes rendered behind series, usually containing one or more `<ChartAxis />` components. |
-| `interactions` | None | Custom interaction layer rendered above the pointer capture surface. |
-| `tooltip` | `{ xValue: unknown, rows: unknown[] }` | Custom tooltip slot. `xValue` is the active x value under the pointer. `rows` is the list of series data items for that row. |
-| `default` | None | Extra content rendered after the built-in tooltip layer. |
 
 ## Series
 

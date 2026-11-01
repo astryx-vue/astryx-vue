@@ -52,8 +52,8 @@ const SHAPES: Partial<Record<RichTextIconName, Shape[]>> = {
     path('M10 6h10M10 12h10M10 18h10', { 'stroke-linecap': 'round' }),
     ...([['1', 8], ['2', 14], ['3', 20]] as const).map(([text, y]): Shape => ({ tag: 'text', text, attrs: { 'x': '2', 'y': String(y), 'font-size': '6', 'fill': 'currentColor' } })),
   ],
-  undo: [path('M9 7L4 12l5 5M4 12h11a5 5 0 0 1 0 10', ROUND)],
-  redo: [path('M15 7l5 5-5 5M20 12H9a5 5 0 0 0 0 10', ROUND)],
+  undo: [path('M9 4.5L4 9.5l5 5M4 9.5h11a5 5 0 0 1 0 10', ROUND)],
+  redo: [path('M15 4.5l5 5-5 5M20 9.5H9a5 5 0 0 0 0 10', ROUND)],
 }
 
 /** 段落和标题没有图形，用一小段文字当图标。 */

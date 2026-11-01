@@ -605,6 +605,7 @@ html.dark .component-card__frame {
 
 .component-detail__stage {
   display: grid;
+  box-sizing: border-box;
   /* 和总览卡片一样：列宽必须受容器约束，否则宽内容会顶出画布。 */
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
@@ -612,8 +613,7 @@ html.dark .component-card__frame {
   min-height: 513px;
   /* 原版 tab 条到画布隔 16px。 */
   margin-top: 16px;
-  /* 原版画布自身没有内边距，靠居中规则摆放组件。 */
-  padding: 0;
+  padding: 32px;
   overflow: hidden;
   isolation: isolate;
   border-radius: 16px;
@@ -662,6 +662,12 @@ html.dark .component-detail__stage {
 
 .component-detail__body > h2:first-child {
   margin-top: 36px;
+}
+
+.component-detail--props .component-detail__body h2:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .component-detail__body .header-anchor {
@@ -1226,37 +1232,71 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .component-api-table {
   margin: 18px 0;
   overflow-x: auto;
-  border: 1px solid var(--astryx-line);
-  border-radius: 12px;
+}
+
+.component-api-table table,
+:is(.vp-doc > table, .vp-doc > div table) {
+  display: block;
+  width: 100%;
+  margin: 18px 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: var(--astryx-color-text-primary, var(--astryx-text));
+  font-family: inherit;
 }
 
 .component-api-table table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+  display: table;
+  margin: 0;
+  overflow: visible;
 }
 
-.component-api-table th,
-.component-api-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--astryx-line);
-  text-align: left;
-  vertical-align: top;
-}
-
-.component-api-table th {
-  color: var(--astryx-text);
-  background: var(--vp-c-bg-soft);
-  font-weight: 400;
+.component-api-table code,
+:is(.vp-doc > table, .vp-doc > div table) code {
   white-space: nowrap;
 }
 
-.component-api-table td {
-  color: var(--astryx-text-muted);
+.component-api-table :is(th, td),
+:is(.vp-doc > table, .vp-doc > div table) :is(th, td) {
+  box-sizing: border-box;
+  padding-block: var(--astryx-spacing-2, 8px);
+  padding-inline: var(--astryx-spacing-3, 12px);
+  border: 0;
+  background: transparent;
+  text-align: start;
+  vertical-align: middle;
 }
 
-.component-api-table tbody tr:last-child td {
-  border-bottom: 0;
+.component-api-table th,
+:is(.vp-doc > table, .vp-doc > div table) th {
+  border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
+  color: var(--astryx-color-text-secondary, var(--astryx-text-muted));
+  font-size: var(--astryx-text-label-size, 1rem);
+  font-weight: var(--astryx-font-weight-semibold, 600);
+  white-space: nowrap;
+}
+
+.component-api-table td,
+:is(.vp-doc > table, .vp-doc > div table) td {
+  color: var(--astryx-color-text-primary, var(--astryx-text));
+  font-size: var(--astryx-text-body-size, 0.875rem);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.component-api-table tbody tr:not(:last-child) > td,
+:is(.vp-doc > table, .vp-doc > div table) tbody tr:not(:last-child) > td {
+  border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
+}
+
+.component-api-table tbody tr,
+:is(.vp-doc > table, .vp-doc > div table) tbody tr,
+:is(.vp-doc > table, .vp-doc > div table) tbody tr:nth-child(2n) {
+  border: 0;
+  background: transparent;
 }
 
 @media (width <= 1100px) {
@@ -1791,6 +1831,10 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 .vp-doc a.astryx-link {
   color: var(--astryx-link-accent-foreground, #0074e2);
   text-decoration: none;
+}
+
+.vp-doc a.astryx-link::after {
+  content: none;
 }
 
 .vp-doc a.astryx-link--color-primary {
@@ -2562,13 +2606,13 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /* 图表示例：图表自己量容器宽度，所以示例容器要占满一行。 */
-.vp-doc .astryx-demo.charts-demo {
+.astryx-demo.charts-demo {
   display: block;
   width: 100%;
 }
 
 /* 富文本示例：编辑器和只读视图都撑满一行，方便看排版。 */
-.vp-doc .astryx-demo.richtext-demo {
+.astryx-demo.richtext-demo {
   display: block;
   width: 100%;
 }

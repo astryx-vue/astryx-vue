@@ -1,61 +1,9 @@
 ---
-title: 富文本
+layout: component-docs
+title: 富文本编辑器
+outline: false
+footer: false
 ---
-
-<script setup lang="ts">
-import { richtextAutoLink, richtextToolbar, richtextView } from '../../../components/richtext-demos'
-</script>
-
-# 富文本
-
-::: warning
-`lexical` 与 `@lexical/*` 是可选 peer 依赖，需自行安装，版本锁定在 `0.52.0`。
-:::
-
-## 使用方法
-
-`@astryx-vue/richtext` 是基于 Lexical 的所见即所得富文本编辑器。
-
-安装依赖与导入样式：
-
-```bash
-pnpm add @astryx-vue/richtext \
-  lexical@0.52.0 @lexical/code@0.52.0 @lexical/extension@0.52.0 @lexical/headless@0.52.0 \
-  @lexical/history@0.52.0 @lexical/html@0.52.0 @lexical/link@0.52.0 @lexical/list@0.52.0 \
-  @lexical/markdown@0.52.0 @lexical/rich-text@0.52.0 @lexical/selection@0.52.0 \
-  @lexical/table@0.52.0 @lexical/utils@0.52.0
-```
-
-```ts
-import '@astryx-vue/richtext/richtext.css'
-```
-
-最简用法（`label` 为必填项）：
-
-```vue
-<RichTextEditor label="发布内容" placeholder="请输入正文..." />
-```
-
-<DemoExample :demo="richtextToolbar" description="带顶部格式工具栏的富文本编辑器。" locale="zh" title="完整编辑器" />
-
-## 使用建议
-
-- **Lexical 类型**：`nodes`、`transformers` 接收的是 Lexical 的类型，`@change` 给出的也是 Lexical 的 `EditorState`，所以用到它们的地方需要自己装好 Lexical。
-- **状态保存**：监听 `@change` 获取 `editorState.toJSON()` 存入后端；通过 `defaultValue` 或 `<RichTextView :value="...">` 读回。
-- **自定义节点**：在 `<RichTextEditor>` 和 `<RichTextView>` 两边都通过 `nodes` 注册自定义节点，保证数据往返一致。
-- **模板引用方法**：通过 ref 可调用 `focus()`、`clear()`、`getEditorState()`、`getMarkdown()`、`getHTML()`、`getEditor()`。只读或禁用时 `focus`/`clear` 为空操作；`getMarkdown()` 保持未改动块的原样，仅规范输出修改过的块。
-- **GFM 表格**：默认支持导入、编辑与导出，太宽的表格在自己的容器里横向滚动；依赖 `@lexical/table`。<kbd>Tab</kbd> 在编辑器里用来缩进，要离开编辑器，先按 <kbd>Escape</kbd> 再按 <kbd>Tab</kbd>。
-- **分割线**：`---`、`***`、`___` 导入为水平线，导出为 `---`；点一下选中，按退格删除；依赖 `@lexical/extension`。
-- **服务端转换**：从 `@astryx-vue/richtext/markdown` 引入 `markdownToEditorStateJSON` 和 `editorStateJSONToMarkdown`，无 DOM 依赖且保持 Markdown 无损往返。
-- **Markdown 插件扩展**：用 `createRichTextExtension(plugin)` 接入并在客户端传给 `markdownExtensions`；插件语法作为整体节点渲染、编辑与导出，重复接入会抛出 `RichTextExtensionError`。
-- **工具栏**：通过 `#toolbar` 插槽传入 `<RichTextEditorToolbar />`，它顶到编辑区两边，包含撤销重做、块格式、行内样式和链接按钮；空间不够时这一行横向滚动；可用 `#end` 插槽追加控件。
-- **链接与快捷键**：工具栏链接按钮与 <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> 打开对话框；自动过滤非安全协议；默认在新标签页打开（可通过 `hasNewTabLinks` 控制），也支持 `promptForUrl`。
-- **自动链接**：把 `<RichTextEditorAutoLinkPlugin>` 放入默认插槽，输入网址或邮箱时自动变为链接，支持 `matchers` 自定义规则。
-- **图标定制**：工具栏图标使用 `richtext:*` 键名（如 `richtext:bold`），可在主题配置中自定义替换，无需重写工具栏。
-- **只读展示与场景选择**：纯展示持久化内容使用 `<RichTextView>`，是语义化文档内容而非表单输入框；单行或纯文本输入请使用 TextInput 或 TextArea。
-
-<DemoExample :demo="richtextAutoLink" description="输入网址自动转为超链接。" locale="zh" title="自动链接" />
-<DemoExample :demo="richtextView" description="只读渲染保存后的富文本状态。" locale="zh" title="只读视图" />
 
 ## `<RichTextEditor>` 属性
 

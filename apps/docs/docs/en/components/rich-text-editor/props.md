@@ -1,61 +1,9 @@
 ---
-title: Rich text
+layout: component-docs
+title: Rich Text Editor
+outline: false
+footer: false
 ---
-
-<script setup lang="ts">
-import { richtextAutoLink, richtextToolbar, richtextView } from '../../../components/richtext-demos'
-</script>
-
-# Rich text
-
-::: warning
-`lexical` and `@lexical/*` are optional peer dependencies. Install them yourself, pinned to `0.52.0`.
-:::
-
-## Usage
-
-`@astryx-vue/richtext` is a WYSIWYG rich text editor based on Lexical.
-
-Install dependencies and import styles:
-
-```bash
-pnpm add @astryx-vue/richtext \
-  lexical@0.52.0 @lexical/code@0.52.0 @lexical/extension@0.52.0 @lexical/headless@0.52.0 \
-  @lexical/history@0.52.0 @lexical/html@0.52.0 @lexical/link@0.52.0 @lexical/list@0.52.0 \
-  @lexical/markdown@0.52.0 @lexical/rich-text@0.52.0 @lexical/selection@0.52.0 \
-  @lexical/table@0.52.0 @lexical/utils@0.52.0
-```
-
-```ts
-import '@astryx-vue/richtext/richtext.css'
-```
-
-Minimal usage (`label` is required):
-
-```vue
-<RichTextEditor label="Publish content" placeholder="Write something..." />
-```
-
-<DemoExample :demo="richtextToolbar" description="Rich text editor with a top formatting toolbar." locale="en" title="Full editor" />
-
-## Best practices
-
-- **Lexical types**: `nodes` and `transformers` accept Lexical types, and `@change` provides a Lexical `EditorState`. Install Lexical where you use them.
-- **State persistence**: Listen to `@change` to get `editorState.toJSON()` and store it in your backend. Read it back via `defaultValue` or `<RichTextView :value="...">`.
-- **Custom nodes**: Register custom nodes through `nodes` on both `<RichTextEditor>` and `<RichTextView>` to preserve round-trip consistency.
-- **Template ref methods**: Call `focus()`, `clear()`, `getEditorState()`, `getMarkdown()`, `getHTML()`, and `getEditor()` via template ref. When read-only or disabled, `focus` and `clear` are no-ops. `getMarkdown()` preserves untouched blocks as-is and normalizes only edited blocks.
-- **GFM tables**: Import, edit, and export work by default. Wide tables scroll horizontally within their container. Requires `@lexical/table`. <kbd>Tab</kbd> indents text inside the editor; to leave the editor, press <kbd>Escape</kbd> then <kbd>Tab</kbd>.
-- **Horizontal rules**: `---`, `***`, and `___` import as horizontal rules and export as `---`. Click to select, press Backspace to delete. Requires `@lexical/extension`.
-- **Server-side conversion**: Import `markdownToEditorStateJSON` and `editorStateJSONToMarkdown` from `@astryx-vue/richtext/markdown`. They have no DOM dependencies and preserve lossless Markdown round-tripping.
-- **Markdown extensions**: Create extensions with `createRichTextExtension(plugin)` and pass them to `markdownExtensions` on the client. Plugin syntax renders, edits, and exports as atomic nodes. Registering duplicates throws a `RichTextExtensionError`.
-- **Toolbar**: Pass `<RichTextEditorToolbar />` into the `#toolbar` slot. It stretches edge-to-edge across the editor and includes undo, redo, block formats, inline styles, and link buttons. It scrolls horizontally when space is tight. Use the `#end` slot to append extra controls.
-- **Links and shortcuts**: The toolbar link button and <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> open a dialog. Unsafe protocols are filtered automatically. Links open in a new tab by default (controlled by `hasNewTabLinks`); `promptForUrl` is also supported.
-- **Auto-links**: Place `<RichTextEditorAutoLinkPlugin>` inside the default slot. Typed URLs and emails turn into links automatically. Custom rules can be provided through `matchers`.
-- **Custom icons**: Toolbar icons use `richtext:*` keys (such as `richtext:bold`). You can override them in your theme configuration without rewriting the toolbar.
-- **Read-only display vs. field**: Use `<RichTextView>` to render persisted content for reading. It outputs semantic document content rather than a form input. Use TextInput or TextArea for single-line or plain-text input.
-
-<DemoExample :demo="richtextAutoLink" description="Automatically turns typed URLs into links." locale="en" title="Auto link" />
-<DemoExample :demo="richtextView" description="Read-only rendering of saved rich text state." locale="en" title="Read-only view" />
 
 ## `<RichTextEditor>` props
 

@@ -563,12 +563,12 @@ describe('catalog source', () => {
     expect(catalog.components.find(component => component.slug === 'button')?.package).toBe('@astryx-vue/core')
     // The CLI carries the playground pages, so copying a template needs nothing else.
     expect(catalog.templates.every(template => template.package === '@astryx-vue/cli')).toBe(true)
-    expect(catalog.packages.find(pkg => pkg.name === '@astryx-vue/charts')?.canary).toBe(true)
+    expect(catalog.packages.find(pkg => pkg.name === '@astryx-vue/charts')?.canary).toBe(false)
   })
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
     expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(57)
-    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(188)
+    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(190)
     const clipboard = catalog.components.find(component => component.slug === 'use-clipboard')
     expect(clipboard?.kind).toBe('composable')
     expect(clipboard?.name).toBe('UseClipboard')
