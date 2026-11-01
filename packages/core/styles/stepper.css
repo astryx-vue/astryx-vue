@@ -79,13 +79,51 @@
 
   .astryx-step-bar,
   .astryx-step-connector {
+    position: relative;
     background: var(--astryx-color-border, #00000014);
     border-radius: var(--astryx-radius-full, 999px);
   }
 
-  .astryx-step-bar[data-filled],
-  .astryx-step-connector[data-filled] {
+  /*
+   * 进度条底色是边框色。填满的部分画在 ::before 上，从起点拉长到整段。
+   * 时长和延迟写在步骤的自定义属性上。只有向前走一步才有时长；
+   * 后退、一次跳过多步，以及第一次渲染，时长都是 0s。
+   * 轨道模式的一段由两截组成，所以用 linear，接缝处才不会停一下。
+   */
+  .astryx-step-bar::before,
+  .astryx-step-connector::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
     background: var(--astryx-color-accent, #0082fb);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition-property: transform;
+    transition-duration: var(--_step-fill-duration, 0s);
+    transition-delay: var(--_step-fill-delay, 0s);
+    transition-timing-function: linear;
+  }
+
+  .astryx-step[data-orientation='vertical'] > .astryx-step-bar::before,
+  .astryx-step[data-orientation='vertical'] .astryx-step-connector::before {
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+
+  .astryx-step-bar[data-filled]::before,
+  .astryx-step-connector[data-filled]::before {
+    transform: scaleX(1);
+  }
+
+  .astryx-step[data-orientation='vertical'] > .astryx-step-bar[data-filled]::before,
+  .astryx-step[data-orientation='vertical'] .astryx-step-connector[data-filled]::before {
+    transform: scaleY(1);
+  }
+
+  :is([dir='rtl']) .astryx-step[data-orientation='horizontal'] > .astryx-step-bar::before,
+  :is([dir='rtl']) .astryx-step[data-orientation='horizontal'] .astryx-step-connector::before {
+    transform-origin: right center;
   }
 
   .astryx-step[data-orientation='horizontal'] > .astryx-step-bar {
@@ -404,8 +442,11 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    button.astryx-step-control {
+    button.astryx-step-control,
+    .astryx-step-bar::before,
+    .astryx-step-connector::before {
       transition-duration: 0s;
+      transition-delay: 0s;
     }
   }
 }
