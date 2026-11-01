@@ -7,7 +7,7 @@ import unoConfig from '../uno.config.ts'
 import { demoSourcePlugin } from './demoSourcePlugin.ts'
 import { llmsAlternateLinks, writeLlmsArtifacts } from './llms.ts'
 import { renderForSearch } from './searchRender.ts'
-import { guideSidebar, themeSidebar } from './sidebar.ts'
+import { guideSidebar, labSidebar, themeSidebar } from './sidebar.ts'
 
 /**
  * The icon plugin scans every module for icon names. core's `semantic.ts` lists
@@ -28,6 +28,7 @@ function navigation(english: boolean): DefaultTheme.NavItem[] {
   return [
     { text: english ? 'Docs' : '文档', link: `${prefix}/guide/why`, activeMatch: `^${prefix}/guide/` },
     { text: english ? 'Components' : '组件', link: `${prefix}/components/`, activeMatch: `^${prefix}/components/` },
+    { text: 'Lab', link: `${prefix}/lab/`, activeMatch: `^${prefix}/lab/` },
     { text: english ? 'Playground' : '演练场', link: `${prefix}/playground/`, activeMatch: `^${prefix}/playground` },
     { text: english ? 'Themes' : '主题', link: `${prefix}/themes/`, activeMatch: `^${prefix}/themes/` },
   ]
@@ -41,6 +42,8 @@ export default defineConfig({
   rewrites: {
     'zh/components/:slug/index.md': 'components/:slug.md',
     'en/components/:slug/index.md': 'en/components/:slug.md',
+    'zh/lab/:slug/index.md': 'lab/:slug.md',
+    'en/lab/:slug/index.md': 'en/lab/:slug.md',
     'zh/:rest*': ':rest*',
   },
   head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
@@ -55,6 +58,7 @@ export default defineConfig({
         nav: navigation(false),
         sidebar: {
           '/guide/': guideSidebar(false),
+          '/lab/': labSidebar(false),
           '/themes/': themeSidebar(false),
         },
       },
@@ -67,6 +71,7 @@ export default defineConfig({
         nav: navigation(true),
         sidebar: {
           '/en/guide/': guideSidebar(true),
+          '/en/lab/': labSidebar(true),
           '/en/themes/': themeSidebar(true),
         },
       },

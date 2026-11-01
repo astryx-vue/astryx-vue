@@ -12,6 +12,7 @@
   "dependencies": {
     "@astryx-vue/charts": "workspace:^",
     "@astryx-vue/core": "workspace:^",
+    "@astryx-vue/lab": "workspace:^",
     "@astryx-vue/richtext": "workspace:^",
     "@astryx-vue/themes": "workspace:^",
     "@lexical/code": "catalog:richtext",
