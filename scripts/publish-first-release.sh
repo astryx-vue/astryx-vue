@@ -22,6 +22,7 @@ cd "$root/packages/$dir"
 
 name="$(node -p "require('./package.json').name")"
 version="$(node -p "require('./package.json').version")"
+tag="$(node -p "require('./package.json').publishConfig?.tag || 'latest'")"
 
 if [ "$version" = "0.0.0" ]; then
   echo "$name 的版本仍是 0.0.0。请先合并 Version Packages PR，再发布正式版本。" >&2
@@ -51,7 +52,7 @@ pnpm --filter "$name" build
 
 cd "$root/packages/$dir"
 # 本机发布拿不到 CI 的身份，所以没有 provenance。
-pnpm publish --access public --no-git-checks --provenance=false "$@"
+pnpm publish --access public --tag "$tag" --no-git-checks --provenance=false "$@"
 
 echo
 echo "已发布 ${name}@${version}。"

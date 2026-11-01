@@ -2,7 +2,7 @@
 
 Vue 3 ports of the Astryx lab components (`@astryxdesign/lab`). This is an unofficial port, not affiliated with Meta.
 
-**This package is canary-only.** Its `package.json` carries `private: true` plus `"astryxVue": { "canaryOnly": true }`, so it publishes to the npm `canary` dist-tag only — there is no stable release. Lab components are experiments: their props and markup can change or disappear in any canary build.
+**This package is canary-only.** Its `package.json` carries `"publishConfig": { "tag": "canary" }` plus `"astryxVue": { "canaryOnly": true }`, so it publishes to the npm `canary` dist-tag only — there is no stable release. Lab components are experiments: their props and markup can change or disappear in any canary build.
 
 ## Install
 
@@ -27,7 +27,10 @@ Or pick single files: `@astryx-vue/lab/styles/stat.css`, `.../log-stream.css`, a
 | `InfoTip` | Small "i" button that reveals a tooltip on hover, keyboard focus, and tap. |
 | `SVGIcon` | CSS-variable-driven SVG icon with variations (linear, bold, twotone, bulk, broken), path roles, and mask-based gaps. |
 | `LogStream` | Streaming log viewer with level accents, expandable detail rows, follow-scroll tailing, and a terminal variant. |
+| `ListInput` | Editable records with custom input columns, validation, and reordering. |
+| `MobileTokenizer` | Touch-friendly multi-select with search and creation in a bottom sheet. |
+| `TransferList` | Dual-panel selection with search, grouping, and reordering. |
 
 ## Documentation
 
-The prop tables live in the upstream docs; behaviour matches Astryx v0.7.1. Component pages for this port are not published yet.
+See the [Lab documentation](https://astryx-vue.pages.dev/lab/) for bilingual guides, prop tables, and interactive examples.

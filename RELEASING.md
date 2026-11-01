@@ -13,7 +13,7 @@
 1. `pnpm install --frozen-lockfile`
 2. `pnpm check`。这里面包含 publint 和 `@arethetypeswrong/cli`
 3. 工作目录里还有 changeset 时，打开或更新标题为 `Version Packages` 的 PR。这个 PR 由 `pnpm version-packages` 生成：`changeset version` 改版本号，`pnpm install --lockfile-only` 更新 lockfile，最后重新生成 CLI 的 `catalog.json`。catalog 里记着每个包的版本号，不重新生成就会和 `package.json` 对不上，`generate:check` 会把发版卡住
-4. 没有未消费的 changeset 时，`pnpm release` 会先构建包，再执行 `changeset publish`。pnpm 11 自己实现了 publish，会把 `catalog:` 和 `workspace:` 改成具体版本
+4. 没有未消费的 changeset 时，`pnpm release` 会检查待发布包、构建，再执行 `changeset publish`。Lab 单独发版时显式使用 canary；Lab 和稳定包不能混在同一批发布。pnpm 11 自己实现了 publish，会把 `catalog:` 和 `workspace:` 改成具体版本
 5. 已经在 npm 上的版本会跳过，不会再次上传
 6. 为每个包打 git tag，并创建 GitHub Release。随后把对应的 npm 版本页链接补进 Release 说明
 7. `npm view` 核对刚发布的版本、`repository` 字段；仓库是 public 时还核对 provenance
@@ -78,6 +78,12 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
    脚本会检查这个版本不在 npm 上、登录、构建，再发布。
 3. 到 npmjs.com 这个包的设置里添加 Trusted Publisher（见上面「一次性准备」第 6 步）。
 4. 重新运行 `main` 上的 Release workflow（或者下一次合并触发它）。`Backfill tags and GitHub Releases` 会发现 npm 上有这个版本但远端没有 tag，补上 tag 和 GitHub Release。
+
+### Lab 只发 canary
+
+`@astryx-vue/lab` 的 `publishConfig.tag` 固定为 `canary`，首发脚本和 `scripts/release.mjs` 也会显式传 `--tag canary`。Changesets 仍负责版本号、changelog、git tag 和 GitHub Release，但 npm 上传不会写入 `latest`。安装时必须明确使用 `@astryx-vue/lab@canary`。Lab 的 changeset 要单独开一个 Version Packages PR；发布脚本会拒绝把 Lab 和稳定包混在同一批，因为 Changesets 的一次发布只能使用一个 dist-tag。
+
+第一次上传仍需按上面的新包流程由仓库所有者本机完成。合并 `Version Packages` PR 后运行 `scripts/publish-first-release.sh lab`，脚本会读取包里的 canary 配置；随后配置 Trusted Publisher 并重跑 Release workflow 补齐其余产物。
 
 ## provenance
 

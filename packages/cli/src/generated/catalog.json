@@ -24,7 +24,7 @@
       "version": "0.0.0",
       "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
       "canary": true,
-      "published": false
+      "published": true
     },
     {
       "name": "@astryx-vue/richtext",

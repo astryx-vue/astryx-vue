@@ -467,6 +467,9 @@ importers:
       '@astryx-vue/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@astryx-vue/lab':
+        specifier: workspace:^
+        version: link:../../packages/lab
       '@astryx-vue/richtext':
         specifier: workspace:^
         version: link:../../packages/richtext
