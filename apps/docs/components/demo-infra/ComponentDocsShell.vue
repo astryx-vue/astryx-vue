@@ -5,6 +5,7 @@ import { useRoute } from 'vitepress'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { componentDemos } from '../demos/registry'
 import { sidebarItems } from './componentCatalog'
+import { LAB_COMPONENTS } from './labNav'
 import { UPSTREAM_PACKAGE, UPSTREAM_VERSION } from './componentDocsRoute'
 import { componentDocsCopy, localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
@@ -100,6 +101,20 @@ function scrollToTop(): void {
   window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 }
 
+function revealSelection(): void {
+  nextTick(() => {
+    const scroller = sidebarEl.value?.querySelector<HTMLElement>('.astryx-side-nav__body')
+    const current = scroller?.querySelector<HTMLElement>('[aria-current="page"]')
+    if (!scroller || !current)
+      return
+    const itemTop = current.getBoundingClientRect().top
+    const boxTop = scroller.getBoundingClientRect().top
+    const boxBottom = scroller.getBoundingClientRect().bottom
+    if (itemTop < boxTop || itemTop > boxBottom)
+      scroller.scrollTop += itemTop - boxTop - 48
+  })
+}
+
 function onKeydown(event: KeyboardEvent): void {
   if (event.key === 'Escape')
     closeSidebar()
@@ -121,6 +136,7 @@ onMounted(() => {
   media.addEventListener('change', syncNarrow)
   window.addEventListener('keydown', onKeydown)
   document.addEventListener('focusin', onFocusIn)
+  revealSelection()
 })
 
 onBeforeUnmount(() => {
@@ -136,6 +152,7 @@ watch(sidebarOpen, (open) => {
 
 watch(() => routePath.path, () => {
   closeSidebar(false)
+  revealSelection()
 })
 </script>
 
@@ -213,13 +230,33 @@ watch(() => routePath.path, () => {
                 @click="closeSidebar(false)"
               />
             </template>
+            <SideNavItem
+              :key="route.kind === 'lab' ? 'lab-open' : 'lab'"
+              :collapsible="{ defaultIsCollapsed: route.kind !== 'lab' }"
+              label="Lab"
+            >
+              <SideNavItem
+                :href="path('/lab/')"
+                :is-selected="route.kind === 'lab' && route.slug == null"
+                :label="route.locale === 'en' ? 'Overview' : '概览'"
+                @click="closeSidebar(false)"
+              />
+              <SideNavItem
+                v-for="entry in LAB_COMPONENTS"
+                :key="entry.slug"
+                :href="path(`/lab/${entry.slug}`)"
+                :is-selected="route.kind === 'lab' && route.slug === entry.slug"
+                :label="entry[route.locale]"
+                @click="closeSidebar(false)"
+              />
+            </SideNavItem>
           </SideNavSection>
         </SideNav>
       </aside>
     </Teleport>
     <div class="component-overview__main" :inert="sidebarOpen ? true : undefined">
-      <slot v-if="route.kind === 'catalog'" />
-      <article v-else class="component-detail__content">
+      <slot v-if="route.kind === 'catalog' || route.kind === 'lab'" />
+      <article v-else-if="route.kind === 'detail'" class="component-detail__content">
         <header class="component-detail__header">
           <h1>{{ route.name }}</h1>
           <p v-if="exportName" class="component-detail__version">

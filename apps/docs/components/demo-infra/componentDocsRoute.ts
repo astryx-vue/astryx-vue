@@ -17,6 +17,12 @@ export type ComponentDocsRoute
     slug: ComponentSlug
     tab: 'overview' | 'props' | 'accessibility'
   }
+  | {
+    kind: 'lab'
+    locale: DocsLocale
+    /** 概览页没有具体组件。 */
+    slug: string | null
+  }
 
 /** 本站文档对齐的上游包名和版本，显示在组件页标题下面。 */
 export const UPSTREAM_PACKAGE = '@astryxdesign/core'

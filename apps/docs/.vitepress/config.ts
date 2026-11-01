@@ -7,7 +7,7 @@ import unoConfig from '../uno.config.ts'
 import { demoSourcePlugin } from './demoSourcePlugin.ts'
 import { llmsAlternateLinks, writeLlmsArtifacts } from './llms.ts'
 import { renderForSearch } from './searchRender.ts'
-import { guideSidebar, labSidebar, themeSidebar } from './sidebar.ts'
+import { guideSidebar, themeSidebar } from './sidebar.ts'
 
 /**
  * The icon plugin scans every module for icon names. core's `semantic.ts` lists
@@ -27,8 +27,7 @@ function navigation(english: boolean): DefaultTheme.NavItem[] {
   const prefix = english ? '/en' : ''
   return [
     { text: english ? 'Docs' : '文档', link: `${prefix}/guide/why`, activeMatch: `^${prefix}/guide/` },
-    { text: english ? 'Components' : '组件', link: `${prefix}/components/`, activeMatch: `^${prefix}/components/` },
-    { text: 'Lab', link: `${prefix}/lab/`, activeMatch: `^${prefix}/lab/` },
+    { text: english ? 'Components' : '组件', link: `${prefix}/components/`, activeMatch: `^${prefix}/components|^${prefix}/lab` },
     { text: english ? 'Playground' : '演练场', link: `${prefix}/playground/`, activeMatch: `^${prefix}/playground` },
     { text: english ? 'Themes' : '主题', link: `${prefix}/themes/`, activeMatch: `^${prefix}/themes/` },
   ]
@@ -50,6 +49,12 @@ export default defineConfig({
   transformHead: llmsAlternateLinks,
   buildEnd: writeLlmsArtifacts,
   appearance: 'dark',
+  transformPageData(pageData) {
+    if (pageData.relativePath.includes('/lab/')) {
+      pageData.frontmatter.outline = false
+      pageData.frontmatter.footer = false
+    }
+  },
   locales: {
     root: {
       label: '简体中文',
@@ -58,7 +63,6 @@ export default defineConfig({
         nav: navigation(false),
         sidebar: {
           '/guide/': guideSidebar(false),
-          '/lab/': labSidebar(false),
           '/themes/': themeSidebar(false),
         },
       },
@@ -71,7 +75,6 @@ export default defineConfig({
         nav: navigation(true),
         sidebar: {
           '/en/guide/': guideSidebar(true),
-          '/en/lab/': labSidebar(true),
           '/en/themes/': themeSidebar(true),
         },
       },
