@@ -288,7 +288,7 @@ function isFreeDelivery(optionValue: string) {
         </HStack>
 
         <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" align="start">
-          <StackItem size="fill">
+          <StackItem size="fill" :cross-align-self="isNarrow ? 'stretch' : undefined">
             <VStack :gap="6">
               <Banner
                 v-if="isComplete"
