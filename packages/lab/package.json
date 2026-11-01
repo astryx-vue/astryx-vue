@@ -2,11 +2,10 @@
   "name": "@astryx-vue/lab",
   "type": "module",
   "version": "0.0.0",
-  "private": true,
   "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
   "author": "ShenQingchuan",
   "license": "MIT",
-  "homepage": "https://astryx-vue.pages.dev",
+  "homepage": "https://astryx-vue.pages.dev/lab/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/astryx-vue/astryx-vue.git",
@@ -21,6 +20,22 @@
     "lab",
     "experimental"
   ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "canary",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "./lab.css": {
+        "types": "./css.d.ts",
+        "default": "./lab.css"
+      },
+      "./styles/*.css": "./styles/*.css",
+      "./package.json": "./package.json"
+    }
+  },
   "astryxVue": {
     "canaryOnly": true
   },
@@ -33,7 +48,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./lab.css": "./lab.css",
+    "./lab.css": {
+      "types": "./css.d.ts",
+      "default": "./lab.css"
+    },
     "./styles/*.css": "./styles/*.css",
     "./package.json": "./package.json"
   },
@@ -41,6 +59,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "README.md",
+    "css.d.ts",
     "dist",
     "lab.css",
     "styles"

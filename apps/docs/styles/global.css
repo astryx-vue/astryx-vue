@@ -2622,3 +2622,16 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   display: block;
   width: 100%;
 }
+
+.astryx-demo.lab-demo {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.lab-demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}

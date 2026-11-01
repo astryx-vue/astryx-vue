@@ -10,6 +10,7 @@ import TokenReference from '../../components/theme-tokens/TokenReference.vue'
 import ThemeGallery from '../../components/themes/ThemeGallery.vue'
 import ThemeStage from '../../components/themes/ThemeStage.vue'
 import ComponentDocsPage from './ComponentDocsPage.vue'
+import LabDocsPage from './LabDocsPage.vue'
 import '@astryx-vue/core/reset.css'
 import 'virtual:uno.css'
 import '../../styles/global.css'
@@ -19,6 +20,7 @@ export default {
   extends: DefaultTheme,
   async enhanceApp({ app }) {
     app.component('component-docs', ComponentDocsPage)
+    app.component('lab-docs', LabDocsPage)
     app.component('ComponentAccessibility', ComponentAccessibility)
     app.component('ComponentAnatomy', ComponentAnatomy)
     app.component('DemoExample', DemoExample)

@@ -122,20 +122,6 @@ describe('doctor', () => {
     }
   })
 
-  it('never sends the reader to a package npm cannot serve', async () => {
-    const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo' }) })
-    try {
-      const unpublished = catalog.packages.filter(pkg => !pkg.published).map(pkg => pkg.name)
-      expect(unpublished.length).toBeGreaterThan(0)
-      const result = await runCli(['doctor'], { cwd })
-      for (const name of unpublished)
-        expect(result.stdout).not.toContain(name)
-    }
-    finally {
-      await rm(cwd, { recursive: true, force: true })
-    }
-  })
-
   it('speaks Chinese with --zh and refuses a positional argument', async () => {
     const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo' }) })
     try {

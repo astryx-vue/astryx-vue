@@ -83,3 +83,23 @@ export function themeSidebar(english: boolean): Sidebar {
     },
   ]
 }
+
+export function labSidebar(english: boolean): Sidebar {
+  const prefix = english ? '/en' : ''
+  return [
+    {
+      text: english ? 'Canary components' : 'Canary 组件',
+      items: [
+        item(english ? 'Overview' : '概览', `${prefix}/lab/`),
+        item('ListInput', `${prefix}/lab/list-input`),
+        item('MobileTokenizer', `${prefix}/lab/mobile-tokenizer`),
+        item('TransferList', `${prefix}/lab/transfer-list`),
+        item('CircularProgress', `${prefix}/lab/circular-progress`),
+        item('InfoTip', `${prefix}/lab/info-tip`),
+        item('LogStream', `${prefix}/lab/log-stream`),
+        item('Stat', `${prefix}/lab/stat`),
+        item('SVGIcon', `${prefix}/lab/svg-icon`),
+      ],
+    },
+  ]
+}
