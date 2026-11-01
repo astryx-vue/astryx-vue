@@ -1,5 +1,13 @@
 # @astryx-vue/richtext
 
+## 0.5.1
+
+### Patch Changes
+
+- [#257](https://github.com/astryx-vue/astryx-vue/pull/257) [`5688596`](https://github.com/astryx-vue/astryx-vue/commit/5688596e50ead2c7ad8ed458a6a76ddba3850fad) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修正富文本的几处样式：代码块的语言名和复制按钮不再溢出代码块；聚焦框改成和 `TextArea` 一致；表格单元格的段落不再留上下外边距，单元格高度和原版一致；代码块背景和边框改用 core 的 `--astryx-code-block-*` 变量。
+- Updated dependencies []:
+  - @astryx-vue/core@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes
