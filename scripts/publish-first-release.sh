@@ -23,6 +23,11 @@ cd "$root/packages/$dir"
 name="$(node -p "require('./package.json').name")"
 version="$(node -p "require('./package.json').version")"
 
+if [ "$version" = "0.0.0" ]; then
+  echo "$name 的版本仍是 0.0.0。请先合并 Version Packages PR，再发布正式版本。" >&2
+  exit 1
+fi
+
 if [ "$(node -p "Boolean(require('./package.json').private)")" = "true" ]; then
   echo "$name 是 private，不能发布。" >&2
   exit 1
@@ -36,7 +41,7 @@ fi
 
 echo "要发布：$name@$version"
 if ! npm whoami --registry https://registry.npmjs.org >/dev/null 2>&1; then
-  echo "还没登录 npm，先登录（会要 2FA 一次性密码）："
+  echo "还没登录 npm，先登录（按提示完成 2FA）："
   npm login --registry https://registry.npmjs.org
 fi
 
@@ -49,6 +54,6 @@ cd "$root/packages/$dir"
 pnpm publish --access public --no-git-checks --provenance=false "$@"
 
 echo
-echo "已发布 $name@$version。"
-echo "接下来：到 https://www.npmjs.com/package/$name/access 添加 Trusted Publisher："
+echo "已发布 ${name}@${version}。"
+echo "接下来：到 https://www.npmjs.com/package/${name}/access 添加 Trusted Publisher："
 echo "  来源 GitHub Actions；用户或组织 astryx-vue；仓库 astryx-vue；工作流文件 release.yml；允许 npm publish。"
