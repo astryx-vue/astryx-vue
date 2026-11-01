@@ -1008,6 +1008,7 @@ html[data-playground-frame] .playground-preview__content:has(> .astryx-layout[da
   background: var(--astryx-color-background-surface, var(--astryx-color-background-body));
 }
 
+
 html[data-playground-frame] #playground-mount[data-preview-layout='center'] .playground-preview__content {
   display: contents;
 }
