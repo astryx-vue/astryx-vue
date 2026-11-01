@@ -1,0 +1,53 @@
+name: Upstream Sync
+
+on:
+  schedule:
+    - cron: '17 1 * * 1'
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 创建缺失的 issue 并加入路线图；关闭时只 dry-run
+        required: true
+        default: false
+        type: boolean
+      to:
+        description: 检查到指定上游标签（留空则取最新稳定版）
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Vue port
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Checkout upstream
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: meta/astryx
+          path: .upstream-sync/upstream
+          fetch-depth: 0
+
+      - name: Create component-family issues
+        env:
+          GH_TOKEN: ${{ secrets.PROJECTS_TOKEN || secrets.GITHUB_TOKEN }}
+          APPLY: ${{ github.event_name == 'schedule' || inputs.apply }}
+          UPSTREAM_TO: ${{ inputs.to }}
+          PROJECT_NUMBER: ${{ secrets.PROJECTS_TOKEN && '1' || '0' }}
+        run: |
+          set -euo pipefail
+          args=(--upstream .upstream-sync/upstream --project "${PROJECT_NUMBER}")
+          if [[ "${APPLY}" == "true" ]]; then
+            args+=(--apply)
+          else
+            args+=(--dry-run)
+          fi
+          if [[ -n "${UPSTREAM_TO}" ]]; then
+            args+=(--to "${UPSTREAM_TO}")
+          fi
+          node scripts/upstream-sync.mjs "${args[@]}"

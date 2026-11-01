@@ -14,6 +14,17 @@
 
 `scripts/swarm/` 里的工具默认读写当前在追的那个目录，路径写在 `status.mjs`、`upstream-ledger.mjs` 和 `visual-compare`、`a11y-scan` 的 `args.mjs` 里。换版本时，要把这些默认路径和 `.gitignore` 里的对应条目一起改掉。
 
+## 持续同步上游
+
+`package.json` 的 `upstream.syncedTo` 是已经完成代码对齐的上游标签，不是“已经看过”的标签。`scripts/upstream-sync.mjs` 从这个标签之后逐版本生成组件族 issue；同名 issue 已存在时只复用，不重复创建，也不覆盖人工勾选和备注。
+
+```sh
+node scripts/upstream-sync.mjs --upstream ../astryx-upstream --dry-run
+node scripts/upstream-sync.mjs --upstream ../astryx-upstream --apply
+```
+
+GitHub 工作流每周一检查 `meta/astryx`，也可手动 dry-run。默认 `GITHUB_TOKEN` 只能创建 issue；要给组织路线图添加或更新卡片，仓库还需要 `PROJECTS_TOKEN`（具有该项目读写权限）。没有它时工作流仍会创建 issue，配置后重跑会补齐卡片。
+
 ## 写作方式
 
 - 尽量用中文和大白话。

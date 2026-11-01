@@ -66,8 +66,9 @@
     "wrangler": "catalog:deploy"
   },
   "upstream": {
-    "repository": "https://github.com/facebook/astryx",
+    "repository": "https://github.com/meta/astryx",
     "version": "0.7.1",
+    "syncedTo": "v0.7.1",
     "commit": "44f7244dd518ca07f8cc9f238fad8c0495b2f44e"
   }
 }

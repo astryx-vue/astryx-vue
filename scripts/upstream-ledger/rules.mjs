@@ -82,7 +82,7 @@ function invert(byNode) {
 /** packages/core/src/<目录>/ 到节点。按 ROADMAP 里 C1–C16 的「涵盖组件」，再补上底座目录。 */
 export const CORE_DIR_NODES = invert({
   B1: ['theme'],
-  B3: ['hooks'],
+  B3: ['hooks', 'gestures', 'motion'],
   B4: ['Layer', 'Overlay'],
   B5: ['i18n'],
   B6: ['InteractiveRoleContext', 'SizeContext'],
@@ -93,7 +93,7 @@ export const CORE_DIR_NODES = invert({
   C4: ['PowerSearch', 'CommandPalette'],
   C5: ['Calendar', 'DateInput', 'DateRangeInput', 'DateTimeInput', 'TimeInput', 'Timestamp', 'Timer'],
   C6: ['DropdownMenu', 'ContextMenu', 'MoreMenu'],
-  C7: ['Dialog', 'AlertDialog', 'Popover', 'HoverCard', 'Tooltip', 'Lightbox', 'Toast'],
+  C7: ['Dialog', 'AlertDialog', 'Popover', 'HoverCard', 'Tooltip', 'Lightbox', 'Toast', 'Drawer'],
   C8: ['BottomSheet'],
   C9: ['Markdown', 'CodeBlock', 'Code'],
   C10: ['Chat'],
@@ -112,11 +112,11 @@ export const CORE_DIR_EXTRA_NODES = invert({
 
 /** packages/lab/src/<目录>/ 到节点。按 ROADMAP 里 F3a–F3e 的组件列表。 */
 export const LAB_DIR_NODES = invert({
-  F3a: ['ListInput', 'MobileTokenizer', 'TransferList'],
+  F3a: ['ListInput', 'MobileTokenizer', 'TransferList', 'MobilePowerSearch'],
   F3b: ['Stat', 'CircularProgress', 'InfoTip', 'SVGIcon', 'LogStream', 'Schedule'],
   F3c: ['Drawer', 'Tour'],
   F3d: ['Chart', 'Radial', 'Sankey', 'ThreeD', 'CodeEditor', 'DiffViewer'],
-  F3e: ['Chat', 'ChatReasoning'],
+  F3e: ['Chat', 'ChatReasoning', 'CommentPin', 'Comments', 'EmojiPicker'],
 })
 
 /** 在 lab 里孵化、后来升进 core 的组件。它们在 lab 时期的改动归 core 对应节点。 */
@@ -127,12 +127,14 @@ export const LAB_PROMOTED_DIR_NODES = invert({
 
 /** docs/specs/AST-xxx 规范记录到节点。按每份记录的标题判断主题。 */
 export const SPEC_NODES = invert({
-  B1: ['AST-006', 'AST-008', 'AST-012', 'AST-022', 'AST-066'],
+  B1: ['AST-006', 'AST-008', 'AST-012', 'AST-022', 'AST-066', 'AST-102', 'AST-108'],
+  B3: ['AST-081', 'AST-085', 'AST-090', 'AST-094', 'AST-099', 'AST-105', 'AST-107'],
   B4: ['AST-003', 'AST-027', 'AST-038', 'AST-059'],
-  B5: ['AST-032'],
+  B5: ['AST-032', 'AST-084', 'AST-086', 'AST-087'],
   B6: ['AST-002', 'AST-056', 'AST-071'],
   B7: ['AST-005', 'AST-067'],
-  C3: ['AST-001', 'AST-004', 'AST-011', 'AST-055', 'AST-058', 'AST-079'],
+  C3: ['AST-001', 'AST-004', 'AST-011', 'AST-055', 'AST-058', 'AST-075', 'AST-079', 'AST-109'],
+  C4: ['AST-083', 'AST-092'],
   C5: ['AST-037', 'AST-043'],
   C9: ['AST-036', 'AST-061'],
   C12: ['AST-057'],
@@ -145,6 +147,7 @@ export const SPEC_NODES = invert({
   E3: ['AST-009', 'AST-020', 'AST-021'],
   F0: ['AST-080'],
   F1a: ['AST-062', 'AST-064'],
+  F3a: ['AST-103'],
   G1: ['AST-017'],
 })
 
@@ -155,6 +158,10 @@ export const SPEC_UNRELATED = {
   'AST-030': '上游 CI 路由流程规范',
   'AST-033': '上游 Next.js 文档站的交互与数据约定',
   'AST-070': '上游规范记录的写作格式约定（草稿已删除）',
+  'AST-082': '原生平台界面规范，Vue 版不适用',
+  'AST-091': '原生平台模板规范，Vue 版不适用',
+  'AST-093': '原生组件指南，Vue 版不适用',
+  'AST-100': '上游发布节奏流程规范',
 }
 
 /** docs/architecture、docs/design、docs/families 下的 Markdown 到节点。key 是不带 .md 的文件名。 */
@@ -163,7 +170,7 @@ export const KNOWLEDGE_DOC_NODES = {
     B1: ['component-theming-surface', 'theme-application', 'theme-authoring-contract', 'theme-compilation', 'theme-tokens'],
     B3: ['interaction-modality'],
     B4: ['layer-runtime'],
-    B5: ['icon-resolution-and-component-slots'],
+    B5: ['icon-resolution-and-component-slots', 'internationalization', 'rtl-audit-evidence'],
     B6: ['component-size-cascade', 'component-style-authoring', 'public-component-api'],
     C8: ['container-padding'],
     D4: ['cli-surface'],
@@ -171,8 +178,8 @@ export const KNOWLEDGE_DOC_NODES = {
   }),
   design: invert({
     B1: ['color-emphasis', 'control-rhythm', 'elevation-hierarchy', 'mobile-typography', 'motion', 'shape-relationships', 'spatial-hierarchy', 'typography-hierarchy'],
-    B3: ['user-states'],
-    B5: ['iconography'],
+    B3: ['user-states', 'reduced-motion'],
+    B5: ['iconography', 'bidirectionality'],
     C10: ['agentic-states'],
     C15: ['system-states'],
     D5: ['template-composition'],
@@ -183,7 +190,7 @@ export const KNOWLEDGE_DOC_NODES = {
     C7: ['overlay-dismissal'],
     C13: ['navigation-destinations'],
     C14: ['layout-primitives', 'layout-regions'],
-    C16: ['buttons'],
+    C16: ['buttons', 'action-groups'],
   }),
 }
 
@@ -253,19 +260,21 @@ export const RULES = [
   unrelated('root-config', /^(?:package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.gitignore|\.gitattributes|\.npmrc|\.nvmrc|crowdin\.yml|tsconfig[^/]*\.json|[^/]+\.config\.(?:ts|js|mjs|cjs|mts)|vitest\.[^/]+\.mjs)$/, '上游 monorepo 根配置与锁文件'),
 
   // 各包通用的无关文件
+  unrelated('native', /^packages\/native\//, '上游 Apple 原生平台与桥接代码，Vue 版不适用'),
   unrelated('package-manifest', /^packages\/(?:themes\/)?[^/]+\/package\.json$/, '上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点'),
-  unrelated('package-build-config', /^packages\/.+\/(?:babel\.config\.(?:js|json)|tsup\.config\.ts|tsconfig[^/]*\.json)$/, '上游 Babel、tsup、TypeScript 构建配置；Vue 版用自己的 tsdown 与 tsconfig'),
+  unrelated('package-build-config', /^packages\/.+\/(?:babel\.config\.(?:js|json|cjs)|tsup\.config\.ts|tsconfig[^/]*\.json)$/, '上游 Babel、tsup、TypeScript 构建配置；Vue 版用自己的 tsdown 与 tsconfig'),
 
   // packages/core 包级文件
   to('core-locales', /^packages\/core\/locales\//, ['B5']),
   to('core-pseudo-locale', /^packages\/core\/scripts\/build-pseudo-locale\.mjs$/, ['B5']),
   unrelated('core-scripts', /^packages\/core\/scripts\//, '上游 npm postinstall 与 agent 初始化提示脚本，Vue 版不提供'),
-  to('core-readme', /^packages\/core\/README\.md$/, ['G1'], 'core 包 README 的改动归 G1'),
+  to('core-readme', /^packages\/core\/(?:README\.md|docs\.mjs)$/, ['G1'], 'core 包 README 与文档生成入口的改动归 G1'),
 
   // packages/core/src 根文件
   to('core-base-props', /^packages\/core\/src\/(?:BaseProps\.ts|naming(?:\.test)?\.ts)$/, ['B6']),
   to('core-reset', /^packages\/core\/src\/(?:reset[^/]*|inputFontFloor[^/]*)$/, ['B2']),
   to('core-tailwind-bridge', /^packages\/core\/src\/tailwind-theme[^/]*$/, ['B1'], 'Tailwind 主题桥（把 token 暴露给 Tailwind）归 B1，Vue 版是否提供由 B1 决定'),
+  to('core-unicode-utils', /^packages\/core\/src\/unicodePropertyEscapes[^/]*$/, ['B7']),
   unrelated('core-index', /^packages\/core\/src\/index\.ts$/, '核心包入口导出；我们的 index.ts 由 pnpm sync 生成，新增导出随对应组件节点处理'),
   unrelated('core-ambient-types', /^packages\/core\/src\/(?:astryx\.css\.d\.ts|raw-import\.d\.ts|doc-mjs\.d\.ts)$/, '上游 TypeScript 环境声明，服务 React 构建'),
   unrelated('core-doc-tooling-tests', /^packages\/core\/src\/(?:docPropLiterals\.test\.ts|docPropReferences\.test\.ts|docs-script\.test\.mjs|postinstall\.test\.mjs)$/, '上游 .doc.mjs 文档格式与 postinstall 脚本的自检测试'),
@@ -284,6 +293,8 @@ export const RULES = [
   to('core-utils-theme-props', /^packages\/core\/src\/utils\/themeProps[^/]*$/, ['B1'], 'themeProps 生成 theme target 类名，归 B1 的换肤机制'),
   to('core-theme-syntax', /^packages\/core\/src\/theme\/syntax\//, ['B1', 'C9'], '代码高亮的语法主题同时属于主题系统（B1）和代码高亮（C9）'),
   to('core-icon', /^packages\/core\/src\/Icon\//, ['B5', 'C16'], 'Icon 目录统一归 B5（图标注册表），同时标 C16（Icon 组件外观）'),
+  to('core-internal-tokenizer', /^packages\/core\/src\/internal\/tokenizer-presentation[^/]*$/, ['C3']),
+  to('core-internal-touch', /^packages\/core\/src\/internal\/touch[^/]*$/, ['B3']),
   to('core-dir', /^packages\/core\/src\/([^/]+)\//, lookup(CORE_DIR_NODES)),
   to('core-dir-extra', /^packages\/core\/src\/([^/]+)\//, lookup(CORE_DIR_EXTRA_NODES), 'ROADMAP 没有列出的 core 目录（HStack、VStack、VisuallyHidden），就近归 C14'),
 
@@ -312,6 +323,7 @@ export const RULES = [
   to('charts-logic', /^packages\/charts\//, ['F2a']),
 
   // packages/lab
+  to('lab-emoji-script', /^packages\/lab\/scripts\/generate-emoji-data\.mjs$/, ['F3e']),
   to('lab-drawer-blocks', /^packages\/lab\/blocks\/Drawer/, ['F3c']),
   to('lab-package', /^packages\/lab\/(?:blocks\/|README\.md$|astryx\.integration\.mjs$|src\/index\.ts$|src\/__tests__\/)/, ['F3f'], 'lab 包级文件（入口、README、示例块、集成描述、包级测试）归 F3f'),
   to('lab-reorder-styles', /^packages\/lab\/src\/reorderStyles\.ts$/, ['F3a'], 'lab 内部共享的拖拽排序样式，就近归 F3a（ListInput、TransferList）'),
@@ -341,6 +353,7 @@ export const RULES = [
   unrelated('docs-process', /^docs\/(?:contributing\/|schemas\/|templates\/|pr-assets\/|themes\/|README\.md$|release\.md$)/, '上游知识库流程文档（贡献规范、记录模板、schema、PR 素材、发布流程）'),
 
   // internal
+  to('interaction-harness', /^internal\/interaction-harness\//, ['A3'], '跨组件交互测试工具归工程质量护栏'),
   to('a11y-spec', /^internal\/a11y-spec\//, ['E3'], '上游 APG 无障碍模式契约测试，归 E3 作为无障碍检查的参考'),
   unrelated('vibe-tests', /^internal\/vibe-tests\//, '上游 AI 代理生成效果的评测用例'),
   unrelated('eslint-plugin', /^internal\/eslint-plugin-astryx\//, '上游 React、StyleX 专用的 ESLint 规则'),

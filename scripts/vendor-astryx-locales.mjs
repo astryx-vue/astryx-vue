@@ -1,5 +1,5 @@
 /**
- * 从 facebook/astryx 拉 packages/core/locales/*.json，不手抄译文。
+ * 从 meta/astryx 拉 packages/core/locales/*.json，不手抄译文。
  *
  * 默认跟随原版 main 的最新提交，让译文始终对得上原版：
  *   node scripts/vendor-astryx-locales.mjs
@@ -16,7 +16,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
 const ref = process.argv[2] ?? 'main'
-const repository = 'https://github.com/facebook/astryx'
+const repository = 'https://github.com/meta/astryx'
 const sourcePath = 'packages/core/locales'
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)))
 const targetDir = join(rootDir, 'packages/core/locales')
@@ -27,12 +27,12 @@ const headers = {
 }
 
 // 把分支名、标签或提交号统一换成具体的提交号，写进 SOURCE.json。
-const commitResponse = await fetch(`https://api.github.com/repos/facebook/astryx/commits/${ref}`, { headers })
+const commitResponse = await fetch(`https://api.github.com/repos/meta/astryx/commits/${ref}`, { headers })
 if (!commitResponse.ok)
   throw new Error(`解析 ${ref} 失败：${commitResponse.status}`)
 const commit = (await commitResponse.json()).sha
 
-const listing = await fetch(`https://api.github.com/repos/facebook/astryx/contents/${sourcePath}?ref=${commit}`, { headers })
+const listing = await fetch(`https://api.github.com/repos/meta/astryx/contents/${sourcePath}?ref=${commit}`, { headers })
 if (!listing.ok)
   throw new Error(`拉取语言目录列表失败：${listing.status}`)
 
@@ -47,7 +47,7 @@ if (files.length < 30)
 
 mkdirSync(targetDir, { recursive: true })
 for (const name of files) {
-  const url = `https://raw.githubusercontent.com/facebook/astryx/${commit}/${sourcePath}/${name}`
+  const url = `https://raw.githubusercontent.com/meta/astryx/${commit}/${sourcePath}/${name}`
   const response = await fetch(url)
   if (!response.ok)
     throw new Error(`拉取 ${name} 失败：${response.status}`)
