@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { StepRegistration } from './context.js'
 import type { StepperProps, StepperSlots } from './types.js'
-import { computed, onMounted, onUnmounted, provide, ref, useTemplateRef } from 'vue'
+import { computed, onMounted, onUnmounted, provide, ref, useTemplateRef, watch } from 'vue'
 import { useAstryxMessages } from '../locale/index.js'
 import { stepperContextKey } from './context.js'
 import { resolveStepGlyph, shouldCollapseStepper } from './logic.js'
@@ -24,6 +24,14 @@ const root = useTemplateRef<HTMLElement>('root')
 const width = ref(Number.POSITIVE_INFINITY)
 const steps = ref<StepRegistration[]>([])
 const activeStep = computed(() => props.activeStep)
+// 记下切换前的 activeStep。初次渲染时 previous 和 current 相同，
+// 打开页面时已经完成的进度条直接显示为填满，不再播放动画。
+// watcher 使用 flush: 'sync'，Step 渲染前就能读到旧步数，用来判断这次要不要做动画。
+const seenActiveStep = ref({ current: props.activeStep, previous: props.activeStep })
+watch(activeStep, (next, prev) => {
+  seenActiveStep.value = { current: next, previous: prev }
+}, { flush: 'sync' })
+const previousActiveStep = computed(() => seenActiveStep.value.previous)
 const orientation = computed(() => props.orientation)
 const density = computed(() => props.density)
 const indicatorPosition = computed(() => props.indicatorPosition)
@@ -96,6 +104,7 @@ onUnmounted(() => observer?.disconnect())
 
 provide(stepperContextKey, {
   activeStep,
+  previousActiveStep,
   collapsed,
   density,
   hasCollapsibleLabels,

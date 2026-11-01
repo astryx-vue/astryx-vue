@@ -361,13 +361,13 @@ function goNext() {
 </template>
 
 <style>
-.form-wizard-dialog :deep(.astryx-dialog__inner) {
+.form-wizard-dialog .astryx-dialog__inner {
   height: auto;
   max-height: 75vh;
 }
 
-.form-wizard-dialog :deep(.astryx-layout),
-.form-wizard-dialog :deep(.astryx-layout__inner) {
+.form-wizard-dialog .astryx-layout,
+.form-wizard-dialog .astryx-layout__inner {
   height: auto;
   min-height: 0;
   max-height: calc(75vh - 32px);

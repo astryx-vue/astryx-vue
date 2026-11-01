@@ -16,7 +16,7 @@
   --pg-handle: rgb(23 23 23 / 18%);
   --pg-stage-bg: #fff;
   --pg-stage-line: rgb(5 54 89 / 9.8%);
-  --pg-rail: 56px;
+  --pg-rail: 64px;
 
   display: flex;
   flex-direction: column;
@@ -111,15 +111,14 @@ html.dark:has(.playground-route) body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 8px 12px;
+  gap: 18px;
+  padding: 18px 0 8px;
   background: var(--pg-surface);
   border-right: 1px solid var(--pg-line);
 }
 
 .playground__rail-home {
   display: inline-flex;
-  margin-bottom: 8px;
 }
 
 .playground__rail-home img {
@@ -131,7 +130,7 @@ html.dark:has(.playground-route) body {
 .playground__rail-tabs {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -179,11 +178,11 @@ html.dark:has(.playground-route) body {
 .playground__left-header {
   display: flex;
   flex: none;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
   min-height: 48px;
-  padding: 8px 12px;
+  padding: 12px 16px;
 }
 
 .playground__word {

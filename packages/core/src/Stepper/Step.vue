@@ -5,7 +5,7 @@ import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useStepperContext } from './context.js'
-import { resolveStepGlyph } from './logic.js'
+import { connectorFillTiming, resolveStepGlyph, STEP_FILL_ARRIVAL_SHARE_H, STEP_FILL_ARRIVAL_SHARE_V } from './logic.js'
 import StepMarker from './StepMarker.vue'
 import '../../styles/stepper.css'
 
@@ -45,6 +45,40 @@ const glyph = computed(() => resolveStepGlyph({
 const collapsed = computed(() => stepper.collapsed.value === true)
 const leadFilled = computed(() => props.step <= stepper.activeStep.value)
 const trailFilled = computed(() => props.step < stepper.activeStep.value)
+const arrivalShare = computed(() => (
+  orientation.value === 'vertical' ? STEP_FILL_ARRIVAL_SHARE_V : STEP_FILL_ARRIVAL_SHARE_H
+))
+const leavingShare = computed(() => 1 - arrivalShare.value)
+// 分离模式：这一步的进度条就是整段。
+// 轨道模式：同一段拆成上一步的后半截和这一步的前半截，两截按顺序接上。
+const barTiming = computed(() => connectorFillTiming(
+  stepper.activeStep.value,
+  stepper.previousActiveStep.value,
+  props.step - 1,
+  0,
+  1,
+))
+const leadTiming = computed(() => connectorFillTiming(
+  stepper.activeStep.value,
+  stepper.previousActiveStep.value,
+  props.step - 1,
+  leavingShare.value,
+  arrivalShare.value,
+))
+const trailTiming = computed(() => connectorFillTiming(
+  stepper.activeStep.value,
+  stepper.previousActiveStep.value,
+  props.step,
+  0,
+  leavingShare.value,
+))
+
+function fillVars(timing: { duration: string, delay: string }) {
+  return {
+    '--_step-fill-duration': timing.duration,
+    '--_step-fill-delay': timing.delay,
+  }
+}
 
 const accessibleName = computed(() => {
   const stepNumber = props.step + 1
@@ -108,10 +142,11 @@ onUnmounted(() => stepper.unregister(props.step))
       v-if="indicatorPosition === 'separated' || collapsed"
       class="astryx-step-bar"
       :data-filled="leadFilled || undefined"
+      :style="fillVars(barTiming)"
     />
     <span v-else class="astryx-step-rail">
-      <span class="astryx-step-connector astryx-step-connector-lead" :data-filled="leadFilled || undefined" />
-      <span class="astryx-step-connector astryx-step-connector-trail" :data-filled="trailFilled || undefined" />
+      <span class="astryx-step-connector astryx-step-connector-lead" :data-filled="leadFilled || undefined" :style="fillVars(leadTiming)" />
+      <span class="astryx-step-connector astryx-step-connector-trail" :data-filled="trailFilled || undefined" :style="fillVars(trailTiming)" />
     </span>
     <div class="astryx-step-body">
       <component

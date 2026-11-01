@@ -62,7 +62,9 @@
   .astryx-calendar-weekdays,
   .astryx-calendar-row {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    width: 100%;
+    /* 列最小是一天的点击高度。minmax(0, 1fr) 会把整月收成一窄条，两位数叠在一起。 */
+    grid-template-columns: repeat(7, minmax(var(--astryx-input-height-md, 32px), 1fr));
     justify-content: center;
   }
 
@@ -119,6 +121,17 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--astryx-spacing-4, 16px);
+    width: 100%;
+  }
+
+  .astryx-calendar-month {
+    flex: 1 1 auto;
+    min-width: calc(7 * var(--astryx-input-height-md, 32px));
+  }
+
+  /* 日期下拉里铺满浮层。单独摆放的日历仍按内容收缩。 */
+  .astryx-popover .astryx-calendar {
+    width: 100%;
   }
 
   .astryx-calendar-grid[data-week-numbers] .astryx-calendar-weekdays,
