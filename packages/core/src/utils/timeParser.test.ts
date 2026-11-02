@@ -272,3 +272,11 @@ describe('adjustTime', () => {
     expect(adjustTime('00:30' as ISOTimeString, -60)).toBe('23:30')
   })
 })
+
+describe('adjustTime whole minutes', () => {
+  it('returns the input unchanged for a fractional delta', () => {
+    // `deltaMinutes` 是分钟数；小数写不回 `HH:MM`，原样返回而不是产出 "30.5"。
+    expect(adjustTime('10:30' as ISOTimeString, 0.5)).toBe('10:30')
+    expect(adjustTime('10:30:45' as ISOTimeString, -0.5, true)).toBe('10:30:45')
+  })
+})

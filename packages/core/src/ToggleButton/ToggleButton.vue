@@ -92,14 +92,18 @@ function handleClick(event: MouseEvent): void {
     return
   }
 
+  // 调用方的 click 先跑：它既能拿到这次点击，也能用 preventDefault 取消这次切换。
+  emit('click', event)
+  if (event.defaultPrevented)
+    return
+
   const next = !isPressed.value
   pressedIntent.value = next
   emit('pressedChange', next, event)
 
+  // 调用方在 pressedChange 里取消，就只报告意图，不改视觉状态。
   if (!event.defaultPrevented)
     isPressedModel.value = next
-
-  emit('click', event)
 }
 
 defineExpose({
