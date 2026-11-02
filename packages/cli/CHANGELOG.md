@@ -1,5 +1,15 @@
 # @astryx-vue/cli
 
+## 0.4.3
+
+### Patch Changes
+
+- [#417](https://github.com/astryx-vue/astryx-vue/pull/417) [`7b180bb`](https://github.com/astryx-vue/astryx-vue/commit/7b180bbf1e2317ab54c67569666e9d9f9e972a36) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 包内 README 收紧为安装、示例、程序调用和链接，完整命令说明只在文档站维护；维护步骤移到 `CONTRIBUTING.md`。文档站补上 `runCli` 的程序调用示例。
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`2e8b52c`](https://github.com/astryx-vue/astryx-vue/commit/2e8b52c461b64ef3b7ef2ef5580448e59a0dbe84) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 同步核心组件的文档目录，加入 Pagination 紧凑形态的首尾按钮说明。
+
+- [#415](https://github.com/astryx-vue/astryx-vue/pull/415) [`5629b63`](https://github.com/astryx-vue/astryx-vue/commit/5629b6318eb987e314954d357c4bcb108709b182) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 同步核心组件目录，加入 `Item` 的首行对齐和 `List` 的边缘口径说明。
+
 ## 0.4.2
 
 ### Patch Changes

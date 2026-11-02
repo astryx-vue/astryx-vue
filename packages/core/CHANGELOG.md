@@ -1,5 +1,37 @@
 # @astryx-vue/core
 
+## 0.6.0
+
+### Minor Changes
+
+- [#415](https://github.com/astryx-vue/astryx-vue/pull/415) [`004f655`](https://github.com/astryx-vue/astryx-vue/commit/004f655f04fcae2194eb694c9a6b61b19adaff0a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Item` 新增 `align="first-line"`：`startContent` 和 `endContent` 改为相对标签第一行居中，而不是相对整块多行内容居中。标签换行时，状态点、单选按钮、时间戳这类小标记能继续贴着第一行；插槽比第一行高时把文字压下去。默认值仍是 `center`，`center` 和 `start` 的对齐不变。
+
+- [#415](https://github.com/astryx-vue/astryx-vue/pull/415) [`9685f9a`](https://github.com/astryx-vue/astryx-vue/commit/9685f9a39d4b01c73f59237f1cff0326bd60864e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `List` 新增 `edge`，统一决定每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。默认 `padded` 保持现有表现；`flush` 去掉行的左右内边距，让静态行的文字、分隔线和背景都落在列表上方标题的竖线上；`outset` 把文字放在这条线上，并让分隔线和背景伸进容器的内边距；`bleed` 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、四角为直角，像 Card 里的表格行。`outset` 和 `bleed` 读取最近的、共享内边距的容器（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 `padded` 一样。`ListEdge` 类型一并导出。
+  
+  原来的 `edgeCompensation="inline"` 保留为 `edge="outset"` 的弃用别名，几何位置相同；两个都设置时以 `edge` 为准，并在开发期警告一次。
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`6d366de`](https://github.com/astryx-vue/astryx-vue/commit/6d366de2fac28a02a75315f0b7283a5eed100ca1) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Pagination` 的 `compact` 形态可以按需显示首页和末页按钮：传 `hasFirstLast` 后，总数已知就在上一页 / 下一页外侧成对出现；不传仍然是原来的「第几页 / 共几页」。`input` 形态的默认显示不变，其他形态仍然忽略这个属性。
+
+### Patch Changes
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`88e2214`](https://github.com/astryx-vue/astryx-vue/commit/88e22141ad5d24ce3f6db2aefe082a9df44a5359) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Button` 在忙碌只因 `isLoading` 或不可中断的 `clickAction` 未完成时改用 `aria-disabled`，不再设置原生 `disabled`：按钮保持键盘焦点，但点击、Enter/Space 以及冒泡到祖先的点击都会被拦住；`href` 版本忙碌时也保持 `<a>`，不会换成禁用按钮。真正的 `isDisabled`（包括同时忙碌）仍用原生 `disabled`。
+  
+  首次渲染就处于 loading 的 `Button` 先以空内容挂载 live region，下一帧再写入 loading 文案，避免读屏器跳过与文字同时出现的 live region。
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`c4f2aa5`](https://github.com/astryx-vue/astryx-vue/commit/c4f2aa52b3834549263b8a98e7787ef6a54262c3) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修正导出的 `getWeekNumber`（`plainDateGetWeekNumber`）的 ISO 周数计算：改为和上游 e63f97283 一样在 UTC 锚点上算，而不是拿本地时间的 `Date` 做减法。在夏令时于新年之后才结束的时区（悉尼、奥克兰、圣地亚哥），一周的周四与 1 月 1 日之间的本地毫秒差会带上一小时偏移，遇到 1 月 1 日是星期五的年份（如 2021、2027）就会把整周向上取整：2021 年 4 月的 ISO 第 14 周会算成第 15 周。现在该函数在任何时区都返回同一个周数。
+
+- [#415](https://github.com/astryx-vue/astryx-vue/pull/415) [`22e9a74`](https://github.com/astryx-vue/astryx-vue/commit/22e9a74dcc1bcc38bea4bb8499212afbddf7bbd1) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Link`、`Token` 和 `ClickableCard` 禁用时改用 `aria-disabled`，不再用原生 `disabled` 或 `tabIndex=-1`：控件保留 Tab 停留点，读屏仍能读到它的名称和不可用状态；点击、Enter/Space 以及冒泡到祖先的点击都会被拦住，不会触发回调或导航。禁用链接继续不带 `href`，并显式暴露链接角色。
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`78d5669`](https://github.com/astryx-vue/astryx-vue/commit/78d56695cc7ee13c01d3347e4b7dd5ce24665c7a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Switch` 现在把调用方传入的 `aria-labelledby` 直接作为开关控件的可访问名称，不再和组件自己的标签 id 拼在一起；`aria-describedby` 继续排在本组件自己的说明、状态和禁用原因之前。两个引用都只落在开关控件上，不落在字段外壳上。
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`2a9b503`](https://github.com/astryx-vue/astryx-vue/commit/2a9b50310e32eb840caac6afe1fbaba65a810f8c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修正 Markdown 与富文本的表格边框：每个单元格四条边都画线，不再只有行与行之间的分隔线；表格外沿由表格自身的边框闭合，和格线折叠成一条 1px 的线，不会在边缘叠成双线。两个界面用同一套 `--astryx-color-border` 行线和列线，最后一行、最后一列不重复画线，所以同一张表在 Markdown 阅读状态和富文本里的格子边界一致。
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`346ff39`](https://github.com/astryx-vue/astryx-vue/commit/346ff392db97126214613c6b5608a173b79240a8) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Timestamp` 服务端渲染时不再读取当前时间。绝对格式（`date`、`date_long`、`date_weekday`、`date_time`、`time`、`system_*`、`unix_seconds`）从头到尾不读时钟，服务端渲染、静态预渲染和客户端写出同一段 HTML；`relative`、`relative_short` 和 `auto` 只在客户端读时钟：服务端渲染和 hydration 那一趟输出带时区标签的 UTC 完整日期时间，挂载后换成格式的正常输出，所以服务端和客户端标记始终一致，时区不同的服务器和浏览器也不会 hydration 失败。仅客户端渲染的结果不变。没有 API 变更。
+
+- [#416](https://github.com/astryx-vue/astryx-vue/pull/416) [`a74832f`](https://github.com/astryx-vue/astryx-vue/commit/a74832fee24df16e017324f5fb80e8eff76c9baa) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `ToggleButton` 先执行调用方的 click 处理函数，再决定是否切换：调用方取消这次点击，切换就不会发生。`adjustTime` 收到小数分钟时原样返回，不再产出 `"30.5"` 这种无法再解析的时间。
+
+- [#412](https://github.com/astryx-vue/astryx-vue/pull/412) [`7ba5cb9`](https://github.com/astryx-vue/astryx-vue/commit/7ba5cb9a0de1d4e824baf235ec23524f4c11be7b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - [fix] `Typeahead`、`Tokenizer`、`PowerSearch`：搜索源被替换时清掉旧请求留下的 loading 状态，避免忙碌指示一直转圈。
+
 ## 0.5.2
 
 ### Patch Changes
