@@ -69,16 +69,20 @@ function readFields(source: string):
   if (close == null)
     return { status: 'defer' }
 
-  const fields: Record<string, string> = Object.create(null)
+  const entries = new Map<string, string>()
   for (const line of body.slice(0, close.index).split(/\r?\n/)) {
     if (line.trim() === '')
       continue
     const separator = line.indexOf(':')
     const key = separator < 0 ? '' : line.slice(0, separator).trim()
-    if (separator <= 0 || key === '' || Object.hasOwn(fields, key))
+    if (separator <= 0 || key === '' || entries.has(key))
       return { status: 'none' }
-    fields[key] = line.slice(separator + 1).trim()
+    entries.set(key, line.slice(separator + 1).trim())
   }
+  // 交给 `parse` 的是普通对象，所以 `parse: fields => fields` 这种原样返回能通过
+  // JSON-like 校验。`fromEntries` 把每个键都定义成自有属性，叫 `__proto__` 的字段
+  // 也仍然只是一个字段。
+  const fields: Record<string, string> = Object.fromEntries(entries)
 
   let end = openingLength + close.index + close[0].length
   if (source.startsWith('\r\n', end))

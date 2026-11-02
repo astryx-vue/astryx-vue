@@ -153,6 +153,26 @@ describe('@astryx-vue/core/Markdown/parser', () => {
     expect(root.children).toMatchObject([{ type: 'heading', depth: 1 }])
   })
 
+  it('accepts the decoded fields record unchanged as metadata', () => {
+    const fields = createMarkdownFrontmatter({
+      name: 'plain-fields',
+      parse: record => record,
+    })
+    const source = '---\ntitle: Release notes\n__proto__: kept\n---\n# Shipped'
+
+    const parsed = fields.parse(source)
+    expect(parsed).toEqual({
+      status: 'match',
+      contentStart: source.indexOf('# Shipped'),
+      metadata: { title: 'Release notes', ['__proto__']: 'kept' },
+    })
+    if (parsed.status !== 'match')
+      throw new TypeError('expected a frontmatter match')
+    // 叫 `__proto__` 的字段仍是普通自有字段，不碰原型。
+    expect(Object.hasOwn(parsed.metadata, '__proto__')).toBe(true)
+    expect(Object.getPrototypeOf(parsed.metadata)).toBe(Object.prototype)
+  })
+
   it('splices an inline syntax plugin into the canonical tree', () => {
     const mention = createMarkdownPlugin({
       name: 'mention',
