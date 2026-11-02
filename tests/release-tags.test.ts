@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { changesetPublishArgs, releasePublishPlan } from '../scripts/release.mjs'
+import { changesetPublishArgs, isSignatureLogConflict, releasePublishPlan } from '../scripts/release.mjs'
 
 describe('changesetPublishArgs', () => {
   it('keeps stable releases on the default tag', () => {
@@ -33,5 +33,16 @@ describe('releasePublishPlan', () => {
       args: ['changeset', 'publish', '--tag', 'canary'],
       thenPublishLabAsCanary: false,
     })
+  })
+})
+
+describe('isSignatureLogConflict', () => {
+  it('recognizes the transparency log 409', () => {
+    expect(isSignatureLogConflict('TLOG_CREATE_ENTRY_ERROR: error creating tlog entry - (409)')).toBe(true)
+  })
+
+  it('leaves other publish failures to the caller', () => {
+    expect(isSignatureLogConflict('npm error 403 Forbidden')).toBe(false)
+    expect(isSignatureLogConflict('')).toBe(false)
   })
 })

@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { appendFileSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
@@ -34,26 +34,51 @@ export function releasePublishPlan(pendingNames) {
   }
 }
 
-function pendingPackageNames() {
-  return listPublicPackages(ROOT).filter((dir) => {
+/** `npm view` 查不到某个版本时，它就是这次要发布的包。 */
+function unpublishedPackages() {
+  const result = []
+  for (const dir of listPublicPackages(ROOT)) {
     const manifest = JSON.parse(readFileSync(join(ROOT, 'packages', dir, 'package.json'), 'utf8'))
     try {
       execFileSync('npm', ['view', `${manifest.name}@${manifest.version}`, 'version', '--registry', 'https://registry.npmjs.org'], { stdio: 'pipe' })
-      return false
     }
     catch (error) {
-      if (isRetryableNpmViewError(error))
-        return true
-      throw error
+      if (!isRetryableNpmViewError(error))
+        throw error
+      result.push({ name: manifest.name, version: manifest.version })
     }
-  })
+  }
+  return result
+}
+
+function pendingPackageNames() {
+  return unpublishedPackages().map(entry => entry.name)
+}
+
+/**
+ * 发布失败后把还没上 npm 的包列出来：重跑只需要补发这些，
+ * 不用重跑整批。写到 Actions 摘要里，失败页面直接能看到。
+ */
+function reportUnpublishedPackages() {
+  const missing = unpublishedPackages()
+  if (missing.length === 0)
+    return
+  const lines = [
+    `还有 ${missing.length} 个包没发上 npm：`,
+    ...missing.map(entry => `- ${entry.name}@${entry.version}`),
+    '重跑这个任务即可，已发布的版本会被自动跳过。',
+  ]
+  console.log(`\n${lines.join('\n')}`)
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY
+  if (summaryPath)
+    appendFileSync(summaryPath, `${lines.map(line => `${line}\n`).join('')}\n`)
 }
 
 const LAB_MANIFEST = join(ROOT, 'packages', 'lab', 'package.json')
 
-function run(args) {
+function run(args, env = {}) {
   // 捕获输出再转发：发布失败时要看清是哪一类错误，才知道能不能重试。
-  const result = spawnSync('pnpm', args, { cwd: ROOT, encoding: 'utf8' })
+  const result = spawnSync('pnpm', args, { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } })
   if (result.stdout)
     process.stdout.write(result.stdout)
   if (result.stderr)
@@ -66,21 +91,26 @@ function run(args) {
 }
 
 /**
- * npm 的签名透明度日志偶尔会报 409（同一份产物已经入过账）。这不是内容错误，
- * 隔一次重试通常就过；其他错误一律直接抛出。
+ * 签名账本的冲突只有在“这次发布要去登记指纹”时才会发生。
+ * 同一份产物在账本里已经存在（409），再试一次签名多半还是撞。
  */
-function runPublish(args, attempts = 3) {
-  for (let attempt = 1; ; attempt++) {
-    try {
-      run(args)
-      return
-    }
-    catch (error) {
-      const output = error.output ?? ''
-      if (attempt >= attempts || !output.includes('TLOG_CREATE_ENTRY_ERROR'))
-        throw error
-      console.log(`发布遇到签名日志冲突，重试第 ${attempt + 1} 次…`)
-    }
+export function isSignatureLogConflict(output) {
+  return String(output).includes('TLOG_CREATE_ENTRY_ERROR')
+}
+
+/**
+ * 发布。第一次带 provenance；如果账本说这份产物已经登记过，就关掉补签直接上传：
+ * 包内容不变，只是不再新增一条账本记录，避免卡在这里永远发不出去。
+ */
+function runPublish(args) {
+  try {
+    run(args)
+  }
+  catch (error) {
+    if (!isSignatureLogConflict(error.output))
+      throw error
+    console.log('签名账本里已经有同一份产物，这次不再签名，直接上传。')
+    run(args, { NPM_CONFIG_PROVENANCE: 'false' })
   }
 }
 
@@ -102,11 +132,17 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const plan = releasePublishPlan(pendingPackageNames())
   run(['build:packages'])
   const publish = () => runPublish(plan.args)
-  if (plan.thenPublishLabAsCanary) {
-    holdLabBack(publish)
-    runPublish(['changeset', 'publish', '--tag', 'canary'])
+  try {
+    if (plan.thenPublishLabAsCanary) {
+      holdLabBack(publish)
+      runPublish(['changeset', 'publish', '--tag', 'canary'])
+    }
+    else {
+      publish()
+    }
   }
-  else {
-    publish()
+  catch (error) {
+    reportUnpublishedPackages()
+    throw error
   }
 }
