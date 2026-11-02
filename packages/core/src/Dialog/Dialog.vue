@@ -191,6 +191,9 @@ function closeDialog(): void {
 }
 
 function onCancel(event: Event): void {
+  // 内部元素也会发 cancel：文件选择器被取消时就会冒上来，那不是关闭请求。
+  if (event.target !== dialogRef.value)
+    return
   // 阻止浏览器直接关闭，关闭权交给父组件通过 isOpen 决定。
   event.preventDefault()
   if (props.purpose !== 'required')

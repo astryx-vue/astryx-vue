@@ -119,6 +119,29 @@ describe('useHoverCard', () => {
     expect(card.isOpen.value).toBe(false)
   })
 
+  it('重新打开后仍然按指针离开关闭', async () => {
+    const isOpen = ref<boolean | undefined>(true)
+    const { card, trigger, content } = setupHoverCard({ isOpen, delay: 0, hideDelay: 200 })
+
+    // 指针停在卡片里时被外部关掉：这时不会收到 mouseleave。
+    content.dispatchEvent(new Event('mouseenter'))
+    isOpen.value = false
+    await nextTick()
+    expect(card.isOpen.value).toBe(false)
+
+    isOpen.value = undefined
+    await nextTick()
+    trigger.dispatchEvent(new Event('mouseenter'))
+    vi.advanceTimersByTime(0)
+    await nextTick()
+    expect(card.isOpen.value).toBe(true)
+
+    trigger.dispatchEvent(new Event('mouseleave'))
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    expect(card.isOpen.value).toBe(false)
+  })
+
   it('键盘焦点立即打开，焦点离开后按 hideDelay 关闭', async () => {
     const { card, trigger } = setupHoverCard({ hideDelay: 200 })
 
