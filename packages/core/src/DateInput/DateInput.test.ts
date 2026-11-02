@@ -372,7 +372,7 @@ describe('dateInput', () => {
     expect(input.attributes('aria-describedby')?.split(' ')).toContain(`${input.attributes('id')}-disabled`)
     expect(wrapper.text()).toContain('Only editors can change the date')
 
-    input.element.focus()
+    ;(input.element as HTMLElement).focus()
     await nextTick()
     const tooltip = document.querySelector<HTMLElement>('[role="tooltip"]')
     expect(tooltip?.textContent).toBe('Only editors can change the date')
@@ -387,7 +387,7 @@ describe('dateInput', () => {
     const input = wrapper.get('input.astryx-date-input-field')
     expect(input.attributes('disabled')).toBeUndefined()
     expect(input.attributes('aria-disabled')).toBe('true')
-    input.element.focus()
+    ;(input.element as HTMLElement).focus()
     expect(document.activeElement).toBe(input.element)
     await input.setValue('2026-05-01')
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()

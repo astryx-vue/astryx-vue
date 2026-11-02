@@ -132,13 +132,13 @@ function commitText(text: string): void {
 
 // 禁用态没有再走原生 `disabled`，输入和改值都靠这里的守卫挡住（spec:AST-085 FR2）。
 function onInput(event: Event): void {
-  if (isDisabled)
+  if (props.isDisabled)
     return
   draft.value = (event.target as HTMLInputElement).value
 }
 
 function onNativeInput(event: Event): void {
-  if (isDisabled)
+  if (props.isDisabled)
     return
   const value = (event.target as HTMLInputElement).value
   if (!value) {
