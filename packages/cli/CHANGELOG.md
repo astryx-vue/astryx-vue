@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.2
+
+### Patch Changes
+
+- [#277](https://github.com/astryx-vue/astryx-vue/pull/277) [`f779be6`](https://github.com/astryx-vue/astryx-vue/commit/f779be63cd21778a9d6d66be8b2c2772c6614194) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 更新内置文档与页面模板目录，补充 Charts 和 Lab 内容，同步近期表单、Dialog Wizard 等模板修复及各包最新发布信息。
+
 ## 0.4.1
 
 ### Patch Changes
