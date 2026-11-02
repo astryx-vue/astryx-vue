@@ -45,13 +45,51 @@
   }
 
   /*
-   * Each logical edge is clamped on its own, against the container padding
-   * published for that edge, so an asymmetric host is never over-pulled and a
-   * surface with no published padding leaves the row where it is.
+   * Row edge treatment. `outset` and `bleed` rows reach into the padding of
+   * the container around the list. The list reaches that padding's edge
+   * first, so its content box moves out with the rows; each row then places
+   * itself against its own edge's padding below, never past it. Container
+   * padding vars are inherited, so the list can read them, and a missing
+   * value resolves to zero.
    */
-  .astryx-list[data-edge-compensation='inline'] > .astryx-list-item {
-    margin-inline-start: calc(-1 * min(var(--astryx-item-inset-inline), var(--container-padding-inline-start, 0px)));
-    margin-inline-end: calc(-1 * min(var(--astryx-item-inset-inline), var(--container-padding-inline-end, 0px)));
+  .astryx-list[data-edge='outset'],
+  .astryx-list[data-edge='bleed'] {
+    margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
+    margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
+    width: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));
+  }
+
+  /* `flush`: no inset, so text, dividers, and backgrounds stop at the row's edges. */
+  .astryx-list[data-edge='flush'] > .astryx-list-item {
+    --astryx-item-inset-inline: 0px;
+  }
+
+  /*
+   * `outset`: the row steps back in by whatever padding its inset does not
+   * fill, so its text lands on the heading's line and its background reaches
+   * min(inset, container padding) past it. Each edge reads its own var, so
+   * asymmetric container padding never over-reaches an edge.
+   */
+  .astryx-list[data-edge='outset'] > .astryx-list-item {
+    margin-inline-start: max(var(--container-padding-inline-start, 0px) - var(--astryx-item-inset-inline), 0px);
+    margin-inline-end: max(var(--container-padding-inline-end, 0px) - var(--astryx-item-inset-inline), 0px);
+  }
+
+  /*
+   * `bleed`: the row fills the list, so its text sits on the container's
+   * padding line, never closer to the row's edge than its own inset. Square
+   * corners make it meet the container's straight sides, like table rows. A
+   * swiping row keeps this padding on its inner surface instead of the root,
+   * which already carries the swipe panels.
+   */
+  .astryx-list[data-edge='bleed'] > .astryx-list-item {
+    border-radius: 0;
+  }
+
+  .astryx-list[data-edge='bleed'] > .astryx-list-item:not(.astryx-item--swipe),
+  .astryx-list[data-edge='bleed'] > .astryx-list-item > .astryx-item__surface {
+    padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));
+    padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));
   }
 
   .astryx-list-marker {
@@ -110,6 +148,26 @@
 
   .astryx-item[data-align='start'] {
     align-items: flex-start;
+  }
+
+  .astryx-item[data-align='first-line'] {
+    align-items: baseline;
+  }
+
+  /*
+   * `first-line`：给前面和后面的插槽塞一根零宽度的「支柱」，行盒和 label
+   * 第一行一样大，再由插槽居中。整行按第一基线对齐时，插槽中心就落在 label
+   * 第一行中心；插槽比这一行高时把文字压下去。纯 CSS，不测量。
+   * 生成内容用空替代文本，读屏器读不到任何东西。
+   */
+  .astryx-item[data-align='first-line'] > :is(.astryx-item__start, .astryx-item__end)::before,
+  .astryx-item--swipe[data-align='first-line'] > .astryx-item__surface > :is(.astryx-item__start, .astryx-item__end)::before {
+    content: "\200B";
+    content: "\200B" / "";
+    inline-size: 0;
+    overflow: hidden;
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   .astryx-item[data-density='compact'] {
@@ -266,6 +324,10 @@
 
   .astryx-item--swipe[data-align='start'] > .astryx-item__surface {
     align-items: flex-start;
+  }
+
+  .astryx-item--swipe[data-align='first-line'] > .astryx-item__surface {
+    align-items: baseline;
   }
 
   .astryx-item--swipe[data-density='compact'] > .astryx-item__surface {

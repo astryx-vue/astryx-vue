@@ -1,5 +1,5 @@
 import type { ComputedRef, InjectionKey } from 'vue'
-import type { ListDensity, ListEdgeCompensation, ListMarkerStyle } from './types.js'
+import type { ListDensity, ListEdge, ListEdgeCompensation, ListMarkerStyle } from './types.js'
 import { computed, inject } from 'vue'
 import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
 
@@ -12,8 +12,11 @@ import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js
  */
 export interface ListContextValue {
   density: ComputedRef<ListDensity>
+  /** The resolved row edge treatment; the deprecated prop resolves into it. */
+  edge: ComputedRef<ListEdge>
   hasDividers: ComputedRef<boolean>
   listStyle: ComputedRef<ListMarkerStyle>
+  /** @deprecated Use `edge`, which it resolves into. */
   edgeCompensation: ComputedRef<ListEdgeCompensation | undefined>
 }
 

@@ -1,4 +1,6 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
+import alignFirstLineDemo from './align-first-line.vue'
+import alignFirstLineSource from './align-first-line.vue?raw&highlighted'
 import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
 import documentTabsDemo from './document-tabs.vue'
@@ -10,6 +12,7 @@ import overviewSource from './overview.vue?raw&highlighted'
 import startContentDemo from './start-content.vue'
 import startContentSource from './start-content.vue?raw&highlighted'
 
+export const itemAlignFirstLine = defineDemo(alignFirstLineDemo, alignFirstLineSource)
 export const itemBasic = defineDemo(basicDemo, basicSource)
 export const itemDocumentTabs = defineDemo(documentTabsDemo, documentTabsSource)
 export const itemMetadata = defineDemo(metadataDemo, metadataSource)

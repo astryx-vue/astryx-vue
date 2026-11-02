@@ -5,6 +5,10 @@ import bulletedDemo from './bulleted.vue'
 import bulletedSource from './bulleted.vue?raw&highlighted'
 import densitiesDemo from './densities.vue'
 import densitiesSource from './densities.vue?raw&highlighted'
+import edgeFlushDemo from './edge-flush.vue'
+import edgeFlushSource from './edge-flush.vue?raw&highlighted'
+import edgeInCardDemo from './edge-in-card.vue'
+import edgeInCardSource from './edge-in-card.vue?raw&highlighted'
 import interactiveDemo from './interactive.vue'
 import interactiveSource from './interactive.vue?raw&highlighted'
 import markersDemo from './markers.vue'
@@ -25,6 +29,8 @@ export const listBulleted = defineDemo(bulletedDemo, bulletedSource, options)
 export const listMessages = defineDemo(messagesDemo, messagesSource, options)
 export const listSteps = defineDemo(stepsDemo, stepsSource, options)
 export const listDensities = defineDemo(densitiesDemo, densitiesSource, options)
+export const listEdgeFlush = defineDemo(edgeFlushDemo, edgeFlushSource, options)
+export const listEdgeInCard = defineDemo(edgeInCardDemo, edgeInCardSource, options)
 export const listMarkers = defineDemo(markersDemo, markersSource, options)
 export const listInteractive = defineDemo(interactiveDemo, interactiveSource, options)
 export const listSwipe = defineDemo(swipeDemo, swipeSource, options)

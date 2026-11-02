@@ -4,6 +4,7 @@ import { computed, useTemplateRef } from 'vue'
 import Card from '../Card/Card.vue'
 import { useClickableContainer } from '../composables/useClickableContainer.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/clickable-card.css'
 
@@ -24,6 +25,8 @@ const containerRef = computed(() => cardRef.value?.element ?? null)
 const controlRef = computed(() => interactiveRef.value?.element ?? null)
 
 const { pressableProps } = usePressFeedback({ hasOverlay: false })
+/** 禁用时不再用原生 disabled 或 tabIndex=-1，改用可聚焦的 aria-disabled 加共用事件守卫。 */
+const disabledInteraction = computed(() => props.isDisabled ? disabledInteractionProps() : undefined)
 
 const handlers = useClickableContainer({
   containerRef,
@@ -53,6 +56,15 @@ function onSurfaceMouseUp(event: MouseEvent): void {
     return
   handlers.onMouseUp(event)
 }
+
+function onInteractiveClick(event: MouseEvent): void {
+  if (props.isDisabled) {
+    event.preventDefault()
+    event.stopPropagation()
+    return
+  }
+  emit('click', event)
+}
 </script>
 
 <template>
@@ -77,17 +89,20 @@ function onSurfaceMouseUp(event: MouseEvent): void {
       :aria-disabled="isDisabled || undefined"
       :aria-label="label"
       :href="isDisabled ? undefined : href"
-      :tabindex="isDisabled ? -1 : undefined"
-      :target="target"
+      :role="isDisabled ? 'link' : undefined"
+      :tabindex="0"
+      :target="isDisabled ? undefined : target"
+      v-bind="disabledInteraction"
     />
     <VisuallyHidden
       v-else
       ref="interactive"
       as="button"
       :aria-label="label"
-      :disabled="isDisabled"
+      :aria-disabled="isDisabled || undefined"
       type="button"
-      @click="emit('click', $event)"
+      v-bind="disabledInteraction"
+      @click="onInteractiveClick"
     />
     <slot />
   </Card>

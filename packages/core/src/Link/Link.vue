@@ -34,9 +34,17 @@ const attrs = useAttrs()
 const messages = useAstryxMessages()
 const linkComponent = useLinkComponent()
 const press = usePressFeedback()
+/**
+ * `keydown` 不直接透传：禁用时要吞掉 Enter 和 Space，其他键才交给调用方。
+ * 其余属性照常落到根元素上。
+ */
+const forwardedAttrs = computed(() => {
+  const { onKeydown: _onKeydown, ...rest } = attrs
+  return rest
+})
 /** 禁用时不挂按压层，鼠标和手指都不会亮。 */
 const rootBindings = computed(() => ({
-  ...attrs,
+  ...forwardedAttrs.value,
   ...(props.isDisabled ? {} : press.pressableProps),
 }))
 
@@ -125,12 +133,28 @@ const downloadAttribute = computed<string | undefined>(() => {
   return props.download
 })
 
+/**
+ * 禁用时只挡住这一次点击：用 `aria-disabled` 保留 Tab 停留点，元素仍会派发
+ * click，所以这里既阻止默认行为，也不让它冒泡到外层可点击容器。
+ */
 function handleClick(event: MouseEvent) {
   if (props.isDisabled) {
     event.preventDefault()
+    event.stopPropagation()
     return
   }
   emit('click', event)
+}
+
+/** 禁用时 Enter 和 Space 会合成一次点击；提前取消，其他键仍交给调用方。 */
+function handleKeydown(event: KeyboardEvent) {
+  if (props.isDisabled && (event.key === 'Enter' || event.key === ' ')) {
+    event.preventDefault()
+    return
+  }
+  const listener = attrs.onKeydown
+  if (typeof listener === 'function')
+    listener(event)
 }
 </script>
 
@@ -148,11 +172,12 @@ function handleClick(event: MouseEvent) {
       :download="downloadAttribute"
       :referrerpolicy="!isButton ? referrerPolicy : undefined"
       :type="isButton ? 'button' : undefined"
-      :disabled="isButton ? isDisabled : undefined"
       :role="isDisabled && !isButton ? 'link' : undefined"
+      :tabindex="isDisabled ? 0 : undefined"
       :aria-disabled="isDisabled || undefined"
       :aria-label="label || undefined"
       @click="handleClick"
+      @keydown="handleKeydown"
     >
       <span :class="labelClass" :style="labelStyle">
         <slot />
@@ -176,11 +201,12 @@ function handleClick(event: MouseEvent) {
     :download="downloadAttribute"
     :referrerpolicy="!isButton ? referrerPolicy : undefined"
     :type="isButton ? 'button' : undefined"
-    :disabled="isButton ? isDisabled : undefined"
     :role="isDisabled && !isButton ? 'link' : undefined"
+    :tabindex="isDisabled ? 0 : undefined"
     :aria-disabled="isDisabled || undefined"
     :aria-label="label || undefined"
     @click="handleClick"
+    @keydown="handleKeydown"
   >
     <span :class="labelClass" :style="labelStyle">
       <slot />

@@ -40664,7 +40664,7 @@
           },
           {
             "guidance": "Do",
-            "text": "Use `align=\"start\"` when start or end content is taller than a single line of text."
+            "text": "Use `align=\"first-line\"` when a wrapping label sits beside a small mark (a status dot, a radio, a timestamp) that belongs to its first line. Use `align=\"start\"` to line up the tops of a tall slot and the text."
           },
           {
             "guidance": "Do",
@@ -40711,7 +40711,7 @@
               {
                 "name": "`align`",
                 "description": "`align`",
-                "type": "`'center' | 'start'`",
+                "type": "`'center' | 'start' | 'first-line'`",
                 "default": "`'center'`"
               },
               {
@@ -40825,9 +40825,9 @@
               },
               {
                 "name": "`align`",
-                "type": "`'center' | 'start'`",
+                "type": "`'center' | 'start' | 'first-line'`",
                 "default": "`'center'`",
-                "description": "前面和后面那两块内容竖直方向怎么对齐。"
+                "description": "前面和后面那两块内容竖直方向怎么对齐。`center` 把每块对到整块文字的中心；`start` 让插槽顶部和文字顶部对齐；`first-line` 把每块对到标签第一行的中线上，标签换行时小标记也跟第一行走。插槽比这一行高时，文字会被压下去。"
               },
               {
                 "name": "`density`",
@@ -40939,7 +40939,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- 推荐: 常见排版用带名字的插槽（`startContent`、`label`、`description`、`endContent`），八成的场景这样写就够了。\n- 推荐: 菜单和密集列表用 `density=\"compact\"`，普通行用 `\"balanced\"`，宽松布局用 `\"spacious\"`。\n- 推荐: 内容长短不固定时，用 `labelLines` 和 `descriptionLines` 控制在第几行截断。\n- 推荐: 前面或后面的内容比一行字更高时，用 `align=\"start\"` 让它顶部对齐。\n- 推荐: 横滑出来的操作要在行里再留一个入口（菜单，或者 `endContent` 里的按钮）。横滑只是给手指的快捷方式，只能滑出来的操作，键盘和鼠标用户永远够不着。\n- 避免: 不要在可点的 `Item` 里再套按钮或链接。焦点和点击目标会变得难猜。\n- 避免: 不要拿 `Item` 做页面之间的跳转。那种场景用导航组件。\n- 避免: 不要把已读未读、收件箱之类的业务逻辑直接塞进来。包一层薄薄的组件（类似 PreviewItem）更好。"
+            "text": "- 推荐: 常见排版用带名字的插槽（`startContent`、`label`、`description`、`endContent`），八成的场景这样写就够了。\n- 推荐: 菜单和密集列表用 `density=\"compact\"`，普通行用 `\"balanced\"`，宽松布局用 `\"spacious\"`。\n- 推荐: 内容长短不固定时，用 `labelLines` 和 `descriptionLines` 控制在第几行截断。\n- 推荐: 换行标签旁边是归属于第一行的小标记（状态点、单选按钮、时间戳）时，用 `align=\"first-line\"`；要让较高的插槽顶部和文字顶部对齐，用 `align=\"start\"`。\n- 推荐: 横滑出来的操作要在行里再留一个入口（菜单，或者 `endContent` 里的按钮）。横滑只是给手指的快捷方式，只能滑出来的操作，键盘和鼠标用户永远够不着。\n- 避免: 不要在可点的 `Item` 里再套按钮或链接。焦点和点击目标会变得难猜。\n- 避免: 不要拿 `Item` 做页面之间的跳转。那种场景用导航组件。\n- 避免: 不要把已读未读、收件箱之类的业务逻辑直接塞进来。包一层薄薄的组件（类似 PreviewItem）更好。"
           },
           {
             "heading": "插槽",
@@ -40952,6 +40952,17 @@
         ]
       },
       "examples": [
+        {
+          "title": {
+            "en": "Align First Line",
+            "zh": "按第一行对齐"
+          },
+          "description": {
+            "en": "Center a small mark on the label's first line when the label wraps, rather than the whole text block. Set align to first-line for a status dot, a radio, or a timestamp that belongs to the first line.",
+            "zh": "标签换行时，把小标记对到标签第一行的中线上，而不是整块文字的中心。状态点、单选按钮、时间戳这类属于第一行的标记用 first-line。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Badge } from '@astryx-vue/core/Badge'\nimport { Item } from '@astryx-vue/core/List'\nimport { StatusDot } from '@astryx-vue/core/StatusDot'\nimport { Text } from '@astryx-vue/core/Text'\n</script>\n\n<template>\n  <div class=\"item-align-first-line\">\n    <Item\n      align=\"first-line\"\n      :label-lines=\"2\"\n      label=\"Quarterly planning notes are ready for the team to review\"\n      description=\"Agenda, decisions, and follow-ups\"\n    >\n      <template #startContent>\n        <StatusDot label=\"Active\" variant=\"success\" />\n      </template>\n      <template #endContent>\n        <Text color=\"secondary\">\n          12m\n        </Text>\n      </template>\n    </Item>\n    <Item\n      align=\"first-line\"\n      :label-lines=\"2\"\n      label=\"Customer research interviews are scheduled for next week\"\n    >\n      <template #startContent>\n        <StatusDot label=\"Away\" variant=\"warning\" />\n      </template>\n      <template #endContent>\n        <Badge label=\"New\" variant=\"blue\" />\n      </template>\n    </Item>\n    <Item\n      align=\"first-line\"\n      label=\"Launch checklist\"\n      description=\"Remaining tasks before release\"\n    >\n      <template #startContent>\n        <StatusDot label=\"Online\" variant=\"success\" />\n      </template>\n      <template #endContent>\n        <Text color=\"secondary\">\n          Fri\n        </Text>\n      </template>\n    </Item>\n  </div>\n</template>\n\n<style scoped>\n.item-align-first-line {\n  display: flex;\n  flex-direction: column;\n  width: min(100%, 340px);\n  min-width: 0;\n}\n</style>"
+        },
         {
           "title": {
             "en": "Basic",
@@ -61148,8 +61159,8 @@
         "zh": "`List` 用来呈现一组彼此相关的条目，`ListItem` 是其中的一行。它渲染出语义正确的 `<ul>` 或 `<ol>`，并统一安排一行内部「起始内容 + 标签 + 描述 + 结束内容」四块位置，所以设置项、通知、步骤说明这类界面不必每次都重新写一遍行布局。"
       },
       "usage": {
-        "en": "`List` presents a collection of related entries, and `ListItem` is one row inside it. The pair renders a semantic `<ul>` or `<ol>` and lays out every row as start content, label, description, and end content, so a settings screen, an inbox, or a set of steps does not have to rebuild that row layout each time.\n\nOne row needs nothing more than a `label`:\n\n```vue\n<script setup lang=\"ts\">\nimport { List, ListItem } from '@astryx-vue/core/List'\n</script>\n\n<template>\n  <List header=\"Inbox\">\n    <ListItem label=\"Mentions\" description=\"Comments that name you\" />\n    <ListItem label=\"Build finished\" description=\"main passed every check\" />\n  </List>\n</template>\n```\n\n`description` is the secondary line under the label. The `startContent` and `endContent` slots place an icon, an avatar, a badge, or an action at either end of the row, and `label` and `description` each have a same-named slot for content that needs richer markup than a string.\n\nThe list sets the density for all of its rows, and a single row can override it. `compact` uses 4px of block padding, `balanced` is the 8px default, and `spacious` uses 12px and widens the inline padding by one step as well. `hasDividers` rules a line between neighbouring rows, and the last row never draws one.\n\n`listStyle` decides what appears in front of each row: `disc` draws a filled bullet, `circle` draws an outlined one, and `decimal` switches the list to an `<ol>` and numbers the rows, with `start` choosing the first number. The default `none` draws no marker at all.\n\nA row becomes interactive in one of two ways. Give it `onClick` and a button appears inside the row, filling the content area, so keyboard users can tab to it and press Enter or Space; give it `href` and that same place becomes a link, with `noopener` and `noreferrer` added automatically when `target=\"_blank\"`. Clicking another control inside the row, such as a button in `endContent`, does not run the row's own action.\n\n`isSelected` marks the row as selected. When the row carries a role that permits `aria-selected` — `option`, `tab`, or `row`, for instance — the state is written there; otherwise it falls back to `aria-current=\"true\"`, which is valid on any element, so assistive technology still hears which row is current. `isDisabled` makes the row inert and dims its content.\n\nThe `header` slot renders a title above the list and associates it through `aria-labelledby`, so a screen reader announces the title when it enters the list. `edgeCompensation=\"inline\"` is for a list placed inside a padded container: it pulls every row toward the container's inline content edges so the row text lines up with a sibling heading, cancelling no more than the container padding each edge actually publishes.\n\nThe package also exports the more general `Item` primitive. `ListItem` is that primitive rendered as an `<li>` with the density and marker from its list; use `Item` directly when the same row layout is needed outside a list, or when you need its extra controls — `as`, `align`, `labelLines`, `descriptionLines`, and `layout`. Most screens only need `List` and `ListItem`.",
-        "zh": "`List` 用来呈现一组彼此相关的条目，`ListItem` 是其中的一行。它渲染出语义正确的 `<ul>` 或 `<ol>`，并统一安排一行内部「起始内容 + 标签 + 描述 + 结束内容」四块位置，所以设置项、通知、步骤说明这类界面不必每次都重新写一遍行布局。\n\n一行最少只需要一个 `label`：\n\n```vue\n<script setup lang=\"ts\">\nimport { List, ListItem } from '@astryx-vue/core/List'\n</script>\n\n<template>\n  <List header=\"Inbox\">\n    <ListItem label=\"Mentions\" description=\"Comments that name you\" />\n    <ListItem label=\"Build finished\" description=\"main passed every check\" />\n  </List>\n</template>\n```\n\n`description` 是标签下方的次要文字。使用 `startContent` 和 `endContent` 两个插槽可以把图标、头像、徽章或操作按钮放在行的两端；`label` 和 `description` 也各有一个同名插槽，当文字需要用富文本表达时改用它即可。\n\n列表的密度由 `List` 的 `density` 统一决定，单行可以用 `ListItem` 的 `density` 覆盖它。`compact` 对应 4 像素的上下内边距，`balanced` 是默认的 8 像素，`spacious` 是 12 像素并把左右内边距也放宽一档。`hasDividers` 会在相邻两行之间画一条分隔线，最后一行不会画。\n\n`listStyle` 决定每行前面画什么标记：`disc` 是实心圆点，`circle` 是空心圆点，`decimal` 会改用 `<ol>` 渲染并给出序号，`start` 用来指定序号从几开始。不需要标记时保持默认的 `none`。\n\n一行可以通过两种方式变成可交互。给出 `onClick` 之后，行内部会出现一个占满内容区的按钮，键盘用户可以用 Tab 聚焦它、用回车或空格触发；给出 `href` 时同一位置会变成链接，`target=\"_blank\"` 会自动补上 `noopener` 和 `noreferrer`。点击行内的其他控件（例如 `endContent` 里的按钮）不会触发这一行自己的动作。\n\n`isSelected` 把行标记为选中。如果这一行带有允许 `aria-selected` 的角色，例如 `option`、`tab` 或 `row`，状态会写进 `aria-selected`；否则会退回到在任何元素上都合法的 `aria-current=\"true\"`，屏幕阅读器仍然能读到当前项。`isDisabled` 会让行变成惰性的，并把它的内容调淡。\n\n`header` 插槽会在列表上方渲染一段标题，并用 `aria-labelledby` 与列表关联起来，于是屏幕阅读器在进入列表时会先读出这个标题。`edgeCompensation=\"inline\"` 用于把列表放在带内边距的容器里时让每一行的文字与同级的标题对齐：它会按每个逻辑边缘各自可用的容器内边距，抵消掉行自身的左右内边距，最多抵消到零。\n\n包里同时导出了更通用的原语 `Item`。`ListItem` 就是它在 `<li>` 上的一层封装，加上来自 `List` 的密度和标记；需要在非列表结构里复用同一套行布局时，可以直接使用 `Item`，它能通过 `as` 决定根元素，并提供 `align`、`labelLines`、`descriptionLines`、`layout` 等额外控制。大多数界面只需要 `List` 和 `ListItem`。"
+        "en": "`List` presents a collection of related entries, and `ListItem` is one row inside it. The pair renders a semantic `<ul>` or `<ol>` and lays out every row as start content, label, description, and end content, so a settings screen, an inbox, or a set of steps does not have to rebuild that row layout each time.\n\nOne row needs nothing more than a `label`:\n\n```vue\n<script setup lang=\"ts\">\nimport { List, ListItem } from '@astryx-vue/core/List'\n</script>\n\n<template>\n  <List header=\"Inbox\">\n    <ListItem label=\"Mentions\" description=\"Comments that name you\" />\n    <ListItem label=\"Build finished\" description=\"main passed every check\" />\n  </List>\n</template>\n```\n\n`description` is the secondary line under the label. The `startContent` and `endContent` slots place an icon, an avatar, a badge, or an action at either end of the row, and `label` and `description` each have a same-named slot for content that needs richer markup than a string.\n\nThe list sets the density for all of its rows, and a single row can override it. `compact` uses 4px of block padding, `balanced` is the 8px default, and `spacious` uses 12px and widens the inline padding by one step as well. `hasDividers` rules a line between neighbouring rows, and the last row never draws one.\n\n`listStyle` decides what appears in front of each row: `disc` draws a filled bullet, `circle` draws an outlined one, and `decimal` switches the list to an `<ol>` and numbers the rows, with `start` choosing the first number. The default `none` draws no marker at all.\n\nA row becomes interactive in one of two ways. Give it `onClick` and a button appears inside the row, filling the content area, so keyboard users can tab to it and press Enter or Space; give it `href` and that same place becomes a link, with `noopener` and `noreferrer` added automatically when `target=\"_blank\"`. Clicking another control inside the row, such as a button in `endContent`, does not run the row's own action.\n\n`isSelected` marks the row as selected. When the row carries a role that permits `aria-selected` — `option`, `tab`, or `row`, for instance — the state is written there; otherwise it falls back to `aria-current=\"true\"`, which is valid on any element, so assistive technology still hears which row is current. `isDisabled` makes the row inert and dims its content.\n\nThe `header` slot renders a title above the list and associates it through `aria-labelledby`, so a screen reader announces the title when it enters the list.\n\n`edge` decides where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. The default `padded` keeps the row's own inline padding. `flush` removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. `outset` keeps text on that line and lets lines and backgrounds reach into the container's padding. `bleed` puts text on the container's padding line and runs lines and backgrounds to its edges with square corners, like table rows in a Card. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading.\n\n`outset` and `bleed` read the padding published by the nearest container that shares it: a Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region. Place the list directly in that container's padding; padding that Stack, Center, or your own styles add in between is not counted. With no such container, such as a standalone list or one in a Popover, they look like `padded`. `edgeCompensation=\"inline\"` still works as a deprecated alias of `edge=\"outset\"`; set `edge` in new code.\n\nThe package also exports the more general `Item` primitive. `ListItem` is that primitive rendered as an `<li>` with the density and marker from its list; use `Item` directly when the same row layout is needed outside a list, or when you need its extra controls — `as`, `align`, `labelLines`, `descriptionLines`, and `layout`. Most screens only need `List` and `ListItem`.",
+        "zh": "`List` 用来呈现一组彼此相关的条目，`ListItem` 是其中的一行。它渲染出语义正确的 `<ul>` 或 `<ol>`，并统一安排一行内部「起始内容 + 标签 + 描述 + 结束内容」四块位置，所以设置项、通知、步骤说明这类界面不必每次都重新写一遍行布局。\n\n一行最少只需要一个 `label`：\n\n```vue\n<script setup lang=\"ts\">\nimport { List, ListItem } from '@astryx-vue/core/List'\n</script>\n\n<template>\n  <List header=\"Inbox\">\n    <ListItem label=\"Mentions\" description=\"Comments that name you\" />\n    <ListItem label=\"Build finished\" description=\"main passed every check\" />\n  </List>\n</template>\n```\n\n`description` 是标签下方的次要文字。使用 `startContent` 和 `endContent` 两个插槽可以把图标、头像、徽章或操作按钮放在行的两端；`label` 和 `description` 也各有一个同名插槽，当文字需要用富文本表达时改用它即可。\n\n列表的密度由 `List` 的 `density` 统一决定，单行可以用 `ListItem` 的 `density` 覆盖它。`compact` 对应 4 像素的上下内边距，`balanced` 是默认的 8 像素，`spacious` 是 12 像素并把左右内边距也放宽一档。`hasDividers` 会在相邻两行之间画一条分隔线，最后一行不会画。\n\n`listStyle` 决定每行前面画什么标记：`disc` 是实心圆点，`circle` 是空心圆点，`decimal` 会改用 `<ol>` 渲染并给出序号，`start` 用来指定序号从几开始。不需要标记时保持默认的 `none`。\n\n一行可以通过两种方式变成可交互。给出 `onClick` 之后，行内部会出现一个占满内容区的按钮，键盘用户可以用 Tab 聚焦它、用回车或空格触发；给出 `href` 时同一位置会变成链接，`target=\"_blank\"` 会自动补上 `noopener` 和 `noreferrer`。点击行内的其他控件（例如 `endContent` 里的按钮）不会触发这一行自己的动作。\n\n`isSelected` 把行标记为选中。如果这一行带有允许 `aria-selected` 的角色，例如 `option`、`tab` 或 `row`，状态会写进 `aria-selected`；否则会退回到在任何元素上都合法的 `aria-current=\"true\"`，屏幕阅读器仍然能读到当前项。`isDisabled` 会让行变成惰性的，并把它的内容调淡。\n\n`header` 插槽会在列表上方渲染一段标题，并用 `aria-labelledby` 与列表关联起来，于是屏幕阅读器在进入列表时会先读出这个标题。\n\n`edge` 决定每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。默认的 `padded` 保留行自身的内边距。`flush` 去掉这段内边距，文字顶到列表上方标题所在的竖线，分隔线和背景也止于文字。`outset` 同样把文字放在这条线上，让分隔线和背景伸进容器的内边距。`bleed` 让文字落在容器的内边距线上，分隔线和背景一直铺到容器边缘、四角为直角，像 Card 里的表格行。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。\n\n`outset` 和 `bleed` 读取最近的、共享内边距的容器公布的数值：Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域。列表要直接放在这个容器的内边距里；Stack、Center 或你自己的样式在中间加的内边距不计入。没有这样的容器时（单独的列表、Popover 里的列表），它们和 `padded` 表现一样。`edgeCompensation=\"inline\"` 仍然可用，是 `edge=\"outset\"` 的弃用别名；新代码请写 `edge`。\n\n包里同时导出了更通用的原语 `Item`。`ListItem` 就是它在 `<li>` 上的一层封装，加上来自 `List` 的密度和标记；需要在非列表结构里复用同一套行布局时，可以直接使用 `Item`，它能通过 `as` 决定根元素，并提供 `align`、`labelLines`、`descriptionLines`、`layout` 等额外控制。大多数界面只需要 `List` 和 `ListItem`。"
       },
       "practices": {
         "en": [
@@ -61168,6 +61179,10 @@
           {
             "guidance": "Do",
             "text": "Set `descriptionLines` when the length of the content varies, or rely on the default single-line truncation for string descriptions, so the row height does not jump."
+          },
+          {
+            "guidance": "Do",
+            "text": "Use `edge` to line row text up with a heading above the list: `flush` for static rows, `outset` or `bleed` for rows inside a Card, Section, or BottomSheet."
           },
           {
             "guidance": "Don't",
@@ -61198,6 +61213,10 @@
           {
             "guidance": "推荐",
             "text": "内容长度不定时给出 `descriptionLines`，或者让组件按默认的单行截断来裁剪字符串描述，避免行高随文字跳动。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "用 `edge` 让行文字与列表上方的标题对齐：静态行用 `flush`，Card、Section 或 BottomSheet 里的行用 `outset` 或 `bleed`。"
           },
           {
             "guidance": "避免",
@@ -61231,10 +61250,16 @@
                 "description": "Whether to rule a line between neighbouring rows. The last row never draws one, and rows lose their rounded corners while dividers are on."
               },
               {
+                "name": "`edge`",
+                "type": "`'padded' | 'flush' | 'outset' | 'bleed'`",
+                "default": "`'padded'`",
+                "description": "Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. `padded` keeps the row's own inline padding. `flush` removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. `outset` keeps text on that line and lets lines and backgrounds reach into the container's padding. `bleed` puts text on the container's padding line and runs lines and backgrounds to its edges with square corners, like table rows. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. `outset` and `bleed` read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like `padded` when there is none."
+              },
+              {
                 "name": "`edgeCompensation`",
                 "type": "`'inline'`",
                 "default": "-",
-                "description": "Cancels each row's inline inset, up to the container padding published on each edge, so row text lines up with a sibling heading. It reads `--container-padding-inline-start` and `--container-padding-inline-end` and treats a missing value as zero, so a row is never pulled outside its container. Omitting the prop leaves row positions unchanged."
+                "description": "Deprecated: use `edge=\"outset\"`, which this sets. Still works; `edge` wins when both are set."
               },
               {
                 "name": "`listStyle`",
@@ -61380,10 +61405,16 @@
                 "description": "是否在相邻两行之间绘制分隔线。最后一行不会绘制，带分隔线时行不再有圆角。"
               },
               {
+                "name": "`edge`",
+                "type": "`'padded' | 'flush' | 'outset' | 'bleed'`",
+                "default": "`'padded'`",
+                "description": "每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。`padded` 保留行自身的内边距；`flush` 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；`outset` 把文字放在这条线上，让分隔线和背景伸进容器的内边距；`bleed` 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、四角为直角，像表格行。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。`outset` 和 `bleed` 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 `padded` 表现一样。"
+              },
+              {
                 "name": "`edgeCompensation`",
                 "type": "`'inline'`",
                 "default": "-",
-                "description": "按每个逻辑边缘可用的容器内边距，抵消行自身的左右内边距，让行内文字与同级标题对齐。它读取容器发布的 `--container-padding-inline-start` 与 `--container-padding-inline-end`，没有发布时按 0 处理，因此不会把行拉出容器之外。省略时行的位置不变。"
+                "description": "已弃用：请改用 `edge=\"outset\"`，两者位置相同。仍然可用；两者同时设置时以 `edge` 为准。"
               },
               {
                 "name": "`listStyle`",
@@ -61611,7 +61642,7 @@
           },
           {
             "heading": "List",
-            "text": "The root element is a `<ul>`, or an `<ol>` when <code>listStyle=\"decimal\"</code>. A header adds a wrapper element around it.\n\nThe following go to the list element:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`.\n\nThe component writes `role=\"list\"`, `data-density`, `data-dividers`, `data-list-style`, and `data-edge-compensation`. Without a rendered header an `aria-labelledby` you pass is kept; with one, the list's own header takes over."
+            "text": "The root element is a `<ul>`, or an `<ol>` when <code>listStyle=\"decimal\"</code>. A header adds a wrapper element around it.\n\nThe following go to the list element:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`.\n\nThe component writes `role=\"list\"`, `data-density`, `data-dividers`, `data-list-style`, and `data-edge` (the resolved `padded`, `flush`, `outset`, or `bleed`), plus `data-edge-compensation` while the deprecated prop is set. Without a rendered header an `aria-labelledby` you pass is kept; with one, the list's own header takes over."
           },
           {
             "heading": "ListItem / Item",
@@ -61629,7 +61660,7 @@
           },
           {
             "heading": "List",
-            "text": "根元素是 `<ul>`，`listStyle=\"decimal\"` 时是 `<ol>`；给出 `header` 时外层会多一个包裹元素。\n\n以下内容传入列表元素：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。\n\n组件自己写入 `role=\"list\"`、`data-density`、`data-dividers`、`data-list-style` 与 `data-edge-compensation`。未渲染 `header` 时，使用方传入的 `aria-labelledby` 会保留；渲染了 `header` 时由组件的标题接管。"
+            "text": "根元素是 `<ul>`，`listStyle=\"decimal\"` 时是 `<ol>`；给出 `header` 时外层会多一个包裹元素。\n\n以下内容传入列表元素：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。\n\n组件自己写入 `role=\"list\"`、`data-density`、`data-dividers`、`data-list-style` 与 `data-edge`（解析后的 `padded`、`flush`、`outset` 或 `bleed`）；弃用的 prop 有值时还会写入 `data-edge-compensation`。未渲染 `header` 时，使用方传入的 `aria-labelledby` 会保留；渲染了 `header` 时由组件的标题接管。"
           },
           {
             "heading": "ListItem / Item",
@@ -61692,6 +61723,28 @@
             "zh": "触摸横滑露出归档。鼠标不会开始这次拖动，所以同一操作还要留在行里。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { ref } from 'vue'\n\nconst note = ref('Swipe the row on a touch screen. Archive stays in the row for keyboard and mouse.')\n\nfunction archive(): void {\n  note.value = 'Archived.'\n}\n</script>\n\n<template>\n  <List>\n    <ListItem\n      label=\"Invoice 1042\"\n      description=\"Due Friday\"\n      :swipe-actions=\"{ trailing: [{ label: 'Archive', onActivate: archive, variant: 'accent' }] }\"\n    >\n      <template #endContent>\n        <Button label=\"Archive\" size=\"sm\" variant=\"secondary\" @click=\"archive\" />\n      </template>\n    </ListItem>\n  </List>\n  <p>{{ note }}</p>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Flush rows",
+            "zh": "标题对齐"
+          },
+          "description": {
+            "en": "Static rows with flush drop their inline padding, so text, dividers, and backgrounds all sit on the heading's line.",
+            "zh": "静态行用 flush 去掉左右内边距，文字、分隔线和背景都落在标题的竖线上。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Heading } from '@astryx-vue/core/Heading'\nimport { List, ListItem } from '@astryx-vue/core/List'\n</script>\n\n<template>\n  <div class=\"list-preview__section\">\n    <Heading :level=\"4\">\n      Shipping\n    </Heading>\n    <List edge=\"flush\" has-dividers>\n      <ListItem label=\"Standard\" description=\"Arrives in 5–7 days\" />\n      <ListItem label=\"Express\" description=\"Arrives tomorrow\" />\n      <ListItem label=\"Pickup\" description=\"Ready at the counter\" />\n    </List>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Edge in a card",
+            "zh": "卡片内的行边缘"
+          },
+          "description": {
+            "en": "Interactive rows in a Card use outset so text lines up with the heading while backgrounds keep their room; bleed runs rows to the card's edges with square corners, like table rows.",
+            "zh": "Card 里的可交互行用 outset 让文字对齐标题、背景保留余量；bleed 则像表格行一样铺到卡片边缘，四角为直角。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Card } from '@astryx-vue/core/Card'\nimport { Heading } from '@astryx-vue/core/Heading'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { ref } from 'vue'\n\nconst outsetSelected = ref('mentions')\nconst bleedSelected = ref('mentions')\n</script>\n\n<template>\n  <div class=\"list-preview__stack\">\n    <Card :width=\"360\">\n      <VStack :gap=\"2\">\n        <Heading :level=\"4\">\n          Outset rows\n        </Heading>\n        <List edge=\"outset\" has-dividers>\n          <ListItem\n            label=\"Mentions\"\n            description=\"Comments that name you\"\n            :is-selected=\"outsetSelected === 'mentions'\"\n            @click=\"outsetSelected = 'mentions'\"\n          />\n          <ListItem\n            label=\"Follows\"\n            description=\"New followers this week\"\n            :is-selected=\"outsetSelected === 'follows'\"\n            @click=\"outsetSelected = 'follows'\"\n          />\n        </List>\n      </VStack>\n    </Card>\n    <Card :width=\"360\">\n      <VStack :gap=\"2\">\n        <Heading :level=\"4\">\n          Bleed rows\n        </Heading>\n        <List edge=\"bleed\" has-dividers>\n          <ListItem\n            label=\"Mentions\"\n            description=\"Comments that name you\"\n            :is-selected=\"bleedSelected === 'mentions'\"\n            @click=\"bleedSelected = 'mentions'\"\n          />\n          <ListItem\n            label=\"Follows\"\n            description=\"New followers this week\"\n            :is-selected=\"bleedSelected === 'follows'\"\n            @click=\"bleedSelected = 'follows'\"\n          />\n        </List>\n      </VStack>\n    </Card>\n  </div>\n</template>"
         }
       ],
       "anatomy": {

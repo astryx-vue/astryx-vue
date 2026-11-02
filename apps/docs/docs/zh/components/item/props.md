@@ -12,7 +12,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string | number</code></td><td>—</td><td>这一行的主文字。写字符串或数字时只显示一行；要放别的内容就用 <code>label</code> 插槽。</td></tr>
 <tr><td><code>description</code></td><td><code>string | number</code></td><td>—</td><td>主文字下面那行小字，同样只显示一行。要多行或者放别的内容就用 <code>description</code> 插槽。</td></tr>
 <tr><td><code>as</code></td><td><code>ItemElement</code>（标签名或组件）</td><td><code>'div'</code></td><td>根元素渲染成什么。只有在这一行自带 <code>role</code>、键盘交给父级管、并且行里不会多出一个 Tab 停留点时，才传组件；另外 <code>startContent</code> 和 <code>endContent</code> 里也不能放控件。</td></tr>
-<tr><td><code>align</code></td><td><code>'center' | 'start'</code></td><td><code>'center'</code></td><td>前面和后面那两块内容竖直方向怎么对齐。</td></tr>
+<tr><td><code>align</code></td><td><code>'center' | 'start' | 'first-line'</code></td><td><code>'center'</code></td><td>前面和后面那两块内容竖直方向怎么对齐。<code>center</code> 把每块对到整块文字的中心；<code>start</code> 让插槽顶部和文字顶部对齐；<code>first-line</code> 把每块对到标签第一行的中线上，标签换行时小标记也跟第一行走。插槽比这一行高时，文字会被压下去。</td></tr>
 <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>疏密。<code>compact</code> 上下各 4px，<code>balanced</code> 8px，<code>spacious</code> 上下左右各 12px。</td></tr>
 <tr><td><code>layout</code></td><td><code>'stacked' | 'inline'</code></td><td><code>'stacked'</code></td><td><code>stacked</code> 让说明单独占一行。<code>inline</code> 把说明和主文字放同一行，空间不够先截断说明，这样这一行能塞进高度固定的容器。</td></tr>
 <tr><td><code>labelLines</code></td><td><code>number</code></td><td>—</td><td>主文字最多显示几行，超过就用省略号。不传时，字符串主文字只显示一行。</td></tr>

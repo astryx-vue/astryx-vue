@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, ref } from 'vue'
 import ClickableCard from './ClickableCard.vue'
 
@@ -37,16 +37,58 @@ describe('clickable card', () => {
     expect(wrapper.vm.clicks).toBe(0)
   })
 
-  it('renders a link when href is set and disables it', () => {
+  it('renders a disabled link that keeps its tab stop and stays inert', () => {
+    const onClick = vi.fn()
     const wrapper = mount(ClickableCard, {
-      props: { label: 'Docs', href: '/docs', isDisabled: true },
+      attachTo: document.body,
+      props: { label: 'Docs', href: '/docs', isDisabled: true, onClick },
       slots: { default: 'Docs' },
     })
     const link = wrapper.get('a')
+
     expect(link.attributes('aria-disabled')).toBe('true')
-    expect(link.attributes('tabindex')).toBe('-1')
+    expect(link.attributes('role')).toBe('link')
+    expect(link.attributes('tabindex')).toBe('0')
+    expect(link.attributes('href')).toBeUndefined()
     expect(wrapper.get('.astryx-card').attributes('data-disabled')).toBe('true')
     expect(wrapper.get('.astryx-card').attributes('data-astryx-pressable')).toBeUndefined()
+
+    ;(link.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(link.element)
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+    link.element.dispatchEvent(click)
+    expect(click.defaultPrevented).toBe(true)
+    expect(onClick).not.toHaveBeenCalled()
+
+    wrapper.unmount()
+  })
+
+  it('keeps a disabled action card focusable and inert', async () => {
+    const onClick = vi.fn()
+    const wrapper = mount(ClickableCard, {
+      attachTo: document.body,
+      props: { label: 'Docs', isDisabled: true, onClick },
+      slots: { default: 'Docs' },
+    })
+    const button = wrapper.get('button')
+
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
+
+    ;(button.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(button.element)
+
+    for (const key of ['Enter', ' ']) {
+      const keydown = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+      button.element.dispatchEvent(keydown)
+      expect(keydown.defaultPrevented).toBe(true)
+    }
+
+    await button.trigger('click')
+    expect(onClick).not.toHaveBeenCalled()
+
+    wrapper.unmount()
   })
 
   it('marks an enabled card as pressable', () => {

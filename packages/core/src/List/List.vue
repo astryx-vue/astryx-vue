@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
-import type { ListProps, ListSlots } from './types.js'
+import type { ListEdge, ListProps, ListSlots } from './types.js'
 import { computed, provide, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { useDevWarning } from '../composables/useDevWarning.js'
 import { listContextKey } from './context.js'
 import '../../styles/list.css'
 
@@ -28,8 +29,18 @@ const tag = computed(() => (props.listStyle === 'decimal' ? 'ol' : 'ul'))
 const hasStartAttribute = computed(() => props.listStyle === 'decimal' && props.start !== 1)
 const counterStart = computed(() => (hasStartAttribute.value ? `astryx-list ${props.start - 1}` : undefined))
 
+/** The deprecated prop is an alias of `outset`; an explicit `edge` wins over it. */
+const edge = computed<ListEdge>(() => props.edge ?? (props.edgeCompensation === 'inline' ? 'outset' : 'padded'))
+
+useDevWarning(
+  'List',
+  '`edge` and the deprecated `edgeCompensation` are both set; `edge` wins. Remove `edgeCompensation`.',
+  () => props.edge != null && props.edgeCompensation != null,
+)
+
 provide(listContextKey, {
   density: computed(() => props.density),
+  edge,
   edgeCompensation: computed(() => props.edgeCompensation),
   hasDividers: computed(() => props.hasDividers),
   listStyle: computed(() => props.listStyle),
@@ -51,6 +62,7 @@ const listAttrs = computed<Record<string, unknown>>(() => {
     'start': hasStartAttribute.value ? props.start : undefined,
     'data-density': props.density,
     'data-dividers': props.hasDividers || undefined,
+    'data-edge': edge.value,
     'data-edge-compensation': props.edgeCompensation,
     'data-list-style': props.listStyle,
     ...(hasHeader.value ? { 'aria-labelledby': headerId } : undefined),

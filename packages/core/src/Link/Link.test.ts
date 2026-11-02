@@ -75,22 +75,70 @@ describe('link', () => {
     expect(anchor.classes()).toContain('astryx-link--underlined')
   })
 
-  it('prevents navigation when disabled', () => {
+  it('keeps a disabled anchor focusable, announced as a link, and inert', async () => {
     const onClick = vi.fn()
-    const wrapper = mount(Link, {
-      props: {
-        href: '/',
-        isDisabled: true,
-        onClick,
-      },
-      slots: {
-        default: 'Disabled',
-      },
-    })
+    const ancestorClick = vi.fn()
+    const wrapper = mount(defineComponent({
+      render: () => h('div', { onClick: ancestorClick }, [
+        h(Link, { href: '/', isDisabled: true, onClick }, () => 'Disabled'),
+      ]),
+    }), { attachTo: document.body })
+    const anchor = wrapper.get('a')
 
-    const anchor = wrapper.find('a')
     expect(anchor.classes()).toContain('astryx-link--disabled')
     expect(anchor.attributes('aria-disabled')).toBe('true')
+    expect(anchor.attributes('role')).toBe('link')
+    expect(anchor.attributes('tabindex')).toBe('0')
+    expect(anchor.attributes('href')).toBeUndefined()
+
+    ;(anchor.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(anchor.element)
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+    anchor.element.dispatchEvent(click)
+    expect(click.defaultPrevented).toBe(true)
+    expect(onClick).not.toHaveBeenCalled()
+    expect(ancestorClick).not.toHaveBeenCalled()
+
+    wrapper.unmount()
+  })
+
+  it('keeps a disabled button fallback focusable and does not activate it', async () => {
+    const onClick = vi.fn()
+    const onKeydown = vi.fn()
+    const ancestorClick = vi.fn()
+    const wrapper = mount(defineComponent({
+      render: () => h('div', { onClick: ancestorClick }, [
+        h(Link, { isDisabled: true, onClick, onKeydown }, () => 'Disabled Action'),
+      ]),
+    }), { attachTo: document.body })
+    const button = wrapper.get('button')
+
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
+
+    ;(button.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(button.element)
+
+    for (const key of ['Enter', ' ']) {
+      const keydown = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+      button.element.dispatchEvent(keydown)
+      expect(keydown.defaultPrevented).toBe(true)
+    }
+    expect(onKeydown).not.toHaveBeenCalled()
+
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    button.element.dispatchEvent(escape)
+    expect(escape.defaultPrevented).toBe(false)
+    expect(onKeydown).toHaveBeenCalledTimes(1)
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+    button.element.dispatchEvent(click)
+    expect(click.defaultPrevented).toBe(true)
+    expect(onClick).not.toHaveBeenCalled()
+    expect(ancestorClick).not.toHaveBeenCalled()
+
+    wrapper.unmount()
   })
 
   it('adds the standalone class and a tooltip', () => {
