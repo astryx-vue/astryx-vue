@@ -274,3 +274,80 @@ describe('power search', () => {
     expect(wrapper.get('.astryx-field').attributes('for') ?? wrapper.get('label').attributes('for')).toBe('search-id')
   })
 })
+
+describe('power search filter removal', () => {
+  const nameFilter: PowerSearchFilter = { field: 'name', operator: 'is', value: { type: 'string', value: 'ali' } }
+  const activeFilter: PowerSearchFilter = { field: 'active', operator: 'is_true', value: { type: 'empty' } }
+
+  function mountFilters(initial: PowerSearchFilter[]) {
+    const filters = ref<PowerSearchFilter[]>([...initial])
+    const wrapper = mount(PowerSearch, {
+      props: {
+        config,
+        'filters': filters.value,
+        'onUpdate:filters': (next: PowerSearchFilter[]) => {
+          filters.value = next
+        },
+      },
+      attachTo: document.body,
+    })
+    return { filters, wrapper }
+  }
+
+  it('clears every filter with one press of the clear button', async () => {
+    const { filters, wrapper } = mountFilters([])
+    const addActive = async () => {
+      await wrapper.get('input').trigger('focus')
+      await flushPromises()
+      await nextTick()
+      const option = [...document.body.querySelectorAll('[role="option"]')]
+        .find(node => node.textContent?.includes('Active'))
+      expect(option).toBeTruthy()
+      option?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+      await nextTick()
+      await wrapper.setProps({ filters: filters.value })
+    }
+
+    await addActive()
+    await addActive()
+    expect(filters.value).toHaveLength(2)
+    expect(wrapper.findAll('.astryx-power-search-tokens .astryx-power-search-token')).toHaveLength(2)
+
+    await wrapper.get('.astryx-power-search-clear').trigger('click')
+    await wrapper.setProps({ filters: filters.value })
+
+    expect(filters.value).toEqual([])
+    expect(wrapper.findAll('.astryx-power-search-tokens .astryx-power-search-token')).toHaveLength(0)
+    expect(wrapper.find('.astryx-power-search-clear').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('removes only the filter whose remove button was pressed', async () => {
+    const { filters, wrapper } = mountFilters([nameFilter, activeFilter])
+    const removeButtons = wrapper.findAll('.astryx-power-search-tokens .astryx-token-remove')
+    expect(removeButtons).toHaveLength(2)
+
+    await removeButtons[0]!.trigger('click')
+    await wrapper.setProps({ filters: filters.value })
+
+    expect(filters.value).toEqual([activeFilter])
+    expect(wrapper.get('.astryx-power-search-tokens').text()).toContain('Active')
+    expect(wrapper.findAll('.astryx-power-search-tokens .astryx-token-remove')).toHaveLength(1)
+    expect(wrapper.find('.astryx-power-search-clear').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('removes only the last filter with backspace on an empty input', async () => {
+    const { filters, wrapper } = mountFilters([nameFilter, activeFilter])
+    const input = wrapper.get('input')
+    await input.trigger('focus')
+    await input.trigger('keydown', { key: 'Backspace' })
+    await wrapper.setProps({ filters: filters.value })
+
+    expect(filters.value).toEqual([nameFilter])
+    expect(wrapper.get('.astryx-power-search-tokens').text()).toContain('Name')
+    expect(wrapper.findAll('.astryx-power-search-tokens .astryx-token-remove')).toHaveLength(1)
+    expect(wrapper.find('.astryx-power-search-clear').exists()).toBe(true)
+    wrapper.unmount()
+  })
+})
