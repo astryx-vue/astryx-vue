@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AvatarGroupOverflowEmits, AvatarGroupOverflowProps, AvatarGroupOverflowSlots } from './types.js'
-import { computed, getCurrentInstance } from 'vue'
+import { computed, getCurrentInstance, useAttrs } from 'vue'
 
 import { resolveSize } from '../Avatar/utils.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
@@ -16,6 +16,7 @@ const emit = defineEmits<AvatarGroupOverflowEmits>()
 defineSlots<AvatarGroupOverflowSlots>()
 
 const instance = getCurrentInstance()
+const attrs = useAttrs()
 const messages = useAstryxMessages()
 const press = usePressFeedback()
 
@@ -56,6 +57,9 @@ const rootStyle = computed(() => ({
   '--astryx-avatar-group-overflow-computed-font-size': `max(var(--astryx-text-supporting-size, 0.75rem), ${Math.round(numericSize.value * OVERFLOW_FONT_RATIO * 100) / 100}px)`,
 }))
 const pressBindings = computed(() => isInteractive.value ? press.pressableProps : {})
+
+/** 静态指示器的 `img` 语义可以被调用方换掉，比如标成 `note`。 */
+const staticRole = computed(() => (attrs.role as string | undefined) ?? 'img')
 </script>
 
 <template>
@@ -70,7 +74,7 @@ const pressBindings = computed(() => isInteractive.value ? press.pressableProps 
     :data-avatar-item="isInteractive ? '' : undefined"
     :type="isInteractive ? 'button' : undefined"
     :aria-label="accessibleName"
-    :role="isInteractive ? undefined : 'img'"
+    :role="isInteractive ? undefined : staticRole"
     @click="emit('click', $event)"
   >
     <slot>{{ `+${safeCount}` }}</slot>

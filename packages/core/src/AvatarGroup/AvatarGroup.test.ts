@@ -164,3 +164,17 @@ describe('avatarGroup', () => {
     expect(named.get('.astryx-avatar-group').attributes('aria-label')).toBe('Reviewers')
   })
 })
+
+describe('avatarGroupOverflow', () => {
+  it('exposes the static overflow as a named image', () => {
+    const wrapper = mount(AvatarGroupOverflow, { props: { count: 5 } })
+    const overflow = wrapper.get('.astryx-avatar-group-overflow')
+    expect(overflow.attributes('role')).toBe('img')
+    expect(overflow.attributes('aria-label')).toContain('5')
+  })
+
+  it('keeps a caller-supplied role on the static overflow', () => {
+    const wrapper = mount(AvatarGroupOverflow, { props: { count: 5 }, attrs: { role: 'note' } })
+    expect(wrapper.get('.astryx-avatar-group-overflow').attributes('role')).toBe('note')
+  })
+})
