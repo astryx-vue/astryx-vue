@@ -27,6 +27,7 @@ import '@astryx-vue/lab/lab.css'
 | [MobileTokenizer](/en/lab/mobile-tokenizer) | Search and select in a bottom sheet. |
 | [TransferList](/en/lab/transfer-list) | Move and reorder options between two panels. |
 | [CircularProgress](/en/lab/circular-progress) | Determinate and indeterminate ring progress. |
+| [DiffViewer](/en/lab/diff-viewer) | Unified or split diff for one file. |
 | [InfoTip](/en/lab/info-tip) | Supplementary explanations for terms and metrics. |
 | [LogStream](/en/lab/log-stream) | Expandable logs with an optional live tail. |
 | [Stat](/en/lab/stat) | Key metrics and trends. |
