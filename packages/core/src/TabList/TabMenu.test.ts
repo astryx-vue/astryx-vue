@@ -47,6 +47,33 @@ describe('tab menu', () => {
     wrapper.unmount()
   })
 
+  it('forwards caller attributes to the trigger and keeps its own behaviour', async () => {
+    const clicks: MouseEvent[] = []
+    const wrapper = mount(defineComponent({
+      components: { Tab, TabList, TabMenu },
+      setup() {
+        const value = ref('home')
+        return { value, onClick: (event: MouseEvent) => clicks.push(event) }
+      },
+      template: `
+        <TabList v-model:value="value" role="tablist">
+          <Tab value="home">Home</Tab>
+          <TabMenu data-testid="more" class="caller-class" label="More" :options="[{ value: 'archive', label: 'Archive' }]" @click="onClick" />
+        </TabList>
+      `,
+    }), { attachTo: document.body })
+
+    const trigger = wrapper.get('[data-tab-menu]')
+    expect(trigger.attributes('data-testid')).toBe('more')
+    expect(trigger.classes()).toContain('caller-class')
+
+    await trigger.trigger('click')
+    await nextTick()
+    expect(clicks).toHaveLength(1)
+    expect(trigger.attributes('aria-expanded')).toBe('true')
+    wrapper.unmount()
+  })
+
   it('moves from a tab onto the menu without selecting it', async () => {
     const wrapper = mount(Harness, { attachTo: document.body })
     await wrapper.get('[role="tab"]').trigger('keydown', { key: 'ArrowRight' })
