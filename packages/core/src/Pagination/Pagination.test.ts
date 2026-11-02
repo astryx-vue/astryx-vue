@@ -288,6 +288,88 @@ describe('pagination', () => {
     expect(wrapper.get('.astryx-pagination-count').text()).toBe('Page 2 of 8')
   })
 
+  describe('compact first/last buttons', () => {
+    it('leaves first/last out unless hasFirstLast is true', () => {
+      const unset = mount(Pagination, { props: { page: 5, totalPages: 10, variant: 'compact' } })
+      expect(unset.find('.astryx-pagination-first').exists()).toBe(false)
+      expect(unset.find('.astryx-pagination-last').exists()).toBe(false)
+
+      const off = mount(Pagination, { props: { page: 5, totalPages: 10, variant: 'compact', hasFirstLast: false } })
+      expect(off.find('.astryx-pagination-first').exists()).toBe(false)
+      expect(off.find('.astryx-pagination-last').exists()).toBe(false)
+    })
+
+    it('flanks prev/next with first/last when hasFirstLast is true', () => {
+      const wrapper = mount(Pagination, {
+        props: { page: 5, totalPages: 10, variant: 'compact', hasFirstLast: true },
+      })
+
+      const first = wrapper.get('.astryx-pagination-first').element
+      const prev = wrapper.get('.astryx-pagination-prev').element
+      const last = wrapper.get('.astryx-pagination-last').element
+      const next = wrapper.get('.astryx-pagination-next').element
+      expect(first.compareDocumentPosition(prev) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(next.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(wrapper.get('.astryx-pagination-count').text()).toBe('Page 5 of 10')
+      expect(wrapper.find('.astryx-pagination-input').exists()).toBe(false)
+    })
+
+    it('jumps to the first and last page from compact', async () => {
+      const wrapper = mount(Pagination, {
+        props: { page: 5, pageSize: 10, total: 95, variant: 'compact', hasFirstLast: true },
+      })
+
+      await wrapper.get('.astryx-pagination-first').trigger('click')
+      expect(wrapper.emitted('update:page')?.[0]).toEqual([1])
+
+      await wrapper.get('.astryx-pagination-last').trigger('click')
+      expect(wrapper.emitted('update:page')?.at(-1)).toEqual([10])
+    })
+
+    it('disables first on the first page and last on the last page', async () => {
+      const wrapper = mount(Pagination, {
+        props: { page: 1, totalPages: 10, variant: 'compact', hasFirstLast: true },
+      })
+
+      expect(wrapper.get('.astryx-pagination-first').attributes('disabled')).toBeDefined()
+      expect(wrapper.get('.astryx-pagination-last').attributes('disabled')).toBeUndefined()
+
+      await wrapper.setProps({ page: 10 })
+      expect(wrapper.get('.astryx-pagination-first').attributes('disabled')).toBeUndefined()
+      expect(wrapper.get('.astryx-pagination-last').attributes('disabled')).toBeDefined()
+    })
+
+    it('omits first/last when the page count is unknown', async () => {
+      const wrapper = mount(Pagination, {
+        props: { page: 2, total: 0, hasMore: true, variant: 'compact', hasFirstLast: true },
+      })
+
+      expect(wrapper.find('.astryx-pagination-first').exists()).toBe(false)
+      expect(wrapper.find('.astryx-pagination-last').exists()).toBe(false)
+      await wrapper.get('.astryx-pagination-next').trigger('click')
+      expect(wrapper.emitted('update:page')?.[0]).toEqual([3])
+    })
+  })
+
+  it.each(['pages', 'count', 'dots', 'none'] as const)('ignores hasFirstLast on the %s variant', (variant) => {
+    const wrapper = mount(Pagination, {
+      props: { page: 3, pageSize: 10, total: 50, variant, hasFirstLast: true },
+    })
+
+    expect(wrapper.find('.astryx-pagination-first').exists()).toBe(false)
+    expect(wrapper.find('.astryx-pagination-last').exists()).toBe(false)
+  })
+
+  it('hides first/last in the input variant when hasFirstLast is false', () => {
+    const wrapper = mount(Pagination, {
+      props: { page: 2, pageSize: 10, total: 80, variant: 'input', hasFirstLast: false },
+    })
+
+    expect(wrapper.find('.astryx-pagination-input').exists()).toBe(true)
+    expect(wrapper.find('.astryx-pagination-first').exists()).toBe(false)
+    expect(wrapper.find('.astryx-pagination-last').exists()).toBe(false)
+  })
+
   it('does not emit when clicking ellipsis', async () => {
     const wrapper = mount(Pagination, {
       props: {
@@ -310,6 +392,7 @@ describe('pagination', () => {
         page: 4,
         pageSize: 10,
         total: 100,
+        variant: 'input',
         hasFirstLast: true,
         step: 3,
       },

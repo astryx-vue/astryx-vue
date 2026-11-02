@@ -1,4 +1,6 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
+import compactDemo from './compact.vue'
+import compactSource from './compact.vue?raw&highlighted'
 import dotsDemo from './dots.vue'
 import dotsSource from './dots.vue?raw&highlighted'
 import inputDemo from './input.vue'
@@ -12,6 +14,7 @@ import withTableSource from './with-table.vue?raw&highlighted'
 
 const options = { className: 'pagination-preview' }
 
+export const paginationCompact = defineDemo(compactDemo, compactSource, options)
 export const paginationDots = defineDemo(dotsDemo, dotsSource, options)
 export const paginationInput = defineDemo(inputDemo, inputSource, options)
 export const paginationPageSize = defineDemo(pageSizeDemo, pageSizeSource, options)

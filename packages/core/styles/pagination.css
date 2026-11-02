@@ -129,6 +129,15 @@
     padding-inline: var(--astryx-spacing-2);
   }
 
+  /* compact 形态的首尾按钮要和上一页 / 下一页成对，收掉中间那格间距。 */
+  .astryx-pagination[data-variant='compact'] .astryx-pagination-first {
+    margin-inline-end: calc(-1 * var(--astryx-spacing-1));
+  }
+
+  .astryx-pagination[data-variant='compact'] .astryx-pagination-last {
+    margin-inline-start: calc(-1 * var(--astryx-spacing-1));
+  }
+
   @media (hover: hover) {
     .astryx-pagination-button:hover:not(:disabled),
     .astryx-pagination-page:hover:not(:disabled):not(.is-active):not(.is-ellipsis) {
