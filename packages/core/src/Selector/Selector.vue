@@ -26,6 +26,7 @@ import { searchResultMessage } from './searchResultMessage.js'
 import { bindListboxEscape, dismissSelectorEscape, focusSelectorTrigger, onSelectorListboxEscape } from './selectorEscape.js'
 import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } from './selectorOptions.js'
 import SelectorPanel from './SelectorPanel.vue'
+import { createTriggerActivation } from './triggerActivation.js'
 import { useSelectorPopup } from './useSelectorPopup.js'
 import '../../styles/button.css'
 import '../../styles/layer.css'
@@ -246,13 +247,6 @@ watch(announcement, (message) => {
     announce(message)
 })
 
-function onTriggerClick(event: MouseEvent): void {
-  // 先透出点击再切换面板，preventDefault 不阻断打开。
-  emit('click', event)
-  if (control.canActivate.value)
-    combobox.toggle()
-}
-
 function onTriggerFocus(event: FocusEvent): void {
   emit('focus', event)
   disabledTooltip.onFocus(event)
@@ -274,6 +268,14 @@ const popup = useSelectorPopup({
   isReadOnly: () => control.isReadOnly.value,
   isSheet: () => isSheet.value,
   emitKeydown: event => emit('keydown', event),
+})
+
+const { onClick: onTriggerClick, onKeyDown: onTriggerKeyDown } = createTriggerActivation({
+  isDisabled: () => control.isDisabled.value,
+  canActivate: () => control.canActivate.value,
+  toggle: () => combobox.toggle(),
+  emitClick: event => emit('click', event),
+  onKeyDown: event => popup.onTriggerKeyDown(event),
 })
 const { gridMode, actionGrid, popupKind } = popup
 
@@ -355,13 +357,12 @@ onMounted(syncAnchorWidth)
         type="button"
         class="astryx-selector-trigger"
         :class="{ 'is-open': combobox.isOpen.value, 'is-disabled': control.isDisabled.value }"
-        :disabled="control.isDisabled.value && !showsDisabledMessage"
         :role="control.isReadOnly.value || !props.searchable ? 'combobox' : undefined"
         :aria-haspopup="popupKind"
         :aria-expanded="control.isReadOnly.value ? false : combobox.isOpen.value"
         :aria-controls="control.isReadOnly.value ? undefined : listboxId"
         :aria-readonly="control.isReadOnly.value || undefined"
-        :aria-disabled="showsDisabledMessage || undefined"
+        :aria-disabled="control.isDisabled.value || undefined"
         :aria-busy="control.isLoading.value || undefined"
         :aria-required="props.isRequired || undefined"
         :aria-label="props.label"
@@ -371,7 +372,7 @@ onMounted(syncAnchorWidth)
         @click="onTriggerClick"
         @focus="onTriggerFocus"
         @blur="disabledTooltip.onBlur"
-        @keydown="popup.onTriggerKeyDown"
+        @keydown="onTriggerKeyDown"
       >
         <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
