@@ -520,8 +520,10 @@ describe('useTableSelectionState', () => {
       template: '<Table :data="people" :columns="columns" :plugins="{ selection }" id-key="id" />',
     })
     const rows = wrapper.findAll('tbody tr')
-    expect(rows[0]!.find('input[type="checkbox"]').attributes('disabled')).toBeUndefined()
-    expect(rows[1]!.find('input[type="checkbox"]').attributes('disabled')).toBeDefined()
+    expect(rows[0]!.find('input[type="checkbox"]').attributes('aria-disabled')).toBeUndefined()
+    // 禁用的行复选框保留 Tab 停留点和禁用语义，不再是原生 disabled。
+    expect(rows[1]!.find('input[type="checkbox"]').attributes('disabled')).toBeUndefined()
+    expect(rows[1]!.find('input[type="checkbox"]').attributes('aria-disabled')).toBe('true')
     expect(rows[2]!.find('input[type="checkbox"]').exists()).toBe(false)
     expect(wrapper.get('table').attributes('data-row-highlight')).toBe('off')
   })

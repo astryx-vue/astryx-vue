@@ -114,13 +114,13 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
       <span class="astryx-switch-control">
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-switch-native" type="checkbox" role="switch"
-          :checked="action.value.value" :disabled="isDisabled && !showsDisabledMessage"
-          :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)" :form="showsDisabledMessage ? '' : inputAttrs().form"
+          :checked="action.value.value"
+          :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)" :form="isDisabled ? '' : inputAttrs().form"
           :readonly="isReadOnly || showsDisabledMessage"
           :aria-checked="action.value.value"
           :aria-labelledby="labelledBy()"
           :aria-describedby="describedBy()"
-          :aria-disabled="showsDisabledMessage || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
+          :aria-disabled="isDisabled || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
           :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
         >

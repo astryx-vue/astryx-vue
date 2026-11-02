@@ -17,8 +17,10 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Check and dry-run
+  # PR 检查拆成并行的小 job，再按分片跑测试：整条关键路径从约 10 分钟降到几分钟，
+  # 改坏一个文件的等待时间不再和改坏十个文件一样长。
+  setup-checks:
+    name: Lint and package checks
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -44,8 +46,94 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check
-        run: pnpm check
+      - name: Package checks
+        run: pnpm check:packages
+
+      - name: Lint
+        run: pnpm lint
+
+  typecheck:
+    name: Typecheck
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.18.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  test:
+    name: Test ${{ matrix.shard }}/${{ matrix.shards }}
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+        shards: [5]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.18.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test
+        run: pnpm exec vitest run --shard=${{ matrix.shard }}/${{ matrix.shards }}
+
+  build:
+    name: Build and pack
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.18.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build:packages
+
+      - name: Lint published output
+        run: pnpm lint:pkg
 
       # 演练场页面在仓库里能过类型检查，不代表 CLI 复制到用户项目后也能过：
       # 用户项目看不到演练场的 tsconfig 别名。这里把 isReady 的模板落到一个临时项目，
@@ -119,8 +207,10 @@ jobs:
           version="$(npm -v)"
           node -e 'const [major, minor] = process.argv[1].split(".").map(Number); if (major < 11 || (major === 11 && minor < 5)) { console.error(`npm ${process.argv[1]} 低于 11.5`); process.exit(1) } console.log(`npm ${process.argv[1]}`)' "$version"
 
+      # 完整测试已经在 PR 上并行跑过；main 上只做构建前必须过的检查，
+      # 避免每次发版都先等十分钟。构建本身在 pnpm release 里做。
       - name: Check
-        run: pnpm check
+        run: pnpm check:packages && pnpm lint && pnpm typecheck
 
       - name: Check npm auth
         env:
@@ -139,6 +229,31 @@ jobs:
             echo "::error::没有可用的 npm 认证。首次发布请在自己的电脑上用 2FA 手动发出 0.1.0，然后配置 Trusted Publisher。NPM_TOKEN 只是不推荐的备用。详见 RELEASING.md。"
             exit 1
           fi
+
+      # 有未消费的 changeset 就直接在这里改版本号，不再开 "Version Packages" PR。
+      # 那个 PR 由机器人创建，每次都要人工批准整条 workflow，等待比构建还久。
+      - name: Apply pending changesets
+        id: apply
+        run: |
+          set -eu
+          shopt -s nullglob
+          files=(.changeset/*.md)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "applied=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          pnpm version-packages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Version Packages"
+          echo "applied=true" >> "$GITHUB_OUTPUT"
+
+      # 先把版本提交推回 main，再发布：发布中途出错时，下一次运行没有 changeset 了，
+      # 会直接补发这几个版本，不需要人再点一次批准。
+      - name: Push the version commit
+        if: steps.apply.outputs.applied == 'true'
+        run: git push origin HEAD:main
 
       - name: Version packages or publish
         id: changesets

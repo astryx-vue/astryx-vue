@@ -212,4 +212,25 @@ describe('checkboxInput', () => {
     expect(ids[0]).not.toBe(ids[1])
     expect(html).toContain('data-state="indeterminate"')
   })
+
+  it('keeps a disabled checkbox focusable, announced, and unable to change', async () => {
+    const onChange = vi.fn()
+    const wrapper = mount(CheckboxInput, {
+      attachTo: document.body,
+      props: { label: 'Email updates', modelValue: false, isDisabled: true, onChange },
+    })
+    const input = wrapper.get('input')
+
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
+    // 禁用时脱离表单，既不提交，也不会因为 required 拦住提交。
+    expect(input.attributes('form')).toBe('')
+
+    ;(input.element as HTMLInputElement).focus()
+    expect(document.activeElement).toBe(input.element)
+
+    await input.setValue(true)
+    expect(onChange).not.toHaveBeenCalled()
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
 })
