@@ -130,6 +130,8 @@ pnpm changeset
 
 写上要进 changelog 的说明。`@astryx-vue/core` 和 `@astryx-vue/themes` 是 fixed 组，动一个版本，另一个会跟着动。`@astryx-vue/cli` 不在这组里，只在自己的 changeset 里升版本。然后把 changeset 和代码一起合并到 `main`。
 
+CLI 的 npm 包内置生成的 catalog，所以文档、模板或 catalog 里的包版本信息变化时，也要给 CLI 补一个 patch changeset。版本号不需要和 core 一致，但新 catalog 只有发布新的 CLI 版本才能送到用户手里。PR 的 Release 检查会比较目标分支与当前分支：catalog 有变化时，必须带 CLI changeset；消费 changeset 后生成的 `Version Packages` PR 则以 CLI 版本号已经提升为准。
+
 ## 失败了怎么处理
 
 先看是哪一步失败。已经上传到 npm 的版本不能用同一个版本号再传一次。
