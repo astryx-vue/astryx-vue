@@ -82,6 +82,19 @@ npm run astryx-vue -- component Button
 
 每次运行命令，工具只会用最新的组件库信息替换这两个标记之间的内容，标记之外由你自己撰写的项目规则会完好无损地保留下来。如果文件已存在但尚未包含这些标记，工具会安全地将其追加到文件末尾。
 
-> **维护者提醒**：CLI 打印的内容均提取自当前文档站和演练场页面。当文档或模板修改后，需要重新生成 CLI 包内置的目录快照，操作步骤记录在 `packages/cli` 的 README 中。
+> **维护者提醒**：CLI 打印的内容均提取自当前文档站和演练场页面。当文档或模板修改后，需要重新生成 CLI 包内置的目录快照，操作步骤记录在 `packages/cli/CONTRIBUTING.md` 中。
+
+## 在代码里调用
+
+`runCli` 收的参数和命令行一致，返回 `{ exitCode, stdout, stderr }`：
+
+```ts
+import { assertResponse, runCli } from '@astryx-vue/cli'
+
+const result = await runCli(['search', 'dialog', '--json'], { cwd: process.cwd() })
+const found = assertResponse(result.stdout, 'search')
+```
+
+`assertResponse` 按你要的类型校验信封；`parseResponse` 只解析不断言，`isError` 判断是不是错误信封。
 >
 > 这一版暂未包含 `swizzle`、`discover`、`gap-report`、`integration`、`blog`，也没有 MCP 服务。

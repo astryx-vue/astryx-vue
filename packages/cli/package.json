@@ -32,6 +32,7 @@
     "astryx-vue": "./bin/astryx-vue.mjs"
   },
   "files": [
+    "CONTRIBUTING.md",
     "README.md",
     "README.zh-CN.md",
     "bin",

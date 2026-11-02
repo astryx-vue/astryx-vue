@@ -97,6 +97,19 @@ The block names every package the CLI documents, marks the canary ones, and says
 
 The install command follows the project's package manager: the `packageManager` field first, then a lockfile. When neither says which manager it is, all four forms are printed.
 
-The sentences the CLI prints come from this docs site and from the playground pages. After a docs or template change, regenerate the catalog in the CLI package. The maintainer steps are in the `packages/cli` README.
+The sentences the CLI prints come from this docs site and from the playground pages. After a docs or template change, regenerate the catalog in the CLI package. The maintainer steps are in `packages/cli/CONTRIBUTING.md`.
+
+## From code
+
+`runCli` takes the same arguments as the binary and returns `{ exitCode, stdout, stderr }`:
+
+```ts
+import { assertResponse, runCli } from '@astryx-vue/cli'
+
+const result = await runCli(['search', 'dialog', '--json'], { cwd: process.cwd() })
+const found = assertResponse(result.stdout, 'search')
+```
+
+`assertResponse` narrows the envelope to the type you expect. `parseResponse` returns the envelope without asserting, and `isError` checks one.
 
 This version does not include `swizzle`, `discover`, `gap-report`, `integration`, or `blog`, and there is no MCP server.
