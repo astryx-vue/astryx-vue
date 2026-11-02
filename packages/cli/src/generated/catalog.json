@@ -50094,7 +50094,7 @@
                 "name": "`variant`",
                 "type": "`'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'`",
                 "default": "`'pages'`",
-                "description": "Middle of the control. `input` is an editable page field."
+                "description": "Middle of the control. `input` is an editable page field; the `compact` readout can add first/last buttons with `hasFirstLast`."
               },
               {
                 "name": "`siblingCount`",
@@ -50123,8 +50123,8 @@
               {
                 "name": "`hasFirstLast`",
                 "type": "`boolean`",
-                "default": "`input` when the page count is known",
-                "description": "Shows buttons that jump to the first and last page."
+                "default": "`true` for `input`; `false` for `compact`",
+                "description": "Shows buttons that jump to the first and last page. Shown in the `input` variant unless `false`, and in the `compact` variant only when `true`; other variants ignore it. Both are omitted when the page count is unknown."
               },
               {
                 "name": "`changeAction`",
@@ -50221,7 +50221,7 @@
                 "name": "`variant`",
                 "type": "`'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'`",
                 "default": "`'pages'`",
-                "description": "中间区域。 `input` 是可输入的页码。"
+                "description": "中间区域。 `input` 是可输入的页码；`compact` 的「第几页 / 共几页」可以用 `hasFirstLast` 加上首尾按钮。"
               },
               {
                 "name": "`siblingCount`",
@@ -50250,8 +50250,8 @@
               {
                 "name": "`hasFirstLast`",
                 "type": "`boolean`",
-                "default": "仅 `input` 且总页数已知",
-                "description": "是否在上一页和下一页外侧放跳到首尾的按钮。"
+                "default": "`input` 为 `true`；`compact` 为 `false`",
+                "description": "是否在上一页和下一页外侧放跳到首尾的按钮。`input` 形态默认显示（传 `false` 关闭）；`compact` 形态只在传 `true` 时显示；其他形态忽略。总页数未知时两个按钮都不显示。"
               },
               {
                 "name": "`changeAction`",
@@ -50392,6 +50392,17 @@
             "zh": "输入页码后跳转，两侧可以直达首页和末页。总数未知时改用 hasMore，不再显示末页。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Pagination } from '@astryx-vue/core/Pagination'\nimport { ref } from 'vue'\n\nconst page = ref(3)\n</script>\n\n<template>\n  <Pagination\n    v-model:page=\"page\"\n    :page-size=\"10\"\n    :total=\"240\"\n    variant=\"input\"\n  />\n</template>"
+        },
+        {
+          "title": {
+            "en": "Compact with first and last",
+            "zh": "紧凑分页加首尾"
+          },
+          "description": {
+            "en": "The compact readout can opt into first and last buttons when the page count is known.",
+            "zh": "总数已知时，紧凑分页可以打开首页和末页按钮。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Pagination } from '@astryx-vue/core/Pagination'\nimport { ref } from 'vue'\n\nconst page = ref(5)\n</script>\n\n<template>\n  <Pagination\n    v-model:page=\"page\"\n    :page-size=\"10\"\n    :total=\"100\"\n    variant=\"compact\"\n    has-first-last\n  />\n</template>"
         }
       ],
       "anatomy": {
