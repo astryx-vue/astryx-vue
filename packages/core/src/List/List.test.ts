@@ -20,8 +20,6 @@ function cssRule(selector: string): string {
 
 let controlElement: HTMLElement | null = null
 
-const listCss = readFileSync(resolve(process.cwd(), 'packages/core/styles/list.css'), 'utf8')
-
 function listOf(items: Array<Record<string, unknown>>, props: Record<string, unknown> = {}) {
   return mount(List, {
     props,
