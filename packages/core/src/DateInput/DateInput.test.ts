@@ -328,7 +328,8 @@ describe('dateInput', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]?.[0]).toEqual(new Date(2026, 2, 15))
     expect(changeAction).toHaveBeenCalledWith(new Date(2026, 2, 15))
     expect(input.attributes('aria-busy')).toBe('true')
-    expect(input.attributes('disabled')).toBeDefined()
+    expect(input.attributes('readonly')).toBeDefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
     expect(wrapper.find('.astryx-date-input-spinner').exists()).toBe(true)
     release()
     await nextTick()
@@ -371,17 +372,33 @@ describe('dateInput', () => {
     expect(input.attributes('aria-describedby')?.split(' ')).toContain(`${input.attributes('id')}-disabled`)
     expect(wrapper.text()).toContain('Only editors can change the date')
 
-    input.element.focus()
+    ;(input.element as HTMLElement).focus()
     await nextTick()
     const tooltip = document.querySelector<HTMLElement>('[role="tooltip"]')
     expect(tooltip?.textContent).toBe('Only editors can change the date')
     expect(tooltip?.style.display).not.toBe('none')
   })
 
+  it('keeps a disabled field focusable and ignores typing', async () => {
+    const wrapper = mount(DateInput, {
+      props: { label: 'Due', disabled: true, modelValue: null },
+      attachTo: document.body,
+    })
+    const input = wrapper.get('input.astryx-date-input-field')
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
+    ;(input.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(input.element)
+    await input.setValue('2026-05-01')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('treats a blank disabledMessage as absent', () => {
     const wrapper = mount(DateInput, { props: { label: 'Due', disabled: true, disabledMessage: '   ' } })
-    expect(wrapper.get('input.astryx-date-input-field').attributes('disabled')).toBeDefined()
-    expect(wrapper.get('input.astryx-date-input-field').attributes('aria-disabled')).toBeUndefined()
+    const input = wrapper.get('input.astryx-date-input-field')
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
   })
 
   it('rejects a native date that fails a constraint', async () => {

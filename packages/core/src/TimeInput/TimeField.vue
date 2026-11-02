@@ -130,11 +130,16 @@ function commitText(text: string): void {
   commit(parsed)
 }
 
+// 禁用态没有再走原生 `disabled`，输入和改值都靠这里的守卫挡住（spec:AST-085 FR2）。
 function onInput(event: Event): void {
+  if (props.isDisabled)
+    return
   draft.value = (event.target as HTMLInputElement).value
 }
 
 function onNativeInput(event: Event): void {
+  if (props.isDisabled)
+    return
   const value = (event.target as HTMLInputElement).value
   if (!value) {
     commit(null)
@@ -347,8 +352,8 @@ function onInputClick(): void {
       v-bind="attrs"
       :id="inputId" class="astryx-time-input-control" type="time"
       :value="model ?? ''" :min="min" :max="max" :step="hasSeconds ? 1 : increment * 60"
-      :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || busy || showsDisabledMessage"
-      :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
+      :readonly="isReadOnly || busy || isDisabled"
+      :aria-disabled="isDisabled || undefined" :aria-busy="busy || undefined"
       :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
       :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"
       :aria-invalid="status?.type === 'error' || undefined"
@@ -360,8 +365,7 @@ function onInputClick(): void {
       :id="inputId" class="astryx-time-input-control" type="text" readonly inputmode="none" autocomplete="off"
       role="combobox" aria-haspopup="dialog" :aria-expanded="sheetOpen" :aria-controls="sheetId"
       :value="draft" :placeholder="shownPlaceholder"
-      :disabled="isDisabled && !showsDisabledMessage"
-      :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
+      :aria-disabled="isDisabled || undefined" :aria-busy="busy || undefined"
       :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
       :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"
       :aria-invalid="status?.type === 'error' || undefined"
@@ -372,8 +376,8 @@ function onInputClick(): void {
       v-bind="attrs"
       :id="inputId" class="astryx-time-input-control" type="text" inputmode="text" autocomplete="off"
       :value="draft" :placeholder="shownPlaceholder"
-      :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || busy || showsDisabledMessage"
-      :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
+      :readonly="isReadOnly || busy || isDisabled"
+      :aria-disabled="isDisabled || undefined" :aria-busy="busy || undefined"
       :role="showsOptions ? 'combobox' : undefined"
       :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
       :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"

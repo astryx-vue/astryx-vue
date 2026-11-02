@@ -53,6 +53,19 @@ describe('time input', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
+  it('keeps a disabled field focusable without a disabledMessage', () => {
+    const wrapper = mount(TimeInput, {
+      props: { label: 'Disabled field', modelValue: '10:00', isDisabled: true },
+      attachTo: document.body,
+    })
+    const input = wrapper.get('input')
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
+    input.element.focus()
+    expect(document.activeElement).toBe(input.element)
+    wrapper.unmount()
+  })
+
   it('shows the labelTooltip through the field label', () => {
     const wrapper = mount(TimeInput, {
       props: { label: 'Start time', modelValue: null, labelTooltip: 'Local time zone' },
