@@ -12,6 +12,7 @@ import Popover from '../Popover/Popover.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import Spinner from '../Spinner/Spinner.vue'
+import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import '../../styles/complex-selector.css'
 
 defineOptions({ name: 'AstryxComplexSelector', inheritAttrs: false })
@@ -118,7 +119,17 @@ function onTriggerKeyDown(event: KeyboardEvent): void {
 }
 
 /** 内置触发器：先让调用方有机会取消打开，再走自己的开关。 */
+/**
+ * 禁用态用 `aria-disabled` 表达，触发器仍留在 Tab 序列里（spec:AST-085 FR1）。
+ * 原生 `disabled` 不会派发事件，换成 aria 之后要自己挡住指针和按键（FR2）。
+ */
+function blockedWhileDisabled(event: Event): boolean {
+  return consumeWhileDisabled(event, props.isDisabled)
+}
+
 function onBuiltinClick(event: MouseEvent): void {
+  if (blockedWhileDisabled(event))
+    return
   emit('click', event)
   // 用户在 preventDefault 里取消了打开，连带拦住 Popover 自己的点击监听。
   if (event.defaultPrevented)
@@ -127,6 +138,8 @@ function onBuiltinClick(event: MouseEvent): void {
 
 /** 内置触发器：内置处理完再透出，每个键都收到。 */
 function onBuiltinKeyDown(event: KeyboardEvent): void {
+  if (blockedWhileDisabled(event))
+    return
   onTriggerKeyDown(event)
   emit('keydown', event)
 }
@@ -134,11 +147,15 @@ function onBuiltinKeyDown(event: KeyboardEvent): void {
 /** 自定义触发器：开关已经做完，点不能取消；内置处理取消的键不外透。 */
 function onCustomClick(event: MouseEvent): void {
   event.stopImmediatePropagation()
+  if (blockedWhileDisabled(event))
+    return
   toggle()
   emit('click', event)
 }
 
 function onCustomKeyDown(event: KeyboardEvent): void {
+  if (blockedWhileDisabled(event))
+    return
   onTriggerKeyDown(event)
   if (!event.defaultPrevented)
     emit('keydown', event)
@@ -159,6 +176,7 @@ const triggerProps = computed<ComplexSelectorTriggerProps>(() => ({
   'id': triggerId,
   'onClick': onCustomClick,
   'onKeydown': onCustomKeyDown,
+  'aria-disabled': props.isDisabled ? 'true' : undefined,
   'aria-haspopup': 'dialog',
   'aria-expanded': isOpen.value,
   'aria-controls': isOpen.value ? contentId : undefined,
@@ -275,9 +293,9 @@ defineExpose(handle)
         :aria-busy="isBusy || undefined"
         :aria-expanded="isOpen"
         :aria-invalid="status?.type === 'error' || undefined"
+        :aria-disabled="isDisabled || undefined"
         :aria-labelledby="labelId"
         :aria-required="isRequired || undefined"
-        :disabled="isDisabled"
         type="button"
         @click="onBuiltinClick"
         @keydown="onBuiltinKeyDown"

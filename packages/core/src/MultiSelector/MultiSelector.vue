@@ -25,6 +25,7 @@ import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
 import { useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
+import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import MultiSelectorPanel from './MultiSelectorPanel.vue'
 import { useMultiSelectorMenu } from './useMultiSelectorMenu.js'
 import '../../styles/button.css'
@@ -204,7 +205,13 @@ useDevWarning(
   () => hasCustomTrigger.value && (props.controlClass != null || props.controlStyle != null),
 )
 
+/**
+ * 禁用态用 `aria-disabled` 表达，触发器仍留在 Tab 序列里（spec:AST-085 FR1）。
+ * 原生 `disabled` 不会派发事件，换成 aria 之后要自己挡住指针和按键（FR2）。
+ */
 function onTriggerClick(event: MouseEvent): void {
+  if (consumeWhileDisabled(event, control.isDisabled.value))
+    return
   if (control.canActivate.value)
     combobox.toggle()
   emit('click', event)
@@ -216,6 +223,8 @@ function onTriggerFocus(event: FocusEvent): void {
 }
 
 function onTriggerKeyDown(event: KeyboardEvent): void {
+  if (consumeWhileDisabled(event, control.isDisabled.value))
+    return
   menu.onKeyDown(event)
   if (!event.defaultPrevented)
     emit('keydown', event)
@@ -319,8 +328,7 @@ defineExpose({
         ref="triggerRef"
         type="button"
         class="astryx-multi-selector-trigger"
-        :disabled="control.isDisabled.value && !showsDisabledMessage"
-        :aria-disabled="showsDisabledMessage ? 'true' : undefined"
+        :aria-disabled="control.isDisabled.value || undefined"
         :aria-readonly="control.isReadOnly.value || undefined"
         :aria-busy="control.isLoading.value || undefined"
         :role="props.searchable && !control.isReadOnly.value ? undefined : 'combobox'"

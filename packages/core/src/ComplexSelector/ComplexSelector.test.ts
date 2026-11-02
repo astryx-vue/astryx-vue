@@ -75,7 +75,8 @@ describe('complex selector', () => {
     const trigger = wrapper.get('button.astryx-complex-selector')
     await trigger.trigger('keydown', { key: 'ArrowDown' })
     expect(trigger.attributes('aria-expanded')).toBe('false')
-    expect(trigger.attributes('disabled')).toBeDefined()
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
   })
 
   it('opens from handleRef and aligns the popup', async () => {

@@ -218,7 +218,9 @@ describe('selector', () => {
     })
 
     const trigger = wrapper.find('.astryx-selector-trigger')
-    expect(trigger.attributes('disabled')).toBeDefined()
+    // 禁用态保留 Tab 站位，用 aria-disabled 表达（spec:AST-085 FR1）。
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
     expect(trigger.classes()).toContain('is-disabled')
   })
 
@@ -381,7 +383,7 @@ describe('selector', () => {
 
     await wrapper.setProps({ disabled: true })
     expect(trigger.attributes('aria-readonly')).toBeUndefined()
-    expect(trigger.attributes('disabled')).toBeDefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
   })
 
   it('shows a spinner and stays quiet while loading', async () => {
@@ -586,11 +588,11 @@ describe('selector', () => {
     expect(trigger.attributes('aria-expanded')).toBe('false')
   })
 
-  it('keeps the plain disabled button when the message is blank', () => {
+  it('keeps the trigger focusable when the message is blank', () => {
     const wrapper = mount(Selector, { props: { options, disabled: true, disabledMessage: '   ' } })
     const trigger = wrapper.get('.astryx-selector-trigger')
-    expect(trigger.attributes('disabled')).toBeDefined()
-    expect(trigger.attributes('aria-disabled')).toBeUndefined()
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
   })
 
   it('takes disabledReason as another name for disabledMessage', async () => {
