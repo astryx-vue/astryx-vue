@@ -375,7 +375,9 @@ export function adjustTime(
 
   // A non-finite delta would spin the wrap-around forever (-Infinity) or
   // produce "NaN:NaN" (NaN) — return the input unchanged instead.
-  if (!Number.isFinite(deltaMinutes)) {
+  // 步长按整分钟计：小数分钟写不回 `HH:MM`，格式化后会留下 "30.5" 这种
+  // 不再是时间的字符串，所以原样返回。
+  if (!Number.isInteger(deltaMinutes)) {
     return time
   }
 

@@ -534,3 +534,31 @@ describe('toggleButtonGroup', () => {
     expect(wrapper.find('[role="group"]').attributes('data-orientation')).toBe('vertical')
   })
 })
+
+describe('toggle button caller click', () => {
+  it('runs the caller click first and lets it cancel the toggle', async () => {
+    const onClick = vi.fn((event: MouseEvent) => event.preventDefault())
+    const onPressedChange = vi.fn()
+    const wrapper = mount(ToggleButton, {
+      props: { isPressed: false, label: 'Bold', onClick, onPressedChange },
+    })
+
+    await wrapper.find('button').trigger('click')
+
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(onPressedChange).not.toHaveBeenCalled()
+    expect(wrapper.find('button').attributes('aria-pressed')).toBe('false')
+  })
+
+  it('still toggles when the caller click does not cancel', async () => {
+    const onClick = vi.fn()
+    const wrapper = mount(ToggleButton, {
+      props: { isPressed: false, label: 'Bold', onClick },
+    })
+
+    await wrapper.find('button').trigger('click')
+
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(wrapper.find('button').attributes('aria-pressed')).toBe('true')
+  })
+})
