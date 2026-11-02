@@ -38,5 +38,10 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
         </article>
       </div>
     </section>
+    <p class="component-overview__canary">
+      <a :href="localePath(locale, '/lab/')">
+        {{ locale === 'en' ? 'Canary components (@astryx-vue/lab)' : 'Canary 组件（@astryx-vue/lab）' }}
+      </a>
+    </p>
   </div>
 </template>

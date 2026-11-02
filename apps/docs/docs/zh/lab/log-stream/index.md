@@ -1,5 +1,4 @@
 ---
-layout: lab-docs
 title: LogStream
 ---
 
