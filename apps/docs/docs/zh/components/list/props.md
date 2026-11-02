@@ -28,10 +28,16 @@ footer: false
         <td>是否在相邻两行之间绘制分隔线。最后一行不会绘制，带分隔线时行不再有圆角。</td>
       </tr>
       <tr>
+        <td><code>edge</code></td>
+        <td><code>'padded' | 'flush' | 'outset' | 'bleed'</code></td>
+        <td><code>'padded'</code></td>
+        <td>每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。<code>padded</code> 保留行自身的内边距；<code>flush</code> 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；<code>outset</code> 把文字放在这条线上，让分隔线和背景伸进容器的内边距；<code>bleed</code> 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、四角为直角，像表格行。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。<code>outset</code> 和 <code>bleed</code> 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 <code>padded</code> 表现一样。</td>
+      </tr>
+      <tr>
         <td><code>edgeCompensation</code></td>
         <td><code>'inline'</code></td>
         <td>-</td>
-        <td>按每个逻辑边缘可用的容器内边距，抵消行自身的左右内边距，让行内文字与同级标题对齐。它读取容器发布的 <code>--container-padding-inline-start</code> 与 <code>--container-padding-inline-end</code>，没有发布时按 0 处理，因此不会把行拉出容器之外。省略时行的位置不变。</td>
+        <td>已弃用：请改用 <code>edge="outset"</code>，两者位置相同。仍然可用；两者同时设置时以 <code>edge</code> 为准。</td>
       </tr>
       <tr>
         <td><code>listStyle</code></td>
@@ -266,7 +272,7 @@ footer: false
 - `class`。
 - `style`。
 
-组件自己写入 `role="list"`、`data-density`、`data-dividers`、`data-list-style` 与 `data-edge-compensation`。未渲染 `header` 时，使用方传入的 `aria-labelledby` 会保留；渲染了 `header` 时由组件的标题接管。
+组件自己写入 `role="list"`、`data-density`、`data-dividers`、`data-list-style` 与 `data-edge`（解析后的 `padded`、`flush`、`outset` 或 `bleed`）；弃用的 prop 有值时还会写入 `data-edge-compensation`。未渲染 `header` 时，使用方传入的 `aria-labelledby` 会保留；渲染了 `header` 时由组件的标题接管。
 
 ### ListItem / Item
 

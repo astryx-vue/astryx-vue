@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import process from 'node:process'
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
@@ -5,6 +8,15 @@ import { useItemDescriptionId } from './context.js'
 import Item from './Item.vue'
 import List from './List.vue'
 import ListItem from './ListItem.vue'
+
+const listCss = readFileSync(resolve(process.cwd(), 'packages/core/styles/list.css'), 'utf8')
+
+/** The declaration block of the first rule whose selector starts with `selector`. */
+function cssRule(selector: string): string {
+  const start = listCss.indexOf(selector)
+  expect(start, `css rule ${selector}`).toBeGreaterThan(-1)
+  return listCss.slice(start, listCss.indexOf('}', start))
+}
 
 let controlElement: HTMLElement | null = null
 
@@ -90,10 +102,92 @@ describe('list', () => {
     expect(wrapper.find('ul.astryx-list').attributes('data-dividers')).toBe('true')
   })
 
-  it('marks the edge compensation opt-in on the list element', () => {
-    const wrapper = listOf([{ label: 'Row' }], { edgeCompensation: 'inline' })
+  describe('edge treatment', () => {
+    it('defaults to padded and writes the resolved edge on the list', () => {
+      const wrapper = listOf([{ label: 'Row' }])
 
-    expect(wrapper.find('ul.astryx-list').attributes('data-edge-compensation')).toBe('inline')
+      expect(wrapper.find('ul.astryx-list').attributes('data-edge')).toBe('padded')
+      expect(wrapper.find('ul.astryx-list').attributes('data-edge-compensation')).toBeUndefined()
+    })
+
+    it('writes each edge value on the list element, not on the rows', () => {
+      for (const edge of ['padded', 'flush', 'outset', 'bleed'] as const) {
+        const wrapper = listOf([{ label: 'Row' }], { edge })
+
+        expect(wrapper.find('ul.astryx-list').attributes('data-edge')).toBe(edge)
+        expect(wrapper.find('.astryx-list-item').attributes('data-edge')).toBeUndefined()
+      }
+    })
+
+    it('follows an edge change after mount', async () => {
+      const wrapper = listOf([{ label: 'Row' }])
+      expect(wrapper.find('ul.astryx-list').attributes('data-edge')).toBe('padded')
+
+      await wrapper.setProps({ edge: 'bleed' })
+
+      expect(wrapper.find('ul.astryx-list').attributes('data-edge')).toBe('bleed')
+    })
+
+    it('treats the deprecated edgeCompensation="inline" as edge="outset" without a warning', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const wrapper = listOf([{ label: 'Row' }], { edgeCompensation: 'inline' })
+
+      expect(wrapper.find('ul.astryx-list').attributes('data-edge')).toBe('outset')
+      expect(wrapper.find('ul.astryx-list').attributes('data-edge-compensation')).toBe('inline')
+      expect(warn).not.toHaveBeenCalled()
+      warn.mockRestore()
+    })
+
+    it('lets edge win over the deprecated prop and warns once about the conflict', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const wrapper = listOf([{ label: 'Row' }], { edge: 'flush', edgeCompensation: 'inline' })
+
+      expect(wrapper.find('ul.astryx-list').attributes('data-edge')).toBe('flush')
+      expect(warn).toHaveBeenCalledTimes(1)
+      expect(String(warn.mock.calls[0]?.[0])).toContain('`edge` wins')
+      warn.mockRestore()
+    })
+
+    it('reaches the container padding for outset and bleed only', () => {
+      const reach = cssRule('.astryx-list[data-edge=\'outset\'],\n  .astryx-list[data-edge=\'bleed\']')
+
+      expect(reach).toContain('margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));')
+      expect(reach).toContain('margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));')
+      expect(reach).toContain('width: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));')
+      expect(reach).not.toContain('data-edge=\'padded\'')
+      expect(reach).not.toContain('data-edge=\'flush\'')
+    })
+
+    it('flush zeroes the row inset without moving the list or the row', () => {
+      const flush = cssRule('.astryx-list[data-edge=\'flush\'] > .astryx-list-item')
+
+      expect(flush).toContain('--astryx-item-inset-inline: 0px;')
+      expect(flush).not.toContain('padding-inline')
+      expect(flush).not.toContain('margin-inline')
+    })
+
+    it('outset steps each row back by its own edge padding, per edge', () => {
+      const outset = cssRule('.astryx-list[data-edge=\'outset\'] > .astryx-list-item')
+
+      expect(outset).toContain('margin-inline-start: max(var(--container-padding-inline-start, 0px) - var(--astryx-item-inset-inline), 0px);')
+      expect(outset).toContain('margin-inline-end: max(var(--container-padding-inline-end, 0px) - var(--astryx-item-inset-inline), 0px);')
+      expect(outset).not.toContain('margin-inline-end: max(var(--container-padding-inline-start')
+    })
+
+    it('bleed fills each row to the container padding line with square corners', () => {
+      const fill = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item:not(.astryx-item--swipe)')
+
+      expect(fill).toContain('padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));')
+      expect(fill).toContain('padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));')
+      expect(cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item')).toContain('border-radius: 0;')
+    })
+
+    it('bleed pads a swiping row on its surface, where the row content lives', () => {
+      const surface = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item > .astryx-item__surface')
+
+      expect(surface).toContain('padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));')
+      expect(surface).toContain('padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));')
+    })
   })
 
   it('forwards consumer attributes and class onto the list element', () => {

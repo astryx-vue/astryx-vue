@@ -653,6 +653,7 @@ export type {
   ItemTarget,
   ItemText,
   ListDensity,
+  ListEdge,
   ListEdgeCompensation,
   ListItemProps,
   ListItemSlots,

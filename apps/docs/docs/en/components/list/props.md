@@ -28,10 +28,16 @@ footer: false
         <td>Whether to rule a line between neighbouring rows. The last row never draws one, and rows lose their rounded corners while dividers are on.</td>
       </tr>
       <tr>
+        <td><code>edge</code></td>
+        <td><code>'padded' | 'flush' | 'outset' | 'bleed'</code></td>
+        <td><code>'padded'</code></td>
+        <td>Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. <code>padded</code> keeps the row's own inline padding. <code>flush</code> removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. <code>outset</code> keeps text on that line and lets lines and backgrounds reach into the container's padding. <code>bleed</code> puts text on the container's padding line and runs lines and backgrounds to its edges with square corners, like table rows. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. <code>outset</code> and <code>bleed</code> read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like <code>padded</code> when there is none.</td>
+      </tr>
+      <tr>
         <td><code>edgeCompensation</code></td>
         <td><code>'inline'</code></td>
         <td>-</td>
-        <td>Cancels each row's inline inset, up to the container padding published on each edge, so row text lines up with a sibling heading. It reads <code>--container-padding-inline-start</code> and <code>--container-padding-inline-end</code> and treats a missing value as zero, so a row is never pulled outside its container. Omitting the prop leaves row positions unchanged.</td>
+        <td>Deprecated: use <code>edge="outset"</code>, which this sets. Still works; <code>edge</code> wins when both are set.</td>
       </tr>
       <tr>
         <td><code>listStyle</code></td>
@@ -266,7 +272,7 @@ The following go to the list element:
 - `class`.
 - `style`.
 
-The component writes `role="list"`, `data-density`, `data-dividers`, `data-list-style`, and `data-edge-compensation`. Without a rendered header an `aria-labelledby` you pass is kept; with one, the list's own header takes over.
+The component writes `role="list"`, `data-density`, `data-dividers`, `data-list-style`, and `data-edge` (the resolved `padded`, `flush`, `outset`, or `bleed`), plus `data-edge-compensation` while the deprecated prop is set. Without a rendered header an `aria-labelledby` you pass is kept; with one, the list's own header takes over.
 
 ### ListItem / Item
 

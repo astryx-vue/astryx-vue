@@ -38,8 +38,15 @@ export type ListDensity = 'compact' | 'balanced' | 'spacious'
 export type ListMarkerStyle = 'none' | 'disc' | 'decimal' | 'circle'
 
 /**
+ * Where each row's text, dividers, and hover and selection backgrounds sit,
+ * relative to the list's edges and the padding of the container around it.
+ */
+export type ListEdge = 'padded' | 'flush' | 'outset' | 'bleed'
+
+/**
  * Compensates for each row's built-in inline inset, so row content lines up
  * with sibling content such as a section heading.
+ * @deprecated Use `edge="outset"`, which selects the same geometry.
  */
 export type ListEdgeCompensation = 'inline'
 
@@ -77,9 +84,28 @@ export interface ListProps {
    */
   hasDividers?: boolean
   /**
-   * Cancels each row's inline inset, up to the container padding published on
-   * each edge, so row content moves toward a sibling heading's text.
-   * @default undefined
+   * Where each row's text, dividers, and hover and selection backgrounds sit,
+   * relative to the list's edges and the padding of the container around it.
+   *
+   * `padded` keeps the row's own inline padding. `flush` removes it, so text
+   * starts on the line of a heading above the list and lines and backgrounds
+   * stop at the text. `outset` puts text on that line and lets lines and
+   * backgrounds reach into the container's padding. `bleed` puts text on the
+   * container's padding line and runs lines and backgrounds to its edges with
+   * square corners, like table rows.
+   *
+   * A row's first content — its marker, icon, or avatar, otherwise its label —
+   * is what lines up with the heading. `outset` and `bleed` read the padding
+   * published by the nearest container that shares it: a Card, Section,
+   * BottomSheet, padded ScrollableArea, or a Layout region. Place the list directly in that container's padding;
+   * padding added in between by Stack, Center, or your own styles is not
+   * counted. With no such container they look like `padded`.
+   * @default 'padded'
+   */
+  edge?: ListEdge
+  /**
+   * @deprecated Use `edge="outset"`, which this sets. `edge` wins when both
+   * are set.
    */
   edgeCompensation?: ListEdgeCompensation
   /**
