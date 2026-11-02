@@ -8,6 +8,26 @@ export type {
   CircularProgressVariantMap,
 } from './CircularProgress/index.js'
 
+export { createDiffFile, DiffViewer, parseUnifiedDiff } from './DiffViewer/index.js'
+export type {
+  CreateDiffFileOptions,
+  DiffViewerEmits,
+  DiffViewerFile,
+  DiffViewerFileStatus,
+  DiffViewerHunk,
+  DiffViewerInlineHighlight,
+  DiffViewerLine,
+  DiffViewerLineKind,
+  DiffViewerLineRef,
+  DiffViewerProps,
+  DiffViewerSide,
+  DiffViewerSlots,
+  DiffViewerViewMode,
+  InlineDiffGranularity,
+  InlineDiffResult,
+  InlineRange,
+} from './DiffViewer/index.js'
+
 export { InfoTip } from './InfoTip/index.js'
 export type { InfoTipProps, InfoTipSize } from './InfoTip/index.js'
 

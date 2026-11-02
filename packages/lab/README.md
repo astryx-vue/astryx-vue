@@ -24,6 +24,7 @@ Or pick single files: `@astryx-vue/lab/styles/stat.css`, `.../log-stream.css`, a
 | --- | --- |
 | `Stat` | KPI/metric display: label, big tabular value, optional sentiment-aware delta, description, trend slot. |
 | `CircularProgress` | Ring-shaped progress indicator, determinate or indeterminate. |
+| `DiffViewer` | Read-only unified or split diff for one file, with inline highlighting. |
 | `InfoTip` | Small "i" button that reveals a tooltip on hover, keyboard focus, and tap. |
 | `SVGIcon` | CSS-variable-driven SVG icon with variations (linear, bold, twotone, bulk, broken), path roles, and mask-based gaps. |
 | `LogStream` | Streaming log viewer with level accents, expandable detail rows, follow-scroll tailing, and a terminal variant. |

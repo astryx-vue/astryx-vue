@@ -95,6 +95,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('MobileTokenizer', `${prefix}/lab/mobile-tokenizer`),
         item('TransferList', `${prefix}/lab/transfer-list`),
         item('CircularProgress', `${prefix}/lab/circular-progress`),
+        item('DiffViewer', `${prefix}/lab/diff-viewer`),
         item('InfoTip', `${prefix}/lab/info-tip`),
         item('LogStream', `${prefix}/lab/log-stream`),
         item('Stat', `${prefix}/lab/stat`),
