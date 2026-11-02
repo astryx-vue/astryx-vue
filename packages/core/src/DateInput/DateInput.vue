@@ -190,7 +190,8 @@ function inputAttrs(): Record<string, unknown> {
 }
 
 function onInput(event: Event): void {
-  if (useSheet.value || (event instanceof InputEvent && event.isComposing))
+  // 禁用和忙碌都不再走原生 `disabled`，输入要自己挡住（spec:AST-085 FR2）。
+  if (useSheet.value || locked.value || (event instanceof InputEvent && event.isComposing))
     return
   const target = event.target as HTMLInputElement
   const value = target.value.trim()
@@ -356,9 +357,8 @@ syncDisplayValue()
               role="combobox"
               :value="inputValue"
               :placeholder="resolvedPlaceholder"
-              :disabled="locked && !showsDisabledMessage"
-              :readonly="useSheet || showsDisabledMessage"
-              :aria-disabled="showsDisabledMessage || undefined"
+              :readonly="useSheet || locked"
+              :aria-disabled="locked || undefined"
               :inputmode="useSheet ? 'none' : undefined"
               :aria-label="showsField ? undefined : props.label"
               :aria-labelledby="showsField ? field?.labelId : undefined"
