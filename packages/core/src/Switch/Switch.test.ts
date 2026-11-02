@@ -143,4 +143,24 @@ describe('switch', () => {
     expect(id).toBeTruthy()
     expect(html).toContain(`for="${id}"`)
   })
+
+  it('keeps a disabled switch focusable, announced, and unable to change', async () => {
+    const onChange = vi.fn()
+    const wrapper = mount(Switch, {
+      attachTo: document.body,
+      props: { label: 'Notifications', modelValue: false, isDisabled: true, onChange },
+    })
+    const input = wrapper.get('input')
+
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
+    expect(input.attributes('form')).toBe('')
+
+    ;(input.element as HTMLInputElement).focus()
+    expect(document.activeElement).toBe(input.element)
+
+    await input.setValue(true)
+    expect(onChange).not.toHaveBeenCalled()
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
 })
