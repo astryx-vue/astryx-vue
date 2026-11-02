@@ -6,7 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { parseArgs } from '../scripts/upstream-sync.mjs'
 import { validateFamilies } from '../scripts/upstream-sync/families.mjs'
 import { buildSyncPlan, latestVersionTag } from '../scripts/upstream-sync/plan.mjs'
-import { renderIssue } from '../scripts/upstream-sync/render.mjs'
+import { renderIssue, renderReleaseIssue } from '../scripts/upstream-sync/render.mjs'
 
 describe('上游持续同步', () => {
   let repo: string
@@ -80,9 +80,37 @@ describe('上游持续同步', () => {
     expect(issue.body).toContain('https://github.com/meta/astryx/commit/')
   })
 
+  it('每个上游版本只开一个 issue，组件族收在小节里', () => {
+    const release = buildSyncPlan({ upstream: repo, from: 'v1.0.0', to: 'v1.1.0' })[0]
+    const issue = renderReleaseIssue(release)
+
+    expect(issue.title).toBe('上游 v1.1.0：同步清单')
+    expect(issue.body).toContain('<!-- upstream-sync:v1.1.0:all -->')
+    for (const family of release.families)
+      expect(issue.body).toContain(family.title)
+    // 每族收在一个可折叠小节里，整版清单才不会超过 GitHub 的正文长度上限。
+    expect(issue.body).toContain('<details>')
+    expect(issue.body).toContain('<summary>')
+    expect(issue.labels).toContain('upstream-sync')
+  })
+
   it('默认只 dry-run，只有 --apply 才写 GitHub', () => {
     expect(parseArgs([])).toMatchObject({ apply: false, from: 'v0.7.1' })
     expect(parseArgs(['--apply', '--to', 'v0.7.5'])).toMatchObject({ apply: true, to: 'v0.7.5' })
     expect(() => parseArgs(['--to'])).toThrow('无法识别的参数')
+  })
+})
+
+describe('pr 测试范围', () => {
+  it('只改一个包时只跑那个包', async () => {
+    const { scopeForFiles } = await import('../scripts/affected-checks.mjs')
+    expect(scopeForFiles(['packages/core/src/Button/Button.vue'])).toEqual({ mode: 'narrow', paths: ['packages/core/src'] })
+    expect(scopeForFiles(['packages/core/src/Link/Link.vue', 'apps/docs/docs/zh/guide/cli.md']).paths).toEqual(['apps/docs', 'packages/core/src'])
+  })
+
+  it('改到共享文件时退回全量', async () => {
+    const { scopeForFiles } = await import('../scripts/affected-checks.mjs')
+    for (const file of ['pnpm-lock.yaml', 'scripts/release.mjs', 'vitest.config.ts', '.github/workflows/release.yml', 'package.json'])
+      expect(scopeForFiles([file])).toEqual({ mode: 'all' })
   })
 })

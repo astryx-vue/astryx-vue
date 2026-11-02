@@ -7,7 +7,7 @@ import { resolveUpstreamDir } from './upstream-ledger.mjs'
 import { validateFamilies } from './upstream-sync/families.mjs'
 import { UpstreamSyncGitHub } from './upstream-sync/github.mjs'
 import { buildSyncPlan, latestVersionTag } from './upstream-sync/plan.mjs'
-import { renderIssue } from './upstream-sync/render.mjs'
+import { renderReleaseIssue } from './upstream-sync/render.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -55,29 +55,28 @@ export function main(argv = process.argv.slice(2)) {
     throw new Error(`这些节点还没有登记长期组件族：${missing.join('、')}`)
   const upstream = resolveUpstreamDir(options.upstream)
   const plan = buildSyncPlan({ upstream, from: options.from, to: options.to ?? latestVersionTag(upstream) })
-  const count = plan.reduce((sum, release) => sum + release.families.length, 0)
+  const commits = plan.reduce((sum, release) => sum + release.families.reduce((n, family) => n + family.commits.length, 0), 0)
   if (!options.apply) {
     for (const release of plan) {
-      for (const family of release.families)
-        console.log(`${release.to}  ${family.id}  ${family.commits.length} 个提交`)
+      const perRelease = release.families.reduce((n, family) => n + family.commits.length, 0)
+      console.log(`${release.to}  ${release.families.length} 个组件族  ${perRelease} 个提交`)
     }
-    console.log(`dry-run：${plan.length} 个版本，${count} 个组件族 issue；没有访问或修改 GitHub。`)
+    console.log(`dry-run：${plan.length} 个版本，${commits} 个提交；每个版本一个 issue，没有访问或修改 GitHub。`)
     return 0
   }
 
   const github = new UpstreamSyncGitHub(options)
   for (const release of plan) {
-    for (const family of release.families) {
-      const input = renderIssue(release, family)
-      const issue = github.ensureIssue(input)
-      if (options.project !== '0')
-        github.ensureProjectItem(issue, release, family)
-      console.log(`${issue.created ? '已创建' : '已存在'} ${issue.url}`)
-    }
+    const input = renderReleaseIssue(release)
+    const issue = github.ensureIssue(input)
+    // 路线图上一张卡片代表一个上游版本；原来的按族拆分会让路线图长出几十张同义卡片。
+    if (options.project !== '0')
+      github.ensureProjectItem(issue, release, release.families[0])
+    console.log(`${issue.created ? '已创建' : '已存在'} ${issue.url}`)
   }
   if (options.project === '0')
     console.log('未配置 PROJECTS_TOKEN，已跳过路线图；配置后重跑会补齐现有 issue 的卡片。')
-  console.log(`同步完成：${count} 个组件族 issue。`)
+  console.log(`同步完成：${plan.length} 个版本 issue。`)
   return 0
 }
 

@@ -52,6 +52,31 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+  scope:
+    name: Test scope
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      mode: ${{ steps.scope.outputs.mode }}
+      paths: ${{ steps.scope.outputs.paths }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      # 只改一个组件时不必跑全仓库。判断逻辑在 scripts/affected-checks.mjs：
+      # 改到配置、脚本、锁文件这类共享文件就退回全量。
+      - name: Decide what to test
+        id: scope
+        run: |
+          set -eu
+          eval "$(node ./scripts/affected-checks.mjs "origin/${GITHUB_BASE_REF}")"
+          echo "mode=${mode}" >> "$GITHUB_OUTPUT"
+          echo "paths=${paths}" >> "$GITHUB_OUTPUT"
+
   typecheck:
     name: Typecheck
     if: github.event_name == 'pull_request'
@@ -79,6 +104,7 @@ jobs:
 
   test:
     name: Test ${{ matrix.shard }}/${{ matrix.shards }}
+    needs: scope
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -105,7 +131,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: pnpm exec vitest run --shard=${{ matrix.shard }}/${{ matrix.shards }}
+        run: |
+          set -eu
+          mode="${{ needs.scope.outputs.mode }}"
+          paths="${{ needs.scope.outputs.paths }}"
+          if [ "${mode}" = "all" ]; then
+            pnpm exec vitest run --shard=${{ matrix.shard }}/${{ matrix.shards }}
+          elif [ "${{ matrix.shard }}" = "1" ]; then
+            # 窄范围只跑相关目录，外加 tests/ 里那些守卫检查（目录、发布、文案）。
+            pnpm exec vitest run ${paths} tests
+          else
+            echo "改动范围窄，这一片不需要跑。"
+          fi
 
   build:
     name: Build and pack
