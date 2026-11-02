@@ -20,17 +20,19 @@ function gh(args, attempts = 4) {
 }
 
 export class UpstreamSyncGitHub {
-  constructor({ repo, owner, projectNumber }) {
+  /** run 默认真的调用 gh；测试时传入假的执行器。project 是 CLI 的 --project 编号。 */
+  constructor({ repo, owner, project, run = gh }) {
     this.repo = repo
     this.owner = owner
-    this.projectNumber = String(projectNumber)
+    this.projectNumber = String(project)
+    this.run = run
     this.issues = null
     this.project = null
   }
 
   listIssues() {
     if (!this.issues) {
-      this.issues = JSON.parse(gh([
+      this.issues = JSON.parse(this.run([
         'issue',
         'list',
         '--repo',
@@ -53,7 +55,7 @@ export class UpstreamSyncGitHub {
     const args = ['issue', 'create', '--repo', this.repo, '--title', input.title, '--body', input.body]
     for (const label of input.labels)
       args.push('--label', label)
-    const url = gh(args).trim()
+    const url = this.run(args).trim()
     const issue = { url, title: input.title, created: true }
     this.issues.push(issue)
     return issue
@@ -62,9 +64,9 @@ export class UpstreamSyncGitHub {
   loadProject() {
     if (this.project)
       return this.project
-    const project = JSON.parse(gh(['project', 'view', this.projectNumber, '--owner', this.owner, '--format', 'json']))
-    const fields = JSON.parse(gh(['project', 'field-list', this.projectNumber, '--owner', this.owner, '--format', 'json'])).fields
-    const items = JSON.parse(gh(['project', 'item-list', this.projectNumber, '--owner', this.owner, '--limit', '500', '--format', 'json'])).items
+    const project = JSON.parse(this.run(['project', 'view', this.projectNumber, '--owner', this.owner, '--format', 'json']))
+    const fields = JSON.parse(this.run(['project', 'field-list', this.projectNumber, '--owner', this.owner, '--format', 'json'])).fields
+    const items = JSON.parse(this.run(['project', 'item-list', this.projectNumber, '--owner', this.owner, '--limit', '500', '--format', 'json'])).items
     this.project = { project, fields, items }
     return this.project
   }
@@ -72,8 +74,9 @@ export class UpstreamSyncGitHub {
   ensureProjectItem(issue, release, family) {
     const state = this.loadProject()
     let item = state.items.find(entry => entry.content?.url === issue.url)
-    if (!item) {
-      item = JSON.parse(gh([
+    const isNew = !item
+    if (isNew) {
+      item = JSON.parse(this.run([
         'project',
         'item-add',
         this.projectNumber,
@@ -90,18 +93,20 @@ export class UpstreamSyncGitHub {
       const field = state.fields.find(entry => entry.name === name)
       if (!field)
         throw new Error(`路线图缺少 ${name} 字段`)
-      gh(['project', 'item-edit', '--id', item.id, '--project-id', state.project.id, '--field-id', field.id, '--text', value])
+      this.run(['project', 'item-edit', '--id', item.id, '--project-id', state.project.id, '--field-id', field.id, '--text', value])
     }
     const editOption = (name, value) => {
       const field = state.fields.find(entry => entry.name === name)
       const option = field?.options?.find(entry => entry.name === value)
       if (!option)
         throw new Error(`路线图字段 ${name} 没有选项 ${value}`)
-      gh(['project', 'item-edit', '--id', item.id, '--project-id', state.project.id, '--field-id', field.id, '--single-select-option-id', option.id])
+      this.run(['project', 'item-edit', '--id', item.id, '--project-id', state.project.id, '--field-id', field.id, '--single-select-option-id', option.id])
     }
     editText('Upstream', release.to)
     editText('Node', family.id)
     editOption('Area', family.projectArea)
-    editOption('Status', 'Todo')
+    // 只有新卡片落到 Todo；已有卡片可能已经在做或做完了，同步不能把它退回去。
+    if (isNew)
+      editOption('Status', 'Todo')
   }
 }
