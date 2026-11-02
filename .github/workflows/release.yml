@@ -271,6 +271,9 @@ jobs:
       # 那个 PR 由机器人创建，每次都要人工批准整条 workflow，等待比构建还久。
       - name: Apply pending changesets
         id: apply
+        env:
+          # `changeset version` 用 changelog-github 生成条目，没有 token 会直接退出。
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eu
           shopt -s nullglob
