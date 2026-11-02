@@ -140,6 +140,15 @@ export interface DropdownMenuSubMenuEmits {
 export interface DropdownMenuSubMenuSlots {
   /** The rows of the nested menu. */
   default?: () => VNodeChild
+  /**
+   * 行内容上方、菜单之外的内容，例如筛选这些行的输入框。
+   * 有 header 或 footer 时，子菜单的面板变成以行为名的模态对话框：
+   * 行带 `aria-haspopup="dialog"`，Tab 在头部、行、尾部之间循环，
+   * Escape 回到行，指针离开时只要焦点还在里面就不关闭。
+   */
+  header?: () => VNodeChild
+  /** 行内容下方、菜单之外的内容。规则和 header 相同。 */
+  footer?: () => VNodeChild
   icon?: () => VNodeChild
   label?: () => VNodeChild
   description?: () => VNodeChild

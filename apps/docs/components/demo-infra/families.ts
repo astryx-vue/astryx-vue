@@ -20,6 +20,7 @@ export const COMPONENT_FAMILIES = {
   'Context Menu': { en: 'Context Menu', zh: '上下文菜单' },
   'Date Input': { en: 'Date Input', zh: '日期输入框' },
   'Dialog': { en: 'Dialog', zh: '对话框' },
+  'Drawer': { en: 'Drawer', zh: '抽屉' },
   'Dropdown Menu': { en: 'Dropdown Menu', zh: '下拉菜单' },
   'Field': { en: 'Field', zh: '表单字段' },
   'Hover Card': { en: 'Hover Card', zh: '悬浮卡片' },

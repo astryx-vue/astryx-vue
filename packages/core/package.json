@@ -84,6 +84,11 @@
       "types": "./dist/DateTimeInput/index.d.ts",
       "import": "./dist/DateTimeInput/index.js"
     },
+    "./Drawer": {
+      "source": "./src/Drawer/index.ts",
+      "types": "./dist/Drawer/index.d.ts",
+      "import": "./dist/Drawer/index.js"
+    },
     "./FieldStatus": {
       "source": "./src/FieldStatus/index.ts",
       "types": "./dist/FieldStatus/index.d.ts",
@@ -664,6 +669,10 @@
       "./DateTimeInput": {
         "types": "./dist/DateTimeInput/index.d.ts",
         "import": "./dist/DateTimeInput/index.js"
+      },
+      "./Drawer": {
+        "types": "./dist/Drawer/index.d.ts",
+        "import": "./dist/Drawer/index.js"
       },
       "./FieldStatus": {
         "types": "./dist/FieldStatus/index.d.ts",

@@ -61139,6 +61139,74 @@
       }
     },
     {
+      "slug": "drawer",
+      "name": "Drawer",
+      "package": "@astryx-vue/core",
+      "kind": "component",
+      "title": {
+        "en": "Drawer",
+        "zh": "抽屉"
+      },
+      "group": "Overlay",
+      "groupTitle": {
+        "en": "Overlay",
+        "zh": "浮层"
+      },
+      "importPath": "@astryx-vue/core/Drawer",
+      "exportName": "Drawer",
+      "summary": {
+        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. It shares the dialog's modal machinery: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.",
+        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。它和弹窗共用同一套模态机制：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。"
+      },
+      "usage": {
+        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. It shares the dialog's modal machinery: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.\n\n`placement` picks the edge, `end` by default. `purpose` decides how it closes: `info` allows Escape and a scrim click, `form` allows only Escape, `required` allows neither.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    Open filters\n  </Button>\n  <Drawer v-model:is-open=\"isOpen\" label=\"Filters\">\n    <DrawerHeader title=\"Filters\" subtitle=\"Narrow the list\" @open-change=\"isOpen = false\" />\n    <p>Category, price range and availability go here.</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />",
+        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。它和弹窗共用同一套模态机制：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。\n\n`placement` 决定贴哪一边，默认 `end`（中文界面是右边）。`purpose` 决定怎么关：`info` 允许 Escape 和点遮罩，`form` 只允许 Escape，`required` 两者都不允许。\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    打开筛选\n  </Button>\n  <Drawer v-model:is-open=\"isOpen\" label=\"筛选\">\n    <DrawerHeader title=\"筛选\" subtitle=\"缩小列表范围\" @open-change=\"isOpen = false\" />\n    <p>分类、价格区间和是否有货放在这里。</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [],
+        "zh": []
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Title row",
+            "text": "`DrawerHeader` gives you a title, a subtitle, and start/end slots. The close button appears when someone listens for `open-change`; pass `has-close-button` to decide it yourself."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "标题行",
+            "text": "`DrawerHeader` 提供标题、副标题、行首和行尾插槽。关闭按钮默认在有人监听 `open-change` 时出现；想写死就传 `has-close-button`。"
+          }
+        ]
+      },
+      "examples": [],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/drawer",
+        "zh": "https://astryx-vue.pages.dev/components/drawer"
+      }
+    },
+    {
       "slug": "list",
       "name": "List",
       "package": "@astryx-vue/core",

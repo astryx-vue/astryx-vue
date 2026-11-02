@@ -104,6 +104,9 @@
       "@astryx-vue/core/Divider": [
         "../../packages/core/src/Divider/index.ts"
       ],
+      "@astryx-vue/core/Drawer": [
+        "../../packages/core/src/Drawer/index.ts"
+      ],
       "@astryx-vue/core/DropdownMenu": [
         "../../packages/core/src/DropdownMenu/index.ts"
       ],

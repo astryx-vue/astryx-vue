@@ -1,0 +1,53 @@
+@layer astryx.components {
+  /*
+   * 抽屉是贴边的模态面板：高度撑满视口，行内方向按 placement 贴左侧或右侧。
+   * 模态、遮罩、焦点交给底下的 Dialog。
+   */
+  .astryx-drawer {
+    box-sizing: border-box;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .astryx-drawer[open] {
+    animation: astryx-drawer-slide-in var(--astryx-duration-medium, 200ms) var(--astryx-ease-standard, ease-out) both;
+  }
+
+  .astryx-drawer--end[open] {
+    --astryx-drawer-from: translateX(100%);
+  }
+
+  .astryx-drawer--start[open] {
+    --astryx-drawer-from: translateX(-100%);
+  }
+
+  .astryx-drawer-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-3, 12px);
+    min-block-size: 0;
+  }
+
+  .astryx-drawer-footer {
+    display: flex;
+    justify-content: end;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  @keyframes astryx-drawer-slide-in {
+    from {
+      transform: var(--astryx-drawer-from, translateX(0));
+    }
+
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-drawer[open] {
+      animation: none;
+    }
+  }
+}
