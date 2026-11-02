@@ -21,12 +21,12 @@ import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import Spinner from '../Spinner/Spinner.vue'
-import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
 import { bindListboxEscape, dismissSelectorEscape, focusSelectorTrigger, onSelectorListboxEscape } from './selectorEscape.js'
 import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } from './selectorOptions.js'
 import SelectorPanel from './SelectorPanel.vue'
+import { createTriggerActivation } from './triggerActivation.js'
 import { useSelectorPopup } from './useSelectorPopup.js'
 import '../../styles/button.css'
 import '../../styles/layer.css'
@@ -247,8 +247,6 @@ watch(announcement, (message) => {
     announce(message)
 })
 
-// 禁用态靠 `aria-disabled` 表达，触发器仍留在 Tab 序列里（spec:AST-085 FR1）；
-// 激活事件由 `consumeWhileDisabled` 统一吃掉（FR2）。
 function onTriggerFocus(event: FocusEvent): void {
   emit('focus', event)
   disabledTooltip.onFocus(event)
@@ -272,20 +270,13 @@ const popup = useSelectorPopup({
   emitKeydown: event => emit('keydown', event),
 })
 
-function onTriggerKeyDown(event: KeyboardEvent): void {
-  if (consumeWhileDisabled(event, control.isDisabled.value))
-    return
-  popup.onTriggerKeyDown(event)
-}
-
-function onTriggerClick(event: MouseEvent): void {
-  if (consumeWhileDisabled(event, control.isDisabled.value))
-    return
-  // 先透出点击再切换面板，preventDefault 不阻断打开。
-  emit('click', event)
-  if (control.canActivate.value)
-    combobox.toggle()
-}
+const { onClick: onTriggerClick, onKeyDown: onTriggerKeyDown } = createTriggerActivation({
+  isDisabled: () => control.isDisabled.value,
+  canActivate: () => control.canActivate.value,
+  toggle: () => combobox.toggle(),
+  emitClick: event => emit('click', event),
+  onKeyDown: event => popup.onTriggerKeyDown(event),
+})
 const { gridMode, actionGrid, popupKind } = popup
 
 function onOptionClick(option: SelectorOption): void {
