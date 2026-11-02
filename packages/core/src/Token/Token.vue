@@ -7,6 +7,7 @@ import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import '../../styles/token.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -51,6 +52,8 @@ const actionRole = useInteractiveRole({
 })
 const actionIsLink = computed(() => actionRole.role.value === 'link')
 const actionIsButton = computed(() => actionRole.role.value === 'button')
+/** 禁用时不再用原生 disabled，改用可聚焦的 aria-disabled 加共用事件守卫。 */
+const disabledInteraction = computed(() => props.disabled ? disabledInteractionProps() : undefined)
 
 const rootAttrs = computed(() => ({
   ...Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'onClick')),
@@ -58,8 +61,11 @@ const rootAttrs = computed(() => ({
 }))
 
 function runClick(event: MouseEvent): void {
-  if (props.disabled)
+  if (props.disabled) {
+    event.preventDefault()
+    event.stopPropagation()
     return
+  }
   const listener = attrs.onClick
   if (typeof listener === 'function')
     listener(event)
@@ -67,8 +73,11 @@ function runClick(event: MouseEvent): void {
 
 function onRemoveClick(event: MouseEvent): void {
   event.stopPropagation()
-  if (!props.disabled)
-    emit('remove', event)
+  if (props.disabled) {
+    event.preventDefault()
+    return
+  }
+  emit('remove', event)
 }
 
 function onKeydown(event: KeyboardEvent): void {
@@ -115,7 +124,8 @@ function onKeydown(event: KeyboardEvent): void {
       v-else-if="actionIsButton"
       type="button"
       class="astryx-token-action"
-      :disabled="props.disabled"
+      :aria-disabled="props.disabled || undefined"
+      v-bind="disabledInteraction"
       @click="runClick"
     >
       <span class="astryx-token-label" :class="{ 'is-hidden': hideLabel }">{{ props.label }}</span>
@@ -129,7 +139,8 @@ function onKeydown(event: KeyboardEvent): void {
       type="button"
       class="astryx-token-remove"
       :aria-label="removeLabel"
-      :disabled="props.disabled"
+      :aria-disabled="props.disabled || undefined"
+      v-bind="disabledInteraction"
       @click="onRemoveClick"
     >
       <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">

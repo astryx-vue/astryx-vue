@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import { defineComponent, h } from 'vue'
 import Token from './Token.vue'
 
 describe('token', () => {
@@ -26,11 +27,63 @@ describe('token', () => {
     expect(wrapper.emitted('remove')).toHaveLength(2)
   })
 
-  it('does not remove a disabled token', async () => {
-    const wrapper = mount(Token, { props: { label: 'Ada', removable: true, disabled: true } })
-    await wrapper.get('button').trigger('click')
+  it('keeps the remove button focusable and inert when disabled', async () => {
+    const wrapper = mount(Token, {
+      attachTo: document.body,
+      props: { label: 'Ada', removable: true, disabled: true },
+    })
+    const button = wrapper.get('button.astryx-token-remove')
+
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
+
+    ;(button.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(button.element)
+
+    for (const key of ['Enter', ' ']) {
+      const keydown = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+      button.element.dispatchEvent(keydown)
+      expect(keydown.defaultPrevented).toBe(true)
+    }
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+    button.element.dispatchEvent(click)
+    expect(click.defaultPrevented).toBe(true)
     await wrapper.trigger('keydown', { key: 'Delete' })
     expect(wrapper.emitted('remove')).toBeUndefined()
+
+    wrapper.unmount()
+  })
+
+  it('keeps the activation button focusable and inert when disabled', async () => {
+    const onClick = vi.fn()
+    const ancestorClick = vi.fn()
+    const wrapper = mount(defineComponent({
+      render: () => h('div', { onClick: ancestorClick }, [
+        h(Token, { label: 'Ada', disabled: true, onClick }),
+      ]),
+    }), { attachTo: document.body })
+    const button = wrapper.get('button.astryx-token-action')
+
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
+
+    ;(button.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(button.element)
+
+    for (const key of ['Enter', ' ']) {
+      const keydown = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+      button.element.dispatchEvent(keydown)
+      expect(keydown.defaultPrevented).toBe(true)
+    }
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true })
+    button.element.dispatchEvent(click)
+    expect(click.defaultPrevented).toBe(true)
+    expect(onClick).not.toHaveBeenCalled()
+    expect(ancestorClick).not.toHaveBeenCalled()
+
+    wrapper.unmount()
   })
 
   it('renders a link without nesting the remove button inside it', () => {
