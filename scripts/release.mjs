@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import process from 'node:process'
@@ -52,7 +52,36 @@ function pendingPackageNames() {
 const LAB_MANIFEST = join(ROOT, 'packages', 'lab', 'package.json')
 
 function run(args) {
-  execFileSync('pnpm', args, { cwd: ROOT, stdio: 'inherit' })
+  // 捕获输出再转发：发布失败时要看清是哪一类错误，才知道能不能重试。
+  const result = spawnSync('pnpm', args, { cwd: ROOT, encoding: 'utf8' })
+  if (result.stdout)
+    process.stdout.write(result.stdout)
+  if (result.stderr)
+    process.stderr.write(result.stderr)
+  if (result.status !== 0) {
+    const error = new Error(`pnpm ${args.join(' ')} 失败`)
+    error.output = `${result.stdout ?? ''}${result.stderr ?? ''}`
+    throw error
+  }
+}
+
+/**
+ * npm 的签名透明度日志偶尔会报 409（同一份产物已经入过账）。这不是内容错误，
+ * 隔一次重试通常就过；其他错误一律直接抛出。
+ */
+function runPublish(args, attempts = 3) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      run(args)
+      return
+    }
+    catch (error) {
+      const output = error.output ?? ''
+      if (attempt >= attempts || !output.includes('TLOG_CREATE_ENTRY_ERROR'))
+        throw error
+      console.log(`发布遇到签名日志冲突，重试第 ${attempt + 1} 次…`)
+    }
+  }
 }
 
 function holdLabBack(publish) {
@@ -72,10 +101,10 @@ function holdLabBack(publish) {
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const plan = releasePublishPlan(pendingPackageNames())
   run(['build:packages'])
-  const publish = () => run(plan.args)
+  const publish = () => runPublish(plan.args)
   if (plan.thenPublishLabAsCanary) {
     holdLabBack(publish)
-    run(['changeset', 'publish', '--tag', 'canary'])
+    runPublish(['changeset', 'publish', '--tag', 'canary'])
   }
   else {
     publish()
