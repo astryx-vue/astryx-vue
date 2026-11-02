@@ -1,5 +1,13 @@
 # @astryx-vue/core
 
+## 0.6.1
+
+### Patch Changes
+
+- [#419](https://github.com/astryx-vue/astryx-vue/pull/419) [`f0edcfe`](https://github.com/astryx-vue/astryx-vue/commit/f0edcfec10c33ae019c076a7d05b87665cbcf347) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `CheckboxInput` 和 `Switch` 禁用时不再用原生 `disabled`，改用可聚焦的 `aria-disabled`：键盘仍能停到控件上，读屏能读到名称和禁用原因，但值不会改变。禁用期间控件同时脱离所在表单，既不会提交，也不会用 `required` 拦住提交。原生复选框的"不确定"状态在禁用点击后保持不变。
+
+- [#420](https://github.com/astryx-vue/astryx-vue/pull/420) [`fb0dacd`](https://github.com/astryx-vue/astryx-vue/commit/fb0dacdda76aa603025210406e12e4c9b41907f7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `createMarkdownFrontmatter` 交给 `parse` 的是普通对象，所以 `parse: fields => fields` 这种原样返回能被当作合法元数据；此前记录没有原型，校验不过，页面会退回成正文并继续显示 frontmatter。叫 `__proto__` 的字段仍是普通字段，不会碰原型。
+
 ## 0.6.0
 
 ### Minor Changes
