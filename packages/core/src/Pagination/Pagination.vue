@@ -133,7 +133,10 @@ watch(() => [props.total, props.totalItems, props.totalPages, props.pageSize] as
 const showFirstLast = computed(() => {
   if (pagination.isCursor.value)
     return false
-  const enabled = props.hasFirstLast ?? props.variant === 'input'
+  // input shows them unless told otherwise; compact opts in; other variants never render them.
+  const enabled = props.variant === 'input'
+    ? (props.hasFirstLast ?? true)
+    : props.variant === 'compact' && props.hasFirstLast === true
   return enabled && pagination.totalPages.value > 1
 })
 

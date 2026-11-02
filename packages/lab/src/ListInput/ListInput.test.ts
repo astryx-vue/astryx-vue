@@ -522,7 +522,8 @@ describe('listInput', () => {
 
     for (const field of inputs())
       expect(field.hasAttribute('disabled')).toBe(true)
-    expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(true)
+    expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(false)
+    expect(buttonByLabel('Add guest')?.getAttribute('aria-disabled')).toBe('true')
     expect(buttonByLabel('Reorder guest 1')?.hasAttribute('disabled')).toBe(true)
     expect(buttonByLabel('Remove guest 1')?.getAttribute('aria-disabled')).toBe('true')
   })

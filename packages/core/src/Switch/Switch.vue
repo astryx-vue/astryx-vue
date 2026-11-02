@@ -63,7 +63,15 @@ function inputAttrs(): InputHTMLAttributes {
   return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
 }
 function describedBy(): string | undefined {
+  // 调用方传的 aria-describedby 描述的是开关本身，排在本组件自己的说明、状态和禁用原因之前。
   return [attrs['aria-describedby'], descriptionId.value, statusId.value, showsDisabledMessage.value ? disabledId : undefined].filter(Boolean).join(' ') || undefined
+}
+function labelledBy(): string {
+  // 调用方传的 aria-labelledby 给控件命名（例如同一行里另一处的可见标题），直接使用它。
+  const external = attrs['aria-labelledby']
+  if (typeof external === 'string' && external.trim() !== '')
+    return external
+  return `${inputId.value}-label`
 }
 function syncNative(): void {
   if (input.value)
@@ -110,7 +118,7 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
           :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)" :form="showsDisabledMessage ? '' : inputAttrs().form"
           :readonly="isReadOnly || showsDisabledMessage"
           :aria-checked="action.value.value"
-          :aria-labelledby="[`${inputId}-label`, attrs['aria-labelledby']].filter(Boolean).join(' ')"
+          :aria-labelledby="labelledBy()"
           :aria-describedby="describedBy()"
           :aria-disabled="showsDisabledMessage || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
           :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"

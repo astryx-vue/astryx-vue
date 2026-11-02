@@ -381,9 +381,13 @@
     overflow-x: auto;
   }
 
+  /* 表格画满格线：行线是格子的底边，列线是格子的行尾边（最后一列不画），外沿交给表格
+     自己的边框。边框在表格元素上而不是包一层，`border-collapse: collapse` 会把它和
+     格线合成一条 1px 线，外沿不会叠成双线。 */
   .astryx-markdown__table {
     width: max-content;
     min-width: 100%;
+    border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
     border-collapse: collapse;
     border-spacing: 0;
   }
@@ -398,6 +402,11 @@
     text-align: start;
     vertical-align: middle;
     overflow-wrap: break-word;
+  }
+
+  /* 列线；最后一列不画，外沿由表格边框收口，和 core `TableCell` 的 `:last-child` 一致。 */
+  .astryx-markdown__cell:not(:last-child) {
+    border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
   }
 
   .astryx-markdown__table tbody tr:last-child > .astryx-markdown__cell {

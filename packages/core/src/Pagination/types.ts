@@ -17,8 +17,9 @@ export interface PaginationProps {
   totalPages?: number
   /**
    * 中间区域的形态。
-   * `pages` 是页码，`count` 是「起–止 / 总数」，`compact` 是「第几页 / 共几页」，
-   * `dots` 是圆点，`input` 是可输入的页码，`none` 只留上一页和下一页。
+   * `pages` 是页码，`count` 是「起–止 / 总数」，`compact` 是「第几页 / 共几页」
+   * （首尾按钮默认不显示，可用 `hasFirstLast` 打开），`dots` 是圆点，
+   * `input` 是可输入的页码，`none` 只留上一页和下一页。
    * @default 'pages'
    */
   variant?: PaginationVariant
@@ -41,8 +42,10 @@ export interface PaginationProps {
   pageLabel?: string
   /**
    * 是否在上一页 / 下一页外侧放跳到首尾的按钮。
-   * 不传时只在 `input` 形态、并且总页数已知时显示。
+   * `input` 形态默认显示（传 `false` 关闭）；`compact` 形态只在传 `true` 时显示；
+   * 其他形态忽略这个属性。总页数未知（游标 / hasMore 分页）时两个按钮都不显示。
    * `null` 和缺省是同一件事。布尔属性缺省会被当成 false，所以这里用 null 表示没指定。
+   * @default `input` 为 true，`compact` 为 false
    */
   hasFirstLast?: boolean | null
   /**

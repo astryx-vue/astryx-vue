@@ -1,6 +1,6 @@
 import type { ISODateString } from './dateTypes.js'
 import type { PlainDate } from './plainDate.js'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import {
   DATE_FORMAT_MONTH_YEAR,
   DATE_FORMAT_WITH_WEEKDAY,
@@ -712,6 +712,47 @@ describe('plainDateGetWeekNumber', () => {
   it('keeps years 1-99 instead of mapping them to 1900-1999', () => {
     // 0004-01-01 is a Thursday (ISO week 1); 1904-01-01 was a Friday.
     expect(plainDateGetWeekNumber({ year: 4, month: 1, day: 1 })).toBe(1)
+  })
+
+  it('assigns weeks straddling New Year to the year that owns their Thursday', () => {
+    // 2025-12-29 (Monday) is ISO week 1 of 2026; 2027-01-01 (Friday) and
+    // 2021-01-01 (Friday) are ISO week 53 of the previous year.
+    expect(plainDateGetWeekNumber({ year: 2025, month: 12, day: 29 })).toBe(1)
+    expect(plainDateGetWeekNumber({ year: 2027, month: 1, day: 1 })).toBe(53)
+    expect(plainDateGetWeekNumber({ year: 2021, month: 1, day: 1 })).toBe(53)
+  })
+
+  // Regression: the week number must not depend on the host timezone's DST
+  // offset. Zones whose DST ends after New Year (southern hemisphere) used to
+  // add a phantom hour to the Thursday-vs-Jan-1 day count, and in years whose
+  // Jan 1 is a Friday that hour rounded a whole week up.
+  describe('week numbers are independent of the host DST offset', () => {
+    const originalTZ = process.env.TZ
+
+    afterEach(() => {
+      if (originalTZ === undefined)
+        delete process.env.TZ
+      else
+        process.env.TZ = originalTZ
+    })
+
+    it.each(['Australia/Sydney', 'Pacific/Auckland', 'America/Santiago'])(
+      'does not round week 14 up to 15 in %s (DST ends after New Year)',
+      (zone) => {
+        process.env.TZ = zone
+        // 2021-01-01 is a Friday, so every ISO Thursday falls on a whole
+        // multiple of 7 days into the year. 2021-04-05..11 is ISO week 14.
+        expect(plainDateGetWeekNumber({ year: 2021, month: 4, day: 5 })).toBe(14)
+        expect(plainDateGetWeekNumber({ year: 2021, month: 4, day: 8 })).toBe(14)
+        expect(plainDateGetWeekNumber({ year: 2021, month: 4, day: 11 })).toBe(14)
+      },
+    )
+
+    it('keeps late-December weeks correct in Australia/Sydney', () => {
+      process.env.TZ = 'Australia/Sydney'
+      // 2027-12-30 (Thursday) is ISO week 52, not 53.
+      expect(plainDateGetWeekNumber({ year: 2027, month: 12, day: 30 })).toBe(52)
+    })
   })
 })
 

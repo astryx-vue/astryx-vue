@@ -2,6 +2,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import type { SwitchProps } from './types.js'
 import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { computeAccessibleDescription, computeAccessibleName } from 'dom-accessibility-api'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createSSRApp, defineComponent, h, nextTick } from 'vue'
 import { resetLiveRegionsForTest } from '../composables/testing/resetLiveRegions.js'
@@ -46,6 +47,34 @@ describe('switch', () => {
     expect(input.attributes('aria-checked')).toBe('false')
     expect(input.attributes('aria-labelledby')).toBe('notify-label')
     expect(wrapper.get('label').attributes('for')).toBe('notify')
+  })
+
+  it('composes a caller aria-describedby onto the switch control', () => {
+    const wrapper = mount({
+      render: () => h('div', [
+        h('p', { id: 'external-hint' }, 'Applies to every repository'),
+        h(Switch, { 'id': 'notifications', 'label': 'Notifications', 'description': 'Sends a daily digest', 'modelValue': false, 'onUpdate:modelValue': () => {}, 'aria-describedby': 'external-hint' }),
+      ]),
+    }, { attachTo: document.body })
+    const input = wrapper.get('input').element
+    expect(input.getAttribute('aria-describedby')).toBe('external-hint notifications-description')
+    expect(computeAccessibleDescription(input)).toBe('Applies to every repository Sends a daily digest')
+    // 引用只落在开关控件上，不落在字段外壳上。
+    expect(wrapper.get('.astryx-switch').attributes('aria-describedby')).toBeUndefined()
+  })
+
+  it('names the switch control from a caller aria-labelledby', () => {
+    const wrapper = mount({
+      render: () => h('div', [
+        h('span', { id: 'row-title' }, 'Release notes'),
+        h(Switch, { 'label': 'Pin Release notes', 'isLabelHidden': true, 'modelValue': false, 'onUpdate:modelValue': () => {}, 'aria-labelledby': 'row-title' }),
+      ]),
+    }, { attachTo: document.body })
+    const input = wrapper.get('input').element
+    expect(input.getAttribute('aria-labelledby')).toBe('row-title')
+    expect(computeAccessibleName(input)).toBe('Release notes')
+    // 引用只落在开关控件上，不落在字段外壳上。
+    expect(wrapper.get('.astryx-switch').attributes('aria-labelledby')).toBeUndefined()
   })
 
   it('blocks toggling when disabled or read-only', async () => {

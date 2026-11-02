@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { paginationDots, paginationInput, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
+import { paginationCompact, paginationDots, paginationInput, paginationPageSize, paginationWithTable } from '../../../../components/demos/pagination'
 </script>
 
 ## Usage
@@ -55,3 +55,5 @@ The visible labels are English unless the app calls `provideAstryxLocale('zh-CN'
 <DemoExample :demo="paginationWithTable" description="The count variant under a table, at the small size, shows the item range for the current page." locale="en" title="With table" />
 
 <DemoExample :demo="paginationInput" description="Type a page number to jump. First and last sit outside the previous and next buttons. When the total is unknown, pass hasMore instead of a last page." locale="en" title="Page input" />
+
+<DemoExample :demo="paginationCompact" description="The compact readout can opt into first and last buttons when the page count is known." locale="en" title="Compact with first and last" />

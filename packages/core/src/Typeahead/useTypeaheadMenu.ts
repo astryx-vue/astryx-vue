@@ -82,6 +82,15 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
     debounceMs: options.debounceMs,
   })
 
+  // 组合组件（Tokenizer、PowerSearch）会换掉搜索源，旧源那次加载随之作废，
+  // 但它留下的 loading 会一直撑到新源的防抖结束。这里用同步 flush 先清掉，
+  // 再让 useAsyncSource 自己的 watcher 报上新源的状态。
+  watch(() => toValue(options.source), (source, previous) => {
+    if (source === previous || asyncSource.status.value !== 'loading')
+      return
+    asyncSource.status.value = 'idle'
+  }, { flush: 'sync' })
+
   const entries = computed<TypeaheadMenuEntry<T>[]>(() => {
     const excluded = new Set(toValue(options.excludeIds) ?? [])
     const blocked = new Set((toValue(options.blockedLabels) ?? []).map(label => label.toLowerCase()))

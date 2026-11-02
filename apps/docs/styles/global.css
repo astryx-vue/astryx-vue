@@ -2083,6 +2083,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: max-content;
   min-width: 100%;
   margin: 0;
+  border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
   border-collapse: collapse;
 }
 
@@ -2093,6 +2094,11 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   background: transparent;
   text-align: start;
   font-size: var(--astryx-text-body-size, 0.875rem);
+}
+
+/* 列线跟组件样式一致：最后一列不画，外沿交给表格边框。 */
+.vp-doc .astryx-markdown :is(th, td).astryx-markdown__cell:not(:last-child) {
+  border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
 }
 
 /*
