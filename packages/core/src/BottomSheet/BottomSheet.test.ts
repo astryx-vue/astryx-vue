@@ -172,6 +172,19 @@ describe('bottom sheet', () => {
     expect(wrapper.emitted('openChange')).toBeUndefined()
   })
 
+  it('ignores a cancel request that bubbles up from inside the sheet', async () => {
+    const wrapper = renderSheet()
+    await wrapper.setProps({ isOpen: true })
+
+    const inner = dialogEl().querySelector('.astryx-bottom-sheet__positioner') as HTMLElement
+    const event = new Event('cancel', { bubbles: true, cancelable: true })
+    inner.dispatchEvent(event)
+
+    expect(event.defaultPrevented).toBe(false)
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('blocks Escape and cancel for the required purpose', async () => {
     const wrapper = renderSheet({ purpose: 'required' })
     await wrapper.setProps({ isOpen: true })

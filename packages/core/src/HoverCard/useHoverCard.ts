@@ -5,7 +5,8 @@ import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from 
 import { useLayer } from '../composables/useLayer.js'
 import { isFocusable } from '../layer/focus.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
-import { isActionTrigger, mergeIds, supportsAriaExpanded } from './hoverCardTrigger.js'
+import { isActionTrigger, supportsAriaExpanded } from './hoverCardTrigger.js'
+import { useHoverCardTriggerBinding } from './hoverCardTriggerBinding.js'
 
 export interface UseHoverCardOptions {
   /**
@@ -300,110 +301,20 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     hideNow()
   }
 
-  let bound: HTMLElement | null = null
-  let describedByBefore: string | null = null
-  let haspopupBefore: string | null = null
-  let controlsBefore: string | null = null
-  let expandedBefore: string | null = null
-  let canExpand = false
-
-  function applyTriggerAttributes(): void {
-    const active = triggerRef.value
-    if (!active)
-      return
-
-    if (isDialog.value) {
-      active.setAttribute('aria-haspopup', 'dialog')
-      if (isOpen.value)
-        active.setAttribute('aria-controls', mergeIds(controlsBefore, layer.id) ?? '')
-      else if (controlsBefore)
-        active.setAttribute('aria-controls', controlsBefore)
-      else
-        active.removeAttribute('aria-controls')
-
-      if (canExpand)
-        active.setAttribute('aria-expanded', String(isOpen.value))
-      else if (expandedBefore)
-        active.setAttribute('aria-expanded', expandedBefore)
-      else
-        active.removeAttribute('aria-expanded')
-      return
-    }
-
-    active.setAttribute('aria-describedby', mergeIds(describedByBefore, layer.id) ?? '')
-  }
-
-  function restoreTriggerAttributes(): void {
-    const active = bound
-    if (!active)
-      return
-
-    if (describedByBefore)
-      active.setAttribute('aria-describedby', describedByBefore)
-    else
-      active.removeAttribute('aria-describedby')
-
-    if (haspopupBefore)
-      active.setAttribute('aria-haspopup', haspopupBefore)
-    else
-      active.removeAttribute('aria-haspopup')
-
-    if (controlsBefore)
-      active.setAttribute('aria-controls', controlsBefore)
-    else
-      active.removeAttribute('aria-controls')
-
-    if (expandedBefore)
-      active.setAttribute('aria-expanded', expandedBefore)
-    else
-      active.removeAttribute('aria-expanded')
-  }
-
   function shouldListenFocus(element: HTMLElement): boolean {
     const mode = toValue(options.focusTrigger) ?? 'auto'
     return mode === 'always' || (mode === 'auto' && isFocusable(element))
   }
 
-  function bind(element: HTMLElement): void {
-    if (bound === element)
-      return
-    unbind()
-    bound = element
-
-    describedByBefore = element.getAttribute('aria-describedby')
-    haspopupBefore = element.getAttribute('aria-haspopup')
-    controlsBefore = element.getAttribute('aria-controls')
-    expandedBefore = element.getAttribute('aria-expanded')
-    canExpand = supportsAriaExpanded(element)
-
-    element.addEventListener('pointerenter', onPointerEnter as EventListener)
-    element.addEventListener('mouseenter', onMouseEnter)
-    element.addEventListener('mouseleave', onMouseLeave)
-    element.addEventListener('pointerdown', onPointerDown as EventListener)
-    if (shouldListenFocus(element)) {
-      element.addEventListener('focusin', onFocusIn)
-      element.addEventListener('focusout', onFocusOut)
-    }
-    applyTriggerAttributes()
-  }
-
-  function unbind(): void {
-    if (bound == null)
-      return
-    bound.removeEventListener('pointerenter', onPointerEnter as EventListener)
-    bound.removeEventListener('mouseenter', onMouseEnter)
-    bound.removeEventListener('mouseleave', onMouseLeave)
-    bound.removeEventListener('pointerdown', onPointerDown as EventListener)
-    bound.removeEventListener('focusin', onFocusIn)
-    bound.removeEventListener('focusout', onFocusOut)
-    restoreTriggerAttributes()
-    bound = null
-    describedByBefore = null
-    haspopupBefore = null
-    controlsBefore = null
-    expandedBefore = null
-    canExpand = false
-  }
+  const { bind, unbind, applyTriggerAttributes } = useHoverCardTriggerBinding({
+    triggerRef,
+    isOpen,
+    isDialog,
+    layerId: layer.id,
+    supportsExpanded: supportsAriaExpanded,
+    shouldListenFocus,
+    handlers: { onPointerEnter, onMouseEnter, onMouseLeave, onPointerDown, onFocusIn, onFocusOut },
+  })
 
   // 同步监听：组件在 onMounted / onUpdated 里写 ref，属性要立刻落到元素上。
   watch(triggerRef, (element) => {
@@ -415,6 +326,10 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
 
   watch(isOpen, (visible) => {
     applyTriggerAttributes()
+    // 指针还停在卡片上时卡片被关掉，就不会再有 mouseleave：
+    // 这里清掉悬停态，下一次打开才能照常按离开关闭。
+    if (!visible)
+      isHoveringContent = false
     if (typeof document === 'undefined')
       return
     if (visible)

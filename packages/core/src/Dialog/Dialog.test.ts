@@ -101,6 +101,17 @@ describe('dialog', () => {
     }
   })
 
+  it('ignores a cancel request that bubbles up from inside the dialog', () => {
+    const wrapper = renderDialog({ isOpen: true, purpose: 'info' })
+    const inner = dialogEl().querySelector('.astryx-dialog__inner') as HTMLElement
+    const event = new Event('cancel', { bubbles: true, cancelable: true })
+    inner.dispatchEvent(event)
+
+    expect(event.defaultPrevented).toBe(false)
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('blocks cancel for the required purpose and uses alertdialog semantics', () => {
     const wrapper = renderDialog({ isOpen: true, purpose: 'required' })
     const event = new Event('cancel', { cancelable: true })

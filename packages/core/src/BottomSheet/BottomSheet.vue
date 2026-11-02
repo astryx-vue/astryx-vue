@@ -194,6 +194,9 @@ function onKeydown(event: KeyboardEvent): void {
 }
 
 function onCancel(event: Event): void {
+  // 内部元素也会发 cancel：文件选择器被取消时就会冒上来，那不是关闭请求。
+  if (event.target !== dialog.value)
+    return
   event.preventDefault()
   if (!layer.isTop())
     return

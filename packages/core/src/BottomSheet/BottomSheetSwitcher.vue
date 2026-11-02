@@ -167,6 +167,9 @@ function onKeydown(event: KeyboardEvent): void {
 }
 
 function onCancel(event: Event): void {
+  // 内部元素也会发 cancel：文件选择器被取消时就会冒上来，那不是关闭请求。
+  if (event.target !== dialog.value)
+    return
   emit('cancel', event)
   // 原生 <dialog> 的 cancel 会自己关掉对话框，所以这里先拦下来；
   // 消费者已经 preventDefault 时视为不同意关闭。
