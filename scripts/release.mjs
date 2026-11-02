@@ -12,9 +12,6 @@ const CANARY_PACKAGE = '@astryx-vue/lab'
 export function changesetPublishArgs(pendingNames) {
   if (!pendingNames.includes(CANARY_PACKAGE))
     return ['changeset', 'publish']
-  if (pendingNames.length > 1) {
-    throw new Error('Lab 必须和稳定包分开发版，避免 Changesets 把 stable 包也发到 canary。请拆开 Version Packages PR 后再发布。')
-  }
   return ['changeset', 'publish', '--tag', 'canary']
 }
 
@@ -26,12 +23,14 @@ export function releasePublishPlan(pendingNames) {
   if (hasLab && hasStable) {
     return {
       args: changesetPublishArgs(pendingNames.filter(name => name !== CANARY_PACKAGE)),
-      holdBackLab: true,
+      // 先发稳定包，再把 Lab 单独发到 canary：Changesets 一次只能用一个 dist-tag，
+      // 混在一批会把稳定包也推到 canary，或者把 Lab 推到 latest。
+      thenPublishLabAsCanary: true,
     }
   }
   return {
     args: changesetPublishArgs(pendingNames),
-    holdBackLab: false,
+    thenPublishLabAsCanary: false,
   }
 }
 
@@ -74,8 +73,11 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const plan = releasePublishPlan(pendingPackageNames())
   run(['build:packages'])
   const publish = () => run(plan.args)
-  if (plan.holdBackLab)
+  if (plan.thenPublishLabAsCanary) {
     holdLabBack(publish)
-  else
+    run(['changeset', 'publish', '--tag', 'canary'])
+  }
+  else {
     publish()
+  }
 }

@@ -14,23 +14,24 @@ describe('changesetPublishArgs', () => {
     expect(changesetPublishArgs([])).toEqual(['changeset', 'publish'])
   })
 
-  it('refuses to mix lab and stable packages in one tagged publish', () => {
-    expect(() => changesetPublishArgs(['@astryx-vue/core', '@astryx-vue/lab'])).toThrow('Lab 必须和稳定包分开发版')
+  it('tags a mixed batch as canary before the caller splits it', () => {
+    // 正式发布不会把两者放同一批；这个分支只在有人直接调用时出现。
+    expect(changesetPublishArgs(['@astryx-vue/core', '@astryx-vue/lab'])).toEqual(['changeset', 'publish', '--tag', 'canary'])
   })
 })
 
 describe('releasePublishPlan', () => {
-  it('publishes only the stable packages when lab is still unpublished', () => {
+  it('publishes stable packages first, then lab as canary', () => {
     expect(releasePublishPlan(['@astryx-vue/core', '@astryx-vue/themes', '@astryx-vue/lab'])).toEqual({
       args: ['changeset', 'publish'],
-      holdBackLab: true,
+      thenPublishLabAsCanary: true,
     })
   })
 
   it('keeps a lab-only release on canary', () => {
     expect(releasePublishPlan(['@astryx-vue/lab'])).toEqual({
       args: ['changeset', 'publish', '--tag', 'canary'],
-      holdBackLab: false,
+      thenPublishLabAsCanary: false,
     })
   })
 })

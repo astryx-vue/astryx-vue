@@ -11,16 +11,16 @@
 推到 `main`，或者在 `main` 上手动运行 Release workflow 时：
 
 1. `pnpm install --frozen-lockfile`
-2. `pnpm check`。这里面包含 publint 和 `@arethetypeswrong/cli`
-3. 工作目录里还有 changeset 时，打开或更新标题为 `Version Packages` 的 PR。这个 PR 由 `pnpm version-packages` 生成：`changeset version` 改版本号，`pnpm install --lockfile-only` 更新 lockfile，最后重新生成 CLI 的 `catalog.json`。catalog 里记着每个包的版本号，不重新生成就会和 `package.json` 对不上，`generate:check` 会把发版卡住
+2. `pnpm check:packages`、`pnpm lint`、`pnpm typecheck`。完整测试已经在 PR 上跑过，`main` 上不再重复跑一遍；`publint` 和 `@arethetypeswrong/cli` 在下面的构建里做
+3. 工作目录里还有 changeset 时，直接运行 `pnpm version-packages` 并提交一次 `Version Packages`，然后把这个提交推回 `main`。不再打开版本 PR：那个 PR 由机器人创建，每次都要人工批准整条 workflow，等待比构建还久。`version-packages` 会跑 `changeset version`、`pnpm install --lockfile-only`，最后重新生成 CLI 的 `catalog.json`。catalog 里记着每个包的版本号，不重新生成就会和 `package.json` 对不上，`generate:check` 会把发版卡住
 4. 没有未消费的 changeset 时，`pnpm release` 会检查待发布包、构建，再执行 `changeset publish`。Lab 单独发版时显式使用 canary；Lab 和稳定包不能混在同一批发布。pnpm 11 自己实现了 publish，会把 `catalog:` 和 `workspace:` 改成具体版本
 5. 已经在 npm 上的版本会跳过，不会再次上传
 6. 为每个包打 git tag，并创建 GitHub Release。随后把对应的 npm 版本页链接补进 Release 说明
 7. `npm view` 核对刚发布的版本、`repository` 字段；仓库是 public 时还核对 provenance
 8. npm 发布成功后，把同一版本发到 GitHub Packages。仓库变量 `PUBLISH_GITHUB_PACKAGES` 为 `false` 时跳过这一步
-9. changesets 真正把包发出去之后（`published` 为 `true`），另一个 job 把 `main` 合并回 `dev`，补上 Version Packages 那次提交。没有冲突就直接推送；推送被分支保护拒绝，或者有冲突，就打开或更新标题为 `chore: sync main into dev` 的 PR（`main` → `dev`）。已经有同名的开放 PR 时不另开，只更新说明。直接推送成功后，这个 PR 会关掉。这一步不依赖 GitHub Packages，失败不会撤回已经发出的版本
+9. changesets 真正把包发出去之后（`published` 为 `true`），另一个 job 把 `main` 合并回 `dev`，补上版本提交。没有冲突就直接推送；推送被分支保护拒绝，或者有冲突，就打开或更新标题为 `chore: sync main into dev` 的 PR（`main` → `dev`）。已经有同名的开放 PR 时不另开，只更新说明。直接推送成功后，这个 PR 会关掉。这一步不依赖 GitHub Packages，失败不会撤回已经发出的版本
 
-pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
+pull request 上并行跑五组检查：包检查与 lint、类型检查、按分片拆开的测试、构建打包与模板落地、以及生产环境变量下的测试守卫。任何一组失败都会挡住合并，但不用等整套串行跑完。
 
 同一次 `main` 发布不会并行，也不会把已经开始的发布取消掉。过期的 pull request 检查可以被新的一次取消。
 
@@ -28,7 +28,7 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
 
 不要为第一次发布配置 `NPM_TOKEN`。包还没在 npm 上出现过时，不能先配 Trusted Publisher，这个设置挂在已经存在的包上。`0.1.0` 由仓库所有者在自己的电脑上发布，npm 会要 2FA 一次性密码。
 
-1. 合并这份准备 PR。workflow 会打开标题为 `Version Packages` 的 PR，把两个包的版本改成 `0.1.0`，这时还不会上传。先不要合并那个 PR。
+1. 合并这份准备 PR。workflow 会自己把两个包的版本改成 `0.1.0` 并提交，然后尝试上传。第一次上传会失败，因为 npm 上还没有这两个包。
 2. 在自己的电脑上检出 `Version Packages` PR 的分支，然后登录 npm。登录时会要 2FA 一次性密码。
 
    ```sh
@@ -81,7 +81,7 @@ pull request 上只跑 `pnpm check` 和 `pnpm release:dry-run`，不会上传。
 
 ### Lab 只发 canary
 
-`@astryx-vue/lab` 的 `publishConfig.tag` 固定为 `canary`，首发脚本和 `scripts/release.mjs` 也会显式传 `--tag canary`。Changesets 仍负责版本号、changelog、git tag 和 GitHub Release，但 npm 上传不会写入 `latest`。安装时必须明确使用 `@astryx-vue/lab@canary`。Lab 的 changeset 要单独开一个 Version Packages PR。Changesets 的一次发布只能使用一个 dist-tag，所以不能把 Lab 和稳定包打进同一个 tag。Lab 这个版本还没出现在 npm 上时，`scripts/release.mjs` 会在这一轮把它标成 private，只发布稳定包，Lab 留到单独的 canary 发布。
+`@astryx-vue/lab` 固定发到 `canary`。`scripts/release.mjs` 会先发稳定包，再把 Lab 单独发到 `canary`：Changesets 一次发布只能用一个 dist-tag，混在一批要么把稳定包推到 canary，要么把 Lab 写成 `latest`。安装时必须明确使用 `@astryx-vue/lab@canary`。Lab 这个版本还没出现在 npm 上时，脚本会在第一轮把它标成 private，只发稳定包，第二轮再用 `--tag canary` 发它。
 
 第一次上传仍需按上面的新包流程由仓库所有者本机完成。合并 `Version Packages` PR 后运行 `scripts/publish-first-release.sh lab`，脚本会读取包里的 canary 配置；随后配置 Trusted Publisher 并重跑 Release workflow 补齐其余产物。
 
@@ -145,3 +145,9 @@ CLI 的 npm 包内置生成的 catalog，所以文档、模板或 catalog 里的
 - 同步 `main` 回 `dev` 没能直接推送：npm 上的包不受影响。推送被分支保护拒绝，或者合并有冲突时，会留下标题为 `chore: sync main into dev` 的 PR。这一步用的是 `GITHUB_TOKEN`，推送和开出来的 PR 不会再触发别的 workflow。
 
 手动补发只作为上面这些步骤都对不上时的最后手段，并且不要复用已经成功的版本号。
+
+## 等待时间
+
+PR 检查拆成五组并行跑：包检查与 lint、类型检查、测试分片、构建打包、生产环境变量守卫。改动只涉及一个小文件时，测试分片仍然会跑完它那一份，但整体等待从约十分钟降到几分钟。
+
+发版不再经过 `Version Packages` PR。`main` 上有 changeset 时，Release workflow 自己改版本、提交、推回 `main`，然后发布；中途失败时下一次运行会接着补发，不需要人点批准。
