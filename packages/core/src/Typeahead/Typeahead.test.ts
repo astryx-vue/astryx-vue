@@ -21,6 +21,7 @@ async function flush(): Promise<void> {
 
 // 下拉挂在 body 上，前一个用例断言失败时可能留下节点，每个用例开始前清干净。
 afterEach(() => {
+  vi.useRealTimers()
   document.body.innerHTML = ''
 })
 
@@ -97,6 +98,38 @@ describe('typeahead', () => {
     rejectSearch?.(new Error('offline'))
     await flush()
     expect(document.querySelector('[role="alert"]')?.textContent).toContain('Couldn\'t load results')
+    wrapper.unmount()
+  })
+
+  it('clears the busy indicator when the search source is replaced during a load', async () => {
+    vi.useFakeTimers()
+    let settle: (items: SearchableItem[]) => void = () => {}
+    const firstSource: SearchSource = {
+      search: () => [],
+      bootstrap: () => new Promise<SearchableItem[]>((resolve) => {
+        settle = resolve
+      }),
+    }
+    const nextSource: SearchSource = { search: () => [], bootstrap: () => [] }
+    const wrapper = mountTypeahead({ searchSource: firstSource, debounceMs: 150 })
+    const input = wrapper.get('input[role="combobox"]')
+
+    await input.trigger('focus')
+    await flush()
+    await vi.advanceTimersByTimeAsync(150)
+    expect(wrapper.find('.astryx-typeahead-spinner').exists()).toBe(true)
+
+    await wrapper.setProps({ searchSource: nextSource })
+    await flush()
+    // 旧源的请求已经作废；新源还在防抖里，旧 loading 不能继续转。
+    expect(wrapper.find('.astryx-typeahead-spinner').exists()).toBe(false)
+
+    await vi.advanceTimersByTimeAsync(150)
+    expect(wrapper.find('.astryx-typeahead-spinner').exists()).toBe(false)
+
+    settle([])
+    await flush()
+    expect(wrapper.find('.astryx-typeahead-spinner').exists()).toBe(false)
     wrapper.unmount()
   })
 
