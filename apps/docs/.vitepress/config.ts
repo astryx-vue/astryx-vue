@@ -28,7 +28,6 @@ function navigation(english: boolean): DefaultTheme.NavItem[] {
   return [
     { text: english ? 'Docs' : '文档', link: `${prefix}/guide/why`, activeMatch: `^${prefix}/guide/` },
     { text: english ? 'Components' : '组件', link: `${prefix}/components/`, activeMatch: `^${prefix}/components/` },
-    { text: 'Lab', link: `${prefix}/lab/`, activeMatch: `^${prefix}/lab/` },
     { text: english ? 'Playground' : '演练场', link: `${prefix}/playground/`, activeMatch: `^${prefix}/playground` },
     { text: english ? 'Themes' : '主题', link: `${prefix}/themes/`, activeMatch: `^${prefix}/themes/` },
   ]

@@ -1,11 +1,10 @@
 ---
-layout: lab-docs
 title: Lab
 ---
 
 # Lab
 
-`@astryx-vue/lab` 收录仍在验证 API 和交互的组件。**这个包只通过 `canary` 标签发布**，属性和标记可能在任何 canary 版本中变化，不承诺稳定版兼容。
+`@astryx-vue/lab` 收录仍在验证 API 和交互的组件。原版 Astryx 没有单独的 Lab 分区，这些组件按用途分在 Form Controls、Indicator、Data Visualization 等分类里，只是标了 canary；这里单独放一页，是为了让「会变」这件事一眼可见。**这个包只通过 `canary` 标签发布**，属性和标记可能在任何 canary 版本中变化，不承诺稳定版兼容。
 
 ## 安装
 

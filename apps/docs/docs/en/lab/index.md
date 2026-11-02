@@ -1,11 +1,10 @@
 ---
-layout: lab-docs
 title: Lab
 ---
 
 # Lab
 
-`@astryx-vue/lab` contains components whose APIs and interactions are still being evaluated. **The package is published only under the `canary` tag**. Props and markup may change in any canary release; stable compatibility is not guaranteed.
+`@astryx-vue/lab` contains components whose APIs and interactions are still being evaluated. Upstream Astryx has no Lab section: it files these under Form Controls, Indicator, Data Visualization, and so on, marked canary. They live on one page here so that "this may change" stays visible. **The package is published only under the `canary` tag**. Props and markup may change in any canary release; stable compatibility is not guaranteed.
 
 ## Install
 
