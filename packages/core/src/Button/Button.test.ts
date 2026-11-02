@@ -182,7 +182,8 @@ describe('button', () => {
     await wrapper.trigger('click')
 
     expect(wrapper.attributes('aria-busy')).toBe('true')
-    expect(wrapper.attributes('disabled')).toBe('')
+    expect(wrapper.attributes('disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
     expect(wrapper.attributes('data-delay-spinner')).toBe('true')
     expect(wrapper.find('.astryx-button__spinner').exists()).toBe(true)
     expect(wrapper.find('.astryx-button__content').attributes('aria-hidden')).toBe('true')
@@ -193,6 +194,7 @@ describe('button', () => {
 
     expect(wrapper.attributes('aria-busy')).toBeUndefined()
     expect(wrapper.attributes('disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-disabled')).toBeUndefined()
     expect(wrapper.find('.astryx-button__spinner').exists()).toBe(false)
     expect(wrapper.find('.astryx-visually-hidden').text()).toBe('')
   })
@@ -259,15 +261,17 @@ describe('button', () => {
 
     expect(wrapper.attributes('aria-busy')).toBe('true')
     expect(wrapper.attributes('data-delay-spinner')).toBeUndefined()
-    expect(wrapper.attributes('disabled')).toBe('')
+    expect(wrapper.attributes('disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
 
     await wrapper.setProps({ isInterruptible: true })
 
     expect(wrapper.attributes('data-delay-spinner')).toBe('true')
     expect(wrapper.attributes('disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-disabled')).toBeUndefined()
   })
 
-  it('uses the localized loadingLabel in both status regions', () => {
+  it('uses the localized loadingLabel in both status regions', async () => {
     const wrapper = mount(Button, {
       props: {
         isLoading: true,
@@ -277,7 +281,98 @@ describe('button', () => {
     })
 
     expect(wrapper.find('.astryx-button__spinner').attributes('aria-label')).toBe('正在保存')
+
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+
     expect(wrapper.find('.astryx-visually-hidden').text()).toBe('正在保存')
+  })
+
+  it('mounts the loading live region empty, then fills it with the loading label', async () => {
+    const wrapper = mount(Button, {
+      props: {
+        isLoading: true,
+        label: 'Save',
+        loadingLabel: '正在保存',
+      },
+    })
+
+    expect(wrapper.find('.astryx-visually-hidden').text()).toBe('')
+
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+
+    expect(wrapper.find('.astryx-visually-hidden').text()).toBe('正在保存')
+  })
+
+  it('keeps a busy-only button focusable and does not fire its action', async () => {
+    const clickAction = vi.fn()
+    const onClick = vi.fn()
+    const wrapper = mount(Button, {
+      attachTo: document.body,
+      props: {
+        clickAction,
+        isLoading: true,
+        label: 'Save',
+        onClick,
+      },
+    })
+
+    expect(wrapper.attributes('disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
+
+    ;(wrapper.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(wrapper.element)
+
+    await wrapper.trigger('click')
+
+    expect(onClick).not.toHaveBeenCalled()
+    expect(clickAction).not.toHaveBeenCalled()
+  })
+
+  it('keeps a click on a busy-only button from reaching an ancestor handler', async () => {
+    const ancestorClick = vi.fn()
+    const wrapper = mount({
+      render: () => h('div', { onClick: ancestorClick }, [
+        h(Button, { isLoading: true, label: 'Save' }),
+      ]),
+    })
+
+    await wrapper.find('button').trigger('click')
+
+    expect(ancestorClick).not.toHaveBeenCalled()
+  })
+
+  it('suppresses Enter and Space while busy-only, but passes other keys through', async () => {
+    const onKeydown = vi.fn()
+    const wrapper = mount(Button, {
+      attrs: { onKeydown },
+      props: {
+        isLoading: true,
+        label: 'Save',
+      },
+    })
+
+    await wrapper.trigger('keydown', { key: 'Enter' })
+    await wrapper.trigger('keydown', { key: ' ' })
+    expect(onKeydown).not.toHaveBeenCalled()
+
+    await wrapper.trigger('keydown', { key: 'Escape' })
+    expect(onKeydown).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps native disabled when isDisabled is the reason, even while loading', () => {
+    const disabled = mount(Button, {
+      props: { isDisabled: true, label: 'Save' },
+    })
+    expect(disabled.attributes('disabled')).toBe('')
+    expect(disabled.attributes('aria-disabled')).toBeUndefined()
+
+    const disabledAndLoading = mount(Button, {
+      props: { isDisabled: true, isLoading: true, label: 'Save' },
+    })
+    expect(disabledAndLoading.attributes('disabled')).toBe('')
+    expect(disabledAndLoading.attributes('aria-disabled')).toBeUndefined()
   })
 
   it('suppresses click and clickAction when disabled', async () => {
@@ -412,6 +507,47 @@ describe('button', () => {
     expect(wrapper.element.tagName).toBe('A')
     expect(wrapper.attributes('href')).toBe('/account')
     expect(wrapper.attributes('data-to')).toBe('/account')
+  })
+
+  it('keeps a busy-only href button an anchor and focusable without navigating', async () => {
+    const onKeydown = vi.fn()
+    const wrapper = mount(Button, {
+      attachTo: document.body,
+      attrs: { onKeydown },
+      props: { href: '/docs', isLoading: true, label: 'Docs' },
+    })
+    const link = wrapper.find('a')
+
+    expect(link.attributes('href')).toBe('/docs')
+    expect(link.attributes('aria-busy')).toBe('true')
+    expect(link.attributes('aria-disabled')).toBe('true')
+    expect(link.attributes('disabled')).toBeUndefined()
+
+    ;(link.element as HTMLElement).focus()
+    expect(document.activeElement).toBe(link.element)
+
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+    link.element.dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+
+    await link.trigger('keydown', { key: 'Enter' })
+    expect(onKeydown).not.toHaveBeenCalled()
+
+    await link.trigger('keydown', { key: 'Escape' })
+    expect(onKeydown).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps a click on a busy-only anchor from reaching an ancestor handler', async () => {
+    const ancestorClick = vi.fn()
+    const wrapper = mount({
+      render: () => h('div', { onClick: ancestorClick }, [
+        h(Button, { href: '/docs', isLoading: true, label: 'Docs' }),
+      ]),
+    })
+
+    await wrapper.find('a').trigger('click')
+
+    expect(ancestorClick).not.toHaveBeenCalled()
   })
 
   it('falls back to a real button when a link action is disabled', () => {

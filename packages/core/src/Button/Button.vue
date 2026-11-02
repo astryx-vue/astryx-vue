@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
-import { computed, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
 import Icon from '../Icon/Icon.vue'
@@ -62,13 +62,22 @@ const action = useButtonAction({
 
 const isLoadingState = computed(() => props.isLoading || action.isPending.value)
 const delaySpinner = computed(() => action.isPending.value || props.isInterruptible)
-const isDisabledState = computed(() =>
-  isLocallyDisabled.value || (isLoadingState.value && !props.isInterruptible),
+const isTrueDisabled = computed(() => isLocallyDisabled.value)
+// 忙碌但未真正禁用：只是动作在飞行中，不能再次触发。按 API 约定，
+// 忙碌是视觉状态（aria-busy + spinner），不能夺走焦点；真正去重靠
+// useButtonAction 的 pending 守卫，原生 disabled 只会让键盘用户丢焦点。
+const isBusyOnlyDisabled = computed(() =>
+  !isTrueDisabled.value && isLoadingState.value && !props.isInterruptible,
 )
+const isButtonDisabled = computed(() => isTrueDisabled.value || isBusyOnlyDisabled.value)
 const hasTooltip = computed(() => (props.tooltip?.trim().length ?? 0) > 0)
-const useAriaDisabled = computed(() => hasTooltip.value && isDisabledState.value)
+// 忙碌或带提示时用 aria-disabled，按钮仍可聚焦；真正禁用且无提示才用原生 disabled。
+const useAriaDisabled = computed(() =>
+  isButtonDisabled.value && (isBusyOnlyDisabled.value || hasTooltip.value),
+)
 const safeHref = computed(() => props.href != null && isSafeUrl(props.href) ? props.href : undefined)
-const renderAsLink = computed(() => props.href != null && !isDisabledState.value)
+// 只有真正禁用才退回 <button>；忙碌时换掉 <a> 同样会让焦点丢失。
+const renderAsLink = computed(() => props.href != null && !isTrueDisabled.value)
 const rootComponent = computed<ButtonLinkElement | 'button'>(() => {
   if (!renderAsLink.value)
     return 'button'
@@ -79,8 +88,32 @@ const rootComponent = computed<ButtonLinkElement | 'button'>(() => {
 })
 const isCustomLink = computed(() => renderAsLink.value && safeHref.value != null && rootComponent.value !== 'a')
 const nativeDisabled = computed(() =>
-  !renderAsLink.value && !useAriaDisabled.value && isDisabledState.value,
+  !renderAsLink.value && !useAriaDisabled.value && isButtonDisabled.value,
 )
+// 首次渲染就处于 loading 时，live region 必须先以空内容挂载，再在下一帧写入文案：
+// 许多读屏器会跳过与文字同时出现的 live region，忙碌开始就播报不出来。
+const isLiveRegionReady = ref(!isLoadingState.value)
+let liveRegionFrame: number | undefined
+
+onMounted(() => {
+  if (isLiveRegionReady.value)
+    return
+
+  if (typeof requestAnimationFrame !== 'function') {
+    isLiveRegionReady.value = true
+    return
+  }
+
+  liveRegionFrame = requestAnimationFrame(() => {
+    liveRegionFrame = undefined
+    isLiveRegionReady.value = true
+  })
+})
+
+onBeforeUnmount(() => {
+  if (liveRegionFrame != null)
+    cancelAnimationFrame(liveRegionFrame)
+})
 
 const element = computed<ButtonRootElement | null>(() => {
   const root = renderedRoot.value
@@ -244,7 +277,7 @@ defineExpose({
     </span>
 
     <VisuallyHidden role="status" aria-live="polite">
-      {{ isLoadingState ? loadingLabel : '' }}
+      {{ isLoadingState && isLiveRegionReady ? loadingLabel : '' }}
     </VisuallyHidden>
 
     <ButtonTooltip

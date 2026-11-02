@@ -35,6 +35,9 @@ export function useButtonAction({
 
     if (isActionBlocked) {
       event.preventDefault()
+      // aria-disabled 元素仍会派发 click；原生 disabled 不会，也不会冒泡到祖先。
+      // 这里一并拦住冒泡，免得不该响应的按钮触发外层可点击行/卡片。
+      event.stopPropagation()
       return
     }
 
