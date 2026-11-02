@@ -20,6 +20,8 @@ function cssRule(selector: string): string {
 
 let controlElement: HTMLElement | null = null
 
+const listCss = readFileSync(resolve(process.cwd(), 'packages/core/styles/list.css'), 'utf8')
+
 function listOf(items: Array<Record<string, unknown>>, props: Record<string, unknown> = {}) {
   return mount(List, {
     props,
@@ -446,6 +448,30 @@ describe('item', () => {
     const wrapper = mount(Item, { props: { description: 'Supporting', label: 'Row', layout: 'inline' } })
 
     expect(wrapper.find('.astryx-item__content').classes()).toContain('astryx-item__content--inline')
+  })
+
+  it('reflects the vertical alignment on the row theme target', () => {
+    const center = mount(Item, { props: { label: 'Row' } })
+    expect(center.find('.astryx-item').attributes('data-align')).toBe('center')
+
+    const start = mount(Item, { props: { align: 'start', label: 'Row' } })
+    expect(start.find('.astryx-item').attributes('data-align')).toBe('start')
+
+    const firstLine = mount(Item, { props: { align: 'first-line', label: 'Row' } })
+    expect(firstLine.find('.astryx-item').attributes('data-align')).toBe('first-line')
+  })
+
+  it('aligns the row on its first baselines only for first-line', () => {
+    expect(listCss).toMatch(/\.astryx-item\[data-align='first-line'\] \{\s*align-items: baseline;/)
+    expect(listCss).toMatch(/\.astryx-item--swipe\[data-align='first-line'\] > \.astryx-item__surface \{\s*align-items: baseline;/)
+    expect(listCss).toMatch(/\.astryx-item\[data-align='start'\] \{\s*align-items: flex-start;/)
+    expect(listCss).not.toMatch(/\.astryx-item\[data-align='center'\]/)
+  })
+
+  it('gives each first-line start and end slot a zero-width strut with no accessible text', () => {
+    const strut = /\.astryx-item\[data-align='first-line'\] > :is\(\.astryx-item__start, \.astryx-item__end\)::before,[\s\S]*?content: "\\200B" \/ "";[\s\S]*?inline-size: 0;[\s\S]*?font-size: var\(--astryx-text-body-size, 0\.875rem\);[\s\S]*?line-height: var\(--astryx-text-body-leading, 1\.4286\);/
+    expect(listCss).toMatch(strut)
+    expect(listCss).toContain('.astryx-item--swipe[data-align=\'first-line\'] > .astryx-item__surface > :is(.astryx-item__start, .astryx-item__end)::before')
   })
 })
 

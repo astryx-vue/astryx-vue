@@ -50,8 +50,12 @@ export type ListEdge = 'padded' | 'flush' | 'outset' | 'bleed'
  */
 export type ListEdgeCompensation = 'inline'
 
-/** Vertical alignment of the start/end content slots. */
-export type ItemAlign = 'center' | 'start'
+/**
+ * Vertical alignment of the start/end content slots. `center` centers each
+ * slot on the whole text block; `start` lines up slot tops with the text's
+ * top; `first-line` centers each slot on the label's first line.
+ */
+export type ItemAlign = 'center' | 'start' | 'first-line'
 
 /** Spacing density of one row. */
 export type ItemDensity = ListDensity
@@ -218,7 +222,11 @@ export interface ItemProps extends ListItemProps {
    */
   as?: ItemElement
   /**
-   * Vertical alignment of the start and end content slots.
+   * Vertical alignment of the start and end content slots. `center` centers
+   * each slot on the whole text block; `start` lines up slot tops with the
+   * text's top; `first-line` centers each slot on the label's first line, so a
+   * small mark stays level with the first line of a wrapped label. A slot
+   * taller than that line moves the text down.
    * @default 'center'
    */
   align?: ItemAlign

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { itemBasic, itemDocumentTabs, itemMetadata, itemStartContent } from '../../../../components/demos/item'
+import { itemAlignFirstLine, itemBasic, itemDocumentTabs, itemMetadata, itemStartContent } from '../../../../components/demos/item'
 </script>
 
 ## 使用方法
@@ -29,7 +29,7 @@ import { Item } from '@astryx-vue/core/List'
 | <Badge variant="success">推荐</Badge> | 常见排版用带名字的插槽（`startContent`、`label`、`description`、`endContent`），八成的场景这样写就够了。 |
 | <Badge variant="success">推荐</Badge> | 菜单和密集列表用 `density="compact"`，普通行用 `"balanced"`，宽松布局用 `"spacious"`。 |
 | <Badge variant="success">推荐</Badge> | 内容长短不固定时，用 `labelLines` 和 `descriptionLines` 控制在第几行截断。 |
-| <Badge variant="success">推荐</Badge> | 前面或后面的内容比一行字更高时，用 `align="start"` 让它顶部对齐。 |
+| <Badge variant="success">推荐</Badge> | 换行标签旁边是归属于第一行的小标记（状态点、单选按钮、时间戳）时，用 `align="first-line"`；要让较高的插槽顶部和文字顶部对齐，用 `align="start"`。 |
 | <Badge variant="success">推荐</Badge> | 横滑出来的操作要在行里再留一个入口（菜单，或者 `endContent` 里的按钮）。横滑只是给手指的快捷方式，只能滑出来的操作，键盘和鼠标用户永远够不着。 |
 | <Badge variant="error">避免</Badge> | 不要在可点的 `Item` 里再套按钮或链接。焦点和点击目标会变得难猜。 |
 | <Badge variant="error">避免</Badge> | 不要拿 `Item` 做页面之间的跳转。那种场景用导航组件。 |
@@ -38,6 +38,8 @@ import { Item } from '@astryx-vue/core/List'
 ## 示例
 
 常见的用法和不同的状态。
+
+<DemoExample :demo="itemAlignFirstLine" title="按第一行对齐" description="标签换行时，把小标记对到标签第一行的中线上，而不是整块文字的中心。状态点、单选按钮、时间戳这类属于第一行的标记用 first-line。" locale="zh" />
 
 <DemoExample :demo="itemBasic" title="基础" description="一行名字、一行说明，末尾放个时间。适合简单、只需要对齐和间距一致的场景。" locale="zh" />
 

@@ -150,6 +150,26 @@
     align-items: flex-start;
   }
 
+  .astryx-item[data-align='first-line'] {
+    align-items: baseline;
+  }
+
+  /*
+   * `first-line`：给前面和后面的插槽塞一根零宽度的「支柱」，行盒和 label
+   * 第一行一样大，再由插槽居中。整行按第一基线对齐时，插槽中心就落在 label
+   * 第一行中心；插槽比这一行高时把文字压下去。纯 CSS，不测量。
+   * 生成内容用空替代文本，读屏器读不到任何东西。
+   */
+  .astryx-item[data-align='first-line'] > :is(.astryx-item__start, .astryx-item__end)::before,
+  .astryx-item--swipe[data-align='first-line'] > .astryx-item__surface > :is(.astryx-item__start, .astryx-item__end)::before {
+    content: "\200B";
+    content: "\200B" / "";
+    inline-size: 0;
+    overflow: hidden;
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
   .astryx-item[data-density='compact'] {
     padding-block: var(--astryx-spacing-1, 4px);
   }
@@ -304,6 +324,10 @@
 
   .astryx-item--swipe[data-align='start'] > .astryx-item__surface {
     align-items: flex-start;
+  }
+
+  .astryx-item--swipe[data-align='first-line'] > .astryx-item__surface {
+    align-items: baseline;
   }
 
   .astryx-item--swipe[data-density='compact'] > .astryx-item__surface {
