@@ -568,7 +568,7 @@ describe('catalog source', () => {
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
     expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(57)
-    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(190)
+    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(191)
     const clipboard = catalog.components.find(component => component.slug === 'use-clipboard')
     expect(clipboard?.kind).toBe('composable')
     expect(clipboard?.name).toBe('UseClipboard')

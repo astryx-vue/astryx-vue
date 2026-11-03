@@ -412,6 +412,16 @@ export type {
 } from './Dialog/index.js'
 export { Divider } from './Divider/index.js'
 export type { DividerOrientation, DividerProps, DividerVariant } from './Divider/index.js'
+export { Drawer, DrawerHeader } from './Drawer/index.js'
+export type {
+  DrawerEmits,
+  DrawerHeaderEmits,
+  DrawerHeaderProps,
+  DrawerHeaderSlots,
+  DrawerPlacement,
+  DrawerProps,
+  DrawerSlots,
+} from './Drawer/index.js'
 export {
   DropdownMenu,
   DropdownMenuCheckboxItem,

@@ -20,6 +20,7 @@ import DropdownMenuBranch from './DropdownMenuBranch.vue'
 import DropdownMenuItem from './DropdownMenuItem.vue'
 import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
 import { useMenuFocus } from './useMenuFocus.js'
+import { useMenuRegions } from './useMenuRegions.js'
 import { useSubmenuMode } from './useSubmenuMode.js'
 import '../../styles/dropdown-menu.css'
 
@@ -46,10 +47,38 @@ const viewId = useId()
 const menuSize = computed(() => menu?.menuSize.value ?? 'md')
 const density = computed(() => (menuSize.value === 'sm' ? 'compact' : 'balanced'))
 const hasStart = computed(() => slots.icon != null || props.icon != null)
+// 有头部或尾部时，面板是对话框而不是纯菜单，键盘和语义都要跟着变。
+const hasRegions = computed(() => slots.header != null || slots.footer != null)
+const headerRef = ref<HTMLElement | null>(null)
+const footerRef = ref<HTMLElement | null>(null)
+const regionMenuRef = ref<HTMLElement | null>(null)
+
+function setHeader(el: unknown): void {
+  headerRef.value = (el as HTMLElement | null) ?? null
+}
+
+function setFooter(el: unknown): void {
+  footerRef.value = (el as HTMLElement | null) ?? null
+}
+
+function setRegionMenu(el: unknown): void {
+  regionMenuRef.value = (el as HTMLElement | null) ?? null
+}
 const stringLabel = computed(() => typeof props.label === 'string' ? props.label : undefined)
 const focus = useMenuFocus({ list: flyoutRef })
 const drillFocus = useMenuFocus({ list: drillRef })
 const hasOverflow = useOverflow(flyoutRef, flyoutOpen)
+
+/** Tab 循环里的「菜单」那一站：有头尾时是里层的 `role="menu"`，否则就是整个飞出层。 */
+const menuStop = computed(() => (hasRegions.value ? regionMenuRef.value : flyoutRef.value))
+
+const regions = useMenuRegions({
+  header: headerRef,
+  footer: footerRef,
+  menu: menuStop,
+  hasRegions,
+  closeMenu: () => closeFlyout(true),
+})
 
 const mode = useSubmenuMode({
   drillIn: computed(() => menu?.drillIn.value),
@@ -123,24 +152,39 @@ async function openFlyout(options?: { skipAutoFocus?: boolean }): Promise<void> 
   focus.focusFirst()
 }
 
+/**
+ * 焦点回到触发行。行的 `focus()` 只会找里面的链接或按钮，子菜单这一行两者都没有，
+ * 所以直接聚焦行元素本身。
+ */
+function focusRowElement(): void {
+  rowRef.value?.focus()
+  void nextTick(() => rowRef.value?.focus())
+}
+
 function closeFlyout(focusRow = true): void {
   if (isDrill.value) {
     if (!mode.closeDrill())
       return
     emit('openChange', false)
     if (focusRow)
-      rowComponent.value?.focus()
+      focusRowElement()
     return
   }
-  if (!flyoutOpen.value)
-    return
-  flyoutOpen.value = false
-  emit('openChange', false)
+  if (flyoutOpen.value) {
+    flyoutOpen.value = false
+    emit('openChange', false)
+  }
+  // 关闭可能已经由外层的关闭监听抢先做了；焦点回到行仍然要做。
+  // 面板里还有自己的焦点维护，会在关闭这一帧之后把焦点拉回去，所以再补一次。
   if (focusRow)
-    rowComponent.value?.focus()
+    focusRowElement()
 }
 
 function onDrillKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Tab' && hasRegions.value) {
+    regions.moveDialogTab(event)
+    return
+  }
   if (event.key === 'Tab' && menu?.hasRegions.value) {
     event.preventDefault()
     event.stopPropagation()
@@ -169,6 +213,10 @@ function onDrillKeydown(event: KeyboardEvent): void {
 }
 
 function onFlyoutKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Tab' && hasRegions.value) {
+    regions.moveDialogTab(event)
+    return
+  }
   if (event.key === 'Tab' && menu?.hasRegions.value) {
     event.preventDefault()
     event.stopPropagation()
@@ -220,7 +268,12 @@ const nestedContext: DropdownMenuContextValue = {
 
 const hover = useMenuHover({
   show: options => void openFlyout(options),
-  hide: () => closeFlyout(false),
+  // 面板是对话框时，指针离开不能抢走用户正在键盘操作的内容。
+  hide: () => {
+    if (hasRegions.value && flyoutRef.value?.contains(document.activeElement))
+      return
+    closeFlyout(false)
+  },
   isOpen: flyoutOpen,
   isEnabled: () => !props.isDisabled && !isDrill.value,
   flyoutRef,
@@ -240,11 +293,28 @@ function onRowClick(event: MouseEvent): void {
   hover.triggerProps.onClick(event)
 }
 
+/**
+ * 关闭时焦点还留在面板里（Escape、外部关闭都会这样），就交还给触发行：
+ * 否则焦点会落进一个已经隐藏的容器。
+ */
+watch(flyoutOpen, (open, wasOpen) => {
+  if (open || !wasOpen)
+    return
+  if (isDrill.value)
+    return
+  const active = document.activeElement
+  if (active instanceof Node && flyoutRef.value?.contains(active))
+    focusRowElement()
+}, { flush: 'pre' })
+
 useDismiss({
   container: flyoutRef,
   trigger: rowRef,
   isEnabled: computed(() => flyoutOpen.value && !isDrill.value),
   onDismiss: () => closeFlyout(false),
+  // Escape 是「退一层」：关掉飞出层并把焦点还给行。关闭栈在捕获阶段处理，
+  // 面板自己的 keydown 收不到这个键，所以必须挂在这里。
+  onEscape: () => closeFlyout(true),
 })
 
 useDismiss({
@@ -263,7 +333,7 @@ watch(() => menu?.isOpen.value, (open) => {
 
 watch(drillOnStack, (onStack, wasOnStack) => {
   if (wasOnStack === true && !onStack && menu?.isOpen.value)
-    rowComponent.value?.focus()
+    focusRowElement()
 })
 </script>
 
@@ -273,7 +343,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
     ref="rowComponent"
     class="astryx-dropdown-menu-item"
     role="menuitem"
-    aria-haspopup="menu"
+    :aria-haspopup="hasRegions ? 'dialog' : 'menu'"
     :aria-expanded="isShown"
     :data-menu-size="menuSize"
     data-variant="default"
@@ -308,35 +378,59 @@ watch(drillOnStack, (onStack, wasOnStack) => {
     </template>
   </Item>
   <Teleport v-if="drillHost" :to="drillHost">
+    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 键盘事件在面板根上接住再分发给头部、菜单和尾部，交互元素仍是里面的行和控件。 -->
     <div
       v-show="drillOnStack"
       ref="drillRef"
       class="astryx-dropdown-menu-drill"
-      role="menu"
+      :class="{ 'is-frame': hasRegions }"
+      :role="hasRegions ? 'dialog' : 'menu'"
       :aria-label="stringLabel"
+      :aria-modal="hasRegions ? 'true' : undefined"
       :hidden="drillIsTop ? undefined : true"
       tabindex="-1"
       @keydown="onDrillKeydown"
     >
       <LayerContentBoundary>
         <DropdownMenuBranch :value="nestedContext">
-          <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
-            <template #icon>
-              <Icon color="secondary" icon="chevronLeft" size="sm" />
-            </template>
-          </DropdownMenuItem>
-          <slot />
+          <template v-if="hasRegions">
+            <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="header" />
+            </div>
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+              <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
+                <template #icon>
+                  <Icon color="secondary" icon="chevronLeft" size="sm" />
+                </template>
+              </DropdownMenuItem>
+              <slot />
+            </div>
+            <div :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="footer" />
+            </div>
+          </template>
+          <template v-else>
+            <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
+              <template #icon>
+                <Icon color="secondary" icon="chevronLeft" size="sm" />
+              </template>
+            </DropdownMenuItem>
+            <slot />
+          </template>
         </DropdownMenuBranch>
       </LayerContentBoundary>
     </div>
   </Teleport>
   <Teleport v-else :to="teleportTarget">
+    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 键盘事件在面板根上接住再分发给头部、菜单和尾部，交互元素仍是里面的行和控件。 -->
     <div
       v-show="flyoutOpen"
       ref="flyoutRef"
       class="astryx-dropdown-menu astryx-dropdown-submenu"
-      role="menu"
+      :class="{ 'is-frame': hasRegions }"
+      :role="hasRegions ? 'dialog' : 'menu'"
       :aria-label="stringLabel"
+      :aria-modal="hasRegions ? 'true' : undefined"
       :data-overflow="hasOverflow || undefined"
       :style="flyoutStyle"
       tabindex="-1"
@@ -346,7 +440,18 @@ watch(drillOnStack, (onStack, wasOnStack) => {
     >
       <LayerContentBoundary>
         <DropdownMenuBranch :value="nestedContext">
-          <slot />
+          <template v-if="hasRegions">
+            <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="header" />
+            </div>
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+              <slot />
+            </div>
+            <div :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="footer" />
+            </div>
+          </template>
+          <slot v-else />
         </DropdownMenuBranch>
       </LayerContentBoundary>
     </div>

@@ -271,6 +271,34 @@
     min-width: min(160px, calc(100vw - 16px));
   }
 
+  /*
+   * 有头部或尾部时，子菜单的面板是「框」：头部、菜单、尾部在同一列，
+   * 框负责高度上限和内边距，中间的菜单自己滚动。
+   */
+  .astryx-dropdown-submenu.is-frame,
+  .astryx-dropdown-menu-drill.is-frame {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-block-size: min(300px, calc(100dvh - 16px));
+    overflow: hidden;
+    border-radius: var(--astryx-dropdown-menu-radius, var(--astryx-radius-container, 0.75rem));
+    --_dropdown-menu-radius: var(--astryx-radius-container, 0.75rem);
+    --_dropdown-menu-padding: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-dropdown-menu-region-menu {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--astryx-spacing-0-5, 2px);
+    min-block-size: 0;
+    overflow-y: auto;
+    outline: none;
+    touch-action: pinch-zoom;
+  }
+
   .astryx-dropdown-menu-drill {
     display: flex;
     flex-direction: column;

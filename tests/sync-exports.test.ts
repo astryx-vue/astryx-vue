@@ -176,6 +176,7 @@ const expectedCatalog = [
   { slug: 'command-palette-input', group: 'Overlay', family: 'Command Palette', en: 'Command Palette Input', zh: '命令面板输入框' },
   { slug: 'command-palette-footer', group: 'Overlay', family: 'Command Palette', en: 'Command Palette Footer', zh: '命令面板页脚' },
   { slug: 'lightbox', group: 'Overlay', en: 'Lightbox', zh: '灯箱' },
+  { slug: 'drawer', group: 'Overlay', family: 'Drawer', en: 'Drawer', zh: '抽屉' },
   { slug: 'list', group: 'Table & List', family: 'List', en: 'List', zh: '列表' },
   { slug: 'list-item', group: 'Table & List', family: 'List', en: 'List Item', zh: '列表项' },
   { slug: 'metadata-list', group: 'Table & List', family: 'Metadata List', en: 'Metadata List', zh: '元数据列表' },
