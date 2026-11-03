@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.4
+
+### Patch Changes
+
+- [#433](https://github.com/astryx-vue/astryx-vue/pull/433) [`dacf1fe`](https://github.com/astryx-vue/astryx-vue/commit/dacf1fe1fe16bd653cf15b78798e16819a292b29) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 内置组件资料补上 `Drawer` 与 `DrawerHeader`。
+
 ## 0.4.3
 
 ### Patch Changes
