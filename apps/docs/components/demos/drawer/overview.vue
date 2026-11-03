@@ -8,9 +8,7 @@ const isOpen = ref(false)
 
 <template>
   <div>
-    <Button @click="isOpen = true">
-      Open filters
-    </Button>
+    <Button label="Open filters" @click="isOpen = true" />
     <Drawer :is-open="isOpen" label="Filters" @open-change="isOpen = $event">
       <DrawerHeader title="Filters" subtitle="Narrow the list" @open-change="isOpen = false" />
       <p>Category, price range and availability would go here.</p>
