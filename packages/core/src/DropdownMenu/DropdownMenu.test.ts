@@ -745,6 +745,46 @@ describe('dropdownMenu', () => {
     expect(document.activeElement).toBe(menu)
   })
 
+  it('wraps Tab from the submenu footer back to its header, and Escape returns to the row', async () => {
+    const Host = defineComponent({
+      components: { DropdownMenu, DropdownMenuItem, DropdownMenuSubMenu },
+      template: `
+        <DropdownMenu :button="{ label: 'Actions' }">
+          <DropdownMenuSubMenu label="Move to">
+            <template #header>
+              <input aria-label="Filter targets" />
+            </template>
+            <DropdownMenuItem label="Projects" />
+            <template #footer>
+              <button type="button">Manage targets</button>
+            </template>
+          </DropdownMenuSubMenu>
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    document.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-trigger > .astryx-button')!.click()
+    await flushPromises()
+    const row = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(item => item.textContent?.includes('Move to'))!
+    row.click()
+    await flushPromises()
+    await nextTick()
+
+    const dialog = document.querySelector<HTMLElement>('.astryx-dropdown-submenu')!
+    const filter = dialog.querySelector<HTMLInputElement>('input')!
+    const footerButton = dialog.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-region button')!
+
+    footerButton.focus()
+    footerButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }))
+    expect(document.activeElement).toBe(filter)
+
+    filter.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+    await flushPromises()
+    await nextTick()
+    expect((dialog as HTMLElement).style.display).toBe('none')
+    expect(document.activeElement).toBe(row)
+  })
+
   it('opens on pointerdown and activates the row the pointer releases on', async () => {
     const onClick = vi.fn()
     const { surface, trigger } = renderMenu({ items: [{ label: 'Edit', onClick: vi.fn() }, { label: 'Copy', onClick }] })

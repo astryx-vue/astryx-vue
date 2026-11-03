@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DrawerHeaderEmits, DrawerHeaderProps, DrawerHeaderSlots } from './types.js'
-import { computed, useSlots } from 'vue'
+import { computed, getCurrentInstance, useSlots } from 'vue'
 import DialogHeader from '../Dialog/DialogHeader.vue'
 
 /**
@@ -15,9 +15,14 @@ const props = withDefaults(defineProps<DrawerHeaderProps>(), {
 })
 const emit = defineEmits<DrawerHeaderEmits>()
 defineSlots<DrawerHeaderSlots>()
+const instance = getCurrentInstance()
 const slots = useSlots()
 
-const showClose = computed(() => props.hasCloseButton ?? slots.default == null)
+/**
+ * 关闭按钮只在有人接关闭请求时出现：没人处理的按钮点了什么也不会发生。
+ * 显式传 `hasCloseButton` 时以传入值为准。监听函数在渲染时才看得到，所以放在 computed 里读。
+ */
+const showClose = computed(() => props.hasCloseButton ?? (instance?.vnode?.props?.onOpenChange != null))
 </script>
 
 <template>

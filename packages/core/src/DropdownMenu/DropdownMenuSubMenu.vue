@@ -152,24 +152,39 @@ async function openFlyout(options?: { skipAutoFocus?: boolean }): Promise<void> 
   focus.focusFirst()
 }
 
+/**
+ * 焦点回到触发行。行的 `focus()` 只会找里面的链接或按钮，子菜单这一行两者都没有，
+ * 所以直接聚焦行元素本身。
+ */
+function focusRowElement(): void {
+  rowRef.value?.focus()
+  void nextTick(() => rowRef.value?.focus())
+}
+
 function closeFlyout(focusRow = true): void {
   if (isDrill.value) {
     if (!mode.closeDrill())
       return
     emit('openChange', false)
     if (focusRow)
-      rowComponent.value?.focus()
+      focusRowElement()
     return
   }
-  if (!flyoutOpen.value)
-    return
-  flyoutOpen.value = false
-  emit('openChange', false)
+  if (flyoutOpen.value) {
+    flyoutOpen.value = false
+    emit('openChange', false)
+  }
+  // 关闭可能已经由外层的关闭监听抢先做了；焦点回到行仍然要做。
+  // 面板里还有自己的焦点维护，会在关闭这一帧之后把焦点拉回去，所以再补一次。
   if (focusRow)
-    rowComponent.value?.focus()
+    focusRowElement()
 }
 
 function onDrillKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Tab' && hasRegions.value) {
+    regions.moveDialogTab(event)
+    return
+  }
   if (event.key === 'Tab' && menu?.hasRegions.value) {
     event.preventDefault()
     event.stopPropagation()
@@ -278,11 +293,28 @@ function onRowClick(event: MouseEvent): void {
   hover.triggerProps.onClick(event)
 }
 
+/**
+ * 关闭时焦点还留在面板里（Escape、外部关闭都会这样），就交还给触发行：
+ * 否则焦点会落进一个已经隐藏的容器。
+ */
+watch(flyoutOpen, (open, wasOpen) => {
+  if (open || !wasOpen)
+    return
+  if (isDrill.value)
+    return
+  const active = document.activeElement
+  if (active instanceof Node && flyoutRef.value?.contains(active))
+    focusRowElement()
+}, { flush: 'pre' })
+
 useDismiss({
   container: flyoutRef,
   trigger: rowRef,
   isEnabled: computed(() => flyoutOpen.value && !isDrill.value),
   onDismiss: () => closeFlyout(false),
+  // Escape 是「退一层」：关掉飞出层并把焦点还给行。关闭栈在捕获阶段处理，
+  // 面板自己的 keydown 收不到这个键，所以必须挂在这里。
+  onEscape: () => closeFlyout(true),
 })
 
 useDismiss({
@@ -301,7 +333,7 @@ watch(() => menu?.isOpen.value, (open) => {
 
 watch(drillOnStack, (onStack, wasOnStack) => {
   if (wasOnStack === true && !onStack && menu?.isOpen.value)
-    rowComponent.value?.focus()
+    focusRowElement()
 })
 </script>
 

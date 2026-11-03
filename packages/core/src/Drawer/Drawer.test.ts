@@ -57,6 +57,17 @@ describe('drawer', () => {
     wrapper.unmount()
   })
 
+  it('shows the close button when the header listens for openChange', async () => {
+    const wrapper = mount(Drawer, {
+      attachTo: document.body,
+      props: { isOpen: true, label: 'Filters' },
+      slots: { default: () => h(DrawerHeader, { title: 'Filters', onOpenChange: () => {} }) },
+    })
+    await nextTick()
+    expect(document.querySelector('.astryx-drawer .astryx-dialog-header button')).not.toBeNull()
+    wrapper.unmount()
+  })
+
   it('is named by the header title', async () => {
     const wrapper = mount(Drawer, {
       attachTo: document.body,
@@ -67,6 +78,17 @@ describe('drawer', () => {
     const dialog = dialogEl()
     expect(dialog.getAttribute('aria-label')).toBe('Filters')
     expect(dialog.querySelector('.astryx-dialog-header')?.textContent).toContain('Filters')
+    wrapper.unmount()
+  })
+
+  it('hides the header close button when nobody listens for it', async () => {
+    const wrapper = mount(Drawer, {
+      attachTo: document.body,
+      props: { isOpen: true, label: 'Filters' },
+      slots: { default: () => h(DrawerHeader, { title: 'Filters' }) },
+    })
+    await nextTick()
+    expect(document.querySelector('.astryx-drawer .astryx-dialog-header button')).toBeNull()
     wrapper.unmount()
   })
 

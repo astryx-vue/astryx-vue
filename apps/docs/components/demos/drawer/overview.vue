@@ -11,7 +11,7 @@ const isOpen = ref(false)
     <Button @click="isOpen = true">
       Open filters
     </Button>
-    <Drawer v-model:is-open="isOpen" label="Filters">
+    <Drawer :is-open="isOpen" label="Filters" @open-change="isOpen = $event">
       <DrawerHeader title="Filters" subtitle="Narrow the list" @open-change="isOpen = false" />
       <p>Category, price range and availability would go here.</p>
     </Drawer>

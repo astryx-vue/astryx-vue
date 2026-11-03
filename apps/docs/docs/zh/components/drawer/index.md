@@ -28,7 +28,7 @@ const isOpen = ref(false)
   <Button @click="isOpen = true">
     打开筛选
   </Button>
-  <Drawer v-model:is-open="isOpen" label="筛选">
+  <Drawer :is-open="isOpen" label="筛选" @open-change="isOpen = $event">
     <DrawerHeader title="筛选" subtitle="缩小列表范围" @open-change="isOpen = false" />
     <p>分类、价格区间和是否有货放在这里。</p>
   </Drawer>
