@@ -393,20 +393,30 @@ watch(drillOnStack, (onStack, wasOnStack) => {
     >
       <LayerContentBoundary>
         <DropdownMenuBranch :value="nestedContext">
-          <div v-if="hasRegions" :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
-            <slot name="header" />
-          </div>
-          <div :ref="hasRegions ? setRegionMenu : undefined" :role="hasRegions ? 'menu' : undefined" :aria-label="hasRegions ? stringLabel : undefined" :class="{ 'astryx-dropdown-menu-region-menu': hasRegions }" tabindex="-1">
+          <template v-if="hasRegions">
+            <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="header" />
+            </div>
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+              <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
+                <template #icon>
+                  <Icon color="secondary" icon="chevronLeft" size="sm" />
+                </template>
+              </DropdownMenuItem>
+              <slot />
+            </div>
+            <div :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="footer" />
+            </div>
+          </template>
+          <template v-else>
             <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
               <template #icon>
                 <Icon color="secondary" icon="chevronLeft" size="sm" />
               </template>
             </DropdownMenuItem>
             <slot />
-          </div>
-          <div v-if="hasRegions" :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
-            <slot name="footer" />
-          </div>
+          </template>
         </DropdownMenuBranch>
       </LayerContentBoundary>
     </div>
@@ -430,15 +440,18 @@ watch(drillOnStack, (onStack, wasOnStack) => {
     >
       <LayerContentBoundary>
         <DropdownMenuBranch :value="nestedContext">
-          <div v-if="hasRegions" :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
-            <slot name="header" />
-          </div>
-          <div :ref="hasRegions ? setRegionMenu : undefined" :role="hasRegions ? 'menu' : undefined" :aria-label="hasRegions ? stringLabel : undefined" :class="{ 'astryx-dropdown-menu-region-menu': hasRegions }" tabindex="-1">
-            <slot />
-          </div>
-          <div v-if="hasRegions" :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
-            <slot name="footer" />
-          </div>
+          <template v-if="hasRegions">
+            <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="header" />
+            </div>
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+              <slot />
+            </div>
+            <div :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
+              <slot name="footer" />
+            </div>
+          </template>
+          <slot v-else />
         </DropdownMenuBranch>
       </LayerContentBoundary>
     </div>
