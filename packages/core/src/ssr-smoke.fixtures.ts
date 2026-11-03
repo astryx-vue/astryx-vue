@@ -94,6 +94,8 @@ export const ssrFixtures: Record<string, SsrFixture> = {
   DateTimeInput: { props: fieldLabel },
   Dialog: { props: { isOpen: true }, slots: { default: text('Body') } },
   DialogHeader: { props: { title: 'Title' } },
+  Drawer: { props: { isOpen: true, label: 'Filters' }, slots: { default: text('Body') } },
+  DrawerHeader: { props: { title: 'Filters' } },
   DropdownMenuCheckboxItem: menuCheckboxItem,
   DropdownMenuRadioGroup: menuRadioGroup,
   DropdownMenuRadioItem: menuRadioItem,

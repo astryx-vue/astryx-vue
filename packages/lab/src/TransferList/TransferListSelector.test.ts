@@ -255,7 +255,8 @@ describe('transferListSelector', () => {
     expect(cancel?.hasAttribute('disabled')).toBe(false)
     expect(fieldset?.contains(cancel)).toBe(false)
     expect(apply?.hasAttribute('disabled')).toBe(true)
-    expect(triggerButton().hasAttribute('disabled')).toBe(true)
+    // 触发器保留 Tab 站位，用 aria-disabled 说明禁用（spec:AST-085 FR1）。
+    expect(triggerButton().getAttribute('aria-disabled')).toBe('true')
 
     await harness.update({ isDisabled: false, isLoading: true })
     expect(popover().querySelector('[aria-busy="true"]')).not.toBeNull()
