@@ -143,6 +143,12 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   }
   catch (error) {
     reportUnpublishedPackages()
+    // 上一次尝试其实已经把包传上去了，后面那一步重复发布才会被拒。
+    // 只要 npm 上什么都不缺，这次就算成功，不让流水线白白变红。
+    if (unpublishedPackages().length === 0) {
+      console.log('npm 上已经没有任何未发布的版本，忽略这次的重复发布错误。')
+      process.exit(0)
+    }
     throw error
   }
 }
