@@ -65,6 +65,7 @@ if (process.argv[1] && import.meta.url.endsWith(process.argv[1].split('/').pop()
   const scope = scopeForFiles(files)
   console.log(`mode=${scope.mode}`)
   // 全量时也要输出空的 paths，调用方才能用同一套 shell 变量。
-  console.log(`paths=${(scope.paths ?? []).join(' ')}`)
+  // 加引号：多个路径时 eval 会把第二个词当成命令去跑。
+  console.log(`paths='${(scope.paths ?? []).join(' ')}'`)
   console.log(`changed=${files.length}`)
 }
