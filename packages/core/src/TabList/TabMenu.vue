@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TabMenuProps } from './types.js'
-import { computed, nextTick, onMounted, onUnmounted, ref, useId, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, useAttrs, useId, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useListFocus } from '../composables/useListFocus.js'
 import Icon from '../Icon/Icon.vue'
@@ -10,8 +10,29 @@ import '../../styles/tab-list.css'
 import '../../styles/layer.css'
 import '../../styles/tab-menu.css'
 
-defineOptions({ name: 'AstryxTabMenu' })
+// 触发器有多个根节点，属性不会自动落到按钮上，这里显式转发。
+defineOptions({ name: 'AstryxTabMenu', inheritAttrs: false })
 const props = defineProps<TabMenuProps>()
+const attrs = useAttrs()
+
+/** 按钮自己的行为属性由组件决定，调用方传进来的同名值不覆盖它们。 */
+const RESERVED_TRIGGER_ATTRS = new Set([
+  'id',
+  'type',
+  'role',
+  'tabindex',
+  'aria-controls',
+  'aria-current',
+  'aria-expanded',
+  'aria-haspopup',
+  'aria-selected',
+  'onClick',
+  'onKeydown',
+])
+
+const triggerAttrs = computed(() => Object.fromEntries(
+  Object.entries(attrs).filter(([name]) => !RESERVED_TRIGGER_ATTRS.has(name)),
+))
 
 const context = useTabListContext()
 const uid = useId()
@@ -64,6 +85,16 @@ function register(): void {
     selectsOnFocus: false,
     value: stopValue,
   })
+}
+
+/** 先切换菜单，再交给调用方的 click：两边都拿到事件，谁也不能吞掉对方。 */
+function onTriggerClick(event: MouseEvent): void {
+  toggle()
+  const handler = attrs.onClick
+  if (Array.isArray(handler))
+    handler.forEach(callback => callback(event))
+  else if (typeof handler === 'function')
+    handler(event)
 }
 
 function toggle(): void {
@@ -140,6 +171,7 @@ onUnmounted(() => {
 
 <template>
   <button
+    v-bind="triggerAttrs"
     :id="`astryx-tab-menu-trigger-${uid}`"
     ref="anchorRef"
     type="button"
@@ -153,7 +185,7 @@ onUnmounted(() => {
     :aria-expanded="isOpen"
     :role="context.isTabsPattern.value ? 'tab' : undefined"
     :tabindex="hasSelectedOption ? 0 : -1"
-    @click="toggle"
+    @click="onTriggerClick"
     @keydown="onTriggerKeyDown"
   >
     <span class="astryx-tab__label">{{ triggerLabel }}</span>
