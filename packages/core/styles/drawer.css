@@ -10,6 +10,18 @@
     border-radius: 0;
   }
 
+  /* 手机上留一条缝露出后面的页面，和原版一样是 56px。 */
+  @media (max-width: 640px) {
+    .astryx-drawer {
+      max-width: calc(100vw - 56px);
+    }
+  }
+
+  /* 底部安全区：刘海屏上内容不要贴到手势条。 */
+  .astryx-drawer {
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+
   .astryx-drawer[open] {
     animation: astryx-drawer-slide-in var(--astryx-duration-medium, 200ms) var(--astryx-ease-standard, ease-out) both;
   }
@@ -46,7 +58,19 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-drawer[open] {
+    /* 手机上留一条缝露出后面的页面，和原版一样是 56px。 */
+  @media (max-width: 640px) {
+    .astryx-drawer {
+      max-width: calc(100vw - 56px);
+    }
+  }
+
+  /* 底部安全区：刘海屏上内容不要贴到手势条。 */
+  .astryx-drawer {
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+
+  .astryx-drawer[open] {
       animation: none;
     }
   }
