@@ -1,8 +1,13 @@
 import { execFileSync } from 'node:child_process'
+import { dirname } from 'node:path'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { retryWithBackoff } from './npm-view-retry.mjs'
+import { verificationPackages } from './release-verification.mjs'
 
-const packages = JSON.parse(process.env.PUBLISHED_PACKAGES ?? '[]')
+const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))
+const reportedPackages = JSON.parse(process.env.PUBLISHED_PACKAGES ?? '[]')
+const packages = verificationPackages(ROOT, reportedPackages)
 const visibility = process.env.REPO_VISIBILITY ?? ''
 // 补齐的版本可能是在本机手动发布的，本来就没有 provenance，这时传 REQUIRE_PROVENANCE=false。
 const requireProvenance = process.env.REQUIRE_PROVENANCE !== 'false'
@@ -82,14 +87,14 @@ for (const pkg of packages) {
   if (!url.includes('github.com/astryx-vue/astryx-vue'))
     throw new Error(`${spec} 的 repository 没有指向 astryx-vue/astryx-vue：${url}`)
 
-  if (visibility === 'public' && requireProvenance) {
+  if (visibility === 'public' && requireProvenance && pkg.reported) {
     if (!hasProvenance(info)) {
       throw new Error(`${spec} 缺少 provenance。dist.attestations=${JSON.stringify(info.dist?.attestations ?? null)}`)
     }
     console.log(`${spec} 已在 npm 上，并且带有 provenance`)
   }
   else {
-    console.log(`${spec} 已在 npm 上。仓库可见性是 ${visibility || '未知'}${requireProvenance ? '' : '，且是补齐的版本'}，这次不要求 provenance`)
+    console.log(`${spec} 已在 npm 上。仓库可见性是 ${visibility || '未知'}，${pkg.reported ? '这是补齐的版本' : '它不在本次发布输出里'}，这次不要求 provenance`)
   }
 
   const tag = `${pkg.name}@${pkg.version}`
