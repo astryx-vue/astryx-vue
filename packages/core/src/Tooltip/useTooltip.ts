@@ -183,8 +183,13 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     scheduleShow()
   }
 
-  function onMouseLeave(): void {
+  function onMouseLeave(event: MouseEvent): void {
     if (isTouchPointer.value)
+      return
+    // 快速从触发器移进气泡时，气泡的 mouseenter 可能先取消隐藏，
+    // 随后触发器的 mouseleave 又排上一个。目的地已在气泡里时不再排队。
+    const next = event.relatedTarget
+    if (next instanceof Node && layer.contentRef.value?.contains(next))
       return
     scheduleHide()
   }
@@ -284,6 +289,14 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
       unbind()
     else
       bind(element)
+  }, { flush: 'sync' })
+
+  watch(() => toValue(options.isEnabled), (enabled) => {
+    if (enabled !== false)
+      return
+    // 禁用后触发器已解绑，没必要再保留一次不会生效的显示；隐藏仍要继续。
+    clearTimeout(showTimer)
+    showTimer = undefined
   }, { flush: 'sync' })
 
   // 受控值落到内部状态上，只同步不生事件：这是使用方自己设的值，不该再回报给它。

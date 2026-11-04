@@ -120,6 +120,61 @@ describe('useTooltip', () => {
     expect(tooltip.isOpen.value).toBe(true)
   })
 
+  it('禁用后取消尚未到期的显示，已经排队的隐藏仍照常执行', async () => {
+    const enabled = ref(true)
+    const onShow = vi.fn()
+    const onHide = vi.fn()
+    const { tooltip, trigger } = setupTooltip({ delay: 200, isEnabled: enabled, onShow, onHide })
+
+    trigger!.dispatchEvent(new Event('mouseenter'))
+    vi.advanceTimersByTime(100)
+    enabled.value = false
+    await nextTick()
+    vi.advanceTimersByTime(1000)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(false)
+    expect(onShow).not.toHaveBeenCalled()
+
+    enabled.value = true
+    trigger!.dispatchEvent(new Event('mouseenter'))
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    trigger!.dispatchEvent(new Event('mouseleave'))
+    enabled.value = false
+    await nextTick()
+    vi.advanceTimersByTime(100)
+    await nextTick()
+    expect(onHide).toHaveBeenCalledOnce()
+  })
+
+  it('指针一步从触发器移进气泡时保持显示', async () => {
+    const { tooltip, trigger } = setupTooltip({ delay: 0 })
+    const surface = document.createElement('div')
+    surface.id = tooltip.id
+    document.body.append(surface)
+    tooltip.contentRef.value = surface
+    surface.addEventListener('mouseenter', tooltip.contentProps.value.onMouseenter as EventListener)
+    surface.addEventListener('mouseleave', tooltip.contentProps.value.onMouseleave as EventListener)
+
+    trigger!.dispatchEvent(new Event('mouseenter'))
+    vi.advanceTimersByTime(0)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(true)
+
+    // 快速跨越时，浏览器先发 mouseout，再发触发器的 mouseleave。
+    trigger!.dispatchEvent(new MouseEvent('mouseout', { relatedTarget: surface }))
+    surface.dispatchEvent(new MouseEvent('mouseenter', { relatedTarget: trigger }))
+    trigger!.dispatchEvent(new MouseEvent('mouseleave', { relatedTarget: surface }))
+    vi.advanceTimersByTime(500)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(true)
+
+    surface.dispatchEvent(new MouseEvent('mouseleave', { relatedTarget: document.body }))
+    vi.advanceTimersByTime(100)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(false)
+  })
+
   it('受控时强制显示，Escape 只上报不自己关', async () => {
     const controlled = ref<boolean | undefined>(true)
     const onHide = vi.fn()
