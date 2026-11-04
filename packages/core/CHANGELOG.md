@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.2
+
+### Patch Changes
+
+- [#437](https://github.com/astryx-vue/astryx-vue/pull/437) [`99c6e58`](https://github.com/astryx-vue/astryx-vue/commit/99c6e58da250ce44e7306d12b62bce18e5186256) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 TopNav 在窄屏遇到长标题时右侧操作区被压缩的问题。标题继续省略，末端内容和菜单按钮保持完整并留在视口内。
+
 ## 0.7.1
 
 ### Patch Changes
