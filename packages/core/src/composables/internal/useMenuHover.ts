@@ -67,6 +67,8 @@ export interface UseMenuHoverReturn {
   focusMenu: () => void
   /** 自己处理点击的调用方在「已打开」分支里调：返回 true 表示这是悬停打开后的确认点击，菜单已钉住，不要当成关闭。 */
   confirmHoverOpen: () => boolean
+  /** 取消尚未执行的悬停打开和关闭，不改变当前开合状态。 */
+  cancelPending: () => void
   /** 关闭，并把焦点还给触发器。给面板里的关闭按钮用。 */
   close: () => void
   /** 记下触发器元素，关闭时焦点回到它。 */
@@ -268,6 +270,7 @@ export function useMenuHover(options: UseMenuHoverOptions): UseMenuHoverReturn {
     triggerProps.popovertarget = options.popoverId
 
   return {
+    cancelPending: clearTimeouts,
     close,
     confirmHoverOpen,
     contentProps: { onKeydown: onContentKeyDown, onMouseenter: onContentMouseEnter, onMouseleave: onMouseLeave },

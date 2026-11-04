@@ -131,7 +131,8 @@ async function focusDrillFirst(): Promise<void> {
 }
 
 async function openFlyout(options?: { skipAutoFocus?: boolean }): Promise<void> {
-  if (props.isDisabled)
+  // 延迟回调到达时，根菜单或上一级飞出层可能已经关闭。
+  if (props.isDisabled || menu?.isOpen.value === false)
     return
   const skipAutoFocus = options?.skipAutoFocus === true
   if (isDrill.value) {
@@ -327,8 +328,11 @@ useDismiss({
 })
 
 watch(() => menu?.isOpen.value, (open) => {
-  if (!open)
-    flyoutOpen.value = false
+  if (open)
+    return
+  hover.cancelPending()
+  if (!isDrill.value)
+    closeFlyout(false)
 })
 
 watch(drillOnStack, (onStack, wasOnStack) => {
