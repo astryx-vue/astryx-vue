@@ -30,7 +30,7 @@
   }
 
   .astryx-top-nav__start { flex: 1 1 auto; gap: var(--astryx-spacing-4, 16px); }
-  .astryx-top-nav__end { margin-inline-start: auto; }
+  .astryx-top-nav__end { flex-shrink: 0; margin-inline-start: auto; }
   .astryx-top-nav--centered .astryx-top-nav__end { justify-content: flex-end; }
   .astryx-top-nav__items { flex-wrap: nowrap; overflow: hidden; }
 
