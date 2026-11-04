@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.1
+
+### Patch Changes
+
+- [#435](https://github.com/astryx-vue/astryx-vue/pull/435) [`d54c4a1`](https://github.com/astryx-vue/astryx-vue/commit/d54c4a1e3f9bd97697e3ec4ce93c0db7cbc07668) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复浮层交互：指针一步移入 Tooltip 时保持显示，禁用后取消尚未执行的显示；根菜单关闭时收好子菜单、上报关闭状态，并阻止旧的悬停定时器重新打开它。
+
 ## 0.7.0
 
 ### Minor Changes
