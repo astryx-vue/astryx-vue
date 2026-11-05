@@ -406,21 +406,27 @@ describe('chat reasoning', () => {
 })
 
 describe('chat typing indicator', () => {
-  it('builds a sentence from the name count and exposes one status region', () => {
+  it('builds a sentence from the name count without adding its own live region', () => {
     const dots = mount(ChatTypingIndicator)
     expect(dots.find('.astryx-chat-typing__label').exists()).toBe(false)
-    expect(dots.get('.astryx-chat-typing').attributes('role')).toBe('status')
+    expect(dots.get('.astryx-chat-typing').attributes('role')).toBeUndefined()
 
     const one = mount(ChatTypingIndicator, { props: { names: ['Ada'] } })
     const region = one.get('.astryx-chat-typing')
     expect(one.get('.astryx-chat-typing__label').text()).toBe('Ada is typing…')
-    expect(region.attributes('role')).toBe('status')
-    expect(region.attributes('aria-live')).toBe('polite')
+    expect(region.attributes('role')).toBeUndefined()
+    expect(region.attributes('aria-live')).toBeUndefined()
     expect(region.attributes('aria-label')).toBeUndefined()
-    expect(document.querySelector('[data-astryx-live-region="polite"]')).toBeNull()
 
     expect(mount(ChatTypingIndicator, { props: { names: ['Ada', 'Grace'] } }).text()).toContain('Ada and Grace are typing…')
     expect(mount(ChatTypingIndicator, { props: { names: ['Ada', 'Grace', 'Lin'] } }).text()).toContain('Ada and 2 others are typing…')
+  })
+
+  it('writes a standalone label into the shared polite region', async () => {
+    mount(ChatTypingIndicator, { props: { names: ['Ada'] } })
+    await new Promise(resolve => requestAnimationFrame(resolve))
+
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('Ada is typing…')
   })
 
   it('localizes the sentence', () => {
