@@ -244,6 +244,7 @@ describe('pagination', () => {
 
   it('renders dot indicators from totalPages', async () => {
     const wrapper = mount(Pagination, {
+      attachTo: document.body,
       props: {
         page: 2,
         totalPages: 4,
@@ -258,6 +259,7 @@ describe('pagination', () => {
 
     await dots[2]!.trigger('click')
     expect(wrapper.emitted('update:page')?.[0]).toEqual([3])
+    wrapper.unmount()
   })
 
   it('renders a count range and a smaller control', () => {

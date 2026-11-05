@@ -3,10 +3,12 @@ import type { PaginationDensity } from '../composables/usePagination.js'
 import type { SelectorOption } from '../Selector/types.js'
 import type { PaginationEmits, PaginationProps, PaginationSlots, PaginationVariant } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useListFocus } from '../composables/useListFocus.js'
 import { paginationDensityForWidth, siblingCountForDensity, usePagination } from '../composables/usePagination.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Selector from '../Selector/Selector.vue'
+import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import '../../styles/pagination.css'
 
 defineOptions({ name: 'AstryxPagination' })
@@ -171,6 +173,36 @@ function onPageClick(page: number): void {
     pagination.goto(page)
   }
 }
+
+const dotsFocus = useListFocus({
+  itemSelector: 'button',
+  hasRovingTabIndex: true,
+  wrap: true,
+  orientation: 'horizontal',
+})
+
+function setDotsList(element: unknown): void {
+  dotsFocus.listRef.value = element as HTMLElement | null
+}
+
+function onDotsFocus(event: FocusEvent): void {
+  dotsFocus.handleFocus(event)
+  if (disabledControl.value)
+    return
+  const target = event.target instanceof Element
+    ? event.target.closest<HTMLButtonElement>('button[data-page]')
+    : null
+  const page = Number(target?.dataset.page)
+  if (Number.isInteger(page) && page > 0 && page !== pageRef.value)
+    onPageClick(page)
+}
+
+function onDotClick(event: MouseEvent): void {
+  // Safari 不一定会因为点击按钮而移动焦点；换页统一由聚焦处理。
+  const button = event.currentTarget as HTMLButtonElement
+  button.focus()
+  consumeWhileDisabled(event, disabledControl.value)
+}
 </script>
 
 <template>
@@ -248,9 +280,12 @@ function onPageClick(page: number): void {
 
       <div
         v-else-if="variant === 'dots' && !pagination.isCursor.value"
+        :ref="setDotsList"
         class="astryx-pagination-dots"
         role="group"
         :aria-label="messages.pagination.nav"
+        @focusin="onDotsFocus"
+        @keydown="dotsFocus.handleKeyDown"
       >
         <button
           v-for="dotPage in pagination.totalPages.value"
@@ -258,10 +293,13 @@ function onPageClick(page: number): void {
           type="button"
           class="astryx-pagination-dot"
           :class="{ 'is-active': dotPage === pageRef }"
-          :disabled="disabledControl"
+          :data-page="dotPage"
+          :tabindex="dotPage === pageRef ? 0 : -1"
+          :aria-disabled="disabledControl || undefined"
           :aria-current="dotPage === pageRef ? 'page' : undefined"
           :aria-label="messages.pagination.page(dotPage)"
-          @click="onPageClick(dotPage)"
+          @click="onDotClick"
+          @keydown="consumeWhileDisabled($event, disabledControl)"
         />
       </div>
 
