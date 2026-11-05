@@ -221,7 +221,7 @@ describe('chat system message', () => {
         icon: '<span class="mark" />',
       },
     })
-    expect(line.get('.astryx-chat-system-message').attributes('role')).toBe('status')
+    expect(line.get('.astryx-chat-system-message').attributes('role')).toBeUndefined()
     expect(line.get('.astryx-chat-system-message').attributes('data-variant')).toBe('default')
     expect(line.text()).toContain('Session started')
     expect(line.get('.mark').element.tagName).toBe('SPAN')
