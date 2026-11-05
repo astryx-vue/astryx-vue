@@ -17,7 +17,6 @@ defineSlots<ChatSystemMessageSlots>()
     v-bind="$attrs"
     class="astryx-chat-system-message"
     data-variant="divider"
-    role="status"
   >
     <Divider>
       <template #label>
@@ -30,7 +29,6 @@ defineSlots<ChatSystemMessageSlots>()
     v-bind="$attrs"
     class="astryx-chat-system-message"
     data-variant="default"
-    role="status"
   >
     <span class="astryx-chat-system-message__content">
       <span v-if="$slots.icon" class="astryx-chat-system-message__icon">

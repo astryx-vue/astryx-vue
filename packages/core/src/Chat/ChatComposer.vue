@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ChatComposerEmits, ChatComposerInputControl, ChatComposerProps, ChatComposerSlots } from './types.js'
-import { computed, provide, ref, useSlots, useTemplateRef } from 'vue'
+import { computed, provide, ref, useSlots, useTemplateRef, watch } from 'vue'
 import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import ChatComposerInput from './ChatComposerInput.vue'
@@ -35,6 +36,21 @@ const stopShown = computed(() => props.isStopShown ?? false)
 const placeholder = computed(() => props.placeholder ?? messages.value.chat.placeholder)
 const canSend = computed(() => value.value.trim().length > 0 && !disabled.value)
 const hasHeader = computed(() => slots.headerActions != null || slots.headerContext != null)
+
+const announce = useAnnounce()
+const statusAnnouncement = computed(() => {
+  const status = props.status
+  return status == null ? null : `${status.type}\0${status.message ?? ''}`
+})
+
+// 可见状态条和读屏播报分开：状态条挂载时就带着文字，live region 不一定能读到。
+// computed 返回字符串，等价状态对象重渲染不会重复；清除后再次出现算新的一次。
+watch(statusAnnouncement, () => {
+  const status = props.status
+  if (!status?.message)
+    return
+  announce(status.message, status.type === 'error' ? 'assertive' : 'polite')
+}, { immediate: true })
 
 const editorSelector = 'textarea, [contenteditable="true"], [role="textbox"], input:not([type]), input[type="text"], input[type="search"], input[type="email"], input[type="url"], input[type="tel"], input[type="password"]'
 
@@ -115,7 +131,6 @@ defineExpose({ element: root })
       class="astryx-chat-composer__status"
       data-place="top"
       :data-type="status.type"
-      :role="status.type === 'error' ? 'alert' : 'status'"
     >
       <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" :color="status.type === 'error' ? 'error' : 'warning'" />
       <span>{{ status.message }}</span>
@@ -172,7 +187,6 @@ defineExpose({ element: root })
       class="astryx-chat-composer__status"
       data-place="bottom"
       :data-type="status.type"
-      :role="status.type === 'error' ? 'alert' : 'status'"
     >
       <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" :color="status.type === 'error' ? 'error' : 'warning'" />
       <span>{{ status.message }}</span>

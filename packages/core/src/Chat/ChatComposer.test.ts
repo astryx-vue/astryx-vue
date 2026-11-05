@@ -204,7 +204,8 @@ describe('chat composer', () => {
     const children = [...root.element.children].map(node => node.className)
     expect(children[0]).toContain('astryx-chat-composer__status')
     expect(children[1]).toBe('drawer-slot')
-    expect(wrapper.get('[role="alert"]').text()).toContain('Could not send')
+    expect(wrapper.get('.astryx-chat-composer__status').text()).toContain('Could not send')
+    expect(wrapper.get('.astryx-chat-composer__status').attributes('role')).toBeUndefined()
     expect(wrapper.get('.astryx-chat-composer__body').attributes('data-elevation')).toBe('none')
     expect(wrapper.get('.astryx-chat-composer__body').attributes('data-density')).toBe('compact')
     expect(wrapper.get('.astryx-chat-composer__header').text()).toContain('Add')
@@ -213,7 +214,7 @@ describe('chat composer', () => {
       props: { status: { type: 'warning', message: 'Slow connection' } },
     })
     expect(warning.get('.astryx-chat-composer__status').text()).toContain('Slow connection')
-    expect(warning.get('.astryx-chat-composer__status').attributes('role')).toBe('status')
+    expect(warning.get('.astryx-chat-composer__status').attributes('role')).toBeUndefined()
     expect(warning.find('.astryx-chat-composer__header').exists()).toBe(false)
   })
 
