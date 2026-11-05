@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { inject } from 'vue'
-import BottomSheet from '../BottomSheet/BottomSheet.vue'
+import { inject, onMounted, ref } from 'vue'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import DropdownMenuBranch from './DropdownMenuBranch.vue'
 import { dropdownMenuFrameKey } from './frame.js'
+import { MenuBottomSheet } from './lazyMenuBottomSheet.js'
 import { DropdownMenuItems } from './renderItems.js'
 import '../../styles/dropdown-menu.css'
 
@@ -17,11 +17,17 @@ defineSlots<{
 const frame = inject(dropdownMenuFrameKey)
 if (frame == null)
   throw new Error('DropdownMenuFrame must render inside DropdownMenu')
+
+// SSR 和水合的第一帧都不挂异步面板；关闭的面板本来就没有可见内容。
+const isClient = ref(false)
+onMounted(() => {
+  isClient.value = true
+})
 </script>
 
 <template>
-  <BottomSheet
-    v-if="frame.isSheet"
+  <MenuBottomSheet
+    v-if="frame.isSheet && isClient"
     v-model:is-open="frame.sheetOpen"
     height="hug"
     :label="frame.sheetLabel"
@@ -66,7 +72,7 @@ if (frame == null)
         </div>
       </DropdownMenuBranch>
     </LayerContentBoundary>
-  </BottomSheet>
+  </MenuBottomSheet>
   <Teleport v-else :to="frame.teleportTarget">
     <Transition name="astryx-dropdown-menu">
       <div

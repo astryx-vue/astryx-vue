@@ -274,19 +274,26 @@ function getTriggerControl(): HTMLElement | null {
   return anchor.querySelector<HTMLElement>('button, a[href], [role="button"], [tabindex]')
 }
 
+async function focusMenuOnOpen(): Promise<void> {
+  if (!isOpen.value || !shouldFocusOnOpen.value)
+    return
+  await nextTick()
+  // 异步 BottomSheet 尚未到达时保留请求，surfaceRef 出现后接着完成。
+  if (surfaceRef.value == null)
+    return
+  shouldFocusOnOpen.value = false
+  const hasFocusedRow = focusLastOnOpen.value ? focusNav.focusLast() : focusNav.focusFirst()
+  focusLastOnOpen.value = false
+  if (openModality === 'pointer' || !hasFocusedRow)
+    focusSurface()
+  openModality = 'keyboard'
+}
+
 watch(isOpen, async (nowOpen) => {
   layerIsOpen.value = nowOpen && !isSheet.value
   if (nowOpen) {
     anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
-    await nextTick()
-    if (!shouldFocusOnOpen.value)
-      return
-    shouldFocusOnOpen.value = false
-    const hasFocusedRow = focusLastOnOpen.value ? focusNav.focusLast() : focusNav.focusFirst()
-    focusLastOnOpen.value = false
-    if (openModality === 'pointer' || !hasFocusedRow)
-      focusSurface()
-    openModality = 'keyboard'
+    await focusMenuOnOpen()
     return
   }
 
@@ -299,7 +306,7 @@ watch(isOpen, async (nowOpen) => {
     getTriggerControl()?.focus({ preventScroll: true })
   }
 })
-
+watch(surfaceRef, () => void focusMenuOnOpen())
 const regions = useMenuRegions({
   closeMenu,
   footer: footerRef,
