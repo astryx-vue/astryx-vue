@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.6
+
+### Patch Changes
+
+- [#442](https://github.com/astryx-vue/astryx-vue/pull/442) [`b3a63e7`](https://github.com/astryx-vue/astryx-vue/commit/b3a63e769e1be385051ee892b1f3c73d27702684) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - ChatTypingIndicator 不再自带 live region。独立使用时，名称标签通过共享 polite 通道播报，并在标签变化时去重；清空后再次出现会重新播报。位于 Chat log 或其他 live 容器内时交给外层容器，避免重复朗读。
+
 ## 0.7.5
 
 ### Patch Changes
