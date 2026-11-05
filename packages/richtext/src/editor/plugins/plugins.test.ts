@@ -100,6 +100,24 @@ describe('task checkboxes', () => {
     await settle()
     expect(wrapper.findAll('[data-richtext-task-checkbox]')).toHaveLength(0)
   })
+
+  it('converts scaled viewport coordinates back to local CSS pixels', async () => {
+    const wrapper = mountEditor('- [ ] one\n')
+    await settle()
+    const root = wrapper.get('[contenteditable]')
+    const container = root.element.parentElement!
+    const item = wrapper.get('[role="textbox"] li')
+
+    // 模拟预览的 scale(0.5)：DOM 屏幕坐标只有本地 CSS 像素的一半。
+    vi.spyOn(container, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect({ x: 0, y: 0, width: 200, height: 100 }))
+    vi.spyOn(item.element, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect({ x: 0, y: 20, width: 200, height: 20 }))
+    Object.defineProperty(container, 'offsetWidth', { value: 400, configurable: true })
+    Object.defineProperty(container, 'offsetHeight', { value: 200, configurable: true })
+    window.dispatchEvent(new Event('resize'))
+    await settle()
+
+    expect(wrapper.get('[data-richtext-task-checkbox]').attributes('style')).toContain('top: 40px')
+  })
 })
 
 describe('code block header', () => {
