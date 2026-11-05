@@ -101,7 +101,8 @@
     }
   }
 
-  .astryx-tree-list__item:focus-visible > .astryx-tree-list__row > .astryx-tree-list__content {
+  /* 焦点也可能在 tabindex=-1 的内部按钮或链接上。 */
+  .astryx-tree-list__item:has(:focus-visible) > .astryx-tree-list__row > .astryx-tree-list__content {
     outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
     outline-offset: var(--astryx-focus-outline-offset, 3px);
   }

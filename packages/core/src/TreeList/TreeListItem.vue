@@ -7,6 +7,7 @@ import { isIconGlyph } from '../Icon/glyphs.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/context.js'
+import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
 import '../../styles/tree-list.css'
 
@@ -69,8 +70,22 @@ function onRowClick(event: MouseEvent) {
 }
 
 function onToggle(event: MouseEvent) {
+  if (consumeWhileDisabled(event, props.item.isDisabled === true))
+    return
   event.stopPropagation()
   emit('toggle', props.item.id)
+}
+
+function onActionClick(event: MouseEvent) {
+  if (consumeWhileDisabled(event, props.item.isDisabled === true))
+    return
+  props.item.onClick?.(event)
+}
+
+function onLinkClick(event: MouseEvent) {
+  if (props.item.isDisabled)
+    event.preventDefault()
+  consumeWhileDisabled(event, props.item.isDisabled === true)
 }
 
 const press = usePressFeedback()
@@ -137,9 +152,10 @@ const rowPress = computed(() => {
           :data-state="isExpanded ? 'expanded' : 'collapsed'"
           :aria-expanded="isExpanded"
           :aria-label="messages.treeList.toggleChildren"
-          :disabled="item.isDisabled"
+          :aria-disabled="item.isDisabled || undefined"
           tabindex="-1"
           @click="onToggle"
+          @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
         >
           <Icon icon="chevronRight" size="sm" color="inherit" />
         </button>
@@ -159,7 +175,10 @@ const rowPress = computed(() => {
           :rel="linkRel"
           :aria-labelledby="labelId"
           :aria-describedby="item.description ? descriptionId : undefined"
+          :aria-disabled="item.isDisabled || undefined"
           tabindex="-1"
+          @click="onLinkClick"
+          @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
         >
           <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
           <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
@@ -168,11 +187,12 @@ const rowPress = computed(() => {
           v-else-if="item.onClick"
           type="button"
           class="astryx-tree-list__action"
-          :disabled="item.isDisabled"
           :aria-labelledby="labelId"
           :aria-describedby="item.description ? descriptionId : undefined"
+          :aria-disabled="item.isDisabled || undefined"
           tabindex="-1"
-          @click="item.onClick($event)"
+          @click="onActionClick"
+          @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
         >
           <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
           <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>

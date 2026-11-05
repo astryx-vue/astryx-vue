@@ -83,7 +83,13 @@
     background: var(--astryx-color-text-primary, #171717);
   }
 
-  .astryx-pagination-dot:disabled {
+  .astryx-pagination-dot:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  .astryx-pagination-dot:disabled,
+  .astryx-pagination-dot[aria-disabled='true'] {
     cursor: default;
     opacity: 0.4;
   }
