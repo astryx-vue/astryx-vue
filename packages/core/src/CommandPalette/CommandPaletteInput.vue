@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { CommandPaletteInputEmits, CommandPaletteInputProps } from './types.js'
-import { computed, inject, onMounted, useAttrs, useTemplateRef } from 'vue'
+import { computed, inject, onMounted, ref, useAttrs, useTemplateRef } from 'vue'
+import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
 import { DIALOG_CONTEXT_KEY } from '../Dialog/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
@@ -27,6 +29,8 @@ const dialog = inject(DIALOG_CONTEXT_KEY, null)
 const attrs = useAttrs()
 const messages = useAstryxMessages()
 const inputRef = useTemplateRef<HTMLInputElement>('input')
+const keyboardFocus = ref(false)
+trackInteractionModality()
 
 function hasAttr(name: string): boolean {
   return Object.hasOwn(attrs, name)
@@ -111,10 +115,22 @@ const inputAttrs = computed(() => {
     'onKeydown',
     'onKeyDown',
     'onInput',
+    'onFocus',
+    'onBlur',
   ])
   return Object.fromEntries(Object.entries(attrs).filter(([key]) => !reserved.has(key)))
 })
 const shouldFocus = computed(() => props.hasAutoFocus && dialog?.isInline.value !== true)
+
+function onFocus(event: FocusEvent): void {
+  keyboardFocus.value = isKeyboardModality()
+  invokeNativeEventHandler(attrs.onFocus, event)
+}
+
+function onBlur(event: FocusEvent): void {
+  keyboardFocus.value = false
+  invokeNativeEventHandler(attrs.onBlur, event)
+}
 
 function onInput(event: Event): void {
   const caller = attrs.onInput
@@ -158,8 +174,11 @@ onMounted(() => {
       class="astryx-command-palette-field"
       :placeholder="placeholder"
       :role="role"
+      :data-keyboard-focus="keyboardFocus ? '' : undefined"
       type="text"
       :value="value"
+      @focus="onFocus"
+      @blur="onBlur"
       @input="onInput"
       @keydown="onKeyDown"
     >

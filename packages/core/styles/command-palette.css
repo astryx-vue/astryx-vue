@@ -48,6 +48,11 @@
     line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
+  .astryx-command-palette-field:focus-visible[data-keyboard-focus] {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
   .astryx-command-palette-field::placeholder {
     color: var(--astryx-color-text-secondary, #525252);
   }
