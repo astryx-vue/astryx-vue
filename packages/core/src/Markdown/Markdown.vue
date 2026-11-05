@@ -20,6 +20,10 @@ function isVueMarkdownPlugin(plugin: MarkdownPlugin | MarkdownPluginEntry): plug
   return !isMarkdownPluginEntry(plugin)
 }
 
+function sameInputs(previous: unknown[], next: unknown[]): boolean {
+  return previous.length === next.length && previous.every((value, index) => Object.is(value, next[index]))
+}
+
 function fadeSpanCount(): number {
   const fallback = 165
   let duration = fallback
@@ -63,6 +67,33 @@ export default defineComponent({
     let boundaries: number[] = []
     let previousLength = 0
     let seenAutolink = props.autolink
+    let previousInputs: unknown[] = []
+    let renderedChildren: VNode[] = []
+    let hasRendered = false
+
+    function renderResult(children: VNode[]): VNode {
+      const inline = props.display === 'inline'
+      const { class: attrClass, style: attrStyle, ...rest } = attrs
+      const measure = props.contentWidth == null || props.contentWidth === ''
+        ? undefined
+        : (typeof props.contentWidth === 'number' ? `${props.contentWidth}px` : props.contentWidth)
+      const style: StyleValue[] = []
+      if (attrStyle != null)
+        style.push(attrStyle as StyleValue)
+      if (measure != null)
+        style.push({ '--astryx-markdown-measure': measure })
+
+      return h(inline ? 'span' : 'div', {
+        ...rest,
+        'ref': root,
+        'class': ['astryx-markdown', props.display === 'inline' ? 'astryx-markdown--inline' : null, attrClass],
+        style,
+        'role': props.display === 'inline' || rest.role != null ? rest.role : 'document',
+        'data-density': props.density,
+        'data-align': props.contentAlign,
+        'data-streaming': props.isStreaming || undefined,
+      }, children)
+    }
 
     return () => {
       if (props.content == null) {
@@ -70,6 +101,28 @@ export default defineComponent({
         if (slotSource.value !== text)
           slotSource.value = text
       }
+
+      const inputs = [
+        source.value,
+        props.isStreaming,
+        props.autolink,
+        props.display,
+        props.plugins,
+        props.inlinePlugins,
+        props.components,
+        props.density,
+        props.headingLevelStart,
+        props.onLinkClick,
+        props.sources,
+        props.citationStyle,
+        messages.value.markdown,
+        messages.value.citation.label,
+        checkboxIndicator.value,
+        fadeSpanCount(),
+      ]
+      if (hasRendered && sameInputs(previousInputs, inputs))
+        return renderResult(renderedChildren)
+      previousInputs = inputs
 
       if (!props.isStreaming || seenAutolink !== props.autolink) {
         incremental.settledEnd = 0
@@ -133,27 +186,10 @@ export default defineComponent({
       }
       const children = renderMarkdownBlocks(blocks, inline ? 0 : parsed.settledCount, ctx, cache)
       previousLength = ctx.fade.offset
+      renderedChildren = children
+      hasRendered = true
 
-      const { class: attrClass, style: attrStyle, ...rest } = attrs
-      const measure = props.contentWidth == null || props.contentWidth === ''
-        ? undefined
-        : (typeof props.contentWidth === 'number' ? `${props.contentWidth}px` : props.contentWidth)
-      const style: StyleValue[] = []
-      if (attrStyle != null)
-        style.push(attrStyle as StyleValue)
-      if (measure != null)
-        style.push({ '--astryx-markdown-measure': measure })
-
-      return h(inline ? 'span' : 'div', {
-        ...rest,
-        'ref': root,
-        'class': ['astryx-markdown', inline ? 'astryx-markdown--inline' : null, attrClass],
-        style,
-        'role': inline || rest.role != null ? rest.role : 'document',
-        'data-density': props.density,
-        'data-align': props.contentAlign,
-        'data-streaming': props.isStreaming || undefined,
-      }, children)
+      return renderResult(renderedChildren)
     }
   },
 })

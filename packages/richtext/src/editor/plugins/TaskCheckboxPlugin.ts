@@ -103,12 +103,21 @@ export const TaskCheckboxPlugin = defineComponent({
         const box = element.getBoundingClientRect()
         const style = getComputedStyle(element)
         const isRtl = style.direction === 'rtl'
+        const container = root.parentElement
+        // 缩略预览可能用 transform 缩放。屏幕坐标的差值要先除回本地 CSS 像素，
+        // 否则写进 top/left 后会被 transform 再缩一次。
+        const scaleX = container != null && container.offsetWidth > 0 ? origin.width / container.offsetWidth : 1
+        const scaleY = container != null && container.offsetHeight > 0 ? origin.height / container.offsetHeight : 1
+        const safeScaleX = scaleX > 0 ? scaleX : 1
+        const safeScaleY = scaleY > 0 ? scaleY : 1
         return [{
           key: item.getKey(),
           checked: task === 'checked',
           label: item.getTextContent(),
-          top: box.top - origin.top + Number.parseFloat(style.paddingTop || '0'),
-          left: (isRtl ? box.right - CHECKBOX_SIZE : box.left) - origin.left,
+          top: (box.top - origin.top) / safeScaleY + Number.parseFloat(style.paddingTop || '0'),
+          left: isRtl
+            ? (box.right - origin.left) / safeScaleX - CHECKBOX_SIZE
+            : (box.left - origin.left) / safeScaleX,
         }]
       })
     }, samePlacements)

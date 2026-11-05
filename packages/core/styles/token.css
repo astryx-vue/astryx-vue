@@ -120,6 +120,7 @@
   }
 
   .astryx-token-remove {
+    position: relative;
     display: inline-flex;
     flex: none;
     align-items: center;
@@ -134,6 +135,13 @@
     color: inherit;
     cursor: pointer;
     outline: none;
+  }
+
+  /* 扩大删除热区，但不伸到旁边的值上。 */
+  .astryx-token-remove::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
   }
 
   @media (hover: hover) {
