@@ -1,5 +1,13 @@
 # @astryx-vue/core
 
+## 0.7.8
+
+### Patch Changes
+
+- [#444](https://github.com/astryx-vue/astryx-vue/pull/444) [`63cfdac`](https://github.com/astryx-vue/astryx-vue/commit/63cfdac4324597396e1be4f7029e9a73282a235b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Markdown 在内容及其渲染输入没有变化时复用已生成的子树，不再因容器对齐等无关变化重新解析。链接回调等输入变化仍会生成对应的新输出。
+
+- [#444](https://github.com/astryx-vue/astryx-vue/pull/444) [`09d2796`](https://github.com/astryx-vue/astryx-vue/commit/09d2796d233d2ca7a82aadf1b476d31739b3c0c6) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Token 的删除按钮在可见 X 四周外扩 4px 作为指针热区，扩大点击范围但不覆盖旁边的值；LTR 和 RTL 都适用。
+
 ## 0.7.7
 
 ### Patch Changes

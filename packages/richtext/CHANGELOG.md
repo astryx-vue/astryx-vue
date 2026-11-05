@@ -1,5 +1,13 @@
 # @astryx-vue/richtext
 
+## 0.7.8
+
+### Patch Changes
+
+- [#444](https://github.com/astryx-vue/astryx-vue/pull/444) [`00c41e4`](https://github.com/astryx-vue/astryx-vue/commit/00c41e44bf9c1a5c477898f0fe34eea22b7b97ce) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 RichText 任务勾选框在缩略预览中错位的问题。使用 transform 缩放时，先把视口坐标换算回本地 CSS 像素，再计算位置和 RTL 左偏，确保勾选框仍对齐自己的任务项。
+- Updated dependencies [[`63cfdac`](https://github.com/astryx-vue/astryx-vue/commit/63cfdac4324597396e1be4f7029e9a73282a235b), [`09d2796`](https://github.com/astryx-vue/astryx-vue/commit/09d2796d233d2ca7a82aadf1b476d31739b3c0c6)]:
+  - @astryx-vue/core@0.7.8
+
 ## 0.7.7
 
 ### Patch Changes
