@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { CodeBlock } from '@astryx-vue/core/Code'
-
-const snippet = `export const total = 42`
+import { Code } from '@astryx-vue/core/Code'
+import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <CodeBlock :code="snippet" language="typescript" title="total.ts" />
+  <Text type="body">
+    Use <Code>items.length</Code> to count items.
+  </Text>
 </template>
