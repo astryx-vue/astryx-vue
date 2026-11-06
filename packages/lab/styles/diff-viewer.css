@@ -188,6 +188,54 @@
     overflow-wrap: anywhere;
   }
 
+  /* 分栏固定在左右各一半；只有代码滚动，行号和变化标记留在原地。 */
+  .astryx-diff-viewer__table[data-view-mode='split'] {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .astryx-diff-viewer__code-scroll {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+  }
+
+  .astryx-diff-viewer__code-scroll > .astryx-diff-viewer__ltr {
+    display: inline-block;
+    min-width: 100%;
+  }
+
+  .astryx-diff-viewer__code--wrapped .astryx-diff-viewer__code-scroll {
+    overflow-x: hidden;
+  }
+
+  /* 统一视图仍整表滚动，行号和标记通过 sticky 留在视口内。 */
+  .astryx-diff-viewer__table[data-view-mode='unified'] .astryx-diff-viewer__gutter,
+  .astryx-diff-viewer__table[data-view-mode='unified'] .astryx-diff-viewer__marker {
+    position: sticky;
+    z-index: 1;
+    background-color: var(--astryx-code-block-background, var(--astryx-color-background-surface, light-dark(#ffffff, #262626)));
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified'][data-has-line-numbers] .astryx-diff-viewer__gutter:nth-child(1) {
+    inset-inline-start: 0;
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified'][data-has-line-numbers] .astryx-diff-viewer__gutter:nth-child(2) {
+    inset-inline-start: var(--_diff-gutter-cell, 2ch);
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified'][data-has-line-numbers] .astryx-diff-viewer__marker {
+    inset-inline-start: calc(2 * var(--_diff-gutter-cell, 2ch));
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified']:not([data-has-line-numbers]) .astryx-diff-viewer__marker {
+    inset-inline-start: 0;
+  }
+
   /* 分栏时旧文件一侧负责画中间的分隔线。 */
   .astryx-diff-viewer__code--old {
     border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#00000014, #ffffff1a));

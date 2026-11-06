@@ -4,7 +4,7 @@ import type { DiffViewerLineRef, DiffViewerSide } from './diffTypes.js'
 import type { LineCell, SplitRow, UnifiedRow } from './rows.js'
 import type { DiffViewerChangeIndicator, DiffViewerViewMode } from './types.js'
 import { VisuallyHidden } from '@astryx-vue/core'
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import RenderVNode from './RenderVNode.js'
 
 defineOptions({ name: 'AstryxDiffViewerTable' })
@@ -25,10 +25,22 @@ const emit = defineEmits<{
   lineNumberClick: [ref: DiffViewerLineRef, event: MouseEvent]
 }>()
 
+const splitTable = useTemplateRef<HTMLTableElement>('splitTable')
+
+function onPaneScroll(event: Event): void {
+  const left = (event.currentTarget as HTMLElement).scrollLeft
+  const panes = splitTable.value?.querySelectorAll<HTMLElement>('[data-pane]') ?? []
+  for (const pane of panes) {
+    if (pane.scrollLeft !== left)
+      pane.scrollLeft = left
+  }
+}
+
 const unifiedColumns = computed(() => (props.hasLineNumbers ? 2 : 0) + 2)
 const splitSideColumns = computed(() => (props.hasLineNumbers ? 1 : 0) + 2)
 const tableStyle = computed<CSSProperties>(() => ({
   '--astryx-diff-viewer-gutter-width': `${props.digits}ch`,
+  '--_diff-gutter-cell': `calc(${props.digits}ch + 2 * var(--astryx-spacing-2, 8px))`,
 }))
 
 function lineNumber(cell: LineCell | null, side: DiffViewerSide): number | null {
@@ -83,6 +95,8 @@ function newNote(row: SplitRow): unknown {
     v-if="viewMode === 'unified'"
     class="astryx-diff-viewer__table"
     :class="{ 'astryx-diff-viewer__table--wrapped': isWrapped }"
+    :data-view-mode="viewMode"
+    :data-has-line-numbers="hasLineNumbers || undefined"
     :data-change-indicator="changeIndicator"
     :data-change-background="hasChangeBackground ? undefined : 'false'"
     :style="tableStyle"
@@ -202,8 +216,11 @@ function newNote(row: SplitRow): unknown {
 
   <table
     v-else
+    ref="splitTable"
     class="astryx-diff-viewer__table"
     :class="{ 'astryx-diff-viewer__table--wrapped': isWrapped }"
+    :data-view-mode="viewMode"
+    :data-has-line-numbers="hasLineNumbers || undefined"
     :data-change-indicator="changeIndicator"
     :data-change-background="hasChangeBackground ? undefined : 'false'"
     :style="tableStyle"
@@ -281,27 +298,29 @@ function newNote(row: SplitRow): unknown {
               :class="[cellClass(row.old), { 'astryx-diff-viewer__code--wrapped': isWrapped }]"
               :data-diff="diffKind(row.old)"
             >
-              <span class="astryx-diff-viewer__ltr">
-                <template v-for="(group, groupIndex) in row.old?.groups ?? []" :key="groupIndex">
-                  <span
-                    v-if="group.changed"
-                    class="astryx-diff-viewer__change"
-                    data-diff-change
-                    :data-kind="row.old?.line.kind"
-                  >
-                    <template v-for="(part, partIndex) in group.parts" :key="partIndex">
-                      <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
-                      <template v-else>{{ part.text }}</template>
-                    </template>
-                  </span>
-                  <template v-else>
-                    <template v-for="(part, partIndex) in group.parts" :key="partIndex">
-                      <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
-                      <template v-else>{{ part.text }}</template>
+              <div class="astryx-diff-viewer__code-scroll" data-pane="old" @scroll="onPaneScroll">
+                <span class="astryx-diff-viewer__ltr">
+                  <template v-for="(group, groupIndex) in row.old?.groups ?? []" :key="groupIndex">
+                    <span
+                      v-if="group.changed"
+                      class="astryx-diff-viewer__change"
+                      data-diff-change
+                      :data-kind="row.old?.line.kind"
+                    >
+                      <template v-for="(part, partIndex) in group.parts" :key="partIndex">
+                        <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
+                        <template v-else>{{ part.text }}</template>
+                      </template>
+                    </span>
+                    <template v-else>
+                      <template v-for="(part, partIndex) in group.parts" :key="partIndex">
+                        <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
+                        <template v-else>{{ part.text }}</template>
+                      </template>
                     </template>
                   </template>
-                </template>
-              </span>
+                </span>
+              </div>
             </td>
 
             <td v-if="hasLineNumbers" class="astryx-diff-viewer__gutter" :class="cellClass(row.new)">
@@ -334,27 +353,29 @@ function newNote(row: SplitRow): unknown {
               :class="[cellClass(row.new), { 'astryx-diff-viewer__code--wrapped': isWrapped }]"
               :data-diff="diffKind(row.new)"
             >
-              <span class="astryx-diff-viewer__ltr">
-                <template v-for="(group, groupIndex) in row.new?.groups ?? []" :key="groupIndex">
-                  <span
-                    v-if="group.changed"
-                    class="astryx-diff-viewer__change"
-                    data-diff-change
-                    :data-kind="row.new?.line.kind"
-                  >
-                    <template v-for="(part, partIndex) in group.parts" :key="partIndex">
-                      <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
-                      <template v-else>{{ part.text }}</template>
-                    </template>
-                  </span>
-                  <template v-else>
-                    <template v-for="(part, partIndex) in group.parts" :key="partIndex">
-                      <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
-                      <template v-else>{{ part.text }}</template>
+              <div class="astryx-diff-viewer__code-scroll" data-pane="new" @scroll="onPaneScroll">
+                <span class="astryx-diff-viewer__ltr">
+                  <template v-for="(group, groupIndex) in row.new?.groups ?? []" :key="groupIndex">
+                    <span
+                      v-if="group.changed"
+                      class="astryx-diff-viewer__change"
+                      data-diff-change
+                      :data-kind="row.new?.line.kind"
+                    >
+                      <template v-for="(part, partIndex) in group.parts" :key="partIndex">
+                        <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
+                        <template v-else>{{ part.text }}</template>
+                      </template>
+                    </span>
+                    <template v-else>
+                      <template v-for="(part, partIndex) in group.parts" :key="partIndex">
+                        <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
+                        <template v-else>{{ part.text }}</template>
+                      </template>
                     </template>
                   </template>
-                </template>
-              </span>
+                </span>
+              </div>
             </td>
           </tr>
           <tr v-if="oldNote(row) != null || newNote(row) != null">
