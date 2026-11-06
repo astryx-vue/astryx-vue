@@ -2,7 +2,7 @@
 import type { CSSProperties } from 'vue'
 import type { DiffViewerLineRef, DiffViewerSide } from './diffTypes.js'
 import type { LineCell, SplitRow, UnifiedRow } from './rows.js'
-import type { DiffViewerViewMode } from './types.js'
+import type { DiffViewerChangeIndicator, DiffViewerViewMode } from './types.js'
 import { VisuallyHidden } from '@astryx-vue/core'
 import { computed } from 'vue'
 import RenderVNode from './RenderVNode.js'
@@ -15,6 +15,8 @@ const props = defineProps<{
   splitRows: SplitRow[]
   hasLineNumbers: boolean
   isWrapped: boolean
+  changeIndicator: DiffViewerChangeIndicator
+  hasChangeBackground: boolean
   hasLineNumberClick: boolean
   digits: number
 }>()
@@ -81,6 +83,8 @@ function newNote(row: SplitRow): unknown {
     v-if="viewMode === 'unified'"
     class="astryx-diff-viewer__table"
     :class="{ 'astryx-diff-viewer__table--wrapped': isWrapped }"
+    :data-change-indicator="changeIndicator"
+    :data-change-background="hasChangeBackground ? undefined : 'false'"
     :style="tableStyle"
   >
     <colgroup>
@@ -148,11 +152,11 @@ function newNote(row: SplitRow): unknown {
             </td>
             <td class="astryx-diff-viewer__marker" :class="cellClass(row.cell)">
               <template v-if="row.cell.line.kind === 'added'">
-                <span aria-hidden="true">+</span>
+                <span v-if="changeIndicator === 'classic'" aria-hidden="true">+</span>
                 <VisuallyHidden>Added</VisuallyHidden>
               </template>
               <template v-else-if="row.cell.line.kind === 'removed'">
-                <span aria-hidden="true">-</span>
+                <span v-if="changeIndicator === 'classic'" aria-hidden="true">-</span>
                 <VisuallyHidden>Removed</VisuallyHidden>
               </template>
             </td>
@@ -200,6 +204,8 @@ function newNote(row: SplitRow): unknown {
     v-else
     class="astryx-diff-viewer__table"
     :class="{ 'astryx-diff-viewer__table--wrapped': isWrapped }"
+    :data-change-indicator="changeIndicator"
+    :data-change-background="hasChangeBackground ? undefined : 'false'"
     :style="tableStyle"
   >
     <colgroup>
@@ -262,11 +268,11 @@ function newNote(row: SplitRow): unknown {
             </td>
             <td class="astryx-diff-viewer__marker" :class="cellClass(row.old)">
               <template v-if="row.old?.line.kind === 'added'">
-                <span aria-hidden="true">+</span>
+                <span v-if="changeIndicator === 'classic'" aria-hidden="true">+</span>
                 <VisuallyHidden>Added</VisuallyHidden>
               </template>
               <template v-else-if="row.old?.line.kind === 'removed'">
-                <span aria-hidden="true">-</span>
+                <span v-if="changeIndicator === 'classic'" aria-hidden="true">-</span>
                 <VisuallyHidden>Removed</VisuallyHidden>
               </template>
             </td>
@@ -315,11 +321,11 @@ function newNote(row: SplitRow): unknown {
             </td>
             <td class="astryx-diff-viewer__marker" :class="cellClass(row.new)">
               <template v-if="row.new?.line.kind === 'added'">
-                <span aria-hidden="true">+</span>
+                <span v-if="changeIndicator === 'classic'" aria-hidden="true">+</span>
                 <VisuallyHidden>Added</VisuallyHidden>
               </template>
               <template v-else-if="row.new?.line.kind === 'removed'">
-                <span aria-hidden="true">-</span>
+                <span v-if="changeIndicator === 'classic'" aria-hidden="true">-</span>
                 <VisuallyHidden>Removed</VisuallyHidden>
               </template>
             </td>

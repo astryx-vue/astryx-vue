@@ -11,6 +11,7 @@ export type {
 export { createDiffFile, DiffViewer, parseUnifiedDiff } from './DiffViewer/index.js'
 export type {
   CreateDiffFileOptions,
+  DiffViewerChangeIndicator,
   DiffViewerEmits,
   DiffViewerFile,
   DiffViewerFileStatus,

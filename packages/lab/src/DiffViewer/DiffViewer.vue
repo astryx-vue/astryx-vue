@@ -19,6 +19,8 @@ const props = withDefaults(defineProps<DiffViewerProps>(), {
   hasLineNumbers: true,
   isWrapped: false,
   inlineHighlight: 'word',
+  changeIndicator: 'classic',
+  hasChangeBackground: true,
   isCollapsible: true,
   isCollapsed: undefined,
   defaultIsCollapsed: false,
@@ -210,6 +212,8 @@ function relayLineNumberClick(ref: DiffViewerLineRef, event: MouseEvent): void {
                 :split-rows="splitRows"
                 :has-line-numbers="hasLineNumbers"
                 :is-wrapped="isWrapped"
+                :change-indicator="changeIndicator"
+                :has-change-background="hasChangeBackground"
                 :has-line-number-click="hasLineNumberClick"
                 :digits="stats.digits"
                 @line-number-click="relayLineNumberClick"

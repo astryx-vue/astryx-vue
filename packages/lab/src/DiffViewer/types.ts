@@ -19,6 +19,9 @@ export type DiffViewerViewMode = 'unified' | 'split'
  */
 export type DiffViewerInlineHighlight = 'word' | 'char' | 'none'
 
+/** 行内变化标记：经典加减号、实线/虚线条，或不显示可见标记。 */
+export type DiffViewerChangeIndicator = 'classic' | 'bars' | 'none'
+
 export interface DiffViewerProps {
   /**
    * The file to render. Build one with `parseUnifiedDiff(patch)` (one per file
@@ -54,6 +57,19 @@ export interface DiffViewerProps {
    * @default 'word'
    */
   inlineHighlight?: DiffViewerInlineHighlight
+  /**
+   * How changed lines are marked beside the code: classic +/− glyphs, a solid
+   * bar for additions and a dashed bar for removals, or no visible marker.
+   * Screen readers keep the Added/Removed label in every mode.
+   * @default 'classic'
+   */
+  changeIndicator?: DiffViewerChangeIndicator
+  /**
+   * Tint added and removed rows. When false, line numbers, the indicator and
+   * inline highlights still carry the change.
+   * @default true
+   */
+  hasChangeBackground?: boolean
   /**
    * Make the file header a disclosure that hides and shows the hunks. Needs a
    * file path to name the control.
