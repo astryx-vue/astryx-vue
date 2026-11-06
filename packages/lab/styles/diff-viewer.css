@@ -167,6 +167,7 @@
   }
 
   .astryx-diff-viewer__marker {
+    position: relative;
     padding: 0 var(--astryx-spacing-2, 8px) 0 var(--astryx-spacing-1, 4px);
     color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
     vertical-align: top;
@@ -187,9 +188,75 @@
     overflow-wrap: anywhere;
   }
 
+  /* 分栏固定在左右各一半；只有代码滚动，行号和变化标记留在原地。 */
+  .astryx-diff-viewer__table[data-view-mode='split'] {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .astryx-diff-viewer__code-scroll {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+  }
+
+  .astryx-diff-viewer__code-scroll > .astryx-diff-viewer__ltr {
+    display: inline-block;
+    min-width: 100%;
+  }
+
+  .astryx-diff-viewer__code--wrapped .astryx-diff-viewer__code-scroll {
+    overflow-x: hidden;
+  }
+
+  /* 统一视图仍整表滚动，行号和标记通过 sticky 留在视口内。 */
+  .astryx-diff-viewer__table[data-view-mode='unified'] .astryx-diff-viewer__gutter,
+  .astryx-diff-viewer__table[data-view-mode='unified'] .astryx-diff-viewer__marker {
+    position: sticky;
+    z-index: 1;
+    background-color: var(--astryx-code-block-background, var(--astryx-color-background-surface, light-dark(#ffffff, #262626)));
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified'][data-has-line-numbers] .astryx-diff-viewer__gutter:nth-child(1) {
+    inset-inline-start: 0;
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified'][data-has-line-numbers] .astryx-diff-viewer__gutter:nth-child(2) {
+    inset-inline-start: var(--_diff-gutter-cell, 2ch);
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified'][data-has-line-numbers] .astryx-diff-viewer__marker {
+    inset-inline-start: calc(2 * var(--_diff-gutter-cell, 2ch));
+  }
+
+  .astryx-diff-viewer__table[data-view-mode='unified']:not([data-has-line-numbers]) .astryx-diff-viewer__marker {
+    inset-inline-start: 0;
+  }
+
   /* 分栏时旧文件一侧负责画中间的分隔线。 */
   .astryx-diff-viewer__code--old {
     border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#00000014, #ffffff1a));
+  }
+
+  .astryx-diff-viewer__table[data-change-background='false'] .is-added,
+  .astryx-diff-viewer__table[data-change-background='false'] .is-removed {
+    background-color: transparent;
+  }
+
+  .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker.is-added::before,
+  .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker.is-removed::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    border-inline-start: 2px solid currentColor;
+  }
+
+  .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker.is-removed::before {
+    border-inline-start-style: dashed;
   }
 
   .astryx-diff-viewer__gutter.is-added,

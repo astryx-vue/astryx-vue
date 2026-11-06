@@ -371,6 +371,7 @@
   .astryx-selector-option {
     box-sizing: border-box;
     display: flex;
+    min-width: 0;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -465,6 +466,11 @@
 
   .astryx-selector-option-label {
     display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .astryx-selector-option-description {
