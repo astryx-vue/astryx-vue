@@ -74,8 +74,6 @@ function reportUnpublishedPackages() {
     appendFileSync(summaryPath, `${lines.map(line => `${line}\n`).join('')}\n`)
 }
 
-const LAB_MANIFEST = join(ROOT, 'packages', 'lab', 'package.json')
-
 function run(args, env = {}) {
   // 捕获输出再转发：发布失败时要看清是哪一类错误，才知道能不能重试。
   const result = spawnSync('pnpm', args, { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } })
@@ -114,18 +112,37 @@ function runPublish(args) {
   }
 }
 
-function holdLabBack(publish) {
-  const original = readFileSync(LAB_MANIFEST, 'utf8')
-  const manifest = JSON.parse(original)
-  manifest.private = true
-  writeFileSync(LAB_MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`)
-  console.log('@astryx-vue/lab 这个版本还没在 npm 上。这次只发布稳定包，Lab 留到单独的 canary 发布。')
+/** 发布期间临时把指定包标成 private，回调结束后恢复清单原文。 */
+export function withPackagesMarkedPrivate(root, packageDirs, publish) {
+  const originals = packageDirs.map((dir) => {
+    const path = join(root, 'packages', dir, 'package.json')
+    return { path, source: readFileSync(path, 'utf8') }
+  })
+  for (const { path, source } of originals) {
+    const manifest = JSON.parse(source)
+    manifest.private = true
+    writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`)
+  }
   try {
-    publish()
+    return publish()
   }
   finally {
-    writeFileSync(LAB_MANIFEST, original)
+    for (const { path, source } of originals)
+      writeFileSync(path, source)
   }
+}
+
+function holdLabBack(publish) {
+  console.log('@astryx-vue/lab 这个版本还没在 npm 上。这次只发布稳定包，Lab 留到单独的 canary 发布。')
+  return withPackagesMarkedPrivate(ROOT, ['lab'], publish)
+}
+
+function holdStableBack(publish) {
+  // 稳定包已经发完，不能让第二次 changeset publish 再碰它们；npm 的传播
+  // 或 staged 状态可能让它误以为还需要发。只留下 Lab。
+  const stableDirs = listPublicPackages(ROOT).filter(dir => dir !== 'lab')
+  console.log('稳定包已经发布，canary 阶段只保留 @astryx-vue/lab。')
+  return withPackagesMarkedPrivate(ROOT, stableDirs, publish)
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
@@ -135,7 +152,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   try {
     if (plan.thenPublishLabAsCanary) {
       holdLabBack(publish)
-      runPublish(['changeset', 'publish', '--tag', 'canary'])
+      holdStableBack(() => runPublish(['changeset', 'publish', '--tag', 'canary']))
     }
     else {
       publish()

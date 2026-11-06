@@ -1,5 +1,8 @@
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { changesetPublishArgs, isSignatureLogConflict, releasePublishPlan } from '../scripts/release.mjs'
+import { changesetPublishArgs, isSignatureLogConflict, releasePublishPlan, withPackagesMarkedPrivate } from '../scripts/release.mjs'
 
 describe('changesetPublishArgs', () => {
   it('keeps stable releases on the default tag', () => {
@@ -33,6 +36,27 @@ describe('releasePublishPlan', () => {
       args: ['changeset', 'publish', '--tag', 'canary'],
       thenPublishLabAsCanary: false,
     })
+  })
+})
+
+describe('publish batch isolation', () => {
+  it('marks only the selected packages private and restores their manifests', () => {
+    const root = mkdtempSync(join(tmpdir(), 'astryx-release-'))
+    try {
+      for (const dir of ['core', 'lab']) {
+        const dirPath = join(root, 'packages', dir)
+        mkdirSync(dirPath, { recursive: true })
+        writeFileSync(join(dirPath, 'package.json'), JSON.stringify({ name: `@astryx-vue/${dir}`, version: '1.0.0' }), { encoding: 'utf8', recursive: true })
+      }
+      withPackagesMarkedPrivate(root, ['core'], () => {
+        expect(readFileSync(join(root, 'packages/core/package.json'), 'utf8')).toContain('"private": true')
+        expect(readFileSync(join(root, 'packages/lab/package.json'), 'utf8')).not.toContain('"private"')
+      })
+      expect(readFileSync(join(root, 'packages/core/package.json'), 'utf8')).not.toContain('"private"')
+    }
+    finally {
+      rmSync(root, { recursive: true, force: true })
+    }
   })
 })
 
