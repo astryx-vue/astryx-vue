@@ -1,5 +1,16 @@
 # @astryx-vue/lab
 
+## 0.3.0
+
+### Minor Changes
+
+- [#445](https://github.com/astryx-vue/astryx-vue/pull/445) [`ee49d4b`](https://github.com/astryx-vue/astryx-vue/commit/ee49d4b65a5734fee9aabfa053dc836858a0d695) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DiffViewer 新增 `changeIndicator="classic|bars|none"` 与 `hasChangeBackground`。可切换经典加减号、实线/虚线条或无可见标记；行底色可关闭，行号、行内高亮和 Added/Removed 读屏标签仍保留。未换行的分栏固定左右各半，两侧代码同步横向滚动，行号和变化标记保持可见；统一视图的行号与标记使用 sticky 定位。
+
+### Patch Changes
+
+- Updated dependencies [[`8a86866`](https://github.com/astryx-vue/astryx-vue/commit/8a86866bd08cf332afb296e3099b6714c562c8ed)]:
+  - @astryx-vue/core@0.7.9
+
 ## 0.2.1
 
 ### Patch Changes

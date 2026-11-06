@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.9
+
+### Patch Changes
+
+- [#445](https://github.com/astryx-vue/astryx-vue/pull/445) [`8a86866`](https://github.com/astryx-vue/astryx-vue/commit/8a86866bd08cf332afb296e3099b6714c562c8ed) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 Selector 选项在窄列表中不能收缩的问题。选项允许 `min-width: 0`，长标签可以按现有省略样式收缩，不再把弹出层撑出窄容器。
+
 ## 0.7.8
 
 ### Patch Changes
