@@ -143,3 +143,43 @@ export function applyHighlightRanges(codeElement: HTMLElement, tokenLines: Token
       highlight.delete(range)
   }
 }
+
+/** 给 contenteditable 的单文本节点画行内 token；token.start/end 是行内偏移。 */
+export function applyHighlightRangesFlat(codeElement: HTMLElement, tokenLines: TokenLine[]): () => void {
+  const applied: HighlightRange[] = []
+  const walker = codeElement.ownerDocument.createTreeWalker(codeElement, NodeFilter.SHOW_TEXT)
+  const text = walker.nextNode() as Text | null
+  if (text == null)
+    return () => {}
+
+  const source = codeElement.textContent ?? ''
+  let lineStart = 0
+  for (const tokens of tokenLines) {
+    for (const token of tokens) {
+      const start = lineStart + token.start
+      const end = lineStart + token.end
+      if (start >= text.length || end <= 0)
+        continue
+      const highlight = resolveHighlight(token.type)
+      if (highlight == null)
+        continue
+      try {
+        const range = new Range()
+        range.setStart(text, Math.max(0, Math.min(start, text.length)))
+        range.setEnd(text, Math.max(0, Math.min(end, text.length)))
+        highlight.add(range)
+        applied.push({ highlight, range })
+      }
+      catch {
+        // 浏览器拒绝某个范围时保留普通文本颜色。
+      }
+    }
+    const lineEnd = source.indexOf('\n', lineStart)
+    lineStart = lineEnd < 0 ? source.length : lineEnd + 1
+  }
+
+  return () => {
+    for (const { highlight, range } of applied)
+      highlight.delete(range)
+  }
+}

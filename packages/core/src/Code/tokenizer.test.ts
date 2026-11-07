@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { applyHighlightRanges } from './highlightRanges.js'
+import { applyHighlightRanges, applyHighlightRangesFlat } from './highlightRanges.js'
 import { flatTokensToLines, SYNC_TOKENIZE_THRESHOLD, tokenize, tokenizeAsync } from './tokenizer.js'
 
 describe('tokenize', () => {
@@ -47,6 +47,38 @@ describe('tokenize', () => {
     const lines = flatTokensToLines([{ type: 'tag', start: 3, end: 5 }], code)
 
     expect(lines).toEqual([[], [{ type: 'tag', start: 0, end: 2 }]])
+  })
+})
+
+describe('applyHighlightRangesFlat', () => {
+  it('paints line-relative ranges on a single text node and cleans them up', () => {
+    const added: object[] = []
+    class FakeHighlight {
+      add(range: object): void { added.push(range) }
+      delete(range: object): void {
+        const index = added.indexOf(range)
+        if (index >= 0)
+          added.splice(index, 1)
+      }
+    }
+    const highlights = new Map<string, unknown>()
+    const css = globalThis.CSS
+    vi.stubGlobal('Highlight', FakeHighlight)
+    vi.stubGlobal('CSS', { highlights, escape: (value: string) => value })
+    try {
+      const code = document.createElement('code')
+      code.textContent = 'const x = 1;\nconst y = 2;'
+      const cleanup = applyHighlightRangesFlat(code, tokenize(code.textContent, 'javascript'))
+      expect(added.length).toBeGreaterThan(0)
+      expect((added[0] as Range).toString()).toBe('const')
+      expect(code.textContent).toBe('const x = 1;\nconst y = 2;')
+      cleanup()
+      expect(added).toHaveLength(0)
+    }
+    finally {
+      vi.stubGlobal('Highlight', undefined)
+      vi.stubGlobal('CSS', css)
+    }
   })
 })
 
