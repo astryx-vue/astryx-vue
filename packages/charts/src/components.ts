@@ -10,6 +10,9 @@ export { DEFAULT_MARGIN, MAX_TABLE_POINTS } from './Chart/types.js'
 export { ChartAxis } from './ChartAxis/index.js'
 export type { ChartAxisPosition, ChartAxisProps } from './ChartAxis/index.js'
 
+export { ChartBrush } from './ChartBrush/index.js'
+export type { BrushMode, BrushRange, ChartBrushEmits, ChartBrushProps } from './ChartBrush/index.js'
+
 export { ChartGrid } from './ChartGrid/index.js'
 export type { ChartGridProps } from './ChartGrid/index.js'
 

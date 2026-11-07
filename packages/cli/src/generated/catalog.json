@@ -20360,6 +20360,29 @@
             ]
           },
           {
+            "heading": "Brush selection",
+            "rows": [
+              {
+                "name": "`mode`",
+                "description": "`mode`",
+                "type": "`'x' \\",
+                "default": "'xy'`"
+              },
+              {
+                "name": "`color`",
+                "description": "`color`",
+                "type": "`string`",
+                "default": "`var(--astryx-color-accent)`"
+              },
+              {
+                "name": "`opacity`",
+                "description": "`opacity`",
+                "type": "`number`",
+                "default": "`0.15`"
+              }
+            ]
+          },
+          {
             "heading": "Props",
             "rows": [
               {
@@ -20912,6 +20935,29 @@
             ]
           },
           {
+            "heading": "框选范围",
+            "rows": [
+              {
+                "name": "`mode`",
+                "type": "`'x' \\",
+                "default": "'xy'`",
+                "description": "`'x'`"
+              },
+              {
+                "name": "`color`",
+                "type": "`string`",
+                "default": "`var(--astryx-color-accent)`",
+                "description": "选区颜色。"
+              },
+              {
+                "name": "`opacity`",
+                "type": "`number`",
+                "default": "`0.15`",
+                "description": "选区填充透明度。"
+              }
+            ]
+          },
+          {
             "heading": "属性",
             "rows": [
               {
@@ -21148,6 +21194,10 @@
             "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale)`: Formats dates as a short month and day. For example, \"Jan 5\".\n- `monthYear(value, locale)`: Formats dates as month and year. For example, \"Jan 2024\".\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
           },
           {
+            "heading": "Brush selection",
+            "text": "Place `<ChartBrush>` in the `<Chart>` `interactions` slot to let users drag a selection over the plot. `mode=\"x\"` selects a horizontal range, useful for time windows; `mode=\"xy\"` selects a rectangle, useful for scatter plots.\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\">\n  <template #interactions>\n    <ChartBrush @brush=\"onBrush\" @clear=\"clearSelection\" />\n  </template>\n</Chart>\n```\n\nThe `brush` event receives `(range, data)`. `range.x` is the `[min, max]` interval in data coordinates, with `range.y` also present in xy mode; `data` contains the original rows inside the selection. `clear` is a click that did not become a drag."
+          },
+          {
             "heading": "Accessibility",
             "text": "Charts include built-in accessibility features so screen reader users can understand chart content:\n\n- The root element has a `role=\"img\"` attribute.\n- The chart's accessible name prioritizes the `title` prop. When `title` is omitted, the component builds a semantic description from primary series and the x-axis field (such as \"Monthly Revenue and Cost trend\"). If only annotations are present, it falls back to \"Chart\".\n- The `subtitle` prop maps to the chart's accessible description.\n- When total data points (data rows × data columns) do not exceed 100 (`MAX_TABLE_POINTS`), the chart generates a visually hidden data table using `VisuallyHidden`. Screen readers can read exact values row by row. Above 100 points, the table is omitted to prevent excessive speech noise."
           },
@@ -21248,6 +21298,10 @@
           {
             "heading": "格式化函数",
             "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。\n- `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
+          },
+          {
+            "heading": "框选范围",
+            "text": "在 `<Chart>` 的 `interactions` 插槽里放 `<ChartBrush>`，用户就可以在绘图区拖动选择范围。`mode=\"x\"` 只选横向范围，适合时间窗口；`mode=\"xy\"` 选择矩形区域，适合散点图。\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\">\n  <template #interactions>\n    <ChartBrush @brush=\"onBrush\" @clear=\"clearSelection\" />\n  </template>\n</Chart>\n```\n\n`brush` 事件的参数是 `(range, data)`：`range.x` 是数据坐标里的 `[最小值, 最大值]`，xy 模式还会提供 `range.y`；`data` 是落在选区内的原始数据行。`clear` 表示没有形成拖动的点击。"
           },
           {
             "heading": "无障碍",
@@ -21355,6 +21409,17 @@
             "zh": "自定义悬停提示框：通过 #tooltip 插槽读取当前数据并按自定义格式排版渲染。"
           },
           "code": "<script setup lang=\"ts\">\nimport type { TooltipSeriesValue } from '@astryx-vue/charts'\nimport { Chart, ChartAxis, ChartGrid, ChartSwatch, currency, line } from '@astryx-vue/charts'\nimport { monthly } from './data'\n\nconst money = currency('¥')\n\nconst series = [\n  line('revenue', { label: '收入' }),\n  line('profit', { label: '利润' }),\n]\n\n// 插槽给出的 rows 是 unknown[]，实际每一项就是 TooltipSeriesValue。\nfunction asRows(rows: unknown[]): TooltipSeriesValue[] {\n  return rows as TooltipSeriesValue[]\n}\n</script>\n\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" :height=\"260\" title=\"收入与利润\" tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" :tick-format=\"money\" />\n    </template>\n    <template #tooltip=\"{ xValue, rows }\">\n      <div style=\"display: grid; gap: 4px; padding: 8px 12px; font-size: 13px\">\n        <strong>{{ xValue }}</strong>\n        <div v-for=\"row in asRows(rows)\" :key=\"row.key\">\n          <ChartSwatch :color=\"row.color\" variant=\"line\" />\n          {{ row.label }}：{{ money(row.value) }}\n        </div>\n      </div>\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Brush data",
+            "zh": "框选数据"
+          },
+          "description": {
+            "en": "Drag a range and inspect the returned interval and matching rows.",
+            "zh": "拖动选择一段数据，查看返回的范围和命中行数。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Chart, ChartBrush, line } from '@astryx-vue/charts'\nimport { ref } from 'vue'\n\nconst data = Array.from({ length: 12 }, (_, x) => ({ x, y: 10 + (x % 5) * 4 }))\nconst series = [line('y', { dots: true })]\nconst result = ref('Drag across the chart to select a range.')\n\nfunction onBrush(range: { x: [number, number] }, selected: unknown[]): void {\n  result.value = `${selected.length} points · x ${range.x[0].toFixed(1)}–${range.x[1].toFixed(1)}`\n}\n</script>\n\n<template>\n  <div class=\"chart-brush-demo\">\n    <Chart :data=\"data\" x-key=\"x\" :series=\"series\" :height=\"240\" title=\"Selectable values\">\n      <template #interactions>\n        <ChartBrush @brush=\"onBrush\" @clear=\"result = 'Drag across the chart to select a range.'\" />\n      </template>\n    </Chart>\n    <p>{{ result }}</p>\n  </div>\n</template>\n\n<style scoped>\n.chart-brush-demo { width: 100%; }\n.chart-brush-demo p { margin: 8px 0 0; color: var(--astryx-color-text-secondary); font-size: 12px; }\n</style>"
         }
       ],
       "anatomy": {
