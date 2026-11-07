@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { changesetPublishArgs, isSignatureLogConflict, releasePublishPlan, withPackagesMarkedPrivate } from '../scripts/release.mjs'
+import { changesetPublishArgs, isSignatureLogConflict, labCanaryPublishArgs, releasePublishPlan, withPackagesMarkedPrivate } from '../scripts/release.mjs'
 
 describe('changesetPublishArgs', () => {
   it('keeps stable releases on the default tag', () => {
@@ -20,6 +20,12 @@ describe('changesetPublishArgs', () => {
   it('tags a mixed batch as canary before the caller splits it', () => {
     // 正式发布不会把两者放同一批；这个分支只在有人直接调用时出现。
     expect(changesetPublishArgs(['@astryx-vue/core', '@astryx-vue/lab'])).toEqual(['changeset', 'publish', '--tag', 'canary'])
+  })
+})
+
+describe('labCanaryPublishArgs', () => {
+  it('publishes only Lab without asking changesets to traverse the stable dependency tree', () => {
+    expect(labCanaryPublishArgs()).toEqual(['--filter', '@astryx-vue/lab', 'publish', '--tag', 'canary', '--no-git-checks'])
   })
 })
 
