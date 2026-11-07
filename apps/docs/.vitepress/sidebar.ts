@@ -102,6 +102,8 @@ export function labSidebar(english: boolean): Sidebar {
         item('LogStream', `${prefix}/lab/log-stream`),
         item('Stat', `${prefix}/lab/stat`),
         item('SVGIcon', `${prefix}/lab/svg-icon`),
+        item('ChatEmojiPicker', `${prefix}/lab/chat-emoji-picker`),
+        item('ChatReactionBar', `${prefix}/lab/chat-reaction-bar`),
       ],
     },
   ]

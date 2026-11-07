@@ -11,3 +11,5 @@
 @import './styles/diff-viewer.css';
 @import './styles/tour.css';
 @import './styles/code-editor.css';
+@import './styles/chat-emoji-picker.css';
+@import './styles/chat-reaction-bar.css';

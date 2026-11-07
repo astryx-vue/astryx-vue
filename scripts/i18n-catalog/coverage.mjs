@@ -5,9 +5,6 @@ export const UNPORTED_NAMESPACES = {
   chart: 'F2b 图表组件（packages/charts）',
   chartLegend: 'F2b 图表组件（packages/charts）',
   diffViewer: 'F3h lab 代码类',
-  emojiPicker: 'F3e lab 对话',
-  comments: '原版 lab Comments，ROADMAP 里还没有对应节点',
-  commentComposer: '原版 lab Comments，ROADMAP 里还没有对应节点',
 }
 
 // 单个键没法接进 upstreamMap 的理由。检查器要求内置文案原样吐出每个占位符的值，

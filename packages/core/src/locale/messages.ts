@@ -12,12 +12,15 @@ import type { CheckboxListMessages } from './messages/checkbox-list.js'
 import type { CitationMessages } from './messages/citation.js'
 import type { CodeBlockMessages } from './messages/code-block.js'
 import type { CommandPaletteMessages } from './messages/command-palette.js'
+import type { CommentComposerMessages } from './messages/comment-composer.js'
+import type { CommentsMessages } from './messages/comments.js'
 import type { ContextMenuMessages } from './messages/context-menu.js'
 import type { DateInputMessages } from './messages/date-input.js'
 import type { DateRangeInputMessages } from './messages/date-range-input.js'
 import type { DateTimeInputMessages } from './messages/date-time-input.js'
 import type { DialogMessages } from './messages/dialog.js'
 import type { DropdownMenuMessages } from './messages/dropdown-menu.js'
+import type { EmojiPickerMessages } from './messages/emoji-picker.js'
 import type { FieldMessages } from './messages/field.js'
 import type { FileInputMessages } from './messages/file-input.js'
 import type { InputMessages } from './messages/input.js'
@@ -67,12 +70,15 @@ import { checkboxListMessages } from './messages/checkbox-list.js'
 import { citationMessages } from './messages/citation.js'
 import { codeBlockMessages } from './messages/code-block.js'
 import { commandPaletteMessages } from './messages/command-palette.js'
+import { commentComposerMessages } from './messages/comment-composer.js'
+import { commentsMessages } from './messages/comments.js'
 import { contextMenuMessages } from './messages/context-menu.js'
 import { dateInputMessages } from './messages/date-input.js'
 import { dateRangeInputMessages } from './messages/date-range-input.js'
 import { dateTimeInputMessages } from './messages/date-time-input.js'
 import { dialogMessages } from './messages/dialog.js'
 import { dropdownMenuMessages } from './messages/dropdown-menu.js'
+import { emojiPickerMessages } from './messages/emoji-picker.js'
 import { fieldMessages } from './messages/field.js'
 import { fileInputMessages } from './messages/file-input.js'
 import { inputMessages } from './messages/input.js'
@@ -123,12 +129,15 @@ export interface AstryxMessages {
   citation: CitationMessages
   codeBlock: CodeBlockMessages
   commandPalette: CommandPaletteMessages
+  commentComposer: CommentComposerMessages
+  comments: CommentsMessages
   contextMenu: ContextMenuMessages
   dateInput: DateInputMessages
   dateRangeInput: DateRangeInputMessages
   dateTimeInput: DateTimeInputMessages
   dialog: DialogMessages
   dropdownMenu: DropdownMenuMessages
+  emojiPicker: EmojiPickerMessages
   field: FieldMessages
   fileInput: FileInputMessages
   input: InputMessages
@@ -181,12 +190,15 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     citation: citationMessages.en,
     codeBlock: codeBlockMessages.en,
     commandPalette: commandPaletteMessages.en,
+    commentComposer: commentComposerMessages.en,
+    comments: commentsMessages.en,
     contextMenu: contextMenuMessages.en,
     dateInput: dateInputMessages.en,
     dateRangeInput: dateRangeInputMessages.en,
     dateTimeInput: dateTimeInputMessages.en,
     dialog: dialogMessages.en,
     dropdownMenu: dropdownMenuMessages.en,
+    emojiPicker: emojiPickerMessages.en,
     field: fieldMessages.en,
     fileInput: fileInputMessages.en,
     input: inputMessages.en,
@@ -237,12 +249,15 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     citation: citationMessages['zh-CN'],
     codeBlock: codeBlockMessages['zh-CN'],
     commandPalette: commandPaletteMessages['zh-CN'],
+    commentComposer: commentComposerMessages['zh-CN'],
+    comments: commentsMessages['zh-CN'],
     contextMenu: contextMenuMessages['zh-CN'],
     dateInput: dateInputMessages['zh-CN'],
     dateRangeInput: dateRangeInputMessages['zh-CN'],
     dateTimeInput: dateTimeInputMessages['zh-CN'],
     dialog: dialogMessages['zh-CN'],
     dropdownMenu: dropdownMenuMessages['zh-CN'],
+    emojiPicker: emojiPickerMessages['zh-CN'],
     field: fieldMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
     input: inputMessages['zh-CN'],

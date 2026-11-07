@@ -1,0 +1,96 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-chat-reaction-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-chat-reaction-bar__pill,
+  .astryx-chat-reaction-bar__add {
+    box-sizing: border-box;
+    margin: 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    background-color: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
+    font-family: var(--astryx-font-family-body, inherit);
+    cursor: pointer;
+    transition-property: border-color, background-color;
+    transition-duration: var(--astryx-duration-fast, 125ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-chat-reaction-bar__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    height: 24px;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    border-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-chat-reaction-bar__pill[data-selected] {
+    border-color: var(--astryx-color-accent, currentcolor);
+    background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
+  }
+
+  /* 悬停只加深边框。自己已经选中的胶囊保持强调色，不被悬停盖掉。 */
+  @media (hover: hover) {
+    .astryx-chat-reaction-bar__pill:hover:where(:not(:disabled, [aria-disabled='true'], [data-selected])),
+    .astryx-chat-reaction-bar__add:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      border-color: var(--astryx-color-border-emphasized, light-dark(#d4d4d4, #525252));
+    }
+  }
+
+  .astryx-chat-reaction-bar__pill:is(:disabled, [aria-disabled='true']),
+  .astryx-chat-reaction-bar__add:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  .astryx-chat-reaction-bar__pill:focus-visible,
+  .astryx-chat-reaction-bar__add:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  .astryx-chat-reaction-bar__emoji {
+    font-size: var(--astryx-text-body-size, 1rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-chat-reaction-bar__count {
+    color: var(--astryx-color-text-secondary, light-dark(#6a6a6a, #9e9e9e));
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-chat-reaction-bar__pill[data-selected] .astryx-chat-reaction-bar__count {
+    color: var(--astryx-color-text-accent, currentcolor);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+  }
+
+  .astryx-chat-reaction-bar__add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 24px;
+    padding: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    color: var(--astryx-color-icon-secondary, light-dark(#6a6a6a, #9e9e9e));
+    font-size: 15px;
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-chat-reaction-bar__pill,
+    .astryx-chat-reaction-bar__add {
+      transition-duration: 0s;
+    }
+  }
+}

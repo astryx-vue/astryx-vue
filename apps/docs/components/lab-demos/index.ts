@@ -1,4 +1,8 @@
 import { defineDemo } from '../demo-infra/defineDemo'
+import chatEmojiPickerDemo from './chat-emoji-picker.vue'
+import chatEmojiPickerSource from './chat-emoji-picker.vue?raw&highlighted'
+import chatReactionBarDemo from './chat-reaction-bar.vue'
+import chatReactionBarSource from './chat-reaction-bar.vue?raw&highlighted'
 import circularProgressDemo from './circular-progress.vue'
 import circularProgressSource from './circular-progress.vue?raw&highlighted'
 import codeEditorDemo from './code-editor.vue'
@@ -24,6 +28,8 @@ import transferListSource from './transfer-list.vue?raw&highlighted'
 
 const options = { className: 'lab-demo' }
 
+export const labChatEmojiPicker = defineDemo(chatEmojiPickerDemo, chatEmojiPickerSource, options)
+export const labChatReactionBar = defineDemo(chatReactionBarDemo, chatReactionBarSource, options)
 export const labCircularProgress = defineDemo(circularProgressDemo, circularProgressSource, options)
 export const labCodeEditor = defineDemo(codeEditorDemo, codeEditorSource, options)
 export const labDiffViewer = defineDemo(diffViewerDemo, diffViewerSource, options)
