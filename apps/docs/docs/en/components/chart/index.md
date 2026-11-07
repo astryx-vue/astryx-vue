@@ -9,6 +9,7 @@ footer: false
 import {
   chartsBandReference,
   chartsBar,
+  chartsBrush,
   chartsCandlestick,
   chartsCustomTooltip,
   chartsDot,
@@ -386,6 +387,28 @@ The library includes formatting helpers for common chart values. Formatting func
 - `shortDate(value, locale)`: Formats dates as a short month and day. For example, "Jan 5".
 - `monthYear(value, locale)`: Formats dates as month and year. For example, "Jan 2024".
 - `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as "A, B, and C".
+
+## Brush selection
+
+Place `<ChartBrush>` in the `<Chart>` `interactions` slot to let users drag a selection over the plot. `mode="x"` selects a horizontal range, useful for time windows; `mode="xy"` selects a rectangle, useful for scatter plots.
+
+```vue
+<Chart :data="data" x-key="x" :series="series">
+  <template #interactions>
+    <ChartBrush @brush="onBrush" @clear="clearSelection" />
+  </template>
+</Chart>
+```
+
+The `brush` event receives `(range, data)`. `range.x` is the `[min, max]` interval in data coordinates, with `range.y` also present in xy mode; `data` contains the original rows inside the selection. `clear` is a click that did not become a drag.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `mode` | `'x' \| 'xy'` | `'x'` | Horizontal or rectangular selection. |
+| `color` | `string` | `var(--astryx-color-accent)` | Selection color. |
+| `opacity` | `number` | `0.15` | Selection fill opacity. |
+
+<DemoExample :demo="chartsBrush" description="Drag a range and inspect the returned interval and matching rows." locale="en" title="Brush data" />
 
 ## Accessibility
 

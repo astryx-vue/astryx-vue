@@ -3,6 +3,8 @@ import bandDemo from './band-reference.vue'
 import bandSource from './band-reference.vue?raw&highlighted'
 import barDemo from './bar.vue'
 import barSource from './bar.vue?raw&highlighted'
+import brushDemo from './brush.vue'
+import brushSource from './brush.vue?raw&highlighted'
 import candlestickDemo from './candlestick.vue'
 import candlestickSource from './candlestick.vue?raw&highlighted'
 import tooltipDemo from './custom-tooltip.vue'
@@ -20,6 +22,7 @@ const chartClass = 'charts-demo'
 
 export const chartsLine = defineDemo(lineDemo, lineSource, { className: chartClass })
 export const chartsBar = defineDemo(barDemo, barSource, { className: chartClass })
+export const chartsBrush = defineDemo(brushDemo, brushSource, { className: chartClass })
 export const chartsStackedArea = defineDemo(areaDemo, areaSource, { className: chartClass })
 export const chartsDot = defineDemo(dotDemo, dotSource, { className: chartClass })
 export const chartsBandReference = defineDemo(bandDemo, bandSource, { className: chartClass })

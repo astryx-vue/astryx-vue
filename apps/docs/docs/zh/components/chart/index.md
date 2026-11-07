@@ -9,6 +9,7 @@ footer: false
 import {
   chartsBandReference,
   chartsBar,
+  chartsBrush,
   chartsCandlestick,
   chartsCustomTooltip,
   chartsDot,
@@ -386,6 +387,28 @@ declare function candlestick(options: CandlestickOptions): SeriesDef
 - `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。
 - `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。
 - `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。
+
+## 框选范围
+
+在 `<Chart>` 的 `interactions` 插槽里放 `<ChartBrush>`，用户就可以在绘图区拖动选择范围。`mode="x"` 只选横向范围，适合时间窗口；`mode="xy"` 选择矩形区域，适合散点图。
+
+```vue
+<Chart :data="data" x-key="x" :series="series">
+  <template #interactions>
+    <ChartBrush @brush="onBrush" @clear="clearSelection" />
+  </template>
+</Chart>
+```
+
+`brush` 事件的参数是 `(range, data)`：`range.x` 是数据坐标里的 `[最小值, 最大值]`，xy 模式还会提供 `range.y`；`data` 是落在选区内的原始数据行。`clear` 表示没有形成拖动的点击。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `mode` | `'x' \| 'xy'` | `'x'` | 横向或矩形框选。 |
+| `color` | `string` | `var(--astryx-color-accent)` | 选区颜色。 |
+| `opacity` | `number` | `0.15` | 选区填充透明度。 |
+
+<DemoExample :demo="chartsBrush" description="拖动选择一段数据，查看返回的范围和命中行数。" locale="zh" title="框选数据" />
 
 ## 无障碍
 
