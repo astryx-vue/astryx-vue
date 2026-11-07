@@ -80,12 +80,10 @@ watch([canScrollStart, canScrollEnd], async ([start, end]) => {
   const active = pressed.ownerDocument.activeElement
   if (active !== pressed && active !== pressed.ownerDocument.body)
     return
-  const opposite = side === 'start' ? endButton.value : startButton.value
-  const receiver = opposite != null && !opposite.disabled ? opposite : scroller.value
-  if (receiver == null)
+  if (scroller.value == null)
     return
   focusedNav.value = null
-  receiver.focus({ preventScroll: true })
+  scroller.value.focus({ preventScroll: true })
 })
 
 function buttonElement(target: EventTarget | null): HTMLButtonElement | null {
