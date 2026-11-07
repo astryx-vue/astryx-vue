@@ -76,6 +76,25 @@ describe('multi selector', () => {
     wrapper.unmount()
   })
 
+  it('marks the action cell active only after the inline-end keyboard navigation', async () => {
+    const wrapper = mountSelector({
+      options: [{ value: 'read', label: 'Read', action: h('button', { type: 'button' }, 'Edit') }],
+    })
+    const trigger = wrapper.get('button[aria-haspopup="grid"]')
+    await trigger.trigger('keydown', { key: 'ArrowDown' })
+    await flush()
+    const action = document.querySelector<HTMLElement>('.astryx-multi-selector-option-action')
+    expect(action?.classList.contains('is-active')).toBe(false)
+    await trigger.trigger('keydown', { key: 'ArrowRight' })
+    await flush()
+    expect(action?.classList.contains('is-active')).toBe(true)
+    expect(trigger.attributes('aria-activedescendant')).toBe(action?.querySelector('button')?.id)
+    await trigger.trigger('keydown', { key: 'ArrowLeft' })
+    await flush()
+    expect(action?.classList.contains('is-active')).toBe(false)
+    wrapper.unmount()
+  })
+
   it('filters from the search combobox', async () => {
     const wrapper = mountSelector({ searchable: true })
     await wrapper.get('button[aria-haspopup="listbox"]').trigger('click')
