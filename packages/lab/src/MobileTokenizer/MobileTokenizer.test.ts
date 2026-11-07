@@ -119,6 +119,35 @@ function buttonNamed(wrapper: ReturnType<typeof mountHarness>, name: string) {
 }
 
 describe('mobileTokenizer (Lab, single-sheet flow)', () => {
+  it('keeps the disabled trigger focusable without opening the sheet', async () => {
+    const openChange = vi.fn()
+    const wrapper = mountHarness({ extra: { isDisabled: true, onOpenChange: openChange } })
+    const trigger = wrapper.get<HTMLButtonElement>('.astryx-mobile-tokenizer__trigger')
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
+    trigger.element.focus()
+    expect(document.activeElement).toBe(trigger.element)
+    await trigger.trigger('click')
+    await trigger.trigger('keydown', { key: 'Enter' })
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    expect(openChange).not.toHaveBeenCalled()
+  })
+
+  it('keeps limit-reached rows focusable without adding another item', async () => {
+    const spy = vi.fn()
+    const wrapper = mountHarness({ extra: { maxEntries: 2 }, spy })
+    await wrapper.get('.astryx-mobile-tokenizer__trigger').trigger('click')
+    await flush()
+    const row = checkboxNamed(wrapper, 'Engineer')
+    expect(row.attributes('disabled')).toBeUndefined()
+    expect(row.attributes('aria-disabled')).toBe('true')
+    ;(row.element as HTMLButtonElement).focus()
+    expect(document.activeElement).toBe(row.element)
+    await row.trigger('click')
+    expect(spy).not.toHaveBeenCalled()
+  })
+
   it('keeps rows stable while open and applies selected-first order on reopen', async () => {
     const spy = vi.fn()
     const wrapper = mountHarness({ spy })

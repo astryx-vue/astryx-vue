@@ -92,6 +92,8 @@ function handleClearAll(): void {
 }
 
 function openSheet(): void {
+  if (props.isDisabled)
+    return
   selectedAtOpen.value = [...selected.value]
   sheet.resetWindow()
   isOpen.value = true
@@ -118,6 +120,19 @@ function handleCreate(): void {
   sheet.resetWindow()
 }
 
+function isRowDisabled(item: T): boolean {
+  return !selectedIds.value.has(item.id) && isAtMax.value
+}
+
+function handleRowClick(item: T): void {
+  if (isRowDisabled(item))
+    return
+  if (selectedIds.value.has(item.id))
+    handleRemove(item)
+  else
+    handleAdd(item)
+}
+
 function handleDone(): void {
   query.value = ''
   handleOpenChange(false)
@@ -137,7 +152,7 @@ function confirmClear(): void {
     <button
       :id="triggerId" type="button" class="astryx-mobile-tokenizer__trigger"
       aria-haspopup="dialog" :aria-expanded="isOpen" :aria-label="label"
-      :disabled="isDisabled" @click="openSheet"
+      :aria-disabled="isDisabled || undefined" @click="openSheet"
     >
       <template v-if="selected.length > 0">
         <Token v-for="item in selected" :key="item.id" :label="item.label" :disabled="isDisabled" />
@@ -190,13 +205,13 @@ function confirmClear(): void {
             <button
               v-for="item in renderedItems" :key="item.id" type="button" role="checkbox"
               class="astryx-mobile-tokenizer__row" :aria-checked="selectedIds.has(item.id)"
-              :aria-label="item.label" :disabled="!selectedIds.has(item.id) && isAtMax"
-              @click="selectedIds.has(item.id) ? handleRemove(item) : handleAdd(item)"
+              :aria-label="item.label" :aria-disabled="isRowDisabled(item) || undefined"
+              @click="handleRowClick(item)"
             >
               <span class="astryx-mobile-tokenizer__row-label"><Text type="body">{{ item.label }}</Text></span>
               <CheckboxIndicator
                 :state="selectedIds.has(item.id) ? 'checked' : 'unchecked'" size="md"
-                :is-disabled="!selectedIds.has(item.id) && isAtMax"
+                :is-disabled="isRowDisabled(item)"
               />
             </button>
           </template>
