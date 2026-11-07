@@ -186,7 +186,10 @@ function describedBy(fieldIds?: string): string | undefined {
 }
 
 function inputAttrs(): Record<string, unknown> {
-  return parts.forwardedAttrs()
+  const forwarded = parts.forwardedAttrs()
+  if (locked.value)
+    delete forwarded.onClick
+  return forwarded
 }
 
 function onInput(event: Event): void {
@@ -218,7 +221,12 @@ function openCalendar(): void {
     isOpen.value = true
 }
 
-function onToggleClick(): void {
+function onToggleClick(event: MouseEvent): void {
+  if (locked.value) {
+    event.preventDefault()
+    event.stopImmediatePropagation()
+    return
+  }
   if (useSheet.value)
     openCalendar()
 }
@@ -341,7 +349,8 @@ syncDisplayValue()
             <button
               type="button"
               class="astryx-date-input-toggle"
-              :disabled="locked"
+              :aria-disabled="locked || undefined"
+              :aria-describedby="showsDisabledMessage ? disabledMessageId : undefined"
               :aria-label="toggleLabel"
               @click="onToggleClick"
               @keydown="onToggleKeyDown"

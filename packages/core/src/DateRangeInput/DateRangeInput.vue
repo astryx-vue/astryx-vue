@@ -101,6 +101,8 @@ function onOpenChange(next: boolean): void {
 }
 
 function applyPreset(preset: DateRangePreset): void {
+  if (presetDisabled(preset))
+    return
   const range = preset.getRange()
   if (!isRangeWithinSpan(range, props.minRangeSpan, props.maxRangeSpan))
     return
@@ -122,7 +124,17 @@ function clear(event: MouseEvent): void {
 }
 
 function triggerAttrs(): Record<string, unknown> {
-  return parts.forwardedAttrs()
+  const forwarded = parts.forwardedAttrs()
+  if (locked.value)
+    delete forwarded.onClick
+  return forwarded
+}
+
+function onTriggerClick(event: MouseEvent): void {
+  if (!locked.value)
+    return
+  event.preventDefault()
+  event.stopImmediatePropagation()
 }
 </script>
 
@@ -148,12 +160,12 @@ function triggerAttrs(): Record<string, unknown> {
         >
           <button
             v-bind="triggerAttrs()"
-            :id="inputId" type="button" class="astryx-date-range-trigger" :disabled="locked && !showsDisabledMessage"
+            :id="inputId" type="button" class="astryx-date-range-trigger"
             :aria-describedby="[attrs['aria-describedby'], field.describedBy, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
             :aria-invalid="status?.type === 'error' || undefined"
             :aria-busy="busy || undefined" :aria-required="ariaRequired"
-            :aria-disabled="showsDisabledMessage || undefined"
-            @focus="disabledTooltip.onFocus" @blur="disabledTooltip.onBlur"
+            :aria-disabled="locked || undefined"
+            @click="onTriggerClick" @focus="disabledTooltip.onFocus" @blur="disabledTooltip.onBlur"
           >
             <Icon class="astryx-date-range-icon" icon="calendar" size="sm" />
             <span class="astryx-date-range-value" :data-placeholder="!display || undefined">{{ display || placeholder }}</span>
@@ -170,7 +182,7 @@ function triggerAttrs(): Record<string, unknown> {
               <div v-if="presets?.length" class="astryx-date-range-presets">
                 <button
                   v-for="preset in presets" :key="preset.label" type="button" class="astryx-date-range-preset"
-                  :disabled="presetDisabled(preset)" @click="applyPreset(preset)"
+                  :aria-disabled="presetDisabled(preset) || undefined" @click="applyPreset(preset)"
                 >
                   {{ preset.label }}
                 </button>

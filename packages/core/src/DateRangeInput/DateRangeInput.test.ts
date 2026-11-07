@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import DateRangeInput from './DateRangeInput.vue'
 
 describe('date range input', () => {
@@ -47,10 +47,46 @@ describe('date range input', () => {
     wrapper.unmount()
   })
 
-  it('stays truly disabled without a disabledMessage', () => {
-    const wrapper = mount(DateRangeInput, { props: { label: 'Reporting period', modelValue: null, isDisabled: true } })
-    expect(wrapper.get('.astryx-date-range-trigger').attributes('disabled')).toBe('')
-    expect(wrapper.get('.astryx-date-range-trigger').attributes('aria-disabled')).toBeUndefined()
+  it.each([{ isDisabled: true }, { isLoading: true }])('stays focusable but blocks activation while disabled or busy: %o', async (state) => {
+    const onClick = vi.fn()
+    const wrapper = mount(DateRangeInput, {
+      props: { label: 'Reporting period', modelValue: null, onClick, ...state },
+      attachTo: document.body,
+    })
+    const trigger = wrapper.get<HTMLButtonElement>('.astryx-date-range-trigger')
+    expect(trigger.attributes('disabled')).toBeUndefined()
+    expect(trigger.attributes('aria-disabled')).toBe('true')
+    trigger.element.focus()
+    expect(document.activeElement).toBe(trigger.element)
+    trigger.element.click()
+    await trigger.trigger('keydown', { key: 'Enter' })
+    await trigger.trigger('keydown', { key: ' ' })
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(document.querySelector<HTMLElement>('.astryx-popover')?.style.display).toBe('none')
+    expect(onClick).not.toHaveBeenCalled()
+    wrapper.unmount()
+  })
+
+  it('keeps an out-of-range preset focusable without allowing selection', async () => {
+    const wrapper = mount(DateRangeInput, {
+      props: {
+        label: 'Report period',
+        modelValue: null,
+        maxRangeSpan: 1,
+        presets: [{ label: 'Last 7 days', getRange: () => ({ start: '2026-03-01', end: '2026-03-07' }) }],
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-date-range-trigger').trigger('click')
+    const preset = document.querySelector<HTMLButtonElement>('.astryx-date-range-preset')
+    expect(preset?.disabled).toBe(false)
+    expect(preset?.getAttribute('aria-disabled')).toBe('true')
+    preset?.focus()
+    expect(document.activeElement).toBe(preset)
+    preset?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(wrapper.emitted('change')).toBeUndefined()
     wrapper.unmount()
   })
 

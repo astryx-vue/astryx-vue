@@ -31,8 +31,8 @@ export interface DateRangeInputProps extends FieldPartStylingProps {
   size?: 'sm' | 'md' | 'lg'
   isDisabled?: boolean
   /**
-   * 为什么禁用。和 `isDisabled` 一起用时，悬停或键盘聚焦会显示这段提示，
-   * 按钮仍可聚焦（带 `aria-disabled`），但打不开日历也改不了值。
+   * 为什么禁用。悬停或键盘聚焦会显示这段提示，并把提示关联到触发按钮。
+   * 禁用和忙碌时按钮始终可聚焦（带 `aria-disabled`），但打不开日历也改不了值。
    */
   disabledMessage?: string
   isLoading?: boolean
