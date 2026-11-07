@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.14
+
+### Patch Changes
+
+- [#453](https://github.com/astryx-vue/astryx-vue/pull/453) [`6d4641e`](https://github.com/astryx-vue/astryx-vue/commit/6d4641ec4b35370d51c51d654ee4aee071801c30) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - lab 增加 ChatEmojiPicker 和 ChatReactionBar。core 把 `@astryx.emojiPicker.*`、`@astryx.comments.*`、`@astryx.commentComposer.*` 接进文案树，`useTranslator` 可以按这些键取句子。
+
 ## 0.7.13
 
 ### Patch Changes
