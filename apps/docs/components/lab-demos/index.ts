@@ -1,6 +1,8 @@
 import { defineDemo } from '../demo-infra/defineDemo'
 import circularProgressDemo from './circular-progress.vue'
 import circularProgressSource from './circular-progress.vue?raw&highlighted'
+import codeEditorDemo from './code-editor.vue'
+import codeEditorSource from './code-editor.vue?raw&highlighted'
 import diffViewerDemo from './diff-viewer.vue'
 import diffViewerSource from './diff-viewer.vue?raw&highlighted'
 import infoTipDemo from './info-tip.vue'
@@ -23,6 +25,7 @@ import transferListSource from './transfer-list.vue?raw&highlighted'
 const options = { className: 'lab-demo' }
 
 export const labCircularProgress = defineDemo(circularProgressDemo, circularProgressSource, options)
+export const labCodeEditor = defineDemo(codeEditorDemo, codeEditorSource, options)
 export const labDiffViewer = defineDemo(diffViewerDemo, diffViewerSource, options)
 export const labInfoTip = defineDemo(infoTipDemo, infoTipSource, options)
 export const labListInput = defineDemo(listInputDemo, listInputSource, options)

@@ -95,6 +95,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('MobileTokenizer', `${prefix}/lab/mobile-tokenizer`),
         item('TransferList', `${prefix}/lab/transfer-list`),
         item('Tour', `${prefix}/lab/tour`),
+        item('CodeEditor', `${prefix}/lab/code-editor`),
         item('CircularProgress', `${prefix}/lab/circular-progress`),
         item('DiffViewer', `${prefix}/lab/diff-viewer`),
         item('InfoTip', `${prefix}/lab/info-tip`),

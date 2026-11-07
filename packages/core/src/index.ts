@@ -235,6 +235,7 @@ export type { ClickableCardEmits, ClickableCardProps, ClickableCardSlots } from 
 export {
   allSyntaxPresets,
   applyHighlightRanges,
+  applyHighlightRangesFlat,
   catppuccinLatte,
   catppuccinMocha,
   Code,

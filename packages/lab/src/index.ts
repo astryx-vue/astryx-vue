@@ -8,6 +8,9 @@ export type {
   CircularProgressVariantMap,
 } from './CircularProgress/index.js'
 
+export { CodeEditor } from './CodeEditor/index.js'
+export type { CodeEditorEmits, CodeEditorProps } from './CodeEditor/index.js'
+
 export { createDiffFile, DiffViewer, parseUnifiedDiff } from './DiffViewer/index.js'
 export type {
   CreateDiffFileOptions,
