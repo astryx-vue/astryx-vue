@@ -1,5 +1,16 @@
 # @astryx-vue/lab
 
+## 0.5.0
+
+### Minor Changes
+
+- [#452](https://github.com/astryx-vue/astryx-vue/pull/452) [`9f1f68a`](https://github.com/astryx-vue/astryx-vue/commit/9f1f68a28296b709479407fbca2c1a229e01491e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 CodeEditor：受控代码输入、行号、只读、占位、语法高亮、Tab 缩进与 Escape 后离开；不引入 Monaco。
+
+### Patch Changes
+
+- Updated dependencies [[`9f1f68a`](https://github.com/astryx-vue/astryx-vue/commit/9f1f68a28296b709479407fbca2c1a229e01491e)]:
+  - @astryx-vue/core@0.7.13
+
 ## 0.4.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.13
+
+### Patch Changes
+
+- [#452](https://github.com/astryx-vue/astryx-vue/pull/452) [`9f1f68a`](https://github.com/astryx-vue/astryx-vue/commit/9f1f68a28296b709479407fbca2c1a229e01491e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Code 高亮范围支持单文本节点的行内绘制，供 contenteditable 编辑器复用；保留文本内容并支持清理旧范围。
+
 ## 0.7.12
 
 ### Patch Changes
