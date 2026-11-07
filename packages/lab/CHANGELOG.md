@@ -1,5 +1,13 @@
 # @astryx-vue/lab
 
+## 0.3.1
+
+### Patch Changes
+
+- [#449](https://github.com/astryx-vue/astryx-vue/pull/449) [`16c66e9`](https://github.com/astryx-vue/astryx-vue/commit/16c66e9953e062a3b762dc0febfc7fc5b1f5bcca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - MobileTokenizer 的禁用触发器与达到数量上限的选项行保留键盘焦点，使用 aria-disabled 并阻止激活；强制颜色模式保留 GrayText 禁用外观。
+- Updated dependencies [[`d3a9e5f`](https://github.com/astryx-vue/astryx-vue/commit/d3a9e5f8d58d3c2f1f5302860650e3500fd75796)]:
+  - @astryx-vue/core@0.7.11
+
 ## 0.3.0
 
 ### Minor Changes

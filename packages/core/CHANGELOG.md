@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.11
+
+### Patch Changes
+
+- [#449](https://github.com/astryx-vue/astryx-vue/pull/449) [`d3a9e5f`](https://github.com/astryx-vue/astryx-vue/commit/d3a9e5f8d58d3c2f1f5302860650e3500fd75796) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - GridSpan 的单列使用 minmax(0, 1fr)，长 Token 或其他宽内容不再把内部列撑出网格单元。
+
 ## 0.7.10
 
 ### Patch Changes
