@@ -15,6 +15,8 @@ import statDemo from './stat.vue'
 import statSource from './stat.vue?raw&highlighted'
 import svgIconDemo from './svg-icon.vue'
 import svgIconSource from './svg-icon.vue?raw&highlighted'
+import tourDemo from './tour.vue'
+import tourSource from './tour.vue?raw&highlighted'
 import transferListDemo from './transfer-list.vue'
 import transferListSource from './transfer-list.vue?raw&highlighted'
 
@@ -29,3 +31,4 @@ export const labMobileTokenizer = defineDemo(mobileTokenizerDemo, mobileTokenize
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
 export const labTransferList = defineDemo(transferListDemo, transferListSource, options)
+export const labTour = defineDemo(tourDemo, tourSource, options)

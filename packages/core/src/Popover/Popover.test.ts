@@ -90,6 +90,16 @@ describe('popover', () => {
     expect(document.activeElement).toBe(trigger)
   })
 
+  it('keeps Escape active when light dismiss is off', async () => {
+    const { wrapper, trigger, surface } = renderPopover({ hasLightDismiss: false })
+    trigger.click()
+    await flushPromises()
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    await flushPromises()
+    expect(isShown(surface)).toBe(false)
+    expect(wrapper.emitted('openChange')).toEqual([[true], [false]])
+  })
+
   it('ignores Escape when hasEscapeDismiss is false', async () => {
     const { trigger, surface } = renderPopover({ hasEscapeDismiss: false })
 
@@ -144,6 +154,35 @@ describe('popover', () => {
     const { surface } = renderPopover({ hasCloseButton: false })
 
     expect(surface.querySelector('.astryx-popover__close')).toBeNull()
+  })
+
+  it('opens a controlled surface on initial mount', async () => {
+    const { surface } = renderPopover({ isOpen: true })
+    await flushPromises()
+    expect(isShown(surface)).toBe(true)
+  })
+
+  it('positions an initially open surface against an external anchor after mount', async () => {
+    let anchorTop = 100
+    const anchor = document.createElement('button')
+    document.body.append(anchor)
+    anchor.getBoundingClientRect = () => new DOMRect(100, anchorTop, 80, 40)
+    const wrapper = mount(Popover, {
+      attachTo: document.body,
+      props: { isOpen: true, anchor, label: 'External' },
+      slots: { content: '<button type="button">Action</button>' },
+    })
+    await flushPromises()
+    const surface = document.querySelector<HTMLElement>('.astryx-popover')
+    expect(surface?.style.top).not.toBe('0px')
+    expect(surface?.style.left).not.toBe('0px')
+    const initialTop = surface?.style.top
+    anchorTop = 200
+    document.dispatchEvent(new Event('scroll'))
+    await flushPromises()
+    expect(surface?.style.top).not.toBe(initialTop)
+    wrapper.unmount()
+    anchor.remove()
   })
 
   it('follows the controlled isOpen prop', async () => {
