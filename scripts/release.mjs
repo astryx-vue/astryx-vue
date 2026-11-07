@@ -15,6 +15,11 @@ export function changesetPublishArgs(pendingNames) {
   return ['changeset', 'publish', '--tag', 'canary']
 }
 
+/** 混合发布第二阶段只上传 Lab；不能再用 changeset 扫描并重复上传稳定包。 */
+export function labCanaryPublishArgs() {
+  return ['--filter', CANARY_PACKAGE, 'publish', '--tag', 'canary', '--no-git-checks']
+}
+
 // Lab 还没发到 npm 时，changeset 会把它和稳定包放进同一批。
 // 新包第一次上传会 404，整次发布失败。这里把 Lab 从这一批拿掉，只发稳定包。
 export function releasePublishPlan(pendingNames) {
@@ -137,14 +142,6 @@ function holdLabBack(publish) {
   return withPackagesMarkedPrivate(ROOT, ['lab'], publish)
 }
 
-function holdStableBack(publish) {
-  // 稳定包已经发完，不能让第二次 changeset publish 再碰它们；npm 的传播
-  // 或 staged 状态可能让它误以为还需要发。只留下 Lab。
-  const stableDirs = listPublicPackages(ROOT).filter(dir => dir !== 'lab')
-  console.log('稳定包已经发布，canary 阶段只保留 @astryx-vue/lab。')
-  return withPackagesMarkedPrivate(ROOT, stableDirs, publish)
-}
-
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const plan = releasePublishPlan(pendingPackageNames())
   run(['build:packages'])
@@ -152,7 +149,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   try {
     if (plan.thenPublishLabAsCanary) {
       holdLabBack(publish)
-      holdStableBack(() => runPublish(['changeset', 'publish', '--tag', 'canary']))
+      console.log('稳定包已经发布，canary 阶段只上传 @astryx-vue/lab。')
+      runPublish(labCanaryPublishArgs())
     }
     else {
       publish()
