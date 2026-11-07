@@ -27,6 +27,22 @@
     min-width: 0;
   }
 
+  .astryx-date-time-input .astryx-date-input-wrapper[data-disabled='true'],
+  .astryx-date-time-input .astryx-bordered-control[data-disabled='true'] {
+    transition: none;
+  }
+
+  .astryx-date-time-input .astryx-date-input-wrapper[data-disabled='true']:focus-within,
+  .astryx-date-time-input .astryx-bordered-control[data-disabled='true']:focus-within {
+    border-color: var(--astryx-input-focus, #262626);
+    box-shadow: inset 0 0 0 2px var(--astryx-color-accent-muted, color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent));
+  }
+
+  .astryx-date-time-fields[data-presentation='bottom-sheet']:focus-within .astryx-date-touch-segment:focus-visible {
+    outline: 2px solid var(--astryx-input-focus, #262626);
+    outline-offset: 2px;
+  }
+
   /* Original segments use a 196px basis, so the row wraps below 399px
      even when the placeholders still fit. Measured placeholders are about
      82px; with the icon and padding they stay on one row down to 16rem.

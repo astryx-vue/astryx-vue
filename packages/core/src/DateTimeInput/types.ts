@@ -27,7 +27,7 @@ export interface DateTimeInputProps extends FieldPartStylingProps {
   timeLabel?: string
   /** 时间那段的占位符。 */
   timePlaceholder?: string
-  /** 为什么禁用。和 `isDisabled` 一起用时，两段都仍可聚焦（带 `aria-disabled`），但不能改值。 */
+  /** 为什么禁用。提示会关联到可聚焦的字段；禁用和忙碌时两段都不能改值。 */
   disabledMessage?: string
   min?: string
   max?: string

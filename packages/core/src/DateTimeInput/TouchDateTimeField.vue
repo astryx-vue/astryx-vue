@@ -104,7 +104,7 @@ function close(): void {
     <button
       type="button"
       class="astryx-date-touch-segment"
-      :disabled="isDisabled"
+      :aria-disabled="isDisabled || undefined"
       :aria-describedby="describedBy"
       @click="show('date')"
     >
@@ -115,8 +115,8 @@ function close(): void {
       :id="inputId"
       type="button"
       class="astryx-date-touch-segment"
-      :disabled="isDisabled"
-      :aria-label="timeLabel || messages.dateTimeInput.timeLabel"
+      :aria-disabled="isDisabled || undefined"
+      :aria-label="`${timeLabel || messages.dateTimeInput.timeLabel}: ${timeText || timePlaceholder || messages.dateTimeInput.timePlaceholder}`"
       :aria-describedby="describedBy"
       @click="show('time')"
     >

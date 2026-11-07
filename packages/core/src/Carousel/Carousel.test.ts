@@ -61,6 +61,58 @@ describe('carousel', () => {
     expect(readOverflow(element)).toEqual({ hasOverflow: true, overflowStart: true, overflowEnd: false })
   })
 
+  it('moves focus from a run-out edge button to the scroll area without extra scrolling', async () => {
+    const wrapper = mount(Host, { attachTo: document.body })
+    const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
+    Object.defineProperties(scroller, {
+      scrollWidth: { configurable: true, value: 400 },
+      clientWidth: { configurable: true, value: 100 },
+      scrollLeft: { configurable: true, value: 100, writable: true },
+    })
+    scroller.dispatchEvent(new Event('scroll'))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+    const startButton = wrapper.get<HTMLButtonElement>('.astryx-carousel__pill--start button')
+    const endButton = wrapper.get<HTMLButtonElement>('.astryx-carousel__pill--end button')
+    startButton.element.focus()
+    endButton.element.focus()
+    expect(document.activeElement).toBe(endButton.element)
+
+    scroller.scrollLeft = 300
+    scroller.dispatchEvent(new Event('scroll'))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+    await nextTick()
+
+    expect(document.activeElement).toBe(scroller)
+    expect(scroller.scrollLeft).toBe(300)
+    expect(wrapper.get('.astryx-carousel__pill--end').attributes('data-hidden')).toBe('true')
+  })
+
+  it('does not move focus when an edge is reached from elsewhere', async () => {
+    const wrapper = mount(Host, { attachTo: document.body })
+    const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
+    Object.defineProperties(scroller, {
+      scrollWidth: { configurable: true, value: 400 },
+      clientWidth: { configurable: true, value: 100 },
+      scrollLeft: { configurable: true, value: 100, writable: true },
+    })
+    scroller.dispatchEvent(new Event('scroll'))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+    const outside = document.createElement('button')
+    document.body.append(outside)
+    outside.focus()
+
+    scroller.scrollLeft = 300
+    scroller.dispatchEvent(new Event('scroll'))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+
+    expect(document.activeElement).toBe(outside)
+    outside.remove()
+  })
+
   describe('slot content', () => {
     function slides(wrapper: ReturnType<typeof mount>): string[] {
       return wrapper.findAll('[aria-roledescription="slide"]').map(slide => slide.text())

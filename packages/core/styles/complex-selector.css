@@ -55,7 +55,7 @@
   }
 
   @media (hover: hover) {
-    .astryx-complex-selector[data-variant='ghost']:not(:disabled):hover {
+    .astryx-complex-selector[data-variant='ghost']:not(:disabled, [aria-disabled='true']):hover {
       background: var(--astryx-color-overlay-hover, #0000000d);
     }
   }
@@ -82,7 +82,7 @@
   }
 
   @media (hover: hover) {
-    .astryx-complex-selector[data-variant='secondary']:not(:disabled):hover {
+    .astryx-complex-selector[data-variant='secondary']:not(:disabled, [aria-disabled='true']):hover {
       background-image: linear-gradient(var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d)), var(--astryx-button-secondary-hover-overlay, var(--astryx-button-hover-overlay, #0000000d)));
     }
   }
@@ -92,7 +92,8 @@
     outline-offset: var(--astryx-focus-outline-offset, 2px);
   }
 
-  .astryx-complex-selector:disabled {
+  .astryx-complex-selector:disabled,
+  .astryx-complex-selector[aria-disabled='true'] {
     opacity: 0.5;
     cursor: default;
   }

@@ -53,7 +53,7 @@ const props = withDefaults(defineProps<{
   optionInterval?: number
   /** 预设列表的无障碍名字。默认是「时间 + options」。 */
   optionsLabel?: string
-  /** 为什么禁用。和 `isDisabled` 一起用时，字段仍可聚焦（带 `aria-disabled`），但不能改值。 */
+  /** 为什么禁用。提示会关联到可聚焦的字段；禁用和忙碌时不能改值。 */
   disabledMessage?: string
   status?: FieldStatusInput
   controlClass?: HTMLAttributes['class']
@@ -113,6 +113,8 @@ const shownPlaceholder = computed(() => {
 })
 
 function commit(value: string | null): void {
+  if (locked.value)
+    return
   model.value = value
   draft.value = value ? formatDisplayTime(value, props.hourFormat, props.hasSeconds) : ''
 }
@@ -132,13 +134,13 @@ function commitText(text: string): void {
 
 // 禁用态没有再走原生 `disabled`，输入和改值都靠这里的守卫挡住（spec:AST-085 FR2）。
 function onInput(event: Event): void {
-  if (props.isDisabled)
+  if (locked.value)
     return
   draft.value = (event.target as HTMLInputElement).value
 }
 
 function onNativeInput(event: Event): void {
-  if (props.isDisabled)
+  if (locked.value)
     return
   const value = (event.target as HTMLInputElement).value
   if (!value) {
@@ -235,11 +237,20 @@ function onKeydown(event: KeyboardEvent): void {
     commit(next)
 }
 
-function onBlur(): void {
+async function onBlur(): Promise<void> {
   focused.value = false
   disabledTooltip.onBlur()
-  if (surface.value === 'text')
-    commitText(draft.value)
+  if (surface.value === 'text') {
+    if (locked.value)
+      draft.value = model.value ? formatDisplayTime(model.value, props.hourFormat, props.hasSeconds) : ''
+    else
+      commitText(draft.value)
+    // 调用方即使直接写了原生 input 的 value，blur 后也同步回已提交值。
+    await nextTick()
+    const input = container.value?.querySelector('input')
+    if (input instanceof HTMLInputElement)
+      input.value = draft.value
+  }
 }
 
 function onInputFocus(event: FocusEvent): void {

@@ -93,8 +93,10 @@ describe('dateTimeInput 底部面板', () => {
     })
     const segments = wrapper.findAll('.astryx-date-touch-segment')
     expect(segments).toHaveLength(2)
-    for (const segment of segments)
-      expect(segment.attributes('disabled')).toBe('')
+    for (const segment of segments) {
+      expect(segment.attributes('disabled')).toBeUndefined()
+      expect(segment.attributes('aria-disabled')).toBe('true')
+    }
     await segments[0]?.trigger('click')
     await nextTick()
     expect(document.querySelector('dialog')?.hasAttribute('open')).not.toBe(true)
