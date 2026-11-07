@@ -143,4 +143,18 @@
   .astryx-mobile-tokenizer__empty {
     flex-grow: 1;
   }
+
+  @media (forced-colors: active) {
+    .astryx-mobile-tokenizer__trigger[aria-disabled='true'] {
+      border-color: GrayText;
+      color: GrayText;
+    }
+
+    .astryx-mobile-tokenizer__trigger[aria-disabled='true'] .astryx-mobile-tokenizer__trigger-placeholder,
+    .astryx-mobile-tokenizer__trigger[aria-disabled='true'] .astryx-token,
+    .astryx-mobile-tokenizer__row[aria-disabled='true'],
+    .astryx-mobile-tokenizer__row[aria-disabled='true'] .astryx-text {
+      color: GrayText;
+    }
+  }
 }

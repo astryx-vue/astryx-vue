@@ -49,6 +49,8 @@
   .astryx-grid-span {
     box-sizing: border-box;
     display: grid;
+    /* 隐式 auto 列会按长内容撑大；零最小值让子项留在当前格里。 */
+    grid-template-columns: minmax(0, 1fr);
     min-width: 0;
     height: 100%;
   }
