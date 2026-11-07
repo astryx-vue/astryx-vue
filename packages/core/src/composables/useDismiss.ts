@@ -11,6 +11,8 @@ export interface UseDismissOptions {
   trigger?: Ref<HTMLElement | null>
   /** 是否启用关闭 */
   isEnabled: Ref<boolean>
+  /** 是否响应点击外部。与 Escape 的开关独立。 */
+  dismissOnPointerOutside?: MaybeRefOrGetter<boolean>
   /**
    * Escape 到达这一层时怎么处理。
    * `'close'` 关掉，`'block'` 吃掉按键但不关，`'ignore'` 留给自己会
@@ -52,7 +54,7 @@ export function useDismiss(options: UseDismissOptions): void {
       depth,
       getContainer: () => container.value,
       getTrigger: () => trigger?.value ?? null,
-      dismissOnPointerOutside: true,
+      dismissOnPointerOutside: toValue(options.dismissOnPointerOutside) ?? true,
       dismissOnEscape: escapeMode(),
       onEscape: options.onEscape,
       onDismiss,
@@ -79,7 +81,7 @@ export function useDismiss(options: UseDismissOptions): void {
     }
   }
 
-  watch([isEnabled, () => escapeMode()], ([enabled]) => sync(enabled), { immediate: true })
+  watch([isEnabled, () => escapeMode(), () => toValue(options.dismissOnPointerOutside) ?? true], ([enabled]) => sync(enabled), { immediate: true })
 
   onScopeDispose(teardown)
 }

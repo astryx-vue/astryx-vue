@@ -116,6 +116,7 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
 
   const layer = useLayer({
     mode: 'context',
+    isDefaultOpen: toValue(options.isOpen) === true,
     anchor: computed(() => anchorRef.value ?? triggerRef.value),
     placement: () => toValue(options.placement) ?? 'below',
     alignment: () => toValue(options.alignment) ?? 'start',
@@ -151,7 +152,8 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
   useDismiss({
     container: layer.contentRef,
     trigger: triggerRef,
-    isEnabled: computed(() => isOpen.value && (toValue(options.hasLightDismiss) ?? true)),
+    isEnabled: computed(() => isOpen.value && ((toValue(options.hasLightDismiss) ?? true) || (toValue(options.hasEscapeDismiss) ?? true))),
+    dismissOnPointerOutside: () => toValue(options.hasLightDismiss) ?? true,
     dismissOnEscape: computed(() => (toValue(options.hasEscapeDismiss) ?? true) ? 'close' : 'block'),
     onDismiss: () => layer.hide(),
   })
@@ -277,7 +279,7 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     if (open === undefined)
       return
     layer.isOpen.value = open
-  })
+  }, { immediate: true })
 
   watch(() => toValue(options.isEnabled), (enabled) => {
     if (!enabled && isOpen.value)

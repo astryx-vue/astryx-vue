@@ -1,0 +1,65 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-tour-step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-3, 12px);
+    max-width: 320px;
+  }
+
+  .astryx-tour-step__footer {
+    align-items: center;
+  }
+
+  .astryx-tour-highlight-root {
+    position: fixed;
+    z-index: calc(var(--astryx-popover-z-index, 1000) - 1);
+    inset: 0;
+    box-sizing: border-box;
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .astryx-tour-highlight-root.is-interactive {
+    pointer-events: auto;
+  }
+
+  .astryx-tour-highlight {
+    position: absolute;
+    pointer-events: none;
+    box-shadow:
+      0 0 0 2px var(--astryx-color-background-surface, #fff),
+      0 0 0 4px var(--astryx-color-accent, #0064e0);
+    transition:
+      top var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, ease),
+      left var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, ease),
+      width var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, ease),
+      height var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, ease);
+  }
+
+  .astryx-tour-highlight.has-backdrop {
+    box-shadow:
+      0 0 0 2px var(--astryx-color-background-surface, #fff),
+      0 0 0 4px var(--astryx-color-accent, #0064e0),
+      0 0 0 9999px var(--astryx-color-overlay, rgb(0 0 0 / 50%));
+  }
+
+  .astryx-tour-highlight.is-hidden {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-tour-highlight {
+      transition: none;
+    }
+  }
+}

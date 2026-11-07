@@ -25,6 +25,7 @@ import '@astryx-vue/lab/lab.css'
 | [ListInput](/lab/list-input) | 编辑、校验和排序一组记录。 |
 | [MobileTokenizer](/lab/mobile-tokenizer) | 在底部面板中搜索和多选。 |
 | [TransferList](/lab/transfer-list) | 在可选与已选面板之间移动并排序。 |
+| [Tour](/lab/tour) | 用目标高亮和步骤弹层引导用户。 |
 | [CircularProgress](/lab/circular-progress) | 显示确定或不确定的圆环进度。 |
 | [DiffViewer](/lab/diff-viewer) | 展示单个文件的统一或分栏 diff。 |
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |

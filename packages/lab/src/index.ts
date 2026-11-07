@@ -105,6 +105,17 @@ export type {
   XIFSlot,
 } from './SVGIcon/index.js'
 
+export { Tour, TourStep, useTour } from './Tour/index.js'
+export type {
+  TourDismissSource,
+  TourEmits,
+  TourProps,
+  TourSlots,
+  TourStepProps,
+  TourStepSlots,
+  UseTourReturn,
+} from './Tour/index.js'
+
 export { TransferList, TransferListSelector } from './TransferList/index.js'
 export type {
   PanelGroup,

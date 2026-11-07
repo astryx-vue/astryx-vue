@@ -101,8 +101,10 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     else {
       detach()
     }
-  })
+  }, { immediate: true })
 
+  // 外部锚点和内容元素都可能在挂载后才写入；变化时要重新定位。
+  watch([anchor, layer], update)
   watch([placement, alignment], update)
   watch(gutter, update)
 

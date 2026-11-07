@@ -1,0 +1,6 @@
+export type { TourDismissSource } from './context.js'
+export { default as Tour } from './Tour.vue'
+export { default as TourStep } from './TourStep.vue'
+export type { TourEmits, TourProps, TourSlots, TourStepProps, TourStepSlots } from './types.js'
+export { useTour } from './useTour.js'
+export type { UseTourReturn } from './useTour.js'
