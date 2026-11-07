@@ -1,5 +1,16 @@
 # @astryx-vue/lab
 
+## 0.4.0
+
+### Minor Changes
+
+- [#451](https://github.com/astryx-vue/astryx-vue/pull/451) [`ca5a8ea`](https://github.com/astryx-vue/astryx-vue/commit/ca5a8eaf3eb9f2dc966d89995697bd3d2feda936) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 Tour、TourStep 与 useTour：按声明顺序运行引导步骤，支持目标高亮、可选遮罩、前后导航、步骤计数和带原因的关闭。复用 Popover，不修改目标元素。
+
+### Patch Changes
+
+- Updated dependencies [[`ca5a8ea`](https://github.com/astryx-vue/astryx-vue/commit/ca5a8eaf3eb9f2dc966d89995697bd3d2feda936)]:
+  - @astryx-vue/core@0.7.12
+
 ## 0.3.1
 
 ### Patch Changes

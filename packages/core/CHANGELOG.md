@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.12
+
+### Patch Changes
+
+- [#451](https://github.com/astryx-vue/astryx-vue/pull/451) [`ca5a8ea`](https://github.com/astryx-vue/astryx-vue/commit/ca5a8eaf3eb9f2dc966d89995697bd3d2feda936) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 Popover 挂载时受控打开、外部锚点定位与滚动监听的初始化；hasLightDismiss 不再意外关闭 Escape。
+
 ## 0.7.11
 
 ### Patch Changes
