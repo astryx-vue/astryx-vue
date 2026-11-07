@@ -104,6 +104,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('SVGIcon', `${prefix}/lab/svg-icon`),
         item('ChatEmojiPicker', `${prefix}/lab/chat-emoji-picker`),
         item('ChatReactionBar', `${prefix}/lab/chat-reaction-bar`),
+        item('Schedule', `${prefix}/lab/schedule`),
       ],
     },
   ]

@@ -69,6 +69,35 @@ export type {
   SearchSource,
 } from './MobileTokenizer/index.js'
 
+export { createEventFromISO, createScheduleDayView, createScheduleListView, createScheduleMonthlyView, createScheduleWeeklyView, defaultSchedulePlugins, Schedule, ScheduleContext, useScheduleContext, useSchedulePaginationPlugin, useScheduleViewSelectorPlugin } from './Schedule/index.js'
+export type {
+  CalendarDayEvent,
+  CalendarEvent,
+  CalendarEventBase,
+  CalendarInstantEvent,
+  Instant,
+  ScheduleCategory,
+  ScheduleContextValue,
+  ScheduleDate,
+  ScheduleEmits,
+  ScheduleEventColor,
+  ScheduleEventSource,
+  ScheduleHeaderContent,
+  SchedulePaginationPluginOptions,
+  SchedulePlugin,
+  SchedulePluginPosition,
+  ScheduleProps,
+  ScheduleRange,
+  ScheduleTimeGridViewOptions,
+  ScheduleView,
+  ScheduleViewBase,
+  ScheduleViewOptions,
+  ScheduleViewSelectorOption,
+  ScheduleViewSelectorPluginOptions,
+  ZonedDateTime,
+  ZonedDateTimeRange,
+} from './Schedule/index.js'
+
 export { Stat } from './Stat/index.js'
 export type { StatDelta, StatDeltaDirection, StatDeltaSentiment, StatProps, StatSize } from './Stat/index.js'
 

@@ -17,6 +17,8 @@ import logStreamDemo from './log-stream.vue'
 import logStreamSource from './log-stream.vue?raw&highlighted'
 import mobileTokenizerDemo from './mobile-tokenizer.vue'
 import mobileTokenizerSource from './mobile-tokenizer.vue?raw&highlighted'
+import scheduleDemo from './schedule.vue'
+import scheduleSource from './schedule.vue?raw&highlighted'
 import statDemo from './stat.vue'
 import statSource from './stat.vue?raw&highlighted'
 import svgIconDemo from './svg-icon.vue'
@@ -37,6 +39,7 @@ export const labInfoTip = defineDemo(infoTipDemo, infoTipSource, options)
 export const labListInput = defineDemo(listInputDemo, listInputSource, options)
 export const labLogStream = defineDemo(logStreamDemo, logStreamSource, options)
 export const labMobileTokenizer = defineDemo(mobileTokenizerDemo, mobileTokenizerSource, options)
+export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
 export const labTransferList = defineDemo(transferListDemo, transferListSource, options)
