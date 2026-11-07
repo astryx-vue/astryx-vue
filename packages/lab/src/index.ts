@@ -1,5 +1,16 @@
 // 实验包入口。每个组件一个子目录，样式在 styles/ 下同名一份。
 
+export { ChatEmojiPicker, ChatReactionBar, DEFAULT_CHAT_EMOJIS } from './Chat/index.js'
+export type {
+  ChatEmojiOption,
+  ChatEmojiPickerEmits,
+  ChatEmojiPickerProps,
+  ChatEmojiPickerSlots,
+  ChatReaction,
+  ChatReactionBarEmits,
+  ChatReactionBarProps,
+} from './Chat/index.js'
+
 export { CircularProgress } from './CircularProgress/index.js'
 export type {
   CircularProgressProps,

@@ -33,5 +33,7 @@ import '@astryx-vue/lab/lab.css'
 | [LogStream](/en/lab/log-stream) | Expandable logs with an optional live tail. |
 | [Stat](/en/lab/stat) | Key metrics and trends. |
 | [SVGIcon](/en/lab/svg-icon) | Multi-variant SVG icons with per-shape roles. |
+| [ChatEmojiPicker](/en/lab/chat-emoji-picker) | Filter and pick an emoji from a popover grid. |
+| [ChatReactionBar](/en/lab/chat-reaction-bar) | Show emoji reactions under a message and add more. |
 
 Every example is interactive, with the complete Vue source available on the code tab.
