@@ -1,8 +1,5 @@
 // 实验包入口。每个组件一个子目录，样式在 styles/ 下同名一份。
 
-export { CodeEditor } from './CodeEditor/index.js'
-export type { CodeEditorEmits, CodeEditorProps } from './CodeEditor/index.js'
-
 export { CircularProgress } from './CircularProgress/index.js'
 export type {
   CircularProgressProps,
@@ -10,6 +7,9 @@ export type {
   CircularProgressVariant,
   CircularProgressVariantMap,
 } from './CircularProgress/index.js'
+
+export { CodeEditor } from './CodeEditor/index.js'
+export type { CodeEditorEmits, CodeEditorProps } from './CodeEditor/index.js'
 
 export { createDiffFile, DiffViewer, parseUnifiedDiff } from './DiffViewer/index.js'
 export type {
