@@ -25,6 +25,7 @@ import { Tour, TourStep, useTour } from '@astryx-vue/lab'
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+
 const active = ref(false)
 function dismiss(source) {
   active.value = false

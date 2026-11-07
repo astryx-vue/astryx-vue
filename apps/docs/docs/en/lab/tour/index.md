@@ -25,6 +25,7 @@ The caller controls `isActive`. The component does not persist â€œalready seenâ€
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+
 const active = ref(false)
 function dismiss(source) {
   active.value = false
