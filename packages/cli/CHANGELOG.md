@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.5
+
+### Patch Changes
+
+- [#454](https://github.com/astryx-vue/astryx-vue/pull/454) [`463244a`](https://github.com/astryx-vue/astryx-vue/commit/463244ae0a4eba3f00a6daae9f6f175a88d63706) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 更新内置资料，收录主站新增的 ChartBrush 框选文档与示例。
+
 ## 0.4.4
 
 ### Patch Changes

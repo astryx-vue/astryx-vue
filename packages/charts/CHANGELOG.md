@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.2.0
+
+### Minor Changes
+
+- [#454](https://github.com/astryx-vue/astryx-vue/pull/454) [`463244a`](https://github.com/astryx-vue/astryx-vue/commit/463244ae0a4eba3f00a6daae9f6f175a88d63706) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 ChartBrush：在 Chart 的 interactions 插槽中拖动选择 x 或 xy 数据范围，返回数据坐标与命中行，支持点击清除。
+
 ## 0.1.2
 
 ### Patch Changes
