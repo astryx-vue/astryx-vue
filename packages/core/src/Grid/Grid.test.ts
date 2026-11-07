@@ -1,4 +1,7 @@
 import type { GridProps } from './types.js'
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
@@ -10,6 +13,13 @@ function templateColumns(element: HTMLElement): string {
 }
 
 describe('grid', () => {
+  it('keeps a GridSpan child in one shrinkable column', () => {
+    const root = dirname(fileURLToPath(import.meta.url))
+    const css = readFileSync(resolve(root, '../../styles/grid.css'), 'utf8')
+    const span = /\.astryx-grid-span\s*\{([^}]+)\}/.exec(css)?.[1] ?? ''
+    expect(span).toContain('grid-template-columns: minmax(0, 1fr)')
+  })
+
   it('renders one grid container with the fixed column template', () => {
     const wrapper = mount(Grid, {
       props: { columns: 3 },
