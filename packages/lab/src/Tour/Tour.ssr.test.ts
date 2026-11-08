@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { renderToString } from '@vue/server-renderer'
 import { describe, expect, it } from 'vitest'
 import { createSSRApp, h, ref } from 'vue'
