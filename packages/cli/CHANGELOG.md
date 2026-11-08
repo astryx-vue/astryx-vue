@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.6
+
+### Patch Changes
+
+- [#458](https://github.com/astryx-vue/astryx-vue/pull/458) [`0f3f490`](https://github.com/astryx-vue/astryx-vue/commit/0f3f490a8fa77c7993e34081470c67bf3f94d4e0) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 同步主站 ChartSelect 文档到内置查询资料。
+
 ## 0.4.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.3.0
+
+### Minor Changes
+
+- [#458](https://github.com/astryx-vue/astryx-vue/pull/458) [`0f3f490`](https://github.com/astryx-vue/astryx-vue/commit/0f3f490a8fa77c7993e34081470c67bf3f94d4e0) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 ChartSelect，支持点击或触摸最近数据点、受控选中项、选中圆环，以及 Shift/Meta 多选切换。
+
 ## 0.2.0
 
 ### Minor Changes
