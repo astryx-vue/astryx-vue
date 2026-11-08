@@ -38,5 +38,8 @@ export type {
   ChartTooltipSlots,
 } from './ChartTooltip/index.js'
 
+export { ChartZoom } from './ChartZoom/index.js'
+export type { ChartZoomEmits, ChartZoomProps, ZoomToolbarPosition } from './ChartZoom/index.js'
+
 export { useChart } from './context.js'
 export { useChartColors } from './useChartColors.js'

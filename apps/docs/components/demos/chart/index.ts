@@ -19,6 +19,8 @@ import selectDemo from './select.vue'
 import selectSource from './select.vue?raw&highlighted'
 import areaDemo from './stacked-area.vue'
 import areaSource from './stacked-area.vue?raw&highlighted'
+import zoomDemo from './zoom.vue'
+import zoomSource from './zoom.vue?raw&highlighted'
 
 const chartClass = 'charts-demo'
 
@@ -32,3 +34,4 @@ export const chartsBandReference = defineDemo(bandDemo, bandSource, { className:
 export const chartsErrorBar = defineDemo(errorBarDemo, errorBarSource, { className: chartClass })
 export const chartsCandlestick = defineDemo(candlestickDemo, candlestickSource, { className: chartClass })
 export const chartsCustomTooltip = defineDemo(tooltipDemo, tooltipSource, { className: chartClass })
+export const chartsZoom = defineDemo(zoomDemo, zoomSource, { className: chartClass })

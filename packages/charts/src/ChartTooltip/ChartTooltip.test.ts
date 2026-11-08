@@ -72,6 +72,7 @@ function renderTooltip(
       handlers.add(handler)
       return () => handlers.delete(handler)
     },
+    registerOverlay: () => () => {},
     svgRef,
     ...overrides,
   }

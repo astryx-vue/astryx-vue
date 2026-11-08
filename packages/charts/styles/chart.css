@@ -33,6 +33,7 @@
 
   /* 绘图区吃掉剩下的空间；宽度为 0 的容器量出 0 宽，所以这里必须挡住内容撑宽。 */
   .astryx-chart__plot {
+    position: relative;
     flex: 1;
     min-width: 0;
     overflow: clip;

@@ -10,6 +10,7 @@ import { deriveLegendItems } from '../legend.js'
 import { useChartMessages } from '../messages.js'
 import { isUtilityMarkType } from '../types.js'
 import ChartMarks from './ChartMarks.js'
+import ChartOverlayHost from './ChartOverlayHost.js'
 import { MAX_TABLE_POINTS } from './types.js'
 import { useChartFrame, useChartIds } from './useChartFrame.js'
 
@@ -32,7 +33,7 @@ const props = withDefaults(defineProps<ChartProps>(), {
 
 defineSlots<ChartSlots>()
 
-const { containerRef, svgRef, containerWidth, safeHeight, margin, innerWidth, innerHeight, resolved, seriesCtx, chart, handlePointerMove, handlePointerLeave } = useChartFrame(props)
+const { containerRef, svgRef, containerWidth, safeHeight, margin, innerWidth, innerHeight, resolved, seriesCtx, overlayRenderers, chart, handlePointerMove, handlePointerLeave } = useChartFrame(props)
 const { clipId, descId } = useChartIds()
 
 /** 模板里写变量名的 ref 读不到类型，绑定统一用函数式 ref 显式赋值。 */
@@ -195,6 +196,11 @@ defineExpose({ element: containerRef })
               <slot />
             </g>
           </svg>
+          <ChartOverlayHost
+            v-for="(renderer, index) in overlayRenderers"
+            :key="index"
+            :renderer="renderer"
+          />
         </div>
       </div>
       <VisuallyHidden

@@ -1,4 +1,4 @@
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef, Ref, VNodeChild } from 'vue'
 import type {
   ChartContext,
   ChartMargin,
@@ -31,6 +31,8 @@ export interface ChartFrame {
   resolved: ComputedRef<Map<string, ResolvedPoint[]>>
   /** 交给各系列 `render()` 的上下文。 */
   seriesCtx: ComputedRef<SeriesContext>
+  /** SVG 外的 HTML 覆盖层渲染器。 */
+  overlayRenderers: Ref<(() => VNodeChild)[]>
   /** 提供给子组件的上下文，身份不变、字段是活的。 */
   chart: ChartContext
   handlePointerMove: (event: PointerEvent) => void
@@ -114,6 +116,14 @@ export function useChartFrame(props: ChartProps): ChartFrame {
   // ── 指针事件 ──────────────────────────────────────────────────────────
   // 图表根只有一层指针捕获，交互子组件订阅这一条流。
   const pointerHandlers = new Set<(event: ChartPointerEvent) => void>()
+  const overlayRenderers = ref<(() => VNodeChild)[]>([])
+
+  function registerOverlay(renderer: () => VNodeChild): () => void {
+    overlayRenderers.value = [...overlayRenderers.value, renderer]
+    return () => {
+      overlayRenderers.value = overlayRenderers.value.filter(item => item !== renderer)
+    }
+  }
 
   function onPointer(handler: (event: ChartPointerEvent) => void): () => void {
     pointerHandlers.add(handler)
@@ -188,6 +198,7 @@ export function useChartFrame(props: ChartProps): ChartFrame {
       return layout.value.resolved
     },
     onPointer,
+    registerOverlay,
     svgRef,
   }
 
@@ -204,6 +215,7 @@ export function useChartFrame(props: ChartProps): ChartFrame {
     yBandScale,
     resolved,
     seriesCtx,
+    overlayRenderers,
     chart,
     handlePointerMove,
     handlePointerLeave,
