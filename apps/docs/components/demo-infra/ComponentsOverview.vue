@@ -5,6 +5,7 @@ import { componentDemos } from '../demos/registry'
 import { catalogGroups } from './componentCatalog'
 import { localePath } from './docs-i18n'
 import { LAB_COMPONENTS } from './labCatalog'
+import LabPreviewFit from './LabPreviewFit.vue'
 import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ locale: DocsLocale }>()
@@ -56,7 +57,9 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
         <article v-for="card in labComponents" :key="card.slug" class="component-card component-card--lab" :data-lab-component="card.slug">
           <div aria-hidden="true" class="component-card__frame" inert>
             <div class="component-card__preview">
-              <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
+              <LabPreviewFit>
+                <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
+              </LabPreviewFit>
             </div>
           </div>
           <a class="component-card__name" :href="localePath(locale, `/lab/${card.slug}/`)">{{ card.name }}</a>
