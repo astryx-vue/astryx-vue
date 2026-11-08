@@ -68,10 +68,11 @@ onBeforeUnmount(() => {
   transform-origin: center center;
 }
 
-.lab-preview-fit > * {
+.lab-preview-fit > :deep(.astryx-demo.lab-demo) {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+  overflow: visible;
 }
 </style>
