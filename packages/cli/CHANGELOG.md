@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.7
+
+### Patch Changes
+
+- [#459](https://github.com/astryx-vue/astryx-vue/pull/459) [`c52b154`](https://github.com/astryx-vue/astryx-vue/commit/c52b154a480506c596ead260af886e1bec130a63) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 同步主站 ChartZoom 文档到内置查询资料。
+
 ## 0.4.6
 
 ### Patch Changes
