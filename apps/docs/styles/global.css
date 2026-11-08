@@ -2681,6 +2681,11 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: 100%;
 }
 
+/* Canary 文档的 logo 下方不再重复画一段顶栏分隔线。 */
+.lab-docs-layout .VPNav .divider::before {
+  display: none;
+}
+
 .astryx-demo.lab-demo {
   display: block;
   width: 100%;

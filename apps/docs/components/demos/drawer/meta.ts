@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { drawerOverview as demo } from './index'
+import { drawerCard, drawerOverview } from './index'
 
 export const meta = {
   slug: 'drawer',
@@ -8,5 +8,6 @@ export const meta = {
   order: 19,
   en: 'Drawer',
   zh: '抽屉',
-  demo,
+  demo: drawerOverview,
+  cardDemo: drawerCard,
 } satisfies DemoMeta

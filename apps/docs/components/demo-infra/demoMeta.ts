@@ -13,8 +13,10 @@ export interface DemoMeta {
   order: number
   en: string
   zh: string
-  /** 总览网格卡片和详情页顶部演示用的那份 demo。没有可视形态的页面（组合式函数）不写。 */
+  /** 详情页顶部演示用的 demo。没有可视形态的页面（组合式函数）不写。 */
   demo?: DemoModule
+  /** 总览卡片的专用静态构图；不写时复用 `demo`。 */
+  cardDemo?: DemoModule
 }
 
 export interface CatalogEntry {
