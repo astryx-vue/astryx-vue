@@ -391,14 +391,46 @@ html.component-docs-scroll-lock body {
 
 /* Direct child only. A descendant h2 also matches Heading level 2 inside a
    catalog card, which adds 24px under Level 2 and flattens its size. */
-.component-overview__canary {
-  margin-block-start: var(--astryx-spacing-8, 32px);
-  font-size: var(--astryx-text-body-size, 0.9375rem);
+.component-overview__lab {
+  margin-block-start: var(--astryx-spacing-10, 40px);
+  padding-block-start: var(--astryx-spacing-6, 24px);
+  border-top: 1px solid var(--astryx-line);
 }
 
-.component-overview__canary a {
+.component-overview__lab-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.component-overview__lab-heading h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.component-overview__lab-link {
   color: var(--astryx-accent-bright);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.component-overview__lab-link:hover {
   text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.component-overview__lab-description {
+  max-width: 70ch;
+  margin: 10px 0 24px;
+  color: var(--astryx-text-muted);
+  font-size: 14px;
+}
+
+.component-card--lab .component-card__preview {
+  contain: inline-size;
 }
 
 .component-overview__catalog > h2 {

@@ -42,6 +42,8 @@ function measure(): void {
 }
 
 function stopMeasuring(): void {
+  if (typeof window === 'undefined')
+    return
   window.removeEventListener('scroll', measure, true)
   window.removeEventListener('resize', measure)
 }
