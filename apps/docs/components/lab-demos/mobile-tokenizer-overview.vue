@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { CheckboxIndicator, TextInput, Token } from '@astryx-vue/core'
+import { CheckboxIndicator, Icon, TextInput, Token } from '@astryx-vue/core'
+import { h } from 'vue'
+
+const SearchIcon = () => h(Icon, { icon: 'search' })
 </script>
 
 <template>
@@ -15,7 +18,7 @@ import { CheckboxIndicator, TextInput, Token } from '@astryx-vue/core'
         label="Search project tags"
         is-label-hidden
         placeholder="Search..."
-        start-icon="search"
+        :start-icon="SearchIcon"
         width="100%"
         tabindex="-1"
       />
