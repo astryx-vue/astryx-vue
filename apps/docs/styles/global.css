@@ -552,7 +552,8 @@ html.dark .component-card__frame {
   width: min(100%, 960px);
   min-width: 0;
   margin-inline: auto;
-  padding: 36px 24px 80px;
+  /* 和总览页同一档留白。24px 贴着侧栏，标题会看起来顶到内容区边上。 */
+  padding: 72px clamp(28px, 4vw, 64px) 80px;
 }
 
 .component-detail__header {
