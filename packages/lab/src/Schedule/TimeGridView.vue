@@ -202,7 +202,7 @@ const openContent = computed(() => openEvent.value == null ? null : contentOf(op
     >
       <div
         class="astryx-schedule__time-content"
-        :style="{ '--days': String(columnCount), 'minWidth': `${60 + columnCount * 140}px` }"
+        :style="{ '--days': String(columnCount) }"
       >
         <div class="astryx-schedule__time-corner" aria-hidden="true" />
         <div

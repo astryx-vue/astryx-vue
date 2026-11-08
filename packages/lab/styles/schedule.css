@@ -56,9 +56,10 @@
   }
 
   .astryx-schedule__title {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: var(--astryx-spacing-2);
+    justify-content: center;
   }
 
   .astryx-schedule__title-em {
@@ -66,7 +67,11 @@
   }
 
   .astryx-schedule__spinner {
+    position: absolute;
+    inset-inline-start: calc(100% + var(--astryx-spacing-2));
+    inset-block-start: 50%;
     display: inline-flex;
+    transform: translateY(-50%);
   }
 
   .astryx-schedule__spinner.is-hidden {
@@ -105,6 +110,8 @@
 
     .astryx-schedule__header-title {
       grid-area: title;
+      justify-self: stretch;
+      text-align: center;
     }
 
     .astryx-schedule__header-end {
@@ -357,8 +364,16 @@
 
   .astryx-schedule__time-content {
     display: grid;
-    grid-template-columns: 60px repeat(var(--days, 1), minmax(140px, 1fr));
+    width: 100%;
+    grid-template-columns: 60px repeat(var(--days, 1), minmax(0, 1fr));
     grid-template-rows: 56px auto auto;
+  }
+
+  @container (max-width: 560px) {
+    .astryx-schedule__time-content {
+      width: max(100%, calc(60px + var(--days, 1) * 140px));
+      grid-template-columns: 60px repeat(var(--days, 1), minmax(140px, 1fr));
+    }
   }
 
   .astryx-schedule__time-corner,
