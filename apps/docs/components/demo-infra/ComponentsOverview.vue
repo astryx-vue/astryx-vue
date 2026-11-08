@@ -4,9 +4,11 @@ import { computed } from 'vue'
 import { componentDemos } from '../demos/registry'
 import { catalogGroups } from './componentCatalog'
 import { localePath } from './docs-i18n'
+import { LAB_COMPONENTS } from './labCatalog'
 import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ locale: DocsLocale }>()
+const labComponents = LAB_COMPONENTS
 // 没有 demo 的页面（组合式函数）只在侧栏出现，不占总览卡片。
 const groups = computed(() => catalogGroups(props.locale).map(group => ({
   id: group.id,
@@ -38,10 +40,28 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
         </article>
       </div>
     </section>
-    <p class="component-overview__canary">
-      <a :href="localePath(locale, '/lab/')">
-        {{ locale === 'en' ? 'Canary components (@astryx-vue/lab)' : 'Canary 组件（@astryx-vue/lab）' }}
-      </a>
-    </p>
+    <section class="component-overview__catalog component-overview__lab" :aria-labelledby="`${locale}-lab-heading`">
+      <div class="component-overview__lab-heading">
+        <h2 :id="`${locale}-lab-heading`">
+          {{ locale === 'en' ? 'Canary components' : 'Canary 组件' }}
+        </h2>
+        <a class="component-overview__lab-link" :href="localePath(locale, '/lab/')">
+          {{ locale === 'en' ? 'About Lab' : '了解 Lab' }}
+        </a>
+      </div>
+      <p class="component-overview__lab-description">
+        {{ locale === 'en' ? 'Experimental components from @astryx-vue/lab. APIs and interactions may change; published only under the canary tag.' : '来自 @astryx-vue/lab 的实验组件。属性和交互可能变化，只通过 canary 标签发布。' }}
+      </p>
+      <div class="component-overview__grid">
+        <article v-for="card in labComponents" :key="card.slug" class="component-card component-card--lab" :data-lab-component="card.slug">
+          <div aria-hidden="true" class="component-card__frame" inert>
+            <div class="component-card__preview">
+              <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
+            </div>
+          </div>
+          <a class="component-card__name" :href="localePath(locale, `/lab/${card.slug}/`)">{{ card.name }}</a>
+        </article>
+      </div>
+    </section>
   </div>
 </template>

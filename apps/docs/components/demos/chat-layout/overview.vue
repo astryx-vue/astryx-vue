@@ -7,21 +7,21 @@ const tokens = [
 </script>
 
 <template>
-  <ChatLayout>
-    <ChatMessageList>
+  <ChatLayout density="compact">
+    <ChatMessageList density="compact">
       <ChatMessage sender="user">
         <ChatMessageBubble>
-          <ChatTokenizedText text="/review the changes in this file" :tokens="tokens" />
+          <ChatTokenizedText text="/review this file" :tokens="tokens" />
         </ChatMessageBubble>
       </ChatMessage>
       <ChatMessage sender="assistant">
         <ChatMessageBubble variant="ghost">
-          Reading the file now...
+          Here is the result.
         </ChatMessageBubble>
       </ChatMessage>
     </ChatMessageList>
     <template #composer>
-      <ChatComposer placeholder="Ask something..." />
+      <ChatComposer density="compact" placeholder="Ask something..." />
     </template>
   </ChatLayout>
 </template>

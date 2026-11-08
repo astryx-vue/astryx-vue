@@ -1,0 +1,39 @@
+import type { DemoModule } from './types'
+import {
+  labChatEmojiPicker,
+  labChatReactionBar,
+  labCircularProgress,
+  labCodeEditor,
+  labDiffViewer,
+  labInfoTip,
+  labListInput,
+  labLogStream,
+  labMobileTokenizer,
+  labStat,
+  labSvgIcon,
+  labTour,
+  labTransferList,
+} from '../lab-demos'
+
+export interface LabCatalogEntry {
+  slug: string
+  name: string
+  demo: DemoModule
+}
+
+/** 主站 overview 的 Lab 卡片。正文和安装说明仍由 /lab/ 页面维护。 */
+export const LAB_COMPONENTS: readonly LabCatalogEntry[] = [
+  { slug: 'chat-emoji-picker', name: 'ChatEmojiPicker', demo: labChatEmojiPicker },
+  { slug: 'chat-reaction-bar', name: 'ChatReactionBar', demo: labChatReactionBar },
+  { slug: 'circular-progress', name: 'CircularProgress', demo: labCircularProgress },
+  { slug: 'code-editor', name: 'CodeEditor', demo: labCodeEditor },
+  { slug: 'diff-viewer', name: 'DiffViewer', demo: labDiffViewer },
+  { slug: 'info-tip', name: 'InfoTip', demo: labInfoTip },
+  { slug: 'list-input', name: 'ListInput', demo: labListInput },
+  { slug: 'log-stream', name: 'LogStream', demo: labLogStream },
+  { slug: 'mobile-tokenizer', name: 'MobileTokenizer', demo: labMobileTokenizer },
+  { slug: 'stat', name: 'Stat', demo: labStat },
+  { slug: 'svg-icon', name: 'SVGIcon', demo: labSvgIcon },
+  { slug: 'tour', name: 'Tour', demo: labTour },
+  { slug: 'transfer-list', name: 'TransferList', demo: labTransferList },
+]
