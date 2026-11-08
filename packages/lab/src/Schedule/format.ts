@@ -88,7 +88,11 @@ export function formatWeekday(date: PlainDate, weekday: 'short' | 'long', locale
 }
 
 export function formatDayNumber(date: PlainDate, locale: string): string {
-  return formatDate(date, { day: 'numeric' }, locale)
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', calendar: 'gregory' })
+    .formatToParts(plainDateToDate(date))
+    .filter(part => part.type === 'day')
+    .map(part => part.value)
+    .join('')
 }
 
 export function formatHour(hour: number, locale: string): string {

@@ -8,6 +8,7 @@
     min-height: 0;
     color: var(--astryx-color-text-primary);
     font-family: var(--astryx-font-family-body);
+    container-type: inline-size;
   }
 
   .astryx-schedule__frame {
@@ -89,18 +90,62 @@
     transform: scaleX(-1);
   }
 
+  @container (max-width: 560px) {
+    .astryx-schedule__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        'title title'
+        'start end';
+      row-gap: var(--astryx-spacing-2);
+    }
+
+    .astryx-schedule__header-start {
+      grid-area: start;
+    }
+
+    .astryx-schedule__header-title {
+      grid-area: title;
+    }
+
+    .astryx-schedule__header-end {
+      grid-area: end;
+    }
+
+    .astryx-schedule__weekday {
+      padding-inline: 0;
+    }
+
+    .astryx-schedule__weekday .astryx-heading {
+      font-size: var(--astryx-text-supporting-size);
+      line-height: var(--astryx-text-supporting-leading);
+      font-weight: var(--astryx-font-weight-medium);
+      white-space: nowrap;
+    }
+  }
+
   .astryx-schedule__weekdays {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
+    width: 100%;
     border-bottom: var(--astryx-border-width) solid var(--astryx-color-border);
   }
 
   .astryx-schedule__weekday {
-    padding: var(--astryx-spacing-2) var(--astryx-spacing-3);
+    min-width: 0;
+    overflow: hidden;
+    padding: var(--astryx-spacing-2) var(--astryx-spacing-1);
     text-align: center;
   }
 
+  .astryx-schedule__weekday .astryx-heading {
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .astryx-schedule__month {
+    min-width: 0;
     overflow-x: auto;
     outline: none;
   }
@@ -113,7 +158,7 @@
   .astryx-schedule__month-surface {
     position: relative;
     width: 100%;
-    min-width: 784px;
+    min-width: 0;
     isolation: isolate;
   }
 
@@ -159,13 +204,16 @@
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
-    justify-content: flex-start;
-    width: 24px;
+    justify-content: center;
+    box-sizing: border-box;
+    width: auto;
+    min-width: 24px;
     height: 24px;
     margin: var(--astryx-spacing-0-5);
-    padding-inline-start: var(--astryx-spacing-1);
+    padding-inline: var(--astryx-spacing-1);
     border-radius: var(--astryx-radius-full);
     color: var(--astryx-color-text-secondary);
+    white-space: nowrap;
   }
 
   .astryx-schedule__day-number.is-current {

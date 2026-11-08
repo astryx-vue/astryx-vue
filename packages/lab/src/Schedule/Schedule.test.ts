@@ -7,6 +7,7 @@ import { h, nextTick } from 'vue'
 import { createEventFromISO } from './CalendarEvent.js'
 import { sortEvents } from './dateMath.js'
 import { createScheduleDayView } from './dayView.js'
+import { formatDayNumber } from './format.js'
 import { createScheduleListView } from './listView.js'
 import { createScheduleMonthlyView } from './monthlyView.js'
 import { useSchedulePaginationPlugin, useScheduleViewSelectorPlugin } from './plugins.js'
@@ -60,6 +61,12 @@ describe('createEventFromISO', () => {
     expect(day.end).toEqual({ year: 2026, month: 5, day: 13 })
     expect(timed.start).toBe(Date.parse('2026-05-13T16:00:00.000Z'))
     expect(timed.end).toBe(Date.parse('2026-05-13T16:30:00.000Z'))
+  })
+
+  it('keeps the day numeral and drops a locale day suffix', () => {
+    const day = { year: 2026, month: 11, day: 1 }
+    expect(formatDayNumber(day, 'zh-CN')).toBe('1')
+    expect(formatDayNumber(day, 'en')).toBe('1')
   })
 })
 

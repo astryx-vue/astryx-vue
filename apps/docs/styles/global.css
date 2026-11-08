@@ -1898,6 +1898,14 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /*
+ * VitePress 的 `.vp-doc h3` 把字号写成 1.25rem，而且不在任何层里，盖过日程表组件层。
+ * 窄屏下列头「周日」因此溢进下一列。退回组件层后，月历自己的字号才能生效。
+ */
+.vp-doc .astryx-schedule :is(h1, h2, h3, h4, h5, h6) {
+  all: revert-layer;
+}
+
+/*
  * VitePress paints every `<code>` in prose with its own tint and inline padding,
  * which reads as a band across the code block's gutter and code. Rolling the
  * prose declarations back to the component layer restores the CodeBlock's own
