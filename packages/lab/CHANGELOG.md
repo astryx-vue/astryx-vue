@@ -1,5 +1,11 @@
 # @astryx-vue/lab
 
+## 0.5.2
+
+### Patch Changes
+
+- [#456](https://github.com/astryx-vue/astryx-vue/pull/456) [`59eca92`](https://github.com/astryx-vue/astryx-vue/commit/59eca925c5803d7257b0c379623774141277ace6) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 Tour 在服务端渲染时停止测量会访问 window 的问题；SSR 渲染已有回归测试。
+
 ## 0.5.1
 
 ### Patch Changes
