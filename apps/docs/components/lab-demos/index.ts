@@ -25,6 +25,8 @@ import statDemo from './stat.vue'
 import statSource from './stat.vue?raw&highlighted'
 import svgIconDemo from './svg-icon.vue'
 import svgIconSource from './svg-icon.vue?raw&highlighted'
+import tourOverviewDemo from './tour-overview.vue'
+import tourOverviewSource from './tour-overview.vue?raw&highlighted'
 import tourDemo from './tour.vue'
 import tourSource from './tour.vue?raw&highlighted'
 import transferListOverviewDemo from './transfer-list-overview.vue'
@@ -50,3 +52,4 @@ export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
 export const labTransferList = defineDemo(transferListDemo, transferListSource, options)
 export const labTransferListOverview = defineDemo(transferListOverviewDemo, transferListOverviewSource, options)
 export const labTour = defineDemo(tourDemo, tourSource, options)
+export const labTourOverview = defineDemo(tourOverviewDemo, tourOverviewSource, options)

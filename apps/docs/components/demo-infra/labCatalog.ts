@@ -11,7 +11,7 @@ import {
   labMobileTokenizer,
   labStat,
   labSvgIcon,
-  labTour,
+  labTourOverview,
   labTransferListOverview,
 } from '../lab-demos'
 
@@ -34,6 +34,6 @@ export const LAB_COMPONENTS: readonly LabCatalogEntry[] = [
   { slug: 'mobile-tokenizer', name: 'MobileTokenizer', demo: labMobileTokenizer },
   { slug: 'stat', name: 'Stat', demo: labStat },
   { slug: 'svg-icon', name: 'SVGIcon', demo: labSvgIcon },
-  { slug: 'tour', name: 'Tour', demo: labTour },
+  { slug: 'tour', name: 'Tour', demo: labTourOverview },
   { slug: 'transfer-list', name: 'TransferList', demo: labTransferListOverview },
 ]
