@@ -33,14 +33,21 @@ const columns: ListInputColumn<Guest>[] = ['name', 'role'].map(key => ({
 </script>
 
 <template>
-  <ListInput
-    v-model="guests"
-    :columns="columns"
-    :get-item-key="item => item.id"
-    :create-item="createItem"
-    label="Guests"
-    item-name="guest"
-    is-reorderable
-    style="width: 100%"
-  />
+  <div class="list-input-preview">
+    <ListInput
+      v-model="guests"
+      :columns="columns"
+      :get-item-key="item => item.id"
+      :create-item="createItem"
+      label="Guests"
+      item-name="guest"
+      is-reorderable
+    />
+  </div>
 </template>
+
+<style scoped>
+.list-input-preview {
+  width: 100%;
+}
+</style>

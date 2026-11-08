@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DocsLocale } from './docs-i18n'
 import { computed } from 'vue'
-import { componentDemos } from '../demos/registry'
+import { componentCardDemos } from '../demos/registry'
 import { catalogGroups } from './componentCatalog'
 import { localePath } from './docs-i18n'
 import { LAB_COMPONENTS } from './labCatalog'
@@ -14,8 +14,8 @@ const labComponents = LAB_COMPONENTS
 const groups = computed(() => catalogGroups(props.locale).map(group => ({
   id: group.id,
   title: group.title,
-  cards: group.entries.flatMap(entry => componentDemos[entry.slug]
-    ? [{ demo: componentDemos[entry.slug], name: entry[props.locale], slug: entry.slug }]
+  cards: group.entries.flatMap(entry => componentCardDemos[entry.slug]
+    ? [{ demo: componentCardDemos[entry.slug], name: entry[props.locale], slug: entry.slug }]
     : []),
 })).filter(group => group.cards.length > 0))
 </script>

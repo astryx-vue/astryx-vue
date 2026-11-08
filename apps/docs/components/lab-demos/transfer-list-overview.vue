@@ -19,5 +19,6 @@ const options: readonly TransferListOption[] = [
     is-label-hidden
     selected-label="Selected"
     available-label="Available"
+    style="width: 100%"
   />
 </template>

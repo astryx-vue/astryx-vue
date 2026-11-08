@@ -5,11 +5,10 @@ const host = ref<HTMLElement | null>(null)
 const naturalSize = ref({ width: 0, height: 0 })
 const scale = ref(1)
 const style = computed(() => {
-  if (naturalSize.value.width === 0 || naturalSize.value.height === 0)
-    return undefined
+  const measured = naturalSize.value.width > 0 && naturalSize.value.height > 0
   return {
-    width: `${naturalSize.value.width}px`,
-    height: `${naturalSize.value.height}px`,
+    width: measured ? `${naturalSize.value.width}px` : undefined,
+    height: measured ? `${naturalSize.value.height}px` : undefined,
     transform: `translate(-50%, -50%) scale(${scale.value})`,
   }
 })

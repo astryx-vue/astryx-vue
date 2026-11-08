@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@astryx-vue/core'
 import { Tour, TourStep } from '@astryx-vue/lab'
 import { ref } from 'vue'
 
@@ -27,9 +28,7 @@ function dismiss(source: string): void {
         History
       </button>
     </div>
-    <button type="button" @click="active = true">
-      Start tour
-    </button>
+    <Button class="tour-demo__start" label="Start tour" @click="active = true" />
     <span v-if="reason" class="tour-demo__reason">Dismissed: {{ reason }}</span>
     <Tour :is-active="active" has-backdrop is-step-count-shown @dismiss="dismiss">
       <TourStep :target-ref="save" heading="Save your work">
@@ -47,7 +46,8 @@ function dismiss(source: string): void {
 
 <style scoped>
 .tour-demo { display: grid; gap: 16px; width: 100%; }
-.tour-demo__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.tour-demo__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .tour-demo__actions button { min-height: 36px; padding: 6px 12px; }
+.tour-demo__start { justify-self: center; }
 .tour-demo__reason { color: var(--astryx-color-text-secondary); font-size: 12px; }
 </style>
