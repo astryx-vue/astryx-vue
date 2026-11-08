@@ -24,6 +24,9 @@ export type {
   LegendPosition,
 } from './ChartLegend/index.js'
 
+export { ChartSelect } from './ChartSelect/index.js'
+export type { ChartSelectEmits, ChartSelectProps } from './ChartSelect/index.js'
+
 export { ChartSwatch, swatchVariantForType } from './ChartSwatch/index.js'
 export type { ChartSwatchProps, ChartSwatchVariant } from './ChartSwatch/index.js'
 

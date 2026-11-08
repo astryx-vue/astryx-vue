@@ -15,6 +15,7 @@ import {
   chartsDot,
   chartsErrorBar,
   chartsLine,
+  chartsSelect,
   chartsStackedArea,
 } from '../../../../components/demos/chart'
 </script>
@@ -409,6 +410,30 @@ declare function candlestick(options: CandlestickOptions): SeriesDef
 | `opacity` | `number` | `0.15` | 选区填充透明度。 |
 
 <DemoExample :demo="chartsBrush" description="拖动选择一段数据，查看返回的范围和命中行数。" locale="zh" title="框选数据" />
+
+## 选择数据点
+
+在 `interactions` 插槽里放 `<ChartSelect>`，用户就可以点击或触摸最近的数据点。距离所有点都超过 30 像素时不会触发选择。
+
+`selected` 是受控属性，由调用方保存数据行下标。普通点击只保留当前点；按住 Shift 或 Meta 点击会切换该点的选中状态，同时保留其他选中项。
+
+```vue
+<Chart :data="data" x-key="month" :series="series">
+  <template #interactions>
+    <ChartSelect :selected="selected" @selection-change="selected = $event" />
+  </template>
+</Chart>
+```
+
+`select` 事件返回 `(datum, index)`；`selection-change` 返回新的下标数组。组件会根据已算好的点位画出选中圆环，支持数值和分类 x 轴。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `selected` | `number[]` | `[]` | 当前选中的数据行下标。 |
+| `color` | `string` | `var(--astryx-color-accent)` | 选中圆环的颜色。 |
+| `radius` | `number` | `6` | 选中圆环的半径。 |
+
+<DemoExample :demo="chartsSelect" description="点击选择数据点，使用 Shift 或 Meta 切换多选。" locale="zh" title="选择数据点" />
 
 ## 无障碍
 
