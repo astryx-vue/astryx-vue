@@ -4,7 +4,7 @@ export interface LocalChartPoint {
 }
 
 /** 把指针的视口坐标换算成当前 SVG 绘图区的局部坐标。 */
-export function localChartPoint(event: PointerEvent): LocalChartPoint | null {
+export function localChartPoint(event: MouseEvent): LocalChartPoint | null {
   const target = event.currentTarget as SVGRectElement | null
   const svg = target?.ownerSVGElement
   const matrix = target?.getScreenCTM()?.inverse()

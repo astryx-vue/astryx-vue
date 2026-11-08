@@ -17,6 +17,7 @@ import {
   chartsLine,
   chartsSelect,
   chartsStackedArea,
+  chartsZoom,
 } from '../../../../components/demos/chart'
 </script>
 
@@ -434,6 +435,31 @@ declare function candlestick(options: CandlestickOptions): SeriesDef
 | `radius` | `number` | `6` | 选中圆环的半径。 |
 
 <DemoExample :demo="chartsSelect" description="点击选择数据点，使用 Shift 或 Meta 切换多选。" locale="zh" title="选择数据点" />
+
+## 缩放和平移
+
+在 `interactions` 插槽里放 `<ChartZoom>`，用户就可以通过滚轮或双指手势缩放，并拖动平移图表。右上角工具栏提供放大、缩小和重置按钮；`toolbar="false"` 可以隐藏它。
+
+Zoom 通过事件更新受控 domain，不会直接修改 `<Chart>` 的内部状态：
+
+```vue
+<Chart :data="data" x-key="x" :series="series" :x-domain="xDomain" :y-domain="yDomain">
+  <template #interactions>
+    <ChartZoom @x-domain-change="xDomain = $event" @y-domain-change="yDomain = $event" />
+  </template>
+</Chart>
+```
+
+重置会回到 ChartZoom 挂载时的初始 domain。分类 x 轴不参与数值缩放和平移；`xOnly` 或 `yOnly` 可以只操作一条轴。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `zoomSpeed` | `number` | `0.1` | 每次滚轮刻度的缩放速度。 |
+| `xOnly` | `boolean` | `false` | 只操作 x 轴。 |
+| `yOnly` | `boolean` | `false` | 只操作 y 轴。 |
+| `toolbar` | `false \| 'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'top-right'` | 工具栏位置或隐藏。 |
+
+<DemoExample :demo="chartsZoom" description="使用滚轮、双指、拖动和工具栏调整图表范围。" locale="zh" title="缩放和平移" />
 
 ## 无障碍
 

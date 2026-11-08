@@ -1,0 +1,31 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-chart-zoom__toolbar {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .astryx-chart-zoom__toolbar[data-position='top-right'] {
+    top: 8px;
+    right: 8px;
+  }
+
+  .astryx-chart-zoom__toolbar[data-position='top-left'] {
+    top: 8px;
+    left: 8px;
+  }
+
+  .astryx-chart-zoom__toolbar[data-position='bottom-right'] {
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .astryx-chart-zoom__toolbar[data-position='bottom-left'] {
+    bottom: 8px;
+    left: 8px;
+  }
+}

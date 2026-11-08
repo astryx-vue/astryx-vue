@@ -164,6 +164,8 @@ export interface ChartContext {
   yBandScale?: ScaleBand<string>
   resolved: Map<string, ResolvedPoint[]>
   onPointer: (handler: (e: ChartPointerEvent) => void) => () => void
+  /** 在 SVG 外的绘图区登记 HTML 覆盖层，返回注销函数。 */
+  registerOverlay: (renderer: () => VNodeChild) => () => void
   svgRef: Ref<SVGSVGElement | null>
 }
 

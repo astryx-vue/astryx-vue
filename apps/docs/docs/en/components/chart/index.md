@@ -17,6 +17,7 @@ import {
   chartsLine,
   chartsSelect,
   chartsStackedArea,
+  chartsZoom,
 } from '../../../../components/demos/chart'
 </script>
 
@@ -434,6 +435,31 @@ The `select` event receives `(datum, index)`; `selection-change` receives the ne
 | `radius` | `number` | `6` | Selection ring radius. |
 
 <DemoExample :demo="chartsSelect" description="Click a data point, or use Shift or Meta to toggle multiple points." locale="en" title="Select data points" />
+
+## Zoom and pan
+
+Place `<ChartZoom>` in the `interactions` slot to let users zoom with the wheel or a pinch gesture and drag to pan. The top-right toolbar provides zoom in, zoom out, and reset buttons; set `toolbar="false"` to hide it.
+
+Zoom updates controlled domains through events rather than changing the `<Chart>` internal state:
+
+```vue
+<Chart :data="data" x-key="x" :series="series" :x-domain="xDomain" :y-domain="yDomain">
+  <template #interactions>
+    <ChartZoom @x-domain-change="xDomain = $event" @y-domain-change="yDomain = $event" />
+  </template>
+</Chart>
+```
+
+Reset restores the initial domains captured when ChartZoom mounts. A categorical x axis does not participate in numeric zoom or pan. Use `xOnly` or `yOnly` to operate on one axis.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `zoomSpeed` | `number` | `0.1` | Zoom speed per wheel tick. |
+| `xOnly` | `boolean` | `false` | Operate only on the x axis. |
+| `yOnly` | `boolean` | `false` | Operate only on the y axis. |
+| `toolbar` | `false \| 'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'top-right'` | Toolbar position or hidden. |
+
+<DemoExample :demo="chartsZoom" description="Use the wheel, pinch, drag, and toolbar to adjust the chart range." locale="en" title="Zoom and pan" />
 
 ## Accessibility
 
