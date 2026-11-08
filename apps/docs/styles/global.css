@@ -584,7 +584,8 @@ html.dark .component-card__frame {
   width: min(100%, 960px);
   min-width: 0;
   margin-inline: auto;
-  padding: 36px 24px 80px;
+  /* 标题在固定导航下面。72px 在属性页看起来仍贴着导航，再留出一档。 */
+  padding: 112px clamp(28px, 4vw, 64px) 80px;
 }
 
 .component-detail__header {
@@ -713,7 +714,8 @@ html.dark .component-detail__stage {
 }
 
 .component-detail--props .component-detail__body h2:first-of-type {
-  margin-top: 0;
+  /* 属性页没有总览那块画布，这条又把标题上边距清成 0，Calendar Props 就贴在 tab 下沿。 */
+  margin-top: 48px;
   padding-top: 0;
   border-top: 0;
 }
@@ -1482,7 +1484,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   }
 
   .component-detail__content {
-    padding: 32px 18px 64px;
+    padding: 72px 18px 64px;
   }
 
   .component-detail__body div[class*='language-'] {
@@ -1927,6 +1929,14 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+/*
+ * VitePress 的 `.vp-doc h3` 把字号写成 1.25rem，而且不在任何层里，盖过日程表组件层。
+ * 窄屏下列头「周日」因此溢进下一列。退回组件层后，月历自己的字号才能生效。
+ */
+.vp-doc .astryx-schedule :is(h1, h2, h3, h4, h5, h6) {
+  all: revert-layer;
 }
 
 /*

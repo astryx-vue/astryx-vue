@@ -165,7 +165,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 
 .home-copy {
   grid-area: copy;
-  max-width: 38rem;
+  max-width: 42rem;
 }
 
 .home-copy h1 {
@@ -276,7 +276,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
     grid-template-areas:
       "mark mark"
       "copy chat";
-    grid-template-columns: minmax(0, 0.95fr) minmax(20rem, 1.05fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.95fr);
     grid-template-rows: auto minmax(0, 1fr);
     gap: clamp(1rem, 2.5vh, 1.75rem) 3.5rem;
     align-items: start;
@@ -294,7 +294,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   }
 
   .home-copy {
-    align-self: center;
+    align-self: start;
   }
 
   .home-chat-column {

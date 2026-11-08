@@ -35,5 +35,6 @@ import '@astryx-vue/lab/lab.css'
 | [SVGIcon](/lab/svg-icon) | 按路径角色渲染多变体 SVG 图标。 |
 | [ChatEmojiPicker](/lab/chat-emoji-picker) | 在弹出层里按短名过滤并选择表情。 |
 | [ChatReactionBar](/lab/chat-reaction-bar) | 在消息下展示表情回应，并可继续添加。 |
+| [Schedule](/lab/schedule) | 按月、周、日或列表展示日程。 |
 
 这些页面中的示例都可以直接交互，代码标签页提供完整 Vue 示例。
