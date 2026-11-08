@@ -15,6 +15,8 @@ import errorBarDemo from './error-bar.vue'
 import errorBarSource from './error-bar.vue?raw&highlighted'
 import lineDemo from './line.vue'
 import lineSource from './line.vue?raw&highlighted'
+import selectDemo from './select.vue'
+import selectSource from './select.vue?raw&highlighted'
 import areaDemo from './stacked-area.vue'
 import areaSource from './stacked-area.vue?raw&highlighted'
 
@@ -23,6 +25,7 @@ const chartClass = 'charts-demo'
 export const chartsLine = defineDemo(lineDemo, lineSource, { className: chartClass })
 export const chartsBar = defineDemo(barDemo, barSource, { className: chartClass })
 export const chartsBrush = defineDemo(brushDemo, brushSource, { className: chartClass })
+export const chartsSelect = defineDemo(selectDemo, selectSource, { className: chartClass })
 export const chartsStackedArea = defineDemo(areaDemo, areaSource, { className: chartClass })
 export const chartsDot = defineDemo(dotDemo, dotSource, { className: chartClass })
 export const chartsBandReference = defineDemo(bandDemo, bandSource, { className: chartClass })

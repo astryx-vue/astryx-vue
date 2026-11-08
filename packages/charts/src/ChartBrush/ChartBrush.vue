@@ -3,6 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { BrushRange, ChartBrushEmits, ChartBrushProps } from './types.js'
 import { computed, ref } from 'vue'
 import { useChart } from '../context.js'
+import { localChartPoint } from '../interactions/pointer.js'
 import { isBandScale } from '../utils.js'
 
 defineOptions({ name: 'AstryxChartBrush' })
@@ -17,26 +18,13 @@ const brush = ref<{ x0: number, y0: number, x1: number, y1: number } | null>(nul
 const dragging = ref(false)
 const start = ref({ x: 0, y: 0 })
 
-function localCoords(event: PointerEvent): { x: number, y: number } {
-  const target = event.currentTarget as SVGRectElement
-  const svg = target.ownerSVGElement
-  if (!svg)
-    return { x: 0, y: 0 }
-  const point = svg.createSVGPoint()
-  point.x = event.clientX
-  point.y = event.clientY
-  const matrix = target.getScreenCTM()?.inverse()
-  if (!matrix)
-    return { x: 0, y: 0 }
-  const local = point.matrixTransform(matrix)
-  return { x: local.x, y: local.y }
-}
-
 function onPointerDown(event: PointerEvent): void {
+  const point = localChartPoint(event)
+  if (!point)
+    return
   const target = event.currentTarget as SVGRectElement
   target.setPointerCapture?.(event.pointerId)
   dragging.value = true
-  const point = localCoords(event)
   start.value = point
   brush.value = { x0: point.x, y0: point.y, x1: point.x, y1: point.y }
 }
@@ -44,7 +32,9 @@ function onPointerDown(event: PointerEvent): void {
 function onPointerMove(event: PointerEvent): void {
   if (!dragging.value)
     return
-  const point = localCoords(event)
+  const point = localChartPoint(event)
+  if (!point)
+    return
   const origin = start.value
   brush.value = props.mode === 'x'
     ? {

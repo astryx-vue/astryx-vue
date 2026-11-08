@@ -15,6 +15,7 @@ import {
   chartsDot,
   chartsErrorBar,
   chartsLine,
+  chartsSelect,
   chartsStackedArea,
 } from '../../../../components/demos/chart'
 </script>
@@ -409,6 +410,30 @@ The `brush` event receives `(range, data)`. `range.x` is the `[min, max]` interv
 | `opacity` | `number` | `0.15` | Selection fill opacity. |
 
 <DemoExample :demo="chartsBrush" description="Drag a range and inspect the returned interval and matching rows." locale="en" title="Brush data" />
+
+## Select data points
+
+Place `<ChartSelect>` in the `interactions` slot to let users click or tap the nearest data point. Pointer positions more than 30 pixels from every point do not trigger a selection.
+
+`selected` is controlled by the caller and contains data row indices. A regular click selects only the current point. Shift-click or Meta-click toggles that point while preserving the other selected rows.
+
+```vue
+<Chart :data="data" x-key="month" :series="series">
+  <template #interactions>
+    <ChartSelect :selected="selected" @selection-change="selected = $event" />
+  </template>
+</Chart>
+```
+
+The `select` event receives `(datum, index)`; `selection-change` receives the new index array. Selection rings use the chart's resolved point positions and support numeric and categorical x axes.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `selected` | `number[]` | `[]` | Selected data row indices. |
+| `color` | `string` | `var(--astryx-color-accent)` | Selection ring color. |
+| `radius` | `number` | `6` | Selection ring radius. |
+
+<DemoExample :demo="chartsSelect" description="Click a data point, or use Shift or Meta to toggle multiple points." locale="en" title="Select data points" />
 
 ## Accessibility
 
