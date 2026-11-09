@@ -412,7 +412,7 @@ Input data must be sorted by `x` in ascending order. `width` is the positive cha
 | `width` | `number` | Positive pixel width used to create buckets. |
 | `xDomain` | `[number, number]` | Optional x-axis range. Defaults to the first and last x values in the data. |
 
-<DemoExample :demo="chartsM4" description="A line chart comparing 12,000 original points with the M4 reduction while preserving the central spike." locale="en" title="M4 line reduction" />
+<DemoExample :demo="chartsM4" description="A line chart comparing 12,000 original points with the M4 reduction while preserving the same major peaks and valleys." locale="en" title="M4 line reduction" />
 
 ## Radial charts
 

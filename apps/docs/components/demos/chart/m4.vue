@@ -3,7 +3,7 @@ import { Chart, ChartAxis, ChartGrid, line, m4Reduce } from '@astryx-vue/charts'
 
 const rawData = Array.from({ length: 12_000 }, (_, x) => ({
   x,
-  y: Math.sin(x / 50) * 30 + Math.sin(x / 400) * 12 + (x === 6_000 ? 100 : 0),
+  y: 48 + Math.sin(x / 1_800) * 18 + Math.cos(x / 950) * 7,
 }))
 const reducedData = m4Reduce(rawData, 480)
 const panels = [
@@ -46,7 +46,7 @@ const panels = [
         </template>
       </Chart>
     </figure>
-    <p>The spike at x = 6,000 remains visible after reduction.</p>
+    <p>Both charts keep the same peaks and valleys. M4 only reduces the number of points.</p>
   </div>
 </template>
 
