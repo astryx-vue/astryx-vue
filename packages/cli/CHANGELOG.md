@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.9
+
+### Patch Changes
+
+- [#463](https://github.com/astryx-vue/astryx-vue/pull/463) [`258c023`](https://github.com/astryx-vue/astryx-vue/commit/258c023a6e88934c0d87434c62e9023def979abf) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 更新主站内置资料，加入 `useChartRange` 流式数据范围说明和交互示例。
+
 ## 0.4.8
 
 ### Patch Changes
