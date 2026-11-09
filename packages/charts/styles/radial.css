@@ -1,0 +1,64 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-radial-chart {
+    width: 100%;
+  }
+
+  .astryx-radial-chart > svg {
+    display: block;
+  }
+
+  .astryx-radial-grid polygon,
+  .astryx-radial-grid line {
+    stroke: var(--astryx-color-border, #e5e5e5);
+    stroke-opacity: 0.3;
+    stroke-width: 1;
+  }
+
+  .astryx-radial-axis text {
+    fill: var(--astryx-color-text-secondary, #525252);
+    font-size: 12px;
+  }
+
+  .astryx-radial-slice {
+    stroke: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-radial-slice__label {
+    fill: var(--astryx-color-text-primary, #171717);
+    font-size: 12px;
+    font-weight: 500;
+    pointer-events: none;
+  }
+
+  .astryx-radial-slice__highlight {
+    fill: none;
+    stroke: var(--astryx-color-border-emphasized, #737373);
+    stroke-width: 2;
+  }
+
+  .astryx-radial-tooltip {
+    box-sizing: border-box;
+    z-index: var(--astryx-chart-tooltip-z-index, 1000);
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    background-color: var(--astryx-color-background-popover, #fff);
+    border: 1px solid var(--astryx-color-border, #e5e5e5);
+    border-radius: var(--astryx-radius-container, 8px);
+    box-shadow: var(--astryx-shadow-med, 0 4px 16px rgb(0 0 0 / 12%));
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .astryx-radial-tooltip__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+  }
+
+  .astryx-radial-tooltip__content div > span {
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+}

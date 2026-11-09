@@ -16,6 +16,8 @@ import {
   chartsErrorBar,
   chartsLine,
   chartsM4,
+  chartsRadialPie,
+  chartsRadialSpider,
   chartsRange,
   chartsSelect,
   chartsStackedArea,
@@ -411,6 +413,82 @@ Input data must be sorted by `x` in ascending order. `width` is the positive cha
 | `xDomain` | `[number, number]` | Optional x-axis range. Defaults to the first and last x values in the data. |
 
 <DemoExample :demo="chartsM4" description="A line chart comparing 12,000 original points with the M4 reduction while preserving the central spike." locale="en" title="M4 line reduction" />
+
+## Radial charts
+
+`RadialChart` uses a dedicated radial coordinate space. Provide `axes` for a radar chart, or provide `valueKey` without `axes` for a pie or donut chart. Grids, areas, slices, and tooltips share the same center, radii, and angle calculations.
+
+| RadialChart prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `Record<string, unknown>[]` | **Required** | Series rows for radar mode or slice rows for pie mode. |
+| `width` / `height` | `number` | `0` / `400` | Container width is measured in the browser. Pass `width` explicitly for SSR. |
+| `axes` | `string[]` | `undefined` | Radar axis fields. Providing this selects radar mode. |
+| `valueKey` | `string` | `undefined` | Numeric slice field. Non-finite and negative values count as zero. |
+| `labelKey` | `string` | `undefined` | Slice label field. |
+| `innerRadius` | `number` | `0` | Inner radius as a fraction of the outer radius. For example, `0.6` creates a donut. |
+| `padAngle` | `number` | `0.02` | Angular gap between adjacent slices. |
+| `interactive` | `boolean` | `false` | Prevents page scrolling during touch dragging. When off, `pan-y` remains available. |
+| `label` | `string` | Derived from the mode | Accessible SVG name. |
+
+### Radar charts
+
+`RadialGrid` draws concentric polygons and axis lines, `RadialArea` draws one data row, and `RadialAxis` draws axis labels. `RadialArea.dataKey` matches any string field value in a row and falls back to the first row when no match exists.
+
+```vue
+<RadialChart :data="data" :axes="['speed', 'handling']" :height="360">
+  <RadialGrid :rings="5" />
+  <RadialArea data-key="Model A" :color="colors[0]" dots />
+  <RadialAxis />
+  <RadialTooltip />
+</RadialChart>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `RadialGrid.rings` | `number` | `5` | Number of concentric grid rings. |
+| `RadialAxis.labelOffset` | `number` | `16` | Distance between labels and the outer ring. |
+| `RadialArea.dataKey` | `string` | **Required** | Identifier of the data row to draw. |
+| `RadialArea.color` | `string` | **Required** | Fill and stroke color. |
+| `RadialArea.opacity` | `number` | `0.2` | Fill opacity. |
+| `RadialArea.strokeWidth` | `number` | `2` | Polygon stroke width. |
+| `RadialArea.dots` / `dotRadius` | `boolean` / `number` | `false` / `4` | Vertex visibility and dot radius. |
+
+<DemoExample :demo="chartsRadialSpider" description="A five-axis radar chart with two series, grid rings, vertex dots, labels, and hover tooltips." locale="en" title="Radar chart" />
+
+### Pie and donut charts
+
+`RadialSlice` draws slices from `valueKey` proportions. A positive `innerRadius` creates the donut hole. `cornerRadius` draws real rounded arc geometry. Use `labels` and `labelThreshold` to control percentage labels.
+
+```vue
+<RadialChart :data="data" value-key="revenue" label-key="region" :inner-radius="0.6">
+  <RadialSlice :colors="colors" :corner-radius="4" />
+  <RadialTooltip />
+</RadialChart>
+```
+
+| RadialSlice prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `colors` | `string[]` | **Required** | Slice colors, cycled in data order. |
+| `cornerRadius` | `number` | `0` | Corner radius for the inner and outer arc edges. |
+| `labels` | `boolean` | `true` | Whether to show percentage labels. |
+| `labelThreshold` | `number` | `5` | Minimum percentage required for a visible label. |
+
+<DemoExample :demo="chartsRadialPie" description="Regional revenue donut with an inner hole, rounded corners, percentage labels, and hover highlighting." locale="en" title="Donut chart" />
+
+### Radial tooltips
+
+`RadialTooltip` hit-tests slices by radius and angle in pie mode. In radar mode, it shows the nearest axis and the highest series value on that axis. It supports mouse hover, touch tapping, and dragging. `highlight` draws and offsets the active slice outline; `highlightOffset` controls the offset distance.
+
+Use the default slot for custom content. It receives `label`, `value`, `percentage`, and `index`:
+
+```vue
+<RadialTooltip>
+  <template #default="{ label, value, percentage }">
+    <strong>{{ label }}</strong>
+    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%
+  </template>
+</RadialTooltip>
+```
 
 ## Brush selection
 
