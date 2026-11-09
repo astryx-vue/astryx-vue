@@ -79,6 +79,9 @@ describe('chartZoom', () => {
     const toolbar = wrapper.get('.astryx-chart-zoom__toolbar')
     expect(toolbar.attributes('data-position')).toBe('top-right')
     expect(toolbar.element.namespaceURI).toBe('http://www.w3.org/1999/xhtml')
+    expect(toolbar.findAll('.astryx-icon')).toHaveLength(3)
+    const reset = wrapper.get('[aria-label="Reset zoom"]')
+    expect(reset.findAll('path').map(path => path.attributes('d'))).toContain('M3 3v5h5')
     wrapper.unmount()
   })
 
