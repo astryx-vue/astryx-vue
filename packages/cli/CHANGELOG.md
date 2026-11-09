@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.11
+
+### Patch Changes
+
+- [#465](https://github.com/astryx-vue/astryx-vue/pull/465) [`d0684ea`](https://github.com/astryx-vue/astryx-vue/commit/d0684ea9d8e32f1e6bf1c204b93c80132b7f0a55) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 更新 M4 示例的内置资料，改用自然的连续峰谷数据，不再展示人为尖峰。
+
 ## 0.4.10
 
 ### Patch Changes
