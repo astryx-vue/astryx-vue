@@ -20455,6 +20455,35 @@
             ]
           },
           {
+            "heading": "Streaming data ranges",
+            "rows": [
+              {
+                "name": "`xWindow`",
+                "description": "`xWindow`",
+                "type": "`number`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`yDomain`",
+                "description": "`yDomain`",
+                "type": "`[number, number]`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`yPadding`",
+                "description": "`yPadding`",
+                "type": "`number`",
+                "default": "`0.1`"
+              },
+              {
+                "name": "`yCenter`",
+                "description": "`yCenter`",
+                "type": "`boolean`",
+                "default": "`false`"
+              }
+            ]
+          },
+          {
             "heading": "Props",
             "rows": [
               {
@@ -21105,6 +21134,35 @@
             ]
           },
           {
+            "heading": "流式数据范围",
+            "rows": [
+              {
+                "name": "`xWindow`",
+                "description": "`xWindow`",
+                "type": "`number`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`yDomain`",
+                "description": "`yDomain`",
+                "type": "`[number, number]`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`yPadding`",
+                "description": "`yPadding`",
+                "type": "`number`",
+                "default": "`0.1`"
+              },
+              {
+                "name": "`yCenter`",
+                "description": "`yCenter`",
+                "type": "`boolean`",
+                "default": "`false`"
+              }
+            ]
+          },
+          {
             "heading": "属性",
             "rows": [
               {
@@ -21357,6 +21415,10 @@
             "text": "Place `<ChartZoom>` in the `interactions` slot to let users zoom with the wheel or a pinch gesture and drag to pan. The top-right toolbar provides zoom in, zoom out, and reset buttons; set `toolbar=\"false\"` to hide it.\n\nZoom updates controlled domains through events rather than changing the `<Chart>` internal state:\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\">\n  <template #interactions>\n    <ChartZoom @x-domain-change=\"xDomain = $event\" @y-domain-change=\"yDomain = $event\" />\n  </template>\n</Chart>\n```\n\nReset restores the initial domains captured when ChartZoom mounts. A categorical x axis does not participate in numeric zoom or pan. Use `xOnly` or `yOnly` to operate on one axis."
           },
           {
+            "heading": "Streaming data ranges",
+            "text": "`useChartRange` manages controlled x/y domains for continuously appended data. Each `push(x, y)` synchronously updates the ranges. Read them with `.value` inside `<script setup>`; template usage unwraps them automatically.\n\n```ts\nconst { xDomain, yDomain, push, reset } = useChartRange({\n  xWindow: 300,\n  yPadding: 0.1,\n})\n\npush(nextX, value)\n```\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\" />\n```\n\nDuring warmup, the x domain expands as `[0, max(x, 1)]`. Once `xWindow` is reached, it slides as `[x - xWindow, x]`. By default, y tracks the historical minimum and maximum values observed by the composable. It does not shrink when old points leave the x window. `reset()` clears that history and restores the initial ranges."
+          },
+          {
             "heading": "Accessibility",
             "text": "Charts include built-in accessibility features so screen reader users can understand chart content:\n\n- The root element has a `role=\"img\"` attribute.\n- The chart's accessible name prioritizes the `title` prop. When `title` is omitted, the component builds a semantic description from primary series and the x-axis field (such as \"Monthly Revenue and Cost trend\"). If only annotations are present, it falls back to \"Chart\".\n- The `subtitle` prop maps to the chart's accessible description.\n- When total data points (data rows × data columns) do not exceed 100 (`MAX_TABLE_POINTS`), the chart generates a visually hidden data table using `VisuallyHidden`. Screen readers can read exact values row by row. Above 100 points, the table is omitted to prevent excessive speech noise."
           },
@@ -21473,6 +21535,10 @@
           {
             "heading": "缩放和平移",
             "text": "在 `interactions` 插槽里放 `<ChartZoom>`，用户就可以通过滚轮或双指手势缩放，并拖动平移图表。右上角工具栏提供放大、缩小和重置按钮；`toolbar=\"false\"` 可以隐藏它。\n\nZoom 通过事件更新受控 domain，不会直接修改 `<Chart>` 的内部状态：\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\">\n  <template #interactions>\n    <ChartZoom @x-domain-change=\"xDomain = $event\" @y-domain-change=\"yDomain = $event\" />\n  </template>\n</Chart>\n```\n\n重置会回到 ChartZoom 挂载时的初始 domain。分类 x 轴不参与数值缩放和平移；`xOnly` 或 `yOnly` 可以只操作一条轴。"
+          },
+          {
+            "heading": "流式数据范围",
+            "text": "`useChartRange` 管理持续追加数据时的受控 x/y 范围。`push(x, y)` 每接收一个点就同步更新范围；在 `<script setup>` 中通过 `.value` 读取，在模板中会自动解包。\n\n```ts\nconst { xDomain, yDomain, push, reset } = useChartRange({\n  xWindow: 300,\n  yPadding: 0.1,\n})\n\npush(nextX, value)\n```\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\" />\n```\n\nx 轴在预热阶段从 `[0, max(x, 1)]` 扩展；达到 `xWindow` 后变为 `[x - xWindow, x]`。y 轴默认跟踪已经观察到的历史最小值和最大值，旧点离开 x 窗口时不会重新缩小 y 范围。`reset()` 会清空这些记录并恢复初始范围。"
           },
           {
             "heading": "无障碍",
@@ -21624,6 +21690,17 @@
             "zh": "使用滚轮、双指、拖动和工具栏调整图表范围。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Chart, ChartZoom, line } from '@astryx-vue/charts'\nimport { ref } from 'vue'\n\nconst data = Array.from({ length: 16 }, (_, x) => ({ x, y: 12 + Math.sin(x / 2) * 6 + x * 0.4 }))\nconst series = [line('y')]\nconst xDomain = ref<[number, number]>([0, 15])\nconst yDomain = ref<[number, number]>([0, 24])\n</script>\n\n<template>\n  <div class=\"chart-zoom-demo\">\n    <Chart\n      :data=\"data\"\n      x-key=\"x\"\n      :series=\"series\"\n      :x-domain=\"xDomain\"\n      :y-domain=\"yDomain\"\n      :height=\"260\"\n      title=\"Zoomable values\"\n    >\n      <template #interactions>\n        <ChartZoom\n          @x-domain-change=\"xDomain = $event\"\n          @y-domain-change=\"yDomain = $event\"\n        />\n      </template>\n    </Chart>\n    <p>x {{ xDomain.map(value => value.toFixed(1)).join('–') }} · y {{ yDomain.map(value => value.toFixed(1)).join('–') }}</p>\n    <p>Use the wheel or pinch to zoom. Drag to pan. Use the toolbar to reset.</p>\n  </div>\n</template>\n\n<style scoped>\n.chart-zoom-demo { width: 100%; }\n.chart-zoom-demo p { margin: 8px 0 0; color: var(--astryx-color-text-secondary); font-size: 12px; }\n.chart-zoom-demo p + p { margin-top: 4px; }\n</style>"
+        },
+        {
+          "title": {
+            "en": "Streaming data ranges",
+            "zh": "流式数据范围"
+          },
+          "description": {
+            "en": "Start and pause streaming or reset the chart to inspect controlled x/y domain changes.",
+            "zh": "启动流式追加、暂停和重置，观察受控 x/y 范围的变化。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, line, useChartRange } from '@astryx-vue/charts'\nimport { Button } from '@astryx-vue/core'\nimport { onBeforeUnmount, ref } from 'vue'\n\nconst data = ref<Record<string, number>[]>([])\nconst series = [line('y', { curve: 'linear', label: 'Value' })]\nconst { xDomain, yDomain, push, reset } = useChartRange({ xWindow: 100, yPadding: 0.15 })\nconst running = ref(false)\nlet nextX = 0\nlet timer: ReturnType<typeof setInterval> | undefined\n\nfunction append(): void {\n  const x = nextX\n  const y = 12 + Math.sin(x / 3) * 6 + Math.cos(x / 8) * 3\n  push(x, y)\n  data.value = [...data.value, { x, y }].filter(point => point.x >= xDomain.value[0])\n  nextX += 1\n}\n\nfunction stop(): void {\n  if (timer !== undefined)\n    clearInterval(timer)\n  timer = undefined\n  running.value = false\n}\n\nfunction toggle(): void {\n  if (timer !== undefined) {\n    stop()\n    return\n  }\n  running.value = true\n  timer = setInterval(append, 450)\n}\n\nfunction seed(): void {\n  for (let index = 0; index < 110; index++)\n    append()\n}\n\nfunction resetStream(): void {\n  reset()\n  data.value = []\n  nextX = 0\n  seed()\n}\n\nseed()\n\nonBeforeUnmount(stop)\n</script>\n\n<template>\n  <div class=\"chart-range-demo\">\n    <Chart\n      :data=\"data\"\n      x-key=\"x\"\n      :series=\"series\"\n      :x-domain=\"xDomain\"\n      :y-domain=\"yDomain\"\n      :height=\"240\"\n      title=\"Streaming values\"\n    >\n      <template #grid>\n        <ChartGrid />\n      </template>\n      <template #axes>\n        <ChartAxis position=\"bottom\" />\n        <ChartAxis position=\"left\" :tick-count=\"4\" />\n      </template>\n    </Chart>\n    <div class=\"chart-range-demo__controls\">\n      <Button :label=\"running ? 'Pause' : 'Start stream'\" variant=\"primary\" @click=\"toggle\" />\n      <Button label=\"Reset\" @click=\"resetStream\" />\n      <span>x {{ xDomain.map(value => value.toFixed(0)).join('–') }} · y {{ yDomain.map(value => value.toFixed(1)).join('–') }} · {{ data.length }} points</span>\n    </div>\n    <p>Start adds one point every 450 ms. The x window slides and y tracks the observed range.</p>\n  </div>\n</template>\n\n<style scoped>\n.chart-range-demo { width: 100%; }\n.chart-range-demo__controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }\n.chart-range-demo__controls span { margin-inline-start: auto; color: var(--astryx-color-text-secondary); font-size: 12px; }\n.chart-range-demo p { margin: 8px 0 0; color: var(--astryx-color-text-secondary); font-size: 12px; }\n@media (max-width: 560px) {\n  .chart-range-demo__controls span { flex-basis: 100%; margin-inline-start: 0; }\n}\n</style>"
         }
       ],
       "anatomy": {

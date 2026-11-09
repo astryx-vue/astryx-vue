@@ -43,3 +43,5 @@ export type { ChartZoomEmits, ChartZoomProps, ZoomToolbarPosition } from './Char
 
 export { useChart } from './context.js'
 export { useChartColors } from './useChartColors.js'
+export { useChartRange } from './useChartRange.js'
+export type { UseChartRangeOptions, UseChartRangeReturn } from './useChartRange.js'
