@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.10
+
+### Patch Changes
+
+- [#464](https://github.com/astryx-vue/astryx-vue/pull/464) [`1a3e7b0`](https://github.com/astryx-vue/astryx-vue/commit/1a3e7b088a071a78ee52708330261ca44e1fb794) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 更新主站内置资料，加入 Radial 雷达图、饼图/donut、扇区、提示框和中英文示例。
+
 ## 0.4.9
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.7.0
+
+### Minor Changes
+
+- [#464](https://github.com/astryx-vue/astryx-vue/pull/464) [`1a3e7b0`](https://github.com/astryx-vue/astryx-vue/commit/1a3e7b088a071a78ee52708330261ca44e1fb794) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增完整 Radial 组件族：雷达图、饼图/donut、网格、面积、轴标签、真实扇区圆角、悬停/触摸提示框、响应式尺寸、SSR 和无障碍数据表。
+
 ## 0.6.0
 
 ### Minor Changes
