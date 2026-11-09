@@ -19,6 +19,8 @@ export { computeLayout } from './layout.js'
 export type { LayoutInput, LayoutResult } from './layout.js'
 export { deriveLegendItems } from './legend.js'
 export type { LegendItem } from './legend.js'
+export { m4Reduce } from './m4.js'
+export type { M4Point } from './m4.js'
 export { pointFill, seriesFill } from './markColor.js'
 
 export {

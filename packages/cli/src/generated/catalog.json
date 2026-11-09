@@ -20360,6 +20360,26 @@
             ]
           },
           {
+            "heading": "Reduce large line datasets",
+            "rows": [
+              {
+                "name": "`data`",
+                "description": "`data`",
+                "type": "`M4Point[]`"
+              },
+              {
+                "name": "`width`",
+                "description": "`width`",
+                "type": "`number`"
+              },
+              {
+                "name": "`xDomain`",
+                "description": "`xDomain`",
+                "type": "`[number, number]`"
+              }
+            ]
+          },
+          {
             "heading": "Brush selection",
             "rows": [
               {
@@ -20987,6 +21007,29 @@
             ]
           },
           {
+            "heading": "大数据折线缩减",
+            "rows": [
+              {
+                "name": "`data`",
+                "payload": "`data`",
+                "type": "`M4Point[]`",
+                "description": "按 x 升序排列的 `{ x, y }` 数据点。"
+              },
+              {
+                "name": "`width`",
+                "payload": "`width`",
+                "type": "`number`",
+                "description": "用于分桶的正数像素宽度。"
+              },
+              {
+                "name": "`xDomain`",
+                "payload": "`xDomain`",
+                "type": "`[number, number]`",
+                "description": "可选的 x 轴范围；省略时使用数据的首尾 x 值。"
+              }
+            ]
+          },
+          {
             "heading": "框选范围",
             "rows": [
               {
@@ -21298,6 +21341,10 @@
             "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale)`: Formats dates as a short month and day. For example, \"Jan 5\".\n- `monthYear(value, locale)`: Formats dates as month and year. For example, \"Jan 2024\".\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
           },
           {
+            "heading": "Reduce large line datasets",
+            "text": "`m4Reduce` groups points by horizontal pixel width and keeps the first, last, minimum, and maximum point in each bucket. It reduces line-rendering work while preserving peaks and valleys that remain visible at the target resolution.\n\n```ts\nimport { m4Reduce } from '@astryx-vue/charts'\n\nconst reduced = m4Reduce(rawData, chartWidth, xDomain)\n```\n\nInput data must be sorted by `x` in ascending order. `width` is the positive chart width in pixels, and the output contains at most `4 × ceil(width)` points. When provided, `xDomain` should match the chart's x-axis range. Points outside that range join the nearest edge bucket. The function does not mutate input points and returns the original array when the dataset is already small enough."
+          },
+          {
             "heading": "Brush selection",
             "text": "Place `<ChartBrush>` in the `<Chart>` `interactions` slot to let users drag a selection over the plot. `mode=\"x\"` selects a horizontal range, useful for time windows; `mode=\"xy\"` selects a rectangle, useful for scatter plots.\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\">\n  <template #interactions>\n    <ChartBrush @brush=\"onBrush\" @clear=\"clearSelection\" />\n  </template>\n</Chart>\n```\n\nThe `brush` event receives `(range, data)`. `range.x` is the `[min, max]` interval in data coordinates, with `range.y` also present in xy mode; `data` contains the original rows inside the selection. `clear` is a click that did not become a drag."
           },
@@ -21410,6 +21457,10 @@
           {
             "heading": "格式化函数",
             "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。\n- `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
+          },
+          {
+            "heading": "大数据折线缩减",
+            "text": "`m4Reduce` 按 x 轴像素宽度分组，每组保留首点、尾点、最低点和最高点。它用于减少大数据折线的渲染量，并保留当前分辨率下可见的峰值和低谷。\n\n```ts\nimport { m4Reduce } from '@astryx-vue/charts'\n\nconst reduced = m4Reduce(rawData, chartWidth, xDomain)\n```\n\n输入数据必须按 `x` 升序排列。`width` 是图表的正数像素宽度；输出最多包含 `4 × ceil(width)` 个点。传入 `xDomain` 时，它应与图表的 x 轴范围一致，范围外的点会归入最近的边缘桶。函数不会修改输入点；数据量已经足够小时会直接返回原数组。"
           },
           {
             "heading": "框选范围",
@@ -21529,6 +21580,17 @@
             "zh": "自定义悬停提示框：通过 #tooltip 插槽读取当前数据并按自定义格式排版渲染。"
           },
           "code": "<script setup lang=\"ts\">\nimport type { TooltipSeriesValue } from '@astryx-vue/charts'\nimport { Chart, ChartAxis, ChartGrid, ChartSwatch, currency, line } from '@astryx-vue/charts'\nimport { monthly } from './data'\n\nconst money = currency('¥')\n\nconst series = [\n  line('revenue', { label: '收入' }),\n  line('profit', { label: '利润' }),\n]\n\n// 插槽给出的 rows 是 unknown[]，实际每一项就是 TooltipSeriesValue。\nfunction asRows(rows: unknown[]): TooltipSeriesValue[] {\n  return rows as TooltipSeriesValue[]\n}\n</script>\n\n<template>\n  <Chart :data=\"monthly\" x-key=\"month\" :series=\"series\" :height=\"260\" title=\"收入与利润\" tooltip>\n    <template #grid>\n      <ChartGrid />\n    </template>\n    <template #axes>\n      <ChartAxis position=\"bottom\" />\n      <ChartAxis position=\"left\" :tick-format=\"money\" />\n    </template>\n    <template #tooltip=\"{ xValue, rows }\">\n      <div style=\"display: grid; gap: 4px; padding: 8px 12px; font-size: 13px\">\n        <strong>{{ xValue }}</strong>\n        <div v-for=\"row in asRows(rows)\" :key=\"row.key\">\n          <ChartSwatch :color=\"row.color\" variant=\"line\" />\n          {{ row.label }}：{{ money(row.value) }}\n        </div>\n      </div>\n    </template>\n  </Chart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "M4 line reduction",
+            "zh": "M4 折线缩减"
+          },
+          "description": {
+            "en": "A line chart comparing 12,000 original points with the M4 reduction while preserving the central spike.",
+            "zh": "12,000 个原始数据点与 M4 缩减结果的折线对比，保留中间的尖峰。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Chart, ChartAxis, ChartGrid, line, m4Reduce } from '@astryx-vue/charts'\n\nconst rawData = Array.from({ length: 12_000 }, (_, x) => ({\n  x,\n  y: Math.sin(x / 50) * 30 + Math.sin(x / 400) * 12 + (x === 6_000 ? 100 : 0),\n}))\nconst reducedData = m4Reduce(rawData, 480)\nconst panels = [\n  {\n    id: 'raw',\n    label: 'Original',\n    data: rawData,\n    series: [line('y', { curve: 'linear', label: 'Original' })],\n  },\n  {\n    id: 'm4',\n    label: 'M4 reduced · 480 px',\n    data: reducedData,\n    series: [line('y', { curve: 'linear', label: 'M4 reduced' })],\n  },\n]\n</script>\n\n<template>\n  <div class=\"chart-m4-demo\">\n    <figure v-for=\"panel in panels\" :key=\"panel.id\">\n      <figcaption>\n        <strong>{{ panel.label }}</strong>\n        <span>{{ panel.data.length.toLocaleString('en-US') }} points</span>\n      </figcaption>\n      <Chart\n        :data=\"panel.data\"\n        x-key=\"x\"\n        :series=\"panel.series\"\n        :x-domain=\"[0, 11_999]\"\n        :y-domain=\"[-50, 110]\"\n        :height=\"180\"\n      >\n        <template #grid>\n          <ChartGrid />\n        </template>\n        <template #axes>\n          <ChartAxis position=\"bottom\" :tick-count=\"4\" />\n          <ChartAxis position=\"left\" :tick-count=\"4\" />\n        </template>\n      </Chart>\n    </figure>\n    <p>The spike at x = 6,000 remains visible after reduction.</p>\n  </div>\n</template>\n\n<style scoped>\n.chart-m4-demo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 100%; }\n.chart-m4-demo figure { min-width: 0; margin: 0; }\n.chart-m4-demo figcaption { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 12px; }\n.chart-m4-demo figcaption span, .chart-m4-demo p { color: var(--astryx-color-text-secondary); }\n.chart-m4-demo p { grid-column: 1 / -1; margin: 0; font-size: 12px; }\n@media (max-width: 680px) {\n  .chart-m4-demo { grid-template-columns: minmax(0, 1fr); }\n}\n</style>"
         },
         {
           "title": {
