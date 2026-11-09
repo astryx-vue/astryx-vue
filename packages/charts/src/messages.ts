@@ -15,8 +15,14 @@ export type ChartMessageKey
     | '@astryx.chart.labelWithSeries'
     | '@astryx.chart.dataTableCaption'
     | '@astryx.chartLegend.label'
+    | '@astryx.radialChart.radarLabel'
+    | '@astryx.radialChart.pieLabel'
+    | '@astryx.radialChart.series'
+    | '@astryx.radialChart.percentage'
+    | '@astryx.radialChart.value'
+    | '@astryx.radialChart.share'
 
-/** 和上游 `locales/en.json`、`locales/zh-CN.json` 里的文案一字不差。 */
+/** Chart 与 legend 沿用上游文案；radial 按同一语言习惯补充中英文。 */
 const FALLBACKS: Record<ChartMessageKey, Record<'en' | 'zh-CN', string>> = {
   '@astryx.chart.label': {
     'en': 'Chart',
@@ -33,6 +39,30 @@ const FALLBACKS: Record<ChartMessageKey, Record<'en' | 'zh-CN', string>> = {
   '@astryx.chartLegend.label': {
     'en': 'Chart legend',
     'zh-CN': '图表图例',
+  },
+  '@astryx.radialChart.radarLabel': {
+    'en': 'Radar chart of {axes}',
+    'zh-CN': '{axes}雷达图',
+  },
+  '@astryx.radialChart.pieLabel': {
+    'en': 'Pie chart of {valueKey}',
+    'zh-CN': '{valueKey}饼图',
+  },
+  '@astryx.radialChart.series': {
+    'en': 'Series',
+    'zh-CN': '系列',
+  },
+  '@astryx.radialChart.percentage': {
+    'en': 'Percentage',
+    'zh-CN': '百分比',
+  },
+  '@astryx.radialChart.value': {
+    'en': 'Value',
+    'zh-CN': '数值',
+  },
+  '@astryx.radialChart.share': {
+    'en': 'Share',
+    'zh-CN': '占比',
   },
 }
 

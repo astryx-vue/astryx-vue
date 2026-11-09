@@ -16,6 +16,8 @@ import {
   chartsErrorBar,
   chartsLine,
   chartsM4,
+  chartsRadialPie,
+  chartsRadialSpider,
   chartsRange,
   chartsSelect,
   chartsStackedArea,
@@ -411,6 +413,82 @@ const reduced = m4Reduce(rawData, chartWidth, xDomain)
 | `xDomain` | `[number, number]` | 可选的 x 轴范围；省略时使用数据的首尾 x 值。 |
 
 <DemoExample :demo="chartsM4" description="12,000 个原始数据点与 M4 缩减结果的折线对比，保留中间的尖峰。" locale="zh" title="M4 折线缩减" />
+
+## 径向图
+
+`RadialChart` 使用独立的径向坐标系。传入 `axes` 时绘制雷达图；传入 `valueKey` 而不传 `axes` 时绘制饼图或 donut。网格、面积、扇区和提示框共享同一份中心点、半径和角度计算。
+
+| RadialChart 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `data` | `Record<string, unknown>[]` | **必填** | 雷达图的系列行，或饼图的扇区行。 |
+| `width` / `height` | `number` | `0` / `400` | 浏览器自动测量容器宽度；SSR 必须显式传 `width`。 |
+| `axes` | `string[]` | `undefined` | 雷达图的轴字段；提供后进入雷达模式。 |
+| `valueKey` | `string` | `undefined` | 饼图扇区的数值字段。非有限数和负数按 0 处理。 |
+| `labelKey` | `string` | `undefined` | 饼图扇区的标签字段。 |
+| `innerRadius` | `number` | `0` | 内半径占外半径的比例；例如 `0.6` 创建 donut。 |
+| `padAngle` | `number` | `0.02` | 相邻扇区之间的弧度间隔。 |
+| `interactive` | `boolean` | `false` | 触摸拖动时阻止页面滚动；关闭时保留 `pan-y`。 |
+| `label` | `string` | 按模式生成 | SVG 的无障碍名称。 |
+
+### 雷达图
+
+`RadialGrid` 绘制同心多边形和轴线，`RadialArea` 绘制一个数据行，`RadialAxis` 绘制轴标签。`RadialArea` 的 `dataKey` 用于匹配行内任意字符串字段的值；没有匹配时使用第一行。
+
+```vue
+<RadialChart :data="data" :axes="['speed', 'handling']" :height="360">
+  <RadialGrid :rings="5" />
+  <RadialArea data-key="Model A" :color="colors[0]" dots />
+  <RadialAxis />
+  <RadialTooltip />
+</RadialChart>
+```
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `RadialGrid.rings` | `number` | `5` | 同心网格环数。 |
+| `RadialAxis.labelOffset` | `number` | `16` | 标签超出外环的距离。 |
+| `RadialArea.dataKey` | `string` | **必填** | 要绘制的数据行标识。 |
+| `RadialArea.color` | `string` | **必填** | 填充和描边颜色。 |
+| `RadialArea.opacity` | `number` | `0.2` | 填充透明度。 |
+| `RadialArea.strokeWidth` | `number` | `2` | 多边形描边宽度。 |
+| `RadialArea.dots` / `dotRadius` | `boolean` / `number` | `false` / `4` | 是否显示顶点及顶点半径。 |
+
+<DemoExample :demo="chartsRadialSpider" description="五轴双系列雷达图，包含网格、顶点、标签和悬停提示。" locale="zh" title="雷达图" />
+
+### 饼图和 donut
+
+`RadialSlice` 根据 `valueKey` 的占比绘制扇区。`innerRadius` 大于 0 时形成内孔；`cornerRadius` 使用真实圆弧绘制圆角。百分比标签可通过 `labels` 和 `labelThreshold` 控制。
+
+```vue
+<RadialChart :data="data" value-key="revenue" label-key="region" :inner-radius="0.6">
+  <RadialSlice :colors="colors" :corner-radius="4" />
+  <RadialTooltip />
+</RadialChart>
+```
+
+| RadialSlice 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `colors` | `string[]` | **必填** | 按数据顺序循环使用的扇区颜色。 |
+| `cornerRadius` | `number` | `0` | 扇区内外边缘的圆角半径。 |
+| `labels` | `boolean` | `true` | 是否显示百分比标签。 |
+| `labelThreshold` | `number` | `5` | 显示标签所需的最低百分比。 |
+
+<DemoExample :demo="chartsRadialPie" description="带内孔、真实圆角、百分比标签和悬停高亮的区域收入 donut。" locale="zh" title="Donut 图" />
+
+### 径向提示框
+
+`RadialTooltip` 在饼图中按半径和角度命中扇区，在雷达图中显示最近的轴及该轴的最大系列值。鼠标悬停、触摸点按和拖动均可使用。`highlight` 默认绘制并外移当前扇区的轮廓，`highlightOffset` 控制外移距离。
+
+自定义内容使用默认插槽，插槽参数为 `label`、`value`、`percentage` 和 `index`：
+
+```vue
+<RadialTooltip>
+  <template #default="{ label, value, percentage }">
+    <strong>{{ label }}</strong>
+    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%
+  </template>
+</RadialTooltip>
+```
 
 ## 框选范围
 

@@ -8,6 +8,12 @@ import { ChartLegend } from './ChartLegend/index.js'
 import { ChartTooltip } from './ChartTooltip/index.js'
 import { bar } from './marks/bar.js'
 import { line } from './marks/line.js'
+import RadialArea from './Radial/RadialArea.vue'
+import RadialAxis from './Radial/RadialAxis.vue'
+import RadialChart from './Radial/RadialChart.vue'
+import RadialGrid from './Radial/RadialGrid.vue'
+import RadialSlice from './Radial/RadialSlice.vue'
+import RadialTooltip from './Radial/RadialTooltip.vue'
 
 /**
  * 服务端渲染。没有 DOM、量不到容器宽度，宽度只能由 `width` prop 给；
@@ -59,6 +65,39 @@ describe('chart server rendering', () => {
     const html = await renderToString(app)
     expect(html).toContain('<svg')
     expect(html).not.toContain('role="tooltip"')
+  })
+
+  it('renders pie and spider SVG without browser-only tooltip cards', async () => {
+    const pie = createSSRApp({
+      render: () => h(RadialChart, {
+        data: [{ region: 'NA', revenue: 60 }, { region: 'EU', revenue: 40 }],
+        valueKey: 'revenue',
+        labelKey: 'region',
+        width: 600,
+      }, {
+        default: () => [h(RadialSlice, { colors: ['#111111', '#222222'] }), h(RadialTooltip)],
+      }),
+    })
+    const pieHtml = await renderToString(pie)
+    expect(pieHtml).toContain('role="img"')
+    expect(pieHtml).toContain('<path')
+    expect(pieHtml).toContain('60.0%')
+    expect(pieHtml).not.toContain('role="tooltip"')
+
+    const spider = createSSRApp({
+      render: () => h(RadialChart, {
+        data: [{ model: 'A', speed: 10, handling: 5 }],
+        axes: ['speed', 'handling'],
+        width: 600,
+        height: 400,
+      }, {
+        default: () => [h(RadialGrid), h(RadialArea, { dataKey: 'A', color: '#111111' }), h(RadialAxis)],
+      }),
+    })
+    const spiderHtml = await renderToString(spider)
+    expect(spiderHtml).toContain('<polygon')
+    expect(spiderHtml).toContain('<line')
+    expect(spiderHtml).toContain('speed')
   })
 
   it('renders the legend list on its own', async () => {

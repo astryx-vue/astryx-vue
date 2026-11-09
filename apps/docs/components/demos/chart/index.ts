@@ -17,6 +17,10 @@ import lineDemo from './line.vue'
 import lineSource from './line.vue?raw&highlighted'
 import m4Demo from './m4.vue'
 import m4Source from './m4.vue?raw&highlighted'
+import radialPieDemo from './radial-pie.vue'
+import radialPieSource from './radial-pie.vue?raw&highlighted'
+import radialSpiderDemo from './radial-spider.vue'
+import radialSpiderSource from './radial-spider.vue?raw&highlighted'
 import rangeDemo from './range.vue'
 import rangeSource from './range.vue?raw&highlighted'
 import selectDemo from './select.vue'
@@ -30,6 +34,8 @@ const chartClass = 'charts-demo'
 
 export const chartsLine = defineDemo(lineDemo, lineSource, { className: chartClass })
 export const chartsM4 = defineDemo(m4Demo, m4Source, { className: chartClass })
+export const chartsRadialPie = defineDemo(radialPieDemo, radialPieSource, { className: chartClass })
+export const chartsRadialSpider = defineDemo(radialSpiderDemo, radialSpiderSource, { className: chartClass })
 export const chartsRange = defineDemo(rangeDemo, rangeSource, { className: chartClass })
 export const chartsBar = defineDemo(barDemo, barSource, { className: chartClass })
 export const chartsBrush = defineDemo(brushDemo, brushSource, { className: chartClass })
