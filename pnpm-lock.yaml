@@ -209,6 +209,9 @@ catalogs:
     '@monaco-editor/loader':
       specifier: 1.7.0
       version: 1.7.0
+    '@shikijs/langs':
+      specifier: 4.5.0
+      version: 4.5.0
     monaco-editor:
       specifier: 0.55.1
       version: 0.55.1
@@ -540,6 +543,9 @@ importers:
       '@iconify-json/lucide':
         specifier: catalog:docs
         version: 1.2.147
+      '@shikijs/langs':
+        specifier: catalog:docs
+        version: 4.5.0
       '@types/node':
         specifier: catalog:language
         version: 26.6.4

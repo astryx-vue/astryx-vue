@@ -19,7 +19,7 @@ export default defineConfig(async env => mergeConfig(await viteConfig(env), defi
   },
   test: {
     environment: 'happy-dom',
-    include: ['packages/**/*.test.ts', 'tests/**/*.test.ts'],
+    include: ['packages/**/*.test.ts', 'apps/docs/**/*.test.ts', 'tests/**/*.test.ts'],
     // Vitest stubs every CSS import, including `?raw`. The playground reads
     // Neutral tokens from that source, so keep those files intact.
     css: {

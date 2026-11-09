@@ -8,6 +8,7 @@ import { demoSourcePlugin } from './demoSourcePlugin.ts'
 import { llmsAlternateLinks, writeLlmsArtifacts } from './llms.ts'
 import { renderForSearch } from './searchRender.ts'
 import { guideSidebar, labSidebar, themeSidebar } from './sidebar.ts'
+import { vueLanguage } from './vueLanguage.ts'
 
 /**
  * The icon plugin scans every module for icon names. core's `semantic.ts` lists
@@ -49,6 +50,7 @@ export default defineConfig({
   transformHead: llmsAlternateLinks,
   buildEnd: writeLlmsArtifacts,
   appearance: 'dark',
+  markdown: { languages: vueLanguage },
   locales: {
     root: {
       label: '简体中文',
