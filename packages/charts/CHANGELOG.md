@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.7.1
+
+### Patch Changes
+
+- [#466](https://github.com/astryx-vue/astryx-vue/pull/466) [`cb8377a`](https://github.com/astryx-vue/astryx-vue/commit/cb8377ae0e3bacca93319e0ac28cd9b071b99ceb) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - ChartZoom 工具栏改用 core Icon 承载标准放大、缩小和刷新图形，修正 reset 图标辨识度并统一尺寸与居中。
+
 ## 0.7.0
 
 ### Minor Changes
