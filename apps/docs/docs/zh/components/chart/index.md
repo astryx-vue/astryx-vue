@@ -16,6 +16,7 @@ import {
   chartsErrorBar,
   chartsLine,
   chartsM4,
+  chartsRange,
   chartsSelect,
   chartsStackedArea,
   chartsZoom,
@@ -481,6 +482,34 @@ Zoom 通过事件更新受控 domain，不会直接修改 `<Chart>` 的内部状
 | `toolbar` | `false \| 'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'top-right'` | 工具栏位置或隐藏。 |
 
 <DemoExample :demo="chartsZoom" description="使用滚轮、双指、拖动和工具栏调整图表范围。" locale="zh" title="缩放和平移" />
+
+## 流式数据范围
+
+`useChartRange` 管理持续追加数据时的受控 x/y 范围。`push(x, y)` 每接收一个点就同步更新范围；在 `<script setup>` 中通过 `.value` 读取，在模板中会自动解包。
+
+```ts
+const { xDomain, yDomain, push, reset } = useChartRange({
+  xWindow: 300,
+  yPadding: 0.1,
+})
+
+push(nextX, value)
+```
+
+```vue
+<Chart :data="data" x-key="x" :series="series" :x-domain="xDomain" :y-domain="yDomain" />
+```
+
+x 轴在预热阶段从 `[0, max(x, 1)]` 扩展；达到 `xWindow` 后变为 `[x - xWindow, x]`。y 轴默认跟踪已经观察到的历史最小值和最大值，旧点离开 x 窗口时不会重新缩小 y 范围。`reset()` 会清空这些记录并恢复初始范围。
+
+| 选项 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `xWindow` | `number` | **必填** | x 轴滑动窗口宽度。 |
+| `yDomain` | `[number, number]` | `undefined` | 固定 y 轴范围；提供后停用自动跟踪。 |
+| `yPadding` | `number` | `0.1` | 自动 y 轴范围在上下两侧保留的比例。 |
+| `yCenter` | `boolean` | `false` | 让自动 y 轴以 0 为中心对称展开。 |
+
+<DemoExample :demo="chartsRange" description="启动流式追加、暂停和重置，观察受控 x/y 范围的变化。" locale="zh" title="流式数据范围" />
 
 ## 无障碍
 

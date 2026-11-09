@@ -16,6 +16,7 @@ import {
   chartsErrorBar,
   chartsLine,
   chartsM4,
+  chartsRange,
   chartsSelect,
   chartsStackedArea,
   chartsZoom,
@@ -481,6 +482,34 @@ Reset restores the initial domains captured when ChartZoom mounts. A categorical
 | `toolbar` | `false \| 'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'top-right'` | Toolbar position or hidden. |
 
 <DemoExample :demo="chartsZoom" description="Use the wheel, pinch, drag, and toolbar to adjust the chart range." locale="en" title="Zoom and pan" />
+
+## Streaming data ranges
+
+`useChartRange` manages controlled x/y domains for continuously appended data. Each `push(x, y)` synchronously updates the ranges. Read them with `.value` inside `<script setup>`; template usage unwraps them automatically.
+
+```ts
+const { xDomain, yDomain, push, reset } = useChartRange({
+  xWindow: 300,
+  yPadding: 0.1,
+})
+
+push(nextX, value)
+```
+
+```vue
+<Chart :data="data" x-key="x" :series="series" :x-domain="xDomain" :y-domain="yDomain" />
+```
+
+During warmup, the x domain expands as `[0, max(x, 1)]`. Once `xWindow` is reached, it slides as `[x - xWindow, x]`. By default, y tracks the historical minimum and maximum values observed by the composable. It does not shrink when old points leave the x window. `reset()` clears that history and restores the initial ranges.
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `xWindow` | `number` | **Required** | Width of the sliding x window. |
+| `yDomain` | `[number, number]` | `undefined` | Fixed y domain. Providing it disables automatic tracking. |
+| `yPadding` | `number` | `0.1` | Padding ratio added above and below the automatic y range. |
+| `yCenter` | `boolean` | `false` | Expands the automatic y domain symmetrically around zero. |
+
+<DemoExample :demo="chartsRange" description="Start and pause streaming or reset the chart to inspect controlled x/y domain changes." locale="en" title="Streaming data ranges" />
 
 ## Accessibility
 
