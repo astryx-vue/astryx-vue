@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.8
+
+### Patch Changes
+
+- [#462](https://github.com/astryx-vue/astryx-vue/pull/462) [`ed329c6`](https://github.com/astryx-vue/astryx-vue/commit/ed329c646331bed771edc22b858509f03c2452be) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 更新主站内置资料，加入 `m4Reduce` 大数据折线缩减说明和示例。
+
 ## 0.4.7
 
 ### Patch Changes

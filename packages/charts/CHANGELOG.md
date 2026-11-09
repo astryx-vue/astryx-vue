@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.5.0
+
+### Minor Changes
+
+- [#462](https://github.com/astryx-vue/astryx-vue/pull/462) [`ed329c6`](https://github.com/astryx-vue/astryx-vue/commit/ed329c646331bed771edc22b858509f03c2452be) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `m4Reduce` 大数据折线缩减工具，按像素桶保留首点、尾点、最低点和最高点，并支持自定义 x 轴范围。
+
 ## 0.4.0
 
 ### Minor Changes
