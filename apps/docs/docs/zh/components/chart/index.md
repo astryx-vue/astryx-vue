@@ -15,6 +15,7 @@ import {
   chartsDot,
   chartsErrorBar,
   chartsLine,
+  chartsM4,
   chartsSelect,
   chartsStackedArea,
   chartsZoom,
@@ -389,6 +390,26 @@ declare function candlestick(options: CandlestickOptions): SeriesDef
 - `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。
 - `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。
 - `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。
+
+## 大数据折线缩减
+
+`m4Reduce` 按 x 轴像素宽度分组，每组保留首点、尾点、最低点和最高点。它用于减少大数据折线的渲染量，并保留当前分辨率下可见的峰值和低谷。
+
+```ts
+import { m4Reduce } from '@astryx-vue/charts'
+
+const reduced = m4Reduce(rawData, chartWidth, xDomain)
+```
+
+输入数据必须按 `x` 升序排列。`width` 是图表的正数像素宽度；输出最多包含 `4 × ceil(width)` 个点。传入 `xDomain` 时，它应与图表的 x 轴范围一致，范围外的点会归入最近的边缘桶。函数不会修改输入点；数据量已经足够小时会直接返回原数组。
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `data` | `M4Point[]` | 按 x 升序排列的 `{ x, y }` 数据点。 |
+| `width` | `number` | 用于分桶的正数像素宽度。 |
+| `xDomain` | `[number, number]` | 可选的 x 轴范围；省略时使用数据的首尾 x 值。 |
+
+<DemoExample :demo="chartsM4" description="12,000 个原始数据点与 M4 缩减结果的折线对比，保留中间的尖峰。" locale="zh" title="M4 折线缩减" />
 
 ## 框选范围
 

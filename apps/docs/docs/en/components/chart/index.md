@@ -15,6 +15,7 @@ import {
   chartsDot,
   chartsErrorBar,
   chartsLine,
+  chartsM4,
   chartsSelect,
   chartsStackedArea,
   chartsZoom,
@@ -389,6 +390,26 @@ The library includes formatting helpers for common chart values. Formatting func
 - `shortDate(value, locale)`: Formats dates as a short month and day. For example, "Jan 5".
 - `monthYear(value, locale)`: Formats dates as month and year. For example, "Jan 2024".
 - `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as "A, B, and C".
+
+## Reduce large line datasets
+
+`m4Reduce` groups points by horizontal pixel width and keeps the first, last, minimum, and maximum point in each bucket. It reduces line-rendering work while preserving peaks and valleys that remain visible at the target resolution.
+
+```ts
+import { m4Reduce } from '@astryx-vue/charts'
+
+const reduced = m4Reduce(rawData, chartWidth, xDomain)
+```
+
+Input data must be sorted by `x` in ascending order. `width` is the positive chart width in pixels, and the output contains at most `4 × ceil(width)` points. When provided, `xDomain` should match the chart's x-axis range. Points outside that range join the nearest edge bucket. The function does not mutate input points and returns the original array when the dataset is already small enough.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `data` | `M4Point[]` | `{ x, y }` points sorted by x in ascending order. |
+| `width` | `number` | Positive pixel width used to create buckets. |
+| `xDomain` | `[number, number]` | Optional x-axis range. Defaults to the first and last x values in the data. |
+
+<DemoExample :demo="chartsM4" description="A line chart comparing 12,000 original points with the M4 reduction while preserving the central spike." locale="en" title="M4 line reduction" />
 
 ## Brush selection
 
