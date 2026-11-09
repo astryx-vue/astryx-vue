@@ -412,7 +412,7 @@ const reduced = m4Reduce(rawData, chartWidth, xDomain)
 | `width` | `number` | 用于分桶的正数像素宽度。 |
 | `xDomain` | `[number, number]` | 可选的 x 轴范围；省略时使用数据的首尾 x 值。 |
 
-<DemoExample :demo="chartsM4" description="12,000 个原始数据点与 M4 缩减结果的折线对比，保留中间的尖峰。" locale="zh" title="M4 折线缩减" />
+<DemoExample :demo="chartsM4" description="12,000 个原始数据点与 M4 缩减结果的折线对比，保留相同的主要峰值和低谷。" locale="zh" title="M4 折线缩减" />
 
 ## 径向图
 
