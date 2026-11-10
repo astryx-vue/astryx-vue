@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.15
+
+### Patch Changes
+
+- [#471](https://github.com/astryx-vue/astryx-vue/pull/471) [`9a83bc0`](https://github.com/astryx-vue/astryx-vue/commit/9a83bc0b6d239985f52ad4737f76eb10d634307d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 CodeBlock 被指定高度时滚动区域不跟着撑满的问题：横向、纵向滚动条现在贴着容器底边，而不是停在内容最后一行下面。
+
 ## 0.7.14
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.14
+
+### Patch Changes
+
+- [#471](https://github.com/astryx-vue/astryx-vue/pull/471) [`9a83bc0`](https://github.com/astryx-vue/astryx-vue/commit/9a83bc0b6d239985f52ad4737f76eb10d634307d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 同步演练场 IDE 示例的最新源码到 CLI 目录。
+
 ## 0.4.13
 
 ### Patch Changes
