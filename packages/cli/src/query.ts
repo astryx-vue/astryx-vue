@@ -3,6 +3,7 @@ import type { Suggestion } from './error.ts'
 import type { SearchType } from './spec.ts'
 import { catalog, componentNames, examplesFor, text } from './catalog.ts'
 import { CliError } from './error.ts'
+import { compoundNameScore } from './query-words.ts'
 import { BINARY, DOCS_PACKAGE } from './spec.ts'
 
 export interface SearchHit {
@@ -211,10 +212,11 @@ export function suggestByNames<T>(query: string, candidates: readonly T[], names
       const values = [...new Set(namesOf(candidate).map(normalize))].filter(Boolean)
       const distance = Math.min(...values.map(value => levenshtein(key, value)))
       const included = values.some(value => value.includes(key) || key.includes(value))
-      return { candidate, distance, included }
+      const compound = compoundNameScore(query, namesOf(candidate)) ?? 0
+      return { candidate, distance, included, compound }
     })
     .filter(entry => entry.included || entry.distance <= nameDistanceLimit(key.length))
-    .sort((a, b) => a.distance - b.distance || labelOf(a.candidate).localeCompare(labelOf(b.candidate)))
+    .sort((a, b) => b.compound - a.compound || a.distance - b.distance || labelOf(a.candidate).localeCompare(labelOf(b.candidate)))
     .slice(0, 5)
     .map(entry => ({ name: labelOf(entry.candidate), reason: 'similar name' }))
 }
@@ -290,23 +292,30 @@ function scoreTemplate(query: string, template: TemplateRecord, locale: 'en' | '
 
 function scoreText(query: string, lookupNames: string[], prose: string[]): { score: number, reason: string } | null {
   const key = normalize(query)
+  const normalizedNames = lookupNames.map(normalize)
   const tokens = key.split(/[^a-z0-9\u4E00-\u9FFF]+/i).filter(token => token.length > 1 || /[\u4E00-\u9FFF]/.test(token))
   const haystack = prose.join('\n').toLowerCase()
-  if (lookupNames.includes(key))
+  if (normalizedNames.includes(key))
     return { score: 100, reason: 'name' }
-  if (lookupNames.some(name => name.startsWith(key) || (key.startsWith(name) && name.length >= 4)))
+  const compound = compoundNameScore(query, lookupNames)
+  if (compound !== null)
+    return { score: compound, reason: 'name' }
+  if (normalizedNames.some(name => name.startsWith(key) || (key.startsWith(name) && name.length >= 4)))
     return { score: 80, reason: 'prefix' }
   // A query that sits inside a name, such as `clipboard` in `useClipboard`, still names the entry.
   // This outranks prose matches, which are only on the page text.
-  if (key.length >= 3 && lookupNames.some(name => name.includes(key)))
+  if (key.length >= 3 && normalizedNames.some(name => name.includes(key)))
     return { score: 75, reason: 'name' }
-  const distance = Math.min(...lookupNames.map(name => levenshtein(key, name)))
+  const distance = Math.min(...normalizedNames.map(name => levenshtein(key, name)))
   if (key.length >= 4 && distance <= nameDistanceLimit(key.length))
     return { score: 70, reason: 'similar name' }
   if (tokens.length > 0 && tokens.every(token => haystack.includes(token)))
     return { score: 50 + tokens.length, reason: 'text' }
   const matched = tokens.filter(token => haystack.includes(token)).length
-  if (tokens.length > 0 && matched / tokens.length >= 0.5)
+  const joinedIdentifier = /^[a-z0-9]+(?:_[a-z0-9]+)+$/i.test(query.trim())
+  // A single underscored identifier is one name, not a bag of unrelated prose words.
+  // Other multi-word queries need a majority, not merely half of their words.
+  if (!joinedIdentifier && tokens.length > 0 && matched / tokens.length > 0.5)
     return { score: 20 + matched, reason: 'text' }
   return null
 }
