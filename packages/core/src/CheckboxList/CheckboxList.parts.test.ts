@@ -22,7 +22,7 @@ describe('checkboxList 样式分层', () => {
         controlClass: 'ctl-a',
         controlStyle: { marginBottom: '9px' },
       },
-      attrs: { 'class': 'root-a', 'data-testid': 'member', 'aria-details': 'details-id' },
+      attrs: { 'class': 'root-a', 'data-testid': 'member', 'aria-details': 'details-id', 'aria-labelledby': 'external-label' },
       slots: { default: item },
     })
     const field = wrapper.get('.astryx-field')
@@ -36,7 +36,7 @@ describe('checkboxList 样式分层', () => {
     expect((group.element as HTMLElement).style.marginBottom).toBe('9px')
     expect(group.attributes('data-testid')).toBe('member')
     expect(group.attributes('aria-details')).toBe('details-id')
-    expect(group.attributes('aria-labelledby')).toBeTruthy()
+    expect(group.attributes('aria-labelledby')).toContain('external-label')
     expect(wrapper.get('input').classes()).not.toContain('ctl-a')
     expect(warn).not.toHaveBeenCalled()
   })

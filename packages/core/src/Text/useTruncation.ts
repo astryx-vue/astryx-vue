@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { onBeforeUnmount, ref, watch } from 'vue'
+import { observeContent } from '../utils/sharedMutationObserver.js'
 
 export type TruncateTooltip = boolean | 'above' | 'below' | 'start' | 'end'
 
@@ -26,6 +27,7 @@ export function useTruncation(maxLines: Ref<number>): Truncation {
   const isTruncated = ref(false)
   const fullText = ref('')
   let observer: ResizeObserver | undefined
+  let unobserveContent: (() => void) | undefined
   let node: HTMLElement | null = null
 
   function measure(): void {
@@ -55,16 +57,26 @@ export function useTruncation(maxLines: Ref<number>): Truncation {
   function bind(value: Element | null): void {
     observer?.disconnect()
     observer = undefined
+    unobserveContent?.()
+    unobserveContent = undefined
     node = value instanceof HTMLElement ? value : null
-    if (node && typeof ResizeObserver !== 'undefined') {
-      observer = new ResizeObserver(() => measure())
-      observer.observe(node)
+    if (node && maxLines.value > 0) {
+      if (typeof ResizeObserver !== 'undefined') {
+        observer = new ResizeObserver(() => measure())
+        observer.observe(node)
+      }
+      // Fixed-width text can change without a resize; both the tooltip text
+      // and the overflow state still need to follow that new content.
+      unobserveContent = observeContent(node, measure)
     }
     measure()
   }
 
-  watch(maxLines, () => measure())
-  onBeforeUnmount(() => observer?.disconnect())
+  watch(maxLines, () => bind(node))
+  onBeforeUnmount(() => {
+    observer?.disconnect()
+    unobserveContent?.()
+  })
 
   return { bind, isTruncated, fullText }
 }

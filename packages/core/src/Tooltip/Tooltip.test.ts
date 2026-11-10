@@ -38,6 +38,22 @@ describe('tooltip', () => {
     expect(trigger.getAttribute('aria-describedby')).toBe(bubble.id)
   })
 
+  it('binds hover and aria-describedby to the actual root in anchors-on-self mode', async () => {
+    const wrapper = mount(Tooltip, {
+      attachTo: document.body,
+      props: { anchorsOnSelf: true, content: 'Current full text' },
+      slots: { default: '<p id="self-anchor">Truncated text</p>' },
+    })
+    const trigger = wrapper.get('#self-anchor')
+    const bubble = document.querySelector('[role="tooltip"]') as HTMLElement
+    expect(trigger.attributes('aria-describedby')).toBe(bubble.id)
+
+    await trigger.trigger('mouseenter')
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    expect(isShown(bubble)).toBe(true)
+  })
+
   it('shows after the delay on pointer hover and reports openChange', async () => {
     const { wrapper, trigger, bubble } = renderTooltip()
 
