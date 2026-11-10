@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.8.0
+
+### Minor Changes
+
+- [#468](https://github.com/astryx-vue/astryx-vue/pull/468) [`7dad994`](https://github.com/astryx-vue/astryx-vue/commit/7dad994c3da3bc7eb72dfd9c5b9f290a9e97ead2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 SankeyChart、SankeyGrid、SankeyLink、SankeyNode、SankeyLabel 和 useSankey，支持自动/显式分列、渐变流向带、响应式滚动、标签、SSR 和无障碍数据表。
+
 ## 0.7.1
 
 ### Patch Changes

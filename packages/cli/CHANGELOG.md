@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.12
+
+### Patch Changes
+
+- [#468](https://github.com/astryx-vue/astryx-vue/pull/468) [`7dad994`](https://github.com/astryx-vue/astryx-vue/commit/7dad994c3da3bc7eb72dfd9c5b9f290a9e97ead2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 同步主站新增的 Sankey 图表 API 和示例资料。
+
 ## 0.4.11
 
 ### Patch Changes
