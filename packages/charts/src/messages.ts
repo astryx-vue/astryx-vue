@@ -25,6 +25,7 @@ export type ChartMessageKey
     | '@astryx.sankeyChart.from'
     | '@astryx.sankeyChart.to'
     | '@astryx.sankeyChart.value'
+    | '@astryx.threeDChart.label'
 
 /** Chart 与 legend 沿用上游文案；radial 按同一语言习惯补充中英文。 */
 const FALLBACKS: Record<ChartMessageKey, Record<'en' | 'zh-CN', string>> = {
@@ -83,6 +84,10 @@ const FALLBACKS: Record<ChartMessageKey, Record<'en' | 'zh-CN', string>> = {
   '@astryx.sankeyChart.value': {
     'en': 'Value',
     'zh-CN': '数值',
+  },
+  '@astryx.threeDChart.label': {
+    'en': '3D chart of {yKey} by {xKey} and {zKey}',
+    'zh-CN': '按 {xKey} 和 {zKey} 显示 {yKey} 的三维图表',
   },
 }
 

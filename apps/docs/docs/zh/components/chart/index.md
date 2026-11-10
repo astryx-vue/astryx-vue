@@ -22,6 +22,9 @@ import {
   chartsSankey,
   chartsSelect,
   chartsStackedArea,
+  chartsThreeDBar,
+  chartsThreeDScatter,
+  chartsThreeDSurface,
   chartsZoom,
 } from '../../../../components/demos/chart'
 </script>
@@ -537,6 +540,55 @@ const reduced = m4Reduce(rawData, chartWidth, xDomain)
 不超过 100 条连线时，组件会输出视觉隐藏的来源、去向和数值表格，供读屏软件读取。
 
 <DemoExample :demo="chartsSankey" description="三列访客流向，展示渐变流向带、节点标签和列标题；窄屏可横向滚动。" locale="zh" title="桑基图" />
+
+## 三维 SVG 图表
+
+`ThreeDChart` 把 x/y/z 数据归一化后投影到二维 SVG，并按深度排序绘制。它不需要 WebGL。`interactive` 开启后，可拖动旋转相机；聚焦图表后，方向键每次旋转 10°，俯仰角限制在 -89° 到 89°。
+
+```vue
+<ThreeDChart :data="data" x-key="x" y-key="y" z-key="z" interactive>
+  <ThreeDGrid />
+  <ThreeDAxis />
+  <ThreeDScatter color="var(--astryx-color-data-1)" />
+</ThreeDChart>
+```
+
+| ThreeDChart 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `data` | `Record<string, unknown>[]` | **必填** | 三维数据行；图元跳过含非有限数值的行。 |
+| `xKey` / `yKey` / `zKey` | `string` | **必填** | 三个维度的字段名，y 为高度。 |
+| `xDomain` / `yDomain` / `zDomain` | `[number, number]` | 数据范围 | 可选的显式数值范围。 |
+| `width` / `height` | `number` | `0` / `400` | 浏览器自动测量容器宽度；SSR 必须显式传 `width`。 |
+| `azimuth` / `elevation` | `number` | `35` / `25` | 初始方位角和俯仰角，单位为度。 |
+| `interactive` | `boolean` | `false` | 启用指针拖动和方向键旋转，并保留触摸拖动所需的指针捕获。 |
+| `autoRotate` | `number` | `0` | 每帧方位角增量；悬停或聚焦时暂停，减少动态效果偏好下停用。 |
+| `label` | `string` | 按字段生成 | SVG 的无障碍名称。 |
+
+自动旋转约每 50ms 更新一次，并按实际经过时间计算角度。开启交互或自动旋转时，SVG 可键盘聚焦；仅开启自动旋转时，方向键不会改变相机。
+
+### 三维图元
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `ThreeDScatter.color` | `string` | **必填** | 散点颜色；半径和不透明度随深度变化。 |
+| `ThreeDScatter.radius` / `opacity` | `number` | `4` / `0.85` | 散点基础半径和不透明度。 |
+| `ThreeDBar.color` | `string` | **必填** | 柱体三个面的颜色和描边。 |
+| `ThreeDBar.barWidth` / `barDepth` | `number` | `0.06` / `0.06` | 归一化坐标中的柱体宽度和深度，不是像素值。 |
+| `ThreeDGrid.divisions` | `number` | `5` | 地面 x/z 两个方向的分段数。 |
+| `ThreeDAxis.labels` | `boolean` | `true` | 是否显示字段名和 domain 标签。 |
+| `ThreeDSurface.colorRange` | `string[]` | **必填** | 从低到高的高度颜色序列。 |
+| `ThreeDSurface.opacity` | `number` | `0.8` | 曲面填充不透明度。 |
+| `ThreeDSurface.wireframe` | `boolean` | `false` | 只绘制网格线，不填充面。 |
+
+`ThreeDSurface` 的数据应形成完整 x/z 网格；缺格或非法点对应的面会跳过。以下示例都可拖动或用方向键旋转。
+
+<DemoExample :demo="chartsThreeDScatter" description="三组三维散点、地面网格和坐标轴，支持拖动与方向键旋转。" locale="zh" title="三维散点" />
+
+<DemoExample :demo="chartsThreeDBar" description="具有顶面、正面和侧面明暗层次的三维柱体。" locale="zh" title="三维柱图" />
+
+<DemoExample :demo="chartsThreeDSurface" description="按高度着色的连续波浪曲面，缺格保护可阻止非法几何。" locale="zh" title="三维曲面" />
+
+`ThreeDScatterGL` 和其他 GL/WebGL 图元不在当前包中。
 
 ## 框选范围
 

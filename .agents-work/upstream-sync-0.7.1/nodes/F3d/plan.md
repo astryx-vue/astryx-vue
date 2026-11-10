@@ -12,18 +12,15 @@ Chart 组合、Brush、Zoom、Select、m4Reduce、useChartRange、Radial、Sanke
 - m4Reduce：按像素桶保留首点、尾点、最低点和最高点，自定义 xDomain 和边缘桶；PR #462。
 - useChartRange：Vue 受控 x/y domain、同步 push、滑动窗口、固定/自动 y 范围和重置；PR #463。
 - Radial：统一径向上下文，雷达/饼图/donut、圆角扇区、真实极坐标提示层、窄屏标签和触摸；PR #464。
+- Sankey：自动/显式分列、流向带、节点、标签、网格、响应式滚动、SSR 与无障碍表格；PR #468。
 
-## 当前阶段：Sankey
+## 当前阶段：ThreeD SVG
 
-- SankeyChart 自动或显式分列，统一计算节点、流向带和列坐标；支持响应式宽度、SSR width 和最小列宽滚动。
-- SankeyGrid、SankeyLink、SankeyNode、SankeyLabel 覆盖网格、渐变/源色/目标色/平色连线、节点光晕、旋转/旁置标签和百分比。
-- 多图渐变 ID 隔离，非法数值与循环连接有有限几何；小图提供视觉隐藏的来源/去向/数值表格。
-- 浏览器修正首末列标题裁切，并排除文档全局表格样式对视觉隐藏数据表的滚动影响。
-- 主站中英文 demo 和 CLI 资料同步；Sankey 完成不会关闭 #196。
-
-## 后续阶段
-
-ThreeD SVG 继续在本 issue 内单独验收；不含 GL/WebGL。
+- ThreeDChart 统一相机和投影，支持响应式/SSR 尺寸、Pointer Events、方向键、自动旋转暂停与减少动态效果。
+- ThreeDScatter、ThreeDBar、ThreeDGrid、ThreeDAxis、ThreeDSurface 覆盖散点、柱体、地面网格、坐标轴和 x/z 曲面。
+- 非法数据、缺格和退化 domain 有明确保护；坐标轴使用紧凑 domain，并按真实文字宽度防止窄屏裁切。
+- 不包含 ThreeDScatterGL 或其他 GL/WebGL 图元；主站三组 demo、中文/英文文档与 CLI 资料同步。
+- 本阶段验收、合并和发布后，#196 的计划范围完整，可关闭路线卡。
 
 ## 验证
 
