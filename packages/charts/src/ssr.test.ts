@@ -14,6 +14,11 @@ import RadialChart from './Radial/RadialChart.vue'
 import RadialGrid from './Radial/RadialGrid.vue'
 import RadialSlice from './Radial/RadialSlice.vue'
 import RadialTooltip from './Radial/RadialTooltip.vue'
+import SankeyChart from './Sankey/SankeyChart.vue'
+import SankeyGrid from './Sankey/SankeyGrid.vue'
+import SankeyLabel from './Sankey/SankeyLabel.vue'
+import SankeyLink from './Sankey/SankeyLink.vue'
+import SankeyNode from './Sankey/SankeyNode.vue'
 
 /**
  * 服务端渲染。没有 DOM、量不到容器宽度，宽度只能由 `width` prop 给；
@@ -98,6 +103,29 @@ describe('chart server rendering', () => {
     expect(spiderHtml).toContain('<polygon')
     expect(spiderHtml).toContain('<line')
     expect(spiderHtml).toContain('speed')
+  })
+
+  it('renders Sankey SVG and its data table without browser APIs', async () => {
+    const app = createSSRApp({
+      render: () => h(SankeyChart, {
+        nodes: [
+          { id: 'a', label: 'Search', value: 10 },
+          { id: 'b', label: 'Signup', value: 10 },
+        ],
+        links: [{ source: 'a', target: 'b', value: 6 }],
+        width: 600,
+      }, {
+        default: () => [h(SankeyGrid), h(SankeyLink), h(SankeyNode), h(SankeyLabel)],
+      }),
+    })
+    const html = await renderToString(app)
+    expect(html).toContain('role="img"')
+    expect(html).toContain('Sankey chart')
+    expect(html).toContain('<linearGradient')
+    expect(html).toContain('<path')
+    expect(html).toContain('Search = 10')
+    expect(html).toContain('>From<')
+    expect(html).toContain('>Signup<')
   })
 
   it('renders the legend list on its own', async () => {

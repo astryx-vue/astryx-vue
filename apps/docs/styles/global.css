@@ -1304,6 +1304,12 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   overflow: visible;
 }
 
+.vp-doc .astryx-visually-hidden table {
+  display: table;
+  margin: 0;
+  overflow: clip;
+}
+
 .component-api-table code,
 :is(.vp-doc > table, .vp-doc > div table) code {
   white-space: nowrap;

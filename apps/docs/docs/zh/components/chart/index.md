@@ -19,6 +19,7 @@ import {
   chartsRadialPie,
   chartsRadialSpider,
   chartsRange,
+  chartsSankey,
   chartsSelect,
   chartsStackedArea,
   chartsZoom,
@@ -489,6 +490,53 @@ const reduced = m4Reduce(rawData, chartWidth, xDomain)
   </template>
 </RadialTooltip>
 ```
+
+## 桑基图
+
+`SankeyChart` 用带宽表示节点之间的流量。节点放在列中，连线越宽，数值越大。省略 `columns` 时会按连接方向自动分列；也可以传入字符串数组，或带 `label` 的列定义。
+
+每个节点的 `value` 应是经过该节点的总流量。为保证图形与数据一致，节点的流入量、流出量和节点总值应由同一份业务数据计算。
+
+```vue
+<SankeyChart :nodes="nodes" :links="links" :columns="columns" :min-column-width="180" label="访客转化流向">
+  <SankeyGrid />
+  <SankeyLink color="gradient" :opacity="0.72" />
+  <SankeyNode />
+  <SankeyLabel />
+</SankeyChart>
+```
+
+| SankeyChart 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `nodes` | `SankeyNodeDatum[]` | **必填** | 节点的 `id`、`label`、总 `value` 和可选 OKLCH `color`。 |
+| `links` | `SankeyLinkDatum[]` | **必填** | 使用源节点和目标节点 ID 描述的流量。 |
+| `columns` | `SankeyColumn[]` | 自动分列 | 字符串 ID 数组或 `{ ids, label }` 定义的混合数组。 |
+| `width` / `height` | `number` | `0` / `320` | 浏览器自动测量容器宽度；SSR 必须显式传 `width`。 |
+| `nodeWidth` / `nodeGap` | `number` | `20` / `14` | 节点条宽度和同列节点间距。 |
+| `nodeColor` | `string` | `undefined` | 使用一个 CSS 颜色覆盖全部节点，标签同步调整对比色。 |
+| `minColumnWidth` | `number` | `160` | 每列最小宽度；空间不足时横向滚动，滚动区域可键盘聚焦。 |
+| `label` | `string` | 按语言生成 | SVG 和滚动区域的无障碍名称。 |
+
+### 连线、节点和标签
+
+`SankeyLink` 默认使用源节点到目标节点的渐变；`color` 也支持 `'source'`、`'target'`、任意 CSS 颜色或 `{ gradient: number }`，数值范围为 0–1。`tension` 控制贝塞尔曲线弯曲程度，`0` 为直线。每张图的渐变 ID 独立，不会在多图页面互相引用。
+
+`SankeyNode` 的 `glow` 控制节点光晕。`SankeyLabel` 根据节点高度选择条内旋转标签或节点旁标签，末列标签向左放置以避免裁切；`formatValue` 自定义数值格式，`showPercent` 控制后续列的百分比。百分比以最大列总值为 100%。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `SankeyGrid.dashArray` | `string` | `'4 4'` | 列网格虚线样式。 |
+| `SankeyGrid.color` / `opacity` | `string` / `number` | 主题边框 / `0.3` | 网格颜色和不透明度。 |
+| `SankeyGrid.showHeaders` | `boolean` | `true` | 是否显示富列定义中的列标题。 |
+| `SankeyLink.color` | `SankeyLinkColor` | `'gradient'` | 渐变、源色、目标色或统一颜色。 |
+| `SankeyLink.opacity` / `tension` | `number` | `0.7` / `0.5` | 连线不透明度和弯曲程度。 |
+| `SankeyNode.glow` | `boolean` | `true` | 是否绘制节点光晕。 |
+| `SankeyLabel.showPercent` | `boolean` | `true` | 是否显示后续列节点百分比。 |
+| `SankeyLabel.formatValue` | `(value: number) => string` | 紧凑数字 | 自定义标签数值格式。 |
+
+不超过 100 条连线时，组件会输出视觉隐藏的来源、去向和数值表格，供读屏软件读取。
+
+<DemoExample :demo="chartsSankey" description="三列访客流向，展示渐变流向带、节点标签和列标题；窄屏可横向滚动。" locale="zh" title="桑基图" />
 
 ## 框选范围
 
