@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { resetScrollLockForTest } from '../composables/internal/scrollLock.js'
 import { pushLayer, resetDismissStackForTests } from '../layer/dismissStack.js'
@@ -10,6 +10,7 @@ afterEach(() => {
   resetScrollLockForTest()
   resetDismissStackForTests()
   document.body.style.overflow = ''
+  vi.useRealTimers()
 })
 
 describe('mobile-nav', () => {
@@ -34,6 +35,7 @@ describe('mobile-nav', () => {
         ])
       },
     })
+    vi.useFakeTimers()
     const wrapper = mount(Host, { attachTo: document.body })
     await wrapper.get('[aria-label="Open menu"]').trigger('click')
     await nextTick()
@@ -46,6 +48,8 @@ describe('mobile-nav', () => {
 
     await wrapper.get('.astryx-mobile-nav__close').trigger('click')
     await nextTick()
+    expect(document.body.querySelector('dialog')?.hasAttribute('open')).toBe(true)
+    await vi.advanceTimersByTimeAsync(300)
     expect(document.body.querySelector('dialog')?.hasAttribute('open')).toBe(false)
     wrapper.unmount()
   })
@@ -70,8 +74,10 @@ describe('mobile-nav', () => {
     await nextTick()
     expect(document.body.style.overflow).toBe('hidden')
 
+    vi.useFakeTimers()
     await wrapper.setProps({ isOpen: false })
     expect(document.body.style.overflow).toBe('')
+    await vi.advanceTimersByTimeAsync(300)
     wrapper.unmount()
   })
 
@@ -106,6 +112,7 @@ describe('mobile-nav', () => {
         ])
       },
     })
+    vi.useFakeTimers()
     const wrapper = mount(Host, { attachTo: document.body })
     const toggle = wrapper.get('[aria-label="Open menu"]')
     ;(toggle.element as HTMLButtonElement).focus()
@@ -115,8 +122,69 @@ describe('mobile-nav', () => {
 
     await wrapper.get('.astryx-mobile-nav__close').trigger('click')
     await nextTick()
+    await vi.advanceTimersByTimeAsync(300)
     expect(document.activeElement).toBe(toggle.element)
     wrapper.unmount()
+  })
+
+  it('keeps the native dialog and exit styling until the close delay ends', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(MobileNav, {
+      attachTo: document.body,
+      props: { isOpen: true },
+    })
+    await nextTick()
+    await wrapper.setProps({ isOpen: false })
+    await nextTick()
+
+    const dialog = wrapper.get('dialog')
+    expect(dialog.attributes('open')).toBe('')
+    expect(dialog.classes()).toContain('astryx-mobile-nav--closing')
+    await vi.advanceTimersByTimeAsync(299)
+    expect(dialog.attributes('open')).toBe('')
+    await vi.advanceTimersByTimeAsync(1)
+    expect(dialog.attributes('open')).toBeUndefined()
+    expect(dialog.classes()).not.toContain('astryx-mobile-nav--closing')
+    wrapper.unmount()
+  })
+
+  it('cancels a pending close when the drawer reopens', async () => {
+    vi.useFakeTimers()
+    const wrapper = mount(MobileNav, {
+      attachTo: document.body,
+      props: { isOpen: true },
+    })
+    await nextTick()
+    await wrapper.setProps({ isOpen: false })
+    await nextTick()
+    await wrapper.setProps({ isOpen: true })
+    await nextTick()
+    await vi.advanceTimersByTimeAsync(300)
+
+    expect(wrapper.get('dialog').attributes('open')).toBe('')
+    expect(wrapper.get('dialog').classes()).not.toContain('astryx-mobile-nav--closing')
+    wrapper.unmount()
+  })
+
+  it('closes without a delay when reduced motion is requested', async () => {
+    const original = window.matchMedia
+    window.matchMedia = vi.fn(() => ({ matches: true })) as unknown as typeof window.matchMedia
+    try {
+      const wrapper = mount(MobileNav, {
+        attachTo: document.body,
+        props: { isOpen: true },
+      })
+      await nextTick()
+      await wrapper.setProps({ isOpen: false })
+      await nextTick()
+
+      expect(wrapper.get('dialog').attributes('open')).toBeUndefined()
+      expect(wrapper.get('dialog').classes()).not.toContain('astryx-mobile-nav--closing')
+      wrapper.unmount()
+    }
+    finally {
+      window.matchMedia = original
+    }
   })
 
   it('lets a nested layer take Escape before the drawer closes', async () => {

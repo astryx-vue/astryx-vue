@@ -1,6 +1,6 @@
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import { useLayerMountTarget } from '../composables/useLayerMountTarget.js'
 import { useActiveModalOutlet } from '../layer/modalOutlet.js'
 import Dialog from './Dialog.vue'
@@ -153,6 +153,32 @@ describe('dialog', () => {
     await wrapper.setProps({ isOpen: false })
     expect(dialogEl().hasAttribute('open')).toBe(false)
     expect(document.activeElement).toBe(trigger)
+  })
+
+  it('focuses a conditionally mounted header and restores its opener', async () => {
+    const Host = defineComponent({
+      components: { Dialog, DialogHeader },
+      setup() {
+        const open = ref(false)
+        return { open }
+      },
+      template: `
+        <button id="conditional-opener" @click="open = true">Open</button>
+        <Dialog :is-open="open">
+          <DialogHeader v-if="open" title="Review" />
+        </Dialog>
+      `,
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    const opener = wrapper.get('#conditional-opener').element as HTMLButtonElement
+    opener.focus()
+    await wrapper.get('#conditional-opener').trigger('click')
+    await flushPromises()
+
+    expect(document.activeElement?.classList.contains('astryx-dialog-header__title')).toBe(true)
+    wrapper.vm.open = false
+    await flushPromises()
+    expect(document.activeElement).toBe(opener)
   })
 
   it('locks body scroll while open and restores it on close', async () => {
