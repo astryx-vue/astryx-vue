@@ -223,11 +223,13 @@ const fileTree = computed(() => buildFileTree((name) => {
                   :height="bottomPanel.size"
                   class="terminal-panel"
                 >
-                  <TabList role="tablist"
+                  <TabList
+                    role="tablist"
                     v-model:value="activeTermTab"
                     size="sm"
                     :has-divider="false"
                     class="tab-list-padding"
+                    overflow="visible"
                   >
                     <Tab label="Terminal" value="terminal" />
                     <Tab label="Problems" value="problems" />
@@ -384,7 +386,12 @@ const fileTree = computed(() => buildFileTree((name) => {
   overflow: hidden;
 }
 
-.editor-code {
+/*
+ * CodeBlock 的根节点是多根片段的第一个，父组件的 scope 标记落不到它身上，
+ * 所以尺寸要从外层用 :deep() 传进去。
+ */
+.editor-area :deep(.editor-code),
+.terminal-wrapper :deep(.editor-code) {
   width: 100%;
   height: 100%;
   border-width: 0;
