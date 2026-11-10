@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.13
+
+### Patch Changes
+
+- [#469](https://github.com/astryx-vue/astryx-vue/pull/469) [`2e3ad0a`](https://github.com/astryx-vue/astryx-vue/commit/2e3ad0a24576ab674c600ba73ba10cccad538079) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 同步主站新增的 ThreeD SVG 图表 API 和示例资料。
+
 ## 0.4.12
 
 ### Patch Changes

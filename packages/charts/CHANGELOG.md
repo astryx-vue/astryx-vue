@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.9.0
+
+### Minor Changes
+
+- [#469](https://github.com/astryx-vue/astryx-vue/pull/469) [`2e3ad0a`](https://github.com/astryx-vue/astryx-vue/commit/2e3ad0a24576ab674c600ba73ba10cccad538079) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 ThreeDChart、ThreeDScatter、ThreeDBar、ThreeDGrid、ThreeDAxis、ThreeDSurface 和 use3D，提供纯 SVG 三维投影、深度排序、指针/键盘相机控制、自动旋转和减少动态效果支持。
+
 ## 0.8.0
 
 ### Minor Changes
