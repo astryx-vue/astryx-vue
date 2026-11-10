@@ -171,7 +171,14 @@
     min-height: 0;
   }
 
+  /*
+   * The scroll region is the only child that may grow, so a code block given a
+   * height (an editor pane, a fixed-height panel) scrolls inside itself instead
+   * of leaving its scrollbar wherever the last line happens to end.
+   */
   .astryx-code-block__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
     overflow: auto;
   }
 

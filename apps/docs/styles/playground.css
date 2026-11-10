@@ -1,4 +1,8 @@
-.Layout.playground-route {
+/*
+ * 主题令牌挂在 html 上，浮层（下拉菜单）Teleport 到 body 之后仍然能继承到。
+ * 布局相关的声明留在 .Layout.playground-route 上。
+ */
+html:has(.playground-route) {
   --pg-ink: #171717;
   --pg-muted-ink: #525252;
   --pg-surface: #fff;
@@ -17,7 +21,9 @@
   --pg-stage-bg: #fff;
   --pg-stage-line: rgb(5 54 89 / 9.8%);
   --pg-rail: 64px;
+}
 
+.Layout.playground-route {
   display: flex;
   flex-direction: column;
   height: 100svh;
@@ -27,7 +33,7 @@
   color-scheme: light;
 }
 
-html.dark .Layout.playground-route {
+html.dark:has(.playground-route) {
   --pg-ink: #fafafa;
   --pg-muted-ink: #a3a3a3;
   --pg-surface: #262626;
@@ -45,7 +51,9 @@ html.dark .Layout.playground-route {
   --pg-handle: rgb(255 255 255 / 28%);
   --pg-stage-bg: #1f1f22;
   --pg-stage-line: rgb(242 244 246 / 9.8%);
+}
 
+html.dark .Layout.playground-route {
   color-scheme: dark;
 }
 
@@ -252,21 +260,21 @@ html.dark:has(.playground-route) body {
   height: 16px;
 }
 
-.playground__menu-wrap {
-  position: relative;
-}
-
+/*
+ * The menu lives in a layer outside the playground tree, so its coordinates
+ * come from `useLayer` as inline viewport offsets and it has to declare the
+ * colours it used to inherit from the playground root.
+ */
 .playground__menu {
-  position: absolute;
+  position: fixed;
   z-index: 30;
-  top: calc(100% + 6px);
-  right: 0;
   width: min(22rem, 80vw);
   max-height: min(32rem, 70vh);
   padding: 6px;
   overflow: auto;
   border: 1px solid var(--pg-line);
   border-radius: 12px;
+  color: var(--pg-ink);
   background: var(--pg-elevated);
   box-shadow: 0 12px 32px rgb(0 0 0 / 12%);
 }
