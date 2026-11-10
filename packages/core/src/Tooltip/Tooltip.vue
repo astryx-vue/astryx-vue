@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { VNode } from 'vue'
 import type { TooltipProps } from './types.js'
-import { computed, getCurrentInstance, nextTick, onMounted, onUpdated, ref, useAttrs, watch } from 'vue'
+import { computed, getCurrentInstance, nextTick, onMounted, onUpdated, ref, Teleport, useAttrs, watch } from 'vue'
 import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
@@ -84,11 +85,26 @@ function resolveTrigger(): HTMLElement | null {
   return null
 }
 
-function syncTrigger(): void {
-  if (props.anchorsOnSelf && !props.anchor) {
-    const el = instance?.vnode.el
-    wrapperRef.value = el instanceof HTMLElement ? el : null
+function findAnchorElement(vnode: VNode): HTMLElement | null {
+  if (vnode.el instanceof HTMLElement)
+    return vnode.el
+  if (vnode.component)
+    return findAnchorElement(vnode.component.subTree)
+  if (vnode.type === Teleport || !Array.isArray(vnode.children))
+    return null
+  for (const child of vnode.children) {
+    if (child == null || typeof child !== 'object')
+      continue
+    const element = findAnchorElement(child as VNode)
+    if (element)
+      return element
   }
+  return null
+}
+
+function syncTrigger(): void {
+  if (props.anchorsOnSelf && !props.anchor)
+    wrapperRef.value = instance ? findAnchorElement(instance.subTree) : null
   triggerRef.value = resolveTrigger()
 }
 

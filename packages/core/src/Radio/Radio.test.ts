@@ -70,6 +70,14 @@ describe('radio', () => {
     expect(wrapper.get('#size-label').attributes('for')).toBeUndefined()
   })
 
+  it('keeps a caller aria-labelledby on the radiogroup', () => {
+    const wrapper = mount(RadioGroup, {
+      props: { id: 'size', label: 'Size', modelValue: 'md', options: [{ value: 'md', label: 'Medium' }] },
+      attrs: { 'aria-labelledby': 'external-label' },
+    })
+    expect(wrapper.get('[role="radiogroup"]').attributes('aria-labelledby')).toBe('size-label external-label')
+  })
+
   it('disables individual options and the whole group', async () => {
     const wrapper = renderGroup({
       options: [

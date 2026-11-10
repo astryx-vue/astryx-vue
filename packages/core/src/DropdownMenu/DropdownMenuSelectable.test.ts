@@ -125,6 +125,31 @@ describe('dropdown menu checkbox and radio rows', () => {
     expect(document.querySelector<HTMLElement>('[role="menu"]')!.style.display).toBe('none')
   })
 
+  it('composes caller attributes on the radio group root without replacing its role or fallback name', async () => {
+    const onClick = vi.fn()
+    const wrapper = mount(DropdownMenuRadioGroup, {
+      props: { label: 'Sort fallback' },
+      attrs: {
+        'role': 'tree',
+        'aria-label': 'Consumer label',
+        'aria-labelledby': 'sort-label',
+        'data-owner': 'consumer',
+        'class': 'consumer-group',
+        'style': 'inline-size: 240px',
+        onClick,
+      },
+    })
+    const group = wrapper.get('[role="group"]')
+    expect(group.attributes('role')).toBe('group')
+    expect(group.attributes('aria-label')).toBe('Sort fallback')
+    expect(group.attributes('aria-labelledby')).toBe('sort-label')
+    expect(group.attributes('data-owner')).toBe('consumer')
+    expect(group.classes()).toContain('consumer-group')
+    expect((group.element as HTMLElement).style.inlineSize).toBe('240px')
+    await group.trigger('click')
+    expect(onClick).toHaveBeenCalledTimes(1)
+  })
+
   it('refuses a radio row outside its group', () => {
     expect(() => mount(DropdownMenuRadioItem, { props: { label: 'Newest', value: 'newest' } })).toThrow(/DropdownMenuRadioGroup/)
   })
