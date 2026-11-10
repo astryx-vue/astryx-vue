@@ -20515,6 +20515,112 @@
             ]
           },
           {
+            "heading": "Sankey charts",
+            "rows": [
+              {
+                "name": "`nodes`",
+                "description": "`nodes`",
+                "type": "`SankeyNodeDatum[]`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`links`",
+                "description": "`links`",
+                "type": "`SankeyLinkDatum[]`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`columns`",
+                "description": "`columns`",
+                "type": "`SankeyColumn[]`",
+                "default": "Inferred"
+              },
+              {
+                "name": "`width` / `height`",
+                "description": "`width` / `height`",
+                "type": "`number`",
+                "default": "`0` / `320`"
+              },
+              {
+                "name": "`nodeWidth` / `nodeGap`",
+                "description": "`nodeWidth` / `nodeGap`",
+                "type": "`number`",
+                "default": "`20` / `14`"
+              },
+              {
+                "name": "`nodeColor`",
+                "description": "`nodeColor`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`minColumnWidth`",
+                "description": "`minColumnWidth`",
+                "type": "`number`",
+                "default": "`160`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "Localized"
+              }
+            ]
+          },
+          {
+            "heading": "Links, nodes, and labels",
+            "rows": [
+              {
+                "name": "`SankeyGrid.dashArray`",
+                "description": "`SankeyGrid.dashArray`",
+                "type": "`string`",
+                "default": "`'4 4'`"
+              },
+              {
+                "name": "`SankeyGrid.color` / `opacity`",
+                "description": "`SankeyGrid.color` / `opacity`",
+                "type": "`string` / `number`",
+                "default": "Theme border / `0.3`"
+              },
+              {
+                "name": "`SankeyGrid.showHeaders`",
+                "description": "`SankeyGrid.showHeaders`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`SankeyLink.color`",
+                "description": "`SankeyLink.color`",
+                "type": "`SankeyLinkColor`",
+                "default": "`'gradient'`"
+              },
+              {
+                "name": "`SankeyLink.opacity` / `tension`",
+                "description": "`SankeyLink.opacity` / `tension`",
+                "type": "`number`",
+                "default": "`0.7` / `0.5`"
+              },
+              {
+                "name": "`SankeyNode.glow`",
+                "description": "`SankeyNode.glow`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`SankeyLabel.showPercent`",
+                "description": "`SankeyLabel.showPercent`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`SankeyLabel.formatValue`",
+                "description": "`SankeyLabel.formatValue`",
+                "type": "`(value: number) => string`",
+                "default": "Compact number"
+              }
+            ]
+          },
+          {
             "heading": "Brush selection",
             "rows": [
               {
@@ -21329,6 +21435,112 @@
             ]
           },
           {
+            "heading": "桑基图",
+            "rows": [
+              {
+                "name": "`nodes`",
+                "description": "`nodes`",
+                "type": "`SankeyNodeDatum[]`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`links`",
+                "description": "`links`",
+                "type": "`SankeyLinkDatum[]`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`columns`",
+                "description": "`columns`",
+                "type": "`SankeyColumn[]`",
+                "default": "自动分列"
+              },
+              {
+                "name": "`width` / `height`",
+                "description": "`width` / `height`",
+                "type": "`number`",
+                "default": "`0` / `320`"
+              },
+              {
+                "name": "`nodeWidth` / `nodeGap`",
+                "description": "`nodeWidth` / `nodeGap`",
+                "type": "`number`",
+                "default": "`20` / `14`"
+              },
+              {
+                "name": "`nodeColor`",
+                "description": "`nodeColor`",
+                "type": "`string`",
+                "default": "`undefined`"
+              },
+              {
+                "name": "`minColumnWidth`",
+                "description": "`minColumnWidth`",
+                "type": "`number`",
+                "default": "`160`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "按语言生成"
+              }
+            ]
+          },
+          {
+            "heading": "连线、节点和标签",
+            "rows": [
+              {
+                "name": "`SankeyGrid.dashArray`",
+                "type": "`string`",
+                "default": "`'4 4'`",
+                "description": "列网格虚线样式。"
+              },
+              {
+                "name": "`SankeyGrid.color` / `opacity`",
+                "type": "`string` / `number`",
+                "default": "主题边框 / `0.3`",
+                "description": "网格颜色和不透明度。"
+              },
+              {
+                "name": "`SankeyGrid.showHeaders`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否显示富列定义中的列标题。"
+              },
+              {
+                "name": "`SankeyLink.color`",
+                "type": "`SankeyLinkColor`",
+                "default": "`'gradient'`",
+                "description": "渐变、源色、目标色或统一颜色。"
+              },
+              {
+                "name": "`SankeyLink.opacity` / `tension`",
+                "type": "`number`",
+                "default": "`0.7` / `0.5`",
+                "description": "连线不透明度和弯曲程度。"
+              },
+              {
+                "name": "`SankeyNode.glow`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否绘制节点光晕。"
+              },
+              {
+                "name": "`SankeyLabel.showPercent`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否显示后续列节点百分比。"
+              },
+              {
+                "name": "`SankeyLabel.formatValue`",
+                "type": "`(value: number) => string`",
+                "default": "紧凑数字",
+                "description": "自定义标签数值格式。"
+              }
+            ]
+          },
+          {
             "heading": "框选范围",
             "rows": [
               {
@@ -21689,6 +21901,14 @@
             "text": "`RadialTooltip` hit-tests slices by radius and angle in pie mode. In radar mode, it shows the nearest axis and the highest series value on that axis. It supports mouse hover, touch tapping, and dragging. `highlight` draws and offsets the active slice outline; `highlightOffset` controls the offset distance.\n\nUse the default slot for custom content. It receives `label`, `value`, `percentage`, and `index`:\n\n```vue\n<RadialTooltip>\n  <template #default=\"{ label, value, percentage }\">\n    <strong>{{ label }}</strong>\n    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%\n  </template>\n</RadialTooltip>\n```"
           },
           {
+            "heading": "Sankey charts",
+            "text": "`SankeyChart` represents flow between nodes with ribbons whose width follows the value. Omit `columns` to infer columns from link direction, or provide string arrays and rich `{ ids, label }` definitions.\n\nA node's `value` is the total flow through that node. Derive node totals and link values from the same business data so incoming flow, outgoing flow and node totals stay consistent.\n\n```vue\n<SankeyChart :nodes=\"nodes\" :links=\"links\" :columns=\"columns\" :min-column-width=\"180\" label=\"Visitor activation flow\">\n  <SankeyGrid />\n  <SankeyLink color=\"gradient\" :opacity=\"0.72\" />\n  <SankeyNode />\n  <SankeyLabel />\n</SankeyChart>\n```"
+          },
+          {
+            "heading": "Links, nodes, and labels",
+            "text": "`SankeyLink` defaults to a source-to-target gradient. `color` also accepts `'source'`, `'target'`, any CSS color, or `{ gradient: number }` with a bias from 0 to 1. `tension` controls the bezier curve; `0` produces straight ribbons. Gradient IDs are scoped per chart, so multiple charts do not reference each other's definitions.\n\n`SankeyNode` provides a `glow` toggle. `SankeyLabel` chooses rotated on-bar or beside-bar labels from node height; last-column labels anchor left to avoid clipping. Use `formatValue` for custom values and `showPercent` for downstream percentages. Percentages use the largest column total as 100%.\n\nFor up to 100 links, the chart also renders a visually hidden From/To/Value table for screen readers."
+          },
+          {
             "heading": "Brush selection",
             "text": "Place `<ChartBrush>` in the `<Chart>` `interactions` slot to let users drag a selection over the plot. `mode=\"x\"` selects a horizontal range, useful for time windows; `mode=\"xy\"` selects a rectangle, useful for scatter plots.\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\">\n  <template #interactions>\n    <ChartBrush @brush=\"onBrush\" @clear=\"clearSelection\" />\n  </template>\n</Chart>\n```\n\nThe `brush` event receives `(range, data)`. `range.x` is the `[min, max]` interval in data coordinates, with `range.y` also present in xy mode; `data` contains the original rows inside the selection. `clear` is a click that did not become a drag."
           },
@@ -21825,6 +22045,14 @@
           {
             "heading": "径向提示框",
             "text": "`RadialTooltip` 在饼图中按半径和角度命中扇区，在雷达图中显示最近的轴及该轴的最大系列值。鼠标悬停、触摸点按和拖动均可使用。`highlight` 默认绘制并外移当前扇区的轮廓，`highlightOffset` 控制外移距离。\n\n自定义内容使用默认插槽，插槽参数为 `label`、`value`、`percentage` 和 `index`：\n\n```vue\n<RadialTooltip>\n  <template #default=\"{ label, value, percentage }\">\n    <strong>{{ label }}</strong>\n    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%\n  </template>\n</RadialTooltip>\n```"
+          },
+          {
+            "heading": "桑基图",
+            "text": "`SankeyChart` 用带宽表示节点之间的流量。节点放在列中，连线越宽，数值越大。省略 `columns` 时会按连接方向自动分列；也可以传入字符串数组，或带 `label` 的列定义。\n\n每个节点的 `value` 应是经过该节点的总流量。为保证图形与数据一致，节点的流入量、流出量和节点总值应由同一份业务数据计算。\n\n```vue\n<SankeyChart :nodes=\"nodes\" :links=\"links\" :columns=\"columns\" :min-column-width=\"180\" label=\"访客转化流向\">\n  <SankeyGrid />\n  <SankeyLink color=\"gradient\" :opacity=\"0.72\" />\n  <SankeyNode />\n  <SankeyLabel />\n</SankeyChart>\n```"
+          },
+          {
+            "heading": "连线、节点和标签",
+            "text": "`SankeyLink` 默认使用源节点到目标节点的渐变；`color` 也支持 `'source'`、`'target'`、任意 CSS 颜色或 `{ gradient: number }`，数值范围为 0–1。`tension` 控制贝塞尔曲线弯曲程度，`0` 为直线。每张图的渐变 ID 独立，不会在多图页面互相引用。\n\n`SankeyNode` 的 `glow` 控制节点光晕。`SankeyLabel` 根据节点高度选择条内旋转标签或节点旁标签，末列标签向左放置以避免裁切；`formatValue` 自定义数值格式，`showPercent` 控制后续列的百分比。百分比以最大列总值为 100%。\n\n不超过 100 条连线时，组件会输出视觉隐藏的来源、去向和数值表格，供读屏软件读取。"
           },
           {
             "heading": "框选范围",
@@ -21981,6 +22209,17 @@
             "zh": "带内孔、真实圆角、百分比标签和悬停高亮的区域收入 donut。"
           },
           "code": "<script setup lang=\"ts\">\nimport { RadialChart, RadialSlice, RadialTooltip, useChartColors } from '@astryx-vue/charts'\n\nconst data = [\n  { region: 'North America', revenue: 500 },\n  { region: 'Europe', revenue: 300 },\n  { region: 'Asia Pacific', revenue: 200 },\n]\nconst colors = useChartColors().categorical(data.length)\n</script>\n\n<template>\n  <RadialChart\n    :data=\"data\"\n    value-key=\"revenue\"\n    label-key=\"region\"\n    :inner-radius=\"0.6\"\n    :height=\"360\"\n    interactive\n    label=\"Revenue share by region\"\n  >\n    <RadialSlice :colors=\"colors\" :corner-radius=\"4\" />\n    <RadialTooltip />\n  </RadialChart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Sankey chart",
+            "zh": "桑基图"
+          },
+          "description": {
+            "en": "Three columns of visitor flow with gradient ribbons, node labels and headers; narrow screens scroll horizontally.",
+            "zh": "三列访客流向，展示渐变流向带、节点标签和列标题；窄屏可横向滚动。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { SankeyChart, SankeyGrid, SankeyLabel, SankeyLink, SankeyNode } from '@astryx-vue/charts'\n\nconst nodes = [\n  { id: 'search', label: 'Search', value: 45 },\n  { id: 'direct', label: 'Direct', value: 35 },\n  { id: 'social', label: 'Social', value: 20 },\n  { id: 'product', label: 'Product', value: 60 },\n  { id: 'docs', label: 'Docs', value: 40 },\n  { id: 'activated', label: 'Activated', value: 55 },\n  { id: 'dropped', label: 'Dropped', value: 45 },\n]\n\nconst links = [\n  { source: 'search', target: 'product', value: 28 },\n  { source: 'search', target: 'docs', value: 17 },\n  { source: 'direct', target: 'product', value: 22 },\n  { source: 'direct', target: 'docs', value: 13 },\n  { source: 'social', target: 'product', value: 10 },\n  { source: 'social', target: 'docs', value: 10 },\n  { source: 'product', target: 'activated', value: 38 },\n  { source: 'product', target: 'dropped', value: 22 },\n  { source: 'docs', target: 'activated', value: 17 },\n  { source: 'docs', target: 'dropped', value: 23 },\n]\n\nconst columns = [\n  { ids: ['search', 'direct', 'social'], label: 'Acquisition' },\n  { ids: ['product', 'docs'], label: 'Engagement' },\n  { ids: ['activated', 'dropped'], label: 'Outcome' },\n]\n</script>\n\n<template>\n  <SankeyChart\n    :nodes=\"nodes\"\n    :links=\"links\"\n    :columns=\"columns\"\n    :width=\"720\"\n    :height=\"340\"\n    :min-column-width=\"220\"\n    label=\"Visitor activation flow\"\n  >\n    <SankeyGrid />\n    <SankeyLink :opacity=\"0.72\" />\n    <SankeyNode />\n    <SankeyLabel />\n  </SankeyChart>\n</template>"
         },
         {
           "title": {

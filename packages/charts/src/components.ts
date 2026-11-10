@@ -65,6 +65,31 @@ export type {
   RadialTooltipProps,
   RadialTooltipSlots,
 } from './Radial/index.js'
+export {
+  SankeyChart,
+  SankeyGrid,
+  SankeyLabel,
+  SankeyLink,
+  SankeyNode,
+  useSankey,
+} from './Sankey/index.js'
+export type {
+  SankeyChartProps,
+  SankeyColor,
+  SankeyColumn,
+  SankeyColumnDef,
+  SankeyColumnLayout,
+  SankeyContext,
+  SankeyGridProps,
+  SankeyLabelProps,
+  SankeyLinkColor,
+  SankeyLinkDatum,
+  SankeyLinkLayout,
+  SankeyLinkProps,
+  SankeyNodeDatum,
+  SankeyNodeLayout,
+  SankeyNodeProps,
+} from './Sankey/index.js'
 export { useChartColors } from './useChartColors.js'
 export { useChartRange } from './useChartRange.js'
 export type { UseChartRangeOptions, UseChartRangeReturn } from './useChartRange.js'

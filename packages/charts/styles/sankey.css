@@ -1,0 +1,43 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-sankey-chart {
+    width: 100%;
+  }
+
+  .astryx-sankey-chart__viewport--scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .astryx-sankey-chart svg {
+    display: block;
+    overflow: visible;
+  }
+
+  .astryx-sankey-grid__header {
+    fill: var(--astryx-color-text-secondary, #525252);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .astryx-sankey-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    pointer-events: none;
+  }
+
+  .astryx-sankey-label--beside {
+    fill: var(--astryx-color-text-primary, #171717);
+  }
+
+  .astryx-sankey-label__percent {
+    fill: var(--astryx-color-text-tertiary, #737373);
+    font-size: 9px;
+    font-weight: 500;
+    pointer-events: none;
+  }
+}

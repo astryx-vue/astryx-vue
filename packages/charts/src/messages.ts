@@ -21,6 +21,10 @@ export type ChartMessageKey
     | '@astryx.radialChart.percentage'
     | '@astryx.radialChart.value'
     | '@astryx.radialChart.share'
+    | '@astryx.sankeyChart.label'
+    | '@astryx.sankeyChart.from'
+    | '@astryx.sankeyChart.to'
+    | '@astryx.sankeyChart.value'
 
 /** Chart 与 legend 沿用上游文案；radial 按同一语言习惯补充中英文。 */
 const FALLBACKS: Record<ChartMessageKey, Record<'en' | 'zh-CN', string>> = {
@@ -63,6 +67,22 @@ const FALLBACKS: Record<ChartMessageKey, Record<'en' | 'zh-CN', string>> = {
   '@astryx.radialChart.share': {
     'en': 'Share',
     'zh-CN': '占比',
+  },
+  '@astryx.sankeyChart.label': {
+    'en': 'Sankey chart',
+    'zh-CN': '桑基图',
+  },
+  '@astryx.sankeyChart.from': {
+    'en': 'From',
+    'zh-CN': '来源',
+  },
+  '@astryx.sankeyChart.to': {
+    'en': 'To',
+    'zh-CN': '去向',
+  },
+  '@astryx.sankeyChart.value': {
+    'en': 'Value',
+    'zh-CN': '数值',
   },
 }
 

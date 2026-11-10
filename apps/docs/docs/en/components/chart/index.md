@@ -19,6 +19,7 @@ import {
   chartsRadialPie,
   chartsRadialSpider,
   chartsRange,
+  chartsSankey,
   chartsSelect,
   chartsStackedArea,
   chartsZoom,
@@ -489,6 +490,53 @@ Use the default slot for custom content. It receives `label`, `value`, `percenta
   </template>
 </RadialTooltip>
 ```
+
+## Sankey charts
+
+`SankeyChart` represents flow between nodes with ribbons whose width follows the value. Omit `columns` to infer columns from link direction, or provide string arrays and rich `{ ids, label }` definitions.
+
+A node's `value` is the total flow through that node. Derive node totals and link values from the same business data so incoming flow, outgoing flow and node totals stay consistent.
+
+```vue
+<SankeyChart :nodes="nodes" :links="links" :columns="columns" :min-column-width="180" label="Visitor activation flow">
+  <SankeyGrid />
+  <SankeyLink color="gradient" :opacity="0.72" />
+  <SankeyNode />
+  <SankeyLabel />
+</SankeyChart>
+```
+
+| SankeyChart prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `nodes` | `SankeyNodeDatum[]` | **Required** | Node `id`, `label`, total `value`, and optional OKLCH `color`. |
+| `links` | `SankeyLinkDatum[]` | **Required** | Flow values between source and target node IDs. |
+| `columns` | `SankeyColumn[]` | Inferred | A mixed array of ID arrays or `{ ids, label }` definitions. |
+| `width` / `height` | `number` | `0` / `320` | Container width is measured in the browser; pass `width` explicitly for SSR. |
+| `nodeWidth` / `nodeGap` | `number` | `20` / `14` | Node bar width and vertical gap within a column. |
+| `nodeColor` | `string` | `undefined` | One CSS color for every node; labels adapt their contrast color. |
+| `minColumnWidth` | `number` | `160` | Minimum column width. Narrow containers scroll horizontally in a keyboard-focusable region. |
+| `label` | `string` | Localized | Accessible name for the SVG and scroll region. |
+
+### Links, nodes, and labels
+
+`SankeyLink` defaults to a source-to-target gradient. `color` also accepts `'source'`, `'target'`, any CSS color, or `{ gradient: number }` with a bias from 0 to 1. `tension` controls the bezier curve; `0` produces straight ribbons. Gradient IDs are scoped per chart, so multiple charts do not reference each other's definitions.
+
+`SankeyNode` provides a `glow` toggle. `SankeyLabel` chooses rotated on-bar or beside-bar labels from node height; last-column labels anchor left to avoid clipping. Use `formatValue` for custom values and `showPercent` for downstream percentages. Percentages use the largest column total as 100%.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `SankeyGrid.dashArray` | `string` | `'4 4'` | Column grid dash pattern. |
+| `SankeyGrid.color` / `opacity` | `string` / `number` | Theme border / `0.3` | Grid color and opacity. |
+| `SankeyGrid.showHeaders` | `boolean` | `true` | Show labels from rich column definitions. |
+| `SankeyLink.color` | `SankeyLinkColor` | `'gradient'` | Gradient, source, target, or flat color mode. |
+| `SankeyLink.opacity` / `tension` | `number` | `0.7` / `0.5` | Ribbon opacity and curve tension. |
+| `SankeyNode.glow` | `boolean` | `true` | Draw the node glow. |
+| `SankeyLabel.showPercent` | `boolean` | `true` | Show percentages for downstream nodes. |
+| `SankeyLabel.formatValue` | `(value: number) => string` | Compact number | Custom label value formatter. |
+
+For up to 100 links, the chart also renders a visually hidden From/To/Value table for screen readers.
+
+<DemoExample :demo="chartsSankey" description="Three columns of visitor flow with gradient ribbons, node labels and headers; narrow screens scroll horizontally." locale="en" title="Sankey chart" />
 
 ## Brush selection
 

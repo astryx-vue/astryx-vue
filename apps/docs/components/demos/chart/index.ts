@@ -23,6 +23,8 @@ import radialSpiderDemo from './radial-spider.vue'
 import radialSpiderSource from './radial-spider.vue?raw&highlighted'
 import rangeDemo from './range.vue'
 import rangeSource from './range.vue?raw&highlighted'
+import sankeyDemo from './sankey.vue'
+import sankeySource from './sankey.vue?raw&highlighted'
 import selectDemo from './select.vue'
 import selectSource from './select.vue?raw&highlighted'
 import areaDemo from './stacked-area.vue'
@@ -40,6 +42,7 @@ export const chartsRange = defineDemo(rangeDemo, rangeSource, { className: chart
 export const chartsBar = defineDemo(barDemo, barSource, { className: chartClass })
 export const chartsBrush = defineDemo(brushDemo, brushSource, { className: chartClass })
 export const chartsSelect = defineDemo(selectDemo, selectSource, { className: chartClass })
+export const chartsSankey = defineDemo(sankeyDemo, sankeySource, { className: chartClass })
 export const chartsStackedArea = defineDemo(areaDemo, areaSource, { className: chartClass })
 export const chartsDot = defineDemo(dotDemo, dotSource, { className: chartClass })
 export const chartsBandReference = defineDemo(bandDemo, bandSource, { className: chartClass })
