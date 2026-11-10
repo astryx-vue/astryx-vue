@@ -1,0 +1,43 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-three-d-chart {
+    width: 100%;
+  }
+
+  .astryx-three-d-chart svg {
+    display: block;
+    overflow: visible;
+  }
+
+  .astryx-three-d-chart--interactive,
+  .astryx-three-d-chart--interactive svg {
+    touch-action: none;
+    user-select: none;
+  }
+
+  .astryx-three-d-chart--interactive svg {
+    cursor: grab;
+  }
+
+  .astryx-three-d-chart--interactive svg.astryx-three-d-chart__dragging {
+    cursor: grabbing;
+  }
+
+  .astryx-three-d-grid line {
+    stroke: var(--astryx-color-border, #e5e5e5);
+    stroke-opacity: 0.3;
+    stroke-width: 1;
+  }
+
+  .astryx-three-d-axis line {
+    stroke: var(--astryx-color-border-emphasized, #737373);
+    stroke-width: 1.5;
+  }
+
+  .astryx-three-d-axis text {
+    fill: var(--astryx-color-text-secondary, #525252);
+    font-size: 11px;
+    pointer-events: none;
+  }
+}

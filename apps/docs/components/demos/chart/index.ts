@@ -29,6 +29,12 @@ import selectDemo from './select.vue'
 import selectSource from './select.vue?raw&highlighted'
 import areaDemo from './stacked-area.vue'
 import areaSource from './stacked-area.vue?raw&highlighted'
+import threeDBarDemo from './three-d-bar.vue'
+import threeDBarSource from './three-d-bar.vue?raw&highlighted'
+import threeDScatterDemo from './three-d-scatter.vue'
+import threeDScatterSource from './three-d-scatter.vue?raw&highlighted'
+import threeDSurfaceDemo from './three-d-surface.vue'
+import threeDSurfaceSource from './three-d-surface.vue?raw&highlighted'
 import zoomDemo from './zoom.vue'
 import zoomSource from './zoom.vue?raw&highlighted'
 
@@ -43,6 +49,9 @@ export const chartsBar = defineDemo(barDemo, barSource, { className: chartClass 
 export const chartsBrush = defineDemo(brushDemo, brushSource, { className: chartClass })
 export const chartsSelect = defineDemo(selectDemo, selectSource, { className: chartClass })
 export const chartsSankey = defineDemo(sankeyDemo, sankeySource, { className: chartClass })
+export const chartsThreeDBar = defineDemo(threeDBarDemo, threeDBarSource, { className: chartClass })
+export const chartsThreeDScatter = defineDemo(threeDScatterDemo, threeDScatterSource, { className: chartClass })
+export const chartsThreeDSurface = defineDemo(threeDSurfaceDemo, threeDSurfaceSource, { className: chartClass })
 export const chartsStackedArea = defineDemo(areaDemo, areaSource, { className: chartClass })
 export const chartsDot = defineDemo(dotDemo, dotSource, { className: chartClass })
 export const chartsBandReference = defineDemo(bandDemo, bandSource, { className: chartClass })

@@ -90,6 +90,28 @@ export type {
   SankeyNodeLayout,
   SankeyNodeProps,
 } from './Sankey/index.js'
+export {
+  ThreeDAxis,
+  ThreeDBar,
+  ThreeDChart,
+  ThreeDGrid,
+  ThreeDScatter,
+  ThreeDSurface,
+  use3D,
+} from './ThreeD/index.js'
+export type {
+  Camera,
+  NumericDomain3D,
+  Point3D,
+  ProjectedPoint,
+  ThreeDAxisProps,
+  ThreeDBarProps,
+  ThreeDChartProps,
+  ThreeDContext,
+  ThreeDGridProps,
+  ThreeDScatterProps,
+  ThreeDSurfaceProps,
+} from './ThreeD/index.js'
 export { useChartColors } from './useChartColors.js'
 export { useChartRange } from './useChartRange.js'
 export type { UseChartRangeOptions, UseChartRangeReturn } from './useChartRange.js'

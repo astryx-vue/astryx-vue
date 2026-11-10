@@ -19,6 +19,10 @@ import SankeyGrid from './Sankey/SankeyGrid.vue'
 import SankeyLabel from './Sankey/SankeyLabel.vue'
 import SankeyLink from './Sankey/SankeyLink.vue'
 import SankeyNode from './Sankey/SankeyNode.vue'
+import ThreeDAxis from './ThreeD/ThreeDAxis.vue'
+import ThreeDChart from './ThreeD/ThreeDChart.vue'
+import ThreeDGrid from './ThreeD/ThreeDGrid.vue'
+import ThreeDScatter from './ThreeD/ThreeDScatter.vue'
 
 /**
  * 服务端渲染。没有 DOM、量不到容器宽度，宽度只能由 `width` prop 给；
@@ -126,6 +130,29 @@ describe('chart server rendering', () => {
     expect(html).toContain('Search = 10')
     expect(html).toContain('>From<')
     expect(html).toContain('>Signup<')
+  })
+
+  it('renders interactive ThreeD SVG without browser animation APIs', async () => {
+    const app = createSSRApp({
+      render: () => h(ThreeDChart, {
+        data: [{ x: 0, y: 1, z: 0 }, { x: 2, y: 3, z: 2 }],
+        xKey: 'x',
+        yKey: 'y',
+        zKey: 'z',
+        width: 600,
+        interactive: true,
+        autoRotate: 1,
+      }, {
+        default: () => [h(ThreeDGrid), h(ThreeDAxis), h(ThreeDScatter, { color: '#336699' })],
+      }),
+    })
+    const html = await renderToString(app)
+    expect(html).toContain('role="img"')
+    expect(html).toContain('3D chart of y by x and z')
+    expect(html).toContain('tabindex="0"')
+    expect(html).toContain('<circle')
+    expect(html).toContain('<line')
+    expect(html).not.toContain('NaN')
   })
 
   it('renders the legend list on its own', async () => {

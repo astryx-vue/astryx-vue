@@ -22,6 +22,9 @@ import {
   chartsSankey,
   chartsSelect,
   chartsStackedArea,
+  chartsThreeDBar,
+  chartsThreeDScatter,
+  chartsThreeDSurface,
   chartsZoom,
 } from '../../../../components/demos/chart'
 </script>
@@ -537,6 +540,55 @@ A node's `value` is the total flow through that node. Derive node totals and lin
 For up to 100 links, the chart also renders a visually hidden From/To/Value table for screen readers.
 
 <DemoExample :demo="chartsSankey" description="Three columns of visitor flow with gradient ribbons, node labels and headers; narrow screens scroll horizontally." locale="en" title="Sankey chart" />
+
+## Three-dimensional SVG charts
+
+`ThreeDChart` normalizes x/y/z data, projects it into two-dimensional SVG, and paints marks in depth order. WebGL is not required. With `interactive`, drag to rotate the camera; when focused, arrow keys rotate by 10° and elevation is clamped from -89° to 89°.
+
+```vue
+<ThreeDChart :data="data" x-key="x" y-key="y" z-key="z" interactive>
+  <ThreeDGrid />
+  <ThreeDAxis />
+  <ThreeDScatter color="var(--astryx-color-data-1)" />
+</ThreeDChart>
+```
+
+| ThreeDChart prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` | `Record<string, unknown>[]` | **Required** | 3D rows; marks skip rows containing non-finite values. |
+| `xKey` / `yKey` / `zKey` | `string` | **Required** | Field names for the three dimensions; y is height. |
+| `xDomain` / `yDomain` / `zDomain` | `[number, number]` | Data extent | Optional explicit numeric domains. |
+| `width` / `height` | `number` | `0` / `400` | Container width is measured in the browser; pass `width` explicitly for SSR. |
+| `azimuth` / `elevation` | `number` | `35` / `25` | Initial camera angles in degrees. |
+| `interactive` | `boolean` | `false` | Enable pointer drag and arrow-key rotation, including touch pointer capture. |
+| `autoRotate` | `number` | `0` | Azimuth increment per frame; pauses on hover/focus and stops under reduced motion. |
+| `label` | `string` | From fields | Accessible SVG name. |
+
+Auto-rotation updates about every 50ms and scales by elapsed time. The SVG is focusable when interaction or auto-rotation is enabled. Arrow keys do not move the camera when only auto-rotation is enabled.
+
+### Three-dimensional marks
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ThreeDScatter.color` | `string` | **Required** | Point color; radius and opacity vary with depth. |
+| `ThreeDScatter.radius` / `opacity` | `number` | `4` / `0.85` | Base point radius and opacity. |
+| `ThreeDBar.color` | `string` | **Required** | Fill and stroke for all three bar faces. |
+| `ThreeDBar.barWidth` / `barDepth` | `number` | `0.06` / `0.06` | Width and depth in normalized coordinates, not pixels. |
+| `ThreeDGrid.divisions` | `number` | `5` | Floor divisions along both x and z. |
+| `ThreeDAxis.labels` | `boolean` | `true` | Show field and domain labels. |
+| `ThreeDSurface.colorRange` | `string[]` | **Required** | Low-to-high height color ramp. |
+| `ThreeDSurface.opacity` | `number` | `0.8` | Surface fill opacity. |
+| `ThreeDSurface.wireframe` | `boolean` | `false` | Draw outlines without face fills. |
+
+`ThreeDSurface` expects a complete x/z grid. Faces with missing cells or invalid points are skipped. All three examples support drag and arrow-key rotation.
+
+<DemoExample :demo="chartsThreeDScatter" description="Three 3D clusters with a floor grid and axes, supporting drag and arrow-key rotation." locale="en" title="3D scatter" />
+
+<DemoExample :demo="chartsThreeDBar" description="3D bars with distinct top, front and side shading." locale="en" title="3D bars" />
+
+<DemoExample :demo="chartsThreeDSurface" description="A continuous wave surface colored by height, with guards against missing or invalid cells." locale="en" title="3D surface" />
+
+`ThreeDScatterGL` and other GL/WebGL marks are not included in this package.
 
 ## Brush selection
 

@@ -20621,6 +20621,118 @@
             ]
           },
           {
+            "heading": "Three-dimensional SVG charts",
+            "rows": [
+              {
+                "name": "`data`",
+                "description": "`data`",
+                "type": "`Record[]`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`xKey` / `yKey` / `zKey`",
+                "description": "`xKey` / `yKey` / `zKey`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`xDomain` / `yDomain` / `zDomain`",
+                "description": "`xDomain` / `yDomain` / `zDomain`",
+                "type": "`[number, number]`",
+                "default": "Data extent"
+              },
+              {
+                "name": "`width` / `height`",
+                "description": "`width` / `height`",
+                "type": "`number`",
+                "default": "`0` / `400`"
+              },
+              {
+                "name": "`azimuth` / `elevation`",
+                "description": "`azimuth` / `elevation`",
+                "type": "`number`",
+                "default": "`35` / `25`"
+              },
+              {
+                "name": "`interactive`",
+                "description": "`interactive`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`autoRotate`",
+                "description": "`autoRotate`",
+                "type": "`number`",
+                "default": "`0`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "From fields"
+              }
+            ]
+          },
+          {
+            "heading": "Three-dimensional marks",
+            "rows": [
+              {
+                "name": "`ThreeDScatter.color`",
+                "description": "`ThreeDScatter.color`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`ThreeDScatter.radius` / `opacity`",
+                "description": "`ThreeDScatter.radius` / `opacity`",
+                "type": "`number`",
+                "default": "`4` / `0.85`"
+              },
+              {
+                "name": "`ThreeDBar.color`",
+                "description": "`ThreeDBar.color`",
+                "type": "`string`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`ThreeDBar.barWidth` / `barDepth`",
+                "description": "`ThreeDBar.barWidth` / `barDepth`",
+                "type": "`number`",
+                "default": "`0.06` / `0.06`"
+              },
+              {
+                "name": "`ThreeDGrid.divisions`",
+                "description": "`ThreeDGrid.divisions`",
+                "type": "`number`",
+                "default": "`5`"
+              },
+              {
+                "name": "`ThreeDAxis.labels`",
+                "description": "`ThreeDAxis.labels`",
+                "type": "`boolean`",
+                "default": "`true`"
+              },
+              {
+                "name": "`ThreeDSurface.colorRange`",
+                "description": "`ThreeDSurface.colorRange`",
+                "type": "`string[]`",
+                "default": "**Required**"
+              },
+              {
+                "name": "`ThreeDSurface.opacity`",
+                "description": "`ThreeDSurface.opacity`",
+                "type": "`number`",
+                "default": "`0.8`"
+              },
+              {
+                "name": "`ThreeDSurface.wireframe`",
+                "description": "`ThreeDSurface.wireframe`",
+                "type": "`boolean`",
+                "default": "`false`"
+              }
+            ]
+          },
+          {
             "heading": "Brush selection",
             "rows": [
               {
@@ -21541,6 +21653,118 @@
             ]
           },
           {
+            "heading": "三维 SVG 图表",
+            "rows": [
+              {
+                "name": "`data`",
+                "description": "`data`",
+                "type": "`Record[]`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`xKey` / `yKey` / `zKey`",
+                "description": "`xKey` / `yKey` / `zKey`",
+                "type": "`string`",
+                "default": "**必填**"
+              },
+              {
+                "name": "`xDomain` / `yDomain` / `zDomain`",
+                "description": "`xDomain` / `yDomain` / `zDomain`",
+                "type": "`[number, number]`",
+                "default": "数据范围"
+              },
+              {
+                "name": "`width` / `height`",
+                "description": "`width` / `height`",
+                "type": "`number`",
+                "default": "`0` / `400`"
+              },
+              {
+                "name": "`azimuth` / `elevation`",
+                "description": "`azimuth` / `elevation`",
+                "type": "`number`",
+                "default": "`35` / `25`"
+              },
+              {
+                "name": "`interactive`",
+                "description": "`interactive`",
+                "type": "`boolean`",
+                "default": "`false`"
+              },
+              {
+                "name": "`autoRotate`",
+                "description": "`autoRotate`",
+                "type": "`number`",
+                "default": "`0`"
+              },
+              {
+                "name": "`label`",
+                "description": "`label`",
+                "type": "`string`",
+                "default": "按字段生成"
+              }
+            ]
+          },
+          {
+            "heading": "三维图元",
+            "rows": [
+              {
+                "name": "`ThreeDScatter.color`",
+                "type": "`string`",
+                "default": "**必填**",
+                "description": "散点颜色；半径和不透明度随深度变化。"
+              },
+              {
+                "name": "`ThreeDScatter.radius` / `opacity`",
+                "type": "`number`",
+                "default": "`4` / `0.85`",
+                "description": "散点基础半径和不透明度。"
+              },
+              {
+                "name": "`ThreeDBar.color`",
+                "type": "`string`",
+                "default": "**必填**",
+                "description": "柱体三个面的颜色和描边。"
+              },
+              {
+                "name": "`ThreeDBar.barWidth` / `barDepth`",
+                "type": "`number`",
+                "default": "`0.06` / `0.06`",
+                "description": "归一化坐标中的柱体宽度和深度，不是像素值。"
+              },
+              {
+                "name": "`ThreeDGrid.divisions`",
+                "type": "`number`",
+                "default": "`5`",
+                "description": "地面 x/z 两个方向的分段数。"
+              },
+              {
+                "name": "`ThreeDAxis.labels`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否显示字段名和 domain 标签。"
+              },
+              {
+                "name": "`ThreeDSurface.colorRange`",
+                "type": "`string[]`",
+                "default": "**必填**",
+                "description": "从低到高的高度颜色序列。"
+              },
+              {
+                "name": "`ThreeDSurface.opacity`",
+                "type": "`number`",
+                "default": "`0.8`",
+                "description": "曲面填充不透明度。"
+              },
+              {
+                "name": "`ThreeDSurface.wireframe`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "只绘制网格线，不填充面。"
+              }
+            ]
+          },
+          {
             "heading": "框选范围",
             "rows": [
               {
@@ -21909,6 +22133,14 @@
             "text": "`SankeyLink` defaults to a source-to-target gradient. `color` also accepts `'source'`, `'target'`, any CSS color, or `{ gradient: number }` with a bias from 0 to 1. `tension` controls the bezier curve; `0` produces straight ribbons. Gradient IDs are scoped per chart, so multiple charts do not reference each other's definitions.\n\n`SankeyNode` provides a `glow` toggle. `SankeyLabel` chooses rotated on-bar or beside-bar labels from node height; last-column labels anchor left to avoid clipping. Use `formatValue` for custom values and `showPercent` for downstream percentages. Percentages use the largest column total as 100%.\n\nFor up to 100 links, the chart also renders a visually hidden From/To/Value table for screen readers."
           },
           {
+            "heading": "Three-dimensional SVG charts",
+            "text": "`ThreeDChart` normalizes x/y/z data, projects it into two-dimensional SVG, and paints marks in depth order. WebGL is not required. With `interactive`, drag to rotate the camera; when focused, arrow keys rotate by 10° and elevation is clamped from -89° to 89°.\n\n```vue\n<ThreeDChart :data=\"data\" x-key=\"x\" y-key=\"y\" z-key=\"z\" interactive>\n  <ThreeDGrid />\n  <ThreeDAxis />\n  <ThreeDScatter color=\"var(--astryx-color-data-1)\" />\n</ThreeDChart>\n```\n\nAuto-rotation updates about every 50ms and scales by elapsed time. The SVG is focusable when interaction or auto-rotation is enabled. Arrow keys do not move the camera when only auto-rotation is enabled."
+          },
+          {
+            "heading": "Three-dimensional marks",
+            "text": "`ThreeDSurface` expects a complete x/z grid. Faces with missing cells or invalid points are skipped. All three examples support drag and arrow-key rotation.\n\n`ThreeDScatterGL` and other GL/WebGL marks are not included in this package."
+          },
+          {
             "heading": "Brush selection",
             "text": "Place `<ChartBrush>` in the `<Chart>` `interactions` slot to let users drag a selection over the plot. `mode=\"x\"` selects a horizontal range, useful for time windows; `mode=\"xy\"` selects a rectangle, useful for scatter plots.\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\">\n  <template #interactions>\n    <ChartBrush @brush=\"onBrush\" @clear=\"clearSelection\" />\n  </template>\n</Chart>\n```\n\nThe `brush` event receives `(range, data)`. `range.x` is the `[min, max]` interval in data coordinates, with `range.y` also present in xy mode; `data` contains the original rows inside the selection. `clear` is a click that did not become a drag."
           },
@@ -22053,6 +22285,14 @@
           {
             "heading": "连线、节点和标签",
             "text": "`SankeyLink` 默认使用源节点到目标节点的渐变；`color` 也支持 `'source'`、`'target'`、任意 CSS 颜色或 `{ gradient: number }`，数值范围为 0–1。`tension` 控制贝塞尔曲线弯曲程度，`0` 为直线。每张图的渐变 ID 独立，不会在多图页面互相引用。\n\n`SankeyNode` 的 `glow` 控制节点光晕。`SankeyLabel` 根据节点高度选择条内旋转标签或节点旁标签，末列标签向左放置以避免裁切；`formatValue` 自定义数值格式，`showPercent` 控制后续列的百分比。百分比以最大列总值为 100%。\n\n不超过 100 条连线时，组件会输出视觉隐藏的来源、去向和数值表格，供读屏软件读取。"
+          },
+          {
+            "heading": "三维 SVG 图表",
+            "text": "`ThreeDChart` 把 x/y/z 数据归一化后投影到二维 SVG，并按深度排序绘制。它不需要 WebGL。`interactive` 开启后，可拖动旋转相机；聚焦图表后，方向键每次旋转 10°，俯仰角限制在 -89° 到 89°。\n\n```vue\n<ThreeDChart :data=\"data\" x-key=\"x\" y-key=\"y\" z-key=\"z\" interactive>\n  <ThreeDGrid />\n  <ThreeDAxis />\n  <ThreeDScatter color=\"var(--astryx-color-data-1)\" />\n</ThreeDChart>\n```\n\n自动旋转约每 50ms 更新一次，并按实际经过时间计算角度。开启交互或自动旋转时，SVG 可键盘聚焦；仅开启自动旋转时，方向键不会改变相机。"
+          },
+          {
+            "heading": "三维图元",
+            "text": "`ThreeDSurface` 的数据应形成完整 x/z 网格；缺格或非法点对应的面会跳过。以下示例都可拖动或用方向键旋转。\n\n`ThreeDScatterGL` 和其他 GL/WebGL 图元不在当前包中。"
           },
           {
             "heading": "框选范围",
@@ -22220,6 +22460,39 @@
             "zh": "三列访客流向，展示渐变流向带、节点标签和列标题；窄屏可横向滚动。"
           },
           "code": "<script setup lang=\"ts\">\nimport { SankeyChart, SankeyGrid, SankeyLabel, SankeyLink, SankeyNode } from '@astryx-vue/charts'\n\nconst nodes = [\n  { id: 'search', label: 'Search', value: 45 },\n  { id: 'direct', label: 'Direct', value: 35 },\n  { id: 'social', label: 'Social', value: 20 },\n  { id: 'product', label: 'Product', value: 60 },\n  { id: 'docs', label: 'Docs', value: 40 },\n  { id: 'activated', label: 'Activated', value: 55 },\n  { id: 'dropped', label: 'Dropped', value: 45 },\n]\n\nconst links = [\n  { source: 'search', target: 'product', value: 28 },\n  { source: 'search', target: 'docs', value: 17 },\n  { source: 'direct', target: 'product', value: 22 },\n  { source: 'direct', target: 'docs', value: 13 },\n  { source: 'social', target: 'product', value: 10 },\n  { source: 'social', target: 'docs', value: 10 },\n  { source: 'product', target: 'activated', value: 38 },\n  { source: 'product', target: 'dropped', value: 22 },\n  { source: 'docs', target: 'activated', value: 17 },\n  { source: 'docs', target: 'dropped', value: 23 },\n]\n\nconst columns = [\n  { ids: ['search', 'direct', 'social'], label: 'Acquisition' },\n  { ids: ['product', 'docs'], label: 'Engagement' },\n  { ids: ['activated', 'dropped'], label: 'Outcome' },\n]\n</script>\n\n<template>\n  <SankeyChart\n    :nodes=\"nodes\"\n    :links=\"links\"\n    :columns=\"columns\"\n    :width=\"720\"\n    :height=\"340\"\n    :min-column-width=\"220\"\n    label=\"Visitor activation flow\"\n  >\n    <SankeyGrid />\n    <SankeyLink :opacity=\"0.72\" />\n    <SankeyNode />\n    <SankeyLabel />\n  </SankeyChart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "3D scatter",
+            "zh": "三维散点"
+          },
+          "description": {
+            "en": "Three 3D clusters with a floor grid and axes, supporting drag and arrow-key rotation.",
+            "zh": "三组三维散点、地面网格和坐标轴，支持拖动与方向键旋转。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { ThreeDAxis, ThreeDChart, ThreeDGrid, ThreeDScatter, useChartColors } from '@astryx-vue/charts'\n\nconst centers = [\n  { x: 2, y: 3, z: 2 },\n  { x: 6, y: 7, z: 5 },\n  { x: 3, y: 5, z: 8 },\n]\nconst data = centers.flatMap((center, group) => Array.from({ length: 12 }, (_, index) => ({\n  x: center.x + Math.sin(index * 1.7 + group) * 1.1,\n  y: center.y + Math.cos(index * 1.3 + group) * 0.9,\n  z: center.z + Math.sin(index * 1.1 + group) * 1.2,\n})))\nconst color = useChartColors().categorical(1)[0]\n</script>\n\n<template>\n  <ThreeDChart\n    :data=\"data\"\n    x-key=\"x\"\n    y-key=\"y\"\n    z-key=\"z\"\n    :width=\"720\"\n    :height=\"420\"\n    interactive\n    label=\"Three-dimensional clusters\"\n  >\n    <ThreeDGrid />\n    <ThreeDAxis />\n    <ThreeDScatter :color=\"color\" :radius=\"4.5\" />\n  </ThreeDChart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "3D bars",
+            "zh": "三维柱图"
+          },
+          "description": {
+            "en": "3D bars with distinct top, front and side shading.",
+            "zh": "具有顶面、正面和侧面明暗层次的三维柱体。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { ThreeDAxis, ThreeDBar, ThreeDChart, ThreeDGrid, useChartColors } from '@astryx-vue/charts'\n\nconst data = Array.from({ length: 12 }, (_, index) => ({\n  x: index % 4 * 2,\n  y: 4 + Math.sin(index * 0.8) * 2 + index % 3,\n  z: Math.floor(index / 4) * 2,\n}))\nconst color = useChartColors().categorical(2)[1]\n</script>\n\n<template>\n  <ThreeDChart\n    :data=\"data\"\n    x-key=\"x\"\n    y-key=\"y\"\n    z-key=\"z\"\n    :x-domain=\"[0, 6]\"\n    :y-domain=\"[0, 10]\"\n    :z-domain=\"[0, 4]\"\n    :width=\"720\"\n    :height=\"420\"\n    interactive\n    label=\"Three-dimensional bar chart\"\n  >\n    <ThreeDGrid />\n    <ThreeDAxis />\n    <ThreeDBar :color=\"color\" :bar-width=\"0.12\" :bar-depth=\"0.16\" />\n  </ThreeDChart>\n</template>"
+        },
+        {
+          "title": {
+            "en": "3D surface",
+            "zh": "三维曲面"
+          },
+          "description": {
+            "en": "A continuous wave surface colored by height, with guards against missing or invalid cells.",
+            "zh": "按高度着色的连续波浪曲面，缺格保护可阻止非法几何。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { ThreeDAxis, ThreeDChart, ThreeDGrid, ThreeDSurface, useChartColors } from '@astryx-vue/charts'\n\nconst data = Array.from({ length: 11 }, (_, x) => Array.from({ length: 11 }, (_, z) => ({\n  x,\n  y: 5 + Math.sin(x * 0.7) * Math.cos(z * 0.6) * 2.5,\n  z,\n}))).flat()\nconst colorRange = useChartColors().sequential.blue(5)\n</script>\n\n<template>\n  <ThreeDChart\n    :data=\"data\"\n    x-key=\"x\"\n    y-key=\"y\"\n    z-key=\"z\"\n    :x-domain=\"[0, 10]\"\n    :y-domain=\"[0, 10]\"\n    :z-domain=\"[0, 10]\"\n    :width=\"720\"\n    :height=\"420\"\n    interactive\n    label=\"Three-dimensional wave surface\"\n  >\n    <ThreeDGrid :divisions=\"4\" />\n    <ThreeDSurface :color-range=\"colorRange\" :opacity=\"0.86\" />\n    <ThreeDAxis />\n  </ThreeDChart>\n</template>"
         },
         {
           "title": {
