@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.16
+
+### Patch Changes
+
+- [#473](https://github.com/astryx-vue/astryx-vue/pull/473) [`878937f`](https://github.com/astryx-vue/astryx-vue/commit/878937fba15a968ae4d2115f9871190c2854b3d0) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Focus conditionally mounted Dialog headers after the dialog opens and restore focus to the saved opener on close. Keep MobileNav mounted and focus-contained through its 300 ms exit animation, while reduced-motion users still close immediately.
+
 ## 0.7.15
 
 ### Patch Changes
