@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.15
+
+### Patch Changes
+
+- [#472](https://github.com/astryx-vue/astryx-vue/pull/472) [`5e1c45f`](https://github.com/astryx-vue/astryx-vue/commit/5e1c45f8bd2f87618c03f3f1c5737eb4f2104d3a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Improve search ranking for compound names, camelCase queries, and common word forms. Search now matches authored template display names, avoids unrelated partial-text results for underscored identifiers, and orders failed-lookup suggestions by name affinity before edit distance.
+
 ## 0.4.14
 
 ### Patch Changes
