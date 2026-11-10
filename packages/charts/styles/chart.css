@@ -43,4 +43,9 @@
   .astryx-chart__plot > svg {
     display: block;
   }
+
+  /* 只有拖动交互需要独占触摸；普通图表仍可用于页面滚动。 */
+  .astryx-chart__plot > svg:has(.astryx-chart-brush, .astryx-chart-zoom) {
+    touch-action: none;
+  }
 }
