@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.9.1
+
+### Patch Changes
+
+- [#470](https://github.com/astryx-vue/astryx-vue/pull/470) [`bef8ed0`](https://github.com/astryx-vue/astryx-vue/commit/bef8ed04e4eaf33de8de05e046e8e0647f83fc63) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 ChartBrush 手机斜向拖动被原生滚动打断的问题，并在 pointercancel 时丢弃未完成选区而不是误提交；ChartZoom 使用相同的根 SVG 触摸约束。
+
 ## 0.9.0
 
 ### Minor Changes
