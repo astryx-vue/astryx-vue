@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.17
+
+### Patch Changes
+
+- [#474](https://github.com/astryx-vue/astryx-vue/pull/474) [`dbad081`](https://github.com/astryx-vue/astryx-vue/commit/dbad081f09ced3c3a80089070b3980acb2c41e87) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Update Text and Heading truncation tooltips when content changes without a resize, and bind anchors-on-self Tooltips to the real slot root. Forward caller attributes, class, style, and events to the DropdownMenuRadioGroup root while preserving its role and fallback label.
+
 ## 0.7.16
 
 ### Patch Changes

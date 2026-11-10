@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/core",
   "type": "module",
-  "version": "0.7.16",
+  "version": "0.7.17",
   "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
