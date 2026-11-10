@@ -51,6 +51,11 @@ function onPointerMove(event: PointerEvent): void {
       }
 }
 
+function onPointerCancel(): void {
+  dragging.value = false
+  brush.value = null
+}
+
 function onPointerUp(): void {
   dragging.value = false
   const selected = brush.value
@@ -97,7 +102,7 @@ const selectionStyle = computed(() => ({ fill: props.color, fillOpacity: props.o
 </script>
 
 <template>
-  <g>
+  <g class="astryx-chart-brush">
     <rect
       x="0"
       y="0"
@@ -108,7 +113,7 @@ const selectionStyle = computed(() => ({ fill: props.color, fillOpacity: props.o
       @pointerdown="onPointerDown"
       @pointermove="onPointerMove"
       @pointerup="onPointerUp"
-      @pointercancel="onPointerUp"
+      @pointercancel="onPointerCancel"
     />
     <rect
       v-if="brush && (Math.abs(brush.x1 - brush.x0) > 1 || Math.abs(brush.y1 - brush.y0) > 1)"
