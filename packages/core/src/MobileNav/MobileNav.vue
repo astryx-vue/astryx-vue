@@ -38,8 +38,11 @@ const dialogId = computed(() => props.id || generatedId)
 const labelId = computed(() => `${dialogId.value}-label`)
 
 const accessibleName = computed(() => props.label || props.header || messages.value.nav.mobileNav)
-const trapEnabled = computed(() => isOpen.value)
+const closing = ref(false)
+const trapEnabled = computed(() => isOpen.value || closing.value)
 const sideIsStart = computed(() => resolvedSide.value === 'start')
+const CLOSE_DELAY_MS = 300
+let closeTimer: ReturnType<typeof setTimeout> | undefined
 
 useScrollLock(isOpen)
 // 启用开关要一直开着。关掉时 shouldRestore 变 false，启用开关如果跟着一起关，焦点就回不去。
@@ -65,11 +68,34 @@ function resolveSide(side: MobileNavSide): 'start' | 'end' {
   return 'start'
 }
 
+function clearCloseTimer(): void {
+  if (closeTimer !== undefined)
+    clearTimeout(closeTimer)
+  closeTimer = undefined
+}
+
+function finishClose(dialog: HTMLDialogElement): void {
+  clearCloseTimer()
+  if (typeof dialog.close === 'function' && dialog.open)
+    dialog.close()
+  else
+    dialog.removeAttribute('open')
+  closing.value = false
+}
+
+function reduceMotion(): boolean {
+  return typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
 function syncDialog(open: boolean): void {
   const dialog = dialogRef.value
   if (!dialog)
     return
   if (open) {
+    clearCloseTimer()
+    closing.value = false
     resolvedSide.value = resolveSide(props.side)
     if (typeof dialog.showModal === 'function' && !dialog.open)
       dialog.showModal()
@@ -77,10 +103,13 @@ function syncDialog(open: boolean): void {
       dialog.setAttribute('open', '')
     return
   }
-  if (typeof dialog.close === 'function' && dialog.open)
-    dialog.close()
-  else
-    dialog.removeAttribute('open')
+  if (!dialog.open || reduceMotion()) {
+    finishClose(dialog)
+    return
+  }
+  closing.value = true
+  clearCloseTimer()
+  closeTimer = setTimeout(finishClose, CLOSE_DELAY_MS, dialog)
 }
 
 function setOpen(next: boolean): void {
@@ -103,6 +132,9 @@ function onDialogClick(event: MouseEvent): void {
 }
 
 watch(isOpen, (open) => {
+  // Keep the modal and its focus boundary alive while the exit animation runs.
+  if (!open && dialogRef.value?.open && !reduceMotion())
+    closing.value = true
   void nextTick(() => syncDialog(open))
 })
 
@@ -112,9 +144,11 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  clearCloseTimer()
   const dialog = dialogRef.value
   if (dialog?.open && typeof dialog.close === 'function')
     dialog.close()
+  closing.value = false
 })
 </script>
 
@@ -124,7 +158,10 @@ onBeforeUnmount(() => {
     :id="dialogId"
     ref="dialogRef"
     class="astryx-mobile-nav astryx-layer"
-    :class="sideIsStart ? 'astryx-mobile-nav--start' : 'astryx-mobile-nav--end'"
+    :class="[
+      sideIsStart ? 'astryx-mobile-nav--start' : 'astryx-mobile-nav--end',
+      { 'astryx-mobile-nav--closing': closing },
+    ]"
     :style="{ '--astryx-mobile-nav-width': `${width}px` }"
     aria-modal="true"
     :aria-labelledby="$slots.header || header ? labelId : undefined"

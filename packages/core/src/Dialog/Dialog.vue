@@ -148,21 +148,23 @@ function detachModalOutlet(): void {
   modalOutlet = null
 }
 
+function initialFocusTarget(): HTMLElement | null {
+  const dialog = dialogRef.value
+  if (!dialog)
+    return null
+  return dialog.querySelector<HTMLElement>('[data-autofocus]')
+    ?? dialog.querySelector<HTMLElement>('[data-dialog-default-focus]')
+    ?? null
+}
+
 // 使用共享的焦点管理
 useFocusTrap({
   container: dialogRef,
   isEnabled: isDialogOpen,
-  initialFocus: () => {
-    const dialog = dialogRef.value
-    if (!dialog)
-      return null
-    return dialog.querySelector<HTMLElement>('[data-autofocus]')
-      ?? dialog.querySelector<HTMLElement>('[data-dialog-default-focus]')
-      ?? null
-  },
+  initialFocus: initialFocusTarget,
 })
 
-useRestoreFocus({
+const { save: saveFocus, restore: restoreFocus } = useRestoreFocus({
   isEnabled: ref(true),
   shouldRestore: shouldRestoreFocus,
 })
@@ -174,8 +176,10 @@ function openDialog(): void {
   if (!dialog || dialog.open)
     return
   triggerElement = document.activeElement as HTMLElement | null
+  saveFocus()
   applyEntryDirection(dialog)
   dialog.showModal()
+  initialFocusTarget()?.focus({ preventScroll: true })
   attachModalOutlet(dialog)
   lockScroll()
 }
@@ -186,6 +190,7 @@ function closeDialog(): void {
   const dialog = dialogRef.value
   if (dialog?.open)
     dialog.close()
+  restoreFocus()
   detachModalOutlet()
   unlockScroll()
 }
@@ -210,7 +215,7 @@ watch(() => props.isOpen, (open) => {
     openDialog()
   else
     closeDialog()
-})
+}, { flush: 'post' })
 
 onMounted(() => {
   if (props.isOpen)

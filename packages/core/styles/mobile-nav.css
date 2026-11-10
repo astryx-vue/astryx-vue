@@ -46,6 +46,14 @@
     animation: astryx-slide-in-end var(--astryx-duration-medium) var(--astryx-ease-standard) both;
   }
 
+  .astryx-mobile-nav--closing.astryx-mobile-nav--start .astryx-mobile-nav__drawer {
+    animation-name: astryx-slide-out-start;
+  }
+
+  .astryx-mobile-nav--closing.astryx-mobile-nav--end .astryx-mobile-nav__drawer {
+    animation-name: astryx-slide-out-end;
+  }
+
   .astryx-mobile-nav__header {
     display: flex;
     flex: none;
