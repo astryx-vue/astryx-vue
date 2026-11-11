@@ -155,6 +155,17 @@ describe('grid', () => {
     expect(wrapper.element.style.color).toBe('red')
   })
 
+  it('keeps component-owned metadata over conflicting pass-throughs', () => {
+    const wrapper = mount(Grid, {
+      props: { columns: 3, gap: 4, align: 'end', justify: 'center' },
+      attrs: { 'data-columns': '9', 'data-gap': '10', 'data-align': 'start', 'data-justify': 'stretch' },
+    })
+    expect(wrapper.attributes('data-columns')).toBe('3')
+    expect(wrapper.attributes('data-gap')).toBe('4')
+    expect(wrapper.attributes('data-align')).toBe('end')
+    expect(wrapper.attributes('data-justify')).toBe('center')
+  })
+
   it('forwards attributes and listeners to the container', async () => {
     const wrapper = mount(Grid, {
       props: { columns: 2 },

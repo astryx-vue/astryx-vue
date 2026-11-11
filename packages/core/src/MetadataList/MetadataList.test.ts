@@ -75,6 +75,27 @@ describe('metadata list', () => {
     expect(onClick).toHaveBeenCalledOnce()
   })
 
+  it('preserves a width-only label config with single-column side labels', () => {
+    const wrapper = mount(MetadataList, {
+      props: { label: { width: 120 } },
+      slots: { default: '<metadata-list-item label="Name">Ada</metadata-list-item>' },
+      global: { components: { MetadataListItem } },
+    })
+    expect(wrapper.get('dl').attributes('style')).toContain('120px minmax(0, 1fr)')
+    expect(wrapper.get('dt').element.parentElement).toBe(wrapper.get('dl').element)
+    expect(wrapper.get('dd').element.parentElement).toBe(wrapper.get('dl').element)
+  })
+
+  it('keeps top labels as the default for numeric multi-column width-only config', () => {
+    const wrapper = mount(MetadataList, {
+      props: { columns: 2, label: { width: 260 } },
+      slots: { default: '<metadata-list-item label="Name">Ada</metadata-list-item>' },
+      global: { components: { MetadataListItem } },
+    })
+    expect(wrapper.get('dl').attributes('style')).toContain('repeat(2, 1fr)')
+    expect(wrapper.get('.astryx-metadata-list__item').element.contains(wrapper.get('dd').element)).toBe(true)
+  })
+
   it('lands item pass-through props on the dt beside the value', () => {
     const wrapper = mount(MetadataListItem, {
       props: { label: 'Name' },
