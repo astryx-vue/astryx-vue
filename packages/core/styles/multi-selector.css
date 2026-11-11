@@ -143,6 +143,10 @@
     box-shadow: none;
   }
 
+  .astryx-multi-selector-control.is-disabled:focus-within {
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
+  }
+
   .astryx-multi-selector-control.is-readonly,
   .astryx-multi-selector-control.is-readonly .astryx-multi-selector-trigger {
     cursor: default;
