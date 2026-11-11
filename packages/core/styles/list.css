@@ -127,6 +127,9 @@
     color: var(--astryx-list-marker-foreground, light-dark(#171717, #fafafa));
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
   }
 
   .astryx-list-marker__number[data-style='decimal']::before {

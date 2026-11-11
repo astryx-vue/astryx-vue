@@ -98,6 +98,10 @@
     box-shadow: none;
   }
 
+  .astryx-selector-field.is-disabled:focus-within {
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
+  }
+
   .astryx-selector-field.is-readonly,
   .astryx-selector-field.is-readonly .astryx-selector-trigger {
     cursor: default;

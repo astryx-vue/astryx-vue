@@ -249,7 +249,7 @@
   .astryx-markdown__marker[data-marker='decimal'],
   .astryx-markdown__marker[data-marker='lower-alpha'],
   .astryx-markdown__marker[data-marker='lower-roman'] {
-    justify-content: flex-start;
+    justify-content: flex-end;
     margin-top: 0;
     color: var(--astryx-color-text-primary, #171717);
     font-size: var(--astryx-text-body-size, 0.875rem);
