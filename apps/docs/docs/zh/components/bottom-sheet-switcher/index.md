@@ -39,7 +39,7 @@ const activeSheet = ref<string | null>(null)
 
 每一张子面板都要有自己的 `sheet-id` 和一个非空的 `label`。对话框的名字优先用切换器自己的 `label`，没写就取当前那张的 `label`，所以整段流程从头到尾只有一个无障碍名称。只有 `sheet-id` 和 `active-sheet` 对上的那一张可以交互；换页时上一张还留在底下，但已经不可交互，等新的一张落定之后才撤掉，所以切步骤的时候遮罩不会闪一下。
 
-`purpose` 决定整段流程怎么被关掉，和 `Dialog` 一致。不传就跟着当前那张走：`info` 允许 Escape、点遮罩和下滑，`form` 只允许 Escape，免得把填到一半的内容丢掉，`required` 堵住所有隐式关闭。`hasScrim` 默认是 `true`，整段流程共用一层遮罩：换页时它一直留着，只有整段关掉才消失，这样多步流程看起来才是一块完整的表面，而不是好几个对话框连着弹。
+`purpose` 决定整段流程怎么被关掉，和 `Dialog` 一致。不传就跟着当前那张走：`info` 允许 Escape、点遮罩和下滑，`form` 只允许 Escape，避免把填到一半的内容丢掉，`required` 阻止所有隐式关闭。`hasScrim` 默认是 `true`，整段流程共用一层遮罩：换页时它一直留着，只有整段关掉才消失，这样多步流程看起来才是一块完整的表面，而不是好几个对话框连着弹。
 
 按 Escape 会请求关闭。在此之前先发 `cancel` 事件，参数就是原生的 cancel 事件；在它上面调 `event.preventDefault()` 就能留住这段流程。
 

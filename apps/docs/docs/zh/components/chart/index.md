@@ -241,7 +241,7 @@ declare function referenceLine(options: ReferenceLineOptions): SeriesDef
 
 ### 误差条（errorBar）
 
-误差条（须线）用于展示数值的不确定性范围。它通常配合 `bar()` 或 `dot()` 一起使用。需要注意的是，误差条传入的上下界字段是绝对数值，因此即使上下误差不对称也可以正确绘制。如果某一行缺失了上界或下界，则会直接跳过该点，绝不绘制误导人的零刻度须线。它属于辅助标注标记，不进入图例和提示框。
+误差条（须线）用于展示数值的不确定性范围。它通常配合 `bar()` 或 `dot()` 一起使用。需要注意的是，误差条传入的上下界字段是绝对数值，因此即使上下误差不对称也可以正确绘制。如果某一行缺失了上界或下界，则会直接跳过该点，不会绘制零刻度须线。它属于辅助标注标记，不进入图例和提示框。
 
 ```ts
 declare function errorBar(options: ErrorBarOptions): SeriesDef

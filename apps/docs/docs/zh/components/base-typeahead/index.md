@@ -18,7 +18,7 @@ import { baseTypeaheadCustomResults } from '../../../../components/demos/base-ty
 import { BaseTypeahead } from '@astryx-vue/core/Typeahead'
 ```
 
-这版的分工和原版一样。`BaseTypeahead` 只管输入框、搜索源、键盘模型和下拉；标签、说明、状态文案、已选值的标签都归调用方，由调用方摆在引擎外面。这里的 `label` 只是输入框的无障碍名，外面已经有 `<label for>` 指过来时就不用传。
+`BaseTypeahead` 只管输入框、搜索源、键盘模型和下拉；标签、说明、状态文案、已选值的标签都归调用方，由调用方放在引擎外面。这里的 `label` 只是输入框的无障碍名，外面已经有 `<label for>` 指过来时就不用传。
 
 <ComponentAnatomy />
 

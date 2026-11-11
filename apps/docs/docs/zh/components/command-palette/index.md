@@ -26,7 +26,7 @@ import {
 - 普通表单里的局部下拉选择，请使用 [Selector](/components/selector) 或下拉菜单。
 - 站内文章的全文搜索结果页，更适合使用带翻页的专属搜索大页面。
 
-通过快捷键打开面板非常简单，配合 `useHotkeys` 监听快捷键，控制 `isOpen` 开关即可：
+配合 `useHotkeys` 监听快捷键，控制 `isOpen` 开关即可打开面板：
 
 ```vue
 <script setup lang="ts">
@@ -56,12 +56,12 @@ useHotkeys([{ keys: 'mod+k', onPress: openPalette }])
 </template>
 ```
 
-其他好用的配置包括：
+其他常见配置：
 
 - `v-model:value`：可以把命令面板变成单选选择器，当前选中的项会保留打勾标记。
 - 在数据项里配置 `auxiliaryData.group`，组件就会自动将菜单整理成带标题的分类区域。
 - 上下方向键在选项间移动高亮，到头就停住。Home 和 End 留在输入框里，不改高亮。Page Up 跳到第一项可用项，Page Down 跳到最后一项可用项。Enter 执行当前高亮行。Escape 关掉面板，并丢掉还没回来的异步搜索。鼠标划过只会移动高亮，不会把列表滚走。
-- 只有在做组件文档演示或特殊内嵌时才开启 `isInline`（将面板平铺在页面里），正常的实际业务项目中请保持默认的模态弹窗形式。
+- 只有在做组件文档演示或特殊内嵌时才开启 `isInline`（将面板平铺在页面里），一般项目中请保持默认的模态弹窗形式。
 
 
 <ComponentAnatomy />
