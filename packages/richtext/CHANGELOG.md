@@ -1,5 +1,12 @@
 # @astryx-vue/richtext
 
+## 0.7.19
+
+### Patch Changes
+
+- Updated dependencies [[`1f1209a`](https://github.com/astryx-vue/astryx-vue/commit/1f1209a3255b5d83226ef24d8f6d25645aeaa833)]:
+  - @astryx-vue/core@0.7.19
+
 ## 0.7.18
 
 ### Patch Changes

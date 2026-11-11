@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.19
+
+### Patch Changes
+
+- [#476](https://github.com/astryx-vue/astryx-vue/pull/476) [`1f1209a`](https://github.com/astryx-vue/astryx-vue/commit/1f1209a3255b5d83226ef24d8f6d25645aeaa833) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Keep nested SideNav and TreeList rows full width while moving indentation inside the row, including activation from the indent area. Mirror Drawer entry motion under `:dir(rtl)`, including a direction set directly on the drawer.
+
 ## 0.7.18
 
 ### Patch Changes
