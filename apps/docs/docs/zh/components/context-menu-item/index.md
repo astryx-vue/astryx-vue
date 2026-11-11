@@ -17,7 +17,7 @@ import { contextMenuItemBasic } from '../../../../components/demos/context-menu-
 import { ContextMenuItem } from '@astryx-vue/core/ContextMenu'
 ```
 
-它是 [上下文菜单](/components/context-menu) 里的一行动作。菜单面板自己用手写的方式拼、也就是用 `content` 插槽而不是 `items` 数组时，就用这一行；两种写法画出来的行一样，样式不会跑偏。
+它是 [上下文菜单](/components/context-menu) 里的一行动作。菜单面板自己写内容、也就是用 `content` 插槽而不是 `items` 数组时，就用这一行；两种写法的行样式一样。
 
 ## 示例
 

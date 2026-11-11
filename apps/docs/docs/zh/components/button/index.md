@@ -13,7 +13,7 @@ import { buttonEndSlot, buttonFloating, buttonIcon, buttonSizes, buttonVariants 
 
 ## 使用方法
 
-`Button`（按钮）用来触发界面里的各种操作，像保存资料、提交表单、删除项目都可以交给它。每个按钮都需要通过 `label` 清楚说明它要做什么，这个文字既会直接显示在按钮上，也会被读屏软件朗读出来。在没有传入默认插槽时，按钮会直接展示 `label` 的内容：
+`Button`（按钮）用来触发界面里的各种操作，像保存资料、提交表单、删除项目都可以交给它。每个按钮都需要通过 `label` 清楚说明它要做什么，文字既会直接显示在按钮上，也会被读屏软件朗读出来。在没有传入默认插槽时，按钮会直接展示 `label` 的内容：
 
 ```vue
 <script setup lang="ts">

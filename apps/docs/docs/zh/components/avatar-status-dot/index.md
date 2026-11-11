@@ -11,7 +11,7 @@ import { avatarStatusDotIcon, avatarStatusDotVariants } from '../../../../compon
 
 ## 使用方法
 
-`AvatarStatusDot` 是头像右下角那个小圆点，用来说明这个人是在线、离开还是忙。状态由 `variant` 决定。
+`AvatarStatusDot` 是放在头像右下角的状态圆点，用来说明当前用户是在线、离开还是忙碌。状态由 `variant` 决定。
 
 每个变体的颜色都自带形状，状态不用只靠颜色分辨：`success` 是实心圆点，`neutral` 是空心环，`error` 是圆点上横一道减号。圆点还会读头像的尺寸，128px 的头像配 32px 的圆点，小头像配小圆点。
 

@@ -43,7 +43,7 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 
 - `variant` 可以调整底色风格：包含纯净底色 `wash`、面板底色 `surface`、区块底色 `section`，或者默认的浮起卡片质感 `elevated`。
 - `contentPadding` 控制正文区域四周的留白间距等级。
-- `height` 设置外壳的高度模式，可以填满全屏（`fill`，使用现代的 `100dvh`），也可以随内容自适应撑开（`auto`）。
+- `height` 设置外壳的高度模式，可以填满全屏（`fill`，使用 `100dvh`），也可以随内容自适应撑开（`auto`）。
 - `mobileNav` 用来控制手机端的抽屉导航。默认在宽度低于 768px（`md` 断点）时，原本在左侧的侧边菜单会自动收拢进一个侧滑抽屉里。顶栏里的汉堡按钮会自动连接并控制这只抽屉，无需自己重复写逻辑。可以通过 `v-model:mobile-nav-open` 双向绑定抽屉的打开状态。
 - 组件内置了专门为键盘操作和读屏用户准备的「跳转到主内容」快捷链接，回车即可将光标焦点直接定位到带有 `role="main"` 的正文容器上。
 - `useAppShellMobile` 组合式函数可以在任何子组件里读取当前外壳的移动端适配状态（如抽屉是否开启、是否处于手机屏幕断点下）。

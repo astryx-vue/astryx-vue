@@ -11,7 +11,7 @@ import { chatComposerAttachments, chatComposerFlat, chatComposerFooterActions, c
 
 ## 使用方法
 
-`ChatComposer` 是对话页面里写字发送的那一整块。它管草稿（你给 `v-model` 就归你管，不给它自己存）、默认带标签能力的输入框、发送和停止两颗按钮，另外还有抽屉、页眉、页脚、状态提示这几个可选位置。自己写的输入框和发送按钮也能接进来：通过 `useChatComposerContext()` 拿到同一份草稿、提交、禁用、停止和聚焦的约定。
+`ChatComposer` 是对话页面里输入和发送消息的区域。它管草稿（你给 `v-model` 就归你管，不给它自己存）、默认带标签能力的输入框、发送和停止两颗按钮，另外还有抽屉、页眉、页脚、状态提示这几个可选位置。自己写的输入框和发送按钮也能接进来：通过 `useChatComposerContext()` 拿到同一份草稿、提交、禁用、停止和聚焦的约定。
 
 ```ts
 import { ChatComposer } from '@astryx-vue/core/Chat'
