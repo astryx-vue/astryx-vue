@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.20
+
+### Patch Changes
+
+- [#477](https://github.com/astryx-vue/astryx-vue/pull/477) [`ceb6ae3`](https://github.com/astryx-vue/astryx-vue/commit/ceb6ae3cd75452218e7978d7232feed3b817090f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Align Markdown and List number markers by their trailing edge without letting wide counters wrap or push text. Keep the Selector and MultiSelector focus border and inset paint visible when a disabled field receives keyboard focus.
+
 ## 0.7.19
 
 ### Patch Changes
