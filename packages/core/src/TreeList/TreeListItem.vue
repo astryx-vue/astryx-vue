@@ -67,6 +67,8 @@ function onRowClick(event: MouseEvent) {
     props.item.onClick(event)
   else if (hasChildren.value)
     emit('toggle', props.item.id)
+  else if (safeHref.value)
+    (event.currentTarget as HTMLElement).querySelector<HTMLElement>('.astryx-tree-list__action')?.click()
 }
 
 function onToggle(event: MouseEvent) {
@@ -139,75 +141,76 @@ const rowPress = computed(() => {
         :data-selected="item.isSelected || undefined"
         :data-disabled="item.isDisabled || undefined"
         :data-interactive="(item.onClick != null || safeHref != null || hasChildren) || undefined"
-        :data-guide-inset="(variant === 'lineGuides' && nestedLevel > 0 && !reservesChevron) || undefined"
         :style="{ '--_tree-indent': indent }"
         v-bind="rowPress"
         @click="onRowClick"
       >
-        <button
-          v-if="hasChildren"
-          type="button"
-          class="astryx-tree-list__chevron"
-          data-tree-toggle=""
-          :data-state="isExpanded ? 'expanded' : 'collapsed'"
-          :aria-expanded="isExpanded"
-          :aria-label="messages.treeList.toggleChildren"
-          :aria-disabled="item.isDisabled || undefined"
-          tabindex="-1"
-          @click="onToggle"
-          @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
-        >
-          <Icon icon="chevronRight" size="sm" color="inherit" />
-        </button>
-        <span v-if="item.icon" class="astryx-tree-list__start">
-          <Icon v-if="isIconGlyph(item.icon)" :icon="item.icon" size="sm" />
-          <span v-else class="astryx-tree-list__icon">
-            <i :class="item.icon" aria-hidden="true" />
+        <div class="astryx-tree-list__indented">
+          <button
+            v-if="hasChildren"
+            type="button"
+            class="astryx-tree-list__chevron"
+            data-tree-toggle=""
+            :data-state="isExpanded ? 'expanded' : 'collapsed'"
+            :aria-expanded="isExpanded"
+            :aria-label="messages.treeList.toggleChildren"
+            :aria-disabled="item.isDisabled || undefined"
+            tabindex="-1"
+            @click="onToggle"
+            @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
+          >
+            <Icon icon="chevronRight" size="sm" color="inherit" />
+          </button>
+          <span v-if="item.icon" class="astryx-tree-list__start">
+            <Icon v-if="isIconGlyph(item.icon)" :icon="item.icon" size="sm" />
+            <span v-else class="astryx-tree-list__icon">
+              <i :class="item.icon" aria-hidden="true" />
+            </span>
           </span>
-        </span>
-        <component
-          :is="linkRoot"
-          v-if="safeHref"
-          class="astryx-tree-list__action"
-          :href="safeHref"
-          :to="linkRoot === 'a' ? undefined : safeHref"
-          :target="item.target"
-          :rel="linkRel"
-          :aria-labelledby="labelId"
-          :aria-describedby="item.description ? descriptionId : undefined"
-          :aria-disabled="item.isDisabled || undefined"
-          tabindex="-1"
-          @click="onLinkClick"
-          @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
-        >
-          <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
-          <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
-        </component>
-        <button
-          v-else-if="item.onClick"
-          type="button"
-          class="astryx-tree-list__action"
-          :aria-labelledby="labelId"
-          :aria-describedby="item.description ? descriptionId : undefined"
-          :aria-disabled="item.isDisabled || undefined"
-          tabindex="-1"
-          @click="onActionClick"
-          @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
-        >
-          <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
-          <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
-        </button>
-        <span v-else class="astryx-tree-list__main">
-          <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
-          <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
-        </span>
-        <span v-if="item.badge || item.endIcon" class="astryx-tree-list__end">
-          <Badge v-if="item.badge">{{ item.badge }}</Badge>
-          <Icon v-else-if="item.endIcon && isIconGlyph(item.endIcon)" :icon="item.endIcon" size="sm" />
-          <span v-else-if="item.endIcon" class="astryx-tree-list__icon">
-            <i :class="item.endIcon" aria-hidden="true" />
+          <component
+            :is="linkRoot"
+            v-if="safeHref"
+            class="astryx-tree-list__action"
+            :href="safeHref"
+            :to="linkRoot === 'a' ? undefined : safeHref"
+            :target="item.target"
+            :rel="linkRel"
+            :aria-labelledby="labelId"
+            :aria-describedby="item.description ? descriptionId : undefined"
+            :aria-disabled="item.isDisabled || undefined"
+            tabindex="-1"
+            @click="onLinkClick"
+            @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
+          >
+            <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
+            <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
+          </component>
+          <button
+            v-else-if="item.onClick"
+            type="button"
+            class="astryx-tree-list__action"
+            :aria-labelledby="labelId"
+            :aria-describedby="item.description ? descriptionId : undefined"
+            :aria-disabled="item.isDisabled || undefined"
+            tabindex="-1"
+            @click="onActionClick"
+            @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
+          >
+            <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
+            <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
+          </button>
+          <span v-else class="astryx-tree-list__main">
+            <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
+            <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
           </span>
-        </span>
+          <span v-if="item.badge || item.endIcon" class="astryx-tree-list__end">
+            <Badge v-if="item.badge">{{ item.badge }}</Badge>
+            <Icon v-else-if="item.endIcon && isIconGlyph(item.endIcon)" :icon="item.endIcon" size="sm" />
+            <span v-else-if="item.endIcon" class="astryx-tree-list__icon">
+              <i :class="item.endIcon" aria-hidden="true" />
+            </span>
+          </span>
+        </div>
       </div>
     </div>
     <ul v-if="hasChildren && isExpanded" class="astryx-tree-list__group" role="group">

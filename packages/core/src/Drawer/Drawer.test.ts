@@ -81,6 +81,15 @@ describe('drawer', () => {
     wrapper.unmount()
   })
 
+  it('keeps numeric zero in header start and end slots', () => {
+    const wrapper = mount(DrawerHeader, {
+      props: { title: 'Details' },
+      slots: { startContent: () => 0, endContent: () => 0 },
+    })
+    expect(wrapper.get('.astryx-dialog-header-start-content').text()).toBe('0')
+    expect(wrapper.get('.astryx-dialog-header-end-content').text()).toBe('0')
+  })
+
   it('hides the header close button when nobody listens for it', async () => {
     const wrapper = mount(Drawer, {
       attachTo: document.body,

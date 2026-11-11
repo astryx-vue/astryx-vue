@@ -34,6 +34,15 @@
     --astryx-drawer-from: translateX(-100%);
   }
 
+  /* DOM direction includes both inherited RTL and dir directly on the drawer. */
+  .astryx-drawer--end[open]:dir(rtl) {
+    --astryx-drawer-from: translateX(-100%);
+  }
+
+  .astryx-drawer--start[open]:dir(rtl) {
+    --astryx-drawer-from: translateX(100%);
+  }
+
   .astryx-drawer-body {
     display: flex;
     flex-direction: column;

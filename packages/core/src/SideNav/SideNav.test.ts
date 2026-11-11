@@ -164,6 +164,23 @@ describe('side-nav', () => {
     wrapper.unmount()
   })
 
+  it('puts nested indent and caller class/style on the actual row', () => {
+    const wrapper = mount(SideNav, {
+      slots: {
+        default: () => h(SideNavItem, { href: '/settings', label: 'Settings' }, () => [
+          h(SideNavItem, { href: '/general', label: 'General', class: 'caller-row' }),
+          h(SideNavItem, { href: '/security', label: 'Security', style: { paddingInlineStart: '20px' } }),
+        ]),
+      },
+    })
+    const general = wrapper.get('a[href="/general"]')
+    const security = wrapper.get('a[href="/security"]')
+    expect(general.classes()).toContain('caller-row')
+    expect((general.element as HTMLElement).style.getPropertyValue('--_side-nav-indent')).toBe('calc(1 * var(--astryx-spacing-6, 24px))')
+    expect((security.element as HTMLElement).style.getPropertyValue('--_side-nav-indent')).toBe('calc(1 * var(--astryx-spacing-6, 24px))')
+    expect((security.element as HTMLElement).style.paddingInlineStart).toBe('20px')
+  })
+
   it('lets a caller aria-label win over the visible label once the rail collapses', async () => {
     const wrapper = mount(SideNav, {
       props: { collapsible: true },

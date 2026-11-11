@@ -5,14 +5,6 @@
     position: relative;
     --tree-list-indent: var(--astryx-spacing-4, 16px);
     --tree-list-row-gap: var(--astryx-spacing-0-5, 2px);
-    /*
-     * A nested branch only indents 16px, while the guide is centered on the
-     * parent chevron (10px margin + 10px). The 1px line therefore ends about
-     * 4.5px inside that row. The fill starts one 4px step past that edge.
-     */
-    --_tree-guide-clearance: calc(
-      var(--astryx-spacing-2, 8px) + var(--astryx-spacing-0-5, 2px) + (var(--astryx-spacing-5, 20px) / 2) + 0.5px - var(--tree-list-indent, 16px) + var(--astryx-spacing-1, 4px)
-    );
   }
 
   .astryx-tree-list__header {
@@ -47,13 +39,21 @@
     box-sizing: border-box;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
-    margin-inline-start: var(--_tree-indent, 0px);
     padding-inline: var(--astryx-spacing-2, 8px);
     overflow: hidden;
     border-radius: var(--astryx-radius-element, 0.625rem);
     font-size: var(--astryx-text-body-size, 1rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
     text-align: start;
+  }
+
+  .astryx-tree-list__indented {
+    display: flex;
+    flex: 1;
+    align-items: inherit;
+    gap: inherit;
+    min-width: 0;
+    padding-inline-start: var(--_tree-indent, 0px);
   }
 
   .astryx-tree-list__content::before {
@@ -65,10 +65,6 @@
     background-color: transparent;
     pointer-events: none;
     transition: background-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
-  }
-
-  .astryx-tree-list__content[data-guide-inset]::before {
-    inset-inline-start: var(--_tree-guide-clearance, 8.5px);
   }
 
   .astryx-tree-list__content[data-density='compact'] {
@@ -99,6 +95,11 @@
     .astryx-tree-list__content[data-selected='true']:hover::before {
       background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
     }
+  }
+
+  /* 焦点环所在的整行盖过 guide；普通行的填充仍位于 guide 下方。 */
+  .astryx-tree-list__item:has(:focus-visible) > .astryx-tree-list__row {
+    z-index: 2;
   }
 
   /* 焦点也可能在 tabindex=-1 的内部按钮或链接上。 */
@@ -207,8 +208,10 @@
 
   .astryx-tree-list__guide {
     position: absolute;
+    z-index: 1;
     width: var(--astryx-spacing-5, 20px);
     height: 100%;
+    pointer-events: none;
   }
 
   .astryx-tree-list__guide-line {

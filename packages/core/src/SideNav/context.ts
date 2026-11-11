@@ -33,3 +33,10 @@ const fallbackCollapse: SideNavCollapseContext = {
 export function useSideNavCollapse(): SideNavCollapseContext {
   return inject(sideNavCollapseKey, fallbackCollapse)
 }
+
+/** Internal nesting depth; zero for top-level rows and the first rail flyout level. */
+export const sideNavDepthKey: InjectionKey<Ref<number>> = Symbol('astryx-side-nav-depth')
+
+export function useSideNavDepth(): Ref<number> {
+  return inject(sideNavDepthKey, ref(0))
+}
