@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { StyleValue } from 'vue'
 import type { SideNavItemCollapsible, SideNavItemEmits, SideNavItemProps, SideNavItemSlots } from './types.js'
 import { computed, getCurrentInstance, provide, ref, useAttrs, useId, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
@@ -6,7 +7,7 @@ import { useAstryxMessages } from '../locale/index.js'
 import NavItem from '../NavItem/NavItem.vue'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
-import { sideNavCollapseKey, useSideNavCollapse } from './context.js'
+import { sideNavCollapseKey, sideNavDepthKey, useSideNavCollapse, useSideNavDepth } from './context.js'
 import '../../styles/side-nav.css'
 
 defineOptions({ name: 'AstryxSideNavItem', inheritAttrs: false })
@@ -29,6 +30,7 @@ const accessibleLabel = computed(() => {
   return props.label
 })
 const collapse = useSideNavCollapse()
+const parentDepth = useSideNavDepth()
 const messages = useAstryxMessages()
 const instance = getCurrentInstance()
 const childrenId = `astryx-side-nav-children-${useId()}`
@@ -67,6 +69,14 @@ provide(sideNavCollapseKey, {
   navId: collapse.navId,
   toggle: () => {},
 })
+provide(sideNavDepthKey, computed(() => sidebarCollapsed.value ? 0 : parentDepth.value + 1))
+
+const rowStyle = computed<StyleValue>(() => [
+  parentDepth.value > 0 && !sidebarCollapsed.value
+    ? { '--_side-nav-indent': `calc(${parentDepth.value} * var(--astryx-spacing-6, 24px))` }
+    : undefined,
+  attrs.style as StyleValue,
+])
 
 function setNested(next: boolean): void {
   if (config.value.isCollapsed === undefined)
@@ -103,6 +113,7 @@ const toggleLabel = computed(() =>
         v-bind="attrs"
         block
         is-icon-only
+        :style="rowStyle"
         :aria-label="accessibleLabel"
         :as="as"
         :href="href"
@@ -166,6 +177,7 @@ const toggleLabel = computed(() =>
         <NavItem
           v-bind="attrs"
           plain
+          :style="rowStyle"
           class="astryx-side-nav-item__split"
           :as="as"
           :href="href"
@@ -211,6 +223,7 @@ const toggleLabel = computed(() =>
         block
         :as="as"
         :controls="canNest ? childrenId : undefined"
+        :style="rowStyle"
         :expanded="canNest ? !nestedCollapsed : undefined"
         :href="href"
         :icon-class="iconClass"

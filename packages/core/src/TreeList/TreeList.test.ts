@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import TreeList from './TreeList.vue'
 
 const items = [
@@ -23,7 +23,7 @@ describe('tree list', () => {
     expect(wrapper.find('.astryx-tree-list__guide').exists()).toBe(true)
   })
 
-  it('insets a nested branch fill so it starts past the guide', () => {
+  it('keeps nested branch rows full width above their guides', () => {
     const wrapper = mount(TreeList, {
       props: {
         items: [{
@@ -39,7 +39,7 @@ describe('tree list', () => {
         }],
       },
     })
-    expect(wrapper.get('[data-tree-id="components"] .astryx-tree-list__content').attributes('data-guide-inset')).toBe('true')
+    expect(wrapper.get('[data-tree-id="components"] .astryx-tree-list__content').attributes('data-guide-inset')).toBeUndefined()
     expect(wrapper.get('[data-tree-id="src"] .astryx-tree-list__content').attributes('data-guide-inset')).toBeUndefined()
     expect(wrapper.get('[data-tree-id="button"] .astryx-tree-list__content').attributes('data-guide-inset')).toBeUndefined()
 
@@ -55,6 +55,28 @@ describe('tree list', () => {
       },
     })
     expect(plain.get('[data-tree-id="components"] .astryx-tree-list__content').attributes('data-guide-inset')).toBeUndefined()
+  })
+
+  it('keeps the indent inside a full-width row and follows a link from the indent area', async () => {
+    const wrapper = mount(TreeList, {
+      attachTo: document.body,
+      props: {
+        items: [{
+          id: 'docs',
+          label: 'Docs',
+          isExpanded: true,
+          children: [{ id: 'guide', label: 'Guide', href: '#guide' }],
+        }],
+      },
+    })
+    const content = wrapper.get('[data-tree-id="guide"] .astryx-tree-list__content')
+    const indented = content.find('.astryx-tree-list__indented')
+    expect(indented.exists()).toBe(true)
+    const anchor = wrapper.get('a[href="#guide"]').element as HTMLAnchorElement
+    const follow = vi.spyOn(anchor, 'click')
+    await content.trigger('click')
+    expect(follow).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
   })
 
   it('puts an external icon class in a sized box', () => {

@@ -322,6 +322,19 @@
 
   .astryx-side-nav-item { width: 100%; }
 
+  /* Nested rows keep the full-width surface; only their content moves inward. */
+  .astryx-side-nav-item .astryx-nav-item {
+    padding-inline-start: calc(var(--astryx-spacing-2, 8px) + var(--_side-nav-indent, 0px));
+  }
+
+  .astryx-side-nav-item .astryx-nav-item--sm {
+    padding-inline-start: calc(var(--astryx-spacing-1, 4px) + var(--_side-nav-indent, 0px));
+  }
+
+  .astryx-side-nav-item .astryx-nav-item--plain {
+    padding-inline-start: var(--_side-nav-indent, 0px);
+  }
+
   .astryx-side-nav-item__main {
     display: flex;
     align-items: center;
@@ -377,7 +390,6 @@
   .astryx-side-nav-item__children-inner {
     min-height: 0;
     overflow: hidden;
-    padding-inline-start: var(--astryx-spacing-6, 24px);
   }
 
   .astryx-side-nav-item__popover {
