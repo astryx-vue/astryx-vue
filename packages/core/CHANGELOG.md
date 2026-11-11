@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.18
+
+### Patch Changes
+
+- [#475](https://github.com/astryx-vue/astryx-vue/pull/475) [`021bcb4`](https://github.com/astryx-vue/astryx-vue/commit/021bcb467162f0175e3aae49f14a504cb64631ee) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Keep Field's horizontal-label layout marker authoritative while preserving caller attributes and styles. Omit EmptyState icon, description, and action wrappers when their values or slots are empty, so no blank layout gaps remain.
+
 ## 0.7.17
 
 ### Patch Changes
