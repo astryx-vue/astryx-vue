@@ -1,7 +1,8 @@
 import type { FieldSlotProps } from './types.js'
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
+import FormLayout from '../FormLayout/FormLayout.vue'
 import Field from './Field.vue'
 import FieldLabel from './FieldLabel.vue'
 import FieldStatus from './FieldStatus.vue'
@@ -29,6 +30,29 @@ describe('field', () => {
     expect(wrapper.get('input').attributes('aria-describedby')).toBeUndefined()
     expect(wrapper.find('.astryx-field-status').exists()).toBe(false)
     expect(wrapper.findAll('[aria-live]')).toHaveLength(2)
+  })
+
+  it('keeps horizontal-label metadata authoritative and hides the description with its label', () => {
+    const Host = defineComponent({
+      components: { FormLayout, Field },
+      template: `
+        <FormLayout direction="horizontal-labels">
+          <Field
+            label="Name"
+            input-id="name"
+            description="Helpful context"
+            is-label-hidden
+            data-layout="consumer"
+          >
+            <input id="name" />
+          </Field>
+        </FormLayout>
+      `,
+    })
+    const wrapper = mount(Host)
+    expect(wrapper.get('.astryx-field').attributes('data-layout')).toBe('horizontal-labels')
+    expect(wrapper.get('.astryx-field-label-group').attributes('data-hidden')).toBe('true')
+    expect(wrapper.get('.astryx-field-description').text()).toBe('Helpful context')
   })
 
   it('labels a group using a span instead of a label', () => {

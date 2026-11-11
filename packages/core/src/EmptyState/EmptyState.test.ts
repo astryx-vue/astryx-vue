@@ -59,6 +59,21 @@ describe('emptyState', () => {
     expect(wrapper.find('.astryx-empty-state-description .custom-description').exists()).toBe(true)
   })
 
+  it('omits wrappers for empty optional values and slots', () => {
+    const wrapper = mount(EmptyState, {
+      props: { title: 'No results', description: '' },
+      slots: {
+        icon: () => false,
+        description: () => '',
+        actions: () => false,
+      },
+    })
+    expect(wrapper.find('.astryx-empty-state-icon').exists()).toBe(false)
+    expect(wrapper.find('.astryx-empty-state-description').exists()).toBe(false)
+    expect(wrapper.find('.astryx-empty-state-actions').exists()).toBe(false)
+    expect(wrapper.get('.astryx-empty-state').element.children).toHaveLength(1)
+  })
+
   it('renders the icon slot in a wrapper hidden from assistive technology', () => {
     const wrapper = mount(EmptyState, {
       props: { title: 'No results' },

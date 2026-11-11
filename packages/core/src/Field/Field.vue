@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, StyleValue } from 'vue'
 import type { FieldProps, FieldSlotProps, FieldSlots } from './types.js'
-import { computed, useTemplateRef } from 'vue'
+import { computed, useAttrs, useTemplateRef } from 'vue'
 import { useFormLayout } from '../FormLayout/context.js'
 import FieldLabel from './FieldLabel.vue'
 import FieldStatus from './FieldStatus.vue'
 import '../../styles/field.css'
 
-defineOptions({ name: 'AstryxField' })
+defineOptions({ name: 'AstryxField', inheritAttrs: false })
 const props = withDefaults(defineProps<FieldProps>(), { statusVariant: 'attached' })
 defineSlots<FieldSlots>()
+const attrs = useAttrs()
 const element = useTemplateRef<HTMLDivElement>('field')
 defineExpose({ element })
 const slotProps = computed<FieldSlotProps>(() => {
@@ -24,12 +25,14 @@ const slotProps = computed<FieldSlotProps>(() => {
   }
 })
 const style = computed<CSSProperties>(() => ({ '--astryx-field-width': typeof props.width === 'number' ? `${props.width}px` : props.width }))
+const rootStyle = computed<StyleValue>(() => [attrs.style as StyleValue, style.value])
+const forwardedAttrs = computed(() => Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style')))
 const formLayout = useFormLayout()
 const horizontalLabels = computed(() => formLayout.value?.direction === 'horizontal-labels')
 </script>
 
 <template>
-  <div ref="field" class="astryx-field" :style="style" :data-status-variant="statusVariant" :data-group-label="isGroupLabel || undefined" :data-layout="horizontalLabels ? 'horizontal-labels' : undefined">
+  <div ref="field" v-bind="forwardedAttrs" class="astryx-field" :class="attrs.class" :style="rootStyle" :data-status-variant="statusVariant" :data-group-label="isGroupLabel || undefined" :data-layout="horizontalLabels ? 'horizontal-labels' : undefined">
     <FieldLabel
       :label="label" :input-id="inputId" :label-id="slotProps.labelId"
       :description="description" :description-id="slotProps.descriptionId"

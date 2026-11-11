@@ -20,6 +20,14 @@ describe('form layout', () => {
     expect(wrapper.element.tagName).toBe('DIV')
   })
 
+  it('keeps component-owned direction over a conflicting pass-through', () => {
+    const wrapper = mount(FormLayout, {
+      props: { direction: 'horizontal' },
+      attrs: { 'data-direction': 'vertical' },
+    })
+    expect(wrapper.attributes('data-direction')).toBe('horizontal')
+  })
+
   it('publishes direction so a nested layout can replace it', () => {
     const wrapper = mount(FormLayout, {
       props: { direction: 'vertical', defaultOptionality: 'required' },

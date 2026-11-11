@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { VNode } from 'vue'
 import type { EmptyStateProps, EmptyStateSlots } from './types.js'
-import { computed, useTemplateRef } from 'vue'
+import { Comment, computed, Fragment, Text as TextVNode, useSlots, useTemplateRef } from 'vue'
 import Heading from '../Heading/Heading.vue'
 import Text from '../Text/Text.vue'
 import '../../styles/empty-state.css'
@@ -13,6 +14,29 @@ const props = withDefaults(defineProps<EmptyStateProps>(), {
 })
 
 defineSlots<EmptyStateSlots>()
+const slots = useSlots()
+
+function hasRenderableContent(nodes: VNode[] | undefined): boolean {
+  return (nodes ?? []).some((node) => {
+    if (node.type === Comment)
+      return false
+    if (node.type === TextVNode)
+      return typeof node.children === 'string' && node.children.length > 0
+    if (node.type === Fragment)
+      return Array.isArray(node.children) && hasRenderableContent(node.children as VNode[])
+    // Elements and components are intentional content even when their own
+    // children are empty; only shallow-empty scalar slots are omitted.
+    return true
+  })
+}
+
+function hasSlotContent(name: 'icon' | 'description' | 'actions'): boolean {
+  return hasRenderableContent(slots[name]?.() as VNode[] | undefined)
+}
+
+function hasDescription(): boolean {
+  return (props.description != null && props.description !== '') || hasSlotContent('description')
+}
 
 const root = useTemplateRef<HTMLDivElement>('root')
 const element = computed(() => root.value ?? null)
@@ -30,7 +54,7 @@ const variant = computed(() => (props.isCompact ? 'compact' : undefined))
     :data-variant="variant"
   >
     <div
-      v-if="$slots.icon"
+      v-if="hasSlotContent('icon')"
       class="astryx-empty-state-icon"
       aria-hidden="true"
     >
@@ -51,7 +75,7 @@ const variant = computed(() => (props.isCompact ? 'compact' : undefined))
       </Heading>
 
       <Text
-        v-if="description != null || $slots.description"
+        v-if="hasDescription()"
         as="div"
         class="astryx-empty-state-description"
         type="body"
@@ -65,7 +89,7 @@ const variant = computed(() => (props.isCompact ? 'compact' : undefined))
       </Text>
     </div>
 
-    <div v-if="$slots.actions" class="astryx-empty-state-actions">
+    <div v-if="hasSlotContent('actions')" class="astryx-empty-state-actions">
       <slot name="actions" />
     </div>
   </div>
