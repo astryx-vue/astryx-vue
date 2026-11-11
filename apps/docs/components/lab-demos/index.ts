@@ -13,6 +13,8 @@ import commentComposerDemo from './comment-composer.vue'
 import commentComposerSource from './comment-composer.vue?raw&highlighted'
 import commentThreadDemo from './comment-thread.vue'
 import commentThreadSource from './comment-thread.vue?raw&highlighted'
+import commentsDemo from './comments.vue'
+import commentsSource from './comments.vue?raw&highlighted'
 import diffViewerOverviewDemo from './diff-viewer-overview.vue'
 import diffViewerOverviewSource from './diff-viewer-overview.vue?raw&highlighted'
 import diffViewerDemo from './diff-viewer.vue'
@@ -57,6 +59,7 @@ export const labCodeEditor = defineDemo(codeEditorDemo, codeEditorSource, option
 export const labCommentComposer = defineDemo(commentComposerDemo, commentComposerSource, options)
 export const labCommentComposerEdit = defineDemo(commentComposerEditDemo, commentComposerEditSource, options)
 export const labCommentThread = defineDemo(commentThreadDemo, commentThreadSource, options)
+export const labComments = defineDemo(commentsDemo, commentsSource, options)
 export const labDiffViewer = defineDemo(diffViewerDemo, diffViewerSource, options)
 export const labEmojiPicker = defineDemo(emojiPickerDemo, emojiPickerSource, options)
 export const labEmojiPickerPopover = defineDemo(emojiPickerPopoverDemo, emojiPickerPopoverSource, options)

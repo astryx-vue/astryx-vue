@@ -441,3 +441,45 @@ export const DEFAULT_COMMENT_REACTIONS: readonly CommentReactionOption[] = Objec
   { key: 'sad', label: '😢' },
   { key: 'celebrate', label: '🎉' },
 ])
+
+export type CommentsComposerPosition = 'top' | 'bottom' | 'none'
+export type CommentsDensity = 'compact' | 'balanced'
+export type CommentsLayout = 'pane' | 'embedded'
+
+/** The comments on one item: threads, activity events, and a new-comment composer. */
+export interface CommentsProps extends CommentThreadSharedProps {
+  comments: readonly CommentThreadData[]
+  events?: readonly CommentActivityEvent[]
+  label?: string
+  /** @default 'bottom' */
+  composerPosition?: CommentsComposerPosition
+  /** @default 'balanced' */
+  density?: CommentsDensity
+  /** @default 'pane' */
+  layout?: CommentsLayout
+  selectedThreadId?: string | null
+  composerAnchor?: CommentAnchor
+  onComposerAnchorDismiss?: () => void
+  composerControls?: VNode
+  isLoading?: boolean
+  /** Description on the load-failure Banner. The title is the localized "Comments couldn't load". */
+  loadError?: string
+  onRetryLoad?: () => MaybePromise
+  hasOlderComments?: boolean
+  isLoadingOlder?: boolean
+  onLoadOlder?: () => MaybePromise
+  composerError?: string
+  emptyState?: VNode
+  renderEvent?: (event: CommentActivityEvent) => VNode
+}
+
+export interface CommentsEmits {
+  selectedThreadChange: [threadId: string | null]
+}
+
+export interface CommentsSlots {
+  emptyState?: () => VNode[]
+  event?: (props: { event: CommentActivityEvent }) => VNode[]
+  composer?: (props: CommentComposerRenderProps) => VNode[]
+  composerControls?: () => VNode[]
+}

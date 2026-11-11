@@ -1,6 +1,7 @@
 export { agentToken } from './agentToken.js'
 export { default as CommentComposer } from './CommentComposer.vue'
 export { default as CommentComposerBase } from './CommentComposerBase.vue'
+export { default as Comments } from './Comments.vue'
 export { default as CommentThread } from './CommentThread.vue'
 export { COMMENT_ICON_KEYS, CommentIcon } from './icons.js'
 export { DEFAULT_COMMENT_REACTIONS } from './types.js'
@@ -23,6 +24,12 @@ export type {
   CommentProgress,
   CommentReaction,
   CommentReactionOption,
+  CommentsComposerPosition,
+  CommentsDensity,
+  CommentsEmits,
+  CommentsLayout,
+  CommentsProps,
+  CommentsSlots,
   CommentStatus,
   CommentThreadData,
   CommentThreadEmits,

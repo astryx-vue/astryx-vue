@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import type { ErrorBannerContent } from './types.js'
 import { Banner, Button, useAnnounce } from '@astryx-vue/core'
-import { watch } from 'vue'
+import { onBeforeUnmount, watch } from 'vue'
+import { toElement } from './utils.js'
 
 defineOptions({ name: 'AstryxCommentErrorBanner' })
 
 const props = defineProps<{
   content: ErrorBannerContent
   onBeforeAction?: () => void
+  actionRef?: (el: HTMLElement | null) => void
 }>()
+
+function setActionRef(el: unknown): void {
+  props.actionRef?.(toElement(el))
+}
+
+onBeforeUnmount(() => {
+  props.actionRef?.(null)
+})
 
 const announce = useAnnounce()
 
@@ -38,6 +48,7 @@ function onActionClick(): void {
   >
     <template v-if="content.actionLabel != null && content.onAction != null" #end>
       <Button
+        :ref="setActionRef"
         :label="content.actionLabel"
         variant="ghost"
         size="sm"

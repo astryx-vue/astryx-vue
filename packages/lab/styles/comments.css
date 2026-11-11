@@ -1,0 +1,53 @@
+/* Comments panel: a pane fills its container; an embedded list is content-height. */
+.astryx-comments {
+  min-width: 0;
+}
+
+.astryx-comments[data-layout='pane'] {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.astryx-comments[data-layout='pane'] > .astryx-chat-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.astryx-comments-timeline {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+
+/* A card parent's Sections bleed through ChatMessageList padding to the panel edge. */
+.astryx-comments-timeline--bleed-compact {
+  width: calc(100% + (var(--astryx-spacing-3) * 2));
+  margin-inline: calc(-1 * var(--astryx-spacing-3));
+  margin-block-start: calc(-1 * var(--astryx-spacing-2));
+}
+
+.astryx-comments-timeline--bleed-balanced {
+  width: calc(100% + (var(--astryx-spacing-4) * 2));
+  margin-inline: calc(-1 * var(--astryx-spacing-4));
+  margin-block-start: calc(-1 * var(--astryx-spacing-4));
+}
+
+/* ChatLayout's dock pads one step less than the message list; restore the inset. */
+.astryx-comments-composer-dock {
+  padding-inline: var(--astryx-spacing-1);
+}
+
+.astryx-comments-event {
+  padding-inline-start: var(--astryx-spacing-3);
+}
+
+.astryx-comments-event-avatar {
+  width: calc(var(--astryx-spacing-6, 24px) + var(--astryx-spacing-1, 4px));
+  min-width: calc(var(--astryx-spacing-6, 24px) + var(--astryx-spacing-1, 4px));
+}
+
+.astryx-comments-loading-composer {
+  border-radius: var(--astryx-radius-container);
+}
