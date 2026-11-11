@@ -11,6 +11,10 @@ import commentComposerEditDemo from './comment-composer-edit.vue'
 import commentComposerEditSource from './comment-composer-edit.vue?raw&highlighted'
 import commentComposerDemo from './comment-composer.vue'
 import commentComposerSource from './comment-composer.vue?raw&highlighted'
+import commentPinSizesDemo from './comment-pin-sizes.vue'
+import commentPinSizesSource from './comment-pin-sizes.vue?raw&highlighted'
+import commentPinDemo from './comment-pin.vue'
+import commentPinSource from './comment-pin.vue?raw&highlighted'
 import commentThreadDemo from './comment-thread.vue'
 import commentThreadSource from './comment-thread.vue?raw&highlighted'
 import commentsDemo from './comments.vue'
@@ -60,6 +64,8 @@ export const labCommentComposer = defineDemo(commentComposerDemo, commentCompose
 export const labCommentComposerEdit = defineDemo(commentComposerEditDemo, commentComposerEditSource, options)
 export const labCommentThread = defineDemo(commentThreadDemo, commentThreadSource, options)
 export const labComments = defineDemo(commentsDemo, commentsSource, options)
+export const labCommentPin = defineDemo(commentPinDemo, commentPinSource, options)
+export const labCommentPinSizes = defineDemo(commentPinSizesDemo, commentPinSizesSource, options)
 export const labDiffViewer = defineDemo(diffViewerDemo, diffViewerSource, options)
 export const labEmojiPicker = defineDemo(emojiPickerDemo, emojiPickerSource, options)
 export const labEmojiPickerPopover = defineDemo(emojiPickerPopoverDemo, emojiPickerPopoverSource, options)

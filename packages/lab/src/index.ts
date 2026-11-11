@@ -22,6 +22,14 @@ export type {
 export { CodeEditor } from './CodeEditor/index.js'
 export type { CodeEditorEmits, CodeEditorProps } from './CodeEditor/index.js'
 
+export { CommentPin } from './CommentPin/index.js'
+export type {
+  CommentPinEmits,
+  CommentPinParticipant,
+  CommentPinProps,
+  CommentPinSize,
+} from './CommentPin/index.js'
+
 export {
   COMMENT_ICON_KEYS,
   CommentComposer,

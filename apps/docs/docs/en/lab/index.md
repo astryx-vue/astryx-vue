@@ -30,6 +30,7 @@ import '@astryx-vue/lab/lab.css'
 | [CommentComposer](/en/lab/comment-composer) | Write a comment with a quoted passage, image attach, and an emoji picker. |
 | [CommentThread](/en/lab/comment-thread) | One comment thread: first comment, replies, reactions, and a reply composer. |
 | [Comments](/en/lab/comments) | A comments panel: threads, activity events, and a composer for new comments. |
+| [CommentPin](/en/lab/comment-pin) | Avatar-first annotation marker for one thread or a grouped set of threads. |
 | [CircularProgress](/en/lab/circular-progress) | Determinate and indeterminate ring progress. |
 | [DiffViewer](/en/lab/diff-viewer) | Unified or split diff for one file. |
 | [InfoTip](/en/lab/info-tip) | Supplementary explanations for terms and metrics. |

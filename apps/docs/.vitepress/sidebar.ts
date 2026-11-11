@@ -99,6 +99,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('CommentComposer', `${prefix}/lab/comment-composer`),
         item('CommentThread', `${prefix}/lab/comment-thread`),
         item('Comments', `${prefix}/lab/comments`),
+        item('CommentPin', `${prefix}/lab/comment-pin`),
         item('CircularProgress', `${prefix}/lab/circular-progress`),
         item('DiffViewer', `${prefix}/lab/diff-viewer`),
         item('InfoTip', `${prefix}/lab/info-tip`),

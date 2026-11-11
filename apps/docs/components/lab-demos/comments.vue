@@ -185,6 +185,10 @@ async function loadOlder() {
   ]
   hasOlderComments.value = false
 }
+
+function uploadImages(files: readonly File[]): { url: string, alt: string }[] {
+  return files.map(file => ({ url: URL.createObjectURL(file), alt: file.name }))
+}
 </script>
 
 <template>
@@ -203,7 +207,7 @@ async function loadOlder() {
       :on-reopen-thread="(id) => { comments = updateComment(comments, id, comment => ({ ...comment, isResolved: false, resolvedBy: undefined })) }"
       :on-retry-comment="(id) => { comments = updateComment(comments, id, comment => ({ ...comment, status: undefined, errorMessage: undefined })) }"
       :on-load-older="loadOlder"
-      :on-upload-images="async (files) => files.map(file => ({ url: URL.createObjectURL(file), alt: file.name }))"
+      :on-upload-images="uploadImages"
       @selected-thread-change="selectedThreadId = $event"
     />
   </div>
