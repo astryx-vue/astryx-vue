@@ -14,5 +14,6 @@
 @import './styles/chat-emoji-picker.css';
 @import './styles/chat-reaction-bar.css';
 @import './styles/comment-composer.css';
+@import './styles/comment-thread.css';
 @import './styles/emoji-picker.css';
 @import './styles/schedule.css';

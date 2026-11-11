@@ -97,6 +97,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('Tour', `${prefix}/lab/tour`),
         item('CodeEditor', `${prefix}/lab/code-editor`),
         item('CommentComposer', `${prefix}/lab/comment-composer`),
+        item('CommentThread', `${prefix}/lab/comment-thread`),
         item('CircularProgress', `${prefix}/lab/circular-progress`),
         item('DiffViewer', `${prefix}/lab/diff-viewer`),
         item('InfoTip', `${prefix}/lab/info-tip`),
