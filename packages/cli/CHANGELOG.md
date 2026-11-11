@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.17
+
+### Patch Changes
+
+- [#480](https://github.com/astryx-vue/astryx-vue/pull/480) [`f294bbf`](https://github.com/astryx-vue/astryx-vue/commit/f294bbf829474c149d1e2fa95372cd792cd9b6b5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Refresh the built-in documentation catalog after polishing the Chinese component guides from AlertDialog through ContextMenu without changing their examples or API tables.
+
 ## 0.4.16
 
 ### Patch Changes
