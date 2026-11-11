@@ -38,7 +38,7 @@ With a [`ScrollbarsProvider`](/en/components/scrollbars-provider) in place, thes
 
 You can set them on any ancestor, and they only affect scrollbars inside it. See the [component page](/en/components/scrollbars-provider) for details and examples.
 
-`@astryx-vue/core/reset.css` is a single declaration, `@layer astryx.reset`. It is not a browser reset. Import it only when you need that layer to exist first.
+`@astryx-vue/core/reset.css` is a global browser reset inside the `astryx.reset` layer. Import it when you want those global defaults. The components do not require it.
 
 Load every structural sheet at once with:
 
