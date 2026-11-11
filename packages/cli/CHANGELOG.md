@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.16
+
+### Patch Changes
+
+- [#479](https://github.com/astryx-vue/astryx-vue/pull/479) [`0053802`](https://github.com/astryx-vue/astryx-vue/commit/005380208f8d23e5fecec68280599c4bfa77d940) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Refresh the built-in documentation catalog after correcting the reset stylesheet description and removing a stale hard-coded package version from the installation guides.
+
 ## 0.4.15
 
 ### Patch Changes
