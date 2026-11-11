@@ -1,0 +1,64 @@
+.astryx-comment-composer {
+  width: 100%;
+}
+
+.astryx-comment-composer .astryx-chat-composer {
+  --_chat-composer-radius: var(--astryx-radius-container, 0.75rem);
+}
+
+.astryx-comment-composer__quote {
+  width: 100%;
+  border-radius: var(--astryx-radius-inner, 0.375rem);
+}
+
+.astryx-comment-error-banner {
+  width: 100%;
+}
+
+.astryx-metadata-action {
+  white-space: nowrap;
+}
+
+.astryx-quoted-passage__text {
+  font-style: italic;
+}
+
+.astryx-quoted-passage[data-highlight-color='blue'] {
+  border-inline-start-color: var(--astryx-color-border-blue);
+}
+
+.astryx-quoted-passage[data-highlight-color='cyan'] {
+  border-inline-start-color: var(--astryx-color-border-cyan);
+}
+
+.astryx-quoted-passage[data-highlight-color='gray'] {
+  border-inline-start-color: var(--astryx-color-border-gray);
+}
+
+.astryx-quoted-passage[data-highlight-color='green'] {
+  border-inline-start-color: var(--astryx-color-border-green);
+}
+
+.astryx-quoted-passage[data-highlight-color='orange'] {
+  border-inline-start-color: var(--astryx-color-border-orange);
+}
+
+.astryx-quoted-passage[data-highlight-color='pink'] {
+  border-inline-start-color: var(--astryx-color-border-pink);
+}
+
+.astryx-quoted-passage[data-highlight-color='purple'] {
+  border-inline-start-color: var(--astryx-color-border-purple);
+}
+
+.astryx-quoted-passage[data-highlight-color='red'] {
+  border-inline-start-color: var(--astryx-color-border-red);
+}
+
+.astryx-quoted-passage[data-highlight-color='teal'] {
+  border-inline-start-color: var(--astryx-color-border-teal);
+}
+
+.astryx-quoted-passage[data-highlight-color='yellow'] {
+  border-inline-start-color: var(--astryx-color-border-yellow);
+}
