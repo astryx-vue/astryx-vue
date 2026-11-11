@@ -43,6 +43,14 @@ export type {
   InlineRange,
 } from './DiffViewer/index.js'
 
+export { DEFAULT_FREQUENT_EMOJIS, EmojiPicker } from './EmojiPicker/index.js'
+export type {
+  EmojiCategory,
+  EmojiOption,
+  EmojiPickerEmits,
+  EmojiPickerProps,
+} from './EmojiPicker/index.js'
+
 export { InfoTip } from './InfoTip/index.js'
 export type { InfoTipProps, InfoTipSize } from './InfoTip/index.js'
 

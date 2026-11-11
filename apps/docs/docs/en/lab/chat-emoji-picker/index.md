@@ -40,4 +40,4 @@ import { ChatEmojiPicker, DEFAULT_CHAT_EMOJIS } from '@astryx-vue/lab'
 
 The default slot is the trigger. It must contain a `<button>`. The popover attaches click handling and `aria-expanded` to that button.
 
-The filter, the grid label, and the empty-result sentence come from `@astryx.emojiPicker.*`. Group, frequently-used, and load-failure keys are already on the message tree for a fuller picker later.
+The filter, the grid label, and the empty-result sentence come from `@astryx.emojiPicker.*`. For a full CLDR-grouped picker — frequently used emoji, keyword search, and a preview footer — use [EmojiPicker](/en/lab/emoji-picker) instead of renaming this chat picker.

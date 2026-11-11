@@ -11,6 +11,10 @@ import diffViewerOverviewDemo from './diff-viewer-overview.vue'
 import diffViewerOverviewSource from './diff-viewer-overview.vue?raw&highlighted'
 import diffViewerDemo from './diff-viewer.vue'
 import diffViewerSource from './diff-viewer.vue?raw&highlighted'
+import emojiPickerPopoverDemo from './emoji-picker-popover.vue'
+import emojiPickerPopoverSource from './emoji-picker-popover.vue?raw&highlighted'
+import emojiPickerDemo from './emoji-picker.vue'
+import emojiPickerSource from './emoji-picker.vue?raw&highlighted'
 import infoTipDemo from './info-tip.vue'
 import infoTipSource from './info-tip.vue?raw&highlighted'
 import listInputDemo from './list-input.vue'
@@ -45,6 +49,8 @@ export const labChatReactionBar = defineDemo(chatReactionBarDemo, chatReactionBa
 export const labCircularProgress = defineDemo(circularProgressDemo, circularProgressSource, options)
 export const labCodeEditor = defineDemo(codeEditorDemo, codeEditorSource, options)
 export const labDiffViewer = defineDemo(diffViewerDemo, diffViewerSource, options)
+export const labEmojiPicker = defineDemo(emojiPickerDemo, emojiPickerSource, options)
+export const labEmojiPickerPopover = defineDemo(emojiPickerPopoverDemo, emojiPickerPopoverSource, options)
 export const labDiffViewerOverview = defineDemo(diffViewerOverviewDemo, diffViewerOverviewSource, options)
 export const labInfoTip = defineDemo(infoTipDemo, infoTipSource, options)
 export const labListInput = defineDemo(listInputDemo, listInputSource, options)
