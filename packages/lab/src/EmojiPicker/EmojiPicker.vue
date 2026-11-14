@@ -53,12 +53,16 @@ function focusSearch(): void {
   searchField.value?.focus()
 }
 
-watch(() => props.categories, (categories) => {
+// 宿主传入 categories 或组件卸载后，还没回来的内置数据作废，不再覆盖当前内容。
+watch(() => props.categories, (categories, _previous, onCleanup) => {
   if (categories != null) {
     loaded.value = categories
     return
   }
   let isCurrent = true
+  onCleanup(() => {
+    isCurrent = false
+  })
   loaded.value = 'loading'
   loadBundledCategories().then(
     (result) => {
@@ -70,9 +74,6 @@ watch(() => props.categories, (categories) => {
         loaded.value = 'failed'
     },
   )
-  return () => {
-    isCurrent = false
-  }
 }, { immediate: true })
 
 const label = computed(() => props.label ?? t('@astryx.emojiPicker.label'))

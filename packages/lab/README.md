@@ -28,6 +28,7 @@ Or pick single files: `@astryx-vue/lab/styles/stat.css`, `.../log-stream.css`, a
 | `CommentComposer` | Controlled comment composer: a growing input, image attach and paste, an emoji picker, and Post. |
 | `CommentThread` | One comment thread: first comment, replies, reactions, edit history, and a reply composer. |
 | `Comments` | A comments panel: threads with replies, activity events, and a composer for new comments. |
+| `CommentPin` | Avatar-first annotation marker: one thread, or a grouped set of threads with a count and optional unread dot. |
 | `InfoTip` | Small "i" button that reveals a tooltip on hover, keyboard focus, and tap. |
 | `SVGIcon` | CSS-variable-driven SVG icon with variations (linear, bold, twotone, bulk, broken), path roles, and mask-based gaps. |
 | `LogStream` | Streaming log viewer with level accents, expandable detail rows, follow-scroll tailing, and a terminal variant. |
