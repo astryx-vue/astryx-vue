@@ -263,6 +263,19 @@ describe('emojiPicker', () => {
     expect(emojiNames()).toEqual(['Chequered flag'])
   })
 
+  it('keeps host categories that arrive while the bundled set is still loading', async () => {
+    let resolveBundled!: (value: readonly EmojiCategory[]) => void
+    loadBundledCategories.mockReturnValue(new Promise((resolve) => {
+      resolveBundled = resolve
+    }))
+    const wrapper = renderPicker({ frequentEmojis: [] })
+    await wrapper.setProps({ categories: CATEGORIES })
+    resolveBundled(BUNDLED)
+    await flushPromises()
+    await nextTick()
+    expect(emojiNames()).toEqual(['Cat face', 'Dog face', 'Beach with umbrella'])
+  })
+
   it('renders the bundled emoji load error inside a status region', async () => {
     loadBundledCategories.mockRejectedValue(new Error('forced emoji data load failure'))
     renderPicker({ frequentEmojis: [] })
