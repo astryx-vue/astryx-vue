@@ -7,6 +7,10 @@ import circularProgressDemo from './circular-progress.vue'
 import circularProgressSource from './circular-progress.vue?raw&highlighted'
 import codeEditorDemo from './code-editor.vue'
 import codeEditorSource from './code-editor.vue?raw&highlighted'
+import commentComposerEditDemo from './comment-composer-edit.vue'
+import commentComposerEditSource from './comment-composer-edit.vue?raw&highlighted'
+import commentComposerDemo from './comment-composer.vue'
+import commentComposerSource from './comment-composer.vue?raw&highlighted'
 import diffViewerOverviewDemo from './diff-viewer-overview.vue'
 import diffViewerOverviewSource from './diff-viewer-overview.vue?raw&highlighted'
 import diffViewerDemo from './diff-viewer.vue'
@@ -48,6 +52,8 @@ export const labChatEmojiPicker = defineDemo(chatEmojiPickerDemo, chatEmojiPicke
 export const labChatReactionBar = defineDemo(chatReactionBarDemo, chatReactionBarSource, options)
 export const labCircularProgress = defineDemo(circularProgressDemo, circularProgressSource, options)
 export const labCodeEditor = defineDemo(codeEditorDemo, codeEditorSource, options)
+export const labCommentComposer = defineDemo(commentComposerDemo, commentComposerSource, options)
+export const labCommentComposerEdit = defineDemo(commentComposerEditDemo, commentComposerEditSource, options)
 export const labDiffViewer = defineDemo(diffViewerDemo, diffViewerSource, options)
 export const labEmojiPicker = defineDemo(emojiPickerDemo, emojiPickerSource, options)
 export const labEmojiPickerPopover = defineDemo(emojiPickerPopoverDemo, emojiPickerPopoverSource, options)

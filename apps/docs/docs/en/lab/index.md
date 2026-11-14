@@ -27,6 +27,7 @@ import '@astryx-vue/lab/lab.css'
 | [TransferList](/en/lab/transfer-list) | Move and reorder options between two panels. |
 | [Tour](/en/lab/tour) | Guide users with target highlights and step callouts. |
 | [CodeEditor](/en/lab/code-editor) | Edit code with syntax highlighting and line numbers. |
+| [CommentComposer](/en/lab/comment-composer) | Write a comment with a quoted passage, image attach, and an emoji picker. |
 | [CircularProgress](/en/lab/circular-progress) | Determinate and indeterminate ring progress. |
 | [DiffViewer](/en/lab/diff-viewer) | Unified or split diff for one file. |
 | [InfoTip](/en/lab/info-tip) | Supplementary explanations for terms and metrics. |

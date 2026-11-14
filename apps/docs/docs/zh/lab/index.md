@@ -27,6 +27,7 @@ import '@astryx-vue/lab/lab.css'
 | [TransferList](/lab/transfer-list) | 在可选与已选面板之间移动并排序。 |
 | [Tour](/lab/tour) | 用目标高亮和步骤弹层引导用户。 |
 | [CodeEditor](/lab/code-editor) | 编辑带语法高亮和行号的代码。 |
+| [CommentComposer](/lab/comment-composer) | 写一条评论：可带引用段落、添加图片和表情。 |
 | [CircularProgress](/lab/circular-progress) | 显示确定或不确定的圆环进度。 |
 | [DiffViewer](/lab/diff-viewer) | 展示单个文件的统一或分栏 diff。 |
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |
