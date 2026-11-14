@@ -40,4 +40,4 @@ import { ChatEmojiPicker, DEFAULT_CHAT_EMOJIS } from '@astryx-vue/lab'
 
 默认插槽是触发内容，里面要有一个 `<button>`。弹出层会把点击和 `aria-expanded` 接到这个按钮上。
 
-过滤框、网格标题和“没有匹配”的句子走 `@astryx.emojiPicker.*`。分组、常用和加载失败这几条键已经在文案树上，留给以后的完整表情选择器。
+过滤框、网格标题和“没有匹配”的句子走 `@astryx.emojiPicker.*`。若需要按 CLDR 分组的完整选择器（常用表情、关键词搜索和预览栏），请使用 [EmojiPicker](/lab/emoji-picker)，不要把这个聊天选择器改名充数。
