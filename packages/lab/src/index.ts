@@ -22,8 +22,15 @@ export type {
 export { CodeEditor } from './CodeEditor/index.js'
 export type { CodeEditorEmits, CodeEditorProps } from './CodeEditor/index.js'
 
-export { COMMENT_ICON_KEYS, CommentComposer, CommentComposerBase } from './Comments/index.js'
+export {
+  COMMENT_ICON_KEYS,
+  CommentComposer,
+  CommentComposerBase,
+  CommentThread,
+  DEFAULT_COMMENT_REACTIONS,
+} from './Comments/index.js'
 export type {
+  CommentActivityEvent,
   CommentAgentCommand,
   CommentAnchor,
   CommentComposerBaseEmits,
@@ -34,8 +41,22 @@ export type {
   CommentComposerProps,
   CommentComposerRenderProps,
   CommentComposerSlots,
+  CommentData,
   CommentHighlightColor,
+  CommentImageUploader,
+  CommentMode,
+  CommentProgress,
+  CommentReaction,
+  CommentReactionOption,
+  CommentStatus,
+  CommentThreadData,
+  CommentThreadEmits,
+  CommentThreadProps,
+  CommentThreadSharedProps,
+  CommentThreadSlots,
   CommentUploadedImage,
+  CommentUser,
+  CommentVersion,
 } from './Comments/index.js'
 
 export { createDiffFile, DiffViewer, parseUnifiedDiff } from './DiffViewer/index.js'

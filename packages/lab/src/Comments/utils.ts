@@ -1,4 +1,4 @@
-import type { CommentUploadedImage } from './types.js'
+import type { CommentData, CommentThreadData, CommentUploadedImage } from './types.js'
 
 /**
  * Alt text that cannot break out of Markdown's image brackets; `fallback`
@@ -47,4 +47,78 @@ export function appendDraftInline(value: string, content: string): string {
   if (value === '' || /\s$/.test(value) || /^\s/.test(content))
     return `${value}${content}`
   return `${value} ${content}`
+}
+
+/** A thread's first comment or one of its replies. */
+export type AnyComment = CommentData | CommentThreadData
+
+/** The element id a comment's permalink points at. */
+export function commentAnchorId(commentId: string): string {
+  return `comment-${encodeURIComponent(commentId)}`
+}
+
+/** The element id of a thread's reply composer. */
+export function replyComposerId(parentId: string): string {
+  return `${commentAnchorId(parentId)}-reply-composer`
+}
+
+/** The element id of an activity event row. */
+export function eventAnchorId(eventId: string): string {
+  return `comments-event-${encodeURIComponent(eventId)}`
+}
+
+/** Whether focus is inside `region`, or already lost to <body>. */
+export function shouldRestoreFocusFrom(region: Element | null): boolean {
+  const active = document.activeElement
+  return (
+    active == null
+    || active === document.body
+    || (region != null && region.contains(active))
+  )
+}
+
+/** A createdAt value as epoch milliseconds; seconds are scaled up. */
+export function timelineTime(value: string | number): number {
+  if (typeof value === 'number')
+    return value < 1_000_000_000_000 ? value * 1_000 : value
+  const parsed = Date.parse(value)
+  return Number.isNaN(parsed) ? 0 : parsed
+}
+
+/**
+ * A pointer press opens a thread into its reply composer; a key press keeps
+ * focus where it is, so the same key can close the thread again.
+ */
+export type ActivationSource = 'pointer' | 'keyboard'
+
+/** Keyboard and assistive-technology clicks carry no click count. */
+export function activationSourceOf(event?: { detail?: number }): ActivationSource {
+  return (event?.detail ?? 1) > 0 ? 'pointer' : 'keyboard'
+}
+
+export type ThreadDivider = 'top' | 'bottom'
+
+export const THREAD_DIVIDERS: readonly ThreadDivider[] = ['top', 'bottom']
+
+/** The DOM node behind a template ref, whether it is an element or a component. */
+export function toElement(value: unknown): HTMLElement | null {
+  if (value instanceof HTMLElement)
+    return value
+  if (value != null && typeof value === 'object') {
+    const record = value as { element?: unknown, $el?: unknown }
+    const exposed = record.element
+    if (exposed instanceof HTMLElement)
+      return exposed
+    if (exposed != null && typeof exposed === 'object' && 'value' in (exposed as object)) {
+      const inner = (exposed as { value: unknown }).value
+      if (inner instanceof HTMLElement)
+        return inner
+    }
+    const el = record.$el
+    if (el instanceof HTMLElement)
+      return el
+    if (el != null && el !== value)
+      return toElement(el)
+  }
+  return null
 }

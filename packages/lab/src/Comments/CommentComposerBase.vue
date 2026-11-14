@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { ChatComposerInputHandle, ChatComposerTrigger } from '@astryx-vue/core'
+import type { VNode } from 'vue'
 import type { CommentComposerBaseEmits, CommentComposerBaseProps, CommentComposerBaseSlots, ErrorBannerContent } from './types.js'
 import { Card, ChatComposer, ChatComposerInput, ChatSendButton, HStack, Icon, IconButton, Popover, StackItem, Text, useTranslator, VStack } from '@astryx-vue/core'
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import { EmojiPicker } from '../EmojiPicker/index.js'
 import ErrorBanner from './ErrorBanner.vue'
 import { CommentIcon } from './icons.js'
@@ -20,8 +21,19 @@ const props = withDefaults(defineProps<CommentComposerBaseProps>(), {
   highlightColor: 'yellow',
   hasEmojiPicker: true,
 })
+
 const emit = defineEmits<CommentComposerBaseEmits>()
+
 const slots = defineSlots<CommentComposerBaseSlots>()
+
+const RenderVNode = defineComponent({
+  name: 'AstryxCommentComposerRender',
+  props: { vnode: { type: Object, required: true } },
+  setup(renderProps: { vnode: VNode }) {
+    return () => renderProps.vnode
+  },
+})
+
 const COMPOSER_CONTROL_SELECTOR = [
   'a[href]',
   'button',
@@ -245,17 +257,18 @@ function focusInputBeforeBannerAction(): void {
 }
 
 const showDefaultComposer = computed(() => props.renderComposer == null && slots.composer == null)
-const renderProps = computed(() => ({
-  value: props.value,
+const renderProps = reactive({
+  get value() { return latestValue.value },
   onChange: onDraftChange,
   onSubmit: submitInput,
-  placeholder: props.placeholder,
-  isSubmitting: props.isSubmitting,
-  error: props.error,
-  contextLabel: props.contextLabel,
-  context: props.context,
+  get placeholder() { return props.placeholder },
+  get isSubmitting() { return props.isSubmitting },
+  get error() { return props.error },
+  get contextLabel() { return props.contextLabel },
+  get context() { return props.context },
   onCancel: () => emit('cancel'),
-}))
+})
+const renderedComposer = computed(() => props.renderComposer?.(renderProps) ?? null)
 
 const bannerKey = computed(() => props.error != null ? 'error' : `action-${actionErrorSerial.value}`)
 const composerLabel = computed(() => props.label ?? props.placeholder)
@@ -285,8 +298,9 @@ const canUpload = computed(() => props.onUploadImages != null)
         />
       </template>
     </HStack>
-    <slot v-if="!showDefaultComposer" name="composer" v-bind="renderProps" />
-    <VStack v-else :gap="1" width="100%" :aria-busy="isBusy || undefined">
+    <slot v-if="slots.composer != null" name="composer" v-bind="renderProps" />
+    <RenderVNode v-else-if="renderedComposer != null" :vnode="renderedComposer" />
+    <VStack v-else-if="showDefaultComposer" :gap="1" width="100%" :aria-busy="isBusy || undefined">
       <ErrorBanner
         v-if="errorBanner != null"
         :key="bannerKey"
