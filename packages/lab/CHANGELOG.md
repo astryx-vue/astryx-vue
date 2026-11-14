@@ -1,5 +1,19 @@
 # @astryx-vue/lab
 
+## 0.5.3
+
+### Patch Changes
+
+- [#482](https://github.com/astryx-vue/astryx-vue/pull/482) [`aecd704`](https://github.com/astryx-vue/astryx-vue/commit/aecd704089321c545b029b9e1681e55c50055c92) Thanks [@wzc520pyfm](https://github.com/wzc520pyfm)! - lab 增加 CommentComposer：受控评论输入框，支持引用段落、图片上传/粘贴、表情选择和 Post。这是完整评论组件栈（[#478](https://github.com/astryx-vue/astryx-vue/issues/478)）的第二刀；表情按钮复用独立的 EmojiPicker。CommentThread、Comments、CommentPin 还不在这一刀里。
+
+- [#485](https://github.com/astryx-vue/astryx-vue/pull/485) [`ebdcf16`](https://github.com/astryx-vue/astryx-vue/commit/ebdcf162d7ad05e7993280eeecb0eabc00da45b9) Thanks [@wzc520pyfm](https://github.com/wzc520pyfm)! - lab 增加 CommentPin：头像优先的批注锚点按钮，用于打开一条锚定线程或一组线程。这是完整评论组件栈（[#478](https://github.com/astryx-vue/astryx-vue/issues/478)）的第五刀，也是最后一刀，叠在 Comments、CommentThread、CommentComposer 与独立 EmojiPicker 之上。
+
+- [#483](https://github.com/astryx-vue/astryx-vue/pull/483) [`c92d66d`](https://github.com/astryx-vue/astryx-vue/commit/c92d66d67ef0ba017766b3fe5fc205635a4eead6) Thanks [@wzc520pyfm](https://github.com/wzc520pyfm)! - lab 增加 CommentThread：单独呈现的评论线程，含首条评论、一级回复、表情回应、编辑历史和回复输入框。这是完整评论组件栈（[#478](https://github.com/astryx-vue/astryx-vue/issues/478)）的第三刀，叠在 CommentComposer 与独立 EmojiPicker 之上。Comments、CommentPin 还不在这一刀里。
+
+- [#484](https://github.com/astryx-vue/astryx-vue/pull/484) [`8fa9ab6`](https://github.com/astryx-vue/astryx-vue/commit/8fa9ab6b753e3ff5fe61a91a630507a5ed50ddda) Thanks [@wzc520pyfm](https://github.com/wzc520pyfm)! - lab 增加 Comments：某一条目上的评论面板，含线程、一级回复、动态事件，以及发布新评论的输入框。这是完整评论组件栈（[#478](https://github.com/astryx-vue/astryx-vue/issues/478)）的第四刀，叠在 CommentThread、CommentComposer 与独立 EmojiPicker 之上。CommentPin 还不在这一刀里。
+
+- [#481](https://github.com/astryx-vue/astryx-vue/pull/481) [`7374c7f`](https://github.com/astryx-vue/astryx-vue/commit/7374c7f9dc5aebf95d0ebcc655d51bc12d593e07) Thanks [@wzc520pyfm](https://github.com/wzc520pyfm)! - lab 增加独立的 EmojiPicker：按 CLDR 分组搜索并选择表情，可内嵌或放进弹出层。这是完整评论组件栈（[#478](https://github.com/astryx-vue/astryx-vue/issues/478)）的第一刀；现有 ChatEmojiPicker 仍用于聊天里的短固定表情集，没有改名复用。
+
 ## 0.5.2
 
 ### Patch Changes
