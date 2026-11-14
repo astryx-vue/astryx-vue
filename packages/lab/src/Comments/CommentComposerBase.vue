@@ -268,7 +268,15 @@ const renderProps = reactive({
   get context() { return props.context },
   onCancel: () => emit('cancel'),
 })
-const renderedComposer = computed(() => props.renderComposer?.(renderProps) ?? null)
+const renderedComposer = computed(() => {
+  void renderProps.value
+  void renderProps.error
+  void renderProps.isSubmitting
+  void renderProps.placeholder
+  void renderProps.contextLabel
+  void renderProps.context
+  return props.renderComposer?.(renderProps) ?? null
+})
 
 const bannerKey = computed(() => props.error != null ? 'error' : `action-${actionErrorSerial.value}`)
 const composerLabel = computed(() => props.label ?? props.placeholder)

@@ -26,7 +26,7 @@ export interface CommentsControllerOptions extends CommentThreadSharedProps {
 
 type FocusTarget = 'reply' | 'actions' | 'history' | 'article' | 'thread'
 type MaybePromise = void | Promise<void>
-type SubmitResult = 'posted' | 'failed' | 'skipped'
+export type SubmitResult = 'posted' | 'failed' | 'skipped'
 
 function focusCommentTarget(
   commentId: string | null,
@@ -67,6 +67,7 @@ export interface CommentsControllerReturn {
   closeDelete: () => void
   closeHistory: () => void
   announce: AnnounceFn
+  submit: (content: string, parentId?: string) => Promise<SubmitResult>
 }
 
 export function useCommentsController(options: CommentsControllerOptions): CommentsControllerReturn {
@@ -494,5 +495,6 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
     closeDelete,
     closeHistory,
     announce,
+    submit,
   }
 }

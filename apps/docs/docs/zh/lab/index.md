@@ -29,6 +29,7 @@ import '@astryx-vue/lab/lab.css'
 | [CodeEditor](/lab/code-editor) | 编辑带语法高亮和行号的代码。 |
 | [CommentComposer](/lab/comment-composer) | 写一条评论：可带引用段落、添加图片和表情。 |
 | [CommentThread](/lab/comment-thread) | 单独的评论线程：首条评论、回复、表情回应和回复输入框。 |
+| [Comments](/lab/comments) | 评论面板：线程、动态事件，以及新评论输入框。 |
 | [CircularProgress](/lab/circular-progress) | 显示确定或不确定的圆环进度。 |
 | [DiffViewer](/lab/diff-viewer) | 展示单个文件的统一或分栏 diff。 |
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |
