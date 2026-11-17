@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { DocsLocale } from './docs-i18n'
-import { useData } from 'vitepress'
+import { usePageData } from 'kawapress/client'
 import { computed } from 'vue'
 import { parseComponentDocsRoute } from './componentDocsRoute'
 import { anatomyFor } from './reference/loadReference'
 import { richText } from './richText'
 
-const { page } = useData()
-const route = computed(() => parseComponentDocsRoute(`/${page.value.relativePath.replace(/\.md$/, '')}`))
+const page = usePageData()
+const route = computed(() => parseComponentDocsRoute(page.value?.path ?? '/'))
 const locale = computed<DocsLocale>(() => route.value?.locale === 'en' ? 'en' : 'zh')
 const parts = computed(() => {
   const current = route.value

@@ -22,7 +22,7 @@
 
 .center-preview__caption {
   color: var(--astryx-text-muted);
-  font-family: var(--vp-font-family-mono);
+  font-family: var(--docs-font-family-mono);
   font-size: 12px;
   text-align: center;
   overflow-wrap: anywhere;

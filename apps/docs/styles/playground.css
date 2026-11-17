@@ -1,6 +1,6 @@
 /*
  * 主题令牌挂在 html 上，浮层（下拉菜单）Teleport 到 body 之后仍然能继承到。
- * 布局相关的声明留在 .Layout.playground-route 上。
+ * 布局相关的声明留在 .nagi.playground-route 上。
  */
 html:has(.playground-route) {
   --pg-ink: #171717;
@@ -23,7 +23,7 @@ html:has(.playground-route) {
   --pg-rail: 64px;
 }
 
-.Layout.playground-route {
+.nagi.playground-route {
   display: flex;
   flex-direction: column;
   height: 100svh;
@@ -53,35 +53,26 @@ html.dark:has(.playground-route) {
   --pg-stage-line: rgb(242 244 246 / 9.8%);
 }
 
-html.dark .Layout.playground-route {
+html.dark .nagi.playground-route {
   color-scheme: dark;
 }
 
-.Layout.playground-route .VPNav,
-.Layout.playground-route .VPSidebar,
-.Layout.playground-route .VPFooter,
-.Layout.playground-route .VPLocalNav {
+.nagi.playground-route .nagi-nav-bar,
+.nagi.playground-route .nagi-footer {
   display: none !important;
 }
 
-.Layout.playground-route .VPContent {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-height: 0;
-  margin: 0;
-  padding: 0 !important;
-}
-
-.Layout.playground-route .VPPage,
-.Layout.playground-route .VPPage > *,
-.Layout.playground-route .VPPage > * > *,
-.Layout.playground-route .vp-doc {
+.nagi.playground-route .nagi-page-scroll,
+.nagi.playground-route .nagi-page-scroll > .nagi-os-scroll__viewport,
+.nagi.playground-route .nagi-main--page,
+.nagi.playground-route .nagi-main__content,
+.nagi.playground-route .nagi-main__content > div {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
   max-width: none;
+  margin: 0;
   padding: 0;
   background: transparent;
 }
@@ -105,7 +96,7 @@ html.dark:has(.playground-route) body {
   min-height: 0;
   color: var(--pg-ink);
   background: var(--pg-surface);
-  font-family: var(--vp-font-family-base);
+  font-family: var(--docs-font-family-base);
 }
 
 .playground__frame {

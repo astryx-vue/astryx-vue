@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ComponentDocsRoute } from './componentDocsRoute'
 import { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
-import { useRoute } from 'vitepress'
+import { useRoute } from 'kawapress/client'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { componentDemos } from '../demos/registry'
 import { sidebarItems } from './componentCatalog'
@@ -64,6 +64,7 @@ const isNarrow = ref(false)
 const menuButton = ref<HTMLButtonElement | null>(null)
 const backdropEl = ref<HTMLButtonElement | null>(null)
 const sidebarEl = ref<HTMLElement | null>(null)
+const overviewRef = ref<HTMLElement | null>(null)
 let media: MediaQueryList | undefined
 
 function path(value: string): string {
@@ -97,7 +98,8 @@ function toggleSidebar(): void {
 }
 
 function scrollToTop(): void {
-  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  // The page may scroll in the window or in a theme container; both follow the overview's top.
+  overviewRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 function onKeydown(event: KeyboardEvent): void {
@@ -134,13 +136,13 @@ watch(sidebarOpen, (open) => {
   document.documentElement.classList.toggle('component-docs-scroll-lock', open)
 })
 
-watch(() => routePath.path, () => {
+watch(() => routePath.value.path, () => {
   closeSidebar(false)
 })
 </script>
 
 <template>
-  <main class="component-overview" :class="[{ 'component-detail': route.kind === 'detail', 'component-detail--props': route.kind === 'detail' && route.tab === 'props', 'is-sidebar-open': sidebarOpen }]">
+  <main ref="overviewRef" class="component-overview" :class="[{ 'component-detail': route.kind === 'detail', 'component-detail--props': route.kind === 'detail' && route.tab === 'props', 'is-sidebar-open': sidebarOpen }]">
     <div class="component-overview__toolbar" :inert="sidebarOpen ? true : undefined">
       <button
         ref="menuButton"
@@ -240,7 +242,7 @@ watch(() => routePath.path, () => {
             />
           </StageFit>
         </div>
-        <div class="component-detail__body vp-doc">
+        <div class="component-detail__body">
           <PropsPlayground v-if="route.tab === 'props'" :locale="route.locale" :slug="route.slug" />
           <slot />
         </div>

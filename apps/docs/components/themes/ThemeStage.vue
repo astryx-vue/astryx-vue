@@ -16,7 +16,7 @@ import { Switch } from '@astryx-vue/core/Switch'
 import { proportional, Table } from '@astryx-vue/core/Table'
 import { Text } from '@astryx-vue/core/Text'
 import { TextInput } from '@astryx-vue/core/TextInput'
-import { useData } from 'vitepress'
+import { useAppearance, usePageData } from 'kawapress/client'
 import { computed, h, reactive, shallowRef } from 'vue'
 import { badgeVariant, themeEntry } from './themeCatalog'
 
@@ -24,10 +24,11 @@ const props = defineProps<{
   theme: ThemeId
 }>()
 
-const { isDark, page } = useData()
+const { isDark } = useAppearance()
+const page = usePageData()
 
 // 主题页不在组件文档壳里，模板自己按站点语言提供文案。
-provideAstryxLocale(computed(() => page.value.relativePath.startsWith('en/') ? 'en' : 'zh-CN'))
+provideAstryxLocale(computed(() => page.value?.path.startsWith('/en/') ? 'en' : 'zh-CN'))
 const colorMode = computed(() => props.theme === 'gothic' || isDark.value ? 'dark' : 'light')
 const entry = computed(() => themeEntry(props.theme))
 

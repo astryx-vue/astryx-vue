@@ -54,7 +54,7 @@
 
 .more-menu-preview__size-label {
   color: var(--astryx-text-muted);
-  font-family: var(--vp-font-family-mono);
+  font-family: var(--docs-font-family-mono);
   font-size: 12px;
 }
 

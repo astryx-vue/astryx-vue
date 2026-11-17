@@ -17,7 +17,7 @@ const PROXY = { server: 'http://127.0.0.1:7890', bypass: '127.0.0.1,localhost' }
 async function shoot(browser, url, local = false) {
   const context = await browser.newContext({ viewport: VIEWPORT, colorScheme: scheme })
   if (local)
-    await context.addInitScript(mode => localStorage.setItem('vitepress-theme-appearance', mode), scheme)
+    await context.addInitScript(mode => localStorage.setItem('kawapress:appearance', mode), scheme)
   const page = await context.newPage()
   for (let attempt = 0; ; attempt++) {
     try {

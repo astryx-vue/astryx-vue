@@ -46,7 +46,7 @@ selected.value = [people.value[0]!, people.value[2]!]
 .demo-caption {
   margin: 0;
   font-size: 0.875rem;
-  color: var(--vp-c-text-2);
+  color: var(--docs-c-text-2);
 }
 .demo-stack :deep(svg) {
   width: 1rem;

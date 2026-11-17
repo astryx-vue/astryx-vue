@@ -100,7 +100,7 @@ pnpm visual <组件> [--section overview|all]
 | 站点 | 怎么切 | 怎么验证 |
 | --- | --- | --- |
 | 上游 | 只看系统偏好。浏览器上下文设 `colorScheme`，页面就跟着变，`<html>` 上会出现 `data-theme="light/dark"`。 | `data-theme` 等于期望值，且预览区背景亮度对得上。 |
-| 我们 | VitePress 读 `localStorage['vitepress-theme-appearance']`。截图前用 init script 写好，同时也设 `colorScheme`。 | `<html>` 有没有 `dark` 类与期望一致，且预览区背景亮度对得上。 |
+| 我们 | nagi 读 `localStorage['kawapress:appearance']`。截图前用 init script 写好，同时也设 `colorScheme`。 | `<html>` 有没有 `dark` 类与期望一致，且预览区背景亮度对得上。 |
 
 背景亮度用 sRGB 相对亮度算，低于 0.18 算深色。两项检查有一项不对，这个组合就报错，不会默默截一张颜色错的图。
 
@@ -220,7 +220,7 @@ pnpm a11y [--only <slug,...>] [--schemes light,dark] [--update] [--init]
 ### 一句话用法
 
 ```sh
-# 本地站点先构建再起 preview（vitepress dev 打开演练场会报 __VP_HASH_MAP__ is not defined）
+# 本地站点先构建再起 preview
 env -u NODE_ENV pnpm docs:build
 env -u NODE_ENV pnpm --filter @astryx-vue/docs preview --port 5181
 

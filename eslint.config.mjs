@@ -4,7 +4,6 @@ export default antfu({
   type: 'lib',
   ignores: [
     '.agents-work/**',
-    '**/.vitepress/cache/**',
     '**/coverage/**',
     '**/dist/**',
     'apps/docs/public/monaco/**',

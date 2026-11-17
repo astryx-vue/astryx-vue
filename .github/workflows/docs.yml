@@ -90,7 +90,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           BRANCH="${{ github.head_ref || github.ref_name }}"
-          DEPLOY_OUTPUT=$(pnpm exec wrangler pages deploy apps/docs/.vitepress/dist --project-name=astryx-vue --branch="$BRANCH" 2>&1)
+          DEPLOY_OUTPUT=$(pnpm exec wrangler pages deploy apps/docs/dist --project-name=astryx-vue --branch="$BRANCH" 2>&1)
           echo "$DEPLOY_OUTPUT"
           DEPLOYMENT_URL=$(echo "$DEPLOY_OUTPUT" | grep -oE 'https://[^[:space:]]+\.pages\.dev' | head -1)
           echo "deployment-url=$DEPLOYMENT_URL" >> "$GITHUB_OUTPUT"
@@ -138,4 +138,4 @@ jobs:
           echo "   - 这是 fork PR，拿不到 Cloudflare secrets"
           echo "   - PR 的 head 分支是 main/dev，push 事件已经部署过了"
           echo "   - PR 没有 docs-preview 标签（启用 label 门控时）"
-          echo "📦 文档已成功构建，产物在 apps/docs/.vitepress/dist"
+          echo "📦 文档已成功构建，产物在 apps/docs/dist"

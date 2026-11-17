@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { DocsLocale } from './docs-i18n'
 import type { AccessibilityRequirement } from './reference/loadReference'
-import { useData } from 'vitepress'
+import { usePageData } from 'kawapress/client'
 import { computed } from 'vue'
 import { parseComponentDocsRoute } from './componentDocsRoute'
 import { accessibilityFor } from './reference/loadReference'
 import { richText } from './richText'
 
-const { page } = useData()
-const route = computed(() => parseComponentDocsRoute(`/${page.value.relativePath.replace(/\.md$/, '')}`))
+const page = usePageData()
+const route = computed(() => parseComponentDocsRoute(page.value?.path ?? '/'))
 const locale = computed<DocsLocale>(() => route.value?.locale === 'en' ? 'en' : 'zh')
 
 const REQUIREMENT_ZH: Record<string, string> = {

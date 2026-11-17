@@ -1,9 +1,9 @@
-import { createMarkdownRenderer } from 'vitepress'
+import { createMarkdownRenderer } from '@kawapress/plugin-shiki'
 import { describe, expect, it } from 'vitest'
 import { vueLanguage } from './vueLanguage.ts'
 
 async function renderVue(source: string): Promise<string> {
-  const markdown = await createMarkdownRenderer(process.cwd(), { languages: vueLanguage })
+  const markdown = await createMarkdownRenderer({ languages: vueLanguage })
   return markdown.renderAsync(`\`\`\`vue\n${source}\n\`\`\``)
 }
 

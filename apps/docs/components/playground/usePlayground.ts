@@ -59,9 +59,8 @@ export function usePlayground(
           : ''
       }
       else {
-        // VitePress resolves `appearance` plus localStorage
-        // `vitepress-theme-appearance` onto `html.dark` before paint.
-        // Seed the preview once from that. The toolbar owns it afterwards.
+        // nagi puts the configured or saved appearance onto `html.dark`
+        // before paint. Seed the preview once from that. The toolbar owns it afterwards.
         theme.dark = document.documentElement.classList.contains('dark')
         const fromQuery = new URLSearchParams(window.location.search).get('template')
         const match = fromQuery ? templates.find(item => item.id === fromQuery) : undefined
