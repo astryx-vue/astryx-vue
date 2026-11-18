@@ -3,6 +3,7 @@ import type { PlaygroundTemplateSummary } from './build-templates.ts'
 import type { PageExample } from './markdown.ts'
 import { readdir, readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
+import { themePagePath } from '../../../../apps/docs/site/themeRoutes.ts'
 import { CORE_PACKAGE } from '../spec.ts'
 import { buildTemplates } from './build-templates.ts'
 import { cleanMarkdown, extractPage, extractTopic, paragraphContaining, pascalCase } from './markdown.ts'
@@ -262,11 +263,11 @@ function localizedAccessibility(en: AccessibilitySource[], zh: ReferencePart[]):
 }
 
 function docsUrl(kind: 'guide' | 'theme', id: string): LocaleText {
-  const folder = kind === 'guide' ? 'guide' : 'themes'
-  const suffix = id === 'index' ? '' : `/${id}`
+  // 主题页的源文件在 themes/ 下，网址由站点的 rewrites 改到 /guide/。
+  const path = kind === 'guide' ? (id === 'index' ? '/guide' : `/guide/${id}`) : themePagePath(id)
   return {
-    en: `${DOCS_ORIGIN}/en/${folder}${suffix}`,
-    zh: `${DOCS_ORIGIN}/${folder}${suffix}`,
+    en: `${DOCS_ORIGIN}/en${path}`,
+    zh: `${DOCS_ORIGIN}${path}`,
   }
 }
 

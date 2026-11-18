@@ -278,7 +278,7 @@ function errorCountLabel() {
       </LayoutHeader>
     </template>
 
-    <LayoutContent>
+    <LayoutContent role="main">
       <VStack :gap="6">
         <VisuallyHidden as="div" aria-live="polite">
           {{ isDone

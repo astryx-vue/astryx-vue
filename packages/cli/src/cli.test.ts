@@ -214,7 +214,7 @@ describe('json envelopes', () => {
     expect(detail).toMatchObject({ id: 'theme/tokens', title: 'Design tokens', locale: 'en' })
     expect(detail.body).toContain('design token')
     expect(detail.body.startsWith('---')).toBe(false)
-    expect(detail.docsUrl).toBe('https://astryx-vue.pages.dev/en/themes/tokens')
+    expect(detail.docsUrl).toBe('https://astryx-vue.pages.dev/en/guide/tokens')
 
     const bare = await run(['docs', 'dark-mode', '--json'])
     expect(assertResponse(bare.stdout, 'docs.detail').data).toMatchObject({ id: 'guide/dark-mode' })

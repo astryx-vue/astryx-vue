@@ -3,7 +3,7 @@
 @layer astryx.tokens {
   [data-astryx-theme='stone'] {
     --astryx-token-default-background: var(--astryx-badge-neutral-background);
-    --astryx-token-default-foreground: var(--astryx-badge-neutral-foreground);
+    --astryx-token-default-foreground: var(--astryx-color-text-primary);
     --astryx-token-gray-background: var(--astryx-badge-neutral-background);
     --astryx-token-gray-foreground: var(--astryx-badge-neutral-foreground);
     --astryx-token-blue-background: var(--astryx-badge-blue-background);

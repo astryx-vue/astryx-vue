@@ -107,7 +107,7 @@
     min-width: 0;
     margin: 0;
     overflow: hidden;
-    color: var(--astryx-code-syntax-comment, #6a6a6a);
+    color: var(--astryx-code-block-title-foreground, #525252);
     font-family: var(--astryx-font-family-code, monospace);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: var(--astryx-font-weight-medium, 500);
@@ -129,7 +129,7 @@
     height: 14px;
     margin-inline-end: var(--astryx-spacing-1, 4px);
     overflow: hidden;
-    color: var(--astryx-code-syntax-comment, #6a6a6a);
+    color: var(--astryx-code-block-title-foreground, #525252);
     animation: astryx-code-block-chevron-reveal var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 

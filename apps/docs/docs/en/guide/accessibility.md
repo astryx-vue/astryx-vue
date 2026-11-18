@@ -16,6 +16,6 @@ Announcements go through `useAnnounce`. Changing a button's text after a copy of
 
 Arrow keys for lists and menus live in `useListFocus`, `useGridRovingFocus`, and `useTypeahead`. `ChatMessageList` is `role="log"`. Keep `isStreaming` true while an assistant reply is still growing so a screen reader waits for the finished message instead of speaking every token.
 
-Motion follows `prefers-reduced-motion`. The shared motion classes collapse distance and scale to zero. See [Motion](/en/themes/motion).
+Motion follows `prefers-reduced-motion`. The shared motion classes collapse distance and scale to zero. See [Motion](/en/guide/motion).
 
 There is no separate third-party audit to cite. Keyboard and screen reader behavior for a component is what that component's docs and the repository tests say.

@@ -60,7 +60,7 @@ import '@astryx-vue/core/styles.css'
 - 页面自己写了 `html { font-size: ... }`：组件的间距和内边距会按同样比例放大或缩小。这是这次改动想要的效果。
 - 自己的主题用 px 写间距：那几档仍然固定不变。想跟着根字号走，就改写成 rem。
 
-细节见 [间距、圆角与阴影](/themes/scale)。
+细节见 [间距、圆角与阴影](/guide/scale)。
 
 ### 自定义主题里的挂点名改名
 
@@ -106,7 +106,7 @@ defineTheme({
 | `statusdot` | `status-dot` |
 | `textarea` | `text-area` |
 
-表里的旧名字本身写法合法，所以不会报错，但已经没有组件用它，写了不生效。完整说明见 [扩展主题](/themes/extending)。
+表里的旧名字本身写法合法，所以不会报错，但已经没有组件用它，写了不生效。完整说明见 [扩展主题](/guide/extending-themes)。
 
 ### 组件不再输出 `primary`、`sm` 这类裸类名
 

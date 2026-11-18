@@ -50,6 +50,10 @@
     text-decoration: none;
   }
 
+  .astryx-top-nav-heading:has(.astryx-nav-icon) {
+    padding-inline-start: 0;
+  }
+
   .astryx-top-nav-heading--link:hover,
   .astryx-top-nav-heading--echo:hover {
     background: var(--astryx-color-overlay-hover);
@@ -174,7 +178,7 @@
   .astryx-top-nav-menu__trigger {
     display: inline-flex;
     align-items: center;
-    gap: var(--astryx-spacing-1, 4px);
+    gap: var(--astryx-spacing-2, 8px);
     height: 32px;
     padding-inline: var(--astryx-spacing-3, 12px);
     border: 0;
@@ -197,6 +201,13 @@
   .astryx-top-nav-menu__drawer-trigger:focus-visible {
     outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
     outline-offset: var(--astryx-focus-outline-offset);
+  }
+
+  /* 原版把下拉箭头钉在 1em（跟随标签字号），不用 sm 的 16px 盒子。 */
+  .astryx-top-nav-menu__trigger .astryx-icon.astryx-top-nav-menu__chevron {
+    width: 1em;
+    height: 1em;
+    font-size: inherit;
   }
 
   .astryx-top-nav-menu__chevron {

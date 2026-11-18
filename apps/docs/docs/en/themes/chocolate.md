@@ -15,4 +15,4 @@ import '@astryx-vue/themes/chocolate.css'
 <div data-astryx-theme="chocolate">
 ```
 
-<ThemeStage theme="chocolate" />
+See it in the [theme gallery](/en/themes/?theme=chocolate).

@@ -41,6 +41,14 @@ describe('text', () => {
     expect(label.classes()).toContain('astryx-text--color-primary')
   })
 
+  it('inherits the color with type inherit unless a color is given', () => {
+    const inherit = mount(Text, { props: { type: 'inherit' }, slots: { default: '+4%' } })
+    const secondary = mount(Text, { props: { type: 'inherit', color: 'secondary', weight: 'normal' }, slots: { default: '+4%' } })
+
+    expect(inherit.classes()).toEqual(expect.arrayContaining(['astryx-text--type-inherit', 'astryx-text--color-inherit']))
+    expect(secondary.classes()).toEqual(expect.arrayContaining(['astryx-text--type-inherit', 'astryx-text--color-secondary', 'astryx-text--weight-regular']))
+  })
+
   it('keeps an explicit color on supporting text', () => {
     const wrapper = mount(Text, { props: { type: 'supporting', color: 'primary' }, slots: { default: 'Hint' } })
 

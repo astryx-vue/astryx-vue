@@ -97,12 +97,12 @@ function onPasswordChange(value: string) {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
+  <Center role="main" axis="both" :padding="6" min-height="100%" :style="pageStyle">
     <Card :padding="8" width="100%" :max-width="400">
       <VStack :gap="4" h-align="stretch">
         <template v-if="step === 'email'">
           <VStack :gap="1" h-align="center">
-            <Text type="display-1" as="h2">
+            <Text type="display-1" as="h1">
               Welcome back
             </Text>
             <Text type="body" color="secondary" size="sm">
@@ -128,7 +128,7 @@ function onPasswordChange(value: string) {
               size="lg"
             />
           </VStack>
-          <Link href="#" size="sm" color="secondary">
+          <Link href="#" size="sm" color="secondary" type="supporting">
             Having trouble signing in?
           </Link>
           <Button
@@ -149,7 +149,7 @@ function onPasswordChange(value: string) {
           <VStack h-align="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
-              <Link href="#" size="sm">
+              <Link href="#" type="supporting">
                 Request access
               </Link>
             </Text>
@@ -159,7 +159,7 @@ function onPasswordChange(value: string) {
         <template v-else-if="step === 'sso-confirm' && provider">
           <VStack :gap="2" h-align="center">
             <Avatar :name="provider.name" :size="48" />
-            <Text type="display-3" as="h2">
+            <Text type="display-3" as="h1">
               Sign in with {{ provider.name }}
             </Text>
             <Text type="body" color="secondary" size="sm">
@@ -200,7 +200,7 @@ function onPasswordChange(value: string) {
 
         <template v-else-if="step === 'password-fallback'">
           <VStack :gap="1" h-align="center">
-            <Text type="display-1" as="h2">
+            <Text type="display-1" as="h1">
               Welcome back
             </Text>
             <Text type="body" color="secondary" size="sm">
@@ -218,7 +218,7 @@ function onPasswordChange(value: string) {
                 @update:model-value="onPasswordChange"
               />
               <VStack v-if="loginFailed" h-align="end">
-                <Link href="#" size="sm" color="secondary">
+                <Link href="#" size="sm" color="secondary" type="supporting">
                   Forgot password?
                 </Link>
               </VStack>

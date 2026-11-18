@@ -18,9 +18,9 @@ The token name is the stable interface. The current numbers live in `packages/th
 
 | Page | Variables |
 | --- | --- |
-| [Color](/en/themes/color) | `--astryx-color-*`, including `--astryx-color-data-*` for chart categories and sequential ramps |
-| [Typography](/en/themes/typography) | `--astryx-font-*`, `--astryx-text-*` |
-| [Motion](/en/themes/motion) | `--astryx-duration-*`, `--astryx-ease-*`, and the shared keyframes |
-| [Space, radius, shadow](/en/themes/scale) | `--astryx-spacing-*`, `--astryx-size-*`, `--astryx-radius-*`, `--astryx-shadow-*`, border and focus |
+| [Color](/en/guide/color) | `--astryx-color-*`, including `--astryx-color-data-*` for chart categories and sequential ramps |
+| [Typography](/en/guide/typography) | `--astryx-font-*`, `--astryx-text-*` |
+| [Motion](/en/guide/motion) | `--astryx-duration-*`, `--astryx-ease-*`, and the shared keyframes |
+| [Space, radius, shadow](/en/guide/scale) | `--astryx-spacing-*`, `--astryx-size-*`, `--astryx-radius-*`, `--astryx-shadow-*`, border and focus |
 
-Outside a component, reference `var(--astryx-color-text-primary)`. Naming and cascade layers are in [CSS variables](/en/themes/css-variables).
+Outside a component, reference `var(--astryx-color-text-primary)`. Naming and cascade layers are in [CSS variables](/en/guide/css-variables).

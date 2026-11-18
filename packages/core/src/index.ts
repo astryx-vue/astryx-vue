@@ -645,7 +645,7 @@ export type {
   UseLightboxOptions,
 } from './Lightbox/index.js'
 export { Link } from './Link/index.js'
-export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkWeight } from './Link/index.js'
+export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkType, LinkWeight } from './Link/index.js'
 export { LinkProvider, useLinkComponent } from './LinkProvider/index.js'
 export type { LinkComponentType, LinkProviderProps, LinkProviderSlots } from './LinkProvider/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'

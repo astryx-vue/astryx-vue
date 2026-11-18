@@ -5,8 +5,6 @@ import {
   Button,
   Card,
   Collapsible,
-  Dialog,
-  DialogHeader,
   Divider,
   Heading,
   HStack,
@@ -31,7 +29,7 @@ import {
   useMediaQuery,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 
 const PRODUCT_IMAGES = [
   '/template-assets/light-product-1.png',
@@ -79,18 +77,44 @@ const ACTIVITY: ActivityItem[] = [
 ]
 
 const activeTab = ref('details')
+// 窄屏时订单详情接在主栏后面；宽屏时放进右侧可隐藏的固定宽度面板。
 const isNarrow = useMediaQuery('(max-width: 1024px)')
 const showSidePanel = ref(true)
-const isPanelDialogOpen = ref(false)
 
-const isPanelShown = computed(() => isNarrow.value ? isPanelDialogOpen.value : showSidePanel.value)
-
-function togglePanel() {
-  if (isNarrow.value)
-    isPanelDialogOpen.value = !isPanelDialogOpen.value
-  else
-    showSidePanel.value = !showSidePanel.value
-}
+/** 订单详情的三段折叠内容。窄屏放在「Order details」标题下，各段标题再降一级。 */
+const PanelContent = defineComponent({
+  props: { sectionLevel: { type: Number as () => 2 | 3, default: 2 } },
+  setup(props) {
+    const trigger = (title: string) => () => h(Heading, { level: 4, accessibilityLevel: props.sectionLevel }, () => title)
+    return () => h(VStack, { gap: 4 }, () => [
+      h(Collapsible, null, {
+        trigger: trigger('Notes'),
+        default: () => h(Text, { type: 'body' }, () => [
+          'Customer is a repeat buyer — 3rd order this quarter. Prefers snow and oat glazes. Requested gift wrapping for the mug set. Ships to a residential address in CA. ',
+          h(Link, { href: '#', color: 'secondary' }, () => 'Show more'),
+        ]),
+      }),
+      h(Collapsible, null, {
+        trigger: trigger('Customer'),
+        default: () => h(MetadataList, null, () => [
+          ['Name', 'Jane Doe'],
+          ['Address', '321 Smith Road, CA 38238'],
+          ['Phone', '234-'],
+          ['Email', 'janedoe@email.com'],
+          ['Billing Address', 'Same as shipping address'],
+        ].map(([label, value]) => h(MetadataListItem, { label }, () => value))),
+      }),
+      h(Collapsible, null, {
+        trigger: trigger('Fraud Analysis'),
+        default: () => h(VStack, { gap: 1 }, () => [
+          h(ProgressBar, { label: 'Risk level', value: 15, variant: 'success', isLabelHidden: true }),
+          h(Text, { type: 'body' }, () => 'Recommendation: Fulfill order'),
+          h(Text, { type: 'body' }, () => 'There is a low chance that you will receive a chargeback on this order.'),
+        ]),
+      }),
+    ])
+  },
+})
 </script>
 
 <template>
@@ -103,7 +127,7 @@ function togglePanel() {
               <VStack :gap="0">
                 <Link href="#" color="secondary">
                   <HStack :gap="1" align="center">
-                    <Icon icon="i-heroicons-arrow-left" size="sm" color="inherit" />
+                    <Icon name="heroicons:arrow-left" size="sm" color="inherit" />
                     All orders
                   </HStack>
                 </Link>
@@ -134,7 +158,7 @@ function togglePanel() {
                       <Text type="supporting" color="secondary">
                         ・
                       </Text>
-                      <Icon icon="i-heroicons-calendar" size="sm" color="secondary" />
+                      <Icon name="heroicons:calendar" size="sm" color="secondary" />
                       <Text type="body" :max-lines="1">
                         02/23/2026
                       </Text>
@@ -143,7 +167,7 @@ function togglePanel() {
                       <Text type="supporting" color="secondary">
                         ・
                       </Text>
-                      <Icon icon="i-heroicons-flag" size="sm" color="secondary" />
+                      <Icon name="heroicons:flag" size="sm" color="secondary" />
                       <Text type="body" :max-lines="1">
                         Needs attention
                       </Text>
@@ -201,14 +225,15 @@ function togglePanel() {
               </TabList>
             </StackItem>
             <Button
-              :label="isPanelShown ? 'Hide panel' : 'Show panel'"
+              v-if="!isNarrow"
+              :label="showSidePanel ? 'Hide panel' : 'Show panel'"
               variant="ghost"
               size="md"
               is-icon-only
-              @click="togglePanel"
+              @click="showSidePanel = !showSidePanel"
             >
               <template #icon>
-                <Icon icon="i-heroicons-view-columns" size="sm" />
+                <Icon name="heroicons:view-columns" size="sm" />
               </template>
             </Button>
           </HStack>
@@ -368,7 +393,7 @@ function togglePanel() {
               </StackItem>
               <Button label="Filters" variant="ghost" is-icon-only>
                 <template #icon>
-                  <Icon icon="i-heroicons-funnel" />
+                  <Icon name="heroicons:funnel" />
                 </template>
               </Button>
             </HStack>
@@ -388,7 +413,7 @@ function togglePanel() {
                           </Text>
                           <VStack v-if="item.changes" :gap="1">
                             <HStack v-for="(change, j) in item.changes" :key="j" :gap="2" align="center">
-                              <Icon icon="i-heroicons-pencil-square" size="sm" color="secondary" />
+                              <Icon name="heroicons:pencil-square" size="sm" color="secondary" />
                               <Text type="supporting" color="secondary">
                                 {{ change }}
                               </Text>
@@ -396,10 +421,10 @@ function togglePanel() {
                           </VStack>
                         </VStack>
                       </Card>
-                      <HStack v-if="item.reactions != null" :gap="3" align="center">
+                      <HStack :gap="3" vAlign="center">
                         <HStack :gap="1" align="center">
-                          <Icon icon="i-heroicons-hand-thumb-up" size="xsm" color="secondary" />
-                          <Icon icon="i-heroicons-heart" size="xsm" color="secondary" />
+                          <Icon name="heroicons:hand-thumb-up" size="xsm" color="secondary" />
+                          <Icon name="heroicons:heart" size="xsm" color="secondary" />
                           <Text type="supporting" color="secondary">
                             {{ item.reactions }}
                           </Text>
@@ -420,9 +445,6 @@ function togglePanel() {
                           {{ item.time }}
                         </Text>
                       </HStack>
-                      <Text v-else type="supporting" color="secondary">
-                        {{ item.time }}
-                      </Text>
                     </VStack>
                   </StackItem>
                 </HStack>
@@ -430,101 +452,22 @@ function togglePanel() {
             </VStack>
           </VStack>
         </Section>
+        <!-- 窄屏：订单详情接在主栏后面，不挤在旁边。 -->
+        <VStack v-if="isNarrow" :gap="4">
+          <Heading :level="2">
+            Order details
+          </Heading>
+          <PanelContent :section-level="3" />
+        </VStack>
       </VStack>
     </LayoutContent>
 
     <template v-if="!isNarrow && showSidePanel" #end>
       <LayoutPanel :width="320" :padding="4" role="complementary">
-        <VStack :gap="4">
-          <Collapsible>
-            <template #trigger>
-              <Heading :level="4">
-                Notes
-              </Heading>
-            </template>
-            <Text type="body">
-              Customer is a repeat buyer — 3rd order this quarter. Prefers snow and oat glazes. Requested gift wrapping for the mug set. Ships to a residential address in CA.
-              <Link href="#" color="secondary">
-                Show more
-              </Link>
-            </Text>
-          </Collapsible>
-          <Collapsible>
-            <template #trigger>
-              <Heading :level="4">
-                Customer
-              </Heading>
-            </template>
-            <MetadataList>
-              <MetadataListItem label="Name">
-                Jane Doe
-              </MetadataListItem>
-              <MetadataListItem label="Address">
-                321 Smith Road, CA 38238
-              </MetadataListItem>
-              <MetadataListItem label="Phone">
-                234-
-              </MetadataListItem>
-              <MetadataListItem label="Email">
-                janedoe@email.com
-              </MetadataListItem>
-              <MetadataListItem label="Billing Address">
-                Same as shipping address
-              </MetadataListItem>
-            </MetadataList>
-          </Collapsible>
-          <Collapsible>
-            <template #trigger>
-              <Heading :level="4">
-                Fraud Analysis
-              </Heading>
-            </template>
-            <VStack :gap="1">
-              <ProgressBar label="Risk level" :value="15" variant="success" is-label-hidden />
-              <Text type="body">
-                Recommendation: Fulfill order
-              </Text>
-              <Text type="body">
-                There is a low chance that you will receive a chargeback on this order.
-              </Text>
-            </VStack>
-          </Collapsible>
-        </VStack>
+        <PanelContent />
       </LayoutPanel>
     </template>
   </Layout>
-
-  <Dialog variant="fullscreen" :is-open="isNarrow && isPanelDialogOpen" @open-change="isPanelDialogOpen = $event">
-    <Layout>
-      <template #header>
-        <DialogHeader title="Order details" @open-change="isPanelDialogOpen = $event" />
-      </template>
-      <LayoutContent :padding="4">
-        <VStack :gap="4">
-          <Collapsible>
-            <template #trigger>
-              <Heading :level="4">
-                Notes
-              </Heading>
-            </template>
-            <Text type="body">
-              Customer is a repeat buyer — 3rd order this quarter. Prefers snow and oat glazes. Requested gift wrapping for the mug set. Ships to a residential address in CA.
-            </Text>
-          </Collapsible>
-          <Collapsible>
-            <template #trigger>
-              <Heading :level="4">
-                Customer
-              </Heading>
-            </template>
-            <Text type="body">
-              Jane Doe · janedoe@email.com
-            </Text>
-          </Collapsible>
-        </VStack>
-      </LayoutContent>
-    </Layout>
-  </Dialog>
 </template>
 
 <style scoped>

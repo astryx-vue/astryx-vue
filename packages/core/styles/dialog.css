@@ -52,7 +52,7 @@
   }
 
   .astryx-dialog--inline {
-    position: relative;
+    position: static;
     inset: auto;
     margin: 0;
     display: flex;
@@ -68,21 +68,41 @@
     border-radius: 0;
   }
 
+  /*
+   * 四边内边距各用一个变量，同时公布给 Layout 这类会“撑出去”的子元素：
+   * Layout 靠 --container-padding-* 用负外边距顶到对话框边缘，各区域再按
+   * --layout-padding-* 自己补内边距（和原版一致，页头、内容、页脚各管各的）。
+   */
   .astryx-dialog__inner {
+    --_dialog-pad-block-start: var(--_dialog-padding, var(--astryx-dialog-padding, var(--astryx-spacing-4, 1rem)));
+    --_dialog-pad-block-end: var(--_dialog-pad-block-start);
+    --_dialog-pad-inline-start: var(--_dialog-pad-block-start);
+    --_dialog-pad-inline-end: var(--_dialog-pad-block-start);
+    --container-padding-block-start: var(--_dialog-pad-block-start);
+    --container-padding-block-end: var(--_dialog-pad-block-end);
+    --container-padding-inline-start: var(--_dialog-pad-inline-start);
+    --container-padding-inline-end: var(--_dialog-pad-inline-end);
+    --layout-padding-own-outer-x: initial;
+    --layout-padding-own-outer-y: initial;
+    --layout-padding-outer-x: var(--_dialog-pad-inline-start);
+    --layout-padding-outer-y: var(--_dialog-pad-block-start);
+    --layout-padding-inner-x: var(--_dialog-pad-inline-start);
+    --layout-padding-inner-y: var(--_dialog-pad-block-start);
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
     min-height: 0;
     overflow: hidden;
     border-radius: inherit;
-    padding: var(--_dialog-padding, var(--astryx-dialog-padding, var(--astryx-spacing-4, 1rem)));
+    padding-block: var(--_dialog-pad-block-start) var(--_dialog-pad-block-end);
+    padding-inline: var(--_dialog-pad-inline-start) var(--_dialog-pad-inline-end);
   }
 
   .astryx-dialog--fullscreen:not([data-padded]) > .astryx-dialog__inner {
-    padding-block-start: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-top, 0px));
-    padding-block-end: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-bottom, 0px));
-    padding-inline-start: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-left, 0px));
-    padding-inline-end: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-right, 0px));
+    --_dialog-pad-block-start: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-top, 0px));
+    --_dialog-pad-block-end: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-bottom, 0px));
+    --_dialog-pad-inline-start: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-left, 0px));
+    --_dialog-pad-inline-end: max(var(--astryx-spacing-4, 1rem), env(safe-area-inset-right, 0px));
   }
 
   /*

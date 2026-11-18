@@ -26,6 +26,7 @@ import {
   useTableSortable,
   useTableSortableState,
   VStack,
+  useToast,
 } from '@astryx-vue/core'
 import type { Component, PropType } from 'vue'
 import type { TableColumn, TablePlugin } from '@astryx-vue/core'
@@ -271,6 +272,9 @@ const BASIS_LABEL: Record<BillingBasis, string> = {
  * 行元素登记处。表格的行级扩展点 `rowPatch.ref` 在 `<tr>` 挂上、卸下时写这里，
  * 单元格按 id 取到自己那一行，再把 `useHoverCard` 挂到整行上。
  */
+// 演示用：按钮点了只弹提示，换成真正执行动作的调用即可。
+const showToast = useToast()
+
 const rowElements = shallowReactive(new Map<string, HTMLTableRowElement>())
 
 /**
@@ -316,7 +320,12 @@ const DescriptionCell = defineComponent({
                 h(MetadataListItem, { label: 'Amount' }, () => formatCents(props.item.amountCents)),
                 h(MetadataListItem, { label: 'Share of invoice' }, () => `${share.value.toFixed(1)}%`),
               ]),
-              h(Button, { label: 'Dispute this line', variant: 'secondary', width: '100%' }),
+              h(Button, {
+                label: 'Dispute this line',
+                variant: 'secondary',
+                width: '100%',
+                onClick: () => showToast({ body: `Demo: a dispute for ${props.item.description} would open here`, uniqueID: `dispute-${props.item.id}` }),
+              }),
             ]),
           ]),
         ]),
@@ -440,7 +449,7 @@ const AMOUNT_COLUMN_WIDTH = 132
 
 <template>
   <Layout height="fill" :content-width="960">
-    <LayoutContent :padding="0">
+    <LayoutContent role="main" :padding="0">
       <VStack :gap="8" :padding="4">
         <VStack :gap="6" :padding-block-end="4">
           <HStack :gap="3" align="center" wrap="wrap">
@@ -449,7 +458,11 @@ const AMOUNT_COLUMN_WIDTH = 132
                 Invoice INV-2043
               </Heading>
             </StackItem>
-            <Button label="Download PDF" variant="secondary">
+            <Button
+              label="Download PDF"
+              variant="secondary"
+              @click="showToast({ body: 'Demo: the invoice PDF would download here', uniqueID: 'download-pdf' })"
+            >
               <template #icon>
                 <Icon icon="i-heroicons-arrow-down-tray" size="sm" />
               </template>
@@ -520,7 +533,7 @@ const AMOUNT_COLUMN_WIDTH = 132
                   Tax (8.75%)
                 </Text>
                 <VStack :width="AMOUNT_COLUMN_WIDTH">
-                  <Text justify="end" display="block" has-tabular-numbers color="secondary">
+                  <Text justify="end" display="block" has-tabular-numbers>
                     {{ formatCents(taxCents) }}
                   </Text>
                 </VStack>

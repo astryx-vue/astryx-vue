@@ -1,5 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { h } from 'vue'
+import Icon from '../Icon/Icon.vue'
 import TreeList from './TreeList.vue'
 
 const items = [
@@ -89,6 +91,17 @@ describe('tree list', () => {
     expect(icons).toHaveLength(2)
     expect(icons[0]?.get('i').classes()).toContain('i-heroicons-folder')
     expect(icons[1]?.get('i').classes()).toContain('i-heroicons-chevron-right')
+  })
+
+  it('renders startContent in place of icon', () => {
+    const wrapper = mount(TreeList, {
+      props: {
+        items: [{ id: 'src', label: 'src', icon: 'i-heroicons-folder', startContent: () => h(Icon, { icon: 'search', size: 'xsm' }) }],
+      },
+    })
+    const start = wrapper.get('.astryx-tree-list__start')
+    expect(start.get('.astryx-icon').attributes('data-size')).toBe('xsm')
+    expect(wrapper.find('.astryx-tree-list__icon').exists()).toBe(false)
   })
 
   it('collapses a parent from the chevron and from ArrowLeft', async () => {

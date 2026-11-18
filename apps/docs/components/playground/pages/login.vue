@@ -29,7 +29,7 @@ function signIn() {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" class="login-page">
+  <Center role="main" axis="both" :padding="6" class="login-page">
     <VStack :gap="4" h-align="center" class="login-column">
       <VStack :gap="2" h-align="center">
         <Icon name="heroicons:cube" size="lg" />
@@ -41,7 +41,7 @@ function signIn() {
       <Card :padding="8" width="100%">
         <VStack :gap="4" h-align="stretch">
           <VStack :gap="1" h-align="center">
-            <Heading :level="2">
+            <Heading :level="2" :accessibility-level="1">
               Sign in
             </Heading>
             <Text type="body" color="secondary" size="sm">

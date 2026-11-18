@@ -1,0 +1,73 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/* 轨道模式（指示点画在连接线上）的布局：竖向一个网格，横向轨道在控件里面。 */
+@layer astryx.components {
+  /* 竖向轨道：指示点一列、标签和说明一列。 */
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-control {
+    display: grid;
+    grid-template-columns: var(--astryx-spacing-4, 16px) minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--astryx-spacing-2, 8px);
+    row-gap: var(--astryx-spacing-0-5, 2px);
+    padding-inline: var(--_step-space);
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-row {
+    display: contents;
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-indicator {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-label-row,
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-description {
+    grid-column: 2;
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'][data-glyph='none'] .astryx-step-control {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'][data-glyph='none'] .astryx-step-label-row,
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'][data-glyph='none'] .astryx-step-description {
+    grid-column: 1;
+  }
+
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-description {
+    padding-inline-start: 0;
+  }
+
+  /*
+   * 横向轨道：[连接线][指示点][连接线] 一行，标签在下面居中，整块是一个点击目标。
+   * 左右不加内边距，轨道才能一直拉到步骤边缘和相邻步骤接上。
+   */
+  .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track'] .astryx-step-control {
+    padding-inline: 0;
+    text-align: center;
+  }
+
+  .astryx-step-track {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track'] .astryx-step-row {
+    display: contents;
+  }
+
+  .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track'] .astryx-step-label-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-block-start: var(--_step-space);
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-step[data-orientation='horizontal'][data-indicator-position='on-track'] .astryx-step-description {
+    margin-block-start: var(--astryx-spacing-0-5, 2px);
+    padding-inline-start: 0;
+  }
+}

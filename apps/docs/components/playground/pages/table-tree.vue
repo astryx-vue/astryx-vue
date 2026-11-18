@@ -34,6 +34,7 @@ import {
   useTableSortable,
   useTableSortableState,
   useTableTreeState,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
@@ -454,7 +455,7 @@ const AboutPanel = defineComponent({
       ])
     return () => h(VStack, { gap: 6 }, () => [
       h(VStack, { gap: 3 }, () => [
-        h(Heading, { level: 3 }, () => 'About'),
+        h(Heading, { level: 3, accessibilityLevel: 2 }, () => 'About'),
         h(Text, { color: 'secondary' }, () => REPO_DESCRIPTION),
         h(Link, { href: '#', isExternalLink: true }, () => 'canvas-editor.dev'),
         h(HStack, { gap: 1, wrap: 'wrap' }, () => TOPICS.map(topic => h(Token, { key: topic, size: 'sm', label: topic, onClick: () => {} }))),
@@ -463,7 +464,7 @@ const AboutPanel = defineComponent({
       ]),
       h(Divider),
       h(VStack, { gap: 3 }, () => [
-        h(Heading, { level: 3 }, () => 'Releases'),
+        h(Heading, { level: 3, accessibilityLevel: 2 }, () => 'Releases'),
         h(HStack, { gap: 2, vAlign: 'center' }, () => [
           h(Icon, { name: 'heroicons:tag', size: 'sm', color: 'success' }),
           h(Text, { weight: 'bold' }, () => 'v2.4.0'),
@@ -473,7 +474,7 @@ const AboutPanel = defineComponent({
       ]),
       h(Divider),
       h(VStack, { gap: 3 }, () => [
-        h(Heading, { level: 3 }, () => 'Contributors'),
+        h(Heading, { level: 3, accessibilityLevel: 2 }, () => 'Contributors'),
         h(HStack, { gap: 1, wrap: 'wrap' }, () => CONTRIBUTORS.map(name => h(Avatar, { key: name, name, size: 32 }))),
         h(Link, { href: '#' }, () => '+ 61 contributors'),
       ]),
@@ -695,12 +696,14 @@ const READMES: Record<string, string> = {
 <template>
   <Layout height="auto" :content-width="1440">
     <template #header>
-      <Toolbar :ref="setHeader" label="Repository" size="sm" :dividers="['bottom']">
+      <Toolbar :ref="setHeader" label="Repository" size="sm" :dividers="['bottom']" :style="{ paddingInline: '4px' }">
         <template #start>
           <HStack :gap="2" align="center">
-            <Heading :level="1" class="repo-visually-hidden">
-              {{ ROOT_NAME }}
-            </Heading>
+            <VisuallyHidden>
+              <Heading :level="1">
+                {{ ROOT_NAME }}
+              </Heading>
+            </VisuallyHidden>
             <Breadcrumbs label="Folder path">
               <BreadcrumbItem
                 v-for="(crumb, index) in crumbs"
@@ -720,7 +723,7 @@ const READMES: Record<string, string> = {
               v-if="isNarrowHeader"
               variant="secondary"
               size="sm"
-              :label="`${STAT_ACTION[stat.label]}: ${stat.value}`"
+              :label="`${stat.label}: ${stat.value}`"
             >
               <Icon :name="stat.icon" size="sm" />
             </IconButton>
@@ -737,7 +740,7 @@ const READMES: Record<string, string> = {
       </Toolbar>
     </template>
 
-    <LayoutContent :padding="4">
+    <LayoutContent role="main" :padding="4">
       <EmptyState
         v-if="data.length === 0"
         title="No matching files"
@@ -749,6 +752,7 @@ const READMES: Record<string, string> = {
       </EmptyState>
 
       <VStack v-else :ref="setBody" :gap="6">
+        <!-- 原版整条用 SizeProvider value="sm" 包着；core 还没有 SizeProvider，逐个写 size="sm"。 -->
         <HStack :gap="2" align="center" wrap="wrap">
           <DropdownMenu has-chevron size="sm" :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
           <HStack :gap="1" align="center">
@@ -774,6 +778,7 @@ const READMES: Record<string, string> = {
                 label="Go to file"
                 is-label-hidden
                 placeholder="Go to file"
+                size="sm"
                 has-clear
                 :start-icon="SearchIcon"
               />
@@ -847,15 +852,3 @@ const READMES: Record<string, string> = {
 }
 </style>
 
-<style>
-.repo-visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-</style>

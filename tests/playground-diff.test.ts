@@ -200,7 +200,15 @@ describe('命令行参数', () => {
       scheme: 'dark',
       port: 5181,
       jsonPath: 'out.json',
+      clicks: [],
     })
+  })
+
+  it('--click 可以重复，按角色:名字或文字解析', () => {
+    expect(parseDiffArgs(['table', 'light', '5181', '--click', 'tab:Billing', '--click', 'Show more']).clicks).toEqual([
+      { role: 'tab', name: 'Billing' },
+      { text: 'Show more' },
+    ])
   })
 
   it('参数不对时报用法错', () => {

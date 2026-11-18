@@ -43,19 +43,19 @@ function fmt(n: number) {
 
 <template>
   <Layout height="fill" :content-width="1200">
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
       <VStack :gap="6">
-        <Grid :columns="{ minWidth: 280 }" :gap="4" align="start">
+        <Grid :columns="{ minWidth: 280, max: 2 }" :gap="4" align="start">
           <Heading :level="1">
             Make every day a little more delightful, one small detail at a time.
           </Heading>
-          <VStack :gap="3" hAlign="start">
+          <VStack :gap="3" h-align="start">
             <Text type="body">
               We believe the smallest details are the ones that matter most. A little color, a thoughtful touch, a moment that catches your eye and makes you pause; that's what turns an ordinary day into something worth remembering.
             </Text>
-            <Button label="Get started" variant="primary">
+            <Button label="Get started" variant="primary" href="#">
               <template #end>
-                <Icon icon="i-heroicons-arrow-right" color="inherit" />
+                <Icon name="heroicons:arrow-right-20-solid" color="inherit" />
               </template>
             </Button>
           </VStack>

@@ -67,6 +67,16 @@
   .astryx-collapsible-trigger-label {
     flex-grow: 1;
     min-width: 0;
+    /* 同上游：文字触发行裁掉行高留白，行高由箭头（17px）撑起；自定义的块级内容不受影响，照常撑高按钮 */
+    text-box-edge: cap alphabetic;
+    text-box-trim: trim-both;
+  }
+
+  /* 同上游：箭头的盒子跟触发行的字号（--text-large-size，17px）走，介于 Icon 的 sm 和 md 之间 */
+  .astryx-collapsible-trigger > .astryx-collapsible-chevron.astryx-icon {
+    width: var(--astryx-text-large-size, 1rem);
+    height: var(--astryx-text-large-size, 1rem);
+    font-size: var(--astryx-text-large-size, 1rem);
   }
 
   .astryx-collapsible-chevron {

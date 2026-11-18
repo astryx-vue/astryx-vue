@@ -39,6 +39,7 @@ import {
   Toolbar,
   useResizable,
   useStreamingText,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import { computed, onBeforeUnmount, reactive, ref, useTemplateRef } from 'vue'
@@ -419,7 +420,8 @@ const mobileActions = [
       @change="onPickFiles"
     >
     <Layout height="fill">
-      <LayoutContent :padding="0">
+      <LayoutContent role="main" :padding="0">
+        <VisuallyHidden as="h1">Chat</VisuallyHidden>
         <HStack height="100%">
           <VStack class="chat-column">
             <ChatLayout density="spacious" class="chat-layout">
@@ -764,7 +766,7 @@ const mobileActions = [
               </Toolbar>
               <Section variant="transparent" class="artifact-scroll">
                 <VStack :gap="2" class="article-body">
-                  <Heading :level="1">
+                  <Heading :level="1" :accessibility-level="2">
                     {{ ARTIFACT_TITLE }}
                   </Heading>
                   <Markdown :content="ARTIFACT_CONTENT" />

@@ -24,6 +24,7 @@ import {
   Text,
   TextArea,
   TextInput,
+  VisuallyHidden,
   VStack,
   useResizable,
 } from '@astryx-vue/core'
@@ -141,8 +142,9 @@ const layers = ref<Layer[]>(LAYERS)
 const selectedId = ref('headline')
 const panel = ref('layers')
 
-const rail = useResizable({ defaultSize: 440, minSize: 280, maxSize: 560 })
-const inspector = useResizable({ defaultSize: 240, minSize: 220, maxSize: 360 })
+// 两侧栏都能拖：下限是面板开始不好用的宽度，上限不让它吃掉画布。
+const rail = useResizable({ defaultSize: 216, minSize: 176, maxSize: 320 })
+const inspector = useResizable({ defaultSize: 288, minSize: 264, maxSize: 400 })
 
 /** 图片垫在最下层，文字压在上面，层级顺序和图层列表无关。 */
 const paintedLayers = computed(() => [...layers.value].sort((a, b) =>
@@ -225,459 +227,471 @@ function textStyle(layer: Layer): Record<string, string> {
 </script>
 
 <template>
-  <Layout height="fill">
-    <template #header>
-      <LayoutHeader :padding="0">
-        <HStack :gap="0.5" align="center" class="editor-header">
-          <DropdownMenu
-            :items="menuItems"
-            has-chevron
-            :button="{ label: 'Menu', variant: 'ghost', size: 'sm', isIconOnly: true }"
-          >
-            <template #trigger="triggerProps">
-              <IconButton v-bind="triggerProps" label="Menu" variant="ghost" size="sm">
-                <Icon name="heroicons:bars-3" size="sm" />
-              </IconButton>
-            </template>
-          </DropdownMenu>
-
-          <HStack :gap="0" align="center" class="tab-strip">
-            <div
-              v-for="tab in tabs"
-              :key="tab.id"
-              class="doc-tab"
-              :data-active="tab.id === activeTab || undefined"
+  <!-- 原版外面还包了一层 Theme 管外观模式；Section 给整个编辑器画上自己的底色。 -->
+  <Section variant="section" :padding="0" height="100%">
+    <Layout height="fill" :padding="0">
+      <template #header>
+        <LayoutHeader :padding="0">
+          <HStack :gap="0.5" align="center" class="editor-header">
+            <DropdownMenu
+              :items="menuItems"
+              has-chevron
+              :button="{ label: 'Menu', variant: 'ghost', size: 'sm', isIconOnly: true }"
             >
-              <button type="button" class="doc-tab__button" @click="activeTab = tab.id">
-                <Icon name="heroicons:document" size="sm" color="secondary" />
-                <span class="doc-tab__name">{{ tab.name }}</span>
-              </button>
-              <IconButton
-                v-if="tab.id === activeTab"
-                :label="`Close ${tab.name}`"
-                variant="ghost"
-                size="sm"
-                @click="closeTab(tab.id)"
-              >
-                <Icon name="heroicons:x-mark" size="sm" />
-              </IconButton>
-            </div>
-            <IconButton label="New document" variant="ghost" size="sm" @click="openTab">
-              <Icon name="heroicons:plus" size="sm" />
-            </IconButton>
-          </HStack>
-
-          <StackItem size="fill" />
-
-          <Text type="supporting" color="secondary" class="saved-note">
-            Saved · 2 min ago
-          </Text>
-          <DropdownMenu has-chevron :items="exportItems" :button="{ label: 'Export', variant: 'secondary', size: 'sm' }">
-            <template #trigger="triggerProps">
-              <Button v-bind="triggerProps" label="Export" variant="secondary" size="sm">
-                <template #icon>
-                  <Icon name="heroicons:arrow-down-tray" size="sm" />
-                </template>
-              </Button>
-            </template>
-          </DropdownMenu>
-        </HStack>
-      </LayoutHeader>
-    </template>
-
-    <template #start>
-      <ResizeHandle :resizable="rail.props" :is-always-visible="false" />
-      <LayoutPanel :width="rail.size" :padding="0" :resizable="rail.props" label="Document panels">
-        <VStack :gap="0" height="100%">
-          <Section variant="transparent" :padding="3" :padding-block-end="0">
-            <TabList v-model:value="panel" size="sm">
-              <Tab value="layers" label="Layers" />
-              <Tab value="library" label="Library" />
-            </TabList>
-          </Section>
-
-          <CollapsibleGroup v-if="panel === 'layers'" type="multiple" :default-value="['text', 'images']" class="layer-groups">
-            <Collapsible v-for="group in LAYER_GROUPS" :key="group.id" :value="group.id">
-              <template #trigger>
-                <HStack :gap="2" align="center">
-                  <Icon :name="group.icon" size="sm" color="secondary" />
-                  <Text type="label">
-                    {{ group.label }}
-                  </Text>
-                </HStack>
+              <template #trigger="triggerProps">
+                <IconButton v-bind="triggerProps" label="Menu" variant="ghost" size="sm">
+                  <Icon name="heroicons:bars-3" size="sm" />
+                </IconButton>
               </template>
-              <VStack :gap="0" class="layer-rows">
-                <HStack
-                  v-for="layer in layersOf(group.kind)"
-                  :key="layer.id"
-                  :gap="2"
-                  align="center"
-                  class="layer-row"
-                  :data-selected="layer.id === selectedId || undefined"
-                  @click="selectedId = layer.id"
+            </DropdownMenu>
+
+            <HStack :gap="0" align="center" class="tab-strip">
+              <div
+                v-for="tab in tabs"
+                :key="tab.id"
+                class="doc-tab"
+                :data-active="tab.id === activeTab || undefined"
+              >
+                <button type="button" class="doc-tab__button" @click="activeTab = tab.id">
+                  <Icon name="heroicons:document" size="sm" color="secondary" />
+                  <span class="doc-tab__name">{{ tab.name }}</span>
+                </button>
+                <IconButton
+                  v-if="tab.id === activeTab"
+                  :label="`Close ${tab.name}`"
+                  variant="ghost"
+                  size="sm"
+                  @click="closeTab(tab.id)"
                 >
-                  <Icon
-                    :name="layer.kind === 'text' ? 'heroicons:document-text' : 'heroicons:photo'"
-                    size="sm"
-                    color="secondary"
-                  />
-                  <StackItem size="fill">
-                    <Text :max-lines="1">
-                      {{ layer.name }}
+                  <Icon name="heroicons:x-mark" size="sm" />
+                </IconButton>
+              </div>
+              <IconButton label="New document" variant="ghost" size="sm" @click="openTab">
+                <Icon name="heroicons:plus" size="sm" />
+              </IconButton>
+            </HStack>
+
+            <StackItem size="fill" />
+
+            <Text type="supporting" color="secondary" class="saved-note">
+              Saved · 2 min ago
+            </Text>
+            <DropdownMenu has-chevron :items="exportItems" :button="{ label: 'Export', variant: 'secondary', size: 'sm' }">
+              <template #trigger="triggerProps">
+                <Button v-bind="triggerProps" label="Export" variant="secondary" size="sm">
+                  <template #icon>
+                    <Icon name="heroicons:arrow-down-tray" size="sm" />
+                  </template>
+                </Button>
+              </template>
+            </DropdownMenu>
+          </HStack>
+        </LayoutHeader>
+      </template>
+
+      <template #start>
+        <ResizeHandle :resizable="rail.props" :is-always-visible="false" class="folds-at-rail" />
+        <LayoutPanel :width="rail.size" :padding="0" :resizable="rail.props" label="Document panels" class="folds-at-rail">
+          <VStack :gap="0" height="100%">
+            <Section variant="transparent" :padding="3" :padding-block-end="0">
+              <TabList v-model:value="panel" size="sm">
+                <Tab value="layers" label="Layers" />
+                <Tab value="library" label="Library" />
+              </TabList>
+            </Section>
+
+            <CollapsibleGroup v-if="panel === 'layers'" type="multiple" :default-value="['text', 'images']" class="layer-groups">
+              <Collapsible v-for="group in LAYER_GROUPS" :key="group.id" :value="group.id">
+                <template #trigger>
+                  <HStack :gap="2" align="center">
+                    <Icon :name="group.icon" size="sm" color="secondary" />
+                    <Text type="label">
+                      {{ group.label }}
                     </Text>
-                  </StackItem>
-                  <Icon v-if="layer.isLocked" name="heroicons:lock-closed" size="sm" color="secondary" />
+                  </HStack>
+                </template>
+                <VStack :gap="0" class="layer-rows">
+                  <HStack
+                    v-for="layer in layersOf(group.kind)"
+                    :key="layer.id"
+                    :gap="2"
+                    align="center"
+                    class="layer-row"
+                    :data-selected="layer.id === selectedId || undefined"
+                    @click="selectedId = layer.id"
+                  >
+                    <Icon
+                      :name="layer.kind === 'text' ? 'heroicons:document-text' : 'heroicons:photo'"
+                      size="sm"
+                      color="secondary"
+                    />
+                    <StackItem size="fill">
+                      <Text :max-lines="1">
+                        {{ layer.name }}
+                      </Text>
+                    </StackItem>
+                    <Icon v-if="layer.isLocked" name="heroicons:lock-closed" size="sm" color="secondary" />
+                  </HStack>
+                </VStack>
+              </Collapsible>
+            </CollapsibleGroup>
+
+            <Section v-else variant="transparent" :padding="3">
+              <Text color="secondary">
+                Nothing saved to this library yet.
+              </Text>
+            </Section>
+          </VStack>
+        </LayoutPanel>
+      </template>
+
+      <LayoutContent role="main" :padding="0">
+        <VisuallyHidden as="h1">Canvas editor</VisuallyHidden>
+        <Center class="canvas-stage">
+          <Card :padding="0" class="artboard-card" :style="frameBox">
+            <div class="artboard" :style="canvasScale">
+              <div
+                v-for="layer in paintedLayers"
+                :key="layer.id"
+                class="layer"
+                :class="{ selected: layer.id === selectedId }"
+                :style="{
+                  left: `${layer.x}px`,
+                  top: `${layer.y}px`,
+                  width: `${layer.width}px`,
+                  height: `${layer.height}px`,
+                  transform: `rotate(${layer.rotation}deg)`,
+                }"
+                @click="selectedId = layer.id"
+              >
+                <img
+                  v-if="layer.kind === 'image'"
+                  class="image-layer"
+                  :src="PHOTO"
+                  :alt="layer.content"
+                >
+                <p v-else class="text-layer" :style="textStyle(layer)">
+                  {{ layer.content }}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </Center>
+      </LayoutContent>
+
+      <template #end>
+        <ResizeHandle :resizable="inspector.props" is-reversed :is-always-visible="false" class="folds-at-inspector" />
+        <LayoutPanel has-divider :width="inspector.size" :padding="0" :resizable="inspector.props" label="Inspector" class="folds-at-inspector">
+          <VStack v-if="selected" :gap="0">
+            <Section variant="transparent" :padding="3" class="insp-section">
+              <VStack :gap="2">
+                <Text weight="semibold">
+                  Layout
+                </Text>
+                <HStack :gap="2" align="center" class="insp-row">
+                  <Text type="supporting" color="secondary" class="insp-label">
+                    Padding
+                  </Text>
+                  <VStack :width="56">
+                    <NumberInput
+                      :model-value="selected.paddingInline"
+                      label="Inline padding"
+                      is-label-hidden
+                      size="sm"
+                      @update:model-value="(value: number | null) => updateNumber('paddingInline', value)"
+                    />
+                  </VStack>
+                  <VStack :width="56">
+                    <NumberInput
+                      :model-value="selected.paddingBlock"
+                      label="Block padding"
+                      is-label-hidden
+                      size="sm"
+                      @update:model-value="(value: number | null) => updateNumber('paddingBlock', value)"
+                    />
+                  </VStack>
+                  <Icon name="heroicons:rectangle-stack" size="sm" color="secondary" />
                 </HStack>
               </VStack>
-            </Collapsible>
-          </CollapsibleGroup>
+            </Section>
 
-          <Section v-else variant="transparent" :padding="3">
-            <Text color="secondary">
-              Nothing saved to this library yet.
-            </Text>
-          </Section>
-        </VStack>
-      </LayoutPanel>
-    </template>
-
-    <LayoutContent :padding="0">
-      <Center class="canvas-stage">
-        <Card :padding="0" class="artboard-card" :style="frameBox">
-          <div class="artboard" :style="canvasScale">
-            <div
-              v-for="layer in paintedLayers"
-              :key="layer.id"
-              class="layer"
-              :class="{ selected: layer.id === selectedId }"
-              :style="{
-                left: `${layer.x}px`,
-                top: `${layer.y}px`,
-                width: `${layer.width}px`,
-                height: `${layer.height}px`,
-                transform: `rotate(${layer.rotation}deg)`,
-              }"
-              @click="selectedId = layer.id"
-            >
-              <img
-                v-if="layer.kind === 'image'"
-                class="image-layer"
-                :src="PHOTO"
-                :alt="layer.content"
-              >
-              <p v-else class="text-layer" :style="textStyle(layer)">
-                {{ layer.content }}
-              </p>
-            </div>
-          </div>
-        </Card>
-      </Center>
-    </LayoutContent>
-
-    <template #end>
-      <ResizeHandle :resizable="inspector.props" is-reversed :is-always-visible="false" />
-      <LayoutPanel has-divider :width="inspector.size" :padding="0" :resizable="inspector.props" label="Inspector">
-        <VStack v-if="selected" :gap="0">
-          <Section variant="transparent" :padding="3" class="insp-section">
-            <VStack :gap="2">
-              <Text weight="semibold">
-                Layout
-              </Text>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Padding
-                </Text>
-                <VStack :width="56">
-                  <NumberInput
-                    :model-value="selected.paddingInline"
-                    label="Inline padding"
-                    is-label-hidden
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('paddingInline', value)"
-                  />
-                </VStack>
-                <VStack :width="56">
-                  <NumberInput
-                    :model-value="selected.paddingBlock"
-                    label="Block padding"
-                    is-label-hidden
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('paddingBlock', value)"
-                  />
-                </VStack>
-                <Icon name="heroicons:rectangle-stack" size="sm" color="secondary" />
-              </HStack>
-            </VStack>
-          </Section>
-
-          <Divider />
-
-          <Section variant="transparent" :padding="3" class="insp-section">
-            <VStack :gap="2">
-              <Text weight="semibold">
-                Layer
-              </Text>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Position
-                </Text>
-                <VStack :width="64">
-                  <NumberInput
-                    :model-value="selected.x"
-                    label="X"
-                   
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('x', value)"
-                  />
-                </VStack>
-                <VStack :width="64">
-                  <NumberInput
-                    :model-value="selected.y"
-                    label="Y"
-                   
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('y', value)"
-                  />
-                </VStack>
-              </HStack>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Size
-                </Text>
-                <VStack :width="64">
-                  <NumberInput
-                    :model-value="selected.width"
-                    label="Width"
-                   
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('width', value)"
-                  />
-                </VStack>
-                <VStack :width="64">
-                  <NumberInput
-                    :model-value="selected.height"
-                    label="Height"
-                   
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('height', value)"
-                  />
-                </VStack>
-              </HStack>
-            </VStack>
-          </Section>
-
-          <Divider />
-
-          <Section variant="transparent" :padding="3" class="insp-section">
-            <VStack :gap="2">
-              <Text weight="semibold">
-                Styles
-              </Text>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Radius
-                </Text>
-                <VStack :width="88">
-                  <NumberInput
-                    :model-value="selected.radius"
-                    label="Radius"
-                    is-label-hidden
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('radius', value)"
-                  />
-                </VStack>
-                <IconButton label="Copy radius" variant="ghost" size="sm">
-                  <Icon icon="copy" size="sm" />
-                </IconButton>
-              </HStack>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Border
-                </Text>
-                <VStack :width="88">
-                  <TextInput :model-value="''" label="Border" is-label-hidden placeholder="Add…" size="sm" />
-                </VStack>
-                <IconButton label="Border presets" variant="ghost" size="sm">
-                  <Icon name="heroicons:square-2-stack" size="sm" />
-                </IconButton>
-                <IconButton label="Clear border" variant="ghost" size="sm">
-                  <Icon icon="close" size="sm" />
-                </IconButton>
-              </HStack>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Shadow
-                </Text>
-                <VStack :width="88">
-                  <TextInput :model-value="''" label="Shadow" is-label-hidden placeholder="Add…" size="sm" />
-                </VStack>
-                <IconButton label="Shadow presets" variant="ghost" size="sm">
-                  <Icon name="heroicons:square-2-stack" size="sm" />
-                </IconButton>
-                <IconButton label="Clear shadow" variant="ghost" size="sm">
-                  <Icon icon="close" size="sm" />
-                </IconButton>
-              </HStack>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Fill
-                </Text>
-                <VStack :width="88">
-                  <TextInput
-                    :model-value="selected.fill ?? ''"
-                    label="Fill"
-                    is-label-hidden
-                    size="sm"
-                    @update:model-value="updateSelected({ fill: $event })"
-                  />
-                </VStack>
-                <span class="swatch" :style="{ backgroundColor: selected.fill ?? '#111111' }" />
-                <IconButton label="Clear fill" variant="ghost" size="sm">
-                  <Icon icon="close" size="sm" />
-                </IconButton>
-              </HStack>
-            </VStack>
-          </Section>
-
-          <Divider />
-
-          <Section variant="transparent" :padding="3" class="insp-section">
-            <VStack :gap="2">
-              <Text weight="semibold">
-                Transforms
-              </Text>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Rotate
-                </Text>
-                <VStack :width="88">
-                  <NumberInput
-                    :model-value="selected.rotation"
-                    label="Rotation"
-                    is-label-hidden
-                    size="sm"
-                    @update:model-value="(value: number | null) => updateNumber('rotation', value)"
-                  />
-                </VStack>
-                <IconButton label="Rotate left" variant="ghost" size="sm">
-                  <Icon name="heroicons:arrow-path" size="sm" />
-                </IconButton>
-                <IconButton label="Rotate right" variant="ghost" size="sm">
-                  <Icon name="heroicons:arrow-path" size="sm" />
-                </IconButton>
-              </HStack>
-              <HStack :gap="2" align="center" class="insp-row">
-                <Text type="supporting" color="secondary" class="insp-label">
-                  Flip
-                </Text>
-                <IconButton label="Flip horizontally" variant="ghost" size="sm">
-                  <Icon name="heroicons:arrows-right-left" size="sm" />
-                </IconButton>
-                <IconButton label="Flip vertically" variant="ghost" size="sm">
-                  <Icon name="heroicons:arrows-up-down" size="sm" />
-                </IconButton>
-              </HStack>
-            </VStack>
-          </Section>
-
-          <template v-if="selected.kind === 'text'">
             <Divider />
 
             <Section variant="transparent" :padding="3" class="insp-section">
               <VStack :gap="2">
                 <Text weight="semibold">
-                  Text
+                  Layer
                 </Text>
-                <TextArea
-                  :model-value="selected.content"
-                  label="Content"
-                  is-label-hidden
-                  :rows="3"
-                  @update:model-value="updateSelected({ content: $event })"
-                />
                 <HStack :gap="2" align="center" class="insp-row">
                   <Text type="supporting" color="secondary" class="insp-label">
-                    Font
+                    Position
                   </Text>
-                  <VStack :width="128">
-                    <Selector
-                      :model-value="selected.family ?? 'Anton'"
-                      label="Font"
-                      is-label-hidden
+                  <VStack :width="64">
+                    <NumberInput
+                      :model-value="selected.x"
+                      label="X"
+                   
                       size="sm"
-                      :options="FONT_OPTIONS"
-                      @update:model-value="(value: string | number | null) => updateSelected({ family: String(value) })"
+                      @update:model-value="(value: number | null) => updateNumber('x', value)"
                     />
                   </VStack>
-                </HStack>
-                <HStack :gap="2" align="center" class="insp-row">
-                  <Text type="supporting" color="secondary" class="insp-label">
-                    Weight
-                  </Text>
-                  <VStack :width="128">
-                    <Selector
-                      :model-value="selected.weight ?? 'Regular'"
-                      label="Weight"
-                      is-label-hidden
+                  <VStack :width="64">
+                    <NumberInput
+                      :model-value="selected.y"
+                      label="Y"
+                   
                       size="sm"
-                      :options="WEIGHT_OPTIONS"
-                      @update:model-value="(value: string | number | null) => updateSelected({ weight: String(value) })"
+                      @update:model-value="(value: number | null) => updateNumber('y', value)"
                     />
                   </VStack>
-                </HStack>
-                <HStack :gap="2" align="center" class="insp-row">
-                  <Text type="supporting" color="secondary" class="insp-label">
-                    Color
-                  </Text>
-                  <VStack :width="88">
-                    <TextInput
-                      :model-value="selected.color ?? ''"
-                      label="Text color"
-                      is-label-hidden
-                      size="sm"
-                      @update:model-value="updateSelected({ color: $event })"
-                    />
-                  </VStack>
-                  <span class="swatch" :style="{ backgroundColor: selected.color ?? '#111111' }" />
                 </HStack>
                 <HStack :gap="2" align="center" class="insp-row">
                   <Text type="supporting" color="secondary" class="insp-label">
                     Size
                   </Text>
-                  <VStack :width="88">
+                  <VStack :width="64">
                     <NumberInput
-                      :model-value="selected.size ?? 16"
-                      label="Size"
-                      is-label-hidden
+                      :model-value="selected.width"
+                      label="Width"
+                   
                       size="sm"
-                      @update:model-value="(value: number | null) => updateNumber('size', value)"
+                      @update:model-value="(value: number | null) => updateNumber('width', value)"
                     />
                   </VStack>
-                </HStack>
-                <HStack :gap="2" align="center" class="insp-row">
-                  <Text type="supporting" color="secondary" class="insp-label">
-                    Line
-                  </Text>
-                  <VStack :width="88">
+                  <VStack :width="64">
                     <NumberInput
-                      :model-value="selected.line ?? 100"
-                      label="Line height"
-                      is-label-hidden
+                      :model-value="selected.height"
+                      label="Height"
+                   
                       size="sm"
-                      @update:model-value="(value: number | null) => updateNumber('line', value)"
+                      @update:model-value="(value: number | null) => updateNumber('height', value)"
                     />
                   </VStack>
                 </HStack>
               </VStack>
             </Section>
-          </template>
-        </VStack>
-      </LayoutPanel>
-    </template>
-  </Layout>
+
+            <Divider />
+
+            <Section variant="transparent" :padding="3" class="insp-section">
+              <VStack :gap="2">
+                <Text weight="semibold">
+                  Styles
+                </Text>
+                <HStack :gap="2" align="center" class="insp-row">
+                  <Text type="supporting" color="secondary" class="insp-label">
+                    Radius
+                  </Text>
+                  <VStack :width="88">
+                    <NumberInput
+                      :model-value="selected.radius"
+                      label="Radius"
+                      is-label-hidden
+                      size="sm"
+                      @update:model-value="(value: number | null) => updateNumber('radius', value)"
+                    />
+                  </VStack>
+                  <IconButton label="Copy radius" variant="ghost" size="sm">
+                    <Icon icon="copy" size="sm" />
+                  </IconButton>
+                </HStack>
+                <HStack :gap="2" align="center" class="insp-row">
+                  <Text type="supporting" color="secondary" class="insp-label">
+                    Border
+                  </Text>
+                  <VStack :width="88">
+                    <TextInput :model-value="''" label="Border" is-label-hidden placeholder="Add…" size="sm" />
+                  </VStack>
+                  <IconButton label="Border presets" variant="ghost" size="sm">
+                    <Icon name="heroicons:square-2-stack" size="sm" />
+                  </IconButton>
+                  <IconButton label="Clear border" variant="ghost" size="sm">
+                    <Icon icon="close" size="sm" />
+                  </IconButton>
+                </HStack>
+                <HStack :gap="2" align="center" class="insp-row">
+                  <Text type="supporting" color="secondary" class="insp-label">
+                    Shadow
+                  </Text>
+                  <VStack :width="88">
+                    <TextInput :model-value="''" label="Shadow" is-label-hidden placeholder="Add…" size="sm" />
+                  </VStack>
+                  <IconButton label="Shadow presets" variant="ghost" size="sm">
+                    <Icon name="heroicons:square-2-stack" size="sm" />
+                  </IconButton>
+                  <IconButton label="Clear shadow" variant="ghost" size="sm">
+                    <Icon icon="close" size="sm" />
+                  </IconButton>
+                </HStack>
+                <HStack :gap="2" align="center" class="insp-row">
+                  <Text type="supporting" color="secondary" class="insp-label">
+                    Fill
+                  </Text>
+                  <VStack :width="88">
+                    <TextInput
+                      :model-value="selected.fill ?? ''"
+                      label="Fill"
+                      is-label-hidden
+                      size="sm"
+                      @update:model-value="updateSelected({ fill: $event })"
+                    />
+                  </VStack>
+                  <span class="swatch" :style="{ backgroundColor: selected.fill ?? '#111111' }" />
+                  <IconButton label="Clear fill" variant="ghost" size="sm">
+                    <Icon icon="close" size="sm" />
+                  </IconButton>
+                </HStack>
+              </VStack>
+            </Section>
+
+            <Divider />
+
+            <Section variant="transparent" :padding="3" class="insp-section">
+              <VStack :gap="2">
+                <Text weight="semibold">
+                  Transforms
+                </Text>
+                <HStack :gap="2" align="center" class="insp-row">
+                  <Text type="supporting" color="secondary" class="insp-label">
+                    Rotate
+                  </Text>
+                  <VStack :width="88">
+                    <NumberInput
+                      :model-value="selected.rotation"
+                      label="Rotation"
+                      is-label-hidden
+                      size="sm"
+                      @update:model-value="(value: number | null) => updateNumber('rotation', value)"
+                    />
+                  </VStack>
+                  <IconButton label="Rotate left" variant="ghost" size="sm">
+                    <Icon name="heroicons:arrow-path" size="sm" />
+                  </IconButton>
+                  <IconButton label="Rotate right" variant="ghost" size="sm">
+                    <Icon name="heroicons:arrow-path" size="sm" />
+                  </IconButton>
+                </HStack>
+                <HStack :gap="2" align="center" class="insp-row">
+                  <Text type="supporting" color="secondary" class="insp-label">
+                    Flip
+                  </Text>
+                  <IconButton label="Flip horizontally" variant="ghost" size="sm">
+                    <Icon name="heroicons:arrows-right-left" size="sm" />
+                  </IconButton>
+                  <IconButton label="Flip vertically" variant="ghost" size="sm">
+                    <Icon name="heroicons:arrows-up-down" size="sm" />
+                  </IconButton>
+                </HStack>
+              </VStack>
+            </Section>
+
+            <template v-if="selected.kind === 'text'">
+              <Divider />
+
+              <Section variant="transparent" :padding="3" class="insp-section">
+                <VStack :gap="2">
+                  <Text weight="semibold">
+                    Text
+                  </Text>
+                  <TextArea
+                    :model-value="selected.content"
+                    label="Content"
+                    is-label-hidden
+                    :rows="3"
+                    @update:model-value="updateSelected({ content: $event })"
+                  />
+                  <HStack :gap="2" align="center" class="insp-row">
+                    <Text type="supporting" color="secondary" class="insp-label">
+                      Font
+                    </Text>
+                    <VStack :width="128">
+                      <Selector
+                        :model-value="selected.family ?? 'Anton'"
+                        label="Font"
+                        is-label-hidden
+                        size="sm"
+                        :options="FONT_OPTIONS"
+                        @update:model-value="(value: string | number | null) => updateSelected({ family: String(value) })"
+                      />
+                    </VStack>
+                  </HStack>
+                  <HStack :gap="2" align="center" class="insp-row">
+                    <Text type="supporting" color="secondary" class="insp-label">
+                      Weight
+                    </Text>
+                    <VStack :width="128">
+                      <Selector
+                        :model-value="selected.weight ?? 'Regular'"
+                        label="Weight"
+                        is-label-hidden
+                        size="sm"
+                        :options="WEIGHT_OPTIONS"
+                        @update:model-value="(value: string | number | null) => updateSelected({ weight: String(value) })"
+                      />
+                    </VStack>
+                  </HStack>
+                  <HStack :gap="2" align="center" class="insp-row">
+                    <Text type="supporting" color="secondary" class="insp-label">
+                      Color
+                    </Text>
+                    <VStack :width="88">
+                      <TextInput
+                        :model-value="selected.color ?? ''"
+                        label="Text color"
+                        is-label-hidden
+                        size="sm"
+                        @update:model-value="updateSelected({ color: $event })"
+                      />
+                    </VStack>
+                    <span class="swatch" :style="{ backgroundColor: selected.color ?? '#111111' }" />
+                  </HStack>
+                  <HStack :gap="2" align="center" class="insp-row">
+                    <Text type="supporting" color="secondary" class="insp-label">
+                      Size
+                    </Text>
+                    <VStack :width="88">
+                      <NumberInput
+                        :model-value="selected.size ?? 16"
+                        label="Size"
+                        is-label-hidden
+                        size="sm"
+                        @update:model-value="(value: number | null) => updateNumber('size', value)"
+                      />
+                    </VStack>
+                  </HStack>
+                  <HStack :gap="2" align="center" class="insp-row">
+                    <Text type="supporting" color="secondary" class="insp-label">
+                      Line
+                    </Text>
+                    <VStack :width="88">
+                      <NumberInput
+                        :model-value="selected.line ?? 100"
+                        label="Line height"
+                        is-label-hidden
+                        size="sm"
+                        @update:model-value="(value: number | null) => updateNumber('line', value)"
+                      />
+                    </VStack>
+                  </HStack>
+                </VStack>
+              </Section>
+            </template>
+          </VStack>
+        </LayoutPanel>
+      </template>
+    </Layout>
+  </Section>
 </template>
 
 <style>
+/* 原版在窄于 1100px 时收起右侧检查器、窄于 840px 时收起左侧栏，给画布让位。 */
+@media (max-width: 1099.98px) {
+  .folds-at-inspector { display: none !important; }
+}
+@media (max-width: 839.98px) {
+  .folds-at-rail { display: none !important; }
+}
+
 .editor-header {
   padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
   border-block-end: 1px solid var(--astryx-color-border, #00000014);
@@ -758,8 +772,9 @@ function textStyle(layer: Layer): Record<string, string> {
   align-items: flex-start;
   min-height: 100%;
   overflow: auto;
-  background: var(--astryx-color-background-body, #fafafa);
-  padding-block: var(--astryx-spacing-6, 24px);
+  /* 原版画布区是 muted 底色的 Section，画板四周留 spacing-6。 */
+  background: var(--astryx-color-background-muted, #f5f5f5);
+  padding: var(--astryx-spacing-6, 24px);
 }
 
 .artboard-card {

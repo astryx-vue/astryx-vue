@@ -168,6 +168,7 @@ export function useTableFiltering<T extends Record<string, unknown>>(
       return {
         variant: current.variant ?? 'popover',
         field,
+        header: typeof column.header === 'string' && column.header !== '' ? column.header : column.key,
         value: current.filters[fieldKey] ?? null,
         onChange(value) {
           toValue(config).onFilterChange(fieldKey, value)

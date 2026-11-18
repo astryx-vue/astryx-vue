@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TableColumn } from '@astryx-vue/core'
 import {
+  AppShell,
   AspectRatio,
   Badge,
   Banner,
@@ -15,22 +16,26 @@ import {
   ChatSystemMessage,
   Divider,
   Grid,
-  GridSpan,
   Heading,
   HStack,
   Icon,
   Item,
+  Layout,
+  LayoutContent,
+  LayoutFooter,
+  LayoutHeader,
   Link,
-  OverflowList,
   MoreMenu,
   NumberInput,
   pixel,
   proportional,
   RadioList,
   RadioListItem,
+  ScrollableArea,
   Section,
   SelectableCard,
   Selector,
+  StackItem,
   Table,
   Text,
   TextInput,
@@ -38,11 +43,11 @@ import {
   TopNavHeading,
   TopNavItem,
   useAppShellMobile,
+  useImperativeAlertDialog,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
-import { computed, h, ref } from 'vue'
-
-/* ChatComposer 从 @astryx-vue/core 引入。 */
+import { computed, defineComponent, h, reactive, ref } from 'vue'
 
 type ShowcaseBadgeVariant = 'blue' | 'cyan' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'teal' | 'yellow'
 
@@ -53,14 +58,6 @@ interface ProductSpec {
   badgeVariant: ShowcaseBadgeVariant
 }
 
-const FILTER_ITEMS = [
-  { id: 'categories', label: 'Categories', icon: 'i-heroicons-folder', options: ['Wearables', 'Audio', 'Bags', 'Drinkware', 'Home'] },
-  { id: 'locations', label: 'Locations', icon: 'i-heroicons-map-pin', options: ['Aisle 1', 'Aisle 2', 'Aisle 3', 'Aisle 4', 'Aisle 5', 'Aisle 6'] },
-  { id: 'tags', label: 'Tags', icon: 'i-heroicons-tag', options: ['New', 'Popular', 'Limited', 'Leather', 'Drinkware', 'Home'] },
-]
-
-const FILTER_BY_ID: Record<string, (typeof FILTER_ITEMS)[number]> = Object.fromEntries(FILTER_ITEMS.map(item => [item.id, item]))
-
 interface TagSpec { label: string, variant: ShowcaseBadgeVariant }
 
 interface InventoryRow extends Record<string, unknown> {
@@ -69,6 +66,8 @@ interface InventoryRow extends Record<string, unknown> {
   meta: string
   available: number
   location: string
+  /** 可选分类，主题页的库存数据可以不带。 */
+  category?: string
   tags: TagSpec[]
   imageKey?: string
   thumbnailFallback: string
@@ -77,7 +76,7 @@ interface InventoryRow extends Record<string, unknown> {
 
 const PRODUCT_IMAGE_KEYS = ['watch', 'headphones', 'backpack']
 
-const images: Record<string, string> = {
+const DEFAULT_IMAGES: Record<string, string> = {
   watch: '/template-assets/Neutral-Watch.png',
   headphones: '/template-assets/Neutral-Headphones.png',
   backpack: '/template-assets/Neutral-Backpack.png',
@@ -86,64 +85,137 @@ const images: Record<string, string> = {
   throw_: '/template-assets/Neutral-Blanket.png',
 }
 
-const products: ProductSpec[] = [
+const DEFAULT_PRODUCTS: ProductSpec[] = [
   { name: 'Minimalist Watch', description: 'Clean design meets everyday durability.', badge: 'New', badgeVariant: 'blue' },
   { name: 'Wireless Headphones', description: 'Immersive sound, all-day comfort.', badge: 'Popular', badgeVariant: 'green' },
   { name: 'Canvas Backpack', description: 'Water-resistant canvas with a quiet, modern profile.', badge: 'Limited', badgeVariant: 'yellow' },
 ]
 
-const inventory = ref<InventoryRow[]>([
-  { id: 'a', name: 'Minimalist Watch', meta: 'Stainless steel, sapphire crystal', available: 42, location: 'Aisle 3', tags: [{ label: 'New', variant: 'blue' }], imageKey: 'watch', thumbnailFallback: 'M', selected: false },
-  { id: 'b', name: 'Wireless Headphones', meta: 'ANC, 30hr battery', available: 128, location: 'Aisle 1', tags: [{ label: 'Popular', variant: 'green' }], imageKey: 'headphones', thumbnailFallback: 'W', selected: true },
-  { id: 'c', name: 'Canvas Backpack', meta: 'Water-resistant, 25L', available: 63, location: 'Aisle 2', tags: [{ label: 'Limited', variant: 'yellow' }], imageKey: 'backpack', thumbnailFallback: 'C', selected: false },
-  { id: 'd', name: 'Leather Wallet', meta: 'Full-grain, RFID blocking', available: 15, location: 'Aisle 4', tags: [{ label: 'Leather', variant: 'yellow' }], imageKey: 'wallet', thumbnailFallback: 'L', selected: true },
-  { id: 'e', name: 'Travel Tumbler', meta: 'Vacuum insulated, 16oz', available: 87, location: 'Aisle 5', tags: [{ label: 'Drinkware', variant: 'green' }], imageKey: 'tumbler', thumbnailFallback: 'T', selected: false },
-  { id: 'f', name: 'Linen Throw', meta: 'Heavyweight, oat', available: 24, location: 'Aisle 6', tags: [{ label: 'Home', variant: 'orange' }], imageKey: 'throw_', thumbnailFallback: 'L', selected: true },
-])
+const DEFAULT_INVENTORY: InventoryRow[] = [
+  { id: 'a', name: 'Minimalist Watch', meta: 'Stainless steel, sapphire crystal', available: 42, location: 'Aisle 3', category: 'Wearables', tags: [{ label: 'New', variant: 'blue' }], imageKey: 'watch', thumbnailFallback: 'M', selected: false },
+  { id: 'b', name: 'Wireless Headphones', meta: 'ANC, 30hr battery', available: 128, location: 'Aisle 1', category: 'Audio', tags: [{ label: 'Popular', variant: 'green' }], imageKey: 'headphones', thumbnailFallback: 'W', selected: true },
+  { id: 'c', name: 'Canvas Backpack', meta: 'Water-resistant, 25L', available: 63, location: 'Aisle 2', category: 'Bags', tags: [{ label: 'Limited', variant: 'yellow' }], imageKey: 'backpack', thumbnailFallback: 'C', selected: false },
+  { id: 'd', name: 'Leather Wallet', meta: 'Full-grain, RFID blocking', available: 15, location: 'Aisle 4', category: 'Wearables', tags: [{ label: 'Leather', variant: 'yellow' }], imageKey: 'wallet', thumbnailFallback: 'L', selected: true },
+  { id: 'e', name: 'Travel Tumbler', meta: 'Vacuum insulated, 16oz', available: 87, location: 'Aisle 5', category: 'Drinkware', tags: [{ label: 'Drinkware', variant: 'green' }], imageKey: 'tumbler', thumbnailFallback: 'T', selected: false },
+  { id: 'f', name: 'Linen Throw', meta: 'Heavyweight, oat', available: 24, location: 'Aisle 6', category: 'Home', tags: [{ label: 'Home', variant: 'orange' }], imageKey: 'throw_', thumbnailFallback: 'L', selected: true },
+]
+
+// 主题页用同一个模板，换成各主题自己的商品和图片；演练场里不传，用上面的默认值。
+// embedded 对应原版的 ThemeShowcaseStore：外壳归宿主页面，这里不套 AppShell，标题降为二级。
+const props = defineProps<{
+  images?: Record<string, string>
+  products?: ProductSpec[]
+  inventoryRows?: InventoryRow[]
+  embedded?: boolean
+}>()
+
+/** 演练场里是整页 AppShell；嵌进主题页时只是一列，导航和内容直接上下排。 */
+const ShowcaseShell = defineComponent({
+  setup(_, { slots }) {
+    return () => props.embedded
+      ? h(VStack, { 'gap': 0, 'data-theme-preview': 'true', 'style': { backgroundColor: 'var(--astryx-color-background-body)' } }, () => [slots.topNav?.(), slots.default?.()])
+      : h(AppShell, { 'height': 'auto', 'variant': 'surface', 'contentPadding': 0, 'data-theme-preview': 'true' }, { topNav: slots.topNav, default: slots.default })
+  },
+})
+
+const images = props.images ?? DEFAULT_IMAGES
+const products = props.products ?? DEFAULT_PRODUCTS
+const inventory = props.inventoryRows ?? DEFAULT_INVENTORY
 
 const SUGGESTED_QUESTIONS = ['Reschedule delivery', 'Update shipping address', 'Start a return']
 
 const ACTIVITY = [
-  { id: '1', label: 'Order #1043', detail: 'Placed · 1:59 pm', amount: 248 },
-  { id: '2', label: 'Order #1041', detail: 'Refunded · 12:40 pm', amount: -89 },
-  { id: '3', label: 'Order #1040', detail: 'Placed · 10:30 am', amount: 156 },
-  { id: '4', label: 'Order #1038', detail: 'Placed · 9:11 am', amount: 412 },
-  { id: '5', label: 'Order #1037', detail: 'Placed · 8:42 am', amount: 95 },
+  { id: '1', kind: 'order', label: 'Order #1043', detail: 'Placed · 1:59 pm', amount: 248 },
+  { id: '2', kind: 'refund', label: 'Order #1041', detail: 'Refunded · 12:40 pm', amount: -89 },
+  { id: '3', kind: 'order', label: 'Order #1040', detail: 'Placed · 10:30 am', amount: 156 },
+  { id: '4', kind: 'order', label: 'Order #1038', detail: 'Placed · 9:11 am', amount: 412 },
+  { id: '5', kind: 'order', label: 'Order #1037', detail: 'Placed · 8:42 am', amount: 95 },
 ]
 
-const ActivityIcons: Record<string, string> = { '1': 'heroicons:shopping-bag', '2': 'heroicons:banknotes', '3': 'heroicons:shopping-bag', '4': 'heroicons:shopping-bag', '5': 'heroicons:shopping-bag' }
+const LOW_STOCK_THRESHOLD = 25
+
 const SearchIcon = () => h(Icon, { name: 'heroicons:magnifying-glass', size: 'sm' })
 const CreditCardIcon = () => h(Icon, { name: 'heroicons:credit-card', size: 'sm' })
+const FolderIcon = () => h(Icon, { name: 'heroicons:folder', size: 'sm' })
+const MapPinIcon = () => h(Icon, { name: 'heroicons:map-pin', size: 'sm' })
+const TagIcon = () => h(Icon, { name: 'heroicons:tag', size: 'sm' })
 
 const { isMobile } = useAppShellMobile()
-const gridColumns = computed(() => (isMobile ? 1 : { minWidth: 200, repeat: 'fit' as const }))
-const productColumns = computed(() => (isMobile ? 1 : { minWidth: 200, max: 3 }))
 
-const shippingMethod = ref('economy')
+// 演示用：真实项目里把这些提示换成执行对应操作的调用。
+const showToast = useToast()
+const confirm = useImperativeAlertDialog()
+const ConfirmHost = confirm.Host
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
+function confirmDelete() {
+  confirm.show({
+    title: 'Delete this item?',
+    description: 'This demo won\'t delete anything.',
+    actionLabel: 'Delete',
+    onAction: () => {
+      confirm.hide()
+      demo('Demo: the item would be deleted here', 'row-delete')
+    },
+  })
+}
+
+// 商品卡：每张卡各自记数量和「已加入」状态。
+const quantities = reactive<Record<string, number | null>>(Object.fromEntries(products.map(p => [p.name, 1])))
+const added = reactive<Record<string, boolean>>({})
+
+// 结账卡
 const email = ref('')
+const shipping = ref('economy')
+const payment = ref('card')
 const cardNumber = ref('')
 const expiry = ref('')
 const cvc = ref('')
-const country = ref('us')
-const saveInfo = ref(true)
-const quantity = ref(1)
-const chatDraft = ref('')
-const search = ref('')
-const paymentCard = ref(true)
-const paymentApple = ref(false)
-const paymentGoogle = ref(false)
+const country = ref<string | undefined>('us')
+const saveInformation = ref(true)
+const showPaymentPreview = ref(false)
 
-const lowStockCount = computed(() => inventory.value.filter(row => row.available < 25).length)
+// 聊天卡
+const draft = ref('')
+const sentMessages = ref<Array<{ id: number, text: string }>>([])
+function submitMessage() {
+  const message = draft.value.trim()
+  if (!message)
+    return
+  sentMessages.value.push({ id: (sentMessages.value.at(-1)?.id ?? 0) + 1, text: message })
+  draft.value = ''
+}
 
 function formatAmount(amount: number) {
   const sign = amount < 0 ? '−' : '+'
   return `${sign}$${Math.abs(amount).toLocaleString()}`
 }
 
-function selectPayment(which: 'card' | 'apple' | 'google') {
-  paymentCard.value = which === 'card'
-  paymentApple.value = which === 'apple'
-  paymentGoogle.value = which === 'google'
+// 库存卡
+const query = ref('')
+const category = ref<string | null>(null)
+const location = ref<string | null>(null)
+const tag = ref<string | null>(null)
+const selectedIds = ref(new Set(inventory.filter(row => row.selected).map(row => row.id)))
+const lowStockCount = inventory.filter(row => row.available < LOW_STOCK_THRESHOLD).length
+const categories = [...new Set(inventory.flatMap(row => (row.category ? [row.category] : [])))]
+const locations = [...new Set(inventory.map(row => row.location))]
+const tagOptions = [...new Set(inventory.flatMap(row => row.tags.map(value => value.label)))]
+const rows = computed(() => inventory.filter(row =>
+  (!query.value || `${row.name} ${row.meta}`.toLowerCase().includes(query.value.toLowerCase()))
+  && (!category.value || row.category === category.value)
+  && (!location.value || row.location === location.value)
+  && (!tag.value || row.tags.some(value => value.label === tag.value)),
+))
+
+function selectRow(id: string, selected: boolean) {
+  const next = new Set(selectedIds.value)
+  if (selected)
+    next.add(id)
+  else
+    next.delete(id)
+  selectedIds.value = next
 }
 
 const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
@@ -153,10 +225,10 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
     headerHidden: true,
     width: pixel(64),
     renderCell: row => h(CheckboxInput, {
-      label: 'Select ' + row.name,
-      isLabelHidden: true,
-      modelValue: row.selected,
-      'onUpdate:modelValue': (v: boolean | 'indeterminate') => { row.selected = v === true },
+      'label': `Select ${row.name}`,
+      'isLabelHidden': true,
+      'modelValue': selectedIds.value.has(row.id),
+      'onUpdate:modelValue': (v: boolean | 'indeterminate') => selectRow(row.id, v === true),
     }),
   },
   {
@@ -164,15 +236,15 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
     header: 'Item',
     width: proportional(3, { minWidth: 80 }),
     renderCell: (row) => {
-      const thumb = row.imageKey && images[row.imageKey]
-        ? h('img', { src: images[row.imageKey!], alt: '', class: 'thumbnail' })
-        : h('div', { class: 'thumbnail-fallback', 'aria-hidden': 'true' }, row.thumbnailFallback)
+      const thumbnailSrc = row.imageKey ? images[row.imageKey] : undefined
       return h(HStack, { gap: 3, vAlign: 'center' }, () => [
-        thumb,
-        h(VStack, { gap: 0, style: { minWidth: 0 } }, () => [
+        h(StackItem, null, () => h(VStack, { width: 40 }, () => thumbnailSrc
+          ? h(AspectRatio, { ratio: 1, fit: 'cover' }, () => h('img', { src: thumbnailSrc, alt: '' }))
+          : h(Center, { 'width': 40, 'height': 40, 'aria-hidden': 'true' }, () => h(Text, { type: 'supporting', weight: 'bold' }, () => row.thumbnailFallback)))),
+        h(StackItem, { size: 'fill' }, () => h(VStack, { gap: 0 }, () => [
           h(Text, { type: 'body', weight: 'bold' }, () => row.name),
           h(Text, { type: 'supporting', color: 'secondary' }, () => row.meta),
-        ]),
+        ])),
       ])
     },
   },
@@ -194,7 +266,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
     width: proportional(2, { minWidth: 80 }),
     align: 'end',
     renderCell: row => h(HStack, { gap: 1, wrap: 'wrap', hAlign: 'end' }, () =>
-      row.tags.map(tag => h(Badge, { key: tag.label, label: tag.label, variant: tag.variant })),
+      row.tags.map(value => h(Badge, { key: value.label, label: value.label, variant: value.variant })),
     ),
   },
   {
@@ -206,363 +278,373 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
     renderCell: () => h(MoreMenu, {
       label: 'Row actions',
       size: 'sm',
-      items: [{ label: 'Edit' }, { label: 'Duplicate' }, { label: 'Move to…' }, { type: 'divider' }, { label: 'Delete' }],
+      items: [
+        { label: 'Edit', onClick: () => demo('Demo: edit would happen here', 'row-edit') },
+        { label: 'Duplicate', onClick: () => demo('Demo: duplicate would happen here', 'row-duplicate') },
+        { label: 'Move to…', onClick: () => demo('Demo: moving the item would happen here', 'row-move-to') },
+        { type: 'divider' },
+        { label: 'Delete', onClick: confirmDelete },
+      ],
     }),
   },
 ])
 </script>
 
 <template>
-  <div class="page-root">
-    <div data-theme-preview="true">
-      <VStack :gap="0">
-        <TopNav label="Theme preview navigation">
-          <template #heading>
-            <TopNavHeading heading="Studio" />
-          </template>
-          <template v-if="!isMobile" #center>
-            <TopNavItem label="Shop" href="#" is-selected />
-            <TopNavItem label="New In" href="#" />
-            <TopNavItem label="Stories" href="#" />
-            <TopNavItem label="Help" href="#" />
-          </template>
-          <template #end>
-            <HStack :gap="2" :align="'center'">
-              <HStack :gap="0.5">
-                <Button label="Search" tooltip="Search" variant="ghost" is-icon-only href="#">
-                  <template #icon><span class="i-carbon-search" aria-hidden="true" /></template>
-                </Button>
-                <Button label="Account" tooltip="Account" variant="ghost" is-icon-only href="#">
-                  <template #icon><span class="i-carbon-user" aria-hidden="true" /></template>
-                </Button>
-                <Button label="Cart" tooltip="Cart" variant="ghost" is-icon-only href="#">
-                  <template #icon><span class="i-carbon-shopping-bag" aria-hidden="true" /></template>
-                </Button>
-              </HStack>
-              <Button label="Sign in" variant="primary" href="#" />
+  <ShowcaseShell>
+    <template #topNav>
+      <TopNav label="Theme preview navigation">
+        <template #heading>
+          <TopNavHeading heading="Studio" />
+        </template>
+        <template v-if="!isMobile" #center>
+          <TopNavItem label="Shop" href="#" is-selected />
+          <TopNavItem label="New In" href="#" />
+          <TopNavItem label="Stories" href="#" />
+          <TopNavItem label="Help" href="#" />
+        </template>
+        <template #end>
+          <HStack :gap="2" vAlign="center">
+            <HStack :gap="0.5">
+              <Button label="Search" tooltip="Search" variant="ghost" is-icon-only href="#">
+                <template #icon><Icon name="heroicons:magnifying-glass" size="md" /></template>
+              </Button>
+              <Button label="Account" tooltip="Account" variant="ghost" is-icon-only href="#">
+                <template #icon><Icon name="heroicons:user" size="md" /></template>
+              </Button>
+              <Button label="Cart" tooltip="Cart" variant="ghost" is-icon-only href="#">
+                <template #icon><Icon name="heroicons:shopping-bag" size="md" /></template>
+              </Button>
             </HStack>
-          </template>
-        </TopNav>
+            <Button label="Sign in" variant="primary" />
+          </HStack>
+        </template>
+      </TopNav>
+    </template>
 
-        <Section :padding="6" variant="transparent">
-          <VStack :gap="10" class="content content-fluid">
+    <Layout height="auto" :padding="0">
+      <LayoutContent :padding="0" :is-scrollable="false">
+        <VStack :gap="0">
+          <!-- 门店预览：标题、介绍和三张商品卡。 -->
+          <Section :padding="6" variant="transparent">
             <Center>
-              <VStack :gap="4" :hAlign="'center'" class="hero-text">
-                <Text type="display-2" color="accent">
-                  Little joys,<br>everywhere you go
-                </Text>
-                <Text type="body" color="secondary">
-                  We believe the smallest details are the ones that matter most.
-                  Turn an ordinary day into something worth remembering.
-                </Text>
+              <VStack :gap="10" width="100%" :max-width="880">
+                <Center>
+                  <VStack :gap="4" h-align="center" :max-width="560">
+                    <!-- 原版每行用 <Text type="inherit" display="block">，core 的 Text 还没有 inherit 类型，先用块级 span 继承标题字号。 -->
+                    <Heading :level="1" :accessibility-level="embedded ? 2 : 1" type="display-2" color="accent" justify="center">
+                      <span class="heading-line">Little joys,</span>
+                      <span class="heading-line">everywhere you go</span>
+                    </Heading>
+                    <Text type="body" color="secondary" justify="center">
+                      We believe the smallest details are the ones that matter most.
+                      Turn an ordinary day into something worth remembering.
+                    </Text>
+                  </VStack>
+                </Center>
+                <Grid :columns="{ minWidth: 200, max: 3 }" :gap="4">
+                  <Card v-for="(product, index) in products" :key="product.name" :padding="0" height="100%">
+                    <VStack :gap="0" height="100%">
+                      <AspectRatio :ratio="1" fit="cover">
+                        <img :src="images[PRODUCT_IMAGE_KEYS[index]!]" :alt="product.name">
+                      </AspectRatio>
+                      <StackItem size="fill">
+                        <VStack :padding="4" :gap="2" h-align="center" height="100%">
+                          <Badge :label="product.badge" :variant="product.badgeVariant" />
+                          <Heading :level="2" justify="center">{{ product.name }}</Heading>
+                          <StackItem size="fill">
+                            <Text type="supporting" color="secondary" justify="center" display="block">{{ product.description }}</Text>
+                          </StackItem>
+                          <HStack :gap="2" vAlign="center" h-align="center" wrap="wrap" width="100%">
+                            <NumberInput
+                              v-model="quantities[product.name]"
+                              label="Quantity"
+                              is-label-hidden
+                              :min="1"
+                              :max="99"
+                              size="sm"
+                              :width="72"
+                              @update:model-value="added[product.name] = false"
+                            />
+                            <Button
+                              :label="added[product.name] ? 'Added to cart' : 'Add to cart'"
+                              variant="secondary"
+                              size="sm"
+                              @click="added[product.name] = true"
+                            />
+                          </HStack>
+                        </VStack>
+                      </StackItem>
+                    </VStack>
+                  </Card>
+                </Grid>
               </VStack>
             </Center>
-            <Grid :columns="productColumns" :gap="4">
-              <Card v-for="(p, i) in products" :key="p.name" :padding="0" height="100%">
-                <VStack :gap="0" class="card-stack">
-                  <AspectRatio :ratio="1">
-                    <img class="product-image" :src="images[PRODUCT_IMAGE_KEYS[i]]" :alt="p.name">
-                  </AspectRatio>
-                  <div class="card-body">
-                    <VStack :gap="2" :hAlign="'center'" class="card-stack">
-                      <HStack><Badge :label="p.badge" :variant="p.badgeVariant" /></HStack>
-                      <Heading :level="2" class="center-text">{{ p.name }}</Heading>
-                      <Text type="supporting" color="secondary" class="card-description center-text">{{ p.description }}</Text>
-                      <HStack :gap="2" :align="'center'" :justify="'center'" wrap="wrap" class="cart-row">
-                        <span class="quantity-field">
-                          <NumberInput v-model="quantity" label="Quantity" is-label-hidden :min="1" :max="99" size="sm" />
-                        </span>
-                        <Button label="Add to cart" variant="secondary" size="sm" href="#" class="cart-button" />
-                      </HStack>
-                    </VStack>
-                  </div>
-                </VStack>
-              </Card>
-            </Grid>
-          </VStack>
-        </Section>
-      </VStack>
-    </div>
+          </Section>
 
-    <div class="showcase-surface">
-      <VStack :gap="8">
-        <HStack :gap="4" wrap="wrap">
-          <div class="checkout-column">
-            <Card :padding="isMobile ? 4 : 5" class="card-surface">
-              <VStack :gap="4" class="checkout-stack">
-                <Heading :level="2">Checkout</Heading>
-                <VStack :gap="3" class="checkout-stack">
-                  <TextInput v-model="email" label="Email" placeholder="you@studio.com" size="lg" />
-                  <RadioList v-model="shippingMethod" label="Shipping method" description="Delivery time may vary based on location and availability.">
-                    <RadioListItem value="economy" label="Economy Shipping" description="Delivered in 5–7 business days">
-                      <template #end><Text type="body" weight="bold">$12.00</Text></template>
-                    </RadioListItem>
-                    <RadioListItem value="standard" label="Standard Shipping" description="Delivered in 3–5 business days">
-                      <template #end><Text type="body" weight="bold">$16.00</Text></template>
-                    </RadioListItem>
-                    <RadioListItem value="express" label="Express Shipping" description="Delivered in 1–2 business days">
-                      <template #end><Text type="body" weight="bold">$24.00</Text></template>
-                    </RadioListItem>
-                  </RadioList>
-                  <VStack :gap="2" class="checkout-stack">
-                    <Text type="supporting" weight="bold">Payment method</Text>
-                    <Grid :columns="isMobile ? 1 : { minWidth: 80, max: 3 }" :gap="2">
-                      <SelectableCard :is-selected="paymentCard" label="Pay with card" :padding="3" @change="selectPayment('card')">
-                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
-                          <Icon name="heroicons:credit-card" size="md" />
-                          <Text type="supporting" weight="bold">Card</Text>
+          <Section :padding="6" variant="transparent">
+            <VStack :gap="8">
+              <HStack :gap="4" wrap="wrap">
+                <!-- 结账卡 -->
+                <StackItem size="fill" class="checkout-column">
+                  <Card height="100%" :padding="isMobile ? 4 : 5">
+                    <VStack :gap="4">
+                      <Heading :level="2">Checkout</Heading>
+                      <VStack :gap="3">
+                        <TextInput v-model="email" label="Email" placeholder="you@studio.com" size="lg" />
+                        <RadioList v-model="shipping" label="Shipping method" description="Delivery time may vary based on location and availability.">
+                          <RadioListItem value="economy" label="Economy Shipping" description="Delivered in 5–7 business days">
+                            <template #end><Text type="body" weight="bold">$12.00</Text></template>
+                          </RadioListItem>
+                          <RadioListItem value="standard" label="Standard Shipping" description="Delivered in 3–5 business days">
+                            <template #end><Text type="body" weight="bold">$16.00</Text></template>
+                          </RadioListItem>
+                          <RadioListItem value="express" label="Express Shipping" description="Delivered in 1–2 business days">
+                            <template #end><Text type="body" weight="bold">$24.00</Text></template>
+                          </RadioListItem>
+                        </RadioList>
+                        <VStack :gap="2">
+                          <Text type="supporting" weight="bold">Payment method</Text>
+                          <Grid :columns="isMobile ? { minWidth: 80, max: 1 } : { minWidth: 80, max: 3 }" :gap="2">
+                            <SelectableCard label="Pay with card" :is-selected="payment === 'card'" :padding="3" @change="payment = 'card'">
+                              <VStack :gap="1" h-align="center">
+                                <Icon name="heroicons:credit-card" size="md" />
+                                <Text type="supporting" weight="bold" justify="center">Card</Text>
+                              </VStack>
+                            </SelectableCard>
+                            <SelectableCard label="Pay with Apple Pay" :is-selected="payment === 'apple'" :padding="3" @change="payment = 'apple'">
+                              <VStack :gap="1" h-align="center">
+                                <Icon name="heroicons:device-phone-mobile" size="md" />
+                                <Text type="supporting" weight="bold" justify="center">Apple Pay</Text>
+                              </VStack>
+                            </SelectableCard>
+                            <SelectableCard label="Pay with Google Pay" :is-selected="payment === 'google'" :padding="3" @change="payment = 'google'">
+                              <VStack :gap="1" h-align="center">
+                                <Icon name="heroicons:wallet" size="md" />
+                                <Text type="supporting" weight="bold" justify="center">Google Pay</Text>
+                              </VStack>
+                            </SelectableCard>
+                          </Grid>
                         </VStack>
-                      </SelectableCard>
-                      <SelectableCard :is-selected="paymentApple" label="Pay with Apple Pay" :padding="3" @change="selectPayment('apple')">
-                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
-                          <Icon name="heroicons:device-phone-mobile" size="md" />
-                          <Text type="supporting" weight="bold">Apple Pay</Text>
-                        </VStack>
-                      </SelectableCard>
-                      <SelectableCard :is-selected="paymentGoogle" label="Pay with Google Pay" :padding="3" @change="selectPayment('google')">
-                        <VStack :gap="1" :hAlign="'center'" class="payment-card-content">
-                          <Icon name="heroicons:wallet" size="md" />
-                          <Text type="supporting" weight="bold">Google Pay</Text>
-                        </VStack>
-                      </SelectableCard>
-                    </Grid>
-                  </VStack>
-                  <TextInput v-model="cardNumber" label="Card number" placeholder="1234 1234 1234 1234" size="lg" :start-icon="isMobile ? undefined : CreditCardIcon" />
-                  <Grid :columns="isMobile ? 1 : { minWidth: 90, max: 2 }" :gap="2">
-                    <TextInput v-model="expiry" label="Expiry" placeholder="MM / YY" size="lg" />
-                    <TextInput v-model="cvc" label="CVC" placeholder="123" size="lg" />
-                  </Grid>
-                  <Selector
-                    v-model="country"
-                    label="Country"
-                    size="lg"
-                    :options="[
-                      { value: 'us', label: 'United States' },
-                      { value: 'ca', label: 'Canada' },
-                      { value: 'uk', label: 'United Kingdom' },
-                      { value: 'de', label: 'Germany' },
-                      { value: 'jp', label: 'Japan' },
-                      { value: 'au', label: 'Australia' },
-                    ]"
-                  />
-                </VStack>
-                <CheckboxInput v-model="saveInfo" label="Securely save my information for 1-click checkout" description="Pay faster on Studio and everywhere Link is accepted." />
-                <Button variant="primary" size="lg" label="Pay now">
-                  <template #icon><span class="i-carbon-locked" aria-hidden="true" /></template>
-                </Button>
-              </VStack>
-            </Card>
-          </div>
-          <div class="chat-column">
-            <Card :padding="0" class="chat-card">
-              <HStack :justify="'between'" :align="'center'" :gap="3" class="chat-header">
-                <Heading :level="2">Studio AI</Heading>
-                <HStack :gap="1" :align="'center'">
-                  <Button variant="ghost" size="sm" is-icon-only label="Export conversation" tooltip="Export conversation">
-                    <template #icon><span class="i-carbon-download" aria-hidden="true" /></template>
-                  </Button>
-                  <Button variant="ghost" size="sm" is-icon-only label="Close chat" tooltip="Close chat">
-                    <template #icon><span class="i-carbon-close" aria-hidden="true" /></template>
-                  </Button>
-                </HStack>
-              </HStack>
-              <Divider variant="subtle" />
-              <div class="chat-body">
-                <ChatMessageList>
-                  <ChatSystemMessage>Today</ChatSystemMessage>
-                  <ChatMessage sender="user">
-                    <ChatMessageBubble variant="filled">Where’s my order?</ChatMessageBubble>
-                  </ChatMessage>
-                  <ChatMessage sender="assistant">
-                    <VStack :gap="3">
-                      <Text type="body">
-                        Your order #1043 — the Minimalist Watch and Linen Throw — shipped this morning from the Aisle 3 warehouse and is currently in transit with UPS. It’s on track to arrive at your address by end of day tomorrow.
-                      </Text>
-                      <Text type="body">
-                        Let me know if you’d like to reschedule the delivery, redirect it to a pickup point, or start a return once it arrives.
-                      </Text>
-                    </VStack>
-                  </ChatMessage>
-                  <ChatMessage sender="user">
-                    <ChatMessageBubble variant="filled">Can you show me the full details?</ChatMessageBubble>
-                  </ChatMessage>
-                  <ChatMessage sender="assistant">
-                    <VStack :gap="3">
-                      <Text type="body">Here’s everything I have on order #1043:</Text>
-                      <Card :padding="3">
-                        <VStack :gap="1">
-                          <Item label="Items" description="Minimalist Watch · Linen Throw">
-                            <template #endContent>
-                              <Text type="body" weight="bold">$248</Text>
-                            </template>
-                          </Item>
-                          <Item label="Shipping" description="UPS Ground">
-                            <template #endContent>
-                              <Text type="body" weight="bold">$12</Text>
-                            </template>
-                          </Item>
-                          <Item label="Estimated arrival" description="Tomorrow by 8pm">
-                            <template #endContent>
-                              <Badge variant="green" label="On time" />
-                            </template>
-                          </Item>
-                          <Item label="Tracking" description="UPS 1Z 999 AA1 0123 4567 84">
-                            <template #endContent>
-                              <Link href="#">Track →</Link>
-                            </template>
-                          </Item>
-                        </VStack>
-                      </Card>
-                    </VStack>
-                  </ChatMessage>
-                </ChatMessageList>
-              </div>
-              <div class="chat-suggestions">
-                <HStack :gap="1" :justify="'center'" wrap="wrap">
-                  <Button v-for="question in SUGGESTED_QUESTIONS" :key="question" variant="secondary" size="sm" :label="question" />
-                </HStack>
-              </div>
-              <div class="chat-composer">
-                <!-- 原版用 ChatComposer：左下附件、右下麦克风，发送按钮是组件自带的。 -->
-                <ChatComposer v-model="chatDraft" placeholder="Ask Studio AI…">
-                  <template #footerActions>
-                    <Button variant="ghost" size="md" is-icon-only label="Attach" tooltip="Attach">
-                      <template #icon>
-                        <Icon name="heroicons:plus" />
-                      </template>
-                    </Button>
-                  </template>
-                  <template #sendActions>
-                    <Button variant="ghost" size="md" is-icon-only label="Voice input" tooltip="Voice input">
-                      <template #icon>
-                        <Icon name="carbon:microphone" />
-                      </template>
-                    </Button>
-                  </template>
-                </ChatComposer>
-              </div>
-            </Card>
-          </div>
-        </HStack>
-
-        <Grid :columns="gridColumns" :gap="4">
-          <GridSpan :columns="isMobile ? 1 : 3">
-            <Card :padding="0" class="inventory-card">
-              <HStack :justify="'between'" :align="'center'" class="inventory-header">
-                <Heading :level="2">Inventory</Heading>
-                <Button label="Add item" variant="primary" size="sm">
-                  <template #icon><span class="i-carbon-add" aria-hidden="true" /></template>
-                </Button>
-              </HStack>
-              <Divider variant="subtle" />
-              <HStack :gap="3" :align="'center'" :justify="'between'" class="inventory-filter-row">
-                <HStack :gap="2" :align="'center'" class="inventory-filter-left">
-                  <TextInput v-model="search" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" />
-                  <OverflowList :items="FILTER_ITEMS" :gap="2">
-                    <template #item="{ item }">
-                      <Selector
-                        :label="item.label"
-                        is-label-hidden
-                        :placeholder="item.label"
-                        size="sm"
-                        :start-icon="FILTER_BY_ID[item.id ?? ''].icon"
-                        :model-value="null"
-                        :options="FILTER_BY_ID[item.id ?? ''].options"
-                      />
-                    </template>
-                    <template #overflow>
-                      <Button label="Filters" variant="ghost" size="sm">
-                        <template #icon><Icon name="heroicons:tag" size="sm" /></template>
+                        <TextInput v-model="cardNumber" label="Card number" placeholder="1234 1234 1234 1234" size="lg" :start-icon="isMobile ? undefined : CreditCardIcon" />
+                        <Grid :columns="isMobile ? { minWidth: 90, max: 1 } : { minWidth: 90, max: 2 }" :gap="2">
+                          <TextInput v-model="expiry" label="Expiry" placeholder="MM / YY" size="lg" />
+                          <TextInput v-model="cvc" label="CVC" placeholder="123" size="lg" />
+                        </Grid>
+                        <Selector
+                          v-model="country"
+                          label="Country"
+                          size="lg"
+                          :options="[
+                            { value: 'us', label: 'United States' },
+                            { value: 'ca', label: 'Canada' },
+                            { value: 'uk', label: 'United Kingdom' },
+                            { value: 'de', label: 'Germany' },
+                            { value: 'jp', label: 'Japan' },
+                            { value: 'au', label: 'Australia' },
+                          ]"
+                        />
+                      </VStack>
+                      <CheckboxInput v-model="saveInformation" label="Securely save my information for 1-click checkout" description="Pay faster on Studio and everywhere Link is accepted." />
+                      <Banner v-if="showPaymentPreview" status="info" title="Payment preview only" description="No payment is submitted or saved." />
+                      <Button variant="primary" size="lg" label="Pay now" @click="showPaymentPreview = true">
+                        <template #icon><Icon name="heroicons:lock-closed" size="sm" /></template>
                       </Button>
-                    </template>
-                  </OverflowList>
-                </HStack>
-                <HStack :gap="1" :align="'center'">
-                  <Button variant="ghost" size="sm" is-icon-only label="List view" tooltip="List view">
-                    <template #icon><Icon name="heroicons:list-bullet" size="md" /></template>
-                  </Button>
-                  <Button variant="ghost" size="sm" is-icon-only label="Grid view" tooltip="Grid view">
-                    <template #icon><Icon name="heroicons:squares-2x2" size="md" /></template>
-                  </Button>
-                </HStack>
+                    </VStack>
+                  </Card>
+                </StackItem>
+
+                <!-- 聊天卡 -->
+                <StackItem size="fill" class="chat-column">
+                  <Card :padding="0" height="100%">
+                    <Layout height="fill" :padding="4">
+                      <template #header>
+                        <LayoutHeader has-divider>
+                          <HStack h-align="between" vAlign="center" :gap="3">
+                            <Heading :level="2">Studio AI</Heading>
+                            <HStack :gap="1" vAlign="center">
+                              <Button variant="ghost" size="sm" is-icon-only label="Export conversation" tooltip="Export conversation" @click="demo('Demo: the conversation would export here', 'export-chat')">
+                                <template #icon><Icon name="heroicons:arrow-down-tray" size="sm" /></template>
+                              </Button>
+                              <Button variant="ghost" size="sm" is-icon-only label="Close chat" tooltip="Close chat" @click="demo('Demo: the chat would close here', 'close-chat')">
+                                <template #icon><Icon name="heroicons:x-mark" size="sm" /></template>
+                              </Button>
+                            </HStack>
+                          </HStack>
+                        </LayoutHeader>
+                      </template>
+                      <LayoutContent class="chat-viewport" :padding="0" label="Studio AI conversation">
+                        <ChatMessageList>
+                          <ChatSystemMessage>Today</ChatSystemMessage>
+                          <ChatMessage sender="user">
+                            <ChatMessageBubble variant="filled">Where’s my order?</ChatMessageBubble>
+                          </ChatMessage>
+                          <ChatMessage sender="assistant">
+                            <VStack :gap="3">
+                              <Text type="body">
+                                Your order #1043 — the Minimalist Watch and Linen Throw — shipped this morning from the Aisle 3 warehouse and is currently in transit with UPS. It’s on track to arrive at your address by end of day tomorrow.
+                              </Text>
+                              <Text type="body">
+                                Let me know if you’d like to reschedule the delivery, redirect it to a pickup point, or start a return once it arrives.
+                              </Text>
+                            </VStack>
+                          </ChatMessage>
+                          <ChatMessage sender="user">
+                            <ChatMessageBubble variant="filled">Can you show me the full details?</ChatMessageBubble>
+                          </ChatMessage>
+                          <ChatMessage sender="assistant">
+                            <VStack :gap="3">
+                              <Text type="body">Here’s everything I have on order #1043:</Text>
+                              <Card :padding="3">
+                                <VStack :gap="1">
+                                  <Item label="Items" description="Minimalist Watch · Linen Throw">
+                                    <template #endContent><Text type="body" weight="bold">$248</Text></template>
+                                  </Item>
+                                  <Item label="Shipping" description="UPS Ground">
+                                    <template #endContent><Text type="body" weight="bold">$12</Text></template>
+                                  </Item>
+                                  <Item label="Estimated arrival" description="Tomorrow by 8pm">
+                                    <template #endContent><Badge variant="green" label="On time" /></template>
+                                  </Item>
+                                  <Item label="Tracking" description="UPS 1Z 999 AA1 0123 4567 84">
+                                    <template #endContent><Link href="#">Track</Link></template>
+                                  </Item>
+                                </VStack>
+                              </Card>
+                            </VStack>
+                          </ChatMessage>
+                          <ChatMessage v-for="message in sentMessages" :key="message.id" sender="user">
+                            <ChatMessageBubble variant="filled">{{ message.text }}</ChatMessageBubble>
+                          </ChatMessage>
+                        </ChatMessageList>
+                      </LayoutContent>
+                      <template #footer>
+                        <LayoutFooter>
+                          <VStack :gap="2">
+                            <HStack :gap="1" h-align="center" wrap="wrap">
+                              <Button v-for="question in SUGGESTED_QUESTIONS" :key="question" variant="secondary" size="sm" :label="question" @click="draft = question" />
+                            </HStack>
+                            <ChatComposer v-model="draft" placeholder="Ask Studio AI…" @submit="submitMessage">
+                              <template #footerActions>
+                                <Button variant="ghost" size="md" is-icon-only label="Attach" tooltip="Attach" @click="demo('Demo: a file picker would open here', 'attach')">
+                                  <template #icon><Icon name="heroicons:plus" size="sm" /></template>
+                                </Button>
+                              </template>
+                              <template #sendActions>
+                                <Button variant="ghost" size="md" is-icon-only label="Voice input" tooltip="Voice input" @click="demo('Demo: voice input would start here', 'voice')">
+                                  <template #icon><Icon name="heroicons:microphone" size="sm" /></template>
+                                </Button>
+                              </template>
+                            </ChatComposer>
+                          </VStack>
+                        </LayoutFooter>
+                      </template>
+                    </Layout>
+                  </Card>
+                </StackItem>
               </HStack>
-              <div v-if="lowStockCount > 0" class="inventory-banner-wrap">
-                <Banner status="warning" :title="`${lowStockCount} items are running low`" />
-              </div>
-              <div class="inventory-table-wrap">
-                <Table :data="inventory" :columns="inventoryColumns" density="spacious" dividers="rows" has-hover />
-              </div>
-            </Card>
-          </GridSpan>
-          <GridSpan :columns="1">
-            <Card :padding="5" class="activity-card">
-              <VStack :gap="4" class="activity-card-stack">
-                <Heading :level="2">Revenue</Heading>
-                <Grid :columns="isMobile ? 1 : 2" :gap="3">
-                  <VStack :gap="0"><span class="kpi-value">18K</span><Text type="supporting" color="secondary">Monthly revenue</Text></VStack>
-                  <VStack :gap="0"><span class="kpi-value">+12%</span><Text type="supporting" color="secondary">Order growth</Text></VStack>
-                </Grid>
-                <Divider variant="subtle" />
-                <HStack :justify="'between'" :align="'center'">
-                  <Heading :level="3">Activity</Heading>
-                  <Link href="#">See all</Link>
-                </HStack>
-                <VStack :gap="1" class="activity-list-fade">
-                  <Item v-for="item in ACTIVITY" :key="item.id" :label="item.label" :description="item.detail" href="#">
-                    <template #startContent>
-                      <div class="activity-icon" aria-hidden="true"><Icon :name="ActivityIcons[item.id]" size="sm" /></div>
-                    </template>
-                    <template #endContent>
-                      <Text type="body" weight="bold" :color="item.amount < 0 ? 'secondary' : 'primary'">{{ formatAmount(item.amount) }}</Text>
-                    </template>
-                  </Item>
-                </VStack>
-              </VStack>
-            </Card>
-          </GridSpan>
-        </Grid>
-      </VStack>
-    </div>
-  </div>
+
+              <HStack :gap="isMobile ? 4 : 0" :wrap="isMobile ? 'wrap' : 'nowrap'">
+                <!-- 库存卡 -->
+                <StackItem size="fill">
+                  <Card :padding="0">
+                    <VStack :gap="0">
+                      <HStack h-align="between" vAlign="center" :padding="6">
+                        <Heading :level="2">Inventory</Heading>
+                        <Button label="Add item" variant="primary" size="sm" @click="demo('Demo: a new item form would open here', 'add-item')">
+                          <template #icon><Icon name="heroicons:plus" size="sm" /></template>
+                        </Button>
+                      </HStack>
+                      <Divider variant="subtle" />
+                      <!-- core 的 ScrollableArea 没有 padding 属性，内边距放在里面那层 HStack 上。 -->
+                      <ScrollableArea label="Inventory filters" axis="inline">
+                        <HStack :gap="3" vAlign="center" h-align="between" :padding-block="4" :padding-inline="6">
+                          <HStack :gap="2" vAlign="center">
+                            <TextInput v-model="query" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" :width="240" />
+                            <HStack :gap="2" wrap="wrap" vAlign="center">
+                              <Selector v-model="category" label="Categories" is-label-hidden placeholder="Categories" size="sm" :start-icon="FolderIcon" has-clear :options="categories" :is-disabled="categories.length === 0" />
+                              <Selector v-model="location" label="Locations" is-label-hidden placeholder="Locations" size="sm" :start-icon="MapPinIcon" has-clear :options="locations" />
+                              <Selector v-model="tag" label="Tags" is-label-hidden placeholder="Tags" size="sm" :start-icon="TagIcon" has-clear :options="tagOptions" />
+                            </HStack>
+                          </HStack>
+                          <HStack :gap="1" vAlign="center">
+                            <!-- 原版直接放 18px 的 lucide 图标，不经过 Icon 的尺寸档。 -->
+                            <Button variant="ghost" size="sm" is-icon-only label="List view" tooltip="List view" @click="demo('Demo: the list view would show here', 'list-view')">
+                              <template #icon><Icon name="heroicons:list-bullet" class="icon-18" /></template>
+                            </Button>
+                            <Button variant="ghost" size="sm" is-icon-only label="Grid view" tooltip="Grid view" @click="demo('Demo: the grid view would show here', 'grid-view')">
+                              <template #icon><Icon name="heroicons:squares-2x2" class="icon-18" /></template>
+                            </Button>
+                          </HStack>
+                        </HStack>
+                      </ScrollableArea>
+                      <VStack v-if="lowStockCount > 0" :padding-inline="6" :padding-block-end="4">
+                        <Banner status="warning" :title="`${lowStockCount} items are running low`" />
+                      </VStack>
+                      <VStack :padding-inline="6" :padding-block-end="2">
+                        <Table :data="rows" :columns="inventoryColumns" density="spacious" dividers="rows" has-hover />
+                        <ConfirmHost />
+                      </VStack>
+                    </VStack>
+                  </Card>
+                </StackItem>
+
+                <!-- 营收与动态卡 -->
+                <StackItem>
+                  <VStack :width="isMobile ? '100%' : 280" :padding-inline-start="isMobile ? 0 : 4" height="100%">
+                    <Card height="100%" :padding="5">
+                      <VStack :gap="4" height="100%">
+                        <Heading :level="2">Revenue</Heading>
+                        <Grid :columns="isMobile ? { minWidth: 80, max: 1 } : { minWidth: 80, max: 2 }" :gap="3">
+                          <VStack :gap="0">
+                            <Text type="large" weight="bold" has-tabular-numbers>18K</Text>
+                            <Text type="supporting" color="secondary">Monthly revenue</Text>
+                          </VStack>
+                          <VStack :gap="0">
+                            <Text type="large" weight="bold" has-tabular-numbers>+12%</Text>
+                            <Text type="supporting" color="secondary">Order growth</Text>
+                          </VStack>
+                        </Grid>
+                        <Divider variant="subtle" />
+                        <HStack h-align="between" vAlign="center">
+                          <Heading :level="3">Activity</Heading>
+                          <Link href="#">See all</Link>
+                        </HStack>
+                        <StackItem size="fill">
+                          <ScrollableArea label="Recent order activity" height="100%">
+                            <VStack :gap="1">
+                              <Item v-for="item in ACTIVITY" :key="item.id" :label="item.label" :description="item.detail" href="#">
+                                <template #startContent>
+                                  <Center :width="32" :height="32">
+                                    <Icon :name="item.kind === 'refund' ? 'heroicons:banknotes' : 'heroicons:shopping-bag'" size="sm" color="secondary" />
+                                  </Center>
+                                </template>
+                                <template #endContent>
+                                  <Text type="body" weight="bold" :color="item.amount < 0 ? 'secondary' : 'primary'">{{ formatAmount(item.amount) }}</Text>
+                                </template>
+                              </Item>
+                            </VStack>
+                          </ScrollableArea>
+                        </StackItem>
+                      </VStack>
+                    </Card>
+                  </VStack>
+                </StackItem>
+              </HStack>
+            </VStack>
+          </Section>
+        </VStack>
+      </LayoutContent>
+    </Layout>
+  </ShowcaseShell>
 </template>
 
 <style scoped>
-.page-root { min-height: 100%; background: var(--astryx-color-background-body); }
-.showcase-surface { padding: var(--astryx-spacing-6); background: var(--astryx-color-background-surface); }
-.content { max-width: 960px; margin-inline: auto; min-width: 0; }
-.content-fluid { max-width: 880px; }
-.hero-text { text-align: center; max-width: 560px; }
-.center-text { text-align: center; }
-.card-stack { height: 100%; }
-.card-description { flex: 1; }
-.cart-row { width: 100%; min-width: 0; }
-.quantity-field { display: block; flex: none; width: 72px; }
-.cart-button { flex: 1 1 auto; min-width: 0; }
-.card-surface { background: var(--astryx-color-background-body); color: var(--astryx-color-text-primary); min-width: 0; border-color: transparent; }
-.checkout-stack { min-width: 0; width: 100%; }
-.payment-card-content { min-width: 0; width: 100%; text-align: center; word-break: break-word; }
-.inventory-card { background: var(--astryx-color-background-surface); overflow: hidden; }
-.inventory-header { padding-block: var(--astryx-spacing-6); padding-inline: var(--astryx-spacing-6); }
-.inventory-filter-row { padding-block: var(--astryx-spacing-4); padding-inline: var(--astryx-spacing-6); width: 100%; overflow-x: auto; }
-.inventory-filter-left { flex: 1; min-width: 0; }
-.activity-icon { width: 32px; height: 32px; border-radius: var(--astryx-radius-full); background: var(--astryx-color-background-muted); color: var(--astryx-color-text-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.inventory-banner-wrap { padding-inline: var(--astryx-spacing-6); padding-bottom: var(--astryx-spacing-4); }
-/* 原版 Table 默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算。 */
-.inventory-table-wrap :deep(.astryx-table) { table-layout: fixed; }
-.inventory-table-wrap { padding-inline: var(--astryx-spacing-6); padding-block-end: var(--astryx-spacing-2); }
-.chat-card { background: var(--astryx-color-background-surface); min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
-.chat-header { padding: var(--astryx-spacing-4); }
-.chat-body { flex: 1; min-height: 0; overflow: hidden; }
-.chat-suggestions { padding-inline: var(--astryx-spacing-4); padding-bottom: var(--astryx-spacing-2); }
-.chat-composer { padding-inline: var(--astryx-spacing-4); padding-bottom: var(--astryx-spacing-4); }
-.activity-card { background: var(--astryx-color-background-surface); min-width: 0; height: 100%; }
-.activity-card-stack { height: 100%; }
-.activity-list-fade { flex: 1; min-height: 0; overflow: hidden; mask-image: linear-gradient(to bottom, black calc(100% - 48px), transparent); margin-inline: calc(var(--astryx-spacing-2) * -1); }
-.checkout-column { flex: 1 1 300px; min-width: 0; display: grid; }
-.chat-column { flex: 2 1 520px; min-width: 0; display: grid; }
-.product-image { width: 100%; height: 100%; object-fit: cover; }
-.card-body { padding: var(--astryx-spacing-4); flex: 1; display: flex; flex-direction: column; }
-.kpi-value { font-size: 24px; font-weight: 700; line-height: 1.1; color: var(--astryx-color-text-primary); font-family: var(--astryx-font-family-heading); }
-:deep(.thumbnail) { width: 40px; height: 40px; border-radius: var(--astryx-radius-element); object-fit: cover; display: block; flex-shrink: 0; }
-:deep(.thumbnail-fallback) { width: 40px; height: 40px; border-radius: var(--astryx-radius-element); background: var(--astryx-color-background-muted); color: var(--astryx-color-text-secondary); display: flex; align-items: center; justify-content: center; font-size: var(--astryx-font-size-sm); font-weight: 600; flex-shrink: 0; }
+/* 原版 StackItem 没有可换行的 flex-basis，这两列的基准宽度按原版 styles 写在这里。 */
+.checkout-column { flex: 1 1 300px; }
+.chat-column { flex: 2 1 520px; }
+/* LayoutContent 没有高度上限，消息区限制在 720px 内。 */
+.chat-viewport { max-height: 720px; }
+.heading-line { display: block; }
+.icon-18 { font-size: 18px; }
 </style>

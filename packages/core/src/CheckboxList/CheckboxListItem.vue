@@ -18,6 +18,9 @@ const context = readLayerScoped(checkboxListKey)
 const slots = useSlots()
 const messages = useAstryxMessages()
 const richLabel = computed(() => slots.label != null)
+// 紧凑密度下（原版渲染出来的结构）复选框的名字来自可见标签（aria-labelledby），
+// 隐藏的 <label> 只留通用词 "Checkbox"；其它密度下字符串标签直接做隐藏 <label> 的文字。
+const hasVisibleLabel = computed(() => richLabel.value || (context?.size.value === 'sm' && props.label != null && props.label !== ''))
 const visibleLabelId = `astryx-checkbox-item-label-${useId()}`
 const checkbox = useTemplateRef<InstanceType<typeof CheckboxListControl>>('checkbox')
 const interactiveRef = computed(() => checkbox.value?.element ?? null)
@@ -56,6 +59,7 @@ function onChecked(value: CheckboxValue): void {
   >
     <template #label>
       <span v-if="richLabel" :id="visibleLabelId"><slot name="label" /></span>
+      <span v-else-if="hasVisibleLabel" :id="visibleLabelId">{{ label }}</span>
       <span v-else aria-hidden="true">{{ label }}</span>
     </template>
     <template v-if="$slots.description" #description>
@@ -63,10 +67,10 @@ function onChecked(value: CheckboxValue): void {
     </template>
     <template #startContent>
       <CheckboxListControl
-        ref="checkbox" :model-value="checked" :label="ariaLabel ?? (richLabel ? messages.checkboxList.checkbox : label)"
+        ref="checkbox" :model-value="checked" :label="ariaLabel ?? (hasVisibleLabel ? messages.checkboxList.checkbox : label)"
         :size="context?.size.value ?? 'md'" :is-disabled="disabled" :is-read-only="readOnly"
         :is-loading="loading" :loading-label="messages.checkboxList.loading" :disabled-message="reason"
-        :aria-labelledby="richLabel && !ariaLabel ? visibleLabelId : undefined"
+        :aria-labelledby="hasVisibleLabel && !ariaLabel ? visibleLabelId : undefined"
         @update:model-value="onChecked"
       />
     </template>

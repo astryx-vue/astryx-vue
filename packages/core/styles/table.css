@@ -8,11 +8,33 @@
     width: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));
   }
 
-  .astryx-table-scroll:first-child {
+  /*
+   * 同上游 #12068：只有作为带内边距容器的直接首个 / 末个子元素时，Table 才在块方向贴到容器边缘。
+   * 套在 Stack 等包装里的 Table 保留容器的上下内边距，只在左右两侧贴边。
+   */
+  :is(
+    .astryx-card,
+    .astryx-section__inner,
+    .astryx-layout-content,
+    .astryx-layout-panel,
+    .astryx-layout-header__inner,
+    .astryx-layout-footer__inner,
+    .astryx-scrollable-area__content,
+    .astryx-bottom-sheet__content
+  ) > .astryx-table-scroll:first-child {
     margin-top: calc(-1 * var(--container-padding-block-start, 0px));
   }
 
-  .astryx-table-scroll:last-child {
+  :is(
+    .astryx-card,
+    .astryx-section__inner,
+    .astryx-layout-content,
+    .astryx-layout-panel,
+    .astryx-layout-header__inner,
+    .astryx-layout-footer__inner,
+    .astryx-scrollable-area__content,
+    .astryx-bottom-sheet__content
+  ) > .astryx-table-scroll:last-child {
     margin-bottom: calc(-1 * var(--container-padding-block-end, 0px));
   }
 
@@ -189,6 +211,9 @@
 
   .astryx-table__sort-icon {
     display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    block-size: 0;
     opacity: 0.35;
   }
 

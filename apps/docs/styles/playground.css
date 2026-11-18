@@ -20,7 +20,8 @@ html:has(.playground-route) {
   --pg-handle: rgb(23 23 23 / 18%);
   --pg-stage-bg: #fff;
   --pg-stage-line: rgb(5 54 89 / 9.8%);
-  --pg-rail: 64px;
+  /* 原版 1440 宽时：侧轨 57、编辑栏 440、分隔线 1、预览 942。 */
+  --pg-rail: 57px;
 }
 
 .nagi.playground-route {
@@ -159,7 +160,7 @@ html.dark:has(.playground-route) body {
 .playground__surface {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: var(--editor-size, 432px) 10px minmax(0, 1fr);
+  grid-template-columns: var(--editor-size, 440px) 1px minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
@@ -295,6 +296,9 @@ html.dark:has(.playground-route) body {
 
 .playground__divider {
   position: relative;
+  z-index: 1;
+  /* 轨道只占 1px，和原版一样；左右各借 4px 当拖动热区。 */
+  margin-inline: -4px;
   padding: 0;
   border: 0;
   cursor: col-resize;
@@ -951,28 +955,6 @@ html[data-playground-frame] {
   --astryx-list-item-selected-background: var(--astryx-color-accent-muted);
 }
 
-/*
- * 待 core 修复后去掉：Layout 的内容区是滚动容器却不是定位参照，里面绝对定位的隐藏控件
- * （单选、开关的原生 input、读屏提示）找不到最近的定位祖先，会落到预览根上撑高整个文档
- * （payment-form 页面高 1509 对 806）。原版内容区是定位参照。
- */
-html[data-playground-frame] .astryx-layout-content {
-  position: relative;
-}
-
-/*
- * 待 core 修复后去掉：Link 没有 `type` 属性（原版 `type="supporting"` 同时给 12px 字号和 20px 行高），
- * 模板里用 `size="sm"` 取字号，行高在这里补成 supporting 的行高。
- */
-html[data-playground-frame] .astryx-link--size-sm {
-  line-height: var(--astryx-text-supporting-leading, 1.6667);
-}
-
-/* 待 core 修复后去掉：Collapsible 触发行原版高 17（行高 25.5 的文字溢出出去），我们撑成 24。 */
-html[data-playground-frame] .astryx-collapsible-trigger {
-  height: 17px;
-}
-
 html[data-playground-frame] #app,
 html[data-playground-frame] #app > *,
 html[data-playground-frame] #app > * > * {
@@ -990,12 +972,15 @@ html[data-playground-frame] #playground-mount {
 
 html[data-playground-frame] #playground-mount[data-preview-layout='center'] {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* safe：内容比预览宽或高时从起点排、向后溢出，和原版一样，不往左上越界。 */
+  align-items: safe center;
+  justify-content: safe center;
   padding: var(--astryx-spacing-4, 16px);
 }
 
 html[data-playground-frame] .playground-preview__content {
+  /* 原版预览包在 Theme 里，没写字号的文字继承主题正文字号（默认 14px），不是浏览器的 16px。 */
+  font-size: var(--astryx-text-body-size, 14px);
   width: 100%;
   height: 100%;
 }

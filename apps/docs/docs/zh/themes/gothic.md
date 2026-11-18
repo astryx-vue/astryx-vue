@@ -29,4 +29,4 @@ import '@astryx-vue/themes/gothic.css'
 
 ## 视觉预览
 
-<ThemeStage theme="gothic" />
+可以在[主题画廊](/themes/?theme=gothic)里看实际效果。

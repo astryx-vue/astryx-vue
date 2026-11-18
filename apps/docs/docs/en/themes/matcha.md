@@ -15,4 +15,4 @@ import '@astryx-vue/themes/matcha.css'
 <div data-astryx-theme="matcha">
 ```
 
-<ThemeStage theme="matcha" />
+See it in the [theme gallery](/en/themes/?theme=matcha).

@@ -24,6 +24,7 @@ import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
 import { bindListboxEscape, dismissSelectorEscape, focusSelectorTrigger, onSelectorListboxEscape } from './selectorEscape.js'
+import SelectorIcon from './SelectorIcon.js'
 import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } from './selectorOptions.js'
 import SelectorPanel from './SelectorPanel.vue'
 import { createTriggerActivation } from './triggerActivation.js'
@@ -351,6 +352,7 @@ onMounted(syncAnchorWidth)
       @pointerenter="disabledTooltip.onPointerEnter"
       @pointerleave="disabledTooltip.onPointerLeave"
     >
+      <SelectorIcon v-if="props.startIcon" class="astryx-selector-start-icon" :icon="props.startIcon" color="secondary" />
       <button
         v-bind="parts.forwardedAttrs()"
         :id="selectorId"
@@ -377,7 +379,7 @@ onMounted(syncAnchorWidth)
         <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
-            <Icon v-if="selectedOption?.icon" class="astryx-selector-value-icon" :icon="selectedOption.icon" size="sm" />
+            <SelectorIcon v-if="!props.startIcon && selectedOption?.icon" class="astryx-selector-value-icon" :icon="selectedOption.icon" />
             <span class="astryx-selector-value-label">{{ displayText }}</span>
           </template>
         </span>

@@ -25,6 +25,23 @@ describe('checkbox list', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([['free', 'pro']])
   })
 
+  it('names the checkbox from the visible label in compact density', () => {
+    const mountList = (density: 'compact' | 'balanced') => mount(CheckboxList, {
+      props: { label: 'Triggers', modelValue: [], density },
+      slots: { default: '<CheckboxListItem label="Pull requests" value="pr" />' },
+      global: { components: { CheckboxListItem } },
+    })
+    const compact = mountList('compact')
+    const input = compact.get('input[type="checkbox"]')
+    const labelledBy = input.attributes('aria-labelledby')
+    expect(labelledBy).toBeTruthy()
+    expect(compact.get(`#${labelledBy}`).text()).toBe('Pull requests')
+    expect(compact.find('label').text()).toBe('Checkbox')
+
+    const balanced = mountList('balanced')
+    expect(balanced.find('label').text()).toBe('Pull requests')
+  })
+
   it('fills a checked row and leaves the indeterminate select-all row clear', () => {
     const wrapper = mount(CheckboxList, {
       props: { label: 'Include in export' },

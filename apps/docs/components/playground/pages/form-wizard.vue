@@ -32,6 +32,7 @@ import {
   TextArea,
   TextInput,
   useMediaQuery,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 
@@ -204,12 +205,25 @@ function markAttempted(index: number) {
   attempted.value = new Set(attempted.value).add(index)
 }
 
+const showToast = useToast()
+
 function goNext() {
   markAttempted(step.value)
   if (Object.keys(errorsByStep.value[step.value]).length)
     return
-  if (!isLastStep.value)
-    step.value += 1
+  if (isLastStep.value) {
+    // 跳着走过来的话，前面的步骤可能还有问题：先把人带到第一处，不直接完成
+    const firstBroken = errorsByStep.value.findIndex(errors => Object.keys(errors).length > 0)
+    if (firstBroken !== -1) {
+      markAttempted(firstBroken)
+      step.value = firstBroken
+      return
+    }
+    // 仅演示：真实页面在这里调用实际的创建操作
+    showToast({ body: 'Demo: your workspace would be created here', uniqueID: 'create-workspace' })
+    return
+  }
+  step.value += 1
 }
 
 /** Skip 不是换名字的 Next：它放弃这一步已经填的东西，再往前走。 */
@@ -245,7 +259,7 @@ function visibilityLabel(value: string) {
                 Create workspace
               </Heading>
             </StackItem>
-            <Button label="Cancel" variant="ghost" />
+            <Button label="Cancel" variant="ghost" @click="showToast({ body: 'Demo: leaving workspace setup would return you to the app here', uniqueID: 'cancel-workspace' })" />
           </HStack>
           <Stepper
             :active-step="step"
@@ -268,7 +282,7 @@ function visibilityLabel(value: string) {
       </LayoutHeader>
     </template>
 
-    <LayoutContent>
+    <LayoutContent role="main">
       <VStack v-if="step === 0" :gap="5">
         <VStack :gap="1">
           <Heading :level="2">

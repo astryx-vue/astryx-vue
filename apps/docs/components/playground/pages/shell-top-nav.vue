@@ -15,8 +15,11 @@ import {
   TopNavMegaMenu,
   TopNavMegaMenuFeaturedCard,
   TopNavMegaMenuItem,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
+
+const showToast = useToast()
 
 interface MegaItem {
   name: string
@@ -61,82 +64,85 @@ const CATEGORY_TILES = [
     <template #topNav>
       <TopNav label="Lumen storefront navigation">
         <template #heading>
-          <TopNavHeading heading="Lumen" href="#">
-            <template #icon>
+          <TopNavHeading heading="Lumen" heading-href="#">
+            <template #logo>
               <NavIcon>
-                <Icon icon="i-heroicons-shopping-bag" size="sm" />
+                <Icon name="heroicons:shopping-bag" size="sm" />
               </NavIcon>
             </template>
           </TopNavHeading>
         </template>
-        <TopNavMegaMenu label="Shop">
-          <Stack class="mega-items">
-            <Grid :columns="2" :gap="2">
-              <TopNavMegaMenuItem
-                v-for="item in SHOP_ITEMS"
-                :key="item.name"
-                :title="item.name"
-                :description="item.tagline"
-                :icon-class="item.iconClass"
-                href="#"
-              />
-            </Grid>
-          </Stack>
-          <template #featured>
-            <Stack class="mega-featured">
-              <TopNavMegaMenuFeaturedCard
-                title="The Autumn Edit"
-                description="Layering staples in warm, earthy tones."
-                href="#autumn-edit"
-              >
-                <img
-                  class="mega-featured__image"
-                  src="/template-assets/illustrative-horizontal-1.png"
-                  alt="Autumn collection lookbook"
-                >
-              </TopNavMegaMenuFeaturedCard>
+        <template #center>
+          <TopNavMegaMenu label="Shop">
+            <Stack class="mega-items">
+              <Grid :columns="2" :gap="2">
+                <TopNavMegaMenuItem
+                  v-for="item in SHOP_ITEMS"
+                  :key="item.name"
+                  :title="item.name"
+                  :description="item.tagline"
+                  :icon-class="item.iconClass"
+                  href="#"
+                />
+              </Grid>
             </Stack>
-          </template>
-        </TopNavMegaMenu>
-        <TopNavMegaMenu label="Brands">
-          <Stack class="mega-items">
-            <Grid :columns="2" :gap="2">
-              <TopNavMegaMenuItem
-                v-for="item in BRAND_ITEMS"
-                :key="item.name"
-                :title="item.name"
-                :description="item.tagline"
-                :icon-class="item.iconClass"
-                href="#"
-              />
-            </Grid>
-          </Stack>
-          <template #featured>
-            <Stack class="mega-featured">
-              <TopNavMegaMenuFeaturedCard
-                title="Meet Studio Mara"
-                description="Modern tailoring, made to last."
-                href="#studio-mara"
-              >
-                <img
-                  class="mega-featured__image"
-                  src="/template-assets/light-scene-horizontal-1.png"
-                  alt="Studio Mara lookbook"
+            <template #featured>
+              <Stack class="mega-featured">
+                <TopNavMegaMenuFeaturedCard
+                  title="The Autumn Edit"
+                  description="Layering staples in warm, earthy tones."
+                  href="#autumn-edit"
                 >
-              </TopNavMegaMenuFeaturedCard>
+                  <img
+                    class="mega-featured__image"
+                    src="/template-assets/illustrative-horizontal-1.png"
+                    alt="Autumn collection lookbook"
+                  >
+                </TopNavMegaMenuFeaturedCard>
+              </Stack>
+            </template>
+          </TopNavMegaMenu>
+          <TopNavMegaMenu label="Brands">
+            <Stack class="mega-items">
+              <Grid :columns="2" :gap="2">
+                <TopNavMegaMenuItem
+                  v-for="item in BRAND_ITEMS"
+                  :key="item.name"
+                  :title="item.name"
+                  :description="item.tagline"
+                  :icon-class="item.iconClass"
+                  href="#"
+                />
+              </Grid>
             </Stack>
-          </template>
-        </TopNavMegaMenu>
-        <TopNavItem label="Sale" href="#" />
-        <TopNavItem label="Service" href="#" />
+            <template #featured>
+              <Stack class="mega-featured">
+                <TopNavMegaMenuFeaturedCard
+                  title="Meet Studio Mara"
+                  description="Modern tailoring, made to last."
+                  href="#studio-mara"
+                >
+                  <img
+                    class="mega-featured__image"
+                    src="/template-assets/light-scene-horizontal-1.png"
+                    alt="Studio Mara lookbook"
+                  >
+                </TopNavMegaMenuFeaturedCard>
+              </Stack>
+            </template>
+          </TopNavMegaMenu>
+          <TopNavItem label="Sale" href="#" />
+          <TopNavItem label="Service" href="#" />
+        </template>
         <template #end>
-          <IconButton label="Search products" tooltip="Search" variant="ghost">
-            <Icon icon="i-heroicons-magnifying-glass" size="sm" />
+          <!-- 演示：换成真正执行操作的调用 -->
+          <IconButton label="Search products" tooltip="Search" variant="ghost" @click="showToast({ body: 'Demo: product search would open here', uniqueID: 'search' })">
+            <Icon name="heroicons:magnifying-glass" size="sm" />
           </IconButton>
-          <Button label="Sign in" variant="ghost" />
-          <Button label="Checkout" variant="primary">
+          <Button label="Sign in" variant="ghost" @click="showToast({ body: 'Demo: sign-in would open here', uniqueID: 'sign-in' })" />
+          <Button label="Checkout" variant="primary" @click="showToast({ body: 'Demo: checkout would open here', uniqueID: 'checkout' })">
             <template #icon>
-              <Icon icon="i-heroicons-shopping-cart" size="sm" />
+              <Icon name="heroicons:shopping-cart" size="sm" />
             </template>
             <template #end>
               <Badge label="3" />

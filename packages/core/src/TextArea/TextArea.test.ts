@@ -27,6 +27,11 @@ function renderArea(props: Partial<TextAreaProps> = {}, attrs: Record<string, un
 }
 
 describe('textArea', () => {
+  it('rows 默认 3，高度由行数决定', () => {
+    const wrapper = mount(TextArea, { props: { label: 'Notes' } })
+    expect(wrapper.find('textarea').attributes('rows')).toBe('3')
+  })
+
   it('connects the native textarea to its label, description and status', () => {
     const wrapper = renderArea({ id: 'bio', label: 'Bio', description: 'Short biography', status: { type: 'error', message: 'Too long' } }, { 'aria-describedby': 'external-help' })
     const textarea = wrapper.get('textarea')
@@ -147,12 +152,19 @@ describe('textArea', () => {
     const textarea = wrapper.get('textarea')
     expect(textarea.attributes('rows')).toBe('4')
     expect(textarea.attributes('maxlength')).toBeUndefined()
-    expect(wrapper.get('.astryx-text-area-count').text()).toBe('0 / 200')
+    expect(wrapper.get('.astryx-text-area-count').text()).toBe('0/200')
+    await wrapper.setProps({ maxlength: 2000 })
+    expect(wrapper.get('.astryx-text-area-count').text()).toBe('0/2,000')
     expect(wrapper.get('.astryx-text-area-count').attributes('data-over')).toBeUndefined()
     expect(textarea.attributes('minlength')).toBe('10')
     expect(textarea.attributes('wrap')).toBe('hard')
     expect(textarea.attributes('cols')).toBe('60')
     expect(wrapper.get('.astryx-text-area').classes()).toContain('custom-area')
+  })
+
+  it('takes the original maxLength spelling for the counter', () => {
+    const wrapper = renderArea({ maxLength: 2000, modelValue: 'abc' })
+    expect(wrapper.get('.astryx-text-area-count').text()).toBe('3/2,000')
   })
 
   it('turns spell checking on by default and lets autoComplete and hasSpellCheck through to the textarea', () => {
@@ -185,11 +197,11 @@ describe('textArea', () => {
     const over = renderArea({ maxlength: 10, modelValue: 'This sentence is already too long.' })
     const count = over.get('.astryx-text-area-count')
     expect(count.attributes('data-over')).toBe('true')
-    expect(count.text()).toContain('/ 10')
+    expect(count.text()).toContain('/10')
     expect(over.get('textarea').attributes('aria-invalid')).toBe('true')
 
     const family = renderArea({ maxlength: 2, modelValue: '👍👍' })
-    expect(family.get('.astryx-text-area-count').text()).toBe('2 / 2')
+    expect(family.get('.astryx-text-area-count').text()).toBe('2/2')
     expect(family.get('.astryx-text-area-count').attributes('data-over')).toBeUndefined()
 
     const wrapper = renderArea({ maxlength: 10 })

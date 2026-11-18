@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<LinkProps>(), {
   isExternalLink: false,
   hasUnderline: false,
   color: 'accent',
+  type: 'body',
   isDisabled: false,
   isStandalone: false,
   maxLines: 0,
@@ -90,6 +91,7 @@ const weightClass = computed(() => {
 const classes = computed(() => [
   'astryx-link',
   `astryx-link--color-${props.color}`,
+  props.type !== 'inherit' && `astryx-link--type-${props.type}`,
   props.hasUnderline && 'astryx-link--underlined',
   props.isDisabled && 'astryx-link--disabled',
   props.isExternalLink && 'astryx-link--external',

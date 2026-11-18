@@ -10,8 +10,11 @@ import {
   LayoutContent,
   StackItem,
   Text,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
+
+const showToast = useToast()
 
 const COMPONENT_CATEGORIES = [
   {
@@ -70,21 +73,21 @@ const COMPONENT_CATEGORIES = [
 
 <template>
   <Layout height="fill" :content-width="1200">
-    <LayoutContent :padding="8">
+    <LayoutContent role="main" :padding="8">
       <VStack :gap="10">
         <Card variant="gray" :padding="10">
           <HStack :gap="8" :align="'center'">
             <StackItem size="fill">
               <VStack :gap="4">
-                <Text type="display-1">
+                <Text as="h1" type="display-1">
                   Web overview
                 </Text>
-                <Text type="large" color="secondary">
+                <Text type="large" weight="normal" color="secondary">
                   An open-source UI library to help developers quickly build
                   beautiful, accessible products.
                 </Text>
                 <HStack>
-                  <Button label="Get started" variant="primary" size="lg" />
+                  <Button label="Get started" variant="primary" size="lg" href="#" />
                 </HStack>
               </VStack>
             </StackItem>
@@ -103,7 +106,7 @@ const COMPONENT_CATEGORIES = [
               :label="`Open ${item.name}`"
               variant="transparent"
               :padding="2"
-              @click="() => {}"
+              @click="showToast({ body: `Demo: the ${item.name} docs would open here`, uniqueID: `open-${item.key}` })"
             >
               <VStack :gap="3">
                 <Card variant="muted" :padding="0" :min-height="160" class="preview-card" />

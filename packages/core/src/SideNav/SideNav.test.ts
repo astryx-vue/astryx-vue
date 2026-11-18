@@ -198,4 +198,28 @@ describe('side-nav', () => {
     expect(wrapper.get('a').attributes('aria-label')).toBe('Go home')
     wrapper.unmount()
   })
+
+  it('没有顶部或底部区域时，滚动区在该侧补成 8px', () => {
+    const wrapper = mount(SideNav, { slots: { default: () => h('div', 'body') } })
+    const body = wrapper.find('.astryx-side-nav__body')
+    expect(body.classes()).toContain('astryx-side-nav__body--no-top')
+    expect(body.classes()).toContain('astryx-side-nav__body--no-bottom')
+
+    const withEdges = mount(SideNav, {
+      slots: { default: () => h('div', 'body'), top: () => h('div', 'top'), footer: () => h('div', 'foot') },
+    })
+    const edgeBody = withEdges.find('.astryx-side-nav__body')
+    expect(edgeBody.classes()).not.toContain('astryx-side-nav__body--no-top')
+    expect(edgeBody.classes()).not.toContain('astryx-side-nav__body--no-bottom')
+  })
+
+  it('可折叠项的无障碍标签用 hidden，不进入渲染文字', () => {
+    const wrapper = mount(SideNavItem, {
+      props: { label: 'Workspace' },
+      slots: { default: () => h('div', 'child') },
+    })
+    const label = wrapper.find('.astryx-side-nav-item__children-inner > span')
+    expect(label.attributes('hidden')).toBeDefined()
+    expect(label.classes()).not.toContain('astryx-visually-hidden')
+  })
 })

@@ -162,7 +162,7 @@ const { active } = useScrollbars(el, { enabled: () => props.fancy })
 }
 ```
 
-变量可以写在任何祖先元素上，所以只想改某一块，就写在那一块的选择器里。也可以放进 [`Theme`](/components/theme) 的主题变量里，跟着主题一起切。更多变量的约定见 [CSS 变量](/themes/css-variables)。
+变量可以写在任何祖先元素上，所以只想改某一块，就写在那一块的选择器里。也可以放进 [`Theme`](/components/theme) 的主题变量里，跟着主题一起切。更多变量的约定见 [CSS 变量](/guide/css-variables)。
 
 ### 用 options 改行为
 

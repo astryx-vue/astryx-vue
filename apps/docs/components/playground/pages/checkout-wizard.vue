@@ -271,7 +271,7 @@ function isFreeDelivery(optionValue: string) {
 
 <template>
   <Layout height="fill" :padding="6" :content-width="1000">
-    <LayoutContent>
+    <LayoutContent role="main">
       <VStack ref="hostRef" :gap="6">
         <HStack :gap="3" align="center">
           <StackItem size="fill">

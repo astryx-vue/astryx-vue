@@ -359,7 +359,7 @@ const ServiceBreakdown = defineComponent({
     <template #header>
       <LayoutHeader :padding="6" has-divider>
         <HStack :gap="3" align="center" justify="between" wrap="wrap">
-          <VStack :gap="0" align="center">
+          <VStack :gap="0" vAlign="center">
             <Heading :level="1">
               Service Health Monitor
             </Heading>
@@ -371,7 +371,7 @@ const ServiceBreakdown = defineComponent({
               </Text>
             </HStack>
           </VStack>
-          <HStack :gap="2" align="center">
+          <HStack :gap="2" align="center" wrap="wrap">
             <SegmentedControl v-model="timeWindow" label="Time window" size="lg">
               <SegmentedControlItem label="1h" value="1h" />
               <SegmentedControlItem label="1d" value="1d" />
@@ -384,7 +384,7 @@ const ServiceBreakdown = defineComponent({
       </LayoutHeader>
     </template>
     <template #default>
-      <LayoutContent :padding="6">
+      <LayoutContent role="main" :padding="6">
         <VStack :gap="10">
           <VStack :gap="6">
             <Grid :columns="{ minWidth: 240, repeat: 'fit' }" :gap="3">
@@ -464,9 +464,9 @@ const ServiceBreakdown = defineComponent({
                       vector-effect="non-scaling-stroke"
                     />
                   </svg>
-                  <HStack :gap="5" align="center" wrap="wrap">
+                  <HStack :gap="6" align="center" wrap="wrap">
                     <HStack v-for="series in latencySeries" :key="series.key" :gap="2" align="center">
-                      <span class="legend-dot" :style="{ background: series.color }" />
+                      <Icon name="stop" size="xsm" color="inherit" :style="{ color: series.color }" />
                       <Text type="supporting" color="secondary">
                         {{ series.label }}
                       </Text>
@@ -526,9 +526,9 @@ const ServiceBreakdown = defineComponent({
                       vector-effect="non-scaling-stroke"
                     />
                   </svg>
-                  <HStack :gap="5" align="center" wrap="wrap">
+                  <HStack :gap="6" align="center" wrap="wrap">
                     <HStack v-for="series in volumeSeries" :key="series.key" :gap="2" align="center">
-                      <span class="legend-dot" :style="{ background: series.color }" />
+                      <Icon name="stop" size="xsm" color="inherit" :style="{ color: series.color }" />
                       <Text type="supporting" color="secondary">
                         {{ series.label }}
                       </Text>
@@ -551,7 +551,7 @@ const ServiceBreakdown = defineComponent({
               </VStack>
               <HStack :gap="4" align="center" wrap="wrap">
                 <HStack v-for="state in UPTIME_ORDER" :key="state" :gap="2" align="center">
-                  <span class="legend-dot" :style="{ background: UPTIME_COLOR[state] }" />
+                  <Icon name="stop" size="xsm" color="inherit" :style="{ color: UPTIME_COLOR[state] }" />
                   <Text type="supporting" color="secondary">
                     {{ UPTIME_LABEL[state] }}
                   </Text>
@@ -571,7 +571,7 @@ const ServiceBreakdown = defineComponent({
                     <HStack :gap="3" align="center" h-align="between">
                       <HStack :gap="2" align="center">
                         <StatusDot :variant="STATUS_DOT[entry.status]" :label="STATUS_LABEL[entry.status]" :is-pulsing="entry.status === 'critical'" />
-                        <Heading :level="4">
+                        <Heading :level="4" :accessibility-level="3">
                           {{ entry.service }}
                         </Heading>
                       </HStack>
@@ -635,7 +635,6 @@ const ServiceBreakdown = defineComponent({
   min-width: 3px;
   height: 30px;
 }
-.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 .sticky-header {
   position: sticky;
   inset-block-start: 0;

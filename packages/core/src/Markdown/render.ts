@@ -205,7 +205,7 @@ function renderInline(node: MdNode, key: string, ctx: RenderContext): VNodeChild
       const id = node.identifier ?? label
       const labelNode = renderText(label, `${key}-label`, ctx)
       return h('sup', { key, class: 'astryx-markdown__fn' }, [
-        h(Link, { href: `#astryx-fn-${id}` }, () => labelNode),
+        h(Link, { href: `#astryx-fn-${id}`, type: 'inherit' }, () => labelNode),
       ])
     }
     case 'extension':

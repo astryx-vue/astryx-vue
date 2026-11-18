@@ -38,9 +38,9 @@ const IMAGES = [
 
 <template>
   <Layout height="fill" :content-width="1400">
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
       <Grid :columns="{ minWidth: 360, repeat: 'fit' }" :gap="8" align="center">
-        <VStack :gap="6" hAlign="center">
+        <VStack :gap="6" vAlign="center">
           <VStack :gap="3">
             <Text type="supporting" color="secondary" weight="semibold">
               COLORFUL
@@ -52,8 +52,8 @@ const IMAGES = [
               The smallest details are the ones that matter most. A little color that catches your eye and makes you pause; that's what turns an ordinary day into something worth remembering.
             </Text>
           </VStack>
-          <HStack :gap="3" align="center">
-            <Button label="Explore" variant="primary" />
+          <HStack :gap="3" vAlign="center">
+            <Button label="Explore" variant="primary" href="#" />
           </HStack>
           <VStack :gap="4">
             <Divider />

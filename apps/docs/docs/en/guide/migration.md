@@ -60,7 +60,7 @@ More detail in [Installation](/en/guide/installation).
 - The page sets `html { font-size: ... }`: spacing and padding now scale with it. That is the point of the change.
 - Your own theme writes spacing in px: those steps stay fixed. Write them in rem if you want them to follow the root size.
 
-More detail in [Space, radius, shadow](/en/themes/scale).
+More detail in [Space, radius, shadow](/en/guide/scale).
 
 ### Theme target names were renamed
 
@@ -106,7 +106,7 @@ defineTheme({
 | `statusdot` | `status-dot` |
 | `textarea` | `text-area` |
 
-The old names are still well-formed, so they do not throw, but no component uses them any more, so they have no effect. Full detail in [Extend a theme](/en/themes/extending).
+The old names are still well-formed, so they do not throw, but no component uses them any more, so they have no effect. Full detail in [Extend a theme](/en/guide/extending-themes).
 
 ### Components no longer emit bare `primary` or `sm` classes
 

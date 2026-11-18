@@ -28,4 +28,4 @@ import '@astryx-vue/themes/butter.css'
 
 ## 视觉预览
 
-<ThemeStage theme="butter" />
+可以在[主题画廊](/themes/?theme=butter)里看实际效果。

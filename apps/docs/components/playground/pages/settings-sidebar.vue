@@ -24,6 +24,7 @@ import {
   TextInput,
   Toolbar,
   useMediaQuery,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { reactive, ref } from 'vue'
@@ -146,6 +147,13 @@ const HELP_CARDS = [
 
 // ── 状态 ──────────────────────────────────────────────────────────────────────
 
+const showToast = useToast()
+
+function openHostingTools() {
+  // 仅演示：真实页面在这里打开专业房东工具
+  showToast({ body: 'Demo: professional hosting tools would open here', uniqueID: 'hosting-tools' })
+}
+
 const isNarrow = useMediaQuery('(max-width: 768px)')
 
 const mobileView = ref<'nav' | 'detail'>('nav')
@@ -196,9 +204,9 @@ function personalValue(key: string) {
     height="fill"
     :style="fillViewport"
   >
-    <LayoutContent :padding="2">
+    <LayoutContent role="main" :padding="2">
       <VStack :gap="4" :style="sideNavPadding">
-        <Heading :level="2" :style="sideNavHeading">
+        <Heading :level="2" :accessibility-level="1" :style="sideNavHeading">
           Account settings
         </Heading>
         <List density="spacious">
@@ -218,7 +226,7 @@ function personalValue(key: string) {
         </List>
         <Divider />
         <List density="spacious">
-          <ListItem label="Professional hosting tools">
+          <ListItem label="Professional hosting tools" @click="openHostingTools">
             <template #startContent>
               <Icon size="md" name="heroicons:wrench-screwdriver" />
             </template>
@@ -237,7 +245,7 @@ function personalValue(key: string) {
     <template v-if="!isNarrow" #start>
       <LayoutPanel :has-divider="true" :padding="0">
         <VStack :gap="4" :style="sideNavPadding">
-          <Heading :level="2" :style="sideNavHeading">
+          <Heading :level="2" :accessibility-level="1" :style="sideNavHeading">
             Account settings
           </Heading>
           <List density="spacious">
@@ -255,7 +263,7 @@ function personalValue(key: string) {
           </List>
           <Divider />
           <List density="spacious">
-            <ListItem label="Professional hosting tools">
+            <ListItem label="Professional hosting tools" @click="openHostingTools">
               <template #startContent>
                 <Icon size="md" name="heroicons:wrench-screwdriver" />
               </template>
@@ -265,7 +273,7 @@ function personalValue(key: string) {
       </LayoutPanel>
     </template>
 
-    <LayoutContent :padding="4">
+    <LayoutContent role="main" :padding="4">
       <VStack :gap="0">
         <Toolbar
           v-if="isNarrow"
@@ -284,7 +292,8 @@ function personalValue(key: string) {
                 <Icon name="heroicons:arrow-left" size="sm" />
               </template>
             </Button>
-            <Heading :level="2">
+            <!-- 手机详情视图的标题就是一级标题：带页面标题的导航此时不显示 -->
+            <Heading :level="2" :accessibility-level="1">
               {{ SECTION_TITLES[activeNav] ?? activeNav }}
             </Heading>
           </template>
@@ -301,7 +310,7 @@ function personalValue(key: string) {
 
           <VStack v-if="activeTab === 'login'" :gap="8">
             <VStack :gap="0">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Login
               </Heading>
               <Divider />
@@ -324,7 +333,7 @@ function personalValue(key: string) {
             </VStack>
 
             <VStack :gap="0">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Social accounts
               </Heading>
               <Divider />
@@ -347,7 +356,7 @@ function personalValue(key: string) {
             </VStack>
 
             <VStack :gap="0">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Device history
               </Heading>
               <Divider />
@@ -380,7 +389,7 @@ function personalValue(key: string) {
             </VStack>
 
             <VStack :gap="0">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Account
               </Heading>
               <Divider />
@@ -403,7 +412,7 @@ function personalValue(key: string) {
 
           <VStack v-else :gap="8">
             <VStack :gap="2">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Shared access
               </Heading>
               <Divider />
@@ -566,7 +575,7 @@ function personalValue(key: string) {
           </Heading>
           <VStack :gap="8">
             <VStack :gap="0">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Messages
               </Heading>
               <VStack :style="rowPadding">
@@ -589,7 +598,7 @@ function personalValue(key: string) {
             </VStack>
 
             <VStack :gap="0">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Listings
               </Heading>
               <VStack :style="rowPadding">
@@ -605,12 +614,12 @@ function personalValue(key: string) {
             </VStack>
 
             <VStack :gap="4">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Reviews
               </Heading>
               <Text type="supporting" color="secondary">
                 Choose what's shared when you write a review.
-                <Link href="#" size="sm">
+                <Link href="#" type="supporting">
                   Learn more
                 </Link>
               </Text>
@@ -648,7 +657,7 @@ function personalValue(key: string) {
             </VStack>
 
             <VStack :gap="4">
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="isNarrow ? 2 : 3">
                 Data privacy
               </Heading>
               <Card>
@@ -689,7 +698,7 @@ function personalValue(key: string) {
                     </Text>
                     <Text type="supporting" color="secondary">
                       We're committed to keeping your data protected. See details in our
-                      <Link href="#" size="sm">
+                      <Link href="#" type="supporting">
                         Privacy Policy
                       </Link>.
                     </Text>

@@ -65,7 +65,27 @@ export function pairItems(upstreamItems, ourItems) {
     missing.push(...left.slice(shared))
     extra.push(...right.slice(shared))
   }
+  pairIconsByPosition(pairs, missing, extra)
   return { pairs, missing, extra }
+}
+
+/** 图标按名字配不上时（两边无障碍名字写法不同），位置几乎重合的就算同一个图标。 */
+const ICON_PAIR_DISTANCE = 12
+
+function pairIconsByPosition(pairs, missing, extra) {
+  for (let i = missing.length - 1; i >= 0; i--) {
+    const upstream = missing[i]
+    if (upstream.kind !== 'icon')
+      continue
+    const index = extra.findIndex(ours => ours.kind === 'icon'
+      && Math.abs((ours.box?.x ?? 0) - (upstream.box?.x ?? 0)) <= ICON_PAIR_DISTANCE
+      && Math.abs((ours.box?.y ?? 0) - (upstream.box?.y ?? 0)) <= ICON_PAIR_DISTANCE)
+    if (index < 0)
+      continue
+    pairs.push({ key: pairKey(upstream), index: 0, upstream, ours: extra[index] })
+    missing.splice(i, 1)
+    extra.splice(index, 1)
+  }
 }
 
 function groupByKey(items) {

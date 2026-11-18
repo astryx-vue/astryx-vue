@@ -40,7 +40,7 @@ const IMAGES: GalleryImage[] = [
 
 <template>
   <Layout height="fill" :content-width="1400">
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
       <VStack :gap="6" :style="containerStyle">
         <VStack :gap="2" h-align="center">
           <Heading :level="1" justify="center">

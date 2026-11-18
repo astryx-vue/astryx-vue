@@ -29,4 +29,4 @@ import '@astryx-vue/themes/y2k.css'
 
 ## 视觉预览
 
-<ThemeStage theme="y2k" />
+可以在[主题画廊](/themes/?theme=y2k)里看实际效果。

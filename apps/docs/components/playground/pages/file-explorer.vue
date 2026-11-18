@@ -15,6 +15,7 @@ import {
   SegmentedControlItem,
   Text,
   Toolbar,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import { computed, ref } from 'vue'
@@ -330,10 +331,10 @@ function goBack(): void {
             :is-disabled="selectedPath.length === 0"
             @click="goBack"
           >
-            <Icon icon="i-heroicons-chevron-left" size="sm" />
+            <Icon name="heroicons:chevron-left" size="sm" />
           </IconButton>
           <IconButton variant="ghost" size="sm" label="Go forward" is-disabled>
-            <Icon icon="i-heroicons-chevron-right" size="sm" />
+            <Icon name="heroicons:chevron-right" size="sm" />
           </IconButton>
           <Text type="label">
             {{ currentFolderName }}
@@ -343,47 +344,48 @@ function goBack(): void {
           <SegmentedControl v-model="viewMode" label="View mode">
             <SegmentedControlItem value="grid" label="Grid" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-squares-2x2" size="sm" />
+                <Icon name="heroicons:squares-2x2" size="sm" />
               </template>
             </SegmentedControlItem>
             <SegmentedControlItem value="list" label="List" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-bars-4" size="sm" />
+                <Icon name="heroicons:bars-4" size="sm" />
               </template>
             </SegmentedControlItem>
             <SegmentedControlItem value="column" label="Column" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-view-columns" size="sm" />
+                <Icon name="heroicons:view-columns" size="sm" />
               </template>
             </SegmentedControlItem>
             <SegmentedControlItem value="gallery" label="Gallery" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-table-cells" size="sm" />
+                <Icon name="heroicons:table-cells" size="sm" />
               </template>
             </SegmentedControlItem>
           </SegmentedControl>
         </template>
         <template #end>
           <IconButton variant="ghost" size="sm" label="Group">
-            <Icon icon="i-heroicons-adjustments-horizontal" size="sm" />
+            <Icon name="heroicons:adjustments-horizontal" size="sm" />
           </IconButton>
           <IconButton variant="ghost" size="sm" label="Share">
-            <Icon icon="i-heroicons-share" size="sm" />
+            <Icon name="heroicons:share" size="sm" />
           </IconButton>
           <IconButton variant="ghost" size="sm" label="Tags">
-            <Icon icon="i-heroicons-tag" size="sm" />
+            <Icon name="heroicons:tag" size="sm" />
           </IconButton>
           <IconButton variant="ghost" size="sm" label="More">
-            <Icon icon="i-heroicons-ellipsis-horizontal" size="sm" />
+            <Icon name="heroicons:ellipsis-horizontal" size="sm" />
           </IconButton>
           <IconButton variant="ghost" size="sm" label="Search">
-            <Icon icon="i-heroicons-magnifying-glass" size="sm" />
+            <Icon name="heroicons:magnifying-glass" size="sm" />
           </IconButton>
         </template>
       </Toolbar>
     </template>
 
-    <LayoutContent :padding="0" :is-scrollable="false">
+    <LayoutContent role="main" :padding="0" :is-scrollable="false">
+      <VisuallyHidden as="h1">Files</VisuallyHidden>
       <HStack class="column-row" height="100%">
         <Section
           v-for="(col, colIndex) in columns"
@@ -404,7 +406,7 @@ function goBack(): void {
             >
               <template #startContent>
                 <Icon
-                  :icon="item.type === 'folder' ? 'i-heroicons-folder-solid' : 'i-heroicons-document'"
+                  :name="item.type === 'folder' ? 'heroicons:folder-solid' : 'heroicons:document'"
                   :color="item.type === 'folder' ? 'accent' : 'secondary'"
                   size="sm"
                 />
@@ -413,7 +415,7 @@ function goBack(): void {
                 v-if="item.type === 'folder' && item.children != null && item.children.length > 0"
                 #endContent
               >
-                <Icon icon="i-heroicons-chevron-right" size="xsm" color="secondary" />
+                <Icon name="heroicons:chevron-right" size="xsm" color="secondary" />
               </template>
             </ListItem>
           </List>

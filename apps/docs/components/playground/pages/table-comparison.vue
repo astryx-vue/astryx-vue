@@ -442,7 +442,7 @@ const columns = computed<TableColumn<SpecRow>[]>(() => [
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="4">
+    <LayoutContent role="main" :padding="4">
       <VStack :gap="4">
         <Card :padding="5" class="table-frame">
           <Table

@@ -95,6 +95,8 @@ export type TableFilterVariant = 'inline' | 'inline-compact' | 'popover'
 export interface TableFilterContribution {
   variant: TableFilterVariant
   field: TableFilterField
+  /** 所在列的标题文字；用来拼「筛选 xxx」这类无障碍名称，缺省时用字段名。 */
+  header?: string
   value: TableFilterValue | null
   onChange: (value: TableFilterValue | null) => void
 }

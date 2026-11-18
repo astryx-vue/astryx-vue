@@ -11,7 +11,12 @@ export function previewLayoutMode(
   stageHeight: number,
   contentWidth: number,
   contentHeight: number,
+  bleeds?: boolean,
 ): PreviewLayoutMode {
+  // 原版预览宿主始终居中并留 16px 内边距，只有能借出容器内边距的根（Layout 一类）铺满。
+  // 已知不借出的根（比如 Section）不看尺寸，一律居中。
+  if (bleeds === false)
+    return 'center'
   const fillsWidth = contentWidth >= stageWidth - 2
   const fillsHeight = contentHeight >= stageHeight - 2
   return fillsWidth || fillsHeight ? 'fill' : 'center'

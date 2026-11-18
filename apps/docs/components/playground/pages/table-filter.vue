@@ -49,6 +49,7 @@ import {
   useTableSortable,
   useTableSortableState,
   useTableStickyColumns,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import type { PowerSearchFilter, TableColumn, TablePlugin } from '@astryx-vue/core'
@@ -1348,20 +1349,18 @@ function labelOf(options: { value: string, label: string }[], value: string): st
 
 // ============= 批量操作 =============
 
-const BULK_EDIT_ACTIONS: { key: string, label: string, icon: string }[] = [
-  { key: 'assign', label: 'Assign', icon: 'heroicons:user-plus' },
-  { key: 'reschedule', label: 'Reschedule', icon: 'heroicons:calendar-days' },
-  { key: 'cancel', label: 'Cancel', icon: 'heroicons:no-symbol' },
+const BULK_EDIT_ACTIONS: { key: string, label: string, icon: string, demoBody: (jobIds: string) => string }[] = [
+  { key: 'assign', label: 'Assign', icon: 'heroicons:user-plus', demoBody: ids => `Demo: a technician would be assigned to ${ids} here` },
+  { key: 'reschedule', label: 'Reschedule', icon: 'heroicons:calendar-days', demoBody: ids => `Demo: ${ids} would be rescheduled here` },
+  { key: 'cancel', label: 'Cancel', icon: 'heroicons:no-symbol', demoBody: ids => `Demo: ${ids} would be canceled here` },
 ]
 
-function runBulkAction(key: string): void {
+// 演示用：按钮点了只弹提示，换成真正执行动作的调用即可。
+const showToast = useToast()
+
+function runBulkAction(action: (typeof BULK_EDIT_ACTIONS)[number]): void {
   const ids = selectedJobs.value.map(job => job.id).join(', ')
-  if (key === 'assign')
-    alert(`Assign technician: ${ids}`)
-  else if (key === 'reschedule')
-    alert(`Reschedule: ${ids}`)
-  else
-    alert(`Cancel: ${ids}`)
+  showToast({ body: action.demoBody(ids), uniqueID: `bulk-${action.key}` })
 }
 
 // ============= 骨架行 =============
@@ -1463,8 +1462,8 @@ function SearchIcon() {
               </HStack>
 
               <HStack :gap="2">
-                <Button :label="NEXT_ACTION[activeJob.status]" size="sm" width="100%" />
-                <Button label="Edit job" variant="secondary" size="sm" width="100%" />
+                <Button :label="NEXT_ACTION[activeJob.status]" size="sm" width="100%" @click="showToast({ body: `Demo: “${NEXT_ACTION[activeJob.status]}” would start for ${activeJob.id} here`, uniqueID: `next-${activeJob.id}` })" />
+                <Button label="Edit job" variant="secondary" size="sm" width="100%" @click="showToast({ body: `Demo: editing ${activeJob.id} would open here`, uniqueID: `edit-${activeJob.id}` })" />
               </HStack>
             </VStack>
           </Section>
@@ -1565,7 +1564,7 @@ function SearchIcon() {
                     Service jobs
                   </Heading>
                 </StackItem>
-                <Button label="New job" variant="primary" />
+                <Button label="New job" variant="primary" @click="showToast({ body: 'Demo: a new job form would open here', uniqueID: 'new-job' })" />
               </HStack>
 
               <Section v-if="selectedCount > 0" variant="muted" :padding-inline="3" :padding-block="1.5" class="tf-bulk">
@@ -1578,7 +1577,7 @@ function SearchIcon() {
                         :label="action.label"
                         variant="ghost"
                         size="sm"
-                        @click="runBulkAction(action.key)"
+                        @click="runBulkAction(action)"
                       >
                         <template #icon>
                           <Icon :name="action.icon" size="sm" />
@@ -1831,8 +1830,9 @@ function SearchIcon() {
                           <Text type="supporting" color="secondary">
                             •
                           </Text>
+                          <!-- 不带 href，Link 渲染成 <button>：清空筛选，不跳转。 -->
                           <Text type="supporting">
-                            <Link color="primary" @click="clearAll">
+                            <Link @click="clearAll">
                               Clear all
                             </Link>
                           </Text>
@@ -2108,7 +2108,7 @@ function SearchIcon() {
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="4" label="Service jobs">
+    <LayoutContent role="main" :padding="4" label="Service jobs">
       <EmptyState
         v-if="results.length === 0"
         title="No jobs match these filters"

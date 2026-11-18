@@ -45,6 +45,20 @@ export async function collectPlaygroundFrame() {
   function hidden(el) {
     const style = getComputedStyle(el)
     return style.display === 'none' || style.visibility === 'hidden' || Number.parseFloat(style.opacity) === 0
+      || screenReaderOnly(el)
+  }
+
+  /**
+   * 只给读屏用的节点（1px 裁剪框）看不见，两边的实现放的位置也不同，不参与视觉比对。
+   * 往上看三层：常见写法是外层裁剪、里面放文字。
+   */
+  function screenReaderOnly(el) {
+    for (let node = el, depth = 0; node && depth < 3; node = node.parentElement, depth++) {
+      const rect = node.getBoundingClientRect()
+      if (rect.width <= 1 && rect.height <= 1 && getComputedStyle(node).overflow === 'hidden')
+        return true
+    }
+    return false
   }
 
   /** 直系文本节点的外包矩形（视口坐标），量不到时返回 null。 */
@@ -168,6 +182,21 @@ export async function collectPlaygroundFrame() {
       if (offStage(box))
         continue
       if (record(svg, { kind: 'icon', text: iconLabel(svg), box, style: {} }))
+        added += 1
+    }
+    // 我们的语义图标（折叠箭头、更多菜单、复制等）是 CSS 遮罩画的空元素，原版是 `<svg>`。
+    // 两边画出来一样，按图标一起收，不然每个都会报成「缺失」。
+    for (const el of document.body.querySelectorAll('span, i')) {
+      if (el.childElementCount > 0 || hidden(el))
+        continue
+      const style = getComputedStyle(el)
+      const mask = style.maskImage || style.webkitMaskImage
+      if (!mask || mask === 'none' || !isIcon(el))
+        continue
+      const box = absolute(el, el.getBoundingClientRect())
+      if (offStage(box))
+        continue
+      if (record(el, { kind: 'icon', text: iconLabel(el), box, style: {} }))
         added += 1
     }
     return added

@@ -268,7 +268,7 @@ const toggleLabel = computed(() =>
       :inert="nestedCollapsed || undefined"
     >
       <div class="astryx-side-nav-item__children-inner">
-        <span :id="labelId" class="astryx-visually-hidden">{{ label }}</span>
+        <span :id="labelId" hidden>{{ label }}</span>
         <slot />
       </div>
     </div>

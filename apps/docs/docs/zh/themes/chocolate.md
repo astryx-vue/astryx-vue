@@ -28,4 +28,4 @@ import '@astryx-vue/themes/chocolate.css'
 
 ## 视觉预览
 
-<ThemeStage theme="chocolate" />
+可以在[主题画廊](/themes/?theme=chocolate)里看实际效果。

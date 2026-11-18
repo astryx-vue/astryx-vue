@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { VNode } from 'vue'
 import type { StepProgress, StepProps, StepSlots } from './types.js'
-import { computed, onUnmounted, watch } from 'vue'
+import { Comment, computed, Fragment, onUnmounted, Text, watch } from 'vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -8,6 +9,7 @@ import { useStepperContext } from './context.js'
 import { connectorFillTiming, resolveStepGlyph, STEP_FILL_ARRIVAL_SHARE_H, STEP_FILL_ARRIVAL_SHARE_V } from './logic.js'
 import StepMarker from './StepMarker.vue'
 import '../../styles/stepper.css'
+import '../../styles/stepper-track.css'
 
 defineOptions({ name: 'AstryxStep' })
 
@@ -18,6 +20,19 @@ const props = withDefaults(defineProps<StepProps>(), {
 })
 
 defineSlots<StepSlots>()
+
+/** 插槽里只有注释（比如 v-if 为假）或空白时不算有内容，不渲染内容区。 */
+function hasContent(nodes: VNode[] | undefined): boolean {
+  return nodes?.some((node) => {
+    if (node.type === Comment)
+      return false
+    if (node.type === Fragment)
+      return hasContent(node.children as VNode[])
+    if (node.type === Text)
+      return typeof node.children === 'string' && node.children.trim() !== ''
+    return true
+  }) ?? false
+}
 
 const stepper = useStepperContext()
 const messages = useAstryxMessages()
@@ -35,7 +50,9 @@ const progress = computed<StepProgress>(() => {
 const density = computed(() => props.density ?? stepper.density.value)
 const orientation = computed(() => stepper.orientation.value)
 const indicatorPosition = computed(() => stepper.indicatorPosition.value)
-const isClickable = computed(() => stepper.isNonLinear.value === true && !props.isDisabled)
+// 和原版一致：只要传了 step-click，禁用步骤也保留按钮（aria-disabled），只是不触发。
+const hasControl = computed(() => stepper.isNonLinear.value === true)
+const isClickable = computed(() => hasControl.value && !props.isDisabled)
 const numberLabel = computed(() => String(props.step + 1))
 const glyph = computed(() => resolveStepGlyph({
   progress: progress.value,
@@ -43,6 +60,10 @@ const glyph = computed(() => resolveStepGlyph({
   status: props.status,
 }))
 const collapsed = computed(() => stepper.collapsed.value === true)
+// 横向 + 轨道模式：轨道（连接线 + 指示点）画在控件里面，和标签同属一个点击目标。
+const isTrack = computed(() => (
+  orientation.value === 'horizontal' && indicatorPosition.value === 'on-track' && !collapsed.value
+))
 const leadFilled = computed(() => props.step <= stepper.activeStep.value)
 const trailFilled = computed(() => props.step < stepper.activeStep.value)
 const arrivalShare = computed(() => (
@@ -144,34 +165,48 @@ onUnmounted(() => stepper.unregister(props.step))
       :data-filled="leadFilled || undefined"
       :style="fillVars(barTiming)"
     />
-    <span v-else class="astryx-step-rail">
+    <span v-else-if="orientation === 'vertical'" class="astryx-step-rail">
       <span class="astryx-step-connector astryx-step-connector-lead" :data-filled="leadFilled || undefined" :style="fillVars(leadTiming)" />
       <span class="astryx-step-connector astryx-step-connector-trail" :data-filled="trailFilled || undefined" :style="fillVars(trailTiming)" />
     </span>
     <div class="astryx-step-body">
       <component
-        :is="isClickable ? 'button' : 'div'"
-        v-bind="isClickable ? pressableProps : undefined"
+        :is="hasControl ? 'button' : 'div'"
+        v-bind="hasControl ? pressableProps : undefined"
         class="astryx-step-control"
-        :aria-label="isClickable ? accessibleName : undefined"
-        :type="isClickable ? 'button' : undefined"
+        :aria-label="hasControl ? accessibleName : undefined"
+        :aria-disabled="hasControl && isDisabled ? 'true' : undefined"
+        :type="hasControl ? 'button' : undefined"
         @click="activate"
       >
-        <span v-if="$slots.icon" class="astryx-step-indicator" :data-glyph="glyph" aria-hidden="true">
-          <slot name="icon" />
+        <span v-if="isTrack" class="astryx-step-track">
+          <span class="astryx-step-connector astryx-step-connector-lead" :data-filled="leadFilled || undefined" :style="fillVars(leadTiming)" />
+          <StepMarker :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled">
+            <template v-if="$slots.icon" #icon>
+              <slot name="icon" />
+            </template>
+          </StepMarker>
+          <span class="astryx-step-connector astryx-step-connector-trail" :data-filled="trailFilled || undefined" :style="fillVars(trailTiming)" />
         </span>
-        <StepMarker v-else :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled" />
-        <span class="astryx-step-copy">
+        <span class="astryx-step-row">
+          <StepMarker v-if="!isTrack" :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled">
+            <template v-if="$slots.icon" #icon>
+              <slot name="icon" />
+            </template>
+          </StepMarker>
           <span class="astryx-step-label-row">
             <span class="astryx-step-label" :data-disabled="isDisabled || undefined" :data-progress="progress" :data-status="status">{{ label }}</span>
             <VisuallyHidden v-if="hiddenStatus">{{ hiddenStatus }}</VisuallyHidden>
-            <span v-if="isOptional" class="astryx-step-optional">• {{ messages.stepper.optional }}</span>
+            <template v-if="isOptional">
+              <span class="astryx-step-optional">•</span>
+              <span class="astryx-step-optional">{{ messages.stepper.optional }}</span>
+            </template>
             <slot name="end" />
           </span>
-          <span v-if="description" class="astryx-step-description" :data-progress="progress" :data-status="status">{{ description }}</span>
         </span>
+        <span v-if="description" class="astryx-step-description" :data-progress="progress" :data-status="status">{{ description }}</span>
       </component>
-      <div v-if="$slots.default" class="astryx-step-content">
+      <div v-if="hasContent($slots.default?.())" class="astryx-step-content">
         <slot />
       </div>
     </div>

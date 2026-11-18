@@ -73,6 +73,11 @@ const showResizeHandle = computed(() => resize.enabled.value && !isCollapsed.val
 const showButton = computed(() => isCollapsible.value && (config.value.hasButton ?? true))
 const hasTop = computed(() => slots.header != null || slots.top != null || showButton.value)
 const hasBottom = computed(() => slots.footer != null || slots.footerIcons != null)
+// 同上游：没有顶部/底部区域时，滚动区在该侧补到 8px，否则 4px。
+const bodyEdgeClass = computed(() => ({
+  'astryx-side-nav__body--no-top': !hasTop.value,
+  'astryx-side-nav__body--no-bottom': !hasBottom.value,
+}))
 const label = computed(() => props.label || messages.value.nav.sideNav)
 const renderMode = useSideNavRenderMode()
 
@@ -169,7 +174,7 @@ provide(sideNavCollapseKey, {
           <slot name="top" />
         </div>
       </div>
-      <div ref="body" class="astryx-side-nav__body">
+      <div ref="body" class="astryx-side-nav__body" :class="bodyEdgeClass">
         <slot />
       </div>
       <div v-if="hasBottom" class="astryx-side-nav__bottom">

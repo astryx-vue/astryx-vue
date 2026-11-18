@@ -8,8 +8,7 @@ import ComponentsOverview from './components/demo-infra/ComponentsOverview.vue'
 import DemoExample from './components/demo-infra/DemoExample.vue'
 import TemplateIndex from './components/demo-infra/TemplateIndex.vue'
 import TokenReference from './components/theme-tokens/TokenReference.vue'
-import ThemeGallery from './components/themes/ThemeGallery.vue'
-import ThemeStage from './components/themes/ThemeStage.vue'
+import ThemesPage from './components/themes/ThemesPage.vue'
 import ComponentDocsLayout from './site/theme/ComponentDocsPage.vue'
 import 'virtual:uno.css'
 import './styles/global.css'
@@ -34,8 +33,7 @@ export default defineRuntimePlugin({
       app.component('TemplateIndex', TemplateIndex)
       app.component('ComponentsOverview', ComponentsOverview)
       app.component('TokenReference', TokenReference)
-      app.component('ThemeGallery', ThemeGallery)
-      app.component('ThemeStage', ThemeStage)
+      app.component('ThemesPage', ThemesPage)
       app.component('PlaygroundApp', defineAsyncComponent(() => import('./components/playground/PlaygroundApp.vue')))
       app.component('PlaygroundFrame', defineAsyncComponent(() => import('./components/playground/PlaygroundFrame.vue')))
     })

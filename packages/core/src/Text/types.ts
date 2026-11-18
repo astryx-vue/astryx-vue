@@ -1,4 +1,4 @@
-export type TextType = 'body' | 'large' | 'label' | 'supporting' | 'code' | 'display-1' | 'display-2' | 'display-3'
+export type TextType = 'body' | 'large' | 'label' | 'supporting' | 'code' | 'display-1' | 'display-2' | 'display-3' | 'inherit'
 export type TextSize = 'sm' | 'md' | 'lg' | 'xl'
 export type TextColor = 'primary' | 'secondary' | 'accent' | 'disabled' | 'placeholder' | 'inherit'
 export type TextWeight = 'regular' | 'normal' | 'medium' | 'semibold' | 'bold'
@@ -12,6 +12,7 @@ export type TextTruncateTooltip = boolean | 'above' | 'below' | 'start' | 'end'
 export interface TextProps {
   /**
    * Semantic text type. Determines size, weight, and line-height.
+   * `inherit` 字号、行高、字重和颜色都跟随父元素，适合嵌在别的文字里。
    * @default 'body'
    */
   type?: TextType

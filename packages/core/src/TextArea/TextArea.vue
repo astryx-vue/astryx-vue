@@ -14,7 +14,7 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextAreaAction } from './useTextAreaAction.js'
 import '../../styles/text-area.css'
@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   size: 'md',
   statusVariant: 'detached',
   resize: 'vertical',
+  rows: 3,
   loadingLabel: 'Loading',
   hasSpellCheck: true,
 })
@@ -36,9 +37,10 @@ const COUNTER_WARNING_THRESHOLD = 0.8
 type CounterZone = 'under' | 'near' | 'over'
 const counterZone = shallowRef<CounterZone | null>(null)
 const limit = computed(() => {
-  if (props.maxlength == null || props.maxlength === '')
+  const raw = props.maxLength ?? props.maxlength
+  if (raw == null || raw === '')
     return null
-  const parsed = Number(props.maxlength)
+  const parsed = Number(raw)
   return Number.isFinite(parsed) ? parsed : null
 })
 const model = defineModel<string>({ required: true })
@@ -61,6 +63,12 @@ const action = useTextAreaAction({
 })
 const busy = computed(() => props.isLoading || action.isPending.value)
 const valueLength = computed(() => (limit.value == null ? 0 : countCharacters(action.value.value)))
+const locale = useAstryxLocale()
+// 同上游 @astryx.textArea.counter：「164/2,000」，没有空格，数字按语言分组
+const counterText = computed(() => {
+  const format = new Intl.NumberFormat(locale.value)
+  return `${format.format(valueLength.value)}/${format.format(limit.value ?? 0)}`
+})
 const isOverLimit = computed(() => limit.value != null && valueLength.value > limit.value)
 
 function announceCounter(length: number): void {
@@ -187,7 +195,7 @@ onMounted(() => {
           class="astryx-text-area-count"
           :data-over="isOverLimit || undefined"
         >
-          <Icon v-if="isOverLimit" icon="warning" size="sm" aria-hidden="true" />{{ valueLength }} / {{ limit }}
+          <Icon v-if="isOverLimit" icon="warning" size="sm" aria-hidden="true" />{{ counterText }}
         </span>
         <span v-if="$slots.end" class="astryx-text-area-end"><slot name="end" /></span>
         <InputClearButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" :label="resolvedClearLabel" @click="clear" />

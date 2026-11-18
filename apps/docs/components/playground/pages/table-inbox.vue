@@ -24,8 +24,13 @@ import {
   Thumbnail,
   Token,
   Toolbar,
+  useContainerReveal,
+  useImperativeAlertDialog,
+  useMediaQuery,
   useResizable,
   useTableRowStatus,
+  useToast,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn, TablePlugin } from '@astryx-vue/core'
@@ -496,7 +501,7 @@ const inboxRows: TablePlugin<Conversation> = {
   rowPatch(item) {
     return {
       attrs: { 'tabindex': '0', 'aria-current': item.id === openId.value ? 'true' : undefined },
-      class: 'inbox-row',
+      class: 'inbox-row astryx-reveal',
       onClick: (event) => {
         if (isRowItself(event))
           openThread(item.id)
@@ -508,6 +513,90 @@ const inboxRows: TablePlugin<Conversation> = {
       return null
     return { style: { backgroundColor: 'var(--astryx-color-accent-muted)' } }
   },
+}
+
+const showToast = useToast()
+const confirm = useImperativeAlertDialog()
+const ConfirmHost = confirm.Host
+const reveal = useContainerReveal()
+/** 触屏没有悬停，操作按钮一直露着，和时间并排。 */
+const isTouch = useMediaQuery('(hover: none)')
+
+interface RowAction { id: string, label: string, icon: string }
+
+/** 列表在面板旁边时是窄布局，只留归档和删除；移动和回复在面板的工具条里。 */
+const ROW_ACTIONS: RowAction[] = [
+  { id: 'archive', label: 'Archive', icon: 'heroicons:archive-box' },
+  { id: 'delete', label: 'Delete', icon: 'heroicons:trash' },
+]
+
+/** 小号 IconButton 28px，间距 2px；balanced 密度每格左右各 12px。 */
+const ACTION_SIZE = 28
+const CELL_INSET = 24
+const TIMESTAMP_WIDTH = 76 + 16 + 4
+
+function trailingWidth(actionCount: number, isSideBySide: boolean): number {
+  const actions = actionCount * ACTION_SIZE + (actionCount - 1) * 2
+  return isSideBySide
+    ? actions + 4 + TIMESTAMP_WIDTH + CELL_INSET
+    : Math.max(actions, TIMESTAMP_WIDTH) + CELL_INSET
+}
+
+function runRowAction(action: RowAction, item: Conversation): void {
+  if (action.id === 'delete') {
+    confirm.show({
+      title: `Delete “${item.subject}”?`,
+      description: 'This demo won\'t delete anything.',
+      actionLabel: 'Delete',
+      onAction: () => {
+        confirm.hide()
+        showToast({ body: `Demo: “${item.subject}” would be deleted here`, uniqueID: `delete-${item.id}` })
+      },
+    })
+    return
+  }
+  showToast({ body: `Demo: ${action.label} would run on “${item.subject}” here`, uniqueID: `${action.id}-${item.id}` })
+}
+
+/** 时间和操作按钮占同一格：悬停或聚焦时按钮进入文档流，把时间挤到零宽。 */
+function ReceivedCell(props: { item: Conversation }) {
+  const item = props.item
+  const overlaid = !isTouch.value
+  return h(HStack, { gap: 1, vAlign: 'center', hAlign: 'end', height: 28 }, () => [
+    h(HStack, {
+      ...reveal.contentProps(),
+      style: overlaid ? { flexBasis: '100%', flexShrink: 0 } : undefined,
+      gap: 0.5,
+      vAlign: 'center',
+      hAlign: 'end',
+    }, () => ROW_ACTIONS.map(action => h(IconButton, {
+      key: action.id,
+      variant: 'ghost',
+      size: 'sm',
+      label: `${action.label} — ${item.subject}`,
+      tooltip: action.label,
+      onClick: () => runRowAction(action, item),
+    }, () => h(Icon, { name: action.icon, size: 'sm' })))),
+    h(StackItem, { size: 'fill' }, () => h(HStack, {
+      ...(overlaid ? {} : reveal.contentProps({ isRevealInverted: true })),
+      style: { overflow: 'hidden' },
+      gap: 1,
+      vAlign: 'center',
+      hAlign: 'end',
+    }, () => [
+      item.attachments.length === 0
+        ? null
+        : h(Icon, { name: 'heroicons:paper-clip', size: 'sm', color: 'gray', label: 'Has attachments' }),
+      h(Text, {
+        color: 'secondary',
+        hasTabularNumbers: true,
+        justify: 'end',
+        maxLines: 1,
+        hasTruncateTooltip: false,
+        weight: item.isUnread ? 'semibold' : 'normal',
+      }, () => item.receivedAt),
+    ])),
+  ])
 }
 
 const columns: TableColumn<Conversation>[] = [
@@ -525,24 +614,9 @@ const columns: TableColumn<Conversation>[] = [
   {
     key: 'receivedAt',
     header: 'Received',
-    width: pixel(120),
+    width: pixel(trailingWidth(ROW_ACTIONS.length, isTouch.value)),
     align: 'end',
-    renderCell: item => h(HStack, {
-      gap: 1,
-      vAlign: 'center',
-      hAlign: 'end',
-    }, () => [
-      item.attachments.length === 0
-        ? null
-        : h(Icon, { name: 'heroicons:paper-clip', size: 'sm', color: 'gray', label: 'Has attachments' }),
-      h(Text, {
-        color: 'secondary',
-        hasTabularNumbers: true,
-        justify: 'end',
-        maxLines: 1,
-        weight: item.isUnread ? 'semibold' : 'normal',
-      }, () => item.receivedAt),
-    ]),
+    renderCell: item => h(ReceivedCell, { item }),
   },
 ]
 
@@ -588,10 +662,9 @@ const threadActions = [
                 :value="option.value"
                 :label="option.label"
               >
-                {{ option.label }}
                 <template v-if="unreadCounts[option.value] > 0" #endContent>
-                  <Badge variant="neutral" :label="`${unreadCounts[option.value]} unread`">
-                    {{ unreadCounts[option.value] }}
+                  <Badge variant="neutral">
+                    {{ unreadCounts[option.value] }}<VisuallyHidden> unread</VisuallyHidden>
                   </Badge>
                 </template>
               </Tab>
@@ -601,7 +674,7 @@ const threadActions = [
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="4" is-scrollable class="inbox-list">
+    <LayoutContent role="main" :padding="4" is-scrollable class="inbox-list">
       <Table
         :data="visible"
         :columns="columns"
@@ -612,6 +685,7 @@ const threadActions = [
         text-overflow="truncate"
         :plugins="{ status: rowStatus, gutter: alignStatusGutter, rows: inboxRows }"
       />
+      <ConfirmHost />
     </LayoutContent>
 
     <template v-if="openConversation" #end>
@@ -767,5 +841,9 @@ const threadActions = [
 /* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
 .inbox-list :deep(.astryx-table) {
   table-layout: fixed;
+}
+
+.inbox-list :deep(.inbox-row) {
+  --_hover-delay: 90ms;
 }
 </style>

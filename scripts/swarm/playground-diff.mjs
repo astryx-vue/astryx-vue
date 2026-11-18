@@ -17,6 +17,7 @@ import process from 'node:process'
 import { parseDiffArgs, playgroundUrls, USAGE, UsageError } from './playground-diff/args.mjs'
 import { collectPlaygroundFrame } from './playground-diff/collect.mjs'
 import { compareSides } from './playground-diff/compare.mjs'
+import { runClicks } from './playground-diff/interact.mjs'
 import { launchBrowser, openSide } from './playground-diff/page.mjs'
 import { buildJsonPayload, renderReport } from './playground-diff/report.mjs'
 
@@ -43,7 +44,7 @@ async function main() {
     return 0
   }
 
-  const { slug, scheme, port, jsonPath } = parsed
+  const { slug, scheme, port, jsonPath, clicks } = parsed
   const { upstreamUrl, ourUrl } = playgroundUrls(slug, port)
   log(`演练场对比：${slug} · ${scheme}`)
   log(`  原版 ${upstreamUrl}`)
@@ -52,10 +53,12 @@ async function main() {
   const browser = await launchBrowser()
   try {
     const upstream = await openSide(browser, upstreamUrl, { scheme, local: false })
+    const upstreamChanged = await runClicks(upstream.frame, clicks, '原版')
     const upstreamCollected = await upstream.frame.evaluate(collectPlaygroundFrame)
     await upstream.context.close()
 
     const ours = await openSide(browser, ourUrl, { scheme, local: true })
+    const ourChanged = await runClicks(ours.frame, clicks, '我们')
     const ourCollected = await ours.frame.evaluate(collectPlaygroundFrame)
     await ours.context.close()
 
@@ -67,6 +70,8 @@ async function main() {
       upstreamUrl,
       ourUrl,
       maxDeviations: MAX_DEVIATIONS,
+      clicks,
+      changed: { upstream: upstreamChanged, ours: ourChanged },
       collect: {
         upstream: { items: upstreamCollected.items.length, scans: upstreamCollected.scanned, scrollers: upstreamCollected.scrollers },
         ours: { items: ourCollected.items.length, scans: ourCollected.scanned, scrollers: ourCollected.scrollers },

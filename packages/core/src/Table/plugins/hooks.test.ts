@@ -351,6 +351,7 @@ describe('useTableFiltering', () => {
     }))
     expect(plugin.filterFor?.(filterColumns[0]!)).toMatchObject({ variant: 'inline-compact', value: 'ali' })
     expect(plugin.filterFor?.(filterColumns[2]!)).toBeNull()
+    expect(plugin.filterFor?.(filterColumns[0]!)?.header).toBe(filterColumns[0]!.header)
   })
 
   it('renders compact inline controls for number and multi-select fields', () => {

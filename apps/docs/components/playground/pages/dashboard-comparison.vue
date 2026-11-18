@@ -18,9 +18,10 @@ import {
   Selector,
   Table,
   Text,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
-import { computed, h, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, h, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
 
@@ -195,6 +196,8 @@ const DEVICE_OPTIONS = [
 
 // ── 状态 ──────────────────────────────────────────────────────────────────────
 
+const showToast = useToast()
+
 const range = ref('90d')
 const segment = ref('all')
 const device = ref('all')
@@ -285,6 +288,25 @@ function sparkPath(data: number[]) {
   }).join('')
 }
 
+/**
+ * 四个周期变化值之一。数值和后面的空格、标签各是一个独立文本节点（和原版的 `{value}{' '}<Text>` 一致），
+ * 所以数值后面的空格不算进数值的排版宽度。
+ */
+const DeltaValue = defineComponent({
+  props: { label: { type: String, required: true }, value: { type: Number, required: true } },
+  setup(props) {
+    return () => {
+      const sign = props.value > 0 ? '+' : ''
+      const text = props.value === 0 ? '—' : `${sign}${props.value.toFixed(1)}%`
+      return h(Text, { type: 'body', weight: 'bold', color: 'primary', hasTabularNumbers: true }, () => [
+        text,
+        ' ',
+        h(Text, { type: 'body', weight: 'normal', color: 'secondary' }, () => props.label),
+      ])
+    }
+  },
+})
+
 function deltaColor(metric: Metric) {
   const trendUp = metric.deltas.ww >= 0
   const favorable = metric.higherIsBetter ? trendUp : !trendUp
@@ -311,11 +333,12 @@ function directionColor(metric: Metric) {
               User analytics overview · {{ summary }}
             </Text>
           </VStack>
-          <HStack :gap="1">
+          <HStack :gap="1" wrap="wrap">
             <Selector v-model="range" label="Date range" is-label-hidden :options="RANGE_OPTIONS" />
             <Selector v-model="segment" label="Segment" is-label-hidden :options="SEGMENT_OPTIONS" />
             <Selector v-model="device" label="Device" is-label-hidden :options="DEVICE_OPTIONS" />
-            <Button label="Export" variant="secondary">
+            <!-- 演示：换成真正执行导出的调用 -->
+            <Button label="Export" variant="secondary" @click="showToast({ body: 'Demo: this dashboard would export here', uniqueID: 'export-dashboard' })">
               <template #icon>
                 <Icon name="heroicons:arrow-down-tray" size="sm" />
               </template>
@@ -325,10 +348,10 @@ function directionColor(metric: Metric) {
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
       <VStack :gap="10">
         <VStack :gap="6">
-          <HStack :gap="3" align="center" justify="between">
+          <HStack :gap="3" align="center" justify="between" wrap="wrap">
             <HStack :gap="3" align="center">
               <span class="section-tile">
                 <Icon name="heroicons:users" size="sm" color="secondary" />
@@ -368,30 +391,10 @@ function directionColor(metric: Metric) {
                   />
                 </svg>
                 <Grid :columns="2" :gap="2">
-                  <Text type="body" weight="bold">
-                    {{ metric.deltas.dd > 0 ? '+' : '' }}{{ metric.deltas.dd.toFixed(1) }}%
-                    <Text type="body" display="inline" weight="normal" color="secondary">
-                      d/d
-                    </Text>
-                  </Text>
-                  <Text type="body" weight="bold">
-                    {{ metric.deltas.ww > 0 ? '+' : '' }}{{ metric.deltas.ww.toFixed(1) }}%
-                    <Text type="body" display="inline" weight="normal" color="secondary">
-                      w/w
-                    </Text>
-                  </Text>
-                  <Text type="body" weight="bold">
-                    {{ metric.deltas.mm > 0 ? '+' : '' }}{{ metric.deltas.mm.toFixed(1) }}%
-                    <Text type="body" display="inline" weight="normal" color="secondary">
-                      m/m
-                    </Text>
-                  </Text>
-                  <Text type="body" weight="bold">
-                    {{ metric.deltas.yy > 0 ? '+' : '' }}{{ metric.deltas.yy.toFixed(1) }}%
-                    <Text type="body" display="inline" weight="normal" color="secondary">
-                      y/y
-                    </Text>
-                  </Text>
+                  <DeltaValue label="d/d" :value="metric.deltas.dd" />
+                  <DeltaValue label="w/w" :value="metric.deltas.ww" />
+                  <DeltaValue label="m/m" :value="metric.deltas.mm" />
+                  <DeltaValue label="y/y" :value="metric.deltas.yy" />
                 </Grid>
               </VStack>
             </Card>
@@ -399,7 +402,7 @@ function directionColor(metric: Metric) {
         </VStack>
 
         <VStack :gap="6">
-          <HStack :gap="3" align="center" justify="between">
+          <HStack :gap="3" align="center" justify="between" wrap="wrap">
             <HStack :gap="3" align="center">
               <span class="section-tile">
                 <Icon name="heroicons:cursor-arrow-rays" size="sm" color="secondary" />
@@ -470,7 +473,7 @@ function directionColor(metric: Metric) {
                 </svg>
                 <HStack :gap="5" align="center" wrap="wrap">
                   <HStack v-for="series in ACTIVE_SERIES" :key="series.key" :gap="2" align="center">
-                    <span class="legend-dot" :style="{ background: series.color }" />
+                    <Icon name="stop" size="xsm" color="inherit" :style="{ color: series.color }" />
                     <Text type="supporting" color="secondary">
                       {{ series.label }}
                     </Text>
@@ -484,7 +487,7 @@ function directionColor(metric: Metric) {
         <Divider />
 
         <VStack :gap="6">
-          <HStack :gap="3" align="center" justify="between">
+          <HStack :gap="3" align="center" justify="between" wrap="wrap">
             <HStack :gap="3" align="center">
               <span class="section-tile">
                 <Icon name="heroicons:users" size="sm" color="secondary" />
@@ -514,12 +517,12 @@ function directionColor(metric: Metric) {
                 <VStack :gap="2">
                   <HStack v-for="seg in breakdown.data" :key="seg.label" justify="between" align="center">
                     <HStack :gap="2" align="center">
-                      <span class="legend-dot" :style="{ background: seg.color }" />
+                      <Icon name="stop" size="xsm" color="inherit" :style="{ color: seg.color }" />
                       <Text type="supporting" color="secondary">
                         {{ seg.label }}
                       </Text>
                     </HStack>
-                    <Text type="supporting" weight="semibold">
+                    <Text type="supporting" weight="semibold" has-tabular-numbers>
                       {{ seg.value }}%
                     </Text>
                   </HStack>
@@ -530,7 +533,7 @@ function directionColor(metric: Metric) {
         </VStack>
 
         <VStack :gap="6">
-          <HStack :gap="3" align="center" justify="between">
+          <HStack :gap="3" align="center" justify="between" wrap="wrap">
             <Heading :level="2">
               Acquisition channels
             </Heading>
@@ -550,7 +553,12 @@ function directionColor(metric: Metric) {
 <style scoped>
 .metrics-grid {
   align-items: stretch;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+/* 和原版一样：视口宽于 900px 时卡片最窄 320px，窄屏沿用 columns 的 240px。 */
+@media (min-width: 900px) {
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
 }
 .section-tile {
   display: grid;
@@ -564,7 +572,6 @@ function directionColor(metric: Metric) {
 .trend-chart { width: 100%; height: 280px; display: block; overflow: visible; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
 .chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
-.legend-dot { width: 12px; height: 12px; border-radius: 0; flex: none; }
 .breakdown-bar { display: flex; width: 100%; height: 24px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
 </style>

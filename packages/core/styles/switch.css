@@ -34,6 +34,13 @@
     min-height: var(--astryx-switch-track-height-lg, 28px);
   }
 
+  /* 隐藏标签是 1px 的 sr-only 盒子：不要再撑最小高度、居中，否则文字会被推到盒外。 */
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-label.astryx-switch-label {
+    flex-direction: row;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+
   .astryx-switch-control {
     position: relative;
     display: inline-flex;

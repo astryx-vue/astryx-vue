@@ -161,7 +161,10 @@ const rowPress = computed(() => {
           >
             <Icon icon="chevronRight" size="sm" color="inherit" />
           </button>
-          <span v-if="item.icon" class="astryx-tree-list__start">
+          <span v-if="item.startContent" class="astryx-tree-list__start">
+            <component :is="item.startContent" />
+          </span>
+          <span v-else-if="item.icon" class="astryx-tree-list__start">
             <Icon v-if="isIconGlyph(item.icon)" :icon="item.icon" size="sm" />
             <span v-else class="astryx-tree-list__icon">
               <i :class="item.icon" aria-hidden="true" />

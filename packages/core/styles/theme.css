@@ -9,6 +9,8 @@
     display: contents;
     color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+    /* 只继承字号的文字取主题正文字号，嵌套主题也一样（同上游 dda98593dc）。 */
+    font-size: var(--astryx-text-body-size, 0.875rem);
     /*
      * These aliases are also declared on :root, where var() is substituted
      * once. Restating them here makes the subtree resolve them again, including

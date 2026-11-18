@@ -17,7 +17,6 @@ import {
   Outline,
   pixel,
   Section,
-  Selector,
   StackItem,
   Tab,
   TabList,
@@ -65,7 +64,6 @@ const OUTLINE_ITEMS: OutlineItem[] = [
   { id: 'examples', label: 'Examples', level: 2 },
 ]
 
-const OUTLINE_OPTIONS = OUTLINE_ITEMS.map(item => ({ value: item.id, label: item.label }))
 
 const USAGE = 'Buttons provide visual cues for actions and events. These fundamental components allow users to commit actions and navigate a page flow. Use a Button when a user needs to submit a form, start a new task or action, or trigger a new UI element to appear on the page.'
 
@@ -103,7 +101,6 @@ const GUIDANCE_COLUMNS: TableColumn<GuidanceRow>[] = [
 ]
 
 const isMobile = useMediaQuery('(max-width: 768px)')
-const activeId = ref<string | undefined>(OUTLINE_ITEMS[0]?.id)
 /** 每个示例卡片各自记住自己是看描述还是看代码。 */
 const exampleTabs = ref<Record<number, string>>({})
 
@@ -114,43 +111,26 @@ function tabFor(index: number): string {
 function setTab(index: number, value: string): void {
   exampleTabs.value = { ...exampleTabs.value, [index]: value }
 }
-
-function scrollToId(id: string): void {
-  activeId.value = id
-  const target = document.getElementById(id)
-  if (target != null) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    window.history.pushState(null, '', `#${id}`)
-  }
-}
 </script>
 
 <template>
   <Layout height="auto" :content-width="960">
     <template v-if="!isMobile" #end>
       <LayoutPanel :is-scrollable="false" label="On this page" role="complementary" class="outline-panel">
-        <Outline v-model:active-id="activeId" :items="OUTLINE_ITEMS" />
+        <Outline :items="OUTLINE_ITEMS" />
       </LayoutPanel>
     </template>
 
-    <LayoutContent :is-scrollable="false" :padding="8">
+    <LayoutContent role="main" :is-scrollable="false" :padding="8">
       <VStack :gap="8">
         <VStack :gap="2">
-          <Text type="display-1">
+          <Text as="h1" type="display-1">
             Button
           </Text>
           <Text type="supporting" color="secondary">
             March 30, 2026 · Updated 5:40 p.m. PST
           </Text>
-          <Selector
-            v-if="isMobile"
-            label="On this page"
-            is-label-hidden
-            :options="OUTLINE_OPTIONS"
-            :model-value="activeId"
-            width="100%"
-            @update:model-value="scrollToId($event as string)"
-          />
+          <Outline v-if="isMobile" :items="OUTLINE_ITEMS" />
         </VStack>
 
         <Card variant="muted" :padding="0">
@@ -199,16 +179,16 @@ function scrollToId(id: string): void {
         <VStack :gap="8">
           <Card v-for="(example, i) in EXAMPLES" :key="i" :padding="0">
             <Section variant="transparent" :padding="3">
-              <HStack :gap="3" align="center">
+              <HStack :gap="3" vAlign="center">
                 <StackItem size="fill">
                   <Text type="body" weight="medium">
                     {{ example.title }}
                   </Text>
                 </StackItem>
-                <HStack :gap="1" align="center">
+                <HStack :gap="1" vAlign="center">
                   <Button label="Open in Craft" variant="ghost" size="sm">
                     <template #icon>
-                      <Icon icon="externalLink" size="sm" />
+                      <Icon name="heroicons:arrow-top-right-on-square" />
                     </template>
                   </Button>
                   <Button label="Send to CLI" variant="ghost" size="sm" />
@@ -219,7 +199,7 @@ function scrollToId(id: string): void {
               </HStack>
             </Section>
             <Center :height="280">
-              <HStack v-if="i === 0" :gap="3" align="center">
+              <HStack v-if="i === 0" :gap="3" vAlign="center">
                 <Button label="Flat" variant="ghost" />
                 <Button label="Default" variant="secondary" />
                 <Button label="Primary" variant="primary" />
@@ -230,6 +210,7 @@ function scrollToId(id: string): void {
             <Section variant="muted" :padding="3" :dividers="['top']">
               <VStack :gap="3">
                 <TabList
+                  :aria-label="`${example.title} details`"
                   class="tab-flush"
                   size="sm"
                   :value="tabFor(i)"

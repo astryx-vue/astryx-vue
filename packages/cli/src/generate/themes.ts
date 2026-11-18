@@ -1,6 +1,7 @@
 import type { ThemeRecord } from '../catalog-types.ts'
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { themePagePath } from '../../../../apps/docs/site/themeRoutes.ts'
 import { cleanMarkdown, extractTopic, paragraphContaining } from './markdown.ts'
 import { DOCS_ORIGIN } from './site.ts'
 
@@ -43,8 +44,8 @@ export async function buildThemes(repoRoot: string): Promise<ThemeRecord[]> {
       attributeValue: readAttributeValue(en, source.slug),
       body: { en: cleanMarkdown(en), zh: cleanMarkdown(zh) },
       docsUrl: {
-        en: `${DOCS_ORIGIN}/en/themes/${source.slug}`,
-        zh: `${DOCS_ORIGIN}/themes/${source.slug}`,
+        en: `${DOCS_ORIGIN}/en${themePagePath(source.slug)}`,
+        zh: `${DOCS_ORIGIN}${themePagePath(source.slug)}`,
       },
     })
   }

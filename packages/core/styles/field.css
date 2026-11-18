@@ -56,16 +56,39 @@
     cursor: default;
   }
 
+  /*
+   * 与原版一致：隐藏标签组不占布局位置（display: contents），
+   * 标签与描述各自用 sr-only 定位（inset 0、clip rect）。
+   */
   .astryx-field-label-group[data-hidden='true'],
+  .astryx-field-label-group[data-hidden='true'] > .astryx-field-label-row {
+    display: contents;
+  }
+
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-label,
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-description,
   .astryx-field-status[data-hidden='true'] {
     position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
     width: 1px;
     height: 1px;
     margin: -1px;
     padding: 0;
     overflow: hidden;
-    border: 0;
-    clip-path: inset(50%);
+    border-style: none;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-info-tip:not(:focus-visible) {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
   }
 

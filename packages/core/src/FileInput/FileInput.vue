@@ -204,7 +204,7 @@ function onDrop(event: DragEvent): void {
           @click="openPicker" @dragover="onDragOver" @dragleave="onDragLeave" @drop="onDrop"
           @focus="disabledTooltip.onFocus" @blur="disabledTooltip.onBlur"
         >
-          <Icon class="astryx-file-input-icon" icon="upload" size="sm" />
+          <Icon class="astryx-file-input-icon" icon="upload" :size="mode === 'dropzone' ? 'md' : 'sm'" />
           <span class="astryx-file-input-text" :data-placeholder="!fileLabel || undefined">{{ fileLabel || placeholder }}</span>
         </button>
         <InputClearButton v-if="fileLabel && !isDisabled" :label="clearLabel" @click="clear" />

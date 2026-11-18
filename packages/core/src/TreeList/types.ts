@@ -1,4 +1,4 @@
-import type { CSSProperties, VNode } from 'vue'
+import type { Component, CSSProperties, VNode, VNodeChild } from 'vue'
 
 export type TreeListDensity = 'compact' | 'balanced' | 'spacious'
 export type TreeListVariant = 'lineGuides' | 'noGuides'
@@ -9,6 +9,11 @@ export interface TreeListItemData {
   description?: string
   /** Glyph name, or a CSS icon class starting with `i-`. */
   icon?: string
+  /**
+   * 标签前面的任意内容，同上游 `startContent`，比如 `() => h(Icon, { icon: FolderIcon, size: 'xsm' })`。
+   * 给了它就不再画 `icon`。
+   */
+  startContent?: Component | (() => VNodeChild)
   /** Trailing glyph or CSS icon class. */
   endIcon?: string
   /** Compact trailing badge, for counts. */

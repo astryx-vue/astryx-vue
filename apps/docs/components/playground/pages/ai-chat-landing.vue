@@ -23,6 +23,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   useChatDictation,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { computed, nextTick, ref, useTemplateRef } from 'vue'
@@ -164,25 +165,31 @@ function chooseMode(key: string) {
   else
     mode.value = key
 }
+
+const showToast = useToast()
+// 演示用：真实项目里换成执行对应操作的调用。
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
 </script>
 
 <template>
   <Layout height="fill" :content-width="720" :padding="6">
-    <LayoutContent>
-      <VStack :gap="8" align="center" class="page">
+    <LayoutContent role="main">
+      <VStack :gap="8" vAlign="center" class="page">
         <VStack :gap="1">
-          <HStack :gap="2" align="center">
+          <HStack :gap="2" vAlign="center">
             <Icon name="heroicons:sparkles" size="md" color="accent" />
-            <Text type="large">
+            <Text type="large" as="h2">
               Hi, Andrew
             </Text>
           </HStack>
-          <Heading :level="1" type="display-2">
+          <Text type="display-2" as="h1">
             Where should we start?
-          </Heading>
+          </Text>
         </VStack>
 
-        <ChatComposer v-model="draft" class="composer" placeholder="Ask anything">
+        <ChatComposer v-model="draft" placeholder="Ask anything" @submit="demo('Demo: the message would be sent here', 'send')">
           <template #input>
             <ChatComposerInput
               ref="composerInput"
@@ -277,9 +284,9 @@ function chooseMode(key: string) {
             <DropdownMenu
               :menu-width="200"
               :items="[
-                { label: 'Preferences' },
-                { label: 'Keyboard shortcuts' },
-                { label: 'About' },
+                { label: 'Preferences', onClick: () => demo('Demo: preferences would open here', 'preferences') },
+                { label: 'Keyboard shortcuts', onClick: () => demo('Demo: the keyboard shortcuts would open here', 'shortcuts') },
+                { label: 'About', onClick: () => demo('Demo: details about the assistant would open here', 'about') },
               ]"
             >
               <template #trigger="triggerProps">
@@ -350,7 +357,6 @@ function chooseMode(key: string) {
 
 <style scoped>
 .page { min-height: 100%; }
-.composer { width: 100%; }
 .composer-input { min-height: 84px; }
-.categories { padding-inline: var(--astryx-spacing-3); width: 100%; }
+.categories { padding-inline: var(--astryx-spacing-3); }
 </style>

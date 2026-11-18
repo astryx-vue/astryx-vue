@@ -26,7 +26,6 @@
 
 @layer astryx.components {
   .astryx-selector {
-    position: relative;
     display: inline-block;
     width: 100%;
     min-width: 0;
@@ -37,7 +36,8 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--astryx-spacing-1, 4px);
+    /* 同上游 triggerContainer：触发按钮、箭头、开头图标之间都隔 8px */
+    gap: var(--astryx-spacing-2, 8px);
     width: 100%;
     min-width: 0;
     height: var(--astryx-input-height-md, 32px);
@@ -213,6 +213,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: start;
+  }
+
+  .astryx-selector-start-icon {
+    flex: none;
   }
 
   .astryx-selector-value-icon {

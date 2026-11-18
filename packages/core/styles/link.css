@@ -44,6 +44,59 @@
     color: inherit;
   }
 
+  /*
+   * 同上游：Link 的文字是一个 Text，`type` 默认 body，决定字号、行高和字重。
+   * `type="inherit"` 不加类，沿用基础规则里的 `font: inherit`，适合嵌在一段文字里。
+   */
+  .astryx-link.astryx-link--type-body {
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-text-body-weight, 400);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-link.astryx-link--type-large {
+    font-size: var(--astryx-text-large-size, 1rem);
+    font-weight: var(--astryx-text-large-weight, 600);
+    line-height: var(--astryx-text-large-leading, 1.5);
+  }
+
+  .astryx-link.astryx-link--type-label {
+    font-size: var(--astryx-text-label-size, 0.875rem);
+    font-weight: var(--astryx-text-label-weight, 500);
+    line-height: var(--astryx-text-label-leading, 1.25);
+  }
+
+  .astryx-link.astryx-link--type-supporting {
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-weight: var(--astryx-text-supporting-weight, 400);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
+  }
+
+  .astryx-link.astryx-link--type-code {
+    font-family: var(--astryx-font-family-code, monospace);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-text-code-weight, 400);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-link.astryx-link--type-display-1 {
+    font-size: var(--astryx-text-display-1-size, 3rem);
+    font-weight: var(--astryx-text-display-weight, var(--astryx-text-display-1-weight, 300));
+    line-height: var(--astryx-text-display-1-leading, 1.1);
+  }
+
+  .astryx-link.astryx-link--type-display-2 {
+    font-size: var(--astryx-text-display-2-size, 2.25rem);
+    font-weight: var(--astryx-text-display-weight, var(--astryx-text-display-2-weight, 300));
+    line-height: var(--astryx-text-display-2-leading, 1.15);
+  }
+
+  .astryx-link.astryx-link--type-display-3 {
+    font-size: var(--astryx-text-display-3-size, 1.75rem);
+    font-weight: var(--astryx-text-display-weight, var(--astryx-text-display-3-weight, 300));
+    line-height: var(--astryx-text-display-3-leading, 1.2);
+  }
+
   .astryx-link.astryx-link--standalone {
     font-size: var(--astryx-font-size-body, var(--text-body-size, 1rem));
     line-height: var(--astryx-line-height-body, var(--text-body-leading, 1.5));

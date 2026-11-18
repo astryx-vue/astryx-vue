@@ -47,7 +47,11 @@ export async function waitForStablePreview(page, { timeoutMs = LOAD_TIMEOUT_MS }
     if (frame) {
       const info = await frame.evaluate(COUNT_TEXT_ELEMENTS).catch(() => null)
       if (info) {
-        const building = await page.evaluate(() => document.body.textContent.includes('Building')).catch(() => true)
+        // 只看渲染出来的状态文字「Building…」/「构建中…」（带省略号）：
+        // 原版 Next.js 页面的内联 <script> 里一直有「Building」，textContent 会误判；
+        // 编辑器里的模板源码也可能出现「Building」（contact-form 的「Community Building」），所以要连省略号一起匹配。
+        // eslint-disable-next-line unicorn/prefer-dom-node-text-content -- 要的正是只含渲染文字的 innerText
+        const building = await page.evaluate(() => /Building…|构建中…/.test(document.body.innerText)).catch(() => true)
         if (!building && info.texts >= 3 && info.elements === lastElements && info.texts === lastTexts)
           return frame
         lastElements = info.elements

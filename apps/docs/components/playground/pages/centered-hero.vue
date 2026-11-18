@@ -30,7 +30,7 @@ const heroFrame: CSSProperties = {
 <template>
   <Layout>
     <template #default>
-      <LayoutContent :padding="6">
+      <LayoutContent role="main" :padding="6">
         <VStack :gap="10">
           <VStack :gap="6" h-align="center">
             <VStack :gap="3" h-align="center">
@@ -45,13 +45,14 @@ const heroFrame: CSSProperties = {
             <HStack :gap="3">
               <Button
                 label="Get started"
+                href="#"
                 variant="primary"
               >
                 <template #end>
-                  <Icon icon="i-heroicons-arrow-right-solid" size="sm" color="inherit" />
+                  <Icon name="heroicons:arrow-right-20-solid" size="sm" color="inherit" />
                 </template>
               </Button>
-              <Button label="Learn more" variant="secondary" />
+              <Button label="Learn more" variant="secondary" href="#" />
             </HStack>
           </VStack>
           <Section variant="transparent" :padding="0">

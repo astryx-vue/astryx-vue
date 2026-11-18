@@ -67,6 +67,8 @@ export function buildJsonPayload(meta, result) {
     port: meta.port,
     upstreamUrl: meta.upstreamUrl,
     ourUrl: meta.ourUrl,
+    clicks: meta.clicks ?? [],
+    changed: meta.changed ?? null,
     generatedAt: new Date().toISOString(),
     maxDeviations: meta.maxDeviations,
     pairCount: result.pairCount,

@@ -131,7 +131,12 @@ function layoutPreview(renderedGeneration: number, attempt = 0): void {
   if (!(root instanceof HTMLElement))
     return
   const rect = root.getBoundingClientRect()
-  stage.dataset.previewLayout = previewLayoutMode(stage.clientWidth, stage.clientHeight, rect.width, rect.height)
+  // 原版只把宿主内边距借给会出血的子节点（Layout 一类带 data-container-corner）。
+  // 所以 Section 根里直接包 Layout 时照常铺满（kanban-board）；否则是居中的块（canvas-editor 宽 696）。
+  // 模板根是 Theme 包裹时（canvas-editor 照原版 <Theme><Section><Layout>），原版宿主同样把它当居中块，不铺满。
+  const sectionWithoutBleed = root.matches('.astryx-section') && !root.querySelector(':scope > .astryx-section__inner > :first-child')?.matches('.astryx-layout, .astryx-app-shell')
+  const bleeds = sectionWithoutBleed || root.matches('.astryx-theme') ? false : undefined
+  stage.dataset.previewLayout = previewLayoutMode(stage.clientWidth, stage.clientHeight, rect.width, rect.height, bleeds)
 }
 
 function clearPreview(): void {

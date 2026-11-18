@@ -16,9 +16,13 @@ import {
   proportional,
   Table,
   Text,
+  useToast,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import { computed, h, onBeforeUnmount, onMounted, ref } from 'vue'
+
+const showToast = useToast()
 
 interface PageRow extends Record<string, unknown> {
   id: string
@@ -231,14 +235,18 @@ function sparklinePoints(values: number[]): string {
 
 <template>
   <Layout height="fill">
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
+      <VisuallyHidden as="h1">
+        Dashboard
+      </VisuallyHidden>
       <VStack :gap="6">
         <VStack :gap="6">
           <HStack h-align="between" align="center">
-            <Heading :level="3">
+            <Heading :level="3" :accessibility-level="2">
               Active users
             </Heading>
-            <Button label="Reload" variant="secondary">
+            <!-- 演示：换成真正执行重新加载的调用 -->
+            <Button label="Reload" variant="secondary" @click="showToast({ body: 'Demo: the active-users data would reload here', uniqueID: 'reload-active-users' })">
               <template #icon>
                 <Icon name="heroicons:arrow-path" size="sm" />
               </template>
@@ -298,11 +306,11 @@ function sparklinePoints(values: number[]): string {
           <Grid v-for="(start, group) in [0, 2]" :key="group" :columns="{ minWidth: 240, repeat: 'fit' }" :gap="4">
             <Card v-for="(metric, i) in METRICS.slice(start, start + 2)" :key="metric.label">
               <VStack :gap="2">
-                <Heading :level="4">
+                <Heading :level="4" :accessibility-level="3">
                   {{ metric.label }}
                 </Heading>
                 <HStack :gap="2" align="center">
-                  <Heading :level="2">
+                  <Heading :level="2" :accessibility-level="4">
                     {{ metric.value }}
                   </Heading>
                   <HStack :gap="1" align="center">
@@ -326,15 +334,15 @@ function sparklinePoints(values: number[]): string {
         <Divider />
 
         <HStack h-align="between" align="center">
-          <Heading :level="3">
+          <Heading :level="3" :accessibility-level="2">
             Demographics
           </Heading>
-          <Button label="View more" variant="secondary" />
+          <Button label="View more" variant="secondary" @click="showToast({ body: 'Demo: the full demographics breakdown would open here', uniqueID: 'more-demographics' })" />
         </HStack>
         <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
           <Card v-for="group in [{ title: 'Region', data: REGION_DATA }, { title: 'Role', data: ROLE_DATA }]" :key="group.title">
             <VStack :gap="4">
-              <Heading :level="4">
+              <Heading :level="4" :accessibility-level="3">
                 {{ group.title }}
               </Heading>
               <div class="stacked-bar" role="img" :aria-label="group.title">
@@ -365,41 +373,33 @@ function sparklinePoints(values: number[]): string {
         <Divider />
 
         <HStack h-align="between" align="center">
-          <Heading :level="3">
+          <Heading :level="3" :accessibility-level="2">
             Engagement
           </Heading>
-          <Button label="View more" variant="secondary" />
+          <Button label="View more" variant="secondary" @click="showToast({ body: 'Demo: the full engagement report would open here', uniqueID: 'more-engagement' })" />
         </HStack>
         <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
           <Card>
-            <VStack :gap="6">
-              <HStack h-align="between" align="center">
-                <Heading :level="4">
-                  Top pages
-                </Heading>
-                <Text type="body">
-                  <Link href="#">
-                    All pages
-                  </Link>
-                </Text>
-              </HStack>
-              <Table :data="TOP_PAGES" :columns="TOP_PAGES_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
-            </VStack>
+            <HStack h-align="between" align="center" :padding-block-end="6">
+              <Heading :level="4" :accessibility-level="3">
+                Top pages
+              </Heading>
+              <Link href="#">
+                All pages
+              </Link>
+            </HStack>
+            <Table :data="TOP_PAGES" :columns="TOP_PAGES_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
           </Card>
           <Card>
-            <VStack :gap="6">
-              <HStack h-align="between" align="center">
-                <Heading :level="4">
-                  Top events
-                </Heading>
-                <Text type="body">
-                  <Link href="#">
-                    All events
-                  </Link>
-                </Text>
-              </HStack>
-              <Table :data="TOP_EVENTS" :columns="TOP_EVENTS_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
-            </VStack>
+            <HStack h-align="between" align="center" :padding-block-end="6">
+              <Heading :level="4" :accessibility-level="3">
+                Top events
+              </Heading>
+              <Link href="#">
+                All events
+              </Link>
+            </HStack>
+            <Table :data="TOP_EVENTS" :columns="TOP_EVENTS_COLUMNS" id-key="id" density="compact" dividers="rows" has-hover />
           </Card>
         </Grid>
       </VStack>

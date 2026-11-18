@@ -5,7 +5,8 @@ import { nagi } from 'kawapress/nagi'
 import UnoCSS from 'unocss/vite'
 import { demoSourcePlugin } from './site/demoSourcePlugin.ts'
 import { llmsPlugin } from './site/llmsPlugin.ts'
-import { guideSidebar, labSidebar, themeSidebar } from './site/sidebar.ts'
+import { guideSidebar, labSidebar } from './site/sidebar.ts'
+import { themeRewrites } from './site/themeRoutes.ts'
 import { vueLanguage } from './site/vueLanguage.ts'
 import unoConfig from './uno.config.ts'
 
@@ -50,6 +51,8 @@ export default nagi({
     server: { fs: { allow: [fileURLToPath(new URL('../..', import.meta.url))] } },
   },
   rewrites: {
+    // 主题页的源文件留在 themes/ 下，网址改到 /guide/，/themes/ 只剩画廊页。见 site/themeRoutes.ts。
+    ...themeRewrites(),
     'zh/components/:slug/index.md': 'components/:slug.md',
     'en/components/:slug/index.md': 'en/components/:slug.md',
     'zh/lab/:slug/index.md': 'lab/:slug.md',
@@ -57,8 +60,8 @@ export default nagi({
     'zh/:rest*': ':rest*',
   },
   locales: {
-    root: { label: '简体中文', lang: 'zh-CN', themeConfig: { nav: navigation(false), sidebar: { '/guide/': guideSidebar(false), '/lab/': labSidebar(false), '/themes/': themeSidebar(false) } } },
-    en: { label: 'English', lang: 'en', description: 'A community Vue 3 implementation of the Astryx design system.', themeConfig: { nav: navigation(true), sidebar: { '/en/guide/': guideSidebar(true), '/en/lab/': labSidebar(true), '/en/themes/': themeSidebar(true) } } },
+    root: { label: '简体中文', lang: 'zh-CN', themeConfig: { nav: navigation(false), sidebar: { '/guide/': guideSidebar(false), '/lab/': labSidebar(false) } } },
+    en: { label: 'English', lang: 'en', description: 'A community Vue 3 implementation of the Astryx design system.', themeConfig: { nav: navigation(true), sidebar: { '/en/guide/': guideSidebar(true), '/en/lab/': labSidebar(true) } } },
   },
   themeConfig: { logo: '/icon-logo.svg', appearance: 'dark', footer: false },
 })

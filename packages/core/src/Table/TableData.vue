@@ -325,7 +325,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   </VisuallyHidden>
                   <HeaderContent v-else :column="column" />
                   <span class="astryx-table__sort-icon" :data-active="sortFor(column)?.direction != null || undefined">
-                    <Icon :icon="sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp'" size="sm" />
+                    <Icon :icon="sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp'" size="xsm" />
                   </span>
                   <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank">{{ sortFor(column)?.rank }}</span>
                 </button>

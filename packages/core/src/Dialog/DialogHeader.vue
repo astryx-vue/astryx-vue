@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { DialogHeaderProps } from './types.js'
-import { computed, inject, onBeforeUnmount, onMounted, useAttrs, useId } from 'vue'
+import { computed, getCurrentInstance, inject, onBeforeUnmount, onMounted, useAttrs, useId } from 'vue'
 import IconButton from '../IconButton/IconButton.vue'
+import { useLayoutArea } from '../Layout/context.js'
 import { useAstryxMessages } from '../locale/context.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import '../../styles/dialog-header.css'
@@ -24,23 +25,30 @@ const slots = defineSlots<{
 const attrs = useAttrs()
 const messages = useAstryxMessages()
 
+// 放在 Layout 的 header 槽里时，自己当一个带内边距的页头区域（原版的 DialogHeader 就是 LayoutHeader）。
+const layoutArea = useLayoutArea()
+const inLayoutHeader = computed(() => layoutArea.value === 'header')
+
 const dialog = inject(DIALOG_CONTEXT_KEY, null)
 const fallbackTitleId = `astryx-dialog-header-title-${useId()}`
 const titleId = computed(() => dialog?.titleId ?? fallbackTitleId)
 const defaultFocusAttr = computed(() => (dialog?.isInline.value ? undefined : ''))
 const showSubtitle = computed(() => slots.subtitle != null || (props.subtitle != null && props.subtitle !== ''))
+// 原版：传了 onOpenChange 就渲染关闭按钮；这里 hasCloseButton 或监听了 openChange 都算。
+const hasOpenChangeListener = getCurrentInstance()?.vnode.props?.onOpenChange != null
+const showClose = computed(() => props.hasCloseButton || hasOpenChangeListener)
 const closeLabel = computed(() => props.closeButtonLabel ?? messages.value.dialog.close)
 
 const compensateBlock = computed(() => {
   const axis = props.endContentEdgeCompensation
   if (axis == null)
-    return props.hasCloseButton
+    return showClose.value
   return axis === 'block' || axis === 'all'
 })
 const compensateInline = computed(() => {
   const axis = props.endContentEdgeCompensation
   if (axis == null)
-    return props.hasCloseButton
+    return showClose.value
   return axis === 'inline' || axis === 'all'
 })
 
@@ -58,7 +66,7 @@ function rootAttrs(): Record<string, unknown> {
 </script>
 
 <template>
-  <div v-bind="rootAttrs()" class="astryx-dialog-header" :class="{ 'astryx-dialog-header--divider': hasDivider }">
+  <div v-bind="rootAttrs()" class="astryx-dialog-header" :class="{ 'astryx-dialog-header--divider': hasDivider }" :data-layout-header="inLayoutHeader || undefined">
     <div v-if="slots.startContent" class="astryx-dialog-header__actions astryx-dialog-header-start-content">
       <slot name="startContent" />
     </div>
@@ -80,7 +88,7 @@ function rootAttrs(): Record<string, unknown> {
       </span>
     </div>
     <div
-      v-if="slots.endContent || hasCloseButton"
+      v-if="slots.endContent || showClose"
       class="astryx-dialog-header__actions astryx-dialog-header-end-content"
       :class="{
         'astryx-dialog-header__actions--compensate-block': compensateBlock,
@@ -89,7 +97,7 @@ function rootAttrs(): Record<string, unknown> {
     >
       <slot name="endContent" />
       <IconButton
-        v-if="hasCloseButton"
+        v-if="showClose"
         class="astryx-dialog-header__close"
         variant="ghost"
         :label="closeLabel"

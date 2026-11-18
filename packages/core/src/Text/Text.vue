@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<TextProps>(), {
 })
 
 /** 没写 color 时按 type 取默认色：supporting 是 secondary，其余 primary，inherit 保持 inherit。 */
-const color = computed(() => props.color ?? (props.type === 'supporting' ? 'secondary' : 'primary'))
+const color = computed(() => props.color ?? (props.type === 'supporting' ? 'secondary' : props.type === 'inherit' ? 'inherit' : 'primary'))
 const weight = computed(() => props.weight === 'normal' ? 'regular' : props.weight)
 const isBlock = computed(() => props.display === 'block' || props.maxLines > 0 || props.hasCapsize)
 const wordBreak = computed(() => props.wordBreak ?? (props.maxLines === 1 ? 'break-all' : props.maxLines > 1 ? 'break-word' : undefined))

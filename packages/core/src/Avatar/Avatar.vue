@@ -207,10 +207,9 @@ function handleFallbackError() {
         <span
           v-else-if="showInitials"
           class="astryx-avatar__fallback astryx-avatar__fallback--initials"
+          :data-initials="initials"
           :style="{ fontSize: `${numericSize * INITIALS_FONT_SIZE_RATIO}px` }"
-        >
-          {{ initials }}
-        </span>
+        />
         <span
           v-else-if="showIcon"
           class="astryx-avatar__fallback astryx-avatar__fallback--icon"
@@ -264,10 +263,9 @@ function handleFallbackError() {
       <span
         v-else-if="showInitials"
         class="astryx-avatar__fallback astryx-avatar__fallback--initials"
+        :data-initials="initials"
         :style="{ fontSize: `${numericSize * INITIALS_FONT_SIZE_RATIO}px` }"
-      >
-        {{ initials }}
-      </span>
+      />
       <span
         v-else-if="showIcon"
         class="astryx-avatar__fallback astryx-avatar__fallback--icon"

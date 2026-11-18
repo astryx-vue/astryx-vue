@@ -66,6 +66,17 @@
     user-select: none;
   }
 
+  /* Initials are painted via generated content (as upstream): part of the picture, not text. */
+  .astryx-avatar__fallback--initials::before {
+    content: attr(data-initials);
+  }
+
+  @supports (content: "a" / "") {
+    .astryx-avatar__fallback--initials::before {
+      content: attr(data-initials) / "";
+    }
+  }
+
   .astryx-avatar__fallback svg {
     width: 1em;
     height: 1em;

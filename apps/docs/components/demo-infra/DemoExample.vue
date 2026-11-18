@@ -13,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-  <ComponentExample :code-html="demo.sourceHtml" :description="description" :locale="locale" :title="title">
+  <ComponentExample :code-html="demo.sourceHtml" :description="description" :locale="locale" :source="demo.source" :title="title">
     <VueDemoHost :class-name="demo.className" :component="demo.component" :data-kind="demo.dataKind" />
   </ComponentExample>
 </template>

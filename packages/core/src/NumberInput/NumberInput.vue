@@ -2,10 +2,9 @@
 import type { InputHTMLAttributes } from 'vue'
 import type { FieldStatusInput, FieldStatusType } from '../Field/types.js'
 import type { NumberInputEmits, NumberInputProps, NumberInputSlots, NumberInputStatus } from './types.js'
-import { computed, defineComponent, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import { useDevWarning } from '../composables/useDevWarning.js'
 import { computeSteppedValue, useNumberField } from '../composables/useNumberField.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
@@ -33,13 +32,6 @@ const props = withDefaults(defineProps<NumberInputProps>(), {
 
 const emit = defineEmits<NumberInputEmits>()
 defineSlots<NumberInputSlots>()
-
-const PassThrough = defineComponent({
-  name: 'NumberInputPassThrough',
-  setup(_, { slots }) {
-    return () => slots.default?.({})
-  },
-})
 
 const attrs = useAttrs()
 const inputElement = useTemplateRef<HTMLInputElement>('input')
@@ -142,28 +134,21 @@ function resolvedStatus(status: NumberInputStatus | undefined): FieldStatusInput
 
 const statusValue = computed(() => resolvedStatus(props.status))
 const statusType = computed<FieldStatusType | undefined>(() => statusValue.value?.type)
-const showsField = computed(() => {
-  if (props.isLabelHidden && !props.description && !statusValue.value?.message)
-    return false
-  return Boolean(props.label || props.description || statusValue.value?.message)
-})
-const shell = computed(() => showsField.value ? Field : PassThrough)
-const fieldBindings = computed(() => showsField.value
-  ? {
-      label: props.label ?? '',
-      inputId: inputId.value,
-      description: props.description,
-      isLabelHidden: props.isLabelHidden || !props.label,
-      isDisabled: isDisabled.value,
-      isOptional: props.isOptional,
-      isRequired: props.isRequired,
-      labelIcon: labelIcon.value,
-      labelTooltip: props.labelTooltip,
-      status: statusValue.value,
-      statusVariant: props.statusVariant,
-      width: props.width,
-    }
-  : {})
+// 同上游：标签藏起来也照样渲染 Field，隐藏的 <label> 给读屏，width 也落在 Field 上
+const fieldBindings = computed(() => ({
+  label: props.label ?? '',
+  inputId: inputId.value,
+  description: props.description,
+  isLabelHidden: props.isLabelHidden || !props.label,
+  isDisabled: isDisabled.value,
+  isOptional: props.isOptional,
+  isRequired: props.isRequired,
+  labelIcon: labelIcon.value,
+  labelTooltip: props.labelTooltip,
+  status: statusValue.value,
+  statusVariant: props.statusVariant,
+  width: props.width,
+}))
 
 const parts = useFieldPartStyling({
   component: 'NumberInput',
@@ -171,11 +156,6 @@ const parts = useFieldPartStyling({
   attrs,
   reservedAttrs: ['id', 'value', 'type', 'disabled', 'readonly', 'autofocus', 'role', 'inputmode', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-invalid', 'aria-disabled', 'aria-valuenow', 'aria-valuemin', 'aria-valuemax', 'aria-valuetext', 'name'],
 })
-useDevWarning(
-  'NumberInput',
-  '`containerClass`/`containerStyle` have no effect here because no Field box renders.',
-  () => !showsField.value && ((props.containerClass != null && props.containerClass !== false) || (props.containerStyle != null && props.containerStyle !== false)),
-)
 function inputAttrs(): InputHTMLAttributes {
   return parts.forwardedAttrs() as InputHTMLAttributes
 }
@@ -329,7 +309,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <component :is="shell" v-bind="fieldBindings" :class="showsField ? parts.containerClass.value : undefined" :style="showsField ? parts.containerStyle.value : undefined">
+  <Field v-bind="fieldBindings" :class="parts.containerClass.value" :style="parts.containerStyle.value">
     <template v-if="$slots.labelIcon" #labelIcon>
       <slot name="labelIcon" />
     </template>
@@ -371,7 +351,6 @@ onMounted(() => {
           :aria-labelledby="labelledBy(field?.labelId)"
           :aria-describedby="describedBy(field?.describedBy)"
           :data-autofocus="props.hasAutoFocus || undefined"
-          :aria-label="showsField ? undefined : props.label"
           @input="onInput"
           @keydown="onKeyDown"
           @focus="onFocus"
@@ -426,7 +405,7 @@ onMounted(() => {
         >
       </div>
     </template>
-  </component>
+  </Field>
   <VisuallyHidden v-if="showsDisabledMessage" :id="disabledDescriptionId">
     {{ disabledMessage }}
   </VisuallyHidden>

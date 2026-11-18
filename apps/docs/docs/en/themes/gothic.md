@@ -15,4 +15,4 @@ import '@astryx-vue/themes/gothic.css'
 <div data-astryx-theme="gothic">
 ```
 
-<ThemeStage theme="gothic" />
+See it in the [theme gallery](/en/themes/?theme=gothic).
