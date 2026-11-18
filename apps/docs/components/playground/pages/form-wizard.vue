@@ -9,6 +9,7 @@ import {
   CheckboxList,
   CheckboxListItem,
   Divider,
+  Field,
   FormLayout,
   Grid,
   Heading,
@@ -394,10 +395,7 @@ function visibilityLabel(value: string) {
           </Text>
         </VStack>
         <FormLayout default-optionality="optional">
-          <VStack :gap="2">
-            <Text type="label">
-              Plan
-            </Text>
+          <Field label="Plan" input-id="plan-picker" is-group-label>
             <Grid :columns="{ minWidth: 200 }" :gap="3">
               <SelectableCard
                 v-for="p in PLANS"
@@ -423,7 +421,7 @@ function visibilityLabel(value: string) {
                 </VStack>
               </SelectableCard>
             </Grid>
-          </VStack>
+          </Field>
           <NumberInput
             v-model="seats"
             label="Seats"

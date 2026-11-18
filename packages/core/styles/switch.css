@@ -12,26 +12,26 @@
     gap: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-switch[data-label-spacing='spread'] > .astryx-switch-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .astryx-switch[data-label-position='start'] > .astryx-switch-row > .astryx-switch-control {
+    order: 1;
+  }
+
   .astryx-switch-row:has(> .astryx-switch-label .astryx-field-label-group[data-hidden='true']) {
     gap: 0;
   }
 
-  /* The label line is 20px and the track is taller. A wrapper at least as tall
-     as the track, centered, keeps the text on the track's midline. */
+  /* 标签列比轨道矮时，行本身用 align-items: center 把文字放在轨道中线上。 */
   .astryx-switch-label {
     display: flex;
     flex-direction: column;
     justify-content: center;
     min-width: 0;
-    min-height: var(--astryx-switch-track-height, 24px);
-  }
-
-  .astryx-switch[data-size='sm'] .astryx-switch-label {
-    min-height: var(--astryx-switch-track-height-sm, 20px);
-  }
-
-  .astryx-switch[data-size='lg'] .astryx-switch-label {
-    min-height: var(--astryx-switch-track-height-lg, 28px);
   }
 
   /* 隐藏标签是 1px 的 sr-only 盒子：不要再撑最小高度、居中，否则文字会被推到盒外。 */

@@ -127,7 +127,7 @@ body {
 
 pre,
 code,
-kbd,
+kbd:not(.astryx-kbd__key),
 samp {
   font-family: var(--docs-font-family-mono);
 }

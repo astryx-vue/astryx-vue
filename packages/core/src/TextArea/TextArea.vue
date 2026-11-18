@@ -22,7 +22,7 @@ import '../../styles/text-area.css'
 defineOptions({ name: 'AstryxTextArea', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
   size: 'md',
-  statusVariant: 'detached',
+  statusVariant: 'attached',
   resize: 'vertical',
   rows: 3,
   loadingLabel: 'Loading',

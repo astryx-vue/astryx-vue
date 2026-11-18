@@ -1173,14 +1173,16 @@ const SearchIcon = defineComponent({
                           />
                         </div>
                         <div class="settings-row-detail">
-                          <div class="font-preview" :style="fontPreviewStyle">
-                            <Text type="body">
-                              The quick brown fox jumps over the lazy dog.
-                            </Text>
-                            <Text type="supporting" color="secondary">
-                              Settings inherit this face wherever the theme allows.
-                            </Text>
-                          </div>
+                          <Card :padding="3" width="100%">
+                            <VStack :gap="1" :style="fontPreviewStyle">
+                              <Text type="label">
+                                Weekly digest
+                              </Text>
+                              <Text type="supporting" color="secondary">
+                                Eight threads moved while you were away, and three are waiting on you.
+                              </Text>
+                            </VStack>
+                          </Card>
                         </div>
                       </div>
                     </div>
@@ -1958,7 +1960,8 @@ const SearchIcon = defineComponent({
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--astryx-spacing-3);
+  column-gap: var(--astryx-spacing-3);
+  row-gap: var(--astryx-spacing-2);
   padding: var(--astryx-spacing-4);
 }
 .settings-row-main {
@@ -1985,14 +1988,6 @@ const SearchIcon = defineComponent({
 }
 .settings-row-detail {
   grid-column: 1 / -1;
-}
-.font-preview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--astryx-spacing-1);
-  padding: var(--astryx-spacing-3);
-  background-color: var(--astryx-color-background-surface);
-  border-radius: var(--astryx-radius-element);
 }
 @container settings-panel (max-width: 480px) {
   .settings-row {

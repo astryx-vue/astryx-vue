@@ -147,11 +147,11 @@
   }
 
   .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-menu-size='md'] {
-    padding-block: var(--astryx-spacing-2, 8px);
+    padding-block: var(--astryx-spacing-1-5, 6px);
   }
 
   .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-menu-size='lg'] {
-    padding-block: var(--astryx-spacing-3, 12px);
+    padding-block: var(--astryx-spacing-2, 8px);
   }
 
   /* DOM focus is the highlight, so a roving row is lit without a ring. */

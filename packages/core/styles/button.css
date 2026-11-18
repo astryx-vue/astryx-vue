@@ -222,13 +222,13 @@
   }
 
   /* The end slot has no fixed box of its own. A named icon still matches the leading slot. */
-  .astryx-button__end > .astryx-icon {
+  .astryx-button__end > .astryx-icon:not([data-size]) {
     width: 16px;
     height: 16px;
     font-size: 16px;
   }
 
-  .astryx-button[data-size='lg'] .astryx-button__end > .astryx-icon {
+  .astryx-button[data-size='lg'] .astryx-button__end > .astryx-icon:not([data-size]) {
     width: 20px;
     height: 20px;
     font-size: 20px;

@@ -10,7 +10,7 @@ import '../../styles/dialog-header.css'
 defineOptions({ name: 'AstryxDialogHeader', inheritAttrs: false })
 const props = withDefaults(defineProps<DialogHeaderProps>(), {
   subtitle: undefined,
-  hasCloseButton: false,
+  hasCloseButton: undefined,
   closeButtonLabel: undefined,
   endContentEdgeCompensation: undefined,
   hasDivider: false,
@@ -34,9 +34,9 @@ const fallbackTitleId = `astryx-dialog-header-title-${useId()}`
 const titleId = computed(() => dialog?.titleId ?? fallbackTitleId)
 const defaultFocusAttr = computed(() => (dialog?.isInline.value ? undefined : ''))
 const showSubtitle = computed(() => slots.subtitle != null || (props.subtitle != null && props.subtitle !== ''))
-// 原版：传了 onOpenChange 就渲染关闭按钮；这里 hasCloseButton 或监听了 openChange 都算。
+// 原版：传了 onOpenChange 就渲染关闭按钮。显式传 hasCloseButton 时以传入值为准（DrawerHeader 用它关掉按钮）。
 const hasOpenChangeListener = getCurrentInstance()?.vnode.props?.onOpenChange != null
-const showClose = computed(() => props.hasCloseButton || hasOpenChangeListener)
+const showClose = computed(() => props.hasCloseButton ?? hasOpenChangeListener)
 const closeLabel = computed(() => props.closeButtonLabel ?? messages.value.dialog.close)
 
 const compensateBlock = computed(() => {

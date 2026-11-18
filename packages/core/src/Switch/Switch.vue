@@ -17,6 +17,8 @@ import '../../styles/switch.css'
 defineOptions({ name: 'AstryxSwitch', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<SwitchProps, 'modelValue'>>(), {
   size: 'md',
+  labelPosition: 'end',
+  labelSpacing: 'hug',
   statusVariant: 'detached',
 })
 const emit = defineEmits<SwitchEmits>()
@@ -109,7 +111,7 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
 </script>
 
 <template>
-  <div class="astryx-switch" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-status="status?.type" :data-blocked="blocked || undefined">
+  <div class="astryx-switch" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-label-position="labelPosition !== 'end' ? labelPosition : undefined" :data-label-spacing="labelSpacing !== 'hug' ? labelSpacing : undefined" :data-status="status?.type" :data-blocked="blocked || undefined">
     <div class="astryx-switch-row" v-bind="blocked ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
       <span class="astryx-switch-control">
         <input

@@ -2,6 +2,8 @@ import type { VNode } from 'vue'
 import type { FieldLabelProps, FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
 
 export type SwitchSize = 'sm' | 'md' | 'lg'
+export type SwitchLabelPosition = 'start' | 'end'
+export type SwitchLabelSpacing = 'hug' | 'spread'
 export type SwitchStatus = FieldStatusInput
 export type SwitchStatusType = FieldStatusType
 export type SwitchChangeEvent = CustomEvent<{ value: boolean, originalEvent: Event }>
@@ -11,6 +13,10 @@ export interface SwitchProps extends Omit<FieldLabelProps, 'inputId' | 'labelId'
   modelValue: boolean
   id?: string
   size?: SwitchSize
+  /** 标签在开关的哪一侧：start 在开关之前，end 在之后。 */
+  labelPosition?: SwitchLabelPosition
+  /** 标签和开关的间距：hug 紧挨着，spread 分到两端。 */
+  labelSpacing?: SwitchLabelSpacing
   isReadOnly?: boolean
   disabledMessage?: string
   status?: SwitchStatus
