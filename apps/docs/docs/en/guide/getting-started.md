@@ -6,9 +6,23 @@ title: Quick start
 
 Install the components and the theme. The peer dependency is Vue `^3.5.0`.
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
+
+```sh [npm]
+npm install @astryx-vue/core @astryx-vue/themes
+```
+
+```sh [yarn]
+yarn add @astryx-vue/core @astryx-vue/themes
+```
+
+```sh [bun]
+bun add @astryx-vue/core @astryx-vue/themes
+```
+:::
 
 Load the theme once from the app entry. Neutral includes Figtree and JetBrains Mono.
 

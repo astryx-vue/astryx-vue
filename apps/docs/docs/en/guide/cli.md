@@ -8,9 +8,23 @@ title: CLI
 
 Install it as a dev dependency:
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add -D @astryx-vue/cli
 ```
+
+```sh [npm]
+npm install -D @astryx-vue/cli
+```
+
+```sh [yarn]
+yarn add -D @astryx-vue/cli
+```
+
+```sh [bun]
+bun add -d @astryx-vue/cli
+```
+:::
 
 The package declares a `bin`, so the command is on `node_modules/.bin` right after installing:
 

@@ -8,9 +8,23 @@ title: 快速开始
 
 首先安装核心组件包和主题包。组件库要求你的项目使用 Vue 3.5.0 或更新版本：
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
+
+```sh [npm]
+npm install @astryx-vue/core @astryx-vue/themes
+```
+
+```sh [yarn]
+yarn add @astryx-vue/core @astryx-vue/themes
+```
+
+```sh [bun]
+bun add @astryx-vue/core @astryx-vue/themes
+```
+:::
 
 在应用的入口文件（例如 `main.ts`）里引入一次主题样式。默认的 Neutral 主题为你准备好了基础配色，并自带了好看的正文字体（Figtree）与等宽字体（JetBrains Mono）：
 

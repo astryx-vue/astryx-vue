@@ -821,6 +821,10 @@ html.dark .component-example {
 
 .component-example__tabs button[aria-selected='true'] {
   color: var(--example-text);
+}
+
+/* 字重写在里面的文字上：文档站不许在顶层给 button 定字重（会盖过组件自己的字重）。 */
+.component-example__tabs [aria-selected='true'] > span {
   font-weight: 600;
 }
 
@@ -2970,4 +2974,17 @@ html:has(.home-stage) .nagi-nav-bar {
   :root {
     --docs-nav-height: 64px;
   }
+}
+
+/*
+ * KawaPress 的代码块给顶部的语言标签（Shell）留了 2.875rem。放进 code-group 后标签藏起来了，
+ * 留白还在，命令上方空一大块。组内改成和底部一样的内边距，复制按钮跟着垂直居中。
+ */
+.kawa-code-group .kawa-code-block pre {
+  padding-top: 1.25rem;
+}
+
+.kawa-code-group .kawa-code-block__copy {
+  top: 50%;
+  transform: translateY(-50%);
 }

@@ -260,6 +260,9 @@
       "@astryx-vue/core/SideNav": [
         "../../packages/core/src/SideNav/index.ts"
       ],
+      "@astryx-vue/core/SizeContext": [
+        "../../packages/core/src/SizeContext/index.ts"
+      ],
       "@astryx-vue/core/Skeleton": [
         "../../packages/core/src/Skeleton/index.ts"
       ],

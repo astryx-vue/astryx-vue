@@ -11,9 +11,23 @@ import { richtextAutoLink, richtextToolbar, richtextView } from '../../../../com
 
 ## 安装
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/richtext
 ```
+
+```sh [npm]
+npm install @astryx-vue/richtext
+```
+
+```sh [yarn]
+yarn add @astryx-vue/richtext
+```
+
+```sh [bun]
+bun add @astryx-vue/richtext
+```
+:::
 
 `RichTextEditor` 基于 Lexical。你还需要根据所用功能自行安装 `lexical` 和相应的 `@lexical/*` 子包，版本统一为 `0.52.0`。
 

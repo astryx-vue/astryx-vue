@@ -6,17 +6,23 @@ title: Installation
 
 Install the two public packages together:
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-```sh
+```sh [npm]
 npm install @astryx-vue/core @astryx-vue/themes
 ```
 
-```sh
+```sh [yarn]
 yarn add @astryx-vue/core @astryx-vue/themes
 ```
+
+```sh [bun]
+bun add @astryx-vue/core @astryx-vue/themes
+```
+:::
 
 `@astryx-vue/core` peers on `vue: ^3.5.0`. The theme package depends on `@fontsource/figtree` and `@fontsource/jetbrains-mono` for the body and monospace faces. Both packages publish ESM only.
 

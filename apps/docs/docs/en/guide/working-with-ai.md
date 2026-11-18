@@ -13,9 +13,23 @@ Two pieces:
 
 ## Step 1: install the CLI
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add -D @astryx-vue/cli
 ```
+
+```sh [npm]
+npm install -D @astryx-vue/cli
+```
+
+```sh [yarn]
+yarn add -D @astryx-vue/cli
+```
+
+```sh [bun]
+bun add -d @astryx-vue/cli
+```
+:::
 
 The binary lands in `node_modules/.bin` and is called `astryx-vue`. Without installing, run `npx @astryx-vue/cli …`; the scope is required, because the bare `astryx-vue` name on npm is not this package.
 

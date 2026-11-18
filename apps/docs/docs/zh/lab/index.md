@@ -8,9 +8,23 @@ title: Lab
 
 ## 安装
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/lab@canary @astryx-vue/core vue
 ```
+
+```sh [npm]
+npm install @astryx-vue/lab@canary @astryx-vue/core vue
+```
+
+```sh [yarn]
+yarn add @astryx-vue/lab@canary @astryx-vue/core vue
+```
+
+```sh [bun]
+bun add @astryx-vue/lab@canary @astryx-vue/core vue
+```
+:::
 
 每个组件会导入自己的样式。也可以一次引入全部结构样式：
 

@@ -22,9 +22,23 @@ import { Icon } from '@astryx-vue/core/Icon'
 
 `@astryx-vue/core` does not include a collection. Install the one you want, and add the Vite plugin:
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add -D @iconify-json/carbon
 ```
+
+```sh [npm]
+npm install -D @iconify-json/carbon
+```
+
+```sh [yarn]
+yarn add -D @iconify-json/carbon
+```
+
+```sh [bun]
+bun add -d @iconify-json/carbon
+```
+:::
 
 ```ts
 import { astryxIcons } from '@astryx-vue/core/icons'

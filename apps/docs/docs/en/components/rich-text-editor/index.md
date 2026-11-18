@@ -11,9 +11,23 @@ import { richtextAutoLink, richtextToolbar, richtextView } from '../../../../com
 
 ## Install
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/richtext
 ```
+
+```sh [npm]
+npm install @astryx-vue/richtext
+```
+
+```sh [yarn]
+yarn add @astryx-vue/richtext
+```
+
+```sh [bun]
+bun add @astryx-vue/richtext
+```
+:::
 
 `RichTextEditor` is built on Lexical. Install `lexical` and the `@lexical/*` packages required by the features you use, all pinned to `0.52.0`.
 

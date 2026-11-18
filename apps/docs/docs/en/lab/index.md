@@ -8,9 +8,23 @@ title: Lab
 
 ## Install
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/lab@canary @astryx-vue/core vue
 ```
+
+```sh [npm]
+npm install @astryx-vue/lab@canary @astryx-vue/core vue
+```
+
+```sh [yarn]
+yarn add @astryx-vue/lab@canary @astryx-vue/core vue
+```
+
+```sh [bun]
+bun add @astryx-vue/lab@canary @astryx-vue/core vue
+```
+:::
 
 Each component imports its own stylesheet. To load all structural styles at once:
 
