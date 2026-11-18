@@ -44,6 +44,6 @@ const selected = ref<SearchableItem[]>([skills.value[0]!, skills.value[1]!])
 .demo-caption {
   margin: 0;
   font-size: 0.875rem;
-  color: var(--vp-c-text-2);
+  color: var(--docs-c-text-2);
 }
 </style>

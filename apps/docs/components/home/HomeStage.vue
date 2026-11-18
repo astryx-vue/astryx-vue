@@ -78,37 +78,6 @@ async function copyInstall(): Promise<void> {
 </template>
 
 <style>
-html:has(.home-stage),
-.page-home {
-  --vp-nav-bg-color: var(--astryx-color-background-body) !important;
-  --vp-nav-home-bg-color: var(--astryx-color-background-body) !important;
-  --astryx-bg: var(--astryx-color-background-body) !important;
-}
-
-html:has(.home-stage),
-html:has(.home-stage) body,
-html:has(.home-stage) .VPNav,
-html:has(.home-stage) .VPNavBar,
-html:has(.home-stage) .VPNavBar::before,
-html:has(.home-stage) .VPContent,
-html:has(.home-stage) .VPPage,
-.page-home,
-.page-home body,
-.page-home .VPNav,
-.page-home .VPNavBar,
-.page-home .VPNavBar::before,
-.page-home .VPContent,
-.page-home .VPPage {
-  background: var(--astryx-color-background-body) !important;
-  background-color: var(--astryx-color-background-body) !important;
-  box-shadow: none !important;
-}
-
-html:has(.home-stage) .VPNav,
-.page-home .VPNav {
-  border-bottom: 1px solid var(--astryx-color-border) !important;
-}
-
 html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, summary):focus-visible,
 .page-home .home-stage :where(a, button, input, textarea, select, summary):focus-visible {
   outline-color: var(--astryx-focus-outline-color);
@@ -139,7 +108,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
   width: min(1200px, calc(100% - 2.5rem));
-  min-height: calc(100svh - var(--vp-nav-height));
+  min-height: calc(100svh - var(--docs-nav-height));
   margin: 0 auto;
   padding: clamp(3.5rem, 6vw, 5.5rem) 0 4rem;
   box-sizing: border-box;
@@ -268,7 +237,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
 
 @media (width >= 960px) {
   .home-stage {
-    height: calc(100svh - var(--vp-nav-height));
+    height: calc(100svh - var(--docs-nav-height));
     overflow: hidden;
   }
 

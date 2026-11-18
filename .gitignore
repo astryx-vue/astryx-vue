@@ -1,7 +1,7 @@
 node_modules/
 **/dist/
-**/.vitepress/cache/
-**/.vitepress/.temp/
+# 迁到 KawaPress 之前的 VitePress 缓存，本地留着的旧目录不进仓库
+**/.vitepress/
 coverage/
 *.log
 *.tsbuildinfo

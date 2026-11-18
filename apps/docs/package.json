@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/copy-monaco.mjs && vitepress build",
-    "dev": "node scripts/copy-monaco.mjs && vitepress dev",
+    "build": "node scripts/copy-monaco.mjs && kawapress build",
+    "dev": "node scripts/copy-monaco.mjs && kawapress dev",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
-    "preview": "vitepress preview"
+    "preview": "kawapress preview"
   },
   "dependencies": {
     "@astryx-vue/charts": "workspace:^",
@@ -29,6 +29,7 @@
     "@lexical/utils": "catalog:richtext",
     "@monaco-editor/loader": "catalog:docs",
     "@vue/compiler-sfc": "catalog:vue",
+    "kawapress": "catalog:docs",
     "lexical": "catalog:richtext",
     "monaco-editor": "catalog:docs",
     "sucrase": "catalog:docs",
@@ -38,13 +39,13 @@
     "@iconify-json/carbon": "catalog:docs",
     "@iconify-json/heroicons": "catalog:docs",
     "@iconify-json/lucide": "catalog:docs",
+    "@kawapress/plugin-shiki": "catalog:docs",
     "@shikijs/langs": "catalog:docs",
     "@types/node": "catalog:language",
     "postcss": "catalog:docs",
     "typescript": "catalog:language",
     "unocss": "catalog:docs",
     "vite": "catalog:build",
-    "vitepress": "catalog:docs",
     "vue-tsc": "catalog:vue"
   }
 }

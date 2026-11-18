@@ -26,7 +26,7 @@ export interface LlmsPage {
 
 /**
  * 中文页面没有语言前缀，英文页面有 `en/`。
- * 这里和 `.vitepress/config.ts` 里的 `rewrites` 是同一套规则。
+ * 这里和 `kawapress.config.ts` 里的 `rewrites` 是同一套规则。
  */
 export function localizeSourcePath(sourcePath: string): string {
   return sourcePath.startsWith('zh/') ? sourcePath.slice('zh/'.length) : sourcePath
@@ -55,6 +55,12 @@ function isComponentTab(dirParts: readonly string[], file: string): boolean {
   return first === 'components'
     ? dirParts.length === 2
     : first === 'en' && second === 'components' && dirParts.length === 3
+}
+
+/** 源文件发布到的站点路由，末尾不带 `/`。组件分页各有自己的路由，不并到总览。 */
+export function routeForSourcePath(sourcePath: string): string {
+  const path = localizeSourcePath(sourcePath).replace(/\.md$/, '').replace(/(?:^|\/)index$/, '')
+  return `/${path}`
 }
 
 /** Markdown 产物对应的站点路径，末尾不带 `/`。 */

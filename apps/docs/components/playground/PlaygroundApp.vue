@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PlaygroundLocale } from './protocol'
 import type { DensityPreset, ThemeColorKey, ThemeState } from './theme'
-import { useData, withBase } from 'vitepress'
+import { useAppearance, useSite, withBase } from 'kawapress/client'
 import { computed, ref } from 'vue'
 import PlaygroundDialog from './PlaygroundDialog.vue'
 import PlaygroundMonacoEditor from './PlaygroundMonacoEditor.vue'
@@ -16,7 +16,8 @@ const props = defineProps<{
   locale: PlaygroundLocale
 }>()
 
-const { isDark } = useData()
+const { isDark } = useAppearance()
+const site = useSite()
 
 const dialog = ref<InstanceType<typeof PlaygroundDialog> | null>(null)
 const iframe = ref<HTMLIFrameElement | null>(null)
@@ -49,7 +50,7 @@ const {
 
 const { sawPreview, errorText, frameSrc, frameKey, onFrameLoad } = usePreviewSync({
   iframe,
-  framePath: withBase('/playground/frame'),
+  framePath: withBase('/playground/frame', site.value.base),
   locale: props.locale,
   theme,
   code,
@@ -73,9 +74,9 @@ const buildStatusText = computed(() => {
 
 const { editorSize, onDividerDown, onDividerKey } = usePaneResize(editorPane, bodyEl)
 
-const homeHref = withBase('/')
-const logoHref = withBase('/icon-logo.svg')
-const localeHref = withBase(props.locale === 'zh' ? '/en/playground/' : '/playground/')
+const homeHref = withBase('/', site.value.base)
+const logoHref = withBase('/icon-logo.svg', site.value.base)
+const localeHref = withBase(props.locale === 'zh' ? '/en/playground/' : '/playground/', site.value.base)
 
 async function copyShareUrl(): Promise<void> {
   try {

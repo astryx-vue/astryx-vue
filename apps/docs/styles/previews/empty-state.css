@@ -25,7 +25,7 @@
   overflow: hidden;
   border: 1px solid var(--astryx-line);
   border-radius: var(--astryx-radius-container, 0.75rem);
-  background: var(--vp-c-bg-soft);
+  background: var(--docs-c-bg-soft);
 }
 
 .empty-state-preview__panel--narrow {

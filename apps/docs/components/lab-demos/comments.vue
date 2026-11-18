@@ -219,9 +219,9 @@ function uploadImages(files: readonly File[]): { url: string, alt: string }[] {
   max-width: 920px;
   height: 640px;
   min-height: 640px;
-  border: 1px solid var(--astryx-color-border-secondary, var(--vp-c-divider));
+  border: 1px solid var(--astryx-color-border-secondary, var(--docs-c-divider));
   border-radius: var(--astryx-radius-container, 12px);
   overflow: hidden;
-  background: var(--astryx-color-background-primary, var(--vp-c-bg));
+  background: var(--astryx-color-background-primary, var(--docs-c-bg));
 }
 </style>

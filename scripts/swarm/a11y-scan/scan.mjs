@@ -22,7 +22,7 @@ const READY_TIMEOUT_MS = 30_000
 /** 文档站的深浅色由 localStorage 决定，页面脚本跑之前写好。 */
 function setAppearance(scheme) {
   try {
-    localStorage.setItem('vitepress-theme-appearance', scheme)
+    localStorage.setItem('kawapress:appearance', scheme)
   }
   catch {}
 }

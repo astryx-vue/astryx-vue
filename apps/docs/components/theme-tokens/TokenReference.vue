@@ -171,9 +171,9 @@ function replay() {
 
 .swatch-card,
 .token-row {
-  border: 1px solid var(--vp-c-divider);
+  border: 1px solid var(--docs-c-divider);
   border-radius: 10px;
-  background: var(--vp-c-bg-soft);
+  background: var(--docs-c-bg-soft);
   padding: 12px;
 }
 
@@ -208,7 +208,7 @@ function replay() {
 }
 
 .scheme {
-  color: var(--vp-c-text-2);
+  color: var(--docs-c-text-2);
   font-size: 12px;
 }
 
@@ -217,22 +217,22 @@ function replay() {
 .motion-names code {
   display: block;
   overflow-wrap: break-word;
-  color: var(--vp-c-text-1);
+  color: var(--docs-c-text-1);
   font-size: 12px;
 }
 
 .token-value {
   margin-top: 6px;
   overflow-wrap: break-word;
-  color: var(--vp-c-text-2);
-  font-family: var(--vp-font-family-mono);
+  color: var(--docs-c-text-2);
+  font-family: var(--docs-font-family-mono);
   font-size: 12px;
   line-height: 1.5;
 }
 
 .token-note {
   margin-top: 8px;
-  color: var(--vp-c-text-1);
+  color: var(--docs-c-text-1);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -276,7 +276,7 @@ function replay() {
   justify-content: center;
   width: 48px;
   height: 36px;
-  background: var(--vp-c-bg);
+  background: var(--docs-c-bg);
 }
 
 .radius-box {
@@ -292,10 +292,10 @@ function replay() {
 }
 
 .replay {
-  border: 1px solid var(--vp-c-divider);
+  border: 1px solid var(--docs-c-divider);
   border-radius: 8px;
-  background: var(--vp-c-bg);
-  color: var(--vp-c-text-1);
+  background: var(--docs-c-bg);
+  color: var(--docs-c-text-1);
   cursor: pointer;
   font: inherit;
   padding: 6px 12px;

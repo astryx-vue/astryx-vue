@@ -1,27 +1,10 @@
 /**
- * 从磁盘读生成 llms 产物要用的素材：文档页列表、演示源码、组件目录，
- * 以及构建产物里页面对应的 HTML 位置。
+ * 从磁盘读生成 llms 产物要用的素材：演示源码和组件目录。
  */
 import type { CatalogEntry } from '../../components/demo-infra/demoMeta.ts'
-import { access, readdir, readFile } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { assembleCatalog, parseDemoMetaFields } from '../../components/demo-infra/demoMeta.ts'
-
-/** `dir` 下全部 `.md` 文件，路径相对 `dir`，按字典序排好。 */
-export async function listMarkdown(dir: string, prefix = ''): Promise<string[]> {
-  const entries = await readdir(join(dir, prefix), { withFileTypes: true })
-  const files: string[] = []
-  for (const entry of entries) {
-    const relative = prefix === '' ? entry.name : `${prefix}/${entry.name}`
-    if (entry.isDirectory()) {
-      files.push(...await listMarkdown(dir, relative))
-      continue
-    }
-    if (entry.isFile() && entry.name.endsWith('.md'))
-      files.push(relative)
-  }
-  return files.sort()
-}
 
 async function listFolders(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true })
@@ -85,24 +68,4 @@ export async function loadCatalog(demosDir: string): Promise<CatalogEntry[]> {
     return source === null ? null : parseDemoMetaFields(source)
   }))
   return assembleCatalog(metas.filter(meta => meta !== null))
-}
-
-async function exists(path: string): Promise<boolean> {
-  return access(path).then(() => true, () => false)
-}
-
-/**
- * 页面在 `dist` 里的 HTML 位置。组件页的 `index.md` 被 rewrite 成同级 `.html`，
- * 所以两种写法都要试一下。
- */
-export async function resolveHtmlPath(outDir: string, sitePath: string): Promise<string | null> {
-  const withoutExt = sitePath.replace(/\.md$/, '')
-  const candidates = withoutExt.endsWith('/index')
-    ? [`${withoutExt.slice(0, -'/index'.length)}.html`, `${withoutExt}.html`]
-    : [`${withoutExt}.html`, `${withoutExt}/index.html`]
-  for (const candidate of candidates) {
-    if (await exists(join(outDir, candidate)))
-      return candidate
-  }
-  return null
 }

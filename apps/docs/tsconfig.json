@@ -367,8 +367,10 @@
   },
   "include": [
     "css-modules.d.ts",
-    ".vitepress/**/*.ts",
-    ".vitepress/**/*.vue",
+    "kawapress.config.ts",
+    "kawapress.runtime.ts",
+    "site/**/*.ts",
+    "site/**/*.vue",
     "uno.config.ts",
     "components/**/*.ts",
     "components/**/*.vue",

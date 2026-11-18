@@ -1,7 +1,6 @@
 import type { Plugin } from 'vite'
 import { readFile } from 'node:fs/promises'
-import process from 'node:process'
-import { createMarkdownRenderer } from 'vitepress'
+import { createMarkdownRenderer } from '@kawapress/plugin-shiki'
 import { fenceFor } from '../scripts/llms-markdown.ts'
 import { vueLanguage } from './vueLanguage.ts'
 
@@ -19,7 +18,7 @@ export function demoSourcePlugin(): Plugin {
     },
     async load(id) {
       if (id === `\0${VITE_HOME_CODE_ID}`) {
-        renderer ??= createMarkdownRenderer(process.cwd(), { languages: vueLanguage })
+        renderer ??= createMarkdownRenderer({ languages: vueLanguage })
         const markdown = await renderer
         const zhCode = `<script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
@@ -54,7 +53,7 @@ import '@astryx-vue/themes/neutral.css'
       const filename = id.slice(0, id.indexOf('?'))
       this.addWatchFile(filename)
       const source = await readFile(filename, 'utf8')
-      renderer ??= createMarkdownRenderer(process.cwd(), { languages: vueLanguage })
+      renderer ??= createMarkdownRenderer({ languages: vueLanguage })
       const markdown = await renderer
       const fence = fenceFor(source)
       const html = await markdown.renderAsync(`${fence}vue\n${source}\n${fence}`)

@@ -1,8 +1,8 @@
-import type { DefaultTheme } from 'vitepress'
+interface Item { text: string, link?: string, items?: Item[] }
 
-type Sidebar = DefaultTheme.SidebarItem[]
+type Sidebar = Item[]
 
-function item(text: string, link: string): DefaultTheme.SidebarItem {
+function item(text: string, link: string): Item {
   return { text, link }
 }
 

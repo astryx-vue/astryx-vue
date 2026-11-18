@@ -5,7 +5,7 @@
 import type { CatalogEntry } from '../../components/demo-infra/demoMeta.ts'
 import type { DocsLocale } from '../../components/demo-infra/docs-i18n.ts'
 import type { LlmsPageEntry } from './render-page.ts'
-import { guideSidebar, themeSidebar } from '../../.vitepress/sidebar.ts'
+import { guideSidebar, themeSidebar } from '../../site/sidebar.ts'
 import { markdownPathForUrl } from './paths.ts'
 
 /** 线上站点地址。`llms.txt` 里的链接用绝对网址，方便别的机器直接抓。 */

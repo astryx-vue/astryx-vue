@@ -1,3 +1,4 @@
+@import '@astryx-vue/core/reset.css' layer(kawa.base);
 @import '@astryx-vue/themes/neutral.css';
 @import '@astryx-vue/core/styles.css';
 @import '@astryx-vue/richtext/richtext.css';
@@ -58,17 +59,17 @@
 :root {
   color-scheme: light;
 
-  --vp-c-bg: #fff;
-  --vp-c-bg-alt: #fafafa;
-  --vp-c-bg-elv: #f1f2f4;
-  --vp-c-bg-soft: #f7f7f8;
-  --vp-c-brand-1: #10b981;
-  --vp-c-brand-2: #059669;
-  --vp-c-brand-3: #047857;
-  --vp-c-brand-soft: rgb(16 185 129 / 14%);
-  --vp-font-family-base: 'Figtree', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  --vp-font-family-mono: var(--astryx-font-family-code);
-  --vp-nav-height: 72px;
+  --docs-c-bg: #fff;
+  --docs-c-bg-alt: #fafafa;
+  --docs-c-bg-elv: #f1f2f4;
+  --docs-c-bg-soft: #f7f7f8;
+  --docs-c-brand-1: #10b981;
+  --docs-c-brand-2: #059669;
+  --docs-c-brand-3: #047857;
+  --docs-c-brand-soft: rgb(16 185 129 / 14%);
+  --docs-font-family-base: 'Figtree', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --docs-font-family-mono: var(--astryx-font-family-code);
+  --docs-nav-height: 72px;
   --astryx-accent: #10b981;
   --astryx-accent-bright: #10b981;
   --astryx-bg: #fff;
@@ -81,16 +82,16 @@
 html.dark {
   color-scheme: dark;
 
-  --vp-c-bg: #0d0f1a;
-  --vp-c-bg-alt: #090b14;
-  --vp-c-bg-elv: #252837;
-  --vp-c-bg-soft: #1a1d2a;
-  --vp-c-divider: rgb(235 238 255 / 24%);
-  --vp-c-divider: rgb(235 238 255 / 12%);
+  --docs-c-bg: #0d0f1a;
+  --docs-c-bg-alt: #090b14;
+  --docs-c-bg-elv: #252837;
+  --docs-c-bg-soft: #1a1d2a;
+  --docs-c-divider: rgb(235 238 255 / 24%);
+  --docs-c-divider: rgb(235 238 255 / 12%);
   --astryx-white: #fff;
-  --vp-c-text-1: #f2f3f8;
-  --vp-c-text-2: #bec2d0;
-  --vp-c-text-3: #8e94a8;
+  --docs-c-text-1: #f2f3f8;
+  --docs-c-text-2: #bec2d0;
+  --docs-c-text-3: #8e94a8;
   --astryx-text-faint: #686e82;
   --astryx-accent: #34d399;
   --astryx-accent-bright: #6ee7b7;
@@ -109,7 +110,7 @@ html {
  * so component layers stay in charge of their own weight.
  */
 body {
-  font-family: var(--vp-font-family-base);
+  font-family: var(--docs-font-family-base);
   font-weight: 400;
 }
 
@@ -122,7 +123,7 @@ pre,
 code,
 kbd,
 samp {
-  font-family: var(--vp-font-family-mono);
+  font-family: var(--docs-font-family-mono);
 }
 
 ::selection {
@@ -136,7 +137,7 @@ samp {
 }
 
 /* The search bar already indicates focus around the whole field. */
-.VPLocalSearchBox .search-input:focus-visible {
+.kawa-search__input:focus-visible {
   outline: none;
 }
 
@@ -165,92 +166,51 @@ samp {
 
 /* Navigation */
 
-.VPNav {
-  border-bottom-color: var(--astryx-line);
-  background: var(--astryx-bg);
-  box-shadow: inset 0 1px 0 rgb(200 237 116 / 18%);
-}
-
 .page-home,
 html:has(.home-stage) {
-  --vp-nav-bg-color: var(--astryx-color-background-body);
-  --vp-nav-home-bg-color: var(--astryx-color-background-body);
+  --nagi-c-bg: var(--astryx-color-background-body);
   --astryx-bg: var(--astryx-color-background-body);
 }
 
-.page-home .VPNav,
-.page-home .VPNavBar,
-.page-home .VPNavBar::before,
-html:has(.home-stage) .VPNav,
-html:has(.home-stage) .VPNavBar,
-html:has(.home-stage) .VPNavBar::before {
-  background: var(--astryx-color-background-body) !important;
-  background-color: var(--astryx-color-background-body) !important;
-  box-shadow: none !important;
-}
-
-.page-home .VPNav,
-html:has(.home-stage) .VPNav {
-  border-bottom: 1px solid var(--astryx-color-border) !important;
-}
-
-.VPNavBar .container {
+.nagi-nav {
   position: relative;
 }
 
-.VPNavBar .container > .title {
-  flex: 0 0 auto;
-  min-width: 0;
-}
-
-.VPNavBarTitle .title {
+.nagi-nav__title {
   color: var(--astryx-text);
   font-size: 15px;
   font-weight: 400;
   letter-spacing: -0.02em;
 }
 
-.VPNavBarTitle .logo {
-  position: relative;
+.nagi-nav__logo {
   width: 28px;
   min-width: 28px;
   height: 28px;
-  margin-right: 10px;
-}
-
-.VPNavBar .content-body {
-  position: static;
-}
-
-.VPNavBar .content-body > .search {
-  margin-right: 0;
-}
-
-.VPNavBar .VPNavBarMenu {
-  order: -1;
 }
 
 @media (width >= 1024px) {
-  .VPNavBar .content-body > .VPNavBarMenu {
+  .nagi-nav__links {
     position: absolute;
     left: 50%;
     width: max-content;
-    flex-grow: 0;
     transform: translateX(-50%);
   }
 }
 
-.VPNavBarMenuLink {
+.nagi-nav-links__link {
   color: var(--astryx-text-muted);
   font-size: 15px;
   font-weight: 400;
   letter-spacing: 0.01em;
 }
 
-.VPNavBarMenuLink:hover,
-.VPNavBarMenuLink.active {
+.nagi-nav-links__link:hover {
   color: var(--astryx-text);
-  font-size: 15px;
+}
+
+.nagi-nav-links__link.is-active {
+  color: var(--astryx-accent);
 }
 
 .DocSearch-Button {
@@ -280,35 +240,25 @@ html:has(.home-stage) .VPNav {
 
 .DocSearch-Button:hover {
   border-color: var(--astryx-accent-bright);
-  background: var(--vp-c-bg-soft);
+  background: var(--docs-c-bg-soft);
 }
 
 /* Document pages */
 
-.VPDoc,
-.VPSidebar,
-.VPDocAside {
+.nagi-main,
+.nagi-sidebar {
   font-weight: 400;
 }
 
-.vp-doc :where(h1, h2, h3, h4) {
+.nagi-doc :where(h1, h2, h3, h4),
+.nagi-content :where(h1, h2, h3, h4) {
   font-weight: 400;
   letter-spacing: -0.025em;
 }
 
 @media (width <= 900px) {
-  .VPNavBarTitle .title > span {
+  .nagi-nav__title > span {
     display: none;
-  }
-}
-
-@media (width <= 720px) {
-  :root {
-    --vp-nav-height: 64px;
-  }
-
-  .VPNavBar .content-body {
-    gap: 6px;
   }
 }
 
@@ -317,18 +267,18 @@ html:has(.home-stage) .VPNav {
 .component-overview {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
-  min-height: calc(100svh - var(--vp-nav-height));
+  min-height: calc(100svh - var(--docs-nav-height));
   color: var(--astryx-text);
   background: var(--astryx-bg);
 }
 
 .component-overview__sidebar {
   position: sticky;
-  top: var(--vp-nav-height);
+  top: var(--docs-nav-height);
   align-self: start;
   display: flex;
   flex-direction: column;
-  height: calc(100svh - var(--vp-nav-height));
+  height: calc(100svh - var(--docs-nav-height));
   overflow: hidden;
   border-right: 1px solid var(--astryx-line);
 }
@@ -1000,7 +950,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 
 .visually-hidden-preview__button:hover {
   border-color: var(--astryx-accent-bright);
-  background: var(--vp-c-bg-soft);
+  background: var(--docs-c-bg-soft);
 }
 
 .visually-hidden-preview__announcement {
@@ -1285,7 +1235,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table table,
-:is(.vp-doc > table, .vp-doc > div table) {
+:is(.nagi-doc > table, .nagi-doc > div table) {
   display: block;
   width: 100%;
   margin: 18px 0;
@@ -1304,19 +1254,19 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   overflow: visible;
 }
 
-.vp-doc .astryx-visually-hidden table {
+.nagi-doc .astryx-visually-hidden table {
   display: table;
   margin: 0;
   overflow: clip;
 }
 
 .component-api-table code,
-:is(.vp-doc > table, .vp-doc > div table) code {
+:is(.nagi-doc > table, .nagi-doc > div table) code {
   white-space: nowrap;
 }
 
 .component-api-table :is(th, td),
-:is(.vp-doc > table, .vp-doc > div table) :is(th, td) {
+:is(.nagi-doc > table, .nagi-doc > div table) :is(th, td) {
   box-sizing: border-box;
   padding-block: var(--astryx-spacing-2, 8px);
   padding-inline: var(--astryx-spacing-3, 12px);
@@ -1327,7 +1277,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table th,
-:is(.vp-doc > table, .vp-doc > div table) th {
+:is(.nagi-doc > table, .nagi-doc > div table) th {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
   color: var(--astryx-color-text-secondary, var(--astryx-text-muted));
   font-size: var(--astryx-text-label-size, 1rem);
@@ -1336,7 +1286,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table td,
-:is(.vp-doc > table, .vp-doc > div table) td {
+:is(.nagi-doc > table, .nagi-doc > div table) td {
   color: var(--astryx-color-text-primary, var(--astryx-text));
   font-size: var(--astryx-text-body-size, 0.875rem);
   overflow-wrap: break-word;
@@ -1344,13 +1294,13 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table tbody tr:not(:last-child) > td,
-:is(.vp-doc > table, .vp-doc > div table) tbody tr:not(:last-child) > td {
+:is(.nagi-doc > table, .nagi-doc > div table) tbody tr:not(:last-child) > td {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
 }
 
 .component-api-table tbody tr,
-:is(.vp-doc > table, .vp-doc > div table) tbody tr,
-:is(.vp-doc > table, .vp-doc > div table) tbody tr:nth-child(2n) {
+:is(.nagi-doc > table, .nagi-doc > div table) tbody tr,
+:is(.nagi-doc > table, .nagi-doc > div table) tbody tr:nth-child(2n) {
   border: 0;
   background: transparent;
 }
@@ -1363,7 +1313,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 
 /* 60rem 以下侧栏离开文档流，从左侧滑出铺满视口高度的抽屉。 */
 @media (width < 60rem) {
-  .Layout:has(.component-overview) .VPLocalNav {
+  .nagi:has(.component-overview) .nagi-doc-toolbar {
     display: none;
   }
 
@@ -1374,12 +1324,12 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   .component-overview__toolbar {
     position: sticky;
     top: 0;
-    z-index: var(--vp-z-index-local-nav);
+    z-index: var(--nagi-z-toolbar);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--vp-local-nav-divider-color, var(--astryx-line));
-    background: var(--vp-local-nav-bg-color, var(--astryx-bg));
+    border-bottom: 1px solid var(--astryx-line);
+    background: var(--astryx-bg);
   }
 
   .component-overview__menu,
@@ -1390,7 +1340,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
     padding: 12px 24px 11px;
     border: 0;
     background: transparent;
-    color: var(--vp-c-text-2);
+    color: var(--docs-c-text-2);
     font: inherit;
     font-size: 12px;
     font-weight: 500;
@@ -1400,7 +1350,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 
   .component-overview__menu:hover,
   .component-overview__totop:hover {
-    color: var(--vp-c-text-1);
+    color: var(--docs-c-text-1);
   }
 
   .component-overview__menu-icon {
@@ -1416,7 +1366,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
     position: fixed;
     inset-block: 0;
     inset-inline-start: 0;
-    z-index: var(--vp-z-index-sidebar);
+    z-index: var(--nagi-z-sidebar);
     align-self: stretch;
     box-sizing: border-box;
     width: min(320px, 80vw);
@@ -1424,7 +1374,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
     max-height: 100dvh;
     margin: 0;
     border-right: 0;
-    background: var(--vp-sidebar-bg-color, var(--astryx-bg));
+    background: var(--astryx-bg);
     box-shadow: var(--astryx-shadow-low);
     visibility: hidden;
     overflow: hidden;
@@ -1453,7 +1403,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   .component-overview__backdrop {
     position: fixed;
     inset: 0;
-    z-index: var(--vp-z-index-backdrop);
+    z-index: var(--nagi-z-backdrop);
     display: block;
     padding: 0;
     border: 0;
@@ -1852,96 +1802,96 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /*
- * VitePress styles every bare list inside `.vp-doc`: an `ol` picks up its
+ * VitePress styles every bare list inside `.nagi-doc`: an `ol` picks up its
  * padding, its top margin, and decimal markers, which both pushed the trail off
  * center and added a marker column. Our components own those elements and reset
  * them in the component layer, so the prose declarations are rolled back to it
  * instead of being restated here.
  */
-.vp-doc .astryx-breadcrumbs :is(ol, ul, li),
-.vp-doc :is(ul, ol).astryx-list,
-.vp-doc .astryx-list :is(ol, ul, li),
-.vp-doc .astryx-tree-list :is(ol, ul, li),
-.vp-doc :is(ol.astryx-stepper, .astryx-step, .astryx-step-control) {
+.nagi-doc .astryx-breadcrumbs :is(ol, ul, li),
+.nagi-doc :is(ul, ol).astryx-list,
+.nagi-doc .astryx-list :is(ol, ul, li),
+.nagi-doc .astryx-tree-list :is(ol, ul, li),
+.nagi-doc :is(ol.astryx-stepper, .astryx-step, .astryx-step-control) {
   all: revert-layer;
 }
 
 /*
- * VitePress paints every table in `.vp-doc` without a layer: block display,
+ * VitePress paints every table in `.nagi-doc` without a layer: block display,
  * 8px 16px cell padding, a left-aligned header, full borders, and zebra rows.
  * Those beat `@layer astryx.components`, so Table density and column alignment
  * never reach the docs. Rolling the prose declarations back lets the component
  * own its cells.
  */
-.vp-doc .astryx-table,
-.vp-doc .astryx-table :is(thead, tbody, tfoot, tr, th, td) {
+.nagi-doc .astryx-table,
+.nagi-doc .astryx-table :is(thead, tbody, tfoot, tr, th, td) {
   all: revert-layer;
 }
 
-/* `.vp-doc img` adds a 1rem margin that shifts the thumbnail out of its frame. */
-.vp-doc .astryx-thumbnail img {
+/* `.nagi-doc img` adds a 1rem margin that shifts the thumbnail out of its frame. */
+.nagi-doc .astryx-thumbnail img {
   all: revert-layer;
 }
 
-/* Docs: override unlayered VitePress .vp-doc styles for component examples */
-.vp-doc a.astryx-link {
+/* Docs: override unlayered VitePress .nagi-doc styles for component examples */
+.nagi-doc a.astryx-link {
   color: var(--astryx-link-accent-foreground, #0074e2);
   text-decoration: none;
 }
 
-.vp-doc a.astryx-link::after {
+.nagi-doc a.astryx-link::after {
   content: none;
 }
 
-.vp-doc a.astryx-link--color-primary {
+.nagi-doc a.astryx-link--color-primary {
   color: var(--astryx-link-primary-foreground, var(--astryx-color-text-primary, #171717));
 }
 
-.vp-doc a.astryx-link--color-secondary {
+.nagi-doc a.astryx-link--color-secondary {
   color: var(--astryx-link-secondary-foreground, var(--astryx-color-text-secondary, #525252));
 }
 
-.vp-doc a.astryx-link--color-accent {
+.nagi-doc a.astryx-link--color-accent {
   color: var(--astryx-link-accent-foreground, #0074e2);
 }
 
-.vp-doc a.astryx-link--color-inherit {
+.nagi-doc a.astryx-link--color-inherit {
   color: inherit;
 }
 
-.vp-doc a.astryx-link:hover:not(:disabled, [aria-disabled='true']) {
+.nagi-doc a.astryx-link:hover:not(:disabled, [aria-disabled='true']) {
   text-decoration: underline;
 }
 
-.vp-doc a.astryx-link--underlined {
+.nagi-doc a.astryx-link--underlined {
   text-decoration: underline;
 }
 
-.vp-doc a.astryx-breadcrumb-item__content {
+.nagi-doc a.astryx-breadcrumb-item__content {
   color: var(--astryx-color-text-secondary, #525252);
   text-decoration: none;
 }
 
-.vp-doc span.astryx-breadcrumb-item__content--current {
+.nagi-doc span.astryx-breadcrumb-item__content--current {
   color: var(--astryx-color-text-primary, #171717);
 }
 
-.vp-doc h1.astryx-heading,
-.vp-doc h2.astryx-heading,
-.vp-doc h3.astryx-heading,
-.vp-doc h4.astryx-heading,
-.vp-doc h5.astryx-heading,
-.vp-doc h6.astryx-heading {
+.nagi-doc h1.astryx-heading,
+.nagi-doc h2.astryx-heading,
+.nagi-doc h3.astryx-heading,
+.nagi-doc h4.astryx-heading,
+.nagi-doc h5.astryx-heading,
+.nagi-doc h6.astryx-heading {
   margin: 0;
   padding: 0;
   border: 0;
 }
 
 /*
- * VitePress 的 `.vp-doc h3` 把字号写成 1.25rem，而且不在任何层里，盖过日程表组件层。
+ * VitePress 的 `.nagi-doc h3` 把字号写成 1.25rem，而且不在任何层里，盖过日程表组件层。
  * 窄屏下列头「周日」因此溢进下一列。退回组件层后，月历自己的字号才能生效。
  */
-.vp-doc .astryx-schedule :is(h1, h2, h3, h4, h5, h6) {
+.nagi-doc .astryx-schedule :is(h1, h2, h3, h4, h5, h6) {
   all: revert-layer;
 }
 
@@ -1951,26 +1901,26 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  * prose declarations back to the component layer restores the CodeBlock's own
  * surface and padding without restating them here.
  */
-.vp-doc .astryx-code-block code,
-.vp-doc .astryx-code {
+.nagi-doc .astryx-code-block code,
+.nagi-doc .astryx-code {
   all: revert-layer;
 }
 
 /*
- * 富文本里的内容块（段落、标题、引用、表格、行内代码、代码块）同理：VitePress 的 `.vp-doc` 给它们
+ * 富文本里的内容块（段落、标题、引用、表格、行内代码、代码块）同理：VitePress 的 `.nagi-doc` 给它们
  * 写了没放进任何层的样式（段落 16px 外边距、单元格 8px 16px 内边距、行内代码底色），盖过组件层里的规则，
  * 单元格会被撑成两倍高。把这些声明退回组件层。
  */
-.vp-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(p, h1, h2, h3, h4, h5, h6, blockquote, table, thead, tbody, tr, th, td, hr, code) {
+.nagi-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(p, h1, h2, h3, h4, h5, h6, blockquote, table, thead, tbody, tr, th, td, hr, code) {
   all: revert-layer;
 }
 
 /*
  * 列表不能用 `all: revert-layer`：退回去会把组件自己的标记样式一起丢掉。
- * `.vp-doc ul` 把左内边距写成 1.25rem（20px），盖过组件层里的 24px，任务项往左缩 24px 就溢出列表 4px。
+ * `.nagi-doc ul` 把左内边距写成 1.25rem（20px），盖过组件层里的 24px，任务项往左缩 24px 就溢出列表 4px。
  * 这里只把这一个声明写回去，边距和标记样式不动。
  */
-.vp-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(ul, ol).astryx-richtext__list {
+.nagi-doc :is(.astryx-richtext-editor__content, .astryx-richtext-view__content) :is(ul, ol).astryx-richtext__list {
   padding-inline-start: var(--astryx-spacing-6, 24px);
   margin-block: var(--astryx-spacing-3, 12px);
 }
@@ -2047,17 +1997,17 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  * and link color. Rolling those declarations back lets the component tokens
  * own the prose inside an example.
  */
-.vp-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6, blockquote, table, thead, tbody, tr, th, td),
-.vp-doc a.astryx-markdown__anchor {
+.nagi-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6, blockquote, table, thead, tbody, tr, th, td),
+.nagi-doc a.astryx-markdown__anchor {
   all: revert-layer;
 }
 
 /*
- * Lists stay out of `all: revert-layer`. VitePress `.vp-doc ul` is unlayered,
+ * Lists stay out of `all: revert-layer`. VitePress `.nagi-doc ul` is unlayered,
  * so a layered component rule cannot keep `list-style: none` or the 6px marker
  * column. These rules repeat the component's own marker, gap, padding, and margin.
  */
-.vp-doc .astryx-markdown :is(ul, ol).astryx-markdown__list {
+.nagi-doc .astryx-markdown :is(ul, ol).astryx-markdown__list {
   display: flex;
   flex-direction: column;
   gap: var(--astryx-spacing-0-5, 2px);
@@ -2067,19 +2017,19 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   list-style: none;
 }
 
-.vp-doc .astryx-markdown[data-density='compact'] :is(ul, ol).astryx-markdown__list {
+.nagi-doc .astryx-markdown[data-density='compact'] :is(ul, ol).astryx-markdown__list {
   margin-block: var(--astryx-spacing-1, 4px);
 }
 
-.vp-doc .astryx-markdown > :is(:first-child).astryx-markdown__list {
+.nagi-doc .astryx-markdown > :is(:first-child).astryx-markdown__list {
   margin-block-start: 0;
 }
 
-.vp-doc .astryx-markdown > :is(:last-child).astryx-markdown__list {
+.nagi-doc .astryx-markdown > :is(:last-child).astryx-markdown__list {
   margin-block-end: 0;
 }
 
-.vp-doc .astryx-markdown :is(li.astryx-markdown__item, li.astryx-markdown__task) {
+.nagi-doc .astryx-markdown :is(li.astryx-markdown__item, li.astryx-markdown__task) {
   display: flex;
   align-items: center;
   gap: var(--astryx-spacing-2, 8px);
@@ -2089,7 +2039,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   list-style: none;
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__marker {
+.nagi-doc .astryx-markdown .astryx-markdown__marker {
   display: flex;
   flex-shrink: 0;
   align-items: center;
@@ -2099,24 +2049,24 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   margin-top: calc((1em * var(--astryx-text-body-leading, 1.4286) - 6px) / 2);
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__marker-shape {
+.nagi-doc .astryx-markdown .astryx-markdown__marker-shape {
   display: block;
   width: 6px;
   height: 6px;
   background: currentColor;
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='disc'],
-.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
+.nagi-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='disc'],
+.nagi-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
   border-radius: 50%;
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
+.nagi-doc .astryx-markdown .astryx-markdown__marker-shape[data-shape='circle'] {
   border: 1px solid currentColor;
   background: transparent;
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__task-check {
+.nagi-doc .astryx-markdown .astryx-markdown__task-check {
   display: flex;
   flex: none;
   align-self: flex-start;
@@ -2124,7 +2074,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   height: 20px;
 }
 
-.vp-doc .astryx-markdown blockquote.astryx-blockquote {
+.nagi-doc .astryx-markdown blockquote.astryx-blockquote {
   margin-block: var(--astryx-spacing-4, 16px);
   margin-inline: 0;
   padding-inline-start: var(--astryx-spacing-4, 16px);
@@ -2136,7 +2086,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-style: normal;
 }
 
-.vp-doc .astryx-markdown table.astryx-markdown__table {
+.nagi-doc .astryx-markdown table.astryx-markdown__table {
   display: table;
   width: max-content;
   min-width: 100%;
@@ -2145,7 +2095,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   border-collapse: collapse;
 }
 
-.vp-doc .astryx-markdown :is(th, td).astryx-markdown__cell {
+.nagi-doc .astryx-markdown :is(th, td).astryx-markdown__cell {
   padding: var(--astryx-spacing-2, 8px);
   border: 0;
   border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
@@ -2155,7 +2105,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /* 列线跟组件样式一致：最后一列不画，外沿交给表格边框。 */
-.vp-doc .astryx-markdown :is(th, td).astryx-markdown__cell:not(:last-child) {
+.nagi-doc .astryx-markdown :is(th, td).astryx-markdown__cell:not(:last-child) {
   border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
 }
 
@@ -2163,15 +2113,15 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  * The start alignment above is unlayered, so it outranks the component layer's
  * GFM rules. Restate center and right here or every column stays left.
  */
-.vp-doc .astryx-markdown .astryx-markdown__cell[data-align='center'] {
+.nagi-doc .astryx-markdown .astryx-markdown__cell[data-align='center'] {
   text-align: center;
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__cell[data-align='right'] {
+.nagi-doc .astryx-markdown .astryx-markdown__cell[data-align='right'] {
   text-align: end;
 }
 
-.vp-doc .astryx-markdown tbody tr:last-child > .astryx-markdown__cell {
+.nagi-doc .astryx-markdown tbody tr:last-child > .astryx-markdown__cell {
   border-block-end: 0;
 }
 
@@ -2180,29 +2130,29 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
  * the regular face. Markdown opts back in. The theme sheet already loads
  * Figtree 600 and italic, so those glyphs are real faces.
  */
-.vp-doc .astryx-markdown {
+.nagi-doc .astryx-markdown {
   font-synthesis: weight style;
 }
 
-.vp-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6).astryx-heading.astryx-markdown__heading,
-.vp-doc .astryx-markdown strong {
+.nagi-doc .astryx-markdown :is(h1, h2, h3, h4, h5, h6).astryx-heading.astryx-markdown__heading,
+.nagi-doc .astryx-markdown strong {
   font-weight: var(--astryx-font-weight-semibold, 600);
 }
 
-.vp-doc .astryx-markdown em {
+.nagi-doc .astryx-markdown em {
   font-style: italic;
 }
 
-.vp-doc .astryx-markdown th.astryx-markdown__cell {
+.nagi-doc .astryx-markdown th.astryx-markdown__cell {
   color: var(--astryx-color-text-secondary, #525252);
   font-weight: var(--astryx-font-weight-semibold, 600);
 }
 
-.vp-doc .astryx-markdown td.astryx-markdown__cell {
+.nagi-doc .astryx-markdown td.astryx-markdown__cell {
   color: light-dark(#000000, #ffffff);
 }
 
-.vp-doc .astryx-markdown code.astryx-code {
+.nagi-doc .astryx-markdown code.astryx-code {
   padding-block: 0;
   padding-inline: var(--astryx-spacing-1, 4px);
   border-radius: var(--astryx-radius-inner, 0.375rem);
@@ -2212,7 +2162,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-size: var(--astryx-text-code-size, 0.875rem);
 }
 
-.vp-doc .astryx-code-block code {
+.nagi-doc .astryx-code-block code {
   margin: 0;
   padding-block: var(--astryx-spacing-3, 12px);
   padding-inline: var(--astryx-spacing-4, 16px);
@@ -2223,35 +2173,35 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-size: var(--astryx-text-code-size, 0.875rem);
 }
 
-.vp-doc .astryx-markdown a.astryx-link,
-.vp-doc .astryx-markdown a.astryx-link.astryx-markdown__link {
+.nagi-doc .astryx-markdown a.astryx-link,
+.nagi-doc .astryx-markdown a.astryx-link.astryx-markdown__link {
   color: light-dark(#1b1b1b, #f1f1f1);
   font-weight: var(--astryx-font-weight-normal, 400);
   text-decoration-line: underline;
 }
 
-.vp-doc .astryx-markdown a.astryx-markdown__cite {
+.nagi-doc .astryx-markdown a.astryx-markdown__cite {
   color: var(--astryx-color-text-secondary, #525252);
   font-weight: var(--astryx-text-supporting-weight, 400);
   text-decoration: none;
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__cite[data-citation-style='number'] {
+.nagi-doc .astryx-markdown .astryx-markdown__cite[data-citation-style='number'] {
   font-weight: var(--astryx-citation-number-font-weight, var(--astryx-font-weight-semibold, 600));
   text-decoration: none;
 }
 
-.vp-doc .astryx-markdown .astryx-markdown__cite img {
+.nagi-doc .astryx-markdown .astryx-markdown__cite img {
   width: var(--astryx-spacing-3, 12px);
   height: var(--astryx-spacing-3, 12px);
   margin: 0;
 }
 
 /*
- * `.vp-doc hr` and `.vp-doc img` are unlayered too. They replace the divider
+ * `.nagi-doc hr` and `.nagi-doc img` are unlayered too. They replace the divider
  * color and add a 1rem margin on images that already sit in a spaced paragraph.
  */
-.vp-doc .astryx-markdown hr.astryx-markdown__hr {
+.nagi-doc .astryx-markdown hr.astryx-markdown__hr {
   height: 0;
   margin-block: var(--astryx-spacing-6, 24px);
   margin-inline: 0;
@@ -2260,19 +2210,19 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   background: transparent;
 }
 
-.vp-doc .astryx-markdown[data-density='compact'] hr.astryx-markdown__hr {
+.nagi-doc .astryx-markdown[data-density='compact'] hr.astryx-markdown__hr {
   margin-block: var(--astryx-spacing-3, 12px);
 }
 
-.vp-doc .astryx-markdown > :is(:first-child).astryx-markdown__hr {
+.nagi-doc .astryx-markdown > :is(:first-child).astryx-markdown__hr {
   margin-block-start: 0;
 }
 
-.vp-doc .astryx-markdown > :is(:last-child).astryx-markdown__hr {
+.nagi-doc .astryx-markdown > :is(:last-child).astryx-markdown__hr {
   margin-block-end: 0;
 }
 
-.vp-doc .astryx-markdown img.astryx-markdown__image {
+.nagi-doc .astryx-markdown img.astryx-markdown__image {
   display: block;
   max-width: 100%;
   height: auto;
@@ -2331,13 +2281,13 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /*
- * VitePress `.vp-doc a` is unlayered (brand color, underline, medium weight).
+ * VitePress `.nagi-doc a` is unlayered (brand color, underline, medium weight).
  * It beats `@layer astryx.components`, and it matches the component root when
  * that root is the anchor (`a.astryx-nav-item`). A descendant selector never
  * sees that root. Inside the demo host, roll those prose properties back to
  * the component layer. Components still set their own color and text-decoration.
  */
-.vp-doc .astryx-demo :is(a, button) {
+.nagi-doc .astryx-demo :is(a, button) {
   color: revert-layer;
   font-weight: revert-layer;
   text-decoration: revert-layer;
@@ -2345,17 +2295,17 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 /*
- * VitePress `.vp-doc` also paints `p` and headings in the prose color. That
+ * VitePress `.nagi-doc` also paints `p` and headings in the prose color. That
  * unlayered color beats the component layer, so themed text stayed on the
  * docs palette. Roll the prose color back to the component token.
  */
-.vp-doc .astryx-demo :is(.astryx-heading, .astryx-text) {
+.nagi-doc .astryx-demo :is(.astryx-heading, .astryx-text) {
   color: revert-layer;
 }
 
-.vp-doc .astryx-demo.theme-preview :is(.astryx-heading, .astryx-text),
-.vp-doc .astryx-demo.media-theme-preview :is(.astryx-heading, .astryx-text),
-.vp-doc .astryx-demo.syntax-theme-preview :is(.astryx-heading, .astryx-text) {
+.nagi-doc .astryx-demo.theme-preview :is(.astryx-heading, .astryx-text),
+.nagi-doc .astryx-demo.media-theme-preview :is(.astryx-heading, .astryx-text),
+.nagi-doc .astryx-demo.syntax-theme-preview :is(.astryx-heading, .astryx-text) {
   font-size: revert-layer;
   font-weight: revert-layer;
   line-height: revert-layer;
@@ -2431,7 +2381,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: min(100%, 16rem);
 }
 
-.vp-doc .nav-bulk-table {
+.nagi-doc .nav-bulk-table {
   display: table;
   width: 100%;
   margin: 0;
@@ -2441,14 +2391,14 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   font-size: 0.875rem;
 }
 
-.vp-doc .nav-bulk-table tr,
-.vp-doc .nav-bulk-table tr:nth-child(2n) {
+.nagi-doc .nav-bulk-table tr,
+.nagi-doc .nav-bulk-table tr:nth-child(2n) {
   border: 0;
   background: transparent;
 }
 
-.vp-doc .nav-bulk-table th,
-.vp-doc .nav-bulk-table td {
+.nagi-doc .nav-bulk-table th,
+.nagi-doc .nav-bulk-table td {
   border: 0;
   border-bottom: 1px solid var(--astryx-color-border);
   background: transparent;
@@ -2457,15 +2407,15 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   vertical-align: middle;
 }
 
-.vp-doc .nav-bulk-table th {
+.nagi-doc .nav-bulk-table th {
   font-weight: var(--astryx-font-weight-semibold, 600);
 }
 
-.vp-doc .nav-bulk-table tr.is-selected td {
+.nagi-doc .nav-bulk-table tr.is-selected td {
   background: var(--astryx-color-background-muted);
 }
 
-.vp-doc .nav-bulk-table .astryx-checkbox-input {
+.nagi-doc .nav-bulk-table .astryx-checkbox-input {
   width: auto;
 }
 
@@ -2607,7 +2557,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   padding: 28px 20px;
   border: 1px solid var(--astryx-line);
   border-radius: 12px;
-  background: var(--vp-c-bg-soft);
+  background: var(--docs-c-bg-soft);
 }
 
 .props-playground__stage > * {
@@ -2635,7 +2585,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   padding: 6px 8px;
   border: 1px solid var(--astryx-line);
   border-radius: 8px;
-  background: var(--vp-c-bg);
+  background: var(--docs-c-bg);
   color: var(--astryx-text);
   font: inherit;
 }
@@ -2645,7 +2595,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   overflow-x: auto;
   padding: 12px 14px;
   border-radius: 12px;
-  background: var(--vp-c-bg-soft);
+  background: var(--docs-c-bg-soft);
   font-size: 13px;
 }
 
@@ -2687,11 +2637,6 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   width: 100%;
 }
 
-/* Canary 文档的 logo 下方不再重复画一段顶栏分隔线。 */
-.lab-docs-layout .VPNav .divider::before {
-  display: none;
-}
-
 .astryx-demo.lab-demo {
   display: block;
   width: 100%;
@@ -2703,4 +2648,220 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   flex-wrap: wrap;
   gap: 24px;
   align-items: center;
+}
+/*
+ * The site keeps its palette in VitePress variables. nagi reads its own
+ * tokens, so they take the site values here. Variables the site never sets
+ * fall back to nagi's own value through the second argument.
+ */
+:root {
+  --nagi-nav-height: var(--docs-nav-height);
+  --nagi-c-bg: var(--docs-c-bg);
+  --nagi-c-bg-alt: var(--docs-c-bg-alt);
+  --nagi-c-bg-elv: var(--docs-c-bg-elv);
+  --nagi-c-bg-soft: var(--docs-c-bg-soft);
+  --nagi-c-brand-1: var(--docs-c-brand-1);
+  --nagi-c-brand-2: var(--docs-c-brand-2);
+  --nagi-font-family-base: var(--docs-font-family-base);
+  --nagi-font-family-mono: var(--docs-font-family-mono);
+}
+
+html.dark {
+  --nagi-c-divider: var(--docs-c-divider);
+  --nagi-c-text-1: var(--docs-c-text-1);
+  --nagi-c-text-2: var(--docs-c-text-2);
+  --nagi-c-text-3: var(--docs-c-text-3);
+}
+
+/* nagi scrolls the page inside a container that already starts below the navigation bar. */
+.nagi .component-overview {
+  min-height: calc(100svh - var(--nagi-nav-height));
+}
+
+.nagi .component-overview__sidebar {
+  top: 0;
+}
+
+/* The home page draws its own stage; VitePress gave `layout: page` no document padding or heading rules. */
+.page-home .nagi-main__content {
+  padding-top: 0;
+}
+
+.page-home .nagi-doc h2 {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Match the VitePress local-search and navigation control geometry used by the site. */
+.nagi-nav {
+  border-bottom: 0;
+}
+
+.nagi-nav-bar {
+  border-bottom: 0;
+  background: var(--astryx-bg);
+  box-shadow: inset 0 1px 0 rgb(200 237 116 / 18%), inset 0 -1px 0 var(--astryx-line);
+}
+
+.nagi-nav__controls {
+  height: var(--nagi-nav-height);
+  gap: 0;
+}
+
+.nagi-nav-links {
+  gap: 0;
+}
+
+.nagi-nav-links__link {
+  display: flex;
+  align-items: center;
+  height: var(--nagi-nav-height);
+  padding: 0 12px;
+  font-weight: 500;
+}
+
+.nagi-nav-links__link.is-active {
+  color: var(--docs-c-brand-1);
+}
+
+.kawa-search-button {
+  width: 131px;
+  height: 38px;
+  margin-left: 32px;
+  padding: 8px 12px;
+  gap: 8px;
+  font-size: 14px;
+  background: var(--docs-c-bg-alt);
+}
+
+.nagi-language-menu {
+  display: flex;
+  align-items: center;
+  width: 75px;
+  height: var(--nagi-nav-height);
+  padding-left: 17px;
+}
+
+.nagi-language-menu__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 58px;
+  height: var(--nagi-nav-height);
+  padding: 0 12px;
+  border-radius: 0;
+}
+
+.nagi-language-menu__button::after {
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid currentcolor;
+  border-bottom: 1px solid currentcolor;
+  content: '';
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.nagi-appearance-switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  margin-left: 25px;
+  border: 1px solid #3c3f44;
+  border-radius: 11px;
+  background: rgb(101 117 133 / 16%);
+}
+
+.nagi-appearance-switch::before {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #000;
+  content: '';
+  transition: transform 180ms;
+}
+
+.nagi-appearance-switch__icon {
+  position: absolute;
+  z-index: 1;
+  top: 4px;
+  left: 4px;
+  width: 12px;
+  height: 12px;
+}
+
+:root.dark .nagi-appearance-switch::before {
+  transform: translateX(18px);
+}
+
+:root.dark .nagi-appearance-switch__moon {
+  display: block;
+  right: 4px;
+  left: auto;
+}
+
+/* VitePress's document measure and heading weight on guide pages. */
+@media (min-width: 48rem) {
+  .nagi-main--doc .nagi-main__content {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+
+.nagi-doc :where(h1, h2, h3, h4) {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 47.999rem) {
+  .nagi-nav__controls {
+    height: var(--nagi-nav-height);
+  }
+
+  .kawa-search-button {
+    width: 36px;
+    height: 36px;
+    margin-left: 0;
+    padding: 0;
+    background: transparent;
+  }
+}
+
+/*
+ * 首页导航栏和舞台同色，底部只有一条 astryx 边框色的分隔线，与原站一致。
+ * 桌面端导航栏固定在顶部，线用 inset 阴影画，不占高度；窄屏用真实边框，舞台从线下开始。
+ */
+.page-home .nagi-nav-bar,
+html:has(.home-stage) .nagi-nav-bar {
+  border-bottom: 0;
+  background: var(--astryx-color-background-body);
+  box-shadow: inset 0 -1px 0 var(--astryx-color-border);
+}
+
+@media (min-width: 48rem) {
+  .page-home .nagi-nav-bar {
+    position: fixed;
+    inset: 0 0 auto;
+  }
+
+  .page-home .nagi-page-scroll {
+    padding-top: var(--nagi-nav-height);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .page-home .nagi-nav-bar,
+  html:has(.home-stage) .nagi-nav-bar {
+    border-bottom: 1px solid var(--astryx-color-border);
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 47.999rem) {
+  :root {
+    --docs-nav-height: 64px;
+  }
 }

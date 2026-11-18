@@ -43,7 +43,7 @@ const UPSTREAM = {
 }
 
 /**
- * 我们（VitePress）：深浅色由 localStorage 的 vitepress-theme-appearance 决定，html 上挂 dark 类。
+ * 我们（KawaPress 的 nagi）：深浅色由 localStorage 的 kawapress:appearance 决定，html 上挂 dark 类。
  * 预览区是 ComponentDocsShell 里的 .component-detail__stage。
  */
 const OURS = {
@@ -51,7 +51,7 @@ const OURS = {
   previewSelector: '.component-detail__stage',
   initScript: (scheme) => {
     try {
-      localStorage.setItem('vitepress-theme-appearance', scheme)
+      localStorage.setItem('kawapress:appearance', scheme)
     }
     catch {}
   },

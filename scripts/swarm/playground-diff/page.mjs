@@ -70,7 +70,7 @@ export async function waitForStablePreview(page, { timeoutMs = LOAD_TIMEOUT_MS }
 export async function openSide(browser, url, { scheme, local, settleMs = 1200, attempts = 2 }) {
   const context = await browser.newContext({ viewport: VIEWPORT, colorScheme: scheme })
   if (local)
-    await context.addInitScript(mode => localStorage.setItem('vitepress-theme-appearance', mode), scheme)
+    await context.addInitScript(mode => localStorage.setItem('kawapress:appearance', mode), scheme)
   const page = await context.newPage()
   let lastError = null
   for (let attempt = 1; attempt <= attempts; attempt++) {
