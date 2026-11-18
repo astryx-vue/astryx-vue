@@ -373,7 +373,11 @@
   .astryx-selector-options {
     display: flex;
     flex-direction: column;
-    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  /* 输入框样式的触发器自带 1px 边框，列表左右多留一像素，让选项和触发器里的文字同一条左边。 */
+  .astryx-selector-listbox.is-input {
+    padding-inline: calc(var(--astryx-spacing-1, 4px) + var(--astryx-border-width, 1px));
   }
 
   .astryx-selector-option {

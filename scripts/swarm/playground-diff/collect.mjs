@@ -77,12 +77,27 @@ export async function collectPlaygroundFrame() {
   }
 
   /** 把视口坐标换成「所有祖先滚动都还原到 0」的绝对坐标。 */
+  function floating(node) {
+    if (getComputedStyle(node).position === 'fixed')
+      return true
+    try {
+      return node.matches(':popover-open, dialog[open]:modal')
+    }
+    catch {
+      return false
+    }
+  }
+
   function absolute(el, rect) {
     let x = rect.left
     let y = rect.top
-    for (let parent = el.parentElement; parent; parent = parent.parentElement) {
-      x += parent.scrollLeft
-      y += parent.scrollTop
+    // 浮层（fixed 定位或顶层 popover）不随外面的滚动区走：原版的菜单是滚动区的 DOM 后代，
+    // 我们的传送到 body，两边都只该按视口坐标算，不能把滚动区的 scrollTop 加进去。
+    for (let node = el; node.parentElement; node = node.parentElement) {
+      if (floating(node))
+        break
+      x += node.parentElement.scrollLeft
+      y += node.parentElement.scrollTop
     }
     return { x: round(x), y: round(y), w: round(rect.width), h: round(rect.height) }
   }

@@ -52,9 +52,23 @@ export function computeLayerPosition(
 
   let top: number
   let left: number
+  let alignedTo = alignment
+  if (resolved === 'above' || resolved === 'below') {
+    // 原版靠 position-try 的 flip-inline：start 对齐的浮层右边越界就改成 end 对齐（反之亦然），
+    // 前提是翻过去能放下；放不下才由下面的夹紧兜底。
+    if (alignment === 'start' && anchor.left + layer.width > viewport.width - gutter.inlineEnd
+      && anchor.right - layer.width >= gutter.inlineStart) {
+      alignedTo = 'end'
+    }
+    else if (alignment === 'end' && anchor.right - layer.width < gutter.inlineStart
+      && anchor.left >= gutter.inlineStart
+      && anchor.left + layer.width <= viewport.width - gutter.inlineEnd) {
+      alignedTo = 'start'
+    }
+  }
   if (resolved === 'above' || resolved === 'below') {
     top = resolved === 'above' ? anchor.top - gap - layer.height : anchor.bottom + gap
-    left = alignOnAxis(anchor.left, anchor.width, layer.width, alignment)
+    left = alignOnAxis(anchor.left, anchor.width, layer.width, alignedTo)
   }
   else {
     left = resolved === 'start' ? anchor.left - gap - layer.width : anchor.right + gap
@@ -75,13 +89,13 @@ export function computeLayerPosition(
     ? (resolved === 'below' ? 0 : gutter.blockStart)
     : (alignment === 'start' ? 0 : gutter.blockStart)
   const minLeft = horizontalPlacement
-    ? (alignment === 'start' ? 0 : gutter.inlineStart)
+    ? (alignedTo === 'start' ? 0 : gutter.inlineStart)
     : (resolved === 'end' ? 0 : gutter.inlineStart)
   const maxTop = viewport.height - layer.height - (
     horizontalPlacement ? (resolved === 'above' ? 0 : gutter.blockEnd) : (alignment === 'end' ? 0 : gutter.blockEnd)
   )
   const maxLeft = viewport.width - layer.width - (
-    horizontalPlacement ? (alignment === 'end' ? 0 : gutter.inlineEnd) : (resolved === 'start' ? 0 : gutter.inlineEnd)
+    horizontalPlacement ? (alignedTo === 'end' ? 0 : gutter.inlineEnd) : (resolved === 'start' ? 0 : gutter.inlineEnd)
   )
   return {
     top: clamp(top, minTop, maxTop),

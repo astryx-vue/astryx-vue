@@ -2,6 +2,8 @@
 import type { ToastContentScope, ToastDismissReason, ToastOptions, ToastSlots } from './types.js'
 import type { ToastGestureDirection } from './useToastGesture.js'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import Icon from '../Icon/Icon.vue'
+import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import MediaTheme from '../Theme/MediaTheme.vue'
 import { useTheme } from '../Theme/useTheme.js'
@@ -185,22 +187,25 @@ onUnmounted(() => {
     <MediaTheme mode="auto" :fallback="mediaFallback" class="astryx-toast__surface">
       <slot v-if="$slots.content" name="content" v-bind="contentScope" />
       <template v-else>
-        <span class="astryx-toast__body">
-          <slot>{{ body }}</slot>
-        </span>
-        <span v-if="endContent || $slots.end" class="astryx-toast__end">
-          <slot name="end">
-            <component :is="endContent" v-if="endContent" />
-          </slot>
-        </span>
-        <button
-          type="button"
-          class="astryx-toast__close"
-          :aria-label="dismissLabel"
-          @click="handleClose"
-        >
-          ×
-        </button>
+        <div class="astryx-toast__inner">
+          <div class="astryx-toast__body">
+            <slot>{{ body }}</slot>
+          </div>
+          <div class="astryx-toast__end">
+            <slot name="end">
+              <component :is="endContent" v-if="endContent" />
+            </slot>
+            <IconButton
+              class="astryx-toast__close"
+              variant="ghost"
+              size="sm"
+              :label="dismissLabel"
+              @click="handleClose"
+            >
+              <Icon icon="close" size="sm" color="inherit" />
+            </IconButton>
+          </div>
+        </div>
       </template>
     </MediaTheme>
   </div>

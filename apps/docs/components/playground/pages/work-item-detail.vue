@@ -120,9 +120,12 @@ const ATTACHMENT_ICONS: Record<AttachmentKind, string> = {
   file: 'heroicons:document-text',
 }
 
-const ATTACHMENT_ACTIONS: { label: string, variant?: 'destructive' }[] = [
-  { label: 'Edit' },
-  { label: 'Delete', variant: 'destructive' },
+const PencilIcon = () => h(Icon, { name: 'heroicons:pencil' })
+const TrashIcon = () => h(Icon, { name: 'heroicons:trash' })
+
+const ATTACHMENT_ACTIONS: { label: string, icon: () => unknown, variant?: 'destructive' }[] = [
+  { label: 'Edit', icon: PencilIcon },
+  { label: 'Delete', icon: TrashIcon, variant: 'destructive' },
 ]
 
 const WATCHERS = [

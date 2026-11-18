@@ -29,6 +29,14 @@ describe('computeLayerPosition', () => {
     expect(position.left).toBe(8)
   })
 
+  it('flips a start-aligned layer to end alignment when it would run past the inline end edge', () => {
+    // 原版 position-try 的 flip-inline：右边放不下就改成和触发器右边对齐。
+    const anchor = rect(100, viewport.width - 40, 32, 32)
+    const position = computeLayerPosition(anchor, layer, viewport, 'below', 'start', 4)
+
+    expect(position.left).toBe(anchor.right - layer.width)
+  })
+
   it('keeps the layer anchored when the anchor is fully below the viewport', () => {
     const anchor = rect(2151, 505)
     const position = computeLayerPosition(anchor, layer, viewport, 'above', 'center', 4)

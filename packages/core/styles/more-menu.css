@@ -142,12 +142,13 @@
     padding-block: var(--astryx-spacing-1, 4px);
   }
 
+  /* 同上游 DropdownMenuItem 的 itemSizeStyles：md 6px（行高 32px），lg 沿用基础的 8px。 */
   .astryx-more-menu__panel[data-size='md'] .astryx-more-menu__item {
-    padding-block: var(--astryx-spacing-2, 8px);
+    padding-block: var(--astryx-spacing-1-5, 6px);
   }
 
   .astryx-more-menu__panel[data-size='lg'] .astryx-more-menu__item {
-    padding-block: var(--astryx-spacing-3, 12px);
+    padding-block: var(--astryx-spacing-2, 8px);
   }
 
   /*

@@ -103,6 +103,7 @@ export const templateIcons = [
   'heroicons:squares-2x2',
   'heroicons:arrow-down-on-square',
   'heroicons:arrow-left',
+  'heroicons:pencil',
   'heroicons:arrow-right-20-solid',
   'heroicons:beaker',
   'heroicons:bell',

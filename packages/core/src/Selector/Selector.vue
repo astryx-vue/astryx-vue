@@ -310,10 +310,38 @@ function syncAnchorWidth(): void {
   anchorWidth.value = fieldRef.value?.getBoundingClientRect().width ?? 0
 }
 
+/**
+ * 原版的下拉列表（没有搜索框、没指定位置时）把选中项盖在触发器上：
+ * 列表上移，使选中项的顶边和字段顶边对齐；还没选值时贴着字段下沿、不留空隙。
+ * 只在朝下展开时生效；空间不够翻到上方时按普通位置走。
+ */
+const overlaySelected = computed(() => !props.searchable && !isSheet.value)
+const overlayTop = ref<number | null>(null)
+
+function syncOverlay(): void {
+  const list = listboxRef.value
+  const field = fieldRef.value
+  if (!overlaySelected.value || !combobox.isOpen.value || !list || !field || position.value.placement !== 'below') {
+    overlayTop.value = null
+    return
+  }
+  const fieldRect = field.getBoundingClientRect()
+  const selected = list.querySelector<HTMLElement>('.astryx-selector-option.is-selected')
+  const raw = selected
+    ? fieldRect.top - list.clientTop - (selected.offsetTop - list.scrollTop)
+    : fieldRect.bottom
+  const maxTop = window.innerHeight - list.offsetHeight - 8
+  overlayTop.value = Math.max(8, Math.min(raw, Math.max(8, maxTop)))
+}
+
+watch([() => combobox.isOpen.value, position, () => props.modelValue], () => {
+  void nextTick(syncOverlay)
+}, { flush: 'post' })
+
 const listboxStyle = computed(() => isSheet.value
   ? undefined
   : {
-      top: `${position.value.top}px`,
+      top: `${overlayTop.value ?? position.value.top}px`,
       left: `${position.value.left}px`,
       minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
     })
@@ -441,7 +469,7 @@ onMounted(syncAnchorWidth)
         ref="listboxRef"
         :role="gridMode ? 'grid' : 'listbox'"
         class="astryx-selector-listbox astryx-layer"
-        :class="{ 'is-sheet': isSheet }"
+        :class="{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
         tabindex="-1"

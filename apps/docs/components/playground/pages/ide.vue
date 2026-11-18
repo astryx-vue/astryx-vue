@@ -4,6 +4,7 @@ import {
   Button,
   CodeBlock,
   Heading,
+  Icon,
   Layout,
   LayoutContent,
   LayoutPanel,
@@ -26,7 +27,7 @@ import {
   VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import { computed, h, ref } from 'vue'
 
 // 和原版逐行一致，代码行数决定编辑区的高度。
 const EDITOR_CODE = [
@@ -136,20 +137,20 @@ function buildFileTree(onFileClick: (name: string) => void): TreeListItemData[] 
   const file = (id: string): TreeListItemData => ({
     id,
     label: id,
-    icon: 'i-heroicons-document',
+    startContent: () => h(Icon, { name: 'heroicons:document-text', size: 'xsm' }),
     onClick: () => onFileClick(id),
   })
   return [
     {
       id: 'src',
       label: 'src',
-      icon: 'i-heroicons-folder',
+      startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
       isExpanded: true,
       children: [
         {
           id: 'components',
           label: 'components',
-          icon: 'i-heroicons-folder',
+          startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
           isExpanded: true,
           children: [
             file('Counter.tsx'),
@@ -160,14 +161,14 @@ function buildFileTree(onFileClick: (name: string) => void): TreeListItemData[] 
         {
           id: 'pages',
           label: 'pages',
-          icon: 'i-heroicons-folder',
+          startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
           isExpanded: true,
           children: [file('index.tsx'), file('about.tsx')],
         },
         {
           id: 'styles',
           label: 'styles',
-          icon: 'i-heroicons-folder',
+          startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
           isExpanded: true,
           children: [file('tokens.ts'), file('theme.ts')],
         },

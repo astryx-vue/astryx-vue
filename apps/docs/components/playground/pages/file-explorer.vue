@@ -16,6 +16,7 @@ import {
   Text,
   Toolbar,
   VisuallyHidden,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { computed, ref } from 'vue'
@@ -246,7 +247,14 @@ const FILESYSTEM: FileSystemItem[] = [
   },
 ]
 
-const viewMode = ref('column')
+const showToast = useToast()
+// Demo only: 这一页只展示分栏视图，切换视图和工具栏动作都只弹提示。
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
+function onViewChange(view: string) {
+  demo(`Demo: the ${view} view would show here`, `view-${view}`)
+}
 const selectedPath = ref<string[]>(['applications', 'chrome-apps', 'component-lab'])
 
 function findItem(items: FileSystemItem[], id: string): FileSystemItem | null {
@@ -341,7 +349,7 @@ function goBack(): void {
           </Text>
         </template>
         <template #center>
-          <SegmentedControl v-model="viewMode" label="View mode">
+          <SegmentedControl model-value="column" label="View mode" @change="onViewChange">
             <SegmentedControlItem value="grid" label="Grid" is-label-hidden>
               <template #icon>
                 <Icon name="heroicons:squares-2x2" size="sm" />
@@ -365,19 +373,19 @@ function goBack(): void {
           </SegmentedControl>
         </template>
         <template #end>
-          <IconButton variant="ghost" size="sm" label="Group">
+          <IconButton variant="ghost" size="sm" label="Group" @click="demo('Demo: grouping options would open here', 'group')">
             <Icon name="heroicons:adjustments-horizontal" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="Share">
+          <IconButton variant="ghost" size="sm" label="Share" @click="demo('Demo: sharing would start here', 'share')">
             <Icon name="heroicons:share" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="Tags">
+          <IconButton variant="ghost" size="sm" label="Tags" @click="demo('Demo: tags for the selection would open here', 'tags')">
             <Icon name="heroicons:tag" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="More">
+          <IconButton variant="ghost" size="sm" label="More" @click="demo('Demo: more actions would open here', 'more')">
             <Icon name="heroicons:ellipsis-horizontal" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="Search">
+          <IconButton variant="ghost" size="sm" label="Search" @click="demo('Demo: search in this folder would open here', 'search')">
             <Icon name="heroicons:magnifying-glass" size="sm" />
           </IconButton>
         </template>
