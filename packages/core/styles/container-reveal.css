@@ -1,105 +1,196 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.components {
-  .astryx-reveal {
-    --_hover-delay: 0s;
-    --_reveal-opacity: 0;
-    --_reveal-position: absolute;
-    --_conceal-opacity: 1;
-  }
+  /* 与上游 containerReveal.stylex.ts 对齐。StyleX 按「属性 + 条件」后者覆盖，这里用嵌套层表达条件优先级：
+     rest < focus-within < hover（仅 hover: hover 且未禁用）< 粗指针 < 元素自身覆盖。
+     同一层内 --inactive / --active 写在容器之后，等价于 StyleX 里同条件的替换。 */
+  @layer rest, focus, hover, coarse, content, override;
 
-  @media (hover: hover) {
-    .astryx-reveal:hover {
-      --_reveal-opacity: 1;
-      --_reveal-position: static;
-      --_conceal-opacity: 0;
-    }
-
-    .astryx-reveal--inactive:hover {
+  @layer rest {
+    .astryx-reveal {
+      --_hover-delay: 0s;
       --_reveal-opacity: 0;
       --_reveal-position: absolute;
+      --_reveal-delay: 0s, var(--astryx-duration-fast-max, 165ms);
+      --_reveal-delay-reduced: 0s, 0s;
       --_conceal-opacity: 1;
+      --_fade-delay: 0s;
     }
-  }
 
-  .astryx-reveal:focus-within,
-  .astryx-reveal--active {
-    --_reveal-opacity: 1;
-    --_reveal-position: static;
-  }
+    .astryx-reveal--inactive {
+      --_reveal-opacity: 0;
+      --_reveal-position: absolute;
+      --_reveal-delay: 0s, var(--astryx-duration-fast-max, 165ms);
+      --_reveal-delay-reduced: 0s, 0s;
+      --_conceal-opacity: 1;
+      --_fade-delay: 0s;
+    }
 
-  @media (any-pointer: coarse) {
-    .astryx-reveal {
+    .astryx-reveal--active {
       --_reveal-opacity: 1;
       --_reveal-position: static;
+      --_reveal-delay: 0s, 0s;
+      --_reveal-delay-reduced: 0s, 0s;
+      --_conceal-opacity: 0;
+      --_fade-delay: 0s;
     }
   }
 
-  .astryx-reveal__content,
-  .astryx-reveal__content--preserve,
-  .astryx-reveal__conceal,
-  .astryx-reveal__conceal--preserve {
-    transition-property: opacity, position;
-    transition-duration: var(--astryx-duration-fast-max, 165ms);
-    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
-    transition-delay: var(--_reveal-delay, 0s);
-    transition-behavior: allow-discrete;
-  }
+  @layer focus {
+    .astryx-reveal:focus-within {
+      --_reveal-opacity: 1;
+      --_reveal-position: static;
+      --_reveal-delay: 0s, 0s;
+      --_reveal-delay-reduced: 0s, 0s;
+      --_fade-delay: 0s;
+    }
 
-  @media (hover: hover) {
-    .astryx-reveal:hover {
-      --_reveal-delay: var(--_hover-delay);
+    .astryx-reveal--inactive:focus-within {
+      --_reveal-opacity: 1;
+      --_reveal-position: static;
+      --_reveal-delay: 0s, 0s;
+      --_reveal-delay-reduced: 0s, 0s;
+      --_fade-delay: 0s;
+    }
+
+    .astryx-reveal--active:focus-within {
+      --_reveal-opacity: 1;
+      --_reveal-position: static;
+      --_reveal-delay: 0s, 0s;
+      --_reveal-delay-reduced: 0s, 0s;
+      --_fade-delay: 0s;
     }
   }
 
-  .astryx-reveal:focus-within .astryx-reveal__content,
-  .astryx-reveal:focus-within .astryx-reveal__content--preserve,
-  .astryx-reveal--active .astryx-reveal__content,
-  .astryx-reveal--active .astryx-reveal__content--preserve {
-    transition-delay: 0s;
+  @layer hover {
+    @media (hover: hover) {
+      .astryx-reveal:hover:where(:not(:disabled, [aria-disabled="true"])) {
+        --_reveal-opacity: 1;
+        --_reveal-position: static;
+        --_reveal-delay: var(--_hover-delay, 0s), var(--_hover-delay, 0s);
+        --_reveal-delay-reduced: var(--_hover-delay, 0s), var(--_hover-delay, 0s);
+        --_conceal-opacity: 0;
+        --_fade-delay: var(--_hover-delay, 0s);
+      }
+
+      .astryx-reveal--inactive:hover:where(:not(:disabled, [aria-disabled="true"])) {
+        --_reveal-opacity: 0;
+        --_reveal-position: absolute;
+        --_reveal-delay: 0s, var(--astryx-duration-fast-max, 165ms);
+        --_reveal-delay-reduced: 0s, 0s;
+        --_conceal-opacity: 1;
+        --_fade-delay: 0s;
+      }
+
+      .astryx-reveal--active:hover:where(:not(:disabled, [aria-disabled="true"])) {
+        --_reveal-opacity: 1;
+        --_reveal-position: static;
+        --_reveal-delay: 0s, 0s;
+        --_reveal-delay-reduced: 0s, 0s;
+        --_conceal-opacity: 0;
+        --_fade-delay: 0s;
+      }
+    }
   }
 
-  .astryx-reveal__content,
-  .astryx-reveal__content--preserve {
-    opacity: var(--_reveal-opacity, 1);
+  @layer coarse {
+    @media (pointer: coarse) {
+      .astryx-reveal {
+        --_reveal-opacity: 1;
+        --_reveal-position: static;
+        --_reveal-delay: 0s, 0s;
+        --_reveal-delay-reduced: 0s, 0s;
+        --_fade-delay: 0s;
+      }
+
+      .astryx-reveal--inactive {
+        --_reveal-opacity: 1;
+        --_reveal-position: static;
+        --_reveal-delay: 0s, 0s;
+        --_reveal-delay-reduced: 0s, 0s;
+        --_fade-delay: 0s;
+      }
+
+      .astryx-reveal--active {
+        --_reveal-opacity: 1;
+        --_reveal-position: static;
+        --_reveal-delay: 0s, 0s;
+        --_reveal-delay-reduced: 0s, 0s;
+        --_fade-delay: 0s;
+      }
+    }
   }
 
-  /* 保留布局的版本只淡入淡出，不脱离文档流；两个类名同时在元素上，所以这里排除。 */
-  .astryx-reveal__content:not(.astryx-reveal__content--preserve) {
-    position: var(--_reveal-position, static);
-  }
+  @layer content {
+    .astryx-reveal__content:not(.astryx-reveal__content--preserve) {
+      transition-property: opacity, position;
+      transition-duration: var(--astryx-duration-fast-max, 165ms), 0s;
+      transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+      transition-behavior: allow-discrete;
+      transition-delay: var(--_reveal-delay, 0s, 0s);
+      opacity: var(--_reveal-opacity, 1);
+      position: var(--_reveal-position, static);
+    }
 
-  .astryx-reveal__conceal,
-  .astryx-reveal__conceal--preserve {
-    opacity: var(--_conceal-opacity, 1);
-  }
-
-  .astryx-reveal__shown {
-    position: static;
-    opacity: 1;
-  }
-
-  .astryx-reveal__hidden {
-    position: absolute;
-    opacity: 0;
-  }
-
-  .astryx-reveal__hidden--preserve {
-    opacity: 0;
-  }
-
-  .astryx-reveal:focus-within .astryx-reveal__hidden,
-  .astryx-reveal:focus-within .astryx-reveal__hidden--preserve {
-    position: static;
-    opacity: 1;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .astryx-reveal__content,
+    /* 保留布局的版本只淡入淡出，不脱离文档流。 */
     .astryx-reveal__content--preserve,
     .astryx-reveal__conceal,
     .astryx-reveal__conceal--preserve {
-      transition-duration: 0.01s;
+      transition-property: opacity;
+      transition-duration: var(--astryx-duration-fast-max, 165ms);
+      transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+      transition-delay: var(--_fade-delay, 0s);
+    }
+
+    .astryx-reveal__content--preserve {
+      opacity: var(--_reveal-opacity, 1);
+    }
+
+    .astryx-reveal__conceal,
+    .astryx-reveal__conceal--preserve {
+      opacity: var(--_conceal-opacity, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .astryx-reveal__content:not(.astryx-reveal__content--preserve) {
+        transition-duration: 0s, 0s;
+        transition-delay: var(--_reveal-delay-reduced, 0s, 0s);
+      }
+
+      .astryx-reveal__content--preserve,
+      .astryx-reveal__conceal,
+      .astryx-reveal__conceal--preserve {
+        transition-duration: 0s;
+      }
+    }
+  }
+
+  /* 单个元素的覆盖：不读容器状态。hidden 遇到自身焦点仍会露出。 */
+  @layer override {
+    .astryx-reveal__shown {
+      opacity: 1;
+      position: static;
+      transition-delay: 0s;
+    }
+
+    .astryx-reveal__hidden {
+      opacity: 0;
+      position: absolute;
+      transition-delay: 0s;
+    }
+
+    .astryx-reveal__hidden--preserve {
+      opacity: 0;
+      transition-delay: 0s;
+    }
+
+    .astryx-reveal__hidden:focus-within {
+      opacity: 1;
+      position: static;
+    }
+
+    .astryx-reveal__hidden--preserve:focus-within {
+      opacity: 1;
     }
   }
 }

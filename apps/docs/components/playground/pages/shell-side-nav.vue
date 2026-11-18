@@ -17,6 +17,7 @@ import {
   SideNavItem,
   SideNavSection,
   StatusDot,
+  useContainerReveal,
   useImperativeAlertDialog,
   useToast,
   VStack,
@@ -76,13 +77,9 @@ const MESSAGES = [
   { role: 'user', width: '38%', height: 40 },
 ]
 
-/** 悬停或菜单打开的那一行，把状态点换成更多菜单。每行各管各的。 */
-const hoveredChat = ref<string | null>(null)
+/** 更多菜单一直挂着、留在 Tab 顺序里：悬停、行内任意处有焦点或粗指针时露出，菜单打开时钉住。 */
 const menuOpenChat = ref<string | null>(null)
-
-function showMenuFor(label: string) {
-  return hoveredChat.value === label || menuOpenChat.value === label
-}
+const reveal = useContainerReveal()
 
 function conversationMenuOpen(label: string, open: boolean) {
   if (open)
@@ -180,8 +177,7 @@ function conversationMenuItems(label: string) {
               <div
                 v-for="chat in workspace.chats"
                 :key="chat.label"
-                @mouseenter="hoveredChat = chat.label"
-                @mouseleave="hoveredChat = hoveredChat === chat.label ? null : hoveredChat"
+                v-bind="reveal.containerProps({ forceState: menuOpenChat === chat.label ? 'active' : undefined })"
               >
                 <SideNavItem
                   :label="chat.label"
@@ -189,14 +185,17 @@ function conversationMenuItems(label: string) {
                   :is-selected="chat.label === SELECTED_CHAT"
                 >
                   <template #end>
-                    <MoreMenu
-                      v-if="showMenuFor(chat.label)"
-                      size="sm"
-                      label="Conversation options"
-                      :items="conversationMenuItems(chat.label)"
-                      @open-change="(open: boolean) => conversationMenuOpen(chat.label, open)"
-                    />
-                    <StatusDot v-else :variant="chat.status" :label="chat.statusLabel" />
+                    <StatusDot :variant="chat.status" :label="chat.statusLabel" />
+                  </template>
+                  <template #actions>
+                    <span v-bind="reveal.contentProps()">
+                      <MoreMenu
+                        size="sm"
+                        label="Conversation options"
+                        :items="conversationMenuItems(chat.label)"
+                        @open-change="(open: boolean) => conversationMenuOpen(chat.label, open)"
+                      />
+                    </span>
                   </template>
                 </SideNavItem>
               </div>
