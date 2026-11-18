@@ -1,11 +1,11 @@
 import type { ComputedRef } from 'vue'
 import type { ResolvedColorMode } from './colorMode.js'
 import { computed, inject } from 'vue'
-import { useMediaQuery } from '../composables/useMediaQuery.js'
-import { readColorMode, resolveLightDark } from './colorMode.js'
+import { resolveLightDark } from './colorMode.js'
 import { themeContextKey } from './context.js'
 import { DATA_TOKEN_DEFAULTS } from './dataTokens.js'
 import { normalizeTokenName } from './tokenName.js'
+import { usePageReadable, useResolvedColorMode } from './useResolvedColorMode.js'
 
 export interface UseThemeReturn {
   /** Name of the nearest theme, or `neutral` when no theme is present. */
@@ -44,14 +44,8 @@ function readDocumentToken(name: string, mode: ResolvedColorMode): string {
  */
 export function useTheme(): UseThemeReturn {
   const context = inject(themeContextKey, null)
-  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
-
-  const mode = computed<ResolvedColorMode>(() => {
-    const requested = context?.value.mode
-    if (requested === 'light' || requested === 'dark')
-      return requested
-    return readColorMode(prefersDark.value)
-  })
+  const pageReadable = usePageReadable()
+  const mode = useResolvedColorMode(() => context?.value.mode, pageReadable)
 
   const theme = computed(() => context?.value.theme)
   const name = computed(() => theme.value?.name ?? 'neutral')
@@ -71,8 +65,9 @@ export function useTheme(): UseThemeReturn {
       return local
     const key = normalizeTokenName(trimmed)
     const fallback = DATA_DEFAULTS[key]
+    // 文档上的计算样式和深浅色一样，挂载后才读，见 usePageReadable。
     return tokens.value[key]
-      || readDocumentToken(key, mode.value)
+      || (pageReadable.value ? readDocumentToken(key, mode.value) : '')
       || (fallback ? resolveLightDark(fallback, mode.value) : '')
   }
 
