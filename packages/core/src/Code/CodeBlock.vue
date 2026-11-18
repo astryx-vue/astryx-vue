@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
 import type { CodeBlockEmits, CodeBlockProps, TokenLine } from './types.js'
-import { computed, onBeforeUnmount, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useClipboard } from '../composables/useClipboard.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
@@ -135,17 +135,30 @@ function isSafari(): boolean {
   return agent.includes('AppleWebKit') && !agent.includes('Chrome')
 }
 
+/**
+ * 浏览器能力只在挂载后读：服务端没有 Highlight API，只能输出 spans。
+ * 要是 setup 里就按浏览器选 ranges，hydration 那一趟渲染的行结构会和服务端
+ * HTML 对不上。所以挂载前一律 spans，挂载后再换成浏览器能用的模式。
+ */
+const canPaintRanges = ref(false)
+const isSafariBrowser = ref(false)
+
+onMounted(() => {
+  canPaintRanges.value = supportsHighlightApi()
+  isSafariBrowser.value = isSafari()
+})
+
 /** Safari ships the Highlight API objects but paints them unreliably in code. */
 const paintMode = computed<'ranges' | 'spans'>(() => {
   // Range paint maps token offsets onto the raw line text. A diff line's
   // tokens belong to the text after the glyph, so the layer always uses spans.
-  if (props.isDiff || props.highlightMode === 'spans' || !supportsHighlightApi())
+  if (props.isDiff || props.highlightMode === 'spans' || !canPaintRanges.value)
     return 'spans'
 
   if (props.highlightMode === 'ranges')
     return 'ranges'
 
-  return isSafari() ? 'spans' : 'ranges'
+  return isSafariBrowser.value ? 'spans' : 'ranges'
 })
 
 const highlightSet = computed<Set<number> | null>(() =>
