@@ -3,20 +3,20 @@ cleanupUnusedCatalogs: true
 
 minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
-  - '@kawapress/plugin-badge@0.8.1'
-  - '@kawapress/plugin-code-block@0.8.1'
-  - '@kawapress/plugin-code-group@0.8.1'
-  - '@kawapress/plugin-container@0.8.1'
-  - '@kawapress/plugin-emoji@0.8.1'
-  - '@kawapress/plugin-github-alerts@0.8.1'
-  - '@kawapress/plugin-llms@0.8.1'
-  - '@kawapress/plugin-search@0.8.1'
-  - '@kawapress/plugin-shiki@0.8.1'
-  - '@kawapress/plugin-sitemap@0.8.1'
-  - '@kawapress/plugin-toc@0.8.1'
-  - '@kawapress/plugin-unocss@0.8.1'
-  - '@kawapress/preset-nagi@0.8.1'
-  - kawapress@0.8.1
+  - '@kawapress/plugin-badge@0.8.2'
+  - '@kawapress/plugin-code-block@0.8.2'
+  - '@kawapress/plugin-code-group@0.8.2'
+  - '@kawapress/plugin-container@0.8.2'
+  - '@kawapress/plugin-emoji@0.8.2'
+  - '@kawapress/plugin-github-alerts@0.8.2'
+  - '@kawapress/plugin-llms@0.8.2'
+  - '@kawapress/plugin-search@0.8.2'
+  - '@kawapress/plugin-shiki@0.8.2'
+  - '@kawapress/plugin-sitemap@0.8.2'
+  - '@kawapress/plugin-toc@0.8.2'
+  - '@kawapress/plugin-unocss@0.8.2'
+  - '@kawapress/preset-nagi@0.8.2'
+  - kawapress@0.8.2
 
 trustPolicy: no-downgrade
 autoInstallPeers: false
@@ -50,10 +50,10 @@ catalogs:
     '@iconify-json/carbon': 1.2.28
     '@iconify-json/heroicons': 1.2.3
     '@iconify-json/lucide': 1.2.147
-    '@kawapress/plugin-shiki': 0.8.1
+    '@kawapress/plugin-shiki': 0.8.2
     '@monaco-editor/loader': 1.7.0
     '@shikijs/langs': 4.6.0
-    kawapress: 0.8.1
+    kawapress: 0.8.2
     monaco-editor: 0.55.1
     postcss: 8.5.29
     sucrase: 3.35.1
