@@ -1,5 +1,6 @@
 @import '@astryx-vue/core/reset.css' layer(kawa.base);
 @import '@astryx-vue/themes/neutral.css';
+@import '@fontsource-variable/fira-code';
 @import '@astryx-vue/core/styles.css';
 @import '@astryx-vue/richtext/richtext.css';
 @import '@astryx-vue/charts/charts.css';
@@ -68,6 +69,11 @@
   --docs-c-brand-3: #047857;
   --docs-c-brand-soft: rgb(16 185 129 / 14%);
   --docs-font-family-base: 'Figtree', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  /*
+   * Neutral 的代码字体是 ui-monospace，各平台落到不同的系统字体。文档站统一用自带的
+   * Fira Code，主题预览里的 [data-astryx-theme] 仍然显示各主题自己的字体。
+   */
+  --astryx-font-family-code: 'Fira Code Variable', ui-monospace, 'SF Mono', Monaco, Consolas, monospace;
   --docs-font-family-mono: var(--astryx-font-family-code);
   --docs-nav-height: 72px;
   --astryx-accent: #10b981;
@@ -205,8 +211,10 @@ html:has(.home-stage) {
   letter-spacing: 0.01em;
 }
 
+/* nagi 悬停时给链接铺一块底色，文档站只让文字亮起来。 */
 .nagi-nav-links__link:hover {
   color: var(--astryx-text);
+  background: transparent;
 }
 
 .nagi-nav-links__link.is-active {
@@ -670,14 +678,22 @@ html.dark .component-detail__stage {
   border-top: 0;
 }
 
+/* 组件页不在 .nagi-doc 里，标题锚点要自己做成 nagi 那样：平时隐藏，悬停标题时出现。 */
+.component-detail__body :is(h2, h3, h4, h5, h6) {
+  position: relative;
+}
+
 .component-detail__body .header-anchor {
   position: absolute;
   left: -0.9em;
   color: var(--astryx-accent-bright);
   text-decoration: none;
+  opacity: 0;
+  user-select: none;
+  transition: opacity 0.25s;
 }
 
-.component-detail__body h2:hover .header-anchor,
+.component-detail__body :is(h2, h3, h4, h5, h6):hover .header-anchor,
 .component-detail__body .header-anchor:focus-visible {
   opacity: 1;
 }
@@ -1235,7 +1251,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table table,
-:is(.nagi-doc > table, .nagi-doc > div table) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) {
   display: block;
   width: 100%;
   margin: 18px 0;
@@ -1260,13 +1276,19 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   overflow: clip;
 }
 
+/*
+ * 属性表的类型列常是一长串联合类型。代码不换行的话这一列会把说明挤出可视区，
+ * 所以只允许在空格处换行，单词内部不断开；属性名和默认值没有空格，照样单行。
+ */
 .component-api-table code,
-:is(.nagi-doc > table, .nagi-doc > div table) code {
-  white-space: nowrap;
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) code {
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .component-api-table :is(th, td),
-:is(.nagi-doc > table, .nagi-doc > div table) :is(th, td) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) :is(th, td) {
   box-sizing: border-box;
   padding-block: var(--astryx-spacing-2, 8px);
   padding-inline: var(--astryx-spacing-3, 12px);
@@ -1277,7 +1299,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table th,
-:is(.nagi-doc > table, .nagi-doc > div table) th {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) th {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
   color: var(--astryx-color-text-secondary, var(--astryx-text-muted));
   font-size: var(--astryx-text-label-size, 1rem);
@@ -1286,7 +1308,7 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table td,
-:is(.nagi-doc > table, .nagi-doc > div table) td {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) td {
   color: var(--astryx-color-text-primary, var(--astryx-text));
   font-size: var(--astryx-text-body-size, 0.875rem);
   overflow-wrap: break-word;
@@ -1294,13 +1316,13 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 }
 
 .component-api-table tbody tr:not(:last-child) > td,
-:is(.nagi-doc > table, .nagi-doc > div table) tbody tr:not(:last-child) > td {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr:not(:last-child) > td {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
 }
 
 .component-api-table tbody tr,
-:is(.nagi-doc > table, .nagi-doc > div table) tbody tr,
-:is(.nagi-doc > table, .nagi-doc > div table) tbody tr:nth-child(2n) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr,
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr:nth-child(2n) {
   border: 0;
   background: transparent;
 }
