@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { FieldStatusInput } from '../Field/types.js'
 import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
 import { computed, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
@@ -28,7 +27,9 @@ import { bindListboxEscape, dismissSelectorEscape, focusSelectorTrigger, onSelec
 import SelectorIcon from './SelectorIcon.js'
 import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } from './selectorOptions.js'
 import SelectorPanel from './SelectorPanel.vue'
+import { selectorFieldStatus, selectorStatusGlyph, selectorStatusType } from './selectorStatusRoles.js'
 import { createTriggerActivation } from './triggerActivation.js'
+import { useListboxOverlay } from './useListboxOverlay.js'
 import { useSelectorPopup } from './useSelectorPopup.js'
 import '../../styles/button.css'
 import '../../styles/layer.css'
@@ -194,31 +195,11 @@ const selectedOption = computed(() => {
 
 const fieldLabel = computed(() => props.label || resolvedPlaceholder.value)
 const hideLabel = computed(() => props.isLabelHidden || !props.label)
-const statusType = computed(() => {
-  const status = props.status
-  if (status == null || status === 'default')
-    return 'default'
-  if (typeof status === 'string')
-    return status
-  return status.type
-})
-
-const fieldStatus = computed<FieldStatusInput | undefined>(() => {
-  const status = props.status
-  if (status && typeof status === 'object')
-    return status
-  if (!props.statusMessage || statusType.value === 'default')
-    return undefined
-  return { type: statusType.value, message: props.statusMessage }
-})
+const statusType = computed(() => selectorStatusType(props.status))
+const fieldStatus = computed(() => selectorFieldStatus(props.status, props.statusMessage))
 
 const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
-const statusGlyph = computed(() => {
-  const type = statusType.value
-  if ((type !== 'error' && type !== 'warning' && type !== 'success') || effectiveStatusVariant.value === 'detached')
-    return undefined
-  return type
-})
+const statusGlyph = computed(() => selectorStatusGlyph(statusType.value, effectiveStatusVariant.value))
 
 const displayRows = computed(() => buildSelectorRows(normalizedEntries.value, combobox.filteredOptions.value))
 
@@ -310,33 +291,14 @@ function syncAnchorWidth(): void {
   anchorWidth.value = fieldRef.value?.getBoundingClientRect().width ?? 0
 }
 
-/**
- * 原版的下拉列表（没有搜索框、没指定位置时）把选中项盖在触发器上：
- * 列表上移，使选中项的顶边和字段顶边对齐；还没选值时贴着字段下沿、不留空隙。
- * 只在朝下展开时生效；空间不够翻到上方时按普通位置走。
- */
-const overlaySelected = computed(() => !props.searchable && !isSheet.value && props.placement == null)
-const overlayTop = ref<number | null>(null)
-
-function syncOverlay(): void {
-  const list = listboxRef.value
-  const field = fieldRef.value
-  if (!overlaySelected.value || !combobox.isOpen.value || !list || !field || position.value.placement !== 'below') {
-    overlayTop.value = null
-    return
-  }
-  const fieldRect = field.getBoundingClientRect()
-  const selected = list.querySelector<HTMLElement>('.astryx-selector-option.is-selected')
-  const raw = selected
-    ? fieldRect.top - list.clientTop - (selected.offsetTop - list.scrollTop)
-    : fieldRect.bottom
-  const maxTop = window.innerHeight - list.offsetHeight - 8
-  overlayTop.value = Math.max(8, Math.min(raw, Math.max(8, maxTop)))
-}
-
-watch([() => combobox.isOpen.value, position, () => props.modelValue], () => {
-  void nextTick(syncOverlay)
-}, { flush: 'post' })
+const { overlayTop } = useListboxOverlay({
+  fieldRef,
+  listboxRef,
+  isOpen: combobox.isOpen,
+  position,
+  value: () => props.modelValue,
+  isEnabled: () => !props.searchable && !isSheet.value && props.placement == null,
+})
 
 const listboxStyle = computed(() => isSheet.value
   ? undefined

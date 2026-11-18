@@ -7,16 +7,16 @@
     --astryx-badge-padding-block: 0;
     --astryx-badge-padding-inline: var(--astryx-spacing-3);
 
-    --astryx-badge-neutral-background: #ffee7b;
-    --astryx-badge-neutral-foreground: #225BFF;
-    --astryx-badge-info-background: #4883fd;
-    --astryx-badge-info-foreground: #ffffff;
-    --astryx-badge-success-background: #91D143;
+    --astryx-badge-neutral-background: #fdee8c;
+    --astryx-badge-neutral-foreground: #194ce8;
+    --astryx-badge-info-background: #4d82ff;
+    --astryx-badge-info-foreground: #1d1c11;
+    --astryx-badge-success-background: #7bbf7a;
     --astryx-badge-success-foreground: #1d1c11;
-    --astryx-badge-warning-background: #ffc502;
+    --astryx-badge-warning-background: #dfcf5b;
     --astryx-badge-warning-foreground: #1d1c11;
-    --astryx-badge-error-background: #fc473b;
-    --astryx-badge-error-foreground: #ffffff;
+    --astryx-badge-error-background: #e56241;
+    --astryx-badge-error-foreground: #1d1c11;
 
     --astryx-badge-blue-background: var(--astryx-color-background-blue);
     --astryx-badge-blue-foreground: var(--astryx-color-text-blue);

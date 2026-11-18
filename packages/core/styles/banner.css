@@ -9,29 +9,35 @@
     border-radius: var(--astryx-banner-radius, var(--astryx-radius-container, 12px));
   }
 
-  .astryx-banner {
-    --astryx-banner-surface: transparent;
-    --astryx-banner-icon-color: currentcolor;
-  }
-
+  /*
+   * The header paints the status's pale fill and the colour that reads on it,
+   * straight from the portable roles. A theme retints one status by scoping
+   * `--astryx-color-<status>-muted` / `--astryx-color-on-<status>-muted` on
+   * the banner, as upstream does. The component tokens stay as an opt-in
+   * override of the same two colours.
+   */
   .astryx-banner[data-status='info'] {
-    --astryx-banner-surface: var(--astryx-banner-info-background, #f5f5f5);
-    --astryx-banner-icon-color: var(--astryx-color-accent, #262626);
-  }
-
-  .astryx-banner[data-status='error'] {
-    --astryx-banner-surface: var(--astryx-banner-error-background, #facecb);
-    --astryx-banner-icon-color: var(--astryx-color-error, #e33f4a);
+    background-color: var(--astryx-banner-info-background, var(--astryx-color-info-muted));
+    color: var(--astryx-banner-info-foreground, var(--astryx-color-on-info-muted));
+    --astryx-banner-control-foreground: var(--astryx-banner-info-foreground, var(--astryx-color-on-info-muted));
   }
 
   .astryx-banner[data-status='warning'] {
-    --astryx-banner-surface: var(--astryx-banner-warning-background, #f8da9d);
-    --astryx-banner-icon-color: var(--astryx-color-warning, #ffce2f);
+    background-color: var(--astryx-banner-warning-background, var(--astryx-color-warning-muted));
+    color: var(--astryx-banner-warning-foreground, var(--astryx-color-on-warning-muted));
+    --astryx-banner-control-foreground: var(--astryx-banner-warning-foreground, var(--astryx-color-on-warning-muted));
+  }
+
+  .astryx-banner[data-status='error'] {
+    background-color: var(--astryx-banner-error-background, var(--astryx-color-error-muted));
+    color: var(--astryx-banner-error-foreground, var(--astryx-color-on-error-muted));
+    --astryx-banner-control-foreground: var(--astryx-banner-error-foreground, var(--astryx-color-on-error-muted));
   }
 
   .astryx-banner[data-status='success'] {
-    --astryx-banner-surface: var(--astryx-banner-success-background, #c5e5c0);
-    --astryx-banner-icon-color: var(--astryx-color-success, #198100);
+    background-color: var(--astryx-banner-success-background, var(--astryx-color-success-muted));
+    color: var(--astryx-banner-success-foreground, var(--astryx-color-on-success-muted));
+    --astryx-banner-control-foreground: var(--astryx-banner-success-foreground, var(--astryx-color-on-success-muted));
   }
 
   .astryx-banner-header {
@@ -43,7 +49,6 @@
     padding: var(--astryx-spacing-3, 12px) var(--astryx-spacing-4, 16px);
     border-radius: inherit;
     color: var(--astryx-color-text-primary, #171717);
-    background: var(--astryx-banner-surface);
   }
 
   .astryx-banner-header[data-centered] {
@@ -69,6 +74,11 @@
     overflow-wrap: anywhere;
   }
 
+  .astryx-banner[data-status] .astryx-banner-title,
+  .astryx-banner[data-status] .astryx-banner-description {
+    color: inherit;
+  }
+
   .astryx-banner-description {
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 12px);
@@ -82,17 +92,6 @@
     flex: none;
     align-items: center;
     height: 20px;
-    color: var(--astryx-banner-icon-color);
-  }
-
-  /*
-   * Status glyphs set their own color from the icon tokens. On an info banner
-   * that token stays the neutral accent, so the glyph stays white while the
-   * title is the status blue. Paint the glyph with the banner icon color,
-   * which the theme already retargets to the status text color.
-   */
-  .astryx-banner-icon .astryx-icon[data-color] {
-    color: var(--astryx-banner-icon-color);
   }
 
   /* The status Icon keeps its own md size (20px), as upstream does. */
@@ -112,8 +111,17 @@
     margin-block: -4px;
   }
 
+  /* 终端内容回到普通文字色；只有内置的展开、关闭按钮跟随状态前景。 */
+  .astryx-banner-actions {
+    color: var(--astryx-color-text-primary, #171717);
+  }
+
   .astryx-banner-actions .astryx-button {
     --astryx-button-ghost-foreground: var(--astryx-color-text-primary, #171717);
+  }
+
+  .astryx-banner-actions .astryx-banner-control {
+    --astryx-button-ghost-foreground: var(--astryx-banner-control-foreground, var(--astryx-color-text-primary, #171717));
   }
 
   .astryx-banner-chevron {

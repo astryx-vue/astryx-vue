@@ -12,7 +12,7 @@
  * 它是注册过的自定义属性（`@property`，`<number>`），所以能做动画；
  * 按压色 `--_press-paint` 是「按压 token 乘以这个强度」，作为背景图片画出来。
  * 图片的切换不会被组件自己的颜色过渡拖慢，所以按下的第一帧就是满强度。
- * `fading` 用关键帧把强度从 1 降到 0，时长和控制器里的 PRESS_FADE_MS 是同一个数（200ms）。
+ * `fading` 用关键帧把强度从 1 降到 0，时长是主题的 `--astryx-duration-exit`，控制器抬手时读同一个 token（读不到用 PRESS_FADE_MS，175ms）。
  *
  * 组件怎么接：在画按压的元素上带 `data-astryx-pressable`，
  * 在自己的样式里用 `var(--_press-paint-image)` 或 `var(--_press-paint)` 画两条触屏分支，
@@ -51,11 +51,11 @@
     --astryx-press-alpha: 1;
   }
 
-  /* 淡出的曲线是平缓的 ease-out，整段时长都在褪色，读起来像系统列表取消选中。 */
+  /* 淡出播主题的退出时长和曲线（`--astryx-duration-exit`、`--astryx-ease-exit`），所有按压释放共用。 */
   [data-astryx-pressable][data-astryx-press='fading'] {
     animation-name: astryx-press-release;
-    animation-duration: 200ms;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    animation-duration: var(--astryx-duration-exit, 175ms);
+    animation-timing-function: var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
     animation-fill-mode: both;
   }
 

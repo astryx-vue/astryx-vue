@@ -12,31 +12,31 @@
     --astryx-code-block-background: light-dark(#ffffff, #111111);
     --astryx-code-block-border: var(--astryx-color-border);
     --astryx-code-block-focus: var(--astryx-color-accent);
-    --astryx-code-block-highlight-background: light-dark(#0074e233, #6d9cfe33);
+    --astryx-code-block-highlight-background: var(--astryx-color-accent-muted);
 
     /* Syntax palette `astryx-neutral`: keyword and type share the same purple,
        strings stay green. Punctuation, comment and operator sit on the neutral
        mid stop so they clear AA on the code background. */
     --astryx-code-syntax-keyword: light-dark(#6b187c, #efa8ff);
     --astryx-code-syntax-string: light-dark(#0b5615, #a4d6a3);
-    --astryx-code-syntax-comment: light-dark(#6a6a6a, #9e9e9e);
+    --astryx-code-syntax-comment: light-dark(#525252, #b9b9b9);
     --astryx-code-syntax-number: light-dark(#733100, #ffb37e);
     --astryx-code-syntax-function: light-dark(#00458c, #a1caff);
     --astryx-code-syntax-type: light-dark(#6b187c, #efa8ff);
     --astryx-code-syntax-variable: light-dark(#111111, #e2e2e2);
-    --astryx-code-syntax-operator: light-dark(#6a6a6a, #9e9e9e);
+    --astryx-code-syntax-operator: light-dark(#525252, #b9b9b9);
     --astryx-code-syntax-constant: light-dark(#733100, #ffb37e);
     --astryx-code-syntax-tag: light-dark(#8a0011, #ffaea7);
     --astryx-code-syntax-attribute: light-dark(#584400, #eec448);
     --astryx-code-syntax-property: light-dark(#005348, #90d7c8);
-    --astryx-code-syntax-punctuation: light-dark(#6a6a6a, #9e9e9e);
+    --astryx-code-syntax-punctuation: light-dark(#525252, #b9b9b9);
 
     /* Diff rows share the --astryx-code-syntax-* names. Tints stay at 25% so
        syntax text keeps its contrast. Markers use the theme's tinted text. */
     --astryx-code-syntax-added: color-mix(in srgb, var(--astryx-color-success-muted) 25%, transparent);
     --astryx-code-syntax-removed: color-mix(in srgb, var(--astryx-color-error-muted) 25%, transparent);
-    --astryx-code-syntax-diff-header: var(--astryx-color-background-muted);
-    --astryx-code-syntax-added-marker: var(--astryx-color-text-green);
-    --astryx-code-syntax-removed-marker: var(--astryx-color-text-red);
+    --astryx-code-syntax-diff-header: transparent;
+    --astryx-code-syntax-added-marker: var(--astryx-code-syntax-punctuation);
+    --astryx-code-syntax-removed-marker: var(--astryx-code-syntax-punctuation);
   }
 }

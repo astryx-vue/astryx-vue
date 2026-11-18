@@ -1,0 +1,16 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /* 选中的行、树节点和单选项底下有一层选中填充，次要文字退一档才够 4.5:1。 */
+  [data-astryx-theme='butter'] .astryx-item[data-selected='true'],
+  [data-astryx-theme='butter'] .astryx-tree-list__content[data-selected='true'],
+  [data-astryx-theme='butter'] .astryx-radio:has(.astryx-radio-native:checked),
+  [data-astryx-theme='butter'] .astryx-file-input[data-mode='dropzone'] {
+    --astryx-color-text-secondary: light-dark(#725538, #f0edd4);
+  }
+
+  /* 数字角标是同一层填充上的小药丸。 */
+  [data-astryx-theme='butter'] .astryx-citation[data-variant='number'] {
+    --astryx-citation-foreground: light-dark(#725538, #f0edd4);
+  }
+}

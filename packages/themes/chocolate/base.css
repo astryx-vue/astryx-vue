@@ -31,7 +31,7 @@
     --astryx-color-background-muted: light-dark(#EDE4D4, #2a2018);
 
     --astryx-color-text-primary: light-dark(#4a3520, #EDE4D4);
-    --astryx-color-text-secondary: light-dark(#B88859, #c4a882);
+    --astryx-color-text-secondary: light-dark(#894d0e, #c4a882);
     --astryx-color-text-disabled: light-dark(#C4AC95, #6b5540);
     --astryx-color-text-accent: light-dark(#8C5927, #d4a06a);
     --astryx-color-on-dark: #FFFCF7;
@@ -39,7 +39,7 @@
 
     --astryx-color-icon-accent: light-dark(#8C5927, #d4a06a);
     --astryx-color-icon-primary: light-dark(#4a3520, #EDE4D4);
-    --astryx-color-icon-secondary: light-dark(#B88859, #c4a882);
+    --astryx-color-icon-secondary: light-dark(#894d0e, #c4a882);
     --astryx-color-icon-disabled: light-dark(#C4AC95, #6b5540);
 
     --astryx-color-background-card: light-dark(#EDE4D4, #2a2018);
@@ -49,10 +49,10 @@
 
     --astryx-color-success: light-dark(#709900, #96bf2a);
     --astryx-color-success-muted: light-dark(#70990020, #96bf2a20);
-    --astryx-color-on-success: light-dark(#FFFFFF, #4a3520);
+    --astryx-color-on-success: #141010;
     --astryx-color-error: light-dark(#FD0000, #ff5c5c);
     --astryx-color-error-muted: light-dark(#FD000020, #ff5c5c20);
-    --astryx-color-on-error: light-dark(#FFFFFF, #4a3520);
+    --astryx-color-on-error: #141010;
     --astryx-color-warning: light-dark(#FFB600, #ffc940);
     --astryx-color-warning-muted: light-dark(#FFB60020, #ffc94020);
 
@@ -104,12 +104,12 @@
     --astryx-color-background-green: light-dark(#70990033, #96bf2a33);
     --astryx-color-border-green: light-dark(#709900, #96bf2a);
     --astryx-color-icon-green: light-dark(#709900, #96bf2a);
-    --astryx-color-text-green: light-dark(#5a7a00, #a8d43a);
+    --astryx-color-text-green: light-dark(#4e6c00, #a8d43a);
 
     --astryx-color-background-orange: light-dark(#c4762033, #d4903a33);
     --astryx-color-border-orange: light-dark(#c47620, #d4903a);
     --astryx-color-icon-orange: light-dark(#c47620, #d4903a);
-    --astryx-color-text-orange: light-dark(#a06018, #e0a04a);
+    --astryx-color-text-orange: light-dark(#925314, #e0a04a);
 
     --astryx-color-background-pink: light-dark(#c44a7033, #e07a9a33);
     --astryx-color-border-pink: light-dark(#c44a70, #e07a9a);
@@ -124,7 +124,7 @@
     --astryx-color-background-red: light-dark(#FD000033, #ff5c5c33);
     --astryx-color-border-red: light-dark(#FD0000, #ff5c5c);
     --astryx-color-icon-red: light-dark(#FD0000, #ff5c5c);
-    --astryx-color-text-red: light-dark(#cc0000, #ff7a7a);
+    --astryx-color-text-red: light-dark(#b60000, #ff7a7a);
 
     --astryx-color-background-teal: light-dark(#2e6b5a33, #5ab89833);
     --astryx-color-border-teal: light-dark(#2e6b5a, #5ab898);
@@ -134,7 +134,7 @@
     --astryx-color-background-yellow: light-dark(#FFB60033, #ffc94033);
     --astryx-color-border-yellow: light-dark(#FFB600, #ffc940);
     --astryx-color-icon-yellow: light-dark(#FFB600, #ffc940);
-    --astryx-color-text-yellow: light-dark(#cc9200, #ffd960);
+    --astryx-color-text-yellow: light-dark(#8b6200, #ffd960);
 
     --astryx-spacing-0: 0rem;
     --astryx-spacing-0-5: 0.125rem;

@@ -370,13 +370,18 @@ describe('neutral base.css semantic tokens', () => {
     }
 
     expect([...referenced].sort()).toEqual([
+      '--astryx-duration-exit',
       '--astryx-duration-fast',
       '--astryx-duration-fast-max',
       '--astryx-duration-fast-min',
       '--astryx-duration-medium',
       '--astryx-duration-medium-max',
+      '--astryx-duration-medium-min',
       '--astryx-duration-slow-max',
       '--astryx-duration-slow-min',
+      '--astryx-ease-entrance',
+      '--astryx-ease-exit',
+      '--astryx-ease-move',
       '--astryx-ease-standard',
     ])
 

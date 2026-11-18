@@ -3,15 +3,14 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    /* Status fills are approved on their own, so they come from the theme-local
-       status tokens instead of the semantic text colors. */
-    --astryx-badge-info-background: var(--astryx-theme-neutral-color-status-fill-accent);
-    --astryx-badge-info-foreground: var(--astryx-color-on-accent);
-    --astryx-badge-success-background: var(--astryx-theme-neutral-color-status-fill-success);
+    /* Status fills are the portable roles, as in upstream. */
+    --astryx-badge-info-background: var(--astryx-color-info);
+    --astryx-badge-info-foreground: var(--astryx-color-on-info);
+    --astryx-badge-success-background: var(--astryx-color-success);
     --astryx-badge-success-foreground: var(--astryx-color-on-success);
-    --astryx-badge-warning-background: var(--astryx-theme-neutral-color-status-fill-warning);
+    --astryx-badge-warning-background: var(--astryx-color-warning);
     --astryx-badge-warning-foreground: var(--astryx-color-on-warning);
-    --astryx-badge-error-background: var(--astryx-theme-neutral-color-status-fill-error);
+    --astryx-badge-error-background: var(--astryx-color-error);
     --astryx-badge-error-foreground: var(--astryx-color-on-error);
 
     --astryx-badge-neutral-background: var(--astryx-color-background-gray);

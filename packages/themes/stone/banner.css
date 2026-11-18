@@ -1,44 +1,26 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
-@layer astryx.tokens {
-  [data-astryx-theme='stone'] {
-    --astryx-banner-info-background: var(--astryx-color-background-blue);
-    --astryx-banner-info-foreground: var(--astryx-color-text-blue);
-    --astryx-banner-error-background: var(--astryx-color-background-red);
-    --astryx-banner-error-foreground: var(--astryx-color-text-red);
-    --astryx-banner-warning-background: var(--astryx-color-background-yellow);
-    --astryx-banner-warning-foreground: var(--astryx-color-text-yellow);
-    --astryx-banner-success-background: var(--astryx-color-background-green);
-    --astryx-banner-success-foreground: var(--astryx-color-text-green);
-    --astryx-banner-content-background: var(--astryx-color-background-surface);
-    --astryx-banner-border: var(--astryx-color-border);
-  }
-}
 
 /*
- * 状态色底上，状态条把共享的文字和色相 token 重指到对应色相的深色值。
+ * 状态条在各状态上重指浅底和浅底上的文字，与上游 banner 的 `status:*` 覆盖一致。
  */
 @layer astryx.overrides {
   [data-astryx-theme='stone'] .astryx-banner[data-status='info'] {
-    --astryx-color-text-primary: var(--astryx-color-text-blue);
-    --astryx-color-text-secondary: var(--astryx-color-text-blue);
-    --astryx-color-accent: var(--astryx-color-text-blue);
+    --astryx-color-info-muted: var(--astryx-color-background-blue);
+    --astryx-color-on-info-muted: var(--astryx-color-text-blue);
   }
 
   [data-astryx-theme='stone'] .astryx-banner[data-status='success'] {
-    --astryx-color-text-primary: var(--astryx-color-text-green);
-    --astryx-color-text-secondary: var(--astryx-color-text-green);
-    --astryx-color-success: var(--astryx-color-text-green);
+    --astryx-color-success-muted: var(--astryx-color-background-green);
+    --astryx-color-on-success-muted: var(--astryx-color-text-green);
   }
 
   [data-astryx-theme='stone'] .astryx-banner[data-status='warning'] {
-    --astryx-color-text-primary: var(--astryx-color-text-yellow);
-    --astryx-color-text-secondary: var(--astryx-color-text-yellow);
-    --astryx-color-warning: var(--astryx-color-text-yellow);
+    --astryx-color-warning-muted: var(--astryx-color-background-yellow);
+    --astryx-color-on-warning-muted: var(--astryx-color-text-yellow);
   }
 
   [data-astryx-theme='stone'] .astryx-banner[data-status='error'] {
-    --astryx-color-text-primary: var(--astryx-color-text-red);
-    --astryx-color-text-secondary: var(--astryx-color-text-red);
-    --astryx-color-error: var(--astryx-color-text-red);
+    --astryx-color-error-muted: var(--astryx-color-background-red);
+    --astryx-color-on-error-muted: var(--astryx-color-text-red);
   }
 }

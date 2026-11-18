@@ -10,7 +10,7 @@
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
     --astryx-button-destructive-background: var(--astryx-color-error-muted);
-    --astryx-button-destructive-foreground: var(--astryx-color-error);
+    --astryx-button-destructive-foreground: var(--astryx-color-on-error-muted);
     --astryx-button-hover-overlay: var(--astryx-color-overlay-hover);
     --astryx-button-pressed-overlay: var(--astryx-color-overlay-pressed);
     --astryx-button-focus: var(--astryx-color-accent);
@@ -30,15 +30,5 @@
       0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)),
       0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)),
       inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%));
-  }
-}
-
-/* A destructive button tints its hover and pressed states with red instead of
-   the neutral overlay, so the interaction reads as dangerous. */
-@layer astryx.overrides {
-  :root .astryx-button[data-variant='destructive'],
-  [data-astryx-theme='neutral'] .astryx-button[data-variant='destructive'] {
-    --astryx-button-hover-overlay: var(--astryx-theme-neutral-color-destructive-overlay-hover);
-    --astryx-button-pressed-overlay: var(--astryx-theme-neutral-color-destructive-overlay-pressed);
   }
 }

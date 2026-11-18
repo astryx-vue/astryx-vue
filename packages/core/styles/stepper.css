@@ -282,7 +282,7 @@
   }
 
   .astryx-step-indicator[data-glyph='number'] {
-    background: var(--astryx-color-accent-muted, #f1f1f1);
+    background: var(--astryx-color-background-muted, #f1f1f1);
     color: var(--astryx-color-text-secondary, #525252);
   }
 

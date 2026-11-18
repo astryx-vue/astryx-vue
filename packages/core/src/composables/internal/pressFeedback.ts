@@ -62,6 +62,26 @@ const TIMER_EVENT = {
   onset: 'onset',
 } as const
 
+/** 读出一个 CSS 时间值，单位毫秒。不是时间就返回 null。 */
+function parseTimeMs(value: string): number | null {
+  const match = /^\s*(-?(?:\d+(?:\.\d+)?|\.\d+))(ms|s)\s*$/.exec(value)
+  if (match == null)
+    return null
+  const amount = Number.parseFloat(match[1]!)
+  return match[2] === 's' ? amount * 1000 : amount
+}
+
+/**
+ * 抬手后淡出的时长：元素上主题的 `--astryx-duration-exit`，抬手时读一次。
+ * 读不出时间（没主题、或不是时间值）就用默认的 PRESS_FADE_MS。
+ */
+export function pressFadeMs(element: HTMLElement): number {
+  if (typeof getComputedStyle !== 'function')
+    return PRESS_FADE_MS
+  const ms = parseTimeMs(getComputedStyle(element).getPropertyValue('--astryx-duration-exit'))
+  return ms != null && ms >= 0 ? ms : PRESS_FADE_MS
+}
+
 function paintElement(element: HTMLElement, paint: PressPaint): void {
   if (paint === 'none')
     element.removeAttribute(PRESSED_ATTRIBUTE)
@@ -101,11 +121,12 @@ function apply(step: PressStep): void {
     const kind = step.timer
     // 用定时器，不用 requestAnimationFrame：iOS 滚动时会压低帧回调，按帧算的延时会在滚动结束后才到，
     // 那时去亮一个已经没人按的控件。
+    const delay = kind === 'fade' ? pressFadeMs(live.element) : TIMER_MS[kind]
     live.timer = setTimeout(() => {
       if (live != null)
         live.timer = null
       apply(pressGestureStep(live?.gesture ?? idlePressGesture(), { kind: TIMER_EVENT[kind] }))
-    }, TIMER_MS[kind])
+    }, delay)
   }
 }
 

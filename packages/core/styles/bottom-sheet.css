@@ -184,7 +184,14 @@
    */
   .astryx-bottom-sheet[data-state='exiting'] {
     transform: translateY(100%);
-    transition-timing-function: cubic-bezier(0.3, 0, 0.6, 0.6);
+    transition-timing-function: var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
+  }
+
+  /* 触屏的退出曲线固定，不跟主题走。 */
+  @media (pointer: coarse) {
+    .astryx-bottom-sheet[data-state='exiting'] {
+      transition-timing-function: cubic-bezier(0.3, 0, 0.6, 0.6);
+    }
   }
 
   .astryx-bottom-sheet[data-dragging],

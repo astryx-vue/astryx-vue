@@ -22,6 +22,7 @@ import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchor
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
 import { createPowerSearchLookup } from './config.js'
 import { powerSearchGroupLabel, powerSearchItemIcon } from './menuPresentation.js'
+import { menuStyleWithWidth, resultCountText } from './menuStyle.js'
 import PowerSearchToken from './PowerSearchToken.vue'
 import { searchPowerSearchFields } from './source.js'
 import { usePowerSearchActions } from './usePowerSearchActions.js'
@@ -216,18 +217,8 @@ watch(() => props.resultCount, (value) => {
 }, { immediate: true })
 const visibleFilters = computed(() => filters.value.slice(0, visibleCount.value))
 const hasClearButton = computed(() => showsClear.value && filters.value.length > 0 && !props.disabled && !props.readOnly)
-const displayCount = computed(() => {
-  if (props.resultCount == null)
-    return ''
-  return typeof props.resultCount === 'number' ? text.value.resultCount(props.resultCount) : props.resultCount
-})
-const menuStyle = computed(() => {
-  const base = anchored.style.value
-  if (props.menuWidth == null)
-    return base
-  const width = `min(${props.menuWidth}px, var(--astryx-layer-max-inline-size, calc(100vw - 32px)))`
-  return { ...base, width, minWidth: width, maxWidth: width }
-})
+const displayCount = computed(() => resultCountText(props.resultCount, text.value.resultCount))
+const menuStyle = computed(() => menuStyleWithWidth(anchored.style.value, props.menuWidth))
 
 function onInputFocus(event: FocusEvent): void {
   emit('focus', event)

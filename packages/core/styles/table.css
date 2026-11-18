@@ -523,7 +523,7 @@
 
   .astryx-table__chevron-icon {
     display: inline-flex;
-    transition: transform var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition: transform var(--astryx-duration-fast, 125ms) var(--astryx-ease-move, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
   .astryx-table__chevron-icon.is-expanded {

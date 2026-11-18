@@ -14,8 +14,8 @@
     --astryx-button-secondary-hover-overlay: light-dark(#225BFF14, #FDEE8C14);
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: light-dark(#225BFF, #FDEE8C);
-    --astryx-button-destructive-background: light-dark(#ffdad3, #f4b8ae);
-    --astryx-button-destructive-foreground: light-dark(#550000, #6d211c);
+    --astryx-button-destructive-background: light-dark(#ffd9cf, #ffb09b);
+    --astryx-button-destructive-foreground: light-dark(#3b0200, #6f1400);
     --astryx-button-hover-overlay: var(--astryx-color-overlay-hover);
     --astryx-button-pressed-overlay: var(--astryx-color-overlay-pressed);
     --astryx-button-focus: var(--astryx-color-accent);

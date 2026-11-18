@@ -77,7 +77,7 @@ export function contrastingInk(color: string): string {
     return '#ffffff'
   const [red, green, blue] = channels.map(channelToLinear)
   const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
-  return luminance > 0.45 ? '#171717' : '#ffffff'
+  return luminance > 0.45 ? '#111111' : '#ffffff'
 }
 
 /** 把 3、4、6、8 位的十六进制颜色统一成小写的 6 或 8 位。不是颜色时返回 null。 */

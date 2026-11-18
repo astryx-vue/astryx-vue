@@ -4,8 +4,8 @@
   [data-astryx-theme='matcha'] {
     --astryx-badge-neutral-background: var(--astryx-color-background-gray);
     --astryx-badge-neutral-foreground: var(--astryx-color-text-gray);
-    --astryx-badge-info-background: var(--astryx-color-background-blue);
-    --astryx-badge-info-foreground: var(--astryx-color-text-blue);
+    --astryx-badge-info-background: var(--astryx-color-info);
+    --astryx-badge-info-foreground: var(--astryx-color-on-info);
     --astryx-badge-success-background: var(--astryx-color-success);
     --astryx-badge-success-foreground: var(--astryx-color-on-success);
     --astryx-badge-warning-background: var(--astryx-color-warning);

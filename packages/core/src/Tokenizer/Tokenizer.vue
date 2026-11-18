@@ -19,6 +19,7 @@ import TypeaheadMenu from '../Typeahead/TypeaheadMenu.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
 import { isImeKeyEvent } from '../utils/ime.js'
+import { pickInputAttrs } from './inputAttrs.js'
 import '../../styles/typeahead.css'
 import '../../styles/tokenizer.css'
 import '../../styles/visually-hidden-utility.css'
@@ -107,34 +108,8 @@ const describedBy = computed(() => {
   return [external, props.description ? `${inputId}-description` : undefined, props.statusMessage ? `${inputId}-status` : undefined, focusableDisabled.value ? disabledId : undefined].filter(Boolean).join(' ') || undefined
 })
 
-/**
- * 这些属性由组件自己算，不能让外面透传的值盖掉。
- * 其余的原生属性和事件监听（@keydown / @focus / @blur …）原样落到输入框上。
- */
-const controlledAttrs = new Set([
-  'id',
-  'type',
-  'role',
-  'value',
-  'class',
-  'style',
-  'disabled',
-  'readonly',
-  'autofocus',
-  'placeholder',
-  'tabindex',
-  'autocomplete',
-  'aria-describedby',
-  'aria-expanded',
-  'aria-controls',
-  'aria-activedescendant',
-  'aria-autocomplete',
-  'aria-disabled',
-  'aria-required',
-])
-
 function inputAttrs(): Record<string, unknown> {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key)))
+  return pickInputAttrs(attrs)
 }
 
 const menu = useTypeaheadMenu<T>({

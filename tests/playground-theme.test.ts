@@ -90,7 +90,7 @@ describe('playground theme', () => {
   it('picks readable ink for the Neutral accent stops', () => {
     const theme = createNeutralTheme()
     expect(contrastingInk(theme.colors.light.accent)).toBe('#ffffff')
-    expect(contrastingInk(theme.colors.dark.accent)).toBe('#171717')
+    expect(contrastingInk(theme.colors.dark.accent)).toBe('#111111')
   })
 
   it('drops invalid shared colors back to Neutral', () => {

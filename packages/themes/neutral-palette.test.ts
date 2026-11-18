@@ -87,9 +87,9 @@ describe('neutral palette', () => {
       '--astryx-color-text-accent': lightDark('#1b1b1b', '#f1f1f1'),
       '--astryx-color-icon-secondary': lightDark('#6a6a6a', '#9e9e9e'),
       '--astryx-color-border': lightDark('#00000014', '#ffffff1a'),
-      '--astryx-color-success': lightDark('#00490b', '#a4d6a3'),
-      '--astryx-color-error': lightDark('#76000c', '#ffc4be'),
-      '--astryx-color-warning': lightDark('#4b3900', '#f8d36a'),
+      '--astryx-color-success': lightDark('#198100', '#64af4c'),
+      '--astryx-color-error': lightDark('#c9303a', '#ff705d'),
+      '--astryx-color-warning': lightDark('#ffce2f', '#ffce2f'),
       '--astryx-color-background-gray': lightDark('#e2e2e2', '#303030'),
       '--astryx-color-text-blue': lightDark('#003978', '#a1caff'),
     }
@@ -105,16 +105,16 @@ describe('neutral palette', () => {
 })
 
 describe('neutral theme-local status tokens', () => {
-  it('carries the separately approved status fills', () => {
+  it('keeps only the deprecated status-fill-accent local token, as upstream does', () => {
     expect(stops('--astryx-theme-neutral-color-status-fill-accent')).toEqual(lightDark('#0074e2', '#6d9cfe'))
-    expect(stops('--astryx-theme-neutral-color-status-fill-success')).toEqual(lightDark('#198100', '#64af4c'))
-    expect(stops('--astryx-theme-neutral-color-status-fill-warning')).toEqual(lightDark('#ffce2f', '#ffce2f'))
-    expect(stops('--astryx-theme-neutral-color-status-fill-error')).toEqual(lightDark('#c9303a', '#ff705d'))
-    expect(stops('--astryx-theme-neutral-color-status-muted-accent')).toEqual(lightDark('#b9d7ff', '#88bcff3d'))
+    for (const name of ['success', 'warning', 'error'])
+      expect(declared.has(`--astryx-theme-neutral-color-status-fill-${name}`), name).toBe(false)
   })
 
-  it('resolves the badge status fills through those tokens', () => {
+  it('resolves the badge status fills through the portable status roles', () => {
     expect(stops('--astryx-badge-info-background')).toEqual(lightDark('#0074e2', '#6d9cfe'))
+    expect(stops('--astryx-badge-success-background')).toEqual(lightDark('#198100', '#64af4c'))
+    expect(stops('--astryx-badge-warning-background')).toEqual(lightDark('#ffce2f', '#ffce2f'))
     expect(stops('--astryx-badge-error-background')).toEqual(lightDark('#c9303a', '#ff705d'))
     expect(stops('--astryx-badge-error-foreground')).toEqual(lightDark('#ffffff', '#111111'))
     expect(stops('--astryx-badge-warning-foreground')).toEqual(lightDark('#111111', '#111111'))
@@ -122,10 +122,10 @@ describe('neutral theme-local status tokens', () => {
 })
 
 describe('neutral syntax palette', () => {
-  it('gives punctuation its own AA-passing neutral stop', () => {
+  it('keeps punctuation and comment on the upstream neutral stop', () => {
     const code = read('code.css')
-    expect(code).toContain('--astryx-code-syntax-punctuation: light-dark(#6a6a6a, #9e9e9e);')
-    expect(code).toContain('--astryx-code-syntax-comment: light-dark(#6a6a6a, #9e9e9e);')
+    expect(code).toContain('--astryx-code-syntax-punctuation: light-dark(#525252, #b9b9b9);')
+    expect(code).toContain('--astryx-code-syntax-comment: light-dark(#525252, #b9b9b9);')
     expect(code).toContain('--astryx-code-syntax-keyword: light-dark(#6b187c, #efa8ff);')
     expect(code).toContain('--astryx-code-block-background: light-dark(#ffffff, #111111);')
   })

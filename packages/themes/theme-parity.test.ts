@@ -107,13 +107,13 @@ const SEMANTIC: Record<Theme, Record<string, Stops>> = {
     '--astryx-color-text-primary': lightDark('#1d1c11', '#f3f2e2'),
     '--astryx-color-text-secondary': lightDark('#605f52', '#adac9e'),
     '--astryx-color-border': lightDark('#e5e3d4', '#f3f2e21a'),
-    '--astryx-color-success': lightDark('#004700', '#99d94b'),
-    '--astryx-color-error': lightDark('#771210', '#ffb4a6'),
+    '--astryx-color-success': lightDark('#004a05', '#83bc82'),
+    '--astryx-color-error': lightDark('#821b00', '#ffc5b5'),
   },
   chocolate: {
     '--astryx-color-accent': lightDark('#8c5927', '#d4a06a'),
     '--astryx-color-text-primary': lightDark('#4a3520', '#ede4d4'),
-    '--astryx-color-text-secondary': lightDark('#b88859', '#c4a882'),
+    '--astryx-color-text-secondary': lightDark('#894d0e', '#c4a882'),
     '--astryx-color-border': lightDark('#c4ac95', '#ede4d41a'),
     '--astryx-color-success': lightDark('#709900', '#96bf2a'),
     '--astryx-color-error': lightDark('#fd0000', '#ff5c5c'),
@@ -129,26 +129,26 @@ const SEMANTIC: Record<Theme, Record<string, Stops>> = {
   matcha: {
     '--astryx-color-accent': lightDark('#3e481d', '#c0cba9'),
     '--astryx-color-text-primary': lightDark('#3e481d', '#c0cba9'),
-    '--astryx-color-text-secondary': lightDark('#707e46', '#94a468'),
+    '--astryx-color-text-secondary': lightDark('#5a6b2a', '#a8bf6a'),
     '--astryx-color-border': lightDark('#dce3ce', '#c0cba91a'),
     '--astryx-color-success': lightDark('#4d9900', '#6dbf2a'),
     '--astryx-color-error': lightDark('#fd0000', '#ff5c5c'),
   },
   stone: {
-    '--astryx-color-accent': lightDark('#25252a', '#f3f3f5'),
-    '--astryx-color-text-primary': lightDark('#25252a', '#f3f3f5'),
-    '--astryx-color-text-secondary': lightDark('#5e5e63', '#ababb0'),
-    '--astryx-color-border': lightDark('#e2e2e8', '#f3f3f51a'),
-    '--astryx-color-success': lightDark('#374c36', '#b4cdb2'),
-    '--astryx-color-error': lightDark('#58413e', '#dcc0bc'),
+    '--astryx-color-accent': lightDark('#25252a', '#f0f0f9'),
+    '--astryx-color-text-primary': lightDark('#25252a', '#f0f0f9'),
+    '--astryx-color-text-secondary': lightDark('#5f5f64', '#ababb3'),
+    '--astryx-color-border': lightDark('#e2e2e8', '#f0f0f91a'),
+    '--astryx-color-success': lightDark('#354f31', '#b3d0af'),
+    '--astryx-color-error': lightDark('#603c37', '#e0bdb8'),
   },
   y2k: {
     '--astryx-color-accent': lightDark('#2d241b', '#edeffc'),
     '--astryx-color-text-primary': lightDark('#2d241b', '#edeffc'),
-    '--astryx-color-text-secondary': lightDark('#675d52', '#a6acd6'),
-    '--astryx-color-border': lightDark('#2f292e', '#edeffc1a'),
+    '--astryx-color-text-secondary': lightDark('#5a5146', '#a6acd6'),
+    '--astryx-color-border': lightDark('#382e24', '#edeffc1a'),
     '--astryx-color-success': lightDark('#c5e17a', '#c5e17a'),
-    '--astryx-color-error': lightDark('#ffc5c3', '#ffc5c3'),
+    '--astryx-color-error': lightDark('#ffc3c3', '#ffc3c3'),
   },
 }
 
@@ -159,10 +159,8 @@ describe.each(THEMES)('%s theme', (theme) => {
   })
 
   it('keeps the radius-none contract at a hard zero', () => {
-    /* Upstream restores the fixed zero contract everywhere but matcha, which
-       leaves the core default in place. */
-    const want = theme === 'matcha' ? '0' : '0px'
-    expect(declared.get(theme)?.get('--astryx-radius-none')).toBe(want)
+    /* Every theme resolves to the same hard zero as upstream's generated rules. */
+    expect(declared.get(theme)?.get('--astryx-radius-none')).toBe('0px')
   })
 })
 
@@ -172,7 +170,7 @@ const COMPONENTS: Array<[Theme, string, Stops]> = [
   ['butter', '--astryx-badge-height', ['30px', '30px']],
   ['chocolate', '--astryx-button-secondary-border-width', ['1px', '1px']],
   ['chocolate', '--astryx-card-padding', ['0.75rem', '0.75rem']],
-  ['gothic', '--astryx-code-syntax-added', ['#081408', '#081408']],
+  ['gothic', '--astryx-code-syntax-added', ['#071607', '#071607']],
   ['gothic', '--astryx-badge-radius', ['0.5rem', '0.5rem']],
   ['matcha', '--astryx-section-padding', ['1.125rem', '1.125rem']],
   ['stone', '--astryx-input-success', lightDark('#7f977e', '#99b298')],

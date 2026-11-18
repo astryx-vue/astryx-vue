@@ -30,11 +30,11 @@ const cancel: PressEvent = { kind: 'cancel' }
 const onset: PressEvent = { kind: 'onset' }
 
 describe('时钟和系统列表一致', () => {
-  it('等 150ms 才认按压，容差 10px，轻点闪 100ms，淡出 200ms，刹车窗口 150ms', () => {
+  it('等 150ms 才认按压，容差 10px，轻点闪 100ms，淡出 175ms，刹车窗口 150ms', () => {
     expect(PRESS_ONSET_MS).toBe(150)
     expect(PRESS_SLOP_PX).toBe(10)
     expect(PRESS_FLASH_MS).toBe(100)
-    expect(PRESS_FADE_MS).toBe(200)
+    expect(PRESS_FADE_MS).toBe(175)
     expect(PRESS_SCROLL_BRAKE_MS).toBe(150)
   })
 })

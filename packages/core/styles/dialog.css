@@ -43,7 +43,7 @@
 
   .astryx-dialog[open] {
     display: flex;
-    animation: astryx-dialog-enter var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)) backwards;
+    animation: astryx-dialog-enter var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-entrance, cubic-bezier(0.24, 1, 0.4, 1)) backwards;
   }
 
   .astryx-dialog::backdrop {
