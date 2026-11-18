@@ -6,6 +6,7 @@ import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import NavItem from '../NavItem/NavItem.vue'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
+import { SizeProvider } from '../SizeContext/SizeContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { sideNavCollapseKey, sideNavDepthKey, useSideNavCollapse, useSideNavDepth } from './context.js'
 import '../../styles/side-nav.css'
@@ -254,7 +255,9 @@ const toggleLabel = computed(() =>
         </template>
       </NavItem>
       <div v-if="$slots.actions" class="astryx-side-nav-item__actions">
-        <slot name="actions" />
+        <SizeProvider value="sm">
+          <slot name="actions" />
+        </SizeProvider>
       </div>
     </div>
     <div

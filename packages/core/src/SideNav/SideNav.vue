@@ -6,6 +6,7 @@ import { useHotkeys } from '../composables/useHotkeys.js'
 import { useAstryxMessages } from '../locale/index.js'
 import ResizeHandle from '../Resizable/ResizeHandle.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { SizeProvider } from '../SizeContext/SizeContext.js'
 import { sideNavCollapseKey, useSideNavRenderMode } from './context.js'
 import SideNavCollapseButton from './SideNavCollapseButton.vue'
 import { useSideNavResize } from './useSideNavResize.js'
@@ -20,7 +21,12 @@ const props = withDefaults(defineProps<SideNavProps>(), {
 })
 
 const emit = defineEmits<SideNavEmits>()
+
 const slots = defineSlots<SideNavSlots>()
+
+/** 同上游 FOOTER_ICON_SIZE：折叠按钮和 footerIcons 同高。 */
+const FOOTER_ICON_SIZE = 'sm'
+
 const messages = useAstryxMessages()
 const navId = `astryx-side-nav-${useId()}`
 const localCollapsed = ref(false)
@@ -71,8 +77,9 @@ const isCollapsed = computed(() => {
 })
 const showResizeHandle = computed(() => resize.enabled.value && !isCollapsed.value)
 const showButton = computed(() => isCollapsible.value && (config.value.hasButton ?? true))
-const hasTop = computed(() => slots.header != null || slots.top != null || showButton.value)
-const hasBottom = computed(() => slots.footer != null || slots.footerIcons != null)
+// 同上游：内置折叠按钮放在底部行（与 footerIcons 同一行），不占顶部。
+const hasTop = computed(() => slots.header != null || slots.top != null)
+const hasBottom = computed(() => slots.footer != null || slots.footerIcons != null || showButton.value)
 // 同上游：没有顶部/底部区域时，滚动区在该侧补到 8px，否则 4px。
 const bodyEdgeClass = computed(() => ({
   'astryx-side-nav__body--no-top': !hasTop.value,
@@ -132,7 +139,9 @@ provide(sideNavCollapseKey, {
   <div v-if="renderMode === 'topbar'" class="astryx-side-nav astryx-side-nav--topbar" data-mode="topbar">
     <slot name="header" />
     <div v-if="slots.footerIcons" class="astryx-side-nav__topbar-icons">
-      <slot name="footerIcons" />
+      <SizeProvider :value="FOOTER_ICON_SIZE">
+        <slot name="footerIcons" />
+      </SizeProvider>
     </div>
   </div>
   <div v-else-if="renderMode === 'drawer' || renderMode === 'drawer-content'" class="astryx-side-nav astryx-side-nav--drawer" data-mode="drawer">
@@ -145,7 +154,9 @@ provide(sideNavCollapseKey, {
     <div v-if="hasBottom" class="astryx-side-nav__bottom">
       <slot name="footer" />
       <div v-if="slots.footerIcons" class="astryx-side-nav__footer-icons">
-        <slot name="footerIcons" />
+        <SizeProvider :value="FOOTER_ICON_SIZE">
+          <slot name="footerIcons" />
+        </SizeProvider>
       </div>
     </div>
   </div>
@@ -166,9 +177,8 @@ provide(sideNavCollapseKey, {
       :data-collapsed="isCollapsed || undefined"
     >
       <div v-if="hasTop" class="astryx-side-nav__top">
-        <div v-if="slots.header || showButton" class="astryx-side-nav__heading-row">
+        <div v-if="slots.header" class="astryx-side-nav__heading-row">
           <slot name="header" />
-          <SideNavCollapseButton v-if="showButton" :label="config.buttonLabel" />
         </div>
         <div v-if="slots.top" class="astryx-side-nav__top-content">
           <slot name="top" />
@@ -179,8 +189,11 @@ provide(sideNavCollapseKey, {
       </div>
       <div v-if="hasBottom" class="astryx-side-nav__bottom">
         <slot name="footer" />
-        <div v-if="slots.footerIcons" class="astryx-side-nav__footer-icons">
-          <slot name="footerIcons" />
+        <div v-if="showButton || slots.footerIcons" class="astryx-side-nav__footer-row">
+          <SizeProvider :value="FOOTER_ICON_SIZE">
+            <SideNavCollapseButton v-if="showButton" :label="config.buttonLabel" />
+            <slot name="footerIcons" />
+          </SizeProvider>
         </div>
       </div>
     </nav>

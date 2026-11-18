@@ -219,6 +219,7 @@ defineExpose({
     :aria-label="ariaLabel"
     :class="rootClass"
     :data-astryx-edge-comp="variant === 'ghost' ? '' : undefined"
+    :data-astryx-has-layer="hasTooltip || undefined"
     :data-delay-spinner="isLoadingState && delaySpinner || undefined"
     :data-elevation="group == null ? elevation : 'none'"
     :data-icon-only="isIconOnly || undefined"

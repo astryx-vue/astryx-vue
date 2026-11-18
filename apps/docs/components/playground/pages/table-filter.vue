@@ -43,6 +43,7 @@ import {
   TextInput,
   Token,
   ToggleButton,
+  useAnnounce,
   usePowerSearchConfig,
   useResizable,
   useTableGroupedRows,
@@ -875,6 +876,77 @@ function columnRowRef(key: string) {
 }
 
 let reorderSession: { key: string, pointerId: number, fromIndex: number } | null = null
+/** 拖动落位之后紧跟一个 click，不能被当成键盘「拿起」。 */
+let suppressGripClick = false
+
+/** 键盘拿起：被拿起的那一列，以及拿起时的顺序（Escape 用它放回去）。 */
+const pickedKey = ref<string | null>(null)
+let pickedOriginalKeys: string[] = []
+const announce = useAnnounce()
+
+function commitColumnOrder(nextKeys: readonly string[]): void {
+  updateView(current => ({ ...current, columnKeys: [...nextKeys] }))
+}
+
+function moveColumn(key: string, requestedIndex: number): boolean {
+  const keys = view.value.columnKeys
+  const from = keys.indexOf(key)
+  const to = Math.max(0, Math.min(keys.length - 1, requestedIndex))
+  if (from < 0 || to === from)
+    return false
+  const next = [...keys]
+  next.splice(from, 1)
+  next.splice(to, 0, key)
+  commitColumnOrder(next)
+  return true
+}
+
+/** 没有拖动的点击：第一次拿起，第二次放下，和读屏被告知的两步一致。 */
+function onGripClick(key: string): void {
+  if (suppressGripClick) {
+    suppressGripClick = false
+    return
+  }
+  const keys = view.value.columnKeys
+  const index = keys.indexOf(key)
+  if (pickedKey.value === key) {
+    pickedKey.value = null
+    announce(`${COLUMN_LABELS[key]} dropped at position ${index + 1} of ${keys.length}.`)
+    return
+  }
+  pickedKey.value = key
+  pickedOriginalKeys = [...keys]
+  announce(`${COLUMN_LABELS[key]} picked up, position ${index + 1} of ${keys.length}. Use the arrow keys to move it, Space or Enter to drop, or Escape to cancel.`)
+}
+
+function onGripKeydown(event: KeyboardEvent, key: string): void {
+  const keys = view.value.columnKeys
+  if (event.key === 'Escape' && pickedKey.value === key) {
+    // Escape 同时是弹层的关闭键，取消必须在这里截住，否则面板会在放回原位时消失。
+    event.preventDefault()
+    event.stopPropagation()
+    // 只有真的动过才写回：updateView 会离开当前保存的视图。
+    if (pickedOriginalKeys.join() !== keys.join() && keys.includes(key))
+      commitColumnOrder(pickedOriginalKeys)
+    pickedKey.value = null
+    announce(`${COLUMN_LABELS[key]} move cancelled.`)
+    return
+  }
+  const index = keys.indexOf(key)
+  const targets: Record<string, number> = {
+    ArrowUp: index - 1,
+    ArrowDown: index + 1,
+    Home: 0,
+    End: keys.length - 1,
+  }
+  const target = targets[event.key]
+  if (target == null)
+    return
+  // 方向键不要求先拿起：拿起是给读屏的流程，不是快捷键的前提。
+  event.preventDefault()
+  if (moveColumn(key, target))
+    announce(`${COLUMN_LABELS[key]}, position ${Math.max(0, Math.min(keys.length - 1, target)) + 1} of ${keys.length}.`)
+}
 
 function onGripPointerDown(event: PointerEvent, key: string): void {
   const fromIndex = view.value.columnKeys.indexOf(key)
@@ -903,6 +975,10 @@ function onGripPointerUp(): void {
   reorderDropKey.value = null
   if (toKey == null || toKey === key)
     return
+  suppressGripClick = true
+  setTimeout(() => {
+    suppressGripClick = false
+  }, 0)
   const toIndex = view.value.columnKeys.indexOf(toKey)
   if (toIndex < 0)
     return
@@ -1939,15 +2015,18 @@ function SearchIcon() {
                                       density="compact"
                                       :label="COLUMN_LABELS[key]"
                                       class="tf-transfer-item tf-transfer-pad-start"
-                                      :class="{ 'tf-transfer-row--drop': reorderDropKey === key }"
+                                      :class="{ 'tf-transfer-row--drop': reorderDropKey === key, 'tf-transfer-row--picked': pickedKey === key }"
                                     >
                                       <template #startContent>
                                         <IconButton
                                           :label="`Reorder ${COLUMN_LABELS[key]}`"
                                           aria-describedby="tf-columns-reorder-hint"
+                                          :aria-pressed="pickedKey === key"
                                           variant="ghost"
                                           size="sm"
                                           class="tf-transfer-grip"
+                                          @click="onGripClick(key)"
+                                          @keydown="onGripKeydown($event, key)"
                                           @pointerdown="onGripPointerDown($event, key)"
                                           @pointermove="onGripPointerMove"
                                           @pointerup="onGripPointerUp"
@@ -2527,6 +2606,10 @@ function SearchIcon() {
 .tf-transfer-item {
   min-width: 0;
   transition: background-color var(--astryx-duration-fast) var(--astryx-ease-standard), opacity var(--astryx-duration-fast) var(--astryx-ease-standard);
+}
+
+.tf-transfer-row--picked {
+  background-color: var(--astryx-color-accent-muted);
 }
 
 .tf-transfer-row--drop {

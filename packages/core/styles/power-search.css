@@ -86,8 +86,17 @@
     color: var(--astryx-color-text-secondary, #525252);
   }
 
-  .astryx-power-search-clear {
+  /* 同上游 endSection：距字段内缘 8px（控件已有 4px 内边距，再补 4px），项间距 8px。 */
+  .astryx-power-search-end {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
     margin-inline-start: auto;
+    padding-inline-end: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-power-search-clear {
     padding: 0;
     border: 0;
     background: transparent;

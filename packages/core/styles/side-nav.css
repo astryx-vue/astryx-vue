@@ -108,6 +108,16 @@
     padding-block-end: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-side-nav__footer-row {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-side-nav--collapsed .astryx-side-nav__footer-row {
+    flex-direction: column-reverse;
+  }
+
   .astryx-side-nav__heading-row,
   .astryx-side-nav__footer-icons {
     display: flex;
@@ -342,6 +352,11 @@
   .astryx-side-nav-collapse__chevron {
     display: inline-flex;
     transition: transform var(--astryx-duration-fast-max) var(--astryx-ease-standard);
+  }
+
+  /* 字形盒子在按钮图标槽里居中，不吃图标自带的 -0.125em 基线偏移。 */
+  .astryx-side-nav-collapse__chevron {
+    vertical-align: baseline;
   }
 
   [dir='rtl'] .astryx-side-nav-collapse__mirror {

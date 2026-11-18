@@ -24,8 +24,9 @@ describe('side-nav', () => {
     const nav = wrapper.get('nav')
     expect(nav.attributes('aria-label')).toBe('Side navigation')
     expect(nav.attributes('data-collapsed')).toBeUndefined()
-    expect(wrapper.get('.astryx-side-nav__heading-row').find('[aria-label="Collapse sidebar"]').exists()).toBe(true)
-    expect(wrapper.find('.astryx-side-nav__bottom [aria-label="Collapse sidebar"]').exists()).toBe(false)
+    // 同上游：内置折叠按钮在底部行，不在顶部。
+    expect(wrapper.get('.astryx-side-nav__footer-row').find('[aria-label="Collapse sidebar"]').exists()).toBe(true)
+    expect(wrapper.find('.astryx-side-nav__top [aria-label="Collapse sidebar"]').exists()).toBe(false)
 
     await wrapper.get('[aria-label="Collapse sidebar"]').trigger('click')
     expect(nav.attributes('data-collapsed')).toBe('true')

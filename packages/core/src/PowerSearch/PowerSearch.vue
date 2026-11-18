@@ -215,6 +215,7 @@ watch(() => props.resultCount, (value) => {
     liveText.value = value
 }, { immediate: true })
 const visibleFilters = computed(() => filters.value.slice(0, visibleCount.value))
+const hasClearButton = computed(() => showsClear.value && filters.value.length > 0 && !props.disabled && !props.readOnly)
 const displayCount = computed(() => {
   if (props.resultCount == null)
     return ''
@@ -400,18 +401,21 @@ defineExpose({
           @focus="onInputFocus"
           @blur="emit('blur', $event)"
         >
-        <slot v-if="slots.endContent" name="endContent" />
-        <slot v-else name="end" />
-        <span v-if="displayCount" class="astryx-power-search-count">{{ displayCount }}</span>
-        <button
-          v-if="showsClear && filters.length > 0 && !disabled && !readOnly"
-          type="button"
-          class="astryx-power-search-clear"
-          :aria-label="text.clear"
-          @click="clearAll"
-        >
-          <Icon icon="close" size="sm" />
-        </button>
+        <!-- 同上游 Tokenizer 的 endSection：计数、endContent、清除按钮并成一组，距边框 8px、间距 8px。 -->
+        <span v-if="displayCount || slots.endContent || slots.end || hasClearButton" class="astryx-power-search-end">
+          <span v-if="displayCount" class="astryx-power-search-count">{{ displayCount }}</span>
+          <slot v-if="slots.endContent" name="endContent" />
+          <slot v-else name="end" />
+          <button
+            v-if="hasClearButton"
+            type="button"
+            class="astryx-power-search-clear"
+            :aria-label="text.clear"
+            @click="clearAll"
+          >
+            <Icon icon="close" size="sm" />
+          </button>
+        </span>
         <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
       </div>
     </Tooltip>

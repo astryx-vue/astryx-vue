@@ -58,7 +58,7 @@ describe('toolbar', () => {
   it('pulls a slot back by the edge inset when its edge child is a flat button', () => {
     const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/toolbar.css'), 'utf8')
     expect(css).toContain('.astryx-toolbar__slot:has(> [data-astryx-edge-comp]:first-child)')
-    expect(css).toContain('.astryx-toolbar__slot:has(> [data-astryx-edge-comp]:last-child)')
+    expect(css).toContain('.astryx-toolbar__slot:has(> [data-astryx-edge-comp]:last-child:not([data-astryx-has-layer]))')
     expect(css).toContain('--_edge-comp-inset: calc(var(--container-padding-inline-start, var(--astryx-spacing-4, 16px)) - var(--astryx-spacing-2, 8px))')
   })
 

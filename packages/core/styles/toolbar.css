@@ -58,7 +58,11 @@
     margin-inline-start: calc(-1 * var(--_edge-comp-inset));
   }
 
-  .astryx-toolbar__slot:has(> [data-astryx-edge-comp]:last-child) {
+  /*
+   * 同上游：带 tooltip 的按钮后面紧跟着一个 popover 层元素，所以它不是 :last-child，
+   * 不做末端补偿。我们的 tooltip 是传送出去的，用 data-astryx-has-layer 还原这个判定。
+   */
+  .astryx-toolbar__slot:has(> [data-astryx-edge-comp]:last-child:not([data-astryx-has-layer])) {
     margin-inline-end: calc(-1 * var(--_edge-comp-inset));
   }
 
