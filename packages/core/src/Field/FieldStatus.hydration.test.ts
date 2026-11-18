@@ -1,6 +1,6 @@
 import { renderToString } from '@vue/server-renderer'
 import { afterEach, describe, expect, it } from 'vitest'
-import { createApp, createSSRApp, defineComponent, h, nextTick } from 'vue'
+import { createSSRApp, defineComponent, h, nextTick } from 'vue'
 import FieldStatus from './FieldStatus.vue'
 
 afterEach(() => {
@@ -15,10 +15,10 @@ async function hydrateStatus(): Promise<unknown[]> {
   container.innerHTML = await renderToString(createSSRApp(Host))
   document.body.appendChild(container)
   const problems: unknown[] = []
-  const app = createApp(Host)
+  const app = createSSRApp(Host)
   app.config.warnHandler = message => problems.push(message)
   app.config.errorHandler = error => problems.push(error)
-  app.mount(container, true)
+  app.mount(container)
   await nextTick()
   expect(container.textContent).toContain('Required')
   app.unmount()
