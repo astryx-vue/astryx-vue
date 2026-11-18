@@ -75,7 +75,7 @@ const barColor = computed(() => clipping.value > 0
       @click="dictation.toggle()"
     >
       <template v-if="!listening" #icon>
-        <Icon icon="microphone" />
+        <Icon icon="microphone" :size="size" />
       </template>
     </Button>
   </span>

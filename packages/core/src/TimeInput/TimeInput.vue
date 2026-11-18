@@ -4,6 +4,7 @@ import { computed, useAttrs, useId } from 'vue'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import TimeField from './TimeField.vue'
 
 defineOptions({ name: 'AstryxTimeInput', inheritAttrs: false })
@@ -13,12 +14,15 @@ const props = withDefaults(defineProps<Omit<TimeInputProps, 'modelValue'>>(), {
   hourFormat: '12h',
   hasSeconds: false,
   increment: 1,
-  size: 'md',
   hasClear: false,
   statusVariant: 'attached',
 })
 
 defineEmits<TimeInputEmits>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const model = defineModel<string | null>({ default: null })
 const attrs = useAttrs()
 const parts = useFieldPartStyling({

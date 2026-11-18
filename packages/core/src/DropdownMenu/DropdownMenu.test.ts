@@ -495,8 +495,9 @@ describe('dropdownMenu', () => {
       const surface = document.querySelector<HTMLElement>('.astryx-dropdown-menu')!
       // Trigger bottom (120) plus the 4px gap.
       expect(surface.style.top).toBe('124px')
-      // The anchor sits 10px from the edge, inside the 16px viewport gutter, so it clamps.
-      expect(surface.style.left).toBe('16px')
+      // 原版的空隙只留在远离锚点的那条边：start 对齐的菜单和触发器同起点（x=10），
+      // 即使它离视口边不足 16px。
+      expect(surface.style.left).toBe('10px')
     }
     finally {
       HTMLElement.prototype.getBoundingClientRect = original

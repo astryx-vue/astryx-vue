@@ -3,6 +3,7 @@ import type { ToolbarProps, ToolbarSlots } from './types.js'
 import { computed } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
 import Section from '../Section/Section.vue'
+import { provideSize } from '../SizeContext/SizeContext.js'
 import '../../styles/toolbar.css'
 
 defineOptions({ name: 'AstryxToolbar' })
@@ -27,6 +28,9 @@ const { listRef, handleKeyDown, handleFocus } = useListFocus({
   wrap: true,
 })
 void listRef.value
+
+// 工具栏里的按钮、输入框、标签页等默认跟着工具栏的尺寸，自己写了 size 的不受影响。
+provideSize(() => props.size)
 
 /** 带底部分隔线时，选中标签的指示条要穿过工具栏的块向内边距落到分隔线上。 */
 const toolbarStyle = computed(() => ({

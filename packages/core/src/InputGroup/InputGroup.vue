@@ -2,13 +2,13 @@
 import type { InputGroupProps, InputGroupSlots } from './types.js'
 import { computed, provide, useId } from 'vue'
 import Field from '../Field/Field.vue'
+import { provideSize, useSize } from '../SizeContext/SizeContext.js'
 import { INPUT_GROUP_KEY } from './context.js'
 import '../../styles/input-group.css'
 
 defineOptions({ name: 'AstryxInputGroup' })
 
 const props = withDefaults(defineProps<InputGroupProps>(), {
-  size: 'md',
   disabled: false,
   isLabelHidden: false,
   isOptional: false,
@@ -16,6 +16,10 @@ const props = withDefaults(defineProps<InputGroupProps>(), {
 })
 
 defineSlots<InputGroupSlots>()
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+provideSize(size)
+provideSize(size)
 
 const inputId = `astryx-input-group-${useId()}`
 const labelId = computed(() => props.label ? `${inputId}-label` : undefined)
@@ -24,14 +28,14 @@ const statusId = computed(() => props.label && props.status?.message ? `${inputI
 const describedBy = computed(() => [descriptionId.value, statusId.value].filter(Boolean).join(' ') || undefined)
 
 provide(INPUT_GROUP_KEY, {
-  size: computed(() => props.size),
+  size,
   disabled: computed(() => props.disabled),
   labelId,
   describedBy,
 })
 
 const groupClass = computed(() => [
-  `size-${props.size}`,
+  `size-${size.value}`,
   {
     'is-disabled': props.disabled,
     [`status-${props.status?.type}`]: props.status != null,

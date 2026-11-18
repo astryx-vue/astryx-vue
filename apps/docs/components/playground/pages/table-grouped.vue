@@ -464,7 +464,7 @@ const columns: TableColumn<TaskRow>[] = [
   <Dialog v-model:is-open="dialogOpen">
     <Layout>
       <template #header>
-        <DialogHeader title="Create Issue" @update:is-open="dialogOpen = $event" />
+        <DialogHeader title="Create Issue" @open-change="dialogOpen = $event" />
       </template>
       <LayoutContent :padding="4">
         <VStack :gap="4">

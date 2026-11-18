@@ -2,37 +2,21 @@
 
 /* 轨道模式（指示点画在连接线上）的布局：竖向一个网格，横向轨道在控件里面。 */
 @layer astryx.components {
-  /* 竖向轨道：指示点一列、标签和说明一列。 */
+  /* 竖向轨道：指示点画在左边的轨道列里（和连接线同一列），控件里只剩标签和说明。 */
   .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-control {
     display: grid;
-    grid-template-columns: var(--astryx-spacing-4, 16px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    column-gap: var(--astryx-spacing-2, 8px);
     row-gap: var(--astryx-spacing-0-5, 2px);
-    padding-inline: var(--_step-space);
+    padding-inline: 0 var(--_step-space);
   }
 
   .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-row {
     display: contents;
   }
 
-  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-indicator {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-  }
-
-  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-label-row,
-  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-description {
-    grid-column: 2;
-  }
-
-  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'][data-glyph='none'] .astryx-step-control {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'][data-glyph='none'] .astryx-step-label-row,
-  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'][data-glyph='none'] .astryx-step-description {
-    grid-column: 1;
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] > .astryx-step-rail {
+    margin-inline-start: var(--_step-space);
   }
 
   .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-description {

@@ -204,6 +204,7 @@ function demo(body: string, uniqueID: string) {
                 v-for="name in attachments"
                 :key="name"
                 :label="name"
+                removable
                 @remove="removeAttachment(name)"
               />
             </ChatComposerDrawer>
@@ -343,7 +344,7 @@ function demo(body: string, uniqueID: string) {
                 <Heading :level="4">
                   {{ suggestion.heading }}
                 </Heading>
-                <Text type="body" color="secondary" size="sm">
+                <Text type="body" color="secondary" size="xsm">
                   {{ suggestion.body }}
                 </Text>
               </VStack>

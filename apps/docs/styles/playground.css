@@ -981,8 +981,17 @@ html[data-playground-frame] #playground-mount[data-preview-layout='center'] {
 html[data-playground-frame] .playground-preview__content {
   /* 原版预览包在 Theme 里，没写字号的文字继承主题正文字号（默认 14px），不是浏览器的 16px。 */
   font-size: var(--astryx-text-body-size, 14px);
+  /* 文档站统一用 Fira Code，但演练场要和原版逐像素对齐：原版用系统等宽字体，行内代码会把行撑高 1px。 */
+  --astryx-font-family-code: ui-monospace, 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --nagi-font-family-mono: var(--astryx-font-family-code);
+  --docs-font-family-mono: var(--astryx-font-family-code);
   width: 100%;
   height: 100%;
+}
+
+/* 主题站的 code 规则会把字体写死成站点等宽字体，预览里改回组件自己的代码字体。 */
+html[data-playground-frame] .playground-preview__content :is(.astryx-markdown code.astryx-code, .astryx-code-block code) {
+  font-family: var(--astryx-font-family-code);
 }
 
 html[data-playground-frame] .playground-preview__content:has(> .astryx-layout[data-height='auto'], > .astryx-center[data-axis='horizontal']) {

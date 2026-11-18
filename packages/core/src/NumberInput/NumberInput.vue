@@ -14,6 +14,7 @@ import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { parseNumberInput, resolveNumberInputCommit } from './numberInputCommit.js'
 import { formatEditableNumber } from './numberParser.js'
@@ -25,13 +26,16 @@ const props = withDefaults(defineProps<NumberInputProps>(), {
   modelValue: null,
   placeholder: '',
   step: 1,
-  size: 'md',
   isWheelEnabled: true,
   statusVariant: 'attached',
 })
 
 const emit = defineEmits<NumberInputEmits>()
+
 defineSlots<NumberInputSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
 
 const attrs = useAttrs()
 const inputElement = useTemplateRef<HTMLInputElement>('input')
@@ -316,7 +320,7 @@ onMounted(() => {
     <template #default="field">
       <div
         ref="container"
-        class="astryx-number-input" :class="[`size-${props.size}`, parts.controlClass()]" :style="parts.controlStyle()"
+        class="astryx-number-input" :class="[`size-${size}`, parts.controlClass()]" :style="parts.controlStyle()"
         :data-status="statusType"
         :data-disabled="isDisabled || undefined"
         :data-readonly="isReadOnly || undefined"

@@ -16,6 +16,7 @@ import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import RangeCalendar from './RangeCalendar.vue'
@@ -29,12 +30,15 @@ const props = withDefaults(defineProps<Omit<DateRangeInputProps, 'modelValue'>>(
   monthCount: 2,
   minRangeSpan: 1,
   hasClear: true,
-  size: 'md',
   statusVariant: 'attached',
   isLoading: false,
 })
 
 const emit = defineEmits<DateRangeInputEmits>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const model = defineModel<DateRange | null>({ default: null })
 const attrs = useAttrs()
 const parts = useFieldPartStyling({

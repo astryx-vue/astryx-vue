@@ -16,6 +16,7 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/context.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
@@ -42,11 +43,15 @@ const props = withDefaults(defineProps<PowerSearchProps>(), {
   maxTokenLength: 40,
   maxSearchResults: 10,
   overflow: 'none',
-  size: 'md',
 })
 
 const emit = defineEmits<PowerSearchEmits>()
+
 const slots = defineSlots<PowerSearchSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
   component: 'PowerSearch',

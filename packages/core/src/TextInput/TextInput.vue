@@ -12,6 +12,7 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import { useAstryxMessages } from '../locale/index.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextInputAction } from './useTextInputAction.js'
 import '../../styles/text-input.css'
@@ -19,12 +20,14 @@ import '../../styles/text-input.css'
 defineOptions({ name: 'AstryxTextInput', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<TextInputProps, 'modelValue'>>(), {
   type: 'text',
-  size: 'md',
   statusVariant: 'attached',
   loadingLabel: 'Loading',
 })
+
 const emit = defineEmits<TextInputEmits>()
 defineSlots<TextInputSlots>()
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
 const ariaRequired = useAriaRequired(props)
 const messages = useAstryxMessages()
 const model = defineModel<string>({ required: true })

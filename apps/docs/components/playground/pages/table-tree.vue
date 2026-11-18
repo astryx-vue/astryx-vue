@@ -21,6 +21,7 @@ import {
   pixel,
   proportional,
   Section,
+  SizeProvider,
   StackItem,
   Tab,
   TabList,
@@ -306,6 +307,7 @@ const relativeFormat = new Intl.RelativeTimeFormat('en-US', { numeric: 'auto' })
 const AGE_UNITS: ReadonlyArray<readonly [Intl.RelativeTimeFormatUnit, number]> = [
   ['year', 365 * 86_400_000],
   ['month', 30 * 86_400_000],
+  ['week', 7 * 86_400_000],
   ['day', 86_400_000],
   ['hour', 3_600_000],
   ['minute', 60_000],
@@ -314,7 +316,7 @@ const AGE_UNITS: ReadonlyArray<readonly [Intl.RelativeTimeFormatUnit, number]> =
 function commitAge(epochMs: number): string {
   const elapsed = NOW - epochMs
   for (const [unit, size] of AGE_UNITS) {
-    if (elapsed >= size || unit === 'minute')
+    if (elapsed >= size)
       return relativeFormat.format(-Math.floor(elapsed / size), unit)
   }
   return 'just now'
@@ -752,9 +754,10 @@ const READMES: Record<string, string> = {
       </EmptyState>
 
       <VStack v-else :ref="setBody" :gap="6">
-        <!-- 原版整条用 SizeProvider value="sm" 包着；core 还没有 SizeProvider，逐个写 size="sm"。 -->
+        <!-- 原版整条用 SizeProvider value="sm" 包着：Button、TextInput 读上下文，IconButton 和 DropdownMenu 不读，仍要自己写 sm。 -->
+        <SizeProvider value="sm">
         <HStack :gap="2" align="center" wrap="wrap">
-          <DropdownMenu has-chevron size="sm" :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
+          <DropdownMenu has-chevron :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
           <HStack :gap="1" align="center">
             <template v-for="ref in REF_COUNTS" :key="ref.label">
               <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
@@ -778,17 +781,17 @@ const READMES: Record<string, string> = {
                 label="Go to file"
                 is-label-hidden
                 placeholder="Go to file"
-                size="sm"
                 has-clear
                 :start-icon="SearchIcon"
               />
-              <DropdownMenu has-chevron size="sm" :items="addFileItems" :button="{ label: 'Add file', size: 'sm' }" />
-              <Button label="Code" variant="primary" size="sm">
+              <DropdownMenu has-chevron :items="addFileItems" :button="{ label: 'Add file', size: 'sm' }" />
+              <Button label="Code" variant="primary">
                 <template #icon>
                   <Icon name="heroicons:code-bracket" size="sm" />
                 </template>
               </Button>
             </HStack>
+        </SizeProvider>
           </StackItem>
         </HStack>
 
@@ -807,7 +810,7 @@ const READMES: Record<string, string> = {
 
         <Card v-if="readme != null" :padding="0">
           <Section variant="transparent" :padding="0" :padding-block-start="1">
-            <TabList v-model:value="readmeTab" size="sm" has-divider>
+            <TabList v-model:value="readmeTab" size="sm" has-divider style="padding-inline: 4px">
               <Tab value="readme" label="Readme" />
               <template v-if="hasRepoTabs">
                 <Tab value="conduct" label="Code of conduct" />

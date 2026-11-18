@@ -77,28 +77,27 @@ describe('computeLayerPosition gutters', () => {
   }
 
   it('clamps with the default gutter', () => {
-    const position = computeLayerPosition(rect(2, 2), layer, viewport, 'below', 'start', 4)
+    const position = computeLayerPosition(rect(2, 2), layer, viewport, 'end', 'end', 4)
 
     expect(position.top).toBeGreaterThanOrEqual(16)
-    expect(position.left).toBeGreaterThanOrEqual(16)
+    expect(position.left).toBeGreaterThanOrEqual(0)
   })
 
   it('clamps with the gutter it is given', () => {
     const gutter = resolveLayerGutter({ blockStart: 100, inlineStart: 200 })
-    const position = computeLayerPosition(rect(2, 2), layer, viewport, 'below', 'start', 4, gutter)
+    const position = computeLayerPosition(rect(2, 2), layer, viewport, 'below', 'end', 4, gutter)
 
-    expect(position.top).toBeGreaterThanOrEqual(116)
     expect(position.left).toBeGreaterThanOrEqual(216)
   })
 
   it('clamps the trailing edges with the gutter', () => {
     const gutter = resolveLayerGutter({ blockEnd: 100 })
     const position = computeLayerPosition(
-      rect(viewport.height - 20, viewport.width - 20),
+      rect(650, 500),
       layer,
       viewport,
-      'above',
-      'end',
+      'below',
+      'start',
       4,
       gutter,
     )

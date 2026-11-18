@@ -20,6 +20,7 @@ import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
@@ -40,7 +41,6 @@ const props = withDefaults(defineProps<SelectorProps>(), {
   modelValue: null,
   disabled: false,
   status: 'default',
-  size: 'md',
   searchable: false,
   clearable: false,
   presentation: 'popover',
@@ -55,7 +55,12 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 })
 
 const emit = defineEmits<SelectorEmits>()
+
 defineSlots<SelectorSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const slots = useSlots()
 const attrs = useAttrs()
 const SelectionMark = useIndicator('check')
@@ -324,7 +329,7 @@ onMounted(syncAnchorWidth)
 <template>
   <Field
     class="astryx-selector"
-    :class="[parts.containerClass.value, `size-${props.size}`, `status-${statusType}`, `variant-${triggerVariant}`]"
+    :class="[parts.containerClass.value, `size-${size}`, `status-${statusType}`, `variant-${triggerVariant}`]"
     :style="parts.containerStyle.value"
     :label="fieldLabel"
     :input-id="selectorId"

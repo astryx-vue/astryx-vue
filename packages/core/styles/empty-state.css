@@ -20,7 +20,9 @@
   }
 
   .astryx-empty-state-icon {
+    display: flex;
     flex-shrink: 0;
+    justify-content: center;
   }
 
   .astryx-empty-state-text {

@@ -1,5 +1,5 @@
 export type TextType = 'body' | 'large' | 'label' | 'supporting' | 'code' | 'display-1' | 'display-2' | 'display-3' | 'inherit'
-export type TextSize = 'sm' | 'md' | 'lg' | 'xl'
+export type TextSize = 'xsm' | 'sm' | 'md' | 'lg' | 'xl'
 export type TextColor = 'primary' | 'secondary' | 'accent' | 'disabled' | 'placeholder' | 'inherit'
 export type TextWeight = 'regular' | 'normal' | 'medium' | 'semibold' | 'bold'
 export type TextWrap = 'wrap' | 'nowrap' | 'balance' | 'pretty'

@@ -1006,6 +1006,8 @@ export type {
   SideNavResizable,
   SideNavSectionProps,
 } from './SideNav/index.js'
+export { provideSize, SizeContext, SizeProvider, useSize } from './SizeContext/index.js'
+export type { ElementSize } from './SizeContext/index.js'
 export { Skeleton } from './Skeleton/index.js'
 export { Slider } from './Slider/index.js'
 export type {

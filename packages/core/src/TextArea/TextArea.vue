@@ -15,21 +15,24 @@ import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextAreaAction } from './useTextAreaAction.js'
 import '../../styles/text-area.css'
 
 defineOptions({ name: 'AstryxTextArea', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<TextAreaProps, 'modelValue'>>(), {
-  size: 'md',
   statusVariant: 'attached',
   resize: 'vertical',
   rows: 3,
   loadingLabel: 'Loading',
   hasSpellCheck: true,
 })
+
 const emit = defineEmits<TextAreaEmits>()
 defineSlots<TextAreaSlots>()
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
 const ariaRequired = useAriaRequired(props)
 const messages = useAstryxMessages()
 const announce = useAnnounce()

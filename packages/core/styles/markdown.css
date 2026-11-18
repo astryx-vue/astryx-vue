@@ -95,6 +95,15 @@
     line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
+  /* 引用块的文字色由 Blockquote 自己给（次要色），这里不能再 `inherit` 把它盖掉。 */
+  .astryx-markdown__blockquote {
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  .astryx-markdown__blockquote > .astryx-markdown__paragraph {
+    color: inherit;
+  }
+
   .astryx-markdown__paragraph,
   .astryx-markdown__list,
   .astryx-markdown__blockquote,
@@ -108,6 +117,21 @@
   .astryx-markdown__table-wrap,
   .astryx-markdown__blockquote {
     margin-block: var(--astryx-spacing-4, 16px);
+  }
+
+  /* 原版：代码块按最长行收缩，下限是 contentWidth（默认 400px 兜底）；居中时块自己居中。 */
+  .astryx-markdown__code {
+    --astryx-code-block-min-width: var(--astryx-markdown-measure, 400px);
+    max-width: 100%;
+  }
+
+  .astryx-markdown[data-align='center'] .astryx-markdown__code > .astryx-code-block {
+    margin-inline: auto;
+  }
+
+  /* 引用块自带的外边距在原版里压过居中的 auto，所以它始终贴左。 */
+  .astryx-markdown[data-align='center'] .astryx-markdown__blockquote {
+    margin-inline: 0;
   }
 
   .astryx-markdown__hr {
@@ -148,6 +172,24 @@
   }
 
   .astryx-markdown > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* 紧凑密度的段落、列表间距特异性更高，首尾去边距同样要跟上。 */
+  .astryx-markdown[data-density='compact'] > :first-child {
+    margin-block-start: 0;
+  }
+
+  .astryx-markdown[data-density='compact'] > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* 引用块里的首尾块不带外边距，否则会穿透引用块撑出多余空白（原版同样给首尾块去外边距）。 */
+  .astryx-markdown__blockquote > :first-child {
+    margin-block-start: 0;
+  }
+
+  .astryx-markdown__blockquote > :last-child {
     margin-block-end: 0;
   }
 
@@ -203,6 +245,9 @@
     gap: var(--astryx-spacing-0-5, 2px);
     margin-block: var(--astryx-spacing-3, 12px);
     margin-inline: calc(-1 * var(--astryx-spacing-2, 8px));
+    /* 原版是 contentWidth 宽的外层里套一个两侧各外扩 8px 的列表；这里宽度也算成外扩后的，居中时才对得上。 */
+    width: calc(100% + var(--astryx-spacing-4, 16px));
+    max-width: calc(var(--astryx-markdown-measure, 100%) + var(--astryx-spacing-4, 16px));
     padding: 0;
     list-style: none;
   }
@@ -385,8 +430,7 @@
      自己的边框。边框在表格元素上而不是包一层，`border-collapse: collapse` 会把它和
      格线合成一条 1px 线，外沿不会叠成双线。 */
   .astryx-markdown__table {
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
     border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
     border-collapse: collapse;
     border-spacing: 0;

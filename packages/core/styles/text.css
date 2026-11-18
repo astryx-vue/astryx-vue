@@ -166,6 +166,10 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .astryx-text--size-xsm {
+    font-size: var(--astryx-font-size-xs, 0.625rem);
+  }
+
   .astryx-text--size-sm {
     font-size: var(--astryx-text-sm-size, 0.75rem);
   }

@@ -139,41 +139,134 @@ onMounted(() => {
   chartObserver.observe(chartEl.value)
 })
 onBeforeUnmount(() => chartObserver?.disconnect())
-const POINTS = 96
-const X_LABELS = ['00:00', '04:50', '09:30', '14:20', '19:00', '23:50']
+type MetricKey = 'p50' | 'p95' | 'p99' | 'useast' | 'uswest' | 'euwest'
+type SeriesPoint = Record<MetricKey, number> & { t: number, label: string }
+interface WindowSeries { points: SeriesPoint[], ticks: number[], tickLabels: Record<number, string> }
 
-function noise(i: number, seed: number) {
+// 原版的确定性时间序列：日周期基线 + 抖动 + 稀疏突发，中段一次持续的延迟尖峰对应右栏 SEV2。
+const ENV_FACTOR: Record<Environment, number> = { production: 1, staging: 0.16, development: 0.04 }
+const ENV_LATENCY_FACTOR: Record<Environment, number> = { production: 1, staging: 0.82, development: 0.7 }
+const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+function pad2(n: number): string {
+  return n < 10 ? `0${n}` : `${n}`
+}
+
+function hashNoise(i: number, seed: number): number {
   const x = Math.sin(i * 127.1 + seed * 311.7) * 43758.5453
   return x - Math.floor(x)
 }
 
-/** 基线 + 慢波 + 抖动，偶尔来一根尖峰，读起来像真实遥测。 */
-function telemetry(base: number, swing: number, jitter: number, seed: number) {
-  return Array.from({ length: POINTS }, (_, i) => {
-    const wave = Math.sin((i / POINTS) * Math.PI * 4 + seed) * swing
-    const wobble = (noise(i, seed) - 0.5) * jitter
-    const spike = noise(i, seed + 41) > 0.86 ? jitter * 2.4 : 0
-    return Math.max(0, base + wave + wobble + spike)
-  })
+const noise = hashNoise
+
+function jitter(i: number, seed: number): number {
+  return hashNoise(i, seed) * 2 - 1
 }
 
-const latencySeries = [
-  { key: 'p50', label: 'p50', color: 'var(--astryx-color-data-categorical-blue, #0171E3)', values: telemetry(46, 10, 14, 3) },
-  { key: 'p95', label: 'p95', color: 'var(--astryx-color-data-categorical-orange, #EB6E00)', values: telemetry(152, 40, 34, 7) },
-  { key: 'p99', label: 'p99', color: 'var(--astryx-color-data-categorical-purple, #6B1EFD)', values: telemetry(330, 110, 90, 11) },
+function burstAt(i: number, seed: number, rate: number): number {
+  const gate = hashNoise(i, seed)
+  if (gate < 1 - rate)
+    return 0
+  const t = (gate - (1 - rate)) / rate
+  return t * t
+}
+
+function buildWindow(kind: TimeWindow): WindowSeries {
+  const config: Record<TimeWindow, { n: number, stepSec: number, cycles: number }> = {
+    '1h': { n: 120, stepSec: 30, cycles: 1.2 },
+    '1d': { n: 144, stepSec: 600, cycles: 2 },
+    '7d': { n: 168, stepSec: 3600, cycles: 7 },
+  }
+  const { n, stepSec, cycles } = config[kind]
+  const points: SeriesPoint[] = []
+  const spikeCenter = Math.round(n * 0.62)
+  const spikeWidth = Math.max(3, Math.round(n * 0.05))
+  for (let i = 0; i < n; i++) {
+    const phase = (i / n) * Math.PI * 2 * cycles
+    const diurnal = Math.sin(phase)
+    const diurnal2 = Math.sin(phase + 1.1)
+    const diurnal3 = Math.sin(phase + 2.3)
+    const dist = Math.abs(i - spikeCenter)
+    const spike = dist <= spikeWidth ? (1 - dist / (spikeWidth + 1)) * 170 : 0
+    const burst = burstAt(i, 3.1, 0.14)
+    const p50 = 46 + 9 * diurnal + spike * 0.15 + burst * 11 + jitter(i, 1) * 4
+    const p95 = 158 + 38 * diurnal + spike * 0.6 + burst * 58 + jitter(i, 2) * 15
+    const p99 = 312 + 88 * diurnal + spike * 1.6 + burst * 195 + jitter(i, 3) * 38
+    const pulse = burstAt(i, 7.3, 0.18) - burstAt(i, 9.7, 0.12)
+    const useast = 9200 + 2600 * diurnal + pulse * 1500 + jitter(i, 11) * 520
+    const uswest = 6100 + 1500 * diurnal2 + pulse * 900 + jitter(i, 13) * 380
+    const euwest = 3900 + 1200 * diurnal3 + pulse * 620 + jitter(i, 17) * 260
+    const totalMin = Math.floor((i * stepSec) / 60)
+    const label = kind === '7d'
+      ? DAY_LABELS[Math.floor(totalMin / (60 * 24)) % 7]
+      : `${pad2(Math.floor(totalMin / 60) % 24)}:${pad2(totalMin % 60)}`
+    points.push({
+      t: i,
+      label,
+      p50: Math.round(p50),
+      p95: Math.round(p95),
+      p99: Math.round(p99),
+      useast: Math.round(useast),
+      uswest: Math.round(uswest),
+      euwest: Math.round(euwest),
+    })
+  }
+  const ticks: number[] = []
+  if (kind === '7d') {
+    const perDay = Math.round((60 * 60 * 24) / stepSec)
+    for (let d = 0; d < 7; d++)
+      ticks.push(d * perDay)
+  }
+  else {
+    for (let k = 0; k < 6; k++)
+      ticks.push(Math.round((k / 5) * (n - 1)))
+  }
+  const tickLabels: Record<number, string> = {}
+  for (const tk of ticks)
+    tickLabels[tk] = points[Math.min(tk, points.length - 1)]?.label ?? ''
+  return { points, ticks, tickLabels }
+}
+
+const SERIES: Record<TimeWindow, WindowSeries> = {
+  '1h': buildWindow('1h'),
+  '1d': buildWindow('1d'),
+  '7d': buildWindow('7d'),
+}
+
+const BLUE = 'var(--astryx-color-data-categorical-blue, #0171E3)'
+const ORANGE = 'var(--astryx-color-data-categorical-orange, #EB6E00)'
+const PURPLE = 'var(--astryx-color-data-categorical-purple, #6B1EFD)'
+const TEAL = 'var(--astryx-color-data-categorical-teal, #08A3A3)'
+interface ChartLine { key: MetricKey, label: string, color: string }
+const LATENCY_LINES: ChartLine[] = [
+  { key: 'p50', label: 'p50', color: BLUE },
+  { key: 'p95', label: 'p95', color: ORANGE },
+  { key: 'p99', label: 'p99', color: PURPLE },
+]
+const TRAFFIC_LINES: ChartLine[] = [
+  { key: 'useast', label: 'us-east-1', color: BLUE },
+  { key: 'uswest', label: 'us-west-2', color: TEAL },
+  { key: 'euwest', label: 'eu-west-1', color: ORANGE },
 ]
 
-const volumeSeries = [
-  { key: 'useast', label: 'us-east-1', color: 'var(--astryx-color-data-categorical-blue, #0171E3)', values: telemetry(9400, 2600, 900, 5) },
-  { key: 'uswest', label: 'us-west-2', color: 'var(--astryx-color-data-categorical-teal, #08A3A3)', values: telemetry(6400, 1500, 650, 9) },
-  { key: 'euwest', label: 'eu-west-1', color: 'var(--astryx-color-data-categorical-orange, #EB6E00)', values: telemetry(4100, 900, 500, 13) },
-]
+/** 和 recharts 的 Y 轴一样：从 0 起，按「约 5 个刻度」取整步长。 */
+function niceTicks(max: number): number[] {
+  const rough = max / 4
+  const digits = Math.floor(Math.log10(rough)) + 1
+  const scale = digits !== 1 ? 0.05 : 0.1
+  const step = Math.ceil(rough / 10 ** digits / scale - 1e-9) * scale * 10 ** digits
+  const count = Math.max(2, Math.ceil(max / step - 1e-9) + 1)
+  return Array.from({ length: count }, (_, i) => Math.round(i * step * 1e6) / 1e6)
+}
 
-const LATENCY_Y_TICKS = [0, 200, 400, 600, 800]
-const VOLUME_Y_TICKS = [0, 3500, 7000, 10500, 14000]
+function buildChart(series: WindowSeries, lines: ChartLine[], scale: number) {
+  const values = lines.map(line => ({ ...line, values: series.points.map(p => Math.round(p[line.key] * scale)) }))
+  const ticks = niceTicks(Math.max(...values.flatMap(v => v.values)))
+  return { lines: values, ticks, max: ticks[ticks.length - 1], xTicks: series.ticks.map(t => ({ at: t, label: series.tickLabels[t] ?? '' })), count: series.points.length }
+}
 
-function chartX(i: number) {
-  return CHART.left + (i / (POINTS - 1)) * (CHART.width - CHART.left - CHART.right)
+function chartX(i: number, count: number) {
+  return CHART.left + (i / (count - 1)) * (CHART.width - CHART.left - CHART.right)
 }
 
 function chartY(value: number, max: number) {
@@ -182,7 +275,7 @@ function chartY(value: number, max: number) {
 }
 
 function chartPath(values: number[], max: number) {
-  return values.map((v, i) => `${i === 0 ? 'M' : 'L'}${chartX(i).toFixed(1)},${chartY(v, max).toFixed(1)}`).join(' ')
+  return values.map((v, i) => `${i === 0 ? 'M' : 'L'}${chartX(i, values.length).toFixed(1)},${chartY(v, max).toFixed(1)}`).join(' ')
 }
 
 const SEVERITY_RANK: Record<HealthStatus, number> = { critical: 0, warning: 1, healthy: 2 }
@@ -266,6 +359,9 @@ const environment = ref<Environment>('production')
 const region = ref('all')
 const isNarrow = useMediaQuery('(max-width: 1024px)')
 
+const windowSeries = computed(() => SERIES[timeWindow.value])
+const latencyChart = computed(() => buildChart(windowSeries.value, LATENCY_LINES, ENV_LATENCY_FACTOR[environment.value]))
+const volumeChart = computed(() => buildChart(windowSeries.value, TRAFFIC_LINES, ENV_FACTOR[environment.value]))
 const kpis = computed(() => KPI_BY_ENV[environment.value])
 const rows = computed(() => HOST_ROWS.filter(r => r.environment === environment.value && (region.value === 'all' || r.region === region.value)))
 /** 同一服务取最差状态，按名字排序。 */
@@ -424,19 +520,19 @@ const ServiceBreakdown = defineComponent({
                   </VStack>
                   <svg ref="chartEl" class="rail-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Response latency percentiles">
                     <line
-                      v-for="tick in LATENCY_Y_TICKS"
+                      v-for="tick in latencyChart.ticks"
                       :key="`ly-${tick}`"
                       :x1="CHART.left"
                       :x2="CHART.width - CHART.right"
-                      :y1="chartY(tick, 800)"
-                      :y2="chartY(tick, 800)"
+                      :y1="chartY(tick, latencyChart.max)"
+                      :y2="chartY(tick, latencyChart.max)"
                       class="chart-grid"
                     />
                     <text
-                      v-for="tick in LATENCY_Y_TICKS"
+                      v-for="tick in latencyChart.ticks"
                       :key="`lyt-${tick}`"
                       :x="CHART.left - 8"
-                      :y="chartY(tick, 800)"
+                      :y="chartY(tick, latencyChart.max)"
                       text-anchor="end"
                       dominant-baseline="central"
                       class="chart-tick"
@@ -444,20 +540,20 @@ const ServiceBreakdown = defineComponent({
                       {{ tick }} ms
                     </text>
                     <text
-                      v-for="(label, i) in X_LABELS"
-                      :key="`lx-${label}`"
-                      :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
+                      v-for="xt in latencyChart.xTicks"
+                      :key="`lx-${xt.at}`"
+                      :x="chartX(xt.at, latencyChart.count)"
                       :y="CHART.height - CHART.bottom + 13"
                       dominant-baseline="central"
                       text-anchor="middle"
                       class="chart-tick"
                     >
-                      {{ label }}
+                      {{ xt.label }}
                     </text>
                     <path
-                      v-for="series in latencySeries"
+                      v-for="series in latencyChart.lines"
                       :key="series.key"
-                      :d="chartPath(series.values, 800)"
+                      :d="chartPath(series.values, latencyChart.max)"
                       fill="none"
                       :stroke="series.color"
                       stroke-width="1.5"
@@ -465,7 +561,7 @@ const ServiceBreakdown = defineComponent({
                     />
                   </svg>
                   <HStack :gap="6" align="center" wrap="wrap">
-                    <HStack v-for="series in latencySeries" :key="series.key" :gap="2" align="center">
+                    <HStack v-for="series in latencyChart.lines" :key="series.key" :gap="2" align="center">
                       <Icon name="stop" size="xsm" color="inherit" :style="{ color: series.color }" />
                       <Text type="supporting" color="secondary">
                         {{ series.label }}
@@ -486,19 +582,19 @@ const ServiceBreakdown = defineComponent({
                   </VStack>
                   <svg class="rail-chart" :viewBox="`0 0 ${CHART.width} ${CHART.height}`" role="img" aria-label="Request volume by region">
                     <line
-                      v-for="tick in VOLUME_Y_TICKS"
+                      v-for="tick in volumeChart.ticks"
                       :key="`vy-${tick}`"
                       :x1="CHART.left"
                       :x2="CHART.width - CHART.right"
-                      :y1="chartY(tick, 14000)"
-                      :y2="chartY(tick, 14000)"
+                      :y1="chartY(tick, volumeChart.max)"
+                      :y2="chartY(tick, volumeChart.max)"
                       class="chart-grid"
                     />
                     <text
-                      v-for="tick in VOLUME_Y_TICKS"
+                      v-for="tick in volumeChart.ticks"
                       :key="`vyt-${tick}`"
                       :x="CHART.left - 8"
-                      :y="chartY(tick, 14000)"
+                      :y="chartY(tick, volumeChart.max)"
                       text-anchor="end"
                       dominant-baseline="central"
                       class="chart-tick"
@@ -506,20 +602,20 @@ const ServiceBreakdown = defineComponent({
                       {{ tick }}
                     </text>
                     <text
-                      v-for="(label, i) in X_LABELS"
-                      :key="`vx-${label}`"
-                      :x="chartX((i / (X_LABELS.length - 1)) * (POINTS - 1))"
+                      v-for="xt in volumeChart.xTicks"
+                      :key="`vx-${xt.at}`"
+                      :x="chartX(xt.at, volumeChart.count)"
                       :y="CHART.height - CHART.bottom + 13"
                       dominant-baseline="central"
                       text-anchor="middle"
                       class="chart-tick"
                     >
-                      {{ label }}
+                      {{ xt.label }}
                     </text>
                     <path
-                      v-for="series in volumeSeries"
+                      v-for="series in volumeChart.lines"
                       :key="series.key"
-                      :d="chartPath(series.values, 14000)"
+                      :d="chartPath(series.values, volumeChart.max)"
                       fill="none"
                       :stroke="series.color"
                       stroke-width="1.5"
@@ -527,7 +623,7 @@ const ServiceBreakdown = defineComponent({
                     />
                   </svg>
                   <HStack :gap="6" align="center" wrap="wrap">
-                    <HStack v-for="series in volumeSeries" :key="series.key" :gap="2" align="center">
+                    <HStack v-for="series in volumeChart.lines" :key="series.key" :gap="2" align="center">
                       <Icon name="stop" size="xsm" color="inherit" :style="{ color: series.color }" />
                       <Text type="supporting" color="secondary">
                         {{ series.label }}

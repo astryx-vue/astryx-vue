@@ -379,9 +379,13 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                   <EmptyState
                     v-else
                     title="No open blockers or risks"
-                    description="Nothing flagged for the selected phase."
+                    description="Nothing flagged for the selected phase. Keep it up."
                     is-compact
-                  />
+                  >
+                    <template #icon>
+                      <Icon name="heroicons:check-circle" size="lg" color="success" />
+                    </template>
+                  </EmptyState>
                 </VStack>
               </Card>
             </Grid>

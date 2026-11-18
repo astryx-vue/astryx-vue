@@ -59,14 +59,44 @@ export function pairItems(upstreamItems, ourItems) {
   for (const key of keys) {
     const left = upstreamGroups.get(key) ?? []
     const right = ourGroups.get(key) ?? []
-    const shared = Math.min(left.length, right.length)
-    for (let index = 0; index < shared; index++)
-      pairs.push({ key, index, upstream: left[index], ours: right[index] })
-    missing.push(...left.slice(shared))
-    extra.push(...right.slice(shared))
+    const matched = matchGroup(left, right)
+    matched.pairs.forEach(([upstream, ours], index) => pairs.push({ key, index, upstream, ours }))
+    missing.push(...matched.missing)
+    extra.push(...matched.extra)
   }
   pairIconsByPosition(pairs, missing, extra)
   return { pairs, missing, extra }
+}
+
+function distance(a, b) {
+  return Math.abs((a.box?.x ?? 0) - (b.box?.x ?? 0)) + Math.abs((a.box?.y ?? 0) - (b.box?.y ?? 0))
+}
+
+/**
+ * 同一个文字出现多次时怎么一一配对。默认按文档顺序（整块下移时也能对上）；
+ * 但浮层两边挂的位置不同（原版插在表格前面，我们传送到 body 末尾），文档顺序会交叉配错。
+ * 所以再算一遍「就近配对」，总距离明显更小时用它。
+ */
+function matchGroup(left, right) {
+  const shared = Math.min(left.length, right.length)
+  const byOrder = left.slice(0, shared).map((item, index) => [item, right[index]])
+  const result = { pairs: byOrder, missing: left.slice(shared), extra: right.slice(shared) }
+  if (left.length < 2 || right.length < 2)
+    return result
+  const used = new Set()
+  const byDistance = []
+  const candidates = left.flatMap(a => right.map(b => [a, b, distance(a, b)])).sort((p, q) => p[2] - q[2])
+  for (const [a, b] of candidates) {
+    if (used.has(a) || used.has(b))
+      continue
+    used.add(a)
+    used.add(b)
+    byDistance.push([a, b])
+  }
+  const cost = list => list.reduce((sum, [a, b]) => sum + distance(a, b), 0)
+  if (cost(byDistance) + 1 >= cost(byOrder) * 0.5)
+    return result
+  return { pairs: byDistance, missing: left.filter(a => !used.has(a)), extra: right.filter(b => !used.has(b)) }
 }
 
 /** 图标按名字配不上时（两边无障碍名字写法不同），位置几乎重合的就算同一个图标。 */

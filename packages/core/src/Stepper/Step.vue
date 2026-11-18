@@ -64,6 +64,10 @@ const collapsed = computed(() => stepper.collapsed.value === true)
 const isTrack = computed(() => (
   orientation.value === 'horizontal' && indicatorPosition.value === 'on-track' && !collapsed.value
 ))
+// 竖向 + 轨道模式：指示点落在轨道上，夹在前后两段连接线中间，和原版的单列一致。
+const isRailMarker = computed(() => (
+  orientation.value === 'vertical' && indicatorPosition.value === 'on-track' && !collapsed.value
+))
 const leadFilled = computed(() => props.step <= stepper.activeStep.value)
 const trailFilled = computed(() => props.step < stepper.activeStep.value)
 const arrivalShare = computed(() => (
@@ -167,6 +171,11 @@ onUnmounted(() => stepper.unregister(props.step))
     />
     <span v-else-if="orientation === 'vertical'" class="astryx-step-rail">
       <span class="astryx-step-connector astryx-step-connector-lead" :data-filled="leadFilled || undefined" :style="fillVars(leadTiming)" />
+      <StepMarker v-if="isRailMarker" :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled" :progress="progress">
+        <template v-if="$slots.icon" #icon>
+          <slot name="icon" />
+        </template>
+      </StepMarker>
       <span class="astryx-step-connector astryx-step-connector-trail" :data-filled="trailFilled || undefined" :style="fillVars(trailTiming)" />
     </span>
     <div class="astryx-step-body">
@@ -181,7 +190,7 @@ onUnmounted(() => stepper.unregister(props.step))
       >
         <span v-if="isTrack" class="astryx-step-track">
           <span class="astryx-step-connector astryx-step-connector-lead" :data-filled="leadFilled || undefined" :style="fillVars(leadTiming)" />
-          <StepMarker :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled">
+          <StepMarker :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled" :progress="progress">
             <template v-if="$slots.icon" #icon>
               <slot name="icon" />
             </template>
@@ -189,7 +198,7 @@ onUnmounted(() => stepper.unregister(props.step))
           <span class="astryx-step-connector astryx-step-connector-trail" :data-filled="trailFilled || undefined" :style="fillVars(trailTiming)" />
         </span>
         <span class="astryx-step-row">
-          <StepMarker v-if="!isTrack" :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled">
+          <StepMarker v-if="!isTrack && !isRailMarker" :glyph="glyph" :number-label="numberLabel" :status="status" :is-disabled="isDisabled" :progress="progress">
             <template v-if="$slots.icon" #icon>
               <slot name="icon" />
             </template>

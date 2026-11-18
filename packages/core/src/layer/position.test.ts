@@ -15,11 +15,18 @@ describe('computeLayerPosition', () => {
     expect(position).toEqual({ top: 268, left: 390, placement: 'above' })
   })
 
-  it('clamps an in-view layer to the viewport margin', () => {
-    const position = computeLayerPosition(rect(2, 2), layer, viewport, 'start', 'start', 4)
+  it('clamps an in-view layer to the viewport gutter on the far edges only', () => {
+    // end 对齐的 below 浮层：起始边受空隙约束，结束边贴着锚点。
+    const position = computeLayerPosition(rect(2, 2), layer, viewport, 'below', 'end', 4)
 
-    expect(position.left).toBeGreaterThanOrEqual(8)
-    expect(position.top).toBeGreaterThanOrEqual(8)
+    expect(position.left).toBeGreaterThanOrEqual(16)
+    expect(position.top).toBe(38)
+  })
+
+  it('lets a start-aligned layer share the trigger origin inside the gutter', () => {
+    const position = computeLayerPosition(rect(2, 8), layer, viewport, 'below', 'start', 4)
+
+    expect(position.left).toBe(8)
   })
 
   it('keeps the layer anchored when the anchor is fully below the viewport', () => {

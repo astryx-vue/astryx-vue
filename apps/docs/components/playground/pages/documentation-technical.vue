@@ -110,7 +110,10 @@ const OPEN_IN_ITEMS = [
                   <Icon name="heroicons:clipboard-document" />
                 </template>
               </Button>
-              <DropdownMenu :items="OPEN_IN_ITEMS">
+              <DropdownMenu
+                :button="{ label: 'More options', variant: 'ghost', size: 'sm', isIconOnly: true }"
+                :items="OPEN_IN_ITEMS"
+              >
                 <template #trigger="triggerProps">
                   <IconButton
                     v-bind="triggerProps"

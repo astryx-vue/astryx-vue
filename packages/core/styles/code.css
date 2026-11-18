@@ -104,15 +104,13 @@
   .astryx-code-block__title {
     display: flex;
     align-items: center;
-    min-width: 0;
     margin: 0;
-    overflow: hidden;
     color: var(--astryx-code-block-title-foreground, #525252);
     font-family: var(--astryx-font-family-code, monospace);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: var(--astryx-font-weight-medium, 500);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
-    text-overflow: ellipsis;
+    /* 同上游：标题继承 pre 的 white-space，不换行也不截断，窄容器里由代码块自己撑宽。 */
     white-space: nowrap;
   }
 

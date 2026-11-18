@@ -380,7 +380,6 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
           code: value,
           language: fence.language,
           isDiff: fence.isDiff,
-          width: '100%',
           isCollapsible: true,
           isWrapped: true,
         }),

@@ -304,6 +304,11 @@
       "types": "./dist/Dialog/index.d.ts",
       "import": "./dist/Dialog/index.js"
     },
+    "./SizeContext": {
+      "source": "./src/SizeContext/index.ts",
+      "types": "./dist/SizeContext/index.d.ts",
+      "import": "./dist/SizeContext/index.js"
+    },
     "./Skeleton": {
       "source": "./src/Skeleton/index.ts",
       "types": "./dist/Skeleton/index.d.ts",
@@ -845,6 +850,10 @@
       "./Dialog": {
         "types": "./dist/Dialog/index.d.ts",
         "import": "./dist/Dialog/index.js"
+      },
+      "./SizeContext": {
+        "types": "./dist/SizeContext/index.d.ts",
+        "import": "./dist/SizeContext/index.js"
       },
       "./Skeleton": {
         "types": "./dist/Skeleton/index.d.ts",

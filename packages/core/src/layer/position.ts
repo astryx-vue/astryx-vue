@@ -66,9 +66,26 @@ export function computeLayerPosition(
   if (!isAnchorInViewport(anchor, viewport))
     return { top, left, placement: resolved }
 
+  // 和原版一致：空隙只落在浮层「可能越界的那一侧」。
+  // - 放置轴（above/below/start/end）：贴锚点的一侧由间距负责，空隙只留在远离锚点的视口边。
+  // - 对齐轴：start 对齐只留结束边，end 对齐只留起始边，居中两边都留。
+  // 所以 start 对齐的菜单可以和触发器同起点，即使触发器离视口边只有 8px。
+  const horizontalPlacement = resolved === 'above' || resolved === 'below'
+  const minTop = horizontalPlacement
+    ? (resolved === 'below' ? 0 : gutter.blockStart)
+    : (alignment === 'start' ? 0 : gutter.blockStart)
+  const minLeft = horizontalPlacement
+    ? (alignment === 'start' ? 0 : gutter.inlineStart)
+    : (resolved === 'end' ? 0 : gutter.inlineStart)
+  const maxTop = viewport.height - layer.height - (
+    horizontalPlacement ? (resolved === 'above' ? 0 : gutter.blockEnd) : (alignment === 'end' ? 0 : gutter.blockEnd)
+  )
+  const maxLeft = viewport.width - layer.width - (
+    horizontalPlacement ? (alignment === 'end' ? 0 : gutter.inlineEnd) : (resolved === 'start' ? 0 : gutter.inlineEnd)
+  )
   return {
-    top: clamp(top, gutter.blockStart, viewport.height - layer.height - gutter.blockEnd),
-    left: clamp(left, gutter.inlineStart, viewport.width - layer.width - gutter.inlineEnd),
+    top: clamp(top, minTop, maxTop),
+    left: clamp(left, minLeft, maxLeft),
     placement: resolved,
   }
 }

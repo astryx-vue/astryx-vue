@@ -193,7 +193,7 @@ useHotkeys([
                 :label="label"
                 @click="noop"
               >
-                <template v-if="shortcut" #end>
+                <template v-if="shortcut" #endContent>
                   <Kbd :keys="shortcut" />
                 </template>
               </DropdownMenuItem>

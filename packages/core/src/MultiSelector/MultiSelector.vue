@@ -22,6 +22,7 @@ import { focusElement } from '../layer/focus.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
 import { useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
@@ -41,7 +42,6 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
   disabled: false,
   status: 'default',
   statusVariant: 'attached',
-  size: 'md',
   variant: 'input',
   presentation: 'popover',
   clearable: false,
@@ -58,7 +58,12 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
 })
 
 const emit = defineEmits<MultiSelectorEmits>()
+
 const slots = defineSlots<MultiSelectorSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
   component: 'MultiSelector',
@@ -291,7 +296,7 @@ defineExpose({
   <Field
     v-else
     class="astryx-multi-selector"
-    :class="[parts.containerClass.value, `size-${props.size}`, `variant-${triggerVariant}`]"
+    :class="[parts.containerClass.value, `size-${size}`, `variant-${triggerVariant}`]"
     :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="props.searchable && combobox.isOpen.value ? searchId : triggerId"
@@ -351,7 +356,7 @@ defineExpose({
             v-for="option in selectedOptions.slice(0, visibleBadgeCount)"
             :key="option.value"
             :label="option.label"
-            :size="props.size === 'lg' ? 'md' : 'sm'"
+            :size="size === 'lg' ? 'md' : 'sm'"
           />
           <span v-if="hiddenBadgeCount > 0" class="astryx-multi-selector-more">
             {{ messages.multiSelector.more(hiddenBadgeCount) }}
@@ -381,7 +386,7 @@ defineExpose({
           v-for="option in selectedOptions"
           :key="option.value"
           :label="option.label"
-          :size="props.size === 'lg' ? 'md' : 'sm'"
+          :size="size === 'lg' ? 'md' : 'sm'"
         />
         <span class="astryx-multi-selector-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>
@@ -434,7 +439,7 @@ defineExpose({
         :select-all-label="menu.selectAllLabel.value"
         :select-all-state="menu.selectAllState.value"
         :checkbox-position="props.checkboxPosition"
-        :size="props.size"
+        :size="size"
         :loading="control.isLoading.value"
         :real-match-count="menu.realMatchCount.value"
         :rows="menu.rows.value"

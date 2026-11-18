@@ -163,6 +163,13 @@
     width: 16px;
   }
 
+  /* 指示点在轨道上：前一段只留一个密度间距，后一段撑满剩下的高度。 */
+  .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] > .astryx-step-rail > .astryx-step-connector-lead {
+    flex: 0 0 auto;
+    min-height: 0;
+    height: var(--_step-space);
+  }
+
   .astryx-step-connector {
     --_step-connector-gap: max(0px, min(var(--astryx-step-connector-gap, 0px), var(--astryx-spacing-2, 8px)));
     flex: 1 1 auto;
@@ -269,7 +276,7 @@
     line-height: 1;
   }
 
-  .astryx-step-indicator svg {
+  .astryx-step-indicator > svg {
     width: 16px;
     height: 16px;
   }
@@ -279,48 +286,49 @@
     color: var(--astryx-color-text-secondary, #525252);
   }
 
-  .astryx-step[data-progress='completed'] .astryx-step-indicator[data-glyph='number'],
-  .astryx-step[data-progress='in-progress'] .astryx-step-indicator[data-glyph='number'] {
+  .astryx-step-indicator[data-progress='completed'][data-glyph='number'],
+  .astryx-step-indicator[data-progress='in-progress'][data-glyph='number'] {
     background: var(--astryx-color-accent, #262626);
     color: var(--astryx-color-background-surface, #fff);
   }
 
-  .astryx-step[data-status='accent'] .astryx-step-indicator {
+  .astryx-step-indicator[data-status='accent'] {
     color: var(--astryx-color-accent, #262626);
   }
 
-  .astryx-step[data-status='success'] .astryx-step-indicator {
+  .astryx-step-indicator[data-status='success'] {
     background: transparent;
     color: var(--astryx-color-success, #16a34a);
   }
 
-  .astryx-step[data-status='warning'] .astryx-step-indicator {
+  .astryx-step-indicator[data-status='warning'] {
     background: transparent;
     color: var(--astryx-color-warning, #ca8a04);
   }
 
-  .astryx-step[data-status='error'] .astryx-step-indicator {
+  .astryx-step-indicator[data-status='error'] {
     background: transparent;
     color: var(--astryx-color-error, #dc2626);
   }
 
+  /* 指示点自带 data-progress / data-status：嵌套的步骤条不会吃到外层步骤的状态。 */
   /* 禁用步骤的指示点：数字徽标换禁用色，其余图标用图标禁用色，都降到半透明。 */
-  .astryx-step[data-progress] .astryx-step-indicator[data-glyph][data-disabled] {
+  .astryx-step-indicator[data-glyph][data-disabled] {
     color: var(--astryx-color-icon-disabled, #a3a3a3);
     opacity: 0.5;
   }
 
-  .astryx-step[data-progress] .astryx-step-indicator[data-glyph='number'][data-disabled] {
+  .astryx-step-indicator[data-glyph='number'][data-disabled] {
     background: var(--astryx-color-background-muted, #f1f1f1);
     color: var(--astryx-color-text-disabled, #a3a3a3);
   }
 
-  .astryx-step[data-progress='not-started'] .astryx-step-label,
-  .astryx-step[data-progress='completed'] .astryx-step-label {
+  .astryx-step-label[data-progress='not-started'],
+  .astryx-step-label[data-progress='completed'] {
     font-weight: var(--astryx-font-weight-regular, 400);
   }
 
-  .astryx-step[data-progress='in-progress'] .astryx-step-label {
+  .astryx-step-label[data-progress='in-progress'] {
     font-weight: var(--astryx-font-weight-semibold, 600);
   }
 
@@ -335,6 +343,7 @@
 
   .astryx-step-label-row {
     display: flex;
+    flex: 1 1 auto;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
     min-width: 0;
@@ -350,7 +359,7 @@
     white-space: nowrap;
   }
 
-  .astryx-step[data-progress='not-started'] .astryx-step-label {
+  .astryx-step-label[data-progress='not-started'] {
     color: var(--astryx-color-text-secondary, #525252);
   }
 
@@ -384,7 +393,7 @@
   }
 
   .astryx-step[data-orientation='vertical'][data-indicator-position='on-track'] .astryx-step-content {
-    padding-inline: calc(var(--_step-space) + var(--astryx-spacing-4, 16px) + var(--astryx-spacing-2, 8px)) var(--_step-space);
+    padding-inline: 0 var(--_step-space);
   }
 
   .astryx-stepper-root[data-collapsed] .astryx-stepper {

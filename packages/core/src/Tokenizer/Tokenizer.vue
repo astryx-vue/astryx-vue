@@ -13,6 +13,7 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLatchedOptionGrid } from '../selectors/useLatchedOptionGrid.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Token from '../Token/Token.vue'
 import TypeaheadMenu from '../Typeahead/TypeaheadMenu.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
@@ -30,7 +31,6 @@ const props = withDefaults(defineProps<TokenizerProps<T>>(), {
   labelHidden: false,
   disabled: false,
   status: 'default',
-  size: 'md',
   clearable: false,
   hasClear: false,
   debounceMs: 150,
@@ -46,7 +46,11 @@ const props = withDefaults(defineProps<TokenizerProps<T>>(), {
 })
 
 const emit = defineEmits<TokenizerEmits<T>>()
+
 defineSlots<TokenizerSlots<T>>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
 
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
@@ -348,7 +352,7 @@ defineExpose({
 <template>
   <Field
     class="astryx-tokenizer"
-    :class="[parts.containerClass.value, `size-${props.size}`, { 'is-floating': floating }]"
+    :class="[parts.containerClass.value, `size-${size}`, { 'is-floating': floating }]"
     :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="inputId"
@@ -392,7 +396,7 @@ defineExpose({
           @keydown="onTokenKeyDown($event, item, index)"
         >
           <slot name="token" :item="item" :remove="() => remove(item)">
-            <Token :label="item.label" :size="props.size" :disabled="props.disabled" removable @remove="remove(item)" />
+            <Token :label="item.label" :size="size" :disabled="props.disabled" removable @remove="remove(item)" />
           </slot>
         </span>
         <span v-if="collapsed && hiddenCount > 0" class="astryx-tokenizer-more">
@@ -401,7 +405,7 @@ defineExpose({
       </span>
       <span :ref="overflow.measureRef" class="astryx-tokenizer-measure" aria-hidden="true">
         <span v-for="item in values" :key="item.id" class="astryx-tokenizer-token">
-          <Token :label="item.label" :size="props.size" removable />
+          <Token :label="item.label" :size="size" removable />
         </span>
         <span class="astryx-tokenizer-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>

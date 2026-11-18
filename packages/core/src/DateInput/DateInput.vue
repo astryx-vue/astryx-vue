@@ -19,6 +19,7 @@ import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
 import { isImeKeyEvent } from '../utils/ime.js'
@@ -33,7 +34,6 @@ const props = withDefaults(defineProps<DateInputProps>(), {
   modelValue: null,
   disabled: false,
   clearable: false,
-  size: 'md',
   statusVariant: 'attached',
   format: 'date_long',
   isLoading: false,
@@ -41,7 +41,12 @@ const props = withDefaults(defineProps<DateInputProps>(), {
 })
 
 const emit = defineEmits<DateInputEmits>()
+
 defineSlots<DateInputSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
   component: 'DateInput',
@@ -321,7 +326,7 @@ syncDisplayValue()
       <div
         ref="containerRef"
         class="astryx-date-input"
-        :class="[statusType ? `status-${statusType}` : undefined, `size-${props.size}`, parts.controlClass()]"
+        :class="[statusType ? `status-${statusType}` : undefined, `size-${size}`, parts.controlClass()]"
         :style="parts.controlStyle()"
         :data-status="statusType"
         :data-presentation="useSheet ? 'bottom-sheet' : 'popover'"
@@ -342,7 +347,7 @@ syncDisplayValue()
           :label="dialogLabel"
           @open-change="onOpenChange"
         >
-          <div class="astryx-date-input-wrapper" :data-disabled="locked ? 'true' : undefined" :data-size="props.size" :data-status="statusType">
+          <div class="astryx-date-input-wrapper" :data-disabled="locked ? 'true' : undefined" :data-size="size" :data-status="statusType">
             <span v-if="$slots.prefix" class="astryx-date-input-prefix">
               <slot name="prefix" />
             </span>

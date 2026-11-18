@@ -214,7 +214,7 @@ function setTab(index: number, value: string): void {
                   class="tab-flush"
                   size="sm"
                   :value="tabFor(i)"
-                  :on-change="(value: string) => setTab(i, value)"
+                  @change="(value: string) => setTab(i, value)"
                 >
                   <Tab value="description" label="Description" />
                   <Tab value="code" label="Code" />

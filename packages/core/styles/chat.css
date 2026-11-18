@@ -124,10 +124,12 @@
     overflow: hidden;
     pointer-events: none;
     opacity: 0;
+    /* 隐藏时不画任何东西，键盘焦点落上去也看不到，所以连同交互一起撤掉（同上游）。 */
+    visibility: hidden;
     border-radius: var(--astryx-radius-full, 9999px);
     background: var(--astryx-chat-scroll-background, var(--astryx-color-background-popover));
     box-shadow: var(--astryx-chat-scroll-shadow, var(--astryx-shadow-med));
-    transition-property: opacity, max-width;
+    transition-property: opacity, max-width, visibility;
     transition-duration: var(--astryx-duration-fast-max, 165ms);
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
@@ -135,6 +137,7 @@
   .astryx-chat-scroll-button__pill[data-visible] {
     pointer-events: auto;
     opacity: 1;
+    visibility: visible;
   }
 
   .astryx-chat-scroll-button__pill[data-labeled] {
@@ -147,6 +150,15 @@
     border-radius: var(--astryx-radius-full, 9999px);
     white-space: nowrap;
     box-shadow: none;
+  }
+
+  /* 上游按钮图标槽只有 16px，md 图标（20px）照原尺寸画出来、从槽里居中溢出。 */
+  .astryx-chat-dictation .astryx-button__icon > *,
+  .astryx-chat-scroll-button .astryx-chat-scroll-button__control .astryx-button__icon > * {
+    width: 1.25rem;
+    height: 1.25rem;
+    max-width: none;
+    max-height: none;
   }
 
   .astryx-chat-scroll-button__pill[data-labeled] .astryx-chat-scroll-button__control {
@@ -305,7 +317,7 @@
     align-items: stretch;
     box-sizing: border-box;
     width: fit-content;
-    max-width: min(100%, max(80%, 280px));
+    max-width: max(80%, 280px);
     /* 同上游：气泡按内容收窄，没有 280px 的下限（"Where's my order?" 只有 148px 宽）。
        280px 只出现在 max-width 的 max(80%, 280px) 里。 */
     min-width: 0;
@@ -571,10 +583,10 @@
   }
 
   .astryx-chat-tool-calls__target {
-    flex-shrink: 0;
-    min-width: max-content;
-    overflow: visible;
-    text-overflow: clip;
+    flex-shrink: 10;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .astryx-chat-tool-calls__stats,
@@ -607,7 +619,11 @@
 
   .astryx-chat-tool-calls__chevron {
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    width: 14px;
+    height: 14px;
     transition: transform var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
@@ -639,6 +655,11 @@
   .astryx-chat-tool-calls__list {
     width: max-content;
     max-width: 100%;
+  }
+
+  .astryx-chat-tool-calls__entry {
+    max-width: 100%;
+    min-width: 0;
   }
 
   .astryx-chat-tool-calls__panel,
@@ -911,11 +932,14 @@
       box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-color-border-emphasized) 30%, transparent);
     }
 
-    .astryx-chat-drawer__toggle:hover .astryx-chat-drawer__label {
+    /* 上游用 stylex 的默认标记，任何悬停中的标记祖先（包括 Layout）都会让文字和手柄变深。 */
+    .astryx-chat-drawer__toggle:hover .astryx-chat-drawer__label,
+    .astryx-layout:hover .astryx-chat-drawer__label {
       color: var(--astryx-color-text-primary);
     }
 
-    .astryx-chat-drawer__toggle:hover .astryx-chat-drawer__handle {
+    .astryx-chat-drawer__toggle:hover .astryx-chat-drawer__handle,
+    .astryx-layout:hover .astryx-chat-drawer__handle {
       background-color: var(--astryx-color-icon-primary);
     }
   }
