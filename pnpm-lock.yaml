@@ -197,6 +197,9 @@ catalogs:
       specifier: 4.149.0
       version: 4.149.0
   docs:
+    '@fontsource-variable/fira-code':
+      specifier: 5.3.0
+      version: 5.3.0
     '@iconify-json/carbon':
       specifier: 1.2.28
       version: 1.2.28
@@ -482,6 +485,9 @@ importers:
       '@astryx-vue/themes':
         specifier: workspace:^
         version: link:../../packages/themes
+      '@fontsource-variable/fira-code':
+        specifier: catalog:docs
+        version: 5.3.0
       '@lexical/code':
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
@@ -1274,6 +1280,9 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@fontsource-variable/fira-code@5.3.0':
+    resolution: {integrity: sha512-ZhvHeknlicraKVSJBa1NrJnXDVByUkC407zwgELYfmnx3p9g8vwIPfQCxx8YD3K7dAeCdLuHJOHlpMfRsIcApQ==}
 
   '@fontsource/figtree@5.3.0':
     resolution: {integrity: sha512-/iTcTXL1eRBGhvD7NN9dnKzXzWqDLVZVEUFI9xIxAC1G/hXU8tCyYeXCAuPOuvSYPInFUP7H6KLGgygmDfy1SA==}
@@ -5531,6 +5540,8 @@ snapshots:
       '@floating-ui/utils': 0.2.12
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@fontsource-variable/fira-code@5.3.0': {}
 
   '@fontsource/figtree@5.3.0': {}
 

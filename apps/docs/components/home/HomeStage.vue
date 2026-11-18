@@ -31,7 +31,12 @@ async function copyInstall(): Promise<void> {
 
       <div class="home-copy">
         <h1 id="home-title">
-          {{ text.title }}
+          <template v-for="(phrase, index) in text.title" :key="phrase">
+            <template v-if="index > 0">
+              {{ ' ' }}
+            </template>
+            <span class="home-copy__phrase">{{ phrase }}</span>
+          </template>
         </h1>
         <div class="home-actions">
           <Button variant="primary" :href="`${prefix}/guide/getting-started`" :label="text.start" />
@@ -146,6 +151,16 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   line-height: 1.15;
   text-wrap: balance;
   font-size: clamp(2rem, 4.2vw, 3.25rem);
+}
+
+/*
+ * 一段放得下就整段留在一行。窄屏放不下时只在段内的空格处换行，
+ * 不拿 h1 的 balance 去拆「重新实现」这样的词。
+ */
+.home-copy__phrase {
+  display: inline-block;
+  text-wrap: wrap;
+  word-break: keep-all;
 }
 
 .home-actions {

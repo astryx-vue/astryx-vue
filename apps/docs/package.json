@@ -15,6 +15,7 @@
     "@astryx-vue/lab": "workspace:^",
     "@astryx-vue/richtext": "workspace:^",
     "@astryx-vue/themes": "workspace:^",
+    "@fontsource-variable/fira-code": "catalog:docs",
     "@lexical/code": "catalog:richtext",
     "@lexical/extension": "catalog:richtext",
     "@lexical/headless": "catalog:richtext",

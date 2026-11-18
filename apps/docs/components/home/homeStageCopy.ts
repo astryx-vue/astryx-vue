@@ -4,7 +4,8 @@ export type HomeStageLocale = 'zh' | 'en'
 export const HOME_STAGE_COPY = {
   zh: {
     mark: 'astryx-vue',
-    title: '用 Vue 重新实现 Astryx 设计语言',
+    /** 标题按意群分段，只在段与段之间换行，免得「实现」这类词被拆到两行。 */
+    title: ['用 Vue 重新实现', 'Astryx 设计语言'],
     start: '快速开始',
     components: '浏览组件',
     copy: '复制安装命令',
@@ -44,7 +45,7 @@ import '@astryx-vue/themes/neutral.css'
   },
   en: {
     mark: 'astryx-vue',
-    title: 'Astryx design language, reimplemented for Vue',
+    title: ['Astryx design language,', 'reimplemented for Vue'],
     start: 'Quick start',
     components: 'Browse components',
     copy: 'Copy install command',
