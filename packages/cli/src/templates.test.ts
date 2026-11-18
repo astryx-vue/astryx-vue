@@ -45,9 +45,9 @@ describe('template catalog', () => {
     expect(new Set(ready.flatMap(template => template.dependencies))).toEqual(new Set(['@astryx-vue/core', 'vue']))
     const charts = catalog.templates.find(template => template.slug === 'dashboard-alert-rail')
     expect(charts?.dependencies).toContain('@astryx-vue/playground-charts')
-    // 页面里当示例打印的包名不是 import，不该算进依赖。
+    // 页面里当示例打印的安装命令（npm install @astryxdesign/core）不是 import，不该算进依赖；这个模板只从 core 导入。
     const mention = catalog.templates.find(template => template.slug === 'documentation-technical')
-    expect(mention?.dependencies).toEqual(['@astryx-vue/core', 'vue'])
+    expect(mention?.dependencies).toEqual(['@astryx-vue/core'])
   })
 
   it('extracts the components from the core imports and flags what a project cannot install', () => {

@@ -955,6 +955,16 @@ html[data-playground-frame] {
   --astryx-list-item-selected-background: var(--astryx-color-accent-muted);
 }
 
+/*
+ * 原版预览框里 AppShell 的主区域会多出 48px 顶部内边距：原版文档站的样式
+ * `body:not(:has([data-playground-page])) #astryx-app-shell-main` 漏进了预览 iframe。
+ * 为了和线上逐像素一致，这里照样写（scroll-padding 同源）。
+ */
+html[data-playground-frame] #astryx-app-shell-main {
+  padding-top: var(--astryx-spacing-12, 48px);
+  scroll-padding-top: var(--astryx-spacing-12, 48px);
+}
+
 html[data-playground-frame] #app,
 html[data-playground-frame] #app > *,
 html[data-playground-frame] #app > * > * {
