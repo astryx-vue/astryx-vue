@@ -173,6 +173,33 @@ export async function collectPlaygroundFrame() {
     return Boolean(named)
   }
 
+  /**
+   * 叠在同一处的几层 `<svg>` 画的是同一个图标（原版 Spinner 是底圈和外面包了一层 span、
+   * 转动的弧两层，我们画在一个 svg 里），只按第一层算，不然层数不同会报成「缺失」。
+   * 往上看两层，只认中心几乎重合的前一个 svg：按钮两侧各有图标的情况不受影响。
+   */
+  const LAYER_CENTER_TOLERANCE = 4
+  function layeredOnSibling(svg) {
+    const rect = svg.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    let node = svg.parentElement
+    for (let depth = 0; node && depth < 2; node = node.parentElement, depth++) {
+      for (const other of node.querySelectorAll('svg')) {
+        if (other === svg)
+          break
+        if (other.contains(svg))
+          continue
+        const box = other.getBoundingClientRect()
+        if (Math.abs(box.left + box.width / 2 - cx) <= LAYER_CENTER_TOLERANCE
+          && Math.abs(box.top + box.height / 2 - cy) <= LAYER_CENTER_TOLERANCE) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
   function scan() {
     let added = 0
     for (const el of document.body.querySelectorAll('*')) {
@@ -191,7 +218,7 @@ export async function collectPlaygroundFrame() {
         added += 1
     }
     for (const svg of document.body.querySelectorAll('svg')) {
-      if (hidden(svg) || !isIcon(svg))
+      if (hidden(svg) || !isIcon(svg) || layeredOnSibling(svg))
         continue
       const box = absolute(svg, svg.getBoundingClientRect())
       if (offStage(box))

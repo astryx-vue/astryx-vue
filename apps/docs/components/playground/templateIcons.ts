@@ -179,4 +179,6 @@ export const templateIcons = [
   'lucide:underline',
   'lucide:undo-2',
   'lucide:x',
+  'heroicons:check',
+  'heroicons:arrow-right',
 ] as const

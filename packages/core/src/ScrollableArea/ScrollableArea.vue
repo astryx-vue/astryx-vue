@@ -3,7 +3,7 @@ import type { CSSProperties, StyleValue } from 'vue'
 import type { ScrollableAreaProps, ScrollableAreaSlots } from './types.js'
 import { computed, shallowRef, useAttrs } from 'vue'
 import { useScrollableArea } from '../composables/useScrollableArea.js'
-import { formatSize, resolvePadding, spacingVariable } from '../Layout/size.js'
+import { resolvePadding, sizingStyle, spacingVariable } from '../Layout/size.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import '../../styles/scrollable-area.css'
 
@@ -42,12 +42,7 @@ const rootClass = computed(() => ['astryx-scrollable-area', attrs.class])
 
 const rootStyle = computed<StyleValue>(() => [
   attrs.style as StyleValue,
-  {
-    width: formatSize(props.width),
-    height: formatSize(props.height),
-    maxWidth: formatSize(props.maxWidth),
-    minHeight: formatSize(props.minHeight),
-  } satisfies CSSProperties,
+  sizingStyle(props),
   scroll.viewportStyle.value,
 ])
 

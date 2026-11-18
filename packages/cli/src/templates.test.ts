@@ -105,7 +105,7 @@ describe('template --list', () => {
       locale: string
     }
     expect(data.locale).toBe('en')
-    expect(data.templates).toHaveLength(57)
+    expect(data.templates).toHaveLength(58)
     // 每条都带上它要装的包，机器读得懂，不用去翻源码里的 import。
     expect(data.templates.find(template => template.slug === 'login-card')?.dependencies).toEqual(['@astryx-vue/core', 'vue'])
     // Each entry says what it ships in and what it composes, so a reader can

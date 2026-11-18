@@ -103,4 +103,14 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: ['工作项', '任务', '问题', '工单', '详情', '项目', '负责人'],
     },
   },
+  'course-detail': {
+    description: {
+      en: 'A long-form sales page for a single offering, in two columns: a preview poster, about block, collapsible syllabus, instructor card, reviews with scored aspects, and a FAQ, beside a sticky enroll rail with price, a self-paced or cohort start picker, and a weekly-pace slider that computes a finish date.',
+      zh: '单个课程的长页面，分两栏：预览海报、课程介绍、可折叠大纲、讲师卡片、带分项评分的评价和常见问题；右侧是固定的报名栏，含价格、自学或班期选择，以及按每周学习时长推算完课日期的滑块。',
+    },
+    keywords: {
+      en: ['course', 'class', 'lesson', 'curriculum', 'syllabus', 'e-learning', 'enroll', 'cohort', 'masterclass', 'bootcamp', 'training', 'education'],
+      zh: ['课程', '课堂', '课时', '大纲', '在线学习', '报名', '班期', '大师课', '训练营', '培训', '教育'],
+    },
+  },
 }
