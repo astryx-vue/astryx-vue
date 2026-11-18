@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { RadialAreaProps } from './types.js'
 import { computed } from 'vue'
+import { polarPoint } from './arc.js'
 import { useRadial } from './context.js'
 
 defineOptions({ name: 'AstryxRadialArea' })
@@ -29,11 +30,7 @@ const points = computed(() => {
     const [min, max] = domain
     const ratio = max > min ? (raw - min) / (max - min) : 0
     const radius = radiusScale(Math.max(0, Math.min(1, ratio)))
-    return {
-      x: cx + Math.cos(angle) * radius,
-      y: cy + Math.sin(angle) * radius,
-      key,
-    }
+    return { ...polarPoint(cx, cy, angle, radius), key }
   })
 })
 

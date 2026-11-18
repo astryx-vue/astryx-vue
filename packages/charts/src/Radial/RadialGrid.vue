@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { RadialGridProps } from './types.js'
 import { computed } from 'vue'
+import { polarPoint } from './arc.js'
 import { useRadial } from './context.js'
 
 defineOptions({ name: 'AstryxRadialGrid' })
@@ -16,7 +17,10 @@ const ringPoints = computed(() => {
     const radius = radiusScale((index + 1) / count)
     return axes.map((key) => {
       const angle = angleByAxis.get(key)
-      return angle == null ? '' : `${cx + Math.cos(angle) * radius},${cy + Math.sin(angle) * radius}`
+      if (angle == null)
+        return ''
+      const point = polarPoint(cx, cy, angle, radius)
+      return `${point.x},${point.y}`
     }).filter(Boolean).join(' ')
   })
 })
@@ -29,13 +33,9 @@ const axisLines = computed(() => {
     const angle = angleByAxis.get(key)
     if (angle == null)
       return []
-    return [{
-      key,
-      x1: cx + Math.cos(angle) * innerRadius,
-      y1: cy + Math.sin(angle) * innerRadius,
-      x2: cx + Math.cos(angle) * radius,
-      y2: cy + Math.sin(angle) * radius,
-    }]
+    const start = polarPoint(cx, cy, angle, innerRadius)
+    const end = polarPoint(cx, cy, angle, radius)
+    return [{ key, x1: start.x, y1: start.y, x2: end.x, y2: end.y }]
   })
 })
 </script>

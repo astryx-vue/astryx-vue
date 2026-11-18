@@ -25,3 +25,15 @@ export function xPixel(
   const value = typeof raw === 'number' ? raw : Number(raw)
   return Number.isFinite(value) ? xScale(value) : Number.NaN
 }
+
+/**
+ * 会写进 SVG 属性的数值先舍到固定位数，坐标默认 3 位小数，和 d3-shape 生成路径的默认精度一致。
+ *
+ * `Math.sin`、`Math.cos` 这类函数的结果由 JS 引擎自行近似，Node 和浏览器可能只差最后
+ * 一位。原样写进属性的话，服务端渲染的 HTML 和客户端 hydration 算出的值对不上。
+ * 0.001px 远小于屏幕能分辨的距离。
+ */
+export function roundForMarkup(value: number, digits = 3): number {
+  const factor = 10 ** digits
+  return Math.round(value * factor) / factor
+}

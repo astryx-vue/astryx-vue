@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RadialSliceProps } from './types.js'
 import { computed } from 'vue'
-import { radialArcPath } from './arc.js'
+import { polarPoint, radialArcPath } from './arc.js'
 import { useRadial } from './context.js'
 
 defineOptions({ name: 'AstryxRadialSlice' })
@@ -24,6 +24,7 @@ const sliceViews = computed(() => {
       : 'var(--astryx-color-accent)'
     const middle = (slice.startAngle + slice.endAngle) / 2
     const labelRadius = innerRadius + (radius - innerRadius) * 0.6
+    const label = polarPoint(cx, cy, middle, labelRadius)
     return [{
       key: `${slice.key}-${index}`,
       path: radialArcPath(innerRadius, radius, slice.startAngle, slice.endAngle, props.cornerRadius),
@@ -31,8 +32,8 @@ const sliceViews = computed(() => {
       color,
       percentage: `${Math.round(slice.percentage * 100)}%`,
       showLabel: props.labels && slice.percentage * 100 >= props.labelThreshold,
-      labelX: cx + Math.cos(middle) * labelRadius,
-      labelY: cy + Math.sin(middle) * labelRadius,
+      labelX: label.x,
+      labelY: label.y,
     }]
   })
 })
