@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.4.18
+
+### Patch Changes
+
+- [#486](https://github.com/astryx-vue/astryx-vue/pull/486) [`aa9573f`](https://github.com/astryx-vue/astryx-vue/commit/aa9573fe071dcf0e81c7ec3f558917f89b566c7a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 组件目录里 Token 和 Tokenizer 示例源码引用的文档站颜色变量改名：`--vp-c-text-2` 变为 `--docs-c-text-2`。文档站从 VitePress 迁到 KawaPress 后，站点自己的调色板不再沿用 VitePress 的变量前缀。
+
+- [#487](https://github.com/astryx-vue/astryx-vue/pull/487) [`78e34af`](https://github.com/astryx-vue/astryx-vue/commit/78e34af5079be3a25c83046f9fb0989457ec1041) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 内置组件目录里 Timestamp 的 auto 与 relative 示例源码改为挂载后再取当前时间，服务端渲染时不读时钟。
+
 ## 0.4.17
 
 ### Patch Changes

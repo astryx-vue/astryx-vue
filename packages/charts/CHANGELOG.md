@@ -1,5 +1,13 @@
 # @astryx-vue/charts
 
+## 0.9.2
+
+### Patch Changes
+
+- [#487](https://github.com/astryx-vue/astryx-vue/pull/487) [`b6b9fbd`](https://github.com/astryx-vue/astryx-vue/commit/b6b9fbd7bfdd918058f30db187513be0b7e28a2f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 3D 图表和径向图表写进 SVG 的坐标舍到 3 位小数（3D 的深度舍到 6 位），和 d3-shape 生成路径的精度一致。`Math.sin`、`Math.cos` 的结果由 JS 引擎自行近似，Node 和浏览器可能只差最后一位，之前服务端渲染的坐标和 hydration 算出的对不上。
+- Updated dependencies [[`09406e4`](https://github.com/astryx-vue/astryx-vue/commit/09406e4bd9394300ebe5ddb06a60443a40916b51), [`7cc9752`](https://github.com/astryx-vue/astryx-vue/commit/7cc97528ab7160b7c7b0664b365a78ce407237f5), [`0178b04`](https://github.com/astryx-vue/astryx-vue/commit/0178b0495d010c81d4877af48763e4cb8532baeb), [`10044cd`](https://github.com/astryx-vue/astryx-vue/commit/10044cd7550c3e5234483490b017c33bf59efd29), [`900f0ed`](https://github.com/astryx-vue/astryx-vue/commit/900f0edeb7f06989850b955267249dfff5f3c5b3)]:
+  - @astryx-vue/core@0.7.21
+
 ## 0.9.1
 
 ### Patch Changes

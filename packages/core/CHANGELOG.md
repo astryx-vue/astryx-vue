@@ -1,5 +1,19 @@
 # @astryx-vue/core
 
+## 0.7.21
+
+### Patch Changes
+
+- [#487](https://github.com/astryx-vue/astryx-vue/pull/487) [`09406e4`](https://github.com/astryx-vue/astryx-vue/commit/09406e4bd9394300ebe5ddb06a60443a40916b51) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeBlock 服务端渲染后 hydration 不再出现差异。之前 CodeBlock 在 setup 里检测浏览器是否支持 CSS Custom Highlight API：服务端只能用 span 着色，Chromium 一进来就选 Highlight API，两边渲染出的行结构不同。现在挂载前一律用 span，挂载后再换成浏览器支持的方式。
+
+- [#487](https://github.com/astryx-vue/astryx-vue/pull/487) [`7cc9752`](https://github.com/astryx-vue/astryx-vue/commit/7cc97528ab7160b7c7b0664b365a78ce407237f5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 内联展开的 MoreMenu 不再打乱页面上其他弹层的 hydration。内联菜单之前用 `<Teleport disabled>` 包住子菜单的 Teleport。Vue 3.5 水合这种嵌套时会让子菜单占走外层在 body 里留的空位，之后每个传送到 body 的弹层（Tooltip、Popover、聊天输入框的建议列表等）都会对上前一个弹层的服务端 HTML。内联菜单现在直接原地渲染，不再经过 Teleport。
+
+- [#487](https://github.com/astryx-vue/astryx-vue/pull/487) [`0178b04`](https://github.com/astryx-vue/astryx-vue/commit/0178b0495d010c81d4877af48763e4cb8532baeb) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `useSpeechRecognition` 和 `useChatDictation` 在组件里改为挂载后才检测浏览器是否支持语音识别，组件外仍立即检测。之前 setup 里就读 `webkitSpeechRecognition`：服务端为 false，Chromium 为 true，默认在不支持时隐藏的 ChatDictationButton 因此只在客户端出现，后面组件的 `useId()` 全部错位。
+
+- [#487](https://github.com/astryx-vue/astryx-vue/pull/487) [`10044cd`](https://github.com/astryx-vue/astryx-vue/commit/10044cd7550c3e5234483490b017c33bf59efd29) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `useTheme` 和 `useSyntaxTheme` 挂载前不再读读者的页面：主题没有指定 light 或 dark 时 `mode` 先按 light 解析，`useTheme().token()` 也先不读文档上的计算样式，挂载后再跟随页面（`data-astryx-color-mode`、`dark` 类、系统偏好、页面定义的 CSS 变量）。服务端看不到这些，之前深色页面或定义了 token 的页面在 hydration 时文字和颜色都会对不上。
+
+- [#487](https://github.com/astryx-vue/astryx-vue/pull/487) [`900f0ed`](https://github.com/astryx-vue/astryx-vue/commit/900f0edeb7f06989850b955267249dfff5f3c5b3) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - VisuallyHidden 渲染成 `input` 这类空元素时不再挂载插槽。服务端不会给空元素输出子节点，客户端却多出一个空插槽，SelectableCard 里的隐藏复选框因此 hydration 失败。
+
 ## 0.7.20
 
 ### Patch Changes
