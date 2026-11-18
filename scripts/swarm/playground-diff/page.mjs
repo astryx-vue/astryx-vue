@@ -76,8 +76,8 @@ export async function waitForStablePreview(page, { timeoutMs = LOAD_TIMEOUT_MS }
  *
  * 原版站点偶尔会卡在加载上（网络或编译排队），所以打不开时再试一次，不要直接挂。
  */
-export async function openSide(browser, url, { scheme, local, settleMs = 1200, attempts = 2 }) {
-  const context = await browser.newContext({ viewport: VIEWPORT, colorScheme: scheme })
+export async function openSide(browser, url, { scheme, local, viewport = VIEWPORT, settleMs = 1200, attempts = 2 }) {
+  const context = await browser.newContext({ viewport, colorScheme: scheme })
   if (local)
     await context.addInitScript(mode => localStorage.setItem('kawapress:appearance', mode), scheme)
   const page = await context.newPage()

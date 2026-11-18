@@ -201,7 +201,13 @@ describe('命令行参数', () => {
       port: 5181,
       jsonPath: 'out.json',
       clicks: [],
+      viewport: null,
     })
+  })
+
+  it('--viewport 解析成宽高', () => {
+    expect(parseDiffArgs(['table', 'light', '5181', '--viewport', '1200x800']).viewport).toEqual({ width: 1200, height: 800 })
+    expect(() => parseDiffArgs(['table', 'light', '5181', '--viewport', 'wide'])).toThrow()
   })
 
   it('--click 可以重复，按角色:名字或文字解析', () => {
